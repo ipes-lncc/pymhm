@@ -1,0 +1,93 @@
+{
+  "archive": "mhm-pgmhm-factor1-s2.npz",
+  "archive_sha256": "ddd9dfac1cf5ad0b8edf4a39d4cec089ce191228493001df61ea15dec4fe0ec3",
+  "reference": "classical-cg2-factor4.npz",
+  "reference_sha256": "0b381e37adab404044dfe3b3f8be08b04273593f6b124e0e6cd4e3c509667207",
+  "integration": "exact geometric intersections; Duffy orders3/4; raw -K grad p",
+  "denominator": "corresponding physical norm of the stated CG2 reference",
+  "source_hashes": {
+    "examples/compare_pgmhm_inclusions.py": "d49693203c7e7b129e5593e17a854686ff05f5aa00b3373430c9dc98195e9cb0",
+    "examples/pgmhm_inclusion_data.py": "e0b5690efee2cffde1cf5b871b3bcf5e3be8c08272b87e6b71d7a32e5d17e852",
+    "examples/solve_pgmhm_inclusions_reference.py": "cfb33b107d0cc557da346a3a27ccc61acac596e05c3ca9718d782cfd90750b73",
+    "examples/compare_unusual_spe10.py": "be46a47bb2240df93431ba390958939fab40154f79868fa7e2d414ab2cbcde04",
+    "examples/spe10_adaptive_norms.py": "9727f068fc1e7c2fc948270584634376ef92efbe2cf1db87e0c46cdd1b5f2ed7",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9"
+  },
+  "rows": [
+    {
+      "order": 3,
+      "seconds": 99.33510468900204,
+      "mhm": {
+        "pressure_absolute": 0.0007065961856225398,
+        "pressure_reference": 0.030134258793962015,
+        "pressure_relative": 0.02344826831327672,
+        "flux_absolute": 0.06247636238566148,
+        "flux_reference": 0.2434187245121967,
+        "flux_relative": 0.25666210564064906,
+        "energy_absolute": 0.033126067418049604,
+        "energy_reference": 0.16025880438860055,
+        "energy_relative": 0.206703572664404
+      },
+      "pgmhm": {
+        "pressure_absolute": 0.00070541647866857,
+        "pressure_reference": 0.030134258793962015,
+        "pressure_relative": 0.023409119948552173,
+        "flux_absolute": 0.06247570595763734,
+        "flux_reference": 0.2434187245121967,
+        "flux_relative": 0.25665940893756894,
+        "energy_absolute": 0.033126004687178336,
+        "energy_reference": 0.16025880438860055,
+        "energy_relative": 0.20670318122961515
+      },
+      "enriched": {
+        "pressure_absolute": 0.0007054068955116949,
+        "pressure_reference": 0.030134258793962015,
+        "pressure_relative": 0.02340880193320159,
+        "flux_absolute": 0.062502862878456,
+        "flux_reference": 0.2434187245121967,
+        "flux_relative": 0.25677097357119805,
+        "energy_absolute": 0.03315355730656896,
+        "energy_reference": 0.16025880438860055,
+        "energy_relative": 0.20687510700614725
+      }
+    },
+    {
+      "order": 4,
+      "seconds": 76.86628714005928,
+      "mhm": {
+        "pressure_absolute": 0.0007065961856225397,
+        "pressure_reference": 0.03013425879396201,
+        "pressure_relative": 0.02344826831327672,
+        "flux_absolute": 0.062476362598677525,
+        "flux_reference": 0.24341872473809567,
+        "flux_relative": 0.2566621062775612,
+        "energy_absolute": 0.03312606741805361,
+        "energy_reference": 0.16025880438860055,
+        "energy_relative": 0.20670357266442901
+      },
+      "pgmhm": {
+        "pressure_absolute": 0.0007054164786685698,
+        "pressure_reference": 0.03013425879396201,
+        "pressure_relative": 0.023409119948552173,
+        "flux_absolute": 0.06247570617060789,
+        "flux_reference": 0.24341872473809567,
+        "flux_relative": 0.25665940957429667,
+        "energy_absolute": 0.03312600468718234,
+        "energy_reference": 0.16025880438860055,
+        "energy_relative": 0.20670318122964013
+      },
+      "enriched": {
+        "pressure_absolute": 0.0007054068955116947,
+        "pressure_reference": 0.03013425879396201,
+        "pressure_relative": 0.023408801933201585,
+        "flux_absolute": 0.06250286309158011,
+        "flux_reference": 0.24341872473809567,
+        "flux_relative": 0.2567709742084531,
+        "energy_absolute": 0.03315355730657296,
+        "energy_reference": 0.16025880438860055,
+        "energy_relative": 0.20687510700617223
+      }
+    }
+  ],
+  "source_changed_during_run": false
+}

@@ -1,0 +1,82 @@
+{
+  "method": "global conforming Taylor-Hood P2/P1; no residual stabilization",
+  "reference_backend": "DOLFINx/UFL with PETSc/MUMPS",
+  "mesh_shape": [
+    60,
+    220
+  ],
+  "triangles": 26400,
+  "triangle_diagonal": "southwest to northeast",
+  "velocity_degree": 2,
+  "pressure_degree": 1,
+  "unknowns": 120203,
+  "prescribed_velocity_unknowns": 1122,
+  "free_unknowns": 119081,
+  "matrix_nonzeros": 3539809,
+  "original_free_residual_relative": 6.596738659978382e-12,
+  "residual_tolerance": 1e-10,
+  "weak_pressure_equation_residual_l2": 1.8962357077916032e-10,
+  "weak_pressure_equation_residual_max": 1.5708323530816415e-11,
+  "divergence_l2": 9.878164027516298e-10,
+  "exterior_flux_bottom_right_top_left": [
+    -1200.0,
+    0.0,
+    1199.9999999999834,
+    0.0
+  ],
+  "exterior_balance": -1.659827830735594e-11,
+  "velocity_nodal_max": 1.000000000008349,
+  "pressure_nodal_min": 2.2375141316913e-14,
+  "pressure_nodal_max": 4400.000000000066,
+  "boundary": "bottom u=(0,1); sides ux=0 and tangential grad-grad traction=0; top full grad-grad traction=0",
+  "pressure_gauge": "none: natural top traction fixes the additive pressure constant",
+  "material": "synthetic scalar gamma=1 below y=1100 and gamma=3 above",
+  "viscosity": 0.3,
+  "coordinate_unit": "numerical coordinates of the manufactured domain",
+  "permeability_unit": "synthetic numerical coefficient values",
+  "material_integration": "DG0 exact pixel assignment on fitted triangles",
+  "quadrature_degree": 4,
+  "assembly_seconds": 0.4352668869541958,
+  "factor_and_solve_seconds": 1.6551868109963834,
+  "total_seconds": 2.1558303280035034,
+  "timing_scope": "observed, not exclusive performance benchmark",
+  "dolfinx": "0.9.0",
+  "basix": "0.9.0",
+  "petsc": [
+    3,
+    23,
+    0
+  ],
+  "numpy": "2.5.3",
+  "python": "3.13.15",
+  "mumps_settings": {
+    "mat_mumps_icntl_7": 5,
+    "mat_mumps_icntl_14": 50,
+    "mat_mumps_icntl_10": 2
+  },
+  "openmp_threads": 1,
+  "blis_threads": 1,
+  "conservation_scope": "global boundary flux and weak continuous-P1 pressure equations; not fine-cell or MHM macro conservation",
+  "fixture_permeability": "K=.3 below y=1100; K=.1 above; all three components equal",
+  "expected": "u=(0,1); p=4400-y below y=1100 and p=6600-3*y above; f=0",
+  "velocity_coefficient_error_max": 8.349099189786102e-12,
+  "pressure_coefficient_error_max": 8.503775461576879e-11,
+  "driver_sha256": "d5b4d1ff04388aef2c1bccdcb97c53f43857a6ef08a3b874acb6aa049ecf3ad9",
+  "case": "synthetic layered channel; no SPE10 data",
+  "domain": [
+    [
+      0.0,
+      1200.0
+    ],
+    [
+      0.0,
+      2200.0
+    ]
+  ],
+  "source": [
+    0.0,
+    0.0
+  ],
+  "velocity_coefficient_error_tolerance": 2e-09,
+  "pressure_coefficient_error_tolerance": 2e-07
+}

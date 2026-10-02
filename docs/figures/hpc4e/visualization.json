@@ -1,0 +1,24 @@
+{
+  "reference": "classical-rt2-1024x512-mumps.npz",
+  "field_samples": "Centres of the common fine rectangular partition; no averaging",
+  "profile": "Six one-sided points per reference fine interval; z=2250.25 m",
+  "macro_mesh": "16 by 8 physical rectangles",
+  "source_sha256": "a7da01179dbe0257ae1407cdc3abb33eded27a5411d757f919b92f4182dc1070",
+  "input_sha256": {
+    "classical-rt2-1024x512-mumps.npz": "4890580574d7bb98de54a0d2c9af0abbd25b8c1646c4f15de0c4ecf3ed1b9268",
+    "mhm-s1.npz": "6758d5d8c4f190efc6ed0c8592051f27234e60dc55f27f671fa0277152801cba",
+    "mhm-s2.npz": "9f4489fc1bb481a4e6e0eb1c2359d8f3c870df2b2dfa4e719e9f4fc172648482",
+    "mhm-s4.npz": "604cb457ecc9ee1e5ecd5d8e491c054800786c6c98b1a0a0efa486e13464a3b2",
+    "mhm-s8.npz": "411c83ae9fb811ddea7d7359854baa0f950348aebff46d160fbad4453f26ac6f",
+    "reference-spatial-refinement.json": "863c58f283f0cc9eee8b3c8326c17db9b0d1549b2cc9ecc66ff99c0e9a7ad048",
+    "published-profile.json": "4e1a2970e25f09ae7186a291137389d62f4d4a2751db0230b08a76aa770b0245"
+  },
+  "figure_sha256": {
+    "displacement-vectors.png": "84e84ab68a2277bf0ed39dc27580d31e407be8001dbda1c422f85fb1927638e4",
+    "material.png": "f3aaa68332c9ad7b400c7d38b2bfa776874765543a1bcf09ae62fd59ee2a4b95",
+    "published-profile-comparison.png": "0864a14e891c9ff4f7e26efc83da82bc8c8a8543a9165fefeb9bf1cf674d0383",
+    "reference-sensitivity.png": "b369d494e66153f72da0b38d30c7e13cab03388541ad68d1653883b5c9166d9b",
+    "stress-displacement-fields.png": "91419a2e2ee223296b216605b9981598d891e1fa94c61d72d32692cafbad6445",
+    "stress-profiles.png": "dbb60390744f353e6bd4ea8f7fc270cf1dcd29de6eb4297fe60a42152047f42c"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "pressure_l2": 1.8076995805498721,
+  "flux_l2": 0.1449654787366452,
+  "pressure_relative_l2": 0.002202684965628331,
+  "flux_relative_l2": 0.14567298181966196,
+  "rectangle_pressure_l2": 820.9787296832592,
+  "rectangle_flux_l2": 0.9847679520769846,
+  "triangle_pressure_l2": 820.6800376622234,
+  "triangle_flux_l2": 0.9951432099887088,
+  "integration": "Exact rectangle-triangle polygon intersections with polynomial-exact positive Duffy quadrature",
+  "relative_denominator": "Triangular reference field L2 norm",
+  "periodic_blocks": [
+    240,
+    440
+  ],
+  "block_extent": [
+    5.0,
+    5.0
+  ],
+  "quadrature_points_per_block": 1040,
+  "integration_triangles_per_block": 65,
+  "duffy_order": 4,
+  "verified_polynomial_degree": 6,
+  "maximum_relative_monomial_defect": 5.215406417846679e-16,
+  "mhm_record": "darcy-q1-r120-s32.json",
+  "mhm_sha256": "185a401ff4f5c3b4d9ca075866e8261e1c480625d36cd6b4babf2576283b99c4",
+  "mhm_record_sha256": "6a38781817b0f8fb068fbd5d7b7fa12e2a3ef7bad4c6f22e08cb02ba111df2b8",
+  "reference_record": "msl-cg-p1-480x1760.json",
+  "reference_record_sha256": "e1730c02107ced90a2c1b4f36c521719cc69d74c80f1770d6c8ed452dff9d1a9",
+  "reference_coefficients_sha256": "b4120150067ef36ec77431c91fb088bea02f5b8024bafb7a6cd7dfad2ff7e516",
+  "reference_sha256": "36535fee2820943e64ca7ed7080c1fb847bd733b17a247c4aa9b0c50d3eb914d",
+  "reference": "MSL_CG global conforming triangular P1",
+  "mhm": "pyMHM Cartesian local Q1 r120, macro6x11, continuous P1 trace32segments",
+  "geometry_integrator_sha256": "c0bd7751775b82999c3cc6234b5740134091db7e249a386cde47df401c29c2ae",
+  "comparison_sha256": "2104cad96f4a022c9a98942704913a06cf4a097d1435a3b971efb618d4771d57",
+  "material": "Layer36 unchanged scalar Kx=Ky; pixels are exactly partitioned by both meshes"
+}

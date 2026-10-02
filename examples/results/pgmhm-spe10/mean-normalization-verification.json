@@ -1,0 +1,65 @@
+{
+  "identity": "C -> C/|K| is the auxiliary saddle congruence diag(I,1/|K|); physical pressure and raw flux remain invariant",
+  "configuration": "layer 1 Kz, two macros, P2 locals, P0 one segment, alpha 0.1, nonzero pressure bottom and zero normal side flux",
+  "original_archive": "pgmhm-s1-q5.npz",
+  "original_archive_sha256": "b53b885f90b0c6d79fc8adf8a39e217de6353f11cb1464ce49a3e6c8c5895494",
+  "normalized_archive": "mean-normalized-replay-s1.npz",
+  "normalized_archive_sha256": "cf7aa5ec17c12f486ad21d9df0d1a87a1b1932f379315150c05e38f8bb96dd09",
+  "original_acquisition_source_hashes": {
+    "src/pymhm/pgmhm.py": "112c30898c9aefa009a34ae35e8f014586b566c0169a3ad2ef14b63aec7b6ee8",
+    "src/pymhm/darcy.py": "053c3823d6849f3e8c82c0ceb55049d701561c161f25793bdae8fe1b3c5d73d0",
+    "src/pymhm/darcy_rt.py": "f3bf5d7d1751f12de2ce6052ad4b2deea2e8072ae4ae3d594bc2a4466f6076b1",
+    "src/pymhm/rt.py": "5d4908fe7077a0e4ba1d6d7e6a4b8ac04aeb9bcfbe968b364e939a89824e62e2",
+    "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/cut_cells.py": "f37bd801059236bbc2b7cc7f735b9c843916fdd9f14ea3d70812c971ab4a6add",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+    "src/pymhm/reservoir.py": "f9c7e595a48ccb5d047d5ec94f6f6d15a7ffb7b49374d921837fa0cf2dbf09a0",
+    "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+    "examples/solve_pgmhm_spe10.py": "b82669b67c9368be71802e05a3d483f73ce1a1890dc17e68bd49e845354d33dc",
+    "examples/spe10_adaptive.py": "82b00d9c44783c0f8ef93e7ba485310cbd55ac84c4d21abb1984b0c65a1bae02",
+    "examples/spe10_adaptive_norms.py": "9727f068fc1e7c2fc948270584634376ef92efbe2cf1db87e0c46cdd1b5f2ed7",
+    "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+    "examples/results/spe10/layer-1.npz": "685c6b7e51bfa56a4b2c6e3a802ea57b7f8a9590f2f99fd403312284f5546e23"
+  },
+  "normalized_acquisition_source_hashes": {
+    "src/pymhm/pgmhm.py": "112c30898c9aefa009a34ae35e8f014586b566c0169a3ad2ef14b63aec7b6ee8",
+    "src/pymhm/darcy.py": "6ed895bac751317e58ac5dea5129b9f5eb944d7492191c5d10a8a9c7ebd2419c",
+    "src/pymhm/darcy_rt.py": "f3bf5d7d1751f12de2ce6052ad4b2deea2e8072ae4ae3d594bc2a4466f6076b1",
+    "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+    "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/cut_cells.py": "f37bd801059236bbc2b7cc7f735b9c843916fdd9f14ea3d70812c971ab4a6add",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+    "src/pymhm/reservoir.py": "f9c7e595a48ccb5d047d5ec94f6f6d15a7ffb7b49374d921837fa0cf2dbf09a0",
+    "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+    "examples/solve_pgmhm_spe10.py": "94b11cf20a3f442d8a88f7a9821e382f2db62dab22d33162171036c1af969a7d",
+    "examples/spe10_adaptive.py": "111d056e78838e757971236ec9511f3b751f4fb70956f23c860254b399277e28",
+    "examples/spe10_adaptive_norms.py": "9727f068fc1e7c2fc948270584634376ef92efbe2cf1db87e0c46cdd1b5f2ed7",
+    "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+    "examples/results/spe10/layer-1.npz": "685c6b7e51bfa56a4b2c6e3a802ea57b7f8a9590f2f99fd403312284f5546e23"
+  },
+  "original_residual": 8.937676197700118e-17,
+  "normalized_residual": 1.49776421523158e-16,
+  "metrics": {
+    "pressure": {
+      "coefficient_relative_difference": 2.091014009660406e-15,
+      "coefficient_linf_difference": 2.183697016613917e-14
+    },
+    "enriched_pressure": {
+      "coefficient_relative_difference": 2.0910134740009193e-15,
+      "coefficient_linf_difference": 2.183697016613917e-14
+    },
+    "physical_raw_flux_samples": {
+      "relative_difference": 3.569618210566228e-15,
+      "linf_difference": 4.243126845975692e-17,
+      "sampling": "three interior barycentric points per unchanged local triangle, both base and enriched fields"
+    }
+  }
+}

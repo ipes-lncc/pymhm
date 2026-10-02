@@ -1,0 +1,42 @@
+{
+  "pressure_l2": 4.276286276767639,
+  "flux_l2": 0.28615450128995495,
+  "pressure_relative_l2": 0.005189632018628151,
+  "flux_relative_l2": 0.3004064545103274,
+  "rectangle_pressure_l2": 820.9787296832593,
+  "rectangle_flux_l2": 0.9847679520769806,
+  "triangle_pressure_l2": 824.0056831424534,
+  "triangle_flux_l2": 0.9525577662983188,
+  "integration": "Exact rectangle-triangle polygon intersections with polynomial-exact positive Duffy quadrature",
+  "relative_denominator": "Triangular reference field L2 norm",
+  "periodic_blocks": [
+    120,
+    440
+  ],
+  "block_extent": [
+    10.0,
+    5.0
+  ],
+  "quadrature_points_per_block": 396,
+  "integration_triangles_per_block": 44,
+  "duffy_order": 3,
+  "verified_polynomial_degree": 4,
+  "maximum_relative_monomial_defect": 6.548361852765085e-16,
+  "reference_method": "Independent classical NeoPZ RT0/P0",
+  "reference_shape": [
+    120,
+    440
+  ],
+  "mhm_method": "Quadrilateral primal Q1, 6x11 macrogrid, 120x120 local subdivisions, 32 continuous P1 face segments",
+  "mhm_archive": "darcy-q1-r120-s32.npz",
+  "mhm_sha256": "185a401ff4f5c3b4d9ca075866e8261e1c480625d36cd6b4babf2576283b99c4",
+  "reference_coefficient_sha256": "a7ac67d6b79939555c4bce4916ba8532dd78d6f1c452003bba8b26a28f4b445e",
+  "comparison_driver_sha256": "d78f0ed7f8a245265b90a87849a09ec15a70965493f5f061e48666744380fad9",
+  "intersection_integrator_sha256": "c0bd7751775b82999c3cc6234b5740134091db7e249a386cde47df401c29c2ae",
+  "bilinear_evaluator_check": {
+    "pressure_linf": 1.1102230246251565e-16,
+    "flux_linf": 7.01353038146113e-14,
+    "points": 400
+  },
+  "elapsed_seconds": 13.413626187015325
+}

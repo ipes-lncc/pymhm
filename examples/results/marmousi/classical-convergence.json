@@ -1,0 +1,363 @@
+{
+  "references": [
+    {
+      "reference_record": "classical-p1.json",
+      "reference_record_sha256": "6f5d9f66c28233bb30e35c22a02645ce0e79548953733a475b6752f8e2e44f0b",
+      "degree": 1,
+      "complex_dofs": 1051137,
+      "physical_norms": {
+        "quadrature_order": 8,
+        "domain_area": 26214400.0,
+        "gradient_cutout": [
+          4975.0,
+          5025.0,
+          25.0,
+          75.0
+        ],
+        "gradient_domain_area": 26211900.0,
+        "pressure_difference": 0.0,
+        "reference_pressure_norm": 246257.3913174912,
+        "pressure_relative_difference": 0.0,
+        "gradient_difference": 0.0,
+        "reference_gradient_norm": 15634.031403836767,
+        "gradient_relative_difference": 0.0,
+        "weighted_gradient_difference": 0.0,
+        "reference_weighted_gradient_norm": 344.041511788402,
+        "weighted_gradient_relative_difference": 0.0,
+        "graph_difference": 0.0,
+        "reference_graph_norm": 486.61314640321893,
+        "graph_relative_difference": 0.0,
+        "flux_difference": 0.0,
+        "reference_flux_norm": 7.579178684274371,
+        "flux_relative_difference": 0.0
+      },
+      "native_pressure_norm_relative_difference": 7.993605777301127e-15,
+      "sample_archive": "classical-p1-samples.npz",
+      "sample_archive_sha256": "750e4da35339a94dd0df979ee4c41825ab60bf05cfa2c5d77f89f4e774521608"
+    },
+    {
+      "reference_record": "classical-p2.json",
+      "reference_record_sha256": "4833a41a48c53188d5e116fc1621392a6a14a64efadc9d038e198188f117c3c4",
+      "degree": 2,
+      "complex_dofs": 4199425,
+      "physical_norms": {
+        "quadrature_order": 8,
+        "domain_area": 26214400.0,
+        "gradient_cutout": [
+          4975.0,
+          5025.0,
+          25.0,
+          75.0
+        ],
+        "gradient_domain_area": 26211900.0,
+        "pressure_difference": 0.0,
+        "reference_pressure_norm": 267011.13477880944,
+        "pressure_relative_difference": 0.0,
+        "gradient_difference": 0.0,
+        "reference_gradient_norm": 16998.282192816034,
+        "gradient_relative_difference": 0.0,
+        "weighted_gradient_difference": 0.0,
+        "reference_weighted_gradient_norm": 374.12182964762445,
+        "weighted_gradient_relative_difference": 0.0,
+        "graph_difference": 0.0,
+        "reference_graph_norm": 529.1770932482913,
+        "graph_relative_difference": 0.0,
+        "flux_difference": 0.0,
+        "reference_flux_norm": 8.242825039901708,
+        "flux_relative_difference": 0.0
+      },
+      "native_pressure_norm_relative_difference": 2.6867397195928788e-14,
+      "sample_archive": "classical-p2-samples.npz",
+      "sample_archive_sha256": "5b24389359dbe8cd32fceb2ee7f14297e7a8f13bbe29d5329eccd5e58103a532",
+      "increment": {
+        "quadrature_order": 6,
+        "domain_area": 26214400.0,
+        "gradient_cutout": [
+          4975.0,
+          5025.0,
+          25.0,
+          75.0
+        ],
+        "gradient_domain_area": 26211900.0,
+        "pressure_difference": 290000.73181896674,
+        "reference_pressure_norm": 267011.13477880944,
+        "pressure_relative_difference": 1.0860997690572032,
+        "gradient_difference": 18211.812879075576,
+        "reference_gradient_norm": 16998.282192816034,
+        "gradient_relative_difference": 1.0713913719335957,
+        "weighted_gradient_difference": 400.3772174555036,
+        "reference_weighted_gradient_norm": 374.1218296476244,
+        "weighted_gradient_relative_difference": 1.0701787111236158,
+        "graph_difference": 565.7637946068317,
+        "reference_graph_norm": 529.1770932482913,
+        "graph_relative_difference": 1.0691388607431156,
+        "flux_difference": 8.812123237306416,
+        "reference_flux_norm": 8.242825039901707,
+        "flux_relative_difference": 1.069065908186679
+      },
+      "increment_quadrature_check": {
+        "quadrature_order": 8,
+        "domain_area": 26214400.0,
+        "gradient_cutout": [
+          4975.0,
+          5025.0,
+          25.0,
+          75.0
+        ],
+        "gradient_domain_area": 26211900.0,
+        "pressure_difference": 290000.73181896674,
+        "reference_pressure_norm": 267011.13477880944,
+        "pressure_relative_difference": 1.0860997690572032,
+        "gradient_difference": 18211.81287907558,
+        "reference_gradient_norm": 16998.282192816034,
+        "gradient_relative_difference": 1.0713913719335957,
+        "weighted_gradient_difference": 400.3772174555037,
+        "reference_weighted_gradient_norm": 374.12182964762445,
+        "weighted_gradient_relative_difference": 1.0701787111236158,
+        "graph_difference": 565.7637946068317,
+        "reference_graph_norm": 529.1770932482913,
+        "graph_relative_difference": 1.0691388607431156,
+        "flux_difference": 8.812123237306416,
+        "reference_flux_norm": 8.242825039901708,
+        "flux_relative_difference": 1.069065908186679
+      },
+      "sample_relative_increment": 1.0912899075881672
+    },
+    {
+      "reference_record": "classical-p3.json",
+      "reference_record_sha256": "444065efcba8af8ba1eed0ecfba47112e1eb686bbb46c74474c6f99e1ef1b8c5",
+      "degree": 3,
+      "complex_dofs": 9444865,
+      "physical_norms": {
+        "quadrature_order": 8,
+        "domain_area": 26214400.0,
+        "gradient_cutout": [
+          4975.0,
+          5025.0,
+          25.0,
+          75.0
+        ],
+        "gradient_domain_area": 26211900.0,
+        "pressure_difference": 0.0,
+        "reference_pressure_norm": 267112.00670133944,
+        "pressure_relative_difference": 0.0,
+        "gradient_difference": 0.0,
+        "reference_gradient_norm": 17005.3537593897,
+        "gradient_relative_difference": 0.0,
+        "weighted_gradient_difference": 0.0,
+        "reference_weighted_gradient_norm": 374.27857529126817,
+        "weighted_gradient_relative_difference": 0.0,
+        "graph_difference": 0.0,
+        "reference_graph_norm": 529.3986211463474,
+        "graph_relative_difference": 0.0,
+        "flux_difference": 0.0,
+        "reference_flux_norm": 8.2463014338614,
+        "flux_relative_difference": 0.0
+      },
+      "native_pressure_norm_relative_difference": 1.7985612998927536e-14,
+      "sample_archive": "classical-p3-samples.npz",
+      "sample_archive_sha256": "9bc7bc79b52ea9afe3d80a566ee6e05d83b3917515ee5614360076761e57dad4",
+      "increment": {
+        "quadrature_order": 6,
+        "domain_area": 26214400.0,
+        "gradient_cutout": [
+          4975.0,
+          5025.0,
+          25.0,
+          75.0
+        ],
+        "gradient_domain_area": 26211900.0,
+        "pressure_difference": 1065.028850985883,
+        "reference_pressure_norm": 267112.00670133944,
+        "pressure_relative_difference": 0.003987199467887275,
+        "gradient_difference": 107.50753530620193,
+        "reference_gradient_norm": 17005.353759389698,
+        "gradient_relative_difference": 0.006321981702194252,
+        "weighted_gradient_difference": 2.378754922477166,
+        "reference_weighted_gradient_norm": 374.2785752912681,
+        "weighted_gradient_relative_difference": 0.006355573306930513,
+        "graph_difference": 2.7590080128234873,
+        "reference_graph_norm": 529.3986211463474,
+        "graph_relative_difference": 0.005211588966456309,
+        "flux_difference": 0.052680581884201154,
+        "reference_flux_norm": 8.2463014338614,
+        "flux_relative_difference": 0.006388389062262673
+      },
+      "increment_quadrature_check": {
+        "quadrature_order": 8,
+        "domain_area": 26214400.0,
+        "gradient_cutout": [
+          4975.0,
+          5025.0,
+          25.0,
+          75.0
+        ],
+        "gradient_domain_area": 26211900.0,
+        "pressure_difference": 1065.0288509858815,
+        "reference_pressure_norm": 267112.00670133944,
+        "pressure_relative_difference": 0.00398719946788727,
+        "gradient_difference": 107.50753530620237,
+        "reference_gradient_norm": 17005.3537593897,
+        "gradient_relative_difference": 0.0063219817021942775,
+        "weighted_gradient_difference": 2.3787549224771753,
+        "reference_weighted_gradient_norm": 374.27857529126817,
+        "weighted_gradient_relative_difference": 0.006355573306930537,
+        "graph_difference": 2.7590080128234944,
+        "reference_graph_norm": 529.3986211463474,
+        "graph_relative_difference": 0.005211588966456322,
+        "flux_difference": 0.05268058188420135,
+        "reference_flux_norm": 8.2463014338614,
+        "flux_relative_difference": 0.006388389062262695
+      },
+      "sample_relative_increment": 0.00378785726943513
+    },
+    {
+      "reference_record": "classical-p4.json",
+      "reference_record_sha256": "b16041e795e720fca24b339fc2dc66d236388c94595602913031b87d21521b3e",
+      "degree": 4,
+      "complex_dofs": 16787457,
+      "physical_norms": {
+        "quadrature_order": 8,
+        "domain_area": 26214400.0,
+        "gradient_cutout": [
+          4975.0,
+          5025.0,
+          25.0,
+          75.0
+        ],
+        "gradient_domain_area": 26211900.0,
+        "pressure_difference": 0.0,
+        "reference_pressure_norm": 267115.7956501733,
+        "pressure_relative_difference": 0.0,
+        "gradient_difference": 0.0,
+        "reference_gradient_norm": 17005.603945555842,
+        "gradient_relative_difference": 0.0,
+        "weighted_gradient_difference": 0.0,
+        "reference_weighted_gradient_norm": 374.28405012996063,
+        "weighted_gradient_relative_difference": 0.0,
+        "graph_difference": 0.0,
+        "reference_graph_norm": 529.4063648769597,
+        "graph_relative_difference": 0.0,
+        "flux_difference": 0.0,
+        "reference_flux_norm": 8.246421344065135,
+        "flux_relative_difference": 0.0
+      },
+      "native_pressure_norm_relative_difference": 1.3988810110276972e-14,
+      "sample_archive": "classical-p4-samples.npz",
+      "sample_archive_sha256": "1870ee036b532aa0be1a751fddfea6a1cc76ffc4075dff8a6b8b22ae39dfde0e",
+      "increment": {
+        "quadrature_order": 6,
+        "domain_area": 26214400.0,
+        "gradient_cutout": [
+          4975.0,
+          5025.0,
+          25.0,
+          75.0
+        ],
+        "gradient_domain_area": 26211900.0,
+        "pressure_difference": 209.88722700030095,
+        "reference_pressure_norm": 267115.7956501733,
+        "pressure_relative_difference": 0.0007857537083848779,
+        "gradient_difference": 6.870265557477142,
+        "reference_gradient_norm": 17005.60394555584,
+        "gradient_relative_difference": 0.00040400009193866844,
+        "weighted_gradient_difference": 0.1525474353826369,
+        "reference_weighted_gradient_norm": 374.2840501299606,
+        "weighted_gradient_relative_difference": 0.0004075712959974348,
+        "graph_difference": 0.15325237128024463,
+        "reference_graph_norm": 529.4063648769596,
+        "graph_relative_difference": 0.00028947965390605434,
+        "flux_difference": 0.0033982933983351493,
+        "reference_flux_norm": 8.246421344065135,
+        "flux_relative_difference": 0.00041209310760974716
+      },
+      "increment_quadrature_check": {
+        "quadrature_order": 8,
+        "domain_area": 26214400.0,
+        "gradient_cutout": [
+          4975.0,
+          5025.0,
+          25.0,
+          75.0
+        ],
+        "gradient_domain_area": 26211900.0,
+        "pressure_difference": 209.88722700030257,
+        "reference_pressure_norm": 267115.7956501733,
+        "pressure_relative_difference": 0.000785753708384884,
+        "gradient_difference": 6.870265557479203,
+        "reference_gradient_norm": 17005.603945555842,
+        "gradient_relative_difference": 0.0004040000919387896,
+        "weighted_gradient_difference": 0.15254743538268237,
+        "reference_weighted_gradient_norm": 374.28405012996063,
+        "weighted_gradient_relative_difference": 0.00040757129599755624,
+        "graph_difference": 0.15325237128029173,
+        "reference_graph_norm": 529.4063648769597,
+        "graph_relative_difference": 0.0002894796539061433,
+        "flux_difference": 0.0033982933983361515,
+        "reference_flux_norm": 8.246421344065135,
+        "flux_relative_difference": 0.00041209310760986865
+      },
+      "sample_relative_increment": 5.4848749764565694e-05
+    }
+  ],
+  "material": {
+    "dataset": "Marmousi II, Martin, Wiley and Marfurt (2006)",
+    "doi": "10.1190/1.2172306",
+    "sources": {
+      "vp": {
+        "filename": "vp_marmousi-ii.segy",
+        "url": "https://ahay.org/data/marm2/vp_marmousi-ii.segy",
+        "sha256": "2722a5de0645d8fcf5750f380893d4875383af9b24988ece0bd07b943f5b0c91"
+      },
+      "density": {
+        "filename": "density_marmousi-ii.segy",
+        "url": "https://ahay.org/data/marm2/density_marmousi-ii.segy",
+        "sha256": "10ec5c4274a63ffde2ac94dda4f062d5b83827efcefeb1a2ab22438a85f32967"
+      }
+    },
+    "primary_shape": [
+      13601,
+      2801
+    ],
+    "primary_spacing_m": 1.25,
+    "crop_origin_m": [
+      3395.0,
+      515.0
+    ],
+    "cell_shape": [
+      2048,
+      512
+    ],
+    "cell_spacing_m": 5.0,
+    "sampling": "Primary nodes at material-cell centres; no interpolation",
+    "coordinate_order": [
+      "x",
+      "depth"
+    ],
+    "density_unit": "kg/m^3",
+    "velocity_unit": "m/s",
+    "bulk_modulus_unit": "Pa",
+    "historical_article_arrays_identified": false
+  },
+  "sampling": "513 by 129 uniform points; unweighted complex Euclidean norm",
+  "gradient_scope": "Fixed rectangular cutout excludes the source from gradient and graph norms; pressure L2 and sampled norms retain the complete domain",
+  "gradient_cutout_m": [
+    4975.0,
+    5025.0,
+    25.0,
+    75.0
+  ],
+  "graph_norm": "Integral rho^-1 |grad p|^2 + omega^2 kappa^-1 |p|^2",
+  "source_sha256": {
+    "examples/marmousi_fields.py": "ffccec6553a0f103b176b8495f762850d4951f9b91c05ec1bbb9137bc61a1775",
+    "examples/marmousi_data.py": "53521b99a9c1007d6d437f8e4b2666599c170eae06fd98ac0318c3568236e999",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9"
+  },
+  "source_changed_during_run": false,
+  "continuation": {
+    "previous_record_sha256": "3627e669407dfda47a1c00ba77b59ec736477471afd51a253579a73b69b3b759",
+    "new_pair_record_sha256": "20e300fb127800a45974d19e81bb34565669f29bab824e93735a3ecb86674126",
+    "contract": "P1/P2/P3 rows retained; repeated P3 physical norms are bitwise equal; all rows share the same executed norm-owner hashes"
+  }
+}

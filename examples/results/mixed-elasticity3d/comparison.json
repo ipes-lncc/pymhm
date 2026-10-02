@@ -1,0 +1,882 @@
+{
+  "reference": "Arnold-Falk-Winther2007 Eq7.1; original 3D MHM integration",
+  "convention": "Cauchy stress, -div(sigma)=f, multiplier -sigma*n, axial skew-gradient rotation",
+  "exact_solution": "curl((0,0,prod_i sin(pi*x_i)**2))",
+  "source": "-mu*Laplacian(u)",
+  "source_independent_of_lambda": true,
+  "boundary": "zero displacement on the unit cube",
+  "exact_norms": {
+    "displacement_l2": 1.1780972450961704,
+    "stress_l2": 13.514512410322249,
+    "rotation_l2": 4.778101684884307
+  },
+  "exact_norm_orders": [
+    18,
+    22
+  ],
+  "source_sha256": {
+    "src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+    "src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+    "src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+    "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+    "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+    "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+    "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+    "src/pymhm/hybrid.py": "d849c8ba0364927dcb84c60b7c99c1c9045aa4dd5e504ec17a446ea376923984",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+    "examples/solve_mixed_elasticity3d.py": "2770c659b113e555b6a60b4fc83cf067841d58fe931eea5845f18812967ff6ea",
+    "examples/mixed_elasticity3d_data.py": "a0bb1828a3f67b00483e86581ae1e3240064d8ceb3e01fe338561e8ba546ad27"
+  },
+  "convergence": [
+    {
+      "n": 1,
+      "stress_degree": 2,
+      "displacement_degree": 1,
+      "rotation_degree": 1,
+      "trace_degree": 1,
+      "local_refinement": 2,
+      "trace_subdivisions": 1,
+      "lame_lambda": "infinity",
+      "lame_mu": 1.0,
+      "macro_cells": 6,
+      "fine_cells": 48,
+      "trace_dofs": 162,
+      "retained_rigid_dofs": 36,
+      "errors": {
+        "displacement_l2": 0.9603902272682744,
+        "stress_l2": 11.731272730712373,
+        "rotation_l2": 6.617483004642203
+      },
+      "relative_errors": {
+        "displacement_l2": 0.8152045438234394,
+        "stress_l2": 0.8680500172357046,
+        "rotation_l2": 1.3849606896347233
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.9603902272682687,
+          "stress_l2": 11.731272730712323,
+          "rotation_l2": 6.617483004642168
+        },
+        {
+          "displacement_l2": 0.9603902272682744,
+          "stress_l2": 11.731272730712373,
+          "rotation_l2": 6.617483004642203
+        }
+      ],
+      "error_orders": [
+        18,
+        22
+      ],
+      "assembly_order": 18,
+      "error_quadrature_change": 4.973799150320701e-14,
+      "global_relative_residual": 1.0053691503894959e-16,
+      "force_moment_max": 1.0980331814302884e-13,
+      "weak_symmetry_moment_max": 1.8174691928578377e-14,
+      "normal_traction_moment_max": 6.650235917504688e-14,
+      "elapsed_seconds": 16.02521458799947,
+      "archive": "bdm2-n1.npz",
+      "archive_sha256": "93242bf3fd6be34d1d61e3b558d6a8aed2ad2eb622f7b5313abfa8165d5ae801",
+      "basis_sha256": "c86957affb924ed646b893c23dc7d2958964bd356944e3bc1b063c84e86e487d"
+    },
+    {
+      "n": 2,
+      "stress_degree": 2,
+      "displacement_degree": 1,
+      "rotation_degree": 1,
+      "trace_degree": 1,
+      "local_refinement": 2,
+      "trace_subdivisions": 1,
+      "lame_lambda": "infinity",
+      "lame_mu": 1.0,
+      "macro_cells": 48,
+      "fine_cells": 384,
+      "trace_dofs": 1080,
+      "retained_rigid_dofs": 288,
+      "errors": {
+        "displacement_l2": 0.2909274463225763,
+        "stress_l2": 6.199601075758591,
+        "rotation_l2": 3.415792807459515
+      },
+      "relative_errors": {
+        "displacement_l2": 0.24694688620448077,
+        "stress_l2": 0.4587365705494042,
+        "rotation_l2": 0.7148849130326163
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.29092744632257633,
+          "stress_l2": 6.199601075758595,
+          "rotation_l2": 3.415792807459516
+        },
+        {
+          "displacement_l2": 0.2909274463225763,
+          "stress_l2": 6.199601075758591,
+          "rotation_l2": 3.415792807459515
+        }
+      ],
+      "error_orders": [
+        14,
+        16
+      ],
+      "assembly_order": 12,
+      "error_quadrature_change": 4.440892098500626e-15,
+      "global_relative_residual": 2.0593359581890067e-16,
+      "force_moment_max": 1.1992545001101702e-13,
+      "weak_symmetry_moment_max": 1.2997563843916314e-14,
+      "normal_traction_moment_max": 1.2070205945846624e-13,
+      "elapsed_seconds": 45.638154401000065,
+      "archive": "bdm2-n2.npz",
+      "archive_sha256": "832b45d186d5161a6ee50926a73337e45bcb3ce0dfaea3779900d168c430cfad",
+      "basis_sha256": "c86957affb924ed646b893c23dc7d2958964bd356944e3bc1b063c84e86e487d"
+    },
+    {
+      "n": 3,
+      "stress_degree": 2,
+      "displacement_degree": 1,
+      "rotation_degree": 1,
+      "trace_degree": 1,
+      "local_refinement": 2,
+      "trace_subdivisions": 1,
+      "lame_lambda": "infinity",
+      "lame_mu": 1.0,
+      "macro_cells": 162,
+      "fine_cells": 1296,
+      "trace_dofs": 3402,
+      "retained_rigid_dofs": 972,
+      "errors": {
+        "displacement_l2": 0.12119600803728227,
+        "stress_l2": 3.4662027909368063,
+        "rotation_l2": 1.9550573546651742
+      },
+      "relative_errors": {
+        "displacement_l2": 0.10287436673140578,
+        "stress_l2": 0.2564800479438204,
+        "rotation_l2": 0.4091703114753851
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.12119600803728228,
+          "stress_l2": 3.4662027909368063,
+          "rotation_l2": 1.9550573546651744
+        },
+        {
+          "displacement_l2": 0.12119600803728227,
+          "stress_l2": 3.4662027909368063,
+          "rotation_l2": 1.9550573546651742
+        }
+      ],
+      "error_orders": [
+        11,
+        13
+      ],
+      "assembly_order": 9,
+      "error_quadrature_change": 2.220446049250313e-16,
+      "global_relative_residual": 2.2977583374451965e-16,
+      "force_moment_max": 8.671497800963868e-14,
+      "weak_symmetry_moment_max": 6.022322984069302e-15,
+      "normal_traction_moment_max": 6.966649479522857e-14,
+      "elapsed_seconds": 77.93478918100027,
+      "archive": "bdm2-n3.npz",
+      "archive_sha256": "933ee63cb821164003de96c78db27068bb50293b7e0bdb9a9908f6323ab63731",
+      "basis_sha256": "c86957affb924ed646b893c23dc7d2958964bd356944e3bc1b063c84e86e487d"
+    },
+    {
+      "n": 4,
+      "stress_degree": 2,
+      "displacement_degree": 1,
+      "rotation_degree": 1,
+      "trace_degree": 1,
+      "local_refinement": 2,
+      "trace_subdivisions": 1,
+      "lame_lambda": "infinity",
+      "lame_mu": 1.0,
+      "macro_cells": 384,
+      "fine_cells": 3072,
+      "trace_dofs": 7776,
+      "retained_rigid_dofs": 2304,
+      "errors": {
+        "displacement_l2": 0.05968801742999603,
+        "stress_l2": 2.110187412002627,
+        "rotation_l2": 1.1682420048044975
+      },
+      "relative_errors": {
+        "displacement_l2": 0.05066476275914182,
+        "stress_l2": 0.15614232670287734,
+        "rotation_l2": 0.2444991927443219
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.05968801742999604,
+          "stress_l2": 2.1101874120026274,
+          "rotation_l2": 1.1682420048044975
+        },
+        {
+          "displacement_l2": 0.05968801742999603,
+          "stress_l2": 2.110187412002627,
+          "rotation_l2": 1.1682420048044975
+        }
+      ],
+      "error_orders": [
+        11,
+        13
+      ],
+      "assembly_order": 9,
+      "error_quadrature_change": 4.440892098500626e-16,
+      "global_relative_residual": 2.463525314363957e-16,
+      "force_moment_max": 7.211458666540466e-14,
+      "weak_symmetry_moment_max": 3.1603672765818777e-15,
+      "normal_traction_moment_max": 4.9155124415278806e-14,
+      "elapsed_seconds": 195.98663418400065,
+      "archive": "bdm2-n4.npz",
+      "archive_sha256": "48825a23e105f28cd05839e49f6a1ffa1c2488b1194a7fa88df5c3653b9e0d1a",
+      "basis_sha256": "c86957affb924ed646b893c23dc7d2958964bd356944e3bc1b063c84e86e487d"
+    },
+    {
+      "n": 5,
+      "stress_degree": 2,
+      "displacement_degree": 1,
+      "rotation_degree": 1,
+      "trace_degree": 1,
+      "local_refinement": 2,
+      "trace_subdivisions": 1,
+      "lame_lambda": "infinity",
+      "lame_mu": 1.0,
+      "macro_cells": 750,
+      "fine_cells": 6000,
+      "trace_dofs": 14850,
+      "retained_rigid_dofs": 4500,
+      "errors": {
+        "displacement_l2": 0.03548300175761866,
+        "stress_l2": 1.4221672777223158,
+        "rotation_l2": 0.7965879337807547
+      },
+      "relative_errors": {
+        "displacement_l2": 0.03011890733580496,
+        "stress_l2": 0.10523259992984124,
+        "rotation_l2": 0.16671640461331927
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.035483001757618676,
+          "stress_l2": 1.422167277722316,
+          "rotation_l2": 0.7965879337807548
+        },
+        {
+          "displacement_l2": 0.03548300175761866,
+          "stress_l2": 1.4221672777223158,
+          "rotation_l2": 0.7965879337807547
+        }
+      ],
+      "error_orders": [
+        11,
+        13
+      ],
+      "assembly_order": 9,
+      "error_quadrature_change": 2.220446049250313e-16,
+      "global_relative_residual": 2.5959496036492625e-16,
+      "force_moment_max": 5.883258048284626e-14,
+      "weak_symmetry_moment_max": 1.95289822559385e-15,
+      "normal_traction_moment_max": 4.729897029598362e-14,
+      "elapsed_seconds": 411.4307184469999,
+      "archive": "bdm2-n5.npz",
+      "archive_sha256": "cce14be33279c5331462188b038aa006b2638646f80c6f58b810b05e66012833",
+      "basis_sha256": "c86957affb924ed646b893c23dc7d2958964bd356944e3bc1b063c84e86e487d"
+    },
+    {
+      "n": 1,
+      "stress_degree": 3,
+      "displacement_degree": 2,
+      "rotation_degree": 2,
+      "trace_degree": 2,
+      "local_refinement": 1,
+      "trace_subdivisions": 1,
+      "lame_lambda": "infinity",
+      "lame_mu": 1.0,
+      "macro_cells": 6,
+      "fine_cells": 6,
+      "trace_dofs": 324,
+      "retained_rigid_dofs": 36,
+      "errors": {
+        "displacement_l2": 0.7249936238246855,
+        "stress_l2": 8.488638969993614,
+        "rotation_l2": 2.7577457224267
+      },
+      "relative_errors": {
+        "displacement_l2": 0.61539370102296,
+        "stress_l2": 0.6281128547049968,
+        "rotation_l2": 0.5771634645513983
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.7249936238307662,
+          "stress_l2": 8.488638969871841,
+          "rotation_l2": 2.7577457223794983
+        },
+        {
+          "displacement_l2": 0.7249936238246855,
+          "stress_l2": 8.488638969993614,
+          "rotation_l2": 2.7577457224267
+        }
+      ],
+      "error_orders": [
+        18,
+        22
+      ],
+      "assembly_order": 18,
+      "error_quadrature_change": 1.2177281405456597e-10,
+      "global_relative_residual": 1.5558178366160412e-16,
+      "force_moment_max": 3.3075379220906627e-14,
+      "weak_symmetry_moment_max": 2.011945501151878e-15,
+      "normal_traction_moment_max": 2.220446049250313e-15,
+      "elapsed_seconds": 13.647355996999977,
+      "archive": "bdm3-n1.npz",
+      "archive_sha256": "8ef69e5b96b79611e1cc0569c761af639116d1f9fadd25d2bd4bf96efee43dda",
+      "basis_sha256": "e6b1542aea8e0a5dd917e22ef83847f98c32b2b029ec97abc61ca80c34de9a45"
+    },
+    {
+      "n": 2,
+      "stress_degree": 3,
+      "displacement_degree": 2,
+      "rotation_degree": 2,
+      "trace_degree": 2,
+      "local_refinement": 1,
+      "trace_subdivisions": 1,
+      "lame_lambda": "infinity",
+      "lame_mu": 1.0,
+      "macro_cells": 48,
+      "fine_cells": 48,
+      "trace_dofs": 2160,
+      "retained_rigid_dofs": 288,
+      "errors": {
+        "displacement_l2": 0.19974492385549913,
+        "stress_l2": 2.174261704771954,
+        "rotation_l2": 0.8245648849817926
+      },
+      "relative_errors": {
+        "displacement_l2": 0.1695487572752906,
+        "stress_l2": 0.16088347390996324,
+        "rotation_l2": 0.1725716486089722
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.19974492385548773,
+          "stress_l2": 2.1742617047722046,
+          "rotation_l2": 0.8245648849818752
+        },
+        {
+          "displacement_l2": 0.19974492385549913,
+          "stress_l2": 2.174261704771954,
+          "rotation_l2": 0.8245648849817926
+        }
+      ],
+      "error_orders": [
+        14,
+        16
+      ],
+      "assembly_order": 12,
+      "error_quadrature_change": 2.504663143554353e-13,
+      "global_relative_residual": 8.984935564941113e-16,
+      "force_moment_max": 1.1846050354888471e-14,
+      "weak_symmetry_moment_max": 9.054262736723787e-16,
+      "normal_traction_moment_max": 1.4016565685892601e-15,
+      "elapsed_seconds": 47.0486935480003,
+      "archive": "bdm3-n2.npz",
+      "archive_sha256": "a35bcef7ad488dab2b10bc8dbae67a4e399e6e8312d220df811a755865345f6f",
+      "basis_sha256": "e6b1542aea8e0a5dd917e22ef83847f98c32b2b029ec97abc61ca80c34de9a45"
+    },
+    {
+      "n": 3,
+      "stress_degree": 3,
+      "displacement_degree": 2,
+      "rotation_degree": 2,
+      "trace_degree": 2,
+      "local_refinement": 1,
+      "trace_subdivisions": 1,
+      "lame_lambda": "infinity",
+      "lame_mu": 1.0,
+      "macro_cells": 162,
+      "fine_cells": 162,
+      "trace_dofs": 6804,
+      "retained_rigid_dofs": 972,
+      "errors": {
+        "displacement_l2": 0.06436748759550068,
+        "stress_l2": 0.89226210772051,
+        "rotation_l2": 0.3570112466778157
+      },
+      "relative_errors": {
+        "displacement_l2": 0.05463682040122777,
+        "stress_l2": 0.06602251569498054,
+        "rotation_l2": 0.07471821870330499
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.06436748759550072,
+          "stress_l2": 0.8922621077205122,
+          "rotation_l2": 0.357011246677816
+        },
+        {
+          "displacement_l2": 0.06436748759550068,
+          "stress_l2": 0.89226210772051,
+          "rotation_l2": 0.3570112466778157
+        }
+      ],
+      "error_orders": [
+        11,
+        13
+      ],
+      "assembly_order": 9,
+      "error_quadrature_change": 2.220446049250313e-15,
+      "global_relative_residual": 2.0596860707657643e-15,
+      "force_moment_max": 1.0246191737087792e-14,
+      "weak_symmetry_moment_max": 1.0294289937464582e-16,
+      "normal_traction_moment_max": 7.216449660063518e-16,
+      "elapsed_seconds": 88.93293746299969,
+      "archive": "bdm3-n3.npz",
+      "archive_sha256": "5e20cd1d32d0aea4127504215c6137e89e844c5e845f08398df11ee74549fb8e",
+      "basis_sha256": "e6b1542aea8e0a5dd917e22ef83847f98c32b2b029ec97abc61ca80c34de9a45"
+    },
+    {
+      "n": 4,
+      "stress_degree": 3,
+      "displacement_degree": 2,
+      "rotation_degree": 2,
+      "trace_degree": 2,
+      "local_refinement": 1,
+      "trace_subdivisions": 1,
+      "lame_lambda": "infinity",
+      "lame_mu": 1.0,
+      "macro_cells": 384,
+      "fine_cells": 384,
+      "trace_dofs": 15552,
+      "retained_rigid_dofs": 2304,
+      "errors": {
+        "displacement_l2": 0.02908183150861276,
+        "stress_l2": 0.41393390539126546,
+        "rotation_l2": 0.1702450380992223
+      },
+      "relative_errors": {
+        "displacement_l2": 0.024685425273393923,
+        "stress_l2": 0.030628844964847336,
+        "rotation_l2": 0.035630266856353954
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.029081831508612804,
+          "stress_l2": 0.4139339053912659,
+          "rotation_l2": 0.17024503809922253
+        },
+        {
+          "displacement_l2": 0.02908183150861276,
+          "stress_l2": 0.41393390539126546,
+          "rotation_l2": 0.1702450380992223
+        }
+      ],
+      "error_orders": [
+        11,
+        13
+      ],
+      "assembly_order": 9,
+      "error_quadrature_change": 4.440892098500626e-16,
+      "global_relative_residual": 3.374311173041299e-15,
+      "force_moment_max": 1.2294333712052624e-14,
+      "weak_symmetry_moment_max": 7.033147205599736e-17,
+      "normal_traction_moment_max": 4.579669976578771e-16,
+      "elapsed_seconds": 234.7225698400007,
+      "archive": "bdm3-n4.npz",
+      "archive_sha256": "7b47af2274b66c9be531149e61267449cbb2221da30783eeb3c41497f6110b8c",
+      "basis_sha256": "e6b1542aea8e0a5dd917e22ef83847f98c32b2b029ec97abc61ca80c34de9a45"
+    },
+    {
+      "n": 5,
+      "stress_degree": 3,
+      "displacement_degree": 2,
+      "rotation_degree": 2,
+      "trace_degree": 2,
+      "local_refinement": 1,
+      "trace_subdivisions": 1,
+      "lame_lambda": "infinity",
+      "lame_mu": 1.0,
+      "macro_cells": 750,
+      "fine_cells": 750,
+      "trace_dofs": 29700,
+      "retained_rigid_dofs": 4500,
+      "errors": {
+        "displacement_l2": 0.01538820195196565,
+        "stress_l2": 0.2217778988304759,
+        "rotation_l2": 0.09265155388652124
+      },
+      "relative_errors": {
+        "displacement_l2": 0.013061911498409013,
+        "stress_l2": 0.016410351487123144,
+        "rotation_l2": 0.019390871102561023
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.015388201951965663,
+          "stress_l2": 0.22177789883047613,
+          "rotation_l2": 0.09265155388652133
+        },
+        {
+          "displacement_l2": 0.01538820195196565,
+          "stress_l2": 0.2217778988304759,
+          "rotation_l2": 0.09265155388652124
+        }
+      ],
+      "error_orders": [
+        11,
+        13
+      ],
+      "assembly_order": 9,
+      "error_quadrature_change": 2.220446049250313e-16,
+      "global_relative_residual": 4.556648631980591e-15,
+      "force_moment_max": 1.07263348307332e-14,
+      "weak_symmetry_moment_max": 4.2882989569224233e-17,
+      "normal_traction_moment_max": 2.5326962749261384e-16,
+      "elapsed_seconds": 587.950686524,
+      "archive": "bdm3-n5.npz",
+      "archive_sha256": "2e2227e44fe2911f2443416aba47ecf07fd17ce2efac4ac6df3c43e5a3899a59",
+      "basis_sha256": "e6b1542aea8e0a5dd917e22ef83847f98c32b2b029ec97abc61ca80c34de9a45"
+    }
+  ],
+  "locking": [
+    {
+      "n": 2,
+      "stress_degree": 2,
+      "displacement_degree": 1,
+      "rotation_degree": 1,
+      "trace_degree": 1,
+      "local_refinement": 2,
+      "trace_subdivisions": 1,
+      "lame_lambda": 0.0,
+      "lame_mu": 1.0,
+      "macro_cells": 48,
+      "fine_cells": 384,
+      "trace_dofs": 1080,
+      "retained_rigid_dofs": 288,
+      "errors": {
+        "displacement_l2": 0.38133894388506434,
+        "stress_l2": 5.797172101099852,
+        "rotation_l2": 4.5808308498436645
+      },
+      "relative_errors": {
+        "displacement_l2": 0.3236905488680053,
+        "stress_l2": 0.4289590275319167,
+        "rotation_l2": 0.9587135544509829
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.38133894388506456,
+          "stress_l2": 5.797172101099854,
+          "rotation_l2": 4.580830849843666
+        },
+        {
+          "displacement_l2": 0.38133894388506434,
+          "stress_l2": 5.797172101099852,
+          "rotation_l2": 4.5808308498436645
+        }
+      ],
+      "error_orders": [
+        14,
+        16
+      ],
+      "assembly_order": 12,
+      "error_quadrature_change": 1.7763568394002505e-15,
+      "global_relative_residual": 1.9640268680904147e-16,
+      "force_moment_max": 8.450666970531879e-14,
+      "weak_symmetry_moment_max": 9.094749244006428e-15,
+      "normal_traction_moment_max": 5.0209836288672705e-14,
+      "elapsed_seconds": 49.26824990899968
+    },
+    {
+      "n": 2,
+      "stress_degree": 2,
+      "displacement_degree": 1,
+      "rotation_degree": 1,
+      "trace_degree": 1,
+      "local_refinement": 2,
+      "trace_subdivisions": 1,
+      "lame_lambda": 1.0,
+      "lame_mu": 1.0,
+      "macro_cells": 48,
+      "fine_cells": 384,
+      "trace_dofs": 1080,
+      "retained_rigid_dofs": 288,
+      "errors": {
+        "displacement_l2": 0.33218843540627896,
+        "stress_l2": 5.872490680281206,
+        "rotation_l2": 3.930133220396942
+      },
+      "relative_errors": {
+        "displacement_l2": 0.28197030150865154,
+        "stress_l2": 0.4345321904322539,
+        "rotation_l2": 0.8225302598373025
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.3321884354062792,
+          "stress_l2": 5.872490680281209,
+          "rotation_l2": 3.930133220396943
+        },
+        {
+          "displacement_l2": 0.33218843540627896,
+          "stress_l2": 5.872490680281206,
+          "rotation_l2": 3.930133220396942
+        }
+      ],
+      "error_orders": [
+        14,
+        16
+      ],
+      "assembly_order": 12,
+      "error_quadrature_change": 3.552713678800501e-15,
+      "global_relative_residual": 2.2635875428175434e-16,
+      "force_moment_max": 9.087602020273101e-14,
+      "weak_symmetry_moment_max": 9.585853183029963e-15,
+      "normal_traction_moment_max": 5.700301342059788e-14,
+      "elapsed_seconds": 53.260749478000434
+    },
+    {
+      "n": 2,
+      "stress_degree": 2,
+      "displacement_degree": 1,
+      "rotation_degree": 1,
+      "trace_degree": 1,
+      "local_refinement": 2,
+      "trace_subdivisions": 1,
+      "lame_lambda": 100.0,
+      "lame_mu": 1.0,
+      "macro_cells": 48,
+      "fine_cells": 384,
+      "trace_dofs": 1080,
+      "retained_rigid_dofs": 288,
+      "errors": {
+        "displacement_l2": 0.2916806203932033,
+        "stress_l2": 6.186406475343201,
+        "rotation_l2": 3.425181700682739
+      },
+      "relative_errors": {
+        "displacement_l2": 0.24758620021167507,
+        "stress_l2": 0.45776024228725304,
+        "rotation_l2": 0.7168498970037457
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.2916806203932034,
+          "stress_l2": 6.186406475343204,
+          "rotation_l2": 3.4251817006827405
+        },
+        {
+          "displacement_l2": 0.2916806203932033,
+          "stress_l2": 6.186406475343201,
+          "rotation_l2": 3.425181700682739
+        }
+      ],
+      "error_orders": [
+        14,
+        16
+      ],
+      "assembly_order": 12,
+      "error_quadrature_change": 2.6645352591003757e-15,
+      "global_relative_residual": 2.3191692841524573e-16,
+      "force_moment_max": 1.270452564417567e-13,
+      "weak_symmetry_moment_max": 1.0901412730353535e-14,
+      "normal_traction_moment_max": 1.084757283997817e-13,
+      "elapsed_seconds": 58.08277190100034
+    },
+    {
+      "n": 2,
+      "stress_degree": 2,
+      "displacement_degree": 1,
+      "rotation_degree": 1,
+      "trace_degree": 1,
+      "local_refinement": 2,
+      "trace_subdivisions": 1,
+      "lame_lambda": 10000.0,
+      "lame_mu": 1.0,
+      "macro_cells": 48,
+      "fine_cells": 384,
+      "trace_dofs": 1080,
+      "retained_rigid_dofs": 288,
+      "errors": {
+        "displacement_l2": 0.2909350241682701,
+        "stress_l2": 6.199464536029739,
+        "rotation_l2": 3.41588751578597
+      },
+      "relative_errors": {
+        "displacement_l2": 0.2469533184796816,
+        "stress_l2": 0.45872646735628064,
+        "rotation_l2": 0.7149047343618179
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.2909350241682702,
+          "stress_l2": 6.199464536029742,
+          "rotation_l2": 3.4158875157859723
+        },
+        {
+          "displacement_l2": 0.2909350241682701,
+          "stress_l2": 6.199464536029739,
+          "rotation_l2": 3.41588751578597
+        }
+      ],
+      "error_orders": [
+        14,
+        16
+      ],
+      "assembly_order": 12,
+      "error_quadrature_change": 3.552713678800501e-15,
+      "global_relative_residual": 2.1858257935463457e-16,
+      "force_moment_max": 1.3421961704308796e-13,
+      "weak_symmetry_moment_max": 1.4339865379023972e-14,
+      "normal_traction_moment_max": 6.932648899393712e-14,
+      "elapsed_seconds": 53.73761777399977
+    },
+    {
+      "n": 2,
+      "stress_degree": 2,
+      "displacement_degree": 1,
+      "rotation_degree": 1,
+      "trace_degree": 1,
+      "local_refinement": 2,
+      "trace_subdivisions": 1,
+      "lame_lambda": 1000000.0,
+      "lame_mu": 1.0,
+      "macro_cells": 48,
+      "fine_cells": 384,
+      "trace_dofs": 1080,
+      "retained_rigid_dofs": 288,
+      "errors": {
+        "displacement_l2": 0.2909275221055342,
+        "stress_l2": 6.199599709882661,
+        "rotation_l2": 3.4157937546256387
+      },
+      "relative_errors": {
+        "displacement_l2": 0.2469469505310533,
+        "stress_l2": 0.45873646948205615,
+        "rotation_l2": 0.7148851112632497
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.29092752210553435,
+          "stress_l2": 6.199599709882666,
+          "rotation_l2": 3.41579375462564
+        },
+        {
+          "displacement_l2": 0.2909275221055342,
+          "stress_l2": 6.199599709882661,
+          "rotation_l2": 3.4157937546256387
+        }
+      ],
+      "error_orders": [
+        14,
+        16
+      ],
+      "assembly_order": 12,
+      "error_quadrature_change": 4.440892098500626e-15,
+      "global_relative_residual": 3.0149537718954045e-16,
+      "force_moment_max": 1.41574357670541e-13,
+      "weak_symmetry_moment_max": 9.988037416430644e-15,
+      "normal_traction_moment_max": 2.0000667788622195e-13,
+      "elapsed_seconds": 53.40694369099947
+    },
+    {
+      "n": 2,
+      "stress_degree": 2,
+      "displacement_degree": 1,
+      "rotation_degree": 1,
+      "trace_degree": 1,
+      "local_refinement": 2,
+      "trace_subdivisions": 1,
+      "lame_lambda": 100000000.0,
+      "lame_mu": 1.0,
+      "macro_cells": 48,
+      "fine_cells": 384,
+      "trace_dofs": 1080,
+      "retained_rigid_dofs": 288,
+      "errors": {
+        "displacement_l2": 0.2909274470804081,
+        "stress_l2": 6.199601062099879,
+        "rotation_l2": 3.4157928169312974
+      },
+      "relative_errors": {
+        "displacement_l2": 0.24694688684774838,
+        "stress_l2": 0.45873656953873426,
+        "rotation_l2": 0.714884915014948
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.2909274470804082,
+          "stress_l2": 6.199601062099882,
+          "rotation_l2": 3.415792816931299
+        },
+        {
+          "displacement_l2": 0.2909274470804081,
+          "stress_l2": 6.199601062099879,
+          "rotation_l2": 3.4157928169312974
+        }
+      ],
+      "error_orders": [
+        14,
+        16
+      ],
+      "assembly_order": 12,
+      "error_quadrature_change": 2.6645352591003757e-15,
+      "global_relative_residual": 2.016899339352205e-16,
+      "force_moment_max": 1.7915372812223505e-13,
+      "weak_symmetry_moment_max": 1.3324393138641734e-14,
+      "normal_traction_moment_max": 8.772149673319518e-14,
+      "elapsed_seconds": 53.06591059100083
+    },
+    {
+      "n": 2,
+      "stress_degree": 2,
+      "displacement_degree": 1,
+      "rotation_degree": 1,
+      "trace_degree": 1,
+      "local_refinement": 2,
+      "trace_subdivisions": 1,
+      "lame_lambda": "infinity",
+      "lame_mu": 1.0,
+      "macro_cells": 48,
+      "fine_cells": 384,
+      "trace_dofs": 1080,
+      "retained_rigid_dofs": 288,
+      "errors": {
+        "displacement_l2": 0.2909274463225763,
+        "stress_l2": 6.199601075758591,
+        "rotation_l2": 3.415792807459515
+      },
+      "relative_errors": {
+        "displacement_l2": 0.24694688620448077,
+        "stress_l2": 0.4587365705494042,
+        "rotation_l2": 0.7148849130326163
+      },
+      "errors_by_order": [
+        {
+          "displacement_l2": 0.29092744632257633,
+          "stress_l2": 6.199601075758595,
+          "rotation_l2": 3.415792807459516
+        },
+        {
+          "displacement_l2": 0.2909274463225763,
+          "stress_l2": 6.199601075758591,
+          "rotation_l2": 3.415792807459515
+        }
+      ],
+      "error_orders": [
+        14,
+        16
+      ],
+      "assembly_order": 12,
+      "error_quadrature_change": 4.440892098500626e-15,
+      "global_relative_residual": 2.0593359581890067e-16,
+      "force_moment_max": 1.1992545001101702e-13,
+      "weak_symmetry_moment_max": 1.2997563843916314e-14,
+      "normal_traction_moment_max": 1.2070205945846624e-13,
+      "elapsed_seconds": 52.582101785000305
+    }
+  ],
+  "source_changed_during_run": false
+}

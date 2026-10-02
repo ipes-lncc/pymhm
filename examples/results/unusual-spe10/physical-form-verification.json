@@ -1,0 +1,324 @@
+{
+  "method": "CG2 exact diffusion-gradient and reaction-mass moments, evaluated after coefficient reload",
+  "physical_residual_tolerance": 1e-10,
+  "source_hashes": {
+    "original-cg2-physical-verification": "7235156fb7f08eafbf623b2cffae0c72c7ab63c03288349e86e3de77a31b11f0",
+    "original-cg2-consumer-replay": "5bfa5636f5fb484ab1497914f7c0a9586b44b36afec9f469f757ecfbe8fb87ef",
+    "examples/cg2_physical_form.py": "b7277b0f7c17099eac6568775d78057cf9b23a80e51a7d4f7f0f344378e3facb",
+    "examples/solve_unusual_spe10_reference.py": "67cbfe9caf8c5e173b132db9618429955ef3ae9b617b666fedd249886a2ce3ac"
+  },
+  "rows": [
+    {
+      "archive": "classical-cg2-120x440.npz",
+      "archive_sha256": "937f6a99c37597bff371ca91b8c06ac6c8c85b07d6f262becd00e436facfff28",
+      "physical_free_relative_residual": 3.596750898407588e-15,
+      "physical_free_residual_linf": 6.180711324688115e-15,
+      "physical_energy": 870.2060604430601,
+      "boundary_work": 870.2060604430601,
+      "relative_energy_work_defect": 2.296469233169679e-17,
+      "outward_bottom": -870.2060604430601,
+      "outward_top": 1.2609491810391914e-172,
+      "reaction_integral": 870.2060604430582,
+      "global_physical_balance": -1.917299652376414e-12,
+      "all_natural_side_rows_included": true,
+      "normalization": "norm of physical free RHS after exact prescribed bottom1/top0 elimination",
+      "driver_sha256": "7235156fb7f08eafbf623b2cffae0c72c7ab63c03288349e86e3de77a31b11f0",
+      "seconds": 0.4446185980923474,
+      "sampling_replay": {
+        "pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.22099655394039663,
+          "relative_l2_change": 0.0
+        },
+        "flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.021420424069778825,
+          "relative_l2_change": 0.0
+        },
+        "profile_pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 1.0,
+          "relative_l2_change": 0.0
+        },
+        "profile_flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.047770082203619266,
+          "relative_l2_change": 0.0
+        }
+      }
+    },
+    {
+      "archive": "classical-cg2-240x880.npz",
+      "archive_sha256": "7f3e60a0879df8e938c72846ddc1bc57c2a0e8a3a8f0116447c00c1b520db7e3",
+      "physical_free_relative_residual": 1.5304835359992096e-15,
+      "physical_free_residual_linf": 2.73750206530865e-15,
+      "physical_energy": 609.2906680280431,
+      "boundary_work": 609.2906680280431,
+      "relative_energy_work_defect": 1.029518490646475e-17,
+      "outward_bottom": -609.2906680280431,
+      "outward_top": 1.1209889222342553e-254,
+      "reaction_integral": 609.2906680280425,
+      "global_physical_balance": -5.752620602095249e-13,
+      "all_natural_side_rows_included": true,
+      "normalization": "norm of physical free RHS after exact prescribed bottom1/top0 elimination",
+      "driver_sha256": "7235156fb7f08eafbf623b2cffae0c72c7ab63c03288349e86e3de77a31b11f0",
+      "seconds": 1.786532690981403,
+      "sampling_replay": {
+        "pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.03860238345415109,
+          "relative_l2_change": 0.0
+        },
+        "flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.007795679247285134,
+          "relative_l2_change": 0.0
+        },
+        "profile_pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 1.0,
+          "relative_l2_change": 0.0
+        },
+        "profile_flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.08895229869594003,
+          "relative_l2_change": 0.0
+        }
+      }
+    },
+    {
+      "archive": "classical-cg2-60x220.npz",
+      "archive_sha256": "d7d8f5055f7ca6193d6c3d683c85287c3014e506596f3a37560858a2242dba71",
+      "physical_free_relative_residual": 3.597495015509696e-15,
+      "physical_free_residual_linf": 2.6676116827648033e-14,
+      "physical_energy": 1502.5126743697529,
+      "boundary_work": 1502.5126743697526,
+      "relative_energy_work_defect": 6.761034930757776e-17,
+      "outward_bottom": -1502.5126743697526,
+      "outward_top": 1.6678118123590253e-127,
+      "reaction_integral": 1502.5126743697479,
+      "global_physical_balance": -4.7298831518105544e-12,
+      "all_natural_side_rows_included": true,
+      "normalization": "norm of physical free RHS after exact prescribed bottom1/top0 elimination",
+      "driver_sha256": "7235156fb7f08eafbf623b2cffae0c72c7ab63c03288349e86e3de77a31b11f0",
+      "seconds": 0.16315252101048827,
+      "sampling_replay": {
+        "pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.19600915902335547,
+          "relative_l2_change": 0.0
+        },
+        "flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.08933166628010275,
+          "relative_l2_change": 0.0
+        },
+        "profile_pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 1.0,
+          "relative_l2_change": 0.0
+        },
+        "profile_flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.024437866100111134,
+          "relative_l2_change": 0.0
+        }
+      }
+    },
+    {
+      "archive": "classical-cg2-graded-120x468.npz",
+      "archive_sha256": "1b0f84ec8623121c4dae26f43714f64792d2c1524c811b4713a1319cde489a69",
+      "physical_free_relative_residual": 2.9830246711483543e-15,
+      "physical_free_residual_linf": 3.0513514184566774e-12,
+      "physical_energy": 497.5570078019996,
+      "boundary_work": 497.5570078020228,
+      "relative_energy_work_defect": 4.662541904779058e-14,
+      "outward_bottom": -497.5570078020228,
+      "outward_top": -3.2850951689997716e-178,
+      "reaction_integral": 497.5570078019987,
+      "global_physical_balance": -2.409511479228854e-11,
+      "all_natural_side_rows_included": true,
+      "normalization": "norm of physical free RHS after exact prescribed bottom1/top0 elimination",
+      "driver_sha256": "7235156fb7f08eafbf623b2cffae0c72c7ab63c03288349e86e3de77a31b11f0",
+      "seconds": 0.502330394112505,
+      "sampling_replay": {
+        "pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.008127278149303203,
+          "relative_l2_change": 0.0
+        },
+        "flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.009380542552062603,
+          "relative_l2_change": 0.0
+        },
+        "profile_pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 1.0,
+          "relative_l2_change": 0.0
+        },
+        "profile_flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.2665665950259845,
+          "relative_l2_change": 0.0
+        }
+      }
+    },
+    {
+      "archive": "classical-cg2-graded-240x936.npz",
+      "archive_sha256": "97aad6605988bcb2fdb78852d362d253a79c3f1de490e775f639f5ce30418566",
+      "physical_free_relative_residual": 4.320326920601045e-15,
+      "physical_free_residual_linf": 3.275898779973374e-12,
+      "physical_energy": 496.17610509523536,
+      "boundary_work": 496.1761050952596,
+      "relative_energy_work_defect": 4.875589464703935e-14,
+      "outward_bottom": -496.1761050952596,
+      "outward_top": 8.069162023328208e-257,
+      "reaction_integral": 496.1761050952324,
+      "global_physical_balance": -2.716024627424929e-11,
+      "all_natural_side_rows_included": true,
+      "normalization": "norm of physical free RHS after exact prescribed bottom1/top0 elimination",
+      "driver_sha256": "7235156fb7f08eafbf623b2cffae0c72c7ab63c03288349e86e3de77a31b11f0",
+      "seconds": 1.933019966003485,
+      "sampling_replay": {
+        "pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.00979277494248642,
+          "relative_l2_change": 0.0
+        },
+        "flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.010672463123974858,
+          "relative_l2_change": 0.0
+        },
+        "profile_pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 1.0,
+          "relative_l2_change": 0.0
+        },
+        "profile_flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.2550969951832845,
+          "relative_l2_change": 0.0
+        }
+      }
+    },
+    {
+      "archive": "classical-cg2-graded-480x1872.npz",
+      "archive_sha256": "802ebbb125093feff91b4d9cfb1fa54fed58e20d4516dbbcd9f06a49464fbbf0",
+      "physical_free_relative_residual": 6.117634994276429e-15,
+      "physical_free_residual_linf": 3.694836159957927e-12,
+      "physical_energy": 495.53679968763106,
+      "boundary_work": 495.53679968756586,
+      "relative_energy_work_defect": 1.315449930434056e-13,
+      "outward_bottom": -495.53679968756586,
+      "outward_top": -0.0,
+      "reaction_integral": 495.53679968763794,
+      "global_physical_balance": 7.207240360074252e-11,
+      "all_natural_side_rows_included": true,
+      "normalization": "norm of physical free RHS after exact prescribed bottom1/top0 elimination",
+      "driver_sha256": "7235156fb7f08eafbf623b2cffae0c72c7ab63c03288349e86e3de77a31b11f0",
+      "seconds": 7.967293065972626,
+      "sampling_replay": {
+        "pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.009821215046782605,
+          "relative_l2_change": 0.0
+        },
+        "flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.010619232499203999,
+          "relative_l2_change": 0.0
+        },
+        "profile_pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 1.0,
+          "relative_l2_change": 0.0
+        },
+        "profile_flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.2552644643355995,
+          "relative_l2_change": 0.0
+        }
+      }
+    },
+    {
+      "archive": "classical-cg2-graded-xy-1440x498.npz",
+      "archive_sha256": "90d4715637a679876b11205f928fb0955c1af267fa3a974c9d3b9aac98b1793f",
+      "physical_free_relative_residual": 4.316378395360409e-15,
+      "physical_free_residual_linf": 1.857209062263867e-12,
+      "physical_energy": 495.16613600352775,
+      "boundary_work": 495.16613600353617,
+      "relative_energy_work_defect": 1.696473794784771e-14,
+      "outward_bottom": -495.16613600353617,
+      "outward_top": 1.4896365659779006e-196,
+      "reaction_integral": 495.1661360035248,
+      "global_physical_balance": -1.1373513242318722e-11,
+      "all_natural_side_rows_included": true,
+      "normalization": "norm of physical free RHS after exact prescribed bottom1/top0 elimination",
+      "driver_sha256": "7235156fb7f08eafbf623b2cffae0c72c7ab63c03288349e86e3de77a31b11f0",
+      "seconds": 6.979765360010788,
+      "sampling_replay": {
+        "pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.009820929761841471,
+          "relative_l2_change": 0.0
+        },
+        "flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.010691870831607076,
+          "relative_l2_change": 0.0
+        },
+        "profile_pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 1.0,
+          "relative_l2_change": 0.0
+        },
+        "profile_flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.2552218883548071,
+          "relative_l2_change": 0.0
+        }
+      }
+    },
+    {
+      "archive": "classical-cg2-graded-xy-720x249.npz",
+      "archive_sha256": "8e9c5391e6700d9ff62a12ebbce98a12e8f242752ced9004fc22868d0026ea72",
+      "physical_free_relative_residual": 3.0361673039303207e-15,
+      "physical_free_residual_linf": 1.509165812067434e-12,
+      "physical_energy": 495.17002213340174,
+      "boundary_work": 495.1700221334392,
+      "relative_energy_work_defect": 7.570186193054488e-14,
+      "outward_bottom": -495.1700221334392,
+      "outward_top": 7.724714770631295e-138,
+      "reaction_integral": 495.17002213340015,
+      "global_physical_balance": -3.903780076974783e-11,
+      "all_natural_side_rows_included": true,
+      "normalization": "norm of physical free RHS after exact prescribed bottom1/top0 elimination",
+      "driver_sha256": "7235156fb7f08eafbf623b2cffae0c72c7ab63c03288349e86e3de77a31b11f0",
+      "seconds": 1.7697136650094762,
+      "sampling_replay": {
+        "pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.009801447901668398,
+          "relative_l2_change": 0.0
+        },
+        "flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.01058423858499091,
+          "relative_l2_change": 0.0
+        },
+        "profile_pressure": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 1.0,
+          "relative_l2_change": 0.0
+        },
+        "profile_flux": {
+          "maximum_absolute_change": 0.0,
+          "maximum_value": 0.2552103297621368,
+          "relative_l2_change": 0.0
+        }
+      }
+    }
+  ]
+}

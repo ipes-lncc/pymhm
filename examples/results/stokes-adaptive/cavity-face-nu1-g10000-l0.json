@@ -1,0 +1,78 @@
+{
+  "case": "regularized cavity",
+  "strategy": "face",
+  "viscosity": 1.0,
+  "drag": 10000.0,
+  "trace_degree": 0,
+  "local_degree": 2,
+  "marking_theta": 0.5,
+  "quadrature_order": 10,
+  "stop_reason": "iterations",
+  "rows": [
+    {
+      "macro_cells": 16,
+      "fine_cells": 16,
+      "trace_dofs": 56,
+      "eta1": 0.5455167485707968,
+      "eta2": 421.5936471109673,
+      "total": 422.1391638595381,
+      "divergence_l2": 0.384477860086203,
+      "algebraic_residual": 1.8459822055053955e-16
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 34,
+      "trace_dofs": 68,
+      "eta1": 0.23976025669285897,
+      "eta2": 177.47905148212837,
+      "total": 177.71881173882122,
+      "divergence_l2": 0.5814772914822062,
+      "algebraic_residual": 2.402493641062182e-16
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 106,
+      "trace_dofs": 80,
+      "eta1": 0.1728041398003813,
+      "eta2": 66.66312310580658,
+      "total": 66.83592724560695,
+      "divergence_l2": 0.31751184369174107,
+      "algebraic_residual": 1.4416268596230179e-15
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 394,
+      "trace_dofs": 92,
+      "eta1": 0.12983595028791045,
+      "eta2": 31.465840747472228,
+      "total": 31.595676697760137,
+      "divergence_l2": 0.2047643160952252,
+      "algebraic_residual": 6.750524807061809e-16
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 1576,
+      "trace_dofs": 130,
+      "eta1": 0.09292746845098204,
+      "eta2": 9.80613710689658,
+      "total": 9.899064575347563,
+      "divergence_l2": 0.11556590956778987,
+      "algebraic_residual": 6.838485143904746e-16
+    }
+  ],
+  "archive": "cavity-face-nu1-g10000-l0.npz",
+  "sha256": "5c69ff45bbf14ff5835f915583fc9d054f660be5674d99b050d7159dc7b9369c",
+  "coefficients": "build/results/stokes-adaptive/cavity-face-nu1-g10000-l0-coefficients.npz",
+  "coefficients_sha256": "f4cb6924ad12049edf382d80326eec76f1aaca46bc9a4da912cda069bff40b71",
+  "source_hashes": {
+    "examples/solve_stokes_adaptive.py": "b863f70b4cbc1d51b731fb08e29cf5c11746a494d3cecf602ad6f5ad129be365",
+    "src/pymhm/flow.py": "65bb434d6ca513f78c246464fbb26a6b33ee499790fe74f5fe2a8fba10da86bd",
+    "src/pymhm/flow_estimator.py": "ba7be76d56c07c99131b29fc0e8782147a342f459c1a1bc0db5dc2caef041320",
+    "src/pymhm/flow_adaptive.py": "6375f1c007e12a8201beb8e68c2ad45d2d60a7bb7047e5ca4d37b5ca31b6ea34",
+    "src/pymhm/flow_macro_adaptive.py": "6a7e51af7ef6d8b63bac6faf7e2460cf981c657065d920bc7215d3a6ce7fd2d6",
+    "src/pymhm/refinement.py": "92db0dd5b7b07954c07941030c86be5ed98929ea6f2c0411d846ce104cc9e4a3"
+  },
+  "initial_mesh": "structured crisscross, four triangles per square",
+  "refinement": "fixed macro topology",
+  "limitations": "The solenoidal component convention is stated explicitly; printed Ei is not a universal numerical target. Historical theta, mesh connectivity and cavity corner data are unspecified; the smooth lid is a declared variation."
+}

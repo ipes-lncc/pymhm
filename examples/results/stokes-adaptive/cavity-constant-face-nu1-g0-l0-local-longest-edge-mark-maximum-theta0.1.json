@@ -1,0 +1,397 @@
+{
+  "case": "constant cavity",
+  "lid": "constant",
+  "strategy": "face",
+  "viscosity": 1.0,
+  "drag": 0.0,
+  "trace_degree": 0,
+  "local_degree": 2,
+  "marking_theta": 0.1,
+  "maximum_cells": 20000,
+  "max_local_refinement": 32,
+  "local_refiner": "longest-edge",
+  "max_local_cells": 16384,
+  "local_error_marking": "maximum",
+  "macro_refiner": null,
+  "quadrature_order": 10,
+  "stop_reason": "iterations",
+  "rows": [
+    {
+      "macro_cells": 16,
+      "fine_cells": 16,
+      "trace_dofs": 56,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 88,
+      "eta1": 0.7424621202458747,
+      "eta2": 7.418104125126188e-14,
+      "total": 0.7424621202459488,
+      "divergence_l2": 9.080878788695796e-16,
+      "algebraic_residual": 3.056743094560889e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 44,
+      "trace_dofs": 88,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 120,
+      "eta1": 0.42966992360849204,
+      "eta2": 4.700255625714493,
+      "total": 5.129925549322985,
+      "divergence_l2": 0.07030701890868513,
+      "algebraic_residual": 5.248500847336047e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 98,
+      "trace_dofs": 118,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 150,
+      "eta1": 0.28323226321171574,
+      "eta2": 7.643931602057914,
+      "total": 7.9271638652696295,
+      "divergence_l2": 0.21251600739899273,
+      "algebraic_residual": 1.2155058984679719e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 212,
+      "trace_dofs": 148,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 180,
+      "eta1": 0.21524589336944377,
+      "eta2": 7.250971676689368,
+      "total": 7.466217570058812,
+      "divergence_l2": 0.2106312510857356,
+      "algebraic_residual": 1.0943085468987424e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 398,
+      "trace_dofs": 168,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 200,
+      "eta1": 0.2011629614553611,
+      "eta2": 7.073581377288223,
+      "total": 7.2747443387435835,
+      "divergence_l2": 0.14455903768525952,
+      "algebraic_residual": 1.390748873083765e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 706,
+      "trace_dofs": 188,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 220,
+      "eta1": 0.15884464384314922,
+      "eta2": 8.738482570661489,
+      "total": 8.897327214504639,
+      "divergence_l2": 0.17634580973929462,
+      "algebraic_residual": 2.9189035902992057e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 1134,
+      "trace_dofs": 208,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 240,
+      "eta1": 0.13753436659960608,
+      "eta2": 6.211440126544878,
+      "total": 6.3489744931444845,
+      "divergence_l2": 0.15973743745880548,
+      "algebraic_residual": 1.3670760043318097e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 1824,
+      "trace_dofs": 228,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 260,
+      "eta1": 0.13072428377223,
+      "eta2": 7.2077987628411115,
+      "total": 7.338523046613341,
+      "divergence_l2": 0.15746159664514717,
+      "algebraic_residual": 3.119978470544789e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 2892,
+      "trace_dofs": 248,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 280,
+      "eta1": 0.11382179061479336,
+      "eta2": 8.812871957537109,
+      "total": 8.926693748151902,
+      "divergence_l2": 0.18180117472792173,
+      "algebraic_residual": 3.7231005488162123e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 3768,
+      "trace_dofs": 268,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 300,
+      "eta1": 0.10748494443766789,
+      "eta2": 6.310849066425164,
+      "total": 6.418334010862832,
+      "divergence_l2": 0.16526592810202148,
+      "algebraic_residual": 3.130899646626732e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 5220,
+      "trace_dofs": 288,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 320,
+      "eta1": 0.10477185209395089,
+      "eta2": 7.260536051890085,
+      "total": 7.365307903984036,
+      "divergence_l2": 0.15953967793354484,
+      "algebraic_residual": 5.144479775830378e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 6558,
+      "trace_dofs": 308,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 340,
+      "eta1": 0.09903486981302204,
+      "eta2": 5.385471455694013,
+      "total": 5.484506325507035,
+      "divergence_l2": 0.12882673700854078,
+      "algebraic_residual": 2.800430004693474e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 8764,
+      "trace_dofs": 328,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 360,
+      "eta1": 0.09739225030042557,
+      "eta2": 7.342125856743781,
+      "total": 7.439518107044207,
+      "divergence_l2": 0.16731192724951405,
+      "algebraic_residual": 3.23631619106738e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 10482,
+      "trace_dofs": 348,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 380,
+      "eta1": 0.09426665862542451,
+      "eta2": 5.289229256023869,
+      "total": 5.383495914649294,
+      "divergence_l2": 0.12460235646054853,
+      "algebraic_residual": 4.267924378042895e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 12960,
+      "trace_dofs": 368,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 400,
+      "eta1": 0.09332280993529309,
+      "eta2": 7.3491413430890065,
+      "total": 7.442464153024299,
+      "divergence_l2": 0.1671218594584614,
+      "algebraic_residual": 1.6325168171945259e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 14626,
+      "trace_dofs": 388,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 420,
+      "eta1": 0.09173558102213795,
+      "eta2": 5.285355463737401,
+      "total": 5.377091044759539,
+      "divergence_l2": 0.12419272743732088,
+      "algebraic_residual": 3.485214214342912e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 18264,
+      "trace_dofs": 408,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 440,
+      "eta1": 0.09086234015867371,
+      "eta2": 7.368839649027242,
+      "total": 7.459701989185916,
+      "divergence_l2": 0.16775752985992323,
+      "algebraic_residual": 5.254075673644614e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 19356,
+      "trace_dofs": 428,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 460,
+      "eta1": 0.09005134014169806,
+      "eta2": 5.312224400910513,
+      "total": 5.402275741052211,
+      "divergence_l2": 0.12513624979929164,
+      "algebraic_residual": 4.1165301361392445e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 20046,
+      "trace_dofs": 448,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 480,
+      "eta1": 0.0893913020539404,
+      "eta2": 7.240323802176669,
+      "total": 7.329715104230609,
+      "divergence_l2": 0.16922986491574993,
+      "algebraic_residual": 7.490725187305355e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 22616,
+      "trace_dofs": 468,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 500,
+      "eta1": 0.08855600188393009,
+      "eta2": 5.031898754995466,
+      "total": 5.120454756879396,
+      "divergence_l2": 0.15465701955657496,
+      "algebraic_residual": 3.4669206738718204e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 26552,
+      "trace_dofs": 488,
+      "coarse_dofs": 32,
+      "trace_and_coarse_dofs": 520,
+      "eta1": 0.08805533998015413,
+      "eta2": 4.461355889487636,
+      "total": 4.54941122946779,
+      "divergence_l2": 0.13516708590084855,
+      "algebraic_residual": 4.1569497725449297e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    }
+  ],
+  "archive": "cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1.npz",
+  "sha256": "6f5d0055db99f7e5f2837bbafe17496ec9b1c225c591af6900061c99094910c5",
+  "coefficients": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-coefficients.npz",
+  "coefficients_sha256": "a60f4831acbc933523871875ff162ed34a2d880a7b94d48ac8e98a370ea680cf",
+  "coefficient_history": [
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state0-coefficients.npz",
+      "sha256": "f896ef20747ec944e99e5745aeb823bf3b46efc1243c66db3e04529c56fef15b"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state1-coefficients.npz",
+      "sha256": "a607ff9949c3a86029e563db6cd4837fd788b932d8cb374da38b4ebe249ec581"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state2-coefficients.npz",
+      "sha256": "14b6bc5b72d52f85af77f437be437cffff98b85c503cd899e5126952e1ee2b4d"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state3-coefficients.npz",
+      "sha256": "cf695d7dd052805e36af8d3f03cbc2fa17613ff525dae9d11064243d5f8b0471"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state4-coefficients.npz",
+      "sha256": "3f9f336433526e55a31e386797778d63ca1c8c0ecd99e0b92f25c87f60cbc84f"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state5-coefficients.npz",
+      "sha256": "d475fae623d420869260e2c113d8511f74637cf6f4c12db56746cce0509d09b3"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state6-coefficients.npz",
+      "sha256": "e8fb6e4fdef2726487fe9f108094be190e26f627d442b369f208d95b1159b8b7"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state7-coefficients.npz",
+      "sha256": "acdb2057c91ca477a857b57cfc6a11e98aca3cb60bdbbcb5a96cfb1472c3d282"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state8-coefficients.npz",
+      "sha256": "fe97e39a897be8730562279cabd18c38b56ff3ef1a572b4b68385c50add567c3"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state9-coefficients.npz",
+      "sha256": "697e0204ec83625c9be3442304c54bb995b3bdd35d52d97e024cdca55a864d56"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state10-coefficients.npz",
+      "sha256": "af434ece50e2c7517a46f6907e246d06c35e2e17ecd3c8d6eda992fa07097fdc"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state11-coefficients.npz",
+      "sha256": "53b3314efdec59418103182dd51702c223f64433e7616799b2771ad89ded9861"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state12-coefficients.npz",
+      "sha256": "922a84c4747a851a057873af1541c4c3af23b32e1336cf44ab081da0acf68729"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state13-coefficients.npz",
+      "sha256": "74f47c8725956e083535aee784a51ec58b1709f106470b4494d8d707107d5ffc"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state14-coefficients.npz",
+      "sha256": "544ca731ace8e38abfb8d825615c68adae4df2f6ecf8e57cd8581efce0975c86"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state15-coefficients.npz",
+      "sha256": "027c3598267078bbe0ab47c0f4323bd45dfa95d351faa5ad156b80c3d8f3cb73"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state16-coefficients.npz",
+      "sha256": "2ab1431613b03096b13727a12b0912ffd62403911439569de51c34a57921e937"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state17-coefficients.npz",
+      "sha256": "8b932b54eed602adc7f1f17cefaf7420b2d091fd347333f4a6f0954b8ce39da8"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state18-coefficients.npz",
+      "sha256": "ed1c53bded8b2310cf9e147d4cd34ae3e7ffcdbc69244065a38e6d2839921c78"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state19-coefficients.npz",
+      "sha256": "ffc7afff0c6fc18ec7417ffb009420dd121a5c5b981bd15fe8f5f2d2a5cc20b3"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-theta0.1-state20-coefficients.npz",
+      "sha256": "a60f4831acbc933523871875ff162ed34a2d880a7b94d48ac8e98a370ea680cf"
+    }
+  ],
+  "source_hashes": {
+    "examples/solve_stokes_adaptive.py": "35fd80a65383a2804095f3f7556ccacbc4973e62933b84820424eee04f8cf2fa",
+    "src/pymhm/flow.py": "61aa1e4ba91751d0aadb108ba760d4fc9dcf3af49d81d33717ac2e755b7d623d",
+    "src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+    "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+    "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+    "src/pymhm/refinement.py": "92db0dd5b7b07954c07941030c86be5ed98929ea6f2c0411d846ce104cc9e4a3",
+    "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+    "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d"
+  },
+  "initial_mesh": "structured crisscross, four triangles per square",
+  "resumed_record": null,
+  "refinement": "fixed macro topology",
+  "limitations": "The solenoidal component convention is stated explicitly; printed Ei is not a universal numerical target. Historical theta, mesh connectivity and cavity corner data are unspecified. Constant lid is interpreted as a weak boundary trace with corner singularities; the regularized lid is a separate variation."
+}

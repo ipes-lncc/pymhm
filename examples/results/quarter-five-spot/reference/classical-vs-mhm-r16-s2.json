@@ -1,0 +1,22 @@
+{
+  "coarse_refinement": 16,
+  "fine_refinement": 16,
+  "pressure_l2_difference": 0.003187619181639591,
+  "flux_l2_difference": 0.11990697005460468,
+  "pressure_l2_scale": 0.7536653813146308,
+  "flux_l2_scale": 1.9328324073204541,
+  "pressure_l2_relative": 0.004229488657259771,
+  "flux_l2_relative": 0.06203692032504539,
+  "normalization": "L2 norm of the classical global RT0/P0 field on the same fine triangulation",
+  "quadrature": "Three positive equal-weight barycentric points per fine triangle; exact for polynomials of degree2",
+  "refinement": 16,
+  "segments": 2,
+  "reference": "NeoPZ classical global conforming RT0/P0",
+  "mhm_formulation": "Mixed RT0/P0 local problems with piecewise constant skeletal flux",
+  "provenance": {
+    "source_archive_sha256": "bac9f73c4f05b2a781baa877d1a14e8c544952e47f4a880650fc5cfa45f1051f",
+    "source_kind": "Existing verified PyMHM mixed field from the matched comparison"
+  },
+  "fields": "classical-vs-mhm-r16-s2.npz",
+  "fields_sha256": "b963e97729c66fb0b4b91f8453eff9a6e729fd216ef2dec3e438e29ea2e701f8"
+}

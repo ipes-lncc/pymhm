@@ -1,0 +1,146 @@
+{
+  "status": "Selected contract; full same-case independent trajectories and classical refinement not completed",
+  "paper": {
+    "doi": "10.20906/CPS/CILAMCE2017-0399",
+    "section": "5.2, equations 56-57 and figures 6-7"
+  },
+  "material_reference": {
+    "url": "https://ec.europa.eu/research/participants/documents/downloadPublic?appId=PPGMS&documentIds=080166e5ae9018d8",
+    "table": "D6.3, version 1.0, Table 1, page 5"
+  },
+  "discretization": {
+    "macro_triangles": 341,
+    "local_displacement_degree": 3,
+    "local_uniform_refinement": 8,
+    "local_triangles_per_macro": 64,
+    "trace_degree": 2,
+    "trace_segments_per_face": 8,
+    "trace_components": 2,
+    "time_step_s": 0.001,
+    "final_time_s": 0.3,
+    "newmark_beta": 0.25,
+    "newmark_gamma": 0.5,
+    "boundary_condition": "Homogeneous physical traction on all exterior faces",
+    "initial_displacement": 0,
+    "initial_velocity": 0
+  },
+  "geometry": {
+    "box_m": [
+      0,
+      1000,
+      0,
+      450
+    ],
+    "coordinate_convention": "x horizontal; y is depth increasing downward",
+    "source_center_m": [
+      500,
+      225
+    ],
+    "justification": "Figure 6 field viewport is 1020 by 462 pixels, with approximately circular fronts centered at the viewport center. Keeping the stated 450 m vertical scale selects a rounded 1000 m width. The source position is a graphical inference for the three-layer figure.",
+    "historical_conflict": "The text prints [500 m, 450 m] and (500 m, 50 m). No coordinate axes, original horizon section or mesh file resolve these conflicts. The sixteen-layer Figure 8 instead visually places the source near the top; that case is not replaced by this one.",
+    "horizons": "Linear interpolation through every digitized column; constant extension over the half-pixel endpoint gaps. No smoothing or field/color matching.",
+    "graphical_resolution_estimate_m": 1.95,
+    "resolution_is_historical_error_bound": false
+  },
+  "materials": [
+    {
+      "layer": "1",
+      "vp_m_s": 1618.92,
+      "vs_m_s": 500.0,
+      "density_kg_m3": 1966.38,
+      "mu_Pa": 491595000.0,
+      "lambda_Pa": 4170499208.689633
+    },
+    {
+      "layer": "7",
+      "vp_m_s": 2381.95,
+      "vs_m_s": 1171.71,
+      "density_kg_m3": 2165.68,
+      "mu_Pa": 2973271436.616888,
+      "lambda_Pa": 6340844995.524422
+    },
+    {
+      "layer": "15",
+      "vp_m_s": 3659.22,
+      "vs_m_s": 2072.65,
+      "density_kg_m3": 2411.06,
+      "mu_Pa": 10357619664.92885,
+      "lambda_Pa": 11568591284.855202
+    }
+  ],
+  "constitutive_convention": {
+    "primary": "Physical isotropic plane strain: mu=rho*Vs^2; lambda=rho*(Vp^2-2*Vs^2); sigma=2*mu*epsilon+lambda*trace(epsilon)*I.",
+    "reason": "Preserves both tabulated physical wave speeds because cP^2=(lambda+2*mu)/rho and cS^2=mu/rho.",
+    "printed_equation_56": "The printed second coefficient is rho*(Vp^2-Vs^2). In the printed stress law this changes cP to sqrt(Vp^2+Vs^2). Record this discrepancy; do not silently describe the physical convention as literal Eq. 56.",
+    "primary_relative_cP_change_if_printed_percent": [
+      4.6607,
+      11.444,
+      14.9274
+    ],
+    "gauge": "No displacement gauge is added to the transient mass-plus-stiffness problem. Zero initial data determine rigid motion."
+  },
+  "source": {
+    "spatial_form": "Eq. 57 radial volume force of constant radial magnitude inside an open disk; zero at the center and outside. No smoothing of the disk or radial direction.",
+    "radius_m": 20,
+    "peak_amplitude_N_m3": 1,
+    "ormsby_corner_frequencies_Hz": [
+      5,
+      10,
+      15,
+      20
+    ],
+    "center_time_s": 0.2,
+    "duration_s": 0.4,
+    "normalization": "Unit central peak of the inverse transform of a symmetric trapezoidal spectrum. With sinc(x)=sin(pi*x)/(pi*x), w(t)=[(f4^2*sinc(f4*tau)^2-f3^2*sinc(f3*tau)^2)/(f4-f3)-(f2^2*sinc(f2*tau)^2-f1^2*sinc(f1*tau)^2)/(f2-f1)]/(f4+f3-f2-f1), tau=t-0.2. Set zero outside [0,0.4).",
+    "endpoint_property": "All four corner frequencies multiplied by 0.2 are nonzero integers, so value and first derivative vanish at both selected truncation endpoints. No force switch occurs inside the simulated interval after onset.",
+    "provenance_limit": "Only the suite's nominal 20/50 Hz labels, delay 0.2 s, 201 samples and sampling 0.005 s were recovered. The four corners, radius, amplitude and duration are selected inputs. The 2017 shot is not identified by the suite description.",
+    "comparison_limit": "This selected time function is not used to claim agreement with the early-time colors or amplitudes of Figures 6-7. Unit amplitude is fixed before any solve.",
+    "temporal_support_warning": "Source support ends at 0.4 s, after final time 0.3 s. The work term remains part of the energy balance throughout propagation; no unforced-energy conservation is inferred. Truncation is C1 but the resulting finite-duration function is not strictly band-limited.",
+    "wavelet_formula": "Let tau=t-0.2 and sinc(z)=sin(pi*z)/(pi*z). w(t)=((20**2*sinc(20*tau)**2-15**2*sinc(15*tau)**2)/5-(10**2*sinc(10*tau)**2-5**2*sinc(5*tau)**2)/5)/20 for 0<=t<0.4, otherwise 0."
+  },
+  "inputs": {
+    "macro-mesh.json": {
+      "sha256": "9b53285f766942131df24f7d18d813c8824299acdfcb06970d759bb989e05742"
+    },
+    "horizons.csv": {
+      "sha256": "316a911b1a0bdb6a166ff0d59a6ebcd0b5cbf56c493538e25a0f23420fc8d987"
+    }
+  },
+  "input_interpretation": {
+    "macro_mesh": "Original selected 341-cell connectivity; paper connectivity unavailable",
+    "horizons": "Normalized digitization of published Figure 6, not original geological input",
+    "layer_ids": "1, 7, 15 from the material table; selected interpretation, not recovered historical numbering"
+  },
+  "required_new_validation": {
+    "operators": [
+      "mass",
+      "stiffness",
+      "signed trace",
+      "radial force"
+    ],
+    "operator_relative_tolerance": 1e-10,
+    "force_mass_dual_relative_tolerance": 2e-08,
+    "material_quadrature_orders": [
+      5,
+      7
+    ],
+    "trajectories": "Compare all 301 states, work/energy, momentum and interval-mean traction",
+    "classical_mesh_scales_m": [
+      8,
+      4,
+      2
+    ]
+  },
+  "nondimensionalization": {
+    "reference_length_m": 1000.0,
+    "reference_density_kg_m3": 2000.0,
+    "reference_displacement_m": 1.0,
+    "reference_time_s": 1.0,
+    "mass_density": "rho_hat = rho / rho0",
+    "kelvin_stiffness": "C_hat = C * t0**2 / (rho0 * L0**2)",
+    "volume_force": "f_hat = f * t0**2 / (rho0 * u0)",
+    "physical_displacement": "u_m = u0 * u_hat",
+    "physical_stress": "sigma_Pa = rho0 * L0 * u0 / t0**2 * sigma_hat",
+    "horizon_columns": "x_hat = csv[:,0] * 1000 / L0; heights_hat = csv[:,1:].T * 450 / L0"
+  }
+}

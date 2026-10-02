@@ -1,0 +1,179 @@
+{
+  "norms": "Integrated pressure L2, physical vector-flux L2, and K^-1-weighted flux energy; denominators are the reference field norms",
+  "quadrature": "Product Gauss on exact common intersections of both finite-element grids and material pixels",
+  "scope": "Q3 and Q1 share pyMHM basis kernels; this is a distinct discretization, not an independent-code comparison",
+  "source_sha256": "d3e0ffa67c28782fce1206676e1fc6987ffdb7f31093f9b774f737d7c5e12a83",
+  "inputs": {
+    "reference-q3-120x220-order5": {
+      "sample_sha256": "2575f9f4c9ed731112e2a82dd2024b1f96355d84deb4f7c6f35c72b2d7cf82f1",
+      "coefficient_sha256": "4f4b8e51abb9c121a7b179f45a8da157a10fcc21387ba3486cfb6f69a1e0f232"
+    },
+    "reference-q3-240x440-order6": {
+      "sample_sha256": "ea304201146918c5eb96d52d236f019463af9c3be1b7894b224e96546a292fab",
+      "coefficient_sha256": "ecace84cc933a823069badab02c95fc8932e2c155c5a43eecd8fec0245eee471"
+    },
+    "reference-q3-480x880-order6": {
+      "sample_sha256": "c08c220336605c76c262380c2dac4266c598061d194ebedfcdc0d65a12df3d24",
+      "coefficient_sha256": "4a2b7758e80af88c77030972ae87568fe96e5ec3dc102867dedd8183f0fab170"
+    },
+    "darcy-q1-r120-s32": {
+      "sample_sha256": "185a401ff4f5c3b4d9ca075866e8261e1c480625d36cd6b4babf2576283b99c4",
+      "coefficient_sha256": "185a401ff4f5c3b4d9ca075866e8261e1c480625d36cd6b4babf2576283b99c4"
+    },
+    "reference-q3-960x1760-order5": {
+      "sample_sha256": "30f2a4ee385e6728f39ebda5b2a72b62850513df6b171981b9e6e3b63f236165",
+      "coefficient_sha256": "a97fc75f80acbb0d6a6af585c9a66a6d14a22644bd960aa1abdeb1b0dc8d5d5f"
+    },
+    "reference-q3-768x1408-order5": {
+      "sample_sha256": "e7f25fcd98ee303f55ddb973d613190e2189d6c507a131197ad15383bb3f211f",
+      "coefficient_sha256": "31278a504351a78e9383b7c3032b575590d8348e1cd39d8c3ee4bc414bf4c843"
+    },
+    "reference-q3-720x1320-order5": {
+      "sample_sha256": "d4ede653d950dc0acc0e6d2c787a91128c0bce0180ebe6c8b73f82b7c39dd09f",
+      "coefficient_sha256": "b247a136f014101fdf9264bd421936149b401ff8925a71e0e5c144cec0f7798a"
+    }
+  },
+  "comparisons": [
+    {
+      "field": "reference-q3-120x220-order5",
+      "reference": "reference-q3-240x440-order6",
+      "quadrature_order": 4,
+      "integration_rectangles": 105600,
+      "seconds": 3.2957616730127484,
+      "pressure_difference": 0.20917272705953183,
+      "pressure_reference_norm": 821.2134679508587,
+      "pressure_relative": 0.00025471175915011746,
+      "flux_difference": 0.058211103408076684,
+      "flux_reference_norm": 0.9881870371729551,
+      "flux_relative": 0.05890696924603396,
+      "energy_difference": 0.015454790496552843,
+      "energy_reference_norm": 0.38853609330011774,
+      "energy_relative": 0.03977697506886463
+    },
+    {
+      "field": "reference-q3-240x440-order6",
+      "reference": "reference-q3-480x880-order6",
+      "quadrature_order": 4,
+      "integration_rectangles": 422400,
+      "seconds": 11.273509020917118,
+      "pressure_difference": 0.10833554028797913,
+      "pressure_reference_norm": 821.3013019137,
+      "pressure_relative": 0.00013190718197517571,
+      "flux_difference": 0.040367358805987345,
+      "flux_reference_norm": 0.9870951736808075,
+      "flux_relative": 0.040895103007605994,
+      "energy_difference": 0.010443901656429985,
+      "energy_reference_norm": 0.3883957012057215,
+      "energy_relative": 0.026889848739335472
+    },
+    {
+      "field": "darcy-q1-r120-s32",
+      "reference": "reference-q3-480x880-order6",
+      "quadrature_order": 4,
+      "integration_rectangles": 1689600,
+      "seconds": 40.75754148710985,
+      "pressure_difference": 1.704250569601708,
+      "pressure_reference_norm": 821.3013019137009,
+      "pressure_relative": 0.0020750613272262704,
+      "flux_difference": 0.1224235094287562,
+      "flux_reference_norm": 0.9870951736828515,
+      "flux_relative": 0.12402401783811197,
+      "energy_difference": 0.0321394228402333,
+      "energy_reference_norm": 0.38839570120576244,
+      "energy_relative": 0.08274917240447682
+    },
+    {
+      "field": "reference-q3-480x880-order6",
+      "reference": "reference-q3-960x1760-order5",
+      "quadrature_order": 4,
+      "integration_rectangles": 1689600,
+      "seconds": 43.91240469494369,
+      "pressure_difference": 0.05601203192500124,
+      "pressure_reference_norm": 821.346742782036,
+      "pressure_relative": 6.819535405385465e-05,
+      "flux_difference": 0.028016175426500277,
+      "flux_reference_norm": 0.9865100811745225,
+      "flux_relative": 0.028399279400312546,
+      "energy_difference": 0.007037211258569609,
+      "energy_reference_norm": 0.3883319435395729,
+      "energy_relative": 0.01812163891135699
+    },
+    {
+      "field": "darcy-q1-r120-s32",
+      "reference": "reference-q3-960x1760-order5",
+      "quadrature_order": 4,
+      "integration_rectangles": 3801600,
+      "seconds": 101.76275309408084,
+      "pressure_difference": 1.7133444848738972,
+      "pressure_reference_norm": 821.3467427820347,
+      "pressure_relative": 0.0020860184811478297,
+      "flux_difference": 0.12439215321487712,
+      "flux_reference_norm": 0.9865100811751403,
+      "flux_relative": 0.1260931394301617,
+      "energy_difference": 0.032755432518955796,
+      "energy_reference_norm": 0.38833194353960027,
+      "energy_relative": 0.08434905514183011
+    },
+    {
+      "field": "darcy-q1-r120-s32",
+      "reference": "reference-q3-768x1408-order5",
+      "quadrature_order": 4,
+      "integration_rectangles": 3801600,
+      "seconds": 90.39243495103437,
+      "pressure_difference": 1.6496204442000404,
+      "pressure_reference_norm": 820.4257326555088,
+      "pressure_relative": 0.002010688327462182,
+      "flux_difference": 0.18280206661943948,
+      "flux_reference_norm": 1.0045244425644926,
+      "flux_relative": 0.1819787143782748,
+      "energy_difference": 0.043722119254940454,
+      "energy_reference_norm": 0.38992937933097227,
+      "energy_relative": 0.11212830212988158
+    },
+    {
+      "field": "reference-q3-480x880-order6",
+      "reference": "reference-q3-720x1320-order5",
+      "quadrature_order": 4,
+      "integration_rectangles": 1689600,
+      "seconds": 43.947601555031724,
+      "pressure_difference": 0.03708167868011788,
+      "pressure_reference_norm": 821.3313545033462,
+      "pressure_relative": 4.514825651888199e-05,
+      "flux_difference": 0.023208992032185252,
+      "flux_reference_norm": 0.9867102499918966,
+      "flux_relative": 0.023521588057259825,
+      "energy_difference": 0.005792335694534187,
+      "energy_reference_norm": 0.3883526436777388,
+      "energy_relative": 0.014915144235095667
+    },
+    {
+      "field": "reference-q3-720x1320-order5",
+      "reference": "reference-q3-960x1760-order5",
+      "quadrature_order": 4,
+      "integration_rectangles": 3801600,
+      "seconds": 102.74207451404072,
+      "pressure_difference": 0.01899482793695476,
+      "pressure_reference_norm": 821.3467427820347,
+      "pressure_relative": 2.3126442155984198e-05,
+      "flux_difference": 0.01643733900828637,
+      "flux_reference_norm": 0.9865100811751403,
+      "flux_relative": 0.01666210951306859,
+      "energy_difference": 0.004033043488802718,
+      "energy_reference_norm": 0.38833194353960027,
+      "energy_relative": 0.01038555688219207
+    }
+  ],
+  "quadrature_check": {
+    "orders": [
+      4,
+      5
+    ],
+    "field": "darcy-q1-r120-s32",
+    "reference": "reference-q3-960x1760-order5",
+    "relative_changes": {
+      "pressure_difference": 1.503327229211548e-14,
+      "flux_difference": 1.5318965020239724e-12,
+      "energy_difference": 5.295987085418306e-14
+    }
+  }
+}

@@ -1,0 +1,181 @@
+{
+  "reference": "Chaumont-Frelet and Valentin (2020), Section 6.1, Equation (6.3)",
+  "ell": 0,
+  "omega": 62.83185307179586,
+  "local_space": "Q3 on 2x2 fine cells per macrocell",
+  "local_space_status": "explicitly selected; not specified in the article",
+  "mesh_parameter": "H=1/n is square edge length; diameter=sqrt(2)/n",
+  "acquisition_batches": [
+    {
+      "id": "27bbdf43213df024",
+      "record_sha256": "27bbdf43213df0244a3a0a8d6d230d69b3397d3813286e0dfd509f2e09c65d31",
+      "source_sha256": {
+        "src/pymhm/helmholtz.py": "a224bad862c9a3e4d1f2a6bd5550ee9a873241423ebad445e6bee0016e085985",
+        "src/pymhm/helmholtz_forms.py": "e1711c2a9ffe74cc9465803151e1d3696bc08a49cb767a9252d5c2f1fa5dbc25",
+        "src/pymhm/helmholtz_spaces.py": "8e3afd13cee8ac53d0f6277e224ac3e567638f9bae130d0a2701c2e8029b3497",
+        "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+        "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc",
+        "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+        "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+        "src/pymhm/quadrilateral.py": "f6969e69f2e06b1282d8dd477a8902c922bbe0ba55299d6759b9f52e2088b293",
+        "src/pymhm/cut_cells.py": "f37bd801059236bbc2b7cc7f735b9c843916fdd9f14ea3d70812c971ab4a6add",
+        "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+        "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+        "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+        "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+        "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+        "examples/helmholtz_campaign.py": "6ccd847b79b18ff0b636f24504a6f2e518e6ae4ab39e9817c45c6e1d4385decc",
+        "examples/helmholtz_stability.py": "3e18ca182fd271b8b612dddd27c8655ab624b46957ddb98520b97883a4d770c5"
+      },
+      "accepted_resolutions": [
+        8,
+        12,
+        16,
+        24,
+        32,
+        48,
+        64,
+        96,
+        128
+      ],
+      "rejected_resolutions": []
+    }
+  ],
+  "rows": [
+    {
+      "n": 8,
+      "macro_edge_length": 0.125,
+      "macro_diameter": 0.1767766952966369,
+      "mhm_gradient_l2": 6.63888368844531,
+      "interpolated_gradient_l2": 4.8519718285463975,
+      "mhm_gradient_relative": 1.0302138273891037,
+      "interpolated_gradient_relative": 0.7529230368308282,
+      "ratio": 1.3682857038422365,
+      "algebraic_residual": 1.7567480024228827e-16,
+      "elapsed_seconds": 8.109987057978287,
+      "acquisition_batch": "27bbdf43213df024"
+    },
+    {
+      "n": 12,
+      "macro_edge_length": 0.08333333333333333,
+      "macro_diameter": 0.11785113019775793,
+      "mhm_gradient_l2": 7.11183140392249,
+      "interpolated_gradient_l2": 3.5349252016671957,
+      "mhm_gradient_relative": 1.103605273749987,
+      "interpolated_gradient_relative": 0.5485453567867189,
+      "ratio": 2.011876064751893,
+      "algebraic_residual": 1.978786500026148e-16,
+      "elapsed_seconds": 10.406442334060557,
+      "acquisition_batch": "27bbdf43213df024"
+    },
+    {
+      "n": 16,
+      "macro_edge_length": 0.0625,
+      "macro_diameter": 0.08838834764831845,
+      "mhm_gradient_l2": 7.882334139716483,
+      "interpolated_gradient_l2": 3.3970004642424123,
+      "mhm_gradient_relative": 1.2231709431768591,
+      "interpolated_gradient_relative": 0.5271423652143061,
+      "ratio": 2.320380648365432,
+      "algebraic_residual": 2.9882696555614336e-16,
+      "elapsed_seconds": 29.989236072986387,
+      "acquisition_batch": "27bbdf43213df024"
+    },
+    {
+      "n": 24,
+      "macro_edge_length": 0.041666666666666664,
+      "macro_diameter": 0.05892556509887897,
+      "mhm_gradient_l2": 7.663652095904398,
+      "interpolated_gradient_l2": 3.0677686594792077,
+      "mhm_gradient_relative": 1.189236131857748,
+      "interpolated_gradient_relative": 0.47605257759328656,
+      "ratio": 2.4981192999101176,
+      "algebraic_residual": 4.539994567282825e-16,
+      "elapsed_seconds": 44.6640226719901,
+      "acquisition_batch": "27bbdf43213df024"
+    },
+    {
+      "n": 32,
+      "macro_edge_length": 0.03125,
+      "macro_diameter": 0.04419417382415922,
+      "mhm_gradient_l2": 5.162518645796524,
+      "interpolated_gradient_l2": 1.5991470823604146,
+      "mhm_gradient_relative": 0.8011133110089371,
+      "interpolated_gradient_relative": 0.24815368269577898,
+      "ratio": 3.2282950722558987,
+      "algebraic_residual": 1.1244186341430784e-15,
+      "elapsed_seconds": 54.95393822295591,
+      "acquisition_batch": "27bbdf43213df024"
+    },
+    {
+      "n": 48,
+      "macro_edge_length": 0.020833333333333332,
+      "macro_diameter": 0.029462782549439483,
+      "mhm_gradient_l2": 2.4842960076690908,
+      "interpolated_gradient_l2": 0.9742310911595731,
+      "mhm_gradient_relative": 0.38551000718429396,
+      "interpolated_gradient_relative": 0.15117998571534008,
+      "ratio": 2.550006903097469,
+      "algebraic_residual": 2.0358344291136822e-15,
+      "elapsed_seconds": 120.52615787601098,
+      "acquisition_batch": "27bbdf43213df024"
+    },
+    {
+      "n": 64,
+      "macro_edge_length": 0.015625,
+      "macro_diameter": 0.02209708691207961,
+      "mhm_gradient_l2": 1.477371213547896,
+      "interpolated_gradient_l2": 0.719712391267523,
+      "mhm_gradient_relative": 0.2292566527461016,
+      "interpolated_gradient_relative": 0.11168408606367888,
+      "ratio": 2.052724437529859,
+      "algebraic_residual": 1.733232758173914e-15,
+      "elapsed_seconds": 287.5252557840431,
+      "acquisition_batch": "27bbdf43213df024"
+    },
+    {
+      "n": 96,
+      "macro_edge_length": 0.010416666666666666,
+      "macro_diameter": 0.014731391274719742,
+      "mhm_gradient_l2": 0.7457120041308469,
+      "interpolated_gradient_l2": 0.4771967791716713,
+      "mhm_gradient_relative": 0.11571867409617868,
+      "interpolated_gradient_relative": 0.07405081085301056,
+      "ratio": 1.56269286943904,
+      "algebraic_residual": 1.895256132847359e-15,
+      "elapsed_seconds": 770.4523965170374,
+      "acquisition_batch": "27bbdf43213df024"
+    },
+    {
+      "n": 128,
+      "macro_edge_length": 0.0078125,
+      "macro_diameter": 0.011048543456039806,
+      "mhm_gradient_l2": 0.4816045710338397,
+      "interpolated_gradient_l2": 0.35778188852445514,
+      "mhm_gradient_relative": 0.07473480658749854,
+      "interpolated_gradient_relative": 0.05552015459900262,
+      "ratio": 1.3460842666464963,
+      "algebraic_residual": 1.8548684921645586e-15,
+      "elapsed_seconds": 788.3378016280476,
+      "acquisition_batch": "27bbdf43213df024"
+    }
+  ],
+  "excluded_settings": [],
+  "overlapping_acquisition_checks": [],
+  "sampled_threshold": {
+    "sampled_suffix_threshold": 0.020833333333333332,
+    "transition_bracket": [
+      0.020833333333333332,
+      0.03125
+    ],
+    "accepted_suffix_resolutions": [
+      48,
+      64,
+      96,
+      128
+    ],
+    "rejected_resolutions": []
+  },
+  "largest_suffix_H_star": 0.020833333333333332,
+  "threshold_definition_sha256": "703d0c36efa518960b77b0b28748110b6168b8bc2e79b4903be665533adaa886"
+}

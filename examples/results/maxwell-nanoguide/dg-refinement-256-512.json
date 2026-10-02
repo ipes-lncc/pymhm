@@ -1,0 +1,39 @@
+{
+  "field": {
+    "electric_time": 11.315,
+    "magnetic_time": 11.31,
+    "resolution": 256,
+    "sha256": "ac29e721c78c231ffe37f45d07a769b600f3bc121dc2bb9fb3b9055a01f0e077",
+    "file": "dg-q2-n256-q12-dt0.0025.npz"
+  },
+  "reference": {
+    "electric_time": 11.315,
+    "magnetic_time": 11.31,
+    "resolution": 512,
+    "sha256": "96f20e25cfab97f83ea47306640de403341113683a60976451d5c8b89729a87e",
+    "file": "dg-q2-n512-q12-dt0.0025.npz"
+  },
+  "components": [
+    "electric",
+    "magnetic_x",
+    "magnetic_y"
+  ],
+  "absolute_l2": [
+    0.021397070495673954,
+    0.016916152949176425,
+    0.020711523024761074
+  ],
+  "reference_l2": [
+    6.173322828631581,
+    2.477820224484322,
+    6.957380860961932
+  ],
+  "relative_l2": [
+    0.003466054034374381,
+    0.006827029976598473,
+    0.002976913789638
+  ],
+  "combined_relative_l2": 0.003558013684406414,
+  "integration_grid": 512,
+  "gauss_order": 3
+}

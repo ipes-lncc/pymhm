@@ -1,0 +1,65 @@
+{
+  "sampling_refinement": 6,
+  "source_sha256": "3552e09e31fb688fc1d9c112c6a09c30cc3a63181b44ccd4eb4056cd0ec66d67",
+  "cases": {
+    "triangle-bdm2": {
+      "archive": "triangle-bdm2-polynomial-fields.npz",
+      "sha256": "2e2dc975d47ccb7f2b75ce59f050daf1f6af6d443bf2c1db0e1920200835dc28",
+      "displacement_l2": 0.0005375164084777896,
+      "projection": {
+        "projection_l2": [
+          0.0003571706858003993,
+          0.00040153741605022155
+        ],
+        "discrete_l2": [
+          9.150651057790945e-06,
+          6.079447726927767e-06
+        ],
+        "total_l2": [
+          0.00035728788561873896,
+          0.00040158343612872423
+        ],
+        "orthogonality": [
+          5.779521911295858e-23,
+          -2.6818037909902805e-23
+        ],
+        "pythagorean_defect": [
+          7.906037198416985e-23,
+          -4.058354880338292e-23
+        ]
+      }
+    },
+    "rectangle-rt1": {
+      "archive": "rectangle-rt1-polynomial-fields.npz",
+      "sha256": "f92d2b33b5cbeb7a3623f947ec2acb88f9b1dc5a8bc298da4e62e88028696ff7",
+      "displacement_l2": 0.00034440072911921853
+    },
+    "polygon-bdm2": {
+      "archive": "polygon-bdm2-polynomial-fields.npz",
+      "sha256": "e803b939e2e89aca0984408b6db8f6e698291794ad52c427b247a36892f9cdac",
+      "displacement_l2": 0.00010156849460445594,
+      "projection": {
+        "projection_l2": [
+          6.050300771377483e-05,
+          8.15805498389833e-05
+        ],
+        "discrete_l2": [
+          2.501394025145382e-07,
+          3.105995021842139e-07
+        ],
+        "total_l2": [
+          6.050352479098873e-05,
+          8.158114110553739e-05
+        ],
+        "orthogonality": [
+          -1.0864925078067585e-26,
+          1.641455726344445e-24
+        ],
+        "pythagorean_defect": [
+          3.178036597209577e-25,
+          6.279219209588902e-24
+        ]
+      }
+    }
+  }
+}

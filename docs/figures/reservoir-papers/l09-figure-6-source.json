@@ -1,0 +1,65 @@
+{
+  "article": "L09",
+  "title": "An H(div;Omega)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method",
+  "authors": [
+    "Gabriel R. Barrenechea",
+    "Larissa Martins",
+    "Weslley Pereira",
+    "Frederic Valentin"
+  ],
+  "doi": "10.1137/24M1673073",
+  "journal": "Multiscale Modeling and Simulation",
+  "year": 2026,
+  "volume": 24,
+  "issue": 2,
+  "pages": "399-428",
+  "source_version": "Accepted author manuscript deposited at Strathprints",
+  "source_url": "https://strathprints.strath.ac.uk/94435/",
+  "source_pdf_sha256": "b7beee7f1f6ed73bad343813eba19addaab683f3f417ddff4564cf3826fea5dc",
+  "pdf_page_one_based": 24,
+  "manuscript_printed_page": 24,
+  "figure": "6",
+  "crop_pdf_points_xyxy": [
+    70.0,
+    338.0,
+    444.0,
+    514.0
+  ],
+  "rendering_dpi": 400,
+  "rendering": "Direct PDF crop containing Figure 6 and its caption. Field values, colors and labels are unchanged; no interpolation of scientific values or image retouching.",
+  "file": "l09-figure-6.png",
+  "width_pixels": 2079,
+  "height_pixels": 979,
+  "image_sha256": "7ab455452e56666e929c4cf1573c8a74f01efd466b17e091dc31c85a11b53d5e",
+  "fields_left_to_right": [
+    "Magnitude of the reference Darcy flux",
+    "Magnitude of raw MHM flux -A grad(u_Hh)",
+    "Magnitude of reconstructed MHM flux in RT_2"
+  ],
+  "reported_case": {
+    "model": "SPE10 Model 2",
+    "layer_one_based": 36,
+    "dirichlet_bottom": 1,
+    "dirichlet_top": 0,
+    "homogeneous_neumann_sides": true,
+    "trace_degree_ell": 0,
+    "local_pressure_degree_k": 2,
+    "reconstruction_degree_m": 2,
+    "reference_family": "Raviart-Thomas of order 2",
+    "reference_triangular_elements": 125000,
+    "reported_reference_degrees_of_freedom": 1314000,
+    "figure6_mhm_macro_count": null,
+    "figure6_mhm_local_refinement": null
+  },
+  "visible_color_scale_endpoints": [
+    7e-09,
+    0.025
+  ],
+  "scope_notes": [
+    "The manuscript does not state the units or transfer function of this color scale. Intermediate numeric labels overlap in the published raster.",
+    "The 512 initial macroelements and four local elements stated after Figure 6 describe the subsequent adaptive experiment; they are not explicitly assigned to Figure 6.",
+    "The reported reference degree-of-freedom count is not identified in the text as flux-only or full mixed-system size.",
+    "Figure 6 does not publish vector components, evaluation coordinates, a numerical flux profile, or field arrays."
+  ],
+  "source_pdf_url": "https://strathprints.strath.ac.uk/94435/1/Barrenechea-etal-MMS-2025-reconstruction-for-the-multiscale-hybrid-mixed-method.pdf"
+}

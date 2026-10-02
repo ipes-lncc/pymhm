@@ -1,0 +1,34 @@
+{
+  "identity": "a(u_f-u_c,u_f-u_c)=a(u_f,u_f)-a(u_c,u_c), nested conforming spaces, f=1 and homogeneous Dirichlet",
+  "norm_integration": "physical fitted triangles, Duffy order4, compensated coefficient components evaluated separately",
+  "native_energy": "original assembled DOLFINx/UFL matrix; no row-sum correction or matrix modification",
+  "arithmetic_limit": "original CSR residual and physical integration are distinct checks; double-component solution corrections do not remove binary64 matrix-assembly rounding",
+  "rows": [
+    {
+      "fine_record": "classical-cg2-factor2.json",
+      "fine_record_sha256": "492ba3ed786abb9bbb84f3c129d12e6f939fae14ba63419519d302d608efca7d",
+      "coarse_record": "classical-cg2-factor1.json",
+      "coarse_record_sha256": "30bd84265a167472cec7d307d3e35d5ff2a3ade32e720094c8bd94b7c2f47aad",
+      "physical_energy_difference_squared": 0.0008801086711079222,
+      "native_discrete_energy_increment": 0.0008801072533481946,
+      "absolute_identity_defect": 1.4177597275431136e-09,
+      "relative_identity_defect": 1.610891670636958e-06,
+      "physical_reference_energy_squared": 0.02540657397217239,
+      "native_reference_energy_squared": 0.0254065771345267,
+      "reference_energy_absolute_difference": 3.1623543089720485e-09
+    },
+    {
+      "fine_record": "classical-cg2-factor4.json",
+      "fine_record_sha256": "14dd59b61e3452c0b9ea94141da2dde5ecfb8187a5664e9196857bfc09744513",
+      "coarse_record": "classical-cg2-factor2.json",
+      "coarse_record_sha256": "492ba3ed786abb9bbb84f3c129d12e6f939fae14ba63419519d302d608efca7d",
+      "physical_energy_difference_squared": 0.00027630028712569,
+      "native_discrete_energy_increment": 0.00027630532841530636,
+      "absolute_identity_defect": 5.041289616336021e-09,
+      "relative_identity_defect": 1.8245690834344736e-05,
+      "physical_reference_energy_squared": 0.02568288438406376,
+      "native_reference_energy_squared": 0.025682882462942005,
+      "reference_energy_absolute_difference": 1.921121754733246e-09
+    }
+  ]
+}

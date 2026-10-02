@@ -1,0 +1,99 @@
+{
+  "accepted": true,
+  "original_acquisition_manifest": "examples/results/periodic-q5-order10-lor.json",
+  "original_acquisition_manifest_sha256": "523547ac0561beea9aeb2657fc0aa85a13429828c1c2d145f727f122e2cff810",
+  "original_acquisition_row": {
+    "n": 1024,
+    "degree": 5,
+    "quadrature_order": 10,
+    "archive": "reference-q5-1024-order10-lor.npz",
+    "archive_sha256": "268f3196b5b6192bfdba5c04dd2c3ebb06fdd596682a389645d9d7e4e436597b",
+    "iterations": 414,
+    "native_threads": 8,
+    "acquisition_seconds": 4064.9636343918974,
+    "relative_equation_residual": 6.113794892307779e-12,
+    "solver": "low-order-refined-pyamg-cg"
+  },
+  "current_acquisition_manifest": "examples/results/periodic-reference-q5-1024-order10.json",
+  "current_acquisition_manifest_sha256": "7de41769ac9b0c4ef8f3b7a212363d2978ff661351a7bff0042d6ee2122a3af6",
+  "current_acquisition_row": {
+    "n": 1024,
+    "degree": 5,
+    "quadrature_order": 10,
+    "archive": "reference-q5-1024-current-order10-lor.npz",
+    "archive_sha256": "37cc159a87f3626adf8e738066ada37e1b21a485017543e28e48c647cbd21d55",
+    "iterations": 412,
+    "elapsed_seconds": 8560.751463797991,
+    "relative_equation_residual": 6.115281857909158e-12,
+    "solver": "low-order-refined-pyamg-cg"
+  },
+  "norm_denominator": "current acquisition, full physical H1 and L2 on the unit square",
+  "norms": {
+    "l2": 1.2487401593608355e-12,
+    "h1_seminorm": 1.0634234013759593e-11,
+    "relative_l2": 8.966761745458346e-10,
+    "relative_h1": 8.525659143395798e-10,
+    "reference_l2": 0.0013926322509832726,
+    "reference_h1": 0.012558912300896763
+  },
+  "maximum_absolute_nodal_difference": 2.5982343768762286e-12,
+  "equivalence_threshold": 1e-09,
+  "original_physical_verification": {
+    "verified_input_identity": true,
+    "n": 1024,
+    "degree": 5,
+    "quadrature_order": 10,
+    "field_archive": "reference-q5-1024-order10-lor.npz",
+    "field_archive_sha256": "268f3196b5b6192bfdba5c04dd2c3ebb06fdd596682a389645d9d7e4e436597b",
+    "acquisition_record_sha256": "dcf566527717aa35a9b1e6bbf528820d132f347345fd25bd0c79870b15f5b90b",
+    "verifier_sha256": "e75952ae6f467e7a9ea5e160190bd84e5978f4da4dfd20e691f9c27ec1c53ce3",
+    "wrapper_sha256": "e77732be6e59e43dec82557dd3ae7a97cb40f4312c5963b87095308e0ba3cc92",
+    "physical_result": "n1024.json",
+    "physical_result_sha256": "ee8ae5625d164e29ec5661ab376faa657dd1d800476ad20e4450de9f8ba2e5f3",
+    "source_changed_during_verification": false,
+    "scope": "The same independent weak physical form and correction estimate; no new PDE solve, modified criterion, or claim of discretization accuracy."
+  },
+  "original_physical_diagnostics": {
+    "n": 1024,
+    "degree": 5,
+    "order": 10,
+    "relative_physical_equation_residual": 3.3766273392536013e-07,
+    "energy": 0.0002983998001134565,
+    "work": 0.00029839979994406355,
+    "relative_energy_work_defect": 5.67670989474345e-10,
+    "elapsed_seconds": 13.843590259552002,
+    "definition": "Independent local cardinal differentiation; trial nodal differences; opposite-sum test force; longdouble quadrature/assembly. Same coefficient samples and rule as acquisition.",
+    "physical_residual_euclidean_norm": 1.91789878038859e-11,
+    "load_euclidean_norm": 5.6799243377936364e-05,
+    "unit_gradient_norm": 0.012481460404533672,
+    "pressure_l2_norm": 0.0013926322521856313,
+    "local_reference_mass_minimum_eigenvalue": 0.023264248726066264,
+    "dirichlet_poincare_constant": 0.22507907903927651,
+    "permeability_lower_bound": 1.0,
+    "discrete_physical_correction_relative_H1_upper_estimate": 1.550782637901961e-05,
+    "bound_scope": "Coercivity/Poincare and cell-mass lower bound for the same quadrature Galerkin space; constants evaluated in floating arithmetic, not interval-certified; excludes discretization and quadrature error."
+  },
+  "verifier_sha256": "9bcf4206838522fb403ce34716f02e6ff40f2c9db34473a2f78cffcc8d71b00b",
+  "norm_owner_sha256": "913d760df45f66c252ab955e0287126143c2f122807bb074c40511a7a1ed7f14",
+  "source_changed_during_verification": false,
+  "meaning": "These are distinct archived acquisitions. Their measured physical-field agreement does not change their archive digests, solver iteration counts or acquisition timings. The timings are not a controlled performance comparison.",
+  "schema_version": 1,
+  "case": "Periodic diffusion; comparison of two independently acquired Q5 fields on a 1024 by 1024 grid",
+  "integration": "Exact tensor-product polynomial moments on the common Cartesian mesh, accumulated in longdouble; coefficient differences are formed before integrating squared differences.",
+  "norm_definitions": {
+    "relative_l2": "||p_original-p_current||_L2 / ||p_current||_L2",
+    "relative_h1": "sqrt(||p_original-p_current||_L2^2+||grad(p_original-p_current)||_L2^2) / ||p_current||_H1"
+  },
+  "comparison_reference": {
+    "manifest": "examples/results/periodic-comparison.json",
+    "primary_reference": "5:1024:10:lor",
+    "archive_sha256": "268f3196b5b6192bfdba5c04dd2c3ebb06fdd596682a389645d9d7e4e436597b",
+    "scope": "Denominator used in the 21 archived comparisons with this primary reference."
+  },
+  "refinement_increment_reference": {
+    "manifest": "examples/results/periodic-reference-q5-1024-order10.json",
+    "archive": "reference-q5-1024-current-order10-lor.npz",
+    "archive_sha256": "37cc159a87f3626adf8e738066ada37e1b21a485017543e28e48c647cbd21d55",
+    "scope": "Explicit Q5/1024 field selected for the 1024-to-2048 refinement increment."
+  }
+}

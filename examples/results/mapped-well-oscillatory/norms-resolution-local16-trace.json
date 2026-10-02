@@ -1,0 +1,183 @@
+{
+  "method": "Native Piola RT1/Q1 physical L2 norms with joint geometry/reference reuse",
+  "pressure_offset": 25000000.0,
+  "reference": "classical-invariant-xy16-z1-q40",
+  "units": "m, Pa, s",
+  "rows": [
+    {
+      "kind": "local-control trace restriction",
+      "reference": "classical-invariant-xy16-z1-q40",
+      "candidate": "fine16-macro4-s1-q40z10",
+      "reference_sha256": "63280fb39717f1cdd6119e4fc449d62df8916ce0f7b422962e57e3186504a7d4",
+      "candidate_sha256": "fac962dda43fc2b8a16b9e0da317bea0db7c88fa7807ea2cf3cf415bb6c62678",
+      "norms": {
+        "6": {
+          "pressure_l2": 8061397.774132496,
+          "flux_l2": 0.001274957129545367,
+          "pressure_reference_l2": 6533499957.587688,
+          "flux_reference_l2": 0.008035638310430259,
+          "pressure_relative": 0.001233855946500831,
+          "flux_relative": 0.15866283178655174,
+          "pressure_reference_increment_l2": 230261532.96047053,
+          "pressure_increment_relative": 0.035009745963588336,
+          "quadrature_order": [
+            6,
+            6,
+            3
+          ],
+          "integration_axis_counts": [
+            16,
+            16,
+            16
+          ]
+        },
+        "8": {
+          "pressure_l2": 8061397.7741324995,
+          "flux_l2": 0.0012749571295453887,
+          "pressure_reference_l2": 6533499957.587688,
+          "flux_reference_l2": 0.008035638310430263,
+          "pressure_relative": 0.0012338559465008316,
+          "flux_relative": 0.15866283178655438,
+          "pressure_reference_increment_l2": 230261532.96047056,
+          "pressure_increment_relative": 0.03500974596358835,
+          "quadrature_order": [
+            8,
+            8,
+            3
+          ],
+          "integration_axis_counts": [
+            16,
+            16,
+            16
+          ]
+        }
+      },
+      "denominator": "physical norm of the explicitly named reference field",
+      "geometry": "exact nested tensor hierarchy; integration respects every fine hexahedron"
+    }
+  ],
+  "acquisitions": [
+    {
+      "order": 6,
+      "reference": "classical-invariant-xy16-z1-q40",
+      "reference_sha256": "63280fb39717f1cdd6119e4fc449d62df8916ce0f7b422962e57e3186504a7d4",
+      "candidates": [
+        "fine16-macro4-s1-q40z10"
+      ],
+      "candidate_sha256": [
+        "fac962dda43fc2b8a16b9e0da317bea0db7c88fa7807ea2cf3cf415bb6c62678"
+      ],
+      "norms": [
+        {
+          "pressure_l2": 8061397.774132496,
+          "flux_l2": 0.001274957129545367,
+          "pressure_reference_l2": 6533499957.587688,
+          "flux_reference_l2": 0.008035638310430259,
+          "pressure_relative": 0.001233855946500831,
+          "flux_relative": 0.15866283178655174,
+          "pressure_reference_increment_l2": 230261532.96047053,
+          "pressure_increment_relative": 0.035009745963588336,
+          "quadrature_order": [
+            6,
+            6,
+            3
+          ],
+          "integration_axis_counts": [
+            16,
+            16,
+            16
+          ]
+        }
+      ],
+      "integration_seconds": 9.827642949996516,
+      "group_workers": 8,
+      "group_backend": "process",
+      "total_seconds": 10.327448932919651,
+      "native_threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libopenblas",
+          "version": "0.3.34",
+          "threading_layer": "pthreads",
+          "architecture": "Haswell"
+        }
+      ],
+      "source_hashes": {
+        "examples/compare_mapped_well_joint.py": "f28fa40dc2384a7142784a9d911870691bf1f7d237a50b470b7a13e5cdef758e",
+        "examples/mapped_well_comparison.py": "1dd632d04141be96de2738739e9aa1d7caaba652682f92aeaa284e34f73286dc",
+        "examples/mapped_well_fields.py": "2ed34e21ad208df55dd6a8c3434a127e364d0c42caefdf71b3c74c88d7ad49d0",
+        "src/pymhm/mapped_rt.py": "088773b09af64d1bd4176adcb2bf51637955a03937442dd686135068eb4fd90e"
+      },
+      "source_changed_during_run": false
+    },
+    {
+      "order": 8,
+      "reference": "classical-invariant-xy16-z1-q40",
+      "reference_sha256": "63280fb39717f1cdd6119e4fc449d62df8916ce0f7b422962e57e3186504a7d4",
+      "candidates": [
+        "fine16-macro4-s1-q40z10"
+      ],
+      "candidate_sha256": [
+        "fac962dda43fc2b8a16b9e0da317bea0db7c88fa7807ea2cf3cf415bb6c62678"
+      ],
+      "norms": [
+        {
+          "pressure_l2": 8061397.7741324995,
+          "flux_l2": 0.0012749571295453887,
+          "pressure_reference_l2": 6533499957.587688,
+          "flux_reference_l2": 0.008035638310430263,
+          "pressure_relative": 0.0012338559465008316,
+          "flux_relative": 0.15866283178655438,
+          "pressure_reference_increment_l2": 230261532.96047056,
+          "pressure_increment_relative": 0.03500974596358835,
+          "quadrature_order": [
+            8,
+            8,
+            3
+          ],
+          "integration_axis_counts": [
+            16,
+            16,
+            16
+          ]
+        }
+      ],
+      "integration_seconds": 13.131589459022507,
+      "group_workers": 8,
+      "group_backend": "process",
+      "total_seconds": 13.820290302974172,
+      "native_threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 1,
+          "prefix": "libopenblas",
+          "version": "0.3.34",
+          "threading_layer": "pthreads",
+          "architecture": "Haswell"
+        }
+      ],
+      "source_hashes": {
+        "examples/compare_mapped_well_joint.py": "f28fa40dc2384a7142784a9d911870691bf1f7d237a50b470b7a13e5cdef758e",
+        "examples/mapped_well_comparison.py": "1dd632d04141be96de2738739e9aa1d7caaba652682f92aeaa284e34f73286dc",
+        "examples/mapped_well_fields.py": "2ed34e21ad208df55dd6a8c3434a127e364d0c42caefdf71b3c74c88d7ad49d0",
+        "src/pymhm/mapped_rt.py": "088773b09af64d1bd4176adcb2bf51637955a03937442dd686135068eb4fd90e"
+      },
+      "source_changed_during_run": false
+    }
+  ],
+  "source_hashes": {
+    "examples/compare_mapped_well_joint.py": "f28fa40dc2384a7142784a9d911870691bf1f7d237a50b470b7a13e5cdef758e",
+    "examples/mapped_well_comparison.py": "1dd632d04141be96de2738739e9aa1d7caaba652682f92aeaa284e34f73286dc",
+    "examples/mapped_well_fields.py": "2ed34e21ad208df55dd6a8c3434a127e364d0c42caefdf71b3c74c88d7ad49d0",
+    "src/pymhm/mapped_rt.py": "088773b09af64d1bd4176adcb2bf51637955a03937442dd686135068eb4fd90e"
+  },
+  "source_changed_during_run": false,
+  "workers": 1,
+  "group_workers": 8,
+  "group_backend": "process",
+  "python": "3.13.15",
+  "numpy": "2.5.3"
+}

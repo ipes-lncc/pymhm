@@ -1,0 +1,30 @@
+{
+  "reference_archive": "reference-cg3-n512-q16.npz",
+  "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+  "acquisition_source_sha256": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+  "norm_source_sha256": {
+    "examples/compare_mh2m_cg3.py": "d2e00f7deb1578616cf7516c3b5498f3224252d4c574349a2eb194ea165df1df",
+    "examples/mh2m_cg_reference.py": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+    "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+    "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+    "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9"
+  },
+  "native_vs_portable_physical_energy": [
+    {
+      "quadrature_order": 8,
+      "native_UFL_energy": 0.006090346628315245,
+      "archive_reader_energy": 0.006090346628314035,
+      "relative_difference": 1.98670075504148e-13,
+      "overlay_area": 1.0000000000000002
+    },
+    {
+      "quadrature_order": 10,
+      "native_UFL_energy": 0.006090346628315245,
+      "archive_reader_energy": 0.006090346628314034,
+      "relative_difference": 1.9895490715361632e-13,
+      "overlay_area": 1.0
+    }
+  ],
+  "scope": "Independent UFL integral and explicit persisted P3 evaluation on the physical mesh; this validates replay and norm conventions, not exact-solution accuracy."
+}

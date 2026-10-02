@@ -1,0 +1,96 @@
+{
+  "norm": "arclength L2 of the scalar normal flux on each interior macroface counted once",
+  "quadrature": "Gauss 4 on intersections with reference grid lines, diagonals and tested trace segment boundaries",
+  "field": "reference RT2 normal component; original MHM P0 trace when segments=1",
+  "reference": "reference-rt2-480x1760.npz",
+  "interpretation": "Best P0 projection for segments1,2,4 is a trace approximation diagnostic, not a volume error bound. Actual MHM is solved only with one segment in this campaign.",
+  "rows": [
+    {
+      "level": 0,
+      "archive": "mhm-level0.npz",
+      "archive_sha256": "beb996d97b7f88eee9da32370a648b4254090627f714176120c319d2051da42c",
+      "reference_sha256": "596d7a1cd09b641382f3c727da1af4ffe703ad5a025bbf6a9f00e0ff6c2ad8ef",
+      "macro_triangles": 512,
+      "segments": 1,
+      "normal_trace_l2": 0.14708670573462182,
+      "projection_difference_l2": 0.13335266740448923,
+      "relative_difference": 0.9066262429256389,
+      "total_interior_face_length": 91095.88507565334,
+      "actual_trace_difference_l2": 0.14069917371407692,
+      "actual_relative_difference": 0.9565730159728406,
+      "actual_trace_l2": 0.030925955676456857,
+      "projected_coefficient_difference_l2": 0.04487007443644003,
+      "orthogonal_identity_defect": 3.490392703203127e-17
+    },
+    {
+      "level": 0,
+      "archive": "mhm-level0.npz",
+      "archive_sha256": "beb996d97b7f88eee9da32370a648b4254090627f714176120c319d2051da42c",
+      "reference_sha256": "596d7a1cd09b641382f3c727da1af4ffe703ad5a025bbf6a9f00e0ff6c2ad8ef",
+      "macro_triangles": 512,
+      "segments": 2,
+      "normal_trace_l2": 0.14708670573462182,
+      "projection_difference_l2": 0.12224618195630661,
+      "relative_difference": 0.8311164584572773,
+      "total_interior_face_length": 91095.88507565334
+    },
+    {
+      "level": 0,
+      "archive": "mhm-level0.npz",
+      "archive_sha256": "beb996d97b7f88eee9da32370a648b4254090627f714176120c319d2051da42c",
+      "reference_sha256": "596d7a1cd09b641382f3c727da1af4ffe703ad5a025bbf6a9f00e0ff6c2ad8ef",
+      "macro_triangles": 512,
+      "segments": 4,
+      "normal_trace_l2": 0.14708670573462213,
+      "projection_difference_l2": 0.10499541693243408,
+      "relative_difference": 0.7138334930273692,
+      "total_interior_face_length": 91095.88507565334
+    },
+    {
+      "level": 6,
+      "archive": "mhm-level6.npz",
+      "archive_sha256": "99f3494fdb160a01d025fcbe5a5f586b74fac5d50b306769f094255fc33ed93f",
+      "reference_sha256": "596d7a1cd09b641382f3c727da1af4ffe703ad5a025bbf6a9f00e0ff6c2ad8ef",
+      "macro_triangles": 4783,
+      "segments": 1,
+      "normal_trace_l2": 0.40518205160726845,
+      "projection_difference_l2": 0.16312891857108003,
+      "relative_difference": 0.4026064775672647,
+      "total_interior_face_length": 176057.07242767492,
+      "actual_trace_difference_l2": 0.24386365422876694,
+      "actual_relative_difference": 0.6018619365330059,
+      "actual_trace_l2": 0.43769756780031716,
+      "projected_coefficient_difference_l2": 0.1812689652964278,
+      "orthogonal_identity_defect": 5.378214689502053e-17
+    },
+    {
+      "level": 6,
+      "archive": "mhm-level6.npz",
+      "archive_sha256": "99f3494fdb160a01d025fcbe5a5f586b74fac5d50b306769f094255fc33ed93f",
+      "reference_sha256": "596d7a1cd09b641382f3c727da1af4ffe703ad5a025bbf6a9f00e0ff6c2ad8ef",
+      "macro_triangles": 4783,
+      "segments": 2,
+      "normal_trace_l2": 0.40518205160726845,
+      "projection_difference_l2": 0.12049248805193762,
+      "relative_difference": 0.2973786414624496,
+      "total_interior_face_length": 176057.07242767492
+    },
+    {
+      "level": 6,
+      "archive": "mhm-level6.npz",
+      "archive_sha256": "99f3494fdb160a01d025fcbe5a5f586b74fac5d50b306769f094255fc33ed93f",
+      "reference_sha256": "596d7a1cd09b641382f3c727da1af4ffe703ad5a025bbf6a9f00e0ff6c2ad8ef",
+      "macro_triangles": 4783,
+      "segments": 4,
+      "normal_trace_l2": 0.4051820516072685,
+      "projection_difference_l2": 0.08930191024366399,
+      "relative_difference": 0.22039947201368587,
+      "total_interior_face_length": 176057.07242767492
+    }
+  ],
+  "source_hashes": {
+    "independent-normal-trace-projection-driver": "c5b5cab73bb23101491b98dbd36750159bedf1802c8e3c6e86e7a9ba1db02247",
+    "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+    "examples/spe10_adaptive.py": "111d056e78838e757971236ec9511f3b751f4fb70956f23c860254b399277e28"
+  }
+}

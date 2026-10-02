@@ -1,0 +1,11 @@
+{
+  "reference": "taylor-hood-960x3520.npz",
+  "reference_coefficients_sha256": "57e20b658531c3e28556dee40aefdac91724debce20bb125a8f221d2166d31ae",
+  "mhm": "flow-layer1-n6x11-p3-r10-s10-q8-pointwise-2017.npz",
+  "mhm_sha256": "28d164cfa6efaf32884f260e77e848e4f088423a0468c0e417c8e3d6daf00503",
+  "display_subdivision": 6,
+  "display_points_sha256": "c8196d68477984137247c8f856ffb314c568d614f6c9b96fc0575029d438686c",
+  "sampling": "Actual P2/P1 reference and broken P3/P3 MHM evaluations at identical display vertices; piecewise linear rendering, no interface averaging",
+  "archive": "taylor-hood-display.npz",
+  "sha256": "ddad446963b73aa065129a166348a4c16763776a7ed16a1e072710c48b08f066"
+}

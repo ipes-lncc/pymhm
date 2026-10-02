@@ -1,0 +1,73 @@
+{
+  "method": "Original recursive MHM, based on nested local variational decompositions",
+  "reference": "10.1007/978-3-319-41640-3_13, sections 2 and 4.1",
+  "local_space": "Q2, 2x2 fine cells per inner macrocell",
+  "trace": "P1 per inner face; two P1 segments per outer face",
+  "rows": [
+    {
+      "n": 1,
+      "macro_cells": 1,
+      "inner_macro_cells": 4,
+      "fine_cells": 16,
+      "outer_global_dofs": 17,
+      "flat_global_dofs": 28,
+      "relative_leaf_difference": 1.1409148403517871e-15,
+      "pressure_l2": 0.006606531506563273,
+      "flux_l2": 0.12165104061886851,
+      "outer_residual": 1.4214074861801067e-16,
+      "inner_residual": 2.83624655246948e-16
+    },
+    {
+      "n": 2,
+      "macro_cells": 4,
+      "inner_macro_cells": 16,
+      "fine_cells": 64,
+      "outer_global_dofs": 52,
+      "flat_global_dofs": 96,
+      "relative_leaf_difference": 1.4644047055169826e-15,
+      "pressure_l2": 0.0007620879043991137,
+      "flux_l2": 0.029535668715328704,
+      "outer_residual": 2.948912723944778e-16,
+      "inner_residual": 1.7086230057848288e-16
+    },
+    {
+      "n": 4,
+      "macro_cells": 16,
+      "inner_macro_cells": 64,
+      "fine_cells": 256,
+      "outer_global_dofs": 176,
+      "flat_global_dofs": 352,
+      "relative_leaf_difference": 2.2298097313380673e-15,
+      "pressure_l2": 9.328814907856863e-05,
+      "flux_l2": 0.007317113559848765,
+      "outer_residual": 3.4994963849260737e-16,
+      "inner_residual": 1.4720593882882892e-16
+    },
+    {
+      "n": 8,
+      "macro_cells": 64,
+      "inner_macro_cells": 256,
+      "fine_cells": 1024,
+      "outer_global_dofs": 640,
+      "flat_global_dofs": 1344,
+      "relative_leaf_difference": 1.6531594590589222e-15,
+      "pressure_l2": 1.1600023551319038e-05,
+      "flux_l2": 0.0018249257943058145,
+      "outer_residual": 1.9554993971666212e-16,
+      "inner_residual": 1.3875754061125768e-16
+    },
+    {
+      "n": 16,
+      "macro_cells": 256,
+      "inner_macro_cells": 1024,
+      "fine_cells": 4096,
+      "outer_global_dofs": 2432,
+      "flat_global_dofs": 5248,
+      "relative_leaf_difference": 3.824089336940888e-15,
+      "pressure_l2": 1.4481025592506106e-06,
+      "flux_l2": 0.0004559566749062978,
+      "outer_residual": 2.13414969530311e-16,
+      "inner_residual": 2.268734070419659e-16
+    }
+  ]
+}

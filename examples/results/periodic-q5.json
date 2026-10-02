@@ -1,0 +1,55 @@
+{
+  "citation": "10.1090/mcom/3108, section 4, Figures 4 and 6",
+  "epsilon": 0.020943951023931952,
+  "coefficient": "1+100*cos(pi*x/epsilon)^2*sin(pi*y/epsilon)^2",
+  "source": "sin(x)*sin(y)",
+  "reference": [
+    {
+      "n": 128,
+      "degree": 5,
+      "cells": 16384,
+      "dofs": 410881,
+      "residual": 1.4472237942859522e-20,
+      "acquisition_seconds": 102.14980562089477,
+      "refinement_precision": "extended",
+      "quadrature_order": 6
+    },
+    {
+      "n": 256,
+      "degree": 5,
+      "cells": 65536,
+      "dofs": 1640961,
+      "residual": 1.3983738487044187e-20,
+      "acquisition_seconds": 367.30662890698295,
+      "refinement_precision": "extended",
+      "quadrature_order": 6,
+      "difference_to_previous": {
+        "l2": 0.00011834929734220297,
+        "h1_seminorm": 0.0034548929231737846,
+        "relative_l2": 0.08587479185845567,
+        "relative_h1": 0.2827482452970902,
+        "reference_l2": 0.0013781610968824688,
+        "reference_h1": 0.012226139143860587
+      }
+    },
+    {
+      "n": 512,
+      "degree": 5,
+      "cells": 262144,
+      "dofs": 6558721,
+      "residual": 1.380757954103106e-20,
+      "acquisition_seconds": 1996.1718151030364,
+      "refinement_precision": "extended",
+      "quadrature_order": 6,
+      "difference_to_previous": {
+        "l2": 1.4133782606113766e-05,
+        "h1_seminorm": 0.0013009335637943346,
+        "relative_l2": 0.010151683706868446,
+        "relative_h1": 0.10369579776341595,
+        "reference_l2": 0.0013922599456631123,
+        "reference_h1": 0.012546413323290602
+      }
+    }
+  ],
+  "mhm": []
+}

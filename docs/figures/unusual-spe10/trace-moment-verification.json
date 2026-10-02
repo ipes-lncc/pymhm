@@ -1,0 +1,4406 @@
+{
+  "method": "Exact P1/P0 trace moments and one-sided pressure; face-supported null modes of proposed skeletons",
+  "archive": "mhm-unusual-layer0.25-tracefit-r32-s32-q5.npz",
+  "archive_sha256": "22868065641e038c78c8065508098b12f2f76278dd9bb2aecd5c626bd19c9993",
+  "reference": "classical-cg2-graded-xy-1440x498.npz",
+  "reference_sha256": "3a536228173b05fbcf816d6dd9b423a61a377ec408c9cd216d17a30fc3a674a3",
+  "driver_sha256": "760f306ee6889bd6dad75690562604ad5c93550107d6293146b2dc23e0bdc759",
+  "bottom_pressure_minus_one_l2": 0.462981558494866,
+  "bottom_pressure_minus_one_relative": 0.013365126371342167,
+  "maximum_bottom_weak_moment_defect": 7.993605777301127e-15,
+  "extrema": [
+    {
+      "kind": "minimum",
+      "point": [
+        1053.515625,
+        6.4453125
+      ],
+      "value": -0.07137490147717059,
+      "macro": 14,
+      "local_node": 3066,
+      "reference_pressure": 0.0002529268063210914
+    },
+    {
+      "kind": "maximum",
+      "point": [
+        0.0,
+        0.0
+      ],
+      "value": 1.4352220428677824,
+      "macro": 0,
+      "local_node": 0,
+      "reference_pressure": 1.0
+    }
+  ],
+  "incident_trace_values": [
+    {
+      "extremum": "maximum",
+      "face": 0,
+      "macro": 0,
+      "pressure": 1.4352220428677824,
+      "parameter": 0.0
+    },
+    {
+      "extremum": "maximum",
+      "face": 2,
+      "macro": 0,
+      "pressure": 1.4352220428677824,
+      "parameter": 1.0
+    },
+    {
+      "extremum": "maximum",
+      "face": 2,
+      "macro": 1,
+      "pressure": 0.014286020008214459,
+      "parameter": 1.0
+    },
+    {
+      "extremum": "maximum",
+      "face": 4,
+      "macro": 1,
+      "pressure": 0.014286020008214459,
+      "parameter": 1.0
+    },
+    {
+      "extremum": "minimum",
+      "face": 31,
+      "macro": 14,
+      "pressure": -0.07137490147717059,
+      "parameter": 0.9765625
+    },
+    {
+      "extremum": "minimum",
+      "face": 31,
+      "macro": 15,
+      "pressure": 0.07517549517582232,
+      "parameter": 0.9765625
+    }
+  ],
+  "rank_preflight": {
+    "32": {
+      "deficient_faces": [],
+      "total_face_supported_nullity": 0
+    },
+    "64": {
+      "deficient_faces": [
+        {
+          "face": 1,
+          "endpoints": [
+            [
+              150.0,
+              0.0
+            ],
+            [
+              150.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 61,
+          "deficit": 30,
+          "incident_boundary_dofs": [
+            113,
+            113
+          ]
+        },
+        {
+          "face": 2,
+          "endpoints": [
+            [
+              150.0,
+              275.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 66,
+          "deficit": 30,
+          "incident_boundary_dofs": [
+            104,
+            103
+          ]
+        },
+        {
+          "face": 3,
+          "endpoints": [
+            [
+              150.0,
+              275.0
+            ],
+            [
+              0.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 6,
+          "endpoints": [
+            [
+              300.0,
+              0.0
+            ],
+            [
+              300.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 61,
+          "deficit": 30,
+          "incident_boundary_dofs": [
+            90,
+            93
+          ]
+        },
+        {
+          "face": 7,
+          "endpoints": [
+            [
+              300.0,
+              275.0
+            ],
+            [
+              150.0,
+              0.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 68,
+          "deficit": 30,
+          "incident_boundary_dofs": [
+            121,
+            119
+          ]
+        },
+        {
+          "face": 8,
+          "endpoints": [
+            [
+              300.0,
+              275.0
+            ],
+            [
+              150.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 10,
+          "endpoints": [
+            [
+              450.0,
+              0.0
+            ],
+            [
+              450.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 61,
+          "deficit": 30,
+          "incident_boundary_dofs": [
+            96,
+            96
+          ]
+        },
+        {
+          "face": 11,
+          "endpoints": [
+            [
+              450.0,
+              275.0
+            ],
+            [
+              300.0,
+              0.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 66,
+          "deficit": 30,
+          "incident_boundary_dofs": [
+            99,
+            99
+          ]
+        },
+        {
+          "face": 12,
+          "endpoints": [
+            [
+              450.0,
+              275.0
+            ],
+            [
+              300.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 14,
+          "endpoints": [
+            [
+              600.0,
+              0.0
+            ],
+            [
+              600.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 61,
+          "deficit": 30,
+          "incident_boundary_dofs": [
+            87,
+            102
+          ]
+        },
+        {
+          "face": 15,
+          "endpoints": [
+            [
+              600.0,
+              275.0
+            ],
+            [
+              450.0,
+              0.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 68,
+          "deficit": 30,
+          "incident_boundary_dofs": [
+            104,
+            104
+          ]
+        },
+        {
+          "face": 16,
+          "endpoints": [
+            [
+              600.0,
+              275.0
+            ],
+            [
+              450.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 18,
+          "endpoints": [
+            [
+              750.0,
+              0.0
+            ],
+            [
+              750.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 61,
+          "deficit": 30,
+          "incident_boundary_dofs": [
+            93,
+            93
+          ]
+        },
+        {
+          "face": 19,
+          "endpoints": [
+            [
+              750.0,
+              275.0
+            ],
+            [
+              600.0,
+              0.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 66,
+          "deficit": 30,
+          "incident_boundary_dofs": [
+            108,
+            106
+          ]
+        },
+        {
+          "face": 20,
+          "endpoints": [
+            [
+              750.0,
+              275.0
+            ],
+            [
+              600.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 22,
+          "endpoints": [
+            [
+              900.0,
+              0.0
+            ],
+            [
+              900.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 61,
+          "deficit": 30,
+          "incident_boundary_dofs": [
+            98,
+            113
+          ]
+        },
+        {
+          "face": 23,
+          "endpoints": [
+            [
+              900.0,
+              275.0
+            ],
+            [
+              750.0,
+              0.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 68,
+          "deficit": 30,
+          "incident_boundary_dofs": [
+            101,
+            101
+          ]
+        },
+        {
+          "face": 24,
+          "endpoints": [
+            [
+              900.0,
+              275.0
+            ],
+            [
+              750.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 26,
+          "endpoints": [
+            [
+              1050.0,
+              0.0
+            ],
+            [
+              1050.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 61,
+          "deficit": 30,
+          "incident_boundary_dofs": [
+            98,
+            98
+          ]
+        },
+        {
+          "face": 27,
+          "endpoints": [
+            [
+              1050.0,
+              275.0
+            ],
+            [
+              900.0,
+              0.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 66,
+          "deficit": 30,
+          "incident_boundary_dofs": [
+            119,
+            117
+          ]
+        },
+        {
+          "face": 28,
+          "endpoints": [
+            [
+              1050.0,
+              275.0
+            ],
+            [
+              900.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 31,
+          "endpoints": [
+            [
+              1200.0,
+              275.0
+            ],
+            [
+              1050.0,
+              0.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 68,
+          "deficit": 30,
+          "incident_boundary_dofs": [
+            107,
+            105
+          ]
+        },
+        {
+          "face": 32,
+          "endpoints": [
+            [
+              1200.0,
+              275.0
+            ],
+            [
+              1050.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 33,
+          "endpoints": [
+            [
+              150.0,
+              275.0
+            ],
+            [
+              150.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 34,
+          "endpoints": [
+            [
+              150.0,
+              550.0
+            ],
+            [
+              0.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 35,
+          "endpoints": [
+            [
+              150.0,
+              550.0
+            ],
+            [
+              0.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 37,
+          "endpoints": [
+            [
+              300.0,
+              275.0
+            ],
+            [
+              300.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 38,
+          "endpoints": [
+            [
+              300.0,
+              550.0
+            ],
+            [
+              150.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 39,
+          "endpoints": [
+            [
+              300.0,
+              550.0
+            ],
+            [
+              150.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 40,
+          "endpoints": [
+            [
+              450.0,
+              275.0
+            ],
+            [
+              450.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 41,
+          "endpoints": [
+            [
+              450.0,
+              550.0
+            ],
+            [
+              300.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 42,
+          "endpoints": [
+            [
+              450.0,
+              550.0
+            ],
+            [
+              300.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 43,
+          "endpoints": [
+            [
+              600.0,
+              275.0
+            ],
+            [
+              600.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 44,
+          "endpoints": [
+            [
+              600.0,
+              550.0
+            ],
+            [
+              450.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 45,
+          "endpoints": [
+            [
+              600.0,
+              550.0
+            ],
+            [
+              450.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 46,
+          "endpoints": [
+            [
+              750.0,
+              275.0
+            ],
+            [
+              750.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 47,
+          "endpoints": [
+            [
+              750.0,
+              550.0
+            ],
+            [
+              600.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 48,
+          "endpoints": [
+            [
+              750.0,
+              550.0
+            ],
+            [
+              600.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 49,
+          "endpoints": [
+            [
+              900.0,
+              275.0
+            ],
+            [
+              900.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 50,
+          "endpoints": [
+            [
+              900.0,
+              550.0
+            ],
+            [
+              750.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 51,
+          "endpoints": [
+            [
+              900.0,
+              550.0
+            ],
+            [
+              750.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 52,
+          "endpoints": [
+            [
+              1050.0,
+              275.0
+            ],
+            [
+              1050.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 53,
+          "endpoints": [
+            [
+              1050.0,
+              550.0
+            ],
+            [
+              900.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 54,
+          "endpoints": [
+            [
+              1050.0,
+              550.0
+            ],
+            [
+              900.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 56,
+          "endpoints": [
+            [
+              1200.0,
+              550.0
+            ],
+            [
+              1050.0,
+              275.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 57,
+          "endpoints": [
+            [
+              1200.0,
+              550.0
+            ],
+            [
+              1050.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 58,
+          "endpoints": [
+            [
+              150.0,
+              550.0
+            ],
+            [
+              150.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 59,
+          "endpoints": [
+            [
+              150.0,
+              825.0
+            ],
+            [
+              0.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 60,
+          "endpoints": [
+            [
+              150.0,
+              825.0
+            ],
+            [
+              0.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 62,
+          "endpoints": [
+            [
+              300.0,
+              550.0
+            ],
+            [
+              300.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 63,
+          "endpoints": [
+            [
+              300.0,
+              825.0
+            ],
+            [
+              150.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 64,
+          "endpoints": [
+            [
+              300.0,
+              825.0
+            ],
+            [
+              150.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 65,
+          "endpoints": [
+            [
+              450.0,
+              550.0
+            ],
+            [
+              450.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 66,
+          "endpoints": [
+            [
+              450.0,
+              825.0
+            ],
+            [
+              300.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 67,
+          "endpoints": [
+            [
+              450.0,
+              825.0
+            ],
+            [
+              300.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 68,
+          "endpoints": [
+            [
+              600.0,
+              550.0
+            ],
+            [
+              600.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 69,
+          "endpoints": [
+            [
+              600.0,
+              825.0
+            ],
+            [
+              450.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 70,
+          "endpoints": [
+            [
+              600.0,
+              825.0
+            ],
+            [
+              450.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 71,
+          "endpoints": [
+            [
+              750.0,
+              550.0
+            ],
+            [
+              750.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 72,
+          "endpoints": [
+            [
+              750.0,
+              825.0
+            ],
+            [
+              600.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 73,
+          "endpoints": [
+            [
+              750.0,
+              825.0
+            ],
+            [
+              600.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 74,
+          "endpoints": [
+            [
+              900.0,
+              550.0
+            ],
+            [
+              900.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 75,
+          "endpoints": [
+            [
+              900.0,
+              825.0
+            ],
+            [
+              750.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 76,
+          "endpoints": [
+            [
+              900.0,
+              825.0
+            ],
+            [
+              750.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 77,
+          "endpoints": [
+            [
+              1050.0,
+              550.0
+            ],
+            [
+              1050.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 78,
+          "endpoints": [
+            [
+              1050.0,
+              825.0
+            ],
+            [
+              900.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 79,
+          "endpoints": [
+            [
+              1050.0,
+              825.0
+            ],
+            [
+              900.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 81,
+          "endpoints": [
+            [
+              1200.0,
+              825.0
+            ],
+            [
+              1050.0,
+              550.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 82,
+          "endpoints": [
+            [
+              1200.0,
+              825.0
+            ],
+            [
+              1050.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 83,
+          "endpoints": [
+            [
+              150.0,
+              825.0
+            ],
+            [
+              150.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 84,
+          "endpoints": [
+            [
+              150.0,
+              1100.0
+            ],
+            [
+              0.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 85,
+          "endpoints": [
+            [
+              150.0,
+              1100.0
+            ],
+            [
+              0.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 87,
+          "endpoints": [
+            [
+              300.0,
+              825.0
+            ],
+            [
+              300.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 88,
+          "endpoints": [
+            [
+              300.0,
+              1100.0
+            ],
+            [
+              150.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 89,
+          "endpoints": [
+            [
+              300.0,
+              1100.0
+            ],
+            [
+              150.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 90,
+          "endpoints": [
+            [
+              450.0,
+              825.0
+            ],
+            [
+              450.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 91,
+          "endpoints": [
+            [
+              450.0,
+              1100.0
+            ],
+            [
+              300.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 92,
+          "endpoints": [
+            [
+              450.0,
+              1100.0
+            ],
+            [
+              300.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 93,
+          "endpoints": [
+            [
+              600.0,
+              825.0
+            ],
+            [
+              600.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 94,
+          "endpoints": [
+            [
+              600.0,
+              1100.0
+            ],
+            [
+              450.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 95,
+          "endpoints": [
+            [
+              600.0,
+              1100.0
+            ],
+            [
+              450.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 96,
+          "endpoints": [
+            [
+              750.0,
+              825.0
+            ],
+            [
+              750.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 97,
+          "endpoints": [
+            [
+              750.0,
+              1100.0
+            ],
+            [
+              600.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 98,
+          "endpoints": [
+            [
+              750.0,
+              1100.0
+            ],
+            [
+              600.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 99,
+          "endpoints": [
+            [
+              900.0,
+              825.0
+            ],
+            [
+              900.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 100,
+          "endpoints": [
+            [
+              900.0,
+              1100.0
+            ],
+            [
+              750.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 101,
+          "endpoints": [
+            [
+              900.0,
+              1100.0
+            ],
+            [
+              750.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 102,
+          "endpoints": [
+            [
+              1050.0,
+              825.0
+            ],
+            [
+              1050.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 103,
+          "endpoints": [
+            [
+              1050.0,
+              1100.0
+            ],
+            [
+              900.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 104,
+          "endpoints": [
+            [
+              1050.0,
+              1100.0
+            ],
+            [
+              900.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 106,
+          "endpoints": [
+            [
+              1200.0,
+              1100.0
+            ],
+            [
+              1050.0,
+              825.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 107,
+          "endpoints": [
+            [
+              1200.0,
+              1100.0
+            ],
+            [
+              1050.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 108,
+          "endpoints": [
+            [
+              150.0,
+              1100.0
+            ],
+            [
+              150.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 109,
+          "endpoints": [
+            [
+              150.0,
+              1375.0
+            ],
+            [
+              0.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 110,
+          "endpoints": [
+            [
+              150.0,
+              1375.0
+            ],
+            [
+              0.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 112,
+          "endpoints": [
+            [
+              300.0,
+              1100.0
+            ],
+            [
+              300.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 113,
+          "endpoints": [
+            [
+              300.0,
+              1375.0
+            ],
+            [
+              150.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 114,
+          "endpoints": [
+            [
+              300.0,
+              1375.0
+            ],
+            [
+              150.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 115,
+          "endpoints": [
+            [
+              450.0,
+              1100.0
+            ],
+            [
+              450.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 116,
+          "endpoints": [
+            [
+              450.0,
+              1375.0
+            ],
+            [
+              300.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 117,
+          "endpoints": [
+            [
+              450.0,
+              1375.0
+            ],
+            [
+              300.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 118,
+          "endpoints": [
+            [
+              600.0,
+              1100.0
+            ],
+            [
+              600.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 119,
+          "endpoints": [
+            [
+              600.0,
+              1375.0
+            ],
+            [
+              450.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 120,
+          "endpoints": [
+            [
+              600.0,
+              1375.0
+            ],
+            [
+              450.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 121,
+          "endpoints": [
+            [
+              750.0,
+              1100.0
+            ],
+            [
+              750.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 122,
+          "endpoints": [
+            [
+              750.0,
+              1375.0
+            ],
+            [
+              600.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 123,
+          "endpoints": [
+            [
+              750.0,
+              1375.0
+            ],
+            [
+              600.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 124,
+          "endpoints": [
+            [
+              900.0,
+              1100.0
+            ],
+            [
+              900.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 125,
+          "endpoints": [
+            [
+              900.0,
+              1375.0
+            ],
+            [
+              750.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 126,
+          "endpoints": [
+            [
+              900.0,
+              1375.0
+            ],
+            [
+              750.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 127,
+          "endpoints": [
+            [
+              1050.0,
+              1100.0
+            ],
+            [
+              1050.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 128,
+          "endpoints": [
+            [
+              1050.0,
+              1375.0
+            ],
+            [
+              900.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 129,
+          "endpoints": [
+            [
+              1050.0,
+              1375.0
+            ],
+            [
+              900.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 131,
+          "endpoints": [
+            [
+              1200.0,
+              1375.0
+            ],
+            [
+              1050.0,
+              1100.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 132,
+          "endpoints": [
+            [
+              1200.0,
+              1375.0
+            ],
+            [
+              1050.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 133,
+          "endpoints": [
+            [
+              150.0,
+              1375.0
+            ],
+            [
+              150.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 134,
+          "endpoints": [
+            [
+              150.0,
+              1650.0
+            ],
+            [
+              0.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 135,
+          "endpoints": [
+            [
+              150.0,
+              1650.0
+            ],
+            [
+              0.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 137,
+          "endpoints": [
+            [
+              300.0,
+              1375.0
+            ],
+            [
+              300.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 138,
+          "endpoints": [
+            [
+              300.0,
+              1650.0
+            ],
+            [
+              150.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 139,
+          "endpoints": [
+            [
+              300.0,
+              1650.0
+            ],
+            [
+              150.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 140,
+          "endpoints": [
+            [
+              450.0,
+              1375.0
+            ],
+            [
+              450.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 141,
+          "endpoints": [
+            [
+              450.0,
+              1650.0
+            ],
+            [
+              300.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 142,
+          "endpoints": [
+            [
+              450.0,
+              1650.0
+            ],
+            [
+              300.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 143,
+          "endpoints": [
+            [
+              600.0,
+              1375.0
+            ],
+            [
+              600.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 144,
+          "endpoints": [
+            [
+              600.0,
+              1650.0
+            ],
+            [
+              450.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 145,
+          "endpoints": [
+            [
+              600.0,
+              1650.0
+            ],
+            [
+              450.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 146,
+          "endpoints": [
+            [
+              750.0,
+              1375.0
+            ],
+            [
+              750.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 147,
+          "endpoints": [
+            [
+              750.0,
+              1650.0
+            ],
+            [
+              600.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 148,
+          "endpoints": [
+            [
+              750.0,
+              1650.0
+            ],
+            [
+              600.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 149,
+          "endpoints": [
+            [
+              900.0,
+              1375.0
+            ],
+            [
+              900.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 150,
+          "endpoints": [
+            [
+              900.0,
+              1650.0
+            ],
+            [
+              750.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 151,
+          "endpoints": [
+            [
+              900.0,
+              1650.0
+            ],
+            [
+              750.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 152,
+          "endpoints": [
+            [
+              1050.0,
+              1375.0
+            ],
+            [
+              1050.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 153,
+          "endpoints": [
+            [
+              1050.0,
+              1650.0
+            ],
+            [
+              900.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 154,
+          "endpoints": [
+            [
+              1050.0,
+              1650.0
+            ],
+            [
+              900.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 156,
+          "endpoints": [
+            [
+              1200.0,
+              1650.0
+            ],
+            [
+              1050.0,
+              1375.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 157,
+          "endpoints": [
+            [
+              1200.0,
+              1650.0
+            ],
+            [
+              1050.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 158,
+          "endpoints": [
+            [
+              150.0,
+              1650.0
+            ],
+            [
+              150.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 159,
+          "endpoints": [
+            [
+              150.0,
+              1925.0
+            ],
+            [
+              0.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 160,
+          "endpoints": [
+            [
+              150.0,
+              1925.0
+            ],
+            [
+              0.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 162,
+          "endpoints": [
+            [
+              300.0,
+              1650.0
+            ],
+            [
+              300.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 163,
+          "endpoints": [
+            [
+              300.0,
+              1925.0
+            ],
+            [
+              150.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 164,
+          "endpoints": [
+            [
+              300.0,
+              1925.0
+            ],
+            [
+              150.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 165,
+          "endpoints": [
+            [
+              450.0,
+              1650.0
+            ],
+            [
+              450.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 166,
+          "endpoints": [
+            [
+              450.0,
+              1925.0
+            ],
+            [
+              300.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 167,
+          "endpoints": [
+            [
+              450.0,
+              1925.0
+            ],
+            [
+              300.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 168,
+          "endpoints": [
+            [
+              600.0,
+              1650.0
+            ],
+            [
+              600.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 169,
+          "endpoints": [
+            [
+              600.0,
+              1925.0
+            ],
+            [
+              450.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 170,
+          "endpoints": [
+            [
+              600.0,
+              1925.0
+            ],
+            [
+              450.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 171,
+          "endpoints": [
+            [
+              750.0,
+              1650.0
+            ],
+            [
+              750.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 172,
+          "endpoints": [
+            [
+              750.0,
+              1925.0
+            ],
+            [
+              600.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 173,
+          "endpoints": [
+            [
+              750.0,
+              1925.0
+            ],
+            [
+              600.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 174,
+          "endpoints": [
+            [
+              900.0,
+              1650.0
+            ],
+            [
+              900.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 175,
+          "endpoints": [
+            [
+              900.0,
+              1925.0
+            ],
+            [
+              750.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 176,
+          "endpoints": [
+            [
+              900.0,
+              1925.0
+            ],
+            [
+              750.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 177,
+          "endpoints": [
+            [
+              1050.0,
+              1650.0
+            ],
+            [
+              1050.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 178,
+          "endpoints": [
+            [
+              1050.0,
+              1925.0
+            ],
+            [
+              900.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 179,
+          "endpoints": [
+            [
+              1050.0,
+              1925.0
+            ],
+            [
+              900.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 181,
+          "endpoints": [
+            [
+              1200.0,
+              1925.0
+            ],
+            [
+              1050.0,
+              1650.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 182,
+          "endpoints": [
+            [
+              1200.0,
+              1925.0
+            ],
+            [
+              1050.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40,
+            40
+          ]
+        },
+        {
+          "face": 183,
+          "endpoints": [
+            [
+              150.0,
+              1925.0
+            ],
+            [
+              150.0,
+              2200.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 184,
+          "endpoints": [
+            [
+              150.0,
+              2200.0
+            ],
+            [
+              0.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 185,
+          "endpoints": [
+            [
+              150.0,
+              2200.0
+            ],
+            [
+              0.0,
+              2200.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40
+          ]
+        },
+        {
+          "face": 187,
+          "endpoints": [
+            [
+              300.0,
+              1925.0
+            ],
+            [
+              300.0,
+              2200.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 188,
+          "endpoints": [
+            [
+              300.0,
+              2200.0
+            ],
+            [
+              150.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 189,
+          "endpoints": [
+            [
+              300.0,
+              2200.0
+            ],
+            [
+              150.0,
+              2200.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40
+          ]
+        },
+        {
+          "face": 190,
+          "endpoints": [
+            [
+              450.0,
+              1925.0
+            ],
+            [
+              450.0,
+              2200.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 191,
+          "endpoints": [
+            [
+              450.0,
+              2200.0
+            ],
+            [
+              300.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 192,
+          "endpoints": [
+            [
+              450.0,
+              2200.0
+            ],
+            [
+              300.0,
+              2200.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40
+          ]
+        },
+        {
+          "face": 193,
+          "endpoints": [
+            [
+              600.0,
+              1925.0
+            ],
+            [
+              600.0,
+              2200.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 194,
+          "endpoints": [
+            [
+              600.0,
+              2200.0
+            ],
+            [
+              450.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 195,
+          "endpoints": [
+            [
+              600.0,
+              2200.0
+            ],
+            [
+              450.0,
+              2200.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40
+          ]
+        },
+        {
+          "face": 196,
+          "endpoints": [
+            [
+              750.0,
+              1925.0
+            ],
+            [
+              750.0,
+              2200.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 197,
+          "endpoints": [
+            [
+              750.0,
+              2200.0
+            ],
+            [
+              600.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 198,
+          "endpoints": [
+            [
+              750.0,
+              2200.0
+            ],
+            [
+              600.0,
+              2200.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40
+          ]
+        },
+        {
+          "face": 199,
+          "endpoints": [
+            [
+              900.0,
+              1925.0
+            ],
+            [
+              900.0,
+              2200.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 200,
+          "endpoints": [
+            [
+              900.0,
+              2200.0
+            ],
+            [
+              750.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 201,
+          "endpoints": [
+            [
+              900.0,
+              2200.0
+            ],
+            [
+              750.0,
+              2200.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40
+          ]
+        },
+        {
+          "face": 202,
+          "endpoints": [
+            [
+              1050.0,
+              1925.0
+            ],
+            [
+              1050.0,
+              2200.0
+            ]
+          ],
+          "moment_dofs": 91,
+          "rank": 60,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            60,
+            60
+          ]
+        },
+        {
+          "face": 203,
+          "endpoints": [
+            [
+              1050.0,
+              2200.0
+            ],
+            [
+              900.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 98,
+          "rank": 67,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            67,
+            67
+          ]
+        },
+        {
+          "face": 204,
+          "endpoints": [
+            [
+              1050.0,
+              2200.0
+            ],
+            [
+              900.0,
+              2200.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40
+          ]
+        },
+        {
+          "face": 206,
+          "endpoints": [
+            [
+              1200.0,
+              2200.0
+            ],
+            [
+              1050.0,
+              1925.0
+            ]
+          ],
+          "moment_dofs": 96,
+          "rank": 65,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            65,
+            65
+          ]
+        },
+        {
+          "face": 207,
+          "endpoints": [
+            [
+              1200.0,
+              2200.0
+            ],
+            [
+              1050.0,
+              2200.0
+            ]
+          ],
+          "moment_dofs": 71,
+          "rank": 40,
+          "deficit": 31,
+          "incident_boundary_dofs": [
+            40
+          ]
+        }
+      ],
+      "total_face_supported_nullity": 5689
+    }
+  },
+  "c0125_initial_marks": [
+    {
+      "macro": 0,
+      "cells": 491993,
+      "initial_c0125_marked": 465813
+    },
+    {
+      "macro": 1,
+      "cells": 6389,
+      "initial_c0125_marked": 760
+    },
+    {
+      "macro": 2,
+      "cells": 264281,
+      "initial_c0125_marked": 247947
+    },
+    {
+      "macro": 3,
+      "cells": 6987,
+      "initial_c0125_marked": 1176
+    },
+    {
+      "macro": 4,
+      "cells": 262671,
+      "initial_c0125_marked": 246489
+    },
+    {
+      "macro": 5,
+      "cells": 6233,
+      "initial_c0125_marked": 624
+    },
+    {
+      "macro": 6,
+      "cells": 174023,
+      "initial_c0125_marked": 161557
+    },
+    {
+      "macro": 7,
+      "cells": 6545,
+      "initial_c0125_marked": 760
+    },
+    {
+      "macro": 8,
+      "cells": 365192,
+      "initial_c0125_marked": 343788
+    },
+    {
+      "macro": 9,
+      "cells": 6645,
+      "initial_c0125_marked": 1018
+    },
+    {
+      "macro": 10,
+      "cells": 223271,
+      "initial_c0125_marked": 209190
+    },
+    {
+      "macro": 11,
+      "cells": 6391,
+      "initial_c0125_marked": 624
+    },
+    {
+      "macro": 12,
+      "cells": 645839,
+      "initial_c0125_marked": 615313
+    },
+    {
+      "macro": 13,
+      "cells": 6829,
+      "initial_c0125_marked": 1176
+    },
+    {
+      "macro": 14,
+      "cells": 319918,
+      "initial_c0125_marked": 303406
+    },
+    {
+      "macro": 15,
+      "cells": 6696,
+      "initial_c0125_marked": 918
+    },
+    {
+      "macro": 16,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 17,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 18,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 19,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 20,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 21,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 22,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 23,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 24,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 25,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 26,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 27,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 28,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 29,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 30,
+      "cells": 5548,
+      "initial_c0125_marked": 13
+    },
+    {
+      "macro": 31,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 32,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 33,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 34,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 35,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 36,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 37,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 38,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 39,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 40,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 41,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 42,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 43,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 44,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 45,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 46,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 47,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 48,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 49,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 50,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 51,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 52,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 53,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 54,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 55,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 56,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 57,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 58,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 59,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 60,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 61,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 62,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 63,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 64,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 65,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 66,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 67,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 68,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 69,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 70,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 71,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 72,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 73,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 74,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 75,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 76,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 77,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 78,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 79,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 80,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 81,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 82,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 83,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 84,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 85,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 86,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 87,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 88,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 89,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 90,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 91,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 92,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 93,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 94,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 95,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 96,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 97,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 98,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 99,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 100,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 101,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 102,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 103,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 104,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 105,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 106,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 107,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 108,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 109,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 110,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 111,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 112,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 113,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 114,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 115,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 116,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 117,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 118,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 119,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 120,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 121,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 122,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 123,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 124,
+      "cells": 5706,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 125,
+      "cells": 5424,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 126,
+      "cells": 5548,
+      "initial_c0125_marked": 0
+    },
+    {
+      "macro": 127,
+      "cells": 5566,
+      "initial_c0125_marked": 0
+    }
+  ],
+  "driver": "original-P1-P0-physical-trace-moment-verification",
+  "scope": "Weak boundary moment identities, independent incident pressure values, and necessary face-wise injectivity of proposed multiplier spaces; no PDE acquisition."
+}

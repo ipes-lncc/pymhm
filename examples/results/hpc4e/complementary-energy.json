@@ -1,0 +1,125 @@
+{
+  "reference": "classical-rt1-512x256-pardiso.npz",
+  "reference_sha256": "9d6d3cbf577b6b892f0af4297b3171993421203b215726acb6079af80b55123a",
+  "source_sha256": "c92d4dc3cdd5512e33d91bb079188187a8053164bed5e41adc272f9f22e2d1c9",
+  "convention": "Discrete RT1 complementary-energy identity; no continuum error bound",
+  "material": "Pinned HPC4E pixels, plane strain, dimensionless domain and moduli",
+  "rows": [
+    {
+      "segments": 1,
+      "fields": "mhm-s1.npz",
+      "sha256": "6758d5d8c4f190efc6ed0c8592051f27234e60dc55f27f671fa0277152801cba",
+      "l2": {
+        "stress_l2": 0.13449693526015574,
+        "stress_reference_l2": 0.5304532880591474,
+        "stress_relative": 0.2535509502679506,
+        "displacement_l2": 0.0005071620562680193,
+        "displacement_reference_l2": 0.003959630582694584,
+        "displacement_relative": 0.12808317485084392,
+        "rotation_l2": 0.013766920567894901,
+        "rotation_reference_l2": 0.04132508347676298,
+        "rotation_relative": 0.3331371508453459
+      },
+      "energy": {
+        "reference_energy": 0.002268863953115239,
+        "comparison_energy": 0.002471087213651067,
+        "cross_energy": 0.002268863953115272,
+        "stress_compliance_difference_squared": 0.00020222326053576263,
+        "energy_difference": 0.00020222326053582823,
+        "identity_defect": -6.559423143537302e-17,
+        "identity_relative_energy": 2.6544684895381168e-14,
+        "identity_relative_difference": 3.243654130665724e-13,
+        "orthogonality_defect": 3.2959746043559335e-17,
+        "polarization_defect": -1.0842021724855044e-19,
+        "quadrature_order": 5
+      }
+    },
+    {
+      "segments": 2,
+      "fields": "mhm-s2.npz",
+      "sha256": "9f4489fc1bb481a4e6e0eb1c2359d8f3c870df2b2dfa4e719e9f4fc172648482",
+      "l2": {
+        "stress_l2": 0.09652505648598977,
+        "stress_reference_l2": 0.5304532880591474,
+        "stress_relative": 0.1819671187997743,
+        "displacement_l2": 0.00027388436820804116,
+        "displacement_reference_l2": 0.003959630582694584,
+        "displacement_relative": 0.06916917184270736,
+        "rotation_l2": 0.009890067224444524,
+        "rotation_reference_l2": 0.04132508347676298,
+        "rotation_relative": 0.23932358733178824
+      },
+      "energy": {
+        "reference_energy": 0.002268863953115239,
+        "comparison_energy": 0.0023718678441993924,
+        "cross_energy": 0.002268863953115275,
+        "stress_compliance_difference_squared": 0.00010300389108408184,
+        "energy_difference": 0.00010300389108415346,
+        "identity_defect": -7.162510601982364e-17,
+        "identity_relative_energy": 3.019776426203046e-14,
+        "identity_relative_difference": 6.953631097421982e-13,
+        "orthogonality_defect": 3.599551212651875e-17,
+        "polarization_defect": 3.6591823321385775e-19,
+        "quadrature_order": 5
+      }
+    },
+    {
+      "segments": 4,
+      "fields": "mhm-s4.npz",
+      "sha256": "604cb457ecc9ee1e5ecd5d8e491c054800786c6c98b1a0a0efa486e13464a3b2",
+      "l2": {
+        "stress_l2": 0.02726993109698118,
+        "stress_reference_l2": 0.5304532880591474,
+        "stress_relative": 0.05140873232543803,
+        "displacement_l2": 4.0735535319446325e-05,
+        "displacement_reference_l2": 0.003959630582694584,
+        "displacement_relative": 0.010287711055036156,
+        "rotation_l2": 0.004673419411365503,
+        "rotation_reference_l2": 0.04132508347676298,
+        "rotation_relative": 0.11308917050326972
+      },
+      "energy": {
+        "reference_energy": 0.002268863953115239,
+        "comparison_energy": 0.0022836943859180173,
+        "cross_energy": 0.0022688639531152697,
+        "stress_compliance_difference_squared": 1.4830432802716487e-05,
+        "energy_difference": 1.483043280277839e-05,
+        "identity_defect": -6.190286185123878e-17,
+        "identity_relative_energy": 2.7106456202262186e-14,
+        "identity_relative_difference": 4.174042839777519e-12,
+        "orthogonality_defect": 3.0791341698588326e-17,
+        "polarization_defect": -3.2017845406212553e-19,
+        "quadrature_order": 5
+      }
+    },
+    {
+      "segments": 8,
+      "fields": "mhm-s8.npz",
+      "sha256": "411c83ae9fb811ddea7d7359854baa0f950348aebff46d160fbad4453f26ac6f",
+      "l2": {
+        "stress_l2": 0.01879847307941719,
+        "stress_reference_l2": 0.5304532880591474,
+        "stress_relative": 0.035438507975316946,
+        "displacement_l2": 1.9533682122261684e-05,
+        "displacement_reference_l2": 0.003959630582694584,
+        "displacement_relative": 0.004933208215845413,
+        "rotation_l2": 0.0027033501684483987,
+        "rotation_reference_l2": 0.04132508347676298,
+        "rotation_relative": 0.06541668984089258
+      },
+      "energy": {
+        "reference_energy": 0.002268863953115239,
+        "comparison_energy": 0.0022755792780541633,
+        "cross_energy": 0.0022688639531152762,
+        "stress_compliance_difference_squared": 6.715324938849556e-06,
+        "energy_difference": 6.7153249389243115e-06,
+        "identity_defect": -7.475573979287553e-17,
+        "identity_relative_energy": 3.285130099127937e-14,
+        "identity_relative_difference": 1.1132110578829298e-11,
+        "orthogonality_defect": 3.729655473350135e-17,
+        "polarization_defect": 2.710505431213761e-19,
+        "quadrature_order": 5
+      }
+    }
+  ]
+}

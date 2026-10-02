@@ -1,0 +1,61 @@
+{
+  "python": "3.12.14",
+  "numpy": "2.5.3",
+  "matplotlib": "3.11.2",
+  "solver": "scipy",
+  "macro_resolution": 4,
+  "macro_triangles": 32,
+  "fine_triangles": 512,
+  "local_refinement": 4,
+  "trace_degree": 0,
+  "assembly_quadrature": 6,
+  "error_quadrature": 8,
+  "cosine": {
+    "primal": {
+      "pressure_l2": 0.02457274210914063,
+      "flux_l2": 0.4979959387492135
+    },
+    "mixed": {
+      "pressure_l2": 0.040349647217481285,
+      "flux_l2": 0.4857458152980586
+    }
+  },
+  "cosine_resolved": {
+    "local_refinement": 12,
+    "trace_segments": 6,
+    "fine_triangles": 4608,
+    "errors": {
+      "primal": {
+        "pressure_l2": 0.0004677458061634172,
+        "flux_l2": 0.07297104081321332,
+        "flux_relative_l2": 0.03284850932555103
+      },
+      "mixed": {
+        "pressure_l2": 0.01090875547529034,
+        "flux_l2": 0.0492889379961594,
+        "flux_relative_l2": 0.022187817541999125
+      }
+    }
+  },
+  "layered": {
+    "primal": {
+      "pressure_l2": 1.1301215915389724e-16,
+      "flux_l2": 5.278423289866252e-13
+    },
+    "mixed": {
+      "pressure_l2": 0.010416671874998708,
+      "flux_l2": 4.159053161242498e-13
+    }
+  },
+  "conservation": {
+    "raw_macro_max": 0.13041092345404814,
+    "raw_fine_max": 0.03830589515202097,
+    "primal_skeleton_macro_max": 2.220446049250313e-16,
+    "recovered_macro_max": 2.402592014227878e-16,
+    "recovered_fine_max": 1.97758476261356e-16,
+    "mixed_macro_max": 1.6653345369377348e-16,
+    "mixed_fine_max": 1.3704315460216776e-16,
+    "recovered_flux_l2": 0.4858182061890678
+  },
+  "layered_p0_projection_l2": 0.010416671874998697
+}

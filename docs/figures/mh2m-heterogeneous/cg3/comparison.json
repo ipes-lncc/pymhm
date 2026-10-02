@@ -1,0 +1,1852 @@
+{
+  "method": "Classical continuous P3 assembled independently with UFL/DOLFINx",
+  "material": "gamma=1.8, epsilon=1/14; unmodified scalar coefficient",
+  "source": "-2*x*(x-1)-2*y*(y-1)",
+  "boundary": "homogeneous Dirichlet",
+  "norms": "physical L2 pressure, L2 flux, L2 gradient and diffusion energy",
+  "source_sha256": {
+    "examples/compare_mh2m_cg3.py": "d2e00f7deb1578616cf7516c3b5498f3224252d4c574349a2eb194ea165df1df",
+    "examples/mh2m_cg_reference.py": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+    "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+    "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+    "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9"
+  },
+  "reference_acquisitions": [
+    {
+      "resolution": 32,
+      "degree": 3,
+      "dofs": 9409,
+      "triangles": 2048,
+      "quadrature_degree": 16,
+      "relative_equation_residual": 6.570297270872017e-13,
+      "residual_accumulation": "extended CSR action on the stored binary64 coefficients",
+      "binary64_matrix_action_residual": 7.275937235885892e-13,
+      "refinement_residuals": [
+        6.570297270872017e-13
+      ],
+      "native_replay_pressure_linf": 6.938893903907228e-18,
+      "native_replay_gradient_linf": 1.0998146837692957e-15,
+      "energy": 0.0059995867024705465,
+      "source_work": 0.005999586702470971,
+      "homogeneous_dirichlet": true,
+      "relative_energy_work_defect": 7.069485131394875e-14,
+      "native_material_difference_linf": 5.577760475716786e-13,
+      "solver": "PETSc/MUMPS Cholesky",
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "petsc": [
+          3,
+          23,
+          0
+        ]
+      },
+      "elapsed_seconds": 0.12670529796741903,
+      "method": "Classical conforming P3, independently assembled by UFL/DOLFINx",
+      "gamma": 1.8,
+      "epsilon": "1/14",
+      "source": "-2*x*(x-1)-2*y*(y-1)",
+      "boundary": "homogeneous Dirichlet",
+      "diagonal": "SW-NE",
+      "archive": "reference-cg3-n32-q16.npz",
+      "archive_sha256": "ebfe85c5fbaf3a3c774c2a7f89331b19c7b90318b137f6ada2b7a854cd490922",
+      "acquisition_source_sha256": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+      "source_changed_during_run": false
+    },
+    {
+      "resolution": 64,
+      "degree": 3,
+      "dofs": 37249,
+      "triangles": 8192,
+      "quadrature_degree": 16,
+      "relative_equation_residual": 8.98211514124362e-13,
+      "residual_accumulation": "extended CSR action on the stored binary64 coefficients",
+      "binary64_matrix_action_residual": 1.6677218709651892e-12,
+      "refinement_residuals": [
+        2.865318839158576e-12,
+        8.98211514124362e-13
+      ],
+      "native_replay_pressure_linf": 5.204170427930421e-18,
+      "native_replay_gradient_linf": 2.0703924685783193e-15,
+      "energy": 0.0060844993869717656,
+      "source_work": 0.006084499386971387,
+      "homogeneous_dirichlet": true,
+      "relative_energy_work_defect": 6.215297162699818e-14,
+      "native_material_difference_linf": 2.851052727237402e-13,
+      "solver": "PETSc/MUMPS Cholesky",
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "petsc": [
+          3,
+          23,
+          0
+        ]
+      },
+      "elapsed_seconds": 0.5951995509676635,
+      "method": "Classical conforming P3, independently assembled by UFL/DOLFINx",
+      "gamma": 1.8,
+      "epsilon": "1/14",
+      "source": "-2*x*(x-1)-2*y*(y-1)",
+      "boundary": "homogeneous Dirichlet",
+      "diagonal": "SW-NE",
+      "archive": "reference-cg3-n64-q16.npz",
+      "archive_sha256": "bb3cf2a7d63300ed1bc3d1c2e6bbaada8f0e6b017eb41e3518e46a60173450d3",
+      "acquisition_source_sha256": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+      "source_changed_during_run": false
+    },
+    {
+      "resolution": 128,
+      "degree": 3,
+      "dofs": 148225,
+      "triangles": 32768,
+      "quadrature_degree": 16,
+      "relative_equation_residual": 3.70621785619029e-12,
+      "residual_accumulation": "extended CSR action on the stored binary64 coefficients",
+      "binary64_matrix_action_residual": 6.840690292940339e-12,
+      "refinement_residuals": [
+        1.1875572084038177e-11,
+        3.714873971935926e-12,
+        3.70621785619029e-12
+      ],
+      "native_replay_pressure_linf": 6.938893903907228e-18,
+      "native_replay_gradient_linf": 4.2309905579074325e-15,
+      "energy": 0.0060901760712891075,
+      "source_work": 0.006090176071289049,
+      "homogeneous_dirichlet": true,
+      "relative_energy_work_defect": 9.542127479562706e-15,
+      "native_material_difference_linf": 3.623767952376511e-13,
+      "solver": "PETSc/MUMPS Cholesky",
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "petsc": [
+          3,
+          23,
+          0
+        ]
+      },
+      "elapsed_seconds": 2.595378633006476,
+      "method": "Classical conforming P3, independently assembled by UFL/DOLFINx",
+      "gamma": 1.8,
+      "epsilon": "1/14",
+      "source": "-2*x*(x-1)-2*y*(y-1)",
+      "boundary": "homogeneous Dirichlet",
+      "diagonal": "SW-NE",
+      "archive": "reference-cg3-n128-q16.npz",
+      "archive_sha256": "fe0d3a41e6f6eec5e086b5c2671f50f9096943cf55411d59fe0fc2d4358e536e",
+      "acquisition_source_sha256": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+      "source_changed_during_run": false
+    },
+    {
+      "resolution": 256,
+      "degree": 3,
+      "dofs": 591361,
+      "triangles": 131072,
+      "quadrature_degree": 16,
+      "relative_equation_residual": 1.4902186490770222e-11,
+      "residual_accumulation": "extended CSR action on the stored binary64 coefficients",
+      "binary64_matrix_action_residual": 2.7509999612897917e-11,
+      "refinement_residuals": [
+        4.86136864956522e-11,
+        1.4999506176113702e-11,
+        1.4902186490770222e-11
+      ],
+      "native_replay_pressure_linf": 5.204170427930421e-18,
+      "native_replay_gradient_linf": 9.218320551340753e-15,
+      "energy": 0.006090343483614653,
+      "source_work": 0.006090343483613241,
+      "homogeneous_dirichlet": true,
+      "relative_energy_work_defect": 2.3185308238264626e-13,
+      "native_material_difference_linf": 3.6770586575585185e-13,
+      "solver": "PETSc/MUMPS Cholesky",
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "petsc": [
+          3,
+          23,
+          0
+        ]
+      },
+      "elapsed_seconds": 9.668563717976213,
+      "method": "Classical conforming P3, independently assembled by UFL/DOLFINx",
+      "gamma": 1.8,
+      "epsilon": "1/14",
+      "source": "-2*x*(x-1)-2*y*(y-1)",
+      "boundary": "homogeneous Dirichlet",
+      "diagonal": "SW-NE",
+      "archive": "reference-cg3-n256-q16.npz",
+      "archive_sha256": "1a3d6196fd96b54237d0b31285c37f3ddb96b60dbf47cb8d108a76a7741dcc1d",
+      "acquisition_source_sha256": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+      "source_changed_during_run": false
+    },
+    {
+      "resolution": 512,
+      "degree": 3,
+      "dofs": 2362369,
+      "triangles": 524288,
+      "quadrature_degree": 16,
+      "relative_equation_residual": 6.010272949893549e-11,
+      "residual_accumulation": "extended CSR action on the stored binary64 coefficients",
+      "binary64_matrix_action_residual": 1.1033838632756811e-10,
+      "refinement_residuals": [
+        1.9580591154344569e-10,
+        6.016129010370111e-11,
+        6.010272949893549e-11
+      ],
+      "native_replay_pressure_linf": 6.938893903907228e-18,
+      "native_replay_gradient_linf": 1.7850304567801345e-14,
+      "energy": 0.006090346628315245,
+      "source_work": 0.0060903466283181214,
+      "homogeneous_dirichlet": true,
+      "relative_energy_work_defect": 4.722508748182392e-13,
+      "native_material_difference_linf": 3.8902214782865485e-13,
+      "solver": "PETSc/MUMPS Cholesky",
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "petsc": [
+          3,
+          23,
+          0
+        ]
+      },
+      "elapsed_seconds": 43.5143330009887,
+      "method": "Classical conforming P3, independently assembled by UFL/DOLFINx",
+      "gamma": 1.8,
+      "epsilon": "1/14",
+      "source": "-2*x*(x-1)-2*y*(y-1)",
+      "boundary": "homogeneous Dirichlet",
+      "diagonal": "SW-NE",
+      "archive": "reference-cg3-n512-q16.npz",
+      "archive_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "acquisition_source_sha256": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+      "source_changed_during_run": false
+    }
+  ],
+  "increments": [
+    {
+      "name": "cg3-n32-to-n64",
+      "reference_archive": "reference-cg3-n64-q16.npz",
+      "reference_sha256": "bb3cf2a7d63300ed1bc3d1c2e6bbaada8f0e6b017eb41e3518e46a60173450d3",
+      "other_archive": "reference-cg3-n32-q16.npz",
+      "other_sha256": "ebfe85c5fbaf3a3c774c2a7f89331b19c7b90318b137f6ada2b7a854cd490922",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000009,
+          "pressure_difference": 0.00012874752239346707,
+          "reference_pressure_norm": 0.009126601666483122,
+          "pressure_relative_difference": 0.014106841417905238,
+          "flux_difference": 0.02278341752963718,
+          "reference_flux_norm": 0.17910235325563026,
+          "flux_relative_difference": 0.1272089233641656,
+          "gradient_difference": 0.004612577626501632,
+          "reference_gradient_norm": 0.04425629810452607,
+          "gradient_relative_difference": 0.10422420817049555,
+          "energy_difference": 0.009191749976094838,
+          "reference_energy_norm": 0.07800319809018927,
+          "energy_relative_difference": 0.11783811691242588
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0000000000000004,
+          "pressure_difference": 0.00012874752239346707,
+          "reference_pressure_norm": 0.00912660166648312,
+          "pressure_relative_difference": 0.01410684141790524,
+          "flux_difference": 0.02278249870541096,
+          "reference_flux_norm": 0.17910245218689716,
+          "flux_relative_difference": 0.12720372293751148,
+          "gradient_difference": 0.00461257762650163,
+          "reference_gradient_norm": 0.044256298104526054,
+          "gradient_relative_difference": 0.10422420817049552,
+          "energy_difference": 0.009191683161523958,
+          "reference_energy_norm": 0.07800320186426928,
+          "energy_relative_difference": 0.117837254649086
+        }
+      }
+    },
+    {
+      "name": "cg3-n64-to-n128",
+      "reference_archive": "reference-cg3-n128-q16.npz",
+      "reference_sha256": "fe0d3a41e6f6eec5e086b5c2671f50f9096943cf55411d59fe0fc2d4358e536e",
+      "other_archive": "reference-cg3-n64-q16.npz",
+      "other_sha256": "bb3cf2a7d63300ed1bc3d1c2e6bbaada8f0e6b017eb41e3518e46a60173450d3",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000004,
+          "pressure_difference": 8.883971981668886e-06,
+          "reference_pressure_norm": 0.009135138907587546,
+          "pressure_relative_difference": 0.0009725054070376484,
+          "flux_difference": 0.005984459775607368,
+          "reference_flux_norm": 0.17896130831102494,
+          "flux_relative_difference": 0.03343996438161206,
+          "gradient_difference": 0.0011148227449057468,
+          "reference_gradient_norm": 0.044306115563286536,
+          "gradient_relative_difference": 0.02516182542144418,
+          "energy_difference": 0.0023825304485982765,
+          "reference_energy_norm": 0.07803958015836363,
+          "energy_relative_difference": 0.030529770198192654
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0,
+          "pressure_difference": 8.883971981668884e-06,
+          "reference_pressure_norm": 0.009135138907587544,
+          "pressure_relative_difference": 0.0009725054070376484,
+          "flux_difference": 0.005984458649601146,
+          "reference_flux_norm": 0.17896130831022175,
+          "flux_relative_difference": 0.033439958089864566,
+          "gradient_difference": 0.0011148227449057435,
+          "reference_gradient_norm": 0.044306115563286536,
+          "gradient_relative_difference": 0.025161825421444108,
+          "energy_difference": 0.002382530407550181,
+          "reference_energy_norm": 0.07803958015833737,
+          "energy_relative_difference": 0.030529769672212197
+        }
+      }
+    },
+    {
+      "name": "cg3-n128-to-n256",
+      "reference_archive": "reference-cg3-n256-q16.npz",
+      "reference_sha256": "1a3d6196fd96b54237d0b31285c37f3ddb96b60dbf47cb8d108a76a7741dcc1d",
+      "other_archive": "reference-cg3-n128-q16.npz",
+      "other_sha256": "fe0d3a41e6f6eec5e086b5c2671f50f9096943cf55411d59fe0fc2d4358e536e",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000004,
+          "pressure_difference": 2.97781943462259e-07,
+          "reference_pressure_norm": 0.009135390050705038,
+          "pressure_relative_difference": 3.2596522076173116e-05,
+          "flux_difference": 0.0010333923808351732,
+          "reference_flux_norm": 0.1789567773874119,
+          "flux_relative_difference": 0.005774536152928421,
+          "gradient_difference": 0.00018339825014268723,
+          "reference_gradient_norm": 0.044307687947476096,
+          "gradient_relative_difference": 0.004139197025132388,
+          "energy_difference": 0.0004091605104995753,
+          "reference_energy_norm": 0.07804065276260685,
+          "energy_relative_difference": 0.0052429150194861565
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0,
+          "pressure_difference": 2.9778194346225845e-07,
+          "reference_pressure_norm": 0.009135390050705036,
+          "pressure_relative_difference": 3.259652207617306e-05,
+          "flux_difference": 0.001033392380845602,
+          "reference_flux_norm": 0.17895677738741192,
+          "flux_relative_difference": 0.005774536152986695,
+          "gradient_difference": 0.00018339825014268657,
+          "reference_gradient_norm": 0.04430768794747609,
+          "gradient_relative_difference": 0.004139197025132374,
+          "energy_difference": 0.0004091605105002926,
+          "reference_energy_norm": 0.07804065276260684,
+          "energy_relative_difference": 0.005242915019495349
+        }
+      }
+    },
+    {
+      "name": "cg3-n256-to-n512",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "other_archive": "reference-cg3-n256-q16.npz",
+      "other_sha256": "1a3d6196fd96b54237d0b31285c37f3ddb96b60dbf47cb8d108a76a7741dcc1d",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000002,
+          "pressure_difference": 1.1305499690615702e-08,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 1.2375491107982054e-06,
+          "flux_difference": 0.0001402485165085293,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.0007837008782163487,
+          "gradient_difference": 2.494230735831954e-05,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.0005629336919070085,
+          "energy_difference": 5.6077687001529e-05,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.0007185700085631664
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0,
+          "pressure_difference": 1.1305499690615705e-08,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 1.2375491107982058e-06,
+          "flux_difference": 0.00014024851650852802,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.0007837008782163417,
+          "gradient_difference": 2.494230735831932e-05,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.0005629336919070036,
+          "energy_difference": 5.6077687001528554e-05,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.0007185700085631609
+        }
+      }
+    }
+  ],
+  "assembly_quadrature_control": {
+    "acquisition": {
+      "resolution": 512,
+      "degree": 3,
+      "dofs": 2362369,
+      "triangles": 524288,
+      "quadrature_degree": 12,
+      "relative_equation_residual": 6.023686858662113e-11,
+      "residual_accumulation": "extended CSR action on the stored binary64 coefficients",
+      "binary64_matrix_action_residual": 1.1067938791210576e-10,
+      "refinement_residuals": [
+        1.939073603511212e-10,
+        6.000376572284532e-11,
+        6.023686858662113e-11
+      ],
+      "native_replay_pressure_linf": 6.938893903907228e-18,
+      "native_replay_gradient_linf": 1.699942270283472e-14,
+      "energy": 0.006090346628315932,
+      "source_work": 0.006090346628317925,
+      "homogeneous_dirichlet": true,
+      "relative_energy_work_defect": 3.272715652389471e-13,
+      "native_material_difference_linf": 3.8902214782865485e-13,
+      "solver": "PETSc/MUMPS Cholesky",
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "petsc": [
+          3,
+          23,
+          0
+        ]
+      },
+      "elapsed_seconds": 41.953260125010274,
+      "method": "Classical conforming P3, independently assembled by UFL/DOLFINx",
+      "gamma": 1.8,
+      "epsilon": "1/14",
+      "source": "-2*x*(x-1)-2*y*(y-1)",
+      "boundary": "homogeneous Dirichlet",
+      "diagonal": "SW-NE",
+      "archive": "reference-cg3-n512-q12.npz",
+      "archive_sha256": "31c9bdcdfd62ccf244800504e660bb090ad161e96a561a0d427fb7988a13594c",
+      "acquisition_source_sha256": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+      "source_changed_during_run": false
+    },
+    "norms": {
+      "quadrature_8": {
+        "quadrature_order": 8,
+        "overlay_area": 1.0000000000000002,
+        "pressure_difference": 4.73561394684065e-15,
+        "reference_pressure_norm": 0.009135394783099784,
+        "pressure_relative_difference": 5.183808756247073e-13,
+        "flux_difference": 4.277981881475459e-13,
+        "reference_flux_norm": 0.1789566917772577,
+        "flux_relative_difference": 2.39051238542124e-12,
+        "gradient_difference": 8.823495269803956e-14,
+        "reference_gradient_norm": 0.04430771815029288,
+        "gradient_relative_difference": 1.9914127014788804e-12,
+        "energy_difference": 1.7006173537343994e-13,
+        "reference_energy_norm": 0.07804067291043841,
+        "energy_relative_difference": 2.179142350151278e-12
+      },
+      "quadrature_10": {
+        "quadrature_order": 10,
+        "overlay_area": 1.0,
+        "pressure_difference": 4.73561370146799e-15,
+        "reference_pressure_norm": 0.009135394783099783,
+        "pressure_relative_difference": 5.183808487651502e-13,
+        "flux_difference": 4.2779818892263793e-13,
+        "reference_flux_norm": 0.17895669177725768,
+        "flux_relative_difference": 2.3905123897524114e-12,
+        "gradient_difference": 8.823495762424638e-14,
+        "reference_gradient_norm": 0.04430771815029287,
+        "gradient_relative_difference": 1.991412812660567e-12,
+        "energy_difference": 1.7006174418740392e-13,
+        "reference_energy_norm": 0.0780406729104384,
+        "energy_relative_difference": 2.179142463091924e-12
+      }
+    }
+  },
+  "cg1_reference_comparison": {
+    "archive": "reference-n1024.npz",
+    "archive_sha256": "2a9c862fafcb94d8724d21b1ae599af09a216eb60bb4729eb3f21dc481fa11c5",
+    "reference_archive": "reference-cg3-n512-q16.npz",
+    "norms": {
+      "quadrature_8": {
+        "quadrature_order": 8,
+        "overlay_area": 1.0,
+        "pressure_difference": 3.012279001342937e-06,
+        "reference_pressure_norm": 0.009135394783099784,
+        "pressure_relative_difference": 0.0003297371457789176,
+        "flux_difference": 0.0033836656415964766,
+        "reference_flux_norm": 0.17895669177725768,
+        "flux_relative_difference": 0.018907734647933865,
+        "gradient_difference": 0.0006983639626777614,
+        "reference_gradient_norm": 0.04430771815029287,
+        "gradient_relative_difference": 0.015761677464609974,
+        "energy_difference": 0.0014159671436339584,
+        "reference_energy_norm": 0.0780406729104384,
+        "energy_relative_difference": 0.01814396379255931
+      },
+      "quadrature_10": {
+        "quadrature_order": 10,
+        "overlay_area": 0.9999999999999998,
+        "pressure_difference": 3.0122790013429364e-06,
+        "reference_pressure_norm": 0.009135394783099783,
+        "pressure_relative_difference": 0.0003297371457789176,
+        "flux_difference": 0.0033836656415964276,
+        "reference_flux_norm": 0.17895669177725768,
+        "flux_relative_difference": 0.01890773464793359,
+        "gradient_difference": 0.0006983639626777511,
+        "reference_gradient_norm": 0.044307718150292864,
+        "gradient_relative_difference": 0.01576167746460974,
+        "energy_difference": 0.0014159671436339374,
+        "reference_energy_norm": 0.0780406729104384,
+        "energy_relative_difference": 0.018143963792559042
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "figure-5",
+      "archive": "figure-5.npz",
+      "archive_sha256": "6c6d863432901e95f5279edd7702ffe43deb4d068bdcd8a6bccae03d7d57ad86",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000002,
+          "pressure_difference": 8.065904764310952e-05,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.008829289763407536,
+          "flux_difference": 0.03675557557376828,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.20538810372912403,
+          "gradient_difference": 0.008178424171585626,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.18458238232544968,
+          "energy_difference": 0.015629212269695228,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.20027008592854825
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0,
+          "pressure_difference": 8.065904764310952e-05,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.008829289763407536,
+          "flux_difference": 0.03675557557376826,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.20538810372912394,
+          "gradient_difference": 0.008178424171585624,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.18458238232544966,
+          "energy_difference": 0.01562921226969522,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.2002700859285482
+        }
+      }
+    },
+    {
+      "name": "figure-7-n8",
+      "archive": "figure-7-n8.npz",
+      "archive_sha256": "d7a27db441261b174c73a947817c4efdb96472cd847af438dc3d3159ee48ce87",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000004,
+          "pressure_difference": 0.0006687126887979105,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.07320019601506544,
+          "flux_difference": 0.0641445485113687,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.3584361549955762,
+          "gradient_difference": 0.017648977021246574,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.39832737405661034,
+          "energy_difference": 0.02970259096253309,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.380603983215529
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0,
+          "pressure_difference": 0.0006687126887979104,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 0.07320019601506546,
+          "flux_difference": 0.06414454851136867,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.3584361549955761,
+          "gradient_difference": 0.01764897702124657,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.3983273740566103,
+          "energy_difference": 0.02970259096253308,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.3806039832155289
+        }
+      }
+    },
+    {
+      "name": "figure-7-n16",
+      "archive": "figure-7-n16.npz",
+      "archive_sha256": "db9c139ae7573cc772249a59ecd7b54b435d25df3f6fd20e62f13c027afbdfbc",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000002,
+          "pressure_difference": 0.0017311002084884723,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.1894937492675147,
+          "flux_difference": 0.07555073452232193,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.4221732854581251,
+          "gradient_difference": 0.022429542558938843,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.5062220194426912,
+          "energy_difference": 0.03578938760664908,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.45859916722811894
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0,
+          "pressure_difference": 0.0017311002084884719,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 0.1894937492675147,
+          "flux_difference": 0.07555073452232192,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.4221732854581251,
+          "gradient_difference": 0.02242954255893884,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.5062220194426912,
+          "energy_difference": 0.03578938760664906,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.45859916722811883
+        }
+      }
+    },
+    {
+      "name": "figure-7-n30",
+      "archive": "figure-7-n30.npz",
+      "archive_sha256": "7cf8094f66b5e67f201aa0d2df47feb6ea99b8fc6c3927ad2095f61c0ab23785",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000007,
+          "pressure_difference": 0.001532357166984471,
+          "reference_pressure_norm": 0.009135394783099786,
+          "pressure_relative_difference": 0.16773847254190777,
+          "flux_difference": 0.07138787697551847,
+          "reference_flux_norm": 0.17895669177725776,
+          "flux_relative_difference": 0.3989114699570604,
+          "gradient_difference": 0.019516915684561525,
+          "reference_gradient_norm": 0.044307718150292885,
+          "gradient_relative_difference": 0.44048568735495836,
+          "energy_difference": 0.03243920652425695,
+          "reference_energy_norm": 0.07804067291043842,
+          "energy_relative_difference": 0.4156705127528187
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0000000000000004,
+          "pressure_difference": 0.0015323571669844706,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.16773847254190777,
+          "flux_difference": 0.07138787697551846,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.39891146995706045,
+          "gradient_difference": 0.01951691568456152,
+          "reference_gradient_norm": 0.044307718150292885,
+          "gradient_relative_difference": 0.44048568735495824,
+          "energy_difference": 0.032439206524256935,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.4156705127528186
+        }
+      }
+    },
+    {
+      "name": "figure-7-n50",
+      "archive": "figure-7-n50.npz",
+      "archive_sha256": "f771a12e91364f7cfbd7588a870733874f41a4035aefed6fc20cadd57b2578a0",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000009,
+          "pressure_difference": 0.0010165537880115548,
+          "reference_pressure_norm": 0.009135394783099788,
+          "pressure_relative_difference": 0.11127639386665034,
+          "flux_difference": 0.06113606138772684,
+          "reference_flux_norm": 0.17895669177725776,
+          "flux_relative_difference": 0.3416248969545164,
+          "gradient_difference": 0.014510740431511149,
+          "reference_gradient_norm": 0.044307718150292885,
+          "gradient_relative_difference": 0.3274991590018325,
+          "energy_difference": 0.02624022840791171,
+          "reference_energy_norm": 0.07804067291043842,
+          "energy_relative_difference": 0.3362378543048405
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0000000000000004,
+          "pressure_difference": 0.0010165537880115546,
+          "reference_pressure_norm": 0.009135394783099786,
+          "pressure_relative_difference": 0.11127639386665034,
+          "flux_difference": 0.06113606138772682,
+          "reference_flux_norm": 0.17895669177725773,
+          "flux_relative_difference": 0.34162489695451637,
+          "gradient_difference": 0.014510740431511146,
+          "reference_gradient_norm": 0.044307718150292885,
+          "gradient_relative_difference": 0.3274991590018324,
+          "energy_difference": 0.026240228407911702,
+          "reference_energy_norm": 0.07804067291043842,
+          "energy_relative_difference": 0.33623785430484043
+        }
+      }
+    },
+    {
+      "name": "figure-7-n60",
+      "archive": "figure-7-n60.npz",
+      "archive_sha256": "095800042f0cb93f475d372eb01fe5e59e5fd31ee0f22aec51e47f7831228d74",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.000000000000001,
+          "pressure_difference": 0.0008228130421043487,
+          "reference_pressure_norm": 0.009135394783099788,
+          "pressure_relative_difference": 0.09006869014862157,
+          "flux_difference": 0.05598685752882682,
+          "reference_flux_norm": 0.1789566917772578,
+          "flux_relative_difference": 0.3128514333429456,
+          "gradient_difference": 0.0126057476681361,
+          "reference_gradient_norm": 0.0443077181502929,
+          "gradient_relative_difference": 0.2845045557385078,
+          "energy_difference": 0.023574256270066173,
+          "reference_energy_norm": 0.07804067291043845,
+          "energy_relative_difference": 0.3020765376680006
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0000000000000007,
+          "pressure_difference": 0.0008228130421043486,
+          "reference_pressure_norm": 0.009135394783099786,
+          "pressure_relative_difference": 0.09006869014862157,
+          "flux_difference": 0.055986857528826796,
+          "reference_flux_norm": 0.17895669177725776,
+          "flux_relative_difference": 0.31285143334294546,
+          "gradient_difference": 0.012605747668136099,
+          "reference_gradient_norm": 0.04430771815029289,
+          "gradient_relative_difference": 0.2845045557385078,
+          "energy_difference": 0.023574256270066166,
+          "reference_energy_norm": 0.07804067291043844,
+          "energy_relative_difference": 0.3020765376680005
+        }
+      }
+    },
+    {
+      "name": "figure-8-n16",
+      "archive": "figure-8-n16.npz",
+      "archive_sha256": "f167304da64508be79a3c8f2d3ef5bf96c81f0d986df4fe8b4be9665be481f0a",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000002,
+          "pressure_difference": 0.0011602396754110227,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.1270048753182985,
+          "flux_difference": 0.06837242252607091,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.3820612788884817,
+          "gradient_difference": 0.015342746157299598,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.34627705505520784,
+          "energy_difference": 0.027950804272882865,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.35815688448714383
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0,
+          "pressure_difference": 0.0011602396754110224,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 0.1270048753182985,
+          "flux_difference": 0.0683724225260709,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.3820612788884817,
+          "gradient_difference": 0.015342746157299594,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.3462770550552078,
+          "energy_difference": 0.027950804272882858,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.35815688448714383
+        }
+      }
+    },
+    {
+      "name": "figure-8-n34",
+      "archive": "figure-8-n34.npz",
+      "archive_sha256": "0ec4a7a3141607bb95c17d6d1cf9a952619b34ca5aae82b0a88d2b0105a5282a",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000002,
+          "pressure_difference": 0.0009147490025584782,
+          "reference_pressure_norm": 0.009135394783099786,
+          "pressure_relative_difference": 0.10013239977879634,
+          "flux_difference": 0.06039920777009108,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.3375074000879959,
+          "gradient_difference": 0.013268205286042294,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.299455847422253,
+          "energy_difference": 0.024636981510409432,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.315694119381614
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0,
+          "pressure_difference": 0.000914749002558478,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.10013239977879633,
+          "flux_difference": 0.06039920777009106,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.3375074000879958,
+          "gradient_difference": 0.013268205286042292,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.299455847422253,
+          "energy_difference": 0.024636981510409425,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.31569411938161396
+        }
+      }
+    },
+    {
+      "name": "figure-8-n65",
+      "archive": "figure-8-n65.npz",
+      "archive_sha256": "60f293d81e7b4bcecad4f110ee3cb7df49951cbb301642561b75c36082d5982e",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 0.9999999999999994,
+          "pressure_difference": 0.0004635318752861197,
+          "reference_pressure_norm": 0.009135394783099781,
+          "pressure_relative_difference": 0.050740212797769885,
+          "flux_difference": 0.04219618039769491,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.23578989966027816,
+          "gradient_difference": 0.009131856646552297,
+          "reference_gradient_norm": 0.04430771815029285,
+          "gradient_relative_difference": 0.20610081105004818,
+          "energy_difference": 0.017528626087304332,
+          "reference_energy_norm": 0.07804067291043837,
+          "energy_relative_difference": 0.22460885373734113
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 0.9999999999999991,
+          "pressure_difference": 0.0004635318752861196,
+          "reference_pressure_norm": 0.00913539478309978,
+          "pressure_relative_difference": 0.05074021279776988,
+          "flux_difference": 0.04219618039769489,
+          "reference_flux_norm": 0.17895669177725765,
+          "flux_relative_difference": 0.23578989966027808,
+          "gradient_difference": 0.009131856646552297,
+          "reference_gradient_norm": 0.044307718150292844,
+          "gradient_relative_difference": 0.2061008110500482,
+          "energy_difference": 0.017528626087304326,
+          "reference_energy_norm": 0.07804067291043837,
+          "energy_relative_difference": 0.22460885373734105
+        }
+      }
+    },
+    {
+      "name": "figure-8-n80",
+      "archive": "figure-8-n80.npz",
+      "archive_sha256": "dc2a4778fe629bdad6b5aa4b9c1c5b8c8e8c4c4874b93dcf0d7bddfdb8b01ffe",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000004,
+          "pressure_difference": 0.0003373535431046186,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.036928184398632984,
+          "flux_difference": 0.03586679828662923,
+          "reference_flux_norm": 0.17895669177725776,
+          "flux_relative_difference": 0.2004216658814391,
+          "gradient_difference": 0.007701584767917968,
+          "reference_gradient_norm": 0.044307718150292885,
+          "gradient_relative_difference": 0.1738203881724173,
+          "energy_difference": 0.014951465772539932,
+          "reference_energy_norm": 0.07804067291043842,
+          "energy_relative_difference": 0.1915855567993197
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0000000000000002,
+          "pressure_difference": 0.00033735354310461855,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 0.036928184398632984,
+          "flux_difference": 0.03586679828662922,
+          "reference_flux_norm": 0.17895669177725773,
+          "flux_relative_difference": 0.20042166588143903,
+          "gradient_difference": 0.007701584767917967,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.1738203881724173,
+          "energy_difference": 0.014951465772539928,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.1915855567993197
+        }
+      }
+    },
+    {
+      "name": "figure-8-n100",
+      "archive": "figure-8-n100.npz",
+      "archive_sha256": "5f54a7216421ea8b2fa27b7b95330e418dc605997bc2b7150a6041f9cad5787e",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000009,
+          "pressure_difference": 0.0002342805674782428,
+          "reference_pressure_norm": 0.00913539478309979,
+          "pressure_relative_difference": 0.025645368704990717,
+          "flux_difference": 0.02973845420929667,
+          "reference_flux_norm": 0.17895669177725776,
+          "flux_relative_difference": 0.16617682140833978,
+          "gradient_difference": 0.006339004994266514,
+          "reference_gradient_norm": 0.044307718150292885,
+          "gradient_relative_difference": 0.14306773760644706,
+          "energy_difference": 0.012446442630627719,
+          "reference_energy_norm": 0.07804067291043842,
+          "energy_relative_difference": 0.15948661340877457
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0000000000000004,
+          "pressure_difference": 0.00023428056747824274,
+          "reference_pressure_norm": 0.009135394783099788,
+          "pressure_relative_difference": 0.025645368704990713,
+          "flux_difference": 0.029738454209296675,
+          "reference_flux_norm": 0.17895669177725773,
+          "flux_relative_difference": 0.16617682140833984,
+          "gradient_difference": 0.006339004994266515,
+          "reference_gradient_norm": 0.044307718150292885,
+          "gradient_relative_difference": 0.1430677376064471,
+          "energy_difference": 0.012446442630627719,
+          "reference_energy_norm": 0.07804067291043842,
+          "energy_relative_difference": 0.15948661340877457
+        }
+      }
+    },
+    {
+      "name": "figure-6-upper-MHM-n8",
+      "archive": "figure-6-upper-MHM-n8.npz",
+      "archive_sha256": "a60b7aa9890c176fb9302cf1e83b76bbcdc3e5421d5583be59eeadc82f1f39d9",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000004,
+          "pressure_difference": 0.00039228484185523885,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.042941202998796994,
+          "flux_difference": 0.07633096238242025,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.4265331551693369,
+          "gradient_difference": 0.017712957131375662,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.3997713687555038,
+          "energy_difference": 0.03221669380409869,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.41281927234368465
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0,
+          "pressure_difference": 0.0003922848418552388,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 0.042941202998796994,
+          "flux_difference": 0.07633096238242022,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.42653315516933676,
+          "gradient_difference": 0.01771295713137566,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.39977136875550373,
+          "energy_difference": 0.03221669380409868,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.41281927234368465
+        }
+      }
+    },
+    {
+      "name": "figure-6-upper-MHM-n30",
+      "archive": "figure-6-upper-MHM-n30.npz",
+      "archive_sha256": "05dc735a6a0e7453101c16eb63e27c7fe662fdce5e87948af218d00264ae257a",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000004,
+          "pressure_difference": 0.0013471910466538446,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.14746938459037467,
+          "flux_difference": 0.07101333287819717,
+          "reference_flux_norm": 0.17895669177725773,
+          "flux_relative_difference": 0.3968185384572566,
+          "gradient_difference": 0.019051597225615467,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.4299837143721096,
+          "energy_difference": 0.03213559763375669,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.411780119715733
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0,
+          "pressure_difference": 0.0013471910466538444,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.14746938459037465,
+          "flux_difference": 0.07101333287819714,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.39681853845725656,
+          "gradient_difference": 0.019051597225615464,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.4299837143721095,
+          "energy_difference": 0.03213559763375668,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.411780119715733
+        }
+      }
+    },
+    {
+      "name": "figure-6-upper-MH2M-n16",
+      "archive": "figure-6-upper-MH2M-n16.npz",
+      "archive_sha256": "d72e4be71b944cd38fd1c286c22502547ff812409e2fd959207f7773c85ea149",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000004,
+          "pressure_difference": 0.0006070039815951868,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.06644529284253009,
+          "flux_difference": 0.07701955582111764,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.43038097685098964,
+          "gradient_difference": 0.019589626696748602,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.44212673354786863,
+          "energy_difference": 0.03412240317058694,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.4372387102523672
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0,
+          "pressure_difference": 0.0006070039815951867,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 0.06644529284253009,
+          "flux_difference": 0.07701955582111761,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.4303809768509895,
+          "gradient_difference": 0.0195896266967486,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.44212673354786863,
+          "energy_difference": 0.034122403170586936,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.4372387102523672
+        }
+      }
+    },
+    {
+      "name": "figure-6-upper-MH2M-n65",
+      "archive": "figure-6-upper-MH2M-n65.npz",
+      "archive_sha256": "a95b851433883c4ff29595a625a62bade187946ed7de745dccb819b56897dea8",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 0.9999999999999993,
+          "pressure_difference": 0.0002417745258903826,
+          "reference_pressure_norm": 0.00913539478309978,
+          "pressure_relative_difference": 0.026465689948907148,
+          "flux_difference": 0.04947834262699452,
+          "reference_flux_norm": 0.17895669177725765,
+          "flux_relative_difference": 0.27648221553278834,
+          "gradient_difference": 0.010606291544011994,
+          "reference_gradient_norm": 0.04430771815029286,
+          "gradient_relative_difference": 0.23937796814620863,
+          "energy_difference": 0.020750194025616953,
+          "reference_energy_norm": 0.07804067291043837,
+          "energy_relative_difference": 0.26588948110981114
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 0.999999999999999,
+          "pressure_difference": 0.00024177452589038258,
+          "reference_pressure_norm": 0.00913539478309978,
+          "pressure_relative_difference": 0.026465689948907144,
+          "flux_difference": 0.04947834262699449,
+          "reference_flux_norm": 0.17895669177725762,
+          "flux_relative_difference": 0.27648221553278823,
+          "gradient_difference": 0.010606291544011994,
+          "reference_gradient_norm": 0.04430771815029285,
+          "gradient_relative_difference": 0.23937796814620868,
+          "energy_difference": 0.020750194025616946,
+          "reference_energy_norm": 0.07804067291043837,
+          "energy_relative_difference": 0.26588948110981103
+        }
+      }
+    },
+    {
+      "name": "figure-6-lower-dofs-MHM-n5-lambda4",
+      "archive": "figure-6-lower-dofs-MHM-n5-lambda4.npz",
+      "archive_sha256": "3d94ecb8c0d123f1717bb7ea191c31a736bd4efaeb38973fec361b610c1e0701",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000002,
+          "pressure_difference": 0.0003767885877999682,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.041244915709282334,
+          "flux_difference": 0.06140242637770216,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.3431133296436213,
+          "gradient_difference": 0.014161189261600026,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.3196099878934167,
+          "energy_difference": 0.02603364327380144,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.3335907072928286
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 0.9999999999999999,
+          "pressure_difference": 0.00037678858779996807,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 0.04124491570928233,
+          "flux_difference": 0.06140242637770214,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.3431133296436213,
+          "gradient_difference": 0.014161189261600022,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.31960998789341666,
+          "energy_difference": 0.026033643273801435,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.33359070729282864
+        }
+      }
+    },
+    {
+      "name": "figure-6-lower-dofs-MHM-n9-lambda4",
+      "archive": "figure-6-lower-dofs-MHM-n9-lambda4.npz",
+      "archive_sha256": "20f7e4a15804821dd5997951124e4c05eb89afb82f9549b8e32bdc71954c7cd5",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000002,
+          "pressure_difference": 6.280819155055431e-05,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.006875257505756362,
+          "flux_difference": 0.04370108037263266,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.244199196680648,
+          "gradient_difference": 0.010502461423497748,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.23703458137638997,
+          "energy_difference": 0.019180070277663035,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.24577018062971603
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 0.9999999999999999,
+          "pressure_difference": 6.28081915505543e-05,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 0.006875257505756362,
+          "flux_difference": 0.04370108037263264,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.24419919668064796,
+          "gradient_difference": 0.010502461423497747,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.23703458137638997,
+          "energy_difference": 0.01918007027766303,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.245770180629716
+        }
+      }
+    },
+    {
+      "name": "figure-6-lower-dofs-MH2M-n5-lambda4",
+      "archive": "figure-6-lower-dofs-MH2M-n5-lambda4.npz",
+      "archive_sha256": "0a8181178c992a5d342b8a7d7df0f0ef8421d37acbcc36c76d0b321404a320cf",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000002,
+          "pressure_difference": 0.00039565490245631774,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.04331010447279934,
+          "flux_difference": 0.06128276991994662,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.34244469603977445,
+          "gradient_difference": 0.014042973690618334,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.3169419296878304,
+          "energy_difference": 0.025890811541461174,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.331760485601837
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 0.9999999999999999,
+          "pressure_difference": 0.00039565490245631763,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 0.043310104472799336,
+          "flux_difference": 0.0612827699199466,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.3424446960397744,
+          "gradient_difference": 0.014042973690618332,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.3169419296878304,
+          "energy_difference": 0.02589081154146117,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.331760485601837
+        }
+      }
+    },
+    {
+      "name": "figure-6-lower-dofs-MH2M-n10-lambda4",
+      "archive": "figure-6-lower-dofs-MH2M-n10-lambda4.npz",
+      "archive_sha256": "30bb16a91fc84a104a58b51a045437dc51d2d88fc34221af379e40f9439f1998",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0,
+          "pressure_difference": 5.339945641773658e-05,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.005845336483599376,
+          "flux_difference": 0.040842234482656344,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.22822412549675156,
+          "gradient_difference": 0.009539882847487816,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.21530973035280893,
+          "energy_difference": 0.017701660100445295,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.22682608235272655
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 0.9999999999999998,
+          "pressure_difference": 5.339945641773654e-05,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 0.005845336483599373,
+          "flux_difference": 0.04084223448265632,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.22822412549675145,
+          "gradient_difference": 0.009539882847487814,
+          "reference_gradient_norm": 0.044307718150292864,
+          "gradient_relative_difference": 0.2153097303528089,
+          "energy_difference": 0.017701660100445292,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.2268260823527265
+        }
+      }
+    },
+    {
+      "name": "figure-6-lower-dofs-MH2M-n5-lambda8",
+      "archive": "figure-6-lower-dofs-MH2M-n5-lambda8.npz",
+      "archive_sha256": "f71142c7de9b9a4681a429da3754306e06ed1690a508d4418862852003b6ec37",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000002,
+          "pressure_difference": 0.0008582738862462233,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.09395038820150445,
+          "flux_difference": 0.061402368752147406,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.3431130076352394,
+          "gradient_difference": 0.012915539669252565,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.2914963850190329,
+          "energy_difference": 0.024522494131570663,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.3142270974484464
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 0.9999999999999999,
+          "pressure_difference": 0.0008582738862462231,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 0.09395038820150445,
+          "flux_difference": 0.06140236875214739,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.3431130076352394,
+          "gradient_difference": 0.012915539669252563,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.2914963850190329,
+          "energy_difference": 0.024522494131570656,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.3142270974484464
+        }
+      }
+    },
+    {
+      "name": "figure-6-lower-dofs-MH2M-n10-lambda8",
+      "archive": "figure-6-lower-dofs-MH2M-n10-lambda8.npz",
+      "archive_sha256": "a951c08e94ce06d51c768a20c79479b54b5862ff3bae19855cea5ba8870c06be",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0,
+          "pressure_difference": 0.00038844829833225897,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.04252123827761413,
+          "flux_difference": 0.040270447397336255,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.22502901119484114,
+          "gradient_difference": 0.008780880783811755,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.19817948543472247,
+          "energy_difference": 0.016707447836788483,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.21408641434912287
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 0.9999999999999998,
+          "pressure_difference": 0.00038844829833225886,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 0.04252123827761412,
+          "flux_difference": 0.04027044739733624,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.22502901119484106,
+          "gradient_difference": 0.008780880783811755,
+          "reference_gradient_norm": 0.044307718150292864,
+          "gradient_relative_difference": 0.1981794854347225,
+          "energy_difference": 0.01670744783678848,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.21408641434912282
+        }
+      }
+    },
+    {
+      "name": "fixed-Gamma-lambda1",
+      "archive": "fixed-Gamma-lambda1.npz",
+      "archive_sha256": "4a982d1744879f948a17ec2ecd5209cb2b296aad3d1a5a894fa72b3276e4a98f",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000002,
+          "pressure_difference": 0.0010474815955801796,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.11466188604328192,
+          "flux_difference": 0.07390126848435359,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.4129561613506825,
+          "gradient_difference": 0.02025747654133438,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.4571997247211088,
+          "energy_difference": 0.03382551684088767,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.4334344589738065
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0,
+          "pressure_difference": 0.0010474815955801794,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 0.11466188604328192,
+          "flux_difference": 0.07390126848435358,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.4129561613506825,
+          "gradient_difference": 0.020257476541334373,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.4571997247211087,
+          "energy_difference": 0.033825516840887665,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.4334344589738065
+        }
+      }
+    },
+    {
+      "name": "fixed-Gamma-lambda2",
+      "archive": "fixed-Gamma-lambda2.npz",
+      "archive_sha256": "29bf96132d814cdc53ab7fc42f2cca536428117d362e20cde4cbea8ef335884f",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000002,
+          "pressure_difference": 0.00021673799264295887,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.023725082253031677,
+          "flux_difference": 0.06593640316297046,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.36844893872445755,
+          "gradient_difference": 0.015816132740283706,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.35696112100909805,
+          "energy_difference": 0.028556524760554335,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.3659184844975206
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0,
+          "pressure_difference": 0.00021673799264295882,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 0.023725082253031677,
+          "flux_difference": 0.06593640316297043,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.36844893872445744,
+          "gradient_difference": 0.0158161327402837,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.35696112100909794,
+          "energy_difference": 0.028556524760554328,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.36591848449752057
+        }
+      }
+    },
+    {
+      "name": "fixed-Gamma-lambda4",
+      "archive": "fixed-Gamma-lambda4.npz",
+      "archive_sha256": "ec377bc3770929fbc85e0a8e26e83d448959a45bd55fd2c5b1cc60222515e91c",
+      "reference_archive": "reference-cg3-n512-q16.npz",
+      "reference_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+      "norms": {
+        "quadrature_8": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000002,
+          "pressure_difference": 0.0009023001643594502,
+          "reference_pressure_norm": 0.009135394783099784,
+          "pressure_relative_difference": 0.09876969586784354,
+          "flux_difference": 0.0640351385502783,
+          "reference_flux_norm": 0.1789566917772577,
+          "flux_relative_difference": 0.35782477824288916,
+          "gradient_difference": 0.01532642053750305,
+          "reference_gradient_norm": 0.04430771815029288,
+          "gradient_relative_difference": 0.3459085951010939,
+          "energy_difference": 0.02739941336513508,
+          "reference_energy_norm": 0.07804067291043841,
+          "energy_relative_difference": 0.35109145453652596
+        },
+        "quadrature_10": {
+          "quadrature_order": 10,
+          "overlay_area": 1.0,
+          "pressure_difference": 0.00090230016435945,
+          "reference_pressure_norm": 0.009135394783099783,
+          "pressure_relative_difference": 0.09876969586784354,
+          "flux_difference": 0.06403513855027827,
+          "reference_flux_norm": 0.17895669177725768,
+          "flux_relative_difference": 0.35782477824288905,
+          "gradient_difference": 0.015326420537503046,
+          "reference_gradient_norm": 0.04430771815029287,
+          "gradient_relative_difference": 0.3459085951010939,
+          "energy_difference": 0.027399413365135072,
+          "reference_energy_norm": 0.0780406729104384,
+          "energy_relative_difference": 0.3510914545365259
+        }
+      }
+    }
+  ],
+  "case_acquisition_provenance": {
+    "completed_original_cases": [
+      "figure-5",
+      "figure-7-n8",
+      "figure-7-n16",
+      "figure-7-n30",
+      "figure-7-n50",
+      "figure-8-n16",
+      "figure-6-upper-MHM-n8",
+      "figure-6-upper-MHM-n30",
+      "figure-6-upper-MH2M-n16",
+      "figure-6-lower-dofs-MHM-n5-lambda4",
+      "figure-6-lower-dofs-MHM-n9-lambda4",
+      "figure-6-lower-dofs-MH2M-n5-lambda4",
+      "figure-6-lower-dofs-MH2M-n10-lambda4",
+      "figure-6-lower-dofs-MH2M-n5-lambda8",
+      "figure-6-lower-dofs-MH2M-n10-lambda8",
+      "fixed-Gamma-lambda1",
+      "fixed-Gamma-lambda2",
+      "fixed-Gamma-lambda4"
+    ],
+    "original_checkpoint_record_sha256": "ddb0700acafadaaef21b447f1e07b6f8b206ab0b0f41939d183b40ae09547a5f",
+    "field_campaign_sha256": "c407c65afa91d71ca38586a7137f036f22d823743b35596f047b398c49b2c522",
+    "cached_geometry_cases": [
+      {
+        "name": "figure-6-upper-MH2M-n65",
+        "norm_acquisitions": [
+          {
+            "order": 8,
+            "executed_record_sha256": "a784355cc3d1f07df737f8f94cae690127f2229767dd7bb3f22a74ab7b4389b8",
+            "source_sha256": {
+              "examples/compare_mh2m_cg3.py": "d2e00f7deb1578616cf7516c3b5498f3224252d4c574349a2eb194ea165df1df",
+              "examples/mh2m_cg_reference.py": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+              "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+              "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+              "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+              "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+              "cached-comparison-runner": "882bf64303c5911166bc1215dcec94806e1ca51f182dc19f837ec403b4f7cc93"
+            },
+            "geometry": {
+              "geometry_validation_sha256": "26b8f6d3e5db26278830e1f83fb70561c4e0110e70745ca53432838b361a2d0d",
+              "acceptance_sha256": "7fbaa247170ec5c45c4cff1883be7a26a7fdef6f3baf4214247172d6412edb61",
+              "run_sha256": "8370875e5580bb81bb07c080fef4fb55e857e541ae2ec8e88184adf2455cdf0b",
+              "verification_sha256": "5617abfdfac660d66bc383cc62f4f12a25bb5ab99dc5cd49c3b6df8af40e33db",
+              "cache_owner_sha256": "f6e49f19ba61d23bd280617001f9bf4fceb4e842aa834505d3f59105081651cd",
+              "first": 512,
+              "second": 260,
+              "batches": 1124
+            },
+            "elapsed_seconds": 468.9137404349999
+          },
+          {
+            "order": 10,
+            "executed_record_sha256": "ff8b63c11683115c5c8c8fca9d5f811c440a7aec48dff1e98e1f4b1ff361ccc3",
+            "source_sha256": {
+              "examples/compare_mh2m_cg3.py": "d2e00f7deb1578616cf7516c3b5498f3224252d4c574349a2eb194ea165df1df",
+              "examples/mh2m_cg_reference.py": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+              "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+              "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+              "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+              "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+              "cached-comparison-runner": "882bf64303c5911166bc1215dcec94806e1ca51f182dc19f837ec403b4f7cc93"
+            },
+            "geometry": {
+              "geometry_validation_sha256": "26b8f6d3e5db26278830e1f83fb70561c4e0110e70745ca53432838b361a2d0d",
+              "acceptance_sha256": "7fbaa247170ec5c45c4cff1883be7a26a7fdef6f3baf4214247172d6412edb61",
+              "run_sha256": "8370875e5580bb81bb07c080fef4fb55e857e541ae2ec8e88184adf2455cdf0b",
+              "verification_sha256": "5617abfdfac660d66bc383cc62f4f12a25bb5ab99dc5cd49c3b6df8af40e33db",
+              "cache_owner_sha256": "f6e49f19ba61d23bd280617001f9bf4fceb4e842aa834505d3f59105081651cd",
+              "first": 512,
+              "second": 260,
+              "batches": 1124
+            },
+            "elapsed_seconds": 1328.1738031989998
+          }
+        ],
+        "phase_record_sha256": "bb38645a38aebcab6bddee1e64df7d164d92e9683d8e1aeb0f09d30496ae567b"
+      },
+      {
+        "name": "figure-8-n34",
+        "norm_acquisitions": [
+          {
+            "order": 8,
+            "executed_record_sha256": "502807f9e45b0c4d1b4934acf993ee1b07589c2c38147c7596b66257a26ad592",
+            "source_sha256": {
+              "examples/compare_mh2m_cg3.py": "d2e00f7deb1578616cf7516c3b5498f3224252d4c574349a2eb194ea165df1df",
+              "examples/mh2m_cg_reference.py": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+              "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+              "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+              "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+              "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+              "cached-comparison-runner": "882bf64303c5911166bc1215dcec94806e1ca51f182dc19f837ec403b4f7cc93"
+            },
+            "geometry": {
+              "geometry_validation_sha256": "c09ba1b5740223bc08f13ea84ad7b93a89293f272d6339243a8986d081c7dd34",
+              "acceptance_sha256": "cd5b92aeff57399b4d6e57a84aab6403da5cac0ff471d29e56c841a24909984d",
+              "run_sha256": "e8c4d310438eb1a55eef3d932296180e08327cab5df02db6fcffea6af85b9aab",
+              "verification_sha256": "5617abfdfac660d66bc383cc62f4f12a25bb5ab99dc5cd49c3b6df8af40e33db",
+              "cache_owner_sha256": "f6e49f19ba61d23bd280617001f9bf4fceb4e842aa834505d3f59105081651cd",
+              "first": 512,
+              "second": 272,
+              "batches": 1108
+            },
+            "elapsed_seconds": 529.860773636
+          },
+          {
+            "order": 10,
+            "executed_record_sha256": "4c5ddefe4860951b9b5a8d6805dec6cd16c1f56a7de131f7423296928ccba8ca",
+            "source_sha256": {
+              "examples/compare_mh2m_cg3.py": "d2e00f7deb1578616cf7516c3b5498f3224252d4c574349a2eb194ea165df1df",
+              "examples/mh2m_cg_reference.py": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+              "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+              "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+              "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+              "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+              "cached-comparison-runner": "882bf64303c5911166bc1215dcec94806e1ca51f182dc19f837ec403b4f7cc93"
+            },
+            "geometry": {
+              "geometry_validation_sha256": "c09ba1b5740223bc08f13ea84ad7b93a89293f272d6339243a8986d081c7dd34",
+              "acceptance_sha256": "cd5b92aeff57399b4d6e57a84aab6403da5cac0ff471d29e56c841a24909984d",
+              "run_sha256": "e8c4d310438eb1a55eef3d932296180e08327cab5df02db6fcffea6af85b9aab",
+              "verification_sha256": "5617abfdfac660d66bc383cc62f4f12a25bb5ab99dc5cd49c3b6df8af40e33db",
+              "cache_owner_sha256": "f6e49f19ba61d23bd280617001f9bf4fceb4e842aa834505d3f59105081651cd",
+              "first": 512,
+              "second": 272,
+              "batches": 1108
+            },
+            "elapsed_seconds": 1258.131882019
+          }
+        ],
+        "phase_record_sha256": "bb38645a38aebcab6bddee1e64df7d164d92e9683d8e1aeb0f09d30496ae567b"
+      },
+      {
+        "name": "figure-7-n60",
+        "norm_acquisitions": [
+          {
+            "order": 8,
+            "executed_record_sha256": "262809661f08f9280a0de5c507b88d8c7a89ca45a26a414479e5e5bd1bc094fa",
+            "source_sha256": {
+              "examples/compare_mh2m_cg3.py": "d2e00f7deb1578616cf7516c3b5498f3224252d4c574349a2eb194ea165df1df",
+              "examples/mh2m_cg_reference.py": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+              "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+              "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+              "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+              "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+              "cached-comparison-runner": "45df13f95216958acc9d6d20550a4688c2d01a181e2a8cbd5171419d9499cf47"
+            },
+            "geometry": {
+              "geometry_validation_sha256": "eedeb1ef82157b1658a02cbb11615ab32a4d2378c92a223085f2a4fff6f05583",
+              "acceptance_sha256": "021cb4617ef32c1988a025b5a65f75369c25a346a65dc0c09249e786be0a85f6",
+              "run_sha256": "4458b554d865dd9b01f0796b4f97bc3c3e59acc8f7df1316bafacf3e38a0e73a",
+              "verification_sha256": "5617abfdfac660d66bc383cc62f4f12a25bb5ab99dc5cd49c3b6df8af40e33db",
+              "cache_owner_sha256": "f6e49f19ba61d23bd280617001f9bf4fceb4e842aa834505d3f59105081651cd",
+              "first": 512,
+              "second": 480,
+              "batches": 1845
+            },
+            "elapsed_seconds": 1069.5050521090002
+          },
+          {
+            "order": 10,
+            "executed_record_sha256": "704c647dc36d607dda5c2c9084af7a1824fbc7e725bc4246ee9e73221f235efc",
+            "source_sha256": {
+              "examples/compare_mh2m_cg3.py": "d2e00f7deb1578616cf7516c3b5498f3224252d4c574349a2eb194ea165df1df",
+              "examples/mh2m_cg_reference.py": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+              "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+              "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+              "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+              "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+              "cached-comparison-runner": "45df13f95216958acc9d6d20550a4688c2d01a181e2a8cbd5171419d9499cf47"
+            },
+            "geometry": {
+              "geometry_validation_sha256": "eedeb1ef82157b1658a02cbb11615ab32a4d2378c92a223085f2a4fff6f05583",
+              "acceptance_sha256": "021cb4617ef32c1988a025b5a65f75369c25a346a65dc0c09249e786be0a85f6",
+              "run_sha256": "4458b554d865dd9b01f0796b4f97bc3c3e59acc8f7df1316bafacf3e38a0e73a",
+              "verification_sha256": "5617abfdfac660d66bc383cc62f4f12a25bb5ab99dc5cd49c3b6df8af40e33db",
+              "cache_owner_sha256": "f6e49f19ba61d23bd280617001f9bf4fceb4e842aa834505d3f59105081651cd",
+              "first": 512,
+              "second": 480,
+              "batches": 1845
+            },
+            "elapsed_seconds": 1894.3986677319995
+          }
+        ],
+        "phase_record_sha256": "60d867c72b7fc5d2eba25805ccf0ec846ce3b51c7a55401c8ffdce63b4a1ae38"
+      },
+      {
+        "name": "figure-8-n65",
+        "norm_acquisitions": [
+          {
+            "order": 8,
+            "executed_record_sha256": "70b4aaad7d93bff1e944958340afd6d29a8c0ef0f98b7ef1a69c911405140676",
+            "source_sha256": {
+              "examples/compare_mh2m_cg3.py": "d2e00f7deb1578616cf7516c3b5498f3224252d4c574349a2eb194ea165df1df",
+              "examples/mh2m_cg_reference.py": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+              "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+              "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+              "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+              "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+              "cached-comparison-runner": "45df13f95216958acc9d6d20550a4688c2d01a181e2a8cbd5171419d9499cf47"
+            },
+            "geometry": {
+              "geometry_validation_sha256": "bf0d08f70bbdb330291387e5f8ba85281056ba0858ed9080c472738578db0157",
+              "acceptance_sha256": "6555b44a6f5e108af5e05e8fb4ad764e331badcadf4834383cb45c2e44df0540",
+              "run_sha256": "fd6525e56a9f081c2006b7acb3f04b2e71125f4352236845ca886fe68cbf9364",
+              "verification_sha256": "5617abfdfac660d66bc383cc62f4f12a25bb5ab99dc5cd49c3b6df8af40e33db",
+              "cache_owner_sha256": "f6e49f19ba61d23bd280617001f9bf4fceb4e842aa834505d3f59105081651cd",
+              "first": 512,
+              "second": 520,
+              "batches": 2164
+            },
+            "elapsed_seconds": 1360.4867123420001
+          },
+          {
+            "order": 10,
+            "executed_record_sha256": "15faa79eb86311d95cfeb4e008c5b55e99bc784a9cc5812c5a291e7e54ee3af9",
+            "source_sha256": {
+              "examples/compare_mh2m_cg3.py": "d2e00f7deb1578616cf7516c3b5498f3224252d4c574349a2eb194ea165df1df",
+              "examples/mh2m_cg_reference.py": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+              "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+              "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+              "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+              "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+              "cached-comparison-runner": "45df13f95216958acc9d6d20550a4688c2d01a181e2a8cbd5171419d9499cf47"
+            },
+            "geometry": {
+              "geometry_validation_sha256": "bf0d08f70bbdb330291387e5f8ba85281056ba0858ed9080c472738578db0157",
+              "acceptance_sha256": "6555b44a6f5e108af5e05e8fb4ad764e331badcadf4834383cb45c2e44df0540",
+              "run_sha256": "fd6525e56a9f081c2006b7acb3f04b2e71125f4352236845ca886fe68cbf9364",
+              "verification_sha256": "5617abfdfac660d66bc383cc62f4f12a25bb5ab99dc5cd49c3b6df8af40e33db",
+              "cache_owner_sha256": "f6e49f19ba61d23bd280617001f9bf4fceb4e842aa834505d3f59105081651cd",
+              "first": 512,
+              "second": 520,
+              "batches": 2164
+            },
+            "elapsed_seconds": 2471.691967644
+          }
+        ],
+        "phase_record_sha256": "c124e49b52367fef3e68dff595858acfc8304a254b594815df587f39ae69aa0e"
+      },
+      {
+        "name": "figure-8-n80",
+        "norm_acquisitions": [
+          {
+            "order": 8,
+            "executed_record_sha256": "895791de2d8e41d7f393752967b5c851f47a5659932866a94acb1c47d97fe022",
+            "source_sha256": {
+              "examples/compare_mh2m_cg3.py": "d2e00f7deb1578616cf7516c3b5498f3224252d4c574349a2eb194ea165df1df",
+              "examples/mh2m_cg_reference.py": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+              "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+              "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+              "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+              "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+              "cached-comparison-runner": "45df13f95216958acc9d6d20550a4688c2d01a181e2a8cbd5171419d9499cf47"
+            },
+            "geometry": {
+              "geometry_validation_sha256": "336a3cf696bee7c7dc3de2d0dfbafe751ac28cf861a335f80554b9ec2d59e3f7",
+              "acceptance_sha256": "e0730f06e88b2128c15fc0026a5e76c3528073152a6934b49459d4b26f161562",
+              "run_sha256": "c5aaa4f4ee611cc38fbeb4717c7b7a8daa4c247a414aa62e44c570dd4e297e0a",
+              "verification_sha256": "5617abfdfac660d66bc383cc62f4f12a25bb5ab99dc5cd49c3b6df8af40e33db",
+              "cache_owner_sha256": "f6e49f19ba61d23bd280617001f9bf4fceb4e842aa834505d3f59105081651cd",
+              "first": 512,
+              "second": 640,
+              "batches": 1973
+            },
+            "elapsed_seconds": 986.2607376450001
+          },
+          {
+            "order": 10,
+            "executed_record_sha256": "b08a24d538bf452ae361e88dc544b18cc635ec3ec143e4b2006c68c9da8114a7",
+            "source_sha256": {
+              "examples/compare_mh2m_cg3.py": "d2e00f7deb1578616cf7516c3b5498f3224252d4c574349a2eb194ea165df1df",
+              "examples/mh2m_cg_reference.py": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+              "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+              "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+              "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+              "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+              "cached-comparison-runner": "45df13f95216958acc9d6d20550a4688c2d01a181e2a8cbd5171419d9499cf47"
+            },
+            "geometry": {
+              "geometry_validation_sha256": "336a3cf696bee7c7dc3de2d0dfbafe751ac28cf861a335f80554b9ec2d59e3f7",
+              "acceptance_sha256": "e0730f06e88b2128c15fc0026a5e76c3528073152a6934b49459d4b26f161562",
+              "run_sha256": "c5aaa4f4ee611cc38fbeb4717c7b7a8daa4c247a414aa62e44c570dd4e297e0a",
+              "verification_sha256": "5617abfdfac660d66bc383cc62f4f12a25bb5ab99dc5cd49c3b6df8af40e33db",
+              "cache_owner_sha256": "f6e49f19ba61d23bd280617001f9bf4fceb4e842aa834505d3f59105081651cd",
+              "first": 512,
+              "second": 640,
+              "batches": 1973
+            },
+            "elapsed_seconds": 1075.7883733039998
+          }
+        ],
+        "phase_record_sha256": "be882fce6d18951f6ceb38a20c3269186815ecb89230fae626e425578e85ccb6"
+      },
+      {
+        "name": "figure-8-n100",
+        "norm_acquisitions": [
+          {
+            "order": 8,
+            "executed_record_sha256": "d7a7a59174a4969bb39717e089cb43ffff5c1125f7b9f800db46c33e7ffd3375",
+            "source_sha256": {
+              "examples/compare_mh2m_cg3.py": "d2e00f7deb1578616cf7516c3b5498f3224252d4c574349a2eb194ea165df1df",
+              "examples/mh2m_cg_reference.py": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+              "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+              "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+              "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+              "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+              "cached-comparison-runner": "45df13f95216958acc9d6d20550a4688c2d01a181e2a8cbd5171419d9499cf47"
+            },
+            "geometry": {
+              "geometry_validation_sha256": "e3fc2a0dc4d76bac0d1c89fd4943e1a67f45bd9f8c3522a3b74b728e06dec042",
+              "acceptance_sha256": "087d782f6e8f4fb3e95233783812dc294ced0d82ad91148ad94396f39caa7896",
+              "run_sha256": "f6803d5cf9fe31950b0936ed708ad5cae568bf89c51e5816fe1cc8d8ee21c001",
+              "verification_sha256": "5617abfdfac660d66bc383cc62f4f12a25bb5ab99dc5cd49c3b6df8af40e33db",
+              "cache_owner_sha256": "f6e49f19ba61d23bd280617001f9bf4fceb4e842aa834505d3f59105081651cd",
+              "first": 512,
+              "second": 800,
+              "batches": 3306
+            },
+            "elapsed_seconds": 1173.4200560610002
+          },
+          {
+            "order": 10,
+            "executed_record_sha256": "475c31408d32bb5a94e38465f8576095d71d620bfb2b0ae10e2df234b9a39390",
+            "source_sha256": {
+              "examples/compare_mh2m_cg3.py": "d2e00f7deb1578616cf7516c3b5498f3224252d4c574349a2eb194ea165df1df",
+              "examples/mh2m_cg_reference.py": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+              "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+              "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+              "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+              "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+              "cached-comparison-runner": "45df13f95216958acc9d6d20550a4688c2d01a181e2a8cbd5171419d9499cf47"
+            },
+            "geometry": {
+              "geometry_validation_sha256": "e3fc2a0dc4d76bac0d1c89fd4943e1a67f45bd9f8c3522a3b74b728e06dec042",
+              "acceptance_sha256": "087d782f6e8f4fb3e95233783812dc294ced0d82ad91148ad94396f39caa7896",
+              "run_sha256": "f6803d5cf9fe31950b0936ed708ad5cae568bf89c51e5816fe1cc8d8ee21c001",
+              "verification_sha256": "5617abfdfac660d66bc383cc62f4f12a25bb5ab99dc5cd49c3b6df8af40e33db",
+              "cache_owner_sha256": "f6e49f19ba61d23bd280617001f9bf4fceb4e842aa834505d3f59105081651cd",
+              "first": 512,
+              "second": 800,
+              "batches": 3306
+            },
+            "elapsed_seconds": 1313.60731544
+          }
+        ],
+        "phase_record_sha256": "4321662ed3154f12260defc27f72ef02fe4a534b0319619e1e42dd6fe49f0e77"
+      }
+    ],
+    "meaning": "Identical numerical integration owners and canonical geometry batches. Additional execution records identify cached geometry acquisition and order checkpoints; no retroactive source attribution.",
+    "execution_partition_record_sha256": "7e2cfd0b2702cec8e91e4c1f26fc8b31ff028a30498fa8a4815840f4b9fa54c9",
+    "execution_partition_meaning": "Independent field assignments with unchanged ordered reductions. Original integrations completed both quadratures before a planned stop of subsequent unassigned work."
+  }
+}

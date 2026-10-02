@@ -1,0 +1,113 @@
+{
+  "method": "MHM Helmholtz 2020; continuous local Q3 and polynomial physical-flux trace",
+  "doi": "10.1137/19M1255616",
+  "material": {
+    "dataset": "Marmousi II, Martin, Wiley and Marfurt (2006)",
+    "doi": "10.1190/1.2172306",
+    "sources": {
+      "vp": {
+        "filename": "vp_marmousi-ii.segy",
+        "url": "https://ahay.org/data/marm2/vp_marmousi-ii.segy",
+        "sha256": "2722a5de0645d8fcf5750f380893d4875383af9b24988ece0bd07b943f5b0c91"
+      },
+      "density": {
+        "filename": "density_marmousi-ii.segy",
+        "url": "https://ahay.org/data/marm2/density_marmousi-ii.segy",
+        "sha256": "10ec5c4274a63ffde2ac94dda4f062d5b83827efcefeb1a2ab22438a85f32967"
+      }
+    },
+    "primary_shape": [
+      13601,
+      2801
+    ],
+    "primary_spacing_m": 1.25,
+    "crop_origin_m": [
+      3395.0,
+      515.0
+    ],
+    "cell_shape": [
+      2048,
+      512
+    ],
+    "cell_spacing_m": 5.0,
+    "sampling": "Primary nodes at material-cell centres; no interpolation",
+    "coordinate_order": [
+      "x",
+      "depth"
+    ],
+    "density_unit": "kg/m^3",
+    "velocity_unit": "m/s",
+    "bulk_modulus_unit": "Pa",
+    "historical_article_arrays_identified": false
+  },
+  "H_m": 20,
+  "macro_shape": [
+    512,
+    128
+  ],
+  "macro_cells": 65536,
+  "local_refinement": 8,
+  "local_degree": 3,
+  "trace_degree": 1,
+  "omega": 125.66370614359172,
+  "point_source": [
+    5000,
+    50,
+    1.0
+  ],
+  "point_source_allocation": [
+    {
+      "macro_cell": 1273,
+      "sources": [
+        [
+          5000.0,
+          50.0,
+          0.5
+        ]
+      ]
+    },
+    {
+      "macro_cell": 1274,
+      "sources": [
+        [
+          5000.0,
+          50.0,
+          0.5
+        ]
+      ]
+    }
+  ],
+  "point_source_convention": "Incident-angle allocation; total unit strength preserved",
+  "boundary": "Top weak Dirichlet zero; other sides outgoing first-order absorption zero",
+  "global_complex_dofs_total": 263424,
+  "global_complex_dofs_free": 261888,
+  "algebraic_residual": 2.836436851396874e-14,
+  "macro_balance_max": 9.41150427030045e-15,
+  "assembly_order": 8,
+  "elapsed_seconds": 835.5478330249898,
+  "workers": 8,
+  "archive": "mhm-H20-ell1.npz",
+  "archive_sha256": "6478c09976533dbf333ed5b74cf6ce73b8e51dda93ec6a2d82f1711c66398503",
+  "source_sha256": {
+    "examples/marmousi_campaign.py": "80477481c94da3c8297f47117726d77c41b19efc9b8f85833e6c95d32b702d7b",
+    "examples/marmousi_data.py": "53521b99a9c1007d6d437f8e4b2666599c170eae06fd98ac0318c3568236e999",
+    "src/pymhm/helmholtz.py": "256aa1f84dd947569898dae45951b5acdce1de646e33895c5ae2f4ed8acbc65b",
+    "src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+    "src/pymhm/helmholtz_spaces.py": "8e3afd13cee8ac53d0f6277e224ac3e567638f9bae130d0a2701c2e8029b3497",
+    "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+    "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+    "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+    "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+    "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca"
+  },
+  "source_changed_during_run": false,
+  "sampling": "513 by129 nodes; four incident macro values, without averaging",
+  "historical_article_arrays_identified": false
+}

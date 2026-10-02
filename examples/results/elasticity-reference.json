@@ -1,0 +1,277 @@
+{
+  "reference": "MSL_MHM + MSL_CG (GaLS)",
+  "revisions": {
+    "msl_mhm": "4cb8cf81518284313b680b13fd586ee619f08b99",
+    "msl_cg": "afb76d14c1baf50f0b9e69f7bcac675749ef4458",
+    "msl_core": "7f15f455717173d29080d411a7e732c72c1e87f8"
+  },
+  "reference_adapter": "Rigid-mode source projection is padded by zero pressure rows; pressure reconstructs with the same native trace coefficients. Native GaLS element assembly and numerical libraries are unchanged.",
+  "adapter_sha256": {
+    "main.cpp": "fb69c8f5adbe56c261e55e0597213c52dcf0ad90a3fe30279c8a9d7750f7277c",
+    "elasticity_mhm_decorator.hpp": "d93b09f5a6a5954ce6b9b786b2d2e83988d460a684fbc382867d656347183dfa"
+  },
+  "analytical_family": "TrigonometricElasticityData: amplitude=1, mu=1, lambda=4999, nu=0.4999, homogeneous displacement boundary, pressure mean zero",
+  "norms": "Both exported nodal fields are evaluated with identical degree-k Lagrange interpolation and physical quadrature. Stress=2mu sym(grad u)-pI; H1 seminorm is full gradient; no mean removal during field comparisons.",
+  "scope": "Code comparison using identical discrete spaces and data; not reproduction of the six face-refinement tables in arXiv:2403.16890v1.",
+  "macro_geometry": "Uniform crisscross: four triangles per Cartesian square",
+  "source_runtime_sha256": {
+    "elasticity.py": "f9a74fc0f4a96adc17aa3502611dba66440f4b9d5279e46ea9534931b6b38b39",
+    "lagrange.py": "946ffb492ef38d104d9f99c9d5d60f948e0a2d137643ad00f13f43ffb28ac371",
+    "mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+    "hybrid.py": "16716d9ec6d2783c22b6003ee9402f70ade2d51f8accea018f66f4575fdf8dec"
+  },
+  "rows": [
+    {
+      "level": 1,
+      "macro_triangles": 4,
+      "degree": 1,
+      "local_refinement": 4,
+      "trace_degree": 1,
+      "trace_segments": 1,
+      "alpha": 0.1,
+      "lambda": 4999,
+      "mu": 1,
+      "quadrature_order_requested": 10,
+      "macro_resolution": 1,
+      "macro_diameter": 1.0,
+      "archive": "elasticity-reference/crisscross-n1-k1-r4.npz",
+      "archive_sha256": "ee5864d7f8aaca5b9431f4d7ff93b3e3349a5b91363f36cf729b17adf05f1493",
+      "msl": {
+        "u_l2": 0.2415236486991051,
+        "p_l2": 4.36532989829152,
+        "u_h1_semi": 4.182093170635315,
+        "stress_l2": 8.380449798531467
+      },
+      "pymhm": {
+        "u_l2": 0.24152364869910609,
+        "p_l2": 4.365329898291417,
+        "u_h1_semi": 4.18209317063533,
+        "stress_l2": 8.380449798531387
+      },
+      "difference_l2": {
+        "u_l2": 3.324460350001943e-14,
+        "p_l2": 5.341453299972191e-12,
+        "u_h1_semi": 4.572089024633871e-13,
+        "stress_l2": 7.556984932380058e-12
+      },
+      "error_quadrature_order": 12,
+      "assembly_quadrature_order": 10
+    },
+    {
+      "level": 2,
+      "macro_triangles": 16,
+      "degree": 1,
+      "local_refinement": 4,
+      "trace_degree": 1,
+      "trace_segments": 1,
+      "alpha": 0.1,
+      "lambda": 4999,
+      "mu": 1,
+      "quadrature_order_requested": 10,
+      "macro_resolution": 2,
+      "macro_diameter": 0.5,
+      "archive": "elasticity-reference/crisscross-n2-k1-r4.npz",
+      "archive_sha256": "308a0f02cdafe6bdf502113af366c3bce48653d9865e09a417588998b94f39ee",
+      "msl": {
+        "u_l2": 0.0811660218424288,
+        "p_l2": 1.7828426410313838,
+        "u_h1_semi": 2.125840627295539,
+        "stress_l2": 3.702934177453623
+      },
+      "pymhm": {
+        "u_l2": 0.08116602184242865,
+        "p_l2": 1.7828426410313833,
+        "u_h1_semi": 2.125840627295538,
+        "stress_l2": 3.7029341774536233
+      },
+      "difference_l2": {
+        "u_l2": 3.99147083140819e-15,
+        "p_l2": 4.906298085366951e-13,
+        "u_h1_semi": 8.098553172485063e-14,
+        "stress_l2": 7.038472895532358e-13
+      },
+      "error_quadrature_order": 12,
+      "assembly_quadrature_order": 10
+    },
+    {
+      "level": 3,
+      "macro_triangles": 64,
+      "degree": 1,
+      "local_refinement": 4,
+      "trace_degree": 1,
+      "trace_segments": 1,
+      "alpha": 0.1,
+      "lambda": 4999,
+      "mu": 1,
+      "quadrature_order_requested": 10,
+      "macro_resolution": 4,
+      "macro_diameter": 0.25,
+      "archive": "elasticity-reference/crisscross-n4-k1-r4.npz",
+      "archive_sha256": "27f6a4c89cdc3dd4b3e87cfbb0072e3a97c548a9685f4d01fb96004c0aa6ef1e",
+      "msl": {
+        "u_l2": 0.01981370620557471,
+        "p_l2": 0.9162826434255903,
+        "u_h1_semi": 1.0575438933409262,
+        "stress_l2": 1.8155519150860726
+      },
+      "pymhm": {
+        "u_l2": 0.019813706205573937,
+        "p_l2": 0.9162826434255917,
+        "u_h1_semi": 1.0575438933409271,
+        "stress_l2": 1.8155519150860786
+      },
+      "difference_l2": {
+        "u_l2": 6.495666350917569e-15,
+        "p_l2": 6.213575148739818e-12,
+        "u_h1_semi": 1.2173602371971752e-13,
+        "stress_l2": 8.789186958976105e-12
+      },
+      "error_quadrature_order": 12,
+      "assembly_quadrature_order": 10
+    },
+    {
+      "level": 4,
+      "macro_triangles": 256,
+      "degree": 1,
+      "local_refinement": 4,
+      "trace_degree": 1,
+      "trace_segments": 1,
+      "alpha": 0.1,
+      "lambda": 4999,
+      "mu": 1,
+      "quadrature_order_requested": 10,
+      "macro_resolution": 8,
+      "macro_diameter": 0.125,
+      "archive": "elasticity-reference/crisscross-n8-k1-r4.npz",
+      "archive_sha256": "4218747f37fb7de5492d24637d20ba316765c3d4e7c109a2431c3aab0bf07b8f",
+      "msl": {
+        "u_l2": 0.004916624676265296,
+        "p_l2": 0.4358557516631998,
+        "u_h1_semi": 0.515656648185964,
+        "stress_l2": 0.8666893230187629
+      },
+      "pymhm": {
+        "u_l2": 0.004916624676265418,
+        "p_l2": 0.43585575166320095,
+        "u_h1_semi": 0.5156566481859653,
+        "stress_l2": 0.8666893230187659
+      },
+      "difference_l2": {
+        "u_l2": 6.592605501178363e-15,
+        "p_l2": 2.936937144455773e-12,
+        "u_h1_semi": 2.645275446955244e-13,
+        "stress_l2": 4.169773460500056e-12
+      },
+      "error_quadrature_order": 12,
+      "assembly_quadrature_order": 10
+    },
+    {
+      "level": 5,
+      "macro_triangles": 1024,
+      "degree": 1,
+      "local_refinement": 4,
+      "trace_degree": 1,
+      "trace_segments": 1,
+      "alpha": 0.1,
+      "lambda": 4999,
+      "mu": 1,
+      "quadrature_order_requested": 10,
+      "macro_resolution": 16,
+      "macro_diameter": 0.0625,
+      "archive": "elasticity-reference/crisscross-n16-k1-r4.npz",
+      "archive_sha256": "b10230e970b2ede3ec5dda92f3313763efc62b9bd3e00a78c16b35cac26489f8",
+      "msl": {
+        "u_l2": 0.0012278383938605468,
+        "p_l2": 0.21368264855645894,
+        "u_h1_semi": 0.2554674273039942,
+        "stress_l2": 0.42634049122061496
+      },
+      "pymhm": {
+        "u_l2": 0.0012278383938622193,
+        "p_l2": 0.21368264855645813,
+        "u_h1_semi": 0.25546742730399513,
+        "stress_l2": 0.42634049122060974
+      },
+      "difference_l2": {
+        "u_l2": 1.5984130925679568e-14,
+        "p_l2": 8.592351917344698e-12,
+        "u_h1_semi": 9.66304041107687e-13,
+        "stress_l2": 1.2223894600500614e-11
+      },
+      "error_quadrature_order": 12,
+      "assembly_quadrature_order": 10
+    },
+    {
+      "level": 3,
+      "macro_triangles": 64,
+      "degree": 2,
+      "local_refinement": 2,
+      "trace_degree": 1,
+      "trace_segments": 1,
+      "alpha": 0.001,
+      "lambda": 4999,
+      "mu": 1,
+      "quadrature_order_requested": 10,
+      "macro_resolution": 4,
+      "macro_diameter": 0.25,
+      "archive": "elasticity-reference/crisscross-n4-k2-r2.npz",
+      "archive_sha256": "66f7b33a03f57551664ca91df3a016793f520a99a88390eeaf6379c3ef6f6286",
+      "msl": {
+        "u_l2": 0.013341145262790012,
+        "p_l2": 0.4675568698180075,
+        "u_h1_semi": 0.48088736408472366,
+        "stress_l2": 0.9220332571496819
+      },
+      "pymhm": {
+        "u_l2": 0.013341145262789173,
+        "p_l2": 0.467556869818005,
+        "u_h1_semi": 0.48088736408471444,
+        "stress_l2": 0.9220332571496768
+      },
+      "difference_l2": {
+        "u_l2": 1.441475118741488e-14,
+        "p_l2": 8.269609895924349e-12,
+        "u_h1_semi": 7.19082469732592e-13,
+        "stress_l2": 1.1761372070119975e-11
+      },
+      "error_quadrature_order": 12,
+      "assembly_quadrature_order": 10
+    },
+    {
+      "level": 3,
+      "macro_triangles": 64,
+      "degree": 3,
+      "local_refinement": 1,
+      "trace_degree": 1,
+      "trace_segments": 1,
+      "alpha": 0.001,
+      "lambda": 4999,
+      "mu": 1,
+      "quadrature_order_requested": 10,
+      "macro_resolution": 4,
+      "macro_diameter": 0.25,
+      "archive": "elasticity-reference/crisscross-n4-k3-r1.npz",
+      "archive_sha256": "95f192b09e950c9f53180d9a43dbf8bace1c221e103a63d12e685695411a6b0a",
+      "msl": {
+        "u_l2": 0.013859360861453857,
+        "p_l2": 0.4080019436025713,
+        "u_h1_semi": 0.4985889312274095,
+        "stress_l2": 0.8461048360462566
+      },
+      "pymhm": {
+        "u_l2": 0.01385936086150795,
+        "p_l2": 0.4080019436026181,
+        "u_h1_semi": 0.4985889312278703,
+        "stress_l2": 0.846104836047815
+      },
+      "difference_l2": {
+        "u_l2": 2.582122151240198e-13,
+        "p_l2": 7.653854160420756e-12,
+        "u_h1_semi": 1.6795943486762804e-11,
+        "stress_l2": 3.093637939777122e-11
+      },
+      "error_quadrature_order": 12,
+      "assembly_quadrature_order": 10
+    }
+  ]
+}

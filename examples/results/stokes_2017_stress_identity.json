@@ -1,0 +1,39 @@
+{
+  "doi": "10.1016/j.cma.2017.05.027",
+  "figure": 3,
+  "python": "3.13.15",
+  "local_degree": 2,
+  "trace_degree": 0,
+  "mesh_kind": "crisscross",
+  "viscosity": 1,
+  "drag": 0,
+  "inverse_estimate": "Sharp generalized eigenvalue of squared Laplacian versus gradient seminorm on the local scalar polynomial space, quotienting constants.",
+  "historical_parameters": "Original inverse constant, connectivity, quadrature and H conversion are not specified sufficiently for bitwise reproduction.",
+  "results": [
+    {
+      "n": 4,
+      "mesh_kind": "crisscross",
+      "macro_triangles": 64,
+      "grid_spacing": 0.25,
+      "macro_diameter": 0.25,
+      "local_degree": 2,
+      "trace_degree": 0,
+      "local_triangles": 1,
+      "sharp_inverse_constant": 0.01041666666666667,
+      "inverse_parameter_m": 0.01041666666666667,
+      "quadrature_degree": 18,
+      "global_unknowns": 336,
+      "velocity_l2": 0.22769170336289707,
+      "velocity_h1_seminorm": 3.5331221699121205,
+      "pressure_l2": 3.1556205699630024,
+      "pseudostress_l2": 5.693164590104615,
+      "pseudostress_hdiv_broken": 12.612800716620182,
+      "divergence_l2": 0.018426291675890726,
+      "macro_mass_defect": 1.292192171474982e-16,
+      "algebraic_residual": 1.3747596695453804e-16,
+      "pressure_mean": 8.326672684688674e-16,
+      "pressure_divergence_error_inner_product": -0.006644209674634125,
+      "stress_identity_defect": 4.577935253102794e-15
+    }
+  ]
+}

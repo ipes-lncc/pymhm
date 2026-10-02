@@ -1,0 +1,56 @@
+{
+  "archive": "darcy-q1-r120-s32.npz",
+  "sha256": "185a401ff4f5c3b4d9ca075866e8261e1c480625d36cd6b4babf2576283b99c4",
+  "layer": 36,
+  "macro_shape": [
+    6,
+    11
+  ],
+  "macro_cells": 66,
+  "domain": [
+    0,
+    1200,
+    0,
+    2200
+  ],
+  "permeability_unit": "mD",
+  "coordinate_unit": "ft",
+  "degree": 1,
+  "local_refinement": [
+    120,
+    120
+  ],
+  "local_unknowns": 14641,
+  "skeleton_degree": 1,
+  "skeleton_segments": 32,
+  "skeleton_continuous": true,
+  "total_skeleton_unknowns": 4917,
+  "prescribed_flux_unknowns": 726,
+  "free_trace_plus_retained": 4257,
+  "quadrature_order": 3,
+  "coefficient_pixels_aligned": true,
+  "residual": 1.0325897652877904e-14,
+  "macro_balance_max": 1.2459651366203417e-15,
+  "exterior_flux_bottom_right_top_left": [
+    -0.15056549924573548,
+    0.0,
+    0.150565499245737,
+    0.0
+  ],
+  "pressure_nodal_min": -0.005253528788924822,
+  "pressure_nodal_max": 1.0033246783228837,
+  "solve_seconds": 84.37716276699211,
+  "sample_seconds": 0.9827584179583937,
+  "timing_scope": "observed wall time, no exclusive performance benchmark",
+  "backend": "process",
+  "workers": 4,
+  "local_solver": "scipy",
+  "global_solver": "scipy",
+  "local_native_threads": 1,
+  "figure_reference": "Paredes, Valentin and Versieux, DOI 10.1016/j.cam.2023.115415, Figures 6\u20138",
+  "reproduction_limit": "Published MHM local refinement is unspecified; this run states its own refinement.",
+  "profile_convention": "x=199; 11 separate macro intervals with both interface limits retained",
+  "pressure_rendering": "unaveraged local Qk coefficients and pixel-center samples",
+  "material_integration": "exact Cartesian pixel intersections; aligned-grid fast path",
+  "sampling_convention": "positive fine-cell side, with material approached from that same cell; upper macro boundary uses its interior side"
+}

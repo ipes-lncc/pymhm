@@ -1,0 +1,129 @@
+{
+  "case": "constant cavity",
+  "lid": "constant",
+  "strategy": "macro",
+  "viscosity": 1.0,
+  "drag": 10000.0,
+  "trace_degree": 0,
+  "local_degree": 2,
+  "marking_theta": 0.1,
+  "maximum_cells": 7000,
+  "max_local_refinement": 32,
+  "local_refiner": null,
+  "max_local_cells": 65536,
+  "local_error_marking": null,
+  "macro_refiner": "longest-edge",
+  "quadrature_order": 10,
+  "stop_reason": "iterations",
+  "rows": [
+    {
+      "macro_cells": 3598,
+      "fine_cells": 3598,
+      "trace_dofs": 11162,
+      "coarse_dofs": 7196,
+      "trace_and_coarse_dofs": 18358,
+      "eta1": 1.1078729583820144,
+      "eta2": 1.1408010989907247,
+      "total": 2.248674057372739,
+      "divergence_l2": 0.004314486740683014,
+      "algebraic_residual": 6.37471774087288e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 3654,
+      "fine_cells": 3654,
+      "trace_dofs": 11342,
+      "coarse_dofs": 7308,
+      "trace_and_coarse_dofs": 18650,
+      "eta1": 1.1131218067079398,
+      "eta2": 1.140800977869035,
+      "total": 2.2539227845769747,
+      "divergence_l2": 0.004314486544413577,
+      "algebraic_residual": 1.2058712811944577e-15,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 3698,
+      "fine_cells": 3698,
+      "trace_dofs": 11474,
+      "coarse_dofs": 7396,
+      "trace_and_coarse_dofs": 18870,
+      "eta1": 1.1296363933262152,
+      "eta2": 1.1408009235959675,
+      "total": 2.270437316922183,
+      "divergence_l2": 0.004314486127976059,
+      "algebraic_residual": 3.763399980832781e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 3754,
+      "fine_cells": 3754,
+      "trace_dofs": 11654,
+      "coarse_dofs": 7508,
+      "trace_and_coarse_dofs": 19162,
+      "eta1": 1.1347350316191613,
+      "eta2": 1.1408009249132285,
+      "total": 2.27553595653239,
+      "divergence_l2": 0.0043144861570512385,
+      "algebraic_residual": 6.479860046904584e-16,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    },
+    {
+      "macro_cells": 3798,
+      "fine_cells": 3798,
+      "trace_dofs": 11786,
+      "coarse_dofs": 7596,
+      "trace_and_coarse_dofs": 19382,
+      "eta1": 1.150946605599992,
+      "eta2": 1.1408009226000566,
+      "total": 2.2917475282000486,
+      "divergence_l2": 0.004314486134717473,
+      "algebraic_residual": 2.1388839895883174e-15,
+      "minimum_macro_angle_degrees": 45.00000000000001
+    }
+  ],
+  "archive": "cavity-constant-macro-nu1-g10000-l0-longest-edge-theta0.1-continued.npz",
+  "sha256": "e7e744962e97cdad63f57ad9a97e68424cce97a0abd24896bd44296081837367",
+  "coefficients": "build/results/stokes-adaptive/cavity-constant-macro-nu1-g10000-l0-longest-edge-theta0.1-continued-coefficients.npz",
+  "coefficients_sha256": "cfb111a98e73a4d32fef89d3541288abfc76a881e9f769f6c9fca8d2f7036287",
+  "coefficient_history": [
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-macro-nu1-g10000-l0-longest-edge-theta0.1-continued-state0-coefficients.npz",
+      "sha256": "e606ed17f0635bcf3d014d6028071168ea4e6e4b324ba6921a6c78cb6d6f937b"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-macro-nu1-g10000-l0-longest-edge-theta0.1-continued-state1-coefficients.npz",
+      "sha256": "7bed122356c7cfbb84f2d62c2b6b772fae328ea69ad339008b354a097bacaed9"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-macro-nu1-g10000-l0-longest-edge-theta0.1-continued-state2-coefficients.npz",
+      "sha256": "6d6eec25c1e561e73afa2559b14a106aae2eff81cf8821944bce03e2481ce408"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-macro-nu1-g10000-l0-longest-edge-theta0.1-continued-state3-coefficients.npz",
+      "sha256": "01647f815b02400753c3edb2d94a1960433cb4172a2adfe252be003a21c3f49a"
+    },
+    {
+      "path": "build/results/stokes-adaptive/cavity-constant-macro-nu1-g10000-l0-longest-edge-theta0.1-continued-state4-coefficients.npz",
+      "sha256": "cfb111a98e73a4d32fef89d3541288abfc76a881e9f769f6c9fca8d2f7036287"
+    }
+  ],
+  "source_hashes": {
+    "examples/solve_stokes_adaptive.py": "35fd80a65383a2804095f3f7556ccacbc4973e62933b84820424eee04f8cf2fa",
+    "src/pymhm/flow.py": "61aa1e4ba91751d0aadb108ba760d4fc9dcf3af49d81d33717ac2e755b7d623d",
+    "src/pymhm/flow_estimator.py": "c54147d8cff8cccf4d2fd1412c9dc85a3b6a51212adb471b857a6f65a9c98dd0",
+    "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+    "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+    "src/pymhm/refinement.py": "92db0dd5b7b07954c07941030c86be5ed98929ea6f2c0411d846ce104cc9e4a3",
+    "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+    "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d"
+  },
+  "initial_mesh": "structured crisscross, four triangles per square",
+  "resumed_record": {
+    "record": "cavity-constant-macro-nu1-g10000-l0-longest-edge-theta0.1.json",
+    "sha256": "71704f9f8cb9bae20658d989a1dc8808b24e0736ff900fbbbe0618e95fb94e8b",
+    "field_sha256": "763a7c004c3b80e40636879d39e8efcd09bb3988c15d827f06e15fafa06f7233"
+  },
+  "refinement": "longest-edge macro closure",
+  "limitations": "The solenoidal component convention is stated explicitly; printed Ei is not a universal numerical target. Historical theta, mesh connectivity and cavity corner data are unspecified. Constant lid is interpreted as a weak boundary trace with corner singularities; the regularized lid is a separate variation."
+}

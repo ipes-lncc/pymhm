@@ -1,0 +1,118 @@
+{
+  "scope": "Exact dyadic common-overlay geometry and cache reuse; unchanged fields, quadrature points, physical weights and ordered batch reductions.",
+  "previous_owner_sha256": "830e2f33b757109d4d7a67ad4af1e8f691742880bff2a95e785fb7129bc8451e",
+  "current_owner_sha256": "7ba72a83ad644166b3d328a7c00a8c1b4a53059488fb4e92be30ad76b61fa53d",
+  "checks": [
+    {
+      "first": 1,
+      "second": 4,
+      "batches": 1,
+      "bitwise_geometry_and_order": true
+    },
+    {
+      "first": 2,
+      "second": 8,
+      "batches": 1,
+      "bitwise_geometry_and_order": true
+    },
+    {
+      "first": 8,
+      "second": 8,
+      "batches": 1,
+      "bitwise_geometry_and_order": true
+    },
+    {
+      "first": 1,
+      "second": 16,
+      "batches": 1,
+      "bitwise_geometry_and_order": true
+    },
+    {
+      "first": 4,
+      "second": 32,
+      "batches": 1,
+      "bitwise_geometry_and_order": true
+    },
+    {
+      "first": 16,
+      "second": 64,
+      "batches": 4,
+      "bitwise_geometry_and_order": true
+    },
+    {
+      "first": 3,
+      "second": 5,
+      "batches": 1,
+      "bitwise_geometry_and_order": true
+    },
+    {
+      "nonzero_norms_orders": [
+        6,
+        8
+      ],
+      "bitwise_equal": true
+    }
+  ],
+  "odd_batch_sizes_checked": [
+    1,
+    3,
+    4,
+    11
+  ],
+  "norm_fields": "Nonzero discontinuous P1 coefficients with positive rational trigonometric material.",
+  "new_fem_solves": 0,
+  "parallel_reduction": {
+    "previous_owner_sha256": "7ba72a83ad644166b3d328a7c00a8c1b4a53059488fb4e92be30ad76b61fa53d",
+    "current_owner_sha256": "67f91b354c8b06caedbf165b8584e836ef144cab8b5958d5e2e596e71dcf251f",
+    "workers": 2,
+    "field_archives": [
+      "reference-n64.npz",
+      "mh2m-n4-r16-g1-l8.npz"
+    ],
+    "scope": "Identical geometry, quadrature, batch reductions and parent summation order.",
+    "checks": [
+      {
+        "order": 6,
+        "previous_serial_equals_current_serial_bitwise": true,
+        "serial_equals_spawned_bitwise": true,
+        "norms": {
+          "quadrature_order": 6,
+          "overlay_area": 1.0000000000000004,
+          "pressure_difference": 0.0012646007321081923,
+          "reference_pressure_norm": 0.008573825823912909,
+          "pressure_relative_difference": 0.14749550061783923,
+          "flux_difference": 0.07174151752368911,
+          "reference_flux_norm": 0.1841137593054404,
+          "flux_relative_difference": 0.38965864253888605,
+          "gradient_difference": 0.01643332119578818,
+          "reference_gradient_norm": 0.041084627629525805,
+          "gradient_relative_difference": 0.3999871033023125,
+          "energy_difference": 0.029861539480424925,
+          "reference_energy_norm": 0.07560169380835104,
+          "energy_relative_difference": 0.39498505888139757
+        }
+      },
+      {
+        "order": 8,
+        "previous_serial_equals_current_serial_bitwise": true,
+        "serial_equals_spawned_bitwise": true,
+        "norms": {
+          "quadrature_order": 8,
+          "overlay_area": 1.0000000000000009,
+          "pressure_difference": 0.0012646007321081923,
+          "reference_pressure_norm": 0.008573825823912909,
+          "pressure_relative_difference": 0.14749550061783923,
+          "flux_difference": 0.07174164454305351,
+          "reference_flux_norm": 0.18411386653687978,
+          "flux_relative_difference": 0.38965910548993316,
+          "gradient_difference": 0.016433321195788185,
+          "reference_gradient_norm": 0.041084627629525805,
+          "gradient_relative_difference": 0.39998710330231263,
+          "energy_difference": 0.029861553782476125,
+          "reference_energy_norm": 0.0756016977315409,
+          "energy_relative_difference": 0.3949852275608082
+        }
+      }
+    ]
+  }
+}

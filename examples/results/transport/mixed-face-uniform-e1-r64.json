@@ -1,0 +1,244 @@
+{
+  "epsilon": 1.0,
+  "macro_resolution": 8,
+  "local_refinement": 64,
+  "local_degree": 1,
+  "trace_degree": 0,
+  "prepared_segments": 16,
+  "gradient_dg0_projection_error": {
+    "8": 0.0003384905225943213,
+    "12": 0.00033849052259432187
+  },
+  "interpretation": "Uniform face subdivision is a control, not the literal maximum-indicator rule. Epsilon=1 is the published Figure7 regime; Figure12 prints epsilon=0.1. The DG0 gradient projection gives a separately integrated lower bound for P1 error on these local meshes; it does not identify historical local meshes.",
+  "source_hashes": {
+    "src/pymhm/scalar_adaptive.py": "fbb92bd3dddb9eb131151961135bccb0891fb26e51904afbe9b663daf8201375",
+    "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+    "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+    "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "examples/transport_mixed_campaign.py": "b36073ec7097b3d38217acadb732d4b34b8e44af2b37bcebeabe82176084e41b",
+    "examples/transport_campaign.py": "5b05711ea6476653cffd3c66c284ddfe66badd2e537c91bc5d475ffe770de735",
+    "examples/pgmhm_campaign.py": "94e7f8d085a61c8e55d49176c161aef86100f3bed14d3abd93b98aade00689ac",
+    "examples/transport_face_resolution.py": "903f8eb09f25e6e12a7de86ee1abbf20546707d597d1cc62add3ab9750b69c02",
+    "examples/transport_trace_family.py": "631240349d9093621ba68115b3a267fa152c30a366ccdef307f4bbc5f8ef8ab0",
+    "examples/unfitted_trace_family.py": "f6843922b962f27d94580e5f179c51031f7cab0e80490e8257cdcf9ab38d54c4",
+    "examples/transport_coefficient_controls.py": "2d4ad344bd711f8f1b5f9076da380c6643332022886591ac7bcd31d0b6a4888b",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64"
+  },
+  "records": [
+    {
+      "name": "mixed-face-uniform-e1-1-r64",
+      "epsilon": 1.0,
+      "local_refinement": 64,
+      "segments": 1,
+      "free_trace_dofs": 368,
+      "retained_constant_coordinates": 240,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.00045286938233125997,
+          "broken_h1_error": 0.01802845886838267
+        },
+        "12": {
+          "l2_error": 0.0004528693823312603,
+          "broken_h1_error": 0.01802845886838267
+        }
+      },
+      "physical_checks": {
+        "projected_original_residual": 2.5678624067627825e-15,
+        "maximum_original_local_residual": 3.4470205022398343e-16
+      },
+      "archive": "mixed-face-uniform-e1-1-r64.npz",
+      "archive_sha256": "e33e775882675bd09dd21b40489590a4e2f69608a5c39fa6786bb040cb5f9a1f",
+      "source_hashes": {
+        "src/pymhm/scalar_adaptive.py": "fbb92bd3dddb9eb131151961135bccb0891fb26e51904afbe9b663daf8201375",
+        "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+        "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+        "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+        "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+        "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+        "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+        "examples/transport_mixed_campaign.py": "b36073ec7097b3d38217acadb732d4b34b8e44af2b37bcebeabe82176084e41b",
+        "examples/transport_campaign.py": "5b05711ea6476653cffd3c66c284ddfe66badd2e537c91bc5d475ffe770de735",
+        "examples/pgmhm_campaign.py": "94e7f8d085a61c8e55d49176c161aef86100f3bed14d3abd93b98aade00689ac",
+        "examples/transport_face_resolution.py": "903f8eb09f25e6e12a7de86ee1abbf20546707d597d1cc62add3ab9750b69c02",
+        "examples/transport_trace_family.py": "631240349d9093621ba68115b3a267fa152c30a366ccdef307f4bbc5f8ef8ab0",
+        "examples/unfitted_trace_family.py": "f6843922b962f27d94580e5f179c51031f7cab0e80490e8257cdcf9ab38d54c4",
+        "examples/transport_coefficient_controls.py": "2d4ad344bd711f8f1b5f9076da380c6643332022886591ac7bcd31d0b6a4888b",
+        "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64"
+      },
+      "source_changed_during_run": false
+    },
+    {
+      "name": "mixed-face-uniform-e1-2-r64",
+      "epsilon": 1.0,
+      "local_refinement": 64,
+      "segments": 2,
+      "free_trace_dofs": 736,
+      "retained_constant_coordinates": 240,
+      "quadrature": {
+        "8": {
+          "l2_error": 3.2644379272510074e-05,
+          "broken_h1_error": 0.004303068394730644
+        },
+        "12": {
+          "l2_error": 3.2644379272510284e-05,
+          "broken_h1_error": 0.004303068394730644
+        }
+      },
+      "physical_checks": {
+        "projected_original_residual": 3.277307968038657e-15,
+        "maximum_original_local_residual": 3.3952483653599463e-16
+      },
+      "archive": "mixed-face-uniform-e1-2-r64.npz",
+      "archive_sha256": "0b25c7128b88bbd88d74da1399d09f342e5f30619a4d33c9ba0bfb0acc42fcad",
+      "source_hashes": {
+        "src/pymhm/scalar_adaptive.py": "fbb92bd3dddb9eb131151961135bccb0891fb26e51904afbe9b663daf8201375",
+        "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+        "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+        "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+        "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+        "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+        "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+        "examples/transport_mixed_campaign.py": "b36073ec7097b3d38217acadb732d4b34b8e44af2b37bcebeabe82176084e41b",
+        "examples/transport_campaign.py": "5b05711ea6476653cffd3c66c284ddfe66badd2e537c91bc5d475ffe770de735",
+        "examples/pgmhm_campaign.py": "94e7f8d085a61c8e55d49176c161aef86100f3bed14d3abd93b98aade00689ac",
+        "examples/transport_face_resolution.py": "903f8eb09f25e6e12a7de86ee1abbf20546707d597d1cc62add3ab9750b69c02",
+        "examples/transport_trace_family.py": "631240349d9093621ba68115b3a267fa152c30a366ccdef307f4bbc5f8ef8ab0",
+        "examples/unfitted_trace_family.py": "f6843922b962f27d94580e5f179c51031f7cab0e80490e8257cdcf9ab38d54c4",
+        "examples/transport_coefficient_controls.py": "2d4ad344bd711f8f1b5f9076da380c6643332022886591ac7bcd31d0b6a4888b",
+        "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64"
+      },
+      "source_changed_during_run": false
+    },
+    {
+      "name": "mixed-face-uniform-e1-4-r64",
+      "epsilon": 1.0,
+      "local_refinement": 64,
+      "segments": 4,
+      "free_trace_dofs": 1472,
+      "retained_constant_coordinates": 240,
+      "quadrature": {
+        "8": {
+          "l2_error": 4.553500690721302e-06,
+          "broken_h1_error": 0.0014040339321106977
+        },
+        "12": {
+          "l2_error": 4.5535006907213945e-06,
+          "broken_h1_error": 0.0014040339321106977
+        }
+      },
+      "physical_checks": {
+        "projected_original_residual": 2.4511650605636936e-15,
+        "maximum_original_local_residual": 3.3685738523871586e-16
+      },
+      "archive": "mixed-face-uniform-e1-4-r64.npz",
+      "archive_sha256": "64621c307549e81ba782ced00fba711b41852f73049deebfc964c6097d386b1c",
+      "source_hashes": {
+        "src/pymhm/scalar_adaptive.py": "fbb92bd3dddb9eb131151961135bccb0891fb26e51904afbe9b663daf8201375",
+        "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+        "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+        "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+        "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+        "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+        "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+        "examples/transport_mixed_campaign.py": "b36073ec7097b3d38217acadb732d4b34b8e44af2b37bcebeabe82176084e41b",
+        "examples/transport_campaign.py": "5b05711ea6476653cffd3c66c284ddfe66badd2e537c91bc5d475ffe770de735",
+        "examples/pgmhm_campaign.py": "94e7f8d085a61c8e55d49176c161aef86100f3bed14d3abd93b98aade00689ac",
+        "examples/transport_face_resolution.py": "903f8eb09f25e6e12a7de86ee1abbf20546707d597d1cc62add3ab9750b69c02",
+        "examples/transport_trace_family.py": "631240349d9093621ba68115b3a267fa152c30a366ccdef307f4bbc5f8ef8ab0",
+        "examples/unfitted_trace_family.py": "f6843922b962f27d94580e5f179c51031f7cab0e80490e8257cdcf9ab38d54c4",
+        "examples/transport_coefficient_controls.py": "2d4ad344bd711f8f1b5f9076da380c6643332022886591ac7bcd31d0b6a4888b",
+        "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64"
+      },
+      "source_changed_during_run": false
+    },
+    {
+      "name": "mixed-face-uniform-e1-8-r64",
+      "epsilon": 1.0,
+      "local_refinement": 64,
+      "segments": 8,
+      "free_trace_dofs": 2944,
+      "retained_constant_coordinates": 240,
+      "quadrature": {
+        "8": {
+          "l2_error": 6.318115775372172e-07,
+          "broken_h1_error": 0.0006425822792702228
+        },
+        "12": {
+          "l2_error": 6.318115775371175e-07,
+          "broken_h1_error": 0.0006425822792702234
+        }
+      },
+      "physical_checks": {
+        "projected_original_residual": 3.692487470126023e-15,
+        "maximum_original_local_residual": 3.386857401224857e-16
+      },
+      "archive": "mixed-face-uniform-e1-8-r64.npz",
+      "archive_sha256": "e0aaea39d7d814eda1f1a416d6a35e486423cfe7b8f46a1c0674c497d19b4ac6",
+      "source_hashes": {
+        "src/pymhm/scalar_adaptive.py": "fbb92bd3dddb9eb131151961135bccb0891fb26e51904afbe9b663daf8201375",
+        "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+        "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+        "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+        "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+        "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+        "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+        "examples/transport_mixed_campaign.py": "b36073ec7097b3d38217acadb732d4b34b8e44af2b37bcebeabe82176084e41b",
+        "examples/transport_campaign.py": "5b05711ea6476653cffd3c66c284ddfe66badd2e537c91bc5d475ffe770de735",
+        "examples/pgmhm_campaign.py": "94e7f8d085a61c8e55d49176c161aef86100f3bed14d3abd93b98aade00689ac",
+        "examples/transport_face_resolution.py": "903f8eb09f25e6e12a7de86ee1abbf20546707d597d1cc62add3ab9750b69c02",
+        "examples/transport_trace_family.py": "631240349d9093621ba68115b3a267fa152c30a366ccdef307f4bbc5f8ef8ab0",
+        "examples/unfitted_trace_family.py": "f6843922b962f27d94580e5f179c51031f7cab0e80490e8257cdcf9ab38d54c4",
+        "examples/transport_coefficient_controls.py": "2d4ad344bd711f8f1b5f9076da380c6643332022886591ac7bcd31d0b6a4888b",
+        "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64"
+      },
+      "source_changed_during_run": false
+    },
+    {
+      "name": "mixed-face-uniform-e1-16-r64",
+      "epsilon": 1.0,
+      "local_refinement": 64,
+      "segments": 16,
+      "free_trace_dofs": 5888,
+      "retained_constant_coordinates": 240,
+      "quadrature": {
+        "8": {
+          "l2_error": 2.7016810852497044e-07,
+          "broken_h1_error": 0.0005182645766799405
+        },
+        "12": {
+          "l2_error": 2.701681085242211e-07,
+          "broken_h1_error": 0.0005182645766799413
+        }
+      },
+      "physical_checks": {
+        "projected_original_residual": 6.40005079687002e-15,
+        "maximum_original_local_residual": 3.398792758807812e-16
+      },
+      "archive": "mixed-face-uniform-e1-16-r64.npz",
+      "archive_sha256": "5915dfef8d0294ef48a32c033346fd2a0611b11518d7499fafcb0b7e5b831913",
+      "source_hashes": {
+        "src/pymhm/scalar_adaptive.py": "fbb92bd3dddb9eb131151961135bccb0891fb26e51904afbe9b663daf8201375",
+        "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+        "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+        "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+        "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+        "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+        "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+        "examples/transport_mixed_campaign.py": "b36073ec7097b3d38217acadb732d4b34b8e44af2b37bcebeabe82176084e41b",
+        "examples/transport_campaign.py": "5b05711ea6476653cffd3c66c284ddfe66badd2e537c91bc5d475ffe770de735",
+        "examples/pgmhm_campaign.py": "94e7f8d085a61c8e55d49176c161aef86100f3bed14d3abd93b98aade00689ac",
+        "examples/transport_face_resolution.py": "903f8eb09f25e6e12a7de86ee1abbf20546707d597d1cc62add3ab9750b69c02",
+        "examples/transport_trace_family.py": "631240349d9093621ba68115b3a267fa152c30a366ccdef307f4bbc5f8ef8ab0",
+        "examples/unfitted_trace_family.py": "f6843922b962f27d94580e5f179c51031f7cab0e80490e8257cdcf9ab38d54c4",
+        "examples/transport_coefficient_controls.py": "2d4ad344bd711f8f1b5f9076da380c6643332022886591ac7bcd31d0b6a4888b",
+        "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64"
+      },
+      "source_changed_during_run": false
+    }
+  ],
+  "source_changed_during_run": false,
+  "seconds": 878.4160270410357
+}

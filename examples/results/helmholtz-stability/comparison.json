@@ -1,0 +1,87 @@
+{
+  "definition": "Equation6.3 tested on the recorded finite sequence; no unsampled guarantee",
+  "sequences": [
+    {
+      "ell": 0,
+      "omega": 62.83185307179586,
+      "levels": 9,
+      "sampled_suffix_threshold": 0.020833333333333332,
+      "transition_bracket": [
+        0.020833333333333332,
+        0.03125
+      ],
+      "accepted_suffix_resolutions": [
+        48,
+        64,
+        96,
+        128
+      ],
+      "rejected_resolutions": [],
+      "maximum_ratio": 3.2282950722558987,
+      "finest_ratio": 1.3460842666464963,
+      "local_space": "Q3 on 2x2 fine cells per macrocell"
+    },
+    {
+      "ell": 0,
+      "omega": 125.66370614359172,
+      "levels": 9,
+      "sampled_suffix_threshold": 0.005208333333333333,
+      "transition_bracket": [
+        0.005208333333333333,
+        0.0078125
+      ],
+      "accepted_suffix_resolutions": [
+        192,
+        256
+      ],
+      "rejected_resolutions": [],
+      "maximum_ratio": 4.905311764589353,
+      "finest_ratio": 2.0619076015708364,
+      "local_space": "Q3 on 2x2 fine cells per macrocell"
+    },
+    {
+      "ell": 1,
+      "omega": 94.24777960769379,
+      "levels": 18,
+      "sampled_suffix_threshold": 0.03125,
+      "transition_bracket": [
+        0.03125,
+        0.03333333333333333
+      ],
+      "accepted_suffix_resolutions": [
+        32,
+        36,
+        40,
+        48,
+        64,
+        96,
+        128
+      ],
+      "rejected_resolutions": [
+        30
+      ],
+      "maximum_ratio": 4.0619785664175065,
+      "finest_ratio": 0.99161078732422,
+      "local_space": "Q4 on 2x2 fine cells per macrocell"
+    },
+    {
+      "ell": 1,
+      "omega": 471.23889803846896,
+      "levels": 9,
+      "sampled_suffix_threshold": 0.00390625,
+      "transition_bracket": [
+        0.00390625,
+        0.005208333333333333
+      ],
+      "accepted_suffix_resolutions": [
+        256,
+        384,
+        512
+      ],
+      "rejected_resolutions": [],
+      "maximum_ratio": 7.900760118765341,
+      "finest_ratio": 1.1339469509607272,
+      "local_space": "Q4 on 2x2 fine cells per macrocell"
+    }
+  ]
+}

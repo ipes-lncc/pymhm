@@ -1,0 +1,26 @@
+{
+  "method": "Common uniform-triangle overlay; physical Pk values and gradients",
+  "fields": [
+    {
+      "name": "smooth-p8-r24-ell3-s32.npz",
+      "sha256": "769bc01b1875d21e584054bd59a1c25dfeb5a420776dc77fd2a0e3b392cd779c"
+    },
+    {
+      "name": "smooth-p8-r32-ell3-s32.npz",
+      "sha256": "495f129594d355ac04acf87191c649def378e2d8f2193b2cc30200480b5d8f22"
+    }
+  ],
+  "quadrature_order": 9,
+  "norms": {
+    "pressure_l2": 2.9304141250050263e-12,
+    "broken_gradient_l2": 4.284987485727362e-09,
+    "common_triangles": 147456
+  },
+  "source_sha256": {
+    "examples/unfitted_local_resolution.py": "9543b3a9d6f1ec279b08da0efc18ea4c036d75fa0ec6716c8e2e3cba681b4898",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae"
+  },
+  "source_changed_during_run": false
+}

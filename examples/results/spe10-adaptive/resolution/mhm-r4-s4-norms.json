@@ -1,0 +1,61 @@
+{
+  "archive": "mhm-r4-s4.npz",
+  "archive_sha256": "f96653efea81b00e51fd5e437755851ae67c69b4a7b9427b1845b07cf6d92016",
+  "reference": "reference-rt2-480x1760.npz",
+  "reference_sha256": "596d7a1cd09b641382f3c727da1af4ffe703ad5a025bbf6a9f00e0ff6c2ad8ef",
+  "integration": "exact intersections of local triangles, reference triangles and pixels",
+  "denominator": "corresponding norm of the stated classical RT2 reference",
+  "source_hashes": {
+    "compare_spe10_resolution.py": "bdc777c73b2c196d1e00632bad91bcaad317cfae12e6691308933bd3e0de39c2",
+    "spe10_adaptive_norms.py": "9727f068fc1e7c2fc948270584634376ef92efbe2cf1db87e0c46cdd1b5f2ed7",
+    "spe10_adaptive.py": "111d056e78838e757971236ec9511f3b751f4fb70956f23c860254b399277e28",
+    "rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4"
+  },
+  "rows": [
+    {
+      "pressure_difference_l2": 8.51732436172352,
+      "raw_flux_difference_l2": 0.3178376177199145,
+      "reconstructed_flux_difference_l2": 0.2723517162803709,
+      "reference_pressure_l2": 821.5255220157964,
+      "reference_flux_l2": 0.9842116240407701,
+      "pressure_l2": 828.5758114439062,
+      "raw_flux_l2": 1.0898011782836063,
+      "reconstructed_flux_l2": 1.0639585820427986,
+      "raw_flux_energy_difference": 0.13435300240834933,
+      "reconstructed_flux_energy_difference": 0.5364089872953576,
+      "reference_flux_energy_norm": 0.38811859944372834,
+      "raw_flux_energy_norm": 0.4071450778353079,
+      "reconstructed_flux_energy_norm": 0.6817962953902532,
+      "pressure_relative_difference": 0.010367692948630937,
+      "raw_flux_relative_difference": 0.3229362567523876,
+      "reconstructed_flux_relative_difference": 0.2767206865147621,
+      "raw_flux_energy_relative_difference": 0.3461648130259951,
+      "reconstructed_flux_energy_relative_difference": 1.3820749329307245,
+      "quadrature_order": 4,
+      "seconds": 291.0526347330306
+    },
+    {
+      "pressure_difference_l2": 8.51732436172352,
+      "raw_flux_difference_l2": 0.3178376177199112,
+      "reconstructed_flux_difference_l2": 0.27235171628037186,
+      "reference_pressure_l2": 821.5255220157962,
+      "reference_flux_l2": 0.9842116240407701,
+      "pressure_l2": 828.5758114439061,
+      "raw_flux_l2": 1.089801178283605,
+      "reconstructed_flux_l2": 1.0639585820427988,
+      "raw_flux_energy_difference": 0.13435300240834938,
+      "reconstructed_flux_energy_difference": 0.5364089872953626,
+      "reference_flux_energy_norm": 0.38811859944372845,
+      "raw_flux_energy_norm": 0.40714507783530784,
+      "reconstructed_flux_energy_norm": 0.681796295390257,
+      "pressure_relative_difference": 0.010367692948630937,
+      "raw_flux_relative_difference": 0.32293625675238424,
+      "reconstructed_flux_relative_difference": 0.2767206865147631,
+      "raw_flux_energy_relative_difference": 0.3461648130259952,
+      "reconstructed_flux_energy_relative_difference": 1.3820749329307371,
+      "quadrature_order": 5,
+      "seconds": 373.3981528559234
+    }
+  ],
+  "source_changed_during_run": false
+}

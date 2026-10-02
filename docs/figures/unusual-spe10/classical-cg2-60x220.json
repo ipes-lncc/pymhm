@@ -1,0 +1,97 @@
+{
+  "method": "classical conforming triangular CG2; independently assembled DOLFINx/UFL",
+  "operator": "-div(Kx_layer36 grad p) + p = 0",
+  "boundary": "bottom p=1, top p=0, homogeneous outward flux on both vertical sides",
+  "source": 0.0,
+  "reaction": 1.0,
+  "mesh_shape": [
+    60,
+    220
+  ],
+  "triangles": 26400,
+  "unknowns": 53361,
+  "triangle_diagonal": "southwest to northeast",
+  "material": "original layer-36 Kx used in both Cartesian directions, exact pixel alignment",
+  "physical_coordinate_unit": "ft source numbers",
+  "permeability_unit": "mD source numbers, no implicit SI conversion",
+  "native_backend": "PETSc/MUMPS SPD Cholesky on COMM_SELF",
+  "quadrature_degree": 4,
+  "original_free_residual_relative": 2.475091975370963e-16,
+  "residual_tolerance": 1e-10,
+  "reaction_integral": 1502.512674369747,
+  "energy_squared": 1502.5126743697397,
+  "boundary_and_source_work": 1502.5126743697513,
+  "energy_identity_relative": 7.717776791779114e-15,
+  "weak_outward_flux_bottom_top": [
+    -1502.5126743697513,
+    1.667811812359024e-127
+  ],
+  "weak_global_balance": -4.320099833421409e-12,
+  "conservation_scope": "continuous CG2 weak equations and boundary reactions, not fine-cell H(div) conservation",
+  "value_min": -0.2636979940210553,
+  "value_max": 1.0,
+  "assembly_seconds": 0.14155082602519542,
+  "factor_and_solve_seconds": 1.8643721969565377,
+  "timing_scope": "concurrent acquisition, not an exclusive performance benchmark",
+  "threads": 4,
+  "threadpools": [
+    {
+      "user_api": "blas",
+      "internal_api": "blis",
+      "num_threads": 4,
+      "prefix": "libblis",
+      "version": "2.0",
+      "threading_layer": "pthreads",
+      "architecture": "haswell"
+    },
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 4,
+      "prefix": "libgomp",
+      "version": null
+    }
+  ],
+  "dolfinx": "0.9.0",
+  "basix": "0.9.0",
+  "petsc": [
+    3,
+    23,
+    0
+  ],
+  "numpy": "2.5.3",
+  "python": "3.13.15",
+  "analytical_patch": false,
+  "historical_scope": "explicit zero-source diffusion-reaction control; no claim that an unspecified historical load was zero",
+  "archive": "classical-cg2-60x220.npz",
+  "archive_sha256": "d7d8f5055f7ca6193d6c3d683c85287c3014e506596f3a37560858a2242dba71",
+  "driver_sha256": "6e98d9450d07fdfaa3105811dedd13b0ab47518674cb20d3284b5c74d6c94052",
+  "material_sha256": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512",
+  "acquisition_archive_sha256": "7181519e31ef3fcbca05a26779646d4c2ebcc260ce5a97f127dbfa4ccd4175a5",
+  "field_payload_sha256": "6079f1b172a87848a5bcc21589f86900971abd5085573fa060b07a296d4009b4",
+  "sampling_replay": {
+    "verification": "field-sampling-verification.json",
+    "source_hashes": {
+      "examples/solve_unusual_spe10_reference.py": "67cbfe9caf8c5e173b132db9618429955ef3ae9b617b666fedd249886a2ce3ac",
+      "examples/cg2_profiles.py": "4b52f7a099f3619c293dd58215209e294d0c7d8b8fb2703c188cb86a2777278a"
+    },
+    "fixed_point_convention": "lower triangle and right/up rectangle at exact interfaces",
+    "trace_profile_convention": "each segment has two one-sided endpoint values; both incident columns retained at vertical grid edges; no point displacement or averaging"
+  },
+  "physical_form_verification": {
+    "archive_sha256": "d7d8f5055f7ca6193d6c3d683c85287c3014e506596f3a37560858a2242dba71",
+    "physical_free_relative_residual": 3.597495015509696e-15,
+    "physical_free_residual_linf": 2.6676116827648033e-14,
+    "physical_energy": 1502.5126743697529,
+    "boundary_work": 1502.5126743697526,
+    "relative_energy_work_defect": 6.761034930757776e-17,
+    "outward_bottom": -1502.5126743697526,
+    "outward_top": 1.6678118123590253e-127,
+    "reaction_integral": 1502.5126743697479,
+    "global_physical_balance": -4.7298831518105544e-12,
+    "all_natural_side_rows_included": true,
+    "normalization": "norm of physical free RHS after exact prescribed bottom1/top0 elimination",
+    "driver_sha256": "7235156fb7f08eafbf623b2cffae0c72c7ab63c03288349e86e3de77a31b11f0",
+    "seconds": 0.16315252101048827
+  }
+}

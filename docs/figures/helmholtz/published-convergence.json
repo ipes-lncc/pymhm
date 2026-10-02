@@ -1,0 +1,1394 @@
+{
+  "reference": {
+    "authors": [
+      "T. Chaumont-Frelet",
+      "F. Valentin"
+    ],
+    "title": "A Multiscale Hybrid-Mixed Method for the Helmholtz Equation in Heterogeneous Domains",
+    "doi": "10.1137/19M1255616",
+    "year": 2020,
+    "source_url": "https://inria.hal.science/hal-01698914v2",
+    "manuscript_version": "HAL 01698914v2, submitted 16 April 2019",
+    "pdf_sha256": "b9bf6eb4e334d040f9f3e13effe2ccebcd3b050d7a488edc1445c3707b971a4a",
+    "pdf_page_one_based": 23,
+    "printed_page": 22,
+    "section": "6.3",
+    "figures": [
+      "6.6",
+      "6.7"
+    ]
+  },
+  "extraction": {
+    "method": "Direct coordinates of the colored SVG polylines extracted from the PDF vector graphics.",
+    "tool": "pdftocairo 26.01.0",
+    "vector_page_sha256": "b70bb750272c280f0b47b8a0543c2650d0107eec35b813461f4cdc3b986421ee",
+    "abscissae": "H=1/n; intermediate n=24,48 (ell=2) and n=32,64 (ell=3) verified against logarithmic vertex positions.",
+    "calibration": "Piecewise linear log10(error) between the two nearest labelled major ticks; endpoint intervals extrapolate the nearest pair.",
+    "assumed_coordinate_tolerance_pt": 0.01,
+    "uncertainty": "Each interval propagates an independently varied +/-0.01 PDF point in the curve ordinate and both calibration ordinates. This conservatively bounds the extracted vector-coordinate quantization, not FEM error, unknown author data rounding, or historical discretization uncertainty.",
+    "maximum_relative_graph_interval": 0.0028210458324435805,
+    "raw_data_fit_to_pymhm": false
+  },
+  "conventions": {
+    "omega": 31.41592653589793,
+    "propagation_angle": 0.241660973353061,
+    "exact_solution": "exp(i omega (x cos(theta)+y sin(theta)))",
+    "macro_mesh": "Uniform squares in the unit square; H is square edge length.",
+    "pressure_norm": "L2(error)/L2(exact)",
+    "gradient_norm": "Broken H1 seminorm(error)/H1 seminorm(exact)",
+    "comparison_scope": "Published graph values versus the declared PyMHM discretization. Matching asymptotic rates does not establish agreement of amplitudes or historical reproduction.",
+    "historical_local_discretization": "The text surrounding Figures 6.6/6.7 does not specify the local finite-element degree and subdivision used to generate those curves."
+  },
+  "pymhm_source": {
+    "record": "examples/results/helmholtz-article/article.json",
+    "sha256": "29462978f3b5d0dfdcc6f95fbe4b71bcb444a0f653f2ea24dcf5d583fc3d9e2e",
+    "assembly_order": 10,
+    "error_order": 12,
+    "local_space_convention": "Q(ell+2), local refinement 2; separately tested with 4",
+    "source_sha256": {
+      "src/pymhm/helmholtz.py": "a224bad862c9a3e4d1f2a6bd5550ee9a873241423ebad445e6bee0016e085985",
+      "src/pymhm/helmholtz_forms.py": "e1711c2a9ffe74cc9465803151e1d3696bc08a49cb767a9252d5c2f1fa5dbc25",
+      "src/pymhm/helmholtz_spaces.py": "8e3afd13cee8ac53d0f6277e224ac3e567638f9bae130d0a2701c2e8029b3497",
+      "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+      "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc",
+      "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+      "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+      "src/pymhm/quadrilateral.py": "f6969e69f2e06b1282d8dd477a8902c922bbe0ba55299d6759b9f52e2088b293",
+      "src/pymhm/cut_cells.py": "f37bd801059236bbc2b7cc7f735b9c843916fdd9f14ea3d70812c971ab4a6add",
+      "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+      "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+      "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+      "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+      "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+      "examples/helmholtz_campaign.py": "6ccd847b79b18ff0b636f24504a6f2e518e6ae4ab39e9817c45c6e1d4385decc",
+      "examples/helmholtz_article.py": "d91071dffa7d0f07e1e15baf0d652d03485057e1b0c743cfbdf673092c4e3c03",
+      "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca"
+    }
+  },
+  "calibrations": [
+    {
+      "ell": 2,
+      "field": "pressure",
+      "svg_transform": "matrix(1, 0, 0, -1, -23.548, 43.736)",
+      "tick_y_pt": [
+        -151.912437,
+        -126.592125,
+        -101.275719,
+        -75.955406
+      ],
+      "tick_log10_value": [
+        -6,
+        -5,
+        -4,
+        -3
+      ]
+    },
+    {
+      "ell": 2,
+      "field": "gradient",
+      "svg_transform": "matrix(1, 0, 0, -1, 170.122, 38.688)",
+      "tick_y_pt": [
+        -154.34325,
+        -115.757312,
+        -77.171375
+      ],
+      "tick_log10_value": [
+        -4,
+        -3,
+        -2
+      ]
+    },
+    {
+      "ell": 3,
+      "field": "pressure",
+      "svg_transform": "matrix(1, 0, 0, -1, -115.12, 190.538)",
+      "tick_y_pt": [
+        -194.001063,
+        -166.286219,
+        -138.571375,
+        -110.856531
+      ],
+      "tick_log10_value": [
+        -7,
+        -6,
+        -5,
+        -4
+      ]
+    },
+    {
+      "ell": 3,
+      "field": "gradient",
+      "svg_transform": "matrix(1, 0, 0, -1, 78.55, 204.14)",
+      "tick_y_pt": [
+        -164.844375,
+        -131.875625,
+        -98.906875
+      ],
+      "tick_log10_value": [
+        -5,
+        -4,
+        -3
+      ]
+    }
+  ],
+  "series": [
+    {
+      "ell": 2,
+      "field": "pressure",
+      "basis": "polynomial",
+      "n": [
+        12,
+        16,
+        24,
+        32,
+        48,
+        64
+      ],
+      "consecutive_orders": {
+        "published": [
+          3.932812872190315,
+          3.957338957682865,
+          3.972495248556712,
+          3.981608059769599,
+          3.9873442381403286
+        ],
+        "pymhm": [
+          3.996761627304942,
+          3.99116842979534,
+          3.990978326899156,
+          3.991775326701157,
+          3.9930495486720994
+        ]
+      },
+      "final_published_over_pymhm": 3.545989072273022,
+      "final_published_value": 4.611458503807098e-06,
+      "final_pymhm_value": 1.300471718840097e-06
+    },
+    {
+      "ell": 2,
+      "field": "pressure",
+      "basis": "oscillatory",
+      "n": [
+        12,
+        16,
+        24,
+        32,
+        48,
+        64
+      ],
+      "consecutive_orders": {
+        "published": [
+          4.751480136980557,
+          4.554224999457723,
+          4.373073966883878,
+          4.237825558485925,
+          4.143962570030281
+        ],
+        "pymhm": [
+          4.571033175913218,
+          4.337163062240121,
+          4.185668494821387,
+          4.101810186987593,
+          4.05443044282696
+        ]
+      },
+      "final_published_over_pymhm": 1.7005138155102155,
+      "final_published_value": 7.759768950027556e-07,
+      "final_pymhm_value": 4.5631907716664715e-07
+    },
+    {
+      "ell": 2,
+      "field": "gradient",
+      "basis": "polynomial",
+      "n": [
+        12,
+        16,
+        24,
+        32,
+        48,
+        64
+      ],
+      "consecutive_orders": {
+        "published": [
+          2.835161432693526,
+          2.90267606843493,
+          2.944548970809094,
+          2.968214654138513,
+          2.981821770342459
+        ],
+        "pymhm": [
+          2.9520162804737544,
+          2.9823357728340154,
+          2.990593735558793,
+          2.9927983704318897,
+          2.994135627850278
+        ]
+      },
+      "final_published_over_pymhm": 3.9338378484431433,
+      "final_published_value": 0.0001353959227708524,
+      "final_pymhm_value": 3.441827751604879e-05
+    },
+    {
+      "ell": 2,
+      "field": "gradient",
+      "basis": "oscillatory",
+      "n": [
+        12,
+        16,
+        24,
+        32,
+        48,
+        64
+      ],
+      "consecutive_orders": {
+        "published": [
+          2.91294808958796,
+          2.960166184458973,
+          2.9785806870006106,
+          2.9860364753147683,
+          2.9907348764050625
+        ],
+        "pymhm": [
+          3.30379737338309,
+          3.1756108452781153,
+          3.093555405491439,
+          3.049131804549675,
+          3.024707169241612
+        ]
+      },
+      "final_published_over_pymhm": 4.396376157164773,
+      "final_published_value": 7.2425360890854e-05,
+      "final_pymhm_value": 1.647387718924424e-05
+    },
+    {
+      "ell": 3,
+      "field": "pressure",
+      "basis": "polynomial",
+      "n": [
+        24,
+        32,
+        48,
+        64,
+        96
+      ],
+      "consecutive_orders": {
+        "published": [
+          4.84183738694643,
+          4.8576579459885645,
+          4.905011406906589,
+          4.94330133313506
+        ],
+        "pymhm": [
+          4.909367057651271,
+          4.944898818819241,
+          4.968325750683183,
+          4.981540735935122
+        ]
+      },
+      "final_published_over_pymhm": 120.61873951441626,
+      "final_published_value": 3.9810719039865297e-07,
+      "final_pymhm_value": 3.3005417897860847e-09
+    },
+    {
+      "ell": 3,
+      "field": "pressure",
+      "basis": "oscillatory",
+      "n": [
+        24,
+        32,
+        48,
+        64,
+        96
+      ],
+      "consecutive_orders": {
+        "published": [
+          4.539504577137104,
+          4.6975771491715514,
+          4.827171772859032,
+          4.904881892722097
+        ],
+        "pymhm": [
+          4.898428819307681,
+          4.939462148037525,
+          4.965677787975081,
+          4.979840456216723
+        ]
+      },
+      "final_published_over_pymhm": 99.77087549549972,
+      "final_published_value": 1.5921106439925928e-07,
+      "final_pymhm_value": 1.595766937080157e-09
+    },
+    {
+      "ell": 3,
+      "field": "gradient",
+      "basis": "polynomial",
+      "n": [
+        24,
+        32,
+        48,
+        64,
+        96
+      ],
+      "consecutive_orders": {
+        "published": [
+          3.9829947481676027,
+          4.031731106031669,
+          4.034204802030559,
+          4.023656878182475
+        ],
+        "pymhm": [
+          3.9233463754521694,
+          3.954309739862312,
+          3.973728841302604,
+          3.984587819282221
+        ]
+      },
+      "final_published_over_pymhm": 67.60339145011817,
+      "final_published_value": 1.2217062889160349e-05,
+      "final_pymhm_value": 1.8071671593835394e-07
+    },
+    {
+      "ell": 3,
+      "field": "gradient",
+      "basis": "oscillatory",
+      "n": [
+        24,
+        32,
+        48,
+        64,
+        96
+      ],
+      "consecutive_orders": {
+        "published": [
+          4.056016500630435,
+          4.082867882409909,
+          4.0711895711837816,
+          4.046533770963425
+        ],
+        "pymhm": [
+          3.923960666608659,
+          3.9545690503707616,
+          3.973839716564585,
+          3.984637551279298
+        ]
+      },
+      "final_published_over_pymhm": 57.07857331238484,
+      "final_published_value": 4.988681638692858e-06,
+      "final_pymhm_value": 8.74002510782872e-08
+    }
+  ],
+  "rows": [
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "pressure",
+      "basis": "polynomial",
+      "n": 12,
+      "H": 0.08333333333333333,
+      "svg_x_pt": 168.2355,
+      "svg_y_pt": -62.088219,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 0.003529152631887336,
+      "published_graph_interval": [
+        0.003519240386884317,
+        0.003539108533211579
+      ],
+      "pymhm_relative_error": 0.0010391834778744773,
+      "pymhm_over_published": 0.29445693804371903,
+      "published_over_pymhm": 3.396082315613587,
+      "relative_difference_to_published": -0.7055430619562809,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "32b87426d65e61afb2d0"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "pressure",
+      "basis": "polynomial",
+      "n": 16,
+      "H": 0.0625,
+      "svg_x_pt": 187.712062,
+      "svg_y_pt": -74.529625,
+      "log_abscissa_check_pt": -0.00017190101732467156,
+      "published_graph_value": 0.0011384390125833508,
+      "published_graph_interval": [
+        0.001136255689566456,
+        0.001140629992680262
+      ],
+      "pymhm_relative_error": 0.0003291106111293688,
+      "pymhm_over_published": 0.2890893649037462,
+      "published_over_pymhm": 3.4591379739374197,
+      "relative_difference_to_published": -0.7109106350962539,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "69b8c5a3cd6cb90b70f5"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "pressure",
+      "basis": "polynomial",
+      "n": 24,
+      "H": 0.041666666666666664,
+      "svg_x_pt": 215.165187,
+      "svg_y_pt": -92.174156,
+      "log_abscissa_check_pt": 0.0020384505086781246,
+      "published_graph_value": 0.0002288005006257903,
+      "published_graph_interval": [
+        0.00022838474445410713,
+        0.0002292170136483512
+      ],
+      "pymhm_relative_error": 6.524271284549346e-05,
+      "pymhm_over_published": 0.2851510930572646,
+      "published_over_pymhm": 3.5069127362565573,
+      "relative_difference_to_published": -0.7148489069427354,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "ee58ee6b9536f48b9559"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "pressure",
+      "basis": "polynomial",
+      "n": 32,
+      "H": 0.03125,
+      "svg_x_pt": 234.64175,
+      "svg_y_pt": -104.740562,
+      "log_abscissa_check_pt": 0.0018675494913509283,
+      "published_graph_value": 7.296900643745576e-05,
+      "published_graph_interval": [
+        7.283639312459662e-05,
+        7.310186119954082e-05
+      ],
+      "pymhm_relative_error": 2.0696848519473387e-05,
+      "pymhm_over_published": 0.2836388972517169,
+      "published_over_pymhm": 3.525609532717032,
+      "relative_difference_to_published": -0.7163611027482831,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "ba676c59d7dae651ea73"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "pressure",
+      "basis": "polynomial",
+      "n": 48,
+      "H": 0.020833333333333332,
+      "svg_x_pt": 262.090969,
+      "svg_y_pt": -122.490562,
+      "log_abscissa_check_pt": 0.00017190101732467156,
+      "published_graph_value": 1.4521519304872665e-05,
+      "published_graph_interval": [
+        1.4495128007021903e-05,
+        1.4547958653392724e-05
+      ],
+      "pymhm_relative_error": 4.101922756827376e-06,
+      "pymhm_over_published": 0.2824720107248685,
+      "published_over_pymhm": 3.5401737589286797,
+      "relative_difference_to_published": -0.7175279892751315,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "ded9753542307a57d8fd"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "pressure",
+      "basis": "polynomial",
+      "n": 64,
+      "H": 0.015625,
+      "svg_x_pt": 281.567531,
+      "svg_y_pt": -135.103844,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 4.611458503807098e-06,
+      "published_graph_interval": [
+        4.603078966158253e-06,
+        4.61985329573502e-06
+      ],
+      "pymhm_relative_error": 1.300471718840097e-06,
+      "pymhm_over_published": 0.2820087652889996,
+      "published_over_pymhm": 3.545989072273022,
+      "relative_difference_to_published": -0.7179912347110003,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "d76917423c4d3b926b83"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "pressure",
+      "basis": "oscillatory",
+      "n": 12,
+      "H": 0.08333333333333333,
+      "svg_x_pt": 168.2355,
+      "svg_y_pt": -73.529625,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 0.0012468199782096835,
+      "published_graph_interval": [
+        0.0012443394859164157,
+        0.0012493093485841883
+      ],
+      "pymhm_relative_error": 0.0005570635095516729,
+      "pymhm_over_published": 0.4467874426840383,
+      "published_over_pymhm": 2.238200773935327,
+      "relative_difference_to_published": -0.5532125573159616,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "dad3c9096b0e06005590"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "pressure",
+      "basis": "oscillatory",
+      "n": 16,
+      "H": 0.0625,
+      "svg_x_pt": 187.712062,
+      "svg_y_pt": -88.560875,
+      "log_abscissa_check_pt": -0.00017190101732467156,
+      "published_graph_value": 0.0003178043425220529,
+      "published_graph_interval": [
+        0.0003172268563870581,
+        0.00031838287992439596
+      ],
+      "pymhm_relative_error": 0.00014955660603828798,
+      "pymhm_over_published": 0.47059333692996985,
+      "published_over_pymhm": 2.124976963175347,
+      "relative_difference_to_published": -0.5294066630700301,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "c9d2842292ff451b61bb"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "pressure",
+      "basis": "oscillatory",
+      "n": 24,
+      "H": 0.041666666666666664,
+      "svg_x_pt": 215.165187,
+      "svg_y_pt": -108.865562,
+      "log_abscissa_check_pt": 0.0020384505086781246,
+      "published_graph_value": 5.0141879976818484e-05,
+      "published_graph_interval": [
+        5.0050752508577515e-05,
+        5.023317336095596e-05
+      ],
+      "pymhm_relative_error": 2.5767310842280846e-05,
+      "pymhm_over_published": 0.5138880084710336,
+      "published_over_pymhm": 1.9459492798349025,
+      "relative_difference_to_published": -0.48611199152896645,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "435cfa479128437a4963"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "pressure",
+      "basis": "oscillatory",
+      "n": 32,
+      "H": 0.03125,
+      "svg_x_pt": 234.64175,
+      "svg_y_pt": -122.697594,
+      "log_abscissa_check_pt": 0.0018675494913509283,
+      "published_graph_value": 1.4250636961962671e-05,
+      "published_graph_interval": [
+        1.4224737963605076e-05,
+        1.4276583114659223e-05
+      ],
+      "pymhm_relative_error": 7.728887092879337e-06,
+      "pymhm_over_published": 0.5423537988869569,
+      "published_over_pymhm": 1.8438148714957752,
+      "relative_difference_to_published": -0.4576462011130431,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "94831179695460a0bb74"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "pressure",
+      "basis": "oscillatory",
+      "n": 48,
+      "H": 0.020833333333333332,
+      "svg_x_pt": 262.090969,
+      "svg_y_pt": -141.592125,
+      "log_abscissa_check_pt": 0.00017190101732467156,
+      "published_graph_value": 2.556172970552492e-06,
+      "published_graph_interval": [
+        2.551528117383799e-06,
+        2.5608262793054276e-06
+      ],
+      "pymhm_relative_error": 1.4649541848902767e-06,
+      "pymhm_over_published": 0.5731044814911884,
+      "published_over_pymhm": 1.7448825341551184,
+      "relative_difference_to_published": -0.4268955185088116,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "be2871fc432005449953"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "pressure",
+      "basis": "oscillatory",
+      "n": 64,
+      "H": 0.015625,
+      "svg_x_pt": 281.567531,
+      "svg_y_pt": -154.7015,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 7.759768950027556e-07,
+      "published_graph_interval": [
+        7.74410461300322e-07,
+        7.775440170618273e-07
+      ],
+      "pymhm_relative_error": 4.5631907716664715e-07,
+      "pymhm_over_published": 0.588057557003713,
+      "published_over_pymhm": 1.7005138155102155,
+      "relative_difference_to_published": -0.411942442996287,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "caf0f9236999cd1dc152"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "gradient",
+      "basis": "polynomial",
+      "n": 12,
+      "H": 0.08333333333333333,
+      "svg_x_pt": 168.233469,
+      "svg_y_pt": -67.136219,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 0.018200062783352938,
+      "published_graph_interval": [
+        0.018172726857558774,
+        0.01822746824503431
+      ],
+      "pymhm_relative_error": 0.005075791059646387,
+      "pymhm_over_published": 0.27888865659788076,
+      "published_over_pymhm": 3.5856603570716863,
+      "relative_difference_to_published": -0.7211113434021192,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "32b87426d65e61afb2d0"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "gradient",
+      "basis": "polynomial",
+      "n": 16,
+      "H": 0.0625,
+      "svg_x_pt": 187.713937,
+      "svg_y_pt": -80.804187,
+      "log_abscissa_check_pt": 0.0030628313635361337,
+      "published_graph_value": 0.00805102914226629,
+      "published_graph_interval": [
+        0.008041426098766435,
+        0.008060643653687787
+      ],
+      "pymhm_relative_error": 0.00217111362058316,
+      "pymhm_over_published": 0.2696690798428798,
+      "published_over_pymhm": 3.708248645275316,
+      "relative_difference_to_published": -0.7303309201571202,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "69b8c5a3cd6cb90b70f5"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "gradient",
+      "basis": "polynomial",
+      "n": 24,
+      "H": 0.041666666666666664,
+      "svg_x_pt": 215.163156,
+      "svg_y_pt": -100.526844,
+      "log_abscissa_check_pt": 0.00042108431819087855,
+      "published_graph_value": 0.0024815070600825986,
+      "published_graph_interval": [
+        0.002478547187521951,
+        0.002484470467312916
+      ],
+      "pymhm_relative_error": 0.0006479168741946431,
+      "pymhm_over_published": 0.2610981385533825,
+      "published_over_pymhm": 3.829977515506287,
+      "relative_difference_to_published": -0.7389018614466176,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "ee58ee6b9536f48b9559"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "gradient",
+      "basis": "polynomial",
+      "n": 32,
+      "H": 0.03125,
+      "svg_x_pt": 234.639719,
+      "svg_y_pt": -114.722156,
+      "log_abscissa_check_pt": -0.00042108431821930026,
+      "published_graph_value": 0.0010637199067939564,
+      "published_graph_interval": [
+        0.0010624511312925763,
+        0.0010649901974626925
+      ],
+      "pymhm_relative_error": 0.00027408059455611816,
+      "pymhm_over_published": 0.2576623722143125,
+      "published_over_pymhm": 3.8810478666564596,
+      "relative_difference_to_published": -0.7423376277856875,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "ba676c59d7dae651ea73"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "gradient",
+      "basis": "polynomial",
+      "n": 48,
+      "H": 0.020833333333333332,
+      "svg_x_pt": 262.092844,
+      "svg_y_pt": -134.890125,
+      "log_abscissa_check_pt": 0.0008431686364360758,
+      "published_graph_value": 0.0003192645004123607,
+      "published_graph_interval": [
+        0.00031888369061129965,
+        0.00031964576497517014
+      ],
+      "pymhm_relative_error": 8.144654284600155e-05,
+      "pymhm_over_published": 0.25510679308474804,
+      "published_over_pymhm": 3.919926976102882,
+      "relative_difference_to_published": -0.744893206915252,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "ded9753542307a57d8fd"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "gradient",
+      "basis": "polynomial",
+      "n": 64,
+      "H": 0.015625,
+      "svg_x_pt": 281.569406,
+      "svg_y_pt": -149.265125,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 0.0001353959227708524,
+      "published_graph_interval": [
+        0.0001352344262864381,
+        0.00013555761211381001
+      ],
+      "pymhm_relative_error": 3.441827751604879e-05,
+      "pymhm_over_published": 0.2542046821771671,
+      "published_over_pymhm": 3.9338378484431433,
+      "relative_difference_to_published": -0.7457953178228329,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "d76917423c4d3b926b83"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "gradient",
+      "basis": "oscillatory",
+      "n": 12,
+      "H": 0.08333333333333333,
+      "svg_x_pt": 168.233469,
+      "svg_y_pt": -76.526844,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 0.010392111073269822,
+      "published_graph_interval": [
+        0.010379515252356952,
+        0.010404735267538195
+      ],
+      "pymhm_relative_error": 0.003090998972653617,
+      "pymhm_over_published": 0.2974370607531479,
+      "published_over_pymhm": 3.362055816003139,
+      "relative_difference_to_published": -0.7025629392468521,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "dad3c9096b0e06005590"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "gradient",
+      "basis": "oscillatory",
+      "n": 16,
+      "H": 0.0625,
+      "svg_x_pt": 187.713937,
+      "svg_y_pt": -90.569812,
+      "log_abscissa_check_pt": 0.0030628313635361337,
+      "published_graph_value": 0.0044953522257022045,
+      "published_graph_interval": [
+        0.004489990294673541,
+        0.004500720559930529
+      ],
+      "pymhm_relative_error": 0.0011948863251333365,
+      "pymhm_over_published": 0.2658048279958056,
+      "published_over_pymhm": 3.7621589026057114,
+      "relative_difference_to_published": -0.7341951720041944,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "c9d2842292ff451b61bb"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "gradient",
+      "basis": "oscillatory",
+      "n": 24,
+      "H": 0.041666666666666664,
+      "svg_x_pt": 215.163156,
+      "svg_y_pt": -110.683094,
+      "log_abscissa_check_pt": 0.00042108431819087855,
+      "published_graph_value": 0.001353643603445294,
+      "published_graph_interval": [
+        0.0013520290150271586,
+        0.0013552601199993874
+      ],
+      "pymhm_relative_error": 0.0003297078435447375,
+      "pymhm_over_published": 0.24357064348811241,
+      "published_over_pymhm": 4.105585080694691,
+      "relative_difference_to_published": -0.7564293565118876,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "435cfa479128437a4963"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "gradient",
+      "basis": "oscillatory",
+      "n": 32,
+      "H": 0.03125,
+      "svg_x_pt": 234.639719,
+      "svg_y_pt": -125.042469,
+      "log_abscissa_check_pt": -0.00042108431821930026,
+      "published_graph_value": 0.0005745981553840784,
+      "published_graph_interval": [
+        0.0005739127907132195,
+        0.0005752843385150587
+      ],
+      "pymhm_relative_error": 0.00013540178038156024,
+      "pymhm_over_published": 0.23564604082491997,
+      "published_over_pymhm": 4.243652880817883,
+      "relative_difference_to_published": -0.7643539591750801,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "94831179695460a0bb74"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "gradient",
+      "basis": "oscillatory",
+      "n": 48,
+      "H": 0.020833333333333332,
+      "svg_x_pt": 262.092844,
+      "svg_y_pt": -145.331531,
+      "log_abscissa_check_pt": 0.0008431686364360758,
+      "published_graph_value": 0.00017121795473561377,
+      "published_graph_interval": [
+        0.00017101373072950975,
+        0.00017142242262531974
+      ],
+      "pymhm_relative_error": 3.9327733329209306e-05,
+      "pymhm_over_published": 0.22969397917372178,
+      "published_over_pymhm": 4.353618686903768,
+      "relative_difference_to_published": -0.7703060208262782,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "be2871fc432005449953"
+    },
+    {
+      "figure": "6.6",
+      "ell": 2,
+      "field": "gradient",
+      "basis": "oscillatory",
+      "n": 64,
+      "H": 0.015625,
+      "svg_x_pt": 281.569406,
+      "svg_y_pt": -159.7495,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 7.2425360890854e-05,
+      "published_graph_interval": [
+        7.232682751518074e-05,
+        7.252392620196848e-05
+      ],
+      "pymhm_relative_error": 1.647387718924424e-05,
+      "pymhm_over_published": 0.22746006352761702,
+      "published_over_pymhm": 4.396376157164773,
+      "relative_difference_to_published": -0.772539936472383,
+      "pymhm_local_degree": 4,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "caf0f9236999cd1dc152"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "pressure",
+      "basis": "polynomial",
+      "n": 24,
+      "H": 0.041666666666666664,
+      "svg_x_pt": 259.8075,
+      "svg_y_pt": -95.790125,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 0.0003496409207789304,
+      "published_graph_interval": [
+        0.0003487459130242129,
+        0.0003505395230982565
+      ],
+      "pymhm_relative_error": 3.1670209419275e-06,
+      "pymhm_over_published": 0.009057924155078896,
+      "published_over_pymhm": 110.40057113298823,
+      "relative_difference_to_published": -0.9909420758449211,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "9dfbc710f6ec7f882646"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "pressure",
+      "basis": "polynomial",
+      "n": 32,
+      "H": 0.03125,
+      "svg_x_pt": 283.327031,
+      "svg_y_pt": -112.55575,
+      "log_abscissa_check_pt": 0.0010096327837914032,
+      "published_graph_value": 8.683388044913439e-05,
+      "published_graph_interval": [
+        8.668971483454432e-05,
+        8.697828581217064e-05
+      ],
+      "pymhm_relative_error": 7.714021010767947e-07,
+      "pymhm_over_published": 0.00888365344364251,
+      "published_over_pymhm": 112.56630015386735,
+      "relative_difference_to_published": -0.9911163465563575,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "71de86218e68023c9600"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "pressure",
+      "basis": "polynomial",
+      "n": 48,
+      "H": 0.020833333333333332,
+      "svg_x_pt": 316.471562,
+      "svg_y_pt": -136.262781,
+      "log_abscissa_check_pt": -0.0019534999999564207,
+      "published_graph_value": 1.211429389504099e-05,
+      "published_graph_interval": [
+        1.2094181185397382e-05,
+        1.213444005226428e-05
+      ],
+      "pymhm_relative_error": 1.0387890391994516e-07,
+      "pymhm_over_published": 0.008574903731076576,
+      "published_over_pymhm": 116.61938505220401,
+      "relative_difference_to_published": -0.9914250962689235,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "21e1156d87684e0a02b6"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "pressure",
+      "basis": "polynomial",
+      "n": 64,
+      "H": 0.015625,
+      "svg_x_pt": 339.991094,
+      "svg_y_pt": -153.247156,
+      "log_abscissa_check_pt": -0.0009428672162243856,
+      "published_graph_value": 2.954419610030339e-06,
+      "published_graph_interval": [
+        2.9495145462852497e-06,
+        2.959332830931444e-06
+      ],
+      "pymhm_relative_error": 2.4876599606368774e-08,
+      "pymhm_over_published": 0.008420130817542643,
+      "published_over_pymhm": 118.76300044134506,
+      "relative_difference_to_published": -0.9915798691824573,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "c9af6a1b3733c6de42b1"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "pressure",
+      "basis": "polynomial",
+      "n": 96,
+      "H": 0.010416666666666666,
+      "svg_x_pt": 373.139531,
+      "svg_y_pt": -177.372156,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 3.9810719039865297e-07,
+      "published_graph_interval": [
+        3.974462344736198e-07,
+        3.987692454981076e-07
+      ],
+      "pymhm_relative_error": 3.3005417897860847e-09,
+      "pymhm_over_published": 0.00829058572511845,
+      "published_over_pymhm": 120.61873951441626,
+      "relative_difference_to_published": -0.9917094142748815,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "e86e61e9021017e94059"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "pressure",
+      "basis": "oscillatory",
+      "n": 24,
+      "H": 0.041666666666666664,
+      "svg_x_pt": 259.8075,
+      "svg_y_pt": -109.106531,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 0.0001156493131808177,
+      "published_graph_interval": [
+        0.00011544534075781258,
+        0.0001158539413699479
+      ],
+      "pymhm_relative_error": 1.52083102806079e-06,
+      "pymhm_over_published": 0.013150368006794566,
+      "published_over_pymhm": 76.0434992757098,
+      "relative_difference_to_published": -0.9868496319932054,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "f77a2f7eddb15db61c9a"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "pressure",
+      "basis": "oscillatory",
+      "n": 32,
+      "H": 0.03125,
+      "svg_x_pt": 283.327031,
+      "svg_y_pt": -124.825281,
+      "log_abscissa_check_pt": 0.0010096327837914032,
+      "published_graph_value": 3.1331637356943836e-05,
+      "published_graph_interval": [
+        3.127961912705122e-05,
+        3.138374209352416e-05
+      ],
+      "pymhm_relative_error": 3.716014982905775e-07,
+      "pymhm_over_published": 0.011860264245278002,
+      "published_over_pymhm": 84.31515346701791,
+      "relative_difference_to_published": -0.9881397357547221,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "aea8ea67586f80a13aa6"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "pressure",
+      "basis": "oscillatory",
+      "n": 48,
+      "H": 0.020833333333333332,
+      "svg_x_pt": 316.471562,
+      "svg_y_pt": -147.751063,
+      "log_abscissa_check_pt": -0.0019534999999564207,
+      "published_graph_value": 4.6642392205840366e-06,
+      "published_graph_interval": [
+        4.656495435435303e-06,
+        4.67199588370276e-06
+      ],
+      "pymhm_relative_error": 5.0151202143594506e-08,
+      "pymhm_over_published": 0.010752279154608795,
+      "published_over_pymhm": 93.00353772635877,
+      "relative_difference_to_published": -0.9892477208453911,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "96dec854fde97bae938d"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "pressure",
+      "basis": "oscillatory",
+      "n": 64,
+      "H": 0.015625,
+      "svg_x_pt": 339.991094,
+      "svg_y_pt": -164.465906,
+      "log_abscissa_check_pt": -0.0009428672162243856,
+      "published_graph_value": 1.1632687833311006e-06,
+      "published_graph_interval": [
+        1.1613374708271016e-06,
+        1.1652033076215777e-06
+      ],
+      "pymhm_relative_error": 1.2019207653294329e-08,
+      "pymhm_over_published": 0.010332270430980273,
+      "published_over_pymhm": 96.7841489128663,
+      "relative_difference_to_published": -0.9896677295690198,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "46777ba382fa139eda6e"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "pressure",
+      "basis": "oscillatory",
+      "n": 96,
+      "H": 0.010416666666666666,
+      "svg_x_pt": 373.139531,
+      "svg_y_pt": -188.403406,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 1.5921106439925928e-07,
+      "published_graph_interval": [
+        1.5894673484459835e-07,
+        1.5947583353585683e-07
+      ],
+      "pymhm_relative_error": 1.595766937080157e-09,
+      "pymhm_over_published": 0.0100229650690507,
+      "published_over_pymhm": 99.77087549549972,
+      "relative_difference_to_published": -0.9899770349309494,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "b300027688de16f608ac"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "gradient",
+      "basis": "polynomial",
+      "n": 24,
+      "H": 0.041666666666666664,
+      "svg_x_pt": 259.809375,
+      "svg_y_pt": -82.188125,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 0.00321446724517127,
+      "published_graph_interval": [
+        0.003207711446188735,
+        0.0032212455001392457
+      ],
+      "pymhm_relative_error": 4.381465465801314e-05,
+      "pymhm_over_published": 0.013630456096210324,
+      "published_over_pymhm": 73.36511654059984,
+      "relative_difference_to_published": -0.9863695439037896,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "9dfbc710f6ec7f882646"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "gradient",
+      "basis": "polynomial",
+      "n": 32,
+      "H": 0.03125,
+      "svg_x_pt": 283.325,
+      "svg_y_pt": -98.594375,
+      "log_abscissa_check_pt": -0.0028963672161808063,
+      "published_graph_value": 0.001022065368532769,
+      "published_graph_interval": [
+        0.0010206260740030747,
+        0.001023508443778209
+      ],
+      "pymhm_relative_error": 1.417233643900079e-05,
+      "pymhm_over_published": 0.013866369877443318,
+      "published_over_pymhm": 72.11692813897304,
+      "relative_difference_to_published": -0.9861336301225566,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "71de86218e68023c9600"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "gradient",
+      "basis": "polynomial",
+      "n": 48,
+      "H": 0.020833333333333332,
+      "svg_x_pt": 316.473437,
+      "svg_y_pt": -122.000625,
+      "log_abscissa_check_pt": -0.001953500000013264,
+      "published_graph_value": 0.000199308612758544,
+      "published_graph_interval": [
+        0.00019903040708198362,
+        0.0001995872073123597
+      ],
+      "pymhm_relative_error": 2.8518197527393493e-06,
+      "pymhm_over_published": 0.014308562551655695,
+      "published_over_pymhm": 69.88822227179531,
+      "relative_difference_to_published": -0.9856914374483443,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "21e1156d87684e0a02b6"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "gradient",
+      "basis": "polynomial",
+      "n": 64,
+      "H": 0.015625,
+      "svg_x_pt": 339.989062,
+      "svg_y_pt": -138.617813,
+      "log_abscissa_check_pt": -0.00484986721619407,
+      "published_graph_value": 6.24449921239537e-05,
+      "published_graph_interval": [
+        6.235782804689158e-05,
+        6.253227803938907e-05
+      ],
+      "pymhm_relative_error": 9.091790330255051e-07,
+      "pymhm_over_published": 0.014559678880586277,
+      "published_over_pymhm": 68.68283347467158,
+      "relative_difference_to_published": -0.9854403211194137,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "c9af6a1b3733c6de42b1"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "gradient",
+      "basis": "polynomial",
+      "n": 96,
+      "H": 0.010416666666666666,
+      "svg_x_pt": 373.141406,
+      "svg_y_pt": -161.977188,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 1.2217062889160349e-05,
+      "published_graph_interval": [
+        1.2200009655987871e-05,
+        1.2234139959425571e-05
+      ],
+      "pymhm_relative_error": 1.8071671593835394e-07,
+      "pymhm_over_published": 0.014792157294917075,
+      "published_over_pymhm": 67.60339145011817,
+      "relative_difference_to_published": -0.9852078427050829,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "e86e61e9021017e94059"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "gradient",
+      "basis": "oscillatory",
+      "n": 24,
+      "H": 0.041666666666666664,
+      "svg_x_pt": 259.809375,
+      "svg_y_pt": -94.129531,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 0.0013960636549932425,
+      "published_graph_interval": [
+        0.0013938341545232332,
+        0.001398299434776898
+      ],
+      "pymhm_relative_error": 2.1197213227349745e-05,
+      "pymhm_over_published": 0.015183557820973678,
+      "published_over_pymhm": 65.86071669043592,
+      "relative_difference_to_published": -0.9848164421790263,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "f77a2f7eddb15db61c9a"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "gradient",
+      "basis": "oscillatory",
+      "n": 32,
+      "H": 0.03125,
+      "svg_x_pt": 283.325,
+      "svg_y_pt": -110.836563,
+      "log_abscissa_check_pt": -0.0028963672161808063,
+      "published_graph_value": 0.0004346619695957983,
+      "published_graph_interval": [
+        0.0004340552450511196,
+        0.0004352695422230133
+      ],
+      "pymhm_relative_error": 6.855262357481545e-06,
+      "pymhm_over_published": 0.015771479533524417,
+      "published_over_pymhm": 63.405592219446795,
+      "relative_difference_to_published": -0.9842285204664756,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "aea8ea67586f80a13aa6"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "gradient",
+      "basis": "oscillatory",
+      "n": 48,
+      "H": 0.020833333333333332,
+      "svg_x_pt": 316.473437,
+      "svg_y_pt": -134.539688,
+      "log_abscissa_check_pt": -0.001953500000013264,
+      "published_graph_value": 8.302221148781212e-05,
+      "published_graph_interval": [
+        8.290632462172644e-05,
+        8.313826034112607e-05
+      ],
+      "pymhm_relative_error": 1.3793009559641685e-06,
+      "pymhm_over_published": 0.016613637859630534,
+      "published_over_pymhm": 60.191513047837596,
+      "relative_difference_to_published": -0.9833863621403695,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "96dec854fde97bae938d"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "gradient",
+      "basis": "oscillatory",
+      "n": 64,
+      "H": 0.015625,
+      "svg_x_pt": 339.989062,
+      "svg_y_pt": -151.309219,
+      "log_abscissa_check_pt": -0.00484986721619407,
+      "published_graph_value": 2.5736235155122597e-05,
+      "published_graph_interval": [
+        2.5700311134507835e-05,
+        2.5772209390509092e-05
+      ],
+      "pymhm_relative_error": 4.3971625808547563e-07,
+      "pymhm_over_published": 0.01708549270843733,
+      "published_over_pymhm": 58.529187133489565,
+      "relative_difference_to_published": -0.9829145072915626,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "46777ba382fa139eda6e"
+    },
+    {
+      "figure": "6.7",
+      "ell": 3,
+      "field": "gradient",
+      "basis": "oscillatory",
+      "n": 96,
+      "H": 0.010416666666666666,
+      "svg_x_pt": 373.141406,
+      "svg_y_pt": -174.801406,
+      "log_abscissa_check_pt": 0.0,
+      "published_graph_value": 4.988681638692858e-06,
+      "published_graph_interval": [
+        4.9796115162159294e-06,
+        4.9977572540757484e-06
+      ],
+      "pymhm_relative_error": 8.74002510782872e-08,
+      "pymhm_over_published": 0.017519709095164458,
+      "published_over_pymhm": 57.07857331238484,
+      "relative_difference_to_published": -0.9824802909048355,
+      "pymhm_local_degree": 5,
+      "pymhm_local_refinement": 2,
+      "pymhm_case_key": "b300027688de16f608ac"
+    }
+  ]
+}

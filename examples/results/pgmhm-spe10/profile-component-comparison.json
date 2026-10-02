@@ -1,0 +1,272 @@
+{
+  "article": "10.1007/s40314-023-02304-y",
+  "figure": 13,
+  "image_sha256": "3b2865fb427945b3884c46c7c83fa8cf8e49a0253a18de14e53b88cc7ae7667f",
+  "axes_pixels": {
+    "y_coordinate": [
+      50.0,
+      1077.0
+    ],
+    "pressure": [
+      863.0,
+      19.0
+    ]
+  },
+  "definition": "median of visible grayscale black reference-curve pixels within two horizontal pixels; curve overlap can leave gaps",
+  "rows": [
+    {
+      "y": 150,
+      "pressure": 0.9995853080568721,
+      "pixel_y_range": [
+        56,
+        58
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403,
+      "kx60": 0.9983942698900038,
+      "kx60_absolute_difference": 0.0011910381668682746,
+      "kz240": 0.9997575768828587,
+      "kz240_absolute_difference": 0.0001722688259866434
+    },
+    {
+      "y": 200,
+      "pressure": 0.991409952606635,
+      "pixel_y_range": [
+        61,
+        62
+      ],
+      "pressure_pixel_uncertainty": 0.0027251184834123222,
+      "kx60": 0.990635698685623,
+      "kx60_absolute_difference": 0.0007742539210120469,
+      "kz240": 0.9977237586556802,
+      "kz240_absolute_difference": 0.00631380604904519
+    },
+    {
+      "y": 300,
+      "pressure": 0.8490225118483411,
+      "pixel_y_range": [
+        154,
+        179
+      ],
+      "pressure_pixel_uncertainty": 0.019075829383886255,
+      "kx60": 0.8525086833644678,
+      "kx60_absolute_difference": 0.003486171516126735,
+      "kz240": 0.9301979849116108,
+      "kz240_absolute_difference": 0.08117547306326967
+    },
+    {
+      "y": 325,
+      "pressure": 0.7488744075829383,
+      "pixel_y_range": [
+        221,
+        260
+      ],
+      "pressure_pixel_uncertainty": 0.02861374407582938,
+      "kx60": 0.7451288242544248,
+      "kx60_absolute_difference": 0.003745583328513491,
+      "kz240": 0.9089928159029828,
+      "kz240_absolute_difference": 0.16011840832004443
+    },
+    {
+      "y": 350,
+      "pressure": 0.5683353080568719,
+      "pixel_y_range": [
+        365,
+        375
+      ],
+      "pressure_pixel_uncertainty": 0.008856635071090047,
+      "kx60": 0.5728441472971517,
+      "kx60_absolute_difference": 0.004508839240279783,
+      "kz240": 0.8775449969639769,
+      "kz240_absolute_difference": 0.309209688907105
+    },
+    {
+      "y": 375,
+      "pressure": 0.42526658767772507,
+      "pixel_y_range": [
+        467,
+        498
+      ],
+      "pressure_pixel_uncertainty": 0.023163507109004736,
+      "kx60": 0.35545735094492725,
+      "kx60_absolute_difference": 0.06980923673279782,
+      "kz240": 0.8399345042586888,
+      "kz240_absolute_difference": 0.4146679165809637
+    },
+    {
+      "y": 425,
+      "pressure": 0.0812203791469194,
+      "pixel_y_range": [
+        729,
+        731
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403,
+      "kx60": 0.08319768857924997,
+      "kx60_absolute_difference": 0.0019773094323305707,
+      "kz240": 0.7932556789050753,
+      "kz240_absolute_difference": 0.7120352997581559
+    },
+    {
+      "y": 450,
+      "pressure": 0.06963862559241704,
+      "pixel_y_range": [
+        737,
+        739
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403,
+      "kx60": 0.07094936584853229,
+      "kx60_absolute_difference": 0.0013107402561152448,
+      "kz240": 0.7912581643057652,
+      "kz240_absolute_difference": 0.7216195387133482
+    },
+    {
+      "y": 500,
+      "pressure": 0.06350710900473933,
+      "pixel_y_range": [
+        742,
+        744
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403,
+      "kx60": 0.06283982531131048,
+      "kx60_absolute_difference": 0.0006672836934288467,
+      "kz240": 0.7899484828936542,
+      "kz240_absolute_difference": 0.7264413738889148
+    },
+    {
+      "y": 600,
+      "pressure": 0.05941943127962082,
+      "pixel_y_range": [
+        745,
+        747
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403,
+      "kx60": 0.05895835882236623,
+      "kx60_absolute_difference": 0.00046107245725458823,
+      "kz240": 0.7893436900686417,
+      "kz240_absolute_difference": 0.7299242587890209
+    },
+    {
+      "y": 700,
+      "pressure": 0.05805687203791465,
+      "pixel_y_range": [
+        746,
+        748
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403,
+      "kx60": 0.058416599648226784,
+      "kx60_absolute_difference": 0.00035972761031213135,
+      "kz240": 0.7892596050089523,
+      "kz240_absolute_difference": 0.7312027329710377
+    },
+    {
+      "y": 800,
+      "pressure": 0.05737559241706158,
+      "pixel_y_range": [
+        747,
+        748
+      ],
+      "pressure_pixel_uncertainty": 0.0027251184834123222,
+      "kx60": 0.057560812582284536,
+      "kx60_absolute_difference": 0.0001852201652229532,
+      "kz240": 0.7829143560844626,
+      "kz240_absolute_difference": 0.725538763667401
+    },
+    {
+      "y": 900,
+      "pressure": 0.05669431279620851,
+      "pixel_y_range": [
+        747,
+        749
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403,
+      "kx60": 0.05645552986984158,
+      "kx60_absolute_difference": 0.00023878292636693443,
+      "kz240": 0.7098785817880278,
+      "kz240_absolute_difference": 0.6531842689918193
+    },
+    {
+      "y": 1000,
+      "pressure": 0.056013033175355414,
+      "pixel_y_range": [
+        748,
+        749
+      ],
+      "pressure_pixel_uncertainty": 0.0027251184834123222,
+      "kx60": 0.05624073267973272,
+      "kx60_absolute_difference": 0.00022769950437730863,
+      "kz240": 0.7050274047637899,
+      "kz240_absolute_difference": 0.6490143715884344
+    },
+    {
+      "y": 1050,
+      "pressure": 0.055331753554502344,
+      "pixel_y_range": [
+        748,
+        750
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403,
+      "kx60": 0.054915731257990125,
+      "kx60_absolute_difference": 0.00041602229651221956,
+      "kz240": 0.6665373782468238,
+      "kz240_absolute_difference": 0.6112056246923214
+    },
+    {
+      "y": 1150,
+      "pressure": 0.041024881516587675,
+      "pixel_y_range": [
+        759,
+        760
+      ],
+      "pressure_pixel_uncertainty": 0.0027251184834123222,
+      "kx60": 0.042211543237911646,
+      "kx60_absolute_difference": 0.0011866617213239714,
+      "kz240": 0.34281975396281245,
+      "kz240_absolute_difference": 0.30179487244622477
+    }
+  ],
+  "kx60": {
+    "archive_sha256": "30ee842a5ad7cb7f9cd6baafeb48a8610113aaa1848edb0e19292bd9eec58244",
+    "pressure": [
+      0.9983942698900038,
+      0.990635698685623,
+      0.8525086833644678,
+      0.7451288242544248,
+      0.5728441472971517,
+      0.35545735094492725,
+      0.08319768857924997,
+      0.07094936584853229,
+      0.06283982531131048,
+      0.05895835882236623,
+      0.058416599648226784,
+      0.057560812582284536,
+      0.05645552986984158,
+      0.05624073267973272,
+      0.054915731257990125,
+      0.042211543237911646
+    ],
+    "plateau_absolute_difference_max": 0.0013107402561152448
+  },
+  "kz240": {
+    "archive_sha256": "50b667fdfaec7a9b15a2d5374c461409374431187b9f0ecbde082ef3c6c1a0de",
+    "pressure": [
+      0.9997575768828587,
+      0.9977237586556802,
+      0.9301979849116108,
+      0.9089928159029828,
+      0.8775449969639769,
+      0.8399345042586888,
+      0.7932556789050753,
+      0.7912581643057652,
+      0.7899484828936542,
+      0.7893436900686417,
+      0.7892596050089523,
+      0.7829143560844626,
+      0.7098785817880278,
+      0.7050274047637899,
+      0.6665373782468238,
+      0.34281975396281245
+    ],
+    "plateau_absolute_difference_max": 0.7312027329710377
+  },
+  "source_url": "https://doi.org/10.1007/s40314-023-02304-y",
+  "source_status": "reference-curve pixels extracted from the published Figure 13; no executable historical field supplied"
+}

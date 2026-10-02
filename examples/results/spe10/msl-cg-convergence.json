@@ -1,0 +1,524 @@
+{
+  "reference": "MSL_CG classical conforming triangular P1",
+  "modules": [
+    {
+      "name": "msl_core",
+      "revision": "7f15f455717173d29080d411a7e732c72c1e87f8",
+      "url": "https://github.com/ipes-lncc/msl_core",
+      "source_changes": false
+    },
+    {
+      "name": "msl_cg",
+      "revision": "afb76d14c1baf50f0b9e69f7bcac675749ef4458",
+      "url": "https://github.com/ipes-lncc/msl_cg",
+      "source_changes": false
+    }
+  ],
+  "native_solver": "MSL LocalLinearSystem with Eigen SparseLU, native unmodified library build",
+  "driver": "Original private application; reads native mesh/data, invokes DiffusionCGProblem assembly and solve, exports fields and verifies native uneliminated reactions",
+  "comparison_scope": "Same PDE, material and boundary data as the Cartesian Q1 MHM layer-36 case. Distinct approximation spaces: global conforming triangular P1 reference versus broken local quadrilateral Q1 MHM with continuous piecewise P1 macroface trace.",
+  "quadrature": "Native order 2; exact stiffness quadrature because each triangle lies in one constant SPE10 pixel",
+  "layer_archive": "layer-36.npz",
+  "layer_sha256": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512",
+  "patches": [
+    {
+      "name": "constant",
+      "pressure_linf": 2.3314683517128287e-15,
+      "flux_linf": 1.2468324983583301e-17,
+      "relative_residual": 7.634762313799836e-16,
+      "reaction_bottom_outward": -1.0909090909090984,
+      "reaction_top_outward": 1.0909090909090857,
+      "reaction_balance": -1.2656542480726785e-14,
+      "exact_flux_y": 0.0009090909090909091,
+      "material": "K=2",
+      "mesh": [
+        6,
+        22
+      ],
+      "domain": [
+        1200,
+        2200
+      ],
+      "driver_sha256": "5df1321daa1b194299f643116b1d383179c31c89946f0f5e8752d67f53fe20f0",
+      "executable_sha256": "2575f104adfa316905d7bc1f318cb76ce7013e0470cc7beea9739f08dcf9d52f"
+    },
+    {
+      "name": "layered",
+      "pressure_linf": 1.7763568394002505e-15,
+      "flux_linf": 6.071532165918825e-18,
+      "relative_residual": 5.219612256954569e-16,
+      "reaction_bottom_outward": -0.8181818181818238,
+      "reaction_top_outward": 0.8181818181818113,
+      "reaction_balance": -1.2434497875801753e-14,
+      "exact_flux_y": 0.0006818181818181819,
+      "material": "K=1 below y=1100, K=3 above",
+      "mesh": [
+        6,
+        22
+      ],
+      "domain": [
+        1200,
+        2200
+      ],
+      "driver_sha256": "5df1321daa1b194299f643116b1d383179c31c89946f0f5e8752d67f53fe20f0",
+      "executable_sha256": "2575f104adfa316905d7bc1f318cb76ce7013e0470cc7beea9739f08dcf9d52f"
+    }
+  ],
+  "records": [
+    {
+      "dofs": 13481,
+      "cells": 26400,
+      "relative_residual": 2.4053633209630463e-13,
+      "free_residual_l2": 6.627952567168661e-12,
+      "reaction_bottom_outward": -0.16800853171208752,
+      "reaction_top_outward": 0.1680085317115696,
+      "reaction_balance": -5.179190409876355e-13,
+      "dirichlet_linf": 0,
+      "assembly_seconds": 0.235524306,
+      "solve_seconds": 0.052172536,
+      "process_seconds": 0.4893083469942212,
+      "timing_scope": "Native mesh/data read, assembly, solve, reaction reassembly and binary export; not a controlled performance benchmark",
+      "discretization": "MSL_CG global conforming triangular P1; SW-NE diagonals; native Eigen SparseLU; raw flux -K grad(p)",
+      "shape": [
+        60,
+        220
+      ],
+      "kind": "spe10",
+      "domain": [
+        1200,
+        2200
+      ],
+      "layer": 36,
+      "permeability_convention": "Kx = Ky from unmodified layer 36; piecewise constant on 60 x 220 pixels",
+      "boundary_conditions": {
+        "bottom_pressure": 1.0,
+        "top_pressure": 0.0,
+        "side_outward_flux": 0.0
+      },
+      "units": "Original SPE10 numerical coordinates in ft and permeability in mD; no SI conversion",
+      "driver_sha256": "5df1321daa1b194299f643116b1d383179c31c89946f0f5e8752d67f53fe20f0",
+      "runner_sha256": "4c5751fc037f5bb05e275dce3e9c32a1ae45477190be6104d2f3f7ba53defde8",
+      "executable_sha256": "2575f104adfa316905d7bc1f318cb76ce7013e0470cc7beea9739f08dcf9d52f",
+      "layer_sha256": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512",
+      "mesh_sha256": {
+        "grid.1.node": "8a72f89ef23603322d7f71afdbe2375f99f8d28229f62798e73c92a7c00a574f",
+        "grid.1.ele": "0a9b4b1314a4c55768bc926ac6fd439d8cef08ad7c8678418d8e2ef11eeeae21"
+      },
+      "data_sha256": "36e0d5b808cd5249368c83cbfeed1a919cdfcd737799ac09020834fbb825c87e",
+      "reaction_convention": "Outward Darcy reaction is minus the uneliminated native stiffness residual at essential nodes; side zero flux is natural, not a pointwise raw-gradient constraint",
+      "pressure_min": 0.0,
+      "pressure_max": 1.0,
+      "flux_magnitude_max": 0.012372195454319003,
+      "reaction_free_relative": 3.945009518044498e-11,
+      "bc_balance_relative": 3.082694882881177e-12,
+      "coefficients_sha256": "55c5e25ab1011bf8d3eccf927e954281ca7d8666a8e6acfdd4a1d1da1d387f28",
+      "coefficients": "build/results/spe10/msl/spe10-60x220/coefficients.npz",
+      "archive": "msl-cg-p1-60x220.npz",
+      "sha256": "050d6632d6b8d78d80d471506096f6c28acbae31db07f57d53d8df5b03c9f8cc",
+      "sample_convention": "Pixel centers: lower triangle at diagonal and positive coordinate side at fine-grid boundaries. Profiles x=199: eleven macro intervals retain their separate interior-side endpoint flux limits. Samples are visualization data, not L2 norms.",
+      "native_reaction_assembly_check_linf": 6.35268001939783e-13,
+      "native_reaction_check": "Native uneliminated LCS action checked against independent exact triangular P1 gradients and archived pixel coefficients; no native matrix or solve altered",
+      "raw_boundary_outward_integrals": {
+        "bottom": -0.17512836416488042,
+        "top": 0.182943758129642,
+        "left": -0.0033314796589163378,
+        "right": 0.004213782265681326
+      },
+      "raw_flux_boundary_convention": "Raw P1 flux is not H(div)-conforming and its boundary integrals need not equal the variational reactions; zero side flux is imposed naturally in the weak equation",
+      "sampling_postprocessor_sha256": "33fa93a8be95bd0974ec743ea5bb4386f344f8548af16dfdd17b8545b82ccde5",
+      "energy_squared": 0.1680085317120818,
+      "energy_from_dirichlet_reaction": 0.16800853171208752,
+      "energy_identity_defect": -5.717648576819556e-15,
+      "energy_identity": "Integral q.K^-1.q equals minus the bottom outward reaction for p_bottom=1, p_top=0 and homogeneous side Neumann data"
+    },
+    {
+      "dofs": 53361,
+      "cells": 105600,
+      "relative_residual": 3.8715575054777407e-13,
+      "free_residual_l2": 1.4079999278765803e-11,
+      "reaction_bottom_outward": -0.158095659738843,
+      "reaction_top_outward": 0.15809565974715584,
+      "reaction_balance": 8.312850408032091e-12,
+      "dirichlet_linf": 0,
+      "assembly_seconds": 0.889825764,
+      "solve_seconds": 0.294622934,
+      "process_seconds": 1.9604805989656597,
+      "timing_scope": "Native mesh/data read, assembly, solve, reaction reassembly and binary export; not a controlled performance benchmark",
+      "discretization": "MSL_CG global conforming triangular P1; SW-NE diagonals; native Eigen SparseLU; raw flux -K grad(p)",
+      "shape": [
+        120,
+        440
+      ],
+      "kind": "spe10",
+      "domain": [
+        1200,
+        2200
+      ],
+      "layer": 36,
+      "permeability_convention": "Kx = Ky from unmodified layer 36; piecewise constant on 60 x 220 pixels",
+      "boundary_conditions": {
+        "bottom_pressure": 1.0,
+        "top_pressure": 0.0,
+        "side_outward_flux": 0.0
+      },
+      "units": "Original SPE10 numerical coordinates in ft and permeability in mD; no SI conversion",
+      "driver_sha256": "5df1321daa1b194299f643116b1d383179c31c89946f0f5e8752d67f53fe20f0",
+      "runner_sha256": "4c5751fc037f5bb05e275dce3e9c32a1ae45477190be6104d2f3f7ba53defde8",
+      "executable_sha256": "2575f104adfa316905d7bc1f318cb76ce7013e0470cc7beea9739f08dcf9d52f",
+      "layer_sha256": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512",
+      "mesh_sha256": {
+        "grid.1.node": "0c8f02c9e0414646ebc60dd81737187d5a234f4da8d1aca2f310e661beb2fedd",
+        "grid.1.ele": "0199c218ee059cb839d0ffe5f6c1e0760f4f1a953e03e003a7fa0efb740ce7bc"
+      },
+      "data_sha256": "36e0d5b808cd5249368c83cbfeed1a919cdfcd737799ac09020834fbb825c87e",
+      "reaction_convention": "Outward Darcy reaction is minus the uneliminated native stiffness residual at essential nodes; side zero flux is natural, not a pointwise raw-gradient constraint",
+      "pressure_min": 0.0,
+      "pressure_max": 1.0,
+      "flux_magnitude_max": 0.014195972873791955,
+      "reaction_free_relative": 8.905999887210126e-11,
+      "bc_balance_relative": 5.2581142463537114e-11,
+      "coefficients_sha256": "52a5cfa4284592173ead4a2ab3708d3f796b97cb4156f71fb2f842d58d326368",
+      "coefficients": "build/results/spe10/msl/spe10-120x440/coefficients.npz",
+      "previous_difference": {
+        "pressure_l2": 3.1276695186847583,
+        "pressure_reference_l2": 818.7100271769525,
+        "pressure_relative_l2": 0.003820240884882624,
+        "flux_l2": 0.28324884356899305,
+        "flux_reference_l2": 1.0265671842706987,
+        "flux_relative_l2": 0.27591846681736737,
+        "integration": "Exact P1 mass matrix for pressure; cell areas for piecewise constant flux; nested SW-NE triangles"
+      },
+      "previous_coefficients_sha256": "55c5e25ab1011bf8d3eccf927e954281ca7d8666a8e6acfdd4a1d1da1d387f28",
+      "archive": "msl-cg-p1-120x440.npz",
+      "sha256": "dbeaa57af55e9f9359bd318b64c889289e945584fed3e8c7fdb21bc91f4d6216",
+      "sample_convention": "Pixel centers: lower triangle at diagonal and positive coordinate side at fine-grid boundaries. Profiles x=199: eleven macro intervals retain their separate interior-side endpoint flux limits. Samples are visualization data, not L2 norms.",
+      "native_reaction_assembly_check_linf": 6.359425046518352e-13,
+      "native_reaction_check": "Native uneliminated LCS action checked against independent exact triangular P1 gradients and archived pixel coefficients; no native matrix or solve altered",
+      "raw_boundary_outward_integrals": {
+        "bottom": -0.16184464207596033,
+        "top": 0.1655034988705905,
+        "left": 0.00020774428556404775,
+        "right": 0.00048261205510785854
+      },
+      "raw_flux_boundary_convention": "Raw P1 flux is not H(div)-conforming and its boundary integrals need not equal the variational reactions; zero side flux is imposed naturally in the weak equation",
+      "sampling_postprocessor_sha256": "33fa93a8be95bd0974ec743ea5bb4386f344f8548af16dfdd17b8545b82ccde5",
+      "energy_squared": 0.15809565974219558,
+      "energy_from_dirichlet_reaction": 0.158095659738843,
+      "energy_identity_defect": 3.3525959786118165e-12,
+      "energy_identity": "Integral q.K^-1.q equals minus the bottom outward reaction for p_bottom=1, p_top=0 and homogeneous side Neumann data"
+    },
+    {
+      "dofs": 212321,
+      "cells": 422400,
+      "relative_residual": 5.816453114159463e-13,
+      "free_residual_l2": 2.911996731243572e-11,
+      "reaction_bottom_outward": -0.1537633416851555,
+      "reaction_top_outward": 0.15376334171602188,
+      "reaction_balance": 3.086636501947737e-11,
+      "dirichlet_linf": 0,
+      "assembly_seconds": 3.501604542,
+      "solve_seconds": 1.95605772,
+      "process_seconds": 8.576928270980716,
+      "timing_scope": "Native mesh/data read, assembly, solve, reaction reassembly and binary export; not a controlled performance benchmark",
+      "discretization": "MSL_CG global conforming triangular P1; SW-NE diagonals; native Eigen SparseLU; raw flux -K grad(p)",
+      "shape": [
+        240,
+        880
+      ],
+      "kind": "spe10",
+      "domain": [
+        1200,
+        2200
+      ],
+      "layer": 36,
+      "permeability_convention": "Kx = Ky from unmodified layer 36; piecewise constant on 60 x 220 pixels",
+      "boundary_conditions": {
+        "bottom_pressure": 1.0,
+        "top_pressure": 0.0,
+        "side_outward_flux": 0.0
+      },
+      "units": "Original SPE10 numerical coordinates in ft and permeability in mD; no SI conversion",
+      "driver_sha256": "5df1321daa1b194299f643116b1d383179c31c89946f0f5e8752d67f53fe20f0",
+      "runner_sha256": "4c5751fc037f5bb05e275dce3e9c32a1ae45477190be6104d2f3f7ba53defde8",
+      "executable_sha256": "2575f104adfa316905d7bc1f318cb76ce7013e0470cc7beea9739f08dcf9d52f",
+      "layer_sha256": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512",
+      "mesh_sha256": {
+        "grid.1.node": "233159b1bf0eec84ac058b6c3d74bd5225304f99fcb81610c2f5e591140a9f8c",
+        "grid.1.ele": "a72df8f14a8db4c9a0dbbcbe2a01cbc2efcf8395d3a7963fde623b786c8edcbc"
+      },
+      "data_sha256": "36e0d5b808cd5249368c83cbfeed1a919cdfcd737799ac09020834fbb825c87e",
+      "reaction_convention": "Outward Darcy reaction is minus the uneliminated native stiffness residual at essential nodes; side zero flux is natural, not a pointwise raw-gradient constraint",
+      "pressure_min": 0.0,
+      "pressure_max": 1.0,
+      "flux_magnitude_max": 0.01903318388378976,
+      "reaction_free_relative": 1.8938172770864973e-10,
+      "bc_balance_relative": 2.0073942641337086e-10,
+      "coefficients_sha256": "79dda70cd3fa8129e0ccd8fe938c4d4291b75ed6765b8bb0b9d24963c6fb388c",
+      "coefficients": "build/results/spe10/msl/spe10-240x880/coefficients.npz",
+      "previous_difference": {
+        "pressure_l2": 1.6509530537333907,
+        "pressure_reference_l2": 819.9994573429118,
+        "pressure_relative_l2": 0.002013358714996059,
+        "flux_l2": 0.19986270401583237,
+        "flux_reference_l2": 1.0049236699991482,
+        "flux_relative_l2": 0.1988834674538035,
+        "integration": "Exact P1 mass matrix for pressure; cell areas for piecewise constant flux; nested SW-NE triangles"
+      },
+      "previous_coefficients_sha256": "52a5cfa4284592173ead4a2ab3708d3f796b97cb4156f71fb2f842d58d326368",
+      "archive": "msl-cg-p1-240x880.npz",
+      "sha256": "b4e0337177fd0a5d28e5dc22dc2ffe3b5675ee455706c3a82bad270bc70d1d23",
+      "sample_convention": "Pixel centers: lower triangle at diagonal and positive coordinate side at fine-grid boundaries. Profiles x=199: eleven macro intervals retain their separate interior-side endpoint flux limits. Samples are visualization data, not L2 norms.",
+      "native_reaction_assembly_check_linf": 1.4696234680589004e-12,
+      "native_reaction_check": "Native uneliminated LCS action checked against independent exact triangular P1 gradients and archived pixel coefficients; no native matrix or solve altered",
+      "raw_boundary_outward_integrals": {
+        "bottom": -0.155468300037349,
+        "top": 0.1572812795714552,
+        "left": 0.0003748187836537665,
+        "right": -2.0143294835707823e-05
+      },
+      "raw_flux_boundary_convention": "Raw P1 flux is not H(div)-conforming and its boundary integrals need not equal the variational reactions; zero side flux is imposed naturally in the weak equation",
+      "sampling_postprocessor_sha256": "33fa93a8be95bd0974ec743ea5bb4386f344f8548af16dfdd17b8545b82ccde5",
+      "energy_squared": 0.1537633416878288,
+      "energy_from_dirichlet_reaction": 0.1537633416851555,
+      "energy_identity_defect": 2.673278265419299e-12,
+      "energy_identity": "Integral q.K^-1.q equals minus the bottom outward reaction for p_bottom=1, p_top=0 and homogeneous side Neumann data"
+    },
+    {
+      "dofs": 847041,
+      "cells": 1689600,
+      "relative_residual": 8.453198636330136e-13,
+      "free_residual_l2": 5.7722532232306725e-11,
+      "reaction_bottom_outward": -0.15200372255979364,
+      "reaction_top_outward": 0.15200372267466072,
+      "reaction_balance": 1.1486708806351942e-10,
+      "dirichlet_linf": 0,
+      "assembly_seconds": 14.196834542,
+      "solve_seconds": 14.702066673,
+      "process_seconds": 43.153203816968016,
+      "timing_scope": "Native mesh/data read, assembly, solve, reaction reassembly and binary export; not a controlled performance benchmark",
+      "discretization": "MSL_CG global conforming triangular P1; SW-NE diagonals; native Eigen SparseLU; raw flux -K grad(p)",
+      "shape": [
+        480,
+        1760
+      ],
+      "kind": "spe10",
+      "domain": [
+        1200,
+        2200
+      ],
+      "layer": 36,
+      "permeability_convention": "Kx = Ky from unmodified layer 36; piecewise constant on 60 x 220 pixels",
+      "boundary_conditions": {
+        "bottom_pressure": 1.0,
+        "top_pressure": 0.0,
+        "side_outward_flux": 0.0
+      },
+      "units": "Original SPE10 numerical coordinates in ft and permeability in mD; no SI conversion",
+      "driver_sha256": "5df1321daa1b194299f643116b1d383179c31c89946f0f5e8752d67f53fe20f0",
+      "runner_sha256": "4c5751fc037f5bb05e275dce3e9c32a1ae45477190be6104d2f3f7ba53defde8",
+      "executable_sha256": "2575f104adfa316905d7bc1f318cb76ce7013e0470cc7beea9739f08dcf9d52f",
+      "layer_sha256": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512",
+      "mesh_sha256": {
+        "grid.1.node": "08aa71426fc44ead5fa78de71227a95efeaa11ab6d0d06843373e45ef077cf69",
+        "grid.1.ele": "a1fddd3219c090c265185764b1174e6aed0d8d1326037c9c9511d42a4f02a710"
+      },
+      "data_sha256": "36e0d5b808cd5249368c83cbfeed1a919cdfcd737799ac09020834fbb825c87e",
+      "reaction_convention": "Outward Darcy reaction is minus the uneliminated native stiffness residual at essential nodes; side zero flux is natural, not a pointwise raw-gradient constraint",
+      "pressure_min": 0.0,
+      "pressure_max": 1.0,
+      "flux_magnitude_max": 0.027445852183228838,
+      "reaction_free_relative": 3.797442011065244e-10,
+      "bc_balance_relative": 7.556860190152958e-10,
+      "coefficients_sha256": "b4120150067ef36ec77431c91fb088bea02f5b8024bafb7a6cd7dfad2ff7e516",
+      "coefficients": "build/results/spe10/msl/spe10-480x1760/coefficients.npz",
+      "previous_difference": {
+        "pressure_l2": 0.8485243925123421,
+        "pressure_reference_l2": 820.6800376622235,
+        "pressure_relative_l2": 0.0010339283930061655,
+        "flux_l2": 0.1355013211860717,
+        "flux_reference_l2": 0.9951432099887086,
+        "flux_relative_l2": 0.1361626345092674,
+        "integration": "Exact P1 mass matrix for pressure; cell areas for piecewise constant flux; nested SW-NE triangles"
+      },
+      "previous_coefficients_sha256": "79dda70cd3fa8129e0ccd8fe938c4d4291b75ed6765b8bb0b9d24963c6fb388c",
+      "archive": "msl-cg-p1-480x1760.npz",
+      "sha256": "36535fee2820943e64ca7ed7080c1fb847bd733b17a247c4aa9b0c50d3eb914d",
+      "sample_convention": "Pixel centers: lower triangle at diagonal and positive coordinate side at fine-grid boundaries. Profiles x=199: eleven macro intervals retain their separate interior-side endpoint flux limits. Samples are visualization data, not L2 norms.",
+      "native_reaction_assembly_check_linf": 1.9922319002829703e-12,
+      "native_reaction_check": "Native uneliminated LCS action checked against independent exact triangular P1 gradients and archived pixel coefficients; no native matrix or solve altered",
+      "raw_boundary_outward_integrals": {
+        "bottom": -0.15278526879589757,
+        "top": 0.15370273075797927,
+        "left": 0.00023221322970601202,
+        "right": -5.751965024488368e-05
+      },
+      "raw_flux_boundary_convention": "Raw P1 flux is not H(div)-conforming and its boundary integrals need not equal the variational reactions; zero side flux is imposed naturally in the weak equation",
+      "sampling_postprocessor_sha256": "33fa93a8be95bd0974ec743ea5bb4386f344f8548af16dfdd17b8545b82ccde5",
+      "energy_squared": 0.15200372256291694,
+      "energy_from_dirichlet_reaction": 0.15200372255979364,
+      "energy_identity_defect": 3.123307168451106e-12,
+      "energy_identity": "Integral q.K^-1.q equals minus the bottom outward reaction for p_bottom=1, p_top=0 and homogeneous side Neumann data"
+    },
+    {
+      "dofs": 3383681,
+      "cells": 6758400,
+      "relative_residual": 1.2514672257209359e-12,
+      "free_residual_l2": 1.1971366177310544e-10,
+      "reaction_bottom_outward": -0.15128906042622214,
+      "reaction_top_outward": 0.15128906096018765,
+      "reaction_balance": 5.339655106961771e-10,
+      "dirichlet_linf": 0,
+      "assembly_seconds": 60.917808342,
+      "solve_seconds": 117.246874177,
+      "process_seconds": 231.5167249579681,
+      "timing_scope": "Native mesh/data read, assembly, solve, reaction reassembly and binary export; not a controlled performance benchmark",
+      "discretization": "MSL_CG global conforming triangular P1; SW-NE diagonals; native Eigen SparseLU; raw flux -K grad(p)",
+      "shape": [
+        960,
+        3520
+      ],
+      "kind": "spe10",
+      "domain": [
+        1200,
+        2200
+      ],
+      "layer": 36,
+      "permeability_convention": "Kx = Ky from unmodified layer 36; piecewise constant on 60 x 220 pixels",
+      "boundary_conditions": {
+        "bottom_pressure": 1.0,
+        "top_pressure": 0.0,
+        "side_outward_flux": 0.0
+      },
+      "units": "Original SPE10 numerical coordinates in ft and permeability in mD; no SI conversion",
+      "driver_sha256": "5df1321daa1b194299f643116b1d383179c31c89946f0f5e8752d67f53fe20f0",
+      "runner_sha256": "4c5751fc037f5bb05e275dce3e9c32a1ae45477190be6104d2f3f7ba53defde8",
+      "executable_sha256": "2575f104adfa316905d7bc1f318cb76ce7013e0470cc7beea9739f08dcf9d52f",
+      "layer_sha256": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512",
+      "mesh_sha256": {
+        "grid.1.node": "9e3fc63401c28f300632d6a623b130c8386c9cc99b6d617d0a0ecbc4e9ef07b0",
+        "grid.1.ele": "3a628a457113c8bb46f1eee9332f31e86f11ee66f54b5a572384663c0a0e4c39"
+      },
+      "data_sha256": "36e0d5b808cd5249368c83cbfeed1a919cdfcd737799ac09020834fbb825c87e",
+      "reaction_convention": "Outward Darcy reaction is minus the uneliminated native stiffness residual at essential nodes; side zero flux is natural, not a pointwise raw-gradient constraint",
+      "pressure_min": 0.0,
+      "pressure_max": 1.0,
+      "flux_magnitude_max": 0.03916163207552703,
+      "reaction_free_relative": 7.912909301790735e-10,
+      "bc_balance_relative": 3.5294389912083095e-09,
+      "coefficients_sha256": "a6a6151fe6c7e1806c0c3e7f7ede817f6f443fbd893cb4e373c69e5221d805a3",
+      "coefficients": "build/results/spe10/msl/spe10-960x3520/coefficients.npz",
+      "previous_difference": {
+        "pressure_l2": 0.4304542745412961,
+        "pressure_reference_l2": 821.0287938930799,
+        "pressure_relative_l2": 0.0005242864534631082,
+        "flux_l2": 0.09147414765300241,
+        "flux_reference_l2": 0.9905563598941355,
+        "flux_relative_l2": 0.09234623223536578,
+        "integration": "Exact P1 mass matrix for pressure; cell areas for piecewise constant flux; nested SW-NE triangles"
+      },
+      "previous_coefficients_sha256": "b4120150067ef36ec77431c91fb088bea02f5b8024bafb7a6cd7dfad2ff7e516",
+      "archive": "msl-cg-p1-960x3520.npz",
+      "sha256": "8015ab0f640b194cdcae3a989899f048e6ecb6cc92d7a90d19180fe265572c33",
+      "sample_convention": "Pixel centers: lower triangle at diagonal and positive coordinate side at fine-grid boundaries. Profiles x=199: eleven macro intervals retain their separate interior-side endpoint flux limits. Samples are visualization data, not L2 norms.",
+      "sampling_postprocessor_sha256": "33fa93a8be95bd0974ec743ea5bb4386f344f8548af16dfdd17b8545b82ccde5",
+      "native_reaction_assembly_check_linf": 2.203000694193935e-12,
+      "native_reaction_check": "Native uneliminated LCS action checked against independent exact triangular P1 gradients and archived pixel coefficients; no native matrix or solve altered",
+      "raw_boundary_outward_integrals": {
+        "bottom": -0.15166662766982966,
+        "top": 0.15212826351214262,
+        "left": 0.0001260270081809197,
+        "right": -3.950107496848805e-05
+      },
+      "raw_flux_boundary_convention": "Raw P1 flux is not H(div)-conforming and its boundary integrals need not equal the variational reactions; zero side flux is imposed naturally in the weak equation",
+      "energy_squared": 0.15128906045881307,
+      "energy_from_dirichlet_reaction": 0.15128906042622214,
+      "energy_identity_defect": 3.259092995477886e-11,
+      "energy_identity": "Integral q.K^-1.q equals minus the bottom outward reaction for p_bottom=1, p_top=0 and homogeneous side Neumann data"
+    }
+  ],
+  "limitations": [
+    "Numerical references, not exact solutions. Integrated consecutive-grid changes quantify observed refinement sensitivity, not a certified error bound.",
+    "Raw P1 flux -K grad(p) is piecewise constant, with normal jumps; variational reaction balance does not imply fine-cell or pointwise conservation.",
+    "Pixel-center/profile samples use deterministic one-sided triangle values and are visualization data, not quadrature norms."
+  ],
+  "comparison_runner_distributed": false,
+  "toolchain": {
+    "compiler": "GCC 13.4.0 conda-forge",
+    "standard": "C++17",
+    "optimization": "-O3 -DNDEBUG",
+    "eigen": "3.4.0",
+    "native_configuration_sha256": "b0948bf48f3dbf0eb86036f8dc29b9c0321b8fab9b0392b86f21edb468a2f7bd",
+    "native_library_sha256": {
+      "msl_core": "82e3ebf6d850061b2ef7c1952b231075dae0dfe870d7da53f3f1e17b1badb511",
+      "msl_cg": "d85adf114816e4f2cf120d333ce2a0e81f351609fe91e5cc6bc344d14e01830e"
+    }
+  },
+  "mhm_comparisons": [
+    {
+      "shape": [
+        480,
+        1760
+      ],
+      "records": [
+        "msl-cg-mhm-480x1760-q3.json",
+        "msl-cg-mhm-480x1760-q4.json"
+      ],
+      "quadrature_absolute_differences": {
+        "pressure_l2": 2.220446049250313e-16,
+        "flux_l2": 1.1934897514720433e-15,
+        "pressure_relative_l2": 0.0,
+        "flux_relative_l2": 1.1657341758564144e-15
+      },
+      "pressure_relative_l2": 0.002202684965628331,
+      "flux_relative_l2": 0.14567298181966196
+    },
+    {
+      "shape": [
+        960,
+        3520
+      ],
+      "records": [
+        "msl-cg-mhm-960x3520-q3.json",
+        "msl-cg-mhm-960x3520-q4.json"
+      ],
+      "quadrature_absolute_differences": {
+        "pressure_l2": 2.220446049250313e-16,
+        "flux_l2": 3.6637359812630166e-15,
+        "pressure_relative_l2": 0.0,
+        "flux_relative_l2": 3.7192471324942744e-15
+      },
+      "pressure_relative_l2": 0.0020757707042051645,
+      "flux_relative_l2": 0.12622987389366816
+    }
+  ],
+  "consecutive_rates": [
+    {
+      "shape": [
+        240,
+        880
+      ],
+      "pressure": 0.9217889835555861,
+      "flux": 0.5030607871824954,
+      "definition": "log2 of consecutive integrated differences, not exact-solution error rates"
+    },
+    {
+      "shape": [
+        480,
+        1760
+      ],
+      "pressure": 0.9602710579633033,
+      "flux": 0.5607023602910278,
+      "definition": "log2 of consecutive integrated differences, not exact-solution error rates"
+    },
+    {
+      "shape": [
+        960,
+        3520
+      ],
+      "pressure": 0.9790961395262483,
+      "flux": 0.5668709455865373,
+      "definition": "log2 of consecutive integrated differences, not exact-solution error rates"
+    }
+  ],
+  "metadata_postprocessor_sha256": "3ea3e83b20be9b2d0edf2c753fb9984b5faf6fe895cc9ffdeed545c479dd6aea"
+}

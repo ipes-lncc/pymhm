@@ -1,0 +1,349 @@
+{
+  "doi": "10.1016/j.cma.2017.05.027",
+  "figure": 3,
+  "python": "3.13.15",
+  "local_degree": 2,
+  "trace_degree": 0,
+  "viscosity": 1,
+  "drag": 0,
+  "inverse_estimate": "Sharp generalized eigenvalue of squared Laplacian versus gradient seminorm on the local scalar polynomial space, quotienting constants.",
+  "historical_parameters": "Original inverse constant, connectivity, quadrature and H conversion are not specified sufficiently for bitwise reproduction.",
+  "results": [
+    {
+      "n": 4,
+      "macro_triangles": 32,
+      "grid_spacing": 0.25,
+      "macro_diameter": 0.3535533905932738,
+      "local_degree": 2,
+      "trace_degree": 0,
+      "local_triangles": 1,
+      "sharp_inverse_constant": 0.010416666666666668,
+      "inverse_parameter_m": 0.010416666666666668,
+      "quadrature_degree": 16,
+      "global_unknowns": 176,
+      "velocity_l2": 0.39280915041264125,
+      "velocity_h1_seminorm": 4.635440881784991,
+      "pressure_l2": 4.6014569080234216,
+      "pseudostress_l2": 7.992574306081706,
+      "pseudostress_hdiv_broken": 16.663084415947903,
+      "divergence_l2": 0.02798341008382942,
+      "macro_mass_defect": 1.4182380855647103e-16,
+      "algebraic_residual": 2.478017008966997e-16,
+      "pressure_mean": -2.220446049250313e-16,
+      "pseudostress_hdiv_domain_scaled": 22.168345009670304,
+      "deviatoric_pseudostress_l2": 4.635398648757586
+    },
+    {
+      "n": 8,
+      "macro_triangles": 128,
+      "grid_spacing": 0.125,
+      "macro_diameter": 0.1767766952966369,
+      "local_degree": 2,
+      "trace_degree": 0,
+      "local_triangles": 1,
+      "sharp_inverse_constant": 0.010416666666666668,
+      "inverse_parameter_m": 0.010416666666666668,
+      "quadrature_degree": 16,
+      "global_unknowns": 672,
+      "velocity_l2": 0.13934184913324646,
+      "velocity_h1_seminorm": 2.6762180972001035,
+      "pressure_l2": 2.2244372483780133,
+      "pseudostress_l2": 4.13054894054366,
+      "pseudostress_hdiv_broken": 8.352875467004635,
+      "divergence_l2": 0.006934444859618894,
+      "macro_mass_defect": 7.498655627100233e-17,
+      "algebraic_residual": 1.4321211196699161e-16,
+      "pressure_mean": 3.3306690738754696e-16,
+      "pseudostress_hdiv_domain_scaled": 11.067051214499255,
+      "deviatoric_pseudostress_l2": 2.6762136051740315
+    },
+    {
+      "n": 16,
+      "macro_triangles": 512,
+      "grid_spacing": 0.0625,
+      "macro_diameter": 0.08838834764831845,
+      "local_degree": 2,
+      "trace_degree": 0,
+      "local_triangles": 1,
+      "sharp_inverse_constant": 0.010416666666666668,
+      "inverse_parameter_m": 0.010416666666666668,
+      "quadrature_degree": 16,
+      "global_unknowns": 2624,
+      "velocity_l2": 0.040899455346823745,
+      "velocity_h1_seminorm": 1.4304547149457758,
+      "pressure_l2": 0.9466034179155057,
+      "pseudostress_l2": 1.9592113871807373,
+      "pseudostress_hdiv_broken": 4.115385015286044,
+      "divergence_l2": 0.001728618582341733,
+      "macro_mass_defect": 4.409193610985308e-17,
+      "algebraic_residual": 1.6832924219669842e-16,
+      "pressure_mean": 7.216449660063518e-16,
+      "pseudostress_hdiv_domain_scaled": 5.480353856132208,
+      "deviatoric_pseudostress_l2": 1.4304541927127548
+    },
+    {
+      "n": 32,
+      "macro_triangles": 2048,
+      "grid_spacing": 0.03125,
+      "macro_diameter": 0.04419417382415922,
+      "local_degree": 2,
+      "trace_degree": 0,
+      "local_triangles": 1,
+      "sharp_inverse_constant": 0.010416666666666668,
+      "inverse_parameter_m": 0.010416666666666668,
+      "quadrature_degree": 16,
+      "global_unknowns": 10368,
+      "velocity_l2": 0.010842499068545444,
+      "velocity_h1_seminorm": 0.7331664803192031,
+      "pressure_l2": 0.4130740599707601,
+      "pseudostress_l2": 0.9374462700176979,
+      "pseudostress_hdiv_broken": 2.036592918518036,
+      "divergence_l2": 0.0004318248091715017,
+      "macro_mass_defect": 2.348793370055705e-17,
+      "algebraic_residual": 5.826436991947746e-16,
+      "pressure_mean": 3.95516952522712e-16,
+      "pseudostress_hdiv_domain_scaled": 2.7233464565393675,
+      "deviatoric_pseudostress_l2": 0.7331664167345061
+    },
+    {
+      "n": 64,
+      "macro_triangles": 8192,
+      "grid_spacing": 0.015625,
+      "macro_diameter": 0.02209708691207961,
+      "local_degree": 2,
+      "trace_degree": 0,
+      "local_triangles": 1,
+      "sharp_inverse_constant": 0.010416666666666668,
+      "inverse_parameter_m": 0.010416666666666668,
+      "quadrature_degree": 16,
+      "global_unknowns": 41216,
+      "velocity_l2": 0.0027652114142576283,
+      "velocity_h1_seminorm": 0.36966729647496094,
+      "pressure_l2": 0.19208227382506005,
+      "pseudostress_l2": 0.4587437894641799,
+      "pseudostress_hdiv_broken": 1.013565253715286,
+      "divergence_l2": 0.00010793531056528783,
+      "macro_mass_defect": 1.1990977663642731e-17,
+      "algebraic_residual": 2.120817302595548e-15,
+      "pressure_mean": -1.7034984534092246e-15,
+      "pseudostress_hdiv_domain_scaled": 1.3580070628335879,
+      "deviatoric_pseudostress_l2": 0.3696672885962336
+    }
+  ],
+  "mesh_kind": "diagonal",
+  "additional_norm_evaluation": "Domain-scaled H(div) and deviatoric norms evaluated algebraically from the separately integrated squared norms.",
+  "published_comparison": {
+    "figure": 3,
+    "relative_digitization_tolerance": 0.01,
+    "abscissa_convention": "Table 1 sequence; Figure 3 also stores its differing abscissas",
+    "maximum_relative_discrepancy": {
+      "velocity_l2": 1.4607432135155687,
+      "pressure_l2": 0.6189577862137654,
+      "velocity_h1_seminorm": 0.5220415121812712,
+      "pseudostress_l2": 1.2601148313958435,
+      "pseudostress_hdiv_broken": 0.35019999721496053
+    },
+    "measurements": [
+      {
+        "n": 4,
+        "norm": "velocity_l2",
+        "computed": 0.39280915041264125,
+        "published_digitized": 0.22790173,
+        "relative_discrepancy": 0.7235900333562244,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 4,
+        "norm": "pressure_l2",
+        "computed": 4.6014569080234216,
+        "published_digitized": 3.15213383,
+        "relative_discrepancy": 0.45979109904208015,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 4,
+        "norm": "velocity_h1_seminorm",
+        "computed": 4.635440881784991,
+        "published_digitized": 3.53093915,
+        "relative_discrepancy": 0.3128067873344662,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 4,
+        "norm": "pseudostress_l2",
+        "computed": 7.992574306081706,
+        "published_digitized": 3.53635762,
+        "relative_discrepancy": 1.2601148313958435,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 4,
+        "norm": "pseudostress_hdiv_broken",
+        "computed": 16.663084415947903,
+        "published_digitized": 12.6097338,
+        "relative_discrepancy": 0.3214461685105441,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 8,
+        "norm": "velocity_l2",
+        "computed": 0.13934184913324646,
+        "published_digitized": 0.066485291,
+        "relative_discrepancy": 1.095829724701761,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 8,
+        "norm": "pressure_l2",
+        "computed": 2.2244372483780133,
+        "published_digitized": 1.37399336,
+        "relative_discrepancy": 0.6189577862137654,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 8,
+        "norm": "velocity_h1_seminorm",
+        "computed": 2.6762180972001035,
+        "published_digitized": 1.87331135,
+        "relative_discrepancy": 0.42860293736014765,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 8,
+        "norm": "pseudostress_l2",
+        "computed": 4.13054894054366,
+        "published_digitized": 1.87520709,
+        "relative_discrepancy": 1.2027161493633538,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 8,
+        "norm": "pseudostress_hdiv_broken",
+        "computed": 8.352875467004635,
+        "published_digitized": 6.18639867,
+        "relative_discrepancy": 0.35019999721496053,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 16,
+        "norm": "velocity_l2",
+        "computed": 0.040899455346823745,
+        "published_digitized": 0.0175584985,
+        "relative_discrepancy": 1.3293253319367682,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 16,
+        "norm": "pressure_l2",
+        "computed": 0.9466034179155057,
+        "published_digitized": 0.615661981,
+        "relative_discrepancy": 0.5375375565305627,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 16,
+        "norm": "velocity_h1_seminorm",
+        "computed": 1.4304547149457758,
+        "published_digitized": 0.961355634,
+        "relative_discrepancy": 0.4879558244163531,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 16,
+        "norm": "pseudostress_l2",
+        "computed": 1.9592113871807373,
+        "published_digitized": 0.960661737,
+        "relative_discrepancy": 1.0394393902884644,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 16,
+        "norm": "pseudostress_hdiv_broken",
+        "computed": 4.115385015286044,
+        "published_digitized": 3.06213773,
+        "relative_discrepancy": 0.3439581684936308,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 32,
+        "norm": "velocity_l2",
+        "computed": 0.010842499068545444,
+        "published_digitized": 0.0044604171,
+        "relative_discrepancy": 1.4308262715039461,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 32,
+        "norm": "pressure_l2",
+        "computed": 0.4130740599707601,
+        "published_digitized": 0.291538079,
+        "relative_discrepancy": 0.41687858199394956,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 32,
+        "norm": "velocity_h1_seminorm",
+        "computed": 0.7331664803192031,
+        "published_digitized": 0.483838927,
+        "relative_discrepancy": 0.5153110661540532,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 32,
+        "norm": "pseudostress_l2",
+        "computed": 0.9374462700176979,
+        "published_digitized": 0.484085686,
+        "relative_discrepancy": 0.9365296209516467,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 32,
+        "norm": "pseudostress_hdiv_broken",
+        "computed": 2.036592918518036,
+        "published_digitized": 1.52540813,
+        "relative_discrepancy": 0.33511345486144495,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 64,
+        "norm": "velocity_l2",
+        "computed": 0.0027652114142576283,
+        "published_digitized": 0.00112373018,
+        "relative_discrepancy": 1.4607432135155687,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 64,
+        "norm": "pressure_l2",
+        "computed": 0.19208227382506005,
+        "published_digitized": 0.14273646,
+        "relative_discrepancy": 0.34571274799066787,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 64,
+        "norm": "velocity_h1_seminorm",
+        "computed": 0.36966729647496094,
+        "published_digitized": 0.242875962,
+        "relative_discrepancy": 0.5220415121812712,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 64,
+        "norm": "pseudostress_l2",
+        "computed": 0.4587437894641799,
+        "published_digitized": 0.242693552,
+        "relative_discrepancy": 0.8902182842673128,
+        "within_digitization_tolerance": false
+      },
+      {
+        "n": 64,
+        "norm": "pseudostress_hdiv_broken",
+        "computed": 1.013565253715286,
+        "published_digitized": 0.760927433,
+        "relative_discrepancy": 0.3320130274699742,
+        "within_digitization_tolerance": false
+      }
+    ]
+  }
+}

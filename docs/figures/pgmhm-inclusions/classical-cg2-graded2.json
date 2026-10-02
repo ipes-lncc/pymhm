@@ -1,0 +1,75 @@
+{
+  "method": "DOLFINx/UFL conforming CG2",
+  "factor": 2,
+  "grading_level": 2,
+  "mesh_family": "interface-graded",
+  "grading": "1:2:4:8:4:2:1 per material interval, then uniform bisection",
+  "rectangles": [
+    1526,
+    1526
+  ],
+  "triangles": 4657352,
+  "dofs": 9320809,
+  "residual": 1.0413420507845792e-11,
+  "source_integral": 0.9999999999999991,
+  "outward_boundary_flux": 1.0000042833495555,
+  "energy_squared": 0.025847092073088742,
+  "source_boundary_work": 0.025847092073111137,
+  "pressure_min": 0.0,
+  "pressure_max": 0.05415411523430995,
+  "seconds": 372.3197485000128,
+  "dolfinx": "0.9.0",
+  "petsc": [
+    3,
+    23,
+    0
+  ],
+  "numpy": "2.5.3",
+  "scipy": "1.18.1",
+  "solver": "PETSc/MUMPS Cholesky with unchanged-CSR residual corrections",
+  "analytical_patch": false,
+  "refinement_precision": "two binary64 components with error-free products and sums",
+  "refinement_history": [
+    1.1474439618664755e-05,
+    1.0413420507845822e-11
+  ],
+  "archive_encoding": "float64 principal + correction; zero tail",
+  "archive": "classical-cg2-graded2.npz",
+  "archive_sha256": "d53f0f9807797aa3f36d3a038d6da03e6e0af042169834db9ce831c24389ecd1",
+  "source_hashes": {
+    "examples/solve_pgmhm_inclusions_reference.py": "b4b79451340660b52078609ad74722578336d5d153431eb9174df87b25a240c3",
+    "examples/pgmhm_inclusion_data.py": "e0b5690efee2cffde1cf5b871b3bcf5e3be8c08272b87e6b71d7a32e5d17e852",
+    "examples/inclusion_grading.py": "a946e8ed9490844c4f96127610a7dacbc609aef6c79d92c9d4b45bc966dc33c1",
+    "examples/solve_unusual_spe10_reference.py": "f15b6c66e7eb86096ba98b01378e02c08428c4636c31a4c1e70d4ea5144adf5c",
+    "examples/compensated_reference.py": "6c6aca71dd6783ad385a1a0e2946b64c0593168f07448b1ef6acb72ef170ac62",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9"
+  },
+  "norms": [
+    {
+      "order": 3,
+      "pressure_absolute": 1.672015351910542e-05,
+      "pressure_reference": 0.030328568720453666,
+      "pressure_relative": 0.0005513004478786796,
+      "flux_absolute": 0.007038565519233716,
+      "flux_reference": 0.24008791212283564,
+      "flux_relative": 0.029316617638094962,
+      "energy_absolute": 0.0037315962763881084,
+      "energy_reference": 0.16077078652169496,
+      "energy_relative": 0.02321066132176043
+    },
+    {
+      "order": 4,
+      "pressure_absolute": 1.6720153519105268e-05,
+      "pressure_reference": 0.030328568720453666,
+      "pressure_relative": 0.0005513004478786747,
+      "flux_absolute": 0.007038565519796066,
+      "flux_reference": 0.2400879121138572,
+      "flux_relative": 0.029316617641533566,
+      "energy_absolute": 0.003731596276388152,
+      "energy_reference": 0.1607707865216948,
+      "energy_relative": 0.023210661321760726
+    }
+  ],
+  "previous_archive": "classical-cg2-graded1.npz",
+  "previous_sha256": "7a07d4ca54cc55b455e13123076118658f776fc6cb65868f3468fa5bf620f4ec"
+}

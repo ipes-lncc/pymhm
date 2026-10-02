@@ -1,0 +1,3 @@
+# Generated fields and figures are ignored; compact scientific inputs are binary.
+*.npz -text
+*.vtu -text

@@ -1,0 +1,59 @@
+{
+  "case": "L05 Problem 5 tensor on an explicitly graded polygonal producing-well reservoir",
+  "physical_parameters": {
+    "inner_radius": 0.2,
+    "outer_radius": 50.0,
+    "height": 10.0,
+    "permeability": 1e-13,
+    "viscosity": 0.001,
+    "outer_pressure": 25000000.0,
+    "rate": 0.01,
+    "tensor_scale": 1e-11
+  },
+  "radii": [
+    0.2,
+    0.7952707287670507,
+    3.1622776601683795,
+    12.574334296829353,
+    50.0
+  ],
+  "units": "m, Pa, s; permeability m\u00b2 and physical flux m/s",
+  "tensor_scale_convention": "10^-11 m\u00b2 outer scale matches Figure16 ranges; printed 10^-3 differs",
+  "rate_convention": "Q>0 prescribes production pressure data; actual heterogeneous rate is computed, not prescribed",
+  "fine_factor": 8,
+  "macro_factor": 2,
+  "local_refinement": 4,
+  "subdivisions": 4,
+  "classical_complete_trace": true,
+  "macro_cells": 256,
+  "fine_cells": 16384,
+  "degree": 1,
+  "trace_dofs": 59392,
+  "pressure_coarse_dofs": 256,
+  "quadrature": [
+    40,
+    40,
+    10
+  ],
+  "boundary_rates": {
+    "inner": 0.012043761594271285,
+    "outer": -0.012043761594271311,
+    "top_bottom": 0.0
+  },
+  "divergence_moment_linf": 5.119126205573899e-19,
+  "algebraic_residual": 1.772591844841409e-15,
+  "physical_block_backward_residual_max": [
+    9.437334390981087e-14,
+    1.9872361622482563e-14,
+    3.732193976557052e-16
+  ],
+  "archive": "fine8-macro2-s4-q40z10.npz",
+  "sha256": "fc68799ba7f51bd594111bebbc85aebf2e9d21a7d6bdcc8a50e5b40674f97f3e",
+  "source_hashes": {
+    "examples/solve_mapped_oscillatory_well.py": "2241d929b702604944bf3bfa6a57e14d8907a8b16f30eff3211bf605c350da77",
+    "examples/solve_mapped_well.py": "d499f815ba776723ffc56909f7e68b956ee9735fb89be26b794abcb6558260fc",
+    "src/pymhm/mapped_rt.py": "941b6f3df8c202d7b057fdc9835c067f61c1db9f7b1a07579f4c456c6828c45d",
+    "src/pymhm/solvers.py": "92875e4978b59e0c3221adf68372818cd347329bb8b4bc4e6fef892a8dcd2b37",
+    "src/pymhm/hybrid.py": "2aaab34041092fc526e0a5ef17c7a25b95345a9de9bf16f6a4b5cc91a24525a0"
+  }
+}

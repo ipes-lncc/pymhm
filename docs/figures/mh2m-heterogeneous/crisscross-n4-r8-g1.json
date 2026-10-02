@@ -1,0 +1,63 @@
+{
+  "geometry_source": "Barros (2022), Figure 4, printed page 54 / PDF page 56",
+  "primary_url": "https://www.lncc.br/~alm/students/frankdissert.pdf",
+  "coefficient_source": "Article v3 Equation 61; thesis Equations 4.1 and 4.4",
+  "gamma": 1.8,
+  "epsilon": 0.07142857142857142,
+  "source": "-2*(x*(x-1)+y*(y-1))",
+  "macro_diagonal": "northwest-southeast",
+  "macro_resolution": 4,
+  "macro_count": 32,
+  "macro_max_diameter": 0.3535533905932738,
+  "macro_cartesian_spacing": 0.25,
+  "local_refinement": 8,
+  "local_triangles_per_macro": 128,
+  "fine_max_diameter": 0.03125,
+  "boundary_edge_counts_per_macro": [
+    8,
+    8,
+    16
+  ],
+  "pressure_degree": 1,
+  "Gamma_degree": 1,
+  "Gamma_segments": 1,
+  "Lambda_degree": 0,
+  "Lambda_segments": 8,
+  "minimum_neumann_energy_eigenvalue": 9.051443251507446e-07,
+  "minimum_neumann_energy_eigenvalue_ratio": 5.5537370038933855e-05,
+  "pressure_range": [
+    -0.00040466367683708896,
+    0.014571907794660159
+  ],
+  "pressure_l2": 0.007091257097533934,
+  "raw_flux_l2": 0.1737381238898429,
+  "assembly_order": 10,
+  "diagnostics": {
+    "free_trace_dofs": 9,
+    "total_trace_dofs": 25,
+    "macro_cells": 32,
+    "algebraic_residual": 9.593602222328144e-17,
+    "macro_balance_max": 3.8163916471489756e-17,
+    "trace_moment_max": 6.505213034913027e-19,
+    "local_equation_max": 4.1270155695660726e-16
+  },
+  "elapsed_seconds": 5.190144086955115,
+  "source_sha256": {
+    "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+    "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "examples/mh2m_campaign.py": "f4ea5f16bc83aae5b6ed65e6b836370a26bcb2f7d1e18326713042e3cf329d14",
+    "examples/mh2m_crisscross.py": "10e30517eb494142588d549478aaf3d09cb8c928bac9c4be38e9f6700cc0e657",
+    "examples/mh2m_heterogeneous.py": "6d4b2ca698c9f6598238ac69c830a8ff522241083895c6933411a23368563c23",
+    "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+    "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+    "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e"
+  },
+  "source_changed_during_run": false,
+  "scope": "Explicit thesis crisscross geometry and declared epsilon; admissibility control, not a quantitative reproduction of the article's figures.",
+  "archive": "crisscross-n4-r8-g1.npz",
+  "archive_sha256": "28b3979e00a05f852fe4c03787c80c9e671e70660eae14cdcd39fa34d327a5e0"
+}

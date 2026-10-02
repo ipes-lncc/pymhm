@@ -1,0 +1,16 @@
+{
+  "first": "mhm-r4-s1.npz",
+  "second": "mhm-r8-s1.npz",
+  "first_sha256": "5798743983236e81799b8cd0bf78e869ab201c7419a221053be2e3b195c0489a",
+  "second_sha256": "bbbf12b42de495812a86a4aab2f05fdb53c396a8c0a26134da1225b844178e82",
+  "kind": "local",
+  "first_energy_squared": 0.13913764156687697,
+  "second_energy_squared": 0.12830725012146846,
+  "increment_energy_squared": 0.010830391445408115,
+  "signed_energy_difference": 0.010830391445408509,
+  "identity_relative_defect": 3.629291592899518e-14,
+  "quadrature_order": 4,
+  "integration": "nested local cells, exact material intersections",
+  "source_sha256": "2ac520cd2bdcb47b895ded03693cbe1fbf72393dad8dce1c40750e5bfc670c10",
+  "seconds": 93.82475131109823
+}

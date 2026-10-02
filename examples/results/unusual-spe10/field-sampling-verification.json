@@ -1,0 +1,148 @@
+{
+  "method": "identical canonical CG2 coefficients; sample replay with explicit incident rectangle and triangle",
+  "profile_x": 33.0,
+  "profile_convention": "each segment has two one-sided endpoint values; both incident columns retained at vertical grid edges; no point displacement or averaging",
+  "source_hashes": {
+    "examples/solve_unusual_spe10_reference.py": "67cbfe9caf8c5e173b132db9618429955ef3ae9b617b666fedd249886a2ce3ac",
+    "examples/cg2_profiles.py": "4b52f7a099f3619c293dd58215209e294d0c7d8b8fb2703c188cb86a2777278a"
+  },
+  "rows": [
+    {
+      "archive": "classical-cg2-120x440.npz",
+      "acquisition_archive_sha256": "fc4a48782367b2eedd1b161257347e3ea441b31e0e697301ba290070608a7a65",
+      "archive_sha256": "937f6a99c37597bff371ca91b8c06ac6c8c85b07d6f262becd00e436facfff28",
+      "field_payload_sha256": "5c01b7d15918e9d121be1447fad0715391ec3ceaafd2757adacb18033e55603f",
+      "physical_arrays": [
+        "coefficients",
+        "permeability",
+        "bounds",
+        "x_axis",
+        "y_axis"
+      ],
+      "physical_arrays_bitwise": true,
+      "added_explicit_axes": [
+        "x_axis",
+        "y_axis"
+      ],
+      "trace_profile_segments": 880
+    },
+    {
+      "archive": "classical-cg2-240x880.npz",
+      "acquisition_archive_sha256": "d38e34974115a2dc451d1e75da6440b7acf4db92a6dc67d8a940a076a17b6c7c",
+      "archive_sha256": "7f3e60a0879df8e938c72846ddc1bc57c2a0e8a3a8f0116447c00c1b520db7e3",
+      "field_payload_sha256": "9a35b3f4ea7cb8190609fbef03b20192c9a02fa017c8997a0f4746bd385a3d9c",
+      "physical_arrays": [
+        "coefficients",
+        "permeability",
+        "bounds",
+        "x_axis",
+        "y_axis"
+      ],
+      "physical_arrays_bitwise": true,
+      "added_explicit_axes": [
+        "x_axis",
+        "y_axis"
+      ],
+      "trace_profile_segments": 1760
+    },
+    {
+      "archive": "classical-cg2-60x220.npz",
+      "acquisition_archive_sha256": "7181519e31ef3fcbca05a26779646d4c2ebcc260ce5a97f127dbfa4ccd4175a5",
+      "archive_sha256": "d7d8f5055f7ca6193d6c3d683c85287c3014e506596f3a37560858a2242dba71",
+      "field_payload_sha256": "6079f1b172a87848a5bcc21589f86900971abd5085573fa060b07a296d4009b4",
+      "physical_arrays": [
+        "coefficients",
+        "permeability",
+        "bounds",
+        "x_axis",
+        "y_axis"
+      ],
+      "physical_arrays_bitwise": true,
+      "added_explicit_axes": [
+        "x_axis",
+        "y_axis"
+      ],
+      "trace_profile_segments": 440
+    },
+    {
+      "archive": "classical-cg2-graded-120x468.npz",
+      "acquisition_archive_sha256": "3b693bb112a65d4564e03afeb0fba4b7c28118285b4f893a574f092eda724b0f",
+      "archive_sha256": "1b0f84ec8623121c4dae26f43714f64792d2c1524c811b4713a1319cde489a69",
+      "field_payload_sha256": "1c173bd9f729fd2d0fb2e05edec98731f0a3ad8661b32a9d2b77e8baacd2413d",
+      "physical_arrays": [
+        "coefficients",
+        "permeability",
+        "bounds",
+        "x_axis",
+        "y_axis"
+      ],
+      "physical_arrays_bitwise": true,
+      "added_explicit_axes": [],
+      "trace_profile_segments": 936
+    },
+    {
+      "archive": "classical-cg2-graded-240x936.npz",
+      "acquisition_archive_sha256": "5100306984a2cf50f5e1c9f2a780ebc859f604275e29ebdf985c4e7982669665",
+      "archive_sha256": "97aad6605988bcb2fdb78852d362d253a79c3f1de490e775f639f5ce30418566",
+      "field_payload_sha256": "da8e4b3c31f2de83465a37b9a4921e299321bf4e71d179bcecd0841adadeee4b",
+      "physical_arrays": [
+        "coefficients",
+        "permeability",
+        "bounds",
+        "x_axis",
+        "y_axis"
+      ],
+      "physical_arrays_bitwise": true,
+      "added_explicit_axes": [],
+      "trace_profile_segments": 1872
+    },
+    {
+      "archive": "classical-cg2-graded-480x1872.npz",
+      "acquisition_archive_sha256": "e7bb7ed38fa82e567ba54b933cde4a4ac71a237d7d83a76832e6a77fa7e25cb5",
+      "archive_sha256": "802ebbb125093feff91b4d9cfb1fa54fed58e20d4516dbbcd9f06a49464fbbf0",
+      "field_payload_sha256": "f78445aff3cef11f7cea19da45ced8370bde8e2c02a5929e614f05d6b8f7fe1f",
+      "physical_arrays": [
+        "coefficients",
+        "permeability",
+        "bounds",
+        "x_axis",
+        "y_axis"
+      ],
+      "physical_arrays_bitwise": true,
+      "added_explicit_axes": [],
+      "trace_profile_segments": 3744
+    },
+    {
+      "archive": "classical-cg2-graded-xy-1440x498.npz",
+      "acquisition_archive_sha256": "3a536228173b05fbcf816d6dd9b423a61a377ec408c9cd216d17a30fc3a674a3",
+      "archive_sha256": "90d4715637a679876b11205f928fb0955c1af267fa3a974c9d3b9aac98b1793f",
+      "field_payload_sha256": "3c65ffb0eaa360ed82d41351ebf6de64d08f158a4ae4fb53dd661242c1495e49",
+      "physical_arrays": [
+        "coefficients",
+        "permeability",
+        "bounds",
+        "x_axis",
+        "y_axis"
+      ],
+      "physical_arrays_bitwise": true,
+      "added_explicit_axes": [],
+      "trace_profile_segments": 996
+    },
+    {
+      "archive": "classical-cg2-graded-xy-720x249.npz",
+      "acquisition_archive_sha256": "44c5b710038c2138680496ca8d9f5a71c5afd098ad1543a1b333da626561dcf1",
+      "archive_sha256": "8e9c5391e6700d9ff62a12ebbce98a12e8f242752ced9004fc22868d0026ea72",
+      "field_payload_sha256": "351215a5a4f1e44883198484b3e649856cf146e01edc5c1e23330b81db975052",
+      "physical_arrays": [
+        "coefficients",
+        "permeability",
+        "bounds",
+        "x_axis",
+        "y_axis"
+      ],
+      "physical_arrays_bitwise": true,
+      "added_explicit_axes": [],
+      "trace_profile_segments": 498
+    }
+  ]
+}

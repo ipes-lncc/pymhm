@@ -1,0 +1,1008 @@
+{
+  "schema_version": 1,
+  "source": {
+    "authors": "T. Chaumont-Frelet, D. Paredes and F. Valentin",
+    "title": "Flux approximation on unfitted meshes and application to multiscale hybrid-mixed methods",
+    "journal": "Computers and Mathematics with Applications 209 (2026) 16\u201327",
+    "doi": "10.1016/j.camwa.2026.01.016",
+    "url": "https://doi.org/10.1016/j.camwa.2026.01.016",
+    "pdf_sha256": "80e5312cf4084806e2747e40afefae662d021d8cafb8986d1ea1f15e2f8e717e"
+  },
+  "extraction": {
+    "method": "Marker symmetry centers from original vector PDF paths; independently checked against the drawn data polylines and rendered axes/legends. No PyMHM outputs are read.",
+    "tool": "PyMuPDF",
+    "version": "1.28.2",
+    "extractor_identifier": "original-l10-vector-marker-extractor",
+    "extractor_sha256": "288194582ac1317c38cb7ee084cfb0ee3fd05cd27b6d66e36f94e12a32d97b30",
+    "coordinates": "PDF points, top-left origin; 72 points per inch",
+    "reading_dpi": 600,
+    "reading_uncertainty_pixels": 1,
+    "coordinate_quantization_allowance_points": 0.001,
+    "coordinate_envelope_points": 0.121,
+    "interval_method": "Min/max over all 8 combinations of independent +/- coordinate envelopes for the marker ordinate and both decade anchors. This is graphical resolution uncertainty, not a numerical-error or statistical confidence interval.",
+    "scope": "Published plotted central values, not recovered source data. Theoretical guide lines are excluded. Full marker paths identify points even where adjacent plotted curves overlap."
+  },
+  "numerical_setup": {
+    "section_6_1": {
+      "domain": "(0,1)^2",
+      "diffusion": "identity",
+      "pressure": "sin(2*pi*x)*sin(2*pi*y)",
+      "source": "8*pi^2*sin(2*pi*x)*sin(2*pi*y)",
+      "macro_mesh": "16 crisscross right triangles",
+      "local_discretization": "Only described as sufficiently accurate; polynomial degree, local connectivity, local mesh size and assembly/error integration are not supplied."
+    },
+    "section_6_2": {
+      "domain": "(0,1)^2",
+      "source": 1,
+      "diffusion": "a_star*I for y<1/2; I for y>1/2",
+      "dirichlet": 0,
+      "macro_cells": 16
+    }
+  },
+  "figures": [
+    {
+      "figure": 2,
+      "pdf_page": 9,
+      "printed_page": 24,
+      "ordinate": "absolute broken H1 seminorm of pressure error: ||grad(u-u_H)||_{T_calH}",
+      "material_weighted": false,
+      "relative": false,
+      "calibration": {
+        "ordinate_scale": "log10",
+        "top_gridline": {
+          "pdf_y_points": 59.24997329711914,
+          "value": 1.0,
+          "path_index": 15
+        },
+        "bottom_gridline": {
+          "pdf_y_points": 260.8699951171875,
+          "value": 1e-10,
+          "path_index": 10
+        }
+      },
+      "series": [
+        {
+          "trace_degree": 0,
+          "marker": "circle",
+          "values": [
+            {
+              "value": 0.0007787607674481547,
+              "graphical_interval": [
+                0.0007575325320216852,
+                0.0008005838789496073
+              ],
+              "vector_center_pdf_points": [
+                187.83099365234375,
+                121.92549133300781
+              ],
+              "marker_path_index": 299,
+              "curve_path_index": 293,
+              "center_to_curve_distance_points": 0.00048828125,
+              "H": 0.015625,
+              "skeleton_subdivisions": 32
+            },
+            {
+              "value": 0.0023725209687884908,
+              "graphical_interval": [
+                0.002307848432902136,
+                0.0024390058147201426
+              ],
+              "vector_center_pdf_points": [
+                226.9114990234375,
+                112.17099380493164
+              ],
+              "marker_path_index": 298,
+              "curve_path_index": 293,
+              "center_to_curve_distance_points": 0.00011424441402141383,
+              "H": 0.03125,
+              "skeleton_subdivisions": 16
+            },
+            {
+              "value": 0.007321859012972268,
+              "graphical_interval": [
+                0.007122272498880012,
+                0.007527038513939687
+              ],
+              "vector_center_pdf_points": [
+                265.9934997558594,
+                102.30348205566406
+              ],
+              "marker_path_index": 297,
+              "curve_path_index": 293,
+              "center_to_curve_distance_points": 0.0006345206507063494,
+              "H": 0.0625,
+              "skeleton_subdivisions": 8
+            },
+            {
+              "value": 0.02200392806527554,
+              "graphical_interval": [
+                0.02140412311258464,
+                0.022620541273991695
+              ],
+              "vector_center_pdf_points": [
+                305.07550048828125,
+                92.66848754882812
+              ],
+              "marker_path_index": 296,
+              "curve_path_index": 293,
+              "center_to_curve_distance_points": 0.0003911129553983983,
+              "H": 0.125,
+              "skeleton_subdivisions": 4
+            },
+            {
+              "value": 0.05734959449091568,
+              "graphical_interval": [
+                0.05578630221380855,
+                0.05895669470378265
+              ],
+              "vector_center_pdf_points": [
+                344.1565246582031,
+                84.28048706054688
+              ],
+              "marker_path_index": 295,
+              "curve_path_index": 293,
+              "center_to_curve_distance_points": 0.0006007083336641017,
+              "H": 0.25,
+              "skeleton_subdivisions": 2
+            },
+            {
+              "value": 0.11730412899186654,
+              "graphical_interval": [
+                0.11410653639241387,
+                0.12059132731203719
+              ],
+              "vector_center_pdf_points": [
+                383.238525390625,
+                78.01448059082031
+              ],
+              "marker_path_index": 294,
+              "curve_path_index": 293,
+              "center_to_curve_distance_points": 0.0005035400390625,
+              "H": 0.5,
+              "skeleton_subdivisions": 1
+            }
+          ]
+        },
+        {
+          "trace_degree": 1,
+          "marker": "triangle",
+          "values": [
+            {
+              "value": 1.1859489237946409e-05,
+              "graphical_interval": [
+                1.1536211486801109e-05,
+                1.2191826159383867e-05
+              ],
+              "vector_center_pdf_points": [
+                187.83102416992188,
+                158.56666564941406
+              ],
+              "marker_path_index": 306,
+              "curve_path_index": 300,
+              "center_to_curve_distance_points": 0.00031448504668674104,
+              "H": 0.015625,
+              "skeleton_subdivisions": 32
+            },
+            {
+              "value": 6.75763106548318e-05,
+              "graphical_interval": [
+                6.573424837871886e-05,
+                6.946999280205879e-05
+              ],
+              "vector_center_pdf_points": [
+                226.912353515625,
+                143.3296661376953
+              ],
+              "marker_path_index": 305,
+              "curve_path_index": 300,
+              "center_to_curve_distance_points": 0.000807378125955438,
+              "H": 0.03125,
+              "skeleton_subdivisions": 16
+            },
+            {
+              "value": 0.00038098705340175877,
+              "graphical_interval": [
+                0.00037060172943307473,
+                0.00039166340395064615
+              ],
+              "vector_center_pdf_points": [
+                265.9940185546875,
+                128.1856689453125
+              ],
+              "marker_path_index": 304,
+              "curve_path_index": 300,
+              "center_to_curve_distance_points": 0.00067138671875,
+              "H": 0.0625,
+              "skeleton_subdivisions": 8
+            },
+            {
+              "value": 0.0020522808111938726,
+              "graphical_interval": [
+                0.0019963376999814187,
+                0.002109791608921568
+              ],
+              "vector_center_pdf_points": [
+                305.0753580729167,
+                113.44066111246745
+              ],
+              "marker_path_index": 303,
+              "curve_path_index": 300,
+              "center_to_curve_distance_points": 0.0017858333816889171,
+              "H": 0.125,
+              "skeleton_subdivisions": 4
+            },
+            {
+              "value": 0.0096668505679718,
+              "graphical_interval": [
+                0.009403341942130473,
+                0.009937743461695778
+              ],
+              "vector_center_pdf_points": [
+                344.1570129394531,
+                99.87066141764323
+              ],
+              "marker_path_index": 302,
+              "curve_path_index": 300,
+              "center_to_curve_distance_points": 0.0006663004557339036,
+              "H": 0.25,
+              "skeleton_subdivisions": 2
+            },
+            {
+              "value": 0.035579611806705234,
+              "graphical_interval": [
+                0.034609747366448354,
+                0.03657665463178292
+              ],
+              "vector_center_pdf_points": [
+                383.2386881510417,
+                88.46065775553386
+              ],
+              "marker_path_index": 301,
+              "curve_path_index": 300,
+              "center_to_curve_distance_points": 0.0006663004557339036,
+              "H": 0.5,
+              "skeleton_subdivisions": 1
+            }
+          ]
+        },
+        {
+          "trace_degree": 2,
+          "marker": "square",
+          "values": [
+            {
+              "value": 7.035756008089259e-08,
+              "graphical_interval": [
+                6.843968374215085e-08,
+                7.232918081834535e-08
+              ],
+              "vector_center_pdf_points": [
+                187.83055114746094,
+                203.46250915527344
+              ],
+              "marker_path_index": 313,
+              "curve_path_index": 307,
+              "center_to_curve_distance_points": 0.000518798828125,
+              "H": 0.015625,
+              "skeleton_subdivisions": 32
+            },
+            {
+              "value": 9.120069917022388e-07,
+              "graphical_interval": [
+                8.871465981902749e-07,
+                9.375640447818909e-07
+              ],
+              "vector_center_pdf_points": [
+                226.9114990234375,
+                181.02850341796875
+              ],
+              "marker_path_index": 312,
+              "curve_path_index": 307,
+              "center_to_curve_distance_points": 0.0007773197816334232,
+              "H": 0.03125,
+              "skeleton_subdivisions": 16
+            },
+            {
+              "value": 1.0951026488836705e-05,
+              "graphical_interval": [
+                1.0652512518714266e-05,
+                1.1257905677042811e-05
+              ],
+              "vector_center_pdf_points": [
+                265.9934997558594,
+                159.26449584960938
+              ],
+              "marker_path_index": 311,
+              "curve_path_index": 307,
+              "center_to_curve_distance_points": 0.0007771901339310716,
+              "H": 0.0625,
+              "skeleton_subdivisions": 8
+            },
+            {
+              "value": 0.00012520915091630743,
+              "graphical_interval": [
+                0.00012179607536820351,
+                0.00012871787063571842
+              ],
+              "vector_center_pdf_points": [
+                305.07550048828125,
+                137.929443359375
+              ],
+              "marker_path_index": 310,
+              "curve_path_index": 307,
+              "center_to_curve_distance_points": 0.0007079387103772206,
+              "H": 0.125,
+              "skeleton_subdivisions": 4
+            },
+            {
+              "value": 0.0012325119207611168,
+              "graphical_interval": [
+                0.0011989148851713801,
+                0.0012670504417009651
+              ],
+              "vector_center_pdf_points": [
+                344.156494140625,
+                117.90544891357422
+              ],
+              "marker_path_index": 309,
+              "curve_path_index": 307,
+              "center_to_curve_distance_points": 0.00019195269346994337,
+              "H": 0.25,
+              "skeleton_subdivisions": 2
+            },
+            {
+              "value": 0.008839149732621987,
+              "graphical_interval": [
+                0.008598203399245725,
+                0.009086848073699354
+              ],
+              "vector_center_pdf_points": [
+                383.2384948730469,
+                100.65444946289062
+              ],
+              "marker_path_index": 308,
+              "curve_path_index": 307,
+              "center_to_curve_distance_points": 0.000457763671875,
+              "H": 0.5,
+              "skeleton_subdivisions": 1
+            }
+          ]
+        },
+        {
+          "trace_degree": 3,
+          "marker": "cross",
+          "values": [
+            {
+              "value": 6.605549343522029e-10,
+              "graphical_interval": [
+                6.425488710723443e-10,
+                6.790655791968831e-10
+              ],
+              "vector_center_pdf_points": [
+                187.8310089111328,
+                244.3389892578125
+              ],
+              "marker_path_index": 325,
+              "curve_path_index": 314,
+              "center_to_curve_distance_points": 0.0009918212890625,
+              "H": 0.015625,
+              "skeleton_subdivisions": 32
+            },
+            {
+              "value": 1.517341347693928e-08,
+              "graphical_interval": [
+                1.4759801483403568e-08,
+                1.5598616065469684e-08
+              ],
+              "vector_center_pdf_points": [
+                226.91200256347656,
+                216.89498901367188
+              ],
+              "marker_path_index": 323,
+              "curve_path_index": 314,
+              "center_to_curve_distance_points": 0.001007080078125,
+              "H": 0.03125,
+              "skeleton_subdivisions": 16
+            },
+            {
+              "value": 3.4088742068595856e-07,
+              "graphical_interval": [
+                3.3159517238234235e-07,
+                3.5044006445286196e-07
+              ],
+              "vector_center_pdf_points": [
+                265.99400329589844,
+                189.6454849243164
+              ],
+              "marker_path_index": 321,
+              "curve_path_index": 314,
+              "center_to_curve_distance_points": 0.000521808649381228,
+              "H": 0.0625,
+              "skeleton_subdivisions": 8
+            },
+            {
+              "value": 7.315595968778612e-06,
+              "graphical_interval": [
+                7.116180178973172e-06,
+                7.520599961274764e-06
+              ],
+              "vector_center_pdf_points": [
+                305.07550048828125,
+                162.79698181152344
+              ],
+              "marker_path_index": 319,
+              "curve_path_index": 314,
+              "center_to_curve_distance_points": 0.0006872772281667494,
+              "H": 0.125,
+              "skeleton_subdivisions": 4
+            },
+            {
+              "value": 0.0001360868281454901,
+              "graphical_interval": [
+                0.00013237723805432464,
+                0.00013990037159636263
+              ],
+              "vector_center_pdf_points": [
+                344.15699768066406,
+                137.19998168945312
+              ],
+              "marker_path_index": 317,
+              "curve_path_index": 314,
+              "center_to_curve_distance_points": 0.0010170739171826426,
+              "H": 0.25,
+              "skeleton_subdivisions": 2
+            },
+            {
+              "value": 0.001856513257327192,
+              "graphical_interval": [
+                0.0018059065727762432,
+                0.0019085380864044652
+              ],
+              "vector_center_pdf_points": [
+                383.2384948730469,
+                114.31848907470703
+              ],
+              "marker_path_index": 315,
+              "curve_path_index": 314,
+              "center_to_curve_distance_points": 0.00049591064453125,
+              "H": 0.5,
+              "skeleton_subdivisions": 1
+            }
+          ]
+        }
+      ],
+      "abscissa": "skeleton size H",
+      "abscissa_scale": "log2",
+      "macro_diameter_printed": 0.5,
+      "trace_degrees": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "skeleton_subdivisions": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ]
+    },
+    {
+      "figure": 3,
+      "pdf_page": 9,
+      "printed_page": 24,
+      "ordinate": "absolute broken H1 seminorm of pressure error: ||grad(u-u_H)||_{T_calH}",
+      "material_weighted": false,
+      "relative": false,
+      "calibration": {
+        "ordinate_scale": "log10",
+        "top_gridline": {
+          "pdf_y_points": 320.84393310546875,
+          "value": 100.0,
+          "path_index": 387
+        },
+        "bottom_gridline": {
+          "pdf_y_points": 523.3729858398438,
+          "value": 1e-08,
+          "path_index": 382
+        }
+      },
+      "series": [
+        {
+          "skeleton_subdivisions": 1,
+          "H_over_macro_diameter": 1.0,
+          "marker": "circle",
+          "values": [
+            {
+              "value": 1.9104400299828137,
+              "graphical_interval": [
+                1.8585938958361756,
+                1.9637324303805004
+              ],
+              "vector_center_pdf_points": [
+                159.01499938964844,
+                355.6559753417969
+              ],
+              "marker_path_index": 658,
+              "curve_path_index": 657,
+              "center_to_curve_distance_points": 0.001007080078125,
+              "trace_degree": 0
+            },
+            {
+              "value": 0.24226976498455297,
+              "graphical_interval": [
+                0.23569497041475085,
+                0.24902796577451766
+              ],
+              "vector_center_pdf_points": [
+                224.22049713134766,
+                373.81947326660156
+              ],
+              "marker_path_index": 659,
+              "curve_path_index": 657,
+              "center_to_curve_distance_points": 0.0006543531162606087,
+              "trace_degree": 1
+            },
+            {
+              "value": 0.025418869625296176,
+              "graphical_interval": [
+                0.024729044190440252,
+                0.0261279379846626
+              ],
+              "vector_center_pdf_points": [
+                289.426025390625,
+                393.64996337890625
+              ],
+              "marker_path_index": 660,
+              "curve_path_index": 657,
+              "center_to_curve_distance_points": 4.076763582361309e-05,
+              "trace_degree": 2
+            },
+            {
+              "value": 0.0021075588629806507,
+              "graphical_interval": [
+                0.0020503632547348278,
+                0.002166349962949731
+              ],
+              "vector_center_pdf_points": [
+                354.6315155029297,
+                415.5509796142578
+              ],
+              "marker_path_index": 661,
+              "curve_path_index": 657,
+              "center_to_curve_distance_points": 0.00015386716250986865,
+              "trace_degree": 3
+            },
+            {
+              "value": 0.00014688682675337056,
+              "graphical_interval": [
+                0.0001429005649473415,
+                0.00015098428674250033
+              ],
+              "vector_center_pdf_points": [
+                419.83750915527344,
+                438.97947692871094
+              ],
+              "marker_path_index": 662,
+              "curve_path_index": 657,
+              "center_to_curve_distance_points": 0.0005035400390625,
+              "trace_degree": 4
+            }
+          ]
+        },
+        {
+          "skeleton_subdivisions": 2,
+          "H_over_macro_diameter": 0.5,
+          "marker": "cross",
+          "values": [
+            {
+              "value": 0.49858141553771285,
+              "graphical_interval": [
+                0.48505075320479346,
+                0.5124895204824778
+              ],
+              "vector_center_pdf_points": [
+                159.0145034790039,
+                367.4714660644531
+              ],
+              "marker_path_index": 664,
+              "curve_path_index": 663,
+              "center_to_curve_distance_points": 0.000518798828125,
+              "trace_degree": 0
+            },
+            {
+              "value": 0.040487773185530276,
+              "graphical_interval": [
+                0.03938900301377324,
+                0.04161719393988569
+              ],
+              "vector_center_pdf_points": [
+                224.22051239013672,
+                389.55548095703125
+              ],
+              "marker_path_index": 666,
+              "curve_path_index": 663,
+              "center_to_curve_distance_points": 0.001702891089394143,
+              "trace_degree": 1
+            },
+            {
+              "value": 0.0019961890705089093,
+              "graphical_interval": [
+                0.0019420158514036792,
+                0.0020518734707232443
+              ],
+              "vector_center_pdf_points": [
+                289.4259948730469,
+                416.02850341796875
+              ],
+              "marker_path_index": 668,
+              "curve_path_index": 663,
+              "center_to_curve_distance_points": 0.00146484375,
+              "trace_degree": 2
+            },
+            {
+              "value": 9.001593635936582e-05,
+              "graphical_interval": [
+                8.757305501340435e-05,
+                9.252696274456947e-05
+              ],
+              "vector_center_pdf_points": [
+                354.6315002441406,
+                443.2865295410156
+              ],
+              "marker_path_index": 670,
+              "curve_path_index": 663,
+              "center_to_curve_distance_points": 0.0022550427245278115,
+              "trace_degree": 3
+            },
+            {
+              "value": 3.007528890302122e-06,
+              "graphical_interval": [
+                2.9259096068651587e-06,
+                3.0914249725209584e-06
+              ],
+              "vector_center_pdf_points": [
+                419.8374938964844,
+                473.1820373535156
+              ],
+              "marker_path_index": 672,
+              "curve_path_index": 663,
+              "center_to_curve_distance_points": 0.001953125,
+              "trace_degree": 4
+            }
+          ]
+        },
+        {
+          "skeleton_subdivisions": 4,
+          "H_over_macro_diameter": 0.25,
+          "marker": "triangle",
+          "values": [
+            {
+              "value": 0.15018719485222043,
+              "graphical_interval": [
+                0.1461113665984093,
+                0.15437671977687445
+              ],
+              "vector_center_pdf_points": [
+                159.01499938964844,
+                378.0253194173177
+              ],
+              "marker_path_index": 675,
+              "curve_path_index": 674,
+              "center_to_curve_distance_points": 0.0003560384114393855,
+              "trace_degree": 0
+            },
+            {
+              "value": 0.007110257992073569,
+              "graphical_interval": [
+                0.006917297530667418,
+                0.007308601153804652
+              ],
+              "vector_center_pdf_points": [
+                224.2203369140625,
+                404.8553059895833
+              ],
+              "marker_path_index": 676,
+              "curve_path_index": 674,
+              "center_to_curve_distance_points": 0.00018463946264546394,
+              "trace_degree": 1
+            },
+            {
+              "value": 0.0001614565341209068,
+              "graphical_interval": [
+                0.00015707487492432924,
+                0.00016596042125065444
+              ],
+              "vector_center_pdf_points": [
+                289.4259948730469,
+                438.1476338704427
+              ],
+              "marker_path_index": 677,
+              "curve_path_index": 674,
+              "center_to_curve_distance_points": 0.0003153483073106145,
+              "trace_degree": 2
+            },
+            {
+              "value": 3.97118876246319e-06,
+              "graphical_interval": [
+                3.863417368402655e-06,
+                4.0819664776819575e-06
+              ],
+              "vector_center_pdf_points": [
+                354.6319885253906,
+                470.73729451497394
+              ],
+              "marker_path_index": 678,
+              "curve_path_index": 674,
+              "center_to_curve_distance_points": 0.00034077307373081567,
+              "trace_degree": 3
+            },
+            {
+              "value": 6.22713801691686e-08,
+              "graphical_interval": [
+                6.05814394858296e-08,
+                6.400846234563535e-08
+              ],
+              "vector_center_pdf_points": [
+                419.83734130859375,
+                507.2863362630208
+              ],
+              "marker_path_index": 679,
+              "curve_path_index": 674,
+              "center_to_curve_distance_points": 0.0003865559895643855,
+              "trace_degree": 4
+            }
+          ]
+        }
+      ],
+      "abscissa": "trace polynomial degree ell",
+      "abscissa_scale": "linear",
+      "trace_degrees": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "skeleton_subdivisions": [
+        1,
+        2,
+        4
+      ],
+      "caption_rate_constant": 4,
+      "note": "The surrounding text lists ell=0..3; the displayed Figure 3 contains ell=4 as well."
+    },
+    {
+      "figure": 7,
+      "pdf_page": 11,
+      "printed_page": 26,
+      "ordinate": "absolute broken H1 seminorm of pressure error: ||grad(u-u_H)||_{T_calH}",
+      "material_weighted": false,
+      "relative": false,
+      "calibration": {
+        "ordinate_scale": "log10",
+        "top_gridline": {
+          "pdf_y_points": 197.4869842529297,
+          "value": 1.0,
+          "path_index": 13
+        },
+        "bottom_gridline": {
+          "pdf_y_points": 407.78997802734375,
+          "value": 0.001,
+          "path_index": 10
+        }
+      },
+      "series": [
+        {
+          "setting": "S0",
+          "marker": "circle",
+          "values": [
+            {
+              "value": 0.0026008481552070362,
+              "graphical_interval": [
+                0.0025802562317968334,
+                0.0026216044139667667
+              ],
+              "vector_center_pdf_points": [
+                141.7310028076172,
+                378.69000244140625
+              ],
+              "marker_path_index": 209,
+              "curve_path_index": 208,
+              "center_to_curve_distance_points": 0.0,
+              "contrast": 10.0
+            },
+            {
+              "value": 0.002791620250184649,
+              "graphical_interval": [
+                0.0027695179101202825,
+                0.002813898979589031
+              ],
+              "vector_center_pdf_points": [
+                196.63099670410156,
+                376.5350036621094
+              ],
+              "marker_path_index": 210,
+              "curve_path_index": 208,
+              "center_to_curve_distance_points": 5.989556939312024e-07,
+              "contrast": 100.0
+            },
+            {
+              "value": 0.002818062930535239,
+              "graphical_interval": [
+                0.0027957512335165077,
+                0.0028405526876824592
+              ],
+              "vector_center_pdf_points": [
+                251.531005859375,
+                376.24798583984375
+              ],
+              "marker_path_index": 211,
+              "curve_path_index": 208,
+              "center_to_curve_distance_points": 3.0517578125e-05,
+              "contrast": 1000.0
+            },
+            {
+              "value": 0.0028207477967342283,
+              "graphical_interval": [
+                0.0027984148425886533,
+                0.002843258980652343
+              ],
+              "vector_center_pdf_points": [
+                306.4309997558594,
+                376.218994140625
+              ],
+              "marker_path_index": 212,
+              "curve_path_index": 208,
+              "center_to_curve_distance_points": 0.0009765625,
+              "contrast": 10000.0
+            },
+            {
+              "value": 0.0028210249073850344,
+              "graphical_interval": [
+                0.0027986897592469757,
+                0.0028435383028049487
+              ],
+              "vector_center_pdf_points": [
+                361.33099365234375,
+                376.21600341796875
+              ],
+              "marker_path_index": 213,
+              "curve_path_index": 208,
+              "center_to_curve_distance_points": 0.0005035404589079917,
+              "contrast": 100000.0
+            },
+            {
+              "value": 0.0028210249073850344,
+              "graphical_interval": [
+                0.0027986897592469757,
+                0.0028435383028049487
+              ],
+              "vector_center_pdf_points": [
+                416.2309875488281,
+                376.21600341796875
+              ],
+              "marker_path_index": 214,
+              "curve_path_index": 208,
+              "center_to_curve_distance_points": 0.0010070792384340166,
+              "contrast": 1000000.0
+            }
+          ]
+        },
+        {
+          "setting": "S2",
+          "marker": "cross",
+          "values": [
+            {
+              "value": 0.0026371064351380967,
+              "graphical_interval": [
+                0.002616227440865328,
+                0.002658152055750393
+              ],
+              "vector_center_pdf_points": [
+                141.7304916381836,
+                378.2685089111328
+              ],
+              "marker_path_index": 216,
+              "curve_path_index": 215,
+              "center_to_curve_distance_points": 0.0005035400390625,
+              "contrast": 10.0
+            },
+            {
+              "value": 0.003943442634436534,
+              "graphical_interval": [
+                0.003912220869898584,
+                0.00397491356654791
+              ],
+              "vector_center_pdf_points": [
+                196.63050079345703,
+                366.0185089111328
+              ],
+              "marker_path_index": 218,
+              "curve_path_index": 215,
+              "center_to_curve_distance_points": 0.0003894813046940726,
+              "contrast": 100.0
+            },
+            {
+              "value": 0.00447628157157209,
+              "graphical_interval": [
+                0.0044408411145428085,
+                0.0045120048637585074
+              ],
+              "vector_center_pdf_points": [
+                251.5300064086914,
+                362.16001892089844
+              ],
+              "marker_path_index": 220,
+              "curve_path_index": 215,
+              "center_to_curve_distance_points": 0.0009520858726546066,
+              "contrast": 1000.0
+            },
+            {
+              "value": 0.00456830134395312,
+              "graphical_interval": [
+                0.004532132330702168,
+                0.004604759006657378
+              ],
+              "vector_center_pdf_points": [
+                306.4304962158203,
+                361.54051208496094
+              ],
+              "marker_path_index": 222,
+              "curve_path_index": 215,
+              "center_to_curve_distance_points": 0.0005092081299267193,
+              "contrast": 10000.0
+            },
+            {
+              "value": 0.005052325699886674,
+              "graphical_interval": [
+                0.005012324478113245,
+                0.005092646154333563
+              ],
+              "vector_center_pdf_points": [
+                361.3304901123047,
+                358.4745330810547
+              ],
+              "marker_path_index": 224,
+              "curve_path_index": 215,
+              "center_to_curve_distance_points": 0.0005011437492044024,
+              "contrast": 100000.0
+            },
+            {
+              "value": 0.005510448876856456,
+              "graphical_interval": [
+                0.0054668205162384485,
+                0.005554425416794525
+              ],
+              "vector_center_pdf_points": [
+                416.23048400878906,
+                355.83203125
+              ],
+              "marker_path_index": 226,
+              "curve_path_index": 215,
+              "center_to_curve_distance_points": 4.806894651210314e-06,
+              "contrast": 1000000.0
+            }
+          ]
+        }
+      ],
+      "abscissa": "contrast a_star",
+      "abscissa_scale": "log10",
+      "contrast_values": [
+        10.0,
+        100.0,
+        1000.0,
+        10000.0,
+        100000.0,
+        1000000.0
+      ],
+      "delta": null,
+      "delta_status": "not specified in the Figure 7 caption or its contrast-study paragraph; Figure 6 separately states delta=1/6",
+      "trace_degree": null,
+      "trace_degree_status": "Figure 5 explicitly states ell=2; Figure 7 does not restate the degree.",
+      "reference": "Conforming piecewise-linear Galerkin solution on a material-fitted mesh of 1,048,576 squares, described in section 6.2; local triangulation and quadrature not specified."
+    }
+  ],
+  "total_markers": 51
+}

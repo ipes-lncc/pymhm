@@ -1,0 +1,1032 @@
+{
+  "citation": "Duran et al. (2019), Figure 3, DOI 10.1016/j.cma.2019.05.013",
+  "figure_size": [
+    1616,
+    1989
+  ],
+  "figure_sha256": "cd3f9831cd68df531d26156b40e051788fcfd9b97b218cf6edb36768809c3273",
+  "method": "Centers of enclosed dark-blue circle interiors; dark-red squares use their color-isolated vertical extent when occluded. Logarithmic axis calibration and a three-pixel vertical uncertainty are used. Simulated values are not used in marker selection.",
+  "field_convention": "Pressure follows Error in u axis; flux follows Error in sigma axis.",
+  "reference_code": {
+    "name": "NeoPZ labmec/MHM",
+    "revision": "f978f29d657d28fe58bcea20fabee68953093482",
+    "function": "TLaplaceExampleSmooth::uxy",
+    "frequency": "2*pi",
+    "url": "https://github.com/labmec/MHM"
+  },
+  "digitizer_sha256": "2f9f71bfe85677d73a9bf65e788bb3232ee5e9492e5e2c8239f78185977a0b8d",
+  "panels": [
+    [
+      1,
+      "pressure_l2",
+      99,
+      604,
+      16.5,
+      573,
+      -1,
+      -6
+    ],
+    [
+      2,
+      "pressure_l2",
+      99,
+      604,
+      690.5,
+      1247,
+      -2,
+      -8.5
+    ],
+    [
+      3,
+      "pressure_l2",
+      98,
+      590,
+      1365,
+      1919.5,
+      -3,
+      -11
+    ],
+    [
+      1,
+      "flux_l2",
+      1088,
+      1592,
+      9,
+      565,
+      0.5,
+      -3.5
+    ],
+    [
+      2,
+      "flux_l2",
+      1088,
+      1592,
+      683,
+      1239.5,
+      -0.5,
+      -5.5
+    ],
+    [
+      3,
+      "flux_l2",
+      1088,
+      1592,
+      1351.5,
+      1919.5,
+      -1.5,
+      -8
+    ]
+  ],
+  "series": [
+    {
+      "k": 1,
+      "enrichment": 0,
+      "N": 4,
+      "H": 0.25,
+      "field": "pressure_l2",
+      "value": 0.017053201744368415,
+      "absolute_uncertainty": 0.0010919292493830393,
+      "marker_pixel": [
+        451.98,
+        102.0
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 1,
+      "enrichment": 0,
+      "N": 8,
+      "H": 0.125,
+      "field": "pressure_l2",
+      "value": 0.004133826083760149,
+      "absolute_uncertainty": 0.00026469197282621043,
+      "marker_pixel": [
+        375.97,
+        170.5
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 1,
+      "enrichment": 0,
+      "N": 16,
+      "H": 0.0625,
+      "field": "pressure_l2",
+      "value": 0.0010124902169134494,
+      "absolute_uncertainty": 6.483050509427486e-05,
+      "marker_pixel": [
+        299.96,
+        238.5
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 1,
+      "enrichment": 0,
+      "N": 32,
+      "H": 0.03125,
+      "field": "pressure_l2",
+      "value": 0.00025580354505080037,
+      "absolute_uncertainty": 1.6379292119093255e-05,
+      "marker_pixel": [
+        223.95,
+        305.0
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 1,
+      "enrichment": 0,
+      "N": 64,
+      "H": 0.015625,
+      "field": "pressure_l2",
+      "value": 6.396316116245836e-05,
+      "absolute_uncertainty": 4.095609000776309e-06,
+      "marker_pixel": [
+        147.94,
+        372.0
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 1,
+      "enrichment": 2,
+      "N": 4,
+      "H": 0.25,
+      "field": "pressure_l2",
+      "value": 0.006765516979274626,
+      "absolute_uncertainty": 0.0004332011071942639,
+      "marker_pixel": [
+        451.8125,
+        146.6875
+      ],
+      "marker_hole_pixels": 16,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 1,
+      "enrichment": 2,
+      "N": 8,
+      "H": 0.125,
+      "field": "pressure_l2",
+      "value": 0.0007423692014695777,
+      "absolute_uncertainty": 4.75344546482866e-05,
+      "marker_pixel": [
+        376.0,
+        253.5
+      ],
+      "marker_hole_pixels": 16,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 1,
+      "enrichment": 2,
+      "N": 16,
+      "H": 0.0625,
+      "field": "pressure_l2",
+      "value": 9.342491542934733e-05,
+      "absolute_uncertainty": 5.982067139511188e-06,
+      "marker_pixel": [
+        299.8125,
+        353.6875
+      ],
+      "marker_hole_pixels": 16,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 1,
+      "enrichment": 2,
+      "N": 32,
+      "H": 0.03125,
+      "field": "pressure_l2",
+      "value": 1.1884913799064044e-05,
+      "absolute_uncertainty": 7.609999106402271e-07,
+      "marker_pixel": [
+        224.0,
+        453.3529411764706
+      ],
+      "marker_hole_pixels": 17,
+      "marker_hole_box": [
+        5,
+        5
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 1,
+      "enrichment": 2,
+      "N": 64,
+      "H": 0.015625,
+      "field": "pressure_l2",
+      "value": 1.5085907086001792e-06,
+      "absolute_uncertainty": 9.659619024984624e-08,
+      "marker_pixel": [
+        148.0,
+        553.125
+      ],
+      "marker_hole_pixels": 16,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 2,
+      "enrichment": 0,
+      "N": 4,
+      "H": 0.25,
+      "field": "pressure_l2",
+      "value": 0.0011321614309294358,
+      "absolute_uncertainty": 9.513306649258489e-05,
+      "marker_pixel": [
+        451.98,
+        771.5
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 2,
+      "enrichment": 0,
+      "N": 8,
+      "H": 0.125,
+      "field": "pressure_l2",
+      "value": 0.0001370935652997921,
+      "absolute_uncertainty": 1.1519674586215018e-05,
+      "marker_pixel": [
+        375.97,
+        850.0
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 2,
+      "enrichment": 0,
+      "N": 16,
+      "H": 0.0625,
+      "field": "pressure_l2",
+      "value": 1.6825417832440148e-05,
+      "absolute_uncertainty": 1.4138033231753996e-06,
+      "marker_pixel": [
+        299.96,
+        928.0
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 2,
+      "enrichment": 0,
+      "N": 32,
+      "H": 0.03125,
+      "field": "pressure_l2",
+      "value": 2.1212643284766277e-06,
+      "absolute_uncertainty": 1.7824523508422993e-07,
+      "marker_pixel": [
+        223.95,
+        1005.0
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 2,
+      "enrichment": 0,
+      "N": 64,
+      "H": 0.015625,
+      "field": "pressure_l2",
+      "value": 2.67438371877556e-07,
+      "absolute_uncertainty": 2.247226563230444e-08,
+      "marker_pixel": [
+        147.94,
+        1082.0
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 2,
+      "enrichment": 2,
+      "N": 4,
+      "H": 0.25,
+      "field": "pressure_l2",
+      "value": 0.000466083374736415,
+      "absolute_uncertainty": 3.916397385440637e-05,
+      "marker_pixel": [
+        452.0,
+        804.5
+      ],
+      "marker_hole_pixels": 16,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 2,
+      "enrichment": 2,
+      "N": 8,
+      "H": 0.125,
+      "field": "pressure_l2",
+      "value": 3.3484215222539924e-05,
+      "absolute_uncertainty": 2.813605892406039e-06,
+      "marker_pixel": [
+        375.88235294117646,
+        902.4117647058823
+      ],
+      "marker_hole_pixels": 17,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 2,
+      "enrichment": 2,
+      "N": 16,
+      "H": 0.0625,
+      "field": "pressure_l2",
+      "value": 2.1608513296480025e-06,
+      "absolute_uncertainty": 1.8157164482739418e-07,
+      "marker_pixel": [
+        299.8125,
+        1004.3125
+      ],
+      "marker_hole_pixels": 16,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 2,
+      "enrichment": 2,
+      "N": 32,
+      "H": 0.03125,
+      "field": "pressure_l2",
+      "value": 1.383758168736441e-07,
+      "absolute_uncertainty": 1.1627419401488702e-08,
+      "marker_pixel": [
+        224.0,
+        1106.5
+      ],
+      "marker_hole_pixels": 16,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 2,
+      "enrichment": 2,
+      "N": 64,
+      "H": 0.015625,
+      "field": "pressure_l2",
+      "value": 8.582727755970166e-09,
+      "absolute_uncertainty": 7.21187975486999e-10,
+      "marker_pixel": [
+        148.0,
+        1209.875
+      ],
+      "marker_hole_pixels": 16,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 3,
+      "enrichment": 0,
+      "N": 4,
+      "H": 0.25,
+      "field": "pressure_l2",
+      "value": 5.840583899376899e-05,
+      "absolute_uncertainty": 6.1207195605923025e-06,
+      "marker_pixel": [
+        441.893,
+        1450.5
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 3,
+      "enrichment": 0,
+      "N": 8,
+      "H": 0.125,
+      "field": "pressure_l2",
+      "value": 3.468376538801524e-06,
+      "absolute_uncertainty": 3.6347325011128975e-07,
+      "marker_pixel": [
+        367.84,
+        1535.5
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 3,
+      "enrichment": 0,
+      "N": 16,
+      "H": 0.0625,
+      "field": "pressure_l2",
+      "value": 2.0596632155549152e-07,
+      "absolute_uncertainty": 2.158452159727445e-08,
+      "marker_pixel": [
+        293.786,
+        1620.5
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 3,
+      "enrichment": 0,
+      "N": 32,
+      "H": 0.03125,
+      "field": "pressure_l2",
+      "value": 1.3071367047091389e-08,
+      "absolute_uncertainty": 1.3698317385244538e-09,
+      "marker_pixel": [
+        219.733,
+        1703.5
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 3,
+      "enrichment": 0,
+      "N": 64,
+      "H": 0.015625,
+      "field": "pressure_l2",
+      "value": 8.434503311496939e-10,
+      "absolute_uncertainty": 8.839052788552098e-11,
+      "marker_pixel": [
+        145.68,
+        1786.0
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 3,
+      "enrichment": 2,
+      "N": 4,
+      "H": 0.25,
+      "field": "pressure_l2",
+      "value": 2.8593472907529233e-05,
+      "absolute_uncertainty": 2.99649199370377e-06,
+      "marker_pixel": [
+        441.7894736842105,
+        1472.0
+      ],
+      "marker_hole_pixels": 19,
+      "marker_hole_box": [
+        5,
+        5
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 3,
+      "enrichment": 2,
+      "N": 8,
+      "H": 0.125,
+      "field": "pressure_l2",
+      "value": 8.647290959563441e-07,
+      "absolute_uncertainty": 9.062046506682234e-08,
+      "marker_pixel": [
+        367.8125,
+        1577.3125
+      ],
+      "marker_hole_pixels": 16,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 3,
+      "enrichment": 2,
+      "N": 16,
+      "H": 0.0625,
+      "field": "pressure_l2",
+      "value": 2.7409456994810316e-08,
+      "absolute_uncertainty": 2.872411431179801e-09,
+      "marker_pixel": [
+        294.0,
+        1681.2105263157894
+      ],
+      "marker_hole_pixels": 19,
+      "marker_hole_box": [
+        5,
+        5
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 3,
+      "enrichment": 2,
+      "N": 32,
+      "H": 0.03125,
+      "field": "pressure_l2",
+      "value": 8.575771861704235e-10,
+      "absolute_uncertainty": 8.987097092588645e-11,
+      "marker_pixel": [
+        219.5,
+        1785.5
+      ],
+      "marker_hole_pixels": 12,
+      "marker_hole_box": [
+        4,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 3,
+      "enrichment": 2,
+      "N": 64,
+      "H": 0.015625,
+      "field": "pressure_l2",
+      "value": 2.7090833211221813e-11,
+      "absolute_uncertainty": 2.8390208171884817e-12,
+      "marker_pixel": [
+        145.5,
+        1889.5
+      ],
+      "marker_hole_pixels": 16,
+      "marker_hole_box": [
+        4,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 1,
+      "enrichment": 0,
+      "N": 4,
+      "H": 0.25,
+      "field": "flux_l2",
+      "value": 0.25077288456582436,
+      "absolute_uncertainty": 0.012777290692381336,
+      "marker_pixel": [
+        1440.281,
+        162.0
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 1,
+      "enrichment": 0,
+      "N": 8,
+      "H": 0.125,
+      "field": "flux_l2",
+      "value": 0.060837682475720876,
+      "absolute_uncertainty": 0.00309977992791736,
+      "marker_pixel": [
+        1364.421,
+        247.5
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 1,
+      "enrichment": 0,
+      "N": 16,
+      "H": 0.0625,
+      "field": "flux_l2",
+      "value": 0.015640282901548144,
+      "absolute_uncertainty": 0.0007968981235357874,
+      "marker_pixel": [
+        1288.562,
+        329.5
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 1,
+      "enrichment": 0,
+      "N": 32,
+      "H": 0.03125,
+      "field": "flux_l2",
+      "value": 0.0038898070360158825,
+      "absolute_uncertainty": 0.00019819206260076854,
+      "marker_pixel": [
+        1212.702,
+        413.5
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 1,
+      "enrichment": 0,
+      "N": 64,
+      "H": 0.015625,
+      "field": "flux_l2",
+      "value": 0.0009917515266982208,
+      "absolute_uncertainty": 5.053137053942513e-05,
+      "marker_pixel": [
+        1136.843,
+        496.0
+      ],
+      "marker_hole_pixels": 0,
+      "marker_hole_box": [
+        0,
+        0
+      ],
+      "extraction": "dark-red square vertical extent"
+    },
+    {
+      "k": 1,
+      "enrichment": 2,
+      "N": 4,
+      "H": 0.25,
+      "field": "flux_l2",
+      "value": 0.22430519314066813,
+      "absolute_uncertainty": 0.011428718306331754,
+      "marker_pixel": [
+        1440.6666666666667,
+        168.73333333333335
+      ],
+      "marker_hole_pixels": 15,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 1,
+      "enrichment": 2,
+      "N": 8,
+      "H": 0.125,
+      "field": "flux_l2",
+      "value": 0.05484068052654298,
+      "absolute_uncertainty": 0.002794222820656386,
+      "marker_pixel": [
+        1364.9411764705883,
+        253.76470588235293
+      ],
+      "marker_hole_pixels": 17,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 1,
+      "enrichment": 2,
+      "N": 16,
+      "H": 0.0625,
+      "field": "flux_l2",
+      "value": 0.013812992302164208,
+      "absolute_uncertainty": 0.0007037946637729525,
+      "marker_pixel": [
+        1288.6470588235295,
+        337.0
+      ],
+      "marker_hole_pixels": 17,
+      "marker_hole_box": [
+        5,
+        5
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 1,
+      "enrichment": 2,
+      "N": 32,
+      "H": 0.03125,
+      "field": "flux_l2",
+      "value": 0.0034689906685819016,
+      "absolute_uncertainty": 0.00017675077693655005,
+      "marker_pixel": [
+        1212.8823529411766,
+        420.4117647058824
+      ],
+      "marker_hole_pixels": 17,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 1,
+      "enrichment": 2,
+      "N": 64,
+      "H": 0.015625,
+      "field": "flux_l2",
+      "value": 0.0008758828910048764,
+      "absolute_uncertainty": 4.462767308446809e-05,
+      "marker_pixel": [
+        1137.0,
+        503.5
+      ],
+      "marker_hole_pixels": 16,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 2,
+      "enrichment": 2,
+      "N": 4,
+      "H": 0.25,
+      "field": "flux_l2",
+      "value": 0.024065872818825204,
+      "absolute_uncertainty": 0.0015409558179586727,
+      "marker_pixel": [
+        1440.7777777777778,
+        807.5
+      ],
+      "marker_hole_pixels": 18,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 2,
+      "enrichment": 2,
+      "N": 8,
+      "H": 0.125,
+      "field": "flux_l2",
+      "value": 0.00330872516439814,
+      "absolute_uncertainty": 0.00021186014446636936,
+      "marker_pixel": [
+        1364.8823529411766,
+        903.4117647058823
+      ],
+      "marker_hole_pixels": 17,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 2,
+      "enrichment": 2,
+      "N": 16,
+      "H": 0.0625,
+      "field": "flux_l2",
+      "value": 0.00041926804557307275,
+      "absolute_uncertainty": 2.6846046223788157e-05,
+      "marker_pixel": [
+        1288.6666666666667,
+        1003.2666666666667
+      ],
+      "marker_hole_pixels": 15,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 2,
+      "enrichment": 2,
+      "N": 32,
+      "H": 0.03125,
+      "field": "flux_l2",
+      "value": 5.292374439587693e-05,
+      "absolute_uncertainty": 3.3887468968584596e-06,
+      "marker_pixel": [
+        1212.923076923077,
+        1103.3076923076924
+      ],
+      "marker_hole_pixels": 13,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 2,
+      "enrichment": 2,
+      "N": 64,
+      "H": 0.015625,
+      "field": "flux_l2",
+      "value": 6.647484981789274e-06,
+      "absolute_uncertainty": 4.256434302049605e-07,
+      "marker_pixel": [
+        1137.1176470588234,
+        1203.5882352941176
+      ],
+      "marker_hole_pixels": 17,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 3,
+      "enrichment": 2,
+      "N": 4,
+      "H": 0.25,
+      "field": "flux_l2",
+      "value": 0.002003217621908261,
+      "absolute_uncertainty": 0.00016478157936486359,
+      "marker_pixel": [
+        1440.6315789473683,
+        1456.2105263157894
+      ],
+      "marker_hole_pixels": 19,
+      "marker_hole_box": [
+        5,
+        5
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 3,
+      "enrichment": 2,
+      "N": 8,
+      "H": 0.125,
+      "field": "flux_l2",
+      "value": 0.00012497725624370493,
+      "absolute_uncertainty": 1.0280435556925265e-05,
+      "marker_pixel": [
+        1365.0,
+        1561.5
+      ],
+      "marker_hole_pixels": 16,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 3,
+      "enrichment": 2,
+      "N": 16,
+      "H": 0.0625,
+      "field": "flux_l2",
+      "value": 7.862905518447504e-06,
+      "absolute_uncertainty": 6.467904313322865e-07,
+      "marker_pixel": [
+        1288.6470588235295,
+        1666.4705882352941
+      ],
+      "marker_hole_pixels": 17,
+      "marker_hole_box": [
+        5,
+        4
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 3,
+      "enrichment": 2,
+      "N": 32,
+      "H": 0.03125,
+      "field": "flux_l2",
+      "value": 4.874612982932917e-07,
+      "absolute_uncertainty": 4.0097811507617636e-08,
+      "marker_pixel": [
+        1212.8947368421052,
+        1772.0
+      ],
+      "marker_hole_pixels": 19,
+      "marker_hole_box": [
+        5,
+        5
+      ],
+      "extraction": "enclosed circle interior"
+    },
+    {
+      "k": 3,
+      "enrichment": 2,
+      "N": 64,
+      "H": 0.015625,
+      "field": "flux_l2",
+      "value": 3.086984357379255e-08,
+      "absolute_uncertainty": 2.539305526870398e-09,
+      "marker_pixel": [
+        1137.111111111111,
+        1876.7222222222222
+      ],
+      "marker_hole_pixels": 18,
+      "marker_hole_box": [
+        5,
+        5
+      ],
+      "extraction": "enclosed circle interior"
+    }
+  ]
+}

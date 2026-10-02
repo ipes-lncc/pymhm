@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "configuration": {
+    "macro_resolution": 4,
+    "macro_triangles": 32,
+    "fine_triangles": 512,
+    "local_refinement": 4,
+    "trace_degree": 0,
+    "trace_segments": 1,
+    "permeability": 1,
+    "pressure": "cos(pi*x)*cos(pi*y)",
+    "source": "2*pi**2*cos(pi*x)*cos(pi*y)",
+    "boundary": "weak exact pressure on the entire boundary",
+    "assembly_order": 6,
+    "error_order": 8
+  },
+  "primal": {
+    "reference": "MSL msl_mhm + msl_cg + msl_core; shared comparison adapter for prescribed weak boundary moments",
+    "plot_label": "MSL primal P1",
+    "plot_note": "MSL: msl_mhm + msl_cg + msl_core, with prescribed weak Dirichlet boundary moments.",
+    "reference_pressure_l2": 0.024572742109142297,
+    "pymhm_pressure_l2": 0.024572742109142152,
+    "reference_flux_l2": 0.4979959387492141,
+    "pymhm_flux_l2": 0.4979959387492135,
+    "reference_flux_relative_l2": 0.22417693451794615,
+    "pymhm_flux_relative_l2": 0.22417693451794588,
+    "pressure_difference_l2": 9.386907702142498e-16,
+    "flux_difference_l2": 7.981845579615468e-15,
+    "shared_helper_sha256": "cd3d5a1695c0f00d4381359752eb8aa2cf44f588ddd9cab263a7b7d49fc98823",
+    "shared_driver_sha256": "06c522d3c3da6a54f9012a44d39973814e8eae562bb6f2070bdaef61516de2b5"
+  },
+  "mixed": {
+    "reference": "NeoPZ EHDivConstant order 0, native operator restricted through T.T A T; SciPy solve and native field reconstruction",
+    "plot_label": "NeoPZ restricted RT0",
+    "plot_note": "NeoPZ native RT0 assembly and reconstruction; restricted system solved with SciPy. No native MHM controller execution.",
+    "reference_pressure_l2": 0.04034964721748132,
+    "pymhm_pressure_l2": 0.04034964721748275,
+    "reference_flux_l2": 0.4857458152980587,
+    "pymhm_flux_l2": 0.4857458152980586,
+    "reference_flux_relative_l2": 0.21866244150893915,
+    "pymhm_flux_relative_l2": 0.2186624415089391,
+    "pressure_difference_l2": 1.457455382350331e-14,
+    "flux_difference_l2": 6.942711999028248e-14
+  },
+  "archives_sha256": {
+    "affine-callback-p1-segmented-fields.npz": "d1d7b9dd69bddb0cfb8163ebec2fd15ec58245883776f367f9009bd246d24274",
+    "affine-expression-p1-fields.npz": "0c8a1133f8d4932e55c770756772a235e60b18b36ee7bd735e337bed563cbaf4",
+    "constant-numeric-p0-fields.npz": "d61273ff00df7629e38714c1e26de11ab9b25b6ce1461f7a38b5ce287a804698",
+    "cosine-p0-segmented-fields.npz": "32c4c8a23c7c788a8891fc6d9d55cd5a42f568d6d76bcd98fe9aac9515172a62",
+    "cosine-p1-fields.npz": "599f1755e2e52d15a2f370f2fdb5cd93d9effb631204bdb5becf4824859a9109",
+    "cosine-p1-segmented-fields.npz": "e3cc98f7b18424b588fd7f601781995d1705acfa12ae68a83d2b53f891e0ffe6",
+    "mixed-enriched-quadrature.npz": "5779d39cc105771a3e4cc0e4387fc77bfcd0b75053eca03c2be17abbb82c2288",
+    "mixed-fields.npz": "7cfc54eb1a9552f40a2c710cd2047f2400e2717f1c520b8af33b8db82eb71219",
+    "mixed-quadrature.npz": "108230322ab6198ec5ec27dc8b46e73909da587bb122b75f3b99ab02e171a184",
+    "primal-fields.npz": "e8062f6f08fb8750c74b339648f7da0e2c7a8486924620f5b3a90bdc0168263c",
+    "zero-numeric-p0-fields.npz": "19c5bbec27bbd6e23d360d349b51c0f32f5be71f536fdcbfecafe7df0ad9728f"
+  }
+}

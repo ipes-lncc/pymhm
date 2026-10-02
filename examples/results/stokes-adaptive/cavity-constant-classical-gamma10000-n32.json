@@ -1,0 +1,20 @@
+{
+  "n": 32,
+  "drag": 10000.0,
+  "viscosity": 1.0,
+  "method": "conforming P2/P1 Taylor-Hood",
+  "backend": "DOLFINx 0.9.0; PETSc/MUMPS",
+  "triangles": 2048,
+  "total_dofs": 9539,
+  "free_dofs": 9026,
+  "pressure_gauge": "zero volume mean",
+  "lid": "constant",
+  "corner_nodal_values": "zero, continuous P2 interpolation on the boundary",
+  "mesh_diagonal": "SW-NE",
+  "residual": 2.372406714884327e-15,
+  "pressure_mean": 5.177629158747976e-14,
+  "divergence_l2": 1.747350829634462,
+  "elapsed_seconds": 1.5986801800318062,
+  "archive": "build/results/stokes-adaptive/cavity-constant-classical-gamma10000-n32.npz",
+  "sha256": "12764d4c8ab6f9aad3df42d64e884df25c8c2a2a590433180d972630ac04da01"
+}

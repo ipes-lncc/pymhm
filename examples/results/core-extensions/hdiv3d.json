@@ -1,0 +1,340 @@
+{
+  "suite": "hdiv3d",
+  "reference": "analytical",
+  "source_sha256": {
+    "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+    "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+    "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+    "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+    "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+    "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+    "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+    "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "examples/solve_core_extensions.py": "bdfa31953ea883d3c0ceb339d8e58910754fb3ed06b5ee6aaeba0c4d07a0ba62",
+    "examples/core_extension_data.py": "e2138ee96c930b9f0559d20bdde5eae2c6ace802d36c88b8286eb6f8559651f2"
+  },
+  "rows": [
+    {
+      "case": "tetra-p1-k1",
+      "resolution": 1,
+      "macro_cells": 6,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 7.045675154415676e-11,
+      "elapsed_seconds": 0.6025738010000623,
+      "pressure_l2": 0.19501106771828516,
+      "flux_l2": 0.9691595114262808,
+      "fine_equilibrium": 2.1797214592248522e-15,
+      "physical_block_residual": 5.233935649874731e-16
+    },
+    {
+      "case": "tetra-p1-k1",
+      "resolution": 2,
+      "macro_cells": 48,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 8.326672684688674e-17,
+      "elapsed_seconds": 4.141241209999862,
+      "pressure_l2": 0.06330020923604142,
+      "flux_l2": 0.22144521386441043,
+      "fine_equilibrium": 2.0989439406592316e-15,
+      "physical_block_residual": 1.8226923897883597e-15
+    },
+    {
+      "case": "tetra-p1-k1",
+      "resolution": 3,
+      "macro_cells": 162,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 1.6653345369377348e-16,
+      "elapsed_seconds": 13.214990988999944,
+      "pressure_l2": 0.0299852920787345,
+      "flux_l2": 0.09731009341304783,
+      "fine_equilibrium": 1.0635419734537612e-15,
+      "physical_block_residual": 2.478352076008755e-15
+    },
+    {
+      "case": "tetra-p1-k1",
+      "resolution": 4,
+      "macro_cells": 384,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 2.220446049250313e-16,
+      "elapsed_seconds": 30.39450421599986,
+      "pressure_l2": 0.017262516921797772,
+      "flux_l2": 0.054550832681528216,
+      "fine_equilibrium": 5.429496326353294e-16,
+      "physical_block_residual": 3.571704067997938e-15
+    },
+    {
+      "case": "tetra-p1-k1",
+      "resolution": 5,
+      "macro_cells": 750,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 2.220446049250313e-16,
+      "elapsed_seconds": 61.99643525900001,
+      "pressure_l2": 0.011170085078142973,
+      "flux_l2": 0.03489255162629256,
+      "fine_equilibrium": 3.473895772526558e-16,
+      "physical_block_residual": 4.348913796672007e-15
+    },
+    {
+      "case": "tetra-p2-k2",
+      "resolution": 1,
+      "macro_cells": 6,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 2.6834096056305157e-10,
+      "elapsed_seconds": 2.597844337999959,
+      "pressure_l2": 0.06464126485038212,
+      "flux_l2": 0.25438463603269,
+      "fine_equilibrium": 2.892419499654426e-15,
+      "physical_block_residual": 7.3466307453414325e-16
+    },
+    {
+      "case": "tetra-p2-k2",
+      "resolution": 2,
+      "macro_cells": 48,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 3.469446951953614e-18,
+      "elapsed_seconds": 18.426454867000075,
+      "pressure_l2": 0.017707838776066378,
+      "flux_l2": 0.045524149903292885,
+      "fine_equilibrium": 1.8547196090334627e-15,
+      "physical_block_residual": 2.5808681574994103e-15
+    },
+    {
+      "case": "tetra-p2-k2",
+      "resolution": 3,
+      "macro_cells": 162,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 1.734723475976807e-17,
+      "elapsed_seconds": 62.14390149399992,
+      "pressure_l2": 0.005640590992670793,
+      "flux_l2": 0.012956114266173508,
+      "fine_equilibrium": 9.87554609081956e-16,
+      "physical_block_residual": 2.5069126880626277e-15
+    },
+    {
+      "case": "tetra-p2-k2",
+      "resolution": 4,
+      "macro_cells": 384,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 1.0408340855860843e-17,
+      "elapsed_seconds": 153.544386971,
+      "pressure_l2": 0.002441820808276352,
+      "flux_l2": 0.005350271563410682,
+      "fine_equilibrium": 9.239497174874108e-16,
+      "physical_block_residual": 5.628867426327535e-15
+    },
+    {
+      "case": "tetra-p2-k2",
+      "resolution": 5,
+      "macro_cells": 750,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 5.204170427930421e-18,
+      "elapsed_seconds": 293.2927194460003,
+      "pressure_l2": 0.00126533290974459,
+      "flux_l2": 0.0027082260322177634,
+      "fine_equilibrium": 1.1090036891147097e-15,
+      "physical_block_residual": 1.029439110197449e-14
+    },
+    {
+      "case": "tetra-p3-k1",
+      "resolution": 1,
+      "macro_cells": 6,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 7.311473648741185e-11,
+      "elapsed_seconds": 6.332633475999955,
+      "pressure_l2": 0.12853712930404648,
+      "flux_l2": 0.9338286924824175,
+      "fine_equilibrium": 1.1218422923963915e-13,
+      "physical_block_residual": 3.207849054163223e-14
+    },
+    {
+      "case": "tetra-p3-k1",
+      "resolution": 2,
+      "macro_cells": 48,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 5.551115123125783e-17,
+      "elapsed_seconds": 48.18913674400028,
+      "pressure_l2": 0.010109046779062467,
+      "flux_l2": 0.17341175061185202,
+      "fine_equilibrium": 3.873670663952135e-14,
+      "physical_block_residual": 6.318580745950659e-14
+    },
+    {
+      "case": "tetra-p3-k1",
+      "resolution": 3,
+      "macro_cells": 162,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 0.0,
+      "elapsed_seconds": 161.7135053840002,
+      "pressure_l2": 0.0027975199928075923,
+      "flux_l2": 0.07839727300978866,
+      "fine_equilibrium": 2.3971159371694687e-14,
+      "physical_block_residual": 5.992362078896731e-14
+    },
+    {
+      "case": "tetra-p3-k1",
+      "resolution": 4,
+      "macro_cells": 384,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 2.3852447794681098e-18,
+      "elapsed_seconds": 370.1997821030004,
+      "pressure_l2": 0.0011446863525454265,
+      "flux_l2": 0.04443077744107265,
+      "fine_equilibrium": 1.3617010789168193e-14,
+      "physical_block_residual": 8.125959676139542e-14
+    },
+    {
+      "case": "tetra-p3-k1",
+      "resolution": 5,
+      "macro_cells": 750,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 2.6020852139652106e-18,
+      "elapsed_seconds": 749.075258722,
+      "pressure_l2": 0.0005785610984301718,
+      "flux_l2": 0.028568995516778994,
+      "fine_equilibrium": 9.386621839740841e-15,
+      "physical_block_residual": 7.563950698238376e-14
+    },
+    {
+      "case": "prism-p2-k2",
+      "resolution": 1,
+      "macro_cells": 2,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 1.0363931934875836e-13,
+      "elapsed_seconds": 1.8869989790000545,
+      "pressure_l2": 0.048077481044260406,
+      "flux_l2": 0.17260678180237282,
+      "fine_equilibrium": 7.58936733432058e-15,
+      "physical_block_residual": 9.442856753285659e-16
+    },
+    {
+      "case": "prism-p2-k2",
+      "resolution": 2,
+      "macro_cells": 16,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 2.7755575615628914e-17,
+      "elapsed_seconds": 13.19371097200019,
+      "pressure_l2": 0.012255771077797947,
+      "flux_l2": 0.04389474836514103,
+      "fine_equilibrium": 1.705781470092352e-14,
+      "physical_block_residual": 9.734829925444076e-15
+    },
+    {
+      "case": "prism-p2-k2",
+      "resolution": 3,
+      "macro_cells": 54,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 2.6020852139652106e-17,
+      "elapsed_seconds": 43.877343053999994,
+      "pressure_l2": 0.0037864440158828726,
+      "flux_l2": 0.013232365469153582,
+      "fine_equilibrium": 7.894582475430413e-15,
+      "physical_block_residual": 1.188078318445905e-14
+    },
+    {
+      "case": "prism-p2-k2",
+      "resolution": 4,
+      "macro_cells": 128,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 4.163336342344337e-17,
+      "elapsed_seconds": 105.2166249930001,
+      "pressure_l2": 0.0016211706696494493,
+      "flux_l2": 0.005614236107331824,
+      "fine_equilibrium": 4.623356265952866e-15,
+      "physical_block_residual": 1.419057230631952e-14
+    },
+    {
+      "case": "prism-p2-k2",
+      "resolution": 5,
+      "macro_cells": 250,
+      "error_quadrature": [
+        12,
+        13
+      ],
+      "error_quadrature_absolute_change": 4.7704895589362195e-18,
+      "elapsed_seconds": 206.66394551199983,
+      "pressure_l2": 0.0008357515612175916,
+      "flux_l2": 0.0028819488153464853,
+      "fine_equilibrium": 3.0740522320069544e-15,
+      "physical_block_residual": 1.6824262861607323e-14
+    }
+  ],
+  "fields": {
+    "tetra-p1-k1": {
+      "archive": "tetra-p1-k1.npz",
+      "sha256": "19906449b6e6f3321c5d55e38f3009585f48e9a1ccb6faf06e96a48d33cc41e2"
+    },
+    "tetra-p2-k2": {
+      "archive": "tetra-p2-k2.npz",
+      "sha256": "c06ebcddc68c0fbd17f2e470ae2a2cdd5dde0d607526c4dfc444e53e988c80f1"
+    },
+    "tetra-p3-k1": {
+      "archive": "tetra-p3-k1.npz",
+      "sha256": "40d005b945eedad193037f2dc6c7b9d5477ce471f3ad5e9494bbbce032d76f17"
+    },
+    "prism-p2-k2": {
+      "archive": "prism-p2-k2.npz",
+      "sha256": "b4293519d2c2fb07aa02f73e631498626f0edbd466efdd4e754612d28eb35d17"
+    }
+  },
+  "source_changed": false
+}

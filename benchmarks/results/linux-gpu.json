@@ -1,0 +1,402 @@
+{
+  "schema_version": 1,
+  "measurement": "complete Darcy primal P1 MHM solve with staged GPU algebra",
+  "problem": "unit square, K=I, f=0, p=1+x+2y on the boundary",
+  "timing_scope": "assembly, transfers, planning, factorization, solve, reconstruction, synchronization",
+  "startup_policy": "one untimed solve for every workload and solver placement",
+  "coefficient_comparison": {
+    "rtol": 1e-09,
+    "atol": 1e-10
+  },
+  "maximum_manufactured_error": 1e-09,
+  "quick": false,
+  "include_amgx": true,
+  "machine": {
+    "timestamp_utc": "2026-09-28T07:04:25.992831+00:00",
+    "platform": "Linux-7.0.0-31-generic-x86_64-desconhecido-with-glibc2.43",
+    "machine": "x86_64",
+    "processor": "Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz",
+    "logical_cpus": 80,
+    "affinity_cpus": 80,
+    "python": "3.13.15",
+    "pymhm": "0.1.0",
+    "numpy": "2.5.3",
+    "scipy": "1.17.1",
+    "revision": "743753a585ebdb56d38a36a412cdcf615afc5cfb",
+    "native_libraries_during_timing": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "prefix": "libopenblas",
+        "version": "0.3.34",
+        "num_threads": 1,
+        "architecture": "Haswell"
+      }
+    ],
+    "thread_environment": {
+      "OMP_NUM_THREADS": null,
+      "OPENBLAS_NUM_THREADS": null,
+      "MKL_NUM_THREADS": null
+    }
+  },
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 3060",
+    "total_memory_bytes": 12542279680,
+    "compute_capability": [
+      8,
+      6
+    ],
+    "cuda_runtime_version": 12090,
+    "cuda_driver_api_version": 13040,
+    "cupy": "14.2.0",
+    "nvmath-python": "1.0.0",
+    "nvidia-cudss-cu12": "0.8.0.10",
+    "amgx": {
+      "api_version": "1.0",
+      "source_revision": "91a8413ef267b1c32aff4014c02820e1c5897ac2",
+      "binding_revision": "6229ff008ee5a264cfc1799eeb2f83d96da0aadc",
+      "build_description": "AmgX 2.5.0; CUDA 12.6; sm86; GCC 12.4; NVTX profiling disabled"
+    }
+  },
+  "source_sha256_before": {
+    "src/pymhm/__init__.py": "3c7db2b47ee566917ae804231cdf5bc0c0be7247cafad4bfdae4f5d0de224098",
+    "src/pymhm/darcy.py": "3e6301df811376fde4e51b1ff2fe5dc65e64fa9446279c1f653a5d5c1fc67268",
+    "src/pymhm/elements.py": "e13f6e6c6ce209b4803fabfc85e985970d0abaa3a18b807ce141f5db3142cc30",
+    "src/pymhm/fenics.py": "9b206e4a1276e98709dd7d3efa205c084927962cf38e0be859a45e8454ea8b22",
+    "src/pymhm/hybrid.py": "f6c71515f347b0d33e0d6990341ce3b646c7dab6351e07b3a6a5fff8f321a158",
+    "src/pymhm/mesh.py": "08b942ef3d54b9fff0a2f86c4b3de331c5e1d6a827a2ebaa58e61ccc97048073",
+    "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+    "src/pymhm/parallel.py": "22e88e7f8d658104423b0823a502991996508d62b1c071589ee32429a6cbd77e",
+    "src/pymhm/reconstruction.py": "9a7c7baee1c212cff8d77d41ffd1b60bdc396b495be5ee514c2cccb5e3bb605d",
+    "src/pymhm/solvers.py": "51a60b1d4fc842a4b3315d36d5e134dafdd9cc781c49a111e67ec63a03e910ab",
+    "src/pymhm/transport.py": "a451821cedd01b6bdd6c3b3d64be5193911f835d85ada9e17de73e304ea4c409",
+    "src/pymhm/vector.py": "f2c8ef69efc5144d437eca06fa76a7763b79992ddf625bee9dddb66b976f8e79",
+    "benchmarks/gpu.py": "892609a7e0f018b8f6ede396649fa8be4967a79c85460842237ce7f7e2d1d4e1",
+    "benchmarks/scaling.py": "fbd002a42955ed58689fcddb0244ee8049a326978442740411519e9206ba8ff1",
+    "pixi.lock": "d502028db19fccd79b61163f7e537f6596ff591d15fa9fe937e9fdd43b7d9836"
+  },
+  "cases": [
+    {
+      "macro_grid": [
+        4,
+        4
+      ],
+      "macrocells": 32,
+      "local_refinement": 8,
+      "total_fine_triangles": 2048,
+      "local_pressure_dofs_per_macrocell": 45,
+      "global_dofs": 88,
+      "repeats": 3,
+      "measurements": [
+        {
+          "name": "cpu",
+          "global_solver": "scipy",
+          "local_solver": "scipy",
+          "backend": "serial",
+          "native_threads": 1,
+          "seconds": [
+            0.48577951395418495,
+            0.4847888459917158,
+            0.4831867020111531
+          ],
+          "median_seconds": 0.4847888459917158,
+          "minimum_seconds": 0.4831867020111531,
+          "maximum_seconds": 0.48577951395418495,
+          "population_stddev_seconds": 0.0010682780598413003,
+          "speedup_over_cpu_median": 1.0,
+          "worst_verification_error": {
+            "pressure_l2": 7.084638617288435e-16,
+            "flux_l2": 9.75733828965978e-15,
+            "macrocell_conservation_linf": 1.1102230246251565e-16,
+            "global_residual": 1.129844102471001e-16
+          }
+        },
+        {
+          "name": "global-cupy",
+          "global_solver": "cupy",
+          "local_solver": "scipy",
+          "backend": "serial",
+          "native_threads": 1,
+          "seconds": [
+            0.4935736710904166,
+            0.5240814329590648,
+            0.49234228394925594
+          ],
+          "median_seconds": 0.4935736710904166,
+          "minimum_seconds": 0.49234228394925594,
+          "maximum_seconds": 0.5240814329590648,
+          "population_stddev_seconds": 0.014680347514780189,
+          "speedup_over_cpu_median": 0.9822015929672806,
+          "worst_verification_error": {
+            "pressure_l2": 9.013508708589541e-16,
+            "flux_l2": 1.0445835865511348e-14,
+            "macrocell_conservation_linf": 3.3306690738754696e-16,
+            "global_residual": 1.8850725987807684e-16
+          }
+        },
+        {
+          "name": "global-cudss",
+          "global_solver": "cudss",
+          "local_solver": "scipy",
+          "backend": "serial",
+          "native_threads": 1,
+          "seconds": [
+            0.5118207349441946,
+            0.5131461919518188,
+            0.5042625609785318
+          ],
+          "median_seconds": 0.5118207349441946,
+          "minimum_seconds": 0.5042625609785318,
+          "maximum_seconds": 0.5131461919518188,
+          "population_stddev_seconds": 0.0039129660424432324,
+          "speedup_over_cpu_median": 0.9471848498763417,
+          "worst_verification_error": {
+            "pressure_l2": 5.781012439976899e-16,
+            "flux_l2": 8.979775924574081e-15,
+            "macrocell_conservation_linf": 1.1102230246251565e-16,
+            "global_residual": 7.163480549163709e-17
+          }
+        },
+        {
+          "name": "local-cudss",
+          "global_solver": "scipy",
+          "local_solver": "cudss",
+          "backend": "serial",
+          "native_threads": 1,
+          "seconds": [
+            0.848752400954254,
+            0.8496422790922225,
+            0.8692589049460366
+          ],
+          "median_seconds": 0.8496422790922225,
+          "minimum_seconds": 0.848752400954254,
+          "maximum_seconds": 0.8692589049460366,
+          "population_stddev_seconds": 0.009464087670733472,
+          "speedup_over_cpu_median": 0.5705799463153781,
+          "worst_verification_error": {
+            "pressure_l2": 7.679799547007903e-16,
+            "flux_l2": 1.0841599276764049e-14,
+            "macrocell_conservation_linf": 1.1102230246251565e-16,
+            "global_residual": 1.6050686030381747e-16
+          }
+        },
+        {
+          "name": "local-global-cudss",
+          "global_solver": "cudss",
+          "local_solver": "cudss",
+          "backend": "serial",
+          "native_threads": 1,
+          "seconds": [
+            0.8588743059663102,
+            0.856297297985293,
+            0.8580081190448254
+          ],
+          "median_seconds": 0.8580081190448254,
+          "minimum_seconds": 0.856297297985293,
+          "maximum_seconds": 0.8588743059663102,
+          "population_stddev_seconds": 0.0010707296896622287,
+          "speedup_over_cpu_median": 0.565016618410797,
+          "worst_verification_error": {
+            "pressure_l2": 5.297114064471924e-16,
+            "flux_l2": 8.039731986922615e-15,
+            "macrocell_conservation_linf": 8.326672684688674e-17,
+            "global_residual": 6.158053598870904e-17
+          }
+        },
+        {
+          "name": "local-amgx",
+          "global_solver": "scipy",
+          "local_solver": "amgx",
+          "backend": "serial",
+          "native_threads": 1,
+          "seconds": [
+            2.4367697259876877,
+            2.424240250024013,
+            2.514157450059429
+          ],
+          "median_seconds": 2.4367697259876877,
+          "minimum_seconds": 2.424240250024013,
+          "maximum_seconds": 2.514157450059429,
+          "population_stddev_seconds": 0.039764515822159806,
+          "speedup_over_cpu_median": 0.19894733623022912,
+          "worst_verification_error": {
+            "pressure_l2": 3.5443117858137493e-15,
+            "flux_l2": 1.0640964998863095e-13,
+            "macrocell_conservation_linf": 1.1102230246251565e-16,
+            "global_residual": 9.358606654478491e-17
+          }
+        }
+      ]
+    },
+    {
+      "macro_grid": [
+        8,
+        8
+      ],
+      "macrocells": 128,
+      "local_refinement": 8,
+      "total_fine_triangles": 8192,
+      "local_pressure_dofs_per_macrocell": 45,
+      "global_dofs": 336,
+      "repeats": 3,
+      "measurements": [
+        {
+          "name": "cpu",
+          "global_solver": "scipy",
+          "local_solver": "scipy",
+          "backend": "serial",
+          "native_threads": 1,
+          "seconds": [
+            1.9174141139956191,
+            1.9201555859763175,
+            1.9192089139251038
+          ],
+          "median_seconds": 1.9192089139251038,
+          "minimum_seconds": 1.9174141139956191,
+          "maximum_seconds": 1.9201555859763175,
+          "population_stddev_seconds": 0.0011369141167789792,
+          "speedup_over_cpu_median": 1.0,
+          "worst_verification_error": {
+            "pressure_l2": 8.502861360878569e-16,
+            "flux_l2": 1.711904863856651e-14,
+            "macrocell_conservation_linf": 5.551115123125783e-17,
+            "global_residual": 1.5255201610546223e-16
+          }
+        },
+        {
+          "name": "global-cupy",
+          "global_solver": "cupy",
+          "local_solver": "scipy",
+          "backend": "serial",
+          "native_threads": 1,
+          "seconds": [
+            1.9299004159402102,
+            1.9342047560494393,
+            1.9327067720005289
+          ],
+          "median_seconds": 1.9327067720005289,
+          "minimum_seconds": 1.9299004159402102,
+          "maximum_seconds": 1.9342047560494393,
+          "population_stddev_seconds": 0.0017840943648434568,
+          "speedup_over_cpu_median": 0.9930160859003699,
+          "worst_verification_error": {
+            "pressure_l2": 2.349250399044646e-15,
+            "flux_l2": 2.2445184240651013e-14,
+            "macrocell_conservation_linf": 2.0816681711721685e-16,
+            "global_residual": 2.1942526527489548e-16
+          }
+        },
+        {
+          "name": "global-cudss",
+          "global_solver": "cudss",
+          "local_solver": "scipy",
+          "backend": "serial",
+          "native_threads": 1,
+          "seconds": [
+            1.9299551430158317,
+            1.948535663075745,
+            1.9328448859741911
+          ],
+          "median_seconds": 1.9328448859741911,
+          "minimum_seconds": 1.9299551430158317,
+          "maximum_seconds": 1.948535663075745,
+          "population_stddev_seconds": 0.008163515215837426,
+          "speedup_over_cpu_median": 0.9929451286298049,
+          "worst_verification_error": {
+            "pressure_l2": 4.3918729162446496e-16,
+            "flux_l2": 1.834053489860361e-14,
+            "macrocell_conservation_linf": 5.551115123125783e-17,
+            "global_residual": 6.62037823767392e-17
+          }
+        },
+        {
+          "name": "local-cudss",
+          "global_solver": "scipy",
+          "local_solver": "cudss",
+          "backend": "serial",
+          "native_threads": 1,
+          "seconds": [
+            3.3861657179659232,
+            3.3722372769843787,
+            3.3847529160557315
+          ],
+          "median_seconds": 3.3847529160557315,
+          "minimum_seconds": 3.3722372769843787,
+          "maximum_seconds": 3.3861657179659232,
+          "population_stddev_seconds": 0.006259558901553719,
+          "speedup_over_cpu_median": 0.5670159570056792,
+          "worst_verification_error": {
+            "pressure_l2": 1.251342634291273e-15,
+            "flux_l2": 1.784802213942934e-14,
+            "macrocell_conservation_linf": 5.551115123125783e-17,
+            "global_residual": 1.816413339932919e-16
+          }
+        },
+        {
+          "name": "local-global-cudss",
+          "global_solver": "cudss",
+          "local_solver": "cudss",
+          "backend": "serial",
+          "native_threads": 1,
+          "seconds": [
+            3.3930309650022537,
+            3.3856527159223333,
+            3.3946880649309605
+          ],
+          "median_seconds": 3.3930309650022537,
+          "minimum_seconds": 3.3856527159223333,
+          "maximum_seconds": 3.3946880649309605,
+          "population_stddev_seconds": 0.003927425950455012,
+          "speedup_over_cpu_median": 0.5656325962600902,
+          "worst_verification_error": {
+            "pressure_l2": 4.2597554816537615e-16,
+            "flux_l2": 1.7514274052622188e-14,
+            "macrocell_conservation_linf": 8.326672684688674e-17,
+            "global_residual": 6.403013831897633e-17
+          }
+        },
+        {
+          "name": "local-amgx",
+          "global_solver": "scipy",
+          "local_solver": "amgx",
+          "backend": "serial",
+          "native_threads": 1,
+          "seconds": [
+            9.696366860996932,
+            9.730426515918225,
+            9.795887818094343
+          ],
+          "median_seconds": 9.730426515918225,
+          "minimum_seconds": 9.696366860996932,
+          "maximum_seconds": 9.795887818094343,
+          "population_stddev_seconds": 0.04129791907258947,
+          "speedup_over_cpu_median": 0.19723790224256116,
+          "worst_verification_error": {
+            "pressure_l2": 1.826711911226582e-15,
+            "flux_l2": 1.0755070308890224e-13,
+            "macrocell_conservation_linf": 6.938893903907228e-17,
+            "global_residual": 1.2092241590559687e-16
+          }
+        }
+      ]
+    }
+  ],
+  "source_sha256_after": {
+    "src/pymhm/__init__.py": "3c7db2b47ee566917ae804231cdf5bc0c0be7247cafad4bfdae4f5d0de224098",
+    "src/pymhm/darcy.py": "3e6301df811376fde4e51b1ff2fe5dc65e64fa9446279c1f653a5d5c1fc67268",
+    "src/pymhm/elements.py": "e13f6e6c6ce209b4803fabfc85e985970d0abaa3a18b807ce141f5db3142cc30",
+    "src/pymhm/fenics.py": "9b206e4a1276e98709dd7d3efa205c084927962cf38e0be859a45e8454ea8b22",
+    "src/pymhm/hybrid.py": "f6c71515f347b0d33e0d6990341ce3b646c7dab6351e07b3a6a5fff8f321a158",
+    "src/pymhm/mesh.py": "08b942ef3d54b9fff0a2f86c4b3de331c5e1d6a827a2ebaa58e61ccc97048073",
+    "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+    "src/pymhm/parallel.py": "22e88e7f8d658104423b0823a502991996508d62b1c071589ee32429a6cbd77e",
+    "src/pymhm/reconstruction.py": "9a7c7baee1c212cff8d77d41ffd1b60bdc396b495be5ee514c2cccb5e3bb605d",
+    "src/pymhm/solvers.py": "51a60b1d4fc842a4b3315d36d5e134dafdd9cc781c49a111e67ec63a03e910ab",
+    "src/pymhm/transport.py": "a451821cedd01b6bdd6c3b3d64be5193911f835d85ada9e17de73e304ea4c409",
+    "src/pymhm/vector.py": "f2c8ef69efc5144d437eca06fa76a7763b79992ddf625bee9dddb66b976f8e79",
+    "benchmarks/gpu.py": "892609a7e0f018b8f6ede396649fa8be4967a79c85460842237ce7f7e2d1d4e1",
+    "benchmarks/scaling.py": "fbd002a42955ed58689fcddb0244ee8049a326978442740411519e9206ba8ff1",
+    "pixi.lock": "d502028db19fccd79b61163f7e537f6596ff591d15fa9fe937e9fdd43b7d9836"
+  },
+  "source_changed_during_run": false
+}

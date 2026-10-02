@@ -1,0 +1,38 @@
+{
+  "level": 6,
+  "reference": "reference-rt2-240x880.npz",
+  "archive_sha256": "99f3494fdb160a01d025fcbe5a5f586b74fac5d50b306769f094255fc33ed93f",
+  "reference_sha256": "94a82d6eb9c7192b388dbe31d27ae6261ab8247abd3cfc97c58663e781bed55f",
+  "orders": [
+    4,
+    5
+  ],
+  "relative_differences": {
+    "pressure_difference_l2": 1.1439858110599337e-16,
+    "raw_flux_difference_l2": 1.3305071937812234e-14,
+    "reconstructed_flux_difference_l2": 6.858514804997445e-16,
+    "reference_pressure_l2": 0.0,
+    "reference_flux_l2": 1.1295618026519464e-16,
+    "pressure_l2": 1.374619431112531e-16,
+    "raw_flux_l2": 5.188193195050526e-15,
+    "reconstructed_flux_l2": 2.021831371337604e-16,
+    "raw_flux_energy_difference": 1.2568825063583096e-16,
+    "reconstructed_flux_energy_difference": 3.3727904989864364e-15,
+    "reference_flux_energy_norm": 2.8618264109899054e-16,
+    "raw_flux_energy_norm": 1.3975561041784663e-16,
+    "reconstructed_flux_energy_norm": 2.4482477422512026e-15,
+    "pressure_relative_difference": 0.0,
+    "raw_flux_relative_difference": 1.307728109694657e-14,
+    "reconstructed_flux_relative_difference": 6.741092902897089e-16,
+    "raw_flux_energy_relative_difference": 3.9007813819843655e-16,
+    "reconstructed_flux_energy_relative_difference": 3.009429295261794e-15
+  },
+  "maximum_relative_difference": 1.3305071937812234e-14,
+  "source_hashes": {
+    "compare_spe10_resolution.py": "82cf61eaa5f7c98ac4e63c4c8eedcbc91fa1d3ef7d97e86051d5a57c985fe35c",
+    "spe10_adaptive_norms.py": "fd979b728c81fd15c5839b0352c7030b20ae49359a1026f2bfa43fbd911380f8"
+  },
+  "norm_acquisition_archive_sha256": "99f3494fdb160a01d025fcbe5a5f586b74fac5d50b306769f094255fc33ed93f",
+  "current_archive_sha256": "d1b2bd9ec781d0366cf8ad8b0639a60e4c5b68e6da261e20c20ee1fdc27e94e5",
+  "scope": "Independent quadrature agreement for the declared acquisition field; current baseline norms use separately certified reverse-triangle intervals"
+}

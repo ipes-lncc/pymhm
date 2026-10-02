@@ -1,0 +1,60 @@
+{
+  "method": "identical fine-cell contributions, unchanged sequential additions inside each macro, unchanged ordered macro reduction",
+  "archive": "mhm-unusual-fitted-r8-s8-q5.npz",
+  "archive_sha256": "0d11e63200f3900c2847ccd9c2ec303aa8edf9d60e4730b61e85d51002d7881f",
+  "reference": "classical-cg2-graded-xy-1440x498.npz",
+  "reference_executed_sha256": "3a536228173b05fbcf816d6dd9b423a61a377ec408c9cd216d17a30fc3a674a3",
+  "fine_cells": 182976,
+  "macro_cells": 128,
+  "workers": 4,
+  "cell_batch_size": 256,
+  "source_hashes": {
+    "examples/compare_unusual_spe10.py": "8119c031802971925223e3e7e68396dc7921bdb3fbd44a51e56bd3f636ef7d78",
+    "examples/solve_unusual_spe10.py": "f84dbbcdc8c2c32db6d9cddfa2e71e3178d4f6ce50132609804046b78fc42100",
+    "examples/solve_unusual_spe10_reference.py": "8839561ec7b9f29a1c6a387d751b02bd0f77aa3867839aac7c837dd6d95c0098",
+    "examples/spe10_adaptive_norms.py": "9727f068fc1e7c2fc948270584634376ef92efbe2cf1db87e0c46cdd1b5f2ed7",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae"
+  },
+  "rows": [
+    {
+      "order": 3,
+      "all_norms_bitwise_equal": true,
+      "quantities": [
+        "pressure_absolute",
+        "pressure_reference",
+        "pressure_relative",
+        "flux_absolute",
+        "flux_reference",
+        "flux_relative",
+        "energy_absolute",
+        "energy_reference",
+        "energy_relative"
+      ],
+      "macro_seconds": 163.01732476300094,
+      "cell_block_seconds": 152.68027100502513
+    },
+    {
+      "order": 4,
+      "all_norms_bitwise_equal": true,
+      "quantities": [
+        "pressure_absolute",
+        "pressure_reference",
+        "pressure_relative",
+        "flux_absolute",
+        "flux_reference",
+        "flux_relative",
+        "energy_absolute",
+        "energy_reference",
+        "energy_relative"
+      ],
+      "macro_seconds": 169.03710632200819,
+      "cell_block_seconds": 180.11712114000693
+    }
+  ],
+  "block_record_sha256": "307c6524d50b03af76720145e07e5405db607b03a547853d1a0f2e435b9e14fa",
+  "macro_record_sha256": "4e70c543d5bfd1dddd27c0679746a5109feb9b8dcfb87082d9927774adab5361",
+  "timing_scope": "initializer, serialization, integration, ordered reduction and worker shutdown; no PDE solves; concurrent host workloads",
+  "reference_current_sha256": "90d4715637a679876b11205f928fb0955c1af267fa3a974c9d3b9aac98b1793f",
+  "field_identity_verification": "field-sampling-verification.json"
+}

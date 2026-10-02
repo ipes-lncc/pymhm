@@ -1,0 +1,60 @@
+{
+  "nx": 4,
+  "ny": 2,
+  "degree": 1,
+  "native_dofs": 240,
+  "free_dofs": 208,
+  "residual": 2.1957800644340664e-15,
+  "conversion_relative": 1.088654065943648e-15,
+  "equilibrium_l2": 2.892494494247449e-14,
+  "equilibrium_relative": 3.919887462837074e-15,
+  "weak_symmetry_moment_max": 1.214306433183765e-17,
+  "compliance_energy": 1.0004999999999993,
+  "body_work": -0.33412500000000017,
+  "energy_work_relative": null,
+  "peak_rss_gib": 0.19076156616210938,
+  "assembly_seconds": 0.018227961962111294,
+  "factor_solve_seconds": 0.002999793039634824,
+  "total_seconds": 0.044393975054845214,
+  "quadrature_degree": 6,
+  "formulation": "Globally conforming row-wise RTk, DG Qk displacement, DPC total Pk rotation; no MHM restriction",
+  "bottom": "zero displacement in the natural mixed boundary functional",
+  "sides_top": "exact nonzero polynomial traction",
+  "bounds": [
+    0.0,
+    1.0,
+    0.0,
+    0.45
+  ],
+  "length_scale_m": 10000.0,
+  "stress_scale_Pa": 100000000.0,
+  "software": {
+    "dolfinx": "0.9.0",
+    "basix": "0.9.0",
+    "petsc": [
+      3,
+      23,
+      0
+    ],
+    "python": "3.13.15"
+  },
+  "threads": 1,
+  "mumps_options": {
+    "mat_mumps_icntl_7": 5,
+    "mat_mumps_icntl_14": 100,
+    "mat_mumps_icntl_10": 2,
+    "mat_mumps_icntl_23": 45000
+  },
+  "archive": "classical-rt1-4x2-patch.npz",
+  "archive_sha256": "2dff5349bc94a485c3d59644bf68229e11ac29bf8f8e39d75e0a5219c608c729",
+  "source_sha256": "ad2e77c048594fbaa25b9d81987f9feef3a3653e1dc3b5bda55a84759e743fc2",
+  "source_hashes": {
+    "examples/solve_hpc4e_reference.py": "ad2e77c048594fbaa25b9d81987f9feef3a3653e1dc3b5bda55a84759e743fc2",
+    "examples/hpc4e_data.py": "bdb6f3fa102556ab545ee22ed7e0632f98a917cdd4c86a1f7c4af734a108d113",
+    "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+    "src/pymhm/quadrilateral.py": "fabb0c01eb141a9f168f99a27fd8b1acb43b8bba2ca438263d7f7ce60606f498",
+    "src/pymhm/elasticity_tensor_rt.py": "f77097e6036a6f0f5866de1eb7a44757e2f018ded2ee3829bdb4000948656cb5"
+  },
+  "source_changed": false,
+  "material_sha256": null
+}

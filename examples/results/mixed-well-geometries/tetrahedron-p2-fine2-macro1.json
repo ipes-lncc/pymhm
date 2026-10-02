@@ -1,0 +1,221 @@
+{
+  "kind": "tetrahedron",
+  "archive_schema": 2,
+  "flux_basis_convention": "Canonical face moments; fixed ordered interior monomial moments, followed by positive-diagonal Cholesky orthonormalization. The executed component-monomial matrix is stored in the archive.",
+  "flux_basis_sha256": "fbac994362cd5ef1ae150325931cbee6cc8f5419ad776a41e190f5f31dbe3b0e",
+  "interior_moment_seeds": [
+    [
+      0,
+      [
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      1,
+      [
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      2,
+      [
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      0,
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    [
+      1,
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    [
+      2,
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    [
+      0,
+      [
+        0,
+        1,
+        0
+      ]
+    ],
+    [
+      1,
+      [
+        0,
+        1,
+        0
+      ]
+    ],
+    [
+      2,
+      [
+        0,
+        1,
+        0
+      ]
+    ],
+    [
+      0,
+      [
+        1,
+        0,
+        0
+      ]
+    ],
+    [
+      1,
+      [
+        1,
+        0,
+        0
+      ]
+    ],
+    [
+      2,
+      [
+        1,
+        0,
+        0
+      ]
+    ],
+    [
+      0,
+      [
+        0,
+        0,
+        2
+      ]
+    ],
+    [
+      1,
+      [
+        0,
+        0,
+        2
+      ]
+    ],
+    [
+      0,
+      [
+        0,
+        1,
+        1
+      ]
+    ],
+    [
+      1,
+      [
+        0,
+        1,
+        1
+      ]
+    ],
+    [
+      0,
+      [
+        0,
+        2,
+        0
+      ]
+    ],
+    [
+      0,
+      [
+        1,
+        0,
+        1
+      ]
+    ],
+    [
+      1,
+      [
+        1,
+        0,
+        1
+      ]
+    ],
+    [
+      0,
+      [
+        1,
+        1,
+        0
+      ]
+    ]
+  ],
+  "pressure_degree": 2,
+  "normal_degree": 1,
+  "fine_factor": 2,
+  "macro_factor": 1,
+  "macrocells": 192,
+  "fine_cells": 1536,
+  "skeleton_dofs": 1392,
+  "retained_dofs": 192,
+  "errors": {
+    "7": {
+      "pressure_l2": 12427613.191547116,
+      "flux_l2": 0.0004992549536595518
+    },
+    "10": {
+      "pressure_l2": 12427612.822439281,
+      "flux_l2": 0.0004992549649199755
+    }
+  },
+  "relative_errors": {
+    "pressure_l2": 0.0019364420222847205,
+    "flux_l2": 0.168416766696414
+  },
+  "exact_norms": {
+    "pressure_l2": 6417756214.449685,
+    "flux_l2": 0.002964401791538525
+  },
+  "physical_block_residual": 1.4168827335878446e-14,
+  "fine_pressure_moment_defect": 2.969026021955899e-18,
+  "volume": 70709.54674780485,
+  "permeability_over_viscosity": 1e-10,
+  "volume_quadrature_order": 5,
+  "boundary_quadrature_order": 12,
+  "error_quadrature_orders": [
+    7,
+    10
+  ],
+  "geometry": "Common planar octagonal annulus; its boundary is preserved exactly.",
+  "boundary": "Exact radial pressure on both polygonal walls; zero outward flux on horizontal caps.",
+  "formulation": "Mixed H(div) local solvers with coarse normal-flux moment restriction.",
+  "comparison_scope": "Original geometry hierarchy for Problem 4; historical meshes and error ratios are not reproduced.",
+  "elapsed_s": 5.185596662922762,
+  "timing_scope": "Concurrent scientific acquisition, not a controlled speed measurement.",
+  "source_hashes": {
+    "src/pymhm/hdiv3d_family.py": "29cd2993848bc6ce5bc944a7a732eae3f9f6cdcc957bf787148d92704dc01c47",
+    "src/pymhm/hdiv3d_mesh.py": "ee7968260eadc10ebf664cd79d5a21d501843cebb24723d12d49ba4119799060",
+    "src/pymhm/darcy_hdiv3d.py": "dcbc14d19771bef9d82e6f4661c6839aa92f20b7be9a82422b217cc26da4d619",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc",
+    "examples/solve_mixed_well_geometries.py": "0e2bb0b451841c0721f456b96436a1f56317112718cac9364e4ed469a5f5dbac",
+    "examples/solve_mapped_well.py": "0c00ec837510eb9c06458f4223cd88e25eebb9ccbe3f72daa7ac8974d148c7b3"
+  },
+  "archive": "tetrahedron-p2-fine2-macro1.npz",
+  "sha256": "61d01b26aef39d4764d3bc2095a3be731a5eb91507a1e16b94b49ee43044361f"
+}

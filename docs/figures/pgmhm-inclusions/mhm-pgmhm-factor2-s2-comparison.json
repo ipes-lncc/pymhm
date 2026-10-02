@@ -1,0 +1,93 @@
+{
+  "archive": "mhm-pgmhm-factor2-s2.npz",
+  "archive_sha256": "09592602783cb2e2cae8e3baaa75e24a86b988cff420d6c197fc8e6ee3b5a9a7",
+  "reference": "classical-cg2-factor4.npz",
+  "reference_sha256": "0b381e37adab404044dfe3b3f8be08b04273593f6b124e0e6cd4e3c509667207",
+  "integration": "exact geometric intersections; Duffy orders3/4; raw -K grad p",
+  "denominator": "corresponding physical norm of the stated CG2 reference",
+  "source_hashes": {
+    "examples/compare_pgmhm_inclusions.py": "d49693203c7e7b129e5593e17a854686ff05f5aa00b3373430c9dc98195e9cb0",
+    "examples/pgmhm_inclusion_data.py": "e0b5690efee2cffde1cf5b871b3bcf5e3be8c08272b87e6b71d7a32e5d17e852",
+    "examples/solve_pgmhm_inclusions_reference.py": "cfb33b107d0cc557da346a3a27ccc61acac596e05c3ca9718d782cfd90750b73",
+    "examples/compare_unusual_spe10.py": "be46a47bb2240df93431ba390958939fab40154f79868fa7e2d414ab2cbcde04",
+    "examples/spe10_adaptive_norms.py": "9727f068fc1e7c2fc948270584634376ef92efbe2cf1db87e0c46cdd1b5f2ed7",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9"
+  },
+  "rows": [
+    {
+      "order": 3,
+      "seconds": 263.2568143130047,
+      "mhm": {
+        "pressure_absolute": 0.00013159947771388035,
+        "pressure_reference": 0.030134258793962018,
+        "pressure_relative": 0.004367105181304438,
+        "flux_absolute": 0.03760112377784047,
+        "flux_reference": 0.24341872484922145,
+        "flux_relative": 0.15447095863776045,
+        "energy_absolute": 0.021439774134337907,
+        "energy_reference": 0.16025880438860055,
+        "energy_relative": 0.13378219197461425
+      },
+      "pgmhm": {
+        "pressure_absolute": 0.00013242309751890588,
+        "pressure_reference": 0.030134258793962018,
+        "pressure_relative": 0.004394436857542334,
+        "flux_absolute": 0.037599847299362915,
+        "flux_reference": 0.24341872484922145,
+        "flux_relative": 0.1544657146760301,
+        "energy_absolute": 0.021439810854546437,
+        "energy_reference": 0.16025880438860055,
+        "energy_relative": 0.13378242110529237
+      },
+      "enriched": {
+        "pressure_absolute": 0.0001327649009743445,
+        "pressure_reference": 0.030134258793962018,
+        "pressure_relative": 0.004405779544209215,
+        "flux_absolute": 0.037650471907711716,
+        "flux_reference": 0.24341872484922145,
+        "flux_relative": 0.15467368802886133,
+        "energy_absolute": 0.02148716776723965,
+        "energy_reference": 0.16025880438860055,
+        "energy_relative": 0.13407792382586914
+      }
+    },
+    {
+      "order": 4,
+      "seconds": 334.3082778940443,
+      "mhm": {
+        "pressure_absolute": 0.00013159947771388067,
+        "pressure_reference": 0.030134258793962015,
+        "pressure_relative": 0.004367105181304449,
+        "flux_absolute": 0.0376011244547737,
+        "flux_reference": 0.24341872534258824,
+        "flux_relative": 0.1544709611056165,
+        "energy_absolute": 0.021439774134349773,
+        "energy_reference": 0.16025880438860057,
+        "energy_relative": 0.13378219197468824
+      },
+      "pgmhm": {
+        "pressure_absolute": 0.0001324230975189062,
+        "pressure_reference": 0.030134258793962015,
+        "pressure_relative": 0.004394436857542345,
+        "flux_absolute": 0.037599847976204505,
+        "flux_reference": 0.24341872534258824,
+        "flux_relative": 0.15446571714352036,
+        "energy_absolute": 0.0214398108545583,
+        "energy_reference": 0.16025880438860057,
+        "energy_relative": 0.13378242110536637
+      },
+      "enriched": {
+        "pressure_absolute": 0.00013276490097434483,
+        "pressure_reference": 0.030134258793962015,
+        "pressure_relative": 0.004405779544209226,
+        "flux_absolute": 0.037650472584724946,
+        "flux_reference": 0.24341872534258824,
+        "flux_relative": 0.1546736904966352,
+        "energy_absolute": 0.021487167767251503,
+        "energy_reference": 0.16025880438860057,
+        "energy_relative": 0.13407792382594308
+      }
+    }
+  ],
+  "source_changed_during_run": false
+}

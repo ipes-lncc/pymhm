@@ -1,0 +1,172 @@
+{
+  "suite": "mshho3d",
+  "reference": "analytical",
+  "source_sha256": {
+    "src/pymhm/mshho.py": "3eb065e61b31be310bf5ae982f5b51560e9d5078bbf0c7a9960d0f035728691f",
+    "src/pymhm/mshho3d.py": "acccdd5fccd512857493ac48e9fd269455bcdddd5fce78253b47d887e9405b93",
+    "src/pymhm/darcy3d.py": "6fd858b23e13ce0466c61efdfacb6c2b627df0c6bd8b63291716757c8bb4fbd2",
+    "src/pymhm/polyhedral_rad.py": "05b9afdbd755e01873efbe181d2ae51574d2eaaa3a2d3c64c64a5ba076e71e35",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/tetrahedral.py": "be9cf2387044046d90761e8a98cf1c81ed6070a9db685c2f63d059c3224e4b24",
+    "src/pymhm/tetra_lagrange.py": "89af3d45c336bab82d298f39be15b7e9f806ea0ec78860d9d05d374a3b8f5f49",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc",
+    "examples/solve_core_extensions.py": "bdfa31953ea883d3c0ceb339d8e58910754fb3ed06b5ee6aaeba0c4d07a0ba62",
+    "examples/core_extension_data.py": "e2138ee96c930b9f0559d20bdde5eae2c6ace802d36c88b8286eb6f8559651f2"
+  },
+  "rows": [
+    {
+      "case": "tetra-p0",
+      "resolution": 1,
+      "macro_cells": 6,
+      "error_quadrature": [
+        10,
+        11
+      ],
+      "error_quadrature_absolute_change": 4.405809050922471e-12,
+      "elapsed_seconds": 1.3167700549820438,
+      "pressure_l2": 0.128981530330164,
+      "flux_l2": 1.174778022818476,
+      "algebraic_residual": 8.556672363225053e-17
+    },
+    {
+      "case": "tetra-p0",
+      "resolution": 2,
+      "macro_cells": 48,
+      "error_quadrature": [
+        10,
+        11
+      ],
+      "error_quadrature_absolute_change": 1.1102230246251565e-16,
+      "elapsed_seconds": 9.735468949074857,
+      "pressure_l2": 0.07956595565781613,
+      "flux_l2": 0.9389332192297474,
+      "algebraic_residual": 8.641561420728923e-17
+    },
+    {
+      "case": "tetra-p0",
+      "resolution": 3,
+      "macro_cells": 162,
+      "error_quadrature": [
+        10,
+        11
+      ],
+      "error_quadrature_absolute_change": 1.3877787807814457e-17,
+      "elapsed_seconds": 34.00187276804354,
+      "pressure_l2": 0.038322182693923394,
+      "flux_l2": 0.6510477066414834,
+      "algebraic_residual": 8.079654206172613e-17
+    },
+    {
+      "case": "tetra-p0",
+      "resolution": 4,
+      "macro_cells": 384,
+      "error_quadrature": [
+        10,
+        11
+      ],
+      "error_quadrature_absolute_change": 1.1102230246251565e-16,
+      "elapsed_seconds": 98.34773475502152,
+      "pressure_l2": 0.022166082267715846,
+      "flux_l2": 0.4949578103880802,
+      "algebraic_residual": 9.425934299380285e-17
+    },
+    {
+      "case": "tetra-p0",
+      "resolution": 5,
+      "macro_cells": 750,
+      "error_quadrature": [
+        10,
+        11
+      ],
+      "error_quadrature_absolute_change": 5.551115123125783e-17,
+      "elapsed_seconds": 193.1819645059295,
+      "pressure_l2": 0.014372312150528165,
+      "flux_l2": 0.39845292574711566,
+      "algebraic_residual": 9.71525078602028e-17
+    },
+    {
+      "case": "cube-p0",
+      "resolution": 1,
+      "macro_cells": 1,
+      "error_quadrature": [
+        10,
+        11
+      ],
+      "error_quadrature_absolute_change": 4.3099745994368277e-10,
+      "elapsed_seconds": 0.3628381120506674,
+      "pressure_l2": 0.12898153028815992,
+      "flux_l2": 1.1747780232357783,
+      "algebraic_residual": 0.0
+    },
+    {
+      "case": "cube-p0",
+      "resolution": 2,
+      "macro_cells": 8,
+      "error_quadrature": [
+        10,
+        11
+      ],
+      "error_quadrature_absolute_change": 2.220446049250313e-16,
+      "elapsed_seconds": 2.482342222938314,
+      "pressure_l2": 0.12898153033149473,
+      "flux_l2": 1.1747780228141522,
+      "algebraic_residual": 6.975736996017267e-17
+    },
+    {
+      "case": "cube-p0",
+      "resolution": 3,
+      "macro_cells": 27,
+      "error_quadrature": [
+        10,
+        11
+      ],
+      "error_quadrature_absolute_change": 1.1102230246251565e-16,
+      "elapsed_seconds": 10.103918559034355,
+      "pressure_l2": 0.06142613869147673,
+      "flux_l2": 0.8080026693065585,
+      "algebraic_residual": 9.924868395724303e-17
+    },
+    {
+      "case": "cube-p0",
+      "resolution": 4,
+      "macro_cells": 64,
+      "error_quadrature": [
+        10,
+        11
+      ],
+      "error_quadrature_absolute_change": 6.938893903907228e-18,
+      "elapsed_seconds": 24.564026855048724,
+      "pressure_l2": 0.03534662871183085,
+      "flux_l2": 0.6112953205360242,
+      "algebraic_residual": 7.21213396156044e-17
+    },
+    {
+      "case": "cube-p0",
+      "resolution": 5,
+      "macro_cells": 125,
+      "error_quadrature": [
+        10,
+        11
+      ],
+      "error_quadrature_absolute_change": 5.551115123125783e-17,
+      "elapsed_seconds": 50.9914161079796,
+      "pressure_l2": 0.022854522343704366,
+      "flux_l2": 0.49077665341885895,
+      "algebraic_residual": 7.941044081381637e-17
+    }
+  ],
+  "fields": {
+    "tetra-p0": {
+      "archive": "tetra-p0.npz",
+      "sha256": "c32352ed2161c360e451d3793d09fb4067acd548b99cbaab1a56270cd139ba88"
+    },
+    "cube-p0": {
+      "archive": "cube-p0.npz",
+      "sha256": "c8360c31867e2e50eac8a845f08e6264c9bdf02e6d4542aefda76dece467904f"
+    }
+  },
+  "source_changed": false
+}

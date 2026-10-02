@@ -1,0 +1,40 @@
+{
+  "field": {
+    "electric_time": 11.315,
+    "magnetic_time": 11.31,
+    "resolution": 256,
+    "sha256": "377567aff39fae313f790986c70162987f4211aefed2ca10b72fd85dc2608220",
+    "file": "dg-q2-n256-q12-dt0.0025-device.npz"
+  },
+  "reference": {
+    "electric_time": 11.315,
+    "magnetic_time": 11.31,
+    "resolution": 256,
+    "sha256": "ac29e721c78c231ffe37f45d07a769b600f3bc121dc2bb9fb3b9055a01f0e077",
+    "file": "dg-q2-n256-q12-dt0.0025.npz"
+  },
+  "components": [
+    "electric",
+    "magnetic_x",
+    "magnetic_y"
+  ],
+  "absolute_l2": [
+    1.6479193394923572e-14,
+    1.450933367077582e-14,
+    1.802300683798164e-14
+  ],
+  "reference_l2": [
+    6.1731720269099615,
+    2.4777087581821227,
+    6.957536318312666
+  ],
+  "relative_l2": [
+    2.6694855291716834e-15,
+    5.8559480095720426e-15,
+    2.590429429817559e-15
+  ],
+  "combined_relative_l2": 2.9510761433257545e-15,
+  "integration_grid": 256,
+  "gauss_order": 3,
+  "purpose": "CPU and GPU evaluation of the same independent classical central-DG recurrence over the complete trajectory"
+}

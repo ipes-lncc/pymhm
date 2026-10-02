@@ -1,0 +1,319 @@
+{
+  "accepted": true,
+  "method": "Full broken local P2 on four triangles per macrocell; one P0 trace per macroface; DOLFINx/Basix triangular P2 volume forms in UFL with exact degree-two raw-K moments; independent long-double Cartesian-pixel clipping and exact P2 Simpson facet moments; PETSc/MUMPS uncondensed MHM saddle solve",
+  "material": "SPE10 Model 2, layer 36, unscaled raw diagonal permeability in mD",
+  "boundary_conditions": "p=1 at y=0, p=0 at y=2200, zero outward flux at x=0 and x=1200",
+  "norm_convention": "Physical pressure, broken gradient, raw Darcy flux and K-energy on the identical fine-triangle/material-pixel intersections; denominator is the independent native field norm",
+  "execution": "Both independent native solves and seven candidate field/estimator evaluations completed with unchanged source and data digests",
+  "rows": [
+    {
+      "level": 0,
+      "macro_triangles": 512,
+      "fine_triangles": 2048,
+      "native_full_dofs": 8448,
+      "pressure_coefficient_linf": 2.7609218351213466e-11,
+      "trace_linf": 9.565422455851125e-14,
+      "moment_relative_check": 5.310106873326106e-16,
+      "independent_pixel_partition_relative_error": 1.985282598038207e-15,
+      "equations": {
+        "native": {
+          "residual_over_rhs": 3.8674641935568925e-14,
+          "backward_linf": 1.24115077727015e-15
+        },
+        "candidate": {
+          "residual_over_rhs": 6.62953951724558e-14
+        }
+      },
+      "physical_differences": {
+        "quadrature_6": {
+          "pressure_l2": {
+            "absolute": 2.036067963666912e-08,
+            "reference_norm": 815.6092765216279,
+            "relative": 2.4963766625488117e-11
+          },
+          "broken_gradient_l2": {
+            "absolute": 8.512476041384165e-11,
+            "reference_norm": 1.1222749551935378,
+            "relative": 7.58501827202958e-11
+          },
+          "physical_raw_flux_l2": {
+            "absolute": 1.228833941218174e-10,
+            "reference_norm": 1.2841873306199463,
+            "relative": 9.568961723247571e-11
+          },
+          "energy": {
+            "absolute": 2.8951560928042037e-11,
+            "reference_norm": 0.369650888310373,
+            "relative": 7.832136170529962e-11
+          }
+        },
+        "quadrature_8": {
+          "pressure_l2": {
+            "absolute": 2.036067963666912e-08,
+            "reference_norm": 815.6092765216279,
+            "relative": 2.4963766625488117e-11
+          },
+          "broken_gradient_l2": {
+            "absolute": 8.512476041384163e-11,
+            "reference_norm": 1.1222749551935378,
+            "relative": 7.58501827202958e-11
+          },
+          "physical_raw_flux_l2": {
+            "absolute": 1.2288339412181762e-10,
+            "reference_norm": 1.2841873306199443,
+            "relative": 9.568961723247603e-11
+          },
+          "energy": {
+            "absolute": 2.8951560928042037e-11,
+            "reference_norm": 0.369650888310373,
+            "relative": 7.832136170529962e-11
+          }
+        }
+      },
+      "candidate_archive_sha256": "b8217f311b3cc91e843a97dc46ca60d74a6343167642e208e99fa20c56247f98",
+      "archive_sha256": "f9b3f837fa586a96793d29beb5ce1097e7d0fcb651e5088b88e4b9f9bb475c01",
+      "reference_code": {
+        "reference_code": "FEniCS/DOLFINx",
+        "version": "0.9.0",
+        "runtime_reported_build_git_hash": "8067ef16087b9f364873e0e657dcda52fb989ce3",
+        "runtime_hash_status": "build-reported identifier; not resolved as an upstream dolfinx commit",
+        "verified_upstream_release_commit": "6443e3b27d29aec04ce83d8424b57c339e35f865",
+        "verified_source_url": "https://github.com/FEniCS/dolfinx/tree/6443e3b27d29aec04ce83d8424b57c339e35f865",
+        "upstream_verification_url": "https://api.github.com/repos/FEniCS/dolfinx/git/ref/tags/v0.9.0",
+        "conda_packages": [
+          {
+            "name": "fenics-dolfinx",
+            "version": "0.9.0",
+            "build": "py313hf84a112_112",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-dolfinx-0.9.0-py313hf84a112_112.conda",
+            "sha256": "79bb466bd1624512b7e6302e7926a05ef1e78685f0c188a69668222f31852b86",
+            "recipe_sha256": "df9a203accdaa6d1a5b1c97600971f9803620dea2176e5c62b705d9ac0e12bec",
+            "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+            "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+            "patches": [
+              {
+                "name": "unpin-cffi.patch",
+                "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+              }
+            ]
+          },
+          {
+            "name": "fenics-libdolfinx",
+            "version": "0.9.0",
+            "build": "py313h2154cf7_112",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-libdolfinx-0.9.0-py313h2154cf7_112.conda",
+            "sha256": "f8068fef21e9008e0531d83e8f19e8ee41bb40920881b8416583380f138e7889",
+            "recipe_sha256": "e75fdc33edb216ccf13ad27023b1b2b1f465451c630395137104e278732a62d7",
+            "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+            "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+            "patches": [
+              {
+                "name": "unpin-cffi.patch",
+                "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+              }
+            ]
+          }
+        ],
+        "python_extension_file": "cpp.cpython-313-x86_64-linux-gnu.so",
+        "python_extension_sha256": "7fba4280795a95accf09754435d0e6a19e48ca4e2c604d739688614bf4b6802a",
+        "runtime_versions": {
+          "dolfinx": "0.9.0",
+          "basix": "0.9.0",
+          "ufl": "2024.2.0",
+          "numpy": "2.5.3",
+          "scipy": "1.18.1"
+        }
+      },
+      "method": "Full broken local P2 on four triangles per macrocell; one P0 trace per macroface; DOLFINx/Basix triangular P2 volume forms in UFL with exact degree-two raw-K moments; independent long-double Cartesian-pixel clipping and exact P2 Simpson facet moments; PETSc/MUMPS uncondensed MHM saddle solve",
+      "accepted": true,
+      "native_assembly_source_sha256": "e101017e4236a2fdfa2f0b5a60554f1598a9a224d67815bb2e587224d8c7a45c",
+      "native_material_integration_source_sha256": "b7bbfd019432752ce1d65b17a9504a77303f4e83ec96dc62f62e03154474428d",
+      "norm_owner_sha256": "3554ba9b99b3d60c4f547d866076d5015ebcf22f6b343109aacf5512e2ee1012",
+      "norm_driver_sha256": "1c5942cd0e60bad330497b80fa0d8d9d7142333a4642c95ae8bbf60f2c82465d",
+      "prior_comparison_sha256": "27ab41fbbab16bd675b9de6ec4e9e624af4bb936562b934790e0276d61b79dd0",
+      "relative_denominator": "independent native field norm",
+      "complete": true,
+      "native_pressure_archive": "native-pressure-level0.npz",
+      "native_pressure_archive_sha256": "5a7c6f08b003b0ca121c2ceed69862ae97c6483fa310f43b54f80f1259662833",
+      "candidate_source_snapshot_sha256": "d6644cdb828c8ac4a5b056af664eacc588bb3803a623fa09f481374c9c638ba3",
+      "candidate_source_hashes": {
+        "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+        "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+        "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+        "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+        "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+        "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+        "src/pymhm/darcy.py": "40c20c036e29d96595e626e62bcc40ccf245dca06f8c6b3f2f652fb90dbc1e16",
+        "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+        "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+        "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94",
+        "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+        "examples/spe10_adaptive.py": "111d056e78838e757971236ec9511f3b751f4fb70956f23c860254b399277e28",
+        "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+        "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+        "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+        "src/pymhm/hybrid.py": "351d06072b275304f609b50cc9f3dfa279350cd20c956b10eee7d12c5078998e",
+        "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+        "examples/solve_spe10_published.py": "f7aa592a1d44bff0f02c26edfdc5aae18b05044fe9f312a0b331523670b97eb7",
+        "examples/solve_spe10_balanced.py": "0a679afc06cd599fb9560f3744b9ca5b042873d3dbef62c96f85f15372055a97",
+        "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+        "examples/results/spe10/layer-36.npz": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512"
+      }
+    },
+    {
+      "level": 6,
+      "macro_triangles": 4783,
+      "fine_triangles": 19132,
+      "native_full_dofs": 78912,
+      "pressure_coefficient_linf": 4.6358143479573524e-11,
+      "trace_linf": 3.2943172766520396e-10,
+      "moment_relative_check": 6.530378345843448e-16,
+      "independent_pixel_partition_relative_error": 1.9857162789072014e-15,
+      "equations": {
+        "native": {
+          "residual_over_rhs": 6.492412232918709e-13,
+          "backward_linf": 6.359251894481606e-15
+        },
+        "candidate": {
+          "residual_over_rhs": 1.8920700719293935e-13
+        }
+      },
+      "physical_differences": {
+        "quadrature_6": {
+          "pressure_l2": {
+            "absolute": 2.9062182196911256e-08,
+            "reference_norm": 827.0422717747529,
+            "relative": 3.5139899360339366e-11
+          },
+          "broken_gradient_l2": {
+            "absolute": 1.258148329582602e-10,
+            "reference_norm": 1.393311959935424,
+            "relative": 9.029911217017856e-11
+          },
+          "physical_raw_flux_l2": {
+            "absolute": 7.611823535648832e-10,
+            "reference_norm": 1.1555476264640943,
+            "relative": 6.587200182255189e-10
+          },
+          "energy": {
+            "absolute": 4.897615345444461e-11,
+            "reference_norm": 0.39720159402033195,
+            "relative": 1.2330301336086184e-10
+          }
+        },
+        "quadrature_8": {
+          "pressure_l2": {
+            "absolute": 2.9062182196911256e-08,
+            "reference_norm": 827.0422717747529,
+            "relative": 3.5139899360339366e-11
+          },
+          "broken_gradient_l2": {
+            "absolute": 1.258148329582602e-10,
+            "reference_norm": 1.393311959935424,
+            "relative": 9.029911217017857e-11
+          },
+          "physical_raw_flux_l2": {
+            "absolute": 7.611823535648807e-10,
+            "reference_norm": 1.1555476264641127,
+            "relative": 6.587200182255062e-10
+          },
+          "energy": {
+            "absolute": 4.897615345444459e-11,
+            "reference_norm": 0.39720159402033195,
+            "relative": 1.233030133608618e-10
+          }
+        }
+      },
+      "candidate_archive_sha256": "d1b2bd9ec781d0366cf8ad8b0639a60e4c5b68e6da261e20c20ee1fdc27e94e5",
+      "archive_sha256": "9603d63955360ba8b81905bf1164eb89552a8bd2a5caa62a60a9733f268c3c81",
+      "reference_code": {
+        "reference_code": "FEniCS/DOLFINx",
+        "version": "0.9.0",
+        "runtime_reported_build_git_hash": "8067ef16087b9f364873e0e657dcda52fb989ce3",
+        "runtime_hash_status": "build-reported identifier; not resolved as an upstream dolfinx commit",
+        "verified_upstream_release_commit": "6443e3b27d29aec04ce83d8424b57c339e35f865",
+        "verified_source_url": "https://github.com/FEniCS/dolfinx/tree/6443e3b27d29aec04ce83d8424b57c339e35f865",
+        "upstream_verification_url": "https://api.github.com/repos/FEniCS/dolfinx/git/ref/tags/v0.9.0",
+        "conda_packages": [
+          {
+            "name": "fenics-dolfinx",
+            "version": "0.9.0",
+            "build": "py313hf84a112_112",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-dolfinx-0.9.0-py313hf84a112_112.conda",
+            "sha256": "79bb466bd1624512b7e6302e7926a05ef1e78685f0c188a69668222f31852b86",
+            "recipe_sha256": "df9a203accdaa6d1a5b1c97600971f9803620dea2176e5c62b705d9ac0e12bec",
+            "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+            "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+            "patches": [
+              {
+                "name": "unpin-cffi.patch",
+                "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+              }
+            ]
+          },
+          {
+            "name": "fenics-libdolfinx",
+            "version": "0.9.0",
+            "build": "py313h2154cf7_112",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-libdolfinx-0.9.0-py313h2154cf7_112.conda",
+            "sha256": "f8068fef21e9008e0531d83e8f19e8ee41bb40920881b8416583380f138e7889",
+            "recipe_sha256": "e75fdc33edb216ccf13ad27023b1b2b1f465451c630395137104e278732a62d7",
+            "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+            "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+            "patches": [
+              {
+                "name": "unpin-cffi.patch",
+                "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+              }
+            ]
+          }
+        ],
+        "python_extension_file": "cpp.cpython-313-x86_64-linux-gnu.so",
+        "python_extension_sha256": "7fba4280795a95accf09754435d0e6a19e48ca4e2c604d739688614bf4b6802a",
+        "runtime_versions": {
+          "dolfinx": "0.9.0",
+          "basix": "0.9.0",
+          "ufl": "2024.2.0",
+          "numpy": "2.5.3",
+          "scipy": "1.18.1"
+        }
+      },
+      "method": "Full broken local P2 on four triangles per macrocell; one P0 trace per macroface; DOLFINx/Basix triangular P2 volume forms in UFL with exact degree-two raw-K moments; independent long-double Cartesian-pixel clipping and exact P2 Simpson facet moments; PETSc/MUMPS uncondensed MHM saddle solve",
+      "accepted": true,
+      "native_assembly_source_sha256": "e101017e4236a2fdfa2f0b5a60554f1598a9a224d67815bb2e587224d8c7a45c",
+      "native_material_integration_source_sha256": "b7bbfd019432752ce1d65b17a9504a77303f4e83ec96dc62f62e03154474428d",
+      "norm_owner_sha256": "3554ba9b99b3d60c4f547d866076d5015ebcf22f6b343109aacf5512e2ee1012",
+      "norm_driver_sha256": "1c5942cd0e60bad330497b80fa0d8d9d7142333a4642c95ae8bbf60f2c82465d",
+      "prior_comparison_sha256": "4723941dfa4d06aa6237e419e377781781c7ef05b541930e6c0ec15ce112e38f",
+      "relative_denominator": "independent native field norm",
+      "complete": true,
+      "native_pressure_archive": "native-pressure-level6.npz",
+      "native_pressure_archive_sha256": "08a3e9b1b41feadb44e5d42f61fd88e726fd6bb9680d7589b9286f890d662ff8",
+      "candidate_source_snapshot_sha256": "d6644cdb828c8ac4a5b056af664eacc588bb3803a623fa09f481374c9c638ba3",
+      "candidate_source_hashes": {
+        "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+        "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+        "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+        "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+        "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+        "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+        "src/pymhm/darcy.py": "40c20c036e29d96595e626e62bcc40ccf245dca06f8c6b3f2f652fb90dbc1e16",
+        "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+        "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+        "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94",
+        "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+        "examples/spe10_adaptive.py": "111d056e78838e757971236ec9511f3b751f4fb70956f23c860254b399277e28",
+        "src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+        "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+        "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+        "src/pymhm/hybrid.py": "351d06072b275304f609b50cc9f3dfa279350cd20c956b10eee7d12c5078998e",
+        "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+        "examples/solve_spe10_published.py": "f7aa592a1d44bff0f02c26edfdc5aae18b05044fe9f312a0b331523670b97eb7",
+        "examples/solve_spe10_balanced.py": "0a679afc06cd599fb9560f3744b9ca5b042873d3dbef62c96f85f15372055a97",
+        "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+        "examples/results/spe10/layer-36.npz": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512"
+      }
+    }
+  ],
+  "norm_source_snapshot_manifest_sha256": "11139de5a3b2fff4547c5baaa4dc3a7a88ba6153f7b0a812d89ab64a13540514"
+}

@@ -1,0 +1,49 @@
+{
+  "archive": "mhm-unusual-layer0.5-r32-s32-q5.npz",
+  "archive_sha256": "d15847080eda387816edab8ab8bd9b8dbfbe650a07fc0e35a2e02d107a96c0bc",
+  "reference": "classical-cg2-graded-xy-1440x498.npz",
+  "reference_sha256": "90d4715637a679876b11205f928fb0955c1af267fa3a974c9d3b9aac98b1793f",
+  "integration": "exact intersections of both finite-element meshes and material pixels",
+  "denominator": "corresponding physical norm of the stated numerical CG2 reference",
+  "energy": "integral of K|gradient difference|^2 + |pressure difference|^2",
+  "source_hashes": {
+    "examples/compare_unusual_spe10.py": "be46a47bb2240df93431ba390958939fab40154f79868fa7e2d414ab2cbcde04",
+    "examples/solve_unusual_spe10.py": "b9e832c0cea1c929d65abeddd357d23ee4ff0ac7e0c249f021dfc3b3c27f3685",
+    "examples/solve_unusual_spe10_reference.py": "1a7496ebe879facf65f33fc5c6bc8548820528874464419c2c7caa33e3e985bb",
+    "examples/spe10_adaptive_norms.py": "9727f068fc1e7c2fc948270584634376ef92efbe2cf1db87e0c46cdd1b5f2ed7",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae"
+  },
+  "rows": [
+    {
+      "order": 3,
+      "seconds": 1297.4157014250522,
+      "pressure_absolute": 1.544368086895485,
+      "pressure_reference": 15.726032254266789,
+      "pressure_relative": 0.09820456056081578,
+      "flux_absolute": 1.4091281242170044,
+      "flux_reference": 9.554367174314226,
+      "flux_relative": 0.14748523879271427,
+      "energy_absolute": 2.7879681206114704,
+      "energy_reference": 22.25232877708596,
+      "energy_relative": 0.1252888247580785
+    },
+    {
+      "order": 4,
+      "seconds": 1375.3061634830665,
+      "pressure_absolute": 1.5443680868954845,
+      "pressure_reference": 15.726032254266787,
+      "pressure_relative": 0.09820456056081575,
+      "flux_absolute": 1.409128124217004,
+      "flux_reference": 9.554367174314224,
+      "flux_relative": 0.14748523879271425,
+      "energy_absolute": 2.7879681206114695,
+      "energy_reference": 22.252328777085957,
+      "energy_relative": 0.12528882475807848
+    }
+  ],
+  "source_changed_during_run": false,
+  "reference_input_sha256": "3a536228173b05fbcf816d6dd9b423a61a377ec408c9cd216d17a30fc3a674a3",
+  "field_identity_verification": "field-sampling-verification.json",
+  "norm_execution_record_sha256": "99e27f2f9c5a2490adc99e67c0c00accc329b391fbeeb762952f12107cac0118"
+}

@@ -1,0 +1,55 @@
+{
+  "kind": "classical spatial refinement",
+  "reference": "classical-invariant-xy64-z1-q10",
+  "candidate": "classical-invariant-xy32-z1-q20",
+  "reference_sha256": "8597b8e73ea44d546eb13c64eef38cba7ea91047e637e54b4f8272c3d4ea092b",
+  "candidate_sha256": "afa9bf954e7efeb4589758e964c9030a045c38d6f8c542713c763e2a2f1d6dd1",
+  "norms": {
+    "6": {
+      "pressure_l2": 10563366.120581975,
+      "flux_l2": 0.001012533781786656,
+      "pressure_reference_l2": 6550285646.483932,
+      "flux_reference_l2": 0.008803266604076213,
+      "pressure_relative": 0.0016126573237691074,
+      "flux_relative": 0.11501796177771309,
+      "pressure_reference_increment_l2": 203378467.7101632,
+      "pressure_increment_relative": 0.05193945179897776,
+      "quadrature_order": [
+        6,
+        6,
+        3
+      ],
+      "integration_axis_counts": [
+        64,
+        64,
+        1
+      ]
+    },
+    "8": {
+      "pressure_l2": 10563366.120581971,
+      "flux_l2": 0.0010125337817866568,
+      "pressure_reference_l2": 6550285646.4839325,
+      "flux_reference_l2": 0.008803266604076211,
+      "pressure_relative": 0.0016126573237691068,
+      "flux_relative": 0.1150179617777132,
+      "pressure_reference_increment_l2": 203378467.71016324,
+      "pressure_increment_relative": 0.05193945179897773,
+      "quadrature_order": [
+        8,
+        8,
+        3
+      ],
+      "integration_axis_counts": [
+        64,
+        64,
+        1
+      ]
+    }
+  },
+  "denominator": "corresponding classical/finer-quadrature physical field",
+  "geometry": "exact nested tensor hierarchy; integration respects every fine hexahedron",
+  "analysis_source_hashes": {
+    "examples/mapped_well_fields.py": "2ed34e21ad208df55dd6a8c3434a127e364d0c42caefdf71b3c74c88d7ad49d0",
+    "examples/compare_mapped_well.py": "7ce16d0746141bb09fb8c6b9fcbbc74f7baa6752f051bca10c7b7fd3b0bca0fa"
+  }
+}

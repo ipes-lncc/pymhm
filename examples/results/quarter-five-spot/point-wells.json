@@ -1,0 +1,71 @@
+{
+  "well_functional": "v(1,1)-v(0,0); unit intensity chosen explicitly",
+  "boundary": "zero exterior normal flux; domain mean pressure zero",
+  "macro_connectivity": "32x32 squares, southwest-to-northeast diagonal",
+  "point_sharing": "incident-angle partition, without duplicated strengths",
+  "rows": [
+    {
+      "name": "homogeneous",
+      "formulation": "primal",
+      "degree": 2,
+      "macro_triangles": 2048,
+      "local_refinement": 2,
+      "trace_degree": 0,
+      "macro_balance_max": 4.163336342344337e-16,
+      "seconds": 28.692941798013635
+    },
+    {
+      "name": "homogeneous",
+      "formulation": "mixed",
+      "degree": 1,
+      "macro_triangles": 2048,
+      "local_refinement": 2,
+      "trace_degree": 0,
+      "macro_balance_max": 2.8015784137025435e-16,
+      "seconds": 16.0046801349381,
+      "fine_balance_max": 7.068998164605489e-17
+    },
+    {
+      "name": "layer-half",
+      "formulation": "primal",
+      "degree": 2,
+      "macro_triangles": 2048,
+      "local_refinement": 2,
+      "trace_degree": 0,
+      "macro_balance_max": 5.828670879282072e-16,
+      "seconds": 28.9478468549205
+    },
+    {
+      "name": "layer-half",
+      "formulation": "mixed",
+      "degree": 1,
+      "macro_triangles": 2048,
+      "local_refinement": 2,
+      "trace_degree": 0,
+      "macro_balance_max": 3.885780586188048e-16,
+      "seconds": 16.592663446092047,
+      "fine_balance_max": 1.0061396160665481e-16
+    },
+    {
+      "name": "layer-offset",
+      "formulation": "primal",
+      "degree": 2,
+      "macro_triangles": 2048,
+      "local_refinement": 2,
+      "trace_degree": 0,
+      "macro_balance_max": 2.8731357570865868e-16,
+      "seconds": 28.384542287909426
+    },
+    {
+      "name": "layer-offset",
+      "formulation": "mixed",
+      "degree": 1,
+      "macro_triangles": 2048,
+      "local_refinement": 2,
+      "trace_degree": 0,
+      "macro_balance_max": 4.3021142204224816e-16,
+      "seconds": 16.30721947096754,
+      "fine_balance_max": 1.1102230246251565e-16
+    }
+  ]
+}

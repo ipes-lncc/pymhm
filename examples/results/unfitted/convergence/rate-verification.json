@@ -1,0 +1,460 @@
+{
+  "source_record_sha256": "a16feb96bbea4f49c29c83f8f8c2877bfb987df67bc5818efcf9098001f181e3",
+  "accepted_field_digests": true,
+  "local_degree": 8,
+  "local_refinement": 32,
+  "macro_triangles": 16,
+  "norm": "absolute broken pressure-gradient L2; quadrature order13",
+  "families": [
+    {
+      "trace_degree": 0,
+      "published_reference_order": 1.5,
+      "errors": [
+        1.7935787084897163,
+        1.7935787084897166,
+        0.49795692684543613,
+        0.15016761229510342,
+        0.04815768181160324,
+        0.016087787145811223
+      ],
+      "segments": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "all_intervals": [
+        {
+          "segments": [
+            1,
+            2
+          ],
+          "H": [
+            0.5,
+            0.25
+          ],
+          "observed_order": -1.6017132519074588e-16
+        },
+        {
+          "segments": [
+            2,
+            4
+          ],
+          "H": [
+            0.25,
+            0.125
+          ],
+          "observed_order": 1.848748197146673
+        },
+        {
+          "segments": [
+            4,
+            8
+          ],
+          "H": [
+            0.125,
+            0.0625
+          ],
+          "observed_order": 1.7294472646980839
+        },
+        {
+          "segments": [
+            8,
+            16
+          ],
+          "H": [
+            0.0625,
+            0.03125
+          ],
+          "observed_order": 1.6407358390082858
+        },
+        {
+          "segments": [
+            16,
+            32
+          ],
+          "H": [
+            0.03125,
+            0.015625
+          ],
+          "observed_order": 1.5818000472147258
+        }
+      ],
+      "last_three_intervals": [
+        {
+          "segments": [
+            4,
+            8
+          ],
+          "H": [
+            0.125,
+            0.0625
+          ],
+          "observed_order": 1.7294472646980839
+        },
+        {
+          "segments": [
+            8,
+            16
+          ],
+          "H": [
+            0.0625,
+            0.03125
+          ],
+          "observed_order": 1.6407358390082858
+        },
+        {
+          "segments": [
+            16,
+            32
+          ],
+          "H": [
+            0.03125,
+            0.015625
+          ],
+          "observed_order": 1.5818000472147258
+        }
+      ]
+    },
+    {
+      "trace_degree": 1,
+      "published_reference_order": 2.5,
+      "errors": [
+        1.7935787084897163,
+        0.23207960795665045,
+        0.039317119872654384,
+        0.006991993983251847,
+        0.0012429050103829158,
+        0.00022013896918938487
+      ],
+      "segments": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "all_intervals": [
+        {
+          "segments": [
+            1,
+            2
+          ],
+          "H": [
+            0.5,
+            0.25
+          ],
+          "observed_order": 2.9501493885023296
+        },
+        {
+          "segments": [
+            2,
+            4
+          ],
+          "H": [
+            0.25,
+            0.125
+          ],
+          "observed_order": 2.5613902157523665
+        },
+        {
+          "segments": [
+            4,
+            8
+          ],
+          "H": [
+            0.125,
+            0.0625
+          ],
+          "observed_order": 2.4913817942108882
+        },
+        {
+          "segments": [
+            8,
+            16
+          ],
+          "H": [
+            0.0625,
+            0.03125
+          ],
+          "observed_order": 2.4919879014350377
+        },
+        {
+          "segments": [
+            16,
+            32
+          ],
+          "H": [
+            0.03125,
+            0.015625
+          ],
+          "observed_order": 2.497229581872242
+        }
+      ],
+      "last_three_intervals": [
+        {
+          "segments": [
+            4,
+            8
+          ],
+          "H": [
+            0.125,
+            0.0625
+          ],
+          "observed_order": 2.4913817942108882
+        },
+        {
+          "segments": [
+            8,
+            16
+          ],
+          "H": [
+            0.0625,
+            0.03125
+          ],
+          "observed_order": 2.4919879014350377
+        },
+        {
+          "segments": [
+            16,
+            32
+          ],
+          "H": [
+            0.03125,
+            0.015625
+          ],
+          "observed_order": 2.497229581872242
+        }
+      ]
+    },
+    {
+      "trace_degree": 2,
+      "published_reference_order": 3.5,
+      "errors": [
+        0.06413710748305938,
+        0.02494479198982037,
+        0.00199294491101721,
+        0.00016174382988719545,
+        1.3557392386109484e-05,
+        1.1489801599196402e-06
+      ],
+      "segments": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "all_intervals": [
+        {
+          "segments": [
+            1,
+            2
+          ],
+          "H": [
+            0.5,
+            0.25
+          ],
+          "observed_order": 1.362420652179196
+        },
+        {
+          "segments": [
+            2,
+            4
+          ],
+          "H": [
+            0.25,
+            0.125
+          ],
+          "observed_order": 3.6457649021546215
+        },
+        {
+          "segments": [
+            4,
+            8
+          ],
+          "H": [
+            0.125,
+            0.0625
+          ],
+          "observed_order": 3.6231192484923658
+        },
+        {
+          "segments": [
+            8,
+            16
+          ],
+          "H": [
+            0.0625,
+            0.03125
+          ],
+          "observed_order": 3.5765590542500427
+        },
+        {
+          "segments": [
+            16,
+            32
+          ],
+          "H": [
+            0.03125,
+            0.015625
+          ],
+          "observed_order": 3.560653927291497
+        }
+      ],
+      "last_three_intervals": [
+        {
+          "segments": [
+            4,
+            8
+          ],
+          "H": [
+            0.125,
+            0.0625
+          ],
+          "observed_order": 3.6231192484923658
+        },
+        {
+          "segments": [
+            8,
+            16
+          ],
+          "H": [
+            0.0625,
+            0.03125
+          ],
+          "observed_order": 3.5765590542500427
+        },
+        {
+          "segments": [
+            16,
+            32
+          ],
+          "H": [
+            0.03125,
+            0.015625
+          ],
+          "observed_order": 3.560653927291497
+        }
+      ]
+    },
+    {
+      "trace_degree": 3,
+      "published_reference_order": 4.5,
+      "errors": [
+        0.06413710748305926,
+        0.002065543576732631,
+        8.870742382038107e-05,
+        3.93964835963656e-06,
+        1.7471553831773485e-07,
+        7.71346830913865e-09
+      ],
+      "segments": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32
+      ],
+      "all_intervals": [
+        {
+          "segments": [
+            1,
+            2
+          ],
+          "H": [
+            0.5,
+            0.25
+          ],
+          "observed_order": 4.9565658890616495
+        },
+        {
+          "segments": [
+            2,
+            4
+          ],
+          "H": [
+            0.25,
+            0.125
+          ],
+          "observed_order": 4.541322839762315
+        },
+        {
+          "segments": [
+            4,
+            8
+          ],
+          "H": [
+            0.125,
+            0.0625
+          ],
+          "observed_order": 4.492916076823189
+        },
+        {
+          "segments": [
+            8,
+            16
+          ],
+          "H": [
+            0.0625,
+            0.03125
+          ],
+          "observed_order": 4.494987040015875
+        },
+        {
+          "segments": [
+            16,
+            32
+          ],
+          "H": [
+            0.03125,
+            0.015625
+          ],
+          "observed_order": 4.5014844056011825
+        }
+      ],
+      "last_three_intervals": [
+        {
+          "segments": [
+            4,
+            8
+          ],
+          "H": [
+            0.125,
+            0.0625
+          ],
+          "observed_order": 4.492916076823189
+        },
+        {
+          "segments": [
+            8,
+            16
+          ],
+          "H": [
+            0.0625,
+            0.03125
+          ],
+          "observed_order": 4.494987040015875
+        },
+        {
+          "segments": [
+            16,
+            32
+          ],
+          "H": [
+            0.03125,
+            0.015625
+          ],
+          "observed_order": 4.5014844056011825
+        }
+      ]
+    }
+  ],
+  "rate_provenance": "Chaumont-Frelet, Paredes and Valentin, Section6.1, fixed macro mesh and repeated skeleton bisection; smooth sine solution, unit coefficient; reference exponent ell+3/2",
+  "scope": "Observed rates of the stated finite-dimensional sequence. The separate local-refinement controls assess the effect of inexact local solves; these observed slopes alone do not prove negligible local error or recover historical inputs."
+}

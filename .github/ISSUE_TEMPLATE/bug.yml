@@ -1,0 +1,25 @@
+name: Bug report
+description: Report an implementation or numerical correctness issue.
+body:
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproducer
+      description: Provide executable code, input data, and boundary conditions.
+      render: python
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and observed result
+      description: Include residuals, conservation errors, tolerances, and references when relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include pymhm, Python, NumPy/SciPy, optional backend versions, OS, and hardware.
+    validations:
+      required: true

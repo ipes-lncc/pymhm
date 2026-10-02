@@ -1,0 +1,65 @@
+{
+  "method": "bulk evaluations at deterministic interior points, pixel centers and prescribed profile coordinates; explicit-side support is additional",
+  "source_hashes": {
+    "norm-acquisition-cg2-reader": "1a7496ebe879facf65f33fc5c6bc8548820528874464419c2c7caa33e3e985bb",
+    "examples/solve_unusual_spe10_reference.py": "8839561ec7b9f29a1c6a387d751b02bd0f77aa3867839aac7c837dd6d95c0098"
+  },
+  "rows": [
+    {
+      "archive": "classical-cg2-120x440.npz",
+      "acquisition_archive_sha256": "fc4a48782367b2eedd1b161257347e3ea441b31e0e697301ba290070608a7a65",
+      "archive_sha256": "937f6a99c37597bff371ca91b8c06ac6c8c85b07d6f262becd00e436facfff28",
+      "tested_points": 27604,
+      "pressure_gradient_flux_bitwise": true
+    },
+    {
+      "archive": "classical-cg2-240x880.npz",
+      "acquisition_archive_sha256": "d38e34974115a2dc451d1e75da6440b7acf4db92a6dc67d8a940a076a17b6c7c",
+      "archive_sha256": "7f3e60a0879df8e938c72846ddc1bc57c2a0e8a3a8f0116447c00c1b520db7e3",
+      "tested_points": 27604,
+      "pressure_gradient_flux_bitwise": true
+    },
+    {
+      "archive": "classical-cg2-60x220.npz",
+      "acquisition_archive_sha256": "7181519e31ef3fcbca05a26779646d4c2ebcc260ce5a97f127dbfa4ccd4175a5",
+      "archive_sha256": "d7d8f5055f7ca6193d6c3d683c85287c3014e506596f3a37560858a2242dba71",
+      "tested_points": 27604,
+      "pressure_gradient_flux_bitwise": true
+    },
+    {
+      "archive": "classical-cg2-graded-120x468.npz",
+      "acquisition_archive_sha256": "3b693bb112a65d4564e03afeb0fba4b7c28118285b4f893a574f092eda724b0f",
+      "archive_sha256": "1b0f84ec8623121c4dae26f43714f64792d2c1524c811b4713a1319cde489a69",
+      "tested_points": 27604,
+      "pressure_gradient_flux_bitwise": true
+    },
+    {
+      "archive": "classical-cg2-graded-240x936.npz",
+      "acquisition_archive_sha256": "5100306984a2cf50f5e1c9f2a780ebc859f604275e29ebdf985c4e7982669665",
+      "archive_sha256": "97aad6605988bcb2fdb78852d362d253a79c3f1de490e775f639f5ce30418566",
+      "tested_points": 27604,
+      "pressure_gradient_flux_bitwise": true
+    },
+    {
+      "archive": "classical-cg2-graded-480x1872.npz",
+      "acquisition_archive_sha256": "e7bb7ed38fa82e567ba54b933cde4a4ac71a237d7d83a76832e6a77fa7e25cb5",
+      "archive_sha256": "802ebbb125093feff91b4d9cfb1fa54fed58e20d4516dbbcd9f06a49464fbbf0",
+      "tested_points": 27604,
+      "pressure_gradient_flux_bitwise": true
+    },
+    {
+      "archive": "classical-cg2-graded-xy-1440x498.npz",
+      "acquisition_archive_sha256": "3a536228173b05fbcf816d6dd9b423a61a377ec408c9cd216d17a30fc3a674a3",
+      "archive_sha256": "90d4715637a679876b11205f928fb0955c1af267fa3a974c9d3b9aac98b1793f",
+      "tested_points": 27604,
+      "pressure_gradient_flux_bitwise": true
+    },
+    {
+      "archive": "classical-cg2-graded-xy-720x249.npz",
+      "acquisition_archive_sha256": "44c5b710038c2138680496ca8d9f5a71c5afd098ad1543a1b333da626561dcf1",
+      "archive_sha256": "8e9c5391e6700d9ff62a12ebbce98a12e8f242752ced9004fc22868d0026ea72",
+      "tested_points": 27604,
+      "pressure_gradient_flux_bitwise": true
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "suite": "mshho3d",
+  "section_height": 0.37,
+  "sampling_refinement": 6,
+  "sampling": "Full polynomial evaluation on private fine-cell section vertices; no averaging across interfaces",
+  "norm_check_rtol": 2e-10,
+  "norm_check_atol": 2e-13,
+  "acquisition_record_sha256": "2777372439715354ce4838ae7b6f4a0355a3659eda4b9e93f238a40905144b58",
+  "source_sha256": {
+    "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+    "src/pymhm/hdiv3d_general.py": "d2c9e84ab28dceb8f24fb7ac03c2b9921e5f6d57131d5a8ecf6dcf95c1277884",
+    "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+    "src/pymhm/tetrahedral.py": "be9cf2387044046d90761e8a98cf1c81ed6070a9db685c2f63d059c3224e4b24",
+    "src/pymhm/tetra_lagrange.py": "89af3d45c336bab82d298f39be15b7e9f806ea0ec78860d9d05d374a3b8f5f49",
+    "src/pymhm/mshho.py": "3eb065e61b31be310bf5ae982f5b51560e9d5078bbf0c7a9960d0f035728691f",
+    "src/pymhm/mshho3d.py": "acccdd5fccd512857493ac48e9fd269455bcdddd5fce78253b47d887e9405b93",
+    "src/pymhm/darcy3d.py": "6fd858b23e13ce0466c61efdfacb6c2b627df0c6bd8b63291716757c8bb4fbd2",
+    "src/pymhm/polyhedral.py": "d9717d144870b573d7483631cd33e61f9e292fe0b20a5e10e7ec20016cd6ab74",
+    "src/pymhm/polyhedral_rad.py": "05b9afdbd755e01873efbe181d2ae51574d2eaaa3a2d3c64c64a5ba076e71e35",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc",
+    "examples/sample_core_sections.py": "f3899b49de8b681b3c014e4412804f1489eadc64b9c8b79afedd7d875fed2b85",
+    "examples/core_extension_data.py": "e2138ee96c930b9f0559d20bdde5eae2c6ace802d36c88b8286eb6f8559651f2"
+  },
+  "cases": {
+    "tetra-p0": {
+      "archive": "tetra-p0-polynomial-fields.npz",
+      "sha256": "8d8f7aed51fbdbcdc77741e86a39680c03e929699ee42296c5833dc201c599cf",
+      "original_archive": "tetra-p0.npz",
+      "original_sha256": "c32352ed2161c360e451d3793d09fb4067acd548b99cbaab1a56270cd139ba88",
+      "resolution": 5,
+      "pressure_l2": 0.014372312150528165,
+      "flux_l2": 0.39845292574711566
+    },
+    "cube-p0": {
+      "archive": "cube-p0-polynomial-fields.npz",
+      "sha256": "cac89bbd3c3f87e374da2233d4b8f017622fa8135c41b31556a64acff2c12929",
+      "original_archive": "cube-p0.npz",
+      "original_sha256": "c8360c31867e2e50eac8a845f08e6264c9bdf02e6d4542aefda76dece467904f",
+      "resolution": 5,
+      "pressure_l2": 0.022854522343704366,
+      "flux_l2": 0.49077665341885895
+    }
+  },
+  "source_changed": false
+}

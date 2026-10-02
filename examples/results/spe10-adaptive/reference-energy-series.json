@@ -1,0 +1,97 @@
+[
+  {
+    "archive": "reference-rt2-15x55.npz",
+    "archive_sha256": "4d9dcf50033504098217a262b76b8258c7a01d86beb9a879d61073bc8c8db46e",
+    "order": 5,
+    "material_cut_integration": true,
+    "norms": {
+      "pressure_l2": 861.6357496676223,
+      "flux_l2": 0.3290806950404834,
+      "divergence_l2": 6.183098894946908e-16,
+      "previous_pressure_difference_l2": 0.0,
+      "previous_flux_difference_l2": 0.0,
+      "previous_pressure_relative_difference": 0.0,
+      "previous_flux_relative_difference": 0.0,
+      "flux_energy_norm": 0.28993933369885183,
+      "previous_flux_energy_difference": 0.0,
+      "previous_flux_energy_relative_difference": 0.0,
+      "norm_quadrature_order": 5
+    }
+  },
+  {
+    "archive": "reference-rt2-30x110.npz",
+    "archive_sha256": "35efb7b1713b6713e27712aad5de7e1b6776769d9b7595857351c0414b70b31b",
+    "order": 5,
+    "material_cut_integration": true,
+    "norms": {
+      "pressure_l2": 833.1449523907728,
+      "flux_l2": 0.82911150088689,
+      "divergence_l2": 4.1127402092078636e-15,
+      "previous_pressure_difference_l2": 102.60251094358016,
+      "previous_flux_difference_l2": 0.6292864536991012,
+      "previous_pressure_relative_difference": 0.1231508522606474,
+      "previous_flux_relative_difference": 0.7589889333653693,
+      "flux_energy_norm": 0.358186108272711,
+      "previous_flux_energy_difference": 0.21031517047911463,
+      "previous_flux_energy_relative_difference": 0.5871673010807769,
+      "norm_quadrature_order": 5
+    }
+  },
+  {
+    "archive": "reference-rt2-60x220.npz",
+    "archive_sha256": "7f554e4e48a7dd57252e13c9866fdf9dc9b31b3b35f17f35d0c3b63c23cacdc6",
+    "order": 5,
+    "material_cut_integration": true,
+    "norms": {
+      "pressure_l2": 822.2684727676968,
+      "flux_l2": 0.9752611778892166,
+      "divergence_l2": 4.6260456818399294e-14,
+      "previous_pressure_difference_l2": 40.48461628971612,
+      "previous_flux_difference_l2": 0.5003202725489522,
+      "previous_pressure_relative_difference": 0.04923527732183115,
+      "previous_flux_relative_difference": 0.5130115746346107,
+      "flux_energy_norm": 0.38657002046574174,
+      "previous_flux_energy_difference": 0.14539289034501562,
+      "previous_flux_energy_relative_difference": 0.3761101033387055,
+      "norm_quadrature_order": 5
+    }
+  },
+  {
+    "archive": "reference-rt2-120x440.npz",
+    "archive_sha256": "7c995c0588339480131e1365702798ef600eeaf4c0f0f9dc84cc172122e019a1",
+    "order": 5,
+    "material_cut_integration": true,
+    "norms": {
+      "pressure_l2": 821.8455779364311,
+      "flux_l2": 0.9803308350537421,
+      "divergence_l2": 2.694838227702867e-13,
+      "previous_pressure_difference_l2": 0.5447730340099869,
+      "previous_flux_difference_l2": 0.0846590009836173,
+      "previous_pressure_relative_difference": 0.0006628654441115998,
+      "previous_flux_relative_difference": 0.08635758251853443,
+      "flux_energy_norm": 0.38753981485248407,
+      "previous_flux_energy_difference": 0.027399404592227682,
+      "previous_flux_energy_relative_difference": 0.07070087650905543,
+      "norm_quadrature_order": 5
+    }
+  },
+  {
+    "archive": "reference-rt2-240x880.npz",
+    "archive_sha256": "94a82d6eb9c7192b388dbe31d27ae6261ab8247abd3cfc97c58663e781bed55f",
+    "order": 5,
+    "material_cut_integration": true,
+    "norms": {
+      "pressure_l2": 821.633886545126,
+      "flux_l2": 0.9828793980272821,
+      "divergence_l2": 4.882618387990211e-12,
+      "previous_pressure_difference_l2": 0.2650769791840921,
+      "previous_flux_difference_l2": 0.05641458802713187,
+      "previous_pressure_relative_difference": 0.00032262177050499915,
+      "previous_flux_relative_difference": 0.057397263733842095,
+      "flux_energy_norm": 0.38794212687454044,
+      "previous_flux_energy_difference": 0.017663117109512332,
+      "previous_flux_energy_relative_difference": 0.04553028889080805,
+      "norm_quadrature_order": 5
+    }
+  }
+]

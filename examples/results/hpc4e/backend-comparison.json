@@ -1,0 +1,21 @@
+{
+  "quadrature_order": 4,
+  "displacement_difference_dimensionless": 2.120257669820243e-12,
+  "displacement_reference_norm_dimensionless": 0.00443866443013303,
+  "displacement_relative": 4.776791990460737e-10,
+  "stress_difference_dimensionless": 1.3179312642855661e-09,
+  "stress_reference_norm_dimensionless": 0.5303961639896924,
+  "stress_relative": 2.4848054223694925e-09,
+  "divergence_difference_dimensionless": 9.482848067962305e-10,
+  "divergence_reference_norm_dimensionless": 1.4845988984228815,
+  "divergence_relative": 6.387481546723577e-10,
+  "rotation_difference_dimensionless": 1.6689806929315915e-09,
+  "rotation_reference_norm_dimensionless": 0.04870897843619354,
+  "rotation_relative": 3.42643337330073e-08,
+  "compliance_difference_dimensionless": 6.223050896896035e-10,
+  "compliance_reference_norm_dimensionless": 0.04971003131814609,
+  "compliance_relative": 1.251870242661541e-08,
+  "reference_solver": "SciPy SuperLU",
+  "compared_solver": "Intel MKL PARDISO symmetric indefinite",
+  "case": "HPC4e RT1, s=1, 512x256 fine rectangles"
+}

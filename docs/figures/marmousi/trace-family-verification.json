@@ -1,0 +1,182 @@
+{
+  "rows": [
+    {
+      "H_m": 20,
+      "local_refinement": 8,
+      "storage_bytes_per_local": [
+        1155536,
+        1155536,
+        1152536,
+        1152536
+      ],
+      "full_local_storage_GiB": 70.5283203125,
+      "preparation_seconds_four_macros": 0.34617828903719783,
+      "degrees": [
+        {
+          "degree": 0,
+          "p_relative": 8.087578140059639e-16,
+          "trace_relative": 6.644522034757913e-16,
+          "residual": 1.766092699488325e-16,
+          "local_residual": 1.4686087579806169e-16,
+          "balance": 6.5137599149430375e-15
+        },
+        {
+          "degree": 1,
+          "p_relative": 3.170910653446284e-16,
+          "trace_relative": 2.2978443402588246e-16,
+          "residual": 1.8596447785088247e-16,
+          "local_residual": 1.6757730004736215e-16,
+          "balance": 3.46689016044273e-15
+        },
+        {
+          "degree": 2,
+          "p_relative": 5.4193018688768575e-16,
+          "trace_relative": 1.2366934723189067e-15,
+          "residual": 1.6698977556019717e-16,
+          "local_residual": 1.7401320691117014e-16,
+          "balance": 5.578177967286191e-15
+        },
+        {
+          "degree": 3,
+          "p_relative": 5.179601844362113e-16,
+          "trace_relative": 2.325357109129954e-15,
+          "residual": 2.0072290439649802e-16,
+          "local_residual": 1.817214219150647e-16,
+          "balance": 4.870387944294713e-15
+        },
+        {
+          "degree": 4,
+          "p_relative": 0.0,
+          "trace_relative": 0.0,
+          "residual": 2.805779028883087e-16,
+          "local_residual": 1.842302134124612e-16,
+          "balance": 3.8905869329848806e-15
+        }
+      ],
+      "process_peak_GiB": 0.2863006591796875
+    },
+    {
+      "H_m": 40,
+      "local_refinement": 16,
+      "storage_bytes_per_local": [
+        4471184,
+        4471184,
+        4465304,
+        4465304
+      ],
+      "full_local_storage_GiB": 68.224853515625,
+      "preparation_seconds_four_macros": 1.2025468240026385,
+      "degrees": [
+        {
+          "degree": 0,
+          "p_relative": 6.62785441323252e-14,
+          "trace_relative": 4.824606656882384e-14,
+          "residual": 9.732176611828324e-17,
+          "local_residual": 2.9774429123408754e-16,
+          "balance": 9.520717627128238e-14
+        },
+        {
+          "degree": 1,
+          "p_relative": 1.5273194008251618e-15,
+          "trace_relative": 1.0054728272697789e-15,
+          "residual": 7.163001937611621e-17,
+          "local_residual": 3.26053152039731e-16,
+          "balance": 8.006303220837898e-14
+        },
+        {
+          "degree": 2,
+          "p_relative": 6.652203099214668e-16,
+          "trace_relative": 4.911573560147791e-16,
+          "residual": 7.214195641070332e-17,
+          "local_residual": 3.5805501429743156e-16,
+          "balance": 7.456504917031409e-14
+        },
+        {
+          "degree": 3,
+          "p_relative": 1.2262396370251251e-15,
+          "trace_relative": 5.641259910536085e-16,
+          "residual": 9.43119711399978e-17,
+          "local_residual": 3.5771542477911097e-16,
+          "balance": 7.142549617932051e-14
+        },
+        {
+          "degree": 4,
+          "p_relative": 0.0,
+          "trace_relative": 0.0,
+          "residual": 1.0943406054543069e-16,
+          "local_residual": 3.7190680339604866e-16,
+          "balance": 7.053331238331324e-14
+        }
+      ],
+      "process_peak_GiB": 0.2863006591796875
+    },
+    {
+      "H_m": 80,
+      "local_refinement": 32,
+      "storage_bytes_per_local": [
+        17627408,
+        17627408,
+        17615768,
+        17615768
+      ],
+      "full_local_storage_GiB": 67.24322509765625,
+      "preparation_seconds_four_macros": 5.578241695999168,
+      "degrees": [
+        {
+          "degree": 0,
+          "p_relative": 4.3675959148558814e-14,
+          "trace_relative": 3.92138127007534e-14,
+          "residual": 8.962178399334864e-17,
+          "local_residual": 3.74061715508637e-16,
+          "balance": 3.767150292368879e-14
+        },
+        {
+          "degree": 1,
+          "p_relative": 6.007445670035006e-15,
+          "trace_relative": 3.8130389602760756e-15,
+          "residual": 6.458025063950922e-17,
+          "local_residual": 4.78904232743129e-16,
+          "balance": 8.429416617356657e-14
+        },
+        {
+          "degree": 2,
+          "p_relative": 9.235988536561661e-15,
+          "trace_relative": 6.870625359748849e-15,
+          "residual": 1.2359369898855975e-16,
+          "local_residual": 4.929857942510689e-16,
+          "balance": 1.28510740309943e-13
+        },
+        {
+          "degree": 3,
+          "p_relative": 2.8306209047556543e-15,
+          "trace_relative": 1.9610071883901092e-15,
+          "residual": 6.727062039054099e-17,
+          "local_residual": 5.578388272489895e-16,
+          "balance": 1.1309895915153024e-13
+        },
+        {
+          "degree": 4,
+          "p_relative": 0.0,
+          "trace_relative": 0.0,
+          "residual": 5.4665981095167033e-17,
+          "local_residual": 5.737034953768755e-16,
+          "balance": 1.139279193682169e-13
+        }
+      ],
+      "process_peak_GiB": 0.672943115234375
+    }
+  ],
+  "global_factor_not_estimated": true,
+  "method": "Original Helmholtz local assembler and LocalProblem condensation; structural-zero sparse coupling storage; exact polynomial trace restriction",
+  "verification_scope": "Four macro rectangles for each H=20,40,80 m, actual pinned Marmousi material, unit point functional at (5000,50) m; local patch top y=40 m Dirichlet zero and other sides absorbing",
+  "geometry": "bounds=(4980,4980+2H,40,40+2H) m, two macro rectangles in each coordinate",
+  "source_sha256": {
+    "examples/helmholtz_compact_family.py": "8d698487dd8960c387fdfb5150d587fcf579425782ce52ebc25afec17b24b139",
+    "examples/helmholtz_trace_family.py": "75c426bd3630d4f6c1e65e1e733ebb2981a863c6d6795ab1bdb586c9351bcbfe",
+    "src/pymhm/helmholtz.py": "256aa1f84dd947569898dae45951b5acdce1de646e33895c5ae2f4ed8acbc65b",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d"
+  },
+  "comparison": "All five restricted trace degrees compared with independent calls to solve_helmholtz using the same Q3 local grid and quadrature nine",
+  "timing_scope": "Four-macro patch observations only; no full-domain speedup claim",
+  "storage_scope": "Retained numerical array buffers extrapolated by macro count; excludes Python overhead and global matrix factorization"
+}

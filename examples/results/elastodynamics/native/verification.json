@@ -1,0 +1,2952 @@
+{
+  "accepted": true,
+  "case": "Gomes et al. (2017), Equation (53)",
+  "method": "Independent DOLFINx/UFL/Basix complete uncondensed P3/P1 Newmark saddle, beta=1/4 gamma=1/2",
+  "native_provenance": {
+    "reference_code": "FEniCS/DOLFINx",
+    "version": "0.9.0",
+    "runtime_reported_build_git_hash": "8067ef16087b9f364873e0e657dcda52fb989ce3",
+    "runtime_hash_status": "build-reported identifier; not resolved as an upstream dolfinx commit",
+    "verified_upstream_release_commit": "6443e3b27d29aec04ce83d8424b57c339e35f865",
+    "verified_source_url": "https://github.com/FEniCS/dolfinx/tree/6443e3b27d29aec04ce83d8424b57c339e35f865",
+    "upstream_verification_url": "https://api.github.com/repos/FEniCS/dolfinx/git/ref/tags/v0.9.0",
+    "conda_packages": [
+      {
+        "name": "fenics-dolfinx",
+        "version": "0.9.0",
+        "build": "py313hf84a112_112",
+        "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-dolfinx-0.9.0-py313hf84a112_112.conda",
+        "sha256": "79bb466bd1624512b7e6302e7926a05ef1e78685f0c188a69668222f31852b86",
+        "recipe_sha256": "df9a203accdaa6d1a5b1c97600971f9803620dea2176e5c62b705d9ac0e12bec",
+        "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+        "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+        "patches": [
+          {
+            "name": "unpin-cffi.patch",
+            "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+          }
+        ]
+      },
+      {
+        "name": "fenics-libdolfinx",
+        "version": "0.9.0",
+        "build": "py313h2154cf7_112",
+        "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-libdolfinx-0.9.0-py313h2154cf7_112.conda",
+        "sha256": "f8068fef21e9008e0531d83e8f19e8ee41bb40920881b8416583380f138e7889",
+        "recipe_sha256": "e75fdc33edb216ccf13ad27023b1b2b1f465451c630395137104e278732a62d7",
+        "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+        "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+        "patches": [
+          {
+            "name": "unpin-cffi.patch",
+            "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+          }
+        ]
+      }
+    ],
+    "python_extension_file": "cpp.cpython-313-x86_64-linux-gnu.so",
+    "python_extension_sha256": "7fba4280795a95accf09754435d0e6a19e48ca4e2c604d739688614bf4b6802a",
+    "runtime_versions": {
+      "dolfinx": "0.9.0",
+      "basix": "0.9.0",
+      "ufl": "2024.2.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1"
+    }
+  },
+  "pymhm_source_sha256": {
+    "src/pymhm/__init__.py": "3d987d092163c67d321357c23813468ce2385b9c440d24ac1383cf4f3de2ead6",
+    "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+    "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+    "src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+    "src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+    "src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+    "src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+    "src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+    "src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+    "src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+    "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+    "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+    "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+    "src/pymhm/darcy.py": "6ed895bac751317e58ac5dea5129b9f5eb944d7492191c5d10a8a9c7ebd2419c",
+    "src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+    "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+    "src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+    "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+    "src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+    "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+    "src/pymhm/darcy_transport.py": "0e89e0a2902fcfb0d7850738e58f1acc734b088ca00a817d2c91199ec5b1931c",
+    "src/pymhm/distributed.py": "b1c1404003f1a1ed5036b4bfcb18cd121aaeea147127b9c6351cc7bd0a88840f",
+    "src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+    "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+    "src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+    "src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+    "src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+    "src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+    "src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+    "src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+    "src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+    "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+    "src/pymhm/elastodynamics.py": "aff5a0b1f62ba07e8dffde962e2b2380e1f48ea0e48187e799c7c23ee263feaf",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+    "src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+    "src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+    "src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+    "src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+    "src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+    "src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+    "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+    "src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+    "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+    "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+    "src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+    "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+    "src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+    "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+    "src/pymhm/hdiv3d_general.py": "d2c9e84ab28dceb8f24fb7ac03c2b9921e5f6d57131d5a8ecf6dcf95c1277884",
+    "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+    "src/pymhm/helmholtz.py": "93542c9da2ea4e3a37d55318747de90103e4e54855124878943fca5da0793b15",
+    "src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+    "src/pymhm/helmholtz_spaces.py": "3d86328917c90ba30942e443f25e6daac4eca01c14f1cba6b202b5066b754c33",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+    "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+    "src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+    "src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+    "src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+    "src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+    "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+    "src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+    "src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+    "src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+    "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+    "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+    "src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+    "src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+    "src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+    "src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+    "src/pymhm/mshho.py": "3eb065e61b31be310bf5ae982f5b51560e9d5078bbf0c7a9960d0f035728691f",
+    "src/pymhm/mshho3d.py": "acccdd5fccd512857493ac48e9fd269455bcdddd5fce78253b47d887e9405b93",
+    "src/pymhm/nested.py": "a364ed723f6ce459f16c404e4b9925e9ea2579c1ed120ec2909ccb307a5dc556",
+    "src/pymhm/offline.py": "d991950927222677d97e25a49ae2839861583d79801c818d5426ecd538590212",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+    "src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+    "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+    "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+    "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+    "src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+    "src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+    "src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+    "src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+    "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+    "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+    "src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+    "src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+    "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+    "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+    "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+    "src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+    "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+    "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+    "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+    "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+    "src/pymhm/scalar_boundary.py": "b0f058385c0ec413902d02638d5d95a67fc238d16aa183359597547681da5ef0",
+    "src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+    "src/pymhm/scalar_transient.py": "c832e492613ccf449a21164206e117f44645f44d1243915db913ce0b2c28ea9d",
+    "src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+    "src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+    "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+    "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+    "src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+    "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+    "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+    "src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+    "src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+    "src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+    "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94"
+  },
+  "reference_driver_sha256": "8b05c8b83ada842ad9cf3031cd704e19728621d47d46c86a68560378b7cd679f",
+  "norm_replay_sha256": "f20cae7ace9e7156804a63a5b15f3eb694e368daed950962f4b2d4159ae66694",
+  "rows": [
+    {
+      "case": "Gomes et al2017 Equation53: lambda=mu=.4,rho=1,zero initial/boundary displacement",
+      "native_method": "DOLFINx/UFL P3/P1 full uncondensed Newmark saddle, beta=1/4 gamma=1/2",
+      "n": 1,
+      "local_refinement": 2,
+      "dt": 0.005,
+      "final_time": 0.5,
+      "pymhm_gauss_order": 12,
+      "native_volume_exactness_degree": 24,
+      "native_unknowns": 1674,
+      "dolfinx": "0.9.0",
+      "basix": "0.9.0",
+      "history": [
+        {
+          "time": 0.005,
+          "native_original_residual": 3.0337846200914863e-15,
+          "native_energy": 7.087272497494281e-05,
+          "pymhm_energy": 7.087272497503497e-05,
+          "displacement_l2_relative": 3.3782127710507635e-12,
+          "displacement_gradient_relative": 1.1020554854667785e-11,
+          "velocity_l2_relative": 3.3782296495926927e-12,
+          "velocity_gradient_relative": 1.1020484033835346e-11
+        },
+        {
+          "time": 0.01,
+          "native_original_residual": 2.6837938280626084e-15,
+          "native_energy": 0.0002837315117207283,
+          "pymhm_energy": 0.00028373151172109704,
+          "displacement_l2_relative": 3.3619426509042793e-12,
+          "displacement_gradient_relative": 1.0940614362003694e-11,
+          "velocity_l2_relative": 3.3456595031395566e-12,
+          "velocity_gradient_relative": 1.0860686488452268e-11
+        },
+        {
+          "time": 0.015,
+          "native_original_residual": 2.7377161393641913e-15,
+          "native_energy": 0.0006392985058341354,
+          "pymhm_energy": 0.000639298505834965,
+          "displacement_l2_relative": 3.3353311882590367e-12,
+          "displacement_gradient_relative": 1.0809865998449758e-11,
+          "velocity_l2_relative": 3.293009485640644e-12,
+          "velocity_gradient_relative": 1.0599946476219949e-11
+        },
+        {
+          "time": 0.02,
+          "native_original_residual": 2.4159346367315613e-15,
+          "native_energy": 0.0011387783232130588,
+          "pymhm_energy": 0.0011387783232145346,
+          "displacement_l2_relative": 3.298903076919936e-12,
+          "displacement_gradient_relative": 1.0629562822277611e-11,
+          "velocity_l2_relative": 3.2224739411486286e-12,
+          "velocity_gradient_relative": 1.0245218793983676e-11
+        },
+        {
+          "time": 0.025,
+          "native_original_residual": 2.6617549787183722e-15,
+          "native_energy": 0.001783859630761175,
+          "pymhm_energy": 0.0017838596307634814,
+          "displacement_l2_relative": 3.253622728510654e-12,
+          "displacement_gradient_relative": 1.0403489284448507e-11,
+          "velocity_l2_relative": 3.137026175796767e-12,
+          "velocity_gradient_relative": 9.80596521397667e-12
+        },
+        {
+          "time": 0.03,
+          "native_original_residual": 2.3699767346285314e-15,
+          "native_energy": 0.0025767173990164367,
+          "pymhm_energy": 0.002576717399019759,
+          "displacement_l2_relative": 3.2006472320148908e-12,
+          "displacement_gradient_relative": 1.0135712810615847e-11,
+          "velocity_l2_relative": 3.0402224317000724e-12,
+          "velocity_gradient_relative": 9.295718975836639e-12
+        },
+        {
+          "time": 0.035,
+          "native_original_residual": 2.341030516798722e-15,
+          "native_energy": 0.0035200158616895275,
+          "pymhm_energy": 0.003520015861694052,
+          "displacement_l2_relative": 3.1412414658912645e-12,
+          "displacement_gradient_relative": 9.831153589744662e-12,
+          "velocity_l2_relative": 2.936032136433314e-12,
+          "velocity_gradient_relative": 8.729558849609093e-12
+        },
+        {
+          "time": 0.04,
+          "native_original_residual": 3.157495943418595e-15,
+          "native_energy": 0.0046169122208068085,
+          "pymhm_energy": 0.00461691222081272,
+          "displacement_l2_relative": 3.076640708732417e-12,
+          "displacement_gradient_relative": 9.495147492459649e-12,
+          "velocity_l2_relative": 2.8285999341761838e-12,
+          "velocity_gradient_relative": 8.126823231633162e-12
+        },
+        {
+          "time": 0.045,
+          "native_original_residual": 3.592891437469758e-15,
+          "native_energy": 0.005871061135755555,
+          "pymhm_energy": 0.0058710611357630435,
+          "displacement_l2_relative": 3.00831665285221e-12,
+          "displacement_gradient_relative": 9.13318976420231e-12,
+          "velocity_l2_relative": 2.721917867962449e-12,
+          "velocity_gradient_relative": 7.50727206181471e-12
+        },
+        {
+          "time": 0.05,
+          "native_original_residual": 2.763910065767334e-15,
+          "native_energy": 0.0072866200297436986,
+          "pymhm_energy": 0.007286620029752953,
+          "displacement_l2_relative": 2.9376740658947487e-12,
+          "displacement_gradient_relative": 8.752205149035902e-12,
+          "velocity_l2_relative": 2.6196155519071674e-12,
+          "velocity_gradient_relative": 6.894005569396517e-12
+        },
+        {
+          "time": 0.055,
+          "native_original_residual": 3.1905920134116807e-15,
+          "native_energy": 0.008868255238039144,
+          "pymhm_energy": 0.008868255238050354,
+          "displacement_l2_relative": 2.866208388071991e-12,
+          "displacement_gradient_relative": 8.359333547152523e-12,
+          "velocity_l2_relative": 2.5246357457478e-12,
+          "velocity_gradient_relative": 6.30810352714769e-12
+        },
+        {
+          "time": 0.06,
+          "native_original_residual": 2.1860229908254256e-15,
+          "native_energy": 0.010621149009186062,
+          "pymhm_energy": 0.010621149009199419,
+          "displacement_l2_relative": 2.7948340740491022e-12,
+          "displacement_gradient_relative": 7.960860629010001e-12,
+          "velocity_l2_relative": 2.4389947973792013e-12,
+          "velocity_gradient_relative": 5.7733994843388684e-12
+        },
+        {
+          "time": 0.065,
+          "native_original_residual": 3.108000771287326e-15,
+          "native_energy": 0.012551007353842939,
+          "pymhm_energy": 0.012551007353858638,
+          "displacement_l2_relative": 2.725110938629027e-12,
+          "displacement_gradient_relative": 7.563098147803222e-12,
+          "velocity_l2_relative": 2.3636852131587707e-12,
+          "velocity_gradient_relative": 5.304754853625807e-12
+        },
+        {
+          "time": 0.07,
+          "native_original_residual": 2.5529199094466666e-15,
+          "native_energy": 0.014664068716842196,
+          "pymhm_energy": 0.014664068716860443,
+          "displacement_l2_relative": 2.6576003347542577e-12,
+          "displacement_gradient_relative": 7.172186509424594e-12,
+          "velocity_l2_relative": 2.2987319969005403e-12,
+          "velocity_gradient_relative": 4.914577662739109e-12
+        },
+        {
+          "time": 0.075,
+          "native_original_residual": 2.6609107027901785e-15,
+          "native_energy": 0.0169671134276272,
+          "pymhm_energy": 0.016967113427648194,
+          "displacement_l2_relative": 2.5932722973662283e-12,
+          "displacement_gradient_relative": 6.79413523057742e-12,
+          "velocity_l2_relative": 2.2431372093879265e-12,
+          "velocity_gradient_relative": 4.6064643924498995e-12
+        },
+        {
+          "time": 0.08,
+          "native_original_residual": 2.9386657721798566e-15,
+          "native_energy": 0.019467473863604465,
+          "pymhm_energy": 0.019467473863628418,
+          "displacement_l2_relative": 2.5324897595446946e-12,
+          "displacement_gradient_relative": 6.4329327600322505e-12,
+          "velocity_l2_relative": 2.1955149896971535e-12,
+          "velocity_gradient_relative": 4.371168059554999e-12
+        },
+        {
+          "time": 0.085,
+          "native_original_residual": 2.5937124206605204e-15,
+          "native_energy": 0.022173045241433428,
+          "pymhm_energy": 0.02217304524146055,
+          "displacement_l2_relative": 2.475443608230662e-12,
+          "displacement_gradient_relative": 6.09273441764672e-12,
+          "velocity_l2_relative": 2.1540099173598715e-12,
+          "velocity_gradient_relative": 4.200742427621097e-12
+        },
+        {
+          "time": 0.09,
+          "native_original_residual": 3.0271503527573125e-15,
+          "native_energy": 0.025092296934108062,
+          "pymhm_energy": 0.025092296934138565,
+          "displacement_l2_relative": 2.422312434532012e-12,
+          "displacement_gradient_relative": 5.775900508660451e-12,
+          "velocity_l2_relative": 2.116814764549484e-12,
+          "velocity_gradient_relative": 4.067821955073065e-12
+        },
+        {
+          "time": 0.095,
+          "native_original_residual": 2.5888971765903022e-15,
+          "native_energy": 0.028234284197993596,
+          "pymhm_energy": 0.028234284198027725,
+          "displacement_l2_relative": 2.3730621874188717e-12,
+          "displacement_gradient_relative": 5.48431802505859e-12,
+          "velocity_l2_relative": 2.0823598553973555e-12,
+          "velocity_gradient_relative": 3.968061114076177e-12
+        },
+        {
+          "time": 0.1,
+          "native_original_residual": 2.8315295589913567e-15,
+          "native_energy": 0.031608660184704845,
+          "pymhm_energy": 0.03160866018474283,
+          "displacement_l2_relative": 2.3276463947474645e-12,
+          "displacement_gradient_relative": 5.218562169295445e-12,
+          "velocity_l2_relative": 2.0495881731051943e-12,
+          "velocity_gradient_relative": 3.872881843711805e-12
+        },
+        {
+          "time": 0.105,
+          "native_original_residual": 2.2706294022816734e-15,
+          "native_energy": 0.03522568810852837,
+          "pymhm_energy": 0.03522568810857046,
+          "displacement_l2_relative": 2.2856551566338478e-12,
+          "displacement_gradient_relative": 4.978414121813988e-12,
+          "velocity_l2_relative": 2.017864443649994e-12,
+          "velocity_gradient_relative": 3.786730982212583e-12
+        },
+        {
+          "time": 0.11,
+          "native_original_residual": 2.9746341272436104e-15,
+          "native_energy": 0.03909625344136979,
+          "pymhm_energy": 0.03909625344141624,
+          "displacement_l2_relative": 2.246813301772545e-12,
+          "displacement_gradient_relative": 4.76238651906851e-12,
+          "velocity_l2_relative": 1.9865054906550438e-12,
+          "velocity_gradient_relative": 3.6945581181410516e-12
+        },
+        {
+          "time": 0.115,
+          "native_original_residual": 2.156340283752367e-15,
+          "native_energy": 0.04323187601397671,
+          "pymhm_energy": 0.04323187601402779,
+          "displacement_l2_relative": 2.210760738914887e-12,
+          "displacement_gradient_relative": 4.569186016577472e-12,
+          "velocity_l2_relative": 1.9557596810752562e-12,
+          "velocity_gradient_relative": 3.6063920194337477e-12
+        },
+        {
+          "time": 0.12,
+          "native_original_residual": 2.5943285491935033e-15,
+          "native_energy": 0.04764472191412675,
+          "pymhm_energy": 0.04764472191418272,
+          "displacement_l2_relative": 2.177007107234426e-12,
+          "displacement_gradient_relative": 4.395964781496855e-12,
+          "velocity_l2_relative": 1.925787372112138e-12,
+          "velocity_gradient_relative": 3.509465037856754e-12
+        },
+        {
+          "time": 0.125,
+          "native_original_residual": 2.957396829463833e-15,
+          "native_energy": 0.05234761508891338,
+          "pymhm_energy": 0.05234761508897454,
+          "displacement_l2_relative": 2.145572584169752e-12,
+          "displacement_gradient_relative": 4.241770251592032e-12,
+          "velocity_l2_relative": 1.8970468614792083e-12,
+          "velocity_gradient_relative": 3.4246864414613094e-12
+        },
+        {
+          "time": 0.13,
+          "native_original_residual": 2.2782373768166593e-15,
+          "native_energy": 0.05735404857824314,
+          "pymhm_energy": 0.057354048578309794,
+          "displacement_l2_relative": 2.1161252752093065e-12,
+          "displacement_gradient_relative": 4.1040980567601525e-12,
+          "velocity_l2_relative": 1.8698556180430707e-12,
+          "velocity_gradient_relative": 3.341118378918011e-12
+        },
+        {
+          "time": 0.135,
+          "native_original_residual": 2.8114297798213495e-15,
+          "native_energy": 0.0626781953289508,
+          "pymhm_energy": 0.06267819532902327,
+          "displacement_l2_relative": 2.0884243598900584e-12,
+          "displacement_gradient_relative": 3.981159080237944e-12,
+          "velocity_l2_relative": 1.844112183314742e-12,
+          "velocity_gradient_relative": 3.2693194049885672e-12
+        },
+        {
+          "time": 0.14,
+          "native_original_residual": 2.855631087430984e-15,
+          "native_energy": 0.06833491856213926,
+          "pymhm_energy": 0.06833491856221788,
+          "displacement_l2_relative": 2.062187514887989e-12,
+          "displacement_gradient_relative": 3.870854709910838e-12,
+          "velocity_l2_relative": 1.819955156246908e-12,
+          "velocity_gradient_relative": 3.207714044019733e-12
+        },
+        {
+          "time": 0.145,
+          "native_original_residual": 2.429845439869843e-15,
+          "native_energy": 0.07433978168895161,
+          "pymhm_energy": 0.07433978168903671,
+          "displacement_l2_relative": 2.037394510918795e-12,
+          "displacement_gradient_relative": 3.7718875011667215e-12,
+          "velocity_l2_relative": 1.7975552769384186e-12,
+          "velocity_gradient_relative": 3.1497258610734743e-12
+        },
+        {
+          "time": 0.15,
+          "native_original_residual": 3.4760111336066863e-15,
+          "native_energy": 0.08070905779046758,
+          "pymhm_energy": 0.08070905779055954,
+          "displacement_l2_relative": 2.0139189963002467e-12,
+          "displacement_gradient_relative": 3.682917769193463e-12,
+          "velocity_l2_relative": 1.7765509015905864e-12,
+          "velocity_gradient_relative": 3.1031489368158654e-12
+        },
+        {
+          "time": 0.155,
+          "native_original_residual": 2.5222647951333313e-15,
+          "native_energy": 0.08745973869435333,
+          "pymhm_energy": 0.08745973869445249,
+          "displacement_l2_relative": 1.991277360332239e-12,
+          "displacement_gradient_relative": 3.601725814278195e-12,
+          "velocity_l2_relative": 1.7566872850562955e-12,
+          "velocity_gradient_relative": 3.057369644930063e-12
+        },
+        {
+          "time": 0.16,
+          "native_original_residual": 2.959964462662539e-15,
+          "native_energy": 0.09460954369302578,
+          "pymhm_energy": 0.09460954369313254,
+          "displacement_l2_relative": 1.9700087833438957e-12,
+          "displacement_gradient_relative": 3.528555062233625e-12,
+          "velocity_l2_relative": 1.7376967577677362e-12,
+          "velocity_gradient_relative": 3.012281670572346e-12
+        },
+        {
+          "time": 0.165,
+          "native_original_residual": 3.1524752703354623e-15,
+          "native_energy": 0.10217692795441627,
+          "pymhm_energy": 0.10217692795453101,
+          "displacement_l2_relative": 1.9495982244475123e-12,
+          "displacement_gradient_relative": 3.4612748603799052e-12,
+          "velocity_l2_relative": 1.719794835355714e-12,
+          "velocity_gradient_relative": 2.9683041785095498e-12
+        },
+        {
+          "time": 0.17,
+          "native_original_residual": 2.5835983810208534e-15,
+          "native_energy": 0.11018109067625426,
+          "pymhm_energy": 0.1101810906763774,
+          "displacement_l2_relative": 1.9299545491305686e-12,
+          "displacement_gradient_relative": 3.3990190705226822e-12,
+          "velocity_l2_relative": 1.7022947390968953e-12,
+          "velocity_gradient_relative": 2.9227736227122637e-12
+        },
+        {
+          "time": 0.17500000000000002,
+          "native_original_residual": 2.796696903770312e-15,
+          "native_energy": 0.11864198302783416,
+          "pymhm_energy": 0.11864198302796616,
+          "displacement_l2_relative": 1.911117448680781e-12,
+          "displacement_gradient_relative": 3.341116212379421e-12,
+          "velocity_l2_relative": 1.685507703189358e-12,
+          "velocity_gradient_relative": 2.8748778913034055e-12
+        },
+        {
+          "time": 0.18,
+          "native_original_residual": 2.2145886924122864e-15,
+          "native_energy": 0.1275803159095639,
+          "pymhm_energy": 0.12758031590970512,
+          "displacement_l2_relative": 1.892931466119873e-12,
+          "displacement_gradient_relative": 3.286565111210754e-12,
+          "velocity_l2_relative": 1.6696370913141464e-12,
+          "velocity_gradient_relative": 2.828987460162664e-12
+        },
+        {
+          "time": 0.185,
+          "native_original_residual": 2.705476588320882e-15,
+          "native_energy": 0.1370175675407244,
+          "pymhm_energy": 0.13701756754087532,
+          "displacement_l2_relative": 1.875496018065193e-12,
+          "displacement_gradient_relative": 3.2349067441801326e-12,
+          "velocity_l2_relative": 1.6538716264044768e-12,
+          "velocity_gradient_relative": 2.775991801040429e-12
+        },
+        {
+          "time": 0.19,
+          "native_original_residual": 2.9021421868861915e-15,
+          "native_energy": 0.14697599086067148,
+          "pymhm_energy": 0.14697599086083263,
+          "displacement_l2_relative": 1.858740392019675e-12,
+          "displacement_gradient_relative": 3.186004518372047e-12,
+          "velocity_l2_relative": 1.6389333320454461e-12,
+          "velocity_gradient_relative": 2.7313750750217062e-12
+        },
+        {
+          "time": 0.195,
+          "native_original_residual": 2.4727709723900237e-15,
+          "native_energy": 0.1574786206994061,
+          "pymhm_energy": 0.15747862069957785,
+          "displacement_l2_relative": 1.842574698282762e-12,
+          "displacement_gradient_relative": 3.13886025648868e-12,
+          "velocity_l2_relative": 1.6244184605726146e-12,
+          "velocity_gradient_relative": 2.676376998273406e-12
+        },
+        {
+          "time": 0.2,
+          "native_original_residual": 2.8957555179242754e-15,
+          "native_energy": 0.16854928064153113,
+          "pymhm_energy": 0.16854928064171398,
+          "displacement_l2_relative": 1.826759070066994e-12,
+          "displacement_gradient_relative": 3.0927228045762634e-12,
+          "velocity_l2_relative": 1.610403119690099e-12,
+          "velocity_gradient_relative": 2.6365861562545105e-12
+        },
+        {
+          "time": 0.20500000000000002,
+          "native_original_residual": 2.5994372533245797e-15,
+          "native_energy": 0.18021258947479823,
+          "pymhm_energy": 0.18021258947499275,
+          "displacement_l2_relative": 1.811705283663471e-12,
+          "displacement_gradient_relative": 3.0486115852843507e-12,
+          "velocity_l2_relative": 1.5969771680211496e-12,
+          "velocity_gradient_relative": 2.5813971177645533e-12
+        },
+        {
+          "time": 0.21,
+          "native_original_residual": 2.66068425692505e-15,
+          "native_energy": 0.1924939670825298,
+          "pymhm_energy": 0.19249396708273642,
+          "displacement_l2_relative": 1.7970775041370057e-12,
+          "displacement_gradient_relative": 3.005569416738926e-12,
+          "velocity_l2_relative": 1.5841608307346548e-12,
+          "velocity_gradient_relative": 2.545021577376247e-12
+        },
+        {
+          "time": 0.215,
+          "native_original_residual": 2.482888853582357e-15,
+          "native_energy": 0.20541963960998988,
+          "pymhm_energy": 0.20541963961020915,
+          "displacement_l2_relative": 1.7827850430516656e-12,
+          "displacement_gradient_relative": 2.96334868581154e-12,
+          "velocity_l2_relative": 1.5720511910445495e-12,
+          "velocity_gradient_relative": 2.4921415648091777e-12
+        },
+        {
+          "time": 0.22,
+          "native_original_residual": 2.897694813213473e-15,
+          "native_energy": 0.21901664370998536,
+          "pymhm_energy": 0.21901664371021778,
+          "displacement_l2_relative": 1.7689277589106864e-12,
+          "displacement_gradient_relative": 2.9219496925157824e-12,
+          "velocity_l2_relative": 1.5606473211883252e-12,
+          "velocity_gradient_relative": 2.45509312727608e-12
+        },
+        {
+          "time": 0.225,
+          "native_original_residual": 2.6243258066287782e-15,
+          "native_energy": 0.23331282965411893,
+          "pymhm_energy": 0.23331282965436506,
+          "displacement_l2_relative": 1.755622573143193e-12,
+          "displacement_gradient_relative": 2.8818884209080557e-12,
+          "velocity_l2_relative": 1.54962107328027e-12,
+          "velocity_gradient_relative": 2.4108257067833048e-12
+        },
+        {
+          "time": 0.23,
+          "native_original_residual": 2.3320100707662847e-15,
+          "native_energy": 0.24833686308442862,
+          "pymhm_energy": 0.24833686308468894,
+          "displacement_l2_relative": 1.7426169969922715e-12,
+          "displacement_gradient_relative": 2.8426874796857742e-12,
+          "velocity_l2_relative": 1.539027178055968e-12,
+          "velocity_gradient_relative": 2.374591888885577e-12
+        },
+        {
+          "time": 0.23500000000000001,
+          "native_original_residual": 2.4153459485694718e-15,
+          "native_energy": 0.2641182251765183,
+          "pymhm_energy": 0.2641182251767935,
+          "displacement_l2_relative": 1.7300577050228358e-12,
+          "displacement_gradient_relative": 2.8047792019083627e-12,
+          "velocity_l2_relative": 1.5287755290882844e-12,
+          "velocity_gradient_relative": 2.3303745490476866e-12
+        },
+        {
+          "time": 0.24,
+          "native_original_residual": 2.6142169816495325e-15,
+          "native_energy": 0.28068721099018834,
+          "pymhm_energy": 0.28068721099047894,
+          "displacement_l2_relative": 1.7178753936623343e-12,
+          "displacement_gradient_relative": 2.76790128476946e-12,
+          "velocity_l2_relative": 1.5197832321235335e-12,
+          "velocity_gradient_relative": 2.30863363187506e-12
+        },
+        {
+          "time": 0.245,
+          "native_original_residual": 2.0953387922752615e-15,
+          "native_energy": 0.29807492579706035,
+          "pymhm_energy": 0.29807492579736683,
+          "displacement_l2_relative": 1.7060460396939285e-12,
+          "displacement_gradient_relative": 2.7322161716116247e-12,
+          "velocity_l2_relative": 1.5114729138729256e-12,
+          "velocity_gradient_relative": 2.2758875224623384e-12
+        },
+        {
+          "time": 0.25,
+          "native_original_residual": 2.436548443902284e-15,
+          "native_energy": 0.3163132791963732,
+          "pymhm_energy": 0.31631327919669633,
+          "displacement_l2_relative": 1.6947776796906473e-12,
+          "displacement_gradient_relative": 2.6981181515451536e-12,
+          "velocity_l2_relative": 1.5029068855560445e-12,
+          "velocity_gradient_relative": 2.2637305815726564e-12
+        },
+        {
+          "time": 0.255,
+          "native_original_residual": 2.4481470759235103e-15,
+          "native_energy": 0.33543497685918566,
+          "pymhm_energy": 0.33543497685952606,
+          "displacement_l2_relative": 1.68386341239278e-12,
+          "displacement_gradient_relative": 2.6653349808314633e-12,
+          "velocity_l2_relative": 1.4945781050729323e-12,
+          "velocity_gradient_relative": 2.230074088037613e-12
+        },
+        {
+          "time": 0.26,
+          "native_original_residual": 2.5040602009911188e-15,
+          "native_energy": 0.3554735097764798,
+          "pymhm_energy": 0.3554735097768382,
+          "displacement_l2_relative": 1.6732459431076874e-12,
+          "displacement_gradient_relative": 2.6335511117276157e-12,
+          "velocity_l2_relative": 1.4871626660960415e-12,
+          "velocity_gradient_relative": 2.224241851009347e-12
+        },
+        {
+          "time": 0.265,
+          "native_original_residual": 2.754925525943842e-15,
+          "native_energy": 0.3764631409266286,
+          "pymhm_energy": 0.3764631409270057,
+          "displacement_l2_relative": 1.6629699697594222e-12,
+          "displacement_gradient_relative": 2.603214131038304e-12,
+          "velocity_l2_relative": 1.4803541695613523e-12,
+          "velocity_gradient_relative": 2.2060048102738276e-12
+        },
+        {
+          "time": 0.27,
+          "native_original_residual": 2.683486677680989e-15,
+          "native_energy": 0.39843888932063365,
+          "pymhm_energy": 0.3984388893210301,
+          "displacement_l2_relative": 1.6530032777999193e-12,
+          "displacement_gradient_relative": 2.574154187093875e-12,
+          "velocity_l2_relative": 1.4744694751589263e-12,
+          "velocity_gradient_relative": 2.201228585945785e-12
+        },
+        {
+          "time": 0.275,
+          "native_original_residual": 3.187497990722904e-15,
+          "native_energy": 0.42143651142762023,
+          "pymhm_energy": 0.42143651142803673,
+          "displacement_l2_relative": 1.6435089936484276e-12,
+          "displacement_gradient_relative": 2.5464926545822897e-12,
+          "velocity_l2_relative": 1.466515676106094e-12,
+          "velocity_gradient_relative": 2.174263379160458e-12
+        },
+        {
+          "time": 0.28,
+          "native_original_residual": 2.8122641439622678e-15,
+          "native_energy": 0.4454924800263859,
+          "pymhm_energy": 0.4454924800268234,
+          "displacement_l2_relative": 1.6342092173159753e-12,
+          "displacement_gradient_relative": 2.5197085550692778e-12,
+          "velocity_l2_relative": 1.4607586964350337e-12,
+          "velocity_gradient_relative": 2.170198522317214e-12
+        },
+        {
+          "time": 0.28500000000000003,
+          "native_original_residual": 2.5891180605650016e-15,
+          "native_energy": 0.4706439605695303,
+          "pymhm_energy": 0.4706439605699894,
+          "displacement_l2_relative": 1.6252917924160465e-12,
+          "displacement_gradient_relative": 2.4945127177266243e-12,
+          "velocity_l2_relative": 1.4533756762537093e-12,
+          "velocity_gradient_relative": 2.138782827716304e-12
+        },
+        {
+          "time": 0.29,
+          "native_original_residual": 2.301672536656836e-15,
+          "native_energy": 0.4969287851831823,
+          "pymhm_energy": 0.4969287851836639,
+          "displacement_l2_relative": 1.6165849193688807e-12,
+          "displacement_gradient_relative": 2.4701606602123157e-12,
+          "velocity_l2_relative": 1.448837883019714e-12,
+          "velocity_gradient_relative": 2.1349007452384125e-12
+        },
+        {
+          "time": 0.295,
+          "native_original_residual": 2.4038138882783316e-15,
+          "native_energy": 0.5243854244561941,
+          "pymhm_energy": 0.5243854244566992,
+          "displacement_l2_relative": 1.6081854446259066e-12,
+          "displacement_gradient_relative": 2.4469749843664945e-12,
+          "velocity_l2_relative": 1.4422945265854254e-12,
+          "velocity_gradient_relative": 2.110753506189861e-12
+        },
+        {
+          "time": 0.3,
+          "native_original_residual": 2.3993040112389106e-15,
+          "native_energy": 0.5530529571967888,
+          "pymhm_energy": 0.5530529571973182,
+          "displacement_l2_relative": 1.6000163088542616e-12,
+          "displacement_gradient_relative": 2.424592217388454e-12,
+          "velocity_l2_relative": 1.4373598381696122e-12,
+          "velocity_gradient_relative": 2.094886324180598e-12
+        },
+        {
+          "time": 0.305,
+          "native_original_residual": 2.8153798618619295e-15,
+          "native_energy": 0.5829710383513462,
+          "pymhm_energy": 0.5829710383519008,
+          "displacement_l2_relative": 1.592189911490473e-12,
+          "displacement_gradient_relative": 2.4032120282110576e-12,
+          "velocity_l2_relative": 1.432180777172583e-12,
+          "velocity_gradient_relative": 2.0805187470454237e-12
+        },
+        {
+          "time": 0.31,
+          "native_original_residual": 2.6189773997883513e-15,
+          "native_energy": 0.6141798652889741,
+          "pymhm_energy": 0.6141798652895546,
+          "displacement_l2_relative": 1.584632225160203e-12,
+          "displacement_gradient_relative": 2.3824930625010235e-12,
+          "velocity_l2_relative": 1.4267412673737302e-12,
+          "velocity_gradient_relative": 2.0641341224660255e-12
+        },
+        {
+          "time": 0.315,
+          "native_original_residual": 2.4920367398549324e-15,
+          "native_energy": 0.6467201426568432,
+          "pymhm_energy": 0.6467201426574509,
+          "displacement_l2_relative": 1.5773692310099081e-12,
+          "displacement_gradient_relative": 2.36268291785554e-12,
+          "velocity_l2_relative": 1.4200936308959517e-12,
+          "velocity_gradient_relative": 2.0297684036135733e-12
+        },
+        {
+          "time": 0.32,
+          "native_original_residual": 2.945154246524632e-15,
+          "native_energy": 0.680633046005478,
+          "pymhm_energy": 0.680633046006114,
+          "displacement_l2_relative": 1.570339837708086e-12,
+          "displacement_gradient_relative": 2.3433717651643505e-12,
+          "velocity_l2_relative": 1.4162995864532598e-12,
+          "velocity_gradient_relative": 2.0366890873175967e-12
+        },
+        {
+          "time": 0.325,
+          "native_original_residual": 2.2177213266935288e-15,
+          "native_energy": 0.7159601843711227,
+          "pymhm_energy": 0.715960184371788,
+          "displacement_l2_relative": 1.5633946773675593e-12,
+          "displacement_gradient_relative": 2.32463987362806e-12,
+          "velocity_l2_relative": 1.4133159893380613e-12,
+          "velocity_gradient_relative": 2.016227525876015e-12
+        },
+        {
+          "time": 0.33,
+          "native_original_residual": 2.3693073914855828e-15,
+          "native_energy": 0.7527435619851032,
+          "pymhm_energy": 0.7527435619857987,
+          "displacement_l2_relative": 1.5566898998516169e-12,
+          "displacement_gradient_relative": 2.3062813174964206e-12,
+          "velocity_l2_relative": 1.4122244217581412e-12,
+          "velocity_gradient_relative": 2.039296893227218e-12
+        },
+        {
+          "time": 0.335,
+          "native_original_residual": 3.207640086955028e-15,
+          "native_energy": 0.7910255392591254,
+          "pymhm_energy": 0.7910255392598524,
+          "displacement_l2_relative": 1.5503005105873466e-12,
+          "displacement_gradient_relative": 2.2887947071018854e-12,
+          "velocity_l2_relative": 1.4059237219379735e-12,
+          "velocity_gradient_relative": 2.004220860254871e-12
+        },
+        {
+          "time": 0.34,
+          "native_original_residual": 2.506590807678063e-15,
+          "native_energy": 0.8308487931721911,
+          "pymhm_energy": 0.8308487931729508,
+          "displacement_l2_relative": 1.5439534927963467e-12,
+          "displacement_gradient_relative": 2.271322468936788e-12,
+          "velocity_l2_relative": 1.4021809559762011e-12,
+          "velocity_gradient_relative": 2.0059922610115104e-12
+        },
+        {
+          "time": 0.34500000000000003,
+          "native_original_residual": 2.8204262760105464e-15,
+          "native_energy": 0.8722562771607851,
+          "pymhm_energy": 0.8722562771615787,
+          "displacement_l2_relative": 1.537896094346557e-12,
+          "displacement_gradient_relative": 2.2547698693420047e-12,
+          "velocity_l2_relative": 1.3974043416057384e-12,
+          "velocity_gradient_relative": 1.968459087488769e-12
+        },
+        {
+          "time": 0.35000000000000003,
+          "native_original_residual": 2.65205436289877e-15,
+          "native_energy": 0.9152911805906855,
+          "pymhm_energy": 0.9152911805915139,
+          "displacement_l2_relative": 1.5319308052645476e-12,
+          "displacement_gradient_relative": 2.238329477124233e-12,
+          "velocity_l2_relative": 1.3924331864690431e-12,
+          "velocity_gradient_relative": 1.965330695098345e-12
+        },
+        {
+          "time": 0.355,
+          "native_original_residual": 2.5746099591702038e-15,
+          "native_energy": 0.9599968878674865,
+          "pymhm_energy": 0.9599968878683514,
+          "displacement_l2_relative": 1.5262018207840155e-12,
+          "displacement_gradient_relative": 2.22244510401194e-12,
+          "velocity_l2_relative": 1.3877797170225896e-12,
+          "velocity_gradient_relative": 1.9210859000611196e-12
+        },
+        {
+          "time": 0.36,
+          "native_original_residual": 2.4973758077123767e-15,
+          "native_energy": 1.0064169372248397,
+          "pymhm_energy": 1.0064169372257423,
+          "displacement_l2_relative": 1.5206286991869388e-12,
+          "displacement_gradient_relative": 2.206852880358647e-12,
+          "velocity_l2_relative": 1.3851771518099258e-12,
+          "velocity_gradient_relative": 1.9299102986588805e-12
+        },
+        {
+          "time": 0.365,
+          "native_original_residual": 2.5668003976286914e-15,
+          "native_energy": 1.0545949792153253,
+          "pymhm_energy": 1.054594979216267,
+          "displacement_l2_relative": 1.5153790973735808e-12,
+          "displacement_gradient_relative": 2.1918428148417694e-12,
+          "velocity_l2_relative": 1.3844589911454726e-12,
+          "velocity_gradient_relative": 1.9145210285628664e-12
+        },
+        {
+          "time": 0.37,
+          "native_original_residual": 2.440797036596072e-15,
+          "native_energy": 1.1045747349193142,
+          "pymhm_energy": 1.1045747349202961,
+          "displacement_l2_relative": 1.510283274220146e-12,
+          "displacement_gradient_relative": 2.1771411168782254e-12,
+          "velocity_l2_relative": 1.3810692282434615e-12,
+          "velocity_gradient_relative": 1.919804337199968e-12
+        },
+        {
+          "time": 0.375,
+          "native_original_residual": 2.7003045316445384e-15,
+          "native_energy": 1.156399953882346,
+          "pymhm_energy": 1.1563999538833694,
+          "displacement_l2_relative": 1.5052450736515083e-12,
+          "displacement_gradient_relative": 2.1627348536165374e-12,
+          "velocity_l2_relative": 1.3748930891443886e-12,
+          "velocity_gradient_relative": 1.8685785941924515e-12
+        },
+        {
+          "time": 0.38,
+          "native_original_residual": 2.728164622182709e-15,
+          "native_energy": 1.210114371791235,
+          "pymhm_energy": 1.2101143717923017,
+          "displacement_l2_relative": 1.5003561781493808e-12,
+          "displacement_gradient_relative": 2.1485459064881093e-12,
+          "velocity_l2_relative": 1.3710025663567518e-12,
+          "velocity_gradient_relative": 1.8686527330415337e-12
+        },
+        {
+          "time": 0.385,
+          "native_original_residual": 2.9950068849439395e-15,
+          "native_energy": 1.265761667902924,
+          "pymhm_energy": 1.2657616679040355,
+          "displacement_l2_relative": 1.4956090369037663e-12,
+          "displacement_gradient_relative": 2.1346662426980402e-12,
+          "velocity_l2_relative": 1.3703411955127393e-12,
+          "velocity_gradient_relative": 1.8549197309586204e-12
+        },
+        {
+          "time": 0.39,
+          "native_original_residual": 2.5466683335430788e-15,
+          "native_energy": 1.3233854222471793,
+          "pymhm_energy": 1.3233854222483368,
+          "displacement_l2_relative": 1.4910159114150205e-12,
+          "displacement_gradient_relative": 2.1210156332247676e-12,
+          "velocity_l2_relative": 1.368296454277334e-12,
+          "velocity_gradient_relative": 1.8631271563126098e-12
+        },
+        {
+          "time": 0.395,
+          "native_original_residual": 2.988136118168386e-15,
+          "native_energy": 1.3830290726336854,
+          "pymhm_energy": 1.3830290726348908,
+          "displacement_l2_relative": 1.4864481499011825e-12,
+          "displacement_gradient_relative": 2.1075362573058344e-12,
+          "velocity_l2_relative": 1.3666550123530554e-12,
+          "velocity_gradient_relative": 1.8375966831456613e-12
+        },
+        {
+          "time": 0.4,
+          "native_original_residual": 2.30689661211525e-15,
+          "native_energy": 1.444735871504772,
+          "pymhm_energy": 1.4447358715060263,
+          "displacement_l2_relative": 1.4821049208809204e-12,
+          "displacement_gradient_relative": 2.094162835538396e-12,
+          "velocity_l2_relative": 1.3645783905811722e-12,
+          "velocity_gradient_relative": 1.8502608869785946e-12
+        },
+        {
+          "time": 0.405,
+          "native_original_residual": 2.8965454077758735e-15,
+          "native_energy": 1.508548842685679,
+          "pymhm_energy": 1.5085488426869842,
+          "displacement_l2_relative": 1.477877498805556e-12,
+          "displacement_gradient_relative": 2.0813703157329876e-12,
+          "velocity_l2_relative": 1.3653541202394419e-12,
+          "velocity_gradient_relative": 1.8400291299232813e-12
+        },
+        {
+          "time": 0.41000000000000003,
+          "native_original_residual": 2.172388507469408e-15,
+          "native_energy": 1.5745107380938714,
+          "pymhm_energy": 1.5745107380952297,
+          "displacement_l2_relative": 1.4739120032456534e-12,
+          "displacement_gradient_relative": 2.068994235445403e-12,
+          "velocity_l2_relative": 1.3632144995565627e-12,
+          "velocity_gradient_relative": 1.85405319168555e-12
+        },
+        {
+          "time": 0.41500000000000004,
+          "native_original_residual": 2.372173411694793e-15,
+          "native_energy": 1.64266399447621,
+          "pymhm_energy": 1.6426639944776225,
+          "displacement_l2_relative": 1.4699425531363609e-12,
+          "displacement_gradient_relative": 2.05669999150775e-12,
+          "velocity_l2_relative": 1.361712307958496e-12,
+          "velocity_gradient_relative": 1.8155446938045756e-12
+        },
+        {
+          "time": 0.42,
+          "native_original_residual": 2.708503643406366e-15,
+          "native_energy": 1.7130506902470066,
+          "pymhm_energy": 1.7130506902484752,
+          "displacement_l2_relative": 1.4662374986848052e-12,
+          "displacement_gradient_relative": 2.0448006249838977e-12,
+          "velocity_l2_relative": 1.3631951121597538e-12,
+          "velocity_gradient_relative": 1.8551778615510043e-12
+        },
+        {
+          "time": 0.425,
+          "native_original_residual": 2.647489518427477e-15,
+          "native_energy": 1.7857125025003717,
+          "pymhm_energy": 1.785712502501898,
+          "displacement_l2_relative": 1.462475162036023e-12,
+          "displacement_gradient_relative": 2.0329923227232564e-12,
+          "velocity_l2_relative": 1.3593083107014608e-12,
+          "velocity_gradient_relative": 1.8048062792835454e-12
+        },
+        {
+          "time": 0.43,
+          "native_original_residual": 2.6954166674240017e-15,
+          "native_energy": 1.8606906642664112,
+          "pymhm_energy": 1.8606906642679977,
+          "displacement_l2_relative": 1.4588396481045415e-12,
+          "displacement_gradient_relative": 2.02144738163103e-12,
+          "velocity_l2_relative": 1.3534409025154298e-12,
+          "velocity_gradient_relative": 1.8049350122561571e-12
+        },
+        {
+          "time": 0.435,
+          "native_original_residual": 2.282774457983217e-15,
+          "native_energy": 1.9380259220726965,
+          "pymhm_energy": 1.938025922074344,
+          "displacement_l2_relative": 1.455142628541416e-12,
+          "displacement_gradient_relative": 2.009807483225735e-12,
+          "velocity_l2_relative": 1.3496822919928055e-12,
+          "velocity_gradient_relative": 1.7534388649885214e-12
+        },
+        {
+          "time": 0.44,
+          "native_original_residual": 2.4553529299374384e-15,
+          "native_energy": 2.0177584938601614,
+          "pymhm_energy": 2.017758493861873,
+          "displacement_l2_relative": 1.4518005025320564e-12,
+          "displacement_gradient_relative": 1.9987648485868e-12,
+          "velocity_l2_relative": 1.350212140152625e-12,
+          "velocity_gradient_relative": 1.7826501982915206e-12
+        },
+        {
+          "time": 0.445,
+          "native_original_residual": 2.436161388336562e-15,
+          "native_energy": 2.099928027286807,
+          "pymhm_energy": 2.099928027288584,
+          "displacement_l2_relative": 1.4484058396209526e-12,
+          "displacement_gradient_relative": 1.9877622104564326e-12,
+          "velocity_l2_relative": 1.3498562544662199e-12,
+          "velocity_gradient_relative": 1.7614858886843236e-12
+        },
+        {
+          "time": 0.45,
+          "native_original_residual": 2.461242158739396e-15,
+          "native_energy": 2.184573558433998,
+          "pymhm_energy": 2.1845735584358428,
+          "displacement_l2_relative": 1.4451451566278614e-12,
+          "displacement_gradient_relative": 1.976971483396727e-12,
+          "velocity_l2_relative": 1.3480302661556603e-12,
+          "velocity_gradient_relative": 1.7736900551122859e-12
+        },
+        {
+          "time": 0.455,
+          "native_original_residual": 2.6245527705966722e-15,
+          "native_energy": 2.2717334709098913,
+          "pymhm_energy": 2.2717334709118058,
+          "displacement_l2_relative": 1.4420034872592346e-12,
+          "displacement_gradient_relative": 1.966474064743237e-12,
+          "velocity_l2_relative": 1.3458421892308608e-12,
+          "velocity_gradient_relative": 1.752864110508441e-12
+        },
+        {
+          "time": 0.46,
+          "native_original_residual": 2.4444825110437527e-15,
+          "native_energy": 2.3614454553237216,
+          "pymhm_energy": 2.361445455325707,
+          "displacement_l2_relative": 1.4388695518090115e-12,
+          "displacement_gradient_relative": 1.9560776595443146e-12,
+          "velocity_l2_relative": 1.3479921634564385e-12,
+          "velocity_gradient_relative": 1.7903847341464472e-12
+        },
+        {
+          "time": 0.465,
+          "native_original_residual": 2.294154862564854e-15,
+          "native_energy": 2.4537464690846704,
+          "pymhm_energy": 2.453746469086731,
+          "displacement_l2_relative": 1.435775916695355e-12,
+          "displacement_gradient_relative": 1.9459614511016155e-12,
+          "velocity_l2_relative": 1.3435063297606784e-12,
+          "velocity_gradient_relative": 1.7542949270148642e-12
+        },
+        {
+          "time": 0.47000000000000003,
+          "native_original_residual": 2.240367520867852e-15,
+          "native_energy": 2.548672696461156,
+          "pymhm_energy": 2.5486726964632926,
+          "displacement_l2_relative": 1.4328692745976797e-12,
+          "displacement_gradient_relative": 1.935995326428556e-12,
+          "velocity_l2_relative": 1.345004795219512e-12,
+          "velocity_gradient_relative": 1.779703688843645e-12
+        },
+        {
+          "time": 0.47500000000000003,
+          "native_original_residual": 2.811816821894856e-15,
+          "native_energy": 2.646259508821804,
+          "pymhm_energy": 2.6462595088240186,
+          "displacement_l2_relative": 1.4300889835001674e-12,
+          "displacement_gradient_relative": 1.9264891055490386e-12,
+          "velocity_l2_relative": 1.340280631780232e-12,
+          "velocity_gradient_relative": 1.7430846960918551e-12
+        },
+        {
+          "time": 0.48,
+          "native_original_residual": 2.4802899811349235e-15,
+          "native_energy": 2.7465414249693434,
+          "pymhm_energy": 2.746541424971638,
+          "displacement_l2_relative": 1.427297355400309e-12,
+          "displacement_gradient_relative": 1.9170409116674304e-12,
+          "velocity_l2_relative": 1.345569307704717e-12,
+          "velocity_gradient_relative": 1.7983383568014339e-12
+        },
+        {
+          "time": 0.485,
+          "native_original_residual": 2.258868830596749e-15,
+          "native_energy": 2.8495520714739344,
+          "pymhm_energy": 2.8495520714763125,
+          "displacement_l2_relative": 1.4245172732631636e-12,
+          "displacement_gradient_relative": 1.9076307903738925e-12,
+          "velocity_l2_relative": 1.3409554593216762e-12,
+          "velocity_gradient_relative": 1.7472677446062868e-12
+        },
+        {
+          "time": 0.49,
+          "native_original_residual": 2.3883266878970957e-15,
+          "native_energy": 2.9553241429138404,
+          "pymhm_energy": 2.9553241429163024,
+          "displacement_l2_relative": 1.4218585812037073e-12,
+          "displacement_gradient_relative": 1.898522606529571e-12,
+          "velocity_l2_relative": 1.3426924511019894e-12,
+          "velocity_gradient_relative": 1.7901960489108662e-12
+        },
+        {
+          "time": 0.495,
+          "native_original_residual": 2.3830644454408598e-15,
+          "native_energy": 3.0638893619390166,
+          "pymhm_energy": 3.0638893619415666,
+          "displacement_l2_relative": 1.4191824063593767e-12,
+          "displacement_gradient_relative": 1.889620970341632e-12,
+          "velocity_l2_relative": 1.3456106140039203e-12,
+          "velocity_gradient_relative": 1.777657416785089e-12
+        },
+        {
+          "time": 0.5,
+          "native_original_residual": 2.3567123654169733e-15,
+          "native_energy": 3.1752784390873776,
+          "pymhm_energy": 3.1752784390900177,
+          "displacement_l2_relative": 1.4164973148876683e-12,
+          "displacement_gradient_relative": 1.8806771194861505e-12,
+          "velocity_l2_relative": 1.3466478821614928e-12,
+          "velocity_gradient_relative": 1.8166681000006429e-12
+        }
+      ],
+      "archive": "n1-dt0.005.npz",
+      "archive_sha256": "d07670659c42e54bd240796e9cde69ea326b64ee698b19267af696baeffb4e65",
+      "seconds": 55.93322703000001,
+      "acquisition_archive_sha256": "fb25afb8a9b94c60b7223ae2a1c5b38d1c84e3a6a3b2fa07cf7110db59bcf932",
+      "physical_error_norms": {
+        "native24": {
+          "displacement_l2": 0.16534243407503382,
+          "velocity_l2": 1.0557566449683191,
+          "displacement_h1": 2.2782914988757836,
+          "velocity_h1": 13.04094311551494,
+          "stress_l2": 1.2308541881634063,
+          "stress_broken_hdiv": 11.457730412669848
+        },
+        "native28": {
+          "displacement_l2": 0.16534243408893426,
+          "velocity_l2": 1.0557566449923048,
+          "displacement_h1": 2.278291498757608,
+          "velocity_h1": 13.040943115287474,
+          "stress_l2": 1.2308541880928145,
+          "stress_broken_hdiv": 11.457730413114062
+        },
+        "candidate24": {
+          "displacement_l2": 0.16534243407513394,
+          "velocity_l2": 1.0557566449688978,
+          "displacement_h1": 2.2782914988767273,
+          "velocity_h1": 13.040943115520742,
+          "stress_l2": 1.2308541881637067,
+          "stress_broken_hdiv": 11.457730412674724
+        },
+        "candidate28": {
+          "displacement_l2": 0.1653424340890346,
+          "velocity_l2": 1.0557566449928826,
+          "displacement_h1": 2.278291498758554,
+          "velocity_h1": 13.040943115293285,
+          "stress_l2": 1.230854188093115,
+          "stress_broken_hdiv": 11.457730413118965
+        },
+        "pymhm22": {
+          "displacement_l2": 0.1653424340890641,
+          "velocity_l2": 1.0557566449929354,
+          "displacement_h1": 2.2782914987583145,
+          "velocity_h1": 13.040943115292858,
+          "stress_l2": 1.2308541880929684,
+          "stress_broken_hdiv": 11.45773041311992
+        },
+        "pymhm26": {
+          "displacement_l2": 0.16534243408906388,
+          "velocity_l2": 1.055756644992934,
+          "displacement_h1": 2.27829149875831,
+          "velocity_h1": 13.040943115292832,
+          "stress_l2": 1.230854188092967,
+          "stress_broken_hdiv": 11.457730413119904
+        }
+      },
+      "physical_checks": {
+        "native_quadrature_change": 8.407059224760205e-11,
+        "candidate_quadrature_change": 8.40719351853525e-11,
+        "pymhm_quadrature_change": 2.043207485489092e-15,
+        "native_vs_candidate_norm_difference": 6.068400190387228e-13,
+        "ufl_vs_pymhm_norm_difference": 1.770999225686692e-13,
+        "replayed_energy_relative_change": 3.7761755058551234e-15
+      },
+      "coordinate_contract": "Equispaced P3 tetrahedral nodal points reconstructed with the acquisition DOLFINx/Basix build; vector DOFs interleaved. Archived permutation identifies canonical PyMHM ordering.",
+      "maximum_trajectory_difference": {
+        "native_original_residual": 3.592891437469758e-15,
+        "displacement_l2_relative": 3.3782127710507635e-12,
+        "displacement_gradient_relative": 1.1020554854667785e-11,
+        "velocity_l2_relative": 3.3782296495926927e-12,
+        "velocity_gradient_relative": 1.1020484033835346e-11
+      }
+    },
+    {
+      "case": "Gomes et al2017 Equation53: lambda=mu=.4,rho=1,zero initial/boundary displacement",
+      "native_method": "DOLFINx/UFL P3/P1 full uncondensed Newmark saddle, beta=1/4 gamma=1/2",
+      "n": 2,
+      "local_refinement": 2,
+      "dt": 0.1,
+      "final_time": 0.5,
+      "pymhm_gauss_order": 12,
+      "native_volume_exactness_degree": 24,
+      "native_unknowns": 13176,
+      "dolfinx": "0.9.0",
+      "basix": "0.9.0",
+      "history": [
+        {
+          "time": 0.1,
+          "native_original_residual": 6.7240586901152495e-15,
+          "native_energy": 0.03277690647348311,
+          "pymhm_energy": 0.03277690647348308,
+          "displacement_l2_relative": 8.590479052491849e-15,
+          "displacement_gradient_relative": 3.539520852889925e-14,
+          "velocity_l2_relative": 2.0163440052130407e-14,
+          "velocity_gradient_relative": 1.4728827224215824e-13
+        },
+        {
+          "time": 0.2,
+          "native_original_residual": 7.614612343118733e-15,
+          "native_energy": 0.17575975863040175,
+          "pymhm_energy": 0.17575975863040136,
+          "displacement_l2_relative": 1.1541572982563963e-14,
+          "displacement_gradient_relative": 4.4607458332005783e-14,
+          "velocity_l2_relative": 4.929182684258673e-14,
+          "velocity_gradient_relative": 3.7728275181562707e-13
+        },
+        {
+          "time": 0.30000000000000004,
+          "native_original_residual": 6.584333662867766e-15,
+          "native_energy": 0.5630430324488231,
+          "pymhm_energy": 0.5630430324488209,
+          "displacement_l2_relative": 1.4748762468816804e-14,
+          "displacement_gradient_relative": 4.995677133479476e-14,
+          "velocity_l2_relative": 6.493849590003792e-14,
+          "velocity_gradient_relative": 4.276182752362973e-13
+        },
+        {
+          "time": 0.4,
+          "native_original_residual": 6.759375806970599e-15,
+          "native_energy": 1.4047364784266931,
+          "pymhm_energy": 1.4047364784266843,
+          "displacement_l2_relative": 1.920186669187863e-14,
+          "displacement_gradient_relative": 5.660187028657884e-14,
+          "velocity_l2_relative": 9.026543529114304e-14,
+          "velocity_gradient_relative": 5.735018484148117e-13
+        },
+        {
+          "time": 0.5,
+          "native_original_residual": 6.700556699783821e-15,
+          "native_energy": 2.9236402949331763,
+          "pymhm_energy": 2.9236402949331493,
+          "displacement_l2_relative": 2.3936434381412713e-14,
+          "displacement_gradient_relative": 6.253799537435667e-14,
+          "velocity_l2_relative": 1.1465225034414566e-13,
+          "velocity_gradient_relative": 6.918514083293563e-13
+        }
+      ],
+      "archive": "n2-dt0.1.npz",
+      "archive_sha256": "0c5f4fc5552b7fa0d14eb2d4c9c65d20f7b260025f11f5ed5a3cbdb2e2ab8a3e",
+      "seconds": 76.11237192800002,
+      "acquisition_archive_sha256": "59da3176a6b22db3ad39b73bd83ba209f63f7b197f17890e9f9d4086715cdbcd",
+      "physical_error_norms": {
+        "native24": {
+          "displacement_l2": 0.10545409781940324,
+          "velocity_l2": 0.6314250808760451,
+          "displacement_h1": 1.890067826458239,
+          "velocity_h1": 10.49810971200318,
+          "stress_l2": 0.9852022825185132,
+          "stress_broken_hdiv": 6.156730649288368
+        },
+        "native28": {
+          "displacement_l2": 0.10545409781940314,
+          "velocity_l2": 0.6314250808760443,
+          "displacement_h1": 1.8900678264582385,
+          "velocity_h1": 10.498109712003172,
+          "stress_l2": 0.9852022825185128,
+          "stress_broken_hdiv": 6.156730649288365
+        },
+        "candidate24": {
+          "displacement_l2": 0.10545409781940093,
+          "velocity_l2": 0.6314250808760256,
+          "displacement_h1": 1.8900678264582136,
+          "velocity_h1": 10.498109712002913,
+          "stress_l2": 0.9852022825185017,
+          "stress_broken_hdiv": 6.1567306492883445
+        },
+        "candidate28": {
+          "displacement_l2": 0.10545409781940081,
+          "velocity_l2": 0.631425080876025,
+          "displacement_h1": 1.8900678264582138,
+          "velocity_h1": 10.498109712002902,
+          "stress_l2": 0.9852022825185016,
+          "stress_broken_hdiv": 6.156730649288339
+        },
+        "pymhm22": {
+          "displacement_l2": 0.10545409781940134,
+          "velocity_l2": 0.6314250808760276,
+          "displacement_h1": 1.890067826458219,
+          "velocity_h1": 10.498109712002941,
+          "stress_l2": 0.9852022825185034,
+          "stress_broken_hdiv": 6.156730649288358
+        },
+        "pymhm26": {
+          "displacement_l2": 0.10545409781940115,
+          "velocity_l2": 0.6314250808760264,
+          "displacement_h1": 1.8900678264582165,
+          "velocity_h1": 10.498109712002927,
+          "stress_l2": 0.9852022825185026,
+          "stress_broken_hdiv": 6.156730649288346
+        }
+      },
+      "physical_checks": {
+        "native_quadrature_change": 1.230797034795287e-15,
+        "candidate_quadrature_change": 1.1844024353063285e-15,
+        "pymhm_quadrature_change": 1.875397855424496e-15,
+        "native_vs_candidate_norm_difference": 3.059409772205521e-14,
+        "ufl_vs_pymhm_norm_difference": 3.290006764739791e-15,
+        "replayed_energy_relative_change": 1.1240302572740188e-14
+      },
+      "coordinate_contract": "Equispaced P3 tetrahedral nodal points reconstructed with the acquisition DOLFINx/Basix build; vector DOFs interleaved. Archived permutation identifies canonical PyMHM ordering.",
+      "maximum_trajectory_difference": {
+        "native_original_residual": 7.614612343118733e-15,
+        "displacement_l2_relative": 2.3936434381412713e-14,
+        "displacement_gradient_relative": 6.253799537435667e-14,
+        "velocity_l2_relative": 1.1465225034414566e-13,
+        "velocity_gradient_relative": 6.918514083293563e-13
+      }
+    },
+    {
+      "case": "Gomes et al2017 Equation53: lambda=mu=.4,rho=1,zero initial/boundary displacement",
+      "native_method": "DOLFINx/UFL P3/P1 full uncondensed Newmark saddle, beta=1/4 gamma=1/2",
+      "n": 2,
+      "local_refinement": 2,
+      "dt": 0.05,
+      "final_time": 0.5,
+      "pymhm_gauss_order": 12,
+      "native_volume_exactness_degree": 24,
+      "native_unknowns": 13176,
+      "dolfinx": "0.9.0",
+      "basix": "0.9.0",
+      "history": [
+        {
+          "time": 0.05,
+          "native_original_residual": 5.692357128410911e-15,
+          "native_energy": 0.007508568081423712,
+          "pymhm_energy": 0.007508568081423713,
+          "displacement_l2_relative": 6.682338075990142e-15,
+          "displacement_gradient_relative": 3.2874482974619754e-14,
+          "velocity_l2_relative": 7.655833651212774e-15,
+          "velocity_gradient_relative": 5.3452108986528926e-14
+        },
+        {
+          "time": 0.1,
+          "native_original_residual": 5.494532591958437e-15,
+          "native_energy": 0.032761609238122935,
+          "pymhm_energy": 0.03276160923812295,
+          "displacement_l2_relative": 6.837665736032155e-15,
+          "displacement_gradient_relative": 3.259378614605856e-14,
+          "velocity_l2_relative": 1.3548369942396592e-14,
+          "velocity_gradient_relative": 9.311038394353812e-14
+        },
+        {
+          "time": 0.15000000000000002,
+          "native_original_residual": 5.94722505629869e-15,
+          "native_energy": 0.08401763438057289,
+          "pymhm_energy": 0.08401763438057282,
+          "displacement_l2_relative": 7.911357547428252e-15,
+          "displacement_gradient_relative": 3.7012920260057296e-14,
+          "velocity_l2_relative": 2.2249719817064746e-14,
+          "velocity_gradient_relative": 1.5487332419658788e-13
+        },
+        {
+          "time": 0.2,
+          "native_original_residual": 4.910584374647377e-15,
+          "native_energy": 0.17531408904342888,
+          "pymhm_energy": 0.17531408904342854,
+          "displacement_l2_relative": 9.524112939057155e-15,
+          "displacement_gradient_relative": 4.180096412549246e-14,
+          "velocity_l2_relative": 2.9064636449711436e-14,
+          "velocity_gradient_relative": 1.928212027294552e-13
+        },
+        {
+          "time": 0.25,
+          "native_original_residual": 5.5195814937020676e-15,
+          "native_energy": 0.32664736934379135,
+          "pymhm_energy": 0.3266473693437904,
+          "displacement_l2_relative": 1.1140075582714347e-14,
+          "displacement_gradient_relative": 4.339698030267002e-14,
+          "velocity_l2_relative": 3.6536608798294085e-14,
+          "velocity_gradient_relative": 2.3010025048494134e-13
+        },
+        {
+          "time": 0.30000000000000004,
+          "native_original_residual": 5.638605893429969e-15,
+          "native_energy": 0.5635129135670431,
+          "pymhm_energy": 0.5635129135670408,
+          "displacement_l2_relative": 1.3389067654956865e-14,
+          "displacement_gradient_relative": 4.7572087450318713e-14,
+          "velocity_l2_relative": 4.6299969562543705e-14,
+          "velocity_gradient_relative": 2.961664541792263e-13
+        },
+        {
+          "time": 0.35000000000000003,
+          "native_original_residual": 5.271875425418627e-15,
+          "native_energy": 0.9153030169637197,
+          "pymhm_energy": 0.9153030169637152,
+          "displacement_l2_relative": 1.5597002330562237e-14,
+          "displacement_gradient_relative": 5.125489930651224e-14,
+          "velocity_l2_relative": 5.489448533693511e-14,
+          "velocity_gradient_relative": 3.402423297826082e-13
+        },
+        {
+          "time": 0.4,
+          "native_original_residual": 5.180026995624252e-15,
+          "native_energy": 1.4123966667723213,
+          "pymhm_energy": 1.4123966667723122,
+          "displacement_l2_relative": 1.8125656831388615e-14,
+          "displacement_gradient_relative": 5.4366348314381266e-14,
+          "velocity_l2_relative": 6.689553851554593e-14,
+          "velocity_gradient_relative": 4.0026937323449154e-13
+        },
+        {
+          "time": 0.45,
+          "native_original_residual": 5.306793602933844e-15,
+          "native_energy": 2.082275752252379,
+          "pymhm_energy": 2.0822757522523627,
+          "displacement_l2_relative": 2.0411233691821665e-14,
+          "displacement_gradient_relative": 5.564870271350778e-14,
+          "velocity_l2_relative": 7.332507117948022e-14,
+          "velocity_gradient_relative": 4.1496975128546225e-13
+        },
+        {
+          "time": 0.5,
+          "native_original_residual": 5.012649447482989e-15,
+          "native_energy": 2.945343259225133,
+          "pymhm_energy": 2.945343259225105,
+          "displacement_l2_relative": 2.3088176151979963e-14,
+          "displacement_gradient_relative": 5.788338764258531e-14,
+          "velocity_l2_relative": 8.630964654511425e-14,
+          "velocity_gradient_relative": 4.809063617836383e-13
+        }
+      ],
+      "archive": "n2-dt0.05.npz",
+      "archive_sha256": "8ada8543394f0101f6b54127e34cc27ea579e93a684aa6ddd5c0d2a468924195",
+      "seconds": 102.07094855100001,
+      "acquisition_archive_sha256": "aaceac4aae7f3512c3a01ce502ceca968a5974afc2712e3c8a5663811fbfcdb1",
+      "physical_error_norms": {
+        "native24": {
+          "displacement_l2": 0.10577473275570008,
+          "velocity_l2": 0.6397423228556076,
+          "displacement_h1": 1.8892668692072419,
+          "velocity_h1": 10.620269444015166,
+          "stress_l2": 0.9873083100951658,
+          "stress_broken_hdiv": 6.185391910904811
+        },
+        "native28": {
+          "displacement_l2": 0.10577473275569999,
+          "velocity_l2": 0.6397423228556075,
+          "displacement_h1": 1.8892668692072414,
+          "velocity_h1": 10.620269444015168,
+          "stress_l2": 0.9873083100951651,
+          "stress_broken_hdiv": 6.185391910904814
+        },
+        "candidate24": {
+          "displacement_l2": 0.10577473275569779,
+          "velocity_l2": 0.6397423228555886,
+          "displacement_h1": 1.8892668692072172,
+          "velocity_h1": 10.620269444014932,
+          "stress_l2": 0.987308310095155,
+          "stress_broken_hdiv": 6.185391910904745
+        },
+        "candidate28": {
+          "displacement_l2": 0.1057747327556977,
+          "velocity_l2": 0.6397423228555883,
+          "displacement_h1": 1.8892668692072168,
+          "velocity_h1": 10.620269444014935,
+          "stress_l2": 0.9873083100951542,
+          "stress_broken_hdiv": 6.185391910904742
+        },
+        "pymhm22": {
+          "displacement_l2": 0.10577473275569811,
+          "velocity_l2": 0.6397423228555905,
+          "displacement_h1": 1.8892668692072228,
+          "velocity_h1": 10.620269444014962,
+          "stress_l2": 0.9873083100951561,
+          "stress_broken_hdiv": 6.1853919109047615
+        },
+        "pymhm26": {
+          "displacement_l2": 0.10577473275569793,
+          "velocity_l2": 0.6397423228555894,
+          "displacement_h1": 1.8892668692072203,
+          "velocity_h1": 10.620269444014946,
+          "stress_l2": 0.9873083100951554,
+          "stress_broken_hdiv": 6.18539191090475
+        }
+      },
+      "physical_checks": {
+        "native_quadrature_change": 9.184094549221755e-16,
+        "candidate_quadrature_change": 9.184094549221952e-16,
+        "pymhm_quadrature_change": 1.866707821010605e-15,
+        "native_vs_candidate_norm_difference": 3.0022803931874384e-14,
+        "ufl_vs_pymhm_norm_difference": 2.230422961953898e-15,
+        "replayed_energy_relative_change": 1.1006700905748738e-14
+      },
+      "coordinate_contract": "Equispaced P3 tetrahedral nodal points reconstructed with the acquisition DOLFINx/Basix build; vector DOFs interleaved. Archived permutation identifies canonical PyMHM ordering.",
+      "maximum_trajectory_difference": {
+        "native_original_residual": 5.94722505629869e-15,
+        "displacement_l2_relative": 2.3088176151979963e-14,
+        "displacement_gradient_relative": 5.788338764258531e-14,
+        "velocity_l2_relative": 8.630964654511425e-14,
+        "velocity_gradient_relative": 4.809063617836383e-13
+      }
+    },
+    {
+      "case": "Gomes et al2017 Equation53: lambda=mu=.4,rho=1,zero initial/boundary displacement",
+      "native_method": "DOLFINx/UFL P3/P1 full uncondensed Newmark saddle, beta=1/4 gamma=1/2",
+      "n": 2,
+      "local_refinement": 2,
+      "dt": 0.025,
+      "final_time": 0.5,
+      "pymhm_gauss_order": 12,
+      "native_volume_exactness_degree": 24,
+      "native_unknowns": 13176,
+      "dolfinx": "0.9.0",
+      "basix": "0.9.0",
+      "history": [
+        {
+          "time": 0.025,
+          "native_original_residual": 5.674613719350129e-15,
+          "native_energy": 0.0018375090830182906,
+          "pymhm_energy": 0.0018375090830182912,
+          "displacement_l2_relative": 5.489570290281791e-15,
+          "displacement_gradient_relative": 3.1805716104589066e-14,
+          "velocity_l2_relative": 3.928594560491333e-15,
+          "velocity_gradient_relative": 2.6365159983510396e-14
+        },
+        {
+          "time": 0.05,
+          "native_original_residual": 5.3866004592836965e-15,
+          "native_energy": 0.007517075380751104,
+          "pymhm_energy": 0.007517075380751104,
+          "displacement_l2_relative": 4.979636464673606e-15,
+          "displacement_gradient_relative": 2.7736719246908936e-14,
+          "velocity_l2_relative": 5.296458181797642e-15,
+          "velocity_gradient_relative": 3.5512825373910616e-14
+        },
+        {
+          "time": 0.07500000000000001,
+          "native_original_residual": 5.507653828658653e-15,
+          "native_energy": 0.01754243012711894,
+          "pymhm_energy": 0.017542430127118945,
+          "displacement_l2_relative": 5.099099011596016e-15,
+          "displacement_gradient_relative": 2.7881603032166888e-14,
+          "velocity_l2_relative": 7.980095237479864e-15,
+          "velocity_gradient_relative": 5.3822435174242645e-14
+        },
+        {
+          "time": 0.1,
+          "native_original_residual": 5.3517540899345114e-15,
+          "native_energy": 0.03276143054417337,
+          "pymhm_energy": 0.03276143054417336,
+          "displacement_l2_relative": 5.504486092887039e-15,
+          "displacement_gradient_relative": 2.967490562100662e-14,
+          "velocity_l2_relative": 1.113539304045704e-14,
+          "velocity_gradient_relative": 7.430980573867749e-14
+        },
+        {
+          "time": 0.125,
+          "native_original_residual": 5.9093213154628074e-15,
+          "native_energy": 0.05437673265468709,
+          "pymhm_energy": 0.054376732654687066,
+          "displacement_l2_relative": 6.371152043680475e-15,
+          "displacement_gradient_relative": 3.3380687982420286e-14,
+          "velocity_l2_relative": 1.5302670521425725e-14,
+          "velocity_gradient_relative": 1.0178954326740695e-13
+        },
+        {
+          "time": 0.15000000000000002,
+          "native_original_residual": 5.7932063378048415e-15,
+          "native_energy": 0.08395728675234204,
+          "pymhm_energy": 0.08395728675234197,
+          "displacement_l2_relative": 7.219479377795338e-15,
+          "displacement_gradient_relative": 3.613224204649746e-14,
+          "velocity_l2_relative": 2.0280454233355418e-14,
+          "velocity_gradient_relative": 1.3331358747901101e-13
+        },
+        {
+          "time": 0.17500000000000002,
+          "native_original_residual": 5.951622535434861e-15,
+          "native_energy": 0.12344854412988862,
+          "pymhm_energy": 0.1234485441298885,
+          "displacement_l2_relative": 8.038580065105241e-15,
+          "displacement_gradient_relative": 3.8809292100738385e-14,
+          "velocity_l2_relative": 2.5595332379230044e-14,
+          "velocity_gradient_relative": 1.6484086526890988e-13
+        },
+        {
+          "time": 0.2,
+          "native_original_residual": 5.19637497186286e-15,
+          "native_energy": 0.1751785859933341,
+          "pymhm_energy": 0.17517858599333383,
+          "displacement_l2_relative": 8.934641103783238e-15,
+          "displacement_gradient_relative": 3.9761181367564546e-14,
+          "velocity_l2_relative": 3.006084569478768e-14,
+          "velocity_gradient_relative": 1.9691654869308352e-13
+        },
+        {
+          "time": 0.225,
+          "native_original_residual": 5.6445387829129796e-15,
+          "native_energy": 0.24185446828545284,
+          "pymhm_energy": 0.24185446828545232,
+          "displacement_l2_relative": 9.73842734442359e-15,
+          "displacement_gradient_relative": 4.1270225908757307e-14,
+          "velocity_l2_relative": 3.285901938119392e-14,
+          "velocity_gradient_relative": 2.1113509595870248e-13
+        },
+        {
+          "time": 0.25,
+          "native_original_residual": 5.453795098301187e-15,
+          "native_energy": 0.3265414483991265,
+          "pymhm_energy": 0.3265414483991256,
+          "displacement_l2_relative": 1.0869059686487056e-14,
+          "displacement_gradient_relative": 4.4032825594467225e-14,
+          "velocity_l2_relative": 3.768412174503754e-14,
+          "velocity_gradient_relative": 2.477403248218524e-13
+        },
+        {
+          "time": 0.275,
+          "native_original_residual": 5.5688937994666446e-15,
+          "native_energy": 0.4326204613428057,
+          "pymhm_energy": 0.43262046134280435,
+          "displacement_l2_relative": 1.1811778577958369e-14,
+          "displacement_gradient_relative": 4.523451887513739e-14,
+          "velocity_l2_relative": 4.294062291222072e-14,
+          "velocity_gradient_relative": 2.7274547243013713e-13
+        },
+        {
+          "time": 0.30000000000000004,
+          "native_original_residual": 5.1498516560061625e-15,
+          "native_energy": 0.5637237460013658,
+          "pymhm_energy": 0.5637237460013637,
+          "displacement_l2_relative": 1.3000843152814494e-14,
+          "displacement_gradient_relative": 4.741047635163693e-14,
+          "velocity_l2_relative": 4.9671277512984056e-14,
+          "velocity_gradient_relative": 3.1674911540563314e-13
+        },
+        {
+          "time": 0.325,
+          "native_original_residual": 5.118006114299123e-15,
+          "native_energy": 0.7236509267174636,
+          "pymhm_energy": 0.7236509267174602,
+          "displacement_l2_relative": 1.4200356812036258e-14,
+          "displacement_gradient_relative": 4.9070774210642395e-14,
+          "velocity_l2_relative": 5.443253112487091e-14,
+          "velocity_gradient_relative": 3.4431689825043603e-13
+        },
+        {
+          "time": 0.35000000000000003,
+          "native_original_residual": 5.315078350283609e-15,
+          "native_energy": 0.916267278101745,
+          "pymhm_energy": 0.9162672781017402,
+          "displacement_l2_relative": 1.541827500766612e-14,
+          "displacement_gradient_relative": 5.1518144614543046e-14,
+          "velocity_l2_relative": 6.04452027023804e-14,
+          "velocity_gradient_relative": 3.6436743140617777e-13
+        },
+        {
+          "time": 0.375,
+          "native_original_residual": 5.462699328509146e-15,
+          "native_energy": 1.1453844123519497,
+          "pymhm_energy": 1.145384412351943,
+          "displacement_l2_relative": 1.6634027487361232e-14,
+          "displacement_gradient_relative": 5.2226113614980754e-14,
+          "velocity_l2_relative": 6.814716331432254e-14,
+          "velocity_gradient_relative": 4.1148462126014406e-13
+        },
+        {
+          "time": 0.4,
+          "native_original_residual": 4.8549923250519686e-15,
+          "native_energy": 1.414625166731326,
+          "pymhm_energy": 1.4146251667313174,
+          "displacement_l2_relative": 1.785555885052502e-14,
+          "displacement_gradient_relative": 5.3787524424407364e-14,
+          "velocity_l2_relative": 7.423791867415205e-14,
+          "velocity_gradient_relative": 4.304192336643987e-13
+        },
+        {
+          "time": 0.42500000000000004,
+          "native_original_residual": 4.846542850787501e-15,
+          "native_energy": 1.7272807944409831,
+          "pymhm_energy": 1.7272807944409714,
+          "displacement_l2_relative": 1.9112561933225025e-14,
+          "displacement_gradient_relative": 5.5743051984707866e-14,
+          "velocity_l2_relative": 7.87451621360843e-14,
+          "velocity_gradient_relative": 4.717171625255219e-13
+        },
+        {
+          "time": 0.45,
+          "native_original_residual": 5.504804981244004e-15,
+          "native_energy": 2.086174676071761,
+          "pymhm_energy": 2.086174676071745,
+          "displacement_l2_relative": 2.0539337380427657e-14,
+          "displacement_gradient_relative": 5.808135801382838e-14,
+          "velocity_l2_relative": 8.59679307315317e-14,
+          "velocity_gradient_relative": 4.95965511017197e-13
+        },
+        {
+          "time": 0.47500000000000003,
+          "native_original_residual": 4.853245505530919e-15,
+          "native_energy": 2.4935457134551924,
+          "pymhm_energy": 2.4935457134551715,
+          "displacement_l2_relative": 2.1724578567363064e-14,
+          "displacement_gradient_relative": 5.836510970573367e-14,
+          "velocity_l2_relative": 9.397368860949898e-14,
+          "velocity_gradient_relative": 5.293617632740566e-13
+        },
+        {
+          "time": 0.5,
+          "native_original_residual": 4.991393476192851e-15,
+          "native_energy": 2.950955531682096,
+          "pymhm_energy": 2.9509555316820686,
+          "displacement_l2_relative": 2.3005417530133533e-14,
+          "displacement_gradient_relative": 5.922465755421053e-14,
+          "velocity_l2_relative": 1.0000560096156441e-13,
+          "velocity_gradient_relative": 5.524851111471354e-13
+        }
+      ],
+      "archive": "n2-dt0.025.npz",
+      "archive_sha256": "bbd1023bcef5b5fa0cec11e0d395f78a1946652640d7a5bb2b1abc9b792f08aa",
+      "seconds": 154.43932981299997,
+      "acquisition_archive_sha256": "746d113561f7fabb3870ea218b4a89a985aaec859c83985bec072c29efa5533c",
+      "physical_error_norms": {
+        "native24": {
+          "displacement_l2": 0.10585994595214916,
+          "velocity_l2": 0.6420652156962459,
+          "displacement_h1": 1.888059760060751,
+          "velocity_h1": 10.677344812688371,
+          "stress_l2": 0.9871617804385511,
+          "stress_broken_hdiv": 6.169327594681657
+        },
+        "native28": {
+          "displacement_l2": 0.10585994595214906,
+          "velocity_l2": 0.6420652156962452,
+          "displacement_h1": 1.8880597600607516,
+          "velocity_h1": 10.677344812688371,
+          "stress_l2": 0.9871617804385512,
+          "stress_broken_hdiv": 6.169327594681652
+        },
+        "candidate24": {
+          "displacement_l2": 0.10585994595214687,
+          "velocity_l2": 0.6420652156962262,
+          "displacement_h1": 1.8880597600607285,
+          "velocity_h1": 10.677344812688114,
+          "stress_l2": 0.9871617804385414,
+          "stress_broken_hdiv": 6.169327594681596
+        },
+        "candidate28": {
+          "displacement_l2": 0.10585994595214678,
+          "velocity_l2": 0.6420652156962259,
+          "displacement_h1": 1.888059760060729,
+          "velocity_h1": 10.67734481268811,
+          "stress_l2": 0.9871617804385415,
+          "stress_broken_hdiv": 6.169327594681592
+        },
+        "pymhm22": {
+          "displacement_l2": 0.10585994595214718,
+          "velocity_l2": 0.6420652156962282,
+          "displacement_h1": 1.8880597600607347,
+          "velocity_h1": 10.677344812688139,
+          "stress_l2": 0.9871617804385431,
+          "stress_broken_hdiv": 6.169327594681614
+        },
+        "pymhm26": {
+          "displacement_l2": 0.105859945952147,
+          "velocity_l2": 0.6420652156962272,
+          "displacement_h1": 1.8880597600607323,
+          "velocity_h1": 10.677344812688125,
+          "stress_l2": 0.9871617804385424,
+          "stress_broken_hdiv": 6.169327594681603
+        }
+      },
+      "physical_checks": {
+        "native_quadrature_change": 1.0374862217894005e-15,
+        "candidate_quadrature_change": 9.17670170534705e-16,
+        "pymhm_quadrature_change": 1.8715685427461128e-15,
+        "native_vs_candidate_norm_difference": 3.008710043189352e-14,
+        "ufl_vs_pymhm_norm_difference": 2.0975318183650357e-15,
+        "replayed_energy_relative_change": 1.128674776056992e-14
+      },
+      "coordinate_contract": "Equispaced P3 tetrahedral nodal points reconstructed with the acquisition DOLFINx/Basix build; vector DOFs interleaved. Archived permutation identifies canonical PyMHM ordering.",
+      "maximum_trajectory_difference": {
+        "native_original_residual": 5.951622535434861e-15,
+        "displacement_l2_relative": 2.3005417530133533e-14,
+        "displacement_gradient_relative": 5.922465755421053e-14,
+        "velocity_l2_relative": 1.0000560096156441e-13,
+        "velocity_gradient_relative": 5.524851111471354e-13
+      }
+    },
+    {
+      "case": "Gomes et al2017 Equation53: lambda=mu=.4,rho=1,zero initial/boundary displacement",
+      "native_method": "DOLFINx/UFL P3/P1 full uncondensed Newmark saddle, beta=1/4 gamma=1/2",
+      "n": 2,
+      "local_refinement": 2,
+      "dt": 0.005,
+      "final_time": 0.5,
+      "pymhm_gauss_order": 12,
+      "native_volume_exactness_degree": 24,
+      "native_unknowns": 13176,
+      "dolfinx": "0.9.0",
+      "basix": "0.9.0",
+      "history": [
+        {
+          "time": 0.005,
+          "native_original_residual": 6.090852415463186e-15,
+          "native_energy": 7.303012581553197e-05,
+          "pymhm_energy": 7.303012581553201e-05,
+          "displacement_l2_relative": 5.793892175016544e-15,
+          "displacement_gradient_relative": 3.7699148636215356e-14,
+          "velocity_l2_relative": 4.343525405790027e-15,
+          "velocity_gradient_relative": 3.094257594988722e-14
+        },
+        {
+          "time": 0.01,
+          "native_original_residual": 5.6734753851054905e-15,
+          "native_energy": 0.0002923830266754822,
+          "pymhm_energy": 0.0002923830266754823,
+          "displacement_l2_relative": 5.729168947815198e-15,
+          "displacement_gradient_relative": 3.688197199411519e-14,
+          "velocity_l2_relative": 4.5775347336791376e-15,
+          "velocity_gradient_relative": 3.1461988057069146e-14
+        },
+        {
+          "time": 0.015,
+          "native_original_residual": 6.029975439494682e-15,
+          "native_energy": 0.0006588467353139246,
+          "pymhm_energy": 0.0006588467353139248,
+          "displacement_l2_relative": 5.783350544715609e-15,
+          "displacement_gradient_relative": 3.6382976283299565e-14,
+          "velocity_l2_relative": 5.2406516848625435e-15,
+          "velocity_gradient_relative": 3.435042310745498e-14
+        },
+        {
+          "time": 0.02,
+          "native_original_residual": 5.822583469605237e-15,
+          "native_energy": 0.0011737361500378627,
+          "pymhm_energy": 0.0011737361500378629,
+          "displacement_l2_relative": 5.865387062757798e-15,
+          "displacement_gradient_relative": 3.574649013418045e-14,
+          "velocity_l2_relative": 6.2779164485149906e-15,
+          "velocity_gradient_relative": 3.922425756131932e-14
+        },
+        {
+          "time": 0.025,
+          "native_original_residual": 5.886582929688176e-15,
+          "native_energy": 0.0018388951953003906,
+          "pymhm_energy": 0.0018388951953003912,
+          "displacement_l2_relative": 6.1273612175112724e-15,
+          "displacement_gradient_relative": 3.657505924865702e-14,
+          "velocity_l2_relative": 8.1665577056151e-15,
+          "velocity_gradient_relative": 4.9565493129872216e-14
+        },
+        {
+          "time": 0.03,
+          "native_original_residual": 5.222578680202149e-15,
+          "native_energy": 0.0026566996508914404,
+          "pymhm_energy": 0.002656699650891441,
+          "displacement_l2_relative": 6.148651495617068e-15,
+          "displacement_gradient_relative": 3.658950648553033e-14,
+          "velocity_l2_relative": 1.0046568203007057e-14,
+          "velocity_gradient_relative": 6.006744328401815e-14
+        },
+        {
+          "time": 0.035,
+          "native_original_residual": 5.782094441589196e-15,
+          "native_energy": 0.0036300604851604848,
+          "pymhm_energy": 0.003630060485160486,
+          "displacement_l2_relative": 6.91843765156961e-15,
+          "displacement_gradient_relative": 4.0049475699809645e-14,
+          "velocity_l2_relative": 1.1139071756907418e-14,
+          "velocity_gradient_relative": 6.826223584888027e-14
+        },
+        {
+          "time": 0.04,
+          "native_original_residual": 5.93092356807016e-15,
+          "native_energy": 0.004762427518494064,
+          "pymhm_energy": 0.004762427518494067,
+          "displacement_l2_relative": 6.5086135759900575e-15,
+          "displacement_gradient_relative": 3.739006346899002e-14,
+          "velocity_l2_relative": 1.3347948879330836e-14,
+          "velocity_gradient_relative": 8.26781910296794e-14
+        },
+        {
+          "time": 0.045,
+          "native_original_residual": 5.719166691609164e-15,
+          "native_energy": 0.00605779325278422,
+          "pymhm_energy": 0.006057793252784221,
+          "displacement_l2_relative": 6.3475571476341295e-15,
+          "displacement_gradient_relative": 3.603279581371124e-14,
+          "velocity_l2_relative": 1.5646137171609577e-14,
+          "velocity_gradient_relative": 9.69001079724907e-14
+        },
+        {
+          "time": 0.05,
+          "native_original_residual": 6.123166899299368e-15,
+          "native_energy": 0.0075206967271263065,
+          "pymhm_energy": 0.007520696727126308,
+          "displacement_l2_relative": 6.741787757955149e-15,
+          "displacement_gradient_relative": 3.8165819291469335e-14,
+          "velocity_l2_relative": 1.9231424459317004e-14,
+          "velocity_gradient_relative": 1.188307458167843e-13
+        },
+        {
+          "time": 0.055,
+          "native_original_residual": 5.566209202716361e-15,
+          "native_energy": 0.009156227294112255,
+          "pymhm_energy": 0.009156227294112257,
+          "displacement_l2_relative": 6.854162088881406e-15,
+          "displacement_gradient_relative": 3.9269206093686816e-14,
+          "velocity_l2_relative": 2.168131159673963e-14,
+          "velocity_gradient_relative": 1.347850333894512e-13
+        },
+        {
+          "time": 0.06,
+          "native_original_residual": 5.7936881445144246e-15,
+          "native_energy": 0.010970028249100448,
+          "pymhm_energy": 0.010970028249100445,
+          "displacement_l2_relative": 7.333826631402015e-15,
+          "displacement_gradient_relative": 4.169897706568721e-14,
+          "velocity_l2_relative": 2.461521922238372e-14,
+          "velocity_gradient_relative": 1.529481367605905e-13
+        },
+        {
+          "time": 0.065,
+          "native_original_residual": 5.749443244194313e-15,
+          "native_energy": 0.012968300281756544,
+          "pymhm_energy": 0.012968300281756542,
+          "displacement_l2_relative": 7.317025414728135e-15,
+          "displacement_gradient_relative": 4.1956184683970694e-14,
+          "velocity_l2_relative": 2.8342031392263145e-14,
+          "velocity_gradient_relative": 1.7536702604508562e-13
+        },
+        {
+          "time": 0.07,
+          "native_original_residual": 5.430212170289855e-15,
+          "native_energy": 0.015157804751433131,
+          "pymhm_energy": 0.015157804751433135,
+          "displacement_l2_relative": 7.81966512510331e-15,
+          "displacement_gradient_relative": 4.4244572326495335e-14,
+          "velocity_l2_relative": 3.158814466421835e-14,
+          "velocity_gradient_relative": 1.946605819130898e-13
+        },
+        {
+          "time": 0.075,
+          "native_original_residual": 5.6093261569414094e-15,
+          "native_energy": 0.017545866813678517,
+          "pymhm_energy": 0.017545866813678517,
+          "displacement_l2_relative": 8.242444006851154e-15,
+          "displacement_gradient_relative": 4.58223138443503e-14,
+          "velocity_l2_relative": 3.375647047802148e-14,
+          "velocity_gradient_relative": 2.1205576350645516e-13
+        },
+        {
+          "time": 0.08,
+          "native_original_residual": 5.802765477425005e-15,
+          "native_energy": 0.020140378443759197,
+          "pymhm_energy": 0.0201403784437592,
+          "displacement_l2_relative": 7.787362131254075e-15,
+          "displacement_gradient_relative": 4.268479642697618e-14,
+          "velocity_l2_relative": 3.7482886356693095e-14,
+          "velocity_gradient_relative": 2.3395731915038416e-13
+        },
+        {
+          "time": 0.085,
+          "native_original_residual": 5.799351653915752e-15,
+          "native_energy": 0.022949801414740588,
+          "pymhm_energy": 0.022949801414740588,
+          "displacement_l2_relative": 7.941274522284334e-15,
+          "displacement_gradient_relative": 4.3537110328230804e-14,
+          "velocity_l2_relative": 4.0463574861031946e-14,
+          "velocity_gradient_relative": 2.5330408570942113e-13
+        },
+        {
+          "time": 0.09,
+          "native_original_residual": 5.4526695628766156e-15,
+          "native_energy": 0.025983170292787947,
+          "pymhm_energy": 0.025983170292787943,
+          "displacement_l2_relative": 8.250374683954793e-15,
+          "displacement_gradient_relative": 4.541703301345208e-14,
+          "velocity_l2_relative": 4.2949377381525415e-14,
+          "velocity_gradient_relative": 2.672303151755441e-13
+        },
+        {
+          "time": 0.095,
+          "native_original_residual": 5.549452763618373e-15,
+          "native_energy": 0.02925009551115198,
+          "pymhm_energy": 0.029250095511151982,
+          "displacement_l2_relative": 8.689743292775936e-15,
+          "displacement_gradient_relative": 4.8083964072266937e-14,
+          "velocity_l2_relative": 4.571853510566838e-14,
+          "velocity_gradient_relative": 2.8252566253576605e-13
+        },
+        {
+          "time": 0.1,
+          "native_original_residual": 5.5339189910323815e-15,
+          "native_energy": 0.032760766576810346,
+          "pymhm_energy": 0.03276076657681033,
+          "displacement_l2_relative": 9.427542899081395e-15,
+          "displacement_gradient_relative": 5.2924879049655514e-14,
+          "velocity_l2_relative": 4.793754492843451e-14,
+          "velocity_gradient_relative": 3.006075440464202e-13
+        },
+        {
+          "time": 0.105,
+          "native_original_residual": 5.980906654610303e-15,
+          "native_energy": 0.036525955450015204,
+          "pymhm_energy": 0.03652595545001519,
+          "displacement_l2_relative": 8.8207751004226e-15,
+          "displacement_gradient_relative": 4.823683537429287e-14,
+          "velocity_l2_relative": 5.2836974117210683e-14,
+          "velocity_gradient_relative": 3.36980891699036e-13
+        },
+        {
+          "time": 0.11,
+          "native_original_residual": 5.7388692520103066e-15,
+          "native_energy": 0.040557020117554424,
+          "pymhm_energy": 0.04055702011755441,
+          "displacement_l2_relative": 8.780940249045028e-15,
+          "displacement_gradient_relative": 4.773639912141557e-14,
+          "velocity_l2_relative": 5.5960857969493814e-14,
+          "velocity_gradient_relative": 3.525363355549697e-13
+        },
+        {
+          "time": 0.115,
+          "native_original_residual": 5.465320299398941e-15,
+          "native_energy": 0.04486590835663412,
+          "pymhm_energy": 0.0448659083566341,
+          "displacement_l2_relative": 9.02128082973146e-15,
+          "displacement_gradient_relative": 4.8775309372593123e-14,
+          "velocity_l2_relative": 6.047828385791178e-14,
+          "velocity_gradient_relative": 3.8666390956199066e-13
+        },
+        {
+          "time": 0.12,
+          "native_original_residual": 6.037090095621887e-15,
+          "native_energy": 0.0494651616600243,
+          "pymhm_energy": 0.049465161660024265,
+          "displacement_l2_relative": 9.561626055204377e-15,
+          "displacement_gradient_relative": 5.148229656906424e-14,
+          "velocity_l2_relative": 6.402498071468283e-14,
+          "velocity_gradient_relative": 4.0558113977659676e-13
+        },
+        {
+          "time": 0.125,
+          "native_original_residual": 5.587365655846548e-15,
+          "native_energy": 0.054367919267109606,
+          "pymhm_energy": 0.05436791926710957,
+          "displacement_l2_relative": 9.296243710884438e-15,
+          "displacement_gradient_relative": 5.061269238803964e-14,
+          "velocity_l2_relative": 6.759922280421123e-14,
+          "velocity_gradient_relative": 4.281935916394759e-13
+        },
+        {
+          "time": 0.13,
+          "native_original_residual": 5.815587358488735e-15,
+          "native_energy": 0.05958792222237326,
+          "pymhm_energy": 0.059587922222373246,
+          "displacement_l2_relative": 9.60932666638686e-15,
+          "displacement_gradient_relative": 5.227306738115093e-14,
+          "velocity_l2_relative": 7.241853762303453e-14,
+          "velocity_gradient_relative": 4.488624386691452e-13
+        },
+        {
+          "time": 0.135,
+          "native_original_residual": 5.78422870123276e-15,
+          "native_energy": 0.06513951736454897,
+          "pymhm_energy": 0.06513951736454893,
+          "displacement_l2_relative": 9.697922104547153e-15,
+          "displacement_gradient_relative": 5.255915011071352e-14,
+          "velocity_l2_relative": 7.199811491914693e-14,
+          "velocity_gradient_relative": 4.538245503383304e-13
+        },
+        {
+          "time": 0.14,
+          "native_original_residual": 5.274362465052077e-15,
+          "native_energy": 0.07103766113693563,
+          "pymhm_energy": 0.07103766113693556,
+          "displacement_l2_relative": 9.906503541070761e-15,
+          "displacement_gradient_relative": 5.4538030012787134e-14,
+          "velocity_l2_relative": 7.854536659612119e-14,
+          "velocity_gradient_relative": 4.983271684934447e-13
+        },
+        {
+          "time": 0.145,
+          "native_original_residual": 5.398551555972629e-15,
+          "native_energy": 0.07729792310154894,
+          "pymhm_energy": 0.07729792310154888,
+          "displacement_l2_relative": 1.0287250609612757e-14,
+          "displacement_gradient_relative": 5.698134593780532e-14,
+          "velocity_l2_relative": 8.005903906708023e-14,
+          "velocity_gradient_relative": 5.029158055875731e-13
+        },
+        {
+          "time": 0.15,
+          "native_original_residual": 5.9200247249625136e-15,
+          "native_energy": 0.08393648903518366,
+          "pymhm_energy": 0.08393648903518362,
+          "displacement_l2_relative": 1.0361454095431952e-14,
+          "displacement_gradient_relative": 5.6434349951895e-14,
+          "velocity_l2_relative": 8.26522115801404e-14,
+          "velocity_gradient_relative": 5.218380553440736e-13
+        },
+        {
+          "time": 0.155,
+          "native_original_residual": 5.714672263114319e-15,
+          "native_energy": 0.09097016348203582,
+          "pymhm_energy": 0.09097016348203577,
+          "displacement_l2_relative": 1.0505883455629435e-14,
+          "displacement_gradient_relative": 5.684426009515063e-14,
+          "velocity_l2_relative": 9.224206793191046e-14,
+          "velocity_gradient_relative": 5.849378553094383e-13
+        },
+        {
+          "time": 0.16,
+          "native_original_residual": 5.750176936809721e-15,
+          "native_energy": 0.09841637163379086,
+          "pymhm_energy": 0.09841637163379077,
+          "displacement_l2_relative": 1.0772993927477504e-14,
+          "displacement_gradient_relative": 5.761941291319633e-14,
+          "velocity_l2_relative": 9.623378841430139e-14,
+          "velocity_gradient_relative": 6.11827750746558e-13
+        },
+        {
+          "time": 0.165,
+          "native_original_residual": 5.489544645496048e-15,
+          "native_energy": 0.1062931604038611,
+          "pymhm_energy": 0.10629316040386098,
+          "displacement_l2_relative": 1.073472273591268e-14,
+          "displacement_gradient_relative": 5.716325839242205e-14,
+          "velocity_l2_relative": 9.936477257631788e-14,
+          "velocity_gradient_relative": 6.331140619232001e-13
+        },
+        {
+          "time": 0.17,
+          "native_original_residual": 5.487810291628654e-15,
+          "native_energy": 0.11461919855927895,
+          "pymhm_energy": 0.11461919855927884,
+          "displacement_l2_relative": 1.0742109436260073e-14,
+          "displacement_gradient_relative": 5.688170210067733e-14,
+          "velocity_l2_relative": 1.0302014453766843e-13,
+          "velocity_gradient_relative": 6.514716855603797e-13
+        },
+        {
+          "time": 0.17500000000000002,
+          "native_original_residual": 5.6048142600624065e-15,
+          "native_energy": 0.12341377577456866,
+          "pymhm_energy": 0.12341377577456848,
+          "displacement_l2_relative": 1.1062889621202178e-14,
+          "displacement_gradient_relative": 5.828038005826052e-14,
+          "velocity_l2_relative": 1.1046483980402018e-13,
+          "velocity_gradient_relative": 6.956800003043742e-13
+        },
+        {
+          "time": 0.18,
+          "native_original_residual": 5.551712052282642e-15,
+          "native_energy": 0.1326968004802171,
+          "pymhm_energy": 0.13269680048021693,
+          "displacement_l2_relative": 1.0976333485559814e-14,
+          "displacement_gradient_relative": 5.813368900823838e-14,
+          "velocity_l2_relative": 1.1760137523673957e-13,
+          "velocity_gradient_relative": 7.410845280418524e-13
+        },
+        {
+          "time": 0.185,
+          "native_original_residual": 5.52425624079108e-15,
+          "native_energy": 0.14248879639691348,
+          "pymhm_energy": 0.14248879639691328,
+          "displacement_l2_relative": 1.1246153613653705e-14,
+          "displacement_gradient_relative": 5.875225773419238e-14,
+          "velocity_l2_relative": 1.2357382744833042e-13,
+          "velocity_gradient_relative": 7.811247432601357e-13
+        },
+        {
+          "time": 0.19,
+          "native_original_residual": 5.383934561388785e-15,
+          "native_energy": 0.1528108976762906,
+          "pymhm_energy": 0.15281089767629044,
+          "displacement_l2_relative": 1.143035560037304e-14,
+          "displacement_gradient_relative": 5.874274605958337e-14,
+          "velocity_l2_relative": 1.2923372718688252e-13,
+          "velocity_gradient_relative": 8.108063550580821e-13
+        },
+        {
+          "time": 0.195,
+          "native_original_residual": 5.552780448132459e-15,
+          "native_energy": 0.16368484260741087,
+          "pymhm_energy": 0.16368484260741062,
+          "displacement_l2_relative": 1.1652069543323846e-14,
+          "displacement_gradient_relative": 5.997840236996815e-14,
+          "velocity_l2_relative": 1.3373438293652755e-13,
+          "velocity_gradient_relative": 8.430718509316543e-13
+        },
+        {
+          "time": 0.2,
+          "native_original_residual": 5.6001464002722146e-15,
+          "native_energy": 0.1751329658906993,
+          "pymhm_energy": 0.175132965890699,
+          "displacement_l2_relative": 1.189178103010354e-14,
+          "displacement_gradient_relative": 6.008621865327418e-14,
+          "velocity_l2_relative": 1.385686569368371e-13,
+          "velocity_gradient_relative": 8.681022273935798e-13
+        },
+        {
+          "time": 0.20500000000000002,
+          "native_original_residual": 5.341554649082576e-15,
+          "native_energy": 0.18717818952037996,
+          "pymhm_energy": 0.18717818952037965,
+          "displacement_l2_relative": 1.2107019942331464e-14,
+          "displacement_gradient_relative": 6.035925189222117e-14,
+          "velocity_l2_relative": 1.3819260170905675e-13,
+          "velocity_gradient_relative": 8.783077434894393e-13
+        },
+        {
+          "time": 0.21,
+          "native_original_residual": 5.414538858358339e-15,
+          "native_energy": 0.19984401234519705,
+          "pymhm_energy": 0.19984401234519664,
+          "displacement_l2_relative": 1.1895510884832405e-14,
+          "displacement_gradient_relative": 5.900159057696428e-14,
+          "velocity_l2_relative": 1.4799748914442063e-13,
+          "velocity_gradient_relative": 9.262858464682976e-13
+        },
+        {
+          "time": 0.215,
+          "native_original_residual": 4.991332470105821e-15,
+          "native_energy": 0.2131544983893282,
+          "pymhm_energy": 0.2131544983893278,
+          "displacement_l2_relative": 1.2387549947247392e-14,
+          "displacement_gradient_relative": 6.133990412836317e-14,
+          "velocity_l2_relative": 1.5100750280009846e-13,
+          "velocity_gradient_relative": 9.63703045119181e-13
+        },
+        {
+          "time": 0.22,
+          "native_original_residual": 5.707322807544655e-15,
+          "native_energy": 0.22713426400831208,
+          "pymhm_energy": 0.2271342640083116,
+          "displacement_l2_relative": 1.250178330521586e-14,
+          "displacement_gradient_relative": 6.150360490074593e-14,
+          "velocity_l2_relative": 1.5147736902955915e-13,
+          "velocity_gradient_relative": 9.452366326157531e-13
+        },
+        {
+          "time": 0.225,
+          "native_original_residual": 5.26588944550841e-15,
+          "native_energy": 0.24180846393033276,
+          "pymhm_energy": 0.24180846393033223,
+          "displacement_l2_relative": 1.2935478450997006e-14,
+          "displacement_gradient_relative": 6.281953597381705e-14,
+          "velocity_l2_relative": 1.6001573589395232e-13,
+          "velocity_gradient_relative": 1.0093670142995482e-12
+        },
+        {
+          "time": 0.23,
+          "native_original_residual": 5.3727474961682636e-15,
+          "native_energy": 0.2572027761975644,
+          "pymhm_energy": 0.25720277619756376,
+          "displacement_l2_relative": 1.308546696350204e-14,
+          "displacement_gradient_relative": 6.268625421836691e-14,
+          "velocity_l2_relative": 1.6267934438079082e-13,
+          "velocity_gradient_relative": 1.0113306343479427e-12
+        },
+        {
+          "time": 0.23500000000000001,
+          "native_original_residual": 5.63402781352671e-15,
+          "native_energy": 0.2733433859848038,
+          "pymhm_energy": 0.2733433859848031,
+          "displacement_l2_relative": 1.320302551272917e-14,
+          "displacement_gradient_relative": 6.293797990631846e-14,
+          "velocity_l2_relative": 1.6534282687382472e-13,
+          "velocity_gradient_relative": 1.035893511759474e-12
+        },
+        {
+          "time": 0.24,
+          "native_original_residual": 5.88718032817157e-15,
+          "native_energy": 0.29025696824351865,
+          "pymhm_energy": 0.2902569682435179,
+          "displacement_l2_relative": 1.3689448934579201e-14,
+          "displacement_gradient_relative": 6.556636649128294e-14,
+          "velocity_l2_relative": 1.6263034962880417e-13,
+          "velocity_gradient_relative": 1.0219223295801272e-12
+        },
+        {
+          "time": 0.245,
+          "native_original_residual": 5.576112686974393e-15,
+          "native_energy": 0.3079706691070946,
+          "pymhm_energy": 0.3079706691070938,
+          "displacement_l2_relative": 1.3867645439601029e-14,
+          "displacement_gradient_relative": 6.604138060005256e-14,
+          "velocity_l2_relative": 1.7050879142016165e-13,
+          "velocity_gradient_relative": 1.0772274723854598e-12
+        },
+        {
+          "time": 0.25,
+          "native_original_residual": 5.714804322828414e-15,
+          "native_energy": 0.3265120860016635,
+          "pymhm_energy": 0.32651208600166254,
+          "displacement_l2_relative": 1.3858715225438804e-14,
+          "displacement_gradient_relative": 6.524824937617305e-14,
+          "velocity_l2_relative": 1.8258722466393692e-13,
+          "velocity_gradient_relative": 1.1374121366171565e-12
+        },
+        {
+          "time": 0.255,
+          "native_original_residual": 5.0170885756169175e-15,
+          "native_energy": 0.34590924643495047,
+          "pymhm_energy": 0.34590924643494947,
+          "displacement_l2_relative": 1.4177631487887826e-14,
+          "displacement_gradient_relative": 6.718864354257246e-14,
+          "velocity_l2_relative": 1.833385275502583e-13,
+          "velocity_gradient_relative": 1.1396660796127302e-12
+        },
+        {
+          "time": 0.26,
+          "native_original_residual": 5.339015915249047e-15,
+          "native_energy": 0.36619058547595335,
+          "pymhm_energy": 0.36619058547595207,
+          "displacement_l2_relative": 1.4411625271747735e-14,
+          "displacement_gradient_relative": 6.859383419993592e-14,
+          "velocity_l2_relative": 1.934058249832094e-13,
+          "velocity_gradient_relative": 1.1903883555112514e-12
+        },
+        {
+          "time": 0.265,
+          "native_original_residual": 5.648296535716114e-15,
+          "native_energy": 0.3873849219795832,
+          "pymhm_energy": 0.38738492197958196,
+          "displacement_l2_relative": 1.4813358858973752e-14,
+          "displacement_gradient_relative": 7.02308388704805e-14,
+          "velocity_l2_relative": 1.9576149175521527e-13,
+          "velocity_gradient_relative": 1.21014813436864e-12
+        },
+        {
+          "time": 0.27,
+          "native_original_residual": 5.226730737229253e-15,
+          "native_energy": 0.4095214336397961,
+          "pymhm_energy": 0.4095214336397947,
+          "displacement_l2_relative": 1.5136011126743348e-14,
+          "displacement_gradient_relative": 7.011777002360732e-14,
+          "velocity_l2_relative": 1.9733000924218456e-13,
+          "velocity_gradient_relative": 1.2134013420338697e-12
+        },
+        {
+          "time": 0.275,
+          "native_original_residual": 5.1735222435741734e-15,
+          "native_energy": 0.43262963096102913,
+          "pymhm_energy": 0.4326296309610277,
+          "displacement_l2_relative": 1.5094672307131533e-14,
+          "displacement_gradient_relative": 6.878884121120926e-14,
+          "velocity_l2_relative": 1.9579504815638143e-13,
+          "velocity_gradient_relative": 1.2227201533225664e-12
+        },
+        {
+          "time": 0.28,
+          "native_original_residual": 5.256422840262336e-15,
+          "native_energy": 0.4567393302145403,
+          "pymhm_energy": 0.4567393302145386,
+          "displacement_l2_relative": 1.5267161119042358e-14,
+          "displacement_gradient_relative": 6.900208902584275e-14,
+          "velocity_l2_relative": 2.002689491995556e-13,
+          "velocity_gradient_relative": 1.2360165639793368e-12
+        },
+        {
+          "time": 0.28500000000000003,
+          "native_original_residual": 5.267731530573864e-15,
+          "native_energy": 0.4818806253938385,
+          "pymhm_energy": 0.4818806253938368,
+          "displacement_l2_relative": 1.5298018613699117e-14,
+          "displacement_gradient_relative": 6.858330530335991e-14,
+          "velocity_l2_relative": 2.086053216093408e-13,
+          "velocity_gradient_relative": 1.2861383980696061e-12
+        },
+        {
+          "time": 0.29,
+          "native_original_residual": 5.507481333736618e-15,
+          "native_energy": 0.5080838591094377,
+          "pymhm_energy": 0.5080838591094359,
+          "displacement_l2_relative": 1.5433223687778377e-14,
+          "displacement_gradient_relative": 7.018070342866622e-14,
+          "velocity_l2_relative": 2.1943237509826033e-13,
+          "velocity_gradient_relative": 1.3413674204882913e-12
+        },
+        {
+          "time": 0.295,
+          "native_original_residual": 5.3942460273831066e-15,
+          "native_energy": 0.5353795922813643,
+          "pymhm_energy": 0.5353795922813622,
+          "displacement_l2_relative": 1.5807315125638495e-14,
+          "displacement_gradient_relative": 7.225838876289639e-14,
+          "velocity_l2_relative": 2.232718296812882e-13,
+          "velocity_gradient_relative": 1.3633913452326803e-12
+        },
+        {
+          "time": 0.3,
+          "native_original_residual": 4.791910211322298e-15,
+          "native_energy": 0.5637985724154646,
+          "pymhm_energy": 0.5637985724154625,
+          "displacement_l2_relative": 1.613248488506549e-14,
+          "displacement_gradient_relative": 7.355234152769112e-14,
+          "velocity_l2_relative": 2.3201592748564707e-13,
+          "velocity_gradient_relative": 1.4109190799584767e-12
+        },
+        {
+          "time": 0.305,
+          "native_original_residual": 5.337249277004227e-15,
+          "native_energy": 0.5933717002038463,
+          "pymhm_energy": 0.5933717002038438,
+          "displacement_l2_relative": 1.6118181747943174e-14,
+          "displacement_gradient_relative": 7.175748716649886e-14,
+          "velocity_l2_relative": 2.4340183534270933e-13,
+          "velocity_gradient_relative": 1.4704182798315704e-12
+        },
+        {
+          "time": 0.31,
+          "native_original_residual": 5.412825313596292e-15,
+          "native_energy": 0.6241299941845557,
+          "pymhm_energy": 0.6241299941845531,
+          "displacement_l2_relative": 1.627809183980731e-14,
+          "displacement_gradient_relative": 7.123918883776903e-14,
+          "velocity_l2_relative": 2.482446444328156e-13,
+          "velocity_gradient_relative": 1.5078320051677028e-12
+        },
+        {
+          "time": 0.315,
+          "native_original_residual": 5.353696120014671e-15,
+          "native_energy": 0.6561045532382337,
+          "pymhm_energy": 0.656104553238231,
+          "displacement_l2_relative": 1.6466319966174924e-14,
+          "displacement_gradient_relative": 7.087005779265843e-14,
+          "velocity_l2_relative": 2.52431308537689e-13,
+          "velocity_gradient_relative": 1.5157323637071423e-12
+        },
+        {
+          "time": 0.32,
+          "native_original_residual": 5.142868676380624e-15,
+          "native_energy": 0.6893265167893534,
+          "pymhm_energy": 0.6893265167893503,
+          "displacement_l2_relative": 1.6771303330666567e-14,
+          "displacement_gradient_relative": 7.224146144492012e-14,
+          "velocity_l2_relative": 2.557741963752712e-13,
+          "velocity_gradient_relative": 1.5414910618874416e-12
+        },
+        {
+          "time": 0.325,
+          "native_original_residual": 5.374666544413449e-15,
+          "native_energy": 0.7238270227079256,
+          "pymhm_energy": 0.7238270227079224,
+          "displacement_l2_relative": 1.6952948829314357e-14,
+          "displacement_gradient_relative": 7.280020605060711e-14,
+          "velocity_l2_relative": 2.6330002477786425e-13,
+          "velocity_gradient_relative": 1.5742187117074232e-12
+        },
+        {
+          "time": 0.33,
+          "native_original_residual": 5.188545405314021e-15,
+          "native_energy": 0.7596371630586153,
+          "pymhm_energy": 0.7596371630586117,
+          "displacement_l2_relative": 1.7533756704252412e-14,
+          "displacement_gradient_relative": 7.53186641702188e-14,
+          "velocity_l2_relative": 2.5811279122640993e-13,
+          "velocity_gradient_relative": 1.5599023621693293e-12
+        },
+        {
+          "time": 0.335,
+          "native_original_residual": 5.24851928722726e-15,
+          "native_energy": 0.7967879379980529,
+          "pymhm_energy": 0.7967879379980493,
+          "displacement_l2_relative": 1.7666980654714982e-14,
+          "displacement_gradient_relative": 7.502858112170497e-14,
+          "velocity_l2_relative": 2.6727608091250577e-13,
+          "velocity_gradient_relative": 1.596270471689169e-12
+        },
+        {
+          "time": 0.34,
+          "native_original_residual": 4.959406145475682e-15,
+          "native_energy": 0.835310208256616,
+          "pymhm_energy": 0.835310208256612,
+          "displacement_l2_relative": 1.7897086617490033e-14,
+          "displacement_gradient_relative": 7.517192143273649e-14,
+          "velocity_l2_relative": 2.7024091997571586e-13,
+          "velocity_gradient_relative": 1.6292466748136102e-12
+        },
+        {
+          "time": 0.34500000000000003,
+          "native_original_residual": 5.627523958935577e-15,
+          "native_energy": 0.8752346467389518,
+          "pymhm_energy": 0.8752346467389475,
+          "displacement_l2_relative": 1.815508811550328e-14,
+          "displacement_gradient_relative": 7.662428572488909e-14,
+          "velocity_l2_relative": 2.7100713506415917e-13,
+          "velocity_gradient_relative": 1.616090346494804e-12
+        },
+        {
+          "time": 0.35000000000000003,
+          "native_original_residual": 5.145396108309541e-15,
+          "native_energy": 0.916591689823866,
+          "pymhm_energy": 0.9165916898238613,
+          "displacement_l2_relative": 1.848237395020449e-14,
+          "displacement_gradient_relative": 7.767810118153179e-14,
+          "velocity_l2_relative": 2.8007081810129093e-13,
+          "velocity_gradient_relative": 1.683132997572397e-12
+        },
+        {
+          "time": 0.355,
+          "native_original_residual": 5.424162681600815e-15,
+          "native_energy": 0.959411488931737,
+          "pymhm_energy": 0.9594114889317318,
+          "displacement_l2_relative": 1.8797710129882027e-14,
+          "displacement_gradient_relative": 7.886536057531578e-14,
+          "velocity_l2_relative": 2.8889812165825423e-13,
+          "velocity_gradient_relative": 1.7280895930021148e-12
+        },
+        {
+          "time": 0.36,
+          "native_original_residual": 5.380280047410769e-15,
+          "native_energy": 1.003723862857372,
+          "pymhm_energy": 1.0037238628573666,
+          "displacement_l2_relative": 1.8920686847137035e-14,
+          "displacement_gradient_relative": 7.881651781712925e-14,
+          "velocity_l2_relative": 2.874000052559493e-13,
+          "velocity_gradient_relative": 1.7185526727188074e-12
+        },
+        {
+          "time": 0.365,
+          "native_original_residual": 5.294361793857216e-15,
+          "native_energy": 1.0495582512474313,
+          "pymhm_energy": 1.0495582512474257,
+          "displacement_l2_relative": 1.928976412408259e-14,
+          "displacement_gradient_relative": 8.037715409610154e-14,
+          "velocity_l2_relative": 2.873979639523833e-13,
+          "velocity_gradient_relative": 1.7067342310173677e-12
+        },
+        {
+          "time": 0.37,
+          "native_original_residual": 5.188011616561412e-15,
+          "native_energy": 1.0969436694506618,
+          "pymhm_energy": 1.0969436694506554,
+          "displacement_l2_relative": 1.9344381955298852e-14,
+          "displacement_gradient_relative": 7.860804000565192e-14,
+          "velocity_l2_relative": 2.9680144600754526e-13,
+          "velocity_gradient_relative": 1.7671462544023375e-12
+        },
+        {
+          "time": 0.375,
+          "native_original_residual": 5.180759750012172e-15,
+          "native_energy": 1.1459086648077927,
+          "pymhm_energy": 1.1459086648077865,
+          "displacement_l2_relative": 1.9596296999823324e-14,
+          "displacement_gradient_relative": 7.868378829376492e-14,
+          "velocity_l2_relative": 3.0472127147691374e-13,
+          "velocity_gradient_relative": 1.8072797460592255e-12
+        },
+        {
+          "time": 0.38,
+          "native_original_residual": 5.167008287873074e-15,
+          "native_energy": 1.1964812742999382,
+          "pymhm_energy": 1.1964812742999311,
+          "displacement_l2_relative": 1.9849467363965803e-14,
+          "displacement_gradient_relative": 7.895082321845207e-14,
+          "velocity_l2_relative": 3.10024090205719e-13,
+          "velocity_gradient_relative": 1.8332212609598774e-12
+        },
+        {
+          "time": 0.385,
+          "native_original_residual": 5.2979702166616514e-15,
+          "native_energy": 1.2486889833622348,
+          "pymhm_energy": 1.2486889833622272,
+          "displacement_l2_relative": 1.997540685634431e-14,
+          "displacement_gradient_relative": 7.796257308991011e-14,
+          "velocity_l2_relative": 3.2229597230120536e-13,
+          "velocity_gradient_relative": 1.892656017201441e-12
+        },
+        {
+          "time": 0.39,
+          "native_original_residual": 5.361641727861762e-15,
+          "native_energy": 1.3025586856110407,
+          "pymhm_energy": 1.3025586856110327,
+          "displacement_l2_relative": 2.0261530877355756e-14,
+          "displacement_gradient_relative": 7.826288538301054e-14,
+          "velocity_l2_relative": 3.370301441317965e-13,
+          "velocity_gradient_relative": 1.958403754632885e-12
+        },
+        {
+          "time": 0.395,
+          "native_original_residual": 4.88836919896872e-15,
+          "native_energy": 1.3581166432374965,
+          "pymhm_energy": 1.358116643237488,
+          "displacement_l2_relative": 2.0305330612787712e-14,
+          "displacement_gradient_relative": 7.820732788713324e-14,
+          "velocity_l2_relative": 3.4249690197349444e-13,
+          "velocity_gradient_relative": 1.9765606440375523e-12
+        },
+        {
+          "time": 0.4,
+          "native_original_residual": 5.318188574239436e-15,
+          "native_energy": 1.4153884478865333,
+          "pymhm_energy": 1.415388447886524,
+          "displacement_l2_relative": 2.055309477545457e-14,
+          "displacement_gradient_relative": 7.877845875072691e-14,
+          "velocity_l2_relative": 3.528229869609968e-13,
+          "velocity_gradient_relative": 2.033910774499517e-12
+        },
+        {
+          "time": 0.405,
+          "native_original_residual": 5.082765268208278e-15,
+          "native_energy": 1.4743989819557282,
+          "pymhm_energy": 1.4743989819557188,
+          "displacement_l2_relative": 2.0764305352428702e-14,
+          "displacement_gradient_relative": 8.005758956379423e-14,
+          "velocity_l2_relative": 3.603471837525646e-13,
+          "velocity_gradient_relative": 2.0788772315981073e-12
+        },
+        {
+          "time": 0.41000000000000003,
+          "native_original_residual": 4.995449910687287e-15,
+          "native_energy": 1.5351723803900903,
+          "pymhm_energy": 1.5351723803900796,
+          "displacement_l2_relative": 2.0987194867574902e-14,
+          "displacement_gradient_relative": 8.059766802818879e-14,
+          "velocity_l2_relative": 3.642039577949697e-13,
+          "velocity_gradient_relative": 2.0824838163813253e-12
+        },
+        {
+          "time": 0.41500000000000004,
+          "native_original_residual": 5.45502762075147e-15,
+          "native_energy": 1.5977319931874132,
+          "pymhm_energy": 1.5977319931874028,
+          "displacement_l2_relative": 2.1328641103021897e-14,
+          "displacement_gradient_relative": 8.133319489987139e-14,
+          "velocity_l2_relative": 3.776290350467692e-13,
+          "velocity_gradient_relative": 2.1611235207050355e-12
+        },
+        {
+          "time": 0.42,
+          "native_original_residual": 4.995129718347473e-15,
+          "native_energy": 1.662100348933397,
+          "pymhm_energy": 1.6621003489333854,
+          "displacement_l2_relative": 2.1477053455153656e-14,
+          "displacement_gradient_relative": 8.091924366747348e-14,
+          "velocity_l2_relative": 3.848985924258244e-13,
+          "velocity_gradient_relative": 2.1818431209657357e-12
+        },
+        {
+          "time": 0.425,
+          "native_original_residual": 4.8526794461900644e-15,
+          "native_energy": 1.7282991197297373,
+          "pymhm_energy": 1.7282991197297255,
+          "displacement_l2_relative": 2.1619712497455048e-14,
+          "displacement_gradient_relative": 8.075034222331639e-14,
+          "velocity_l2_relative": 3.8741883787964e-13,
+          "velocity_gradient_relative": 2.182739593082916e-12
+        },
+        {
+          "time": 0.43,
+          "native_original_residual": 5.147459529962951e-15,
+          "native_energy": 1.7963490878459811,
+          "pymhm_energy": 1.7963490878459685,
+          "displacement_l2_relative": 2.191559761985582e-14,
+          "displacement_gradient_relative": 8.120454236806068e-14,
+          "velocity_l2_relative": 3.9131247642016944e-13,
+          "velocity_gradient_relative": 2.1930825109441787e-12
+        },
+        {
+          "time": 0.435,
+          "native_original_residual": 5.440769608270145e-15,
+          "native_energy": 1.8662701143153546,
+          "pymhm_energy": 1.8662701143153413,
+          "displacement_l2_relative": 2.224754239757117e-14,
+          "displacement_gradient_relative": 8.222880276589517e-14,
+          "velocity_l2_relative": 3.890191218145761e-13,
+          "velocity_gradient_relative": 2.1625848915548017e-12
+        },
+        {
+          "time": 0.44,
+          "native_original_residual": 5.03535349631886e-15,
+          "native_energy": 1.9380811095207626,
+          "pymhm_energy": 1.9380811095207475,
+          "displacement_l2_relative": 2.2557817934275317e-14,
+          "displacement_gradient_relative": 8.32335677950215e-14,
+          "velocity_l2_relative": 3.9727361036093683e-13,
+          "velocity_gradient_relative": 2.209600601752423e-12
+        },
+        {
+          "time": 0.445,
+          "native_original_residual": 5.217216638395073e-15,
+          "native_energy": 2.0118000056081873,
+          "pymhm_energy": 2.011800005608172,
+          "displacement_l2_relative": 2.29190741937504e-14,
+          "displacement_gradient_relative": 8.442171563363765e-14,
+          "velocity_l2_relative": 4.005685354051838e-13,
+          "velocity_gradient_relative": 2.2271906665271174e-12
+        },
+        {
+          "time": 0.45,
+          "native_original_residual": 5.319781683626599e-15,
+          "native_energy": 2.0874437303587703,
+          "pymhm_energy": 2.087443730358754,
+          "displacement_l2_relative": 2.3028951955403213e-14,
+          "displacement_gradient_relative": 8.348773984397065e-14,
+          "velocity_l2_relative": 4.139688564014423e-13,
+          "velocity_gradient_relative": 2.312941412548745e-12
+        },
+        {
+          "time": 0.455,
+          "native_original_residual": 5.1108169291856615e-15,
+          "native_energy": 2.1650281819871573,
+          "pymhm_energy": 2.165028181987141,
+          "displacement_l2_relative": 2.324511834960373e-14,
+          "displacement_gradient_relative": 8.365688481886406e-14,
+          "velocity_l2_relative": 4.188705992503258e-13,
+          "velocity_gradient_relative": 2.321792330719114e-12
+        },
+        {
+          "time": 0.46,
+          "native_original_residual": 4.953428505659136e-15,
+          "native_energy": 2.2445682042453865,
+          "pymhm_energy": 2.2445682042453687,
+          "displacement_l2_relative": 2.3502229038034957e-14,
+          "displacement_gradient_relative": 8.370622774870568e-14,
+          "velocity_l2_relative": 4.3574855571286005e-13,
+          "velocity_gradient_relative": 2.4305538838609706e-12
+        },
+        {
+          "time": 0.465,
+          "native_original_residual": 4.9721902058595854e-15,
+          "native_energy": 2.326077561217533,
+          "pymhm_energy": 2.326077561217514,
+          "displacement_l2_relative": 2.376140891050116e-14,
+          "displacement_gradient_relative": 8.414940238611241e-14,
+          "velocity_l2_relative": 4.535681259938915e-13,
+          "velocity_gradient_relative": 2.4743344982997624e-12
+        },
+        {
+          "time": 0.47000000000000003,
+          "native_original_residual": 5.147188428280404e-15,
+          "native_energy": 2.4095689112917333,
+          "pymhm_energy": 2.409568911291714,
+          "displacement_l2_relative": 2.4054510878763376e-14,
+          "displacement_gradient_relative": 8.455643503833841e-14,
+          "velocity_l2_relative": 4.594708954326353e-13,
+          "velocity_gradient_relative": 2.530320948516976e-12
+        },
+        {
+          "time": 0.47500000000000003,
+          "native_original_residual": 4.893823690148757e-15,
+          "native_energy": 2.4950537799751427,
+          "pymhm_energy": 2.4950537799751205,
+          "displacement_l2_relative": 2.4147394402967362e-14,
+          "displacement_gradient_relative": 8.407047564000004e-14,
+          "velocity_l2_relative": 4.5418371486973615e-13,
+          "velocity_gradient_relative": 2.473515997884915e-12
+        },
+        {
+          "time": 0.48,
+          "native_original_residual": 5.279524374447736e-15,
+          "native_energy": 2.582542531441119,
+          "pymhm_energy": 2.582542531441096,
+          "displacement_l2_relative": 2.4471055249478733e-14,
+          "displacement_gradient_relative": 8.43161329896962e-14,
+          "velocity_l2_relative": 4.4408313853135625e-13,
+          "velocity_gradient_relative": 2.4287625762648433e-12
+        },
+        {
+          "time": 0.485,
+          "native_original_residual": 4.458695856151551e-15,
+          "native_energy": 2.6720443389257977,
+          "pymhm_energy": 2.672044338925775,
+          "displacement_l2_relative": 2.476636108578346e-14,
+          "displacement_gradient_relative": 8.427307122107229e-14,
+          "velocity_l2_relative": 4.4360888035014293e-13,
+          "velocity_gradient_relative": 2.4044292079650417e-12
+        },
+        {
+          "time": 0.49,
+          "native_original_residual": 4.832639200827486e-15,
+          "native_energy": 2.7635671542830984,
+          "pymhm_energy": 2.763567154283074,
+          "displacement_l2_relative": 2.482426126483914e-14,
+          "displacement_gradient_relative": 8.359502300560254e-14,
+          "velocity_l2_relative": 4.4974728950614056e-13,
+          "velocity_gradient_relative": 2.4540726420400763e-12
+        },
+        {
+          "time": 0.495,
+          "native_original_residual": 5.4796253214932525e-15,
+          "native_energy": 2.857117677133038,
+          "pymhm_energy": 2.857117677133012,
+          "displacement_l2_relative": 2.5143580384883377e-14,
+          "displacement_gradient_relative": 8.484955486849502e-14,
+          "velocity_l2_relative": 4.4308744526955524e-13,
+          "velocity_gradient_relative": 2.4086539524700874e-12
+        },
+        {
+          "time": 0.5,
+          "native_original_residual": 4.979428640103699e-15,
+          "native_energy": 2.952701324083228,
+          "pymhm_energy": 2.952701324083201,
+          "displacement_l2_relative": 2.5465223443932907e-14,
+          "displacement_gradient_relative": 8.561214489538024e-14,
+          "velocity_l2_relative": 4.551812677157613e-13,
+          "velocity_gradient_relative": 2.4683537614045288e-12
+        }
+      ],
+      "archive": "n2-dt0.005.npz",
+      "archive_sha256": "29eb407a278cd398c855b089b29372eaead10aaaa2ae7ef8a00c712d858bf4c4",
+      "seconds": 536.529201377,
+      "acquisition_archive_sha256": "4e8b6c60e765561c9bbaa3b6e78123f2847677b3078d1f087817ec88e1fe2974",
+      "physical_error_norms": {
+        "native24": {
+          "displacement_l2": 0.10589188623150979,
+          "velocity_l2": 0.642820728750952,
+          "displacement_h1": 1.8880648417403056,
+          "velocity_h1": 10.696566542629839,
+          "stress_l2": 0.9876647372651357,
+          "stress_broken_hdiv": 6.172546224138896
+        },
+        "native28": {
+          "displacement_l2": 0.10589188623150964,
+          "velocity_l2": 0.6428207287509518,
+          "displacement_h1": 1.888064841740305,
+          "velocity_h1": 10.696566542629832,
+          "stress_l2": 0.9876647372651356,
+          "stress_broken_hdiv": 6.172546224138893
+        },
+        "candidate24": {
+          "displacement_l2": 0.10589188623150735,
+          "velocity_l2": 0.6428207287509335,
+          "displacement_h1": 1.8880648417402788,
+          "velocity_h1": 10.696566542629585,
+          "stress_l2": 0.9876647372651232,
+          "stress_broken_hdiv": 6.172546224138853
+        },
+        "candidate28": {
+          "displacement_l2": 0.1058918862315072,
+          "velocity_l2": 0.6428207287509337,
+          "displacement_h1": 1.8880648417402783,
+          "velocity_h1": 10.696566542629574,
+          "stress_l2": 0.9876647372651229,
+          "stress_broken_hdiv": 6.172546224138851
+        },
+        "pymhm22": {
+          "displacement_l2": 0.10589188623150765,
+          "velocity_l2": 0.6428207287509358,
+          "displacement_h1": 1.8880648417402834,
+          "velocity_h1": 10.696566542629611,
+          "stress_l2": 0.987664737265125,
+          "stress_broken_hdiv": 6.172546224138868
+        },
+        "pymhm26": {
+          "displacement_l2": 0.10589188623150747,
+          "velocity_l2": 0.6428207287509348,
+          "displacement_h1": 1.888064841740281,
+          "velocity_h1": 10.696566542629595,
+          "stress_l2": 0.9876647372651244,
+          "stress_broken_hdiv": 6.172546224138857
+        }
+      },
+      "physical_checks": {
+        "native_quadrature_change": 1.441618157147664e-15,
+        "candidate_quadrature_change": 1.310561961043361e-15,
+        "pymhm_quadrature_change": 1.726700886373425e-15,
+        "native_vs_candidate_norm_difference": 2.8151916221733643e-14,
+        "ufl_vs_pymhm_norm_difference": 2.4900677259823798e-15,
+        "replayed_energy_relative_change": 1.128007444135772e-14
+      },
+      "coordinate_contract": "Equispaced P3 tetrahedral nodal points reconstructed with the acquisition DOLFINx/Basix build; vector DOFs interleaved. Archived permutation identifies canonical PyMHM ordering.",
+      "maximum_trajectory_difference": {
+        "native_original_residual": 6.123166899299368e-15,
+        "displacement_l2_relative": 2.5465223443932907e-14,
+        "displacement_gradient_relative": 8.561214489538024e-14,
+        "velocity_l2_relative": 4.594708954326353e-13,
+        "velocity_gradient_relative": 2.530320948516976e-12
+      }
+    }
+  ]
+}

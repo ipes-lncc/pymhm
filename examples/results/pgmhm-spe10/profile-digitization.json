@@ -1,0 +1,164 @@
+{
+  "article": "10.1007/s40314-023-02304-y",
+  "figure": 13,
+  "image_sha256": "3b2865fb427945b3884c46c7c83fa8cf8e49a0253a18de14e53b88cc7ae7667f",
+  "axes_pixels": {
+    "y_coordinate": [
+      50.0,
+      1077.0
+    ],
+    "pressure": [
+      863.0,
+      19.0
+    ]
+  },
+  "definition": "median of visible grayscale black reference-curve pixels within two horizontal pixels; curve overlap can leave gaps",
+  "rows": [
+    {
+      "y": 150,
+      "pressure": 0.9995853080568721,
+      "pixel_y_range": [
+        56,
+        58
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403
+    },
+    {
+      "y": 200,
+      "pressure": 0.991409952606635,
+      "pixel_y_range": [
+        61,
+        62
+      ],
+      "pressure_pixel_uncertainty": 0.0027251184834123222
+    },
+    {
+      "y": 300,
+      "pressure": 0.8490225118483411,
+      "pixel_y_range": [
+        154,
+        179
+      ],
+      "pressure_pixel_uncertainty": 0.019075829383886255
+    },
+    {
+      "y": 325,
+      "pressure": 0.7488744075829383,
+      "pixel_y_range": [
+        221,
+        260
+      ],
+      "pressure_pixel_uncertainty": 0.02861374407582938
+    },
+    {
+      "y": 350,
+      "pressure": 0.5683353080568719,
+      "pixel_y_range": [
+        365,
+        375
+      ],
+      "pressure_pixel_uncertainty": 0.008856635071090047
+    },
+    {
+      "y": 375,
+      "pressure": 0.42526658767772507,
+      "pixel_y_range": [
+        467,
+        498
+      ],
+      "pressure_pixel_uncertainty": 0.023163507109004736
+    },
+    {
+      "y": 425,
+      "pressure": 0.0812203791469194,
+      "pixel_y_range": [
+        729,
+        731
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403
+    },
+    {
+      "y": 450,
+      "pressure": 0.06963862559241704,
+      "pixel_y_range": [
+        737,
+        739
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403
+    },
+    {
+      "y": 500,
+      "pressure": 0.06350710900473933,
+      "pixel_y_range": [
+        742,
+        744
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403
+    },
+    {
+      "y": 600,
+      "pressure": 0.05941943127962082,
+      "pixel_y_range": [
+        745,
+        747
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403
+    },
+    {
+      "y": 700,
+      "pressure": 0.05805687203791465,
+      "pixel_y_range": [
+        746,
+        748
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403
+    },
+    {
+      "y": 800,
+      "pressure": 0.05737559241706158,
+      "pixel_y_range": [
+        747,
+        748
+      ],
+      "pressure_pixel_uncertainty": 0.0027251184834123222
+    },
+    {
+      "y": 900,
+      "pressure": 0.05669431279620851,
+      "pixel_y_range": [
+        747,
+        749
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403
+    },
+    {
+      "y": 1000,
+      "pressure": 0.056013033175355414,
+      "pixel_y_range": [
+        748,
+        749
+      ],
+      "pressure_pixel_uncertainty": 0.0027251184834123222
+    },
+    {
+      "y": 1050,
+      "pressure": 0.055331753554502344,
+      "pixel_y_range": [
+        748,
+        750
+      ],
+      "pressure_pixel_uncertainty": 0.003406398104265403
+    },
+    {
+      "y": 1150,
+      "pressure": 0.041024881516587675,
+      "pixel_y_range": [
+        759,
+        760
+      ],
+      "pressure_pixel_uncertainty": 0.0027251184834123222
+    }
+  ],
+  "source_url": "https://doi.org/10.1007/s40314-023-02304-y",
+  "source_status": "reference-curve pixels extracted from the published Figure 13; no executable historical field supplied"
+}

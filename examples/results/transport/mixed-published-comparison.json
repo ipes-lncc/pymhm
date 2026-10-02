@@ -1,0 +1,1127 @@
+{
+  "doi": "10.1137/130938499",
+  "figure": 12,
+  "printed_epsilon": 0.1,
+  "comparison_epsilon": 1.0,
+  "coefficient_scope": "The epsilon=1 regime is explicitly published in Figure7. Its compatibility with Figure12 markers does not establish the historical inputs or an editorial cause.",
+  "norm_convention": "Absolute L2 and unweighted broken H1 seminorm; no rescaling",
+  "dof_convention": "Computed abscissae count free interior multipliers only. Constant retained coordinates are algebraic and are recorded separately in each acquisition.",
+  "association": "Computed count must lie inside the original graphical abscissa interval",
+  "uncertainty": "Graphical reading intervals only; not certified discretization-error bounds",
+  "nominal_mesh": [
+    {
+      "archive": "mixed-spatial-n8.npz",
+      "archive_sha256": "ae1582f7e427196ca12cea795c7213d70be8b56aa7f7d8c57062923e0583da44",
+      "free_trace_dofs": 368,
+      "norm": "l2_error",
+      "computed": 0.0052293720112845535,
+      "published": 0.00044351891621077647,
+      "published_interval": [
+        0.00043185696970742324,
+        0.00045549578410196656
+      ],
+      "ratio_to_marker": 11.79064030901303,
+      "inside_graphical_interval": false,
+      "visibility": "visible_marker"
+    },
+    {
+      "archive": "mixed-spatial-n8.npz",
+      "archive_sha256": "ae1582f7e427196ca12cea795c7213d70be8b56aa7f7d8c57062923e0583da44",
+      "free_trace_dofs": 368,
+      "norm": "broken_h1_error",
+      "computed": 0.2394926578063121,
+      "published": 0.017796772188265038,
+      "published_interval": [
+        0.017479212539430602,
+        0.018120101212026424
+      ],
+      "ratio_to_marker": 13.457083974150688,
+      "inside_graphical_interval": false,
+      "visibility": "visible_marker"
+    },
+    {
+      "archive": "mixed-spatial-n16.npz",
+      "archive_sha256": "5c3e41db1e4c2391c09b0d7fc208ec8a6bc83bc743fbc3e019abbcf68fa34038",
+      "free_trace_dofs": 1504,
+      "norm": "l2_error",
+      "computed": 0.0013907308137569973,
+      "published": 0.00011271893153384666,
+      "published_interval": [
+        0.00010975508466865862,
+        0.00011576281467495568
+      ],
+      "ratio_to_marker": 12.338041133218121,
+      "inside_graphical_interval": false,
+      "visibility": "visible_marker"
+    },
+    {
+      "archive": "mixed-spatial-n16.npz",
+      "archive_sha256": "5c3e41db1e4c2391c09b0d7fc208ec8a6bc83bc743fbc3e019abbcf68fa34038",
+      "free_trace_dofs": 1504,
+      "norm": "broken_h1_error",
+      "computed": 0.12436261227186805,
+      "published": 0.00897787081649889,
+      "published_interval": [
+        0.008817672693288196,
+        0.009140979394607705
+      ],
+      "ratio_to_marker": 13.852127616196407,
+      "inside_graphical_interval": false,
+      "visibility": "visible_marker"
+    }
+  ],
+  "coefficient_mesh": [
+    {
+      "archive": "mixed-coefficient-e1-n8-r16.npz",
+      "archive_sha256": "0740cac95c38455d5456dcb1ff45b577ff65f36723dac908fe98c0aac27557c4",
+      "free_trace_dofs": 368,
+      "norm": "l2_error",
+      "computed": 0.00045215994113821515,
+      "published": 0.00044351891621077647,
+      "published_interval": [
+        0.00043185696970742324,
+        0.00045549578410196656
+      ],
+      "ratio_to_marker": 1.0194828779824403,
+      "inside_graphical_interval": true,
+      "visibility": "visible_marker"
+    },
+    {
+      "archive": "mixed-coefficient-e1-n8-r16.npz",
+      "archive_sha256": "0740cac95c38455d5456dcb1ff45b577ff65f36723dac908fe98c0aac27557c4",
+      "free_trace_dofs": 368,
+      "norm": "broken_h1_error",
+      "computed": 0.018068755262909353,
+      "published": 0.017796772188265038,
+      "published_interval": [
+        0.017479212539430602,
+        0.018120101212026424
+      ],
+      "ratio_to_marker": 1.0152827193474814,
+      "inside_graphical_interval": true,
+      "visibility": "visible_marker"
+    },
+    {
+      "archive": "mixed-coefficient-e1-n16-r16.npz",
+      "archive_sha256": "4b4c7048f22f68fa7aacb3342c580c173302c419e37e740a260c39fa1a24d79f",
+      "free_trace_dofs": 1504,
+      "norm": "l2_error",
+      "computed": 0.00011399102828644723,
+      "published": 0.00011271893153384666,
+      "published_interval": [
+        0.00010975508466865862,
+        0.00011576281467495568
+      ],
+      "ratio_to_marker": 1.011285564326154,
+      "inside_graphical_interval": true,
+      "visibility": "visible_marker"
+    },
+    {
+      "archive": "mixed-coefficient-e1-n16-r16.npz",
+      "archive_sha256": "4b4c7048f22f68fa7aacb3342c580c173302c419e37e740a260c39fa1a24d79f",
+      "free_trace_dofs": 1504,
+      "norm": "broken_h1_error",
+      "computed": 0.009084182963108275,
+      "published": 0.00897787081649889,
+      "published_interval": [
+        0.008817672693288196,
+        0.009140979394607705
+      ],
+      "ratio_to_marker": 1.0118415767816589,
+      "inside_graphical_interval": true,
+      "visibility": "visible_marker"
+    },
+    {
+      "archive": "mixed-coefficient-e1-n32-r16.npz",
+      "archive_sha256": "59b44200aa86719ad80be55f16a2fefacfb175ac30f2e68a8356590ff67585a4",
+      "free_trace_dofs": 6080,
+      "norm": "l2_error",
+      "computed": 2.8616242716787446e-05,
+      "published": 2.8464608777374642e-05,
+      "published_interval": [
+        2.7716156495707157e-05,
+        2.923327240465265e-05
+      ],
+      "ratio_to_marker": 1.0053271042858432,
+      "inside_graphical_interval": true,
+      "visibility": "visible_marker"
+    },
+    {
+      "archive": "mixed-coefficient-e1-n32-r16.npz",
+      "archive_sha256": "59b44200aa86719ad80be55f16a2fefacfb175ac30f2e68a8356590ff67585a4",
+      "free_trace_dofs": 6080,
+      "norm": "broken_h1_error",
+      "computed": 0.004554527999699367,
+      "published": 0.004518581693910091,
+      "published_interval": [
+        0.00443795363390188,
+        0.004600674592129089
+      ],
+      "ratio_to_marker": 1.0079552187443512,
+      "inside_graphical_interval": true,
+      "visibility": "visible_marker"
+    },
+    {
+      "archive": "mixed-coefficient-e1-n64-r16.npz",
+      "archive_sha256": "78a5e190f8e03115f72ff184a727c5c4481a3305edf1ef13305ebe347343be72",
+      "free_trace_dofs": 24448,
+      "norm": "l2_error",
+      "computed": 7.16884992551968e-06,
+      "published": 7.163629110489121e-06,
+      "published_interval": [
+        6.97526767560349e-06,
+        7.357077092845393e-06
+      ],
+      "ratio_to_marker": 1.0007287947142482,
+      "inside_graphical_interval": true,
+      "visibility": "visible_marker"
+    },
+    {
+      "archive": "mixed-coefficient-e1-n64-r16.npz",
+      "archive_sha256": "78a5e190f8e03115f72ff184a727c5c4481a3305edf1ef13305ebe347343be72",
+      "free_trace_dofs": 24448,
+      "norm": "broken_h1_error",
+      "computed": 0.002280371868611798,
+      "published": 0.0022691442928972024,
+      "published_interval": [
+        0.002228654441300277,
+        0.002310369757899216
+      ],
+      "ratio_to_marker": 1.0049479337870844,
+      "inside_graphical_interval": true,
+      "visibility": "visible_marker"
+    },
+    {
+      "archive": "mixed-coefficient-e1-n128-r16.npz",
+      "archive_sha256": "36c8d7abbb15766594cc8bf5d44668cbfa871dff50ffdf5674cb8a64a7b5340a",
+      "free_trace_dofs": 98048,
+      "norm": "l2_error",
+      "computed": 1.794063705536085e-06,
+      "published": 1.7971007318512322e-06,
+      "published_interval": [
+        1.7498475216047812e-06,
+        1.8456299766384232e-06
+      ],
+      "ratio_to_marker": 0.9983100411338552,
+      "inside_graphical_interval": true,
+      "visibility": "occluded_by_legend"
+    },
+    {
+      "archive": "mixed-coefficient-e1-n128-r16.npz",
+      "archive_sha256": "36c8d7abbb15766594cc8bf5d44668cbfa871dff50ffdf5674cb8a64a7b5340a",
+      "free_trace_dofs": 98048,
+      "norm": "broken_h1_error",
+      "computed": 0.0011409627813994427,
+      "published": 0.0011372367790622024,
+      "published_interval": [
+        0.0011169443064508653,
+        0.0011578979221992822
+      ],
+      "ratio_to_marker": 1.0032763646109941,
+      "inside_graphical_interval": true,
+      "visibility": "visible_marker"
+    }
+  ],
+  "uniform_face_controls": {
+    "16": [
+      {
+        "archive": "mixed-face-uniform-e1-1-r16.npz",
+        "archive_sha256": "6c0c6de3e94ba274fec7f945509eea933ffaf734fec13800f3b9789b55c59495",
+        "free_trace_dofs": 368,
+        "norm": "l2_error",
+        "computed": 0.0004521599411382152,
+        "published": 0.0004434958168803361,
+        "published_interval": [
+          0.0004318344777539086,
+          0.0004554720609928796
+        ],
+        "ratio_to_marker": 1.0195359774052093,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-1-r16.npz",
+        "archive_sha256": "6c0c6de3e94ba274fec7f945509eea933ffaf734fec13800f3b9789b55c59495",
+        "free_trace_dofs": 368,
+        "norm": "broken_h1_error",
+        "computed": 0.018068755262909353,
+        "published": 0.017797438927349384,
+        "published_interval": [
+          0.01747986738144579,
+          0.01812078006432406
+        ],
+        "ratio_to_marker": 1.0152446841743639,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-2-r16.npz",
+        "archive_sha256": "4881d7b9e9c299347a1cc82530e07ce2eb03a66141217890942ffc045c342d82",
+        "free_trace_dofs": 736,
+        "norm": "l2_error",
+        "computed": 2.953592237626961e-05,
+        "published": 3.265216339139018e-05,
+        "published_interval": [
+          3.1793602981064526e-05,
+          3.353390852785781e-05
+        ],
+        "ratio_to_marker": 0.9045624947490533,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-2-r16.npz",
+        "archive_sha256": "4881d7b9e9c299347a1cc82530e07ce2eb03a66141217890942ffc045c342d82",
+        "free_trace_dofs": 736,
+        "norm": "broken_h1_error",
+        "computed": 0.004511954202584658,
+        "published": 0.004269539190929645,
+        "published_interval": [
+          0.0041933549620248945,
+          0.00434710752320422
+        ],
+        "ratio_to_marker": 1.056777792828324,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-4-r16.npz",
+        "archive_sha256": "6877856184b955cc558a6db3b47b64ea7844472954c766605998ee11ac3c1de7",
+        "free_trace_dofs": 1472,
+        "norm": "l2_error",
+        "computed": 5.167591576034291e-06,
+        "published": 4.623082182118648e-06,
+        "published_interval": [
+          4.501522232547398e-06,
+          4.747924759338136e-06
+        ],
+        "ratio_to_marker": 1.117780600141983,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-4-r16.npz",
+        "archive_sha256": "6877856184b955cc558a6db3b47b64ea7844472954c766605998ee11ac3c1de7",
+        "free_trace_dofs": 1472,
+        "norm": "broken_h1_error",
+        "computed": 0.0022842457567886325,
+        "published": 0.0013275230463849503,
+        "published_interval": [
+          0.0013038351692817305,
+          0.0013516412812012287
+        ],
+        "ratio_to_marker": 1.7206825621664237,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-8-r16.npz",
+        "archive_sha256": "37341f15ea63ff5d456e03ab073cf899d33d2721816d8e1ae6eec03c70245da5",
+        "free_trace_dofs": 2944,
+        "norm": "l2_error",
+        "computed": 4.249497386023223e-06,
+        "published": 6.501839887527391e-07,
+        "published_interval": [
+          6.330879628178095e-07,
+          6.677416789743609e-07
+        ],
+        "ratio_to_marker": 6.535838254299554,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-8-r16.npz",
+        "archive_sha256": "37341f15ea63ff5d456e03ab073cf899d33d2721816d8e1ae6eec03c70245da5",
+        "free_trace_dofs": 2944,
+        "norm": "broken_h1_error",
+        "computed": 0.0020330213831713296,
+        "published": 0.00041547744070164654,
+        "published_interval": [
+          0.0004080638002520121,
+          0.0004230257710323299
+        ],
+        "ratio_to_marker": 4.893217258049007,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-16-r16.npz",
+        "archive_sha256": "552f19b2c0b9bb76eac290a340796190ce3e58c0ff34fee84d7321553cdc5186",
+        "free_trace_dofs": 5888,
+        "norm": "l2_error",
+        "computed": 4.2701737956891995e-06,
+        "published": 9.11540000735939e-08,
+        "published_interval": [
+          8.875718443942214e-08,
+          9.361553976611104e-08
+        ],
+        "ratio_to_marker": 46.84570937360556,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-16-r16.npz",
+        "archive_sha256": "552f19b2c0b9bb76eac290a340796190ce3e58c0ff34fee84d7321553cdc5186",
+        "free_trace_dofs": 5888,
+        "norm": "broken_h1_error",
+        "computed": 0.002028741379840123,
+        "published": 0.00011891300476821473,
+        "published_interval": [
+          0.00011679116089469808,
+          0.00012107339797533754
+        ],
+        "ratio_to_marker": 17.060719168559793,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      }
+    ],
+    "32": [
+      {
+        "archive": "mixed-face-uniform-e1-1-r32.npz",
+        "archive_sha256": "29ae2d7340d47f4742eeaed40418ceda15a864e63dfe872e7517e4be75934b33",
+        "free_trace_dofs": 368,
+        "norm": "l2_error",
+        "computed": 0.0004527264220052461,
+        "published": 0.0004434958168803361,
+        "published_interval": [
+          0.0004318344777539086,
+          0.0004554720609928796
+        ],
+        "ratio_to_marker": 1.0208132856581162,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-1-r32.npz",
+        "archive_sha256": "29ae2d7340d47f4742eeaed40418ceda15a864e63dfe872e7517e4be75934b33",
+        "free_trace_dofs": 368,
+        "norm": "broken_h1_error",
+        "computed": 0.018036562063007067,
+        "published": 0.017797438927349384,
+        "published_interval": [
+          0.01747986738144579,
+          0.01812078006432406
+        ],
+        "ratio_to_marker": 1.0134358171776177,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-2-r32.npz",
+        "archive_sha256": "776fbdac672a861409bb6f89c32d8d86de3c8d33e99086a0f4d4857e2d02b970",
+        "free_trace_dofs": 736,
+        "norm": "l2_error",
+        "computed": 3.1903047024315495e-05,
+        "published": 3.265216339139018e-05,
+        "published_interval": [
+          3.1793602981064526e-05,
+          3.353390852785781e-05
+        ],
+        "ratio_to_marker": 0.9770576804331375,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-2-r32.npz",
+        "archive_sha256": "776fbdac672a861409bb6f89c32d8d86de3c8d33e99086a0f4d4857e2d02b970",
+        "free_trace_dofs": 736,
+        "norm": "broken_h1_error",
+        "computed": 0.004334215267768916,
+        "published": 0.004269539190929645,
+        "published_interval": [
+          0.0041933549620248945,
+          0.00434710752320422
+        ],
+        "ratio_to_marker": 1.0151482569773973,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-4-r32.npz",
+        "archive_sha256": "065265586dc57320e6d18292f18a1bc21ba55591e4e7c8ae16369400b186252b",
+        "free_trace_dofs": 1472,
+        "norm": "l2_error",
+        "computed": 4.31864974301934e-06,
+        "published": 4.623082182118648e-06,
+        "published_interval": [
+          4.501522232547398e-06,
+          4.747924759338136e-06
+        ],
+        "ratio_to_marker": 0.9341494641222678,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-4-r32.npz",
+        "archive_sha256": "065265586dc57320e6d18292f18a1bc21ba55591e4e7c8ae16369400b186252b",
+        "free_trace_dofs": 1472,
+        "norm": "broken_h1_error",
+        "computed": 0.0016025524929772035,
+        "published": 0.0013275230463849503,
+        "published_interval": [
+          0.0013038351692817305,
+          0.0013516412812012287
+        ],
+        "ratio_to_marker": 1.2071748941317446,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-8-r32.npz",
+        "archive_sha256": "830269181b331885bbadff98db5d75fa517d51a0ce116464d3c7be18440656e5",
+        "free_trace_dofs": 2944,
+        "norm": "l2_error",
+        "computed": 1.1243064204934951e-06,
+        "published": 6.501839887527391e-07,
+        "published_interval": [
+          6.330879628178095e-07,
+          6.677416789743609e-07
+        ],
+        "ratio_to_marker": 1.729212715081272,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-8-r32.npz",
+        "archive_sha256": "830269181b331885bbadff98db5d75fa517d51a0ce116464d3c7be18440656e5",
+        "free_trace_dofs": 2944,
+        "norm": "broken_h1_error",
+        "computed": 0.0010651503012858374,
+        "published": 0.00041547744070164654,
+        "published_interval": [
+          0.0004080638002520121,
+          0.0004230257710323299
+        ],
+        "ratio_to_marker": 2.5636778244494858,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-16-r32.npz",
+        "archive_sha256": "bfbd80975691c6129a2a2023625dadf4e0fa2552be7bdb4fc6c2381deae3d9aa",
+        "free_trace_dofs": 5888,
+        "norm": "l2_error",
+        "computed": 1.0677571531225712e-06,
+        "published": 9.11540000735939e-08,
+        "published_interval": [
+          8.875718443942214e-08,
+          9.361553976611104e-08
+        ],
+        "ratio_to_marker": 11.713771773707233,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-16-r32.npz",
+        "archive_sha256": "bfbd80975691c6129a2a2023625dadf4e0fa2552be7bdb4fc6c2381deae3d9aa",
+        "free_trace_dofs": 5888,
+        "norm": "broken_h1_error",
+        "computed": 0.001015604222091082,
+        "published": 0.00011891300476821473,
+        "published_interval": [
+          0.00011679116089469808,
+          0.00012107339797533754
+        ],
+        "ratio_to_marker": 8.540732984341773,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      }
+    ],
+    "64": [
+      {
+        "archive": "mixed-face-uniform-e1-1-r64.npz",
+        "archive_sha256": "e33e775882675bd09dd21b40489590a4e2f69608a5c39fa6786bb040cb5f9a1f",
+        "free_trace_dofs": 368,
+        "norm": "l2_error",
+        "computed": 0.0004528693823312603,
+        "published": 0.0004434958168803361,
+        "published_interval": [
+          0.0004318344777539086,
+          0.0004554720609928796
+        ],
+        "ratio_to_marker": 1.0211356344167128,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-1-r64.npz",
+        "archive_sha256": "e33e775882675bd09dd21b40489590a4e2f69608a5c39fa6786bb040cb5f9a1f",
+        "free_trace_dofs": 368,
+        "norm": "broken_h1_error",
+        "computed": 0.01802845886838267,
+        "published": 0.017797438927349384,
+        "published_interval": [
+          0.01747986738144579,
+          0.01812078006432406
+        ],
+        "ratio_to_marker": 1.0129805160156091,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-2-r64.npz",
+        "archive_sha256": "0b25c7128b88bbd88d74da1399d09f342e5f30619a4d33c9ba0bfb0acc42fcad",
+        "free_trace_dofs": 736,
+        "norm": "l2_error",
+        "computed": 3.2644379272510284e-05,
+        "published": 3.265216339139018e-05,
+        "published_interval": [
+          3.1793602981064526e-05,
+          3.353390852785781e-05
+        ],
+        "ratio_to_marker": 0.9997616048043558,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-2-r64.npz",
+        "archive_sha256": "0b25c7128b88bbd88d74da1399d09f342e5f30619a4d33c9ba0bfb0acc42fcad",
+        "free_trace_dofs": 736,
+        "norm": "broken_h1_error",
+        "computed": 0.004303068394730644,
+        "published": 0.004269539190929645,
+        "published_interval": [
+          0.0041933549620248945,
+          0.00434710752320422
+        ],
+        "ratio_to_marker": 1.007853120044484,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-4-r64.npz",
+        "archive_sha256": "64621c307549e81ba782ced00fba711b41852f73049deebfc964c6097d386b1c",
+        "free_trace_dofs": 1472,
+        "norm": "l2_error",
+        "computed": 4.5535006907213945e-06,
+        "published": 4.623082182118648e-06,
+        "published_interval": [
+          4.501522232547398e-06,
+          4.747924759338136e-06
+        ],
+        "ratio_to_marker": 0.9849491121601983,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-4-r64.npz",
+        "archive_sha256": "64621c307549e81ba782ced00fba711b41852f73049deebfc964c6097d386b1c",
+        "free_trace_dofs": 1472,
+        "norm": "broken_h1_error",
+        "computed": 0.0014040339321106977,
+        "published": 0.0013275230463849503,
+        "published_interval": [
+          0.0013038351692817305,
+          0.0013516412812012287
+        ],
+        "ratio_to_marker": 1.0576343182395955,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-8-r64.npz",
+        "archive_sha256": "e0aaea39d7d814eda1f1a416d6a35e486423cfe7b8f46a1c0674c497d19b4ac6",
+        "free_trace_dofs": 2944,
+        "norm": "l2_error",
+        "computed": 6.318115775371175e-07,
+        "published": 6.501839887527391e-07,
+        "published_interval": [
+          6.330879628178095e-07,
+          6.677416789743609e-07
+        ],
+        "ratio_to_marker": 0.9717427504622718,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-8-r64.npz",
+        "archive_sha256": "e0aaea39d7d814eda1f1a416d6a35e486423cfe7b8f46a1c0674c497d19b4ac6",
+        "free_trace_dofs": 2944,
+        "norm": "broken_h1_error",
+        "computed": 0.0006425822792702234,
+        "published": 0.00041547744070164654,
+        "published_interval": [
+          0.0004080638002520121,
+          0.0004230257710323299
+        ],
+        "ratio_to_marker": 1.5466117202056715,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-16-r64.npz",
+        "archive_sha256": "5915dfef8d0294ef48a32c033346fd2a0611b11518d7499fafcb0b7e5b831913",
+        "free_trace_dofs": 5888,
+        "norm": "l2_error",
+        "computed": 2.701681085242211e-07,
+        "published": 9.11540000735939e-08,
+        "published_interval": [
+          8.875718443942214e-08,
+          9.361553976611104e-08
+        ],
+        "ratio_to_marker": 2.9638645402955297,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-16-r64.npz",
+        "archive_sha256": "5915dfef8d0294ef48a32c033346fd2a0611b11518d7499fafcb0b7e5b831913",
+        "free_trace_dofs": 5888,
+        "norm": "broken_h1_error",
+        "computed": 0.0005182645766799413,
+        "published": 0.00011891300476821473,
+        "published_interval": [
+          0.00011679116089469808,
+          0.00012107339797533754
+        ],
+        "ratio_to_marker": 4.35835069250956,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      }
+    ],
+    "128": [
+      {
+        "archive": "mixed-face-uniform-e1-1-r128.npz",
+        "archive_sha256": "df34d816076e78e189fa9e63d75b66ace85a3691003548241d7deffe39c58c83",
+        "free_trace_dofs": 368,
+        "norm": "l2_error",
+        "computed": 0.00045290521784581997,
+        "published": 0.0004434958168803361,
+        "published_interval": [
+          0.0004318344777539086,
+          0.0004554720609928796
+        ],
+        "ratio_to_marker": 1.021216436790029,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-1-r128.npz",
+        "archive_sha256": "df34d816076e78e189fa9e63d75b66ace85a3691003548241d7deffe39c58c83",
+        "free_trace_dofs": 368,
+        "norm": "broken_h1_error",
+        "computed": 0.018026429066924733,
+        "published": 0.017797438927349384,
+        "published_interval": [
+          0.01747986738144579,
+          0.01812078006432406
+        ],
+        "ratio_to_marker": 1.0128664658162394,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-2-r128.npz",
+        "archive_sha256": "d1ac6eba71282d09368bb67241f26f3a2a0efd41206619a15f9f981063f4941c",
+        "free_trace_dofs": 736,
+        "norm": "l2_error",
+        "computed": 3.285627865556704e-05,
+        "published": 3.265216339139018e-05,
+        "published_interval": [
+          3.1793602981064526e-05,
+          3.353390852785781e-05
+        ],
+        "ratio_to_marker": 1.0062512018493293,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-2-r128.npz",
+        "archive_sha256": "d1ac6eba71282d09368bb67241f26f3a2a0efd41206619a15f9f981063f4941c",
+        "free_trace_dofs": 736,
+        "norm": "broken_h1_error",
+        "computed": 0.004298902561330458,
+        "published": 0.004269539190929645,
+        "published_interval": [
+          0.0041933549620248945,
+          0.00434710752320422
+        ],
+        "ratio_to_marker": 1.006877409736206,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-4-r128.npz",
+        "archive_sha256": "19de2d56d3af4da53ec2c6da0a7d01b64b2ea77ba518530ea911dadf441ca7f7",
+        "free_trace_dofs": 1472,
+        "norm": "l2_error",
+        "computed": 4.647240538679412e-06,
+        "published": 4.623082182118648e-06,
+        "published_interval": [
+          4.501522232547398e-06,
+          4.747924759338136e-06
+        ],
+        "ratio_to_marker": 1.0052255953083,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-4-r128.npz",
+        "archive_sha256": "19de2d56d3af4da53ec2c6da0a7d01b64b2ea77ba518530ea911dadf441ca7f7",
+        "free_trace_dofs": 1472,
+        "norm": "broken_h1_error",
+        "computed": 0.0013562005315863072,
+        "published": 0.0013275230463849503,
+        "published_interval": [
+          0.0013038351692817305,
+          0.0013516412812012287
+        ],
+        "ratio_to_marker": 1.021602250355992,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-8-r128.npz",
+        "archive_sha256": "bd41a560ddf23cea7129473178ae28e9b5c9328e7bcfbe664c444d6ecb805684",
+        "free_trace_dofs": 2944,
+        "norm": "l2_error",
+        "computed": 6.40381051196633e-07,
+        "published": 6.501839887527391e-07,
+        "published_interval": [
+          6.330879628178095e-07,
+          6.677416789743609e-07
+        ],
+        "ratio_to_marker": 0.984922825345313,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-8-r128.npz",
+        "archive_sha256": "bd41a560ddf23cea7129473178ae28e9b5c9328e7bcfbe664c444d6ecb805684",
+        "free_trace_dofs": 2944,
+        "norm": "broken_h1_error",
+        "computed": 0.0004912336925055597,
+        "published": 0.00041547744070164654,
+        "published_interval": [
+          0.0004080638002520121,
+          0.0004230257710323299
+        ],
+        "ratio_to_marker": 1.1823354155546404,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-16-r128.npz",
+        "archive_sha256": "12b4fd98890f6b152ae038667367c1dff5c7dd825dbaac1abd301a07f3a9c2fe",
+        "free_trace_dofs": 5888,
+        "norm": "l2_error",
+        "computed": 1.0656682777620512e-07,
+        "published": 9.11540000735939e-08,
+        "published_interval": [
+          8.875718443942214e-08,
+          9.361553976611104e-08
+        ],
+        "ratio_to_marker": 1.1690855880177233,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-16-r128.npz",
+        "archive_sha256": "12b4fd98890f6b152ae038667367c1dff5c7dd825dbaac1abd301a07f3a9c2fe",
+        "free_trace_dofs": 5888,
+        "norm": "broken_h1_error",
+        "computed": 0.00028549270832841923,
+        "published": 0.00011891300476821473,
+        "published_interval": [
+          0.00011679116089469808,
+          0.00012107339797533754
+        ],
+        "ratio_to_marker": 2.4008535389792036,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      }
+    ],
+    "256": [
+      {
+        "archive": "mixed-face-uniform-e1-1-r256.npz",
+        "archive_sha256": "c9d084e0dc66f2ae0e6249ffe07e687aa35555907716d75bf20e3a9ddbf3aca0",
+        "free_trace_dofs": 368,
+        "norm": "l2_error",
+        "computed": 0.00045291418692436445,
+        "published": 0.0004434958168803361,
+        "published_interval": [
+          0.0004318344777539086,
+          0.0004554720609928796
+        ],
+        "ratio_to_marker": 1.0212366603822323,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-1-r256.npz",
+        "archive_sha256": "c9d084e0dc66f2ae0e6249ffe07e687aa35555907716d75bf20e3a9ddbf3aca0",
+        "free_trace_dofs": 368,
+        "norm": "broken_h1_error",
+        "computed": 0.018025921331991216,
+        "published": 0.017797438927349384,
+        "published_interval": [
+          0.01747986738144579,
+          0.01812078006432406
+        ],
+        "ratio_to_marker": 1.0128379372770722,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-2-r256.npz",
+        "archive_sha256": "8460434583bbdc1bc6d9bb0bb891bb277a01785bc045952ae7624e91c9a2e593",
+        "free_trace_dofs": 736,
+        "norm": "l2_error",
+        "computed": 3.291512964670889e-05,
+        "published": 3.265216339139018e-05,
+        "published_interval": [
+          3.1793602981064526e-05,
+          3.353390852785781e-05
+        ],
+        "ratio_to_marker": 1.0080535630110208,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-2-r256.npz",
+        "archive_sha256": "8460434583bbdc1bc6d9bb0bb891bb277a01785bc045952ae7624e91c9a2e593",
+        "free_trace_dofs": 736,
+        "norm": "broken_h1_error",
+        "computed": 0.004298779383764042,
+        "published": 0.004269539190929645,
+        "published_interval": [
+          0.0041933549620248945,
+          0.00434710752320422
+        ],
+        "ratio_to_marker": 1.0068485594174932,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-4-r256.npz",
+        "archive_sha256": "415bac7d322a55603bc6f419d828a0795f81d71e92c7f2dc54cc285887e498b9",
+        "free_trace_dofs": 1472,
+        "norm": "l2_error",
+        "computed": 4.6741478246479375e-06,
+        "published": 4.623082182118648e-06,
+        "published_interval": [
+          4.501522232547398e-06,
+          4.747924759338136e-06
+        ],
+        "ratio_to_marker": 1.011045800294618,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-4-r256.npz",
+        "archive_sha256": "415bac7d322a55603bc6f419d828a0795f81d71e92c7f2dc54cc285887e498b9",
+        "free_trace_dofs": 1472,
+        "norm": "broken_h1_error",
+        "computed": 0.001345593972630079,
+        "published": 0.0013275230463849503,
+        "published_interval": [
+          0.0013038351692817305,
+          0.0013516412812012287
+        ],
+        "ratio_to_marker": 1.0136125141437948,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-8-r256.npz",
+        "archive_sha256": "a8fa532277e896af03b9ca78512f5757280db171c6fd2c863e30b680f0180747",
+        "free_trace_dofs": 2944,
+        "norm": "l2_error",
+        "computed": 6.548974144270336e-07,
+        "published": 6.501839887527391e-07,
+        "published_interval": [
+          6.330879628178095e-07,
+          6.677416789743609e-07
+        ],
+        "ratio_to_marker": 1.0072493721097875,
+        "inside_graphical_interval": true,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-8-r256.npz",
+        "archive_sha256": "a8fa532277e896af03b9ca78512f5757280db171c6fd2c863e30b680f0180747",
+        "free_trace_dofs": 2944,
+        "norm": "broken_h1_error",
+        "computed": 0.00044802108275275105,
+        "published": 0.00041547744070164654,
+        "published_interval": [
+          0.0004080638002520121,
+          0.0004230257710323299
+        ],
+        "ratio_to_marker": 1.0783283010411966,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-16-r256.npz",
+        "archive_sha256": "9e2b3b43f2059514a254a2bcf45800f6e962c3b86f67cdb328e77176e5e7aa40",
+        "free_trace_dofs": 5888,
+        "norm": "l2_error",
+        "computed": 9.654218839258466e-08,
+        "published": 9.11540000735939e-08,
+        "published_interval": [
+          8.875718443942214e-08,
+          9.361553976611104e-08
+        ],
+        "ratio_to_marker": 1.0591108268933953,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      },
+      {
+        "archive": "mixed-face-uniform-e1-16-r256.npz",
+        "archive_sha256": "9e2b3b43f2059514a254a2bcf45800f6e962c3b86f67cdb328e77176e5e7aa40",
+        "free_trace_dofs": 5888,
+        "norm": "broken_h1_error",
+        "computed": 0.00018940386753542272,
+        "published": 0.00011891300476821473,
+        "published_interval": [
+          0.00011679116089469808,
+          0.00012107339797533754
+        ],
+        "ratio_to_marker": 1.5927935544527598,
+        "inside_graphical_interval": false,
+        "visibility": "visible_marker"
+      }
+    ]
+  },
+  "finest_trace_endpoint": [],
+  "gradient_projection_lower_bounds": {
+    "32": {
+      "8": 0.0006769808878635907,
+      "12": 0.0006769808878635931
+    },
+    "64": {
+      "8": 0.0003384905225943213,
+      "12": 0.00033849052259432187
+    },
+    "128": {
+      "8": 0.00016924527112997678,
+      "12": 0.00016924527112998085
+    },
+    "256": {
+      "8": 8.462263679409032e-05,
+      "12": 8.462263679409153e-05
+    },
+    "16": {
+      "8": 0.0013539605171286552,
+      "12": 0.0013539605171286548
+    }
+  },
+  "fixed_adaptive_local_controls": [
+    {
+      "archive": "mixed-face-adaptive-e1-7-r16.npz",
+      "archive_sha256": "cb261c6f321318642c8de34d3db588f96726a433431d0f4b72a564d1472cb64b",
+      "local_refinement": 16,
+      "free_trace_dofs": 1408,
+      "quadrature": {
+        "8": {
+          "l2_error": 4.637932251437492e-06,
+          "broken_h1_error": 0.002179606318292134
+        },
+        "12": {
+          "l2_error": 4.637932251437673e-06,
+          "broken_h1_error": 0.0021796063182921354
+        }
+      }
+    },
+    {
+      "archive": "mixed-adaptive-fixed-e1-r32.npz",
+      "archive_sha256": "9c6f01ede590a0cd7c1705c6ab786adffc8a4cb16cb49f9575e506d597479762",
+      "local_refinement": 32,
+      "free_trace_dofs": 1408,
+      "quadrature": {
+        "8": {
+          "l2_error": 3.203408684279326e-06,
+          "broken_h1_error": 0.0014060547800497322
+        },
+        "12": {
+          "l2_error": 3.203408684279323e-06,
+          "broken_h1_error": 0.0014060547800497337
+        }
+      }
+    },
+    {
+      "archive": "mixed-adaptive-fixed-e1-r64.npz",
+      "archive_sha256": "acc132a477a5756f1dc01472544d857406fbfafe0d4c0fa663cc4107475bc0a8",
+      "local_refinement": 64,
+      "free_trace_dofs": 1408,
+      "quadrature": {
+        "8": {
+          "l2_error": 3.3772141107444155e-06,
+          "broken_h1_error": 0.0011570594041193667
+        },
+        "12": {
+          "l2_error": 3.377214110744601e-06,
+          "broken_h1_error": 0.0011570594041193669
+        }
+      }
+    },
+    {
+      "archive": "mixed-adaptive-fixed-e1-r128.npz",
+      "archive_sha256": "d38da620b3b42e65268cf0742f4c2b4d30857577ac5e19fd61bc13fd8caf0e7d",
+      "local_refinement": 128,
+      "free_trace_dofs": 1408,
+      "quadrature": {
+        "8": {
+          "l2_error": 3.465936513343606e-06,
+          "broken_h1_error": 0.00109279507331243
+        },
+        "12": {
+          "l2_error": 3.4659365133436874e-06,
+          "broken_h1_error": 0.0010927950733124303
+        }
+      }
+    }
+  ],
+  "literal_marking_control": {
+    "theta": 0.75,
+    "epsilon": 1,
+    "local_refinement": 16,
+    "free_trace_dofs": [
+      368,
+      528,
+      608,
+      624,
+      880,
+      1120,
+      1136,
+      1408
+    ],
+    "maximum_segments": [
+      1,
+      2,
+      2,
+      2,
+      4,
+      4,
+      4,
+      6
+    ],
+    "marked_segment_counts": [
+      160,
+      80,
+      16,
+      256,
+      240,
+      16,
+      272,
+      224
+    ]
+  },
+  "input_records": {
+    "published-figure-12.json": "23e45b34c066cbd3a503c98f589300613ebb4dc608370e3f3a02fae0a36d6129",
+    "mixed-campaign.json": "b75dc08e654ac0ca52f6977bee425c81c2d01011842598b737649c52dfee3068",
+    "mixed-coefficient-e1.json": "a4d88d249ec3556c4152a319018c88c99fc8a3b91efe380457e8cfd90362db11",
+    "mixed-face-uniform-e1-r16.json": "fd37d3f9848075bab49443e1e810340ff95ef0f021e47cf7071ef6f1738d2e18",
+    "mixed-face-uniform-e1-r32.json": "b7bbbc51ef7654f708c25987ead9cf40e4452851479e4e1be108d5a862a3f438",
+    "mixed-face-uniform-e1-r64.json": "2bd956819868d73fef97a812dfcda63d210d24ad7a767d85993dd4b127b20539",
+    "mixed-face-uniform-e1-r128.json": "89586aee398acdc77fb6f06ed5d18d3d5397559855e05def91094f47b557f51d",
+    "mixed-face-uniform-e1-r256.json": "ba1b681c7278a755a5e0364e4a3e35c929dcea85c23035326bf4dc3f2461610b",
+    "mixed-face-adaptive-e1-r16.json": "921d0d20ee47df46dc1d0424d183f0d4a053aa4eaed60feacaca90ecc4950b29",
+    "mixed-gradient-bound-r16.json": "9c91e57728fe5c16f9295f94c0927772be626f6954c49cb763c8175f69e84ae0",
+    "mixed-adaptive-fixed-e1-r32.json": "31a3e8c43bea43a3f5b3a1bd3760af25d2ff9c7e5e169fa6f582357c4a7872bb",
+    "mixed-adaptive-fixed-e1-r64.json": "a0917a082137e2f59ae30533f8f62692c616431a4581ad8df81110f8e7543079",
+    "mixed-adaptive-fixed-e1-r128.json": "d38605258286031dfba05222412e9c749e2e52f7a093fae6229f6f0dd64ef309"
+  },
+  "verifier_sha256": "9abc662e69bf0a48346bb4543f81553c8875e73a1a02527ccaf013adc8198b9f"
+}

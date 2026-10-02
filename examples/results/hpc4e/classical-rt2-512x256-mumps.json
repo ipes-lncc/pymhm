@@ -1,0 +1,100 @@
+{
+  "nx": 512,
+  "ny": 256,
+  "degree": 2,
+  "native_dofs": 7868928,
+  "free_dofs": 7862784,
+  "residual": 1.055270964262541e-12,
+  "conversion_relative": 1.077859593144488e-13,
+  "equilibrium_l2": 3.656632106401615e-13,
+  "equilibrium_relative": 2.463043796061156e-13,
+  "weak_symmetry_moment_max": 4.235164736271502e-21,
+  "compliance_energy": 0.0022667462479747805,
+  "body_work": 0.0022667462479747653,
+  "energy_work_relative": 6.696307726706752e-15,
+  "peak_rss_gib": 33.087581634521484,
+  "assembly_seconds": 50.50692885904573,
+  "factor_solve_seconds": 603.4829178659711,
+  "quadrature_degree": 8,
+  "formulation": "Globally conforming row-wise RTk, DG Qk displacement, DPC total Pk rotation; no MHM restriction",
+  "bottom": "zero displacement in the natural mixed boundary functional",
+  "sides_top": "prescribed zero physical traction",
+  "bounds": [
+    0.0,
+    1.0,
+    0.0,
+    0.45
+  ],
+  "length_scale_m": 10000.0,
+  "stress_scale_Pa": 100000000.0,
+  "software": {
+    "dolfinx": "0.9.0",
+    "basix": "0.9.0",
+    "petsc": [
+      3,
+      23,
+      0
+    ],
+    "python": "3.13.15"
+  },
+  "threads": 4,
+  "backend": "DOLFINx/UFL with PETSc/MUMPS symmetric indefinite LDLt and Ruiz congruence",
+  "archive": "classical-rt2-512x256-mumps.npz",
+  "archive_sha256": "65d18ce839fcdaa9c8f4c8a839c40f0df16b3aec3baadb1895f50f119cea84a6",
+  "source_sha256": "ad2e77c048594fbaa25b9d81987f9feef3a3653e1dc3b5bda55a84759e743fc2",
+  "executed_source_sha256": "9482edc49184046bfbcdcbefdf6dd0f8f4eedd35654036549be803994271752b",
+  "source_changed": false,
+  "factorization": {
+    "backend": "PETSc MUMPS symmetric indefinite LDLt",
+    "settings": {
+      "mat_mumps_icntl_7": 5,
+      "mat_mumps_icntl_14": 100,
+      "mat_mumps_icntl_10": 5,
+      "mat_mumps_icntl_23": 80000
+    },
+    "congruence": "five symmetric infinity-row Ruiz sweeps",
+    "residual_history": [
+      7.392068963886788e-11,
+      5.755270162405215e-16
+    ],
+    "stored_residual": 5.02444783988062e-13,
+    "factor_seconds": 478.07124569104053,
+    "total_seconds": 603.4829178659711,
+    "peak_rss_gib": 30.574981689453125,
+    "threadpools": [
+      {
+        "user_api": "openmp",
+        "internal_api": "openmp",
+        "num_threads": 4,
+        "prefix": "libgomp",
+        "version": null
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "blis",
+        "num_threads": 4,
+        "prefix": "libblis",
+        "version": "2.0",
+        "threading_layer": "pthreads",
+        "architecture": "haswell"
+      }
+    ],
+    "matrix_sha256": "3b1a48f735b476b225ca8345a373c8f9d2be46c9d874e5d9f7370522cb74e8b0",
+    "rhs_sha256": "b48cc7103c974cf2fed98e3c4fd446f04e36136068970bfebe2a690022c9ce8d",
+    "solution_sha256": "133c494c664202d30f7d545356ca000d8aabea558d4bc6a4ae6f7f1954cb6b82",
+    "factorization_driver_sha256": "81433c376fd7deebd9e4a290a6c2486d1037be7a1f396c32fb78ea8856ce1aec",
+    "requested_threads": 4,
+    "correction_target_relative": 1e-11,
+    "correction_accumulator": "NumPy longdouble, 64-bit significand on the recorded Linux platform",
+    "archive_dtype": "float64",
+    "archival_relative_residual_limit": 1e-10
+  },
+  "material_sha256": {
+    "young": "ded396dc2316824e034a427044f2fc0c575a685eb89e4ca69386228b10e86ae7",
+    "poisson": "c2a0bd32e46c8e6a5b81834dba140a57d9582395d078708291ba22bac8ddbe40",
+    "density": "75ef5430e6027f5fc64f177db1cb62a706a8c317c41e396356451f9ce00c5094"
+  },
+  "physical_replay_seconds": 108.72586903697811,
+  "timing_scope": "Factorization phase and independent physical replay are measured separately; no complete-run timing is inferred.",
+  "replay_driver_sha256": "32c566fcf0be9747589f7e8523b74eebfa5ed63707375e00148de6430e15566d"
+}

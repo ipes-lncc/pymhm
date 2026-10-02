@@ -1,0 +1,11 @@
+{
+  "reference": "classical-cg2-factor4.npz",
+  "reference_sha256": "0b381e37adab404044dfe3b3f8be08b04273593f6b124e0e6cd4e3c509667207",
+  "original_matrix_sha256": "f1e143401b5c05dc85fd488a1293e9c160cf68b95237949958c9db1c506e5670",
+  "original_relative_residual": 4.073090936216763e-14,
+  "decimal_precision": 80,
+  "decimal_rows": 1000,
+  "decimal_residual_difference_linf": 5.980576774796073e-28,
+  "independent_driver_sha256": "ebb5398bf7918e3072c9fe56b87ed96d781b2993ebb7f48670ec75b4ed5eff4d",
+  "method": "original saved native CSR; deterministic DOF-coordinate mapping; Decimal80 row products"
+}

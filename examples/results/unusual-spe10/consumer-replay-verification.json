@@ -1,0 +1,135 @@
+{
+  "method": "unchanged physical coefficients, stable nodal-difference evaluation, independent ordered geometric norms",
+  "serial_parallel_norms_bitwise": true,
+  "comparisons": [
+    {
+      "record": "mhm-unusual-fitted-r16-s8-q5-comparison.json",
+      "executed_record_sha256": "6843664b68bffd89195fc70153df29a355cac19cd3fb4194ebc850c8701310ff",
+      "published_record_sha256": "a5464ed0d9eb1dfe2832cef62bd7c98297bd65fc72639a5997945cfa7b856cf6"
+    },
+    {
+      "record": "mhm-unusual-fitted-r32-s16-q5-comparison.json",
+      "executed_record_sha256": "a7341f7d1fd83799424cbdfc3ee17398924bce1adeba85d7768c312851a029c1",
+      "published_record_sha256": "ed35509bbe8b7200b710ecda2cc993177c635e5ccba8b33d114989ef9381981b"
+    },
+    {
+      "record": "mhm-unusual-fitted-r32-s32-q5-comparison.json",
+      "executed_record_sha256": "683504355a743b81269c6ec70a5d646556f5a4a2efdc6314fee5f027ee2fb415",
+      "published_record_sha256": "dab865fe395618604046b4278ea2216233a417c2e0abd806daf31e49a617e478"
+    },
+    {
+      "record": "mhm-unusual-fitted-r32-s8-q5-comparison.json",
+      "executed_record_sha256": "614137bfde81a8f3c278dc569208c2fe0bfd949b520e633f1c8c9a0ff651e525",
+      "published_record_sha256": "29717fe4b0f026655b3d37b296242eb33db772fee87312fe78022ca9441fc983"
+    },
+    {
+      "record": "mhm-unusual-fitted-r8-s8-q5-comparison.json",
+      "executed_record_sha256": "7ec1df515d078667961c2f6c0ab1183b311c73d7d6d2f66e107904005c4e8a35",
+      "published_record_sha256": "548574dca1b9f016049238f229ef624f2a7d6a73375ea8fc250562dc304893a7"
+    },
+    {
+      "record": "mhm-unusual-layer0.25-tracefit-r32-s32-q5-comparison.json",
+      "executed_record_sha256": "17fab6e1e532ba05913cfa9e61920c3614a1866b3929b0bbc6ca0b651b4ba891",
+      "published_record_sha256": "9d94c4a60f128d6e9b44209ce855e822400d016cec1bb06c44c1915891548063"
+    },
+    {
+      "record": "mhm-unusual-layer0.5-r32-s32-q5-comparison.json",
+      "executed_record_sha256": "99e27f2f9c5a2490adc99e67c0c00accc329b391fbeeb762952f12107cac0118",
+      "published_record_sha256": "5341d2a499f82d1f8afac925ea20609084258b3cf7aa541d93f9ac860d63620b"
+    },
+    {
+      "record": "mhm-unusual-layer0.5-r8-s8-q5-comparison.json",
+      "executed_record_sha256": "22cfaf3d17433465c34026a83df05ae0b1067ca8d007464c18a61b82660df965",
+      "published_record_sha256": "c56917fef04a3b61d49ee95dd40444fc187249da903cd984953fb11e23db97f8"
+    },
+    {
+      "record": "mhm-unusual-layer0.5-tracefit-r32-s32-q5-comparison.json",
+      "executed_record_sha256": "3c011aba4ff978ca1d4f2cb38e859c1010f5098e6f8fd21a22458d984e439fcc",
+      "published_record_sha256": "5730b749e390832968310e8b0ac64be9825109bf9ac0e64a19b95be9f7efc5be"
+    }
+  ],
+  "classical": [
+    {
+      "record": "classical-cg2-120x440-refinement.json",
+      "executed_record_sha256": "0e72ecff29f88b24366d1b8fb025c5fc8b1ab2050b158b6a205c031a8784712e",
+      "published_record_sha256": "c7d37ae9707a9c30c83ab17f6398c8c227798a2d94f4b6f2c00b057beeaa356d",
+      "absolute_changes": {
+        "pressure_absolute": 3.552713678800501e-15,
+        "pressure_reference": 3.552713678800501e-15,
+        "pressure_relative": 0.0,
+        "flux_absolute": 0.0,
+        "flux_reference": 0.0,
+        "flux_relative": 1.1102230246251565e-16,
+        "energy_absolute": 0.0,
+        "energy_reference": 0.0,
+        "energy_relative": 0.0
+      }
+    },
+    {
+      "record": "classical-cg2-240x880-refinement.json",
+      "executed_record_sha256": "98c079cc0debb6d732df2f3ccd77988f6831794f88dc273e4102e278ff1d9bc9",
+      "published_record_sha256": "8b082e4c62136f22c696a0f57b7a311cc12256e80ba30f802d5a36b477407113",
+      "absolute_changes": {
+        "pressure_absolute": 0.0,
+        "pressure_reference": 3.552713678800501e-15,
+        "pressure_relative": 1.1102230246251565e-16,
+        "flux_absolute": 8.881784197001252e-16,
+        "flux_reference": 1.7763568394002505e-15,
+        "flux_relative": 1.6653345369377348e-16,
+        "energy_absolute": 0.0,
+        "energy_reference": 0.0,
+        "energy_relative": 1.1102230246251565e-16
+      }
+    },
+    {
+      "record": "classical-cg2-graded-240x936-refinement.json",
+      "executed_record_sha256": "7356771b63abd9d3d9454b9b6916903365b99d1422676f21dab184c48f6ad54c",
+      "published_record_sha256": "b995d947bed62c2a5f4b12a697d0a5d5f60a9559f85e38bccdbe4e9840194834",
+      "absolute_changes": {
+        "pressure_absolute": 1.1102230246251565e-16,
+        "pressure_reference": 0.0,
+        "pressure_relative": 0.0,
+        "flux_absolute": 2.220446049250313e-16,
+        "flux_reference": 1.7763568394002505e-15,
+        "flux_relative": 6.938893903907228e-18,
+        "energy_absolute": 0.0,
+        "energy_reference": 3.552713678800501e-15,
+        "energy_relative": 6.938893903907228e-18
+      }
+    },
+    {
+      "record": "classical-cg2-graded-480x1872-refinement.json",
+      "executed_record_sha256": "dcddc2462954511238974eeb85c0a6d2f5c3841807deea5f7545171326918812",
+      "published_record_sha256": "e2c7cf413af8e11a2ad8c1e8555023f33bc541d8db9dd82bcd2dd1d7a38649dc",
+      "absolute_changes": {
+        "pressure_absolute": 0.0,
+        "pressure_reference": 0.0,
+        "pressure_relative": 0.0,
+        "flux_absolute": 7.771561172376096e-16,
+        "flux_reference": 3.552713678800501e-15,
+        "flux_relative": 9.020562075079397e-17,
+        "energy_absolute": 4.440892098500626e-16,
+        "energy_reference": 3.552713678800501e-15,
+        "energy_relative": 2.7755575615628914e-17
+      }
+    },
+    {
+      "record": "classical-cg2-graded-xy-1440x498-refinement.json",
+      "executed_record_sha256": "f52055d65f8922d339bea84d3e96dea13ebe33a4b5a9cc83a8c2b62c88b5a635",
+      "published_record_sha256": "ec6ca5fb8d8ea5346d364913d6d31c7dd64f81c402ac3d8a3ff4763dd8e0ac3c",
+      "absolute_changes": {
+        "pressure_absolute": 3.469446951953614e-18,
+        "pressure_reference": 0.0,
+        "pressure_relative": 0.0,
+        "flux_absolute": 1.3877787807814457e-17,
+        "flux_reference": 1.7763568394002505e-15,
+        "flux_relative": 2.168404344971009e-18,
+        "energy_absolute": 6.938893903907228e-18,
+        "energy_reference": 0.0,
+        "energy_relative": 0.0
+      }
+    }
+  ],
+  "bulk_verification": "bulk-evaluation-verification.json",
+  "reduction_verification": "norm-reduction-verification.json"
+}

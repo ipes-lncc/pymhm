@@ -1,0 +1,89 @@
+{
+  "case": "Original solenoidal trigonometric 3D elasticity",
+  "anisotropic": false,
+  "constitutive": "isotropic, finite lambda; bounded force",
+  "trace": "P1 vector densities on each triangular macroface",
+  "rows": [
+    {
+      "resolution": 2,
+      "macro_tetrahedra": 48,
+      "degree": 3,
+      "local_refinement": 1,
+      "local_tetrahedra": 48,
+      "vector_trace_dofs": 1080,
+      "coarse_rigid_modes": 288,
+      "lame_lambda": 1.0,
+      "displacement_l2": 0.21893426278700978,
+      "stress_l2": 5.046368180495721,
+      "algebraic_residual": 1.4949173661188005e-16,
+      "force_moment_linf": 2.220446049250313e-15
+    },
+    {
+      "resolution": 2,
+      "macro_tetrahedra": 48,
+      "degree": 3,
+      "local_refinement": 1,
+      "local_tetrahedra": 48,
+      "vector_trace_dofs": 1080,
+      "coarse_rigid_modes": 288,
+      "lame_lambda": 10.0,
+      "displacement_l2": 0.19258408302853225,
+      "stress_l2": 5.353689623070721,
+      "algebraic_residual": 1.4922196267936072e-16,
+      "force_moment_linf": 1.9984014443252818e-15
+    },
+    {
+      "resolution": 2,
+      "macro_tetrahedra": 48,
+      "degree": 3,
+      "local_refinement": 1,
+      "local_tetrahedra": 48,
+      "vector_trace_dofs": 1080,
+      "coarse_rigid_modes": 288,
+      "lame_lambda": 100.0,
+      "displacement_l2": 0.1876190838998747,
+      "stress_l2": 5.473561470159553,
+      "algebraic_residual": 1.4012262162000263e-16,
+      "force_moment_linf": 2.220446049250313e-15
+    },
+    {
+      "resolution": 2,
+      "macro_tetrahedra": 48,
+      "degree": 3,
+      "local_refinement": 1,
+      "local_tetrahedra": 48,
+      "vector_trace_dofs": 1080,
+      "coarse_rigid_modes": 288,
+      "lame_lambda": 1000.0,
+      "displacement_l2": 0.1870919892541662,
+      "stress_l2": 5.48946881295407,
+      "algebraic_residual": 1.2195709012401019e-16,
+      "force_moment_linf": 2.6645352591003757e-15
+    },
+    {
+      "resolution": 2,
+      "macro_tetrahedra": 48,
+      "degree": 3,
+      "local_refinement": 1,
+      "local_tetrahedra": 48,
+      "vector_trace_dofs": 1080,
+      "coarse_rigid_modes": 288,
+      "lame_lambda": 10000.0,
+      "displacement_l2": 0.1870390810701546,
+      "stress_l2": 5.491114959123623,
+      "algebraic_residual": 1.338966087719276e-16,
+      "force_moment_linf": 2.525757381022231e-15
+    }
+  ],
+  "assembly_quadrature": 7,
+  "error_quadrature": 9,
+  "workers": 2,
+  "archive": "locking-p3.npz",
+  "sha256": "3581239ad50eb2583f734a2d0b692d9ee909aa3a1750e07e2e288003b947063a",
+  "source_hashes": {
+    "examples/solve_elasticity3d.py": "615372001cf2d7454abc47d5008411c1703d4cdae93a5806cb709553aa66e80a",
+    "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+    "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+    "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee"
+  }
+}

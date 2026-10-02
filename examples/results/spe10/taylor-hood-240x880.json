@@ -1,0 +1,73 @@
+{
+  "method": "global conforming Taylor-Hood P2/P1; no residual stabilization",
+  "reference_backend": "DOLFINx/UFL with PETSc/MUMPS",
+  "mesh_shape": [
+    240,
+    880
+  ],
+  "triangles": 422400,
+  "triangle_diagonal": "southwest to northeast",
+  "velocity_degree": 2,
+  "pressure_degree": 1,
+  "unknowns": 1906403,
+  "prescribed_velocity_unknowns": 4482,
+  "free_unknowns": 1901921,
+  "matrix_nonzeros": 56452009,
+  "original_free_residual_relative": 2.412188371331499e-12,
+  "residual_tolerance": 1e-10,
+  "weak_pressure_equation_residual_l2": 1.4415664959906172e-10,
+  "weak_pressure_equation_residual_max": 8.2929774158913e-12,
+  "divergence_l2": 27.141575584996623,
+  "exterior_flux_bottom_right_top_left": [
+    -1200.0,
+    0.0,
+    1199.999999999998,
+    0.0
+  ],
+  "exterior_balance": -2.0463630789890885e-12,
+  "velocity_nodal_max": 9.041735164326312,
+  "pressure_nodal_min": -0.010463060482544249,
+  "pressure_nodal_max": 486.93458346539245,
+  "boundary": "bottom u=(0,1); sides ux=0 and tangential grad-grad traction=0; top full grad-grad traction=0",
+  "pressure_gauge": "none: natural top traction fixes the additive pressure constant",
+  "material": "gamma=0.3/Kx on original layer-1 pixels",
+  "viscosity": 0.3,
+  "coordinate_unit": "ft source numbers",
+  "permeability_unit": "mD source numbers; no implicit SI conversion",
+  "material_integration": "DG0 exact pixel assignment on fitted triangles",
+  "quadrature_degree": 4,
+  "assembly_seconds": 6.053923647035845,
+  "factor_and_solve_seconds": 29.41701312502846,
+  "total_seconds": 35.82292642898392,
+  "timing_scope": "assembly, factorization/solve and in-solve diagnostics; excludes native object destruction, export and field-comparison norms; observed, not an exclusive performance benchmark",
+  "dolfinx": "0.9.0",
+  "basix": "0.9.0",
+  "petsc": [
+    3,
+    23,
+    0
+  ],
+  "numpy": "2.5.3",
+  "python": "3.13.15",
+  "mumps_settings": {
+    "mat_mumps_icntl_7": 5,
+    "mat_mumps_icntl_14": 50,
+    "mat_mumps_icntl_10": 2
+  },
+  "openmp_threads": 8,
+  "blis_threads": 1,
+  "conservation_scope": "global boundary flux and weak continuous-P1 pressure equations; not fine-cell or MHM macro conservation",
+  "successive_difference": {
+    "velocity_l2": 82.25064994543158,
+    "pressure_l2": 266.3442333197851,
+    "velocity_relative": 0.03116634906883284,
+    "pressure_relative": 0.0009357486493059301
+  },
+  "previous_coefficients": "build/results/spe10/taylor-hood/taylor-hood-120x440.npz",
+  "archive": "taylor-hood-240x880.npz",
+  "sha256": "f69d070e614eda5bcf54b51289bd57ac06bcc18337943c390859313db7939cc5",
+  "coefficient_archive": "build/results/spe10/taylor-hood/taylor-hood-240x880.npz",
+  "coefficient_sha256": "db9ec4bae92fb785d40322d392cbcfb960b98417f86db146ed1d94c731e68ecc",
+  "layer_sha256": "685c6b7e51bfa56a4b2c6e3a802ea57b7f8a9590f2f99fd403312284f5546e23",
+  "driver_sha256": "d59a5e7abeb7fc88b8e6898f2ee0bb174b5d2986ff8725fedb05ce3ac1652ea8"
+}

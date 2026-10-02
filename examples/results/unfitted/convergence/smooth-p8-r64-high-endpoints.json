@@ -1,0 +1,215 @@
+{
+  "configuration": {
+    "study": "smooth-local-resolution-endpoints",
+    "local_degree": 8,
+    "local_refinement": 64,
+    "prepared_trace_degree": 3,
+    "maximum_segments": 32,
+    "requested_names": [
+      "ell2-s32",
+      "ell3-s32"
+    ],
+    "assembly_order": 11,
+    "norm_orders": [
+      11,
+      13
+    ],
+    "local_solver": "pypardiso-symmetric",
+    "local_assembly_workers": 1,
+    "global_solver": "scipy",
+    "global_backend_control": "pypardiso"
+  },
+  "source_sha256": {
+    "examples/unfitted_convergence.py": "71fbc90a108028dc86b178eb0eed475c2efb6fcf234e8e9f9a1164a6ac747f17",
+    "examples/unfitted_trace_family.py": "ba18ae264be7847b06a5285772085953026e729cab8cafe70109b771b5ecc36c",
+    "examples/unfitted_campaign.py": "d554c8da8b93843a60d4a2383252a55374626abc1331f87660cf5c1107d10aba",
+    "examples/unfitted_geometry.py": "dd9df457b18ad11dea09ea31e269e6f3fd5473c1697cbcc653bde4a042d46c09",
+    "examples/layered_poisson.py": "9788591c6b9c8761fbff9b8e39e38fd1164268bcbde4b3668ad3fe05afb37b46",
+    "src/pymhm/darcy.py": "6ed895bac751317e58ac5dea5129b9f5eb944d7492191c5d10a8a9c7ebd2419c",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+    "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+    "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+    "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a"
+  },
+  "source_changed_during_run": false,
+  "acquisition_driver": "original-local-resolution-endpoint-wrapper",
+  "acquisition_driver_sha256": "f034590ac4846fc7fe3c94741f96445cabf1cea171f2a770aa99a6ccb709b324",
+  "cases": [
+    {
+      "name": "ell2-s32",
+      "trace_degree": 2,
+      "segments": 32,
+      "macro_diameter": 0.5,
+      "H": 0.015625,
+      "original_trace_residual": 1.4676250703821093e-15,
+      "original_local_residual_max": 8.31950297429535e-11,
+      "original_local_defect_l2_max": 3.0609194090768886e-11,
+      "local_componentwise_backward_error_max": 3.145223108981939e-16,
+      "local_roundoff_envelope_l2_max": 1.344643710542527e-09,
+      "local_accepted_with_roundoff_envelope": false,
+      "macro_cells": 16,
+      "fine_cells": 65536,
+      "trace_dofs": 2688,
+      "global_dofs": 2704,
+      "macro_balance_max": 4.1300296516055823e-14,
+      "archive": "smooth-p8-r64-ell2-s32.npz",
+      "archive_sha256": "fdf2a0890127dbade8af290a906f34acb7ca6babab9eac35b18164f6bb39b610",
+      "norms": {
+        "quadrature_11": {
+          "pressure_absolute": 1.157892522562608e-09,
+          "pressure_reference_norm": 0.5,
+          "pressure_relative": 2.315785045125216e-09,
+          "gradient_absolute": 1.166607508234875e-06,
+          "gradient_reference_norm": 4.442882938158366,
+          "gradient_relative": 2.6257894355381083e-07,
+          "flux_absolute": 1.166607508234875e-06,
+          "flux_reference_norm": 4.442882938158366,
+          "flux_relative": 2.6257894355381083e-07,
+          "energy_absolute": 1.166607508234875e-06,
+          "energy_reference_norm": 4.442882938158366,
+          "energy_relative": 2.6257894355381083e-07
+        },
+        "quadrature_13": {
+          "pressure_absolute": 1.1578926433840023e-09,
+          "pressure_reference_norm": 0.5,
+          "pressure_relative": 2.3157852867680046e-09,
+          "gradient_absolute": 1.1666075082964023e-06,
+          "gradient_reference_norm": 4.442882938158366,
+          "gradient_relative": 2.625789435676594e-07,
+          "flux_absolute": 1.1666075082964023e-06,
+          "flux_reference_norm": 4.442882938158366,
+          "flux_relative": 2.625789435676594e-07,
+          "energy_absolute": 1.1666075082964023e-06,
+          "energy_reference_norm": 4.442882938158366,
+          "energy_relative": 2.625789435676594e-07
+        }
+      },
+      "primary_acquisition_driver_sha256": "cf39349b1445a5cdf29323e03024aad4951032e508ebc682ad9bd2002089b4f5",
+      "global_backend_control": {
+        "backend": "pypardiso",
+        "primary_backend": "scipy",
+        "scope": "Same local responses and restricted global equations; changes only the global factorization",
+        "archive": "smooth-p8-r64-ell2-s32-pardiso.npz",
+        "archive_sha256": "fde364d18ac145c77d6b345966f6bd5a1e4b389ae757f74697766cece25ed2a7",
+        "diagnostics": {
+          "original_trace_residual": 4.2922009043130756e-16,
+          "original_local_residual_max": 8.331062039238431e-11,
+          "original_local_defect_l2_max": 3.065172231191669e-11,
+          "local_componentwise_backward_error_max": 3.1495930621257814e-16,
+          "local_roundoff_envelope_l2_max": 1.3446437105425252e-09,
+          "local_accepted_with_roundoff_envelope": false
+        },
+        "resource_phases": [
+          {
+            "backend": "scipy",
+            "peak_process_GiB": 7.767887115478516,
+            "elapsed_seconds": 7.70620776099986,
+            "scope": "Whole-process RSS sampled every 20 ms during the backend phase"
+          },
+          {
+            "backend": "pypardiso",
+            "peak_process_GiB": 7.820446014404297,
+            "elapsed_seconds": 7.670655395000267,
+            "scope": "Whole-process RSS sampled every 20 ms during the backend phase"
+          }
+        ],
+        "pressure_coefficient_max_absolute_difference": 1.308397834520747e-13,
+        "pressure_coefficient_relative_difference": 1.4154754371771568e-14,
+        "trace_max_absolute_difference": 6.887911187994459e-11
+      }
+    },
+    {
+      "name": "ell3-s32",
+      "trace_degree": 3,
+      "segments": 32,
+      "macro_diameter": 0.5,
+      "H": 0.015625,
+      "original_trace_residual": 1.819187535047783e-15,
+      "original_local_residual_max": 8.318778936023739e-11,
+      "original_local_defect_l2_max": 3.0606529179852883e-11,
+      "local_componentwise_backward_error_max": 3.144949278204848e-16,
+      "local_roundoff_envelope_l2_max": 1.3446437105422742e-09,
+      "local_accepted_with_roundoff_envelope": false,
+      "macro_cells": 16,
+      "fine_cells": 65536,
+      "trace_dofs": 3584,
+      "global_dofs": 3600,
+      "primary_acquisition_driver_sha256": "f034590ac4846fc7fe3c94741f96445cabf1cea171f2a770aa99a6ccb709b324",
+      "macro_balance_max": 3.952393967665557e-14,
+      "archive": "smooth-p8-r64-ell3-s32.npz",
+      "archive_sha256": "1fa94f04a1f61ced8b452851983d7ebcada191bac3d30edbfbad99937759015f",
+      "norms": {
+        "quadrature_11": {
+          "pressure_absolute": 3.176435669547673e-11,
+          "pressure_reference_norm": 0.5,
+          "pressure_relative": 6.352871339095346e-11,
+          "gradient_absolute": 7.734324608699408e-09,
+          "gradient_reference_norm": 4.442882938158366,
+          "gradient_relative": 1.7408346599168755e-09,
+          "flux_absolute": 7.734324608699408e-09,
+          "flux_reference_norm": 4.442882938158366,
+          "flux_relative": 1.7408346599168755e-09,
+          "energy_absolute": 7.734324608699408e-09,
+          "energy_reference_norm": 4.442882938158366,
+          "energy_relative": 1.7408346599168755e-09
+        },
+        "quadrature_13": {
+          "pressure_absolute": 3.176875864950477e-11,
+          "pressure_reference_norm": 0.5,
+          "pressure_relative": 6.353751729900953e-11,
+          "gradient_absolute": 7.734347516603232e-09,
+          "gradient_reference_norm": 4.442882938158366,
+          "gradient_relative": 1.7408398160067709e-09,
+          "flux_absolute": 7.734347516603232e-09,
+          "flux_reference_norm": 4.442882938158366,
+          "flux_relative": 1.7408398160067709e-09,
+          "energy_absolute": 7.734347516603232e-09,
+          "energy_reference_norm": 4.442882938158366,
+          "energy_relative": 1.7408398160067709e-09
+        }
+      },
+      "global_backend_control": {
+        "backend": "pypardiso",
+        "primary_backend": "scipy",
+        "scope": "Same local responses and restricted global equations; changes only the global factorization",
+        "archive": "smooth-p8-r64-ell3-s32-pardiso.npz",
+        "archive_sha256": "b28cdd796dfa6c892cde3c8faa5a3ab44561d8e296886d2cf059d2c3e04a92f0",
+        "diagnostics": {
+          "original_trace_residual": 4.1379906316626325e-16,
+          "original_local_residual_max": 8.319424606241826e-11,
+          "original_local_defect_l2_max": 3.060890473575299e-11,
+          "local_componentwise_backward_error_max": 3.1451933765402283e-16,
+          "local_roundoff_envelope_l2_max": 1.3446437105422394e-09,
+          "local_accepted_with_roundoff_envelope": false
+        },
+        "resource_phases": [
+          {
+            "backend": "scipy",
+            "peak_process_GiB": 7.932159423828125,
+            "elapsed_seconds": 9.627920577000168,
+            "scope": "Whole-process RSS sampled every 20 ms during the backend phase"
+          },
+          {
+            "backend": "pypardiso",
+            "peak_process_GiB": 7.895992279052734,
+            "elapsed_seconds": 9.373587062000297,
+            "scope": "Whole-process RSS sampled every 20 ms during the backend phase"
+          }
+        ],
+        "pressure_coefficient_max_absolute_difference": 4.0839553960836383e-13,
+        "pressure_coefficient_relative_difference": 4.2417539633147625e-14,
+        "trace_max_absolute_difference": 1.1133089280112793e-10
+      }
+    }
+  ],
+  "complete": true,
+  "first_local_pilot_record_sha256": "d68ce8630b5f31d7c76d0beccbaa6f86928ebd437ad9621cabd16dd65f06f98e",
+  "primary_error": "absolute broken H1 seminorm of pressure error",
+  "preparation_equivalence_sha256": "243071c4570440e2c732f2e8a51a5a2f459cde1bf0fe01ad04f054b6b2d71b7f",
+  "preparation_elapsed_this_invocation_seconds": 26.65255862899994
+}

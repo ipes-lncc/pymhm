@@ -1,0 +1,16 @@
+{
+  "reference_archive": "reference-cg3-n512-q16.npz",
+  "reference_archive_sha256": "b62ada0cb3a5e865ff8f5fbde240e5f331d5ee8e4bed5671229fd5bfc784bf1f",
+  "physical_norm_reference": "Classical P3 n=512",
+  "historical_profile_reference": "Classical P1 n=128",
+  "inputs": {
+    "cg3/comparison.json": "8341f79471d94e0aa40d3e7e7440247a37595c82934438f2d1be3a56bf4b4d3c",
+    "cg3/structured-comparison.json": "0e5bf8942e8de8a8007a9afade7ea7e634a97394a5c0d1d2aa2430520d8fd02f",
+    "comparison.json": "5fc0de49d0381f70c3909d310ddd05dfae2d9ae50f8d4b5231a39828db6af83b",
+    "crisscross/comparison.json": "c407c65afa91d71ca38586a7137f036f22d823743b35596f047b398c49b2c522"
+  },
+  "case_counts": {
+    "crisscross": 24,
+    "SW-NE": 18
+  }
+}

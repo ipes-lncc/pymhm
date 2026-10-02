@@ -1,0 +1,93 @@
+{
+  "method": "exact degree-two gradient moments; canonical P2 coordinates; analytic edge-node source moments",
+  "driver_sha256": "56fb2d96e2deb3b9c9e6bfeaed64810d49625bd28e5d48dbde56260ada500bc7",
+  "rows": [
+    {
+      "archive": "classical-cg2-factor4.npz",
+      "archive_sha256": "0b381e37adab404044dfe3b3f8be08b04273593f6b124e0e6cd4e3c509667207",
+      "energy_squared": 0.025682884384063725,
+      "source_work": 0.025682882462942144,
+      "flux_squared": 0.05925267531070723,
+      "energy_minus_work": 1.9211215801343446e-09,
+      "acquisition_record": "classical-cg2-factor4.json",
+      "acquisition_record_sha256": "14dd59b61e3452c0b9ea94141da2dde5ecfb8187a5664e9196857bfc09744513",
+      "native_matrix_energy_squared": 0.025682882462942005,
+      "native_source_boundary_work": 0.025682882462942112,
+      "native_free_residual": 4.073090936216755e-14,
+      "physical_energy_work_relative_defect": 7.48016286413065e-08
+    },
+    {
+      "archive": "classical-cg2-graded1.npz",
+      "archive_sha256": "7a07d4ca54cc55b455e13123076118658f776fc6cb65868f3468fa5bf620f4ec",
+      "energy_squared": 0.025833045830361064,
+      "source_work": 0.025833029767922712,
+      "flux_squared": 0.05778673256126342,
+      "energy_minus_work": 1.6062438353349167e-08,
+      "acquisition_record": "classical-cg2-graded1.json",
+      "acquisition_record_sha256": "bf80c3623ad443f705428c709c6d9671f713c55dac11ba31aaf879c24adf2b53",
+      "native_matrix_energy_squared": 0.02583302976792243,
+      "native_source_boundary_work": 0.025833029767922677,
+      "native_free_residual": 1.6512131727672596e-13,
+      "physical_energy_work_relative_defect": 6.217787270934697e-07
+    },
+    {
+      "archive": "classical-cg2-graded2.npz",
+      "archive_sha256": "d53f0f9807797aa3f36d3a038d6da03e6e0af042169834db9ce831c24389ecd1",
+      "energy_squared": 0.025847245798804385,
+      "source_work": 0.025847092073111175,
+      "flux_squared": 0.05764220554501983,
+      "energy_minus_work": 1.53725693207705e-07,
+      "acquisition_record": "classical-cg2-graded2.json",
+      "acquisition_record_sha256": "6f53a322a955ae55023da1adbbbf2d3bc1fa36d5544eadf04afdfd035931a71d",
+      "native_matrix_energy_squared": 0.025847092073088742,
+      "native_source_boundary_work": 0.025847092073111137,
+      "native_free_residual": 1.0413420507845792e-11,
+      "physical_energy_work_relative_defect": 5.947469003247375e-06
+    },
+    {
+      "archive": "classical-cg2-graded3.npz",
+      "archive_sha256": "0be4aadc57ec5b883861c70acdea9301059cdf913f917168faf968f06eaffe2b",
+      "energy_squared": 0.025852155170056797,
+      "source_work": 0.025851756213605543,
+      "flux_squared": 0.057587567111166804,
+      "energy_minus_work": 3.9895645125399597e-07,
+      "driver": "original-canonical-P2-energy-moment-verification-graded3",
+      "driver_sha256": "82bc94ed00616ff2a06b9f3e9f88ffe2b8ab30a410bb40893c53787d279edace",
+      "acquisition_record": "classical-cg2-graded3.json",
+      "acquisition_record_sha256": "bcfdd7cd93af186c087d4fe8948b84fb1e504030d4703754ac25bcd5138db576",
+      "native_matrix_energy_squared": 0.02585175621360551,
+      "native_source_boundary_work": 0.025851756213605505,
+      "native_free_residual": 1.351124235303489e-15,
+      "physical_energy_work_relative_defect": 1.5432231805419705e-05
+    }
+  ],
+  "driver": "original-canonical-P2-energy-moment-verification",
+  "arithmetic": "extended-real reductions of the two archived binary64 coefficient components; native CSR remains binary64",
+  "scope": "Physical polynomial energy/source integrals and the unchanged native-matrix energy are separate numerical checks. Recorded nonzero differences are not exact-error bounds.",
+  "graded_nested_identity": {
+    "previous": "classical-cg2-graded1.npz",
+    "current": "classical-cg2-graded2.npz",
+    "physical_energy_increase": 1.4199968443321526e-05,
+    "integrated_difference_squared": 1.3924810769953923e-05,
+    "absolute_defect": 2.7515767336760257e-07,
+    "relative_to_increment": 0.019760245069995522
+  },
+  "graded_nested_identities": [
+    {
+      "previous": "classical-cg2-graded1.npz",
+      "current": "classical-cg2-graded2.npz",
+      "physical_energy_increase": 1.4199968443321526e-05,
+      "integrated_difference_squared": 1.3924810769953923e-05,
+      "absolute_defect": 2.7515767336760257e-07,
+      "relative_to_increment": 0.019760245069995522
+    },
+    {
+      "previous": "classical-cg2-graded2.npz",
+      "current": "classical-cg2-graded3.npz",
+      "physical_energy_increase": 4.909371252411615e-06,
+      "integrated_difference_squared": 4.419055265854535e-06,
+      "absolute_defect": 4.903159865570804e-07,
+      "relative_to_increment": 0.11095493426970426
+    }
+  ]
+}

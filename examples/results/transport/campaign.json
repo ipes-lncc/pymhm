@@ -1,0 +1,148 @@
+{
+  "stationary": [
+    {
+      "macro_resolution": 1,
+      "macro_triangles": 2,
+      "trace_dofs": 5,
+      "local_refinement": 4,
+      "degree": 3,
+      "l2_error_order10": 0.2837503406322781,
+      "l2_error_order12": 0.28375032202742173
+    },
+    {
+      "macro_resolution": 2,
+      "macro_triangles": 8,
+      "trace_dofs": 16,
+      "local_refinement": 4,
+      "degree": 3,
+      "l2_error_order10": 0.17683636219720503,
+      "l2_error_order12": 0.1768363621909484
+    },
+    {
+      "macro_resolution": 4,
+      "macro_triangles": 32,
+      "trace_dofs": 56,
+      "local_refinement": 4,
+      "degree": 3,
+      "l2_error_order10": 0.08221265380755043,
+      "l2_error_order12": 0.08221265380755016
+    },
+    {
+      "macro_resolution": 8,
+      "macro_triangles": 128,
+      "trace_dofs": 208,
+      "local_refinement": 4,
+      "degree": 3,
+      "l2_error_order10": 0.03637914436650833,
+      "l2_error_order12": 0.03637914436650833
+    },
+    {
+      "macro_resolution": 16,
+      "macro_triangles": 512,
+      "trace_dofs": 800,
+      "local_refinement": 4,
+      "degree": 3,
+      "l2_error_order10": 0.021796887936495424,
+      "l2_error_order12": 0.021796887936495393
+    }
+  ],
+  "adaptive": [
+    {
+      "iteration": 0,
+      "trace_dofs": 56,
+      "indicator": 0.7261766394724596,
+      "l2_error_order10": 0.05200087671071769,
+      "l2_error_order12": 0.0520008767107177,
+      "maximum_face_segments": 1
+    },
+    {
+      "iteration": 1,
+      "trace_dofs": 59,
+      "indicator": 0.5881708198483245,
+      "l2_error_order10": 0.04415063204846655,
+      "l2_error_order12": 0.04415063204846659,
+      "maximum_face_segments": 2
+    },
+    {
+      "iteration": 2,
+      "trace_dofs": 61,
+      "indicator": 0.5961735046688457,
+      "l2_error_order10": 0.04784078067312434,
+      "l2_error_order12": 0.04784078067312437,
+      "maximum_face_segments": 2
+    },
+    {
+      "iteration": 3,
+      "trace_dofs": 62,
+      "indicator": 0.5653685770963487,
+      "l2_error_order10": 0.04538292808372198,
+      "l2_error_order12": 0.04538292808372201,
+      "maximum_face_segments": 3
+    },
+    {
+      "iteration": 4,
+      "trace_dofs": 78,
+      "indicator": 0.2120456098367248,
+      "l2_error_order10": 0.019587102804964295,
+      "l2_error_order12": 0.01958710280496439,
+      "maximum_face_segments": 3
+    }
+  ],
+  "transient": [
+    {
+      "steps": 4,
+      "dt": 0.25,
+      "l2_error_order10": 0.08350081013427402,
+      "l2_error_order12": 0.08350081013427395,
+      "operator_builds": 1,
+      "darcy_flux_l2_error": 4.79223721981282e-15,
+      "maximum_discrete_balance_residual": 4.461708780212348e-15,
+      "final_mass": 1.3928068872040664
+    },
+    {
+      "steps": 8,
+      "dt": 0.125,
+      "l2_error_order10": 0.04469749587957099,
+      "l2_error_order12": 0.04469749587957092,
+      "operator_builds": 1,
+      "darcy_flux_l2_error": 4.79223721981282e-15,
+      "maximum_discrete_balance_residual": 5.230191280070073e-15,
+      "final_mass": 1.3433282774773143
+    },
+    {
+      "steps": 16,
+      "dt": 0.0625,
+      "l2_error_order10": 0.023284813187545276,
+      "l2_error_order12": 0.023284813187545213,
+      "operator_builds": 1,
+      "darcy_flux_l2_error": 4.79223721981282e-15,
+      "maximum_discrete_balance_residual": 6.5780714209040525e-15,
+      "final_mass": 1.3165081962251703
+    },
+    {
+      "steps": 32,
+      "dt": 0.03125,
+      "l2_error_order10": 0.011905227252264707,
+      "l2_error_order12": 0.011905227252264646,
+      "operator_builds": 1,
+      "darcy_flux_l2_error": 4.79223721981282e-15,
+      "maximum_discrete_balance_residual": 1.0942635686461699e-14,
+      "final_mass": 1.3023586613749831
+    },
+    {
+      "steps": 64,
+      "dt": 0.015625,
+      "l2_error_order10": 0.006026882796602051,
+      "l2_error_order12": 0.006026882796601991,
+      "operator_builds": 1,
+      "darcy_flux_l2_error": 4.79223721981282e-15,
+      "maximum_discrete_balance_residual": 2.1850576903403862e-14,
+      "final_mass": 1.2950690878535014
+    }
+  ],
+  "conventions": {
+    "stationary": "L11 section 5.1 PDE; independently specified triangular P3/SUPG mesh series",
+    "adaptive": "Analytical layer with full Dirichlet boundary; L11 face bisection; fixed 32 macros, r8, P3",
+    "transient": "Original layered manufactured test using L11 Darcy-dispersion coupling; backward Euler"
+  }
+}

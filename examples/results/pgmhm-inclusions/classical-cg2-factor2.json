@@ -1,0 +1,68 @@
+{
+  "method": "DOLFINx/UFL conforming CG2",
+  "factor": 2,
+  "rectangles": [
+    218,
+    218
+  ],
+  "triangles": 95048,
+  "dofs": 190969,
+  "residual": 1.7468027252345747e-15,
+  "source_integral": 0.9999999999999991,
+  "outward_boundary_flux": 0.9999999196469882,
+  "energy_squared": 0.0254065771345267,
+  "source_boundary_work": 0.0254065771345267,
+  "pressure_min": 0.0,
+  "pressure_max": 0.05321790226420067,
+  "seconds": 51.1160168920178,
+  "dolfinx": "0.9.0",
+  "petsc": [
+    3,
+    23,
+    0
+  ],
+  "analytical_patch": false,
+  "refinement_precision": "two binary64 components with error-free products and sums",
+  "refinement_history": [
+    1.7476398645548764e-07,
+    1.7468027252345871e-15
+  ],
+  "archive_encoding": "float64 principal + correction; zero tail",
+  "archive": "classical-cg2-factor2.npz",
+  "archive_sha256": "393ee5f68e4e8adbf0ff21e9d6ed783a1f71576769bb6b6f90ab3a6dd8fb5e27",
+  "source_hashes": {
+    "examples/solve_pgmhm_inclusions_reference.py": "cfb33b107d0cc557da346a3a27ccc61acac596e05c3ca9718d782cfd90750b73",
+    "examples/pgmhm_inclusion_data.py": "e0b5690efee2cffde1cf5b871b3bcf5e3be8c08272b87e6b71d7a32e5d17e852",
+    "examples/solve_unusual_spe10_reference.py": "f15b6c66e7eb86096ba98b01378e02c08428c4636c31a4c1e70d4ea5144adf5c",
+    "examples/compensated_reference.py": "6c6aca71dd6783ad385a1a0e2946b64c0593168f07448b1ef6acb72ef170ac62",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc"
+  },
+  "norms": [
+    {
+      "order": 3,
+      "pressure_absolute": 0.0010429591808628913,
+      "pressure_reference": 0.029807895900948195,
+      "pressure_relative": 0.034989359340513344,
+      "flux_absolute": 0.0551219778906283,
+      "flux_reference": 0.2479939472359341,
+      "flux_relative": 0.2222714647071079,
+      "energy_absolute": 0.029666625542988868,
+      "energy_reference": 0.15939439755578733,
+      "energy_relative": 0.18612088001779162
+    },
+    {
+      "order": 4,
+      "pressure_absolute": 0.0010429591808628913,
+      "pressure_reference": 0.029807895900948192,
+      "pressure_relative": 0.03498935934051335,
+      "flux_absolute": 0.05512197789037708,
+      "flux_reference": 0.24799394723792478,
+      "flux_relative": 0.2222714647043107,
+      "energy_absolute": 0.029666625542988913,
+      "energy_reference": 0.15939439755578735,
+      "energy_relative": 0.18612088001779187
+    }
+  ],
+  "previous_archive": "classical-cg2-factor1.npz",
+  "previous_sha256": "364926b9ca08b90ceac2d92c9b07f19586210833437bd61b16e91ce1dbce5c9a"
+}

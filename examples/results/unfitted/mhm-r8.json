@@ -1,0 +1,160 @@
+[
+  {
+    "setting": "S0",
+    "delta": 0,
+    "local_refinement": 8,
+    "local_degree": 4,
+    "trace_degree": 2,
+    "trace_dofs": 84,
+    "macro_triangles": 16,
+    "macro_balance_linf": 1.1796119636642288e-16,
+    "pressure_l2": 9.076263881953774e-05,
+    "gradient_l2": 0.002594149370530366,
+    "energy_error": 0.002830523595221251,
+    "independent_1023_modes_order10": {
+      "pressure_l2": 9.076263384573018e-05,
+      "gradient_l2": 0.0025941480143443205,
+      "energy_error": 0.0028305225699829135
+    }
+  },
+  {
+    "setting": "S1",
+    "delta": 0.007936507936507936,
+    "local_refinement": 8,
+    "local_degree": 4,
+    "trace_degree": 2,
+    "trace_dofs": 84,
+    "macro_triangles": 16,
+    "macro_balance_linf": 9.71445146547012e-17,
+    "pressure_l2": 0.00012293521657608821,
+    "gradient_l2": 0.006985767672212775,
+    "energy_error": 0.008334673858853905
+  },
+  {
+    "setting": "S2",
+    "delta": 0.007936507936507936,
+    "local_refinement": 8,
+    "local_degree": 4,
+    "trace_degree": 2,
+    "trace_dofs": 105,
+    "macro_triangles": 16,
+    "macro_balance_linf": 9.71445146547012e-17,
+    "pressure_l2": 0.0001295267578935257,
+    "gradient_l2": 0.006347356743806705,
+    "energy_error": 0.007319994955335405
+  },
+  {
+    "setting": "S1",
+    "delta": 0.016129032258064516,
+    "local_refinement": 8,
+    "local_degree": 4,
+    "trace_degree": 2,
+    "trace_dofs": 84,
+    "macro_triangles": 16,
+    "macro_balance_linf": 8.326672684688674e-17,
+    "pressure_l2": 0.00015834875291651673,
+    "gradient_l2": 0.00872556508254944,
+    "energy_error": 0.01106195211974234
+  },
+  {
+    "setting": "S2",
+    "delta": 0.016129032258064516,
+    "local_refinement": 8,
+    "local_degree": 4,
+    "trace_degree": 2,
+    "trace_dofs": 105,
+    "macro_triangles": 16,
+    "macro_balance_linf": 9.71445146547012e-17,
+    "pressure_l2": 0.000163061549096651,
+    "gradient_l2": 0.0070734585982282,
+    "energy_error": 0.00860464088979454
+  },
+  {
+    "setting": "S1",
+    "delta": 0.03333333333333333,
+    "local_refinement": 8,
+    "local_degree": 4,
+    "trace_degree": 2,
+    "trace_dofs": 84,
+    "macro_triangles": 16,
+    "macro_balance_linf": 8.326672684688674e-17,
+    "pressure_l2": 0.0001941281988407793,
+    "gradient_l2": 0.0074821694843034345,
+    "energy_error": 0.010407905956016482
+  },
+  {
+    "setting": "S2",
+    "delta": 0.03333333333333333,
+    "local_refinement": 8,
+    "local_degree": 4,
+    "trace_degree": 2,
+    "trace_dofs": 105,
+    "macro_triangles": 16,
+    "macro_balance_linf": 8.326672684688674e-17,
+    "pressure_l2": 9.131572452459253e-05,
+    "gradient_l2": 0.003496742002920922,
+    "energy_error": 0.0040715016974241965
+  },
+  {
+    "setting": "S1",
+    "delta": 0.07142857142857142,
+    "local_refinement": 8,
+    "local_degree": 4,
+    "trace_degree": 2,
+    "trace_dofs": 84,
+    "macro_triangles": 16,
+    "macro_balance_linf": 6.938893903907228e-17,
+    "pressure_l2": 0.00024104820489006924,
+    "gradient_l2": 0.00884500301074522,
+    "energy_error": 0.012394325210206293
+  },
+  {
+    "setting": "S2",
+    "delta": 0.07142857142857142,
+    "local_refinement": 8,
+    "local_degree": 4,
+    "trace_degree": 2,
+    "trace_dofs": 105,
+    "macro_triangles": 16,
+    "macro_balance_linf": 1.249000902703301e-16,
+    "pressure_l2": 0.00010285240492916168,
+    "gradient_l2": 0.004376426777787603,
+    "energy_error": 0.005287907659392519
+  },
+  {
+    "setting": "S1",
+    "delta": 0.16666666666666666,
+    "local_refinement": 8,
+    "local_degree": 4,
+    "trace_degree": 2,
+    "trace_dofs": 84,
+    "macro_triangles": 16,
+    "macro_balance_linf": 4.163336342344337e-17,
+    "pressure_l2": 0.0003978928047484821,
+    "gradient_l2": 0.014203057886619987,
+    "energy_error": 0.01717078345378314,
+    "independent_1023_modes_order10": {
+      "pressure_l2": 0.00039789281875295693,
+      "gradient_l2": 0.014203075409237471,
+      "energy_error": 0.017170797952337728
+    }
+  },
+  {
+    "setting": "S2",
+    "delta": 0.16666666666666666,
+    "local_refinement": 8,
+    "local_degree": 4,
+    "trace_degree": 2,
+    "trace_dofs": 105,
+    "macro_triangles": 16,
+    "macro_balance_linf": 6.938893903907228e-17,
+    "pressure_l2": 0.00015255659474440887,
+    "gradient_l2": 0.006386809194161021,
+    "energy_error": 0.007850948113643128,
+    "independent_1023_modes_order10": {
+      "pressure_l2": 0.0001525565943203789,
+      "gradient_l2": 0.006386807984912567,
+      "energy_error": 0.00785094750462283
+    }
+  }
+]

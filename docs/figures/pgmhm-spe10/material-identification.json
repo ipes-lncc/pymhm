@@ -1,0 +1,254 @@
+{
+  "figure": "PGMHM 2023 Figure 11",
+  "raster_sha256": "cc9be3f62556ac1016f68e3d6883382604194c44822b96c1f45787aac96a8581",
+  "pixel_field_box": [
+    0,
+    113,
+    409,
+    860
+  ],
+  "colorbar_box": [
+    420,
+    558,
+    435,
+    857
+  ],
+  "original_layer": 1,
+  "sampling": "one original embedded-JPEG pixel at each geological cell center; y increases upward",
+  "scores": [
+    {
+      "component": "Kz",
+      "flip_x": false,
+      "flip_y": false,
+      "normalization": "printed_range",
+      "rgb_rmse": 58.562798481018525,
+      "rgb_median_distance": 56.36266715699594,
+      "spearman_log_material_vs_color": 0.9957662089991881
+    },
+    {
+      "component": "Kz",
+      "flip_x": false,
+      "flip_y": false,
+      "normalization": "own_range",
+      "rgb_rmse": 58.562798481018525,
+      "rgb_median_distance": 56.36266715699594,
+      "spearman_log_material_vs_color": 0.9957662089991881
+    },
+    {
+      "component": "Kx",
+      "flip_x": false,
+      "flip_y": false,
+      "normalization": "own_range",
+      "rgb_rmse": 159.7728056411596,
+      "rgb_median_distance": 138.28963765545336,
+      "spearman_log_material_vs_color": 0.7698121240960325
+    },
+    {
+      "component": "Ky",
+      "flip_x": false,
+      "flip_y": false,
+      "normalization": "own_range",
+      "rgb_rmse": 159.7728056411596,
+      "rgb_median_distance": 138.28963765545336,
+      "spearman_log_material_vs_color": 0.7698121240960325
+    },
+    {
+      "component": "Kx",
+      "flip_x": false,
+      "flip_y": true,
+      "normalization": "own_range",
+      "rgb_rmse": 182.11895786460468,
+      "rgb_median_distance": 162.08010384409624,
+      "spearman_log_material_vs_color": 0.1686854458214941
+    },
+    {
+      "component": "Ky",
+      "flip_x": false,
+      "flip_y": true,
+      "normalization": "own_range",
+      "rgb_rmse": 182.11895786460468,
+      "rgb_median_distance": 162.08010384409624,
+      "spearman_log_material_vs_color": 0.1686854458214941
+    },
+    {
+      "component": "Kz",
+      "flip_x": false,
+      "flip_y": true,
+      "normalization": "printed_range",
+      "rgb_rmse": 189.74454436329836,
+      "rgb_median_distance": 156.53467936788576,
+      "spearman_log_material_vs_color": 0.2241779262171058
+    },
+    {
+      "component": "Kz",
+      "flip_x": false,
+      "flip_y": true,
+      "normalization": "own_range",
+      "rgb_rmse": 189.74454436329836,
+      "rgb_median_distance": 156.53467936788576,
+      "spearman_log_material_vs_color": 0.2241779262171058
+    },
+    {
+      "component": "Kx",
+      "flip_x": false,
+      "flip_y": false,
+      "normalization": "printed_range",
+      "rgb_rmse": 192.8998103922115,
+      "rgb_median_distance": 138.55509415538404,
+      "spearman_log_material_vs_color": 0.7698121240960325
+    },
+    {
+      "component": "Ky",
+      "flip_x": false,
+      "flip_y": false,
+      "normalization": "printed_range",
+      "rgb_rmse": 192.8998103922115,
+      "rgb_median_distance": 138.55509415538404,
+      "spearman_log_material_vs_color": 0.7698121240960325
+    },
+    {
+      "component": "Kx",
+      "flip_x": true,
+      "flip_y": true,
+      "normalization": "own_range",
+      "rgb_rmse": 196.78621357926795,
+      "rgb_median_distance": 180.252645824971,
+      "spearman_log_material_vs_color": -0.17883297790170305
+    },
+    {
+      "component": "Ky",
+      "flip_x": true,
+      "flip_y": true,
+      "normalization": "own_range",
+      "rgb_rmse": 196.78621357926795,
+      "rgb_median_distance": 180.252645824971,
+      "spearman_log_material_vs_color": -0.17883297790170305
+    },
+    {
+      "component": "Kz",
+      "flip_x": true,
+      "flip_y": false,
+      "normalization": "printed_range",
+      "rgb_rmse": 197.77886011577863,
+      "rgb_median_distance": 162.54954848887195,
+      "spearman_log_material_vs_color": -0.1592263691139604
+    },
+    {
+      "component": "Kz",
+      "flip_x": true,
+      "flip_y": false,
+      "normalization": "own_range",
+      "rgb_rmse": 197.77886011577863,
+      "rgb_median_distance": 162.54954848887195,
+      "spearman_log_material_vs_color": -0.1592263691139604
+    },
+    {
+      "component": "Kx",
+      "flip_x": true,
+      "flip_y": false,
+      "normalization": "own_range",
+      "rgb_rmse": 201.17471882548423,
+      "rgb_median_distance": 180.91102519748205,
+      "spearman_log_material_vs_color": -0.11711190511841117
+    },
+    {
+      "component": "Ky",
+      "flip_x": true,
+      "flip_y": false,
+      "normalization": "own_range",
+      "rgb_rmse": 201.17471882548423,
+      "rgb_median_distance": 180.91102519748205,
+      "spearman_log_material_vs_color": -0.11711190511841117
+    },
+    {
+      "component": "Kz",
+      "flip_x": true,
+      "flip_y": true,
+      "normalization": "printed_range",
+      "rgb_rmse": 203.26219766896534,
+      "rgb_median_distance": 187.0218234576206,
+      "spearman_log_material_vs_color": -0.16465560966806825
+    },
+    {
+      "component": "Kz",
+      "flip_x": true,
+      "flip_y": true,
+      "normalization": "own_range",
+      "rgb_rmse": 203.26219766896534,
+      "rgb_median_distance": 187.0218234576206,
+      "spearman_log_material_vs_color": -0.16465560966806825
+    },
+    {
+      "component": "Kx",
+      "flip_x": true,
+      "flip_y": false,
+      "normalization": "printed_range",
+      "rgb_rmse": 205.5764808756334,
+      "rgb_median_distance": 175.0139139206279,
+      "spearman_log_material_vs_color": -0.11711190511841117
+    },
+    {
+      "component": "Ky",
+      "flip_x": true,
+      "flip_y": false,
+      "normalization": "printed_range",
+      "rgb_rmse": 205.5764808756334,
+      "rgb_median_distance": 175.0139139206279,
+      "spearman_log_material_vs_color": -0.11711190511841117
+    },
+    {
+      "component": "Kx",
+      "flip_x": true,
+      "flip_y": true,
+      "normalization": "printed_range",
+      "rgb_rmse": 211.63388656521812,
+      "rgb_median_distance": 193.7596498129689,
+      "spearman_log_material_vs_color": -0.17883297790170305
+    },
+    {
+      "component": "Ky",
+      "flip_x": true,
+      "flip_y": true,
+      "normalization": "printed_range",
+      "rgb_rmse": 211.63388656521812,
+      "rgb_median_distance": 193.7596498129689,
+      "spearman_log_material_vs_color": -0.17883297790170305
+    },
+    {
+      "component": "Kx",
+      "flip_x": false,
+      "flip_y": true,
+      "normalization": "printed_range",
+      "rgb_rmse": 214.99117607314733,
+      "rgb_median_distance": 199.08528102626303,
+      "spearman_log_material_vs_color": 0.1686854458214941
+    },
+    {
+      "component": "Ky",
+      "flip_x": false,
+      "flip_y": true,
+      "normalization": "printed_range",
+      "rgb_rmse": 214.99117607314733,
+      "rgb_median_distance": 199.08528102626303,
+      "spearman_log_material_vs_color": 0.1686854458214941
+    }
+  ],
+  "article": "Fernando et al., Computational and Applied Mathematics 42, 173 (2023), DOI 10.1007/s40314-023-02304-y",
+  "interpretation": "Figure-based identification of scalar layer-one Kz. The article text does not specify the permeability component.",
+  "layer_archive": "examples/results/spe10/layer-1.npz",
+  "layer_archive_sha256": "685c6b7e51bfa56a4b2c6e3a802ea57b7f8a9590f2f99fd403312284f5546e23",
+  "printed_colorbar_range": [
+    3.6e-07,
+    1400.0
+  ],
+  "material_range": {
+    "Kz": [
+      3.636e-07,
+      1394.25
+    ],
+    "Kx_Ky": [
+      0.003033,
+      4647.5
+    ]
+  }
+}

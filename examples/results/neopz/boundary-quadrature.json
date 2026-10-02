@@ -1,0 +1,26 @@
+{
+  "diagnostic_source_sha256": "4588207404a543af25133bffe0e61cf39a2def9457ce5c1257fc209828218b9b",
+  "pymhm_points_per_segment": [
+    5,
+    20
+  ],
+  "native_boundary_rule": "requested order20, 11 Gauss points",
+  "rows": [
+    {
+      "macro_resolution": 1,
+      "trace_segments": 2,
+      "gauss5_pressure_difference_l2": 1.3922210981060292e-11,
+      "gauss5_flux_difference_l2": 7.12412303781855e-11,
+      "gauss20_pressure_difference_l2": 1.0244013178164325e-14,
+      "gauss20_flux_difference_l2": 5.150892206111765e-14
+    },
+    {
+      "macro_resolution": 2,
+      "trace_segments": 1,
+      "gauss5_pressure_difference_l2": 1.570721584134835e-11,
+      "gauss5_flux_difference_l2": 7.124118142924075e-11,
+      "gauss20_pressure_difference_l2": 2.2204121676739248e-16,
+      "gauss20_flux_difference_l2": 1.704493302990819e-15
+    }
+  ]
+}

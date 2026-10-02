@@ -1,0 +1,57 @@
+{
+  "operation": "canonical RT3 reconstruction of an unchanged archived P4 MHM solution",
+  "new_primal_solve": false,
+  "parent_archive": "resolution-p4-t2-s2.npz",
+  "parent_archive_sha256": "5e7e7150f0d26c4448f027791ac7822e2c9d9e3fbb19b6d6b65faecf8a763047",
+  "name": "resolution-p4-t2-s2-rt3",
+  "macro_cells": 162,
+  "fine_cells": 1296,
+  "local_degree": 4,
+  "trace_degree": 2,
+  "trace_subdivisions": 2,
+  "local_refinement": 2,
+  "reconstruction_degree": 3,
+  "error_orders": [
+    10,
+    12
+  ],
+  "rt_flux_l2_by_order": [
+    0.025695377889564074,
+    0.025695377778615205
+  ],
+  "rt_flux_l2": 0.025695377778615205,
+  "rt_flux_relative": 0.02042019821438887,
+  "rt2_flux_l2": 0.04079955850667524,
+  "rt2_flux_relative": 0.03242353854237686,
+  "raw_flux_l2": 0.013679815249786616,
+  "raw_flux_relative": 0.010871392564982827,
+  "pressure_l2": 0.0001943691220011627,
+  "pressure_relative": 0.0015976959584672779,
+  "exact_norms": [
+    0.12165588888866401,
+    1.2583314573562385
+  ],
+  "error_quadrature_change": 1.109488681483306e-10,
+  "continuous_moment_residual_max": 2.423344321435608e-15,
+  "boundary_normal_moment_residual_max": 0.0,
+  "fine_cell_balance_residual_max": 0.0009820032448719979,
+  "macro_balance_residual_max": 1.6653345369377348e-16,
+  "archive": "resolution-p4-t2-s2-rt3.npz",
+  "archive_sha256": "5f1314bb8d28769f21677a3734e186dc74fa1f7a0382acc06b4d670a2fe06fd7",
+  "basis_sha256": "48b629f307533f202adbe2505948e6a225b1de5305692a051f11dc3a091bca4e",
+  "basis_digest_format": "SHA256 of contiguous float64 C-order array bytes",
+  "source_sha256": {
+    "src/pymhm/darcy3d.py": "6fd858b23e13ce0466c61efdfacb6c2b627df0c6bd8b63291716757c8bb4fbd2",
+    "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+    "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+    "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+    "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+    "src/pymhm/tetrahedral.py": "be9cf2387044046d90761e8a98cf1c81ed6070a9db685c2f63d059c3224e4b24",
+    "src/pymhm/tetra_lagrange.py": "89af3d45c336bab82d298f39be15b7e9f806ea0ec78860d9d05d374a3b8f5f49",
+    "examples/reconstruction3d_rt_order.py": "85bff875fc5e019d230ae55b55a8ffefcf4a2432302e8966739f68bf9626057a",
+    "examples/reconstruction3d_data.py": "7ae922c6c820a87b72cc20d5cec551ea4c491240dfe945ff052b71e9679f7ee0"
+  },
+  "elapsed_seconds": 191.21531145402696,
+  "interpretation": "RT3 contains the piecewise P3 raw gradient, but canonical reconstruction changes normal moments through interior averages and the prescribed skeletal density. Its error need not decrease monotonically with the reconstruction degree. This P4/P2 local/trace pair does not meet the L09 three-dimensional error-estimate condition k >= ell + 3; no such estimate is asserted. Continuous-test equilibrium differs from separate fine-cell source balance.",
+  "source_changed_during_run": false
+}

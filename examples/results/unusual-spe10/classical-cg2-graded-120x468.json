@@ -1,0 +1,102 @@
+{
+  "method": "classical conforming triangular CG2; independently assembled DOLFINx/UFL",
+  "operator": "-div(Kx_layer36 grad p) + p = 0",
+  "boundary": "bottom p=1, top p=0, homogeneous outward flux on both vertical sides",
+  "source": 0.0,
+  "reaction": 1.0,
+  "mesh_shape": [
+    120,
+    468
+  ],
+  "triangles": 112320,
+  "mesh_grading": "explicit coordinate axes, with every material interface retained",
+  "minimum_interval": [
+    10.0,
+    0.009128424015129885
+  ],
+  "unknowns": 225817,
+  "triangle_diagonal": "southwest to northeast",
+  "material": "original layer-36 Kx used in both Cartesian directions, exact pixel alignment",
+  "physical_coordinate_unit": "ft source numbers",
+  "permeability_unit": "mD source numbers, no implicit SI conversion",
+  "native_backend": "PETSc/MUMPS SPD Cholesky on COMM_SELF",
+  "quadrature_degree": 4,
+  "original_free_residual_relative": 8.008791272388455e-16,
+  "residual_tolerance": 1e-10,
+  "reaction_integral": 497.5570078020022,
+  "energy_squared": 497.55700780199356,
+  "boundary_and_source_work": 497.55700780200925,
+  "energy_identity_relative": 3.153163026461881e-14,
+  "weak_outward_flux_bottom_top": [
+    -497.5570078020093,
+    -3.2850951689997694e-178
+  ],
+  "weak_global_balance": -7.105427357601002e-12,
+  "conservation_scope": "continuous CG2 weak equations and boundary reactions, not fine-cell H(div) conservation",
+  "value_min": -0.036151775662978766,
+  "value_max": 1.0,
+  "assembly_seconds": 0.6214145580306649,
+  "factor_and_solve_seconds": 7.788484873948619,
+  "timing_scope": "concurrent acquisition, not an exclusive performance benchmark",
+  "threads": 4,
+  "threadpools": [
+    {
+      "user_api": "blas",
+      "internal_api": "blis",
+      "num_threads": 4,
+      "prefix": "libblis",
+      "version": "2.0",
+      "threading_layer": "pthreads",
+      "architecture": "haswell"
+    },
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 4,
+      "prefix": "libgomp",
+      "version": null
+    }
+  ],
+  "dolfinx": "0.9.0",
+  "basix": "0.9.0",
+  "petsc": [
+    3,
+    23,
+    0
+  ],
+  "numpy": "2.5.3",
+  "python": "3.13.15",
+  "analytical_patch": false,
+  "historical_scope": "explicit zero-source diffusion-reaction control; no claim that an unspecified historical load was zero",
+  "archive": "classical-cg2-graded-120x468.npz",
+  "archive_sha256": "1b0f84ec8623121c4dae26f43714f64792d2c1524c811b4713a1319cde489a69",
+  "driver_sha256": "83fed5a36872135410a524fd0a45ead82a9e0e593c3203eecfe689bca1ed37bf",
+  "material_sha256": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512",
+  "acquisition_archive_sha256": "3b693bb112a65d4564e03afeb0fba4b7c28118285b4f893a574f092eda724b0f",
+  "field_payload_sha256": "1c173bd9f729fd2d0fb2e05edec98731f0a3ad8661b32a9d2b77e8baacd2413d",
+  "sampling_replay": {
+    "verification": "field-sampling-verification.json",
+    "source_hashes": {
+      "examples/solve_unusual_spe10_reference.py": "67cbfe9caf8c5e173b132db9618429955ef3ae9b617b666fedd249886a2ce3ac",
+      "examples/cg2_profiles.py": "4b52f7a099f3619c293dd58215209e294d0c7d8b8fb2703c188cb86a2777278a"
+    },
+    "fixed_point_convention": "lower triangle and right/up rectangle at exact interfaces",
+    "trace_profile_convention": "each segment has two one-sided endpoint values; both incident columns retained at vertical grid edges; no point displacement or averaging"
+  },
+  "physical_form_verification": {
+    "archive_sha256": "1b0f84ec8623121c4dae26f43714f64792d2c1524c811b4713a1319cde489a69",
+    "physical_free_relative_residual": 2.9830246711483543e-15,
+    "physical_free_residual_linf": 3.0513514184566774e-12,
+    "physical_energy": 497.5570078019996,
+    "boundary_work": 497.5570078020228,
+    "relative_energy_work_defect": 4.662541904779058e-14,
+    "outward_bottom": -497.5570078020228,
+    "outward_top": -3.2850951689997716e-178,
+    "reaction_integral": 497.5570078019987,
+    "global_physical_balance": -2.409511479228854e-11,
+    "all_natural_side_rows_included": true,
+    "normalization": "norm of physical free RHS after exact prescribed bottom1/top0 elimination",
+    "driver_sha256": "7235156fb7f08eafbf623b2cffae0c72c7ab63c03288349e86e3de77a31b11f0",
+    "seconds": 0.502330394112505
+  }
+}

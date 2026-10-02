@@ -1,0 +1,42 @@
+{
+  "name": "mixed-face-uniform-e1-8-r32",
+  "epsilon": 1.0,
+  "local_refinement": 32,
+  "segments": 8,
+  "free_trace_dofs": 2944,
+  "retained_constant_coordinates": 240,
+  "quadrature": {
+    "8": {
+      "l2_error": 1.1243064204933117e-06,
+      "broken_h1_error": 0.0010651503012858352
+    },
+    "12": {
+      "l2_error": 1.1243064204934951e-06,
+      "broken_h1_error": 0.0010651503012858374
+    }
+  },
+  "physical_checks": {
+    "projected_original_residual": 3.641038544835935e-15,
+    "maximum_original_local_residual": 1.5283749025663853e-16
+  },
+  "archive": "mixed-face-uniform-e1-8-r32.npz",
+  "archive_sha256": "830269181b331885bbadff98db5d75fa517d51a0ce116464d3c7be18440656e5",
+  "source_hashes": {
+    "src/pymhm/scalar_adaptive.py": "fbb92bd3dddb9eb131151961135bccb0891fb26e51904afbe9b663daf8201375",
+    "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+    "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+    "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "examples/transport_mixed_campaign.py": "b36073ec7097b3d38217acadb732d4b34b8e44af2b37bcebeabe82176084e41b",
+    "examples/transport_campaign.py": "5b05711ea6476653cffd3c66c284ddfe66badd2e537c91bc5d475ffe770de735",
+    "examples/pgmhm_campaign.py": "94e7f8d085a61c8e55d49176c161aef86100f3bed14d3abd93b98aade00689ac",
+    "examples/transport_face_resolution.py": "903f8eb09f25e6e12a7de86ee1abbf20546707d597d1cc62add3ab9750b69c02",
+    "examples/transport_trace_family.py": "631240349d9093621ba68115b3a267fa152c30a366ccdef307f4bbc5f8ef8ab0",
+    "examples/unfitted_trace_family.py": "f6843922b962f27d94580e5f179c51031f7cab0e80490e8257cdcf9ab38d54c4",
+    "examples/transport_coefficient_controls.py": "2d4ad344bd711f8f1b5f9076da380c6643332022886591ac7bcd31d0b6a4888b",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64"
+  },
+  "source_changed_during_run": false
+}

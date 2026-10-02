@@ -1,0 +1,233 @@
+{
+  "published_reference": "10.1016/j.cam.2023.115415",
+  "samples": 221,
+  "pressure_digitization_uncertainty": 0.0021,
+  "measurements": [
+    {
+      "refinement": 40,
+      "segments": 8,
+      "coefficient_pixels_aligned": true,
+      "global_dofs": 1209,
+      "profile_rms_against_raster": 0.020944320564239914,
+      "profile_max_against_raster": 0.07049816058565689,
+      "pixel_pressure_rms_against_conforming": 0.021365857302376667,
+      "pixel_flux_rms_against_conforming": 0.00016280951689633997,
+      "inlet_flux": 0.1387412275535048,
+      "macro_balance_max": 3.725318664660193e-16,
+      "pressure_nodal_range": [
+        -0.00783866773713407,
+        1.033611690622419
+      ]
+    },
+    {
+      "refinement": 40,
+      "segments": 32,
+      "coefficient_pixels_aligned": true,
+      "global_dofs": 4257,
+      "profile_rms_against_raster": 0.001156122201716007,
+      "profile_max_against_raster": 0.0056663561315813404,
+      "pixel_pressure_rms_against_conforming": 0.0003448391328593349,
+      "pixel_flux_rms_against_conforming": 6.247930547846678e-05,
+      "inlet_flux": 0.15260702105568832,
+      "macro_balance_max": 6.106226635438361e-16,
+      "pressure_nodal_range": [
+        -0.00042574109388357484,
+        1.0023909396918897
+      ]
+    },
+    {
+      "refinement": 60,
+      "segments": 32,
+      "coefficient_pixels_aligned": true,
+      "global_dofs": 4257,
+      "profile_rms_against_raster": 0.0011724001108239057,
+      "profile_max_against_raster": 0.004723561138590959,
+      "pixel_pressure_rms_against_conforming": 0.00040853640114744657,
+      "pixel_flux_rms_against_conforming": 3.345680988368583e-05,
+      "inlet_flux": 0.15159094028292974,
+      "macro_balance_max": 1.0776969594505914e-15,
+      "pressure_nodal_range": [
+        -0.001612970312957894,
+        1.001745348607512
+      ]
+    },
+    {
+      "refinement": 64,
+      "segments": 32,
+      "coefficient_pixels_aligned": false,
+      "global_dofs": 4257,
+      "profile_rms_against_raster": 0.0026765407922930916,
+      "profile_max_against_raster": 0.006665853162163338,
+      "pixel_pressure_rms_against_conforming": 0.0019491156183508737,
+      "pixel_flux_rms_against_conforming": 3.6163512384845354e-05,
+      "inlet_flux": 0.1586713845425759,
+      "macro_balance_max": 9.43689570931383e-16,
+      "pressure_nodal_range": [
+        -0.0015606581591141588,
+        1.0018946154404178
+      ]
+    },
+    {
+      "refinement": 80,
+      "segments": 8,
+      "coefficient_pixels_aligned": true,
+      "global_dofs": 1209,
+      "profile_rms_against_raster": 0.02248538402023028,
+      "profile_max_against_raster": 0.07501360397154072,
+      "pixel_pressure_rms_against_conforming": 0.022994894726192122,
+      "pixel_flux_rms_against_conforming": 0.00016282354041425104,
+      "inlet_flux": 0.13679242584949228,
+      "macro_balance_max": 2.931682674400804e-16,
+      "pressure_nodal_range": [
+        -0.008376619074778019,
+        1.0308848715468362
+      ]
+    },
+    {
+      "refinement": 80,
+      "segments": 16,
+      "coefficient_pixels_aligned": true,
+      "global_dofs": 2225,
+      "profile_rms_against_raster": 0.005853260369255069,
+      "profile_max_against_raster": 0.03042509730098142,
+      "pixel_pressure_rms_against_conforming": 0.005419549190172658,
+      "pixel_flux_rms_against_conforming": 6.443066848770737e-05,
+      "inlet_flux": 0.14773605841852122,
+      "macro_balance_max": 4.883246584874712e-16,
+      "pressure_nodal_range": [
+        -0.010460936488874029,
+        1.0048979866557022
+      ]
+    },
+    {
+      "refinement": 80,
+      "segments": 32,
+      "coefficient_pixels_aligned": true,
+      "global_dofs": 4257,
+      "profile_rms_against_raster": 0.00135113357198542,
+      "profile_max_against_raster": 0.004913316294638481,
+      "pixel_pressure_rms_against_conforming": 0.0006455922782015027,
+      "pixel_flux_rms_against_conforming": 3.679884364594708e-05,
+      "inlet_flux": 0.15107562167466443,
+      "macro_balance_max": 2.112893193739751e-15,
+      "pressure_nodal_range": [
+        -0.0030619570886952774,
+        1.0028404357515144
+      ]
+    },
+    {
+      "refinement": 96,
+      "segments": 32,
+      "coefficient_pixels_aligned": false,
+      "global_dofs": 4257,
+      "profile_rms_against_raster": 0.001968200212242478,
+      "profile_max_against_raster": 0.00462163108747965,
+      "pixel_pressure_rms_against_conforming": 0.0009088177311467197,
+      "pixel_flux_rms_against_conforming": 2.3981160060105743e-05,
+      "inlet_flux": 0.1555324209748647,
+      "macro_balance_max": 5.117434254131581e-16,
+      "pressure_nodal_range": [
+        -0.0037389485864792182,
+        1.0020592889082742
+      ]
+    },
+    {
+      "refinement": 100,
+      "segments": 32,
+      "coefficient_pixels_aligned": true,
+      "global_dofs": 4257,
+      "profile_rms_against_raster": 0.0015162806674771572,
+      "profile_max_against_raster": 0.00513180259120638,
+      "pixel_pressure_rms_against_conforming": 0.0008730784324116978,
+      "pixel_flux_rms_against_conforming": 2.876943620642132e-05,
+      "inlet_flux": 0.15075752814948148,
+      "macro_balance_max": 2.177077962350893e-15,
+      "pressure_nodal_range": [
+        -0.0045431539398815834,
+        1.0031748630455966
+      ]
+    },
+    {
+      "refinement": 112,
+      "segments": 32,
+      "coefficient_pixels_aligned": false,
+      "global_dofs": 4257,
+      "profile_rms_against_raster": 0.0022567634173692964,
+      "profile_max_against_raster": 0.005264739439772903,
+      "pixel_pressure_rms_against_conforming": 0.0011493601818722444,
+      "pixel_flux_rms_against_conforming": 2.3921137885428454e-05,
+      "inlet_flux": 0.15504973555852233,
+      "macro_balance_max": 2.3800406090401793e-15,
+      "pressure_nodal_range": [
+        -0.002541194734371671,
+        1.0021800568628316
+      ]
+    },
+    {
+      "refinement": 120,
+      "segments": 8,
+      "coefficient_pixels_aligned": true,
+      "global_dofs": 1209,
+      "profile_rms_against_raster": 0.022801648970994928,
+      "profile_max_against_raster": 0.07592748859227,
+      "pixel_pressure_rms_against_conforming": 0.02334177797521203,
+      "pixel_flux_rms_against_conforming": 0.00016321014272104655,
+      "inlet_flux": 0.13631859285683304,
+      "macro_balance_max": 2.5847379792054426e-16,
+      "pressure_nodal_range": [
+        -0.008009804838562229,
+        1.030532080858177
+      ]
+    },
+    {
+      "refinement": 120,
+      "segments": 16,
+      "coefficient_pixels_aligned": true,
+      "global_dofs": 2225,
+      "profile_rms_against_raster": 0.006427848307742757,
+      "profile_max_against_raster": 0.032355732341355026,
+      "pixel_pressure_rms_against_conforming": 0.00610675642674664,
+      "pixel_flux_rms_against_conforming": 6.654225149169643e-05,
+      "inlet_flux": 0.14705231050060702,
+      "macro_balance_max": 5.698566618583811e-16,
+      "pressure_nodal_range": [
+        -0.009236093653753913,
+        1.0049245579485437
+      ]
+    },
+    {
+      "refinement": 120,
+      "segments": 32,
+      "coefficient_pixels_aligned": true,
+      "global_dofs": 4257,
+      "profile_rms_against_raster": 0.0016078408970304561,
+      "profile_max_against_raster": 0.005274295454017697,
+      "pixel_pressure_rms_against_conforming": 0.0010130765501405131,
+      "pixel_flux_rms_against_conforming": 3.105134671357447e-05,
+      "inlet_flux": 0.15056549924573548,
+      "macro_balance_max": 1.2459651366203417e-15,
+      "pressure_nodal_range": [
+        -0.005253528788924822,
+        1.0033246783228837
+      ]
+    },
+    {
+      "refinement": 128,
+      "segments": 32,
+      "coefficient_pixels_aligned": false,
+      "global_dofs": 4257,
+      "profile_rms_against_raster": 0.0017689703419101197,
+      "profile_max_against_raster": 0.004587353227312352,
+      "pixel_pressure_rms_against_conforming": 0.000736187862543845,
+      "pixel_flux_rms_against_conforming": 2.1652009431136402e-05,
+      "inlet_flux": 0.15410576298866718,
+      "macro_balance_max": 8.393893219382775e-16,
+      "pressure_nodal_range": [
+        -0.0036067358282327877,
+        1.003033557441595
+      ]
+    }
+  ],
+  "conforming_reference": "reference-q3-768x1408-order5.npz",
+  "sampling": "uniform 60x220 material-pixel centers; RMS samples are not integrated L2 norms"
+}

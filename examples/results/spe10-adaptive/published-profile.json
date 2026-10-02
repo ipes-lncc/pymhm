@@ -1,0 +1,1022 @@
+{
+  "article": "L09",
+  "doi": "10.1137/24M1673073",
+  "figure": 9,
+  "pdf_page": 26,
+  "digitization": "visible red reference curve, original embedded raster, median per sampled column",
+  "distance_uncertainty_ft": 5.033881897386253,
+  "pressure_uncertainty": 0.0033742331288343563,
+  "sample_count": 167,
+  "rms_difference": 0.004148010499726916,
+  "maximum_difference": 0.015886339793758086,
+  "samples": [
+    {
+      "t": 0.013056794140854613,
+      "distance_ft": 32.72023233301065,
+      "published_pressure": 0.9723926380368099,
+      "classical_rt2_pressure": 0.9678273558564181
+    },
+    {
+      "t": 0.01807863804118331,
+      "distance_ft": 45.304937076476286,
+      "published_pressure": 0.9453987730061351,
+      "classical_rt2_pressure": 0.9453547645400688
+    },
+    {
+      "t": 0.0381660136424981,
+      "distance_ft": 95.64375605033882,
+      "published_pressure": 0.9335889570552147,
+      "classical_rt2_pressure": 0.9291011610561266
+    },
+    {
+      "t": 0.0431878575428268,
+      "distance_ft": 108.22846079380446,
+      "published_pressure": 0.926840490797546,
+      "classical_rt2_pressure": 0.9234356261778516
+    },
+    {
+      "t": 0.04820970144315549,
+      "distance_ft": 120.81316553727008,
+      "published_pressure": 0.9217791411042945,
+      "classical_rt2_pressure": 0.9213445172429615
+    },
+    {
+      "t": 0.05323154534348419,
+      "distance_ft": 133.39787028073573,
+      "published_pressure": 0.9158742331288344,
+      "classical_rt2_pressure": 0.9109569668980373
+    },
+    {
+      "t": 0.05825338924381289,
+      "distance_ft": 145.98257502420137,
+      "published_pressure": 0.8939417177914111,
+      "classical_rt2_pressure": 0.8998463990705141
+    },
+    {
+      "t": 0.06829707704447027,
+      "distance_ft": 171.1519845111326,
+      "published_pressure": 0.8796012269938651,
+      "classical_rt2_pressure": 0.8773862939960335
+    },
+    {
+      "t": 0.07331892094479897,
+      "distance_ft": 183.73668925459825,
+      "published_pressure": 0.8703220858895706,
+      "classical_rt2_pressure": 0.871987942153791
+    },
+    {
+      "t": 0.07834076484512767,
+      "distance_ft": 196.32139399806388,
+      "published_pressure": 0.8576687116564418,
+      "classical_rt2_pressure": 0.8595576145921928
+    },
+    {
+      "t": 0.08336260874545637,
+      "distance_ft": 208.90609874152952,
+      "published_pressure": 0.8542944785276074,
+      "classical_rt2_pressure": 0.84870258912177
+    },
+    {
+      "t": 0.10847182824709985,
+      "distance_ft": 271.82962245885767,
+      "published_pressure": 0.8357361963190184,
+      "classical_rt2_pressure": 0.832041223968639
+    },
+    {
+      "t": 0.11851551604775724,
+      "distance_ft": 296.99903194578894,
+      "published_pressure": 0.8205521472392638,
+      "classical_rt2_pressure": 0.8242497378838679
+    },
+    {
+      "t": 0.12353735994808594,
+      "distance_ft": 309.5837366892546,
+      "published_pressure": 0.8138036809815952,
+      "classical_rt2_pressure": 0.8172461829393931
+    },
+    {
+      "t": 0.12855920384841463,
+      "distance_ft": 322.1684414327202,
+      "published_pressure": 0.7952453987730062,
+      "classical_rt2_pressure": 0.8020651150110677
+    },
+    {
+      "t": 0.14362473554940072,
+      "distance_ft": 359.9225556631171,
+      "published_pressure": 0.775,
+      "classical_rt2_pressure": 0.7700045168643939
+    },
+    {
+      "t": 0.14864657944972942,
+      "distance_ft": 372.50726040658276,
+      "published_pressure": 0.7623466257668712,
+      "classical_rt2_pressure": 0.7595792073756102
+    },
+    {
+      "t": 0.15366842335005812,
+      "distance_ft": 385.0919651500484,
+      "published_pressure": 0.7454754601226994,
+      "classical_rt2_pressure": 0.7295891203289413
+    },
+    {
+      "t": 0.15869026725038682,
+      "distance_ft": 397.67666989351403,
+      "published_pressure": 0.717638036809816,
+      "classical_rt2_pressure": 0.7198238405748847
+    },
+    {
+      "t": 0.17375579895137291,
+      "distance_ft": 435.43078412391094,
+      "published_pressure": 0.7049846625766871,
+      "classical_rt2_pressure": 0.7033833240125742
+    },
+    {
+      "t": 0.1787776428517016,
+      "distance_ft": 448.0154888673766,
+      "published_pressure": 0.7016104294478528,
+      "classical_rt2_pressure": 0.7023665619899921
+    },
+    {
+      "t": 0.1837994867520303,
+      "distance_ft": 460.6001936108422,
+      "published_pressure": 0.6973926380368098,
+      "classical_rt2_pressure": 0.698715076068022
+    },
+    {
+      "t": 0.188821330652359,
+      "distance_ft": 473.18489835430785,
+      "published_pressure": 0.694861963190184,
+      "classical_rt2_pressure": 0.6930357482492635
+    },
+    {
+      "t": 0.1938431745526877,
+      "distance_ft": 485.7696030977735,
+      "published_pressure": 0.6931748466257669,
+      "classical_rt2_pressure": 0.6886970012944031
+    },
+    {
+      "t": 0.1988650184530164,
+      "distance_ft": 498.3543078412391,
+      "published_pressure": 0.6754601226993866,
+      "classical_rt2_pressure": 0.6737789564023887
+    },
+    {
+      "t": 0.2038868623533451,
+      "distance_ft": 510.93901258470476,
+      "published_pressure": 0.6611196319018405,
+      "classical_rt2_pressure": 0.6599339839492181
+    },
+    {
+      "t": 0.2089087062536738,
+      "distance_ft": 523.5237173281704,
+      "published_pressure": 0.6526840490797546,
+      "classical_rt2_pressure": 0.6497436100234186
+    },
+    {
+      "t": 0.2139305501540025,
+      "distance_ft": 536.108422071636,
+      "published_pressure": 0.6467791411042945,
+      "classical_rt2_pressure": 0.6445167717283107
+    },
+    {
+      "t": 0.2189523940543312,
+      "distance_ft": 548.6931268151017,
+      "published_pressure": 0.6450920245398774,
+      "classical_rt2_pressure": 0.6428053040750532
+    },
+    {
+      "t": 0.2239742379546599,
+      "distance_ft": 561.2778315585673,
+      "published_pressure": 0.6425613496932515,
+      "classical_rt2_pressure": 0.6419001942394696
+    },
+    {
+      "t": 0.2289960818549886,
+      "distance_ft": 573.8625363020329,
+      "published_pressure": 0.6434049079754601,
+      "classical_rt2_pressure": 0.6413413339353723
+    },
+    {
+      "t": 0.2340179257553173,
+      "distance_ft": 586.4472410454986,
+      "published_pressure": 0.6434049079754601,
+      "classical_rt2_pressure": 0.6398211436912461
+    },
+    {
+      "t": 0.239039769655646,
+      "distance_ft": 599.0319457889642,
+      "published_pressure": 0.633282208588957,
+      "classical_rt2_pressure": 0.6350572078849219
+    },
+    {
+      "t": 0.2440616135559747,
+      "distance_ft": 611.6166505324298,
+      "published_pressure": 0.6299079754601227,
+      "classical_rt2_pressure": 0.6268181742549943
+    },
+    {
+      "t": 0.2490834574563034,
+      "distance_ft": 624.2013552758955,
+      "published_pressure": 0.6248466257668712,
+      "classical_rt2_pressure": 0.6227562212310748
+    },
+    {
+      "t": 0.25410530135663206,
+      "distance_ft": 636.7860600193611,
+      "published_pressure": 0.6214723926380368,
+      "classical_rt2_pressure": 0.6196625019668975
+    },
+    {
+      "t": 0.2591271452569608,
+      "distance_ft": 649.3707647628268,
+      "published_pressure": 0.618941717791411,
+      "classical_rt2_pressure": 0.6170713855529115
+    },
+    {
+      "t": 0.26414898915728946,
+      "distance_ft": 661.9554695062924,
+      "published_pressure": 0.6164110429447853,
+      "classical_rt2_pressure": 0.6145178520037318
+    },
+    {
+      "t": 0.2691708330576182,
+      "distance_ft": 674.540174249758,
+      "published_pressure": 0.6130368098159509,
+      "classical_rt2_pressure": 0.610727099186733
+    },
+    {
+      "t": 0.27419267695794686,
+      "distance_ft": 687.1248789932237,
+      "published_pressure": 0.6096625766871167,
+      "classical_rt2_pressure": 0.6078438714958525
+    },
+    {
+      "t": 0.28423636475860425,
+      "distance_ft": 712.2942884801549,
+      "published_pressure": 0.5986963190184049,
+      "classical_rt2_pressure": 0.5974392407260356
+    },
+    {
+      "t": 0.289258208658933,
+      "distance_ft": 724.8789932236206,
+      "published_pressure": 0.590260736196319,
+      "classical_rt2_pressure": 0.5858195615167616
+    },
+    {
+      "t": 0.29428005255926165,
+      "distance_ft": 737.4636979670862,
+      "published_pressure": 0.5767638036809817,
+      "classical_rt2_pressure": 0.5748628069443571
+    },
+    {
+      "t": 0.2993018964595904,
+      "distance_ft": 750.0484027105518,
+      "published_pressure": 0.5683282208588958,
+      "classical_rt2_pressure": 0.563157795776852
+    },
+    {
+      "t": 0.30432374035991905,
+      "distance_ft": 762.6331074540175,
+      "published_pressure": 0.5590490797546013,
+      "classical_rt2_pressure": 0.5579161953568912
+    },
+    {
+      "t": 0.3093455842602478,
+      "distance_ft": 775.2178121974831,
+      "published_pressure": 0.5556748466257668,
+      "classical_rt2_pressure": 0.5552720768305006
+    },
+    {
+      "t": 0.31436742816057645,
+      "distance_ft": 787.8025169409487,
+      "published_pressure": 0.5506134969325154,
+      "classical_rt2_pressure": 0.5495185861096148
+    },
+    {
+      "t": 0.3193892720609051,
+      "distance_ft": 800.3872216844143,
+      "published_pressure": 0.5455521472392638,
+      "classical_rt2_pressure": 0.5403792586533389
+    },
+    {
+      "t": 0.3244111159612338,
+      "distance_ft": 812.9719264278799,
+      "published_pressure": 0.5388036809815951,
+      "classical_rt2_pressure": 0.5377088346607031
+    },
+    {
+      "t": 0.3294329598615625,
+      "distance_ft": 825.5566311713455,
+      "published_pressure": 0.532898773006135,
+      "classical_rt2_pressure": 0.5350624904413165
+    },
+    {
+      "t": 0.3394766476622199,
+      "distance_ft": 850.7260406582768,
+      "published_pressure": 0.528680981595092,
+      "classical_rt2_pressure": 0.5262363729077632
+    },
+    {
+      "t": 0.3444984915625486,
+      "distance_ft": 863.3107454017425,
+      "published_pressure": 0.5236196319018405,
+      "classical_rt2_pressure": 0.5223731350656061
+    },
+    {
+      "t": 0.3495203354628773,
+      "distance_ft": 875.8954501452081,
+      "published_pressure": 0.5202453987730061,
+      "classical_rt2_pressure": 0.5194328092803533
+    },
+    {
+      "t": 0.354542179363206,
+      "distance_ft": 888.4801548886737,
+      "published_pressure": 0.5210889570552147,
+      "classical_rt2_pressure": 0.5180153960391073
+    },
+    {
+      "t": 0.3595640232635347,
+      "distance_ft": 901.0648596321394,
+      "published_pressure": 0.5118098159509202,
+      "classical_rt2_pressure": 0.5154215664101296
+    },
+    {
+      "t": 0.3645858671638634,
+      "distance_ft": 913.649564375605,
+      "published_pressure": 0.5126533742331288,
+      "classical_rt2_pressure": 0.510522846292776
+    },
+    {
+      "t": 0.3696077110641921,
+      "distance_ft": 926.2342691190706,
+      "published_pressure": 0.5101226993865031,
+      "classical_rt2_pressure": 0.5096135936637579
+    },
+    {
+      "t": 0.38467324276517817,
+      "distance_ft": 963.9883833494675,
+      "published_pressure": 0.5151840490797546,
+      "classical_rt2_pressure": 0.5106878437667831
+    },
+    {
+      "t": 0.3896950866655069,
+      "distance_ft": 976.5730880929332,
+      "published_pressure": 0.504217791411043,
+      "classical_rt2_pressure": 0.5046351768735683
+    },
+    {
+      "t": 0.39471693056583557,
+      "distance_ft": 989.1577928363988,
+      "published_pressure": 0.4983128834355828,
+      "classical_rt2_pressure": 0.49709489968817777
+    },
+    {
+      "t": 0.3997387744661643,
+      "distance_ft": 1001.7424975798644,
+      "published_pressure": 0.4915644171779141,
+      "classical_rt2_pressure": 0.493817460893626
+    },
+    {
+      "t": 0.40476061836649296,
+      "distance_ft": 1014.3272023233301,
+      "published_pressure": 0.47722392638036804,
+      "classical_rt2_pressure": 0.47914913836743
+    },
+    {
+      "t": 0.4097824622668217,
+      "distance_ft": 1026.9119070667957,
+      "published_pressure": 0.4746932515337423,
+      "classical_rt2_pressure": 0.4755897083727241
+    },
+    {
+      "t": 0.41480430616715036,
+      "distance_ft": 1039.4966118102614,
+      "published_pressure": 0.4721625766871165,
+      "classical_rt2_pressure": 0.47477161739197665
+    },
+    {
+      "t": 0.4198261500674791,
+      "distance_ft": 1052.081316553727,
+      "published_pressure": 0.4679447852760735,
+      "classical_rt2_pressure": 0.4739713627579112
+    },
+    {
+      "t": 0.42484799396780776,
+      "distance_ft": 1064.6660212971926,
+      "published_pressure": 0.467101226993865,
+      "classical_rt2_pressure": 0.4729074244901498
+    },
+    {
+      "t": 0.4298698378681365,
+      "distance_ft": 1077.2507260406583,
+      "published_pressure": 0.4662576687116564,
+      "classical_rt2_pressure": 0.4715473343527013
+    },
+    {
+      "t": 0.43489168176846515,
+      "distance_ft": 1089.835430784124,
+      "published_pressure": 0.4645705521472392,
+      "classical_rt2_pressure": 0.4709327798327231
+    },
+    {
+      "t": 0.4399135256687939,
+      "distance_ft": 1102.4201355275895,
+      "published_pressure": 0.4679447852760735,
+      "classical_rt2_pressure": 0.4708456296719227
+    },
+    {
+      "t": 0.44493536956912255,
+      "distance_ft": 1115.0048402710552,
+      "published_pressure": 0.4645705521472392,
+      "classical_rt2_pressure": 0.4708204664825589
+    },
+    {
+      "t": 0.4499572134694513,
+      "distance_ft": 1127.5895450145208,
+      "published_pressure": 0.4645705521472392,
+      "classical_rt2_pressure": 0.47079705562715257
+    },
+    {
+      "t": 0.45497905736977995,
+      "distance_ft": 1140.1742497579864,
+      "published_pressure": 0.4679447852760735,
+      "classical_rt2_pressure": 0.47078549682633763
+    },
+    {
+      "t": 0.4600009012701087,
+      "distance_ft": 1152.758954501452,
+      "published_pressure": 0.4679447852760735,
+      "classical_rt2_pressure": 0.470781757851334
+    },
+    {
+      "t": 0.46502274517043735,
+      "distance_ft": 1165.3436592449177,
+      "published_pressure": 0.4679447852760735,
+      "classical_rt2_pressure": 0.4706182023959639
+    },
+    {
+      "t": 0.47506643297109474,
+      "distance_ft": 1190.513068731849,
+      "published_pressure": 0.4628834355828221,
+      "classical_rt2_pressure": 0.4689573493492115
+    },
+    {
+      "t": 0.48008827687142347,
+      "distance_ft": 1203.0977734753146,
+      "published_pressure": 0.4645705521472392,
+      "classical_rt2_pressure": 0.4679041316082764
+    },
+    {
+      "t": 0.49013196467208087,
+      "distance_ft": 1228.267182962246,
+      "published_pressure": 0.4628834355828221,
+      "classical_rt2_pressure": 0.46573918311020024
+    },
+    {
+      "t": 0.49515380857240954,
+      "distance_ft": 1240.8518877057115,
+      "published_pressure": 0.46203987730061347,
+      "classical_rt2_pressure": 0.46504408749450726
+    },
+    {
+      "t": 0.5001756524727382,
+      "distance_ft": 1253.4365924491772,
+      "published_pressure": 0.4578220858895705,
+      "classical_rt2_pressure": 0.4646923411363627
+    },
+    {
+      "t": 0.505197496373067,
+      "distance_ft": 1266.0212971926428,
+      "published_pressure": 0.46035276073619624,
+      "classical_rt2_pressure": 0.46354634860800814
+    },
+    {
+      "t": 0.5102193402733957,
+      "distance_ft": 1278.6060019361084,
+      "published_pressure": 0.45950920245398774,
+      "classical_rt2_pressure": 0.4625953349746268
+    },
+    {
+      "t": 0.5152411841737243,
+      "distance_ft": 1291.190706679574,
+      "published_pressure": 0.4544478527607362,
+      "classical_rt2_pressure": 0.46135478249198336
+    },
+    {
+      "t": 0.520263028074053,
+      "distance_ft": 1303.7754114230397,
+      "published_pressure": 0.4578220858895705,
+      "classical_rt2_pressure": 0.4604010770372743
+    },
+    {
+      "t": 0.5252848719743818,
+      "distance_ft": 1316.3601161665053,
+      "published_pressure": 0.4561349693251533,
+      "classical_rt2_pressure": 0.459742290942203
+    },
+    {
+      "t": 0.5303067158747105,
+      "distance_ft": 1328.944820909971,
+      "published_pressure": 0.45276073619631896,
+      "classical_rt2_pressure": 0.458622353139689
+    },
+    {
+      "t": 0.5353285597750391,
+      "distance_ft": 1341.5295256534366,
+      "published_pressure": 0.4544478527607362,
+      "classical_rt2_pressure": 0.457265095953055
+    },
+    {
+      "t": 0.5403504036753678,
+      "distance_ft": 1354.1142303969023,
+      "published_pressure": 0.45191717791411046,
+      "classical_rt2_pressure": 0.45666444975137915
+    },
+    {
+      "t": 0.5453722475756966,
+      "distance_ft": 1366.698935140368,
+      "published_pressure": 0.4493865030674846,
+      "classical_rt2_pressure": 0.4547084353781117
+    },
+    {
+      "t": 0.5503940914760252,
+      "distance_ft": 1379.2836398838335,
+      "published_pressure": 0.4493865030674846,
+      "classical_rt2_pressure": 0.45422719146097446
+    },
+    {
+      "t": 0.5554159353763539,
+      "distance_ft": 1391.8683446272992,
+      "published_pressure": 0.4476993865030675,
+      "classical_rt2_pressure": 0.45231972573832097
+    },
+    {
+      "t": 0.5604377792766826,
+      "distance_ft": 1404.4530493707648,
+      "published_pressure": 0.4460122699386503,
+      "classical_rt2_pressure": 0.44961694540881625
+    },
+    {
+      "t": 0.5654596231770113,
+      "distance_ft": 1417.0377541142304,
+      "published_pressure": 0.44348159509202456,
+      "classical_rt2_pressure": 0.44911988257564794
+    },
+    {
+      "t": 0.57048146707734,
+      "distance_ft": 1429.622458857696,
+      "published_pressure": 0.4443251533742332,
+      "classical_rt2_pressure": 0.4477629019927561
+    },
+    {
+      "t": 0.5755033109776687,
+      "distance_ft": 1442.2071636011617,
+      "published_pressure": 0.44263803680981595,
+      "classical_rt2_pressure": 0.44672079997765146
+    },
+    {
+      "t": 0.5805251548779974,
+      "distance_ft": 1454.7918683446273,
+      "published_pressure": 0.4392638036809816,
+      "classical_rt2_pressure": 0.4456693003406475
+    },
+    {
+      "t": 0.585546998778326,
+      "distance_ft": 1467.376573088093,
+      "published_pressure": 0.4401073619631902,
+      "classical_rt2_pressure": 0.4448055316293637
+    },
+    {
+      "t": 0.5905688426786548,
+      "distance_ft": 1479.9612778315586,
+      "published_pressure": 0.4392638036809816,
+      "classical_rt2_pressure": 0.4433006900824754
+    },
+    {
+      "t": 0.5955906865789835,
+      "distance_ft": 1492.5459825750243,
+      "published_pressure": 0.4367331288343559,
+      "classical_rt2_pressure": 0.44220024648754347
+    },
+    {
+      "t": 0.6006125304793122,
+      "distance_ft": 1505.13068731849,
+      "published_pressure": 0.4358895705521473,
+      "classical_rt2_pressure": 0.43947140431273357
+    },
+    {
+      "t": 0.6056343743796408,
+      "distance_ft": 1517.7153920619555,
+      "published_pressure": 0.43420245398773005,
+      "classical_rt2_pressure": 0.43871361429534045
+    },
+    {
+      "t": 0.6106562182799696,
+      "distance_ft": 1530.3000968054212,
+      "published_pressure": 0.43167177914110433,
+      "classical_rt2_pressure": 0.4381074696654692
+    },
+    {
+      "t": 0.6156780621802983,
+      "distance_ft": 1542.8848015488868,
+      "published_pressure": 0.43251533742331294,
+      "classical_rt2_pressure": 0.43749079186302436
+    },
+    {
+      "t": 0.620699906080627,
+      "distance_ft": 1555.4695062923524,
+      "published_pressure": 0.43251533742331294,
+      "classical_rt2_pressure": 0.4367924388969347
+    },
+    {
+      "t": 0.6257217499809556,
+      "distance_ft": 1568.054211035818,
+      "published_pressure": 0.4291411042944786,
+      "classical_rt2_pressure": 0.4363119735812947
+    },
+    {
+      "t": 0.6357654377816131,
+      "distance_ft": 1593.2236205227493,
+      "published_pressure": 0.4299846625766871,
+      "classical_rt2_pressure": 0.4340201221149437
+    },
+    {
+      "t": 0.6407872816819418,
+      "distance_ft": 1605.808325266215,
+      "published_pressure": 0.42661042944785277,
+      "classical_rt2_pressure": 0.43250727609531914
+    },
+    {
+      "t": 0.6458091255822704,
+      "distance_ft": 1618.3930300096806,
+      "published_pressure": 0.4274539877300614,
+      "classical_rt2_pressure": 0.43138569827825535
+    },
+    {
+      "t": 0.6508309694825992,
+      "distance_ft": 1630.9777347531463,
+      "published_pressure": 0.42323619631901843,
+      "classical_rt2_pressure": 0.43023571480799805
+    },
+    {
+      "t": 0.6558528133829279,
+      "distance_ft": 1643.562439496612,
+      "published_pressure": 0.42323619631901843,
+      "classical_rt2_pressure": 0.42781468894729713
+    },
+    {
+      "t": 0.6608746572832566,
+      "distance_ft": 1656.1471442400775,
+      "published_pressure": 0.4215490797546012,
+      "classical_rt2_pressure": 0.4261144077110448
+    },
+    {
+      "t": 0.670918345083914,
+      "distance_ft": 1681.3165537270088,
+      "published_pressure": 0.4139570552147239,
+      "classical_rt2_pressure": 0.42275291230268663
+    },
+    {
+      "t": 0.6759401889842427,
+      "distance_ft": 1693.9012584704744,
+      "published_pressure": 0.4139570552147239,
+      "classical_rt2_pressure": 0.4191158172547571
+    },
+    {
+      "t": 0.6809620328845714,
+      "distance_ft": 1706.48596321394,
+      "published_pressure": 0.40889570552147236,
+      "classical_rt2_pressure": 0.4154804513861141
+    },
+    {
+      "t": 0.6859838767849,
+      "distance_ft": 1719.0706679574057,
+      "published_pressure": 0.40636503067484664,
+      "classical_rt2_pressure": 0.4116780416245892
+    },
+    {
+      "t": 0.6910057206852288,
+      "distance_ft": 1731.6553727008713,
+      "published_pressure": 0.4029907975460123,
+      "classical_rt2_pressure": 0.4090902218093758
+    },
+    {
+      "t": 0.6960275645855575,
+      "distance_ft": 1744.240077444337,
+      "published_pressure": 0.39792944785276074,
+      "classical_rt2_pressure": 0.403575217298989
+    },
+    {
+      "t": 0.7010494084858861,
+      "distance_ft": 1756.8247821878026,
+      "published_pressure": 0.3937116564417178,
+      "classical_rt2_pressure": 0.3985392196576669
+    },
+    {
+      "t": 0.7060712523862148,
+      "distance_ft": 1769.4094869312682,
+      "published_pressure": 0.38865030674846623,
+      "classical_rt2_pressure": 0.3955531675798019
+    },
+    {
+      "t": 0.7110930962865436,
+      "distance_ft": 1781.9941916747339,
+      "published_pressure": 0.3852760736196319,
+      "classical_rt2_pressure": 0.389102140965549
+    },
+    {
+      "t": 0.7161149401868723,
+      "distance_ft": 1794.5788964181995,
+      "published_pressure": 0.3776840490797546,
+      "classical_rt2_pressure": 0.38057546621652255
+    },
+    {
+      "t": 0.7211367840872009,
+      "distance_ft": 1807.1636011616652,
+      "published_pressure": 0.3675613496932515,
+      "classical_rt2_pressure": 0.37295923676410253
+    },
+    {
+      "t": 0.7261586279875296,
+      "distance_ft": 1819.7483059051308,
+      "published_pressure": 0.36249999999999993,
+      "classical_rt2_pressure": 0.36545315778242554
+    },
+    {
+      "t": 0.7311804718878584,
+      "distance_ft": 1832.3330106485964,
+      "published_pressure": 0.348159509202454,
+      "classical_rt2_pressure": 0.35458116250970406
+    },
+    {
+      "t": 0.7362023157881871,
+      "distance_ft": 1844.917715392062,
+      "published_pressure": 0.34478527607361964,
+      "classical_rt2_pressure": 0.3488791736013543
+    },
+    {
+      "t": 0.7412241596885157,
+      "distance_ft": 1857.5024201355277,
+      "published_pressure": 0.34478527607361964,
+      "classical_rt2_pressure": 0.34643119257950356
+    },
+    {
+      "t": 0.7462460035888444,
+      "distance_ft": 1870.0871248789933,
+      "published_pressure": 0.33719325153374224,
+      "classical_rt2_pressure": 0.3434213786890605
+    },
+    {
+      "t": 0.7562896913895018,
+      "distance_ft": 1895.2565343659244,
+      "published_pressure": 0.3144171779141104,
+      "classical_rt2_pressure": 0.31899533658293056
+    },
+    {
+      "t": 0.7613115352898304,
+      "distance_ft": 1907.84123910939,
+      "published_pressure": 0.3059815950920245,
+      "classical_rt2_pressure": 0.31155554560379994
+    },
+    {
+      "t": 0.7663333791901591,
+      "distance_ft": 1920.4259438528557,
+      "published_pressure": 0.29332822085889576,
+      "classical_rt2_pressure": 0.29584112132473495
+    },
+    {
+      "t": 0.7713552230904879,
+      "distance_ft": 1933.0106485963213,
+      "published_pressure": 0.27645705521472397,
+      "classical_rt2_pressure": 0.2783646211870108
+    },
+    {
+      "t": 0.7763770669908165,
+      "distance_ft": 1945.595353339787,
+      "published_pressure": 0.2553680981595092,
+      "classical_rt2_pressure": 0.262909621021672
+    },
+    {
+      "t": 0.7813989108911452,
+      "distance_ft": 1958.1800580832526,
+      "published_pressure": 0.2511503067484663,
+      "classical_rt2_pressure": 0.25348930365647276
+    },
+    {
+      "t": 0.7914425986918027,
+      "distance_ft": 1983.3494675701838,
+      "published_pressure": 0.24102760736196316,
+      "classical_rt2_pressure": 0.24429568668250573
+    },
+    {
+      "t": 0.7964644425921313,
+      "distance_ft": 1995.9341723136495,
+      "published_pressure": 0.23849693251533743,
+      "classical_rt2_pressure": 0.2395963809984192
+    },
+    {
+      "t": 0.80148628649246,
+      "distance_ft": 2008.518877057115,
+      "published_pressure": 0.22499999999999987,
+      "classical_rt2_pressure": 0.23208318993910815
+    },
+    {
+      "t": 0.8065081303927887,
+      "distance_ft": 2021.1035818005807,
+      "published_pressure": 0.22162576687116564,
+      "classical_rt2_pressure": 0.2246255405095359
+    },
+    {
+      "t": 0.8115299742931175,
+      "distance_ft": 2033.6882865440464,
+      "published_pressure": 0.21065950920245402,
+      "classical_rt2_pressure": 0.21584357030593512
+    },
+    {
+      "t": 0.8165518181934461,
+      "distance_ft": 2046.272991287512,
+      "published_pressure": 0.20559815950920235,
+      "classical_rt2_pressure": 0.2100875649230488
+    },
+    {
+      "t": 0.8215736620937749,
+      "distance_ft": 2058.857696030978,
+      "published_pressure": 0.19716257668711645,
+      "classical_rt2_pressure": 0.20219955599133213
+    },
+    {
+      "t": 0.8265955059941035,
+      "distance_ft": 2071.4424007744433,
+      "published_pressure": 0.19378834355828223,
+      "classical_rt2_pressure": 0.19551959483521553
+    },
+    {
+      "t": 0.8316173498944323,
+      "distance_ft": 2084.027105517909,
+      "published_pressure": 0.18872699386503067,
+      "classical_rt2_pressure": 0.19069953739476664
+    },
+    {
+      "t": 0.8366391937947609,
+      "distance_ft": 2096.6118102613746,
+      "published_pressure": 0.1836656441717791,
+      "classical_rt2_pressure": 0.1866870743727069
+    },
+    {
+      "t": 0.8416610376950897,
+      "distance_ft": 2109.1965150048404,
+      "published_pressure": 0.17944785276073616,
+      "classical_rt2_pressure": 0.17933761708768006
+    },
+    {
+      "t": 0.8466828815954183,
+      "distance_ft": 2121.781219748306,
+      "published_pressure": 0.1735429447852761,
+      "classical_rt2_pressure": 0.1735960460446911
+    },
+    {
+      "t": 0.851704725495747,
+      "distance_ft": 2134.3659244917717,
+      "published_pressure": 0.1659509202453987,
+      "classical_rt2_pressure": 0.1684555257431277
+    },
+    {
+      "t": 0.8567265693960757,
+      "distance_ft": 2146.950629235237,
+      "published_pressure": 0.16088957055214725,
+      "classical_rt2_pressure": 0.1639771632668359
+    },
+    {
+      "t": 0.8617484132964045,
+      "distance_ft": 2159.535333978703,
+      "published_pressure": 0.16004601226993864,
+      "classical_rt2_pressure": 0.16042505335447527
+    },
+    {
+      "t": 0.8667702571967331,
+      "distance_ft": 2172.1200387221684,
+      "published_pressure": 0.15835889570552153,
+      "classical_rt2_pressure": 0.157471202193456
+    },
+    {
+      "t": 0.8717921010970618,
+      "distance_ft": 2184.7047434656342,
+      "published_pressure": 0.15329754601226986,
+      "classical_rt2_pressure": 0.15562618636521258
+    },
+    {
+      "t": 0.8768139449973905,
+      "distance_ft": 2197.2894482090996,
+      "published_pressure": 0.15161042944785286,
+      "classical_rt2_pressure": 0.1542611811020404
+    },
+    {
+      "t": 0.8818357888977193,
+      "distance_ft": 2209.8741529525655,
+      "published_pressure": 0.14654907975460119,
+      "classical_rt2_pressure": 0.14772599412048232
+    },
+    {
+      "t": 0.8868576327980479,
+      "distance_ft": 2222.458857696031,
+      "published_pressure": 0.14064417177914101,
+      "classical_rt2_pressure": 0.14363674874357388
+    },
+    {
+      "t": 0.8918794766983766,
+      "distance_ft": 2235.043562439497,
+      "published_pressure": 0.13473926380368106,
+      "classical_rt2_pressure": 0.13657794800533507
+    },
+    {
+      "t": 0.8969013205987053,
+      "distance_ft": 2247.628267182962,
+      "published_pressure": 0.1288343558282209,
+      "classical_rt2_pressure": 0.13159458706080754
+    },
+    {
+      "t": 0.9019231644990341,
+      "distance_ft": 2260.212971926428,
+      "published_pressure": 0.1212423312883435,
+      "classical_rt2_pressure": 0.12302031945583965
+    },
+    {
+      "t": 0.9069450083993627,
+      "distance_ft": 2272.7976766698935,
+      "published_pressure": 0.11027607361963188,
+      "classical_rt2_pressure": 0.11281585546433738
+    },
+    {
+      "t": 0.9119668522996914,
+      "distance_ft": 2285.3823814133593,
+      "published_pressure": 0.08159509202453974,
+      "classical_rt2_pressure": 0.09042969606887283
+    },
+    {
+      "t": 0.9169886962000201,
+      "distance_ft": 2297.9670861568247,
+      "published_pressure": 0.07484662576687107,
+      "classical_rt2_pressure": 0.07117993391515581
+    },
+    {
+      "t": 0.9220105401003489,
+      "distance_ft": 2310.5517909002906,
+      "published_pressure": 0.06219325153374222,
+      "classical_rt2_pressure": 0.06453389618174428
+    },
+    {
+      "t": 0.9270323840006774,
+      "distance_ft": 2323.136495643756,
+      "published_pressure": 0.05628834355828216,
+      "classical_rt2_pressure": 0.05511495659389444
+    },
+    {
+      "t": 0.9320542279010062,
+      "distance_ft": 2335.721200387222,
+      "published_pressure": 0.052914110429447825,
+      "classical_rt2_pressure": 0.04925302666076454
+    },
+    {
+      "t": 0.9370760718013349,
+      "distance_ft": 2348.3059051306873,
+      "published_pressure": 0.047852760736196265,
+      "classical_rt2_pressure": 0.048705492750376375
+    },
+    {
+      "t": 0.952141603502321,
+      "distance_ft": 2386.0600193610844,
+      "published_pressure": 0.047852760736196265,
+      "classical_rt2_pressure": 0.04868363591137659
+    },
+    {
+      "t": 0.9571634474026497,
+      "distance_ft": 2398.64472410455,
+      "published_pressure": 0.047852760736196265,
+      "classical_rt2_pressure": 0.04867370815371546
+    },
+    {
+      "t": 0.9722289791036358,
+      "distance_ft": 2436.398838334947,
+      "published_pressure": 0.047852760736196265,
+      "classical_rt2_pressure": 0.048640769058524574
+    },
+    {
+      "t": 0.9822726669042933,
+      "distance_ft": 2461.5682478218782,
+      "published_pressure": 0.03435582822085892,
+      "classical_rt2_pressure": 0.03799130463203651
+    },
+    {
+      "t": 0.9872945108046218,
+      "distance_ft": 2474.1529525653436,
+      "published_pressure": 0.01411042944785268,
+      "classical_rt2_pressure": 0.02010069577869559
+    }
+  ],
+  "image_sha256": "cbd0ef8a2483bc38d0cf9953d60ba42f41b9fdba7cfc8ece4bb4756638e3f585",
+  "source_pdf_sha256": "b7beee7f1f6ed73bad343813eba19addaab683f3f417ddff4564cf3826fea5dc",
+  "reference_archive": "reference-rt2-240x880.npz",
+  "reference_archive_sha256": "94a82d6eb9c7192b388dbe31d27ae6261ab8247abd3cfc97c58663e781bed55f",
+  "reference": "reference-rt2-480x1760.npz",
+  "reference_sha256": "596d7a1cd09b641382f3c727da1af4ffe703ad5a025bbf6a9f00e0ff6c2ad8ef"
+}

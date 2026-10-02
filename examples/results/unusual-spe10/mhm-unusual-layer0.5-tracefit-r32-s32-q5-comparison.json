@@ -1,0 +1,49 @@
+{
+  "archive": "mhm-unusual-layer0.5-tracefit-r32-s32-q5.npz",
+  "archive_sha256": "5611491803aa9a966e1c69612590c6ca1017999b1394394c62599b9a24b978a0",
+  "reference": "classical-cg2-graded-xy-1440x498.npz",
+  "reference_sha256": "90d4715637a679876b11205f928fb0955c1af267fa3a974c9d3b9aac98b1793f",
+  "integration": "exact intersections of both finite-element meshes and material pixels",
+  "denominator": "corresponding physical norm of the stated numerical CG2 reference",
+  "energy": "integral of K|gradient difference|^2 + |pressure difference|^2",
+  "source_hashes": {
+    "examples/compare_unusual_spe10.py": "be46a47bb2240df93431ba390958939fab40154f79868fa7e2d414ab2cbcde04",
+    "examples/solve_unusual_spe10.py": "b9e832c0cea1c929d65abeddd357d23ee4ff0ac7e0c249f021dfc3b3c27f3685",
+    "examples/solve_unusual_spe10_reference.py": "1a7496ebe879facf65f33fc5c6bc8548820528874464419c2c7caa33e3e985bb",
+    "examples/spe10_adaptive_norms.py": "9727f068fc1e7c2fc948270584634376ef92efbe2cf1db87e0c46cdd1b5f2ed7",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae"
+  },
+  "rows": [
+    {
+      "order": 3,
+      "seconds": 1221.8767301669577,
+      "pressure_absolute": 0.6816645015207918,
+      "pressure_reference": 15.726032254266789,
+      "pressure_relative": 0.04334624846873518,
+      "flux_absolute": 0.8849023624955576,
+      "flux_reference": 9.554367174314226,
+      "flux_relative": 0.09261757962102524,
+      "energy_absolute": 1.6253898327108824,
+      "energy_reference": 22.25232877708596,
+      "energy_relative": 0.07304358339270117
+    },
+    {
+      "order": 4,
+      "seconds": 1350.7309428099543,
+      "pressure_absolute": 0.6816645015207914,
+      "pressure_reference": 15.726032254266787,
+      "pressure_relative": 0.04334624846873516,
+      "flux_absolute": 0.8849023624955574,
+      "flux_reference": 9.554367174314224,
+      "flux_relative": 0.09261757962102522,
+      "energy_absolute": 1.625389832710882,
+      "energy_reference": 22.252328777085957,
+      "energy_relative": 0.07304358339270116
+    }
+  ],
+  "source_changed_during_run": false,
+  "reference_input_sha256": "3a536228173b05fbcf816d6dd9b423a61a377ec408c9cd216d17a30fc3a674a3",
+  "field_identity_verification": "field-sampling-verification.json",
+  "norm_execution_record_sha256": "3c011aba4ff978ca1d4f2cb38e859c1010f5098e6f8fd21a22458d984e439fcc"
+}

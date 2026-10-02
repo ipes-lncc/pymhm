@@ -1,0 +1,296 @@
+{
+  "schema_version": 1,
+  "article": {
+    "doi": "10.1016/j.camwa.2026.01.016",
+    "section": "6.2",
+    "figure": 5,
+    "primary_preprint_url": "https://www.ci2ma.udec.cl/pdf/pre-publicaciones2/2023/pp23-02.pdf",
+    "software_access_statement_url": "https://ipes.lncc.br/#software",
+    "pdf_sha256": "80e5312cf4084806e2747e40afefae662d021d8cafb8986d1ea1f15e2f8e717e"
+  },
+  "scope": "Discriminating numerical checks; no identification of the historical Figure 5 implementation.",
+  "reference_bound": {
+    "reference": "homogeneous Dirichlet, f=1, a=10 below y=1/2 and a=1 above",
+    "method": "DST diagonalization of independently assembled Q1 tensor-product or SW-NE P1 matrices",
+    "bound": "Since a>=1, ||grad(u-u_ref)|| <= ||sqrt(a) grad(u-u_ref)|| = sqrt(int(fu)-int(fu_ref))",
+    "source_sha256": "4eabd7feeecbe333758d763e57d4938e3409ad7fb7a2f259ddd80418e05b3edd",
+    "rows": [
+      {
+        "resolution": 32,
+        "family": "Q1",
+        "squares": 1024,
+        "triangles": null,
+        "energy_squared": 0.011620828793022755,
+        "exact_energy_squared": 0.011652141545313585,
+        "energy_error": 0.005595779864400553,
+        "gradient_error_upper_bound": 0.005595779864400553,
+        "relative_modal_residual": 1.01342706830718e-14
+      },
+      {
+        "resolution": 64,
+        "family": "Q1",
+        "squares": 4096,
+        "triangles": null,
+        "energy_squared": 0.011644307710869167,
+        "exact_energy_squared": 0.011652141545313585,
+        "energy_error": 0.002798898791385385,
+        "gradient_error_upper_bound": 0.002798898791385385,
+        "relative_modal_residual": 3.0420950972462485e-14
+      },
+      {
+        "resolution": 128,
+        "family": "Q1",
+        "squares": 16384,
+        "triangles": null,
+        "energy_squared": 0.011650182670916763,
+        "exact_energy_squared": 0.011652141545313585,
+        "energy_error": 0.0013995979411324275,
+        "gradient_error_upper_bound": 0.0013995979411324275,
+        "relative_modal_residual": 1.4127194470425444e-13
+      },
+      {
+        "resolution": 256,
+        "family": "Q1",
+        "squares": 65536,
+        "triangles": null,
+        "energy_squared": 0.011651651796793665,
+        "exact_energy_squared": 0.011652141545313585,
+        "energy_error": 0.0006998203483185835,
+        "gradient_error_upper_bound": 0.0006998203483185835,
+        "relative_modal_residual": 5.913879541086574e-13
+      },
+      {
+        "resolution": 512,
+        "family": "Q1",
+        "squares": 262144,
+        "triangles": null,
+        "energy_squared": 0.011652019106070584,
+        "exact_energy_squared": 0.011652141545313585,
+        "energy_error": 0.00034991319352278713,
+        "gradient_error_upper_bound": 0.00034991319352278713,
+        "relative_modal_residual": 2.0994759401085806e-12
+      },
+      {
+        "resolution": 1024,
+        "family": "Q1",
+        "squares": 1048576,
+        "triangles": null,
+        "energy_squared": 0.011652110935404624,
+        "exact_energy_squared": 0.011652141545313585,
+        "energy_error": 0.0001749568774346938,
+        "gradient_error_upper_bound": 0.0001749568774346938,
+        "relative_modal_residual": 1.010467554234127e-11
+      },
+      {
+        "resolution": 32,
+        "family": "P1",
+        "squares": 1024,
+        "triangles": 2048,
+        "energy_squared": 0.011594261084338267,
+        "exact_energy_squared": 0.011652141545313585,
+        "energy_error": 0.007607920936452903,
+        "gradient_error_upper_bound": 0.007607920936452903,
+        "relative_modal_residual": 9.964124724160683e-15
+      },
+      {
+        "resolution": 64,
+        "family": "P1",
+        "squares": 4096,
+        "triangles": 8192,
+        "energy_squared": 0.011637619491642135,
+        "exact_energy_squared": 0.011652141545313585,
+        "energy_error": 0.003810781241615742,
+        "gradient_error_upper_bound": 0.003810781241615742,
+        "relative_modal_residual": 3.199947003691087e-14
+      },
+      {
+        "resolution": 128,
+        "family": "P1",
+        "squares": 16384,
+        "triangles": 32768,
+        "energy_squared": 0.011648507219372575,
+        "exact_energy_squared": 0.011652141545313585,
+        "energy_error": 0.0019063908153919846,
+        "gradient_error_upper_bound": 0.0019063908153919846,
+        "relative_modal_residual": 1.3747906042974886e-13
+      },
+      {
+        "resolution": 256,
+        "family": "P1",
+        "squares": 65536,
+        "triangles": 131072,
+        "energy_squared": 0.011651232690167126,
+        "exact_energy_squared": 0.011652141545313585,
+        "energy_error": 0.0009533389462618768,
+        "gradient_error_upper_bound": 0.0009533389462618768,
+        "relative_modal_residual": 6.843489542973245e-13
+      },
+      {
+        "resolution": 512,
+        "family": "P1",
+        "squares": 262144,
+        "triangles": 524288,
+        "energy_squared": 0.011651914312201507,
+        "exact_energy_squared": 0.011652141545313585,
+        "energy_error": 0.0004766897440458153,
+        "gradient_error_upper_bound": 0.0004766897440458153,
+        "relative_modal_residual": 2.1042181069739696e-12
+      },
+      {
+        "resolution": 1024,
+        "family": "P1",
+        "squares": 1048576,
+        "triangles": 2097152,
+        "energy_squared": 0.011652084735694715,
+        "exact_energy_squared": 0.011652141545313585,
+        "energy_error": 0.0002383476848434317,
+        "gradient_error_upper_bound": 0.0002383476848434317,
+        "relative_modal_residual": 1.0551909005175771e-11
+      }
+    ],
+    "fourier_energy_positive_tail_upper_bound": 3.4248010705553673e-15,
+    "assembly_checks": [
+      {
+        "family": "Q1",
+        "resolution": 8,
+        "pressure_coefficient_linf": 2.7755575615628914e-17,
+        "energy_squared": 0.011156046238125814
+      },
+      {
+        "family": "P1",
+        "resolution": 8,
+        "pressure_coefficient_linf": 6.938893903907228e-18,
+        "energy_squared": 0.01077153040380833
+      },
+      {
+        "family": "Q1",
+        "resolution": 16,
+        "pressure_coefficient_linf": 1.249000902703301e-16,
+        "energy_squared": 0.01152718750524183
+      },
+      {
+        "family": "P1",
+        "resolution": 16,
+        "pressure_coefficient_linf": 3.469446951953614e-17,
+        "energy_squared": 0.011423362653162574
+      },
+      {
+        "family": "Q1",
+        "resolution": 32,
+        "pressure_coefficient_linf": 4.2327252813834093e-16,
+        "energy_squared": 0.011620828793022654
+      },
+      {
+        "family": "P1",
+        "resolution": 32,
+        "pressure_coefficient_linf": 2.0816681711721685e-16,
+        "energy_squared": 0.0115942610843382
+      }
+    ],
+    "interpretation": "The stated aligned 1024 by 1024 square reference, interpreted as Q1 or two P1 triangles per square, cannot account for the S2 difference by the reverse triangle inequality. This is not an interval-arithmetic certificate."
+  },
+  "transfer_check": {
+    "rows": [
+      {
+        "setting": "S0",
+        "n": 128,
+        "broken": 0.0025941493705313387,
+        "average_transfer": 0.004005666837472409,
+        "first_transfer": 0.005059697143553697
+      },
+      {
+        "setting": "S0",
+        "n": 256,
+        "broken": 0.0025941493705313387,
+        "average_transfer": 0.005211215666316339,
+        "first_transfer": 0.006999251166576501
+      },
+      {
+        "setting": "S0",
+        "n": 512,
+        "broken": 0.0025941493705313387,
+        "average_transfer": 0.007166681711918339,
+        "first_transfer": 0.00988864890658627
+      },
+      {
+        "setting": "S0",
+        "n": 1024,
+        "broken": 0.0025941493705313387,
+        "average_transfer": 0.010018724321007194,
+        "first_transfer": 0.013998467454550072
+      },
+      {
+        "setting": "S2",
+        "n": 128,
+        "broken": 0.0018943261818104057,
+        "average_transfer": 0.002661658161043513,
+        "first_transfer": 0.00268020544354314
+      },
+      {
+        "setting": "S2",
+        "n": 256,
+        "broken": 0.0018943261818104057,
+        "average_transfer": 0.0029773700547654426,
+        "first_transfer": 0.0029978204778713913
+      },
+      {
+        "setting": "S2",
+        "n": 512,
+        "broken": 0.0018943261818104057,
+        "average_transfer": 0.0037309295756368203,
+        "first_transfer": 0.00374897454676201
+      },
+      {
+        "setting": "S2",
+        "n": 1024,
+        "broken": 0.0018943261818104057,
+        "average_transfer": 0.004965085032270146,
+        "first_transfer": 0.0049796959711423585
+      }
+    ],
+    "source_sha256": "fba1b52ced75756115e8bd8af8b30b98df687c4814251e71952b4b26aad2577e",
+    "local_degree": 4,
+    "local_refinement": 8,
+    "delta_S2": 0.16666666666666666,
+    "source": "Piecewise P4 solution on material-fitted local triangles, transferred to continuous P1 on a SW-NE global Cartesian triangulation.",
+    "average_transfer": "Average values of every incident macro field at each nodal point; no boundary-value overwrite.",
+    "first_transfer": "First incident macro value in the stored macro order; no boundary-value overwrite.",
+    "quadrature": "Triangle centroid after transfer; four grid refinements distinguish growth from a consistent broken-gradient norm.",
+    "interpretation": "Both tested transfer conventions change S0 substantially and fail to explain the published S0 and S2 simultaneously."
+  },
+  "missing_historical_inputs": [
+    "Original macro coordinates and connectivity for each Figure 5 perturbation.",
+    "Local finite-element degrees, local meshes and the quantitative convergence check behind the statement that local errors are negligible.",
+    "Local coefficient quadrature and material representation when a local cell crosses y=1/2.",
+    "Exact trace partition/connectivity and complete Figure 5 solver input.",
+    "Raw S2 values and the executable error-evaluation procedure, including any transfers between meshes."
+  ],
+  "source_inspection": [
+    {
+      "project": "MSL Core",
+      "revision": "7f15f455717173d29080d411a7e732c72c1e87f8",
+      "url": "https://github.com/ipes-lncc/msl_core",
+      "finding": "PiecewiseLagrangeSpace assigns degree+1 unknowns independently to each segment. No Figure 5 input was located."
+    },
+    {
+      "project": "MSL MHM",
+      "revision": "4cb8cf81518284313b680b13fd586ee619f08b99",
+      "url": "https://github.com/ipes-lncc/msl_mhm",
+      "finding": "The generic diffusion example sums local squared errors. It does not identify the Figure 5 local meshes or numerical reference."
+    },
+    {
+      "project": "MHMUN-RAD_Parallel",
+      "source_access": "Source provided privately; public source URL unavailable.",
+      "archive_sha256": "11f3b2193a65aa72e6a3a9362a906215f3580076111ee3f193e5098415521f35",
+      "finding": "The supplied reaction-diffusion driver directly integrates local broken derivatives; it is not identified as the Figure 5 implementation and contains no corresponding input fixture."
+    }
+  ],
+  "conclusion": "The current DG-P2 trace formulation is independently verified but the complete S2 curve is not reproduced. Fine-reference error and the two tested global field-transfer conventions are excluded as sole explanations. No correction to the shared operator is justified by these checks.",
+  "source_hashes": {
+    "independent-aligned-reference-driver": "4eabd7feeecbe333758d763e57d4938e3409ad7fb7a2f259ddd80418e05b3edd",
+    "independent-reference-assembly-check": "eba6cc7d8fc7e1e1531e47b3168aea6368bcc6ba9757a71b05f0df21589c500d",
+    "broken-field-transfer-diagnostic": "fba1b52ced75756115e8bd8af8b30b98df687c4814251e71952b4b26aad2577e",
+    "examples/layered_poisson.py": "9788591c6b9c8761fbff9b8e39e38fd1164268bcbde4b3668ad3fe05afb37b46",
+    "examples/unfitted_campaign.py": "b81db470ff6348517c4c63e653a838eedf492f794948a35ff180488dd114b648"
+  }
+}

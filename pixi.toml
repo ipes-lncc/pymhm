@@ -1,0 +1,278 @@
+[workspace]
+name = "pymhm"
+version = "0.1.0"
+description = "Composable multiscale hybrid mixed finite element methods"
+channels = ["conda-forge"]
+platforms = [
+  "linux-64", "win-64", "osx-64", "osx-arm64",
+  { name = "linux-64-cuda", platform = "linux-64", cuda = "12.9" },
+  { name = "win-64-cuda", platform = "win-64", cuda = "12.9" },
+]
+
+[dependencies]
+python = ">=3.11,<3.14"
+numpy = ">=1.26"
+scipy = ">=1.12"
+threadpoolctl = ">=3.2"
+
+[pypi-dependencies]
+pymhm = { path = ".", editable = true }
+
+[feature.dev.dependencies]
+python-build = ">=1.2"
+hatchling = ">=1.27"
+mypy = ">=1.10"
+pre-commit = ">=3.7"
+ruff = ">=0.11"
+twine = ">=5"
+
+[feature.test.dependencies]
+pytest = ">=8"
+pytest-cov = ">=5"
+pytest-xdist = ">=3.6"
+hypothesis = ">=6.116"
+pyamg = ">=5.3"
+fenics-ufl = ">=2024.2"
+fenics-basix = ">=0.9"
+
+[feature.py311]
+platforms = ["linux-64", "win-64", "osx-64", "osx-arm64"]
+
+[feature.py311.dependencies]
+python = "3.11.*"
+
+[feature.py312]
+platforms = ["linux-64", "win-64", "osx-64", "osx-arm64"]
+
+[feature.py312.dependencies]
+python = "3.12.*"
+
+[feature.native]
+platforms = ["linux-64", "win-64", "osx-64", "osx-arm64"]
+
+[feature.docs.dependencies]
+mkdocs = ">=1.6,<2"
+mkdocs-material = ">=9.5"
+
+[feature.docs.pypi-dependencies]
+mkdocstrings = { version = ">=0.27", extras = ["python"] }
+
+[feature.docs.activation.env]
+NO_MKDOCS_2_WARNING = "1"
+
+[feature.notebooks.dependencies]
+ipykernel = ">=6.29"
+jupyterlab = ">=4"
+nbclient = ">=0.10"
+nbformat = ">=5.10"
+meshio = ">=5.3"
+matplotlib-base = ">=3.8"
+pyamg = ">=5.3"
+
+[feature.visualization.pypi-dependencies]
+pyvista = ">=0.46,<0.50"
+vtk = ">=9.5,<9.7"
+
+[feature.packaging.dependencies]
+rattler-build = ">=0.40"
+actionlint = ">=1.7"
+
+[feature.meshing.dependencies]
+python-gmsh = ">=4.13"
+meshio = ">=5.3"
+netgen = ">=6.2"
+
+[feature.freefem]
+platforms = ["linux-64"]
+
+[feature.freefem.dependencies]
+freefem = { version = ">=4.13,<5", build = "*nompi*" }
+
+[feature.fem]
+platforms = ["linux-64", "osx-64", "osx-arm64"]
+
+[feature.fem.dependencies]
+fenics-dolfinx = ">=0.9,<0.11"
+mpi4py = ">=4"
+petsc4py = ">=3.22"
+
+[feature.intel]
+platforms = ["linux-64", "win-64"]
+
+[feature.intel.dependencies]
+mkl = ">=2024"
+pypardiso = ">=0.4"
+
+[feature.gpu]
+platforms = ["linux-64-cuda", "win-64-cuda"]
+
+[feature.gpu.dependencies]
+cuda-version = "12.9.*"
+cupy = ">=13"
+
+[feature.gpu.pypi-dependencies]
+nvmath-python = ">=1.0,<1.1"
+nvidia-cudss-cu12 = "==0.8.*"
+cuda-bindings = ">=12.9.2,<13"
+
+[tasks]
+lint = "ruff check src tests scripts benchmarks examples"
+format = "ruff format src tests scripts benchmarks examples"
+format-check = "ruff format --check src tests scripts benchmarks examples"
+typecheck = "mypy"
+test = "pytest -q"
+coverage-run = { cmd = "pytest -n 2 --dist=loadscope --cov=pymhm --cov-branch --cov-report=term-missing --cov-report=xml:build/reports/coverage/coverage.xml --cov-report=json:build/reports/coverage/coverage.json --cov-fail-under=99", env = { OMP_NUM_THREADS = "1", OPENBLAS_NUM_THREADS = "1", MKL_NUM_THREADS = "1", BLIS_NUM_THREADS = "1", VECLIB_MAXIMUM_THREADS = "1" } }
+test-cov = { cmd = "python scripts/check_coverage.py build/reports/coverage/coverage.json", depends-on = ["coverage-run"] }
+test-parallel = "pytest -q -n auto"
+test-fem = "pytest -q -m fem"
+test-mpi = "pytest -q -m mpi"
+test-meshing = "pytest -q -m meshing"
+test-visualization = "pytest -q tests/test_visualization.py"
+build = "python -m build"
+check-dist = "python scripts/check_distribution.py"
+conda-build = "rattler-build build --recipe recipe/recipe.yaml --output-dir build/conda --no-include-recipe"
+ci-check = "actionlint"
+metadata-check = "python scripts/check_metadata.py"
+notebooks-run = "python scripts/run_notebooks.py"
+gallery-darcy = "python examples/plot_darcy_cases.py"
+gallery-darcy-audit = "python examples/plot_darcy_audit.py"
+gallery-reference = "python examples/plot_reference_comparison.py"
+gallery-neopz = "python examples/plot_neopz_comparison.py"
+gallery-flow = "python examples/plot_flow_cases.py"
+gallery-flow-audit = "python examples/plot_flow_audit.py"
+gallery-scalars = "python examples/plot_scalar_elasticity.py"
+gallery-elasticity = "python examples/plot_elasticity.py"
+gallery-tetra-pk = "python -m examples.plot_tetra_pk"
+gallery-star-polyhedra = "python -m examples.plot_star_polyhedra"
+gallery-mixed-elasticity3d = "python -m examples.plot_mixed_elasticity3d"
+gallery-mixed-elasticity = "python examples/plot_mixed_elasticity.py"
+gallery-elasticity-reference = "python examples/plot_elasticity_reference.py"
+gallery-darcy-bdm = "python examples/plot_darcy_bdm.py"
+gallery-native-extensions = "python examples/plot_native_extensions.py"
+gallery-reconstruction = "python examples/plot_reconstruction_moments.py"
+gallery-estimator = "python examples/plot_estimator.py"
+gallery-performance = "python examples/plot_performance.py"
+gallery-large = "python examples/plot_large_local.py"
+gallery-published = "python examples/plot_reproductions.py"
+gallery-convergence = "python examples/plot_verification.py"
+gallery-spe10-data = "python examples/plot_spe10_data.py --layers-only"
+gallery-spe10-darcy = "python examples/plot_spe10_darcy.py"
+gallery-spe10-flux = "python examples/plot_spe10_flux.py"
+gallery-spe10-brinkman = "python examples/plot_spe10_brinkman.py"
+gallery-spe10-taylor-hood = "python examples/plot_spe10_taylor_hood.py"
+gallery-quarter-spot = "python examples/plot_quarter_spot.py"
+gallery-quarter-reference = "python examples/plot_quarter_reference.py"
+gallery-quarter-elevation = "python examples/plot_quarter_elevation.py"
+gallery-quarter-geometry = "python examples/plot_quarter_geometry.py"
+gallery-quarter-classical = "python examples/plot_quarter_classical.py"
+gallery = { depends-on = ["gallery-darcy", "gallery-darcy-audit", "gallery-reference", "gallery-neopz", "gallery-flow", "gallery-flow-audit", "gallery-scalars", "gallery-elasticity", "gallery-mixed-elasticity", "gallery-elasticity-reference", "gallery-darcy-bdm", "gallery-native-extensions", "gallery-reconstruction", "gallery-estimator", "gallery-performance", "gallery-large", "gallery-published", "gallery-convergence"] }
+gallery-oseen = "python examples/plot_oseen.py"
+gallery-helmholtz-article = "python -m examples.plot_helmholtz_article"
+gallery-maxwell-nanoguide = "python -m examples.maxwell_nanoguide_results --plot"
+gallery-elastodynamics = "python -m examples.elastodynamics_results"
+campaign-elastodynamics = "python -m examples.elastodynamics_campaign"
+campaign-maxwell-nanoguide = "python -m examples.maxwell_nanoguide"
+campaign-helmholtz-stability = "python -m examples.helmholtz_stability"
+gallery-mixed-well = "python examples/plot_mixed_well_geometries.py"
+mh2m-campaign = "python -m examples.mh2m_campaign"
+mh2m-trace-campaign = "python -m examples.mh2m_trace_campaign"
+gallery-mh2m = "python -m examples.plot_mh2m"
+mh2m-heterogeneous-campaign = "python -m examples.mh2m_heterogeneous --references 32 64 128 256 512 1024 --norm-workers 8"
+gallery-mh2m-heterogeneous = "python -m examples.plot_mh2m_heterogeneous"
+gallery-mh2m-cg3 = "python -m examples.plot_mh2m_cg3"
+mh2m-cg3-comparison = "python -m examples.compare_mh2m_cg3"
+mh2m-cg3-controls = "python -m examples.compare_mh2m_cg3_controls"
+campaign-mh3d = "python -m examples.mh3d_campaign"
+gallery-mh3d = "python -m examples.plot_mh3d"
+unusual-campaign = "python -m examples.solve_unusual"
+gallery-unusual = "python -m examples.plot_unusual"
+verify-mshho = "python examples/verify_mshho.py"
+verify-tensor-rt = "python examples/verify_tensor_rt.py"
+verify-polygons = "python examples/verify_polygons.py"
+verify-transport = "python -m examples.transport_campaign --collect"
+verify-nested = "python examples/verify_nested.py"
+verify-weighted-estimator = "python examples/verify_weighted_estimator.py"
+verify-periodic = "python examples/verify_periodic.py"
+verify-analytic = "python examples/verify_analytic.py"
+verify-rad-conditioning = "python examples/verify_rad_conditioning.py"
+verify-rad-layer = "python examples/verify_rad_layer.py"
+benchmark = "python benchmarks/scaling.py"
+benchmark-large = "python benchmarks/large_local.py"
+benchmark-gpu = "python benchmarks/gpu.py"
+precommit = "pre-commit run --all-files"
+docs-build = "mkdocs build --strict"
+docs-check = { cmd = "python scripts/check_docs_math.py", depends-on = ["docs-build"] }
+docs-serve = "mkdocs serve"
+
+[feature.notebooks.tasks.mh-campaign]
+cmd = "python -m examples.mh_campaign --workers 8"
+
+[feature.notebooks.tasks.gallery-mh]
+cmd = "python -m examples.plot_mh"
+
+[feature.notebooks.tasks.flow3d-campaign]
+cmd = "python examples/solve_flow3d.py"
+
+[feature.notebooks.tasks.gals3d-campaign]
+cmd = "python examples/solve_gals3d.py"
+
+[feature.notebooks.tasks.gallery-gals3d]
+cmd = "python examples/plot_gals3d.py"
+
+[feature.notebooks.tasks.pgmhm-campaign]
+cmd = "python examples/pgmhm_campaign.py"
+
+[feature.notebooks.tasks.gallery-pgmhm]
+cmd = "python examples/plot_pgmhm.py"
+
+[feature.notebooks.tasks.gallery-flow3d]
+cmd = "python examples/plot_flow3d.py"
+
+[feature.notebooks.tasks.planar3d-campaign]
+cmd = "python examples/solve_planar3d.py"
+
+[feature.notebooks.tasks.gallery-planar3d]
+cmd = "python examples/plot_planar3d.py"
+
+[feature.notebooks.tasks.helmholtz-campaign]
+cmd = "python -m examples.helmholtz_campaign --workers 8"
+
+[feature.notebooks.tasks.gallery-helmholtz]
+cmd = "python -m examples.plot_helmholtz"
+
+[feature.notebooks.tasks.reconstruction3d-uniform]
+cmd = "python -m examples.solve_reconstruction3d uniform"
+
+[feature.notebooks.tasks.reconstruction3d-adaptive]
+cmd = "python -m examples.solve_reconstruction3d adaptive"
+
+[feature.notebooks.tasks.reconstruction3d-resolution]
+cmd = "python -m examples.reconstruction3d_resolution"
+
+[feature.notebooks.tasks.gallery-reconstruction3d]
+cmd = "python -m examples.plot_reconstruction3d"
+
+[feature.notebooks.tasks.reconstruction3d-rt-order]
+cmd = "python -m examples.reconstruction3d_rt_order"
+
+[feature.notebooks.tasks.maxwell-campaign]
+cmd = "python -m examples.maxwell_campaign"
+
+[feature.notebooks.tasks.gallery-maxwell]
+cmd = "python -m examples.plot_maxwell"
+
+[environments]
+default = { features = ["native", "dev", "test"], solve-group = "core" }
+test = { features = ["native", "dev", "test"], solve-group = "core" }
+test-py311 = { features = ["dev", "test", "py311"], solve-group = "py311" }
+test-py312 = { features = ["dev", "test", "py312"], solve-group = "py312" }
+docs = { features = ["native", "docs"], solve-group = "docs" }
+notebooks = { features = ["native", "notebooks", "visualization"], solve-group = "notebooks" }
+packaging = { features = ["native", "dev", "packaging"], solve-group = "packaging" }
+meshing = { features = ["native", "dev", "test", "meshing"], solve-group = "meshing" }
+fem = { features = ["dev", "test", "fem"], solve-group = "fem" }
+remeshing = { features = ["dev", "test", "freefem"], solve-group = "remeshing" }
+intel = { features = ["dev", "test", "intel"], solve-group = "intel" }
+gpu = { features = ["dev", "test", "gpu"], solve-group = "gpu" }
+
+visualization = { features = ["native", "dev", "test", "visualization"], solve-group = "visualization" }

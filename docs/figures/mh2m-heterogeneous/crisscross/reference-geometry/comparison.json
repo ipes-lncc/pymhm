@@ -1,0 +1,170 @@
+{
+  "source_sha256": {
+    "examples/mh2m_heterogeneous.py": "e73e34fde996e3d20acdd1f7efa90e1cea9655f51014e2dc2128d6ed5b94ba9b",
+    "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+    "examples/mh2m_campaign.py": "f4ea5f16bc83aae5b6ed65e6b836370a26bcb2f7d1e18326713042e3cf329d14",
+    "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+    "src/pymhm/darcy.py": "6ed895bac751317e58ac5dea5129b9f5eb944d7492191c5d10a8a9c7ebd2419c",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+    "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d"
+  },
+  "printed_profile_sha256": "8203c14522804ac0446ef1f40c087373bde9fafa40f1a7b873965816ebd429d0",
+  "gamma": 1.8,
+  "epsilon": "1/14",
+  "source": "-2*x*(x-1)-2*y*(y-1)",
+  "boundary": "homogeneous Dirichlet",
+  "n": 128,
+  "cases": [
+    {
+      "geometry": "northwest-southeast",
+      "quadrature_order": 10,
+      "dofs": 16641,
+      "triangles": 32768,
+      "area": 1.0,
+      "maximum_diameter": 0.011048543456039806,
+      "residual": 8.095139784762733e-13,
+      "pressure_range": [
+        0.0,
+        0.016816330313772398
+      ],
+      "archive": "northwest-southeast-q10.npz",
+      "archive_sha256": "db8cc50a8c36174710075a5cfc0674cd7145e09b48006de679d0af7f76b04e07",
+      "profiles": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "rms_difference_to_raster_centre": 0.00031360907102264074,
+          "maximum_distance_outside_raster_envelope": 0.0008670057225108711,
+          "fraction_intersecting_raster_envelope": 0.4206008583690987,
+          "profile_maximum": 0.016816330313772398
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "rms_difference_to_raster_centre": 0.00017728872007344236,
+          "maximum_distance_outside_raster_envelope": 0.00048168006329067127,
+          "fraction_intersecting_raster_envelope": 0.35668789808917195,
+          "profile_maximum": 0.016816330313772398
+        }
+      ],
+      "seconds": 14.3997352339793
+    },
+    {
+      "geometry": "northwest-southeast",
+      "quadrature_order": 14,
+      "dofs": 16641,
+      "triangles": 32768,
+      "area": 1.0,
+      "maximum_diameter": 0.011048543456039806,
+      "residual": 7.970616551564581e-13,
+      "pressure_range": [
+        0.0,
+        0.016816330313772967
+      ],
+      "archive": "northwest-southeast-q14.npz",
+      "archive_sha256": "94f10a7d1f79a7217c4ff6bd34962f027696a4a5c5b710d2b320b2704e084425",
+      "profiles": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "rms_difference_to_raster_centre": 0.00031360907102261526,
+          "maximum_distance_outside_raster_envelope": 0.000867005722512925,
+          "fraction_intersecting_raster_envelope": 0.4206008583690987,
+          "profile_maximum": 0.016816330313772967
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "rms_difference_to_raster_centre": 0.0001772887200732823,
+          "maximum_distance_outside_raster_envelope": 0.00048168006328956625,
+          "fraction_intersecting_raster_envelope": 0.35668789808917195,
+          "profile_maximum": 0.016816330313772967
+        }
+      ],
+      "seconds": 27.788804987911135,
+      "previous_order_pressure_difference_l2_relative": 8.776892116759593e-13,
+      "previous_order_energy_difference_relative": 2.3196072797702376e-11
+    },
+    {
+      "geometry": "crisscross",
+      "quadrature_order": 10,
+      "dofs": 33025,
+      "triangles": 65536,
+      "area": 1.0,
+      "maximum_diameter": 0.0078125,
+      "residual": 1.69636586122606e-12,
+      "pressure_range": [
+        0.0,
+        0.016962823399803175
+      ],
+      "archive": "crisscross-q10.npz",
+      "archive_sha256": "a06020ad6b484186c5495c531fa724eefe290dffdf88e301ab9b6c80f680cdec",
+      "profiles": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "rms_difference_to_raster_centre": 0.00028621392940917745,
+          "maximum_distance_outside_raster_envelope": 0.0008347300614063996,
+          "fraction_intersecting_raster_envelope": 0.5858369098712446,
+          "profile_maximum": 0.016962823399803175
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "rms_difference_to_raster_centre": 0.00018566601814930204,
+          "maximum_distance_outside_raster_envelope": 0.0005270044411562,
+          "fraction_intersecting_raster_envelope": 0.35987261146496813,
+          "profile_maximum": 0.016962823399803175
+        }
+      ],
+      "seconds": 32.04236426297575
+    },
+    {
+      "geometry": "crisscross",
+      "quadrature_order": 14,
+      "dofs": 33025,
+      "triangles": 65536,
+      "area": 1.0,
+      "maximum_diameter": 0.0078125,
+      "residual": 1.6702821250194358e-12,
+      "pressure_range": [
+        0.0,
+        0.01696282339980347
+      ],
+      "archive": "crisscross-q14.npz",
+      "archive_sha256": "8989ab849a7ee47e4f265992a3bada8af7de44ec7f392ab78e62d630d75de579",
+      "profiles": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "rms_difference_to_raster_centre": 0.0002862139294091514,
+          "maximum_distance_outside_raster_envelope": 0.0008347300614066793,
+          "fraction_intersecting_raster_envelope": 0.5858369098712446,
+          "profile_maximum": 0.01696282339980347
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "rms_difference_to_raster_centre": 0.0001856660181493639,
+          "maximum_distance_outside_raster_envelope": 0.0005270044411562659,
+          "fraction_intersecting_raster_envelope": 0.35987261146496813,
+          "profile_maximum": 0.01696282339980347
+        }
+      ],
+      "seconds": 59.805145349004306,
+      "previous_order_pressure_difference_l2_relative": 6.150004023184691e-14,
+      "previous_order_energy_difference_relative": 6.2198672004406334e-12
+    }
+  ],
+  "source_changed_during_run": false,
+  "method": "Classical conforming P1; identical coefficient/source and n128 Cartesian subdivisions, independently specified diagonal connectivity",
+  "geometry_source": "Barros2022 dissertation Figure4, https://www.lncc.br/~alm/students/frankdissert.pdf, printed p54/PDF p56",
+  "comparison_scope": "Visible raster columns only, not volume errors; original CG reference remains unchanged",
+  "driver_sha256": {
+    "reference-geometry-control": "47eaae4d620644eee6e4eb88e526ed98692a04f47ba0eb5d955de12ca1871ee2"
+  }
+}

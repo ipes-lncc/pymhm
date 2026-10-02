@@ -1,0 +1,1952 @@
+{
+  "article": "L09",
+  "doi": "10.1137/24M1673073",
+  "figure": 9,
+  "pdf_page": 26,
+  "field": "raw MHM pressure u_Hh, not Oswald potential",
+  "digitization": "visible blue initial and green adapted samples; original raster; median colored pixel per sampled column",
+  "distance_uncertainty_ft": 5.033881897386253,
+  "pressure_uncertainty": 0.0033742331288343563,
+  "image_sha256": "cbd0ef8a2483bc38d0cf9953d60ba42f41b9fdba7cfc8ece4bb4756638e3f585",
+  "convention": "Initial 512 and adapted 4783 macrotriangles; published adapted mesh has 3786. The stated local/trace degrees are preserved, with four local triangles throughout this campaign; the modified historical remeshing wrapper is unavailable.",
+  "curves": [
+    {
+      "curve": "initial",
+      "level": 0,
+      "macro_triangles": 512,
+      "archive": "mhm-level0.npz",
+      "archive_sha256": "beb996d97b7f88eee9da32370a648b4254090627f714176120c319d2051da42c",
+      "sample_count": 190,
+      "rms_difference": 0.01917564787233247,
+      "maximum_difference": 0.06548013322184065,
+      "samples": [
+        {
+          "t": 0.013056794140854613,
+          "distance_ft": 32.72023233301065,
+          "published_pressure": 0.9673312883435583,
+          "pymhm_pressure": 0.960273572135766
+        },
+        {
+          "t": 0.01807863804118331,
+          "distance_ft": 45.304937076476286,
+          "published_pressure": 0.9572085889570553,
+          "pymhm_pressure": 0.9459594771965
+        },
+        {
+          "t": 0.023100481941512006,
+          "distance_ft": 57.889641819941914,
+          "published_pressure": 0.9496165644171779,
+          "pymhm_pressure": 0.9365512994732779
+        },
+        {
+          "t": 0.028122325841840705,
+          "distance_ft": 70.47434656340755,
+          "published_pressure": 0.9420245398773006,
+          "pymhm_pressure": 0.9320490389660994
+        },
+        {
+          "t": 0.0331441697421694,
+          "distance_ft": 83.05905130687319,
+          "published_pressure": 0.9369631901840492,
+          "pymhm_pressure": 0.9264640031147613
+        },
+        {
+          "t": 0.0381660136424981,
+          "distance_ft": 95.64375605033882,
+          "published_pressure": 0.9276840490797547,
+          "pymhm_pressure": 0.926099113174324
+        },
+        {
+          "t": 0.0431878575428268,
+          "distance_ft": 108.22846079380446,
+          "published_pressure": 0.9217791411042945,
+          "pymhm_pressure": 0.9258333839969393
+        },
+        {
+          "t": 0.04820970144315549,
+          "distance_ft": 120.81316553727008,
+          "published_pressure": 0.9141871165644172,
+          "pymhm_pressure": 0.918964467418846
+        },
+        {
+          "t": 0.05323154534348419,
+          "distance_ft": 133.39787028073573,
+          "published_pressure": 0.9074386503067485,
+          "pymhm_pressure": 0.9094952478390129
+        },
+        {
+          "t": 0.05825338924381289,
+          "distance_ft": 145.98257502420137,
+          "published_pressure": 0.8964723926380369,
+          "pymhm_pressure": 0.89742572525744
+        },
+        {
+          "t": 0.06327523314414159,
+          "distance_ft": 158.567279767667,
+          "published_pressure": 0.8846625766871166,
+          "pymhm_pressure": 0.8799114162520201
+        },
+        {
+          "t": 0.06829707704447027,
+          "distance_ft": 171.1519845111326,
+          "published_pressure": 0.8618865030674847,
+          "pymhm_pressure": 0.8700012598439639
+        },
+        {
+          "t": 0.07331892094479897,
+          "distance_ft": 183.73668925459825,
+          "published_pressure": 0.8568251533742332,
+          "pymhm_pressure": 0.8601070901902897
+        },
+        {
+          "t": 0.07834076484512767,
+          "distance_ft": 196.32139399806388,
+          "published_pressure": 0.8517638036809816,
+          "pymhm_pressure": 0.8502289072909978
+        },
+        {
+          "t": 0.08336260874545637,
+          "distance_ft": 208.90609874152952,
+          "published_pressure": 0.8467024539877301,
+          "pymhm_pressure": 0.8403667111460873
+        },
+        {
+          "t": 0.08838445264578507,
+          "distance_ft": 221.49080348499515,
+          "published_pressure": 0.8416411042944785,
+          "pymhm_pressure": 0.8305205017555588
+        },
+        {
+          "t": 0.09340629654611377,
+          "distance_ft": 234.0755082284608,
+          "published_pressure": 0.836579754601227,
+          "pymhm_pressure": 0.8206902791194122
+        },
+        {
+          "t": 0.09842814044644246,
+          "distance_ft": 246.66021297192643,
+          "published_pressure": 0.8340490797546012,
+          "pymhm_pressure": 0.8241479958645551
+        },
+        {
+          "t": 0.10847182824709985,
+          "distance_ft": 271.82962245885767,
+          "published_pressure": 0.830674846625767,
+          "pymhm_pressure": 0.817034468142149
+        },
+        {
+          "t": 0.11349367214742855,
+          "distance_ft": 284.4143272023233,
+          "published_pressure": 0.8281441717791411,
+          "pymhm_pressure": 0.8155725673551051
+        },
+        {
+          "t": 0.11851551604775724,
+          "distance_ft": 296.99903194578894,
+          "published_pressure": 0.8256134969325154,
+          "pymhm_pressure": 0.8164547026105481
+        },
+        {
+          "t": 0.12353735994808594,
+          "distance_ft": 309.5837366892546,
+          "published_pressure": 0.8222392638036811,
+          "pymhm_pressure": 0.8119709443654614
+        },
+        {
+          "t": 0.12855920384841463,
+          "distance_ft": 322.1684414327202,
+          "published_pressure": 0.8129601226993866,
+          "pymhm_pressure": 0.7945333023056386
+        },
+        {
+          "t": 0.13358104774874333,
+          "distance_ft": 334.75314617618585,
+          "published_pressure": 0.7944018404907975,
+          "pymhm_pressure": 0.7807367384056391
+        },
+        {
+          "t": 0.13860289164907202,
+          "distance_ft": 347.3378509196515,
+          "published_pressure": 0.779217791411043,
+          "pymhm_pressure": 0.7669991347550579
+        },
+        {
+          "t": 0.14362473554940072,
+          "distance_ft": 359.9225556631171,
+          "published_pressure": 0.7581288343558282,
+          "pymhm_pressure": 0.7684969277249288
+        },
+        {
+          "t": 0.14864657944972942,
+          "distance_ft": 372.50726040658276,
+          "published_pressure": 0.7530674846625767,
+          "pymhm_pressure": 0.7397008082021502
+        },
+        {
+          "t": 0.15366842335005812,
+          "distance_ft": 385.0919651500484,
+          "published_pressure": 0.731978527607362,
+          "pymhm_pressure": 0.7277273172753014
+        },
+        {
+          "t": 0.16371211115071552,
+          "distance_ft": 410.26137463697967,
+          "published_pressure": 0.7184815950920246,
+          "pymhm_pressure": 0.7039312493185793
+        },
+        {
+          "t": 0.16873395505104422,
+          "distance_ft": 422.8460793804453,
+          "published_pressure": 0.7159509202453989,
+          "pymhm_pressure": 0.6983648016381022
+        },
+        {
+          "t": 0.1787776428517016,
+          "distance_ft": 448.0154888673766,
+          "published_pressure": 0.7049846625766871,
+          "pymhm_pressure": 0.6904517766929499
+        },
+        {
+          "t": 0.188821330652359,
+          "distance_ft": 473.18489835430785,
+          "published_pressure": 0.7108895705521472,
+          "pymhm_pressure": 0.7081954777572722
+        },
+        {
+          "t": 0.1938431745526877,
+          "distance_ft": 485.7696030977735,
+          "published_pressure": 0.7092024539877301,
+          "pymhm_pressure": 0.6907516939340016
+        },
+        {
+          "t": 0.1988650184530164,
+          "distance_ft": 498.3543078412391,
+          "published_pressure": 0.6990797546012271,
+          "pymhm_pressure": 0.6793923030637685
+        },
+        {
+          "t": 0.2038868623533451,
+          "distance_ft": 510.93901258470476,
+          "published_pressure": 0.6906441717791412,
+          "pymhm_pressure": 0.6633882510321034
+        },
+        {
+          "t": 0.2089087062536738,
+          "distance_ft": 523.5237173281704,
+          "published_pressure": 0.6822085889570553,
+          "pymhm_pressure": 0.6537125806553405
+        },
+        {
+          "t": 0.2139305501540025,
+          "distance_ft": 536.108422071636,
+          "published_pressure": 0.6737730061349694,
+          "pymhm_pressure": 0.6460569744563949
+        },
+        {
+          "t": 0.2189523940543312,
+          "distance_ft": 548.6931268151017,
+          "published_pressure": 0.6644938650306749,
+          "pymhm_pressure": 0.6413174513495657
+        },
+        {
+          "t": 0.2239742379546599,
+          "distance_ft": 561.2778315585673,
+          "published_pressure": 0.661963190184049,
+          "pymhm_pressure": 0.6410094119265302
+        },
+        {
+          "t": 0.2289960818549886,
+          "distance_ft": 573.8625363020329,
+          "published_pressure": 0.6602760736196319,
+          "pymhm_pressure": 0.6359002123025054
+        },
+        {
+          "t": 0.2340179257553173,
+          "distance_ft": 586.4472410454986,
+          "published_pressure": 0.6569018404907976,
+          "pymhm_pressure": 0.633461288821007
+        },
+        {
+          "t": 0.239039769655646,
+          "distance_ft": 599.0319457889642,
+          "published_pressure": 0.6552147239263804,
+          "pymhm_pressure": 0.6302051715017936
+        },
+        {
+          "t": 0.2440616135559747,
+          "distance_ft": 611.6166505324298,
+          "published_pressure": 0.651840490797546,
+          "pymhm_pressure": 0.6267338074947656
+        },
+        {
+          "t": 0.2490834574563034,
+          "distance_ft": 624.2013552758955,
+          "published_pressure": 0.6501533742331288,
+          "pymhm_pressure": 0.6212413553502204
+        },
+        {
+          "t": 0.25410530135663206,
+          "distance_ft": 636.7860600193611,
+          "published_pressure": 0.6450920245398774,
+          "pymhm_pressure": 0.628278996109691
+        },
+        {
+          "t": 0.2591271452569608,
+          "distance_ft": 649.3707647628268,
+          "published_pressure": 0.6434049079754601,
+          "pymhm_pressure": 0.6163306776656313
+        },
+        {
+          "t": 0.26414898915728946,
+          "distance_ft": 661.9554695062924,
+          "published_pressure": 0.6417177914110429,
+          "pymhm_pressure": 0.6137668511125368
+        },
+        {
+          "t": 0.2691708330576182,
+          "distance_ft": 674.540174249758,
+          "published_pressure": 0.6391871165644172,
+          "pymhm_pressure": 0.6109797467283336
+        },
+        {
+          "t": 0.27419267695794686,
+          "distance_ft": 687.1248789932237,
+          "published_pressure": 0.6366564417177915,
+          "pymhm_pressure": 0.6094784030445591
+        },
+        {
+          "t": 0.2792145208582756,
+          "distance_ft": 699.7095837366893,
+          "published_pressure": 0.6349693251533742,
+          "pymhm_pressure": 0.6035409691421834
+        },
+        {
+          "t": 0.28423636475860425,
+          "distance_ft": 712.2942884801549,
+          "published_pressure": 0.6282208588957056,
+          "pymhm_pressure": 0.5937015627909988
+        },
+        {
+          "t": 0.289258208658933,
+          "distance_ft": 724.8789932236206,
+          "published_pressure": 0.6172546012269939,
+          "pymhm_pressure": 0.5737268533894919
+        },
+        {
+          "t": 0.29428005255926165,
+          "distance_ft": 737.4636979670862,
+          "published_pressure": 0.6071319018404908,
+          "pymhm_pressure": 0.5668288433151274
+        },
+        {
+          "t": 0.2993018964595904,
+          "distance_ft": 750.0484027105518,
+          "published_pressure": 0.5970092024539877,
+          "pymhm_pressure": 0.5503283563851277
+        },
+        {
+          "t": 0.30432374035991905,
+          "distance_ft": 762.6331074540175,
+          "published_pressure": 0.5851993865030676,
+          "pymhm_pressure": 0.5486125773801556
+        },
+        {
+          "t": 0.3093455842602478,
+          "distance_ft": 775.2178121974831,
+          "published_pressure": 0.5750766871165645,
+          "pymhm_pressure": 0.5389459987197417
+        },
+        {
+          "t": 0.31436742816057645,
+          "distance_ft": 787.8025169409487,
+          "published_pressure": 0.5784509202453987,
+          "pymhm_pressure": 0.5364879257296646
+        },
+        {
+          "t": 0.3193892720609051,
+          "distance_ft": 800.3872216844143,
+          "published_pressure": 0.5700153374233128,
+          "pymhm_pressure": 0.5045352042014721
+        },
+        {
+          "t": 0.3244111159612338,
+          "distance_ft": 812.9719264278799,
+          "published_pressure": 0.557361963190184,
+          "pymhm_pressure": 0.5025859845285755
+        },
+        {
+          "t": 0.3294329598615625,
+          "distance_ft": 825.5566311713455,
+          "published_pressure": 0.5480828220858897,
+          "pymhm_pressure": 0.49987045018119936
+        },
+        {
+          "t": 0.3344548037618912,
+          "distance_ft": 838.1413359148112,
+          "published_pressure": 0.5278374233128834,
+          "pymhm_pressure": 0.49638860115934375
+        },
+        {
+          "t": 0.3394766476622199,
+          "distance_ft": 850.7260406582768,
+          "published_pressure": 0.518558282208589,
+          "pymhm_pressure": 0.4915743937422019
+        },
+        {
+          "t": 0.3444984915625486,
+          "distance_ft": 863.3107454017425,
+          "published_pressure": 0.5067484662576687,
+          "pymhm_pressure": 0.4815533660431799
+        },
+        {
+          "t": 0.3495203354628773,
+          "distance_ft": 875.8954501452081,
+          "published_pressure": 0.4991564417177914,
+          "pymhm_pressure": 0.47587499153329893
+        },
+        {
+          "t": 0.354542179363206,
+          "distance_ft": 888.4801548886737,
+          "published_pressure": 0.49409509202453983,
+          "pymhm_pressure": 0.4813970809821329
+        },
+        {
+          "t": 0.3595640232635347,
+          "distance_ft": 901.0648596321394,
+          "published_pressure": 0.48734662576687116,
+          "pymhm_pressure": 0.46385158309449104
+        },
+        {
+          "t": 0.3645858671638634,
+          "distance_ft": 913.649564375605,
+          "published_pressure": 0.48059815950920237,
+          "pymhm_pressure": 0.457506549165564
+        },
+        {
+          "t": 0.3696077110641921,
+          "distance_ft": 926.2342691190706,
+          "published_pressure": 0.4738496932515337,
+          "pymhm_pressure": 0.45093929543028816
+        },
+        {
+          "t": 0.3746295549645208,
+          "distance_ft": 938.8189738625363,
+          "published_pressure": 0.4924079754601227,
+          "pymhm_pressure": 0.4638747169809237
+        },
+        {
+          "t": 0.3796513988648495,
+          "distance_ft": 951.4036786060019,
+          "published_pressure": 0.5151840490797546,
+          "pymhm_pressure": 0.4503104624878668
+        },
+        {
+          "t": 0.38467324276517817,
+          "distance_ft": 963.9883833494675,
+          "published_pressure": 0.5050613496932516,
+          "pymhm_pressure": 0.4613955501103265
+        },
+        {
+          "t": 0.3896950866655069,
+          "distance_ft": 976.5730880929332,
+          "published_pressure": 0.49493865030674844,
+          "pymhm_pressure": 0.46096706669181053
+        },
+        {
+          "t": 0.39471693056583557,
+          "distance_ft": 989.1577928363988,
+          "published_pressure": 0.48565950920245393,
+          "pymhm_pressure": 0.4501854385885946
+        },
+        {
+          "t": 0.3997387744661643,
+          "distance_ft": 1001.7424975798644,
+          "published_pressure": 0.4755368098159509,
+          "pymhm_pressure": 0.45889438217941797
+        },
+        {
+          "t": 0.40476061836649296,
+          "distance_ft": 1014.3272023233301,
+          "published_pressure": 0.467101226993865,
+          "pymhm_pressure": 0.4572501810855414
+        },
+        {
+          "t": 0.4097824622668217,
+          "distance_ft": 1026.9119070667957,
+          "published_pressure": 0.46119631901840485,
+          "pymhm_pressure": 0.44792128316069135
+        },
+        {
+          "t": 0.41480430616715036,
+          "distance_ft": 1039.4966118102614,
+          "published_pressure": 0.46035276073619624,
+          "pymhm_pressure": 0.44174024731507666
+        },
+        {
+          "t": 0.4198261500674791,
+          "distance_ft": 1052.081316553727,
+          "published_pressure": 0.45950920245398774,
+          "pymhm_pressure": 0.42927864813782135
+        },
+        {
+          "t": 0.42484799396780776,
+          "distance_ft": 1064.6660212971926,
+          "published_pressure": 0.4578220858895705,
+          "pymhm_pressure": 0.4405870226238735
+        },
+        {
+          "t": 0.4298698378681365,
+          "distance_ft": 1077.2507260406583,
+          "published_pressure": 0.4561349693251533,
+          "pymhm_pressure": 0.41991874509455007
+        },
+        {
+          "t": 0.43489168176846515,
+          "distance_ft": 1089.835430784124,
+          "published_pressure": 0.4544478527607362,
+          "pymhm_pressure": 0.44014039468995364
+        },
+        {
+          "t": 0.4399135256687939,
+          "distance_ft": 1102.4201355275895,
+          "published_pressure": 0.45276073619631896,
+          "pymhm_pressure": 0.4341587215812595
+        },
+        {
+          "t": 0.44493536956912255,
+          "distance_ft": 1115.0048402710552,
+          "published_pressure": 0.45276073619631896,
+          "pymhm_pressure": 0.4372017558060754
+        },
+        {
+          "t": 0.4499572134694513,
+          "distance_ft": 1127.5895450145208,
+          "published_pressure": 0.45276073619631896,
+          "pymhm_pressure": 0.43415641950430917
+        },
+        {
+          "t": 0.45497905736977995,
+          "distance_ft": 1140.1742497579864,
+          "published_pressure": 0.45276073619631896,
+          "pymhm_pressure": 0.43719780957604465
+        },
+        {
+          "t": 0.4600009012701087,
+          "distance_ft": 1152.758954501452,
+          "published_pressure": 0.45276073619631896,
+          "pymhm_pressure": 0.43719494595322883
+        },
+        {
+          "t": 0.46502274517043735,
+          "distance_ft": 1165.3436592449177,
+          "published_pressure": 0.45276073619631896,
+          "pymhm_pressure": 0.4341526879688163
+        },
+        {
+          "t": 0.4700445890707661,
+          "distance_ft": 1177.9283639883834,
+          "published_pressure": 0.45107361963190185,
+          "pymhm_pressure": 0.4355200475944577
+        },
+        {
+          "t": 0.47506643297109474,
+          "distance_ft": 1190.513068731849,
+          "published_pressure": 0.4468558282208589,
+          "pymhm_pressure": 0.42576827219918006
+        },
+        {
+          "t": 0.48008827687142347,
+          "distance_ft": 1203.0977734753146,
+          "published_pressure": 0.44263803680981595,
+          "pymhm_pressure": 0.42009608885996025
+        },
+        {
+          "t": 0.48511012077175214,
+          "distance_ft": 1215.6824782187803,
+          "published_pressure": 0.4375766871165644,
+          "pymhm_pressure": 0.41390454435184243
+        },
+        {
+          "t": 0.49013196467208087,
+          "distance_ft": 1228.267182962246,
+          "published_pressure": 0.43335889570552155,
+          "pymhm_pressure": 0.4057994797308933
+        },
+        {
+          "t": 0.49515380857240954,
+          "distance_ft": 1240.8518877057115,
+          "published_pressure": 0.4291411042944786,
+          "pymhm_pressure": 0.39724446667323876
+        },
+        {
+          "t": 0.5001756524727382,
+          "distance_ft": 1253.4365924491772,
+          "published_pressure": 0.42492331288343566,
+          "pymhm_pressure": 0.3981108611983546
+        },
+        {
+          "t": 0.505197496373067,
+          "distance_ft": 1266.0212971926428,
+          "published_pressure": 0.4198619631901841,
+          "pymhm_pressure": 0.3928269899820409
+        },
+        {
+          "t": 0.5102193402733957,
+          "distance_ft": 1278.6060019361084,
+          "published_pressure": 0.4122699386503068,
+          "pymhm_pressure": 0.3861625751746761
+        },
+        {
+          "t": 0.5152411841737243,
+          "distance_ft": 1291.190706679574,
+          "published_pressure": 0.405521472392638,
+          "pymhm_pressure": 0.383831490906295
+        },
+        {
+          "t": 0.520263028074053,
+          "distance_ft": 1303.7754114230397,
+          "published_pressure": 0.39792944785276074,
+          "pymhm_pressure": 0.38011986304686274
+        },
+        {
+          "t": 0.5252848719743818,
+          "distance_ft": 1316.3601161665053,
+          "published_pressure": 0.39118098159509207,
+          "pymhm_pressure": 0.377407997437302
+        },
+        {
+          "t": 0.5303067158747105,
+          "distance_ft": 1328.944820909971,
+          "published_pressure": 0.3852760736196319,
+          "pymhm_pressure": 0.3742688506848796
+        },
+        {
+          "t": 0.5353285597750391,
+          "distance_ft": 1341.5295256534366,
+          "published_pressure": 0.38021472392638034,
+          "pymhm_pressure": 0.37006962530276416
+        },
+        {
+          "t": 0.5403504036753678,
+          "distance_ft": 1354.1142303969023,
+          "published_pressure": 0.376840490797546,
+          "pymhm_pressure": 0.36584534181219985
+        },
+        {
+          "t": 0.5453722475756966,
+          "distance_ft": 1366.698935140368,
+          "published_pressure": 0.37346625766871167,
+          "pymhm_pressure": 0.36613498980142595
+        },
+        {
+          "t": 0.5503940914760252,
+          "distance_ft": 1379.2836398838335,
+          "published_pressure": 0.37177914110429444,
+          "pymhm_pressure": 0.3607875201018743
+        },
+        {
+          "t": 0.5554159353763539,
+          "distance_ft": 1391.8683446272992,
+          "published_pressure": 0.3684049079754601,
+          "pymhm_pressure": 0.35583528752473237
+        },
+        {
+          "t": 0.5604377792766826,
+          "distance_ft": 1404.4530493707648,
+          "published_pressure": 0.36503067484662577,
+          "pymhm_pressure": 0.3466878292149271
+        },
+        {
+          "t": 0.5654596231770113,
+          "distance_ft": 1417.0377541142304,
+          "published_pressure": 0.358282208588957,
+          "pymhm_pressure": 0.34162730010116427
+        },
+        {
+          "t": 0.57048146707734,
+          "distance_ft": 1429.622458857696,
+          "published_pressure": 0.35322085889570554,
+          "pymhm_pressure": 0.3461950652478278
+        },
+        {
+          "t": 0.5755033109776687,
+          "distance_ft": 1442.2071636011617,
+          "published_pressure": 0.3498466257668711,
+          "pymhm_pressure": 0.3430256729840978
+        },
+        {
+          "t": 0.5805251548779974,
+          "distance_ft": 1454.7918683446273,
+          "published_pressure": 0.34647239263803675,
+          "pymhm_pressure": 0.3335765265480069
+        },
+        {
+          "t": 0.585546998778326,
+          "distance_ft": 1467.376573088093,
+          "published_pressure": 0.3430981595092024,
+          "pymhm_pressure": 0.3312836330379213
+        },
+        {
+          "t": 0.5905688426786548,
+          "distance_ft": 1479.9612778315586,
+          "published_pressure": 0.3397239263803681,
+          "pymhm_pressure": 0.32918608836498564
+        },
+        {
+          "t": 0.5955906865789835,
+          "distance_ft": 1492.5459825750243,
+          "published_pressure": 0.33634969325153374,
+          "pymhm_pressure": 0.3266163831349376
+        },
+        {
+          "t": 0.6006125304793122,
+          "distance_ft": 1505.13068731849,
+          "published_pressure": 0.3329754601226993,
+          "pymhm_pressure": 0.3253842061177821
+        },
+        {
+          "t": 0.6056343743796408,
+          "distance_ft": 1517.7153920619555,
+          "published_pressure": 0.33044478527607357,
+          "pymhm_pressure": 0.3236737685331452
+        },
+        {
+          "t": 0.6106562182799696,
+          "distance_ft": 1530.3000968054212,
+          "published_pressure": 0.32791411042944785,
+          "pymhm_pressure": 0.31482360904295675
+        },
+        {
+          "t": 0.6156780621802983,
+          "distance_ft": 1542.8848015488868,
+          "published_pressure": 0.3245398773006134,
+          "pymhm_pressure": 0.312898757588782
+        },
+        {
+          "t": 0.620699906080627,
+          "distance_ft": 1555.4695062923524,
+          "published_pressure": 0.3228527607361963,
+          "pymhm_pressure": 0.31942134089743857
+        },
+        {
+          "t": 0.6257217499809556,
+          "distance_ft": 1568.054211035818,
+          "published_pressure": 0.30851226993865033,
+          "pymhm_pressure": 0.2984267340258222
+        },
+        {
+          "t": 0.6307435938812844,
+          "distance_ft": 1580.6389157792837,
+          "published_pressure": 0.2992331288343558,
+          "pymhm_pressure": 0.2970893147606131
+        },
+        {
+          "t": 0.6357654377816131,
+          "distance_ft": 1593.2236205227493,
+          "published_pressure": 0.2975460122699387,
+          "pymhm_pressure": 0.3010228508109753
+        },
+        {
+          "t": 0.6407872816819418,
+          "distance_ft": 1605.808325266215,
+          "published_pressure": 0.2967024539877301,
+          "pymhm_pressure": 0.29797849025200523
+        },
+        {
+          "t": 0.6458091255822704,
+          "distance_ft": 1618.3930300096806,
+          "published_pressure": 0.2950153374233129,
+          "pymhm_pressure": 0.29414818977411433
+        },
+        {
+          "t": 0.6508309694825992,
+          "distance_ft": 1630.9777347531463,
+          "published_pressure": 0.29332822085889576,
+          "pymhm_pressure": 0.28953194937730253
+        },
+        {
+          "t": 0.6558528133829279,
+          "distance_ft": 1643.562439496612,
+          "published_pressure": 0.29248466257668715,
+          "pymhm_pressure": 0.2841297690615703
+        },
+        {
+          "t": 0.6608746572832566,
+          "distance_ft": 1656.1471442400775,
+          "published_pressure": 0.2874233128834356,
+          "pymhm_pressure": 0.28064036048371666
+        },
+        {
+          "t": 0.6658965011835852,
+          "distance_ft": 1668.7318489835432,
+          "published_pressure": 0.28236196319018403,
+          "pymhm_pressure": 0.27887720920060755
+        },
+        {
+          "t": 0.670918345083914,
+          "distance_ft": 1681.3165537270088,
+          "published_pressure": 0.27730061349693247,
+          "pymhm_pressure": 0.27457943399952384
+        },
+        {
+          "t": 0.6759401889842427,
+          "distance_ft": 1693.9012584704744,
+          "published_pressure": 0.2730828220858895,
+          "pymhm_pressure": 0.2662879355323588
+        },
+        {
+          "t": 0.6809620328845714,
+          "distance_ft": 1706.48596321394,
+          "published_pressure": 0.26802147239263807,
+          "pymhm_pressure": 0.2649698487007268
+        },
+        {
+          "t": 0.6859838767849,
+          "distance_ft": 1719.0706679574057,
+          "published_pressure": 0.2705521472392638,
+          "pymhm_pressure": 0.25965803860301334
+        },
+        {
+          "t": 0.6910057206852288,
+          "distance_ft": 1731.6553727008713,
+          "published_pressure": 0.27730061349693247,
+          "pymhm_pressure": 0.2761762364809397
+        },
+        {
+          "t": 0.6960275645855575,
+          "distance_ft": 1744.240077444337,
+          "published_pressure": 0.2697085889570552,
+          "pymhm_pressure": 0.25285568947744785
+        },
+        {
+          "t": 0.7010494084858861,
+          "distance_ft": 1756.8247821878026,
+          "published_pressure": 0.2629601226993864,
+          "pymhm_pressure": 0.24973734337671735
+        },
+        {
+          "t": 0.7060712523862148,
+          "distance_ft": 1769.4094869312682,
+          "published_pressure": 0.25621165644171773,
+          "pymhm_pressure": 0.24883584965106473
+        },
+        {
+          "t": 0.7110930962865436,
+          "distance_ft": 1781.9941916747339,
+          "published_pressure": 0.24946319018404906,
+          "pymhm_pressure": 0.24264688113974936
+        },
+        {
+          "t": 0.7161149401868723,
+          "distance_ft": 1794.5788964181995,
+          "published_pressure": 0.24187116564417166,
+          "pymhm_pressure": 0.23867476500351184
+        },
+        {
+          "t": 0.7211367840872009,
+          "distance_ft": 1807.1636011616652,
+          "published_pressure": 0.2359662576687117,
+          "pymhm_pressure": 0.23051002815688373
+        },
+        {
+          "t": 0.7261586279875296,
+          "distance_ft": 1819.7483059051308,
+          "published_pressure": 0.23174846625766876,
+          "pymhm_pressure": 0.22386457497052809
+        },
+        {
+          "t": 0.7311804718878584,
+          "distance_ft": 1832.3330106485964,
+          "published_pressure": 0.2275306748466258,
+          "pymhm_pressure": 0.22615347273253328
+        },
+        {
+          "t": 0.7362023157881871,
+          "distance_ft": 1844.917715392062,
+          "published_pressure": 0.22331288343558287,
+          "pymhm_pressure": 0.2146527973662345
+        },
+        {
+          "t": 0.7412241596885157,
+          "distance_ft": 1857.5024201355277,
+          "published_pressure": 0.2182515337423312,
+          "pymhm_pressure": 0.2120864729482966
+        },
+        {
+          "t": 0.7462460035888444,
+          "distance_ft": 1870.0871248789933,
+          "published_pressure": 0.21487730061349697,
+          "pymhm_pressure": 0.21986951777932845
+        },
+        {
+          "t": 0.7512678474891731,
+          "distance_ft": 1882.6718296224587,
+          "published_pressure": 0.20644171779141107,
+          "pymhm_pressure": 0.1977242527216135
+        },
+        {
+          "t": 0.7562896913895018,
+          "distance_ft": 1895.2565343659244,
+          "published_pressure": 0.19800613496932518,
+          "pymhm_pressure": 0.19174371586176633
+        },
+        {
+          "t": 0.7613115352898304,
+          "distance_ft": 1907.84123910939,
+          "published_pressure": 0.18957055214723928,
+          "pymhm_pressure": 0.1865768555893619
+        },
+        {
+          "t": 0.7663333791901591,
+          "distance_ft": 1920.4259438528557,
+          "published_pressure": 0.18113496932515338,
+          "pymhm_pressure": 0.17853241967792907
+        },
+        {
+          "t": 0.7713552230904879,
+          "distance_ft": 1933.0106485963213,
+          "published_pressure": 0.1735429447852761,
+          "pymhm_pressure": 0.17130166035393873
+        },
+        {
+          "t": 0.7763770669908165,
+          "distance_ft": 1945.595353339787,
+          "published_pressure": 0.1659509202453987,
+          "pymhm_pressure": 0.16080551945117638
+        },
+        {
+          "t": 0.7813989108911452,
+          "distance_ft": 1958.1800580832526,
+          "published_pressure": 0.15835889570552153,
+          "pymhm_pressure": 0.15155781447493102
+        },
+        {
+          "t": 0.7864207547914739,
+          "distance_ft": 1970.7647628267182,
+          "published_pressure": 0.15329754601226986,
+          "pymhm_pressure": 0.14963336468557317
+        },
+        {
+          "t": 0.7914425986918027,
+          "distance_ft": 1983.3494675701838,
+          "published_pressure": 0.1482361963190184,
+          "pymhm_pressure": 0.14614717778384304
+        },
+        {
+          "t": 0.7964644425921313,
+          "distance_ft": 1995.9341723136495,
+          "published_pressure": 0.14317484662576696,
+          "pymhm_pressure": 0.14109925376974078
+        },
+        {
+          "t": 0.80148628649246,
+          "distance_ft": 2008.518877057115,
+          "published_pressure": 0.1381134969325153,
+          "pymhm_pressure": 0.13314821267609211
+        },
+        {
+          "t": 0.8065081303927887,
+          "distance_ft": 2021.1035818005807,
+          "published_pressure": 0.13305214723926384,
+          "pymhm_pressure": 0.12500178836952427
+        },
+        {
+          "t": 0.8115299742931175,
+          "distance_ft": 2033.6882865440464,
+          "published_pressure": 0.13305214723926384,
+          "pymhm_pressure": 0.11585471716220967
+        },
+        {
+          "t": 0.8165518181934461,
+          "distance_ft": 2046.272991287512,
+          "published_pressure": 0.1372699386503068,
+          "pymhm_pressure": 0.11876174379079459
+        },
+        {
+          "t": 0.8215736620937749,
+          "distance_ft": 2058.857696030978,
+          "published_pressure": 0.13220858895705512,
+          "pymhm_pressure": 0.11248131728748205
+        },
+        {
+          "t": 0.8265955059941035,
+          "distance_ft": 2071.4424007744433,
+          "published_pressure": 0.12714723926380367,
+          "pymhm_pressure": 0.1068329198646068
+        },
+        {
+          "t": 0.8316173498944323,
+          "distance_ft": 2084.027105517909,
+          "published_pressure": 0.12208588957055222,
+          "pymhm_pressure": 0.1080174120147418
+        },
+        {
+          "t": 0.8366391937947609,
+          "distance_ft": 2096.6118102613746,
+          "published_pressure": 0.11786809815950927,
+          "pymhm_pressure": 0.10483890180353377
+        },
+        {
+          "t": 0.8416610376950897,
+          "distance_ft": 2109.1965150048404,
+          "published_pressure": 0.1128067484662576,
+          "pymhm_pressure": 0.09521718581432805
+        },
+        {
+          "t": 0.8466828815954183,
+          "distance_ft": 2121.781219748306,
+          "published_pressure": 0.10774539877300615,
+          "pymhm_pressure": 0.09664907394459618
+        },
+        {
+          "t": 0.851704725495747,
+          "distance_ft": 2134.3659244917717,
+          "published_pressure": 0.1035276073619632,
+          "pymhm_pressure": 0.09071145038138455
+        },
+        {
+          "t": 0.8567265693960757,
+          "distance_ft": 2146.950629235237,
+          "published_pressure": 0.09846625766871153,
+          "pymhm_pressure": 0.09060738822303654
+        },
+        {
+          "t": 0.8617484132964045,
+          "distance_ft": 2159.535333978703,
+          "published_pressure": 0.09340490797546008,
+          "pymhm_pressure": 0.08924792049354494
+        },
+        {
+          "t": 0.8667702571967331,
+          "distance_ft": 2172.1200387221684,
+          "published_pressure": 0.08918711656441713,
+          "pymhm_pressure": 0.0802406932610619
+        },
+        {
+          "t": 0.8717921010970618,
+          "distance_ft": 2184.7047434656342,
+          "published_pressure": 0.08412576687116569,
+          "pymhm_pressure": 0.07919781207739159
+        },
+        {
+          "t": 0.8768139449973905,
+          "distance_ft": 2197.2894482090996,
+          "published_pressure": 0.07737730061349679,
+          "pymhm_pressure": 0.07543865203586114
+        },
+        {
+          "t": 0.8818357888977193,
+          "distance_ft": 2209.8741529525655,
+          "published_pressure": 0.07315950920245384,
+          "pymhm_pressure": 0.0748123748866225
+        },
+        {
+          "t": 0.8868576327980479,
+          "distance_ft": 2222.458857696031,
+          "published_pressure": 0.06978527607361962,
+          "pymhm_pressure": 0.07193208075719769
+        },
+        {
+          "t": 0.8918794766983766,
+          "distance_ft": 2235.043562439497,
+          "published_pressure": 0.06641104294478517,
+          "pymhm_pressure": 0.06679776964758652
+        },
+        {
+          "t": 0.8969013205987053,
+          "distance_ft": 2247.628267182962,
+          "published_pressure": 0.06388036809815945,
+          "pymhm_pressure": 0.059409441557789364
+        },
+        {
+          "t": 0.9019231644990341,
+          "distance_ft": 2260.212971926428,
+          "published_pressure": 0.06134969325153372,
+          "pymhm_pressure": 0.04976709648780563
+        },
+        {
+          "t": 0.9069450083993627,
+          "distance_ft": 2272.7976766698935,
+          "published_pressure": 0.05628834355828216,
+          "pymhm_pressure": 0.038469018717016204
+        },
+        {
+          "t": 0.9119668522996914,
+          "distance_ft": 2285.3823814133593,
+          "published_pressure": 0.0503834355828221,
+          "pymhm_pressure": 0.030747199580299592
+        },
+        {
+          "t": 0.9169886962000201,
+          "distance_ft": 2297.9670861568247,
+          "published_pressure": 0.043634969325153206,
+          "pymhm_pressure": 0.026851311831351143
+        },
+        {
+          "t": 0.9270323840006774,
+          "distance_ft": 2323.136495643756,
+          "published_pressure": 0.03013803680981586,
+          "pymhm_pressure": 0.019137505322626886
+        },
+        {
+          "t": 0.9320542279010062,
+          "distance_ft": 2335.721200387222,
+          "published_pressure": 0.023389570552147187,
+          "pymhm_pressure": 0.017646416403352034
+        },
+        {
+          "t": 0.9370760718013349,
+          "distance_ft": 2348.3059051306873,
+          "published_pressure": 0.017484662576687127,
+          "pymhm_pressure": 0.013816518056302553
+        },
+        {
+          "t": 0.9420979157016637,
+          "distance_ft": 2360.890609874153,
+          "published_pressure": 0.015797546012269903,
+          "pymhm_pressure": 0.013666682983585544
+        },
+        {
+          "t": 0.9471197596019922,
+          "distance_ft": 2373.4753146176186,
+          "published_pressure": 0.015797546012269903,
+          "pymhm_pressure": 0.015861902198553428
+        },
+        {
+          "t": 0.952141603502321,
+          "distance_ft": 2386.0600193610844,
+          "published_pressure": 0.015797546012269903,
+          "pymhm_pressure": 0.015848853836026165
+        },
+        {
+          "t": 0.9571634474026497,
+          "distance_ft": 2398.64472410455,
+          "published_pressure": 0.015797546012269903,
+          "pymhm_pressure": 0.01583389072106753
+        },
+        {
+          "t": 0.9621852913029785,
+          "distance_ft": 2411.2294288480157,
+          "published_pressure": 0.015797546012269903,
+          "pymhm_pressure": 0.013628576080817394
+        },
+        {
+          "t": 0.967207135203307,
+          "distance_ft": 2423.814133591481,
+          "published_pressure": 0.015797546012269903,
+          "pymhm_pressure": 0.013616200472499377
+        },
+        {
+          "t": 0.9722289791036358,
+          "distance_ft": 2436.398838334947,
+          "published_pressure": 0.01411042944785268,
+          "pymhm_pressure": 0.013637679707543161
+        },
+        {
+          "t": 0.9772508230039645,
+          "distance_ft": 2448.9835430784124,
+          "published_pressure": 0.012423312883435678,
+          "pymhm_pressure": 0.013519794963717387
+        },
+        {
+          "t": 0.9822726669042933,
+          "distance_ft": 2461.5682478218782,
+          "published_pressure": 0.00904907975460123,
+          "pymhm_pressure": 0.013219122977635089
+        },
+        {
+          "t": 0.9872945108046218,
+          "distance_ft": 2474.1529525653436,
+          "published_pressure": 0.006518404907975395,
+          "pymhm_pressure": 0.012735663749296307
+        }
+      ]
+    },
+    {
+      "curve": "adapted",
+      "level": 6,
+      "macro_triangles": 4783,
+      "archive": "mhm-level6.npz",
+      "archive_sha256": "99f3494fdb160a01d025fcbe5a5f586b74fac5d50b306769f094255fc33ed93f",
+      "sample_count": 129,
+      "rms_difference": 0.010032736033588995,
+      "maximum_difference": 0.036187902671256295,
+      "samples": [
+        {
+          "t": 0.013056794140854613,
+          "distance_ft": 32.72023233301065,
+          "published_pressure": 0.9462423312883436,
+          "pymhm_pressure": 0.9575645469363226
+        },
+        {
+          "t": 0.023100481941512006,
+          "distance_ft": 57.889641819941914,
+          "published_pressure": 0.9394938650306749,
+          "pymhm_pressure": 0.9370387091718871
+        },
+        {
+          "t": 0.028122325841840705,
+          "distance_ft": 70.47434656340755,
+          "published_pressure": 0.9344325153374233,
+          "pymhm_pressure": 0.9323142425153098
+        },
+        {
+          "t": 0.0331441697421694,
+          "distance_ft": 83.05905130687319,
+          "published_pressure": 0.931058282208589,
+          "pymhm_pressure": 0.9290506734429065
+        },
+        {
+          "t": 0.0381660136424981,
+          "distance_ft": 95.64375605033882,
+          "published_pressure": 0.9192484662576688,
+          "pymhm_pressure": 0.9262316022863298
+        },
+        {
+          "t": 0.0431878575428268,
+          "distance_ft": 108.22846079380446,
+          "published_pressure": 0.9125000000000001,
+          "pymhm_pressure": 0.9238570290455801
+        },
+        {
+          "t": 0.04820970144315549,
+          "distance_ft": 120.81316553727008,
+          "published_pressure": 0.8964723926380369,
+          "pymhm_pressure": 0.9200336155530151
+        },
+        {
+          "t": 0.05323154534348419,
+          "distance_ft": 133.39787028073573,
+          "published_pressure": 0.8930981595092025,
+          "pymhm_pressure": 0.91224780367028
+        },
+        {
+          "t": 0.05825338924381289,
+          "distance_ft": 145.98257502420137,
+          "published_pressure": 0.9015337423312884,
+          "pymhm_pressure": 0.899331957470748
+        },
+        {
+          "t": 0.06327523314414159,
+          "distance_ft": 158.567279767667,
+          "published_pressure": 0.8770705521472393,
+          "pymhm_pressure": 0.8862255388349781
+        },
+        {
+          "t": 0.06829707704447027,
+          "distance_ft": 171.1519845111326,
+          "published_pressure": 0.8736963190184049,
+          "pymhm_pressure": 0.8862271058653555
+        },
+        {
+          "t": 0.07834076484512767,
+          "distance_ft": 196.32139399806388,
+          "published_pressure": 0.8627300613496933,
+          "pymhm_pressure": 0.8599029052767829
+        },
+        {
+          "t": 0.08336260874545637,
+          "distance_ft": 208.90609874152952,
+          "published_pressure": 0.8601993865030675,
+          "pymhm_pressure": 0.8441934619710108
+        },
+        {
+          "t": 0.08838445264578507,
+          "distance_ft": 221.49080348499515,
+          "published_pressure": 0.8475460122699388,
+          "pymhm_pressure": 0.8335320663230774
+        },
+        {
+          "t": 0.09340629654611377,
+          "distance_ft": 234.0755082284608,
+          "published_pressure": 0.8458588957055215,
+          "pymhm_pressure": 0.8279174369281124
+        },
+        {
+          "t": 0.10344998434677115,
+          "distance_ft": 259.24491771539203,
+          "published_pressure": 0.830674846625767,
+          "pymhm_pressure": 0.8214079030684421
+        },
+        {
+          "t": 0.10847182824709985,
+          "distance_ft": 271.82962245885767,
+          "published_pressure": 0.8138036809815952,
+          "pymhm_pressure": 0.8201186217915878
+        },
+        {
+          "t": 0.11349367214742855,
+          "distance_ft": 284.4143272023233,
+          "published_pressure": 0.8138036809815952,
+          "pymhm_pressure": 0.818648681650737
+        },
+        {
+          "t": 0.12855920384841463,
+          "distance_ft": 322.1684414327202,
+          "published_pressure": 0.8028374233128834,
+          "pymhm_pressure": 0.8003306864090788
+        },
+        {
+          "t": 0.13358104774874333,
+          "distance_ft": 334.75314617618585,
+          "published_pressure": 0.785122699386503,
+          "pymhm_pressure": 0.7906977461365354
+        },
+        {
+          "t": 0.13860289164907202,
+          "distance_ft": 347.3378509196515,
+          "published_pressure": 0.7699386503067485,
+          "pymhm_pressure": 0.7796255716229679
+        },
+        {
+          "t": 0.14362473554940072,
+          "distance_ft": 359.9225556631171,
+          "published_pressure": 0.7657208588957055,
+          "pymhm_pressure": 0.7659582784369316
+        },
+        {
+          "t": 0.14864657944972942,
+          "distance_ft": 372.50726040658276,
+          "published_pressure": 0.7446319018404908,
+          "pymhm_pressure": 0.7490006934500694
+        },
+        {
+          "t": 0.15869026725038682,
+          "distance_ft": 397.67666989351403,
+          "published_pressure": 0.7243865030674848,
+          "pymhm_pressure": 0.7234660130885981
+        },
+        {
+          "t": 0.16371211115071552,
+          "distance_ft": 410.26137463697967,
+          "published_pressure": 0.7226993865030675,
+          "pymhm_pressure": 0.7171594309007172
+        },
+        {
+          "t": 0.17375579895137291,
+          "distance_ft": 435.43078412391094,
+          "published_pressure": 0.7117331288343558,
+          "pymhm_pressure": 0.7202573678577151
+        },
+        {
+          "t": 0.1787776428517016,
+          "distance_ft": 448.0154888673766,
+          "published_pressure": 0.7083588957055215,
+          "pymhm_pressure": 0.7117000727536721
+        },
+        {
+          "t": 0.1837994867520303,
+          "distance_ft": 460.6001936108422,
+          "published_pressure": 0.7041411042944785,
+          "pymhm_pressure": 0.710245831500833
+        },
+        {
+          "t": 0.188821330652359,
+          "distance_ft": 473.18489835430785,
+          "published_pressure": 0.688957055214724,
+          "pymhm_pressure": 0.7065773395359543
+        },
+        {
+          "t": 0.1938431745526877,
+          "distance_ft": 485.7696030977735,
+          "published_pressure": 0.688957055214724,
+          "pymhm_pressure": 0.6995649829307293
+        },
+        {
+          "t": 0.2089087062536738,
+          "distance_ft": 523.5237173281704,
+          "published_pressure": 0.6670245398773007,
+          "pymhm_pressure": 0.6671348859639
+        },
+        {
+          "t": 0.2139305501540025,
+          "distance_ft": 536.108422071636,
+          "published_pressure": 0.6636503067484663,
+          "pymhm_pressure": 0.6593673820764115
+        },
+        {
+          "t": 0.2189523940543312,
+          "distance_ft": 548.6931268151017,
+          "published_pressure": 0.6501533742331288,
+          "pymhm_pressure": 0.6604531784728837
+        },
+        {
+          "t": 0.2239742379546599,
+          "distance_ft": 561.2778315585673,
+          "published_pressure": 0.6501533742331288,
+          "pymhm_pressure": 0.6584024143785027
+        },
+        {
+          "t": 0.2340179257553173,
+          "distance_ft": 586.4472410454986,
+          "published_pressure": 0.6400306748466258,
+          "pymhm_pressure": 0.6545159870834136
+        },
+        {
+          "t": 0.239039769655646,
+          "distance_ft": 599.0319457889642,
+          "published_pressure": 0.6400306748466258,
+          "pymhm_pressure": 0.6508115781974817
+        },
+        {
+          "t": 0.2490834574563034,
+          "distance_ft": 624.2013552758955,
+          "published_pressure": 0.6324386503067485,
+          "pymhm_pressure": 0.6382600557889433
+        },
+        {
+          "t": 0.25410530135663206,
+          "distance_ft": 636.7860600193611,
+          "published_pressure": 0.6315950920245399,
+          "pymhm_pressure": 0.6354182879246719
+        },
+        {
+          "t": 0.26414898915728946,
+          "distance_ft": 661.9554695062924,
+          "published_pressure": 0.623159509202454,
+          "pymhm_pressure": 0.6301033524722492
+        },
+        {
+          "t": 0.2691708330576182,
+          "distance_ft": 674.540174249758,
+          "published_pressure": 0.623159509202454,
+          "pymhm_pressure": 0.6266323476973119
+        },
+        {
+          "t": 0.2792145208582756,
+          "distance_ft": 699.7095837366893,
+          "published_pressure": 0.608819018404908,
+          "pymhm_pressure": 0.6194096112130669
+        },
+        {
+          "t": 0.289258208658933,
+          "distance_ft": 724.8789932236206,
+          "published_pressure": 0.5801380368098159,
+          "pymhm_pressure": 0.6044009379550237
+        },
+        {
+          "t": 0.29428005255926165,
+          "distance_ft": 737.4636979670862,
+          "published_pressure": 0.5759202453987731,
+          "pymhm_pressure": 0.5837849000582319
+        },
+        {
+          "t": 0.2993018964595904,
+          "distance_ft": 750.0484027105518,
+          "published_pressure": 0.5582055214723927,
+          "pymhm_pressure": 0.5745397428360943
+        },
+        {
+          "t": 0.3093455842602478,
+          "distance_ft": 775.2178121974831,
+          "published_pressure": 0.5362730061349693,
+          "pymhm_pressure": 0.5655333684750155
+        },
+        {
+          "t": 0.3193892720609051,
+          "distance_ft": 800.3872216844143,
+          "published_pressure": 0.5320552147239264,
+          "pymhm_pressure": 0.5509819821103078
+        },
+        {
+          "t": 0.3294329598615625,
+          "distance_ft": 825.5566311713455,
+          "published_pressure": 0.5388036809815951,
+          "pymhm_pressure": 0.5449828051427578
+        },
+        {
+          "t": 0.3344548037618912,
+          "distance_ft": 838.1413359148112,
+          "published_pressure": 0.5371165644171779,
+          "pymhm_pressure": 0.5425377478966769
+        },
+        {
+          "t": 0.3444984915625486,
+          "distance_ft": 863.3107454017425,
+          "published_pressure": 0.532898773006135,
+          "pymhm_pressure": 0.5298564272545216
+        },
+        {
+          "t": 0.354542179363206,
+          "distance_ft": 888.4801548886737,
+          "published_pressure": 0.5168711656441718,
+          "pymhm_pressure": 0.5232478394731657
+        },
+        {
+          "t": 0.3595640232635347,
+          "distance_ft": 901.0648596321394,
+          "published_pressure": 0.5168711656441718,
+          "pymhm_pressure": 0.5202523953940881
+        },
+        {
+          "t": 0.3746295549645208,
+          "distance_ft": 938.8189738625363,
+          "published_pressure": 0.5126533742331288,
+          "pymhm_pressure": 0.5175123925857492
+        },
+        {
+          "t": 0.3896950866655069,
+          "distance_ft": 976.5730880929332,
+          "published_pressure": 0.5101226993865031,
+          "pymhm_pressure": 0.5136045546273384
+        },
+        {
+          "t": 0.3997387744661643,
+          "distance_ft": 1001.7424975798644,
+          "published_pressure": 0.5016871165644171,
+          "pymhm_pressure": 0.4942891021546397
+        },
+        {
+          "t": 0.40476061836649296,
+          "distance_ft": 1014.3272023233301,
+          "published_pressure": 0.4848159509202453,
+          "pymhm_pressure": 0.480913784653383
+        },
+        {
+          "t": 0.4097824622668217,
+          "distance_ft": 1026.9119070667957,
+          "published_pressure": 0.48059815950920237,
+          "pymhm_pressure": 0.4759488149958433
+        },
+        {
+          "t": 0.4198261500674791,
+          "distance_ft": 1052.081316553727,
+          "published_pressure": 0.4738496932515337,
+          "pymhm_pressure": 0.47358895779747423
+        },
+        {
+          "t": 0.42484799396780776,
+          "distance_ft": 1064.6660212971926,
+          "published_pressure": 0.4755368098159509,
+          "pymhm_pressure": 0.472354405429551
+        },
+        {
+          "t": 0.4298698378681365,
+          "distance_ft": 1077.2507260406583,
+          "published_pressure": 0.471319018404908,
+          "pymhm_pressure": 0.4709565048406407
+        },
+        {
+          "t": 0.43489168176846515,
+          "distance_ft": 1089.835430784124,
+          "published_pressure": 0.47047546012269936,
+          "pymhm_pressure": 0.4703867734106403
+        },
+        {
+          "t": 0.44493536956912255,
+          "distance_ft": 1115.0048402710552,
+          "published_pressure": 0.47047546012269936,
+          "pymhm_pressure": 0.4703019317130919
+        },
+        {
+          "t": 0.4499572134694513,
+          "distance_ft": 1127.5895450145208,
+          "published_pressure": 0.46963190184049075,
+          "pymhm_pressure": 0.47028939240100015
+        },
+        {
+          "t": 0.4700445890707661,
+          "distance_ft": 1177.9283639883834,
+          "published_pressure": 0.4679447852760735,
+          "pymhm_pressure": 0.4694182226479316
+        },
+        {
+          "t": 0.47506643297109474,
+          "distance_ft": 1190.513068731849,
+          "published_pressure": 0.4654141104294478,
+          "pymhm_pressure": 0.46807448691502945
+        },
+        {
+          "t": 0.48511012077175214,
+          "distance_ft": 1215.6824782187803,
+          "published_pressure": 0.46119631901840485,
+          "pymhm_pressure": 0.46526793655048754
+        },
+        {
+          "t": 0.49515380857240954,
+          "distance_ft": 1240.8518877057115,
+          "published_pressure": 0.46203987730061347,
+          "pymhm_pressure": 0.4628875529507718
+        },
+        {
+          "t": 0.5001756524727382,
+          "distance_ft": 1253.4365924491772,
+          "published_pressure": 0.4628834355828221,
+          "pymhm_pressure": 0.46248524131328217
+        },
+        {
+          "t": 0.5152411841737243,
+          "distance_ft": 1291.190706679574,
+          "published_pressure": 0.46035276073619624,
+          "pymhm_pressure": 0.4575368670242087
+        },
+        {
+          "t": 0.5303067158747105,
+          "distance_ft": 1328.944820909971,
+          "published_pressure": 0.4578220858895705,
+          "pymhm_pressure": 0.4552684327346577
+        },
+        {
+          "t": 0.5453722475756966,
+          "distance_ft": 1366.698935140368,
+          "published_pressure": 0.4561349693251533,
+          "pymhm_pressure": 0.45230297439572564
+        },
+        {
+          "t": 0.5503940914760252,
+          "distance_ft": 1379.2836398838335,
+          "published_pressure": 0.4552914110429448,
+          "pymhm_pressure": 0.45110651463813783
+        },
+        {
+          "t": 0.5654596231770113,
+          "distance_ft": 1417.0377541142304,
+          "published_pressure": 0.4493865030674846,
+          "pymhm_pressure": 0.44748681393145295
+        },
+        {
+          "t": 0.5805251548779974,
+          "distance_ft": 1454.7918683446273,
+          "published_pressure": 0.4451687116564417,
+          "pymhm_pressure": 0.44133457875615706
+        },
+        {
+          "t": 0.585546998778326,
+          "distance_ft": 1467.376573088093,
+          "published_pressure": 0.4460122699386503,
+          "pymhm_pressure": 0.4400025220069211
+        },
+        {
+          "t": 0.5955906865789835,
+          "distance_ft": 1492.5459825750243,
+          "published_pressure": 0.4443251533742332,
+          "pymhm_pressure": 0.43755389321150595
+        },
+        {
+          "t": 0.6006125304793122,
+          "distance_ft": 1505.13068731849,
+          "published_pressure": 0.4460122699386503,
+          "pymhm_pressure": 0.43567812192062494
+        },
+        {
+          "t": 0.6106562182799696,
+          "distance_ft": 1530.3000968054212,
+          "published_pressure": 0.4392638036809816,
+          "pymhm_pressure": 0.4342280817024747
+        },
+        {
+          "t": 0.6156780621802983,
+          "distance_ft": 1542.8848015488868,
+          "published_pressure": 0.4375766871165644,
+          "pymhm_pressure": 0.43362807223069494
+        },
+        {
+          "t": 0.6257217499809556,
+          "distance_ft": 1568.054211035818,
+          "published_pressure": 0.43420245398773005,
+          "pymhm_pressure": 0.432678074561726
+        },
+        {
+          "t": 0.6307435938812844,
+          "distance_ft": 1580.6389157792837,
+          "published_pressure": 0.43335889570552155,
+          "pymhm_pressure": 0.43228797161584565
+        },
+        {
+          "t": 0.6407872816819418,
+          "distance_ft": 1605.808325266215,
+          "published_pressure": 0.43251533742331294,
+          "pymhm_pressure": 0.4290698220137447
+        },
+        {
+          "t": 0.6508309694825992,
+          "distance_ft": 1630.9777347531463,
+          "published_pressure": 0.4291411042944786,
+          "pymhm_pressure": 0.4273910225541213
+        },
+        {
+          "t": 0.6558528133829279,
+          "distance_ft": 1643.562439496612,
+          "published_pressure": 0.4291411042944786,
+          "pymhm_pressure": 0.4218380494561455
+        },
+        {
+          "t": 0.6658965011835852,
+          "distance_ft": 1668.7318489835432,
+          "published_pressure": 0.4215490797546012,
+          "pymhm_pressure": 0.41896608286930415
+        },
+        {
+          "t": 0.670918345083914,
+          "distance_ft": 1681.3165537270088,
+          "published_pressure": 0.4190184049079755,
+          "pymhm_pressure": 0.41654167414050736
+        },
+        {
+          "t": 0.6809620328845714,
+          "distance_ft": 1706.48596321394,
+          "published_pressure": 0.41480061349693254,
+          "pymhm_pressure": 0.41173889378136064
+        },
+        {
+          "t": 0.6859838767849,
+          "distance_ft": 1719.0706679574057,
+          "published_pressure": 0.4139570552147239,
+          "pymhm_pressure": 0.40682342333620103
+        },
+        {
+          "t": 0.7110930962865436,
+          "distance_ft": 1781.9941916747339,
+          "published_pressure": 0.376840490797546,
+          "pymhm_pressure": 0.39227390559327807
+        },
+        {
+          "t": 0.7161149401868723,
+          "distance_ft": 1794.5788964181995,
+          "published_pressure": 0.37346625766871167,
+          "pymhm_pressure": 0.3719606326471993
+        },
+        {
+          "t": 0.7261586279875296,
+          "distance_ft": 1819.7483059051308,
+          "published_pressure": 0.3565950920245399,
+          "pymhm_pressure": 0.3588119178841226
+        },
+        {
+          "t": 0.7311804718878584,
+          "distance_ft": 1832.3330106485964,
+          "published_pressure": 0.35322085889570554,
+          "pymhm_pressure": 0.3497882147530393
+        },
+        {
+          "t": 0.7362023157881871,
+          "distance_ft": 1844.917715392062,
+          "published_pressure": 0.33803680981595086,
+          "pymhm_pressure": 0.3439979537599792
+        },
+        {
+          "t": 0.7412241596885157,
+          "distance_ft": 1857.5024201355277,
+          "published_pressure": 0.33803680981595086,
+          "pymhm_pressure": 0.34403718922366816
+        },
+        {
+          "t": 0.7512678474891731,
+          "distance_ft": 1882.6718296224587,
+          "published_pressure": 0.3262269938650306,
+          "pymhm_pressure": 0.3207115842276659
+        },
+        {
+          "t": 0.7562896913895018,
+          "distance_ft": 1895.2565343659244,
+          "published_pressure": 0.30345092024539877,
+          "pymhm_pressure": 0.3140005498949254
+        },
+        {
+          "t": 0.7613115352898304,
+          "distance_ft": 1907.84123910939,
+          "published_pressure": 0.2992331288343558,
+          "pymhm_pressure": 0.3077673918960404
+        },
+        {
+          "t": 0.7663333791901591,
+          "distance_ft": 1920.4259438528557,
+          "published_pressure": 0.2789877300613497,
+          "pymhm_pressure": 0.2981087282912301
+        },
+        {
+          "t": 0.7713552230904879,
+          "distance_ft": 1933.0106485963213,
+          "published_pressure": 0.26717791411042946,
+          "pymhm_pressure": 0.28482857419943997
+        },
+        {
+          "t": 0.7763770669908165,
+          "distance_ft": 1945.595353339787,
+          "published_pressure": 0.2629601226993864,
+          "pymhm_pressure": 0.2604618459967794
+        },
+        {
+          "t": 0.7864207547914739,
+          "distance_ft": 1970.7647628267182,
+          "published_pressure": 0.2452453987730061,
+          "pymhm_pressure": 0.2507588671256219
+        },
+        {
+          "t": 0.7964644425921313,
+          "distance_ft": 1995.9341723136495,
+          "published_pressure": 0.23259202453987726,
+          "pymhm_pressure": 0.24051663541250176
+        },
+        {
+          "t": 0.80148628649246,
+          "distance_ft": 2008.518877057115,
+          "published_pressure": 0.23006134969325154,
+          "pymhm_pressure": 0.23245142212052758
+        },
+        {
+          "t": 0.8115299742931175,
+          "distance_ft": 2033.6882865440464,
+          "published_pressure": 0.2174079754601227,
+          "pymhm_pressure": 0.2118751223274942
+        },
+        {
+          "t": 0.8165518181934461,
+          "distance_ft": 2046.272991287512,
+          "published_pressure": 0.21487730061349697,
+          "pymhm_pressure": 0.2159886179065319
+        },
+        {
+          "t": 0.8215736620937749,
+          "distance_ft": 2058.857696030978,
+          "published_pressure": 0.2005368098159509,
+          "pymhm_pressure": 0.21040517545034265
+        },
+        {
+          "t": 0.8265955059941035,
+          "distance_ft": 2071.4424007744433,
+          "published_pressure": 0.18619631901840483,
+          "pymhm_pressure": 0.18954023198451542
+        },
+        {
+          "t": 0.8316173498944323,
+          "distance_ft": 2084.027105517909,
+          "published_pressure": 0.18197852760736188,
+          "pymhm_pressure": 0.18545197074967495
+        },
+        {
+          "t": 0.8416610376950897,
+          "distance_ft": 2109.1965150048404,
+          "published_pressure": 0.17101226993865026,
+          "pymhm_pressure": 0.17964099956236226
+        },
+        {
+          "t": 0.8466828815954183,
+          "distance_ft": 2121.781219748306,
+          "published_pressure": 0.16932515337423315,
+          "pymhm_pressure": 0.17240645978707678
+        },
+        {
+          "t": 0.8617484132964045,
+          "distance_ft": 2159.535333978703,
+          "published_pressure": 0.15414110429447858,
+          "pymhm_pressure": 0.16070392123550228
+        },
+        {
+          "t": 0.8667702571967331,
+          "distance_ft": 2172.1200387221684,
+          "published_pressure": 0.15329754601226986,
+          "pymhm_pressure": 0.15773271857988744
+        },
+        {
+          "t": 0.8768139449973905,
+          "distance_ft": 2197.2894482090996,
+          "published_pressure": 0.14401840490797546,
+          "pymhm_pressure": 0.15354307854855856
+        },
+        {
+          "t": 0.8818357888977193,
+          "distance_ft": 2209.8741529525655,
+          "published_pressure": 0.14401840490797546,
+          "pymhm_pressure": 0.15621541521053187
+        },
+        {
+          "t": 0.8868576327980479,
+          "distance_ft": 2222.458857696031,
+          "published_pressure": 0.1288343558282209,
+          "pymhm_pressure": 0.14493378624233447
+        },
+        {
+          "t": 0.8918794766983766,
+          "distance_ft": 2235.043562439497,
+          "published_pressure": 0.10943251533742338,
+          "pymhm_pressure": 0.14090296871089816
+        },
+        {
+          "t": 0.8969013205987053,
+          "distance_ft": 2247.628267182962,
+          "published_pressure": 0.10015337423312876,
+          "pymhm_pressure": 0.13634127690438505
+        },
+        {
+          "t": 0.9019231644990341,
+          "distance_ft": 2260.212971926428,
+          "published_pressure": 0.09677914110429453,
+          "pymhm_pressure": 0.12898473638173286
+        },
+        {
+          "t": 0.9119668522996914,
+          "distance_ft": 2285.3823814133593,
+          "published_pressure": 0.09003067484662564,
+          "pymhm_pressure": 0.08564894370584822
+        },
+        {
+          "t": 0.9169886962000201,
+          "distance_ft": 2297.9670861568247,
+          "published_pressure": 0.06472392638036806,
+          "pymhm_pressure": 0.06904820380986272
+        },
+        {
+          "t": 0.9220105401003489,
+          "distance_ft": 2310.5517909002906,
+          "published_pressure": 0.03941717791411037,
+          "pymhm_pressure": 0.0639288379376735
+        },
+        {
+          "t": 0.9270323840006774,
+          "distance_ft": 2323.136495643756,
+          "published_pressure": 0.04700920245398765,
+          "pymhm_pressure": 0.053844721288795895
+        },
+        {
+          "t": 0.9320542279010062,
+          "distance_ft": 2335.721200387222,
+          "published_pressure": 0.04700920245398765,
+          "pymhm_pressure": 0.050743600027152724
+        },
+        {
+          "t": 0.9420979157016637,
+          "distance_ft": 2360.890609874153,
+          "published_pressure": 0.04700920245398765,
+          "pymhm_pressure": 0.05073616773763805
+        },
+        {
+          "t": 0.9471197596019922,
+          "distance_ft": 2373.4753146176186,
+          "published_pressure": 0.04700920245398765,
+          "pymhm_pressure": 0.050731484092631084
+        },
+        {
+          "t": 0.9621852913029785,
+          "distance_ft": 2411.2294288480157,
+          "published_pressure": 0.04700920245398765,
+          "pymhm_pressure": 0.050692635553457044
+        },
+        {
+          "t": 0.967207135203307,
+          "distance_ft": 2423.814133591481,
+          "published_pressure": 0.04700920245398765,
+          "pymhm_pressure": 0.05067701693361939
+        },
+        {
+          "t": 0.9772508230039645,
+          "distance_ft": 2448.9835430784124,
+          "published_pressure": 0.04700920245398765,
+          "pymhm_pressure": 0.05066381575706813
+        },
+        {
+          "t": 0.9822726669042933,
+          "distance_ft": 2461.5682478218782,
+          "published_pressure": 0.04447852760736204,
+          "pymhm_pressure": 0.04219237017148704
+        },
+        {
+          "t": 0.9872945108046218,
+          "distance_ft": 2474.1529525653436,
+          "published_pressure": 0.023389570552147187,
+          "pymhm_pressure": 0.022298829876090918
+        }
+      ]
+    }
+  ]
+}

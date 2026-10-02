@@ -1,0 +1,6289 @@
+{
+  "doi": "10.1051/m2an/2021013",
+  "figure": 10,
+  "source_image": "docs/figures/hpc4e/published-figure10.png",
+  "calibration": {
+    "x_axis_pixels": [
+      127,
+      1297,
+      1535,
+      2705
+    ],
+    "bottom_axis_pixels": [
+      520,
+      1119
+    ],
+    "vertical_extent_pixels": 508,
+    "stress_axis_mpa": [
+      -120,
+      60
+    ],
+    "horizontal_uncertainty_pixels": 2,
+    "vertical_additional_uncertainty_pixels": 2,
+    "sampling_stride_pixels": 8
+  },
+  "method": "Red-channel trace band; omit multiple disconnected red bands and legend pixels. Intervals include the full visible line width plus two pixels on each side.",
+  "curves": [
+    {
+      "level": 0,
+      "segments": 1,
+      "samples": [
+        {
+          "x_m": 68.37606837606837,
+          "stress_mpa": -4.133858267716533,
+          "stress_lower_mpa": -5.196850393700785,
+          "stress_upper_mpa": -3.0708661417322816,
+          "pixel_column": 135,
+          "pixel_rows": [
+            192,
+            194
+          ]
+        },
+        {
+          "x_m": 136.75213675213675,
+          "stress_mpa": -4.6653543307086665,
+          "stress_lower_mpa": -5.905511811023615,
+          "stress_upper_mpa": -3.4251968503937036,
+          "pixel_column": 143,
+          "pixel_rows": [
+            193,
+            196
+          ]
+        },
+        {
+          "x_m": 205.12820512820514,
+          "stress_mpa": -1.1220472440944889,
+          "stress_lower_mpa": -2.7165354330708595,
+          "stress_upper_mpa": 0.47244094488189603,
+          "pixel_column": 151,
+          "pixel_rows": [
+            182,
+            187
+          ]
+        },
+        {
+          "x_m": 273.5042735042735,
+          "stress_mpa": 4.015748031496059,
+          "stress_lower_mpa": 2.2440944881889777,
+          "stress_upper_mpa": 5.787401574803155,
+          "pixel_column": 159,
+          "pixel_rows": [
+            167,
+            173
+          ]
+        },
+        {
+          "x_m": 341.8803418803419,
+          "stress_mpa": 9.50787401574803,
+          "stress_lower_mpa": 7.913385826771659,
+          "stress_upper_mpa": 11.102362204724415,
+          "pixel_column": 167,
+          "pixel_rows": [
+            152,
+            157
+          ]
+        },
+        {
+          "x_m": 410.2564102564103,
+          "stress_mpa": 12.874015748031496,
+          "stress_lower_mpa": 11.81102362204723,
+          "stress_upper_mpa": 13.937007874015734,
+          "pixel_column": 175,
+          "pixel_rows": [
+            144,
+            146
+          ]
+        },
+        {
+          "x_m": 478.6324786324787,
+          "stress_mpa": 13.051181102362193,
+          "stress_lower_mpa": 12.165354330708652,
+          "stress_upper_mpa": 13.937007874015734,
+          "pixel_column": 183,
+          "pixel_rows": [
+            144,
+            145
+          ]
+        },
+        {
+          "x_m": 547.008547008547,
+          "stress_mpa": 10.748031496062993,
+          "stress_lower_mpa": 9.330708661417333,
+          "stress_upper_mpa": 12.165354330708652,
+          "pixel_column": 191,
+          "pixel_rows": [
+            149,
+            153
+          ]
+        },
+        {
+          "x_m": 615.3846153846155,
+          "stress_mpa": -3.6023622047244146,
+          "stress_lower_mpa": -15.472440944881896,
+          "stress_upper_mpa": 8.267716535433067,
+          "pixel_column": 199,
+          "pixel_rows": [
+            160,
+            223
+          ]
+        },
+        {
+          "x_m": 683.7606837606838,
+          "stress_mpa": -3.0708661417322816,
+          "stress_lower_mpa": -4.133858267716533,
+          "stress_upper_mpa": -2.0078740157480297,
+          "pixel_column": 207,
+          "pixel_rows": [
+            189,
+            191
+          ]
+        },
+        {
+          "x_m": 752.1367521367521,
+          "stress_mpa": -1.2992125984251999,
+          "stress_lower_mpa": -2.7165354330708595,
+          "stress_upper_mpa": 0.11811023622047401,
+          "pixel_column": 215,
+          "pixel_rows": [
+            183,
+            187
+          ]
+        },
+        {
+          "x_m": 820.5128205128206,
+          "stress_mpa": 1.1811023622047259,
+          "stress_lower_mpa": -0.23622047244094801,
+          "stress_upper_mpa": 2.5984251968503997,
+          "pixel_column": 223,
+          "pixel_rows": [
+            176,
+            180
+          ]
+        },
+        {
+          "x_m": 957.2649572649574,
+          "stress_mpa": 5.964566929133852,
+          "stress_lower_mpa": 4.7244094488189035,
+          "stress_upper_mpa": 7.204724409448815,
+          "pixel_column": 239,
+          "pixel_rows": [
+            163,
+            166
+          ]
+        },
+        {
+          "x_m": 1025.6410256410256,
+          "stress_mpa": 7.913385826771659,
+          "stress_lower_mpa": 6.850393700787407,
+          "stress_upper_mpa": 8.97637795275591,
+          "pixel_column": 247,
+          "pixel_rows": [
+            158,
+            160
+          ]
+        },
+        {
+          "x_m": 1094.017094017094,
+          "stress_mpa": 10.216535433070874,
+          "stress_lower_mpa": 8.97637795275591,
+          "stress_upper_mpa": 11.456692913385837,
+          "pixel_column": 255,
+          "pixel_rows": [
+            151,
+            154
+          ]
+        },
+        {
+          "x_m": 1162.3931623931624,
+          "stress_mpa": 13.937007874015734,
+          "stress_lower_mpa": 12.874015748031496,
+          "stress_upper_mpa": 15.0,
+          "pixel_column": 263,
+          "pixel_rows": [
+            141,
+            143
+          ]
+        },
+        {
+          "x_m": 1230.769230769231,
+          "stress_mpa": -2.8937007874015706,
+          "stress_lower_mpa": -16.889763779527556,
+          "stress_upper_mpa": 11.102362204724415,
+          "pixel_column": 271,
+          "pixel_rows": [
+            152,
+            227
+          ]
+        },
+        {
+          "x_m": 1299.1452991452993,
+          "stress_mpa": -23.267716535433067,
+          "stress_lower_mpa": -24.33070866141732,
+          "stress_upper_mpa": -22.204724409448815,
+          "pixel_column": 279,
+          "pixel_rows": [
+            246,
+            248
+          ]
+        },
+        {
+          "x_m": 1367.5213675213677,
+          "stress_mpa": -23.62204724409449,
+          "stress_lower_mpa": -24.68503937007874,
+          "stress_upper_mpa": -22.559055118110237,
+          "pixel_column": 287,
+          "pixel_rows": [
+            247,
+            249
+          ]
+        },
+        {
+          "x_m": 1435.8974358974358,
+          "stress_mpa": -23.97637795275591,
+          "stress_lower_mpa": -25.039370078740163,
+          "stress_upper_mpa": -22.91338582677166,
+          "pixel_column": 295,
+          "pixel_rows": [
+            248,
+            250
+          ]
+        },
+        {
+          "x_m": 1504.2735042735042,
+          "stress_mpa": -23.97637795275591,
+          "stress_lower_mpa": -25.039370078740163,
+          "stress_upper_mpa": -22.91338582677166,
+          "pixel_column": 303,
+          "pixel_rows": [
+            248,
+            250
+          ]
+        },
+        {
+          "x_m": 1572.6495726495725,
+          "stress_mpa": -23.97637795275591,
+          "stress_lower_mpa": -25.039370078740163,
+          "stress_upper_mpa": -22.91338582677166,
+          "pixel_column": 311,
+          "pixel_rows": [
+            248,
+            250
+          ]
+        },
+        {
+          "x_m": 1641.025641025641,
+          "stress_mpa": -23.7992125984252,
+          "stress_lower_mpa": -24.68503937007874,
+          "stress_upper_mpa": -22.91338582677166,
+          "pixel_column": 319,
+          "pixel_rows": [
+            248,
+            249
+          ]
+        },
+        {
+          "x_m": 1709.4017094017095,
+          "stress_mpa": -22.381889763779526,
+          "stress_lower_mpa": -23.62204724409449,
+          "stress_upper_mpa": -21.141732283464563,
+          "pixel_column": 327,
+          "pixel_rows": [
+            243,
+            246
+          ]
+        },
+        {
+          "x_m": 1777.7777777777778,
+          "stress_mpa": -17.775590551181097,
+          "stress_lower_mpa": -18.66141732283465,
+          "stress_upper_mpa": -16.889763779527556,
+          "pixel_column": 335,
+          "pixel_rows": [
+            231,
+            232
+          ]
+        },
+        {
+          "x_m": 1846.1538461538462,
+          "stress_mpa": -20.07874015748031,
+          "stress_lower_mpa": -21.850393700787407,
+          "stress_upper_mpa": -18.30708661417323,
+          "pixel_column": 343,
+          "pixel_rows": [
+            235,
+            241
+          ]
+        },
+        {
+          "x_m": 1914.5299145299148,
+          "stress_mpa": -45.76771653543307,
+          "stress_lower_mpa": -54.094488188976385,
+          "stress_upper_mpa": -37.44094488188976,
+          "pixel_column": 351,
+          "pixel_rows": [
+            289,
+            332
+          ]
+        },
+        {
+          "x_m": 1982.905982905983,
+          "stress_mpa": -69.15354330708661,
+          "stress_lower_mpa": -72.51968503937007,
+          "stress_upper_mpa": -65.78740157480314,
+          "pixel_column": 359,
+          "pixel_rows": [
+            369,
+            384
+          ]
+        },
+        {
+          "x_m": 2051.2820512820513,
+          "stress_mpa": -68.26771653543307,
+          "stress_lower_mpa": -72.51968503937007,
+          "stress_upper_mpa": -64.01574803149606,
+          "pixel_column": 367,
+          "pixel_rows": [
+            364,
+            384
+          ]
+        },
+        {
+          "x_m": 2119.6581196581196,
+          "stress_mpa": -39.56692913385827,
+          "stress_lower_mpa": -49.488188976377955,
+          "stress_upper_mpa": -29.645669291338578,
+          "pixel_column": 375,
+          "pixel_rows": [
+            267,
+            319
+          ]
+        },
+        {
+          "x_m": 2188.034188034188,
+          "stress_mpa": -0.059055118110237004,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": 8.267716535433067,
+          "pixel_column": 383,
+          "pixel_rows": [
+            160,
+            203
+          ]
+        },
+        {
+          "x_m": 2324.7863247863247,
+          "stress_mpa": 18.897637795275585,
+          "stress_lower_mpa": 11.81102362204723,
+          "stress_upper_mpa": 25.98425196850394,
+          "pixel_column": 399,
+          "pixel_rows": [
+            110,
+            146
+          ]
+        },
+        {
+          "x_m": 2461.538461538462,
+          "stress_mpa": -51.082677165354326,
+          "stress_lower_mpa": -55.15748031496064,
+          "stress_upper_mpa": -47.00787401574803,
+          "pixel_column": 415,
+          "pixel_rows": [
+            316,
+            335
+          ]
+        },
+        {
+          "x_m": 2529.91452991453,
+          "stress_mpa": -87.4015748031496,
+          "stress_lower_mpa": -93.77952755905511,
+          "stress_upper_mpa": -81.02362204724409,
+          "pixel_column": 423,
+          "pixel_rows": [
+            412,
+            444
+          ]
+        },
+        {
+          "x_m": 2598.2905982905986,
+          "stress_mpa": -107.42125984251969,
+          "stress_lower_mpa": -109.7244094488189,
+          "stress_upper_mpa": -105.11811023622047,
+          "pixel_column": 431,
+          "pixel_rows": [
+            480,
+            489
+          ]
+        },
+        {
+          "x_m": 2666.6666666666665,
+          "stress_mpa": -96.08267716535433,
+          "stress_lower_mpa": -101.92913385826772,
+          "stress_upper_mpa": -90.23622047244095,
+          "pixel_column": 439,
+          "pixel_rows": [
+            438,
+            467
+          ]
+        },
+        {
+          "x_m": 2735.0427350427353,
+          "stress_mpa": -57.99212598425197,
+          "stress_lower_mpa": -69.33070866141733,
+          "stress_upper_mpa": -46.65354330708661,
+          "pixel_column": 447,
+          "pixel_rows": [
+            315,
+            375
+          ]
+        },
+        {
+          "x_m": 2871.7948717948716,
+          "stress_mpa": -2.5393700787401627,
+          "stress_lower_mpa": -6.259842519685037,
+          "stress_upper_mpa": 1.1811023622047259,
+          "pixel_column": 463,
+          "pixel_rows": [
+            180,
+            197
+          ]
+        },
+        {
+          "x_m": 2940.1709401709404,
+          "stress_mpa": 9.862204724409452,
+          "stress_lower_mpa": 7.913385826771659,
+          "stress_upper_mpa": 11.81102362204723,
+          "pixel_column": 471,
+          "pixel_rows": [
+            150,
+            157
+          ]
+        },
+        {
+          "x_m": 3008.5470085470083,
+          "stress_mpa": 0.6496062992125928,
+          "stress_lower_mpa": -5.551181102362207,
+          "stress_upper_mpa": 6.850393700787407,
+          "pixel_column": 479,
+          "pixel_rows": [
+            164,
+            195
+          ]
+        },
+        {
+          "x_m": 3076.923076923077,
+          "stress_mpa": -29.645669291338578,
+          "stress_lower_mpa": -39.56692913385827,
+          "stress_upper_mpa": -19.724409448818903,
+          "pixel_column": 487,
+          "pixel_rows": [
+            239,
+            291
+          ]
+        },
+        {
+          "x_m": 3145.299145299145,
+          "stress_mpa": -8.031496062992133,
+          "stress_lower_mpa": -14.409448818897644,
+          "stress_upper_mpa": -1.6535433070866077,
+          "pixel_column": 495,
+          "pixel_rows": [
+            188,
+            220
+          ]
+        },
+        {
+          "x_m": 3213.675213675214,
+          "stress_mpa": -5.728346456692918,
+          "stress_lower_mpa": -6.614173228346459,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 503,
+          "pixel_rows": [
+            197,
+            198
+          ]
+        },
+        {
+          "x_m": 3282.051282051282,
+          "stress_mpa": -5.905511811023615,
+          "stress_lower_mpa": -6.968503937007867,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 511,
+          "pixel_rows": [
+            197,
+            199
+          ]
+        },
+        {
+          "x_m": 3350.42735042735,
+          "stress_mpa": -6.79133858267717,
+          "stress_lower_mpa": -7.677165354330711,
+          "stress_upper_mpa": -5.905511811023615,
+          "pixel_column": 519,
+          "pixel_rows": [
+            200,
+            201
+          ]
+        },
+        {
+          "x_m": 3418.803418803419,
+          "stress_mpa": -7.322834645669289,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 527,
+          "pixel_rows": [
+            201,
+            203
+          ]
+        },
+        {
+          "x_m": 3487.179487179487,
+          "stress_mpa": -7.322834645669289,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 535,
+          "pixel_rows": [
+            201,
+            203
+          ]
+        },
+        {
+          "x_m": 3555.5555555555557,
+          "stress_mpa": -7.322834645669289,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 543,
+          "pixel_rows": [
+            201,
+            203
+          ]
+        },
+        {
+          "x_m": 3623.931623931624,
+          "stress_mpa": -7.322834645669289,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 551,
+          "pixel_rows": [
+            201,
+            203
+          ]
+        },
+        {
+          "x_m": 3692.3076923076924,
+          "stress_mpa": -7.322834645669289,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 559,
+          "pixel_rows": [
+            201,
+            203
+          ]
+        },
+        {
+          "x_m": 3760.6837606837607,
+          "stress_mpa": -7.5,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -6.614173228346459,
+          "pixel_column": 567,
+          "pixel_rows": [
+            202,
+            203
+          ]
+        },
+        {
+          "x_m": 3829.0598290598296,
+          "stress_mpa": -7.5,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -6.614173228346459,
+          "pixel_column": 575,
+          "pixel_rows": [
+            202,
+            203
+          ]
+        },
+        {
+          "x_m": 3897.4358974358975,
+          "stress_mpa": -7.322834645669289,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 583,
+          "pixel_rows": [
+            201,
+            203
+          ]
+        },
+        {
+          "x_m": 3965.811965811966,
+          "stress_mpa": -6.968503937007867,
+          "stress_lower_mpa": -8.031496062992133,
+          "stress_upper_mpa": -5.905511811023615,
+          "pixel_column": 591,
+          "pixel_rows": [
+            200,
+            202
+          ]
+        },
+        {
+          "x_m": 4034.188034188034,
+          "stress_mpa": -6.968503937007867,
+          "stress_lower_mpa": -8.031496062992133,
+          "stress_upper_mpa": -5.905511811023615,
+          "pixel_column": 599,
+          "pixel_rows": [
+            200,
+            202
+          ]
+        },
+        {
+          "x_m": 4102.5641025641025,
+          "stress_mpa": -6.968503937007867,
+          "stress_lower_mpa": -8.031496062992133,
+          "stress_upper_mpa": -5.905511811023615,
+          "pixel_column": 607,
+          "pixel_rows": [
+            200,
+            202
+          ]
+        },
+        {
+          "x_m": 4170.940170940171,
+          "stress_mpa": -6.968503937007867,
+          "stress_lower_mpa": -8.031496062992133,
+          "stress_upper_mpa": -5.905511811023615,
+          "pixel_column": 615,
+          "pixel_rows": [
+            200,
+            202
+          ]
+        },
+        {
+          "x_m": 4239.316239316239,
+          "stress_mpa": -6.968503937007867,
+          "stress_lower_mpa": -8.031496062992133,
+          "stress_upper_mpa": -5.905511811023615,
+          "pixel_column": 623,
+          "pixel_rows": [
+            200,
+            202
+          ]
+        },
+        {
+          "x_m": 4307.692307692308,
+          "stress_mpa": -7.322834645669289,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 631,
+          "pixel_rows": [
+            201,
+            203
+          ]
+        },
+        {
+          "x_m": 4376.068376068376,
+          "stress_mpa": -7.677165354330711,
+          "stress_lower_mpa": -8.740157480314963,
+          "stress_upper_mpa": -6.614173228346459,
+          "pixel_column": 639,
+          "pixel_rows": [
+            202,
+            204
+          ]
+        },
+        {
+          "x_m": 4444.444444444444,
+          "stress_mpa": -6.968503937007867,
+          "stress_lower_mpa": -7.677165354330711,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 647,
+          "pixel_rows": [
+            201,
+            201
+          ]
+        },
+        {
+          "x_m": 4512.820512820513,
+          "stress_mpa": -6.968503937007867,
+          "stress_lower_mpa": -8.031496062992133,
+          "stress_upper_mpa": -5.905511811023615,
+          "pixel_column": 655,
+          "pixel_rows": [
+            200,
+            202
+          ]
+        },
+        {
+          "x_m": 4581.196581196581,
+          "stress_mpa": -7.322834645669289,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 663,
+          "pixel_rows": [
+            201,
+            203
+          ]
+        },
+        {
+          "x_m": 4649.572649572649,
+          "stress_mpa": -7.322834645669289,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 671,
+          "pixel_rows": [
+            201,
+            203
+          ]
+        },
+        {
+          "x_m": 4717.948717948718,
+          "stress_mpa": -7.677165354330711,
+          "stress_lower_mpa": -8.740157480314963,
+          "stress_upper_mpa": -6.614173228346459,
+          "pixel_column": 679,
+          "pixel_rows": [
+            202,
+            204
+          ]
+        },
+        {
+          "x_m": 4786.324786324786,
+          "stress_mpa": -7.677165354330711,
+          "stress_lower_mpa": -8.740157480314963,
+          "stress_upper_mpa": -6.614173228346459,
+          "pixel_column": 687,
+          "pixel_rows": [
+            202,
+            204
+          ]
+        },
+        {
+          "x_m": 4854.7008547008545,
+          "stress_mpa": -7.322834645669289,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 695,
+          "pixel_rows": [
+            201,
+            203
+          ]
+        },
+        {
+          "x_m": 4923.076923076924,
+          "stress_mpa": -6.082677165354326,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 703,
+          "pixel_rows": [
+            197,
+            200
+          ]
+        },
+        {
+          "x_m": 4991.452991452991,
+          "stress_mpa": -4.488188976377955,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -0.5905511811023558,
+          "pixel_column": 711,
+          "pixel_rows": [
+            185,
+            203
+          ]
+        },
+        {
+          "x_m": 5059.82905982906,
+          "stress_mpa": 38.38582677165354,
+          "stress_lower_mpa": 31.299212598425186,
+          "stress_upper_mpa": 45.472440944881896,
+          "pixel_column": 719,
+          "pixel_rows": [
+            55,
+            91
+          ]
+        },
+        {
+          "x_m": 5128.205128205128,
+          "stress_mpa": 42.46062992125985,
+          "stress_lower_mpa": 39.094488188976385,
+          "stress_upper_mpa": 45.82677165354332,
+          "pixel_column": 727,
+          "pixel_rows": [
+            54,
+            69
+          ]
+        },
+        {
+          "x_m": 5196.581196581197,
+          "stress_mpa": 19.429133858267704,
+          "stress_lower_mpa": 12.874015748031496,
+          "stress_upper_mpa": 25.98425196850394,
+          "pixel_column": 735,
+          "pixel_rows": [
+            110,
+            143
+          ]
+        },
+        {
+          "x_m": 5264.957264957266,
+          "stress_mpa": -14.763779527559052,
+          "stress_lower_mpa": -23.267716535433067,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 743,
+          "pixel_rows": [
+            201,
+            245
+          ]
+        },
+        {
+          "x_m": 5333.333333333333,
+          "stress_mpa": -37.44094488188976,
+          "stress_lower_mpa": -41.33858267716535,
+          "stress_upper_mpa": -33.54330708661418,
+          "pixel_column": 751,
+          "pixel_rows": [
+            278,
+            296
+          ]
+        },
+        {
+          "x_m": 5401.709401709401,
+          "stress_mpa": -52.14566929133858,
+          "stress_lower_mpa": -55.511811023622045,
+          "stress_upper_mpa": -48.77952755905511,
+          "pixel_column": 759,
+          "pixel_rows": [
+            321,
+            336
+          ]
+        },
+        {
+          "x_m": 5470.085470085471,
+          "stress_mpa": -63.12992125984252,
+          "stress_lower_mpa": -65.07874015748033,
+          "stress_upper_mpa": -61.181102362204726,
+          "pixel_column": 767,
+          "pixel_rows": [
+            356,
+            363
+          ]
+        },
+        {
+          "x_m": 5538.461538461539,
+          "stress_mpa": -62.95275590551181,
+          "stress_lower_mpa": -65.43307086614173,
+          "stress_upper_mpa": -60.47244094488189,
+          "pixel_column": 775,
+          "pixel_rows": [
+            354,
+            364
+          ]
+        },
+        {
+          "x_m": 5606.8376068376065,
+          "stress_mpa": -51.61417322834646,
+          "stress_lower_mpa": -56.22047244094488,
+          "stress_upper_mpa": -47.00787401574803,
+          "pixel_column": 783,
+          "pixel_rows": [
+            316,
+            338
+          ]
+        },
+        {
+          "x_m": 5675.213675213675,
+          "stress_mpa": -30.88582677165354,
+          "stress_lower_mpa": -32.125984251968504,
+          "stress_upper_mpa": -29.645669291338578,
+          "pixel_column": 791,
+          "pixel_rows": [
+            267,
+            270
+          ]
+        },
+        {
+          "x_m": 5743.589743589743,
+          "stress_mpa": -35.84645669291339,
+          "stress_lower_mpa": -37.795275590551185,
+          "stress_upper_mpa": -33.897637795275585,
+          "pixel_column": 799,
+          "pixel_rows": [
+            279,
+            286
+          ]
+        },
+        {
+          "x_m": 5811.9658119658125,
+          "stress_mpa": -41.16141732283465,
+          "stress_lower_mpa": -42.4015748031496,
+          "stress_upper_mpa": -39.92125984251969,
+          "pixel_column": 807,
+          "pixel_rows": [
+            296,
+            299
+          ]
+        },
+        {
+          "x_m": 5880.341880341881,
+          "stress_mpa": -41.69291338582677,
+          "stress_lower_mpa": -42.75590551181102,
+          "stress_upper_mpa": -40.62992125984252,
+          "pixel_column": 815,
+          "pixel_rows": [
+            298,
+            300
+          ]
+        },
+        {
+          "x_m": 5948.717948717948,
+          "stress_mpa": -41.69291338582677,
+          "stress_lower_mpa": -42.75590551181102,
+          "stress_upper_mpa": -40.62992125984252,
+          "pixel_column": 823,
+          "pixel_rows": [
+            298,
+            300
+          ]
+        },
+        {
+          "x_m": 6017.094017094017,
+          "stress_mpa": -43.287401574803155,
+          "stress_lower_mpa": -44.173228346456696,
+          "stress_upper_mpa": -42.4015748031496,
+          "pixel_column": 831,
+          "pixel_rows": [
+            303,
+            304
+          ]
+        },
+        {
+          "x_m": 6085.470085470085,
+          "stress_mpa": -43.46456692913385,
+          "stress_lower_mpa": -44.881889763779526,
+          "stress_upper_mpa": -42.04724409448819,
+          "pixel_column": 839,
+          "pixel_rows": [
+            302,
+            306
+          ]
+        },
+        {
+          "x_m": 6153.846153846154,
+          "stress_mpa": -40.0984251968504,
+          "stress_lower_mpa": -41.33858267716535,
+          "stress_upper_mpa": -38.85826771653544,
+          "pixel_column": 847,
+          "pixel_rows": [
+            293,
+            296
+          ]
+        },
+        {
+          "x_m": 6222.222222222223,
+          "stress_mpa": -40.0984251968504,
+          "stress_lower_mpa": -41.33858267716535,
+          "stress_upper_mpa": -38.85826771653544,
+          "pixel_column": 855,
+          "pixel_rows": [
+            293,
+            296
+          ]
+        },
+        {
+          "x_m": 6290.59829059829,
+          "stress_mpa": -37.26377952755905,
+          "stress_lower_mpa": -38.85826771653544,
+          "stress_upper_mpa": -35.66929133858268,
+          "pixel_column": 863,
+          "pixel_rows": [
+            284,
+            289
+          ]
+        },
+        {
+          "x_m": 6358.974358974358,
+          "stress_mpa": -40.80708661417323,
+          "stress_lower_mpa": -42.75590551181102,
+          "stress_upper_mpa": -38.85826771653544,
+          "pixel_column": 871,
+          "pixel_rows": [
+            293,
+            300
+          ]
+        },
+        {
+          "x_m": 6427.350427350428,
+          "stress_mpa": -46.83070866141732,
+          "stress_lower_mpa": -48.77952755905511,
+          "stress_upper_mpa": -44.881889763779526,
+          "pixel_column": 879,
+          "pixel_rows": [
+            310,
+            317
+          ]
+        },
+        {
+          "x_m": 6495.726495726496,
+          "stress_mpa": -52.67716535433071,
+          "stress_lower_mpa": -54.44881889763779,
+          "stress_upper_mpa": -50.905511811023615,
+          "pixel_column": 887,
+          "pixel_rows": [
+            327,
+            333
+          ]
+        },
+        {
+          "x_m": 6564.102564102564,
+          "stress_mpa": -57.63779527559055,
+          "stress_lower_mpa": -59.05511811023622,
+          "stress_upper_mpa": -56.22047244094488,
+          "pixel_column": 895,
+          "pixel_rows": [
+            342,
+            346
+          ]
+        },
+        {
+          "x_m": 6632.478632478632,
+          "stress_mpa": -57.81496062992126,
+          "stress_lower_mpa": -59.05511811023622,
+          "stress_upper_mpa": -56.574803149606296,
+          "pixel_column": 903,
+          "pixel_rows": [
+            343,
+            346
+          ]
+        },
+        {
+          "x_m": 6700.8547008547,
+          "stress_mpa": -53.74015748031496,
+          "stress_lower_mpa": -55.511811023622045,
+          "stress_upper_mpa": -51.96850393700787,
+          "pixel_column": 911,
+          "pixel_rows": [
+            330,
+            336
+          ]
+        },
+        {
+          "x_m": 6769.2307692307695,
+          "stress_mpa": -52.32283464566929,
+          "stress_lower_mpa": -53.03149606299213,
+          "stress_upper_mpa": -51.61417322834646,
+          "pixel_column": 919,
+          "pixel_rows": [
+            329,
+            329
+          ]
+        },
+        {
+          "x_m": 6837.606837606838,
+          "stress_mpa": -56.04330708661417,
+          "stress_lower_mpa": -57.99212598425197,
+          "stress_upper_mpa": -54.094488188976385,
+          "pixel_column": 927,
+          "pixel_rows": [
+            336,
+            343
+          ]
+        },
+        {
+          "x_m": 6905.982905982906,
+          "stress_mpa": -63.48425196850393,
+          "stress_lower_mpa": -66.49606299212599,
+          "stress_upper_mpa": -60.47244094488189,
+          "pixel_column": 935,
+          "pixel_rows": [
+            354,
+            367
+          ]
+        },
+        {
+          "x_m": 6974.358974358974,
+          "stress_mpa": -73.05118110236221,
+          "stress_lower_mpa": -75.0,
+          "stress_upper_mpa": -71.10236220472441,
+          "pixel_column": 943,
+          "pixel_rows": [
+            384,
+            391
+          ]
+        },
+        {
+          "x_m": 7042.735042735043,
+          "stress_mpa": -73.05118110236221,
+          "stress_lower_mpa": -75.35433070866142,
+          "stress_upper_mpa": -70.74803149606299,
+          "pixel_column": 951,
+          "pixel_rows": [
+            383,
+            392
+          ]
+        },
+        {
+          "x_m": 7111.111111111111,
+          "stress_mpa": -57.28346456692913,
+          "stress_lower_mpa": -62.24409448818898,
+          "stress_upper_mpa": -52.32283464566929,
+          "pixel_column": 959,
+          "pixel_rows": [
+            331,
+            355
+          ]
+        },
+        {
+          "x_m": 7179.48717948718,
+          "stress_mpa": -30.354330708661422,
+          "stress_lower_mpa": -38.14960629921259,
+          "stress_upper_mpa": -22.559055118110237,
+          "pixel_column": 967,
+          "pixel_rows": [
+            247,
+            287
+          ]
+        },
+        {
+          "x_m": 7247.863247863248,
+          "stress_mpa": -7.145669291338578,
+          "stress_lower_mpa": -11.220472440944889,
+          "stress_upper_mpa": -3.0708661417322816,
+          "pixel_column": 975,
+          "pixel_rows": [
+            192,
+            211
+          ]
+        },
+        {
+          "x_m": 7316.2393162393155,
+          "stress_mpa": 2.7755905511810965,
+          "stress_lower_mpa": 1.5354330708661479,
+          "stress_upper_mpa": 4.015748031496059,
+          "pixel_column": 983,
+          "pixel_rows": [
+            172,
+            175
+          ]
+        },
+        {
+          "x_m": 7384.615384615385,
+          "stress_mpa": -8.917322834645674,
+          "stress_lower_mpa": -14.763779527559052,
+          "stress_upper_mpa": -3.0708661417322816,
+          "pixel_column": 991,
+          "pixel_rows": [
+            192,
+            221
+          ]
+        },
+        {
+          "x_m": 7452.991452991453,
+          "stress_mpa": -33.188976377952756,
+          "stress_lower_mpa": -39.212598425196845,
+          "stress_upper_mpa": -27.165354330708666,
+          "pixel_column": 999,
+          "pixel_rows": [
+            260,
+            290
+          ]
+        },
+        {
+          "x_m": 7521.3675213675215,
+          "stress_mpa": -24.33070866141732,
+          "stress_lower_mpa": -36.02362204724409,
+          "stress_upper_mpa": -12.637795275590548,
+          "pixel_column": 1007,
+          "pixel_rows": [
+            219,
+            281
+          ]
+        },
+        {
+          "x_m": 7589.74358974359,
+          "stress_mpa": -19.01574803149606,
+          "stress_lower_mpa": -22.559055118110237,
+          "stress_upper_mpa": -15.472440944881896,
+          "pixel_column": 1015,
+          "pixel_rows": [
+            227,
+            243
+          ]
+        },
+        {
+          "x_m": 7658.119658119659,
+          "stress_mpa": -33.011811023622045,
+          "stress_lower_mpa": -37.08661417322834,
+          "stress_upper_mpa": -28.937007874015748,
+          "pixel_column": 1023,
+          "pixel_rows": [
+            265,
+            284
+          ]
+        },
+        {
+          "x_m": 7726.495726495727,
+          "stress_mpa": -43.287401574803155,
+          "stress_lower_mpa": -44.881889763779526,
+          "stress_upper_mpa": -41.69291338582677,
+          "pixel_column": 1031,
+          "pixel_rows": [
+            301,
+            306
+          ]
+        },
+        {
+          "x_m": 7794.871794871795,
+          "stress_mpa": -46.83070866141732,
+          "stress_lower_mpa": -47.71653543307086,
+          "stress_upper_mpa": -45.94488188976378,
+          "pixel_column": 1039,
+          "pixel_rows": [
+            313,
+            314
+          ]
+        },
+        {
+          "x_m": 7863.247863247863,
+          "stress_mpa": -42.57874015748031,
+          "stress_lower_mpa": -44.881889763779526,
+          "stress_upper_mpa": -40.2755905511811,
+          "pixel_column": 1047,
+          "pixel_rows": [
+            297,
+            306
+          ]
+        },
+        {
+          "x_m": 7931.623931623932,
+          "stress_mpa": -34.074803149606296,
+          "stress_lower_mpa": -36.73228346456693,
+          "stress_upper_mpa": -31.417322834645674,
+          "pixel_column": 1055,
+          "pixel_rows": [
+            272,
+            283
+          ]
+        },
+        {
+          "x_m": 8000.0,
+          "stress_mpa": -24.50787401574803,
+          "stress_lower_mpa": -27.519685039370074,
+          "stress_upper_mpa": -21.496062992125985,
+          "pixel_column": 1063,
+          "pixel_rows": [
+            244,
+            257
+          ]
+        },
+        {
+          "x_m": 8136.752136752137,
+          "stress_mpa": -4.488188976377955,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -1.6535433070866077,
+          "pixel_column": 1079,
+          "pixel_rows": [
+            188,
+            200
+          ]
+        },
+        {
+          "x_m": 8205.128205128205,
+          "stress_mpa": 1.8897637795275557,
+          "stress_lower_mpa": -1.2992125984251999,
+          "stress_upper_mpa": 5.078740157480311,
+          "pixel_column": 1087,
+          "pixel_rows": [
+            169,
+            183
+          ]
+        },
+        {
+          "x_m": 8273.504273504273,
+          "stress_mpa": 14.291338582677156,
+          "stress_lower_mpa": 10.039370078740149,
+          "stress_upper_mpa": 18.543307086614163,
+          "pixel_column": 1095,
+          "pixel_rows": [
+            131,
+            151
+          ]
+        },
+        {
+          "x_m": 8410.25641025641,
+          "stress_mpa": -10.511811023622045,
+          "stress_lower_mpa": -11.220472440944889,
+          "stress_upper_mpa": -9.803149606299215,
+          "pixel_column": 1111,
+          "pixel_rows": [
+            211,
+            211
+          ]
+        },
+        {
+          "x_m": 8478.632478632479,
+          "stress_mpa": -12.28346456692914,
+          "stress_lower_mpa": -13.346456692913392,
+          "stress_upper_mpa": -11.220472440944889,
+          "pixel_column": 1119,
+          "pixel_rows": [
+            215,
+            217
+          ]
+        },
+        {
+          "x_m": 8547.008547008547,
+          "stress_mpa": -12.460629921259837,
+          "stress_lower_mpa": -13.346456692913392,
+          "stress_upper_mpa": -11.574803149606296,
+          "pixel_column": 1127,
+          "pixel_rows": [
+            216,
+            217
+          ]
+        },
+        {
+          "x_m": 8615.384615384615,
+          "stress_mpa": -12.460629921259837,
+          "stress_lower_mpa": -13.346456692913392,
+          "stress_upper_mpa": -11.574803149606296,
+          "pixel_column": 1135,
+          "pixel_rows": [
+            216,
+            217
+          ]
+        },
+        {
+          "x_m": 8683.760683760684,
+          "stress_mpa": -12.28346456692914,
+          "stress_lower_mpa": -13.346456692913392,
+          "stress_upper_mpa": -11.220472440944889,
+          "pixel_column": 1143,
+          "pixel_rows": [
+            215,
+            217
+          ]
+        },
+        {
+          "x_m": 8752.136752136752,
+          "stress_mpa": -11.220472440944889,
+          "stress_lower_mpa": -12.28346456692914,
+          "stress_upper_mpa": -10.157480314960637,
+          "pixel_column": 1151,
+          "pixel_rows": [
+            212,
+            214
+          ]
+        },
+        {
+          "x_m": 8820.51282051282,
+          "stress_mpa": -11.751968503937007,
+          "stress_lower_mpa": -12.637795275590548,
+          "stress_upper_mpa": -10.866141732283467,
+          "pixel_column": 1159,
+          "pixel_rows": [
+            214,
+            215
+          ]
+        },
+        {
+          "x_m": 8888.888888888889,
+          "stress_mpa": -11.043307086614178,
+          "stress_lower_mpa": -11.929133858267718,
+          "stress_upper_mpa": -10.157480314960637,
+          "pixel_column": 1167,
+          "pixel_rows": [
+            212,
+            213
+          ]
+        },
+        {
+          "x_m": 8957.264957264957,
+          "stress_mpa": -10.511811023622045,
+          "stress_lower_mpa": -11.574803149606296,
+          "stress_upper_mpa": -9.448818897637793,
+          "pixel_column": 1175,
+          "pixel_rows": [
+            210,
+            212
+          ]
+        },
+        {
+          "x_m": 9025.641025641025,
+          "stress_mpa": -9.980314960629926,
+          "stress_lower_mpa": -10.866141732283467,
+          "stress_upper_mpa": -9.094488188976385,
+          "pixel_column": 1183,
+          "pixel_rows": [
+            209,
+            210
+          ]
+        },
+        {
+          "x_m": 9094.017094017094,
+          "stress_mpa": -9.448818897637793,
+          "stress_lower_mpa": -10.511811023622045,
+          "stress_upper_mpa": -8.38582677165354,
+          "pixel_column": 1191,
+          "pixel_rows": [
+            207,
+            209
+          ]
+        },
+        {
+          "x_m": 9162.393162393162,
+          "stress_mpa": -8.917322834645674,
+          "stress_lower_mpa": -9.803149606299215,
+          "stress_upper_mpa": -8.031496062992133,
+          "pixel_column": 1199,
+          "pixel_rows": [
+            206,
+            207
+          ]
+        },
+        {
+          "x_m": 9230.76923076923,
+          "stress_mpa": -8.38582677165354,
+          "stress_lower_mpa": -9.448818897637793,
+          "stress_upper_mpa": -7.322834645669289,
+          "pixel_column": 1207,
+          "pixel_rows": [
+            204,
+            206
+          ]
+        },
+        {
+          "x_m": 9299.145299145299,
+          "stress_mpa": -8.031496062992133,
+          "stress_lower_mpa": -9.094488188976385,
+          "stress_upper_mpa": -6.968503937007867,
+          "pixel_column": 1215,
+          "pixel_rows": [
+            203,
+            205
+          ]
+        },
+        {
+          "x_m": 9367.521367521367,
+          "stress_mpa": -7.145669291338578,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -5.905511811023615,
+          "pixel_column": 1223,
+          "pixel_rows": [
+            200,
+            203
+          ]
+        },
+        {
+          "x_m": 9435.897435897436,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1231,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 9504.273504273504,
+          "stress_mpa": -5.551181102362207,
+          "stress_lower_mpa": -6.614173228346459,
+          "stress_upper_mpa": -4.488188976377955,
+          "pixel_column": 1239,
+          "pixel_rows": [
+            196,
+            198
+          ]
+        },
+        {
+          "x_m": 9572.649572649572,
+          "stress_mpa": -4.311023622047244,
+          "stress_lower_mpa": -5.551181102362207,
+          "stress_upper_mpa": -3.0708661417322816,
+          "pixel_column": 1247,
+          "pixel_rows": [
+            192,
+            195
+          ]
+        },
+        {
+          "x_m": 9641.02564102564,
+          "stress_mpa": -2.8937007874015706,
+          "stress_lower_mpa": -4.133858267716533,
+          "stress_upper_mpa": -1.6535433070866077,
+          "pixel_column": 1255,
+          "pixel_rows": [
+            188,
+            191
+          ]
+        },
+        {
+          "x_m": 9709.401709401709,
+          "stress_mpa": -1.4763779527559109,
+          "stress_lower_mpa": -2.3622047244094517,
+          "stress_upper_mpa": -0.5905511811023558,
+          "pixel_column": 1263,
+          "pixel_rows": [
+            185,
+            186
+          ]
+        },
+        {
+          "x_m": 9777.777777777777,
+          "stress_mpa": -0.23622047244094801,
+          "stress_lower_mpa": -1.2992125984251999,
+          "stress_upper_mpa": 0.8267716535433038,
+          "pixel_column": 1271,
+          "pixel_rows": [
+            181,
+            183
+          ]
+        },
+        {
+          "x_m": 9846.153846153848,
+          "stress_mpa": 0.47244094488189603,
+          "stress_lower_mpa": -0.5905511811023558,
+          "stress_upper_mpa": 1.5354330708661479,
+          "pixel_column": 1279,
+          "pixel_rows": [
+            179,
+            181
+          ]
+        },
+        {
+          "x_m": 9914.529914529914,
+          "stress_mpa": 0.8267716535433038,
+          "stress_lower_mpa": -0.23622047244094801,
+          "stress_upper_mpa": 1.8897637795275557,
+          "pixel_column": 1287,
+          "pixel_rows": [
+            178,
+            180
+          ]
+        }
+      ]
+    },
+    {
+      "level": 1,
+      "segments": 2,
+      "samples": [
+        {
+          "x_m": 68.37606837606837,
+          "stress_mpa": -0.5905511811023558,
+          "stress_lower_mpa": -2.0078740157480297,
+          "stress_upper_mpa": 0.8267716535433038,
+          "pixel_column": 1543,
+          "pixel_rows": [
+            181,
+            185
+          ]
+        },
+        {
+          "x_m": 136.75213675213675,
+          "stress_mpa": -1.6535433070866077,
+          "stress_lower_mpa": -2.7165354330708595,
+          "stress_upper_mpa": -0.5905511811023558,
+          "pixel_column": 1551,
+          "pixel_rows": [
+            185,
+            187
+          ]
+        },
+        {
+          "x_m": 205.12820512820514,
+          "stress_mpa": 0.47244094488189603,
+          "stress_lower_mpa": -0.9448818897637778,
+          "stress_upper_mpa": 1.8897637795275557,
+          "pixel_column": 1559,
+          "pixel_rows": [
+            178,
+            182
+          ]
+        },
+        {
+          "x_m": 273.5042735042735,
+          "stress_mpa": 4.7244094488189035,
+          "stress_lower_mpa": 2.9527559055118076,
+          "stress_upper_mpa": 6.496062992125985,
+          "pixel_column": 1567,
+          "pixel_rows": [
+            165,
+            171
+          ]
+        },
+        {
+          "x_m": 341.8803418803419,
+          "stress_mpa": 0.295275590551185,
+          "stress_lower_mpa": -1.2992125984251999,
+          "stress_upper_mpa": 1.8897637795275557,
+          "pixel_column": 1575,
+          "pixel_rows": [
+            178,
+            183
+          ]
+        },
+        {
+          "x_m": 410.2564102564103,
+          "stress_mpa": 1.8897637795275557,
+          "stress_lower_mpa": 0.11811023622047401,
+          "stress_upper_mpa": 3.6614173228346516,
+          "pixel_column": 1583,
+          "pixel_rows": [
+            173,
+            179
+          ]
+        },
+        {
+          "x_m": 478.6324786324787,
+          "stress_mpa": 7.559055118110237,
+          "stress_lower_mpa": 5.433070866141733,
+          "stress_upper_mpa": 9.685039370078727,
+          "pixel_column": 1591,
+          "pixel_rows": [
+            156,
+            164
+          ]
+        },
+        {
+          "x_m": 547.008547008547,
+          "stress_mpa": 12.519685039370074,
+          "stress_lower_mpa": 11.102362204724415,
+          "stress_upper_mpa": 13.937007874015734,
+          "pixel_column": 1599,
+          "pixel_rows": [
+            144,
+            148
+          ]
+        },
+        {
+          "x_m": 615.3846153846155,
+          "stress_mpa": 18.543307086614163,
+          "stress_lower_mpa": 15.0,
+          "stress_upper_mpa": 22.086614173228355,
+          "pixel_column": 1607,
+          "pixel_rows": [
+            121,
+            137
+          ]
+        },
+        {
+          "x_m": 683.7606837606838,
+          "stress_mpa": 12.519685039370074,
+          "stress_lower_mpa": 11.102362204724415,
+          "stress_upper_mpa": 13.937007874015734,
+          "pixel_column": 1615,
+          "pixel_rows": [
+            144,
+            148
+          ]
+        },
+        {
+          "x_m": 752.1367521367521,
+          "stress_mpa": 7.381889763779526,
+          "stress_lower_mpa": 5.433070866141733,
+          "stress_upper_mpa": 9.330708661417333,
+          "pixel_column": 1623,
+          "pixel_rows": [
+            157,
+            164
+          ]
+        },
+        {
+          "x_m": 820.5128205128206,
+          "stress_mpa": 2.9527559055118076,
+          "stress_lower_mpa": 1.5354330708661479,
+          "stress_upper_mpa": 4.370078740157481,
+          "pixel_column": 1631,
+          "pixel_rows": [
+            171,
+            175
+          ]
+        },
+        {
+          "x_m": 888.8888888888889,
+          "stress_mpa": -1.1220472440944889,
+          "stress_lower_mpa": -2.3622047244094517,
+          "stress_upper_mpa": 0.11811023622047401,
+          "pixel_column": 1639,
+          "pixel_rows": [
+            183,
+            186
+          ]
+        },
+        {
+          "x_m": 957.2649572649574,
+          "stress_mpa": -1.4763779527559109,
+          "stress_lower_mpa": -2.3622047244094517,
+          "stress_upper_mpa": -0.5905511811023558,
+          "pixel_column": 1647,
+          "pixel_rows": [
+            185,
+            186
+          ]
+        },
+        {
+          "x_m": 1025.6410256410256,
+          "stress_mpa": 0.295275590551185,
+          "stress_lower_mpa": -0.9448818897637778,
+          "stress_upper_mpa": 1.5354330708661479,
+          "pixel_column": 1655,
+          "pixel_rows": [
+            179,
+            182
+          ]
+        },
+        {
+          "x_m": 1162.3931623931624,
+          "stress_mpa": 1.1811023622047259,
+          "stress_lower_mpa": 0.11811023622047401,
+          "stress_upper_mpa": 2.2440944881889777,
+          "pixel_column": 1671,
+          "pixel_rows": [
+            177,
+            179
+          ]
+        },
+        {
+          "x_m": 1230.769230769231,
+          "stress_mpa": -6.968503937007867,
+          "stress_lower_mpa": -15.472440944881896,
+          "stress_upper_mpa": 1.5354330708661479,
+          "pixel_column": 1679,
+          "pixel_rows": [
+            179,
+            223
+          ]
+        },
+        {
+          "x_m": 1299.1452991452993,
+          "stress_mpa": -21.850393700787407,
+          "stress_lower_mpa": -22.91338582677166,
+          "stress_upper_mpa": -20.787401574803155,
+          "pixel_column": 1687,
+          "pixel_rows": [
+            242,
+            244
+          ]
+        },
+        {
+          "x_m": 1367.5213675213677,
+          "stress_mpa": -22.559055118110237,
+          "stress_lower_mpa": -23.62204724409449,
+          "stress_upper_mpa": -21.496062992125985,
+          "pixel_column": 1695,
+          "pixel_rows": [
+            244,
+            246
+          ]
+        },
+        {
+          "x_m": 1435.8974358974358,
+          "stress_mpa": -22.91338582677166,
+          "stress_lower_mpa": -23.97637795275591,
+          "stress_upper_mpa": -21.850393700787407,
+          "pixel_column": 1703,
+          "pixel_rows": [
+            245,
+            247
+          ]
+        },
+        {
+          "x_m": 1504.2735042735042,
+          "stress_mpa": -22.91338582677166,
+          "stress_lower_mpa": -23.97637795275591,
+          "stress_upper_mpa": -21.850393700787407,
+          "pixel_column": 1711,
+          "pixel_rows": [
+            245,
+            247
+          ]
+        },
+        {
+          "x_m": 1572.6495726495725,
+          "stress_mpa": -22.736220472440948,
+          "stress_lower_mpa": -23.62204724409449,
+          "stress_upper_mpa": -21.850393700787407,
+          "pixel_column": 1719,
+          "pixel_rows": [
+            245,
+            246
+          ]
+        },
+        {
+          "x_m": 1641.025641025641,
+          "stress_mpa": -22.559055118110237,
+          "stress_lower_mpa": -23.62204724409449,
+          "stress_upper_mpa": -21.496062992125985,
+          "pixel_column": 1727,
+          "pixel_rows": [
+            244,
+            246
+          ]
+        },
+        {
+          "x_m": 1709.4017094017095,
+          "stress_mpa": -22.559055118110237,
+          "stress_lower_mpa": -25.039370078740163,
+          "stress_upper_mpa": -20.07874015748031,
+          "pixel_column": 1735,
+          "pixel_rows": [
+            240,
+            250
+          ]
+        },
+        {
+          "x_m": 1777.7777777777778,
+          "stress_mpa": -17.952755905511808,
+          "stress_lower_mpa": -20.07874015748031,
+          "stress_upper_mpa": -15.826771653543304,
+          "pixel_column": 1743,
+          "pixel_rows": [
+            228,
+            236
+          ]
+        },
+        {
+          "x_m": 1846.1538461538462,
+          "stress_mpa": -22.381889763779526,
+          "stress_lower_mpa": -23.97637795275591,
+          "stress_upper_mpa": -20.787401574803155,
+          "pixel_column": 1751,
+          "pixel_rows": [
+            242,
+            247
+          ]
+        },
+        {
+          "x_m": 1914.5299145299148,
+          "stress_mpa": -12.10629921259843,
+          "stress_lower_mpa": -14.055118110236222,
+          "stress_upper_mpa": -10.157480314960637,
+          "pixel_column": 1759,
+          "pixel_rows": [
+            212,
+            219
+          ]
+        },
+        {
+          "x_m": 1982.905982905983,
+          "stress_mpa": -21.496062992125985,
+          "stress_lower_mpa": -24.33070866141732,
+          "stress_upper_mpa": -18.66141732283465,
+          "pixel_column": 1767,
+          "pixel_rows": [
+            236,
+            248
+          ]
+        },
+        {
+          "x_m": 2051.2820512820513,
+          "stress_mpa": -24.68503937007874,
+          "stress_lower_mpa": -26.102362204724415,
+          "stress_upper_mpa": -23.267716535433067,
+          "pixel_column": 1775,
+          "pixel_rows": [
+            249,
+            253
+          ]
+        },
+        {
+          "x_m": 2119.6581196581196,
+          "stress_mpa": -16.003937007874015,
+          "stress_lower_mpa": -19.724409448818903,
+          "stress_upper_mpa": -12.28346456692914,
+          "pixel_column": 1783,
+          "pixel_rows": [
+            218,
+            235
+          ]
+        },
+        {
+          "x_m": 2188.034188034188,
+          "stress_mpa": -29.468503937007867,
+          "stress_lower_mpa": -42.4015748031496,
+          "stress_upper_mpa": -16.535433070866148,
+          "pixel_column": 1791,
+          "pixel_rows": [
+            230,
+            299
+          ]
+        },
+        {
+          "x_m": 2256.4102564102564,
+          "stress_mpa": -19.547244094488192,
+          "stress_lower_mpa": -23.62204724409449,
+          "stress_upper_mpa": -15.472440944881896,
+          "pixel_column": 1799,
+          "pixel_rows": [
+            227,
+            246
+          ]
+        },
+        {
+          "x_m": 2324.7863247863247,
+          "stress_mpa": -16.181102362204726,
+          "stress_lower_mpa": -19.37007874015748,
+          "stress_upper_mpa": -12.99212598425197,
+          "pixel_column": 1807,
+          "pixel_rows": [
+            220,
+            234
+          ]
+        },
+        {
+          "x_m": 2393.162393162393,
+          "stress_mpa": -35.49212598425197,
+          "stress_lower_mpa": -42.4015748031496,
+          "stress_upper_mpa": -28.582677165354326,
+          "pixel_column": 1815,
+          "pixel_rows": [
+            264,
+            299
+          ]
+        },
+        {
+          "x_m": 2598.2905982905986,
+          "stress_mpa": -58.169291338582674,
+          "stress_lower_mpa": -60.826771653543304,
+          "stress_upper_mpa": -55.511811023622045,
+          "pixel_column": 1839,
+          "pixel_rows": [
+            340,
+            351
+          ]
+        },
+        {
+          "x_m": 2735.0427350427353,
+          "stress_mpa": -31.417322834645674,
+          "stress_lower_mpa": -37.08661417322834,
+          "stress_upper_mpa": -25.748031496062993,
+          "pixel_column": 1855,
+          "pixel_rows": [
+            256,
+            284
+          ]
+        },
+        {
+          "x_m": 2803.4188034188032,
+          "stress_mpa": -41.87007874015748,
+          "stress_lower_mpa": -57.28346456692913,
+          "stress_upper_mpa": -26.456692913385822,
+          "pixel_column": 1863,
+          "pixel_rows": [
+            258,
+            341
+          ]
+        },
+        {
+          "x_m": 2871.7948717948716,
+          "stress_mpa": -39.56692913385827,
+          "stress_lower_mpa": -44.527559055118104,
+          "stress_upper_mpa": -34.60629921259843,
+          "pixel_column": 1871,
+          "pixel_rows": [
+            281,
+            305
+          ]
+        },
+        {
+          "x_m": 2940.1709401709404,
+          "stress_mpa": -28.405511811023615,
+          "stress_lower_mpa": -30.0,
+          "stress_upper_mpa": -26.811023622047244,
+          "pixel_column": 1879,
+          "pixel_rows": [
+            259,
+            264
+          ]
+        },
+        {
+          "x_m": 3008.5470085470083,
+          "stress_mpa": -42.75590551181102,
+          "stress_lower_mpa": -50.905511811023615,
+          "stress_upper_mpa": -34.60629921259843,
+          "pixel_column": 1887,
+          "pixel_rows": [
+            281,
+            323
+          ]
+        },
+        {
+          "x_m": 3076.923076923077,
+          "stress_mpa": -81.37795275590551,
+          "stress_lower_mpa": -93.4251968503937,
+          "stress_upper_mpa": -69.33070866141733,
+          "pixel_column": 1895,
+          "pixel_rows": [
+            379,
+            443
+          ]
+        },
+        {
+          "x_m": 3145.299145299145,
+          "stress_mpa": -14.940944881889763,
+          "stress_lower_mpa": -25.039370078740163,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 1903,
+          "pixel_rows": [
+            197,
+            250
+          ]
+        },
+        {
+          "x_m": 3213.675213675214,
+          "stress_mpa": -6.082677165354326,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 1911,
+          "pixel_rows": [
+            197,
+            200
+          ]
+        },
+        {
+          "x_m": 3282.051282051282,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1919,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 3350.42735042735,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1927,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 3418.803418803419,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1935,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 3487.179487179487,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1943,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 3555.5555555555557,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1951,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 3623.931623931624,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1959,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 3692.3076923076924,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1967,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 3760.6837606837607,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1975,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 3829.0598290598296,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1983,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 3897.4358974358975,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1991,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 3965.811965811966,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1999,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 4034.188034188034,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2007,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 4102.5641025641025,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2015,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 4170.940170940171,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2023,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 4239.316239316239,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2031,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 4307.692307692308,
+          "stress_mpa": -6.614173228346459,
+          "stress_lower_mpa": -7.677165354330711,
+          "stress_upper_mpa": -5.551181102362207,
+          "pixel_column": 2039,
+          "pixel_rows": [
+            199,
+            201
+          ]
+        },
+        {
+          "x_m": 4376.068376068376,
+          "stress_mpa": -6.968503937007867,
+          "stress_lower_mpa": -8.031496062992133,
+          "stress_upper_mpa": -5.905511811023615,
+          "pixel_column": 2047,
+          "pixel_rows": [
+            200,
+            202
+          ]
+        },
+        {
+          "x_m": 4444.444444444444,
+          "stress_mpa": -6.968503937007867,
+          "stress_lower_mpa": -8.031496062992133,
+          "stress_upper_mpa": -5.905511811023615,
+          "pixel_column": 2055,
+          "pixel_rows": [
+            200,
+            202
+          ]
+        },
+        {
+          "x_m": 4512.820512820513,
+          "stress_mpa": -6.968503937007867,
+          "stress_lower_mpa": -8.031496062992133,
+          "stress_upper_mpa": -5.905511811023615,
+          "pixel_column": 2063,
+          "pixel_rows": [
+            200,
+            202
+          ]
+        },
+        {
+          "x_m": 4581.196581196581,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2071,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 4649.572649572649,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2079,
+          "pixel_rows": [
+            198,
+            200
+          ]
+        },
+        {
+          "x_m": 4717.948717948718,
+          "stress_mpa": -6.614173228346459,
+          "stress_lower_mpa": -8.031496062992133,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2087,
+          "pixel_rows": [
+            198,
+            202
+          ]
+        },
+        {
+          "x_m": 4786.324786324786,
+          "stress_mpa": -7.322834645669289,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 2095,
+          "pixel_rows": [
+            201,
+            203
+          ]
+        },
+        {
+          "x_m": 4854.7008547008545,
+          "stress_mpa": -7.145669291338578,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -5.905511811023615,
+          "pixel_column": 2103,
+          "pixel_rows": [
+            200,
+            203
+          ]
+        },
+        {
+          "x_m": 4923.076923076924,
+          "stress_mpa": -6.082677165354326,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 2111,
+          "pixel_rows": [
+            197,
+            200
+          ]
+        },
+        {
+          "x_m": 4991.452991452991,
+          "stress_mpa": -5.196850393700785,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -3.0708661417322816,
+          "pixel_column": 2119,
+          "pixel_rows": [
+            192,
+            200
+          ]
+        },
+        {
+          "x_m": 5059.82905982906,
+          "stress_mpa": -2.1850393700787407,
+          "stress_lower_mpa": -9.803149606299215,
+          "stress_upper_mpa": 5.433070866141733,
+          "pixel_column": 2127,
+          "pixel_rows": [
+            168,
+            207
+          ]
+        },
+        {
+          "x_m": 5128.205128205128,
+          "stress_mpa": 4.9015748031496,
+          "stress_lower_mpa": 1.5354330708661479,
+          "stress_upper_mpa": 8.267716535433067,
+          "pixel_column": 2135,
+          "pixel_rows": [
+            160,
+            175
+          ]
+        },
+        {
+          "x_m": 5196.581196581197,
+          "stress_mpa": -18.48425196850394,
+          "stress_lower_mpa": -26.102362204724415,
+          "stress_upper_mpa": -10.866141732283467,
+          "pixel_column": 2143,
+          "pixel_rows": [
+            214,
+            253
+          ]
+        },
+        {
+          "x_m": 5264.957264957266,
+          "stress_mpa": -40.62992125984252,
+          "stress_lower_mpa": -44.173228346456696,
+          "stress_upper_mpa": -37.08661417322834,
+          "pixel_column": 2151,
+          "pixel_rows": [
+            288,
+            304
+          ]
+        },
+        {
+          "x_m": 5333.333333333333,
+          "stress_mpa": -19.19291338582677,
+          "stress_lower_mpa": -22.91338582677166,
+          "stress_upper_mpa": -15.472440944881896,
+          "pixel_column": 2159,
+          "pixel_rows": [
+            227,
+            244
+          ]
+        },
+        {
+          "x_m": 5401.709401709401,
+          "stress_mpa": -27.874015748031496,
+          "stress_lower_mpa": -30.0,
+          "stress_upper_mpa": -25.748031496062993,
+          "pixel_column": 2167,
+          "pixel_rows": [
+            256,
+            264
+          ]
+        },
+        {
+          "x_m": 5470.085470085471,
+          "stress_mpa": -32.65748031496064,
+          "stress_lower_mpa": -33.897637795275585,
+          "stress_upper_mpa": -31.417322834645674,
+          "pixel_column": 2175,
+          "pixel_rows": [
+            272,
+            275
+          ]
+        },
+        {
+          "x_m": 5538.461538461539,
+          "stress_mpa": -28.582677165354326,
+          "stress_lower_mpa": -31.417322834645674,
+          "stress_upper_mpa": -25.748031496062993,
+          "pixel_column": 2183,
+          "pixel_rows": [
+            256,
+            268
+          ]
+        },
+        {
+          "x_m": 5606.8376068376065,
+          "stress_mpa": -21.673228346456696,
+          "stress_lower_mpa": -23.97637795275591,
+          "stress_upper_mpa": -19.37007874015748,
+          "pixel_column": 2191,
+          "pixel_rows": [
+            238,
+            247
+          ]
+        },
+        {
+          "x_m": 5675.213675213675,
+          "stress_mpa": -30.0,
+          "stress_lower_mpa": -31.062992125984252,
+          "stress_upper_mpa": -28.937007874015748,
+          "pixel_column": 2199,
+          "pixel_rows": [
+            265,
+            267
+          ]
+        },
+        {
+          "x_m": 5743.589743589743,
+          "stress_mpa": -34.78346456692914,
+          "stress_lower_mpa": -37.08661417322834,
+          "stress_upper_mpa": -32.480314960629926,
+          "pixel_column": 2207,
+          "pixel_rows": [
+            275,
+            284
+          ]
+        },
+        {
+          "x_m": 5811.9658119658125,
+          "stress_mpa": -38.85826771653544,
+          "stress_lower_mpa": -39.92125984251969,
+          "stress_upper_mpa": -37.795275590551185,
+          "pixel_column": 2215,
+          "pixel_rows": [
+            290,
+            292
+          ]
+        },
+        {
+          "x_m": 5880.341880341881,
+          "stress_mpa": -36.909448818897644,
+          "stress_lower_mpa": -38.503937007874015,
+          "stress_upper_mpa": -35.31496062992126,
+          "pixel_column": 2223,
+          "pixel_rows": [
+            283,
+            288
+          ]
+        },
+        {
+          "x_m": 5948.717948717948,
+          "stress_mpa": -34.78346456692914,
+          "stress_lower_mpa": -37.08661417322834,
+          "stress_upper_mpa": -32.480314960629926,
+          "pixel_column": 2231,
+          "pixel_rows": [
+            275,
+            284
+          ]
+        },
+        {
+          "x_m": 6017.094017094017,
+          "stress_mpa": -39.74409448818898,
+          "stress_lower_mpa": -41.33858267716535,
+          "stress_upper_mpa": -38.14960629921259,
+          "pixel_column": 2239,
+          "pixel_rows": [
+            291,
+            296
+          ]
+        },
+        {
+          "x_m": 6085.470085470085,
+          "stress_mpa": -40.62992125984252,
+          "stress_lower_mpa": -42.04724409448819,
+          "stress_upper_mpa": -39.212598425196845,
+          "pixel_column": 2247,
+          "pixel_rows": [
+            294,
+            298
+          ]
+        },
+        {
+          "x_m": 6153.846153846154,
+          "stress_mpa": -38.326771653543304,
+          "stress_lower_mpa": -39.56692913385827,
+          "stress_upper_mpa": -37.08661417322834,
+          "pixel_column": 2255,
+          "pixel_rows": [
+            288,
+            291
+          ]
+        },
+        {
+          "x_m": 6222.222222222223,
+          "stress_mpa": -39.03543307086615,
+          "stress_lower_mpa": -40.2755905511811,
+          "stress_upper_mpa": -37.795275590551185,
+          "pixel_column": 2263,
+          "pixel_rows": [
+            290,
+            293
+          ]
+        },
+        {
+          "x_m": 6290.59829059829,
+          "stress_mpa": -42.75590551181102,
+          "stress_lower_mpa": -43.818897637795274,
+          "stress_upper_mpa": -41.69291338582677,
+          "pixel_column": 2271,
+          "pixel_rows": [
+            301,
+            303
+          ]
+        },
+        {
+          "x_m": 6358.974358974358,
+          "stress_mpa": -46.12204724409449,
+          "stress_lower_mpa": -47.71653543307086,
+          "stress_upper_mpa": -44.527559055118104,
+          "pixel_column": 2279,
+          "pixel_rows": [
+            309,
+            314
+          ]
+        },
+        {
+          "x_m": 6427.350427350428,
+          "stress_mpa": -48.77952755905511,
+          "stress_lower_mpa": -50.196850393700785,
+          "stress_upper_mpa": -47.36220472440945,
+          "pixel_column": 2287,
+          "pixel_rows": [
+            317,
+            321
+          ]
+        },
+        {
+          "x_m": 6495.726495726496,
+          "stress_mpa": -49.488188976377955,
+          "stress_lower_mpa": -50.55118110236221,
+          "stress_upper_mpa": -48.425196850393704,
+          "pixel_column": 2295,
+          "pixel_rows": [
+            320,
+            322
+          ]
+        },
+        {
+          "x_m": 6564.102564102564,
+          "stress_mpa": -41.33858267716535,
+          "stress_lower_mpa": -47.36220472440945,
+          "stress_upper_mpa": -35.31496062992126,
+          "pixel_column": 2303,
+          "pixel_rows": [
+            283,
+            313
+          ]
+        },
+        {
+          "x_m": 6632.478632478632,
+          "stress_mpa": -56.75196850393701,
+          "stress_lower_mpa": -58.346456692913385,
+          "stress_upper_mpa": -55.15748031496064,
+          "pixel_column": 2311,
+          "pixel_rows": [
+            339,
+            344
+          ]
+        },
+        {
+          "x_m": 6700.8547008547,
+          "stress_mpa": -47.71653543307086,
+          "stress_lower_mpa": -50.905511811023615,
+          "stress_upper_mpa": -44.527559055118104,
+          "pixel_column": 2319,
+          "pixel_rows": [
+            309,
+            323
+          ]
+        },
+        {
+          "x_m": 6769.2307692307695,
+          "stress_mpa": -33.897637795275585,
+          "stress_lower_mpa": -37.795275590551185,
+          "stress_upper_mpa": -30.0,
+          "pixel_column": 2327,
+          "pixel_rows": [
+            268,
+            286
+          ]
+        },
+        {
+          "x_m": 6837.606837606838,
+          "stress_mpa": -23.267716535433067,
+          "stress_lower_mpa": -25.39370078740157,
+          "stress_upper_mpa": -21.141732283464563,
+          "pixel_column": 2335,
+          "pixel_rows": [
+            243,
+            251
+          ]
+        },
+        {
+          "x_m": 6905.982905982906,
+          "stress_mpa": -18.12992125984252,
+          "stress_lower_mpa": -21.850393700787407,
+          "stress_upper_mpa": -14.409448818897644,
+          "pixel_column": 2343,
+          "pixel_rows": [
+            224,
+            241
+          ]
+        },
+        {
+          "x_m": 6974.358974358974,
+          "stress_mpa": -30.70866141732283,
+          "stress_lower_mpa": -34.96062992125984,
+          "stress_upper_mpa": -26.456692913385822,
+          "pixel_column": 2351,
+          "pixel_rows": [
+            258,
+            278
+          ]
+        },
+        {
+          "x_m": 7042.735042735043,
+          "stress_mpa": -45.94488188976378,
+          "stress_lower_mpa": -49.13385826771653,
+          "stress_upper_mpa": -42.75590551181102,
+          "pixel_column": 2359,
+          "pixel_rows": [
+            304,
+            318
+          ]
+        },
+        {
+          "x_m": 7111.111111111111,
+          "stress_mpa": -48.77952755905511,
+          "stress_lower_mpa": -50.55118110236221,
+          "stress_upper_mpa": -47.00787401574803,
+          "pixel_column": 2367,
+          "pixel_rows": [
+            316,
+            322
+          ]
+        },
+        {
+          "x_m": 7179.48717948718,
+          "stress_mpa": -39.56692913385827,
+          "stress_lower_mpa": -42.4015748031496,
+          "stress_upper_mpa": -36.73228346456693,
+          "pixel_column": 2375,
+          "pixel_rows": [
+            287,
+            299
+          ]
+        },
+        {
+          "x_m": 7247.863247863248,
+          "stress_mpa": -42.75590551181102,
+          "stress_lower_mpa": -48.425196850393704,
+          "stress_upper_mpa": -37.08661417322834,
+          "pixel_column": 2383,
+          "pixel_rows": [
+            288,
+            316
+          ]
+        },
+        {
+          "x_m": 7316.2393162393155,
+          "stress_mpa": -24.153543307086608,
+          "stress_lower_mpa": -27.519685039370074,
+          "stress_upper_mpa": -20.787401574803155,
+          "pixel_column": 2391,
+          "pixel_rows": [
+            242,
+            257
+          ]
+        },
+        {
+          "x_m": 7384.615384615385,
+          "stress_mpa": -22.381889763779526,
+          "stress_lower_mpa": -25.039370078740163,
+          "stress_upper_mpa": -19.724409448818903,
+          "pixel_column": 2399,
+          "pixel_rows": [
+            239,
+            250
+          ]
+        },
+        {
+          "x_m": 7452.991452991453,
+          "stress_mpa": -37.08661417322834,
+          "stress_lower_mpa": -41.69291338582677,
+          "stress_upper_mpa": -32.480314960629926,
+          "pixel_column": 2407,
+          "pixel_rows": [
+            275,
+            297
+          ]
+        },
+        {
+          "x_m": 7521.3675213675215,
+          "stress_mpa": -31.062992125984252,
+          "stress_lower_mpa": -38.14960629921259,
+          "stress_upper_mpa": -23.97637795275591,
+          "pixel_column": 2415,
+          "pixel_rows": [
+            251,
+            287
+          ]
+        },
+        {
+          "x_m": 7589.74358974359,
+          "stress_mpa": -28.582677165354326,
+          "stress_lower_mpa": -31.062992125984252,
+          "stress_upper_mpa": -26.102362204724415,
+          "pixel_column": 2423,
+          "pixel_rows": [
+            257,
+            267
+          ]
+        },
+        {
+          "x_m": 7658.119658119659,
+          "stress_mpa": -36.02362204724409,
+          "stress_lower_mpa": -38.14960629921259,
+          "stress_upper_mpa": -33.897637795275585,
+          "pixel_column": 2431,
+          "pixel_rows": [
+            279,
+            287
+          ]
+        },
+        {
+          "x_m": 7726.495726495727,
+          "stress_mpa": -38.85826771653544,
+          "stress_lower_mpa": -39.92125984251969,
+          "stress_upper_mpa": -37.795275590551185,
+          "pixel_column": 2439,
+          "pixel_rows": [
+            290,
+            292
+          ]
+        },
+        {
+          "x_m": 7794.871794871795,
+          "stress_mpa": -29.29133858267717,
+          "stress_lower_mpa": -35.66929133858268,
+          "stress_upper_mpa": -22.91338582677166,
+          "pixel_column": 2447,
+          "pixel_rows": [
+            248,
+            280
+          ]
+        },
+        {
+          "x_m": 7863.247863247863,
+          "stress_mpa": -28.22834645669292,
+          "stress_lower_mpa": -30.0,
+          "stress_upper_mpa": -26.456692913385822,
+          "pixel_column": 2455,
+          "pixel_rows": [
+            258,
+            264
+          ]
+        },
+        {
+          "x_m": 7931.623931623932,
+          "stress_mpa": -29.645669291338578,
+          "stress_lower_mpa": -30.70866141732283,
+          "stress_upper_mpa": -28.582677165354326,
+          "pixel_column": 2463,
+          "pixel_rows": [
+            264,
+            266
+          ]
+        },
+        {
+          "x_m": 8000.0,
+          "stress_mpa": -28.405511811023615,
+          "stress_lower_mpa": -29.645669291338578,
+          "stress_upper_mpa": -27.165354330708666,
+          "pixel_column": 2471,
+          "pixel_rows": [
+            260,
+            263
+          ]
+        },
+        {
+          "x_m": 8068.376068376068,
+          "stress_mpa": -26.988188976377955,
+          "stress_lower_mpa": -27.874015748031496,
+          "stress_upper_mpa": -26.102362204724415,
+          "pixel_column": 2479,
+          "pixel_rows": [
+            257,
+            258
+          ]
+        },
+        {
+          "x_m": 8136.752136752137,
+          "stress_mpa": -19.547244094488192,
+          "stress_lower_mpa": -23.97637795275591,
+          "stress_upper_mpa": -15.118110236220474,
+          "pixel_column": 2487,
+          "pixel_rows": [
+            226,
+            247
+          ]
+        },
+        {
+          "x_m": 8205.128205128205,
+          "stress_mpa": -13.346456692913392,
+          "stress_lower_mpa": -14.763779527559052,
+          "stress_upper_mpa": -11.929133858267718,
+          "pixel_column": 2495,
+          "pixel_rows": [
+            217,
+            221
+          ]
+        },
+        {
+          "x_m": 8273.504273504273,
+          "stress_mpa": -10.688976377952756,
+          "stress_lower_mpa": -11.929133858267718,
+          "stress_upper_mpa": -9.448818897637793,
+          "pixel_column": 2503,
+          "pixel_rows": [
+            210,
+            213
+          ]
+        },
+        {
+          "x_m": 8341.880341880342,
+          "stress_mpa": -10.688976377952756,
+          "stress_lower_mpa": -13.346456692913392,
+          "stress_upper_mpa": -8.031496062992133,
+          "pixel_column": 2511,
+          "pixel_rows": [
+            206,
+            217
+          ]
+        },
+        {
+          "x_m": 8410.25641025641,
+          "stress_mpa": -10.157480314960637,
+          "stress_lower_mpa": -11.574803149606296,
+          "stress_upper_mpa": -8.740157480314963,
+          "pixel_column": 2519,
+          "pixel_rows": [
+            208,
+            212
+          ]
+        },
+        {
+          "x_m": 8478.632478632479,
+          "stress_mpa": -10.511811023622045,
+          "stress_lower_mpa": -11.574803149606296,
+          "stress_upper_mpa": -9.448818897637793,
+          "pixel_column": 2527,
+          "pixel_rows": [
+            210,
+            212
+          ]
+        },
+        {
+          "x_m": 8547.008547008547,
+          "stress_mpa": -10.334645669291334,
+          "stress_lower_mpa": -11.220472440944889,
+          "stress_upper_mpa": -9.448818897637793,
+          "pixel_column": 2535,
+          "pixel_rows": [
+            210,
+            211
+          ]
+        },
+        {
+          "x_m": 8615.384615384615,
+          "stress_mpa": -10.511811023622045,
+          "stress_lower_mpa": -11.574803149606296,
+          "stress_upper_mpa": -9.448818897637793,
+          "pixel_column": 2543,
+          "pixel_rows": [
+            210,
+            212
+          ]
+        },
+        {
+          "x_m": 8683.760683760684,
+          "stress_mpa": -10.688976377952756,
+          "stress_lower_mpa": -11.574803149606296,
+          "stress_upper_mpa": -9.803149606299215,
+          "pixel_column": 2551,
+          "pixel_rows": [
+            211,
+            212
+          ]
+        },
+        {
+          "x_m": 8752.136752136752,
+          "stress_mpa": -10.688976377952756,
+          "stress_lower_mpa": -11.574803149606296,
+          "stress_upper_mpa": -9.803149606299215,
+          "pixel_column": 2559,
+          "pixel_rows": [
+            211,
+            212
+          ]
+        },
+        {
+          "x_m": 8820.51282051282,
+          "stress_mpa": -10.334645669291334,
+          "stress_lower_mpa": -11.220472440944889,
+          "stress_upper_mpa": -9.448818897637793,
+          "pixel_column": 2567,
+          "pixel_rows": [
+            210,
+            211
+          ]
+        },
+        {
+          "x_m": 8888.888888888889,
+          "stress_mpa": -10.157480314960637,
+          "stress_lower_mpa": -11.220472440944889,
+          "stress_upper_mpa": -9.094488188976385,
+          "pixel_column": 2575,
+          "pixel_rows": [
+            209,
+            211
+          ]
+        },
+        {
+          "x_m": 8957.264957264957,
+          "stress_mpa": -9.803149606299215,
+          "stress_lower_mpa": -10.866141732283467,
+          "stress_upper_mpa": -8.740157480314963,
+          "pixel_column": 2583,
+          "pixel_rows": [
+            208,
+            210
+          ]
+        },
+        {
+          "x_m": 9025.641025641025,
+          "stress_mpa": -9.803149606299215,
+          "stress_lower_mpa": -10.866141732283467,
+          "stress_upper_mpa": -8.740157480314963,
+          "pixel_column": 2591,
+          "pixel_rows": [
+            208,
+            210
+          ]
+        },
+        {
+          "x_m": 9094.017094017094,
+          "stress_mpa": -9.271653543307082,
+          "stress_lower_mpa": -10.511811023622045,
+          "stress_upper_mpa": -8.031496062992133,
+          "pixel_column": 2599,
+          "pixel_rows": [
+            206,
+            209
+          ]
+        },
+        {
+          "x_m": 9162.393162393162,
+          "stress_mpa": -8.740157480314963,
+          "stress_lower_mpa": -9.803149606299215,
+          "stress_upper_mpa": -7.677165354330711,
+          "pixel_column": 2607,
+          "pixel_rows": [
+            205,
+            207
+          ]
+        },
+        {
+          "x_m": 9230.76923076923,
+          "stress_mpa": -8.031496062992133,
+          "stress_lower_mpa": -9.094488188976385,
+          "stress_upper_mpa": -6.968503937007867,
+          "pixel_column": 2615,
+          "pixel_rows": [
+            203,
+            205
+          ]
+        },
+        {
+          "x_m": 9299.145299145299,
+          "stress_mpa": -7.322834645669289,
+          "stress_lower_mpa": -8.38582677165354,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 2623,
+          "pixel_rows": [
+            201,
+            203
+          ]
+        },
+        {
+          "x_m": 9367.521367521367,
+          "stress_mpa": -6.79133858267717,
+          "stress_lower_mpa": -8.031496062992133,
+          "stress_upper_mpa": -5.551181102362207,
+          "pixel_column": 2631,
+          "pixel_rows": [
+            199,
+            202
+          ]
+        },
+        {
+          "x_m": 9435.897435897436,
+          "stress_mpa": -5.905511811023615,
+          "stress_lower_mpa": -6.968503937007867,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 2639,
+          "pixel_rows": [
+            197,
+            199
+          ]
+        },
+        {
+          "x_m": 9504.273504273504,
+          "stress_mpa": -5.196850393700785,
+          "stress_lower_mpa": -6.259842519685037,
+          "stress_upper_mpa": -4.133858267716533,
+          "pixel_column": 2647,
+          "pixel_rows": [
+            195,
+            197
+          ]
+        },
+        {
+          "x_m": 9572.649572649572,
+          "stress_mpa": -4.133858267716533,
+          "stress_lower_mpa": -5.196850393700785,
+          "stress_upper_mpa": -3.0708661417322816,
+          "pixel_column": 2655,
+          "pixel_rows": [
+            192,
+            194
+          ]
+        },
+        {
+          "x_m": 9641.02564102564,
+          "stress_mpa": -3.4251968503937036,
+          "stress_lower_mpa": -4.488188976377955,
+          "stress_upper_mpa": -2.3622047244094517,
+          "pixel_column": 2663,
+          "pixel_rows": [
+            190,
+            192
+          ]
+        },
+        {
+          "x_m": 9709.401709401709,
+          "stress_mpa": -2.8937007874015706,
+          "stress_lower_mpa": -3.7795275590551114,
+          "stress_upper_mpa": -2.0078740157480297,
+          "pixel_column": 2671,
+          "pixel_rows": [
+            189,
+            190
+          ]
+        },
+        {
+          "x_m": 9777.777777777777,
+          "stress_mpa": -1.6535433070866077,
+          "stress_lower_mpa": -2.7165354330708595,
+          "stress_upper_mpa": -0.5905511811023558,
+          "pixel_column": 2679,
+          "pixel_rows": [
+            185,
+            187
+          ]
+        },
+        {
+          "x_m": 9846.153846153848,
+          "stress_mpa": -0.5905511811023558,
+          "stress_lower_mpa": -1.6535433070866077,
+          "stress_upper_mpa": 0.47244094488189603,
+          "pixel_column": 2687,
+          "pixel_rows": [
+            182,
+            184
+          ]
+        },
+        {
+          "x_m": 9914.529914529914,
+          "stress_mpa": 0.11811023622047401,
+          "stress_lower_mpa": -0.9448818897637778,
+          "stress_upper_mpa": 1.1811023622047259,
+          "pixel_column": 2695,
+          "pixel_rows": [
+            180,
+            182
+          ]
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "segments": 4,
+      "samples": [
+        {
+          "x_m": 68.37606837606837,
+          "stress_mpa": -0.413385826771659,
+          "stress_lower_mpa": -1.6535433070866077,
+          "stress_upper_mpa": 0.8267716535433038,
+          "pixel_column": 135,
+          "pixel_rows": [
+            780,
+            783
+          ]
+        },
+        {
+          "x_m": 136.75213675213675,
+          "stress_mpa": 0.11811023622047401,
+          "stress_lower_mpa": -1.2992125984251999,
+          "stress_upper_mpa": 1.5354330708661479,
+          "pixel_column": 143,
+          "pixel_rows": [
+            778,
+            782
+          ]
+        },
+        {
+          "x_m": 205.12820512820514,
+          "stress_mpa": 0.47244094488189603,
+          "stress_lower_mpa": -0.5905511811023558,
+          "stress_upper_mpa": 1.5354330708661479,
+          "pixel_column": 151,
+          "pixel_rows": [
+            778,
+            780
+          ]
+        },
+        {
+          "x_m": 273.5042735042735,
+          "stress_mpa": 1.3582677165354369,
+          "stress_lower_mpa": 0.11811023622047401,
+          "stress_upper_mpa": 2.5984251968503997,
+          "pixel_column": 159,
+          "pixel_rows": [
+            775,
+            778
+          ]
+        },
+        {
+          "x_m": 341.8803418803419,
+          "stress_mpa": 1.5354330708661479,
+          "stress_lower_mpa": 0.47244094488189603,
+          "stress_upper_mpa": 2.5984251968503997,
+          "pixel_column": 167,
+          "pixel_rows": [
+            775,
+            777
+          ]
+        },
+        {
+          "x_m": 410.2564102564103,
+          "stress_mpa": 2.2440944881889777,
+          "stress_lower_mpa": 1.1811023622047259,
+          "stress_upper_mpa": 3.3070866141732296,
+          "pixel_column": 175,
+          "pixel_rows": [
+            773,
+            775
+          ]
+        },
+        {
+          "x_m": 478.6324786324787,
+          "stress_mpa": 2.0669291338582667,
+          "stress_lower_mpa": 0.8267716535433038,
+          "stress_upper_mpa": 3.3070866141732296,
+          "pixel_column": 183,
+          "pixel_rows": [
+            773,
+            776
+          ]
+        },
+        {
+          "x_m": 547.008547008547,
+          "stress_mpa": 1.8897637795275557,
+          "stress_lower_mpa": 0.8267716535433038,
+          "stress_upper_mpa": 2.9527559055118076,
+          "pixel_column": 191,
+          "pixel_rows": [
+            774,
+            776
+          ]
+        },
+        {
+          "x_m": 615.3846153846155,
+          "stress_mpa": 2.7755905511810965,
+          "stress_lower_mpa": 1.5354330708661479,
+          "stress_upper_mpa": 4.015748031496059,
+          "pixel_column": 199,
+          "pixel_rows": [
+            771,
+            774
+          ]
+        },
+        {
+          "x_m": 683.7606837606838,
+          "stress_mpa": 1.7125984251968447,
+          "stress_lower_mpa": 0.8267716535433038,
+          "stress_upper_mpa": 2.5984251968503997,
+          "pixel_column": 207,
+          "pixel_rows": [
+            775,
+            776
+          ]
+        },
+        {
+          "x_m": 752.1367521367521,
+          "stress_mpa": 0.8267716535433038,
+          "stress_lower_mpa": -0.23622047244094801,
+          "stress_upper_mpa": 1.8897637795275557,
+          "pixel_column": 215,
+          "pixel_rows": [
+            777,
+            779
+          ]
+        },
+        {
+          "x_m": 820.5128205128206,
+          "stress_mpa": 0.47244094488189603,
+          "stress_lower_mpa": -0.5905511811023558,
+          "stress_upper_mpa": 1.5354330708661479,
+          "pixel_column": 223,
+          "pixel_rows": [
+            778,
+            780
+          ]
+        },
+        {
+          "x_m": 888.8888888888889,
+          "stress_mpa": 0.11811023622047401,
+          "stress_lower_mpa": -0.9448818897637778,
+          "stress_upper_mpa": 1.1811023622047259,
+          "pixel_column": 231,
+          "pixel_rows": [
+            779,
+            781
+          ]
+        },
+        {
+          "x_m": 957.2649572649574,
+          "stress_mpa": -0.5905511811023558,
+          "stress_lower_mpa": -1.6535433070866077,
+          "stress_upper_mpa": 0.47244094488189603,
+          "pixel_column": 239,
+          "pixel_rows": [
+            781,
+            783
+          ]
+        },
+        {
+          "x_m": 1025.6410256410256,
+          "stress_mpa": -0.5905511811023558,
+          "stress_lower_mpa": -1.6535433070866077,
+          "stress_upper_mpa": 0.47244094488189603,
+          "pixel_column": 247,
+          "pixel_rows": [
+            781,
+            783
+          ]
+        },
+        {
+          "x_m": 1094.017094017094,
+          "stress_mpa": -2.0078740157480297,
+          "stress_lower_mpa": -3.4251968503937036,
+          "stress_upper_mpa": -0.5905511811023558,
+          "pixel_column": 255,
+          "pixel_rows": [
+            784,
+            788
+          ]
+        },
+        {
+          "x_m": 1162.3931623931624,
+          "stress_mpa": -2.0078740157480297,
+          "stress_lower_mpa": -3.0708661417322816,
+          "stress_upper_mpa": -0.9448818897637778,
+          "pixel_column": 263,
+          "pixel_rows": [
+            785,
+            787
+          ]
+        },
+        {
+          "x_m": 1230.769230769231,
+          "stress_mpa": -7.677165354330711,
+          "stress_lower_mpa": -16.181102362204726,
+          "stress_upper_mpa": 0.8267716535433038,
+          "pixel_column": 271,
+          "pixel_rows": [
+            780,
+            824
+          ]
+        },
+        {
+          "x_m": 1299.1452991452993,
+          "stress_mpa": -22.027559055118104,
+          "stress_lower_mpa": -23.267716535433067,
+          "stress_upper_mpa": -20.787401574803155,
+          "pixel_column": 279,
+          "pixel_rows": [
+            841,
+            844
+          ]
+        },
+        {
+          "x_m": 1367.5213675213677,
+          "stress_mpa": -22.559055118110237,
+          "stress_lower_mpa": -23.62204724409449,
+          "stress_upper_mpa": -21.496062992125985,
+          "pixel_column": 287,
+          "pixel_rows": [
+            843,
+            845
+          ]
+        },
+        {
+          "x_m": 1435.8974358974358,
+          "stress_mpa": -22.559055118110237,
+          "stress_lower_mpa": -23.62204724409449,
+          "stress_upper_mpa": -21.496062992125985,
+          "pixel_column": 295,
+          "pixel_rows": [
+            843,
+            845
+          ]
+        },
+        {
+          "x_m": 1504.2735042735042,
+          "stress_mpa": -22.91338582677166,
+          "stress_lower_mpa": -23.97637795275591,
+          "stress_upper_mpa": -21.850393700787407,
+          "pixel_column": 303,
+          "pixel_rows": [
+            844,
+            846
+          ]
+        },
+        {
+          "x_m": 1572.6495726495725,
+          "stress_mpa": -22.91338582677166,
+          "stress_lower_mpa": -23.97637795275591,
+          "stress_upper_mpa": -21.850393700787407,
+          "pixel_column": 311,
+          "pixel_rows": [
+            844,
+            846
+          ]
+        },
+        {
+          "x_m": 1641.025641025641,
+          "stress_mpa": -22.91338582677166,
+          "stress_lower_mpa": -23.97637795275591,
+          "stress_upper_mpa": -21.850393700787407,
+          "pixel_column": 319,
+          "pixel_rows": [
+            844,
+            846
+          ]
+        },
+        {
+          "x_m": 1709.4017094017095,
+          "stress_mpa": -20.964566929133852,
+          "stress_lower_mpa": -23.97637795275591,
+          "stress_upper_mpa": -17.952755905511808,
+          "pixel_column": 327,
+          "pixel_rows": [
+            833,
+            846
+          ]
+        },
+        {
+          "x_m": 1777.7777777777778,
+          "stress_mpa": -8.031496062992133,
+          "stress_lower_mpa": -9.803149606299215,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 335,
+          "pixel_rows": [
+            800,
+            806
+          ]
+        },
+        {
+          "x_m": 1846.1538461538462,
+          "stress_mpa": -5.196850393700785,
+          "stress_lower_mpa": -6.614173228346459,
+          "stress_upper_mpa": -3.7795275590551114,
+          "pixel_column": 343,
+          "pixel_rows": [
+            793,
+            797
+          ]
+        },
+        {
+          "x_m": 1914.5299145299148,
+          "stress_mpa": -11.397637795275585,
+          "stress_lower_mpa": -14.055118110236222,
+          "stress_upper_mpa": -8.740157480314963,
+          "pixel_column": 351,
+          "pixel_rows": [
+            807,
+            818
+          ]
+        },
+        {
+          "x_m": 1982.905982905983,
+          "stress_mpa": -19.19291338582677,
+          "stress_lower_mpa": -20.787401574803155,
+          "stress_upper_mpa": -17.5984251968504,
+          "pixel_column": 359,
+          "pixel_rows": [
+            832,
+            837
+          ]
+        },
+        {
+          "x_m": 2051.2820512820513,
+          "stress_mpa": -19.37007874015748,
+          "stress_lower_mpa": -24.33070866141732,
+          "stress_upper_mpa": -14.409448818897644,
+          "pixel_column": 367,
+          "pixel_rows": [
+            823,
+            847
+          ]
+        },
+        {
+          "x_m": 2119.6581196581196,
+          "stress_mpa": -22.736220472440948,
+          "stress_lower_mpa": -25.39370078740157,
+          "stress_upper_mpa": -20.07874015748031,
+          "pixel_column": 375,
+          "pixel_rows": [
+            839,
+            850
+          ]
+        },
+        {
+          "x_m": 2188.034188034188,
+          "stress_mpa": -20.610236220472444,
+          "stress_lower_mpa": -24.68503937007874,
+          "stress_upper_mpa": -16.535433070866148,
+          "pixel_column": 383,
+          "pixel_rows": [
+            829,
+            848
+          ]
+        },
+        {
+          "x_m": 2256.4102564102564,
+          "stress_mpa": -18.48425196850394,
+          "stress_lower_mpa": -20.07874015748031,
+          "stress_upper_mpa": -16.889763779527556,
+          "pixel_column": 391,
+          "pixel_rows": [
+            830,
+            835
+          ]
+        },
+        {
+          "x_m": 2324.7863247863247,
+          "stress_mpa": -24.86220472440945,
+          "stress_lower_mpa": -29.645669291338578,
+          "stress_upper_mpa": -20.07874015748031,
+          "pixel_column": 399,
+          "pixel_rows": [
+            839,
+            862
+          ]
+        },
+        {
+          "x_m": 2393.162393162393,
+          "stress_mpa": -30.531496062992133,
+          "stress_lower_mpa": -31.77165354330708,
+          "stress_upper_mpa": -29.29133858267717,
+          "pixel_column": 407,
+          "pixel_rows": [
+            865,
+            868
+          ]
+        },
+        {
+          "x_m": 2461.538461538462,
+          "stress_mpa": -30.354330708661422,
+          "stress_lower_mpa": -31.77165354330708,
+          "stress_upper_mpa": -28.937007874015748,
+          "pixel_column": 415,
+          "pixel_rows": [
+            864,
+            868
+          ]
+        },
+        {
+          "x_m": 2529.91452991453,
+          "stress_mpa": -31.948818897637793,
+          "stress_lower_mpa": -37.795275590551185,
+          "stress_upper_mpa": -26.102362204724415,
+          "pixel_column": 423,
+          "pixel_rows": [
+            856,
+            885
+          ]
+        },
+        {
+          "x_m": 2598.2905982905986,
+          "stress_mpa": -51.25984251968504,
+          "stress_lower_mpa": -53.38582677165354,
+          "stress_upper_mpa": -49.13385826771653,
+          "pixel_column": 431,
+          "pixel_rows": [
+            921,
+            929
+          ]
+        },
+        {
+          "x_m": 2666.6666666666665,
+          "stress_mpa": -42.2244094488189,
+          "stress_lower_mpa": -47.36220472440945,
+          "stress_upper_mpa": -37.08661417322834,
+          "pixel_column": 439,
+          "pixel_rows": [
+            887,
+            912
+          ]
+        },
+        {
+          "x_m": 2735.0427350427353,
+          "stress_mpa": -41.51574803149606,
+          "stress_lower_mpa": -45.23622047244095,
+          "stress_upper_mpa": -37.795275590551185,
+          "pixel_column": 447,
+          "pixel_rows": [
+            889,
+            906
+          ]
+        },
+        {
+          "x_m": 2803.4188034188032,
+          "stress_mpa": -38.14960629921259,
+          "stress_lower_mpa": -40.2755905511811,
+          "stress_upper_mpa": -36.02362204724409,
+          "pixel_column": 455,
+          "pixel_rows": [
+            884,
+            892
+          ]
+        },
+        {
+          "x_m": 2871.7948717948716,
+          "stress_mpa": -38.14960629921259,
+          "stress_lower_mpa": -39.56692913385827,
+          "stress_upper_mpa": -36.73228346456693,
+          "pixel_column": 463,
+          "pixel_rows": [
+            886,
+            890
+          ]
+        },
+        {
+          "x_m": 2940.1709401709404,
+          "stress_mpa": -39.56692913385827,
+          "stress_lower_mpa": -43.110236220472444,
+          "stress_upper_mpa": -36.02362204724409,
+          "pixel_column": 471,
+          "pixel_rows": [
+            884,
+            900
+          ]
+        },
+        {
+          "x_m": 3008.5470085470083,
+          "stress_mpa": -36.73228346456693,
+          "stress_lower_mpa": -41.69291338582677,
+          "stress_upper_mpa": -31.77165354330708,
+          "pixel_column": 479,
+          "pixel_rows": [
+            872,
+            896
+          ]
+        },
+        {
+          "x_m": 3076.923076923077,
+          "stress_mpa": -66.49606299212599,
+          "stress_lower_mpa": -75.70866141732284,
+          "stress_upper_mpa": -57.28346456692913,
+          "pixel_column": 487,
+          "pixel_rows": [
+            944,
+            992
+          ]
+        },
+        {
+          "x_m": 3145.299145299145,
+          "stress_mpa": -14.409448818897644,
+          "stress_lower_mpa": -23.97637795275591,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 495,
+          "pixel_rows": [
+            796,
+            846
+          ]
+        },
+        {
+          "x_m": 3213.675213675214,
+          "stress_mpa": -5.905511811023615,
+          "stress_lower_mpa": -6.968503937007867,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 503,
+          "pixel_rows": [
+            796,
+            798
+          ]
+        },
+        {
+          "x_m": 3282.051282051282,
+          "stress_mpa": -5.905511811023615,
+          "stress_lower_mpa": -6.968503937007867,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 511,
+          "pixel_rows": [
+            796,
+            798
+          ]
+        },
+        {
+          "x_m": 3350.42735042735,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 519,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 3418.803418803419,
+          "stress_mpa": -5.905511811023615,
+          "stress_lower_mpa": -6.968503937007867,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 527,
+          "pixel_rows": [
+            796,
+            798
+          ]
+        },
+        {
+          "x_m": 3487.179487179487,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 535,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 3555.5555555555557,
+          "stress_mpa": -6.082677165354326,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 543,
+          "pixel_rows": [
+            796,
+            799
+          ]
+        },
+        {
+          "x_m": 3623.931623931624,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 551,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 3692.3076923076924,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 559,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 3760.6837606837607,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 567,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 3829.0598290598296,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 575,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 3897.4358974358975,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 583,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 3965.811965811966,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 591,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4034.188034188034,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 599,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4102.5641025641025,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 607,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4170.940170940171,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 615,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4239.316239316239,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 623,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4307.692307692308,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 631,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4376.068376068376,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 639,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4444.444444444444,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 647,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4512.820512820513,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 655,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4581.196581196581,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 663,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4649.572649572649,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 671,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4717.948717948718,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 679,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4786.324786324786,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 687,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4854.7008547008545,
+          "stress_mpa": -6.437007874015748,
+          "stress_lower_mpa": -7.677165354330711,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 695,
+          "pixel_rows": [
+            797,
+            800
+          ]
+        },
+        {
+          "x_m": 4923.076923076924,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 703,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 5059.82905982906,
+          "stress_mpa": -13.346456692913392,
+          "stress_lower_mpa": -20.433070866141733,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 719,
+          "pixel_rows": [
+            800,
+            836
+          ]
+        },
+        {
+          "x_m": 5128.205128205128,
+          "stress_mpa": -14.055118110236222,
+          "stress_lower_mpa": -21.850393700787407,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 727,
+          "pixel_rows": [
+            800,
+            840
+          ]
+        },
+        {
+          "x_m": 5196.581196581197,
+          "stress_mpa": -17.244094488188978,
+          "stress_lower_mpa": -20.07874015748031,
+          "stress_upper_mpa": -14.409448818897644,
+          "pixel_column": 735,
+          "pixel_rows": [
+            823,
+            835
+          ]
+        },
+        {
+          "x_m": 5264.957264957266,
+          "stress_mpa": -27.874015748031496,
+          "stress_lower_mpa": -30.70866141732283,
+          "stress_upper_mpa": -25.039370078740163,
+          "pixel_column": 743,
+          "pixel_rows": [
+            853,
+            865
+          ]
+        },
+        {
+          "x_m": 5333.333333333333,
+          "stress_mpa": -27.342519685039363,
+          "stress_lower_mpa": -29.29133858267717,
+          "stress_upper_mpa": -25.39370078740157,
+          "pixel_column": 751,
+          "pixel_rows": [
+            854,
+            861
+          ]
+        },
+        {
+          "x_m": 5401.709401709401,
+          "stress_mpa": -31.062992125984252,
+          "stress_lower_mpa": -32.480314960629926,
+          "stress_upper_mpa": -29.645669291338578,
+          "pixel_column": 759,
+          "pixel_rows": [
+            866,
+            870
+          ]
+        },
+        {
+          "x_m": 5470.085470085471,
+          "stress_mpa": -31.77165354330708,
+          "stress_lower_mpa": -33.188976377952756,
+          "stress_upper_mpa": -30.354330708661422,
+          "pixel_column": 767,
+          "pixel_rows": [
+            868,
+            872
+          ]
+        },
+        {
+          "x_m": 5538.461538461539,
+          "stress_mpa": -33.54330708661418,
+          "stress_lower_mpa": -34.60629921259843,
+          "stress_upper_mpa": -32.480314960629926,
+          "pixel_column": 775,
+          "pixel_rows": [
+            874,
+            876
+          ]
+        },
+        {
+          "x_m": 5606.8376068376065,
+          "stress_mpa": -31.948818897637793,
+          "stress_lower_mpa": -33.188976377952756,
+          "stress_upper_mpa": -30.70866141732283,
+          "pixel_column": 783,
+          "pixel_rows": [
+            869,
+            872
+          ]
+        },
+        {
+          "x_m": 5675.213675213675,
+          "stress_mpa": -32.65748031496064,
+          "stress_lower_mpa": -34.96062992125984,
+          "stress_upper_mpa": -30.354330708661422,
+          "pixel_column": 791,
+          "pixel_rows": [
+            868,
+            877
+          ]
+        },
+        {
+          "x_m": 5743.589743589743,
+          "stress_mpa": -37.44094488188976,
+          "stress_lower_mpa": -38.85826771653544,
+          "stress_upper_mpa": -36.02362204724409,
+          "pixel_column": 799,
+          "pixel_rows": [
+            884,
+            888
+          ]
+        },
+        {
+          "x_m": 5811.9658119658125,
+          "stress_mpa": -36.909448818897644,
+          "stress_lower_mpa": -38.14960629921259,
+          "stress_upper_mpa": -35.66929133858268,
+          "pixel_column": 807,
+          "pixel_rows": [
+            883,
+            886
+          ]
+        },
+        {
+          "x_m": 5880.341880341881,
+          "stress_mpa": -37.618110236220474,
+          "stress_lower_mpa": -38.85826771653544,
+          "stress_upper_mpa": -36.37795275590551,
+          "pixel_column": 815,
+          "pixel_rows": [
+            885,
+            888
+          ]
+        },
+        {
+          "x_m": 5948.717948717948,
+          "stress_mpa": -37.795275590551185,
+          "stress_lower_mpa": -38.85826771653544,
+          "stress_upper_mpa": -36.73228346456693,
+          "pixel_column": 823,
+          "pixel_rows": [
+            886,
+            888
+          ]
+        },
+        {
+          "x_m": 6017.094017094017,
+          "stress_mpa": -39.03543307086615,
+          "stress_lower_mpa": -40.2755905511811,
+          "stress_upper_mpa": -37.795275590551185,
+          "pixel_column": 831,
+          "pixel_rows": [
+            889,
+            892
+          ]
+        },
+        {
+          "x_m": 6085.470085470085,
+          "stress_mpa": -39.389763779527556,
+          "stress_lower_mpa": -40.62992125984252,
+          "stress_upper_mpa": -38.14960629921259,
+          "pixel_column": 839,
+          "pixel_rows": [
+            890,
+            893
+          ]
+        },
+        {
+          "x_m": 6153.846153846154,
+          "stress_mpa": -40.98425196850394,
+          "stress_lower_mpa": -41.69291338582677,
+          "stress_upper_mpa": -40.2755905511811,
+          "pixel_column": 847,
+          "pixel_rows": [
+            896,
+            896
+          ]
+        },
+        {
+          "x_m": 6222.222222222223,
+          "stress_mpa": -39.03543307086615,
+          "stress_lower_mpa": -40.62992125984252,
+          "stress_upper_mpa": -37.44094488188976,
+          "pixel_column": 855,
+          "pixel_rows": [
+            888,
+            893
+          ]
+        },
+        {
+          "x_m": 6290.59829059829,
+          "stress_mpa": -41.16141732283465,
+          "stress_lower_mpa": -43.818897637795274,
+          "stress_upper_mpa": -38.503937007874015,
+          "pixel_column": 863,
+          "pixel_rows": [
+            891,
+            902
+          ]
+        },
+        {
+          "x_m": 6358.974358974358,
+          "stress_mpa": -47.71653543307086,
+          "stress_lower_mpa": -49.13385826771653,
+          "stress_upper_mpa": -46.2992125984252,
+          "pixel_column": 871,
+          "pixel_rows": [
+            913,
+            917
+          ]
+        },
+        {
+          "x_m": 6427.350427350428,
+          "stress_mpa": -47.89370078740157,
+          "stress_lower_mpa": -49.13385826771653,
+          "stress_upper_mpa": -46.65354330708661,
+          "pixel_column": 879,
+          "pixel_rows": [
+            914,
+            917
+          ]
+        },
+        {
+          "x_m": 6495.726495726496,
+          "stress_mpa": -50.374015748031496,
+          "stress_lower_mpa": -51.61417322834646,
+          "stress_upper_mpa": -49.13385826771653,
+          "pixel_column": 887,
+          "pixel_rows": [
+            921,
+            924
+          ]
+        },
+        {
+          "x_m": 6564.102564102564,
+          "stress_mpa": -50.72834645669292,
+          "stress_lower_mpa": -51.96850393700787,
+          "stress_upper_mpa": -49.488188976377955,
+          "pixel_column": 895,
+          "pixel_rows": [
+            922,
+            925
+          ]
+        },
+        {
+          "x_m": 6632.478632478632,
+          "stress_mpa": -52.85433070866142,
+          "stress_lower_mpa": -54.094488188976385,
+          "stress_upper_mpa": -51.61417322834646,
+          "pixel_column": 903,
+          "pixel_rows": [
+            928,
+            931
+          ]
+        },
+        {
+          "x_m": 6700.8547008547,
+          "stress_mpa": -50.55118110236221,
+          "stress_lower_mpa": -51.61417322834646,
+          "stress_upper_mpa": -49.488188976377955,
+          "pixel_column": 911,
+          "pixel_rows": [
+            922,
+            924
+          ]
+        },
+        {
+          "x_m": 6769.2307692307695,
+          "stress_mpa": -51.79133858267717,
+          "stress_lower_mpa": -52.67716535433071,
+          "stress_upper_mpa": -50.905511811023615,
+          "pixel_column": 919,
+          "pixel_rows": [
+            926,
+            927
+          ]
+        },
+        {
+          "x_m": 6837.606837606838,
+          "stress_mpa": -48.24803149606299,
+          "stress_lower_mpa": -50.55118110236221,
+          "stress_upper_mpa": -45.94488188976378,
+          "pixel_column": 927,
+          "pixel_rows": [
+            912,
+            921
+          ]
+        },
+        {
+          "x_m": 6905.982905982906,
+          "stress_mpa": -49.311023622047244,
+          "stress_lower_mpa": -50.55118110236221,
+          "stress_upper_mpa": -48.07086614173228,
+          "pixel_column": 935,
+          "pixel_rows": [
+            918,
+            921
+          ]
+        },
+        {
+          "x_m": 6974.358974358974,
+          "stress_mpa": -50.905511811023615,
+          "stress_lower_mpa": -52.67716535433071,
+          "stress_upper_mpa": -49.13385826771653,
+          "pixel_column": 943,
+          "pixel_rows": [
+            921,
+            927
+          ]
+        },
+        {
+          "x_m": 7042.735042735043,
+          "stress_mpa": -50.374015748031496,
+          "stress_lower_mpa": -52.67716535433071,
+          "stress_upper_mpa": -48.07086614173228,
+          "pixel_column": 951,
+          "pixel_rows": [
+            918,
+            927
+          ]
+        },
+        {
+          "x_m": 7111.111111111111,
+          "stress_mpa": -51.96850393700787,
+          "stress_lower_mpa": -53.74015748031496,
+          "stress_upper_mpa": -50.196850393700785,
+          "pixel_column": 959,
+          "pixel_rows": [
+            924,
+            930
+          ]
+        },
+        {
+          "x_m": 7179.48717948718,
+          "stress_mpa": -45.94488188976378,
+          "stress_lower_mpa": -47.00787401574803,
+          "stress_upper_mpa": -44.881889763779526,
+          "pixel_column": 967,
+          "pixel_rows": [
+            909,
+            911
+          ]
+        },
+        {
+          "x_m": 7247.863247863248,
+          "stress_mpa": -41.33858267716535,
+          "stress_lower_mpa": -45.590551181102356,
+          "stress_upper_mpa": -37.08661417322834,
+          "pixel_column": 975,
+          "pixel_rows": [
+            887,
+            907
+          ]
+        },
+        {
+          "x_m": 7316.2393162393155,
+          "stress_mpa": -32.65748031496064,
+          "stress_lower_mpa": -34.25196850393701,
+          "stress_upper_mpa": -31.062992125984252,
+          "pixel_column": 983,
+          "pixel_rows": [
+            870,
+            875
+          ]
+        },
+        {
+          "x_m": 7384.615384615385,
+          "stress_mpa": -30.0,
+          "stress_lower_mpa": -33.54330708661418,
+          "stress_upper_mpa": -26.456692913385822,
+          "pixel_column": 991,
+          "pixel_rows": [
+            857,
+            873
+          ]
+        },
+        {
+          "x_m": 7452.991452991453,
+          "stress_mpa": -27.342519685039363,
+          "stress_lower_mpa": -29.29133858267717,
+          "stress_upper_mpa": -25.39370078740157,
+          "pixel_column": 999,
+          "pixel_rows": [
+            854,
+            861
+          ]
+        },
+        {
+          "x_m": 7521.3675213675215,
+          "stress_mpa": -27.342519685039363,
+          "stress_lower_mpa": -30.0,
+          "stress_upper_mpa": -24.68503937007874,
+          "pixel_column": 1007,
+          "pixel_rows": [
+            852,
+            863
+          ]
+        },
+        {
+          "x_m": 7589.74358974359,
+          "stress_mpa": -30.88582677165354,
+          "stress_lower_mpa": -33.54330708661418,
+          "stress_upper_mpa": -28.22834645669292,
+          "pixel_column": 1015,
+          "pixel_rows": [
+            862,
+            873
+          ]
+        },
+        {
+          "x_m": 7658.119658119659,
+          "stress_mpa": -32.480314960629926,
+          "stress_lower_mpa": -34.96062992125984,
+          "stress_upper_mpa": -30.0,
+          "pixel_column": 1023,
+          "pixel_rows": [
+            867,
+            877
+          ]
+        },
+        {
+          "x_m": 7726.495726495727,
+          "stress_mpa": -34.42913385826772,
+          "stress_lower_mpa": -35.66929133858268,
+          "stress_upper_mpa": -33.188976377952756,
+          "pixel_column": 1031,
+          "pixel_rows": [
+            876,
+            879
+          ]
+        },
+        {
+          "x_m": 7794.871794871795,
+          "stress_mpa": -33.188976377952756,
+          "stress_lower_mpa": -35.31496062992126,
+          "stress_upper_mpa": -31.062992125984252,
+          "pixel_column": 1039,
+          "pixel_rows": [
+            870,
+            878
+          ]
+        },
+        {
+          "x_m": 7863.247863247863,
+          "stress_mpa": -31.417322834645674,
+          "stress_lower_mpa": -32.83464566929133,
+          "stress_upper_mpa": -30.0,
+          "pixel_column": 1047,
+          "pixel_rows": [
+            867,
+            871
+          ]
+        },
+        {
+          "x_m": 7931.623931623932,
+          "stress_mpa": -27.342519685039363,
+          "stress_lower_mpa": -29.29133858267717,
+          "stress_upper_mpa": -25.39370078740157,
+          "pixel_column": 1055,
+          "pixel_rows": [
+            854,
+            861
+          ]
+        },
+        {
+          "x_m": 8000.0,
+          "stress_mpa": -24.153543307086608,
+          "stress_lower_mpa": -25.039370078740163,
+          "stress_upper_mpa": -23.267716535433067,
+          "pixel_column": 1063,
+          "pixel_rows": [
+            848,
+            849
+          ]
+        },
+        {
+          "x_m": 8068.376068376068,
+          "stress_mpa": -20.964566929133852,
+          "stress_lower_mpa": -22.559055118110237,
+          "stress_upper_mpa": -19.37007874015748,
+          "pixel_column": 1071,
+          "pixel_rows": [
+            837,
+            842
+          ]
+        },
+        {
+          "x_m": 8136.752136752137,
+          "stress_mpa": -18.30708661417323,
+          "stress_lower_mpa": -19.724409448818903,
+          "stress_upper_mpa": -16.889763779527556,
+          "pixel_column": 1079,
+          "pixel_rows": [
+            830,
+            834
+          ]
+        },
+        {
+          "x_m": 8205.128205128205,
+          "stress_mpa": -16.889763779527556,
+          "stress_lower_mpa": -17.952755905511808,
+          "stress_upper_mpa": -15.826771653543304,
+          "pixel_column": 1087,
+          "pixel_rows": [
+            827,
+            829
+          ]
+        },
+        {
+          "x_m": 8273.504273504273,
+          "stress_mpa": -12.28346456692914,
+          "stress_lower_mpa": -16.535433070866148,
+          "stress_upper_mpa": -8.031496062992133,
+          "pixel_column": 1095,
+          "pixel_rows": [
+            805,
+            825
+          ]
+        },
+        {
+          "x_m": 8341.880341880342,
+          "stress_mpa": -16.358267716535437,
+          "stress_lower_mpa": -20.787401574803155,
+          "stress_upper_mpa": -11.929133858267718,
+          "pixel_column": 1103,
+          "pixel_rows": [
+            816,
+            837
+          ]
+        },
+        {
+          "x_m": 8410.25641025641,
+          "stress_mpa": -9.980314960629926,
+          "stress_lower_mpa": -10.866141732283467,
+          "stress_upper_mpa": -9.094488188976385,
+          "pixel_column": 1111,
+          "pixel_rows": [
+            808,
+            809
+          ]
+        },
+        {
+          "x_m": 8478.632478632479,
+          "stress_mpa": -9.803149606299215,
+          "stress_lower_mpa": -10.866141732283467,
+          "stress_upper_mpa": -8.740157480314963,
+          "pixel_column": 1119,
+          "pixel_rows": [
+            807,
+            809
+          ]
+        },
+        {
+          "x_m": 8547.008547008547,
+          "stress_mpa": -10.157480314960637,
+          "stress_lower_mpa": -11.220472440944889,
+          "stress_upper_mpa": -9.094488188976385,
+          "pixel_column": 1127,
+          "pixel_rows": [
+            808,
+            810
+          ]
+        },
+        {
+          "x_m": 8615.384615384615,
+          "stress_mpa": -10.157480314960637,
+          "stress_lower_mpa": -11.220472440944889,
+          "stress_upper_mpa": -9.094488188976385,
+          "pixel_column": 1135,
+          "pixel_rows": [
+            808,
+            810
+          ]
+        },
+        {
+          "x_m": 8683.760683760684,
+          "stress_mpa": -10.157480314960637,
+          "stress_lower_mpa": -11.220472440944889,
+          "stress_upper_mpa": -9.094488188976385,
+          "pixel_column": 1143,
+          "pixel_rows": [
+            808,
+            810
+          ]
+        },
+        {
+          "x_m": 8752.136752136752,
+          "stress_mpa": -10.157480314960637,
+          "stress_lower_mpa": -11.220472440944889,
+          "stress_upper_mpa": -9.094488188976385,
+          "pixel_column": 1151,
+          "pixel_rows": [
+            808,
+            810
+          ]
+        },
+        {
+          "x_m": 8820.51282051282,
+          "stress_mpa": -9.803149606299215,
+          "stress_lower_mpa": -10.866141732283467,
+          "stress_upper_mpa": -8.740157480314963,
+          "pixel_column": 1159,
+          "pixel_rows": [
+            807,
+            809
+          ]
+        },
+        {
+          "x_m": 8888.888888888889,
+          "stress_mpa": -9.803149606299215,
+          "stress_lower_mpa": -10.866141732283467,
+          "stress_upper_mpa": -8.740157480314963,
+          "pixel_column": 1167,
+          "pixel_rows": [
+            807,
+            809
+          ]
+        },
+        {
+          "x_m": 8957.264957264957,
+          "stress_mpa": -9.271653543307082,
+          "stress_lower_mpa": -10.511811023622045,
+          "stress_upper_mpa": -8.031496062992133,
+          "pixel_column": 1175,
+          "pixel_rows": [
+            805,
+            808
+          ]
+        },
+        {
+          "x_m": 9025.641025641025,
+          "stress_mpa": -9.094488188976385,
+          "stress_lower_mpa": -10.157480314960637,
+          "stress_upper_mpa": -8.031496062992133,
+          "pixel_column": 1183,
+          "pixel_rows": [
+            805,
+            807
+          ]
+        },
+        {
+          "x_m": 9094.017094017094,
+          "stress_mpa": -8.740157480314963,
+          "stress_lower_mpa": -9.803149606299215,
+          "stress_upper_mpa": -7.677165354330711,
+          "pixel_column": 1191,
+          "pixel_rows": [
+            804,
+            806
+          ]
+        },
+        {
+          "x_m": 9162.393162393162,
+          "stress_mpa": -8.38582677165354,
+          "stress_lower_mpa": -9.448818897637793,
+          "stress_upper_mpa": -7.322834645669289,
+          "pixel_column": 1199,
+          "pixel_rows": [
+            803,
+            805
+          ]
+        },
+        {
+          "x_m": 9230.76923076923,
+          "stress_mpa": -7.854330708661422,
+          "stress_lower_mpa": -9.094488188976385,
+          "stress_upper_mpa": -6.614173228346459,
+          "pixel_column": 1207,
+          "pixel_rows": [
+            801,
+            804
+          ]
+        },
+        {
+          "x_m": 9299.145299145299,
+          "stress_mpa": -7.145669291338578,
+          "stress_lower_mpa": -8.031496062992133,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 1215,
+          "pixel_rows": [
+            800,
+            801
+          ]
+        },
+        {
+          "x_m": 9367.521367521367,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1223,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 9435.897435897436,
+          "stress_mpa": -5.728346456692918,
+          "stress_lower_mpa": -6.968503937007867,
+          "stress_upper_mpa": -4.488188976377955,
+          "pixel_column": 1231,
+          "pixel_rows": [
+            795,
+            798
+          ]
+        },
+        {
+          "x_m": 9504.273504273504,
+          "stress_mpa": -4.842519685039363,
+          "stress_lower_mpa": -5.905511811023615,
+          "stress_upper_mpa": -3.7795275590551114,
+          "pixel_column": 1239,
+          "pixel_rows": [
+            793,
+            795
+          ]
+        },
+        {
+          "x_m": 9572.649572649572,
+          "stress_mpa": -4.133858267716533,
+          "stress_lower_mpa": -5.196850393700785,
+          "stress_upper_mpa": -3.0708661417322816,
+          "pixel_column": 1247,
+          "pixel_rows": [
+            791,
+            793
+          ]
+        },
+        {
+          "x_m": 9641.02564102564,
+          "stress_mpa": -3.2480314960629926,
+          "stress_lower_mpa": -4.488188976377955,
+          "stress_upper_mpa": -2.0078740157480297,
+          "pixel_column": 1255,
+          "pixel_rows": [
+            788,
+            791
+          ]
+        },
+        {
+          "x_m": 9709.401709401709,
+          "stress_mpa": -2.3622047244094517,
+          "stress_lower_mpa": -3.4251968503937036,
+          "stress_upper_mpa": -1.2992125984251999,
+          "pixel_column": 1263,
+          "pixel_rows": [
+            786,
+            788
+          ]
+        },
+        {
+          "x_m": 9777.777777777777,
+          "stress_mpa": -1.2992125984251999,
+          "stress_lower_mpa": -2.3622047244094517,
+          "stress_upper_mpa": -0.23622047244094801,
+          "pixel_column": 1271,
+          "pixel_rows": [
+            783,
+            785
+          ]
+        },
+        {
+          "x_m": 9846.153846153848,
+          "stress_mpa": -0.9448818897637778,
+          "stress_lower_mpa": -2.0078740157480297,
+          "stress_upper_mpa": 0.11811023622047401,
+          "pixel_column": 1279,
+          "pixel_rows": [
+            782,
+            784
+          ]
+        },
+        {
+          "x_m": 9914.529914529914,
+          "stress_mpa": -0.23622047244094801,
+          "stress_lower_mpa": -1.2992125984251999,
+          "stress_upper_mpa": 0.8267716535433038,
+          "pixel_column": 1287,
+          "pixel_rows": [
+            780,
+            782
+          ]
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "segments": 8,
+      "samples": [
+        {
+          "x_m": 68.37606837606837,
+          "stress_mpa": -0.23622047244094801,
+          "stress_lower_mpa": -1.2992125984251999,
+          "stress_upper_mpa": 0.8267716535433038,
+          "pixel_column": 1543,
+          "pixel_rows": [
+            780,
+            782
+          ]
+        },
+        {
+          "x_m": 136.75213675213675,
+          "stress_mpa": -0.059055118110237004,
+          "stress_lower_mpa": -0.9448818897637778,
+          "stress_upper_mpa": 0.8267716535433038,
+          "pixel_column": 1551,
+          "pixel_rows": [
+            780,
+            781
+          ]
+        },
+        {
+          "x_m": 205.12820512820514,
+          "stress_mpa": 0.47244094488189603,
+          "stress_lower_mpa": -0.5905511811023558,
+          "stress_upper_mpa": 1.5354330708661479,
+          "pixel_column": 1559,
+          "pixel_rows": [
+            778,
+            780
+          ]
+        },
+        {
+          "x_m": 273.5042735042735,
+          "stress_mpa": 1.1811023622047259,
+          "stress_lower_mpa": 0.11811023622047401,
+          "stress_upper_mpa": 2.2440944881889777,
+          "pixel_column": 1567,
+          "pixel_rows": [
+            776,
+            778
+          ]
+        },
+        {
+          "x_m": 341.8803418803419,
+          "stress_mpa": 1.5354330708661479,
+          "stress_lower_mpa": 0.47244094488189603,
+          "stress_upper_mpa": 2.5984251968503997,
+          "pixel_column": 1575,
+          "pixel_rows": [
+            775,
+            777
+          ]
+        },
+        {
+          "x_m": 410.2564102564103,
+          "stress_mpa": 1.8897637795275557,
+          "stress_lower_mpa": 0.8267716535433038,
+          "stress_upper_mpa": 2.9527559055118076,
+          "pixel_column": 1583,
+          "pixel_rows": [
+            774,
+            776
+          ]
+        },
+        {
+          "x_m": 478.6324786324787,
+          "stress_mpa": 1.8897637795275557,
+          "stress_lower_mpa": 0.8267716535433038,
+          "stress_upper_mpa": 2.9527559055118076,
+          "pixel_column": 1591,
+          "pixel_rows": [
+            774,
+            776
+          ]
+        },
+        {
+          "x_m": 547.008547008547,
+          "stress_mpa": 1.8897637795275557,
+          "stress_lower_mpa": 0.8267716535433038,
+          "stress_upper_mpa": 2.9527559055118076,
+          "pixel_column": 1599,
+          "pixel_rows": [
+            774,
+            776
+          ]
+        },
+        {
+          "x_m": 615.3846153846155,
+          "stress_mpa": 1.5354330708661479,
+          "stress_lower_mpa": 0.47244094488189603,
+          "stress_upper_mpa": 2.5984251968503997,
+          "pixel_column": 1607,
+          "pixel_rows": [
+            775,
+            777
+          ]
+        },
+        {
+          "x_m": 683.7606837606838,
+          "stress_mpa": 1.3582677165354369,
+          "stress_lower_mpa": 0.47244094488189603,
+          "stress_upper_mpa": 2.2440944881889777,
+          "pixel_column": 1615,
+          "pixel_rows": [
+            776,
+            777
+          ]
+        },
+        {
+          "x_m": 752.1367521367521,
+          "stress_mpa": 0.8267716535433038,
+          "stress_lower_mpa": -0.23622047244094801,
+          "stress_upper_mpa": 1.8897637795275557,
+          "pixel_column": 1623,
+          "pixel_rows": [
+            777,
+            779
+          ]
+        },
+        {
+          "x_m": 820.5128205128206,
+          "stress_mpa": 0.47244094488189603,
+          "stress_lower_mpa": -0.5905511811023558,
+          "stress_upper_mpa": 1.5354330708661479,
+          "pixel_column": 1631,
+          "pixel_rows": [
+            778,
+            780
+          ]
+        },
+        {
+          "x_m": 888.8888888888889,
+          "stress_mpa": 0.11811023622047401,
+          "stress_lower_mpa": -0.9448818897637778,
+          "stress_upper_mpa": 1.1811023622047259,
+          "pixel_column": 1639,
+          "pixel_rows": [
+            779,
+            781
+          ]
+        },
+        {
+          "x_m": 957.2649572649574,
+          "stress_mpa": -0.23622047244094801,
+          "stress_lower_mpa": -1.2992125984251999,
+          "stress_upper_mpa": 0.8267716535433038,
+          "pixel_column": 1647,
+          "pixel_rows": [
+            780,
+            782
+          ]
+        },
+        {
+          "x_m": 1025.6410256410256,
+          "stress_mpa": -0.9448818897637778,
+          "stress_lower_mpa": -2.0078740157480297,
+          "stress_upper_mpa": 0.11811023622047401,
+          "pixel_column": 1655,
+          "pixel_rows": [
+            782,
+            784
+          ]
+        },
+        {
+          "x_m": 1094.017094017094,
+          "stress_mpa": -1.4763779527559109,
+          "stress_lower_mpa": -2.3622047244094517,
+          "stress_upper_mpa": -0.5905511811023558,
+          "pixel_column": 1663,
+          "pixel_rows": [
+            784,
+            785
+          ]
+        },
+        {
+          "x_m": 1162.3931623931624,
+          "stress_mpa": -2.5393700787401627,
+          "stress_lower_mpa": -4.133858267716533,
+          "stress_upper_mpa": -0.9448818897637778,
+          "pixel_column": 1671,
+          "pixel_rows": [
+            785,
+            790
+          ]
+        },
+        {
+          "x_m": 1230.769230769231,
+          "stress_mpa": -8.38582677165354,
+          "stress_lower_mpa": -16.181102362204726,
+          "stress_upper_mpa": -0.5905511811023558,
+          "pixel_column": 1679,
+          "pixel_rows": [
+            784,
+            824
+          ]
+        },
+        {
+          "x_m": 1299.1452991452993,
+          "stress_mpa": -22.381889763779526,
+          "stress_lower_mpa": -23.62204724409449,
+          "stress_upper_mpa": -21.141732283464563,
+          "pixel_column": 1687,
+          "pixel_rows": [
+            842,
+            845
+          ]
+        },
+        {
+          "x_m": 1367.5213675213677,
+          "stress_mpa": -22.559055118110237,
+          "stress_lower_mpa": -23.62204724409449,
+          "stress_upper_mpa": -21.496062992125985,
+          "pixel_column": 1695,
+          "pixel_rows": [
+            843,
+            845
+          ]
+        },
+        {
+          "x_m": 1435.8974358974358,
+          "stress_mpa": -22.559055118110237,
+          "stress_lower_mpa": -23.62204724409449,
+          "stress_upper_mpa": -21.496062992125985,
+          "pixel_column": 1703,
+          "pixel_rows": [
+            843,
+            845
+          ]
+        },
+        {
+          "x_m": 1504.2735042735042,
+          "stress_mpa": -22.91338582677166,
+          "stress_lower_mpa": -23.97637795275591,
+          "stress_upper_mpa": -21.850393700787407,
+          "pixel_column": 1711,
+          "pixel_rows": [
+            844,
+            846
+          ]
+        },
+        {
+          "x_m": 1572.6495726495725,
+          "stress_mpa": -22.91338582677166,
+          "stress_lower_mpa": -23.97637795275591,
+          "stress_upper_mpa": -21.850393700787407,
+          "pixel_column": 1719,
+          "pixel_rows": [
+            844,
+            846
+          ]
+        },
+        {
+          "x_m": 1641.025641025641,
+          "stress_mpa": -22.91338582677166,
+          "stress_lower_mpa": -23.97637795275591,
+          "stress_upper_mpa": -21.850393700787407,
+          "pixel_column": 1727,
+          "pixel_rows": [
+            844,
+            846
+          ]
+        },
+        {
+          "x_m": 1709.4017094017095,
+          "stress_mpa": -20.964566929133852,
+          "stress_lower_mpa": -23.62204724409449,
+          "stress_upper_mpa": -18.30708661417323,
+          "pixel_column": 1735,
+          "pixel_rows": [
+            834,
+            845
+          ]
+        },
+        {
+          "x_m": 1777.7777777777778,
+          "stress_mpa": -8.917322834645674,
+          "stress_lower_mpa": -11.574803149606296,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 1743,
+          "pixel_rows": [
+            800,
+            811
+          ]
+        },
+        {
+          "x_m": 1846.1538461538462,
+          "stress_mpa": -10.688976377952756,
+          "stress_lower_mpa": -13.346456692913392,
+          "stress_upper_mpa": -8.031496062992133,
+          "pixel_column": 1751,
+          "pixel_rows": [
+            805,
+            816
+          ]
+        },
+        {
+          "x_m": 1914.5299145299148,
+          "stress_mpa": -14.232283464566933,
+          "stress_lower_mpa": -15.472440944881896,
+          "stress_upper_mpa": -12.99212598425197,
+          "pixel_column": 1759,
+          "pixel_rows": [
+            819,
+            822
+          ]
+        },
+        {
+          "x_m": 1982.905982905983,
+          "stress_mpa": -18.83858267716535,
+          "stress_lower_mpa": -20.787401574803155,
+          "stress_upper_mpa": -16.889763779527556,
+          "pixel_column": 1767,
+          "pixel_rows": [
+            830,
+            837
+          ]
+        },
+        {
+          "x_m": 2051.2820512820513,
+          "stress_mpa": -22.027559055118104,
+          "stress_lower_mpa": -23.62204724409449,
+          "stress_upper_mpa": -20.433070866141733,
+          "pixel_column": 1775,
+          "pixel_rows": [
+            840,
+            845
+          ]
+        },
+        {
+          "x_m": 2119.6581196581196,
+          "stress_mpa": -22.381889763779526,
+          "stress_lower_mpa": -23.97637795275591,
+          "stress_upper_mpa": -20.787401574803155,
+          "pixel_column": 1783,
+          "pixel_rows": [
+            841,
+            846
+          ]
+        },
+        {
+          "x_m": 2188.034188034188,
+          "stress_mpa": -20.433070866141733,
+          "stress_lower_mpa": -21.496062992125985,
+          "stress_upper_mpa": -19.37007874015748,
+          "pixel_column": 1791,
+          "pixel_rows": [
+            837,
+            839
+          ]
+        },
+        {
+          "x_m": 2256.4102564102564,
+          "stress_mpa": -19.547244094488192,
+          "stress_lower_mpa": -21.496062992125985,
+          "stress_upper_mpa": -17.5984251968504,
+          "pixel_column": 1799,
+          "pixel_rows": [
+            832,
+            839
+          ]
+        },
+        {
+          "x_m": 2324.7863247863247,
+          "stress_mpa": -23.7992125984252,
+          "stress_lower_mpa": -26.456692913385822,
+          "stress_upper_mpa": -21.141732283464563,
+          "pixel_column": 1807,
+          "pixel_rows": [
+            842,
+            853
+          ]
+        },
+        {
+          "x_m": 2393.162393162393,
+          "stress_mpa": -30.88582677165354,
+          "stress_lower_mpa": -33.54330708661418,
+          "stress_upper_mpa": -28.22834645669292,
+          "pixel_column": 1815,
+          "pixel_rows": [
+            862,
+            873
+          ]
+        },
+        {
+          "x_m": 2461.538461538462,
+          "stress_mpa": -36.55511811023622,
+          "stress_lower_mpa": -38.503937007874015,
+          "stress_upper_mpa": -34.60629921259843,
+          "pixel_column": 1823,
+          "pixel_rows": [
+            880,
+            887
+          ]
+        },
+        {
+          "x_m": 2529.91452991453,
+          "stress_mpa": -42.57874015748031,
+          "stress_lower_mpa": -46.2992125984252,
+          "stress_upper_mpa": -38.85826771653544,
+          "pixel_column": 1831,
+          "pixel_rows": [
+            892,
+            909
+          ]
+        },
+        {
+          "x_m": 2598.2905982905986,
+          "stress_mpa": -47.36220472440945,
+          "stress_lower_mpa": -49.13385826771653,
+          "stress_upper_mpa": -45.590551181102356,
+          "pixel_column": 1839,
+          "pixel_rows": [
+            911,
+            917
+          ]
+        },
+        {
+          "x_m": 2666.6666666666665,
+          "stress_mpa": -46.2992125984252,
+          "stress_lower_mpa": -47.71653543307086,
+          "stress_upper_mpa": -44.881889763779526,
+          "pixel_column": 1847,
+          "pixel_rows": [
+            909,
+            913
+          ]
+        },
+        {
+          "x_m": 2735.0427350427353,
+          "stress_mpa": -41.33858267716535,
+          "stress_lower_mpa": -42.4015748031496,
+          "stress_upper_mpa": -40.2755905511811,
+          "pixel_column": 1855,
+          "pixel_rows": [
+            896,
+            898
+          ]
+        },
+        {
+          "x_m": 2803.4188034188032,
+          "stress_mpa": -38.681102362204726,
+          "stress_lower_mpa": -39.56692913385827,
+          "stress_upper_mpa": -37.795275590551185,
+          "pixel_column": 1863,
+          "pixel_rows": [
+            889,
+            890
+          ]
+        },
+        {
+          "x_m": 2871.7948717948716,
+          "stress_mpa": -37.795275590551185,
+          "stress_lower_mpa": -38.85826771653544,
+          "stress_upper_mpa": -36.73228346456693,
+          "pixel_column": 1871,
+          "pixel_rows": [
+            886,
+            888
+          ]
+        },
+        {
+          "x_m": 2940.1709401709404,
+          "stress_mpa": -37.972440944881896,
+          "stress_lower_mpa": -39.212598425196845,
+          "stress_upper_mpa": -36.73228346456693,
+          "pixel_column": 1879,
+          "pixel_rows": [
+            886,
+            889
+          ]
+        },
+        {
+          "x_m": 3008.5470085470083,
+          "stress_mpa": -43.110236220472444,
+          "stress_lower_mpa": -46.65354330708661,
+          "stress_upper_mpa": -39.56692913385827,
+          "pixel_column": 1887,
+          "pixel_rows": [
+            894,
+            910
+          ]
+        },
+        {
+          "x_m": 3076.923076923077,
+          "stress_mpa": -60.6496062992126,
+          "stress_lower_mpa": -75.35433070866142,
+          "stress_upper_mpa": -45.94488188976378,
+          "pixel_column": 1895,
+          "pixel_rows": [
+            912,
+            991
+          ]
+        },
+        {
+          "x_m": 3145.299145299145,
+          "stress_mpa": -14.763779527559052,
+          "stress_lower_mpa": -22.91338582677166,
+          "stress_upper_mpa": -6.614173228346459,
+          "pixel_column": 1903,
+          "pixel_rows": [
+            801,
+            843
+          ]
+        },
+        {
+          "x_m": 3213.675213675214,
+          "stress_mpa": -6.082677165354326,
+          "stress_lower_mpa": -6.968503937007867,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1911,
+          "pixel_rows": [
+            797,
+            798
+          ]
+        },
+        {
+          "x_m": 3282.051282051282,
+          "stress_mpa": -5.905511811023615,
+          "stress_lower_mpa": -6.968503937007867,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 1919,
+          "pixel_rows": [
+            796,
+            798
+          ]
+        },
+        {
+          "x_m": 3350.42735042735,
+          "stress_mpa": -5.905511811023615,
+          "stress_lower_mpa": -6.968503937007867,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 1927,
+          "pixel_rows": [
+            796,
+            798
+          ]
+        },
+        {
+          "x_m": 3418.803418803419,
+          "stress_mpa": -5.905511811023615,
+          "stress_lower_mpa": -6.968503937007867,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 1935,
+          "pixel_rows": [
+            796,
+            798
+          ]
+        },
+        {
+          "x_m": 3487.179487179487,
+          "stress_mpa": -5.905511811023615,
+          "stress_lower_mpa": -6.968503937007867,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 1943,
+          "pixel_rows": [
+            796,
+            798
+          ]
+        },
+        {
+          "x_m": 3555.5555555555557,
+          "stress_mpa": -5.905511811023615,
+          "stress_lower_mpa": -6.968503937007867,
+          "stress_upper_mpa": -4.842519685039363,
+          "pixel_column": 1951,
+          "pixel_rows": [
+            796,
+            798
+          ]
+        },
+        {
+          "x_m": 3623.931623931624,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1959,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 3692.3076923076924,
+          "stress_mpa": -6.437007874015748,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.551181102362207,
+          "pixel_column": 1967,
+          "pixel_rows": [
+            798,
+            799
+          ]
+        },
+        {
+          "x_m": 3760.6837606837607,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1975,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 3829.0598290598296,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1983,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 3897.4358974358975,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1991,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 3965.811965811966,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 1999,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4034.188034188034,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2007,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4102.5641025641025,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2015,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4170.940170940171,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2023,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4239.316239316239,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2031,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4307.692307692308,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2039,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4376.068376068376,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2047,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4444.444444444444,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2055,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4512.820512820513,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2063,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4581.196581196581,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2071,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4649.572649572649,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2079,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4717.948717948718,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2087,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4786.324786324786,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2095,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4854.7008547008545,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2103,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 4923.076923076924,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2111,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 5059.82905982906,
+          "stress_mpa": -12.10629921259843,
+          "stress_lower_mpa": -15.472440944881896,
+          "stress_upper_mpa": -8.740157480314963,
+          "pixel_column": 2127,
+          "pixel_rows": [
+            807,
+            822
+          ]
+        },
+        {
+          "x_m": 5128.205128205128,
+          "stress_mpa": -13.169291338582681,
+          "stress_lower_mpa": -15.472440944881896,
+          "stress_upper_mpa": -10.866141732283467,
+          "pixel_column": 2135,
+          "pixel_rows": [
+            813,
+            822
+          ]
+        },
+        {
+          "x_m": 5196.581196581197,
+          "stress_mpa": -19.724409448818903,
+          "stress_lower_mpa": -23.267716535433067,
+          "stress_upper_mpa": -16.181102362204726,
+          "pixel_column": 2143,
+          "pixel_rows": [
+            828,
+            844
+          ]
+        },
+        {
+          "x_m": 5264.957264957266,
+          "stress_mpa": -26.456692913385822,
+          "stress_lower_mpa": -28.582677165354326,
+          "stress_upper_mpa": -24.33070866141732,
+          "pixel_column": 2151,
+          "pixel_rows": [
+            851,
+            859
+          ]
+        },
+        {
+          "x_m": 5401.709401709401,
+          "stress_mpa": -30.88582677165354,
+          "stress_lower_mpa": -32.125984251968504,
+          "stress_upper_mpa": -29.645669291338578,
+          "pixel_column": 2167,
+          "pixel_rows": [
+            866,
+            869
+          ]
+        },
+        {
+          "x_m": 5470.085470085471,
+          "stress_mpa": -32.65748031496064,
+          "stress_lower_mpa": -33.897637795275585,
+          "stress_upper_mpa": -31.417322834645674,
+          "pixel_column": 2175,
+          "pixel_rows": [
+            871,
+            874
+          ]
+        },
+        {
+          "x_m": 5538.461538461539,
+          "stress_mpa": -33.188976377952756,
+          "stress_lower_mpa": -34.25196850393701,
+          "stress_upper_mpa": -32.125984251968504,
+          "pixel_column": 2183,
+          "pixel_rows": [
+            873,
+            875
+          ]
+        },
+        {
+          "x_m": 5606.8376068376065,
+          "stress_mpa": -33.54330708661418,
+          "stress_lower_mpa": -34.60629921259843,
+          "stress_upper_mpa": -32.480314960629926,
+          "pixel_column": 2191,
+          "pixel_rows": [
+            874,
+            876
+          ]
+        },
+        {
+          "x_m": 5675.213675213675,
+          "stress_mpa": -34.96062992125984,
+          "stress_lower_mpa": -36.02362204724409,
+          "stress_upper_mpa": -33.897637795275585,
+          "pixel_column": 2199,
+          "pixel_rows": [
+            878,
+            880
+          ]
+        },
+        {
+          "x_m": 5743.589743589743,
+          "stress_mpa": -36.909448818897644,
+          "stress_lower_mpa": -38.14960629921259,
+          "stress_upper_mpa": -35.66929133858268,
+          "pixel_column": 2207,
+          "pixel_rows": [
+            883,
+            886
+          ]
+        },
+        {
+          "x_m": 5811.9658119658125,
+          "stress_mpa": -37.795275590551185,
+          "stress_lower_mpa": -38.85826771653544,
+          "stress_upper_mpa": -36.73228346456693,
+          "pixel_column": 2215,
+          "pixel_rows": [
+            886,
+            888
+          ]
+        },
+        {
+          "x_m": 5880.341880341881,
+          "stress_mpa": -37.795275590551185,
+          "stress_lower_mpa": -38.85826771653544,
+          "stress_upper_mpa": -36.73228346456693,
+          "pixel_column": 2223,
+          "pixel_rows": [
+            886,
+            888
+          ]
+        },
+        {
+          "x_m": 5948.717948717948,
+          "stress_mpa": -37.795275590551185,
+          "stress_lower_mpa": -38.85826771653544,
+          "stress_upper_mpa": -36.73228346456693,
+          "pixel_column": 2231,
+          "pixel_rows": [
+            886,
+            888
+          ]
+        },
+        {
+          "x_m": 6017.094017094017,
+          "stress_mpa": -38.681102362204726,
+          "stress_lower_mpa": -39.56692913385827,
+          "stress_upper_mpa": -37.795275590551185,
+          "pixel_column": 2239,
+          "pixel_rows": [
+            889,
+            890
+          ]
+        },
+        {
+          "x_m": 6085.470085470085,
+          "stress_mpa": -40.0984251968504,
+          "stress_lower_mpa": -41.33858267716535,
+          "stress_upper_mpa": -38.85826771653544,
+          "pixel_column": 2247,
+          "pixel_rows": [
+            892,
+            895
+          ]
+        },
+        {
+          "x_m": 6153.846153846154,
+          "stress_mpa": -41.33858267716535,
+          "stress_lower_mpa": -42.4015748031496,
+          "stress_upper_mpa": -40.2755905511811,
+          "pixel_column": 2255,
+          "pixel_rows": [
+            896,
+            898
+          ]
+        },
+        {
+          "x_m": 6222.222222222223,
+          "stress_mpa": -43.110236220472444,
+          "stress_lower_mpa": -44.173228346456696,
+          "stress_upper_mpa": -42.04724409448819,
+          "pixel_column": 2263,
+          "pixel_rows": [
+            901,
+            903
+          ]
+        },
+        {
+          "x_m": 6290.59829059829,
+          "stress_mpa": -44.704724409448815,
+          "stress_lower_mpa": -45.94488188976378,
+          "stress_upper_mpa": -43.46456692913385,
+          "pixel_column": 2271,
+          "pixel_rows": [
+            905,
+            908
+          ]
+        },
+        {
+          "x_m": 6358.974358974358,
+          "stress_mpa": -46.65354330708661,
+          "stress_lower_mpa": -47.71653543307086,
+          "stress_upper_mpa": -45.590551181102356,
+          "pixel_column": 2279,
+          "pixel_rows": [
+            911,
+            913
+          ]
+        },
+        {
+          "x_m": 6427.350427350428,
+          "stress_mpa": -48.07086614173228,
+          "stress_lower_mpa": -49.13385826771653,
+          "stress_upper_mpa": -47.00787401574803,
+          "pixel_column": 2287,
+          "pixel_rows": [
+            915,
+            917
+          ]
+        },
+        {
+          "x_m": 6495.726495726496,
+          "stress_mpa": -50.374015748031496,
+          "stress_lower_mpa": -51.61417322834646,
+          "stress_upper_mpa": -49.13385826771653,
+          "pixel_column": 2295,
+          "pixel_rows": [
+            921,
+            924
+          ]
+        },
+        {
+          "x_m": 6564.102564102564,
+          "stress_mpa": -51.96850393700787,
+          "stress_lower_mpa": -53.03149606299213,
+          "stress_upper_mpa": -50.905511811023615,
+          "pixel_column": 2303,
+          "pixel_rows": [
+            926,
+            928
+          ]
+        },
+        {
+          "x_m": 6632.478632478632,
+          "stress_mpa": -52.67716535433071,
+          "stress_lower_mpa": -53.74015748031496,
+          "stress_upper_mpa": -51.61417322834646,
+          "pixel_column": 2311,
+          "pixel_rows": [
+            928,
+            930
+          ]
+        },
+        {
+          "x_m": 6700.8547008547,
+          "stress_mpa": -52.5,
+          "stress_lower_mpa": -53.38582677165354,
+          "stress_upper_mpa": -51.61417322834646,
+          "pixel_column": 2319,
+          "pixel_rows": [
+            928,
+            929
+          ]
+        },
+        {
+          "x_m": 6769.2307692307695,
+          "stress_mpa": -51.61417322834646,
+          "stress_lower_mpa": -52.67716535433071,
+          "stress_upper_mpa": -50.55118110236221,
+          "pixel_column": 2327,
+          "pixel_rows": [
+            925,
+            927
+          ]
+        },
+        {
+          "x_m": 6837.606837606838,
+          "stress_mpa": -51.61417322834646,
+          "stress_lower_mpa": -52.67716535433071,
+          "stress_upper_mpa": -50.55118110236221,
+          "pixel_column": 2335,
+          "pixel_rows": [
+            925,
+            927
+          ]
+        },
+        {
+          "x_m": 6905.982905982906,
+          "stress_mpa": -51.43700787401575,
+          "stress_lower_mpa": -52.67716535433071,
+          "stress_upper_mpa": -50.196850393700785,
+          "pixel_column": 2343,
+          "pixel_rows": [
+            924,
+            927
+          ]
+        },
+        {
+          "x_m": 6974.358974358974,
+          "stress_mpa": -51.61417322834646,
+          "stress_lower_mpa": -52.67716535433071,
+          "stress_upper_mpa": -50.55118110236221,
+          "pixel_column": 2351,
+          "pixel_rows": [
+            925,
+            927
+          ]
+        },
+        {
+          "x_m": 7042.735042735043,
+          "stress_mpa": -52.85433070866142,
+          "stress_lower_mpa": -54.094488188976385,
+          "stress_upper_mpa": -51.61417322834646,
+          "pixel_column": 2359,
+          "pixel_rows": [
+            928,
+            931
+          ]
+        },
+        {
+          "x_m": 7111.111111111111,
+          "stress_mpa": -51.96850393700787,
+          "stress_lower_mpa": -53.03149606299213,
+          "stress_upper_mpa": -50.905511811023615,
+          "pixel_column": 2367,
+          "pixel_rows": [
+            926,
+            928
+          ]
+        },
+        {
+          "x_m": 7179.48717948718,
+          "stress_mpa": -47.89370078740157,
+          "stress_lower_mpa": -49.84251968503936,
+          "stress_upper_mpa": -45.94488188976378,
+          "pixel_column": 2375,
+          "pixel_rows": [
+            912,
+            919
+          ]
+        },
+        {
+          "x_m": 7247.863247863248,
+          "stress_mpa": -41.51574803149606,
+          "stress_lower_mpa": -43.818897637795274,
+          "stress_upper_mpa": -39.212598425196845,
+          "pixel_column": 2383,
+          "pixel_rows": [
+            893,
+            902
+          ]
+        },
+        {
+          "x_m": 7316.2393162393155,
+          "stress_mpa": -33.72047244094489,
+          "stress_lower_mpa": -35.66929133858268,
+          "stress_upper_mpa": -31.77165354330708,
+          "pixel_column": 2391,
+          "pixel_rows": [
+            872,
+            879
+          ]
+        },
+        {
+          "x_m": 7384.615384615385,
+          "stress_mpa": -29.29133858267717,
+          "stress_lower_mpa": -31.062992125984252,
+          "stress_upper_mpa": -27.519685039370074,
+          "pixel_column": 2399,
+          "pixel_rows": [
+            860,
+            866
+          ]
+        },
+        {
+          "x_m": 7452.991452991453,
+          "stress_mpa": -27.696850393700785,
+          "stress_lower_mpa": -28.937007874015748,
+          "stress_upper_mpa": -26.456692913385822,
+          "pixel_column": 2407,
+          "pixel_rows": [
+            857,
+            860
+          ]
+        },
+        {
+          "x_m": 7521.3675213675215,
+          "stress_mpa": -28.582677165354326,
+          "stress_lower_mpa": -29.645669291338578,
+          "stress_upper_mpa": -27.519685039370074,
+          "pixel_column": 2415,
+          "pixel_rows": [
+            860,
+            862
+          ]
+        },
+        {
+          "x_m": 7589.74358974359,
+          "stress_mpa": -30.88582677165354,
+          "stress_lower_mpa": -31.77165354330708,
+          "stress_upper_mpa": -30.0,
+          "pixel_column": 2423,
+          "pixel_rows": [
+            867,
+            868
+          ]
+        },
+        {
+          "x_m": 7658.119658119659,
+          "stress_mpa": -33.54330708661418,
+          "stress_lower_mpa": -34.60629921259843,
+          "stress_upper_mpa": -32.480314960629926,
+          "pixel_column": 2431,
+          "pixel_rows": [
+            874,
+            876
+          ]
+        },
+        {
+          "x_m": 7726.495726495727,
+          "stress_mpa": -34.25196850393701,
+          "stress_lower_mpa": -35.31496062992126,
+          "stress_upper_mpa": -33.188976377952756,
+          "pixel_column": 2439,
+          "pixel_rows": [
+            876,
+            878
+          ]
+        },
+        {
+          "x_m": 7794.871794871795,
+          "stress_mpa": -33.54330708661418,
+          "stress_lower_mpa": -34.60629921259843,
+          "stress_upper_mpa": -32.480314960629926,
+          "pixel_column": 2447,
+          "pixel_rows": [
+            874,
+            876
+          ]
+        },
+        {
+          "x_m": 7863.247863247863,
+          "stress_mpa": -31.062992125984252,
+          "stress_lower_mpa": -32.83464566929133,
+          "stress_upper_mpa": -29.29133858267717,
+          "pixel_column": 2455,
+          "pixel_rows": [
+            865,
+            871
+          ]
+        },
+        {
+          "x_m": 7931.623931623932,
+          "stress_mpa": -27.519685039370074,
+          "stress_lower_mpa": -29.29133858267717,
+          "stress_upper_mpa": -25.748031496062993,
+          "pixel_column": 2463,
+          "pixel_rows": [
+            855,
+            861
+          ]
+        },
+        {
+          "x_m": 8000.0,
+          "stress_mpa": -24.153543307086608,
+          "stress_lower_mpa": -25.748031496062993,
+          "stress_upper_mpa": -22.559055118110237,
+          "pixel_column": 2471,
+          "pixel_rows": [
+            846,
+            851
+          ]
+        },
+        {
+          "x_m": 8068.376068376068,
+          "stress_mpa": -20.07874015748031,
+          "stress_lower_mpa": -21.496062992125985,
+          "stress_upper_mpa": -18.66141732283465,
+          "pixel_column": 2479,
+          "pixel_rows": [
+            835,
+            839
+          ]
+        },
+        {
+          "x_m": 8136.752136752137,
+          "stress_mpa": -16.889763779527556,
+          "stress_lower_mpa": -18.66141732283465,
+          "stress_upper_mpa": -15.118110236220474,
+          "pixel_column": 2487,
+          "pixel_rows": [
+            825,
+            831
+          ]
+        },
+        {
+          "x_m": 8205.128205128205,
+          "stress_mpa": -14.232283464566933,
+          "stress_lower_mpa": -15.472440944881896,
+          "stress_upper_mpa": -12.99212598425197,
+          "pixel_column": 2495,
+          "pixel_rows": [
+            819,
+            822
+          ]
+        },
+        {
+          "x_m": 8273.504273504273,
+          "stress_mpa": -11.929133858267718,
+          "stress_lower_mpa": -12.99212598425197,
+          "stress_upper_mpa": -10.866141732283467,
+          "pixel_column": 2503,
+          "pixel_rows": [
+            813,
+            815
+          ]
+        },
+        {
+          "x_m": 8341.880341880342,
+          "stress_mpa": -13.346456692913392,
+          "stress_lower_mpa": -16.535433070866148,
+          "stress_upper_mpa": -10.157480314960637,
+          "pixel_column": 2511,
+          "pixel_rows": [
+            811,
+            825
+          ]
+        },
+        {
+          "x_m": 8410.25641025641,
+          "stress_mpa": -9.625984251968504,
+          "stress_lower_mpa": -10.511811023622045,
+          "stress_upper_mpa": -8.740157480314963,
+          "pixel_column": 2519,
+          "pixel_rows": [
+            807,
+            808
+          ]
+        },
+        {
+          "x_m": 8478.632478632479,
+          "stress_mpa": -9.803149606299215,
+          "stress_lower_mpa": -10.866141732283467,
+          "stress_upper_mpa": -8.740157480314963,
+          "pixel_column": 2527,
+          "pixel_rows": [
+            807,
+            809
+          ]
+        },
+        {
+          "x_m": 8547.008547008547,
+          "stress_mpa": -9.803149606299215,
+          "stress_lower_mpa": -10.866141732283467,
+          "stress_upper_mpa": -8.740157480314963,
+          "pixel_column": 2535,
+          "pixel_rows": [
+            807,
+            809
+          ]
+        },
+        {
+          "x_m": 8615.384615384615,
+          "stress_mpa": -10.157480314960637,
+          "stress_lower_mpa": -11.220472440944889,
+          "stress_upper_mpa": -9.094488188976385,
+          "pixel_column": 2543,
+          "pixel_rows": [
+            808,
+            810
+          ]
+        },
+        {
+          "x_m": 8683.760683760684,
+          "stress_mpa": -10.157480314960637,
+          "stress_lower_mpa": -11.220472440944889,
+          "stress_upper_mpa": -9.094488188976385,
+          "pixel_column": 2551,
+          "pixel_rows": [
+            808,
+            810
+          ]
+        },
+        {
+          "x_m": 8752.136752136752,
+          "stress_mpa": -9.980314960629926,
+          "stress_lower_mpa": -10.866141732283467,
+          "stress_upper_mpa": -9.094488188976385,
+          "pixel_column": 2559,
+          "pixel_rows": [
+            808,
+            809
+          ]
+        },
+        {
+          "x_m": 8820.51282051282,
+          "stress_mpa": -9.803149606299215,
+          "stress_lower_mpa": -10.866141732283467,
+          "stress_upper_mpa": -8.740157480314963,
+          "pixel_column": 2567,
+          "pixel_rows": [
+            807,
+            809
+          ]
+        },
+        {
+          "x_m": 8888.888888888889,
+          "stress_mpa": -9.803149606299215,
+          "stress_lower_mpa": -10.866141732283467,
+          "stress_upper_mpa": -8.740157480314963,
+          "pixel_column": 2575,
+          "pixel_rows": [
+            807,
+            809
+          ]
+        },
+        {
+          "x_m": 8957.264957264957,
+          "stress_mpa": -9.448818897637793,
+          "stress_lower_mpa": -10.511811023622045,
+          "stress_upper_mpa": -8.38582677165354,
+          "pixel_column": 2583,
+          "pixel_rows": [
+            806,
+            808
+          ]
+        },
+        {
+          "x_m": 9025.641025641025,
+          "stress_mpa": -9.094488188976385,
+          "stress_lower_mpa": -10.157480314960637,
+          "stress_upper_mpa": -8.031496062992133,
+          "pixel_column": 2591,
+          "pixel_rows": [
+            805,
+            807
+          ]
+        },
+        {
+          "x_m": 9094.017094017094,
+          "stress_mpa": -8.740157480314963,
+          "stress_lower_mpa": -9.803149606299215,
+          "stress_upper_mpa": -7.677165354330711,
+          "pixel_column": 2599,
+          "pixel_rows": [
+            804,
+            806
+          ]
+        },
+        {
+          "x_m": 9162.393162393162,
+          "stress_mpa": -8.38582677165354,
+          "stress_lower_mpa": -9.448818897637793,
+          "stress_upper_mpa": -7.322834645669289,
+          "pixel_column": 2607,
+          "pixel_rows": [
+            803,
+            805
+          ]
+        },
+        {
+          "x_m": 9230.76923076923,
+          "stress_mpa": -7.854330708661422,
+          "stress_lower_mpa": -9.094488188976385,
+          "stress_upper_mpa": -6.614173228346459,
+          "pixel_column": 2615,
+          "pixel_rows": [
+            801,
+            804
+          ]
+        },
+        {
+          "x_m": 9299.145299145299,
+          "stress_mpa": -7.145669291338578,
+          "stress_lower_mpa": -8.031496062992133,
+          "stress_upper_mpa": -6.259842519685037,
+          "pixel_column": 2623,
+          "pixel_rows": [
+            800,
+            801
+          ]
+        },
+        {
+          "x_m": 9367.521367521367,
+          "stress_mpa": -6.259842519685037,
+          "stress_lower_mpa": -7.322834645669289,
+          "stress_upper_mpa": -5.196850393700785,
+          "pixel_column": 2631,
+          "pixel_rows": [
+            797,
+            799
+          ]
+        },
+        {
+          "x_m": 9435.897435897436,
+          "stress_mpa": -5.551181102362207,
+          "stress_lower_mpa": -6.614173228346459,
+          "stress_upper_mpa": -4.488188976377955,
+          "pixel_column": 2639,
+          "pixel_rows": [
+            795,
+            797
+          ]
+        },
+        {
+          "x_m": 9504.273504273504,
+          "stress_mpa": -5.019685039370074,
+          "stress_lower_mpa": -6.259842519685037,
+          "stress_upper_mpa": -3.7795275590551114,
+          "pixel_column": 2647,
+          "pixel_rows": [
+            793,
+            796
+          ]
+        },
+        {
+          "x_m": 9572.649572649572,
+          "stress_mpa": -4.133858267716533,
+          "stress_lower_mpa": -5.196850393700785,
+          "stress_upper_mpa": -3.0708661417322816,
+          "pixel_column": 2655,
+          "pixel_rows": [
+            791,
+            793
+          ]
+        },
+        {
+          "x_m": 9641.02564102564,
+          "stress_mpa": -3.2480314960629926,
+          "stress_lower_mpa": -4.488188976377955,
+          "stress_upper_mpa": -2.0078740157480297,
+          "pixel_column": 2663,
+          "pixel_rows": [
+            788,
+            791
+          ]
+        },
+        {
+          "x_m": 9709.401709401709,
+          "stress_mpa": -2.3622047244094517,
+          "stress_lower_mpa": -3.4251968503937036,
+          "stress_upper_mpa": -1.2992125984251999,
+          "pixel_column": 2671,
+          "pixel_rows": [
+            786,
+            788
+          ]
+        },
+        {
+          "x_m": 9777.777777777777,
+          "stress_mpa": -1.6535433070866077,
+          "stress_lower_mpa": -2.7165354330708595,
+          "stress_upper_mpa": -0.5905511811023558,
+          "pixel_column": 2679,
+          "pixel_rows": [
+            784,
+            786
+          ]
+        },
+        {
+          "x_m": 9846.153846153848,
+          "stress_mpa": -0.9448818897637778,
+          "stress_lower_mpa": -2.0078740157480297,
+          "stress_upper_mpa": 0.11811023622047401,
+          "pixel_column": 2687,
+          "pixel_rows": [
+            782,
+            784
+          ]
+        },
+        {
+          "x_m": 9914.529914529914,
+          "stress_mpa": -0.23622047244094801,
+          "stress_lower_mpa": -1.2992125984251999,
+          "stress_upper_mpa": 0.8267716535433038,
+          "pixel_column": 2695,
+          "pixel_rows": [
+            780,
+            782
+          ]
+        }
+      ]
+    }
+  ]
+}

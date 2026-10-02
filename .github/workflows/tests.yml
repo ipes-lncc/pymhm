@@ -1,0 +1,211 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core:
+    name: Core (${{ matrix.os }}, ${{ matrix.environment }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {os: ubuntu-latest, environment: test}
+          - {os: windows-latest, environment: test}
+          - {os: macos-15, environment: test}
+          - {os: macos-15-intel, environment: test}
+          - {os: ubuntu-latest, environment: test-py311}
+          - {os: ubuntu-latest, environment: test-py312}
+    env:
+      PYTHONFAULTHANDLER: "1"
+      OMP_NUM_THREADS: "1"
+      BLIS_NUM_THREADS: "1"
+      VECLIB_MAXIMUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          pixi-version: v0.76.2
+          environments: ${{ matrix.environment }}
+          locked: true
+      - name: Check metadata
+        run: pixi run -e ${{ matrix.environment }} metadata-check
+      - name: Run tests with branch coverage
+        run: pixi run -e ${{ matrix.environment }} test-cov
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.os }}-${{ matrix.environment }}
+          path: build/reports/coverage/coverage.xml
+      - uses: codecov/codecov-action@v5
+        if: matrix.os == 'ubuntu-latest' && matrix.environment == 'test'
+        with:
+          files: build/reports/coverage/coverage.xml
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          pixi-version: v0.76.2
+          environments: test packaging
+          locked: true
+      - run: pixi run -e test lint
+      - run: pixi run -e test format-check
+      - run: pixi run -e test typecheck
+      - run: pixi run -e packaging ci-check
+      - run: pixi run -e test build
+      - run: pixi run -e test check-dist
+      - run: pixi run -e packaging conda-build
+
+  fem:
+    name: DOLFINx integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OMP_NUM_THREADS: "1"
+      BLIS_NUM_THREADS: "1"
+      VECLIB_MAXIMUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          pixi-version: v0.76.2
+          environments: fem
+          locked: true
+      - run: pixi run -e fem test-fem
+      - name: Require native PETSc
+        run: pixi run -e fem python -c 'from petsc4py import PETSc; print(PETSc.Sys.getVersion())'
+      - name: Exercise native PETSc solver
+        run: pixi run -e fem pytest -q tests/test_solvers.py -k 'native_optional_cpu_integration and petsc'
+
+  mpi:
+    name: Distributed MPI integration (two ranks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      BLIS_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          pixi-version: v0.76.2
+          environments: fem
+          locked: true
+      - name: Require native MPI and MUMPS
+        run: >-
+          pixi run -e fem python -c
+          'import shutil; from mpi4py import MPI; from petsc4py import PETSc;
+          assert shutil.which("mpiexec"); assert PETSc.Sys.hasExternalPackage("mumps");
+          print(MPI.Get_library_version())'
+      - name: Exercise distributed assembly, solves and collective failures
+        run: pixi run -e fem test-mpi
+
+  intel:
+    name: PARDISO integration (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    env:
+      OMP_NUM_THREADS: "1"
+      BLIS_NUM_THREADS: "1"
+      VECLIB_MAXIMUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          pixi-version: v0.76.2
+          environments: intel
+          locked: true
+      - name: Require native PARDISO
+        run: pixi run -e intel python -c 'import pypardiso'
+      - name: Exercise native PARDISO solver
+        run: pixi run -e intel pytest -q tests/test_solvers.py tests/test_extended_local.py -k pardiso
+
+  meshing:
+    name: Gmsh and Netgen integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          pixi-version: v0.76.2
+          environments: meshing
+          locked: true
+      - run: pixi run -e meshing test-meshing
+
+  remeshing:
+    name: FreeFEM and BAMG integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      BLIS_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          pixi-version: v0.76.2
+          environments: remeshing
+          locked: true
+      - name: Require native FreeFEM
+        run: pixi run -e remeshing python -c 'import shutil; assert shutil.which("FreeFem++-nw")'
+      - name: Verify metric remeshing and polygon boundaries
+        run: pixi run -e remeshing pytest -q tests/test_metric_freefem.py tests/test_metric_adapt.py
+
+  visualization:
+    name: PyVista integration (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-15, macos-15-intel]
+    env:
+      PYVISTA_OFF_SCREEN: "true"
+      OMP_NUM_THREADS: "1"
+      BLIS_NUM_THREADS: "1"
+      VECLIB_MAXIMUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Linux offscreen runtime
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libegl-mesa0 libgl1 libgl1-mesa-dri libopengl0 libxrender1
+      - uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          pixi-version: v0.76.2
+          environments: visualization
+          locked: true
+      - name: Require native PyVista and VTK
+        run: pixi run -e visualization python -c 'import pyvista as pv; print(pv.__version__, pv.vtk_version_info)'
+      - name: Validate native fields, file round trips and offscreen images
+        run: pixi run -e visualization test-visualization

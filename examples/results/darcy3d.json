@@ -1,0 +1,96 @@
+{
+  "problem": "K=I; p=sin(2pi x)sin(2pi y)sin(2pi z); f=12pi^2 p; unit cube; homogeneous weak Dirichlet",
+  "literature": "Gomes et al., On the implementation of a scalable simulator for Multiscale Hybrid-Mixed methods, arXiv:1703.10435, section 5",
+  "discretization": {
+    "local": "continuous P2",
+    "local_edge_refinement": 4,
+    "trace": "discontinuous P0 on 4 equal subtriangles per macroface",
+    "assembly_quadrature_order": 5,
+    "error_quadrature_order": 6
+  },
+  "reproduction_limit": "Same PDE and polynomial families; deterministic red-refined local tetrahedra and Freudenthal macro meshes differ from the reported TetGen meshes. This is an analytical convergence study, not a reproduction of published cluster timings.",
+  "rows": [
+    {
+      "n": 1,
+      "macro_tetrahedra": 6,
+      "fine_tetrahedra": 384,
+      "local_pressure_dofs": 165,
+      "trace_dofs": 72,
+      "retained_modes": 6,
+      "pressure_l2_error": 0.11949996496702416,
+      "flux_l2_error": 1.836039839200371,
+      "macro_balance_max": 3.191891195797325e-16,
+      "global_relative_residual": 4.390236305476204e-17,
+      "solve_seconds": 0.5752395030576736
+    },
+    {
+      "n": 2,
+      "macro_tetrahedra": 48,
+      "fine_tetrahedra": 3072,
+      "local_pressure_dofs": 165,
+      "trace_dofs": 480,
+      "retained_modes": 48,
+      "pressure_l2_error": 0.05865911140153049,
+      "flux_l2_error": 1.3120678467532714,
+      "macro_balance_max": 4.440892098500626e-16,
+      "global_relative_residual": 2.0568801164608796e-16,
+      "solve_seconds": 4.457331815036014
+    },
+    {
+      "n": 3,
+      "macro_tetrahedra": 162,
+      "fine_tetrahedra": 10368,
+      "local_pressure_dofs": 165,
+      "trace_dofs": 1512,
+      "retained_modes": 162,
+      "pressure_l2_error": 0.02193022838442798,
+      "flux_l2_error": 0.750342855312286,
+      "macro_balance_max": 3.3306690738754696e-16,
+      "global_relative_residual": 1.2306035920828074e-16,
+      "solve_seconds": 15.234715252998285
+    },
+    {
+      "n": 4,
+      "macro_tetrahedra": 384,
+      "fine_tetrahedra": 24576,
+      "local_pressure_dofs": 165,
+      "trace_dofs": 3456,
+      "retained_modes": 384,
+      "pressure_l2_error": 0.011788940316923265,
+      "flux_l2_error": 0.5409425689910234,
+      "macro_balance_max": 1.1102230246251565e-16,
+      "global_relative_residual": 1.7718045905534702e-16,
+      "solve_seconds": 37.13707537401933
+    },
+    {
+      "n": 5,
+      "macro_tetrahedra": 750,
+      "fine_tetrahedra": 48000,
+      "local_pressure_dofs": 165,
+      "trace_dofs": 6600,
+      "retained_modes": 750,
+      "pressure_l2_error": 0.007341052580718358,
+      "flux_l2_error": 0.4231021337614402,
+      "macro_balance_max": 1.6653345369377348e-16,
+      "global_relative_residual": 2.34174173272755e-16,
+      "solve_seconds": 74.4874873040244,
+      "quadrature_order8_pressure_l2_error": 0.007341052580880411,
+      "quadrature_order8_flux_l2_error": 0.4231021337613517,
+      "fields": "darcy3d.npz",
+      "fields_sha256": "68732ae89020bcb5bc5b4523ffd84bcf0488bf22f265ea3b6ee11acb61c83079"
+    }
+  ],
+  "source_sha256": {
+    "examples/solve_darcy3d.py": "46e58580ad1249724c2886c183e990a13af701fe59f3d21ae071d1de4bb2cefd",
+    "src/pymhm/tetrahedral.py": "d6c2fba0c1e0a5368c493e57048f7e3c4a8ffc38b184d908e94d04fa53f6299c",
+    "src/pymhm/darcy3d.py": "aa81abdd4168606a454c502714cfb303779c09852762f195537a345c1080b1de",
+    "src/pymhm/hybrid.py": "0471839b2346b6a3ed2ac60ebac22f609e05ecc8ccd0fdfa46c7c9ac19f7ea1a",
+    "src/pymhm/parallel.py": "22e88e7f8d658104423b0823a502991996508d62b1c071589ee32429a6cbd77e",
+    "src/pymhm/solvers.py": "e0d33505e442a247ffdf14059a53933b393b4d4a876a88bd0ce803bf65155b15"
+  },
+  "source_changed_during_run": false,
+  "timestamp_utc": "2026-09-28T23:37:27.964985+00:00",
+  "python": "3.13.15",
+  "numpy": "2.5.3",
+  "native_threads": 1
+}

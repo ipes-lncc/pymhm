@@ -1,0 +1,49 @@
+{
+  "problem": "Unit corner point wells; K=1000 below y=0.484375, K=1 above",
+  "formulations": [
+    "Primal P2",
+    "Mixed RT0/P0"
+  ],
+  "macro_triangles": 2048,
+  "local_refinement": 2,
+  "trace_degree": 0,
+  "display_sampling": "Existing one-sided nodal display fields; independent cell vertices",
+  "source_sha256": {
+    "layer-offset-primal.vtu": "8bf93724f42c7a96936fa987cebdf5a384fe33e05a8a38a62da4d321e66f43df",
+    "layer-offset-mixed.vtu": "a17e4aaf36ec6f960297cf576bedca95da82bbd0784855056b5e35122a42c3c7"
+  },
+  "sampled_flux_peaks": [
+    203.45892672530482,
+    45.28376518079885
+  ],
+  "views": [
+    {
+      "file": "point-flux-elevation.png",
+      "excluded_well_radius": 0.0,
+      "selection": "Whole display triangles outside both open well disks; exact edge distances",
+      "retained_display_triangles": [
+        32768,
+        8192
+      ],
+      "height_factor": 0.004423497235956196,
+      "physical_color_limits": [
+        0.0,
+        203.45892672530482
+      ]
+    },
+    {
+      "file": "point-flux-elevation-detail.png",
+      "excluded_well_radius": 0.125,
+      "selection": "Whole display triangles outside both open well disks; exact edge distances",
+      "retained_display_triangles": [
+        31912,
+        7968
+      ],
+      "height_factor": 0.149907089900547,
+      "physical_color_limits": [
+        0.0,
+        6.003718707347917
+      ]
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "case": "regularized cavity: MHM versus conforming Taylor-Hood",
+  "strategy": "face",
+  "drag": 0,
+  "reference": "cavity-classical-gamma0-n512.json",
+  "reference_sha256": "0d1f68426bbb8ffc50fedb35b067ac937addfec2da43203b5e19ef1b1c4ab3d9",
+  "reference_coefficients_sha256": "7007c8029ca8baa2eaa9cd0b9ff80bddbe61a22b69cf2660a42258c3b66067e0",
+  "mhm_coefficients_sha256": "f5397a29d31a767261ca5ac8f47dad2a63b6b351448903ecc8519e9ac955487f",
+  "norms": {
+    "12": {
+      "quadrature_order": 12,
+      "velocity_l2": 0.025615427741103987,
+      "pressure_l2": 0.4988680561165961,
+      "velocity_h1_seminorm": 0.47509021946827223,
+      "velocity_reference_l2": 0.19299941675632726,
+      "pressure_reference_l2": 2.615885595915923,
+      "velocity_reference_h1_seminorm": 1.838154248824263,
+      "velocity_relative": 0.13272282461581178,
+      "pressure_relative": 0.19070713829972488,
+      "velocity_h1_seminorm_relative": 0.2584604745614541,
+      "velocity_energy": 0.47509021946827223,
+      "velocity_reference_energy": 1.838154248824263,
+      "velocity_energy_relative": 0.2584604745614541
+    },
+    "20": {
+      "quadrature_order": 20,
+      "velocity_l2": 0.025615427722752424,
+      "pressure_l2": 0.49886801240317785,
+      "velocity_h1_seminorm": 0.4750902508936875,
+      "velocity_reference_l2": 0.1929994167693269,
+      "pressure_reference_l2": 2.61588556455686,
+      "velocity_reference_h1_seminorm": 1.838154258161242,
+      "velocity_relative": 0.13272282451178602,
+      "pressure_relative": 0.19070712387515615,
+      "velocity_h1_seminorm_relative": 0.25846049034477325,
+      "velocity_energy": 0.4750902508936875,
+      "velocity_reference_energy": 1.838154258161242,
+      "velocity_energy_relative": 0.25846049034477325
+    },
+    "28": {
+      "quadrature_order": 28,
+      "velocity_l2": 0.025615427724381384,
+      "pressure_l2": 0.4988680755774469,
+      "velocity_h1_seminorm": 0.4750902435352526,
+      "velocity_reference_l2": 0.19299941679945826,
+      "pressure_reference_l2": 2.615885573172503,
+      "velocity_reference_h1_seminorm": 1.8381539572835293,
+      "velocity_relative": 0.13272282449950537,
+      "pressure_relative": 0.1907071473972877,
+      "velocity_h1_seminorm_relative": 0.2584605286476401,
+      "velocity_energy": 0.4750902435352526,
+      "velocity_reference_energy": 1.8381539572835293,
+      "velocity_energy_relative": 0.2584605286476401
+    }
+  },
+  "integration": "MHM fine triangles; Gaussian order study resolves intersections with the continuous reference",
+  "archive": "cavity-face-nu1-g0-l0-comparison.npz",
+  "sha256": "2f98c04e296231557b493a0b3c7a41d3c0c2946baef566383d2e1538e39ff00f",
+  "source_sha256": "278747a87786c9594a58c085a1ea41830f14aa4ecfaef1f849e380f4b58f3a40"
+}

@@ -1,0 +1,218 @@
+{
+  "archive": "mhm-level6.npz",
+  "archive_sha256": "d1b2bd9ec781d0366cf8ad8b0639a60e4c5b68e6da261e20c20ee1fdc27e94e5",
+  "reference": "reference-rt2-480x1760.npz",
+  "reference_sha256": "596d7a1cd09b641382f3c727da1af4ffe703ad5a025bbf6a9f00e0ff6c2ad8ef",
+  "integration": "exact intersections of local triangles, reference triangles and pixels",
+  "denominator": "corresponding norm of the stated classical RT2 reference",
+  "source_hashes": {
+    "compare_spe10_resolution.py": "82cf61eaa5f7c98ac4e63c4c8eedcbc91fa1d3ef7d97e86051d5a57c985fe35c",
+    "spe10_adaptive_norms.py": "9727f068fc1e7c2fc948270584634376ef92efbe2cf1db87e0c46cdd1b5f2ed7"
+  },
+  "rows": [
+    {
+      "pressure_difference_l2": 15.585747771389503,
+      "raw_flux_difference_l2": 0.7180283099827128,
+      "reconstructed_flux_difference_l2": 0.6486869828162056,
+      "reference_pressure_l2": 821.5255220157964,
+      "reference_flux_l2": 0.9842116240407702,
+      "pressure_l2": 827.042271835231,
+      "raw_flux_l2": 1.155547626617919,
+      "reconstructed_flux_l2": 1.0982350361797535,
+      "raw_flux_energy_difference": 0.22073041162442167,
+      "reconstructed_flux_energy_difference": 0.6584388957119351,
+      "reference_flux_energy_norm": 0.38811859944372834,
+      "raw_flux_energy_norm": 0.39720159402036515,
+      "reconstructed_flux_energy_norm": 0.7709101939688865,
+      "pressure_relative_difference": 0.018971714637843983,
+      "raw_flux_relative_difference": 0.7295466670417713,
+      "reconstructed_flux_relative_difference": 0.6590929907461999,
+      "raw_flux_energy_relative_difference": 0.5687189738929903,
+      "reconstructed_flux_energy_relative_difference": 1.6964888996704715,
+      "quadrature_order": 4,
+      "seconds": 340.0769899250008,
+      "archive_sha256": "d1b2bd9ec781d0366cf8ad8b0639a60e4c5b68e6da261e20c20ee1fdc27e94e5",
+      "norm_acquisition_archive_sha256": "99f3494fdb160a01d025fcbe5a5f586b74fac5d50b306769f094255fc33ed93f",
+      "norm_transfer": {
+        "method": "Reverse triangle inequality from integrated executed-field changes",
+        "central_values": "Original independently integrated values; current-field norms lie in the stated intervals",
+        "current_archive_sha256": "d1b2bd9ec781d0366cf8ad8b0639a60e4c5b68e6da261e20c20ee1fdc27e94e5",
+        "norm_acquisition_archive_sha256": "99f3494fdb160a01d025fcbe5a5f586b74fac5d50b306769f094255fc33ed93f",
+        "delta_absolute": {
+          "pressure": 4.6596603467336584e-08,
+          "raw_flux": 1.8463213723474871e-10,
+          "reconstructed_flux": 1.704996209138774e-10,
+          "raw_flux_energy": 4.609356450930317e-11,
+          "reconstructed_flux_energy": 3.6660227694062207e-09
+        },
+        "current_norm_intervals": {
+          "pressure_difference_l2": [
+            15.585747724792899,
+            15.585747817986107
+          ],
+          "pressure_l2": [
+            827.0422717886344,
+            827.0422718818276
+          ],
+          "pressure_relative_difference": [
+            0.01897171458112438,
+            0.018971714694563588
+          ],
+          "raw_flux_difference_l2": [
+            0.7180283097980807,
+            0.7180283101673449
+          ],
+          "raw_flux_l2": [
+            1.155547626433287,
+            1.155547626802551
+          ],
+          "raw_flux_relative_difference": [
+            0.7295466668541775,
+            0.7295466672293652
+          ],
+          "reconstructed_flux_difference_l2": [
+            0.648686982645706,
+            0.6486869829867052
+          ],
+          "reconstructed_flux_l2": [
+            1.0982350360092539,
+            1.098235036350253
+          ],
+          "reconstructed_flux_relative_difference": [
+            0.6590929905729651,
+            0.6590929909194345
+          ],
+          "raw_flux_energy_difference": [
+            0.2207304115783281,
+            0.22073041167051524
+          ],
+          "raw_flux_energy_norm": [
+            0.39720159397427157,
+            0.3972015940664587
+          ],
+          "raw_flux_energy_relative_difference": [
+            0.5687189737742286,
+            0.5687189740117518
+          ],
+          "reconstructed_flux_energy_difference": [
+            0.6584388920459123,
+            0.658438899377958
+          ],
+          "reconstructed_flux_energy_norm": [
+            0.7709101903028637,
+            0.7709101976349093
+          ],
+          "reconstructed_flux_energy_relative_difference": [
+            1.6964888902248463,
+            1.6964889091160966
+          ]
+        },
+        "rt2_energy_bound": "L2 coefficient-field change / sqrt(global minimum permeability eigenvalue)",
+        "global_minimum_permeability_eigenvalue": 0.002163
+      }
+    },
+    {
+      "pressure_difference_l2": 15.585747771389501,
+      "raw_flux_difference_l2": 0.718028309982704,
+      "reconstructed_flux_difference_l2": 0.6486869828162052,
+      "reference_pressure_l2": 821.5255220157962,
+      "reference_flux_l2": 0.9842116240407702,
+      "pressure_l2": 827.0422718352308,
+      "raw_flux_l2": 1.1555476266179137,
+      "reconstructed_flux_l2": 1.0982350361797533,
+      "raw_flux_energy_difference": 0.22073041162442172,
+      "reconstructed_flux_energy_difference": 0.6584388957119351,
+      "reference_flux_energy_norm": 0.38811859944372845,
+      "raw_flux_energy_norm": 0.3972015940203651,
+      "reconstructed_flux_energy_norm": 0.7709101939688865,
+      "pressure_relative_difference": 0.018971714637843983,
+      "raw_flux_relative_difference": 0.7295466670417623,
+      "reconstructed_flux_relative_difference": 0.6590929907461994,
+      "raw_flux_energy_relative_difference": 0.5687189738929902,
+      "reconstructed_flux_energy_relative_difference": 1.696488899670471,
+      "quadrature_order": 5,
+      "seconds": 671.5698569009546,
+      "archive_sha256": "d1b2bd9ec781d0366cf8ad8b0639a60e4c5b68e6da261e20c20ee1fdc27e94e5",
+      "norm_acquisition_archive_sha256": "99f3494fdb160a01d025fcbe5a5f586b74fac5d50b306769f094255fc33ed93f",
+      "norm_transfer": {
+        "method": "Reverse triangle inequality from integrated executed-field changes",
+        "central_values": "Original independently integrated values; current-field norms lie in the stated intervals",
+        "current_archive_sha256": "d1b2bd9ec781d0366cf8ad8b0639a60e4c5b68e6da261e20c20ee1fdc27e94e5",
+        "norm_acquisition_archive_sha256": "99f3494fdb160a01d025fcbe5a5f586b74fac5d50b306769f094255fc33ed93f",
+        "delta_absolute": {
+          "pressure": 4.6596603467336584e-08,
+          "raw_flux": 1.8463213723474871e-10,
+          "reconstructed_flux": 1.704996209138774e-10,
+          "raw_flux_energy": 4.609356450930317e-11,
+          "reconstructed_flux_energy": 3.6660227694062207e-09
+        },
+        "current_norm_intervals": {
+          "pressure_difference_l2": [
+            15.585747724792897,
+            15.585747817986105
+          ],
+          "pressure_l2": [
+            827.0422717886343,
+            827.0422718818274
+          ],
+          "pressure_relative_difference": [
+            0.01897171458112438,
+            0.018971714694563588
+          ],
+          "raw_flux_difference_l2": [
+            0.7180283097980719,
+            0.718028310167336
+          ],
+          "raw_flux_l2": [
+            1.1555476264332816,
+            1.1555476268025457
+          ],
+          "raw_flux_relative_difference": [
+            0.7295466668541685,
+            0.7295466672293562
+          ],
+          "reconstructed_flux_difference_l2": [
+            0.6486869826457056,
+            0.6486869829867048
+          ],
+          "reconstructed_flux_l2": [
+            1.0982350360092537,
+            1.0982350363502529
+          ],
+          "reconstructed_flux_relative_difference": [
+            0.6590929905729647,
+            0.6590929909194341
+          ],
+          "raw_flux_energy_difference": [
+            0.22073041157832815,
+            0.2207304116705153
+          ],
+          "raw_flux_energy_norm": [
+            0.3972015939742715,
+            0.39720159406645866
+          ],
+          "raw_flux_energy_relative_difference": [
+            0.5687189737742286,
+            0.5687189740117518
+          ],
+          "reconstructed_flux_energy_difference": [
+            0.6584388920459123,
+            0.658438899377958
+          ],
+          "reconstructed_flux_energy_norm": [
+            0.7709101903028637,
+            0.7709101976349093
+          ],
+          "reconstructed_flux_energy_relative_difference": [
+            1.6964888902248458,
+            1.6964889091160962
+          ]
+        },
+        "rt2_energy_bound": "L2 coefficient-field change / sqrt(global minimum permeability eigenvalue)",
+        "global_minimum_permeability_eigenvalue": 0.002163
+      }
+    }
+  ],
+  "source_changed_during_run": false,
+  "norm_acquisition_archive_sha256": "99f3494fdb160a01d025fcbe5a5f586b74fac5d50b306769f094255fc33ed93f"
+}

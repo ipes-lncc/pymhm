@@ -1,0 +1,19 @@
+{
+  "accepted": true,
+  "record_sha256": "49f113e395145d114d6b402d5ae4ff8c556da33b10ed843e001e34c120afd23a",
+  "source_snapshot_sha256": "0f18d58f39de2071b22cca469338ac37bc9eb2bc528105da5c5cdd4ff29ddcca",
+  "acquired_archives": {
+    "bdm2-n1.npz": "93242bf3fd6be34d1d61e3b558d6a8aed2ad2eb622f7b5313abfa8165d5ae801",
+    "bdm2-n2.npz": "832b45d186d5161a6ee50926a73337e45bcb3ce0dfaea3779900d168c430cfad",
+    "bdm2-n3.npz": "933ee63cb821164003de96c78db27068bb50293b7e0bdb9a9908f6323ab63731",
+    "bdm2-n4.npz": "48825a23e105f28cd05839e49f6a1ffa1c2488b1194a7fa88df5c3653b9e0d1a",
+    "bdm2-n5.npz": "cce14be33279c5331462188b038aa006b2638646f80c6f58b810b05e66012833",
+    "bdm3-n1.npz": "8ef69e5b96b79611e1cc0569c761af639116d1f9fadd25d2bd4bf96efee43dda",
+    "bdm3-n2.npz": "a35bcef7ad488dab2b10bc8dbae67a4e399e6e8312d220df811a755865345f6f",
+    "bdm3-n3.npz": "5e20cd1d32d0aea4127504215c6137e89e844c5e845f08398df11ee74549fb8e",
+    "bdm3-n4.npz": "7b47af2274b66c9be531149e61267449cbb2221da30783eeb3c41497f6110b8c",
+    "bdm3-n5.npz": "2e2227e44fe2911f2443416aba47ecf07fd17ce2efac4ac6df3c43e5a3899a59"
+  },
+  "cases": 17,
+  "scope": "Current mathematical owner, original 3D analytical AFW MHM study; this does not turn it into a published heterogeneous elasticity experiment."
+}

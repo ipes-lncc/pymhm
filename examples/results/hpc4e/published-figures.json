@@ -1,0 +1,27 @@
+{
+  "doi": "10.1051/m2an/2021013",
+  "pdf_sha256": "b6ae01ac1c40e21eef06a26103f9fc3654e817b7713c42e742e570e0b1519a66",
+  "figures": [
+    {
+      "figure": 9,
+      "pdf_page": 24,
+      "image_xref": 698,
+      "width": 2691,
+      "height": 662
+    },
+    {
+      "figure": 10,
+      "pdf_page": 25,
+      "image_xref": 709,
+      "width": 2734,
+      "height": 1145
+    },
+    {
+      "figure": 11,
+      "pdf_page": 25,
+      "image_xref": 712,
+      "width": 2692,
+      "height": 656
+    }
+  ]
+}

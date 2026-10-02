@@ -1,0 +1,67 @@
+{
+  "reference": {
+    "project": "NeoPZ",
+    "url": "https://github.com/labmec/neopz",
+    "revision": "4c6b6d277ce097b97bfc8dea1b6725860f4fe05a",
+    "module": "Shape/TPZShapeHDiv.cpp",
+    "executed": true
+  },
+  "method": "Fit one invertible coefficient change on 150 points, verify vectors and analytic divergences on 150 different points. No native coefficients are used by PyMHM.",
+  "points_seed": 2026,
+  "point_count_fit": 150,
+  "point_count_validation": 150,
+  "prism_reference_change": "Native z in [-1,1] is mapped to [0,1] by affine contravariant Piola.",
+  "families": [
+    {
+      "kind": "tetra",
+      "pressure_degree": 1,
+      "dimension": 18,
+      "rank": 18,
+      "value_max_difference": 1.8290924330699454e-14,
+      "divergence_max_difference": 9.85878045867139e-14,
+      "native_divergence_dimension": 4,
+      "native_flux_polynomial_fit_max": 4.529709940470639e-14,
+      "native_divergence_fit_max": 1.7763568394002505e-14
+    },
+    {
+      "kind": "tetra",
+      "pressure_degree": 2,
+      "dimension": 32,
+      "rank": 32,
+      "value_max_difference": 4.934941344458821e-14,
+      "divergence_max_difference": 3.2862601528904634e-13,
+      "native_divergence_dimension": 10,
+      "native_flux_polynomial_fit_max": 9.064970996064403e-14,
+      "native_divergence_fit_max": 1.2434497875801753e-13
+    },
+    {
+      "kind": "prism",
+      "pressure_degree": 1,
+      "dimension": 27,
+      "rank": 27,
+      "value_max_difference": 6.136481598392935e-14,
+      "divergence_max_difference": 2.701172618913006e-13,
+      "native_divergence_dimension": 6,
+      "native_flux_polynomial_fit_max": 2.0664026045835726e-14,
+      "native_divergence_fit_max": 9.769962616701378e-15
+    }
+  ],
+  "pymhm_sources": {
+    "src/pymhm/hdiv3d_family.py": "29cd2993848bc6ce5bc944a7a732eae3f9f6cdcc957bf787148d92704dc01c47"
+  },
+  "acceptance": {
+    "value_max_difference_below": 2e-11,
+    "divergence_max_difference_below": 2e-10,
+    "change_of_basis_full_rank": true
+  },
+  "execution": {
+    "utc": "2026-09-29T13:28:51.577559+00:00",
+    "python": "3.12.14",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "native_executable_sha256": "57fde2bcfe13d73e6de2fffb8ac97a6cdeff107226463a316296620d8141f280",
+    "native_probe_sha256": "0aa5371efccce18251d36f68910623f041cad6279b6c238dce7c5244f3d64b00",
+    "reference_shape_source_sha256": "1d9d180e728c4145c60c7a5d311e3c4c15cba2d84b5d20b66d1b02c4ae98db0e",
+    "source_changed_during_run": false
+  }
+}

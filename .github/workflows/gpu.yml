@@ -1,0 +1,33 @@
+name: GPU integration
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gpu-integration
+  cancel-in-progress: false
+
+jobs:
+  cuda:
+    runs-on: [self-hosted, linux, x64, gpu]
+    timeout-minutes: 30
+    env:
+      OMP_NUM_THREADS: "1"
+      BLIS_NUM_THREADS: "1"
+      VECLIB_MAXIMUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          pixi-version: v0.76.2
+          environments: gpu
+          locked: true
+      - name: Require an available CUDA device
+        run: pixi run -e gpu python -c 'import cupy; assert cupy.cuda.runtime.getDeviceCount() > 0'
+      - name: Exercise native GPU backends
+        run: pixi run -e gpu pytest -q -m gpu

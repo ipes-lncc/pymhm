@@ -1,0 +1,150 @@
+{
+  "candidate": "mhm-H20-ell1.json",
+  "candidate_record_sha256": "3cc5a4e01b8002db2b5dea1bc605e12b45c01afac0f0f026b3a77c0783c3eab4",
+  "reference": "classical-p4.json",
+  "reference_record_sha256": "b16041e795e720fca24b339fc2dc66d236388c94595602913031b87d21521b3e",
+  "norms": {
+    "8": {
+      "quadrature_order": 8,
+      "common_triangles": 8388608,
+      "domain_area": 26214400.0,
+      "gradient_cutout": [
+        4975.0,
+        5025.0,
+        25.0,
+        75.0
+      ],
+      "gradient_domain_area": 26211900.0,
+      "pressure_difference": 7194.629185645311,
+      "reference_pressure_norm": 267115.7956501733,
+      "pressure_relative_difference": 0.026934495461540267,
+      "gradient_difference": 514.7559607657355,
+      "reference_gradient_norm": 17005.603945555842,
+      "gradient_relative_difference": 0.03026978414961023,
+      "weighted_gradient_difference": 11.348935947820818,
+      "reference_weighted_gradient_norm": 374.2840501299606,
+      "weighted_gradient_relative_difference": 0.0303217194103788,
+      "graph_difference": 15.218272515903958,
+      "reference_graph_norm": 529.4063648769597,
+      "graph_relative_difference": 0.028745919062459446,
+      "flux_difference": 0.2504380410532909,
+      "reference_flux_norm": 8.246421344065135,
+      "flux_relative_difference": 0.030369299676098725
+    },
+    "10": {
+      "quadrature_order": 10,
+      "common_triangles": 8388608,
+      "domain_area": 26214400.0,
+      "gradient_cutout": [
+        4975.0,
+        5025.0,
+        25.0,
+        75.0
+      ],
+      "gradient_domain_area": 26211900.0,
+      "pressure_difference": 7194.629185645305,
+      "reference_pressure_norm": 267115.79565017327,
+      "pressure_relative_difference": 0.02693449546154025,
+      "gradient_difference": 514.7559607657408,
+      "reference_gradient_norm": 17005.60394555584,
+      "gradient_relative_difference": 0.03026978414961055,
+      "weighted_gradient_difference": 11.348935947820943,
+      "reference_weighted_gradient_norm": 374.2840501299605,
+      "weighted_gradient_relative_difference": 0.030321719410379134,
+      "graph_difference": 15.218272515904046,
+      "reference_graph_norm": 529.4063648769596,
+      "graph_relative_difference": 0.02874591906245962,
+      "flux_difference": 0.25043804105329376,
+      "reference_flux_norm": 8.246421344065135,
+      "flux_relative_difference": 0.03036929967609907
+    }
+  },
+  "sampled_pressure": [
+    {
+      "incident_side": [
+        -1,
+        -1
+      ],
+      "difference": 371.1558558623534,
+      "reference_norm": 13365.100483595852,
+      "relative_difference": 0.027770524906857618
+    },
+    {
+      "incident_side": [
+        -1,
+        1
+      ],
+      "difference": 358.479878677745,
+      "reference_norm": 13365.100483595852,
+      "relative_difference": 0.026822086307374825
+    },
+    {
+      "incident_side": [
+        1,
+        -1
+      ],
+      "difference": 394.11362736520033,
+      "reference_norm": 13365.100483595852,
+      "relative_difference": 0.02948826519104216
+    },
+    {
+      "incident_side": [
+        1,
+        1
+      ],
+      "difference": 374.0823121596885,
+      "reference_norm": 13365.100483595852,
+      "relative_difference": 0.027989487442973752
+    }
+  ],
+  "denominator": "Physical or sampled norm of the named classical reference field",
+  "source_sha256": {
+    "examples/marmousi_comparison.py": "99aadb57a1c36561889dad8d1b62d12795bf08d5f71ae38bf71c8fee180b2ebb",
+    "examples/marmousi_fields.py": "ffccec6553a0f103b176b8495f762850d4951f9b91c05ec1bbb9137bc61a1775",
+    "examples/marmousi_campaign.py": "80477481c94da3c8297f47117726d77c41b19efc9b8f85833e6c95d32b702d7b",
+    "examples/marmousi_data.py": "53521b99a9c1007d6d437f8e4b2666599c170eae06fd98ac0318c3568236e999",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3"
+  },
+  "source_changed_during_run": false,
+  "material": {
+    "dataset": "Marmousi II, Martin, Wiley and Marfurt (2006)",
+    "doi": "10.1190/1.2172306",
+    "sources": {
+      "vp": {
+        "filename": "vp_marmousi-ii.segy",
+        "url": "https://ahay.org/data/marm2/vp_marmousi-ii.segy",
+        "sha256": "2722a5de0645d8fcf5750f380893d4875383af9b24988ece0bd07b943f5b0c91"
+      },
+      "density": {
+        "filename": "density_marmousi-ii.segy",
+        "url": "https://ahay.org/data/marm2/density_marmousi-ii.segy",
+        "sha256": "10ec5c4274a63ffde2ac94dda4f062d5b83827efcefeb1a2ab22438a85f32967"
+      }
+    },
+    "primary_shape": [
+      13601,
+      2801
+    ],
+    "primary_spacing_m": 1.25,
+    "crop_origin_m": [
+      3395.0,
+      515.0
+    ],
+    "cell_shape": [
+      2048,
+      512
+    ],
+    "cell_spacing_m": 5.0,
+    "sampling": "Primary nodes at material-cell centres; no interpolation",
+    "coordinate_order": [
+      "x",
+      "depth"
+    ],
+    "density_unit": "kg/m^3",
+    "velocity_unit": "m/s",
+    "bulk_modulus_unit": "Pa",
+    "historical_article_arrays_identified": false
+  }
+}

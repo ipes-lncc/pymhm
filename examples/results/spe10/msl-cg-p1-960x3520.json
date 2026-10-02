@@ -1,0 +1,76 @@
+{
+  "dofs": 3383681,
+  "cells": 6758400,
+  "relative_residual": 1.2514672257209359e-12,
+  "free_residual_l2": 1.1971366177310544e-10,
+  "reaction_bottom_outward": -0.15128906042622214,
+  "reaction_top_outward": 0.15128906096018765,
+  "reaction_balance": 5.339655106961771e-10,
+  "dirichlet_linf": 0,
+  "assembly_seconds": 60.917808342,
+  "solve_seconds": 117.246874177,
+  "process_seconds": 231.5167249579681,
+  "timing_scope": "Native mesh/data read, assembly, solve, reaction reassembly and binary export; not a controlled performance benchmark",
+  "discretization": "MSL_CG global conforming triangular P1; SW-NE diagonals; native Eigen SparseLU; raw flux -K grad(p)",
+  "shape": [
+    960,
+    3520
+  ],
+  "kind": "spe10",
+  "domain": [
+    1200,
+    2200
+  ],
+  "layer": 36,
+  "permeability_convention": "Kx = Ky from unmodified layer 36; piecewise constant on 60 x 220 pixels",
+  "boundary_conditions": {
+    "bottom_pressure": 1.0,
+    "top_pressure": 0.0,
+    "side_outward_flux": 0.0
+  },
+  "units": "Original SPE10 numerical coordinates in ft and permeability in mD; no SI conversion",
+  "driver_sha256": "5df1321daa1b194299f643116b1d383179c31c89946f0f5e8752d67f53fe20f0",
+  "runner_sha256": "4c5751fc037f5bb05e275dce3e9c32a1ae45477190be6104d2f3f7ba53defde8",
+  "executable_sha256": "2575f104adfa316905d7bc1f318cb76ce7013e0470cc7beea9739f08dcf9d52f",
+  "layer_sha256": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512",
+  "mesh_sha256": {
+    "grid.1.node": "9e3fc63401c28f300632d6a623b130c8386c9cc99b6d617d0a0ecbc4e9ef07b0",
+    "grid.1.ele": "3a628a457113c8bb46f1eee9332f31e86f11ee66f54b5a572384663c0a0e4c39"
+  },
+  "data_sha256": "36e0d5b808cd5249368c83cbfeed1a919cdfcd737799ac09020834fbb825c87e",
+  "reaction_convention": "Outward Darcy reaction is minus the uneliminated native stiffness residual at essential nodes; side zero flux is natural, not a pointwise raw-gradient constraint",
+  "pressure_min": 0.0,
+  "pressure_max": 1.0,
+  "flux_magnitude_max": 0.03916163207552703,
+  "reaction_free_relative": 7.912909301790735e-10,
+  "bc_balance_relative": 3.5294389912083095e-09,
+  "coefficients_sha256": "a6a6151fe6c7e1806c0c3e7f7ede817f6f443fbd893cb4e373c69e5221d805a3",
+  "coefficients": "build/results/spe10/msl/spe10-960x3520/coefficients.npz",
+  "previous_difference": {
+    "pressure_l2": 0.4304542745412961,
+    "pressure_reference_l2": 821.0287938930799,
+    "pressure_relative_l2": 0.0005242864534631082,
+    "flux_l2": 0.09147414765300241,
+    "flux_reference_l2": 0.9905563598941355,
+    "flux_relative_l2": 0.09234623223536578,
+    "integration": "Exact P1 mass matrix for pressure; cell areas for piecewise constant flux; nested SW-NE triangles"
+  },
+  "previous_coefficients_sha256": "b4120150067ef36ec77431c91fb088bea02f5b8024bafb7a6cd7dfad2ff7e516",
+  "archive": "msl-cg-p1-960x3520.npz",
+  "sha256": "8015ab0f640b194cdcae3a989899f048e6ecb6cc92d7a90d19180fe265572c33",
+  "sample_convention": "Pixel centers: lower triangle at diagonal and positive coordinate side at fine-grid boundaries. Profiles x=199: eleven macro intervals retain their separate interior-side endpoint flux limits. Samples are visualization data, not L2 norms.",
+  "sampling_postprocessor_sha256": "33fa93a8be95bd0974ec743ea5bb4386f344f8548af16dfdd17b8545b82ccde5",
+  "native_reaction_assembly_check_linf": 2.203000694193935e-12,
+  "native_reaction_check": "Native uneliminated LCS action checked against independent exact triangular P1 gradients and archived pixel coefficients; no native matrix or solve altered",
+  "raw_boundary_outward_integrals": {
+    "bottom": -0.15166662766982966,
+    "top": 0.15212826351214262,
+    "left": 0.0001260270081809197,
+    "right": -3.950107496848805e-05
+  },
+  "raw_flux_boundary_convention": "Raw P1 flux is not H(div)-conforming and its boundary integrals need not equal the variational reactions; zero side flux is imposed naturally in the weak equation",
+  "energy_squared": 0.15128906045881307,
+  "energy_from_dirichlet_reaction": 0.15128906042622214,
+  "energy_identity_defect": 3.259092995477886e-11,
+  "energy_identity": "Integral q.K^-1.q equals minus the bottom outward reaction for p_bottom=1, p_top=0 and homogeneous side Neumann data"
+}

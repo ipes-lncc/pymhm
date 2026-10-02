@@ -1,0 +1,126 @@
+{
+  "method": "classical conforming triangular CG2; independently assembled DOLFINx/UFL",
+  "operator": "-div(Kx_layer36 grad p) + p = 0",
+  "boundary": "bottom p=1, top p=0, homogeneous outward flux on both vertical sides",
+  "source": 0.0,
+  "reaction": 1.0,
+  "mesh_shape": [
+    240,
+    936
+  ],
+  "triangles": 449280,
+  "mesh_grading": "explicit coordinate axes, with every material interface retained",
+  "minimum_interval": [
+    5.0,
+    0.004564212007564942
+  ],
+  "unknowns": 900913,
+  "triangle_diagonal": "southwest to northeast",
+  "material": "original layer-36 Kx used in both Cartesian directions, exact pixel alignment",
+  "physical_coordinate_unit": "ft source numbers",
+  "permeability_unit": "mD source numbers, no implicit SI conversion",
+  "native_backend": "PETSc/MUMPS SPD Cholesky on COMM_SELF",
+  "quadrature_degree": 4,
+  "original_free_residual_relative": 1.040224105968113e-15,
+  "residual_tolerance": 1e-10,
+  "reaction_integral": 496.17610509522683,
+  "energy_squared": 496.1761050952231,
+  "boundary_and_source_work": 496.1761050952322,
+  "energy_identity_relative": 1.8330078623966927e-14,
+  "weak_outward_flux_bottom_top": [
+    -496.1761050952322,
+    8.069162023328199e-257
+  ],
+  "weak_global_balance": -5.343281372915953e-12,
+  "conservation_scope": "continuous CG2 weak equations and boundary reactions, not fine-cell H(div) conservation",
+  "value_min": -0.03621041158556283,
+  "value_max": 1.0,
+  "assembly_seconds": 2.5966718290001154,
+  "factor_and_solve_seconds": 33.84248040500097,
+  "timing_scope": "concurrent acquisition, not an exclusive performance benchmark",
+  "threads": 4,
+  "threadpools": [
+    {
+      "user_api": "blas",
+      "internal_api": "blis",
+      "num_threads": 4,
+      "prefix": "libblis",
+      "version": "2.0",
+      "threading_layer": "pthreads",
+      "architecture": "haswell"
+    },
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 4,
+      "prefix": "libgomp",
+      "version": null
+    }
+  ],
+  "dolfinx": "0.9.0",
+  "basix": "0.9.0",
+  "petsc": [
+    3,
+    23,
+    0
+  ],
+  "numpy": "2.5.3",
+  "python": "3.13.15",
+  "analytical_patch": false,
+  "historical_scope": "explicit zero-source diffusion-reaction control; no claim that an unspecified historical load was zero",
+  "refinement": {
+    "pressure_absolute": 0.7492763328390561,
+    "pressure_reference": 15.747351464584975,
+    "pressure_relative": 0.0475811017823627,
+    "flux_absolute": 0.45734319034093185,
+    "flux_reference": 9.583700835581906,
+    "flux_relative": 0.04772093768233352,
+    "energy_absolute": 1.175118167149282,
+    "energy_reference": 22.275010776545887,
+    "energy_relative": 0.05275499881627908
+  },
+  "refinement_orders": [
+    3,
+    4
+  ],
+  "refinement_quadrature_relative_change": 4.1488357935605156e-15,
+  "archive": "classical-cg2-graded-240x936.npz",
+  "archive_sha256": "97aad6605988bcb2fdb78852d362d253a79c3f1de490e775f639f5ce30418566",
+  "driver_sha256": "83fed5a36872135410a524fd0a45ead82a9e0e593c3203eecfe689bca1ed37bf",
+  "material_sha256": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512",
+  "acquisition_archive_sha256": "5100306984a2cf50f5e1c9f2a780ebc859f604275e29ebdf985c4e7982669665",
+  "field_payload_sha256": "da8e4b3c31f2de83465a37b9a4921e299321bf4e71d179bcecd0841adadeee4b",
+  "sampling_replay": {
+    "verification": "field-sampling-verification.json",
+    "source_hashes": {
+      "examples/solve_unusual_spe10_reference.py": "67cbfe9caf8c5e173b132db9618429955ef3ae9b617b666fedd249886a2ce3ac",
+      "examples/cg2_profiles.py": "4b52f7a099f3619c293dd58215209e294d0c7d8b8fb2703c188cb86a2777278a"
+    },
+    "fixed_point_convention": "lower triangle and right/up rectangle at exact interfaces",
+    "trace_profile_convention": "each segment has two one-sided endpoint values; both incident columns retained at vertical grid edges; no point displacement or averaging"
+  },
+  "physical_form_verification": {
+    "archive_sha256": "97aad6605988bcb2fdb78852d362d253a79c3f1de490e775f639f5ce30418566",
+    "physical_free_relative_residual": 4.320326920601045e-15,
+    "physical_free_residual_linf": 3.275898779973374e-12,
+    "physical_energy": 496.17610509523536,
+    "boundary_work": 496.1761050952596,
+    "relative_energy_work_defect": 4.875589464703935e-14,
+    "outward_bottom": -496.1761050952596,
+    "outward_top": 8.069162023328208e-257,
+    "reaction_integral": 496.1761050952324,
+    "global_physical_balance": -2.716024627424929e-11,
+    "all_natural_side_rows_included": true,
+    "normalization": "norm of physical free RHS after exact prescribed bottom1/top0 elimination",
+    "driver_sha256": "7235156fb7f08eafbf623b2cffae0c72c7ab63c03288349e86e3de77a31b11f0",
+    "seconds": 1.933019966003485
+  },
+  "refinement_replay": {
+    "record": "classical-cg2-graded-240x936-refinement.json",
+    "source_hashes": {
+      "examples/solve_unusual_spe10_reference.py": "1a7496ebe879facf65f33fc5c6bc8548820528874464419c2c7caa33e3e985bb",
+      "examples/compare_unusual_spe10.py": "be46a47bb2240df93431ba390958939fab40154f79868fa7e2d414ab2cbcde04"
+    },
+    "executed_record_sha256": "7356771b63abd9d3d9454b9b6916903365b99d1422676f21dab184c48f6ad54c"
+  }
+}

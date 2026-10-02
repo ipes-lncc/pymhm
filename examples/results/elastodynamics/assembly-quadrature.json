@@ -1,0 +1,129 @@
+{
+  "rows": [
+    {
+      "n": 1,
+      "dt": 0.005,
+      "orders": [
+        12,
+        14
+      ],
+      "absolute_increment": {
+        "displacement_l2": 4.772602827369736e-13,
+        "velocity_l2": 2.0593894907759336e-12,
+        "displacement_h1": 5.888372128849511e-12,
+        "velocity_h1": 2.4430169212217054e-11,
+        "stress_l2": 2.8756011938799405e-12,
+        "stress_broken_hdiv": 2.7501072811591835e-11
+      },
+      "increment_over_physical_error": {
+        "displacement_l2": 2.886496049043161e-12,
+        "velocity_l2": 1.9506289641121334e-12,
+        "displacement_h1": 2.5845560728559852e-12,
+        "velocity_h1": 1.873343744869054e-12,
+        "stress_l2": 2.3362647027557198e-12,
+        "stress_broken_hdiv": 2.4002199231457696e-12
+      },
+      "field_sha256": {
+        "n1-dt0.005-q12-s1.npz": "c7a2b4b5ac7e2b1cdf3b15610706de381961e74fff3c2a4e8f6382b2d4a60c9d",
+        "n1-dt0.005-q14-s1.npz": "1859ad0473b339efa75e8b55991b91a259f3620aa03d47be211a4bfa38da7183"
+      }
+    },
+    {
+      "n": 2,
+      "dt": 0.1,
+      "orders": [
+        8,
+        12
+      ],
+      "absolute_increment": {
+        "displacement_l2": 1.3088627034394279e-11,
+        "velocity_l2": 4.5085621914361405e-11,
+        "displacement_h1": 3.3151929794942494e-10,
+        "velocity_h1": 1.1657005627800558e-09,
+        "stress_l2": 1.501680724099743e-10,
+        "stress_broken_hdiv": 2.915908031593363e-09
+      },
+      "increment_over_physical_error": {
+        "displacement_l2": 1.2411681769645058e-10,
+        "velocity_l2": 7.140296335997696e-11,
+        "displacement_h1": 1.7540074134305348e-10,
+        "velocity_h1": 1.1103909129919473e-10,
+        "stress_l2": 1.524235936868671e-10,
+        "stress_broken_hdiv": 4.73613058243893e-10
+      }
+    },
+    {
+      "n": 2,
+      "dt": 0.05,
+      "orders": [
+        8,
+        12
+      ],
+      "absolute_increment": {
+        "displacement_l2": 1.3054119750536006e-11,
+        "velocity_l2": 4.612505941508377e-11,
+        "displacement_h1": 3.3174458211841696e-10,
+        "velocity_h1": 1.2731111817615997e-09,
+        "stress_l2": 1.5273528223969126e-10,
+        "stress_broken_hdiv": 2.9644211896853406e-09
+      },
+      "increment_over_physical_error": {
+        "displacement_l2": 1.2341434868652787e-10,
+        "velocity_l2": 7.20994340490049e-11,
+        "displacement_h1": 1.7559434695301918e-10,
+        "velocity_h1": 1.1987560094146779e-10,
+        "stress_l2": 1.546986697852982e-10,
+        "stress_broken_hdiv": 4.792616591454961e-10
+      }
+    },
+    {
+      "n": 2,
+      "dt": 0.025,
+      "orders": [
+        8,
+        12
+      ],
+      "absolute_increment": {
+        "displacement_l2": 1.3029147280364953e-11,
+        "velocity_l2": 4.622861503576808e-11,
+        "displacement_h1": 3.2951047561449917e-10,
+        "velocity_h1": 1.222567350406575e-09,
+        "stress_l2": 1.5132302672148611e-10,
+        "stress_broken_hdiv": 2.9642506724885707e-09
+      },
+      "increment_over_physical_error": {
+        "displacement_l2": 1.2307910384022544e-10,
+        "velocity_l2": 7.199987463211164e-11,
+        "displacement_h1": 1.7452332949667862e-10,
+        "velocity_h1": 1.1450106481096043e-10,
+        "stress_l2": 1.5329101036940622e-10,
+        "stress_broken_hdiv": 4.804819693873875e-10
+      }
+    },
+    {
+      "n": 2,
+      "dt": 0.005,
+      "orders": [
+        8,
+        12
+      ],
+      "absolute_increment": {
+        "displacement_l2": 1.3019805021927246e-11,
+        "velocity_l2": 4.639676263960556e-11,
+        "displacement_h1": 3.2923920031241975e-10,
+        "velocity_h1": 1.2434519368326742e-09,
+        "stress_l2": 1.5067424011456648e-10,
+        "stress_broken_hdiv": 2.9244915927852358e-09
+      },
+      "increment_over_physical_error": {
+        "displacement_l2": 1.229537548652456e-10,
+        "velocity_l2": 7.217683028012978e-11,
+        "displacement_h1": 1.7437918075363926e-10,
+        "velocity_h1": 1.1624776341801634e-10,
+        "stress_l2": 1.525560591864283e-10,
+        "stress_broken_hdiv": 4.737901486016391e-10
+      }
+    }
+  ],
+  "accepted": true
+}

@@ -1,0 +1,557 @@
+{
+  "source_hashes": {
+    "src/pymhm/scalar_adaptive.py": "fbb92bd3dddb9eb131151961135bccb0891fb26e51904afbe9b663daf8201375",
+    "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+    "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+    "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "examples/transport_mixed_campaign.py": "d77f00b48ba7923704c0ebd4e55a09c6ab306026bfe099c501e656db78559a89",
+    "examples/transport_campaign.py": "5b05711ea6476653cffd3c66c284ddfe66badd2e537c91bc5d475ffe770de735",
+    "examples/pgmhm_campaign.py": "94e7f8d085a61c8e55d49176c161aef86100f3bed14d3abd93b98aade00689ac"
+  },
+  "doi": "10.1137/130938499",
+  "target": "Section 5.1, Figure 12: epsilon=0.1, a=1, sigma=0, f=1",
+  "boundaries": "Strong u=0 at x=0,1; physical diffusive flux zero at y=0,1",
+  "method": "P1 continuous local Galerkin, P0 discontinuous skeletal segments; no SUPG",
+  "theta": 0.75,
+  "adaptive_macro_mesh": "16 crisscross triangles from a 2x2 square grid",
+  "historical_scope": "Physical data and published space family; the complete Figure 12 local mesh and initial adaptive connectivity are not specified. Own local-refinement controls retain the final skeletal space exactly.",
+  "norm_convention": "Absolute L2 error and unweighted broken H1 seminorm against Eq5.2",
+  "dof_convention": "free_trace_dofs counts only unconstrained interior multipliers; prescribed wall/Dirichlet coordinates are excluded; no retained coarse modes",
+  "adaptive": [
+    {
+      "name": "mixed-adaptive-0",
+      "archive": "mixed-adaptive-0.npz",
+      "sha256": "f93b565b7823c46e62acc26273ade64ec591c5efa1fe06a10f3b72d81d672694",
+      "macro_triangles": 16,
+      "local_refinement": 16,
+      "local_triangles": 4096,
+      "trace_dofs": 28,
+      "free_trace_dofs": 20,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.4223847411489583,
+      "maximum_face_segments": 1,
+      "physical_hybrid_residual": 7.248550021999199e-17,
+      "maximum_continuity_moment": 5.447031714567174e-16,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.05366184956088967,
+          "broken_h1_error": 0.7248141342811943
+        },
+        "12": {
+          "l2_error": 0.053661849560889666,
+          "broken_h1_error": 0.7248141342811942
+        }
+      },
+      "iteration": 0
+    },
+    {
+      "name": "mixed-adaptive-1",
+      "archive": "mixed-adaptive-1.npz",
+      "sha256": "aa6b3b23d51310ec01e45d3c8b8b3620794305297977c71a2f0f0e722d4bed34",
+      "macro_triangles": 16,
+      "local_refinement": 16,
+      "local_triangles": 4096,
+      "trace_dofs": 32,
+      "free_trace_dofs": 24,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.20719280060942336,
+      "maximum_face_segments": 2,
+      "physical_hybrid_residual": 6.982008837518834e-17,
+      "maximum_continuity_moment": 8.232226628774383e-16,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.02768635043938995,
+          "broken_h1_error": 0.3871557537619385
+        },
+        "12": {
+          "l2_error": 0.027686350439389946,
+          "broken_h1_error": 0.3871557537619384
+        }
+      },
+      "iteration": 1
+    },
+    {
+      "name": "mixed-adaptive-2",
+      "archive": "mixed-adaptive-2.npz",
+      "sha256": "39c57e34dafb7890ed2660ecc20e2feefaf9faf9aff7f1180c6862257bb9f804",
+      "macro_triangles": 16,
+      "local_refinement": 16,
+      "local_triangles": 4096,
+      "trace_dofs": 40,
+      "free_trace_dofs": 32,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.11041036151175575,
+      "maximum_face_segments": 2,
+      "physical_hybrid_residual": 7.669628725953006e-17,
+      "maximum_continuity_moment": 4.071179157683069e-16,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.015451156785770154,
+          "broken_h1_error": 0.28491666043186265
+        },
+        "12": {
+          "l2_error": 0.015451156785770153,
+          "broken_h1_error": 0.28491666043186265
+        }
+      },
+      "iteration": 2
+    },
+    {
+      "name": "mixed-adaptive-3",
+      "archive": "mixed-adaptive-3.npz",
+      "sha256": "17635bc9f9ba81f6b16b4d6761d5244ea1b27ea689c6cb9cf78f41f3877c72f0",
+      "macro_triangles": 16,
+      "local_refinement": 16,
+      "local_triangles": 4096,
+      "trace_dofs": 48,
+      "free_trace_dofs": 40,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.0424588404825779,
+      "maximum_face_segments": 3,
+      "physical_hybrid_residual": 6.302621271639409e-17,
+      "maximum_continuity_moment": 4.562322741819003e-16,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.0036507908205945755,
+          "broken_h1_error": 0.18034753260830588
+        },
+        "12": {
+          "l2_error": 0.003650790820594577,
+          "broken_h1_error": 0.1803475326083059
+        }
+      },
+      "iteration": 3
+    },
+    {
+      "name": "mixed-adaptive-4",
+      "archive": "mixed-adaptive-4.npz",
+      "sha256": "8d15ab9342485fefe89f72f468f4c66b71c6397c14be341e91b13c332fe0a728",
+      "macro_triangles": 16,
+      "local_refinement": 16,
+      "local_triangles": 4096,
+      "trace_dofs": 52,
+      "free_trace_dofs": 44,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.03019192986201162,
+      "maximum_face_segments": 4,
+      "physical_hybrid_residual": 7.69903166754697e-17,
+      "maximum_continuity_moment": 6.693864212925504e-16,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.002620734854302154,
+          "broken_h1_error": 0.1637709556897095
+        },
+        "12": {
+          "l2_error": 0.0026207348543021555,
+          "broken_h1_error": 0.16377095568970954
+        }
+      },
+      "iteration": 4
+    },
+    {
+      "name": "mixed-adaptive-5",
+      "archive": "mixed-adaptive-5.npz",
+      "sha256": "69768ccfb65c6c2ad6d8a266243f20d3011cbaf2496d92366b713903d6f9ed71",
+      "macro_triangles": 16,
+      "local_refinement": 16,
+      "local_triangles": 4096,
+      "trace_dofs": 68,
+      "free_trace_dofs": 60,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.019495499661680765,
+      "maximum_face_segments": 5,
+      "physical_hybrid_residual": 7.553886065367571e-17,
+      "maximum_continuity_moment": 6.422813669804128e-16,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.0019005451211102054,
+          "broken_h1_error": 0.1468198725051263
+        },
+        "12": {
+          "l2_error": 0.0019005451211102072,
+          "broken_h1_error": 0.1468198725051263
+        }
+      },
+      "iteration": 5
+    },
+    {
+      "name": "mixed-adaptive-6",
+      "archive": "mixed-adaptive-6.npz",
+      "sha256": "3aa28d7dd847a6c7828669b7f4e2a2e024ee5ad27153a0146c837f682bda1004",
+      "macro_triangles": 16,
+      "local_refinement": 16,
+      "local_triangles": 4096,
+      "trace_dofs": 72,
+      "free_trace_dofs": 64,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.01449228246978479,
+      "maximum_face_segments": 5,
+      "physical_hybrid_residual": 9.22285703705593e-17,
+      "maximum_continuity_moment": 6.205973235307027e-16,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.001540929221791044,
+          "broken_h1_error": 0.14340389751112076
+        },
+        "12": {
+          "l2_error": 0.0015409292217910464,
+          "broken_h1_error": 0.14340389751112084
+        }
+      },
+      "iteration": 6
+    },
+    {
+      "name": "mixed-adaptive-7",
+      "archive": "mixed-adaptive-7.npz",
+      "sha256": "bc7bf7ca710bd86d3bb66d4873c75813f34eefb7051dc6dd16e280114509cdce",
+      "macro_triangles": 16,
+      "local_refinement": 16,
+      "local_triangles": 4096,
+      "trace_dofs": 80,
+      "free_trace_dofs": 72,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.008075102130452374,
+      "maximum_face_segments": 5,
+      "physical_hybrid_residual": 8.41224687542864e-17,
+      "maximum_continuity_moment": 6.268856961311187e-16,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.0008263089898735387,
+          "broken_h1_error": 0.13879014682972055
+        },
+        "12": {
+          "l2_error": 0.0008263089898735437,
+          "broken_h1_error": 0.13879014682972055
+        }
+      },
+      "iteration": 7
+    }
+  ],
+  "spatial": [
+    {
+      "name": "mixed-spatial-n1",
+      "archive": "mixed-spatial-n1.npz",
+      "sha256": "fca94bff4712b44f9ff5d1822d3037a9002497282aaa45f981ba6d3d7abb7951",
+      "macro_triangles": 4,
+      "local_refinement": 16,
+      "local_triangles": 1024,
+      "trace_dofs": 8,
+      "free_trace_dofs": 4,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.5071134957442563,
+      "maximum_face_segments": 1,
+      "physical_hybrid_residual": 1.0043079727284939e-16,
+      "maximum_continuity_moment": 2.983724378680108e-16,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.12157187793814782,
+          "broken_h1_error": 1.021774203813649
+        },
+        "12": {
+          "l2_error": 0.12157187793814779,
+          "broken_h1_error": 1.021774203813649
+        }
+      },
+      "resolution": 1
+    },
+    {
+      "name": "mixed-spatial-n2",
+      "archive": "mixed-spatial-n2.npz",
+      "sha256": "f93b565b7823c46e62acc26273ade64ec591c5efa1fe06a10f3b72d81d672694",
+      "macro_triangles": 16,
+      "local_refinement": 16,
+      "local_triangles": 4096,
+      "trace_dofs": 28,
+      "free_trace_dofs": 20,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.4223847411489583,
+      "maximum_face_segments": 1,
+      "physical_hybrid_residual": 7.248550021999199e-17,
+      "maximum_continuity_moment": 5.447031714567174e-16,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.05366184956088967,
+          "broken_h1_error": 0.7248141342811943
+        },
+        "12": {
+          "l2_error": 0.053661849560889666,
+          "broken_h1_error": 0.7248141342811942
+        }
+      },
+      "resolution": 2
+    },
+    {
+      "name": "mixed-spatial-n3",
+      "archive": "mixed-spatial-n3.npz",
+      "sha256": "d88bf924abe5ec7dff912ce2261b2dc7c43bd9c6ef34edb276252a4b6361a883",
+      "macro_triangles": 36,
+      "local_refinement": 16,
+      "local_triangles": 9216,
+      "trace_dofs": 60,
+      "free_trace_dofs": 48,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.3397070097475126,
+      "maximum_face_segments": 1,
+      "physical_hybrid_residual": 5.718300260089114e-17,
+      "maximum_continuity_moment": 1.124100812432971e-15,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.02935026334374899,
+          "broken_h1_error": 0.550763143688466
+        },
+        "12": {
+          "l2_error": 0.029350263343748986,
+          "broken_h1_error": 0.550763143688466
+        }
+      },
+      "resolution": 3
+    },
+    {
+      "name": "mixed-spatial-n4",
+      "archive": "mixed-spatial-n4.npz",
+      "sha256": "6fd07a30b1b95f2780355b4785fec87b3601b77a323948330bdaf01cf59bf0fe",
+      "macro_triangles": 64,
+      "local_refinement": 16,
+      "local_triangles": 16384,
+      "trace_dofs": 104,
+      "free_trace_dofs": 88,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.27937916657297285,
+      "maximum_face_segments": 1,
+      "physical_hybrid_residual": 6.366217464729441e-17,
+      "maximum_continuity_moment": 1.2732870313669764e-15,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.01823926152920479,
+          "broken_h1_error": 0.43981658324286105
+        },
+        "12": {
+          "l2_error": 0.018239261529204784,
+          "broken_h1_error": 0.439816583242861
+        }
+      },
+      "resolution": 4
+    },
+    {
+      "name": "mixed-spatial-n6",
+      "archive": "mixed-spatial-n6.npz",
+      "sha256": "39cbcecd054082d6901a294bf99e5c0693f095f6619866311134f3bc646b6ee8",
+      "macro_triangles": 144,
+      "local_refinement": 16,
+      "local_triangles": 36864,
+      "trace_dofs": 228,
+      "free_trace_dofs": 204,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.2035827307821266,
+      "maximum_face_segments": 1,
+      "physical_hybrid_residual": 5.861973037002895e-17,
+      "maximum_continuity_moment": 2.459322892903182e-15,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.00889942320798664,
+          "broken_h1_error": 0.31081622563103983
+        },
+        "12": {
+          "l2_error": 0.00889942320798664,
+          "broken_h1_error": 0.3108162256310398
+        }
+      },
+      "resolution": 6
+    },
+    {
+      "name": "mixed-spatial-n8",
+      "archive": "mixed-spatial-n8.npz",
+      "sha256": "ae1582f7e427196ca12cea795c7213d70be8b56aa7f7d8c57062923e0583da44",
+      "macro_triangles": 256,
+      "local_refinement": 16,
+      "local_triangles": 65536,
+      "trace_dofs": 400,
+      "free_trace_dofs": 368,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.15940102539693654,
+      "maximum_face_segments": 1,
+      "physical_hybrid_residual": 6.942278331536139e-17,
+      "maximum_continuity_moment": 4.1317182964892285e-15,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.005229372011284554,
+          "broken_h1_error": 0.23949265780631213
+        },
+        "12": {
+          "l2_error": 0.0052293720112845535,
+          "broken_h1_error": 0.2394926578063121
+        }
+      },
+      "resolution": 8,
+      "acquisition_source_hashes": {
+        "src/pymhm/scalar_adaptive.py": "fbb92bd3dddb9eb131151961135bccb0891fb26e51904afbe9b663daf8201375",
+        "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+        "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+        "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+        "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+        "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+        "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+        "examples/transport_mixed_campaign.py": "b36073ec7097b3d38217acadb732d4b34b8e44af2b37bcebeabe82176084e41b",
+        "examples/transport_campaign.py": "5b05711ea6476653cffd3c66c284ddfe66badd2e537c91bc5d475ffe770de735",
+        "examples/pgmhm_campaign.py": "94e7f8d085a61c8e55d49176c161aef86100f3bed14d3abd93b98aade00689ac"
+      },
+      "source_changed_during_run": false,
+      "seconds_including_errors_and_archive": 140.71035304199904
+    },
+    {
+      "name": "mixed-spatial-n12",
+      "archive": "mixed-spatial-n12.npz",
+      "sha256": "26288626a2a7499af5bc482abb2287ab886ec17f967c88e0752a971ef63cc220",
+      "macro_triangles": 576,
+      "local_refinement": 16,
+      "local_triangles": 147456,
+      "trace_dofs": 888,
+      "free_trace_dofs": 840,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.11085516629188319,
+      "maximum_face_segments": 1,
+      "physical_hybrid_residual": 6.490957205983486e-17,
+      "maximum_continuity_moment": 6.016752851153995e-15,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.002422996373497134,
+          "broken_h1_error": 0.16379063196179355
+        },
+        "12": {
+          "l2_error": 0.002422996373497134,
+          "broken_h1_error": 0.16379063196179353
+        }
+      },
+      "resolution": 12,
+      "acquisition_source_hashes": {
+        "src/pymhm/scalar_adaptive.py": "fbb92bd3dddb9eb131151961135bccb0891fb26e51904afbe9b663daf8201375",
+        "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+        "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+        "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+        "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+        "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+        "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+        "examples/transport_mixed_campaign.py": "b36073ec7097b3d38217acadb732d4b34b8e44af2b37bcebeabe82176084e41b",
+        "examples/transport_campaign.py": "5b05711ea6476653cffd3c66c284ddfe66badd2e537c91bc5d475ffe770de735",
+        "examples/pgmhm_campaign.py": "94e7f8d085a61c8e55d49176c161aef86100f3bed14d3abd93b98aade00689ac"
+      },
+      "source_changed_during_run": false,
+      "seconds_including_errors_and_archive": 370.7894242890179
+    },
+    {
+      "name": "mixed-spatial-n16",
+      "archive": "mixed-spatial-n16.npz",
+      "sha256": "5c3e41db1e4c2391c09b0d7fc208ec8a6bc83bc743fbc3e019abbcf68fa34038",
+      "macro_triangles": 1024,
+      "local_refinement": 16,
+      "local_triangles": 262144,
+      "trace_dofs": 1568,
+      "free_trace_dofs": 1504,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.08490796990975229,
+      "maximum_face_segments": 1,
+      "physical_hybrid_residual": 7.366341333631536e-17,
+      "maximum_continuity_moment": 1.4148031975570047e-14,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.0013907308137569992,
+          "broken_h1_error": 0.12436261227186805
+        },
+        "12": {
+          "l2_error": 0.0013907308137569973,
+          "broken_h1_error": 0.12436261227186805
+        }
+      },
+      "resolution": 16,
+      "acquisition_source_hashes": {
+        "src/pymhm/scalar_adaptive.py": "fbb92bd3dddb9eb131151961135bccb0891fb26e51904afbe9b663daf8201375",
+        "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+        "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+        "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+        "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+        "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+        "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+        "examples/transport_mixed_campaign.py": "b36073ec7097b3d38217acadb732d4b34b8e44af2b37bcebeabe82176084e41b",
+        "examples/transport_campaign.py": "5b05711ea6476653cffd3c66c284ddfe66badd2e537c91bc5d475ffe770de735",
+        "examples/pgmhm_campaign.py": "94e7f8d085a61c8e55d49176c161aef86100f3bed14d3abd93b98aade00689ac"
+      },
+      "source_changed_during_run": false,
+      "seconds_including_errors_and_archive": 545.7096387570491
+    }
+  ],
+  "local_controls": [
+    {
+      "name": "mixed-local-r8",
+      "archive": "mixed-local-r8.npz",
+      "sha256": "b6858f0afdbf6707329536a4a20d015373e921a75dea0d1682676831cabe5124",
+      "macro_triangles": 16,
+      "local_refinement": 8,
+      "local_triangles": 1024,
+      "trace_dofs": 80,
+      "free_trace_dofs": 72,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.006197883566562911,
+      "maximum_face_segments": 5,
+      "physical_hybrid_residual": 5.832080298303654e-17,
+      "maximum_continuity_moment": 4.733626685071712e-16,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.002703437065119323,
+          "broken_h1_error": 0.2680046440298772
+        },
+        "12": {
+          "l2_error": 0.00270343706511933,
+          "broken_h1_error": 0.2680046440298773
+        }
+      }
+    },
+    {
+      "name": "mixed-local-r32",
+      "archive": "mixed-local-r32.npz",
+      "sha256": "73ae55ffd95055a1c11ecf08cf8a45438ad7fce31e902fe2e180a627a0bb9daf",
+      "macro_triangles": 16,
+      "local_refinement": 32,
+      "local_triangles": 16384,
+      "trace_dofs": 80,
+      "free_trace_dofs": 72,
+      "retained_coarse_dofs": 0,
+      "indicator": 0.009713168005185345,
+      "maximum_face_segments": 5,
+      "physical_hybrid_residual": 8.109733172454268e-17,
+      "maximum_continuity_moment": 3.222790957713162e-16,
+      "maximum_prescribed_wall_multiplier": 0.0,
+      "quadrature": {
+        "8": {
+          "l2_error": 0.0005827196787895768,
+          "broken_h1_error": 0.0805394288200195
+        },
+        "12": {
+          "l2_error": 0.000582719678789577,
+          "broken_h1_error": 0.08053942882001955
+        }
+      }
+    }
+  ],
+  "source_changed_during_run": false,
+  "total_seconds_including_errors_and_archives": 243.47534144599922
+}

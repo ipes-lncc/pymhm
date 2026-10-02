@@ -1,0 +1,163 @@
+{
+  "literature": "Araya et al., CMAME 428 (2024) 117089, section 5.2.1 and Figure 4",
+  "problem": "Unit cube, K=.1 I, beta=(1,0,0), reaction=0; u=sin(6pi x)sin(4pi y)sin(2pi z); homogeneous Dirichlet",
+  "formulation": "Conservative RAD skew form, Robin skeleton flux (-K grad(u)+beta*u/2).n; Galerkin local solve",
+  "mhm": {
+    "degree": 4,
+    "face_degree": 1,
+    "face_subdivisions": 1,
+    "local_edge_refinement": 2,
+    "dirichlet": "weak face moments",
+    "local_retained": "physical constant"
+  },
+  "classical": {
+    "degree": 2,
+    "dirichlet": "strong nodal",
+    "mesh": "Freudenthal cube, same fine Cartesian spacing"
+  },
+  "quadrature": {
+    "assembly": 8,
+    "errors": 8,
+    "finest_sensitivity": 10,
+    "V": "sqrt(H1_seminorm_squared+L2_squared/diameter_squared), diameter_squared=3"
+  },
+  "reproduction_limit": "Published PDE and polynomial degrees; deterministic Freudenthal/red-refined meshes differ from the irregular meshes in Figure 4. Analytical refinement comparison, not identical published mesh data.",
+  "rows": [
+    {
+      "n": 1,
+      "macro_tetrahedra": 6,
+      "fine_tetrahedra": 48,
+      "global_mhm_unknowns": 60,
+      "classical_total_dofs": 125,
+      "mhm": {
+        "l2_error": 0.44811080703219075,
+        "h1_seminorm_error": 7.812565000009379,
+        "V_error": 7.816847594213703,
+        "physical_flux_l2_error": 0.8842444748009858,
+        "backward_residual": 6.558952536462382e-17
+      },
+      "classical": {
+        "l2_error": 0.356146523698355,
+        "h1_seminorm_error": 8.223161196329498,
+        "V_error": 8.225731589121215,
+        "physical_flux_l2_error": 0.8961317376521135,
+        "backward_residual": 5.825200671100301e-17
+      }
+    },
+    {
+      "n": 2,
+      "macro_tetrahedra": 48,
+      "fine_tetrahedra": 384,
+      "global_mhm_unknowns": 408,
+      "classical_total_dofs": 729,
+      "mhm": {
+        "l2_error": 0.37337884612284156,
+        "h1_seminorm_error": 6.804766054958934,
+        "V_error": 6.808179760427798,
+        "physical_flux_l2_error": 0.731635507726065,
+        "backward_residual": 1.5633725297046932e-16
+      },
+      "classical": {
+        "l2_error": 0.24055065369534542,
+        "h1_seminorm_error": 6.446608117027982,
+        "V_error": 6.448103939934241,
+        "physical_flux_l2_error": 0.6880786139292278,
+        "backward_residual": 1.2394979770133605e-16
+      }
+    },
+    {
+      "n": 3,
+      "macro_tetrahedra": 162,
+      "fine_tetrahedra": 1296,
+      "global_mhm_unknowns": 1296,
+      "classical_total_dofs": 2197,
+      "mhm": {
+        "l2_error": 0.18971145234498651,
+        "h1_seminorm_error": 4.6220969160522944,
+        "V_error": 4.623394501131942,
+        "physical_flux_l2_error": 0.47981402484414337,
+        "backward_residual": 1.9804104917732104e-16
+      },
+      "classical": {
+        "l2_error": 0.121453383851711,
+        "h1_seminorm_error": 4.2867964104627045,
+        "V_error": 4.287369874360302,
+        "physical_flux_l2_error": 0.4455526445844902,
+        "backward_residual": 1.8529760623246866e-16
+      }
+    },
+    {
+      "n": 4,
+      "macro_tetrahedra": 384,
+      "fine_tetrahedra": 3072,
+      "global_mhm_unknowns": 2976,
+      "classical_total_dofs": 4913,
+      "mhm": {
+        "l2_error": 0.11436896314585702,
+        "h1_seminorm_error": 3.579612851053913,
+        "V_error": 3.5802218157549044,
+        "physical_flux_l2_error": 0.36419645993059313,
+        "backward_residual": 3.2954756443418044e-16
+      },
+      "classical": {
+        "l2_error": 0.05230452804680274,
+        "h1_seminorm_error": 2.6572624178413013,
+        "V_error": 2.657434002659307,
+        "physical_flux_l2_error": 0.270825034343058,
+        "backward_residual": 1.8920678763930528e-16
+      }
+    },
+    {
+      "n": 5,
+      "macro_tetrahedra": 750,
+      "fine_tetrahedra": 6000,
+      "global_mhm_unknowns": 5700,
+      "classical_total_dofs": 9261,
+      "mhm": {
+        "l2_error": 0.05904061954838785,
+        "h1_seminorm_error": 2.3183703178998156,
+        "V_error": 2.3186208966763937,
+        "physical_flux_l2_error": 0.23427863406599878,
+        "backward_residual": 4.2251666473714264e-16
+      },
+      "classical": {
+        "l2_error": 0.027300368943698795,
+        "h1_seminorm_error": 1.8383657423274127,
+        "V_error": 1.8384333110770812,
+        "physical_flux_l2_error": 0.18585261948676546,
+        "backward_residual": 2.2031711182674506e-16
+      },
+      "quadrature_order10": {
+        "mhm": {
+          "l2_error": 0.059040619540056724,
+          "h1_seminorm_error": 2.3183703179334003,
+          "V_error": 2.3186208967099042,
+          "physical_flux_l2_error": 0.23427863406775007,
+          "backward_residual": 4.2251666473714264e-16
+        },
+        "classical": {
+          "l2_error": 0.02730036894376518,
+          "h1_seminorm_error": 1.8383657423273114,
+          "V_error": 1.8384333110769804,
+          "physical_flux_l2_error": 0.18585261948676474,
+          "backward_residual": 2.2031711182674506e-16
+        }
+      },
+      "fields": "rad3d.npz",
+      "fields_sha256": "d66814341fb1801e93814ab835fdad5c6b1b9d768b2055c618015c13d312f43f"
+    }
+  ],
+  "source_sha256": {
+    "examples/solve_rad3d.py": "158766f5e7ca32be9d3f51d66f7402fea023e740ac2794b6742b6ece8d7235a6",
+    "src/pymhm/rad3d.py": "4a81870b0e9cf9c045ebde4ba6a13267dcd0e3b83a96494f8103c7f15afce0a2",
+    "src/pymhm/darcy3d.py": "82c73ec65e89867f64c6e752e47f973e71f148a2d51b5b6588ad08bd5aec1588",
+    "src/pymhm/tetrahedral.py": "be9cf2387044046d90761e8a98cf1c81ed6070a9db685c2f63d059c3224e4b24",
+    "src/pymhm/tetra_lagrange.py": "89af3d45c336bab82d298f39be15b7e9f806ea0ec78860d9d05d374a3b8f5f49",
+    "src/pymhm/hybrid.py": "0471839b2346b6a3ed2ac60ebac22f609e05ecc8ccd0fdfa46c7c9ac19f7ea1a",
+    "src/pymhm/solvers.py": "412801ae96eb8f5dc4516e58963c3b644357b01100258b11416b4326b548c20b",
+    "src/pymhm/parallel.py": "22e88e7f8d658104423b0823a502991996508d62b1c071589ee32429a6cbd77e"
+  },
+  "source_changed_during_run": false,
+  "timestamp_utc": "2026-09-29T00:16:17.967255+00:00",
+  "native_threads": 1
+}

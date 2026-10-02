@@ -1,0 +1,46 @@
+{
+  "quantity": "Pointwise archived display samples; these are not integrated norms",
+  "coefficient_trace": "Incident material side, without coordinate displacement or averaging",
+  "raw_flux_contract": "-a grad(p_h), not an H(div) reconstruction or the conservative skeleton multiplier",
+  "rows": [
+    {
+      "setting": "S0",
+      "archive": "S0-fitted-r16.npz",
+      "sha256": "34649af965a9977a17aeb6923e23fb532994c3674f71a91404ea111228fc3e42",
+      "sampled_flux_component_error_linf": [
+        0.054236855109425566,
+        0.04598205734097055
+      ],
+      "pressure_sample_min": -0.0013446042517596389,
+      "pressure_sample_max": 0.034070211021352693
+    },
+    {
+      "setting": "S1",
+      "archive": "S1-fitted-r16.npz",
+      "sha256": "00e5ff4f05ab575621db1cf58a2a7d4cb06d1b3fc4469da290b69f6d2e3de4b7",
+      "sampled_flux_component_error_linf": [
+        0.29256722883185493,
+        0.5724776040476093
+      ],
+      "pressure_sample_min": -0.004728020312440732,
+      "pressure_sample_max": 0.03448395150978743
+    },
+    {
+      "setting": "S2",
+      "archive": "S2-fitted-r16.npz",
+      "sha256": "a186913f57af47446f7c0b694e6cf71a2a92a869252a11b9859a89ffbd7aa109",
+      "sampled_flux_component_error_linf": [
+        0.05050178446093595,
+        0.04786659710049413
+      ],
+      "pressure_sample_min": -0.001151550580108503,
+      "pressure_sample_max": 0.034089374077648366
+    }
+  ],
+  "source_sha256": "fdef0dbd46e27a3d98a44ece6090aa432fc4e9c48685929ca37655d3fc643d40",
+  "input_record_sha256": {
+    "published-figure5.json": "965b87df13f0285fe98bb504f43f189d2f61db6446d72b8bf17ea4c99cd552d8",
+    "mhm-fitted-r16.json": "2c6b01493cd3ebc0c9c493923da10d2d75ca7f3a4d69e01fc45ff9e0afa76211",
+    "mhm-r16.json": "37773ffecc5c01fff3438599165d0abf916b50cee4ef03890f412c1ccb8c9e5b"
+  }
+}

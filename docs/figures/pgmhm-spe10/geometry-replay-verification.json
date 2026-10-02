@@ -1,0 +1,34 @@
+{
+  "archive": "pgmhm-fitted-tracefit-r32-s64-q5.npz",
+  "archive_sha256": "3e1a2d4f1b0462109ef65c92412a56146bcce2a6c5dfc11f09f81b29b01c9110",
+  "source_hashes": {
+    "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+    "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+    "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+    "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e"
+  },
+  "rows": [
+    {
+      "macro": 0,
+      "points": 28537,
+      "cells": 56448,
+      "points_bitwise_equal": true,
+      "cells_bitwise_equal": true
+    },
+    {
+      "macro": 1,
+      "points": 28537,
+      "cells": 56448,
+      "points_bitwise_equal": true,
+      "cells_bitwise_equal": true
+    }
+  ],
+  "source_unchanged": true,
+  "method": "Exact equality of all archived material-fitted local coordinates and cell connectivity with independent geometry replay; two macros,112896 triangles",
+  "driver": "original-geological-local-partition-replay",
+  "driver_sha256": "d1d5a400a0fe4b7fb25f58dee845cc755bb827959917ec029826a141f9d65aea",
+  "acquisition_geometry_source_hashes": {
+    "src/pymhm/cut_cells.py": "f37bd801059236bbc2b7cc7f735b9c843916fdd9f14ea3d70812c971ab4a6add",
+    "src/pymhm/reservoir.py": "f9c7e595a48ccb5d047d5ec94f6f6d15a7ffb7b49374d921837fa0cf2dbf09a0"
+  }
+}

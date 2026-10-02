@@ -1,0 +1,35 @@
+{
+  "reference": {
+    "n": 1024,
+    "degree": 5
+  },
+  "approximation": {
+    "n": 512,
+    "degree": 5
+  },
+  "norms": {
+    "l2": 3.752251560750037e-07,
+    "h1_seminorm": 0.00023310489288950483,
+    "relative_l2": 0.0002694359230946108,
+    "relative_h1": 0.01856093818487617,
+    "reference_l2": 0.0013926322509832726,
+    "reference_h1": 0.012558912300896763
+  },
+  "normalization": "The finer Q5 field on the unit square supplies both denominators.",
+  "integration": "Shared periodic_norms: exact tensor-product polynomial moments on nested cells; positive exact quadrature if integrated products approach cancellation.",
+  "interpretation": "Measured reference increment; not a continuum error bound.",
+  "archive_sha256": {
+    "reference-q5-512-current-order10-lor.npz": "67635d23ae6f42cc8fecd23baa5ed28b892d3601b38b2fa4769993798e747caf",
+    "periodic-reference-q5-512-order10.json": "98741d9aef342e10721c90cb139aa9eed0eedbdf155092f2f0edb4397dd8f760",
+    "reference-q5-1024-current-order10-lor.npz": "37cc159a87f3626adf8e738066ada37e1b21a485017543e28e48c647cbd21d55",
+    "periodic-reference-q5-1024-order10.json": "7de41769ac9b0c4ef8f3b7a212363d2978ff661351a7bff0042d6ee2122a3af6"
+  },
+  "source_sha256": {
+    "examples/periodic_norms.py": "913d760df45f66c252ab955e0287126143c2f122807bb074c40511a7a1ed7f14",
+    "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+    "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3"
+  },
+  "invocation_sha256": "310d86638c75bb837ccdbbbfcea9d226c8b75e394c64525547093ce70ffc6f65",
+  "source_changed": false,
+  "integration_seconds": 11.306839126045816
+}

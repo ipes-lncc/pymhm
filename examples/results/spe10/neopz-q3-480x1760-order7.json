@@ -1,0 +1,58 @@
+{
+  "rectangle_method": "Conforming continuous Q3",
+  "rectangle_shape": [
+    960,
+    1760
+  ],
+  "triangle_method": "Independent classical NeoPZ RT0/P0",
+  "triangle_shape": [
+    480,
+    1760
+  ],
+  "pressure_l2": 1.0891247762504446,
+  "flux_l2": 0.12134456231003818,
+  "pressure_relative_to_q3": 0.0013260231270430353,
+  "flux_relative_to_q3": 0.12300387459331014,
+  "pressure_relative_to_neopz": 0.0013247747142550443,
+  "flux_relative_to_neopz": 0.12423255978048967,
+  "q3_pressure_l2": 821.3467427820342,
+  "q3_flux_l2": 0.986510081176238,
+  "neopz_pressure_l2": 822.1207459133066,
+  "neopz_flux_l2": 0.9767532965950764,
+  "energy_k_inverse": {
+    "q3": 0.15080169837322568,
+    "rt0": 0.14956955086433005,
+    "cross": 0.14956955086462842,
+    "difference": 0.001232147508298889,
+    "q3_inlet": 0.15080169615569894,
+    "rt0_inlet": 0.14956955086439122,
+    "inlet_difference": 0.001232145291307718,
+    "q3_identity_relative_defect": 1.4704919105804463e-08,
+    "rt0_identity_relative_defect": 4.0906410438344365e-13,
+    "cross_identity_relative_defect": 1.5858454318772417e-12,
+    "difference_identity_relative_defect": 1.7992936275622564e-06,
+    "difference_from_three_terms": 0.0012321475082988892,
+    "relative_identity_diagnostic_tolerance": 1e-07,
+    "relative_identity_diagnostic_passed": false,
+    "interpretation": "The direct Q3 energy and its archived inlet reaction differ by an absolute algebraic-work defect. The same defect enters the inlet-difference identity. Every term and the failed relative diagnostic are retained; no certified error bound is asserted."
+  },
+  "integration": "Exact rectangle-triangle intersections with positive polynomial-exact Duffy quadrature; no display samples",
+  "q3_coefficient_sha256": "a97fc75f80acbb0d6a6af585c9a66a6d14a22644bd960aa1abdeb1b0dc8d5d5f",
+  "neopz_coefficient_sha256": "b79e392ad600e057ca3101a78722b58783e54f10ce1e78dd4332a44efdaea257",
+  "comparison_driver_sha256": "0c753b6398bed845c22d8ec5654523979c97eb85c76e78930c59a2ea692a2add",
+  "intersection_integrator_sha256": "c0bd7751775b82999c3cc6234b5740134091db7e249a386cde47df401c29c2ae",
+  "elapsed_seconds": 161.68260838498827,
+  "periodic_blocks": [
+    480,
+    1760
+  ],
+  "block_extent": [
+    2.5,
+    1.25
+  ],
+  "quadrature_points_per_block": 294,
+  "integration_triangles_per_block": 6,
+  "duffy_order": 7,
+  "verified_polynomial_degree": 12,
+  "maximum_relative_monomial_defect": 6.866455078125001e-16
+}

@@ -1,0 +1,192 @@
+{
+  "scope": "Algebraic boundary pairing on the recovered crisscross macro triangle; no PDE or material parameters altered",
+  "source": "Barros 2022 Figure4; MH2M v3 Assumption A",
+  "rows": [
+    {
+      "local_refinement": 4,
+      "local_P1_nodes": 25,
+      "local_triangles": 32,
+      "boundary_nodes": 16,
+      "Lambda_segments_per_macroedge": 8,
+      "Lambda_dimension": 24,
+      "zero_mean_Lambda_dimension": 23,
+      "zero_mean_pairing_rank": 15,
+      "singular_values": [
+        0.17388580413148655,
+        0.173823217828452,
+        0.16539595664865217,
+        0.16511927803676377,
+        0.15188282172113293,
+        0.15114831965948863,
+        0.1344187533665375,
+        0.13279804366228756,
+        0.11480297961159916,
+        0.1118026069816649,
+        0.09562178176119777,
+        0.0937954294407765,
+        0.07752885090757383,
+        0.05402756333998328,
+        0.027581420792448887,
+        3.71558672372386e-17,
+        2.0377703823138612e-17,
+        1.1476964340674436e-17,
+        9.577616742859189e-18,
+        6.37485785494262e-18,
+        5.755231983073838e-18,
+        2.5888361141789295e-18,
+        1.0107385719036762e-33
+      ],
+      "rank_roundoff_threshold": 9.652601170111827e-16
+    },
+    {
+      "local_refinement": 8,
+      "local_P1_nodes": 81,
+      "local_triangles": 128,
+      "boundary_nodes": 32,
+      "Lambda_segments_per_macroedge": 8,
+      "Lambda_dimension": 24,
+      "zero_mean_Lambda_dimension": 23,
+      "zero_mean_pairing_rank": 23,
+      "singular_values": [
+        0.1242205155594054,
+        0.1241268832564234,
+        0.12189267249529463,
+        0.12156102690930426,
+        0.1180619291502782,
+        0.11744923324166304,
+        0.11285141503666832,
+        0.11200299510328267,
+        0.1065379107473808,
+        0.10548377471906284,
+        0.099676639586152,
+        0.0982315633587484,
+        0.09327587068191504,
+        0.09104079032840134,
+        0.08838834764831843,
+        0.08165761482816278,
+        0.07325416765544365,
+        0.06409024141614103,
+        0.054315838119097626,
+        0.044045474075281275,
+        0.03338004248950248,
+        0.02241833659327856,
+        0.01125871583732782
+      ],
+      "rank_roundoff_threshold": 2.234182119378722e-15
+    }
+  ],
+  "interpretation": "r4 has fewer zero-mean boundary pressure coordinates than conormal coordinates; r8 has injective pairing in this test",
+  "source_sha256": {
+    "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae"
+  },
+  "uniform_macroface_partition_source": {
+    "url": "https://www.lncc.br/~alm/students/frankdissert.pdf",
+    "definition": "4.2.1, printed p55/PDF p57",
+    "MH2M_space": "Section4.2.1.3, printed p57/PDF p59",
+    "statement": "Each macroface has the same N subfaces; this partition is independent of local fine boundary edges."
+  },
+  "inherited_partition_control": {
+    "local_refinement": 8,
+    "macro_triangle": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "zero_mean_basis": "Coordinate columns with one pivot enforcing the exact boundary integral constraint; rank is invariant to this basis choice.",
+    "rows": [
+      {
+        "convention": "uniform-per-face",
+        "segments_on_sides": [
+          8,
+          8,
+          8
+        ],
+        "lambda_dimension": 24,
+        "zero_mean_dimension": 23,
+        "rank": 23,
+        "singular_values": [
+          0.42935860576956664,
+          0.12420802538850152,
+          0.12314549926116623,
+          0.12172638821111893,
+          0.11980732002240246,
+          0.11753208922389667,
+          0.1150188766021934,
+          0.11200405210083436,
+          0.10881234994563281,
+          0.1055316101773251,
+          0.10165742135449579,
+          0.09840049837937112,
+          0.09466226069607689,
+          0.09114364672001835,
+          0.08935894786184194,
+          0.0824140021592703,
+          0.07376643087300641,
+          0.0644224688769834,
+          0.054515815474034425,
+          0.04415193293945765,
+          0.033426525694600494,
+          0.02243247864510072,
+          0.011260513340908728
+        ],
+        "roundoff_threshold": 7.72227772113052e-15
+      },
+      {
+        "convention": "inherited-boundary",
+        "segments_on_sides": [
+          8,
+          8,
+          16
+        ],
+        "lambda_dimension": 32,
+        "zero_mean_dimension": 31,
+        "rank": 30,
+        "singular_values": [
+          0.42856734238483996,
+          0.12256835850664932,
+          0.12005119516954292,
+          0.11540875030153043,
+          0.11072000560559345,
+          0.1040947529373846,
+          0.10093002142495727,
+          0.09633739559558666,
+          0.08901036024021786,
+          0.08676422321210875,
+          0.08476934588747953,
+          0.08266672650448549,
+          0.07967232247578035,
+          0.0783281451336782,
+          0.07349495862342166,
+          0.07167067856064535,
+          0.06685281859241302,
+          0.06445039902465435,
+          0.05837888431339727,
+          0.05706806788809363,
+          0.04959997245500291,
+          0.048503598438586,
+          0.040767165527030344,
+          0.03906422546406878,
+          0.031166630411070505,
+          0.029529913038162017,
+          0.02096188744052791,
+          0.01988496393935766,
+          0.0104880411632396,
+          0.010040154022251337,
+          8.454313833944594e-17
+        ],
+        "roundoff_threshold": 7.708046364112606e-15
+      }
+    ]
+  }
+}

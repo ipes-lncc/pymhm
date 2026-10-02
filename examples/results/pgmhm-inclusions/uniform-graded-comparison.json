@@ -1,0 +1,46 @@
+{
+  "reference": "classical-cg2-graded2.npz",
+  "reference_sha256": "d53f0f9807797aa3f36d3a038d6da03e6e0af042169834db9ce831c24389ecd1",
+  "previous": "classical-cg2-factor4.npz",
+  "previous_sha256": "0b381e37adab404044dfe3b3f8be08b04273593f6b124e0e6cd4e3c509667207",
+  "denominator": "corresponding physical norm of the reference field",
+  "integration": "exact nonnested-triangle intersections, repeated per material rectangle",
+  "source_hashes": {
+    "examples/compare_inclusion_references.py": "f17a70b55f53966bd923261aca03c8e72804b0e6c5730a69179be0b3263c9ec9",
+    "examples/compare_unusual_spe10.py": "be46a47bb2240df93431ba390958939fab40154f79868fa7e2d414ab2cbcde04",
+    "examples/solve_pgmhm_inclusions_reference.py": "b4b79451340660b52078609ad74722578336d5d153431eb9174df87b25a240c3",
+    "examples/solve_unusual_spe10_reference.py": "f15b6c66e7eb86096ba98b01378e02c08428c4636c31a4c1e70d4ea5144adf5c",
+    "examples/pgmhm_inclusion_data.py": "e0b5690efee2cffde1cf5b871b3bcf5e3be8c08272b87e6b71d7a32e5d17e852",
+    "examples/spe10_adaptive_norms.py": "9727f068fc1e7c2fc948270584634376ef92efbe2cf1db87e0c46cdd1b5f2ed7",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9"
+  },
+  "rows": [
+    {
+      "order": 3,
+      "seconds": 293.948288435,
+      "pressure_absolute": 0.00019466655078637917,
+      "pressure_reference": 0.030328568720453666,
+      "pressure_relative": 0.006418586797836442,
+      "flux_absolute": 0.027089807034117903,
+      "flux_reference": 0.2400879121207121,
+      "flux_relative": 0.11283286524020257,
+      "energy_absolute": 0.012818004961114838,
+      "energy_reference": 0.16077078652169494,
+      "energy_relative": 0.07972844593495308
+    },
+    {
+      "order": 4,
+      "seconds": 634.9215366509743,
+      "pressure_absolute": 0.0001946665507863792,
+      "pressure_reference": 0.030328568720453662,
+      "pressure_relative": 0.006418586797836444,
+      "flux_absolute": 0.02708980703570872,
+      "flux_reference": 0.24008791211435607,
+      "flux_relative": 0.11283286524981566,
+      "energy_absolute": 0.012818004961114814,
+      "energy_reference": 0.16077078652169474,
+      "energy_relative": 0.07972844593495303
+    }
+  ],
+  "source_changed_during_run": false
+}

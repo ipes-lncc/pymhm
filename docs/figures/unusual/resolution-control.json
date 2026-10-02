@@ -1,0 +1,98 @@
+{
+  "method": "MHM-UNUSUAL; additional resolution study, not a historical mesh claim",
+  "rows": [
+    {
+      "n": 8,
+      "case": "layer-high-order",
+      "method": "unusual",
+      "epsilon": 0.001,
+      "local_degree": 3,
+      "trace_degree": 2,
+      "local_refinement": 2,
+      "macro_cells": 128,
+      "trace_dofs": 624,
+      "residual": 2.5462962644132527e-16,
+      "error_quadrature": 12,
+      "scalar_l2": 0.0022897384287857547,
+      "gradient_l2": 0.20991193697967886,
+      "flux_l2": 0.0002099119369796788,
+      "diffusion_energy": 0.006637998289135109,
+      "scalar_relative_l2": 0.002406744524883582,
+      "flux_relative_l2": 0.03732820754525754,
+      "quadrature_check": {
+        "order": 20,
+        "scalar_l2": 0.002289738428785747,
+        "gradient_l2": 0.20991193697967814,
+        "flux_l2": 0.00020991193697967813,
+        "diffusion_energy": 0.0066379982891350865,
+        "scalar_relative_l2": 0.002406744524883574,
+        "flux_relative_l2": 0.037328207545257445
+      }
+    },
+    {
+      "n": 16,
+      "case": "layer-high-order",
+      "method": "unusual",
+      "epsilon": 0.001,
+      "local_degree": 3,
+      "trace_degree": 2,
+      "local_refinement": 2,
+      "macro_cells": 512,
+      "trace_dofs": 2400,
+      "residual": 2.358824009012986e-16,
+      "error_quadrature": 12,
+      "scalar_l2": 0.0002765986243011409,
+      "gradient_l2": 0.04464495208964768,
+      "flux_l2": 4.464495208964767e-05,
+      "diffusion_energy": 0.0014117973463238043,
+      "scalar_relative_l2": 0.000290732869858905,
+      "flux_relative_l2": 0.007939119906324245,
+      "quadrature_check": {
+        "order": 20,
+        "scalar_l2": 0.0002765986243011367,
+        "gradient_l2": 0.04464495208964738,
+        "flux_l2": 4.464495208964738e-05,
+        "diffusion_energy": 0.001411797346323795,
+        "scalar_relative_l2": 0.0002907328698589006,
+        "flux_relative_l2": 0.00793911990632419
+      },
+      "archive": "layer-high-order-n16.npz",
+      "archive_sha256": "146599b089c838529ad77599fb09fbf13a2d8845e45d6df6419c5de0f4119cf9"
+    },
+    {
+      "n": 32,
+      "case": "layer-high-order",
+      "method": "unusual",
+      "epsilon": 0.001,
+      "local_degree": 3,
+      "trace_degree": 2,
+      "local_refinement": 2,
+      "macro_cells": 2048,
+      "trace_dofs": 9408,
+      "residual": 2.2967530756196707e-16,
+      "error_quadrature": 12,
+      "scalar_l2": 2.2283513284924255e-05,
+      "gradient_l2": 0.006852473811772566,
+      "flux_l2": 6.852473811772579e-06,
+      "diffusion_energy": 0.00021669424851857244,
+      "scalar_relative_l2": 2.3422205313688187e-05,
+      "flux_relative_l2": 0.001218561308731342,
+      "quadrature_check": {
+        "order": 20,
+        "scalar_l2": 2.228351328492803e-05,
+        "gradient_l2": 0.006852473811772082,
+        "flux_l2": 6.852473811772095e-06,
+        "diffusion_energy": 0.00021669424851855716,
+        "scalar_relative_l2": 2.342220531369215e-05,
+        "flux_relative_l2": 0.001218561308731256
+      }
+    }
+  ],
+  "source_hashes": {
+    "src/pymhm/rad.py": "88298d53bcb81a6fa333ae9800690701890c4d206681a15e4a56fa41bf00c151",
+    "src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+    "examples/solve_unusual.py": "585b9a6670f69815a5f0383af90f2574732c771eae74a75d79648fae4fd10625",
+    "examples/verify_unusual_resolution.py": "bb602beeaa21b56c3939773a117bf36678f78f7c384d7fb7301e8e7fac28d85b"
+  },
+  "source_changed_during_run": false
+}

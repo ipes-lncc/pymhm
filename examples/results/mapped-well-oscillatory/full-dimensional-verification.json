@@ -1,0 +1,65 @@
+{
+  "global_rtol": 1e-17,
+  "global_refinement_precision": "extended",
+  "case": "Classical mapped RT1/Q1 for the vertically invariant oscillatory well",
+  "fine_factor": 64,
+  "vertical_factor": 1,
+  "macro_cells": 131072,
+  "fine_cells": 131072,
+  "trace_dofs": 2099200,
+  "pressure_coarse_dofs": 131072,
+  "degree": 1,
+  "quadrature": [
+    8,
+    8,
+    10
+  ],
+  "symmetry": "Kxy and pressure boundary data are independent of z; Kz depends only on z, with impermeable horizontal caps. The unique solution has dz(p)=0 and qz=0.",
+  "vertical_flux_sample_linf": 5.461950183318479e-16,
+  "pressure_vertical_modal_linf": 6.518504468845719e-09,
+  "physical_parameters": {
+    "inner_radius": 0.2,
+    "outer_radius": 50.0,
+    "height": 10.0,
+    "permeability": 1e-13,
+    "viscosity": 0.001,
+    "outer_pressure": 25000000.0,
+    "rate": 0.01,
+    "tensor_scale": 1e-11
+  },
+  "radii": [
+    0.2,
+    0.7952707287670507,
+    3.1622776601683795,
+    12.574334296829353,
+    50.0
+  ],
+  "units": "m, Pa, s; physical flux m/s",
+  "boundary_rates": {
+    "inner": 0.013136642764851322,
+    "outer": -0.013136642764851315,
+    "top_bottom": 0.0
+  },
+  "divergence_moment_linf": 1.7898603468730168e-20,
+  "divergence_moment_quadrature": 3,
+  "algebraic_residual": 2.3408477184973056e-20,
+  "physical_block_backward_residual_max": [
+    3.2101325498457345e-12,
+    1.2619687393448028e-16,
+    5.697645520615253e-17
+  ],
+  "source_hashes": {
+    "examples/solve_mapped_well_classical.py": "f435f2cac57bcdbd7b10e6715c3225ba9456d36ce96fa03c47651e5e43609266",
+    "examples/solve_mapped_oscillatory_well.py": "5fe410a552543e4ac3155f63ef3a902cd15a963b8f678371cfddf9a47fa0a552",
+    "examples/solve_mapped_well.py": "0c00ec837510eb9c06458f4223cd88e25eebb9ccbe3f72daa7ac8974d148c7b3",
+    "src/pymhm/mapped_rt.py": "088773b09af64d1bd4176adcb2bf51637955a03937442dd686135068eb4fd90e",
+    "src/pymhm/solvers.py": "81aaf2832bb54da082a0a33feb462db15c3adca7a61271e8cd8c4fc3ceb3deb2",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d"
+  },
+  "method": "Full three-dimensional conforming mapped RT1/Q1; every fine normal moment retained",
+  "precision": "Extended residual corrections and coefficient accumulation; requires longdouble wider than float64",
+  "physical_acceptance_tolerance": 1e-10,
+  "retained_diagnostic_sha256": "94589f805f302daf2f18d14776c63cbfe4b2522bc7936f4bb0cb4efdff0dd0e5",
+  "coefficient_distribution": "Numerical verification summary only; extended-precision coefficients are not distributed",
+  "comparison_scope": "Physical residual and exact vertical-symmetry verification, not a spatial-accuracy certificate"
+}

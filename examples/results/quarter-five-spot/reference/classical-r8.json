@@ -1,0 +1,75 @@
+{
+  "reference": "NeoPZ classical global conforming RT0/P0; no macroface restriction",
+  "refinement": 8,
+  "fine_cells": 12800,
+  "fine_grid_shape": [
+    80,
+    80
+  ],
+  "native_equations": 32160,
+  "free_equations": 31840,
+  "pressure_l2_norm": 0.754387751793247,
+  "flux_l2_norm": 1.9336965412269451,
+  "boundary": "Zero physical outward flux on every exterior fine edge; pressure integral zero",
+  "native_element_integration": "NeoPZ order12; piecewise constant fitted coefficient and source",
+  "fields": "classical-r8.npz",
+  "fields_sha256": "e3e62ef132b83143a715fde4399f7500c186259429a06f42fd60a3d43476e52a",
+  "algebra": {
+    "reduced_residual": 3.1563928548085385e-14,
+    "gauge_multiplier": 3.3436794999478133e-15,
+    "mean_pressure_integral": 3.2959746043559335e-17,
+    "native_equations": 32160,
+    "restricted_equations": 31840,
+    "native_free_relative_residual": 6.690672888696822e-12,
+    "native_free_residual_linf": 1.4654943925052066e-13,
+    "native_load_l2": 0.12499999999999997,
+    "essential_exterior_flux_equations": 320,
+    "independent_free_equations": 31840,
+    "fine_interior_fluxes_untied": true,
+    "native_exterior_coefficient_linf": 0.0
+  },
+  "physical_checks": {
+    "pressure_integral": 3.2959746043559335e-17,
+    "fine_cell_balance_linf": 3.2751579226442118e-15,
+    "normal_flux_moment_jump_linf": 5.551115123125783e-17,
+    "exterior_flux_moment_linf": 1.8503717077085884e-18,
+    "exterior_integrated_flux": -1.1463630970413342e-17,
+    "divergence_source_l2": 1.9298789608367915e-12,
+    "obstacle_area": 0.2500000000000001,
+    "extraction_integral": -1.0,
+    "injection_integral": 0.9999999999999993
+  },
+  "native_fine_conservation_linf": 3.2818192607919654e-15,
+  "native_coefficients_sha256": "0a65a537b0bf00baedea7bd669d0a199cee80b327e0b6ea0c65ddbd303f463d7",
+  "native_field_export_sha256": "09c7a0699af6e956e11268f4b032d5d93da82f471233307d44ceb35343bfd64e",
+  "operator_fingerprint": {
+    "executable": "20670fc5987a90d58d409f6acfc6df3a7a1e30ecf381d4b353d28ce465102bb7",
+    "mesh": "7dfc9743dc4d8f7bbf793045aaf6b204e12dc66d4037c31f7272569f06ce61ed",
+    "geometry": "48efe56ee0f6ef71ec352fdf4a50b2a6a6ff54c9315e0315f56d548df6d481e3",
+    "driver": "52b42555947f105db6c976e929ec10679c421606bec883074a43a735e50e3d7f"
+  },
+  "operator_sha256": {
+    "matrix": "6b1f178827d85ded924cfd6a81c1573913b2473b339d63a918b9fb443732cc29",
+    "rhs": "27b4bd296801a8cf3303e30ee3f4b38fea442b78238a57afc8a248c6deec544c",
+    "dofs": "fdb450e46408ca7808fee86d865724c921c05fb476ccbf046ddb65422d2831e3"
+  },
+  "provenance": {
+    "reference": "NeoPZ classical global conforming RT0/P0",
+    "project_url": "https://github.com/labmec/neopz",
+    "revision": "4c6b6d277ce097b97bfc8dea1b6725860f4fe05a",
+    "upstream_source_modifications": false,
+    "hdiv_family": "EHDivConstant, order zero; three flux shapes and one pressure shape per triangle",
+    "native_integration_order": 12,
+    "linear_solver": "SciPy SuperLU, physical mean-pressure Lagrange multiplier",
+    "threads": 1,
+    "python": "3.13.15",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "native_executable_sha256": "20670fc5987a90d58d409f6acfc6df3a7a1e30ecf381d4b353d28ce465102bb7",
+    "native_driver_sha256": "52b42555947f105db6c976e929ec10679c421606bec883074a43a735e50e3d7f",
+    "restriction_driver_sha256": "553dea21da0e00cd3dce463928e4e3e8a2e6081eb13196c2dfc13d227e7b9d40",
+    "classical_study_driver_sha256": "f0249c0aedcc49c1f88598d4428a78c032b57d5008140dc651d690a63ae5ca49",
+    "shared_model_sha256": "822b725def3fddf79167a26e8c24f158cb36887e8c26f5000291440f4df1abb7",
+    "geometry_sha256": "48efe56ee0f6ef71ec352fdf4a50b2a6a6ff54c9315e0315f56d548df6d481e3"
+  }
+}

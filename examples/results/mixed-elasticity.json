@@ -1,0 +1,187 @@
+{
+  "method": "pyMHM BDM2 stress rows / discontinuous P1 displacement and rotation",
+  "mesh": "unit-square Cartesian southwest-diagonal macro triangulation",
+  "local_refinement": 2,
+  "interior_trace_degree": 1,
+  "exterior_trace": "P2 on each fine boundary face",
+  "error_quadrature_order": 10,
+  "convergence": [
+    {
+      "macro_resolution": 1,
+      "displacement_l2": 0.1194668851277315,
+      "stress_l2": 1.6705010218418075,
+      "rotation_l2": 0.47512693754400614,
+      "stress_divergence_l2": 2.0409958024845545,
+      "force_moment_linf": 3.9968028886505635e-15,
+      "fine_force_linf": 2.037215882100263e-15,
+      "weak_symmetry_linf": 7.832140968763723e-16,
+      "normal_traction_linf": 1.1102230246251565e-16
+    },
+    {
+      "macro_resolution": 2,
+      "displacement_l2": 0.05224057130319898,
+      "stress_l2": 0.7801122203814671,
+      "rotation_l2": 0.49402162316396425,
+      "stress_divergence_l2": 0.5439421374200887,
+      "force_moment_linf": 1.915134717478395e-15,
+      "fine_force_linf": 1.9902220408916186e-15,
+      "weak_symmetry_linf": 1.6154273556855114e-16,
+      "normal_traction_linf": 6.938893903907228e-18
+    },
+    {
+      "macro_resolution": 4,
+      "displacement_l2": 0.00951961732704364,
+      "stress_l2": 0.2302844942933611,
+      "rotation_l2": 0.15355619349941887,
+      "stress_divergence_l2": 0.13819467185564652,
+      "force_moment_linf": 1.0217521273503394e-15,
+      "fine_force_linf": 1.4628580443535756e-15,
+      "weak_symmetry_linf": 6.694858417847344e-17,
+      "normal_traction_linf": 1.1102230246251565e-16
+    },
+    {
+      "macro_resolution": 8,
+      "displacement_l2": 0.001946692512895617,
+      "stress_l2": 0.061158503792327866,
+      "rotation_l2": 0.040271037674573545,
+      "stress_divergence_l2": 0.03468840128024839,
+      "force_moment_linf": 1.4432899320127035e-15,
+      "fine_force_linf": 8.997758551625793e-16,
+      "weak_symmetry_linf": 2.745866864733005e-17,
+      "normal_traction_linf": 5.551115123125783e-17
+    },
+    {
+      "macro_resolution": 16,
+      "displacement_l2": 0.00045234468818892184,
+      "stress_l2": 0.01568537092860108,
+      "rotation_l2": 0.010177809358111746,
+      "stress_divergence_l2": 0.008680859815176845,
+      "force_moment_linf": 2.0539125955565396e-15,
+      "fine_force_linf": 4.841544557890997e-16,
+      "weak_symmetry_linf": 4.5164185522487194e-18,
+      "normal_traction_linf": 2.7755575615628914e-17
+    }
+  ],
+  "lame_sweep": [
+    {
+      "lame_lambda": 1.0,
+      "poisson_ratio": 0.25,
+      "displacement_l2": 0.00951961732704364,
+      "stress_l2": 0.2302844942933611,
+      "rotation_l2": 0.15355619349941887,
+      "stress_divergence_l2": 0.13819467185564652,
+      "force_moment_linf": 1.0217521273503394e-15,
+      "fine_force_linf": 1.4628580443535756e-15,
+      "weak_symmetry_linf": 6.694858417847344e-17,
+      "normal_traction_linf": 1.1102230246251565e-16
+    },
+    {
+      "lame_lambda": 10.0,
+      "poisson_ratio": 0.45454545454545453,
+      "displacement_l2": 0.008474974985577272,
+      "stress_l2": 0.2315250596492683,
+      "rotation_l2": 0.11558385285357312,
+      "stress_divergence_l2": 0.13819467185564638,
+      "force_moment_linf": 1.3127519904454488e-15,
+      "fine_force_linf": 1.599132655522453e-15,
+      "weak_symmetry_linf": 4.644006364087471e-17,
+      "normal_traction_linf": 5.551115123125783e-17
+    },
+    {
+      "lame_lambda": 100.0,
+      "poisson_ratio": 0.49504950495049505,
+      "displacement_l2": 0.008296649794370352,
+      "stress_l2": 0.23192633978141688,
+      "rotation_l2": 0.10806293257392818,
+      "stress_divergence_l2": 0.13819467185564652,
+      "force_moment_linf": 9.194034422677078e-16,
+      "fine_force_linf": 1.5414604116024537e-15,
+      "weak_symmetry_linf": 4.211087824745798e-17,
+      "normal_traction_linf": 5.551115123125783e-17
+    },
+    {
+      "lame_lambda": 1000.0,
+      "poisson_ratio": 0.4995004995004995,
+      "displacement_l2": 0.008277740887446042,
+      "stress_l2": 0.2319756821011844,
+      "rotation_l2": 0.1072366842314088,
+      "stress_divergence_l2": 0.13819467185564666,
+      "force_moment_linf": 1.371298907759666e-15,
+      "fine_force_linf": 2.060692247266363e-15,
+      "weak_symmetry_linf": 4.612136749447028e-17,
+      "normal_traction_linf": 1.1102230246251565e-16
+    },
+    {
+      "lame_lambda": 10000.0,
+      "poisson_ratio": 0.49995000499950004,
+      "displacement_l2": 0.008275839121454598,
+      "stress_l2": 0.23198073093943994,
+      "rotation_l2": 0.10715324490562328,
+      "stress_divergence_l2": 0.1381946718556465,
+      "force_moment_linf": 1.9984014443252818e-15,
+      "fine_force_linf": 1.5288458183391042e-15,
+      "weak_symmetry_linf": 6.827472013651846e-17,
+      "normal_traction_linf": 5.551115123125783e-17
+    },
+    {
+      "lame_lambda": 100000.0,
+      "poisson_ratio": 0.4999950000499995,
+      "displacement_l2": 0.008275648836120862,
+      "stress_l2": 0.2319812369976183,
+      "rotation_l2": 0.1071448927482609,
+      "stress_divergence_l2": 0.13819467185564643,
+      "force_moment_linf": 1.4432899320127035e-15,
+      "fine_force_linf": 1.7581969178090743e-15,
+      "weak_symmetry_linf": 4.44151255013449e-17,
+      "normal_traction_linf": 5.551115123125783e-17
+    },
+    {
+      "lame_lambda": 1000000.0,
+      "poisson_ratio": 0.4999995000005,
+      "displacement_l2": 0.008275629806500213,
+      "stress_l2": 0.2319812876152087,
+      "rotation_l2": 0.10714405745019381,
+      "stress_divergence_l2": 0.13819467185564652,
+      "force_moment_linf": 1.942890293094024e-15,
+      "fine_force_linf": 1.478531959800402e-15,
+      "weak_symmetry_linf": 5.0079076000956796e-17,
+      "normal_traction_linf": 5.551115123125783e-17
+    },
+    {
+      "lame_lambda": 100000000.0,
+      "poisson_ratio": 0.49999999500000003,
+      "displacement_l2": 0.008275627713229889,
+      "stress_l2": 0.23198129318327407,
+      "rotation_l2": 0.10714396556649396,
+      "stress_divergence_l2": 0.13819467185564657,
+      "force_moment_linf": 2.942524696125659e-15,
+      "fine_force_linf": 2.078223855052899e-15,
+      "weak_symmetry_linf": 7.413338233488043e-17,
+      "normal_traction_linf": 5.551115123125783e-17
+    },
+    {
+      "lame_lambda": "infinity",
+      "poisson_ratio": 0.5,
+      "displacement_l2": 0.008275627692085705,
+      "stress_l2": 0.23198129323951847,
+      "rotation_l2": 0.1071439646383752,
+      "stress_divergence_l2": 0.1381946718556465,
+      "force_moment_linf": 1.7128225920926e-15,
+      "fine_force_linf": 1.5497856904050922e-15,
+      "weak_symmetry_linf": 6.021287230278884e-17,
+      "normal_traction_linf": 1.1102230246251565e-16
+    }
+  ],
+  "oscillatory_2021_analytical_data": {
+    "macro_resolution": 16,
+    "displacement_l2": 0.0024029207300476606,
+    "stress_l2": 9.385932709319047,
+    "rotation_l2": 0.15263403853378588,
+    "stress_divergence_l2": 66.33443044995371,
+    "force_moment_linf": 1.1246559239452836e-13,
+    "fine_force_linf": 1.8297433984039895e-14,
+    "weak_symmetry_linf": 1.5727961874502025e-16,
+    "normal_traction_linf": 8.881784197001252e-15
+  },
+  "scope": "Own mesh study; the oscillatory case uses published analytical data, not reproduced table ordinates."
+}

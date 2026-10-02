@@ -1,0 +1,93 @@
+{
+  "archive": "mhm-pgmhm-factor1-s2.npz",
+  "archive_sha256": "ddd9dfac1cf5ad0b8edf4a39d4cec089ce191228493001df61ea15dec4fe0ec3",
+  "reference": "classical-cg2-graded2.npz",
+  "reference_sha256": "d53f0f9807797aa3f36d3a038d6da03e6e0af042169834db9ce831c24389ecd1",
+  "integration": "exact geometric intersections; Duffy orders3/4; raw -K grad p",
+  "denominator": "corresponding physical norm of the stated CG2 reference",
+  "source_hashes": {
+    "examples/compare_pgmhm_inclusions.py": "cd3149ebca77dafcd49bc2430e02b69ebdec720918fe407057f3519c3faa33f0",
+    "examples/pgmhm_inclusion_data.py": "e0b5690efee2cffde1cf5b871b3bcf5e3be8c08272b87e6b71d7a32e5d17e852",
+    "examples/solve_pgmhm_inclusions_reference.py": "b4b79451340660b52078609ad74722578336d5d153431eb9174df87b25a240c3",
+    "examples/compare_unusual_spe10.py": "be46a47bb2240df93431ba390958939fab40154f79868fa7e2d414ab2cbcde04",
+    "examples/spe10_adaptive_norms.py": "9727f068fc1e7c2fc948270584634376ef92efbe2cf1db87e0c46cdd1b5f2ed7",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9"
+  },
+  "rows": [
+    {
+      "order": 3,
+      "seconds": 483.4158586319536,
+      "mhm": {
+        "pressure_absolute": 0.0008989549585048158,
+        "pressure_reference": 0.030328568720453662,
+        "pressure_relative": 0.02964053354415496,
+        "flux_absolute": 0.06727946127270866,
+        "flux_reference": 0.24008791212256134,
+        "flux_relative": 0.2802284408153105,
+        "energy_absolute": 0.03517185439156521,
+        "energy_reference": 0.16077078652169485,
+        "energy_relative": 0.21877018301965592
+      },
+      "pgmhm": {
+        "pressure_absolute": 0.0008977664833094694,
+        "pressure_reference": 0.030328568720453662,
+        "pressure_relative": 0.02960134688795958,
+        "flux_absolute": 0.06727893235752302,
+        "flux_reference": 0.24008791212256134,
+        "flux_relative": 0.2802262378089994,
+        "energy_absolute": 0.03517181250955574,
+        "energy_reference": 0.16077078652169485,
+        "energy_relative": 0.21876992251207006
+      },
+      "enriched": {
+        "pressure_absolute": 0.0008977450389465881,
+        "pressure_reference": 0.030328568720453662,
+        "pressure_relative": 0.02960063981987869,
+        "flux_absolute": 0.06730208801851785,
+        "flux_reference": 0.24008791212256134,
+        "flux_relative": 0.2803226844013751,
+        "energy_absolute": 0.035197468232991705,
+        "energy_reference": 0.16077078652169485,
+        "energy_relative": 0.2189295020226953
+      }
+    },
+    {
+      "order": 4,
+      "seconds": 780.1316263210028,
+      "mhm": {
+        "pressure_absolute": 0.0008989549585048153,
+        "pressure_reference": 0.03032856872045366,
+        "pressure_relative": 0.029640533544154954,
+        "flux_absolute": 0.06727946127640662,
+        "flux_reference": 0.24008791212444497,
+        "flux_relative": 0.28022844082851456,
+        "energy_absolute": 0.035171854391565296,
+        "energy_reference": 0.1607707865216949,
+        "energy_relative": 0.2187701830196564
+      },
+      "pgmhm": {
+        "pressure_absolute": 0.000897766483309469,
+        "pressure_reference": 0.03032856872045366,
+        "pressure_relative": 0.029601346887959575,
+        "flux_absolute": 0.06727893236117227,
+        "flux_reference": 0.24008791212444497,
+        "flux_relative": 0.2802262378220005,
+        "energy_absolute": 0.035171812509555825,
+        "energy_reference": 0.1607707865216949,
+        "energy_relative": 0.21876992251207056
+      },
+      "enriched": {
+        "pressure_absolute": 0.0008977450389465876,
+        "pressure_reference": 0.03032856872045366,
+        "pressure_relative": 0.02960063981987868,
+        "flux_absolute": 0.0673020880223421,
+        "flux_reference": 0.24008791212444497,
+        "flux_relative": 0.2803226844151044,
+        "energy_absolute": 0.035197468232991795,
+        "energy_reference": 0.1607707865216949,
+        "energy_relative": 0.2189295020226958
+      }
+    }
+  ],
+  "source_changed_during_run": false
+}

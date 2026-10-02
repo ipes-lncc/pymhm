@@ -1,0 +1,61 @@
+name: Publish PyPI
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          pixi-version: v0.76.2
+          environments: test
+          locked: true
+      - name: Validate release tag
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: pixi run -e test metadata-check --tag "$RELEASE_TAG"
+      - run: pixi run -e test lint
+      - run: pixi run -e test format-check
+      - run: pixi run -e test typecheck
+      - run: pixi run -e test test-cov
+      - run: pixi run -e test build
+      - run: pixi run -e test check-dist
+      - name: Check installed wheel
+        run: |
+          pixi run -e test python -m venv .venv-smoke
+          .venv-smoke/bin/python -m pip install dist/*.whl
+          cd "$RUNNER_TEMP"
+          "$GITHUB_WORKSPACE/.venv-smoke/bin/python" -c 'import pymhm; print(pymhm.__version__)'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-distributions
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    environment:
+      name: pypi
+      url: https://pypi.org/project/pymhm/
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: python-distributions
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

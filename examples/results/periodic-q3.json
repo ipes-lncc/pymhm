@@ -1,0 +1,69 @@
+{
+  "citation": "10.1090/mcom/3108, section 4, Figures 4 and 6",
+  "epsilon": 0.020943951023931952,
+  "coefficient": "1+100*cos(pi*x/epsilon)^2*sin(pi*y/epsilon)^2",
+  "source": "sin(x)*sin(y)",
+  "reference": [
+    {
+      "n": 128,
+      "degree": 3,
+      "cells": 16384,
+      "dofs": 148225,
+      "residual": 3.193461260254666e-16,
+      "acquisition_seconds": 5.961932847974822,
+      "refinement_precision": "extended"
+    },
+    {
+      "n": 256,
+      "degree": 3,
+      "cells": 65536,
+      "dofs": 591361,
+      "residual": 2.2809784292183105e-20,
+      "acquisition_seconds": 46.47697615099605,
+      "refinement_precision": "extended",
+      "difference_to_previous": {
+        "l2": 0.0002595911955924243,
+        "h1_seminorm": 0.004819138136552722,
+        "relative_l2": 0.1972555040786968,
+        "relative_h1": 0.4315662298736897,
+        "reference_l2": 0.0013160149665018127,
+        "reference_h1": 0.011182813672589866
+      }
+    },
+    {
+      "n": 512,
+      "degree": 3,
+      "cells": 262144,
+      "dofs": 2362369,
+      "residual": 2.2675332634972043e-20,
+      "acquisition_seconds": 226.5922782040434,
+      "refinement_precision": "extended",
+      "difference_to_previous": {
+        "l2": 6.99599603352941e-05,
+        "h1_seminorm": 0.0027941090562679316,
+        "relative_l2": 0.05048247732884855,
+        "relative_h1": 0.22536065110396933,
+        "reference_l2": 0.0013858266083014712,
+        "reference_h1": 0.012402274963861046
+      }
+    },
+    {
+      "n": 1024,
+      "degree": 3,
+      "cells": 1048576,
+      "dofs": 9443329,
+      "residual": 2.2588002856448995e-20,
+      "acquisition_seconds": 1033.6859076879919,
+      "refinement_precision": "extended",
+      "difference_to_previous": {
+        "l2": 6.566221463793202e-06,
+        "h1_seminorm": 0.000946117676293518,
+        "relative_l2": 0.004715822590517949,
+        "relative_h1": 0.07537758441842873,
+        "reference_l2": 0.0013923809341334912,
+        "reference_h1": 0.012552013555214871
+      }
+    }
+  ],
+  "mhm": []
+}

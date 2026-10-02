@@ -1,0 +1,17 @@
+name: Formulation or feature request
+description: Propose a numerical formulation, backend, or reproducible benchmark.
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Problem and proposed capability
+      description: Describe the PDE, spaces, constraints, and intended use.
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: References and verification
+      description: Include papers, exact solutions, or published reference values and tolerances.
+    validations:
+      required: true

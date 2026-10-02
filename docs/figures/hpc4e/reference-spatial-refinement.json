@@ -1,0 +1,245 @@
+{
+  "comparison": "Physical L2 and compliance norms on the common material-aligned grid",
+  "normalization": "Each difference is divided by the RT2 reference norm",
+  "input_sha256": {
+    "classical-rt2-512x256-mumps.npz": "65d18ce839fcdaa9c8f4c8a839c40f0df16b3aec3baadb1895f50f119cea84a6",
+    "mhm-s1.npz": "6758d5d8c4f190efc6ed0c8592051f27234e60dc55f27f671fa0277152801cba",
+    "mhm-s2.npz": "9f4489fc1bb481a4e6e0eb1c2359d8f3c870df2b2dfa4e719e9f4fc172648482",
+    "mhm-s4.npz": "604cb457ecc9ee1e5ecd5d8e491c054800786c6c98b1a0a0efa486e13464a3b2",
+    "mhm-s8.npz": "411c83ae9fb811ddea7d7359854baa0f950348aebff46d160fbad4453f26ac6f",
+    "classical-rt2-1024x512-mumps.npz": "4890580574d7bb98de54a0d2c9af0abbd25b8c1646c4f15de0c4ecf3ed1b9268"
+  },
+  "source_sha256": {
+    "examples/compare_hpc4e_fields.py": "1114b57aa55dab5c3e6a2909ae463fb1f63bbdd85f9b6bcb79a675cc2b6c7483",
+    "examples/hpc4e_fields.py": "9d99d7d188294bc6303ae9eef73243c3ccf4f0d683968a2a3add04b24ca8d074",
+    "examples/hpc4e_data.py": "d18ce4ef42c494f93e8c652d4e99e2d0014cf968f7411109f40f06220146ed4b",
+    "examples/results/hpc4e/dataset.json": "f77137fc029f1f50e91d3a33e90054a97f74c3327814a253b6b4e67dee90043e",
+    "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+    "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+    "src/pymhm/quadrilateral.py": "f6969e69f2e06b1282d8dd477a8902c922bbe0ba55299d6759b9f52e2088b293",
+    "src/pymhm/reservoir.py": "f9c7e595a48ccb5d047d5ec94f6f6d15a7ffb7b49374d921837fa0cf2dbf09a0"
+  },
+  "source_changed": false,
+  "rows": [
+    {
+      "approximation": "classical-rt2-512x256-mumps",
+      "reference": "classical-rt2-1024x512-mumps",
+      "norms": {
+        "quadrature_order": 4,
+        "displacement_difference_dimensionless": 4.187119255954049e-07,
+        "displacement_reference_norm_dimensionless": 0.003954396136275757,
+        "displacement_relative": 0.00010588517466784373,
+        "stress_difference_dimensionless": 0.005935889598016753,
+        "stress_reference_norm_dimensionless": 0.5304028551914811,
+        "stress_relative": 0.011191285152252494,
+        "divergence_difference_dimensionless": 1.9535800002265518e-10,
+        "divergence_reference_norm_dimensionless": 1.4845988984178142,
+        "divergence_relative": 1.315897514344478e-10,
+        "rotation_difference_dimensionless": 0.001182111920349497,
+        "rotation_reference_norm_dimensionless": 0.04127291866651722,
+        "rotation_relative": 0.02864134542800068,
+        "compliance_difference_dimensionless": 0.0014822723494851094,
+        "compliance_reference_norm_dimensionless": 0.04760951442126747,
+        "compliance_relative": 0.03113395226780488
+      }
+    },
+    {
+      "approximation": "classical-rt2-512x256-mumps",
+      "reference": "classical-rt2-1024x512-mumps",
+      "norms": {
+        "quadrature_order": 5,
+        "displacement_difference_dimensionless": 4.187119255954041e-07,
+        "displacement_reference_norm_dimensionless": 0.003954396136275757,
+        "displacement_relative": 0.00010588517466784354,
+        "stress_difference_dimensionless": 0.005935889598016632,
+        "stress_reference_norm_dimensionless": 0.5304028551914811,
+        "stress_relative": 0.011191285152252267,
+        "divergence_difference_dimensionless": 1.95357951413728e-10,
+        "divergence_reference_norm_dimensionless": 1.4845988984178142,
+        "divergence_relative": 1.3158971869231979e-10,
+        "rotation_difference_dimensionless": 0.0011821119203494906,
+        "rotation_reference_norm_dimensionless": 0.041272918666517215,
+        "rotation_relative": 0.02864134542800053,
+        "compliance_difference_dimensionless": 0.0014822723494850893,
+        "compliance_reference_norm_dimensionless": 0.047609514421267464,
+        "compliance_relative": 0.03113395226780446
+      }
+    },
+    {
+      "approximation": "mhm-s1",
+      "reference": "classical-rt2-1024x512-mumps",
+      "norms": {
+        "quadrature_order": 4,
+        "displacement_difference_dimensionless": 0.0005123070160192763,
+        "displacement_reference_norm_dimensionless": 0.003954396136275757,
+        "displacement_relative": 0.12955379237795991,
+        "stress_difference_dimensionless": 0.13485175647429196,
+        "stress_reference_norm_dimensionless": 0.5304028551914811,
+        "stress_relative": 0.25424402443235156,
+        "divergence_difference_dimensionless": 1.9016544483208474e-10,
+        "divergence_reference_norm_dimensionless": 1.4845988984178142,
+        "divergence_relative": 1.280921365594103e-10,
+        "rotation_difference_dimensionless": 0.013939238937603276,
+        "rotation_reference_norm_dimensionless": 0.04127291866651722,
+        "rotation_relative": 0.3377332979581966,
+        "compliance_difference_dimensionless": 0.014404648955155946,
+        "compliance_reference_norm_dimensionless": 0.04760951442126747,
+        "compliance_relative": 0.3025581993485172
+      }
+    },
+    {
+      "approximation": "mhm-s1",
+      "reference": "classical-rt2-1024x512-mumps",
+      "norms": {
+        "quadrature_order": 5,
+        "displacement_difference_dimensionless": 0.0005123070160192763,
+        "displacement_reference_norm_dimensionless": 0.003954396136275757,
+        "displacement_relative": 0.12955379237795991,
+        "stress_difference_dimensionless": 0.13485175647429193,
+        "stress_reference_norm_dimensionless": 0.5304028551914811,
+        "stress_relative": 0.25424402443235156,
+        "divergence_difference_dimensionless": 1.9016538802412953e-10,
+        "divergence_reference_norm_dimensionless": 1.4845988984178142,
+        "divergence_relative": 1.280920982945596e-10,
+        "rotation_difference_dimensionless": 0.013939238937603293,
+        "rotation_reference_norm_dimensionless": 0.041272918666517215,
+        "rotation_relative": 0.33773329795819707,
+        "compliance_difference_dimensionless": 0.014404648955155945,
+        "compliance_reference_norm_dimensionless": 0.047609514421267464,
+        "compliance_relative": 0.3025581993485172
+      }
+    },
+    {
+      "approximation": "mhm-s2",
+      "reference": "classical-rt2-1024x512-mumps",
+      "norms": {
+        "quadrature_order": 4,
+        "displacement_difference_dimensionless": 0.0002790203652271816,
+        "displacement_reference_norm_dimensionless": 0.003954396136275757,
+        "displacement_relative": 0.07055953819790105,
+        "stress_difference_dimensionless": 0.09711413257852146,
+        "stress_reference_norm_dimensionless": 0.5304028551914811,
+        "stress_relative": 0.18309504111447933,
+        "divergence_difference_dimensionless": 1.9022207321146965e-10,
+        "divergence_reference_norm_dimensionless": 1.4845988984178142,
+        "divergence_relative": 1.2813028045096595e-10,
+        "rotation_difference_dimensionless": 0.010113291246257336,
+        "rotation_reference_norm_dimensionless": 0.04127291866651722,
+        "rotation_relative": 0.24503455469122842,
+        "compliance_difference_dimensionless": 0.010407035963284322,
+        "compliance_reference_norm_dimensionless": 0.04760951442126747,
+        "compliance_relative": 0.21859151662835347
+      }
+    },
+    {
+      "approximation": "mhm-s2",
+      "reference": "classical-rt2-1024x512-mumps",
+      "norms": {
+        "quadrature_order": 5,
+        "displacement_difference_dimensionless": 0.00027902036522718156,
+        "displacement_reference_norm_dimensionless": 0.003954396136275757,
+        "displacement_relative": 0.07055953819790105,
+        "stress_difference_dimensionless": 0.09711413257852144,
+        "stress_reference_norm_dimensionless": 0.5304028551914811,
+        "stress_relative": 0.1830950411144793,
+        "divergence_difference_dimensionless": 1.9022203802850874e-10,
+        "divergence_reference_norm_dimensionless": 1.4845988984178142,
+        "divergence_relative": 1.2813025675233534e-10,
+        "rotation_difference_dimensionless": 0.010113291246257362,
+        "rotation_reference_norm_dimensionless": 0.041272918666517215,
+        "rotation_relative": 0.24503455469122903,
+        "compliance_difference_dimensionless": 0.01040703596328432,
+        "compliance_reference_norm_dimensionless": 0.047609514421267464,
+        "compliance_relative": 0.21859151662835347
+      }
+    },
+    {
+      "approximation": "mhm-s4",
+      "reference": "classical-rt2-1024x512-mumps",
+      "norms": {
+        "quadrature_order": 4,
+        "displacement_difference_dimensionless": 4.587528185303008e-05,
+        "displacement_reference_norm_dimensionless": 0.003954396136275757,
+        "displacement_relative": 0.011601084027012867,
+        "stress_difference_dimensionless": 0.02959321084698398,
+        "stress_reference_norm_dimensionless": 0.5304028551914811,
+        "stress_relative": 0.05579383775432452,
+        "divergence_difference_dimensionless": 1.9018163112376664e-10,
+        "divergence_reference_norm_dimensionless": 1.4845988984178142,
+        "divergence_relative": 1.281030393639989e-10,
+        "rotation_difference_dimensionless": 0.005097975417266205,
+        "rotation_reference_norm_dimensionless": 0.04127291866651722,
+        "rotation_relative": 0.1235186553792706,
+        "compliance_difference_dimensionless": 0.00451049437708824,
+        "compliance_reference_norm_dimensionless": 0.04760951442126747,
+        "compliance_relative": 0.09473934846672946
+      }
+    },
+    {
+      "approximation": "mhm-s4",
+      "reference": "classical-rt2-1024x512-mumps",
+      "norms": {
+        "quadrature_order": 5,
+        "displacement_difference_dimensionless": 4.587528185303008e-05,
+        "displacement_reference_norm_dimensionless": 0.003954396136275757,
+        "displacement_relative": 0.011601084027012869,
+        "stress_difference_dimensionless": 0.02959321084698394,
+        "stress_reference_norm_dimensionless": 0.5304028551914811,
+        "stress_relative": 0.05579383775432445,
+        "divergence_difference_dimensionless": 1.9018158217143306e-10,
+        "divergence_reference_norm_dimensionless": 1.4845988984178142,
+        "divergence_relative": 1.281030063905583e-10,
+        "rotation_difference_dimensionless": 0.0050979754172662305,
+        "rotation_reference_norm_dimensionless": 0.041272918666517215,
+        "rotation_relative": 0.12351865537927122,
+        "compliance_difference_dimensionless": 0.00451049437708825,
+        "compliance_reference_norm_dimensionless": 0.047609514421267464,
+        "compliance_relative": 0.09473934846672968
+      }
+    },
+    {
+      "approximation": "mhm-s8",
+      "reference": "classical-rt2-1024x512-mumps",
+      "norms": {
+        "quadrature_order": 4,
+        "displacement_difference_dimensionless": 2.4723030038934746e-05,
+        "displacement_reference_norm_dimensionless": 0.003954396136275757,
+        "displacement_relative": 0.006252036767924533,
+        "stress_difference_dimensionless": 0.022061570034661932,
+        "stress_reference_norm_dimensionless": 0.5304028551914811,
+        "stress_relative": 0.04159398807666197,
+        "divergence_difference_dimensionless": 1.9015556866708825e-10,
+        "divergence_reference_norm_dimensionless": 1.4845988984178142,
+        "divergence_relative": 1.2808548414642048e-10,
+        "rotation_difference_dimensionless": 0.003385510918879893,
+        "rotation_reference_norm_dimensionless": 0.04127291866651722,
+        "rotation_relative": 0.08202741720871799,
+        "compliance_difference_dimensionless": 0.003494018149712427,
+        "compliance_reference_norm_dimensionless": 0.04760951442126747,
+        "compliance_relative": 0.07338907342755059
+      }
+    },
+    {
+      "approximation": "mhm-s8",
+      "reference": "classical-rt2-1024x512-mumps",
+      "norms": {
+        "quadrature_order": 5,
+        "displacement_difference_dimensionless": 2.4723030038934743e-05,
+        "displacement_reference_norm_dimensionless": 0.003954396136275757,
+        "displacement_relative": 0.006252036767924533,
+        "stress_difference_dimensionless": 0.02206157003466187,
+        "stress_reference_norm_dimensionless": 0.5304028551914811,
+        "stress_relative": 0.04159398807666186,
+        "divergence_difference_dimensionless": 1.901555377877871e-10,
+        "divergence_reference_norm_dimensionless": 1.4845988984178142,
+        "divergence_relative": 1.2808546334666022e-10,
+        "rotation_difference_dimensionless": 0.003385510918879904,
+        "rotation_reference_norm_dimensionless": 0.041272918666517215,
+        "rotation_relative": 0.08202741720871827,
+        "compliance_difference_dimensionless": 0.00349401814971242,
+        "compliance_reference_norm_dimensionless": 0.047609514421267464,
+        "compliance_relative": 0.07338907342755047
+      }
+    }
+  ]
+}

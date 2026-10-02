@@ -1,0 +1,17 @@
+{
+  "identity": "p_producer=2*p_external-p_injector; q_producer=-q_injector; trace_producer=-trace_injector",
+  "hypotheses": "Identical linear Darcy operator, zero volume source, zero Neumann data and the corresponding transformed Dirichlet pressure",
+  "direct_producer_grid": {
+    "macro_cells": 32,
+    "fine_cells": 256,
+    "local_degree": 1,
+    "trace_degree": 1
+  },
+  "relative_coefficient_differences": {
+    "pressure": 2.1522835340269342e-15,
+    "flux": 2.5295261469761844e-13,
+    "trace": 7.795929270737502e-14
+  },
+  "verification": "Independent direct producer solve compared with the transformed solution; physical constitutive, divergence and interface equations verified on archived fields",
+  "tests_sha256": "d5ca9ad7da6d0cc5ab3f1898a64ba1809f5500c1ac9ad53b6c4a5b548a485961"
+}

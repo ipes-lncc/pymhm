@@ -1,0 +1,74 @@
+{
+  "case": "L05 Problem 4 physical data on an original explicitly graded polygonal reservoir",
+  "geometry": "Trilinear eight-sector polygonal annulus, four logarithmically graded radial bands, extruded in z",
+  "radii": [
+    0.2,
+    0.7952707287670507,
+    3.1622776601683795,
+    12.574334296829353,
+    50.0
+  ],
+  "height": 10.0,
+  "physical_parameters": {
+    "inner_radius": 0.2,
+    "outer_radius": 50.0,
+    "height": 10.0,
+    "permeability": 1e-13,
+    "viscosity": 0.001,
+    "outer_pressure": 25000000.0,
+    "rate": 0.01
+  },
+  "units": "m, Pa, s; physical Darcy flux m/s",
+  "rate_convention": "Positive Q denotes extraction: inner outward rate +Q and exterior -Q",
+  "historical_geometry": "Printed graded-distance expression does not determine radii consistent with the stated domain; no identical historical-mesh claim",
+  "macro_factor": 4,
+  "fine_factor": 4,
+  "local_refinement": 1,
+  "macro_cells": 2048,
+  "fine_cells": 2048,
+  "local_space": "Contravariant Piola RT1 / scalar pullback Q1",
+  "trace_space": "Q1 reference-face flux density",
+  "trace_dofs": 27136,
+  "pressure_coarse_dofs": 2048,
+  "fine_flux_unknowns_sum": 73728,
+  "assembly_quadrature": 6,
+  "error_quadrature": 11,
+  "quadrature9": {
+    "pressure_l2": 2184606.159074087,
+    "flux_l2": 7.532107241280436e-06
+  },
+  "errors": {
+    "pressure_l2": 2184606.159074083,
+    "flux_l2": 7.532107241280477e-06
+  },
+  "pressure_relative": 0.000340400302859028,
+  "pressure_increment_relative": 0.006931309017894517,
+  "flux_relative": 0.002540852344235158,
+  "boundary_rates": {
+    "inner": 0.00999993200902888,
+    "outer": -0.009999932009029083,
+    "top_bottom": 0.0
+  },
+  "exact_boundary_rates": {
+    "inner": 0.01,
+    "outer": -0.01,
+    "top_bottom": 0.0
+  },
+  "divergence_moment_linf": 1.7450458100503713e-16,
+  "algebraic_residual": 2.0875694180328994e-13,
+  "physical_block_backward_residual_max": [
+    1.0822954782990268e-15,
+    1.0747104029060002e-12,
+    9.504179634277884e-17
+  ],
+  "local_scaling": "Exact symmetric flux/pressure change of units; physical fields restored before all errors and balances",
+  "archive": "fine4-macro4-q6.npz",
+  "sha256": "f9c70c781fb4a908b3518fa4afb52066bafe28dcdc696967a9f33a5f3629368b",
+  "source_hashes": {
+    "examples/solve_mapped_well.py": "d499f815ba776723ffc56909f7e68b956ee9735fb89be26b794abcb6558260fc",
+    "src/pymhm/mapped_rt.py": "f56df35df93a186a652cbe41761e199e649e78a08c47f1853078517df972b4e4",
+    "src/pymhm/solvers.py": "7218aeda3f421ad066eadc33b12ccee866a37f22b368b9f3642e0566375da5ea"
+  },
+  "hybrid_source_hash_start": "2aaab34041092fc526e0a5ef17c7a25b95345a9de9bf16f6a4b5cc91a24525a0",
+  "hybrid_source_hash_end": "2aaab34041092fc526e0a5ef17c7a25b95345a9de9bf16f6a4b5cc91a24525a0"
+}

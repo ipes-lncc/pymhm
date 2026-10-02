@@ -1,0 +1,34 @@
+{
+  "article": "L09",
+  "title": "An H(div;Omega)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method",
+  "authors": [
+    "Gabriel R. Barrenechea",
+    "Larissa Martins",
+    "Weslley Pereira",
+    "Frederic Valentin"
+  ],
+  "doi": "10.1137/24M1673073",
+  "journal": "Multiscale Modeling and Simulation",
+  "year": 2026,
+  "volume": 24,
+  "issue": 2,
+  "pages": "399-428",
+  "source_version": "Accepted author manuscript deposited at Strathprints",
+  "source_url": "https://strathprints.strath.ac.uk/94435/",
+  "source_pdf_sha256": "b7beee7f1f6ed73bad343813eba19addaab683f3f417ddff4564cf3826fea5dc",
+  "pdf_page_one_based": 26,
+  "manuscript_printed_page": 26,
+  "figure": "9",
+  "file": "l09-figure-9.png",
+  "width_pixels": 1095,
+  "height_pixels": 789,
+  "image_sha256": "cbd0ef8a2483bc38d0cf9953d60ba42f41b9fdba7cfc8ece4bb4756638e3f585",
+  "source_pdf_url": "https://strathprints.strath.ac.uk/94435/1/Barrenechea-etal-MMS-2025-reconstruction-for-the-multiscale-hybrid-mixed-method.pdf",
+  "extraction": "Unmodified embedded raster from manuscript page 26, extracted with pdfimages; the caption is attributed in the case text.",
+  "fields": [
+    "Reference pressure",
+    "Initial MHM pressure",
+    "Final adapted MHM pressure"
+  ],
+  "profile": "Domain diagonal, distance coordinate along (0,0) to (1200,2200)"
+}

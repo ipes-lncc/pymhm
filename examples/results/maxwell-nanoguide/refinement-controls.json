@@ -1,0 +1,236 @@
+{
+  "spatial_256_512": {
+    "field": {
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "resolution": 256,
+      "sha256": "ac29e721c78c231ffe37f45d07a769b600f3bc121dc2bb9fb3b9055a01f0e077",
+      "file": "dg-q2-n256-q12-dt0.0025.npz"
+    },
+    "reference": {
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "resolution": 512,
+      "sha256": "96f20e25cfab97f83ea47306640de403341113683a60976451d5c8b89729a87e",
+      "file": "dg-q2-n512-q12-dt0.0025.npz"
+    },
+    "components": [
+      "electric",
+      "magnetic_x",
+      "magnetic_y"
+    ],
+    "absolute_l2": [
+      0.021397070495673954,
+      0.016916152949176425,
+      0.020711523024761074
+    ],
+    "reference_l2": [
+      6.173322828631581,
+      2.477820224484322,
+      6.957380860961932
+    ],
+    "relative_l2": [
+      0.003466054034374381,
+      0.006827029976598473,
+      0.002976913789638
+    ],
+    "combined_relative_l2": 0.003558013684406414,
+    "integration_grid": 512,
+    "gauss_order": 3
+  },
+  "spatial_512_1024": {
+    "field": {
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "resolution": 512,
+      "sha256": "92b49a81fc543e4e46402e2ccd3cdc7cc8b1fd837d17842e41b53e94f620dc5a",
+      "file": "dg-q2-n512-q12-dt0.00125-device.npz"
+    },
+    "reference": {
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "resolution": 1024,
+      "sha256": "118e94a6fc77913d93733848a235afae11e4b52d88a6a1fd922d515730c64986",
+      "file": "dg-q2-n1024-q12-dt0.00125-device.npz"
+    },
+    "components": [
+      "electric",
+      "magnetic_x",
+      "magnetic_y"
+    ],
+    "absolute_l2": [
+      0.0077554026605805865,
+      0.005752798103743916,
+      0.007499130168392357
+    ],
+    "reference_l2": [
+      6.173334534279303,
+      2.4777901855012705,
+      6.957376998160576
+    ],
+    "relative_l2": [
+      0.0012562744846430034,
+      0.002321745455852669,
+      0.001077867444925726
+    ],
+    "combined_relative_l2": 0.0012701500206381306,
+    "integration_grid": 1024,
+    "gauss_order": 3
+  },
+  "time_512": {
+    "field": {
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "resolution": 512,
+      "sha256": "96f20e25cfab97f83ea47306640de403341113683a60976451d5c8b89729a87e",
+      "file": "dg-q2-n512-q12-dt0.0025.npz"
+    },
+    "reference": {
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "resolution": 512,
+      "sha256": "92b49a81fc543e4e46402e2ccd3cdc7cc8b1fd837d17842e41b53e94f620dc5a",
+      "file": "dg-q2-n512-q12-dt0.00125-device.npz"
+    },
+    "components": [
+      "electric",
+      "magnetic_x",
+      "magnetic_y"
+    ],
+    "absolute_l2": [
+      0.00522169696919043,
+      0.0026032992176917083,
+      0.005024924036941563
+    ],
+    "reference_l2": [
+      6.1733248003923205,
+      2.4778072378904414,
+      6.957382156666608
+    ],
+    "relative_l2": [
+      0.0008458484103831028,
+      0.0010506463851918154,
+      0.00072224349960806
+    ],
+    "combined_relative_l2": 0.0007999607517901641,
+    "integration_grid": 512,
+    "gauss_order": 3
+  },
+  "material_quadrature_256": {
+    "field": {
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "resolution": 256,
+      "sha256": "ac29e721c78c231ffe37f45d07a769b600f3bc121dc2bb9fb3b9055a01f0e077",
+      "file": "dg-q2-n256-q12-dt0.0025.npz"
+    },
+    "reference": {
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "resolution": 256,
+      "sha256": "b201e0ca330a363d98476079c23549dc693ac364de1d0bced394688edd40a0ec",
+      "file": "dg-q2-n256-q20-dt0.0025.npz"
+    },
+    "components": [
+      "electric",
+      "magnetic_x",
+      "magnetic_y"
+    ],
+    "absolute_l2": [
+      0.00198917582778895,
+      0.0015143375296137152,
+      0.0022865567664210173
+    ],
+    "reference_l2": [
+      6.173337270886966,
+      2.477833197359746,
+      6.957364202896218
+    ],
+    "relative_l2": [
+      0.0003222205009225344,
+      0.000611153943383807,
+      0.0003286527339576628
+    ],
+    "combined_relative_l2": 0.00035197081854945457,
+    "integration_grid": 256,
+    "gauss_order": 3
+  },
+  "mhm_time": {
+    "field": {
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "resolution": 128,
+      "sha256": "d0951c5694e3fbbe78312d9ca4ba1dd20b1677426563c7b0eebbc177b728b13a",
+      "file": "mhm-n16-f128-q12-dt0.01-fields.npz"
+    },
+    "reference": {
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "resolution": 128,
+      "sha256": "ff3ecbd929061338f355ad271475e9b7eda3657b6228c721502614cb95f7b9d9",
+      "file": "mhm-n16-f128-q12-dt0.005-aligned.npz"
+    },
+    "components": [
+      "electric",
+      "magnetic_x",
+      "magnetic_y"
+    ],
+    "absolute_l2": [
+      0.017517267503866833,
+      0.009055314067299277,
+      0.01699019239320401
+    ],
+    "reference_l2": [
+      6.173616146265977,
+      2.4779039783050503,
+      6.956857808773126
+    ],
+    "relative_l2": [
+      0.0028374403410976403,
+      0.003654424927915626,
+      0.0024422221727427125
+    ],
+    "combined_relative_l2": 0.0027041765059290235,
+    "integration_grid": 128,
+    "gauss_order": 3
+  },
+  "mhm_material_quadrature": {
+    "field": {
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "resolution": 128,
+      "sha256": "ff4440fcc0f1383a1b9a44e1a7d007af14fd3915531378a7aae2d0d633cd326c",
+      "file": "mhm-n16-f128-q20-dt0.01-fields.npz"
+    },
+    "reference": {
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "resolution": 128,
+      "sha256": "114cfd58ff5e71c01cd51c3c38f318613a0abf045dadea6a7a823f200f8624ec",
+      "file": "mhm-n16-f128-q28-dt0.01-fields.npz"
+    },
+    "components": [
+      "electric",
+      "magnetic_x",
+      "magnetic_y"
+    ],
+    "absolute_l2": [
+      0.0010261719624167802,
+      0.0007161288964296861,
+      0.0012563447437816322
+    ],
+    "reference_l2": [
+      6.173967113174321,
+      2.477897627994117,
+      6.95724613283008
+    ],
+    "relative_l2": [
+      0.00016620949603490484,
+      0.00028900665158205086,
+      0.0001805807527569208
+    ],
+    "combined_relative_l2": 0.0001842091733765615,
+    "integration_grid": 128,
+    "gauss_order": 3
+  }
+}

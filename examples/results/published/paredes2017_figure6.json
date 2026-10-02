@@ -1,0 +1,13 @@
+{
+  "title": "On the robustness of the Multiscale Hybrid-Mixed finite element method",
+  "doi": "10.1090/mcom/3108",
+  "figure": 6,
+  "page": 28,
+  "source_sha256": "a48b97f8910d73df73bd55b5eee5499f84fe260afa05195ea5c943954589f68d",
+  "method": "Polyline vertices from the vector PDF left panel; logarithmic ordinate calibrated with tick marks at 0.04 and 0.72; vertex series identified against Figure 6 legend.",
+  "ordinate_uncertainty": "Plus/minus 1 PDF point vertically, mapped through logarithmic calibration; extraction allowance, not solver uncertainty.",
+  "ordinate": "Relative full broken H1 norm",
+  "face_macro_spacing": 0.125,
+  "epsilon": "pi/150",
+  "historical_local_refinement": "unspecified"
+}

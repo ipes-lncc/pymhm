@@ -1,0 +1,197 @@
+{
+  "audit_date": "2026-09-28",
+  "status": "Published data extracted and checked visually. Reproduction status is reported per experiment, not implied by extraction.",
+  "digitized_values": {
+    "relative_comparison_tolerance": 0.01,
+    "meaning": "Conservative analyst-selected tolerance for PDF graphics, not a confidence interval or original solver precision. Stored decimal places preserve extraction output only.",
+    "method": "Read vector path marker centers, identify series visually, and calibrate logarithmic axes with labelled tick marks."
+  },
+  "sources": {
+    "harder2013": {
+      "authors": [
+        "Christopher Harder",
+        "Diego Paredes",
+        "Frederic Valentin"
+      ],
+      "title": "A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients",
+      "journal": "Journal of Computational Physics 245 (2013), 107-130",
+      "doi": "10.1016/j.jcp.2013.03.019",
+      "dataset": "harder2013_figure5.csv",
+      "location": "Figure 5, printed page117 / PDF page11; Section5.1 pages117-119",
+      "version": "Version of record",
+      "extraction": "Vector path marker centers, rendered page visually checked",
+      "coordinate_calibration": {
+        "left_plot_pdf_points": [
+          90.5690994263,
+          493.2000732422,
+          259.6980895996,
+          662.330078125
+        ],
+        "right_plot_pdf_points": [
+          294.6820068359,
+          492.4198913574,
+          463.8120117188,
+          661.5488891602
+        ],
+        "left_x_log10_range": [
+          -2,
+          0
+        ],
+        "left_y_log10_range": [
+          -2,
+          1
+        ],
+        "right_x_log10_range": [
+          -2,
+          0
+        ],
+        "right_y_log10_range": [
+          -4,
+          0
+        ]
+      },
+      "norm_definitions": {
+        "pressure_l2": "L2 norm of p-(p0+p_lambda+p_f)",
+        "flux_l2": "L2 vector norm of -K grad(p)+K grad(p_h)",
+        "macroconstant_pressure_l2": "L2 norm of p-p0",
+        "macroconstant_projection_l2": "L2 norm of elementwise mean(p)-p0"
+      },
+      "known_data": {
+        "domain": "unit square",
+        "pressure": "cos(2*pi*x)*cos(2*pi*y)",
+        "source": "8*pi**2*pressure",
+        "permeability": "identity",
+        "boundary": "homogeneous Neumann on all sides",
+        "mean_pressure": 0,
+        "trace_degree": 0,
+        "reported_local_space": "one-element continuous P_(ell+1); P1 when ell=0"
+      },
+      "unresolved": [
+        "Exact structured triangular mesh connectivity and number of triangles per axis value are not stated.",
+        "The formal definition h=max diam(K) is not mapped to the five dyadic plot labels.",
+        "Equation40 supplies exact quadratic radial lifts for ell=0 and Section5.1 invokes the RT0 equivalence, while page119 states local degree ell+1.",
+        "Assembly/error quadrature rules and original output arrays are not supplied."
+      ],
+      "source_pdf_sha256": "40e4e1c0942e0a58b0a7f8de4e9846d7ea9f0bdd3d1674fcede032e7410d8533",
+      "comparison_evidence": {
+        "rt0_with_mean_preserving_quadratic_potential": "All four curves, five levels each, within 0.20 percent of digitized points.",
+        "primal_p1": "Systematic differences exceed extraction uncertainty.",
+        "limitation": "Matching curves does not independently identify the original source-lift correction or mesh-parameter convention."
+      }
+    },
+    "araya2017": {
+      "authors": [
+        "Rodolfo Araya",
+        "Christopher Harder",
+        "Abner H. Poza",
+        "Frederic Valentin"
+      ],
+      "title": "Multiscale hybrid-mixed method for the Stokes and Brinkman equations--The method",
+      "journal": "Computer Methods in Applied Mechanics and Engineering324 (2017),29-53",
+      "doi": "10.1016/j.cma.2017.05.027",
+      "version": "Version of record",
+      "datasets": {
+        "araya2017_table1.csv": "Table1,printed page43/PDF15: Stokes macro mass defect",
+        "araya2017_table2.csv": "Table2,printed page44/PDF16: Brinkman macro mass defect",
+        "araya2017_figure3.csv": "Figure3,printed page42/PDF14: Stokes ell0 errors, PDF vector digitization",
+        "araya2017_figure4.csv": "Figure4, printed page42/PDF14: Stokes ell1 errors, PDF vector digitization"
+      },
+      "extraction": "Tables transcribed and visually checked in rendered pages; Figures3 and4 vector curves calibrated to labelled logarithmic ticks.",
+      "macro_mass_norm": "max over K of abs(integral_K div(u_h) dx); unnormalized integrated defect",
+      "local_spaces": "USFEM P_(ell+2)^2/P_(ell+2), one triangle per macroelement; ell=0,1,2",
+      "stabilization": "Equations41-42; kappa=h_tau^2/[gamma_min*h_tau^2*max(1,Pe_tau)+4*nu/m_tau], Pe_tau=4*nu/(gamma_min*h_tau^2*m_tau), m_tau=min(1/3,C_tau).",
+      "stokes": {
+        "viscosity": 1,
+        "drag": 0,
+        "u1": "-256*x^2*(x-1)^2*y*(y-1)*(2*y-1)",
+        "u2": "-u1(y,x)",
+        "pressure": "150*(x-1/2)*(y-1/2)",
+        "boundary": "exact velocity on all sides",
+        "pressure_mean": 0
+      },
+      "brinkman": {
+        "viscosity": 0.01,
+        "drag": 1,
+        "u1": "y-(1-exp(y/nu))/(1-exp(1/nu))",
+        "u2": "x-(1-exp(x/nu))/(1-exp(1/nu))",
+        "pressure": "x-y",
+        "source": "-nu*Delta(u)+u+grad(p)",
+        "boundary": "exact velocity on all sides",
+        "pressure_mean": 0
+      },
+      "unresolved": [
+        "Numerical inverse inequality constant C_tau for degree2-4 local spaces is not specified in the numerical subsection.",
+        "Exact triangle connectivity and quadrature are not given.",
+        "Figure3 abscissas are approximately Table1 H values divided by sqrt(2); the conversion is not explained.",
+        "Roundoff-level mass defects cannot be used as portable digit-by-digit acceptance targets."
+      ],
+      "source_pdf_sha256": "f6cf5335d3dfa51584dbf22ce829ae2c41d9700e15667839acc5273fe0da6618",
+      "figure4_coordinate_calibration": {
+        "left_plot_pdf_points": [
+          91.34599304199219,
+          259.7420349121094,
+          265.37298583984375,
+          382.80804443359375
+        ],
+        "right_plot_pdf_points": [
+          312.65997314453125,
+          259.743896484375,
+          486.68896484375,
+          382.8099060058594
+        ],
+        "x_log10_range": [
+          -3,
+          0
+        ],
+        "left_y_log10_range": [
+          -7,
+          0
+        ],
+        "right_y_log10_range": [
+          -4,
+          1
+        ]
+      },
+      "norm_discrepancies": [
+        "Equation55 defines the full pseudostress -nu*grad(u)+p*I. Figure3 L2 pseudostress ordinates closely track the velocity gradient error. Full-stress values are incompatible with these ordinates for our reconstructed fields, as verified by the measured pressure, gradient and divergence norms; original coefficient arrays are unavailable, so this does not identify a bug in the article.",
+        "Equation8 defines a norm on conforming H(div;Omega) weighting divergence by domain diameter squared. The numerical section names a broken H(div;T_H) norm without repeating its weight. Figure3 is matched by divergence weight1; both conventions are reported without asserting a formal contradiction.",
+        "Figure4 velocity and pressure curves agree within1percent at the first five levels; stress curves remain discrepant. Orthogonal projection of f onto P2 or a larger polynomial space can only reduce the divergence residual and cannot explain the larger published H(div) ordinate."
+      ],
+      "comparison_evidence": {
+        "crisscross_p2_p2_trace0": "20 values across velocity L2, velocity H1 seminorm, pressure L2 and standard broken pseudostress H(div), n4 through64, differ by at most0.14 percent.",
+        "crisscross_p3_p3_trace1": "15 velocity and pressure values, n4,8,16,32,64, differ by at most0.70 percent.",
+        "sharp_inverse_constants": {
+          "P2": 0.010416666666666666,
+          "P3": 0.003353888994497343
+        },
+        "constant_definition": "Largest admissible scalar constant from the generalized Laplacian/gradient eigenproblem, quotienting constant functions; no curve-fitting."
+      }
+    },
+    "barrenechea_manuscript": {
+      "authors": [
+        "Gabriel R. Barrenechea",
+        "Larissa Martins",
+        "Weslley S. Pereira",
+        "Frederic Valentin"
+      ],
+      "title": "An H(div; Omega)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method",
+      "related_version_of_record_doi": "10.1137/24M1673073",
+      "related_journal": "Multiscale Modeling & Simulation24(2)(2026),399-428",
+      "version": "Author manuscript bearing review footer; data are not asserted identical to the version of record.",
+      "dataset": "barrenechea_reconstruction_manuscript_table2.csv",
+      "location": "Section6.1,Table2,printed page23/PDF23",
+      "extraction": "Decimal values transcribed and checked on rendered page; parenthesized rates omitted from CSV.",
+      "problem": "unit square, A=I, u=sin(2*pi*x)*sin(2*pi*y), f=8*pi^2*u, homogeneous Dirichlet",
+      "spaces": "ell=0 skeletal polynomial degree, k=2 continuous local degree, m=2 Raviart-Thomas reconstruction degree; fine h=macro H/2",
+      "energy_norm": "broken L2 norm of A^(1/2) grad(u-u_Hh)",
+      "effectivity": "eta/energy_error",
+      "unresolved": [
+        "Macro diameters are printed rounded; exact values and connectivity are not supplied.",
+        "The quadrature rules are unspecified.",
+        "The moment reconstruction in Equation5.1 is not the native RT0 minimum-energy correction.",
+        "Comparison with the final journal tables is pending."
+      ],
+      "source_pdf_sha256": "b7beee7f1f6ed73bad343813eba19addaab683f3f417ddff4564cf3826fea5dc"
+    }
+  }
+}

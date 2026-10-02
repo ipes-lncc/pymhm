@@ -1,0 +1,49 @@
+{
+  "mode": "distributed-mpi",
+  "ranks": 1,
+  "host": "tp-ws-01",
+  "mpi_library": "MPICH Version:      4.3.1",
+  "petsc": [
+    3,
+    23,
+    0
+  ],
+  "global_solver": "distributed PETSc AIJ + MUMPS LU",
+  "macro_triangles": 128,
+  "fine_refinement": 32,
+  "owned_global_rows": [
+    336
+  ],
+  "owned_local_cells": [
+    128
+  ],
+  "global_unknowns": 336,
+  "seconds": [
+    14.166514398995787,
+    14.83622336096596,
+    14.407569054979831
+  ],
+  "median_seconds": 14.407569054979831,
+  "max_coefficient_flux_residual_error": 3.410605131648481e-13,
+  "scope": "rank-local assembly, condensation, distributed global assembly/solve and owned reconstruction; coarse mesh metadata replicated",
+  "hardware_limit": "all ranks share this host; these measurements do not establish inter-node scaling",
+  "platform": "Linux-7.0.0-31-generic-x86_64-desconhecido-with-glibc2.43",
+  "logical_cpu_count": 80,
+  "numpy": "2.5.3",
+  "python": "3.13.15",
+  "native_threads": 1,
+  "source_sha256": {
+    "src/pymhm/hybrid.py": "65161789a26c2d73e97f96717df58823984bc9248bf80b18b4a058d0c55a4fa4",
+    "src/pymhm/parallel.py": "22e88e7f8d658104423b0823a502991996508d62b1c071589ee32429a6cbd77e",
+    "src/pymhm/solvers.py": "e0d33505e442a247ffdf14059a53933b393b4d4a876a88bd0ce803bf65155b15",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/offline.py": "dff4793610d9a1c0a985600ee9cc19b7a67b3461ea5db5f25b855afdd07640ca",
+    "src/pymhm/distributed.py": "c0f82a0f1b52fe25da75c4dc36566aa70b8e070b7ccbb1b96e703d4a7eddd251",
+    "src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+    "benchmarks/execution_modes.py": "8e5f04d951c094999be738522366ad84613432080fb7fef308c8cb34268fbf41"
+  },
+  "source_changed_during_run": false,
+  "timestamp_utc": "2026-09-28T23:19:49Z"
+}

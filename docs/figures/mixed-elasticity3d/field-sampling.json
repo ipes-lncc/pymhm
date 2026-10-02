@@ -1,0 +1,32 @@
+[
+  {
+    "archive": "bdm2-n5.npz",
+    "archive_sha256": "cce14be33279c5331462188b038aa006b2638646f80c6f58b810b05e66012833",
+    "basis_sha256": "c86957affb924ed646b893c23dc7d2958964bd356944e3bc1b063c84e86e487d",
+    "height": 0.37,
+    "display_refinement": 5,
+    "display_points": 17850,
+    "display_triangles": 21250,
+    "sample_difference_max": [
+      0.22033416350783952,
+      5.590936852230746,
+      4.205064643843373,
+      5.365661870432355
+    ]
+  },
+  {
+    "archive": "bdm3-n5.npz",
+    "archive_sha256": "2e2227e44fe2911f2443416aba47ecf07fd17ce2efac4ac6df3c43e5a3899a59",
+    "basis_sha256": "e6b1542aea8e0a5dd917e22ef83847f98c32b2b029ec97abc61ca80c34de9a45",
+    "height": 0.37,
+    "display_refinement": 5,
+    "display_points": 4200,
+    "display_triangles": 5000,
+    "sample_difference_max": [
+      0.1541976150094131,
+      1.258172904432313,
+      0.9627556861237494,
+      1.0792666507826993
+    ]
+  }
+]

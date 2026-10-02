@@ -1,0 +1,66 @@
+{
+  "method": "Independent DOLFINx/UFL local assembly and global uncondensed PETSc/MUMPS saddle; P4 pressure, P2 normal-flux traces",
+  "rows": [
+    {
+      "setting": "S1",
+      "delta": 0.16666666666666666,
+      "refinement": 4,
+      "fine_triangles": 264,
+      "native_dofs": 2596,
+      "trace_dofs": 84,
+      "pressure_linf_difference": 2.5379004453540688e-15,
+      "trace_linf_difference": 5.2513549064769904e-14,
+      "full_residual_relative": 1.738500337721365e-13,
+      "pressure_l2": 0.0004331491186582497,
+      "gradient_l2": 0.013381475629125917,
+      "energy_error": 0.01578547056127748,
+      "seconds": 26.24291671498213
+    },
+    {
+      "setting": "S2",
+      "delta": 0.16666666666666666,
+      "refinement": 4,
+      "fine_triangles": 264,
+      "native_dofs": 2617,
+      "trace_dofs": 105,
+      "pressure_linf_difference": 2.112893193739751e-15,
+      "trace_linf_difference": 5.1486592766991635e-14,
+      "full_residual_relative": 1.8138552920919893e-13,
+      "pressure_l2": 6.12208433077603e-05,
+      "gradient_l2": 0.0018935341252943405,
+      "energy_error": 0.0021070195154528812,
+      "seconds": 17.35109047300648
+    },
+    {
+      "setting": "S2",
+      "delta": 0.007936507936507936,
+      "refinement": 4,
+      "fine_triangles": 328,
+      "native_dofs": 3153,
+      "trace_dofs": 105,
+      "pressure_linf_difference": 8.101158632811689e-16,
+      "trace_linf_difference": 9.161032658422408e-13,
+      "full_residual_relative": 2.778775397192211e-13,
+      "pressure_l2": 8.792089830269708e-05,
+      "gradient_l2": 0.002571980384626559,
+      "energy_error": 0.0027626489672476417,
+      "seconds": 30.10127307102084
+    }
+  ],
+  "source_hashes": {
+    "independent-unfitted-ufl-comparison-driver": "469fbb18998ac7d9052fb7bb8f9a33d387f3d6ea21d6f3495fd85d36cb1f9fc0",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/cut_cells.py": "f1eb87e66d9c77dae77969c428fd8d5f9a8dcc8a338c561bec80fe967de07c2c",
+    "src/pymhm/darcy.py": "053c3823d6849f3e8c82c0ceb55049d701561c161f25793bdae8fe1b3c5d73d0",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc"
+  },
+  "sources_changed": false,
+  "native_test": "tests/test_unfitted_fenics.py",
+  "native_test_sha256": "e1165b019032ded47eb27f79bdbc45646dfc7bcb850365d84bd0a67479c202ec",
+  "native_software": {
+    "DOLFINx": "0.9.0",
+    "Basix": "0.9.0",
+    "PETSc": "3.23.0",
+    "factorization": "MUMPS"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "electric_time": 11.315,
+  "magnetic_time": 11.31,
+  "time_step": 0.005,
+  "electric_interpolation": {
+    "rule": "linear",
+    "lower_time": 11.3125,
+    "upper_time": 11.3175,
+    "upper_weight": 0.4999999999999005
+  },
+  "magnetic_interpolation": "none",
+  "energy_balance_max": 1.1733669591507123e-13,
+  "setup_seconds": 1280.7834171499126,
+  "elapsed_seconds": 4496.056454243022,
+  "source_sha256": {
+    "examples/maxwell_nanoguide.py": "c129d1e692f792b67ffce38a4897eddf146ecf7a30d8af15e1335c70a1b082c1",
+    "src/pymhm/maxwell.py": "656354aeceb5627bf5b4b1a9b92f62c4de9470cdcc3a5536add10d9ed15349e5",
+    "src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+    "src/pymhm/quadrilateral.py": "f6969e69f2e06b1282d8dd477a8902c922bbe0ba55299d6759b9f52e2088b293",
+    "src/pymhm/helmholtz_forms.py": "e1711c2a9ffe74cc9465803151e1d3696bc08a49cb767a9252d5c2f1fa5dbc25",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc",
+    "src/pymhm/cut_cells.py": "f37bd801059236bbc2b7cc7f735b9c843916fdd9f14ea3d70812c971ab4a6add",
+    "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+    "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+    "examples/maxwell_nanoguide_time.py": "dcfc7f2c75d7ec8d1a545920f40eff255e68355e0c5a8e14da5daae649199884"
+  },
+  "fields": "mhm-n16-f128-q12-dt0.005-aligned.npz",
+  "fields_sha256": "ff3ecbd929061338f355ad271475e9b7eda3657b6228c721502614cb95f7b9d9"
+}

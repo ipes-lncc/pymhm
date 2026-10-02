@@ -1,0 +1,143 @@
+{
+  "method": "Independent DOLFINx/UFL assembly and PETSc/MUMPS solve of the full uncondensed scalar saddle system",
+  "case": "CAMWA 209 (2026), Section 6.1: unit square, sixteen crisscross macrotriangles, u=sin(2*pi*x)*sin(2*pi*y), K=1",
+  "source": "8*pi^2*sin(2*pi*x)*sin(2*pi*y)",
+  "boundary": "homogeneous Dirichlet enforced by the exterior multiplier equations",
+  "physical_trace": "q.n with q=-grad(p)",
+  "local_space": "continuous P6 on four subtriangles per macrotriangle",
+  "native_volume_quadrature_degree": 28,
+  "owner_volume_duffy_order": 16,
+  "native_boundary_quadrature_degree": 12,
+  "cases": [
+    {
+      "macro_cells": 16,
+      "local_degree": 6,
+      "local_refinement": 2,
+      "trace_degree": 0,
+      "trace_segments": 1,
+      "native_full_dofs": 1484,
+      "maximum_pressure_coefficient_difference": 4.3076653355456074e-14,
+      "maximum_trace_coefficient_difference": 1.2567724638756772e-13,
+      "native_original_relative_residual": 5.972551162666611e-14,
+      "physical_norms": {
+        "pressure_absolute": 0.12261217013403944,
+        "pressure_reference_norm": 0.5,
+        "pressure_relative": 0.24522434026807888,
+        "gradient_absolute": 1.7935786992222345,
+        "gradient_reference_norm": 4.442882938158366,
+        "gradient_relative": 0.4036970418054041,
+        "flux_absolute": 1.7935786992222345,
+        "flux_reference_norm": 4.442882938158366,
+        "flux_relative": 0.4036970418054041,
+        "energy_absolute": 1.7935786992222345,
+        "energy_reference_norm": 4.442882938158366,
+        "energy_relative": 0.4036970418054041
+      }
+    },
+    {
+      "macro_cells": 16,
+      "local_degree": 6,
+      "local_refinement": 2,
+      "trace_degree": 1,
+      "trace_segments": 1,
+      "native_full_dofs": 1512,
+      "maximum_pressure_coefficient_difference": 3.2807090377673376e-14,
+      "maximum_trace_coefficient_difference": 2.8582364100601943e-13,
+      "native_original_relative_residual": 6.283202698016921e-14,
+      "physical_norms": {
+        "pressure_absolute": 0.12261217013403944,
+        "pressure_reference_norm": 0.5,
+        "pressure_relative": 0.24522434026807888,
+        "gradient_absolute": 1.7935786992222351,
+        "gradient_reference_norm": 4.442882938158366,
+        "gradient_relative": 0.4036970418054042,
+        "flux_absolute": 1.7935786992222351,
+        "flux_reference_norm": 4.442882938158366,
+        "flux_relative": 0.4036970418054042,
+        "energy_absolute": 1.7935786992222351,
+        "energy_reference_norm": 4.442882938158366,
+        "energy_relative": 0.4036970418054042
+      }
+    },
+    {
+      "macro_cells": 16,
+      "local_degree": 6,
+      "local_refinement": 2,
+      "trace_degree": 0,
+      "trace_segments": 2,
+      "native_full_dofs": 1512,
+      "maximum_pressure_coefficient_difference": 2.8199664825478976e-14,
+      "maximum_trace_coefficient_difference": 2.611166625100338e-13,
+      "native_original_relative_residual": 6.184951141967318e-14,
+      "physical_norms": {
+        "pressure_absolute": 0.12261217013403948,
+        "pressure_reference_norm": 0.5,
+        "pressure_relative": 0.24522434026807896,
+        "gradient_absolute": 1.7935786992222362,
+        "gradient_reference_norm": 4.442882938158366,
+        "gradient_relative": 0.4036970418054045,
+        "flux_absolute": 1.7935786992222362,
+        "flux_reference_norm": 4.442882938158366,
+        "flux_relative": 0.4036970418054045,
+        "energy_absolute": 1.7935786992222362,
+        "energy_reference_norm": 4.442882938158366,
+        "energy_relative": 0.4036970418054045
+      }
+    },
+    {
+      "macro_cells": 16,
+      "local_degree": 6,
+      "local_refinement": 2,
+      "trace_degree": 1,
+      "trace_segments": 2,
+      "native_full_dofs": 1568,
+      "maximum_pressure_coefficient_difference": 2.4646951146678475e-14,
+      "maximum_trace_coefficient_difference": 2.504414701853081e-13,
+      "native_original_relative_residual": 5.3956880684336265e-14,
+      "physical_norms": {
+        "pressure_absolute": 0.006858945452358957,
+        "pressure_reference_norm": 0.5,
+        "pressure_relative": 0.013717890904717913,
+        "gradient_absolute": 0.23200207039525617,
+        "gradient_reference_norm": 4.442882938158366,
+        "gradient_relative": 0.05221881233976966,
+        "flux_absolute": 0.23200207039525617,
+        "flux_reference_norm": 4.442882938158366,
+        "flux_relative": 0.05221881233976966,
+        "energy_absolute": 0.23200207039525617,
+        "energy_reference_norm": 4.442882938158366,
+        "energy_relative": 0.05221881233976966
+      }
+    }
+  ],
+  "native_symmetry_control": [
+    {
+      "segments": 1,
+      "maximum_native_P0_P1_pressure_coefficient_difference": 2.5979218776228663e-14
+    },
+    {
+      "segments": 2,
+      "maximum_native_P0_P1_pressure_coefficient_difference": 0.38686532383586725
+    }
+  ],
+  "source_sha256": {
+    "tests/test_unfitted_smooth_fenics.py": "e4ccd0401ecb1193ccbe899d54cd32e406a03afd4351a8c968d45720d74e7b2e",
+    "examples/unfitted_convergence.py": "1a1b6ae8cb2027e888d24f088070985e8487622d942ba191f13c32585a5a7c69",
+    "src/pymhm/darcy.py": "6ed895bac751317e58ac5dea5129b9f5eb944d7492191c5d10a8a9c7ebd2419c",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae"
+  },
+  "source_changed_during_run": false,
+  "environment": {
+    "python": "3.13.15",
+    "numpy": "2.5.3",
+    "dolfinx": "0.9.0",
+    "basix": "0.9.0",
+    "ufl": "2024.2.0"
+  },
+  "scope": "Verifies the stated discrete operators, all macro couplings, load and four global solutions. It does not identify the historical local discretization or reconcile the printed curves."
+}

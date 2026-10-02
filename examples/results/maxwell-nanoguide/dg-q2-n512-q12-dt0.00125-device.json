@@ -1,0 +1,31 @@
+{
+  "n": 512,
+  "dt": 0.00125,
+  "steps": 9052,
+  "quadrature": 12,
+  "electric_dofs": 2359296,
+  "electric_time": 11.315,
+  "magnetic_time": 11.31,
+  "source_sha256": {
+    "classical_gpu.py": "e2e4a8025089e94c774d9800d4b745fc6e3debf148c47f59066f2b90df891f3d",
+    "classical.py": "fc290c8dc979f011dc74f44c521327312e18b9927e58a053b0fe62429455f703",
+    "maxwell_nanoguide.py": "c129d1e692f792b67ffce38a4897eddf146ecf7a30d8af15e1335c70a1b082c1"
+  },
+  "fields_sha256": "92b49a81fc543e4e46402e2ccd3cdc7cc8b1fd837d17842e41b53e94f620dc5a",
+  "device": "NVIDIA GeForce RTX 3060",
+  "cupy_version": "14.2.0",
+  "precision": "float64",
+  "setup_seconds": 2.635594463907182,
+  "elapsed_seconds": 836.8919162349775,
+  "interpolation": {
+    "electric_indices": [
+      9051,
+      9052
+    ],
+    "magnetic_indices": [
+      9048,
+      9048
+    ],
+    "method": "linear between staggered time levels"
+  }
+}

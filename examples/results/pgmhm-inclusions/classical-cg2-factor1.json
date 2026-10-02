@@ -1,0 +1,40 @@
+{
+  "method": "DOLFINx/UFL conforming CG2",
+  "factor": 1,
+  "rectangles": [
+    109,
+    109
+  ],
+  "triangles": 23762,
+  "dofs": 47961,
+  "residual": 4.398668134551488e-16,
+  "source_integral": 0.9999999999999991,
+  "outward_boundary_flux": 0.9999999571811399,
+  "energy_squared": 0.024526469881178504,
+  "source_boundary_work": 0.024526469881178507,
+  "pressure_min": 0.0,
+  "pressure_max": 0.051349231246723144,
+  "seconds": 3.8444770879577845,
+  "dolfinx": "0.9.0",
+  "petsc": [
+    3,
+    23,
+    0
+  ],
+  "analytical_patch": false,
+  "refinement_precision": "two binary64 components with error-free products and sums",
+  "refinement_history": [
+    4.2311981811098745e-08,
+    4.398668134551482e-16
+  ],
+  "archive_encoding": "float64 principal + correction; zero tail",
+  "archive": "classical-cg2-factor1.npz",
+  "archive_sha256": "364926b9ca08b90ceac2d92c9b07f19586210833437bd61b16e91ce1dbce5c9a",
+  "source_hashes": {
+    "examples/solve_pgmhm_inclusions_reference.py": "cfb33b107d0cc557da346a3a27ccc61acac596e05c3ca9718d782cfd90750b73",
+    "examples/pgmhm_inclusion_data.py": "e0b5690efee2cffde1cf5b871b3bcf5e3be8c08272b87e6b71d7a32e5d17e852",
+    "examples/solve_unusual_spe10_reference.py": "f15b6c66e7eb86096ba98b01378e02c08428c4636c31a4c1e70d4ea5144adf5c",
+    "examples/compensated_reference.py": "6c6aca71dd6783ad385a1a0e2946b64c0593168f07448b1ef6acb72ef170ac62",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc"
+  }
+}

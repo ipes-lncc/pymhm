@@ -1,0 +1,350 @@
+site_name: pymhm
+site_description: Composable multiscale hybrid mixed finite element methods
+site_url: https://volpatto.github.io/pymhm/
+repo_url: https://github.com/volpatto/pymhm
+repo_name: volpatto/pymhm
+edit_uri: edit/main/docs/
+strict: true
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: teal
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: teal
+      accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+# Supplementary sources remain in Git; the default site displays essential cases.
+# Supplementary sources remain in Git; the default site displays essential cases.
+exclude_docs: |
+  /cases/adaptive-darcy.md
+  /cases/analytic.md
+  /cases/anisotropic-stress.md
+  /cases/coarse-cosine.md
+  /cases/darcy-audit.md
+  /cases/darcy-bdm.md
+  /cases/darcy-jump.md
+  /cases/darcy-rt.md
+  /cases/darcy.md
+  /cases/darcy3d.md
+  /cases/elasticity-reference.md
+  /cases/elasticity-tensor-rt.md
+  /cases/elasticity3d.md
+  /cases/enriched-hdiv3d.md
+  /cases/estimator.md
+  /cases/flow-audit.md
+  /cases/flow.md
+  /cases/flow3d.md
+  /cases/gals3d.md
+  /cases/high-order.md
+  /cases/mapped-well.md
+  /cases/maxwell.md
+  /cases/mh.md
+  /cases/mh2m.md
+  /cases/mh3d.md
+  /cases/mixed-elasticity.md
+  /cases/mshho3d.md
+  /cases/neopz.md
+  /cases/pgmhm-inclusions.md
+  /cases/pgmhm-spe10.md
+  /cases/pgmhm.md
+  /cases/planar3d.md
+  /cases/polyhedral-rad.md
+  /cases/primal-elasticity.md
+  /cases/rad-conditioning.md
+  /cases/rad-layer.md
+  /cases/rad3d.md
+  /cases/reconstruction-moments.md
+  /cases/reference-comparison.md
+  /cases/scalars.md
+  /cases/star-polyhedra.md
+  /cases/tetra-pk.md
+  /cases/unusual-spe10.md
+  /cases/weighted-estimator.md
+  /performance.md
+  /figures/**
+  !/figures/convergence.svg
+  !/figures/elasticity-families/convergence.png
+  !/figures/elasticity-families/incompressible-sweep.png
+  !/figures/elasticity-families/oscillatory-convergence.png
+  !/figures/elasticity/fields.png
+  !/figures/elasticity/material-sweep.png
+  !/figures/elasticity/refinement.png
+  !/figures/elastodynamics/assembly-quadrature.json
+  !/figures/elastodynamics/comparison.json
+  !/figures/elastodynamics/displacement-components.png
+  !/figures/elastodynamics/native-discrete-verification.json
+  !/figures/elastodynamics/profiles.png
+  !/figures/elastodynamics/published-convergence.png
+  !/figures/helmholtz/article-convergence.png
+  !/figures/helmholtz/comparison.json
+  !/figures/helmholtz/marmousi-identification.json
+  !/figures/helmholtz/native-convergence-verification.json
+  !/figures/helmholtz/native-global-verification.json
+  !/figures/helmholtz/native-hankel-verification.json
+  !/figures/helmholtz/plane-oscillatory-fields.png
+  !/figures/helmholtz/published-convergence.json
+  !/figures/helmholtz/stability-comparison.json
+  !/figures/helmholtz/stability-errors.png
+  !/figures/hpc4e/material.png
+  !/figures/hpc4e/published-profile-comparison.png
+  !/figures/hpc4e/reference-refinement.json
+  !/figures/hpc4e/reference-spatial-refinement.json
+  !/figures/hpc4e/stress-displacement-fields.png
+  !/figures/mapped-well-oscillatory/convergence.png
+  !/figures/mapped-well-oscillatory/native-comparison.png
+  !/figures/mapped-well-oscillatory/native-discrete-verification.json
+  !/figures/mapped-well-oscillatory/profiles.png
+  !/figures/marmousi/classical-convergence.json
+  !/figures/marmousi/classical-fields-H20.png
+  !/figures/marmousi/classical-profiles.png
+  !/figures/marmousi/mhm-H20-ell1-fields.png
+  !/figures/marmousi/mhm-H20-ell1-vs-classical-p4.json
+  !/figures/marmousi/mhm-H20-ell1.json
+  !/figures/marmousi/published-table.json
+  !/figures/marmousi/trace-family-verification.json
+  !/figures/maxwell-nanoguide/comparison.json
+  !/figures/maxwell-nanoguide/components.png
+  !/figures/maxwell-nanoguide/dg-device-verification.json
+  !/figures/maxwell-nanoguide/errors.png
+  !/figures/maxwell-nanoguide/profiles.png
+  !/figures/maxwell-nanoguide/refinement-controls.json
+  !/figures/mh2m-heterogeneous/cg1-native-verification.json
+  !/figures/mh2m-heterogeneous/cg3/acquisition-environment.json
+  !/figures/mh2m-heterogeneous/cg3/comparison.json
+  !/figures/mh2m-heterogeneous/cg3/geometry-integration-verification.json
+  !/figures/mh2m-heterogeneous/cg3/native-norm-verification.json
+  !/figures/mh2m-heterogeneous/comparison.json
+  !/figures/mh2m-heterogeneous/crisscross-n4-r8-g1.json
+  !/figures/mh2m-heterogeneous/crisscross/fields-asinh-display.json
+  !/figures/mh2m-heterogeneous/crisscross/native-system-verification.json
+  !/figures/mh2m-heterogeneous/crisscross/profiles.png
+  !/figures/mh2m-heterogeneous/crisscross/published-figure-7-comparison.png
+  !/figures/mh2m-heterogeneous/crisscross/published-figure-7.png
+  !/figures/mh2m-heterogeneous/crisscross/published-figure-8-comparison.png
+  !/figures/mh2m-heterogeneous/crisscross/published-figure-8.png
+  !/figures/mh2m-heterogeneous/crisscross/published-profile-comparison.json
+  !/figures/mh2m-heterogeneous/crisscross/published-profiles.json
+  !/figures/mh2m-heterogeneous/crisscross/reference-geometry/comparison.json
+  !/figures/mh2m-heterogeneous/crisscross/source-archive-provenance.json
+  !/figures/mh2m-heterogeneous/crisscross/space-compatibility.json
+  !/figures/mh2m-heterogeneous/norm-equivalence.json
+  !/figures/mixed-elasticity/native-discrete-verification.json
+  !/figures/mixed-elasticity3d/bdm3-fields.png
+  !/figures/mixed-elasticity3d/convergence.png
+  !/figures/mixed-elasticity3d/incompressibility.png
+  !/figures/mixed-well-geometries/boundary-rates.json
+  !/figures/mixed-well-geometries/convergence.png
+  !/figures/mixed-well-geometries/fine-space-separation.json
+  !/figures/mixed-well-geometries/native-basis-verification.json
+  !/figures/mixed-well-geometries/native-solution-verification.json
+  !/figures/mixed-well-geometries/prism-p1-fields.png
+  !/figures/mixed-well-geometries/replay-verification.json
+  !/figures/mixed-well-geometries/tetrahedron-p2-fields.png
+  !/figures/mshho/convergence.png
+  !/figures/mshho/fields.png
+  !/figures/nested/convergence.png
+  !/figures/nested/fields.png
+  !/figures/oseen/boundary-nu0.01-l1-adaptive-fields.png
+  !/figures/oseen/internal-nu0.001-l1-adaptive-history.png
+  !/figures/oseen/smooth-nu1-l1-uniform-history.png
+  !/figures/periodic/convergence.png
+  !/figures/periodic/fields.png
+  !/figures/periodic/native-discrete-verification.json
+  !/figures/periodic/periodic-physical-form.json
+  !/figures/periodic/periodic-q5-1024-equivalence.json
+  !/figures/periodic/problem.png
+  !/figures/polygons/convergence.png
+  !/figures/polygons/fields.png
+  !/figures/quarter-five-spot/classical-vs-mhm-components.png
+  !/figures/quarter-five-spot/obstacle-macro-cut.png
+  !/figures/quarter-five-spot/point-flux-elevation.json
+  !/figures/quarter-five-spot/point-flux-elevation.png
+  !/figures/reconstruction3d/adaptive-components.png
+  !/figures/reconstruction3d/adaptive-convergence.png
+  !/figures/reconstruction3d/adaptive-profiles.png
+  !/figures/reconstruction3d/adaptive-rt2-components.png
+  !/figures/reconstruction3d/adaptive.json
+  !/figures/reconstruction3d/native-saddle-verification.json
+  !/figures/reconstruction3d/reconstruction-order.json
+  !/figures/reconstruction3d/resolution.json
+  !/figures/reconstruction3d/uniform.json
+  !/figures/reproduction/darcy-2013-comparison.json
+  !/figures/reproduction/mixed/darcy-2013-comparison.json
+  !/figures/reproduction/mixed/darcy-2013-comparison.png
+  !/figures/reproduction/stokes/crisscross-p2/results.json
+  !/figures/reproduction/stokes/crisscross-p2/stokes-2017-convergence.png
+  !/figures/reproduction/stokes/crisscross-p3/results.json
+  !/figures/reproduction/stokes/crisscross-p3/stokes-2017-convergence.png
+  !/figures/reproduction/stokes/stokes2017-stress-consistency.json
+  !/figures/reservoir-papers/l09-figure-9-source.json
+  !/figures/spe10-adaptive/comparison.json
+  !/figures/spe10-adaptive/diagonal-profile.png
+  !/figures/spe10-adaptive/flux-components.png
+  !/figures/spe10-adaptive/native-system-verification.json
+  !/figures/spe10-adaptive/published-profile-mhm.json
+  !/figures/spe10-adaptive/published-profile.json
+  !/figures/spe10-adaptive/quadrature-check.json
+  !/figures/spe10-adaptive/refinement.png
+  !/figures/spe10-adaptive/resolution/comparison.json
+  !/figures/spe10-adaptive/trace-comparison.json
+  !/figures/spe10/brinkman-layer1.png
+  !/figures/spe10/brinkman-taylor-hood-fields.png
+  !/figures/spe10/brinkman-taylor-hood-refinement.png
+  !/figures/spe10/darcy-flux-classical-references.png
+  !/figures/spe10/darcy-flux-comparison.json
+  !/figures/spe10/darcy-flux-q3-components.png
+  !/figures/spe10/darcy-flux-reference-refinement.png
+  !/figures/stokes-adaptive/cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-comparison-physical-convergence.png
+  !/figures/stokes-adaptive/cavity-macro-nu1-g0-l0-comparison-fields.png
+  !/figures/stokes-adaptive/polynomial-face-nu0.01-g0-l1-history.png
+  !/figures/tensor-rt/convergence.png
+  !/figures/tensor-rt/duran-2019-figure3.jpeg
+  !/figures/tensor-rt/marker-centers.png
+  !/figures/tensor-rt/marker-verification.json
+  !/figures/transport/darcy-transient.png
+  !/figures/transport/local-mesh-verification.json
+  !/figures/transport/mixed-campaign.json
+  !/figures/transport/mixed-fields.png
+  !/figures/transport/mixed-local-field-increments.json
+  !/figures/transport/mixed-local-resolution.png
+  !/figures/transport/mixed-nominal-local-resolution.json
+  !/figures/transport/mixed-published-comparison.json
+  !/figures/transport/mixed-published-comparison.png
+  !/figures/transport/mixed-verification.json
+  !/figures/transport/nominal-native-rates.json
+  !/figures/transport/published-figure-12.json
+  !/figures/transport/refinement.png
+  !/figures/transport/scalar-trace-replay.json
+  !/figures/unfitted/convergence-comparison.json
+  !/figures/unfitted/convergence/msl-smooth-verification.json
+  !/figures/unfitted/convergence/rate-verification.json
+  !/figures/unfitted/discrepancy-diagnostics.json
+  !/figures/unfitted/publication-comparison.png
+  !/figures/unfitted/published-convergence.json
+  !/figures/unfitted/smooth-native-verification.json
+  !/figures/unfitted/smooth-p8-r64-endpoints.json
+  !/figures/unfitted/trace-h-convergence.png
+  !/figures/unfitted/trace-p-convergence.png
+  !/figures/unfitted/ufl-contrast-verification.json
+  !/figures/unfitted/ufl-r16-verification.json
+  !/figures/unfitted/ufl-verification.json
+  !/figures/unusual/analytical.json
+  !/figures/unusual/convergence.png
+  !/figures/unusual/native-comparison.json
+  !/figures/unusual/native-comparison.png
+  !/figures/unusual/resolution-control.json
+  !/figures/unusual/resolved-layer-flux.png
+
+nav:
+  - Overview: index.md
+  - Installation: installation.md
+  - Mathematical foundations: theory.md
+  - Literature and scope: literature.md
+  - Architecture: architecture.md
+  - Mesh generation: meshing.md
+  - Cartesian Qk Darcy: quadrilateral.md
+  - PyVista visualization: visualization.md
+  - FEniCS local forms: fenics.md
+  - Linear solvers: solvers.md
+  - MPI, GPU and operator reuse: execution.md
+  - Tutorials: tutorials.md
+  - Case gallery:
+      - Evidence guide: cases/index.md
+      - Published curves: cases/reproduction.md
+      - Multiscale constructions:
+          - Recursive MHM: cases/nested.md
+          - MHM–MsHHO equivalence: cases/mshho.md
+      - Darcy and heterogeneous media:
+          - Quarter-five spot and square obstacle: cases/quarter-five-spot.md
+          - Periodic permeability: cases/periodic.md
+          - Rectangular mixed spaces: cases/tensor-rt.md
+          - Tetrahedral and prismatic wells: cases/mixed-well-geometries.md
+          - Oscillatory mixed well: cases/mapped-well-oscillatory.md
+          - SPE10 Darcy and Brinkman: cases/spe10.md
+          - SPE10 flux references: cases/spe10-flux.md
+          - Adaptive SPE10: cases/spe10-adaptive.md
+          - Unfitted interfaces: cases/unfitted.md
+          - Reconstruction and estimation in 3D: cases/reconstruction3d.md
+          - MH²M oscillatory medium: cases/mh2m-heterogeneous.md
+      - Transport and polytopes:
+          - Adaptive RAD: cases/adaptive-transport.md
+          - Transient Darcy transport: cases/transient-transport.md
+          - MHM-USFEM reaction–diffusion: cases/unusual.md
+          - Polygonal and polyhedral families: cases/polygons.md
+      - Stokes, Brinkman and Oseen:
+          - Stokes–Brinkman adaptation: cases/stokes-adaptive.md
+          - Adaptive Oseen: cases/oseen.md
+      - Elasticity:
+          - Mixed stress families: cases/mixed-families.md
+          - Mixed AFW in 3D: cases/mixed-elasticity3d.md
+          - Locking-free displacement–pressure: cases/elasticity.md
+          - HPC4e heterogeneous material: cases/hpc4e.md
+      - Waves:
+          - Helmholtz: cases/helmholtz.md
+          - Marmousi: cases/marmousi.md
+          - Maxwell nanowaveguide: cases/maxwell-nanoguide.md
+          - Elastodynamics: cases/elastodynamics.md
+  - Verification: verification.md
+  - API reference:
+      - Overview: api.md
+      - Meshes and geometric refinement: api/geometry.md
+      - Materials and reservoir data: api/materials.md
+      - Mesh exchange and visualization: api/meshing.md
+      - Hybrid operators and multiscale constructions: api/hybrid.md
+      - Robin MH and three-field MH²M: api/mh.md
+      - Darcy in two dimensions: api/darcy.md
+      - Darcy in three dimensions: api/darcy3d.md
+      - Flux reconstruction and error estimation: api/reconstruction.md
+      - Adaptive scalar and elasticity indicators: api/adaptivity.md
+      - Stokes, Brinkman and Oseen: api/flow.md
+      - Elasticity: api/elasticity.md
+      - Transport, reaction and diffusion: api/transport.md
+      - Finite element bases: api/elements.md
+      - Helmholtz and Maxwell: api/waves.md
+      - Solvers and execution backends: api/backends.md
+  - Roadmap: roadmap.md
+  - Development: development.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            docstring_style: numpy
+            show_source: true
+            show_signature_annotations: true
+            members_order: source
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js
+  - javascripts/figures.js
+
+extra_css:
+  - stylesheets/extra.css

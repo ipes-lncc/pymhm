@@ -1,0 +1,403 @@
+{
+  "source_profile_record_sha256": "8203c14522804ac0446ef1f40c087373bde9fafa40f1a7b873965816ebd429d0",
+  "comparison": "Visible raster pressure at y=1/2; RMS over available image columns, not a volume norm. Both incident y sides retained. No numerical amplitude scaling.",
+  "uncertainty": "Printed line spans plus one vertical pixel; numerical pressure range at x and x\u00b1one horizontal pixel. Occluded profile colours are excluded.",
+  "rows": [
+    {
+      "name": "figure-7-reference-n128",
+      "figure": 7,
+      "archive_sha256": "deb9fed6532ac5ffc2a502dd023c8d063039bee82bff1ac05d20002be3d6867e",
+      "method": "Classical P1",
+      "local_refinement": null,
+      "Gamma_segments": null,
+      "Lambda_segments": null,
+      "estimates": [
+        {
+          "incident_y_side": 1,
+          "visible_column_count": 466,
+          "rms_difference_to_raster_centre": 0.0003133436298334917,
+          "maximum_difference_to_raster_centre": 0.0010710051372685003,
+          "fraction_intersecting_raster_envelope": 0.4227467811158798,
+          "maximum_distance_outside_raster_envelope": 0.0008676415361388327,
+          "sampled_pressure_range": [
+            0.0016333217858084228,
+            0.016818087157213127
+          ]
+        }
+      ]
+    },
+    {
+      "name": "figure-7-n8",
+      "figure": 7,
+      "archive_sha256": "d7a27db441261b174c73a947817c4efdb96472cd847af438dc3d3159ee48ce87",
+      "method": "MHM",
+      "local_refinement": 8,
+      "Gamma_segments": null,
+      "Lambda_segments": 1,
+      "estimates": [
+        {
+          "incident_y_side": -1,
+          "visible_column_count": 208,
+          "rms_difference_to_raster_centre": 0.0006616936487335061,
+          "maximum_difference_to_raster_centre": 0.0015990048567284618,
+          "fraction_intersecting_raster_envelope": 0.07692307692307693,
+          "maximum_distance_outside_raster_envelope": 0.001407518465097556,
+          "sampled_pressure_range": [
+            0.007263048209591894,
+            0.01836729007220761
+          ]
+        },
+        {
+          "incident_y_side": 1,
+          "visible_column_count": 208,
+          "rms_difference_to_raster_centre": 0.0006301825566699978,
+          "maximum_difference_to_raster_centre": 0.001262578886270108,
+          "fraction_intersecting_raster_envelope": 0.057692307692307696,
+          "maximum_distance_outside_raster_envelope": 0.001098623754208829,
+          "sampled_pressure_range": [
+            0.006429728806037585,
+            0.018087800927393802
+          ]
+        }
+      ]
+    },
+    {
+      "name": "figure-7-n16",
+      "figure": 7,
+      "archive_sha256": "db9c139ae7573cc772249a59ecd7b54b435d25df3f6fd20e62f13c027afbdfbc",
+      "method": "MHM",
+      "local_refinement": 8,
+      "Gamma_segments": null,
+      "Lambda_segments": 1,
+      "estimates": [
+        {
+          "incident_y_side": -1,
+          "visible_column_count": 440,
+          "rms_difference_to_raster_centre": 0.0006440567894696575,
+          "maximum_difference_to_raster_centre": 0.0023021796894701846,
+          "fraction_intersecting_raster_envelope": 0.17954545454545454,
+          "maximum_distance_outside_raster_envelope": 0.0019056513585911541,
+          "sampled_pressure_range": [
+            -0.001400737381777877,
+            0.02031482671134358
+          ]
+        },
+        {
+          "incident_y_side": 1,
+          "visible_column_count": 440,
+          "rms_difference_to_raster_centre": 0.0005509605148558451,
+          "maximum_difference_to_raster_centre": 0.001362627642649418,
+          "fraction_intersecting_raster_envelope": 0.2431818181818182,
+          "maximum_distance_outside_raster_envelope": 0.0010173042442973928,
+          "sampled_pressure_range": [
+            -0.00046118533495711014,
+            0.020168920412905942
+          ]
+        }
+      ]
+    },
+    {
+      "name": "figure-7-n30",
+      "figure": 7,
+      "archive_sha256": "7cf8094f66b5e67f201aa0d2df47feb6ea99b8fc6c3927ad2095f61c0ab23785",
+      "method": "MHM",
+      "local_refinement": 8,
+      "Gamma_segments": null,
+      "Lambda_segments": 1,
+      "estimates": [
+        {
+          "incident_y_side": -1,
+          "visible_column_count": 486,
+          "rms_difference_to_raster_centre": 0.0004478376559331062,
+          "maximum_difference_to_raster_centre": 0.0016073469041013202,
+          "fraction_intersecting_raster_envelope": 0.5617283950617284,
+          "maximum_distance_outside_raster_envelope": 0.001391074574249478,
+          "sampled_pressure_range": [
+            0.0013690395822466403,
+            0.020104453263634785
+          ]
+        },
+        {
+          "incident_y_side": 1,
+          "visible_column_count": 486,
+          "rms_difference_to_raster_centre": 0.00048204395140002385,
+          "maximum_difference_to_raster_centre": 0.0019239347127410632,
+          "fraction_intersecting_raster_envelope": 0.5390946502057613,
+          "maximum_distance_outside_raster_envelope": 0.0013537636026836881,
+          "sampled_pressure_range": [
+            0.0013915780993426965,
+            0.020090426865512608
+          ]
+        }
+      ]
+    },
+    {
+      "name": "figure-7-n50",
+      "figure": 7,
+      "archive_sha256": "f771a12e91364f7cfbd7588a870733874f41a4035aefed6fc20cadd57b2578a0",
+      "method": "MHM",
+      "local_refinement": 8,
+      "Gamma_segments": null,
+      "Lambda_segments": 1,
+      "estimates": [
+        {
+          "incident_y_side": -1,
+          "visible_column_count": 484,
+          "rms_difference_to_raster_centre": 0.00039048132461613115,
+          "maximum_difference_to_raster_centre": 0.0014073266069184113,
+          "fraction_intersecting_raster_envelope": 0.3285123966942149,
+          "maximum_distance_outside_raster_envelope": 0.0011648973765623091,
+          "sampled_pressure_range": [
+            0.0011156467566435589,
+            0.019085045190058707
+          ]
+        },
+        {
+          "incident_y_side": 1,
+          "visible_column_count": 484,
+          "rms_difference_to_raster_centre": 0.0003890386345626869,
+          "maximum_difference_to_raster_centre": 0.0013769466103249765,
+          "fraction_intersecting_raster_envelope": 0.3512396694214876,
+          "maximum_distance_outside_raster_envelope": 0.001180106966174655,
+          "sampled_pressure_range": [
+            0.001187361738913346,
+            0.019052956039176935
+          ]
+        }
+      ]
+    },
+    {
+      "name": "figure-7-n60",
+      "figure": 7,
+      "archive_sha256": "095800042f0cb93f475d372eb01fe5e59e5fd31ee0f22aec51e47f7831228d74",
+      "method": "MHM",
+      "local_refinement": 8,
+      "Gamma_segments": null,
+      "Lambda_segments": 1,
+      "estimates": [
+        {
+          "incident_y_side": -1,
+          "visible_column_count": 538,
+          "rms_difference_to_raster_centre": 0.0006445367838748424,
+          "maximum_difference_to_raster_centre": 0.0012217137333411076,
+          "fraction_intersecting_raster_envelope": 0.21189591078066913,
+          "maximum_distance_outside_raster_envelope": 0.0009809445850323876,
+          "sampled_pressure_range": [
+            0.0004611007806540185,
+            0.018729115128638864
+          ]
+        },
+        {
+          "incident_y_side": 1,
+          "visible_column_count": 538,
+          "rms_difference_to_raster_centre": 0.0006437882569705056,
+          "maximum_difference_to_raster_centre": 0.0012286092420701472,
+          "fraction_intersecting_raster_envelope": 0.21189591078066913,
+          "maximum_distance_outside_raster_envelope": 0.0009789154023901615,
+          "sampled_pressure_range": [
+            0.00043495092741943566,
+            0.01870527270458426
+          ]
+        }
+      ]
+    },
+    {
+      "name": "figure-8-reference-n128",
+      "figure": 8,
+      "archive_sha256": "deb9fed6532ac5ffc2a502dd023c8d063039bee82bff1ac05d20002be3d6867e",
+      "method": "Classical P1",
+      "local_refinement": null,
+      "Gamma_segments": null,
+      "Lambda_segments": null,
+      "estimates": [
+        {
+          "incident_y_side": 1,
+          "visible_column_count": 314,
+          "rms_difference_to_raster_centre": 0.00017810916576915518,
+          "maximum_difference_to_raster_centre": 0.0006087514161484796,
+          "fraction_intersecting_raster_envelope": 0.3503184713375796,
+          "maximum_distance_outside_raster_envelope": 0.0004908380905349567,
+          "sampled_pressure_range": [
+            0.007189189673742803,
+            0.016818376067981974
+          ]
+        }
+      ]
+    },
+    {
+      "name": "figure-8-n16",
+      "figure": 8,
+      "archive_sha256": "f167304da64508be79a3c8f2d3ef5bf96c81f0d986df4fe8b4be9665be481f0a",
+      "method": "MH2M",
+      "local_refinement": 8,
+      "Gamma_segments": 1,
+      "Lambda_segments": 8,
+      "estimates": [
+        {
+          "incident_y_side": -1,
+          "visible_column_count": 643,
+          "rms_difference_to_raster_centre": 0.0032536056813078865,
+          "maximum_difference_to_raster_centre": 0.004431145643309334,
+          "fraction_intersecting_raster_envelope": 0.0,
+          "maximum_distance_outside_raster_envelope": 0.004322455977724786,
+          "sampled_pressure_range": [
+            0.00022427056349929534,
+            0.015128387839254562
+          ]
+        },
+        {
+          "incident_y_side": 1,
+          "visible_column_count": 643,
+          "rms_difference_to_raster_centre": 0.003253614143504654,
+          "maximum_difference_to_raster_centre": 0.004429227850048343,
+          "fraction_intersecting_raster_envelope": 0.0,
+          "maximum_distance_outside_raster_envelope": 0.004320397021013297,
+          "sampled_pressure_range": [
+            0.00022443534917772318,
+            0.015128348645484383
+          ]
+        }
+      ]
+    },
+    {
+      "name": "figure-8-n34",
+      "figure": 8,
+      "archive_sha256": "0ec4a7a3141607bb95c17d6d1cf9a952619b34ca5aae82b0a88d2b0105a5282a",
+      "method": "MH2M",
+      "local_refinement": 8,
+      "Gamma_segments": 1,
+      "Lambda_segments": 8,
+      "estimates": [
+        {
+          "incident_y_side": -1,
+          "visible_column_count": 587,
+          "rms_difference_to_raster_centre": 0.002016808631021567,
+          "maximum_difference_to_raster_centre": 0.002663200077418871,
+          "fraction_intersecting_raster_envelope": 0.034071550255536626,
+          "maximum_distance_outside_raster_envelope": 0.0025830397567775856,
+          "sampled_pressure_range": [
+            0.000400348784479616,
+            0.015451253509232248
+          ]
+        },
+        {
+          "incident_y_side": 1,
+          "visible_column_count": 587,
+          "rms_difference_to_raster_centre": 0.0020168099265993693,
+          "maximum_difference_to_raster_centre": 0.002663212574808912,
+          "fraction_intersecting_raster_envelope": 0.034071550255536626,
+          "maximum_distance_outside_raster_envelope": 0.002583052254167627,
+          "sampled_pressure_range": [
+            0.00040045820172120037,
+            0.015451231108918953
+          ]
+        }
+      ]
+    },
+    {
+      "name": "figure-8-n65",
+      "figure": 8,
+      "archive_sha256": "60f293d81e7b4bcecad4f110ee3cb7df49951cbb301642561b75c36082d5982e",
+      "method": "MH2M",
+      "local_refinement": 8,
+      "Gamma_segments": 1,
+      "Lambda_segments": 8,
+      "estimates": [
+        {
+          "incident_y_side": -1,
+          "visible_column_count": 571,
+          "rms_difference_to_raster_centre": 0.0010525645774211855,
+          "maximum_difference_to_raster_centre": 0.0015133897200231578,
+          "fraction_intersecting_raster_envelope": 0.024518388791593695,
+          "maximum_distance_outside_raster_envelope": 0.0013931492390612341,
+          "sampled_pressure_range": [
+            0.0018530188391380226,
+            0.01627544164769942
+          ]
+        },
+        {
+          "incident_y_side": 1,
+          "visible_column_count": 571,
+          "rms_difference_to_raster_centre": 0.0010525645774211855,
+          "maximum_difference_to_raster_centre": 0.0015133897200231578,
+          "fraction_intersecting_raster_envelope": 0.024518388791593695,
+          "maximum_distance_outside_raster_envelope": 0.0013931492390612341,
+          "sampled_pressure_range": [
+            0.0018530188391380226,
+            0.01627544164769942
+          ]
+        }
+      ]
+    },
+    {
+      "name": "figure-8-n80",
+      "figure": 8,
+      "archive_sha256": "dc2a4778fe629bdad6b5aa4b9c1c5b8c8e8c4c4874b93dcf0d7bddfdb8b01ffe",
+      "method": "MH2M",
+      "local_refinement": 8,
+      "Gamma_segments": 1,
+      "Lambda_segments": 8,
+      "estimates": [
+        {
+          "incident_y_side": -1,
+          "visible_column_count": 17,
+          "rms_difference_to_raster_centre": 0.0005052993365557657,
+          "maximum_difference_to_raster_centre": 0.0007713635576163808,
+          "fraction_intersecting_raster_envelope": 0.0,
+          "maximum_distance_outside_raster_envelope": 0.0006787380419688589,
+          "sampled_pressure_range": [
+            0.012174528225950753,
+            0.01650457337939072
+          ]
+        },
+        {
+          "incident_y_side": 1,
+          "visible_column_count": 17,
+          "rms_difference_to_raster_centre": 0.0005052942506510648,
+          "maximum_difference_to_raster_centre": 0.0007713416584020916,
+          "fraction_intersecting_raster_envelope": 0.0,
+          "maximum_distance_outside_raster_envelope": 0.0006787434765647242,
+          "sampled_pressure_range": [
+            0.012174550125165043,
+            0.016504573469419522
+          ]
+        }
+      ]
+    },
+    {
+      "name": "figure-8-n100",
+      "figure": 8,
+      "archive_sha256": "5f54a7216421ea8b2fa27b7b95330e418dc605997bc2b7150a6041f9cad5787e",
+      "method": "MH2M",
+      "local_refinement": 8,
+      "Gamma_segments": 1,
+      "Lambda_segments": 8,
+      "estimates": [
+        {
+          "incident_y_side": -1,
+          "visible_column_count": 701,
+          "rms_difference_to_raster_centre": 0.00046165719610727514,
+          "maximum_difference_to_raster_centre": 0.0011882638689970654,
+          "fraction_intersecting_raster_envelope": 0.14122681883024252,
+          "maximum_distance_outside_raster_envelope": 0.0010469577467335854,
+          "sampled_pressure_range": [
+            0.00029576882967556563,
+            0.016707083467901687
+          ]
+        },
+        {
+          "incident_y_side": 1,
+          "visible_column_count": 701,
+          "rms_difference_to_raster_centre": 0.00046165698021735435,
+          "maximum_difference_to_raster_centre": 0.001188290096388698,
+          "fraction_intersecting_raster_envelope": 0.14122681883024252,
+          "maximum_distance_outside_raster_envelope": 0.0010469626304254968,
+          "sampled_pressure_range": [
+            0.00029576256330189317,
+            0.016707081615710016
+          ]
+        }
+      ]
+    }
+  ]
+}

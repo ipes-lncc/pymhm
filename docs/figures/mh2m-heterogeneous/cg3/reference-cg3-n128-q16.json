@@ -1,0 +1,43 @@
+{
+  "resolution": 128,
+  "degree": 3,
+  "dofs": 148225,
+  "triangles": 32768,
+  "quadrature_degree": 16,
+  "relative_equation_residual": 3.70621785619029e-12,
+  "residual_accumulation": "extended CSR action on the stored binary64 coefficients",
+  "binary64_matrix_action_residual": 6.840690292940339e-12,
+  "refinement_residuals": [
+    1.1875572084038177e-11,
+    3.714873971935926e-12,
+    3.70621785619029e-12
+  ],
+  "native_replay_pressure_linf": 6.938893903907228e-18,
+  "native_replay_gradient_linf": 4.2309905579074325e-15,
+  "energy": 0.0060901760712891075,
+  "source_work": 0.006090176071289049,
+  "homogeneous_dirichlet": true,
+  "relative_energy_work_defect": 9.542127479562706e-15,
+  "native_material_difference_linf": 3.623767952376511e-13,
+  "solver": "PETSc/MUMPS Cholesky",
+  "versions": {
+    "dolfinx": "0.9.0",
+    "basix": "0.9.0",
+    "petsc": [
+      3,
+      23,
+      0
+    ]
+  },
+  "elapsed_seconds": 2.595378633006476,
+  "method": "Classical conforming P3, independently assembled by UFL/DOLFINx",
+  "gamma": 1.8,
+  "epsilon": "1/14",
+  "source": "-2*x*(x-1)-2*y*(y-1)",
+  "boundary": "homogeneous Dirichlet",
+  "diagonal": "SW-NE",
+  "archive": "reference-cg3-n128-q16.npz",
+  "archive_sha256": "fe0d3a41e6f6eec5e086b5c2671f50f9096943cf55411d59fe0fc2d4358e536e",
+  "acquisition_source_sha256": "fcc60c95c2e7f4b6434b2af08e4bd003ce0414fb3ff63b816592332ff2a6c29f",
+  "source_changed_during_run": false
+}

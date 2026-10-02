@@ -1,0 +1,24 @@
+{
+  "method": "pointwise-2017; geometric material intersections",
+  "norm": "physical broken L2, exact consistent P3 fine-element mass integrated with Duffy order5",
+  "rows": [
+    {
+      "lower": "flow-layer1-n6x11-p3-r10-s10-q5-pointwise-2017.npz",
+      "higher": "flow-layer1-n6x11-p3-r10-s10-q8-pointwise-2017.npz",
+      "lower_sha256": "f632da64f1f907f68fe462dd87a094f057cebb554af13f971a8aa6520dce4835",
+      "higher_sha256": "28d164cfa6efaf32884f260e77e848e4f088423a0468c0e417c8e3d6daf00503",
+      "velocity": {
+        "lower_l2": 2635.943441717051,
+        "higher_l2": 2635.9434417008733,
+        "difference_l2": 4.874116286001686e-08,
+        "relative_to_higher": 1.8490974460577218e-11
+      },
+      "pressure": {
+        "lower_l2": 281431.1391297584,
+        "higher_l2": 281431.1391276826,
+        "difference_l2": 2.0867395324152246e-06,
+        "relative_to_higher": 7.414742870612093e-12
+      }
+    }
+  ]
+}

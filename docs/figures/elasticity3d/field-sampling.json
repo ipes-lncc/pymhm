@@ -1,0 +1,26 @@
+[
+  {
+    "archive": "anisotropic-p2.npz",
+    "archive_sha256": "4c41863ce3f4c81f8d0e945ff883c5fac01688de9d49862f69382e9285d2f19e",
+    "degree": 2,
+    "height": 0.375,
+    "display_refinement": 6,
+    "display_points": 23800,
+    "display_triangles": 30600,
+    "displacement_sample_error_max": 0.23676175732720298,
+    "stress_sample_error_max": 76.52815177392726,
+    "norm_definition": "Display sample maxima; physical L2 volume errors remain in the acquisition records."
+  },
+  {
+    "archive": "anisotropic-p3.npz",
+    "archive_sha256": "5aeaf7ce9649959ce39448580dcaf98d3f4c1c47ae99c2f3bfb2ba70a5111ae1",
+    "degree": 3,
+    "height": 0.375,
+    "display_refinement": 6,
+    "display_points": 5600,
+    "display_triangles": 7200,
+    "displacement_sample_error_max": 0.2588546562132909,
+    "stress_sample_error_max": 77.2255369228215,
+    "norm_definition": "Display sample maxima; physical L2 volume errors remain in the acquisition records."
+  }
+]

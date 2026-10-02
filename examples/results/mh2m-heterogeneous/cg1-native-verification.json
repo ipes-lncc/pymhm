@@ -1,0 +1,473 @@
+{
+  "method": "Independent DOLFINx0.9.0/UFL2024.2.0 P1 assembly, PETSc3.23.0/MUMPS Cholesky",
+  "scope": "Verification of the same discrete operator and complete coefficients; no historical field equivalence inferred. Duffy8 physical-cell coefficient averages preserve the original P1 stiffness under native vertex permutations. Physical flux retains pointwise permeability. Original acquisition metadata is preserved separately.",
+  "native_assembly_sha256": "78f747a3db3ab1d4d18a0045c3ccaaeedc1c84869ed71044118ad34356213b6b",
+  "native_report_sha256": "34ce09bb8be53033d2824798a0968b3afc420b4821f1a4014bf8fea281b1b40c",
+  "comparison_sources": {
+    "compare.py": "452ce6651db4785279392cbb74bcd1e6a92a03601e32a0ccce078f68a2a79e10",
+    "mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3"
+  },
+  "nonhomogeneous_affine_patch": {
+    "n": 4,
+    "epsilon": "1/14",
+    "degree": 1,
+    "dofs": 25,
+    "triangles": 32,
+    "quadrature": "Original canonical physical-cell Duffy8 coefficient average; exact P1 gradient and polynomial load integration by UFL",
+    "relative_equation_residual": 2.774568077542062e-16,
+    "refinement_residuals": [
+      2.774568077542062e-16
+    ],
+    "native_replay_pressure_linf": 8.881784197001252e-16,
+    "native_replay_gradient_linf": 0.0,
+    "solver": "DOLFINx/UFL0.9.0; PETSc/MUMPS Cholesky",
+    "seconds": 0.03121352195739746,
+    "patch_pressure_linf": 8.881784197001252e-16,
+    "patch_gradient_linf": 3.552713678800501e-15
+  },
+  "fields": [
+    {
+      "n": 32,
+      "epsilon": "1/14",
+      "native_archive_sha256": "78be83202c57075a6cd66fad66061978d556a864fd66dd889dddc928e8899481",
+      "native_equation_residual": 2.7618424895255083e-14,
+      "native_replay_pressure_linf": 1.734723475976807e-18,
+      "native_replay_gradient_linf": 0.0,
+      "archive": "reference-n32.npz",
+      "archive_sha256": "7b241296522b600c0dd06047d0c53de5acc6a1a7c438ff78e4930bca0dd27e61",
+      "pressure_coefficient_linf": 9.194034422677078e-17,
+      "gradient_component_linf": 7.771561172376096e-16,
+      "pressure_l2_relative": 4.030830407038049e-15,
+      "gradient_l2_relative": 6.17806156025116e-15
+    },
+    {
+      "n": 64,
+      "epsilon": "1/14",
+      "native_archive_sha256": "e94055c161b0246809f84afb154c809ecf30d22eaaeeef4d70280d2ec3ec86e2",
+      "native_equation_residual": 1.3541747507832392e-13,
+      "native_replay_pressure_linf": 3.469446951953614e-18,
+      "native_replay_gradient_linf": 0.0,
+      "archive": "reference-n64.npz",
+      "archive_sha256": "5a9cb8bdca0d9d55ec0898ada5fe8af0f42f4159f4daa40d904545f59bcd7ce5",
+      "pressure_coefficient_linf": 1.196959198423997e-16,
+      "gradient_component_linf": 2.3314683517128287e-15,
+      "pressure_l2_relative": 4.576536138659726e-15,
+      "gradient_l2_relative": 1.346863615360565e-14
+    },
+    {
+      "n": 128,
+      "epsilon": "1/14",
+      "native_archive_sha256": "d3a52021a1896c657cbb16d5ae4fd1713c3724cd5a7567c4e2f5cc6a932f6aa4",
+      "native_equation_residual": 6.372054489245097e-13,
+      "native_replay_pressure_linf": 3.469446951953614e-18,
+      "native_replay_gradient_linf": 0.0,
+      "archive": "reference-n128.npz",
+      "archive_sha256": "deb9fed6532ac5ffc2a502dd023c8d063039bee82bff1ac05d20002be3d6867e",
+      "pressure_coefficient_linf": 2.185751579730777e-16,
+      "gradient_component_linf": 5.773159728050814e-15,
+      "pressure_l2_relative": 6.232014368461974e-15,
+      "gradient_l2_relative": 2.4608065747208166e-14
+    },
+    {
+      "n": 256,
+      "epsilon": "1/14",
+      "native_archive_sha256": "04264f2702b41c63ba38c7fcc23dfde7c84909795f2da2dbca1dd0f0eedeb862",
+      "native_equation_residual": 1.0223989619314468e-12,
+      "native_replay_pressure_linf": 3.469446951953614e-18,
+      "native_replay_gradient_linf": 0.0,
+      "archive": "reference-n256.npz",
+      "archive_sha256": "5104e735b73d30fbee6f1d3cd92301320d561ee0e7fcd6b80fd2ccf37ff10e07",
+      "pressure_coefficient_linf": 5.412337245047638e-16,
+      "gradient_component_linf": 1.4210854715202004e-14,
+      "pressure_l2_relative": 1.2438031434811944e-14,
+      "gradient_l2_relative": 5.3527488851373245e-14
+    },
+    {
+      "n": 512,
+      "epsilon": "1/14",
+      "native_archive_sha256": "f8d4acbc465b8080eaf9059e28773e3643c49f4cb548a3aac568e7d1c17a4c19",
+      "native_equation_residual": 4.277017535452387e-12,
+      "native_replay_pressure_linf": 3.469446951953614e-18,
+      "native_replay_gradient_linf": 0.0,
+      "archive": "reference-n512.npz",
+      "archive_sha256": "2d5ebddb78778b58c27f902dc401e47300095884e7731ba84d24aded5d65b2a5",
+      "pressure_coefficient_linf": 2.1788126858268697e-15,
+      "gradient_component_linf": 3.552713678800501e-14,
+      "pressure_l2_relative": 7.123431375077419e-14,
+      "gradient_l2_relative": 1.3631180558983286e-13
+    },
+    {
+      "n": 1024,
+      "epsilon": "1/14",
+      "native_archive_sha256": "d234246c5e9933ac6d0bff947d354cd3cd5d7fb310b5cb77af897a008725ff80",
+      "native_equation_residual": 1.714654684995375e-11,
+      "native_replay_pressure_linf": 3.469446951953614e-18,
+      "native_replay_gradient_linf": 0.0,
+      "archive": "reference-n1024.npz",
+      "archive_sha256": "2a9c862fafcb94d8724d21b1ae599af09a216eb60bb4729eb3f21dc481fa11c5",
+      "pressure_coefficient_linf": 8.670147932932082e-15,
+      "gradient_component_linf": 7.460698725481052e-14,
+      "pressure_l2_relative": 3.8072573594711526e-13,
+      "gradient_l2_relative": 4.4163180282271596e-13
+    }
+  ],
+  "documented_data_controls": [
+    {
+      "n": 128,
+      "epsilon": "1/14",
+      "native_archive_sha256": "d3a52021a1896c657cbb16d5ae4fd1713c3724cd5a7567c4e2f5cc6a932f6aa4",
+      "native_equation_residual": 6.372054489245097e-13,
+      "native_replay_pressure_linf": 3.469446951953614e-18,
+      "native_replay_gradient_linf": 0.0,
+      "archive": "reference-n128.npz",
+      "archive_sha256": "deb9fed6532ac5ffc2a502dd023c8d063039bee82bff1ac05d20002be3d6867e",
+      "pressure_coefficient_linf": 2.185751579730777e-16,
+      "gradient_component_linf": 5.773159728050814e-15,
+      "pressure_l2_relative": 6.232014368461974e-15,
+      "gradient_l2_relative": 2.4608065747208166e-14,
+      "raster_comparisons": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "columns_with_intersecting_envelopes": 197,
+          "maximum_vertical_separation": 0.0008676415361389038,
+          "rms_centre_difference": 0.0003133436298335333,
+          "x_pixel_uncertainty": 0.001838235294117647,
+          "pressure_pixel_uncertainty": 6.009615384615385e-05
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "columns_with_intersecting_envelopes": 110,
+          "maximum_vertical_separation": 0.0004908380905350868,
+          "rms_centre_difference": 0.0001781091657691985,
+          "x_pixel_uncertainty": 0.0014144271570014145,
+          "pressure_pixel_uncertainty": 4.0080160320641287e-05
+        }
+      ],
+      "pressure_max": 0.016818398529032493
+    },
+    {
+      "n": 128,
+      "epsilon": "1/17",
+      "native_archive_sha256": "9544396eff56efe87a144b6f7abbe769f75a7ef598aff8b1ca435060b0354220",
+      "native_equation_residual": 6.15442499848338e-13,
+      "native_replay_pressure_linf": 3.469446951953614e-18,
+      "native_replay_gradient_linf": 3.469446951953614e-18,
+      "raster_comparisons": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "columns_with_intersecting_envelopes": 89,
+          "maximum_vertical_separation": 0.0006996224219363092,
+          "rms_centre_difference": 0.0003390977320736758,
+          "x_pixel_uncertainty": 0.001838235294117647,
+          "pressure_pixel_uncertainty": 6.009615384615385e-05
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "columns_with_intersecting_envelopes": 33,
+          "maximum_vertical_separation": 0.0004918303309104557,
+          "rms_centre_difference": 0.00023151154010119494,
+          "x_pixel_uncertainty": 0.0014144271570014145,
+          "pressure_pixel_uncertainty": 4.0080160320641287e-05
+        }
+      ],
+      "pressure_max": 0.016667951688395154
+    },
+    {
+      "n": 130,
+      "epsilon": "1/14",
+      "native_archive_sha256": "55ade7388c78a811131b2860e55eab02f613d4496607d6e831f9e38852436b88",
+      "native_equation_residual": 6.785072191462742e-13,
+      "native_replay_pressure_linf": 1.2088854223213374e-17,
+      "native_replay_gradient_linf": 6.938893903907228e-16,
+      "raster_comparisons": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "columns_with_intersecting_envelopes": 206,
+          "maximum_vertical_separation": 0.0008740591560960822,
+          "rms_centre_difference": 0.00031092378107840357,
+          "x_pixel_uncertainty": 0.001838235294117647,
+          "pressure_pixel_uncertainty": 6.009615384615385e-05
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "columns_with_intersecting_envelopes": 118,
+          "maximum_vertical_separation": 0.0004907311206697896,
+          "rms_centre_difference": 0.00017821409150439764,
+          "x_pixel_uncertainty": 0.0014144271570014145,
+          "pressure_pixel_uncertainty": 4.0080160320641287e-05
+        }
+      ],
+      "pressure_max": 0.01682755852863585
+    },
+    {
+      "n": 130,
+      "epsilon": "1/17",
+      "native_archive_sha256": "c7ca018339f0b894874717b78b7d1dfc204f650f928c2b80532a585f9f5a7f8c",
+      "native_equation_residual": 6.53129350097539e-13,
+      "native_replay_pressure_linf": 1.089623183347932e-17,
+      "native_replay_gradient_linf": 7.771561172376096e-16,
+      "raster_comparisons": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "columns_with_intersecting_envelopes": 93,
+          "maximum_vertical_separation": 0.0006867642218281091,
+          "rms_centre_difference": 0.0003321681457497745,
+          "x_pixel_uncertainty": 0.001838235294117647,
+          "pressure_pixel_uncertainty": 6.009615384615385e-05
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "columns_with_intersecting_envelopes": 38,
+          "maximum_vertical_separation": 0.0004627146772174084,
+          "rms_centre_difference": 0.00022152732292900603,
+          "x_pixel_uncertainty": 0.0014144271570014145,
+          "pressure_pixel_uncertainty": 4.0080160320641287e-05
+        }
+      ],
+      "pressure_max": 0.016680528871448597
+    }
+  ],
+  "quadrature_controls": [
+    {
+      "rule": "duffy-1",
+      "archive_sha256": "cf4b6c713cab54878f8eeb04e8f093272636d68f278fb063fb5af7d77b950f5f",
+      "pressure_max": 0.016987108017838013,
+      "raster_comparisons": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "columns_with_intersecting_envelopes": 271,
+          "maximum_vertical_separation": 0.0007973969669054582,
+          "rms_centre_difference": 0.00027108321918993284,
+          "x_pixel_uncertainty": 0.001838235294117647,
+          "pressure_pixel_uncertainty": 6.009615384615385e-05
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "columns_with_intersecting_envelopes": 88,
+          "maximum_vertical_separation": 0.0005270365307685146,
+          "rms_centre_difference": 0.00018958616761724896,
+          "x_pixel_uncertainty": 0.0014144271570014145,
+          "pressure_pixel_uncertainty": 4.0080160320641287e-05
+        }
+      ]
+    },
+    {
+      "rule": "duffy-2",
+      "archive_sha256": "64d61f18e8c7f513ce786d26062efad62c7ec36a3cc8ee83489f92cda9613854",
+      "pressure_max": 0.016821097836575292,
+      "raster_comparisons": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "columns_with_intersecting_envelopes": 197,
+          "maximum_vertical_separation": 0.000862038512186092,
+          "rms_centre_difference": 0.00031236437019508155,
+          "x_pixel_uncertainty": 0.001838235294117647,
+          "pressure_pixel_uncertainty": 6.009615384615385e-05
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "columns_with_intersecting_envelopes": 113,
+          "maximum_vertical_separation": 0.0004868405862698804,
+          "rms_centre_difference": 0.00017725431254347106,
+          "x_pixel_uncertainty": 0.0014144271570014145,
+          "pressure_pixel_uncertainty": 4.0080160320641287e-05
+        }
+      ]
+    },
+    {
+      "rule": "duffy-3",
+      "archive_sha256": "1126d74fa23d4ab3d5b3247dbecb677bd5ecb8f4c5fcb3c4f81066f9d3651bbd",
+      "pressure_max": 0.0168180825106647,
+      "raster_comparisons": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "columns_with_intersecting_envelopes": 197,
+          "maximum_vertical_separation": 0.0008684187099883564,
+          "rms_centre_difference": 0.00031347875040029644,
+          "x_pixel_uncertainty": 0.001838235294117647,
+          "pressure_pixel_uncertainty": 6.009615384615385e-05
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "columns_with_intersecting_envelopes": 110,
+          "maximum_vertical_separation": 0.0004914509547321224,
+          "rms_centre_difference": 0.00017819771633170224,
+          "x_pixel_uncertainty": 0.0014144271570014145,
+          "pressure_pixel_uncertainty": 4.0080160320641287e-05
+        }
+      ]
+    },
+    {
+      "rule": "duffy-4",
+      "archive_sha256": "74047a3abf57638a69a858ef8e0f9bda67600c191d092ae9a6b90d489522382d",
+      "pressure_max": 0.016818413492693904,
+      "raster_comparisons": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "columns_with_intersecting_envelopes": 197,
+          "maximum_vertical_separation": 0.000867601700067216,
+          "rms_centre_difference": 0.000313338434385879,
+          "x_pixel_uncertainty": 0.001838235294117647,
+          "pressure_pixel_uncertainty": 6.009615384615385e-05
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "columns_with_intersecting_envelopes": 110,
+          "maximum_vertical_separation": 0.0004908116749949027,
+          "rms_centre_difference": 0.0001781068192554667,
+          "x_pixel_uncertainty": 0.0014144271570014145,
+          "pressure_pixel_uncertainty": 4.0080160320641287e-05
+        }
+      ]
+    },
+    {
+      "rule": "duffy-6",
+      "archive_sha256": "56c48a3b268d04f3531f7cbc069209d03a03a7211dd7cc6bd52b7ac3a8816424",
+      "pressure_max": 0.016818398512719095,
+      "raster_comparisons": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "columns_with_intersecting_envelopes": 197,
+          "maximum_vertical_separation": 0.0008676413529783164,
+          "rms_centre_difference": 0.0003133436156552165,
+          "x_pixel_uncertainty": 0.001838235294117647,
+          "pressure_pixel_uncertainty": 6.009615384615385e-05
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "columns_with_intersecting_envelopes": 110,
+          "maximum_vertical_separation": 0.0004908380543780337,
+          "rms_centre_difference": 0.00017810916058520063,
+          "x_pixel_uncertainty": 0.0014144271570014145,
+          "pressure_pixel_uncertainty": 4.0080160320641287e-05
+        }
+      ]
+    },
+    {
+      "rule": "duffy-8",
+      "archive_sha256": "ca5a0735627ccafe66d2ddaee8c346638f1e820eefb63f64410f8b437a17ded7",
+      "pressure_max": 0.0168183985290327,
+      "raster_comparisons": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "columns_with_intersecting_envelopes": 197,
+          "maximum_vertical_separation": 0.0008676415361388093,
+          "rms_centre_difference": 0.0003133436298334573,
+          "x_pixel_uncertainty": 0.001838235294117647,
+          "pressure_pixel_uncertainty": 6.009615384615385e-05
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "columns_with_intersecting_envelopes": 110,
+          "maximum_vertical_separation": 0.0004908380905349272,
+          "rms_centre_difference": 0.00017810916576912225,
+          "x_pixel_uncertainty": 0.0014144271570014145,
+          "pressure_pixel_uncertainty": 4.0080160320641287e-05
+        }
+      ]
+    },
+    {
+      "rule": "duffy-14",
+      "archive_sha256": "f77f2d360dae13be4d85c2713ec491eb7ecf5787b5b302e670d86303f088bd87",
+      "pressure_max": 0.0168183985292736,
+      "raster_comparisons": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "columns_with_intersecting_envelopes": 197,
+          "maximum_vertical_separation": 0.0008676415363068788,
+          "rms_centre_difference": 0.0003133436295821768,
+          "x_pixel_uncertainty": 0.001838235294117647,
+          "pressure_pixel_uncertainty": 6.009615384615385e-05
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "columns_with_intersecting_envelopes": 110,
+          "maximum_vertical_separation": 0.0004908380886460718,
+          "rms_centre_difference": 0.0001781091655065736,
+          "x_pixel_uncertainty": 0.0014144271570014145,
+          "pressure_pixel_uncertainty": 4.0080160320641287e-05
+        }
+      ]
+    },
+    {
+      "rule": "centroid",
+      "archive_sha256": "f5f2d04c834ec00059653000c449e1bc3fc0016dd35d5a161a33982d56b2a040",
+      "pressure_max": 0.01699737569454595,
+      "raster_comparisons": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "columns_with_intersecting_envelopes": 257,
+          "maximum_vertical_separation": 0.0008138241598921463,
+          "rms_centre_difference": 0.00028060704824407783,
+          "x_pixel_uncertainty": 0.001838235294117647,
+          "pressure_pixel_uncertainty": 6.009615384615385e-05
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "columns_with_intersecting_envelopes": 80,
+          "maximum_vertical_separation": 0.0005396026214434096,
+          "rms_centre_difference": 0.0001949895465968728,
+          "x_pixel_uncertainty": 0.0014144271570014145,
+          "pressure_pixel_uncertainty": 4.0080160320641287e-05
+        }
+      ]
+    },
+    {
+      "rule": "vertex-mean",
+      "archive_sha256": "9676bdf5986107cfae9e5fb3f6ebdc3acc59fa8c24b3300e857fd0ef8e838c43",
+      "pressure_max": 0.016378000425538945,
+      "raster_comparisons": [
+        {
+          "figure": 7,
+          "visible_columns": 466,
+          "columns_with_intersecting_envelopes": 40,
+          "maximum_vertical_separation": 0.0010406267001989607,
+          "rms_centre_difference": 0.0005552104148993503,
+          "x_pixel_uncertainty": 0.001838235294117647,
+          "pressure_pixel_uncertainty": 6.009615384615385e-05
+        },
+        {
+          "figure": 8,
+          "visible_columns": 314,
+          "columns_with_intersecting_envelopes": 13,
+          "maximum_vertical_separation": 0.0008153153313564827,
+          "rms_centre_difference": 0.00048814895282500736,
+          "x_pixel_uncertainty": 0.0014144271570014145,
+          "pressure_pixel_uncertainty": 4.0080160320641287e-05
+        }
+      ]
+    }
+  ],
+  "raster_sha256": "8203c14522804ac0446ef1f40c087373bde9fafa40f1a7b873965816ebd429d0",
+  "source_changed_during_comparison": false,
+  "raster_envelope_method": "Exact P1 profile range over x plus or minus one raster pixel, intersected with visible pressure line-thickness range plus or minus one vertical raster pixel. Hidden overlapping curves are excluded.",
+  "historical_data_contract": {
+    "article": "n128 and epsilon1/14; gamma1.8 and polynomial source identified in the predecessor dissertation",
+    "dissertation_figure24": "n130 and epsilon1/17; separately labelled controls, not substituted for article data",
+    "inference": "None of the nine tested coefficient rules or four explicitly sourced n/epsilon combinations reconciles the complete visible reference curve with Figures7/8. This does not identify the unpublished historical assembly."
+  }
+}

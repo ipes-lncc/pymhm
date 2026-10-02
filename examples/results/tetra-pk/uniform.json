@@ -1,0 +1,321 @@
+{
+  "suite": "uniform",
+  "reference": "analytical",
+  "local_degree": 5,
+  "trace_degree": 2,
+  "reconstruction_degree": 2,
+  "spatial_dimension": 3,
+  "source_sha256": {
+    "src/pymhm/darcy3d.py": "6fd858b23e13ce0466c61efdfacb6c2b627df0c6bd8b63291716757c8bb4fbd2",
+    "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+    "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+    "src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+    "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+    "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+    "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+    "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+    "src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+    "src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+    "examples/solve_tetra_pk.py": "154364dce314278561c8218818ba78457b32bf3dd99bb91d799e1c6e6edfbfe9",
+    "examples/reconstruction3d_data.py": "7ae922c6c820a87b72cc20d5cec551ea4c491240dfe945ff052b71e9679f7ee0",
+    "examples/reconstruction3d_resolution.py": "6924eaf91a88dbdb0867398bd6a9e31439ccd481b7386a5664c3bdcf13764fa9"
+  },
+  "exact_norms": [
+    0.12165588888866401,
+    1.2583314573562385
+  ],
+  "workers": 4,
+  "native_threads_per_worker": 1,
+  "interpretation": "Original analytical Gaussian case, not a historical mesh reproduction. The L09 degree hypothesis is satisfied. Numerical quadrature is verified by two rules, not by interval certification. Continuous local test-space equilibrium does not impose one source balance on every fine tetrahedron. Uniform refinement and fixed-geometry trace controls are distinct studies.",
+  "rows": [
+    {
+      "name": "uniform-1",
+      "macro_cells": 6,
+      "trace_dofs": 108,
+      "fine_cells": 6,
+      "local_degree": 5,
+      "trace_degree": 2,
+      "reconstruction_degree": 2,
+      "local_refinement": 1,
+      "trace_subdivisions": 1,
+      "estimator_condition": "k >= ell + d: 5 = 2 + 3; ell <= m <= k: 2 <= 2 <= 5",
+      "assembly_order": 34,
+      "estimator_order": 34,
+      "error_orders": [
+        34,
+        38
+      ],
+      "pressure_l2": 0.06200690235414166,
+      "raw_flux_l2": 0.9395291959329267,
+      "rt_flux_l2": 1.1806069329166813,
+      "energy_error": 0.9395291959329267,
+      "pressure_relative": 0.5096909234775195,
+      "raw_flux_relative": 0.7466468317551902,
+      "rt_flux_relative": 0.9382320739220357,
+      "errors_by_order": [
+        [
+          0.062006902353890996,
+          0.939529195947081,
+          1.1806069329279494,
+          0.9395291959470807
+        ],
+        [
+          0.06200690235414166,
+          0.9395291959329267,
+          1.1806069329166813,
+          0.9395291959329267
+        ]
+      ],
+      "error_quadrature_change": 1.415423334094612e-11,
+      "indicator": 9.119875077493827,
+      "effectivity": 9.706856494691515,
+      "global_relative_residual": 6.501487418605908e-17,
+      "continuous_equilibrium": 2.3055217605398492e-14,
+      "normal_moments": 0.0,
+      "macro_balance": 1.083855227790309e-14,
+      "fine_balance": 4.98896118461397e-15,
+      "terms": {
+        "flux_defect": 0.917335144246851,
+        "nonconformity": 0.8029020490474886,
+        "divergence_defect": 2.5721776502296013e-14,
+        "oscillation": 8.183813738289643
+      },
+      "archive": "uniform-1.npz",
+      "archive_sha256": "ab6cc7bacdc6f688b546cef4c5a99936e89d6a66a7e7fe0fadcb63cf51ca29ca",
+      "basis_sha256": "3e908060a74c879ebbd8bd9940f17b46bb2397c96f2c536c9dd8a6a4eefd1481",
+      "elapsed_seconds": 68.76472218707204
+    },
+    {
+      "name": "uniform-2",
+      "macro_cells": 48,
+      "trace_dofs": 720,
+      "fine_cells": 48,
+      "local_degree": 5,
+      "trace_degree": 2,
+      "reconstruction_degree": 2,
+      "local_refinement": 1,
+      "trace_subdivisions": 1,
+      "estimator_condition": "k >= ell + d: 5 = 2 + 3; ell <= m <= k: 2 <= 2 <= 5",
+      "assembly_order": 18,
+      "estimator_order": 18,
+      "error_orders": [
+        18,
+        22
+      ],
+      "pressure_l2": 0.013520209156671358,
+      "raw_flux_l2": 0.3323374743634703,
+      "rt_flux_l2": 0.5402915336151605,
+      "energy_error": 0.3323374743634702,
+      "pressure_relative": 0.11113485158983687,
+      "raw_flux_relative": 0.26410964489572025,
+      "rt_flux_relative": 0.42937139531607676,
+      "errors_by_order": [
+        [
+          0.013520209158145002,
+          0.3323374743111038,
+          0.5402915335829134,
+          0.33233747431110383
+        ],
+        [
+          0.013520209156671358,
+          0.3323374743634703,
+          0.5402915336151605,
+          0.3323374743634702
+        ]
+      ],
+      "error_quadrature_change": 5.23665000251583e-11,
+      "indicator": 2.89437330901526,
+      "effectivity": 8.709139150072938,
+      "global_relative_residual": 1.1601669773487903e-16,
+      "continuous_equilibrium": 5.437963071615537e-15,
+      "normal_moments": 0.0,
+      "macro_balance": 3.1086244689504383e-15,
+      "fine_balance": 1.3216040657695907e-14,
+      "terms": {
+        "flux_defect": 0.4916715458223436,
+        "nonconformity": 0.4210918240762306,
+        "divergence_defect": 2.602105241827399e-14,
+        "oscillation": 2.3834517452931103
+      },
+      "archive": "uniform-2.npz",
+      "archive_sha256": "8220e527306e890150e603426ad63fdb4e4d67a1785bff79794dcd3e19720eb6",
+      "basis_sha256": "3e908060a74c879ebbd8bd9940f17b46bb2397c96f2c536c9dd8a6a4eefd1481",
+      "elapsed_seconds": 78.37724953796715
+    },
+    {
+      "name": "uniform-3",
+      "macro_cells": 162,
+      "trace_dofs": 2268,
+      "fine_cells": 162,
+      "local_degree": 5,
+      "trace_degree": 2,
+      "reconstruction_degree": 2,
+      "local_refinement": 1,
+      "trace_subdivisions": 1,
+      "estimator_condition": "k >= ell + d: 5 = 2 + 3; ell <= m <= k: 2 <= 2 <= 5",
+      "assembly_order": 12,
+      "estimator_order": 12,
+      "error_orders": [
+        12,
+        14
+      ],
+      "pressure_l2": 0.004458342912870195,
+      "raw_flux_l2": 0.1389799885617797,
+      "rt_flux_l2": 0.23501264271806263,
+      "energy_error": 0.1389799885617797,
+      "pressure_relative": 0.03664716072191411,
+      "raw_flux_relative": 0.11044783768958415,
+      "rt_flux_relative": 0.18676529251825708,
+      "errors_by_order": [
+        [
+          0.004458342932340994,
+          0.13897998805598724,
+          0.23501264239988584,
+          0.13897998805598724
+        ],
+        [
+          0.004458342912870195,
+          0.1389799885617797,
+          0.23501264271806263,
+          0.1389799885617797
+        ]
+      ],
+      "error_quadrature_change": 5.057924634677136e-10,
+      "indicator": 1.019499809152046,
+      "effectivity": 7.335587084890682,
+      "global_relative_residual": 1.4633083055331757e-16,
+      "continuous_equilibrium": 1.7945964460058236e-15,
+      "normal_moments": 0.0,
+      "macro_balance": 2.7755575615628914e-16,
+      "fine_balance": 1.1657341758564144e-15,
+      "terms": {
+        "flux_defect": 0.2135682474683659,
+        "nonconformity": 0.19070317801868453,
+        "divergence_defect": 1.9679039242296968e-14,
+        "oscillation": 0.7939282281379119
+      },
+      "archive": "uniform-3.npz",
+      "archive_sha256": "388f32d05d188ce0bf95fe64043b25a381bfc18eb9c1690af055b724959b857d",
+      "basis_sha256": "3e908060a74c879ebbd8bd9940f17b46bb2397c96f2c536c9dd8a6a4eefd1481",
+      "elapsed_seconds": 73.62901349004824
+    },
+    {
+      "name": "uniform-4",
+      "macro_cells": 384,
+      "trace_dofs": 5184,
+      "fine_cells": 384,
+      "local_degree": 5,
+      "trace_degree": 2,
+      "reconstruction_degree": 2,
+      "local_refinement": 1,
+      "trace_subdivisions": 1,
+      "estimator_condition": "k >= ell + d: 5 = 2 + 3; ell <= m <= k: 2 <= 2 <= 5",
+      "assembly_order": 12,
+      "estimator_order": 12,
+      "error_orders": [
+        12,
+        14
+      ],
+      "pressure_l2": 0.0016088224991904123,
+      "raw_flux_l2": 0.06939307814123316,
+      "rt_flux_l2": 0.1123411423130761,
+      "energy_error": 0.06939307814123316,
+      "pressure_relative": 0.013224370097388057,
+      "raw_flux_relative": 0.05514689928123422,
+      "rt_flux_relative": 0.08927786208977519,
+      "errors_by_order": [
+        [
+          0.001608822499213125,
+          0.06939307813511389,
+          0.11234114230911818,
+          0.0693930781351139
+        ],
+        [
+          0.0016088224991904123,
+          0.06939307814123316,
+          0.1123411423130761,
+          0.06939307814123316
+        ]
+      ],
+      "error_quadrature_change": 6.1192717559777066e-12,
+      "indicator": 0.3870505262584215,
+      "effectivity": 5.577653227468479,
+      "global_relative_residual": 1.4940567499119223e-16,
+      "continuous_equilibrium": 1.323364365674002e-15,
+      "normal_moments": 0.0,
+      "macro_balance": 4.440892098500626e-16,
+      "fine_balance": 7.57098377046628e-16,
+      "terms": {
+        "flux_defect": 0.09435368483339061,
+        "nonconformity": 0.08638110971720458,
+        "divergence_defect": 1.879420999212489e-14,
+        "oscillation": 0.28924075264908783
+      },
+      "archive": "uniform-4.npz",
+      "archive_sha256": "78605b32c47056808d56bb9228ed04fb8ec21f8ecfc450a1652f73d8de5f3688",
+      "basis_sha256": "3e908060a74c879ebbd8bd9940f17b46bb2397c96f2c536c9dd8a6a4eefd1481",
+      "elapsed_seconds": 180.15781785803847
+    },
+    {
+      "name": "uniform-5",
+      "macro_cells": 750,
+      "trace_dofs": 9900,
+      "fine_cells": 750,
+      "local_degree": 5,
+      "trace_degree": 2,
+      "reconstruction_degree": 2,
+      "local_refinement": 1,
+      "trace_subdivisions": 1,
+      "estimator_condition": "k >= ell + d: 5 = 2 + 3; ell <= m <= k: 2 <= 2 <= 5",
+      "assembly_order": 12,
+      "estimator_order": 12,
+      "error_orders": [
+        12,
+        14
+      ],
+      "pressure_l2": 0.0006997865215886754,
+      "raw_flux_l2": 0.03776617092686447,
+      "rt_flux_l2": 0.06479633899110455,
+      "energy_error": 0.03776617092686447,
+      "pressure_relative": 0.0057521795942743065,
+      "raw_flux_relative": 0.03001289581221422,
+      "rt_flux_relative": 0.051493856099919834,
+      "errors_by_order": [
+        [
+          0.0006997865215375053,
+          0.03776617092748646,
+          0.06479633899147266,
+          0.03776617092748646
+        ],
+        [
+          0.0006997865215886754,
+          0.03776617092686447,
+          0.06479633899110455,
+          0.03776617092686447
+        ]
+      ],
+      "error_quadrature_change": 6.219885717584361e-13,
+      "indicator": 0.2142533410458781,
+      "effectivity": 5.673154989972039,
+      "global_relative_residual": 4.786294404499425e-16,
+      "continuous_equilibrium": 6.679928103938612e-16,
+      "normal_moments": 0.0,
+      "macro_balance": 1.3877787807814457e-16,
+      "fine_balance": 4.1924796967407455e-16,
+      "terms": {
+        "flux_defect": 0.05487211000833016,
+        "nonconformity": 0.046357690152799204,
+        "divergence_defect": 2.0468947996955818e-14,
+        "oscillation": 0.1581198683981683
+      },
+      "archive": "uniform-5.npz",
+      "archive_sha256": "00e83258959ec19062152615aa3bcb1292fb7388ffa9676f5c94409d808bde12",
+      "basis_sha256": "3e908060a74c879ebbd8bd9940f17b46bb2397c96f2c536c9dd8a6a4eefd1481",
+      "elapsed_seconds": 351.70415208803024
+    }
+  ],
+  "source_changed_during_run": false
+}

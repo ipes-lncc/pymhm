@@ -1,0 +1,93 @@
+{
+  "case": "internal",
+  "viscosity": 0.001,
+  "drag": 0.0,
+  "local_pair": "P3/P3",
+  "trace_degree": 1,
+  "mesh": "unit-square structured crisscross; four triangles per square",
+  "quadrature_order": 20,
+  "marking_theta": 0.5,
+  "stop_reason": "iterations",
+  "literature": "L15 sections5.1\u20135.3; variable beta is supplementary; historical marking threshold/meshes not identified",
+  "reference_doi": "10.1007/s10444-020-09833-8",
+  "rows": [
+    {
+      "macro_cells": 16,
+      "fine_cells": 16,
+      "trace_dofs": 112,
+      "velocity_l2": 0.14566675521620517,
+      "pressure_l2": 0.06416460033239173,
+      "mixed_error": 5.291132009300659,
+      "eta1": 1.0483985884010538,
+      "eta2": 0.48953977852744435,
+      "effectivity": 0.29066339003168645,
+      "divergence_l2": 0.19263558295100236,
+      "algebraic_residual": 2.557417071383456e-16
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 52,
+      "trace_dofs": 152,
+      "velocity_l2": 0.11035601089360898,
+      "pressure_l2": 0.041815072551586105,
+      "mixed_error": 4.421323064469696,
+      "eta1": 0.5907349472999814,
+      "eta2": 0.230553646483816,
+      "effectivity": 0.18575629552696002,
+      "divergence_l2": 0.36499579029286394,
+      "algebraic_residual": 4.080865023044501e-16
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 199,
+      "trace_dofs": 204,
+      "velocity_l2": 0.09273611782108619,
+      "pressure_l2": 0.032708910431512174,
+      "mixed_error": 4.095348284600109,
+      "eta1": 0.48600767057396643,
+      "eta2": 0.12885199060162417,
+      "effectivity": 0.15013611015396913,
+      "divergence_l2": 0.3544877618001747,
+      "algebraic_residual": 5.19937991922366e-16
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 745,
+      "trace_dofs": 284,
+      "velocity_l2": 0.026227781574076087,
+      "pressure_l2": 0.016189166298710728,
+      "mixed_error": 2.7284158941318766,
+      "eta1": 0.2248410727157294,
+      "eta2": 0.09223440210826539,
+      "effectivity": 0.11621229575225056,
+      "divergence_l2": 0.3203837816153653,
+      "algebraic_residual": 3.951581153626935e-16
+    },
+    {
+      "macro_cells": 16,
+      "fine_cells": 2917,
+      "trace_dofs": 348,
+      "velocity_l2": 0.02388135776029806,
+      "pressure_l2": 0.007590981877898162,
+      "mixed_error": 1.9346043555611725,
+      "eta1": 0.15109151191262607,
+      "eta2": 0.059808452449624044,
+      "effectivity": 0.10901451956106765,
+      "divergence_l2": 0.23009513122619707,
+      "algebraic_residual": 5.813848274002228e-16
+    }
+  ],
+  "archive": "internal-nu0.001-l1-adaptive.npz",
+  "sha256": "35b50cff059e87a109e6d7be0e25f8ae00c2950973836938a245ba2e390f0974",
+  "versions": {
+    "python": "3.13.15",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  },
+  "source_hashes": {
+    "examples/solve_oseen.py": "81742c8283b5ada21e9ed08202a1acd8d03ffc9b4e28bc11879ca222c0681dda",
+    "src/pymhm/flow.py": "ca9b38ee04d1f2293242ff2c6d479de795c8be318d0d4c3a05bbf8c94da2b161",
+    "src/pymhm/flow_estimator.py": "ba7be76d56c07c99131b29fc0e8782147a342f459c1a1bc0db5dc2caef041320",
+    "src/pymhm/flow_adaptive.py": "6375f1c007e12a8201beb8e68c2ad45d2d60a7bb7047e5ca4d37b5ca31b6ea34"
+  }
+}

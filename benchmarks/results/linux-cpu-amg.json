@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "measurement": "complete Darcy primal P1 MHM solve",
+  "problem": "unit square, K=I, f=0, p=1+x+2y on the boundary",
+  "timing_scope": "assembly, pool startup, local condensation, global solve, reconstruction",
+  "parallel_scope": "independent local condensation only",
+  "startup_policy": "one untimed serial warmup per workload; fresh process pool per solve",
+  "coefficient_comparison": {
+    "rtol": 1e-09,
+    "atol": 1e-10
+  },
+  "maximum_manufactured_error": 1e-09,
+  "quick": false,
+  "machine": {
+    "timestamp_utc": "2026-09-28T07:03:32.116959+00:00",
+    "platform": "Linux-7.0.0-31-generic-x86_64-desconhecido-with-glibc2.43",
+    "machine": "x86_64",
+    "processor": "Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz",
+    "logical_cpus": 80,
+    "affinity_cpus": 80,
+    "python": "3.13.15",
+    "pymhm": "0.1.0",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "revision": "743753a585ebdb56d38a36a412cdcf615afc5cfb",
+    "native_libraries_during_timing": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "prefix": "libopenblas",
+        "version": "0.3.34",
+        "num_threads": 1,
+        "architecture": "Haswell"
+      }
+    ],
+    "thread_environment": {
+      "OMP_NUM_THREADS": null,
+      "OPENBLAS_NUM_THREADS": null,
+      "MKL_NUM_THREADS": null
+    }
+  },
+  "source_sha256_before": {
+    "src/pymhm/__init__.py": "3c7db2b47ee566917ae804231cdf5bc0c0be7247cafad4bfdae4f5d0de224098",
+    "src/pymhm/darcy.py": "3e6301df811376fde4e51b1ff2fe5dc65e64fa9446279c1f653a5d5c1fc67268",
+    "src/pymhm/elements.py": "e13f6e6c6ce209b4803fabfc85e985970d0abaa3a18b807ce141f5db3142cc30",
+    "src/pymhm/fenics.py": "9b206e4a1276e98709dd7d3efa205c084927962cf38e0be859a45e8454ea8b22",
+    "src/pymhm/hybrid.py": "f6c71515f347b0d33e0d6990341ce3b646c7dab6351e07b3a6a5fff8f321a158",
+    "src/pymhm/mesh.py": "08b942ef3d54b9fff0a2f86c4b3de331c5e1d6a827a2ebaa58e61ccc97048073",
+    "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+    "src/pymhm/parallel.py": "22e88e7f8d658104423b0823a502991996508d62b1c071589ee32429a6cbd77e",
+    "src/pymhm/reconstruction.py": "9a7c7baee1c212cff8d77d41ffd1b60bdc396b495be5ee514c2cccb5e3bb605d",
+    "src/pymhm/solvers.py": "51a60b1d4fc842a4b3315d36d5e134dafdd9cc781c49a111e67ec63a03e910ab",
+    "src/pymhm/transport.py": "a451821cedd01b6bdd6c3b3d64be5193911f835d85ada9e17de73e304ea4c409",
+    "src/pymhm/vector.py": "f2c8ef69efc5144d437eca06fa76a7763b79992ddf625bee9dddb66b976f8e79",
+    "benchmarks/gpu.py": "892609a7e0f018b8f6ede396649fa8be4967a79c85460842237ce7f7e2d1d4e1",
+    "benchmarks/scaling.py": "fbd002a42955ed58689fcddb0244ee8049a326978442740411519e9206ba8ff1",
+    "pixi.lock": "d502028db19fccd79b61163f7e537f6596ff591d15fa9fe937e9fdd43b7d9836"
+  },
+  "cases": [
+    {
+      "macro_grid": [
+        4,
+        4
+      ],
+      "macrocells": 32,
+      "local_refinement": 8,
+      "total_fine_triangles": 2048,
+      "local_pressure_dofs_per_macrocell": 45,
+      "skeleton_dofs": 56,
+      "coarse_kernel_dofs": 32,
+      "repeats": 3,
+      "local_solver": "pyamg",
+      "measurements": [
+        {
+          "backend": "serial",
+          "workers": 1,
+          "native_threads": 1,
+          "seconds": [
+            0.6656055269995704,
+            0.6711752889677882,
+            0.6371656809933484
+          ],
+          "median_seconds": 0.6656055269995704,
+          "minimum_seconds": 0.6371656809933484,
+          "maximum_seconds": 0.6711752889677882,
+          "population_stddev_seconds": 0.01489407236235392,
+          "speedup_over_serial_median": 1.0,
+          "worst_verification_error": {
+            "pressure_l2": 1.1927963350959458e-12,
+            "flux_l2": 5.164407127725456e-11,
+            "macrocell_conservation_linf": 8.326672684688674e-17,
+            "global_residual": 1.118074572121173e-16
+          }
+        },
+        {
+          "backend": "thread",
+          "workers": 2,
+          "native_threads": 1,
+          "seconds": [
+            0.9434607130242512,
+            0.942493362003006,
+            0.988872479996644
+          ],
+          "median_seconds": 0.9434607130242512,
+          "minimum_seconds": 0.942493362003006,
+          "maximum_seconds": 0.988872479996644,
+          "population_stddev_seconds": 0.021638923092481593,
+          "speedup_over_serial_median": 0.7054936340337696,
+          "worst_verification_error": {
+            "pressure_l2": 1.1927963350959458e-12,
+            "flux_l2": 5.164407127725456e-11,
+            "macrocell_conservation_linf": 8.326672684688674e-17,
+            "global_residual": 1.118074572121173e-16
+          }
+        },
+        {
+          "backend": "process",
+          "workers": 2,
+          "native_threads": 1,
+          "seconds": [
+            1.1459780019940808,
+            1.0387430969858542,
+            1.0244310649577528
+          ],
+          "median_seconds": 1.0387430969858542,
+          "minimum_seconds": 1.0244310649577528,
+          "maximum_seconds": 1.1459780019940808,
+          "population_stddev_seconds": 0.05424001906732076,
+          "speedup_over_serial_median": 0.6407797355582665,
+          "worst_verification_error": {
+            "pressure_l2": 1.1927963661569714e-12,
+            "flux_l2": 5.164411941339122e-11,
+            "macrocell_conservation_linf": 8.326672684688674e-17,
+            "global_residual": 1.118074572121173e-16
+          }
+        }
+      ]
+    },
+    {
+      "macro_grid": [
+        8,
+        8
+      ],
+      "macrocells": 128,
+      "local_refinement": 8,
+      "total_fine_triangles": 8192,
+      "local_pressure_dofs_per_macrocell": 45,
+      "skeleton_dofs": 208,
+      "coarse_kernel_dofs": 128,
+      "repeats": 3,
+      "local_solver": "pyamg",
+      "measurements": [
+        {
+          "backend": "serial",
+          "workers": 1,
+          "native_threads": 1,
+          "seconds": [
+            2.5021221078932285,
+            2.580743500031531,
+            2.5495384950190783
+          ],
+          "median_seconds": 2.5495384950190783,
+          "minimum_seconds": 2.5021221078932285,
+          "maximum_seconds": 2.580743500031531,
+          "population_stddev_seconds": 0.03232369170276802,
+          "speedup_over_serial_median": 1.0,
+          "worst_verification_error": {
+            "pressure_l2": 6.106326868038485e-13,
+            "flux_l2": 5.172536428368775e-11,
+            "macrocell_conservation_linf": 5.551115123125783e-17,
+            "global_residual": 1.4149736947456602e-16
+          }
+        },
+        {
+          "backend": "thread",
+          "workers": 2,
+          "native_threads": 1,
+          "seconds": [
+            4.132201100001112,
+            4.2938774060457945,
+            4.131487571983598
+          ],
+          "median_seconds": 4.132201100001112,
+          "minimum_seconds": 4.131487571983598,
+          "maximum_seconds": 4.2938774060457945,
+          "population_stddev_seconds": 0.0763836771868276,
+          "speedup_over_serial_median": 0.616992840696546,
+          "worst_verification_error": {
+            "pressure_l2": 6.106326868038485e-13,
+            "flux_l2": 5.172536428368775e-11,
+            "macrocell_conservation_linf": 5.551115123125783e-17,
+            "global_residual": 1.4149736947456602e-16
+          }
+        },
+        {
+          "backend": "process",
+          "workers": 2,
+          "native_threads": 1,
+          "seconds": [
+            2.7767683500424027,
+            2.7319009989732876,
+            2.7315880950773135
+          ],
+          "median_seconds": 2.7319009989732876,
+          "minimum_seconds": 2.7315880950773135,
+          "maximum_seconds": 2.7767683500424027,
+          "population_stddev_seconds": 0.021224808700925153,
+          "speedup_over_serial_median": 0.9332470305392672,
+          "worst_verification_error": {
+            "pressure_l2": 6.106325499762491e-13,
+            "flux_l2": 5.1725384782150945e-11,
+            "macrocell_conservation_linf": 5.551115123125783e-17,
+            "global_residual": 1.4149736947456602e-16
+          }
+        }
+      ]
+    }
+  ],
+  "source_sha256_after": {
+    "src/pymhm/__init__.py": "3c7db2b47ee566917ae804231cdf5bc0c0be7247cafad4bfdae4f5d0de224098",
+    "src/pymhm/darcy.py": "3e6301df811376fde4e51b1ff2fe5dc65e64fa9446279c1f653a5d5c1fc67268",
+    "src/pymhm/elements.py": "e13f6e6c6ce209b4803fabfc85e985970d0abaa3a18b807ce141f5db3142cc30",
+    "src/pymhm/fenics.py": "9b206e4a1276e98709dd7d3efa205c084927962cf38e0be859a45e8454ea8b22",
+    "src/pymhm/hybrid.py": "f6c71515f347b0d33e0d6990341ce3b646c7dab6351e07b3a6a5fff8f321a158",
+    "src/pymhm/mesh.py": "08b942ef3d54b9fff0a2f86c4b3de331c5e1d6a827a2ebaa58e61ccc97048073",
+    "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+    "src/pymhm/parallel.py": "22e88e7f8d658104423b0823a502991996508d62b1c071589ee32429a6cbd77e",
+    "src/pymhm/reconstruction.py": "9a7c7baee1c212cff8d77d41ffd1b60bdc396b495be5ee514c2cccb5e3bb605d",
+    "src/pymhm/solvers.py": "51a60b1d4fc842a4b3315d36d5e134dafdd9cc781c49a111e67ec63a03e910ab",
+    "src/pymhm/transport.py": "a451821cedd01b6bdd6c3b3d64be5193911f835d85ada9e17de73e304ea4c409",
+    "src/pymhm/vector.py": "f2c8ef69efc5144d437eca06fa76a7763b79992ddf625bee9dddb66b976f8e79",
+    "benchmarks/gpu.py": "892609a7e0f018b8f6ede396649fa8be4967a79c85460842237ce7f7e2d1d4e1",
+    "benchmarks/scaling.py": "fbd002a42955ed58689fcddb0244ee8049a326978442740411519e9206ba8ff1",
+    "pixi.lock": "d502028db19fccd79b61163f7e537f6596ff591d15fa9fe937e9fdd43b7d9836"
+  },
+  "source_changed_during_run": false
+}

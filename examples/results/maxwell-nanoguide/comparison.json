@@ -1,0 +1,122 @@
+{
+  "norm": "physical unweighted L2; broken Q2 integration on common cell partition",
+  "comparisons": [
+    {
+      "field": {
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "resolution": 128,
+        "sha256": "d0951c5694e3fbbe78312d9ca4ba1dd20b1677426563c7b0eebbc177b728b13a",
+        "file": "mhm-n16-f128-q12-dt0.01-fields.npz"
+      },
+      "reference": {
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "resolution": 1024,
+        "sha256": "118e94a6fc77913d93733848a235afae11e4b52d88a6a1fd922d515730c64986",
+        "file": "dg-q2-n1024-q12-dt0.00125-device.npz"
+      },
+      "components": [
+        "electric",
+        "magnetic_x",
+        "magnetic_y"
+      ],
+      "absolute_l2": [
+        0.05233495327736427,
+        0.03280045878714614,
+        0.05137714218736006
+      ],
+      "reference_l2": [
+        6.173334534279303,
+        2.4777901855012705,
+        6.957376998160576
+      ],
+      "relative_l2": [
+        0.008477582574985794,
+        0.0132377870326056,
+        0.007384556306341224
+      ],
+      "combined_relative_l2": 0.008346327031867412,
+      "integration_grid": 1024,
+      "gauss_order": 3
+    },
+    {
+      "field": {
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "resolution": 128,
+        "sha256": "d784e5d8f36449739b7cdd8d45f8042f58eff70974cc6612183556558804981f",
+        "file": "mhm-n8-f128-q12-dt0.01-fields.npz"
+      },
+      "reference": {
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "resolution": 1024,
+        "sha256": "118e94a6fc77913d93733848a235afae11e4b52d88a6a1fd922d515730c64986",
+        "file": "dg-q2-n1024-q12-dt0.00125-device.npz"
+      },
+      "components": [
+        "electric",
+        "magnetic_x",
+        "magnetic_y"
+      ],
+      "absolute_l2": [
+        0.04466108059614278,
+        0.030499639651003045,
+        0.04397034181338181
+      ],
+      "reference_l2": [
+        6.173334534279303,
+        2.4777901855012705,
+        6.957376998160576
+      ],
+      "relative_l2": [
+        0.007234514887885736,
+        0.012309209968410945,
+        0.006319959637807021
+      ],
+      "combined_relative_l2": 0.007241117526964516,
+      "integration_grid": 1024,
+      "gauss_order": 3
+    },
+    {
+      "field": {
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "resolution": 32,
+        "sha256": "41234f5a1d583aa36185482cc55d9f9dd02994aa8c6c1df5e6831c8a76e0711f",
+        "file": "dg-q2-n32-q12-dt0.01.npz"
+      },
+      "reference": {
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "resolution": 1024,
+        "sha256": "118e94a6fc77913d93733848a235afae11e4b52d88a6a1fd922d515730c64986",
+        "file": "dg-q2-n1024-q12-dt0.00125-device.npz"
+      },
+      "components": [
+        "electric",
+        "magnetic_x",
+        "magnetic_y"
+      ],
+      "absolute_l2": [
+        0.7532734486940703,
+        0.5602804193925238,
+        0.8291306091051031
+      ],
+      "reference_l2": [
+        6.173334534279303,
+        2.4777901855012705,
+        6.957376998160576
+      ],
+      "relative_l2": [
+        0.12202051330788768,
+        0.22612101003183854,
+        0.11917287353039982
+      ],
+      "combined_relative_l2": 0.13012156503610425,
+      "integration_grid": 1024,
+      "gauss_order": 3
+    }
+  ]
+}

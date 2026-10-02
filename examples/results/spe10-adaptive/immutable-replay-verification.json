@@ -1,0 +1,51 @@
+{
+  "verification": "immutable RT field preserves archived physical replay and ordered norm arithmetic",
+  "archives": {
+    "reference-rt2-120x440.npz": "7c995c0588339480131e1365702798ef600eeaf4c0f0f9dc84cc172122e019a1",
+    "reference-rt2-240x880.npz": "94a82d6eb9c7192b388dbe31d27ae6261ab8247abd3cfc97c58663e781bed55f"
+  },
+  "old_source_hashes": {
+    "rt.py": "5d4908fe7077a0e4ba1d6d7e6a4b8ac04aeb9bcfbe968b364e939a89824e62e2",
+    "spe10_adaptive.py": "82b00d9c44783c0f8ef93e7ba485310cbd55ac84c4d21abb1984b0c65a1bae02"
+  },
+  "current_source_hashes": {
+    "rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+    "spe10_adaptive.py": "111d056e78838e757971236ec9511f3b751f4fb70956f23c860254b399277e28"
+  },
+  "rows": [
+    {
+      "order": 5,
+      "512_cell_norms_bitwise_equal": true,
+      "norms": {
+        "pressure_l2": 56.48308836813988,
+        "flux_l2": 0.00962329309459816,
+        "divergence_l2": 1.2096586918438483e-16,
+        "previous_pressure_difference_l2": 0.0010341865443002352,
+        "previous_flux_difference_l2": 5.587622270661931e-05,
+        "previous_pressure_relative_difference": 1.830966709114269e-05,
+        "previous_flux_relative_difference": 0.005806351542798201,
+        "flux_energy_norm": 0.02040380141928906,
+        "previous_flux_energy_difference": 0.00011752670705809866,
+        "previous_flux_energy_relative_difference": 0.005760039741760714,
+        "norm_quadrature_order": 5
+      }
+    },
+    {
+      "order": 6,
+      "512_cell_norms_bitwise_equal": true,
+      "norms": {
+        "pressure_l2": 56.48308836813989,
+        "flux_l2": 0.009623293094598159,
+        "divergence_l2": 1.3509242591067745e-16,
+        "previous_pressure_difference_l2": 0.0010341865443001521,
+        "previous_flux_difference_l2": 5.587622270661883e-05,
+        "previous_pressure_relative_difference": 1.8309667091141218e-05,
+        "previous_flux_relative_difference": 0.005806351542798152,
+        "flux_energy_norm": 0.02040380141928906,
+        "previous_flux_energy_difference": 0.0001175267070580986,
+        "previous_flux_energy_relative_difference": 0.005760039741760712,
+        "norm_quadrature_order": 6
+      }
+    }
+  ]
+}

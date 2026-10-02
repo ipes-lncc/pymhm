@@ -1,0 +1,17 @@
+{
+  "same_space": "two macros, 2048 fine P2 cells, P0 four segments, alpha=.1",
+  "orders": [
+    5,
+    8
+  ],
+  "norms": {
+    "pressure": {
+      "max_abs_coefficient_difference": 6.200826127523637e-10,
+      "relative_coefficient_2norm": 1.2518656959287892e-10
+    },
+    "enriched_pressure": {
+      "max_abs_coefficient_difference": 6.200840221067677e-10,
+      "relative_coefficient_2norm": 1.2518656855395313e-10
+    }
+  }
+}

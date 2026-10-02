@@ -1,0 +1,54 @@
+schema_version: 1
+
+context:
+  version: "0.1.0"
+
+package:
+  name: pymhm
+  version: ${{ version }}
+
+source:
+  path: ..
+  use_gitignore: true
+
+build:
+  number: 0
+  noarch: python
+  script:
+    - python -m pip install . --no-deps --no-build-isolation -v
+    # A temporary source checkout is not the installation provenance of a Conda package.
+    - >-
+      python -c "from importlib.metadata import distribution; from pathlib import Path;
+      package = distribution('pymhm');
+      records = [entry for entry in package.files or () if entry.name == 'direct_url.json'
+      and entry.parent.name.startswith('pymhm-') and entry.parent.name.endswith('.dist-info')];
+      [Path(package.locate_file(entry)).unlink() for entry in records]"
+
+requirements:
+  host:
+    - python >=3.11,<3.14
+    - pip
+    - hatchling >=1.27
+  run:
+    - python >=3.11,<3.14
+    - numpy >=1.26
+    - scipy >=1.12
+    - threadpoolctl >=3.2
+
+tests:
+  - python:
+      imports:
+        - pymhm
+      pip_check: true
+
+about:
+  homepage: https://github.com/volpatto/pymhm
+  repository: https://github.com/volpatto/pymhm
+  documentation: https://volpatto.github.io/pymhm/
+  summary: Composable multiscale hybrid mixed finite element methods
+  license: LGPL-2.1-only
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - volpatto

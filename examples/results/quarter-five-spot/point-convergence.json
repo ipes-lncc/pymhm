@@ -1,0 +1,67 @@
+{
+  "reference_terms": 2048,
+  "check_terms": 4096,
+  "excluded_radius": 0.125,
+  "rows": [
+    {
+      "n": 8,
+      "macro_triangles": 128,
+      "sampled_pressure_rms": 0.011241756386780679,
+      "sampled_flux_rms": 0.3510607586307855,
+      "reference_doubling_pressure_max": 0.0,
+      "reference_doubling_flux_max": 0.0,
+      "reference_doubling_flux_away_wells_max": 0.0,
+      "macro_balance_max": 2.220446049250313e-16
+    },
+    {
+      "n": 12,
+      "macro_triangles": 288,
+      "sampled_pressure_rms": 0.005491160669865817,
+      "sampled_flux_rms": 0.2698465982389405,
+      "reference_doubling_pressure_max": 0.0,
+      "reference_doubling_flux_max": 0.0,
+      "reference_doubling_flux_away_wells_max": 0.0,
+      "macro_balance_max": 3.885780586188048e-16
+    },
+    {
+      "n": 16,
+      "macro_triangles": 512,
+      "sampled_pressure_rms": 0.0030776891980450597,
+      "sampled_flux_rms": 0.18754515716687187,
+      "reference_doubling_pressure_max": 0.0,
+      "reference_doubling_flux_max": 0.0,
+      "reference_doubling_flux_away_wells_max": 0.0,
+      "macro_balance_max": 2.7755575615628914e-16
+    },
+    {
+      "n": 24,
+      "macro_triangles": 1152,
+      "sampled_pressure_rms": 0.0014445239776302225,
+      "sampled_flux_rms": 0.12786038995157278,
+      "reference_doubling_pressure_max": 0.0,
+      "reference_doubling_flux_max": 0.0,
+      "reference_doubling_flux_away_wells_max": 0.0,
+      "macro_balance_max": 9.08995101411847e-16
+    },
+    {
+      "n": 32,
+      "macro_triangles": 2048,
+      "sampled_pressure_rms": 0.0008195551872285604,
+      "sampled_flux_rms": 0.09671714012456835,
+      "reference_doubling_pressure_max": 0.0,
+      "reference_doubling_flux_max": 1.2789769243681803e-13,
+      "reference_doubling_flux_away_wells_max": 1.2323475573339238e-14,
+      "macro_balance_max": 4.163336342344337e-16
+    },
+    {
+      "n": 48,
+      "macro_triangles": 4608,
+      "sampled_pressure_rms": 0.00036923945063829593,
+      "sampled_flux_rms": 0.0642417272342265,
+      "reference_doubling_pressure_max": 1.1013412404281553e-12,
+      "reference_doubling_flux_max": 1.57029802494435e-08,
+      "reference_doubling_flux_away_wells_max": 8.284058994334487e-10,
+      "macro_balance_max": 8.465450562766819e-16
+    }
+  ]
+}

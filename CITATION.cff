@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "Please cite this software and the relevant method papers when using pymhm."
+title: "pymhm: Composable multiscale hybrid mixed finite element methods"
+type: software
+authors:
+  - family-names: Volpatto
+    given-names: Diego
+version: "0.1.0"
+license: LGPL-2.1-only
+repository-code: https://github.com/volpatto/pymhm
+url: https://github.com/volpatto/pymhm
+keywords:
+  - finite element methods
+  - multiscale hybrid mixed
+  - Darcy flow
+  - scientific computing

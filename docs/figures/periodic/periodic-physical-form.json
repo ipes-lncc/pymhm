@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "case": "periodic scalar diffusion",
+  "method": "Conforming tensor-product Q5; homogeneous Dirichlet unit-square problem",
+  "verification": "Physical weak-form residual independently evaluated from local cardinal products and nodal differences",
+  "verifier_sha256": "e75952ae6f467e7a9ea5e160190bd84e5978f4da4dfd20e691f9c27ec1c53ce3",
+  "arithmetic": "NumPy longdouble for local basis, contractions and assembly; Gauss points, coefficient samples and bound constants in float64",
+  "formulae": {
+    "coefficient": "1 + 100 cos(150 x)^2 sin(150 y)^2",
+    "source": "sin(x) sin(y)",
+    "poincare_constant": "1/(pi sqrt(2))",
+    "mass_lower_bound": "M_global >= h^2 lambda_min(M_1D)^2 I",
+    "correction_H1_bound": "sqrt(1+C_P^2) C_P ||r||_2 / (h lambda_min(M_1D))",
+    "reported_relative_bound": "correction_H1_bound / sqrt(||p_h||_L2^2 + ||grad p_h||_L2^2)"
+  },
+  "interpretation": "The correction estimate bounds the discrete perturbation for the same quadrature-based Galerkin problem. It does not bound spatial discretization or quadrature error; evaluated constants are not interval-certified.",
+  "rows": [
+    {
+      "n": 512,
+      "degree": 5,
+      "order": 10,
+      "relative_physical_equation_residual": 2.1863519024431302e-09,
+      "energy": 0.0002983179757021836,
+      "work": 0.0002983179757187843,
+      "relative_energy_work_defect": 5.5647660479517405e-11,
+      "elapsed_seconds": 4.0585339069366455,
+      "definition": "Independent local cardinal differentiation; trial nodal differences; opposite-sum test force; longdouble quadrature/assembly. Same coefficient samples and rule as acquisition.",
+      "physical_residual_euclidean_norm": 2.4834065934832707e-13,
+      "load_euclidean_norm": 0.00011358677396388925,
+      "unit_gradient_norm": 0.012468937179771857,
+      "pressure_l2_norm": 0.0013922603363069007,
+      "local_reference_mass_minimum_eigenvalue": 0.023264248726066264,
+      "dirichlet_poincare_constant": 0.22507907903927651,
+      "permeability_lower_bound": 1.0,
+      "discrete_physical_correction_relative_H1_upper_estimate": 1.005020939940103e-07,
+      "bound_scope": "Coercivity/Poincare and cell-mass lower bound for the same quadrature Galerkin space; constants evaluated in floating arithmetic, not interval-certified; excludes discretization and quadrature error.",
+      "field_archive_sha256": "67635d23ae6f42cc8fecd23baa5ed28b892d3601b38b2fa4769993798e747caf",
+      "field_shape": [
+        2561,
+        2561
+      ]
+    },
+    {
+      "n": 1024,
+      "degree": 5,
+      "order": 10,
+      "relative_physical_equation_residual": 8.747628477779542e-09,
+      "energy": 0.0002983997996636547,
+      "work": 0.00029839979971916266,
+      "relative_energy_work_defect": 1.8601879395699972e-10,
+      "elapsed_seconds": 16.07026481628418,
+      "definition": "Independent local cardinal differentiation; trial nodal differences; opposite-sum test force; longdouble quadrature/assembly. Same coefficient samples and rule as acquisition.",
+      "physical_residual_euclidean_norm": 4.968586788891673e-13,
+      "load_euclidean_norm": 5.6799243377936364e-05,
+      "unit_gradient_norm": 0.012481460395127535,
+      "pressure_l2_norm": 0.0013926322509832723,
+      "local_reference_mass_minimum_eigenvalue": 0.023264248726066264,
+      "dirichlet_poincare_constant": 0.22507907903927651,
+      "permeability_lower_bound": 1.0,
+      "discrete_physical_correction_relative_H1_upper_estimate": 4.017520742871632e-07,
+      "bound_scope": "Coercivity/Poincare and cell-mass lower bound for the same quadrature Galerkin space; constants evaluated in floating arithmetic, not interval-certified; excludes discretization and quadrature error.",
+      "field_archive_sha256": "37cc159a87f3626adf8e738066ada37e1b21a485017543e28e48c647cbd21d55",
+      "field_shape": [
+        5121,
+        5121
+      ]
+    },
+    {
+      "n": 1024,
+      "degree": 5,
+      "order": 10,
+      "relative_physical_equation_residual": 3.3766273392536013e-07,
+      "energy": 0.0002983998001134565,
+      "work": 0.00029839979994406355,
+      "relative_energy_work_defect": 5.67670989474345e-10,
+      "elapsed_seconds": 13.843590259552002,
+      "definition": "Independent local cardinal differentiation; trial nodal differences; opposite-sum test force; longdouble quadrature/assembly. Same coefficient samples and rule as acquisition.",
+      "physical_residual_euclidean_norm": 1.91789878038859e-11,
+      "load_euclidean_norm": 5.6799243377936364e-05,
+      "unit_gradient_norm": 0.012481460404533672,
+      "pressure_l2_norm": 0.0013926322521856313,
+      "local_reference_mass_minimum_eigenvalue": 0.023264248726066264,
+      "dirichlet_poincare_constant": 0.22507907903927651,
+      "permeability_lower_bound": 1.0,
+      "discrete_physical_correction_relative_H1_upper_estimate": 1.550782637901961e-05,
+      "bound_scope": "Coercivity/Poincare and cell-mass lower bound for the same quadrature Galerkin space; constants evaluated in floating arithmetic, not interval-certified; excludes discretization and quadrature error.",
+      "field_archive": "reference-q5-1024-order10-lor.npz",
+      "field_archive_sha256": "268f3196b5b6192bfdba5c04dd2c3ebb06fdd596682a389645d9d7e4e436597b",
+      "field_shape": [
+        5121,
+        5121
+      ],
+      "acquisition_manifest": "examples/results/periodic-q5-order10-lor.json",
+      "acquisition_manifest_sha256": "523547ac0561beea9aeb2657fc0aa85a13429828c1c2d145f727f122e2cff810",
+      "acquisition_selector": {
+        "n": 1024,
+        "degree": 5,
+        "quadrature_order": 10
+      },
+      "scope": "Physical weak-form verification of the same archived field used by the 21 Q5/1024 comparison denominators."
+    }
+  ],
+  "archive_equivalence_record": "periodic-q5-1024-equivalence.json",
+  "archive_equivalence_record_sha256": "60cade52eab874e01d2796ba6bd30e5ac0524d33376abe5d42fbe8c2376cedbb"
+}

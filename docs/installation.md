@@ -1,0 +1,111 @@
+# Installation and environments
+
+The core supports Python 3.11–3.13 and requires NumPy, SciPy and threadpoolctl.
+Optional native dependencies are loaded only when their functionality is called.
+
+## From a checkout
+
+```bash
+pixi install -e test
+pixi run -e test test-cov
+pixi run -e test lint
+pixi run -e test typecheck
+pixi run -e docs docs-check
+```
+
+The lockfile resolves Linux x86-64, Windows x86-64, macOS x86-64 and macOS ARM64
+for the portable environments. A Linux run does not substitute for the native
+Windows/macOS CI jobs.
+
+```bash
+python -m pip install .
+# Build an installable wheel and source distribution:
+pixi run -e test build
+```
+
+Install from a checkout until a release is published. The repository includes
+a trusted-publishing workflow and a Conda recipe; building distribution artifacts
+does not publish them.
+
+The source distribution includes the package, tests, original examples, notebook
+sources, documentation sources, JSON records and compact SPE10 input layers.
+Rendered figures and large numerical solution archives are excluded. Replaying
+archived campaigns and their notebooks requires a checkout with the corresponding
+figures and result archives; the source distribution supports installation and
+core tests.
+Release checks enforce a 100,000,000-byte limit per artifact, within the default
+[PyPI file-size limit](https://docs.pypi.org/project-management/storage-limits/).
+
+Computed field archives and publication figures are generated locally and remain
+outside the lightweight Git sources. The three compact SPE10 input layers are
+ordinary Git files. Core tests generate small fixtures; installing the wheel or
+source distribution does not require previously computed scientific outputs.
+
+Generate a case with its documented public command. Before using its results,
+verify geometry, material and boundary data, approximation spaces, physical norms
+and the applicable reference or convergence criteria. A plotting command may
+read an existing JSON record; that operation alone does not recompute the physical
+field or establish that the record still matches the current implementation.
+
+Inspect or validate the field selection for one notebook with:
+
+```bash
+pixi run -e notebooks python scripts/notebook_data.py --notebook 23
+pixi run -e notebooks python scripts/notebook_data.py --notebook 23 --check
+```
+
+The first command lists missing files without downloading anything. The second
+requires real local payloads and applies an explicit three-GiB budget. Generate
+missing fields with the corresponding public case command. The selectors follow
+the versioned JSON records; update `scripts/notebook_data.py` when adding field
+reads. The notebook runner checks its selected dependencies before execution.
+Existing checksum and numerical checks remain active.
+
+Build the visual documentation after generating the figures for its retained
+cases. For example, the public `gallery-darcy` task computes and plots stated
+analytical problems; it does not reproduce a published numerical table. Source
+tests and package builds need no computed fields or figures. Scientific notebooks
+and the full gallery are executed separately from source-only CI, with their
+numerical and rendering checks. Automatic documentation generation remains
+pending until these checks have a manageable, verified CI workflow.
+
+## Optional capabilities
+
+| Environment / extra | Purpose | Native requirements |
+| --- | --- | --- |
+| `pixi run -e fem ...` | UFL/DOLFINx assembly, PETSc | Unix FEniCS stack from conda-forge; PETSc with MUMPS |
+| `pixi run -e meshing ...` | Gmsh, Netgen, meshio | Meshing libraries resolved by Pixi |
+| `pixi run -e intel ...` | PARDISO | Intel MKL, supported x86-64 platform |
+| `pixi run -e gpu ...` | CuPy QR and cuDSS | NVIDIA device and driver; locked CUDA 12.9 runtime |
+| `pip install '.[amg]'` | CPU algebraic multigrid | PyAMG |
+| `pip install '.[meshing]'` | Import/export and generators | Wheel availability depends on platform |
+| `pixi run -e notebooks ...` | Execute notebooks | Jupyter/nbclient and plotting stack |
+
+AmgX uses the optional `pyamgx` bindings and the native NVIDIA AmgX library. The
+binding is built against that library; it is not treated as an ordinary
+self-contained Python wheel. See [performance](https://github.com/volpatto/pymhm/blob/main/docs/performance.md) for the verified
+runtime combinations. PETSc scalar types and available factorization packages
+are properties of the installed PETSc build. The `petsc` solver requires MUMPS
+for pivoted factorization of local and global saddle matrices. The locked `fem`
+environment includes it. For a custom PETSc installation, enable MUMPS when
+building PETSc, for example with `--download-mumps`; installing `petsc4py` alone
+does not add a missing native factorization package. Check availability with:
+
+```python
+from petsc4py import PETSc
+
+assert PETSc.Sys.hasExternalPackage("mumps")
+```
+
+## Development checks
+
+```bash
+pixi run -e test pytest
+pixi run -e fem test-fem
+pixi run -e meshing pytest tests/test_meshing.py
+pixi run -e notebooks notebooks-run
+pixi run -e test python examples/verify.py
+```
+
+Environment definitions and task names in `pixi.toml` are authoritative. The
+metadata checker prevents release-version/dependency drift between manifests.

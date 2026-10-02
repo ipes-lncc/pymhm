@@ -1,0 +1,152 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pymhm"
+version = "0.1.0"
+description = "Composable multiscale hybrid mixed finite element methods"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = "LGPL-2.1-only"
+license-files = ["LICENSE"]
+authors = [{ name = "Diego Volpatto", email = "volpatto@lncc.br" }]
+keywords = ["finite-elements", "multiscale", "hybrid-mixed", "darcy", "brinkman", "scientific-computing"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Mathematics",
+  "Typing :: Typed",
+]
+dependencies = ["numpy>=1.26", "scipy>=1.12", "threadpoolctl>=3.2"]
+
+[project.optional-dependencies]
+intel = ["pypardiso>=0.4; (sys_platform == 'linux' or sys_platform == 'win32') and (platform_machine == 'x86_64' or platform_machine == 'AMD64')"]
+gpu = [
+  "cupy-cuda12x>=13; sys_platform == 'linux' or sys_platform == 'win32'",
+  "nvmath-python[cu12]>=1.0,<1.1; sys_platform == 'linux' or sys_platform == 'win32'",
+]
+mpi = ["mpi4py>=4"]
+amg = ["pyamg>=5.3"]
+meshing = ["gmsh>=4.13", "meshio>=5.3", "netgen-mesher>=6.2"]
+visualization = ["pyvista>=0.46,<0.50", "vtk>=9.5,<9.7"]
+
+[project.urls]
+Homepage = "https://github.com/volpatto/pymhm"
+Documentation = "https://volpatto.github.io/pymhm/"
+Repository = "https://github.com/volpatto/pymhm"
+Issues = "https://github.com/volpatto/pymhm/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pymhm"]
+
+[tool.hatch.build.targets.sdist]
+only-include = [
+  "src",
+  "tests",
+  "scripts",
+  "examples",
+  "benchmarks",
+  "docs",
+  "notebooks",
+  "tools/amgx/pixi.toml",
+  "tools/amgx/pixi.lock",
+  "recipe",
+  "README.md",
+  "LICENSE",
+  "CITATION.cff",
+  "CHANGELOG.md",
+  "CONTRIBUTING.md",
+  "mkdocs.yml",
+  "pyproject.toml",
+  "pixi.toml",
+  "pixi.lock",
+]
+exclude = [
+  "docs/figures/**",
+  "examples/results/checkpoint-validation.json",
+  "examples/results/checkpoint-validation/**",
+  "examples/results/mh2m-heterogeneous/**/*-validated-input-*.json",
+  "examples/results/mh2m-heterogeneous/**/*-resume-validation.json",
+  "examples/results/**/*.tmp",
+  "examples/results/**/*.part",
+  "examples/results/**/*.new",
+  "examples/results/**/*.progress.json",
+  "examples/results/**/*.npz",
+  "examples/results/**/*.vtu",
+  "!examples/results/spe10/layer-1.npz",
+  "!examples/results/spe10/layer-36.npz",
+  "!examples/results/spe10/layer-85.npz",
+  "tools/neopz/**",
+  "examples/generate_neopz_reference.py",
+  "examples/verify_neopz_darcy.py",
+  "examples/verify_reference_darcy.py",
+  "examples/audit_neopz_quadrature.py",
+  "examples/audit_darcy.py",
+  "examples/audit_flow.py",
+  "examples/reproduce_darcy_2013.py",
+  "examples/reproduce_stokes_2017.py",
+  "tests/test_darcy_independent.py",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra --strict-config --strict-markers"
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+  "fem: requires the DOLFINx finite element backend",
+  "mpi: requires an MPI execution environment",
+  "gpu: requires a compatible GPU and optional solver packages",
+  "slow: computationally expensive convergence or performance verification",
+  "meshing: requires optional mesh generators and mesh exchange libraries",
+  "visualization: requires native PyVista/VTK and optionally an offscreen renderer",
+]
+
+[tool.coverage.run]
+data_file = "build/reports/coverage/.coverage"
+branch = true
+source = ["pymhm"]
+parallel = true
+
+[tool.coverage.report]
+fail_under = 99
+show_missing = true
+skip_covered = true
+precision = 2
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+extend-exclude = ["notebooks"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "D"]
+ignore = ["D203", "D213"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.mypy]
+# Current NumPy stubs use PEP 695; Ruff and the Python 3.11 job check source compatibility.
+python_version = "3.12"
+files = ["src/pymhm"]
+check_untyped_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = ["scipy.*", "dolfinx.*", "ufl.*", "basix.*", "mpi4py.*", "petsc4py.*", "pypardiso.*", "cupy.*", "nvmath.*", "threadpoolctl.*", "pyamg.*", "pyamgx.*", "gmsh.*", "meshio.*", "netgen.*", "pyvista.*"]
+ignore_missing_imports = true

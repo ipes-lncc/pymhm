@@ -1,0 +1,124 @@
+{
+  "method": "independently assembled DOLFINx CG2, pixel-aligned nested triangular refinements",
+  "operator": "-div(Kx grad p)+p=0",
+  "load_convention": "explicit f=0 control; historical source not inferred",
+  "native_checks": 2,
+  "portable_checks": 9,
+  "archive_checks": [
+    {
+      "archive": "classical-cg2-120x440.npz",
+      "sha256": "937f6a99c37597bff371ca91b8c06ac6c8c85b07d6f262becd00e436facfff28",
+      "acquisition_archive_sha256": "fc4a48782367b2eedd1b161257347e3ea441b31e0e697301ba290070608a7a65",
+      "driver_sha256": "6e98d9450d07fdfaa3105811dedd13b0ab47518674cb20d3284b5c74d6c94052",
+      "csr_residual": 2.809000249966746e-16,
+      "physical_free_residual": 3.596750898407588e-15
+    },
+    {
+      "archive": "classical-cg2-240x880.npz",
+      "sha256": "7f3e60a0879df8e938c72846ddc1bc57c2a0e8a3a8f0116447c00c1b520db7e3",
+      "acquisition_archive_sha256": "d38e34974115a2dc451d1e75da6440b7acf4db92a6dc67d8a940a076a17b6c7c",
+      "driver_sha256": "6e98d9450d07fdfaa3105811dedd13b0ab47518674cb20d3284b5c74d6c94052",
+      "csr_residual": 2.73150609045954e-16,
+      "physical_free_residual": 1.5304835359992096e-15
+    },
+    {
+      "archive": "classical-cg2-60x220.npz",
+      "sha256": "d7d8f5055f7ca6193d6c3d683c85287c3014e506596f3a37560858a2242dba71",
+      "acquisition_archive_sha256": "7181519e31ef3fcbca05a26779646d4c2ebcc260ce5a97f127dbfa4ccd4175a5",
+      "driver_sha256": "6e98d9450d07fdfaa3105811dedd13b0ab47518674cb20d3284b5c74d6c94052",
+      "csr_residual": 2.475091975370963e-16,
+      "physical_free_residual": 3.597495015509696e-15
+    },
+    {
+      "archive": "classical-cg2-graded-120x468.npz",
+      "sha256": "1b0f84ec8623121c4dae26f43714f64792d2c1524c811b4713a1319cde489a69",
+      "acquisition_archive_sha256": "3b693bb112a65d4564e03afeb0fba4b7c28118285b4f893a574f092eda724b0f",
+      "driver_sha256": "83fed5a36872135410a524fd0a45ead82a9e0e593c3203eecfe689bca1ed37bf",
+      "csr_residual": 8.008791272388455e-16,
+      "physical_free_residual": 2.9830246711483543e-15
+    },
+    {
+      "archive": "classical-cg2-graded-240x936.npz",
+      "sha256": "97aad6605988bcb2fdb78852d362d253a79c3f1de490e775f639f5ce30418566",
+      "acquisition_archive_sha256": "5100306984a2cf50f5e1c9f2a780ebc859f604275e29ebdf985c4e7982669665",
+      "driver_sha256": "83fed5a36872135410a524fd0a45ead82a9e0e593c3203eecfe689bca1ed37bf",
+      "csr_residual": 1.040224105968113e-15,
+      "physical_free_residual": 4.320326920601045e-15
+    },
+    {
+      "archive": "classical-cg2-graded-480x1872.npz",
+      "sha256": "802ebbb125093feff91b4d9cfb1fa54fed58e20d4516dbbcd9f06a49464fbbf0",
+      "acquisition_archive_sha256": "e7bb7ed38fa82e567ba54b933cde4a4ac71a237d7d83a76832e6a77fa7e25cb5",
+      "driver_sha256": "83fed5a36872135410a524fd0a45ead82a9e0e593c3203eecfe689bca1ed37bf",
+      "csr_residual": 1.4689024583699586e-15,
+      "physical_free_residual": 6.117634994276429e-15
+    },
+    {
+      "archive": "classical-cg2-graded-xy-1440x498.npz",
+      "sha256": "90d4715637a679876b11205f928fb0955c1af267fa3a974c9d3b9aac98b1793f",
+      "acquisition_archive_sha256": "3a536228173b05fbcf816d6dd9b423a61a377ec408c9cd216d17a30fc3a674a3",
+      "driver_sha256": "f15b6c66e7eb86096ba98b01378e02c08428c4636c31a4c1e70d4ea5144adf5c",
+      "csr_residual": 1.0359234745183604e-15,
+      "physical_free_residual": 4.316378395360409e-15
+    },
+    {
+      "archive": "classical-cg2-graded-xy-720x249.npz",
+      "sha256": "8e9c5391e6700d9ff62a12ebbce98a12e8f242752ced9004fc22868d0026ea72",
+      "acquisition_archive_sha256": "44c5b710038c2138680496ca8d9f5a71c5afd098ad1543a1b333da626561dcf1",
+      "driver_sha256": "f15b6c66e7eb86096ba98b01378e02c08428c4636c31a4c1e70d4ea5144adf5c",
+      "csr_residual": 7.673466203879113e-16,
+      "physical_free_residual": 3.0361673039303207e-15
+    }
+  ],
+  "nested_galerkin_identity": "a(p_H-p_h,p_H-p_h)=a(p_H,p_H)-a(p_h,p_h)",
+  "identities": [
+    {
+      "coarse": "classical-cg2-60x220.npz",
+      "fine": "classical-cg2-120x440.npz",
+      "energy_difference": 632.3066139266928,
+      "integrated_difference_squared": 632.306613926693,
+      "relative_discrepancy": 3.595940172620001e-16,
+      "absolute_discrepancy": 2.2737367544323206e-13,
+      "integration": "element physical energy and current integrated refinement norm"
+    },
+    {
+      "coarse": "classical-cg2-120x440.npz",
+      "fine": "classical-cg2-240x880.npz",
+      "energy_difference": 260.915392415017,
+      "integrated_difference_squared": 260.9153924150171,
+      "relative_discrepancy": 4.3572300073727937e-16,
+      "absolute_discrepancy": 1.1368683772161603e-13,
+      "integration": "element physical energy and current integrated refinement norm"
+    },
+    {
+      "coarse": "classical-cg2-graded-120x468.npz",
+      "fine": "classical-cg2-graded-240x936.npz",
+      "energy_difference": 1.3809027067642319,
+      "integrated_difference_squared": 1.380902706764288,
+      "relative_discrepancy": 4.068156631951773e-14,
+      "absolute_discrepancy": 5.617728504603292e-14,
+      "integration": "element physical energy and current integrated refinement norm"
+    },
+    {
+      "coarse": "classical-cg2-graded-240x936.npz",
+      "fine": "classical-cg2-graded-480x1872.npz",
+      "energy_difference": 0.6393054076042972,
+      "integrated_difference_squared": 0.6393054076044297,
+      "relative_discrepancy": 2.0717736040132856e-13,
+      "absolute_discrepancy": 1.3244960683778118e-13,
+      "integration": "element physical energy and current integrated refinement norm"
+    },
+    {
+      "coarse": "classical-cg2-graded-xy-720x249.npz",
+      "fine": "classical-cg2-graded-xy-1440x498.npz",
+      "energy_difference": 0.003886129873990285,
+      "integrated_difference_squared": 0.0038861298739533046,
+      "relative_discrepancy": 9.515997297945409e-12,
+      "absolute_discrepancy": 3.698040138000458e-14,
+      "integration": "element physical energy and current integrated refinement norm"
+    }
+  ],
+  "scope": "Recorded increments measure reference refinement, not an exact continuum error bound; CG2 has no discrete maximum-principle claim.",
+  "physical_form_verification": "physical-form-verification.json",
+  "field_identity_verification": "field-sampling-verification.json"
+}

@@ -1,0 +1,101 @@
+{
+  "complex_dofs": 1051137,
+  "residual_history": [
+    7.059675650544048e-12
+  ],
+  "stored_original_residual": 7.059675650544048e-12,
+  "pressure_l2": 246257.3913174892,
+  "elapsed_seconds": 77.40640923101455,
+  "storage": {
+    "structural_nonzeros": 29390852,
+    "nonzero_entries": 14713860
+  },
+  "native_versions": {
+    "dolfinx": "0.9.0",
+    "basix": "0.9.0",
+    "ufl": "2024.2.0",
+    "petsc": [
+      3,
+      23,
+      0
+    ]
+  },
+  "degree": 1,
+  "method": "DOLFINx/UFL conforming triangular CG",
+  "geometry": [
+    2048,
+    512
+  ],
+  "material": {
+    "dataset": "Marmousi II, Martin, Wiley and Marfurt (2006)",
+    "doi": "10.1190/1.2172306",
+    "sources": {
+      "vp": {
+        "filename": "vp_marmousi-ii.segy",
+        "url": "https://ahay.org/data/marm2/vp_marmousi-ii.segy",
+        "sha256": "2722a5de0645d8fcf5750f380893d4875383af9b24988ece0bd07b943f5b0c91"
+      },
+      "density": {
+        "filename": "density_marmousi-ii.segy",
+        "url": "https://ahay.org/data/marm2/density_marmousi-ii.segy",
+        "sha256": "10ec5c4274a63ffde2ac94dda4f062d5b83827efcefeb1a2ab22438a85f32967"
+      }
+    },
+    "primary_shape": [
+      13601,
+      2801
+    ],
+    "primary_spacing_m": 1.25,
+    "crop_origin_m": [
+      3395.0,
+      515.0
+    ],
+    "cell_shape": [
+      2048,
+      512
+    ],
+    "cell_spacing_m": 5.0,
+    "sampling": "Primary nodes at material-cell centres; no interpolation",
+    "coordinate_order": [
+      "x",
+      "depth"
+    ],
+    "density_unit": "kg/m^3",
+    "velocity_unit": "m/s",
+    "bulk_modulus_unit": "Pa",
+    "historical_article_arrays_identified": false
+  },
+  "omega": 125.66370614359172,
+  "point_source": [
+    5000,
+    50,
+    1.0
+  ],
+  "mpi_ranks": 4,
+  "archives": [
+    {
+      "archive": "classical-p1-rank0.npz",
+      "sha256": "fc257a5310b8a4c8075a9708a3ba45aed44684cdce4f23d1dc1dc31fd4f4b628"
+    },
+    {
+      "archive": "classical-p1-rank1.npz",
+      "sha256": "9a85fefd5d5867ae6e7e88866d2bcf71ed333c5e79d0c01435fbf29a20ba965d"
+    },
+    {
+      "archive": "classical-p1-rank2.npz",
+      "sha256": "b2349f8af091d21d67b514a564ad55a59e50384671fd72555c66aa8371b45c5f"
+    },
+    {
+      "archive": "classical-p1-rank3.npz",
+      "sha256": "600944191384657de5568006c0ea4de6499dc84f937556dcd9d1fca9441fad11"
+    }
+  ],
+  "source_sha256": {
+    "examples/marmousi_reference.py": "c274159b27f1610cacb036a797d4518eb34b21a034d91bde5c17d1fdd39b098d",
+    "examples/marmousi_data.py": "53521b99a9c1007d6d437f8e4b2666599c170eae06fd98ac0318c3568236e999",
+    "examples/hpc4e_parallel.py": "9acee6767c2a9745e151ee70620a59a88e3a0ae1fd77f27a511afdcd15d42787"
+  },
+  "source_changed_during_run": false,
+  "field_coordinates": "Owned continuous equispaced Pk nodal values on SW-NE triangles",
+  "solver": "PETSc/MUMPS symmetric-indefinite LDLt; five Ruiz congruences"
+}

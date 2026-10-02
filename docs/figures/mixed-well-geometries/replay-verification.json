@@ -1,0 +1,45 @@
+{
+  "source_hashes": {
+    "examples/verify_mixed_well_fields.py": "2a1318d00728822b6ee3fd196fba5416cd82326e5cf518dd8d7cf3bc4d2c76b5",
+    "examples/solve_mapped_well.py": "0c00ec837510eb9c06458f4223cd88e25eebb9ccbe3f72daa7ac8974d148c7b3",
+    "src/pymhm/hdiv3d_family.py": "29cd2993848bc6ce5bc944a7a732eae3f9f6cdcc957bf787148d92704dc01c47",
+    "src/pymhm/hdiv3d_mesh.py": "ee7968260eadc10ebf664cd79d5a21d501843cebb24723d12d49ba4119799060"
+  },
+  "source_changed_during_run": false,
+  "field_interpolation": "Executed monomial basis, exact affine Piola, no averaging or smoothing.",
+  "rows": [
+    {
+      "archive": "prism-p1-fine4-macro4.npz",
+      "sha256": "be1186b2927459cf825378342f4db9de519789945085889dd551dda1c39bc4b6",
+      "native_threads": [
+        1,
+        4
+      ],
+      "sample_count": 8192,
+      "pressure_max_absolute": 0.0,
+      "flux_max_absolute": 0.0
+    },
+    {
+      "archive": "tetrahedron-p1-fine4-macro4.npz",
+      "sha256": "e25ce47ea7d050ffdc7f3a8e63e6504a2b3b0c8b9b9c77818eb3ba65645c1f08",
+      "native_threads": [
+        1,
+        4
+      ],
+      "sample_count": 24576,
+      "pressure_max_absolute": 0.0,
+      "flux_max_absolute": 0.0
+    },
+    {
+      "archive": "tetrahedron-p2-fine4-macro4.npz",
+      "sha256": "bd265dc7ef575cff2d9d4da9270252dc163175726c9236db6c5268fa9b89e747",
+      "native_threads": [
+        1,
+        4
+      ],
+      "sample_count": 24576,
+      "pressure_max_absolute": 0.0,
+      "flux_max_absolute": 0.0
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "name": "mixed-face-uniform-e1-2-r128",
+  "epsilon": 1.0,
+  "local_refinement": 128,
+  "segments": 2,
+  "free_trace_dofs": 736,
+  "retained_constant_coordinates": 240,
+  "quadrature": {
+    "8": {
+      "l2_error": 3.285627865556686e-05,
+      "broken_h1_error": 0.004298902561330459
+    },
+    "12": {
+      "l2_error": 3.285627865556704e-05,
+      "broken_h1_error": 0.004298902561330458
+    }
+  },
+  "physical_checks": {
+    "projected_original_residual": 3.1018382032075967e-15,
+    "maximum_original_local_residual": 8.893338183266354e-16
+  },
+  "archive": "mixed-face-uniform-e1-2-r128.npz",
+  "archive_sha256": "d1ac6eba71282d09368bb67241f26f3a2a0efd41206619a15f9f981063f4941c",
+  "source_hashes": {
+    "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+    "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+    "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+    "src/pymhm/scalar_boundary.py": "b0f058385c0ec413902d02638d5d95a67fc238d16aa183359597547681da5ef0",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "examples/transport_mixed_campaign.py": "251f32e290d7bea03dd310f28251556dda01609141c431e3ca07baa0a55ad276",
+    "examples/transport_campaign.py": "5b05711ea6476653cffd3c66c284ddfe66badd2e537c91bc5d475ffe770de735",
+    "examples/pgmhm_campaign.py": "94e7f8d085a61c8e55d49176c161aef86100f3bed14d3abd93b98aade00689ac",
+    "examples/transport_face_resolution.py": "ee752b9a0ff88d23aa5011d71489da0fd02ca8d4888ae2ce9eb62a44542be3d4",
+    "examples/transport_checkpoints.py": "fccba8e1a4e0f624e3d7b733fadfd181c25ec0674d00bf61a98d8a87c9f5ee75",
+    "examples/transport_trace_family.py": "631240349d9093621ba68115b3a267fa152c30a366ccdef307f4bbc5f8ef8ab0",
+    "examples/unfitted_trace_family.py": "ba18ae264be7847b06a5285772085953026e729cab8cafe70109b771b5ecc36c",
+    "examples/transport_coefficient_controls.py": "bc438db69f8f3749fc89b59c361c3f20bbcdfc8663c35f62afa9be0e266ff340",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64"
+  },
+  "source_changed_during_run": false
+}

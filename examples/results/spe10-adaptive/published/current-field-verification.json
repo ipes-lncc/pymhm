@@ -1,0 +1,736 @@
+{
+  "accepted": true,
+  "scope": "Seven complete current MHM fields, reconstructed RT2 fluxes, recovered pressures, indicators, metrics and nested local diagnostics on the declared macro geometry",
+  "source_snapshot_sha256": "d6644cdb828c8ac4a5b056af664eacc588bb3803a623fa09f481374c9c638ba3",
+  "source_hashes": {
+    "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+    "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+    "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+    "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+    "src/pymhm/darcy.py": "40c20c036e29d96595e626e62bcc40ccf245dca06f8c6b3f2f652fb90dbc1e16",
+    "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+    "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+    "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94",
+    "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+    "examples/spe10_adaptive.py": "111d056e78838e757971236ec9511f3b751f4fb70956f23c860254b399277e28",
+    "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+    "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+    "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+    "src/pymhm/hybrid.py": "351d06072b275304f609b50cc9f3dfa279350cd20c956b10eee7d12c5078998e",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+    "examples/solve_spe10_published.py": "f7aa592a1d44bff0f02c26edfdc5aae18b05044fe9f312a0b331523670b97eb7",
+    "examples/solve_spe10_balanced.py": "0a679afc06cd599fb9560f3744b9ca5b042873d3dbef62c96f85f15372055a97",
+    "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3"
+  },
+  "rows": [
+    {
+      "level": 0,
+      "archive": "mhm-level0.npz",
+      "archive_sha256": "b8217f311b3cc91e843a97dc46ca60d74a6343167642e208e99fa20c56247f98",
+      "primary_pressure_and_rt2_replay_bitwise": true,
+      "macro_and_local_geometry_identical": true,
+      "source_snapshot_sha256": "d6644cdb828c8ac4a5b056af664eacc588bb3803a623fa09f481374c9c638ba3",
+      "raw_pressure_field_change": {
+        "pressure_l2": {
+          "absolute": 1.9201186849528744e-08,
+          "reference_norm": 815.609276523324,
+          "relative": 2.3542138867494413e-11
+        },
+        "broken_gradient_l2": {
+          "absolute": 7.90535464844734e-11,
+          "reference_norm": 1.122274955192895,
+          "relative": 7.04404443124063e-11
+        },
+        "physical_raw_flux_l2": {
+          "absolute": 1.1670068439069878e-10,
+          "reference_norm": 1.2841873306260077,
+          "relative": 9.087512515312721e-11
+        },
+        "energy": {
+          "absolute": 2.73939233606742e-11,
+          "reference_norm": 0.36965088831037535,
+          "relative": 7.41075545249956e-11
+        }
+      },
+      "reconstructed_field_change": {
+        "reconstructed_flux_l2": {
+          "absolute": 7.09198007216459e-11,
+          "reference_norm": 0.91316909239208,
+          "relative": 7.766338273218257e-11
+        },
+        "recovered_pressure_l2": {
+          "absolute": 1.9176810203897903e-08,
+          "reference_norm": 815.5674855892267,
+          "relative": 2.351345602018838e-11
+        }
+      },
+      "indicator_metric_changes": {
+        "local_squared": {
+          "absolute_l2": 2.21860801390741e-09,
+          "reference_l2": 18.800499148894644,
+          "relative_l2": 1.1800793140313248e-10,
+          "linf": 1.3325820447107617e-09
+        },
+        "flux_defect": {
+          "absolute_l2": 1.0077895753835325e-10,
+          "reference_l2": 1.4084213144178954,
+          "relative_l2": 7.155455296415013e-11,
+          "linf": 4.331557335035541e-11
+        },
+        "nonconformity": {
+          "absolute_l2": 7.107102048070502e-10,
+          "reference_l2": 5.024845070984661,
+          "relative_l2": 1.4143922743229584e-10,
+          "linf": 4.3155545803585937e-10
+        },
+        "divergence_defect": {
+          "absolute_l2": 4.077890667982898e-10,
+          "reference_l2": 6.398185606899365,
+          "relative_l2": 6.373511052235777e-11,
+          "linf": 1.6758977539055309e-10
+        },
+        "oscillation": {
+          "absolute_l2": 0.0,
+          "reference_l2": 0.0,
+          "relative_l2": 0.0,
+          "linf": 0.0
+        },
+        "mesh_size": {
+          "absolute_l2": 0.0,
+          "reference_l2": 2090.8863885228466,
+          "relative_l2": 0.0,
+          "linf": 0.0
+        },
+        "requested_mesh_size": {
+          "absolute_l2": 1.5255439993699025e-07,
+          "reference_l2": 4852.428269480053,
+          "relative_l2": 3.1438774869996534e-11,
+          "linf": 7.304353744075343e-08
+        },
+        "mesh_size_factors": {
+          "absolute_l2": 1.5066877907677617e-09,
+          "reference_l2": 21.78836367471576,
+          "relative_l2": 6.915103002967556e-11,
+          "linf": 7.711995486658907e-10
+        },
+        "projected_indicator": {
+          "absolute_l2": 3.3498656377277034e-10,
+          "reference_l2": 4.9028118803767695,
+          "relative_l2": 6.832539610861582e-11,
+          "linf": 1.4579004670167706e-10
+        }
+      },
+      "marks_equal": true,
+      "local_refinement_change": 3.744338405887976e-11,
+      "accepted": true
+    },
+    {
+      "level": 1,
+      "archive": "mhm-level1.npz",
+      "archive_sha256": "6574f594c58e90688db041d404a0df3ac9080d114ef4f24bf76e1e3cd6d1f132",
+      "primary_pressure_and_rt2_replay_bitwise": true,
+      "macro_and_local_geometry_identical": true,
+      "source_snapshot_sha256": "d6644cdb828c8ac4a5b056af664eacc588bb3803a623fa09f481374c9c638ba3",
+      "raw_pressure_field_change": {
+        "pressure_l2": {
+          "absolute": 3.05047970514577e-08,
+          "reference_norm": 833.7466475304478,
+          "relative": 3.658760984744312e-11
+        },
+        "broken_gradient_l2": {
+          "absolute": 1.1580003715786154e-10,
+          "reference_norm": 1.1245462771664612,
+          "relative": 1.0297489708440004e-10
+        },
+        "physical_raw_flux_l2": {
+          "absolute": 1.7428334528322287e-10,
+          "reference_norm": 1.3284489291213892,
+          "relative": 1.311931090933925e-10
+        },
+        "energy": {
+          "absolute": 3.7729148147319615e-11,
+          "reference_norm": 0.3712585261619797,
+          "relative": 1.0162500114774045e-10
+        }
+      },
+      "reconstructed_field_change": {
+        "reconstructed_flux_l2": {
+          "absolute": 1.430838488252493e-10,
+          "reference_norm": 0.8819500535853546,
+          "relative": 1.6223577315243254e-10
+        },
+        "recovered_pressure_l2": {
+          "absolute": 3.049826791216349e-08,
+          "reference_norm": 833.7412397202636,
+          "relative": 3.6580016027989996e-11
+        }
+      },
+      "indicator_metric_changes": {
+        "local_squared": {
+          "absolute_l2": 7.280097280344064e-09,
+          "reference_l2": 24.505530468715655,
+          "relative_l2": 2.9707976693824316e-10,
+          "linf": 6.363674032172639e-09
+        },
+        "flux_defect": {
+          "absolute_l2": 1.7625450639324566e-10,
+          "reference_l2": 1.3820809726062107,
+          "relative_l2": 1.275283502824584e-10,
+          "linf": 9.498379860417572e-11
+        },
+        "nonconformity": {
+          "absolute_l2": 9.609868306593988e-10,
+          "reference_l2": 4.370524867478403,
+          "relative_l2": 2.1987904423338633e-10,
+          "linf": 5.547358128410451e-10
+        },
+        "divergence_defect": {
+          "absolute_l2": 9.121760731622301e-10,
+          "reference_l2": 6.036016872393795,
+          "relative_l2": 1.5112218743690733e-10,
+          "linf": 5.70969937996324e-10
+        },
+        "oscillation": {
+          "absolute_l2": 0.0,
+          "reference_l2": 0.0,
+          "relative_l2": 0.0,
+          "linf": 0.0
+        },
+        "mesh_size": {
+          "absolute_l2": 0.0,
+          "reference_l2": 1908.3731071342315,
+          "relative_l2": 0.0,
+          "linf": 0.0
+        },
+        "requested_mesh_size": {
+          "absolute_l2": 2.3312623715781228e-07,
+          "reference_l2": 4465.925251993533,
+          "relative_l2": 5.22011059306798e-11,
+          "linf": 7.815737035343773e-08
+        },
+        "mesh_size_factors": {
+          "absolute_l2": 2.6056198282813476e-09,
+          "reference_l2": 23.602261173119743,
+          "relative_l2": 1.1039704243459727e-10,
+          "linf": 1.1408212152730357e-09
+        },
+        "projected_indicator": {
+          "absolute_l2": 6.219033356189045e-10,
+          "reference_l2": 3.6902200050557115,
+          "relative_l2": 1.6852744139018226e-10,
+          "linf": 2.9225022402101786e-10
+        }
+      },
+      "marks_equal": true,
+      "local_refinement_change": 4.811799993815831e-10,
+      "accepted": true
+    },
+    {
+      "level": 2,
+      "archive": "mhm-level2.npz",
+      "archive_sha256": "4fc57ee94e5d91b637f582d68ef447ddd2c7e24fb49cec565ff0c67a5bdacb2f",
+      "primary_pressure_and_rt2_replay_bitwise": true,
+      "macro_and_local_geometry_identical": true,
+      "source_snapshot_sha256": "d6644cdb828c8ac4a5b056af664eacc588bb3803a623fa09f481374c9c638ba3",
+      "raw_pressure_field_change": {
+        "pressure_l2": {
+          "absolute": 4.3230006943050934e-08,
+          "reference_norm": 852.4752453692937,
+          "relative": 5.071115809858341e-11
+        },
+        "broken_gradient_l2": {
+          "absolute": 1.6062460731171858e-10,
+          "reference_norm": 1.216442362514453,
+          "relative": 1.3204456886859705e-10
+        },
+        "physical_raw_flux_l2": {
+          "absolute": 1.7101005313826842e-10,
+          "reference_norm": 1.2711376845533,
+          "relative": 1.3453306846013642e-10
+        },
+        "energy": {
+          "absolute": 4.844789929670953e-11,
+          "reference_norm": 0.3906642802745595,
+          "relative": 1.2401415164616603e-10
+        }
+      },
+      "reconstructed_field_change": {
+        "reconstructed_flux_l2": {
+          "absolute": 1.411591029525308e-10,
+          "reference_norm": 1.041209730902906,
+          "relative": 1.355722087135335e-10
+        },
+        "recovered_pressure_l2": {
+          "absolute": 4.321838155527176e-08,
+          "reference_norm": 852.4334813579939,
+          "relative": 5.0700004751598295e-11
+        }
+      },
+      "indicator_metric_changes": {
+        "local_squared": {
+          "absolute_l2": 3.037193754284678e-09,
+          "reference_l2": 16.205838089314632,
+          "relative_l2": 1.874135566174304e-10,
+          "linf": 1.593971621360879e-09
+        },
+        "flux_defect": {
+          "absolute_l2": 1.4792333993775164e-10,
+          "reference_l2": 1.2156226516465654,
+          "relative_l2": 1.2168524478989342e-10,
+          "linf": 5.588213225493632e-11
+        },
+        "nonconformity": {
+          "absolute_l2": 4.2505506294111563e-10,
+          "reference_l2": 2.2510840108965864,
+          "relative_l2": 1.8882238996127916e-10,
+          "linf": 2.0037148329432597e-10
+        },
+        "divergence_defect": {
+          "absolute_l2": 7.879402420355318e-10,
+          "reference_l2": 6.544694024623468,
+          "relative_l2": 1.203937478316053e-10,
+          "linf": 3.4345171151528575e-10
+        },
+        "oscillation": {
+          "absolute_l2": 0.0,
+          "reference_l2": 0.0,
+          "relative_l2": 0.0,
+          "linf": 0.0
+        },
+        "mesh_size": {
+          "absolute_l2": 0.0,
+          "reference_l2": 1909.5610131667993,
+          "relative_l2": 0.0,
+          "linf": 0.0
+        },
+        "requested_mesh_size": {
+          "absolute_l2": 2.734452746741159e-07,
+          "reference_l2": 3464.883400407964,
+          "relative_l2": 7.891904086640253e-11,
+          "linf": 6.269488039833959e-08
+        },
+        "mesh_size_factors": {
+          "absolute_l2": 2.794631867517864e-09,
+          "reference_l2": 28.48312610243586,
+          "relative_l2": 9.81153493288389e-11,
+          "linf": 6.019593712380811e-10
+        },
+        "projected_indicator": {
+          "absolute_l2": 4.4857965995232555e-10,
+          "reference_l2": 3.4426159771953313,
+          "relative_l2": 1.3030197469709632e-10,
+          "linf": 1.3812306853822065e-10
+        }
+      },
+      "marks_equal": true,
+      "local_refinement_change": 1.972976586947458e-10,
+      "accepted": true
+    },
+    {
+      "level": 3,
+      "archive": "mhm-level3.npz",
+      "archive_sha256": "0494d6a07242ccdb6290be255abb10b9367a55ac1cd5301ada5ecffbe240e35d",
+      "primary_pressure_and_rt2_replay_bitwise": true,
+      "macro_and_local_geometry_identical": true,
+      "source_snapshot_sha256": "d6644cdb828c8ac4a5b056af664eacc588bb3803a623fa09f481374c9c638ba3",
+      "raw_pressure_field_change": {
+        "pressure_l2": {
+          "absolute": 2.372988237213777e-08,
+          "reference_norm": 840.2485864279772,
+          "relative": 2.824150228329102e-11
+        },
+        "broken_gradient_l2": {
+          "absolute": 1.0248174767305321e-10,
+          "reference_norm": 1.24341656333429,
+          "relative": 8.241948088438097e-11
+        },
+        "physical_raw_flux_l2": {
+          "absolute": 2.7079336578026846e-10,
+          "reference_norm": 1.1198413985867721,
+          "relative": 2.418140337747888e-10
+        },
+        "energy": {
+          "absolute": 3.348759535396138e-11,
+          "reference_norm": 0.376502601818837,
+          "relative": 8.894386172150469e-11
+        }
+      },
+      "reconstructed_field_change": {
+        "reconstructed_flux_l2": {
+          "absolute": 2.2367594829146017e-10,
+          "reference_norm": 0.9142292979400005,
+          "relative": 2.446606653226505e-10
+        },
+        "recovered_pressure_l2": {
+          "absolute": 2.3721610580530005e-08,
+          "reference_norm": 840.2301115873173,
+          "relative": 2.823227857868176e-11
+        }
+      },
+      "indicator_metric_changes": {
+        "local_squared": {
+          "absolute_l2": 7.1676038695224025e-09,
+          "reference_l2": 10.483198394553357,
+          "relative_l2": 6.83723001297619e-10,
+          "linf": 5.454486640132927e-09
+        },
+        "flux_defect": {
+          "absolute_l2": 2.9583356731768073e-10,
+          "reference_l2": 1.0255666213837906,
+          "relative_l2": 2.8845865412284414e-10,
+          "linf": 2.4646029661568036e-10
+        },
+        "nonconformity": {
+          "absolute_l2": 4.5267273570082374e-10,
+          "reference_l2": 2.2248294704769913,
+          "relative_l2": 2.0346401452681817e-10,
+          "linf": 1.7457146839205961e-10
+        },
+        "divergence_defect": {
+          "absolute_l2": 1.3919479174803212e-09,
+          "reference_l2": 4.629606015071116,
+          "relative_l2": 3.006622837772815e-10,
+          "linf": 1.0931158200833124e-09
+        },
+        "oscillation": {
+          "absolute_l2": 0.0,
+          "reference_l2": 0.0,
+          "relative_l2": 0.0,
+          "linf": 0.0
+        },
+        "mesh_size": {
+          "absolute_l2": 0.0,
+          "reference_l2": 1877.7355460716221,
+          "relative_l2": 0.0,
+          "linf": 0.0
+        },
+        "requested_mesh_size": {
+          "absolute_l2": 2.772744904289317e-07,
+          "reference_l2": 3565.349763561467,
+          "relative_l2": 7.776922569076622e-11,
+          "linf": 8.373331183975097e-08
+        },
+        "mesh_size_factors": {
+          "absolute_l2": 3.611659885637904e-09,
+          "reference_l2": 34.93392041136234,
+          "relative_l2": 1.0338547300471903e-10,
+          "linf": 1.072852473527064e-09
+        },
+        "projected_indicator": {
+          "absolute_l2": 7.245525712761511e-10,
+          "reference_l2": 2.8315179218060083,
+          "relative_l2": 2.558883931817089e-10,
+          "linf": 4.419868915306324e-10
+        }
+      },
+      "marks_equal": true,
+      "local_refinement_change": 1.2621801881369944e-10,
+      "accepted": true
+    },
+    {
+      "level": 4,
+      "archive": "mhm-level4.npz",
+      "archive_sha256": "eb328a1d4adff13009761fe47bf9f72966461269ee840374167371c5437f816b",
+      "primary_pressure_and_rt2_replay_bitwise": true,
+      "macro_and_local_geometry_identical": true,
+      "source_snapshot_sha256": "d6644cdb828c8ac4a5b056af664eacc588bb3803a623fa09f481374c9c638ba3",
+      "raw_pressure_field_change": {
+        "pressure_l2": {
+          "absolute": 8.510349773975192e-08,
+          "reference_norm": 844.6945450809695,
+          "relative": 1.0075061835707036e-10
+        },
+        "broken_gradient_l2": {
+          "absolute": 2.0183122981413132e-10,
+          "reference_norm": 1.3076577692342914,
+          "relative": 1.543456052207873e-10
+        },
+        "physical_raw_flux_l2": {
+          "absolute": 2.484891423469626e-10,
+          "reference_norm": 1.427016216947213,
+          "relative": 1.741319680855137e-10
+        },
+        "energy": {
+          "absolute": 6.043858347761046e-11,
+          "reference_norm": 0.4010037693256361,
+          "relative": 1.5071824282163083e-10
+        }
+      },
+      "reconstructed_field_change": {
+        "reconstructed_flux_l2": {
+          "absolute": 2.1110616187558873e-10,
+          "reference_norm": 1.2254723052197358,
+          "relative": 1.7226514297908666e-10
+        },
+        "recovered_pressure_l2": {
+          "absolute": 8.509497459506601e-08,
+          "reference_norm": 844.658873928047,
+          "relative": 1.0074478256451126e-10
+        }
+      },
+      "indicator_metric_changes": {
+        "local_squared": {
+          "absolute_l2": 3.74217946403186e-09,
+          "reference_l2": 19.077179419663068,
+          "relative_l2": 1.9615999733035757e-10,
+          "linf": 2.511644225933196e-09
+        },
+        "flux_defect": {
+          "absolute_l2": 1.8464869195481994e-10,
+          "reference_l2": 1.0980359032405143,
+          "relative_l2": 1.681627088967549e-10,
+          "linf": 9.479683704682884e-11
+        },
+        "nonconformity": {
+          "absolute_l2": 3.234246011320544e-10,
+          "reference_l2": 1.5938035324223356,
+          "relative_l2": 2.0292626697877802e-10,
+          "linf": 1.3903111995006157e-10
+        },
+        "divergence_defect": {
+          "absolute_l2": 9.110802866645453e-10,
+          "reference_l2": 5.755218549030455,
+          "relative_l2": 1.5830507197993882e-10,
+          "linf": 4.4656811581944567e-10
+        },
+        "oscillation": {
+          "absolute_l2": 0.0,
+          "reference_l2": 0.0,
+          "relative_l2": 0.0,
+          "linf": 0.0
+        },
+        "mesh_size": {
+          "absolute_l2": 0.0,
+          "reference_l2": 1865.534387347356,
+          "relative_l2": 0.0,
+          "linf": 0.0
+        },
+        "requested_mesh_size": {
+          "absolute_l2": 3.4174681422790865e-07,
+          "reference_l2": 3634.230778072662,
+          "relative_l2": 9.403552913861649e-11,
+          "linf": 1.4107587276157574e-07
+        },
+        "mesh_size_factors": {
+          "absolute_l2": 5.638162084441951e-09,
+          "reference_l2": 40.12481645564278,
+          "relative_l2": 1.4051558567687985e-10,
+          "linf": 1.4965884087558834e-09
+        },
+        "projected_indicator": {
+          "absolute_l2": 4.370273001072417e-10,
+          "reference_l2": 2.864481747232884,
+          "relative_l2": 1.5256766796626095e-10,
+          "linf": 1.3546164190358922e-10
+        }
+      },
+      "marks_equal": true,
+      "local_refinement_change": 1.652219570346228e-10,
+      "accepted": true
+    },
+    {
+      "level": 5,
+      "archive": "mhm-level5.npz",
+      "archive_sha256": "9641dcf1cadc963aee2905fbbc143ff4fdf61969a7311c9c3908db02027f2881",
+      "primary_pressure_and_rt2_replay_bitwise": true,
+      "macro_and_local_geometry_identical": true,
+      "source_snapshot_sha256": "d6644cdb828c8ac4a5b056af664eacc588bb3803a623fa09f481374c9c638ba3",
+      "raw_pressure_field_change": {
+        "pressure_l2": {
+          "absolute": 4.531218977367895e-08,
+          "reference_norm": 841.2442560194997,
+          "relative": 5.3863297668244196e-11
+        },
+        "broken_gradient_l2": {
+          "absolute": 1.8635188211692203e-10,
+          "reference_norm": 1.3335279664731041,
+          "relative": 1.3974351254873405e-10
+        },
+        "physical_raw_flux_l2": {
+          "absolute": 1.5634784532626438e-10,
+          "reference_norm": 1.1851564190889785,
+          "relative": 1.319216964174635e-10
+        },
+        "energy": {
+          "absolute": 5.7662979122115154e-11,
+          "reference_norm": 0.39545571051885336,
+          "relative": 1.4581400037556437e-10
+        }
+      },
+      "reconstructed_field_change": {
+        "reconstructed_flux_l2": {
+          "absolute": 1.315197433607568e-10,
+          "reference_norm": 1.0853534936343068,
+          "relative": 1.211768738315504e-10
+        },
+        "recovered_pressure_l2": {
+          "absolute": 4.530602440000642e-08,
+          "reference_norm": 841.2236025763252,
+          "relative": 5.385729104753187e-11
+        }
+      },
+      "indicator_metric_changes": {
+        "local_squared": {
+          "absolute_l2": 6.363160021770911e-10,
+          "reference_l2": 1.8092437823954153,
+          "relative_l2": 3.5170274363724327e-10,
+          "linf": 3.396604109084933e-10
+        },
+        "flux_defect": {
+          "absolute_l2": 1.1131709567788262e-10,
+          "reference_l2": 0.6288812448621729,
+          "relative_l2": 1.7700813402740153e-10,
+          "linf": 2.9619577623929416e-11
+        },
+        "nonconformity": {
+          "absolute_l2": 5.181885997893063e-10,
+          "reference_l2": 1.0050847859696028,
+          "relative_l2": 5.155670516785417e-10,
+          "linf": 2.954586991732455e-10
+        },
+        "divergence_defect": {
+          "absolute_l2": 5.409686379177067e-10,
+          "reference_l2": 2.9842754607940525,
+          "relative_l2": 1.812730242314047e-10,
+          "linf": 1.5974233047444386e-10
+        },
+        "oscillation": {
+          "absolute_l2": 0.0,
+          "reference_l2": 0.0,
+          "relative_l2": 0.0,
+          "linf": 0.0
+        },
+        "mesh_size": {
+          "absolute_l2": 0.0,
+          "reference_l2": 1835.5760190835267,
+          "relative_l2": 0.0,
+          "linf": 0.0
+        },
+        "requested_mesh_size": {
+          "absolute_l2": 3.4343095700042116e-07,
+          "reference_l2": 3371.116797408517,
+          "relative_l2": 1.0187453524731843e-10,
+          "linf": 1.6662258417454723e-07
+        },
+        "mesh_size_factors": {
+          "absolute_l2": 1.007241829442721e-08,
+          "reference_l2": 48.27149204462765,
+          "relative_l2": 2.0866183885750045e-10,
+          "linf": 6.7927390379196595e-09
+        },
+        "projected_indicator": {
+          "absolute_l2": 3.505516941641273e-10,
+          "reference_l2": 1.722121115490676,
+          "relative_l2": 2.035580953109946e-10,
+          "linf": 1.7121079554094365e-10
+        }
+      },
+      "marks_equal": true,
+      "local_refinement_change": 6.71225003432976e-11,
+      "accepted": true
+    },
+    {
+      "level": 6,
+      "archive": "mhm-level6.npz",
+      "archive_sha256": "d1b2bd9ec781d0366cf8ad8b0639a60e4c5b68e6da261e20c20ee1fdc27e94e5",
+      "primary_pressure_and_rt2_replay_bitwise": true,
+      "macro_and_local_geometry_identical": true,
+      "source_snapshot_sha256": "d6644cdb828c8ac4a5b056af664eacc588bb3803a623fa09f481374c9c638ba3",
+      "raw_pressure_field_change": {
+        "pressure_l2": {
+          "absolute": 4.6596603467336584e-08,
+          "reference_norm": 827.042271835231,
+          "relative": 5.634125975681674e-11
+        },
+        "broken_gradient_l2": {
+          "absolute": 1.462662612232496e-10,
+          "reference_norm": 1.3933119598939327,
+          "relative": 1.0497739589803296e-10
+        },
+        "physical_raw_flux_l2": {
+          "absolute": 1.8463213723474871e-10,
+          "reference_norm": 1.155547626617928,
+          "relative": 1.5977890740439013e-10
+        },
+        "energy": {
+          "absolute": 4.609356450930317e-11,
+          "reference_norm": 0.3972015940203652,
+          "relative": 1.1604576920942536e-10
+        }
+      },
+      "reconstructed_field_change": {
+        "reconstructed_flux_l2": {
+          "absolute": 1.704996209138774e-10,
+          "reference_norm": 1.0982350361797513,
+          "relative": 1.5524875395249295e-10
+        },
+        "recovered_pressure_l2": {
+          "absolute": 4.659387766152058e-08,
+          "reference_norm": 827.0272529387248,
+          "relative": 5.633898701155954e-11
+        }
+      },
+      "indicator_metric_changes": {
+        "local_squared": {
+          "absolute_l2": 2.441192460507678e-10,
+          "reference_l2": 0.5869064477853021,
+          "relative_l2": 4.159423481748317e-10,
+          "linf": 1.4917159174565597e-10
+        },
+        "flux_defect": {
+          "absolute_l2": 1.0590176160261765e-10,
+          "reference_l2": 0.4495363059906776,
+          "relative_l2": 2.355799969687294e-10,
+          "linf": 3.925199922039102e-11
+        },
+        "nonconformity": {
+          "absolute_l2": 4.261946280985054e-10,
+          "reference_l2": 0.6344856938866098,
+          "relative_l2": 6.71716686766891e-10,
+          "linf": 1.6915264154648835e-10
+        },
+        "divergence_defect": {
+          "absolute_l2": 6.054351303567224e-10,
+          "reference_l2": 1.9663157487020084,
+          "relative_l2": 3.079033114373306e-10,
+          "linf": 2.662147759180389e-10
+        },
+        "oscillation": {
+          "absolute_l2": 0.0,
+          "reference_l2": 0.0,
+          "relative_l2": 0.0,
+          "linf": 0.0
+        },
+        "mesh_size": {
+          "absolute_l2": 0.0,
+          "reference_l2": 1824.3204939484533,
+          "relative_l2": 0.0,
+          "linf": 0.0
+        },
+        "requested_mesh_size": {
+          "absolute_l2": 2.9905736848456173e-07,
+          "reference_l2": 2977.3739334570523,
+          "relative_l2": 1.0044333535805624e-10,
+          "linf": 1.3487473182749454e-07
+        },
+        "mesh_size_factors": {
+          "absolute_l2": 1.3376575116330077e-08,
+          "reference_l2": 60.61887588833271,
+          "relative_l2": 2.2066682894238e-10,
+          "linf": 5.445219386501776e-09
+        },
+        "projected_indicator": {
+          "absolute_l2": 2.894482315074618e-10,
+          "reference_l2": 1.155256299487267,
+          "relative_l2": 2.5054893155391277e-10,
+          "linf": 8.798405060073122e-11
+        }
+      },
+      "marks_equal": true,
+      "local_refinement_change": 2.9697610539005946e-10,
+      "accepted": true
+    }
+  ]
+}

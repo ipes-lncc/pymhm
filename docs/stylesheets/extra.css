@@ -1,0 +1,52 @@
+.md-grid {
+  max-width: 1500px;
+}
+
+.md-typeset img[data-scientific-figure] {
+  cursor: zoom-in;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 4px;
+  background: white;
+}
+
+.figure-dialog {
+  width: min(96vw, 2200px);
+  max-width: 96vw;
+  max-height: 96vh;
+  padding: 16px;
+  border: 0;
+  border-radius: 6px;
+  background: white;
+  color: #222;
+}
+
+.figure-dialog::backdrop {
+  background: rgb(0 0 0 / 75%);
+}
+
+.figure-dialog img {
+  display: block;
+  width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+}
+
+.figure-dialog footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 12px;
+  font: 14px/1.4 sans-serif;
+}
+
+.figure-dialog button,
+.figure-dialog a {
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border: 1px solid #087e8b;
+  border-radius: 4px;
+  color: #075f69;
+  background: white;
+  cursor: pointer;
+}

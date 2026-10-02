@@ -1,0 +1,95 @@
+{
+  "paper": "Gomes et al. CILAMCE2017-0399, Equation (53)",
+  "n": 2,
+  "dt": 0.05,
+  "time": 0.5,
+  "trace_degree": 1,
+  "local_degree": 3,
+  "local_refinement": 2,
+  "local_substeps": 1,
+  "assembly_workers": 1,
+  "lambda": 0.4,
+  "mu": 0.4,
+  "rho": 1.0,
+  "macro_cells": 48,
+  "trace_dofs": 1080,
+  "norms": {
+    "displacement_l2": 0.1057747327553814,
+    "velocity_l2": 0.6397423228494056,
+    "displacement_h1": 1.889266869215971,
+    "velocity_h1": 10.620269443965224,
+    "stress_l2": 0.9873083101075748,
+    "stress_broken_hdiv": 6.185391910837475
+  },
+  "quadrature_relative_change": 1.2928245839556585e-15,
+  "history_columns": [
+    "time",
+    "physical_energy",
+    "displacement_constraint_residual"
+  ],
+  "history": [
+    [
+      0.05,
+      0.007508568081249205,
+      5.001862699988224e-19
+    ],
+    [
+      0.1,
+      0.03276160923743924,
+      2.153454757842369e-18
+    ],
+    [
+      0.15000000000000002,
+      0.08401763437905155,
+      4.890805138745375e-18
+    ],
+    [
+      0.2,
+      0.17531408904069107,
+      8.277736307713369e-18
+    ],
+    [
+      0.25,
+      0.326647369339335,
+      1.2828894961487791e-17
+    ],
+    [
+      0.30000000000000004,
+      0.5635129135601277,
+      1.923583302427478e-17
+    ],
+    [
+      0.35000000000000003,
+      0.9153030169532876,
+      2.600135156319636e-17
+    ],
+    [
+      0.4,
+      1.4123966667570784,
+      3.395094975288483e-17
+    ],
+    [
+      0.45,
+      2.0822757522307986,
+      4.4568152523202534e-17
+    ],
+    [
+      0.5,
+      2.9453432591952375,
+      5.365714700484136e-17
+    ]
+  ],
+  "setup_seconds": 18.7287753430428,
+  "elapsed_seconds": 226.41987496695947,
+  "source_sha256": {
+    "examples/elastodynamics_campaign.py": "53c5fc84bfb8b78d571c2e87c9fe95638d32bb858ccffb5d26e5a11ac35a2ac4",
+    "src/pymhm/elastodynamics.py": "595dec9789177bcac3b5d8b46b40702d0a22811ad3d98c8ac80aa1516958a8f8",
+    "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+    "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+    "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+    "src/pymhm/darcy3d.py": "6fd858b23e13ce0466c61efdfacb6c2b627df0c6bd8b63291716757c8bb4fbd2",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64"
+  }
+}

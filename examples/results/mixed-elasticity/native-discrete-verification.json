@@ -1,0 +1,2892 @@
+{
+  "schema_version": 1,
+  "case": "MHM weak-symmetry elasticity, oscillatory Young modulus, M2AN 55 (2021), Section 6.1.2/Table 3",
+  "physical_data": {
+    "geometry": "unit square; diagonal macrotriangles with original physical fine-cell connectivity",
+    "young_modulus": "100*(1+0.3*sin(10*pi*(x-0.5))*cos(10*pi*y))",
+    "poisson_ratio": 0.3,
+    "displacement": [
+      "x**2*y**2*cos(6*pi*x)*sin(7*pi*y)/27",
+      "exp(y)*sin(4*pi*x)/5"
+    ],
+    "body_force": "-div(2*mu*sym(grad(u))+lambda*div(u)*I), differentiated symbolically in UFL",
+    "boundary": "exact displacement trace, including nonzero values"
+  },
+  "method": {
+    "native": "DOLFINx/UFL/Basix, monolithic weak-symmetry stress/displacement/rotation with native PETSc/MUMPS LU",
+    "restriction": "Independent Basix normal-moment interpolation restricts interior macroface tractions to the declared segmented degree; fine exterior normal degree and all declared interior stress and DG displacement/rotation modes are retained. The congruence-restricted operator represents the same MHM approximation spaces. DOLFINx assembles the conforming operator; the independent comparison application supplies the macro restriction and enriched coordinates, without a built-in DOLFINx MHM controller.",
+    "assembly": "Matching physical Duffy quadrature under native cell permutations; independent UFL compliance, divergence, weak symmetry, body force and displacement boundary load.",
+    "field_norms": "Physical stress Frobenius, displacement vector and rotation scalar L2; independent orders10/12, retaining every one-sided fine-cell value.",
+    "acceptance": "Native original restricted-equation residual <1e-10 and each same-space physical relative field difference <1e-8, without tolerance changes."
+  },
+  "native_provenance": {
+    "reference_code": "FEniCS/DOLFINx",
+    "version": "0.9.0",
+    "runtime_reported_build_git_hash": "8067ef16087b9f364873e0e657dcda52fb989ce3",
+    "runtime_hash_status": "build-reported identifier; not resolved as an upstream dolfinx commit",
+    "verified_upstream_release_commit": "6443e3b27d29aec04ce83d8424b57c339e35f865",
+    "verified_source_url": "https://github.com/FEniCS/dolfinx/tree/6443e3b27d29aec04ce83d8424b57c339e35f865",
+    "upstream_verification_url": "https://api.github.com/repos/FEniCS/dolfinx/git/ref/tags/v0.9.0",
+    "conda_packages": [
+      {
+        "name": "fenics-dolfinx",
+        "version": "0.9.0",
+        "build": "py313hf84a112_112",
+        "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-dolfinx-0.9.0-py313hf84a112_112.conda",
+        "sha256": "79bb466bd1624512b7e6302e7926a05ef1e78685f0c188a69668222f31852b86",
+        "recipe_sha256": "df9a203accdaa6d1a5b1c97600971f9803620dea2176e5c62b705d9ac0e12bec",
+        "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+        "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+        "patches": [
+          {
+            "name": "unpin-cffi.patch",
+            "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+          }
+        ]
+      },
+      {
+        "name": "fenics-libdolfinx",
+        "version": "0.9.0",
+        "build": "py313h2154cf7_112",
+        "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-libdolfinx-0.9.0-py313h2154cf7_112.conda",
+        "sha256": "f8068fef21e9008e0531d83e8f19e8ee41bb40920881b8416583380f138e7889",
+        "recipe_sha256": "e75fdc33edb216ccf13ad27023b1b2b1f465451c630395137104e278732a62d7",
+        "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+        "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+        "patches": [
+          {
+            "name": "unpin-cffi.patch",
+            "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+          }
+        ]
+      }
+    ],
+    "python_extension_file": "cpp.cpython-313-x86_64-linux-gnu.so",
+    "python_extension_sha256": "7fba4280795a95accf09754435d0e6a19e48ca4e2c604d739688614bf4b6802a",
+    "runtime_versions": {
+      "dolfinx": "0.9.0",
+      "basix": "0.9.0",
+      "ufl": "2024.2.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1"
+    }
+  },
+  "literature_scope": "Same published coefficients and analytical fields, declared nonzero boundary trace and nominal spaces. Historical Table3 connectivity/mesh-size convention and inconsistent printed rotation entries remain unresolved; no literal ordinate reproduction is claimed.",
+  "rows": [
+    {
+      "case": "n4-q8",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 128,
+      "local_refinement": 2,
+      "skeletal_segments": 1,
+      "trace_degree": 1,
+      "stress_normal_degree": 2,
+      "interior_enrichment": 0,
+      "polynomial_degree": 2,
+      "quadrature_order": 8,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 8
+      },
+      "restriction": {
+        "full_dofs": 3168,
+        "restricted_dofs": 2848,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 40,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 240,
+            "free_fine_stress_dofs": 768
+          },
+          {
+            "restricted_fine_stress_dofs": 240,
+            "free_fine_stress_dofs": 768
+          }
+        ],
+        "interior_normal_degree": 1,
+        "exterior_fine_normal_degree": 2,
+        "skeletal_segments": 1,
+        "parent_polynomial_degree": 2
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 7.12230647801998e-15,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 1.2270427672900711e-11,
+            "reference_l2": 177.79444528938143,
+            "relative_difference": 6.901468520531754e-14,
+            "analytical_error_l2": 34.16034688697163
+          },
+          "displacement": {
+            "difference_l2": 2.628016034323051e-14,
+            "reference_l2": 0.25550738269048745,
+            "relative_difference": 1.0285479842696116e-13,
+            "analytical_error_l2": 0.027087328068709546
+          },
+          "rotation": {
+            "difference_l2": 1.2634636172297482e-13,
+            "reference_l2": 1.6750591700913011,
+            "relative_difference": 7.542799918888127e-14,
+            "analytical_error_l2": 0.4958769500748019
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 1.2270057617611883e-11,
+            "reference_l2": 177.79444528938146,
+            "relative_difference": 6.901260383945581e-14,
+            "analytical_error_l2": 34.16034629124265
+          },
+          "displacement": {
+            "difference_l2": 2.628153985673383e-14,
+            "reference_l2": 0.25550738269048745,
+            "relative_difference": 1.0286019754102507e-13,
+            "analytical_error_l2": 0.02708732806870998
+          },
+          "rotation": {
+            "difference_l2": 1.2637251616990332e-13,
+            "reference_l2": 1.6750591700913013,
+            "relative_difference": 7.54436132324897e-14,
+            "analytical_error_l2": 0.4958769500748
+          }
+        }
+      ],
+      "elapsed_seconds": 1.5234068990002925,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "2a57c48ccad35ea3be725ed87338b252f71dd3ca4858ea7f9641e765f0453b92",
+      "native_archive_sha256": "e1d92f85b63d9608bcc8e3932c23e74e219190e32189e1cfedce28d129f38385",
+      "pymhm_archive_sha256": "47c76985d14eacbfd30d154eeffb6faca1a887d5f43af53becdc589c404f4ba0",
+      "target_hybrid_residual": 7.54674469855753e-16,
+      "target_fine_force_moment_linf": 2.842267165983209e-14,
+      "target_weak_symmetry_moment_linf": 1.1748414741052926e-15,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "dc8fc590e2bec8bd300320444de93fb569860df12cfaef7e6903a70071301af4",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "c2c49741508aacb075597e53eae1886d2bd4a1236c9254b3dc34e4321487b102"
+    },
+    {
+      "case": "n8-q8",
+      "accepted": true,
+      "resolution": 8,
+      "macro_cells": 128,
+      "fine_cells": 512,
+      "local_refinement": 2,
+      "skeletal_segments": 1,
+      "trace_degree": 1,
+      "stress_normal_degree": 2,
+      "interior_enrichment": 0,
+      "polynomial_degree": 2,
+      "quadrature_order": 8,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 8
+      },
+      "restriction": {
+        "full_dofs": 12480,
+        "restricted_dofs": 11072,
+        "internal_macroedges": 176,
+        "normal_restriction_groups": 176,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 1056,
+            "free_fine_stress_dofs": 2880
+          },
+          {
+            "restricted_fine_stress_dofs": 1056,
+            "free_fine_stress_dofs": 2880
+          }
+        ],
+        "interior_normal_degree": 1,
+        "exterior_fine_normal_degree": 2,
+        "skeletal_segments": 1,
+        "parent_polynomial_degree": 2
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 3.349657398414577e-14,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 2.433417692615071e-11,
+            "reference_l2": 178.61628443121845,
+            "relative_difference": 1.362371689884822e-13,
+            "analytical_error_l2": 21.874096298216646
+          },
+          "displacement": {
+            "difference_l2": 8.260129913994533e-14,
+            "reference_l2": 0.25433369580227133,
+            "relative_difference": 3.247752873616979e-13,
+            "analytical_error_l2": 0.00967491731129161
+          },
+          "rotation": {
+            "difference_l2": 3.374294450010832e-13,
+            "reference_l2": 1.6261573220213608,
+            "relative_difference": 2.0750110732315161e-13,
+            "analytical_error_l2": 0.3085437059360345
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 2.4334311136710084e-11,
+            "reference_l2": 178.61628443121845,
+            "relative_difference": 1.3623792037887084e-13,
+            "analytical_error_l2": 21.874096298209604
+          },
+          "displacement": {
+            "difference_l2": 8.260068233564699e-14,
+            "reference_l2": 0.2543336958022714,
+            "relative_difference": 3.247728621844267e-13,
+            "analytical_error_l2": 0.00967491731129161
+          },
+          "rotation": {
+            "difference_l2": 3.3742103730820914e-13,
+            "reference_l2": 1.6261573220213608,
+            "relative_difference": 2.074959370405718e-13,
+            "analytical_error_l2": 0.3085437059360345
+          }
+        }
+      ],
+      "elapsed_seconds": 5.564610009000717,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "06b5e3b43aa824f64d690ce06bee91a49667926d3118cc5542b163ff2217f95d",
+      "native_archive_sha256": "1e86fa74695c4596d8260ac5b773672aa0a4247f205fdde8316bf3414b51662c",
+      "pymhm_archive_sha256": "38b6b707bc63369678cf2f660a8e20e11e0564d638645b41de77abcbcd4ef04f",
+      "target_hybrid_residual": 4.857447542706815e-16,
+      "target_fine_force_moment_linf": 1.609043510560539e-14,
+      "target_weak_symmetry_moment_linf": 5.779449794717124e-16,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "074ed7f32420d6c888d02d45b68757714a6c01b3d151a9eb3db862d5fe180475",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "06dad3eba1a8c4b0b53b81f42c683a2b92679f91817600cfe4c468ef04f2093e"
+    },
+    {
+      "case": "n16-q8",
+      "accepted": true,
+      "resolution": 16,
+      "macro_cells": 512,
+      "fine_cells": 2048,
+      "local_refinement": 2,
+      "skeletal_segments": 1,
+      "trace_degree": 1,
+      "stress_normal_degree": 2,
+      "interior_enrichment": 0,
+      "polynomial_degree": 2,
+      "quadrature_order": 8,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 8
+      },
+      "restriction": {
+        "full_dofs": 49536,
+        "restricted_dofs": 43648,
+        "internal_macroedges": 736,
+        "normal_restriction_groups": 736,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 4416,
+            "free_fine_stress_dofs": 11136
+          },
+          {
+            "restricted_fine_stress_dofs": 4416,
+            "free_fine_stress_dofs": 11136
+          }
+        ],
+        "interior_normal_degree": 1,
+        "exterior_fine_normal_degree": 2,
+        "skeletal_segments": 1,
+        "parent_polynomial_degree": 2
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 1.083330773392265e-13,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 1.0576771947930497e-10,
+            "reference_l2": 178.85821553275738,
+            "relative_difference": 5.913495176291407e-13,
+            "analytical_error_l2": 9.385932709318999
+          },
+          "displacement": {
+            "difference_l2": 1.1676473521818286e-13,
+            "reference_l2": 0.25311227718524054,
+            "relative_difference": 4.613159682204133e-13,
+            "analytical_error_l2": 0.0024029207300463474
+          },
+          "rotation": {
+            "difference_l2": 1.29642085452617e-12,
+            "reference_l2": 1.5980026161018535,
+            "relative_difference": 8.112758023442052e-13,
+            "analytical_error_l2": 0.1526340385337849
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 1.0576826539559771e-10,
+            "reference_l2": 178.85821553275738,
+            "relative_difference": 5.913525698584784e-13,
+            "analytical_error_l2": 9.385932709318997
+          },
+          "displacement": {
+            "difference_l2": 1.1676143350950225e-13,
+            "reference_l2": 0.25311227718524054,
+            "relative_difference": 4.613029237773805e-13,
+            "analytical_error_l2": 0.0024029207300463457
+          },
+          "rotation": {
+            "difference_l2": 1.296435109356823e-12,
+            "reference_l2": 1.5980026161018535,
+            "relative_difference": 8.112847227492842e-13,
+            "analytical_error_l2": 0.15263403853378493
+          }
+        }
+      ],
+      "elapsed_seconds": 21.599459131999538,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "5332f7bc6091ce9a577d33ec72ea13852efd7d262b5e925eaac91dedda639814",
+      "native_archive_sha256": "807a774e210ad1067fd4ac3fd3fa02bdc5927fda45eb1d98c04dc0438f0d8042",
+      "pymhm_archive_sha256": "2a14f47a7337855bef875dddb6c499593b1d3826c47c0025897fc3ff8a7d1323",
+      "target_hybrid_residual": 6.623472408053439e-16,
+      "target_fine_force_moment_linf": 1.025755154766482e-14,
+      "target_weak_symmetry_moment_linf": 1.7665708560023847e-16,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "e47dcaff786174a176377cce76c29e2d82e8e1ef6c41be0a3c996ef530fa8fd8",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "090ec6a53aa31e3350d8bc86b20433e22f20f3df6dbe38027de3c6a8c5a0e7dd"
+    },
+    {
+      "case": "table3-k1-e0-s1-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 128,
+      "local_refinement": 2,
+      "skeletal_segments": 1,
+      "trace_degree": 1,
+      "stress_normal_degree": 2,
+      "interior_enrichment": 0,
+      "polynomial_degree": 2,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 3168,
+        "restricted_dofs": 2848,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 40,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 240,
+            "free_fine_stress_dofs": 768
+          },
+          {
+            "restricted_fine_stress_dofs": 240,
+            "free_fine_stress_dofs": 768
+          }
+        ],
+        "interior_normal_degree": 1,
+        "exterior_fine_normal_degree": 2,
+        "skeletal_segments": 1,
+        "parent_polynomial_degree": 2
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 7.317870905425404e-15,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 1.782158726291277e-11,
+            "reference_l2": 177.79445568740152,
+            "relative_difference": 1.0023702479365673e-13,
+            "analytical_error_l2": 34.160357182673465
+          },
+          "displacement": {
+            "difference_l2": 2.939728311168468e-14,
+            "reference_l2": 0.25550719124075505,
+            "relative_difference": 1.150546212375866e-13,
+            "analytical_error_l2": 0.027087065846321888
+          },
+          "rotation": {
+            "difference_l2": 1.5292997027503556e-13,
+            "reference_l2": 1.6750567874220812,
+            "relative_difference": 9.12983795077153e-14,
+            "analytical_error_l2": 0.4958713719357667
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 1.7821299490383105e-11,
+            "reference_l2": 177.79445568740152,
+            "relative_difference": 1.0023540622502053e-13,
+            "analytical_error_l2": 34.1603565869446
+          },
+          "displacement": {
+            "difference_l2": 2.939737736876599e-14,
+            "reference_l2": 0.25550719124075505,
+            "relative_difference": 1.1505499013945922e-13,
+            "analytical_error_l2": 0.027087065846322318
+          },
+          "rotation": {
+            "difference_l2": 1.5293406274905092e-13,
+            "reference_l2": 1.6750567874220814,
+            "relative_difference": 9.1300822692953e-14,
+            "analytical_error_l2": 0.4958713719357648
+          }
+        }
+      ],
+      "elapsed_seconds": 1.968493846000456,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "e70db45aa1089f092c0e16f1e6362e8045245a47446d1ad3c5a3e028ba0c553a",
+      "native_archive_sha256": "62e798725c31fc5db509c86fce3c8b5c20e3b3b7d9fe1dc17818157fcd77f433",
+      "pymhm_archive_sha256": "2374572788c9dc1226fd06af1bee6829f36e834ea685165eb21d72bcc9b59722",
+      "target_hybrid_residual": 8.016751359158131e-16,
+      "target_fine_force_moment_linf": 4.000249052412148e-14,
+      "target_weak_symmetry_moment_linf": 1.5890736195975884e-15,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "08e3fadafb8f438b05951e33794aab5b9354e44a858ecec1f22885ade9b5d587",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "99b14cd9a462b7ef5e38951d7c3738e18bcea06db28fece4388f50a019de324b"
+    },
+    {
+      "case": "table3-k1-e0-s2-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 512,
+      "local_refinement": 4,
+      "skeletal_segments": 2,
+      "trace_degree": 1,
+      "stress_normal_degree": 2,
+      "interior_enrichment": 0,
+      "polynomial_degree": 2,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 12480,
+        "restricted_dofs": 11840,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 80,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 480,
+            "free_fine_stress_dofs": 3456
+          },
+          {
+            "restricted_fine_stress_dofs": 480,
+            "free_fine_stress_dofs": 3456
+          }
+        ],
+        "interior_normal_degree": 1,
+        "exterior_fine_normal_degree": 2,
+        "skeletal_segments": 2,
+        "parent_polynomial_degree": 2
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 2.4254069749010502e-14,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 2.0738592172943416e-11,
+            "reference_l2": 178.62093667605373,
+            "relative_difference": 1.1610392689046777e-13,
+            "analytical_error_l2": 14.301494866388792
+          },
+          "displacement": {
+            "difference_l2": 2.7074835875276202e-14,
+            "reference_l2": 0.25345074037271953,
+            "relative_difference": 1.0682484428911315e-13,
+            "analytical_error_l2": 0.006023803063826274
+          },
+          "rotation": {
+            "difference_l2": 1.9111815132111587e-13,
+            "reference_l2": 1.6002185041567005,
+            "relative_difference": 1.1943253425995927e-13,
+            "analytical_error_l2": 0.14940430494488754
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 2.073672556961527e-11,
+            "reference_l2": 178.62093667605373,
+            "relative_difference": 1.16093476809067e-13,
+            "analytical_error_l2": 14.301494866376453
+          },
+          "displacement": {
+            "difference_l2": 2.7075426833624763e-14,
+            "reference_l2": 0.25345074037271953,
+            "relative_difference": 1.0682717593883604e-13,
+            "analytical_error_l2": 0.006023803063826275
+          },
+          "rotation": {
+            "difference_l2": 1.9112102685499126e-13,
+            "reference_l2": 1.6002185041567005,
+            "relative_difference": 1.194343312232289e-13,
+            "analytical_error_l2": 0.14940430494488754
+          }
+        }
+      ],
+      "elapsed_seconds": 5.914077157000065,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "5a452a0014c09efa147a3acce49f485f9df8384c03c16b2803b76a28a60ddb15",
+      "native_archive_sha256": "02a52310cf3dd12b2f102d18b362484b8dc7e2bf94b70610cda180802a6c9b18",
+      "pymhm_archive_sha256": "1f61079f40bead860c9041ebe08aa3321cf2f79c3be0eba254cdeb8b2c00dcf0",
+      "target_hybrid_residual": 2.819484106049547e-16,
+      "target_fine_force_moment_linf": 4.5163478263211126e-14,
+      "target_weak_symmetry_moment_linf": 1.2360889442135934e-15,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "85b8321b71394c97765acab0e8eaee53483391c3ca35cefbefdfb0105b1deb06",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "286e3763db19e418f266b82a80bd355fcd897952ba36921d3e1c16db5514a035"
+    },
+    {
+      "case": "table3-k1-e0-s4-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 2048,
+      "local_refinement": 8,
+      "skeletal_segments": 4,
+      "trace_degree": 1,
+      "stress_normal_degree": 2,
+      "interior_enrichment": 0,
+      "polynomial_degree": 2,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 49536,
+        "restricted_dofs": 48256,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 160,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 960,
+            "free_fine_stress_dofs": 14592
+          },
+          {
+            "restricted_fine_stress_dofs": 960,
+            "free_fine_stress_dofs": 14592
+          }
+        ],
+        "interior_normal_degree": 1,
+        "exterior_fine_normal_degree": 2,
+        "skeletal_segments": 4,
+        "parent_polynomial_degree": 2
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 7.899334890556421e-13,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 1.5490889190839504e-10,
+            "reference_l2": 178.95644092046857,
+            "relative_difference": 8.65623450665513e-13,
+            "analytical_error_l2": 3.6570737782376277
+          },
+          "displacement": {
+            "difference_l2": 1.3856426748673471e-13,
+            "reference_l2": 0.2528469478469848,
+            "relative_difference": 5.48016373804874e-13,
+            "analytical_error_l2": 0.001245686389262443
+          },
+          "rotation": {
+            "difference_l2": 1.1954793977093454e-12,
+            "reference_l2": 1.5895247336779985,
+            "relative_difference": 7.520986445697688e-13,
+            "analytical_error_l2": 0.03639749427155783
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 1.549094282889082e-10,
+            "reference_l2": 178.95644092046857,
+            "relative_difference": 8.656264479340685e-13,
+            "analytical_error_l2": 3.657073778237627
+          },
+          "displacement": {
+            "difference_l2": 1.3856117308176835e-13,
+            "reference_l2": 0.2528469478469848,
+            "relative_difference": 5.480041355516829e-13,
+            "analytical_error_l2": 0.001245686389262442
+          },
+          "rotation": {
+            "difference_l2": 1.1954783308761266e-12,
+            "reference_l2": 1.5895247336779985,
+            "relative_difference": 7.520979734048626e-13,
+            "analytical_error_l2": 0.03639749427155783
+          }
+        }
+      ],
+      "elapsed_seconds": 22.98706440299975,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "ee042667608fc6a1eee6a63e82d27e16dee2f71c8f4b295d3adc6b7a7ac09ee9",
+      "native_archive_sha256": "cecf73060a85f01d803298d4d11446f4a368fd6e6505a5c718d596d8969185ed",
+      "pymhm_archive_sha256": "d6755343cde2fb7532caf2bf370a3ecec4275db71f0338a017a27669520c2d06",
+      "target_hybrid_residual": 3.5603151386403005e-16,
+      "target_fine_force_moment_linf": 6.195304627696255e-14,
+      "target_weak_symmetry_moment_linf": 7.405245776662927e-16,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "fec6a211376447c578cfd697d12c9bd2e315543f552b09ac672ca49015a74b51",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "41dde57ef89c516f242f2eb102583792bfbcde401f451966b97f50748ea7fbe4"
+    },
+    {
+      "case": "table3-k1-e0-s8-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 8192,
+      "local_refinement": 16,
+      "skeletal_segments": 8,
+      "trace_degree": 1,
+      "stress_normal_degree": 2,
+      "interior_enrichment": 0,
+      "polynomial_degree": 2,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 197376,
+        "restricted_dofs": 194816,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 320,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 1920,
+            "free_fine_stress_dofs": 59904
+          },
+          {
+            "restricted_fine_stress_dofs": 1920,
+            "free_fine_stress_dofs": 59904
+          }
+        ],
+        "interior_normal_degree": 1,
+        "exterior_fine_normal_degree": 2,
+        "skeletal_segments": 8,
+        "parent_polynomial_degree": 2
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 6.50345571354495e-13,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 3.0502077264981986e-10,
+            "reference_l2": 178.9934793120827,
+            "relative_difference": 1.704088740115517e-12,
+            "analytical_error_l2": 0.7623217897778406
+          },
+          "displacement": {
+            "difference_l2": 9.760909611840642e-14,
+            "reference_l2": 0.25279536891330595,
+            "relative_difference": 3.861190042285966e-13,
+            "analytical_error_l2": 0.00028814260272554994
+          },
+          "rotation": {
+            "difference_l2": 2.503454116053085e-12,
+            "reference_l2": 1.5887829009357157,
+            "relative_difference": 1.5757056011734973e-12,
+            "analytical_error_l2": 0.006888956288640329
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 3.0502088312801005e-10,
+            "reference_l2": 178.9934793120827,
+            "relative_difference": 1.7040893573345944e-12,
+            "analytical_error_l2": 0.7623217897778404
+          },
+          "displacement": {
+            "difference_l2": 9.760803514392233e-14,
+            "reference_l2": 0.25279536891330595,
+            "relative_difference": 3.861148072589739e-13,
+            "analytical_error_l2": 0.00028814260272554983
+          },
+          "rotation": {
+            "difference_l2": 2.50344952670347e-12,
+            "reference_l2": 1.5887829009357157,
+            "relative_difference": 1.575702712578956e-12,
+            "analytical_error_l2": 0.006888956288640328
+          }
+        }
+      ],
+      "elapsed_seconds": 114.77688760799992,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "e2f6488ec7f005c5f06cb0eb812d681e8e6bb99e63de60e6341e4bb0c06d8ca7",
+      "native_archive_sha256": "c165310fe626ed96d4c2c0c74b7e6e0c79017d3d7972794b77adb9f5e9f881db",
+      "pymhm_archive_sha256": "ba491c6d0192086957bb249f13e67dc6a6cfb269734b37fa16c6a8358723fd76",
+      "target_hybrid_residual": 3.240403551400734e-16,
+      "target_fine_force_moment_linf": 3.3666907639677796e-13,
+      "target_weak_symmetry_moment_linf": 6.063754142158031e-16,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "7a147da80c83327ab411e2b34844a1b53e85566b9924cd37ddcfddd3b7cb449e",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "b27843d466b8a4c28b2fe492076150628b72115e8ce94b7326501d3b535562bf"
+    },
+    {
+      "case": "table3-k1-e1-s1-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 128,
+      "local_refinement": 2,
+      "skeletal_segments": 1,
+      "trace_degree": 1,
+      "stress_normal_degree": 2,
+      "interior_enrichment": 1,
+      "polynomial_degree": 3,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 6016,
+        "restricted_dofs": 5280,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 168,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 832,
+            "free_fine_stress_dofs": 1024
+          },
+          {
+            "restricted_fine_stress_dofs": 832,
+            "free_fine_stress_dofs": 1024
+          }
+        ],
+        "interior_normal_degree": 1,
+        "exterior_fine_normal_degree": 2,
+        "skeletal_segments": 1,
+        "parent_polynomial_degree": 3
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 1.708337115225769e-14,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 2.8843510766473072e-11,
+            "reference_l2": 179.45474157064328,
+            "relative_difference": 1.607286077482588e-13,
+            "analytical_error_l2": 35.37423264781148
+          },
+          "displacement": {
+            "difference_l2": 2.5327085956118907e-14,
+            "reference_l2": 0.25738797235977184,
+            "relative_difference": 9.840042533423902e-14,
+            "analytical_error_l2": 0.025545801424255176
+          },
+          "rotation": {
+            "difference_l2": 3.2182312576576313e-13,
+            "reference_l2": 1.7316012426699057,
+            "relative_difference": 1.8585290760680756e-13,
+            "analytical_error_l2": 0.634313104247388
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 2.8623916930865495e-11,
+            "reference_l2": 179.45474157064328,
+            "relative_difference": 1.5950493522957456e-13,
+            "analytical_error_l2": 35.37423207803461
+          },
+          "displacement": {
+            "difference_l2": 2.532884661884747e-14,
+            "reference_l2": 0.25738797235977184,
+            "relative_difference": 9.840726583541871e-14,
+            "analytical_error_l2": 0.025545801424255634
+          },
+          "rotation": {
+            "difference_l2": 3.2183239631558647e-13,
+            "reference_l2": 1.7316012426699057,
+            "relative_difference": 1.858582613508422e-13,
+            "analytical_error_l2": 0.6343131042473865
+          }
+        }
+      ],
+      "elapsed_seconds": 2.94194422199962,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "bf00fd2d9eaf16f5d9416b74057466c4399f5ab249448c3f019bd50e29a1669c",
+      "native_archive_sha256": "4744dbaeec05cfb6782dacc609defe729c65917a0a649235ee4e9197f8eefc61",
+      "pymhm_archive_sha256": "95fe628a2e41ed9aec3ba906086e6c4bf26d25c63f79674b5ce88022e3143d7c",
+      "target_hybrid_residual": 6.519177966705448e-16,
+      "target_fine_force_moment_linf": 5.534703269000337e-14,
+      "target_weak_symmetry_moment_linf": 7.361846677107981e-15,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "b9cf498d84c6ff05d8eae6ffd75e4b34ea70c18c6dfe45e67be17fe03084b39a",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "9e0e9700c24d25871ddba9eabfbbf6623c1f9392d3b123e7930509470650cd43"
+    },
+    {
+      "case": "table3-k1-e1-s2-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 512,
+      "local_refinement": 4,
+      "skeletal_segments": 2,
+      "trace_degree": 1,
+      "stress_normal_degree": 2,
+      "interior_enrichment": 1,
+      "polynomial_degree": 3,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 23808,
+        "restricted_dofs": 21568,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 720,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 3200,
+            "free_fine_stress_dofs": 4096
+          },
+          {
+            "restricted_fine_stress_dofs": 3200,
+            "free_fine_stress_dofs": 4096
+          }
+        ],
+        "interior_normal_degree": 1,
+        "exterior_fine_normal_degree": 2,
+        "skeletal_segments": 2,
+        "parent_polynomial_degree": 3
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 1.5337360936461657e-13,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 5.42551230604008e-11,
+            "reference_l2": 178.79737619215396,
+            "relative_difference": 3.0344473848482367e-13,
+            "analytical_error_l2": 14.82256144448532
+          },
+          "displacement": {
+            "difference_l2": 3.7907039119047084e-14,
+            "reference_l2": 0.25354388005576284,
+            "relative_difference": 1.4950879157765533e-13,
+            "analytical_error_l2": 0.0044929847432527885
+          },
+          "rotation": {
+            "difference_l2": 5.33577169735811e-13,
+            "reference_l2": 1.6046768132219733,
+            "relative_difference": 3.325137905273651e-13,
+            "analytical_error_l2": 0.18373950477171805
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 5.409472101431625e-11,
+            "reference_l2": 178.79737619215396,
+            "relative_difference": 3.0254762215403275e-13,
+            "analytical_error_l2": 14.822561444473523
+          },
+          "displacement": {
+            "difference_l2": 3.790653987381548e-14,
+            "reference_l2": 0.25354388005576284,
+            "relative_difference": 1.4950682250929722e-13,
+            "analytical_error_l2": 0.004492984743252785
+          },
+          "rotation": {
+            "difference_l2": 5.336092567156621e-13,
+            "reference_l2": 1.6046768132219733,
+            "relative_difference": 3.3253378644154957e-13,
+            "analytical_error_l2": 0.18373950477171802
+          }
+        }
+      ],
+      "elapsed_seconds": 9.961292875000254,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "396f6a8a5939898c749e4fca3af2a1c55194a4772c4ba9df804b19fa1c0debc8",
+      "native_archive_sha256": "4c7b61879cdc459fdfa39a07a1757a630e06e194969c4031ae6ade312699ad5b",
+      "pymhm_archive_sha256": "e3e9806d28eaf2e1afe6fa6544a714243556e33b5be613d448f8190e5d52c0d2",
+      "target_hybrid_residual": 1.832329882168625e-16,
+      "target_fine_force_moment_linf": 9.158276116345413e-14,
+      "target_weak_symmetry_moment_linf": 2.58561071430869e-15,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "7ddcfcee11d7304deec96242341ddf708e2e1340fdf101f66f810ab7f7b9ee28",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "e82e3f1d723b9faeb81c493f7eb45a802650152e0c3fb37b7c5f1e5cb64b921c"
+    },
+    {
+      "case": "table3-k1-e1-s4-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 2048,
+      "local_refinement": 8,
+      "skeletal_segments": 4,
+      "trace_degree": 1,
+      "stress_normal_degree": 2,
+      "interior_enrichment": 1,
+      "polynomial_degree": 3,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 94720,
+        "restricted_dofs": 87168,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 2976,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 12544,
+            "free_fine_stress_dofs": 16384
+          },
+          {
+            "restricted_fine_stress_dofs": 12544,
+            "free_fine_stress_dofs": 16384
+          }
+        ],
+        "interior_normal_degree": 1,
+        "exterior_fine_normal_degree": 2,
+        "skeletal_segments": 4,
+        "parent_polynomial_degree": 3
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 2.4203921413812386e-13,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 1.5485354696637082e-10,
+            "reference_l2": 178.9679686542163,
+            "relative_difference": 8.652584489326304e-13,
+            "analytical_error_l2": 3.8223545523539
+          },
+          "displacement": {
+            "difference_l2": 7.940591674767524e-14,
+            "reference_l2": 0.25285256481515944,
+            "relative_difference": 3.140403847820276e-13,
+            "analytical_error_l2": 0.0005845677160039338
+          },
+          "rotation": {
+            "difference_l2": 1.5356164977838459e-12,
+            "reference_l2": 1.5897716553137213,
+            "relative_difference": 9.659352603571306e-13,
+            "analytical_error_l2": 0.044457323859871056
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 1.547368601063689e-10,
+            "reference_l2": 178.9679686542163,
+            "relative_difference": 8.646064503605991e-13,
+            "analytical_error_l2": 3.822354552353899
+          },
+          "displacement": {
+            "difference_l2": 7.940954499608149e-14,
+            "reference_l2": 0.25285256481515944,
+            "relative_difference": 3.140547340468211e-13,
+            "analytical_error_l2": 0.0005845677160039333
+          },
+          "rotation": {
+            "difference_l2": 1.5356700275625046e-12,
+            "reference_l2": 1.5897716553137213,
+            "relative_difference": 9.659689317202348e-13,
+            "analytical_error_l2": 0.04445732385987105
+          }
+        }
+      ],
+      "elapsed_seconds": 40.16579571799957,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "53ba0713c55f3bbefcfd2b7d7646ebe22cfe4efdc98c9bf03029a88942cc7d4d",
+      "native_archive_sha256": "442e9ba3b9b9df20d0b3917246edfbad08a3b814826c9ae6dda359e2c52dba3f",
+      "pymhm_archive_sha256": "a80d571b00ede7a8a20addbb7cacc087296ce71b5279719a440cc3fd672618cc",
+      "target_hybrid_residual": 3.241678942896376e-16,
+      "target_fine_force_moment_linf": 8.613740826980879e-14,
+      "target_weak_symmetry_moment_linf": 1.0339909936727714e-15,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "0d44400812810c9b7a0d5d3aa3ee1402caf801e3d94e1179501bb634ed9b5b68",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "17563d88fd7093a951090d4843ba4e9082fcf432fa12601b8b316afd9fdc2d96"
+    },
+    {
+      "case": "table3-k1-e1-s8-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 8192,
+      "local_refinement": 16,
+      "skeletal_segments": 8,
+      "trace_degree": 1,
+      "stress_normal_degree": 2,
+      "interior_enrichment": 1,
+      "polynomial_degree": 3,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 377856,
+        "restricted_dofs": 350464,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 12096,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 49664,
+            "free_fine_stress_dofs": 65536
+          },
+          {
+            "restricted_fine_stress_dofs": 49664,
+            "free_fine_stress_dofs": 65536
+          }
+        ],
+        "interior_normal_degree": 1,
+        "exterior_fine_normal_degree": 2,
+        "skeletal_segments": 8,
+        "parent_polynomial_degree": 3
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 9.33115615130039e-13,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 3.474820427749482e-10,
+            "reference_l2": 178.99423447402603,
+            "relative_difference": 1.941302991104842e-12,
+            "analytical_error_l2": 0.7848693177059588
+          },
+          "displacement": {
+            "difference_l2": 1.1990213119535084e-13,
+            "reference_l2": 0.2527955632129272,
+            "relative_difference": 4.743047293688397e-13,
+            "analytical_error_l2": 5.621081424356885e-05
+          },
+          "rotation": {
+            "difference_l2": 3.130121181350014e-12,
+            "reference_l2": 1.5887890874390016,
+            "relative_difference": 1.970130085923182e-12,
+            "analytical_error_l2": 0.007951197221965637
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 3.4741594146753177e-10,
+            "reference_l2": 178.99423447402603,
+            "relative_difference": 1.9409336981630294e-12,
+            "analytical_error_l2": 0.7848693177059587
+          },
+          "displacement": {
+            "difference_l2": 1.1990541815702822e-13,
+            "reference_l2": 0.2527955632129272,
+            "relative_difference": 4.743177318188653e-13,
+            "analytical_error_l2": 5.621081424356884e-05
+          },
+          "rotation": {
+            "difference_l2": 3.130162390196602e-12,
+            "reference_l2": 1.5887890874390016,
+            "relative_difference": 1.970156023190069e-12,
+            "analytical_error_l2": 0.007951197221965633
+          }
+        }
+      ],
+      "elapsed_seconds": 262.08281673200054,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "380524b3b66f23b7d034e77069e6ce471d8ddbec2a17b215ef44ef98e9515fdf",
+      "native_archive_sha256": "8f308b0c58bfffdb8e6a3ee9cb25937e8e3ac1b06404dc1ce9a0f0207d4798a5",
+      "pymhm_archive_sha256": "f820ed0ee36ae0b2b6b2a01fbe6baed083f1f2fd6e0f5847fdb08145520190f7",
+      "target_hybrid_residual": 3.797198076107567e-16,
+      "target_fine_force_moment_linf": 5.499007344396046e-13,
+      "target_weak_symmetry_moment_linf": 1.8540181806777313e-15,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "6593a43d581d2215ace373a28272939fbaadb61faf3790b5b586d9339adae578",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "220330b0ca1e4243a0f38534ef63c9f9167209926c79f091af55ebc6679515b5"
+    },
+    {
+      "case": "table3-k2-e0-s1-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 128,
+      "local_refinement": 2,
+      "skeletal_segments": 1,
+      "trace_degree": 2,
+      "stress_normal_degree": 3,
+      "interior_enrichment": 0,
+      "polynomial_degree": 3,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 6016,
+        "restricted_dofs": 5616,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 40,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 320,
+            "free_fine_stress_dofs": 1536
+          },
+          {
+            "restricted_fine_stress_dofs": 320,
+            "free_fine_stress_dofs": 1536
+          }
+        ],
+        "interior_normal_degree": 2,
+        "exterior_fine_normal_degree": 3,
+        "skeletal_segments": 1,
+        "parent_polynomial_degree": 3
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 3.977353916212046e-14,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 5.041495540553585e-11,
+            "reference_l2": 178.54953323336892,
+            "relative_difference": 2.8235837133016857e-13,
+            "analytical_error_l2": 22.38220871468756
+          },
+          "displacement": {
+            "difference_l2": 6.84951759541357e-14,
+            "reference_l2": 0.2545726130435865,
+            "relative_difference": 2.690594841889309e-13,
+            "analytical_error_l2": 0.009326492667665776
+          },
+          "rotation": {
+            "difference_l2": 7.85490702198154e-13,
+            "reference_l2": 1.616536123542454,
+            "relative_difference": 4.859097738421342e-13,
+            "analytical_error_l2": 0.23492207851185765
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 5.02168617643544e-11,
+            "reference_l2": 178.54953323336892,
+            "relative_difference": 2.8124891090429036e-13,
+            "analytical_error_l2": 22.382207813789336
+          },
+          "displacement": {
+            "difference_l2": 6.849960418934869e-14,
+            "reference_l2": 0.2545726130435865,
+            "relative_difference": 2.69076878971347e-13,
+            "analytical_error_l2": 0.009326492667667018
+          },
+          "rotation": {
+            "difference_l2": 7.854897472554502e-13,
+            "reference_l2": 1.616536123542454,
+            "relative_difference": 4.859091831082248e-13,
+            "analytical_error_l2": 0.23492207851185326
+          }
+        }
+      ],
+      "elapsed_seconds": 3.2385451139998622,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "f4e13760f8334da3e114aba19d070fda3d03e811c8c01ab57f380ae3d5a9297e",
+      "native_archive_sha256": "8cfa1c1dae31a85ff69a7bb1c4c163c131f122261af828ffa736d9ca0efcab1b",
+      "pymhm_archive_sha256": "70273f841f3c608f36b4d54bf9d30f7f38401050eab77ebbee82bff478cd1640",
+      "target_hybrid_residual": 5.017427384531754e-16,
+      "target_fine_force_moment_linf": 7.279241328134349e-14,
+      "target_weak_symmetry_moment_linf": 8.146959980670775e-15,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "8f8cc64f63d5e25cb704fec85fcf48579bb8719882a8076d519e58fa994c6a6e",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "6507a859744cdf7a4037417e624f6246dd44a1473c60e4eac832b5f0d3008377"
+    },
+    {
+      "case": "table3-k2-e0-s2-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 512,
+      "local_refinement": 4,
+      "skeletal_segments": 2,
+      "trace_degree": 2,
+      "stress_normal_degree": 3,
+      "interior_enrichment": 0,
+      "polynomial_degree": 3,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 23808,
+        "restricted_dofs": 23008,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 80,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 640,
+            "free_fine_stress_dofs": 6656
+          },
+          {
+            "restricted_fine_stress_dofs": 640,
+            "free_fine_stress_dofs": 6656
+          }
+        ],
+        "interior_normal_degree": 2,
+        "exterior_fine_normal_degree": 3,
+        "skeletal_segments": 2,
+        "parent_polynomial_degree": 3
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 1.0723227675122841e-13,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 7.283878567576352e-11,
+            "reference_l2": 178.8642019675734,
+            "relative_difference": 4.0722953433112667e-13,
+            "analytical_error_l2": 6.326009436806105
+          },
+          "displacement": {
+            "difference_l2": 6.406888133441831e-14,
+            "reference_l2": 0.2529955626721904,
+            "relative_difference": 2.5324112667317083e-13,
+            "analytical_error_l2": 0.001429612354113445
+          },
+          "rotation": {
+            "difference_l2": 6.548086508650869e-13,
+            "reference_l2": 1.5912932212284843,
+            "relative_difference": 4.1149465235550494e-13,
+            "analytical_error_l2": 0.06421546739184537
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 7.273110013896405e-11,
+            "reference_l2": 178.8642019675734,
+            "relative_difference": 4.066274824078526e-13,
+            "analytical_error_l2": 6.326009436778449
+          },
+          "displacement": {
+            "difference_l2": 6.407249893969307e-14,
+            "reference_l2": 0.2529955626721904,
+            "relative_difference": 2.5325542575903844e-13,
+            "analytical_error_l2": 0.001429612354113444
+          },
+          "rotation": {
+            "difference_l2": 6.548436594590129e-13,
+            "reference_l2": 1.5912932212284845,
+            "relative_difference": 4.1151665244540613e-13,
+            "analytical_error_l2": 0.06421546739184537
+          }
+        }
+      ],
+      "elapsed_seconds": 11.590827381000054,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "1e6da42d6a9c386a584fa965bfca314d3faf4d7d50e8f2431f79f36aa01f7cdb",
+      "native_archive_sha256": "931ef8ecf1050f9221ea84440971cd192eec5ef38a1b05ebe67315b4bd211d45",
+      "pymhm_archive_sha256": "8ddd80aa2111b8465a01309614cc8db4c02a7f4bd7966e9ebea4ffc830cff5b1",
+      "target_hybrid_residual": 3.322721391151364e-16,
+      "target_fine_force_moment_linf": 8.108651736451632e-14,
+      "target_weak_symmetry_moment_linf": 2.9340025520595457e-15,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "abbc3caab632ef0930e09fe251e79664331b4527c6dbf40d1b192811e2e75201",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "b279e3cf3d13b37f1c642e0a0cdd3f7190e0ecf977115f0884f98b00d7a43688"
+    },
+    {
+      "case": "table3-k2-e0-s4-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 2048,
+      "local_refinement": 8,
+      "skeletal_segments": 4,
+      "trace_degree": 2,
+      "stress_normal_degree": 3,
+      "interior_enrichment": 0,
+      "polynomial_degree": 3,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 94720,
+        "restricted_dofs": 93120,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 160,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 1280,
+            "free_fine_stress_dofs": 27648
+          },
+          {
+            "restricted_fine_stress_dofs": 1280,
+            "free_fine_stress_dofs": 27648
+          }
+        ],
+        "interior_normal_degree": 2,
+        "exterior_fine_normal_degree": 3,
+        "skeletal_segments": 4,
+        "parent_polynomial_degree": 3
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 3.2351938898426516e-13,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 3.8314293666421406e-10,
+            "reference_l2": 178.99109303948677,
+            "relative_difference": 2.140569847124683e-12,
+            "analytical_error_l2": 1.0774287760274228
+          },
+          "displacement": {
+            "difference_l2": 2.7386622279693865e-13,
+            "reference_l2": 0.25279911836168717,
+            "relative_difference": 1.0833353556443586e-12,
+            "analytical_error_l2": 0.00012516604758478392
+          },
+          "rotation": {
+            "difference_l2": 3.403151406384616e-12,
+            "reference_l2": 1.5888241324879593,
+            "relative_difference": 2.1419308385350235e-12,
+            "analytical_error_l2": 0.01036848964952059
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 3.831322642945356e-10,
+            "reference_l2": 178.99109303948677,
+            "relative_difference": 2.1405102219807874e-12,
+            "analytical_error_l2": 1.0774287760274222
+          },
+          "displacement": {
+            "difference_l2": 2.738645372643503e-13,
+            "reference_l2": 0.25279911836168717,
+            "relative_difference": 1.0833286881662468e-12,
+            "analytical_error_l2": 0.00012516604758478422
+          },
+          "rotation": {
+            "difference_l2": 3.4031516123912058e-12,
+            "reference_l2": 1.5888241324879593,
+            "relative_difference": 2.141930968194805e-12,
+            "analytical_error_l2": 0.010368489649520588
+          }
+        }
+      ],
+      "elapsed_seconds": 50.968848714999694,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "9c9dfe0d5704eecf856955d1b4c46b1c07fa0acee20ba5c30841905eb7ce5c55",
+      "native_archive_sha256": "df768b190c36702d3520c39749d161c3f89c9d9f30025af44a4b1c097502be73",
+      "pymhm_archive_sha256": "e863ee7147695acef53e224f33a8b2dd32459c3d699c7995ef3a9646f5f93471",
+      "target_hybrid_residual": 8.224580834542875e-16,
+      "target_fine_force_moment_linf": 1.2148723013621901e-13,
+      "target_weak_symmetry_moment_linf": 9.208252197433083e-16,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "8e8c7ec72e44046d9ee6fcc88e02e287eecfe7f398c7bffba554e216eecc2042",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "5d9e2e2c6d1555e9b77b6032d6751a2a52c87d5a9ac22398ab9cb1e14e6ef4af"
+    },
+    {
+      "case": "table3-k2-e0-s8-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 8192,
+      "local_refinement": 16,
+      "skeletal_segments": 8,
+      "trace_degree": 2,
+      "stress_normal_degree": 3,
+      "interior_enrichment": 0,
+      "polynomial_degree": 3,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 377856,
+        "restricted_dofs": 374656,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 320,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 2560,
+            "free_fine_stress_dofs": 112640
+          },
+          {
+            "restricted_fine_stress_dofs": 2560,
+            "free_fine_stress_dofs": 112640
+          }
+        ],
+        "interior_normal_degree": 2,
+        "exterior_fine_normal_degree": 3,
+        "skeletal_segments": 8,
+        "parent_polynomial_degree": 3
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 8.806049336777222e-13,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 8.536172993295094e-10,
+            "reference_l2": 178.99563076794846,
+            "relative_difference": 4.7689281334254825e-12,
+            "analytical_error_l2": 0.113737506904333
+          },
+          "displacement": {
+            "difference_l2": 3.813190595693925e-13,
+            "reference_l2": 0.25279312296417006,
+            "relative_difference": 1.508423390233757e-12,
+            "analytical_error_l2": 8.095682222993394e-06
+          },
+          "rotation": {
+            "difference_l2": 7.850460985676264e-12,
+            "reference_l2": 1.5887534239349477,
+            "relative_difference": 4.941270852611365e-12,
+            "analytical_error_l2": 0.0010779755114976835
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 8.535895474785964e-10,
+            "reference_l2": 178.99563076794848,
+            "relative_difference": 4.768773091367786e-12,
+            "analytical_error_l2": 0.11373750690433289
+          },
+          "displacement": {
+            "difference_l2": 3.813230792832223e-13,
+            "reference_l2": 0.25279312296417006,
+            "relative_difference": 1.5084392914330568e-12,
+            "analytical_error_l2": 8.095682222995047e-06
+          },
+          "rotation": {
+            "difference_l2": 7.850478460244193e-12,
+            "reference_l2": 1.5887534239349477,
+            "relative_difference": 4.941281851528922e-12,
+            "analytical_error_l2": 0.0010779755114976833
+          }
+        }
+      ],
+      "elapsed_seconds": 380.8266988409996,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "496edbb5f594f1fa47e202595366cc11320270738d5f9cc667c16c24ac3f971f",
+      "native_archive_sha256": "977ce1cd9166b68787df83bce7a5e39015c8e941898de93f1fa42d620b864dae",
+      "pymhm_archive_sha256": "ebad0f0e8c77e1bb01b2f9225a1a01f58211b9095c4fd8ba34f36030e1a54101",
+      "target_hybrid_residual": 1.0529067524346371e-15,
+      "target_fine_force_moment_linf": 7.395776875376559e-13,
+      "target_weak_symmetry_moment_linf": 9.426319958207535e-16,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "6b81ee1ac114e06193e30f2fdb57acefb79dc3d826861b678cc642e0d5310e8b",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "85fadd531a7b54bc3f8aef89defe1aef349888105f25cb335e3b08e92f9b7e34"
+    },
+    {
+      "case": "table3-k2-e1-s1-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 128,
+      "local_refinement": 2,
+      "skeletal_segments": 1,
+      "trace_degree": 2,
+      "stress_normal_degree": 3,
+      "interior_enrichment": 1,
+      "polynomial_degree": 4,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 9760,
+        "restricted_dofs": 8944,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 168,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 1040,
+            "free_fine_stress_dofs": 1920
+          },
+          {
+            "restricted_fine_stress_dofs": 1040,
+            "free_fine_stress_dofs": 1920
+          }
+        ],
+        "interior_normal_degree": 2,
+        "exterior_fine_normal_degree": 3,
+        "skeletal_segments": 1,
+        "parent_polynomial_degree": 4
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 8.633519257362639e-14,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 9.980618441264522e-10,
+            "reference_l2": 178.8465731100209,
+            "relative_difference": 5.580547766562323e-12,
+            "analytical_error_l2": 22.596772524794293
+          },
+          "displacement": {
+            "difference_l2": 3.475563052851632e-13,
+            "reference_l2": 0.2544310012093065,
+            "relative_difference": 1.3660139827034977e-12,
+            "analytical_error_l2": 0.009513991202357618
+          },
+          "rotation": {
+            "difference_l2": 7.457114958308694e-12,
+            "reference_l2": 1.6220015401859922,
+            "relative_difference": 4.59747711303258e-12,
+            "analytical_error_l2": 0.2710630283507528
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 1.0049919210910702e-09,
+            "reference_l2": 178.8465731100209,
+            "relative_difference": 5.6192964931613765e-12,
+            "analytical_error_l2": 22.59677163713923
+          },
+          "displacement": {
+            "difference_l2": 3.4756523792762817e-13,
+            "reference_l2": 0.2544310012093065,
+            "relative_difference": 1.3660490910135015e-12,
+            "analytical_error_l2": 0.009513991202358867
+          },
+          "rotation": {
+            "difference_l2": 7.457065755603456e-12,
+            "reference_l2": 1.6220015401859922,
+            "relative_difference": 4.5974467784712256e-12,
+            "analytical_error_l2": 0.2710630283507489
+          }
+        }
+      ],
+      "elapsed_seconds": 5.495806246999564,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "676afb860dba0ca79a0b92348fd453804adb1df6f404ad6da791f9cb03dde797",
+      "native_archive_sha256": "a5152bc109bc8a1b228a0c5eb0cc58106a8151f6b65f173c3494efb5a8c281ff",
+      "pymhm_archive_sha256": "77c23162410fabf14269badeb2685b89da0634655f24ca8905d46636a3619e65",
+      "target_hybrid_residual": 4.993301868929658e-16,
+      "target_fine_force_moment_linf": 4.546309252419497e-13,
+      "target_weak_symmetry_moment_linf": 1.9665218222552647e-13,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "80a0a4ecb76c2e6bf33fa5faf1ff3d82042d3c1501bada13257af685ad1496df",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "f260694e03daf6276a2597a1dffb47dbe92cea35bf25089ecf0aef68379d224a"
+    },
+    {
+      "case": "table3-k2-e1-s2-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 512,
+      "local_refinement": 4,
+      "skeletal_segments": 2,
+      "trace_degree": 2,
+      "stress_normal_degree": 3,
+      "interior_enrichment": 1,
+      "polynomial_degree": 4,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 38720,
+        "restricted_dofs": 36320,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 720,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 4000,
+            "free_fine_stress_dofs": 7680
+          },
+          {
+            "restricted_fine_stress_dofs": 4000,
+            "free_fine_stress_dofs": 7680
+          }
+        ],
+        "interior_normal_degree": 2,
+        "exterior_fine_normal_degree": 3,
+        "skeletal_segments": 2,
+        "parent_polynomial_degree": 4
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 8.021974774447005e-14,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 1.970183246547829e-09,
+            "reference_l2": 178.8751947194824,
+            "relative_difference": 1.1014289877573751e-11,
+            "analytical_error_l2": 6.411450687396609
+          },
+          "displacement": {
+            "difference_l2": 4.583850912380422e-13,
+            "reference_l2": 0.2529897182968039,
+            "relative_difference": 1.8118724125391984e-12,
+            "analytical_error_l2": 0.001441102292674034
+          },
+          "rotation": {
+            "difference_l2": 1.476280687794202e-11,
+            "reference_l2": 1.5914526980388084,
+            "relative_difference": 9.276308932169107e-12,
+            "analytical_error_l2": 0.06884057802135744
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 1.974367638984906e-09,
+            "reference_l2": 178.8751947194824,
+            "relative_difference": 1.1037682681945757e-11,
+            "analytical_error_l2": 6.41145068736956
+          },
+          "displacement": {
+            "difference_l2": 4.583848626641847e-13,
+            "reference_l2": 0.2529897182968039,
+            "relative_difference": 1.811871509048499e-12,
+            "analytical_error_l2": 0.0014411022926740335
+          },
+          "rotation": {
+            "difference_l2": 1.476276451198295e-11,
+            "reference_l2": 1.5914526980388084,
+            "relative_difference": 9.276282311233955e-12,
+            "analytical_error_l2": 0.06884057802135743
+          }
+        }
+      ],
+      "elapsed_seconds": 19.127256883999507,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "54f3f07f5e0bd1480a6b6a7cca1543f1aa161b6ba2306e26cda51cca490e707e",
+      "native_archive_sha256": "d50814ea75c50069fb9a514a966803e31f82a64672c11f0a884d85b5568c89bc",
+      "pymhm_archive_sha256": "f4c18d3e1144e515b5a8f9441103cf0b35472b5549a946d8a8f451128fe74f25",
+      "target_hybrid_residual": 3.630366836810842e-16,
+      "target_fine_force_moment_linf": 3.32311266137436e-13,
+      "target_weak_symmetry_moment_linf": 5.1922529537686546e-14,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "37a1e1b02e8ff95aa2a493b8e1cdab55a78b686f8b6769783d605cf16aa6a61b",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "48968d482e3613732a1c8af05db2225d608b3c502ec737e352a1aaf0c8e28a67"
+    },
+    {
+      "case": "table3-k2-e1-s4-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 2048,
+      "local_refinement": 8,
+      "skeletal_segments": 4,
+      "trace_degree": 2,
+      "stress_normal_degree": 3,
+      "interior_enrichment": 1,
+      "polynomial_degree": 4,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 154240,
+        "restricted_dofs": 146368,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 2976,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 15680,
+            "free_fine_stress_dofs": 30720
+          },
+          {
+            "restricted_fine_stress_dofs": 15680,
+            "free_fine_stress_dofs": 30720
+          }
+        ],
+        "interior_normal_degree": 2,
+        "exterior_fine_normal_degree": 3,
+        "skeletal_segments": 4,
+        "parent_polynomial_degree": 4
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 6.926098000414032e-13,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 3.95110489957141e-09,
+            "reference_l2": 178.9912856921765,
+            "relative_difference": 2.2074286378200528e-11,
+            "analytical_error_l2": 1.091067295453641
+          },
+          "displacement": {
+            "difference_l2": 7.184665913676858e-13,
+            "reference_l2": 0.25279903998634823,
+            "relative_difference": 2.8420463598536007e-12,
+            "analytical_error_l2": 0.00012322963955293455
+          },
+          "rotation": {
+            "difference_l2": 3.036012985932556e-11,
+            "reference_l2": 1.5888270819101913,
+            "relative_difference": 1.910851734905263e-11,
+            "analytical_error_l2": 0.010877566729351654
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 3.953953764883764e-09,
+            "reference_l2": 178.9912856921765,
+            "relative_difference": 2.2090202601726926e-11,
+            "analytical_error_l2": 1.0910672954536405
+          },
+          "displacement": {
+            "difference_l2": 7.184657645978159e-13,
+            "reference_l2": 0.25279903998634823,
+            "relative_difference": 2.8420430893907463e-12,
+            "analytical_error_l2": 0.00012322963955293436
+          },
+          "rotation": {
+            "difference_l2": 3.0360037865163474e-11,
+            "reference_l2": 1.5888270819101913,
+            "relative_difference": 1.9108459448376635e-11,
+            "analytical_error_l2": 0.010877566729351652
+          }
+        }
+      ],
+      "elapsed_seconds": 92.47842837999997,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "e03b721ba26eb99ad29ae3355d510614fdd768e86bbf8c0f9ac095aa97f023d6",
+      "native_archive_sha256": "bdcfb337fac005823494ac9c6c26557094059f5fa6b565801ee7b32999c2dd2d",
+      "pymhm_archive_sha256": "8e04433d0ae7fad290500f375be628a3b37e302bdc924a72c3d17b77f6cea72b",
+      "target_hybrid_residual": 4.845284510129423e-16,
+      "target_fine_force_moment_linf": 3.0610955524182187e-13,
+      "target_weak_symmetry_moment_linf": 1.614945973816367e-14,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "3749302efd5984a0f6880ff6b50e311e0926dddf28535dbe8edd62531072c3ae",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "execution_sha256": "326bd9d059dd6a0a114d224026fab77af5f95a8ae7bab791a84902cf6e1406d7"
+    },
+    {
+      "case": "table3-k2-e1-s8-q12",
+      "accepted": true,
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 8192,
+      "local_refinement": 16,
+      "skeletal_segments": 8,
+      "trace_degree": 2,
+      "stress_normal_degree": 3,
+      "interior_enrichment": 1,
+      "polynomial_degree": 4,
+      "quadrature_order": 12,
+      "quadrature_alignment": {
+        "native_vertex_permutations": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "physical_point_alignment_checked": true,
+        "duffy_order": 12
+      },
+      "restriction": {
+        "full_dofs": 615680,
+        "restricted_dofs": 587648,
+        "internal_macroedges": 40,
+        "normal_restriction_groups": 12096,
+        "rows": [
+          {
+            "restricted_fine_stress_dofs": 62080,
+            "free_fine_stress_dofs": 122880
+          },
+          {
+            "restricted_fine_stress_dofs": 62080,
+            "free_fine_stress_dofs": 122880
+          }
+        ],
+        "interior_normal_degree": 2,
+        "exterior_fine_normal_degree": 3,
+        "skeletal_segments": 8,
+        "parent_polynomial_degree": 4
+      },
+      "native_solver": "PETSc/MUMPS LU",
+      "native_scaled_residual": 1.337317793471154e-12,
+      "comparisons": [
+        {
+          "order": 10,
+          "stress": {
+            "difference_l2": 7.919123698746981e-09,
+            "reference_l2": 178.9956343175427,
+            "relative_difference": 4.424199354883851e-11,
+            "analytical_error_l2": 0.11508471125465704
+          },
+          "displacement": {
+            "difference_l2": 1.317911565222214e-12,
+            "reference_l2": 0.25279312097900913,
+            "relative_difference": 5.213399637293325e-12,
+            "analytical_error_l2": 6.757819758078188e-06
+          },
+          "rotation": {
+            "difference_l2": 6.391659375559081e-11,
+            "reference_l2": 1.5887534471322657,
+            "relative_difference": 4.023065622357053e-11,
+            "analytical_error_l2": 0.0011286850022566605
+          }
+        },
+        {
+          "order": 12,
+          "stress": {
+            "difference_l2": 7.92130966601276e-09,
+            "reference_l2": 178.9956343175427,
+            "relative_difference": 4.425420595432043e-11,
+            "analytical_error_l2": 0.11508471125465701
+          },
+          "displacement": {
+            "difference_l2": 1.3179091453771124e-12,
+            "reference_l2": 0.25279312097900913,
+            "relative_difference": 5.213390064860768e-12,
+            "analytical_error_l2": 6.757819758078093e-06
+          },
+          "rotation": {
+            "difference_l2": 6.391651765922443e-11,
+            "reference_l2": 1.5887534471322657,
+            "relative_difference": 4.0230608326669646e-11,
+            "analytical_error_l2": 0.0011286850022566607
+          }
+        }
+      ],
+      "elapsed_seconds": 829.2475041950001,
+      "driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+      "frozen_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+      "samples_sha256": "54b13e23357386c5fd8767344dee759979ca6a31a4cf5179a56b3684623e406c",
+      "native_archive_sha256": "7b20821dbd3da40700a5d4a992c3738f538812a360512c4aa11fb2a0a9f5fc67",
+      "pymhm_archive_sha256": "b57cde9995b101f4cc55cddef89ad82a291a95ed62169c188f68de847de5ecaf",
+      "target_hybrid_residual": 1.0135926033085683e-15,
+      "target_fine_force_moment_linf": 1.853277743396801e-12,
+      "target_weak_symmetry_moment_linf": 1.0012070774007215e-14,
+      "versions": {
+        "dolfinx": "0.9.0",
+        "basix": "0.9.0",
+        "ufl": "2024.2.0",
+        "numpy": "2.5.3"
+      },
+      "native_replay": {
+        "accepted_acquisition_sha256": "b1ca701ee188f459295b46d4b49ae8ad82499bacd0707cd1ff3b0d22b83200b5",
+        "native_archive_sha256_unchanged": true,
+        "geometry_dofmap_orientation_arrays_bitwise_equal": true,
+        "runtime_binary_manifest_sha256": "01132ee7957b8410bd9dfbc7d26f907aef003c205bb4c4960ea5eb20fd9f1751",
+        "native_matrix_and_load_not_reassembled": true,
+        "scope": "Same physical data and discrete coordinates; only current-owner PyMHM fields and dependent norms are reacquired."
+      },
+      "storage_execution": {
+        "wrapper_sha256": "c0652495a736766128481935a2198b7a4e2b99862ee80fde6f5c632d68b738f8",
+        "original_replay_driver_sha256": "f5d820b942ee284fe49e78dc3a97ec9c55a0680973a6f2a494747da60ec788c6",
+        "trial_test_readonly_aliases": [
+          {
+            "shared": true,
+            "bytes": 34062336,
+            "shape": [
+              19008,
+              224
+            ],
+            "dtype": "float64",
+            "strides": [
+              1792,
+              8
+            ],
+            "trial_sha256": "04b2dad6ba7f99e8b8eb7f467ed7d180f9d10c018237c6f32d97c6ffcab311cb",
+            "test_sha256": "04b2dad6ba7f99e8b8eb7f467ed7d180f9d10c018237c6f32d97c6ffcab311cb"
+          },
+          {
+            "shared": true,
+            "bytes": 34062336,
+            "shape": [
+              19008,
+              224
+            ],
+            "dtype": "float64",
+            "strides": [
+              1792,
+              8
+            ],
+            "trial_sha256": "f9cf9919a3efc80176ea3dfd654df9f7e8894e323dff408bd635ea312b057b88",
+            "test_sha256": "f9cf9919a3efc80176ea3dfd654df9f7e8894e323dff408bd635ea312b057b88"
+          },
+          {
+            "shared": true,
+            "bytes": 34062336,
+            "shape": [
+              19008,
+              224
+            ],
+            "dtype": "float64",
+            "strides": [
+              1792,
+              8
+            ],
+            "trial_sha256": "04b2dad6ba7f99e8b8eb7f467ed7d180f9d10c018237c6f32d97c6ffcab311cb",
+            "test_sha256": "04b2dad6ba7f99e8b8eb7f467ed7d180f9d10c018237c6f32d97c6ffcab311cb"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542",
+            "test_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542"
+          },
+          {
+            "shared": true,
+            "bytes": 34062336,
+            "shape": [
+              19008,
+              224
+            ],
+            "dtype": "float64",
+            "strides": [
+              1792,
+              8
+            ],
+            "trial_sha256": "04b2dad6ba7f99e8b8eb7f467ed7d180f9d10c018237c6f32d97c6ffcab311cb",
+            "test_sha256": "04b2dad6ba7f99e8b8eb7f467ed7d180f9d10c018237c6f32d97c6ffcab311cb"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542",
+            "test_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542"
+          },
+          {
+            "shared": true,
+            "bytes": 46227456,
+            "shape": [
+              19008,
+              304
+            ],
+            "dtype": "float64",
+            "strides": [
+              2432,
+              8
+            ],
+            "trial_sha256": "9596134fd1f4e2d6386c4de28d2ebae3a586cbede7634df12dc6500a5b53c418",
+            "test_sha256": "9596134fd1f4e2d6386c4de28d2ebae3a586cbede7634df12dc6500a5b53c418"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542",
+            "test_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b",
+            "test_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b"
+          },
+          {
+            "shared": true,
+            "bytes": 34062336,
+            "shape": [
+              19008,
+              224
+            ],
+            "dtype": "float64",
+            "strides": [
+              1792,
+              8
+            ],
+            "trial_sha256": "f9cf9919a3efc80176ea3dfd654df9f7e8894e323dff408bd635ea312b057b88",
+            "test_sha256": "f9cf9919a3efc80176ea3dfd654df9f7e8894e323dff408bd635ea312b057b88"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b",
+            "test_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542",
+            "test_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b",
+            "test_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542",
+            "test_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542"
+          },
+          {
+            "shared": true,
+            "bytes": 34062336,
+            "shape": [
+              19008,
+              224
+            ],
+            "dtype": "float64",
+            "strides": [
+              1792,
+              8
+            ],
+            "trial_sha256": "5b9498675d433e87597cc734d2c6307968c27fa350aaf74e48228a19cea7e111",
+            "test_sha256": "5b9498675d433e87597cc734d2c6307968c27fa350aaf74e48228a19cea7e111"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542",
+            "test_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b",
+            "test_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b"
+          },
+          {
+            "shared": true,
+            "bytes": 34062336,
+            "shape": [
+              19008,
+              224
+            ],
+            "dtype": "float64",
+            "strides": [
+              1792,
+              8
+            ],
+            "trial_sha256": "f9cf9919a3efc80176ea3dfd654df9f7e8894e323dff408bd635ea312b057b88",
+            "test_sha256": "f9cf9919a3efc80176ea3dfd654df9f7e8894e323dff408bd635ea312b057b88"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b",
+            "test_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542",
+            "test_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b",
+            "test_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542",
+            "test_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542"
+          },
+          {
+            "shared": true,
+            "bytes": 34062336,
+            "shape": [
+              19008,
+              224
+            ],
+            "dtype": "float64",
+            "strides": [
+              1792,
+              8
+            ],
+            "trial_sha256": "5b9498675d433e87597cc734d2c6307968c27fa350aaf74e48228a19cea7e111",
+            "test_sha256": "5b9498675d433e87597cc734d2c6307968c27fa350aaf74e48228a19cea7e111"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542",
+            "test_sha256": "92bb591ea28fee5c0db330fc5b907e169cb0cff8e5061603e00ebc3bad9d7542"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b",
+            "test_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b"
+          },
+          {
+            "shared": true,
+            "bytes": 46227456,
+            "shape": [
+              19008,
+              304
+            ],
+            "dtype": "float64",
+            "strides": [
+              2432,
+              8
+            ],
+            "trial_sha256": "8924a49c3ae6a4d8fc274b37aa84cbebbbae76716156423c32449f91816128c6",
+            "test_sha256": "8924a49c3ae6a4d8fc274b37aa84cbebbbae76716156423c32449f91816128c6"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b",
+            "test_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b"
+          },
+          {
+            "shared": true,
+            "bytes": 34062336,
+            "shape": [
+              19008,
+              224
+            ],
+            "dtype": "float64",
+            "strides": [
+              1792,
+              8
+            ],
+            "trial_sha256": "f413031c3df90860cb5dbe37321aea7e5203b09a0d4c94d45c7ea567319fc077",
+            "test_sha256": "f413031c3df90860cb5dbe37321aea7e5203b09a0d4c94d45c7ea567319fc077"
+          },
+          {
+            "shared": true,
+            "bytes": 21897216,
+            "shape": [
+              19008,
+              144
+            ],
+            "dtype": "float64",
+            "strides": [
+              1152,
+              8
+            ],
+            "trial_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b",
+            "test_sha256": "57610e479cb99c879f37e5a68a16968f386438b413f3a883823fb22dd1bd509b"
+          },
+          {
+            "shared": true,
+            "bytes": 34062336,
+            "shape": [
+              19008,
+              224
+            ],
+            "dtype": "float64",
+            "strides": [
+              1792,
+              8
+            ],
+            "trial_sha256": "f413031c3df90860cb5dbe37321aea7e5203b09a0d4c94d45c7ea567319fc077",
+            "test_sha256": "f413031c3df90860cb5dbe37321aea7e5203b09a0d4c94d45c7ea567319fc077"
+          },
+          {
+            "shared": true,
+            "bytes": 34062336,
+            "shape": [
+              19008,
+              224
+            ],
+            "dtype": "float64",
+            "strides": [
+              1792,
+              8
+            ],
+            "trial_sha256": "5b9498675d433e87597cc734d2c6307968c27fa350aaf74e48228a19cea7e111",
+            "test_sha256": "5b9498675d433e87597cc734d2c6307968c27fa350aaf74e48228a19cea7e111"
+          },
+          {
+            "shared": true,
+            "bytes": 34062336,
+            "shape": [
+              19008,
+              224
+            ],
+            "dtype": "float64",
+            "strides": [
+              1792,
+              8
+            ],
+            "trial_sha256": "f413031c3df90860cb5dbe37321aea7e5203b09a0d4c94d45c7ea567319fc077",
+            "test_sha256": "f413031c3df90860cb5dbe37321aea7e5203b09a0d4c94d45c7ea567319fc077"
+          }
+        ],
+        "bitwise_control": false,
+        "bitwise_arrays_verified": [],
+        "array_byte_digests": {},
+        "mathematical_changes": false,
+        "checkpoint_sha256": "9e3615f0f5aedbfcda71440eccc3e0833bf41e73bf605b24e1676c142a2b6462",
+        "replayed_checkpoint": false,
+        "scope": "Identical immutable coupling storage; complete solved-state checkpoint and exact basis bytes verified. Unreachable storage may be returned to the allocator. All numerical operations, physical inputs, field evaluations and reductions remain those of the original frozen replay."
+      },
+      "execution_sha256": "3c523452ccd4e39757f27c8024059ec5493dc9839992ec866a61af6d9a81c1cd"
+    }
+  ],
+  "pymhm_source_hashes": {
+    "src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+    "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+    "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+    "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+    "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+    "src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+    "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+    "src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+    "src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+    "src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+    "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+    "src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+    "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+    "src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+    "src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+    "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+    "src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+    "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+    "src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+    "src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+    "src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+    "src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+    "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+    "src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+    "src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+    "src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+    "src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+    "src/pymhm/helmholtz_spaces.py": "3d86328917c90ba30942e443f25e6daac4eca01c14f1cba6b202b5066b754c33",
+    "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+    "src/pymhm/scalar_transient.py": "c832e492613ccf449a21164206e117f44645f44d1243915db913ce0b2c28ea9d",
+    "src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+    "src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+    "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+    "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+    "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+    "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+    "src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+    "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+    "src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+    "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+    "src/pymhm/helmholtz.py": "93542c9da2ea4e3a37d55318747de90103e4e54855124878943fca5da0793b15",
+    "src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+    "src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+    "src/pymhm/distributed.py": "b1c1404003f1a1ed5036b4bfcb18cd121aaeea147127b9c6351cc7bd0a88840f",
+    "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+    "src/pymhm/darcy_transport.py": "0e89e0a2902fcfb0d7850738e58f1acc734b088ca00a817d2c91199ec5b1931c",
+    "src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+    "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+    "src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+    "src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+    "src/pymhm/hybrid.py": "d849c8ba0364927dcb84c60b7c99c1c9045aa4dd5e504ec17a446ea376923984",
+    "src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+    "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+    "src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+    "src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+    "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+    "src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+    "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+    "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+    "src/pymhm/offline.py": "d991950927222677d97e25a49ae2839861583d79801c818d5426ecd538590212",
+    "src/pymhm/mshho.py": "3eb065e61b31be310bf5ae982f5b51560e9d5078bbf0c7a9960d0f035728691f",
+    "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+    "src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+    "src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+    "src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+    "src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+    "src/pymhm/darcy.py": "6ed895bac751317e58ac5dea5129b9f5eb944d7492191c5d10a8a9c7ebd2419c",
+    "src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+    "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+    "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+    "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+    "src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+    "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+    "src/pymhm/scalar_boundary.py": "b0f058385c0ec413902d02638d5d95a67fc238d16aa183359597547681da5ef0",
+    "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94",
+    "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+    "src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+    "src/pymhm/__init__.py": "3d987d092163c67d321357c23813468ce2385b9c440d24ac1383cf4f3de2ead6",
+    "src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+    "src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+    "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+    "src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+    "src/pymhm/elastodynamics.py": "aff5a0b1f62ba07e8dffde962e2b2380e1f48ea0e48187e799c7c23ee263feaf",
+    "src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+    "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+    "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+    "src/pymhm/mshho3d.py": "acccdd5fccd512857493ac48e9fd269455bcdddd5fce78253b47d887e9405b93",
+    "src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+    "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+    "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+    "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+    "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+    "src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+    "src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+    "src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+    "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+    "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+    "src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+    "src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+    "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+    "src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+    "src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+    "src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+    "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+    "src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+    "src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+    "src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+    "src/pymhm/nested.py": "a364ed723f6ce459f16c404e4b9925e9ea2579c1ed120ec2909ccb307a5dc556",
+    "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+    "src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+    "examples/plot_mixed_elasticity.py": "4804a4e7cbf7d6fc16e554a1c2a068236549960bedd2ad025bf50bbc5b6ee7df"
+  },
+  "native_replay_method": "Accepted native coefficient vectors reused with exact mesh/DOF ordering and runtime digest checks; current PyMHM solves and full field norms recomputed, native matrices and loads unchanged.",
+  "display": {
+    "case": "n16-q8",
+    "macrotriangles": 512,
+    "fine_triangles": 2048,
+    "polynomial": "Separate per-fine-triangle degree-two reconstruction of independently archived Gauss samples; 36 display triangles per fine cell, no interface averaging.",
+    "maximum_polynomial_replay_defects": {
+      "stress": 1.2221335055073723e-12,
+      "displacement": 2.220446049250313e-15,
+      "rotation": 1.1546319456101628e-14,
+      "pymhm_stress": 1.3926637620897964e-12,
+      "pymhm_displacement": 2.55351295663786e-15,
+      "pymhm_rotation": 7.549516567451064e-15,
+      "difference_stress": 1.2296703284686734e-12,
+      "difference_displacement": 1.1526605197408442e-15,
+      "difference_rotation": 1.0660786958905363e-14
+    },
+    "archive": "native-comparison-fields.npz",
+    "archive_sha256": "7897b96389e10397fd95f41730fe812ac291e635f7a4f24c45657dc7e16c201e"
+  }
+}

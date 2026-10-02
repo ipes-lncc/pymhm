@@ -1,0 +1,34 @@
+[
+  {
+    "level": 0,
+    "reference": "reference-rt2-60x220.npz",
+    "pressure_difference_l2": 160.04812070523602,
+    "raw_flux_difference_l2": 1.4971588695248923,
+    "reconstructed_flux_difference_l2": 1.220508372707928,
+    "reference_pressure_l2": 822.2684727676972,
+    "reference_flux_l2": 0.9752611778892167,
+    "pressure_l2": 815.6092765233304,
+    "raw_flux_l2": 1.2841873306260139,
+    "reconstructed_flux_l2": 0.913169092392055,
+    "pressure_relative_difference": 0.19464217102538958,
+    "raw_flux_relative_difference": 1.5351363342127822,
+    "reconstructed_flux_relative_difference": 1.2514682224401736,
+    "quadrature_order": 4
+  },
+  {
+    "level": 4,
+    "reference": "reference-rt2-60x220.npz",
+    "pressure_difference_l2": 169.52558918417196,
+    "raw_flux_difference_l2": 1.250528623222872,
+    "reconstructed_flux_difference_l2": 1.206959770040861,
+    "reference_pressure_l2": 822.2684727676964,
+    "reference_flux_l2": 0.9752611778892173,
+    "pressure_l2": 824.4724787090513,
+    "raw_flux_l2": 0.9735793081385238,
+    "reconstructed_flux_l2": 0.8962210201474421,
+    "pressure_relative_difference": 0.20616817353286215,
+    "raw_flux_relative_difference": 1.282249977313178,
+    "reconstructed_flux_relative_difference": 1.237575941096225,
+    "quadrature_order": 4
+  }
+]

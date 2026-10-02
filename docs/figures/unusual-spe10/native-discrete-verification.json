@@ -1,0 +1,129 @@
+{
+  "case": "Full SPE10 layer36 Kx, 128 macrotriangles, fitted r8, s8 P0, P1 locals, original UNUSUAL tau, weak bottom1/top0 and lateral zero physical flux",
+  "historical_scope": "Same explicitly specified full reservoir case; historical volume source remains unreported",
+  "method": "Independent DOLFINx/UFL local forms and geometric P1/P0 coupling; complete uncondensed solve",
+  "dolfinx": "0.9.0",
+  "basix": "0.9.0",
+  "ufl": "2024.2.0",
+  "petsc": [
+    3,
+    23,
+    0
+  ],
+  "pressure_dofs": 97440,
+  "free_trace_dofs": 1536,
+  "fine_cells": 182976,
+  "maximum_pressure_coefficient_difference": 1.808585325889274e-13,
+  "relative_trace_difference": 3.9530410950099766e-15,
+  "native_continuity_linf": 7.105427357601002e-15,
+  "norms": {
+    "3": {
+      "pressure_difference": 1.3479104230496336e-12,
+      "flux_difference": 2.4855403530591897e-13,
+      "pressure_reference": 61.40235035524428,
+      "flux_reference": 3.6724573359246624,
+      "pressure_relative_difference": 2.195209817297345e-14,
+      "flux_relative_difference": 6.768057803545246e-14
+    },
+    "5": {
+      "pressure_difference": 1.3479104230496027e-12,
+      "flux_difference": 2.485540353059175e-13,
+      "pressure_reference": 61.4023503552442,
+      "flux_reference": 3.67245733592462,
+      "pressure_relative_difference": 2.1952098172972974e-14,
+      "flux_relative_difference": 6.768057803545284e-14
+    }
+  },
+  "native_backend": "PETSc/MUMPS LU full uncondensed saddle system",
+  "relative_original_residual": 1.4522780258755333e-16,
+  "seconds": 16.048493547999897,
+  "input_sha256": {
+    "field": "0d11e63200f3900c2847ccd9c2ec303aa8edf9d60e4730b61e85d51002d7881f",
+    "field_record": "5a503bbff4d43c3c95d6b6ce47e11141d1cca966e525b8fbf17c6f0017f0f95c",
+    "material": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512"
+  },
+  "driver_sha256": "c4804a0b4e53f81980af1ac1d97d649cc298a107a39196d07f56b76bc8e08487",
+  "accepted": true,
+  "native_archive_sha256": "8d8d7b41c21fdb90bb1c15eaa605da5a6de94ccae422f75e4d88c99643dff035",
+  "reference_implementation": {
+    "reference_code": "FEniCS/DOLFINx",
+    "version": "0.9.0",
+    "runtime_reported_build_git_hash": "8067ef16087b9f364873e0e657dcda52fb989ce3",
+    "runtime_hash_status": "build-reported identifier; not resolved as an upstream dolfinx commit",
+    "verified_upstream_release_commit": "6443e3b27d29aec04ce83d8424b57c339e35f865",
+    "verified_source_url": "https://github.com/FEniCS/dolfinx/tree/6443e3b27d29aec04ce83d8424b57c339e35f865",
+    "upstream_verification_url": "https://api.github.com/repos/FEniCS/dolfinx/git/ref/tags/v0.9.0",
+    "conda_packages": [
+      {
+        "name": "fenics-dolfinx",
+        "version": "0.9.0",
+        "build": "py313hf84a112_112",
+        "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-dolfinx-0.9.0-py313hf84a112_112.conda",
+        "sha256": "79bb466bd1624512b7e6302e7926a05ef1e78685f0c188a69668222f31852b86",
+        "recipe_sha256": "df9a203accdaa6d1a5b1c97600971f9803620dea2176e5c62b705d9ac0e12bec",
+        "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+        "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+        "patches": [
+          {
+            "name": "unpin-cffi.patch",
+            "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+          }
+        ]
+      },
+      {
+        "name": "fenics-libdolfinx",
+        "version": "0.9.0",
+        "build": "py313h2154cf7_112",
+        "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-libdolfinx-0.9.0-py313h2154cf7_112.conda",
+        "sha256": "f8068fef21e9008e0531d83e8f19e8ee41bb40920881b8416583380f138e7889",
+        "recipe_sha256": "e75fdc33edb216ccf13ad27023b1b2b1f465451c630395137104e278732a62d7",
+        "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+        "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+        "patches": [
+          {
+            "name": "unpin-cffi.patch",
+            "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+          }
+        ]
+      }
+    ],
+    "python_extension_file": "cpp.cpython-313-x86_64-linux-gnu.so",
+    "python_extension_sha256": "7fba4280795a95accf09754435d0e6a19e48ca4e2c604d739688614bf4b6802a",
+    "runtime_versions": {
+      "dolfinx": "0.9.0",
+      "basix": "0.9.0",
+      "ufl": "2024.2.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1"
+    },
+    "module": "dolfinx.fem and dolfinx.mesh; Basix Lagrange spaces; UFL forms; PETSc/MUMPS",
+    "application": "Instrumented comparison of the complete declared reservoir case, not an original DOLFINx application",
+    "provenance_audit": "Installed environment audited after acquisition; runtime version and build identifier match the acquisition record"
+  },
+  "execution": {
+    "accepted": true,
+    "source_hashes_unchanged": true,
+    "owned_process_group_empty": true,
+    "peak_rss_gib": 0.40662384033203125,
+    "execution_record_sha256": "6f3ab207573696987d1767cd84a6c131730ed3a5032481bfba3f733d454b84c7",
+    "comparison_record_sha256": "ab7118d5faf6feffe15e6a1d68a6c7c92cef9dba41d4013c9c0cda82f6c92cb5"
+  },
+  "norm_convention": "Absolute and native-reference-relative physical L2 pressure and Darcy flux norms; trace coordinate differences reported separately",
+  "interpretation": "Discrete agreement for identical geometry, coefficients, boundary data and approximation spaces. This does not establish historical input identity or remove the unresolved literature discrepancy. No smooth-problem convergence rate is assigned to discontinuous SPE10 coefficients.",
+  "physical_problem": {
+    "source": 0.0,
+    "reaction": 1.0,
+    "advection": [
+      0.0,
+      0.0
+    ],
+    "domain": [
+      1200.0,
+      2200.0
+    ],
+    "layer": 36,
+    "isotropic_component": "Kx",
+    "original_material_units": true
+  },
+  "field_archive": "mhm-unusual-fitted-r8-s8-q5.npz"
+}

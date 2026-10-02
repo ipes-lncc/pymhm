@@ -1,0 +1,22 @@
+{
+  "method": "P1 MHM-UNUSUAL on identical material-fitted local meshes; enriched macro trace",
+  "equation": "a(u,v)=integral K grad(u).grad(v)+(1-tau)u v; sigma=1, beta=0",
+  "tau": "(h_squared/3)/(max(h_squared/3,2*K)+2*K)",
+  "identity": "a(p_f-p_c,p_f-p_c)=a(p_f,p_f)-a(p_c,p_c)",
+  "denominator": "squared difference in the actual stabilized bilinear form",
+  "fields": {
+    "mhm-unusual-layer0.5-r32-s32-q5": "d15847080eda387816edab8ab8bd9b8dbfbe650a07fc0e35a2e02d107a96c0bc",
+    "mhm-unusual-layer0.5-tracefit-r32-s32-q5": "5611491803aa9a966e1c69612590c6ca1017999b1394394c62599b9a24b978a0"
+  },
+  "local_meshes_identical": true,
+  "coarse_energy": 488.12242104065456,
+  "enriched_energy": 493.2077811723555,
+  "difference_squared": 5.085360131701023,
+  "coarse_cross_difference": -2.644681134930415e-14,
+  "identity_absolute_defect": 5.287567259038006e-14,
+  "identity_relative_defect": 1.0397625973579467e-14,
+  "arithmetic": "extended-real accumulation of the archived field; exact affine mass formula",
+  "source_hashes": {
+    "independent-stabilized-trace-energy-verification": "08cc5b4a147e14c97cb64cdf0e10bb289c6bc4e1fe08a03e1b40fab19b537513"
+  }
+}

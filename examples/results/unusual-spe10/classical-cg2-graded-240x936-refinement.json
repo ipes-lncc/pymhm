@@ -1,0 +1,43 @@
+{
+  "reference": "classical-cg2-graded-240x936.npz",
+  "reference_sha256": "97aad6605988bcb2fdb78852d362d253a79c3f1de490e775f639f5ce30418566",
+  "coarse": "classical-cg2-graded-120x468.npz",
+  "coarse_sha256": "1b0f84ec8623121c4dae26f43714f64792d2c1524c811b4713a1319cde489a69",
+  "acquisition_record_sha256": "29c27eb2f4c3acb677923bf59c638c0d68d6a3b8515ad2b315fb4b3a963c3301",
+  "source_hashes": {
+    "examples/solve_unusual_spe10_reference.py": "1a7496ebe879facf65f33fc5c6bc8548820528874464419c2c7caa33e3e985bb",
+    "examples/compare_unusual_spe10.py": "be46a47bb2240df93431ba390958939fab40154f79868fa7e2d414ab2cbcde04"
+  },
+  "rows": [
+    {
+      "order": 3,
+      "seconds": 6.6259409569902346,
+      "pressure_absolute": 0.7492763328390593,
+      "pressure_reference": 15.747351464584977,
+      "pressure_relative": 0.0475811017823629,
+      "flux_absolute": 0.4573431903409334,
+      "flux_reference": 9.583700835581906,
+      "flux_relative": 0.04772093768233368,
+      "energy_absolute": 1.1751181671492865,
+      "energy_reference": 22.27501077654589,
+      "energy_relative": 0.05275499881627928
+    },
+    {
+      "order": 4,
+      "seconds": 11.415981933940202,
+      "pressure_absolute": 0.7492763328390561,
+      "pressure_reference": 15.747351464584975,
+      "pressure_relative": 0.0475811017823627,
+      "flux_absolute": 0.45734319034093185,
+      "flux_reference": 9.583700835581906,
+      "flux_relative": 0.04772093768233352,
+      "energy_absolute": 1.175118167149282,
+      "energy_reference": 22.275010776545887,
+      "energy_relative": 0.05275499881627908
+    }
+  ],
+  "quadrature_relative_change": 4.1488357935605156e-15,
+  "reference_input_sha256": "5100306984a2cf50f5e1c9f2a780ebc859f604275e29ebdf985c4e7982669665",
+  "coarse_input_sha256": "3b693bb112a65d4564e03afeb0fba4b7c28118285b4f893a574f092eda724b0f",
+  "field_identity_verification": "field-sampling-verification.json"
+}

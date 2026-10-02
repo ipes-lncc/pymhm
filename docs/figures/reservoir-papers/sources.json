@@ -1,0 +1,185 @@
+[
+  {
+    "article": "L01",
+    "doi": "10.1016/j.jcp.2013.03.019",
+    "pdf_page": 14,
+    "printed_page": "120",
+    "figure": "10",
+    "file": "l01-figure-10.png",
+    "crop_pixels_at_2200_long_edge": [
+      160,
+      150,
+      1330,
+      575
+    ],
+    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified."
+  },
+  {
+    "article": "L01",
+    "doi": "10.1016/j.jcp.2013.03.019",
+    "pdf_page": 17,
+    "printed_page": "123",
+    "figure": "19",
+    "file": "l01-figure-19.png",
+    "crop_pixels_at_2200_long_edge": [
+      70,
+      885,
+      1480,
+      975
+    ],
+    "rendering": "Direct PDF clip using pdftoppm at a 2200-pixel page long edge; includes Figure19 and its full caption, excludes adjacent formulae; figure values, labels and colors unmodified.",
+    "image_sha256": "4f7e3322fa9911dc5cb4f3479821d733ec4909c173d8a1852fd4508a9e7bb2ff"
+  },
+  {
+    "article": "L02",
+    "doi": "10.1137/120888223",
+    "pdf_page": 22,
+    "printed_page": "3526",
+    "figure": "6.4\u20136.6",
+    "file": "l02-figure-6p4-6p6.png",
+    "crop_pixels_at_2200_long_edge": [
+      175,
+      245,
+      1360,
+      1290
+    ],
+    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified."
+  },
+  {
+    "article": "L07",
+    "doi": "10.1016/j.cam.2023.115415",
+    "pdf_page": 14,
+    "printed_page": "14",
+    "figure": "5",
+    "file": "l07-figure-5.png",
+    "crop_pixels_at_2200_long_edge": [
+      65,
+      140,
+      1500,
+      890
+    ],
+    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified."
+  },
+  {
+    "article": "L07",
+    "doi": "10.1016/j.cam.2023.115415",
+    "pdf_page": 14,
+    "printed_page": "14",
+    "figure": "6",
+    "file": "l07-figure-6.png",
+    "crop_pixels_at_2200_long_edge": [
+      65,
+      1040,
+      1500,
+      860
+    ],
+    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified."
+  },
+  {
+    "article": "L07",
+    "doi": "10.1016/j.cam.2023.115415",
+    "pdf_page": 15,
+    "printed_page": "15",
+    "figure": "7\u20138",
+    "file": "l07-figure-7-8.png",
+    "crop_pixels_at_2200_long_edge": [
+      65,
+      110,
+      1500,
+      1450
+    ],
+    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified."
+  },
+  {
+    "article": "L09",
+    "doi": "10.1137/24M1673073",
+    "pdf_page": 24,
+    "printed_page": "24",
+    "figure": "6",
+    "file": "l09-figure-6.png",
+    "rendering": "Direct PDF crop containing Figure 6 and its caption. Field values, colors and labels are unchanged; no interpolation of scientific values or image retouching.",
+    "crop_pdf_points_xyxy": [
+      70.0,
+      338.0,
+      444.0,
+      514.0
+    ],
+    "rendering_dpi": 400,
+    "source_manifest": "l09-figure-6-source.json"
+  },
+  {
+    "article": "L13",
+    "doi": "10.1016/j.cma.2017.05.027",
+    "pdf_page": 20,
+    "printed_page": "48",
+    "figure": "18",
+    "file": "l13-figure-18.png",
+    "crop_pixels_at_2200_long_edge": [
+      65,
+      1030,
+      1500,
+      690
+    ],
+    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified."
+  },
+  {
+    "article": "L13",
+    "doi": "10.1016/j.cma.2017.05.027",
+    "pdf_page": 21,
+    "printed_page": "49",
+    "figure": "19\u201320",
+    "file": "l13-figure-19-20.png",
+    "crop_pixels_at_2200_long_edge": [
+      140,
+      120,
+      1330,
+      1850
+    ],
+    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified."
+  },
+  {
+    "article": "L14",
+    "doi": "10.1093/imanum/drz053",
+    "pdf_page": 23,
+    "printed_page": "22",
+    "figure": "4\u20136",
+    "file": "l14-figure-4-6.png",
+    "crop_pixels_at_2200_long_edge": [
+      180,
+      170,
+      1320,
+      1700
+    ],
+    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified."
+  },
+  {
+    "article": "L16",
+    "doi": "10.1137/24M1649368",
+    "pdf_page": 32,
+    "printed_page": "32",
+    "figure": "4",
+    "file": "l16-figure-4.png",
+    "crop_pixels_at_2200_long_edge": [
+      180,
+      1450,
+      1330,
+      595
+    ],
+    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified."
+  },
+  {
+    "article": "L16",
+    "doi": "10.1137/24M1649368",
+    "pdf_page": 33,
+    "printed_page": "33",
+    "figure": "5",
+    "file": "l16-figure-5.png",
+    "crop_pixels_at_2200_long_edge": [
+      220,
+      240,
+      1300,
+      555
+    ],
+    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified."
+  }
+]

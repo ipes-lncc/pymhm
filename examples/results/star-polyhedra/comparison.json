@@ -1,0 +1,225 @@
+{
+  "reference": "10.1016/j.cma.2024.117089, section 5.2.1 analytical 3D problem",
+  "geometry": "Original nonconvex star-shaped L-prism / cuboid tiling of the unit cube",
+  "local_degree": 4,
+  "trace_degree": 1,
+  "local_refinement": 1,
+  "exact": "sin(6*pi*x)*sin(4*pi*y)*sin(2*pi*z)",
+  "source": "5.6*pi**2*u + partial_x(u)",
+  "diffusion": 0.1,
+  "velocity": [
+    1.0,
+    0.0,
+    0.0
+  ],
+  "reaction": 0.0,
+  "source_sha256": {
+    "src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+    "src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+    "src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+    "src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+    "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+    "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+    "src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+    "examples/solve_star_polyhedra.py": "fc304ad611780d88f5dfb61657a2cd36f07260badbbc28694dc08929d7d1ba45",
+    "examples/polygon_meshes.py": "2bb652aff9ef121790f209c89a12198a64c7faa52e37dc9185ed4998af93c4d1",
+    "examples/solve_rad3d.py": "158766f5e7ca32be9d3f51d66f7402fea023e740ac2794b6742b6ece8d7235a6"
+  },
+  "rows": [
+    {
+      "n": 2,
+      "macro_cells": 16,
+      "nonconvex_cells": 8,
+      "original_faces": 88,
+      "trace_dofs": 264,
+      "fine_cells": 320,
+      "kernel_radius_min": 0.125,
+      "kernel_radius_over_diameter_min": 0.14433756729740646,
+      "total_volume": 0.9999999999999999,
+      "volume_relative_difference": 5.921189464667502e-16,
+      "l2_error": 0.13424938452498533,
+      "h1_seminorm_error": 4.182285117078313,
+      "V_error": 4.183003279098627,
+      "physical_flux_l2_error": 0.42701004495850314,
+      "assembly_order": 20,
+      "error_orders": [
+        20,
+        24
+      ],
+      "errors_by_order": [
+        [
+          0.13424938452498508,
+          4.182285117078292,
+          0.42701004495850126
+        ],
+        [
+          0.13424938452498533,
+          4.182285117078313,
+          0.42701004495850314
+        ]
+      ],
+      "error_quadrature_change": 2.042810365310288e-14,
+      "global_relative_residual": 4.3617830015397276e-16,
+      "archive": "n2.npz",
+      "archive_sha256": "5c96a34efcd5d8707b247d2559cdd2a23892a6f458bff380ee74efaf82350691",
+      "elapsed_seconds": 280.45367833808996
+    },
+    {
+      "n": 3,
+      "macro_cells": 54,
+      "nonconvex_cells": 27,
+      "original_faces": 270,
+      "trace_dofs": 810,
+      "fine_cells": 1080,
+      "kernel_radius_min": 0.08333333333333326,
+      "kernel_radius_over_diameter_min": 0.14433756729740632,
+      "total_volume": 1.0,
+      "volume_relative_difference": 5.620504062164856e-16,
+      "l2_error": 0.06456434598109492,
+      "h1_seminorm_error": 2.461410101863926,
+      "V_error": 2.4616923462965685,
+      "physical_flux_l2_error": 0.2540579850957789,
+      "assembly_order": 16,
+      "error_orders": [
+        16,
+        20
+      ],
+      "errors_by_order": [
+        [
+          0.06456434598109505,
+          2.461410101863932,
+          0.2540579850957794
+        ],
+        [
+          0.06456434598109492,
+          2.461410101863926,
+          0.2540579850957789
+        ]
+      ],
+      "error_quadrature_change": 5.773159728050814e-15,
+      "global_relative_residual": 4.507107390276261e-16,
+      "archive": "n3.npz",
+      "archive_sha256": "3c26d5ec86db8c4bf44a0c52cb9ed7e65a240ce533cb2932cdc89924d18b29da",
+      "elapsed_seconds": 488.5776196389925
+    },
+    {
+      "n": 4,
+      "macro_cells": 128,
+      "nonconvex_cells": 64,
+      "original_faces": 608,
+      "trace_dofs": 1824,
+      "fine_cells": 2560,
+      "kernel_radius_min": 0.0625,
+      "kernel_radius_over_diameter_min": 0.14433756729740646,
+      "total_volume": 0.9999999999999999,
+      "volume_relative_difference": 5.921189464667502e-16,
+      "l2_error": 0.03563547839581831,
+      "h1_seminorm_error": 1.591426587106898,
+      "V_error": 1.5915595741046606,
+      "physical_flux_l2_error": 0.16372333062884564,
+      "assembly_order": 14,
+      "error_orders": [
+        14,
+        16
+      ],
+      "errors_by_order": [
+        [
+          0.0356354783958183,
+          1.5914265871068982,
+          0.1637233306288457
+        ],
+        [
+          0.03563547839581831,
+          1.591426587106898,
+          0.16372333062884564
+        ]
+      ],
+      "error_quadrature_change": 2.220446049250313e-16,
+      "global_relative_residual": 6.893209820092855e-16,
+      "archive": "n4.npz",
+      "archive_sha256": "0ddeb28def13c312049f77975ef80dcd93d137353100058b3956d21b2312f21b",
+      "elapsed_seconds": 868.2808338130126
+    },
+    {
+      "n": 5,
+      "macro_cells": 250,
+      "nonconvex_cells": 125,
+      "original_faces": 1150,
+      "trace_dofs": 3450,
+      "fine_cells": 5000,
+      "kernel_radius_min": 0.04999999999999982,
+      "kernel_radius_over_diameter_min": 0.14433756729740588,
+      "total_volume": 1.0,
+      "volume_relative_difference": 1.9515639104739017e-15,
+      "l2_error": 0.020054728294048797,
+      "h1_seminorm_error": 1.0737484133373794,
+      "V_error": 1.0738108395741104,
+      "physical_flux_l2_error": 0.10876388801147745,
+      "assembly_order": 14,
+      "error_orders": [
+        14,
+        16
+      ],
+      "errors_by_order": [
+        [
+          0.020054728294048793,
+          1.07374841333738,
+          0.10876388801147746
+        ],
+        [
+          0.020054728294048797,
+          1.0737484133373794,
+          0.10876388801147745
+        ]
+      ],
+      "error_quadrature_change": 6.661338147750939e-16,
+      "global_relative_residual": 1.157622855162429e-15,
+      "archive": "n5.npz",
+      "archive_sha256": "d71a920139cb281041ca29475d42edc58a95e6ede14d669bbb5c4ef69b4b1f8d",
+      "elapsed_seconds": 2228.0023912889883
+    },
+    {
+      "n": 6,
+      "macro_cells": 432,
+      "nonconvex_cells": 216,
+      "original_faces": 1944,
+      "trace_dofs": 5832,
+      "fine_cells": 8640,
+      "kernel_radius_min": 0.04166666666666652,
+      "kernel_radius_over_diameter_min": 0.1443375672974059,
+      "total_volume": 1.0,
+      "volume_relative_difference": 1.4988010832439613e-15,
+      "l2_error": 0.013404810048648559,
+      "h1_seminorm_error": 0.8596543599366591,
+      "V_error": 0.8596891966687266,
+      "physical_flux_l2_error": 0.08589670754769671,
+      "assembly_order": 14,
+      "error_orders": [
+        14,
+        16
+      ],
+      "errors_by_order": [
+        [
+          0.013404810048648555,
+          0.8596543599366593,
+          0.08589670754769674
+        ],
+        [
+          0.013404810048648559,
+          0.8596543599366591,
+          0.08589670754769671
+        ]
+      ],
+      "error_quadrature_change": 2.220446049250313e-16,
+      "global_relative_residual": 1.6055086416846412e-15,
+      "archive": "n6.npz",
+      "archive_sha256": "c96efe1987bc7682bca2a78ca66b2f1fc0968cb4b050a0b8fc8c3165e94c5560",
+      "elapsed_seconds": 3421.8311141779413
+    }
+  ],
+  "interpretation": "Published PDE and polynomial degrees on an original nonconvex polyhedral family, not historical mesh connectivity. One P1 polynomial belongs to each original polygonal face. Convex-hull filling and independent traces on triangulation diagonals are not used. Each recorded kernel radius is verified against all faces.",
+  "source_changed_during_run": false
+}

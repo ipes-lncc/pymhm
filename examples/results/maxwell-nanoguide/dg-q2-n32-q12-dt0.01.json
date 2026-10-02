@@ -1,0 +1,26 @@
+{
+  "n": 32,
+  "dt": 0.01,
+  "steps": 1131,
+  "quadrature": 12,
+  "electric_dofs": 9216,
+  "electric_time": 11.315,
+  "magnetic_time": 11.31,
+  "interpolation": {
+    "electric_indices": [
+      1131,
+      1131
+    ],
+    "magnetic_indices": [
+      1131,
+      1131
+    ],
+    "method": "linear between staggered time levels"
+  },
+  "source_sha256": {
+    "classical.py": "537521ca36e16cb2698e848907a8597fe11880d1d9e088616f90cbd4d1c4c6c5",
+    "maxwell_nanoguide.py": "c129d1e692f792b67ffce38a4897eddf146ecf7a30d8af15e1335c70a1b082c1"
+  },
+  "fields_sha256": "41234f5a1d583aa36185482cc55d9f9dd02994aa8c6c1df5e6831c8a76e0711f",
+  "elapsed_seconds": 5.440953871933743
+}

@@ -1,0 +1,28 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: ruff
+        name: Ruff lint
+        entry: pixi run -e test ruff check
+        language: system
+        types: [python]
+      - id: ruff-format
+        name: Ruff formatting
+        entry: pixi run -e test ruff format --check
+        language: system
+        types: [python]
+      - id: metadata
+        name: Release metadata consistency
+        entry: pixi run -e test metadata-check
+        language: system
+        pass_filenames: false
+        always_run: true

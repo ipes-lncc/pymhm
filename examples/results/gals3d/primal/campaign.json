@@ -1,0 +1,88 @@
+{
+  "timestamp_utc": "2026-09-30T02:53:17.717025+00:00",
+  "source_sha256": {
+    "examples/solve_gals3d.py": "dba345e54352641e440e8bda9901c9584acee8da94403a589166795f5cbcc46e",
+    "examples/gals3d_data.py": "b76fb53170c67757d33a380db28c287fc86f7f306b3efe2f564d560dd0607b63",
+    "src/pymhm/gals3d.py": "e8175f48bbb00eff58603e5f776eb478e443ba8cc7d3c6e03cde99f1585f039a",
+    "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+    "src/pymhm/elasticity.py": "18bf5fc416138445497f44f01188861651341489d202197393f8518f1b9922d6",
+    "src/pymhm/elasticity3d.py": "9b9dd2002cff42d86282fac96dd2c305c4fb1ea5a35f11fcc7bdeedbb11882bf",
+    "src/pymhm/darcy3d.py": "ad29b1d2979d93e1d6b3c149faeae4c45e8d4da5a604b4bf1b71f3fd4b62bc46",
+    "src/pymhm/tetrahedral.py": "be9cf2387044046d90761e8a98cf1c81ed6070a9db685c2f63d059c3224e4b24",
+    "src/pymhm/tetra_lagrange.py": "89af3d45c336bab82d298f39be15b7e9f806ea0ec78860d9d05d374a3b8f5f49",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64"
+  },
+  "python": "3.13.15",
+  "numpy": "2.5.3",
+  "native_threads": 1,
+  "operator": "-div(2*mu*sym(grad(u))-p*I)=f; div(u)+p/lambda=0",
+  "domain": "unit cube; Freudenthal tetrahedral macrocells",
+  "boundary": "exact displacement; integrated finite compressibility or zero pressure mean at infinity",
+  "evidence": "original analytic 3D verification of L19 dimensional formulation; not a historical figure reproduction",
+  "rows": [],
+  "primal_control": [
+    {
+      "lame_lambda": 1.0,
+      "local_refinement_precision": "extended",
+      "degree": 2,
+      "local_refinement": 2,
+      "macro_subdivisions": 2,
+      "backward_residual": 1.1081501250972741e-16,
+      "acquisition_source_index": 0,
+      "displacement_l2": 0.01504117930035128,
+      "stress_l2": 0.48060407777289665
+    },
+    {
+      "lame_lambda": 100.0,
+      "local_refinement_precision": "extended",
+      "degree": 2,
+      "local_refinement": 2,
+      "macro_subdivisions": 2,
+      "backward_residual": 1.0675941515169527e-16,
+      "acquisition_source_index": 0,
+      "displacement_l2": 0.01166647831543674,
+      "stress_l2": 0.802308248556966
+    },
+    {
+      "lame_lambda": 10000.0,
+      "local_refinement_precision": "extended",
+      "degree": 2,
+      "local_refinement": 2,
+      "macro_subdivisions": 2,
+      "backward_residual": 1.0558942982656889e-16,
+      "acquisition_source_index": 0,
+      "displacement_l2": 0.011696698502453464,
+      "stress_l2": 0.848857255405507
+    },
+    {
+      "lame_lambda": 1000000.0,
+      "local_refinement_precision": "extended",
+      "degree": 2,
+      "local_refinement": 2,
+      "macro_subdivisions": 2,
+      "backward_residual": 1.0569000530304735e-16,
+      "acquisition_source_index": 0,
+      "displacement_l2": 0.011697165253786626,
+      "stress_l2": 0.8493816380690055
+    }
+  ],
+  "acquisition_sources": [
+    {
+      "examples/solve_gals3d.py": "dba345e54352641e440e8bda9901c9584acee8da94403a589166795f5cbcc46e",
+      "examples/gals3d_data.py": "b76fb53170c67757d33a380db28c287fc86f7f306b3efe2f564d560dd0607b63",
+      "src/pymhm/gals3d.py": "e8175f48bbb00eff58603e5f776eb478e443ba8cc7d3c6e03cde99f1585f039a",
+      "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+      "src/pymhm/elasticity.py": "18bf5fc416138445497f44f01188861651341489d202197393f8518f1b9922d6",
+      "src/pymhm/elasticity3d.py": "9b9dd2002cff42d86282fac96dd2c305c4fb1ea5a35f11fcc7bdeedbb11882bf",
+      "src/pymhm/darcy3d.py": "ad29b1d2979d93e1d6b3c149faeae4c45e8d4da5a604b4bf1b71f3fd4b62bc46",
+      "src/pymhm/tetrahedral.py": "be9cf2387044046d90761e8a98cf1c81ed6070a9db685c2f63d059c3224e4b24",
+      "src/pymhm/tetra_lagrange.py": "89af3d45c336bab82d298f39be15b7e9f806ea0ec78860d9d05d374a3b8f5f49",
+      "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+      "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc",
+      "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64"
+    }
+  ],
+  "source_changed_during_run": false
+}

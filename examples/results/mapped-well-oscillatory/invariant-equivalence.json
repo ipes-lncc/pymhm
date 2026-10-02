@@ -1,0 +1,55 @@
+{
+  "method": "Exact vertically invariant RT1 subspace versus full three-dimensional RT1/Q1",
+  "rows": [
+    {
+      "fine_factor": 2,
+      "invariant_sha256": "b48c48f7884c18ad2d04c49f1bcdb2058bc03bbdfa528d720be45ed72dd35287",
+      "full_3d_sha256": "3655b6acb22002710bfc11a1695392eb2fb1e7a054c0b28588135aef3a313573",
+      "norms": {
+        "pressure_l2": 9.979920624156365e-06,
+        "flux_l2": 4.884481156050653e-16,
+        "pressure_reference_l2": 6537849632.853456,
+        "flux_reference_l2": 0.006154490505035575,
+        "pressure_relative": 1.5264836581750216e-15,
+        "flux_relative": 7.93645087607852e-14,
+        "pressure_reference_increment_l2": 236193778.3655011,
+        "pressure_increment_relative": 4.225310545103694e-14,
+        "quadrature_order": [
+          6,
+          6,
+          3
+        ],
+        "integration_axis_counts": [
+          2,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "fine_factor": 8,
+      "invariant_sha256": "a01bfee999e4b0ff07107d3330819a62c4d2baf23f9960255b674906128fe12e",
+      "full_3d_sha256": "206d1a7f853932405c7065977cb7fba661d49800cd552ae88f77e1ba2c2da938",
+      "norms": {
+        "pressure_l2": 2.152576186186077e-05,
+        "flux_l2": 1.136472201244482e-15,
+        "pressure_reference_l2": 6530082776.740936,
+        "flux_reference_l2": 0.007626958928716188,
+        "pressure_relative": 3.296399540068916e-15,
+        "flux_relative": 1.4900725333206682e-13,
+        "pressure_reference_increment_l2": 239765019.688541,
+        "pressure_increment_relative": 8.977857524764503e-14,
+        "quadrature_order": [
+          6,
+          6,
+          3
+        ],
+        "integration_axis_counts": [
+          8,
+          8,
+          1
+        ]
+      }
+    }
+  ]
+}

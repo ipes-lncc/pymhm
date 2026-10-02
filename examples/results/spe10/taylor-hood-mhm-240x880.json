@@ -1,0 +1,25 @@
+{
+  "reference": "taylor-hood-240x880.npz",
+  "reference_sha256": "f69d070e614eda5bcf54b51289bd57ac06bcc18337943c390859313db7939cc5",
+  "reference_coefficients_sha256": "db9ec4bae92fb785d40322d392cbcfb960b98417f86db146ed1d94c731e68ecc",
+  "mhm": "flow-layer1-n6x11-p3-r10-s10-q8-pointwise-2017.npz",
+  "mhm_sha256": "28d164cfa6efaf32884f260e77e848e4f088423a0468c0e417c8e3d6daf00503",
+  "integration": "physical L2 over each MHM fine triangle; both one-sided macro fields preserved; no pressure-mean adjustment",
+  "comparison_driver_sha256": "d5b4d1ff04388aef2c1bccdcb97c53f43857a6ef08a3b874acb6aa049ecf3ad9",
+  "norms": [
+    {
+      "quadrature_order": 24,
+      "velocity_l2": 79.72850222825383,
+      "pressure_l2": 3263.2484911873426,
+      "velocity_relative": 0.030210665787914922,
+      "pressure_relative": 0.011464788767449082
+    },
+    {
+      "quadrature_order": 32,
+      "velocity_l2": 79.7269110544215,
+      "pressure_l2": 3263.2471760915273,
+      "velocity_relative": 0.030210054634079813,
+      "pressure_relative": 0.011464784217390738
+    }
+  ]
+}

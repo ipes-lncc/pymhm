@@ -1,0 +1,917 @@
+{
+  "case": "Literature-type corner Dirac wells; unit magnitude is an explicit normalization, not an inferred paper parameter",
+  "cases": [
+    {
+      "reference": "MSL msl_mhm + msl_cg with exact nodal point-load adapter",
+      "n": 2,
+      "refinement": 4,
+      "segments": 1,
+      "lower_half_permeability": 1,
+      "source": "unit extraction at (0,0), unit injection at (1,1); each equally divided over its two incident macro sectors",
+      "pressure_l2_difference": 3.801321402453708e-15,
+      "flux_l2_difference": 1.712816868189572e-14,
+      "pressure_l2_scale": 0.49511405889455834,
+      "flux_l2_scale": 2.1330687970614712,
+      "pressure_linf_difference": 1.865174681370263e-14,
+      "flux_component_linf_difference": 6.750155989720952e-14,
+      "native_pressure_mean_removed": 0.5937500000000047,
+      "macro_conservation_linf": 3.556621198410758e-18,
+      "native_point_loads": [
+        {
+          "macro": 0,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 1,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 6,
+          "values": [
+            1.0,
+            1.0,
+            14.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        },
+        {
+          "macro": 7,
+          "values": [
+            1.0,
+            1.0,
+            4.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        }
+      ],
+      "algebra": {
+        "relative_residual": 2.0260201870217988e-16,
+        "gauge_multiplier": 0
+      },
+      "fields": "msl-point-n2-r4-s1-k1.npz",
+      "fields_sha256": "4985fac8e5c74041becb989050f23f4ad22e31ea68ce4cd6fbac1f4b92459051",
+      "executable_sha256": "b71441110ec73460ac395a67fa2f82de7372b65555a54fa96e71dd3a341fde9d",
+      "log_sha256": "c5c7b3a39688f6fbcf779fb84490527b2eb757438a8a27cc8fed5d1c4ae8f7b3",
+      "final_runtime_recheck": "bitwise identical pressure and centroid flux after a fresh solve"
+    },
+    {
+      "reference": "MSL msl_mhm + msl_cg with exact nodal point-load adapter",
+      "n": 2,
+      "refinement": 4,
+      "segments": 2,
+      "lower_half_permeability": 1,
+      "source": "unit extraction at (0,0), unit injection at (1,1); each equally divided over its two incident macro sectors",
+      "pressure_l2_difference": 3.4973609541505336e-15,
+      "flux_l2_difference": 1.6593097500596097e-14,
+      "pressure_l2_scale": 0.4399473283174702,
+      "flux_l2_scale": 2.091138911055451,
+      "pressure_linf_difference": 1.7763568394002505e-14,
+      "flux_component_linf_difference": 6.394884621840902e-14,
+      "native_pressure_mean_removed": 0.5111283603380609,
+      "macro_conservation_linf": 1.1102230246251565e-16,
+      "native_point_loads": [
+        {
+          "macro": 0,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 1,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 6,
+          "values": [
+            1.0,
+            1.0,
+            14.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        },
+        {
+          "macro": 7,
+          "values": [
+            1.0,
+            1.0,
+            4.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        }
+      ],
+      "algebra": {
+        "relative_residual": 2.8121616253703235e-16,
+        "gauge_multiplier": 2.7755575615628914e-17
+      },
+      "fields": "msl-point-n2-r4-s2-k1.npz",
+      "fields_sha256": "1841dcaeee33064d142049162dd0f6a79b55defbb2e578952920a9500cb83a08",
+      "executable_sha256": "b71441110ec73460ac395a67fa2f82de7372b65555a54fa96e71dd3a341fde9d",
+      "log_sha256": "39de0f3691d39bcb4e169c4e99b0a6a179ebedf2c83a84962fc677d69b186a9c",
+      "final_runtime_recheck": "bitwise identical pressure and centroid flux after a fresh solve"
+    },
+    {
+      "reference": "MSL msl_mhm + msl_cg with exact nodal point-load adapter",
+      "n": 2,
+      "refinement": 4,
+      "segments": 1,
+      "lower_half_permeability": 1000,
+      "source": "unit extraction at (0,0), unit injection at (1,1); each equally divided over its two incident macro sectors",
+      "pressure_l2_difference": 2.1223129664934804e-15,
+      "flux_l2_difference": 5.912758726630471e-14,
+      "pressure_l2_scale": 0.262147707444803,
+      "flux_l2_scale": 2.1906584603724215,
+      "pressure_linf_difference": 1.7319479184152442e-14,
+      "flux_component_linf_difference": 1.919020498064583e-13,
+      "native_pressure_mean_removed": 0.14896597933316802,
+      "macro_conservation_linf": 5.551115123125783e-17,
+      "native_point_loads": [
+        {
+          "macro": 0,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 1,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 6,
+          "values": [
+            1.0,
+            1.0,
+            14.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        },
+        {
+          "macro": 7,
+          "values": [
+            1.0,
+            1.0,
+            4.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        }
+      ],
+      "algebra": {
+        "relative_residual": 1.40702115242702e-16,
+        "gauge_multiplier": -1.1102230246251565e-16
+      },
+      "fields": "msl-point-n2-r4-s1-k1000.npz",
+      "fields_sha256": "3852ae91af76f07ca5e63e7241a116c2a7d02bc6c84d277009eb86c3682ccecf",
+      "executable_sha256": "b71441110ec73460ac395a67fa2f82de7372b65555a54fa96e71dd3a341fde9d",
+      "log_sha256": "615dccf8fdd6e1db0069486828406d8010ee4e070adbf6c0e3682974d483e703",
+      "final_runtime_recheck": "bitwise identical pressure and centroid flux after a fresh solve"
+    },
+    {
+      "reference": "MSL msl_mhm + msl_cg with exact nodal point-load adapter",
+      "n": 2,
+      "refinement": 4,
+      "segments": 2,
+      "lower_half_permeability": 1000,
+      "source": "unit extraction at (0,0), unit injection at (1,1); each equally divided over its two incident macro sectors",
+      "pressure_l2_difference": 1.8268743945607674e-15,
+      "flux_l2_difference": 1.2127723676355153e-13,
+      "pressure_l2_scale": 0.23776832356041855,
+      "flux_l2_scale": 2.1444316419995646,
+      "pressure_linf_difference": 1.554312234475219e-14,
+      "flux_component_linf_difference": 3.312905505481467e-13,
+      "native_pressure_mean_removed": 0.1284935302372107,
+      "macro_conservation_linf": 2.220446049250313e-16,
+      "native_point_loads": [
+        {
+          "macro": 0,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 1,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 6,
+          "values": [
+            1.0,
+            1.0,
+            14.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        },
+        {
+          "macro": 7,
+          "values": [
+            1.0,
+            1.0,
+            4.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        }
+      ],
+      "algebra": {
+        "relative_residual": 1.6788611249323183e-16,
+        "gauge_multiplier": 0
+      },
+      "fields": "msl-point-n2-r4-s2-k1000.npz",
+      "fields_sha256": "27a820a2afedc76ec6cd7896270909f6efc8091afaebb10ff9deae08ca36aaa6",
+      "executable_sha256": "b71441110ec73460ac395a67fa2f82de7372b65555a54fa96e71dd3a341fde9d",
+      "log_sha256": "6c6a2290876c804c2d0495dbe52de526083a1104dede7e574a2fa9c07704b90d",
+      "final_runtime_recheck": "bitwise identical pressure and centroid flux after a fresh solve"
+    },
+    {
+      "reference": "MSL msl_mhm + msl_cg with exact nodal point-load adapter",
+      "n": 4,
+      "refinement": 4,
+      "segments": 1,
+      "lower_half_permeability": 1,
+      "source": "unit extraction at (0,0), unit injection at (1,1); each equally divided over its two incident macro sectors",
+      "pressure_l2_difference": 3.641995196694554e-15,
+      "flux_l2_difference": 1.9099079043849225e-14,
+      "pressure_l2_scale": 0.45725728832542695,
+      "flux_l2_scale": 2.3253226335586517,
+      "pressure_linf_difference": 2.220446049250313e-14,
+      "flux_component_linf_difference": 1.3145040611561853e-13,
+      "native_pressure_mean_removed": 1.0223214285714368,
+      "macro_conservation_linf": 1.1102230246251565e-16,
+      "native_point_loads": [
+        {
+          "macro": 0,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 1,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 30,
+          "values": [
+            1.0,
+            1.0,
+            14.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        },
+        {
+          "macro": 31,
+          "values": [
+            1.0,
+            1.0,
+            4.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        }
+      ],
+      "algebra": {
+        "relative_residual": 3.935827098934914e-16,
+        "gauge_multiplier": -1.6653345369377356e-16
+      },
+      "fields": "msl-point-n4-r4-s1-k1.npz",
+      "fields_sha256": "ba615a27d9b7ec4cec2c97dac66ecea51e599a3aaf8fad3e0a6de4d6180547e4",
+      "executable_sha256": "b71441110ec73460ac395a67fa2f82de7372b65555a54fa96e71dd3a341fde9d",
+      "log_sha256": "94b835b11f209f7c1150cd1486199ae44b1097e411a9356a0232cf6e4e7469dc",
+      "final_runtime_recheck": "bitwise identical pressure and centroid flux after a fresh solve"
+    },
+    {
+      "reference": "MSL msl_mhm + msl_cg with exact nodal point-load adapter",
+      "n": 4,
+      "refinement": 4,
+      "segments": 1,
+      "lower_half_permeability": 1000,
+      "source": "unit extraction at (0,0), unit injection at (1,1); each equally divided over its two incident macro sectors",
+      "pressure_l2_difference": 1.997813901881489e-15,
+      "flux_l2_difference": 2.0478552942914225e-13,
+      "pressure_l2_scale": 0.24779560475288118,
+      "flux_l2_scale": 2.3763910491919695,
+      "pressure_linf_difference": 1.9984014443252818e-14,
+      "flux_component_linf_difference": 5.238032230181489e-13,
+      "native_pressure_mean_removed": 0.13185925096109352,
+      "macro_conservation_linf": 1.1102230246251565e-16,
+      "native_point_loads": [
+        {
+          "macro": 0,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 1,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 30,
+          "values": [
+            1.0,
+            1.0,
+            14.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        },
+        {
+          "macro": 31,
+          "values": [
+            1.0,
+            1.0,
+            4.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        }
+      ],
+      "algebra": {
+        "relative_residual": 1.8074685830840092e-16,
+        "gauge_multiplier": 5.551115123125783e-17
+      },
+      "fields": "msl-point-n4-r4-s1-k1000.npz",
+      "fields_sha256": "64f3b10e5b1dd54e653c3ef90855f0fd2e4110fe6f136f8447017de541e41577",
+      "executable_sha256": "b71441110ec73460ac395a67fa2f82de7372b65555a54fa96e71dd3a341fde9d",
+      "log_sha256": "339ebe2806787d588e448ade19b5e4e13a1bc15bf22bfca4f9ee71d3e31d2f86",
+      "final_runtime_recheck": "bitwise identical pressure and centroid flux after a fresh solve"
+    },
+    {
+      "reference": "MSL msl_mhm + msl_cg with exact nodal point-load adapter",
+      "n": 8,
+      "refinement": 4,
+      "segments": 1,
+      "lower_half_permeability": 1,
+      "source": "unit extraction at (0,0), unit injection at (1,1); each equally divided over its two incident macro sectors",
+      "pressure_l2_difference": 3.6975318084562335e-15,
+      "flux_l2_difference": 2.188851380473873e-14,
+      "pressure_l2_scale": 0.4398996807662856,
+      "flux_l2_scale": 2.505785157623675,
+      "pressure_linf_difference": 2.4868995751603507e-14,
+      "flux_component_linf_difference": 2.7000623958883807e-13,
+      "native_pressure_mean_removed": 1.458238381584914,
+      "macro_conservation_linf": 1.6653345369377348e-16,
+      "native_point_loads": [
+        {
+          "macro": 0,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 1,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 126,
+          "values": [
+            1.0,
+            1.0,
+            14.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        },
+        {
+          "macro": 127,
+          "values": [
+            1.0,
+            1.0,
+            4.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        }
+      ],
+      "algebra": {
+        "relative_residual": 7.608678616200114e-16,
+        "gauge_multiplier": -2.7755575615628923e-16
+      },
+      "fields": "msl-point-n8-r4-s1-k1.npz",
+      "fields_sha256": "7c8500ab572932c589db4ab1abd166896da5cd21e5cd8947d2aa0c858b1f09b5",
+      "executable_sha256": "b71441110ec73460ac395a67fa2f82de7372b65555a54fa96e71dd3a341fde9d",
+      "log_sha256": "109fce63d2d7566dac84f0de23674663f0865b130883259564ba2d53e5164cf8",
+      "final_runtime_recheck": "bitwise identical pressure and centroid flux after a fresh solve"
+    },
+    {
+      "reference": "MSL msl_mhm + msl_cg with exact nodal point-load adapter",
+      "n": 8,
+      "refinement": 4,
+      "segments": 1,
+      "lower_half_permeability": 1000,
+      "source": "unit extraction at (0,0), unit injection at (1,1); each equally divided over its two incident macro sectors",
+      "pressure_l2_difference": 1.821955418888429e-15,
+      "flux_l2_difference": 7.070618588452925e-13,
+      "pressure_l2_scale": 0.23850140190603242,
+      "flux_l2_scale": 2.55042649727553,
+      "pressure_linf_difference": 2.398081733190338e-14,
+      "flux_component_linf_difference": 3.0948577034450864e-12,
+      "native_pressure_mean_removed": 0.12790680488500353,
+      "macro_conservation_linf": 2.220446049250313e-16,
+      "native_point_loads": [
+        {
+          "macro": 0,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 1,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 126,
+          "values": [
+            1.0,
+            1.0,
+            14.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        },
+        {
+          "macro": 127,
+          "values": [
+            1.0,
+            1.0,
+            4.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        }
+      ],
+      "algebra": {
+        "relative_residual": 4.326212530727429e-16,
+        "gauge_multiplier": -1.1102230246251565e-16
+      },
+      "fields": "msl-point-n8-r4-s1-k1000.npz",
+      "fields_sha256": "47c0c381b39dc376067782113683bc919fbb5bdd1561d32582d777302d809cf2",
+      "executable_sha256": "b71441110ec73460ac395a67fa2f82de7372b65555a54fa96e71dd3a341fde9d",
+      "log_sha256": "bc1147e6efeda5e4f328498387c3860af759cbd77cdfdc1e4dffd73c918d27d8",
+      "final_runtime_recheck": "bitwise identical pressure and centroid flux after a fresh solve"
+    },
+    {
+      "reference": "MSL msl_mhm + msl_cg with exact nodal point-load adapter",
+      "n": 16,
+      "refinement": 4,
+      "segments": 1,
+      "lower_half_permeability": 1,
+      "source": "unit extraction at (0,0), unit injection at (1,1); each equally divided over its two incident macro sectors",
+      "pressure_l2_difference": 4.68263508951656e-15,
+      "flux_l2_difference": 3.443406787033095e-14,
+      "pressure_l2_scale": 0.4336955013875387,
+      "flux_l2_scale": 2.675537746272233,
+      "pressure_linf_difference": 3.019806626980426e-14,
+      "flux_component_linf_difference": 5.400124791776761e-13,
+      "native_pressure_mean_removed": 1.8980098693651082,
+      "macro_conservation_linf": 2.3505503099485736e-16,
+      "native_point_loads": [
+        {
+          "macro": 0,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 1,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 510,
+          "values": [
+            1.0,
+            1.0,
+            14.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        },
+        {
+          "macro": 511,
+          "values": [
+            1.0,
+            1.0,
+            4.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        }
+      ],
+      "algebra": {
+        "relative_residual": 1.6399575956575469e-15,
+        "gauge_multiplier": -8.32667268468867e-16
+      },
+      "fields": "msl-point-n16-r4-s1-k1.npz",
+      "fields_sha256": "838c0d7a107e4d091318710bee1d20179041f9635cc32be35271125c05c3e9ae",
+      "executable_sha256": "b71441110ec73460ac395a67fa2f82de7372b65555a54fa96e71dd3a341fde9d",
+      "log_sha256": "58b8671a7aed992919b4c1e645618b45fbff68d9c82f8ab7c1079884d7bce16c",
+      "final_runtime_recheck": "bitwise identical pressure and centroid flux after a fresh solve"
+    },
+    {
+      "reference": "MSL msl_mhm + msl_cg with exact nodal point-load adapter",
+      "n": 16,
+      "refinement": 4,
+      "segments": 1,
+      "lower_half_permeability": 1000,
+      "source": "unit extraction at (0,0), unit injection at (1,1); each equally divided over its two incident macro sectors",
+      "pressure_l2_difference": 1.7082068518683188e-15,
+      "flux_l2_difference": 1.4271639637477254e-12,
+      "pressure_l2_scale": 0.2345311569518585,
+      "flux_l2_scale": 2.7165777210881537,
+      "pressure_linf_difference": 2.7533531010703882e-14,
+      "flux_component_linf_difference": 6.106226635438361e-12,
+      "native_pressure_mean_removed": 0.1272490078483752,
+      "macro_conservation_linf": 1.942890293094024e-16,
+      "native_point_loads": [
+        {
+          "macro": 0,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 1,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 510,
+          "values": [
+            1.0,
+            1.0,
+            14.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        },
+        {
+          "macro": 511,
+          "values": [
+            1.0,
+            1.0,
+            4.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        }
+      ],
+      "algebra": {
+        "relative_residual": 4.971826788546134e-16,
+        "gauge_multiplier": 5.551115123125783e-17
+      },
+      "fields": "msl-point-n16-r4-s1-k1000.npz",
+      "fields_sha256": "136c5dabf8742f767de99a64f1a3f8153e0fb372778e9fec43052108cc8732cb",
+      "executable_sha256": "b71441110ec73460ac395a67fa2f82de7372b65555a54fa96e71dd3a341fde9d",
+      "log_sha256": "73d34d3ea491cb059607ca50511f377477089b3fbbdee51e0e4ce4acfd6f11b0",
+      "final_runtime_recheck": "bitwise identical pressure and centroid flux after a fresh solve"
+    },
+    {
+      "reference": "MSL msl_mhm + msl_cg with exact nodal point-load adapter",
+      "n": 32,
+      "refinement": 4,
+      "segments": 1,
+      "lower_half_permeability": 1,
+      "source": "unit extraction at (0,0), unit injection at (1,1); each equally divided over its two incident macro sectors",
+      "pressure_l2_difference": 8.61948983981915e-15,
+      "flux_l2_difference": 9.316542358360593e-14,
+      "pressure_l2_scale": 0.4316929152801285,
+      "flux_l2_scale": 2.835537464996887,
+      "pressure_linf_difference": 4.5072232486001104e-14,
+      "flux_component_linf_difference": 1.0800249583553523e-12,
+      "native_pressure_mean_removed": 2.3388951112018397,
+      "macro_conservation_linf": 2.220446049250313e-16,
+      "native_point_loads": [
+        {
+          "macro": 0,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 1,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 2046,
+          "values": [
+            1.0,
+            1.0,
+            14.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        },
+        {
+          "macro": 2047,
+          "values": [
+            1.0,
+            1.0,
+            4.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        }
+      ],
+      "algebra": {
+        "relative_residual": 3.110005982991073e-15,
+        "gauge_multiplier": -1.998401444325281e-15
+      },
+      "fields": "msl-point-n32-r4-s1-k1.npz",
+      "fields_sha256": "6c45aa123938dccc742d39be5f829907b23ef8cea19c9facf8540f464114264f",
+      "executable_sha256": "b71441110ec73460ac395a67fa2f82de7372b65555a54fa96e71dd3a341fde9d",
+      "log_sha256": "021fe7326d9004a71ee15c3a34f7e00cc76b8ee73a1dc1a5556e467816f599c4",
+      "final_runtime_recheck": "bitwise identical pressure and centroid flux after a fresh solve"
+    },
+    {
+      "reference": "MSL msl_mhm + msl_cg with exact nodal point-load adapter",
+      "n": 32,
+      "refinement": 4,
+      "segments": 1,
+      "lower_half_permeability": 1000,
+      "source": "unit extraction at (0,0), unit injection at (1,1); each equally divided over its two incident macro sectors",
+      "pressure_l2_difference": 2.3587652855679896e-15,
+      "flux_l2_difference": 8.394650854355265e-12,
+      "pressure_l2_scale": 0.23312392191768003,
+      "flux_l2_scale": 2.874093731462416,
+      "pressure_linf_difference": 3.197442310920451e-14,
+      "flux_component_linf_difference": 5.637179611994725e-11,
+      "native_pressure_mean_removed": 0.12741546972928625,
+      "macro_conservation_linf": 2.2898349882893854e-16,
+      "native_point_loads": [
+        {
+          "macro": 0,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 1,
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            -0.5
+          ]
+        },
+        {
+          "macro": 2046,
+          "values": [
+            1.0,
+            1.0,
+            14.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        },
+        {
+          "macro": 2047,
+          "values": [
+            1.0,
+            1.0,
+            4.0,
+            0.7853981633974483,
+            1.5707963267948966,
+            0.5
+          ]
+        }
+      ],
+      "algebra": {
+        "relative_residual": 7.672664442459684e-16,
+        "gauge_multiplier": 5.551115123125783e-17
+      },
+      "fields": "msl-point-n32-r4-s1-k1000.npz",
+      "fields_sha256": "4bddbeee53587c92c68aab9e013b03946cc86281b767fbd13ab67e10d88eb10d",
+      "executable_sha256": "b71441110ec73460ac395a67fa2f82de7372b65555a54fa96e71dd3a341fde9d",
+      "log_sha256": "059529c8185100604312777821db02a1d17438b835ca92faaeeefe94d3da60b8",
+      "final_runtime_recheck": "bitwise identical pressure and centroid flux after a fresh solve"
+    }
+  ],
+  "comparison_source_sha256": "6be873de834d1aefe790b6e086af33ee5a17ecc8996cb6f6597e2d14fb69efe9",
+  "point_adapter_sha256": "6f208fb8d814494a89e2ebf73abefa05cab346d3934bdf90a79bbb7dc5f4cfd4",
+  "provenance": {
+    "sources": {
+      "MSL core": {
+        "url": "https://github.com/ipes-lncc/msl_core",
+        "revision": "7f15f455717173d29080d411a7e732c72c1e87f8",
+        "upstream_source_modifications": false
+      },
+      "MSL CG": {
+        "url": "https://github.com/ipes-lncc/msl_cg",
+        "revision": "afb76d14c1baf50f0b9e69f7bcac675749ef4458",
+        "upstream_source_modifications": false
+      },
+      "MSL MHM": {
+        "url": "https://github.com/ipes-lncc/msl_mhm",
+        "revision": "4cb8cf81518284313b680b13fd586ee619f08b99",
+        "upstream_source_modifications": false
+      },
+      "NeoPZ": {
+        "url": "https://github.com/labmec/neopz",
+        "revision": "4c6b6d277ce097b97bfc8dea1b6725860f4fe05a",
+        "upstream_source_modifications": false
+      }
+    },
+    "runtime_source_sha256": {
+      "darcy.py": "7b59e9efb289b22ecc992862192f58bc8a306edc8b1399ea116f30212456289b",
+      "elements.py": "bb5b546ea8c27c71091ed551840079867d71a98d485efc58cb8f3d2368ce2910",
+      "lagrange.py": "946ffb492ef38d104d9f99c9d5d60f948e0a2d137643ad00f13f43ffb28ac371",
+      "loads.py": "bea0a908d8346f01251b01c32d093a138b55f653bf32d5c5ab49f0f69009a6dd",
+      "hybrid.py": "16716d9ec6d2783c22b6003ee9402f70ade2d51f8accea018f66f4575fdf8dec",
+      "mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+      "parallel.py": "22e88e7f8d658104423b0823a502991996508d62b1c071589ee32429a6cbd77e",
+      "solvers.py": "68080fde386955c1688770bd630e25d595c3dc016e2917edee81fcd6b5c54450"
+    },
+    "python": "3.13.15",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "platform": "Linux-7.0.0-31-generic-x86_64-desconhecido-with-glibc2.43",
+    "reference_threads": 1,
+    "quadrature": {
+      "pymhm": 6,
+      "msl_source_and_coefficient_order": 8,
+      "neopz_order": 12,
+      "note": "Finite-well source and material interfaces coincide with fine edges; integrands are polynomial inside every fine cell."
+    },
+    "native_msl_gauge": "One retained macro pressure amplitude fixed through one exact Lagrange multiplier; reconstructed P1 pressure shifted by its physical domain mean; original unaugmented residual checked.",
+    "native_neopz_method": "Native EHDivConstant RT0/P0 operator assembled without preliminary solve; exact sparse transformation imposes zero exterior flux and constant flux on each macroface segment; SciPy SuperLU solves the gauge-augmented restricted operator; native NeoPZ reloads coefficients and evaluates fields. This does not execute the MHM controller.",
+    "comparison_tools_sha256": {
+      "msl_driver": "57aa24da3c57f5aa86c7547ded7b74aa0abeda50f8cf096dc7390f5a7610a1c3",
+      "msl_point_driver": "1125670f898ae77952c8b2077996146a3fd879d8d8d779e49930aa6f5450b02f",
+      "msl_point_load_adapter": "6f208fb8d814494a89e2ebf73abefa05cab346d3934bdf90a79bbb7dc5f4cfd4",
+      "neopz_driver": "8467a56886328534e72d26442d1a8a33187c0b31e9e87a54681c076fd595a9fb",
+      "regularized_comparison": "9e01217a9cb89b8475158fc54e003ad2d03ea3c387e9e782d8977d7eec068914",
+      "point_comparison": "6be873de834d1aefe790b6e086af33ee5a17ecc8996cb6f6597e2d14fb69efe9"
+    },
+    "finalizer_sha256": "ec3925651a90ad2c82b7078ab779ca3ed01c2d2cfc102ef6daa625ae649dc6f4"
+  },
+  "point_functional": "Q[v(1,1)-v(0,0)] with explicitly chosen Q=1. Each corner load is partitioned by incident macro angle. This is an explicit extension to broken test functions; the paper does not specify its partition or intensity.",
+  "scope": "Independent code comparison on matched meshes and discrete point loads; not digitized agreement with a published figure."
+}

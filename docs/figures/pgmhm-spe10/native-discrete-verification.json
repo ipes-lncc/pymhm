@@ -1,0 +1,260 @@
+{
+  "accepted": true,
+  "rows": [
+    {
+      "segments": 1,
+      "pressure_dofs": 4290,
+      "trace_dofs": 5,
+      "full_uncondensed_unknowns": 8589,
+      "relative_trace_difference": 5.464024678813083e-11,
+      "maximum_pressure_coefficient_difference": 2.024572840647089e-11,
+      "norms": {
+        "base": {
+          "4": {
+            "pressure_difference": 8.410225829965079e-09,
+            "flux_difference": 1.294603754546226e-10,
+            "pressure_reference": 579.1585035737221,
+            "flux_reference": 1.7503495584471318,
+            "pressure_relative_difference": 1.4521457904993925e-11,
+            "flux_relative_difference": 7.396258354786957e-11
+          },
+          "6": {
+            "pressure_difference": 8.410225829964784e-09,
+            "flux_difference": 1.2946037545462405e-10,
+            "pressure_reference": 579.1585035737389,
+            "flux_reference": 1.7503495584475295,
+            "pressure_relative_difference": 1.4521457904992995e-11,
+            "flux_relative_difference": 7.396258354785359e-11
+          }
+        },
+        "enriched": {
+          "4": {
+            "pressure_difference": 8.410812882038486e-09,
+            "flux_difference": 1.2949782635318996e-10,
+            "pressure_reference": 579.1713553186937,
+            "flux_reference": 1.7503676625147082,
+            "pressure_relative_difference": 1.4522149282418099e-11,
+            "flux_relative_difference": 7.3983214570557e-11
+          },
+          "6": {
+            "pressure_difference": 8.410812882038438e-09,
+            "flux_difference": 1.2949782635319024e-10,
+            "pressure_reference": 579.1713553186837,
+            "flux_reference": 1.7503676625151785,
+            "pressure_relative_difference": 1.4522149282418267e-11,
+            "flux_relative_difference": 7.398321457053729e-11
+          }
+        }
+      },
+      "native_backend": "PETSc/MUMPS LU full uncondensed saddle system",
+      "relative_original_residual": 3.906799012252363e-15,
+      "field_sha256": "8f03bc76cf9bdf45055ee7c724ea2823f41327a89c26cac1ba6a8386e1d6d7c5",
+      "record_sha256": "d21e0ec868613cbbfc52dd1214b02c7a1f270600edfef098e4b0af74c0435032",
+      "accepted": true,
+      "native_archive_sha256": "b2a9bf43f4fef6a3a209ef3fa74d2f4dad46f567db906f2727de03d011b6423b",
+      "field_archive": "pgmhm-s1-q5.npz"
+    },
+    {
+      "segments": 2,
+      "pressure_dofs": 4290,
+      "trace_dofs": 10,
+      "full_uncondensed_unknowns": 8594,
+      "relative_trace_difference": 5.0508713996047404e-11,
+      "maximum_pressure_coefficient_difference": 1.151465489797332e-11,
+      "norms": {
+        "base": {
+          "4": {
+            "pressure_difference": 4.365980280302501e-09,
+            "flux_difference": 9.698220817009362e-11,
+            "pressure_reference": 582.6493313700697,
+            "flux_reference": 2.5621471817932076,
+            "pressure_relative_difference": 7.493324106347336e-12,
+            "flux_relative_difference": 3.7851927031848836e-11
+          },
+          "6": {
+            "pressure_difference": 4.365980280302658e-09,
+            "flux_difference": 9.698220817009499e-11,
+            "pressure_reference": 582.6493313700726,
+            "flux_reference": 2.5621471817935206,
+            "pressure_relative_difference": 7.49332410634757e-12,
+            "flux_relative_difference": 3.7851927031844746e-11
+          }
+        },
+        "enriched": {
+          "4": {
+            "pressure_difference": 4.3661480968521965e-09,
+            "flux_difference": 9.699633382386223e-11,
+            "pressure_reference": 582.6530583309277,
+            "flux_reference": 2.56214776031565,
+            "pressure_relative_difference": 7.493564196435348e-12,
+            "flux_relative_difference": 3.785743169313254e-11
+          },
+          "6": {
+            "pressure_difference": 4.366148096852092e-09,
+            "flux_difference": 9.699633382386681e-11,
+            "pressure_reference": 582.6530583309274,
+            "flux_reference": 2.562147760315991,
+            "pressure_relative_difference": 7.493564196435174e-12,
+            "flux_relative_difference": 3.785743169312928e-11
+          }
+        }
+      },
+      "native_backend": "PETSc/MUMPS LU full uncondensed saddle system",
+      "relative_original_residual": 4.9332105589049075e-15,
+      "field_sha256": "0b34167476df4c0744f8575ba4efd23e65d6b90d2fc7c4e8a53ad300346094ba",
+      "record_sha256": "b6d5baabf2875d00337d5ef632a874ed3aecfe663478cf39be987bd0e0dd3836",
+      "accepted": true,
+      "native_archive_sha256": "4990e03d3d638620a47deb44cd2e22fb17b4a06a652c2f03e262b1ae2f906b7d",
+      "field_archive": "pgmhm-s2-q5.npz"
+    },
+    {
+      "segments": 4,
+      "pressure_dofs": 4290,
+      "trace_dofs": 20,
+      "full_uncondensed_unknowns": 8604,
+      "relative_trace_difference": 5.420200913098653e-11,
+      "maximum_pressure_coefficient_difference": 1.1222101969476234e-11,
+      "norms": {
+        "base": {
+          "4": {
+            "pressure_difference": 2.6907285393974316e-09,
+            "flux_difference": 8.75207334764372e-11,
+            "pressure_reference": 588.7051855768385,
+            "flux_reference": 2.243693745623992,
+            "pressure_relative_difference": 4.570587460956269e-12,
+            "flux_relative_difference": 3.9007433009578087e-11
+          },
+          "6": {
+            "pressure_difference": 2.6907285393974494e-09,
+            "flux_difference": 8.752073347643716e-11,
+            "pressure_reference": 588.705185576857,
+            "flux_reference": 2.2436937456247628,
+            "pressure_relative_difference": 4.570587460956156e-12,
+            "flux_relative_difference": 3.900743300956467e-11
+          }
+        },
+        "enriched": {
+          "4": {
+            "pressure_difference": 2.6907801920471433e-09,
+            "flux_difference": 8.75350469858247e-11,
+            "pressure_reference": 588.7072299387102,
+            "flux_reference": 2.2436949370601793,
+            "pressure_relative_difference": 4.570659328113362e-12,
+            "flux_relative_difference": 3.9013791732541974e-11
+          },
+          "6": {
+            "pressure_difference": 2.6907801920471503e-09,
+            "flux_difference": 8.753504698582579e-11,
+            "pressure_reference": 588.7072299387119,
+            "flux_reference": 2.24369493706089,
+            "pressure_relative_difference": 4.57065932811336e-12,
+            "flux_relative_difference": 3.90137917325301e-11
+          }
+        }
+      },
+      "native_backend": "PETSc/MUMPS LU full uncondensed saddle system",
+      "relative_original_residual": 6.3598565794400095e-15,
+      "field_sha256": "a85b453d4f212d4e7535b06c2448c6ce3aee9a9bab213725f1a9d962e304d495",
+      "record_sha256": "d1bba66766486ece6a80a0e78577de53718e31f0fca7f00b8c5fa2b3be2a972e",
+      "accepted": true,
+      "native_archive_sha256": "1c674f0b83bb7ba27c13570bea69535312acd4d488e4a33848a5e549a1b91ea8",
+      "field_archive": "pgmhm-s4-q5.npz"
+    }
+  ],
+  "case": "Full SPE10 layer1 Kx, two NW-SE macros, unchanged unfitted P2/r32, P0 traces s1/s2/s4, alpha0.1, weak bottom1/top0 and natural lateral zero flux",
+  "method": "Independent material intersection; DOLFINx/UFL restricted P2 forms; full auxiliary PGMHM saddle solve without PyMHM condensation",
+  "dolfinx": "0.9.0",
+  "basix": "0.9.0",
+  "physical_norm_orders": [
+    4,
+    6
+  ],
+  "cut_triangles": 60800,
+  "seconds": 28.146129974999894,
+  "material_sha256": "685c6b7e51bfa56a4b2c6e3a802ea57b7f8a9590f2f99fd403312284f5546e23",
+  "comparison_modules_sha256": {
+    "pgmhm-full-saddle": "3ac87d18d6fbca771ab00a9ecb3768b7cf7ff21894f29df49db2bf5244e3fc71",
+    "native-facet-and-petsc-support": "c4804a0b4e53f81980af1ac1d97d649cc298a107a39196d07f56b76bc8e08487"
+  },
+  "reference_implementation": {
+    "reference_code": "FEniCS/DOLFINx",
+    "version": "0.9.0",
+    "runtime_reported_build_git_hash": "8067ef16087b9f364873e0e657dcda52fb989ce3",
+    "runtime_hash_status": "build-reported identifier; not resolved as an upstream dolfinx commit",
+    "verified_upstream_release_commit": "6443e3b27d29aec04ce83d8424b57c339e35f865",
+    "verified_source_url": "https://github.com/FEniCS/dolfinx/tree/6443e3b27d29aec04ce83d8424b57c339e35f865",
+    "upstream_verification_url": "https://api.github.com/repos/FEniCS/dolfinx/git/ref/tags/v0.9.0",
+    "conda_packages": [
+      {
+        "name": "fenics-dolfinx",
+        "version": "0.9.0",
+        "build": "py313hf84a112_112",
+        "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-dolfinx-0.9.0-py313hf84a112_112.conda",
+        "sha256": "79bb466bd1624512b7e6302e7926a05ef1e78685f0c188a69668222f31852b86",
+        "recipe_sha256": "df9a203accdaa6d1a5b1c97600971f9803620dea2176e5c62b705d9ac0e12bec",
+        "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+        "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+        "patches": [
+          {
+            "name": "unpin-cffi.patch",
+            "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+          }
+        ]
+      },
+      {
+        "name": "fenics-libdolfinx",
+        "version": "0.9.0",
+        "build": "py313h2154cf7_112",
+        "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-libdolfinx-0.9.0-py313h2154cf7_112.conda",
+        "sha256": "f8068fef21e9008e0531d83e8f19e8ee41bb40920881b8416583380f138e7889",
+        "recipe_sha256": "e75fdc33edb216ccf13ad27023b1b2b1f465451c630395137104e278732a62d7",
+        "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+        "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+        "patches": [
+          {
+            "name": "unpin-cffi.patch",
+            "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+          }
+        ]
+      }
+    ],
+    "python_extension_file": "cpp.cpython-313-x86_64-linux-gnu.so",
+    "python_extension_sha256": "7fba4280795a95accf09754435d0e6a19e48ca4e2c604d739688614bf4b6802a",
+    "runtime_versions": {
+      "dolfinx": "0.9.0",
+      "basix": "0.9.0",
+      "ufl": "2024.2.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1"
+    },
+    "module": "dolfinx.fem and dolfinx.mesh; Basix Lagrange spaces; UFL forms; PETSc/MUMPS",
+    "application": "Instrumented comparison of the complete declared reservoir case, not an original DOLFINx application",
+    "provenance_audit": "Installed environment audited after acquisition; runtime version and build identifier match the acquisition record"
+  },
+  "execution": {
+    "accepted": true,
+    "source_hashes_unchanged": true,
+    "owned_process_group_empty": true,
+    "peak_rss_gib": 0.5014877319335938,
+    "execution_record_sha256": "3657ab6f492c0b94e555a90a2653662617acedf5f40249c0ba2b7b9de1350373",
+    "comparison_record_sha256": "cf97c873af2f2f2c8100e179da8a499da06de8c49ff9fecb4f14734b12d9db6d"
+  },
+  "norm_convention": "Absolute and native-reference-relative physical L2 pressure and Darcy flux norms; trace coordinate differences reported separately",
+  "interpretation": "Discrete agreement for identical geometry, coefficients, boundary data and approximation spaces. This does not establish historical input identity or remove the unresolved literature discrepancy. No smooth-problem convergence rate is assigned to discontinuous SPE10 coefficients.",
+  "physical_problem": {
+    "source": 0.0,
+    "reaction": 0.0,
+    "advection": [
+      0.0,
+      0.0
+    ],
+    "domain": [
+      1200.0,
+      2200.0
+    ],
+    "layer": 1,
+    "isotropic_component": "Kx",
+    "original_material_units": true,
+    "alpha": 0.1
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "panels": [
+    {
+      "row": 0,
+      "column": 0,
+      "quantity": "pressure",
+      "scale": "linear",
+      "linear_width": null,
+      "limits": [
+        -0.00027019350894680967,
+        0.017271189842029362
+      ],
+      "data_range": [
+        -2.710505431213761e-20,
+        0.017145349677929196
+      ],
+      "clipped": false
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "quantity": "pressure",
+      "scale": "linear",
+      "linear_width": null,
+      "limits": [
+        -0.00027019350894680967,
+        0.017271189842029362
+      ],
+      "data_range": [
+        -0.00027019350894680967,
+        0.017271189842029362
+      ],
+      "clipped": false
+    },
+    {
+      "row": 0,
+      "column": 2,
+      "quantity": "pressure",
+      "scale": "linear",
+      "linear_width": null,
+      "limits": [
+        -0.00036560698722301523,
+        0.00036560698722301523
+      ],
+      "data_range": [
+        -0.00027019350894680967,
+        0.00036560698722301523
+      ],
+      "clipped": false
+    },
+    {
+      "row": 1,
+      "column": 0,
+      "quantity": "raw_flux_x",
+      "scale": "linear",
+      "linear_width": null,
+      "limits": [
+        -0.9632482131033918,
+        0.9632482131033918
+      ],
+      "data_range": [
+        -0.9632482131033918,
+        0.8478710953583563
+      ],
+      "clipped": false
+    },
+    {
+      "row": 1,
+      "column": 1,
+      "quantity": "raw_flux_x",
+      "scale": "linear",
+      "linear_width": null,
+      "limits": [
+        -0.9632482131033918,
+        0.9632482131033918
+      ],
+      "data_range": [
+        -0.9410530005750294,
+        0.8643846230799762
+      ],
+      "clipped": false
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "quantity": "raw_flux_x",
+      "scale": "linear",
+      "linear_width": null,
+      "limits": [
+        -0.2924774173324625,
+        0.2924774173324625
+      ],
+      "data_range": [
+        -0.2924774173324625,
+        0.2733961966748263
+      ],
+      "clipped": false
+    },
+    {
+      "row": 2,
+      "column": 0,
+      "quantity": "raw_flux_y",
+      "scale": "linear",
+      "linear_width": null,
+      "limits": [
+        -0.804600377225377,
+        0.804600377225377
+      ],
+      "data_range": [
+        -0.7874849659303936,
+        0.6422629002846859
+      ],
+      "clipped": false
+    },
+    {
+      "row": 2,
+      "column": 1,
+      "quantity": "raw_flux_y",
+      "scale": "linear",
+      "linear_width": null,
+      "limits": [
+        -0.804600377225377,
+        0.804600377225377
+      ],
+      "data_range": [
+        -0.804600377225377,
+        0.6333899057649781
+      ],
+      "clipped": false
+    },
+    {
+      "row": 2,
+      "column": 2,
+      "quantity": "raw_flux_y",
+      "scale": "linear",
+      "linear_width": null,
+      "limits": [
+        -0.2523262249714702,
+        0.2523262249714702
+      ],
+      "data_range": [
+        -0.20250238012416816,
+        0.2523262249714702
+      ],
+      "clipped": false
+    }
+  ],
+  "difference": "MH2M minus classical",
+  "reference": "Classical P3 n=512"
+}

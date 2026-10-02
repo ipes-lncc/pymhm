@@ -1,0 +1,263 @@
+{
+  "target": {
+    "macro_resolution": 4,
+    "macro_triangles": 32,
+    "fine_triangles": 512,
+    "local_refinement": 4,
+    "trace_degree": 0,
+    "trace_segments": 1,
+    "permeability": 1,
+    "pressure": "cos(pi*x)*cos(pi*y)",
+    "source": "2*pi**2*cos(pi*x)*cos(pi*y)",
+    "boundary": "weak exact pressure on the entire boundary",
+    "assembly_order": 6,
+    "error_order": 8
+  },
+  "reference": {
+    "name": "NeoPZ",
+    "commit": "4c6b6d277ce097b97bfc8dea1b6725860f4fe05a",
+    "driver_binary_sha256": "b6719ff6e3b4b550116ce2a7c7869637136f6d548b0da95e2ddc129b518e85de",
+    "method": "EHDivConstant order 0 native mixed RT0/P0 operator; s1 restriction T.T A T",
+    "not_executed": "MSL mixed solver; native NeoPZ MHM controller"
+  },
+  "reference_replay": [
+    {
+      "case": "cos",
+      "macro_resolution": 4,
+      "local_refinement": 4,
+      "trace_segments": 4,
+      "pressure_difference_l2": 1.3850738565401903e-15,
+      "pressure_difference_max": 4.218847493575595e-15,
+      "flux_difference_l2": 2.32765017422352e-14,
+      "flux_difference_max": 1.4093142237210106e-13,
+      "divergence_difference_l2": 9.352798266364819e-13,
+      "divergence_difference_max": 6.66844357510854e-12,
+      "pressure_error_l2": 0.032703111519911676,
+      "flux_error_l2": 0.12594855825928156,
+      "fine_balance_max": 1.682681771697503e-16
+    },
+    {
+      "case": "cos",
+      "macro_resolution": 4,
+      "local_refinement": 4,
+      "trace_segments": 1,
+      "pressure_difference_l2": 1.4576353199749404e-14,
+      "pressure_difference_max": 3.7414515929867775e-14,
+      "flux_difference_l2": 6.990847559744023e-14,
+      "flux_difference_max": 9.501459626371011e-14,
+      "divergence_difference_l2": 3.432994935303402e-14,
+      "divergence_difference_max": 1.7408297026122455e-13,
+      "pressure_error_l2": 0.040349647217482715,
+      "flux_error_l2": 0.4857458152980586,
+      "fine_balance_max": 1.214306433183765e-16
+    }
+  ],
+  "rows": [
+    {
+      "trace_segments": 4,
+      "is_target": false,
+      "native_equations": 1312,
+      "restricted_equations": null,
+      "appropriate_reference_residual": 7.29104914469115e-15,
+      "default6_vs_reference": {
+        "pressure_l2": 1.3827352173892654e-15,
+        "pressure_max": 4.218847493575595e-15,
+        "flux_l2": 2.318289838983732e-14,
+        "flux_max": 1.3819633493430805e-13,
+        "divergence_l2": 9.340730250674055e-13,
+        "divergence_max": 6.657785434072139e-12
+      },
+      "default6_vs_assembly10": {
+        "pressure_l2": 2.4658204294927885e-16,
+        "pressure_max": 1.2212453270876722e-15,
+        "flux_l2": 6.1248611265182114e-15,
+        "flux_max": 3.5441859518038505e-14,
+        "divergence_l2": 2.098806759222587e-14,
+        "divergence_max": 1.2789769243681803e-13
+      },
+      "pymhm_assembly6_diagnostics": {
+        "6": {
+          "error_quadrature_duffy_order": 6,
+          "pressure_error_l2": 0.032703111519911676,
+          "pressure_error_relative": 0.06540622303982335,
+          "flux_error_l2": 0.12594855825928156,
+          "flux_error_relative": 0.05669677099864751,
+          "divergence_error_l2": 0.6451866372106969,
+          "divergence_error_relative": 0.06537107375240739,
+          "fine_balance_max": 1.97758476261356e-16,
+          "macro_balance_max": 2.7755575615628914e-16
+        },
+        "8": {
+          "error_quadrature_duffy_order": 8,
+          "pressure_error_l2": 0.032703111519911704,
+          "pressure_error_relative": 0.06540622303982341,
+          "flux_error_l2": 0.12594855825928167,
+          "flux_error_relative": 0.05669677099864757,
+          "divergence_error_l2": 0.6451866372106976,
+          "divergence_error_relative": 0.06537107375240744,
+          "fine_balance_max": 1.942890293094024e-16,
+          "macro_balance_max": 2.1163626406917047e-16
+        },
+        "10": {
+          "error_quadrature_duffy_order": 10,
+          "pressure_error_l2": 0.03270311151991167,
+          "pressure_error_relative": 0.06540622303982334,
+          "flux_error_l2": 0.12594855825928156,
+          "flux_error_relative": 0.05669677099864751,
+          "divergence_error_l2": 0.6451866372106968,
+          "divergence_error_relative": 0.06537107375240737,
+          "fine_balance_max": 2.0122792321330962e-16,
+          "macro_balance_max": 3.434752482434078e-16
+        }
+      },
+      "neopz_diagnostics": {
+        "6": {
+          "error_quadrature_duffy_order": 6,
+          "pressure_error_l2": 0.032703111519911676,
+          "pressure_error_relative": 0.06540622303982335,
+          "flux_error_l2": 0.12594855825928153,
+          "flux_error_relative": 0.056696770998647505,
+          "divergence_error_l2": 0.6451866372106969,
+          "divergence_error_relative": 0.06537107375240739,
+          "fine_balance_max": 1.3010426069826053e-14,
+          "macro_balance_max": 2.822395095414265e-14
+        },
+        "8": {
+          "error_quadrature_duffy_order": 8,
+          "pressure_error_l2": 0.03270311151991171,
+          "pressure_error_relative": 0.06540622303982342,
+          "flux_error_l2": 0.12594855825928164,
+          "flux_error_relative": 0.056696770998647554,
+          "divergence_error_l2": 0.6451866372106976,
+          "divergence_error_relative": 0.06537107375240744,
+          "fine_balance_max": 1.3003487175922146e-14,
+          "macro_balance_max": 2.8158031462055533e-14
+        },
+        "10": {
+          "error_quadrature_duffy_order": 10,
+          "pressure_error_l2": 0.03270311151991167,
+          "pressure_error_relative": 0.06540622303982334,
+          "flux_error_l2": 0.12594855825928153,
+          "flux_error_relative": 0.056696770998647505,
+          "divergence_error_l2": 0.6451866372106968,
+          "divergence_error_relative": 0.06537107375240737,
+          "fine_balance_max": 1.3010426069826053e-14,
+          "macro_balance_max": 2.8275992658421956e-14
+        }
+      },
+      "pymhm_api_order8": {
+        "pressure_l2": 0.032703111519911704,
+        "flux_l2": 0.1259485582592817
+      },
+      "pymhm_api_macro_balance_assembly6": 2.220446049250313e-16,
+      "pymhm_api_fine_balance_assembly6": 1.97758476261356e-16,
+      "default6_archive": "mixed-enriched-quadrature.npz",
+      "default6_archive_sha256": "5779d39cc105771a3e4cc0e4387fc77bfcd0b75053eca03c2be17abbb82c2288"
+    },
+    {
+      "trace_segments": 1,
+      "is_target": true,
+      "native_equations": 1312,
+      "restricted_equations": 1144,
+      "appropriate_reference_residual": 3.685053164184696e-15,
+      "default6_vs_reference": {
+        "pressure_l2": 1.457455382350331e-14,
+        "pressure_max": 3.752553823233029e-14,
+        "flux_l2": 6.942711999028248e-14,
+        "flux_max": 9.302801130132124e-14,
+        "divergence_l2": 3.4899918784808303e-14,
+        "divergence_max": 1.5987211554602254e-13
+      },
+      "default6_vs_assembly10": {
+        "pressure_l2": 1.7741834791498919e-16,
+        "pressure_max": 1.1102230246251565e-15,
+        "flux_l2": 1.5558679596159377e-15,
+        "flux_max": 5.2404408462462845e-15,
+        "divergence_l2": 1.865952680213074e-14,
+        "divergence_max": 1.0302869668521453e-13
+      },
+      "pymhm_assembly6_diagnostics": {
+        "6": {
+          "error_quadrature_duffy_order": 6,
+          "pressure_error_l2": 0.04034964721748272,
+          "pressure_error_relative": 0.08069929443496544,
+          "flux_error_l2": 0.48574581529805855,
+          "flux_error_relative": 0.21866244150893907,
+          "divergence_error_l2": 0.6451866372106969,
+          "divergence_error_relative": 0.06537107375240739,
+          "fine_balance_max": 1.3877787807814457e-16,
+          "macro_balance_max": 2.3180242447740085e-16
+        },
+        "8": {
+          "error_quadrature_duffy_order": 8,
+          "pressure_error_l2": 0.04034964721748275,
+          "pressure_error_relative": 0.0806992944349655,
+          "flux_error_l2": 0.4857458152980586,
+          "flux_error_relative": 0.2186624415089391,
+          "divergence_error_l2": 0.6451866372106976,
+          "divergence_error_relative": 0.06537107375240744,
+          "fine_balance_max": 1.3877787807814457e-16,
+          "macro_balance_max": 2.389581588158052e-16
+        },
+        "10": {
+          "error_quadrature_duffy_order": 10,
+          "pressure_error_l2": 0.040349647217482715,
+          "pressure_error_relative": 0.08069929443496543,
+          "flux_error_l2": 0.48574581529805855,
+          "flux_error_relative": 0.21866244150893907,
+          "divergence_error_l2": 0.6451866372106968,
+          "divergence_error_relative": 0.06537107375240737,
+          "fine_balance_max": 1.3877787807814457e-16,
+          "macro_balance_max": 2.393918396847994e-16
+        }
+      },
+      "neopz_diagnostics": {
+        "6": {
+          "error_quadrature_duffy_order": 6,
+          "pressure_error_l2": 0.04034964721748129,
+          "pressure_error_relative": 0.08069929443496258,
+          "flux_error_l2": 0.48574581529805866,
+          "flux_error_relative": 0.21866244150893913,
+          "divergence_error_l2": 0.6451866372106969,
+          "divergence_error_relative": 0.06537107375240739,
+          "fine_balance_max": 3.2612801348363973e-16,
+          "macro_balance_max": 5.299580219109146e-16
+        },
+        "8": {
+          "error_quadrature_duffy_order": 8,
+          "pressure_error_l2": 0.04034964721748132,
+          "pressure_error_relative": 0.08069929443496264,
+          "flux_error_l2": 0.4857458152980587,
+          "flux_error_relative": 0.21866244150893915,
+          "divergence_error_l2": 0.6451866372106976,
+          "divergence_error_relative": 0.06537107375240744,
+          "fine_balance_max": 3.191891195797325e-16,
+          "macro_balance_max": 5.460042140637e-16
+        },
+        "10": {
+          "error_quadrature_duffy_order": 10,
+          "pressure_error_l2": 0.040349647217481285,
+          "pressure_error_relative": 0.08069929443496257,
+          "flux_error_l2": 0.4857458152980586,
+          "flux_error_relative": 0.2186624415089391,
+          "divergence_error_l2": 0.6451866372106968,
+          "divergence_error_relative": 0.06537107375240737,
+          "fine_balance_max": 3.2612801348363973e-16,
+          "macro_balance_max": 5.863365348801608e-16
+        }
+      },
+      "pymhm_api_order8": {
+        "pressure_l2": 0.04034964721748275,
+        "flux_l2": 0.4857458152980586
+      },
+      "pymhm_api_macro_balance_assembly6": 1.3877787807814457e-16,
+      "pymhm_api_fine_balance_assembly6": 1.3877787807814457e-16,
+      "matches_saved_plot_norms": true,
+      "default6_archive": "mixed-quadrature.npz",
+      "default6_archive_sha256": "108230322ab6198ec5ec27dc8b46e73909da587bb122b75f3b99ab02e171a184"
+    }
+  ],
+  "source_fingerprints_still_match_generator": true,
+  "target_validation_script_sha256": "a7c7441258b5b528bc57a17b96e1b5aa8bf072678f6a65ecb2e58db6fda5f1df",
+  "all_previous_numerical_metrics_bitwise_unchanged": true
+}

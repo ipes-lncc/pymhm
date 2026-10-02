@@ -1,0 +1,133 @@
+{
+  "scope": "L11 mixed-boundary face adaptation; prescribed Robin/diffusive coordinates remain fixed, strong Dirichlet on essential faces",
+  "portable_tests": 58,
+  "native_dolfinx_ufl_tests": 2,
+  "coverage": {
+    "covered_lines": 114,
+    "num_statements": 114,
+    "percent_covered": 100.0,
+    "percent_covered_display": "100.00",
+    "missing_lines": 0,
+    "excluded_lines": 0,
+    "percent_statements_covered": 100.0,
+    "percent_statements_covered_display": "100.00",
+    "num_branches": 40,
+    "num_partial_branches": 0,
+    "covered_branches": 40,
+    "missing_branches": 0,
+    "percent_branches_covered": 100.0,
+    "percent_branches_covered_display": "100.00"
+  },
+  "source_hashes": {
+    "src/pymhm/scalar_adaptive.py": "fbb92bd3dddb9eb131151961135bccb0891fb26e51904afbe9b663daf8201375",
+    "tests/test_scalar_adaptive.py": "91b0125f089c100990ae768e7a37da9cd1d3e86f128811be3cf777fa977bc3bb",
+    "tests/test_transport_mixed_fenics.py": "8f80b8dfda5cb80bafa9295e34bd0a397527687eb5c656ea1382842638c55008"
+  },
+  "native_operator_checks": [
+    "P2 local skew operator with prescribed Robin multiplier and nonzero boundary load",
+    "P2 local skew operator plus half normal-advection boundary mass for physical diffusive flux"
+  ],
+  "regressions": [
+    "Nonhomogeneous affine data distinguish Robin from physical flux when beta.n is nonzero",
+    "Natural exterior faces remain unmarked through multiple adaptive states",
+    "Macrogeometry and actual local meshes remain identical through adaptation"
+  ],
+  "interpretation": "Matrix/load checks verify implemented boundary forms. Error reduction and source data are recorded separately; these checks are not a constant-one error bound or historical curve reproduction.",
+  "campaign_checks": {
+    "campaign_sha256": "b75dc08e654ac0ca52f6977bee425c81c2d01011842598b737649c52dfee3068",
+    "verified_archives": 18,
+    "adaptive_states_with_bitwise_identical_macro_and_local_meshes": 8,
+    "same_final_skeleton_local_subdivisions": [
+      8,
+      16,
+      32
+    ],
+    "prescribed_natural_coefficients_exactly_zero": true,
+    "retained_coarse_dofs_all_zero": true,
+    "source_notebook_unexecuted": true,
+    "coefficient_replay": {
+      "archives": [
+        "mixed-adaptive-0",
+        "mixed-adaptive-7",
+        "mixed-local-r32"
+      ],
+      "norm_quadrature_order": 12,
+      "maximum_absolute_difference": 0.0,
+      "bitwise_identical": true
+    },
+    "maximum_absolute_quadrature_change": 1.1102230246251565e-16,
+    "maximum_normalized_continuity_moment": 1.4148031975570047e-14
+  },
+  "native_full_system": {
+    "versions": {
+      "dolfinx": "0.9.0",
+      "ufl": "2024.2.0",
+      "basix": "0.9.0",
+      "scipy": "1.18.1"
+    },
+    "driver_identifier": "independent-mixed-transport-global-ufl",
+    "cases": [
+      {
+        "n": 2,
+        "r": 2,
+        "pressure_dofs": 96,
+        "free_pressure_dofs": 84,
+        "trace_dofs": 20,
+        "maximum_coefficient_difference": 1.4432899320127035e-15,
+        "relative_coefficient_difference": 6.490324800000652e-16,
+        "relative_original_saddle_residual": 1.927005039095826e-15,
+        "maximum_continuity_moment": 7.632783294297951e-17,
+        "comparison": {
+          "direct_pymhm_solve": true
+        },
+        "method": "DOLFINx/UFL broken CG1 operator; independent fine-edge geometric P0 coupling; strong homogeneous Dirichlet elimination; SuperLU full saddle solve; no PyMHM local condensation",
+        "source_sha256": "51c1cca8dbe0854bd609b79a235e70a2bff03e8b134c397b6c826b566998653a",
+        "epsilon": 0.1
+      },
+      {
+        "n": 8,
+        "r": 16,
+        "pressure_dofs": 39168,
+        "free_pressure_dofs": 38896,
+        "trace_dofs": 368,
+        "maximum_coefficient_difference": 3.902433931557425e-13,
+        "relative_coefficient_difference": 4.8692664041679e-13,
+        "relative_original_saddle_residual": 1.0184197201946714e-12,
+        "maximum_continuity_moment": 8.131516293641283e-17,
+        "comparison": {
+          "archive": "mixed-spatial-n8.npz",
+          "sha256": "ae1582f7e427196ca12cea795c7213d70be8b56aa7f7d8c57062923e0583da44"
+        },
+        "method": "DOLFINx/UFL broken CG1 operator; independent fine-edge geometric P0 coupling; strong homogeneous Dirichlet elimination; SuperLU full saddle solve; no PyMHM local condensation",
+        "source_sha256": "51c1cca8dbe0854bd609b79a235e70a2bff03e8b134c397b6c826b566998653a",
+        "epsilon": 0.1
+      },
+      {
+        "n": 8,
+        "r": 16,
+        "epsilon": 1.0,
+        "pressure_dofs": 39168,
+        "free_pressure_dofs": 38896,
+        "trace_dofs": 368,
+        "maximum_coefficient_difference": 6.637745908477655e-14,
+        "relative_coefficient_difference": 5.100216566086713e-13,
+        "relative_original_saddle_residual": 1.7884689446539448e-12,
+        "maximum_continuity_moment": 1.6338926739356552e-16,
+        "comparison": {
+          "archive": "mixed-coefficient-e1-n8-r16.npz",
+          "sha256": "0740cac95c38455d5456dcb1ff45b577ff65f36723dac908fe98c0aac27557c4"
+        },
+        "method": "DOLFINx/UFL broken CG1 operator; independent fine-edge geometric P0 coupling; strong homogeneous Dirichlet elimination; SuperLU full saddle solve; no PyMHM local condensation",
+        "source_sha256": "ad6f903f55d8894723d0511d2da296e5df1ad9580a2bf347f142fd8c1db80aeb"
+      }
+    ]
+  },
+  "algebraic_retention": {
+    "archive": "mixed-coefficient-e1-n8-r16.npz",
+    "sha256": "0740cac95c38455d5456dcb1ff45b577ff65f36723dac908fe98c0aac27557c4",
+    "maximum_nodal_difference": 6.400435736964027e-14,
+    "relative_nodal_difference": 1.4591736235412696e-13,
+    "maximum_trace_difference": 3.5814358206529007e-13,
+    "physical_spaces": "identical P1/P0; only retained algebraic constant coordinates differ"
+  }
+}

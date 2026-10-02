@@ -1,0 +1,112 @@
+{
+  "nx": 1024,
+  "ny": 512,
+  "degree": 2,
+  "native_dofs": 31466496,
+  "free_dofs": 31454208,
+  "mpi_ranks": 4,
+  "petsc_index_bits": 32,
+  "matrix_storage": {
+    "structural_nonzeros": 2680215552,
+    "nonzero_entries": 1934431864
+  },
+  "sparsity_estimate": {
+    "native_dofs": 31466496,
+    "structural_nonzeros": 2680215552
+  },
+  "distributed_refinement_history": [
+    2.8249200466871805e-10,
+    2.3067317062614746e-15
+  ],
+  "refinement_precision": "extended",
+  "residual": 4.319149433322367e-12,
+  "conversion_relative": 1.2321742082833875e-13,
+  "equilibrium_l2": 7.209224587996846e-13,
+  "equilibrium_relative": 4.856008310182317e-13,
+  "weak_symmetry_moment_max": 8.470329472543003e-22,
+  "compliance_energy": 0.002266665863428961,
+  "body_work": 0.002266665863428786,
+  "energy_work_relative": 7.710593476723123e-14,
+  "peak_rss_gib": 119.69044876098633,
+  "peak_rss_per_rank_gib": [
+    33.17720413208008,
+    28.44070053100586,
+    29.62909698486328,
+    28.44344711303711
+  ],
+  "peak_rss_convention": "sum of each rank peak; an upper bound on concurrent owned RSS",
+  "assembly_seconds": 1286.8641140420223,
+  "factor_solve_seconds": 4479.594145443058,
+  "total_seconds": 5825.3535068290075,
+  "quadrature_degree": 8,
+  "formulation": "Globally conforming row-wise RTk, DG Qk displacement, DPC total Pk rotation; no MHM restriction",
+  "bottom": "zero displacement in the natural mixed boundary functional",
+  "sides_top": "prescribed zero physical traction",
+  "bounds": [
+    0.0,
+    1.0,
+    0.0,
+    0.45
+  ],
+  "length_scale_m": 10000.0,
+  "stress_scale_Pa": 100000000.0,
+  "software": {
+    "dolfinx": "0.9.0",
+    "basix": "0.9.0",
+    "petsc": [
+      3,
+      23,
+      0
+    ],
+    "python": "3.13.15"
+  },
+  "requested_threads": 2,
+  "factorization": "ldlt",
+  "algebra_process": null,
+  "equilibration": "symmetric",
+  "algebra_refinement_rtol": 1e-11,
+  "mumps_options": {
+    "mat_mumps_icntl_7": 5,
+    "mat_mumps_icntl_14": 100,
+    "mat_mumps_icntl_10": 5,
+    "mat_mumps_icntl_23": 17500,
+    "mat_mumps_icntl_22": 1
+  },
+  "factor_storage": "out-of-core",
+  "native_threadpools": [
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "num_threads": 2,
+      "prefix": "libgomp",
+      "version": null
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "blis",
+      "num_threads": 2,
+      "prefix": "libblis",
+      "version": "2.0",
+      "threading_layer": "pthreads",
+      "architecture": "haswell"
+    }
+  ],
+  "archive": "classical-rt2-1024x512-mumps.npz",
+  "archive_sha256": "4890580574d7bb98de54a0d2c9af0abbd25b8c1646c4f15de0c4ecf3ed1b9268",
+  "source_sha256": "3b711f7c21d696fb8505f378415d047c45fbdc5a5d578fcffbd3c6658159ba0a",
+  "source_hashes": {
+    "examples/solve_hpc4e_reference.py": "3b711f7c21d696fb8505f378415d047c45fbdc5a5d578fcffbd3c6658159ba0a",
+    "examples/hpc4e_data.py": "d18ce4ef42c494f93e8c652d4e99e2d0014cf968f7411109f40f06220146ed4b",
+    "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+    "src/pymhm/quadrilateral.py": "f6969e69f2e06b1282d8dd477a8902c922bbe0ba55299d6759b9f52e2088b293",
+    "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc",
+    "examples/hpc4e_parallel.py": "9acee6767c2a9745e151ee70620a59a88e3a0ae1fd77f27a511afdcd15d42787"
+  },
+  "source_changed": false,
+  "material_sha256": {
+    "young": "ded396dc2316824e034a427044f2fc0c575a685eb89e4ca69386228b10e86ae7",
+    "poisson": "c2a0bd32e46c8e6a5b81834dba140a57d9582395d078708291ba22bac8ddbe40",
+    "density": "75ef5430e6027f5fc64f177db1cb62a706a8c317c41e396356451f9ce00c5094"
+  }
+}

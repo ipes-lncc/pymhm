@@ -1,0 +1,342 @@
+{
+  "problem": "SPE10 Model 2, layer 36; normalized pressure drop 1 on the 1200 by 2200 physical domain; scalar Kx=Ky in mD; source zero; no-flow vertical walls.",
+  "method": "Classical conforming NeoPZ RT0/P0, no MHM controller",
+  "independent_reference": "https://github.com/labmec/neopz/tree/4c6b6d277ce097b97bfc8dea1b6725860f4fe05a",
+  "interpretation": "Four refinement levels are reported. The last flux self-refinement difference is 12.74%, so this RT0 reference is not treated as converged. Cross-method distances are measured differences, not isolated MHM errors.",
+  "records": [
+    {
+      "shape": [
+        60,
+        220
+      ],
+      "triangles": 26400,
+      "degrees_of_freedom": 66280,
+      "free_degrees_of_freedom": 65840,
+      "free_residual_relative": 2.0621347574302495e-13,
+      "cell_balance_linf": 3.6938577434168004e-17,
+      "interior_normal_flux_jump_linf": 3.469446951953614e-18,
+      "outward_flux_top": 0.13818243074753386,
+      "exterior_balance": -8.326672684688674e-17,
+      "samples": "neopz-rt0-60x220.npz",
+      "samples_sha256": "112cba1b6284703f246c5380d3b62fe5e7a4abfbf6cb5f34ffe28acc9c77f4fb",
+      "mhm_comparison": {
+        "pressure_l2": 7.70455377349671,
+        "flux_l2": 0.40719619399603757,
+        "pressure_relative_l2": 0.009325703517934497,
+        "flux_relative_l2": 0.43801008446279405,
+        "rectangle_pressure_l2": 820.9787296832593,
+        "rectangle_flux_l2": 0.9847679520769806,
+        "triangle_pressure_l2": 826.1632764412773,
+        "triangle_flux_l2": 0.9296502716266253,
+        "integration": "Exact rectangle-triangle polygon intersections with polynomial-exact positive Duffy quadrature",
+        "relative_denominator": "Triangular reference field L2 norm",
+        "periodic_blocks": [
+          60,
+          220
+        ],
+        "block_extent": [
+          20.0,
+          10.0
+        ],
+        "quadrature_points_per_block": 1467,
+        "integration_triangles_per_block": 163,
+        "duffy_order": 3,
+        "verified_polynomial_degree": 4,
+        "maximum_relative_monomial_defect": 4.365574568510056e-16,
+        "reference_method": "Independent classical NeoPZ RT0/P0",
+        "reference_shape": [
+          60,
+          220
+        ],
+        "mhm_method": "Quadrilateral primal Q1, 6x11 macrogrid, 120x120 local subdivisions, 32 continuous P1 face segments",
+        "mhm_archive": "darcy-q1-r120-s32.npz",
+        "mhm_sha256": "185a401ff4f5c3b4d9ca075866e8261e1c480625d36cd6b4babf2576283b99c4",
+        "reference_coefficient_sha256": "fc9500d078522a2e686b6e2b42276fa3fe8307e0b11acac729c120064b041946",
+        "comparison_driver_sha256": "d78f0ed7f8a245265b90a87849a09ec15a70965493f5f061e48666744380fad9",
+        "intersection_integrator_sha256": "c0bd7751775b82999c3cc6234b5740134091db7e249a386cde47df401c29c2ae",
+        "bilinear_evaluator_check": {
+          "pressure_linf": 1.1102230246251565e-16,
+          "flux_linf": 7.01353038146113e-14,
+          "points": 400
+        },
+        "elapsed_seconds": 13.371232986915857
+      }
+    },
+    {
+      "shape": [
+        120,
+        440
+      ],
+      "triangles": 105600,
+      "degrees_of_freedom": 264560,
+      "free_degrees_of_freedom": 263680,
+      "free_residual_relative": 3.838365116265407e-13,
+      "cell_balance_linf": 2.168404344971009e-17,
+      "interior_normal_flux_jump_linf": 3.469446951953614e-18,
+      "outward_flux_top": 0.1446574192662466,
+      "exterior_balance": -1.1102230246251565e-16,
+      "samples": "neopz-rt0-120x440.npz",
+      "samples_sha256": "1c85227c687afa905de0f208a5fc9858f0b5ad6cbeed03b3432b9ff5086dca43",
+      "change_from_previous": {
+        "pressure_l2": 4.7594649204056525,
+        "flux_l2": 0.28626120610117267,
+        "pressure_relative_l2": 0.005776009823445405,
+        "flux_relative_l2": 0.30051847376521457,
+        "pressure_reference_l2": 824.0056831424534,
+        "flux_reference_l2": 0.9525577662983187,
+        "integration": "degree-two three-point triangle quadrature on the finer nested grid; finer reference norm denominator"
+      },
+      "energy_change": {
+        "integrated_k_inverse_squared_norm": 0.00647498851871417,
+        "inlet_difference": 0.006474988518712754,
+        "relative_identity_defect": 2.1861573226055492e-13
+      },
+      "mhm_comparison": {
+        "pressure_l2": 4.276286276767639,
+        "flux_l2": 0.28615450128995495,
+        "pressure_relative_l2": 0.005189632018628151,
+        "flux_relative_l2": 0.3004064545103274,
+        "rectangle_pressure_l2": 820.9787296832593,
+        "rectangle_flux_l2": 0.9847679520769806,
+        "triangle_pressure_l2": 824.0056831424534,
+        "triangle_flux_l2": 0.9525577662983188,
+        "integration": "Exact rectangle-triangle polygon intersections with polynomial-exact positive Duffy quadrature",
+        "relative_denominator": "Triangular reference field L2 norm",
+        "periodic_blocks": [
+          120,
+          440
+        ],
+        "block_extent": [
+          10.0,
+          5.0
+        ],
+        "quadrature_points_per_block": 396,
+        "integration_triangles_per_block": 44,
+        "duffy_order": 3,
+        "verified_polynomial_degree": 4,
+        "maximum_relative_monomial_defect": 6.548361852765085e-16,
+        "reference_method": "Independent classical NeoPZ RT0/P0",
+        "reference_shape": [
+          120,
+          440
+        ],
+        "mhm_method": "Quadrilateral primal Q1, 6x11 macrogrid, 120x120 local subdivisions, 32 continuous P1 face segments",
+        "mhm_archive": "darcy-q1-r120-s32.npz",
+        "mhm_sha256": "185a401ff4f5c3b4d9ca075866e8261e1c480625d36cd6b4babf2576283b99c4",
+        "reference_coefficient_sha256": "a7ac67d6b79939555c4bce4916ba8532dd78d6f1c452003bba8b26a28f4b445e",
+        "comparison_driver_sha256": "d78f0ed7f8a245265b90a87849a09ec15a70965493f5f061e48666744380fad9",
+        "intersection_integrator_sha256": "c0bd7751775b82999c3cc6234b5740134091db7e249a386cde47df401c29c2ae",
+        "bilinear_evaluator_check": {
+          "pressure_linf": 1.1102230246251565e-16,
+          "flux_linf": 7.01353038146113e-14,
+          "points": 400
+        },
+        "elapsed_seconds": 13.413626187015325
+      }
+    },
+    {
+      "shape": [
+        240,
+        880
+      ],
+      "triangles": 422400,
+      "degrees_of_freedom": 1057120,
+      "free_degrees_of_freedom": 1055360,
+      "free_residual_relative": 1.5764344488635269e-12,
+      "cell_balance_linf": 1.1887578019122071e-17,
+      "interior_normal_flux_jump_linf": 5.204170427930421e-18,
+      "outward_flux_top": 0.148027148604963,
+      "exterior_balance": -5.551115123125783e-17,
+      "samples": "neopz-rt0-240x880.npz",
+      "samples_sha256": "9ddac2c7fe6a29dd7a49ef300e931fb993393ac353f01643f49b1c52c38b12b3",
+      "change_from_previous": {
+        "pressure_l2": 2.4120756185616115,
+        "flux_l2": 0.19081721514415792,
+        "pressure_relative_l2": 0.002931611662597544,
+        "flux_relative_l2": 0.19707441778225082,
+        "pressure_reference_l2": 822.7814240663788,
+        "flux_reference_l2": 0.9682495439615785,
+        "integration": "degree-two three-point triangle quadrature on the finer nested grid; finer reference norm denominator"
+      },
+      "energy_change": {
+        "integrated_k_inverse_squared_norm": 0.0033697293387222457,
+        "inlet_difference": 0.0033697293387163485,
+        "relative_identity_defect": 1.7500492958967467e-12
+      },
+      "mhm_comparison": {
+        "pressure_l2": 2.7439301991460465,
+        "flux_l2": 0.2104884882655556,
+        "pressure_relative_l2": 0.003334944274245886,
+        "flux_relative_l2": 0.21739074351054696,
+        "rectangle_pressure_l2": 820.9787296832593,
+        "rectangle_flux_l2": 0.9847679520769806,
+        "triangle_pressure_l2": 822.7814240663789,
+        "triangle_flux_l2": 0.9682495439615786,
+        "integration": "Exact rectangle-triangle polygon intersections with polynomial-exact positive Duffy quadrature",
+        "relative_denominator": "Triangular reference field L2 norm",
+        "periodic_blocks": [
+          240,
+          440
+        ],
+        "block_extent": [
+          5.0,
+          5.0
+        ],
+        "quadrature_points_per_block": 252,
+        "integration_triangles_per_block": 28,
+        "duffy_order": 3,
+        "verified_polynomial_degree": 4,
+        "maximum_relative_monomial_defect": 7.105427357601002e-16,
+        "reference_method": "Independent classical NeoPZ RT0/P0",
+        "reference_shape": [
+          240,
+          880
+        ],
+        "mhm_method": "Quadrilateral primal Q1, 6x11 macrogrid, 120x120 local subdivisions, 32 continuous P1 face segments",
+        "mhm_archive": "darcy-q1-r120-s32.npz",
+        "mhm_sha256": "185a401ff4f5c3b4d9ca075866e8261e1c480625d36cd6b4babf2576283b99c4",
+        "reference_coefficient_sha256": "df8ac78f827f89f93b4a2418e57d4c074e03622c64d942c07252ba82db4f0eea",
+        "comparison_driver_sha256": "d78f0ed7f8a245265b90a87849a09ec15a70965493f5f061e48666744380fad9",
+        "intersection_integrator_sha256": "c0bd7751775b82999c3cc6234b5740134091db7e249a386cde47df401c29c2ae",
+        "bilinear_evaluator_check": {
+          "pressure_linf": 1.1102230246251565e-16,
+          "flux_linf": 7.01353038146113e-14,
+          "points": 400
+        },
+        "elapsed_seconds": 18.020533793023787
+      }
+    },
+    {
+      "shape": [
+        480,
+        1760
+      ],
+      "triangles": 1689600,
+      "degrees_of_freedom": 4226240,
+      "free_degrees_of_freedom": 4222720,
+      "free_residual_relative": 1.6637884657025877e-11,
+      "cell_balance_linf": 5.421010862427522e-18,
+      "interior_normal_flux_jump_linf": 6.206335383118182e-18,
+      "outward_flux_top": 0.14956955086439117,
+      "exterior_balance": -5.551115123125783e-17,
+      "samples": "neopz-rt0-480x1760.npz",
+      "samples_sha256": "3d9f3d6d80a70da57ac5bd2f5c344459527faa93cf6ca3ff01678d683e4ab8ee",
+      "change_from_previous": {
+        "pressure_l2": 1.225487659352003,
+        "flux_l2": 0.12445378133515257,
+        "pressure_relative_l2": 0.0014906419348298889,
+        "flux_relative_l2": 0.1274157781386493,
+        "pressure_reference_l2": 822.1207459133066,
+        "flux_reference_l2": 0.9767532965950765,
+        "integration": "degree-two three-point triangle quadrature on the finer nested grid; finer reference norm denominator"
+      },
+      "energy_change": {
+        "integrated_k_inverse_squared_norm": 0.0015424022594768794,
+        "inlet_difference": 0.0015424022594281717,
+        "relative_identity_defect": 3.1579169636959135e-11
+      },
+      "mhm_comparison": {
+        "pressure_l2": 2.1182304956365594,
+        "flux_l2": 0.16741174341739654,
+        "pressure_relative_l2": 0.0025765442681821445,
+        "flux_relative_l2": 0.17139613861656497,
+        "rectangle_pressure_l2": 820.9787296832593,
+        "rectangle_flux_l2": 0.9847679520769808,
+        "triangle_pressure_l2": 822.1207459133067,
+        "triangle_flux_l2": 0.9767532965950766,
+        "integration": "Exact rectangle-triangle polygon intersections with polynomial-exact positive Duffy quadrature",
+        "relative_denominator": "Triangular reference field L2 norm",
+        "periodic_blocks": [
+          240,
+          440
+        ],
+        "block_extent": [
+          5.0,
+          5.0
+        ],
+        "quadrature_points_per_block": 585,
+        "integration_triangles_per_block": 65,
+        "duffy_order": 3,
+        "verified_polynomial_degree": 4,
+        "maximum_relative_monomial_defect": 8.526512829121202e-16,
+        "reference_method": "Independent classical NeoPZ RT0/P0",
+        "reference_shape": [
+          480,
+          1760
+        ],
+        "mhm_method": "Quadrilateral primal Q1, 6x11 macrogrid, 120x120 local subdivisions, 32 continuous P1 face segments",
+        "mhm_archive": "darcy-q1-r120-s32.npz",
+        "mhm_sha256": "185a401ff4f5c3b4d9ca075866e8261e1c480625d36cd6b4babf2576283b99c4",
+        "reference_coefficient_sha256": "b79e392ad600e057ca3101a78722b58783e54f10ce1e78dd4332a44efdaea257",
+        "comparison_driver_sha256": "d78f0ed7f8a245265b90a87849a09ec15a70965493f5f061e48666744380fad9",
+        "intersection_integrator_sha256": "c0bd7751775b82999c3cc6234b5740134091db7e249a386cde47df401c29c2ae",
+        "bilinear_evaluator_check": {
+          "pressure_linf": 1.1102230246251565e-16,
+          "flux_linf": 7.01353038146113e-14,
+          "points": 400
+        },
+        "elapsed_seconds": 30.80861237505451
+      }
+    }
+  ],
+  "integrated_comparison_scope": "Field norms use physical integration on exact mesh intersections; pixel-center and profile arrays are display samples only.",
+  "summary_driver_sha256": "1179e76864358d3cb20d4b5b03980852b2b0fef32c08b207aff79c94c73aff92",
+  "q3_comparison": {
+    "rectangle_method": "Conforming continuous Q3",
+    "rectangle_shape": [
+      960,
+      1760
+    ],
+    "triangle_method": "Independent classical NeoPZ RT0/P0",
+    "triangle_shape": [
+      480,
+      1760
+    ],
+    "pressure_l2": 1.0891247762504446,
+    "flux_l2": 0.12134456231003818,
+    "pressure_relative_to_q3": 0.0013260231270430353,
+    "flux_relative_to_q3": 0.12300387459331014,
+    "pressure_relative_to_neopz": 0.0013247747142550443,
+    "flux_relative_to_neopz": 0.12423255978048967,
+    "q3_pressure_l2": 821.3467427820342,
+    "q3_flux_l2": 0.986510081176238,
+    "neopz_pressure_l2": 822.1207459133066,
+    "neopz_flux_l2": 0.9767532965950764,
+    "energy_k_inverse": {
+      "q3": 0.15080169837322568,
+      "rt0": 0.14956955086433005,
+      "cross": 0.14956955086462842,
+      "difference": 0.001232147508298889,
+      "q3_inlet": 0.15080169615569894,
+      "rt0_inlet": 0.14956955086439122,
+      "inlet_difference": 0.001232145291307718,
+      "q3_identity_relative_defect": 1.4704919105804463e-08,
+      "rt0_identity_relative_defect": 4.0906410438344365e-13,
+      "cross_identity_relative_defect": 1.5858454318772417e-12,
+      "difference_identity_relative_defect": 1.7992936275622564e-06,
+      "difference_from_three_terms": 0.0012321475082988892,
+      "relative_identity_diagnostic_tolerance": 1e-07,
+      "relative_identity_diagnostic_passed": false,
+      "interpretation": "The direct Q3 energy and its archived inlet reaction differ by an absolute algebraic-work defect. The same defect enters the inlet-difference identity. Every term and the failed relative diagnostic are retained; no certified error bound is asserted."
+    },
+    "integration": "Exact rectangle-triangle intersections with positive polynomial-exact Duffy quadrature; no display samples",
+    "q3_coefficient_sha256": "a97fc75f80acbb0d6a6af585c9a66a6d14a22644bd960aa1abdeb1b0dc8d5d5f",
+    "neopz_coefficient_sha256": "b79e392ad600e057ca3101a78722b58783e54f10ce1e78dd4332a44efdaea257",
+    "comparison_driver_sha256": "0c753b6398bed845c22d8ec5654523979c97eb85c76e78930c59a2ea692a2add",
+    "intersection_integrator_sha256": "c0bd7751775b82999c3cc6234b5740134091db7e249a386cde47df401c29c2ae",
+    "elapsed_seconds": 161.68260838498827,
+    "periodic_blocks": [
+      480,
+      1760
+    ],
+    "block_extent": [
+      2.5,
+      1.25
+    ],
+    "quadrature_points_per_block": 294,
+    "integration_triangles_per_block": 6,
+    "duffy_order": 7,
+    "verified_polynomial_degree": 12,
+    "maximum_relative_monomial_defect": 6.866455078125001e-16
+  }
+}

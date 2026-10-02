@@ -1,0 +1,246 @@
+{
+  "epsilon": 0.1,
+  "physical_case": "Section 5.1, Figure 12: epsilon=0.1, a=1, sigma=0, f=1",
+  "boundary": "Strong u=0 at x=0,1; physical diffusive flux zero at y=0,1",
+  "method": "P1 continuous local Galerkin, P0 discontinuous skeletal segments; no SUPG",
+  "norm_convention": "Absolute L2 error and unweighted broken H1 seminorm against Eq5.2",
+  "campaign_sha256": "b75dc08e654ac0ca52f6977bee425c81c2d01011842598b737649c52dfee3068",
+  "spatial": [
+    {
+      "resolution": 1,
+      "local_refinement": 16,
+      "archive": "mixed-spatial-n1.npz",
+      "archive_sha256": "fca94bff4712b44f9ff5d1822d3037a9002497282aaa45f981ba6d3d7abb7951",
+      "quadrature": {
+        "8": {
+          "l2_error": 0.12157187793814782,
+          "broken_h1_error": 1.021774203813649
+        },
+        "12": {
+          "l2_error": 0.12157187793814779,
+          "broken_h1_error": 1.021774203813649
+        }
+      }
+    },
+    {
+      "resolution": 2,
+      "local_refinement": 16,
+      "archive": "mixed-spatial-n2.npz",
+      "archive_sha256": "f93b565b7823c46e62acc26273ade64ec591c5efa1fe06a10f3b72d81d672694",
+      "quadrature": {
+        "8": {
+          "l2_error": 0.05366184956088967,
+          "broken_h1_error": 0.7248141342811943
+        },
+        "12": {
+          "l2_error": 0.053661849560889666,
+          "broken_h1_error": 0.7248141342811942
+        }
+      },
+      "rates_from_previous": {
+        "l2_error": 1.1798408566220244,
+        "broken_h1_error": 0.4953934242289514
+      }
+    },
+    {
+      "resolution": 3,
+      "local_refinement": 16,
+      "archive": "mixed-spatial-n3.npz",
+      "archive_sha256": "d88bf924abe5ec7dff912ce2261b2dc7c43bd9c6ef34edb276252a4b6361a883",
+      "quadrature": {
+        "8": {
+          "l2_error": 0.02935026334374899,
+          "broken_h1_error": 0.550763143688466
+        },
+        "12": {
+          "l2_error": 0.029350263343748986,
+          "broken_h1_error": 0.550763143688466
+        }
+      },
+      "rates_from_previous": {
+        "l2_error": 1.4881694669227483,
+        "broken_h1_error": 0.6772725926774706
+      }
+    },
+    {
+      "resolution": 4,
+      "local_refinement": 16,
+      "archive": "mixed-spatial-n4.npz",
+      "archive_sha256": "6fd07a30b1b95f2780355b4785fec87b3601b77a323948330bdaf01cf59bf0fe",
+      "quadrature": {
+        "8": {
+          "l2_error": 0.01823926152920479,
+          "broken_h1_error": 0.43981658324286105
+        },
+        "12": {
+          "l2_error": 0.018239261529204784,
+          "broken_h1_error": 0.439816583242861
+        }
+      },
+      "rates_from_previous": {
+        "l2_error": 1.6536484780581302,
+        "broken_h1_error": 0.7819293875886115
+      }
+    },
+    {
+      "resolution": 6,
+      "local_refinement": 16,
+      "archive": "mixed-spatial-n6.npz",
+      "archive_sha256": "39cbcecd054082d6901a294bf99e5c0693f095f6619866311134f3bc646b6ee8",
+      "quadrature": {
+        "8": {
+          "l2_error": 0.00889942320798664,
+          "broken_h1_error": 0.31081622563103983
+        },
+        "12": {
+          "l2_error": 0.00889942320798664,
+          "broken_h1_error": 0.3108162256310398
+        }
+      },
+      "rates_from_previous": {
+        "l2_error": 1.7697947778804564,
+        "broken_h1_error": 0.8561919475790352
+      }
+    },
+    {
+      "resolution": 8,
+      "local_refinement": 16,
+      "archive": "mixed-spatial-n8.npz",
+      "archive_sha256": "ae1582f7e427196ca12cea795c7213d70be8b56aa7f7d8c57062923e0583da44",
+      "quadrature": {
+        "8": {
+          "l2_error": 0.005229372011284554,
+          "broken_h1_error": 0.23949265780631213
+        },
+        "12": {
+          "l2_error": 0.0052293720112845535,
+          "broken_h1_error": 0.2394926578063121
+        }
+      },
+      "rates_from_previous": {
+        "l2_error": 1.8482043926895502,
+        "broken_h1_error": 0.9061359329389471
+      }
+    },
+    {
+      "resolution": 12,
+      "local_refinement": 16,
+      "archive": "mixed-spatial-n12.npz",
+      "archive_sha256": "26288626a2a7499af5bc482abb2287ab886ec17f967c88e0752a971ef63cc220",
+      "quadrature": {
+        "8": {
+          "l2_error": 0.002422996373497134,
+          "broken_h1_error": 0.16379063196179355
+        },
+        "12": {
+          "l2_error": 0.002422996373497134,
+          "broken_h1_error": 0.16379063196179353
+        }
+      },
+      "rates_from_previous": {
+        "l2_error": 1.897293345409534,
+        "broken_h1_error": 0.9370320024815023
+      }
+    },
+    {
+      "resolution": 16,
+      "local_refinement": 16,
+      "archive": "mixed-spatial-n16.npz",
+      "archive_sha256": "5c3e41db1e4c2391c09b0d7fc208ec8a6bc83bc743fbc3e019abbcf68fa34038",
+      "quadrature": {
+        "8": {
+          "l2_error": 0.0013907308137569992,
+          "broken_h1_error": 0.12436261227186805
+        },
+        "12": {
+          "l2_error": 0.0013907308137569973,
+          "broken_h1_error": 0.12436261227186805
+        }
+      },
+      "rates_from_previous": {
+        "l2_error": 1.9298233154850943,
+        "broken_h1_error": 0.9572629424274453
+      }
+    }
+  ],
+  "native_same_case": {
+    "n": 8,
+    "r": 16,
+    "pressure_dofs": 39168,
+    "free_pressure_dofs": 38896,
+    "trace_dofs": 368,
+    "maximum_coefficient_difference": 3.902433931557425e-13,
+    "relative_coefficient_difference": 4.8692664041679e-13,
+    "relative_original_saddle_residual": 1.0184197201946714e-12,
+    "maximum_continuity_moment": 8.131516293641283e-17,
+    "comparison": {
+      "archive": "mixed-spatial-n8.npz",
+      "sha256": "ae1582f7e427196ca12cea795c7213d70be8b56aa7f7d8c57062923e0583da44"
+    },
+    "method": "DOLFINx/UFL broken CG1 operator; independent fine-edge geometric P0 coupling; strong homogeneous Dirichlet elimination; SuperLU full saddle solve; no PyMHM local condensation",
+    "source_sha256": "51c1cca8dbe0854bd609b79a235e70a2bff03e8b134c397b6c826b566998653a"
+  },
+  "native_execution_status": "Previously executed full n8/r16 saddle comparison; current audit verifies its source and input field hashes. No new native solve is claimed.",
+  "native_execution_record_sha256": "e65db929eb992ce9a0ba2c0a0b33516d8528f58161665d69b750024fd1790f2a",
+  "reference_source_provenance": {
+    "reference_code": "FEniCS/DOLFINx",
+    "version": "0.9.0",
+    "runtime_reported_build_git_hash": "8067ef16087b9f364873e0e657dcda52fb989ce3",
+    "runtime_hash_status": "build-reported identifier; not resolved as an upstream dolfinx commit",
+    "verified_upstream_release_commit": "6443e3b27d29aec04ce83d8424b57c339e35f865",
+    "verified_source_url": "https://github.com/FEniCS/dolfinx/tree/6443e3b27d29aec04ce83d8424b57c339e35f865",
+    "upstream_verification_url": "https://api.github.com/repos/FEniCS/dolfinx/git/ref/tags/v0.9.0",
+    "conda_packages": [
+      {
+        "name": "fenics-dolfinx",
+        "version": "0.9.0",
+        "build": "py313hf84a112_112",
+        "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-dolfinx-0.9.0-py313hf84a112_112.conda",
+        "sha256": "79bb466bd1624512b7e6302e7926a05ef1e78685f0c188a69668222f31852b86",
+        "recipe_sha256": "df9a203accdaa6d1a5b1c97600971f9803620dea2176e5c62b705d9ac0e12bec",
+        "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+        "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+        "patches": [
+          {
+            "name": "unpin-cffi.patch",
+            "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+          }
+        ]
+      },
+      {
+        "name": "fenics-libdolfinx",
+        "version": "0.9.0",
+        "build": "py313h2154cf7_112",
+        "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-libdolfinx-0.9.0-py313h2154cf7_112.conda",
+        "sha256": "f8068fef21e9008e0531d83e8f19e8ee41bb40920881b8416583380f138e7889",
+        "recipe_sha256": "e75fdc33edb216ccf13ad27023b1b2b1f465451c630395137104e278732a62d7",
+        "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+        "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+        "patches": [
+          {
+            "name": "unpin-cffi.patch",
+            "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+          }
+        ]
+      }
+    ],
+    "python_extension_file": "cpp.cpython-313-x86_64-linux-gnu.so",
+    "python_extension_sha256": "7fba4280795a95accf09754435d0e6a19e48ca4e2c604d739688614bf4b6802a",
+    "runtime_versions": {
+      "dolfinx": "0.9.0",
+      "basix": "0.9.0",
+      "ufl": "2024.2.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1"
+    }
+  },
+  "provenance_scope": "Current installed environment and verified upstream release; detailed runtime binary fingerprint was not recorded during the earlier transport comparison.",
+  "expected_rates": {
+    "l2": 2,
+    "broken_h1": 1,
+    "parameter": "H proportional to inverse macro resolution; fixed epsilon=0.1",
+    "hypotheses": "Smooth exact layer for fixed positive diffusion; P1 local fields and P0 trace family; boundary layer must be resolved before asymptotic behavior",
+    "literature_scope": "Section 5.1.1 explicitly reports optimal L2/broken-H1 behavior for the Lambda0 family. Figure 12 uses epsilon=0.1 and assumes the second level exactly solved; its historical local mesh and adaptive connectivity are unspecified."
+  },
+  "unresolved": "The nominal Figure 12 values remain discrepant. Independent discrete agreement and observed rates do not constitute reproduction of its absolute errors. Epsilon=1 controls do not substitute this epsilon=0.1 case."
+}

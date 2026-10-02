@@ -1,0 +1,177 @@
+{
+  "paper": "de Barros, Madureira and Valentin, arXiv:2404.16978v3, Section8.1/Figure2",
+  "scope": "Smooth quartic-pressure problem on the unit square, A=I and homogeneous Dirichlet data. Rates are not transferred to the oscillatory-coefficient or singular examples.",
+  "norms": "Absolute physical L2 pressure and broken L2 gradient errors; relative norms have constant exact denominators and give identical rates.",
+  "input_record_sha256": "b69bbd8edadede2acb2e22fea4c00831dfbca34626d81ba4021971f82c3e5555",
+  "families": [
+    {
+      "k": 0,
+      "pressure_trace_degree": 1,
+      "flux_trace_degree": 0,
+      "local_pressure_degree": 1,
+      "local_refinement": 1,
+      "expected_gradient_order": 1,
+      "intervals": [
+        {
+          "coarse_resolution": 2,
+          "fine_resolution": 4,
+          "pressure_order": 1.6938975674405725,
+          "gradient_order": 0.8593844776785404
+        },
+        {
+          "coarse_resolution": 4,
+          "fine_resolution": 8,
+          "pressure_order": 1.9186940150287657,
+          "gradient_order": 0.962563882254791
+        },
+        {
+          "coarse_resolution": 8,
+          "fine_resolution": 16,
+          "pressure_order": 1.9792775670119416,
+          "gradient_order": 0.9904476657828583
+        },
+        {
+          "coarse_resolution": 16,
+          "fine_resolution": 32,
+          "pressure_order": 1.994791471391262,
+          "gradient_order": 0.9975984748412243
+        }
+      ],
+      "last_three_intervals": [
+        {
+          "coarse_resolution": 4,
+          "fine_resolution": 8,
+          "pressure_order": 1.9186940150287657,
+          "gradient_order": 0.962563882254791
+        },
+        {
+          "coarse_resolution": 8,
+          "fine_resolution": 16,
+          "pressure_order": 1.9792775670119416,
+          "gradient_order": 0.9904476657828583
+        },
+        {
+          "coarse_resolution": 16,
+          "fine_resolution": 32,
+          "pressure_order": 1.994791471391262,
+          "gradient_order": 0.9975984748412243
+        }
+      ],
+      "observed_asymptotic_pressure_order": 2,
+      "published_pressure_order": null
+    },
+    {
+      "k": 1,
+      "pressure_trace_degree": 2,
+      "flux_trace_degree": 1,
+      "local_pressure_degree": 2,
+      "local_refinement": 2,
+      "expected_gradient_order": 2,
+      "intervals": [
+        {
+          "coarse_resolution": 2,
+          "fine_resolution": 4,
+          "pressure_order": 3.0628389051914353,
+          "gradient_order": 1.923904759981334
+        },
+        {
+          "coarse_resolution": 4,
+          "fine_resolution": 8,
+          "pressure_order": 3.040372559052735,
+          "gradient_order": 1.9830484666081691
+        },
+        {
+          "coarse_resolution": 8,
+          "fine_resolution": 16,
+          "pressure_order": 3.0139174873597527,
+          "gradient_order": 1.99591806360701
+        },
+        {
+          "coarse_resolution": 16,
+          "fine_resolution": 32,
+          "pressure_order": 3.0039905525502357,
+          "gradient_order": 1.9989950824287135
+        }
+      ],
+      "last_three_intervals": [
+        {
+          "coarse_resolution": 4,
+          "fine_resolution": 8,
+          "pressure_order": 3.040372559052735,
+          "gradient_order": 1.9830484666081691
+        },
+        {
+          "coarse_resolution": 8,
+          "fine_resolution": 16,
+          "pressure_order": 3.0139174873597527,
+          "gradient_order": 1.99591806360701
+        },
+        {
+          "coarse_resolution": 16,
+          "fine_resolution": 32,
+          "pressure_order": 3.0039905525502357,
+          "gradient_order": 1.9989950824287135
+        }
+      ],
+      "observed_asymptotic_pressure_order": 3,
+      "published_pressure_order": null
+    },
+    {
+      "k": 2,
+      "pressure_trace_degree": 3,
+      "flux_trace_degree": 2,
+      "local_pressure_degree": 3,
+      "local_refinement": 1,
+      "expected_gradient_order": 3,
+      "intervals": [
+        {
+          "coarse_resolution": 2,
+          "fine_resolution": 4,
+          "pressure_order": 4.114962343601164,
+          "gradient_order": 3.043358362641531
+        },
+        {
+          "coarse_resolution": 4,
+          "fine_resolution": 8,
+          "pressure_order": 4.070523700197489,
+          "gradient_order": 3.0274284781840928
+        },
+        {
+          "coarse_resolution": 8,
+          "fine_resolution": 16,
+          "pressure_order": 4.039652118245099,
+          "gradient_order": 3.015321329649269
+        },
+        {
+          "coarse_resolution": 16,
+          "fine_resolution": 32,
+          "pressure_order": 4.021103204184101,
+          "gradient_order": 3.0080894180109774
+        }
+      ],
+      "last_three_intervals": [
+        {
+          "coarse_resolution": 4,
+          "fine_resolution": 8,
+          "pressure_order": 4.070523700197489,
+          "gradient_order": 3.0274284781840928
+        },
+        {
+          "coarse_resolution": 8,
+          "fine_resolution": 16,
+          "pressure_order": 4.039652118245099,
+          "gradient_order": 3.015321329649269
+        },
+        {
+          "coarse_resolution": 16,
+          "fine_resolution": 32,
+          "pressure_order": 4.021103204184101,
+          "gradient_order": 3.0080894180109774
+        }
+      ],
+      "observed_asymptotic_pressure_order": 4,
+      "published_pressure_order": null
+    }
+  ],
+  "rate_provenance": "Section8.1/Figure2 explicitly reports broken-H1 order k+1 for these spaces and h/H choices. No pressure-L2 rate is stated there; the k+2 pressure trend is additional measured evidence, not a quoted theorem."
+}

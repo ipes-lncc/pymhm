@@ -1,0 +1,242 @@
+{
+  "article": "A Three-Field Multiscale Method",
+  "authors": "de Barros, Madureira and Valentin",
+  "source_packages": [
+    {
+      "version": 1,
+      "url": "https://arxiv.org/src/2404.16978v1",
+      "archive_sha256": "710672f957c1593aace459645a4282dabecc793fb64090fcfe8604b62b0d4943"
+    },
+    {
+      "version": 2,
+      "url": "https://arxiv.org/src/2404.16978v2",
+      "archive_sha256": "1466d6afee5a1902997e20fc8d3f703c1b34e8a34f5c5e7df2a7dc2468766410"
+    },
+    {
+      "version": 3,
+      "url": "https://arxiv.org/src/2404.16978v3",
+      "archive_sha256": "3a81ba17862356a4ecd9f2800c762ff27fc28a476fe7c739ce7b2bc1187880da"
+    }
+  ],
+  "v3_images": {
+    "cut1a.png": {
+      "size": [
+        640,
+        449
+      ],
+      "info": {
+        "dpi": [
+          96.012,
+          96.012
+        ]
+      },
+      "sha256": "f5fa738f48de0f8e275db60c8734afd3501784f5448cb2ca21508a8e0719a55d"
+    },
+    "mh2msol.png": {
+      "size": [
+        822,
+        583
+      ],
+      "info": {
+        "dpi": [
+          96.012,
+          96.012
+        ]
+      },
+      "sha256": "9f7583d6d3079a07aa1b4c68c667d410a2d67b1d0df3878658bc5a5be140127e"
+    },
+    "ressonancia_mhm1.png": {
+      "size": [
+        640,
+        480
+      ],
+      "info": {
+        "dpi": [
+          96.012,
+          96.012
+        ]
+      },
+      "sha256": "3aaa0301cc94d79595ce1e51c3c2f7436d1557f91743b02e736a430a215314a8"
+    },
+    "h1.png": {
+      "size": [
+        640,
+        485
+      ],
+      "info": {
+        "dpi": [
+          96.012,
+          96.012
+        ]
+      },
+      "sha256": "72820a8be0141698fd606031a588c295dbb64b565f163f771654329d2c7504b5"
+    },
+    "ressonancia_mh2m1.png": {
+      "size": [
+        803,
+        563
+      ],
+      "info": {
+        "dpi": [
+          96.012,
+          96.012
+        ]
+      },
+      "sha256": "d6c52097b3698f55aff686930d0fa68e511c980b6c0fe804a820682bd3c4ad52"
+    },
+    "femOsc128.png": {
+      "size": [
+        944,
+        715
+      ],
+      "info": {
+        "dpi": [
+          96.012,
+          96.012
+        ]
+      },
+      "sha256": "353434c70aae2dc32a571c9df96b4cf01122e2f1306c769c1c72e6e56483a367"
+    },
+    "erro_dof2.png": {
+      "size": [
+        640,
+        480
+      ],
+      "info": {
+        "dpi": [
+          96.012,
+          96.012
+        ]
+      },
+      "sha256": "d7aac3bd37f9727253393675c62e99e8b33fbb0e8754988504b7c7e89efd5635"
+    },
+    "cut1c.png": {
+      "size": [
+        640,
+        449
+      ],
+      "info": {
+        "dpi": [
+          96.012,
+          96.012
+        ]
+      },
+      "sha256": "2baefec056ebfe7db940c7107dcc2b16b372db5a43cc363a81b3cb199702c5fe"
+    },
+    "htraco.png": {
+      "size": [
+        640,
+        480
+      ],
+      "info": {
+        "dpi": [
+          96.012,
+          96.012
+        ]
+      },
+      "sha256": "485f78550872040154246b3cd02a380e38aa1846662c941a8d9a6a875ccc379a"
+    },
+    "cut4b.png": {
+      "size": [
+        640,
+        449
+      ],
+      "info": {
+        "dpi": [
+          96.012,
+          96.012
+        ]
+      },
+      "sha256": "4c647af72a9226dcd80d220a6b234defbf519af6ede701408da1740a373b814c"
+    },
+    "cut2a.png": {
+      "size": [
+        640,
+        480
+      ],
+      "info": {
+        "dpi": [
+          96.012,
+          96.012
+        ]
+      },
+      "sha256": "dc2af9a233fd1ff95e1cc949fdc54e68237d723780803170bbc3a146d8803538"
+    },
+    "aresta.png": {
+      "size": [
+        546,
+        437
+      ],
+      "info": {
+        "dpi": [
+          96.012,
+          96.012
+        ]
+      },
+      "sha256": "f662d9635a2b56f43221da1db9694e0e6a38cc34a51ce598d4842402cc05f5e9"
+    },
+    "cut4a.png": {
+      "size": [
+        640,
+        449
+      ],
+      "info": {
+        "dpi": [
+          96.012,
+          96.012
+        ]
+      },
+      "sha256": "966928df00c1e42f165ea64c65baa009d5e77053812c0af397c42ddcbbb877de"
+    }
+  },
+  "common_v2_v3_images": [
+    {
+      "name": "cut1a.png",
+      "same_pixels_v2_v3": true
+    },
+    {
+      "name": "mh2msol.png",
+      "same_pixels_v2_v3": true
+    },
+    {
+      "name": "ressonancia_mhm1.png",
+      "same_pixels_v2_v3": true
+    },
+    {
+      "name": "ressonancia_mh2m1.png",
+      "same_pixels_v2_v3": true
+    },
+    {
+      "name": "femOsc128.png",
+      "same_pixels_v2_v3": true
+    },
+    {
+      "name": "erro_dof2.png",
+      "same_pixels_v2_v3": true
+    },
+    {
+      "name": "cut1c.png",
+      "same_pixels_v2_v3": true
+    },
+    {
+      "name": "cut4b.png",
+      "same_pixels_v2_v3": true
+    },
+    {
+      "name": "aresta.png",
+      "same_pixels_v2_v3": true
+    },
+    {
+      "name": "cut4a.png",
+      "same_pixels_v2_v3": true
+    }
+  ],
+  "numerical_data_scope": "The source packages contain TeX, bibliography and figure files, without numerical solver scripts or mesh/field arrays. No TeX version assigns a value to gamma in the oscillatory coefficient. The source polynomial matches Section8.1.",
+  "v1_numerical_section": "Commented in the supplied TeX",
+  "thesis_data_source": {
+    "url": "https://www.lncc.br/~alm/students/frankdissert.pdf",
+    "gamma": "1.8, Equation4.4",
+    "forcing": "-2[x(x-1)+y(y-1)], Equation4.1",
+    "epsilon": "1/17 in the thesis; 1/14 in articlev3"
+  }
+}

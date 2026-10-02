@@ -1,0 +1,147 @@
+{
+  "configuration": {
+    "study": "smooth-local-resolution-endpoints",
+    "local_degree": 8,
+    "local_refinement": 64,
+    "prepared_trace_degree": 1,
+    "maximum_segments": 32,
+    "requested_names": [
+      "ell0-s32",
+      "ell1-s32"
+    ],
+    "assembly_order": 11,
+    "norm_orders": [
+      11,
+      13
+    ],
+    "local_solver": "pypardiso-symmetric",
+    "local_assembly_workers": 1
+  },
+  "source_sha256": {
+    "examples/unfitted_convergence.py": "71fbc90a108028dc86b178eb0eed475c2efb6fcf234e8e9f9a1164a6ac747f17",
+    "examples/unfitted_trace_family.py": "ba18ae264be7847b06a5285772085953026e729cab8cafe70109b771b5ecc36c",
+    "examples/unfitted_campaign.py": "d554c8da8b93843a60d4a2383252a55374626abc1331f87660cf5c1107d10aba",
+    "examples/unfitted_geometry.py": "dd9df457b18ad11dea09ea31e269e6f3fd5473c1697cbcc653bde4a042d46c09",
+    "examples/layered_poisson.py": "9788591c6b9c8761fbff9b8e39e38fd1164268bcbde4b3668ad3fe05afb37b46",
+    "src/pymhm/darcy.py": "6ed895bac751317e58ac5dea5129b9f5eb944d7492191c5d10a8a9c7ebd2419c",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39",
+    "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+    "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+    "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a"
+  },
+  "source_changed_during_run": false,
+  "acquisition_driver": "original-local-resolution-endpoint-wrapper",
+  "acquisition_driver_sha256": "8e337001acd36b0f560bf6600b16b10a43806f50a114f34ba52466f1caecd93d",
+  "cases": [
+    {
+      "name": "ell0-s32",
+      "trace_degree": 0,
+      "segments": 32,
+      "macro_diameter": 0.5,
+      "H": 0.015625,
+      "original_trace_residual": 5.84487105019189e-16,
+      "original_local_residual_max": 8.278644071897792e-11,
+      "original_local_defect_l2_max": 3.047447417704998e-11,
+      "local_componentwise_backward_error_max": 3.1313388322032237e-16,
+      "local_roundoff_envelope_l2_max": 1.3445094901809163e-09,
+      "local_accepted_with_roundoff_envelope": false,
+      "macro_cells": 16,
+      "fine_cells": 65536,
+      "trace_dofs": 896,
+      "global_dofs": 912,
+      "macro_balance_max": 3.885780586188048e-14,
+      "archive": "smooth-p8-r64-ell0-s32.npz",
+      "archive_sha256": "afffcd676a11df241f68efd5b1064efcbb4a1a94cf8766cba787154ca8aaaf83",
+      "norms": {
+        "quadrature_11": {
+          "pressure_absolute": 3.155280094355847e-05,
+          "pressure_reference_norm": 0.5,
+          "pressure_relative": 6.310560188711694e-05,
+          "gradient_absolute": 0.01611606272615636,
+          "gradient_reference_norm": 4.442882938158366,
+          "gradient_relative": 0.003627388556142486,
+          "flux_absolute": 0.01611606272615636,
+          "flux_reference_norm": 4.442882938158366,
+          "flux_relative": 0.003627388556142486,
+          "energy_absolute": 0.01611606272615636,
+          "energy_reference_norm": 4.442882938158366,
+          "energy_relative": 0.003627388556142486
+        },
+        "quadrature_13": {
+          "pressure_absolute": 3.1552800944512074e-05,
+          "pressure_reference_norm": 0.5,
+          "pressure_relative": 6.310560188902415e-05,
+          "gradient_absolute": 0.01611606272615634,
+          "gradient_reference_norm": 4.442882938158366,
+          "gradient_relative": 0.003627388556142481,
+          "flux_absolute": 0.01611606272615634,
+          "flux_reference_norm": 4.442882938158366,
+          "flux_relative": 0.003627388556142481,
+          "energy_absolute": 0.01611606272615634,
+          "energy_reference_norm": 4.442882938158366,
+          "energy_relative": 0.003627388556142481
+        }
+      }
+    },
+    {
+      "name": "ell1-s32",
+      "trace_degree": 1,
+      "segments": 32,
+      "macro_diameter": 0.5,
+      "H": 0.015625,
+      "original_trace_residual": 1.1873812488027862e-15,
+      "original_local_residual_max": 8.27817848680392e-11,
+      "original_local_defect_l2_max": 3.0460357060399193e-11,
+      "local_componentwise_backward_error_max": 3.1299294718464087e-16,
+      "local_roundoff_envelope_l2_max": 1.3444917681311877e-09,
+      "local_accepted_with_roundoff_envelope": false,
+      "macro_cells": 16,
+      "fine_cells": 65536,
+      "trace_dofs": 1792,
+      "global_dofs": 1808,
+      "macro_balance_max": 3.9968028886505635e-14,
+      "archive": "smooth-p8-r64-ell1-s32.npz",
+      "archive_sha256": "5f5803e40dee19ce30fb484f72b491860a5ea4bbeaaff8a882743b6c4ca2e821",
+      "norms": {
+        "quadrature_11": {
+          "pressure_absolute": 3.814920432178617e-07,
+          "pressure_reference_norm": 0.5,
+          "pressure_relative": 7.629840864357234e-07,
+          "gradient_absolute": 0.0002201519326624816,
+          "gradient_reference_norm": 4.442882938158366,
+          "gradient_relative": 4.9551594252388177e-05,
+          "flux_absolute": 0.0002201519326624816,
+          "flux_reference_norm": 4.442882938158366,
+          "flux_relative": 4.9551594252388177e-05,
+          "energy_absolute": 0.0002201519326624816,
+          "energy_reference_norm": 4.442882938158366,
+          "energy_relative": 4.9551594252388177e-05
+        },
+        "quadrature_13": {
+          "pressure_absolute": 3.8149204323268764e-07,
+          "pressure_reference_norm": 0.5,
+          "pressure_relative": 7.629840864653753e-07,
+          "gradient_absolute": 0.00022015193266190745,
+          "gradient_reference_norm": 4.442882938158366,
+          "gradient_relative": 4.9551594252258946e-05,
+          "flux_absolute": 0.00022015193266190745,
+          "flux_reference_norm": 4.442882938158366,
+          "flux_relative": 4.9551594252258946e-05,
+          "energy_absolute": 0.00022015193266190745,
+          "energy_reference_norm": 4.442882938158366,
+          "energy_relative": 4.9551594252258946e-05
+        }
+      }
+    }
+  ],
+  "complete": true,
+  "first_local_pilot_record_sha256": "dafc4f1c814a84d49fb60e1dcc68259bf4abedd879eca6bb6b7e4abde76471b9",
+  "primary_error": "absolute broken H1 seminorm of pressure error",
+  "preparation_equivalence_sha256": "aa32d99b5d370f56f5328741f9b68c090da8345a1cf1529750209df28df3fdba",
+  "preparation_elapsed_this_invocation_seconds": 1576.3386827529994
+}

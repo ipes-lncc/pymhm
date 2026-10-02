@@ -1,0 +1,105 @@
+{
+  "case": "Original trigonometric anisotropic elasticity",
+  "variable_material": false,
+  "tensor_kelvin": [
+    [
+      5.0,
+      1.0,
+      0.4
+    ],
+    [
+      1.0,
+      4.0,
+      0.3
+    ],
+    [
+      0.4,
+      0.3,
+      2.0
+    ]
+  ],
+  "tensor_factor": "1",
+  "source": "minus div(C epsilon(u)); analytic material derivatives included",
+  "indicator_scope": "L17 face residual only; finite local error is not certified",
+  "assembly_quadrature": 10,
+  "error_quadrature": 12,
+  "rows": [
+    {
+      "resolution": 1,
+      "macro_cells": 2,
+      "degree": 2,
+      "minimal_enrichment": true,
+      "local_refinement": 1,
+      "trace_degree": 1,
+      "trace_dofs": 20,
+      "local_coordinates": 14,
+      "displacement_l2": 0.3720112407574712,
+      "stress_l2": 7.145309764622702,
+      "face_indicator": 1.1072212709686895,
+      "algebraic_residual": 1.0118347873629582e-16
+    },
+    {
+      "resolution": 2,
+      "macro_cells": 8,
+      "degree": 2,
+      "minimal_enrichment": true,
+      "local_refinement": 1,
+      "trace_degree": 1,
+      "trace_dofs": 64,
+      "local_coordinates": 14,
+      "displacement_l2": 0.07015900293052801,
+      "stress_l2": 2.8854974591985125,
+      "face_indicator": 0.39109255508627805,
+      "algebraic_residual": 1.823154973913292e-16
+    },
+    {
+      "resolution": 4,
+      "macro_cells": 32,
+      "degree": 2,
+      "minimal_enrichment": true,
+      "local_refinement": 1,
+      "trace_degree": 1,
+      "trace_dofs": 224,
+      "local_coordinates": 14,
+      "displacement_l2": 0.012235467487802434,
+      "stress_l2": 0.8187642114077949,
+      "face_indicator": 0.12225473559520829,
+      "algebraic_residual": 2.2828774352287045e-16
+    },
+    {
+      "resolution": 8,
+      "macro_cells": 128,
+      "degree": 2,
+      "minimal_enrichment": true,
+      "local_refinement": 1,
+      "trace_degree": 1,
+      "trace_dofs": 832,
+      "local_coordinates": 14,
+      "displacement_l2": 0.0018586714170483428,
+      "stress_l2": 0.22307049574627613,
+      "face_indicator": 0.037262986395515466,
+      "algebraic_residual": 2.0627746155409189e-16
+    },
+    {
+      "resolution": 16,
+      "macro_cells": 512,
+      "degree": 2,
+      "minimal_enrichment": true,
+      "local_refinement": 1,
+      "trace_degree": 1,
+      "trace_dofs": 3200,
+      "local_coordinates": 14,
+      "displacement_l2": 0.00028010195408557665,
+      "stress_l2": 0.05842418118246017,
+      "face_indicator": 0.010891951772464605,
+      "algebraic_residual": 4.597299580680827e-16
+    }
+  ],
+  "archive": "constant-p2.npz",
+  "sha256": "d4a16531132e3e1f9b82d8ce66acd4249b57134e436bda0fbadd17dd1384af65",
+  "source_hashes": {
+    "examples/solve_primal_elasticity.py": "1021441c6279aaa80416137cc6934c52693b13b7fe4336262dd0b6d38bd0c585",
+    "src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+    "src/pymhm/elasticity_estimator.py": "b69e9f47c413fcf63ceea575a02c19639822c5eb30c92dcd5dceb5ed70043345"
+  }
+}

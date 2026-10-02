@@ -1,0 +1,17 @@
+{
+  "case": "Devloo et al. (2021), Section 6.2, HPC4e heterogeneous elasticity",
+  "doi": "10.1051/m2an/2021013",
+  "repository": "https://github.com/labmec/MHM",
+  "revision": "f978f29d657d28fe58bcea20fabee68953093482",
+  "directory": "Data_13_Set",
+  "shape": [512, 256],
+  "physical_bounds_m": [0, 10000, 0, 4500],
+  "file_axes": "horizontal index first; second index is downward depth",
+  "evaluation_axes": "horizontal index first; second index is upward height",
+  "units": {"VE": "Pa", "VPoisso": "dimensionless", "Vden": "kg/m^3"},
+  "sha256": {
+    "VE": "6e0f7b8b588c72facab1c4aa535917a9b4774e9cc67aafa08d5b16fbd3049673",
+    "VPoisso": "82ac6b281108fda85038fcb0c345c6df1c70b74f4057a37254cab6b2c44ead95",
+    "Vden": "6674714f92ecd8e9fc66f2ae8edac376c34feee1be970d654eb3a744158ed0fb"
+  }
+}

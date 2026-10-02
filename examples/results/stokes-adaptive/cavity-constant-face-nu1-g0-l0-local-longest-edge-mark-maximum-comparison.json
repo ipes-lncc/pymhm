@@ -1,0 +1,604 @@
+{
+  "case": "constant cavity: MHM versus conforming Taylor-Hood",
+  "lid": "constant",
+  "corner_cutout": 0.03125,
+  "strategy": "face",
+  "drag": 0,
+  "reference": "cavity-constant-classical-gamma0-n512.json",
+  "reference_sha256": "4a8c7e9e68eb728cd6065ae408f4135f52017ea446e922b1b9719f9eb1d1c9dc",
+  "reference_coefficients_sha256": "576f22c16ebe8868d242848bcd9cecff77897cbba60fedea4e90b093bc852a67",
+  "mhm_coefficients_sha256": "199a6f9739085ed24d623880ab0649346cdb67e094c789ab8947117a50e6ed82",
+  "norms": {
+    "12": {
+      "quadrature_order": 12,
+      "corner_cutout": 0.03125,
+      "velocity_l2": 0.032595990688689264,
+      "pressure_l2": 0.3497775093130503,
+      "velocity_h1_seminorm": 0.5039083562382033,
+      "velocity_reference_l2": 0.2585078820583541,
+      "pressure_reference_l2": 4.956516387458853,
+      "velocity_reference_h1_seminorm": 3.529488677134676,
+      "velocity_relative": 0.1260928310160045,
+      "pressure_relative": 0.0705692228110189,
+      "velocity_h1_seminorm_relative": 0.14277092302426317,
+      "velocity_energy": 0.5039083562382033,
+      "velocity_reference_energy": 3.529488677134676,
+      "velocity_energy_relative": 0.14277092302426317
+    },
+    "20": {
+      "quadrature_order": 20,
+      "corner_cutout": 0.03125,
+      "velocity_l2": 0.03259599064408916,
+      "pressure_l2": 0.349776906302695,
+      "velocity_h1_seminorm": 0.5039079968208222,
+      "velocity_reference_l2": 0.25850788193861224,
+      "pressure_reference_l2": 4.956515267290291,
+      "velocity_reference_h1_seminorm": 3.529495364520635,
+      "velocity_relative": 0.1260928309018822,
+      "pressure_relative": 0.07056911709946508,
+      "velocity_h1_seminorm_relative": 0.14277055068161604,
+      "velocity_energy": 0.5039079968208222,
+      "velocity_reference_energy": 3.529495364520635,
+      "velocity_energy_relative": 0.14277055068161604
+    },
+    "28": {
+      "quadrature_order": 28,
+      "corner_cutout": 0.03125,
+      "velocity_l2": 0.032595990655014354,
+      "pressure_l2": 0.34977689205808765,
+      "velocity_h1_seminorm": 0.5039077785078464,
+      "velocity_reference_l2": 0.25850788193315205,
+      "pressure_reference_l2": 4.956515336152543,
+      "velocity_reference_h1_seminorm": 3.5294933623234774,
+      "velocity_relative": 0.12609283094680804,
+      "pressure_relative": 0.0705691132451129,
+      "velocity_h1_seminorm_relative": 0.1427705698180212,
+      "velocity_energy": 0.5039077785078464,
+      "velocity_reference_energy": 3.5294933623234774,
+      "velocity_energy_relative": 0.1427705698180212
+    }
+  },
+  "global_velocity_norms": {
+    "12": {
+      "velocity_l2": 0.032617700943917985,
+      "velocity_reference_l2": 0.2591331000464846,
+      "velocity_relative": 0.12587238348966942
+    },
+    "20": {
+      "velocity_l2": 0.03261770089370873,
+      "velocity_reference_l2": 0.25913309995312434,
+      "velocity_relative": 0.12587238334126008
+    },
+    "28": {
+      "velocity_l2": 0.0326177009030985,
+      "velocity_reference_l2": 0.25913309995716277,
+      "velocity_relative": 0.12587238337553375
+    }
+  },
+  "history": [
+    {
+      "state": 0,
+      "trace_and_coarse_dofs": 88,
+      "fine_cells": 16,
+      "coefficients_sha256": "f896ef20747ec944e99e5745aeb823bf3b46efc1243c66db3e04529c56fef15b",
+      "norms": {
+        "12": {
+          "quadrature_order": 12,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.20676498495580276,
+          "pressure_l2": 4.059843867178149,
+          "velocity_h1_seminorm": 2.9267555574054187,
+          "velocity_reference_l2": 0.25850786934524084,
+          "pressure_reference_l2": 4.956603889711289,
+          "velocity_reference_h1_seminorm": 3.529560021940972,
+          "velocity_relative": 0.7998401962752835,
+          "pressure_relative": 0.8190777309450535,
+          "velocity_h1_seminorm_relative": 0.8292125758484595,
+          "velocity_energy": 2.9267555574054187,
+          "velocity_reference_energy": 3.529560021940972,
+          "velocity_energy_relative": 0.8292125758484595
+        },
+        "20": {
+          "quadrature_order": 20,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.20676501626270682,
+          "pressure_l2": 4.059818350693933,
+          "velocity_h1_seminorm": 2.926812132934309,
+          "velocity_reference_l2": 0.25850788131645447,
+          "pressure_reference_l2": 4.956582202188931,
+          "velocity_reference_h1_seminorm": 3.5296099005745423,
+          "velocity_relative": 0.7998402803417579,
+          "pressure_relative": 0.8190761668193522,
+          "velocity_h1_seminorm_relative": 0.8292168866757453,
+          "velocity_energy": 2.926812132934309,
+          "velocity_reference_energy": 3.5296099005745423,
+          "velocity_energy_relative": 0.8292168866757453
+        }
+      }
+    },
+    {
+      "state": 2,
+      "trace_and_coarse_dofs": 104,
+      "fine_cells": 32,
+      "coefficients_sha256": "79ab9f85b066ee65adf2d677c289b87053654e0fdfbda7885084b1cdfcabe0ab",
+      "norms": {
+        "12": {
+          "quadrature_order": 12,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.14653092449421015,
+          "pressure_l2": 2.811392930067523,
+          "velocity_h1_seminorm": 2.4482931632581706,
+          "velocity_reference_l2": 0.25850788459567625,
+          "pressure_reference_l2": 4.956524995129155,
+          "velocity_reference_h1_seminorm": 3.529459191101724,
+          "velocity_relative": 0.566833482558547,
+          "pressure_relative": 0.567210481704484,
+          "velocity_h1_seminorm_relative": 0.6936737416969351,
+          "velocity_energy": 2.4482931632581706,
+          "velocity_reference_energy": 3.529459191101724,
+          "velocity_energy_relative": 0.6936737416969351
+        },
+        "20": {
+          "quadrature_order": 20,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.1465309233002432,
+          "pressure_l2": 2.8114003440062763,
+          "velocity_h1_seminorm": 2.448360287475807,
+          "velocity_reference_l2": 0.2585078817210392,
+          "pressure_reference_l2": 4.9565353970200725,
+          "velocity_reference_h1_seminorm": 3.5295125549254016,
+          "velocity_relative": 0.566833484243113,
+          "pressure_relative": 0.5672107871350063,
+          "velocity_h1_seminorm_relative": 0.6936822718080838,
+          "velocity_energy": 2.448360287475807,
+          "velocity_reference_energy": 3.5295125549254016,
+          "velocity_energy_relative": 0.6936822718080838
+        }
+      }
+    },
+    {
+      "state": 4,
+      "trace_and_coarse_dofs": 132,
+      "fine_cells": 116,
+      "coefficients_sha256": "146c91970f0cc0e8efdc7d936339695895810686381c033959b36ddc53dcce7f",
+      "norms": {
+        "12": {
+          "quadrature_order": 12,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.09534398779270717,
+          "pressure_l2": 1.637484031747154,
+          "velocity_h1_seminorm": 1.97362812583874,
+          "velocity_reference_l2": 0.25850788239331146,
+          "pressure_reference_l2": 4.9565898655511695,
+          "velocity_reference_h1_seminorm": 3.5295569891890697,
+          "velocity_relative": 0.3688242962264661,
+          "pressure_relative": 0.3303650445496496,
+          "velocity_h1_seminorm_relative": 0.5591716274546368,
+          "velocity_energy": 1.97362812583874,
+          "velocity_reference_energy": 3.5295569891890697,
+          "velocity_energy_relative": 0.5591716274546368
+        },
+        "20": {
+          "quadrature_order": 20,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.09534398866323826,
+          "pressure_l2": 1.637460240513992,
+          "velocity_h1_seminorm": 1.973619337276246,
+          "velocity_reference_l2": 0.2585078823152477,
+          "pressure_reference_l2": 4.9565745276672954,
+          "velocity_reference_h1_seminorm": 3.5295220750917777,
+          "velocity_relative": 0.36882429970536545,
+          "pressure_relative": 0.3303612669140329,
+          "velocity_h1_seminorm_relative": 0.5591746687757793,
+          "velocity_energy": 1.973619337276246,
+          "velocity_reference_energy": 3.5295220750917777,
+          "velocity_energy_relative": 0.5591746687757793
+        }
+      }
+    },
+    {
+      "state": 6,
+      "trace_and_coarse_dofs": 164,
+      "fine_cells": 264,
+      "coefficients_sha256": "f9f4cea5c83726ddecde5261cf4b97aa665136f5f8bfd8bdfd1b1f2036e99404",
+      "norms": {
+        "12": {
+          "quadrature_order": 12,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.03572127061674341,
+          "pressure_l2": 0.7304330890867433,
+          "velocity_h1_seminorm": 1.2790752190535588,
+          "velocity_reference_l2": 0.2585078815776857,
+          "pressure_reference_l2": 4.956543837375184,
+          "velocity_reference_h1_seminorm": 3.529497598193079,
+          "velocity_relative": 0.13818252038868148,
+          "pressure_relative": 0.14736742235161096,
+          "velocity_h1_seminorm_relative": 0.3623958321174037,
+          "velocity_energy": 1.2790752190535588,
+          "velocity_reference_energy": 3.529497598193079,
+          "velocity_energy_relative": 0.3623958321174037
+        },
+        "20": {
+          "quadrature_order": 20,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.035721270283525924,
+          "pressure_l2": 0.7304042804176948,
+          "velocity_h1_seminorm": 1.2790885908469691,
+          "velocity_reference_l2": 0.25850788194935587,
+          "pressure_reference_l2": 4.95652641234645,
+          "velocity_reference_h1_seminorm": 3.5294813397700584,
+          "velocity_relative": 0.1381825189010061,
+          "pressure_relative": 0.14736212816263738,
+          "velocity_h1_seminorm_relative": 0.36240129008028704,
+          "velocity_energy": 1.2790885908469691,
+          "velocity_reference_energy": 3.5294813397700584,
+          "velocity_energy_relative": 0.36240129008028704
+        }
+      }
+    },
+    {
+      "state": 8,
+      "trace_and_coarse_dofs": 200,
+      "fine_cells": 460,
+      "coefficients_sha256": "09caf1c073ddcf9ec1de59cc70906b58b3a16160ed9749e1207fb21c5bdf9056",
+      "norms": {
+        "12": {
+          "quadrature_order": 12,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.03317392202956372,
+          "pressure_l2": 0.5023627285942269,
+          "velocity_h1_seminorm": 0.6428981104966294,
+          "velocity_reference_l2": 0.2585078818589999,
+          "pressure_reference_l2": 4.956501232746528,
+          "velocity_reference_h1_seminorm": 3.5295249854169537,
+          "velocity_relative": 0.1283284741300772,
+          "pressure_relative": 0.10135430316757017,
+          "velocity_h1_seminorm_relative": 0.18214862145838637,
+          "velocity_energy": 0.6428981104966294,
+          "velocity_reference_energy": 3.5295249854169537,
+          "velocity_energy_relative": 0.18214862145838637
+        },
+        "20": {
+          "quadrature_order": 20,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.03317392132044073,
+          "pressure_l2": 0.5023055117556567,
+          "velocity_h1_seminorm": 0.6429353512377869,
+          "velocity_reference_l2": 0.25850788185056617,
+          "pressure_reference_l2": 4.956516227378915,
+          "velocity_reference_h1_seminorm": 3.529490832147545,
+          "velocity_relative": 0.1283284713911251,
+          "pressure_relative": 0.1013424527858923,
+          "velocity_h1_seminorm_relative": 0.18216093533428676,
+          "velocity_energy": 0.6429353512377869,
+          "velocity_reference_energy": 3.529490832147545,
+          "velocity_energy_relative": 0.18216093533428676
+        }
+      }
+    },
+    {
+      "state": 10,
+      "trace_and_coarse_dofs": 224,
+      "fine_cells": 674,
+      "coefficients_sha256": "505ecf60466bf99bfb0f2f45d6b06f0ff6d830efc0b7340bcf82bfdc28701cfe",
+      "norms": {
+        "12": {
+          "quadrature_order": 12,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.033169716114554756,
+          "pressure_l2": 0.46157075445719664,
+          "velocity_h1_seminorm": 0.6319948850645823,
+          "velocity_reference_l2": 0.25850788204355707,
+          "pressure_reference_l2": 4.956494761599574,
+          "velocity_reference_h1_seminorm": 3.5294964607459,
+          "velocity_relative": 0.12831220407030317,
+          "pressure_relative": 0.09312443100580162,
+          "velocity_h1_seminorm_relative": 0.17906092047221397,
+          "velocity_energy": 0.6319948850645823,
+          "velocity_reference_energy": 3.5294964607459,
+          "velocity_energy_relative": 0.17906092047221397
+        },
+        "20": {
+          "quadrature_order": 20,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.033169715886228926,
+          "pressure_l2": 0.46157104590507686,
+          "velocity_h1_seminorm": 0.6320056352598418,
+          "velocity_reference_l2": 0.2585078818703112,
+          "pressure_reference_l2": 4.956519832547112,
+          "velocity_reference_h1_seminorm": 3.529496220839605,
+          "velocity_relative": 0.12831220327304985,
+          "pressure_relative": 0.0931240187669903,
+          "velocity_h1_seminorm_relative": 0.17906397845908412,
+          "velocity_energy": 0.6320056352598418,
+          "velocity_reference_energy": 3.529496220839605,
+          "velocity_energy_relative": 0.17906397845908412
+        }
+      }
+    },
+    {
+      "state": 12,
+      "trace_and_coarse_dofs": 252,
+      "fine_cells": 930,
+      "coefficients_sha256": "9d1017e2d48f2669a14b66a6b857c26fce6428c4c4a8cfe0f7a85fb8b56fd234",
+      "norms": {
+        "12": {
+          "quadrature_order": 12,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.033054408837558856,
+          "pressure_l2": 0.3860837958287966,
+          "velocity_h1_seminorm": 0.532929763309873,
+          "velocity_reference_l2": 0.25850788201556263,
+          "pressure_reference_l2": 4.956495040920094,
+          "velocity_reference_h1_seminorm": 3.5294938286591284,
+          "velocity_relative": 0.12786615471774637,
+          "pressure_relative": 0.07789451873578922,
+          "velocity_h1_seminorm_relative": 0.1509932554584847,
+          "velocity_energy": 0.532929763309873,
+          "velocity_reference_energy": 3.5294938286591284,
+          "velocity_energy_relative": 0.1509932554584847
+        },
+        "20": {
+          "quadrature_order": 20,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.03305440870003852,
+          "pressure_l2": 0.38608865035463386,
+          "velocity_h1_seminorm": 0.532931017264085,
+          "velocity_reference_l2": 0.2585078818896142,
+          "pressure_reference_l2": 4.956520329996347,
+          "velocity_reference_h1_seminorm": 3.5294943160835803,
+          "velocity_relative": 0.1278661542480671,
+          "pressure_relative": 0.07789510072581875,
+          "velocity_h1_seminorm_relative": 0.150993589884978,
+          "velocity_energy": 0.532931017264085,
+          "velocity_reference_energy": 3.5294943160835803,
+          "velocity_energy_relative": 0.150993589884978
+        }
+      }
+    },
+    {
+      "state": 14,
+      "trace_and_coarse_dofs": 280,
+      "fine_cells": 1168,
+      "coefficients_sha256": "a771bef9bc01c9df8b74a643155f4b5132c361606fd897d1f06760d8b5ccac42",
+      "norms": {
+        "12": {
+          "quadrature_order": 12,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.03278614128844726,
+          "pressure_l2": 0.37712879828490387,
+          "velocity_h1_seminorm": 0.5361344148536904,
+          "velocity_reference_l2": 0.25850788180402257,
+          "pressure_reference_l2": 4.956510154873162,
+          "velocity_reference_h1_seminorm": 3.529488750888939,
+          "velocity_relative": 0.1268284009742603,
+          "pressure_relative": 0.0760875669575935,
+          "velocity_h1_seminorm_relative": 0.15190143748684828,
+          "velocity_energy": 0.5361344148536904,
+          "velocity_reference_energy": 3.529488750888939,
+          "velocity_energy_relative": 0.15190143748684828
+        },
+        "20": {
+          "quadrature_order": 20,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.03278614123857248,
+          "pressure_l2": 0.37713776248542663,
+          "velocity_h1_seminorm": 0.5361321175762036,
+          "velocity_reference_l2": 0.25850788194572727,
+          "pressure_reference_l2": 4.956516759368174,
+          "velocity_reference_h1_seminorm": 3.5294975653240037,
+          "velocity_relative": 0.12682840071180423,
+          "pressure_relative": 0.07608927414047557,
+          "velocity_h1_seminorm_relative": 0.15190040725442103,
+          "velocity_energy": 0.5361321175762036,
+          "velocity_reference_energy": 3.5294975653240037,
+          "velocity_energy_relative": 0.15190040725442103
+        }
+      }
+    },
+    {
+      "state": 16,
+      "trace_and_coarse_dofs": 304,
+      "fine_cells": 1356,
+      "coefficients_sha256": "586be2be08085f995525c022623eed369bc427ac159656984c5ca9282d99e08d",
+      "norms": {
+        "12": {
+          "quadrature_order": 12,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.032785677922052496,
+          "pressure_l2": 0.3771822399028068,
+          "velocity_h1_seminorm": 0.5360592321914789,
+          "velocity_reference_l2": 0.25850788180405787,
+          "pressure_reference_l2": 4.956510143992662,
+          "velocity_reference_h1_seminorm": 3.529488729038231,
+          "velocity_relative": 0.12682660850899383,
+          "pressure_relative": 0.07609834923064877,
+          "velocity_h1_seminorm_relative": 0.15188013713746934,
+          "velocity_energy": 0.5360592321914789,
+          "velocity_reference_energy": 3.529488729038231,
+          "velocity_energy_relative": 0.15188013713746934
+        },
+        "20": {
+          "quadrature_order": 20,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.03278567787392963,
+          "pressure_l2": 0.37719119578868626,
+          "velocity_h1_seminorm": 0.5360568622183174,
+          "velocity_reference_l2": 0.2585078819432351,
+          "pressure_reference_l2": 4.95651675349808,
+          "velocity_reference_h1_seminorm": 3.5294975572049756,
+          "velocity_relative": 0.12682660825455577,
+          "pressure_relative": 0.07610005464472247,
+          "velocity_h1_seminorm_relative": 0.15187908577073025,
+          "velocity_energy": 0.5360568622183174,
+          "velocity_reference_energy": 3.5294975572049756,
+          "velocity_energy_relative": 0.15187908577073025
+        }
+      }
+    },
+    {
+      "state": 18,
+      "trace_and_coarse_dofs": 328,
+      "fine_cells": 1766,
+      "coefficients_sha256": "df3879233af87558d6acc6c901f823aff0e0cbc8b68d54f916e1d5e5558913d6",
+      "norms": {
+        "12": {
+          "quadrature_order": 12,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.032778217640860675,
+          "pressure_l2": 0.35780912190481967,
+          "velocity_h1_seminorm": 0.5095255544189274,
+          "velocity_reference_l2": 0.2585078818065839,
+          "pressure_reference_l2": 4.956510129074193,
+          "velocity_reference_h1_seminorm": 3.5294887199241427,
+          "velocity_relative": 0.12679774949912515,
+          "pressure_relative": 0.0721897287783115,
+          "velocity_h1_seminorm_relative": 0.14436242607679403,
+          "velocity_energy": 0.5095255544189274,
+          "velocity_reference_energy": 3.5294887199241427,
+          "velocity_energy_relative": 0.14436242607679403
+        },
+        "20": {
+          "quadrature_order": 20,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.032778217621011504,
+          "pressure_l2": 0.3578159522276843,
+          "velocity_h1_seminorm": 0.509524413485021,
+          "velocity_reference_l2": 0.2585078819420336,
+          "pressure_reference_l2": 4.956516752596572,
+          "velocity_reference_h1_seminorm": 3.529497543625936,
+          "velocity_relative": 0.12679774935590363,
+          "pressure_relative": 0.07219101035827935,
+          "velocity_h1_seminorm_relative": 0.144361741915699,
+          "velocity_energy": 0.509524413485021,
+          "velocity_reference_energy": 3.529497543625936,
+          "velocity_energy_relative": 0.144361741915699
+        }
+      }
+    },
+    {
+      "state": 20,
+      "trace_and_coarse_dofs": 356,
+      "fine_cells": 2648,
+      "coefficients_sha256": "8bfdab11df3e6bab44bb458c7c16e85929c48db4596570c2a3efcc023734d86d",
+      "norms": {
+        "12": {
+          "quadrature_order": 12,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.03256879931556298,
+          "pressure_l2": 0.35412007160570586,
+          "velocity_h1_seminorm": 0.5044395491888726,
+          "velocity_reference_l2": 0.2585078817992969,
+          "pressure_reference_l2": 4.9565152374913835,
+          "velocity_reference_h1_seminorm": 3.5294856593494255,
+          "velocity_relative": 0.12598764528521839,
+          "pressure_relative": 0.07144537132199656,
+          "velocity_h1_seminorm_relative": 0.1429215466147704,
+          "velocity_energy": 0.5044395491888726,
+          "velocity_reference_energy": 3.5294856593494255,
+          "velocity_energy_relative": 0.1429215466147704
+        },
+        "20": {
+          "quadrature_order": 20,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.032568799272539306,
+          "pressure_l2": 0.3541253246257031,
+          "velocity_h1_seminorm": 0.5044365923739563,
+          "velocity_reference_l2": 0.25850788197572033,
+          "pressure_reference_l2": 4.9565207143216075,
+          "velocity_reference_h1_seminorm": 3.5294977285147278,
+          "velocity_relative": 0.12598764503280502,
+          "pressure_relative": 0.07144635219670857,
+          "velocity_h1_seminorm_relative": 0.14292022014878353,
+          "velocity_energy": 0.5044365923739563,
+          "velocity_reference_energy": 3.5294977285147278,
+          "velocity_energy_relative": 0.14292022014878353
+        }
+      }
+    },
+    {
+      "state": 22,
+      "trace_and_coarse_dofs": 380,
+      "fine_cells": 3238,
+      "coefficients_sha256": "dcc163c2a355035add8db139d51cf0523c1316397d45e0683065f3f392a7bb4f",
+      "norms": {
+        "12": {
+          "quadrature_order": 12,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.03260411654695233,
+          "pressure_l2": 0.3550838463207279,
+          "velocity_h1_seminorm": 0.5050279534810389,
+          "velocity_reference_l2": 0.25850788205130604,
+          "pressure_reference_l2": 4.95650730022782,
+          "velocity_reference_h1_seminorm": 3.529490501310853,
+          "velocity_relative": 0.1261242647157714,
+          "pressure_relative": 0.07163993207563861,
+          "velocity_h1_seminorm_relative": 0.14308806137698105,
+          "velocity_energy": 0.5050279534810389,
+          "velocity_reference_energy": 3.529490501310853,
+          "velocity_energy_relative": 0.14308806137698105
+        },
+        "20": {
+          "quadrature_order": 20,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.032604116535625574,
+          "pressure_l2": 0.35508806205002635,
+          "velocity_h1_seminorm": 0.5050274195427282,
+          "velocity_reference_l2": 0.2585078819578689,
+          "pressure_reference_l2": 4.956518942505525,
+          "velocity_reference_h1_seminorm": 3.529497162626707,
+          "velocity_relative": 0.12612426471754284,
+          "pressure_relative": 0.07164061434425367,
+          "velocity_h1_seminorm_relative": 0.14308764004413563,
+          "velocity_energy": 0.5050274195427282,
+          "velocity_reference_energy": 3.529497162626707,
+          "velocity_energy_relative": 0.14308764004413563
+        }
+      }
+    },
+    {
+      "state": 24,
+      "trace_and_coarse_dofs": 404,
+      "fine_cells": 4152,
+      "coefficients_sha256": "199a6f9739085ed24d623880ab0649346cdb67e094c789ab8947117a50e6ed82",
+      "norms": {
+        "12": {
+          "quadrature_order": 12,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.032595990688689264,
+          "pressure_l2": 0.3497775093130503,
+          "velocity_h1_seminorm": 0.5039083562382033,
+          "velocity_reference_l2": 0.2585078820583541,
+          "pressure_reference_l2": 4.956516387458853,
+          "velocity_reference_h1_seminorm": 3.529488677134676,
+          "velocity_relative": 0.1260928310160045,
+          "pressure_relative": 0.0705692228110189,
+          "velocity_h1_seminorm_relative": 0.14277092302426317,
+          "velocity_energy": 0.5039083562382033,
+          "velocity_reference_energy": 3.529488677134676,
+          "velocity_energy_relative": 0.14277092302426317
+        },
+        "20": {
+          "quadrature_order": 20,
+          "corner_cutout": 0.03125,
+          "velocity_l2": 0.03259599064408916,
+          "pressure_l2": 0.349776906302695,
+          "velocity_h1_seminorm": 0.5039079968208222,
+          "velocity_reference_l2": 0.25850788193861224,
+          "pressure_reference_l2": 4.956515267290291,
+          "velocity_reference_h1_seminorm": 3.529495364520635,
+          "velocity_relative": 0.1260928309018822,
+          "pressure_relative": 0.07056911709946508,
+          "velocity_h1_seminorm_relative": 0.14277055068161604,
+          "velocity_energy": 0.5039079968208222,
+          "velocity_reference_energy": 3.529495364520635,
+          "velocity_energy_relative": 0.14277055068161604
+        }
+      }
+    }
+  ],
+  "integration": "MHM fine triangles; Gaussian order study resolves intersections with the continuous reference",
+  "archive": "cavity-constant-face-nu1-g0-l0-local-longest-edge-mark-maximum-comparison.npz",
+  "sha256": "6d25afd655d097c7f4ef144229093e3d12853dca035beb2a05e870abe77f76b7",
+  "source_sha256": "6ec6e5d71181fe2ae7b7fa6cf3085aa6053a9d67ca467ae9fb4e5253942deab0"
+}

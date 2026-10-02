@@ -1,0 +1,37 @@
+{
+  "n": 256,
+  "drag": 0.0,
+  "viscosity": 1.0,
+  "method": "conforming P2/P1 Taylor-Hood",
+  "backend": "DOLFINx 0.9.0; PETSc/MUMPS",
+  "triangles": 131072,
+  "total_dofs": 592387,
+  "free_dofs": 588290,
+  "pressure_gauge": "zero volume mean",
+  "lid": "constant",
+  "corner_nodal_values": "zero, continuous P2 interpolation on the boundary",
+  "mesh_diagonal": "SW-NE",
+  "residual": 7.872131694601864e-15,
+  "pressure_mean": -1.255572794171822e-13,
+  "divergence_l2": 1.7806522854774054,
+  "elapsed_seconds": 213.7194117269246,
+  "archive": "build/results/stokes-adaptive/cavity-constant-classical-gamma0-n256.npz",
+  "sha256": "6fb507dcf692505fcc9a24da624f70b4c95f9aad154b8c838793cadf97e74615",
+  "difference_from_previous": {
+    "velocity_l2": 0.0025404752954320525,
+    "pressure_l2": 4.623753907390321,
+    "velocity_relative": 0.009803693516785204,
+    "pressure_relative": 0.41888765173039627,
+    "velocity_h1_seminorm": 3.2187064265204715,
+    "velocity_h1_relative": 0.5781960227553377
+  },
+  "corner_cutout": 0.03125,
+  "interior_difference_from_previous": {
+    "velocity_l2": 3.478892185381852e-05,
+    "pressure_l2": 0.018426580461217444,
+    "velocity_relative": 0.0001345758598915742,
+    "pressure_relative": 0.003717649188889381,
+    "velocity_h1_seminorm": 0.025758122193371997,
+    "velocity_h1_relative": 0.007297958876235735
+  }
+}

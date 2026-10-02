@@ -1,0 +1,288 @@
+{
+  "scope": "independent local P3/P3 operator and load; not a historical figure reproduction",
+  "native": "PyMHM",
+  "reference": "DOLFINx/UFL",
+  "dolfinx": "0.9.0",
+  "basix": "0.9.0",
+  "ufl": "2024.2.0",
+  "numpy": "2.5.3",
+  "scipy": "1.18.1",
+  "source_hashes": {
+    "src/pymhm/flow.py": "9a2011410d1d505a1cdb71594d316630224effd33d67d2346effe1fb21cead5e",
+    "src/pymhm/lagrange.py": "946ffb492ef38d104d9f99c9d5d60f948e0a2d137643ad00f13f43ffb28ac371",
+    "tests/test_scientific_review.py": "d0920aed960f897a047e7a7e45ef6274db5d9d58bc063cca94a5db75a72a7ee8"
+  },
+  "geometry": {
+    "points": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        1.1,
+        0.25
+      ],
+      [
+        -0.15,
+        0.85
+      ],
+      [
+        0.9500000000000001,
+        1.1
+      ]
+    ],
+    "cells": [
+      [
+        0,
+        1,
+        3
+      ],
+      [
+        0,
+        3,
+        2
+      ]
+    ],
+    "refinement": 1
+  },
+  "resistance": {
+    "constant": [
+      [
+        20,
+        3
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "variable": "(1+x+2*y)*[[20,3],[3,1]]"
+  },
+  "source": [
+    "1+x+2*y+x*y",
+    "-2+3*x-y+x*x"
+  ],
+  "independent_inverse_constant": "P3 analytic monomial gradients/Hessians integrated with Basix; generalized eigenproblem; squared-norm convention",
+  "checks": {
+    "matrix_relative_frobenius": 2e-13,
+    "load_relative_l2": 2e-13,
+    "statement": "Normwise checks supplement entrywise assertions; no PDE solver tolerance was changed."
+  },
+  "driver_sha256": "64712cf649d6804fa09c61ecfb82cbd538de60443b762942889046d48ef46db4",
+  "cases": [
+    {
+      "material": "constant",
+      "stabilization": "tensor-2025",
+      "macro": 0,
+      "degree": 3,
+      "viscosity": 0.0001,
+      "quadrature_order": 7,
+      "quadrature_points": 49,
+      "quadrature": "identical physical tensor-product Duffy points and weights; UFL custom rule",
+      "gamma_min": null,
+      "inverse_constant_independent": 0.002830537851787971,
+      "matrix_max_abs": 7.962380754733545e-16,
+      "load_max_abs": 7.511352650979575e-16,
+      "matrix_relative_frobenius": 1.2966693302706057e-15,
+      "load_relative_l2": 3.535983444421164e-15
+    },
+    {
+      "material": "constant",
+      "stabilization": "tensor-2025",
+      "macro": 1,
+      "degree": 3,
+      "viscosity": 0.0001,
+      "quadrature_order": 7,
+      "quadrature_points": 49,
+      "quadrature": "identical physical tensor-product Duffy points and weights; UFL custom rule",
+      "gamma_min": null,
+      "inverse_constant_independent": 0.0028305378517879524,
+      "matrix_max_abs": 1.2125717097077882e-15,
+      "load_max_abs": 2.220446049250313e-16,
+      "matrix_relative_frobenius": 1.2833080964870867e-15,
+      "load_relative_l2": 6.326583110437375e-16
+    },
+    {
+      "material": "constant",
+      "stabilization": "minimum-2017",
+      "macro": 0,
+      "degree": 3,
+      "viscosity": 0.0001,
+      "quadrature_order": 7,
+      "quadrature_points": 49,
+      "quadrature": "identical physical tensor-product Duffy points and weights; UFL custom rule",
+      "gamma_min": 0.5375705774143625,
+      "inverse_constant_independent": 0.002830537851787971,
+      "matrix_max_abs": 5.3290705182007514e-14,
+      "load_max_abs": 3.552713678800501e-14,
+      "matrix_relative_frobenius": 1.0033525764044291e-15,
+      "load_relative_l2": 1.544487345303982e-15
+    },
+    {
+      "material": "constant",
+      "stabilization": "minimum-2017",
+      "macro": 1,
+      "degree": 3,
+      "viscosity": 0.0001,
+      "quadrature_order": 7,
+      "quadrature_points": 49,
+      "quadrature": "identical physical tensor-product Duffy points and weights; UFL custom rule",
+      "gamma_min": 0.5375705774143625,
+      "inverse_constant_independent": 0.0028305378517879524,
+      "matrix_max_abs": 1.9895196601282805e-13,
+      "load_max_abs": 7.105427357601002e-15,
+      "matrix_relative_frobenius": 1.9350255298546924e-15,
+      "load_relative_l2": 6.226575440457924e-16
+    },
+    {
+      "material": "constant",
+      "stabilization": "pointwise-2017",
+      "macro": 0,
+      "degree": 3,
+      "viscosity": 0.0001,
+      "quadrature_order": 7,
+      "quadrature_points": 49,
+      "quadrature": "identical physical tensor-product Duffy points and weights; UFL custom rule",
+      "gamma_min": null,
+      "inverse_constant_independent": 0.002830537851787971,
+      "matrix_max_abs": 5.3290705182007514e-14,
+      "load_max_abs": 4.263256414560601e-14,
+      "matrix_relative_frobenius": 1.0791624979508822e-15,
+      "load_relative_l2": 1.849051539416903e-15
+    },
+    {
+      "material": "constant",
+      "stabilization": "pointwise-2017",
+      "macro": 1,
+      "degree": 3,
+      "viscosity": 0.0001,
+      "quadrature_order": 7,
+      "quadrature_points": 49,
+      "quadrature": "identical physical tensor-product Duffy points and weights; UFL custom rule",
+      "gamma_min": null,
+      "inverse_constant_independent": 0.0028305378517879524,
+      "matrix_max_abs": 1.9895196601282805e-13,
+      "load_max_abs": 7.993605777301127e-15,
+      "matrix_relative_frobenius": 1.9400350334984447e-15,
+      "load_relative_l2": 6.905511232461352e-16
+    },
+    {
+      "material": "variable",
+      "stabilization": "tensor-2025",
+      "macro": 0,
+      "degree": 3,
+      "viscosity": 0.0001,
+      "quadrature_order": 7,
+      "quadrature_points": 49,
+      "quadrature": "identical physical tensor-product Duffy points and weights; UFL custom rule",
+      "gamma_min": null,
+      "inverse_constant_independent": 0.002830537851787971,
+      "matrix_max_abs": 3.552713678800501e-15,
+      "load_max_abs": 4.163336342344337e-16,
+      "matrix_relative_frobenius": 1.7254128073491405e-15,
+      "load_relative_l2": 1.7946371805716153e-15
+    },
+    {
+      "material": "variable",
+      "stabilization": "tensor-2025",
+      "macro": 1,
+      "degree": 3,
+      "viscosity": 0.0001,
+      "quadrature_order": 7,
+      "quadrature_points": 49,
+      "quadrature": "identical physical tensor-product Duffy points and weights; UFL custom rule",
+      "gamma_min": null,
+      "inverse_constant_independent": 0.0028305378517879524,
+      "matrix_max_abs": 1.2212453270876722e-15,
+      "load_max_abs": 1.8041124150158794e-16,
+      "matrix_relative_frobenius": 8.960256644120023e-16,
+      "load_relative_l2": 6.018215843970702e-16
+    },
+    {
+      "material": "variable",
+      "stabilization": "minimum-2017",
+      "macro": 0,
+      "degree": 3,
+      "viscosity": 0.0001,
+      "quadrature_order": 7,
+      "quadrature_points": 49,
+      "quadrature": "identical physical tensor-product Duffy points and weights; UFL custom rule",
+      "gamma_min": 0.5375705774143625,
+      "inverse_constant_independent": 0.002830537851787971,
+      "matrix_max_abs": 9.094947017729282e-13,
+      "load_max_abs": 2.1316282072803006e-14,
+      "matrix_relative_frobenius": 1.3378944466783883e-15,
+      "load_relative_l2": 4.814818115088249e-16
+    },
+    {
+      "material": "variable",
+      "stabilization": "minimum-2017",
+      "macro": 1,
+      "degree": 3,
+      "viscosity": 0.0001,
+      "quadrature_order": 7,
+      "quadrature_points": 49,
+      "quadrature": "identical physical tensor-product Duffy points and weights; UFL custom rule",
+      "gamma_min": 0.5375705774143625,
+      "inverse_constant_independent": 0.0028305378517879524,
+      "matrix_max_abs": 5.115907697472721e-13,
+      "load_max_abs": 4.973799150320701e-14,
+      "matrix_relative_frobenius": 1.2521533071191613e-15,
+      "load_relative_l2": 1.1958042502029747e-15
+    },
+    {
+      "material": "variable",
+      "stabilization": "pointwise-2017",
+      "macro": 0,
+      "degree": 3,
+      "viscosity": 0.0001,
+      "quadrature_order": 7,
+      "quadrature_points": 49,
+      "quadrature": "identical physical tensor-product Duffy points and weights; UFL custom rule",
+      "gamma_min": null,
+      "inverse_constant_independent": 0.002830537851787971,
+      "matrix_max_abs": 1.7053025658242404e-13,
+      "load_max_abs": 7.105427357601002e-15,
+      "matrix_relative_frobenius": 1.000961253261967e-15,
+      "load_relative_l2": 4.392757286711718e-16
+    },
+    {
+      "material": "variable",
+      "stabilization": "pointwise-2017",
+      "macro": 1,
+      "degree": 3,
+      "viscosity": 0.0001,
+      "quadrature_order": 7,
+      "quadrature_points": 49,
+      "quadrature": "identical physical tensor-product Duffy points and weights; UFL custom rule",
+      "gamma_min": null,
+      "inverse_constant_independent": 0.0028305378517879524,
+      "matrix_max_abs": 1.9895196601282805e-13,
+      "load_max_abs": 8.881784197001252e-15,
+      "matrix_relative_frobenius": 1.0038065569048696e-15,
+      "load_relative_l2": 5.64841756643822e-16
+    }
+  ],
+  "mode_differences": [
+    {
+      "material": "constant",
+      "macro": 0,
+      "minimum_vs_pointwise_relative": 0.0
+    },
+    {
+      "material": "constant",
+      "macro": 1,
+      "minimum_vs_pointwise_relative": 0.0
+    },
+    {
+      "material": "variable",
+      "macro": 0,
+      "minimum_vs_pointwise_relative": 0.6304011071470284
+    },
+    {
+      "material": "variable",
+      "macro": 1,
+      "minimum_vs_pointwise_relative": 0.6284481066729841
+    }
+  ]
+}

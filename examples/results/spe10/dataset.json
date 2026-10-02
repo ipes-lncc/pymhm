@@ -1,0 +1,81 @@
+{
+  "model": 2,
+  "shape": [
+    60,
+    220,
+    85
+  ],
+  "spacing_ft": [
+    20.0,
+    10.0,
+    2.0
+  ],
+  "permeability_unit": "mD",
+  "axis_order": "x,y,z,component; original ECLIPSE I/x index fastest",
+  "revision": "eaa2261683a97027e057c2bc49612ad1c86390b3",
+  "repository": "https://github.com/OPM/opm-data",
+  "source_checksums": {
+    "SPE10MODEL2_PERM.INC": "1829e331b64d2efb416fc40f4d68388087a11e4f7ff5ac6866eb8f1a88f8993d",
+    "SPE10MODEL2_PHI.INC": "1426c8b40c8a1ffd3cce6653aad264685f100f82018d212ca74c8ae6d0bd1295"
+  },
+  "porosity_convention": "OPM published values preserved; header records zero-to-1e-7 replacement",
+  "layers": [
+    {
+      "layer_one_based": 1,
+      "array_index": 0,
+      "depth_interval_ft": [
+        0,
+        2
+      ],
+      "kx_range_md": [
+        0.003033,
+        4647.5
+      ],
+      "phi_range": [
+        1e-07,
+        0.446819
+      ],
+      "kx_equals_ky": true,
+      "sha256": "685c6b7e51bfa56a4b2c6e3a802ea57b7f8a9590f2f99fd403312284f5546e23",
+      "file": "layer-1.npz"
+    },
+    {
+      "layer_one_based": 36,
+      "array_index": 35,
+      "depth_interval_ft": [
+        70,
+        72
+      ],
+      "kx_range_md": [
+        0.002163,
+        8412.63
+      ],
+      "phi_range": [
+        1e-07,
+        0.4
+      ],
+      "kx_equals_ky": true,
+      "sha256": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512",
+      "file": "layer-36.npz"
+    },
+    {
+      "layer_one_based": 85,
+      "array_index": 84,
+      "depth_interval_ft": [
+        168,
+        170
+      ],
+      "kx_range_md": [
+        0.002272,
+        20000.0
+      ],
+      "phi_range": [
+        0.0,
+        0.4
+      ],
+      "kx_equals_ky": true,
+      "sha256": "eeccea0043307ed8d016f811062d05b8f1315d8c6d8ea48f08a2162cc700d533",
+      "file": "layer-85.npz"
+    }
+  ]
+}

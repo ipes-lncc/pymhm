@@ -1,0 +1,344 @@
+[
+  {
+    "kind": "prism",
+    "pressure_degree": 1,
+    "fine_factor": 1,
+    "macro_factor": 1,
+    "archive": "prism-p1-fine1-macro1.npz",
+    "sha256": "009f9ff8ac6a6c8479e0e55d8cd772f1559bb6195a0441c4ec09e1450a0a9a32",
+    "flux_rates_m3_per_s": {
+      "inner": 0.00961422976487593,
+      "outer": -0.009614229764875935,
+      "caps": 0.0
+    },
+    "net_outward_rate": -5.204170427930421e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "prism",
+    "pressure_degree": 1,
+    "fine_factor": 2,
+    "macro_factor": 1,
+    "archive": "prism-p1-fine2-macro1.npz",
+    "sha256": "d4c398f77c020f639e53a061856611f426efa9cd26a095ba1808e997b11a366b",
+    "flux_rates_m3_per_s": {
+      "inner": 0.009618720634248254,
+      "outer": -0.009618720634248245,
+      "caps": 0.0
+    },
+    "net_outward_rate": 8.673617379884035e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "prism",
+    "pressure_degree": 1,
+    "fine_factor": 2,
+    "macro_factor": 2,
+    "archive": "prism-p1-fine2-macro2.npz",
+    "sha256": "d892f5598d88144f0a12b5f9ddb2f54ae6cb2312e88f75291c9de887579cd576",
+    "flux_rates_m3_per_s": {
+      "inner": 0.009945748116899102,
+      "outer": -0.009945748116899094,
+      "caps": 0.0
+    },
+    "net_outward_rate": 8.673617379884035e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "prism",
+    "pressure_degree": 1,
+    "fine_factor": 4,
+    "macro_factor": 1,
+    "archive": "prism-p1-fine4-macro1.npz",
+    "sha256": "567c41b56c32f90323fdc0c6e1f9e8f8db9ea4ed20f31d106a8f8e8de3de958f",
+    "flux_rates_m3_per_s": {
+      "inner": 0.00962491302272057,
+      "outer": -0.009624913022720567,
+      "caps": 0.0
+    },
+    "net_outward_rate": 3.469446951953614e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "prism",
+    "pressure_degree": 1,
+    "fine_factor": 4,
+    "macro_factor": 2,
+    "archive": "prism-p1-fine4-macro2.npz",
+    "sha256": "3491cdb3812717854506a2d8fb44056d4e8a4033ac08c8dafba96774be7199e9",
+    "flux_rates_m3_per_s": {
+      "inner": 0.009946964675970206,
+      "outer": -0.00994696467597021,
+      "caps": 0.0
+    },
+    "net_outward_rate": -3.469446951953614e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "prism",
+    "pressure_degree": 1,
+    "fine_factor": 4,
+    "macro_factor": 4,
+    "archive": "prism-p1-fine4-macro4.npz",
+    "sha256": "be1186b2927459cf825378342f4db9de519789945085889dd551dda1c39bc4b6",
+    "flux_rates_m3_per_s": {
+      "inner": 0.00999488467475046,
+      "outer": -0.009994884674750456,
+      "caps": 0.0
+    },
+    "net_outward_rate": 3.469446951953614e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "tetrahedron",
+    "pressure_degree": 1,
+    "fine_factor": 1,
+    "macro_factor": 1,
+    "archive": "tetrahedron-p1-fine1-macro1.npz",
+    "sha256": "072ef65176a2411990c71c58433bc909503e09e00db0f66a31085ec6f99cc77b",
+    "flux_rates_m3_per_s": {
+      "inner": 0.009711525087188198,
+      "outer": -0.009711525087188205,
+      "caps": 0.0
+    },
+    "net_outward_rate": -6.938893903907228e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "tetrahedron",
+    "pressure_degree": 1,
+    "fine_factor": 2,
+    "macro_factor": 1,
+    "archive": "tetrahedron-p1-fine2-macro1.npz",
+    "sha256": "61923dd358bc3a9dc7b39054b3e95c51ebee2843485913f3dbf3ff82fbc9c9d5",
+    "flux_rates_m3_per_s": {
+      "inner": 0.009714331678205878,
+      "outer": -0.009714331678205866,
+      "caps": 0.0
+    },
+    "net_outward_rate": 1.214306433183765e-17,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "tetrahedron",
+    "pressure_degree": 1,
+    "fine_factor": 2,
+    "macro_factor": 2,
+    "archive": "tetrahedron-p1-fine2-macro2.npz",
+    "sha256": "4a515e8c4faf05b66a93136bf36e72de4b0cf1c73ec5f5028da0ea1c449d2f95",
+    "flux_rates_m3_per_s": {
+      "inner": 0.009954939048798257,
+      "outer": -0.009954939048798262,
+      "caps": 0.0
+    },
+    "net_outward_rate": -5.204170427930421e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "tetrahedron",
+    "pressure_degree": 1,
+    "fine_factor": 4,
+    "macro_factor": 1,
+    "archive": "tetrahedron-p1-fine4-macro1.npz",
+    "sha256": "f952bf83defc67523cef11ee38220f2c184d3bf8768ffe4d7492300860aa353c",
+    "flux_rates_m3_per_s": {
+      "inner": 0.009721328108430473,
+      "outer": -0.009721328108430474,
+      "caps": 0.0
+    },
+    "net_outward_rate": -1.734723475976807e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "tetrahedron",
+    "pressure_degree": 1,
+    "fine_factor": 4,
+    "macro_factor": 2,
+    "archive": "tetrahedron-p1-fine4-macro2.npz",
+    "sha256": "86aa19832d7db6134cb7bdf609b14f6bcba6ad61e110708bf1e202dedba4866d",
+    "flux_rates_m3_per_s": {
+      "inner": 0.009956053105703506,
+      "outer": -0.009956053105703506,
+      "caps": 0.0
+    },
+    "net_outward_rate": 0.0,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "tetrahedron",
+    "pressure_degree": 1,
+    "fine_factor": 4,
+    "macro_factor": 4,
+    "archive": "tetrahedron-p1-fine4-macro4.npz",
+    "sha256": "e25ce47ea7d050ffdc7f3a8e63e6504a2b3b0c8b9b9c77818eb3ba65645c1f08",
+    "flux_rates_m3_per_s": {
+      "inner": 0.009992565979089067,
+      "outer": -0.009992565979089072,
+      "caps": 0.0
+    },
+    "net_outward_rate": -5.204170427930421e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "tetrahedron",
+    "pressure_degree": 2,
+    "fine_factor": 1,
+    "macro_factor": 1,
+    "archive": "tetrahedron-p2-fine1-macro1.npz",
+    "sha256": "3a6bb51faa5e11b2fd2d5a27c7e161afa3eb74d28dcc14983eae4661f9579594",
+    "flux_rates_m3_per_s": {
+      "inner": 0.009719429473702076,
+      "outer": -0.00971942947370208,
+      "caps": 0.0
+    },
+    "net_outward_rate": -3.469446951953614e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "tetrahedron",
+    "pressure_degree": 2,
+    "fine_factor": 2,
+    "macro_factor": 1,
+    "archive": "tetrahedron-p2-fine2-macro1.npz",
+    "sha256": "61d01b26aef39d4764d3bc2095a3be731a5eb91507a1e16b94b49ee43044361f",
+    "flux_rates_m3_per_s": {
+      "inner": 0.009715633939827667,
+      "outer": -0.009715633939827658,
+      "caps": 0.0
+    },
+    "net_outward_rate": 8.673617379884035e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "tetrahedron",
+    "pressure_degree": 2,
+    "fine_factor": 2,
+    "macro_factor": 2,
+    "archive": "tetrahedron-p2-fine2-macro2.npz",
+    "sha256": "2c872d00375acbab09df3eaba7b682347a59affabad6dee0a4f4b4c605fc01f2",
+    "flux_rates_m3_per_s": {
+      "inner": 0.0099573821762185,
+      "outer": -0.009957382176218504,
+      "caps": 0.0
+    },
+    "net_outward_rate": -3.469446951953614e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "tetrahedron",
+    "pressure_degree": 2,
+    "fine_factor": 4,
+    "macro_factor": 1,
+    "archive": "tetrahedron-p2-fine4-macro1.npz",
+    "sha256": "5d363bef9be0f3cd66d1212e95f50b81718331ad3068c66bb710eb7e2f900cb7",
+    "flux_rates_m3_per_s": {
+      "inner": 0.00972161862051225,
+      "outer": -0.009721618620512252,
+      "caps": 0.0
+    },
+    "net_outward_rate": -1.734723475976807e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "tetrahedron",
+    "pressure_degree": 2,
+    "fine_factor": 4,
+    "macro_factor": 2,
+    "archive": "tetrahedron-p2-fine4-macro2.npz",
+    "sha256": "c9cbbd78870d9586856aacd79107e27ca8efc3cfd60da4917659a43b7a714533",
+    "flux_rates_m3_per_s": {
+      "inner": 0.009956485853901985,
+      "outer": -0.00995648585390198,
+      "caps": 0.0
+    },
+    "net_outward_rate": 5.204170427930421e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  },
+  {
+    "kind": "tetrahedron",
+    "pressure_degree": 2,
+    "fine_factor": 4,
+    "macro_factor": 4,
+    "archive": "tetrahedron-p2-fine4-macro4.npz",
+    "sha256": "bd265dc7ef575cff2d9d4da9270252dc163175726c9236db6c5268fa9b89e747",
+    "flux_rates_m3_per_s": {
+      "inner": 0.009993147615989089,
+      "outer": -0.009993147615989096,
+      "caps": 0.0
+    },
+    "net_outward_rate": -6.938893903907228e-18,
+    "exact_rates_m3_per_s": {
+      "inner": 0.01,
+      "outer": -0.01,
+      "caps": 0.0
+    }
+  }
+]

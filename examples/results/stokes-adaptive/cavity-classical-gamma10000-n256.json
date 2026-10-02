@@ -1,0 +1,25 @@
+{
+  "n": 256,
+  "drag": 10000.0,
+  "viscosity": 1.0,
+  "method": "conforming P2/P1 Taylor-Hood",
+  "backend": "DOLFINx 0.9.0; PETSc/MUMPS",
+  "triangles": 131072,
+  "total_dofs": 592387,
+  "free_dofs": 588290,
+  "pressure_gauge": "zero volume mean",
+  "residual": 1.8455957355689105e-15,
+  "pressure_mean": 9.785736403058326e-14,
+  "divergence_l2": 0.0015964087674352617,
+  "elapsed_seconds": 65.19620990101248,
+  "archive": "build/results/stokes-adaptive/cavity-classical-gamma10000-n256.npz",
+  "sha256": "609fb212e3208e2d6bdaad090d00b2fbb9381799a9e25c08f7bbd21b559d9020",
+  "difference_from_previous": {
+    "velocity_l2": 0.00012163678659664307,
+    "pressure_l2": 0.006626844740597336,
+    "velocity_relative": 0.0026997184177075446,
+    "pressure_relative": 0.00024887647890629774,
+    "velocity_h1_seminorm": 0.09920329761171308,
+    "velocity_h1_relative": 0.021287103288038775
+  }
+}

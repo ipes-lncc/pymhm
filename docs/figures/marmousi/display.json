@@ -1,0 +1,66 @@
+{
+  "material": {
+    "dataset": "Marmousi II, Martin, Wiley and Marfurt (2006)",
+    "doi": "10.1190/1.2172306",
+    "sources": {
+      "vp": {
+        "filename": "vp_marmousi-ii.segy",
+        "url": "https://ahay.org/data/marm2/vp_marmousi-ii.segy",
+        "sha256": "2722a5de0645d8fcf5750f380893d4875383af9b24988ece0bd07b943f5b0c91"
+      },
+      "density": {
+        "filename": "density_marmousi-ii.segy",
+        "url": "https://ahay.org/data/marm2/density_marmousi-ii.segy",
+        "sha256": "10ec5c4274a63ffde2ac94dda4f062d5b83827efcefeb1a2ab22438a85f32967"
+      }
+    },
+    "primary_shape": [
+      13601,
+      2801
+    ],
+    "primary_spacing_m": 1.25,
+    "crop_origin_m": [
+      3395.0,
+      515.0
+    ],
+    "cell_shape": [
+      2048,
+      512
+    ],
+    "cell_spacing_m": 5.0,
+    "sampling": "Primary nodes at material-cell centres; no interpolation",
+    "coordinate_order": [
+      "x",
+      "depth"
+    ],
+    "density_unit": "kg/m^3",
+    "velocity_unit": "m/s",
+    "bulk_modulus_unit": "Pa",
+    "historical_article_arrays_identified": false
+  },
+  "reference_records": {
+    "classical-p3.json": "444065efcba8af8ba1eed0ecfba47112e1eb686bbb46c74474c6f99e1ef1b8c5",
+    "classical-p4.json": "b16041e795e720fca24b339fc2dc66d236388c94595602913031b87d21521b3e"
+  },
+  "display_grid": "All native nodal pressure coordinates; differences on the P4 nodal grid",
+  "displayed_degrees": [
+    3,
+    4
+  ],
+  "sampling_norm_grid": [
+    513,
+    129
+  ],
+  "displayed_nodal_max_abs": [
+    1644.6006099307886,
+    1800.8211002886508
+  ],
+  "pressure_display": "Signed asinh transform, linear_width=1; physical-value color ticks",
+  "macro_overlay": "Declared H20/H80 comparison partitions, not additional numerical solves",
+  "source_sha256": "bd92977e9489b34fd93a78e03a76b780c2788fdb49a3b0a97dff4fe3a82ca239",
+  "dependency_sha256": {
+    "examples/marmousi_data.py": "53521b99a9c1007d6d437f8e4b2666599c170eae06fd98ac0318c3568236e999",
+    "examples/marmousi_fields.py": "ffccec6553a0f103b176b8495f762850d4951f9b91c05ec1bbb9137bc61a1775",
+    "examples/plot_mesh.py": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6"
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "case": "L18 section 6.1.2/Table 3 oscillatory Young modulus",
+  "macro_geometry": "unit_square(4), 32 diagonal triangles",
+  "poisson_ratio": 0.3,
+  "exterior_trace": "degree k_in on every fine exterior face",
+  "interior_trace": "degree k_sk on segments h_sk; h_in=h_sk/2",
+  "boundary": "analytical displacement trace, including nonzero values",
+  "assembly_quadrature": 12,
+  "error_quadrature": 10,
+  "rows": [
+    {
+      "segments": 1,
+      "local_refinement": 2,
+      "h_sk": 0.25,
+      "h_in": 0.125,
+      "trace_degree": 2,
+      "local_normal_degree": 3,
+      "interior_degree": 4,
+      "displacement_degree": 3,
+      "trace_dofs": 496,
+      "algebraic_residual": 4.993301868929658e-16,
+      "displacement_l2": 0.00951399120239302,
+      "stress_l2": 22.596772524800688,
+      "rotation_l2": 0.2710630283501093,
+      "stress_divergence_l2": 191.38019139155716,
+      "force_moment_linf": 1.5929990659913074e-10,
+      "fine_force_linf": 4.546309252419497e-13,
+      "weak_symmetry_linf": 1.9665218222552647e-13,
+      "normal_traction_linf": 3.552713678800501e-15
+    },
+    {
+      "segments": 2,
+      "local_refinement": 4,
+      "h_sk": 0.125,
+      "h_in": 0.0625,
+      "trace_degree": 2,
+      "local_normal_degree": 3,
+      "interior_degree": 4,
+      "displacement_degree": 3,
+      "trace_dofs": 992,
+      "algebraic_residual": 3.630366836810842e-16,
+      "displacement_l2": 0.0014411022927296568,
+      "stress_l2": 6.411450687409274,
+      "rotation_l2": 0.06884057802100303,
+      "stress_divergence_l2": 20.20562379153307,
+      "force_moment_linf": 2.7809710090309636e-10,
+      "fine_force_linf": 3.32311266137436e-13,
+      "weak_symmetry_linf": 5.1922529537686546e-14,
+      "normal_traction_linf": 1.7763568394002505e-15
+    },
+    {
+      "segments": 4,
+      "local_refinement": 8,
+      "h_sk": 0.0625,
+      "h_in": 0.03125,
+      "trace_degree": 2,
+      "local_normal_degree": 3,
+      "interior_degree": 4,
+      "displacement_degree": 3,
+      "trace_dofs": 1984,
+      "algebraic_residual": 4.845284510129423e-16,
+      "displacement_l2": 0.00012322963957587328,
+      "stress_l2": 1.0910672954654645,
+      "rotation_l2": 0.010877566729194087,
+      "stress_divergence_l2": 1.4319776639196795,
+      "force_moment_linf": 5.13314946104515e-10,
+      "fine_force_linf": 3.0610955524182187e-13,
+      "weak_symmetry_linf": 1.614945973816367e-14,
+      "normal_traction_linf": 8.881784197001252e-16
+    },
+    {
+      "segments": 8,
+      "local_refinement": 16,
+      "h_sk": 0.03125,
+      "h_in": 0.015625,
+      "trace_degree": 2,
+      "local_normal_degree": 3,
+      "interior_degree": 4,
+      "displacement_degree": 3,
+      "trace_dofs": 3968,
+      "algebraic_residual": 1.0135926033085683e-15,
+      "displacement_l2": 6.757819764993036e-06,
+      "stress_l2": 0.11508471126086657,
+      "rotation_l2": 0.0011286850020040746,
+      "stress_divergence_l2": 0.09255485799693451,
+      "force_moment_linf": 9.890743779550348e-10,
+      "fine_force_linf": 1.853277743396801e-12,
+      "weak_symmetry_linf": 1.0012070774007215e-14,
+      "normal_traction_linf": 4.440892098500626e-16
+    }
+  ],
+  "source_hashes": {
+    "examples/solve_elasticity_literature.py": "39fcfeb2c18a44d5cd5c1d8139ec77c5b6dceb1adf33e4b692bc5b2889348205",
+    "examples/plot_mixed_elasticity.py": "4804a4e7cbf7d6fc16e554a1c2a068236549960bedd2ad025bf50bbc5b6ee7df",
+    "src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+    "src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369"
+  },
+  "executed_core_manifest_sha256": "9d6b542bc27b2ed61b3f87c0c46f89d73948e40f060cc6689291d88f32520b89",
+  "acquisition_and_reintegration": [
+    {
+      "segments": 1,
+      "record_sha256": "c7ae138971027965af2d599eebb17be53677bfaf5a4d748097eaca557ead066a",
+      "mode": "complete-state-reintegration",
+      "executed_checkpoint_sha256": "3e5f7bd172c908b577c47f173aec12ef44a8bf0055599387530cdffb33dc71cd",
+      "checkpoint_header_sha256": "208933e94c2d519e163f62fa8fcc954209e70398ffbac83fb8bf15fdd5471e23",
+      "fresh_solve_bitwise_control": {
+        "accepted": true,
+        "field_arrays": 96,
+        "all_eight_original_metrics_exactly_equal": true,
+        "actual_trace_and_coarse_equal": true
+      },
+      "accepted_independent_comparison_sha256": "e2ccd487894e866016839ab73781f33e881383f8ee1e69dd875d3bfee3aeaf87",
+      "identical_executed_target_arrays": {
+        "macro_points": "54871cf89c3d32f6c1d86e843b1ae787c621312cef777ea01dd573b522a7b7a6",
+        "macro_cells": "d0739819bede1bbf0e7198510e09628be68eb85d51b0dffe93b794680d5078ce",
+        "local_points": "14bfd07fdd15c9beba736a3d8257c500cff78e463ac6bc32fa10e88799c0f40f",
+        "local_cells": "6a6ff30c846778a16e172554e04a5fcde727e58a360e2613bb7ce6f91b6f4e47",
+        "stress": "6127c6c7e289b9bc5833e70fee541af62e6f1b1492df2268829e05fe0f1ccd00",
+        "displacement": "1576b2d688ca483034cf4fb253a2d05185bab804f22ea2ce775c01163f0a9eb1",
+        "rotation": "d0949d647f9e4387a2a61ed1d8ecf5ca2d728eeefc31daeed43ff3b04dc74bc0",
+        "parent_moment_basis": "41679d8e262b8ef54c5a890639b20efc83584c7487aac709675f995c1ac8e6e8"
+      }
+    },
+    {
+      "segments": 2,
+      "record_sha256": "ef99fdba7ffea435c6ecd14cdd8f159625541d7dc475d600c5ce0528e0ae621b",
+      "mode": "complete-state-reintegration",
+      "executed_checkpoint_sha256": "734644caa06c4aee8e6f885d42ea8cdde3d171048c34239b7ccd5de38ea57216",
+      "checkpoint_header_sha256": "defc1a5013c0b4bd2933b8643e75d83d69da6969042b4b8580ea70fa482d88f3",
+      "accepted_independent_comparison_sha256": "79c78f275b3722ce784c9a6efae8e573644c90f922f9110aae45f911a47493ac",
+      "identical_executed_target_arrays": {
+        "macro_points": "54871cf89c3d32f6c1d86e843b1ae787c621312cef777ea01dd573b522a7b7a6",
+        "macro_cells": "d0739819bede1bbf0e7198510e09628be68eb85d51b0dffe93b794680d5078ce",
+        "local_points": "587c3bbcaaf092fb039a78fd981fc41ca96b1e52856c6fa24a5ddcd9009e6d0f",
+        "local_cells": "1bca946cec53df82e20fae5742a8a29d7e57c36aac36d5861a42a5a8e101d25d",
+        "stress": "c3e75ca204b64e868ff3b9d4555b9e74c6a7abdaa15943e9d299ec9b4a62fa30",
+        "displacement": "b8ae089017b384263db13e8eebca1c36ca22d25f43d17a31f28ee90541219f54",
+        "rotation": "d25a62e1832964c6af86aba1269324d92cefa5a48da86675f918a415c232ff35",
+        "parent_moment_basis": "41679d8e262b8ef54c5a890639b20efc83584c7487aac709675f995c1ac8e6e8"
+      }
+    },
+    {
+      "segments": 4,
+      "record_sha256": "b2e0d561cc27ff0247348421b5f27c505600d77193f707af350752548e6b6a4c",
+      "mode": "new-target-acquisition",
+      "executed_checkpoint_sha256": "c31982ea3c24a8325e315b41e67bdeccf5ef42e471ddd70a0679be351f0a8261",
+      "basis_sha256": "612dd821ffe8ff6c065ff03bd19611a280c806f0641ede27b7ca01a4fb2c8645",
+      "accepted_independent_comparison_sha256": "e4b167a17afdf1926760930fc30e0e713ff159cf4d34d33f466d357fe74c44bf",
+      "identical_executed_target_arrays": {
+        "macro_points": "54871cf89c3d32f6c1d86e843b1ae787c621312cef777ea01dd573b522a7b7a6",
+        "macro_cells": "d0739819bede1bbf0e7198510e09628be68eb85d51b0dffe93b794680d5078ce",
+        "local_points": "10432841d164af67303ca0e5c858c5cdbc0046e4490b07cb1af478abf84e6c98",
+        "local_cells": "084accaee55c791535743b1dacb6e19a85fb45ac2174ef0801fbc2f6b462d61f",
+        "stress": "f5e6d682a5c70a96ea7004a1e2058268de0937686b5efcbb66a93853434d9016",
+        "displacement": "0fce6d8fa068615c146d1d08b60ee88c9cdecf79aeb02dfd978254b4c059020b",
+        "rotation": "54c719b4fc310bc844351f3c962f8ea15e1778f7c17116ce3deba63357529b86",
+        "parent_moment_basis": "41679d8e262b8ef54c5a890639b20efc83584c7487aac709675f995c1ac8e6e8"
+      }
+    },
+    {
+      "segments": 8,
+      "record_sha256": "d4982fa936670775d6322c092c859c982c9d3e039fade9383ed26d0daccb8379",
+      "mode": "complete-state-reintegration",
+      "executed_checkpoint_sha256": "e7031b63a71e59a11ec603fc715bf7ec81446ee906f590e7e713642437e1e145",
+      "checkpoint_header_sha256": "9e3615f0f5aedbfcda71440eccc3e0833bf41e73bf605b24e1676c142a2b6462",
+      "accepted_independent_comparison_sha256": "bbff7ef07468edacf6f680a0dc0fc23ea30b4a7d12976e1a278e8ab47482a4a2",
+      "identical_executed_target_arrays": {
+        "macro_points": "54871cf89c3d32f6c1d86e843b1ae787c621312cef777ea01dd573b522a7b7a6",
+        "macro_cells": "d0739819bede1bbf0e7198510e09628be68eb85d51b0dffe93b794680d5078ce",
+        "local_points": "921ca8b1582ab5b79dbb5634f959c41c3dd3d5f1138cf164f50400565976040c",
+        "local_cells": "ac4e3f5278f03fdb75e91b795be61e3d1ffeb463acad39b7b938928254a7da0e",
+        "stress": "2500014666df3d35e7c2590d1766c2f1dfc116da6ee5f1fe6ac8e6ac5a71472d",
+        "displacement": "308026c09d0858033fd3982739568eca57785bd78c828057579ef91dcf3994a1",
+        "rotation": "1118061b874d8584a32a4351edb7675c957e7ce61629039da38f6b27b329666b",
+        "parent_moment_basis": "41679d8e262b8ef54c5a890639b20efc83584c7487aac709675f995c1ac8e6e8"
+      }
+    }
+  ],
+  "private_wrapper_sha256": "5889f8403dd916baaef2ec060866d965f639d9e77fe2dc05be7932cdf3000344"
+}

@@ -1,0 +1,40 @@
+{
+  "Re p": {
+    "native_nodal_range_mhm": [
+      -477.53473869017563,
+      1980.3952888922015
+    ],
+    "native_nodal_range_reference": [
+      -474.37067307832416,
+      1765.7476753983337
+    ],
+    "shared_symmetric_limit": 1980.3952888922015
+  },
+  "Im p": {
+    "native_nodal_range_mhm": [
+      -370.4811542249397,
+      370.01437708481
+    ],
+    "native_nodal_range_reference": [
+      -368.4390269809564,
+      368.57159988501195
+    ],
+    "shared_symmetric_limit": 370.4811542249397
+  },
+  "candidate_record": "mhm-H20-ell1.json",
+  "candidate_record_sha256": "3cc5a4e01b8002db2b5dea1bc605e12b45c01afac0f0f026b3a77c0783c3eab4",
+  "reference_record": "classical-p4.json",
+  "reference_record_sha256": "b16041e795e720fca24b339fc2dc66d236388c94595602913031b87d21521b3e",
+  "map_sampling": "Original material-cell centres; no incident-field averaging",
+  "color_scale": "Signed asinh, linear width 1; physical-value ticks; no clipping",
+  "profile_depth_m": 505.0,
+  "profile_intersections": "Exact one-sided macro endpoints; no joins across faces",
+  "source_sha256": {
+    "examples/plot_marmousi_mhm.py": "4f66d3d7fb6d2e2ba64c8b8598a2f9731efdc95079e10d3cc4f842cf5a535282",
+    "examples/plot_marmousi.py": "bd92977e9489b34fd93a78e03a76b780c2788fdb49a3b0a97dff4fe3a82ca239",
+    "examples/marmousi_campaign.py": "80477481c94da3c8297f47117726d77c41b19efc9b8f85833e6c95d32b702d7b",
+    "examples/marmousi_comparison.py": "99aadb57a1c36561889dad8d1b62d12795bf08d5f71ae38bf71c8fee180b2ebb",
+    "examples/marmousi_fields.py": "ffccec6553a0f103b176b8495f762850d4951f9b91c05ec1bbb9137bc61a1775",
+    "examples/plot_mesh.py": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6"
+  }
+}

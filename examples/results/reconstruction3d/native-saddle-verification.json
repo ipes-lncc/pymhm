@@ -1,0 +1,137 @@
+{
+  "source_sha256": {
+    "src/pymhm/darcy3d.py": "6fd858b23e13ce0466c61efdfacb6c2b627df0c6bd8b63291716757c8bb4fbd2",
+    "src/pymhm/tetrahedral.py": "be9cf2387044046d90761e8a98cf1c81ed6070a9db685c2f63d059c3224e4b24",
+    "src/pymhm/tetra_lagrange.py": "89af3d45c336bab82d298f39be15b7e9f806ea0ec78860d9d05d374a3b8f5f49",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "197c1fdcd7c36f695a625bbe0ad0a23c2851aab4b6b945bea3f7b6a4204d7fbc"
+  },
+  "rows": [
+    {
+      "n": 1,
+      "local_degree": 2,
+      "trace_degree": 0,
+      "macro_cells": 6,
+      "full_saddle_size": 228,
+      "full_residual": 5.096594783059752e-16,
+      "pressure_coefficients_relative": 1.2656948225028578e-14,
+      "trace_coefficients_relative": 1.964982430024603e-14,
+      "maximum_operator_discrepancies": {
+        "stiffness_relative": 6.20674856992492e-15,
+        "coupling_relative": 2.103484257331974e-15,
+        "source_relative": 5.110057072901389e-16
+      },
+      "l09_degree_hypothesis_satisfied": false
+    },
+    {
+      "n": 1,
+      "local_degree": 3,
+      "trace_degree": 0,
+      "macro_cells": 6,
+      "full_saddle_size": 522,
+      "full_residual": 1.2204126613585876e-15,
+      "pressure_coefficients_relative": 5.12362566127681e-14,
+      "trace_coefficients_relative": 3.184495724976479e-14,
+      "maximum_operator_discrepancies": {
+        "stiffness_relative": 7.894957750706804e-15,
+        "coupling_relative": 7.179224292636068e-16,
+        "source_relative": 7.290499206471518e-16
+      },
+      "l09_degree_hypothesis_satisfied": true
+    },
+    {
+      "n": 1,
+      "local_degree": 4,
+      "trace_degree": 2,
+      "macro_cells": 6,
+      "full_saddle_size": 1098,
+      "full_residual": 1.856869524028525e-15,
+      "pressure_coefficients_relative": 5.747646504443108e-14,
+      "trace_coefficients_relative": 6.240400435006846e-14,
+      "maximum_operator_discrepancies": {
+        "stiffness_relative": 6.679839144042984e-15,
+        "coupling_relative": 1.4716741375764548e-15,
+        "source_relative": 1.1266194125367046e-15
+      },
+      "l09_degree_hypothesis_satisfied": false
+    },
+    {
+      "n": 2,
+      "local_degree": 2,
+      "trace_degree": 0,
+      "macro_cells": 48,
+      "full_saddle_size": 1800,
+      "full_residual": 1.0851095634411953e-15,
+      "pressure_coefficients_relative": 5.2213926680850094e-14,
+      "trace_coefficients_relative": 4.518801145862222e-14,
+      "maximum_operator_discrepancies": {
+        "stiffness_relative": 6.173925557007718e-15,
+        "coupling_relative": 2.103484257331974e-15,
+        "source_relative": 1.4953726374534067e-15
+      },
+      "l09_degree_hypothesis_satisfied": false
+    },
+    {
+      "n": 2,
+      "local_degree": 4,
+      "trace_degree": 2,
+      "macro_cells": 48,
+      "full_saddle_size": 8640,
+      "full_residual": 8.303000751187364e-15,
+      "pressure_coefficients_relative": 2.176854369863913e-13,
+      "trace_coefficients_relative": 1.4957947397265229e-13,
+      "maximum_operator_discrepancies": {
+        "stiffness_relative": 6.718626208820661e-15,
+        "coupling_relative": 1.5931777361487465e-15,
+        "source_relative": 1.5133314337918002e-15
+      },
+      "l09_degree_hypothesis_satisfied": false
+    }
+  ],
+  "schema_version": 1,
+  "passed": true,
+  "independent_backend": "DOLFINx/UFL volume and normal-trace assembly; SciPy SuperLU full-saddle solution",
+  "environment": {
+    "python": "3.13.15",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "dolfinx": "0.9.0",
+    "basix": "0.9.0",
+    "ufl": "2024.2.0"
+  },
+  "problem": {
+    "domain": "unit cube",
+    "permeability": "identity",
+    "pressure": "100 * product_i[x_i * (1-x_i) * exp(-30*(x_i-c_i)^2)]",
+    "centers": [
+      0.3,
+      0.4,
+      0.6
+    ],
+    "source": "-div(grad(pressure)), differentiated symbolically in UFL",
+    "boundary": "homogeneous Dirichlet pressure on the whole boundary"
+  },
+  "protocol": {
+    "local_refinement": 2,
+    "volume_quadrature_order": 16,
+    "volume_quadrature_points_per_tetrahedron": 4096,
+    "scalar_basis": "continuous equispaced Lagrange Pk independently tabulated by Basix",
+    "trace_basis": "complete Bernstein Pell on each original macroface, independently constructed in physical coordinates",
+    "orientation": "DOLFINx FacetNormal and independently oriented global face normals",
+    "uncondensed_operator": "[[block_diag(A_K), B], [B.T, 0]]",
+    "reference_does_not_use": "PyMHM local condensation or Schur complement",
+    "coefficient_difference": "Euclidean norm of the difference divided by the native full-saddle coefficient norm",
+    "operator_difference": "Frobenius norm of the matrix difference divided by the PyMHM matrix norm; Euclidean norm for source vectors",
+    "scope": "Discrete algebra verification; these coefficient differences are not PDE approximation errors. Only P3/P0 among these configurations meets the L09 degree hypothesis in dimension three.",
+    "full_residual": "Euclidean norm of A*x-b divided by the Euclidean norm of the full native right-hand side"
+  },
+  "public_regression_test": {
+    "path": "tests/test_darcy3d_saddle_fenics.py",
+    "sha256": "806ce18c5ab87b215213f950912d46f28a0760ad966635b1cd6c7b98d1bc006b",
+    "cases": 3,
+    "passed": 3,
+    "boundary": "nonhomogeneous affine pressure",
+    "source": "polynomial"
+  },
+  "verification_driver_sha256": "1faebf6b8c7c7cb2940ec736ebd4917fab117a847a2ec68fdb68a4dec64c342a"
+}

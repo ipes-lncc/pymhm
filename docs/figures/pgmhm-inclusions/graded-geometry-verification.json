@@ -1,0 +1,41 @@
+{
+  "scope": "Geometry and polynomial evaluation only; no PDE solve or reference accuracy claim",
+  "interval_counts": [
+    109,
+    763,
+    1526,
+    3052
+  ],
+  "nested_levels_bitwise": true,
+  "original_material_interfaces_bitwise": true,
+  "annuli_connected_components": 729,
+  "annuli_area_analytic": 0.10546875,
+  "annuli_area_raster": 0.10546875,
+  "material_values": [
+    1.0,
+    100000.0
+  ],
+  "all_graded_cell_materials_match": true,
+  "prolongation_seed": 4,
+  "prolongation_norms": {
+    "pressure_absolute": 5.578077670043646e-16,
+    "pressure_reference": 0.7655932668243531,
+    "pressure_relative": 7.285954450959665e-16,
+    "flux_absolute": 5.1320203861717736e-14,
+    "flux_reference": 39.95369829585314,
+    "flux_relative": 1.2844919506999517e-15,
+    "energy_absolute": 5.1320203861717736e-14,
+    "energy_reference": 39.95369829585314,
+    "energy_relative": 1.2844919506999517e-15
+  },
+  "norm_denominator": "fine field; diffusion energy uses integral K times gradient squared",
+  "source_hashes": {
+    "examples/inclusion_grading.py": "a946e8ed9490844c4f96127610a7dacbc609aef6c79d92c9d4b45bc966dc33c1",
+    "examples/pgmhm_inclusion_data.py": "e0b5690efee2cffde1cf5b871b3bcf5e3be8c08272b87e6b71d7a32e5d17e852",
+    "examples/solve_pgmhm_inclusions_reference.py": "b4b79451340660b52078609ad74722578336d5d153431eb9174df87b25a240c3",
+    "examples/solve_unusual_spe10_reference.py": "f15b6c66e7eb86096ba98b01378e02c08428c4636c31a4c1e70d4ea5144adf5c",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9"
+  },
+  "audit_script_sha256": "e917f9ce6b26a85788abee7055791c73c55f2238b6f5af7ede99ee9ed69c6443",
+  "passed": true
+}

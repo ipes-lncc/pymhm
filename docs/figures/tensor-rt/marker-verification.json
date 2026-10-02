@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "figure_sha256": "cd3f9831cd68df531d26156b40e051788fcfd9b97b218cf6edb36768809c3273",
+  "digitizer_sha256": "2f9f71bfe85677d73a9bf65e788bb3232ee5e9492e5e2c8239f78185977a0b8d",
+  "method": "Centers of enclosed dark-blue circle interiors; dark-red squares use their color-isolated vertical extent when occluded. Logarithmic axis calibration and a three-pixel vertical uncertainty are used. Simulated values are not used in marker selection.",
+  "symbols_reviewed": 50,
+  "circles": 30,
+  "squares": 20,
+  "synthetic_translation_checks": [
+    {
+      "translation": [
+        0,
+        0
+      ],
+      "center": [
+        20.0,
+        20.0
+      ]
+    },
+    {
+      "translation": [
+        2,
+        1
+      ],
+      "center": [
+        22.0,
+        21.0
+      ]
+    },
+    {
+      "translation": [
+        -2,
+        -1
+      ],
+      "center": [
+        18.0,
+        19.0
+      ]
+    }
+  ],
+  "blank_crop_rejected": true,
+  "all_within_three_pixels": true,
+  "maximum_uncertainty_units": 0.5585422819215057,
+  "target": {
+    "k": 3,
+    "enrichment": 2,
+    "N": 64,
+    "H": 0.015625,
+    "field": "pressure_l2",
+    "value": 2.7090833211221813e-11,
+    "absolute_uncertainty": 2.8390208171884817e-12,
+    "marker_pixel": [
+      145.5,
+      1889.5
+    ],
+    "marker_hole_pixels": 16,
+    "marker_hole_box": [
+      4,
+      4
+    ],
+    "extraction": "enclosed circle interior"
+  },
+  "simulation_record_sha256": "60288ab81ae8e9f5bd9a99cf7d6dbe5805d812c252163fcab3ef9238121319de",
+  "physical_solutions_modified": false,
+  "comparison_values_used_in_extraction": false
+}

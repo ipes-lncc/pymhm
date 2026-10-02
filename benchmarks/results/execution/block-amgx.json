@@ -1,0 +1,173 @@
+{
+  "backend": "amgx",
+  "outer": "CPU GMRES on original symmetric saddle",
+  "primal_preconditioner": "one retained AMG V-cycle on A+alpha B B.T",
+  "schur_preconditioner": "sparse LU of C+B.T diag(P)^-1 B",
+  "operator_unchanged": true,
+  "rows": [
+    {
+      "macro_triangles": 8,
+      "trace_size": 16,
+      "global_unknowns": 24,
+      "block": [
+        {
+          "setup_seconds": 0.05582199594937265,
+          "three_rhs_seconds": 0.017943221027962863,
+          "iterations": [
+            13,
+            13,
+            13
+          ]
+        },
+        {
+          "setup_seconds": 0.05212951707653701,
+          "three_rhs_seconds": 0.018012161017395556,
+          "iterations": [
+            13,
+            13,
+            13
+          ]
+        },
+        {
+          "setup_seconds": 0.05342481401748955,
+          "three_rhs_seconds": 0.018135791062377393,
+          "iterations": [
+            13,
+            13,
+            13
+          ]
+        }
+      ],
+      "direct": [
+        {
+          "setup_seconds": 0.000950501998886466,
+          "three_rhs_seconds": 0.00027971400413662195
+        },
+        {
+          "setup_seconds": 0.0009449699427932501,
+          "three_rhs_seconds": 0.00027447601314634085
+        },
+        {
+          "setup_seconds": 0.000960103003308177,
+          "three_rhs_seconds": 0.0003159469924867153
+        }
+      ],
+      "max_pressure_coefficient_difference": 3.552713678800501e-15,
+      "max_global_backward_residual": 6.037589971661045e-16
+    },
+    {
+      "macro_triangles": 32,
+      "trace_size": 56,
+      "global_unknowns": 88,
+      "block": [
+        {
+          "setup_seconds": 0.050135783036239445,
+          "three_rhs_seconds": 0.05580601096153259,
+          "iterations": [
+            36,
+            36,
+            36
+          ]
+        },
+        {
+          "setup_seconds": 0.053946760948747396,
+          "three_rhs_seconds": 0.05424714204855263,
+          "iterations": [
+            36,
+            36,
+            36
+          ]
+        },
+        {
+          "setup_seconds": 0.05726460705045611,
+          "three_rhs_seconds": 0.05518529599066824,
+          "iterations": [
+            36,
+            36,
+            36
+          ]
+        }
+      ],
+      "direct": [
+        {
+          "setup_seconds": 0.001018249080516398,
+          "three_rhs_seconds": 0.0003332759952172637
+        },
+        {
+          "setup_seconds": 0.0013361060991883278,
+          "three_rhs_seconds": 0.00038476299960166216
+        },
+        {
+          "setup_seconds": 0.00104519200976938,
+          "three_rhs_seconds": 0.00032068497966974974
+        }
+      ],
+      "max_pressure_coefficient_difference": 8.077982727172639e-13,
+      "max_global_backward_residual": 4.3531051519832867e-13
+    },
+    {
+      "macro_triangles": 128,
+      "trace_size": 208,
+      "global_unknowns": 336,
+      "block": [
+        {
+          "setup_seconds": 0.0634747160365805,
+          "three_rhs_seconds": 0.0864314140053466,
+          "iterations": [
+            44,
+            44,
+            44
+          ]
+        },
+        {
+          "setup_seconds": 0.0603146399371326,
+          "three_rhs_seconds": 0.0847205959726125,
+          "iterations": [
+            44,
+            44,
+            44
+          ]
+        },
+        {
+          "setup_seconds": 0.060904244892299175,
+          "three_rhs_seconds": 0.08328826492652297,
+          "iterations": [
+            44,
+            44,
+            44
+          ]
+        }
+      ],
+      "direct": [
+        {
+          "setup_seconds": 0.0017400170909240842,
+          "three_rhs_seconds": 0.0005313820438459516
+        },
+        {
+          "setup_seconds": 0.0015747089637443423,
+          "three_rhs_seconds": 0.000500759924761951
+        },
+        {
+          "setup_seconds": 0.0015692600281909108,
+          "three_rhs_seconds": 0.0005160549189895391
+        }
+      ],
+      "max_pressure_coefficient_difference": 5.355715870791755e-13,
+      "max_global_backward_residual": 4.3514198660232656e-13
+    }
+  ],
+  "python": "3.13.15",
+  "numpy": "2.5.3",
+  "native_threads": 1,
+  "measurement_limit": "One untimed warmup and three repetitions; setup includes block construction, positive-definiteness checks and AMG hierarchy. Assembly is excluded. Other numerical campaigns were active; wall times do not establish isolated comparative speedup.",
+  "source_sha256": {
+    "benchmarks/block_solver.py": "956dd2ae81db83bf1bf8f5f63fef35e030449c2fef3d7258dafd1fb87b4b8ee3",
+    "src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+    "src/pymhm/solvers.py": "e0d33505e442a247ffdf14059a53933b393b4d4a876a88bd0ce803bf65155b15",
+    "src/pymhm/hybrid.py": "0471839b2346b6a3ed2ac60ebac22f609e05ecc8ccd0fdfa46c7c9ac19f7ea1a",
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae"
+  },
+  "source_changed_during_run": false,
+  "timestamp_utc": "2026-09-28T23:28:10.669403+00:00"
+}

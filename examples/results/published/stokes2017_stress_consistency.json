@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "title": "Conditional consistency of the Stokes 2017 Figure 3 norms",
+  "doi": "10.1016/j.cma.2017.05.027",
+  "preprint_url": "https://www.ci2ma.udec.cl/pdf/pre-publicaciones2/2016/pp16-15.pdf",
+  "paper_equations": [
+    "41",
+    "42",
+    "47",
+    "55"
+  ],
+  "assumptions": [
+    "One right-isosceles triangle per local problem, P2/P2 USFEM, viscosity 1, drag 0.",
+    "Macro diameter h=1/n as in the archived crisscross computations and Table 1 level pairing.",
+    "Stress is the full Frobenius tensor -grad(u)+p I, as equation 55.",
+    "The exact velocity is divergence-free and the computed velocity satisfies equation 47 locally.",
+    "Pressure testing with div(u_h) is admissible: degree one and zero local mean.",
+    "Pressure uses the zero-volume-mean gauge of the model and exact solution.",
+    "The stabilization obeys tau=m h^2/8 with 0<m<=1/96, the stated inverse inequality.",
+    "The plotted H(div) ordinate is the square root of stress-L2 squared plus w times divergence-L2 squared, with w=1 or w=2.",
+    "Digitization intervals of 1% are independent allowances, not statistical confidence intervals."
+  ],
+  "identities": {
+    "stress": "Es^2=Eg^2+2 Ep^2-2 (ep,div eu)",
+    "cauchy_lower": "||div eu|| >= |Eg^2+2 Ep^2-Es^2|/(2 Ep)",
+    "usfem_upper": "||div uh|| <= h sqrt(72)/768 * sqrt((Ed^2-Es^2)/w)",
+    "inverse_p1_gradient_ratio_times_h2": 72.0,
+    "inverse_p2_laplacian_ratio_times_h2": 96.0
+  },
+  "interpretation": "For the stated geometry, spaces, stress definition and either recorded H(div) convention, no admissible stabilization constant reconciles all four digitized norms; separation remains after the declared ordinate intervals. This conditional exclusion does not identify the historical diagnostic, connectivity or an error in the article.",
+  "rows": [
+    {
+      "resolution": 4,
+      "assumed_macro_diameter": 0.25,
+      "published_pressure_l2": 3.15213383,
+      "published_gradient_l2": 3.53093915,
+      "published_stress_l2": 3.53635762,
+      "published_stress_hdiv": 12.6097338,
+      "required_divergence_lower": 3.1460595422960824,
+      "usfem_divergence_upper_standard_hdiv": 0.03343206472443739,
+      "usfem_divergence_upper_domain_scaled_hdiv": 0.02364003967571724,
+      "digitization_relative_interval": 0.01,
+      "required_divergence_lower_with_intervals": 3.034449134938482,
+      "usfem_divergence_upper_with_intervals_standard_hdiv": 0.03382285109285666,
+      "interval_separation_factor": 89.71594755887843,
+      "computed_divergence_l2": 0.018426291675890653
+    },
+    {
+      "resolution": 8,
+      "assumed_macro_diameter": 0.125,
+      "published_pressure_l2": 1.37399336,
+      "published_gradient_l2": 1.87331135,
+      "published_stress_l2": 1.87520709,
+      "published_stress_hdiv": 6.18639867,
+      "required_divergence_lower": 1.3714073881334963,
+      "usfem_divergence_upper_standard_hdiv": 0.008141875934080008,
+      "usfem_divergence_upper_domain_scaled_hdiv": 0.005757175684567529,
+      "digitization_relative_interval": 0.01,
+      "required_divergence_lower_with_intervals": 1.3059911599015177,
+      "usfem_divergence_upper_with_intervals_standard_hdiv": 0.008239590752490578,
+      "interval_separation_factor": 158.50194495482148,
+      "computed_divergence_l2": 0.004531553051636996
+    },
+    {
+      "resolution": 16,
+      "assumed_macro_diameter": 0.0625,
+      "published_pressure_l2": 0.615661981,
+      "published_gradient_l2": 0.961355634,
+      "published_stress_l2": 0.960661737,
+      "published_stress_hdiv": 3.06213773,
+      "required_divergence_lower": 0.6167451095095098,
+      "usfem_divergence_upper_standard_hdiv": 0.0020077584112641786,
+      "usfem_divergence_upper_domain_scaled_hdiv": 0.0014196995875892298,
+      "digitization_relative_interval": 0.01,
+      "required_divergence_lower_with_intervals": 0.5802950380570141,
+      "usfem_divergence_upper_with_intervals_standard_hdiv": 0.0020321715456700046,
+      "interval_separation_factor": 285.5541596837444,
+      "computed_divergence_l2": 0.001129483160975385
+    },
+    {
+      "resolution": 32,
+      "assumed_macro_diameter": 0.03125,
+      "published_pressure_l2": 0.291538079,
+      "published_gradient_l2": 0.483838927,
+      "published_stress_l2": 0.484085686,
+      "published_stress_hdiv": 1.52540813,
+      "required_divergence_lower": 0.2911284513616508,
+      "usfem_divergence_upper_standard_hdiv": 0.0004994488314786121,
+      "usfem_divergence_upper_domain_scaled_hdiv": 0.0003531636555942238,
+      "digitization_relative_interval": 0.01,
+      "required_divergence_lower_with_intervals": 0.27197873841926334,
+      "usfem_divergence_upper_with_intervals_standard_hdiv": 0.0005055496791419772,
+      "interval_separation_factor": 537.9861755245652,
+      "computed_divergence_l2": 0.00028217947346971143
+    },
+    {
+      "resolution": 64,
+      "assumed_macro_diameter": 0.015625,
+      "published_pressure_l2": 0.14273646,
+      "published_gradient_l2": 0.242875962,
+      "published_stress_l2": 0.242693552,
+      "published_stress_hdiv": 0.760927433,
+      "required_divergence_lower": 0.14304672667975632,
+      "usfem_divergence_upper_standard_hdiv": 0.00012450099502274924,
+      "usfem_divergence_upper_domain_scaled_hdiv": 8.803549784505859e-05,
+      "digitization_relative_interval": 0.01,
+      "required_divergence_lower_with_intervals": 0.13327990144312676,
+      "usfem_divergence_upper_with_intervals_standard_hdiv": 0.00012602488734040422,
+      "interval_separation_factor": 1057.5681062354463,
+      "computed_divergence_l2": 7.05332523141254e-05
+    }
+  ],
+  "provenance": {
+    "analysis_id": "original-stokes2017-norm-consistency",
+    "analysis_sha256": "c08544aca181e610527f7baac34b9efbc539eed0e4633f1657eef39b3e8f70c4",
+    "digitized_values_sha256": "0903a259180d1f5a0fe9973e57ca056ff34190bc963f425a8143aa30f28aad66",
+    "computed_values_sha256": "60cdac1acc0f7b41ceb9ab771be9d54aadbabeea3f9b3137eb54c95f7e095f82",
+    "new_fem_solves": 0
+  }
+}

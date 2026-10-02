@@ -1,0 +1,59 @@
+{
+  "case": "Classical mapped RT1/Q1 for the vertically invariant oscillatory well",
+  "archive_layout": "canonical-reference-cell",
+  "fine_factor": 32,
+  "vertical_factor": 1,
+  "macro_cells": 32768,
+  "fine_cells": 32768,
+  "trace_dofs": 525312,
+  "pressure_coarse_dofs": 32768,
+  "degree": 1,
+  "quadrature": [
+    20,
+    20,
+    10
+  ],
+  "symmetry": "Kxy and pressure boundary data are independent of z; Kz depends only on z, with impermeable horizontal caps. The unique solution has dz(p)=0 and qz=0.",
+  "vertical_flux_sample_linf": 2.7203858645323343e-16,
+  "pressure_vertical_modal_linf": 2.486578405396694e-05,
+  "physical_parameters": {
+    "inner_radius": 0.2,
+    "outer_radius": 50.0,
+    "height": 10.0,
+    "permeability": 1e-13,
+    "viscosity": 0.001,
+    "outer_pressure": 25000000.0,
+    "rate": 0.01,
+    "tensor_scale": 1e-11
+  },
+  "radii": [
+    0.2,
+    0.7952707287670507,
+    3.1622776601683795,
+    12.574334296829353,
+    50.0
+  ],
+  "units": "m, Pa, s; physical flux m/s",
+  "boundary_rates": {
+    "inner": 0.01293927607009205,
+    "outer": -0.0129392760700931,
+    "top_bottom": 0.0
+  },
+  "divergence_moment_linf": 6.701312622301873e-16,
+  "algebraic_residual": 5.953035891114362e-15,
+  "physical_block_backward_residual_max": [
+    1.6588637689286842e-12,
+    8.8743193929361e-11,
+    1.0949920664045477e-16
+  ],
+  "archive": "classical-xy32-z1-q20z10.npz",
+  "sha256": "a245ecc64bf7f2b2455e418d7c77c8f0879fa52f67ed3f93ae4408c333a19309",
+  "source_hashes": {
+    "examples/solve_mapped_well_classical.py": "9f9bfdaea74a15d9bf788e8f890a6273b82540a7b8e9722063dd1aacc2a17b85",
+    "examples/solve_mapped_oscillatory_well.py": "2241d929b702604944bf3bfa6a57e14d8907a8b16f30eff3211bf605c350da77",
+    "examples/solve_mapped_well.py": "d499f815ba776723ffc56909f7e68b956ee9735fb89be26b794abcb6558260fc",
+    "src/pymhm/mapped_rt.py": "ab8c6b712cf05d9ded7d5695077c563027bfa009bcf73e910bbbee657109610e",
+    "src/pymhm/solvers.py": "92875e4978b59e0c3221adf68372818cd347329bb8b4bc4e6fef892a8dcd2b37",
+    "src/pymhm/hybrid.py": "125ca77c25528fe55c5abf0621c797c456288edee925d0956cf5b67db6dbf85c"
+  }
+}

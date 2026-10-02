@@ -1,0 +1,228 @@
+{
+  "source_hashes": {
+    "examples/verify_mixed_well_fields.py": "2a1318d00728822b6ee3fd196fba5416cd82326e5cf518dd8d7cf3bc4d2c76b5",
+    "examples/solve_mapped_well.py": "0c00ec837510eb9c06458f4223cd88e25eebb9ccbe3f72daa7ac8974d148c7b3",
+    "src/pymhm/hdiv3d_family.py": "29cd2993848bc6ce5bc944a7a732eae3f9f6cdcc957bf787148d92704dc01c47",
+    "src/pymhm/hdiv3d_mesh.py": "ee7968260eadc10ebf664cd79d5a21d501843cebb24723d12d49ba4119799060"
+  },
+  "source_changed_during_run": false,
+  "field_interpolation": "Executed monomial basis, exact affine Piola, no averaging or smoothing.",
+  "rows": [
+    {
+      "candidate": "prism-p1-fine4-macro1.npz",
+      "reference": "prism-p1-fine4-macro4.npz",
+      "candidate_sha256": "567c41b56c32f90323fdc0c6e1f9e8f8db9ea4ed20f31d106a8f8e8de3de958f",
+      "reference_sha256": "be1186b2927459cf825378342f4db9de519789945085889dd551dda1c39bc4b6",
+      "norms": [
+        {
+          "order": 7,
+          "fine_cells": 4096,
+          "geometry_discrepancy_m": 1.4210854715202004e-14,
+          "pressure_difference_over_reference": 0.002844797196042733,
+          "flux_difference_over_reference": 0.1923636059743814,
+          "mhm_pressure_error_relative": 0.002868019898845566,
+          "mhm_flux_error_relative": 0.1936716234379593,
+          "classical_pressure_error_relative": 0.00026610545735020907,
+          "classical_flux_error_relative": 0.02289854803803046,
+          "mhm_drawdown_error_relative": 0.058399278794418565,
+          "classical_drawdown_error_relative": 0.005418500338427365,
+          "flux_difference_over_exact": 0.19231316705827922,
+          "flux_cross_term_over_exact_squared": -5.70452108236069e-13,
+          "pythagoras_relative_defect": -3.041705737170593e-11
+        },
+        {
+          "order": 10,
+          "fine_cells": 4096,
+          "geometry_discrepancy_m": 1.4210854715202004e-14,
+          "pressure_difference_over_reference": 0.0028447971960427324,
+          "flux_difference_over_reference": 0.19236360597438137,
+          "mhm_pressure_error_relative": 0.0028680198988340995,
+          "mhm_flux_error_relative": 0.19367162344420888,
+          "classical_pressure_error_relative": 0.0002661054572591489,
+          "classical_flux_error_relative": 0.022898548067384273,
+          "mhm_drawdown_error_relative": 0.058399278794185855,
+          "classical_drawdown_error_relative": 0.005418500336573249,
+          "flux_difference_over_exact": 0.19231316705811394,
+          "flux_cross_term_over_exact_squared": -4.537622472372471e-16,
+          "pythagoras_relative_defect": -2.4194951491681604e-14
+        }
+      ],
+      "candidate_top_surface": {
+        "quadrature_order": 10,
+        "flux_error_l2": 0.00018155284551364228,
+        "exact_flux_l2": 0.0009374261561139042,
+        "flux_error_relative": 0.1936716234442068,
+        "vertical_flux_l2": 3.377991277871194e-17
+      },
+      "reference_top_surface": {
+        "quadrature_order": 10,
+        "flux_error_l2": 2.146569789540496e-05,
+        "exact_flux_l2": 0.0009374261561139042,
+        "flux_error_relative": 0.02289854806739222,
+        "vertical_flux_l2": 3.471105407663561e-17
+      }
+    },
+    {
+      "candidate": "prism-p1-fine4-macro2.npz",
+      "reference": "prism-p1-fine4-macro4.npz",
+      "candidate_sha256": "3491cdb3812717854506a2d8fb44056d4e8a4033ac08c8dafba96774be7199e9",
+      "reference_sha256": "be1186b2927459cf825378342f4db9de519789945085889dd551dda1c39bc4b6",
+      "norms": [
+        {
+          "order": 7,
+          "fine_cells": 4096,
+          "geometry_discrepancy_m": 1.4210854715202004e-14,
+          "pressure_difference_over_reference": 0.0004929795246177538,
+          "flux_difference_over_reference": 0.06887542119167667,
+          "mhm_pressure_error_relative": 0.0005716463300672921,
+          "mhm_flux_error_relative": 0.07256500364263772,
+          "classical_pressure_error_relative": 0.00026610545734968394,
+          "classical_flux_error_relative": 0.022898548038098123,
+          "mhm_drawdown_error_relative": 0.011639993646781746,
+          "classical_drawdown_error_relative": 0.005418500338416674,
+          "flux_difference_over_exact": 0.06885736163423913,
+          "flux_cross_term_over_exact_squared": 8.727567788210626e-14,
+          "pythagoras_relative_defect": 3.314887408279851e-11
+        },
+        {
+          "order": 10,
+          "fine_cells": 4096,
+          "geometry_discrepancy_m": 1.4210854715202004e-14,
+          "pressure_difference_over_reference": 0.0004929795246177538,
+          "flux_difference_over_reference": 0.06887542119167667,
+          "mhm_pressure_error_relative": 0.0005716463300272481,
+          "mhm_flux_error_relative": 0.07256500365059808,
+          "classical_pressure_error_relative": 0.000266105457259149,
+          "classical_flux_error_relative": 0.02289854806738427,
+          "mhm_drawdown_error_relative": 0.011639993645966514,
+          "classical_drawdown_error_relative": 0.005418500336573252,
+          "flux_difference_over_exact": 0.06885736163417994,
+          "flux_cross_term_over_exact_squared": -1.6158490629544945e-15,
+          "pythagoras_relative_defect": -6.13728664919496e-13
+        }
+      ],
+      "candidate_top_surface": {
+        "quadrature_order": 10,
+        "flux_error_l2": 6.802433244056735e-05,
+        "exact_flux_l2": 0.0009374261561139042,
+        "flux_error_relative": 0.07256500365059357,
+        "vertical_flux_l2": 3.461931633424169e-17
+      },
+      "reference_top_surface": {
+        "quadrature_order": 10,
+        "flux_error_l2": 2.146569789540496e-05,
+        "exact_flux_l2": 0.0009374261561139042,
+        "flux_error_relative": 0.02289854806739222,
+        "vertical_flux_l2": 3.471105407663561e-17
+      }
+    },
+    {
+      "candidate": "tetrahedron-p1-fine4-macro1.npz",
+      "reference": "tetrahedron-p1-fine4-macro4.npz",
+      "candidate_sha256": "f952bf83defc67523cef11ee38220f2c184d3bf8768ffe4d7492300860aa353c",
+      "reference_sha256": "e25ce47ea7d050ffdc7f3a8e63e6504a2b3b0c8b9b9c77818eb3ba65645c1f08",
+      "norms": [
+        {
+          "order": 7,
+          "fine_cells": 12288,
+          "geometry_discrepancy_m": 1.0048591735576161e-14,
+          "pressure_difference_over_reference": 0.0018932869904696372,
+          "flux_difference_over_reference": 0.16444656889247258,
+          "mhm_pressure_error_relative": 0.00193605286271354,
+          "mhm_flux_error_relative": 0.16671344464953305,
+          "classical_pressure_error_relative": 0.00028389404802230307,
+          "classical_flux_error_relative": 0.027777036413896592,
+          "mhm_drawdown_error_relative": 0.03942235231207008,
+          "classical_drawdown_error_relative": 0.005780715700473576,
+          "flux_difference_over_exact": 0.16438311614432205,
+          "flux_cross_term_over_exact_squared": 8.281555813996792e-13,
+          "pythagoras_relative_defect": 5.959374528004672e-11
+        },
+        {
+          "order": 10,
+          "fine_cells": 12288,
+          "geometry_discrepancy_m": 1.0048591735576161e-14,
+          "pressure_difference_over_reference": 0.001893286990469637,
+          "flux_difference_over_reference": 0.16444656889247258,
+          "mhm_pressure_error_relative": 0.001936052862593208,
+          "mhm_flux_error_relative": 0.1667134446396491,
+          "classical_pressure_error_relative": 0.0002838940472290849,
+          "classical_flux_error_relative": 0.027777036380735753,
+          "mhm_drawdown_error_relative": 0.03942235230962829,
+          "classical_drawdown_error_relative": 0.005780715684323123,
+          "flux_difference_over_exact": 0.1643831161449323,
+          "flux_cross_term_over_exact_squared": 1.161698018806039e-15,
+          "pythagoras_relative_defect": 8.35951836934333e-14
+        }
+      ],
+      "candidate_top_surface": {
+        "quadrature_order": 10,
+        "flux_error_l2": 0.00020728837963197787,
+        "exact_flux_l2": 0.0009374261561139042,
+        "flux_error_relative": 0.22112502225379638,
+        "vertical_flux_l2": 4.4260369959439686e-17
+      },
+      "reference_top_surface": {
+        "quadrature_order": 10,
+        "flux_error_l2": 3.32843034646544e-05,
+        "exact_flux_l2": 0.0009374261561139042,
+        "flux_error_relative": 0.03550605372761768,
+        "vertical_flux_l2": 4.4806327173900306e-17
+      }
+    },
+    {
+      "candidate": "tetrahedron-p2-fine4-macro1.npz",
+      "reference": "tetrahedron-p2-fine4-macro4.npz",
+      "candidate_sha256": "5d363bef9be0f3cd66d1212e95f50b81718331ad3068c66bb710eb7e2f900cb7",
+      "reference_sha256": "bd265dc7ef575cff2d9d4da9270252dc163175726c9236db6c5268fa9b89e747",
+      "norms": [
+        {
+          "order": 7,
+          "fine_cells": 12288,
+          "geometry_discrepancy_m": 1.0048591735576161e-14,
+          "pressure_difference_over_reference": 0.001899487997465317,
+          "flux_difference_over_reference": 0.16454303586972763,
+          "mhm_pressure_error_relative": 0.0019200139551183311,
+          "mhm_flux_error_relative": 0.16662480583982311,
+          "classical_pressure_error_relative": 6.0586713741921325e-05,
+          "classical_flux_error_relative": 0.026619545430998953,
+          "mhm_drawdown_error_relative": 0.0390957643980227,
+          "classical_drawdown_error_relative": 0.0012336805572637714,
+          "flux_difference_over_exact": 0.16448472792418095,
+          "flux_cross_term_over_exact_squared": 9.569510540289056e-13,
+          "pythagoras_relative_defect": 6.893509969755639e-11
+        },
+        {
+          "order": 10,
+          "fine_cells": 12288,
+          "geometry_discrepancy_m": 1.0048591735576161e-14,
+          "pressure_difference_over_reference": 0.0018994879974653168,
+          "flux_difference_over_reference": 0.1645430358697276,
+          "mhm_pressure_error_relative": 0.0019200139550851136,
+          "mhm_flux_error_relative": 0.166624805830084,
+          "classical_pressure_error_relative": 6.058671321993305e-05,
+          "classical_flux_error_relative": 0.026619545402352576,
+          "mhm_drawdown_error_relative": 0.039095764397354696,
+          "classical_drawdown_error_relative": 0.0012336805466351907,
+          "flux_difference_over_exact": 0.16448472792479157,
+          "flux_cross_term_over_exact_squared": -3.714279545312327e-15,
+          "pythagoras_relative_defect": -2.675621581539089e-13
+        }
+      ],
+      "candidate_top_surface": {
+        "quadrature_order": 10,
+        "flux_error_l2": 0.0002070324190280583,
+        "exact_flux_l2": 0.0009374261561139042,
+        "flux_error_relative": 0.22085197610264068,
+        "vertical_flux_l2": 2.139361696212676e-16
+      },
+      "reference_top_surface": {
+        "quadrature_order": 10,
+        "flux_error_l2": 3.1626946021974175e-05,
+        "exact_flux_l2": 0.0009374261561139042,
+        "flux_error_relative": 0.03373806653004385,
+        "vertical_flux_l2": 1.8854839094409618e-16
+      }
+    }
+  ]
+}

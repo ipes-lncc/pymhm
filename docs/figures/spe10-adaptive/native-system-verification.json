@@ -1,0 +1,273 @@
+{
+  "accepted": true,
+  "method": "Full broken local P2 on four triangles per macrocell; one P0 trace per macroface; DOLFINx/Basix triangular P2 volume forms in UFL with exact degree-two raw-K moments; independent long-double Cartesian-pixel clipping and exact P2 Simpson facet moments; PETSc/MUMPS uncondensed MHM saddle solve",
+  "material": "SPE10 Model 2, layer 36, unscaled raw diagonal permeability in mD",
+  "boundary_conditions": "p=1 at y=0, p=0 at y=2200, zero outward flux at x=0 and x=1200",
+  "norm_convention": "Physical pressure, broken gradient, raw Darcy flux and K-energy on the identical fine-triangle/material-pixel intersections; denominator is the independent native field norm",
+  "execution": "Both process groups closed; input and frozen source digests verified unchanged",
+  "rows": [
+    {
+      "level": 0,
+      "macro_triangles": 512,
+      "fine_triangles": 2048,
+      "native_full_dofs": 8448,
+      "pressure_coefficient_linf": 1.0273375574722243e-11,
+      "trace_linf": 1.2298864184023817e-14,
+      "moment_relative_check": 5.310106873326106e-16,
+      "independent_pixel_partition_relative_error": 1.985282598038207e-15,
+      "equations": {
+        "native": {
+          "residual_over_rhs": 3.8674641935568925e-14,
+          "backward_linf": 1.24115077727015e-15
+        },
+        "candidate": {
+          "residual_over_rhs": 1.8735515558174898e-14,
+          "backward_linf": 2.663461558611288e-16
+        }
+      },
+      "physical_differences": {
+        "quadrature_6": {
+          "pressure_l2": {
+            "absolute": 2.260631541458337e-09,
+            "reference_norm": 815.6092765216279,
+            "relative": 2.771708962285682e-12
+          },
+          "broken_gradient_l2": {
+            "absolute": 1.6093599590345044e-11,
+            "reference_norm": 1.1222749551935378,
+            "relative": 1.4340157477335561e-11
+          },
+          "physical_raw_flux_l2": {
+            "absolute": 2.398729100777269e-11,
+            "reference_norm": 1.2841873306199463,
+            "relative": 1.8678965627384542e-11
+          },
+          "energy": {
+            "absolute": 5.089158748773189e-12,
+            "reference_norm": 0.369650888310373,
+            "relative": 1.3767473336896561e-11
+          }
+        },
+        "quadrature_8": {
+          "pressure_l2": {
+            "absolute": 2.260631541458337e-09,
+            "reference_norm": 815.6092765216279,
+            "relative": 2.771708962285682e-12
+          },
+          "broken_gradient_l2": {
+            "absolute": 1.6093599590345044e-11,
+            "reference_norm": 1.1222749551935378,
+            "relative": 1.4340157477335561e-11
+          },
+          "physical_raw_flux_l2": {
+            "absolute": 2.3987291007772744e-11,
+            "reference_norm": 1.2841873306199443,
+            "relative": 1.867896562738462e-11
+          },
+          "energy": {
+            "absolute": 5.0891587487731896e-12,
+            "reference_norm": 0.369650888310373,
+            "relative": 1.3767473336896562e-11
+          }
+        }
+      },
+      "candidate_archive_sha256": "beb996d97b7f88eee9da32370a648b4254090627f714176120c319d2051da42c",
+      "archive_sha256": "f9b3f837fa586a96793d29beb5ce1097e7d0fcb651e5088b88e4b9f9bb475c01",
+      "reference_code": {
+        "reference_code": "FEniCS/DOLFINx",
+        "version": "0.9.0",
+        "runtime_reported_build_git_hash": "8067ef16087b9f364873e0e657dcda52fb989ce3",
+        "runtime_hash_status": "build-reported identifier; not resolved as an upstream dolfinx commit",
+        "verified_upstream_release_commit": "6443e3b27d29aec04ce83d8424b57c339e35f865",
+        "verified_source_url": "https://github.com/FEniCS/dolfinx/tree/6443e3b27d29aec04ce83d8424b57c339e35f865",
+        "upstream_verification_url": "https://api.github.com/repos/FEniCS/dolfinx/git/ref/tags/v0.9.0",
+        "conda_packages": [
+          {
+            "name": "fenics-dolfinx",
+            "version": "0.9.0",
+            "build": "py313hf84a112_112",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-dolfinx-0.9.0-py313hf84a112_112.conda",
+            "sha256": "79bb466bd1624512b7e6302e7926a05ef1e78685f0c188a69668222f31852b86",
+            "recipe_sha256": "df9a203accdaa6d1a5b1c97600971f9803620dea2176e5c62b705d9ac0e12bec",
+            "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+            "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+            "patches": [
+              {
+                "name": "unpin-cffi.patch",
+                "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+              }
+            ]
+          },
+          {
+            "name": "fenics-libdolfinx",
+            "version": "0.9.0",
+            "build": "py313h2154cf7_112",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-libdolfinx-0.9.0-py313h2154cf7_112.conda",
+            "sha256": "f8068fef21e9008e0531d83e8f19e8ee41bb40920881b8416583380f138e7889",
+            "recipe_sha256": "e75fdc33edb216ccf13ad27023b1b2b1f465451c630395137104e278732a62d7",
+            "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+            "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+            "patches": [
+              {
+                "name": "unpin-cffi.patch",
+                "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+              }
+            ]
+          }
+        ],
+        "python_extension_file": "cpp.cpython-313-x86_64-linux-gnu.so",
+        "python_extension_sha256": "7fba4280795a95accf09754435d0e6a19e48ca4e2c604d739688614bf4b6802a",
+        "runtime_versions": {
+          "dolfinx": "0.9.0",
+          "basix": "0.9.0",
+          "ufl": "2024.2.0",
+          "numpy": "2.5.3",
+          "scipy": "1.18.1"
+        }
+      },
+      "method": "Full broken local P2 on four triangles per macrocell; one P0 trace per macroface; DOLFINx/Basix triangular P2 volume forms in UFL with exact degree-two raw-K moments; independent long-double Cartesian-pixel clipping and exact P2 Simpson facet moments; PETSc/MUMPS uncondensed MHM saddle solve",
+      "accepted": true,
+      "native_assembly_source_sha256": "e101017e4236a2fdfa2f0b5a60554f1598a9a224d67815bb2e587224d8c7a45c",
+      "native_material_integration_source_sha256": "b7bbfd019432752ce1d65b17a9504a77303f4e83ec96dc62f62e03154474428d",
+      "norm_owner_sha256": "3554ba9b99b3d60c4f547d866076d5015ebcf22f6b343109aacf5512e2ee1012",
+      "norm_driver_sha256": "1c5942cd0e60bad330497b80fa0d8d9d7142333a4642c95ae8bbf60f2c82465d",
+      "prior_comparison_sha256": "27ab41fbbab16bd675b9de6ec4e9e624af4bb936562b934790e0276d61b79dd0",
+      "relative_denominator": "independent native field norm",
+      "complete": true,
+      "native_pressure_archive": "native-pressure-level0.npz",
+      "native_pressure_archive_sha256": "5a7c6f08b003b0ca121c2ceed69862ae97c6483fa310f43b54f80f1259662833"
+    },
+    {
+      "level": 6,
+      "macro_triangles": 4783,
+      "fine_triangles": 19132,
+      "native_full_dofs": 78912,
+      "pressure_coefficient_linf": 6.741595373312495e-11,
+      "trace_linf": 3.2973376069486693e-10,
+      "moment_relative_check": 6.530378345843448e-16,
+      "independent_pixel_partition_relative_error": 1.9857162789072014e-15,
+      "equations": {
+        "native": {
+          "residual_over_rhs": 6.492412232918709e-13,
+          "backward_linf": 6.359251894481606e-15
+        },
+        "candidate": {
+          "residual_over_rhs": 1.2074728512059024e-13,
+          "backward_linf": 1.6531693321286027e-16
+        }
+      },
+      "physical_differences": {
+        "quadrature_6": {
+          "pressure_l2": {
+            "absolute": 7.071014546340573e-08,
+            "reference_norm": 827.0422717747529,
+            "relative": 8.5497619500958e-11
+          },
+          "broken_gradient_l2": {
+            "absolute": 1.8459816171951283e-10,
+            "reference_norm": 1.393311959935424,
+            "relative": 1.324887512829994e-10
+          },
+          "physical_raw_flux_l2": {
+            "absolute": 7.175235054457448e-10,
+            "reference_norm": 1.1555476264640943,
+            "relative": 6.209380634888441e-10
+          },
+          "energy": {
+            "absolute": 5.457437746350075e-11,
+            "reference_norm": 0.39720159402033195,
+            "relative": 1.3739717635852992e-10
+          }
+        },
+        "quadrature_8": {
+          "pressure_l2": {
+            "absolute": 7.071014546340573e-08,
+            "reference_norm": 827.0422717747529,
+            "relative": 8.5497619500958e-11
+          },
+          "broken_gradient_l2": {
+            "absolute": 1.8459816171951283e-10,
+            "reference_norm": 1.393311959935424,
+            "relative": 1.324887512829994e-10
+          },
+          "physical_raw_flux_l2": {
+            "absolute": 7.175235054457533e-10,
+            "reference_norm": 1.1555476264641127,
+            "relative": 6.209380634888415e-10
+          },
+          "energy": {
+            "absolute": 5.4574377463500793e-11,
+            "reference_norm": 0.39720159402033195,
+            "relative": 1.3739717635853002e-10
+          }
+        }
+      },
+      "candidate_archive_sha256": "99f3494fdb160a01d025fcbe5a5f586b74fac5d50b306769f094255fc33ed93f",
+      "archive_sha256": "9603d63955360ba8b81905bf1164eb89552a8bd2a5caa62a60a9733f268c3c81",
+      "reference_code": {
+        "reference_code": "FEniCS/DOLFINx",
+        "version": "0.9.0",
+        "runtime_reported_build_git_hash": "8067ef16087b9f364873e0e657dcda52fb989ce3",
+        "runtime_hash_status": "build-reported identifier; not resolved as an upstream dolfinx commit",
+        "verified_upstream_release_commit": "6443e3b27d29aec04ce83d8424b57c339e35f865",
+        "verified_source_url": "https://github.com/FEniCS/dolfinx/tree/6443e3b27d29aec04ce83d8424b57c339e35f865",
+        "upstream_verification_url": "https://api.github.com/repos/FEniCS/dolfinx/git/ref/tags/v0.9.0",
+        "conda_packages": [
+          {
+            "name": "fenics-dolfinx",
+            "version": "0.9.0",
+            "build": "py313hf84a112_112",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-dolfinx-0.9.0-py313hf84a112_112.conda",
+            "sha256": "79bb466bd1624512b7e6302e7926a05ef1e78685f0c188a69668222f31852b86",
+            "recipe_sha256": "df9a203accdaa6d1a5b1c97600971f9803620dea2176e5c62b705d9ac0e12bec",
+            "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+            "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+            "patches": [
+              {
+                "name": "unpin-cffi.patch",
+                "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+              }
+            ]
+          },
+          {
+            "name": "fenics-libdolfinx",
+            "version": "0.9.0",
+            "build": "py313h2154cf7_112",
+            "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-libdolfinx-0.9.0-py313h2154cf7_112.conda",
+            "sha256": "f8068fef21e9008e0531d83e8f19e8ee41bb40920881b8416583380f138e7889",
+            "recipe_sha256": "e75fdc33edb216ccf13ad27023b1b2b1f465451c630395137104e278732a62d7",
+            "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+            "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+            "patches": [
+              {
+                "name": "unpin-cffi.patch",
+                "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+              }
+            ]
+          }
+        ],
+        "python_extension_file": "cpp.cpython-313-x86_64-linux-gnu.so",
+        "python_extension_sha256": "7fba4280795a95accf09754435d0e6a19e48ca4e2c604d739688614bf4b6802a",
+        "runtime_versions": {
+          "dolfinx": "0.9.0",
+          "basix": "0.9.0",
+          "ufl": "2024.2.0",
+          "numpy": "2.5.3",
+          "scipy": "1.18.1"
+        }
+      },
+      "method": "Full broken local P2 on four triangles per macrocell; one P0 trace per macroface; DOLFINx/Basix triangular P2 volume forms in UFL with exact degree-two raw-K moments; independent long-double Cartesian-pixel clipping and exact P2 Simpson facet moments; PETSc/MUMPS uncondensed MHM saddle solve",
+      "accepted": true,
+      "native_assembly_source_sha256": "e101017e4236a2fdfa2f0b5a60554f1598a9a224d67815bb2e587224d8c7a45c",
+      "native_material_integration_source_sha256": "b7bbfd019432752ce1d65b17a9504a77303f4e83ec96dc62f62e03154474428d",
+      "norm_owner_sha256": "3554ba9b99b3d60c4f547d866076d5015ebcf22f6b343109aacf5512e2ee1012",
+      "norm_driver_sha256": "1c5942cd0e60bad330497b80fa0d8d9d7142333a4642c95ae8bbf60f2c82465d",
+      "prior_comparison_sha256": "4723941dfa4d06aa6237e419e377781781c7ef05b541930e6c0ec15ce112e38f",
+      "relative_denominator": "independent native field norm",
+      "complete": true,
+      "native_pressure_archive": "native-pressure-level6.npz",
+      "native_pressure_archive_sha256": "08a3e9b1b41feadb44e5d42f61fd88e726fd6bb9680d7589b9286f890d662ff8"
+    }
+  ],
+  "norm_source_snapshot_manifest_sha256": "11139de5a3b2fff4547c5baaa4dc3a7a88ba6153f7b0a812d89ab64a13540514"
+}

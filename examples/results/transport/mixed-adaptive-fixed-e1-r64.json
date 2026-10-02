@@ -1,0 +1,51 @@
+{
+  "epsilon": 1.0,
+  "local_refinement": 64,
+  "local_degree": 1,
+  "trace_degree": 0,
+  "free_trace_dofs": 1408,
+  "fixed_skeleton_from": "mixed-face-adaptive-e1-7-r16.npz",
+  "fixed_skeleton_archive_sha256": "cb261c6f321318642c8de34d3db588f96726a433431d0f4b72a564d1472cb64b",
+  "interpretation": "Local refinement of the same final maximum-marked r16 face space; this is not a rerun of the adaptive sequence or a historical mesh identification.",
+  "quadrature": {
+    "8": {
+      "l2_error": 3.3772141107444155e-06,
+      "broken_h1_error": 0.0011570594041193667
+    },
+    "12": {
+      "l2_error": 3.377214110744601e-06,
+      "broken_h1_error": 0.0011570594041193669
+    }
+  },
+  "gradient_dg0_projection_error": {
+    "8": 0.0003384905225943213,
+    "12": 0.00033849052259432187
+  },
+  "face_indicator": 0.00023601486094926419,
+  "maximum_continuity_moment": 4.85866780632776e-16,
+  "physical_checks": {
+    "projected_original_residual": 2.086132437105002e-15,
+    "maximum_original_local_residual": 2.9523116337212715e-16
+  },
+  "archive": "mixed-adaptive-fixed-e1-r64.npz",
+  "archive_sha256": "acc132a477a5756f1dc01472544d857406fbfafe0d4c0fa663cc4107475bc0a8",
+  "source_hashes": {
+    "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+    "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+    "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+    "src/pymhm/scalar_boundary.py": "b0f058385c0ec413902d02638d5d95a67fc238d16aa183359597547681da5ef0",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/hybrid.py": "288f85a41eeda946fe7b6a2fc9299c2c9dfc9f1d7bd61a4cc1a625708dae998d",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "examples/transport_mixed_campaign.py": "251f32e290d7bea03dd310f28251556dda01609141c431e3ca07baa0a55ad276",
+    "examples/transport_campaign.py": "5b05711ea6476653cffd3c66c284ddfe66badd2e537c91bc5d475ffe770de735",
+    "examples/pgmhm_campaign.py": "94e7f8d085a61c8e55d49176c161aef86100f3bed14d3abd93b98aade00689ac",
+    "examples/transport_adaptive_resolution.py": "c91cff81d1fb3170fb9c5c21641f02f4de7e100793e27e5e2d564f837ade9c55",
+    "examples/transport_trace_family.py": "631240349d9093621ba68115b3a267fa152c30a366ccdef307f4bbc5f8ef8ab0",
+    "examples/transport_face_resolution.py": "903f8eb09f25e6e12a7de86ee1abbf20546707d597d1cc62add3ab9750b69c02",
+    "examples/transport_coefficient_controls.py": "2d4ad344bd711f8f1b5f9076da380c6643332022886591ac7bcd31d0b6a4888b",
+    "examples/unfitted_trace_family.py": "f79dd3e0c80c0eb75ea82ac9239cdf0bf1ebce4c5a25bc5425bae9eaa271d1bd",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64"
+  },
+  "source_changed_during_run": false
+}

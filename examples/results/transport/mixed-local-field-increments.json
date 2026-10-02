@@ -1,0 +1,348 @@
+{
+  "interpretation": "Physical field differences on nested P1 partitions; exact local mass and stiffness plus independent quadrature moments. These are increments, not continuum-error bounds.",
+  "records": [
+    {
+      "coarse_refinement": 64,
+      "fine_refinement": 128,
+      "segments": 1,
+      "free_trace_dofs": 368,
+      "archives": {
+        "mixed-face-uniform-e1-1-r64.npz": "e33e775882675bd09dd21b40489590a4e2f69608a5c39fa6786bb040cb5f9a1f",
+        "mixed-face-uniform-e1-1-r128.npz": "df34d816076e78e189fa9e63d75b66ace85a3691003548241d7deffe39c58c83"
+      },
+      "norms": {
+        "exact": {
+          "l2_difference": 9.492303753476717e-08,
+          "broken_h1_difference": 0.000262533534116949
+        },
+        "8": {
+          "l2_difference": 9.492303753476717e-08,
+          "broken_h1_difference": 0.000262533534116949
+        },
+        "12": {
+          "l2_difference": 9.492303753476717e-08,
+          "broken_h1_difference": 0.0002625335341169489
+        }
+      },
+      "finest_exact_errors": {
+        "l2_error": 0.00045290521784581997,
+        "broken_h1_error": 0.018026429066924733
+      },
+      "parent_cell_counts": [
+        4
+      ],
+      "seconds": 33.263217871999586
+    },
+    {
+      "coarse_refinement": 64,
+      "fine_refinement": 128,
+      "segments": 2,
+      "free_trace_dofs": 736,
+      "archives": {
+        "mixed-face-uniform-e1-2-r64.npz": "0b25c7128b88bbd88d74da1399d09f342e5f30619a4d33c9ba0bfb0acc42fcad",
+        "mixed-face-uniform-e1-2-r128.npz": "d1ac6eba71282d09368bb67241f26f3a2a0efd41206619a15f9f981063f4941c"
+      },
+      "norms": {
+        "exact": {
+          "l2_difference": 3.6366823188322176e-07,
+          "broken_h1_difference": 0.000560138602215745
+        },
+        "8": {
+          "l2_difference": 3.6366823188322176e-07,
+          "broken_h1_difference": 0.000560138602215745
+        },
+        "12": {
+          "l2_difference": 3.6366823188322176e-07,
+          "broken_h1_difference": 0.000560138602215745
+        }
+      },
+      "finest_exact_errors": {
+        "l2_error": 3.285627865556704e-05,
+        "broken_h1_error": 0.004298902561330458
+      },
+      "parent_cell_counts": [
+        4
+      ],
+      "seconds": 34.0056242160008
+    },
+    {
+      "coarse_refinement": 64,
+      "fine_refinement": 128,
+      "segments": 4,
+      "free_trace_dofs": 1472,
+      "archives": {
+        "mixed-face-uniform-e1-4-r64.npz": "64621c307549e81ba782ced00fba711b41852f73049deebfc964c6097d386b1c",
+        "mixed-face-uniform-e1-4-r128.npz": "19de2d56d3af4da53ec2c6da0a7d01b64b2ea77ba518530ea911dadf441ca7f7"
+      },
+      "norms": {
+        "exact": {
+          "l2_difference": 2.6762625974544734e-07,
+          "broken_h1_difference": 0.0004946189641892942
+        },
+        "8": {
+          "l2_difference": 2.676262597454474e-07,
+          "broken_h1_difference": 0.0004946189641892942
+        },
+        "12": {
+          "l2_difference": 2.6762625974544734e-07,
+          "broken_h1_difference": 0.0004946189641892942
+        }
+      },
+      "finest_exact_errors": {
+        "l2_error": 4.647240538679412e-06,
+        "broken_h1_error": 0.0013562005315863072
+      },
+      "parent_cell_counts": [
+        4
+      ],
+      "seconds": 34.440918398000576
+    },
+    {
+      "coarse_refinement": 64,
+      "fine_refinement": 128,
+      "segments": 8,
+      "free_trace_dofs": 2944,
+      "archives": {
+        "mixed-face-uniform-e1-8-r64.npz": "e0aaea39d7d814eda1f1a416d6a35e486423cfe7b8f46a1c0674c497d19b4ac6",
+        "mixed-face-uniform-e1-8-r128.npz": "bd41a560ddf23cea7129473178ae28e9b5c9328e7bcfbe664c444d6ecb805684"
+      },
+      "norms": {
+        "exact": {
+          "l2_difference": 2.282136911702881e-07,
+          "broken_h1_difference": 0.0004610088063637386
+        },
+        "8": {
+          "l2_difference": 2.2821369117028814e-07,
+          "broken_h1_difference": 0.0004610088063637386
+        },
+        "12": {
+          "l2_difference": 2.2821369117028808e-07,
+          "broken_h1_difference": 0.0004610088063637386
+        }
+      },
+      "finest_exact_errors": {
+        "l2_error": 6.40381051196633e-07,
+        "broken_h1_error": 0.0004912336925055597
+      },
+      "parent_cell_counts": [
+        4
+      ],
+      "seconds": 35.43081137599984
+    },
+    {
+      "coarse_refinement": 64,
+      "fine_refinement": 128,
+      "segments": 16,
+      "free_trace_dofs": 5888,
+      "archives": {
+        "mixed-face-uniform-e1-16-r64.npz": "5915dfef8d0294ef48a32c033346fd2a0611b11518d7499fafcb0b7e5b831913",
+        "mixed-face-uniform-e1-16-r128.npz": "12b4fd98890f6b152ae038667367c1dff5c7dd825dbaac1abd301a07f3a9c2fe"
+      },
+      "norms": {
+        "exact": {
+          "l2_difference": 2.1284427098860312e-07,
+          "broken_h1_difference": 0.0004459707952848335
+        },
+        "8": {
+          "l2_difference": 2.1284427098860312e-07,
+          "broken_h1_difference": 0.0004459707952848335
+        },
+        "12": {
+          "l2_difference": 2.1284427098860312e-07,
+          "broken_h1_difference": 0.00044597079528483345
+        }
+      },
+      "finest_exact_errors": {
+        "l2_error": 1.0656682777620512e-07,
+        "broken_h1_error": 0.00028549270832841923
+      },
+      "parent_cell_counts": [
+        4
+      ],
+      "seconds": 35.69479332999981
+    },
+    {
+      "coarse_refinement": 128,
+      "fine_refinement": 256,
+      "segments": 1,
+      "free_trace_dofs": 368,
+      "archives": {
+        "mixed-face-uniform-e1-1-r128.npz": "df34d816076e78e189fa9e63d75b66ace85a3691003548241d7deffe39c58c83",
+        "mixed-face-uniform-e1-1-r256.npz": "c9d084e0dc66f2ae0e6249ffe07e687aa35555907716d75bf20e3a9ddbf3aca0"
+      },
+      "norms": {
+        "exact": {
+          "l2_difference": 2.374381629459446e-08,
+          "broken_h1_difference": 0.00013130145964577796
+        },
+        "8": {
+          "l2_difference": 2.3743816294594464e-08,
+          "broken_h1_difference": 0.00013130145964577796
+        },
+        "12": {
+          "l2_difference": 2.3743816294594464e-08,
+          "broken_h1_difference": 0.00013130145964577794
+        }
+      },
+      "finest_exact_errors": {
+        "l2_error": 0.00045291418692436445,
+        "broken_h1_error": 0.018025921331991216
+      },
+      "parent_cell_counts": [
+        4
+      ],
+      "seconds": 155.26267451500098
+    },
+    {
+      "coarse_refinement": 128,
+      "fine_refinement": 256,
+      "segments": 2,
+      "free_trace_dofs": 736,
+      "archives": {
+        "mixed-face-uniform-e1-2-r128.npz": "d1ac6eba71282d09368bb67241f26f3a2a0efd41206619a15f9f981063f4941c",
+        "mixed-face-uniform-e1-2-r256.npz": "8460434583bbdc1bc6d9bb0bb891bb277a01785bc045952ae7624e91c9a2e593"
+      },
+      "norms": {
+        "exact": {
+          "l2_difference": 1.0160016459659035e-07,
+          "broken_h1_difference": 0.0002937986870557216
+        },
+        "8": {
+          "l2_difference": 1.0160016459659035e-07,
+          "broken_h1_difference": 0.0002937986870557216
+        },
+        "12": {
+          "l2_difference": 1.0160016459659034e-07,
+          "broken_h1_difference": 0.00029379868705572157
+        }
+      },
+      "finest_exact_errors": {
+        "l2_error": 3.291512964670889e-05,
+        "broken_h1_error": 0.004298779383764042
+      },
+      "parent_cell_counts": [
+        4
+      ],
+      "seconds": 153.66104319900114
+    },
+    {
+      "coarse_refinement": 128,
+      "fine_refinement": 256,
+      "segments": 4,
+      "free_trace_dofs": 1472,
+      "archives": {
+        "mixed-face-uniform-e1-4-r128.npz": "19de2d56d3af4da53ec2c6da0a7d01b64b2ea77ba518530ea911dadf441ca7f7",
+        "mixed-face-uniform-e1-4-r256.npz": "415bac7d322a55603bc6f419d828a0795f81d71e92c7f2dc54cc285887e498b9"
+      },
+      "norms": {
+        "exact": {
+          "l2_difference": 7.225982635007238e-08,
+          "broken_h1_difference": 0.00025593858694897455
+        },
+        "8": {
+          "l2_difference": 7.225982635007238e-08,
+          "broken_h1_difference": 0.00025593858694897455
+        },
+        "12": {
+          "l2_difference": 7.225982635007238e-08,
+          "broken_h1_difference": 0.00025593858694897455
+        }
+      },
+      "finest_exact_errors": {
+        "l2_error": 4.6741478246479375e-06,
+        "broken_h1_error": 0.001345593972630079
+      },
+      "parent_cell_counts": [
+        4
+      ],
+      "seconds": 143.57001680599933
+    },
+    {
+      "coarse_refinement": 128,
+      "fine_refinement": 256,
+      "segments": 8,
+      "free_trace_dofs": 2944,
+      "archives": {
+        "mixed-face-uniform-e1-8-r128.npz": "bd41a560ddf23cea7129473178ae28e9b5c9328e7bcfbe664c444d6ecb805684",
+        "mixed-face-uniform-e1-8-r256.npz": "a8fa532277e896af03b9ca78512f5757280db171c6fd2c863e30b680f0180747"
+      },
+      "norms": {
+        "exact": {
+          "l2_difference": 5.969600654641447e-08,
+          "broken_h1_difference": 0.00023546015575987228
+        },
+        "8": {
+          "l2_difference": 5.969600654641447e-08,
+          "broken_h1_difference": 0.00023546015575987228
+        },
+        "12": {
+          "l2_difference": 5.969600654641447e-08,
+          "broken_h1_difference": 0.00023546015575987223
+        }
+      },
+      "finest_exact_errors": {
+        "l2_error": 6.548974144270336e-07,
+        "broken_h1_error": 0.00044802108275275105
+      },
+      "parent_cell_counts": [
+        4
+      ],
+      "seconds": 143.65260643700094
+    },
+    {
+      "coarse_refinement": 128,
+      "fine_refinement": 256,
+      "segments": 16,
+      "free_trace_dofs": 5888,
+      "archives": {
+        "mixed-face-uniform-e1-16-r128.npz": "12b4fd98890f6b152ae038667367c1dff5c7dd825dbaac1abd301a07f3a9c2fe",
+        "mixed-face-uniform-e1-16-r256.npz": "9e2b3b43f2059514a254a2bcf45800f6e962c3b86f67cdb328e77176e5e7aa40"
+      },
+      "norms": {
+        "exact": {
+          "l2_difference": 5.446251969807431e-08,
+          "broken_h1_difference": 0.0002255315812461475
+        },
+        "8": {
+          "l2_difference": 5.446251969807431e-08,
+          "broken_h1_difference": 0.0002255315812461475
+        },
+        "12": {
+          "l2_difference": 5.446251969807431e-08,
+          "broken_h1_difference": 0.00022553158124614744
+        }
+      },
+      "finest_exact_errors": {
+        "l2_error": 9.654218839258466e-08,
+        "broken_h1_error": 0.00018940386753542272
+      },
+      "parent_cell_counts": [
+        4
+      ],
+      "seconds": 143.34561942399887
+    }
+  ],
+  "driver": "original nested P1 field integration with independently verified affine prolongation",
+  "driver_sha256": "f26b728188e39ad65593595283ca8ba8b0615925aab97381b70ca2832d865580",
+  "source_hashes": {
+    "src/pymhm/elements.py": "bcb1368e5a7f2ded4fdb2d4d8e09a0b43a8600fece40bd2cc208c8490b89e1e9",
+    "src/pymhm/mesh.py": "dcb0cae3352615514bdb363586e66c94ba71a2568da09e10d6d04cfb44e176ae"
+  },
+  "verification": {
+    "unchanged_macro_and_trace_geometry": true,
+    "fine_triangles_contained_in_recorded_coarse_parents": true,
+    "affine_local_partition_and_order_verified": true,
+    "exact_P1_mass_and_two_quadrature_rules_agree": true,
+    "analytical_prolongation_checks": {
+      "checks": [
+        "affine P1 exact prolongation",
+        "constant L2 and zero gradient",
+        "linear analytical mass and gradient",
+        "nonnested partition rejected",
+        "physical affine measure"
+      ],
+      "passed": true,
+      "driver_sha256": "f26b728188e39ad65593595283ca8ba8b0615925aab97381b70ca2832d865580"
+    }
+  }
+}

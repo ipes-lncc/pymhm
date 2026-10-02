@@ -1,0 +1,16 @@
+{
+  "first": "mhm-fitted-r4-s1.npz",
+  "second": "mhm-fitted-r4-s4.npz",
+  "first_sha256": "167657c45535857591ea570d9e017669e130b7bb9aa24bda02dc6f9f46bf379e",
+  "second_sha256": "1b19ee37685b0e7bd2e0e2115e483518a5e52f3b72c11a684f2771267a057246",
+  "kind": "trace",
+  "first_energy_squared": 0.11899719705625296,
+  "second_energy_squared": 0.14788365137122203,
+  "increment_energy_squared": 0.02888645431495842,
+  "signed_energy_difference": 0.02888645431496908,
+  "identity_relative_defect": 3.6907805496739196e-13,
+  "quadrature_order": 4,
+  "integration": "nested local cells, exact material intersections",
+  "source_sha256": "2ac520cd2bdcb47b895ded03693cbe1fbf72393dad8dce1c40750e5bfc670c10",
+  "seconds": 42.68272727599833
+}

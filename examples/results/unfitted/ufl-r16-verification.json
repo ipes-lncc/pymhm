@@ -1,0 +1,776 @@
+{
+  "method": "Independent DOLFINx/UFL P4 local assembly, complete uncondensed P4/DG-P2 saddle solved with PETSc/MUMPS LU",
+  "accepted": true,
+  "complete": true,
+  "rows": [
+    {
+      "setting": "S0",
+      "delta": 0.0,
+      "refinement": 16,
+      "fine_triangles": 4096,
+      "original_equations_relative": {
+        "native": 2.3469557830632358e-12,
+        "candidate": 4.674975154733078e-11
+      },
+      "relative_denominator": "independent native field norm",
+      "field_archive_sha256": "f2e70b222a89c746a33040021a0e613bdbbe48fd5ecd116467df329f2998dc5d",
+      "native_dofs": 34404,
+      "trace_dofs": 84,
+      "pressure_linf_difference": 4.271062670202497e-14,
+      "trace_linf_difference": 3.6626257582383914e-13,
+      "full_residual_relative": 2.60824619129073e-12,
+      "pressure_l2": 9.076273288701604e-05,
+      "gradient_l2": 0.0025941356741482507,
+      "energy_error": 0.0028305121340063163,
+      "native_exact_errors": {
+        "pressure_l2": 9.076273288719025e-05,
+        "gradient_l2": 0.002594135674152648,
+        "energy_error": 0.002830512134010519
+      },
+      "physical_differences": {
+        "pressure_l2": {
+          "absolute": 1.526441068853329e-14,
+          "relative": 1.0048646937653072e-12
+        },
+        "broken_gradient_l2": {
+          "absolute": 1.458931566502428e-13,
+          "relative": 1.63987543755866e-12
+        },
+        "physical_flux_l2": {
+          "absolute": 3.213867692330858e-13,
+          "relative": 1.4502180660837062e-12
+        }
+      },
+      "accepted": true,
+      "seconds": 101.72640734800007,
+      "complete": true,
+      "driver_sha256": "221e09d30a31fa0cc9de4de656ad601ec21244105db72363f0c958f565203511",
+      "field_archive": "ufl-r16-fields-S0-d0.npz"
+    },
+    {
+      "setting": "S1",
+      "delta": 0.007936507936507936,
+      "refinement": 16,
+      "fine_triangles": 4360,
+      "original_equations_relative": {
+        "native": 2.8447050976915517e-12,
+        "candidate": 5.998524406925813e-11
+      },
+      "relative_denominator": "independent native field norm",
+      "field_archive_sha256": "b3a7a94eae3d34985f183ea89231e2a1b6e0692e523493ada78db87cbb3c66ac",
+      "native_dofs": 36540,
+      "trace_dofs": 84,
+      "pressure_linf_difference": 2.6652291484907664e-14,
+      "trace_linf_difference": 3.3140157285060923e-13,
+      "full_residual_relative": 3.1719003202790957e-12,
+      "pressure_l2": 9.935267927132149e-05,
+      "gradient_l2": 0.005248842072226107,
+      "energy_error": 0.005836781873367086,
+      "native_exact_errors": {
+        "pressure_l2": 9.935267927295384e-05,
+        "gradient_l2": 0.005248842072225157,
+        "energy_error": 0.00583678187336601
+      },
+      "physical_differences": {
+        "pressure_l2": {
+          "absolute": 7.0340474104437994e-15,
+          "relative": 4.623403188776756e-13
+        },
+        "broken_gradient_l2": {
+          "absolute": 9.81463038544841e-14,
+          "relative": 1.1010691073124513e-12
+        },
+        "physical_flux_l2": {
+          "absolute": 2.344731520173033e-13,
+          "relative": 1.058229745953126e-12
+        }
+      },
+      "accepted": true,
+      "seconds": 93.50282644399886,
+      "complete": true,
+      "driver_sha256": "221e09d30a31fa0cc9de4de656ad601ec21244105db72363f0c958f565203511",
+      "field_archive": "ufl-r16-fields-S1-d126.npz"
+    },
+    {
+      "setting": "S2",
+      "delta": 0.007936507936507936,
+      "refinement": 16,
+      "fine_triangles": 4360,
+      "original_equations_relative": {
+        "native": 2.808648934631322e-12,
+        "candidate": 7.211989638430872e-11
+      },
+      "relative_denominator": "independent native field norm",
+      "field_archive_sha256": "e967d9c704794e7bae97bf3c37d8bb17c987c61f56b73976fe8d1bd23a31e079",
+      "native_dofs": 36561,
+      "trace_dofs": 105,
+      "pressure_linf_difference": 2.6201263381153694e-14,
+      "trace_linf_difference": 3.4076214072698008e-12,
+      "full_residual_relative": 3.1748623282001007e-12,
+      "pressure_l2": 8.812194642692921e-05,
+      "gradient_l2": 0.0025754661556932185,
+      "energy_error": 0.002770762545011213,
+      "native_exact_errors": {
+        "pressure_l2": 8.812194642674759e-05,
+        "gradient_l2": 0.002575466155689549,
+        "energy_error": 0.0027707625450074146
+      },
+      "physical_differences": {
+        "pressure_l2": {
+          "absolute": 6.955987735642656e-15,
+          "relative": 4.579183305175212e-13
+        },
+        "broken_gradient_l2": {
+          "absolute": 9.846581312593233e-14,
+          "relative": 1.1067967692899335e-12
+        },
+        "physical_flux_l2": {
+          "absolute": 2.506610323082913e-13,
+          "relative": 1.1310921627088385e-12
+        }
+      },
+      "accepted": true,
+      "seconds": 91.05807969399939,
+      "complete": true,
+      "driver_sha256": "221e09d30a31fa0cc9de4de656ad601ec21244105db72363f0c958f565203511",
+      "field_archive": "ufl-r16-fields-S2-d126.npz"
+    },
+    {
+      "setting": "S1",
+      "delta": 0.016129032258064516,
+      "refinement": 16,
+      "fine_triangles": 4100,
+      "original_equations_relative": {
+        "native": 2.3095601324040304e-12,
+        "candidate": 4.760899194696746e-11
+      },
+      "relative_denominator": "independent native field norm",
+      "field_archive_sha256": "95148d9e8f9ceedf7c5da3aa73e384b2dc942a02f5be63dbb39ce879c94635d2",
+      "native_dofs": 34444,
+      "trace_dofs": 84,
+      "pressure_linf_difference": 4.6150583354886976e-14,
+      "trace_linf_difference": 7.382150446488822e-13,
+      "full_residual_relative": 2.5739575427249916e-12,
+      "pressure_l2": 0.0001430259032158733,
+      "gradient_l2": 0.0069276706058131205,
+      "energy_error": 0.008305225588968398,
+      "native_exact_errors": {
+        "pressure_l2": 0.00014302590321398038,
+        "gradient_l2": 0.0069276706058022716,
+        "energy_error": 0.008305225588957372
+      },
+      "physical_differences": {
+        "pressure_l2": {
+          "absolute": 1.1346192923118518e-14,
+          "relative": 7.44241758281056e-13
+        },
+        "broken_gradient_l2": {
+          "absolute": 1.234053432621325e-13,
+          "relative": 1.3815334088630882e-12
+        },
+        "physical_flux_l2": {
+          "absolute": 4.436979999108334e-13,
+          "relative": 2.001506878013076e-12
+        }
+      },
+      "accepted": true,
+      "seconds": 94.09854580499996,
+      "complete": true,
+      "driver_sha256": "221e09d30a31fa0cc9de4de656ad601ec21244105db72363f0c958f565203511",
+      "field_archive": "ufl-r16-fields-S1-d62.npz"
+    },
+    {
+      "setting": "S2",
+      "delta": 0.016129032258064516,
+      "refinement": 16,
+      "fine_triangles": 4100,
+      "original_equations_relative": {
+        "native": 2.357631460455114e-12,
+        "candidate": 5.4997518358568965e-11
+      },
+      "relative_denominator": "independent native field norm",
+      "field_archive_sha256": "04d8470bb18280f532e49bae1527a530a72291700a041d4d0d6224b0e9d15eab",
+      "native_dofs": 34465,
+      "trace_dofs": 105,
+      "pressure_linf_difference": 4.491892968694344e-14,
+      "trace_linf_difference": 9.753101104514883e-13,
+      "full_residual_relative": 2.6259740794664093e-12,
+      "pressure_l2": 8.590156412658669e-05,
+      "gradient_l2": 0.0025337850748497746,
+      "energy_error": 0.0027217190696981757,
+      "native_exact_errors": {
+        "pressure_l2": 8.590156412660641e-05,
+        "gradient_l2": 0.0025337850748460198,
+        "energy_error": 0.0027217190696951785
+      },
+      "physical_differences": {
+        "pressure_l2": {
+          "absolute": 1.101321868234599e-14,
+          "relative": 7.250110532519318e-13
+        },
+        "broken_gradient_l2": {
+          "absolute": 1.1998453702826502e-13,
+          "relative": 1.348704585143028e-12
+        },
+        "physical_flux_l2": {
+          "absolute": 4.2891418911141895e-13,
+          "relative": 1.9354410984566166e-12
+        }
+      },
+      "accepted": true,
+      "seconds": 85.8002180830008,
+      "complete": true,
+      "driver_sha256": "221e09d30a31fa0cc9de4de656ad601ec21244105db72363f0c958f565203511",
+      "field_archive": "ufl-r16-fields-S2-d62.npz"
+    },
+    {
+      "setting": "S1",
+      "delta": 0.03333333333333333,
+      "refinement": 16,
+      "fine_triangles": 4104,
+      "original_equations_relative": {
+        "native": 2.343323332653422e-12,
+        "candidate": 5.086379504079966e-11
+      },
+      "relative_denominator": "independent native field norm",
+      "field_archive_sha256": "ab3e66fa8d965b530356d6e9085d1b920556a6eeb8581efe65a1f004eb523372",
+      "native_dofs": 34468,
+      "trace_dofs": 84,
+      "pressure_linf_difference": 4.6851411639181606e-14,
+      "trace_linf_difference": 5.735134589457402e-13,
+      "full_residual_relative": 2.5941493160014416e-12,
+      "pressure_l2": 0.0002107763247600081,
+      "gradient_l2": 0.007681558681301716,
+      "energy_error": 0.01044111921826908,
+      "native_exact_errors": {
+        "pressure_l2": 0.0002107763247499875,
+        "gradient_l2": 0.007681558681284316,
+        "energy_error": 0.010441119218250692
+      },
+      "physical_differences": {
+        "pressure_l2": {
+          "absolute": 2.0647305859017642e-14,
+          "relative": 1.35103922278674e-12
+        },
+        "broken_gradient_l2": {
+          "absolute": 1.394930402009916e-13,
+          "relative": 1.5590770654909956e-12
+        },
+        "physical_flux_l2": {
+          "absolute": 4.569806969441593e-13,
+          "relative": 2.05769628122489e-12
+        }
+      },
+      "accepted": true,
+      "seconds": 94.49851564999881,
+      "complete": true,
+      "driver_sha256": "221e09d30a31fa0cc9de4de656ad601ec21244105db72363f0c958f565203511",
+      "field_archive": "ufl-r16-fields-S1-d30.npz"
+    },
+    {
+      "setting": "S2",
+      "delta": 0.03333333333333333,
+      "refinement": 16,
+      "fine_triangles": 4104,
+      "original_equations_relative": {
+        "native": 2.265774205267719e-12,
+        "candidate": 5.061545154025517e-11
+      },
+      "relative_denominator": "independent native field norm",
+      "field_archive_sha256": "5053413bfe53287f8ca5700d30b1bd916f50babbdad750973610df2cc87838cd",
+      "native_dofs": 34489,
+      "trace_dofs": 105,
+      "pressure_linf_difference": 4.532138553337006e-14,
+      "trace_linf_difference": 5.891398480173393e-13,
+      "full_residual_relative": 2.51502040860626e-12,
+      "pressure_l2": 8.203283200205513e-05,
+      "gradient_l2": 0.0024294987886620584,
+      "energy_error": 0.0026132090133162414,
+      "native_exact_errors": {
+        "pressure_l2": 8.203283200249075e-05,
+        "gradient_l2": 0.00242949878866017,
+        "energy_error": 0.002613209013315442
+      },
+      "physical_differences": {
+        "pressure_l2": {
+          "absolute": 1.97554505642438e-14,
+          "relative": 1.3005278935943777e-12
+        },
+        "broken_gradient_l2": {
+          "absolute": 1.3588095926324855e-13,
+          "relative": 1.5274627969383415e-12
+        },
+        "physical_flux_l2": {
+          "absolute": 4.437648431958221e-13,
+          "relative": 2.0024311140218688e-12
+        }
+      },
+      "accepted": true,
+      "seconds": 90.05088976200022,
+      "complete": true,
+      "driver_sha256": "221e09d30a31fa0cc9de4de656ad601ec21244105db72363f0c958f565203511",
+      "field_archive": "ufl-r16-fields-S2-d30.npz"
+    },
+    {
+      "setting": "S1",
+      "delta": 0.07142857142857142,
+      "refinement": 16,
+      "fine_triangles": 4112,
+      "original_equations_relative": {
+        "native": 2.319775822588512e-12,
+        "candidate": 4.5247590410188794e-11
+      },
+      "relative_denominator": "independent native field norm",
+      "field_archive_sha256": "2fae9b320d0034adb0542c90edcee370a602e1fc97a53c4ab1579448d9ba9aef",
+      "native_dofs": 34532,
+      "trace_dofs": 84,
+      "pressure_linf_difference": 5.904998712225051e-14,
+      "trace_linf_difference": 2.924743780496897e-13,
+      "full_residual_relative": 2.554123485431913e-12,
+      "pressure_l2": 0.0002566546844150883,
+      "gradient_l2": 0.00840071170969288,
+      "energy_error": 0.011784321790032394,
+      "native_exact_errors": {
+        "pressure_l2": 0.00025665468440951825,
+        "gradient_l2": 0.008400711709694315,
+        "energy_error": 0.011784321790035197
+      },
+      "physical_differences": {
+        "pressure_l2": {
+          "absolute": 2.2793296660209212e-14,
+          "relative": 1.488362456136579e-12
+        },
+        "broken_gradient_l2": {
+          "absolute": 1.785582179545032e-13,
+          "relative": 1.9928594246909076e-12
+        },
+        "physical_flux_l2": {
+          "absolute": 2.564298462543844e-13,
+          "relative": 1.1534837646278937e-12
+        }
+      },
+      "accepted": true,
+      "seconds": 95.44429276199844,
+      "complete": true,
+      "driver_sha256": "221e09d30a31fa0cc9de4de656ad601ec21244105db72363f0c958f565203511",
+      "field_archive": "ufl-r16-fields-S1-d14.npz"
+    },
+    {
+      "setting": "S2",
+      "delta": 0.07142857142857142,
+      "refinement": 16,
+      "fine_triangles": 4112,
+      "original_equations_relative": {
+        "native": 2.2795339462625027e-12,
+        "candidate": 3.782245981748353e-11
+      },
+      "relative_denominator": "independent native field norm",
+      "field_archive_sha256": "414f3ec0e2cf52f68a42913dc077ccfc7a849d6d3aaecab8d5dc8f84c060abb7",
+      "native_dofs": 34553,
+      "trace_dofs": 105,
+      "pressure_linf_difference": 5.767608612927688e-14,
+      "trace_linf_difference": 2.892547312782767e-13,
+      "full_residual_relative": 2.5474327395901082e-12,
+      "pressure_l2": 7.52479625838064e-05,
+      "gradient_l2": 0.0022160338073620436,
+      "energy_error": 0.0024079141227356373,
+      "native_exact_errors": {
+        "pressure_l2": 7.524796258410965e-05,
+        "gradient_l2": 0.002216033807359552,
+        "energy_error": 0.002407914122734304
+      },
+      "physical_differences": {
+        "pressure_l2": {
+          "absolute": 2.2329151016158597e-14,
+          "relative": 1.4699710379129463e-12
+        },
+        "broken_gradient_l2": {
+          "absolute": 1.7401631005141669e-13,
+          "relative": 1.9563118634464744e-12
+        },
+        "physical_flux_l2": {
+          "absolute": 2.548031172215185e-13,
+          "relative": 1.1497446619878496e-12
+        }
+      },
+      "accepted": true,
+      "seconds": 91.72668201200031,
+      "complete": true,
+      "driver_sha256": "221e09d30a31fa0cc9de4de656ad601ec21244105db72363f0c958f565203511",
+      "field_archive": "ufl-r16-fields-S2-d14.npz"
+    },
+    {
+      "setting": "S1",
+      "delta": 0.16666666666666666,
+      "refinement": 16,
+      "fine_triangles": 4128,
+      "original_equations_relative": {
+        "native": 2.34915250524878e-12,
+        "candidate": 8.287495630906368e-11
+      },
+      "relative_denominator": "independent native field norm",
+      "field_archive_sha256": "7888891df7517db1f11bb6308dd7145ee7ba003d76b2a02e54e15c4ac61ac839",
+      "native_dofs": 34660,
+      "trace_dofs": 84,
+      "pressure_linf_difference": 5.895284260759581e-14,
+      "trace_linf_difference": 2.076845639908953e-13,
+      "full_residual_relative": 2.5993890748692495e-12,
+      "pressure_l2": 0.0004370234631287705,
+      "gradient_l2": 0.013535975810521534,
+      "energy_error": 0.01597344285676701,
+      "native_exact_errors": {
+        "pressure_l2": 0.0004370234631327558,
+        "gradient_l2": 0.013535975810519463,
+        "energy_error": 0.01597344285676581
+      },
+      "physical_differences": {
+        "pressure_l2": {
+          "absolute": 1.3993256551032286e-14,
+          "relative": 9.076316271751433e-13
+        },
+        "broken_gradient_l2": {
+          "absolute": 1.523860784202619e-13,
+          "relative": 1.6847927387222695e-12
+        },
+        "physical_flux_l2": {
+          "absolute": 3.5119008845844726e-13,
+          "relative": 1.583740392872806e-12
+        }
+      },
+      "accepted": true,
+      "seconds": 89.49209030100019,
+      "complete": true,
+      "driver_sha256": "221e09d30a31fa0cc9de4de656ad601ec21244105db72363f0c958f565203511",
+      "field_archive": "ufl-r16-fields-S1-d6.npz"
+    },
+    {
+      "setting": "S2",
+      "delta": 0.16666666666666666,
+      "refinement": 16,
+      "fine_triangles": 4128,
+      "original_equations_relative": {
+        "native": 2.224197190339291e-12,
+        "candidate": 7.719422210187448e-11
+      },
+      "relative_denominator": "independent native field norm",
+      "field_archive_sha256": "1fc9edb7bd7504c70f0af1ac8f318e02db25e73d98e6121f0eb7b77b31d57227",
+      "native_dofs": 34681,
+      "trace_dofs": 105,
+      "pressure_linf_difference": 5.057759766557979e-14,
+      "trace_linf_difference": 2.92748464358894e-13,
+      "full_residual_relative": 2.4695598994453756e-12,
+      "pressure_l2": 6.125458094002739e-05,
+      "gradient_l2": 0.0018948350017583939,
+      "energy_error": 0.0021129449798325114,
+      "native_exact_errors": {
+        "pressure_l2": 6.125458093988389e-05,
+        "gradient_l2": 0.0018948350017598896,
+        "energy_error": 0.0021129449798312555
+      },
+      "physical_differences": {
+        "pressure_l2": {
+          "absolute": 1.4167264816059616e-14,
+          "relative": 9.326584506356872e-13
+        },
+        "broken_gradient_l2": {
+          "absolute": 1.3062202504080603e-13,
+          "relative": 1.4686051239891596e-12
+        },
+        "physical_flux_l2": {
+          "absolute": 3.292428762152832e-13,
+          "relative": 1.4856368998902838e-12
+        }
+      },
+      "accepted": true,
+      "seconds": 74.74098371299988,
+      "complete": true,
+      "driver_sha256": "221e09d30a31fa0cc9de4de656ad601ec21244105db72363f0c958f565203511",
+      "field_archive": "ufl-r16-fields-S2-d6.npz"
+    }
+  ],
+  "reference_code": {
+    "reference_code": "FEniCS/DOLFINx",
+    "version": "0.9.0",
+    "runtime_reported_build_git_hash": "8067ef16087b9f364873e0e657dcda52fb989ce3",
+    "runtime_hash_status": "build-reported identifier; not resolved as an upstream dolfinx commit",
+    "verified_upstream_release_commit": "6443e3b27d29aec04ce83d8424b57c339e35f865",
+    "verified_source_url": "https://github.com/FEniCS/dolfinx/tree/6443e3b27d29aec04ce83d8424b57c339e35f865",
+    "upstream_verification_url": "https://api.github.com/repos/FEniCS/dolfinx/git/ref/tags/v0.9.0",
+    "conda_packages": [
+      {
+        "name": "fenics-dolfinx",
+        "version": "0.9.0",
+        "build": "py313hf84a112_112",
+        "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-dolfinx-0.9.0-py313hf84a112_112.conda",
+        "sha256": "79bb466bd1624512b7e6302e7926a05ef1e78685f0c188a69668222f31852b86",
+        "recipe_sha256": "df9a203accdaa6d1a5b1c97600971f9803620dea2176e5c62b705d9ac0e12bec",
+        "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+        "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+        "patches": [
+          {
+            "name": "unpin-cffi.patch",
+            "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+          }
+        ]
+      },
+      {
+        "name": "fenics-libdolfinx",
+        "version": "0.9.0",
+        "build": "py313h2154cf7_112",
+        "url": "https://conda.anaconda.org/conda-forge/linux-64/fenics-libdolfinx-0.9.0-py313h2154cf7_112.conda",
+        "sha256": "f8068fef21e9008e0531d83e8f19e8ee41bb40920881b8416583380f138e7889",
+        "recipe_sha256": "e75fdc33edb216ccf13ad27023b1b2b1f465451c630395137104e278732a62d7",
+        "source_archive_url": "https://github.com/fenics/dolfinx/archive/refs/tags/v0.9.0.tar.gz",
+        "source_archive_sha256": "b266c74360c2590c5745d74768c04568c965b44739becca4cd6b5aa58cdbbbd1",
+        "patches": [
+          {
+            "name": "unpin-cffi.patch",
+            "sha256": "ee3d12ce5e0f29e6ae49772b82d8dea146656b54e4c1fdfd9d6e4289c83e36b4"
+          }
+        ]
+      }
+    ],
+    "python_extension_file": "cpp.cpython-313-x86_64-linux-gnu.so",
+    "python_extension_sha256": "7fba4280795a95accf09754435d0e6a19e48ca4e2c604d739688614bf4b6802a",
+    "runtime_versions": {
+      "dolfinx": "0.9.0",
+      "basix": "0.9.0",
+      "ufl": "2024.2.0",
+      "numpy": "2.5.3",
+      "scipy": "1.18.1"
+    }
+  },
+  "source_hashes": {
+    "src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+    "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+    "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+    "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+    "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+    "src/pymhm/hybrid_refinement.py": "1d23684e51dd9ba831d10d1171ef9c772ee66ae205cc1aec92975cb5926176e7",
+    "src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+    "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+    "src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+    "src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+    "src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+    "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+    "src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+    "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+    "src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+    "src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+    "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+    "src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+    "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+    "src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+    "src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+    "src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+    "src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+    "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+    "src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+    "src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+    "src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+    "src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+    "src/pymhm/helmholtz_spaces.py": "3d86328917c90ba30942e443f25e6daac4eca01c14f1cba6b202b5066b754c33",
+    "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+    "src/pymhm/scalar_transient.py": "c832e492613ccf449a21164206e117f44645f44d1243915db913ce0b2c28ea9d",
+    "src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+    "src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+    "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+    "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+    "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+    "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+    "src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+    "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+    "src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+    "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+    "src/pymhm/helmholtz.py": "93542c9da2ea4e3a37d55318747de90103e4e54855124878943fca5da0793b15",
+    "src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+    "src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+    "src/pymhm/distributed.py": "c6cf5f26bd9033a72328d18f5d099ab0d9b867f92a6babe472c2035ff1abd7ae",
+    "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+    "src/pymhm/darcy_transport.py": "0e89e0a2902fcfb0d7850738e58f1acc734b088ca00a817d2c91199ec5b1931c",
+    "src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+    "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+    "src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+    "src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+    "src/pymhm/hybrid.py": "351d06072b275304f609b50cc9f3dfa279350cd20c956b10eee7d12c5078998e",
+    "src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+    "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+    "src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+    "src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+    "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+    "src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+    "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+    "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+    "src/pymhm/offline.py": "d991950927222677d97e25a49ae2839861583d79801c818d5426ecd538590212",
+    "src/pymhm/mshho.py": "3eb065e61b31be310bf5ae982f5b51560e9d5078bbf0c7a9960d0f035728691f",
+    "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+    "src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+    "src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+    "src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+    "src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+    "src/pymhm/darcy.py": "40c20c036e29d96595e626e62bcc40ccf245dca06f8c6b3f2f652fb90dbc1e16",
+    "src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+    "src/pymhm/rad.py": "402db397443a7ac86e726f8e44361c108708a3812bc835908dcb2fdc145be4df",
+    "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+    "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+    "src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+    "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+    "src/pymhm/scalar_boundary.py": "b0f058385c0ec413902d02638d5d95a67fc238d16aa183359597547681da5ef0",
+    "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94",
+    "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+    "src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+    "src/pymhm/__init__.py": "c3049225d8a0d55d75ebb68d14f163e4d51fb17257076ded27bed7ee63ecd3ca",
+    "src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+    "src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+    "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+    "src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+    "src/pymhm/elastodynamics.py": "6e2852f5d55eee9e96ccffc0fa18d729fc32740728499082b0bb5098436929ea",
+    "src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+    "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+    "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+    "src/pymhm/mshho3d.py": "acccdd5fccd512857493ac48e9fd269455bcdddd5fce78253b47d887e9405b93",
+    "src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+    "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+    "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+    "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+    "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+    "src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+    "src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+    "src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+    "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+    "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+    "src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+    "src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+    "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+    "src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+    "src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+    "src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+    "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+    "src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+    "src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+    "src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+    "src/pymhm/nested.py": "4414c4fba66266017d97b5a75eda9a24ad90393647bd75d1245b5f4f93bc0049",
+    "src/pymhm/triangle_fields.py": "4f99653e6eb82f5e8d232d1adce3ef628a33b8a0bae2f1316f19456e193a07aa",
+    "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+    "src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c"
+  },
+  "independent_comparison_driver_sha256": "221e09d30a31fa0cc9de4de656ad601ec21244105db72363f0c958f565203511",
+  "acquisition_source_manifest_sha256": "325b8d7432d8610a7a870660ba302ab1c534232c647f1e9ec27854d4e0ec4591",
+  "current_family_result_sha256": "128109149b75c7484d3adb2cac63103be5fbbdf601d43340408debff4538275d",
+  "source_hashes_reverified": true,
+  "gallery_record_sha256": "2c6b01493cd3ebc0c9c493923da10d2d75ca7f3a4d69e01fc45ff9e0afa76211",
+  "gallery_norm_agreement": [
+    {
+      "setting": "S0",
+      "delta": 0.0,
+      "absolute_error_norm_difference": {
+        "pressure_l2": 2.2238341810393303e-16,
+        "gradient_l2": 6.483095310594322e-15,
+        "energy_error": 7.047314121155779e-15
+      }
+    },
+    {
+      "setting": "S1",
+      "delta": 0.007936507936507936,
+      "absolute_error_norm_difference": {
+        "pressure_l2": 1.2143335382380771e-15,
+        "gradient_l2": 3.707104068162437e-15,
+        "energy_error": 3.877106968808164e-15
+      }
+    },
+    {
+      "setting": "S2",
+      "delta": 0.007936507936507936,
+      "absolute_error_norm_difference": {
+        "pressure_l2": 1.1550818895117443e-16,
+        "gradient_l2": 7.39209041200617e-15,
+        "energy_error": 7.122340911491776e-15
+      }
+    },
+    {
+      "setting": "S1",
+      "delta": 0.016129032258064516,
+      "absolute_error_norm_difference": {
+        "pressure_l2": 2.324827613406355e-15,
+        "gradient_l2": 5.6109630830469825e-15,
+        "energy_error": 5.4366233737113134e-15
+      }
+    },
+    {
+      "setting": "S2",
+      "delta": 0.016129032258064516,
+      "absolute_error_norm_difference": {
+        "pressure_l2": 2.4141116623105363e-16,
+        "gradient_l2": 1.9888604652074093e-15,
+        "energy_error": 2.7599450502791e-15
+      }
+    },
+    {
+      "setting": "S1",
+      "delta": 0.03333333333333333,
+      "absolute_error_norm_difference": {
+        "pressure_l2": 6.0021432268797525e-15,
+        "gradient_l2": 9.316332427733443e-15,
+        "energy_error": 9.246076126956382e-15
+      }
+    },
+    {
+      "setting": "S2",
+      "delta": 0.03333333333333333,
+      "absolute_error_norm_difference": {
+        "pressure_l2": 1.115644035487584e-16,
+        "gradient_l2": 4.425713268085829e-15,
+        "energy_error": 3.1320432358761252e-15
+      }
+    },
+    {
+      "setting": "S1",
+      "delta": 0.07142857142857142,
+      "absolute_error_norm_difference": {
+        "pressure_l2": 1.6061913084286505e-15,
+        "gradient_l2": 4.2327252813834093e-16,
+        "energy_error": 1.0633854907737827e-15
+      }
+    },
+    {
+      "setting": "S2",
+      "delta": 0.07142857142857142,
+      "absolute_error_norm_difference": {
+        "pressure_l2": 8.538092108323347e-18,
+        "gradient_l2": 7.582476313494624e-15,
+        "energy_error": 6.4575081393236644e-15
+      }
+    },
+    {
+      "setting": "S1",
+      "delta": 0.16666666666666666,
+      "absolute_error_norm_difference": {
+        "pressure_l2": 6.827925811553337e-15,
+        "gradient_l2": 1.6790388523979516e-14,
+        "energy_error": 1.6958656701149266e-14
+      }
+    },
+    {
+      "setting": "S2",
+      "delta": 0.16666666666666666,
+      "absolute_error_norm_difference": {
+        "pressure_l2": 7.401035079929175e-17,
+        "gradient_l2": 4.627374872168133e-16,
+        "energy_error": 4.560588018343026e-15
+      }
+    }
+  ],
+  "norm_conventions": {
+    "analytical_reference": "511 odd Fourier modes; material-split order8 triangle quadrature",
+    "pressure": "Physical L2",
+    "gradient": "Broken physical gradient L2",
+    "flux": "Physical -a grad(p), material-split L2; no smoothing",
+    "relative_denominator": "Independently assembled native field norm for each complete physical case",
+    "original_equations": "Compensated original full-system defect divided by physical load norm"
+  },
+  "scope": "All eleven P4/r16 heterogeneous S0/S1/S2 configurations on the declared macro mesh, coefficient and boundary data. Historical Figure5 local discretization is not uniquely identified."
+}

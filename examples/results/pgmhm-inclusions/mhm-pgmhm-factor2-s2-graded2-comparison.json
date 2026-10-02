@@ -1,0 +1,93 @@
+{
+  "archive": "mhm-pgmhm-factor2-s2.npz",
+  "archive_sha256": "09592602783cb2e2cae8e3baaa75e24a86b988cff420d6c197fc8e6ee3b5a9a7",
+  "reference": "classical-cg2-graded2.npz",
+  "reference_sha256": "d53f0f9807797aa3f36d3a038d6da03e6e0af042169834db9ce831c24389ecd1",
+  "integration": "exact geometric intersections; Duffy orders3/4; raw -K grad p",
+  "denominator": "corresponding physical norm of the stated CG2 reference",
+  "source_hashes": {
+    "examples/compare_pgmhm_inclusions.py": "cd3149ebca77dafcd49bc2430e02b69ebdec720918fe407057f3519c3faa33f0",
+    "examples/pgmhm_inclusion_data.py": "e0b5690efee2cffde1cf5b871b3bcf5e3be8c08272b87e6b71d7a32e5d17e852",
+    "examples/solve_pgmhm_inclusions_reference.py": "b4b79451340660b52078609ad74722578336d5d153431eb9174df87b25a240c3",
+    "examples/compare_unusual_spe10.py": "be46a47bb2240df93431ba390958939fab40154f79868fa7e2d414ab2cbcde04",
+    "examples/spe10_adaptive_norms.py": "9727f068fc1e7c2fc948270584634376ef92efbe2cf1db87e0c46cdd1b5f2ed7",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9"
+  },
+  "rows": [
+    {
+      "order": 3,
+      "seconds": 652.1244465908967,
+      "mhm": {
+        "pressure_absolute": 0.0001476998613386779,
+        "pressure_reference": 0.030328568720453666,
+        "pressure_relative": 0.004869991152568592,
+        "flux_absolute": 0.044646133427704515,
+        "flux_reference": 0.2400879121219342,
+        "flux_relative": 0.1859574396441498,
+        "energy_absolute": 0.02419368849102243,
+        "energy_reference": 0.16077078652169485,
+        "energy_relative": 0.15048560136115066
+      },
+      "pgmhm": {
+        "pressure_absolute": 0.00014685813465822355,
+        "pressure_reference": 0.030328568720453666,
+        "pressure_relative": 0.004842237561945415,
+        "flux_absolute": 0.04464518753877833,
+        "flux_reference": 0.2400879121219342,
+        "flux_relative": 0.18595349988342702,
+        "energy_absolute": 0.02419373381490895,
+        "energy_reference": 0.16077078652169485,
+        "energy_relative": 0.15048588327733398
+      },
+      "enriched": {
+        "pressure_absolute": 0.00014707988907004468,
+        "pressure_reference": 0.030328568720453666,
+        "pressure_relative": 0.004849549295442142,
+        "flux_absolute": 0.04468476865254583,
+        "flux_reference": 0.2400879121219342,
+        "flux_relative": 0.18611836080215333,
+        "energy_absolute": 0.02423522678519214,
+        "energy_reference": 0.16077078652169485,
+        "energy_relative": 0.1507439710256177
+      }
+    },
+    {
+      "order": 4,
+      "seconds": 678.5840924219228,
+      "mhm": {
+        "pressure_absolute": 0.0001476998613386778,
+        "pressure_reference": 0.030328568720453662,
+        "pressure_relative": 0.004869991152568589,
+        "flux_absolute": 0.044646133477405245,
+        "flux_reference": 0.24008791212454944,
+        "flux_relative": 0.1859574398491347,
+        "energy_absolute": 0.024193688491023338,
+        "energy_reference": 0.1607707865216949,
+        "energy_relative": 0.1504856013611563
+      },
+      "pgmhm": {
+        "pressure_absolute": 0.0001468581346582234,
+        "pressure_reference": 0.030328568720453662,
+        "pressure_relative": 0.004842237561945411,
+        "flux_absolute": 0.04464518758839436,
+        "flux_reference": 0.24008791212454944,
+        "flux_relative": 0.18595350008805922,
+        "energy_absolute": 0.02419373381490986,
+        "energy_reference": 0.1607707865216949,
+        "energy_relative": 0.1504858832773396
+      },
+      "enriched": {
+        "pressure_absolute": 0.00014707988907004455,
+        "pressure_reference": 0.030328568720453662,
+        "pressure_relative": 0.004849549295442139,
+        "flux_absolute": 0.04468476870223811,
+        "flux_reference": 0.24008791212454944,
+        "flux_relative": 0.18611836100710133,
+        "energy_absolute": 0.024235226785193048,
+        "energy_reference": 0.1607707865216949,
+        "energy_relative": 0.15074397102562334
+      }
+    }
+  ],
+  "source_changed_during_run": false
+}

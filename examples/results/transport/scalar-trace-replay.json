@@ -1,0 +1,126 @@
+{
+  "scope": "Prepared scalar traces preserve original one-sided ownership, quadrature, operators and physical fields. Acquisition source hashes remain attached to their original records; this is a separate diagnostic replay.",
+  "acquisition_sources": {
+    "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd",
+    "src/pymhm/scalar_adaptive.py": "fbb92bd3dddb9eb131151961135bccb0891fb26e51904afbe9b663daf8201375",
+    "examples/transport_mixed_campaign.py": "b36073ec7097b3d38217acadb732d4b34b8e44af2b37bcebeabe82176084e41b"
+  },
+  "diagnostic_sources": {
+    "src/pymhm/scalar_boundary.py": "b0f058385c0ec413902d02638d5d95a67fc238d16aa183359597547681da5ef0",
+    "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+    "examples/transport_mixed_campaign.py": "251f32e290d7bea03dd310f28251556dda01609141c431e3ca07baa0a55ad276"
+  },
+  "archived_field_replays": [
+    {
+      "archive": "mixed-adaptive-0.npz",
+      "sha256": "f93b565b7823c46e62acc26273ade64ec591c5efa1fe06a10f3b72d81d672694",
+      "total": 0.4223847411489583,
+      "maximum_continuity_moment": 5.447031714567174e-16,
+      "all_segment_indicators_bitwise_equal": true,
+      "total_bitwise_equal": true,
+      "continuity_moment_bitwise_equal": true
+    },
+    {
+      "archive": "mixed-adaptive-7.npz",
+      "sha256": "bc7bf7ca710bd86d3bb66d4873c75813f34eefb7051dc6dd16e280114509cdce",
+      "total": 0.008075102130452374,
+      "maximum_continuity_moment": 6.268856961311187e-16,
+      "all_segment_indicators_bitwise_equal": true,
+      "total_bitwise_equal": true,
+      "continuity_moment_bitwise_equal": true
+    },
+    {
+      "archive": "mixed-local-r32.npz",
+      "sha256": "73ae55ffd95055a1c11ecf08cf8a45438ad7fce31e902fe2e180a627a0bb9daf",
+      "total": 0.009713168005185345,
+      "maximum_continuity_moment": 3.222790957713162e-16,
+      "all_segment_indicators_bitwise_equal": true,
+      "total_bitwise_equal": true,
+      "continuity_moment_bitwise_equal": true
+    }
+  ],
+  "additional_fine_archive": {
+    "archive": "mixed-n8-local-r64.npz",
+    "sha256": "10070d116b3bb47830a9012c3f472704e7f3e424798ca31d8a17b65d2f59c325",
+    "total": 0.15895282301546576,
+    "maximum_continuity_moment": 4.160165050989817e-15,
+    "continuity_moment_equals_original_acquisition": true
+  },
+  "pgmhm_operator_field_replay": {
+    "bitwise_arrays": {
+      "constant_pressure": true,
+      "constant_enriched": true,
+      "constant_trace": true,
+      "constant_flux": true,
+      "constant_matrix_data": true,
+      "constant_matrix_indices": true,
+      "constant_matrix_indptr": true,
+      "constant_rhs": true,
+      "heterogeneous_pressure": true,
+      "heterogeneous_enriched": true,
+      "heterogeneous_trace": true,
+      "heterogeneous_flux": true,
+      "heterogeneous_matrix_data": true,
+      "heterogeneous_matrix_indices": true,
+      "heterogeneous_matrix_indptr": true,
+      "heterogeneous_rhs": true
+    },
+    "source_records": {
+      "original": {
+        "variant": "original",
+        "records": [
+          {
+            "material": "constant",
+            "original_hybrid_residual": 1.9728447122223457e-16
+          },
+          {
+            "material": "heterogeneous",
+            "original_hybrid_residual": 1.3792144265343746e-16
+          }
+        ],
+        "source_hashes": {
+          "src/pymhm/pgmhm.py": "112c30898c9aefa009a34ae35e8f014586b566c0169a3ad2ef14b63aec7b6ee8",
+          "src/pymhm/scalar_boundary.py": "ca2bd882668c1a833c15fc3d22ff1bd151c5727355d7d93b378f5f34050babbd"
+        }
+      },
+      "candidate": {
+        "variant": "candidate",
+        "records": [
+          {
+            "material": "constant",
+            "original_hybrid_residual": 1.9728447122223457e-16
+          },
+          {
+            "material": "heterogeneous",
+            "original_hybrid_residual": 1.3792144265343746e-16
+          }
+        ],
+        "source_hashes": {
+          "src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+          "src/pymhm/scalar_boundary.py": "b0f058385c0ec413902d02638d5d95a67fc238d16aa183359597547681da5ef0"
+        }
+      }
+    }
+  },
+  "geometric_work_regression": {
+    "repeated_evaluations": 64,
+    "fine_edges": 16,
+    "prepared_geometry_calls": 1,
+    "polynomial_piece_evaluations": 64,
+    "scope": "Controlled operation counts, not a timing benchmark"
+  },
+  "tests": {
+    "new_portable_regressions": 8,
+    "focused_portable_passed": 87,
+    "native_mixed_boundary_ufl_passed": 2,
+    "owner_coverage": {
+      "covered_lines": 472,
+      "num_statements": 472,
+      "missing_lines": 0,
+      "covered_branches": 136,
+      "num_branches": 136,
+      "missing_branches": 0
+    }
+  },
+  "coefficient_policy": "Archived coefficients are unchanged; no new solve is attributed to the diagnostic source."
+}

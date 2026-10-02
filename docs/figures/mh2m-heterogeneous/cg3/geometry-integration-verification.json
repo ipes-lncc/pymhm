@@ -1,0 +1,189 @@
+{
+  "scope": "Canonical common-refinement geometry; neither an exact-solution error bound nor a new quadrature rule.",
+  "small_controls": [
+    {
+      "first": 2,
+      "second": 3,
+      "batches": 1,
+      "triangles": 95,
+      "area": 1.0,
+      "bitwise": true,
+      "physical_norms_equal": true,
+      "resume": true,
+      "tamper_rejected": true
+    },
+    {
+      "first": 4,
+      "second": 7,
+      "batches": 1,
+      "triangles": 785,
+      "area": 1.0,
+      "bitwise": true,
+      "physical_norms_equal": true,
+      "resume": true,
+      "tamper_rejected": true
+    },
+    {
+      "first": 8,
+      "second": 12,
+      "batches": 1,
+      "triangles": 1792,
+      "area": 0.9999999999999999,
+      "bitwise": true,
+      "physical_norms_equal": true,
+      "resume": true,
+      "tamper_rejected": true
+    },
+    {
+      "first": 32,
+      "second": 40,
+      "batches": 8,
+      "triangles": 30345,
+      "area": 1.0000000000000004,
+      "bitwise": true,
+      "physical_norms_equal": true,
+      "resume": true,
+      "tamper_rejected": true
+    },
+    {
+      "first": 4,
+      "second": 8,
+      "batches": 1,
+      "triangles": 256,
+      "area": 1.0000000000000002,
+      "bitwise": true,
+      "physical_norms_equal": true,
+      "resume": true,
+      "tamper_rejected": true
+    },
+    {
+      "first": 8,
+      "second": 4,
+      "batches": 1,
+      "triangles": 192,
+      "area": 1.0000000000000002,
+      "bitwise": true,
+      "physical_norms_equal": true,
+      "resume": true,
+      "tamper_rejected": true
+    }
+  ],
+  "small_control_record_sha256": "5617abfdfac660d66bc383cc62f4f12a25bb5ab99dc5cd49c3b6df8af40e33db",
+  "small_control_meaning": "Cached and original clipping yield identical ordered triangle and batch arrays; serial/spawn physical norms agree bitwise for the specified controls.",
+  "production_checks": [
+    {
+      "classical_resolution": 512,
+      "crisscross_resolution": 260,
+      "accepted": true,
+      "batches": 1124,
+      "triangles": 4209654,
+      "area": 0.9999999999999992,
+      "coordinate_min": 0.0,
+      "coordinate_max": 1.0,
+      "source_sha256": {
+        "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+        "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+        "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39"
+      },
+      "geometry_acceptance_sha256": "7fbaa247170ec5c45c4cff1883be7a26a7fdef6f3baf4214247172d6412edb61",
+      "geometry_validation_sha256": "26b8f6d3e5db26278830e1f83fb70561c4e0110e70745ca53432838b361a2d0d",
+      "execution_record_sha256": "8370875e5580bb81bb07c080fef4fb55e857e541ae2ec8e88184adf2455cdf0b"
+    },
+    {
+      "classical_resolution": 512,
+      "crisscross_resolution": 272,
+      "accepted": true,
+      "batches": 1108,
+      "triangles": 4147279,
+      "area": 1.0000000000000002,
+      "coordinate_min": 0.0,
+      "coordinate_max": 1.0,
+      "source_sha256": {
+        "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+        "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+        "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39"
+      },
+      "geometry_acceptance_sha256": "cd5b92aeff57399b4d6e57a84aab6403da5cac0ff471d29e56c841a24909984d",
+      "geometry_validation_sha256": "c09ba1b5740223bc08f13ea84ad7b93a89293f272d6339243a8986d081c7dd34",
+      "execution_record_sha256": "e8c4d310438eb1a55eef3d932296180e08327cab5df02db6fcffea6af85b9aab"
+    },
+    {
+      "classical_resolution": 512,
+      "crisscross_resolution": 480,
+      "accepted": true,
+      "batches": 1845,
+      "triangles": 7528195,
+      "area": 1.0000000000000009,
+      "coordinate_min": 0.0,
+      "coordinate_max": 1.0,
+      "source_sha256": {
+        "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+        "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+        "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39"
+      },
+      "geometry_acceptance_sha256": "021cb4617ef32c1988a025b5a65f75369c25a346a65dc0c09249e786be0a85f6",
+      "geometry_validation_sha256": "eedeb1ef82157b1658a02cbb11615ab32a4d2378c92a223085f2a4fff6f05583",
+      "execution_record_sha256": "4458b554d865dd9b01f0796b4f97bc3c3e59acc8f7df1316bafacf3e38a0e73a"
+    },
+    {
+      "classical_resolution": 512,
+      "crisscross_resolution": 520,
+      "accepted": true,
+      "batches": 2164,
+      "triangles": 9093227,
+      "area": 0.9999999999999993,
+      "coordinate_min": 0.0,
+      "coordinate_max": 1.0,
+      "source_sha256": {
+        "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+        "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+        "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39"
+      },
+      "geometry_acceptance_sha256": "6555b44a6f5e108af5e05e8fb4ad764e331badcadf4834383cb45c2e44df0540",
+      "geometry_validation_sha256": "bf0d08f70bbdb330291387e5f8ba85281056ba0858ed9080c472738578db0157",
+      "execution_record_sha256": "fd6525e56a9f081c2006b7acb3f04b2e71125f4352236845ca886fe68cbf9364"
+    },
+    {
+      "classical_resolution": 512,
+      "crisscross_resolution": 640,
+      "accepted": true,
+      "batches": 1973,
+      "triangles": 7780448,
+      "area": 1.0000000000000004,
+      "coordinate_min": 0.0,
+      "coordinate_max": 1.0,
+      "source_sha256": {
+        "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+        "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+        "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39"
+      },
+      "geometry_acceptance_sha256": "e0730f06e88b2128c15fc0026a5e76c3528073152a6934b49459d4b26f161562",
+      "geometry_validation_sha256": "336a3cf696bee7c7dc3de2d0dfbafe751ac28cf861a335f80554b9ec2d59e3f7",
+      "execution_record_sha256": "c5aaa4f4ee611cc38fbeb4717c7b7a8daa4c247a414aa62e44c570dd4e297e0a"
+    },
+    {
+      "classical_resolution": 512,
+      "crisscross_resolution": 800,
+      "accepted": true,
+      "batches": 3306,
+      "triangles": 14196962,
+      "area": 1.0000000000000007,
+      "coordinate_min": 0.0,
+      "coordinate_max": 1.0,
+      "source_sha256": {
+        "examples/mh2m_heterogeneous_norms.py": "5426e8a86296621c6f41bfc347c38b9c7aa2091712a442e80fce316db3d1b0d3",
+        "examples/mh2m_crisscross_norms.py": "da3a2ec66bf6ba41ef3c7bf37a4c2cb931fc2abe41ab4ca07a1893427ce57752",
+        "src/pymhm/cut_cells.py": "73e963fbe9634c0efac32a4043f1b427fb3c0870235a4ba0b202266f3f458a39"
+      },
+      "geometry_acceptance_sha256": "087d782f6e8f4fb3e95233783812dc294ced0d82ad91148ad94396f39caa7896",
+      "geometry_validation_sha256": "e3fc2a0dc4d76bac0d1c89fd4943e1a67f45bd9f8c3522a3b74b728e06dec042",
+      "execution_record_sha256": "f6803d5cf9fe31950b0936ed708ad5cae568bf89c51e5816fe1cc8d8ee21c001"
+    }
+  ],
+  "production_check_meaning": "All persisted batches are checked for SHA, shape, finite coordinates, nonzero determinants, unit-square containment and total domain area; this is distinct from rerunning both full production geometry algorithms.",
+  "geometry_execution_adapter": {
+    "identifier": "canonical-overlay-checkpoint-adapter",
+    "sha256": "f6e49f19ba61d23bd280617001f9bf4fceb4e842aa834505d3f59105081651cd"
+  },
+  "numerical_evaluation": "Unchanged physical norm owner, quadrature orders8/10 and ordered batch reductions. Norm acceptance is recorded separately per field and quadrature."
+}

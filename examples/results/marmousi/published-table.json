@@ -1,0 +1,128 @@
+{
+  "source": {
+    "authors": [
+      "Théophile Chaumont-Frelet",
+      "Frédéric Valentin"
+    ],
+    "title": "A multiscale hybrid-mixed method for the Helmholtz equation in heterogeneous domains",
+    "doi": "10.1137/19M1255616",
+    "author_manuscript_url": "https://inria.hal.science/hal-01698914v2",
+    "manuscript_version": "HAL hal-01698914v2, submitted 16 April 2019",
+    "pdf_sha256": "b9bf6eb4e334d040f9f3e13effe2ccebcd3b050d7a488edc1445c3707b971a4a",
+    "section": "6.4",
+    "table": "6.1",
+    "printed_page": 23,
+    "pdf_page_one_based": 24,
+    "extraction": "Direct transcription checked against the rendered original table; no curve digitization"
+  },
+  "quantity": "100 * sqrt(sum over 513x129 grid of abs(p_reference-p_mhm)^2 / sum of abs(p_reference)^2)",
+  "quantity_unit": "percent",
+  "reference_space": "Continuous triangular P4, pixel-conforming 2048x512 squares divided into two triangles each",
+  "mhm_local_space": "Continuous square Q3, local Cartesian subdivisions 8/16/32 for macro widths20/40/80m",
+  "frequency_hz": 20,
+  "domain_m": [
+    10240,
+    2560
+  ],
+  "point_source_m": [
+    5000,
+    50
+  ],
+  "mhm_rows": [
+    {
+      "macro_width_m": 20,
+      "trace_degree": 0,
+      "relative_sampled_pressure_percent": 138.0,
+      "printed_value": "138"
+    },
+    {
+      "macro_width_m": 20,
+      "trace_degree": 1,
+      "relative_sampled_pressure_percent": 2.9,
+      "printed_value": "2.90"
+    },
+    {
+      "macro_width_m": 20,
+      "trace_degree": 2,
+      "relative_sampled_pressure_percent": 0.13,
+      "printed_value": "0.13"
+    },
+    {
+      "macro_width_m": 20,
+      "trace_degree": 3,
+      "relative_sampled_pressure_percent": 0.11,
+      "printed_value": "0.11"
+    },
+    {
+      "macro_width_m": 20,
+      "trace_degree": 4,
+      "relative_sampled_pressure_percent": 0.03,
+      "printed_value": "0.03"
+    },
+    {
+      "macro_width_m": 40,
+      "trace_degree": 0,
+      "relative_sampled_pressure_percent": 225.0,
+      "printed_value": "225"
+    },
+    {
+      "macro_width_m": 40,
+      "trace_degree": 1,
+      "relative_sampled_pressure_percent": 45.1,
+      "printed_value": "45.1"
+    },
+    {
+      "macro_width_m": 40,
+      "trace_degree": 2,
+      "relative_sampled_pressure_percent": 1.47,
+      "printed_value": "1.47"
+    },
+    {
+      "macro_width_m": 40,
+      "trace_degree": 3,
+      "relative_sampled_pressure_percent": 0.37,
+      "printed_value": "0.37"
+    },
+    {
+      "macro_width_m": 40,
+      "trace_degree": 4,
+      "relative_sampled_pressure_percent": 0.2,
+      "printed_value": "0.20"
+    },
+    {
+      "macro_width_m": 80,
+      "trace_degree": 0,
+      "relative_sampled_pressure_percent": 161.0,
+      "printed_value": "161"
+    },
+    {
+      "macro_width_m": 80,
+      "trace_degree": 1,
+      "relative_sampled_pressure_percent": 154.0,
+      "printed_value": "154"
+    },
+    {
+      "macro_width_m": 80,
+      "trace_degree": 2,
+      "relative_sampled_pressure_percent": 44.8,
+      "printed_value": "44.8"
+    },
+    {
+      "macro_width_m": 80,
+      "trace_degree": 3,
+      "relative_sampled_pressure_percent": 4.12,
+      "printed_value": "4.12"
+    },
+    {
+      "macro_width_m": 80,
+      "trace_degree": 4,
+      "relative_sampled_pressure_percent": 0.33,
+      "printed_value": "0.33"
+    }
+  ],
+  "comparison_scope": "Published values only. The declared primary-data crop used by this repository has not been identified with the historical coefficient arrays; no equality of material inputs is asserted.",
+  "unspecified_historical_conventions": [
+    "Selection of incident broken MHM values on macro interfaces in the sampling grid",
+    "Allocation of the point functional between incident macroelements when the source lies on a macro interface"
+  ]
+}

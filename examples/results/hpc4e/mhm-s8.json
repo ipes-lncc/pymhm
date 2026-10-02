@@ -1,0 +1,42 @@
+{
+  "case": "Devloo et al. (2021), Section 6.2, Figures 10 and 11",
+  "macro_shape": [
+    16,
+    8
+  ],
+  "fine_shape": [
+    512,
+    256
+  ],
+  "degree": 1,
+  "enrichment": 0,
+  "displacement_space": "Q1 squared",
+  "rotation_space": "total-degree P1",
+  "skeleton_degree": 1,
+  "skeleton_segments": 8,
+  "skeleton_dofs": 8960,
+  "coarse_rigid_dofs": 384,
+  "unknown_global_dofs": 8320,
+  "assembly_quadrature": 4,
+  "length_scale_m": 10000.0,
+  "stress_scale_pa": 100000000.0,
+  "solve_seconds": 1526.259166172007,
+  "workers": 8,
+  "local_solver": "scipy",
+  "diagnostics": {
+    "algebraic_residual": 5.753547437369955e-16,
+    "force_moment_linf": 2.47349883630843e-15,
+    "fine_force_linf": 2.219460878935619e-15,
+    "weak_symmetry_linf": 1.7498024357063718e-18,
+    "normal_traction_linf": 1.6300437562233316e-15
+  },
+  "field_archive": "build/results/hpc4e/mhm-s8.npz",
+  "sha256": "411c83ae9fb811ddea7d7359854baa0f950348aebff46d160fbad4453f26ac6f",
+  "source_hashes": {
+    "examples/solve_hpc4e_mhm.py": "45cb8b4b38ee2d5b19d9c0679f7c3ca1a0a4a61b4d8f3e4bd5f896f842577791",
+    "examples/hpc4e_data.py": "bdb6f3fa102556ab545ee22ed7e0632f98a917cdd4c86a1f7c4af734a108d113",
+    "src/pymhm/elasticity_tensor_rt.py": "f77097e6036a6f0f5866de1eb7a44757e2f018ded2ee3829bdb4000948656cb5",
+    "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+    "src/pymhm/hybrid.py": "125ca77c25528fe55c5abf0621c797c456288edee925d0956cf5b67db6dbf85c"
+  }
+}

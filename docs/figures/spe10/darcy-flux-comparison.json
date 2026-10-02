@@ -1,0 +1,616 @@
+{
+  "case": "SPE10 Model 2, layer 36; fixed Q1 MHM with matching physical data and independent classical references",
+  "display": "One-sided physical vector fields at identical 60x220 material-pixel centers; plots are not integrated error norms",
+  "mhm": {
+    "archive": "darcy-q1-r120-s32.npz",
+    "sha256": "185a401ff4f5c3b4d9ca075866e8261e1c480625d36cd6b4babf2576283b99c4",
+    "layer": 36,
+    "macro_shape": [
+      6,
+      11
+    ],
+    "macro_cells": 66,
+    "domain": [
+      0,
+      1200,
+      0,
+      2200
+    ],
+    "permeability_unit": "mD",
+    "coordinate_unit": "ft",
+    "degree": 1,
+    "local_refinement": [
+      120,
+      120
+    ],
+    "local_unknowns": 14641,
+    "skeleton_degree": 1,
+    "skeleton_segments": 32,
+    "skeleton_continuous": true,
+    "total_skeleton_unknowns": 4917,
+    "prescribed_flux_unknowns": 726,
+    "free_trace_plus_retained": 4257,
+    "quadrature_order": 3,
+    "coefficient_pixels_aligned": true,
+    "residual": 1.0325897652877904e-14,
+    "macro_balance_max": 1.2459651366203417e-15,
+    "exterior_flux_bottom_right_top_left": [
+      -0.15056549924573548,
+      0.0,
+      0.150565499245737,
+      0.0
+    ],
+    "pressure_nodal_min": -0.005253528788924822,
+    "pressure_nodal_max": 1.0033246783228837,
+    "solve_seconds": 84.37716276699211,
+    "sample_seconds": 0.9827584179583937,
+    "timing_scope": "observed wall time, no exclusive performance benchmark",
+    "backend": "process",
+    "workers": 4,
+    "local_solver": "scipy",
+    "global_solver": "scipy",
+    "local_native_threads": 1,
+    "figure_reference": "Paredes, Valentin and Versieux, DOI 10.1016/j.cam.2023.115415, Figures 6\u20138",
+    "reproduction_limit": "Published MHM local refinement is unspecified; this run states its own refinement.",
+    "profile_convention": "x=199; 11 separate macro intervals with both interface limits retained",
+    "pressure_rendering": "unaveraged local Qk coefficients and pixel-center samples",
+    "material_integration": "exact Cartesian pixel intersections; aligned-grid fast path",
+    "sampling_convention": "positive fine-cell side, with material approached from that same cell; upper macro boundary uses its interior side",
+    "label": "MHM Q1 / r=120\n32 continuous-P1 face segments",
+    "inlet_flux": 0.15056549924573548
+  },
+  "references": {
+    "q3": {
+      "archive": "reference-q3-960x1760-order5.npz",
+      "sha256": "30f2a4ee385e6728f39ebda5b2a72b62850513df6b171981b9e6e3b63f236165",
+      "layer": 36,
+      "method": "Conforming continuous Q3 finite elements",
+      "shape": [
+        960,
+        1760
+      ],
+      "cells": 1689600,
+      "degrees_of_freedom": 15214561,
+      "free_degrees_of_freedom": 15208799,
+      "coefficient_pixels_aligned": true,
+      "article_grid": false,
+      "material_integration": "exact Cartesian pixel intersections; aligned-grid fast path",
+      "quadrature_order": 5,
+      "pressure_nodal_min": 0.0,
+      "pressure_nodal_max": 1.0,
+      "free_residual_relative": 7.767746768200878e-12,
+      "outward_flux_bottom": -0.15080169615569894,
+      "outward_flux_top": 0.15080170409801114,
+      "exterior_balance": 7.942312196806967e-09,
+      "flux_diagnostic": "boundary reactions in the assembled weak equation",
+      "assembly_seconds": 71.88065406691749,
+      "solve_seconds": 107.39195448404644,
+      "sampling_seconds": 0.6875599059276283,
+      "solver": "pypardiso",
+      "native_threads": 8,
+      "timing_scope": "observed wall time, no exclusive performance benchmark",
+      "permeability_unit": "mD",
+      "coordinate_unit": "ft",
+      "source": 0,
+      "dirichlet": "p=1 at y=0 and p=0 at y=2200, imposed strongly",
+      "neumann": "q dot n=0 on x=0 and x=1200",
+      "reference": "Paredes et al., DOI 10.1016/j.cam.2023.115415, Section 5.2",
+      "label": "Conforming Q3\n960 x 1760 pixel-aligned cells"
+    },
+    "msl": {
+      "dofs": 3383681,
+      "cells": 6758400,
+      "relative_residual": 1.2514672257209359e-12,
+      "free_residual_l2": 1.1971366177310544e-10,
+      "reaction_bottom_outward": -0.15128906042622214,
+      "reaction_top_outward": 0.15128906096018765,
+      "reaction_balance": 5.339655106961771e-10,
+      "dirichlet_linf": 0,
+      "assembly_seconds": 60.917808342,
+      "solve_seconds": 117.246874177,
+      "process_seconds": 231.5167249579681,
+      "timing_scope": "Native mesh/data read, assembly, solve, reaction reassembly and binary export; not a controlled performance benchmark",
+      "discretization": "MSL_CG global conforming triangular P1; SW-NE diagonals; native Eigen SparseLU; raw flux -K grad(p)",
+      "shape": [
+        960,
+        3520
+      ],
+      "kind": "spe10",
+      "domain": [
+        1200,
+        2200
+      ],
+      "layer": 36,
+      "permeability_convention": "Kx = Ky from unmodified layer 36; piecewise constant on 60 x 220 pixels",
+      "boundary_conditions": {
+        "bottom_pressure": 1.0,
+        "top_pressure": 0.0,
+        "side_outward_flux": 0.0
+      },
+      "units": "Original SPE10 numerical coordinates in ft and permeability in mD; no SI conversion",
+      "driver_sha256": "5df1321daa1b194299f643116b1d383179c31c89946f0f5e8752d67f53fe20f0",
+      "runner_sha256": "4c5751fc037f5bb05e275dce3e9c32a1ae45477190be6104d2f3f7ba53defde8",
+      "executable_sha256": "2575f104adfa316905d7bc1f318cb76ce7013e0470cc7beea9739f08dcf9d52f",
+      "layer_sha256": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512",
+      "mesh_sha256": {
+        "grid.1.node": "9e3fc63401c28f300632d6a623b130c8386c9cc99b6d617d0a0ecbc4e9ef07b0",
+        "grid.1.ele": "3a628a457113c8bb46f1eee9332f31e86f11ee66f54b5a572384663c0a0e4c39"
+      },
+      "data_sha256": "36e0d5b808cd5249368c83cbfeed1a919cdfcd737799ac09020834fbb825c87e",
+      "reaction_convention": "Outward Darcy reaction is minus the uneliminated native stiffness residual at essential nodes; side zero flux is natural, not a pointwise raw-gradient constraint",
+      "pressure_min": 0.0,
+      "pressure_max": 1.0,
+      "flux_magnitude_max": 0.03916163207552703,
+      "reaction_free_relative": 7.912909301790735e-10,
+      "bc_balance_relative": 3.5294389912083095e-09,
+      "coefficients_sha256": "a6a6151fe6c7e1806c0c3e7f7ede817f6f443fbd893cb4e373c69e5221d805a3",
+      "coefficients": "build/results/spe10/msl/spe10-960x3520/coefficients.npz",
+      "previous_difference": {
+        "pressure_l2": 0.4304542745412961,
+        "pressure_reference_l2": 821.0287938930799,
+        "pressure_relative_l2": 0.0005242864534631082,
+        "flux_l2": 0.09147414765300241,
+        "flux_reference_l2": 0.9905563598941355,
+        "flux_relative_l2": 0.09234623223536578,
+        "integration": "Exact P1 mass matrix for pressure; cell areas for piecewise constant flux; nested SW-NE triangles"
+      },
+      "previous_coefficients_sha256": "b4120150067ef36ec77431c91fb088bea02f5b8024bafb7a6cd7dfad2ff7e516",
+      "archive": "msl-cg-p1-960x3520.npz",
+      "sha256": "8015ab0f640b194cdcae3a989899f048e6ecb6cc92d7a90d19180fe265572c33",
+      "sample_convention": "Pixel centers: lower triangle at diagonal and positive coordinate side at fine-grid boundaries. Profiles x=199: eleven macro intervals retain their separate interior-side endpoint flux limits. Samples are visualization data, not L2 norms.",
+      "sampling_postprocessor_sha256": "33fa93a8be95bd0974ec743ea5bb4386f344f8548af16dfdd17b8545b82ccde5",
+      "native_reaction_assembly_check_linf": 2.203000694193935e-12,
+      "native_reaction_check": "Native uneliminated LCS action checked against independent exact triangular P1 gradients and archived pixel coefficients; no native matrix or solve altered",
+      "raw_boundary_outward_integrals": {
+        "bottom": -0.15166662766982966,
+        "top": 0.15212826351214262,
+        "left": 0.0001260270081809197,
+        "right": -3.950107496848805e-05
+      },
+      "raw_flux_boundary_convention": "Raw P1 flux is not H(div)-conforming and its boundary integrals need not equal the variational reactions; zero side flux is imposed naturally in the weak equation",
+      "energy_squared": 0.15128906045881307,
+      "energy_from_dirichlet_reaction": 0.15128906042622214,
+      "energy_identity_defect": 3.259092995477886e-11,
+      "energy_identity": "Integral q.K^-1.q equals minus the bottom outward reaction for p_bottom=1, p_top=0 and homogeneous side Neumann data",
+      "label": "MSL_CG conforming P1\n6,758,400 triangles"
+    },
+    "neopz": {
+      "method": "Classical conforming NeoPZ RT0/P0 mixed Darcy",
+      "hdiv_family": "EHDivConstant, polynomial order zero; three triangular flux functions and one constant pressure",
+      "shape": [
+        480,
+        1760
+      ],
+      "triangles": 1689600,
+      "degrees_of_freedom": 4226240,
+      "free_degrees_of_freedom": 4222720,
+      "prescribed_normal_flux_degrees_of_freedom": 3520,
+      "matrix_nonzeros": 22811840,
+      "coefficient_pixels_aligned": true,
+      "domain": [
+        0,
+        1200,
+        0,
+        2200
+      ],
+      "layer": 36,
+      "coefficient_case": "spe10",
+      "coordinate_unit": "ft",
+      "permeability_unit": "mD",
+      "pressure_unit": "normalized prescribed pressure",
+      "flux_convention": "q=-K grad(p), Kx=Ky",
+      "source": 0,
+      "dirichlet": "p=1 at y=0 and p=0 at y=2200, natural mixed functional",
+      "neumann": "q dot n=0 at x=0 and x=1200, exact flux-coefficient elimination; no penalty",
+      "quadrature_order": 2,
+      "material_integration": "Each triangle lies in one constant-coefficient region; quadratic RT0 mass is integrated exactly",
+      "solver": "Intel MKL PARDISO through pypardiso; native NeoPZ element assembly and field evaluation",
+      "linear_solver_coordinate_scaling": "Eight symmetric Ruiz equilibration steps, final residual in unscaled physical equations",
+      "free_residual_relative": 1.6637884657025877e-11,
+      "refinement_steps": 1,
+      "assembly_seconds": 92.14552220306359,
+      "solve_seconds": 22.377508097910322,
+      "field_export_seconds": 176.4327194240177,
+      "native_threads": 8,
+      "timing_scope": "Observed wall time without exclusive access; not a performance benchmark",
+      "peak_process_rss_gib": 6.500713348388672,
+      "software": {
+        "neopz_revision": "4c6b6d277ce097b97bfc8dea1b6725860f4fe05a",
+        "neopz_url": "https://github.com/labmec/neopz",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1"
+      },
+      "native_driver_sha256": "49af121847e10db9cd148e9ff3bf0cf547f3d39e9ee38a49c4fae9a572107965",
+      "orchestration_sha256": "78e26fff2dbb9c0e04434e7f1050a4fd105812ec548b52fcfef934c6503c27a7",
+      "interior_normal_flux_jump_linf": 6.206335383118182e-18,
+      "pressure_min": 3.5047538274935674e-08,
+      "pressure_max": 0.9999534083984102,
+      "divergence_l2": 1.297988590249196e-16,
+      "cell_balance_linf": 5.421010862427522e-18,
+      "outward_flux_bottom": -0.14956955086439122,
+      "outward_flux_top": 0.14956955086439117,
+      "outward_flux_left": -0.0,
+      "outward_flux_right": 0.0,
+      "exterior_balance": -5.551115123125783e-17,
+      "archive": "neopz-rt0-480x1760.npz",
+      "sha256": "3d9f3d6d80a70da57ac5bd2f5c344459527faa93cf6ca3ff01678d683e4ab8ee",
+      "input_sha256": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512",
+      "sampling": "Common pixel centers; positive-coordinate owner on grid boundaries, lower-right owner on diagonal ties. Profiles approach each 200-unit interval from within. Samples are not integrated error norms.",
+      "coefficient_archive_sha256": "b79e392ad600e057ca3101a78722b58783e54f10ce1e78dd4332a44efdaea257",
+      "change_from_previous": {
+        "pressure_l2": 1.225487659352003,
+        "flux_l2": 0.12445378133515257,
+        "pressure_relative_l2": 0.0014906419348298889,
+        "flux_relative_l2": 0.1274157781386493,
+        "pressure_reference_l2": 822.1207459133066,
+        "flux_reference_l2": 0.9767532965950765,
+        "integration": "degree-two three-point triangle quadrature on the finer nested grid; finer reference norm denominator"
+      },
+      "label": "NeoPZ mixed RT0/P0\n1,689,600 triangles"
+    }
+  },
+  "refinement": {
+    "q3": [
+      {
+        "shape": [
+          120,
+          220
+        ],
+        "cells": 26400,
+        "archive": "reference-q3-120x220-order5.npz",
+        "sha256": "2575f9f4c9ed731112e2a82dd2024b1f96355d84deb4f7c6f35c72b2d7cf82f1",
+        "inlet_flux": 0.15119914629998032
+      },
+      {
+        "shape": [
+          240,
+          440
+        ],
+        "cells": 105600,
+        "archive": "reference-q3-240x440-order6.npz",
+        "sha256": "ea304201146918c5eb96d52d236f019463af9c3be1b7894b224e96546a292fab",
+        "inlet_flux": 0.15096029600614652,
+        "pressure_relative": 0.00025471175915011746,
+        "flux_relative": 0.05890696924603396
+      },
+      {
+        "shape": [
+          480,
+          880
+        ],
+        "cells": 422400,
+        "archive": "reference-q3-480x880-order6.npz",
+        "sha256": "c08c220336605c76c262380c2dac4266c598061d194ebedfcdc0d65a12df3d24",
+        "inlet_flux": 0.15085122159014006,
+        "pressure_relative": 0.00013190718197517571,
+        "flux_relative": 0.040895103007605994
+      },
+      {
+        "shape": [
+          720,
+          1320
+        ],
+        "cells": 950400,
+        "archive": "reference-q3-720x1320-order5.npz",
+        "sha256": "d4ede653d950dc0acc0e6d2c787a91128c0bce0180ebe6c8b73f82b7c39dd09f",
+        "inlet_flux": 0.1508177829598655,
+        "pressure_relative": 4.514825651888199e-05,
+        "flux_relative": 0.023521588057259825
+      },
+      {
+        "shape": [
+          960,
+          1760
+        ],
+        "cells": 1689600,
+        "archive": "reference-q3-960x1760-order5.npz",
+        "sha256": "30f2a4ee385e6728f39ebda5b2a72b62850513df6b171981b9e6e3b63f236165",
+        "inlet_flux": 0.15080169615569894,
+        "pressure_relative": 2.3126442155984198e-05,
+        "flux_relative": 0.01666210951306859
+      }
+    ],
+    "msl": [
+      {
+        "shape": [
+          60,
+          220
+        ],
+        "cells": 26400,
+        "archive": "msl-cg-p1-60x220.npz",
+        "sha256": "050d6632d6b8d78d80d471506096f6c28acbae31db07f57d53d8df5b03c9f8cc",
+        "inlet_flux": 0.16800853171208752
+      },
+      {
+        "shape": [
+          120,
+          440
+        ],
+        "cells": 105600,
+        "archive": "msl-cg-p1-120x440.npz",
+        "sha256": "dbeaa57af55e9f9359bd318b64c889289e945584fed3e8c7fdb21bc91f4d6216",
+        "inlet_flux": 0.158095659738843,
+        "pressure_relative": 0.003820240884882624,
+        "flux_relative": 0.27591846681736737
+      },
+      {
+        "shape": [
+          240,
+          880
+        ],
+        "cells": 422400,
+        "archive": "msl-cg-p1-240x880.npz",
+        "sha256": "b4e0337177fd0a5d28e5dc22dc2ffe3b5675ee455706c3a82bad270bc70d1d23",
+        "inlet_flux": 0.1537633416851555,
+        "pressure_relative": 0.002013358714996059,
+        "flux_relative": 0.1988834674538035
+      },
+      {
+        "shape": [
+          480,
+          1760
+        ],
+        "cells": 1689600,
+        "archive": "msl-cg-p1-480x1760.npz",
+        "sha256": "36535fee2820943e64ca7ed7080c1fb847bd733b17a247c4aa9b0c50d3eb914d",
+        "inlet_flux": 0.15200372255979364,
+        "pressure_relative": 0.0010339283930061655,
+        "flux_relative": 0.1361626345092674
+      },
+      {
+        "shape": [
+          960,
+          3520
+        ],
+        "cells": 6758400,
+        "archive": "msl-cg-p1-960x3520.npz",
+        "sha256": "8015ab0f640b194cdcae3a989899f048e6ecb6cc92d7a90d19180fe265572c33",
+        "inlet_flux": 0.15128906042622214,
+        "pressure_relative": 0.0005242864534631082,
+        "flux_relative": 0.09234623223536578
+      }
+    ],
+    "neopz": [
+      {
+        "shape": [
+          60,
+          220
+        ],
+        "cells": 26400,
+        "archive": "neopz-rt0-60x220.npz",
+        "sha256": "112cba1b6284703f246c5380d3b62fe5e7a4abfbf6cb5f34ffe28acc9c77f4fb",
+        "inlet_flux": 0.13818243074753395
+      },
+      {
+        "shape": [
+          120,
+          440
+        ],
+        "cells": 105600,
+        "archive": "neopz-rt0-120x440.npz",
+        "sha256": "1c85227c687afa905de0f208a5fc9858f0b5ad6cbeed03b3432b9ff5086dca43",
+        "inlet_flux": 0.1446574192662467,
+        "pressure_relative": 0.005776009823445405,
+        "flux_relative": 0.30051847376521457
+      },
+      {
+        "shape": [
+          240,
+          880
+        ],
+        "cells": 422400,
+        "archive": "neopz-rt0-240x880.npz",
+        "sha256": "9ddac2c7fe6a29dd7a49ef300e931fb993393ac353f01643f49b1c52c38b12b3",
+        "inlet_flux": 0.14802714860496305,
+        "pressure_relative": 0.002931611662597544,
+        "flux_relative": 0.19707441778225082
+      },
+      {
+        "shape": [
+          480,
+          1760
+        ],
+        "cells": 1689600,
+        "archive": "neopz-rt0-480x1760.npz",
+        "sha256": "3d9f3d6d80a70da57ac5bd2f5c344459527faa93cf6ca3ff01678d683e4ab8ee",
+        "inlet_flux": 0.14956955086439122,
+        "pressure_relative": 0.0014906419348298889,
+        "flux_relative": 0.1274157781386493
+      }
+    ]
+  },
+  "mhm_differences": [
+    {
+      "field": "darcy-q1-r120-s32",
+      "reference": "reference-q3-480x880-order6",
+      "quadrature_order": 4,
+      "integration_rectangles": 1689600,
+      "seconds": 40.75754148710985,
+      "pressure_difference": 1.704250569601708,
+      "pressure_reference_norm": 821.3013019137009,
+      "pressure_relative": 0.0020750613272262704,
+      "flux_difference": 0.1224235094287562,
+      "flux_reference_norm": 0.9870951736828515,
+      "flux_relative": 0.12402401783811197,
+      "energy_difference": 0.0321394228402333,
+      "energy_reference_norm": 0.38839570120576244,
+      "energy_relative": 0.08274917240447682
+    },
+    {
+      "field": "darcy-q1-r120-s32",
+      "reference": "reference-q3-960x1760-order5",
+      "quadrature_order": 4,
+      "integration_rectangles": 3801600,
+      "seconds": 101.76275309408084,
+      "pressure_difference": 1.7133444848738972,
+      "pressure_reference_norm": 821.3467427820347,
+      "pressure_relative": 0.0020860184811478297,
+      "flux_difference": 0.12439215321487712,
+      "flux_reference_norm": 0.9865100811751403,
+      "flux_relative": 0.1260931394301617,
+      "energy_difference": 0.032755432518955796,
+      "energy_reference_norm": 0.38833194353960027,
+      "energy_relative": 0.08434905514183011
+    },
+    {
+      "field": "darcy-q1-r120-s32",
+      "reference": "reference-q3-768x1408-order5",
+      "quadrature_order": 4,
+      "integration_rectangles": 3801600,
+      "seconds": 90.39243495103437,
+      "pressure_difference": 1.6496204442000404,
+      "pressure_reference_norm": 820.4257326555088,
+      "pressure_relative": 0.002010688327462182,
+      "flux_difference": 0.18280206661943948,
+      "flux_reference_norm": 1.0045244425644926,
+      "flux_relative": 0.1819787143782748,
+      "energy_difference": 0.043722119254940454,
+      "energy_reference_norm": 0.38992937933097227,
+      "energy_relative": 0.11212830212988158
+    },
+    {
+      "field": "darcy-q1-r120-s32",
+      "reference": "msl-cg-p1-960x3520",
+      "pressure_difference": 1.7042675176721553,
+      "flux_difference": 0.12503780439400403,
+      "pressure_relative": 0.0020757707042051645,
+      "flux_relative": 0.12622987389366444,
+      "source_record": "msl-cg-mhm-960x3520-q3.json",
+      "integration": "Exact rectangle-triangle polygon intersections with polynomial-exact positive Duffy quadrature",
+      "relative_denominator": "Reference field L2 norm"
+    },
+    {
+      "field": "darcy-q1-r120-s32",
+      "reference": "neopz-rt0-480x1760",
+      "pressure_difference": 2.1182304956365594,
+      "flux_difference": 0.16741174341739654,
+      "pressure_relative": 0.0025765442681821445,
+      "flux_relative": 0.17139613861656497,
+      "source_record": "neopz-mhm-480x1760-order3.json",
+      "integration": "Exact rectangle-triangle polygon intersections with polynomial-exact positive Duffy quadrature",
+      "relative_denominator": "Reference field L2 norm"
+    }
+  ],
+  "quadrature_check": {
+    "orders": [
+      4,
+      5
+    ],
+    "field": "darcy-q1-r120-s32",
+    "reference": "reference-q3-960x1760-order5",
+    "relative_changes": {
+      "pressure_difference": 1.503327229211548e-14,
+      "flux_difference": 1.5318965020239724e-12,
+      "energy_difference": 5.295987085418306e-14
+    }
+  },
+  "q3_norm_record": "darcy-flux-q3-norms.json",
+  "comparison_scope": "Q3 shares PyMHM basis kernels; MSL_CG and NeoPZ assemble their own finite element operators. The MSL P1 and NeoPZ RT0 references have their own non-negligible refinement errors.",
+  "paper_figure": {
+    "doi": "10.1137/24M1673073",
+    "figure": 6,
+    "comparison": "qualitative, different local and skeletal spaces; no published vector coefficient arrays"
+  },
+  "provenance_records": [
+    "msl-cg-convergence.json",
+    "neopz-provenance.json",
+    "neopz-patches.json",
+    "darcy-flux-q3-norms.json",
+    "neopz-convergence.json",
+    "neopz-q3-480x1760-order7.json"
+  ],
+  "source_records_sha256": {
+    "darcy-q1-r120-s32.json": "6a38781817b0f8fb068fbd5d7b7fa12e2a3ef7bad4c6f22e08cb02ba111df2b8",
+    "darcy-flux-q3-norms.json": "334976b3a40e0b984eea905c0bb7c15f721d494f990b0669cb0a2f060821e8cc",
+    "msl-cg-mhm-960x3520-q3.json": "f47e7452f90a32880dccb10fccbd07a87919ea80f14932c21a9cf55b59ae669e",
+    "neopz-mhm-480x1760-order3.json": "54a8d552d37bccccfb05fc51bba0c68cd7c4c413c2db2c6f2546277b9807eff4",
+    "neopz-convergence.json": "f254f85d20861487e367bcaa1202e9bf051171852be138075e0f5eaff1449674",
+    "neopz-q3-480x1760-order7.json": "99237c6e557fea3819a0287ab5869061dcff333f0e461e2f6a4f6860eee6ed4a",
+    "neopz-provenance.json": "15d7c5009a62e07f0fe45e21f2b5a34297c475ecf9197c1e10fc49e0d986955e",
+    "neopz-patches.json": "fe11986bd33e606c55fde24edd54b5e60b940b3d14a880553dc672478bf05e3c",
+    "neopz-rt0-480x1760.json": "99dd780894a5797e93186ddc99041cebf045e13daccc25ce904dcc3503d71564"
+  },
+  "independent_quadrature_checks": {
+    "msl": {
+      "records": [
+        "msl-cg-mhm-960x3520-q3.json",
+        "msl-cg-mhm-960x3520-q4.json"
+      ],
+      "pressure_relative_change": 1.3028741240595853e-16,
+      "flux_relative_change": 2.930102618979372e-14
+    },
+    "neopz": {
+      "records": [
+        "neopz-mhm-240x880-order3.json",
+        "neopz-mhm-240x880-order4.json"
+      ],
+      "pressure_relative_change": 3.2368841597229407e-16,
+      "flux_relative_change": 3.560292288652504e-15
+    }
+  },
+  "neopz_verification": {
+    "convergence_record": "neopz-convergence.json",
+    "convergence_sha256": "f254f85d20861487e367bcaa1202e9bf051171852be138075e0f5eaff1449674",
+    "reference_limit": "Four refinement levels are reported. The last flux self-refinement difference is 12.74%, so this RT0 reference is not treated as converged. Cross-method distances are measured differences, not isolated MHM errors.",
+    "q3_comparison_record": "neopz-q3-480x1760-order7.json",
+    "q3_comparison_sha256": "99237c6e557fea3819a0287ab5869061dcff333f0e461e2f6a4f6860eee6ed4a",
+    "q3_comparison": {
+      "rectangle_method": "Conforming continuous Q3",
+      "rectangle_shape": [
+        960,
+        1760
+      ],
+      "triangle_method": "Independent classical NeoPZ RT0/P0",
+      "triangle_shape": [
+        480,
+        1760
+      ],
+      "pressure_l2": 1.0891247762504446,
+      "flux_l2": 0.12134456231003818,
+      "pressure_relative_to_q3": 0.0013260231270430353,
+      "flux_relative_to_q3": 0.12300387459331014,
+      "pressure_relative_to_neopz": 0.0013247747142550443,
+      "flux_relative_to_neopz": 0.12423255978048967,
+      "q3_pressure_l2": 821.3467427820342,
+      "q3_flux_l2": 0.986510081176238,
+      "neopz_pressure_l2": 822.1207459133066,
+      "neopz_flux_l2": 0.9767532965950764,
+      "energy_k_inverse": {
+        "q3": 0.15080169837322568,
+        "rt0": 0.14956955086433005,
+        "cross": 0.14956955086462842,
+        "difference": 0.001232147508298889,
+        "q3_inlet": 0.15080169615569894,
+        "rt0_inlet": 0.14956955086439122,
+        "inlet_difference": 0.001232145291307718,
+        "q3_identity_relative_defect": 1.4704919105804463e-08,
+        "rt0_identity_relative_defect": 4.0906410438344365e-13,
+        "cross_identity_relative_defect": 1.5858454318772417e-12,
+        "difference_identity_relative_defect": 1.7992936275622564e-06,
+        "difference_from_three_terms": 0.0012321475082988892,
+        "relative_identity_diagnostic_tolerance": 1e-07,
+        "relative_identity_diagnostic_passed": false,
+        "interpretation": "The direct Q3 energy and its archived inlet reaction differ by an absolute algebraic-work defect. The same defect enters the inlet-difference identity. Every term and the failed relative diagnostic are retained; no certified error bound is asserted."
+      },
+      "integration": "Exact rectangle-triangle intersections with positive polynomial-exact Duffy quadrature; no display samples",
+      "q3_coefficient_sha256": "a97fc75f80acbb0d6a6af585c9a66a6d14a22644bd960aa1abdeb1b0dc8d5d5f",
+      "neopz_coefficient_sha256": "b79e392ad600e057ca3101a78722b58783e54f10ce1e78dd4332a44efdaea257",
+      "comparison_driver_sha256": "0c753b6398bed845c22d8ec5654523979c97eb85c76e78930c59a2ea692a2add",
+      "intersection_integrator_sha256": "c0bd7751775b82999c3cc6234b5740134091db7e249a386cde47df401c29c2ae",
+      "elapsed_seconds": 161.68260838498827,
+      "periodic_blocks": [
+        480,
+        1760
+      ],
+      "block_extent": [
+        2.5,
+        1.25
+      ],
+      "quadrature_points_per_block": 294,
+      "integration_triangles_per_block": 6,
+      "duffy_order": 7,
+      "verified_polynomial_degree": 12,
+      "maximum_relative_monomial_defect": 6.866455078125001e-16
+    }
+  }
+}
