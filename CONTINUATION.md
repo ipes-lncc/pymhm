@@ -9,6 +9,44 @@ e alguns drivers de casos. A retomada usa as fontes versionadas e as referência
 primárias preservadas em `.tmp`; campos e ambientes são adquiridos novamente.
 As quedas interromperam execuções; sua causa não foi estabelecida.
 
+### Prioridade de engenharia definida pelo usuário
+
+A campanha focada de Brinkman fica para uma etapa posterior. A prioridade atual
+é organizar a arquitetura do PyMHM segundo os padrões de `voids` e `torch-flash`:
+operações em funções livres com delegações explícitas; objetos próprios para
+problemas, configurações, bases, sistemas e soluções; definição variacional dos
+problemas locais e globais aproveitando UFL; providers locais por contratos
+pequenos, com adaptadores FEM e futuros métodos externos/ML; execução serial
+por macroelemento ou paralela em lotes limitados.
+
+Referências de engenharia fornecidas pelo usuário:
+`https://github.com/geomech-project/voids` e
+`https://github.com/ThermoPhase-FCSRG/torch-flash`.
+A preferência por composição e funções não exige classes exclusivamente de dados:
+objetos podem gerir recursos e estados quando isso define uma responsabilidade clara.
+
+Preservar os resultados demonstrados é requisito explícito. Antes de qualquer
+mudança no núcleo, foram arquivadas 730 fontes/configurações da árvore de trabalho,
+os registros aceitos e o wheel portátil. Baseline:
+`build/refactoring/baseline-20261003-v1/manifest.json` e
+`executed-project-sources-and-evidence.zip`, no mesmo diretório. Os 117 módulos
+do core coincidem com o recibo final da entrega inicial. Campos e seus digests
+originais permanecem nos respectivos diretórios; essa captura não recalculou PDEs.
+
+A extração deve preservar operadores, RHS, quadratura, bases executadas,
+mapas orientados, gauges, modos retidos e critérios originais. Comparar a montagem,
+a reconstrução e os campos por problema antes/depois. Manter os métodos atuais
+como delegadores durante a migração; não retaguar as aquisições históricas nem
+substituir fórmulas ou tolerâncias para obter concordância. Em paralelo, workers
+retornam contribuições por célula e o coordenador reduz em ordem fixa; nenhuma
+escrita concorrente nos coeficientes de faces compartilhadas. Recursos FEM/MPI/
+PETSc/CUDA são criados e liberados no worker, preservando spawn multiplataforma.
+
+A primeira revisão é de arquitetura e contratos, sem mudanças no núcleo.
+UFL local e contribuições globais já existem em forma limitada; a DSL global e
+providers ML ainda precisam ser definidos e verificados. preCICE é candidato a
+adaptador externo opcional; sua adoção não foi decidida como dependência do núcleo.
+
 ### Entrega reduzida autorizada em 3 de outubro
 
 O escopo corrente é uma entrega inicial **até hoje**, conforme a solicitação do
