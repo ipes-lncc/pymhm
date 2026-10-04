@@ -20,17 +20,17 @@
   "manuscript_printed_page": 24,
   "figure": "6",
   "crop_pdf_points_xyxy": [
-    70.0,
-    338.0,
-    444.0,
-    514.0
+    69.84,
+    337.86,
+    444.06,
+    514.08
   ],
   "rendering_dpi": 400,
   "rendering": "Direct PDF crop containing Figure 6 and its caption. Field values, colors and labels are unchanged; no interpolation of scientific values or image retouching.",
   "file": "l09-figure-6.png",
   "width_pixels": 2079,
   "height_pixels": 979,
-  "image_sha256": "7ab455452e56666e929c4cf1573c8a74f01efd466b17e091dc31c85a11b53d5e",
+  "image_sha256": "1feb2612953110ce9d9586ad2c5a9f4c6bd3b7994032d8e3621624ae4ede8fbd",
   "fields_left_to_right": [
     "Magnitude of the reference Darcy flux",
     "Magnitude of raw MHM flux -A grad(u_Hh)",
@@ -61,5 +61,19 @@
     "The reported reference degree-of-freedom count is not identified in the text as flux-only or full mixed-system size.",
     "Figure 6 does not publish vector components, evaluation coordinates, a numerical flux profile, or field arrays."
   ],
-  "source_pdf_url": "https://strathprints.strath.ac.uk/94435/1/Barrenechea-etal-MMS-2025-reconstruction-for-the-multiscale-hybrid-mixed-method.pdf"
+  "source_pdf_url": "https://strathprints.strath.ac.uk/94435/1/Barrenechea-etal-MMS-2025-reconstruction-for-the-multiscale-hybrid-mixed-method.pdf",
+  "acquisition_manifest": "../primary-raster-extractions.json",
+  "rendering_tool": "pdftoppm version 0.86.1",
+  "requested_crop_pdf_points_xyxy": [
+    70,
+    338,
+    444,
+    514
+  ],
+  "crop_pixels_xywh": [
+    388,
+    1877,
+    2079,
+    979
+  ]
 }

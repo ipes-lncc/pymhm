@@ -1,0 +1,149 @@
+{
+  "schema": "pymhm-minimal-public-record-verification-v1",
+  "id": "darcy-unusual",
+  "published_scalar_record_sha256": "4daf12fda908927d862d7cd621f0b984bb656c967deb45b80665f60f32343a88",
+  "original_scalar_record": {
+    "path": "build/results/minimal-studies/unusual-n2-n4-n8-v1/minimal-convergence.json",
+    "sha256": "4daf12fda908927d862d7cd621f0b984bb656c967deb45b80665f60f32343a88"
+  },
+  "literal_record_copy": true,
+  "original_norm_verification": {
+    "schema": "pymhm-minimal-darcy-summary-v1",
+    "case": "unusual",
+    "acquisition_id": "35a5a856-17cc-46e0-a458-440b0aa0c575",
+    "acquisition_complete": true,
+    "accepted_level_count": 3,
+    "requested_levels": [
+      2,
+      4,
+      8
+    ],
+    "acquisition_record": {
+      "path": "build/results/minimal-studies/unusual-n2-n4-n8-v1/minimal-convergence.json",
+      "sha256": "4daf12fda908927d862d7cd621f0b984bb656c967deb45b80665f60f32343a88"
+    },
+    "resource_phases": [
+      {
+        "path": "build/reports/preliminary/minimal-darcy-v1/unusual-resource.json",
+        "sha256": "370c02071c942bfcda09028232e0ad02eb0aa3cecf1fcc92f5b00328b3e57556",
+        "role": "completed acquisition"
+      }
+    ],
+    "executed_source_copies_verified": 127,
+    "elapsed_seconds": 6.003351109102368,
+    "elapsed_scope": "Sum of original sequential acquisition phases, including interrupted work",
+    "peak_owned_rss_bytes": 179712000,
+    "peak_scope": "Maximum of measured sequential owned-process phase peaks",
+    "native_threads": 1,
+    "workers": 1,
+    "physical_field_norms_separate": true,
+    "quadrature_checks": [
+      {
+        "level": 2,
+        "orders": [
+          12,
+          20
+        ],
+        "field_relative_changes": {
+          "scalar_l2": 0.0,
+          "flux_l2": 2.2903006795150304e-16
+        }
+      },
+      {
+        "level": 4,
+        "orders": [
+          12,
+          20
+        ],
+        "field_relative_changes": {
+          "scalar_l2": 3.138443089566476e-16,
+          "flux_l2": 4.242777210251017e-16
+        }
+      },
+      {
+        "level": 8,
+        "orders": [
+          12,
+          20
+        ],
+        "field_relative_changes": {
+          "scalar_l2": 7.438772016176955e-16,
+          "flux_l2": 6.14481785202136e-16
+        }
+      }
+    ],
+    "observed_initial_rates": {
+      "pressure_l2_error": [
+        1.8303438444817623,
+        1.9230873393950565
+      ],
+      "flux_l2_error": [
+        0.8894719108542941,
+        0.9493988211873474
+      ]
+    },
+    "original_checked_rhs_relative_max": 7.359683796758373e-16,
+    "interpretation": "Initial empirical rates for the stated analytical problem and physical spaces; no matched historical reproduction or general stability theorem is asserted.",
+    "historical_reproduction": false,
+    "converged_numerical_reference": false,
+    "persisted_coefficients": false,
+    "figures": {
+      "png": {
+        "path": "build/results/minimal-studies/unusual-n2-n4-n8-v1/convergence.png",
+        "sha256": "c7923e2b3f1f4a891506be3badb3b712f70e19b44fa6a9797f23ea21c8f87290"
+      },
+      "svg": {
+        "path": "build/results/minimal-studies/unusual-n2-n4-n8-v1/convergence.svg",
+        "sha256": "da163a5ab49f933dfa5189a72580cd94e3e5941870aecbb74426692e0d382aa1"
+      }
+    },
+    "renderer_source_sha256": "0f73de8d25a95ddaecf2cb2468219b0f49d85599f05cb88e7b95760248c8614f"
+  },
+  "norm_verification_sha256": "34fe10ec6c4563827feadebb602f8549afee9b1f898c8f32db4acbfa6e927c6a",
+  "rendered_inspection": {
+    "schema": "pymhm-minimal-figure-inspection-v1",
+    "native_png_dimensions": [
+      1344,
+      600
+    ],
+    "intended_viewing_width_px": 893,
+    "inspected_png_native_and_893": true,
+    "fields_in_distinct_panels": true,
+    "title_axes_footer_regions_separate": true,
+    "no_observed_clipping_or_overlap": true,
+    "svg_generated_from_same_matplotlib_figure": true,
+    "svg_independent_browser_inspection": false,
+    "artifacts": {
+      "convergence.png": "c7923e2b3f1f4a891506be3badb3b712f70e19b44fa6a9797f23ea21c8f87290",
+      "convergence.svg": "da163a5ab49f933dfa5189a72580cd94e3e5941870aecbb74426692e0d382aa1",
+      "convergence-view893.png": "f22b7291995e503e501e0647c60c70d599e7a4215b3f0368282b19dabdd91305"
+    }
+  },
+  "resource_receipts": [
+    {
+      "path": "build/reports/preliminary/minimal-darcy-v1/unusual-resource.json",
+      "sha256": "370c02071c942bfcda09028232e0ad02eb0aa3cecf1fcc92f5b00328b3e57556",
+      "elapsed_seconds": 6.003351109102368,
+      "peak_owned_rss_bytes": 179712000,
+      "guard_reason": null,
+      "returncode": 0,
+      "owned_group_empty": true,
+      "changed_sources": [],
+      "native_threads": 1,
+      "workers": 1
+    }
+  ],
+  "public_figures": {
+    "png": {
+      "path": "docs/figures/minimal-convergence/darcy-unusual/convergence.png",
+      "sha256": "c7923e2b3f1f4a891506be3badb3b712f70e19b44fa6a9797f23ea21c8f87290"
+    },
+    "svg": {
+      "path": "docs/figures/minimal-convergence/darcy-unusual/convergence.svg",
+      "sha256": "da163a5ab49f933dfa5189a72580cd94e3e5941870aecbb74426692e0d382aa1"
+    }
+  },
+  "limitations": [
+    "Epsilon=1 analytical control with stated strong Dirichlet and zero Neumann data; no singular-perturbation rate is inferred."
+  ]
+}

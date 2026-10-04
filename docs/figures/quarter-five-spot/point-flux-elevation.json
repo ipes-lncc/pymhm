@@ -8,13 +8,23 @@
   "local_refinement": 2,
   "trace_degree": 0,
   "display_sampling": "Existing one-sided nodal display fields; independent cell vertices",
+  "acquisition_record_sha256": "a2ba3bc482047385ab7b1f766ff34fc5c315713a8e363e43da7b95674df6cb93",
+  "physical_field_archives_sha256": {
+    "layer-offset-primal-fields.npz": "77020433e43d22f9b59dff442a77de9eb4e955df87fb2e1e683a9c7fb1140c82",
+    "layer-offset-mixed-fields.npz": "8fed42acf56ab2a5d5fc5105b1f7945f786f24009f823b5c7449bbe0b361c149"
+  },
+  "original_saddle_relative_load_residuals": [
+    4.355593577484237e-12,
+    3.078334603567964e-15
+  ],
+  "renderer_sha256": "86f11f54555d3d86d35afd9a209d466cab756b6ac8d58086f26895010bf977e5",
   "source_sha256": {
-    "layer-offset-primal.vtu": "8bf93724f42c7a96936fa987cebdf5a384fe33e05a8a38a62da4d321e66f43df",
-    "layer-offset-mixed.vtu": "a17e4aaf36ec6f960297cf576bedca95da82bbd0784855056b5e35122a42c3c7"
+    "layer-offset-primal.vtu": "4b6398f331d90cf9beda06952b2d40400b5b40c0b89519015ef2d41dc829a442",
+    "layer-offset-mixed.vtu": "29ac48a23e5a9216a7e423b2c24c4812a6e69d00800a1d14b518db97eb24ee78"
   },
   "sampled_flux_peaks": [
-    203.45892672530482,
-    45.28376518079885
+    203.4589267253139,
+    45.28376518080433
   ],
   "views": [
     {
@@ -25,10 +35,10 @@
         32768,
         8192
       ],
-      "height_factor": 0.004423497235956196,
+      "height_factor": 0.004423497235955999,
       "physical_color_limits": [
         0.0,
-        203.45892672530482
+        203.4589267253139
       ]
     },
     {
@@ -39,10 +49,10 @@
         31912,
         7968
       ],
-      "height_factor": 0.149907089900547,
+      "height_factor": 0.14990708990042562,
       "physical_color_limits": [
         0.0,
-        6.003718707347917
+        6.003718707352778
       ]
     }
   ]

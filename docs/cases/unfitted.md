@@ -509,6 +509,85 @@ uniform triangular refinements 16, 24 and 32. Those local discretizations
 are declared controls, since the article does not provide its numerical
 local degree or mesh. Error integration uses orders 11 and 13.
 
+The labels `P8/r32` and `ell3/s32` describe independent spaces. `P8` is
+the pressure polynomial degree on each fine triangle; `r32` divides each
+original macro edge into 32 intervals and gives $32^2=1024$ fine triangles
+per macro. `ell3` is the multiplier polynomial degree on each skeletal
+segment, and `s32` divides each original macroface into 32 segments.
+Thus `ell3/s32` has four polynomial coefficients per segment, or 128 per
+original macroface before boundary elimination. Adjacent segments have
+independent polynomials and may be discontinuous at their endpoints. Each
+interior segment has one shared multiplier, with opposite outward-normal
+signs for its two incident macros.
+Doubling $r$ quadruples the fine-triangle count in two dimensions, without
+changing the sixteen macrotriangles. Here $r$ is a subdivision factor,
+not a count of successive refinement rounds.
+
+The acquisition driver selects assembly quadrature with `--assembly-order`
+and independent error quadratures with `--norm-orders`. These orders count Gauss
+points per Duffy coordinate on each integration triangle, rather than polynomial
+exactness degrees. Darcy applies a local-degree-plus-two floor to volume
+integration; boundary data also apply a trace-degree-plus-two floor. Polynomial
+trace coupling retains its separate exact degree-dependent rule. The defaults
+are local degree plus three for assembly and local degree plus three and five
+for norms. Requested and executed assembly orders are recorded separately.
+Filename labels such as `q13` and `nq13-15` denote these quadrature counts;
+the physical Darcy field $q=-a\nabla p$ has a separate meaning.
+
+The integer $q$ in L10 Theorem 2 is a regularity index, with
+$0\leq q\leq\ell$; it does not denote a numerical Gauss count. The theorem
+uses exact local solution maps and does not prescribe a finite local polynomial
+degree or refinement. A finite local space must resolve the skeletal functionals:
+a nonzero multiplier with zero pairing against every local pressure trace is
+an algebraic kernel. For local P8, refinement 16 and 32 segments per macroface,
+the degree-three trace has such a cyclic multiplier kernel. Increasing volume
+quadrature does not restore uniqueness of that multiplier. With refinement 32
+and the same traces, the local coupling has full column rank. This injectivity check is
+separate from a uniform inf-sup estimate and from local approximation accuracy.
+
+On the full sixteen-macro smooth problem, the admissible P8/r16 and P2/s32
+control gives a pressure $L^2$ difference of $1.23574\times10^{-11}$ and a
+broken-gradient $L^2$ difference of $1.10148\times10^{-10}$ between assembly
+orders 11 and 13. Integrating these differences with orders 13 and 15 changes
+the gradient difference by less than $2\times10^{-19}$. The exact-gradient
+error is approximately $2.15797\times10^{-7}$, so the assembly increment is
+about 0.051% of that error. This measures quadrature sensitivity for this
+specified pair; it does not measure the local-refinement error. The lightweight
+record `examples/results/unfitted/convergence/quadrature-control.json` retains
+the fields' digests, independent norms, source hashes and coupling-rank checks.
+
+For example, the following fixed-space control acquires both assembly orders
+with the same independent norm orders, source, macro mesh and trace spaces:
+
+```bash
+for order in 11 13; do
+  pixi run -e test python -m examples.unfitted_convergence \
+    --study smooth --degree 8 --refinement 32 --maximum-segments 32 \
+    --names ell2-s32 ell3-s32 --workers 1 --assembly-order "$order" \
+    --norm-orders 13 15 --output build/results/unfitted/quadrature
+done
+```
+
+The default assembly order keeps the `smooth-p8-r32` filename prefix; selecting
+order 13 appends `-q13`. Independent norm orders 13 and 15 append `-nq13-15`
+to both acquisition and field filenames. Thus these commands produce
+`smooth-p8-r32-nq13-15.json` and `smooth-p8-r32-q13-nq13-15.json`, with
+distinct corresponding field archives. A resumed acquisition requires matching
+configuration and numerical-source digests. Compare the physical fields with
+`examples.unfitted_local_resolution`, passing the two explicit archives and
+`--order 13`, then `--order 15`; an increment in the integrated field differs
+from an increment between two exact-error norms. These controls quantify
+quadrature sensitivity of the declared local discretization and do not establish
+agreement with an unidentified historical local solver.
+
+The field-comparison reader supports monolithic version-2 archives and complete
+version-2 phase acquisitions. A phase field requires its accompanying acquisition
+receipt and cell archives, including the executed retained basis and ordered
+field corrections. Both schemas verify the cardinal nodes, nodal DOF maps and
+macro orientation before evaluating the independent physical polynomials. The
+integration uses each archived local geometry and DOF map; compatible dimensions
+alone do not identify a coefficient vector's basis.
+
 The [published-marker record](../figures/unfitted/published-convergence.json)
 contains 51 values extracted from vector paths in Figures 2, 3 and 7,
 independently of the PyMHM results. Its intervals propagate one raster pixel
@@ -675,9 +754,15 @@ solution in both original operators, native-solution residuals and verified
 DOLFINx release provenance. The PyMHM runs use
 `solve_darcy(..., hybrid_refinement_steps=3)` with the unchanged original-equation
 relative tolerance $10^{-10}$. Their archives retain complete corrected
-pressure fields, trace and coarse coefficients as portable high/correction/tail
-components; trace and coarse coefficients alone do not reconstruct a field
-that includes a defect-source correction. Assembly and norm/export sources
+pressure fields and physical trace coefficients as portable high/correction/tail
+components. The field writer records the cardinal nodal coordinates, local DOF
+maps, barycentric multiindices, skeletal subface partitions and normal
+orientations. Replay evaluates the complete corrected pressure polynomials on
+their original elements and checks the declared cardinal coordinates and
+orientation maps; the declared coefficient precision must be available
+on the consuming host. The two-pass acquisition also archives its executed
+retained matrix, initial fields and ordered physical corrections.
+Assembly and norm/export sources
 are identified separately. This establishes same-discretization agreement
 for the declared S0/S2 cases; the unspecified Figure-7 parameters remain a
 limit on literal reproduction of its S2 curve.

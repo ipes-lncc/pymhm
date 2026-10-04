@@ -17,7 +17,9 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.campaign_provenance import file_digest
 from examples.helmholtz_compact_family import CompactFamily
+from examples.helmholtz_field_store import write_coefficients
 from examples.helmholtz_response_store import ResponseStore
 from examples.marmousi_campaign import evaluate_fields, source_hashes
 from examples.marmousi_data import load_marmousi_crop
@@ -37,6 +39,8 @@ def hashes() -> dict[str, str]:
         "examples/helmholtz_trace_family.py",
         "examples/helmholtz_compact_family.py",
         "examples/helmholtz_response_store.py",
+        "examples/helmholtz_field_store.py",
+        "examples/local_response_cache.py",
         "examples/campaign_checkpoint.py",
         "examples/campaign_provenance.py",
     ):
@@ -57,6 +61,7 @@ def main() -> None:
     )
     parser.add_argument("--response-store", type=Path)
     parser.add_argument("--response-batch-size", type=int, default=128)
+    parser.add_argument("--field-store", action="store_true")
     parser.add_argument("--output", type=Path, default=ROOT / "examples/results/marmousi/family")
     args = parser.parse_args()
     material = load_marmousi_crop(args.data)
@@ -95,6 +100,7 @@ def main() -> None:
         if args.response_store is None:
             prepared = CompactFamily.prepare(factory, **execution)
             local_storage_bytes = sum(item.storage_bytes for item in prepared.local)
+            response_acquisition_seconds = None
         else:
             store = ResponseStore.prepare(
                 factory,
@@ -118,6 +124,7 @@ def main() -> None:
             )
             prepared = CompactFamily.from_locals(skeleton, store)
             local_storage_bytes = store.storage_bytes
+            response_acquisition_seconds = store.acquisition_seconds
         preparation_seconds = time.perf_counter() - started
         print(json.dumps({"prepared_H": args.H, "seconds": preparation_seconds}), flush=True)
         x, y = np.meshgrid(np.linspace(0, 10240, 513), np.linspace(0, 2560, 129))
@@ -125,26 +132,47 @@ def main() -> None:
         sides = ((-1, -1), (-1, 1), (1, -1), (1, 1))
         for degree in (4, 0, 1, 2, 3):
             stage_started = time.perf_counter()
-            solution = prepared.solve(degree, solver=args.solver)
-            trace = solution.trace
-            coefficients = np.asarray(solution.pressure)
-            samples = np.array(
-                [
-                    evaluate_fields(coefficients, mesh, args.H // 5 * 2, 3, points, side=side)
-                    for side in sides
-                ]
-            )
+            stored = {}
+            if args.field_store:
+                solved = prepared.solve_trace(degree, solver=args.solver)
+                coefficient_path = args.output / f"mhm-H{args.H}-ell{degree}-coefficients.npy"
+                stored = write_coefficients(
+                    prepared, solved, coefficient_path, cell_count=len(mesh.cells)
+                )
+                coefficients = np.load(coefficient_path, mmap_mode="r", allow_pickle=False)
+                trace = solved.trace
+                residual = solved.residual
+                macro_balance = stored["macro_balance_max"]
+                local_residual = stored["local_equation_residual_max"]
+            else:
+                solution = prepared.solve(degree, solver=args.solver)
+                trace = solution.trace
+                coefficients = np.asarray(solution.pressure)
+                residual = solution.residual
+                macro_balance = float(np.max(abs(solution.balance)))
+                local_residual = solution.local_residual_max
+                stored["original_field_trace_residual"] = solution.original_trace_residual
             archive = args.output / f"mhm-H{args.H}-ell{degree}-q9.npz"
-            np.savez_compressed(
-                archive,
-                macro_points=mesh.points,
-                macro_cells=mesh.cells,
-                pressure=coefficients,
-                trace=trace,
-                sample_points=points,
-                sample_pressure=samples,
-                incident_sides=np.asarray(sides),
-            )
+            try:
+                samples = np.array(
+                    [
+                        evaluate_fields(coefficients, mesh, args.H // 5 * 2, 3, points, side=side)
+                        for side in sides
+                    ]
+                )
+                np.savez_compressed(
+                    archive,
+                    macro_points=mesh.points,
+                    macro_cells=mesh.cells,
+                    pressure=coefficients,
+                    trace=trace,
+                    sample_points=points,
+                    sample_pressure=samples,
+                    incident_sides=np.asarray(sides),
+                )
+            finally:
+                if args.field_store:
+                    coefficients._mmap.close()
             if before != hashes():
                 raise RuntimeError("Marmousi trace-family acquisition sources changed")
             record = {
@@ -161,6 +189,7 @@ def main() -> None:
                 "trace_degree": degree,
                 "prepared_trace_degree": 4,
                 "assembly_order": 9,
+                "requested_assembly_order": 9,
                 "omega": 40 * np.pi,
                 "point_source": [5000, 50, 1.0],
                 "point_source_allocation": [
@@ -176,22 +205,25 @@ def main() -> None:
                 ),
                 "global_complex_dofs_total": len(mesh.faces) * (degree + 1),
                 "global_complex_dofs_free": (2 * len(mesh.cells) - mesh.ny) * (degree + 1),
-                "algebraic_residual": solution.residual,
+                "algebraic_residual": residual,
                 "residual_equations": (
                     "Original skeleton equations tested in the stated lower-degree space"
                 ),
-                "macro_balance_max": float(np.max(abs(solution.balance))),
-                "local_equation_residual_max": solution.local_residual_max,
+                "macro_balance_max": macro_balance,
+                "local_equation_residual_max": local_residual,
                 "local_storage_bytes": local_storage_bytes,
                 "response_storage": "memory" if args.response_store is None else "verified batches",
                 "preparation_seconds_shared": preparation_seconds,
+                "response_acquisition_seconds_total": response_acquisition_seconds,
+                "field_storage": "streamed NPY/memory-map" if args.field_store else "memory",
+                **stored,
                 "restriction_and_export_seconds": time.perf_counter() - stage_started,
                 "workers": args.workers,
                 "local_solver": args.local_solver,
                 "local_refinement_precision": args.local_refinement_precision,
                 "global_solver": args.solver,
                 "archive": archive.name,
-                "archive_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
+                "archive_sha256": file_digest(archive),
                 "source_sha256": before,
                 "source_changed_during_run": False,
                 "sampling": "513 by129 nodes; four incident macro values, without averaging",
@@ -204,7 +236,10 @@ def main() -> None:
             temporary.write_text(json.dumps(record, indent=2) + "\n")
             temporary.replace(record_path)
             print(json.dumps(record), flush=True)
-            del coefficients, samples, solution
+            if args.field_store:
+                del coefficients, samples, solved
+            else:
+                del coefficients, samples, solution
             gc.collect()
 
 

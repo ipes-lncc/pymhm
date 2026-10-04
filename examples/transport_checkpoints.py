@@ -2,20 +2,29 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
+import os
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 
+from examples.campaign_provenance import file_digest
+
 
 def write_progress(path: Path, record: dict[str, Any]) -> None:
     """Atomically publish progress without marking an unfinished case accepted."""
+    payload = json.dumps(record, indent=2, allow_nan=False) + "\n"
     temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(record, indent=2) + "\n")
-    temporary.replace(path)
+    try:
+        with temporary.open("w") as stream:
+            stream.write(payload)
+            stream.flush()
+            os.fsync(stream.fileno())
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def checkpoint_field(
@@ -27,15 +36,26 @@ def checkpoint_field(
     the executed sources and field digest available if later diagnostics are
     interrupted; the final case record is written only by its owning driver.
     """
+    json.dumps(metadata, allow_nan=False)
+    if any(
+        np.asarray(value).dtype.kind not in "biufc" or not np.isfinite(value).all()
+        for value in arrays.values()
+    ):
+        raise ValueError("transport coefficient archives require finite numerical arrays")
     archive.parent.mkdir(parents=True, exist_ok=True)
     temporary = archive.with_suffix(archive.suffix + ".tmp")
-    with temporary.open("wb") as stream:
-        np.savez_compressed(stream, **arrays)
-    temporary.replace(archive)
+    try:
+        with temporary.open("wb") as stream:
+            np.savez_compressed(stream, **arrays)
+            stream.flush()
+            os.fsync(stream.fileno())
+        temporary.replace(archive)
+    finally:
+        temporary.unlink(missing_ok=True)
     record = dict(
         metadata,
         archive=archive.name,
-        archive_sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),
+        archive_sha256=file_digest(archive),
         status="physical-field-verified; diagnostics incomplete",
         quadrature={},
     )

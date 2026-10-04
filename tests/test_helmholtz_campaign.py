@@ -76,6 +76,57 @@ def test_stability_acquisition_checkpoints_failed_attempts(tmp_path, monkeypatch
     assert path.read_bytes() == before
 
 
+def test_angular_record_reports_executed_high_degree_quadrature(tmp_path, monkeypatch):
+    """Recorded order agrees with actual incident-wave sample counts at ell4/Q6."""
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1]))
+    article = importlib.import_module("examples.helmholtz_article")
+    counts = []
+    original = article.AcousticWave.absorbing
+
+    def observe_boundary(self, points, normals):
+        counts.append(len(points))
+        return original(self, points, normals)
+
+    monkeypatch.setattr(article.AcousticWave, "absorbing", observe_boundary)
+    configuration = article.Configuration("local-control", 2, 4, False, 3.1, np.pi / 13)
+    row = article.solve_configuration(configuration, tmp_path)
+    article.validate_row(row, tmp_path)
+    assert counts and set(counts) == {12}
+    assert row["requested_assembly_order"] == 10
+    assert row["assembly_order"] == 12
+    assert row["error_order"] == 12
+    stale = {**row, "assembly_order": 10}
+    with pytest.raises(ValueError, match="checkpoint identity changed"):
+        article.validate_row(stale, tmp_path)
+
+
+def test_continuous_square_resonance_preserves_admissible_neighbours(tmp_path, monkeypatch):
+    """A continuous cosine kernel is excluded before any finite local inverse is used."""
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1]))
+    campaign = importlib.import_module("examples.helmholtz_stability")
+    assert campaign.continuous_local_resonance(30, 15) == (0, 1)
+    assert campaign.continuous_local_resonance(29, 15) is None
+    assert campaign.continuous_local_resonance(31, 15) is None
+    assert campaign.continuous_local_resonance(30, 15 + 1e-12) is None
+    assert campaign.continuous_local_resonance(1, 15) is None
+
+    def unexpected_solve(*args, **kwargs):
+        raise AssertionError("A finite inverse cannot make the continuous lifting unique")
+
+    monkeypatch.setattr(campaign, "solve_helmholtz", unexpected_solve)
+    campaign.run(tmp_path, 1, 15, [30], 1)
+    record = json.loads((tmp_path / "ell1-frequency15.json").read_text())
+    assert record["rows"] == []
+    assert record["excluded_settings"][0]["failure_type"] == "ContinuousLocalResonance"
+    assert record["sampled_threshold"]["rejected_resolutions"] == [30]
+    assert record["largest_suffix_H_star"] is None
+    with pytest.raises(ValueError, match="checkpoint identity changed"):
+        campaign.run(tmp_path, 1, 15, [30], 1, norm_order=20)
+    for invalid in (0, -1, np.inf, 1j):
+        with pytest.raises(ValueError, match="frequency"):
+            campaign.continuous_local_resonance(30, invalid)
+
+
 @pytest.mark.parametrize("kind", ["plane", "hankel", "pml"])
 def test_analytical_wave_and_transformed_balance(kind, monkeypatch):
     """Finite differences verify gradients and the original/transformed PDE separately."""

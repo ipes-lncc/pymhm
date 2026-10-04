@@ -32,6 +32,52 @@ def test_complex_system(solver: str) -> None:
     assert_allclose(solve_linear(matrix, matrix @ expected, solver=solver), expected)
 
 
+@pytest.mark.parametrize("solver", ["scipy", "cg", "minres", "gmres"])
+@pytest.mark.parametrize("multiple", [False, True])
+def test_extended_original_rhs_digits_define_residual(solver: str, multiple: bool) -> None:
+    """The requested criterion belongs to the supplied RHS, before backend rounding."""
+    if np.finfo(np.longdouble).eps >= np.finfo(float).eps:
+        return
+    epsilon = np.longdouble(2) ** -60
+    # A coordinate axis avoids introducing double-precision Krylov normalization
+    # roundoff into this check of the supplied RHS digits.
+    rhs = np.array([1 + epsilon, 0], dtype=np.longdouble)
+    if multiple:
+        rhs = np.column_stack((rhs, rhs * 2))
+    actual = solve_linear(
+        np.eye(2), rhs, solver=solver, rtol=1e-22, refinement_precision="extended"
+    )
+    assert_allclose(actual, rhs, rtol=0, atol=0)
+    assert not np.array_equal(np.asarray(actual, dtype=float).astype(np.longdouble), rhs)
+    with factorize(np.eye(2), rtol=1e-22) as factor:
+        assert_allclose(factor.solve(rhs, refinement_precision="extended"), rhs, rtol=0, atol=0)
+        assert_allclose(factor.solve(rhs), np.asarray(rhs, dtype=float), rtol=0, atol=0)
+
+
+@pytest.mark.parametrize("solver", ["scipy", "cg"])
+def test_extended_complex_rhs_preserves_original_components(solver: str) -> None:
+    """Complex backends receive ordinary components while refinement retains both tails."""
+    if np.finfo(np.longdouble).eps >= np.finfo(float).eps:
+        return
+    epsilon = np.longdouble(2) ** -60
+    rhs = np.array([1 + epsilon + 1j * (2 + 2 * epsilon)], dtype=np.clongdouble)
+    actual = solve_linear(
+        [[1 + 0j]], rhs, solver=solver, rtol=1e-22, refinement_precision="extended"
+    )
+    assert_allclose(actual, rhs, rtol=0, atol=0)
+
+
+def test_extended_complex_krylov_coordinate_rhs() -> None:
+    """A complex coordinate-axis source retains its imaginary correction digits."""
+    if np.finfo(np.longdouble).eps >= np.finfo(float).eps:
+        return
+    rhs = np.array([1j * (1 + np.longdouble(2) ** -60)], dtype=np.clongdouble)
+    actual = solve_linear(
+        [[1 + 0j]], rhs, solver="gmres", rtol=1e-22, refinement_precision="extended"
+    )
+    assert_allclose(actual, rhs, rtol=0, atol=0)
+
+
 def test_factorization_reused_and_matrix_copied(monkeypatch: pytest.MonkeyPatch) -> None:
     matrix = sparse.csr_matrix([[3.0, 1], [1, 4]])
     original = matrix.copy()
@@ -1047,3 +1093,32 @@ def test_native_pardiso_symmetric_equilibration(backend: str) -> None:
         result = factor.solve(rhs)
     assert_allclose(result, expected, rtol=2e-13)
     assert_allclose(matrix @ result, rhs, rtol=2e-13)
+
+
+@pytest.mark.parametrize("multiple", [False, True])
+@pytest.mark.parametrize("complex_values", [False, True])
+@pytest.mark.parametrize("shape", ["wide", "tall", "empty_rows", "empty_columns"])
+def test_rectangular_original_residual_compensated_fallback(
+    monkeypatch: pytest.MonkeyPatch, multiple: bool, complex_values: bool, shape: str
+) -> None:
+    """Original Darcy volume/coupling rows and projections work without native LD."""
+    monkeypatch.setattr(solvers, "_EXTENDED_PRECISION", False)
+    matrix = np.array([[1e16, 1, -1e16, 0], [0, 2, 0, 1]])
+    if shape == "tall":
+        matrix = matrix.T
+    elif shape == "empty_rows":
+        matrix = matrix[:0]
+    elif shape == "empty_columns":
+        matrix = matrix[:, :0]
+    x = np.ones(matrix.shape[1]) * (1 + 2j if complex_values else 1)
+    b = np.arange(matrix.shape[0], dtype=float) * (1 + 2j if complex_values else 1)
+    expected = np.array([sum(float(value) for value in row) for row in matrix])
+    if shape == "wide":
+        expected[0] = 1  # The exact sum is masked by ordinary float64 accumulation.
+    expected = b - expected * (1 + 2j if complex_values else 1)
+    if multiple:
+        x = x[:, None] * np.array([1, -0.25])
+        b = b[:, None] * np.array([1, -0.25])
+        expected = expected[:, None] * np.array([1, -0.25])
+    actual = solvers._accurate_residual(sparse.csr_matrix(matrix), b, x)
+    assert_allclose(actual, expected, atol=0)

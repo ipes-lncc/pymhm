@@ -5,53 +5,66 @@
   "sampling": "Full polynomial evaluation on private fine-cell section vertices; no averaging across interfaces",
   "norm_check_rtol": 2e-10,
   "norm_check_atol": 2e-13,
-  "acquisition_record_sha256": "257bfb5c89708020f409dee657b07dcf706903b39feec573223a9e1a56a06236",
+  "acquisition_record_sha256": "fa5366e6445627799be1f504f42138366a876d30d1efadb5db01fe1cd84d07db",
   "source_sha256": {
     "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
     "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
     "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
     "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
     "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
-    "examples/sample_core_sections.py": "f3899b49de8b681b3c014e4412804f1489eadc64b9c8b79afedd7d875fed2b85",
-    "examples/core_extension_data.py": "e2138ee96c930b9f0559d20bdde5eae2c6ace802d36c88b8286eb6f8559651f2"
+    "examples/sample_core_sections.py": "7b8f6796fe8b88c325dd14e9c914293cf7b9c951f02e698c6bef43d533c3d608",
+    "examples/core_extension_data.py": "e2138ee96c930b9f0559d20bdde5eae2c6ace802d36c88b8286eb6f8559651f2",
+    "examples/hdiv3d_field_archive.py": "70cb96ad229db87c7045c5dad8fc487bc77f99d7e02a831087b7fae0f3541731",
+    "examples/hdiv3d_sections.py": "8b88781b7fcd04691a3d1e880d858e6da5545f8ff00194939f6a992d2919ff7a",
+    "examples/verify_hdiv3d.py": "cc8bfed8c0c78e98d72cee37084c5e0a587802c70f2d5fbf81fd0b2a3d106dde",
+    "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3"
   },
   "cases": {
     "tetra-p1-k1": {
       "archive": "tetra-p1-k1-polynomial-fields.npz",
-      "sha256": "63215b03023888581a9563709172fadf7bff9b98c97b762baf589dab3234a537",
-      "original_archive": "tetra-p1-k1.npz",
-      "original_sha256": "19906449b6e6f3321c5d55e38f3009585f48e9a1ccb6faf06e96a48d33cc41e2",
+      "sha256": "3c1c9b7364fb1341b55218d045ec7069d5fe86f27a11f09307e87172d4860fa5",
+      "original_archive": "hdiv3d-current/tetra-p1-k1-n5.npz",
+      "original_sha256": "3cf5c6d3dc88cb559c1af9de2bd8a60d2348cc3416c8d303a2c7511842ba7bda",
       "resolution": 5,
-      "pressure_l2": 0.011170085078142973,
-      "flux_l2": 0.03489255162629254
+      "pressure_l2": 0.011170085078142936,
+      "flux_l2": 0.034892551626293004,
+      "divergence_l2": 0.3305840074956552,
+      "norm_order": 13
     },
     "tetra-p2-k2": {
       "archive": "tetra-p2-k2-polynomial-fields.npz",
-      "sha256": "507b18de772c7b580b70623b219e28ae49acfb63638fc540a83525094e50949a",
-      "original_archive": "tetra-p2-k2.npz",
-      "original_sha256": "c06ebcddc68c0fbd17f2e470ae2a2cdd5dde0d607526c4dfc444e53e988c80f1",
+      "sha256": "7b523be60587da2fdee7dde78e2f8bf8379b08564ef3717184dd387d3ad7e188",
+      "original_archive": "hdiv3d-current/tetra-p2-k2-n5.npz",
+      "original_sha256": "0cfa9c7aca8d4f2a5d63b5672eb685095971e92bb82a6a2dba2c7e80c866633f",
       "resolution": 5,
-      "pressure_l2": 0.00126533290974459,
-      "flux_l2": 0.002708226032217761
+      "pressure_l2": 0.0012653329097445966,
+      "flux_l2": 0.002708226032217713,
+      "divergence_l2": 0.03746047645776185,
+      "norm_order": 13
     },
     "tetra-p3-k1": {
       "archive": "tetra-p3-k1-polynomial-fields.npz",
-      "sha256": "742f85faf8d0f2ae616de10b837ab6c8b47e9f79966e57162ab23ef825b3c9bb",
-      "original_archive": "tetra-p3-k1.npz",
-      "original_sha256": "40d005b945eedad193037f2dc6c7b9d5477ce471f3ad5e9494bbbce032d76f17",
+      "sha256": "c05ca9ca2cbbebe7bffc902d72340e925a24aed8d10607671f3a50bc6a2f7bf0",
+      "original_archive": "hdiv3d-current/tetra-p3-k1-n5.npz",
+      "original_sha256": "4186f8e102fb5a8d509f2411efb0e68590595e43870c6ed40b47c94d3f7c5fdd",
       "resolution": 5,
-      "pressure_l2": 0.0005785610984301718,
-      "flux_l2": 0.028568995516778998
+      "pressure_l2": 0.0005785610984283227,
+      "flux_l2": 0.028568995516775872,
+      "divergence_l2": 0.0034867526033467966,
+      "norm_order": 13
     },
     "prism-p2-k2": {
       "archive": "prism-p2-k2-polynomial-fields.npz",
-      "sha256": "71f95a3c8a1bf6e7a2fe513336193d57cc4c366a75695934ce62885750216a43",
-      "original_archive": "prism-p2-k2.npz",
-      "original_sha256": "b4293519d2c2fb07aa02f73e631498626f0edbd466efdd4e754612d28eb35d17",
+      "sha256": "a2989ed119e34f1553716fa1f23b5547334ccc877cd1f9f6a1b122ed68a61e8e",
+      "original_archive": "hdiv3d-current/prism-p2-k2-n5.npz",
+      "original_sha256": "96ccd36cdb8511269ee2b97f74126f9941c163387c1fd81e2fa152c6d34370f5",
       "resolution": 5,
-      "pressure_l2": 0.0008357515612175916,
-      "flux_l2": 0.0028819488153464853
+      "pressure_l2": 0.0008357515612176006,
+      "flux_l2": 0.002881948815346646,
+      "divergence_l2": 0.024744695870213985,
+      "norm_order": 13
     }
   },
-  "source_changed": false
+  "source_changed": false,
+  "native_whole_verification_sha256": "745e46e7a1337963cd0804fecd9f8721db671e627f386297b55d107649c30b76"
 }

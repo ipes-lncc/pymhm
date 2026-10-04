@@ -1,0 +1,2190 @@
+{
+  "schema": "pymhm-nested-native-verification-v1",
+  "complete": true,
+  "cases": 10,
+  "acquisition_source_identity_sha256": "144b3a874e61ea1ca11eee89c1a4288f53d92e6cd0f965071c43855fd763136a",
+  "native_source_identity_sha256": "7d519a18f4c674dba89df811222f5d59f0353d0cb930e809dd73872f2323f0c5",
+  "complete_verified_receipt_sha256": "48bf789199982c210d20bd83c375bc8f19df5227c6adbe91daf82db9c1fb8fd3",
+  "reference": {
+    "project": "FEniCS Basix",
+    "version": "0.9.0",
+    "module": "create_element/tabulate: equispaced Q2 and P1 polynomial bases",
+    "verified_source_url": "https://docs.fenicsproject.org/basix/v0.9.0/index.html",
+    "upstream_tag": "v0.9.0",
+    "upstream_revision": "19555f5b629b4090b14014f9db5f2c9ac80984f9",
+    "upstream_source_url": "https://github.com/FEniCS/basix/tree/19555f5b629b4090b14014f9db5f2c9ac80984f9",
+    "upstream_revision_verification": "Official Git remote refs/tags/v0.9.0 independently verified",
+    "runtime_source_relation": "Compiled runtime file digests recorded separately; no byte identity to an upstream source checkout is asserted",
+    "original_author_application": false,
+    "execution": "Instrumented independent original Q2/P1 hybrid assembly of all ten complete physical cases",
+    "independence": "Geometry, basis tabulation, local and full original A/B/f/g assembly and field evaluation are independent of PyMHM assembly and condensation",
+    "shared_solver": "PyMHM factorize owner using SciPy SuperLU and extended original-residual policy; solver arithmetic is shared"
+  },
+  "instrumented_source_sha256": {
+    "independent_assembly": "375f4c3dc0d41152bdd32d85357a498a1194edd9a4f03b45c9bec6a3b1d0f6e8",
+    "independent_acquisition": "c3180209148878b3077600dc042c45d04bf11906774360be6eadbd6adc8223fe",
+    "independent_archive_reader": "75c7c789e6e2690666114f182e31700696b667954de2ee0779e12a024ae1f757",
+    "physical_field_comparison": "60de6e407a1d9b7e80003ca8a64e8efb5539d9fa322c3dc00bd849939b099a30",
+    "shared_solver": "2d360c2f7d71d8c04caa1966125291849b45daa5a886f5030772981e1cdaa751"
+  },
+  "compiled_runtime": {
+    "python": "3.13.15",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "basix": "0.9.0"
+  },
+  "basix_compiled_and_python_runtime_sha256": {
+    "__init__.py": "c3d0b9ba1a47f31ae82d37197d9a7f53b264133f839465d2ea75f104b0d91690",
+    "_basixcpp.cpython-313-x86_64-linux-gnu.so": "fa14b18f7b393882c9a49e8af6f9e86b47c14f880daee89b7213a894fc8a9fdb",
+    "_basixcpp.pyi": "5c42596f176822b9fe53502ab489f3dea5cfb7692946aea842736da7d0d13444",
+    "cell.py": "ff93a1d4e00d31e083b34927adf13fa8aa17ef9fbd7d27d2b5b2087a19558288",
+    "finite_element.py": "8cd2c3b47f705da0ad0d38d2907f41f7564ac213143f658754463e32030b4fa6",
+    "interpolation.py": "f5933e34c7065c642e5286ef98cfa2b9a8acd5cba56cc41cf2aeb84470baf3e8",
+    "lattice.py": "8b8d03326763b33e9de2d07992395ca25a18c5e594d76a5817cd0276f0fdd733",
+    "maps.py": "e4cca5b3ff7427d33ebc6ce63a219bcb7ebe2c412f7c90a5ef56171d879dc6c7",
+    "numba_helpers.py": "83f0889e53247a760ed3d6ae45ffdc46a8069adf4f0e833831d3df0791693872",
+    "polynomials.py": "0f4a2a5c6ac0937b9f431ebc8235b92ffdf4e5cda50dedfc105a19c1d4b02e55",
+    "quadrature.py": "ba0949da5df7d5743fbca4e1efc77614aae7dea24f34baa527f12e8b3f2f9196",
+    "sobolev_spaces.py": "90d34837d8c4f667f4a131a43a584c9bf6c596a8e6ed3ffd47388fe9c238b2fb",
+    "ufl.py": "3ba9faad971a241f811c7f41e218c8d828689cecb2e46749c84b530815e32096",
+    "utils.py": "e4fd8f64de7e7bfa171f585553b2d556320077710e3b08c78d08fd432baa0a8d"
+  },
+  "criteria": {
+    "original": 1e-10,
+    "physical_fields": 1e-09,
+    "norm_integration": 1e-09,
+    "represented_operator_identity": 1e-11
+  },
+  "maximum_native_original_relative": 8.758588278904221e-13,
+  "maximum_candidate_in_native_original_relative": 2.0112285176187383e-12,
+  "maximum_same_space_physical_field_relative": 1.3500481920266278e-12,
+  "maximum_represented_operator_relative_difference": 4.50954017908594e-16,
+  "maximum_native_norm_q8_q10_relative_sensitivity": 3.686642820160747e-12,
+  "bitwise_data_only_replay_and_comparison_threads_1_2": true,
+  "data_only_replays": 20,
+  "physical_comparisons": 20,
+  "rows": [
+    {
+      "n": 1,
+      "boundary_case": "sine_zero_dirichlet",
+      "acquisition_uuid": "e61afd68-c0e1-4674-b79d-4a2984fef507",
+      "candidate_archive_sha256": "08d6183952f030df6494eb075eccd41f89830e887024e1ba02ef5d7022380208",
+      "candidate_record_sha256": "44f0ee6aa0ef48dfd3f3a846e419298a63714f28f88062a335c5f33a76390b7b",
+      "candidate_actual_basis_sha256": {
+        "leaf_E": "055a06a448b4d353f8e4c2b0ad5ad3c14d4e9ecbb7a5a260c1013e370c141598",
+        "flat_E": "055a06a448b4d353f8e4c2b0ad5ad3c14d4e9ecbb7a5a260c1013e370c141598",
+        "parent_E": "47de4148e81600a34d39b7f7dc4792f9fe5f250713b890c8de9e62a5353359de",
+        "q2_cardinal_matrix": "5e6590ab7ec04c680c21bb3d5c00d89743f100dc6d471d390387331bb8abead6",
+        "trace_cardinal_matrix": "9dd7593376e84d339fcd21820ac217607efaf858a49981a3baa1395d2a89cbb6",
+        "q8_basis": "41cd51d663eabfbcfee5123ea73902956bd93e549426029e27b741d30fbb964f",
+        "q10_basis": "ce216e7fbf842334c4d98c8236511402aaad1aad41925a833e9c52dd32b16e86",
+        "trace_q8_basis": "614d6d49dea4711f8a6d68966802ef56477c940afea171a9ee9bec8a2129ab35",
+        "trace_q10_basis": "4ec118471c2488a188b699fbde6968577291a0536df9334a2d9967020b11df8d",
+        "display_basis": "0a276695763872ebf0209f7723d562141e6c0fcaa4c384cfa1b3cb38428bed0e"
+      },
+      "candidate_original_operator_sha256": {
+        "leaf_A": "1a56bb18d32ae06780b811c39a455c80def8fb62cdad39e438122812bc08100f",
+        "leaf_B_original": "4f83e1fc7c33162796152ccafe74f139f4ab4821787ef74310e29edc91404258",
+        "leaf_f": "b831989d98543a8792d16da60424a86a54b92faf06d3ba4c58f3a0d1560ec293",
+        "flat_A": "1a56bb18d32ae06780b811c39a455c80def8fb62cdad39e438122812bc08100f",
+        "flat_B_original": "4f83e1fc7c33162796152ccafe74f139f4ab4821787ef74310e29edc91404258",
+        "flat_f": "b831989d98543a8792d16da60424a86a54b92faf06d3ba4c58f3a0d1560ec293",
+        "parent_A": "9381c9b6f0d51aff4b5ea290ddb83c63f77c5eda69468654390b152b82f10557",
+        "parent_B_original": "dfad733118bb37cd034a2c4c74fe5d1a199f89161a8dbb630d55ae7e89016228",
+        "parent_f": "65c998a0a886b583d810e91ed9036f80d22e4d05abd715f09119ea122e990aa5",
+        "inner_A": "003fc26a1de15ae1d162d7a6308b07e4714113a00cbe4b5055014a2017f78cda",
+        "inner_f": "40bdffa575c198f69d623de44ea66572943692fb2f70c400a28178fbe33e1fde",
+        "leaf_B": "4f83e1fc7c33162796152ccafe74f139f4ab4821787ef74310e29edc91404258"
+      },
+      "candidate_field_sha256": {
+        "leaf_pressure_recursive": "f39763a003af6d6687e2e9febff959d0d1bc53bc55e96479a901074fa788ba42",
+        "leaf_pressure_flat": "cd89d9a9099aec77cb60d917b1a98963a2db019263b00040cf3711fba301ef29",
+        "trace_recursive": "1bdb3e8b3246e4f98fc3ec2b54fdb1694e7effb33f5f9aeeb749aaf6d1ab5849",
+        "trace_flat": "907e5b11dce6fcbc86b488b50adb93f948249ab7d20eb42c3576f7165c86e880"
+      },
+      "candidate_original_checks": {
+        "leaf_original_source_relative_residual": 1.3799215109104728e-15,
+        "flat_original_source_relative_residual": 1.441531253686748e-15,
+        "parent_original_source_relative_residual": 2.36361262031351e-16,
+        "leaf_original_constraint_relative_residual": 6.836883489680042e-16,
+        "flat_original_constraint_relative_residual": 3.33168069302566e-16,
+        "parent_original_constraint_relative_residual": 1.745502702364324e-16
+      },
+      "native_manifest_sha256": "5a84435f4bcff8b31f9ea61cf7268702515945b953e30d48614da4e3c702b3b2",
+      "native_actual_system_archive_sha256": "20d514834e79bf6cecd85ec6f05124662884a9ef9c9592789a84a2ee31b9ccdd",
+      "native_actual_system_numeric_sha256": {
+        "leaf_points": "8e17b83a704e38d2b6ba0742f9c324800c71cd93ac7b3b4384fed3a87c020310",
+        "leaf_cells": "f3997789a9c88a9cea99f18a3f7c7cbdcc14b96fa8eca836ebfc4f26a9fda5a9",
+        "leaf_nodes": "815ff636c01f3d5f18d82bb741222f8d8a2d32b15b24e5de6fb211c617583e26",
+        "leaf_dofs": "8880cf42b8b6d517d126846489dd8e0d0f4c954d201d44ee56cf68db0bdb7a4d",
+        "face_endpoints": "8a96350ffa03eb8ae8e12db1d4a6b31247cfa04b8b44074205ecbbd447048ccd",
+        "face_normals": "7d0423a1f8f89c91e1fc1a6963bb154b01f1ab69ed11cec4a477b6432b750e07",
+        "cell_faces": "31715ae7500c07eae27388867eb13ecd70bf1301e9fd545ecec753f7ac269200",
+        "cell_signs": "961c0914b6a315e3e9416a5110fba738566d649189cea53e857e5642f2dc360f",
+        "trace_dofs": "1a547af36419e2587003415a73a0a951c1ac922a0108c2088ea4855bb7c75937",
+        "leaf_A": "9db956813a2ff7798771984ab0eb3c4ebaa160cdcc49b4d6691b57a907253379",
+        "leaf_B": "71c1b9b7b33e003dbfc85d24f286a920ae1125f5d9ba0e63cf75d630940676e6",
+        "leaf_f": "15c3b34ebffe7b4de04a7e129b3160dd8e451cd419b041927b5fbce4d67c651b",
+        "leaf_integral": "b3da0836ab6e752a3d1a8b9316de6a72b2ff381d745fc02de6d68c483e939e54",
+        "boundary_load": "e1f1a370b6a0d495ff91a4ead938ab9940a3c8fb92f41fad2d726b81e4ac1c14",
+        "volume_basis_nodes": "46e71903f2332b75d962657ec352490db2102c3a2ed01463b0942ae8e2dcd00b",
+        "volume_basis_coefficients": "e28ae40b117e39e19c21ef77fb7738cca71a82b06febae96417aa45e7599ec13",
+        "volume_basis_cardinal_matrix": "24ad96dc04807b66353322f8e954a923d52e68c3d918a15c18e953b4155a8c2d",
+        "trace_basis_nodes": "f5d080b6fdf73f08557596860c1e18f121392c0401bf46193dc60e1d6b651e75",
+        "trace_basis_coefficients": "4b3486d79f5631ba829d4f861a48d9b93667aec239eac64af91cee1cf3100e6f",
+        "trace_to_legendre": "00200f6c268fe5b9e2dabb19cc0b53b841b9d25fcdf829c167431dd7fc140cab",
+        "A_data": "40b11363130e5f81c6559a7c3abd93e3c0d6355935d41bf78d9ff8dfc9d6693d",
+        "A_indices": "725d695e0c2598216c87008dc2a877f06bdaeb3a0c1e7ca5139ea07304d9fa11",
+        "A_indptr": "1de98f720f7bd28e424f303859c4463233228b3f46e4175bc8b754844e5aaa0d",
+        "A_shape": "f77da22698780f9257693a0df05153188a8b3618bc34dd1a425a3a48dc0f06e6",
+        "B_data": "fa9c418366da9e89e66fd1e012e4571fdb33d6575d5f849acc3c91ef3a2707d9",
+        "B_indices": "287cc4199fcf510f693262c15f32b01d795f903b992a32a9a1f8bb2ee2eb07ec",
+        "B_indptr": "b69abe620914051b2e9cf7099f702b36312fb85254d59eaaa439d65d8b84b236",
+        "B_shape": "995e3e128f27491075cedf63984ae421e61e214e4419e870ae8a5a8406dc79c2",
+        "volume_reference_points_q6": "970992863902dbc8ec00d6ab2b0a5d8760478ea60947a7b5ea052026ac707155",
+        "volume_reference_weights_q6": "0a4c8a5086561b6b4045b22a3067171ecc097087f42d5c4d06a42772f9f217b8",
+        "volume_values_q6": "eed06750d84657db8300ff237b53c62b02676d6edf8a414676f03e5d9191cd6d",
+        "volume_reference_gradients_q6": "e25a7620e40066a3368799ca8d42cc1cedac8fcbda1adf372c00d587d11b075f",
+        "face_parameter_q6": "10c0b9cb9ea9956430ca0a13a199c88af63d5c839783d372100f2dd06dd79e8e",
+        "face_reference_weights_q6": "255c318bd9eccbfd9801d59e1fc618ee229c1c3364e0affa0690aa5f1d8ba874",
+        "face_values_q6": "baad6cdee44d0f26476d0be3abfc8e4508c5aaf9df5a556134c797d8c0132d09",
+        "volume_reference_points_q8": "1ebabb620b5f51971b32324b4affa570bbf7338cd076bfaddfa3992580af47b9",
+        "volume_reference_weights_q8": "c329a0b67a67f3dd615b041c3ae437bc46b82530bebdeaa36782eb526f2a47dc",
+        "volume_values_q8": "8b7a0cefaf8be8026e1452285ea16e6266725e7f887a343bd4f67788a335bec1",
+        "volume_reference_gradients_q8": "809293da0d53d679b868081e0803eb64abe212ec059b6955ccd6fee13180767e",
+        "face_parameter_q8": "44d79bddb323603c226301711e9827b505e4cbbacc62c1d8e63968f0f71d2958",
+        "face_reference_weights_q8": "cd6f6e2f0fc8bf23493cb76c93bf6669d16f829fcdd8681059bc443ed8e66695",
+        "face_values_q8": "68426ae6fbefd508e61898d20bee2961ee06ebc33a6fad73ead49099474c8969",
+        "volume_reference_points_q10": "3108f0865402915313b1b6629918c437d38626f397560c62705ab7038dff1b34",
+        "volume_reference_weights_q10": "c0adb578f9e5c93d83fc97bf07326fa05b7dbe6f9727fd33ce8bae395edab934",
+        "volume_values_q10": "b3092a796d22c25ff3c53f1a712a7f681ae6267f741ec82d50a6f74e0cf9cbd8",
+        "volume_reference_gradients_q10": "13b7c583f195bd1f97f8c6817611ec6f091e61e1616ed84fdf610c2849a55848",
+        "face_parameter_q10": "df95933fc813614ca1882bfd865cdaaac752b5b6d0afc7def5c9390620e54bba",
+        "face_reference_weights_q10": "ff07793dae643b65340e5e8bb6e7474542874aab76800f654843fa715e1ebe58",
+        "face_values_q10": "c00cca2607ba79eea2992d84e0c7c460243a44ad7f586aead3764d6471e7dc3e"
+      },
+      "native_actual_fields_archive_sha256": "eabb0f9b02ab69944653979b0d273a471acf03f7f607e2d30d32a2e80901fe93",
+      "native_actual_field_numeric_sha256": {
+        "pressure": "e53050c67fc1d207fc711082ab6003da19f4d373c7bd05fb1acb567248343dec",
+        "pressure_correction": "9b461cee974a53d02e14e2e09b337f8bdb5da3f3aa6c6d304dfd889f073c709f",
+        "pressure_tail": "9b461cee974a53d02e14e2e09b337f8bdb5da3f3aa6c6d304dfd889f073c709f",
+        "trace": "741e7f74a52eda02a279fa8141c6c9bcea1c537efb8efda5fdbb77589dd9c6dc",
+        "trace_correction": "e1f1a370b6a0d495ff91a4ead938ab9940a3c8fb92f41fad2d726b81e4ac1c14",
+        "trace_tail": "e1f1a370b6a0d495ff91a4ead938ab9940a3c8fb92f41fad2d726b81e4ac1c14",
+        "coefficient_precision_bits": "1918e77a097e249d16b23282fb7a9352bba0bd54bed7ae437b13c2b1964edd44"
+      },
+      "native_coefficient_precision_bits": 64,
+      "native_operator_precision_bits": 53,
+      "candidate_coefficient_precision_bits": 53,
+      "native_original_residual": {
+        "absolute": 2.5972515861607543e-15,
+        "physical_augmented_rhs_norm": 1.2811763530618139,
+        "relative": 2.0272397160263875e-15
+      },
+      "represented_operator_relative_difference": {
+        "A": 4.50954017908594e-16,
+        "B": 2.745682200592691e-16,
+        "f": 1.9240618256247488e-16,
+        "weak_g": 0.0
+      },
+      "candidate_in_native_original_and_physical_norms": {
+        "recursive": {
+          "independent_original_relative": 7.995132361818941e-15,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 2.875828921741594e-15,
+              "raw_gradient_relative_l2": 2.774374317634114e-15,
+              "physical_darcy_flux_relative_l2": 2.774374317634114e-15,
+              "full_broken_h1_relative": 2.779360982764213e-15,
+              "physical_normal_multiplier_relative_l2": 2.6457413354554556e-15
+            },
+            "10": {
+              "pressure_relative_l2": 2.895876198540935e-15,
+              "raw_gradient_relative_l2": 2.852109116931654e-15,
+              "physical_darcy_flux_relative_l2": 2.852109116931654e-15,
+              "full_broken_h1_relative": 2.854239042978581e-15,
+              "physical_normal_multiplier_relative_l2": 2.651014200172462e-15
+            }
+          },
+          "maximum_nodal_absolute_difference": 3.1086244689504383e-15
+        },
+        "flat": {
+          "independent_original_relative": 7.869953392314795e-15,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 2.4883976453377315e-15,
+              "raw_gradient_relative_l2": 2.56992037587408e-15,
+              "physical_darcy_flux_relative_l2": 2.56992037587408e-15,
+              "full_broken_h1_relative": 2.566041350497973e-15,
+              "physical_normal_multiplier_relative_l2": 2.256881760215907e-15
+            },
+            "10": {
+              "pressure_relative_l2": 2.509924407296824e-15,
+              "raw_gradient_relative_l2": 2.6561192576190383e-15,
+              "physical_darcy_flux_relative_l2": 2.6561192576190383e-15,
+              "full_broken_h1_relative": 2.6492416916838864e-15,
+              "physical_normal_multiplier_relative_l2": 2.262000767061751e-15
+            }
+          },
+          "maximum_nodal_absolute_difference": 3.3306690738754696e-15
+        }
+      },
+      "native_analytical_norms": {
+        "8": {
+          "pressure_l2_error": 0.006606531506520964,
+          "raw_gradient_l2_error": 0.12165104061885457,
+          "darcy_flux_l2_error": 0.12165104061885457,
+          "full_broken_h1_error": 0.12183029977061066,
+          "pressure_l2_norm": 0.5009887155708372,
+          "raw_gradient_l2_norm": 2.223542063668703,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        },
+        "10": {
+          "pressure_l2_error": 0.006606531506520962,
+          "raw_gradient_l2_error": 0.12165104061885439,
+          "darcy_flux_l2_error": 0.12165104061885439,
+          "full_broken_h1_error": 0.1218302997706105,
+          "pressure_l2_norm": 0.5009887155708371,
+          "raw_gradient_l2_norm": 2.223542063668703,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        }
+      },
+      "trace_coordinate_transform": {
+        "shape": [
+          24,
+          24
+        ],
+        "signed_permutation": true,
+        "source": "actual physical endpoints/normals; no averaging"
+      },
+      "comparison_records_sha256": {
+        "1": "5f67018f55fe9dfbab5547c188d3192a8a5002ff01ee8701272ddcfacdb41437",
+        "2": "5f97c3ef3c74de9b99707dbbdd7e9fdb2d0d46a2afceaa4141fe53d3f51a06e2"
+      },
+      "replay_records_sha256": {
+        "1": "d7278072fbf6861418640c7c6bfe9ff81ce30704dcf5830bcb4d0c1fa8f5c60d",
+        "2": "373e069e1d4840f434fbbc4efc0e59dd7283ccd685107ca2c9e36ad4a7cd3dc0"
+      }
+    },
+    {
+      "n": 1,
+      "boundary_case": "affine_plus_sine",
+      "acquisition_uuid": "6ee2d4b2-4ca7-458d-a2ab-f4f045b0eeb1",
+      "candidate_archive_sha256": "fcfe2e6e8363d2e92444090c2e567fb5e7edc85300d537c45b612d26956b79a8",
+      "candidate_record_sha256": "5b872720dcdc0e8e4e266a5248bec4903a28365cce52924ed607f2af7707305f",
+      "candidate_actual_basis_sha256": {
+        "leaf_E": "055a06a448b4d353f8e4c2b0ad5ad3c14d4e9ecbb7a5a260c1013e370c141598",
+        "flat_E": "055a06a448b4d353f8e4c2b0ad5ad3c14d4e9ecbb7a5a260c1013e370c141598",
+        "parent_E": "47de4148e81600a34d39b7f7dc4792f9fe5f250713b890c8de9e62a5353359de",
+        "q2_cardinal_matrix": "5e6590ab7ec04c680c21bb3d5c00d89743f100dc6d471d390387331bb8abead6",
+        "trace_cardinal_matrix": "9dd7593376e84d339fcd21820ac217607efaf858a49981a3baa1395d2a89cbb6",
+        "q8_basis": "41cd51d663eabfbcfee5123ea73902956bd93e549426029e27b741d30fbb964f",
+        "q10_basis": "ce216e7fbf842334c4d98c8236511402aaad1aad41925a833e9c52dd32b16e86",
+        "trace_q8_basis": "614d6d49dea4711f8a6d68966802ef56477c940afea171a9ee9bec8a2129ab35",
+        "trace_q10_basis": "4ec118471c2488a188b699fbde6968577291a0536df9334a2d9967020b11df8d",
+        "display_basis": "0a276695763872ebf0209f7723d562141e6c0fcaa4c384cfa1b3cb38428bed0e"
+      },
+      "candidate_original_operator_sha256": {
+        "leaf_A": "1a56bb18d32ae06780b811c39a455c80def8fb62cdad39e438122812bc08100f",
+        "leaf_B_original": "4f83e1fc7c33162796152ccafe74f139f4ab4821787ef74310e29edc91404258",
+        "leaf_f": "b831989d98543a8792d16da60424a86a54b92faf06d3ba4c58f3a0d1560ec293",
+        "flat_A": "1a56bb18d32ae06780b811c39a455c80def8fb62cdad39e438122812bc08100f",
+        "flat_B_original": "4f83e1fc7c33162796152ccafe74f139f4ab4821787ef74310e29edc91404258",
+        "flat_f": "b831989d98543a8792d16da60424a86a54b92faf06d3ba4c58f3a0d1560ec293",
+        "parent_A": "9381c9b6f0d51aff4b5ea290ddb83c63f77c5eda69468654390b152b82f10557",
+        "parent_B_original": "dfad733118bb37cd034a2c4c74fe5d1a199f89161a8dbb630d55ae7e89016228",
+        "parent_f": "65c998a0a886b583d810e91ed9036f80d22e4d05abd715f09119ea122e990aa5",
+        "inner_A": "003fc26a1de15ae1d162d7a6308b07e4714113a00cbe4b5055014a2017f78cda",
+        "inner_f": "40bdffa575c198f69d623de44ea66572943692fb2f70c400a28178fbe33e1fde",
+        "leaf_B": "4f83e1fc7c33162796152ccafe74f139f4ab4821787ef74310e29edc91404258"
+      },
+      "candidate_field_sha256": {
+        "leaf_pressure_recursive": "fc03b34ac5b53ca9da6a81244c3010d8022ac8dfb80b7e61a51b4b4548dae975",
+        "leaf_pressure_flat": "0cf1bd37f1149d881ab8ee47a5de152675d43b12efa7e2d72d6d1ed51c717cbb",
+        "trace_recursive": "9a259446099e3af4810677bb42ddefa8cf96207f389bee43b9bd0712f1269549",
+        "trace_flat": "9cd0271a1be17e71ce7d5868ec2320bcc7eb87249559284594e10e7af7dcaa1f"
+      },
+      "candidate_original_checks": {
+        "leaf_original_source_relative_residual": 2.9239402484653846e-15,
+        "flat_original_source_relative_residual": 3.1251848263512548e-15,
+        "parent_original_source_relative_residual": 5.0195267756251e-16,
+        "leaf_original_constraint_relative_residual": 6.239301956497805e-16,
+        "flat_original_constraint_relative_residual": 4.56636542818367e-16,
+        "parent_original_constraint_relative_residual": 2.0830842307836337e-16
+      },
+      "native_manifest_sha256": "8793e48d3e871d13158a6d686cfcadc6771d977c5821a7acf07be08167d5b3de",
+      "native_actual_system_archive_sha256": "da08af7d96ebe0cdabe0188af13f45a838901f638d0b5d91d34b4799c1018c2c",
+      "native_actual_system_numeric_sha256": {
+        "leaf_points": "8e17b83a704e38d2b6ba0742f9c324800c71cd93ac7b3b4384fed3a87c020310",
+        "leaf_cells": "f3997789a9c88a9cea99f18a3f7c7cbdcc14b96fa8eca836ebfc4f26a9fda5a9",
+        "leaf_nodes": "815ff636c01f3d5f18d82bb741222f8d8a2d32b15b24e5de6fb211c617583e26",
+        "leaf_dofs": "8880cf42b8b6d517d126846489dd8e0d0f4c954d201d44ee56cf68db0bdb7a4d",
+        "face_endpoints": "8a96350ffa03eb8ae8e12db1d4a6b31247cfa04b8b44074205ecbbd447048ccd",
+        "face_normals": "7d0423a1f8f89c91e1fc1a6963bb154b01f1ab69ed11cec4a477b6432b750e07",
+        "cell_faces": "31715ae7500c07eae27388867eb13ecd70bf1301e9fd545ecec753f7ac269200",
+        "cell_signs": "961c0914b6a315e3e9416a5110fba738566d649189cea53e857e5642f2dc360f",
+        "trace_dofs": "1a547af36419e2587003415a73a0a951c1ac922a0108c2088ea4855bb7c75937",
+        "leaf_A": "9db956813a2ff7798771984ab0eb3c4ebaa160cdcc49b4d6691b57a907253379",
+        "leaf_B": "71c1b9b7b33e003dbfc85d24f286a920ae1125f5d9ba0e63cf75d630940676e6",
+        "leaf_f": "15c3b34ebffe7b4de04a7e129b3160dd8e451cd419b041927b5fbce4d67c651b",
+        "leaf_integral": "b3da0836ab6e752a3d1a8b9316de6a72b2ff381d745fc02de6d68c483e939e54",
+        "boundary_load": "e03b9e0c40952d0906b27ab0d77ba5307df116b9a530eb97d29e612e8b471c78",
+        "volume_basis_nodes": "46e71903f2332b75d962657ec352490db2102c3a2ed01463b0942ae8e2dcd00b",
+        "volume_basis_coefficients": "e28ae40b117e39e19c21ef77fb7738cca71a82b06febae96417aa45e7599ec13",
+        "volume_basis_cardinal_matrix": "24ad96dc04807b66353322f8e954a923d52e68c3d918a15c18e953b4155a8c2d",
+        "trace_basis_nodes": "f5d080b6fdf73f08557596860c1e18f121392c0401bf46193dc60e1d6b651e75",
+        "trace_basis_coefficients": "4b3486d79f5631ba829d4f861a48d9b93667aec239eac64af91cee1cf3100e6f",
+        "trace_to_legendre": "00200f6c268fe5b9e2dabb19cc0b53b841b9d25fcdf829c167431dd7fc140cab",
+        "A_data": "40b11363130e5f81c6559a7c3abd93e3c0d6355935d41bf78d9ff8dfc9d6693d",
+        "A_indices": "725d695e0c2598216c87008dc2a877f06bdaeb3a0c1e7ca5139ea07304d9fa11",
+        "A_indptr": "1de98f720f7bd28e424f303859c4463233228b3f46e4175bc8b754844e5aaa0d",
+        "A_shape": "f77da22698780f9257693a0df05153188a8b3618bc34dd1a425a3a48dc0f06e6",
+        "B_data": "fa9c418366da9e89e66fd1e012e4571fdb33d6575d5f849acc3c91ef3a2707d9",
+        "B_indices": "287cc4199fcf510f693262c15f32b01d795f903b992a32a9a1f8bb2ee2eb07ec",
+        "B_indptr": "b69abe620914051b2e9cf7099f702b36312fb85254d59eaaa439d65d8b84b236",
+        "B_shape": "995e3e128f27491075cedf63984ae421e61e214e4419e870ae8a5a8406dc79c2",
+        "volume_reference_points_q6": "970992863902dbc8ec00d6ab2b0a5d8760478ea60947a7b5ea052026ac707155",
+        "volume_reference_weights_q6": "0a4c8a5086561b6b4045b22a3067171ecc097087f42d5c4d06a42772f9f217b8",
+        "volume_values_q6": "eed06750d84657db8300ff237b53c62b02676d6edf8a414676f03e5d9191cd6d",
+        "volume_reference_gradients_q6": "e25a7620e40066a3368799ca8d42cc1cedac8fcbda1adf372c00d587d11b075f",
+        "face_parameter_q6": "10c0b9cb9ea9956430ca0a13a199c88af63d5c839783d372100f2dd06dd79e8e",
+        "face_reference_weights_q6": "255c318bd9eccbfd9801d59e1fc618ee229c1c3364e0affa0690aa5f1d8ba874",
+        "face_values_q6": "baad6cdee44d0f26476d0be3abfc8e4508c5aaf9df5a556134c797d8c0132d09",
+        "volume_reference_points_q8": "1ebabb620b5f51971b32324b4affa570bbf7338cd076bfaddfa3992580af47b9",
+        "volume_reference_weights_q8": "c329a0b67a67f3dd615b041c3ae437bc46b82530bebdeaa36782eb526f2a47dc",
+        "volume_values_q8": "8b7a0cefaf8be8026e1452285ea16e6266725e7f887a343bd4f67788a335bec1",
+        "volume_reference_gradients_q8": "809293da0d53d679b868081e0803eb64abe212ec059b6955ccd6fee13180767e",
+        "face_parameter_q8": "44d79bddb323603c226301711e9827b505e4cbbacc62c1d8e63968f0f71d2958",
+        "face_reference_weights_q8": "cd6f6e2f0fc8bf23493cb76c93bf6669d16f829fcdd8681059bc443ed8e66695",
+        "face_values_q8": "68426ae6fbefd508e61898d20bee2961ee06ebc33a6fad73ead49099474c8969",
+        "volume_reference_points_q10": "3108f0865402915313b1b6629918c437d38626f397560c62705ab7038dff1b34",
+        "volume_reference_weights_q10": "c0adb578f9e5c93d83fc97bf07326fa05b7dbe6f9727fd33ce8bae395edab934",
+        "volume_values_q10": "b3092a796d22c25ff3c53f1a712a7f681ae6267f741ec82d50a6f74e0cf9cbd8",
+        "volume_reference_gradients_q10": "13b7c583f195bd1f97f8c6817611ec6f091e61e1616ed84fdf610c2849a55848",
+        "face_parameter_q10": "df95933fc813614ca1882bfd865cdaaac752b5b6d0afc7def5c9390620e54bba",
+        "face_reference_weights_q10": "ff07793dae643b65340e5e8bb6e7474542874aab76800f654843fa715e1ebe58",
+        "face_values_q10": "c00cca2607ba79eea2992d84e0c7c460243a44ad7f586aead3764d6471e7dc3e"
+      },
+      "native_actual_fields_archive_sha256": "84b1ae2f53704f1ccaab97da2423ec15fa5b0344f5aaf523cdd5d796eb2a298a",
+      "native_actual_field_numeric_sha256": {
+        "pressure": "9ee9436ced879ef2487bffeb32129e00ffc1cbc56d1fb6d684951a150052ac85",
+        "pressure_correction": "9b461cee974a53d02e14e2e09b337f8bdb5da3f3aa6c6d304dfd889f073c709f",
+        "pressure_tail": "9b461cee974a53d02e14e2e09b337f8bdb5da3f3aa6c6d304dfd889f073c709f",
+        "trace": "5979a1211bca4c0c9ce5fb2d830280f8277cabbe9c768fcc5d1db4fc17cf15df",
+        "trace_correction": "e1f1a370b6a0d495ff91a4ead938ab9940a3c8fb92f41fad2d726b81e4ac1c14",
+        "trace_tail": "e1f1a370b6a0d495ff91a4ead938ab9940a3c8fb92f41fad2d726b81e4ac1c14",
+        "coefficient_precision_bits": "1918e77a097e249d16b23282fb7a9352bba0bd54bed7ae437b13c2b1964edd44"
+      },
+      "native_coefficient_precision_bits": 64,
+      "native_operator_precision_bits": 53,
+      "candidate_coefficient_precision_bits": 53,
+      "native_original_residual": {
+        "absolute": 7.443150534520121e-15,
+        "physical_augmented_rhs_norm": 2.0688890102017696,
+        "relative": 3.597655793915316e-15
+      },
+      "represented_operator_relative_difference": {
+        "A": 4.50954017908594e-16,
+        "B": 2.745682200592691e-16,
+        "f": 1.9240618256247488e-16,
+        "weak_g": 1.420552400575974e-16
+      },
+      "candidate_in_native_original_and_physical_norms": {
+        "recursive": {
+          "independent_original_relative": 1.465193527179492e-14,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 2.589566022719152e-15,
+              "raw_gradient_relative_l2": 6.949521409178367e-15,
+              "physical_darcy_flux_relative_l2": 6.949521409178367e-15,
+              "full_broken_h1_relative": 6.17881343891679e-15,
+              "physical_normal_multiplier_relative_l2": 8.598324076747733e-15
+            },
+            "10": {
+              "pressure_relative_l2": 2.607098170918776e-15,
+              "raw_gradient_relative_l2": 7.174912501126527e-15,
+              "physical_darcy_flux_relative_l2": 7.174912501126527e-15,
+              "full_broken_h1_relative": 6.3725134434366434e-15,
+              "physical_normal_multiplier_relative_l2": 8.602423394080842e-15
+            }
+          },
+          "maximum_nodal_absolute_difference": 8.43769498715119e-15
+        },
+        "flat": {
+          "independent_original_relative": 1.4880011477704162e-14,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 2.5057507556534742e-15,
+              "raw_gradient_relative_l2": 6.724268094484229e-15,
+              "physical_darcy_flux_relative_l2": 6.724268094484229e-15,
+              "full_broken_h1_relative": 5.978553124793646e-15,
+              "physical_normal_multiplier_relative_l2": 8.040752414762688e-15
+            },
+            "10": {
+              "pressure_relative_l2": 2.522315985735605e-15,
+              "raw_gradient_relative_l2": 6.9743703992777794e-15,
+              "physical_darcy_flux_relative_l2": 6.9743703992777794e-15,
+              "full_broken_h1_relative": 6.193215768534148e-15,
+              "physical_normal_multiplier_relative_l2": 8.041936925308342e-15
+            }
+          },
+          "maximum_nodal_absolute_difference": 8.43769498715119e-15
+        }
+      },
+      "native_analytical_norms": {
+        "8": {
+          "pressure_l2_error": 0.006606531506521208,
+          "raw_gradient_l2_error": 0.1216510406188546,
+          "darcy_flux_l2_error": 0.1216510406188546,
+          "full_broken_h1_error": 0.1218302997706107,
+          "pressure_l2_norm": 1.4941616791705434,
+          "raw_gradient_l2_norm": 2.6351734874395083,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        },
+        "10": {
+          "pressure_l2_error": 0.006606531506521206,
+          "raw_gradient_l2_error": 0.12165104061885447,
+          "darcy_flux_l2_error": 0.12165104061885447,
+          "full_broken_h1_error": 0.12183029977061058,
+          "pressure_l2_norm": 1.4941616791705432,
+          "raw_gradient_l2_norm": 2.635173487439508,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        }
+      },
+      "trace_coordinate_transform": {
+        "shape": [
+          24,
+          24
+        ],
+        "signed_permutation": true,
+        "source": "actual physical endpoints/normals; no averaging"
+      },
+      "comparison_records_sha256": {
+        "1": "47bc2c874a14f569fdd07533ebed7ac12fb1c3972624140c5d564b6f049f70c4",
+        "2": "c23a914eafd135d9196a5583c949790d845f726213133fcd2d4bedeb54cba036"
+      },
+      "replay_records_sha256": {
+        "1": "3a133f3af583d91c37277a5af370fd7ab0eeefca0dd0d881ec3be6bf18498df8",
+        "2": "1bb23d4532a9286a27dfe509ee543d129eb46f45f74fbc99a27606af4632c2ff"
+      }
+    },
+    {
+      "n": 2,
+      "boundary_case": "sine_zero_dirichlet",
+      "acquisition_uuid": "8b4c524d-6a9f-4c6b-b4c2-b3eab0dd3318",
+      "candidate_archive_sha256": "307ad60f6e1ca59d8722fdaccf119ff4e2d7f196bcf6c7e4783d3467f22d2160",
+      "candidate_record_sha256": "d951b3319b83417b2d22f558efce135689b33c26cbd2940f950365a1a16a2d02",
+      "candidate_actual_basis_sha256": {
+        "leaf_E": "b9986e1183121d705c614377a8c163a5e626937729f965418041978590d61996",
+        "flat_E": "b9986e1183121d705c614377a8c163a5e626937729f965418041978590d61996",
+        "parent_E": "ee7d2ba588647361e4e7f32d30fbc19e1494d622f3ef4c2336bd113ee6793a82",
+        "q2_cardinal_matrix": "5e6590ab7ec04c680c21bb3d5c00d89743f100dc6d471d390387331bb8abead6",
+        "trace_cardinal_matrix": "9dd7593376e84d339fcd21820ac217607efaf858a49981a3baa1395d2a89cbb6",
+        "q8_basis": "41cd51d663eabfbcfee5123ea73902956bd93e549426029e27b741d30fbb964f",
+        "q10_basis": "ce216e7fbf842334c4d98c8236511402aaad1aad41925a833e9c52dd32b16e86",
+        "trace_q8_basis": "614d6d49dea4711f8a6d68966802ef56477c940afea171a9ee9bec8a2129ab35",
+        "trace_q10_basis": "4ec118471c2488a188b699fbde6968577291a0536df9334a2d9967020b11df8d",
+        "display_basis": "379b2faf0199c5aaa8df4e1c0f9518d97e25abc7af77446dd3fbe4fd6b1dad30"
+      },
+      "candidate_original_operator_sha256": {
+        "leaf_A": "9b4c3cc3ec2e08431e0199f42ec2d777980eff66840865848549ba69cbb561c5",
+        "leaf_B_original": "e29db010bd2a87327a5bdf3218f81e9452eb12fbd2ab1a3bd914f0808f5349e1",
+        "leaf_f": "fe8b8470efa9e9e51b5fa69fc31adb722d4b18a13b3a3577bc696073f86f9d54",
+        "flat_A": "9b4c3cc3ec2e08431e0199f42ec2d777980eff66840865848549ba69cbb561c5",
+        "flat_B_original": "59cf8de1210ad016e91661dc55f7ca9e9fa2836323ca3eb4883d59433aa8427b",
+        "flat_f": "fe8b8470efa9e9e51b5fa69fc31adb722d4b18a13b3a3577bc696073f86f9d54",
+        "parent_A": "a957fbf6abd06c93dc364aeb092f7c08c545d5e603f2166e89059978ad255c1a",
+        "parent_B_original": "7cf9f5ee11e9dc3f375b7af3cc174f3f5f89d01a39bdb725ad7950478a8b8fdc",
+        "parent_f": "3cf8119f25e109e6e2e9d60744fd4868529854ca83bb7a4334ca34d3d955c1b2",
+        "inner_A": "c52b28e5796f592bf90cec9dd43434c352e8a55eaff4e6eff864fcd9e6d0bd71",
+        "inner_f": "690f00af71e1a85ee926001194cf5c76f76a7506f0e8652de5044a324b38732b",
+        "leaf_B": "c0fc95b00ca468a0c3d56298c9c70f99e4159ac9e6c9f38489e82ef065fdd8c6"
+      },
+      "candidate_field_sha256": {
+        "leaf_pressure_recursive": "f6d0bdfcb92a728078eb92f0e37df6419c3bdd06c451660ab4bea636651d2ec3",
+        "leaf_pressure_flat": "b06d6f2f5433991275680a93e4977c9d0d0e2ea55c5e5892bfb83c531e0de950",
+        "trace_recursive": "89ca6f43c31d61de8ba4263b33b5eeab431d0dfacb31d81f62186fed2a3fbb2e",
+        "trace_flat": "f743f96dac00f5669744cdeb9413fd6393877c9d97af0dcd49a74d3ff0fb4549"
+      },
+      "candidate_original_checks": {
+        "leaf_original_source_relative_residual": 4.21285204240596e-15,
+        "flat_original_source_relative_residual": 4.2732582742389644e-15,
+        "parent_original_source_relative_residual": 5.373702566642457e-16,
+        "leaf_original_constraint_relative_residual": 1.930264342717912e-15,
+        "flat_original_constraint_relative_residual": 1.0225696450032663e-15,
+        "parent_original_constraint_relative_residual": 5.378070866228449e-16
+      },
+      "native_manifest_sha256": "679469fa56d20a91fb1b942fef3b4909639ebac407c3d178238a723a3662b693",
+      "native_actual_system_archive_sha256": "3de79a6edb50c613c5ec6313f8b7577bd1e3ff1352c576f1c2cca0c95c8573f9",
+      "native_actual_system_numeric_sha256": {
+        "leaf_points": "806d892be08484c8f6a6cdd48d6c57fffbedee212550373299ef501c2c675141",
+        "leaf_cells": "b2cba9704f747e3bf9a86039192616b935664881bef946f54e3c5e6ecadcb1c4",
+        "leaf_nodes": "810ab1ded50d6e340e2d1ca8797f2c33cf8453cd8a70f72003625e5a8f086304",
+        "leaf_dofs": "28ae3c1952531c81e66e67135b50ec5073fc68a02f9c9d118ac4cf3a2db45a33",
+        "face_endpoints": "e5d859d5e57e8080e6dedc3bbba2b41e307ee6159ef52393d69a3a998578c344",
+        "face_normals": "c5876d887339734f373d3ab91427aca465f1ebf909fc52ccefaaad6883ec8707",
+        "cell_faces": "1a2b7de33ad13776f1f33234e54e3adcf9db341beab21e9237eb1ec367718816",
+        "cell_signs": "e264911c2460e9e9c3b05b35ef2b713b9513fe6eee9f3f42e001b6e70005e63c",
+        "trace_dofs": "61f4a49f62fdcc93c11f0f9b7d77ab1692e46be21a52b37c5771b5df4258141d",
+        "leaf_A": "7a1e1a76a5e5546e177a96e12c70823c1aa52dc8793c51503b21d7891cb6fcd6",
+        "leaf_B": "5ec27cb08087ee21c61254518719d2cc96553e19a61ef71dfc7b6ac7049a8332",
+        "leaf_f": "24216292dad024b4a83e5acd0258bd0e0ef4e063d367f827514e563329cf2b0a",
+        "leaf_integral": "a35f022e64d97b56fc0a04ea209491f10e0361fab8ca2870a62ad5297b3e3eec",
+        "boundary_load": "55b840cdb8811f8fb9bd5476f35529c6b8efcbacf30568da26e72bc49290d278",
+        "volume_basis_nodes": "46e71903f2332b75d962657ec352490db2102c3a2ed01463b0942ae8e2dcd00b",
+        "volume_basis_coefficients": "e28ae40b117e39e19c21ef77fb7738cca71a82b06febae96417aa45e7599ec13",
+        "volume_basis_cardinal_matrix": "24ad96dc04807b66353322f8e954a923d52e68c3d918a15c18e953b4155a8c2d",
+        "trace_basis_nodes": "f5d080b6fdf73f08557596860c1e18f121392c0401bf46193dc60e1d6b651e75",
+        "trace_basis_coefficients": "4b3486d79f5631ba829d4f861a48d9b93667aec239eac64af91cee1cf3100e6f",
+        "trace_to_legendre": "00200f6c268fe5b9e2dabb19cc0b53b841b9d25fcdf829c167431dd7fc140cab",
+        "A_data": "ddb129a493983a443e35b5f585a2ca70bc4c66d0984c1f237be8d9eff51bc401",
+        "A_indices": "cf8fed6f7a4769833f4fc664366c9f84abeec804faa3195e2805bb6347e3e2a1",
+        "A_indptr": "ad79cf304a0edf33c100880101140068214f718cc51a3e2e1ce5df508118e190",
+        "A_shape": "0d8033659bd72c62015442a17516fa831088c200aac62c0782e276cb94bbf9a8",
+        "B_data": "e3815aa73679bd9cc0519aabbc91874f968ef55a4ae22f6d120436613a2f89dd",
+        "B_indices": "e249ac7c68628717267717ac240fdbbc761b4b4c7f259c92557ded550071024f",
+        "B_indptr": "f4752aa91d6c1a50c8b3bc004a211e41c4b9435b7b08a14f48e9717ecbd74bb9",
+        "B_shape": "1c89a9329ce95fdfe1f57acaa0e13e4143bb9c0deda2a2ab496c236ad048008f",
+        "volume_reference_points_q6": "970992863902dbc8ec00d6ab2b0a5d8760478ea60947a7b5ea052026ac707155",
+        "volume_reference_weights_q6": "0a4c8a5086561b6b4045b22a3067171ecc097087f42d5c4d06a42772f9f217b8",
+        "volume_values_q6": "eed06750d84657db8300ff237b53c62b02676d6edf8a414676f03e5d9191cd6d",
+        "volume_reference_gradients_q6": "e25a7620e40066a3368799ca8d42cc1cedac8fcbda1adf372c00d587d11b075f",
+        "face_parameter_q6": "10c0b9cb9ea9956430ca0a13a199c88af63d5c839783d372100f2dd06dd79e8e",
+        "face_reference_weights_q6": "255c318bd9eccbfd9801d59e1fc618ee229c1c3364e0affa0690aa5f1d8ba874",
+        "face_values_q6": "baad6cdee44d0f26476d0be3abfc8e4508c5aaf9df5a556134c797d8c0132d09",
+        "volume_reference_points_q8": "1ebabb620b5f51971b32324b4affa570bbf7338cd076bfaddfa3992580af47b9",
+        "volume_reference_weights_q8": "c329a0b67a67f3dd615b041c3ae437bc46b82530bebdeaa36782eb526f2a47dc",
+        "volume_values_q8": "8b7a0cefaf8be8026e1452285ea16e6266725e7f887a343bd4f67788a335bec1",
+        "volume_reference_gradients_q8": "809293da0d53d679b868081e0803eb64abe212ec059b6955ccd6fee13180767e",
+        "face_parameter_q8": "44d79bddb323603c226301711e9827b505e4cbbacc62c1d8e63968f0f71d2958",
+        "face_reference_weights_q8": "cd6f6e2f0fc8bf23493cb76c93bf6669d16f829fcdd8681059bc443ed8e66695",
+        "face_values_q8": "68426ae6fbefd508e61898d20bee2961ee06ebc33a6fad73ead49099474c8969",
+        "volume_reference_points_q10": "3108f0865402915313b1b6629918c437d38626f397560c62705ab7038dff1b34",
+        "volume_reference_weights_q10": "c0adb578f9e5c93d83fc97bf07326fa05b7dbe6f9727fd33ce8bae395edab934",
+        "volume_values_q10": "b3092a796d22c25ff3c53f1a712a7f681ae6267f741ec82d50a6f74e0cf9cbd8",
+        "volume_reference_gradients_q10": "13b7c583f195bd1f97f8c6817611ec6f091e61e1616ed84fdf610c2849a55848",
+        "face_parameter_q10": "df95933fc813614ca1882bfd865cdaaac752b5b6d0afc7def5c9390620e54bba",
+        "face_reference_weights_q10": "ff07793dae643b65340e5e8bb6e7474542874aab76800f654843fa715e1ebe58",
+        "face_values_q10": "c00cca2607ba79eea2992d84e0c7c460243a44ad7f586aead3764d6471e7dc3e"
+      },
+      "native_actual_fields_archive_sha256": "38a9f555a5802bfb697148679cc371bb582e4d3be2d4ca59eeff94967ccb4279",
+      "native_actual_field_numeric_sha256": {
+        "pressure": "ed8f8afe300799dca7591e82ae8f66ce0342486f62854b92ccc9e1ccefce3814",
+        "pressure_correction": "eebde41c883137516f6d7ccd923493c3dc223c6b0e7a5ca7eba70e10bdc4a19e",
+        "pressure_tail": "eebde41c883137516f6d7ccd923493c3dc223c6b0e7a5ca7eba70e10bdc4a19e",
+        "trace": "26526130f4a20614ce3dbc14f2051457ff24a71c49c57d4d5e69b3c1c164d360",
+        "trace_correction": "55b840cdb8811f8fb9bd5476f35529c6b8efcbacf30568da26e72bc49290d278",
+        "trace_tail": "55b840cdb8811f8fb9bd5476f35529c6b8efcbacf30568da26e72bc49290d278",
+        "coefficient_precision_bits": "1918e77a097e249d16b23282fb7a9352bba0bd54bed7ae437b13c2b1964edd44"
+      },
+      "native_coefficient_precision_bits": 64,
+      "native_operator_precision_bits": 53,
+      "candidate_coefficient_precision_bits": 53,
+      "native_original_residual": {
+        "absolute": 4.688085910301437e-15,
+        "physical_augmented_rhs_norm": 0.6484799004053484,
+        "relative": 7.229346518482737e-15
+      },
+      "represented_operator_relative_difference": {
+        "A": 4.50954017908594e-16,
+        "B": 2.745682200592691e-16,
+        "f": 1.8329211956720227e-16,
+        "weak_g": 0.0
+      },
+      "candidate_in_native_original_and_physical_norms": {
+        "recursive": {
+          "independent_original_relative": 3.1782521656530004e-14,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 7.815712273490073e-15,
+              "raw_gradient_relative_l2": 9.464330438850726e-15,
+              "physical_darcy_flux_relative_l2": 9.464330438850726e-15,
+              "full_broken_h1_relative": 9.391472973820873e-15,
+              "physical_normal_multiplier_relative_l2": 1.0866464688316204e-14
+            },
+            "10": {
+              "pressure_relative_l2": 7.833835842200119e-15,
+              "raw_gradient_relative_l2": 9.558060342722374e-15,
+              "physical_darcy_flux_relative_l2": 9.558060342722374e-15,
+              "full_broken_h1_relative": 9.482110985952006e-15,
+              "physical_normal_multiplier_relative_l2": 1.0865778600097189e-14
+            }
+          },
+          "maximum_nodal_absolute_difference": 8.881784197001252e-15
+        },
+        "flat": {
+          "independent_original_relative": 3.1898245499540793e-14,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 8.060586252267752e-15,
+              "raw_gradient_relative_l2": 8.93242728819954e-15,
+              "physical_darcy_flux_relative_l2": 8.93242728819954e-15,
+              "full_broken_h1_relative": 8.892346348734018e-15,
+              "physical_normal_multiplier_relative_l2": 8.8607288018156e-15
+            },
+            "10": {
+              "pressure_relative_l2": 8.078247674960517e-15,
+              "raw_gradient_relative_l2": 9.033061455619389e-15,
+              "physical_darcy_flux_relative_l2": 9.033061455619389e-15,
+              "full_broken_h1_relative": 8.989345161663786e-15,
+              "physical_normal_multiplier_relative_l2": 8.86223777413632e-15
+            }
+          },
+          "maximum_nodal_absolute_difference": 8.659739592076221e-15
+        }
+      },
+      "native_analytical_norms": {
+        "8": {
+          "pressure_l2_error": 0.0007620879043992132,
+          "raw_gradient_l2_error": 0.02953566871532896,
+          "darcy_flux_l2_error": 0.02953566871532896,
+          "full_broken_h1_error": 0.02954549888622112,
+          "pressure_l2_norm": 0.5000555395703784,
+          "raw_gradient_l2_norm": 2.221563560316992,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        },
+        "10": {
+          "pressure_l2_error": 0.0007620879043992098,
+          "raw_gradient_l2_error": 0.029535668715328922,
+          "darcy_flux_l2_error": 0.029535668715328922,
+          "full_broken_h1_error": 0.029545498886221083,
+          "pressure_l2_norm": 0.5000555395703783,
+          "raw_gradient_l2_norm": 2.2215635603169916,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        }
+      },
+      "trace_coordinate_transform": {
+        "shape": [
+          80,
+          80
+        ],
+        "signed_permutation": true,
+        "source": "actual physical endpoints/normals; no averaging"
+      },
+      "comparison_records_sha256": {
+        "1": "b963d31562882149744633b82430f7294e3ebd1619d7fe1f00a3e13b3167a631",
+        "2": "ad23d29b8f0dadc64d5e6a0889e8372e4714c30675edd776f2b88c9f249dee07"
+      },
+      "replay_records_sha256": {
+        "1": "46a4c62fdb8c1610314a1e1a001f558bc30ef46d88c3f98b2fad4ee170a1e62d",
+        "2": "b0fcbd911f02f41f9ec6aab2015406bcc363f0176e9bb83864cb5deb537b6ef3"
+      }
+    },
+    {
+      "n": 2,
+      "boundary_case": "affine_plus_sine",
+      "acquisition_uuid": "ec54f0b8-d39a-4e6c-b2e5-9a75b364aeea",
+      "candidate_archive_sha256": "e33710aa6970bc21a619b4a6b8312d14c002288285cac239529d5414b550d900",
+      "candidate_record_sha256": "1ff6765fd5dd7fcf8f6ee1715647946f2f5e91fd604cadcba65a5ed35e96d9b1",
+      "candidate_actual_basis_sha256": {
+        "leaf_E": "b9986e1183121d705c614377a8c163a5e626937729f965418041978590d61996",
+        "flat_E": "b9986e1183121d705c614377a8c163a5e626937729f965418041978590d61996",
+        "parent_E": "ee7d2ba588647361e4e7f32d30fbc19e1494d622f3ef4c2336bd113ee6793a82",
+        "q2_cardinal_matrix": "5e6590ab7ec04c680c21bb3d5c00d89743f100dc6d471d390387331bb8abead6",
+        "trace_cardinal_matrix": "9dd7593376e84d339fcd21820ac217607efaf858a49981a3baa1395d2a89cbb6",
+        "q8_basis": "41cd51d663eabfbcfee5123ea73902956bd93e549426029e27b741d30fbb964f",
+        "q10_basis": "ce216e7fbf842334c4d98c8236511402aaad1aad41925a833e9c52dd32b16e86",
+        "trace_q8_basis": "614d6d49dea4711f8a6d68966802ef56477c940afea171a9ee9bec8a2129ab35",
+        "trace_q10_basis": "4ec118471c2488a188b699fbde6968577291a0536df9334a2d9967020b11df8d",
+        "display_basis": "379b2faf0199c5aaa8df4e1c0f9518d97e25abc7af77446dd3fbe4fd6b1dad30"
+      },
+      "candidate_original_operator_sha256": {
+        "leaf_A": "9b4c3cc3ec2e08431e0199f42ec2d777980eff66840865848549ba69cbb561c5",
+        "leaf_B_original": "e29db010bd2a87327a5bdf3218f81e9452eb12fbd2ab1a3bd914f0808f5349e1",
+        "leaf_f": "fe8b8470efa9e9e51b5fa69fc31adb722d4b18a13b3a3577bc696073f86f9d54",
+        "flat_A": "9b4c3cc3ec2e08431e0199f42ec2d777980eff66840865848549ba69cbb561c5",
+        "flat_B_original": "59cf8de1210ad016e91661dc55f7ca9e9fa2836323ca3eb4883d59433aa8427b",
+        "flat_f": "fe8b8470efa9e9e51b5fa69fc31adb722d4b18a13b3a3577bc696073f86f9d54",
+        "parent_A": "a957fbf6abd06c93dc364aeb092f7c08c545d5e603f2166e89059978ad255c1a",
+        "parent_B_original": "7cf9f5ee11e9dc3f375b7af3cc174f3f5f89d01a39bdb725ad7950478a8b8fdc",
+        "parent_f": "3cf8119f25e109e6e2e9d60744fd4868529854ca83bb7a4334ca34d3d955c1b2",
+        "inner_A": "c52b28e5796f592bf90cec9dd43434c352e8a55eaff4e6eff864fcd9e6d0bd71",
+        "inner_f": "690f00af71e1a85ee926001194cf5c76f76a7506f0e8652de5044a324b38732b",
+        "leaf_B": "c0fc95b00ca468a0c3d56298c9c70f99e4159ac9e6c9f38489e82ef065fdd8c6"
+      },
+      "candidate_field_sha256": {
+        "leaf_pressure_recursive": "fb3dfbe0a2dcff0e424b1c3923357a7d93a855d304f0688d154ea24f9efb328e",
+        "leaf_pressure_flat": "dec0cd7358accd0885a2462bc2cd2fe5dd0c4f073cb033cc3ac9d24d081878d8",
+        "trace_recursive": "ea7a8ebbb9e4479f3ca3962a05cea08b43fb066555b6d49e9ed9451140f5cac0",
+        "trace_flat": "ece0f3c976fb6aa3573489c89a2d25cbe8dd1cfee8f1c33a5eeee68e554ed424"
+      },
+      "candidate_original_checks": {
+        "leaf_original_source_relative_residual": 1.0286713210420433e-14,
+        "flat_original_source_relative_residual": 1.0832141720511186e-14,
+        "parent_original_source_relative_residual": 9.544696275415891e-16,
+        "leaf_original_constraint_relative_residual": 1.5213961768886392e-15,
+        "flat_original_constraint_relative_residual": 8.72561400769085e-16,
+        "parent_original_constraint_relative_residual": 7.572231877360037e-16
+      },
+      "native_manifest_sha256": "7a95e33955adf6cf210f6df9178de7b2ca73569a1b698acde9c8a634d7e74b3c",
+      "native_actual_system_archive_sha256": "e1efda1a9ba51b106393002d183a925f429201cf0c141c94159150cf47d00814",
+      "native_actual_system_numeric_sha256": {
+        "leaf_points": "806d892be08484c8f6a6cdd48d6c57fffbedee212550373299ef501c2c675141",
+        "leaf_cells": "b2cba9704f747e3bf9a86039192616b935664881bef946f54e3c5e6ecadcb1c4",
+        "leaf_nodes": "810ab1ded50d6e340e2d1ca8797f2c33cf8453cd8a70f72003625e5a8f086304",
+        "leaf_dofs": "28ae3c1952531c81e66e67135b50ec5073fc68a02f9c9d118ac4cf3a2db45a33",
+        "face_endpoints": "e5d859d5e57e8080e6dedc3bbba2b41e307ee6159ef52393d69a3a998578c344",
+        "face_normals": "c5876d887339734f373d3ab91427aca465f1ebf909fc52ccefaaad6883ec8707",
+        "cell_faces": "1a2b7de33ad13776f1f33234e54e3adcf9db341beab21e9237eb1ec367718816",
+        "cell_signs": "e264911c2460e9e9c3b05b35ef2b713b9513fe6eee9f3f42e001b6e70005e63c",
+        "trace_dofs": "61f4a49f62fdcc93c11f0f9b7d77ab1692e46be21a52b37c5771b5df4258141d",
+        "leaf_A": "7a1e1a76a5e5546e177a96e12c70823c1aa52dc8793c51503b21d7891cb6fcd6",
+        "leaf_B": "5ec27cb08087ee21c61254518719d2cc96553e19a61ef71dfc7b6ac7049a8332",
+        "leaf_f": "24216292dad024b4a83e5acd0258bd0e0ef4e063d367f827514e563329cf2b0a",
+        "leaf_integral": "a35f022e64d97b56fc0a04ea209491f10e0361fab8ca2870a62ad5297b3e3eec",
+        "boundary_load": "f6725d60c1524454bd22d6afe623c33d91faf81eebaee6d30b9a17f36e95c103",
+        "volume_basis_nodes": "46e71903f2332b75d962657ec352490db2102c3a2ed01463b0942ae8e2dcd00b",
+        "volume_basis_coefficients": "e28ae40b117e39e19c21ef77fb7738cca71a82b06febae96417aa45e7599ec13",
+        "volume_basis_cardinal_matrix": "24ad96dc04807b66353322f8e954a923d52e68c3d918a15c18e953b4155a8c2d",
+        "trace_basis_nodes": "f5d080b6fdf73f08557596860c1e18f121392c0401bf46193dc60e1d6b651e75",
+        "trace_basis_coefficients": "4b3486d79f5631ba829d4f861a48d9b93667aec239eac64af91cee1cf3100e6f",
+        "trace_to_legendre": "00200f6c268fe5b9e2dabb19cc0b53b841b9d25fcdf829c167431dd7fc140cab",
+        "A_data": "ddb129a493983a443e35b5f585a2ca70bc4c66d0984c1f237be8d9eff51bc401",
+        "A_indices": "cf8fed6f7a4769833f4fc664366c9f84abeec804faa3195e2805bb6347e3e2a1",
+        "A_indptr": "ad79cf304a0edf33c100880101140068214f718cc51a3e2e1ce5df508118e190",
+        "A_shape": "0d8033659bd72c62015442a17516fa831088c200aac62c0782e276cb94bbf9a8",
+        "B_data": "e3815aa73679bd9cc0519aabbc91874f968ef55a4ae22f6d120436613a2f89dd",
+        "B_indices": "e249ac7c68628717267717ac240fdbbc761b4b4c7f259c92557ded550071024f",
+        "B_indptr": "f4752aa91d6c1a50c8b3bc004a211e41c4b9435b7b08a14f48e9717ecbd74bb9",
+        "B_shape": "1c89a9329ce95fdfe1f57acaa0e13e4143bb9c0deda2a2ab496c236ad048008f",
+        "volume_reference_points_q6": "970992863902dbc8ec00d6ab2b0a5d8760478ea60947a7b5ea052026ac707155",
+        "volume_reference_weights_q6": "0a4c8a5086561b6b4045b22a3067171ecc097087f42d5c4d06a42772f9f217b8",
+        "volume_values_q6": "eed06750d84657db8300ff237b53c62b02676d6edf8a414676f03e5d9191cd6d",
+        "volume_reference_gradients_q6": "e25a7620e40066a3368799ca8d42cc1cedac8fcbda1adf372c00d587d11b075f",
+        "face_parameter_q6": "10c0b9cb9ea9956430ca0a13a199c88af63d5c839783d372100f2dd06dd79e8e",
+        "face_reference_weights_q6": "255c318bd9eccbfd9801d59e1fc618ee229c1c3364e0affa0690aa5f1d8ba874",
+        "face_values_q6": "baad6cdee44d0f26476d0be3abfc8e4508c5aaf9df5a556134c797d8c0132d09",
+        "volume_reference_points_q8": "1ebabb620b5f51971b32324b4affa570bbf7338cd076bfaddfa3992580af47b9",
+        "volume_reference_weights_q8": "c329a0b67a67f3dd615b041c3ae437bc46b82530bebdeaa36782eb526f2a47dc",
+        "volume_values_q8": "8b7a0cefaf8be8026e1452285ea16e6266725e7f887a343bd4f67788a335bec1",
+        "volume_reference_gradients_q8": "809293da0d53d679b868081e0803eb64abe212ec059b6955ccd6fee13180767e",
+        "face_parameter_q8": "44d79bddb323603c226301711e9827b505e4cbbacc62c1d8e63968f0f71d2958",
+        "face_reference_weights_q8": "cd6f6e2f0fc8bf23493cb76c93bf6669d16f829fcdd8681059bc443ed8e66695",
+        "face_values_q8": "68426ae6fbefd508e61898d20bee2961ee06ebc33a6fad73ead49099474c8969",
+        "volume_reference_points_q10": "3108f0865402915313b1b6629918c437d38626f397560c62705ab7038dff1b34",
+        "volume_reference_weights_q10": "c0adb578f9e5c93d83fc97bf07326fa05b7dbe6f9727fd33ce8bae395edab934",
+        "volume_values_q10": "b3092a796d22c25ff3c53f1a712a7f681ae6267f741ec82d50a6f74e0cf9cbd8",
+        "volume_reference_gradients_q10": "13b7c583f195bd1f97f8c6817611ec6f091e61e1616ed84fdf610c2849a55848",
+        "face_parameter_q10": "df95933fc813614ca1882bfd865cdaaac752b5b6d0afc7def5c9390620e54bba",
+        "face_reference_weights_q10": "ff07793dae643b65340e5e8bb6e7474542874aab76800f654843fa715e1ebe58",
+        "face_values_q10": "c00cca2607ba79eea2992d84e0c7c460243a44ad7f586aead3764d6471e7dc3e"
+      },
+      "native_actual_fields_archive_sha256": "95036e5eb093885cddc41292be3b7c5b367de734d3d99fc35fdacbf5c754a0a3",
+      "native_actual_field_numeric_sha256": {
+        "pressure": "ebc2b79e07ad13a07e72ef61f4e1e8f4a48f2cb36a227f549c102c3bcb6c0609",
+        "pressure_correction": "eebde41c883137516f6d7ccd923493c3dc223c6b0e7a5ca7eba70e10bdc4a19e",
+        "pressure_tail": "eebde41c883137516f6d7ccd923493c3dc223c6b0e7a5ca7eba70e10bdc4a19e",
+        "trace": "fb43ef35b6e46d317731593b25149235ad402c5d27fc9a36f620dce3b224be6a",
+        "trace_correction": "55b840cdb8811f8fb9bd5476f35529c6b8efcbacf30568da26e72bc49290d278",
+        "trace_tail": "55b840cdb8811f8fb9bd5476f35529c6b8efcbacf30568da26e72bc49290d278",
+        "coefficient_precision_bits": "1918e77a097e249d16b23282fb7a9352bba0bd54bed7ae437b13c2b1964edd44"
+      },
+      "native_coefficient_precision_bits": 64,
+      "native_operator_precision_bits": 53,
+      "candidate_coefficient_precision_bits": 53,
+      "native_original_residual": {
+        "absolute": 1.6466163972042537e-14,
+        "physical_augmented_rhs_norm": 1.3230220301797102,
+        "relative": 1.244587285504678e-14
+      },
+      "represented_operator_relative_difference": {
+        "A": 4.50954017908594e-16,
+        "B": 2.745682200592691e-16,
+        "f": 1.8329211956720227e-16,
+        "weak_g": 5.947118630904046e-17
+      },
+      "candidate_in_native_original_and_physical_norms": {
+        "recursive": {
+          "independent_original_relative": 4.570745794041842e-14,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 7.350685516863921e-15,
+              "raw_gradient_relative_l2": 1.9911293551583347e-14,
+              "physical_darcy_flux_relative_l2": 1.9911293551583347e-14,
+              "full_broken_h1_relative": 1.769791467776736e-14,
+              "physical_normal_multiplier_relative_l2": 2.340872834767898e-14
+            },
+            "10": {
+              "pressure_relative_l2": 7.366318603792527e-15,
+              "raw_gradient_relative_l2": 2.019361360404581e-14,
+              "physical_darcy_flux_relative_l2": 2.019361360404581e-14,
+              "full_broken_h1_relative": 1.793995743454424e-14,
+              "physical_normal_multiplier_relative_l2": 2.340964156590225e-14
+            }
+          },
+          "maximum_nodal_absolute_difference": 2.398081733190338e-14
+        },
+        "flat": {
+          "independent_original_relative": 4.6420568139297114e-14,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 7.447451116983595e-15,
+              "raw_gradient_relative_l2": 1.9604058999792348e-14,
+              "physical_darcy_flux_relative_l2": 1.9604058999792348e-14,
+              "full_broken_h1_relative": 1.74463502601228e-14,
+              "physical_normal_multiplier_relative_l2": 2.261740640777999e-14
+            },
+            "10": {
+              "pressure_relative_l2": 7.463191850994654e-15,
+              "raw_gradient_relative_l2": 1.99078180348243e-14,
+              "physical_darcy_flux_relative_l2": 1.99078180348243e-14,
+              "full_broken_h1_relative": 1.7706399854321655e-14,
+              "physical_normal_multiplier_relative_l2": 2.2617875609210692e-14
+            }
+          },
+          "maximum_nodal_absolute_difference": 2.353672812205332e-14
+        }
+      },
+      "native_analytical_norms": {
+        "8": {
+          "pressure_l2_error": 0.0007620879043994732,
+          "raw_gradient_l2_error": 0.02953566871532899,
+          "darcy_flux_l2_error": 0.02953566871532899,
+          "full_broken_h1_error": 0.02954549888622116,
+          "pressure_l2_norm": 1.4924687117892588,
+          "raw_gradient_l2_norm": 2.633504253371992,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        },
+        "10": {
+          "pressure_l2_error": 0.0007620879043994719,
+          "raw_gradient_l2_error": 0.029535668715328985,
+          "darcy_flux_l2_error": 0.029535668715328985,
+          "full_broken_h1_error": 0.029545498886221152,
+          "pressure_l2_norm": 1.4924687117892586,
+          "raw_gradient_l2_norm": 2.6335042533719917,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        }
+      },
+      "trace_coordinate_transform": {
+        "shape": [
+          80,
+          80
+        ],
+        "signed_permutation": true,
+        "source": "actual physical endpoints/normals; no averaging"
+      },
+      "comparison_records_sha256": {
+        "1": "12ac222becf5353c972e4c3bad12238d59b20d93f46c1959a7a9cf4acefc12dd",
+        "2": "dcb185f887f0c5a8a86e815aa432ec0db8ce521684db7772e74bb3139e5f7708"
+      },
+      "replay_records_sha256": {
+        "1": "5c704730a1628b92ba81333e9a8ed5bc5f9d8ce0c36752c6b303042aea449b3c",
+        "2": "db9b0b5cfa1ba760b78cd9308830378843d5fb6136ebc48aea2cb5f99f6d3c0d"
+      }
+    },
+    {
+      "n": 4,
+      "boundary_case": "sine_zero_dirichlet",
+      "acquisition_uuid": "b9135e09-6e3a-444b-b626-c4817edbb05b",
+      "candidate_archive_sha256": "0b8adcece28359c180f7e91ed3b9ac990d585749b7b3ae81fd8873522e44b229",
+      "candidate_record_sha256": "926e915bdc2f982af23bdfd975807b175a30005f6ae58d9f9b8de186acd62d37",
+      "candidate_actual_basis_sha256": {
+        "leaf_E": "6da223c0647de404bac6372ffd96fc5b0a25cf1bf03a79e207177e0ce6acf782",
+        "flat_E": "6da223c0647de404bac6372ffd96fc5b0a25cf1bf03a79e207177e0ce6acf782",
+        "parent_E": "e38b8a44f50a1df4ed8d0b65e8917e039897065f78724c1ced419ea3ad5e1d8c",
+        "q2_cardinal_matrix": "5e6590ab7ec04c680c21bb3d5c00d89743f100dc6d471d390387331bb8abead6",
+        "trace_cardinal_matrix": "9dd7593376e84d339fcd21820ac217607efaf858a49981a3baa1395d2a89cbb6",
+        "q8_basis": "41cd51d663eabfbcfee5123ea73902956bd93e549426029e27b741d30fbb964f",
+        "q10_basis": "ce216e7fbf842334c4d98c8236511402aaad1aad41925a833e9c52dd32b16e86",
+        "trace_q8_basis": "614d6d49dea4711f8a6d68966802ef56477c940afea171a9ee9bec8a2129ab35",
+        "trace_q10_basis": "4ec118471c2488a188b699fbde6968577291a0536df9334a2d9967020b11df8d",
+        "display_basis": "ded977e8b165676f7fc065ce34dfa4a5602ee50698c02f401700a4fb38a28b79"
+      },
+      "candidate_original_operator_sha256": {
+        "leaf_A": "557ff6f461b38bd78f9010c142e9018f1b2b186c4f80c9a2005530e0a16aeb35",
+        "leaf_B_original": "528801368d13ddc88c35efb6484bbae7f9df16ea597ec4645497f610f7b2377f",
+        "leaf_f": "c46354344859208d8c056d1205673248340292fa53a6a9ad32983a3e22a7c18f",
+        "flat_A": "557ff6f461b38bd78f9010c142e9018f1b2b186c4f80c9a2005530e0a16aeb35",
+        "flat_B_original": "0bc7003d807959b6c19d76a4972fa0c775077883f0b77c204bf4f37329107cf0",
+        "flat_f": "c46354344859208d8c056d1205673248340292fa53a6a9ad32983a3e22a7c18f",
+        "parent_A": "b64ddecff005f132520614b8d82f9c9660efd933ac92132c45481cf68f4398fc",
+        "parent_B_original": "5ba9a7344fbb214e85bc5a02c8e06c3d55fc949d357f31cd1bae2e5aed2f7654",
+        "parent_f": "8f03c304df068c008007c3fa173618b7b4c06bd42254cbb9c0118f412f2ec1d2",
+        "inner_A": "ea4679fc0edc343dcc4a561f310fb988244cb22587d148bfc11317cc3d98c9f0",
+        "inner_f": "2e08bf75f5cf08ffb65781445eff73a4db6cb29dcd664ba963c1906eb87d99f8",
+        "leaf_B": "a4c0fd853114816bab8a1e0925cbb15eb127ca5a0b6fb1aa7a94ddffe3359baa"
+      },
+      "candidate_field_sha256": {
+        "leaf_pressure_recursive": "c2c294aa475e77522db840522feda5aa0aef18983563cb13dabc0dae3344159c",
+        "leaf_pressure_flat": "c2e4dc6fdb73d826dcb4e78024c4585fb0492d211760b4245e62dbfe2e18e721",
+        "trace_recursive": "a822f39e0a21cab706d97e6b25a7eb77ec816c6465bea182bdc6c50e0d87ec09",
+        "trace_flat": "3aab215d60b1d9114c0b77ddcdbce862c5b8d45827f7dd330196e27855effee3"
+      },
+      "candidate_original_checks": {
+        "leaf_original_source_relative_residual": 1.4768085348306895e-14,
+        "flat_original_source_relative_residual": 1.5142318205526818e-14,
+        "parent_original_source_relative_residual": 2.570565029927574e-15,
+        "leaf_original_constraint_relative_residual": 3.985669008535647e-15,
+        "flat_original_constraint_relative_residual": 3.3709264049878638e-15,
+        "parent_original_constraint_relative_residual": 1.0544710602737347e-15
+      },
+      "native_manifest_sha256": "6aaf375a564c12ee6f48e65fb18e61eae7845cc0eaae8f8b176ac4cfe1a822fd",
+      "native_actual_system_archive_sha256": "a990265a2205805252319636ff06f733bc4494350f70c5806a0519204b13f772",
+      "native_actual_system_numeric_sha256": {
+        "leaf_points": "98cc03fbcc683158bbdc652eb39a4e79e82c72536cf9e0d0416c965c844585b4",
+        "leaf_cells": "816bb236ffda0bae0188b355a6dbb7b652edb7d98b6684828ae718dc13df84e8",
+        "leaf_nodes": "f30c8cd2590953b314b5d9d308a5b5a7d33004bacd2222ba3f35edaae6eceaa2",
+        "leaf_dofs": "4c22bf77db2de45241f0ac0f3ced4d127ee3164aa4dafe36897b02b97de6346a",
+        "face_endpoints": "3cd0717b95cd868e0f6d3ef548a18b9eb512327232d615d72ebc9a2f337f15aa",
+        "face_normals": "0ca5686c880672a8290961896570f3e7150d5baad968c6cb5fdc93d78d101cd1",
+        "cell_faces": "a00d46f264af195bdf079677090a0487496b570a8353be6fd782e2cbf6a38481",
+        "cell_signs": "2dd28f9ec550a9ac44c9b32787fe7bf0fc54e475a1f3c71562a30376b4b9fd14",
+        "trace_dofs": "326e78d9bca9846982546a60986879caa8a32ef25a945a61eb0763c72cec5018",
+        "leaf_A": "bcad5f4a30a02d4f8ed6dbec30bf3d84b1e7ecbd83ab9310be99af887c9c96e1",
+        "leaf_B": "1d5885b479437933882b26a36125cedb32bbeb57a6efe7f955117303c05a3dea",
+        "leaf_f": "d58ffc72bb54bd1a7fbd7dd2255e1322837884feafbba5ab67a4c84991e7e867",
+        "leaf_integral": "77ed82ac7e2416a31ca998d64132003fb4856203ea8e194008cf31bfdba7d998",
+        "boundary_load": "c7eebc8fba3df9a1d258239e3cbb5ea8b9f00a6df2b149d45b318503266ff58a",
+        "volume_basis_nodes": "46e71903f2332b75d962657ec352490db2102c3a2ed01463b0942ae8e2dcd00b",
+        "volume_basis_coefficients": "e28ae40b117e39e19c21ef77fb7738cca71a82b06febae96417aa45e7599ec13",
+        "volume_basis_cardinal_matrix": "24ad96dc04807b66353322f8e954a923d52e68c3d918a15c18e953b4155a8c2d",
+        "trace_basis_nodes": "f5d080b6fdf73f08557596860c1e18f121392c0401bf46193dc60e1d6b651e75",
+        "trace_basis_coefficients": "4b3486d79f5631ba829d4f861a48d9b93667aec239eac64af91cee1cf3100e6f",
+        "trace_to_legendre": "00200f6c268fe5b9e2dabb19cc0b53b841b9d25fcdf829c167431dd7fc140cab",
+        "A_data": "96eb21965b244add06db331240a99d32f50d43490edd4ebb12160013f1119d74",
+        "A_indices": "7eddf188167f5f0dfd6f70be22dc28bf229c566125f4a4eef2a846acd60d9578",
+        "A_indptr": "8d33d1123b490c62a71bb7d345ea1ee3e08037077c79972fd1b828e506d99865",
+        "A_shape": "9b12ca10a61e4f0ddc1c53a3211d6f6e33af938e23851bcf33f3821800535d9c",
+        "B_data": "7a0352c27b46ed6b6b805a9153bd1867d4493d57bec0e02b9401c52c213565ff",
+        "B_indices": "6e862639ac9ba2abbeaa5e67dddf935208804c2dbb4f4fec43b5d01c440354dd",
+        "B_indptr": "3e14f4dc3ef566b6600ffed6b5e113f7c08e82239a764ab4e9e9003e1ba2e322",
+        "B_shape": "93517178bc62b4a753f38e0a4681a9503fe3892faf41bfb88ccb7d20153c7988",
+        "volume_reference_points_q6": "970992863902dbc8ec00d6ab2b0a5d8760478ea60947a7b5ea052026ac707155",
+        "volume_reference_weights_q6": "0a4c8a5086561b6b4045b22a3067171ecc097087f42d5c4d06a42772f9f217b8",
+        "volume_values_q6": "eed06750d84657db8300ff237b53c62b02676d6edf8a414676f03e5d9191cd6d",
+        "volume_reference_gradients_q6": "e25a7620e40066a3368799ca8d42cc1cedac8fcbda1adf372c00d587d11b075f",
+        "face_parameter_q6": "10c0b9cb9ea9956430ca0a13a199c88af63d5c839783d372100f2dd06dd79e8e",
+        "face_reference_weights_q6": "255c318bd9eccbfd9801d59e1fc618ee229c1c3364e0affa0690aa5f1d8ba874",
+        "face_values_q6": "baad6cdee44d0f26476d0be3abfc8e4508c5aaf9df5a556134c797d8c0132d09",
+        "volume_reference_points_q8": "1ebabb620b5f51971b32324b4affa570bbf7338cd076bfaddfa3992580af47b9",
+        "volume_reference_weights_q8": "c329a0b67a67f3dd615b041c3ae437bc46b82530bebdeaa36782eb526f2a47dc",
+        "volume_values_q8": "8b7a0cefaf8be8026e1452285ea16e6266725e7f887a343bd4f67788a335bec1",
+        "volume_reference_gradients_q8": "809293da0d53d679b868081e0803eb64abe212ec059b6955ccd6fee13180767e",
+        "face_parameter_q8": "44d79bddb323603c226301711e9827b505e4cbbacc62c1d8e63968f0f71d2958",
+        "face_reference_weights_q8": "cd6f6e2f0fc8bf23493cb76c93bf6669d16f829fcdd8681059bc443ed8e66695",
+        "face_values_q8": "68426ae6fbefd508e61898d20bee2961ee06ebc33a6fad73ead49099474c8969",
+        "volume_reference_points_q10": "3108f0865402915313b1b6629918c437d38626f397560c62705ab7038dff1b34",
+        "volume_reference_weights_q10": "c0adb578f9e5c93d83fc97bf07326fa05b7dbe6f9727fd33ce8bae395edab934",
+        "volume_values_q10": "b3092a796d22c25ff3c53f1a712a7f681ae6267f741ec82d50a6f74e0cf9cbd8",
+        "volume_reference_gradients_q10": "13b7c583f195bd1f97f8c6817611ec6f091e61e1616ed84fdf610c2849a55848",
+        "face_parameter_q10": "df95933fc813614ca1882bfd865cdaaac752b5b6d0afc7def5c9390620e54bba",
+        "face_reference_weights_q10": "ff07793dae643b65340e5e8bb6e7474542874aab76800f654843fa715e1ebe58",
+        "face_values_q10": "c00cca2607ba79eea2992d84e0c7c460243a44ad7f586aead3764d6471e7dc3e"
+      },
+      "native_actual_fields_archive_sha256": "ced31ed99cf5f3072056f797e0a44fd0fccb81fd2bcfca7c78060a38c6f7e3ad",
+      "native_actual_field_numeric_sha256": {
+        "pressure": "a9addf664247dc8875df8622de8a0f80f236a94f3bde3081bd9e5aa1f08ebfc8",
+        "pressure_correction": "73662dca4bc2970537406dced82a9b9eb5fa80c5e4349df9b917f9fa499ced13",
+        "pressure_tail": "73662dca4bc2970537406dced82a9b9eb5fa80c5e4349df9b917f9fa499ced13",
+        "trace": "d8855fc68ef666c1254c1a28fda87772f18272d368f0c53e7f57c280bb3b893c",
+        "trace_correction": "c7eebc8fba3df9a1d258239e3cbb5ea8b9f00a6df2b149d45b318503266ff58a",
+        "trace_tail": "c7eebc8fba3df9a1d258239e3cbb5ea8b9f00a6df2b149d45b318503266ff58a",
+        "coefficient_precision_bits": "1918e77a097e249d16b23282fb7a9352bba0bd54bed7ae437b13c2b1964edd44"
+      },
+      "native_coefficient_precision_bits": 64,
+      "native_operator_precision_bits": 53,
+      "candidate_coefficient_precision_bits": 53,
+      "native_original_residual": {
+        "absolute": 1.1730673002047625e-14,
+        "physical_augmented_rhs_norm": 0.3252296499218649,
+        "relative": 3.6068891642769566e-14
+      },
+      "represented_operator_relative_difference": {
+        "A": 4.50954017908594e-16,
+        "B": 2.745682200592691e-16,
+        "f": 2.0037734393201666e-16,
+        "weak_g": 0.0
+      },
+      "candidate_in_native_original_and_physical_norms": {
+        "recursive": {
+          "independent_original_relative": 1.2673185028084765e-13,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 3.7111231697993556e-14,
+              "raw_gradient_relative_l2": 3.7073740692868835e-14,
+              "physical_darcy_flux_relative_l2": 3.7073740692868835e-14,
+              "full_broken_h1_relative": 3.707554930995597e-14,
+              "physical_normal_multiplier_relative_l2": 3.703190035966942e-14
+            },
+            "10": {
+              "pressure_relative_l2": 3.7127923017440935e-14,
+              "raw_gradient_relative_l2": 3.717734221273919e-14,
+              "physical_darcy_flux_relative_l2": 3.717734221273919e-14,
+              "full_broken_h1_relative": 3.7174960817746105e-14,
+              "physical_normal_multiplier_relative_l2": 3.7032023128178017e-14
+            }
+          },
+          "maximum_nodal_absolute_difference": 3.963496197911809e-14
+        },
+        "flat": {
+          "independent_original_relative": 1.263682082699659e-13,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 3.648335064859111e-14,
+              "raw_gradient_relative_l2": 3.698625300424537e-14,
+              "physical_darcy_flux_relative_l2": 3.698625300424537e-14,
+              "full_broken_h1_relative": 3.6962160990286033e-14,
+              "physical_normal_multiplier_relative_l2": 3.684495337239589e-14
+            },
+            "10": {
+              "pressure_relative_l2": 3.650005009002808e-14,
+              "raw_gradient_relative_l2": 3.708788695421902e-14,
+              "physical_darcy_flux_relative_l2": 3.708788695421902e-14,
+              "full_broken_h1_relative": 3.705975650313812e-14,
+              "physical_normal_multiplier_relative_l2": 3.684503783994498e-14
+            }
+          },
+          "maximum_nodal_absolute_difference": 3.774758283725532e-14
+        }
+      },
+      "native_analytical_norms": {
+        "8": {
+          "pressure_l2_error": 9.328814907897793e-05,
+          "raw_gradient_l2_error": 0.007317113559849001,
+          "darcy_flux_l2_error": 0.007317113559849001,
+          "full_broken_h1_error": 0.007317708215451385,
+          "pressure_l2_norm": 0.5000033628680093,
+          "raw_gradient_l2_norm": 2.2214489201737915,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        },
+        "10": {
+          "pressure_l2_error": 9.328814907896475e-05,
+          "raw_gradient_l2_error": 0.007317113559848997,
+          "darcy_flux_l2_error": 0.007317113559848997,
+          "full_broken_h1_error": 0.007317708215451382,
+          "pressure_l2_norm": 0.5000033628680093,
+          "raw_gradient_l2_norm": 2.2214489201737915,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        }
+      },
+      "trace_coordinate_transform": {
+        "shape": [
+          288,
+          288
+        ],
+        "signed_permutation": true,
+        "source": "actual physical endpoints/normals; no averaging"
+      },
+      "comparison_records_sha256": {
+        "1": "bdfad163242c7acaabb4a6334a5199ea30ed43b80964af652f4b7c5f2d3a84c7",
+        "2": "f35d1b78f51a31c9a4df953b7e874cbb44a23e9fec18f98db46da3fd32a6889e"
+      },
+      "replay_records_sha256": {
+        "1": "bc698d711a69093699e096eaf04ef709046961b4a386059e826e7068cd540c2a",
+        "2": "ed02fc2b8c2f6ff216ddc9d109e7af8fee8dba2dcd82a21fdb3eb85c527a3711"
+      }
+    },
+    {
+      "n": 4,
+      "boundary_case": "affine_plus_sine",
+      "acquisition_uuid": "4238a613-1b9d-40c7-ae0b-4a2fbdb838cb",
+      "candidate_archive_sha256": "f1ec35917f7b183bc404db50b05dab109b5e0fbca3d46e012fc8aeb62b3eb904",
+      "candidate_record_sha256": "7c2038391743bc6bfcaff9dc59be6670b30f3a35b4ac0211bd14e743ad8a8288",
+      "candidate_actual_basis_sha256": {
+        "leaf_E": "6da223c0647de404bac6372ffd96fc5b0a25cf1bf03a79e207177e0ce6acf782",
+        "flat_E": "6da223c0647de404bac6372ffd96fc5b0a25cf1bf03a79e207177e0ce6acf782",
+        "parent_E": "e38b8a44f50a1df4ed8d0b65e8917e039897065f78724c1ced419ea3ad5e1d8c",
+        "q2_cardinal_matrix": "5e6590ab7ec04c680c21bb3d5c00d89743f100dc6d471d390387331bb8abead6",
+        "trace_cardinal_matrix": "9dd7593376e84d339fcd21820ac217607efaf858a49981a3baa1395d2a89cbb6",
+        "q8_basis": "41cd51d663eabfbcfee5123ea73902956bd93e549426029e27b741d30fbb964f",
+        "q10_basis": "ce216e7fbf842334c4d98c8236511402aaad1aad41925a833e9c52dd32b16e86",
+        "trace_q8_basis": "614d6d49dea4711f8a6d68966802ef56477c940afea171a9ee9bec8a2129ab35",
+        "trace_q10_basis": "4ec118471c2488a188b699fbde6968577291a0536df9334a2d9967020b11df8d",
+        "display_basis": "ded977e8b165676f7fc065ce34dfa4a5602ee50698c02f401700a4fb38a28b79"
+      },
+      "candidate_original_operator_sha256": {
+        "leaf_A": "557ff6f461b38bd78f9010c142e9018f1b2b186c4f80c9a2005530e0a16aeb35",
+        "leaf_B_original": "528801368d13ddc88c35efb6484bbae7f9df16ea597ec4645497f610f7b2377f",
+        "leaf_f": "c46354344859208d8c056d1205673248340292fa53a6a9ad32983a3e22a7c18f",
+        "flat_A": "557ff6f461b38bd78f9010c142e9018f1b2b186c4f80c9a2005530e0a16aeb35",
+        "flat_B_original": "0bc7003d807959b6c19d76a4972fa0c775077883f0b77c204bf4f37329107cf0",
+        "flat_f": "c46354344859208d8c056d1205673248340292fa53a6a9ad32983a3e22a7c18f",
+        "parent_A": "b64ddecff005f132520614b8d82f9c9660efd933ac92132c45481cf68f4398fc",
+        "parent_B_original": "5ba9a7344fbb214e85bc5a02c8e06c3d55fc949d357f31cd1bae2e5aed2f7654",
+        "parent_f": "8f03c304df068c008007c3fa173618b7b4c06bd42254cbb9c0118f412f2ec1d2",
+        "inner_A": "ea4679fc0edc343dcc4a561f310fb988244cb22587d148bfc11317cc3d98c9f0",
+        "inner_f": "2e08bf75f5cf08ffb65781445eff73a4db6cb29dcd664ba963c1906eb87d99f8",
+        "leaf_B": "a4c0fd853114816bab8a1e0925cbb15eb127ca5a0b6fb1aa7a94ddffe3359baa"
+      },
+      "candidate_field_sha256": {
+        "leaf_pressure_recursive": "1d22d8648ef4e6bb2b24d0abbff5fec7513e16fe8523fb64b372bf30847eeba8",
+        "leaf_pressure_flat": "9476db4361972c5702345bb185f26dbb3e77be8b5ead03b661738f4193c749bc",
+        "trace_recursive": "f681f440a486dfc487baac9bde54f00382e75b0b2d1b3f44640a70bb9b0e81dd",
+        "trace_flat": "bdd65e4cd7a0500fa77635e65e39f5846ec95ecc40b91206ea31b5e7b1df40a7"
+      },
+      "candidate_original_checks": {
+        "leaf_original_source_relative_residual": 4.1300615301628156e-14,
+        "flat_original_source_relative_residual": 4.11701172550051e-14,
+        "parent_original_source_relative_residual": 3.4311878097196057e-15,
+        "leaf_original_constraint_relative_residual": 2.0009627171403386e-15,
+        "flat_original_constraint_relative_residual": 1.6936812721087578e-15,
+        "parent_original_constraint_relative_residual": 1.2876955846626024e-15
+      },
+      "native_manifest_sha256": "c5f5de39fdc48b7fd4096425df96ae922dc8ceafb2b9f420f981a3d9e659a13c",
+      "native_actual_system_archive_sha256": "b0b1c047c56c8cc6bd7c9163acd2054897e885d0cdf2bfa3d83f51cde10d9bb7",
+      "native_actual_system_numeric_sha256": {
+        "leaf_points": "98cc03fbcc683158bbdc652eb39a4e79e82c72536cf9e0d0416c965c844585b4",
+        "leaf_cells": "816bb236ffda0bae0188b355a6dbb7b652edb7d98b6684828ae718dc13df84e8",
+        "leaf_nodes": "f30c8cd2590953b314b5d9d308a5b5a7d33004bacd2222ba3f35edaae6eceaa2",
+        "leaf_dofs": "4c22bf77db2de45241f0ac0f3ced4d127ee3164aa4dafe36897b02b97de6346a",
+        "face_endpoints": "3cd0717b95cd868e0f6d3ef548a18b9eb512327232d615d72ebc9a2f337f15aa",
+        "face_normals": "0ca5686c880672a8290961896570f3e7150d5baad968c6cb5fdc93d78d101cd1",
+        "cell_faces": "a00d46f264af195bdf079677090a0487496b570a8353be6fd782e2cbf6a38481",
+        "cell_signs": "2dd28f9ec550a9ac44c9b32787fe7bf0fc54e475a1f3c71562a30376b4b9fd14",
+        "trace_dofs": "326e78d9bca9846982546a60986879caa8a32ef25a945a61eb0763c72cec5018",
+        "leaf_A": "bcad5f4a30a02d4f8ed6dbec30bf3d84b1e7ecbd83ab9310be99af887c9c96e1",
+        "leaf_B": "1d5885b479437933882b26a36125cedb32bbeb57a6efe7f955117303c05a3dea",
+        "leaf_f": "d58ffc72bb54bd1a7fbd7dd2255e1322837884feafbba5ab67a4c84991e7e867",
+        "leaf_integral": "77ed82ac7e2416a31ca998d64132003fb4856203ea8e194008cf31bfdba7d998",
+        "boundary_load": "07a8ddc0dd1d678f3dea4a66e78ef0e06ce6f8b44d1eb3cd29b28530508cb7b3",
+        "volume_basis_nodes": "46e71903f2332b75d962657ec352490db2102c3a2ed01463b0942ae8e2dcd00b",
+        "volume_basis_coefficients": "e28ae40b117e39e19c21ef77fb7738cca71a82b06febae96417aa45e7599ec13",
+        "volume_basis_cardinal_matrix": "24ad96dc04807b66353322f8e954a923d52e68c3d918a15c18e953b4155a8c2d",
+        "trace_basis_nodes": "f5d080b6fdf73f08557596860c1e18f121392c0401bf46193dc60e1d6b651e75",
+        "trace_basis_coefficients": "4b3486d79f5631ba829d4f861a48d9b93667aec239eac64af91cee1cf3100e6f",
+        "trace_to_legendre": "00200f6c268fe5b9e2dabb19cc0b53b841b9d25fcdf829c167431dd7fc140cab",
+        "A_data": "96eb21965b244add06db331240a99d32f50d43490edd4ebb12160013f1119d74",
+        "A_indices": "7eddf188167f5f0dfd6f70be22dc28bf229c566125f4a4eef2a846acd60d9578",
+        "A_indptr": "8d33d1123b490c62a71bb7d345ea1ee3e08037077c79972fd1b828e506d99865",
+        "A_shape": "9b12ca10a61e4f0ddc1c53a3211d6f6e33af938e23851bcf33f3821800535d9c",
+        "B_data": "7a0352c27b46ed6b6b805a9153bd1867d4493d57bec0e02b9401c52c213565ff",
+        "B_indices": "6e862639ac9ba2abbeaa5e67dddf935208804c2dbb4f4fec43b5d01c440354dd",
+        "B_indptr": "3e14f4dc3ef566b6600ffed6b5e113f7c08e82239a764ab4e9e9003e1ba2e322",
+        "B_shape": "93517178bc62b4a753f38e0a4681a9503fe3892faf41bfb88ccb7d20153c7988",
+        "volume_reference_points_q6": "970992863902dbc8ec00d6ab2b0a5d8760478ea60947a7b5ea052026ac707155",
+        "volume_reference_weights_q6": "0a4c8a5086561b6b4045b22a3067171ecc097087f42d5c4d06a42772f9f217b8",
+        "volume_values_q6": "eed06750d84657db8300ff237b53c62b02676d6edf8a414676f03e5d9191cd6d",
+        "volume_reference_gradients_q6": "e25a7620e40066a3368799ca8d42cc1cedac8fcbda1adf372c00d587d11b075f",
+        "face_parameter_q6": "10c0b9cb9ea9956430ca0a13a199c88af63d5c839783d372100f2dd06dd79e8e",
+        "face_reference_weights_q6": "255c318bd9eccbfd9801d59e1fc618ee229c1c3364e0affa0690aa5f1d8ba874",
+        "face_values_q6": "baad6cdee44d0f26476d0be3abfc8e4508c5aaf9df5a556134c797d8c0132d09",
+        "volume_reference_points_q8": "1ebabb620b5f51971b32324b4affa570bbf7338cd076bfaddfa3992580af47b9",
+        "volume_reference_weights_q8": "c329a0b67a67f3dd615b041c3ae437bc46b82530bebdeaa36782eb526f2a47dc",
+        "volume_values_q8": "8b7a0cefaf8be8026e1452285ea16e6266725e7f887a343bd4f67788a335bec1",
+        "volume_reference_gradients_q8": "809293da0d53d679b868081e0803eb64abe212ec059b6955ccd6fee13180767e",
+        "face_parameter_q8": "44d79bddb323603c226301711e9827b505e4cbbacc62c1d8e63968f0f71d2958",
+        "face_reference_weights_q8": "cd6f6e2f0fc8bf23493cb76c93bf6669d16f829fcdd8681059bc443ed8e66695",
+        "face_values_q8": "68426ae6fbefd508e61898d20bee2961ee06ebc33a6fad73ead49099474c8969",
+        "volume_reference_points_q10": "3108f0865402915313b1b6629918c437d38626f397560c62705ab7038dff1b34",
+        "volume_reference_weights_q10": "c0adb578f9e5c93d83fc97bf07326fa05b7dbe6f9727fd33ce8bae395edab934",
+        "volume_values_q10": "b3092a796d22c25ff3c53f1a712a7f681ae6267f741ec82d50a6f74e0cf9cbd8",
+        "volume_reference_gradients_q10": "13b7c583f195bd1f97f8c6817611ec6f091e61e1616ed84fdf610c2849a55848",
+        "face_parameter_q10": "df95933fc813614ca1882bfd865cdaaac752b5b6d0afc7def5c9390620e54bba",
+        "face_reference_weights_q10": "ff07793dae643b65340e5e8bb6e7474542874aab76800f654843fa715e1ebe58",
+        "face_values_q10": "c00cca2607ba79eea2992d84e0c7c460243a44ad7f586aead3764d6471e7dc3e"
+      },
+      "native_actual_fields_archive_sha256": "791213303ed4bccc0a84432e4859f4e8b8ee34d3fc323aa9dd58f9c17d02c9b7",
+      "native_actual_field_numeric_sha256": {
+        "pressure": "b9dc22b417fd7f85adbb05afabdde4a40e1f150c573227a4c770d9b5a2ce964f",
+        "pressure_correction": "73662dca4bc2970537406dced82a9b9eb5fa80c5e4349df9b917f9fa499ced13",
+        "pressure_tail": "73662dca4bc2970537406dced82a9b9eb5fa80c5e4349df9b917f9fa499ced13",
+        "trace": "1e185a8237f9475e25695ee7f52f6f9939fb0b9757e94efc6a9f6b40f833e90d",
+        "trace_correction": "c7eebc8fba3df9a1d258239e3cbb5ea8b9f00a6df2b149d45b318503266ff58a",
+        "trace_tail": "c7eebc8fba3df9a1d258239e3cbb5ea8b9f00a6df2b149d45b318503266ff58a",
+        "coefficient_precision_bits": "1918e77a097e249d16b23282fb7a9352bba0bd54bed7ae437b13c2b1964edd44"
+      },
+      "native_coefficient_precision_bits": 64,
+      "native_operator_precision_bits": 53,
+      "candidate_coefficient_precision_bits": 53,
+      "native_original_residual": {
+        "absolute": 3.8634944636091076e-14,
+        "physical_augmented_rhs_norm": 0.878639268458443,
+        "relative": 4.3971338435482635e-14
+      },
+      "represented_operator_relative_difference": {
+        "A": 4.50954017908594e-16,
+        "B": 2.745682200592691e-16,
+        "f": 2.0037734393201666e-16,
+        "weak_g": 7.649183135863716e-17
+      },
+      "candidate_in_native_original_and_physical_norms": {
+        "recursive": {
+          "independent_original_relative": 1.3839392213274968e-13,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 3.1897891499386386e-14,
+              "raw_gradient_relative_l2": 8.267926579227322e-14,
+              "physical_darcy_flux_relative_l2": 8.267926579227322e-14,
+              "full_broken_h1_relative": 7.363046724556396e-14,
+              "physical_normal_multiplier_relative_l2": 8.931021410355184e-14
+            },
+            "10": {
+              "pressure_relative_l2": 3.191304470112152e-14,
+              "raw_gradient_relative_l2": 8.301399028865811e-14,
+              "physical_darcy_flux_relative_l2": 8.301399028865811e-14,
+              "full_broken_h1_relative": 7.391657438818307e-14,
+              "physical_normal_multiplier_relative_l2": 8.931026316105345e-14
+            }
+          },
+          "maximum_nodal_absolute_difference": 9.14823772291129e-14
+        },
+        "flat": {
+          "independent_original_relative": 1.3764438829349046e-13,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 3.196483028688061e-14,
+              "raw_gradient_relative_l2": 8.251730866743318e-14,
+              "physical_darcy_flux_relative_l2": 8.251730866743318e-14,
+              "full_broken_h1_relative": 7.349989164095233e-14,
+              "physical_normal_multiplier_relative_l2": 8.90980775099922e-14
+            },
+            "10": {
+              "pressure_relative_l2": 3.197995486276985e-14,
+              "raw_gradient_relative_l2": 8.28529296490844e-14,
+              "physical_darcy_flux_relative_l2": 8.28529296490844e-14,
+              "full_broken_h1_relative": 7.378671124560533e-14,
+              "physical_normal_multiplier_relative_l2": 8.909810079850161e-14
+            }
+          },
+          "maximum_nodal_absolute_difference": 9.192646643896296e-14
+        }
+      },
+      "native_analytical_norms": {
+        "8": {
+          "pressure_l2_error": 9.328814907955875e-05,
+          "raw_gradient_l2_error": 0.00731711355984838,
+          "darcy_flux_l2_error": 0.00731711355984838,
+          "full_broken_h1_error": 0.007317708215450773,
+          "pressure_l2_norm": 1.4923969720361163,
+          "raw_gradient_l2_norm": 2.633407546306045,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        },
+        "10": {
+          "pressure_l2_error": 9.328814907954587e-05,
+          "raw_gradient_l2_error": 0.007317113559848379,
+          "darcy_flux_l2_error": 0.007317113559848379,
+          "full_broken_h1_error": 0.00731770821545077,
+          "pressure_l2_norm": 1.492396972036116,
+          "raw_gradient_l2_norm": 2.6334075463060445,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        }
+      },
+      "trace_coordinate_transform": {
+        "shape": [
+          288,
+          288
+        ],
+        "signed_permutation": true,
+        "source": "actual physical endpoints/normals; no averaging"
+      },
+      "comparison_records_sha256": {
+        "1": "78bccddd9a7e2d05578567c6478dc65cae8f6de3528f41a8d466792cda88c51a",
+        "2": "4e8a9029e4c1ba54ecda4005776c62d2fa2d34493c9190441fe8907294bcf9cb"
+      },
+      "replay_records_sha256": {
+        "1": "e0217babbde22b5d3d3b6576f20fe5dc3932f83197f90e1309bb7a4cc39f9bc1",
+        "2": "e53a23ed37702683db47058109f10cfd0b07f28ec65946ac253fca9249ddcc0f"
+      }
+    },
+    {
+      "n": 8,
+      "boundary_case": "sine_zero_dirichlet",
+      "acquisition_uuid": "c7a027a4-6a8d-44e2-93fd-fd727c2bb608",
+      "candidate_archive_sha256": "1990345e2ba6cc63cc74a774879b8fde89db38acd8d206c2b7291aa334c7782b",
+      "candidate_record_sha256": "8203fbdff9b9e8826446789fd26e947012ce3419be7f89bfea366f050d461f91",
+      "candidate_actual_basis_sha256": {
+        "leaf_E": "1f25f0bf46e5fdc9a50ce0f5ee69bad98da26a7d6e796c46cef644dd8c5fdc89",
+        "flat_E": "1f25f0bf46e5fdc9a50ce0f5ee69bad98da26a7d6e796c46cef644dd8c5fdc89",
+        "parent_E": "5775b6ec6581cb94664ebf54eb35216019768cda56e07ff76c0c95bb6ce1d8da",
+        "q2_cardinal_matrix": "5e6590ab7ec04c680c21bb3d5c00d89743f100dc6d471d390387331bb8abead6",
+        "trace_cardinal_matrix": "9dd7593376e84d339fcd21820ac217607efaf858a49981a3baa1395d2a89cbb6",
+        "q8_basis": "41cd51d663eabfbcfee5123ea73902956bd93e549426029e27b741d30fbb964f",
+        "q10_basis": "ce216e7fbf842334c4d98c8236511402aaad1aad41925a833e9c52dd32b16e86",
+        "trace_q8_basis": "614d6d49dea4711f8a6d68966802ef56477c940afea171a9ee9bec8a2129ab35",
+        "trace_q10_basis": "4ec118471c2488a188b699fbde6968577291a0536df9334a2d9967020b11df8d",
+        "display_basis": "9a8e0a606b6064421b50e372b9c000541b8cafa12c8c7c38ccff7581d16ea6ca"
+      },
+      "candidate_original_operator_sha256": {
+        "leaf_A": "4d3972bd77d10cc8b428107b54ae3cfcc792bcca1e341a4c0967791fe74f90af",
+        "leaf_B_original": "23c43ddc9b78058e959b59ae4b8bbe6bce0db9a4b97633055dd02a65011f5f4c",
+        "leaf_f": "1a0377729e84c81afbc609e0148540d26408038e36a6b0ef4fd7560960124eaf",
+        "flat_A": "4d3972bd77d10cc8b428107b54ae3cfcc792bcca1e341a4c0967791fe74f90af",
+        "flat_B_original": "22cc16872257f398b977d1288a84999c27507b07799b0e4f861893a154fe6f9c",
+        "flat_f": "1a0377729e84c81afbc609e0148540d26408038e36a6b0ef4fd7560960124eaf",
+        "parent_A": "1279d185887745586123fd07de3c553d8772d3523121635a75b447010ee5849f",
+        "parent_B_original": "5eec917550c869161cde03c6c783a933284edd94afd85e7ae291c06e03ec6647",
+        "parent_f": "93035c41f18bd163ae3908b14b0126a0708d4f32870c847c2301369fff4b3df6",
+        "inner_A": "39b783b375181e71aaa0585aa1c80f883b07a8b92102db6c7d1d97251ba4273f",
+        "inner_f": "db63e6a5e29c0266549eeee32aa19692d987638659e2d19098500f8e76aa886b",
+        "leaf_B": "9dd084eb2f16b15355f9641b1cb51fa9fa82dbe735b9f51c8ae322b37a6d2969"
+      },
+      "candidate_field_sha256": {
+        "leaf_pressure_recursive": "bca92c9b25f995b64ee9d180a0eb5029ab0e2ad4c3c6f4210ff2586889065a58",
+        "leaf_pressure_flat": "31d1a5267a66f574fc569f5f3a8849ec5d413590961c5860505563a29f15ccfe",
+        "trace_recursive": "fc39d150794483691f9ae12c435b3eb1ff2cff98ff61bc76a3f0db152481c7ec",
+        "trace_flat": "60ee525294803a08e17788694835ccb3dc30f8692e060da94d058477d332036d"
+      },
+      "candidate_original_checks": {
+        "leaf_original_source_relative_residual": 5.646109933480777e-14,
+        "flat_original_source_relative_residual": 5.58782910508836e-14,
+        "parent_original_source_relative_residual": 8.979090721152978e-15,
+        "leaf_original_constraint_relative_residual": 6.088604224139007e-15,
+        "flat_original_constraint_relative_residual": 6.955545550272755e-15,
+        "parent_original_constraint_relative_residual": 1.6012582799347802e-15
+      },
+      "native_manifest_sha256": "d3583b068228287469876048078ed47405aa4817a8db18a204b4cb893d54b585",
+      "native_actual_system_archive_sha256": "e316ba3a4392146f106364d22093030c16ae79c802c623f2e0568977a25b6dd3",
+      "native_actual_system_numeric_sha256": {
+        "leaf_points": "b2f9a2fd1703d0fc414549942fab798fc424e6f40b54bc7b21756d3a9174e583",
+        "leaf_cells": "a92c9da8a20ff59c9d9c0a64cb72284b280148adc9595d8986a1d2d3d0a23172",
+        "leaf_nodes": "2d5730ed3c4fcbbc6ed312de6c0addaed601597e365902a627c9d2801eff36ad",
+        "leaf_dofs": "aa11da253c25f5bdd266b464922a34cc26f0a88efa3a0daece7046d7661b2098",
+        "face_endpoints": "430232363c8f09c28124626ebf61bec4cbdc288fd1a3408017ac74fb05145b8e",
+        "face_normals": "1c3c487bc18eed8e2f15e2f6beca780d09eecec9881de5531573586ee860c147",
+        "cell_faces": "a4861c724131d74d6ea1f30b7d4adf049241ba5df2d9235964efb733a2ed3d63",
+        "cell_signs": "ef1cdf032837d60942ba442cf4961f61c905d59b483c6f789a89b4c3dbabbed7",
+        "trace_dofs": "24241424697dfa4324b3dd22a0819ec91f1ba0ba928a7d01418901c005f11559",
+        "leaf_A": "147f2e553e6df07a0fc9cb713748ca4afc7f6a1ec5874ce3a08ab45046e48144",
+        "leaf_B": "f6d0f03e0d5fb9db0dbfd6f2e07279df47cf64461f9565ba358995fcdde2afa0",
+        "leaf_f": "fc51a025e12321dee60c7e6686e6130b61bc30d1105ae5ee3e3bfb42dfc60c1d",
+        "leaf_integral": "25c06b34d41ac9b25f53de69d56b4d43d76a7ae6fec7859177355c3c2ff5b26b",
+        "boundary_load": "34745eb5f601c3a3454a34cb2d1ea6ac188c6cb8cfdea4122d27dc00e63a4c09",
+        "volume_basis_nodes": "46e71903f2332b75d962657ec352490db2102c3a2ed01463b0942ae8e2dcd00b",
+        "volume_basis_coefficients": "e28ae40b117e39e19c21ef77fb7738cca71a82b06febae96417aa45e7599ec13",
+        "volume_basis_cardinal_matrix": "24ad96dc04807b66353322f8e954a923d52e68c3d918a15c18e953b4155a8c2d",
+        "trace_basis_nodes": "f5d080b6fdf73f08557596860c1e18f121392c0401bf46193dc60e1d6b651e75",
+        "trace_basis_coefficients": "4b3486d79f5631ba829d4f861a48d9b93667aec239eac64af91cee1cf3100e6f",
+        "trace_to_legendre": "00200f6c268fe5b9e2dabb19cc0b53b841b9d25fcdf829c167431dd7fc140cab",
+        "A_data": "d6446f77c0661bd5ccb8336e6ace9f43a98018633b5fe8bc1d109df430175519",
+        "A_indices": "bedc97367dbb0779b0e503afdb9c9a243ea00d247b437655bc204aaf30b55051",
+        "A_indptr": "111a68c99cffe2fed1e879d75b394951335a4fb84b00d0c1765d871bc403cbbc",
+        "A_shape": "cadbbf1fb64a52d1fca850236ee39b577451f6989ae3933599c2339ab052d24c",
+        "B_data": "289cb5934e90077b237b34a0c5046f148e8c62ec021a69852ecc233528a9ba41",
+        "B_indices": "37db98adfce337cf008bd2aea218ada1327292339ca4612daadd4f2116192862",
+        "B_indptr": "e2181487601457aabe5ab25845e53846f9e616302f5948c08d4247b7e335bb07",
+        "B_shape": "f53e09efd899a85a47fb2d05f4992667db7e2c9f27e00168d02f9e14e5bcb744",
+        "volume_reference_points_q6": "970992863902dbc8ec00d6ab2b0a5d8760478ea60947a7b5ea052026ac707155",
+        "volume_reference_weights_q6": "0a4c8a5086561b6b4045b22a3067171ecc097087f42d5c4d06a42772f9f217b8",
+        "volume_values_q6": "eed06750d84657db8300ff237b53c62b02676d6edf8a414676f03e5d9191cd6d",
+        "volume_reference_gradients_q6": "e25a7620e40066a3368799ca8d42cc1cedac8fcbda1adf372c00d587d11b075f",
+        "face_parameter_q6": "10c0b9cb9ea9956430ca0a13a199c88af63d5c839783d372100f2dd06dd79e8e",
+        "face_reference_weights_q6": "255c318bd9eccbfd9801d59e1fc618ee229c1c3364e0affa0690aa5f1d8ba874",
+        "face_values_q6": "baad6cdee44d0f26476d0be3abfc8e4508c5aaf9df5a556134c797d8c0132d09",
+        "volume_reference_points_q8": "1ebabb620b5f51971b32324b4affa570bbf7338cd076bfaddfa3992580af47b9",
+        "volume_reference_weights_q8": "c329a0b67a67f3dd615b041c3ae437bc46b82530bebdeaa36782eb526f2a47dc",
+        "volume_values_q8": "8b7a0cefaf8be8026e1452285ea16e6266725e7f887a343bd4f67788a335bec1",
+        "volume_reference_gradients_q8": "809293da0d53d679b868081e0803eb64abe212ec059b6955ccd6fee13180767e",
+        "face_parameter_q8": "44d79bddb323603c226301711e9827b505e4cbbacc62c1d8e63968f0f71d2958",
+        "face_reference_weights_q8": "cd6f6e2f0fc8bf23493cb76c93bf6669d16f829fcdd8681059bc443ed8e66695",
+        "face_values_q8": "68426ae6fbefd508e61898d20bee2961ee06ebc33a6fad73ead49099474c8969",
+        "volume_reference_points_q10": "3108f0865402915313b1b6629918c437d38626f397560c62705ab7038dff1b34",
+        "volume_reference_weights_q10": "c0adb578f9e5c93d83fc97bf07326fa05b7dbe6f9727fd33ce8bae395edab934",
+        "volume_values_q10": "b3092a796d22c25ff3c53f1a712a7f681ae6267f741ec82d50a6f74e0cf9cbd8",
+        "volume_reference_gradients_q10": "13b7c583f195bd1f97f8c6817611ec6f091e61e1616ed84fdf610c2849a55848",
+        "face_parameter_q10": "df95933fc813614ca1882bfd865cdaaac752b5b6d0afc7def5c9390620e54bba",
+        "face_reference_weights_q10": "ff07793dae643b65340e5e8bb6e7474542874aab76800f654843fa715e1ebe58",
+        "face_values_q10": "c00cca2607ba79eea2992d84e0c7c460243a44ad7f586aead3764d6471e7dc3e"
+      },
+      "native_actual_fields_archive_sha256": "eeecdfaaaec215ef4da487db8b6caad5a03d942f8325ced80235f9b864b7fbd1",
+      "native_actual_field_numeric_sha256": {
+        "pressure": "a1f29cd6f65d6511846451111bc9268ff736a6ac5762746ede66a574f8825967",
+        "pressure_correction": "c9411e09f10c3690f443f29aedd04d522f2711bdf10e93d0a5ab0fa2f5627178",
+        "pressure_tail": "c9411e09f10c3690f443f29aedd04d522f2711bdf10e93d0a5ab0fa2f5627178",
+        "trace": "d71e6b1a9fae881567feed8a5c48b447db18b5ef5f06b8e54d6d2ec0190d640c",
+        "trace_correction": "34745eb5f601c3a3454a34cb2d1ea6ac188c6cb8cfdea4122d27dc00e63a4c09",
+        "trace_tail": "34745eb5f601c3a3454a34cb2d1ea6ac188c6cb8cfdea4122d27dc00e63a4c09",
+        "coefficient_precision_bits": "1918e77a097e249d16b23282fb7a9352bba0bd54bed7ae437b13c2b1964edd44"
+      },
+      "native_coefficient_precision_bits": 64,
+      "native_operator_precision_bits": 53,
+      "candidate_coefficient_precision_bits": 53,
+      "native_original_residual": {
+        "absolute": 2.6769440854132726e-14,
+        "physical_augmented_rhs_norm": 0.1627386488979985,
+        "relative": 1.6449344415358458e-13
+      },
+      "represented_operator_relative_difference": {
+        "A": 4.50954017908594e-16,
+        "B": 2.745682200592691e-16,
+        "f": 1.842137351358931e-16,
+        "weak_g": 0.0
+      },
+      "candidate_in_native_original_and_physical_norms": {
+        "recursive": {
+          "independent_original_relative": 5.015977742295901e-13,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 1.4567368297764207e-13,
+              "raw_gradient_relative_l2": 1.4593020245428126e-13,
+              "physical_darcy_flux_relative_l2": 1.4593020245428126e-13,
+              "full_broken_h1_relative": 1.4591784398025067e-13,
+              "physical_normal_multiplier_relative_l2": 1.4570262605626176e-13
+            },
+            "10": {
+              "pressure_relative_l2": 1.4569008496559303e-13,
+              "raw_gradient_relative_l2": 1.4603352531686733e-13,
+              "physical_darcy_flux_relative_l2": 1.4603352531686733e-13,
+              "full_broken_h1_relative": 1.4601698389187918e-13,
+              "physical_normal_multiplier_relative_l2": 1.4570266981944873e-13
+            }
+          },
+          "maximum_nodal_absolute_difference": 1.4566126083082054e-13
+        },
+        "flat": {
+          "independent_original_relative": 5.005690972190526e-13,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 1.4550228649860948e-13,
+              "raw_gradient_relative_l2": 1.4596362363474803e-13,
+              "physical_darcy_flux_relative_l2": 1.4596362363474803e-13,
+              "full_broken_h1_relative": 1.4594141240609522e-13,
+              "physical_normal_multiplier_relative_l2": 1.4588687745899022e-13
+            },
+            "10": {
+              "pressure_relative_l2": 1.4551868839081452e-13,
+              "raw_gradient_relative_l2": 1.4606759260855614e-13,
+              "physical_darcy_flux_relative_l2": 1.4606759260855614e-13,
+              "full_broken_h1_relative": 1.4604117295894196e-13,
+              "physical_normal_multiplier_relative_l2": 1.4588693133091597e-13
+            }
+          },
+          "maximum_nodal_absolute_difference": 1.4521717162097048e-13
+        }
+      },
+      "native_analytical_norms": {
+        "8": {
+          "pressure_l2_error": 1.160002355206374e-05,
+          "raw_gradient_l2_error": 0.001824925794306005,
+          "darcy_flux_l2_error": 0.001824925794306005,
+          "full_broken_h1_error": 0.0018249626613357907,
+          "pressure_l2_norm": 0.5000002084499694,
+          "raw_gradient_l2_norm": 2.221441931839811,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        },
+        "10": {
+          "pressure_l2_error": 1.1600023552064386e-05,
+          "raw_gradient_l2_error": 0.0018249257943060023,
+          "darcy_flux_l2_error": 0.0018249257943060023,
+          "full_broken_h1_error": 0.0018249626613357879,
+          "pressure_l2_norm": 0.5000002084499694,
+          "raw_gradient_l2_norm": 2.2214419318398106,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        }
+      },
+      "trace_coordinate_transform": {
+        "shape": [
+          1088,
+          1088
+        ],
+        "signed_permutation": true,
+        "source": "actual physical endpoints/normals; no averaging"
+      },
+      "comparison_records_sha256": {
+        "1": "29ca1515ce7f4bb5fa6d3d28ffa6311d79e33ede657832ed25e83c66a79af70d",
+        "2": "50910525ae236189e2a303e2f140859a435768c83c557fdd1603fc841c7dd4a6"
+      },
+      "replay_records_sha256": {
+        "1": "8a1c875b019b677569b52d93bd38ebfd3aa1400f0f65eae4dea9d670923a4fe6",
+        "2": "cc358a8da993a3cdfa2f5a3fa1ac185db95640bab0eaaa2b425f489c92aa3e39"
+      }
+    },
+    {
+      "n": 8,
+      "boundary_case": "affine_plus_sine",
+      "acquisition_uuid": "83476ad8-837c-4c14-a2b5-f9e976b375d9",
+      "candidate_archive_sha256": "1dbb897eefd34b8ae6841dbc9a376c18a23890c2fc105e722951baed3a0226a9",
+      "candidate_record_sha256": "1c0cd7083bbae9f43d1f32dba54b94235790fcde582383462b0c37d9595768ef",
+      "candidate_actual_basis_sha256": {
+        "leaf_E": "1f25f0bf46e5fdc9a50ce0f5ee69bad98da26a7d6e796c46cef644dd8c5fdc89",
+        "flat_E": "1f25f0bf46e5fdc9a50ce0f5ee69bad98da26a7d6e796c46cef644dd8c5fdc89",
+        "parent_E": "5775b6ec6581cb94664ebf54eb35216019768cda56e07ff76c0c95bb6ce1d8da",
+        "q2_cardinal_matrix": "5e6590ab7ec04c680c21bb3d5c00d89743f100dc6d471d390387331bb8abead6",
+        "trace_cardinal_matrix": "9dd7593376e84d339fcd21820ac217607efaf858a49981a3baa1395d2a89cbb6",
+        "q8_basis": "41cd51d663eabfbcfee5123ea73902956bd93e549426029e27b741d30fbb964f",
+        "q10_basis": "ce216e7fbf842334c4d98c8236511402aaad1aad41925a833e9c52dd32b16e86",
+        "trace_q8_basis": "614d6d49dea4711f8a6d68966802ef56477c940afea171a9ee9bec8a2129ab35",
+        "trace_q10_basis": "4ec118471c2488a188b699fbde6968577291a0536df9334a2d9967020b11df8d",
+        "display_basis": "9a8e0a606b6064421b50e372b9c000541b8cafa12c8c7c38ccff7581d16ea6ca"
+      },
+      "candidate_original_operator_sha256": {
+        "leaf_A": "4d3972bd77d10cc8b428107b54ae3cfcc792bcca1e341a4c0967791fe74f90af",
+        "leaf_B_original": "23c43ddc9b78058e959b59ae4b8bbe6bce0db9a4b97633055dd02a65011f5f4c",
+        "leaf_f": "1a0377729e84c81afbc609e0148540d26408038e36a6b0ef4fd7560960124eaf",
+        "flat_A": "4d3972bd77d10cc8b428107b54ae3cfcc792bcca1e341a4c0967791fe74f90af",
+        "flat_B_original": "22cc16872257f398b977d1288a84999c27507b07799b0e4f861893a154fe6f9c",
+        "flat_f": "1a0377729e84c81afbc609e0148540d26408038e36a6b0ef4fd7560960124eaf",
+        "parent_A": "1279d185887745586123fd07de3c553d8772d3523121635a75b447010ee5849f",
+        "parent_B_original": "5eec917550c869161cde03c6c783a933284edd94afd85e7ae291c06e03ec6647",
+        "parent_f": "93035c41f18bd163ae3908b14b0126a0708d4f32870c847c2301369fff4b3df6",
+        "inner_A": "39b783b375181e71aaa0585aa1c80f883b07a8b92102db6c7d1d97251ba4273f",
+        "inner_f": "db63e6a5e29c0266549eeee32aa19692d987638659e2d19098500f8e76aa886b",
+        "leaf_B": "9dd084eb2f16b15355f9641b1cb51fa9fa82dbe735b9f51c8ae322b37a6d2969"
+      },
+      "candidate_field_sha256": {
+        "leaf_pressure_recursive": "d062eca9b04a7549510ffc7d2ea771f90a1fb7d0ddd483c12b6af4afb6fedd61",
+        "leaf_pressure_flat": "c0ba43c2906df1e8806925678a409248c08920b7e5eeb9f89c609a4eb0565ef5",
+        "trace_recursive": "ae2f06746ca2dd4b6528356405a2e3e7974528d751f76a3fda34f104625d5a8a",
+        "trace_flat": "a99abae3d4086781a77b0fec66e983b26fa24ce9655a4284cbe5f494a85a826f"
+      },
+      "candidate_original_checks": {
+        "leaf_original_source_relative_residual": 1.6529327671215206e-13,
+        "flat_original_source_relative_residual": 1.7266568198158094e-13,
+        "parent_original_source_relative_residual": 1.1204842702113536e-14,
+        "leaf_original_constraint_relative_residual": 3.180889649934917e-15,
+        "flat_original_constraint_relative_residual": 3.5899610072627815e-15,
+        "parent_original_constraint_relative_residual": 2.9542321314647115e-15
+      },
+      "native_manifest_sha256": "8abb9ce750d09704088a26ecbbed52d33d677efbdd5b0a62aa06661398abe28d",
+      "native_actual_system_archive_sha256": "35a13d13678ecbc61c7295fbae974590c76fa40eb6b814448ffbdc97e1ae793b",
+      "native_actual_system_numeric_sha256": {
+        "leaf_points": "b2f9a2fd1703d0fc414549942fab798fc424e6f40b54bc7b21756d3a9174e583",
+        "leaf_cells": "a92c9da8a20ff59c9d9c0a64cb72284b280148adc9595d8986a1d2d3d0a23172",
+        "leaf_nodes": "2d5730ed3c4fcbbc6ed312de6c0addaed601597e365902a627c9d2801eff36ad",
+        "leaf_dofs": "aa11da253c25f5bdd266b464922a34cc26f0a88efa3a0daece7046d7661b2098",
+        "face_endpoints": "430232363c8f09c28124626ebf61bec4cbdc288fd1a3408017ac74fb05145b8e",
+        "face_normals": "1c3c487bc18eed8e2f15e2f6beca780d09eecec9881de5531573586ee860c147",
+        "cell_faces": "a4861c724131d74d6ea1f30b7d4adf049241ba5df2d9235964efb733a2ed3d63",
+        "cell_signs": "ef1cdf032837d60942ba442cf4961f61c905d59b483c6f789a89b4c3dbabbed7",
+        "trace_dofs": "24241424697dfa4324b3dd22a0819ec91f1ba0ba928a7d01418901c005f11559",
+        "leaf_A": "147f2e553e6df07a0fc9cb713748ca4afc7f6a1ec5874ce3a08ab45046e48144",
+        "leaf_B": "f6d0f03e0d5fb9db0dbfd6f2e07279df47cf64461f9565ba358995fcdde2afa0",
+        "leaf_f": "fc51a025e12321dee60c7e6686e6130b61bc30d1105ae5ee3e3bfb42dfc60c1d",
+        "leaf_integral": "25c06b34d41ac9b25f53de69d56b4d43d76a7ae6fec7859177355c3c2ff5b26b",
+        "boundary_load": "a632c3761bb3d90a6b15a43a5b96e4af650e5574d3a2710519cf79b3da8228af",
+        "volume_basis_nodes": "46e71903f2332b75d962657ec352490db2102c3a2ed01463b0942ae8e2dcd00b",
+        "volume_basis_coefficients": "e28ae40b117e39e19c21ef77fb7738cca71a82b06febae96417aa45e7599ec13",
+        "volume_basis_cardinal_matrix": "24ad96dc04807b66353322f8e954a923d52e68c3d918a15c18e953b4155a8c2d",
+        "trace_basis_nodes": "f5d080b6fdf73f08557596860c1e18f121392c0401bf46193dc60e1d6b651e75",
+        "trace_basis_coefficients": "4b3486d79f5631ba829d4f861a48d9b93667aec239eac64af91cee1cf3100e6f",
+        "trace_to_legendre": "00200f6c268fe5b9e2dabb19cc0b53b841b9d25fcdf829c167431dd7fc140cab",
+        "A_data": "d6446f77c0661bd5ccb8336e6ace9f43a98018633b5fe8bc1d109df430175519",
+        "A_indices": "bedc97367dbb0779b0e503afdb9c9a243ea00d247b437655bc204aaf30b55051",
+        "A_indptr": "111a68c99cffe2fed1e879d75b394951335a4fb84b00d0c1765d871bc403cbbc",
+        "A_shape": "cadbbf1fb64a52d1fca850236ee39b577451f6989ae3933599c2339ab052d24c",
+        "B_data": "289cb5934e90077b237b34a0c5046f148e8c62ec021a69852ecc233528a9ba41",
+        "B_indices": "37db98adfce337cf008bd2aea218ada1327292339ca4612daadd4f2116192862",
+        "B_indptr": "e2181487601457aabe5ab25845e53846f9e616302f5948c08d4247b7e335bb07",
+        "B_shape": "f53e09efd899a85a47fb2d05f4992667db7e2c9f27e00168d02f9e14e5bcb744",
+        "volume_reference_points_q6": "970992863902dbc8ec00d6ab2b0a5d8760478ea60947a7b5ea052026ac707155",
+        "volume_reference_weights_q6": "0a4c8a5086561b6b4045b22a3067171ecc097087f42d5c4d06a42772f9f217b8",
+        "volume_values_q6": "eed06750d84657db8300ff237b53c62b02676d6edf8a414676f03e5d9191cd6d",
+        "volume_reference_gradients_q6": "e25a7620e40066a3368799ca8d42cc1cedac8fcbda1adf372c00d587d11b075f",
+        "face_parameter_q6": "10c0b9cb9ea9956430ca0a13a199c88af63d5c839783d372100f2dd06dd79e8e",
+        "face_reference_weights_q6": "255c318bd9eccbfd9801d59e1fc618ee229c1c3364e0affa0690aa5f1d8ba874",
+        "face_values_q6": "baad6cdee44d0f26476d0be3abfc8e4508c5aaf9df5a556134c797d8c0132d09",
+        "volume_reference_points_q8": "1ebabb620b5f51971b32324b4affa570bbf7338cd076bfaddfa3992580af47b9",
+        "volume_reference_weights_q8": "c329a0b67a67f3dd615b041c3ae437bc46b82530bebdeaa36782eb526f2a47dc",
+        "volume_values_q8": "8b7a0cefaf8be8026e1452285ea16e6266725e7f887a343bd4f67788a335bec1",
+        "volume_reference_gradients_q8": "809293da0d53d679b868081e0803eb64abe212ec059b6955ccd6fee13180767e",
+        "face_parameter_q8": "44d79bddb323603c226301711e9827b505e4cbbacc62c1d8e63968f0f71d2958",
+        "face_reference_weights_q8": "cd6f6e2f0fc8bf23493cb76c93bf6669d16f829fcdd8681059bc443ed8e66695",
+        "face_values_q8": "68426ae6fbefd508e61898d20bee2961ee06ebc33a6fad73ead49099474c8969",
+        "volume_reference_points_q10": "3108f0865402915313b1b6629918c437d38626f397560c62705ab7038dff1b34",
+        "volume_reference_weights_q10": "c0adb578f9e5c93d83fc97bf07326fa05b7dbe6f9727fd33ce8bae395edab934",
+        "volume_values_q10": "b3092a796d22c25ff3c53f1a712a7f681ae6267f741ec82d50a6f74e0cf9cbd8",
+        "volume_reference_gradients_q10": "13b7c583f195bd1f97f8c6817611ec6f091e61e1616ed84fdf610c2849a55848",
+        "face_parameter_q10": "df95933fc813614ca1882bfd865cdaaac752b5b6d0afc7def5c9390620e54bba",
+        "face_reference_weights_q10": "ff07793dae643b65340e5e8bb6e7474542874aab76800f654843fa715e1ebe58",
+        "face_values_q10": "c00cca2607ba79eea2992d84e0c7c460243a44ad7f586aead3764d6471e7dc3e"
+      },
+      "native_actual_fields_archive_sha256": "a7ab43412d8134d35df76667a30f5dcf92e0266c15bc2215f6fb9186b09505da",
+      "native_actual_field_numeric_sha256": {
+        "pressure": "700802862f61e87052490b079943f9bcbaffe8fc700afea82b5e03e0454d7b9d",
+        "pressure_correction": "c9411e09f10c3690f443f29aedd04d522f2711bdf10e93d0a5ab0fa2f5627178",
+        "pressure_tail": "c9411e09f10c3690f443f29aedd04d522f2711bdf10e93d0a5ab0fa2f5627178",
+        "trace": "8c625e2191503f27b6a6674f64383ad699ce9f189be26a128130ced7a55de811",
+        "trace_correction": "34745eb5f601c3a3454a34cb2d1ea6ac188c6cb8cfdea4122d27dc00e63a4c09",
+        "trace_tail": "34745eb5f601c3a3454a34cb2d1ea6ac188c6cb8cfdea4122d27dc00e63a4c09",
+        "coefficient_precision_bits": "1918e77a097e249d16b23282fb7a9352bba0bd54bed7ae437b13c2b1964edd44"
+      },
+      "native_coefficient_precision_bits": 64,
+      "native_operator_precision_bits": 53,
+      "candidate_coefficient_precision_bits": 53,
+      "native_original_residual": {
+        "absolute": 8.158896735650833e-14,
+        "physical_augmented_rhs_norm": 0.5998024238916154,
+        "relative": 1.3602640487370136e-13
+      },
+      "represented_operator_relative_difference": {
+        "A": 4.50954017908594e-16,
+        "B": 2.745682200592691e-16,
+        "f": 1.842137351358931e-16,
+        "weak_g": 7.32522241716486e-17
+      },
+      "candidate_in_native_original_and_physical_norms": {
+        "recursive": {
+          "independent_original_relative": 4.067096237422785e-13,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 1.2857287820275381e-13,
+              "raw_gradient_relative_l2": 3.29586823571028e-13,
+              "physical_darcy_flux_relative_l2": 3.29586823571028e-13,
+              "full_broken_h1_relative": 2.936654110935982e-13,
+              "physical_normal_multiplier_relative_l2": 3.433746588343663e-13
+            },
+            "10": {
+              "pressure_relative_l2": 1.2858782883336005e-13,
+              "raw_gradient_relative_l2": 3.300160571345034e-13,
+              "physical_darcy_flux_relative_l2": 3.300160571345034e-13,
+              "full_broken_h1_relative": 2.940316417216205e-13,
+              "physical_normal_multiplier_relative_l2": 3.43374600946034e-13
+            }
+          },
+          "maximum_nodal_absolute_difference": 3.6060043839825084e-13
+        },
+        "flat": {
+          "independent_original_relative": 4.054959221221044e-13,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 1.2822719480156022e-13,
+              "raw_gradient_relative_l2": 3.296203511970069e-13,
+              "physical_darcy_flux_relative_l2": 3.296203511970069e-13,
+              "full_broken_h1_relative": 2.9365715166669053e-13,
+              "physical_normal_multiplier_relative_l2": 3.4337695865883644e-13
+            },
+            "10": {
+              "pressure_relative_l2": 1.2824214566180424e-13,
+              "raw_gradient_relative_l2": 3.300488380334975e-13,
+              "physical_darcy_flux_relative_l2": 3.300488380334975e-13,
+              "full_broken_h1_relative": 2.940227909258592e-13,
+              "physical_normal_multiplier_relative_l2": 3.433769057193476e-13
+            }
+          },
+          "maximum_nodal_absolute_difference": 3.6060043839825084e-13
+        }
+      },
+      "native_analytical_norms": {
+        "8": {
+          "pressure_l2_error": 1.1600023553260622e-05,
+          "raw_gradient_l2_error": 0.001824925794306323,
+          "darcy_flux_l2_error": 0.001824925794306323,
+          "full_broken_h1_error": 0.0018249626613361161,
+          "pressure_l2_norm": 1.4923930105585852,
+          "raw_gradient_l2_norm": 2.633401651198978,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        },
+        "10": {
+          "pressure_l2_error": 1.1600023553266765e-05,
+          "raw_gradient_l2_error": 0.0018249257943062551,
+          "darcy_flux_l2_error": 0.0018249257943062551,
+          "full_broken_h1_error": 0.0018249626613360485,
+          "pressure_l2_norm": 1.492393010558585,
+          "raw_gradient_l2_norm": 2.633401651198977,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        }
+      },
+      "trace_coordinate_transform": {
+        "shape": [
+          1088,
+          1088
+        ],
+        "signed_permutation": true,
+        "source": "actual physical endpoints/normals; no averaging"
+      },
+      "comparison_records_sha256": {
+        "1": "196a4a4fb3917128e062d1dd4414da12ffde3633784bffbd24049f9c4a60328c",
+        "2": "cd9fbc40ebbd381c431aa1db2a2eec4b397800116aa970a6fc2a37a02a8d8f58"
+      },
+      "replay_records_sha256": {
+        "1": "b39c7c0301861b8bb5132fb7a0e4849c68917375df831472d5af8f283da87c5a",
+        "2": "c1cec0a27dba210cb26539983696fd266f84a75d0ef4f8f5eb6e96ef4d02cd5a"
+      }
+    },
+    {
+      "n": 16,
+      "boundary_case": "sine_zero_dirichlet",
+      "acquisition_uuid": "915c9b14-e1df-498c-b742-95d456e376a8",
+      "candidate_archive_sha256": "9a86ac03745576e621a887b7ab3541c0ad1d07e4462d3f37f33fadebd3db0f1f",
+      "candidate_record_sha256": "fce19d9fcb9f63fc6d3837148af95740ff29deb0a43ea51bb19c4b2401c37fe5",
+      "candidate_actual_basis_sha256": {
+        "leaf_E": "a850ed84092105520372193b9389b528701605e4935b510ef43b738769ec5d8e",
+        "flat_E": "a850ed84092105520372193b9389b528701605e4935b510ef43b738769ec5d8e",
+        "parent_E": "8fc3a75a9270ccc30671c6fd60ae1fcf4dd2160b31a029f40f81d9f084e614e4",
+        "q2_cardinal_matrix": "5e6590ab7ec04c680c21bb3d5c00d89743f100dc6d471d390387331bb8abead6",
+        "trace_cardinal_matrix": "9dd7593376e84d339fcd21820ac217607efaf858a49981a3baa1395d2a89cbb6",
+        "q8_basis": "41cd51d663eabfbcfee5123ea73902956bd93e549426029e27b741d30fbb964f",
+        "q10_basis": "ce216e7fbf842334c4d98c8236511402aaad1aad41925a833e9c52dd32b16e86",
+        "trace_q8_basis": "614d6d49dea4711f8a6d68966802ef56477c940afea171a9ee9bec8a2129ab35",
+        "trace_q10_basis": "4ec118471c2488a188b699fbde6968577291a0536df9334a2d9967020b11df8d",
+        "display_basis": "0a36fc76b7588731fcdc412d7118eb274c58839e1d4335e2522f3fe281788891"
+      },
+      "candidate_original_operator_sha256": {
+        "leaf_A": "d6437d1c5f0cd26728fb3c00ac34448f43349b12ddeb47a0509232d02e4bf3ae",
+        "leaf_B_original": "d39f9bc87a973ee784ffbf5b99f4b76a6728c70237c84c91839ddc38a108a1b7",
+        "leaf_f": "9fa69535b6b77baa8a431b972f0c163aed27fcdd2b7d5c378e3d74994c9c970b",
+        "flat_A": "d6437d1c5f0cd26728fb3c00ac34448f43349b12ddeb47a0509232d02e4bf3ae",
+        "flat_B_original": "c400316a5e7f714e45caafe88f0a5ecdf89fe46adf59f008697f23c81044d807",
+        "flat_f": "9fa69535b6b77baa8a431b972f0c163aed27fcdd2b7d5c378e3d74994c9c970b",
+        "parent_A": "f10be10a42a84d2297350a085684875b15cf4c1adb0f5aff151695078b14b4b2",
+        "parent_B_original": "86d736308b8e3eca892a3c1317214ba1af5532231c9afa7fd6dfca13ea39f032",
+        "parent_f": "89bfdde5a7cab2c77dee562d93bdba3fd0f7994a8b16c21d6cf2a63d7a52031e",
+        "inner_A": "e30181c030c2007cfe13b0721c774c0cefd661dd0c9b18cf83a767dfa6115506",
+        "inner_f": "12b3bfb6fb206411f7bc904704fb46fa197a4b6dad7cb950c3f3842019cde670",
+        "leaf_B": "693988c0ae97e87845a0c77b34505ef8c5f98cddd6c7e2f1d8b000e52742996f"
+      },
+      "candidate_field_sha256": {
+        "leaf_pressure_recursive": "bb5892028929a05109a4e2fc39ae54254d43d1c10e1e64457a1382e76244aa6b",
+        "leaf_pressure_flat": "eebfdf0bb6fc82988bea432fb29cd4912376eb9f98a85aaf3d8c5a4a3a8335f4",
+        "trace_recursive": "824893fab43c5330aa38aa6905d9e7f30aae03b2e33a47f9dee87e620e31f17e",
+        "trace_flat": "cb4aafd249b761a7c3768853e829614bdc818b5fe8c71b714fbecd7c6aa99cd3"
+      },
+      "candidate_original_checks": {
+        "leaf_original_source_relative_residual": 2.226726077911211e-13,
+        "flat_original_source_relative_residual": 2.238677117521145e-13,
+        "parent_original_source_relative_residual": 3.438119743667624e-14,
+        "leaf_original_constraint_relative_residual": 1.4003181177362316e-14,
+        "flat_original_constraint_relative_residual": 3.446022572834452e-14,
+        "parent_original_constraint_relative_residual": 3.691425986634684e-15
+      },
+      "native_manifest_sha256": "9c84d3042c5249c48990ff1b9b3874722900ad0fe8466c76016ff2b273d80e46",
+      "native_actual_system_archive_sha256": "f28fd76482c2551565f58092500cdbf5311a3662ab573d67ae7ed765f1d018ec",
+      "native_actual_system_numeric_sha256": {
+        "leaf_points": "9c23e3d4039fe5c54f4e7c0f56d585e12ac196ec3d75d7a96516f08db4486dfc",
+        "leaf_cells": "d238d3b2675b591385f89511ad3eb6fea88a2d2c3db4cd71dd0b0b98882786f5",
+        "leaf_nodes": "3cfaf9eb6f3a0fbc24f52663d314fdd043b695d9259c96dbf86035edd2219168",
+        "leaf_dofs": "fb278f8cc506e9f8a927b27f453c4d47495910a8741c7dac85d8fe5cc9ae0785",
+        "face_endpoints": "e7a47ef28c57205b8fd78a0f278e779a31e665d1fc8211092e96b6c4fb95f9eb",
+        "face_normals": "a68cb8c0d7f51886d19534a73594d4cf2a00d68b5d1e4eb952bc4a3bd56dd501",
+        "cell_faces": "6c424371d4198ec7122a1dd553a8e0c4b6570cb728a46896c11a5de0824923d5",
+        "cell_signs": "b5efeba4c960ce22f60dd99191d8049dbddd02ef9a42c2ceef56ccdb57c6d933",
+        "trace_dofs": "8732314c01edb4511bcde754407e2e95d6b6ee992048e9e9a20dac40b5137747",
+        "leaf_A": "c4bd199bd7a5e72e5076d5c5ce7ca439687fa81dacb6efead1bc6124b92fb023",
+        "leaf_B": "1f4668bdc65dd4894456c7a36592c4b906923fda4d719871932498d51c134c96",
+        "leaf_f": "ddd300f8d14cc5645629957b44bf7608079bd1b4a4773207c627a811ab32c5cc",
+        "leaf_integral": "7d6da604f311b55efbb899821393d9f3147eb05f242ed0aa76251973f98e12fd",
+        "boundary_load": "7674b0864d112548370b4284402dfa47995a1adfe510f3aa1dbc8c8010a95013",
+        "volume_basis_nodes": "46e71903f2332b75d962657ec352490db2102c3a2ed01463b0942ae8e2dcd00b",
+        "volume_basis_coefficients": "e28ae40b117e39e19c21ef77fb7738cca71a82b06febae96417aa45e7599ec13",
+        "volume_basis_cardinal_matrix": "24ad96dc04807b66353322f8e954a923d52e68c3d918a15c18e953b4155a8c2d",
+        "trace_basis_nodes": "f5d080b6fdf73f08557596860c1e18f121392c0401bf46193dc60e1d6b651e75",
+        "trace_basis_coefficients": "4b3486d79f5631ba829d4f861a48d9b93667aec239eac64af91cee1cf3100e6f",
+        "trace_to_legendre": "00200f6c268fe5b9e2dabb19cc0b53b841b9d25fcdf829c167431dd7fc140cab",
+        "A_data": "369a4aa86080539a8a65e9291479c110b8031a4ea1a46011d5de337456827731",
+        "A_indices": "fbd3371084a9921cbba8df02624536fdd072fb359d60dd04faf8976be1e2e9dd",
+        "A_indptr": "789429920748d3b99bc07b4163422f029068398c46ff2c5df0383d8fb2f3ec0f",
+        "A_shape": "48403bc7fcb30b6e9d8f63bd8cbc76a6e02af19952112f0a22afc22f4231c17a",
+        "B_data": "b9a99b0bd2df436e6d34ab46c3ec4ad899217f1aed660d73b3939202ffd64d0f",
+        "B_indices": "1988bfcbdff17247b1faa6ace95825c40e04603df945cf981314341b8a90d983",
+        "B_indptr": "314005b79097db6f6ca8789c9f11806846d18670dbcd31642de0d8209c0f3059",
+        "B_shape": "04a3d72b7b9c0b1f9ab890876f20c92a675dc8787b1b4cb9f02fb7bacc304ba5",
+        "volume_reference_points_q6": "970992863902dbc8ec00d6ab2b0a5d8760478ea60947a7b5ea052026ac707155",
+        "volume_reference_weights_q6": "0a4c8a5086561b6b4045b22a3067171ecc097087f42d5c4d06a42772f9f217b8",
+        "volume_values_q6": "eed06750d84657db8300ff237b53c62b02676d6edf8a414676f03e5d9191cd6d",
+        "volume_reference_gradients_q6": "e25a7620e40066a3368799ca8d42cc1cedac8fcbda1adf372c00d587d11b075f",
+        "face_parameter_q6": "10c0b9cb9ea9956430ca0a13a199c88af63d5c839783d372100f2dd06dd79e8e",
+        "face_reference_weights_q6": "255c318bd9eccbfd9801d59e1fc618ee229c1c3364e0affa0690aa5f1d8ba874",
+        "face_values_q6": "baad6cdee44d0f26476d0be3abfc8e4508c5aaf9df5a556134c797d8c0132d09",
+        "volume_reference_points_q8": "1ebabb620b5f51971b32324b4affa570bbf7338cd076bfaddfa3992580af47b9",
+        "volume_reference_weights_q8": "c329a0b67a67f3dd615b041c3ae437bc46b82530bebdeaa36782eb526f2a47dc",
+        "volume_values_q8": "8b7a0cefaf8be8026e1452285ea16e6266725e7f887a343bd4f67788a335bec1",
+        "volume_reference_gradients_q8": "809293da0d53d679b868081e0803eb64abe212ec059b6955ccd6fee13180767e",
+        "face_parameter_q8": "44d79bddb323603c226301711e9827b505e4cbbacc62c1d8e63968f0f71d2958",
+        "face_reference_weights_q8": "cd6f6e2f0fc8bf23493cb76c93bf6669d16f829fcdd8681059bc443ed8e66695",
+        "face_values_q8": "68426ae6fbefd508e61898d20bee2961ee06ebc33a6fad73ead49099474c8969",
+        "volume_reference_points_q10": "3108f0865402915313b1b6629918c437d38626f397560c62705ab7038dff1b34",
+        "volume_reference_weights_q10": "c0adb578f9e5c93d83fc97bf07326fa05b7dbe6f9727fd33ce8bae395edab934",
+        "volume_values_q10": "b3092a796d22c25ff3c53f1a712a7f681ae6267f741ec82d50a6f74e0cf9cbd8",
+        "volume_reference_gradients_q10": "13b7c583f195bd1f97f8c6817611ec6f091e61e1616ed84fdf610c2849a55848",
+        "face_parameter_q10": "df95933fc813614ca1882bfd865cdaaac752b5b6d0afc7def5c9390620e54bba",
+        "face_reference_weights_q10": "ff07793dae643b65340e5e8bb6e7474542874aab76800f654843fa715e1ebe58",
+        "face_values_q10": "c00cca2607ba79eea2992d84e0c7c460243a44ad7f586aead3764d6471e7dc3e"
+      },
+      "native_actual_fields_archive_sha256": "bef996c72ae87ec3d3654985d91a54fde34b99bedbcf62bf8f7be1d376d29ce2",
+      "native_actual_field_numeric_sha256": {
+        "pressure": "226bc20c1f45a79a45e9a67a7b441ffef3c27d0b1f3d0f27c30fc42990654a67",
+        "pressure_correction": "1bf7bfd86cd52832392ec2c0db4f202b588fdaa528ec8c2e152b6dc794380628",
+        "pressure_tail": "1bf7bfd86cd52832392ec2c0db4f202b588fdaa528ec8c2e152b6dc794380628",
+        "trace": "e5fa5bd728e8ff8fa98e1e915e1cf9896e403cc9ee30882c61f2298aac388073",
+        "trace_correction": "7674b0864d112548370b4284402dfa47995a1adfe510f3aa1dbc8c8010a95013",
+        "trace_tail": "7674b0864d112548370b4284402dfa47995a1adfe510f3aa1dbc8c8010a95013",
+        "coefficient_precision_bits": "1918e77a097e249d16b23282fb7a9352bba0bd54bed7ae437b13c2b1964edd44"
+      },
+      "native_coefficient_precision_bits": 64,
+      "native_operator_precision_bits": 53,
+      "candidate_coefficient_precision_bits": 53,
+      "native_original_residual": {
+        "absolute": 7.128160079985354e-14,
+        "physical_augmented_rhs_norm": 0.08138480600982366,
+        "relative": 8.758588278904221e-13
+      },
+      "represented_operator_relative_difference": {
+        "A": 4.50954017908594e-16,
+        "B": 2.745682200592691e-16,
+        "f": 1.96070657283708e-16,
+        "weak_g": 0.0
+      },
+      "candidate_in_native_original_and_physical_norms": {
+        "recursive": {
+          "independent_original_relative": 2.0094930201549926e-12,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 5.763142171165716e-13,
+              "raw_gradient_relative_l2": 5.77075799916356e-13,
+              "physical_darcy_flux_relative_l2": 5.77075799916356e-13,
+              "full_broken_h1_relative": 5.770391010969355e-13,
+              "physical_normal_multiplier_relative_l2": 5.778114831296847e-13
+            },
+            "10": {
+              "pressure_relative_l2": 5.763305457926783e-13,
+              "raw_gradient_relative_l2": 5.771836529692703e-13,
+              "physical_darcy_flux_relative_l2": 5.771836529692703e-13,
+              "full_broken_h1_relative": 5.771425469128768e-13,
+              "physical_normal_multiplier_relative_l2": 5.778114877193839e-13
+            }
+          },
+          "maximum_nodal_absolute_difference": 5.754285936632186e-13
+        },
+        "flat": {
+          "independent_original_relative": 2.0112285176187383e-12,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 5.761328260412309e-13,
+              "raw_gradient_relative_l2": 5.783748798543692e-13,
+              "physical_darcy_flux_relative_l2": 5.783748798543692e-13,
+              "full_broken_h1_relative": 5.782669723143454e-13,
+              "physical_normal_multiplier_relative_l2": 5.816205724523772e-13
+            },
+            "10": {
+              "pressure_relative_l2": 5.761491554909327e-13,
+              "raw_gradient_relative_l2": 5.784813257442938e-13,
+              "physical_darcy_flux_relative_l2": 5.784813257442938e-13,
+              "full_broken_h1_relative": 5.783690893025025e-13,
+              "physical_normal_multiplier_relative_l2": 5.816205777391568e-13
+            }
+          },
+          "maximum_nodal_absolute_difference": 5.747624598484435e-13
+        }
+      },
+      "native_analytical_norms": {
+        "8": {
+          "pressure_l2_error": 1.4481025607071373e-06,
+          "raw_gradient_l2_error": 0.000455956674906218,
+          "darcy_flux_l2_error": 0.000455956674906218,
+          "full_broken_h1_error": 0.000455958974462134,
+          "pressure_l2_norm": 0.5000000130011247,
+          "raw_gradient_l2_norm": 2.221441497956123,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        },
+        "10": {
+          "pressure_l2_error": 1.448102560712476e-06,
+          "raw_gradient_l2_error": 0.0004559566749062202,
+          "darcy_flux_l2_error": 0.0004559566749062202,
+          "full_broken_h1_error": 0.00045595897446213616,
+          "pressure_l2_norm": 0.5000000130011247,
+          "raw_gradient_l2_norm": 2.221441497956123,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        }
+      },
+      "trace_coordinate_transform": {
+        "shape": [
+          4224,
+          4224
+        ],
+        "signed_permutation": true,
+        "source": "actual physical endpoints/normals; no averaging"
+      },
+      "comparison_records_sha256": {
+        "1": "ed8dffbf2d161ba1481c9d53cee5686099589d5df67451362783d95b5d0671a2",
+        "2": "96788e7c8a2ca0f0c3502c3b9710ffff9c5ece94458ee6601efefa8ea337cf3c"
+      },
+      "replay_records_sha256": {
+        "1": "f4eca7d3f285b57d5d866f41cc0a1b3fcae455136b47d20b3c10cc31be6fc410",
+        "2": "a7c54862f70a15ff5dcc19676accaef31f7d688c635542154e4a4726e8d8052f"
+      }
+    },
+    {
+      "n": 16,
+      "boundary_case": "affine_plus_sine",
+      "acquisition_uuid": "d4f36b23-734f-4aba-a00a-33d3cda5fe04",
+      "candidate_archive_sha256": "6c91ac346dcfa10d4772d0e353f7359bc593a8bcc4fd5b6af39b0dee6f9e4a9d",
+      "candidate_record_sha256": "1df26f925fde1145ed05efe3c30fad5e75ed76493a03606392201f5525df9e9c",
+      "candidate_actual_basis_sha256": {
+        "leaf_E": "a850ed84092105520372193b9389b528701605e4935b510ef43b738769ec5d8e",
+        "flat_E": "a850ed84092105520372193b9389b528701605e4935b510ef43b738769ec5d8e",
+        "parent_E": "8fc3a75a9270ccc30671c6fd60ae1fcf4dd2160b31a029f40f81d9f084e614e4",
+        "q2_cardinal_matrix": "5e6590ab7ec04c680c21bb3d5c00d89743f100dc6d471d390387331bb8abead6",
+        "trace_cardinal_matrix": "9dd7593376e84d339fcd21820ac217607efaf858a49981a3baa1395d2a89cbb6",
+        "q8_basis": "41cd51d663eabfbcfee5123ea73902956bd93e549426029e27b741d30fbb964f",
+        "q10_basis": "ce216e7fbf842334c4d98c8236511402aaad1aad41925a833e9c52dd32b16e86",
+        "trace_q8_basis": "614d6d49dea4711f8a6d68966802ef56477c940afea171a9ee9bec8a2129ab35",
+        "trace_q10_basis": "4ec118471c2488a188b699fbde6968577291a0536df9334a2d9967020b11df8d",
+        "display_basis": "0a36fc76b7588731fcdc412d7118eb274c58839e1d4335e2522f3fe281788891"
+      },
+      "candidate_original_operator_sha256": {
+        "leaf_A": "d6437d1c5f0cd26728fb3c00ac34448f43349b12ddeb47a0509232d02e4bf3ae",
+        "leaf_B_original": "d39f9bc87a973ee784ffbf5b99f4b76a6728c70237c84c91839ddc38a108a1b7",
+        "leaf_f": "9fa69535b6b77baa8a431b972f0c163aed27fcdd2b7d5c378e3d74994c9c970b",
+        "flat_A": "d6437d1c5f0cd26728fb3c00ac34448f43349b12ddeb47a0509232d02e4bf3ae",
+        "flat_B_original": "c400316a5e7f714e45caafe88f0a5ecdf89fe46adf59f008697f23c81044d807",
+        "flat_f": "9fa69535b6b77baa8a431b972f0c163aed27fcdd2b7d5c378e3d74994c9c970b",
+        "parent_A": "f10be10a42a84d2297350a085684875b15cf4c1adb0f5aff151695078b14b4b2",
+        "parent_B_original": "86d736308b8e3eca892a3c1317214ba1af5532231c9afa7fd6dfca13ea39f032",
+        "parent_f": "89bfdde5a7cab2c77dee562d93bdba3fd0f7994a8b16c21d6cf2a63d7a52031e",
+        "inner_A": "e30181c030c2007cfe13b0721c774c0cefd661dd0c9b18cf83a767dfa6115506",
+        "inner_f": "12b3bfb6fb206411f7bc904704fb46fa197a4b6dad7cb950c3f3842019cde670",
+        "leaf_B": "693988c0ae97e87845a0c77b34505ef8c5f98cddd6c7e2f1d8b000e52742996f"
+      },
+      "candidate_field_sha256": {
+        "leaf_pressure_recursive": "bce9d1402ec5668347f89590a33b8c25aa8b8f285b8081cdb1accba1ac1fe328",
+        "leaf_pressure_flat": "a1c3b45ae2bc4fcd8a3c7fde6a161eb2cf88659fd8490dc64ab80954dcab25ee",
+        "trace_recursive": "acaabacc304d26d92b2393c7bf7cd15a2b84edec19b7f910afe99a05d70c565f",
+        "trace_flat": "50988cd667196d7613ad939bb159389dbfe22911bb68d531acbe41109f8552d1"
+      },
+      "candidate_original_checks": {
+        "leaf_original_source_relative_residual": 6.630197467549578e-13,
+        "flat_original_source_relative_residual": 6.617177123560603e-13,
+        "parent_original_source_relative_residual": 4.212690646964385e-14,
+        "leaf_original_constraint_relative_residual": 5.1023057250351405e-15,
+        "flat_original_constraint_relative_residual": 1.4042100405467137e-14,
+        "parent_original_constraint_relative_residual": 5.005523514369978e-15
+      },
+      "native_manifest_sha256": "cfd9c0be54d43b98c8340d40bfb7348b950367428740717b4910aa148fea5f6c",
+      "native_actual_system_archive_sha256": "fdb9b22e00affd880b70892706d6796549d360408731071d3ddae29d412a4ead",
+      "native_actual_system_numeric_sha256": {
+        "leaf_points": "9c23e3d4039fe5c54f4e7c0f56d585e12ac196ec3d75d7a96516f08db4486dfc",
+        "leaf_cells": "d238d3b2675b591385f89511ad3eb6fea88a2d2c3db4cd71dd0b0b98882786f5",
+        "leaf_nodes": "3cfaf9eb6f3a0fbc24f52663d314fdd043b695d9259c96dbf86035edd2219168",
+        "leaf_dofs": "fb278f8cc506e9f8a927b27f453c4d47495910a8741c7dac85d8fe5cc9ae0785",
+        "face_endpoints": "e7a47ef28c57205b8fd78a0f278e779a31e665d1fc8211092e96b6c4fb95f9eb",
+        "face_normals": "a68cb8c0d7f51886d19534a73594d4cf2a00d68b5d1e4eb952bc4a3bd56dd501",
+        "cell_faces": "6c424371d4198ec7122a1dd553a8e0c4b6570cb728a46896c11a5de0824923d5",
+        "cell_signs": "b5efeba4c960ce22f60dd99191d8049dbddd02ef9a42c2ceef56ccdb57c6d933",
+        "trace_dofs": "8732314c01edb4511bcde754407e2e95d6b6ee992048e9e9a20dac40b5137747",
+        "leaf_A": "c4bd199bd7a5e72e5076d5c5ce7ca439687fa81dacb6efead1bc6124b92fb023",
+        "leaf_B": "1f4668bdc65dd4894456c7a36592c4b906923fda4d719871932498d51c134c96",
+        "leaf_f": "ddd300f8d14cc5645629957b44bf7608079bd1b4a4773207c627a811ab32c5cc",
+        "leaf_integral": "7d6da604f311b55efbb899821393d9f3147eb05f242ed0aa76251973f98e12fd",
+        "boundary_load": "1305dc86532568a4ca131447586edc3e4f2d8419d20b2dd9e7b9a63521b53d84",
+        "volume_basis_nodes": "46e71903f2332b75d962657ec352490db2102c3a2ed01463b0942ae8e2dcd00b",
+        "volume_basis_coefficients": "e28ae40b117e39e19c21ef77fb7738cca71a82b06febae96417aa45e7599ec13",
+        "volume_basis_cardinal_matrix": "24ad96dc04807b66353322f8e954a923d52e68c3d918a15c18e953b4155a8c2d",
+        "trace_basis_nodes": "f5d080b6fdf73f08557596860c1e18f121392c0401bf46193dc60e1d6b651e75",
+        "trace_basis_coefficients": "4b3486d79f5631ba829d4f861a48d9b93667aec239eac64af91cee1cf3100e6f",
+        "trace_to_legendre": "00200f6c268fe5b9e2dabb19cc0b53b841b9d25fcdf829c167431dd7fc140cab",
+        "A_data": "369a4aa86080539a8a65e9291479c110b8031a4ea1a46011d5de337456827731",
+        "A_indices": "fbd3371084a9921cbba8df02624536fdd072fb359d60dd04faf8976be1e2e9dd",
+        "A_indptr": "789429920748d3b99bc07b4163422f029068398c46ff2c5df0383d8fb2f3ec0f",
+        "A_shape": "48403bc7fcb30b6e9d8f63bd8cbc76a6e02af19952112f0a22afc22f4231c17a",
+        "B_data": "b9a99b0bd2df436e6d34ab46c3ec4ad899217f1aed660d73b3939202ffd64d0f",
+        "B_indices": "1988bfcbdff17247b1faa6ace95825c40e04603df945cf981314341b8a90d983",
+        "B_indptr": "314005b79097db6f6ca8789c9f11806846d18670dbcd31642de0d8209c0f3059",
+        "B_shape": "04a3d72b7b9c0b1f9ab890876f20c92a675dc8787b1b4cb9f02fb7bacc304ba5",
+        "volume_reference_points_q6": "970992863902dbc8ec00d6ab2b0a5d8760478ea60947a7b5ea052026ac707155",
+        "volume_reference_weights_q6": "0a4c8a5086561b6b4045b22a3067171ecc097087f42d5c4d06a42772f9f217b8",
+        "volume_values_q6": "eed06750d84657db8300ff237b53c62b02676d6edf8a414676f03e5d9191cd6d",
+        "volume_reference_gradients_q6": "e25a7620e40066a3368799ca8d42cc1cedac8fcbda1adf372c00d587d11b075f",
+        "face_parameter_q6": "10c0b9cb9ea9956430ca0a13a199c88af63d5c839783d372100f2dd06dd79e8e",
+        "face_reference_weights_q6": "255c318bd9eccbfd9801d59e1fc618ee229c1c3364e0affa0690aa5f1d8ba874",
+        "face_values_q6": "baad6cdee44d0f26476d0be3abfc8e4508c5aaf9df5a556134c797d8c0132d09",
+        "volume_reference_points_q8": "1ebabb620b5f51971b32324b4affa570bbf7338cd076bfaddfa3992580af47b9",
+        "volume_reference_weights_q8": "c329a0b67a67f3dd615b041c3ae437bc46b82530bebdeaa36782eb526f2a47dc",
+        "volume_values_q8": "8b7a0cefaf8be8026e1452285ea16e6266725e7f887a343bd4f67788a335bec1",
+        "volume_reference_gradients_q8": "809293da0d53d679b868081e0803eb64abe212ec059b6955ccd6fee13180767e",
+        "face_parameter_q8": "44d79bddb323603c226301711e9827b505e4cbbacc62c1d8e63968f0f71d2958",
+        "face_reference_weights_q8": "cd6f6e2f0fc8bf23493cb76c93bf6669d16f829fcdd8681059bc443ed8e66695",
+        "face_values_q8": "68426ae6fbefd508e61898d20bee2961ee06ebc33a6fad73ead49099474c8969",
+        "volume_reference_points_q10": "3108f0865402915313b1b6629918c437d38626f397560c62705ab7038dff1b34",
+        "volume_reference_weights_q10": "c0adb578f9e5c93d83fc97bf07326fa05b7dbe6f9727fd33ce8bae395edab934",
+        "volume_values_q10": "b3092a796d22c25ff3c53f1a712a7f681ae6267f741ec82d50a6f74e0cf9cbd8",
+        "volume_reference_gradients_q10": "13b7c583f195bd1f97f8c6817611ec6f091e61e1616ed84fdf610c2849a55848",
+        "face_parameter_q10": "df95933fc813614ca1882bfd865cdaaac752b5b6d0afc7def5c9390620e54bba",
+        "face_reference_weights_q10": "ff07793dae643b65340e5e8bb6e7474542874aab76800f654843fa715e1ebe58",
+        "face_values_q10": "c00cca2607ba79eea2992d84e0c7c460243a44ad7f586aead3764d6471e7dc3e"
+      },
+      "native_actual_fields_archive_sha256": "8e05fd7552ce3039e608949c65ff36086324ca87d436cb290b94bebc1b349dbc",
+      "native_actual_field_numeric_sha256": {
+        "pressure": "5d9520c198180c251093b9366996e89de705b9692418e0e344523b5d3265e58a",
+        "pressure_correction": "1bf7bfd86cd52832392ec2c0db4f202b588fdaa528ec8c2e152b6dc794380628",
+        "pressure_tail": "1bf7bfd86cd52832392ec2c0db4f202b588fdaa528ec8c2e152b6dc794380628",
+        "trace": "ac6b85b1e55c0420b805e4c16c0f697ec7942e0f3dab29dc2682a989b2b98db2",
+        "trace_correction": "7674b0864d112548370b4284402dfa47995a1adfe510f3aa1dbc8c8010a95013",
+        "trace_tail": "7674b0864d112548370b4284402dfa47995a1adfe510f3aa1dbc8c8010a95013",
+        "coefficient_precision_bits": "1918e77a097e249d16b23282fb7a9352bba0bd54bed7ae437b13c2b1964edd44"
+      },
+      "native_coefficient_precision_bits": 64,
+      "native_operator_precision_bits": 53,
+      "candidate_coefficient_precision_bits": 53,
+      "native_original_residual": {
+        "absolute": 2.0955648987837697e-13,
+        "physical_augmented_rhs_norm": 0.4162731935062544,
+        "relative": 5.034109645958464e-13
+      },
+      "represented_operator_relative_difference": {
+        "A": 4.50954017908594e-16,
+        "B": 2.745682200592691e-16,
+        "f": 1.96070657283708e-16,
+        "weak_g": 9.853527105117967e-17
+      },
+      "candidate_in_native_original_and_physical_norms": {
+        "recursive": {
+          "independent_original_relative": 1.1681366380281185e-12,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 5.119609004602179e-13,
+              "raw_gradient_relative_l2": 1.3125592628400344e-12,
+              "physical_darcy_flux_relative_l2": 1.3125592628400344e-12,
+              "full_broken_h1_relative": 1.1694967157187239e-12,
+              "physical_normal_multiplier_relative_l2": 1.3455528657323335e-12
+            },
+            "10": {
+              "pressure_relative_l2": 5.119758090185987e-13,
+              "raw_gradient_relative_l2": 1.3131453885294734e-12,
+              "physical_darcy_flux_relative_l2": 1.3131453885294734e-12,
+              "full_broken_h1_relative": 1.1699962188288105e-12,
+              "physical_normal_multiplier_relative_l2": 1.3455528151312572e-12
+            }
+          },
+          "maximum_nodal_absolute_difference": 1.4406253967536031e-12
+        },
+        "flat": {
+          "independent_original_relative": 1.169195509168561e-12,
+          "physical_norms": {
+            "8": {
+              "pressure_relative_l2": 5.114475819470815e-13,
+              "raw_gradient_relative_l2": 1.3140878178172065e-12,
+              "physical_darcy_flux_relative_l2": 1.3140878178172065e-12,
+              "full_broken_h1_relative": 1.17074071462199e-12,
+              "physical_normal_multiplier_relative_l2": 1.3500481920266278e-12
+            },
+            "10": {
+              "pressure_relative_l2": 5.114624887187466e-13,
+              "raw_gradient_relative_l2": 1.3146712825836882e-12,
+              "physical_darcy_flux_relative_l2": 1.3146712825836882e-12,
+              "full_broken_h1_relative": 1.1712380036893409e-12,
+              "physical_normal_multiplier_relative_l2": 1.3500481417953543e-12
+            }
+          },
+          "maximum_nodal_absolute_difference": 1.4521717162097048e-12
+        }
+      },
+      "native_analytical_norms": {
+        "8": {
+          "pressure_l2_error": 1.4481025631047704e-06,
+          "raw_gradient_l2_error": 0.0004559566749064498,
+          "darcy_flux_l2_error": 0.0004559566749064498,
+          "full_broken_h1_error": 0.00045595897446237333,
+          "pressure_l2_norm": 1.4923927710425104,
+          "raw_gradient_l2_norm": 2.6334012851912263,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        },
+        "10": {
+          "pressure_l2_error": 1.448102563100787e-06,
+          "raw_gradient_l2_error": 0.0004559566749062571,
+          "darcy_flux_l2_error": 0.0004559566749062571,
+          "full_broken_h1_error": 0.0004559589744621806,
+          "pressure_l2_norm": 1.4923927710425102,
+          "raw_gradient_l2_norm": 2.6334012851912245,
+          "darcy_flux": "-raw_gradient since K=I; no H(div) flux reconstruction"
+        }
+      },
+      "trace_coordinate_transform": {
+        "shape": [
+          4224,
+          4224
+        ],
+        "signed_permutation": true,
+        "source": "actual physical endpoints/normals; no averaging"
+      },
+      "comparison_records_sha256": {
+        "1": "9c365c7d14d2df51d1c75012c8865c27c3eeff0e4b568c735d9e83952d361172",
+        "2": "626d97d8df9074a3b306d71cb4520ff4da3d16ba4a80d020cc6bb3b01c3f52d4"
+      },
+      "replay_records_sha256": {
+        "1": "5ef22dce4d9a0feef1b806d6091eb883a5e75ff8f61035588a1f35bcd6f6dab2",
+        "2": "583cdb26ff3a721defb41e2512eb179da73702e8f2f6c527aaff5d0f728fdea0"
+      }
+    }
+  ],
+  "observed_native_analytical_rates": [
+    {
+      "boundary": "zero",
+      "nouter": [
+        1,
+        2
+      ],
+      "pressure_l2_error": 3.115863718841924,
+      "raw_gradient_l2_error": 2.042218479914359,
+      "full_broken_h1_error": 2.043862718288774
+    },
+    {
+      "boundary": "zero",
+      "nouter": [
+        2,
+        4
+      ],
+      "pressure_l2_error": 3.030191693447871,
+      "raw_gradient_l2_error": 2.0131117218805636,
+      "full_broken_h1_error": 2.0134745632756976
+    },
+    {
+      "boundary": "zero",
+      "nouter": [
+        4,
+        8
+      ],
+      "pressure_l2_error": 3.007566084482757,
+      "raw_gradient_l2_error": 2.0034368474345245,
+      "full_broken_h1_error": 2.0035249443356946
+    },
+    {
+      "boundary": "zero",
+      "nouter": [
+        8,
+        16
+      ],
+      "pressure_l2_error": 3.0018920456448566,
+      "raw_gradient_l2_error": 2.0008691510298484,
+      "full_broken_h1_error": 2.0008910199456644
+    },
+    {
+      "boundary": "affine",
+      "nouter": [
+        1,
+        2
+      ],
+      "pressure_l2_error": 3.1158637188414806,
+      "raw_gradient_l2_error": 2.042218479914357,
+      "full_broken_h1_error": 2.0438627182887723
+    },
+    {
+      "boundary": "affine",
+      "nouter": [
+        2,
+        4
+      ],
+      "pressure_l2_error": 3.03019169343938,
+      "raw_gradient_l2_error": 2.0131117218806884,
+      "full_broken_h1_error": 2.013474563275822
+    },
+    {
+      "boundary": "affine",
+      "nouter": [
+        4,
+        8
+      ],
+      "pressure_l2_error": 3.007566084342204,
+      "raw_gradient_l2_error": 2.0034368474342026,
+      "full_broken_h1_error": 2.0035249443353678
+    },
+    {
+      "boundary": "affine",
+      "nouter": [
+        8,
+        16
+      ],
+      "pressure_l2_error": 3.001892043415004,
+      "raw_gradient_l2_error": 2.000869151029931,
+      "full_broken_h1_error": 2.0008910199457297
+    }
+  ],
+  "performance": {
+    "complete_wall_seconds": 246.9143353048712,
+    "complete_peak_owned_rss_bytes": 660881408,
+    "scope": "Synchronous complete setup, acquisition, snapshots, archives, comparisons and data-only replays under shared host load",
+    "runtime_speedup_asserted": false
+  },
+  "conventions": {
+    "volume_norms": "Physical leafwise L2 pressure and gradient; full broken H1 includes both pressure L2 and gradient L2",
+    "raw_darcy_flux": "Minus the one-sided Q2 gradient, distinct from an H(div) reconstruction",
+    "physical_normal_multiplier": "Canonical oriented P1 macroface normal Darcy flux, evaluated with executed trace basis and signed geometry transform",
+    "original_residual": "Original [A B; B^T 0] system normalized by physical source and weak Dirichlet load; candidate recursive and flat fields checked separately",
+    "basis": "Numerical matrices and tables actually executed by each producer and comparison; no fresh tabulation in data-only replay"
+  },
+  "limits": [
+    "Finite matched discretization agreement and observed smooth-case rates; no mesh-uniform inf-sup estimate",
+    "Current manufactured Cartesian geometry is not a literal historical mesh or published-figure reproduction",
+    "Single-cell Pk degree hypotheses do not automatically apply to Q2 on a fine submesh",
+    "Normal macroface equilibrium does not establish fine-cell conservation of the raw gradient",
+    "Independent assembly shares the attributed solver arithmetic"
+  ]
+}

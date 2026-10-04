@@ -1,0 +1,48 @@
+{
+  "schema": "pymhm-initial-convergence-public-verification-v1",
+  "status": "verified_initial_study",
+  "case": "helmholtz",
+  "study_sha256": "5281b1e955c32f42800e534b260b8648398ffb287f7f302c3aa3c566acf166bf",
+  "generation_id": null,
+  "identity_convention": "Original producer UUID when recorded; original execution record SHA256 otherwise",
+  "levels": [
+    8,
+    12,
+    16
+  ],
+  "scope": "Initial three-level refinement of published analytical plane-wave data on Cartesian macro meshes",
+  "original_equation_threshold": 1e-10,
+  "original_equation_maximum": 2.0437308210855637e-15,
+  "quadrature_sensitivity_threshold": 1e-06,
+  "quadrature_sensitivity_maximum": 1.0308013639765536e-13,
+  "exact_solution_available": true,
+  "asymptotic_convergence_verified": false,
+  "historical_literal_reproduction": false,
+  "figures_sha256": {
+    "docs/figures/minimal-convergence/wave-helmholtz/convergence.png": "29438629a868a32c91e3dbb5256f47c89d0f160d9044254c29e1b5b1cbbf23f7",
+    "docs/figures/minimal-convergence/wave-helmholtz/convergence.svg": "60348a9d6557eeb6cc6b768cf20fe917aea675a685d56d5d6a899f5658812100"
+  },
+  "rendered_inspection": "All five PNGs inspected at 1024x640 publication size; no clipping or overlap",
+  "aggregate_private_verification_sha256": "1b5b6b5d388bd620135f3a779bae8e7878873a1af71abc50eec9b8230fa3b83f",
+  "original_executed_source_manifests": [
+    {
+      "manifest": "build/results/minimal-wave-helmholtz-v1/executed-sources/manifest.json",
+      "sha256": "dea215e02c490e004ca70900794637df96fd7d6841b1b7dbf9786d8290d45a0d",
+      "generation_id": null,
+      "files": 127
+    }
+  ],
+  "native_threads": 1,
+  "workers": 1,
+  "coefficient_and_reference_source_archives_remain_private": true,
+  "original_execution_record_sha256": "5281b1e955c32f42800e534b260b8648398ffb287f7f302c3aa3c566acf166bf",
+  "published_metadata_record_sha256": "5281b1e955c32f42800e534b260b8648398ffb287f7f302c3aa3c566acf166bf",
+  "publication_consumer": "Private metadata normalization; numerical field values and executed SHA256 values unchanged",
+  "private_path_alias_scheme": "private-comparison/<project>/<module>",
+  "numeric_fields_unchanged": true,
+  "source_and_basis_sha256_values_unchanged": true,
+  "original_execution_snapshot_unchanged": true,
+  "pde_solves_during_publication": 0,
+  "byte_equality_with_original_execution_record": true,
+  "figure_source_execution_record_sha256": "5281b1e955c32f42800e534b260b8648398ffb287f7f302c3aa3c566acf166bf"
+}

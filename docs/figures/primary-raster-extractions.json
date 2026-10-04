@@ -1,0 +1,252 @@
+{
+  "schema": "pymhm-primary-raster-provenance-v1",
+  "figures": [
+    {
+      "output": "docs/figures/reservoir-papers/l07-figure-6.png",
+      "output_sha256": "0b5c2a2947f5cb7ba447ca41d8ff835003cc1ebd954f38148e66cac76e386713",
+      "pixels": [
+        1500,
+        860
+      ],
+      "pdf_sha256": "9473480617f42e94e31d0906303eed4a1ab5ac7bfbb686cde76ae91706eeabab",
+      "doi": "10.1016/j.cam.2023.115415",
+      "primary_url": "https://doi.org/10.1016/j.cam.2023.115415",
+      "source_url": "https://doi.org/10.1016/j.cam.2023.115415",
+      "source_pdf_url": null,
+      "version": "Journal of Computational and Applied Mathematics 436 (2024) 115415",
+      "pdf_page_one_based": 14,
+      "printed_page": "14",
+      "figure": "6",
+      "source_access": "Existing local primary PDF read and SHA verified; no claim of fresh publisher download",
+      "operation": "Direct PDF crop only; no scientific value interpolation, curve smoothing, retouching or additional macrooverlay",
+      "consuming_notebooks": [
+        "23"
+      ],
+      "crop_pixels_at_2200_long_edge": [
+        65,
+        1040,
+        1500,
+        860
+      ],
+      "crop_pdf_points_xyxy": [
+        21.942729545454544,
+        351.0836727272727,
+        528.3134113636363,
+        641.4028636363636
+      ],
+      "rasterization_dpi": 213.28249023465114,
+      "source_pdf_filename": "1-s2.0-S037704272300359X-main.pdf",
+      "inspection": "All panels, published axes/ticks/legends and full crop captions retained; no scientific retouching"
+    },
+    {
+      "output": "docs/figures/reservoir-papers/l07-figure-7-8.png",
+      "output_sha256": "117b832d61edb0aa40b11340212497665aaa4c183b284b5f1bc859f5f2f77258",
+      "pixels": [
+        1500,
+        1415
+      ],
+      "pdf_sha256": "9473480617f42e94e31d0906303eed4a1ab5ac7bfbb686cde76ae91706eeabab",
+      "doi": "10.1016/j.cam.2023.115415",
+      "primary_url": "https://doi.org/10.1016/j.cam.2023.115415",
+      "source_url": "https://doi.org/10.1016/j.cam.2023.115415",
+      "source_pdf_url": null,
+      "version": "Journal of Computational and Applied Mathematics 436 (2024) 115415",
+      "pdf_page_one_based": 15,
+      "printed_page": "15",
+      "figure": "7\u20138",
+      "source_access": "Existing local primary PDF read and SHA verified; no claim of fresh publisher download",
+      "operation": "Direct PDF crop only; no scientific value interpolation, curve smoothing, retouching or additional macrooverlay",
+      "consuming_notebooks": [
+        "23"
+      ],
+      "crop_pixels_at_2200_long_edge": [
+        65,
+        145,
+        1500,
+        1415
+      ],
+      "crop_pdf_points_xyxy": [
+        21.942729545454544,
+        48.94916590909091,
+        528.3134113636363,
+        526.6255090909091
+      ],
+      "rasterization_dpi": 213.28249023465114,
+      "source_pdf_filename": "1-s2.0-S037704272300359X-main.pdf",
+      "inspection": "All panels, published axes/ticks/legends and full crop captions retained; no scientific retouching",
+      "viewing_limit": "The original dense tick labels remain small at 960 px; use the native PNG or primary PDF for numerical ordinate reading"
+    },
+    {
+      "output": "docs/figures/reservoir-papers/l09-figure-6.png",
+      "output_sha256": "1feb2612953110ce9d9586ad2c5a9f4c6bd3b7994032d8e3621624ae4ede8fbd",
+      "pixels": [
+        2079,
+        979
+      ],
+      "pdf_sha256": "b7beee7f1f6ed73bad343813eba19addaab683f3f417ddff4564cf3826fea5dc",
+      "doi": "10.1137/24M1673073",
+      "primary_url": "https://doi.org/10.1137/24M1673073",
+      "source_url": "https://strathprints.strath.ac.uk/94435/",
+      "source_pdf_url": "https://strathprints.strath.ac.uk/94435/1/Barrenechea-etal-MMS-2025-reconstruction-for-the-multiscale-hybrid-mixed-method.pdf",
+      "version": "Accepted author manuscript deposited at Strathprints",
+      "pdf_page_one_based": 24,
+      "printed_page": "24",
+      "figure": "6",
+      "source_access": "Existing local primary PDF read and SHA verified; no claim of fresh publisher download",
+      "operation": "Direct PDF crop only; no scientific value interpolation, curve smoothing, retouching or additional macrooverlay",
+      "consuming_notebooks": [
+        "23"
+      ],
+      "requested_crop_pdf_points_xyxy": [
+        70,
+        338,
+        444,
+        514
+      ],
+      "crop_pixels_xywh": [
+        388,
+        1877,
+        2079,
+        979
+      ],
+      "crop_pdf_points_xyxy": [
+        69.84,
+        337.86,
+        444.06,
+        514.08
+      ],
+      "rasterization_dpi": 400,
+      "source_pdf_filename": "Barrenechea-etal-MMS-2025-reconstruction-for-the-multiscale-hybrid-mixed-method.pdf",
+      "inspection": "All panels, published axes/ticks/legends and full crop captions retained; no scientific retouching"
+    },
+    {
+      "output": "docs/figures/reservoir-papers/l09-figure-9.png",
+      "output_sha256": "cbd0ef8a2483bc38d0cf9953d60ba42f41b9fdba7cfc8ece4bb4756638e3f585",
+      "pixels": [
+        1095,
+        789
+      ],
+      "pdf_sha256": "b7beee7f1f6ed73bad343813eba19addaab683f3f417ddff4564cf3826fea5dc",
+      "doi": "10.1137/24M1673073",
+      "primary_url": "https://doi.org/10.1137/24M1673073",
+      "source_url": "https://strathprints.strath.ac.uk/94435/",
+      "source_pdf_url": "https://strathprints.strath.ac.uk/94435/1/Barrenechea-etal-MMS-2025-reconstruction-for-the-multiscale-hybrid-mixed-method.pdf",
+      "version": "Accepted author manuscript deposited at Strathprints",
+      "pdf_page_one_based": 26,
+      "printed_page": "26",
+      "figure": "9",
+      "source_access": "Existing local primary PDF read and SHA verified; no claim of fresh publisher download",
+      "operation": "Lossless embedded RGB raster from PDF object 774 0; no crop, resampling or repainting",
+      "consuming_notebooks": [
+        "40"
+      ],
+      "embedded_object": [
+        774,
+        0
+      ],
+      "effective_embedded_dpi": [
+        345,
+        345
+      ],
+      "rasterization": "Native 1095x789 embedded pixels; no rasterization",
+      "display_bbox_pdf_points_top_left": [
+        140,
+        96,
+        369,
+        261
+      ],
+      "bbox_precision": "Integer PDF-point display coordinates reported by pdftohtml -zoom 1; no raster pixels are cropped by this bbox",
+      "matches_existing_recorded_image_digest": true,
+      "source_pdf_filename": "Barrenechea-etal-MMS-2025-reconstruction-for-the-multiscale-hybrid-mixed-method.pdf",
+      "inspection": "All panels, published axes/ticks/legends and full crop captions retained; no scientific retouching",
+      "caption_convention": "Complete embedded plot retained; the primary caption remains attributed by the consuming case text"
+    },
+    {
+      "output": "docs/figures/rad-layer/published-figure5.png",
+      "output_sha256": "53fbfb77797a45c74982cd34b00356f07a69bc7449dd81dda8f70e65028a6efc",
+      "pixels": [
+        1460,
+        605
+      ],
+      "pdf_sha256": "04eabc1621ba87498d211092f482e079a56cd65618d7a47c387307fdf7eb5bfb",
+      "doi": "10.1016/j.cma.2024.117089",
+      "primary_url": "https://doi.org/10.1016/j.cma.2024.117089",
+      "source_url": "https://doi.org/10.1016/j.cma.2024.117089",
+      "source_pdf_url": null,
+      "version": "Computer Methods in Applied Mechanics and Engineering 428 (2024) 117089",
+      "pdf_page_one_based": 19,
+      "printed_page": "19",
+      "figure": "5",
+      "source_access": "Existing local primary PDF read and SHA verified; no claim of fresh publisher download",
+      "operation": "Direct PDF crop only; no scientific value interpolation, curve smoothing, retouching or additional macrooverlay",
+      "consuming_notebooks": [
+        "46"
+      ],
+      "crop_pixels_at_2200_long_edge": [
+        80,
+        720,
+        1460,
+        605
+      ],
+      "crop_pdf_points_xyxy": [
+        27.006436363636364,
+        243.05792727272728,
+        519.8739,
+        447.2941022727273
+      ],
+      "rasterization_dpi": 213.28249023465114,
+      "source_pdf_filename": "1-s2.0-S0045782524003451-main.pdf",
+      "inspection": "All panels, published axes/ticks/legends and full crop captions retained; no scientific retouching",
+      "primary_information_limit": "The original profile panel has no coordinate tick labels or axis names; the full primary caption and curves are retained without adding labels"
+    },
+    {
+      "output": "docs/figures/rad-layer/published-figure6.png",
+      "output_sha256": "0ba948f2f2e5406c164c53b97ab5c544f839581eff1e833d474a3fe12bdd70b2",
+      "pixels": [
+        1460,
+        555
+      ],
+      "pdf_sha256": "04eabc1621ba87498d211092f482e079a56cd65618d7a47c387307fdf7eb5bfb",
+      "doi": "10.1016/j.cma.2024.117089",
+      "primary_url": "https://doi.org/10.1016/j.cma.2024.117089",
+      "source_url": "https://doi.org/10.1016/j.cma.2024.117089",
+      "source_pdf_url": null,
+      "version": "Computer Methods in Applied Mechanics and Engineering 428 (2024) 117089",
+      "pdf_page_one_based": 19,
+      "printed_page": "19",
+      "figure": "6",
+      "source_access": "Existing local primary PDF read and SHA verified; no claim of fresh publisher download",
+      "operation": "Direct PDF crop only; no scientific value interpolation, curve smoothing, retouching or additional macrooverlay",
+      "consuming_notebooks": [
+        "46"
+      ],
+      "crop_pixels_at_2200_long_edge": [
+        85,
+        1330,
+        1460,
+        555
+      ],
+      "crop_pdf_points_xyxy": [
+        28.694338636363636,
+        448.9820045454545,
+        521.5618022727273,
+        636.3391568181818
+      ],
+      "rasterization_dpi": 213.28249023465114,
+      "source_pdf_filename": "1-s2.0-S0045782524003451-main.pdf",
+      "inspection": "All panels, published axes/ticks/legends and full crop captions retained; no scientific retouching"
+    }
+  ],
+  "acquisition": "Direct extraction from exact locally available primary PDF bytes; no old thumbnail or numerical result is used",
+  "tool": "pdftoppm version 0.86.1",
+  "acquisition_owner_sha256": "d5d6c8edee0ba0171370412bc082fee19e24bca0178e54233b02603a3434dc1d",
+  "viewing": "Original scientific colors, mesh overlays, one-sided traces and legends are preserved; viewing pixels do not define numerical field arrays",
+  "published_figures_are_not_current_pymhm_solutions": true,
+  "source_access": {
+    "l07": "DOI web fetch unavailable; local journal PDF identity and full text verified",
+    "l09": "Official Strathprints record accessible and identifies the accepted author manuscript; local PDF SHA verified",
+    "araya2024": "DOI web fetch returned 403; local journal PDF identity and full text verified",
+    "l06": "Official publisher PDF fetch returned 403; full local primary PDF SHA 772ed867278e055dd1b01bd49ddb9a5de2056bdd7e77c90baf8e4a6b64c7b218 is available and independently readable",
+    "l06_official_pdf_url": "https://www.esaim-m2an.org/articles/m2an/pdf/2022/01/m2an210093.pdf"
+  }
+}

@@ -6,9 +6,11 @@ subject to these moments. Local volume moments are condensed before the global
 face solve. It uses the same projected-source and reconstructed-source
 conventions as the [two-dimensional implementation](mshho.md), following
 [Chaumont-Frelet, Ern, Lemaire and Valentin (2022)](https://doi.org/10.1051/m2an/2021082).
-The article proves a dimension-independent equivalence rather than publishing
-a numerical benchmark table; the cases here verify the formulation with exact
-fields and independent MHM constructions.
+The article proves equivalence for its ideal local reconstruction spaces.
+Generic finite local meshes approximate those spaces; algebraic reconstruction
+alone does not establish the hypotheses of the paper's error estimates.
+The cases below use an analytical solution rather than a published numerical
+benchmark table.
 
 ## Geometry, moments and boundary conditions
 
@@ -40,6 +42,39 @@ The face-only choice `cell_degree=-1` requires the reconstructed-source variant.
 Tests cover both conventions, mixed and pure Neumann boundaries, tensor
 diffusion and source compatibility.
 
+## Exact local spaces for the selected constant-moment cases
+
+For identity diffusion and constant volume/original-face moments, Equation
+(2.19) defines local functions with constant Laplacian and constant normal
+derivative on every original face. On a tetrahedron $T$ and an axis-aligned
+box $Q$, respectively, these spaces are
+
+$$
+\begin{aligned}
+\mathcal U^{0,0}(T)
+ &=\operatorname{span}\{1,x,y,z,x^2+y^2+z^2\},\\
+\mathcal U^{0,0}(Q)
+ &=\operatorname{span}\{1,x,y,z,x^2,y^2,z^2\}.
+\end{aligned}
+$$
+
+Compatible constant Neumann data and the constant kernel give dimensions
+five and seven. The volume and face integrals determine each polynomial
+uniquely: integration by parts gives zero energy for a polynomial whose
+moments all vanish, and the zero volume moment fixes its constant part.
+The same calculation makes each polynomial energy lift orthogonal to every
+fine finite-element function with zero moments. A conforming local P2
+space contains these polynomials, so its energy lifts coincide with the
+ideal lifts for these particular geometries and $K=I$.
+
+The ten-case acquisition compares every column of the executed lift with
+this independent polynomial characterization. Its maximum relative
+discrepancy is $5.890\times10^{-15}$; the executed matrix and field
+coefficients are retained. This exact-space argument requires local degree
+at least two and does not extend to degree one, higher moment degrees,
+general polyhedra or different materials. Those configurations can admit
+finite algebraic reconstructions without satisfying this argument.
+
 ## Five-level unit-cube study
 
 The material is \(K=I\), pressure is zero on the boundary, and
@@ -54,8 +89,18 @@ source. Tetrahedral macrocells use local refinement two; cubic macrocells use
 their conforming tetrahedral decomposition at refinement one. These are
 different local meshes, so their errors are not an equal-cost comparison.
 The macro resolutions are \(n=1,2,3,4,5\). Assembly order nine and independent
-error rules ten and eleven give a maximum norm difference \(4.4\times10^{-10}\)
-in the coarsest case and approximately machine precision on finer meshes.
+error rules ten and twelve give a maximum relative norm difference
+$3.588\times10^{-10}$. The local refinement is an integer subdivision
+factor: each tetrahedral macro has eight fine tetrahedra, and each cubic
+macro has twelve. The executed coefficient precision is explicitly
+extended; native sparse factors use binary64. The default solver precision
+is documented separately from this acquisition setting.
+
+Here $n$ counts equal intervals along each side of the unit cube. The
+macro partition therefore has $n^3$ cubes or $6n^3$ tetrahedra: at `n5`,
+125 cubes or 750 tetrahedra. It is independent of the local subdivision
+factor and polynomial degree. `P2/P0` in these records denotes local
+pressure degree two and constant cell/original-face moments.
 
 ![Five-level three-dimensional MsHHO convergence](../figures/core-extensions/mshho3d-convergence.png)
 
@@ -65,10 +110,50 @@ in the coarsest case and approximately machine precision on finer meshes.
 | Cubes | 2.28545e-2 | 1.954 | 4.90777e-1 | 0.984 |
 
 The measured rates approach second order for pressure and first order for
-flux, as expected for these constant macro moments. The flux is the physical
-raw field \(-K\nabla p_h\); this reconstruction does not make it globally
-\(H(\mathrm{div})\) conforming. The largest condensed backward residual is
-below \(1.0\times10^{-16}\), separately from the approximation errors above.
+flux. Theorem 6.3 supplies a first-order energy estimate here: the smooth
+source satisfies $f\in H^1$ and the exact flux satisfies
+$K\nabla p\in H^1$. The second-order pressure rate is an observation from
+this study, rather than an additional consequence of that energy bound.
+The displayed flux is the raw physical field $-K\nabla p_h$, with no
+separate H(div) postprocessing. Generic finite lifts do not guarantee
+H(div) conformity or fine-cell conservation. Conservation for a projected
+source refers to its macro P0 projection, not to the original nonconstant
+source at each fine cell.
+
+For the selected identity-material tetrahedral and cubic P0 cases, the
+polynomial characterization above gives a stronger conclusion. The raw
+flux has constant divergence equal to the macro P0 source projection and
+constant normal trace on each original macroface. Global face equations
+match these normal traces with opposite outward orientations, so this
+particular flux is H(div)-conforming without postprocessing. Independent
+one-sided derivative checks on all ten acquired meshes confirm the
+divergence, fine-face normal continuity and macroface multiplier identity;
+their maximum scaled discrepancies are below $5.889\times10^{-13}$.
+This statement concerns the projected source and these exact local spaces,
+not arbitrary finite local lifts.
+
+The maximum relative residual of the original projected-source equations
+is $5.789\times10^{-17}$, separately from approximation accuracy and
+uniform inf-sup stability. Actual volume/face moments, reconstructed
+matrices, raw energy matrices, physical maps, coefficients and cardinal
+value/derivative tables are archived. Original stiffness matrices in the
+archive are explicitly identified as diagnostic reassemblies by the shared
+operator owner.
+
+An independently assembled FEniCS Basix 0.9.0 P2/P0 reference solves the
+same projected-source problem on all ten macro meshes. Both fields are
+evaluated with their own executed bases and physical maps. The maximum
+relative differences are $1.327\times10^{-14}$ for pressure, raw gradient,
+physical Darcy flux and full broken H1 norms, and $8.771\times10^{-15}$
+for the physical P0 normal multiplier. Inserting the acquired coefficients
+into the original reference equations gives at most
+$2.559\times10^{-14}$, against the unchanged $10^{-10}$ criterion.
+Twenty data-only replays with one and two BLAS threads are bitwise
+identical. The reference independently constructs operators, moments,
+source projection and field norms; it shares the attributed SciPy
+factorization and original-residual arithmetic. Project, module, revision,
+verified source URL, runtime digests and all archive identities are in
+the [independent verification record](../figures/core-extensions/mshho3d-native-verification.json).
 
 ## Sections and components
 
@@ -85,9 +170,9 @@ before all local coefficients and section samples are archived.
 ![Cubic MsHHO pressure and flux components](../figures/core-extensions/cube-p0-fields.png)
 
 ```bash
-pixi run -e notebooks python -m examples.solve_core_extensions mshho3d
-pixi run -e notebooks python -m examples.sample_core_sections mshho3d
-pixi run -e notebooks python -m examples.plot_core_extensions mshho3d
+pixi run --locked -e notebooks python -m examples.solve_core_extensions mshho3d
+pixi run --locked -e notebooks python -m examples.sample_core_sections mshho3d
+pixi run --locked -e notebooks python -m examples.plot_core_extensions mshho3d
 ```
 
 The ten-case record is `examples/results/core-extensions/mshho3d.json`, with

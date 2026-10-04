@@ -1,5 +1,8 @@
 """Nested real/complex trace solves reuse the exact original local operators."""
 
+from copy import copy
+from dataclasses import replace
+
 import numpy as np
 import pytest
 from numpy.testing import assert_allclose
@@ -49,6 +52,7 @@ def test_all_nested_degrees_match_direct_physical_fields(boundary):
         for first, second in zip(result.solution.pressure, direct.pressure, strict=True):
             assert_allclose(first, second, rtol=3e-10, atol=3e-11)
         assert result.restricted_residual < 1e-12
+        assert result.original_trace_residual < 1e-12
         assert_allclose(result.solution.conservation_residuals(), 0, atol=5e-12)
 
 
@@ -132,4 +136,18 @@ def test_restriction_rejects_a_response_with_retained_modes():
     problem = SimpleNamespace(coarse_basis=np.ones((1, 1)))
     prepared = SimpleNamespace(system=SimpleNamespace(responses=[SimpleNamespace(problem=problem)]))
     with pytest.raises(ValueError, match="no retained"):
+        restrict_helmholtz_trace(prepared, 0)
+
+
+def test_original_field_gate_rejects_corrupted_lift_with_unchanged_schur():
+    mesh = CartesianMacroMesh(2)
+    prepared = solve_helmholtz(
+        mesh, omega=1.2, degree=3, local_refinement=2, source=1 + 0.4j, dirichlet=0.2j
+    )
+    original = prepared.system.responses[0]
+    corrupted = replace(original, source=original.source + 0.5)
+    system = copy(prepared.system)
+    system.responses = (corrupted, *prepared.system.responses[1:])
+    prepared = replace(prepared, system=system)
+    with pytest.raises(ValueError, match="original Helmholtz local equations"):
         restrict_helmholtz_trace(prepared, 0)

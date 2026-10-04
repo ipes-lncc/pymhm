@@ -105,6 +105,7 @@ def acquire(
         *SOURCES,
         "examples/transport_coefficient_controls.py",
         "examples/transport_checkpoints.py",
+        "examples/campaign_provenance.py",
         "src/pymhm/parallel.py",
     )
     hashes = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in paths}

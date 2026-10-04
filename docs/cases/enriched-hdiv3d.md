@@ -3,7 +3,7 @@
 `HDiv3DFamily` and `solve_darcy_hdiv3d` separate the normal polynomial degree
 from the complete interior divergence space. Adding zero-normal bubbles changes
 local approximation without adding macroface unknowns. Enriching a normal trace
-changes a different part of the discrete problem. The [well comparisons](mixed-well-geometries.md)
+changes a different part of the discrete problem. The [well comparisons](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-well-geometries.md)
 include independent NeoPZ verification for their stated lower-order spaces.
 The higher orders below are checked against exact fields and native Basix operators.
 
@@ -29,6 +29,18 @@ divergence use the complete space \(W_{p,p}=P_p(\triangle)\otimes P_p(I)\).
 Every zero-normal bubble of the declared parent space is retained. Physical
 Piola maps, face orientation and normal moments are applied before local
 condensation. A macro trace can further restrict these local normal spaces.
+Here `p` is the cell pressure degree and `k` is the normal-flux degree on each
+face. A triangular `Pk` face has `(k+1)(k+2)/2` moments; a rectangular `Qk` face
+has `(k+1)^2`, since its degree is at most `k` in each of the two coordinates.
+Different faces have independent polynomial blocks. Adjacent cells share the
+canonical normal-flux moments of their common face, with opposite outward signs.
+The selected tetrahedral flux spaces have 18, 44 and 57 modes for `(p,k)` equal
+to `(1,1)`, `(2,2)` and `(3,1)` respectively; the `(2,2)` prism has 75 modes.
+
+The global skeletal coordinate in this mixed formulation represents physical
+normal-flux moments. A distinct local multiplier represents face pressure.
+The retained constant-pressure coordinate is a pressure amplitude; its physical
+integral also depends on the executed retained basis and the cell volume.
 The geometry is affine; this construction does not assert support for curved
 prisms or pyramids. Full matrix rank is not evidence of a uniform inf-sup
 constant as polynomial orders increase.
@@ -49,6 +61,14 @@ agree within \(2.7\times10^{-10}\) in the coarsest case and to floating-point
 precision on finer meshes. These are analytical verification cases rather than
 historical figure reproductions.
 
+The level `n` counts equal intervals on each edge of the unit cube. The local
+refinement is `r1`: each macrocell contains one fine cell. These labels describe
+different mesh scales. The computed flux is an H(div) field obtained with the
+physical Piola map; it is distinct from the raw gradient of the discontinuous
+cell pressure. Fine-cell equilibrium means equality of all declared pressure
+test moments of its divergence and the source, rather than pointwise equality
+with a nonpolynomial manufactured source.
+
 ![Pressure and physical flux convergence](../figures/core-extensions/hdiv3d-convergence.png)
 
 | Geometry and orders | Pressure L2 error at n=5 | Final rate | Flux L2 error at n=5 | Final rate |
@@ -64,9 +84,13 @@ second-order flux limitation in this sequence. Increasing both to degree two
 yields third-order pressure and flux. An inaccurate coarse normal space cannot
 be repaired solely by adding local bubbles.
 
-Fine-cell equilibrium moments are below \(1.2\times10^{-13}\), and original
-physical block residuals are below \(8.2\times10^{-14}\). These conservation
-and algebraic checks accompany the field errors; they do not replace them.
+The maximum original physical block backward error is
+\(1.936\times10^{-14}\); the full uncondensed original saddle residual is
+at most \(5.435\times10^{-13}\), relative to its physical right-hand side.
+The blocks distinguish constitutive flux rows, pressure/divergence balance
+rows and normal-flux/trace rows. These are coefficient-row algebraic checks.
+The physical L2 errors of pressure, H(div) flux and divergence are integrated
+and reported separately using the terminal order-13 rule.
 
 ## Pressure and flux components
 
@@ -79,6 +103,7 @@ intersections. Differences have separate symmetric scales. The volume norms
 are independently reintegrated from the archived coefficients and executed
 basis before the section fields are exported.
 
+![Tetrahedral order-one pressure and physical flux components](../figures/core-extensions/tetra-p1-k1-fields.png)
 ![Tetrahedral order-two pressure and physical flux components](../figures/core-extensions/tetra-p2-k2-fields.png)
 ![Interior enrichment with fixed normal degree one](../figures/core-extensions/tetra-p3-k1-fields.png)
 ![Prismatic order-two pressure and physical flux components](../figures/core-extensions/prism-p2-k2-fields.png)
@@ -92,13 +117,36 @@ pressure orders two and three. Persisted fields include the executed basis
 matrix alongside coefficients, so evaluation does not depend on a new nullspace
 orientation.
 
+The whole 20-case comparison uses a dedicated reference driver built on
+FEniCS/Basix 0.9.0. It independently constructs the restricted parent flux
+spaces, pressure bases, quadrature, source and boundary terms, and solves the
+full uncondensed saddle system. It shares the linear-solver arithmetic with
+`pymhm`; both sets of fields are evaluated in their own executed bases.
+The maximum relative differences are \(5.029\times10^{-14}\) in pressure,
+\(3.952\times10^{-13}\) in physical flux and \(6.412\times10^{-13}\) in
+divergence. The native full-original residual is at most
+\(1.533\times10^{-12}\), against the unchanged \(10^{-10}\) criterion.
+Its interface multiplier represents pressure; comparison uses the physical
+fields, independently of the global normal-flux coordinates of `pymhm`.
+
+The reference source audit identifies
+[Basix revision 19555f5](https://github.com/FEniCS/basix/tree/19555f5b629b4090b14014f9db5f2c9ac80984f9).
+The verification record separately identifies the executed Python modules and
+compiled Basix binary by digest. Literal field replay with one and two BLAS
+threads and coherent saved bubble-basis changes verify the persisted data
+contract. The comparison certifies these finite affine discretizations;
+uniform inf-sup estimates and general material coefficients require separate
+analysis and verification.
+
 ```bash
-pixi run -e notebooks python -m examples.solve_core_extensions hdiv3d
-pixi run -e notebooks python -m examples.sample_core_sections hdiv3d
-pixi run -e notebooks python -m examples.plot_core_extensions hdiv3d
+pixi run --locked -e notebooks python -m examples.solve_core_extensions hdiv3d
+pixi run --locked -e notebooks python -m examples.sample_core_sections hdiv3d
+pixi run --locked -e notebooks python -m examples.plot_core_extensions hdiv3d
 ```
 
 The 20-case record is `examples/results/core-extensions/hdiv3d.json`, accompanied
 by field archives, source hashes and quadrature checks.
 The display replay and reintegrated volume norms are recorded separately in
 `examples/results/core-extensions/hdiv3d-field-sampling.json`.
+The independent whole-case evidence is available in
+[the verification record](../figures/core-extensions/hdiv3d-native-verification.json).

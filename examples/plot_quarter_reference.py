@@ -1,4 +1,4 @@
-"""Render archived MSL and NeoPZ quarter-five-spot comparisons with PyVista.
+"""Render archived Basix and NeoPZ quarter-five-spot comparisons with PyVista.
 
 This script only reads numerical records. It does not execute reference solvers
 or assemble comparison operators. Cell values remain cell values; broken nodal
@@ -14,15 +14,27 @@ from pathlib import Path
 
 import numpy as np
 import pyvista as pv
-from plot_pyvista_layout import horizontal_color_scale
-from quarter_spot_problem import (
-    OBSTACLE_AREA,
-    OBSTACLE_LOWER,
-    OBSTACLE_UPPER,
-    coefficient,
-    macro_mesh,
-    source,
-)
+
+if __package__:
+    from .plot_pyvista_layout import horizontal_color_scale
+    from .quarter_spot_problem import (
+        OBSTACLE_AREA,
+        OBSTACLE_LOWER,
+        OBSTACLE_UPPER,
+        coefficient,
+        macro_mesh,
+        source,
+    )
+else:
+    from plot_pyvista_layout import horizontal_color_scale
+    from quarter_spot_problem import (
+        OBSTACLE_AREA,
+        OBSTACLE_LOWER,
+        OBSTACLE_UPPER,
+        coefficient,
+        macro_mesh,
+        source,
+    )
 
 from pymhm import TriangleMesh
 from pymhm.visualization import macro_edges
@@ -404,13 +416,13 @@ def main() -> None:
     refinement = max(row["refinement"] for row in candidates)
     rows = [row for row in candidates if row["refinement"] == refinement]
     FIGURES.mkdir(parents=True, exist_ok=True)
-    primal = next(row for row in rows if row["reference"].startswith("MSL"))
-    mixed = next(row for row in rows if row["reference"].startswith("NeoPZ"))
+    primal = next(row for row in rows if row["formulation"] == "primal")
+    mixed = next(row for row in rows if row["formulation"] == "mixed")
     problem_geometry()
-    compare_fields(primal, "MSL msl_mhm + msl_cg", "reference-obstacle-msl.png")
+    compare_fields(primal, "Basix independent P1", "reference-obstacle-basix.png")
     compare_fields(mixed, "NeoPZ restricted RT0/P0", "reference-obstacle-neopz.png")
     for row, label, suffix in (
-        (primal, "MSL msl_mhm + msl_cg", "msl"),
+        (primal, "Basix independent P1", "basix"),
         (mixed, "NeoPZ restricted RT0/P0", "neopz"),
     ):
         compare_components(row, label, f"reference-obstacle-{suffix}-components.png")

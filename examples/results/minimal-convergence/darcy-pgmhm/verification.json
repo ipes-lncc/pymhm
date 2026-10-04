@@ -1,0 +1,150 @@
+{
+  "schema": "pymhm-minimal-public-record-verification-v1",
+  "id": "darcy-pgmhm",
+  "published_scalar_record_sha256": "df35bdf1d853b095b77c0b2f9391f3c050c6832b5bce96f83b36a813ac71fd03",
+  "original_scalar_record": {
+    "path": "build/results/minimal-studies/pgmhm-n2-n4-n8-v1/minimal-convergence.json",
+    "sha256": "df35bdf1d853b095b77c0b2f9391f3c050c6832b5bce96f83b36a813ac71fd03"
+  },
+  "literal_record_copy": true,
+  "original_norm_verification": {
+    "schema": "pymhm-minimal-darcy-summary-v1",
+    "case": "pgmhm",
+    "acquisition_id": "f53c0a5a-f978-42c5-aa00-3ba3200b6830",
+    "acquisition_complete": true,
+    "accepted_level_count": 3,
+    "requested_levels": [
+      2,
+      4,
+      8
+    ],
+    "acquisition_record": {
+      "path": "build/results/minimal-studies/pgmhm-n2-n4-n8-v1/minimal-convergence.json",
+      "sha256": "df35bdf1d853b095b77c0b2f9391f3c050c6832b5bce96f83b36a813ac71fd03"
+    },
+    "resource_phases": [
+      {
+        "path": "build/reports/preliminary/minimal-darcy-v1/pgmhm-resource.json",
+        "sha256": "0531de7fd35f943eb26f7f19ef13ad8b8294dd91da8e9559b48c1e07a3f917f9",
+        "role": "completed acquisition"
+      }
+    ],
+    "executed_source_copies_verified": 127,
+    "elapsed_seconds": 14.368475548923016,
+    "elapsed_scope": "Sum of original sequential acquisition phases, including interrupted work",
+    "peak_owned_rss_bytes": 182505472,
+    "peak_scope": "Maximum of measured sequential owned-process phase peaks",
+    "native_threads": 1,
+    "workers": 1,
+    "physical_field_norms_separate": true,
+    "quadrature_checks": [
+      {
+        "level": 2,
+        "orders": [
+          10,
+          12
+        ],
+        "field_relative_changes": {
+          "enriched_pressure_l2": 6.487153207025713e-10,
+          "enriched_flux_l2": 1.9138492096234444e-10
+        }
+      },
+      {
+        "level": 4,
+        "orders": [
+          10,
+          12
+        ],
+        "field_relative_changes": {
+          "enriched_pressure_l2": 4.422762170458258e-16,
+          "enriched_flux_l2": 4.110921104930293e-16
+        }
+      },
+      {
+        "level": 8,
+        "orders": [
+          10,
+          12
+        ],
+        "field_relative_changes": {
+          "enriched_pressure_l2": 1.9314078539747116e-14,
+          "enriched_flux_l2": 8.431156104321712e-16
+        }
+      }
+    ],
+    "observed_initial_rates": {
+      "pressure_l2_error": [
+        4.0107516824479825,
+        3.117644496107129
+      ],
+      "flux_l2_error": [
+        2.938048377306477,
+        2.2289138645878945
+      ]
+    },
+    "original_checked_rhs_relative_max": 1.0181835692322952e-15,
+    "interpretation": "Initial empirical rates for the stated analytical problem and physical spaces; no matched historical reproduction or general stability theorem is asserted.",
+    "historical_reproduction": false,
+    "converged_numerical_reference": false,
+    "persisted_coefficients": false,
+    "figures": {
+      "png": {
+        "path": "build/results/minimal-studies/pgmhm-n2-n4-n8-v1/convergence.png",
+        "sha256": "da4c237f16fb1bd433e8cac071bb6f8f55c1374a595292379c90e37a983f8477"
+      },
+      "svg": {
+        "path": "build/results/minimal-studies/pgmhm-n2-n4-n8-v1/convergence.svg",
+        "sha256": "7e6167866781edc42720ca659ebc6ae49949bfddb6e466f7d8ab64dc47f5479e"
+      }
+    },
+    "renderer_source_sha256": "0f73de8d25a95ddaecf2cb2468219b0f49d85599f05cb88e7b95760248c8614f"
+  },
+  "norm_verification_sha256": "8657b1398031f5b7aa2f7a0d0375883dee6e82c767e486ac0d2a4879a2fde2b4",
+  "rendered_inspection": {
+    "schema": "pymhm-minimal-figure-inspection-v1",
+    "native_png_dimensions": [
+      1344,
+      600
+    ],
+    "intended_viewing_width_px": 893,
+    "inspected_png_native_and_893": true,
+    "fields_in_distinct_panels": true,
+    "title_axes_footer_regions_separate": true,
+    "no_observed_clipping_or_overlap": true,
+    "svg_generated_from_same_matplotlib_figure": true,
+    "svg_independent_browser_inspection": false,
+    "artifacts": {
+      "convergence.png": "da4c237f16fb1bd433e8cac071bb6f8f55c1374a595292379c90e37a983f8477",
+      "convergence.svg": "7e6167866781edc42720ca659ebc6ae49949bfddb6e466f7d8ab64dc47f5479e",
+      "convergence-view893.png": "863b75c0dddc864a89ac101c37e740fc8451a7d00feb90bcbc2cee32d9f660ad"
+    }
+  },
+  "resource_receipts": [
+    {
+      "path": "build/reports/preliminary/minimal-darcy-v1/pgmhm-resource.json",
+      "sha256": "0531de7fd35f943eb26f7f19ef13ad8b8294dd91da8e9559b48c1e07a3f917f9",
+      "elapsed_seconds": 14.368475548923016,
+      "peak_owned_rss_bytes": 182505472,
+      "guard_reason": null,
+      "returncode": 0,
+      "owned_group_empty": true,
+      "changed_sources": [],
+      "native_threads": 1,
+      "workers": 1
+    }
+  ],
+  "public_figures": {
+    "png": {
+      "path": "docs/figures/minimal-convergence/darcy-pgmhm/convergence.png",
+      "sha256": "da4c237f16fb1bd433e8cac071bb6f8f55c1374a595292379c90e37a983f8477"
+    },
+    "svg": {
+      "path": "docs/figures/minimal-convergence/darcy-pgmhm/convergence.svg",
+      "sha256": "7e6167866781edc42720ca659ebc6ae49949bfddb6e466f7d8ab64dc47f5479e"
+    }
+  },
+  "limitations": [
+    "Raw broken gradient flux; only the enriched normal multiplier is macro conservative.",
+    "This declared triangular smooth problem does not reproduce a historical polygonal computation."
+  ]
+}

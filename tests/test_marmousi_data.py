@@ -16,7 +16,7 @@ def data(monkeypatch):
     return importlib.import_module("examples.marmousi_data")
 
 
-def test_ibm_decoding_and_trace_layout(tmp_path, data):
+def test_ibm_decoding_and_trace_layout(tmp_path, data, monkeypatch):
     """Known hexadecimal IBM numbers check signs, exponents and trace strides."""
     words = np.array([[0, 0x41100000, 0xC1200000], [0x40800000, 0x42100000, 0x43100000]])
     expected = np.array([[0.0, 1.0, -2.0], [0.5, 16.0, 256.0]])
@@ -30,15 +30,26 @@ def test_ibm_decoding_and_trace_layout(tmp_path, data):
         payload[offset + 240 : offset + 252] = words[i].astype(">u4").tobytes()
     path = tmp_path / "fixture.segy"
     path.write_bytes(payload)
+    mapped = []
+    original_memmap = data.np.memmap
+
+    def tracked_memmap(*args, **kwargs):
+        value = original_memmap(*args, **kwargs)
+        mapped.append(value)
+        return value
+
+    monkeypatch.setattr(data.np, "memmap", tracked_memmap)
     np.testing.assert_array_equal(
         data._read_samples(path, [1, 0], [2, 0], shape=(2, 3)), expected[[1, 0]][:, [2, 0]]
     )
+    assert mapped[-1]._mmap.closed
     for byte, value, message in [(3224, 5, "IBM"), (3220, 2, "binary"), (3714, 2, "trace")]:
         altered = payload.copy()
         altered[byte : byte + 2] = struct.pack(">H", value)
         path.write_bytes(altered)
         with pytest.raises(ValueError, match=message):
             data._read_samples(path, [0], [0], shape=(2, 3))
+        assert mapped[-1]._mmap.closed
     path.write_bytes(payload[:-1])
     with pytest.raises(ValueError, match="size"):
         data._read_samples(path, [0], [0], shape=(2, 3))

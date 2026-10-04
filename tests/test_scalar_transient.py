@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import numpy as np
 import pytest
-from numpy.testing import assert_allclose
+from numpy.testing import assert_allclose, assert_array_equal
 
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy, solve_heat, solve_transport
 from pymhm.darcy_transport import HydrodynamicDispersion, RT0DarcyVelocity, solve_darcy_transport
@@ -67,6 +67,36 @@ def test_closed_diffusion_preserves_mass_and_roundoff_uniform_time_grid():
     assert result.operator_builds == 1
     assert_allclose(result.total_mass(), 1.5, atol=2e-12)
     assert max(s.l2_error(1) for s in result.solutions) < 2e-12
+    assert result.original_residual_norms is None
+    assert result.original_rhs_norms is None
+
+
+@pytest.mark.parametrize("boundary", [0.0, 1.0])
+def test_original_transient_checks_include_discarded_steps_and_preserve_evolution(boundary):
+    """Gate all original equations on a changing-dt grid without changing the trajectory."""
+    mesh = TriangleMesh.unit_square()
+    options = dict(
+        times=[0.0, 0.125, 0.25, 0.5],
+        initial=boundary,
+        source=lambda x, t: 1 + t + x[:, 0],
+        dirichlet=boundary,
+        output_steps=[1, 3],
+        local_refinement=2,
+        degree=2,
+    )
+    baseline = solve_transient_transport(mesh, **options)
+    checked = solve_transient_transport(mesh, check_original=True, **options)
+    assert checked.operator_builds == baseline.operator_builds == 2
+    assert checked.original_residual_norms.shape == checked.original_rhs_norms.shape == (3,)
+    assert np.all(checked.original_residual_norms <= 1e-10 * checked.original_rhs_norms)
+    assert_array_equal(checked.times, baseline.times)
+    assert_array_equal(checked.integration_times, baseline.integration_times)
+    for first, second in zip(checked.solutions, baseline.solutions, strict=True):
+        assert_array_equal(first.hybrid.trace, second.hybrid.trace)
+        for actual, reference in zip(first.hybrid.fields, second.hybrid.fields, strict=True):
+            assert_array_equal(actual, reference)
+    with pytest.raises(ValueError, match="check_original"):
+        solve_transient_transport(mesh, [0.0, 0.1], check_original=1)
 
 
 @pytest.mark.parametrize("stabilization", ["galerkin", "supg"])

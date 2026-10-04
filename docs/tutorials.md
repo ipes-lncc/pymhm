@@ -124,7 +124,7 @@ writes executed copies under `build/notebooks`. Recent formulation studies are:
 
 The [quadratic Darcy tutorial](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy-bdm.md) explains the distinction
 between exact flux and projected pressure. The
-[elasticity gallery](cases/elasticity.md) compares GaLS with Taylor–Hood and
+[elasticity gallery](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity.md) compares GaLS with Taylor–Hood and
 the displacement-only baseline; [mixed elasticity](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-elasticity.md)
 instead solves for an H(div) stress and an independent rotation.
 

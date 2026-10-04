@@ -46,6 +46,7 @@ def acquire(refinement: int, workers: int, *, endpoint_only: bool = False) -> di
         *SOURCES,
         "examples/transport_face_resolution.py",
         "examples/transport_checkpoints.py",
+        "examples/campaign_provenance.py",
         "examples/transport_trace_family.py",
         "examples/unfitted_trace_family.py",
         "examples/transport_coefficient_controls.py",

@@ -2,35 +2,28 @@
 
 from __future__ import annotations
 
-import json
+import argparse
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 
+from examples.helmholtz_article import publication_rows as article_rows
+from examples.helmholtz_local_control import publication_rows as local_rows
+from examples.helmholtz_publication import support_rows
 from examples.plot_helmholtz import save
 from examples.plot_style import set_refinement_ticks
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def main() -> None:
+def main(data: Path | None = None, output: Path | None = None) -> None:
     """Render all acquired directions and spatial levels with explicit local controls."""
-    rows = json.loads((ROOT / "examples/results/helmholtz-article/article.json").read_text())[
-        "rows"
-    ]
-    published = json.loads(
-        (ROOT / "examples/results/helmholtz-article/published-convergence.json").read_text()
-    )["rows"]
-    fine_rows = json.loads(
-        (ROOT / "examples/results/helmholtz-article/local-refinement-eight.json").read_text()
-    )["rows"]
-    native_rows = json.loads(
-        (
-            ROOT / "examples/results/helmholtz-article/native-convergence-verification.json"
-        ).read_text()
-    )["rows"]
-    output = ROOT / "docs/figures/helmholtz"
+    data = ROOT / "examples/results/helmholtz-article" if data is None else data
+    rows = article_rows(data)
+    fine_rows = local_rows(data)
+    published, native_rows = support_rows(data, rows)
+    output = ROOT / "docs/figures/helmholtz" if output is None else output
     output.mkdir(parents=True, exist_ok=True)
     fig, axes = plt.subplots(1, 2, figsize=(11.5, 5.5), layout="constrained")
     for ax, ell, n, omega in zip(axes, (2, 4), (11, 21), (20, 40), strict=True):
@@ -194,4 +187,8 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--data", type=Path)
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    main(args.data, args.output)

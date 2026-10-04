@@ -1,0 +1,21 @@
+{
+  "schema": "pymhm-initial-limitations-publication-receipt-v1",
+  "metadata_publication_accepted": true,
+  "complete_convergence_study": false,
+  "public_limitations_sha256": "297c2eb8d403a6c2ebd4b23f7d3e4fcfed5b604648909575b96b35f290a09124",
+  "evidence": {
+    "examples/results/minimal-convergence/flow-elasticity/evidence/spe36-n1.json": {
+      "original_execution_record_sha256": "127bd976c74ab76ea87c152e0d13e3096260ea81427d25660badb78fbf42a9da",
+      "published_metadata_record_sha256": "0e3f48b3fd3b3a603c324df144bce6b36a7d5393d54b4544b63cc658e6397f88"
+    },
+    "examples/results/minimal-convergence/flow-elasticity/evidence/spe36-resource.json": {
+      "original_execution_record_sha256": "aae50cfa16b5d64ae58f08bb5881a16517adafcb37625c574c00cbae76b23d41",
+      "published_metadata_record_sha256": "3f3195b161e1bf2d47969f7dd4a21c10d08cf2b846efbbb540dae36f884abad2"
+    }
+  },
+  "original_acquisition_uuid": "41bdac5a-6a50-4617-8631-b939800b9f0f",
+  "no_convergence_curve_for_partial_campaign": true,
+  "source_snapshots_private": true,
+  "original_source_digest_values_preserved": true,
+  "pde_solves_during_publication": 0
+}

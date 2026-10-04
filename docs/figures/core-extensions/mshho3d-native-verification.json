@@ -1,0 +1,1090 @@
+{
+  "schema": "pymhm-mshho3d-independent-whole-verification-v1",
+  "complete": true,
+  "cases": 10,
+  "source_generation_manifest_sha256": "f8e948e69b2ebfd34da0535c53e1a3a4291bd547422f99cf5965ee8263502c17",
+  "public_source_generation_manifest_sha256": "503cfd56c6ea8a63132af7b112d97dc5dfb22a85d114fa31befe9e433a4d43de",
+  "verification_sha256": "42337bc87591174f97dd3f82c9b8e2cc77bcba2189ac245702772402edae8020",
+  "resource_receipt_sha256": "8415758db80591ba95dc56613acef0d8e42404b32b52f042cab33eb671ace14c",
+  "reference": {
+    "project": "FEniCS Basix",
+    "module": "P2 tetrahedron create_element/tabulate",
+    "version": "0.9.0",
+    "upstream_revision": "19555f5b629b4090b14014f9db5f2c9ac80984f9",
+    "verified_source_url": "https://docs.fenicsproject.org/basix/v0.9.0/index.html",
+    "upstream_source_url": "https://github.com/FEniCS/basix/tree/19555f5b629b4090b14014f9db5f2c9ac80984f9",
+    "compiled_runtime": "recorded separately from upstream revision",
+    "original_author_application": false,
+    "solver": "Attributed shared SciPy factor/extended original-residual policy; no PyMHM numerical assembly/basis"
+  },
+  "runtime": {
+    "python": "3.13.15",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "basix": "0.9.0"
+  },
+  "basix_compiled_and_python_runtime_sha256": {
+    "__init__.py": "c3d0b9ba1a47f31ae82d37197d9a7f53b264133f839465d2ea75f104b0d91690",
+    "_basixcpp.cpython-313-x86_64-linux-gnu.so": "fa14b18f7b393882c9a49e8af6f9e86b47c14f880daee89b7213a894fc8a9fdb",
+    "_basixcpp.pyi": "5c42596f176822b9fe53502ab489f3dea5cfb7692946aea842736da7d0d13444",
+    "cell.py": "ff93a1d4e00d31e083b34927adf13fa8aa17ef9fbd7d27d2b5b2087a19558288",
+    "finite_element.py": "8cd2c3b47f705da0ad0d38d2907f41f7564ac213143f658754463e32030b4fa6",
+    "interpolation.py": "f5933e34c7065c642e5286ef98cfa2b9a8acd5cba56cc41cf2aeb84470baf3e8",
+    "lattice.py": "8b8d03326763b33e9de2d07992395ca25a18c5e594d76a5817cd0276f0fdd733",
+    "maps.py": "e4cca5b3ff7427d33ebc6ce63a219bcb7ebe2c412f7c90a5ef56171d879dc6c7",
+    "numba_helpers.py": "83f0889e53247a760ed3d6ae45ffdc46a8069adf4f0e833831d3df0791693872",
+    "polynomials.py": "0f4a2a5c6ac0937b9f431ebc8235b92ffdf4e5cda50dedfc105a19c1d4b02e55",
+    "quadrature.py": "ba0949da5df7d5743fbca4e1efc77614aae7dea24f34baa527f12e8b3f2f9196",
+    "sobolev_spaces.py": "90d34837d8c4f667f4a131a43a584c9bf6c596a8e6ed3ffd47388fe9c238b2fb",
+    "ufl.py": "3ba9faad971a241f811c7f41e218c8d828689cecb2e46749c84b530815e32096",
+    "utils.py": "e4fd8f64de7e7bfa171f585553b2d556320077710e3b08c78d08fd432baa0a8d"
+  },
+  "criteria": {
+    "original": 1e-10,
+    "physical_fields": 1e-09,
+    "quadrature": 1e-09,
+    "operator_identity": 1e-11
+  },
+  "maximum_native_original_relative": 6.172475457248625e-14,
+  "maximum_candidate_in_native_original_relative": 2.5585678050251282e-14,
+  "maximum_same_space_field_relative": 1.3268147931762418e-14,
+  "maximum_physical_p0_normal_multiplier_relative_l2": 8.77036130503978e-15,
+  "maximum_original_operator_relative_difference": 9.402131733808154e-15,
+  "maximum_norm_q10_q12_relative_sensitivity": 2.0680516186608413e-16,
+  "bitwise_data_only_replay_comparison_and_derivative_observer_threads1_2": true,
+  "data_only_replays": 20,
+  "physical_comparisons": 20,
+  "actual_derivative_observer_maxima": {
+    "native": {
+      "affine_gradient_fit_absolute_max": 3.443424659857952e-14,
+      "affine_gradient_fit_relative_to_gradient_max": 3.6660157818151495e-14,
+      "divergence_minus_projected_source_absolute_max": 4.798224317870137e-12,
+      "divergence_minus_projected_source_relative_to_source_max": 5.888026174106258e-13,
+      "fine_interior_normal_jump_absolute_max": 4.702174686990861e-13,
+      "fine_interior_normal_jump_relative_to_flux_max": 3.4869266123851975e-13,
+      "original_macro_normal_minus_physical_multiplier_absolute_max": 3.909737659492374e-13,
+      "original_macro_normal_minus_physical_multiplier_relative_to_normal_max": 3.0645165928529253e-13,
+      "original_macro_normal_variation_absolute_max": 3.3010220419248863e-13,
+      "gradient_component_scale": 3.498324435708141,
+      "projected_source_scale": 28.178539143598396,
+      "normal_component_scale": 3.0397302147332406
+    },
+    "candidate": {
+      "affine_gradient_fit_absolute_max": 7.985691101441983e-15,
+      "affine_gradient_fit_relative_to_gradient_max": 5.8762471493879415e-15,
+      "divergence_minus_projected_source_absolute_max": 3.169010193149191e-12,
+      "divergence_minus_projected_source_relative_to_source_max": 3.178803742348134e-13,
+      "fine_interior_normal_jump_absolute_max": 1.8829117712224257e-13,
+      "fine_interior_normal_jump_relative_to_flux_max": 1.798027880192445e-13,
+      "original_macro_normal_minus_physical_multiplier_absolute_max": 1.7532017538310438e-13,
+      "original_macro_normal_minus_physical_multiplier_relative_to_normal_max": 1.687064870777388e-13,
+      "original_macro_normal_variation_absolute_max": 1.4898941752048515e-13,
+      "gradient_component_scale": 3.4983244357081342,
+      "projected_source_scale": 28.17853914359836,
+      "normal_component_scale": 3.039730214733208
+    }
+  },
+  "rows": [
+    {
+      "case": "tetra",
+      "n": 1,
+      "native_manifest_sha256": "fbb2a47b22039a750076beabac4f7ad82cc76d0cf2d8fd9de964067b4aaec1fc",
+      "native_original": 1.4304804850608624e-15,
+      "candidate_in_native_original": 3.767616058834565e-15,
+      "physical_norms": {
+        "10": {
+          "pressure_relative_l2": 3.0176370411130303e-15,
+          "raw_gradient_relative_l2": 3.2729348833561985e-15,
+          "physical_darcy_flux_relative_l2": 3.2729348833561985e-15,
+          "full_broken_h1_relative": 3.2624781417865247e-15
+        },
+        "12": {
+          "pressure_relative_l2": 3.0128020019231585e-15,
+          "raw_gradient_relative_l2": 3.268152645398475e-15,
+          "physical_darcy_flux_relative_l2": 3.268152645398475e-15,
+          "full_broken_h1_relative": 3.2576944233180108e-15
+        }
+      },
+      "physical_p0_normal_multiplier_relative_l2": 2.3625545895997695e-15,
+      "operator_max": 4.766075260402323e-15,
+      "norm_quadrature_change": 2.0680516186608218e-16,
+      "native_field_norms": {
+        "10": {
+          "pressure_l2_norm": 0.2684224645572646,
+          "raw_gradient_l2_norm": 1.2732395447351648,
+          "physical_darcy_flux_l2_norm": 1.2732395447351648,
+          "full_broken_h1_norm": 1.3012261747123004
+        },
+        "12": {
+          "pressure_l2_norm": 0.26842246455726465,
+          "raw_gradient_l2_norm": 1.273239544735165,
+          "physical_darcy_flux_l2_norm": 1.273239544735165,
+          "full_broken_h1_norm": 1.3012261747123004
+        }
+      },
+      "coefficient_precision_bits": 64,
+      "operator_precision_bits": 53,
+      "basis_matrix_sha256": "f1f2fd40170e61b64dc49e61843ef3019a81c2b08b325dadfbf322828879a130"
+    },
+    {
+      "case": "cube",
+      "n": 1,
+      "native_manifest_sha256": "f91ff719b84e9346bf81c9a8d9307a1d488677690f685c9af820983df9cf7ee7",
+      "native_original": 7.912082916662376e-16,
+      "candidate_in_native_original": 6.307914223752898e-15,
+      "physical_norms": {
+        "10": {
+          "pressure_relative_l2": 6.939513362629372e-15,
+          "raw_gradient_relative_l2": 6.767721546043717e-15,
+          "physical_darcy_flux_relative_l2": 6.767721546043717e-15,
+          "full_broken_h1_relative": 6.7751205736864774e-15
+        },
+        "12": {
+          "pressure_relative_l2": 6.932595667962084e-15,
+          "raw_gradient_relative_l2": 6.753914352793692e-15,
+          "physical_darcy_flux_relative_l2": 6.753914352793692e-15,
+          "full_broken_h1_relative": 6.76161400254149e-15
+        }
+      },
+      "physical_p0_normal_multiplier_relative_l2": 5.876525645060797e-15,
+      "operator_max": 6.052703503289813e-15,
+      "norm_quadrature_change": 2.0680516186608413e-16,
+      "native_field_norms": {
+        "10": {
+          "pressure_l2_norm": 0.2684224645572621,
+          "raw_gradient_l2_norm": 1.273239544735153,
+          "physical_darcy_flux_l2_norm": 1.273239544735153,
+          "full_broken_h1_norm": 1.3012261747122882
+        },
+        "12": {
+          "pressure_l2_norm": 0.26842246455726215,
+          "raw_gradient_l2_norm": 1.2732395447351532,
+          "physical_darcy_flux_l2_norm": 1.2732395447351532,
+          "full_broken_h1_norm": 1.3012261747122884
+        }
+      },
+      "coefficient_precision_bits": 64,
+      "operator_precision_bits": 53,
+      "basis_matrix_sha256": "f1f2fd40170e61b64dc49e61843ef3019a81c2b08b325dadfbf322828879a130"
+    },
+    {
+      "case": "tetra",
+      "n": 2,
+      "native_manifest_sha256": "a55793b728b69394b6583e2e6fe11ac78476030faa87669ceb5fa4be61cb7ebb",
+      "native_original": 7.917005203025826e-15,
+      "candidate_in_native_original": 5.278870470109967e-15,
+      "physical_norms": {
+        "10": {
+          "pressure_relative_l2": 1.3319035684410229e-15,
+          "raw_gradient_relative_l2": 3.685704519575176e-15,
+          "physical_darcy_flux_relative_l2": 3.685704519575176e-15,
+          "full_broken_h1_relative": 3.620016153306072e-15
+        },
+        "12": {
+          "pressure_relative_l2": 1.330738659981407e-15,
+          "raw_gradient_relative_l2": 3.69046359483193e-15,
+          "physical_darcy_flux_relative_l2": 3.69046359483193e-15,
+          "full_broken_h1_relative": 3.6246473296463536e-15
+        }
+      },
+      "physical_p0_normal_multiplier_relative_l2": 1.455287142229984e-15,
+      "operator_max": 7.670892023955745e-15,
+      "norm_quadrature_change": 1.6446227142506044e-16,
+      "native_field_norms": {
+        "10": {
+          "pressure_l2_norm": 0.33753122068821884,
+          "raw_gradient_l2_norm": 1.640074894353155,
+          "physical_darcy_flux_l2_norm": 1.640074894353155,
+          "full_broken_h1_norm": 1.6744470681472112
+        },
+        "12": {
+          "pressure_l2_norm": 0.3375312206882189,
+          "raw_gradient_l2_norm": 1.6400748943531551,
+          "physical_darcy_flux_l2_norm": 1.6400748943531551,
+          "full_broken_h1_norm": 1.6744470681472112
+        }
+      },
+      "coefficient_precision_bits": 64,
+      "operator_precision_bits": 53,
+      "basis_matrix_sha256": "f1f2fd40170e61b64dc49e61843ef3019a81c2b08b325dadfbf322828879a130"
+    },
+    {
+      "case": "cube",
+      "n": 2,
+      "native_manifest_sha256": "cbe3fce4fd626c6d121c8fc7bad6cecf46e265fbdf2255a4ffa86d0f71bbd0ba",
+      "native_original": 2.2458283736218166e-15,
+      "candidate_in_native_original": 4.074922912892157e-15,
+      "physical_norms": {
+        "10": {
+          "pressure_relative_l2": 2.482734427402486e-15,
+          "raw_gradient_relative_l2": 3.2225477423567727e-15,
+          "physical_darcy_flux_relative_l2": 3.2225477423567727e-15,
+          "full_broken_h1_relative": 3.1945584328554574e-15
+        },
+        "12": {
+          "pressure_relative_l2": 2.47314981004193e-15,
+          "raw_gradient_relative_l2": 3.212881166852925e-15,
+          "physical_darcy_flux_relative_l2": 3.212881166852925e-15,
+          "full_broken_h1_relative": 3.1849051644925786e-15
+        }
+      },
+      "physical_p0_normal_multiplier_relative_l2": 2.697029830299886e-15,
+      "operator_max": 6.666863089166476e-15,
+      "norm_quadrature_change": 2.06805161866083e-16,
+      "native_field_norms": {
+        "10": {
+          "pressure_l2_norm": 0.26842246455726354,
+          "raw_gradient_l2_norm": 1.2732395447351599,
+          "physical_darcy_flux_l2_norm": 1.2732395447351599,
+          "full_broken_h1_norm": 1.3012261747122953
+        },
+        "12": {
+          "pressure_l2_norm": 0.2684224645572636,
+          "raw_gradient_l2_norm": 1.27323954473516,
+          "physical_darcy_flux_l2_norm": 1.27323954473516,
+          "full_broken_h1_norm": 1.3012261747122953
+        }
+      },
+      "coefficient_precision_bits": 64,
+      "operator_precision_bits": 53,
+      "basis_matrix_sha256": "f1f2fd40170e61b64dc49e61843ef3019a81c2b08b325dadfbf322828879a130"
+    },
+    {
+      "case": "tetra",
+      "n": 3,
+      "native_manifest_sha256": "8ffd49dfef8a7d69154d1af1f7c4225238ab96a085ad80c62c788c201fdf3cf2",
+      "native_original": 1.9221517859921597e-14,
+      "candidate_in_native_original": 9.17830815740772e-15,
+      "physical_norms": {
+        "10": {
+          "pressure_relative_l2": 1.93630386576483e-15,
+          "raw_gradient_relative_l2": 5.887934137853696e-15,
+          "physical_darcy_flux_relative_l2": 5.887934137853696e-15,
+          "full_broken_h1_relative": 5.791685296755345e-15
+        },
+        "12": {
+          "pressure_relative_l2": 1.945319167068387e-15,
+          "raw_gradient_relative_l2": 5.897793773427235e-15,
+          "physical_darcy_flux_relative_l2": 5.897793773427235e-15,
+          "full_broken_h1_relative": 5.801454035227704e-15
+        }
+      },
+      "physical_p0_normal_multiplier_relative_l2": 2.2156048073432434e-15,
+      "operator_max": 5.322674116604767e-15,
+      "norm_quadrature_change": 1.599155961004554e-16,
+      "native_field_norms": {
+        "10": {
+          "pressure_l2_norm": 0.34712781357727585,
+          "raw_gradient_l2_norm": 1.7870810109874162,
+          "physical_darcy_flux_l2_norm": 1.7870810109874162,
+          "full_broken_h1_norm": 1.8204824247409657
+        },
+        "12": {
+          "pressure_l2_norm": 0.3471278135772759,
+          "raw_gradient_l2_norm": 1.7870810109874165,
+          "physical_darcy_flux_l2_norm": 1.7870810109874165,
+          "full_broken_h1_norm": 1.8204824247409659
+        }
+      },
+      "coefficient_precision_bits": 64,
+      "operator_precision_bits": 53,
+      "basis_matrix_sha256": "f1f2fd40170e61b64dc49e61843ef3019a81c2b08b325dadfbf322828879a130"
+    },
+    {
+      "case": "cube",
+      "n": 3,
+      "native_manifest_sha256": "5a533fa444945f1350533deda79bb9702461ed51e9c707819ea84364a4d454eb",
+      "native_original": 8.532605349529317e-15,
+      "candidate_in_native_original": 6.384744413844133e-15,
+      "physical_norms": {
+        "10": {
+          "pressure_relative_l2": 3.148756256653362e-15,
+          "raw_gradient_relative_l2": 4.925532329974736e-15,
+          "physical_darcy_flux_relative_l2": 4.925532329974736e-15,
+          "full_broken_h1_relative": 4.870039439389376e-15
+        },
+        "12": {
+          "pressure_relative_l2": 3.138347089821074e-15,
+          "raw_gradient_relative_l2": 4.917739249820565e-15,
+          "physical_darcy_flux_relative_l2": 4.917739249820565e-15,
+          "full_broken_h1_relative": 4.862201312894112e-15
+        }
+      },
+      "physical_p0_normal_multiplier_relative_l2": 2.9734981785059628e-15,
+      "operator_max": 6.481856031492287e-15,
+      "norm_quadrature_change": 1.7466655494234094e-16,
+      "native_field_norms": {
+        "10": {
+          "pressure_l2_norm": 0.3178121378164387,
+          "raw_gradient_l2_norm": 1.6014657226886448,
+          "physical_darcy_flux_l2_norm": 1.6014657226886448,
+          "full_broken_h1_norm": 1.6326962411575885
+        },
+        "12": {
+          "pressure_l2_norm": 0.31781213781643874,
+          "raw_gradient_l2_norm": 1.601465722688645,
+          "physical_darcy_flux_l2_norm": 1.601465722688645,
+          "full_broken_h1_norm": 1.6326962411575887
+        }
+      },
+      "coefficient_precision_bits": 64,
+      "operator_precision_bits": 53,
+      "basis_matrix_sha256": "f1f2fd40170e61b64dc49e61843ef3019a81c2b08b325dadfbf322828879a130"
+    },
+    {
+      "case": "tetra",
+      "n": 4,
+      "native_manifest_sha256": "960a6e273cb2ddf8f44f3a70ca6ddeb78eb85f12e388da0ca0c8895f154d4fd9",
+      "native_original": 3.930764383320614e-14,
+      "candidate_in_native_original": 1.7283813984162833e-14,
+      "physical_norms": {
+        "10": {
+          "pressure_relative_l2": 5.593944148093281e-15,
+          "raw_gradient_relative_l2": 9.858020662294899e-15,
+          "physical_darcy_flux_relative_l2": 9.858020662294899e-15,
+          "full_broken_h1_relative": 9.741087853052733e-15
+        },
+        "12": {
+          "pressure_relative_l2": 5.582420893094034e-15,
+          "raw_gradient_relative_l2": 9.850100284533698e-15,
+          "physical_darcy_flux_relative_l2": 9.850100284533698e-15,
+          "full_broken_h1_relative": 9.733121114713278e-15
+        }
+      },
+      "physical_p0_normal_multiplier_relative_l2": 6.245807509946855e-15,
+      "operator_max": 9.402131733808154e-15,
+      "norm_quadrature_change": 1.5853085756355964e-16,
+      "native_field_norms": {
+        "10": {
+          "pressure_l2_norm": 0.35015991261513096,
+          "raw_gradient_l2_norm": 1.8445777272057367,
+          "physical_darcy_flux_l2_norm": 1.8445777272057367,
+          "full_broken_h1_norm": 1.877519362378486
+        },
+        "12": {
+          "pressure_l2_norm": 0.350159912615131,
+          "raw_gradient_l2_norm": 1.8445777272057369,
+          "physical_darcy_flux_l2_norm": 1.8445777272057369,
+          "full_broken_h1_norm": 1.8775193623784863
+        }
+      },
+      "coefficient_precision_bits": 64,
+      "operator_precision_bits": 53,
+      "basis_matrix_sha256": "f1f2fd40170e61b64dc49e61843ef3019a81c2b08b325dadfbf322828879a130"
+    },
+    {
+      "case": "cube",
+      "n": 4,
+      "native_manifest_sha256": "9e11b0f0e1710643b13cf3d5dbfbff1fdb35645b762a7a419ac3e0a64a466e88",
+      "native_original": 1.5336036563889754e-14,
+      "candidate_in_native_original": 8.825535468719595e-15,
+      "physical_norms": {
+        "10": {
+          "pressure_relative_l2": 1.3953626477749436e-15,
+          "raw_gradient_relative_l2": 4.922529102858618e-15,
+          "physical_darcy_flux_relative_l2": 4.922529102858618e-15,
+          "full_broken_h1_relative": 4.840932859994075e-15
+        },
+        "12": {
+          "pressure_relative_l2": 1.3912903367473227e-15,
+          "raw_gradient_relative_l2": 4.9217627620654035e-15,
+          "physical_darcy_flux_relative_l2": 4.9217627620654035e-15,
+          "full_broken_h1_relative": 4.840139551534744e-15
+        }
+      },
+      "physical_p0_normal_multiplier_relative_l2": 2.2229232945464417e-15,
+      "operator_max": 8.18994538609288e-15,
+      "norm_quadrature_change": 1.2794493651377242e-16,
+      "native_field_norms": {
+        "10": {
+          "pressure_l2_norm": 0.3341644359705808,
+          "raw_gradient_l2_norm": 1.7354700465315378,
+          "physical_darcy_flux_l2_norm": 1.7354700465315378,
+          "full_broken_h1_norm": 1.7673489051898368
+        },
+        "12": {
+          "pressure_l2_norm": 0.3341644359705808,
+          "raw_gradient_l2_norm": 1.735470046531538,
+          "physical_darcy_flux_l2_norm": 1.735470046531538,
+          "full_broken_h1_norm": 1.767348905189837
+        }
+      },
+      "coefficient_precision_bits": 64,
+      "operator_precision_bits": 53,
+      "basis_matrix_sha256": "f1f2fd40170e61b64dc49e61843ef3019a81c2b08b325dadfbf322828879a130"
+    },
+    {
+      "case": "tetra",
+      "n": 5,
+      "native_manifest_sha256": "9e4deb6009645df9f58bfb906c7e15f5bb61203f2ffabb2540b6e2a213cb4dcf",
+      "native_original": 6.172475457248625e-14,
+      "candidate_in_native_original": 2.5585678050251282e-14,
+      "physical_norms": {
+        "10": {
+          "pressure_relative_l2": 8.037972922823564e-15,
+          "raw_gradient_relative_l2": 1.325536192023009e-14,
+          "physical_darcy_flux_relative_l2": 1.325536192023009e-14,
+          "full_broken_h1_relative": 1.3111962319517173e-14
+        },
+        "12": {
+          "pressure_relative_l2": 8.05073896434001e-15,
+          "raw_gradient_relative_l2": 1.3268147931762418e-14,
+          "physical_darcy_flux_relative_l2": 1.3268147931762418e-14,
+          "full_broken_h1_relative": 1.3124714625314431e-14
+        }
+      },
+      "physical_p0_normal_multiplier_relative_l2": 8.77036130503978e-15,
+      "operator_max": 9.14708758466286e-15,
+      "norm_quadrature_change": 1.579450640818963e-16,
+      "native_field_norms": {
+        "10": {
+          "pressure_l2_norm": 0.35145860083652036,
+          "raw_gradient_l2_norm": 1.872390691999141,
+          "physical_darcy_flux_l2_norm": 1.872390691999141,
+          "full_broken_h1_norm": 1.9050905625683485
+        },
+        "12": {
+          "pressure_l2_norm": 0.3514586008365204,
+          "raw_gradient_l2_norm": 1.8723906919991413,
+          "physical_darcy_flux_l2_norm": 1.8723906919991413,
+          "full_broken_h1_norm": 1.9050905625683487
+        }
+      },
+      "coefficient_precision_bits": 64,
+      "operator_precision_bits": 53,
+      "basis_matrix_sha256": "f1f2fd40170e61b64dc49e61843ef3019a81c2b08b325dadfbf322828879a130"
+    },
+    {
+      "case": "cube",
+      "n": 5,
+      "native_manifest_sha256": "1386227e458495364cf100a39b10e76f0807a2678ce199ea943b97c454f4d9be",
+      "native_original": 2.9771979054600306e-14,
+      "candidate_in_native_original": 1.196669106371134e-14,
+      "physical_norms": {
+        "10": {
+          "pressure_relative_l2": 4.557977067770546e-15,
+          "raw_gradient_relative_l2": 8.644834307721396e-15,
+          "physical_darcy_flux_relative_l2": 8.644834307721396e-15,
+          "full_broken_h1_relative": 8.535913115581471e-15
+        },
+        "12": {
+          "pressure_relative_l2": 4.570246019691919e-15,
+          "raw_gradient_relative_l2": 8.653297869487801e-15,
+          "physical_darcy_flux_relative_l2": 8.653297869487801e-15,
+          "full_broken_h1_relative": 8.544414733135557e-15
+        }
+      },
+      "physical_p0_normal_multiplier_relative_l2": 5.6738557340058446e-15,
+      "operator_max": 8.287957973167717e-15,
+      "norm_quadrature_change": 1.6259950334018258e-16,
+      "native_field_norms": {
+        "10": {
+          "pressure_l2_norm": 0.3413980368385268,
+          "raw_gradient_l2_norm": 1.8011382336835102,
+          "physical_darcy_flux_l2_norm": 1.8011382336835102,
+          "full_broken_h1_norm": 1.8332079959442014
+        },
+        "12": {
+          "pressure_l2_norm": 0.3413980368385269,
+          "raw_gradient_l2_norm": 1.8011382336835104,
+          "physical_darcy_flux_l2_norm": 1.8011382336835104,
+          "full_broken_h1_norm": 1.8332079959442016
+        }
+      },
+      "coefficient_precision_bits": 64,
+      "operator_precision_bits": 53,
+      "basis_matrix_sha256": "f1f2fd40170e61b64dc49e61843ef3019a81c2b08b325dadfbf322828879a130"
+    }
+  ],
+  "scope": [
+    "Whole original uncondensed P2/P0 weak Dirichlet problem on all ten actual meshes; K=I and macro P0 projection of the sine source.",
+    "Each field is evaluated using its own executed numerical basis, geometry and portable coefficient components; no basis replacement or coefficient transfer.",
+    "Original equations and physical norm agreement are distinct acceptance criteria; no continuum accuracy or uniform inf-sup follows from the residual.",
+    "The gradient observer fits the actual represented affine P2 gradient, records its fit residual, and preserves both fine-facet sides. Divergence is compared to the projected constant source, not the original sine forcing.",
+    "The special tetra/cube K=I/P0 ideal polynomial-space proof is distinct from a generic finite-local API claim.",
+    "Shared attributed SciPy factorization and extended original-residual arithmetic are not independent; operator, basis, projection and norm assembly are independent."
+  ],
+  "verification_ledger_sha256": {
+    "tetra-p0-n1/system.npz": "229688ab313d5d201d55b178b414ce354487485d52706cbf53bb7d2d1c02d6aa",
+    "tetra-p0-n1/fields.npz": "4b8922f03617032dc1b5a2bdc35551216552b35cbaff782f669f7d33971afd0b",
+    "tetra-p0-n1/field-invariants-threads1.npz": "e22bb17d03ef0f92f943656b3e8747b10619f63c2bc7fd0b562be6d2da6c5d8a",
+    "tetra-p0-n1/field-invariants-threads2.npz": "e22bb17d03ef0f92f943656b3e8747b10619f63c2bc7fd0b562be6d2da6c5d8a",
+    "tetra-p0-n1/comparison-threads1.json": "26bc7df4e56b58feade9281059c4d0b72c99fba732a839296227b9b94f9f380b",
+    "tetra-p0-n1/native.json": "fbb2a47b22039a750076beabac4f7ad82cc76d0cf2d8fd9de964067b4aaec1fc",
+    "tetra-p0-n1/replay-threads2.json": "fb5c1bb3b0e67d93b6cbaa370ea74ac9cdaea0208930adbf9e3edea1f6a60b5f",
+    "tetra-p0-n1/comparison-threads2.json": "4c4277f3fe4dd1594908eccf40bff91230169129c9488a84d7659df94bd50b65",
+    "tetra-p0-n1/replay-threads1.json": "acad9442e0e49d4955b6ae733f805b7803a00f2481e880a98e69895d3309c070",
+    "cube-p0-n1/system.npz": "0741c44edbdbca994c12b8204227dea29e8a924420d0a497f8514d53307d1f87",
+    "cube-p0-n1/fields.npz": "57013f79894e73b19260f62096f87a909142ff54454a1e2e5b757cce5b27baa6",
+    "cube-p0-n1/field-invariants-threads1.npz": "a5e2b6167acebf9c8fd3c230e8dd1b48210b5007e6b9eb3d9fad0ecff6561503",
+    "cube-p0-n1/field-invariants-threads2.npz": "a5e2b6167acebf9c8fd3c230e8dd1b48210b5007e6b9eb3d9fad0ecff6561503",
+    "cube-p0-n1/comparison-threads1.json": "cac0072f970d67cd0d31ddacb5163c7e7daeca2ec92972f0c066914e644617d0",
+    "cube-p0-n1/native.json": "f91ff719b84e9346bf81c9a8d9307a1d488677690f685c9af820983df9cf7ee7",
+    "cube-p0-n1/replay-threads2.json": "1ad7c8b5228bc369baa72ca66d7521af89eeca64d7f4ac2a0d0a2c4a07903637",
+    "cube-p0-n1/comparison-threads2.json": "d7c717789dc10dbae80b6fe3f3ed0cfcc15839bc55da2a1c8d5e9b5721e95d19",
+    "cube-p0-n1/replay-threads1.json": "818b8a2ed77ee3ad065b897e00dcf1cb07b3647003caee9f60f40d1bde56409f",
+    "tetra-p0-n2/system.npz": "508481f9c303658c9209dd1a19449d403ac77a72655bb6452316abd2358e83db",
+    "tetra-p0-n2/fields.npz": "9b19610b5665ccca8705a29a9c44bd28ee771c89410d0c6a9c3e0b9932d62d49",
+    "tetra-p0-n2/field-invariants-threads1.npz": "2862c8c9e14c1abed98d5a61d22c39c46378f0200fbc0ef81b1cbe336992e1a3",
+    "tetra-p0-n2/field-invariants-threads2.npz": "2862c8c9e14c1abed98d5a61d22c39c46378f0200fbc0ef81b1cbe336992e1a3",
+    "tetra-p0-n2/comparison-threads1.json": "028c235282c43ebdd417399cc85c27b211b84afae02b16fe8fdeac74c2508b0b",
+    "tetra-p0-n2/native.json": "a55793b728b69394b6583e2e6fe11ac78476030faa87669ceb5fa4be61cb7ebb",
+    "tetra-p0-n2/replay-threads2.json": "efc97bd930e62ae45550a8851c59454f9681c1b5ef0cb84eb8061dcd780d086a",
+    "tetra-p0-n2/comparison-threads2.json": "c65795c73ac72280c4b9391f9bfa547ee44a79d64a5e3da75010860fbc8e3355",
+    "tetra-p0-n2/replay-threads1.json": "defb97e036de37a7898c37c58cf3e06b329b57ae5b9c7e778721bc3a55bda9d0",
+    "cube-p0-n2/system.npz": "3fcf2b353ef7decc8a296a67575eb8bf3c27fe3d4ef33b9435d6cc05e9ec2cf3",
+    "cube-p0-n2/fields.npz": "dd86a028b3358f363c4bc01b9690df55bd77b0c2f13f281d22bea7a05b9f1055",
+    "cube-p0-n2/field-invariants-threads1.npz": "8966d2ba62374e864cd50c50b50c4240f0f26cf885cd4b588a6e772d2354a4a1",
+    "cube-p0-n2/field-invariants-threads2.npz": "8966d2ba62374e864cd50c50b50c4240f0f26cf885cd4b588a6e772d2354a4a1",
+    "cube-p0-n2/comparison-threads1.json": "500cc04fd0207011f928a44388d43223f1da1b3b11225ec0d926fee8e40e57d5",
+    "cube-p0-n2/native.json": "cbe3fce4fd626c6d121c8fc7bad6cecf46e265fbdf2255a4ffa86d0f71bbd0ba",
+    "cube-p0-n2/replay-threads2.json": "f33676ba7648c845bff2837f320612d55e2c506de0f6c12bf20eba2ce15fe65a",
+    "cube-p0-n2/comparison-threads2.json": "3a304a0e8c4baf06958c39b460f2115591b7fd92ad7f15a1da86e71c4849b864",
+    "cube-p0-n2/replay-threads1.json": "485cbfb7901001bf071948df9aa1b88b14475514ddfc2a11554bbfd006772b40",
+    "tetra-p0-n3/system.npz": "1a23ab3d263b394376aa6ba114bb77289d0a863a3463d5ca4c50989e40a63a7b",
+    "tetra-p0-n3/fields.npz": "b02fc7e938a79118097c189bbbcb04fbfff21158be5d2f3db2e006fb18935720",
+    "tetra-p0-n3/field-invariants-threads1.npz": "6913af44775408db75b6d0e8ee082365c9bee2f8ecb203a6d2b9a3f9cdb07ede",
+    "tetra-p0-n3/field-invariants-threads2.npz": "6913af44775408db75b6d0e8ee082365c9bee2f8ecb203a6d2b9a3f9cdb07ede",
+    "tetra-p0-n3/comparison-threads1.json": "45891c9498d5482bb76fc6b5009812726dde86cb332cc3381ac640f6740279be",
+    "tetra-p0-n3/native.json": "8ffd49dfef8a7d69154d1af1f7c4225238ab96a085ad80c62c788c201fdf3cf2",
+    "tetra-p0-n3/replay-threads2.json": "20f6f4c420fc30a0569ff68060fa2ba563b2494528dd83605bb1c22ba73895aa",
+    "tetra-p0-n3/comparison-threads2.json": "d13043080f01760d8178124d039d0635a8238021d0798200b834b8fd54fea076",
+    "tetra-p0-n3/replay-threads1.json": "2acc0aba9ef7c9f5530d4202c9580ea6e0874e0cd0147b3c51c51d00065ab4a9",
+    "cube-p0-n3/system.npz": "ad0f8900fed9aeb78f59cf7f61bde91cdbd706e0867cc3f3d716d1499a9a5223",
+    "cube-p0-n3/fields.npz": "d3108da6cedab752d284afb1e2c30ac41b4a724b4f6a94e14d553310fd41b92b",
+    "cube-p0-n3/field-invariants-threads1.npz": "fd7f34713aefa4a133ffd1aa3f4081d93965cd1426b1b63380da7ebe692ec889",
+    "cube-p0-n3/field-invariants-threads2.npz": "fd7f34713aefa4a133ffd1aa3f4081d93965cd1426b1b63380da7ebe692ec889",
+    "cube-p0-n3/comparison-threads1.json": "073b56076fa2b0577071d351a5daaf796dd1c5bd966d05e96a0b787e51969891",
+    "cube-p0-n3/native.json": "5a533fa444945f1350533deda79bb9702461ed51e9c707819ea84364a4d454eb",
+    "cube-p0-n3/replay-threads2.json": "f6af3ee6648b7cb75c785092ee2d0cdfa293b75e79fc76241c0a67693ab0196e",
+    "cube-p0-n3/comparison-threads2.json": "206004d567ab980a75fb2fed1a61869bdf0b29ed3fa6fb7b32b72847998647ac",
+    "cube-p0-n3/replay-threads1.json": "ebbeb30285e0ff85b93a1a21c4500f70176742ca1c4f3aa3959a59f652ba37a4",
+    "tetra-p0-n4/system.npz": "7b895ddb078e5eea1d789661661abca4d7579a420f25da2777ac33bd91436588",
+    "tetra-p0-n4/fields.npz": "7857fd82a9e74b0005fa2655f05a30bec9202d3d1c0a1a5e26067bfe97ff3136",
+    "tetra-p0-n4/field-invariants-threads1.npz": "3d8dbebb07b08662d2def8ec3c88622da2345a78e72f77ec073cd9b0dfab556c",
+    "tetra-p0-n4/field-invariants-threads2.npz": "3d8dbebb07b08662d2def8ec3c88622da2345a78e72f77ec073cd9b0dfab556c",
+    "tetra-p0-n4/comparison-threads1.json": "d268829abf562f4e7ddd17a5c558948e7d6ef6bf29ecb3ad7e1a91125e5846ad",
+    "tetra-p0-n4/native.json": "960a6e273cb2ddf8f44f3a70ca6ddeb78eb85f12e388da0ca0c8895f154d4fd9",
+    "tetra-p0-n4/replay-threads2.json": "e341b1aa603f9f9b5c11ab4d2061bd1d87b553ac99bbe2c5496c7f3c60cfccbf",
+    "tetra-p0-n4/comparison-threads2.json": "b601bd8447856ec703c0cd2aaa50ac7d9fe9c2696f3f12111c6b666204b696e5",
+    "tetra-p0-n4/replay-threads1.json": "1b34e0b378356f82429c370f54b3055a894157ad10a22530510a1699e56aeeca",
+    "cube-p0-n4/system.npz": "3694701d13e4b66a03600c337ef8371b949a511aa1d7834bb174640397f47356",
+    "cube-p0-n4/fields.npz": "87ad3a909ee151f782af046fcb88d4a4eab80fc456916c3a04ff2af6a84d144e",
+    "cube-p0-n4/field-invariants-threads1.npz": "cd960a340e89481cf300a2521880295fea80d8991381466f10fdea54e6c4db16",
+    "cube-p0-n4/field-invariants-threads2.npz": "cd960a340e89481cf300a2521880295fea80d8991381466f10fdea54e6c4db16",
+    "cube-p0-n4/comparison-threads1.json": "6cba0852f7be7c08d7b5bc6df860d8dee8a99a2047336069da27549b4f26d32d",
+    "cube-p0-n4/native.json": "9e11b0f0e1710643b13cf3d5dbfbff1fdb35645b762a7a419ac3e0a64a466e88",
+    "cube-p0-n4/replay-threads2.json": "811cb47b5df28a0973f33e1b699c2e5c6e2f24813059625b24e7e8c3d4cff756",
+    "cube-p0-n4/comparison-threads2.json": "c42d13ca9b89317f67beecb767b478a4a5e3bbaccdd0a8d1699f6c100a0fe86a",
+    "cube-p0-n4/replay-threads1.json": "a2cc209ff2877e39d1bea39676d484950de9c963c7f34ea299ce582cd61bbfb8",
+    "tetra-p0-n5/system.npz": "b94c52f49a8b2d3c5611f17f1dec576e269e63fc53af35823ae548e1367501ff",
+    "tetra-p0-n5/fields.npz": "3c0f966382668f03d17f84f024c1df346b068a62d427428bc6ceac58de52dd1d",
+    "tetra-p0-n5/field-invariants-threads1.npz": "139927fafa6c824d5845791a7908a28f1da7d536ea91e244b219bbc8ca1ab02b",
+    "tetra-p0-n5/field-invariants-threads2.npz": "139927fafa6c824d5845791a7908a28f1da7d536ea91e244b219bbc8ca1ab02b",
+    "tetra-p0-n5/comparison-threads1.json": "3c52c4951f01d7d3328f37fbf5f058af6c1c98b039985aefaed7568e2131d7d7",
+    "tetra-p0-n5/native.json": "9e4deb6009645df9f58bfb906c7e15f5bb61203f2ffabb2540b6e2a213cb4dcf",
+    "tetra-p0-n5/candidate-section.json": "b4fdcbca11ad11c97d8dad8e9c37060218ec1b2b6cc1d3d1b0ece3e6516d68ca",
+    "tetra-p0-n5/replay-threads2.json": "adc75b443417b73260b5f4473d22b28d287c57bd1be0800a15cf29a84bfbd81f",
+    "tetra-p0-n5/comparison-threads2.json": "e4fe411a8181d3ae8fb36f4d6e518b58e11dce3b7c68a6b0c5c70c6ad38810ec",
+    "tetra-p0-n5/replay-threads1.json": "17afc77f716d396fdddbb48b85244f9dbcd7df6f2e8f142940e451f38c0c3dd4",
+    "tetra-p0-n5/candidate-section.npz": "397a7dd25278d4447aec72b2f4ebe56057fbb9c06bd8069536c6c9222edd7d13",
+    "cube-p0-n5/system.npz": "1ed378a22eb4b25c4dd5f86fea18e2c7a687bd489a8d5903cbab4d46bc2da6ad",
+    "cube-p0-n5/fields.npz": "968670a0f13693b7038bff9ce5ddd928d1f3bf522eb5157cb2b2b75ba5414fbb",
+    "cube-p0-n5/field-invariants-threads1.npz": "a7056387fe1a0e9d01f63960e932cd370e802a3138c4e680c4234182c3af38e4",
+    "cube-p0-n5/field-invariants-threads2.npz": "a7056387fe1a0e9d01f63960e932cd370e802a3138c4e680c4234182c3af38e4",
+    "cube-p0-n5/comparison-threads1.json": "81796e0e57440f28cfff07a71ef336b46ce0159ccb2423e0e1567a69f634d15f",
+    "cube-p0-n5/native.json": "1386227e458495364cf100a39b10e76f0807a2678ce199ea943b97c454f4d9be",
+    "cube-p0-n5/candidate-section.json": "aee10bab8fd441f35dad629a68d557c360f346fdccaee8e83fb20a1d4dc1a253",
+    "cube-p0-n5/replay-threads2.json": "d755982e379ecd9f0fe59c485351049cde4e18d9b391eed6595f3a1b42be185b",
+    "cube-p0-n5/comparison-threads2.json": "d4a4caa0b25d5928bb246a26db312bdf72c696d33e19e0270de6e0ea30c97f7f",
+    "cube-p0-n5/replay-threads1.json": "d4ed7d39c954dbd13d560546308c2a1c4393f43f49bd27ce4c1352664dde8ec1",
+    "cube-p0-n5/candidate-section.npz": "c2daddcf5f26226e962e8e12f76a5d69c832a36eaf5abbd9f9733d5059dfb7a7"
+  },
+  "owned_resource": {
+    "elapsed_seconds": 729.5229967255145,
+    "peak_owned_rss_bytes": 2440556544,
+    "rss_cap_bytes": 8589934592,
+    "deadline_seconds": 900.0,
+    "host_memory_floor_bytes": 34359738368,
+    "guard_reason": null,
+    "returncode": 0,
+    "owned_processes_remaining": [],
+    "changed_sources": [],
+    "main_core117_unchanged": true,
+    "workers": 1,
+    "native_threads_during_solves": 1,
+    "data_only_replay_threads": [
+      1,
+      2
+    ],
+    "host_exclusive": false,
+    "scope": "Complete owned process cost on shared host; no speedup claim"
+  },
+  "private_final_receipt_sha256": "5ca5001726767cf56ef34f9f8f0deb77d17ac223aca1e85a2ca3d2f28637a285",
+  "public_coefficient_archives": [
+    {
+      "case": "tetra-p0",
+      "resolution": 1,
+      "acquisition_uuid": "2ab0f277-7324-46aa-a17f-6cfa2046498d",
+      "archive": "tetra-p0-n1.npz",
+      "sha256": "a00d5665556aa34e8e128538318e998585ed77b36489f51c260fa2e4da833639"
+    },
+    {
+      "case": "tetra-p0",
+      "resolution": 2,
+      "acquisition_uuid": "43373046-a234-461a-bd25-526cad613c72",
+      "archive": "tetra-p0-n2.npz",
+      "sha256": "eb0f72827e1cc9f4a1cbf289e11c55c66ceb65c7e1207990243bc148eed26e03"
+    },
+    {
+      "case": "tetra-p0",
+      "resolution": 3,
+      "acquisition_uuid": "d8e3529e-09da-4657-a80b-254cd86ea7e0",
+      "archive": "tetra-p0-n3.npz",
+      "sha256": "1a07f982f649889eae032e79513ab89e26685c463f75825767808e272eb5b79b"
+    },
+    {
+      "case": "tetra-p0",
+      "resolution": 4,
+      "acquisition_uuid": "14df5bc2-31fd-4d73-a02a-15312214f12b",
+      "archive": "tetra-p0-n4.npz",
+      "sha256": "386cdc44ae70ca542062ddf4646ca491a734bb5cc225fd1af9026b62245a4945"
+    },
+    {
+      "case": "tetra-p0",
+      "resolution": 5,
+      "acquisition_uuid": "4903997e-f815-438f-8c36-1fb34916ec8b",
+      "archive": "tetra-p0-n5.npz",
+      "sha256": "79fa5a257e775c617d1734de637fdc416db698a0470fabb612f8c8bf7ca82c74"
+    },
+    {
+      "case": "cube-p0",
+      "resolution": 1,
+      "acquisition_uuid": "1614d049-09f3-4e55-8dc9-35e1a522403c",
+      "archive": "cube-p0-n1.npz",
+      "sha256": "016c377fec4eac76ec0b8e54793ee9bfa101cb3e8381017fca60c95969db42ff"
+    },
+    {
+      "case": "cube-p0",
+      "resolution": 2,
+      "acquisition_uuid": "73fb7f2b-ca2a-48c7-b371-c1e89443aff7",
+      "archive": "cube-p0-n2.npz",
+      "sha256": "9272d3d4f62b31ae48f7253f8b00d980365ce7993f88f705b0a6fdc9b8b1dcdb"
+    },
+    {
+      "case": "cube-p0",
+      "resolution": 3,
+      "acquisition_uuid": "5f02a270-fdb8-460f-8e0f-95390bd731b5",
+      "archive": "cube-p0-n3.npz",
+      "sha256": "c3f8bc11c7bc530d3f8692bd1d15b1f92e38a431ca8c431b0f534020abfe5e9b"
+    },
+    {
+      "case": "cube-p0",
+      "resolution": 4,
+      "acquisition_uuid": "a5edfe21-befa-484b-a6c6-ab27911c56c8",
+      "archive": "cube-p0-n4.npz",
+      "sha256": "141e406cfc15463f2381fc17e4a7919c1ce223f101b4900ee500c122cd57af37"
+    },
+    {
+      "case": "cube-p0",
+      "resolution": 5,
+      "acquisition_uuid": "634e451d-6f89-4fb4-890b-53a463779214",
+      "archive": "cube-p0-n5.npz",
+      "sha256": "e54807d81f72e59e6f2ab844a17482d5148eb13637f57eb3fbb60e41f39e0b3f"
+    }
+  ],
+  "sampled_n5_sections": {
+    "tetra": {
+      "schema": "mshho3d-actual-sampled-section-cache-v1",
+      "source_field_archive_sha256": "79fa5a257e775c617d1734de637fdc416db698a0470fabb612f8c8bf7ca82c74",
+      "source_field_manifest_sha256": "f83ead161184151bba0e22daffa352e178ba5e8e29174b5c148d479041fefce9",
+      "source_manifest_sha256": "503cfd56c6ea8a63132af7b112d97dc5dfb22a85d114fa31befe9e433a4d43de",
+      "reader_sha256": "9d10de440e311fe0d6786493f08402c11165d04fad60c28ce9c00f501909fd54",
+      "section_owner_sha256": "e49cb430ba2e6bd95f925db62dd5cffcbd19aecfdacdac63feba6f2447a2cc9b",
+      "basis_contract": "Producer archived actual cardinal tables and coefficients",
+      "coefficient_precision_bits": 64,
+      "bytes": 2936588,
+      "sidecar_sha256": "b4fdcbca11ad11c97d8dad8e9c37060218ec1b2b6cc1d3d1b0ece3e6516d68ca",
+      "archive": "tetra-p0-polynomial-fields.npz",
+      "sha256": "397a7dd25278d4447aec72b2f4ebe56057fbb9c06bd8069536c6c9222edd7d13",
+      "original_archive": "mshho3d-current/tetra-p0-n5.npz",
+      "original_sha256": "79fa5a257e775c617d1734de637fdc416db698a0470fabb612f8c8bf7ca82c74",
+      "resolution": 5,
+      "norm_order": 12,
+      "pressure_l2": 0.014372312150528114,
+      "flux_l2": 0.39845292574711544,
+      "acquired_norms_verified_in_native_whole_run": true
+    },
+    "cube": {
+      "schema": "mshho3d-actual-sampled-section-cache-v1",
+      "source_field_archive_sha256": "e54807d81f72e59e6f2ab844a17482d5148eb13637f57eb3fbb60e41f39e0b3f",
+      "source_field_manifest_sha256": "0be14119732ec178bd7a23dc2d915aaa83e07fbab39646b5b512ca17dd2eaf1e",
+      "source_manifest_sha256": "503cfd56c6ea8a63132af7b112d97dc5dfb22a85d114fa31befe9e433a4d43de",
+      "reader_sha256": "9d10de440e311fe0d6786493f08402c11165d04fad60c28ce9c00f501909fd54",
+      "section_owner_sha256": "e49cb430ba2e6bd95f925db62dd5cffcbd19aecfdacdac63feba6f2447a2cc9b",
+      "basis_contract": "Producer archived actual cardinal tables and coefficients",
+      "coefficient_precision_bits": 64,
+      "bytes": 1111983,
+      "sidecar_sha256": "aee10bab8fd441f35dad629a68d557c360f346fdccaee8e83fb20a1d4dc1a253",
+      "archive": "cube-p0-polynomial-fields.npz",
+      "sha256": "c2daddcf5f26226e962e8e12f76a5d69c832a36eaf5abbd9f9733d5059dfb7a7",
+      "original_archive": "mshho3d-current/cube-p0-n5.npz",
+      "original_sha256": "e54807d81f72e59e6f2ab844a17482d5148eb13637f57eb3fbb60e41f39e0b3f",
+      "resolution": 5,
+      "norm_order": 12,
+      "pressure_l2": 0.022854522343704855,
+      "flux_l2": 0.4907766534188595,
+      "acquired_norms_verified_in_native_whole_run": true
+    }
+  },
+  "nonhomogeneous_and_portable_bitwise_controls": {
+    "schema": "mshho3d-native-field-bitwise-and-nonhomogeneous-closure-v1",
+    "complete": true,
+    "field_observer_array_replays": 20,
+    "bitwise_portable_observer_arrays_threads1_2": true,
+    "whole_final_receipt_sha256": "5ca5001726767cf56ef34f9f8f0deb77d17ac223aca1e85a2ca3d2f28637a285",
+    "n2_analytical_controls": {
+      "complete": true,
+      "observations": [
+        {
+          "case": "tetra",
+          "n": 2,
+          "native_original": {
+            "relative": 1.0580050339766606e-14,
+            "residual_norm": 4.0206148900794284e-15,
+            "physical_rhs_norm": 0.38001850283900657
+          },
+          "physical_analytical_norms": {
+            "10": {
+              "pressure_l2_norm": 0.5163977794943239,
+              "raw_gradient_l2_norm": 1.0000000000000073,
+              "physical_darcy_flux_l2_norm": 1.0000000000000073,
+              "full_broken_h1_norm": 1.1254628677422829,
+              "pressure_l2_error": 2.2602556939629218e-15,
+              "raw_gradient_l2_error": 1.999252747234103e-14,
+              "physical_darcy_flux_l2_error": 1.999252747234103e-14
+            },
+            "12": {
+              "pressure_l2_norm": 0.5163977794943239,
+              "raw_gradient_l2_norm": 1.0000000000000075,
+              "physical_darcy_flux_l2_norm": 1.0000000000000075,
+              "full_broken_h1_norm": 1.1254628677422829,
+              "pressure_l2_error": 2.2572424924060738e-15,
+              "raw_gradient_l2_error": 1.9994406078054288e-14,
+              "physical_darcy_flux_l2_error": 1.9994406078054288e-14
+            }
+          },
+          "data_only_threads1_2_bitwise": true
+        },
+        {
+          "case": "cube",
+          "n": 2,
+          "native_original": {
+            "relative": 3.0842009121861013e-15,
+            "residual_norm": 2.161234212573995e-15,
+            "physical_rhs_norm": 0.7007436526053351
+          },
+          "physical_analytical_norms": {
+            "10": {
+              "pressure_l2_norm": 0.5163977794943213,
+              "raw_gradient_l2_norm": 0.9999999999999954,
+              "physical_darcy_flux_l2_norm": 0.9999999999999954,
+              "full_broken_h1_norm": 1.125462867742271,
+              "pressure_l2_error": 1.0531436539046553e-15,
+              "raw_gradient_l2_error": 7.616211711719768e-15,
+              "physical_darcy_flux_l2_error": 7.616211711719768e-15
+            },
+            "12": {
+              "pressure_l2_norm": 0.5163977794943214,
+              "raw_gradient_l2_norm": 0.9999999999999956,
+              "physical_darcy_flux_l2_norm": 0.9999999999999956,
+              "full_broken_h1_norm": 1.1254628677422711,
+              "pressure_l2_error": 1.0557072208054109e-15,
+              "raw_gradient_l2_error": 7.610662672108175e-15,
+              "physical_darcy_flux_l2_error": 7.610662672108175e-15
+            }
+          },
+          "data_only_threads1_2_bitwise": true
+        }
+      ]
+    },
+    "n2_resource_receipt_sha256": "c51e1753a63c93da2e7a253132b051519a08413a60d6330ee9dde26a104c10c3",
+    "private_receipt_sha256": "72dce5ea8eaa67708d8094645bb00ae218da980ad712e6e486d3c7b8cb1065bb",
+    "problem": "p=sum_i x_i*(1-x_i); f=6; absolute nonzero Dirichlet boundary moments; K=I; P2/P0; n2; assemblyq9/normq10q12",
+    "native_archive_sha256": {
+      "cube/executed-sources/private-comparison/mshho3d-basix/acquire.py": "81215cc1dd89374a74e8667810cd529ad8df1e3767818640f26ad34dc992fb3d",
+      "cube/executed-sources/private-comparison/mshho3d-basix/compare_fields.py": "5551b84babaa6cbdfbfcc460305bf0524e8b10c839488955b9af27a5cc1cae83",
+      "cube/executed-sources/private-comparison/mshho3d-basix/field_invariants.py": "0f78303721a6b427404e34e1413f883416db16066d9f90ea98aa2d4dca6d625a",
+      "cube/executed-sources/private-comparison/mshho3d-basix/native_owner.py": "968bb50e9548af2272e931295f85e04caaaa03027ad798d842c579eb8191b3fd",
+      "cube/executed-sources/private-comparison/mshho3d-basix/read_native.py": "9d89087d73aab0196463ae332a507eb8edc5e7372dd766472395131c14605b47",
+      "cube/executed-sources/private-comparison/mshho3d-basix/run_whole.py": "092bec037e272f20667bb82562863cceb78e334fc3234ea4ca4136faef65150b",
+      "cube/executed-sources/private-comparison/mshho3d-basix/test_native_owner.py": "e827db3594cf3da549d77881399f51e6aad84ebda8d4fd32691b44dfe01f67c8",
+      "cube/executed-sources/examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+      "cube/executed-sources/pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57",
+      "cube/executed-sources/src/pymhm/__init__.py": "a3273ccef37cce0b25b1e1cbf9faf150dfaaf715aafc6bd87e6d4809b431898c",
+      "cube/executed-sources/src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+      "cube/executed-sources/src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+      "cube/executed-sources/src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+      "cube/executed-sources/src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+      "cube/executed-sources/src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+      "cube/executed-sources/src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+      "cube/executed-sources/src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+      "cube/executed-sources/src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+      "cube/executed-sources/src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+      "cube/executed-sources/src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+      "cube/executed-sources/src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+      "cube/executed-sources/src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+      "cube/executed-sources/src/pymhm/darcy.py": "945eb63777daa94f02cd89f77ec6299cf1fe8722b3d98c027c70b7d318e097fc",
+      "cube/executed-sources/src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+      "cube/executed-sources/src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+      "cube/executed-sources/src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+      "cube/executed-sources/src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+      "cube/executed-sources/src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+      "cube/executed-sources/src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+      "cube/executed-sources/src/pymhm/darcy_transport.py": "3f9331d82dae0d16b30c53085981646942574a552601ec34631ba3b00eab5b7e",
+      "cube/executed-sources/src/pymhm/darcy_velocity.py": "83c0dc577fe731a4316962b389ed286e711fcf9264836094188206d6eb276558",
+      "cube/executed-sources/src/pymhm/distributed.py": "c6cf5f26bd9033a72328d18f5d099ab0d9b867f92a6babe472c2035ff1abd7ae",
+      "cube/executed-sources/src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+      "cube/executed-sources/src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+      "cube/executed-sources/src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+      "cube/executed-sources/src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+      "cube/executed-sources/src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+      "cube/executed-sources/src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+      "cube/executed-sources/src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+      "cube/executed-sources/src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+      "cube/executed-sources/src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+      "cube/executed-sources/src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+      "cube/executed-sources/src/pymhm/elastodynamics.py": "21d7d7327f85b61399e2166f4babdd0098d220031a3cc0f507014655fd539f6c",
+      "cube/executed-sources/src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+      "cube/executed-sources/src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+      "cube/executed-sources/src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+      "cube/executed-sources/src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+      "cube/executed-sources/src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+      "cube/executed-sources/src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+      "cube/executed-sources/src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+      "cube/executed-sources/src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+      "cube/executed-sources/src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+      "cube/executed-sources/src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+      "cube/executed-sources/src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+      "cube/executed-sources/src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+      "cube/executed-sources/src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+      "cube/executed-sources/src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+      "cube/executed-sources/src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+      "cube/executed-sources/src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+      "cube/executed-sources/src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+      "cube/executed-sources/src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+      "cube/executed-sources/src/pymhm/helmholtz.py": "603a3e5eccf84830f8819657d97d3f7f22d856f97f21482e992f3a64fb67c1b4",
+      "cube/executed-sources/src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+      "cube/executed-sources/src/pymhm/helmholtz_spaces.py": "a0805d5ea9a95636062df0917dba98cfad8bc7ec298eba55c5fc1e6320a44bfb",
+      "cube/executed-sources/src/pymhm/hybrid.py": "e4ca37cd8fa05dcb505d2cc7d36c975bbd25ac9ee01564bc86dd70d1d042dbb3",
+      "cube/executed-sources/src/pymhm/hybrid_refinement.py": "b3ac92f5403b0fbc9a509e04626b7981cbd9767654ea149a894f1c82b74ecc16",
+      "cube/executed-sources/src/pymhm/lagrange.py": "db5552571ee459630678dad97a887d4c49d1a2eb700cd2847b3f0a5f4ee8a2b7",
+      "cube/executed-sources/src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+      "cube/executed-sources/src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+      "cube/executed-sources/src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+      "cube/executed-sources/src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+      "cube/executed-sources/src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+      "cube/executed-sources/src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+      "cube/executed-sources/src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+      "cube/executed-sources/src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+      "cube/executed-sources/src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+      "cube/executed-sources/src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+      "cube/executed-sources/src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+      "cube/executed-sources/src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+      "cube/executed-sources/src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+      "cube/executed-sources/src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+      "cube/executed-sources/src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+      "cube/executed-sources/src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+      "cube/executed-sources/src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+      "cube/executed-sources/src/pymhm/mshho.py": "557b02892d7b93d2560deff999ef543bc7b95e762024139b6c8968d6b4ede0ee",
+      "cube/executed-sources/src/pymhm/mshho3d.py": "522668e3fa23cd7661c958151caacdcc9e9a0e013c6f44e2974f5745dd3a4089",
+      "cube/executed-sources/src/pymhm/nested.py": "4414c4fba66266017d97b5a75eda9a24ad90393647bd75d1245b5f4f93bc0049",
+      "cube/executed-sources/src/pymhm/offline.py": "7b40681863239cf07f5df220ad893f044d26314c9a5bb8563fff587ef3df4932",
+      "cube/executed-sources/src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+      "cube/executed-sources/src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+      "cube/executed-sources/src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+      "cube/executed-sources/src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+      "cube/executed-sources/src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+      "cube/executed-sources/src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+      "cube/executed-sources/src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+      "cube/executed-sources/src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+      "cube/executed-sources/src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+      "cube/executed-sources/src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+      "cube/executed-sources/src/pymhm/rad.py": "d1f3d5c948bcc9370333050e8dfc1b15d5372ef745d51f04d8f700065d40c1e7",
+      "cube/executed-sources/src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+      "cube/executed-sources/src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+      "cube/executed-sources/src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+      "cube/executed-sources/src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+      "cube/executed-sources/src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+      "cube/executed-sources/src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+      "cube/executed-sources/src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+      "cube/executed-sources/src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+      "cube/executed-sources/src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+      "cube/executed-sources/src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+      "cube/executed-sources/src/pymhm/scalar_boundary.py": "5c2d4970ef3e032f93caee5f9b36ce36f535f65a924ef1e666f0e4aa5f4b69b3",
+      "cube/executed-sources/src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+      "cube/executed-sources/src/pymhm/scalar_transient.py": "c68b44eec515d94c114ba555e09d01705754ce2a2dda5199c753dc6b8f7f0ef5",
+      "cube/executed-sources/src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+      "cube/executed-sources/src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+      "cube/executed-sources/src/pymhm/solvers.py": "2d360c2f7d71d8c04caa1966125291849b45daa5a886f5030772981e1cdaa751",
+      "cube/executed-sources/src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+      "cube/executed-sources/src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+      "cube/executed-sources/src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+      "cube/executed-sources/src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+      "cube/executed-sources/src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+      "cube/executed-sources/src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+      "cube/executed-sources/src/pymhm/triangle_fields.py": "60e456d358ec5615d98375d6588e6ac88de972304d2fd3ac505f1ca998f67f4c",
+      "cube/executed-sources/src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+      "cube/executed-sources/src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+      "cube/executed-sources/src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+      "cube/executed-sources/src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94",
+      "cube/fields.npz": "f7792ffe46b1df7edf54d23602fd99038430dba49605faf787af96d2f0b88f0a",
+      "cube/input-geometry/cube-p0-n2.json": "46606484ba5eb01ace457e751f770913d75b845bd45a943db3a0431e446cde89",
+      "cube/input-geometry/cube-p0-n2.npz": "9272d3d4f62b31ae48f7253f8b00d980365ce7993f88f705b0a6fdc9b8b1dcdb",
+      "cube/native.json": "a4a4155d844a0659a4e6bde2aabbc7863dda14674147a4b5c5695fe0ee870804",
+      "cube/replay-threads1.json": "ea7de7a208f2f37abdc2fcc29dd71923c08f57b10e674d2357a765b7609deefa",
+      "cube/replay-threads2.json": "c0b79ac94e6d6302272a960a0536fa07ff67b4b8c0b0a4b329e6ab986027770d",
+      "cube/system.npz": "75b415007d17d802b7d83b27c0163ff852a005589135adef15830693c0259e27",
+      "tetra/executed-sources/private-comparison/mshho3d-basix/acquire.py": "81215cc1dd89374a74e8667810cd529ad8df1e3767818640f26ad34dc992fb3d",
+      "tetra/executed-sources/private-comparison/mshho3d-basix/compare_fields.py": "5551b84babaa6cbdfbfcc460305bf0524e8b10c839488955b9af27a5cc1cae83",
+      "tetra/executed-sources/private-comparison/mshho3d-basix/field_invariants.py": "0f78303721a6b427404e34e1413f883416db16066d9f90ea98aa2d4dca6d625a",
+      "tetra/executed-sources/private-comparison/mshho3d-basix/native_owner.py": "968bb50e9548af2272e931295f85e04caaaa03027ad798d842c579eb8191b3fd",
+      "tetra/executed-sources/private-comparison/mshho3d-basix/read_native.py": "9d89087d73aab0196463ae332a507eb8edc5e7372dd766472395131c14605b47",
+      "tetra/executed-sources/private-comparison/mshho3d-basix/run_whole.py": "092bec037e272f20667bb82562863cceb78e334fc3234ea4ca4136faef65150b",
+      "tetra/executed-sources/private-comparison/mshho3d-basix/test_native_owner.py": "e827db3594cf3da549d77881399f51e6aad84ebda8d4fd32691b44dfe01f67c8",
+      "tetra/executed-sources/examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+      "tetra/executed-sources/pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57",
+      "tetra/executed-sources/src/pymhm/__init__.py": "a3273ccef37cce0b25b1e1cbf9faf150dfaaf715aafc6bd87e6d4809b431898c",
+      "tetra/executed-sources/src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+      "tetra/executed-sources/src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+      "tetra/executed-sources/src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+      "tetra/executed-sources/src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+      "tetra/executed-sources/src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+      "tetra/executed-sources/src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+      "tetra/executed-sources/src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+      "tetra/executed-sources/src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+      "tetra/executed-sources/src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+      "tetra/executed-sources/src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+      "tetra/executed-sources/src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+      "tetra/executed-sources/src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+      "tetra/executed-sources/src/pymhm/darcy.py": "945eb63777daa94f02cd89f77ec6299cf1fe8722b3d98c027c70b7d318e097fc",
+      "tetra/executed-sources/src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+      "tetra/executed-sources/src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+      "tetra/executed-sources/src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+      "tetra/executed-sources/src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+      "tetra/executed-sources/src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+      "tetra/executed-sources/src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+      "tetra/executed-sources/src/pymhm/darcy_transport.py": "3f9331d82dae0d16b30c53085981646942574a552601ec34631ba3b00eab5b7e",
+      "tetra/executed-sources/src/pymhm/darcy_velocity.py": "83c0dc577fe731a4316962b389ed286e711fcf9264836094188206d6eb276558",
+      "tetra/executed-sources/src/pymhm/distributed.py": "c6cf5f26bd9033a72328d18f5d099ab0d9b867f92a6babe472c2035ff1abd7ae",
+      "tetra/executed-sources/src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+      "tetra/executed-sources/src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+      "tetra/executed-sources/src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+      "tetra/executed-sources/src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+      "tetra/executed-sources/src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+      "tetra/executed-sources/src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+      "tetra/executed-sources/src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+      "tetra/executed-sources/src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+      "tetra/executed-sources/src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+      "tetra/executed-sources/src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+      "tetra/executed-sources/src/pymhm/elastodynamics.py": "21d7d7327f85b61399e2166f4babdd0098d220031a3cc0f507014655fd539f6c",
+      "tetra/executed-sources/src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+      "tetra/executed-sources/src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+      "tetra/executed-sources/src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+      "tetra/executed-sources/src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+      "tetra/executed-sources/src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+      "tetra/executed-sources/src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+      "tetra/executed-sources/src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+      "tetra/executed-sources/src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+      "tetra/executed-sources/src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+      "tetra/executed-sources/src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+      "tetra/executed-sources/src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+      "tetra/executed-sources/src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+      "tetra/executed-sources/src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+      "tetra/executed-sources/src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+      "tetra/executed-sources/src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+      "tetra/executed-sources/src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+      "tetra/executed-sources/src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+      "tetra/executed-sources/src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+      "tetra/executed-sources/src/pymhm/helmholtz.py": "603a3e5eccf84830f8819657d97d3f7f22d856f97f21482e992f3a64fb67c1b4",
+      "tetra/executed-sources/src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+      "tetra/executed-sources/src/pymhm/helmholtz_spaces.py": "a0805d5ea9a95636062df0917dba98cfad8bc7ec298eba55c5fc1e6320a44bfb",
+      "tetra/executed-sources/src/pymhm/hybrid.py": "e4ca37cd8fa05dcb505d2cc7d36c975bbd25ac9ee01564bc86dd70d1d042dbb3",
+      "tetra/executed-sources/src/pymhm/hybrid_refinement.py": "b3ac92f5403b0fbc9a509e04626b7981cbd9767654ea149a894f1c82b74ecc16",
+      "tetra/executed-sources/src/pymhm/lagrange.py": "db5552571ee459630678dad97a887d4c49d1a2eb700cd2847b3f0a5f4ee8a2b7",
+      "tetra/executed-sources/src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+      "tetra/executed-sources/src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+      "tetra/executed-sources/src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+      "tetra/executed-sources/src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+      "tetra/executed-sources/src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+      "tetra/executed-sources/src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+      "tetra/executed-sources/src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+      "tetra/executed-sources/src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+      "tetra/executed-sources/src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+      "tetra/executed-sources/src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+      "tetra/executed-sources/src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+      "tetra/executed-sources/src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+      "tetra/executed-sources/src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+      "tetra/executed-sources/src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+      "tetra/executed-sources/src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+      "tetra/executed-sources/src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+      "tetra/executed-sources/src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+      "tetra/executed-sources/src/pymhm/mshho.py": "557b02892d7b93d2560deff999ef543bc7b95e762024139b6c8968d6b4ede0ee",
+      "tetra/executed-sources/src/pymhm/mshho3d.py": "522668e3fa23cd7661c958151caacdcc9e9a0e013c6f44e2974f5745dd3a4089",
+      "tetra/executed-sources/src/pymhm/nested.py": "4414c4fba66266017d97b5a75eda9a24ad90393647bd75d1245b5f4f93bc0049",
+      "tetra/executed-sources/src/pymhm/offline.py": "7b40681863239cf07f5df220ad893f044d26314c9a5bb8563fff587ef3df4932",
+      "tetra/executed-sources/src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+      "tetra/executed-sources/src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+      "tetra/executed-sources/src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+      "tetra/executed-sources/src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+      "tetra/executed-sources/src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+      "tetra/executed-sources/src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+      "tetra/executed-sources/src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+      "tetra/executed-sources/src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+      "tetra/executed-sources/src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+      "tetra/executed-sources/src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+      "tetra/executed-sources/src/pymhm/rad.py": "d1f3d5c948bcc9370333050e8dfc1b15d5372ef745d51f04d8f700065d40c1e7",
+      "tetra/executed-sources/src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+      "tetra/executed-sources/src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+      "tetra/executed-sources/src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+      "tetra/executed-sources/src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+      "tetra/executed-sources/src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+      "tetra/executed-sources/src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+      "tetra/executed-sources/src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+      "tetra/executed-sources/src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+      "tetra/executed-sources/src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+      "tetra/executed-sources/src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+      "tetra/executed-sources/src/pymhm/scalar_boundary.py": "5c2d4970ef3e032f93caee5f9b36ce36f535f65a924ef1e666f0e4aa5f4b69b3",
+      "tetra/executed-sources/src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+      "tetra/executed-sources/src/pymhm/scalar_transient.py": "c68b44eec515d94c114ba555e09d01705754ce2a2dda5199c753dc6b8f7f0ef5",
+      "tetra/executed-sources/src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+      "tetra/executed-sources/src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+      "tetra/executed-sources/src/pymhm/solvers.py": "2d360c2f7d71d8c04caa1966125291849b45daa5a886f5030772981e1cdaa751",
+      "tetra/executed-sources/src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+      "tetra/executed-sources/src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+      "tetra/executed-sources/src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+      "tetra/executed-sources/src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+      "tetra/executed-sources/src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+      "tetra/executed-sources/src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+      "tetra/executed-sources/src/pymhm/triangle_fields.py": "60e456d358ec5615d98375d6588e6ac88de972304d2fd3ac505f1ca998f67f4c",
+      "tetra/executed-sources/src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+      "tetra/executed-sources/src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+      "tetra/executed-sources/src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+      "tetra/executed-sources/src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94",
+      "tetra/fields.npz": "fc912d23aabdabbaaf2210c8cd55f52f367f4cea08794745ecea5db5a1fd5d31",
+      "tetra/input-geometry/tetra-p0-n2.json": "2e7337baa153ad395da1662518db56e956e06fe183bf0d36888ea9f71eab7b78",
+      "tetra/input-geometry/tetra-p0-n2.npz": "eb0f72827e1cc9f4a1cbf289e11c55c66ceb65c7e1207990243bc148eed26e03",
+      "tetra/native.json": "756b80e95d34067df8099e861cd3cdfdcd59c4de25bc727b3e4c56cd8433b302",
+      "tetra/replay-threads1.json": "22a89987c1c85c436c3602fa5e3f72135d1581be0fadf0eb30eac30a9dbbf0ec",
+      "tetra/replay-threads2.json": "b0555ea60386b450ab3cc81a4915397813199433c9f6fa8e500216543a2b138a",
+      "tetra/system.npz": "4bd52004dcabcdc61fdad6f0e713a2dadfdaa268b9289c4aa4a7f7e9a26d0888",
+      "verification.json": "05a5295dc8af2ae4a0e3bbe9f21d4621ffcd735107ed8f57097f9628bb4576c7"
+    }
+  },
+  "publication_metadata": {
+    "original_publication_record_sha256": "b07bf1d23a35b77b15ee984da325f321a74548f981e7325a8edf4e9cd8e4bcb1",
+    "private_identifiers": "Neutral aliases for private source/driver identifiers; digest values are unchanged",
+    "numerical_values_changed": false,
+    "pde_solves": 0
+  }
+}

@@ -1,6 +1,7 @@
 """Exact geometry and source integrals for the square-obstacle example."""
 
 import importlib
+from math import fsum
 from pathlib import Path
 
 import numpy as np
@@ -22,11 +23,13 @@ def test_square_material_and_well_interfaces_are_fitted(monkeypatch, refinement)
     lower, upper = problem.OBSTACLE_LOWER, problem.OBSTACLE_UPPER
     assert_allclose(lower + upper, 1.0, rtol=0, atol=2e-16)
     assert_allclose((upper - lower) ** 2, 0.25, rtol=0, atol=2e-16)
-    assert_allclose(areas.sum(), 1.0, rtol=0, atol=5e-16)
-    assert_allclose(areas @ (problem.coefficient(centers) == 1e-4), 0.25, atol=3e-16)
+    # These moments measure represented triangle geometry. Accurate accumulation
+    # preserves that convention independently of the native BLAS reduction order.
+    assert_allclose(fsum(areas), 1.0, rtol=0, atol=5e-16)
+    assert_allclose(fsum(areas[problem.coefficient(centers) == 1e-4]), 0.25, atol=3e-16)
     load = problem.source(centers)
-    assert_allclose(areas @ np.maximum(load, 0), 1.0, rtol=0, atol=5e-16)
-    assert_allclose(areas @ np.minimum(load, 0), -1.0, rtol=0, atol=5e-16)
+    assert_allclose(fsum(areas * np.maximum(load, 0)), 1.0, rtol=0, atol=5e-16)
+    assert_allclose(fsum(areas * np.minimum(load, 0)), -1.0, rtol=0, atol=5e-16)
     for direction in (0, 1):
         for interface in (0.1, lower, upper, 0.9):
             crosses = (vertices[..., direction].min(axis=1) < interface - 1e-14) & (

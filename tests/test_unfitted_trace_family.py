@@ -10,6 +10,7 @@ from examples.unfitted_trace_family import ScalarTraceFamily, _Cell, nested_trac
 from pymhm.darcy import solve_darcy
 from pymhm.mesh import FaceSpace, TriangleMesh
 from pymhm.reservoir import CartesianCellField
+from pymhm.solvers import LinearSolveError
 
 
 def _spawn_source(points):
@@ -72,6 +73,85 @@ def test_spawn_worker_count_is_validated_before_assembly():
         )
 
 
+def test_selected_gauss_count_integrates_independent_high_degree_load_moments():
+    """A declared q13 reaches both volume and boundary data, beyond the P2 floor."""
+    mesh = TriangleMesh.unit_square(1)
+
+    def high_degree(points):
+        """Use x²⁰, whose unit-square and horizontal-edge integrals are 1/21."""
+        return points[:, 0] ** 20
+
+    options = dict(trace_degree=2, segments=1, local_degree=2, local_refinement=1)
+    exact = ScalarTraceFamily.prepare(mesh, **options, source=high_degree, quadrature_order=13)
+    underintegrated = ScalarTraceFamily.prepare(
+        mesh, **options, source=high_degree, quadrature_order=1
+    )
+    assert exact.quadrature_order == 13
+    assert underintegrated.quadrature_order == 4
+    assert_allclose(sum(cell.load.sum() for cell in exact.cells), 1 / 21, rtol=2e-14)
+    assert abs(sum(cell.load.sum() for cell in underintegrated.cells) - 1 / 21) > 1e-6
+
+    boundary = ScalarTraceFamily.prepare(
+        mesh, **options, dirichlet=high_degree, quadrature_order=13
+    )
+    low_boundary = ScalarTraceFamily.prepare(
+        mesh, **options, dirichlet=high_degree, quadrature_order=1
+    )
+    horizontal_moments = []
+    for face in mesh.boundary_faces:
+        vertices = mesh.points[mesh.faces[face]]
+        if vertices[0, 1] == vertices[1, 1]:
+            dof = boundary.skeleton.offsets[face]
+            assert_allclose(-boundary.load[dof], 1 / 21, rtol=2e-14)
+            horizontal_moments.append(-low_boundary.load[dof])
+    assert len(horizontal_moments) == 2
+    assert np.all(np.abs(np.asarray(horizontal_moments) - 1 / 21) > 1e-6)
+
+
+@pytest.mark.parametrize("quadrature_order", [11, 13])
+@pytest.mark.parametrize("threads", [1, 2])
+def test_exact_cyclic_trace_kernel_is_excluded_and_refinement_restores_injectivity(
+    quadrature_order, threads
+):
+    """Keep an exact P8/P3 trace null mode distinct from volume integration accuracy.
+
+    The integer pattern contains shifted-Legendre coefficients on two equal
+    segments per face. Scaling by inverse physical face length gives the same
+    cyclic endpoint moments on each edge. Its global orientation is the executed
+    FaceSpace orientation; the coupling tests actual P8 nodal pressure traces.
+    Independent rational integration gives zero against every nodal trace.
+    """
+    from threadpoolctl import threadpool_limits
+
+    mesh = TriangleMesh.unit_square(1)
+    options = dict(
+        trace_degree=3,
+        segments=2,
+        local_degree=8,
+        source=1.0,
+        quadrature_order=quadrature_order,
+    )
+    with threadpool_limits(threads):
+        excluded = ScalarTraceFamily.prepare(mesh, **options, local_refinement=1)
+        pattern = np.array([27.0, 129.0, 125.0, 231.0, -27.0, 129.0, -125.0, 231.0])
+        multiplier = np.concatenate([pattern / length for length in mesh.lengths])
+        multiplier /= np.linalg.norm(multiplier)
+        for cell in excluded.cells:
+            assert_allclose(cell.coupling @ multiplier[cell.trace_dofs], 0, atol=2e-14)
+            assert np.linalg.matrix_rank(cell.coupling.toarray()) == len(cell.trace_dofs) - 1
+        with pytest.raises(LinearSolveError, match="insufficient numerical rank"):
+            excluded.solve(3, 2)
+
+        resolved = ScalarTraceFamily.prepare(mesh, **options, local_refinement=2)
+        for cell in resolved.cells:
+            assert np.linalg.matrix_rank(cell.coupling.toarray()) == len(cell.trace_dofs)
+            assert np.linalg.norm(cell.coupling @ multiplier[cell.trace_dofs]) > 1e-3
+        result, diagnostics = resolved.solve(3, 2)
+        assert result.quadrature_order == quadrature_order
+        assert diagnostics["original_trace_residual"] < 1e-10
+        assert diagnostics["original_local_residual_max"] < 1e-10
+
+
 def test_piecewise_legendre_injection_preserves_every_resolved_jump():
     """Compare piecewise polynomials away from breaks with nonuniform segment lengths."""
     fine = FaceSpace((0, 0.1, 0.3, 0.6, 1), (3, 3, 4, 3))
@@ -95,8 +175,9 @@ def test_piecewise_legendre_injection_preserves_every_resolved_jump():
 
 @pytest.mark.parametrize("heterogeneous", [False, True])
 @pytest.mark.parametrize("boundary_scale", [0.0, 1.0])
+@pytest.mark.parametrize("quadrature_order", [1, 6, 13])
 def test_nested_schur_fields_and_constants_equal_independent_direct_solves(
-    heterogeneous, boundary_scale
+    heterogeneous, boundary_scale, quadrature_order
 ):
     """Keep local matrices, sources and modes while varying both skeletal resolutions."""
     mesh = TriangleMesh.unit_square(1)
@@ -121,8 +202,9 @@ def test_nested_schur_fields_and_constants_equal_independent_direct_solves(
         permeability=material,
         source=source,
         dirichlet=dirichlet,
-        quadrature_order=6,
+        quadrature_order=quadrature_order,
     )
+    assert family.quadrature_order == max(quadrature_order, 5)
     owners = [id(cell.matrix) for cell in family.cells]
     for degree in range(3):
         for segments in (1, 2):
@@ -135,8 +217,9 @@ def test_nested_schur_fields_and_constants_equal_independent_direct_solves(
                 permeability=material,
                 source=source,
                 dirichlet=dirichlet,
-                quadrature_order=6,
+                quadrature_order=quadrature_order,
             )
+            assert result.quadrature_order == direct.quadrature_order == family.quadrature_order
             assert [id(cell.matrix) for cell in family.cells] == owners
             assert_allclose(result.hybrid.trace, direct.hybrid.trace, rtol=1e-11, atol=1e-12)
             for field, expected in zip(result.pressure, direct.pressure, strict=True):

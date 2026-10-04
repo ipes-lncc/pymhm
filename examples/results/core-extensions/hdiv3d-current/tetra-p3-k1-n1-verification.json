@@ -1,0 +1,119 @@
+{
+  "case": "tetra-p3-k1",
+  "resolution": 1,
+  "macro_cells": 6,
+  "fine_cells": 6,
+  "pressure_degree": 3,
+  "normal_degree": 1,
+  "trace_degree": 1,
+  "local_refinement": 1,
+  "assembly_order": 12,
+  "error_quadrature": [
+    12,
+    13
+  ],
+  "error_quadrature_absolute_change": 7.311484750971431e-11,
+  "divergence_error_quadrature_absolute_change": 1.2855616571272321e-09,
+  "norms": {
+    "quadrature_12": {
+      "pressure_l2": 0.12853712930401923,
+      "flux_l2": 0.9338286924823705,
+      "divergence_l2": 1.5715853004770448
+    },
+    "quadrature_13": {
+      "pressure_l2": 0.1285371293219478,
+      "flux_l2": 0.9338286924092557,
+      "divergence_l2": 1.5715853017626065
+    }
+  },
+  "pressure_l2": 0.1285371293219478,
+  "flux_l2": 0.9338286924092557,
+  "divergence_l2": 1.5715853017626065,
+  "original_physical_checks": {
+    "accepted": true,
+    "criterion": 1e-10,
+    "maximum_physical_block_backward_error": 1.966271522237896e-15,
+    "all_local_physical_rows_relative_to_source": 1.0064760349150619e-14,
+    "compact_original_relative_residual": 4.761720668601414e-15,
+    "full_uncondensed_global_saddle_executed": true,
+    "original_full_saddle_relative_to_physical_rhs": 1.1180875650932471e-14,
+    "native_whole_field_agreement_verified": false,
+    "rows": [
+      {
+        "macro": 0,
+        "physical_block_backward_errors": [
+          1.4040177141184648e-16,
+          1.043922352365443e-15,
+          1.966271522237896e-15
+        ],
+        "physical_pressure_integral": 0.053609118925271815,
+        "coarse_constant_pressure_amplitude": 0.3216547135516293,
+        "physical_pressure_integral_minus_retained_pairing": 3.973228267662582e-16
+      },
+      {
+        "macro": 1,
+        "physical_block_backward_errors": [
+          9.37154789143756e-17,
+          7.1666247419288095e-16,
+          4.355355791570245e-16
+        ],
+        "physical_pressure_integral": 0.05360911892527182,
+        "coarse_constant_pressure_amplitude": 0.32165471355162756,
+        "physical_pressure_integral_minus_retained_pairing": 7.198865256078518e-16
+      },
+      {
+        "macro": 2,
+        "physical_block_backward_errors": [
+          1.3422816913285954e-16,
+          4.588322865147127e-16,
+          4.486598645217747e-16
+        ],
+        "physical_pressure_integral": 0.05360911892527138,
+        "coarse_constant_pressure_amplitude": 0.3216547135516268,
+        "physical_pressure_integral_minus_retained_pairing": 4.008126025089459e-16
+      },
+      {
+        "macro": 3,
+        "physical_block_backward_errors": [
+          1.664806625023042e-16,
+          4.2568734184492557e-16,
+          6.680979403544416e-16
+        ],
+        "physical_pressure_integral": 0.05360911892527136,
+        "coarse_constant_pressure_amplitude": 0.32165471355162517,
+        "physical_pressure_integral_minus_retained_pairing": 6.229961208373269e-16
+      },
+      {
+        "macro": 4,
+        "physical_block_backward_errors": [
+          1.6991535611118506e-16,
+          2.8281236035225644e-16,
+          6.103194198148155e-16
+        ],
+        "physical_pressure_integral": 0.053609118925271336,
+        "coarse_constant_pressure_amplitude": 0.32165471355163033,
+        "physical_pressure_integral_minus_retained_pairing": -2.575352854149865e-16
+      },
+      {
+        "macro": 5,
+        "physical_block_backward_errors": [
+          2.0774977186146471e-16,
+          5.666114760202277e-16,
+          2.352154134769706e-16
+        ],
+        "physical_pressure_integral": 0.053609118925270836,
+        "coarse_constant_pressure_amplitude": 0.32165471355163,
+        "physical_pressure_integral_minus_retained_pairing": -6.756612413658103e-16
+      }
+    ]
+  },
+  "orientation_checks": {
+    "maximum_canonical_normal_moment_defect": 1.0769454526631861e-13
+  },
+  "archive": "tetra-p3-k1-n1.npz",
+  "sha256": "9dec7528ded765f9f10a7f7b660dacb08517746d567266e1dffb9edc43bfef8d",
+  "acquisition_uuid": "c93636c1-4a94-43f7-999b-a2faf04b6f45",
+  "finite_case_accepted": true,
+  "native_whole_field_agreement_verified": false,
+  "elapsed_seconds": 4.140278369188309
+}

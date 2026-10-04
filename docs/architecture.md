@@ -56,7 +56,7 @@ define local tetrahedra, while `PolygonalSkeleton3D` keeps one P0 or P1 space
 on each **original** face. Triangulating a quadrilateral face therefore does
 not introduce independent multipliers on its two triangles. The
 [polyhedral RAD cases](https://github.com/volpatto/pymhm/blob/main/docs/cases/polyhedral-rad.md) exercise cubes and two prism
-families; [polygonal cases](cases/polygons.md) cover five planar families.
+families; [polygonal cases](https://github.com/volpatto/pymhm/blob/main/docs/cases/polygons.md) cover five planar families.
 
 Mapped hexahedral RT fields use a trilinear geometry and contravariant Piola
 transformation, with surface Jacobians in normal moments and the physical
@@ -87,7 +87,7 @@ multiplier, and its constraints are physical displacement moments.
 The enriched BDM and rectangular RT variants preserve their boundary normal
 degree while adding zero-normal interior fields; their displacement and rotation
 spaces follow the resulting divergence degree. See the
-[mixed-family definitions](cases/mixed-families.md) and
+[mixed-family definitions](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-families.md) and
 [rectangular weak-symmetry construction](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity-tensor-rt.md).
 
 Primal Darcy, conservative RAD and backward Euler use a shared nodal Pk

@@ -17,8 +17,9 @@ import numpy as np
 from matplotlib.colors import AsinhNorm
 from matplotlib.ticker import FuncFormatter
 
-from examples.marmousi_data import load_marmousi_crop
+from examples.marmousi_data import MarmousiMaterial, load_marmousi_crop
 from examples.marmousi_fields import load_reference
+from examples.marmousi_records import checked_reference
 from examples.plot_mesh import draw_macro_mesh
 from pymhm.quadrilateral import CartesianMacroMesh
 
@@ -82,12 +83,86 @@ def save(figure: plt.Figure, directory: Path, name: str) -> None:
     plt.close(figure)
 
 
+def render_material(material: MarmousiMaterial, directory: Path) -> None:
+    """Plot the declared primary crop with independent SI scales and actual macrofaces.
+
+    The H20 and H80 partitions are comparison meshes. This material plot
+    requires no acquired acoustic fields and makes no numerical-solution claim.
+    """
+    for field in (material.velocity, material.density):
+        if (
+            field.values.ndim != 2
+            or not np.array_equal(field.origin, (0, 0))
+            or not np.array_equal(np.asarray(field.values.shape) * field.spacing, (10240, 2560))
+        ):
+            raise ValueError("material panels require the complete declared 10240 by 2560 m crop")
+        if not np.all(np.isfinite(field.values) & (field.values > 0)):
+            raise ValueError("material panels require finite positive SI coefficients")
+    directory.mkdir(parents=True, exist_ok=True)
+    figure, axes = plt.subplots(2, 2, figsize=(11.4, 6.8), layout="constrained")
+    fields = (
+        (material.velocity.values, "P-wave velocity", "m/s"),
+        (material.density.values, "Density", "kg/m³"),
+    )
+    for row, H in enumerate((20, 80)):
+        macro = CartesianMacroMesh(10240 // H, 2560 // H, BOUNDS)
+        for column, (data, title, label) in enumerate(fields):
+            panel(
+                axes[row, column],
+                data,
+                f"{title}; comparison grid H={H} m",
+                label,
+                macro,
+                limits=(float(data.min()), float(data.max())),
+            )
+    save(figure, directory, "material")
+    provenance = {
+        "material": material.provenance,
+        "scope": "Primary material input visualization; no acoustic field solution",
+        "macro_overlay": {
+            "H_m": [20, 80],
+            "bounds_m": list(BOUNDS),
+            "meaning": "Declared MHM comparison partitions",
+        },
+        "color_ranges": {
+            title: {"minimum": float(data.min()), "maximum": float(data.max()), "unit": unit}
+            for data, title, unit in fields
+        },
+        "display": {
+            "coordinate_order": ["x", "depth"],
+            "interpolation": "nearest",
+            "color_scales": "Independent colorbar for every panel; no clipping or rescaling",
+            "source_marker_m": [5000, 50],
+            "source_marker_meaning": "Declared acoustic forcing location",
+        },
+        "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "dependency_sha256": {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in (
+                Path(__file__).with_name("marmousi_data.py"),
+                Path(__file__).with_name("plot_mesh.py"),
+                ROOT / "src/pymhm/quadrilateral.py",
+            )
+        },
+        "figure_sha256": {
+            f"material.{suffix}": hashlib.sha256(
+                (directory / f"material.{suffix}").read_bytes()
+            ).hexdigest()
+            for suffix in ("png", "svg")
+        },
+    }
+    (directory / "material.json").write_text(json.dumps(provenance, indent=2) + "\n")
+
+
 def main() -> None:
     """Plot complete declared material and compare acquired classical pressure levels."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, required=True)
     parser.add_argument("--source", type=Path, default=ROOT / "examples/results/marmousi")
     parser.add_argument("--output", type=Path, default=ROOT / "docs/figures/marmousi")
+    parser.add_argument(
+        "--material-only", action="store_true", help="Render primary material without field records"
+    )
     parser.add_argument(
         "--degrees",
         type=int,
@@ -98,6 +173,9 @@ def main() -> None:
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     material = load_marmousi_crop(args.data)
+    if args.material_only:
+        render_material(material, args.output)
+        return
     available = [
         degree for degree in range(1, 5) if (args.source / f"classical-p{degree}.json").exists()
     ]
@@ -105,6 +183,8 @@ def main() -> None:
     if len(degrees) != 2 or degrees[0] >= degrees[1] or any(d not in available for d in degrees):
         parser.error("two increasing acquired polynomial degrees are required")
     records = [args.source / f"classical-p{degree}.json" for degree in degrees]
+    for path in records:
+        checked_reference(path)
     fields = [load_reference(path) for path in records]
     # Retain every archived node, including the source node absent from the
     # article's coarser sampling grid. Evaluate differences on the finer grid.
@@ -115,24 +195,7 @@ def main() -> None:
         coordinates = np.column_stack((index // difference.shape[1], index % difference.shape[1]))
         points = coordinates * (fields[1].spacing / fields[1].degree)
         difference.ravel()[index] = values[1].ravel()[index] - fields[0].sample(points)
-    figure, axes = plt.subplots(2, 2, figsize=(11.4, 6.8), layout="constrained")
-    for row, H in enumerate((20, 80)):
-        macro = CartesianMacroMesh(10240 // H, 2560 // H, BOUNDS)
-        for column, (data, title, label) in enumerate(
-            (
-                (material.velocity.values, "P-wave velocity", "m/s"),
-                (material.density.values, "Density", "kg/m³"),
-            )
-        ):
-            panel(
-                axes[row, column],
-                data,
-                f"{title}; comparison grid H={H} m",
-                label,
-                macro,
-                limits=(float(data.min()), float(data.max())),
-            )
-    save(figure, args.output, "material")
+    render_material(material, args.output)
     for H in (20, 80):
         macro = CartesianMacroMesh(10240 // H, 2560 // H, BOUNDS)
         figure, axes = plt.subplots(2, 3, figsize=(11.4, 6.8), layout="constrained")

@@ -1,0 +1,127 @@
+{
+  "schema": "pymhm-initial-scalar-publication-receipt-v1",
+  "accepted": true,
+  "complete": true,
+  "initial_three_levels": true,
+  "row_count": 12,
+  "original_execution_record_sha256": "b82d2089e85d19040b6cacf07d2b8f9e0563cd67627bb74d197a710c54359946",
+  "published_metadata_record_sha256": "b82d2089e85d19040b6cacf07d2b8f9e0563cd67627bb74d197a710c54359946",
+  "evidence": {
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-stokes-th2-n1.json": {
+      "original_execution_record_sha256": "0d740605a3cba78d14d6ff7fbbd0b5ce91cd8ae5a23b6ac35de7638c7def662f",
+      "published_metadata_record_sha256": "0d740605a3cba78d14d6ff7fbbd0b5ce91cd8ae5a23b6ac35de7638c7def662f",
+      "acquisition_uuid": "1363f724-10d0-44a1-87f0-40417fcb702d"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-stokes-th2-n1-resource.json": {
+      "original_execution_record_sha256": "8ad8ada5bb760b60e22f79c692f30b05b460eb54d6bacd2a92544301bcb680f1",
+      "published_metadata_record_sha256": "8ad8ada5bb760b60e22f79c692f30b05b460eb54d6bacd2a92544301bcb680f1"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-stokes-th2-n2.json": {
+      "original_execution_record_sha256": "ae0e94a1d5409d10585736d88508941046ca85f658d0843959234d5f2c0265ea",
+      "published_metadata_record_sha256": "ae0e94a1d5409d10585736d88508941046ca85f658d0843959234d5f2c0265ea",
+      "acquisition_uuid": "5b6b58a5-9f59-4ede-9118-8bc8d2888f19"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-stokes-th2-n2-resource.json": {
+      "original_execution_record_sha256": "4a535aeea2e2bd5a560dfe8d69d5613fc8a1b2f156a6a5c3e9e14c290b455759",
+      "published_metadata_record_sha256": "4a535aeea2e2bd5a560dfe8d69d5613fc8a1b2f156a6a5c3e9e14c290b455759"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-stokes-th2-n3.json": {
+      "original_execution_record_sha256": "2b0e87c1d0095af91b9ea7febc8d67bebfc7187166e7883da3a8df9b5ba1e6a9",
+      "published_metadata_record_sha256": "2b0e87c1d0095af91b9ea7febc8d67bebfc7187166e7883da3a8df9b5ba1e6a9",
+      "acquisition_uuid": "3eddcf14-d9ec-45f2-ae35-bda73e37adb4"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-stokes-th2-n3-resource.json": {
+      "original_execution_record_sha256": "fcb776abf3657a46a47425b42038cbdf6412672fd229e578f59d86137d9c6b93",
+      "published_metadata_record_sha256": "fcb776abf3657a46a47425b42038cbdf6412672fd229e578f59d86137d9c6b93"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-brinkman-usfem1-n1.json": {
+      "original_execution_record_sha256": "575563e5d7b3e89c09d1ec506502b7b98cb568df7e8b35bcc016b550c0c68cc3",
+      "published_metadata_record_sha256": "575563e5d7b3e89c09d1ec506502b7b98cb568df7e8b35bcc016b550c0c68cc3",
+      "acquisition_uuid": "bd4c2a94-bc9a-4752-a181-ca248c44f66b"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-brinkman-usfem1-n1-resource.json": {
+      "original_execution_record_sha256": "48ba044e9a0be841aad9add278b2e18ef42a33d9c9d0d20ef69eb98ba29536de",
+      "published_metadata_record_sha256": "48ba044e9a0be841aad9add278b2e18ef42a33d9c9d0d20ef69eb98ba29536de"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-brinkman-usfem1-n2.json": {
+      "original_execution_record_sha256": "f26459f43386096bbbf46e2a800b67ddf8f5b2e6750c46cb3182b0c05bb878cc",
+      "published_metadata_record_sha256": "f26459f43386096bbbf46e2a800b67ddf8f5b2e6750c46cb3182b0c05bb878cc",
+      "acquisition_uuid": "02ba4b6f-9ce1-4f44-bfa1-877d724c51f8"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-brinkman-usfem1-n2-resource.json": {
+      "original_execution_record_sha256": "cba90d079ce832909dce51aab0f9dea2dc6a2029975483340448e3c061c65c2a",
+      "published_metadata_record_sha256": "cba90d079ce832909dce51aab0f9dea2dc6a2029975483340448e3c061c65c2a"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-brinkman-usfem1-n3.json": {
+      "original_execution_record_sha256": "3b40d7949ff4fdc32305fe3bc49be41a01f9fc2508e4ebb8e86e6220670b7c77",
+      "published_metadata_record_sha256": "3b40d7949ff4fdc32305fe3bc49be41a01f9fc2508e4ebb8e86e6220670b7c77",
+      "acquisition_uuid": "9424dd25-6c59-4a67-a0bc-a1658a85f333"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-brinkman-usfem1-n3-resource.json": {
+      "original_execution_record_sha256": "3440a3209eed74287c957fdc45b322a73835b0da6d783f9e5fad57a9942666a4",
+      "published_metadata_record_sha256": "3440a3209eed74287c957fdc45b322a73835b0da6d783f9e5fad57a9942666a4"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-brinkman-usfem2-n1.json": {
+      "original_execution_record_sha256": "acd861f4f4aa9e97c117f0b3be0bd9a84b14542ce1fc1dd5bed37d4009653ae6",
+      "published_metadata_record_sha256": "acd861f4f4aa9e97c117f0b3be0bd9a84b14542ce1fc1dd5bed37d4009653ae6",
+      "acquisition_uuid": "d42fea86-e2db-4901-8329-cb0e2e0bedb7"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-brinkman-usfem2-n1-resource.json": {
+      "original_execution_record_sha256": "a0f4070bd8c3281f9621c2086d12cee8fe990be776b74b811ef618f45242b94a",
+      "published_metadata_record_sha256": "a0f4070bd8c3281f9621c2086d12cee8fe990be776b74b811ef618f45242b94a"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-brinkman-usfem2-n2.json": {
+      "original_execution_record_sha256": "3660a965a0cbe6fb402ddda11dbe514a3a012f3f7d7da8652bf28ce022973472",
+      "published_metadata_record_sha256": "3660a965a0cbe6fb402ddda11dbe514a3a012f3f7d7da8652bf28ce022973472",
+      "acquisition_uuid": "78830bc1-3285-4317-a0fb-587d4964b743"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-brinkman-usfem2-n2-resource.json": {
+      "original_execution_record_sha256": "38e507a6f7410527f18150fa7cf5f246f7fd9822fa60b0a2a72a77b0013ffd59",
+      "published_metadata_record_sha256": "38e507a6f7410527f18150fa7cf5f246f7fd9822fa60b0a2a72a77b0013ffd59"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-brinkman-usfem2-n3.json": {
+      "original_execution_record_sha256": "4732f27a92bbca88e0583644475a7ca86e52e11874262ac55ea614ffd693f760",
+      "published_metadata_record_sha256": "4732f27a92bbca88e0583644475a7ca86e52e11874262ac55ea614ffd693f760",
+      "acquisition_uuid": "eece79ea-61eb-4ca2-8299-435dde7ba248"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-brinkman-usfem2-n3-resource.json": {
+      "original_execution_record_sha256": "c7656b69cb881abc87f3c83485d20a51d054c6da2ccf2daf6671fe41081dcd19",
+      "published_metadata_record_sha256": "c7656b69cb881abc87f3c83485d20a51d054c6da2ccf2daf6671fe41081dcd19"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-oseen-p2-n1.json": {
+      "original_execution_record_sha256": "b63ff5b4061bcab08f3c413fff622b24b9ef04d21c1f7b1ee562d227024c5050",
+      "published_metadata_record_sha256": "b63ff5b4061bcab08f3c413fff622b24b9ef04d21c1f7b1ee562d227024c5050",
+      "acquisition_uuid": "e41d7685-c66b-4933-acc9-0c707b0dc23f"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-oseen-p2-n1-resource.json": {
+      "original_execution_record_sha256": "9b4d583f9a49590accd363d10caf94fc737118863cd8323a5b1518dd95043c38",
+      "published_metadata_record_sha256": "9b4d583f9a49590accd363d10caf94fc737118863cd8323a5b1518dd95043c38"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-oseen-p2-n2.json": {
+      "original_execution_record_sha256": "2faece436827988cb24429f61fb1194a06704d7d5540caaa192e48ef62fb1206",
+      "published_metadata_record_sha256": "2faece436827988cb24429f61fb1194a06704d7d5540caaa192e48ef62fb1206",
+      "acquisition_uuid": "bcd694da-dadf-4e99-8b7e-c0ab891acc70"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-oseen-p2-n2-resource.json": {
+      "original_execution_record_sha256": "45ff4e4fccd10e7ea74ceed7ed3f7222749925c2e4b4e9b57c4c27a94a3b157e",
+      "published_metadata_record_sha256": "45ff4e4fccd10e7ea74ceed7ed3f7222749925c2e4b4e9b57c4c27a94a3b157e"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-oseen-p2-n3.json": {
+      "original_execution_record_sha256": "78fb2341e121dd1df6e63ac4e4f2275780e9ca701b69bc1bb47c9a62ab82156b",
+      "published_metadata_record_sha256": "78fb2341e121dd1df6e63ac4e4f2275780e9ca701b69bc1bb47c9a62ab82156b",
+      "acquisition_uuid": "f79a4e17-e3c1-4ec9-9329-a42daa9b479c"
+    },
+    "examples/results/minimal-convergence/flow3d/evidence/flow3d-oseen-p2-n3-resource.json": {
+      "original_execution_record_sha256": "e275922911913b1890fc707adf9a59df37686e1b214f35ac80939e07c2c84a98",
+      "published_metadata_record_sha256": "e275922911913b1890fc707adf9a59df37686e1b214f35ac80939e07c2c84a98"
+    }
+  },
+  "figures": {
+    "docs/figures/minimal-convergence/flow3d/convergence.png": "979f2d49facf824840dc0377914ef24d8f43742e612e28b6fd9b3bf374b15eaf",
+    "docs/figures/minimal-convergence/flow3d/convergence.svg": "99e6837073ffc9dd4191313b81f58eb635157675c9b011880d230768674bdf06"
+  },
+  "figure_original_size_inspected": true,
+  "pde_solves_during_publication": 0,
+  "coefficient_vectors_persisted_by_publication": false,
+  "historical_literature_reproduction": false
+}

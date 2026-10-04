@@ -1,0 +1,255 @@
+{
+  "original_inputs": [
+    {
+      "path": "examples/results/transport-random-classical-pilot-verification.json",
+      "sha256": "168c088a2ab19b3665a5e781dbf1be23288f87a1ec140b90cc81cc4b18d64096"
+    },
+    {
+      "path": "build/reports/completion/transport-classical-current-temporal-verification.json",
+      "sha256": "2e2671bd3fd4a88d7383ca103ed6418a8c8c6d85f07c82ee4113bba66d90032a"
+    },
+    {
+      "path": "build/results/transport-random-classical-pilot-n64x16-q8-v2/classical.json",
+      "sha256": "ffcaa0a8c63c64bd1f29695ba9a6ec9301e34f38aecb6bc752afd5d0216e6982"
+    },
+    {
+      "path": "build/results/transport-random-classical-time-pilot-n64x16-dt0005-q8/classical.json",
+      "sha256": "6ee7d8e69f86061665e9108c1e86d2c34f878c83db133245a6e8dfd208eed8f2"
+    },
+    {
+      "path": "build/results/transport-random-classical-time-pilot-n64x16-dt00025-q8/classical.json",
+      "sha256": "8044b5d5a7b041e55f1c64f4cc4e6be2f1c453acd66dd49905ca56349dac79d4"
+    },
+    {
+      "path": "build/reports/completion/transport-classical-time-pilot-dt001-dt0005.json",
+      "sha256": "c33ecb9f98901058ee01ae2d2f55176c9a667a750aeca1a42dfb6a573db3955f"
+    },
+    {
+      "path": "build/reports/completion/transport-classical-time-pilot-dt0005-dt00025.json",
+      "sha256": "e188a182ffa6ea168a39cac19f7c37bd8c068365e153cfb8066b41380a2e7277"
+    }
+  ],
+  "quadrature_orders": [
+    6,
+    8
+  ],
+  "positive_quadrature_comparisons": [
+    {
+      "scope": "Own classical increment; no exact error, certified bound or smooth-rate claim",
+      "coarse_uuid": "3b2c0d25-c2fd-483b-b2fc-ab1b6b606588",
+      "fine_uuid": "ca3bfda8-dd0a-47cf-973a-bbbf81907729",
+      "coarse_record_sha256": "ffcaa0a8c63c64bd1f29695ba9a6ec9301e34f38aecb6bc752afd5d0216e6982",
+      "fine_record_sha256": "6ee7d8e69f86061665e9108c1e86d2c34f878c83db133245a6e8dfd208eed8f2",
+      "executed_comparison_owner_sha256": {
+        "compare_classical_control.py": "43a76aa276218e2379de0a09c781f084669ce9f58a9c2388bb80cdf093d4b7dc",
+        "classical_fields.py": "ee01df9d23e1516ea5bea8b754d21dbdcd8dd200f01012b772d65b4d76364ebb",
+        "classical_reference.py": "6daf7913783f4d5b62a1d668db9a4e3c97a478d06cdd8c85e6d4a50efdd6b8c9",
+        "reference_basis.py": "577724148fd9d102651aa5a6148df7be3f41dc7a13000bc69efc468affe8e1d7"
+      },
+      "fresh_field_solves": 0,
+      "same_physical_input_sha256": "4850aa7a196662359b001cd5ec34edf009999737ef8a76cc7161839a744bd037",
+      "increments": [
+        {
+          "scope": "Own classical refinement increment; not an exact error or certified bound",
+          "coarse_uuid": "3b2c0d25-c2fd-483b-b2fc-ab1b6b606588",
+          "fine_uuid": "ca3bfda8-dd0a-47cf-973a-bbbf81907729",
+          "step": 5,
+          "fine_step": 10,
+          "time": 0.005,
+          "fine_time": 0.005,
+          "time_step_ratio": 2.0,
+          "spatial_refinement_ratio": 1,
+          "positive_duffy_order": 6,
+          "denominator": "Norm of finer computed field",
+          "norms": {
+            "pressure_l2": {
+              "difference": 0.0,
+              "fine_norm": 2.9053754757209562,
+              "relative": 0.0
+            },
+            "darcy_flux_l2": {
+              "difference": 0.0,
+              "fine_norm": 0.40930093182799304,
+              "relative": 0.0
+            },
+            "concentration_l2": {
+              "difference": 0.00030195303962586627,
+              "fine_norm": 0.056590084122309606,
+              "relative": 0.005335794146784574
+            },
+            "concentration_gradient_l2": {
+              "difference": 0.06112970647328576,
+              "fine_norm": 10.265741260848566,
+              "relative": 0.005954728929943124
+            },
+            "concentration_h1": {
+              "difference": 0.06113045222430646,
+              "fine_norm": 10.265897236594066,
+              "relative": 0.005954711099814964
+            }
+          }
+        },
+        {
+          "scope": "Own classical refinement increment; not an exact error or certified bound",
+          "coarse_uuid": "3b2c0d25-c2fd-483b-b2fc-ab1b6b606588",
+          "fine_uuid": "ca3bfda8-dd0a-47cf-973a-bbbf81907729",
+          "step": 5,
+          "fine_step": 10,
+          "time": 0.005,
+          "fine_time": 0.005,
+          "time_step_ratio": 2.0,
+          "spatial_refinement_ratio": 1,
+          "positive_duffy_order": 8,
+          "denominator": "Norm of finer computed field",
+          "norms": {
+            "pressure_l2": {
+              "difference": 0.0,
+              "fine_norm": 2.9053754757209562,
+              "relative": 0.0
+            },
+            "darcy_flux_l2": {
+              "difference": 0.0,
+              "fine_norm": 0.4093009318279931,
+              "relative": 0.0
+            },
+            "concentration_l2": {
+              "difference": 0.0003019530396258664,
+              "fine_norm": 0.05659008412230978,
+              "relative": 0.005335794146784561
+            },
+            "concentration_gradient_l2": {
+              "difference": 0.06112970647328586,
+              "fine_norm": 10.265741260848587,
+              "relative": 0.005954728929943122
+            },
+            "concentration_h1": {
+              "difference": 0.061130452224306554,
+              "fine_norm": 10.265897236594087,
+              "relative": 0.005954711099814962
+            }
+          }
+        }
+      ]
+    },
+    {
+      "scope": "Own classical increment; no exact error, certified bound or smooth-rate claim",
+      "coarse_uuid": "ca3bfda8-dd0a-47cf-973a-bbbf81907729",
+      "fine_uuid": "0e366251-02c4-4db9-aec2-457d2cb9780c",
+      "coarse_record_sha256": "6ee7d8e69f86061665e9108c1e86d2c34f878c83db133245a6e8dfd208eed8f2",
+      "fine_record_sha256": "8044b5d5a7b041e55f1c64f4cc4e6be2f1c453acd66dd49905ca56349dac79d4",
+      "executed_comparison_owner_sha256": {
+        "compare_classical_control.py": "43a76aa276218e2379de0a09c781f084669ce9f58a9c2388bb80cdf093d4b7dc",
+        "classical_fields.py": "ee01df9d23e1516ea5bea8b754d21dbdcd8dd200f01012b772d65b4d76364ebb",
+        "classical_reference.py": "6daf7913783f4d5b62a1d668db9a4e3c97a478d06cdd8c85e6d4a50efdd6b8c9",
+        "reference_basis.py": "577724148fd9d102651aa5a6148df7be3f41dc7a13000bc69efc468affe8e1d7"
+      },
+      "fresh_field_solves": 0,
+      "same_physical_input_sha256": "4850aa7a196662359b001cd5ec34edf009999737ef8a76cc7161839a744bd037",
+      "increments": [
+        {
+          "scope": "Own classical refinement increment; not an exact error or certified bound",
+          "coarse_uuid": "ca3bfda8-dd0a-47cf-973a-bbbf81907729",
+          "fine_uuid": "0e366251-02c4-4db9-aec2-457d2cb9780c",
+          "step": 10,
+          "fine_step": 20,
+          "time": 0.005,
+          "fine_time": 0.005,
+          "time_step_ratio": 2.0,
+          "spatial_refinement_ratio": 1,
+          "positive_duffy_order": 6,
+          "denominator": "Norm of finer computed field",
+          "norms": {
+            "pressure_l2": {
+              "difference": 0.0,
+              "fine_norm": 2.9053754757209562,
+              "relative": 0.0
+            },
+            "darcy_flux_l2": {
+              "difference": 0.0,
+              "fine_norm": 0.40930093182799304,
+              "relative": 0.0
+            },
+            "concentration_l2": {
+              "difference": 0.00015846215331932124,
+              "fine_norm": 0.05662679701466091,
+              "relative": 0.002798359816789474
+            },
+            "concentration_gradient_l2": {
+              "difference": 0.03222715351078274,
+              "fine_norm": 10.261129774465681,
+              "relative": 0.0031407022636998926
+            },
+            "concentration_h1": {
+              "difference": 0.032227543090679295,
+              "fine_norm": 10.261286022841691,
+              "relative": 0.0031406924062871424
+            }
+          }
+        },
+        {
+          "scope": "Own classical refinement increment; not an exact error or certified bound",
+          "coarse_uuid": "ca3bfda8-dd0a-47cf-973a-bbbf81907729",
+          "fine_uuid": "0e366251-02c4-4db9-aec2-457d2cb9780c",
+          "step": 10,
+          "fine_step": 20,
+          "time": 0.005,
+          "fine_time": 0.005,
+          "time_step_ratio": 2.0,
+          "spatial_refinement_ratio": 1,
+          "positive_duffy_order": 8,
+          "denominator": "Norm of finer computed field",
+          "norms": {
+            "pressure_l2": {
+              "difference": 0.0,
+              "fine_norm": 2.9053754757209562,
+              "relative": 0.0
+            },
+            "darcy_flux_l2": {
+              "difference": 0.0,
+              "fine_norm": 0.4093009318279931,
+              "relative": 0.0
+            },
+            "concentration_l2": {
+              "difference": 0.00015846215331932132,
+              "fine_norm": 0.05662679701466108,
+              "relative": 0.002798359816789467
+            },
+            "concentration_gradient_l2": {
+              "difference": 0.03222715351078279,
+              "fine_norm": 10.261129774465703,
+              "relative": 0.0031407022636998918
+            },
+            "concentration_h1": {
+              "difference": 0.03222754309067934,
+              "fine_norm": 10.261286022841713,
+              "relative": 0.003140692406287141
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "schema": "pymhm-initial-reused-controls-verification-v1",
+  "public_record_sha256": "275674239ab9c0eaeeca9b7d7d2d46cdeb569a1e75b94eb2c94987f9849db609",
+  "inputs_immutable": true,
+  "producer_sha_values_and_uuids_unchanged": true,
+  "new_field_solves": 0,
+  "artifacts": {
+    "convergence.png": "2626019a819722871c206959bc2344c4607f7535be3f0b108b1fbbd68d6c0a0a",
+    "convergence.svg": "9df2c9af4d53c5c4a5a726a1a6c13b8f4b497ce9c68ea67877ead2b0d9e12776"
+  },
+  "producer_metadata_literal_after_path_aliasing": true,
+  "rendered_inspection": {
+    "native_png_size": [
+      1344,
+      480
+    ],
+    "intended_width_px": 893,
+    "inspected_native_and_893": true,
+    "numeric_y_ticks_present": true,
+    "no_observed_overlap_or_clipping": true,
+    "svg_generated_from_same_matplotlib_figure": true,
+    "svg_independent_browser_inspection": false,
+    "preview_sha256": "f9cb3b888192c60375f71b8d77270b0090f6b32c04632c53e30607b56b17c407"
+  }
+}

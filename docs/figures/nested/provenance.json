@@ -1,0 +1,28 @@
+{
+  "schema": "pymhm-nested-figure-provenance-v1",
+  "numerical_source_identity_sha256": "144b3a874e61ea1ca11eee89c1a4288f53d92e6cd0f965071c43855fd763136a",
+  "numerical_source_identity_scope": "Immutable 126-file acquisition snapshot including 117 core files, 5 example owners, 2 tests and budget controller",
+  "acquisition_uuid": "b9135e09-6e3a-444b-b626-c4817edbb05b",
+  "input_archive": "examples/results/nested-current/n4-homogeneous.npz",
+  "input_archive_sha256": "0b8adcece28359c180f7e91ed3b9ac990d585749b7b3ae81fd8873522e44b229",
+  "input_record_sha256": "4a25cabfdeec84e015a054f6039c377eb781e47bbb3e434fe5a38e836c10e0fb",
+  "render_source_sha256": {
+    "examples/plot_nested.py": "023f972852d4be28d8e7a5a18ec5ec17c37c28897a2de6b328ce32d0788bbfd1"
+  },
+  "actual_display_digests": {
+    "points": "6ab4e588405256ebe09961f67b92dd2ea32d8306c933a93569ee310f59f4e0bb",
+    "pressure": "ff673cc7d6ab8c96a0efb99e7c4bbd2334a5259c789f6f296e6cc1dda4fb11a4",
+    "raw_flux": "5938f3aef146902956fa9ab0f183c68a980fa68c1078578a072d914d4b61fcda"
+  },
+  "one_sided_sample_pixels": "Bound within each independent leaf; no shared-face averaging or color interpolation",
+  "macro_mesh": "Actual archived outer and inner face endpoints on every analytical, numerical and error panel",
+  "colorbars": "Nine independent field/axis/colorbar regions",
+  "figures_sha256": {
+    "convergence.png": "d97f1876530a36ad0922ef69531e13b51c4c1b7cbfcfe5983f711f2ddbb61712",
+    "convergence.svg": "0d3827f1534d7684f13bdb48380d355000aa507d12af88d8d7f5242b8e20678c",
+    "fields.png": "ac4959502fda2f48f73a37a2283cf4ba226cbd31ca27ad00c5808c1fe226aca1",
+    "fields.svg": "5d6db6c56e9e82899bfd16fc42372ab6eae05ce2270230a0fb72d3c0e0532658"
+  },
+  "mathematical_flux": "minus the one-sided Q2 gradient; not an H(div) field",
+  "physical_norms": "Actual archived q8/q10 tables; pointwise figure errors do not replace integrated physical norms"
+}

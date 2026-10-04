@@ -1,0 +1,3522 @@
+{
+  "schema": "pymhm-initial-flow-elasticity-convergence-v1",
+  "group": "elasticity-l18-oscillatory",
+  "rows": [
+    {
+      "schema": "pymhm-initial-analytical-scalar-record-v1",
+      "family": "l18-oscillatory",
+      "case": "bdm2-trace1-enrichment0",
+      "resolution": 1,
+      "acquisition_uuid": "67517292-6a9f-4de9-9fa2-5a40155762cf",
+      "source_sha256": {
+        "src/pymhm/__init__.py": "a3273ccef37cce0b25b1e1cbf9faf150dfaaf715aafc6bd87e6d4809b431898c",
+        "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+        "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+        "src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+        "src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+        "src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+        "src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+        "src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+        "src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+        "src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+        "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+        "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+        "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+        "src/pymhm/darcy.py": "945eb63777daa94f02cd89f77ec6299cf1fe8722b3d98c027c70b7d318e097fc",
+        "src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+        "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+        "src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+        "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+        "src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+        "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+        "src/pymhm/darcy_transport.py": "3f9331d82dae0d16b30c53085981646942574a552601ec34631ba3b00eab5b7e",
+        "src/pymhm/darcy_velocity.py": "83c0dc577fe731a4316962b389ed286e711fcf9264836094188206d6eb276558",
+        "src/pymhm/distributed.py": "c6cf5f26bd9033a72328d18f5d099ab0d9b867f92a6babe472c2035ff1abd7ae",
+        "src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+        "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+        "src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+        "src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+        "src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+        "src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+        "src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+        "src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+        "src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+        "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+        "src/pymhm/elastodynamics.py": "21d7d7327f85b61399e2166f4babdd0098d220031a3cc0f507014655fd539f6c",
+        "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+        "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+        "src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+        "src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+        "src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+        "src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+        "src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+        "src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+        "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+        "src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+        "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+        "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+        "src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+        "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+        "src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+        "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+        "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+        "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+        "src/pymhm/helmholtz.py": "603a3e5eccf84830f8819657d97d3f7f22d856f97f21482e992f3a64fb67c1b4",
+        "src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+        "src/pymhm/helmholtz_spaces.py": "a0805d5ea9a95636062df0917dba98cfad8bc7ec298eba55c5fc1e6320a44bfb",
+        "src/pymhm/hybrid.py": "e4ca37cd8fa05dcb505d2cc7d36c975bbd25ac9ee01564bc86dd70d1d042dbb3",
+        "src/pymhm/hybrid_refinement.py": "b3ac92f5403b0fbc9a509e04626b7981cbd9767654ea149a894f1c82b74ecc16",
+        "src/pymhm/lagrange.py": "db5552571ee459630678dad97a887d4c49d1a2eb700cd2847b3f0a5f4ee8a2b7",
+        "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+        "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+        "src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+        "src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+        "src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+        "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+        "src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+        "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+        "src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+        "src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+        "src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+        "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+        "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+        "src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+        "src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+        "src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+        "src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+        "src/pymhm/mshho.py": "557b02892d7b93d2560deff999ef543bc7b95e762024139b6c8968d6b4ede0ee",
+        "src/pymhm/mshho3d.py": "522668e3fa23cd7661c958151caacdcc9e9a0e013c6f44e2974f5745dd3a4089",
+        "src/pymhm/nested.py": "4414c4fba66266017d97b5a75eda9a24ad90393647bd75d1245b5f4f93bc0049",
+        "src/pymhm/offline.py": "7b40681863239cf07f5df220ad893f044d26314c9a5bb8563fff587ef3df4932",
+        "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+        "src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+        "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+        "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+        "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+        "src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+        "src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+        "src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+        "src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+        "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+        "src/pymhm/rad.py": "d1f3d5c948bcc9370333050e8dfc1b15d5372ef745d51f04d8f700065d40c1e7",
+        "src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+        "src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+        "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+        "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+        "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+        "src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+        "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+        "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+        "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+        "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+        "src/pymhm/scalar_boundary.py": "5c2d4970ef3e032f93caee5f9b36ce36f535f65a924ef1e666f0e4aa5f4b69b3",
+        "src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+        "src/pymhm/scalar_transient.py": "c68b44eec515d94c114ba555e09d01705754ce2a2dda5199c753dc6b8f7f0ef5",
+        "src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+        "src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+        "src/pymhm/solvers.py": "2d360c2f7d71d8c04caa1966125291849b45daa5a886f5030772981e1cdaa751",
+        "src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+        "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+        "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+        "src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+        "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+        "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+        "src/pymhm/triangle_fields.py": "60e456d358ec5615d98375d6588e6ac88de972304d2fd3ac505f1ca998f67f4c",
+        "src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+        "src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+        "src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+        "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94",
+        "examples/minimal_flow_originals.py": "18df0121fb009627c8d026e7cd5644bed1adb5682448ed401a3a1853746aa398",
+        "examples/core_elasticity_field_archive.py": "c33037bb41044d7e4815d3bcfb859c13b8951e5c7699c9311b9f8485fb2a72e0",
+        "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+        "examples/campaign_provenance.py": "32a86b873f1dc5cb5e134f057e80abbd06c831f531850262bc909fb4adf7e736",
+        "examples/transport_checkpoints.py": "c9c09536afbe7ae247fb97e2c626a410279a1df9358c7984405d888e9a25f518",
+        "examples/local_response_cache.py": "4921332802aa6400356e9536366244e4285981d0cd7451abff376cf64ab7f5d5",
+        "pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57",
+        "pixi.toml": "c6d1234f9f6715265cdb85aadfcda86df379f542f6c579ed79e48835bdc29870",
+        "pyproject.toml": "9fe172ddcb0fc2407c85c8140de8d263808d3a2e57db016aea3a012a475efbc9",
+        "examples/minimal_elasticity_l18.py": "d88cd6f86e7bf44b5041081bfb633557c7c45fb2479d611716fcf9f2efef394a",
+        "examples/plot_mixed_elasticity.py": "4804a4e7cbf7d6fc16e554a1c2a068236549960bedd2ad025bf50bbc5b6ee7df",
+        "examples/plot_mesh.py": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6"
+      },
+      "macro_cells": 32,
+      "fine_cells": 128,
+      "macro_geometry": "unit_square(4): 32 diagonal triangles",
+      "macro_h": 0.25,
+      "stress_degree": 2,
+      "displacement_degree": 1,
+      "rotation_degree": 1,
+      "trace_degree": 1,
+      "enrichment": 0,
+      "local_refinement": 2,
+      "poisson_ratio": 0.3,
+      "assembly_order": 16,
+      "norm_orders": [
+        16,
+        20
+      ],
+      "norms_by_order": {
+        "16": {
+          "displacement_l2": 0.02708706559484783,
+          "stress_l2": 34.16035662085935,
+          "rotation_l2": 0.4958713646040615,
+          "stress_divergence_l2": 583.1924757347696
+        },
+        "20": {
+          "displacement_l2": 0.027087065594847793,
+          "stress_l2": 34.16035662085927,
+          "rotation_l2": 0.4958713646040605,
+          "stress_divergence_l2": 583.192475734775
+        }
+      },
+      "terminal_norms": {
+        "displacement_l2": 0.027087065594847793,
+        "stress_l2": 34.16035662085927,
+        "rotation_l2": 0.4958713646040605,
+        "stress_divergence_l2": 583.192475734775
+      },
+      "physical_error_quadrature_relative_changes": {
+        "displacement_l2": 1.4089350630416341e-15,
+        "stress_l2": 2.496025707153969e-15,
+        "rotation_l2": 2.0150401767209826e-15,
+        "stress_divergence_l2": 9.35706209817305e-15
+      },
+      "original_equations": {
+        "accepted": true,
+        "criterion": 1e-10,
+        "full_uncondensed_relative_to_physical_rhs": 2.1931671254045383e-15,
+        "physical_rhs_row_norm": 78.90736346356546,
+        "maximum_original_block_backward_error": 6.537623374624403e-16,
+        "global_weak_row_absolute_residual_norm": 8.14668013628577e-14,
+        "physical_mean_relative_defect": 2.1657012677332005e-17,
+        "reduced_gauge_relative_defect": 1.1235678826838103e-17,
+        "physical_mean_values": [
+          0.22485177232580766
+        ],
+        "physical_mean_targets": [
+          0.22485177232581147
+        ],
+        "gauge_multipliers": [
+          6.611505777078368e-16
+        ],
+        "blocks": [
+          {
+            "macrocell": 0,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 3.3031410291970974e-15,
+                "row_action_scale_norm": 9.418033351947159,
+                "backward_error": 3.50725136104363e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 1.288320418662368e-14,
+                "row_action_scale_norm": 67.54909464359255,
+                "backward_error": 1.9072356564657127e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 4.174125753112036e-16,
+                "row_action_scale_norm": 2.80949279740305,
+                "backward_error": 1.485722176248461e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 1.0612305869531407e-15,
+                "row_action_scale_norm": 59.77098241327306,
+                "backward_error": 1.7754946365370068e-17
+              }
+            }
+          },
+          {
+            "macrocell": 1,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 2.5062262354178186e-15,
+                "row_action_scale_norm": 8.837807962091604,
+                "backward_error": 2.835800739468298e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 1.4607390079256638e-14,
+                "row_action_scale_norm": 68.28202081942895,
+                "backward_error": 2.139273252894158e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 3.180054553316721e-16,
+                "row_action_scale_norm": 2.667957319675013,
+                "backward_error": 1.1919435629143001e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 1.5492880974960809e-15,
+                "row_action_scale_norm": 64.58966084997307,
+                "backward_error": 2.3986626916879482e-17
+              }
+            }
+          },
+          {
+            "macrocell": 2,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 3.681547981388327e-15,
+                "row_action_scale_norm": 10.116039017345361,
+                "backward_error": 3.639317696457871e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 4.5935942243360373e-14,
+                "row_action_scale_norm": 70.26397761250581,
+                "backward_error": 6.537623374624403e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 6.092418847897732e-16,
+                "row_action_scale_norm": 2.9348608221603123,
+                "backward_error": 2.075879987867085e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 8.414918189087671e-16,
+                "row_action_scale_norm": 59.01951315232999,
+                "backward_error": 1.425785768067703e-17
+              }
+            }
+          },
+          {
+            "macrocell": 3,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 2.8441387429554153e-15,
+                "row_action_scale_norm": 8.946218339773552,
+                "backward_error": 3.1791519443593263e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 3.9817324382436286e-14,
+                "row_action_scale_norm": 66.88308800948842,
+                "backward_error": 5.953272429165886e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 7.118516310226053e-16,
+                "row_action_scale_norm": 2.6266534767882144,
+                "backward_error": 2.71010865084889e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 1.2684293165619808e-15,
+                "row_action_scale_norm": 61.505563160733466,
+                "backward_error": 2.0623001422605862e-17
+              }
+            }
+          },
+          {
+            "macrocell": 4,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 2.607103439229028e-15,
+                "row_action_scale_norm": 10.046975779770454,
+                "backward_error": 2.594913630107898e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 1.3276164679416117e-14,
+                "row_action_scale_norm": 70.94172978185931,
+                "backward_error": 1.8714182358168266e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 5.455224358987206e-16,
+                "row_action_scale_norm": 3.0565120777130854,
+                "backward_error": 1.7847874375385627e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 1.2729018964023005e-15,
+                "row_action_scale_norm": 66.33946995053779,
+                "backward_error": 1.9187700736098232e-17
+              }
+            }
+          },
+          {
+            "macrocell": 5,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 3.0598229577316777e-15,
+                "row_action_scale_norm": 8.775457941858006,
+                "backward_error": 3.4867957638274873e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 1.4796550253218463e-14,
+                "row_action_scale_norm": 67.73262107279423,
+                "backward_error": 2.1845530290812425e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 5.176609917018952e-16,
+                "row_action_scale_norm": 2.6819548975188945,
+                "backward_error": 1.9301629277240603e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 1.6095157101036979e-15,
+                "row_action_scale_norm": 67.33418683469165,
+                "backward_error": 2.390339567113402e-17
+              }
+            }
+          },
+          {
+            "macrocell": 6,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 5.7615666768510314e-15,
+                "row_action_scale_norm": 9.697419220046447,
+                "backward_error": 5.941340212394608e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 1.5478005060862162e-14,
+                "row_action_scale_norm": 71.72577320429104,
+                "backward_error": 2.1579418902571245e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 9.872476810464686e-16,
+                "row_action_scale_norm": 2.996498370913971,
+                "backward_error": 3.294671175627388e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 1.1524094597942483e-15,
+                "row_action_scale_norm": 70.06580056299839,
+                "backward_error": 1.6447531470907553e-17
+              }
+            }
+          },
+          {
+            "macrocell": 7,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 3.7873524906464185e-15,
+                "row_action_scale_norm": 9.198650051497102,
+                "backward_error": 4.1172916345806826e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 1.1211177895109636e-14,
+                "row_action_scale_norm": 71.6179292089471,
+                "backward_error": 1.5654149762415978e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 5.155326874722547e-16,
+                "row_action_scale_norm": 2.8030086218512755,
+                "backward_error": 1.8392119219803395e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 1.6719261819885204e-15,
+                "row_action_scale_norm": 74.02507447786478,
+                "backward_error": 2.2585943935638527e-17
+              }
+            }
+          },
+          {
+            "macrocell": 8,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 5.5867178667895875e-15,
+                "row_action_scale_norm": 13.123879548142357,
+                "backward_error": 4.256910349028897e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 2.6227827304924735e-14,
+                "row_action_scale_norm": 91.68470913462187,
+                "backward_error": 2.8606544703560184e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 5.919099709374483e-16,
+                "row_action_scale_norm": 3.9262435447219017,
+                "backward_error": 1.5075732419430786e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 2.1919827226061626e-15,
+                "row_action_scale_norm": 86.68924401985815,
+                "backward_error": 2.5285521259177653e-17
+              }
+            }
+          },
+          {
+            "macrocell": 9,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 5.02223205295236e-15,
+                "row_action_scale_norm": 11.44087193252217,
+                "backward_error": 4.3897284075665693e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 2.0988195159967168e-14,
+                "row_action_scale_norm": 89.60545811429773,
+                "backward_error": 2.342289811541985e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 6.44472092313724e-16,
+                "row_action_scale_norm": 3.522262473685588,
+                "backward_error": 1.8297105826964906e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 1.6278785298399066e-15,
+                "row_action_scale_norm": 91.01948436399242,
+                "backward_error": 1.788494563790234e-17
+              }
+            }
+          },
+          {
+            "macrocell": 10,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 2.4700530234563276e-15,
+                "row_action_scale_norm": 12.853404532731865,
+                "backward_error": 1.9217111055411108e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 1.5771155200960566e-14,
+                "row_action_scale_norm": 91.77826551441711,
+                "backward_error": 1.7183976089069946e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 7.560800956603531e-16,
+                "row_action_scale_norm": 3.8727460400166787,
+                "backward_error": 1.9523100349154238e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 2.7374139825396853e-15,
+                "row_action_scale_norm": 82.12929260226882,
+                "backward_error": 3.333054377804375e-17
+              }
+            }
+          },
+          {
+            "macrocell": 11,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 3.2824982038072777e-15,
+                "row_action_scale_norm": 11.451483999902877,
+                "backward_error": 2.8664391478302006e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 3.255014727049806e-14,
+                "row_action_scale_norm": 88.64732907881498,
+                "backward_error": 3.6718700505413115e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 3.9689392000964275e-16,
+                "row_action_scale_norm": 3.49390097823099,
+                "backward_error": 1.135962130817444e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 1.892799647685734e-15,
+                "row_action_scale_norm": 88.78975503056297,
+                "backward_error": 2.13177708062625e-17
+              }
+            }
+          },
+          {
+            "macrocell": 12,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 5.1562777206302445e-15,
+                "row_action_scale_norm": 12.940225720255778,
+                "backward_error": 3.984689163929302e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 1.6400319344814917e-14,
+                "row_action_scale_norm": 89.96370194470951,
+                "backward_error": 1.8229929394073106e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 1.124111211609851e-15,
+                "row_action_scale_norm": 3.842564467719016,
+                "backward_error": 2.925419263758337e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 1.5296025781069095e-15,
+                "row_action_scale_norm": 76.49808081680364,
+                "backward_error": 1.9995306572069134e-17
+              }
+            }
+          },
+          {
+            "macrocell": 13,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 2.49796655331216e-15,
+                "row_action_scale_norm": 11.29018275838165,
+                "backward_error": 2.2125120618244284e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 2.5569354487736546e-14,
+                "row_action_scale_norm": 85.33532508472368,
+                "backward_error": 2.996338791977468e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 4.182186824511645e-16,
+                "row_action_scale_norm": 3.3246890149727797,
+                "backward_error": 1.257918200973719e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 1.813317038291364e-15,
+                "row_action_scale_norm": 79.4333965410798,
+                "backward_error": 2.2828144297639197e-17
+              }
+            }
+          },
+          {
+            "macrocell": 14,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 5.749371484014296e-15,
+                "row_action_scale_norm": 12.912161961667397,
+                "backward_error": 4.452679188103877e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 1.4383099225194414e-14,
+                "row_action_scale_norm": 90.79125189623846,
+                "backward_error": 1.5841943937101186e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 8.954543391425173e-16,
+                "row_action_scale_norm": 3.8552179953005488,
+                "backward_error": 2.32270740651777e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 1.7655288318815628e-15,
+                "row_action_scale_norm": 78.9306153375687,
+                "backward_error": 2.2368111845204657e-17
+              }
+            }
+          },
+          {
+            "macrocell": 15,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 4.0114186963715004e-15,
+                "row_action_scale_norm": 11.189209181247977,
+                "backward_error": 3.5850779366018526e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 7.3799275628805e-15,
+                "row_action_scale_norm": 85.22758521812415,
+                "backward_error": 8.65908325807067e-17
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 4.3612814793154955e-16,
+                "row_action_scale_norm": 3.33070404895963,
+                "backward_error": 1.3094172929227302e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 2.2111254668881225e-15,
+                "row_action_scale_norm": 82.48973743091959,
+                "backward_error": 2.680485519474241e-17
+              }
+            }
+          },
+          {
+            "macrocell": 16,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 4.0588422151544936e-15,
+                "row_action_scale_norm": 16.58142366574147,
+                "backward_error": 2.4478249256367424e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 1.643537268142533e-14,
+                "row_action_scale_norm": 117.79530820285554,
+                "backward_error": 1.3952484977688537e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 6.544461733371856e-16,
+                "row_action_scale_norm": 5.0374996695972465,
+                "backward_error": 1.2991488163998415e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 2.774317965462615e-15,
+                "row_action_scale_norm": 111.03746546340155,
+                "backward_error": 2.4985422297639193e-17
+              }
+            }
+          },
+          {
+            "macrocell": 17,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 5.270878551728811e-15,
+                "row_action_scale_norm": 14.486566389368962,
+                "backward_error": 3.638459528682291e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 2.0608242849210665e-14,
+                "row_action_scale_norm": 112.82836080696342,
+                "backward_error": 1.8265126517674967e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 6.692789267669676e-16,
+                "row_action_scale_norm": 4.429114015097639,
+                "backward_error": 1.5110898578938783e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 2.651887515856343e-15,
+                "row_action_scale_norm": 109.92038446584631,
+                "backward_error": 2.4125529843650783e-17
+              }
+            }
+          },
+          {
+            "macrocell": 18,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 3.987925788834251e-15,
+                "row_action_scale_norm": 16.252591056384,
+                "backward_error": 2.4537169335026113e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 2.293412602541175e-14,
+                "row_action_scale_norm": 116.36209121226422,
+                "backward_error": 1.970927626556316e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 1.1038644701288982e-15,
+                "row_action_scale_norm": 4.967765803049247,
+                "backward_error": 2.2220541665859914e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 1.8583203354930694e-15,
+                "row_action_scale_norm": 113.49616853261867,
+                "backward_error": 1.637341911642586e-17
+              }
+            }
+          },
+          {
+            "macrocell": 19,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 6.100236224965732e-15,
+                "row_action_scale_norm": 14.831557779057972,
+                "backward_error": 4.1130111319656595e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 2.9854881095138e-14,
+                "row_action_scale_norm": 114.67349519554291,
+                "backward_error": 2.603468311856111e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 7.146900479527877e-16,
+                "row_action_scale_norm": 4.537321326629504,
+                "backward_error": 1.575136510077603e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 2.954629225522045e-15,
+                "row_action_scale_norm": 118.66453656272286,
+                "backward_error": 2.489900783424295e-17
+              }
+            }
+          },
+          {
+            "macrocell": 20,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 4.434532479112753e-15,
+                "row_action_scale_norm": 16.445404474957318,
+                "backward_error": 2.6965177328812784e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 3.4383511539817536e-14,
+                "row_action_scale_norm": 113.43964455036739,
+                "backward_error": 3.030996057515959e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 1.0322672399878427e-15,
+                "row_action_scale_norm": 4.856440296180306,
+                "backward_error": 2.1255635342613867e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 2.13497748186787e-15,
+                "row_action_scale_norm": 98.78773444239839,
+                "backward_error": 2.16117668242786e-17
+              }
+            }
+          },
+          {
+            "macrocell": 21,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 5.209679288417389e-15,
+                "row_action_scale_norm": 14.879663000119596,
+                "backward_error": 3.501207848844101e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 2.5794747956976243e-14,
+                "row_action_scale_norm": 112.27485753582452,
+                "backward_error": 2.297464323100627e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 8.8640295678244485e-16,
+                "row_action_scale_norm": 4.42977180662695,
+                "backward_error": 2.0010126829927984e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 1.8644208169983486e-15,
+                "row_action_scale_norm": 108.03655690540255,
+                "backward_error": 1.7257314286967205e-17
+              }
+            }
+          },
+          {
+            "macrocell": 22,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 7.732721788497194e-15,
+                "row_action_scale_norm": 16.902455484443433,
+                "backward_error": 4.574910311471718e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 2.960396865282694e-14,
+                "row_action_scale_norm": 118.40433166774692,
+                "backward_error": 2.5002437187769713e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 9.992202562961366e-16,
+                "row_action_scale_norm": 4.899038090590889,
+                "backward_error": 2.0396254077208398e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 1.789550127775071e-15,
+                "row_action_scale_norm": 89.92595725068978,
+                "backward_error": 1.9900262198891903e-17
+              }
+            }
+          },
+          {
+            "macrocell": 23,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 2.613277641670995e-15,
+                "row_action_scale_norm": 13.837345283863696,
+                "backward_error": 1.8885686438123695e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 1.9927508685256073e-14,
+                "row_action_scale_norm": 104.24621145500298,
+                "backward_error": 1.9115810931755175e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 4.435061750130533e-16,
+                "row_action_scale_norm": 4.0479541179473495,
+                "backward_error": 1.0956304396996178e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 2.3960175607298966e-15,
+                "row_action_scale_norm": 95.36842843579626,
+                "backward_error": 2.5123802499722837e-17
+              }
+            }
+          },
+          {
+            "macrocell": 24,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 5.331350297846088e-15,
+                "row_action_scale_norm": 20.83841623930847,
+                "backward_error": 2.558423940006206e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 3.3451899226222555e-14,
+                "row_action_scale_norm": 146.31772012585628,
+                "backward_error": 2.286250715050006e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 1.1572636268438454e-15,
+                "row_action_scale_norm": 6.185211683254108,
+                "backward_error": 1.8710170097767714e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 2.9266166455036995e-15,
+                "row_action_scale_norm": 124.49203809062067,
+                "backward_error": 2.3508464399734115e-17
+              }
+            }
+          },
+          {
+            "macrocell": 25,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 4.923865749576021e-15,
+                "row_action_scale_norm": 18.68524823199817,
+                "backward_error": 2.6351620746166943e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 3.4232747907675096e-14,
+                "row_action_scale_norm": 139.97130626205725,
+                "backward_error": 2.445697537721325e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 8.57914302478085e-16,
+                "row_action_scale_norm": 5.497029735345953,
+                "backward_error": 1.5606870324198684e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 2.544996791722613e-15,
+                "row_action_scale_norm": 123.44230584131795,
+                "backward_error": 2.061689284218446e-17
+              }
+            }
+          },
+          {
+            "macrocell": 26,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 1.0624604775371785e-14,
+                "row_action_scale_norm": 21.02352655929198,
+                "backward_error": 5.053673914035094e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 3.82674936787194e-14,
+                "row_action_scale_norm": 144.58159775343591,
+                "backward_error": 2.6467748505573554e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 2.1557475494639103e-15,
+                "row_action_scale_norm": 6.277240889978279,
+                "backward_error": 3.4342278514523753e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 2.1489032756596633e-15,
+                "row_action_scale_norm": 129.74293236256426,
+                "backward_error": 1.656277715116375e-17
+              }
+            }
+          },
+          {
+            "macrocell": 27,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 5.920825195225253e-15,
+                "row_action_scale_norm": 17.679797923809232,
+                "backward_error": 3.3489213059679424e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 2.279984246051308e-14,
+                "row_action_scale_norm": 137.1546523499125,
+                "backward_error": 1.6623455398614937e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 8.370826861230972e-16,
+                "row_action_scale_norm": 5.323010058481694,
+                "backward_error": 1.5725739326554308e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 2.8920149367828573e-15,
+                "row_action_scale_norm": 133.1803901766804,
+                "backward_error": 2.1715020754528793e-17
+              }
+            }
+          },
+          {
+            "macrocell": 28,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 9.298496780103099e-15,
+                "row_action_scale_norm": 20.542259559158754,
+                "backward_error": 4.526520927907062e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 2.519373783276385e-14,
+                "row_action_scale_norm": 145.73743249220254,
+                "backward_error": 1.728707402205113e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 1.0631961611777462e-15,
+                "row_action_scale_norm": 6.066796590078054,
+                "backward_error": 1.7524836137024125e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 2.8299651971612673e-15,
+                "row_action_scale_norm": 136.42852558487047,
+                "backward_error": 2.074320736832109e-17
+              }
+            }
+          },
+          {
+            "macrocell": 29,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 6.195734143342258e-15,
+                "row_action_scale_norm": 18.630331761568943,
+                "backward_error": 3.3256166463567516e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 3.939415839324015e-14,
+                "row_action_scale_norm": 144.7974779652676,
+                "backward_error": 2.720638435614851e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 8.605537870972985e-16,
+                "row_action_scale_norm": 5.6835838681116915,
+                "backward_error": 1.5141041410957626e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 2.6969148169599476e-15,
+                "row_action_scale_norm": 146.73643542847117,
+                "backward_error": 1.8379312602796588e-17
+              }
+            }
+          },
+          {
+            "macrocell": 30,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 9.110752823653255e-15,
+                "row_action_scale_norm": 20.677571055022863,
+                "backward_error": 4.406103985525964e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 3.182765310991007e-14,
+                "row_action_scale_norm": 153.0246063472698,
+                "backward_error": 2.0799042630883347e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 1.8607244646442754e-15,
+                "row_action_scale_norm": 6.312935754808401,
+                "backward_error": 2.947478854393551e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 2.9144893411322906e-15,
+                "row_action_scale_norm": 121.60205632277773,
+                "backward_error": 2.3967434673934598e-17
+              }
+            }
+          },
+          {
+            "macrocell": 31,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 78,
+                "absolute_row_residual_norm": 5.716198090417731e-15,
+                "row_action_scale_norm": 18.36704779451316,
+                "backward_error": 3.112202981322533e-16
+              },
+              "force_balance": {
+                "row_count": 24,
+                "absolute_row_residual_norm": 3.250261097916118e-14,
+                "row_action_scale_norm": 141.53883470225324,
+                "backward_error": 2.296374069175783e-16
+              },
+              "weak_symmetry": {
+                "row_count": 12,
+                "absolute_row_residual_norm": 9.657560287059489e-16,
+                "row_action_scale_norm": 5.6348251880687625,
+                "backward_error": 1.713905926932482e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 36,
+                "absolute_row_residual_norm": 3.661898251272425e-15,
+                "row_action_scale_norm": 132.1576005133347,
+                "backward_error": 2.770857095655985e-17
+              }
+            }
+          }
+        ],
+        "norm_convention": "Original coefficient-row block norms; physical field L2 errors are separate",
+        "coefficient_vectors_persisted": false,
+        "field_replay_claimed": false
+      },
+      "physical_moment_diagnostics": {
+        "fine_force_max": 3.663779001934059e-14,
+        "weak_symmetry_max": 1.9649851475231524e-15,
+        "normal_traction_max": 3.552713678800501e-15
+      },
+      "accepted": true,
+      "elapsed_seconds": 5.048406593501568,
+      "conventions": "Physical row-wise H(div) Cauchy stress; lambda=-stress*n; weak P1 rotation; full nonhomogeneous displacement boundary data",
+      "study_scope": "Selected original geometry/data/BDM2 finite-space initial study; unresolved historical rotation column is not fitted",
+      "workers": 1,
+      "native_threads": 1,
+      "coefficient_vectors_persisted": false,
+      "field_replay_claimed": false,
+      "historical_literature_reproduction": false,
+      "uniform_inf_sup_proven": false,
+      "independent_native_whole_case_verified": false,
+      "numerical_record": "build/results/minimal-l18-v1/s1/record.json",
+      "numerical_record_sha256": "0881193cab0f3a459996d59ea7d98998f18e732babdbcdf8a66eccecd57a54d0",
+      "resource_record": "build/reports/completion/minimal-l18-s1-v1-resource.json",
+      "resource_record_sha256": "e0aed882bde3090cf09f4105cc8cd5395cc5992a15f754a24d4bc69ba7965efa",
+      "owned_elapsed_seconds": 7.61684825271368,
+      "owned_peak_rss_bytes": 221700096,
+      "closed_owned_children": []
+    },
+    {
+      "schema": "pymhm-initial-analytical-scalar-record-v1",
+      "family": "l18-oscillatory",
+      "case": "bdm2-trace1-enrichment0",
+      "resolution": 2,
+      "acquisition_uuid": "aca08c8a-1380-4188-8e39-325f9cdf55ee",
+      "source_sha256": {
+        "src/pymhm/__init__.py": "a3273ccef37cce0b25b1e1cbf9faf150dfaaf715aafc6bd87e6d4809b431898c",
+        "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+        "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+        "src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+        "src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+        "src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+        "src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+        "src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+        "src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+        "src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+        "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+        "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+        "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+        "src/pymhm/darcy.py": "945eb63777daa94f02cd89f77ec6299cf1fe8722b3d98c027c70b7d318e097fc",
+        "src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+        "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+        "src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+        "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+        "src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+        "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+        "src/pymhm/darcy_transport.py": "3f9331d82dae0d16b30c53085981646942574a552601ec34631ba3b00eab5b7e",
+        "src/pymhm/darcy_velocity.py": "83c0dc577fe731a4316962b389ed286e711fcf9264836094188206d6eb276558",
+        "src/pymhm/distributed.py": "c6cf5f26bd9033a72328d18f5d099ab0d9b867f92a6babe472c2035ff1abd7ae",
+        "src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+        "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+        "src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+        "src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+        "src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+        "src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+        "src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+        "src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+        "src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+        "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+        "src/pymhm/elastodynamics.py": "21d7d7327f85b61399e2166f4babdd0098d220031a3cc0f507014655fd539f6c",
+        "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+        "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+        "src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+        "src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+        "src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+        "src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+        "src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+        "src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+        "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+        "src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+        "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+        "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+        "src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+        "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+        "src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+        "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+        "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+        "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+        "src/pymhm/helmholtz.py": "603a3e5eccf84830f8819657d97d3f7f22d856f97f21482e992f3a64fb67c1b4",
+        "src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+        "src/pymhm/helmholtz_spaces.py": "a0805d5ea9a95636062df0917dba98cfad8bc7ec298eba55c5fc1e6320a44bfb",
+        "src/pymhm/hybrid.py": "e4ca37cd8fa05dcb505d2cc7d36c975bbd25ac9ee01564bc86dd70d1d042dbb3",
+        "src/pymhm/hybrid_refinement.py": "b3ac92f5403b0fbc9a509e04626b7981cbd9767654ea149a894f1c82b74ecc16",
+        "src/pymhm/lagrange.py": "db5552571ee459630678dad97a887d4c49d1a2eb700cd2847b3f0a5f4ee8a2b7",
+        "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+        "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+        "src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+        "src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+        "src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+        "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+        "src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+        "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+        "src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+        "src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+        "src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+        "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+        "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+        "src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+        "src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+        "src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+        "src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+        "src/pymhm/mshho.py": "557b02892d7b93d2560deff999ef543bc7b95e762024139b6c8968d6b4ede0ee",
+        "src/pymhm/mshho3d.py": "522668e3fa23cd7661c958151caacdcc9e9a0e013c6f44e2974f5745dd3a4089",
+        "src/pymhm/nested.py": "4414c4fba66266017d97b5a75eda9a24ad90393647bd75d1245b5f4f93bc0049",
+        "src/pymhm/offline.py": "7b40681863239cf07f5df220ad893f044d26314c9a5bb8563fff587ef3df4932",
+        "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+        "src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+        "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+        "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+        "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+        "src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+        "src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+        "src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+        "src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+        "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+        "src/pymhm/rad.py": "d1f3d5c948bcc9370333050e8dfc1b15d5372ef745d51f04d8f700065d40c1e7",
+        "src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+        "src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+        "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+        "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+        "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+        "src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+        "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+        "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+        "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+        "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+        "src/pymhm/scalar_boundary.py": "5c2d4970ef3e032f93caee5f9b36ce36f535f65a924ef1e666f0e4aa5f4b69b3",
+        "src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+        "src/pymhm/scalar_transient.py": "c68b44eec515d94c114ba555e09d01705754ce2a2dda5199c753dc6b8f7f0ef5",
+        "src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+        "src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+        "src/pymhm/solvers.py": "2d360c2f7d71d8c04caa1966125291849b45daa5a886f5030772981e1cdaa751",
+        "src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+        "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+        "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+        "src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+        "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+        "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+        "src/pymhm/triangle_fields.py": "60e456d358ec5615d98375d6588e6ac88de972304d2fd3ac505f1ca998f67f4c",
+        "src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+        "src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+        "src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+        "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94",
+        "examples/minimal_flow_originals.py": "18df0121fb009627c8d026e7cd5644bed1adb5682448ed401a3a1853746aa398",
+        "examples/core_elasticity_field_archive.py": "c33037bb41044d7e4815d3bcfb859c13b8951e5c7699c9311b9f8485fb2a72e0",
+        "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+        "examples/campaign_provenance.py": "32a86b873f1dc5cb5e134f057e80abbd06c831f531850262bc909fb4adf7e736",
+        "examples/transport_checkpoints.py": "c9c09536afbe7ae247fb97e2c626a410279a1df9358c7984405d888e9a25f518",
+        "examples/local_response_cache.py": "4921332802aa6400356e9536366244e4285981d0cd7451abff376cf64ab7f5d5",
+        "pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57",
+        "pixi.toml": "c6d1234f9f6715265cdb85aadfcda86df379f542f6c579ed79e48835bdc29870",
+        "pyproject.toml": "9fe172ddcb0fc2407c85c8140de8d263808d3a2e57db016aea3a012a475efbc9",
+        "examples/minimal_elasticity_l18.py": "d88cd6f86e7bf44b5041081bfb633557c7c45fb2479d611716fcf9f2efef394a",
+        "examples/plot_mixed_elasticity.py": "4804a4e7cbf7d6fc16e554a1c2a068236549960bedd2ad025bf50bbc5b6ee7df",
+        "examples/plot_mesh.py": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6"
+      },
+      "macro_cells": 32,
+      "fine_cells": 512,
+      "macro_geometry": "unit_square(4): 32 diagonal triangles",
+      "macro_h": 0.25,
+      "stress_degree": 2,
+      "displacement_degree": 1,
+      "rotation_degree": 1,
+      "trace_degree": 1,
+      "enrichment": 0,
+      "local_refinement": 4,
+      "poisson_ratio": 0.3,
+      "assembly_order": 16,
+      "norm_orders": [
+        16,
+        20
+      ],
+      "norms_by_order": {
+        "16": {
+          "displacement_l2": 0.00602380306382795,
+          "stress_l2": 14.301494866376826,
+          "rotation_l2": 0.14940430494487528,
+          "stress_divergence_l2": 232.82371896692513
+        },
+        "20": {
+          "displacement_l2": 0.006023803063827935,
+          "stress_l2": 14.301494866376807,
+          "rotation_l2": 0.14940430494487508,
+          "stress_divergence_l2": 232.82371896692447
+        }
+      },
+      "terminal_norms": {
+        "displacement_l2": 0.006023803063827935,
+        "stress_l2": 14.301494866376807,
+        "rotation_l2": 0.14940430494487508,
+        "stress_divergence_l2": 232.82371896692447
+      },
+      "physical_error_quadrature_relative_changes": {
+        "displacement_l2": 2.5918030716412585e-15,
+        "stress_l2": 1.3662855118272732e-15,
+        "rotation_l2": 1.300424571976612e-15,
+        "stress_divergence_l2": 2.8077006921797273e-15
+      },
+      "original_equations": {
+        "accepted": true,
+        "criterion": 1e-10,
+        "full_uncondensed_relative_to_physical_rhs": 9.455580632133703e-15,
+        "physical_rhs_row_norm": 43.30346958183834,
+        "maximum_original_block_backward_error": 3.1183521651581696e-15,
+        "global_weak_row_absolute_residual_norm": 5.5649973321105245e-14,
+        "physical_mean_relative_defect": 3.074705802046022e-17,
+        "reduced_gauge_relative_defect": 6.213048640044451e-17,
+        "physical_mean_values": [
+          0.22484387683941554
+        ],
+        "physical_mean_targets": [
+          0.22484387683941073
+        ],
+        "gauge_multipliers": [
+          5.660094921084418e-15
+        ],
+        "blocks": [
+          {
+            "macrocell": 0,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 9.482222251376468e-15,
+                "row_action_scale_norm": 10.259058177638797,
+                "backward_error": 9.242780465018159e-16
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 3.462457721480999e-14,
+                "row_action_scale_norm": 64.88160719981929,
+                "backward_error": 5.336578224422657e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 4.062761290805097e-16,
+                "row_action_scale_norm": 1.4212527861863966,
+                "backward_error": 2.8585775382763386e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 9.350621686426568e-16,
+                "row_action_scale_norm": 44.22915730043675,
+                "backward_error": 2.114130645291366e-17
+              }
+            }
+          },
+          {
+            "macrocell": 1,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 1.6372905856928988e-14,
+                "row_action_scale_norm": 9.442118687847067,
+                "backward_error": 1.734028812622587e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 3.7697620346109086e-14,
+                "row_action_scale_norm": 64.85246625713981,
+                "backward_error": 5.812827564126574e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 4.3307438223320873e-16,
+                "row_action_scale_norm": 1.3830318607932086,
+                "backward_error": 3.131340604003353e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 8.744328815162977e-16,
+                "row_action_scale_norm": 49.100586712803924,
+                "backward_error": 1.7809010850134557e-17
+              }
+            }
+          },
+          {
+            "macrocell": 2,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 1.2587366276659888e-14,
+                "row_action_scale_norm": 10.326928539696478,
+                "backward_error": 1.2188877097652354e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 2.577681967088647e-14,
+                "row_action_scale_norm": 66.27155460716388,
+                "backward_error": 3.889575221779998e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 5.923653794302616e-16,
+                "row_action_scale_norm": 1.4562969490415159,
+                "backward_error": 4.0676139562067746e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.0169633245092018e-15,
+                "row_action_scale_norm": 41.89008345268651,
+                "backward_error": 2.427694673031217e-17
+              }
+            }
+          },
+          {
+            "macrocell": 3,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 9.008906499090712e-15,
+                "row_action_scale_norm": 9.468880773865237,
+                "backward_error": 9.514225296780496e-16
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 4.1672074817378245e-14,
+                "row_action_scale_norm": 62.446108828151694,
+                "backward_error": 6.673286070082851e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 5.203608474584963e-16,
+                "row_action_scale_norm": 1.343260743891249,
+                "backward_error": 3.8738632825007576e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.0006887245896412e-15,
+                "row_action_scale_norm": 46.416535141082335,
+                "backward_error": 2.1558884598948702e-17
+              }
+            }
+          },
+          {
+            "macrocell": 4,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 1.304749205582179e-14,
+                "row_action_scale_norm": 10.292440382742253,
+                "backward_error": 1.2676772048832113e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 3.9326512327476733e-14,
+                "row_action_scale_norm": 68.9851113347351,
+                "backward_error": 5.700724629790547e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 6.214740597229106e-16,
+                "row_action_scale_norm": 1.5263194884930298,
+                "backward_error": 4.0717167303976847e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.2484918778345618e-15,
+                "row_action_scale_norm": 49.85865560101856,
+                "backward_error": 2.504062459736793e-17
+              }
+            }
+          },
+          {
+            "macrocell": 5,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 1.402473420419461e-14,
+                "row_action_scale_norm": 9.285262747418315,
+                "backward_error": 1.510429439177051e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 3.371296591447642e-14,
+                "row_action_scale_norm": 63.819740188557795,
+                "backward_error": 5.28252948302049e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 5.141926976371384e-16,
+                "row_action_scale_norm": 1.3768547784849379,
+                "backward_error": 3.73454561564543e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.3004622087011506e-15,
+                "row_action_scale_norm": 50.35984428545573,
+                "backward_error": 2.582339614335807e-17
+              }
+            }
+          },
+          {
+            "macrocell": 6,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 1.0474058818882596e-14,
+                "row_action_scale_norm": 10.200814094541249,
+                "backward_error": 1.0267865605439834e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 2.947230294591846e-14,
+                "row_action_scale_norm": 67.68007429116543,
+                "backward_error": 4.354649910566899e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 5.238579777696677e-16,
+                "row_action_scale_norm": 1.4851498355600252,
+                "backward_error": 3.527307246895594e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 8.703821801986174e-16,
+                "row_action_scale_norm": 51.115116269999334,
+                "backward_error": 1.7027882233527564e-17
+              }
+            }
+          },
+          {
+            "macrocell": 7,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 1.7546023825518992e-14,
+                "row_action_scale_norm": 9.442311149599801,
+                "backward_error": 1.8582340221083115e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 7.654885790980943e-14,
+                "row_action_scale_norm": 67.5320871671825,
+                "backward_error": 1.1335183187853355e-15
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 7.151193622524445e-16,
+                "row_action_scale_norm": 1.4522751012826356,
+                "backward_error": 4.924131534175982e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.0280391054603134e-15,
+                "row_action_scale_norm": 55.97339446256635,
+                "backward_error": 1.8366567104445327e-17
+              }
+            }
+          },
+          {
+            "macrocell": 8,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 1.6646319840572313e-14,
+                "row_action_scale_norm": 13.291087397865287,
+                "backward_error": 1.2524422827319544e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 4.6485161922141384e-14,
+                "row_action_scale_norm": 88.27240034316966,
+                "backward_error": 5.266103758527544e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 4.645562143521137e-16,
+                "row_action_scale_norm": 1.9416033372869252,
+                "backward_error": 2.39264223248223e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.2439992676887896e-15,
+                "row_action_scale_norm": 67.08971458476287,
+                "backward_error": 1.854232463781149e-17
+              }
+            }
+          },
+          {
+            "macrocell": 9,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 1.5675844351483555e-14,
+                "row_action_scale_norm": 12.0396792690601,
+                "backward_error": 1.3020151119613105e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 5.508177756661232e-14,
+                "row_action_scale_norm": 84.70621730411479,
+                "backward_error": 6.502684138149633e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 7.035523147823669e-16,
+                "row_action_scale_norm": 1.8093508382043033,
+                "backward_error": 3.8884239580678e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.4825543219886424e-15,
+                "row_action_scale_norm": 70.36490270929859,
+                "backward_error": 2.1069514273523263e-17
+              }
+            }
+          },
+          {
+            "macrocell": 10,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 1.7636501657143803e-14,
+                "row_action_scale_norm": 13.13467355473603,
+                "backward_error": 1.3427438134375656e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 5.334623189191136e-14,
+                "row_action_scale_norm": 85.1380073344395,
+                "backward_error": 6.265853942570732e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 6.309474809376204e-16,
+                "row_action_scale_norm": 1.8722687012034451,
+                "backward_error": 3.3699622310198527e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.574536141551151e-15,
+                "row_action_scale_norm": 61.114157394157914,
+                "backward_error": 2.5763852578317077e-17
+              }
+            }
+          },
+          {
+            "macrocell": 11,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 2.0566705126235353e-14,
+                "row_action_scale_norm": 11.985334624017753,
+                "backward_error": 1.715989229455567e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 8.490423104827357e-14,
+                "row_action_scale_norm": 85.21927867194884,
+                "backward_error": 9.963030944572056e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 1.7261682490034083e-15,
+                "row_action_scale_norm": 1.830011181849757,
+                "backward_error": 9.432555746783002e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.1136845040831046e-15,
+                "row_action_scale_norm": 68.57168923556219,
+                "backward_error": 1.6241170612806385e-17
+              }
+            }
+          },
+          {
+            "macrocell": 12,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 1.6477064357941207e-14,
+                "row_action_scale_norm": 13.178297949448545,
+                "backward_error": 1.2503180927572441e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 3.883132990135047e-14,
+                "row_action_scale_norm": 84.21111593378849,
+                "backward_error": 4.611188139566021e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 5.777186014825507e-16,
+                "row_action_scale_norm": 1.8510650850209411,
+                "backward_error": 3.1210064203442905e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.3977122304179267e-15,
+                "row_action_scale_norm": 56.5917021648421,
+                "backward_error": 2.4698183248608187e-17
+              }
+            }
+          },
+          {
+            "macrocell": 13,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 2.6435068161299128e-14,
+                "row_action_scale_norm": 12.140120388555923,
+                "backward_error": 2.1774963769073133e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 6.276597841432063e-14,
+                "row_action_scale_norm": 81.52653758793728,
+                "backward_error": 7.698840190118355e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 1.0608379566437562e-15,
+                "row_action_scale_norm": 1.7549063104689904,
+                "backward_error": 6.044983429116807e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.3153010513370335e-15,
+                "row_action_scale_norm": 58.168534208863484,
+                "backward_error": 2.2611899529980133e-17
+              }
+            }
+          },
+          {
+            "macrocell": 14,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 1.2485294281206734e-14,
+                "row_action_scale_norm": 13.129508095035272,
+                "backward_error": 9.509338956824942e-16
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 4.139008524298247e-14,
+                "row_action_scale_norm": 85.21064156674954,
+                "backward_error": 4.857384533428217e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 5.838451055933689e-16,
+                "row_action_scale_norm": 1.8729717445826404,
+                "backward_error": 3.117212564909615e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.4451649458564764e-15,
+                "row_action_scale_norm": 59.376180554759166,
+                "backward_error": 2.433913620502561e-17
+              }
+            }
+          },
+          {
+            "macrocell": 15,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 2.6527272258132274e-14,
+                "row_action_scale_norm": 12.362537725849146,
+                "backward_error": 2.145778872137694e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 5.0537657351455144e-14,
+                "row_action_scale_norm": 81.10252694413428,
+                "backward_error": 6.231329559714818e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 1.2356567792695969e-15,
+                "row_action_scale_norm": 1.7496427337681941,
+                "backward_error": 7.062337672836619e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.7777212846842034e-15,
+                "row_action_scale_norm": 61.28207932661004,
+                "backward_error": 2.900882777181285e-17
+              }
+            }
+          },
+          {
+            "macrocell": 16,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 2.107325202607132e-14,
+                "row_action_scale_norm": 16.932277206259194,
+                "backward_error": 1.244561010274588e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 7.803522973002907e-14,
+                "row_action_scale_norm": 113.47988644310303,
+                "backward_error": 6.876569247287242e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 1.3227467369384042e-15,
+                "row_action_scale_norm": 2.5096826925172273,
+                "backward_error": 5.270573610290475e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 2.3597071853762318e-15,
+                "row_action_scale_norm": 84.00506662429738,
+                "backward_error": 2.809005790007572e-17
+              }
+            }
+          },
+          {
+            "macrocell": 17,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 2.217642798110321e-14,
+                "row_action_scale_norm": 15.27732134804358,
+                "backward_error": 1.451591380182831e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 7.792508898998477e-14,
+                "row_action_scale_norm": 105.03888812447168,
+                "backward_error": 7.418689437919706e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 1.0227777723973878e-15,
+                "row_action_scale_norm": 2.266352269865116,
+                "backward_error": 4.5128808349739e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 2.0244684233126035e-15,
+                "row_action_scale_norm": 82.42185078663321,
+                "backward_error": 2.456227813366358e-17
+              }
+            }
+          },
+          {
+            "macrocell": 18,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 1.9736419438239755e-14,
+                "row_action_scale_norm": 16.9245954706469,
+                "backward_error": 1.1661383264651454e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 5.68511060328549e-14,
+                "row_action_scale_norm": 111.17156772182001,
+                "backward_error": 5.113817066528293e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 6.967063028286029e-16,
+                "row_action_scale_norm": 2.4569415537577064,
+                "backward_error": 2.8356649418991803e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 2.1833517140847048e-15,
+                "row_action_scale_norm": 84.95673737531578,
+                "backward_error": 2.5699571117464768e-17
+              }
+            }
+          },
+          {
+            "macrocell": 19,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 2.5267284469536605e-14,
+                "row_action_scale_norm": 15.3915976155405,
+                "backward_error": 1.6416284456413334e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 8.828073724543192e-14,
+                "row_action_scale_norm": 109.74073608069807,
+                "backward_error": 8.044481967071418e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 1.8748702832224617e-15,
+                "row_action_scale_norm": 2.349634475054606,
+                "backward_error": 7.979412555984434e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 2.1169594754153886e-15,
+                "row_action_scale_norm": 90.04478041643229,
+                "backward_error": 2.35100742722125e-17
+              }
+            }
+          },
+          {
+            "macrocell": 20,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 1.8121991412765452e-14,
+                "row_action_scale_norm": 16.944870000031734,
+                "backward_error": 1.0694677157589002e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 4.546854717899988e-14,
+                "row_action_scale_norm": 106.94856819807538,
+                "backward_error": 4.251440476957982e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 7.949071696594124e-16,
+                "row_action_scale_norm": 2.3324087338244284,
+                "backward_error": 3.408095494291906e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 2.1599839763710124e-15,
+                "row_action_scale_norm": 74.3378422778279,
+                "backward_error": 2.9056317888517085e-17
+              }
+            }
+          },
+          {
+            "macrocell": 21,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 2.69637281575789e-14,
+                "row_action_scale_norm": 15.956278434178534,
+                "backward_error": 1.689850692240509e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 7.601896580561576e-14,
+                "row_action_scale_norm": 108.90784463339094,
+                "backward_error": 6.980118471861529e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 1.0310673170283425e-15,
+                "row_action_scale_norm": 2.335703491118986,
+                "backward_error": 4.414375886959779e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 2.293659323888148e-15,
+                "row_action_scale_norm": 81.62173431659419,
+                "backward_error": 2.810108536767312e-17
+              }
+            }
+          },
+          {
+            "macrocell": 22,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 1.7680917092261703e-14,
+                "row_action_scale_norm": 16.882950524194467,
+                "backward_error": 1.0472646393723475e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 4.2815693612030766e-14,
+                "row_action_scale_norm": 109.49245165601522,
+                "backward_error": 3.910378566235948e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 5.831369546723066e-16,
+                "row_action_scale_norm": 2.3792232409071135,
+                "backward_error": 2.450955188425182e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.281253186010025e-15,
+                "row_action_scale_norm": 68.48913238592688,
+                "backward_error": 1.8707394025527128e-17
+              }
+            }
+          },
+          {
+            "macrocell": 23,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 1.7595357408625817e-14,
+                "row_action_scale_norm": 15.599933710230982,
+                "backward_error": 1.1279123190815977e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 6.494308105994385e-14,
+                "row_action_scale_norm": 101.82998907352629,
+                "backward_error": 6.377598745793023e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 6.145285719454514e-16,
+                "row_action_scale_norm": 2.203531458213827,
+                "backward_error": 2.788835029582857e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.3735245052582396e-15,
+                "row_action_scale_norm": 74.55743490962853,
+                "backward_error": 1.8422368029735682e-17
+              }
+            }
+          },
+          {
+            "macrocell": 24,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 2.867929167644112e-14,
+                "row_action_scale_norm": 21.818564050441427,
+                "backward_error": 1.3144445074450666e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 7.270361947432017e-14,
+                "row_action_scale_norm": 139.38164161294537,
+                "backward_error": 5.216154626461772e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 8.009899819948146e-16,
+                "row_action_scale_norm": 3.078946312755233,
+                "backward_error": 2.601506816395375e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 2.5812425270582963e-15,
+                "row_action_scale_norm": 93.78216574239232,
+                "backward_error": 2.752381016822155e-17
+              }
+            }
+          },
+          {
+            "macrocell": 25,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 4.4420298595348224e-14,
+                "row_action_scale_norm": 19.76335386210247,
+                "backward_error": 2.2476093331773542e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 7.999604358206506e-14,
+                "row_action_scale_norm": 133.24954687123744,
+                "backward_error": 6.003475843664019e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 1.2967741368831652e-15,
+                "row_action_scale_norm": 2.8660800040753034,
+                "backward_error": 4.524556659406825e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.5515851680211433e-15,
+                "row_action_scale_norm": 92.68039422973966,
+                "backward_error": 1.6741244800653474e-17
+              }
+            }
+          },
+          {
+            "macrocell": 26,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 2.6794928683707158e-14,
+                "row_action_scale_norm": 22.047219445724377,
+                "backward_error": 1.2153427669040373e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 7.520712400255489e-14,
+                "row_action_scale_norm": 142.97826771217532,
+                "backward_error": 5.260038830093521e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 1.2501083383504842e-15,
+                "row_action_scale_norm": 3.1631567810190413,
+                "backward_error": 3.9520909802888423e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 2.594292700191145e-15,
+                "row_action_scale_norm": 99.41023652773596,
+                "backward_error": 2.6096836611663467e-17
+              }
+            }
+          },
+          {
+            "macrocell": 27,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 6.217113054022218e-14,
+                "row_action_scale_norm": 19.93717426622619,
+                "backward_error": 3.1183521651581696e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 1.120135872319257e-13,
+                "row_action_scale_norm": 133.04724670767644,
+                "backward_error": 8.419083446201284e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 2.3283980810300102e-15,
+                "row_action_scale_norm": 2.8384454575642994,
+                "backward_error": 8.20307494309943e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 3.0614717070831136e-15,
+                "row_action_scale_norm": 99.49455948290384,
+                "backward_error": 3.0770242342840534e-17
+              }
+            }
+          },
+          {
+            "macrocell": 28,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 3.475085385060073e-14,
+                "row_action_scale_norm": 21.539941298047676,
+                "backward_error": 1.6133216599689834e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 8.250349959803961e-14,
+                "row_action_scale_norm": 144.18662538477923,
+                "backward_error": 5.721993935142679e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 1.1613662064925606e-15,
+                "row_action_scale_norm": 3.1513196560258376,
+                "backward_error": 3.685332918454777e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 3.2254395248028876e-15,
+                "row_action_scale_norm": 108.61917495643016,
+                "backward_error": 2.9694936700602736e-17
+              }
+            }
+          },
+          {
+            "macrocell": 29,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 3.080239431296515e-14,
+                "row_action_scale_norm": 19.94024770883733,
+                "backward_error": 1.5447347877887104e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 1.2862667848317393e-13,
+                "row_action_scale_norm": 139.87276933802084,
+                "backward_error": 9.195977107762178e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 1.0726501006637903e-15,
+                "row_action_scale_norm": 2.9784296692078467,
+                "backward_error": 3.601394760981803e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 2.696608722434522e-15,
+                "row_action_scale_norm": 111.21006708543221,
+                "backward_error": 2.424788324570447e-17
+              }
+            }
+          },
+          {
+            "macrocell": 30,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 2.4734127374799202e-14,
+                "row_action_scale_norm": 22.185955361564613,
+                "backward_error": 1.1148551852605407e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 7.092884907445002e-14,
+                "row_action_scale_norm": 147.88705727360346,
+                "backward_error": 4.796149871535121e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 8.949874552911556e-16,
+                "row_action_scale_norm": 3.2150597964699292,
+                "backward_error": 2.7837350218923883e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.8064297027314842e-15,
+                "row_action_scale_norm": 96.87205632281605,
+                "backward_error": 1.8647582918150775e-17
+              }
+            }
+          },
+          {
+            "macrocell": 31,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 276,
+                "absolute_row_residual_norm": 3.134108370491605e-14,
+                "row_action_scale_norm": 19.517372068076366,
+                "backward_error": 1.6058044902561017e-15
+              },
+              "force_balance": {
+                "row_count": 96,
+                "absolute_row_residual_norm": 1.0212029364526728e-13,
+                "row_action_scale_norm": 139.01031082678125,
+                "backward_error": 7.346238781705762e-16
+              },
+              "weak_symmetry": {
+                "row_count": 48,
+                "absolute_row_residual_norm": 1.1201222341056336e-15,
+                "row_action_scale_norm": 2.9888180214002924,
+                "backward_error": 3.7477097169698027e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 72,
+                "absolute_row_residual_norm": 1.8872746713660305e-15,
+                "row_action_scale_norm": 105.13784444500375,
+                "backward_error": 1.795047902426076e-17
+              }
+            }
+          }
+        ],
+        "norm_convention": "Original coefficient-row block norms; physical field L2 errors are separate",
+        "coefficient_vectors_persisted": false,
+        "field_replay_claimed": false
+      },
+      "physical_moment_diagnostics": {
+        "fine_force_max": 6.085430367220668e-14,
+        "weak_symmetry_max": 1.5254385753692146e-15,
+        "normal_traction_max": 3.552713678800501e-15
+      },
+      "accepted": true,
+      "elapsed_seconds": 15.229311492294073,
+      "conventions": "Physical row-wise H(div) Cauchy stress; lambda=-stress*n; weak P1 rotation; full nonhomogeneous displacement boundary data",
+      "study_scope": "Selected original geometry/data/BDM2 finite-space initial study; unresolved historical rotation column is not fitted",
+      "workers": 1,
+      "native_threads": 1,
+      "coefficient_vectors_persisted": false,
+      "field_replay_claimed": false,
+      "historical_literature_reproduction": false,
+      "uniform_inf_sup_proven": false,
+      "independent_native_whole_case_verified": false,
+      "numerical_record": "build/results/minimal-l18-v1/s2/record.json",
+      "numerical_record_sha256": "a025c5688d3aa6208cd338cdd8e0ab83f0ac6138e448d2e52a7ca6340abdfec4",
+      "resource_record": "build/reports/completion/minimal-l18-s2-v1-resource.json",
+      "resource_record_sha256": "aa48b61121b80cbf3a29c61c751221042b3587f9855265000c44fdd5740d2fd6",
+      "owned_elapsed_seconds": 17.790601029992104,
+      "owned_peak_rss_bytes": 243290112,
+      "closed_owned_children": []
+    },
+    {
+      "schema": "pymhm-initial-analytical-scalar-record-v1",
+      "family": "l18-oscillatory",
+      "case": "bdm2-trace1-enrichment0",
+      "resolution": 4,
+      "acquisition_uuid": "fc4fbe34-fb33-49ef-837b-59f87bb90090",
+      "source_sha256": {
+        "src/pymhm/__init__.py": "a3273ccef37cce0b25b1e1cbf9faf150dfaaf715aafc6bd87e6d4809b431898c",
+        "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+        "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+        "src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+        "src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+        "src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+        "src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+        "src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+        "src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+        "src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+        "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+        "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+        "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+        "src/pymhm/darcy.py": "945eb63777daa94f02cd89f77ec6299cf1fe8722b3d98c027c70b7d318e097fc",
+        "src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+        "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+        "src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+        "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+        "src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+        "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+        "src/pymhm/darcy_transport.py": "3f9331d82dae0d16b30c53085981646942574a552601ec34631ba3b00eab5b7e",
+        "src/pymhm/darcy_velocity.py": "83c0dc577fe731a4316962b389ed286e711fcf9264836094188206d6eb276558",
+        "src/pymhm/distributed.py": "c6cf5f26bd9033a72328d18f5d099ab0d9b867f92a6babe472c2035ff1abd7ae",
+        "src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+        "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+        "src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+        "src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+        "src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+        "src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+        "src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+        "src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+        "src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+        "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+        "src/pymhm/elastodynamics.py": "21d7d7327f85b61399e2166f4babdd0098d220031a3cc0f507014655fd539f6c",
+        "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+        "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+        "src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+        "src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+        "src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+        "src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+        "src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+        "src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+        "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+        "src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+        "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+        "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+        "src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+        "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+        "src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+        "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+        "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+        "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+        "src/pymhm/helmholtz.py": "603a3e5eccf84830f8819657d97d3f7f22d856f97f21482e992f3a64fb67c1b4",
+        "src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+        "src/pymhm/helmholtz_spaces.py": "a0805d5ea9a95636062df0917dba98cfad8bc7ec298eba55c5fc1e6320a44bfb",
+        "src/pymhm/hybrid.py": "e4ca37cd8fa05dcb505d2cc7d36c975bbd25ac9ee01564bc86dd70d1d042dbb3",
+        "src/pymhm/hybrid_refinement.py": "b3ac92f5403b0fbc9a509e04626b7981cbd9767654ea149a894f1c82b74ecc16",
+        "src/pymhm/lagrange.py": "db5552571ee459630678dad97a887d4c49d1a2eb700cd2847b3f0a5f4ee8a2b7",
+        "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+        "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+        "src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+        "src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+        "src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+        "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+        "src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+        "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+        "src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+        "src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+        "src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+        "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+        "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+        "src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+        "src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+        "src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+        "src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+        "src/pymhm/mshho.py": "557b02892d7b93d2560deff999ef543bc7b95e762024139b6c8968d6b4ede0ee",
+        "src/pymhm/mshho3d.py": "522668e3fa23cd7661c958151caacdcc9e9a0e013c6f44e2974f5745dd3a4089",
+        "src/pymhm/nested.py": "4414c4fba66266017d97b5a75eda9a24ad90393647bd75d1245b5f4f93bc0049",
+        "src/pymhm/offline.py": "7b40681863239cf07f5df220ad893f044d26314c9a5bb8563fff587ef3df4932",
+        "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+        "src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+        "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+        "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+        "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+        "src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+        "src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+        "src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+        "src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+        "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+        "src/pymhm/rad.py": "d1f3d5c948bcc9370333050e8dfc1b15d5372ef745d51f04d8f700065d40c1e7",
+        "src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+        "src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+        "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+        "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+        "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+        "src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+        "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+        "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+        "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+        "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+        "src/pymhm/scalar_boundary.py": "5c2d4970ef3e032f93caee5f9b36ce36f535f65a924ef1e666f0e4aa5f4b69b3",
+        "src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+        "src/pymhm/scalar_transient.py": "c68b44eec515d94c114ba555e09d01705754ce2a2dda5199c753dc6b8f7f0ef5",
+        "src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+        "src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+        "src/pymhm/solvers.py": "2d360c2f7d71d8c04caa1966125291849b45daa5a886f5030772981e1cdaa751",
+        "src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+        "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+        "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+        "src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+        "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+        "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+        "src/pymhm/triangle_fields.py": "60e456d358ec5615d98375d6588e6ac88de972304d2fd3ac505f1ca998f67f4c",
+        "src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+        "src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+        "src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+        "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94",
+        "examples/minimal_flow_originals.py": "18df0121fb009627c8d026e7cd5644bed1adb5682448ed401a3a1853746aa398",
+        "examples/core_elasticity_field_archive.py": "c33037bb41044d7e4815d3bcfb859c13b8951e5c7699c9311b9f8485fb2a72e0",
+        "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+        "examples/campaign_provenance.py": "32a86b873f1dc5cb5e134f057e80abbd06c831f531850262bc909fb4adf7e736",
+        "examples/transport_checkpoints.py": "c9c09536afbe7ae247fb97e2c626a410279a1df9358c7984405d888e9a25f518",
+        "examples/local_response_cache.py": "4921332802aa6400356e9536366244e4285981d0cd7451abff376cf64ab7f5d5",
+        "pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57",
+        "pixi.toml": "c6d1234f9f6715265cdb85aadfcda86df379f542f6c579ed79e48835bdc29870",
+        "pyproject.toml": "9fe172ddcb0fc2407c85c8140de8d263808d3a2e57db016aea3a012a475efbc9",
+        "examples/minimal_elasticity_l18.py": "d88cd6f86e7bf44b5041081bfb633557c7c45fb2479d611716fcf9f2efef394a",
+        "examples/plot_mixed_elasticity.py": "4804a4e7cbf7d6fc16e554a1c2a068236549960bedd2ad025bf50bbc5b6ee7df",
+        "examples/plot_mesh.py": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6"
+      },
+      "macro_cells": 32,
+      "fine_cells": 2048,
+      "macro_geometry": "unit_square(4): 32 diagonal triangles",
+      "macro_h": 0.25,
+      "stress_degree": 2,
+      "displacement_degree": 1,
+      "rotation_degree": 1,
+      "trace_degree": 1,
+      "enrichment": 0,
+      "local_refinement": 8,
+      "poisson_ratio": 0.3,
+      "assembly_order": 16,
+      "norm_orders": [
+        16,
+        20
+      ],
+      "norms_by_order": {
+        "16": {
+          "displacement_l2": 0.0012456863892609084,
+          "stress_l2": 3.6570737782373026,
+          "rotation_l2": 0.03639749427154481,
+          "stress_divergence_l2": 66.33443044995366
+        },
+        "20": {
+          "displacement_l2": 0.001245686389260906,
+          "stress_l2": 3.657073778237293,
+          "rotation_l2": 0.03639749427154477,
+          "stress_divergence_l2": 66.33443044995347
+        }
+      },
+      "terminal_norms": {
+        "displacement_l2": 0.001245686389260906,
+        "stress_l2": 3.657073778237293,
+        "rotation_l2": 0.03639749427154477,
+        "stress_divergence_l2": 66.33443044995347
+      },
+      "physical_error_quadrature_relative_changes": {
+        "displacement_l2": 1.9148035974635073e-15,
+        "stress_l2": 2.671524614800222e-15,
+        "rotation_l2": 1.1438524617336626e-15,
+        "stress_divergence_l2": 2.7849958165692763e-15
+      },
+      "original_equations": {
+        "accepted": true,
+        "criterion": 1e-10,
+        "full_uncondensed_relative_to_physical_rhs": 2.9677716251897355e-14,
+        "physical_rhs_row_norm": 22.441898157772506,
+        "maximum_original_block_backward_error": 4.681607389328422e-15,
+        "global_weak_row_absolute_residual_norm": 1.97085203175696e-13,
+        "physical_mean_relative_defect": 6.343787333300187e-17,
+        "reduced_gauge_relative_defect": 1.0589523163118883e-17,
+        "physical_mean_values": [
+          0.22484190290162254
+        ],
+        "physical_mean_targets": [
+          0.22484190290161354
+        ],
+        "gauge_multipliers": [
+          -9.699341310397997e-15
+        ],
+        "blocks": [
+          {
+            "macrocell": 0,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 2.393818803866841e-14,
+                "row_action_scale_norm": 11.661787726564997,
+                "backward_error": 2.0527031189341888e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 4.585427044295145e-14,
+                "row_action_scale_norm": 62.7959605289359,
+                "backward_error": 7.302105112608662e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 3.0228279149067805e-16,
+                "row_action_scale_norm": 0.7105364448170821,
+                "backward_error": 4.2542897510133577e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 6.803508395788198e-16,
+                "row_action_scale_norm": 30.228010242653564,
+                "backward_error": 2.250729816872972e-17
+              }
+            }
+          },
+          {
+            "macrocell": 1,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 2.744200458935282e-14,
+                "row_action_scale_norm": 10.955298710231908,
+                "backward_error": 2.5049070148788223e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 5.94331426343502e-14,
+                "row_action_scale_norm": 61.513766442657634,
+                "backward_error": 9.661762898188495e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 4.590340268101879e-16,
+                "row_action_scale_norm": 0.6853859396543063,
+                "backward_error": 6.697453219447639e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 8.178040484760378e-16,
+                "row_action_scale_norm": 32.735530991681514,
+                "backward_error": 2.498215314374621e-17
+              }
+            }
+          },
+          {
+            "macrocell": 2,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 2.8903032934015804e-14,
+                "row_action_scale_norm": 11.697816178117762,
+                "backward_error": 2.470805874696729e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 5.728267162614013e-14,
+                "row_action_scale_norm": 64.64607400731019,
+                "backward_error": 8.860966811327568e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 3.824361170802006e-16,
+                "row_action_scale_norm": 0.7307500679719876,
+                "backward_error": 5.233473575193164e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 6.807807439711588e-16,
+                "row_action_scale_norm": 29.112904337516422,
+                "backward_error": 2.3384157625725746e-17
+              }
+            }
+          },
+          {
+            "macrocell": 3,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 3.308537807061487e-14,
+                "row_action_scale_norm": 10.983587017676356,
+                "backward_error": 3.0122561980315862e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 5.343796325849484e-14,
+                "row_action_scale_norm": 59.365432972359855,
+                "backward_error": 9.0015284287365e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 3.103642123814653e-16,
+                "row_action_scale_norm": 0.6658977099056292,
+                "backward_error": 4.660839161399879e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 7.051966379967587e-16,
+                "row_action_scale_norm": 31.846019733623578,
+                "backward_error": 2.2143949036500782e-17
+              }
+            }
+          },
+          {
+            "macrocell": 4,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 3.467247895993372e-14,
+                "row_action_scale_norm": 11.68397643481984,
+                "backward_error": 2.96752386940845e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 7.833298966542206e-14,
+                "row_action_scale_norm": 67.56514028232289,
+                "backward_error": 1.1593698960455852e-15
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 5.101303111810288e-16,
+                "row_action_scale_norm": 0.7647357352829496,
+                "backward_error": 6.670674425751562e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.0175803542969194e-15,
+                "row_action_scale_norm": 34.33279719900489,
+                "backward_error": 2.9638725571897576e-17
+              }
+            }
+          },
+          {
+            "macrocell": 5,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 3.1010668464801e-14,
+                "row_action_scale_norm": 10.964103152630173,
+                "backward_error": 2.8283816772885676e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 6.195051907096651e-14,
+                "row_action_scale_norm": 61.43042005956653,
+                "backward_error": 1.00846647330257e-15
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 3.3416579374178784e-16,
+                "row_action_scale_norm": 0.6900191922586028,
+                "backward_error": 4.842847814826438e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.0268288872044757e-15,
+                "row_action_scale_norm": 34.525970833333396,
+                "backward_error": 2.9740767961638746e-17
+              }
+            }
+          },
+          {
+            "macrocell": 6,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 3.642623125495646e-14,
+                "row_action_scale_norm": 11.65195238296931,
+                "backward_error": 3.126191221670083e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 6.478535347491364e-14,
+                "row_action_scale_norm": 65.86382439589784,
+                "backward_error": 9.836257470489163e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 5.064353523484372e-16,
+                "row_action_scale_norm": 0.7438905159618041,
+                "backward_error": 6.807928606182696e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 9.594628668985672e-16,
+                "row_action_scale_norm": 34.62165029747585,
+                "backward_error": 2.771279989990883e-17
+              }
+            }
+          },
+          {
+            "macrocell": 7,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 4.1899413182303636e-14,
+                "row_action_scale_norm": 10.973910863640947,
+                "backward_error": 3.8180930848569116e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 4.768593075472747e-14,
+                "row_action_scale_norm": 64.00371901835715,
+                "backward_error": 7.450493734754772e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 3.6395171426004296e-16,
+                "row_action_scale_norm": 0.7139961550016273,
+                "backward_error": 5.097390395039501e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.0546276604078267e-15,
+                "row_action_scale_norm": 37.00099556391074,
+                "backward_error": 2.85026833558086e-17
+              }
+            }
+          },
+          {
+            "macrocell": 8,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 4.9608351746589664e-14,
+                "row_action_scale_norm": 14.998471266145343,
+                "backward_error": 3.3075605417577453e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 7.64828852253074e-14,
+                "row_action_scale_norm": 84.90383337301172,
+                "backward_error": 9.008178098307033e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 6.163737364645586e-16,
+                "row_action_scale_norm": 0.9603753223181448,
+                "backward_error": 6.418050548995381e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.3900647798138468e-15,
+                "row_action_scale_norm": 45.23018509154456,
+                "backward_error": 3.073312163106113e-17
+              }
+            }
+          },
+          {
+            "macrocell": 9,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 5.4949120410659615e-14,
+                "row_action_scale_norm": 14.07152444470584,
+                "backward_error": 3.904987027282125e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 1.003198270313265e-13,
+                "row_action_scale_norm": 79.94369967450196,
+                "backward_error": 1.2548809654768015e-15
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 4.455153210477911e-16,
+                "row_action_scale_norm": 0.8941501925574571,
+                "backward_error": 4.98255578040557e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.2227237872683476e-15,
+                "row_action_scale_norm": 47.5175702398806,
+                "backward_error": 2.573203514185872e-17
+              }
+            }
+          },
+          {
+            "macrocell": 10,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 4.036599066598636e-14,
+                "row_action_scale_norm": 15.020851192823093,
+                "backward_error": 2.6873304413849113e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 1.0177592569125135e-13,
+                "row_action_scale_norm": 83.2914610294712,
+                "backward_error": 1.2219250861170482e-15
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 6.141320175731829e-16,
+                "row_action_scale_norm": 0.9405126915215603,
+                "backward_error": 6.529757898105988e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.2205758531585428e-15,
+                "row_action_scale_norm": 41.99729325235848,
+                "backward_error": 2.9063202855102995e-17
+              }
+            }
+          },
+          {
+            "macrocell": 11,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 5.351859718684087e-14,
+                "row_action_scale_norm": 14.0822007737554,
+                "backward_error": 3.800442703997089e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 1.0051344423512479e-13,
+                "row_action_scale_norm": 82.00366473623477,
+                "backward_error": 1.2257189304700812e-15
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 4.324092288902132e-16,
+                "row_action_scale_norm": 0.9173356422101856,
+                "backward_error": 4.713751532082485e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.3983504541096983e-15,
+                "row_action_scale_norm": 46.93324457829607,
+                "backward_error": 2.979445522409834e-17
+              }
+            }
+          },
+          {
+            "macrocell": 12,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 3.877170572705834e-14,
+                "row_action_scale_norm": 14.962598562471445,
+                "backward_error": 2.5912414588401698e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 6.541288228179812e-14,
+                "row_action_scale_norm": 82.33364859606046,
+                "backward_error": 7.944854066011601e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 4.628720361752118e-16,
+                "row_action_scale_norm": 0.930354371756398,
+                "backward_error": 4.975222885247099e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.1925713481215363e-15,
+                "row_action_scale_norm": 38.96154411120846,
+                "backward_error": 3.060893440767039e-17
+              }
+            }
+          },
+          {
+            "macrocell": 13,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 5.4154246541157547e-14,
+                "row_action_scale_norm": 14.141503950857965,
+                "backward_error": 3.829454542412514e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 6.649449185185985e-14,
+                "row_action_scale_norm": 78.80327951161121,
+                "backward_error": 8.438036115243437e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 3.9765787032267194e-16,
+                "row_action_scale_norm": 0.8797652340968034,
+                "backward_error": 4.52004529061575e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.3105924217775687e-15,
+                "row_action_scale_norm": 40.00050110576044,
+                "backward_error": 3.276440008369873e-17
+              }
+            }
+          },
+          {
+            "macrocell": 14,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 2.980442476690437e-14,
+                "row_action_scale_norm": 14.850848092211606,
+                "backward_error": 2.006917354607851e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 7.384546774626548e-14,
+                "row_action_scale_norm": 82.77702669129573,
+                "backward_error": 8.921009934514908e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 5.793054920367005e-16,
+                "row_action_scale_norm": 0.9363325375211329,
+                "backward_error": 6.186963165569002e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.0603597000914822e-15,
+                "row_action_scale_norm": 39.74886465645142,
+                "backward_error": 2.6676477661843886e-17
+              }
+            }
+          },
+          {
+            "macrocell": 15,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 3.696081579408548e-14,
+                "row_action_scale_norm": 14.124884591057624,
+                "backward_error": 2.6167163034723227e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 6.312066008993355e-14,
+                "row_action_scale_norm": 76.30433223598939,
+                "backward_error": 8.272224949786313e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 3.7528561608481596e-16,
+                "row_action_scale_norm": 0.8519678799834474,
+                "backward_error": 4.4049268159277e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.3071422347043582e-15,
+                "row_action_scale_norm": 41.25779587284771,
+                "backward_error": 3.1682308932179415e-17
+              }
+            }
+          },
+          {
+            "macrocell": 16,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 6.399880212850644e-14,
+                "row_action_scale_norm": 19.260751655247965,
+                "backward_error": 3.3227572461362757e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 1.3794631377008113e-13,
+                "row_action_scale_norm": 111.29417220590265,
+                "backward_error": 1.2394747275254448e-15
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 8.909433459264856e-16,
+                "row_action_scale_norm": 1.2594476881818444,
+                "backward_error": 7.07407980725792e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.2607325471861937e-15,
+                "row_action_scale_norm": 57.02558441897328,
+                "backward_error": 2.2108191613144235e-17
+              }
+            }
+          },
+          {
+            "macrocell": 17,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 4.629429713875435e-14,
+                "row_action_scale_norm": 18.05653694189732,
+                "backward_error": 2.5638524866490762e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 8.398261344771465e-14,
+                "row_action_scale_norm": 101.08671071152092,
+                "backward_error": 8.307977661611962e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 5.387016766390468e-16,
+                "row_action_scale_norm": 1.1352238786592892,
+                "backward_error": 4.745334261954205e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 8.444535540083252e-16,
+                "row_action_scale_norm": 56.55090332893153,
+                "backward_error": 1.4932627142956733e-17
+              }
+            }
+          },
+          {
+            "macrocell": 18,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 5.899211116958122e-14,
+                "row_action_scale_norm": 19.30107081875805,
+                "backward_error": 3.0564164923040855e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 1.1259611300797413e-13,
+                "row_action_scale_norm": 109.23423664573407,
+                "backward_error": 1.0307767643686953e-15
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 7.406704824669487e-16,
+                "row_action_scale_norm": 1.234178718108977,
+                "backward_error": 6.001322754955722e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.5772951916427925e-15,
+                "row_action_scale_norm": 57.9389319047453,
+                "backward_error": 2.72234081607847e-17
+              }
+            }
+          },
+          {
+            "macrocell": 19,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 6.792148639426133e-14,
+                "row_action_scale_norm": 18.0605130867007,
+                "backward_error": 3.760772801315206e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 9.10622338858576e-14,
+                "row_action_scale_norm": 105.15569787199593,
+                "backward_error": 8.659752702768989e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 6.260381638573683e-16,
+                "row_action_scale_norm": 1.1729925635734852,
+                "backward_error": 5.337102581027134e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.2629383478339829e-15,
+                "row_action_scale_norm": 60.94200413660146,
+                "backward_error": 2.072361035260848e-17
+              }
+            }
+          },
+          {
+            "macrocell": 20,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 5.351676409732693e-14,
+                "row_action_scale_norm": 19.10009321968472,
+                "backward_error": 2.8019111468090687e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 1.2069387069946233e-13,
+                "row_action_scale_norm": 102.3284281310681,
+                "backward_error": 1.1794754683895927e-15
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 6.148398552419492e-16,
+                "row_action_scale_norm": 1.1541378797244763,
+                "backward_error": 5.32726519112888e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.2308835193866298e-15,
+                "row_action_scale_norm": 50.90229157150584,
+                "backward_error": 2.4181298746786787e-17
+              }
+            }
+          },
+          {
+            "macrocell": 21,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 5.575273456333769e-14,
+                "row_action_scale_norm": 18.241512336447265,
+                "backward_error": 3.056365806465592e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 8.160275193908811e-14,
+                "row_action_scale_norm": 102.97369113145402,
+                "backward_error": 7.92462142926544e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 6.393172461613681e-16,
+                "row_action_scale_norm": 1.144994082869371,
+                "backward_error": 5.583585589885585e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.3853148190064296e-15,
+                "row_action_scale_norm": 54.84953918308596,
+                "backward_error": 2.525663550941229e-17
+              }
+            }
+          },
+          {
+            "macrocell": 22,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 5.3655187948251164e-14,
+                "row_action_scale_norm": 19.157161225722277,
+                "backward_error": 2.8007901231320467e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 9.068176066239906e-14,
+                "row_action_scale_norm": 106.1111759837141,
+                "backward_error": 8.54591986392808e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 7.585023426974738e-16,
+                "row_action_scale_norm": 1.191996129746114,
+                "backward_error": 6.363295347771214e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.1062129314262934e-15,
+                "row_action_scale_norm": 47.44284066910317,
+                "backward_error": 2.33167516073022e-17
+              }
+            }
+          },
+          {
+            "macrocell": 23,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 4.876981246556173e-14,
+                "row_action_scale_norm": 18.10519738690241,
+                "backward_error": 2.6936912878311172e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 8.709181006549821e-14,
+                "row_action_scale_norm": 97.51256986554549,
+                "backward_error": 8.931341896289281e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 5.627975486738345e-16,
+                "row_action_scale_norm": 1.0927252205653535,
+                "backward_error": 5.150403212828333e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.1858511395849043e-15,
+                "row_action_scale_norm": 51.647094382440045,
+                "backward_error": 2.296065545921771e-17
+              }
+            }
+          },
+          {
+            "macrocell": 24,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 1.0086687529430557e-13,
+                "row_action_scale_norm": 24.723015304503065,
+                "backward_error": 4.07987755748926e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 1.2214601674489098e-13,
+                "row_action_scale_norm": 136.45781574930456,
+                "backward_error": 8.951192430728432e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 7.951211878742533e-16,
+                "row_action_scale_norm": 1.543309234749076,
+                "backward_error": 5.152053587002159e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.3524250989850418e-15,
+                "row_action_scale_norm": 63.83005330137773,
+                "backward_error": 2.1187904898018478e-17
+              }
+            }
+          },
+          {
+            "macrocell": 25,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 5.185229238984283e-14,
+                "row_action_scale_norm": 23.180947310779725,
+                "backward_error": 2.2368495857686626e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 1.1547623707679402e-13,
+                "row_action_scale_norm": 128.69927052682308,
+                "backward_error": 8.972563449979061e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 6.829158684465355e-16,
+                "row_action_scale_norm": 1.4384883907974504,
+                "backward_error": 4.747454847848647e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 9.224715261512598e-16,
+                "row_action_scale_norm": 64.19986492095666,
+                "backward_error": 1.4368745592954338e-17
+              }
+            }
+          },
+          {
+            "macrocell": 26,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 6.128321018921623e-14,
+                "row_action_scale_norm": 24.714418740574114,
+                "backward_error": 2.4796541174001582e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 1.6584501658843115e-13,
+                "row_action_scale_norm": 139.3981814635662,
+                "backward_error": 1.189721521810363e-15
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 9.719763219377188e-16,
+                "row_action_scale_norm": 1.5782823378275066,
+                "backward_error": 6.158443889549171e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.7603550123197605e-15,
+                "row_action_scale_norm": 66.43186231647364,
+                "backward_error": 2.649865517744534e-17
+              }
+            }
+          },
+          {
+            "macrocell": 27,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 8.905495427670074e-14,
+                "row_action_scale_norm": 23.250130280543733,
+                "backward_error": 3.830299151107297e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 9.606553082342807e-14,
+                "row_action_scale_norm": 125.95280441391803,
+                "backward_error": 7.627105348740663e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 5.272725493242643e-16,
+                "row_action_scale_norm": 1.408540925082406,
+                "backward_error": 3.7433953102457178e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.616558347163831e-15,
+                "row_action_scale_norm": 67.93391119227044,
+                "backward_error": 2.379604410805312e-17
+              }
+            }
+          },
+          {
+            "macrocell": 28,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 8.105613651057947e-14,
+                "row_action_scale_norm": 24.559493610602726,
+                "backward_error": 3.300399340301798e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 1.45734293440543e-13,
+                "row_action_scale_norm": 139.8801017836067,
+                "backward_error": 1.0418514969769802e-15
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 9.133362647443198e-16,
+                "row_action_scale_norm": 1.5779293109185022,
+                "backward_error": 5.7881950631405215e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.959975657654466e-15,
+                "row_action_scale_norm": 74.81992360830284,
+                "backward_error": 2.6195905624220196e-17
+              }
+            }
+          },
+          {
+            "macrocell": 29,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 1.0947242992439564e-13,
+                "row_action_scale_norm": 23.383513571414515,
+                "backward_error": 4.681607389328422e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 1.2712933818561783e-13,
+                "row_action_scale_norm": 133.41860496061338,
+                "backward_error": 9.528606465578604e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 7.147666484572385e-16,
+                "row_action_scale_norm": 1.4867464342106362,
+                "backward_error": 4.807589458499238e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 2.0450459160477042e-15,
+                "row_action_scale_norm": 77.48945909095674,
+                "backward_error": 2.6391278762795848e-17
+              }
+            }
+          },
+          {
+            "macrocell": 30,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 8.643302307873398e-14,
+                "row_action_scale_norm": 25.245559869211665,
+                "backward_error": 3.423692068090903e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 1.2016692720369064e-13,
+                "row_action_scale_norm": 144.1792445691179,
+                "backward_error": 8.334551034915705e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 1.0174774551046292e-15,
+                "row_action_scale_norm": 1.617262464746994,
+                "backward_error": 6.291356395659651e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.1916331495228192e-15,
+                "row_action_scale_norm": 67.28647726921172,
+                "backward_error": 1.7709845988148872e-17
+              }
+            }
+          },
+          {
+            "macrocell": 31,
+            "blocks": {
+              "constitutive_stress": {
+                "row_count": 1032,
+                "absolute_row_residual_norm": 7.253238605470037e-14,
+                "row_action_scale_norm": 23.10650334319194,
+                "backward_error": 3.139046396480028e-15
+              },
+              "force_balance": {
+                "row_count": 384,
+                "absolute_row_residual_norm": 1.203071183896004e-13,
+                "row_action_scale_norm": 134.02612369993975,
+                "backward_error": 8.976393188759699e-16
+              },
+              "weak_symmetry": {
+                "row_count": 192,
+                "absolute_row_residual_norm": 8.579134757625547e-16,
+                "row_action_scale_norm": 1.5015661113032224,
+                "backward_error": 5.71345789775426e-16
+              },
+              "negative_traction_compatibility": {
+                "row_count": 144,
+                "absolute_row_residual_norm": 1.355501026697951e-15,
+                "row_action_scale_norm": 73.83214418756165,
+                "backward_error": 1.8359226074410953e-17
+              }
+            }
+          }
+        ],
+        "norm_convention": "Original coefficient-row block norms; physical field L2 errors are separate",
+        "coefficient_vectors_persisted": false,
+        "field_replay_claimed": false
+      },
+      "physical_moment_diagnostics": {
+        "fine_force_max": 5.561343847336456e-14,
+        "weak_symmetry_max": 5.812536812424092e-16,
+        "normal_traction_max": 8.881784197001252e-16
+      },
+      "accepted": true,
+      "elapsed_seconds": 57.82637909427285,
+      "conventions": "Physical row-wise H(div) Cauchy stress; lambda=-stress*n; weak P1 rotation; full nonhomogeneous displacement boundary data",
+      "study_scope": "Selected original geometry/data/BDM2 finite-space initial study; unresolved historical rotation column is not fitted",
+      "workers": 1,
+      "native_threads": 1,
+      "coefficient_vectors_persisted": false,
+      "field_replay_claimed": false,
+      "historical_literature_reproduction": false,
+      "uniform_inf_sup_proven": false,
+      "independent_native_whole_case_verified": false,
+      "numerical_record": "build/results/minimal-l18-v1/s4/record.json",
+      "numerical_record_sha256": "f051d390af32daa1bc4bc4097237bee1d9267c45a20218b8db4496c285478a0f",
+      "resource_record": "build/reports/completion/minimal-l18-s4-v1-resource.json",
+      "resource_record_sha256": "f02f2523c728cdef29c4780d48d158d6c0a9d5fa5471a5ac834014d918568f01",
+      "owned_elapsed_seconds": 60.42878741584718,
+      "owned_peak_rss_bytes": 384499712,
+      "closed_owned_children": []
+    }
+  ],
+  "observed_orders": {
+    "bdm2-trace1-enrichment0": [
+      {
+        "levels": [
+          1,
+          2
+        ],
+        "observed_orders": {
+          "displacement_l2": 2.168857601608176,
+          "stress_l2": 1.2561570833637261,
+          "rotation_l2": 1.7307441969077282,
+          "stress_divergence_l2": 1.3247340657377364
+        }
+      },
+      {
+        "levels": [
+          2,
+          4
+        ],
+        "observed_orders": {
+          "displacement_l2": 2.2737336998031297,
+          "stress_l2": 1.9674043156641023,
+          "rotation_l2": 2.037310679754167,
+          "stress_divergence_l2": 1.8114082493758692
+        }
+      }
+    ]
+  },
+  "expected_levels": [
+    1,
+    2,
+    4
+  ],
+  "selected_cases": [
+    "bdm2-trace1-enrichment0"
+  ],
+  "omitted_cases": [
+    "other stress orders and rotation enrichment sweeps"
+  ],
+  "three_levels_complete": true,
+  "rejected_levels": [],
+  "consumer_sha256": "35a1592a5501a2f8558d42402f46d388d0f73cdeeb264864dff1a0231182ba9b",
+  "pde_solves_during_collection": 0,
+  "field_replay_claimed": false,
+  "historical_literature_reproduction": false,
+  "scope": "Initial selected L18 original oscillatory geometry/data/BDM2 finite spaces; fixed macro H=1/4, skeleton segments s=1,2,4 and local r=2s; the historical rotation column remains unreconciled",
+  "refinement_axis": "Face segments s; fixed 32 triangular macrocells; h_skeleton=1/(4s), h_interior=1/(8s)",
+  "figure_sha256": {
+    "convergence.png": "a8ed17e2fe29383cb2dacbdb3f4b7dca44a3bd06594340318325a0c176117ef4",
+    "convergence.svg": "a811a068c8cbbffd3b1d877633d9606a83705cbbd97d1bbc5b0384925898e7ac"
+  }
+}

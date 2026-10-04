@@ -1,0 +1,71 @@
+{
+  "case": "cube-p0",
+  "resolution": 1,
+  "macro_cells": 1,
+  "fine_cells": 12,
+  "degree": 2,
+  "cell_degree": 0,
+  "face_degree": 0,
+  "local_refinement": 1,
+  "source_variant": "projected",
+  "local_refinement_precision": "extended",
+  "coefficient_nmant": 63,
+  "algebraic_residual": 0.0,
+  "original_physical_checks": {
+    "original_projected_source_relative_residual": 5.269283839148744e-17,
+    "original_projected_source_residual_norm": 1.0807628128416003e-16,
+    "physical_rhs_norm": 2.051062052895974,
+    "duplicate_trace_absolute_difference": 0.0
+  },
+  "ideal_constant_moment_space_audit": {
+    "definition": "U^{0,0}: constant divergence and original-face normal derivatives",
+    "primary_source": "10.1051/m2an/2021082, Equation(2.19)",
+    "geometry": "cube",
+    "permeability": "identity",
+    "dimension": 7,
+    "relative_tolerance": 1e-10,
+    "executed_lift_replaced": false,
+    "uniform_inf_sup_verified": false,
+    "general_polyhedral_exactness_claimed": false,
+    "macro_cells": 1,
+    "maxima": {
+      "lift_relative_linf": 1.1522033327437954e-15,
+      "moment_inverse_defect": 3.449931312848875e-16,
+      "moment_matrix_condition": 89.60480347188829
+    },
+    "rows": [
+      {
+        "cell": 0,
+        "dimension": 7,
+        "lift_relative_linf": 1.1522033327437954e-15,
+        "moment_inverse_defect": 3.449931312848875e-16,
+        "moment_matrix_condition": 89.60480347188829
+      }
+    ],
+    "accepted": true
+  },
+  "error_quadrature": [
+    10,
+    12
+  ],
+  "error_quadrature_absolute_change": 4.214526505563754e-10,
+  "error_quadrature_relative_change": 3.587508809083214e-10,
+  "norms": {
+    "quadrature_10": {
+      "pressure_l2": 0.1289815302881599,
+      "flux_l2": 1.174778023235778
+    },
+    "quadrature_12": {
+      "pressure_l2": 0.12898153033147705,
+      "flux_l2": 1.1747780228143254
+    }
+  },
+  "pressure_l2": 0.12898153033147705,
+  "flux_l2": 1.1747780228143254,
+  "elapsed_seconds": 0.771220788359642,
+  "archive": "cube-p0-n1.npz",
+  "sha256": "016c377fec4eac76ec0b8e54793ee9bfa101cb3e8381017fca60c95969db42ff",
+  "acquisition_uuid": "1614d049-09f3-4e55-8dc9-35e1a522403c",
+  "finite_case_accepted": true,
+  "native_whole_field_agreement_verified": false
+}

@@ -80,6 +80,76 @@ def test_fixed_cutout_preserves_global_pressure_norm(driver):
         )
 
 
+def test_radial_mask_has_physical_boundary_and_shared_numerator_denominator(driver):
+    """Use independently specified points and both complex norm denominators."""
+    points = np.array([[[5000.0, 50.0], [5050.0, 50.0], [5000.0, 100.0], [5025.0, 50.0]]])
+    keep = driver.radial_exclusion_mask(points, (5000.0, 50.0, 50.0))
+    assert np.array_equal(keep, [[False, True, True, False]])
+    pressure = np.array([[2 + 1j, 3 + 2j, -1 + 0.5j, 1 - 1j]])
+    reference = np.full((1, 4), 1 + 2j)
+    gradient = np.broadcast_to([3 + 1j, 2 - 2j], (1, 4, 2))
+    exact_gradient = np.broadcast_to([1 + 2j, -1j], (1, 4, 2))
+    actual = driver.acoustic_norm_contributions(
+        pressure, reference, gradient, exact_gradient, np.array([2.0]), np.array([3.0]), 4.0, keep
+    )
+    assert_allclose(actual[0], abs(pressure - reference) ** 2)
+    assert_allclose(actual[1], abs(reference) ** 2)
+    assert_allclose(actual[2], [[0.0, 10.0, 10.0, 0.0]])
+    assert_allclose(actual[3], [[0.0, 6.0, 6.0, 0.0]])
+    assert_allclose(actual[6], 16 / 3 * abs(pressure - reference) ** 2 * keep)
+    assert_allclose(actual[7], 16 / 3 * abs(reference) ** 2 * keep)
+    with pytest.raises(ValueError, match="positive radius"):
+        driver.radial_exclusion_mask(points, (5000.0, 50.0, 0.0))
+    with pytest.raises(ValueError, match="mask"):
+        driver.acoustic_norm_contributions(
+            pressure,
+            reference,
+            gradient,
+            exact_gradient,
+            np.array([2.0]),
+            np.array([3.0]),
+            4.0,
+            keep.astype(float),
+        )
+
+
+def test_circular_integration_matches_independent_disk_area_control(driver):
+    """The affine gradient integral equals its constant integrand times disk-complement area."""
+    n = 24
+    axis = np.linspace(-1, 1, n + 1)
+    x, y = np.meshgrid(axis, axis, indexing="ij")
+    fine = driver.PixelCGField(x + 2j * y, 1, (-1, 1, -1, 1))
+    zero = driver.PixelCGField(np.zeros_like(x, dtype=complex), 1, fine.bounds)
+    material = np.ones((n, n))
+    exact = 4 - np.pi * 0.4**2
+    for order in (8, 12):
+        actual = driver.reference_difference(
+            zero,
+            fine,
+            material,
+            material,
+            omega=2.0,
+            order=order,
+            gradient_exclusion=(0.0, 0.0, 0.4),
+        )
+        assert abs(actual["gradient_domain_area"] - exact) < 0.004
+        assert_allclose(
+            actual["gradient_difference"] ** 2, 5 * actual["gradient_domain_area"], rtol=2e-13
+        )
+        assert actual["gradient_relative_difference"] == pytest.approx(1, abs=1e-14)
+        assert_allclose(actual["pressure_difference"] ** 2, 20 / 3, rtol=2e-13)
+    with pytest.raises(ValueError, match="one derivative exclusion"):
+        driver.reference_difference(
+            zero,
+            fine,
+            material,
+            material,
+            omega=2.0,
+            gradient_exclusion=(0.0, 0.0, 0.4),
+            gradient_cutout=(-1, 0, -1, 0),
+        )
+
+
 def test_archive_ownership_digests_and_geometry(driver, tmp_path):
     """MPI-owned shards reconstruct once and reject missing, repeated or altered nodes."""
     x, y = np.meshgrid(np.arange(3), np.arange(3), indexing="ij")
@@ -108,6 +178,36 @@ def test_archive_ownership_digests_and_geometry(driver, tmp_path):
     record.write_text(json.dumps(metadata))
     with pytest.raises(ValueError, match="digest"):
         driver.load_reference(record)
+
+
+def test_reference_replay_retains_executed_wider_complex_coefficients(driver, tmp_path):
+    if np.finfo(np.longdouble).eps >= np.finfo(float).eps:
+        pytest.skip("wider persisted mantissa requires a wider host dtype")
+    coordinates = np.array([[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]])
+    pressure = np.full(4, np.clongdouble(1 + 2j))
+    pressure.real += np.longdouble(2) ** -60
+    archive = tmp_path / "native.npz"
+    np.savez(archive, coordinates=coordinates, pressure=pressure)
+    record = tmp_path / "native.json"
+    record.write_text(
+        json.dumps(
+            {
+                "degree": 1,
+                "geometry": [1, 1],
+                "bounds": [0, 1, 0, 1],
+                "archives": [
+                    {
+                        "archive": archive.name,
+                        "sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
+                    }
+                ],
+            }
+        )
+    )
+    field = driver.load_reference(record)
+    assert field.nodes.dtype == pressure.dtype
+    assert (field.nodes.real > np.longdouble(1)).all()
+    assert np.array_equal(field.nodes.ravel(), pressure)
 
 
 def test_invalid_contracts_and_zero_denominator(driver):

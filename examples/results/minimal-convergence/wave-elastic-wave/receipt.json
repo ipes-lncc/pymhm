@@ -1,0 +1,60 @@
+{
+  "schema": "pymhm-initial-convergence-public-verification-v1",
+  "status": "verified_initial_study",
+  "case": "elastic-wave",
+  "study_sha256": "adf47bf6d615336b91494241f172e50c1331980da6115a704bea3949d6efbe3d",
+  "generation_id": "54158cb0-07e1-495b-863c-90f44e634d50",
+  "identity_convention": "Original producer UUID when recorded; original execution record SHA256 otherwise",
+  "levels": [
+    1,
+    2,
+    3
+  ],
+  "scope": "Initial spatial refinement of the original analytical wave at an explicitly shortened final time",
+  "original_equation_threshold": 1e-10,
+  "original_equation_maximum": 9.535945408268558e-16,
+  "quadrature_sensitivity_threshold": 1e-06,
+  "quadrature_sensitivity_maximum": 5.273325161276599e-08,
+  "exact_solution_available": true,
+  "asymptotic_convergence_verified": false,
+  "historical_literal_reproduction": false,
+  "figures_sha256": {
+    "docs/figures/minimal-convergence/wave-elastic-wave/convergence.png": "3b7f09fe8c388caa4c6669afc33f71436651d10f9f9c246860661fcc970e4ebd",
+    "docs/figures/minimal-convergence/wave-elastic-wave/convergence.svg": "40676a4923e17f7d2dcce3261bcbbef346456bf872ff66b28bb906f50fd44b3a"
+  },
+  "rendered_inspection": "All five PNGs inspected at 1024x640 publication size; no clipping or overlap",
+  "aggregate_private_verification_sha256": "1b5b6b5d388bd620135f3a779bae8e7878873a1af71abc50eec9b8230fa3b83f",
+  "original_executed_source_manifests": [
+    {
+      "manifest": "build/results/minimal-wave-elastic-wave-v1/executed-sources/manifest.json",
+      "sha256": "1b84fcedd4b7bdecf68870b6cced1681c01a79e3ed0e710d4dbc32532481ac23",
+      "generation_id": null,
+      "files": 123
+    },
+    {
+      "manifest": "build/results/minimal-wave-elastic-wave-n3-v2/executed-sources/manifest.json",
+      "sha256": "925f7af5eaf33de14957fec196b8cac33e444ecfd061b373e5550cb3e7fb87fe",
+      "generation_id": "35277126-cf51-4792-95e0-42b2e182512d",
+      "files": 123
+    },
+    {
+      "manifest": "build/results/minimal-wave-elastic-wave-assembled-v2/executed-consumer/manifest.json",
+      "sha256": "5bbdf294e574168cba41c2a23d092a162b6d9420bd3038fffa831ac168c920a9",
+      "generation_id": "54158cb0-07e1-495b-863c-90f44e634d50",
+      "files": 123
+    }
+  ],
+  "native_threads": 1,
+  "workers": 1,
+  "coefficient_and_reference_source_archives_remain_private": true,
+  "original_execution_record_sha256": "adf47bf6d615336b91494241f172e50c1331980da6115a704bea3949d6efbe3d",
+  "published_metadata_record_sha256": "adf47bf6d615336b91494241f172e50c1331980da6115a704bea3949d6efbe3d",
+  "publication_consumer": "Private metadata normalization; numerical field values and executed SHA256 values unchanged",
+  "private_path_alias_scheme": "private-comparison/<project>/<module>",
+  "numeric_fields_unchanged": true,
+  "source_and_basis_sha256_values_unchanged": true,
+  "original_execution_snapshot_unchanged": true,
+  "pde_solves_during_publication": 0,
+  "byte_equality_with_original_execution_record": true,
+  "figure_source_execution_record_sha256": "adf47bf6d615336b91494241f172e50c1331980da6115a704bea3949d6efbe3d"
+}

@@ -69,6 +69,7 @@ def _local(
     refinement: int,
     order: int,
     variant: str,
+    refinement_precision: Literal["double", "extended"],
 ) -> MsHHOLocal:
     """Construct constrained-energy bases with volume and original-face moments."""
     fine = mesh.submesh(cell, refinement)
@@ -107,7 +108,7 @@ def _local(
         faces[:, offset : offset + width] *= mesh.signs[cell][side]
         offset += width
     moments = np.column_stack((volume, faces))
-    reconstruction, energy = _energy_reconstruction(matrix, moments)
+    reconstruction, energy = _energy_reconstruction(matrix, moments, refinement_precision)
     if variant == "reconstructed":
         load = reconstruction.T @ force
     else:
@@ -155,6 +156,7 @@ def solve_mshho_3d(
     quadrature_order: int = 5,
     mean_pressure: float = 0.0,
     solver: str = "scipy",
+    local_refinement_precision: Literal["double", "extended"] = "double",
 ) -> MsHHO3DSolution:
     """Solve MsHHO with tetrahedral Pk energy lifts and polynomial face moments.
 
@@ -164,6 +166,9 @@ def solve_mshho_3d(
     pressure. Pure Neumann data require compatibility and fix the volume mean.
     The face-only case m=-1 requires the reconstructed-source variant. Local
     numerical spaces must represent all independent volume and face moments.
+    ``local_refinement_precision='extended'`` uses the same preserved moment
+    arithmetic as the two-dimensional and polygonal solvers, without changing
+    local spaces, represented operators or the original 1e-10 residual check.
     """
     if not isinstance(mesh, (TetraMesh, PolyhedralMesh)):
         raise TypeError("MsHHO 3D requires TetraMesh or PolyhedralMesh")
@@ -171,6 +176,8 @@ def solve_mshho_3d(
     degree = positive_int(degree, "degree")
     m = positive_int(cell_degree, "cell_degree", -1)
     order = positive_int(quadrature_order, "quadrature_order")
+    if local_refinement_precision not in {"double", "extended"}:
+        raise ValueError("local_refinement_precision must be double or extended")
     if source_variant not in ("projected", "reconstructed") or (
         m == -1 and source_variant != "reconstructed"
     ):
@@ -187,7 +194,17 @@ def solve_mshho_3d(
         raise ValueError("skeleton must belong to this macro mesh")
     local = tuple(
         _local(
-            mesh, c, skeleton, permeability, source, m, degree, refinement, order, source_variant
+            mesh,
+            c,
+            skeleton,
+            permeability,
+            source,
+            m,
+            degree,
+            refinement,
+            order,
+            source_variant,
+            local_refinement_precision,
         )
         for c in range(len(mesh.cells))
     )
@@ -221,6 +238,7 @@ def solve_mshho_3d(
         constants,
         mean_pressure * volume if pure else None,
         solver,
+        local_refinement_precision,
     )
     return MsHHO3DSolution(
         skeleton,
@@ -233,4 +251,5 @@ def solve_mshho_3d(
         degree,
         permeability,
         source_variant,
+        local_refinement_precision,
     )

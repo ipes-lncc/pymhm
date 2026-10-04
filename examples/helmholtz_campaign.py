@@ -15,6 +15,8 @@ from scipy.special import hankel1
 from threadpoolctl import threadpool_limits
 
 from examples.campaign_checkpoint import archive_identity, require_sources, verify_checkpoint
+from examples.helmholtz_basis_archive import basis_payload
+from examples.helmholtz_trace_family import verify_helmholtz_solution
 from pymhm.helmholtz import HelmholtzSolution, solve_helmholtz
 from pymhm.helmholtz_forms import acoustic_quadrature
 from pymhm.helmholtz_spaces import helmholtz_skeleton
@@ -80,26 +82,12 @@ class AcousticWave:
 
 def source_hashes() -> dict[str, str]:
     """Record every original operator, geometry and acquisition owner used here."""
-    names = [
-        "helmholtz",
-        "helmholtz_forms",
-        "helmholtz_spaces",
-        "loads",
-        "hybrid",
-        "parallel",
-        "solvers",
-        "mesh",
-        "lagrange",
-        "quadrilateral",
-        "_geometry_roundoff",
-        "cut_cells",
-        "scalar_boundary",
-        "elements",
-        "planar_quadrature",
-        "planar_fitting",
-        "planar_material",
+    paths = [
+        *sorted((ROOT / "src/pymhm").rglob("*.py")),
+        Path(__file__),
+        ROOT / "examples/helmholtz_trace_family.py",
+        ROOT / "examples/helmholtz_basis_archive.py",
     ]
-    paths = [ROOT / f"src/pymhm/{name}.py" for name in names] + [Path(__file__)]
     return {
         str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
     }
@@ -152,10 +140,6 @@ def archive(solution: HelmholtzSolution, path: Path, wave: AcousticWave) -> None
                     a = offset + 5 * j + i
                     cells.extend(([a, a + 1, a + 6], [a, a + 6, a + 5]))
             offset += 25
-    transforms = {}
-    for face, space in enumerate(solution.skeleton.faces):
-        for segment, transform in enumerate(getattr(space, "transforms", ())):
-            transforms[f"face_{face}_segment_{segment}_transform"] = transform
     mesh = solution.skeleton.mesh
     np.savez_compressed(
         path,
@@ -169,7 +153,7 @@ def archive(solution: HelmholtzSolution, path: Path, wave: AcousticWave) -> None
         omega=wave.omega,
         angle=wave.angle,
         kind=wave.kind,
-        **transforms,
+        **basis_payload(solution.skeleton),
     )
 
 
@@ -193,6 +177,10 @@ def run(
         },
         "mathematical_configuration": {"resolutions": resolutions, "angle_count": angle_count},
         "assembly_quadrature": 10,
+        "requested_assembly_quadrature": 10,
+        "assembly_quadrature_convention": (
+            "Each row records max(10, local degree + trace degree + 2)"
+        ),
         "error_quadrature": 12,
         "source_sha256": hashes,
         "rows": [],
@@ -220,6 +208,8 @@ def run(
                     "energy_relative_error",
                     "residual",
                     "macro_balance_max",
+                    "original_field_trace_residual",
+                    "original_local_equation_residual_max",
                 ),
             )
         phases = previous.get("acquisition_sources", [previous["source_sha256"]]) + [hashes]
@@ -282,6 +272,9 @@ def run(
             "trace_basis": "oscillatory" if oscillatory else "polynomial",
             "local_degree": degree,
             "local_refinement": 2,
+            "requested_assembly_quadrature": 10,
+            "assembly_quadrature": solution.quadrature_order,
+            "error_quadrature": 12,
             "free_complex_trace_dofs": int(
                 sum(
                     space.size
@@ -291,6 +284,7 @@ def run(
             ),
             "residual": solution.hybrid.residual,
             "macro_balance_max": float(np.max(abs(solution.conservation_residuals()))),
+            **verify_helmholtz_solution(solution),
             **norms(solution, wave),
             "elapsed_seconds": time.perf_counter() - start,
         }

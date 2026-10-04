@@ -6,6 +6,21 @@
   "source_sha256": "a48b97f8910d73df73bd55b5eee5499f84fe260afa05195ea5c943954589f68d",
   "method": "Polyline vertices from the vector PDF left panel; logarithmic ordinate calibrated with tick marks at 0.04 and 0.72; vertex series identified against Figure 6 legend.",
   "ordinate_uncertainty": "Plus/minus 1 PDF point vertically, mapped through logarithmic calibration; extraction allowance, not solver uncertainty.",
+  "printed_annotations": {
+    "scope": "Distinct observations from numeric text next to the face-enrichment curve in Figure 6, manuscript PDF page 28 (zero-based index 27 of 31). These do not replace the vector-digitized CSV ordinates or their extraction allowance.",
+    "source_sha256": "a48b97f8910d73df73bd55b5eee5499f84fe260afa05195ea5c943954589f68d",
+    "doi": "10.1090/mcom/3108",
+    "decimal_places": 5,
+    "precision_convention": "The text is transcribed to its five printed decimal places; it is neither an exact real-valued error nor a bound for reference/discretization uncertainty.",
+    "face_values": [
+      {"subdivisions": 1, "effective_h": 0.125, "relative_h1_text": "0.17922"},
+      {"subdivisions": 4, "effective_h": 0.03125, "relative_h1_text": "0.12410"},
+      {"subdivisions": 16, "effective_h": 0.0078125, "relative_h1_text": "0.05614"},
+      {"subdivisions": 32, "effective_h": 0.00390625, "relative_h1_text": "0.03969"}
+    ],
+    "unannotated_subdivisions": [2, 8],
+    "unannotated_convention": "The s=2 and s=8 ordinates remain vector-PDF extractions with the CSV uncertainty. No exact printed values are assigned to these two points."
+  },
   "ordinate": "Relative full broken H1 norm",
   "face_macro_spacing": 0.125,
   "epsilon": "pi/150",

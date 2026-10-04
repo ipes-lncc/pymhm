@@ -1,0 +1,537 @@
+{
+  "method": "P8 primal MHM on the full 16-macro crisscross smooth L10 geometry; independent assembly and norm quadrature controls",
+  "physical_problem": {
+    "domain": "unit square",
+    "permeability": "identity",
+    "pressure": "sin(2*pi*x)*sin(2*pi*y)",
+    "source": "8*pi^2*sin(2*pi*x)*sin(2*pi*y)",
+    "boundary": "weak homogeneous Dirichlet",
+    "flux": "-grad(pressure)",
+    "local_kernel": "constant; zero-physical-mean response complement, retained macro constant",
+    "trace": "oriented physical normal flux; discontinuous P2 with 32 segments per macroface"
+  },
+  "literature_sources": {
+    "L10": {
+      "sha256": "80e5312cf4084806e2747e40afefae662d021d8cafb8986d1ea1f15e2f8e717e",
+      "doi": "10.1016/j.camwa.2026.01.016",
+      "pdf_pages": 12,
+      "printed_pages": "16-27"
+    },
+    "L08": {
+      "sha256": "92f006499a69a19681a5af2087d5b3ea923f144419f7c6328fbb0be7cf2d2a6f",
+      "source_url_printed_on_cover": "https://inria.hal.science/hal-03834748v1",
+      "pdf_pages": 13,
+      "printed_pages": "HAL cover plus manuscript pages 1-12"
+    }
+  },
+  "assembly_controls": [
+    {
+      "configuration": {
+        "study": "smooth",
+        "local_degree": 8,
+        "local_refinement": 16,
+        "local_assembly_workers": 1,
+        "local_solver": "pypardiso",
+        "requested_names": [
+          "ell2-s32",
+          "ell3-s32"
+        ],
+        "maximum_segments": 32,
+        "contrasts": null,
+        "requested_assembly_order": 11,
+        "assembly_order": 11,
+        "norm_orders": [
+          13,
+          15
+        ],
+        "quadrature_convention": "Gauss points per Duffy coordinate; boundary count also has trace degree+2 floor; trace coupling has a separate exact polynomial rule",
+        "material_fitted_local_meshes": false,
+        "contrast_delta": "1/6 (declared control, not restated in Figure 7)",
+        "local_refinement_precision": "double",
+        "hybrid_refinement_steps": 0
+      },
+      "accepted_case": {
+        "name": "ell2-s32",
+        "trace_degree": 2,
+        "segments": 32,
+        "macro_diameter": 0.5,
+        "H": 0.015625,
+        "original_trace_residual": 1.1769552042036141e-15,
+        "original_local_residual_max": 1.6911028616970134e-12,
+        "original_local_defect_l2_max": 1.3140533965294583e-12,
+        "local_componentwise_backward_error_max": 5.429250218002466e-17,
+        "local_roundoff_envelope_l2_max": 3.3170471592078583e-10,
+        "local_accepted_with_roundoff_envelope": false,
+        "solve_seconds": 3.124311774969101,
+        "trace_dofs": 2688,
+        "macro_cells": 16,
+        "fine_cells": 4096,
+        "global_dofs": 2704,
+        "macro_balance_max": 2.3982815733347707e-11,
+        "norms": {
+          "quadrature_13": {
+            "pressure_absolute": 1.8531290343004001e-10,
+            "pressure_reference_norm": 0.5,
+            "pressure_relative": 3.7062580686008003e-10,
+            "gradient_absolute": 2.1579662549076946e-07,
+            "gradient_reference_norm": 4.442882938158366,
+            "gradient_relative": 4.8571305725246054e-08,
+            "flux_absolute": 2.1579662549076946e-07,
+            "flux_reference_norm": 4.442882938158366,
+            "flux_relative": 4.8571305725246054e-08,
+            "energy_absolute": 2.1579662549076946e-07,
+            "energy_reference_norm": 4.442882938158366,
+            "energy_relative": 4.8571305725246054e-08
+          },
+          "quadrature_15": {
+            "pressure_absolute": 1.8531277932087133e-10,
+            "pressure_reference_norm": 0.49999999999999994,
+            "pressure_relative": 3.706255586417427e-10,
+            "gradient_absolute": 2.1579662521973342e-07,
+            "gradient_reference_norm": 4.442882938158365,
+            "gradient_relative": 4.857130566424152e-08,
+            "flux_absolute": 2.1579662521973342e-07,
+            "flux_reference_norm": 4.442882938158365,
+            "flux_relative": 4.857130566424152e-08,
+            "energy_absolute": 2.1579662521973342e-07,
+            "energy_reference_norm": 4.442882938158365,
+            "energy_relative": 4.857130566424152e-08
+          }
+        },
+        "archive": "smooth-p8-r16-nq13-15-ell2-s32.npz",
+        "archive_sha256": "2e1a8e453e9fa9c94a3c9ea5a9c97209c96225fe58c4d90b93515cb7ce785ada",
+        "total_seconds": 54.14510844834149
+      },
+      "source_sha256": {
+        "examples/unfitted_convergence.py": "329c4e47af14103c295180f844ed291f6aa89b9e9c1b630ec1971d8149ac83f7",
+        "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+        "examples/unfitted_trace_family.py": "53f2f3284106c3350ed754c0b1448c607941a2eadfe6eb18229039cc6b37ce74",
+        "examples/unfitted_campaign.py": "d554c8da8b93843a60d4a2383252a55374626abc1331f87660cf5c1107d10aba",
+        "examples/unfitted_geometry.py": "dd9df457b18ad11dea09ea31e269e6f3fd5473c1697cbcc653bde4a042d46c09",
+        "examples/layered_poisson.py": "9788591c6b9c8761fbff9b8e39e38fd1164268bcbde4b3668ad3fe05afb37b46",
+        "src/pymhm/darcy.py": "9a19652045d014585e5ed42e6d61e20cc30e7ceb67877e81298e84f59d16f4b5",
+        "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+        "src/pymhm/hybrid.py": "244e15cba7a09d76f630a1a2b670c9b8bfc86e3cda7f864e9ce5e97862c1a75e",
+        "src/pymhm/hybrid_refinement.py": "1d23684e51dd9ba831d10d1171ef9c772ee66ae205cc1aec92975cb5926176e7",
+        "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+        "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+        "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+        "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+        "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+        "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+        "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a"
+      }
+    },
+    {
+      "configuration": {
+        "study": "smooth",
+        "local_degree": 8,
+        "local_refinement": 16,
+        "local_assembly_workers": 1,
+        "local_solver": "pypardiso",
+        "requested_names": [
+          "ell2-s32",
+          "ell3-s32"
+        ],
+        "maximum_segments": 32,
+        "contrasts": null,
+        "requested_assembly_order": 13,
+        "assembly_order": 13,
+        "norm_orders": [
+          13,
+          15
+        ],
+        "quadrature_convention": "Gauss points per Duffy coordinate; boundary count also has trace degree+2 floor; trace coupling has a separate exact polynomial rule",
+        "material_fitted_local_meshes": false,
+        "contrast_delta": "1/6 (declared control, not restated in Figure 7)",
+        "local_refinement_precision": "double",
+        "hybrid_refinement_steps": 0
+      },
+      "accepted_case": {
+        "name": "ell2-s32",
+        "trace_degree": 2,
+        "segments": 32,
+        "macro_diameter": 0.5,
+        "H": 0.015625,
+        "original_trace_residual": 1.1614646121035898e-15,
+        "original_local_residual_max": 1.6907748210284282e-12,
+        "original_local_defect_l2_max": 1.313798496006728e-12,
+        "local_componentwise_backward_error_max": 5.428197050341586e-17,
+        "local_roundoff_envelope_l2_max": 3.317047159125901e-10,
+        "local_accepted_with_roundoff_envelope": false,
+        "solve_seconds": 3.061001667752862,
+        "trace_dofs": 2688,
+        "macro_cells": 16,
+        "fine_cells": 4096,
+        "global_dofs": 2704,
+        "macro_balance_max": 2.5657032054482443e-11,
+        "norms": {
+          "quadrature_13": {
+            "pressure_absolute": 1.853226535985952e-10,
+            "pressure_reference_norm": 0.5,
+            "pressure_relative": 3.706453071971904e-10,
+            "gradient_absolute": 2.1579662374367218e-07,
+            "gradient_reference_norm": 4.442882938158366,
+            "gradient_relative": 4.857130533201101e-08,
+            "flux_absolute": 2.1579662374367218e-07,
+            "flux_reference_norm": 4.442882938158366,
+            "flux_relative": 4.857130533201101e-08,
+            "energy_absolute": 2.1579662374367218e-07,
+            "energy_reference_norm": 4.442882938158366,
+            "energy_relative": 4.857130533201101e-08
+          },
+          "quadrature_15": {
+            "pressure_absolute": 1.853227895252393e-10,
+            "pressure_reference_norm": 0.49999999999999994,
+            "pressure_relative": 3.7064557905047867e-10,
+            "gradient_absolute": 2.1579662350694648e-07,
+            "gradient_reference_norm": 4.442882938158365,
+            "gradient_relative": 4.8571305278729016e-08,
+            "flux_absolute": 2.1579662350694648e-07,
+            "flux_reference_norm": 4.442882938158365,
+            "flux_relative": 4.8571305278729016e-08,
+            "energy_absolute": 2.1579662350694648e-07,
+            "energy_reference_norm": 4.442882938158365,
+            "energy_relative": 4.8571305278729016e-08
+          }
+        },
+        "archive": "smooth-p8-r16-q13-nq13-15-ell2-s32.npz",
+        "archive_sha256": "9ac049aa3698d3a99db6ea83565087173f7aa2422603b7496b7b19c1037d4c54",
+        "total_seconds": 53.247060207650065
+      },
+      "source_sha256": {
+        "examples/unfitted_convergence.py": "329c4e47af14103c295180f844ed291f6aa89b9e9c1b630ec1971d8149ac83f7",
+        "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+        "examples/unfitted_trace_family.py": "53f2f3284106c3350ed754c0b1448c607941a2eadfe6eb18229039cc6b37ce74",
+        "examples/unfitted_campaign.py": "d554c8da8b93843a60d4a2383252a55374626abc1331f87660cf5c1107d10aba",
+        "examples/unfitted_geometry.py": "dd9df457b18ad11dea09ea31e269e6f3fd5473c1697cbcc653bde4a042d46c09",
+        "examples/layered_poisson.py": "9788591c6b9c8761fbff9b8e39e38fd1164268bcbde4b3668ad3fe05afb37b46",
+        "src/pymhm/darcy.py": "9a19652045d014585e5ed42e6d61e20cc30e7ceb67877e81298e84f59d16f4b5",
+        "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+        "src/pymhm/hybrid.py": "244e15cba7a09d76f630a1a2b670c9b8bfc86e3cda7f864e9ce5e97862c1a75e",
+        "src/pymhm/hybrid_refinement.py": "1d23684e51dd9ba831d10d1171ef9c772ee66ae205cc1aec92975cb5926176e7",
+        "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+        "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+        "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+        "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+        "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+        "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+        "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a"
+      }
+    }
+  ],
+  "field_differences": [
+    {
+      "method": "Common uniform-triangle overlay; physical Pk values and gradients",
+      "fields": [
+        {
+          "name": "smooth-p8-r16-nq13-15-ell2-s32.npz",
+          "sha256": "2e1a8e453e9fa9c94a3c9ea5a9c97209c96225fe58c4d90b93515cb7ce785ada"
+        },
+        {
+          "name": "smooth-p8-r16-q13-nq13-15-ell2-s32.npz",
+          "sha256": "9ac049aa3698d3a99db6ea83565087173f7aa2422603b7496b7b19c1037d4c54"
+        }
+      ],
+      "quadrature_order": 13,
+      "norms": {
+        "pressure_l2": 1.2357428161831092e-11,
+        "broken_gradient_l2": 1.1014829360010822e-10,
+        "common_triangles": 4096
+      },
+      "source_sha256": {
+        "examples/unfitted_local_resolution.py": "5a7159f31c95caabf1d1b9f66e246d179582a0556c94e24593e4b9bb8471b41d",
+        "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+        "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+        "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+        "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e"
+      },
+      "source_changed_during_run": false
+    },
+    {
+      "method": "Common uniform-triangle overlay; physical Pk values and gradients",
+      "fields": [
+        {
+          "name": "smooth-p8-r16-nq13-15-ell2-s32.npz",
+          "sha256": "2e1a8e453e9fa9c94a3c9ea5a9c97209c96225fe58c4d90b93515cb7ce785ada"
+        },
+        {
+          "name": "smooth-p8-r16-q13-nq13-15-ell2-s32.npz",
+          "sha256": "9ac049aa3698d3a99db6ea83565087173f7aa2422603b7496b7b19c1037d4c54"
+        }
+      ],
+      "quadrature_order": 15,
+      "norms": {
+        "pressure_l2": 1.2357428161989154e-11,
+        "broken_gradient_l2": 1.1014829378615371e-10,
+        "common_triangles": 4096
+      },
+      "source_sha256": {
+        "examples/unfitted_local_resolution.py": "5a7159f31c95caabf1d1b9f66e246d179582a0556c94e24593e4b9bb8471b41d",
+        "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+        "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+        "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+        "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e"
+      },
+      "source_changed_during_run": false
+    }
+  ],
+  "trace_injectivity": {
+    "method": "Exact rational edge moments and separate production boundary SVD",
+    "exact_coefficient_convention": {
+      "edge_parameter": "Each of three cyclic oriented edges uses t in [0,1]; the two segments are [0,1/2] and [1/2,1].",
+      "test_basis_and_rows": "P8 nodal Lagrange edge traces at t=j/8, j=0,...,8; shared cyclic endpoint moments are added to row (8*edge+j) modulo 24.",
+      "trace_basis": "On segment k=0,1, mode m is the standard Legendre polynomial L_m(4*t-2*k-1), normalized by L_m(1)=1, for m=0,...,trace_degree.",
+      "column_order": "Edge 0,1,2; within each edge segment 0,1; within each segment increasing Legendre degree m.",
+      "moment_matrix": "Integrate each product of a test trace and trace mode with respect to dt on its segment; physical edge lengths and global normal-orientation signs are factored out.",
+      "null_vector_normalization": "The last coefficient equals one; the listed rational vector is not normalized in Euclidean or physical L2 norm.",
+      "physical_length_scaling": "On a physical edge of length L, divide every listed coefficient on that edge by L to preserve the zero physical edge moments.",
+      "production_orientation_map": "Use the macrocell outward physical normal-flux convention, then multiply by its first-neighbor face sign. If the production face parameter reverses the cyclic edge parameter, reverse the segment order and multiply Legendre mode m by (-1)^m."
+    },
+    "exact": [
+      {
+        "local_degree": 8,
+        "refinement": 1,
+        "segments": 2,
+        "trace_degree": 2,
+        "rank": 18,
+        "columns": 18,
+        "right_null_vectors": []
+      },
+      {
+        "local_degree": 8,
+        "refinement": 1,
+        "segments": 2,
+        "trace_degree": 3,
+        "rank": 23,
+        "columns": 24,
+        "right_null_vectors": [
+          [
+            "9/77",
+            "43/77",
+            "125/231",
+            "1",
+            "-9/77",
+            "43/77",
+            "-125/231",
+            "1",
+            "9/77",
+            "43/77",
+            "125/231",
+            "1",
+            "-9/77",
+            "43/77",
+            "-125/231",
+            "1",
+            "9/77",
+            "43/77",
+            "125/231",
+            "1",
+            "-9/77",
+            "43/77",
+            "-125/231",
+            "1"
+          ]
+        ]
+      }
+    ],
+    "numerical": [
+      {
+        "refinement": 1,
+        "segments": 2,
+        "trace_degree": 2,
+        "local_degree": 8,
+        "boundary_rows": 24,
+        "trace_columns": 18,
+        "rank": 18,
+        "tolerance": 4.2790214770190954e-15,
+        "smallest_singular_values": [
+          0.11659312736456262,
+          0.08510954762054083,
+          0.08505714877622433
+        ],
+        "largest_singular_value": 0.8029583137255645
+      },
+      {
+        "refinement": 1,
+        "segments": 2,
+        "trace_degree": 3,
+        "local_degree": 8,
+        "boundary_rows": 24,
+        "trace_columns": 24,
+        "rank": 23,
+        "tolerance": 4.3877065636776296e-15,
+        "smallest_singular_values": [
+          0.020517447020055653,
+          0.015893693050204903,
+          2.99676632796659e-17
+        ],
+        "largest_singular_value": 0.8233530685495688
+      },
+      {
+        "refinement": 2,
+        "segments": 2,
+        "trace_degree": 3,
+        "local_degree": 8,
+        "boundary_rows": 48,
+        "trace_columns": 24,
+        "rank": 24,
+        "tolerance": 5.5054868137677204e-15,
+        "smallest_singular_values": [
+          0.074406049283466,
+          0.07410502508544778,
+          0.07384815863910262
+        ],
+        "largest_singular_value": 0.5165522575620309
+      },
+      {
+        "refinement": 16,
+        "segments": 32,
+        "trace_degree": 2,
+        "local_degree": 8,
+        "boundary_rows": 384,
+        "trace_columns": 288,
+        "rank": 288,
+        "tolerance": 4.296723363558827e-15,
+        "smallest_singular_values": [
+          0.005314564651686519,
+          0.005314485068019445,
+          0.00531443692980894
+        ],
+        "largest_singular_value": 0.05039250452874385
+      },
+      {
+        "refinement": 16,
+        "segments": 32,
+        "trace_degree": 3,
+        "local_degree": 8,
+        "boundary_rows": 384,
+        "trace_columns": 384,
+        "rank": 383,
+        "tolerance": 4.4065879822957265e-15,
+        "smallest_singular_values": [
+          9.078810955895102e-05,
+          8.137669332698706e-05,
+          2.7216785438872175e-17
+        ],
+        "largest_singular_value": 0.05168101040375609
+      },
+      {
+        "refinement": 32,
+        "segments": 32,
+        "trace_degree": 3,
+        "local_degree": 8,
+        "boundary_rows": 768,
+        "trace_columns": 384,
+        "rank": 384,
+        "tolerance": 5.5158941720647375e-15,
+        "smallest_singular_values": [
+          0.0046095570192834995,
+          0.00460935758593318,
+          0.004609237671693289
+        ],
+        "largest_singular_value": 0.03234554549209094
+      }
+    ],
+    "global_cycle": {
+      "macro_triangles": 16,
+      "trace_dofs": 3584,
+      "null_coefficients_l2": 1.0000000000000004,
+      "max_coupling_action_l2": 6.631067357369368e-17,
+      "max_relative_to_frobenius": 1.5326369082512383e-15,
+      "cells": [
+        {
+          "cell": 0,
+          "action_l2": 6.6301618400982e-17,
+          "relative_to_frobenius": 1.5324276162751422e-15
+        },
+        {
+          "cell": 1,
+          "action_l2": 6.628554942469367e-17,
+          "relative_to_frobenius": 1.532056214435739e-15
+        },
+        {
+          "cell": 2,
+          "action_l2": 6.628554942469367e-17,
+          "relative_to_frobenius": 1.532056214435739e-15
+        },
+        {
+          "cell": 3,
+          "action_l2": 6.631067357369368e-17,
+          "relative_to_frobenius": 1.5326369082512383e-15
+        },
+        {
+          "cell": 4,
+          "action_l2": 6.6301618400982e-17,
+          "relative_to_frobenius": 1.5324276162751422e-15
+        },
+        {
+          "cell": 5,
+          "action_l2": 6.628554942469367e-17,
+          "relative_to_frobenius": 1.532056214435739e-15
+        },
+        {
+          "cell": 6,
+          "action_l2": 6.628554942469367e-17,
+          "relative_to_frobenius": 1.532056214435739e-15
+        },
+        {
+          "cell": 7,
+          "action_l2": 6.63086260807901e-17,
+          "relative_to_frobenius": 1.5325895845999422e-15
+        },
+        {
+          "cell": 8,
+          "action_l2": 6.630347916760375e-17,
+          "relative_to_frobenius": 1.5324706241266453e-15
+        },
+        {
+          "cell": 9,
+          "action_l2": 6.628554942469367e-17,
+          "relative_to_frobenius": 1.532056214435739e-15
+        },
+        {
+          "cell": 10,
+          "action_l2": 6.628554942469367e-17,
+          "relative_to_frobenius": 1.532056214435739e-15
+        },
+        {
+          "cell": 11,
+          "action_l2": 6.631067357369368e-17,
+          "relative_to_frobenius": 1.5326369082512383e-15
+        },
+        {
+          "cell": 12,
+          "action_l2": 6.630347916760375e-17,
+          "relative_to_frobenius": 1.5324706241266453e-15
+        },
+        {
+          "cell": 13,
+          "action_l2": 6.628554942469367e-17,
+          "relative_to_frobenius": 1.532056214435739e-15
+        },
+        {
+          "cell": 14,
+          "action_l2": 6.628554942469367e-17,
+          "relative_to_frobenius": 1.532056214435739e-15
+        },
+        {
+          "cell": 15,
+          "action_l2": 6.63086260807901e-17,
+          "relative_to_frobenius": 1.5325895845999422e-15
+        }
+      ]
+    }
+  },
+  "scope": {
+    "verified": "Full-case P8/r16 P2/s32 fields under assembly Gauss11/13 and independent norm Gauss13/15; exact excluded multiplier mode and finite-space rank checks",
+    "not_established": [
+      "Matched historical local discretization, which L10 does not specify",
+      "Local refinement r32 to r64 increment",
+      "Full-case independent assembly of the P8 campaign",
+      "Uniform inf-sup bound from rank or residual alone"
+    ],
+    "excluded_pair": "P8/r16 P3/s32 has an exact nonzero multiplier kernel; both assembly orders reject it",
+    "admissible_rank_control": "P8/r32 P3/s32 has full local coupling rank; this alone does not establish error estimates"
+  }
+}

@@ -1,0 +1,2122 @@
+{
+  "schema": "pymhm-initial-analytical-scalar-record-v1",
+  "family": "elasticity3d",
+  "case": "anisotropic-p3",
+  "resolution": 3,
+  "acquisition_uuid": "1a7f08cf-fa32-4459-9920-add1c1dc12c4",
+  "source_sha256": {
+    "src/pymhm/__init__.py": "a3273ccef37cce0b25b1e1cbf9faf150dfaaf715aafc6bd87e6d4809b431898c",
+    "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+    "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+    "src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+    "src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+    "src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+    "src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+    "src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+    "src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+    "src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+    "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+    "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+    "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+    "src/pymhm/darcy.py": "945eb63777daa94f02cd89f77ec6299cf1fe8722b3d98c027c70b7d318e097fc",
+    "src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+    "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+    "src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+    "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+    "src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+    "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+    "src/pymhm/darcy_transport.py": "3f9331d82dae0d16b30c53085981646942574a552601ec34631ba3b00eab5b7e",
+    "src/pymhm/darcy_velocity.py": "83c0dc577fe731a4316962b389ed286e711fcf9264836094188206d6eb276558",
+    "src/pymhm/distributed.py": "c6cf5f26bd9033a72328d18f5d099ab0d9b867f92a6babe472c2035ff1abd7ae",
+    "src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+    "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+    "src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+    "src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+    "src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+    "src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+    "src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+    "src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+    "src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+    "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+    "src/pymhm/elastodynamics.py": "21d7d7327f85b61399e2166f4babdd0098d220031a3cc0f507014655fd539f6c",
+    "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+    "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+    "src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+    "src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+    "src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+    "src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+    "src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+    "src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+    "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+    "src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+    "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+    "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+    "src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+    "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+    "src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+    "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+    "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+    "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+    "src/pymhm/helmholtz.py": "603a3e5eccf84830f8819657d97d3f7f22d856f97f21482e992f3a64fb67c1b4",
+    "src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+    "src/pymhm/helmholtz_spaces.py": "a0805d5ea9a95636062df0917dba98cfad8bc7ec298eba55c5fc1e6320a44bfb",
+    "src/pymhm/hybrid.py": "e4ca37cd8fa05dcb505d2cc7d36c975bbd25ac9ee01564bc86dd70d1d042dbb3",
+    "src/pymhm/hybrid_refinement.py": "b3ac92f5403b0fbc9a509e04626b7981cbd9767654ea149a894f1c82b74ecc16",
+    "src/pymhm/lagrange.py": "db5552571ee459630678dad97a887d4c49d1a2eb700cd2847b3f0a5f4ee8a2b7",
+    "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+    "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+    "src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+    "src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+    "src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+    "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+    "src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+    "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+    "src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+    "src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+    "src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+    "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+    "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+    "src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+    "src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+    "src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+    "src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+    "src/pymhm/mshho.py": "557b02892d7b93d2560deff999ef543bc7b95e762024139b6c8968d6b4ede0ee",
+    "src/pymhm/mshho3d.py": "522668e3fa23cd7661c958151caacdcc9e9a0e013c6f44e2974f5745dd3a4089",
+    "src/pymhm/nested.py": "4414c4fba66266017d97b5a75eda9a24ad90393647bd75d1245b5f4f93bc0049",
+    "src/pymhm/offline.py": "7b40681863239cf07f5df220ad893f044d26314c9a5bb8563fff587ef3df4932",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+    "src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+    "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+    "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+    "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+    "src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+    "src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+    "src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+    "src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+    "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+    "src/pymhm/rad.py": "d1f3d5c948bcc9370333050e8dfc1b15d5372ef745d51f04d8f700065d40c1e7",
+    "src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+    "src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+    "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+    "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+    "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+    "src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+    "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+    "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+    "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+    "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+    "src/pymhm/scalar_boundary.py": "5c2d4970ef3e032f93caee5f9b36ce36f535f65a924ef1e666f0e4aa5f4b69b3",
+    "src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+    "src/pymhm/scalar_transient.py": "c68b44eec515d94c114ba555e09d01705754ce2a2dda5199c753dc6b8f7f0ef5",
+    "src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+    "src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+    "src/pymhm/solvers.py": "2d360c2f7d71d8c04caa1966125291849b45daa5a886f5030772981e1cdaa751",
+    "src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+    "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+    "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+    "src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+    "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+    "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+    "src/pymhm/triangle_fields.py": "60e456d358ec5615d98375d6588e6ac88de972304d2fd3ac505f1ca998f67f4c",
+    "src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+    "src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+    "src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+    "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94",
+    "examples/minimal_flow_originals.py": "18df0121fb009627c8d026e7cd5644bed1adb5682448ed401a3a1853746aa398",
+    "examples/core_elasticity_field_archive.py": "c33037bb41044d7e4815d3bcfb859c13b8951e5c7699c9311b9f8485fb2a72e0",
+    "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+    "examples/campaign_provenance.py": "32a86b873f1dc5cb5e134f057e80abbd06c831f531850262bc909fb4adf7e736",
+    "examples/transport_checkpoints.py": "c9c09536afbe7ae247fb97e2c626a410279a1df9358c7984405d888e9a25f518",
+    "examples/local_response_cache.py": "4921332802aa6400356e9536366244e4285981d0cd7451abff376cf64ab7f5d5",
+    "pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57",
+    "pixi.toml": "c6d1234f9f6715265cdb85aadfcda86df379f542f6c579ed79e48835bdc29870",
+    "pyproject.toml": "9fe172ddcb0fc2407c85c8140de8d263808d3a2e57db016aea3a012a475efbc9",
+    "examples/minimal_flow_studies.py": "e4c4feacb2c8c6ecf5d93d978c8a5fd60352d374d5ef58c4745a365be498372d",
+    "examples/flow3d_data.py": "72ab684f95768877affda8192d4227f19432383a58e9d1ae2827c3414063315e",
+    "examples/gals3d_data.py": "b76fb53170c67757d33a380db28c287fc86f7f306b3efe2f564d560dd0607b63",
+    "examples/solve_elasticity3d.py": "615372001cf2d7454abc47d5008411c1703d4cdae93a5806cb709553aa66e80a",
+    "examples/solve_oseen.py": "b1b4d34cc67515f1626e063cb7e12d70dd4824159741dfac54a3664de2732dcb",
+    "examples/solve_stokes_adaptive.py": "35fd80a65383a2804095f3f7556ccacbc4973e62933b84820424eee04f8cf2fa",
+    "examples/field_sampling.py": "8822c5adf3914f9e0285d1cc871f32c69617114a40aa3975ccf82a009a837556",
+    "examples/plot_mesh.py": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6"
+  },
+  "degree": 3,
+  "formulation": "primal-anisotropic",
+  "local_refinement": 1,
+  "macro_cells": 162,
+  "fine_cells": 162,
+  "assembly_order": 9,
+  "norm_orders": [
+    11,
+    13
+  ],
+  "norms_by_order": {
+    "11": {
+      "displacement_l2": 0.12441781764434087,
+      "stress_l2": 26.9818255916306
+    },
+    "13": {
+      "displacement_l2": 0.12441781764434078,
+      "stress_l2": 26.98182559163059
+    }
+  },
+  "terminal_norms": {
+    "displacement_l2": 0.12441781764434078,
+    "stress_l2": 26.98182559163059
+  },
+  "physical_error_quadrature_relative_changes": {
+    "displacement_l2": 7.807926267634536e-16,
+    "stress_l2": 3.950118571557115e-16
+  },
+  "original_equations": {
+    "accepted": true,
+    "criterion": 1e-10,
+    "full_uncondensed_relative_to_physical_rhs": 5.603207197682654e-15,
+    "physical_rhs_row_norm": 25.233146778788864,
+    "maximum_original_block_backward_error": 1.0544340413822244e-15,
+    "global_weak_row_absolute_residual_norm": 4.50596061110604e-15,
+    "physical_mean_relative_defect": 0.0,
+    "reduced_gauge_relative_defect": 0.0,
+    "physical_mean_values": [],
+    "physical_mean_targets": [],
+    "gauge_multipliers": [],
+    "blocks": [
+      {
+        "macrocell": 0,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 3.5217287398666896e-15,
+            "row_action_scale_norm": 10.833727692420087,
+            "backward_error": 3.250708195601684e-16
+          }
+        }
+      },
+      {
+        "macrocell": 1,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 5.290278788758711e-15,
+            "row_action_scale_norm": 14.338733072279195,
+            "backward_error": 3.689502246880031e-16
+          }
+        }
+      },
+      {
+        "macrocell": 2,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 3.018774909903053e-15,
+            "row_action_scale_norm": 10.880623714762852,
+            "backward_error": 2.774450242045567e-16
+          }
+        }
+      },
+      {
+        "macrocell": 3,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 6.1931141136142146e-15,
+            "row_action_scale_norm": 15.039139703822283,
+            "backward_error": 4.117997595328009e-16
+          }
+        }
+      },
+      {
+        "macrocell": 4,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 3.0341265504601312e-15,
+            "row_action_scale_norm": 17.635514936422457,
+            "backward_error": 1.7204638262043482e-16
+          }
+        }
+      },
+      {
+        "macrocell": 5,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 3.2491923275326492e-15,
+            "row_action_scale_norm": 18.36086140917202,
+            "backward_error": 1.7696295697268002e-16
+          }
+        }
+      },
+      {
+        "macrocell": 6,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.635180673161557e-14,
+            "row_action_scale_norm": 71.81729610360827,
+            "backward_error": 2.27686192863978e-16
+          }
+        }
+      },
+      {
+        "macrocell": 7,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.654844591772964e-14,
+            "row_action_scale_norm": 40.65656130096342,
+            "backward_error": 4.0703014195491004e-16
+          }
+        }
+      },
+      {
+        "macrocell": 8,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.48386039968791e-14,
+            "row_action_scale_norm": 75.47282171091663,
+            "backward_error": 1.966085759151204e-16
+          }
+        }
+      },
+      {
+        "macrocell": 9,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.8656353163563887e-14,
+            "row_action_scale_norm": 43.359053103543665,
+            "backward_error": 4.3027584387074943e-16
+          }
+        }
+      },
+      {
+        "macrocell": 10,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 9.826839155039954e-15,
+            "row_action_scale_norm": 32.470906951875016,
+            "backward_error": 3.02635191853565e-16
+          }
+        }
+      },
+      {
+        "macrocell": 11,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.893252543417651e-15,
+            "row_action_scale_norm": 33.465861830792946,
+            "backward_error": 2.35859831828829e-16
+          }
+        }
+      },
+      {
+        "macrocell": 12,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.265200671848686e-15,
+            "row_action_scale_norm": 49.917858539594796,
+            "backward_error": 1.4554311591884369e-16
+          }
+        }
+      },
+      {
+        "macrocell": 13,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.353953892253641e-15,
+            "row_action_scale_norm": 12.643925602936779,
+            "backward_error": 3.4435143237811813e-16
+          }
+        }
+      },
+      {
+        "macrocell": 14,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 6.412320106029982e-15,
+            "row_action_scale_norm": 51.459653005736726,
+            "backward_error": 1.2460869305347115e-16
+          }
+        }
+      },
+      {
+        "macrocell": 15,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 6.159399584081371e-15,
+            "row_action_scale_norm": 12.654279305438504,
+            "backward_error": 4.867443996936443e-16
+          }
+        }
+      },
+      {
+        "macrocell": 16,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 2.0101328815775566e-15,
+            "row_action_scale_norm": 3.4980348354513233,
+            "backward_error": 5.746463303354168e-16
+          }
+        }
+      },
+      {
+        "macrocell": 17,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.7562669489337616e-15,
+            "row_action_scale_norm": 3.2861660899030696,
+            "backward_error": 5.344425390822426e-16
+          }
+        }
+      },
+      {
+        "macrocell": 18,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.080743362456247e-15,
+            "row_action_scale_norm": 17.37974032455625,
+            "backward_error": 2.3479886846700857e-16
+          }
+        }
+      },
+      {
+        "macrocell": 19,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.458483523954119e-15,
+            "row_action_scale_norm": 35.28881181481819,
+            "backward_error": 1.2634269318418787e-16
+          }
+        }
+      },
+      {
+        "macrocell": 20,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 3.692614267533196e-15,
+            "row_action_scale_norm": 15.322442440172699,
+            "backward_error": 2.40993841677083e-16
+          }
+        }
+      },
+      {
+        "macrocell": 21,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 9.306815321543527e-15,
+            "row_action_scale_norm": 22.86748616213041,
+            "backward_error": 4.069889998208912e-16
+          }
+        }
+      },
+      {
+        "macrocell": 22,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.936985836942788e-15,
+            "row_action_scale_norm": 58.085893108011234,
+            "backward_error": 8.499457566680466e-17
+          }
+        }
+      },
+      {
+        "macrocell": 23,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.270804586682883e-15,
+            "row_action_scale_norm": 37.70619022524745,
+            "backward_error": 1.9282787635793743e-16
+          }
+        }
+      },
+      {
+        "macrocell": 24,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.6181746475699826e-14,
+            "row_action_scale_norm": 146.26559805585694,
+            "backward_error": 1.1063262100442938e-16
+          }
+        }
+      },
+      {
+        "macrocell": 25,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.5409817150855078e-14,
+            "row_action_scale_norm": 131.34354834039252,
+            "backward_error": 1.1732450771711065e-16
+          }
+        }
+      },
+      {
+        "macrocell": 26,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.3994621176441649e-14,
+            "row_action_scale_norm": 121.78468211509164,
+            "backward_error": 1.1491281935782486e-16
+          }
+        }
+      },
+      {
+        "macrocell": 27,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.5194901769264673e-14,
+            "row_action_scale_norm": 74.14412984431527,
+            "backward_error": 2.0493735378876644e-16
+          }
+        }
+      },
+      {
+        "macrocell": 28,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.1075072769698914e-14,
+            "row_action_scale_norm": 117.8268275824497,
+            "backward_error": 9.399449172090369e-17
+          }
+        }
+      },
+      {
+        "macrocell": 29,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.1799363441596615e-14,
+            "row_action_scale_norm": 74.60907680902245,
+            "backward_error": 1.5814916825468242e-16
+          }
+        }
+      },
+      {
+        "macrocell": 30,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.059682140086344e-15,
+            "row_action_scale_norm": 109.33554961945968,
+            "backward_error": 6.456895460495177e-17
+          }
+        }
+      },
+      {
+        "macrocell": 31,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.1702117311461075e-14,
+            "row_action_scale_norm": 49.6737828422172,
+            "backward_error": 2.35579346727658e-16
+          }
+        }
+      },
+      {
+        "macrocell": 32,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 9.093334861964511e-15,
+            "row_action_scale_norm": 80.44572505549957,
+            "backward_error": 1.1303689357875777e-16
+          }
+        }
+      },
+      {
+        "macrocell": 33,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.024771048022596e-14,
+            "row_action_scale_norm": 24.084370511376637,
+            "backward_error": 4.254921454303857e-16
+          }
+        }
+      },
+      {
+        "macrocell": 34,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 5.55734709371927e-15,
+            "row_action_scale_norm": 15.683378790468806,
+            "backward_error": 3.543462902966173e-16
+          }
+        }
+      },
+      {
+        "macrocell": 35,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 8.080036242668584e-15,
+            "row_action_scale_norm": 10.457579057584978,
+            "backward_error": 7.726488318353242e-16
+          }
+        }
+      },
+      {
+        "macrocell": 36,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 9.131637678684541e-15,
+            "row_action_scale_norm": 9.563816406429234,
+            "backward_error": 9.548110597925988e-16
+          }
+        }
+      },
+      {
+        "macrocell": 37,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.633000163255426e-15,
+            "row_action_scale_norm": 35.004852860781746,
+            "backward_error": 2.180554848669906e-16
+          }
+        }
+      },
+      {
+        "macrocell": 38,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 3.9468401026465124e-15,
+            "row_action_scale_norm": 6.269756206452186,
+            "backward_error": 6.295045569052321e-16
+          }
+        }
+      },
+      {
+        "macrocell": 39,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.152678917942689e-15,
+            "row_action_scale_norm": 6.695847804516046,
+            "backward_error": 6.201871725850601e-16
+          }
+        }
+      },
+      {
+        "macrocell": 40,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.941114175900309e-15,
+            "row_action_scale_norm": 51.95201841521881,
+            "backward_error": 9.510918587241762e-17
+          }
+        }
+      },
+      {
+        "macrocell": 41,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.916181550813277e-15,
+            "row_action_scale_norm": 14.143724686818603,
+            "backward_error": 3.475874749877566e-16
+          }
+        }
+      },
+      {
+        "macrocell": 42,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 2.2790165900978644e-14,
+            "row_action_scale_norm": 97.30404077051905,
+            "backward_error": 2.3421602762342376e-16
+          }
+        }
+      },
+      {
+        "macrocell": 43,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.644708186674079e-14,
+            "row_action_scale_norm": 131.11068168807262,
+            "backward_error": 1.254442556089388e-16
+          }
+        }
+      },
+      {
+        "macrocell": 44,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 9.531699009606901e-15,
+            "row_action_scale_norm": 32.39880459970806,
+            "backward_error": 2.941990955336911e-16
+          }
+        }
+      },
+      {
+        "macrocell": 45,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.8778681454542197e-14,
+            "row_action_scale_norm": 20.45180589042185,
+            "backward_error": 9.18191848443896e-16
+          }
+        }
+      },
+      {
+        "macrocell": 46,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.4125186511844527e-14,
+            "row_action_scale_norm": 101.15681738446496,
+            "backward_error": 1.396365255162109e-16
+          }
+        }
+      },
+      {
+        "macrocell": 47,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 9.233935633759789e-15,
+            "row_action_scale_norm": 31.386194901483805,
+            "backward_error": 2.942037307403341e-16
+          }
+        }
+      },
+      {
+        "macrocell": 48,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 8.883594642402524e-15,
+            "row_action_scale_norm": 76.73664712394611,
+            "backward_error": 1.1576730252565787e-16
+          }
+        }
+      },
+      {
+        "macrocell": 49,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.1803539341888383e-14,
+            "row_action_scale_norm": 53.08719331932617,
+            "backward_error": 2.2234250115444234e-16
+          }
+        }
+      },
+      {
+        "macrocell": 50,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 5.21388544173177e-15,
+            "row_action_scale_norm": 21.405015746578055,
+            "backward_error": 2.435824156104765e-16
+          }
+        }
+      },
+      {
+        "macrocell": 51,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 5.588242320605209e-15,
+            "row_action_scale_norm": 9.174839213732966,
+            "backward_error": 6.090834063054411e-16
+          }
+        }
+      },
+      {
+        "macrocell": 52,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.692113198259365e-15,
+            "row_action_scale_norm": 13.702368198400126,
+            "backward_error": 5.613710773848194e-16
+          }
+        }
+      },
+      {
+        "macrocell": 53,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.644823705231088e-15,
+            "row_action_scale_norm": 7.5425947051586455,
+            "backward_error": 1.0135535586981129e-15
+          }
+        }
+      },
+      {
+        "macrocell": 54,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 3.441601334711185e-15,
+            "row_action_scale_norm": 12.630448424594883,
+            "backward_error": 2.7248449295034217e-16
+          }
+        }
+      },
+      {
+        "macrocell": 55,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 8.745607272959963e-15,
+            "row_action_scale_norm": 18.54464738088518,
+            "backward_error": 4.715973883641736e-16
+          }
+        }
+      },
+      {
+        "macrocell": 56,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 3.331622019908266e-15,
+            "row_action_scale_norm": 14.636383518208508,
+            "backward_error": 2.2762603998204443e-16
+          }
+        }
+      },
+      {
+        "macrocell": 57,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 6.8651964326788236e-15,
+            "row_action_scale_norm": 31.073714841220962,
+            "backward_error": 2.2093259424430867e-16
+          }
+        }
+      },
+      {
+        "macrocell": 58,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.876180521065493e-15,
+            "row_action_scale_norm": 31.306490869278726,
+            "backward_error": 1.557562149468027e-16
+          }
+        }
+      },
+      {
+        "macrocell": 59,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 3.347498333933364e-15,
+            "row_action_scale_norm": 48.99542045344435,
+            "backward_error": 6.832267797587676e-17
+          }
+        }
+      },
+      {
+        "macrocell": 60,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.539605423218441e-14,
+            "row_action_scale_norm": 100.2962652901968,
+            "backward_error": 1.5350575804231126e-16
+          }
+        }
+      },
+      {
+        "macrocell": 61,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.3758740704648215e-14,
+            "row_action_scale_norm": 61.95331096270685,
+            "backward_error": 2.2208241159105066e-16
+          }
+        }
+      },
+      {
+        "macrocell": 62,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.0230445995237178e-14,
+            "row_action_scale_norm": 126.77940266744416,
+            "backward_error": 8.06948587861131e-17
+          }
+        }
+      },
+      {
+        "macrocell": 63,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 2.4623396325839424e-14,
+            "row_action_scale_norm": 121.00092865685419,
+            "backward_error": 2.0349758137533611e-16
+          }
+        }
+      },
+      {
+        "macrocell": 64,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.4058385520671448e-14,
+            "row_action_scale_norm": 64.71394911385298,
+            "backward_error": 2.1723887528387666e-16
+          }
+        }
+      },
+      {
+        "macrocell": 65,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 8.269237436645783e-15,
+            "row_action_scale_norm": 101.58498923157201,
+            "backward_error": 8.14021589134131e-17
+          }
+        }
+      },
+      {
+        "macrocell": 66,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 9.719983276424755e-15,
+            "row_action_scale_norm": 69.40445793268283,
+            "backward_error": 1.4004839985714485e-16
+          }
+        }
+      },
+      {
+        "macrocell": 67,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 5.3747640310256894e-15,
+            "row_action_scale_norm": 21.623822606651565,
+            "backward_error": 2.4855753438212133e-16
+          }
+        }
+      },
+      {
+        "macrocell": 68,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 5.194701323409303e-15,
+            "row_action_scale_norm": 97.81754912857797,
+            "backward_error": 5.3106026164906655e-17
+          }
+        }
+      },
+      {
+        "macrocell": 69,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.1526078705294375e-14,
+            "row_action_scale_norm": 47.40985228745534,
+            "backward_error": 2.4311568480343443e-16
+          }
+        }
+      },
+      {
+        "macrocell": 70,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.338899587975548e-15,
+            "row_action_scale_norm": 10.201436839866476,
+            "backward_error": 4.2532239880361196e-16
+          }
+        }
+      },
+      {
+        "macrocell": 71,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.282426386369143e-15,
+            "row_action_scale_norm": 14.03187468132432,
+            "backward_error": 5.1899169225489635e-16
+          }
+        }
+      },
+      {
+        "macrocell": 72,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 3.571238856383938e-15,
+            "row_action_scale_norm": 14.072041323961459,
+            "backward_error": 2.5378257312980863e-16
+          }
+        }
+      },
+      {
+        "macrocell": 73,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.111372005940766e-15,
+            "row_action_scale_norm": 35.85018576982284,
+            "backward_error": 1.9836360267697177e-16
+          }
+        }
+      },
+      {
+        "macrocell": 74,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 3.795548755400609e-15,
+            "row_action_scale_norm": 13.633028883148572,
+            "backward_error": 2.784083264205643e-16
+          }
+        }
+      },
+      {
+        "macrocell": 75,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.27277582175282e-15,
+            "row_action_scale_norm": 36.66816068944145,
+            "backward_error": 1.9834034991144254e-16
+          }
+        }
+      },
+      {
+        "macrocell": 76,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 6.16112199081957e-15,
+            "row_action_scale_norm": 60.366444369830575,
+            "backward_error": 1.020620322289302e-16
+          }
+        }
+      },
+      {
+        "macrocell": 77,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.146701024743633e-15,
+            "row_action_scale_norm": 62.473523492284265,
+            "backward_error": 1.1439567716436353e-16
+          }
+        }
+      },
+      {
+        "macrocell": 78,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.2348134477332398e-14,
+            "row_action_scale_norm": 124.16862060875933,
+            "backward_error": 9.944649797020708e-17
+          }
+        }
+      },
+      {
+        "macrocell": 79,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.2998151419050598e-14,
+            "row_action_scale_norm": 124.904990710039,
+            "backward_error": 1.0406430796048164e-16
+          }
+        }
+      },
+      {
+        "macrocell": 80,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 9.732270291710246e-15,
+            "row_action_scale_norm": 125.03796096567756,
+            "backward_error": 7.783452494384258e-17
+          }
+        }
+      },
+      {
+        "macrocell": 81,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 2.1959526376670255e-14,
+            "row_action_scale_norm": 131.28529144052914,
+            "backward_error": 1.672657015551334e-16
+          }
+        }
+      },
+      {
+        "macrocell": 82,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.3106263467610044e-14,
+            "row_action_scale_norm": 122.7018649089252,
+            "backward_error": 1.0681388972643649e-16
+          }
+        }
+      },
+      {
+        "macrocell": 83,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 8.8360435198223e-15,
+            "row_action_scale_norm": 125.03186136620259,
+            "backward_error": 7.067033493121118e-17
+          }
+        }
+      },
+      {
+        "macrocell": 84,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.525901353277491e-15,
+            "row_action_scale_norm": 96.12986226707652,
+            "backward_error": 7.828890186452536e-17
+          }
+        }
+      },
+      {
+        "macrocell": 85,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.1185594896334392e-14,
+            "row_action_scale_norm": 55.30094463447163,
+            "backward_error": 2.0226770031269766e-16
+          }
+        }
+      },
+      {
+        "macrocell": 86,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.440185510604073e-15,
+            "row_action_scale_norm": 97.3110843318558,
+            "backward_error": 7.645773923586269e-17
+          }
+        }
+      },
+      {
+        "macrocell": 87,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.0867331220493935e-14,
+            "row_action_scale_norm": 60.1469510952083,
+            "backward_error": 1.8067966908732799e-16
+          }
+        }
+      },
+      {
+        "macrocell": 88,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 8.81441631500841e-15,
+            "row_action_scale_norm": 19.382565156079583,
+            "backward_error": 4.5476005079976e-16
+          }
+        }
+      },
+      {
+        "macrocell": 89,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.637354960894282e-15,
+            "row_action_scale_norm": 20.507294362702094,
+            "backward_error": 2.261319742563666e-16
+          }
+        }
+      },
+      {
+        "macrocell": 90,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.715144284748263e-15,
+            "row_action_scale_norm": 12.969413907052681,
+            "backward_error": 3.63558779027339e-16
+          }
+        }
+      },
+      {
+        "macrocell": 91,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.1162673411720966e-14,
+            "row_action_scale_norm": 41.792978576692015,
+            "backward_error": 2.670944687810885e-16
+          }
+        }
+      },
+      {
+        "macrocell": 92,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.951935716823625e-15,
+            "row_action_scale_norm": 9.68611359475458,
+            "backward_error": 5.112407229567592e-16
+          }
+        }
+      },
+      {
+        "macrocell": 93,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 6.0020479652526305e-15,
+            "row_action_scale_norm": 19.239898765651176,
+            "backward_error": 3.1195839636994525e-16
+          }
+        }
+      },
+      {
+        "macrocell": 94,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.93377711771728e-15,
+            "row_action_scale_norm": 87.99802190190537,
+            "backward_error": 9.015858477547772e-17
+          }
+        }
+      },
+      {
+        "macrocell": 95,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.269543619918972e-15,
+            "row_action_scale_norm": 60.13588060261206,
+            "backward_error": 1.208852942215535e-16
+          }
+        }
+      },
+      {
+        "macrocell": 96,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.6668752915809142e-14,
+            "row_action_scale_norm": 139.17656608988784,
+            "backward_error": 1.1976695060175252e-16
+          }
+        }
+      },
+      {
+        "macrocell": 97,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.81857760964871e-14,
+            "row_action_scale_norm": 168.04480744020492,
+            "backward_error": 1.0821980383391562e-16
+          }
+        }
+      },
+      {
+        "macrocell": 98,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.9678081237368593e-14,
+            "row_action_scale_norm": 85.30494447427762,
+            "backward_error": 2.3067925732373245e-16
+          }
+        }
+      },
+      {
+        "macrocell": 99,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 2.4492646828471396e-14,
+            "row_action_scale_norm": 81.86668841214784,
+            "backward_error": 2.9917720263907783e-16
+          }
+        }
+      },
+      {
+        "macrocell": 100,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.774365829398476e-14,
+            "row_action_scale_norm": 178.29992998373297,
+            "backward_error": 9.95157894655572e-17
+          }
+        }
+      },
+      {
+        "macrocell": 101,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.8019767324249814e-14,
+            "row_action_scale_norm": 135.79325885229395,
+            "backward_error": 1.327000138044438e-16
+          }
+        }
+      },
+      {
+        "macrocell": 102,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 6.7602900332657035e-15,
+            "row_action_scale_norm": 107.43031875194036,
+            "backward_error": 6.292720818296559e-17
+          }
+        }
+      },
+      {
+        "macrocell": 103,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.449271914437771e-15,
+            "row_action_scale_norm": 69.71247746255189,
+            "backward_error": 1.0685708191104479e-16
+          }
+        }
+      },
+      {
+        "macrocell": 104,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.2579991841422461e-14,
+            "row_action_scale_norm": 66.52889348712023,
+            "backward_error": 1.8909065192641306e-16
+          }
+        }
+      },
+      {
+        "macrocell": 105,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.6864027633437375e-14,
+            "row_action_scale_norm": 39.676970376630564,
+            "backward_error": 4.250331482811541e-16
+          }
+        }
+      },
+      {
+        "macrocell": 106,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 5.245907244708534e-15,
+            "row_action_scale_norm": 30.66564426447323,
+            "backward_error": 1.7106789602936938e-16
+          }
+        }
+      },
+      {
+        "macrocell": 107,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.1115747525419294e-14,
+            "row_action_scale_norm": 25.72197649707648,
+            "backward_error": 4.3214982047288214e-16
+          }
+        }
+      },
+      {
+        "macrocell": 108,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 2.9585214499777572e-15,
+            "row_action_scale_norm": 4.685421765436981,
+            "backward_error": 6.314311919157258e-16
+          }
+        }
+      },
+      {
+        "macrocell": 109,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.973406439929195e-15,
+            "row_action_scale_norm": 5.2021847551334215,
+            "backward_error": 9.560226470275836e-16
+          }
+        }
+      },
+      {
+        "macrocell": 110,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.150081195273263e-15,
+            "row_action_scale_norm": 8.309100694064167,
+            "backward_error": 4.994621377302585e-16
+          }
+        }
+      },
+      {
+        "macrocell": 111,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 6.425974248041709e-15,
+            "row_action_scale_norm": 29.82362545014152,
+            "backward_error": 2.1546589829544738e-16
+          }
+        }
+      },
+      {
+        "macrocell": 112,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.131748155252275e-15,
+            "row_action_scale_norm": 11.502926234453616,
+            "backward_error": 3.591910502630926e-16
+          }
+        }
+      },
+      {
+        "macrocell": 113,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 3.7657726625373435e-15,
+            "row_action_scale_norm": 42.30796944833067,
+            "backward_error": 8.90085889642224e-17
+          }
+        }
+      },
+      {
+        "macrocell": 114,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.2817410614386458e-14,
+            "row_action_scale_norm": 26.915779803272223,
+            "backward_error": 4.762043198476535e-16
+          }
+        }
+      },
+      {
+        "macrocell": 115,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 9.099898885604115e-15,
+            "row_action_scale_norm": 16.64400025304474,
+            "backward_error": 5.467374878187376e-16
+          }
+        }
+      },
+      {
+        "macrocell": 116,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.237484065492872e-14,
+            "row_action_scale_norm": 86.59019262128447,
+            "backward_error": 1.4291272810827422e-16
+          }
+        }
+      },
+      {
+        "macrocell": 117,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.930359562657417e-14,
+            "row_action_scale_norm": 116.72425373132093,
+            "backward_error": 1.6537776005839981e-16
+          }
+        }
+      },
+      {
+        "macrocell": 118,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 6.531190007858934e-15,
+            "row_action_scale_norm": 26.297927547928683,
+            "backward_error": 2.4835379122387735e-16
+          }
+        }
+      },
+      {
+        "macrocell": 119,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.8552617038621878e-14,
+            "row_action_scale_norm": 84.80084981665,
+            "backward_error": 2.1877866883097218e-16
+          }
+        }
+      },
+      {
+        "macrocell": 120,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 5.685247381664463e-15,
+            "row_action_scale_norm": 18.090176139609483,
+            "backward_error": 3.1427263824238205e-16
+          }
+        }
+      },
+      {
+        "macrocell": 121,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 5.2788121206125835e-15,
+            "row_action_scale_norm": 7.951745554931405,
+            "backward_error": 6.638557640138324e-16
+          }
+        }
+      },
+      {
+        "macrocell": 122,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.875459151850544e-15,
+            "row_action_scale_norm": 69.28958449020841,
+            "backward_error": 1.1366007185341767e-16
+          }
+        }
+      },
+      {
+        "macrocell": 123,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 9.369664708074084e-15,
+            "row_action_scale_norm": 48.21530583057801,
+            "backward_error": 1.9432967491687812e-16
+          }
+        }
+      },
+      {
+        "macrocell": 124,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.7403666068174345e-15,
+            "row_action_scale_norm": 7.270147538337351,
+            "backward_error": 6.520316928673409e-16
+          }
+        }
+      },
+      {
+        "macrocell": 125,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 9.498090617359098e-15,
+            "row_action_scale_norm": 11.350955678745796,
+            "backward_error": 8.367657214223722e-16
+          }
+        }
+      },
+      {
+        "macrocell": 126,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 8.886819985872598e-15,
+            "row_action_scale_norm": 8.428047309837556,
+            "backward_error": 1.0544340413822244e-15
+          }
+        }
+      },
+      {
+        "macrocell": 127,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 5.4405660083966496e-15,
+            "row_action_scale_norm": 17.159150152121768,
+            "backward_error": 3.170650038122028e-16
+          }
+        }
+      },
+      {
+        "macrocell": 128,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.242508292050389e-15,
+            "row_action_scale_norm": 12.971785404198448,
+            "backward_error": 5.583277911540441e-16
+          }
+        }
+      },
+      {
+        "macrocell": 129,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 9.938654336312497e-15,
+            "row_action_scale_norm": 41.2702089284471,
+            "backward_error": 2.4081909431434675e-16
+          }
+        }
+      },
+      {
+        "macrocell": 130,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.999426891732619e-15,
+            "row_action_scale_norm": 56.49169690935197,
+            "backward_error": 1.416035865335875e-16
+          }
+        }
+      },
+      {
+        "macrocell": 131,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 6.954068842494472e-15,
+            "row_action_scale_norm": 85.182945464034,
+            "backward_error": 8.163686762194228e-17
+          }
+        }
+      },
+      {
+        "macrocell": 132,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.747987256735264e-14,
+            "row_action_scale_norm": 81.68983042910929,
+            "backward_error": 2.139785634947759e-16
+          }
+        }
+      },
+      {
+        "macrocell": 133,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.2857601968171432e-14,
+            "row_action_scale_norm": 75.40631096972552,
+            "backward_error": 1.7051095329850526e-16
+          }
+        }
+      },
+      {
+        "macrocell": 134,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 2.0938712635780927e-14,
+            "row_action_scale_norm": 141.52217536544433,
+            "backward_error": 1.4795358099684471e-16
+          }
+        }
+      },
+      {
+        "macrocell": 135,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 2.4448119252619885e-14,
+            "row_action_scale_norm": 168.9538142727032,
+            "backward_error": 1.4470297316377197e-16
+          }
+        }
+      },
+      {
+        "macrocell": 136,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.443891152007361e-14,
+            "row_action_scale_norm": 133.20356169494204,
+            "backward_error": 1.083973381518212e-16
+          }
+        }
+      },
+      {
+        "macrocell": 137,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.2760650206220939e-14,
+            "row_action_scale_norm": 175.95677867378987,
+            "backward_error": 7.252150387384727e-17
+          }
+        }
+      },
+      {
+        "macrocell": 138,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.129727440136511e-15,
+            "row_action_scale_norm": 64.23225663137364,
+            "backward_error": 1.1099917415409726e-16
+          }
+        }
+      },
+      {
+        "macrocell": 139,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.618194059916133e-14,
+            "row_action_scale_norm": 36.27478007838585,
+            "backward_error": 4.4609341708465e-16
+          }
+        }
+      },
+      {
+        "macrocell": 140,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 8.41650866939588e-15,
+            "row_action_scale_norm": 110.51805878559327,
+            "backward_error": 7.615505340827634e-17
+          }
+        }
+      },
+      {
+        "macrocell": 141,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.0886150358994108e-14,
+            "row_action_scale_norm": 71.90970026049645,
+            "backward_error": 1.5138639598772474e-16
+          }
+        }
+      },
+      {
+        "macrocell": 142,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.0690231109428376e-14,
+            "row_action_scale_norm": 24.782430313667447,
+            "backward_error": 4.313633075579654e-16
+          }
+        }
+      },
+      {
+        "macrocell": 143,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.685260304999322e-15,
+            "row_action_scale_norm": 30.3401326450466,
+            "backward_error": 2.5330345107288235e-16
+          }
+        }
+      },
+      {
+        "macrocell": 144,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.3917637600035576e-15,
+            "row_action_scale_norm": 3.284324060086084,
+            "backward_error": 4.237595726065712e-16
+          }
+        }
+      },
+      {
+        "macrocell": 145,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 3.2274544588289798e-15,
+            "row_action_scale_norm": 12.396692584569895,
+            "backward_error": 2.6034802725092796e-16
+          }
+        }
+      },
+      {
+        "macrocell": 146,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.6364450806051862e-15,
+            "row_action_scale_norm": 3.682485576033816,
+            "backward_error": 4.443860123323831e-16
+          }
+        }
+      },
+      {
+        "macrocell": 147,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 5.796655088136663e-15,
+            "row_action_scale_norm": 13.450576688789768,
+            "backward_error": 4.309595954326494e-16
+          }
+        }
+      },
+      {
+        "macrocell": 148,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 5.473132178544992e-15,
+            "row_action_scale_norm": 52.34540611306027,
+            "backward_error": 1.0455802304262638e-16
+          }
+        }
+      },
+      {
+        "macrocell": 149,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 4.688891874846816e-15,
+            "row_action_scale_norm": 52.19223734646145,
+            "backward_error": 8.983887476831293e-17
+          }
+        }
+      },
+      {
+        "macrocell": 150,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.3105109409352508e-14,
+            "row_action_scale_norm": 47.95973295797277,
+            "backward_error": 2.7325234318624225e-16
+          }
+        }
+      },
+      {
+        "macrocell": 151,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.6533651070865627e-14,
+            "row_action_scale_norm": 62.273009815944995,
+            "backward_error": 2.655026811733161e-16
+          }
+        }
+      },
+      {
+        "macrocell": 152,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.0383838235016097e-14,
+            "row_action_scale_norm": 48.33105798395461,
+            "backward_error": 2.148481466816518e-16
+          }
+        }
+      },
+      {
+        "macrocell": 153,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.5050238090678262e-14,
+            "row_action_scale_norm": 64.17999515965589,
+            "backward_error": 2.3450045537147335e-16
+          }
+        }
+      },
+      {
+        "macrocell": 154,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 2.4230471741931657e-14,
+            "row_action_scale_norm": 117.46624842715791,
+            "backward_error": 2.06276033042438e-16
+          }
+        }
+      },
+      {
+        "macrocell": 155,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 2.0318684513407558e-14,
+            "row_action_scale_norm": 116.06413988580263,
+            "backward_error": 1.7506427509306007e-16
+          }
+        }
+      },
+      {
+        "macrocell": 156,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 9.855622657793819e-15,
+            "row_action_scale_norm": 44.15180110687388,
+            "backward_error": 2.2322130492337766e-16
+          }
+        }
+      },
+      {
+        "macrocell": 157,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.3805571974294431e-14,
+            "row_action_scale_norm": 35.562539455536054,
+            "backward_error": 3.882054596116674e-16
+          }
+        }
+      },
+      {
+        "macrocell": 158,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 7.912683145959474e-15,
+            "row_action_scale_norm": 44.29270694260243,
+            "backward_error": 1.7864528253405871e-16
+          }
+        }
+      },
+      {
+        "macrocell": 159,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.769139614172609e-14,
+            "row_action_scale_norm": 37.087980162600445,
+            "backward_error": 4.770115833799467e-16
+          }
+        }
+      },
+      {
+        "macrocell": 160,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.3865552329560818e-14,
+            "row_action_scale_norm": 25.505573271254857,
+            "backward_error": 5.436283349564031e-16
+          }
+        }
+      },
+      {
+        "macrocell": 161,
+        "blocks": {
+          "displacement_balance": {
+            "row_count": 60,
+            "absolute_row_residual_norm": 1.2051334080365499e-14,
+            "row_action_scale_norm": 25.292000589223708,
+            "backward_error": 4.764879724658979e-16
+          }
+        }
+      }
+    ],
+    "norm_convention": "Original coefficient-row block norms; physical field L2 errors are separate",
+    "coefficient_vectors_persisted": false,
+    "field_replay_claimed": false
+  },
+  "accepted": true,
+  "conventions": "Anisotropic Kelvin stiffness (1+x+2y+3z)*SPD; raw symmetric stress; six retained physical rigid modes",
+  "elapsed_seconds": 27.665211707353592,
+  "workers": 1,
+  "native_threads": 1,
+  "coefficient_vectors_persisted": false,
+  "field_replay_claimed": false,
+  "historical_literature_reproduction": false,
+  "uniform_inf_sup_proven": false,
+  "independent_native_whole_case_verified": false,
+  "source_changed": false,
+  "runtime_module_origins": {
+    "__main__": "examples/minimal_flow_studies.py",
+    "examples.flow3d_data": "examples/flow3d_data.py",
+    "examples.gals3d_data": "examples/gals3d_data.py",
+    "examples.campaign_provenance": "examples/campaign_provenance.py",
+    "examples.archive_precision": "examples/archive_precision.py",
+    "pymhm.mesh": "src/pymhm/mesh.py",
+    "pymhm._geometry_roundoff": "src/pymhm/_geometry_roundoff.py",
+    "pymhm.elements": "src/pymhm/elements.py",
+    "pymhm.planar_material": "src/pymhm/planar_material.py",
+    "pymhm.tetra_lagrange": "src/pymhm/tetra_lagrange.py",
+    "pymhm.tetrahedral": "src/pymhm/tetrahedral.py",
+    "pymhm.planar_fitting": "src/pymhm/planar_fitting.py",
+    "pymhm.planar_quadrature": "src/pymhm/planar_quadrature.py",
+    "pymhm.reservoir": "src/pymhm/reservoir.py",
+    "pymhm.triangle_fields": "src/pymhm/triangle_fields.py",
+    "pymhm.cut_cells": "src/pymhm/cut_cells.py",
+    "__mp_main__": "examples/minimal_flow_studies.py",
+    "pymhm.parallel": "src/pymhm/parallel.py",
+    "pymhm.solvers": "src/pymhm/solvers.py",
+    "pymhm.hybrid": "src/pymhm/hybrid.py",
+    "pymhm.hybrid_refinement": "src/pymhm/hybrid_refinement.py",
+    "pymhm.lagrange": "src/pymhm/lagrange.py",
+    "pymhm.polygon": "src/pymhm/polygon.py",
+    "pymhm.quadrilateral": "src/pymhm/quadrilateral.py",
+    "pymhm.loads": "src/pymhm/loads.py",
+    "pymhm.darcy": "src/pymhm/darcy.py",
+    "pymhm.estimator_spaces": "src/pymhm/estimator_spaces.py",
+    "pymhm.refinement": "src/pymhm/refinement.py",
+    "pymhm.rt": "src/pymhm/rt.py",
+    "pymhm.darcy_rt": "src/pymhm/darcy_rt.py",
+    "pymhm.reconstruction_moments": "src/pymhm/reconstruction_moments.py",
+    "pymhm.estimator": "src/pymhm/estimator.py",
+    "pymhm.weighted_estimator": "src/pymhm/weighted_estimator.py",
+    "pymhm.adaptive_darcy": "src/pymhm/adaptive_darcy.py",
+    "pymhm.tetra_validation": "src/pymhm/tetra_validation.py",
+    "pymhm.darcy3d": "src/pymhm/darcy3d.py",
+    "pymhm.rad3d": "src/pymhm/rad3d.py",
+    "pymhm.mapped_rt": "src/pymhm/mapped_rt.py",
+    "pymhm.hdiv3d_family": "src/pymhm/hdiv3d_family.py",
+    "pymhm.hdiv3d_mesh": "src/pymhm/hdiv3d_mesh.py",
+    "pymhm.hdiv3d_general": "src/pymhm/hdiv3d_general.py",
+    "pymhm.rt3d": "src/pymhm/rt3d.py",
+    "pymhm.reconstruction3d": "src/pymhm/reconstruction3d.py",
+    "pymhm.estimator3d": "src/pymhm/estimator3d.py",
+    "pymhm.refinement3d": "src/pymhm/refinement3d.py",
+    "pymhm.adaptive_darcy3d": "src/pymhm/adaptive_darcy3d.py",
+    "pymhm.adaptive_darcy_balanced": "src/pymhm/adaptive_darcy_balanced.py",
+    "pymhm.longest_edge": "src/pymhm/longest_edge.py",
+    "pymhm.adaptive_darcy_budget": "src/pymhm/adaptive_darcy_budget.py",
+    "pymhm.analytic": "src/pymhm/analytic.py",
+    "pymhm.bdm_family": "src/pymhm/bdm_family.py",
+    "pymhm.block": "src/pymhm/block.py",
+    "pymhm.conforming": "src/pymhm/conforming.py",
+    "pymhm.darcy_hdiv3d": "src/pymhm/darcy_hdiv3d.py",
+    "pymhm.scalar_boundary": "src/pymhm/scalar_boundary.py",
+    "pymhm.darcy_jump_estimator": "src/pymhm/darcy_jump_estimator.py",
+    "pymhm.darcy_local_error": "src/pymhm/darcy_local_error.py",
+    "pymhm.bdm": "src/pymhm/bdm.py",
+    "pymhm.darcy_mixed": "src/pymhm/darcy_mixed.py",
+    "pymhm.darcy_velocity": "src/pymhm/darcy_velocity.py",
+    "pymhm.transport": "src/pymhm/transport.py",
+    "pymhm.unusual": "src/pymhm/unusual.py",
+    "pymhm.vector": "src/pymhm/vector.py",
+    "pymhm.rad": "src/pymhm/rad.py",
+    "pymhm.scalar_transient": "src/pymhm/scalar_transient.py",
+    "pymhm.darcy_transport": "src/pymhm/darcy_transport.py",
+    "pymhm.distributed": "src/pymhm/distributed.py",
+    "pymhm.elasticity_compatibility": "src/pymhm/elasticity_compatibility.py",
+    "pymhm.elasticity": "src/pymhm/elasticity.py",
+    "pymhm.elasticity3d": "src/pymhm/elasticity3d.py",
+    "pymhm.elasticity_primal": "src/pymhm/elasticity_primal.py",
+    "pymhm.flow": "src/pymhm/flow.py",
+    "pymhm.flow_estimator": "src/pymhm/flow_estimator.py",
+    "pymhm.elasticity_estimator": "src/pymhm/elasticity_estimator.py",
+    "pymhm.elasticity_compliance": "src/pymhm/elasticity_compliance.py",
+    "pymhm.elasticity_mixed": "src/pymhm/elasticity_mixed.py",
+    "pymhm.elasticity_mixed3d_forms": "src/pymhm/elasticity_mixed3d_forms.py",
+    "pymhm.elasticity_mixed3d": "src/pymhm/elasticity_mixed3d.py",
+    "pymhm.offline": "src/pymhm/offline.py",
+    "pymhm.tensor_rt": "src/pymhm/tensor_rt.py",
+    "pymhm.elasticity_tensor_rt": "src/pymhm/elasticity_tensor_rt.py",
+    "pymhm.helmholtz_forms": "src/pymhm/helmholtz_forms.py",
+    "pymhm.maxwell_dg": "src/pymhm/maxwell_dg.py",
+    "pymhm.elastodynamics": "src/pymhm/elastodynamics.py",
+    "pymhm.flow3d_forms": "src/pymhm/flow3d_forms.py",
+    "pymhm.flow3d": "src/pymhm/flow3d.py",
+    "pymhm.flow_local_refinement": "src/pymhm/flow_local_refinement.py",
+    "pymhm.scalar_adaptive": "src/pymhm/scalar_adaptive.py",
+    "pymhm.flow_adaptive": "src/pymhm/flow_adaptive.py",
+    "pymhm.flow_macro_adaptive": "src/pymhm/flow_macro_adaptive.py",
+    "pymhm.gals3d_forms": "src/pymhm/gals3d_forms.py",
+    "pymhm.gals3d": "src/pymhm/gals3d.py",
+    "pymhm.gpu": "src/pymhm/gpu.py",
+    "pymhm.helmholtz_spaces": "src/pymhm/helmholtz_spaces.py",
+    "pymhm.helmholtz": "src/pymhm/helmholtz.py",
+    "pymhm.maxwell": "src/pymhm/maxwell.py",
+    "pymhm.meshing": "src/pymhm/meshing.py",
+    "pymhm.meshing3d": "src/pymhm/meshing3d.py",
+    "pymhm.polyhedral_geometry": "src/pymhm/polyhedral_geometry.py",
+    "pymhm.polyhedral": "src/pymhm/polyhedral.py",
+    "pymhm.mesh_exchange": "src/pymhm/mesh_exchange.py",
+    "pymhm.meshing_native3d": "src/pymhm/meshing_native3d.py",
+    "pymhm.metric_adapt": "src/pymhm/metric_adapt.py",
+    "pymhm.mh_boundary": "src/pymhm/mh_boundary.py",
+    "pymhm.scalar_trace_integration": "src/pymhm/scalar_trace_integration.py",
+    "pymhm.mh": "src/pymhm/mh.py",
+    "pymhm.mh2m": "src/pymhm/mh2m.py",
+    "pymhm.mh_trace3d": "src/pymhm/mh_trace3d.py",
+    "pymhm.mh2m3d": "src/pymhm/mh2m3d.py",
+    "pymhm.mh3d": "src/pymhm/mh3d.py",
+    "pymhm.mshho": "src/pymhm/mshho.py",
+    "pymhm.polyhedral_rad": "src/pymhm/polyhedral_rad.py",
+    "pymhm.mshho3d": "src/pymhm/mshho3d.py",
+    "pymhm.nested": "src/pymhm/nested.py",
+    "pymhm.pgmhm": "src/pymhm/pgmhm.py",
+    "pymhm.separable": "src/pymhm/separable.py",
+    "pymhm.separable_krylov": "src/pymhm/separable_krylov.py",
+    "pymhm.subspaces": "src/pymhm/subspaces.py",
+    "pymhm": "src/pymhm/__init__.py",
+    "examples.local_response_cache": "examples/local_response_cache.py",
+    "examples.transport_checkpoints": "examples/transport_checkpoints.py",
+    "examples.core_elasticity_field_archive": "examples/core_elasticity_field_archive.py",
+    "examples.minimal_flow_originals": "examples/minimal_flow_originals.py",
+    "examples.solve_elasticity3d": "examples/solve_elasticity3d.py"
+  },
+  "python_version": "3.13.15",
+  "numpy_version": "2.5.3",
+  "native_libraries": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libopenblas",
+      "filepath": "/prj/thermophase/volpatto/Work/pymhm/.pixi/envs/test/lib/libopenblasp-r0.3.34.so",
+      "version": "0.3.34",
+      "threading_layer": "pthreads",
+      "architecture": "SkylakeX"
+    }
+  ]
+}

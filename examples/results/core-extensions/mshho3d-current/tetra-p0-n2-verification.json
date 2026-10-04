@@ -1,0 +1,400 @@
+{
+  "case": "tetra-p0",
+  "resolution": 2,
+  "macro_cells": 48,
+  "fine_cells": 384,
+  "degree": 2,
+  "cell_degree": 0,
+  "face_degree": 0,
+  "local_refinement": 2,
+  "source_variant": "projected",
+  "local_refinement_precision": "extended",
+  "coefficient_nmant": 63,
+  "algebraic_residual": 2.3214533482578603e-20,
+  "original_physical_checks": {
+    "original_projected_source_relative_residual": 5.2884591505114296e-17,
+    "original_projected_source_residual_norm": 1.9249283680996782e-17,
+    "physical_rhs_norm": 0.3639866194132415,
+    "duplicate_trace_absolute_difference": 1.0842021724855044e-18
+  },
+  "ideal_constant_moment_space_audit": {
+    "definition": "U^{0,0}: constant divergence and original-face normal derivatives",
+    "primary_source": "10.1051/m2an/2021082, Equation(2.19)",
+    "geometry": "tetra",
+    "permeability": "identity",
+    "dimension": 5,
+    "relative_tolerance": 1e-10,
+    "executed_lift_replaced": false,
+    "uniform_inf_sup_verified": false,
+    "general_polyhedral_exactness_claimed": false,
+    "macro_cells": 48,
+    "maxima": {
+      "lift_relative_linf": 3.2993717711630546e-15,
+      "moment_inverse_defect": 2.51014486973844e-15,
+      "moment_matrix_condition": 534.382592823377
+    },
+    "rows": [
+      {
+        "cell": 0,
+        "dimension": 5,
+        "lift_relative_linf": 3.053619278732999e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233755
+      },
+      {
+        "cell": 1,
+        "dimension": 5,
+        "lift_relative_linf": 3.2993717711630546e-15,
+        "moment_inverse_defect": 1.5508427875232655e-15,
+        "moment_matrix_condition": 534.382592823377
+      },
+      {
+        "cell": 2,
+        "dimension": 5,
+        "lift_relative_linf": 2.9794598501349983e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 3,
+        "dimension": 5,
+        "lift_relative_linf": 2.9007467724125436e-15,
+        "moment_inverse_defect": 2.1996293675385914e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 4,
+        "dimension": 5,
+        "lift_relative_linf": 2.914479999930693e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233767
+      },
+      {
+        "cell": 5,
+        "dimension": 5,
+        "lift_relative_linf": 3.1128167173507153e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233764
+      },
+      {
+        "cell": 6,
+        "dimension": 5,
+        "lift_relative_linf": 3.053619278732999e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233755
+      },
+      {
+        "cell": 7,
+        "dimension": 5,
+        "lift_relative_linf": 3.2993717711630546e-15,
+        "moment_inverse_defect": 1.5508427875232655e-15,
+        "moment_matrix_condition": 534.382592823377
+      },
+      {
+        "cell": 8,
+        "dimension": 5,
+        "lift_relative_linf": 2.9794598501349983e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 9,
+        "dimension": 5,
+        "lift_relative_linf": 2.9007467724125436e-15,
+        "moment_inverse_defect": 2.1996293675385914e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 10,
+        "dimension": 5,
+        "lift_relative_linf": 2.914479999930693e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233767
+      },
+      {
+        "cell": 11,
+        "dimension": 5,
+        "lift_relative_linf": 3.1128167173507153e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233764
+      },
+      {
+        "cell": 12,
+        "dimension": 5,
+        "lift_relative_linf": 3.053619278732999e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233755
+      },
+      {
+        "cell": 13,
+        "dimension": 5,
+        "lift_relative_linf": 3.2993717711630546e-15,
+        "moment_inverse_defect": 1.5508427875232655e-15,
+        "moment_matrix_condition": 534.382592823377
+      },
+      {
+        "cell": 14,
+        "dimension": 5,
+        "lift_relative_linf": 2.9794598501349983e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 15,
+        "dimension": 5,
+        "lift_relative_linf": 2.9007467724125436e-15,
+        "moment_inverse_defect": 2.1996293675385914e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 16,
+        "dimension": 5,
+        "lift_relative_linf": 2.914479999930693e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233767
+      },
+      {
+        "cell": 17,
+        "dimension": 5,
+        "lift_relative_linf": 3.1128167173507153e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233764
+      },
+      {
+        "cell": 18,
+        "dimension": 5,
+        "lift_relative_linf": 3.053619278732999e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233755
+      },
+      {
+        "cell": 19,
+        "dimension": 5,
+        "lift_relative_linf": 3.2993717711630546e-15,
+        "moment_inverse_defect": 1.5508427875232655e-15,
+        "moment_matrix_condition": 534.382592823377
+      },
+      {
+        "cell": 20,
+        "dimension": 5,
+        "lift_relative_linf": 2.9794598501349983e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 21,
+        "dimension": 5,
+        "lift_relative_linf": 2.9007467724125436e-15,
+        "moment_inverse_defect": 2.1996293675385914e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 22,
+        "dimension": 5,
+        "lift_relative_linf": 2.914479999930693e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233767
+      },
+      {
+        "cell": 23,
+        "dimension": 5,
+        "lift_relative_linf": 3.1128167173507153e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233764
+      },
+      {
+        "cell": 24,
+        "dimension": 5,
+        "lift_relative_linf": 3.053619278732999e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233755
+      },
+      {
+        "cell": 25,
+        "dimension": 5,
+        "lift_relative_linf": 3.2993717711630546e-15,
+        "moment_inverse_defect": 1.5508427875232655e-15,
+        "moment_matrix_condition": 534.382592823377
+      },
+      {
+        "cell": 26,
+        "dimension": 5,
+        "lift_relative_linf": 2.9794598501349983e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 27,
+        "dimension": 5,
+        "lift_relative_linf": 2.9007467724125436e-15,
+        "moment_inverse_defect": 2.1996293675385914e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 28,
+        "dimension": 5,
+        "lift_relative_linf": 2.914479999930693e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233767
+      },
+      {
+        "cell": 29,
+        "dimension": 5,
+        "lift_relative_linf": 3.1128167173507153e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233764
+      },
+      {
+        "cell": 30,
+        "dimension": 5,
+        "lift_relative_linf": 3.053619278732999e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233755
+      },
+      {
+        "cell": 31,
+        "dimension": 5,
+        "lift_relative_linf": 3.2993717711630546e-15,
+        "moment_inverse_defect": 1.5508427875232655e-15,
+        "moment_matrix_condition": 534.382592823377
+      },
+      {
+        "cell": 32,
+        "dimension": 5,
+        "lift_relative_linf": 2.9794598501349983e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 33,
+        "dimension": 5,
+        "lift_relative_linf": 2.9007467724125436e-15,
+        "moment_inverse_defect": 2.1996293675385914e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 34,
+        "dimension": 5,
+        "lift_relative_linf": 2.914479999930693e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233767
+      },
+      {
+        "cell": 35,
+        "dimension": 5,
+        "lift_relative_linf": 3.1128167173507153e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233764
+      },
+      {
+        "cell": 36,
+        "dimension": 5,
+        "lift_relative_linf": 3.053619278732999e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233755
+      },
+      {
+        "cell": 37,
+        "dimension": 5,
+        "lift_relative_linf": 3.2993717711630546e-15,
+        "moment_inverse_defect": 1.5508427875232655e-15,
+        "moment_matrix_condition": 534.382592823377
+      },
+      {
+        "cell": 38,
+        "dimension": 5,
+        "lift_relative_linf": 2.9794598501349983e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 39,
+        "dimension": 5,
+        "lift_relative_linf": 2.9007467724125436e-15,
+        "moment_inverse_defect": 2.1996293675385914e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 40,
+        "dimension": 5,
+        "lift_relative_linf": 2.914479999930693e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233767
+      },
+      {
+        "cell": 41,
+        "dimension": 5,
+        "lift_relative_linf": 3.1128167173507153e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233764
+      },
+      {
+        "cell": 42,
+        "dimension": 5,
+        "lift_relative_linf": 3.053619278732999e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233755
+      },
+      {
+        "cell": 43,
+        "dimension": 5,
+        "lift_relative_linf": 3.2993717711630546e-15,
+        "moment_inverse_defect": 1.5508427875232655e-15,
+        "moment_matrix_condition": 534.382592823377
+      },
+      {
+        "cell": 44,
+        "dimension": 5,
+        "lift_relative_linf": 2.9794598501349983e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 45,
+        "dimension": 5,
+        "lift_relative_linf": 2.9007467724125436e-15,
+        "moment_inverse_defect": 2.1996293675385914e-15,
+        "moment_matrix_condition": 534.3825928233762
+      },
+      {
+        "cell": 46,
+        "dimension": 5,
+        "lift_relative_linf": 2.914479999930693e-15,
+        "moment_inverse_defect": 2.51014486973844e-15,
+        "moment_matrix_condition": 534.3825928233767
+      },
+      {
+        "cell": 47,
+        "dimension": 5,
+        "lift_relative_linf": 3.1128167173507153e-15,
+        "moment_inverse_defect": 1.7633464133304244e-15,
+        "moment_matrix_condition": 534.3825928233764
+      }
+    ],
+    "accepted": true
+  },
+  "error_quadrature": [
+    10,
+    12
+  ],
+  "error_quadrature_absolute_change": 1.1102230246251565e-16,
+  "error_quadrature_relative_change": 3.4883733106902427e-16,
+  "norms": {
+    "quadrature_10": {
+      "pressure_l2": 0.07956595565781611,
+      "flux_l2": 0.9389332192297473
+    },
+    "quadrature_12": {
+      "pressure_l2": 0.07956595565781614,
+      "flux_l2": 0.9389332192297474
+    }
+  },
+  "pressure_l2": 0.07956595565781614,
+  "flux_l2": 0.9389332192297474,
+  "elapsed_seconds": 13.53503137268126,
+  "archive": "tetra-p0-n2.npz",
+  "sha256": "eb0f72827e1cc9f4a1cbf289e11c55c66ceb65c7e1207990243bc148eed26e03",
+  "acquisition_uuid": "43373046-a234-461a-bd25-526cad613c72",
+  "finite_case_accepted": true,
+  "native_whole_field_agreement_verified": false
+}

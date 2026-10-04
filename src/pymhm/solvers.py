@@ -53,14 +53,19 @@ def _matrix(matrix: Any) -> sparse.csr_matrix:
     return result
 
 
-def _rhs(rhs: Any, size: int) -> Array:
-    """Validate a finite vector or a nonempty column collection of vectors."""
+def _rhs(rhs: Any, size: int, *, preserve_extended: bool = False) -> Array:
+    """Validate finite columns, preserving original forcing in explicit extended mode."""
     raw = np.asarray(rhs)
     if raw.ndim not in (1, 2) or raw.shape[0] != size:
         raise ValueError("rhs must have shape (n,) or (n, nrhs) matching matrix")
     if raw.ndim == 2 and raw.shape[1] == 0:
         raise ValueError("rhs must contain at least one column")
-    result = np.asarray(raw, dtype=np.complex128 if np.iscomplexobj(raw) else np.float64)
+    dtype = (
+        (np.clongdouble if np.iscomplexobj(raw) else np.longdouble)
+        if preserve_extended
+        else (np.complex128 if np.iscomplexobj(raw) else np.float64)
+    )
+    result = np.asarray(raw, dtype=dtype)
     if not np.all(np.isfinite(result)):
         raise ValueError("rhs entries must be finite")
     return result
@@ -95,8 +100,9 @@ def _accurate_residual(matrix: sparse.csr_matrix, rhs: Array, solution: Array) -
         return np.asarray(rhs, dtype=precision) - matrix.astype(precision) @ np.asarray(
             solution, dtype=precision
         )
-    columns = solution.reshape(matrix.shape[0], -1)
-    forcing = rhs.reshape(columns.shape)
+    width = int(np.prod(solution.shape[1:]))
+    columns = solution.reshape(matrix.shape[1], width)
+    forcing = rhs.reshape(matrix.shape[0], width)
     result = np.empty_like(forcing, dtype=np.result_type(matrix.dtype, rhs.dtype, solution.dtype))
     for row in range(matrix.shape[0]):
         start, stop = matrix.indptr[row : row + 2]
@@ -190,7 +196,9 @@ class LinearFactorization:
         columnwise criterion; invalid output and failed refinement are rejected.
         ``refinement_precision="extended"`` retains correction digits in a
         wider solution array, while the factorization and correction solves use
-        their original precision. This explicit mode requires a wider NumPy
+        their original precision. Original wider RHS digits are retained for
+        residuals; only backend operands are rounded to double precision.
+        This explicit mode requires a wider NumPy
         long-double type; no backend or tolerance is substituted.
         The nonnegative correction limit defaults to two; zero checks only the
         initial backend solve. Increasing it permits additional defect corrections
@@ -203,8 +211,13 @@ class LinearFactorization:
             raise ValueError("refinement_precision must be double or extended")
         if refinement_precision == "extended" and not _EXTENDED_PRECISION:
             raise SolverUnavailableError("extended refinement requires a wider long-double type")
-        forcing = _rhs(rhs, self._matrix.shape[0])
-        result = np.asarray(self._solve(forcing))
+        forcing = _rhs(
+            rhs, self._matrix.shape[0], preserve_extended=refinement_precision == "extended"
+        )
+        backend_forcing = np.asarray(
+            forcing, dtype=np.complex128 if np.iscomplexobj(forcing) else np.float64
+        )
+        result = np.asarray(self._solve(backend_forcing))
         correction_dtype = result.dtype
         if refinement_precision == "extended":
             result = result.astype(np.result_type(result.dtype, np.longdouble))
@@ -682,7 +695,7 @@ def solve_linear(
     ):
         raise ValueError("maxiter must be a positive integer or None")
     operator = _matrix(matrix)
-    forcing = _rhs(rhs, operator.shape[0])
+    forcing = _rhs(rhs, operator.shape[0], preserve_extended=refinement_precision == "extended")
     if near_nullspace is not None and solver != "pyamg":
         raise ValueError("near_nullspace is only supported by the pyamg backend")
     if solver in {"pyamg", "amgx"}:
@@ -717,7 +730,9 @@ def solve_linear(
         if solver in {"cg", "minres"}:
             _hermitian(operator, solver)
         columns = forcing[:, None] if forcing.ndim == 1 else forcing
-        dtype = np.result_type(operator.dtype, forcing.dtype)
+        dtype = np.result_type(
+            operator.dtype, np.complex128 if np.iscomplexobj(forcing) else np.float64
+        )
         output_dtype = (
             np.result_type(dtype, np.longdouble) if refinement_precision == "extended" else dtype
         )
@@ -725,6 +740,7 @@ def solve_linear(
 
         def iterate(column: Array, correction: bool = False) -> Array:
             """Run one Krylov solve, reusing any existing AMG hierarchy."""
+            column = np.asarray(column, dtype=dtype)
             relative = max(rtol, np.finfo(float).eps) if correction else rtol
             absolute = 0.0 if correction else atol
             if solver == "minres":

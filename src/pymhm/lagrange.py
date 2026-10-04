@@ -24,10 +24,9 @@ def multiindices(degree: int) -> IntArray:
     return np.asarray(indices, dtype=np.int64)
 
 
-def reference_basis(degree: int, bary: FloatArray) -> tuple[FloatArray, FloatArray, FloatArray]:
-    """Evaluate cardinal polynomials and their barycentric derivatives analytically."""
-    indices = multiindices(degree)
-    table = np.empty((3, degree + 1, 3, len(bary)))
+def _reference_table(degree: int, bary: FloatArray, derivatives: int) -> FloatArray:
+    """Centralize the cardinal factors for the requested derivative orders only."""
+    table = np.empty((3, degree + 1, derivatives + 1, len(bary)))
     for i in range(3):
         for k in range(degree + 1):
             polynomial = (
@@ -35,14 +34,46 @@ def reference_basis(degree: int, bary: FloatArray) -> tuple[FloatArray, FloatArr
                 if k
                 else Polynomial([1.0])
             )
-            for derivative in range(3):
+            for derivative in range(derivatives + 1):
                 table[i, k, derivative] = polynomial.deriv(derivative)(bary[:, i])
-    values = np.ones((len(bary), len(indices)))
+    return table
+
+
+def _reference_values(indices: IntArray, table: FloatArray) -> FloatArray:
+    """Multiply the same executed cardinal factors in the same node/coordinate order."""
+    values = np.ones((table.shape[-1], len(indices)))
+    for node, index in enumerate(indices):
+        for coordinate in range(3):
+            values[:, node] *= table[coordinate, index[coordinate], 0]
+    return values
+
+
+def reference_values(degree: int, bary: FloatArray) -> FloatArray:
+    """Evaluate triangular cardinal Pk values without allocating derivatives.
+
+    ``bary`` is a finite real array of shape (points, 3); evaluation is allowed
+    outside the reference triangle. Coordinates and returned values use
+    binary64, with the same node order as :func:`multiindices`. The cardinal
+    polynomial factors and product order are shared with :func:`reference_basis`.
+    """
+    indices = multiindices(degree)
+    if np.iscomplexobj(bary):
+        raise ValueError("barycentric coordinates must be finite real triples")
+    bary = np.asarray(bary, dtype=float)
+    if bary.ndim != 2 or bary.shape[1] != 3 or not np.isfinite(bary).all():
+        raise ValueError("barycentric coordinates must be finite real triples")
+    return _reference_values(indices, _reference_table(degree, bary, 0))
+
+
+def reference_basis(degree: int, bary: FloatArray) -> tuple[FloatArray, FloatArray, FloatArray]:
+    """Evaluate cardinal polynomials and their barycentric derivatives analytically."""
+    indices = multiindices(degree)
+    table = _reference_table(degree, bary, 2)
+    values = _reference_values(indices, table)
     gradient = np.ones((*values.shape, 3))
     hessian = np.ones((*values.shape, 3, 3))
     for node, index in enumerate(indices):
         for i in range(3):
-            values[:, node] *= table[i, index[i], 0]
             for a in range(3):
                 gradient[:, node, a] *= table[i, index[i], int(i == a)]
                 for b in range(3):

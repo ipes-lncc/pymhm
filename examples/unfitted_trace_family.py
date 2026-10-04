@@ -20,7 +20,7 @@ from numpy.polynomial.legendre import leggauss
 from scipy import sparse
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy import DarcySolution, _DarcyLocalFactory
+from pymhm.darcy import DarcySolution, _assembly_quadrature_order, _DarcyLocalFactory
 from pymhm.elements import boundary_data, tensor_values
 from pymhm.hybrid import HybridSolution, LocalResponse
 from pymhm.lagrange import tabulate
@@ -164,11 +164,16 @@ class ScalarTraceFamily:
         await collection. The parent retains all original matrices and lifts.
         The explicitly selected local backend retains its original residual
         criterion. Global reduced systems use the standard SciPy backend.
+        ``quadrature_order`` counts Gauss points per Duffy coordinate and boundary
+        interval. Darcy's shared ``local_degree+2`` minimum applies, and the
+        executed volume order is retained on this family and each reconstructed
+        solution. Boundary data also apply the trace degree+2 floor; trace
+        coupling retains its separate exact polynomial rule.
         """
         local_degree = positive_int(local_degree, "local_degree")
         local_refinement = positive_int(local_refinement, "local_refinement")
         workers = positive_int(workers, "workers")
-        order = max(positive_int(quadrature_order, "quadrature_order"), local_degree + 2)
+        order = _assembly_quadrature_order(local_degree, quadrature_order)
         skeleton = SkeletonSpace(
             mesh, tuple(FaceSpace.uniform(trace_degree, segments) for _ in mesh.faces)
         )

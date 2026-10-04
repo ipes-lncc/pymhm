@@ -1,0 +1,921 @@
+{
+  "schema": "pymhm-quarter-point-native-verification-v1",
+  "scope": "Executed independent same-space comparison of all six specified n32/r2 point-well finite-dimensional cases. The well intensity is explicitly normalized to one; the published rate is not recoverable. This record does not establish continuum exact-solution accuracy, singular energy convergence or original-author application execution.",
+  "reference": {
+    "project": "FEniCS Basix",
+    "module": "basix.finite_element",
+    "runtime_version": "0.9.0",
+    "upstream_revision": "19555f5b629b4090b14014f9db5f2c9ac80984f9",
+    "verified_source_url": "https://github.com/FEniCS/basix/tree/19555f5b629b4090b14014f9db5f2c9ac80984f9",
+    "revision_verification": "git ls-remote https://github.com/FEniCS/basix.git refs/tags/v0.9.0",
+    "revision_scope": "Verified upstream tag; executed installed extension is separately digested",
+    "executed_extension_sha256": "fa14b18f7b393882c9a49e8af6f9e86b47c14f880daee89b7213a894fc8a9fdb",
+    "comparison_method": "Independent Basix primal P2 and mixed RT0/P0 assembly with SciPy SuperLU full original uncondensed saddle",
+    "independent_modules": [
+      "native_owner.py",
+      "native_mixed.py"
+    ],
+    "private_execution_source_sha256": {
+      "native_owner.py": "8e1c14bbfca0c12d162d9c545b6b81e229f67ad77fc37dd1ae1b2d79af4cfd64",
+      "acquire_mixed.py": "0578c8af0771d2a6bf28f282333ed741c82081847fd7faac6b8fe22b58f00977",
+      "acquire.py": "578002b5d872a2c0f9da0822e0bbcd7239b9deeab98d9e15384f28333d6f544c",
+      "compare_archives.py": "a1e9ec6ba584d9679ad4e7e3d9210de13d9ea5e162133762ef7ac869063b7510",
+      "native_mixed.py": "66c5c1b73d4f09de7619ed44fc6b1c7fdb0a28ca446fa117065914392ac3e0ab",
+      "reference_stability.py": "9aaa4b8a27d30459adbff906245c3756f9013ddd0cedbc968c93720ec9e7b3ac",
+      "replay_native.py": "abbe869a4a37aba6bb7e629a69db25d2f265f9af8ef46d90cac46b847495827f"
+    },
+    "private_source_snapshot_bundle_sha256": "4d2e6c99c97c3255b45945af9b2e9dd3765a4d6b401e2c20c2232d03827e0e41",
+    "source_access": "Basix upstream release tag is verified; the executed installed extension is separately digested. The instrumented independent drivers, external code and native operator/field archives remain outside the versioned repository and release artifacts."
+  },
+  "geometry": {
+    "domain": [
+      0,
+      1,
+      0,
+      1
+    ],
+    "macro_squares_per_axis": 32,
+    "macro_triangles": 2048,
+    "macro_diagonal": "southwest-to-northeast",
+    "local_refinement": 2,
+    "fine_triangles": 8192,
+    "material_interfaces_are_original_fine_edges": true
+  },
+  "source": {
+    "functional": "v(1,1)-v(0,0)",
+    "wells": [
+      [
+        0,
+        0,
+        -1
+      ],
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    "macro_partition": "Incident-angle partition; each corner belongs to two macrotriangles with rates -0.5/-0.5 or +0.5/+0.5",
+    "primal": "Actual nodal P2 point evaluation once per continuous local pressure mesh",
+    "mixed": "Incident-angle allocation of the integrated rate to fine P0 pressure test cells",
+    "total_intensity": 0
+  },
+  "equations": {
+    "physical": "q=-K grad(p), div(q)=f, with the declared point functional acting on discrete tests",
+    "full_original_saddle": "A u+B lambda+h gamma=f_local; B.T u=0; h.T u=0",
+    "primal": "A_ij=integral K grad(phi_i).grad(phi_j); B is the oriented physical normal-flux pairing; f_local is the point functional",
+    "mixed": "(K^-1 q,v)-(p,div(v))+(alpha,v.normal)=0; -(div(q),w)=-(f,w); fine boundary normal integrals equal the constant oriented macroface flux",
+    "orientation": "Every macroface unit normal points outward from its first adjacent macrocell; physical trace lambda changes outward sign in the second neighbor",
+    "prescribed_boundary": "Zero exterior normal-flux trace; weak primal boundary convention, conforming mixed normal moments",
+    "physical_gauge": "Integral over the physical domain of p equals zero; no coefficient-average or material-weighted gauge"
+  },
+  "spaces": {
+    "primal": "Continuous nodal P2 within each four-triangle macro refinement, broken across macrofaces; raw Darcy flux is -K grad(p)",
+    "mixed": "Contravariant-Piola Basix RT degree1 (RT0), fine P0 pressure, all executed fine-boundary pressure multipliers; original constant-per-macroface physical flux restriction retained",
+    "skeleton_degree": 0,
+    "skeleton_segments_per_macroface": 1,
+    "kernel": "Constant local pressure; mixed kernel also has zero Darcy flux and constant fine-boundary pressure multipliers",
+    "kernel_verification": "All 2048 original local blocks per case checked. Represented rank uses NumPy's default SVD threshold; positive K and connected local spaces supply the exact constant-kernel argument. This check is not an inf-sup proof."
+  },
+  "quadrature": {
+    "assembly_order": 4,
+    "error_order": 4,
+    "convention": "Positive four-point Gauss-Legendre rule in each coordinate of an independent triangle Duffy map; native reference weights sum to 0.5",
+    "adequacy": "Material is constant on each original fine triangle; P2 squared pressure has degree4, gradient/RT0 squared flux degree2, so the stated positive rule integrates the polynomial discrete norms exactly up to floating-point arithmetic"
+  },
+  "norms": {
+    "pressure": "Broken physical L2 over all original fine triangles",
+    "raw_gradient": "Broken physical L2 of the raw pressure gradient for P2 only",
+    "darcy_flux": "Broken physical vector L2 of q=-K grad(p) for P2 or Piola RT0 q",
+    "relative_denominator": "Corresponding executed native field norm",
+    "interfaces": "Independent one-sided macrocell values; no averaging",
+    "field_agreement_criterion": 1e-09
+  },
+  "native_arithmetic": {
+    "operator": "Archived float64 original operator fixed throughout solve and controls",
+    "backend": "SciPy SuperLU double-precision factorization and backend RHS",
+    "precision": "Explicit extended original forcing/residual/correction accumulation uniformly selected for all six references",
+    "coefficient_fraction_mantissa_bits": 63,
+    "coefficient_storage": "Portable float64 high/correction/tail components with host precision guard",
+    "executed_original_equation_corrections": 1,
+    "policy": "At least one same-original-operator represented-defect correction unless the defect is exactly zero; the precision policy is independent of candidate agreement or expected fields",
+    "original_physical_relative_residual_criterion": 1e-10,
+    "physical_residual": "Original local physical rows and global weak trace equations divided by the norm of the complete original point-functional load; artificial gauge loads excluded",
+    "additional_precision_control": "One further same-operator correction uses only native archives and compares native physical field norms; no candidate data is read"
+  },
+  "conservation": {
+    "primal": "Macro conservation from the constant local test; no fine-cell H(div) or pointwise exterior-normal-flux claim for the raw gradient",
+    "mixed": "Fine-cell integrated divergence equals its allocated point-functional rate; macroface normal conformity retains the original constant trace restriction"
+  },
+  "runtime": {
+    "python": "3.13.15",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "native_libraries": [
+      {
+        "user_api": "blas",
+        "internal_api": "blis",
+        "num_threads": 1,
+        "prefix": "libblis",
+        "version": "2.0",
+        "threading_layer": "pthreads",
+        "architecture": "haswell"
+      }
+    ],
+    "locked_environment": "fem",
+    "lockfile_sha256": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57",
+    "resource_scope": "Serial one-worker/one-thread acquisitions on a shared host. Timings cover the acquisition body: geometry/basis setup, assembly, solve, checks and archive; interpreter/module startup is excluded. Peak RSS is the driver process maximum since startup, rather than incremental case memory. CPU-only execution; no device transfer or synchronization costs. No speedup claim."
+  },
+  "candidate_source_snapshot": {
+    "examples/plot_quarter_spot.py": "c64b0b68346e2e596312391272c9317125063500f97de9b5d56b92b80c4ce4f0",
+    "examples/quarter_point_archive.py": "f2ef49e2e047f369ffae159e076880bf99ef94b45b4467a9c083a112534eea39",
+    "examples/field_sampling.py": "8822c5adf3914f9e0285d1cc871f32c69617114a40aa3975ccf82a009a837556",
+    "src/pymhm/__init__.py": "a3273ccef37cce0b25b1e1cbf9faf150dfaaf715aafc6bd87e6d4809b431898c",
+    "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+    "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+    "src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+    "src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+    "src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+    "src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+    "src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+    "src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+    "src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+    "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+    "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+    "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+    "src/pymhm/darcy.py": "9a19652045d014585e5ed42e6d61e20cc30e7ceb67877e81298e84f59d16f4b5",
+    "src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+    "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+    "src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+    "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+    "src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+    "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+    "src/pymhm/darcy_transport.py": "3f9331d82dae0d16b30c53085981646942574a552601ec34631ba3b00eab5b7e",
+    "src/pymhm/darcy_velocity.py": "83c0dc577fe731a4316962b389ed286e711fcf9264836094188206d6eb276558",
+    "src/pymhm/distributed.py": "c6cf5f26bd9033a72328d18f5d099ab0d9b867f92a6babe472c2035ff1abd7ae",
+    "src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+    "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+    "src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+    "src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+    "src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+    "src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+    "src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+    "src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+    "src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+    "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+    "src/pymhm/elastodynamics.py": "6e2852f5d55eee9e96ccffc0fa18d729fc32740728499082b0bb5098436929ea",
+    "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+    "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+    "src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+    "src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+    "src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+    "src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+    "src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+    "src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+    "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+    "src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+    "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+    "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+    "src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+    "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+    "src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+    "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+    "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+    "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+    "src/pymhm/helmholtz.py": "603a3e5eccf84830f8819657d97d3f7f22d856f97f21482e992f3a64fb67c1b4",
+    "src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+    "src/pymhm/helmholtz_spaces.py": "3d86328917c90ba30942e443f25e6daac4eca01c14f1cba6b202b5066b754c33",
+    "src/pymhm/hybrid.py": "e4ca37cd8fa05dcb505d2cc7d36c975bbd25ac9ee01564bc86dd70d1d042dbb3",
+    "src/pymhm/hybrid_refinement.py": "ac63c07f5c94a156fc8e6bb5d34ddef705eccccbc648b4019c701c24e6322b71",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9",
+    "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+    "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+    "src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+    "src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+    "src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+    "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+    "src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+    "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+    "src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+    "src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+    "src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+    "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+    "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+    "src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+    "src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+    "src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+    "src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+    "src/pymhm/mshho.py": "3eb065e61b31be310bf5ae982f5b51560e9d5078bbf0c7a9960d0f035728691f",
+    "src/pymhm/mshho3d.py": "acccdd5fccd512857493ac48e9fd269455bcdddd5fce78253b47d887e9405b93",
+    "src/pymhm/nested.py": "4414c4fba66266017d97b5a75eda9a24ad90393647bd75d1245b5f4f93bc0049",
+    "src/pymhm/offline.py": "d991950927222677d97e25a49ae2839861583d79801c818d5426ecd538590212",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+    "src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+    "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+    "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+    "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+    "src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+    "src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+    "src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+    "src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+    "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+    "src/pymhm/rad.py": "d1f3d5c948bcc9370333050e8dfc1b15d5372ef745d51f04d8f700065d40c1e7",
+    "src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+    "src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+    "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+    "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+    "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+    "src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+    "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+    "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+    "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+    "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+    "src/pymhm/scalar_boundary.py": "5c2d4970ef3e032f93caee5f9b36ce36f535f65a924ef1e666f0e4aa5f4b69b3",
+    "src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+    "src/pymhm/scalar_transient.py": "79a6d7a936356b890ba8d3d06352d8ebe0e254783da85b4fed101c80322abc42",
+    "src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+    "src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+    "src/pymhm/solvers.py": "2d360c2f7d71d8c04caa1966125291849b45daa5a886f5030772981e1cdaa751",
+    "src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+    "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+    "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+    "src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+    "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+    "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+    "src/pymhm/triangle_fields.py": "4f99653e6eb82f5e8d232d1adce3ef628a33b8a0bae2f1316f19456e193a07aa",
+    "src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+    "src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+    "src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+    "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94"
+  },
+  "candidate_source_snapshot_bundle_sha256": "b9b639d40a766eb185ff911de602271e7a9ee4c196a1a38cd42d948260412dfd",
+  "candidate_point_record_sha256": "a2ba3bc482047385ab7b1f766ff34fc5c315713a8e363e43da7b95674df6cb93",
+  "executed_basis_bundles": {
+    "db222d02f79aa95b3175845e0e87a696320947f21bd50292544733e29ffef016": {
+      "macro_faces": "43f217e78d2d0511edc9eada3277fd6a2a2581449c9aa2eecda9ccdad21c4d34",
+      "macro_neighbors": "ba7f95b708c6716b032e1a1297a32118cc718dfd2ce728c633db55cf96793573",
+      "macro_normals": "4ee8857e51b4dfb472f30074c902664e7a1875b5fcf52f0d66714a85eb9f56eb",
+      "macro_cell_faces": "2bdc50a04f7030248cd6bdcb2cab588c3e407f6acd24b9f3afef46ed3ea898a9",
+      "macro_signs": "7f9ee163ebe9f30dade49bf8b1c8f50b8e61737c95db36b86a1e2f00fbcba9a6",
+      "points": "4a973b3117f05e3fb6b58de5f7056e8a10fe25dcdb9354fae4951390dac11a88",
+      "cells": "c534a7cc93ebd8a9d2ede60a22bec06afa121e62cd6e3eac1fb537e009b22247",
+      "pressure_nodes": "2392d8fed3fb1f7c6fd18d2de3f0a827846bbfe600c0b74e2949068639d2ed04",
+      "pressure_cell_dofs": "e555500f329f95eb35853deb7aa19109e07115d7b3e3fe2500accc35ff812f14",
+      "pressure_basis_values": "b9cdba745eab46ee9ea52bfe702b1d1677b6aaa9036b49172ce48b6e2e13d8a4",
+      "pressure_basis_gradients": "17a6e692bc83af0576d0b6780e2820e32e161175a24d44eadcd9238205c89554",
+      "physical_mean": "a72b60e0e47ca8db42f58ea14531fdd02bdec370f4d548b1128291aacf3482be",
+      "free_faces": "f102dd7b0ef484b82e47cd4e12b79da28d1047b53e91b3717229ecbe8fc42bb1",
+      "executed_basix_triangle_coefficients": "6c4f092ca7f389987269a08eda79c03e60eabd243c0dc373f2b95067912307db",
+      "executed_basix_triangle_nodes": "5a9bad16e5c8898554da7ec363724fecb2c3b24b304766a53f24de01eb92a6aa",
+      "executed_basix_interval_coefficients": "1329fa16f6095a0bf83dbfb9016b8882ff75ae1277cbdcc143efc9348e32e412",
+      "executed_basix_trace_coefficients": "3793745d973f38c0672875f39bf8ff96e8b6939cc9bef916c8ce3c5a4d12d274"
+    },
+    "d8a54fe43aa2b9b62d42a418810f9c20c11d17ddcbf9e3265378a33a2cc4da86": {
+      "macro_points": "71b38151296381620dd933c69a8d048c7025157bd1f95cb9432ffa051bcf4ac7",
+      "macro_cells": "6fcd40a5d2c3f55bfd2125bab76a5835cdc93f52be48439ace1ed1af327d5a8a",
+      "macro_faces": "2a44dd58d64246b2b11189a7cf2ef8f5593419872666b145c18599f95f1a4a9f",
+      "macro_cell_faces": "6571060d8d164e1c6760bb0fb674e2d9b55078ec3829ef8477547eb60817fcbf",
+      "macro_normals": "17cdb06dfed28a5c1b24e403139243688b1b203c01cb87dc38ecf5e3a0f81e40",
+      "macro_signs": "7f9ee163ebe9f30dade49bf8b1c8f50b8e61737c95db36b86a1e2f00fbcba9a6",
+      "points": "4a973b3117f05e3fb6b58de5f7056e8a10fe25dcdb9354fae4951390dac11a88",
+      "cells": "c534a7cc93ebd8a9d2ede60a22bec06afa121e62cd6e3eac1fb537e009b22247",
+      "macro_cell": "0b293ea98848d8a0824460f26e6d251c2f88edca661791dfabf1d4162a515d9f",
+      "pressure_offsets": "f0a2c93660c6af1e0c1528ba9931b93ee5187ad8b15fd9315090299e107edb94",
+      "flux_offsets": "f1f320252c1213d45330e2d843f9859d7e5d36eff39b6e476eb7dac828559496",
+      "hybrid_field_offsets": "f0a2c93660c6af1e0c1528ba9931b93ee5187ad8b15fd9315090299e107edb94",
+      "quadrature_barycentric": "61211566fac4fbef09bf610cc8df6961256cdd802304082c1a0bb2bbe4ee0324",
+      "quadrature_weights": "b776517453ac497f836e05af7b819e8ad27206f32f66b37a4346dae899e43cdb",
+      "point_sources": "c2e3fa85ef5ee18f145f621ee7acab05ad0fc0a170e2dbe9d92e1ed82b3ba868",
+      "point_source_offsets": "f27030ebea09f16478b5c47da1e3bf91bdfc7bbcc22fd8349cc36026c1b22b8d",
+      "pressure_nodes": "3033c92780bb0ef63e319c50771eaf6ad88324ddaa2e7562c5b628248a0710ce",
+      "pressure_cell_dofs": "cb1fb10e6fda5eb4bc1af5b1123682a14e4ca25614425022efb35057bb9bc90c",
+      "pressure_basis_values": "39198e7c9d235fb7d106222a3d411bf55afaeb696c8705379c16802809bb7eff",
+      "pressure_basis_gradients": "57775dba28c6532aaee2aaa7530502ef5bd47ce7b54b62404932881824041648",
+      "permeability_tensors": "5fcfd76299df38ec3a86315aa62127636b074066f2167dcdb0a9d9fd92afd384",
+      "declared_kernels": "fe028f08377c35570cf7082129b7d61f7918818daaf50be2a85b75644a58231c",
+      "declared_constraints": "314a13916df1be11710fb030c139fc93ae006a317c4ddfe406deb15d1384a7db"
+    },
+    "7621478c6461b94302f927c974517f5afa2226555f0cf4101f66e38377820563": {
+      "macro_points": "71b38151296381620dd933c69a8d048c7025157bd1f95cb9432ffa051bcf4ac7",
+      "macro_cells": "6fcd40a5d2c3f55bfd2125bab76a5835cdc93f52be48439ace1ed1af327d5a8a",
+      "macro_faces": "43f217e78d2d0511edc9eada3277fd6a2a2581449c9aa2eecda9ccdad21c4d34",
+      "macro_normals": "4ee8857e51b4dfb472f30074c902664e7a1875b5fcf52f0d66714a85eb9f56eb",
+      "macro_neighbors": "ba7f95b708c6716b032e1a1297a32118cc718dfd2ce728c633db55cf96793573",
+      "macro_cell_faces": "2bdc50a04f7030248cd6bdcb2cab588c3e407f6acd24b9f3afef46ed3ea898a9",
+      "macro_signs": "7f9ee163ebe9f30dade49bf8b1c8f50b8e61737c95db36b86a1e2f00fbcba9a6",
+      "points": "4a973b3117f05e3fb6b58de5f7056e8a10fe25dcdb9354fae4951390dac11a88",
+      "cells": "c534a7cc93ebd8a9d2ede60a22bec06afa121e62cd6e3eac1fb537e009b22247",
+      "fine_faces": "9402ccd6b8dbafaffb8281638d6a0ed9aec88f39c485e2e949595ad0e2ec9991",
+      "fine_normals": "fee0d6a382736edc792f6308def10794e719ee7ae2d1795ec45af48312254aec",
+      "fine_boundary": "a14a7501da41c13fbf2a0eac0a79e1e365531b1d735d8f3ad783300c69f24b1c",
+      "flux_cell_dofs": "60e324d7e161fc608417ad267a53f607315faa5c7d4d1fa04574e614b28ee5e2",
+      "pressure_cell_dofs": "910f3f83a2bcc22cf04896a2152b0b7d2b57db2db58b4dc73e5428cbf53fac00",
+      "auxiliary_dofs": "3757da8b6545ffffe0582d3caa26ad217caa8135dba6836359118bac1724a9e0",
+      "flux_basis_values": "e5243aeaa5579f4ba76a27bfd6426633b8ea18df4a2308caf0f99869b8a83b90",
+      "divergence_basis_values": "ab1825ec5858ba0f3e6ba3bf0fbb2809bc926718091380c088660eaf6cd893ff",
+      "executed_basix_rt0_coefficients": "c0dad727b48218c093f1e916595bedfd0c9087da8aea2cc5a94cdc58383446cf",
+      "executed_basix_rt0_interpolation_points": "0f19ff98de2656efcc73ea9e52bd27efcb0345922e6f736598f48767694ce623",
+      "executed_basix_rt0_normalization": "08c541001048ceaf9b265921aa7cd876c052006d00be7b3d2a83e3ecf7a19fe9",
+      "executed_basix_p0_coefficients": "cbc4914b2e562cfd1cd08c65fdb9f8dcb42eee027ca9b406d80fcc8ed6f10fa4",
+      "executed_basix_p0_values": "580e4ebf698a0a80e16f01a16b3826d2e6bf7ff979f11999a2501138c3ee03e0",
+      "executed_basix_trace_coefficients": "3793745d973f38c0672875f39bf8ff96e8b6939cc9bef916c8ce3c5a4d12d274",
+      "physical_mean": "4866a9321113106a593dbc8210812da32e9ac4b9963d7bc27f19133003a34b66"
+    },
+    "f4a95ab1a2cd671ab4671a955e9a9620b00ad2619dc8438538976de1826c5782": {
+      "macro_points": "71b38151296381620dd933c69a8d048c7025157bd1f95cb9432ffa051bcf4ac7",
+      "macro_cells": "6fcd40a5d2c3f55bfd2125bab76a5835cdc93f52be48439ace1ed1af327d5a8a",
+      "macro_faces": "2a44dd58d64246b2b11189a7cf2ef8f5593419872666b145c18599f95f1a4a9f",
+      "macro_cell_faces": "6571060d8d164e1c6760bb0fb674e2d9b55078ec3829ef8477547eb60817fcbf",
+      "macro_normals": "17cdb06dfed28a5c1b24e403139243688b1b203c01cb87dc38ecf5e3a0f81e40",
+      "macro_signs": "7f9ee163ebe9f30dade49bf8b1c8f50b8e61737c95db36b86a1e2f00fbcba9a6",
+      "points": "4a973b3117f05e3fb6b58de5f7056e8a10fe25dcdb9354fae4951390dac11a88",
+      "cells": "c534a7cc93ebd8a9d2ede60a22bec06afa121e62cd6e3eac1fb537e009b22247",
+      "macro_cell": "0b293ea98848d8a0824460f26e6d251c2f88edca661791dfabf1d4162a515d9f",
+      "pressure_offsets": "f1f320252c1213d45330e2d843f9859d7e5d36eff39b6e476eb7dac828559496",
+      "flux_offsets": "9290c85f89c20c4a5dcd7c00f7a57d6cb4510410e892b907067a3abe474a6eec",
+      "hybrid_field_offsets": "0217981c6f5cf298cee7911186254091c5ca4770ad36eb5e9252508fb52e4637",
+      "quadrature_barycentric": "61211566fac4fbef09bf610cc8df6961256cdd802304082c1a0bb2bbe4ee0324",
+      "quadrature_weights": "b776517453ac497f836e05af7b819e8ad27206f32f66b37a4346dae899e43cdb",
+      "point_sources": "c2e3fa85ef5ee18f145f621ee7acab05ad0fc0a170e2dbe9d92e1ed82b3ba868",
+      "point_source_offsets": "f27030ebea09f16478b5c47da1e3bf91bdfc7bbcc22fd8349cc36026c1b22b8d",
+      "flux_basis_values": "627a7c45f3e5c5db02b46fc40bd94b1d26ebb063c6be6e38b76bb4234f690c5d",
+      "flux_cell_dofs": "3c231e82d76ddfbcd1f58aedcbc8460d991f163db28e5ea99039e73ece19d70f",
+      "pressure_cell_dofs": "f4f28fab8ddfdcc72c35fb81199f2ed5d5c8f9af4f3ce418b7c307f5513b9721",
+      "declared_kernels": "fed70189fec8d5c949c53096f82546b526d857845a3efcc6963de1560abbbf88",
+      "declared_constraints": "bbd62a9a98d86564b70c8856ebbaa19f569e5ced18a617c3be37acd8c418a606"
+    },
+    "a8c26d37ba758c78b06729267e91b97cac14b0ca5a0ebb6e9496dd467ee24148": {
+      "macro_points": "71b38151296381620dd933c69a8d048c7025157bd1f95cb9432ffa051bcf4ac7",
+      "macro_cells": "6fcd40a5d2c3f55bfd2125bab76a5835cdc93f52be48439ace1ed1af327d5a8a",
+      "macro_faces": "2a44dd58d64246b2b11189a7cf2ef8f5593419872666b145c18599f95f1a4a9f",
+      "macro_cell_faces": "6571060d8d164e1c6760bb0fb674e2d9b55078ec3829ef8477547eb60817fcbf",
+      "macro_normals": "17cdb06dfed28a5c1b24e403139243688b1b203c01cb87dc38ecf5e3a0f81e40",
+      "macro_signs": "7f9ee163ebe9f30dade49bf8b1c8f50b8e61737c95db36b86a1e2f00fbcba9a6",
+      "points": "4a973b3117f05e3fb6b58de5f7056e8a10fe25dcdb9354fae4951390dac11a88",
+      "cells": "c534a7cc93ebd8a9d2ede60a22bec06afa121e62cd6e3eac1fb537e009b22247",
+      "macro_cell": "0b293ea98848d8a0824460f26e6d251c2f88edca661791dfabf1d4162a515d9f",
+      "pressure_offsets": "f0a2c93660c6af1e0c1528ba9931b93ee5187ad8b15fd9315090299e107edb94",
+      "flux_offsets": "f1f320252c1213d45330e2d843f9859d7e5d36eff39b6e476eb7dac828559496",
+      "hybrid_field_offsets": "f0a2c93660c6af1e0c1528ba9931b93ee5187ad8b15fd9315090299e107edb94",
+      "quadrature_barycentric": "61211566fac4fbef09bf610cc8df6961256cdd802304082c1a0bb2bbe4ee0324",
+      "quadrature_weights": "b776517453ac497f836e05af7b819e8ad27206f32f66b37a4346dae899e43cdb",
+      "point_sources": "c2e3fa85ef5ee18f145f621ee7acab05ad0fc0a170e2dbe9d92e1ed82b3ba868",
+      "point_source_offsets": "f27030ebea09f16478b5c47da1e3bf91bdfc7bbcc22fd8349cc36026c1b22b8d",
+      "pressure_nodes": "3033c92780bb0ef63e319c50771eaf6ad88324ddaa2e7562c5b628248a0710ce",
+      "pressure_cell_dofs": "cb1fb10e6fda5eb4bc1af5b1123682a14e4ca25614425022efb35057bb9bc90c",
+      "pressure_basis_values": "39198e7c9d235fb7d106222a3d411bf55afaeb696c8705379c16802809bb7eff",
+      "pressure_basis_gradients": "57775dba28c6532aaee2aaa7530502ef5bd47ce7b54b62404932881824041648",
+      "permeability_tensors": "772216134695d7dc014b03d9fa4d4c8b852c0b32a0b3e1b3da6ce69b88ef27ae",
+      "declared_kernels": "fe028f08377c35570cf7082129b7d61f7918818daaf50be2a85b75644a58231c",
+      "declared_constraints": "314a13916df1be11710fb030c139fc93ae006a317c4ddfe406deb15d1384a7db"
+    },
+    "f4f80caf2bd58fdda391afe5a3b08c0bed8b12f49ef9deb23f0e6357f90aa7c2": {
+      "macro_points": "71b38151296381620dd933c69a8d048c7025157bd1f95cb9432ffa051bcf4ac7",
+      "macro_cells": "6fcd40a5d2c3f55bfd2125bab76a5835cdc93f52be48439ace1ed1af327d5a8a",
+      "macro_faces": "2a44dd58d64246b2b11189a7cf2ef8f5593419872666b145c18599f95f1a4a9f",
+      "macro_cell_faces": "6571060d8d164e1c6760bb0fb674e2d9b55078ec3829ef8477547eb60817fcbf",
+      "macro_normals": "17cdb06dfed28a5c1b24e403139243688b1b203c01cb87dc38ecf5e3a0f81e40",
+      "macro_signs": "7f9ee163ebe9f30dade49bf8b1c8f50b8e61737c95db36b86a1e2f00fbcba9a6",
+      "points": "4a973b3117f05e3fb6b58de5f7056e8a10fe25dcdb9354fae4951390dac11a88",
+      "cells": "c534a7cc93ebd8a9d2ede60a22bec06afa121e62cd6e3eac1fb537e009b22247",
+      "macro_cell": "0b293ea98848d8a0824460f26e6d251c2f88edca661791dfabf1d4162a515d9f",
+      "pressure_offsets": "f0a2c93660c6af1e0c1528ba9931b93ee5187ad8b15fd9315090299e107edb94",
+      "flux_offsets": "f1f320252c1213d45330e2d843f9859d7e5d36eff39b6e476eb7dac828559496",
+      "hybrid_field_offsets": "f0a2c93660c6af1e0c1528ba9931b93ee5187ad8b15fd9315090299e107edb94",
+      "quadrature_barycentric": "61211566fac4fbef09bf610cc8df6961256cdd802304082c1a0bb2bbe4ee0324",
+      "quadrature_weights": "b776517453ac497f836e05af7b819e8ad27206f32f66b37a4346dae899e43cdb",
+      "point_sources": "c2e3fa85ef5ee18f145f621ee7acab05ad0fc0a170e2dbe9d92e1ed82b3ba868",
+      "point_source_offsets": "f27030ebea09f16478b5c47da1e3bf91bdfc7bbcc22fd8349cc36026c1b22b8d",
+      "pressure_nodes": "3033c92780bb0ef63e319c50771eaf6ad88324ddaa2e7562c5b628248a0710ce",
+      "pressure_cell_dofs": "cb1fb10e6fda5eb4bc1af5b1123682a14e4ca25614425022efb35057bb9bc90c",
+      "pressure_basis_values": "39198e7c9d235fb7d106222a3d411bf55afaeb696c8705379c16802809bb7eff",
+      "pressure_basis_gradients": "57775dba28c6532aaee2aaa7530502ef5bd47ce7b54b62404932881824041648",
+      "permeability_tensors": "20d9dcaa0e9de9492b4da336f574d120a844f3b7e7d1381404ae65c914aeb6de",
+      "declared_kernels": "fe028f08377c35570cf7082129b7d61f7918818daaf50be2a85b75644a58231c",
+      "declared_constraints": "314a13916df1be11710fb030c139fc93ae006a317c4ddfe406deb15d1384a7db"
+    }
+  },
+  "verification": {
+    "private_tests_passed": 25,
+    "private_test_blas_threads": [
+      1,
+      2
+    ],
+    "native_field_replay_blas_threads": [
+      1,
+      2
+    ],
+    "complete_candidate_comparison_blas_threads": [
+      1,
+      2
+    ],
+    "native_archive_replay": "Actual archived basis and complete original coefficients; no new basis or factorization",
+    "coordinate_comparison": "P2 actual physical nodal correspondence; RT0 actual archived affine Piola basis evaluated in independently oriented physical normal moments",
+    "strict_current_source_and_lock_guards": true
+  },
+  "rows": [
+    {
+      "name": "homogeneous",
+      "formulation": "primal",
+      "material": {
+        "constant": 1.0
+      },
+      "native_full_original_saddle_dofs": 33729,
+      "native_field_archive_sha256": "1d87a62772291f53b569aa1e8b621e13f8d27d0eb0fc633b4cd78d599fb40b91",
+      "native_metadata_sha256": "6d241ba1e3189bb2938f609f6e0c6dcc65e0ac708e6054fc08670a21f548f116",
+      "native_basis_bundle_sha256": "db222d02f79aa95b3175845e0e87a696320947f21bd50292544733e29ffef016",
+      "candidate_field_archive": "homogeneous-primal-fields.npz",
+      "candidate_field_archive_sha256": "7b4318016984e14466f0905e336c764669631a271982443753a83df94869bd35",
+      "candidate_metadata_sha256": "4369344e9eee6ef29030a51831dcddc0123a1e5bc41130277168e4c29e79ab87",
+      "candidate_basis_bundle_sha256": "d8a54fe43aa2b9b62d42a418810f9c20c11d17ddcbf9e3265378a33a2cc4da86",
+      "executed_coordinate_maps_sha256": {
+        "candidate_native_node_permutation": "b2043e9532f89fce4c3d9568edcbc73a0498bccdad06ad767c5211ed8d83c6bd",
+        "candidate_native_face_permutation": "257bc4959c44f70a79786af64e74cd394f84f01db9f776d54675275265897e27",
+        "candidate_native_normal_sign": "787b85943136cd67176dbba6f52dd45677d98feab3a06a62042f6a143b410eed"
+      },
+      "native_original_full_saddle_relative_residual": 1.3064992540692748e-17,
+      "native_physical_pressure_integral": -1.3179567961480896e-18,
+      "candidate_in_native_physical_pressure_integral": -1.0513736900789899e-16,
+      "candidate_physical_pressure_integral": -1.0451105431785344e-16,
+      "native_additional_correction_control": {
+        "corrections": 1,
+        "original_full_saddle_relative_residual": 1.3007927692736308e-17,
+        "original_physical_relative_residual": 7.101572555330224e-17,
+        "physical_field_norm_changes": {
+          "pressure": {
+            "original_reference_norm": 0.43158983822947833,
+            "corrected_reference_norm": 0.4315898382294784,
+            "absolute_change": 2.362539930975572e-18,
+            "relative_change": 5.474039751879881e-18
+          },
+          "raw_gradient": {
+            "original_reference_norm": 2.9252276644854973,
+            "corrected_reference_norm": 2.9252276644854973,
+            "absolute_change": 1.5062806160116648e-17,
+            "relative_change": 5.149276530846007e-18
+          },
+          "physical_darcy_flux": {
+            "original_reference_norm": 2.9252276644854973,
+            "corrected_reference_norm": 2.9252276644854973,
+            "absolute_change": 1.5062806160116648e-17,
+            "relative_change": 5.149276530846007e-18
+          }
+        },
+        "executed_control_archive_sha256": "16c511c42b0180b83ea4c43332269e87d518d460049f6d035c75068978437844"
+      },
+      "native_local_kernel_check": {
+        "checked_macro_cells": 2048,
+        "local_block_size": 15,
+        "represented_local_rank": 14,
+        "declared_kernel": "constant pressure",
+        "maximum_relative_kernel_action": 3.3006461280375584e-17,
+        "minimum_positive_local_singular_value": 0.18388714756929464,
+        "interior_macro_cells_with_three_free_trace_faces": 1922,
+        "local_trace_rank": 3
+      },
+      "one_two_threads_replay": {
+        "native_pressure_bitwise_equal": true,
+        "native_flux_bitwise_equal": true,
+        "executed_coordinate_maps_equal": true,
+        "physical_norm_and_residual_metrics_equal": true
+      },
+      "native_resources": {
+        "assembly_seconds": 2.5573411267250776,
+        "solve_and_original_equation_correction_seconds": 0.4807284027338028,
+        "total_setup_solve_check_archive_seconds": 4.214317871257663,
+        "peak_rss_kib": 181408,
+        "threads": 1
+      },
+      "native_original_physical_relative_residual": 7.096047919766345e-17,
+      "pressure_l2_difference": 1.3220191466981945e-13,
+      "pressure_l2_scale": 0.43158983822947833,
+      "pressure_relative_l2_difference": 3.063137797964721e-13,
+      "gradient_l2_difference": 4.204646724042221e-13,
+      "gradient_l2_scale": 2.9252276644854973,
+      "gradient_relative_l2_difference": 1.4373741829020183e-13,
+      "flux_l2_difference": 4.204646724042221e-13,
+      "flux_l2_scale": 2.9252276644854973,
+      "flux_relative_l2_difference": 1.4373741829020183e-13,
+      "candidate_in_native_original_physical_relative_residual": 4.1840586751175483e-14,
+      "candidate_original_saddle_relative_load_residual": 1.9427604291033562e-14
+    },
+    {
+      "name": "homogeneous",
+      "formulation": "mixed",
+      "material": {
+        "constant": 1.0
+      },
+      "native_full_original_saddle_dofs": 41921,
+      "native_field_archive_sha256": "25e4b0102fa9ba81b5c01af13db764f0d214f5f719c6c8442ab1c7a6cb29d034",
+      "native_metadata_sha256": "b0e3c1d0dd276abb7abe098b1f9b90eaef02a16bd53b69da3375be239798ce76",
+      "native_basis_bundle_sha256": "7621478c6461b94302f927c974517f5afa2226555f0cf4101f66e38377820563",
+      "candidate_field_archive": "homogeneous-mixed-fields.npz",
+      "candidate_field_archive_sha256": "a2cf27a22168c28d8a92d38d39515100299f30dad1956f8f96c7e7bdf438b6e0",
+      "candidate_metadata_sha256": "5c75402cae68ac90b0d06ef37b2900fcac12b699a23f94547c2969beb4538ba6",
+      "candidate_basis_bundle_sha256": "f4a95ab1a2cd671ab4671a955e9a9620b00ad2619dc8438538976de1826c5782",
+      "executed_coordinate_maps_sha256": {
+        "candidate_native_flux_permutation": "960058aff023e43b7dfdb19cacd32ac558014c066c586777183b8f2bdd1257a5",
+        "candidate_native_flux_sign": "c4b91aebc7befa1bd8d9f064eeb2698ec48ae62693d8c0b629d4b8b1a384b850",
+        "candidate_native_normal_moment_map": "0e06711cb18e59b62f22766a045bc8f79817996afdd39f9813381fa2d185d31c",
+        "candidate_native_face_permutation": "257bc4959c44f70a79786af64e74cd394f84f01db9f776d54675275265897e27",
+        "candidate_native_normal_sign": "787b85943136cd67176dbba6f52dd45677d98feab3a06a62042f6a143b410eed"
+      },
+      "native_original_full_saddle_relative_residual": 2.748014303826843e-18,
+      "native_physical_pressure_integral": -4.864880792995871e-19,
+      "candidate_in_native_physical_pressure_integral": -1.274767115563185e-16,
+      "candidate_physical_pressure_integral": -1.274691411993524e-16,
+      "native_additional_correction_control": {
+        "corrections": 1,
+        "original_full_saddle_relative_residual": 1.9794694859654196e-18,
+        "original_physical_relative_residual": 1.9382092714065635e-16,
+        "physical_field_norm_changes": {
+          "pressure": {
+            "original_reference_norm": 0.43093130832416726,
+            "corrected_reference_norm": 0.43093130832416726,
+            "absolute_change": 4.882101376656743e-19,
+            "relative_change": 1.1329187001154697e-18
+          },
+          "physical_darcy_flux": {
+            "original_reference_norm": 2.3072978905501054,
+            "corrected_reference_norm": 2.3072978905501054,
+            "absolute_change": 9.682793327548179e-19,
+            "relative_change": 4.1965943657321206e-19
+          }
+        },
+        "executed_control_archive_sha256": "6dcaf1d824fcb6d5b10cf9e74967653d7489d0098f9986c69d7505259dda594f"
+      },
+      "native_local_kernel_check": {
+        "checked_macro_cells": 2048,
+        "local_block_size": 19,
+        "represented_local_rank": 18,
+        "declared_kernel": "zero Darcy flux with constant pressure and constant fine-boundary pressure multipliers",
+        "maximum_relative_kernel_action": 5.716255012566411e-17,
+        "minimum_positive_local_singular_value": 0.2514494769024285,
+        "interior_macro_cells_with_three_free_trace_faces": 1922,
+        "local_trace_rank": 3
+      },
+      "one_two_threads_replay": {
+        "native_pressure_bitwise_equal": true,
+        "native_flux_bitwise_equal": true,
+        "executed_coordinate_maps_equal": true,
+        "physical_norm_and_residual_metrics_equal": true
+      },
+      "native_resources": {
+        "assembly_seconds": 2.2332624532282352,
+        "solve_and_original_equation_correction_seconds": 0.6986130885779858,
+        "total_setup_solve_check_archive_seconds": 4.110781263560057,
+        "peak_rss_kib": 198676,
+        "threads": 1
+      },
+      "native_original_physical_relative_residual": 1.938293068979453e-16,
+      "pressure_l2_difference": 3.142953144951058e-15,
+      "pressure_l2_scale": 0.43093130832416726,
+      "pressure_relative_l2_difference": 7.293397078001994e-15,
+      "flux_l2_difference": 2.5720582124413285e-14,
+      "flux_l2_scale": 2.3072978905501054,
+      "flux_relative_l2_difference": 1.1147490850555491e-14,
+      "candidate_in_native_original_physical_relative_residual": 2.2264238189286712e-14,
+      "candidate_fine_cell_point_functional_balance_max": 2.8709673527416157e-16,
+      "candidate_original_saddle_relative_load_residual": 5.4575128447646955e-15,
+      "native_fine_cell_point_functional_balance_max": 2.15485181781494e-18
+    },
+    {
+      "name": "layer-half",
+      "formulation": "primal",
+      "material": {
+        "below": 1000.0,
+        "above": 1.0,
+        "interface_y": 0.5
+      },
+      "native_full_original_saddle_dofs": 33729,
+      "native_field_archive_sha256": "4170dbf98e8fd266860f1f829a50b9502edc54da7b805952d646f59b60e6ea95",
+      "native_metadata_sha256": "438f654a7ed4b79e07aa2ef9977c3e3361efb3a73712ba46bb6e164b12c06111",
+      "native_basis_bundle_sha256": "db222d02f79aa95b3175845e0e87a696320947f21bd50292544733e29ffef016",
+      "candidate_field_archive": "layer-half-primal-fields.npz",
+      "candidate_field_archive_sha256": "3a0152cbde5f9d40e4e039bd58325241a0cd0b0cf2c8b523e19c7ee2c1968e7a",
+      "candidate_metadata_sha256": "47a41ffe6abe1a4a52d186b92d665feabd07b496fef07e2e1a4bbcfe41eba55f",
+      "candidate_basis_bundle_sha256": "a8c26d37ba758c78b06729267e91b97cac14b0ca5a0ebb6e9496dd467ee24148",
+      "executed_coordinate_maps_sha256": {
+        "candidate_native_node_permutation": "b2043e9532f89fce4c3d9568edcbc73a0498bccdad06ad767c5211ed8d83c6bd",
+        "candidate_native_face_permutation": "257bc4959c44f70a79786af64e74cd394f84f01db9f776d54675275265897e27",
+        "candidate_native_normal_sign": "787b85943136cd67176dbba6f52dd45677d98feab3a06a62042f6a143b410eed"
+      },
+      "native_original_full_saddle_relative_residual": 2.8652965313162086e-15,
+      "native_physical_pressure_integral": 7.999829140122841e-20,
+      "candidate_in_native_physical_pressure_integral": -1.256955865566999e-17,
+      "candidate_physical_pressure_integral": -1.189287197504241e-17,
+      "native_additional_correction_control": {
+        "corrections": 1,
+        "original_full_saddle_relative_residual": 2.8949540553027773e-15,
+        "original_physical_relative_residual": 8.59417503311649e-13,
+        "physical_field_norm_changes": {
+          "pressure": {
+            "original_reference_norm": 0.23303873988956572,
+            "corrected_reference_norm": 0.23303873988956567,
+            "absolute_change": 1.0663515807866949e-16,
+            "relative_change": 4.575855419111974e-16
+          },
+          "raw_gradient": {
+            "original_reference_norm": 2.041560995384748,
+            "corrected_reference_norm": 2.041560995384748,
+            "absolute_change": 4.410462264392829e-16,
+            "relative_change": 2.1603382286217921e-16
+          },
+          "physical_darcy_flux": {
+            "original_reference_norm": 2.96261690922791,
+            "corrected_reference_norm": 2.96261690922791,
+            "absolute_change": 2.951268494738471e-15,
+            "relative_change": 9.961694627293557e-16
+          }
+        },
+        "executed_control_archive_sha256": "25826fc110bd4a3244aea0d1d51a1c605dbc3b9efb9506decc73af64c8292691"
+      },
+      "native_local_kernel_check": {
+        "checked_macro_cells": 2048,
+        "local_block_size": 15,
+        "represented_local_rank": 14,
+        "declared_kernel": "constant pressure",
+        "maximum_relative_kernel_action": 5.2784327208879303e-17,
+        "minimum_positive_local_singular_value": 0.18388714756929464,
+        "interior_macro_cells_with_three_free_trace_faces": 1922,
+        "local_trace_rank": 3
+      },
+      "one_two_threads_replay": {
+        "native_pressure_bitwise_equal": true,
+        "native_flux_bitwise_equal": true,
+        "executed_coordinate_maps_equal": true,
+        "physical_norm_and_residual_metrics_equal": true
+      },
+      "native_resources": {
+        "assembly_seconds": 2.2387426383793354,
+        "solve_and_original_equation_correction_seconds": 0.5097834467887878,
+        "total_setup_solve_check_archive_seconds": 3.8062993120402098,
+        "peak_rss_kib": 186852,
+        "threads": 1
+      },
+      "native_original_physical_relative_residual": 8.594400324033177e-13,
+      "pressure_l2_difference": 6.3866415445096614e-12,
+      "pressure_l2_scale": 0.23303873988956572,
+      "pressure_relative_l2_difference": 2.7405922069164187e-11,
+      "gradient_l2_difference": 2.642022836862175e-11,
+      "gradient_l2_scale": 2.041560995384748,
+      "gradient_relative_l2_difference": 1.294118981913771e-11,
+      "flux_l2_difference": 4.878158779483939e-11,
+      "flux_l2_scale": 2.96261690922791,
+      "flux_relative_l2_difference": 1.6465708962537585e-11,
+      "candidate_in_native_original_physical_relative_residual": 1.2968917460346568e-11,
+      "candidate_original_saddle_relative_load_residual": 3.8275483695731665e-12
+    },
+    {
+      "name": "layer-half",
+      "formulation": "mixed",
+      "material": {
+        "below": 1000.0,
+        "above": 1.0,
+        "interface_y": 0.5
+      },
+      "native_full_original_saddle_dofs": 41921,
+      "native_field_archive_sha256": "7b0baf457babefe3f2352c80f126975527a500f404daa75bfbae88067fb1c77f",
+      "native_metadata_sha256": "4b72ee25afa61c0c8110a8079c95ad62ab541a43137b480dcd63b99a31fc271e",
+      "native_basis_bundle_sha256": "7621478c6461b94302f927c974517f5afa2226555f0cf4101f66e38377820563",
+      "candidate_field_archive": "layer-half-mixed-fields.npz",
+      "candidate_field_archive_sha256": "e277f7bc2226aa8ffa952ff98469a17a09fd97adcab853943185e3236081e956",
+      "candidate_metadata_sha256": "87f4f8489ac78123e31cfe578833235a04674ec954f4e96b155568526c60e986",
+      "candidate_basis_bundle_sha256": "f4a95ab1a2cd671ab4671a955e9a9620b00ad2619dc8438538976de1826c5782",
+      "executed_coordinate_maps_sha256": {
+        "candidate_native_flux_permutation": "960058aff023e43b7dfdb19cacd32ac558014c066c586777183b8f2bdd1257a5",
+        "candidate_native_flux_sign": "c4b91aebc7befa1bd8d9f064eeb2698ec48ae62693d8c0b629d4b8b1a384b850",
+        "candidate_native_normal_moment_map": "0e06711cb18e59b62f22766a045bc8f79817996afdd39f9813381fa2d185d31c",
+        "candidate_native_face_permutation": "257bc4959c44f70a79786af64e74cd394f84f01db9f776d54675275265897e27",
+        "candidate_native_normal_sign": "787b85943136cd67176dbba6f52dd45677d98feab3a06a62042f6a143b410eed"
+      },
+      "native_original_full_saddle_relative_residual": 1.8116784866130006e-18,
+      "native_physical_pressure_integral": -9.5045037615813e-19,
+      "candidate_in_native_physical_pressure_integral": -2.3763668153897006e-17,
+      "candidate_physical_pressure_integral": -2.4374220090189747e-17,
+      "native_additional_correction_control": {
+        "corrections": 1,
+        "original_full_saddle_relative_residual": 1.1456096263084348e-18,
+        "original_physical_relative_residual": 1.9381110361406715e-16,
+        "physical_field_norm_changes": {
+          "pressure": {
+            "original_reference_norm": 0.23247614219931698,
+            "corrected_reference_norm": 0.23247614219931698,
+            "absolute_change": 9.506188647258763e-19,
+            "relative_change": 4.0891028891508735e-18
+          },
+          "physical_darcy_flux": {
+            "original_reference_norm": 2.3545202521039315,
+            "corrected_reference_norm": 2.3545202521039315,
+            "absolute_change": 2.416033876117001e-16,
+            "relative_change": 1.0261257570233693e-16
+          }
+        },
+        "executed_control_archive_sha256": "00d0557b6b97a654c27a908d4137f3ba6cb3a86ce7889357cd3330a4c3d40881"
+      },
+      "native_local_kernel_check": {
+        "checked_macro_cells": 2048,
+        "local_block_size": 19,
+        "represented_local_rank": 18,
+        "declared_kernel": "zero Darcy flux with constant pressure and constant fine-boundary pressure multipliers",
+        "maximum_relative_kernel_action": 5.851388974330722e-17,
+        "minimum_positive_local_singular_value": 0.2514494769024285,
+        "interior_macro_cells_with_three_free_trace_faces": 1922,
+        "local_trace_rank": 3
+      },
+      "one_two_threads_replay": {
+        "native_pressure_bitwise_equal": true,
+        "native_flux_bitwise_equal": true,
+        "executed_coordinate_maps_equal": true,
+        "physical_norm_and_residual_metrics_equal": true
+      },
+      "native_resources": {
+        "assembly_seconds": 2.083283308893442,
+        "solve_and_original_equation_correction_seconds": 0.6871509701013565,
+        "total_setup_solve_check_archive_seconds": 3.5496585983783007,
+        "peak_rss_kib": 198676,
+        "threads": 1
+      },
+      "native_original_physical_relative_residual": 1.9381330287011816e-16,
+      "pressure_l2_difference": 1.5848892838770982e-15,
+      "pressure_l2_scale": 0.23247614219931698,
+      "pressure_relative_l2_difference": 6.817427667559406e-15,
+      "flux_l2_difference": 1.0048352240212475e-11,
+      "flux_l2_scale": 2.3545202521039315,
+      "flux_relative_l2_difference": 4.2676856277764255e-12,
+      "candidate_in_native_original_physical_relative_residual": 1.267752938206312e-14,
+      "candidate_fine_cell_point_functional_balance_max": 2.4231918555051024e-16,
+      "candidate_original_saddle_relative_load_residual": 2.740627381588761e-15,
+      "native_fine_cell_point_functional_balance_max": 2.168404344971009e-18
+    },
+    {
+      "name": "layer-offset",
+      "formulation": "primal",
+      "material": {
+        "below": 1000.0,
+        "above": 1.0,
+        "interface_y": 0.484375
+      },
+      "native_full_original_saddle_dofs": 33729,
+      "native_field_archive_sha256": "c77893a754815aee72f4bd6027c05511543f9ba07f7d82c23e1dcff8f5a8d035",
+      "native_metadata_sha256": "629ec6e31eb884378b0321ceadc092bd8e04f409955fdd9d008181defd306b1d",
+      "native_basis_bundle_sha256": "db222d02f79aa95b3175845e0e87a696320947f21bd50292544733e29ffef016",
+      "candidate_field_archive": "layer-offset-primal-fields.npz",
+      "candidate_field_archive_sha256": "77020433e43d22f9b59dff442a77de9eb4e955df87fb2e1e683a9c7fb1140c82",
+      "candidate_metadata_sha256": "d4aa6ab7d53b7b12a0b7f85532d56edb89daf34e9e2b80b118bc7014f1ad0d6a",
+      "candidate_basis_bundle_sha256": "f4f80caf2bd58fdda391afe5a3b08c0bed8b12f49ef9deb23f0e6357f90aa7c2",
+      "executed_coordinate_maps_sha256": {
+        "candidate_native_node_permutation": "b2043e9532f89fce4c3d9568edcbc73a0498bccdad06ad767c5211ed8d83c6bd",
+        "candidate_native_face_permutation": "257bc4959c44f70a79786af64e74cd394f84f01db9f776d54675275265897e27",
+        "candidate_native_normal_sign": "787b85943136cd67176dbba6f52dd45677d98feab3a06a62042f6a143b410eed"
+      },
+      "native_original_full_saddle_relative_residual": 3.1706260750823385e-15,
+      "native_physical_pressure_integral": 2.949527541017084e-19,
+      "candidate_in_native_physical_pressure_integral": 2.494208288942985e-17,
+      "candidate_physical_pressure_integral": 2.640074641649566e-17,
+      "native_additional_correction_control": {
+        "corrections": 1,
+        "original_full_saddle_relative_residual": 3.2359084335274413e-15,
+        "original_physical_relative_residual": 8.869812741937433e-13,
+        "physical_field_norm_changes": {
+          "pressure": {
+            "original_reference_norm": 0.23878284225171453,
+            "corrected_reference_norm": 0.2387828422517146,
+            "absolute_change": 7.472230550045338e-17,
+            "relative_change": 3.1292996094620715e-16
+          },
+          "raw_gradient": {
+            "original_reference_norm": 2.0465984431642683,
+            "corrected_reference_norm": 2.0465984431642683,
+            "absolute_change": 3.102844761711324e-16,
+            "relative_change": 1.5160984667387813e-16
+          },
+          "physical_darcy_flux": {
+            "original_reference_norm": 2.967326638296781,
+            "corrected_reference_norm": 2.967326638296781,
+            "absolute_change": 3.3467988311572575e-15,
+            "relative_change": 1.1278835258521757e-15
+          }
+        },
+        "executed_control_archive_sha256": "8edc177740ab61be0e4fbed76fd36e6949e32f692869b52f19a65092046cc307"
+      },
+      "native_local_kernel_check": {
+        "checked_macro_cells": 2048,
+        "local_block_size": 15,
+        "represented_local_rank": 14,
+        "declared_kernel": "constant pressure",
+        "maximum_relative_kernel_action": 5.65401474965517e-17,
+        "minimum_positive_local_singular_value": 0.18388714756929464,
+        "interior_macro_cells_with_three_free_trace_faces": 1922,
+        "local_trace_rank": 3
+      },
+      "one_two_threads_replay": {
+        "native_pressure_bitwise_equal": true,
+        "native_flux_bitwise_equal": true,
+        "executed_coordinate_maps_equal": true,
+        "physical_norm_and_residual_metrics_equal": true
+      },
+      "native_resources": {
+        "assembly_seconds": 2.2225504722446203,
+        "solve_and_original_equation_correction_seconds": 0.5576988868415356,
+        "total_setup_solve_check_archive_seconds": 3.9101856276392937,
+        "peak_rss_kib": 187796,
+        "threads": 1
+      },
+      "native_original_physical_relative_residual": 8.869882674154143e-13,
+      "pressure_l2_difference": 7.204621378843485e-12,
+      "pressure_l2_scale": 0.23878284225171453,
+      "pressure_relative_l2_difference": 3.01722741504546e-11,
+      "gradient_l2_difference": 2.92329221836854e-11,
+      "gradient_l2_scale": 2.0465984431642683,
+      "gradient_relative_l2_difference": 1.4283662865729566e-11,
+      "flux_l2_difference": 5.0507982033086e-11,
+      "flux_l2_scale": 2.967326638296781,
+      "flux_relative_l2_difference": 1.702137586783406e-11,
+      "candidate_in_native_original_physical_relative_residual": 1.3463800329800742e-11,
+      "candidate_original_saddle_relative_load_residual": 4.355593577484237e-12
+    },
+    {
+      "name": "layer-offset",
+      "formulation": "mixed",
+      "material": {
+        "below": 1000.0,
+        "above": 1.0,
+        "interface_y": 0.484375
+      },
+      "native_full_original_saddle_dofs": 41921,
+      "native_field_archive_sha256": "0847bc5407f5687ebdf6e51d021be71cbd154bcfe5bfd3b60b49e396cd5e5e58",
+      "native_metadata_sha256": "4913c1e1b34611ba72f08dd768602e08d7d05e685679e3489ecedc2a898b0fd1",
+      "native_basis_bundle_sha256": "7621478c6461b94302f927c974517f5afa2226555f0cf4101f66e38377820563",
+      "candidate_field_archive": "layer-offset-mixed-fields.npz",
+      "candidate_field_archive_sha256": "8fed42acf56ab2a5d5fc5105b1f7945f786f24009f823b5c7449bbe0b361c149",
+      "candidate_metadata_sha256": "5870c07cc4d25512c076bfc4e4d5b7b408733b354d0cb73a0b11663df46ca3a9",
+      "candidate_basis_bundle_sha256": "f4a95ab1a2cd671ab4671a955e9a9620b00ad2619dc8438538976de1826c5782",
+      "executed_coordinate_maps_sha256": {
+        "candidate_native_flux_permutation": "960058aff023e43b7dfdb19cacd32ac558014c066c586777183b8f2bdd1257a5",
+        "candidate_native_flux_sign": "c4b91aebc7befa1bd8d9f064eeb2698ec48ae62693d8c0b629d4b8b1a384b850",
+        "candidate_native_normal_moment_map": "0e06711cb18e59b62f22766a045bc8f79817996afdd39f9813381fa2d185d31c",
+        "candidate_native_face_permutation": "257bc4959c44f70a79786af64e74cd394f84f01db9f776d54675275265897e27",
+        "candidate_native_normal_sign": "787b85943136cd67176dbba6f52dd45677d98feab3a06a62042f6a143b410eed"
+      },
+      "native_original_full_saddle_relative_residual": 2.6125125946223443e-18,
+      "native_physical_pressure_integral": -2.104982753045343e-18,
+      "candidate_in_native_physical_pressure_integral": -1.611239307156931e-17,
+      "candidate_physical_pressure_integral": -1.787324222001299e-17,
+      "native_additional_correction_control": {
+        "corrections": 1,
+        "original_full_saddle_relative_residual": 1.2117023421303544e-18,
+        "original_physical_relative_residual": 1.9381151093974733e-16,
+        "physical_field_norm_changes": {
+          "pressure": {
+            "original_reference_norm": 0.23823128927118603,
+            "corrected_reference_norm": 0.23823128927118603,
+            "absolute_change": 2.1049455222529584e-18,
+            "relative_change": 8.835722329726528e-18
+          },
+          "physical_darcy_flux": {
+            "original_reference_norm": 2.3605589956279878,
+            "corrected_reference_norm": 2.3605589956279878,
+            "absolute_change": 2.4621982351500146e-16,
+            "relative_change": 1.0430572757174355e-16
+          }
+        },
+        "executed_control_archive_sha256": "d098b236e72fecbf7cd684d5a6d0228136051f40887a73826ca777d17d0dbb33"
+      },
+      "native_local_kernel_check": {
+        "checked_macro_cells": 2048,
+        "local_block_size": 19,
+        "represented_local_rank": 18,
+        "declared_kernel": "zero Darcy flux with constant pressure and constant fine-boundary pressure multipliers",
+        "maximum_relative_kernel_action": 5.851388974330722e-17,
+        "minimum_positive_local_singular_value": 0.2514494769024285,
+        "interior_macro_cells_with_three_free_trace_faces": 1922,
+        "local_trace_rank": 3
+      },
+      "one_two_threads_replay": {
+        "native_pressure_bitwise_equal": true,
+        "native_flux_bitwise_equal": true,
+        "executed_coordinate_maps_equal": true,
+        "physical_norm_and_residual_metrics_equal": true
+      },
+      "native_resources": {
+        "assembly_seconds": 1.9562366865575314,
+        "solve_and_original_equation_correction_seconds": 0.8163302950561047,
+        "total_setup_solve_check_archive_seconds": 3.4298423398286104,
+        "peak_rss_kib": 207120,
+        "threads": 1
+      },
+      "native_original_physical_relative_residual": 1.9381321959210756e-16,
+      "pressure_l2_difference": 1.4259490959615749e-15,
+      "pressure_l2_scale": 0.23823128927118603,
+      "pressure_relative_l2_difference": 5.985565961230109e-15,
+      "flux_l2_difference": 1.7142125348640353e-11,
+      "flux_l2_scale": 2.3605589956279878,
+      "flux_relative_l2_difference": 7.261892365490308e-12,
+      "candidate_in_native_original_physical_relative_residual": 1.3165476670405605e-14,
+      "candidate_fine_cell_point_functional_balance_max": 2.439454888092385e-16,
+      "candidate_original_saddle_relative_load_residual": 3.078334603567964e-15,
+      "native_fine_cell_point_functional_balance_max": 2.168404344971009e-18
+    }
+  ]
+}

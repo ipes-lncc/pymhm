@@ -3,7 +3,9 @@
 The cell and face unknowns are integral moments, an invertible change of
 coordinates from the polynomial coefficients in Chaumont-Frelet et al. (2022).
 Local reconstructions minimize diffusion energy subject to these moments.
-The cell moments are statically condensed, leaving a symmetric face system.
+The cell moments are statically condensed, leaving the represented face system.
+The exact diffusion form is symmetric; its assembled operator is retained
+without a further projection onto its symmetric part.
 Both the projected-source formulation (4.6) and reconstructed-source variant
 (5.1) are available. The face-only case m=-1 requires the latter variant.
 """
@@ -18,12 +20,18 @@ from scipy import sparse
 from pymhm.elements import scalar_values, tensor_values, triangle_quadrature
 from pymhm.lagrange import scalar_operators, tabulate, trace_coupling
 from pymhm.mesh import FaceSpace, FloatArray, SkeletonSpace, TriangleMesh, positive_int
-from pymhm.solvers import factorize, solve_linear
+from pymhm.solvers import _accurate_residual, _checked, factorize
 
 
 @dataclass(frozen=True)
 class MsHHOLocal:
-    """One energy-minimizing reconstruction and its local moment equations."""
+    """One constrained Galerkin lift and its represented local moment operator.
+
+    ``energy`` is R.T A R, retaining the represented assembly's small
+    antisymmetry. For the exactly symmetric diffusion form it is the energy
+    Hessian. Projecting this matrix to its symmetric part would change the
+    original finite equations.
+    """
 
     mesh: Any
     reconstruction: FloatArray
@@ -36,7 +44,7 @@ class MsHHOLocal:
 
 @dataclass(frozen=True)
 class MsHHOSolution:
-    """Broken pressure fields, common face moments and condensed SPD operator."""
+    """Broken pressure fields, common face moments and represented condensed operator."""
 
     skeleton: Any
     local: tuple[MsHHOLocal, ...]
@@ -48,6 +56,7 @@ class MsHHOSolution:
     degree: int
     permeability: Any
     source_variant: str
+    local_refinement_precision: str = "double"
 
     def l2_error(self, exact: Any, order: int = 8) -> float:
         """Integrate broken pressure error with independent quadrature."""
@@ -80,22 +89,50 @@ class MsHHOSolution:
         return float(np.sqrt(total))
 
 
-def _energy_reconstruction(matrix: Any, moments: FloatArray) -> tuple[FloatArray, FloatArray]:
-    """Minimize diffusion energy subject to independent physical integral moments."""
+def _moment_solve(
+    matrix: Any,
+    rhs: Any,
+    *,
+    solver: str = "scipy",
+    refinement_precision: Literal["double", "extended"] = "double",
+) -> FloatArray:
+    """Solve the represented moment operator without discarding its wider digits.
+
+    Native factors use binary64. Explicit extended storage keeps the actual
+    original operator and forcing for two further defect corrections and the
+    unchanged 1e-10 columnwise check. This operation is shared by local,
+    condensed and gauged moment equations in all supported dimensions.
+    """
+    original = sparse.csr_matrix(matrix)
+    dtype = np.longdouble if refinement_precision == "extended" else float
+    forcing = np.asarray(rhs, dtype=dtype)
+    with factorize(original, solver=solver) as factor:
+        result = factor.solve(forcing, refinement_precision=refinement_precision)
+        if refinement_precision == "extended":
+            for _ in range(2):
+                defect = _accurate_residual(original, forcing, result)
+                if np.any(defect):
+                    result += factor.solve(defect, refinement_precision="extended")
+        return _checked(original, forcing, result, 1e-10, 0.0)
+
+
+def _energy_reconstruction(
+    matrix: Any,
+    moments: FloatArray,
+    refinement_precision: Literal["double", "extended"] = "double",
+) -> tuple[FloatArray, FloatArray]:
+    """Solve the original A/C moment saddle and retain its Galerkin reduction."""
     scale = np.linalg.norm(moments, axis=0)
     if np.any(scale == 0) or np.linalg.matrix_rank(moments / scale) != moments.shape[1]:
         raise ValueError("local space cannot represent all independent cell and face moments")
-    # Normalize moment columns and rows for the factorization, preserving integral DOFs.
-    normalized = moments / scale
-    energy_scale = float(np.max(np.abs(matrix.data)))
-    augmented = sparse.bmat(
-        [[matrix / energy_scale, normalized], [normalized.T, None]], format="csc"
-    )
-    rhs = np.vstack((np.zeros((matrix.shape[0], len(scale))), np.diag(1 / scale)))
-    with factorize(augmented) as factor:
-        reconstruction = factor.solve(rhs)[: matrix.shape[0]]
+    # Native equilibration acts only inside the fixed factorization. Acceptance
+    # and corrections use the original physical A/C rows and integral units.
+    augmented = sparse.bmat([[matrix, moments], [moments.T, None]], format="csc")
+    rhs = np.vstack((np.zeros((matrix.shape[0], len(scale))), np.eye(len(scale))))
+    reconstruction = _moment_solve(augmented, rhs, refinement_precision=refinement_precision)[
+        : matrix.shape[0]
+    ]
     energy = reconstruction.T @ (matrix @ reconstruction)
-    energy = (energy + energy.T) / 2
     return reconstruction, energy
 
 
@@ -110,6 +147,7 @@ def _local_reconstruction(
     refinement: int,
     order: int,
     variant: str,
+    refinement_precision: Literal["double", "extended"],
 ) -> MsHHOLocal:
     """Solve the constrained energy minimum defining all local moment basis functions."""
     fine = mesh.submesh(cell, refinement)
@@ -146,7 +184,7 @@ def _local_reconstruction(
         face[:, offset : offset + width] *= mesh.signs[cell, side]
         offset += width
     moments = np.column_stack((volume, face))
-    reconstruction, energy = _energy_reconstruction(matrix, moments)
+    reconstruction, energy = _energy_reconstruction(matrix, moments, refinement_precision)
     if variant == "reconstructed":
         load = reconstruction.T @ force
     else:
@@ -174,18 +212,24 @@ def _condense_moments(
     constant_moments: FloatArray,
     mean_target: float | None,
     solver: str,
+    refinement_precision: Literal["double", "extended"] = "double",
 ) -> tuple[Any, FloatArray, tuple[FloatArray, ...], tuple[FloatArray, ...], float]:
     """Condense cell moments, impose natural data and recover the broken fields."""
     rows: list[int] = []
     columns: list[int] = []
     entries: list[float] = []
-    rhs = np.zeros(skeleton.size)
+    dtype = np.longdouble if refinement_precision == "extended" else float
+    rhs = np.zeros(skeleton.size, dtype=dtype)
     lifts, sources = [], []
     for cell, data in enumerate(cells):
         n = data.cell_count
         if n:
-            lift = np.linalg.solve(data.energy[:n, :n], data.energy[:n, n:])
-            particular = np.linalg.solve(data.energy[:n, :n], data.load[:n])
+            lift = _moment_solve(
+                data.energy[:n, :n], data.energy[:n, n:], refinement_precision=refinement_precision
+            )
+            particular = _moment_solve(
+                data.energy[:n, :n], data.load[:n], refinement_precision=refinement_precision
+            )
         else:
             lift, particular = np.empty((0, data.energy.shape[1])), np.empty(0)
         local_matrix = data.energy[n:, n:] - data.energy[n:, :n] @ lift
@@ -199,7 +243,7 @@ def _condense_moments(
         sources.append(particular)
     matrix = sparse.coo_matrix((entries, (rows, columns)), shape=(skeleton.size,) * 2).tocsc()
     rhs += boundary_load
-    values = np.zeros(skeleton.size)
+    values = np.zeros(skeleton.size, dtype=dtype)
     for index, value in fixed.items():
         values[index] = value
     free = np.setdiff1d(np.arange(skeleton.size), list(fixed))
@@ -208,8 +252,8 @@ def _condense_moments(
         scale = float(np.abs(constant_moments) @ np.abs(rhs))
         if abs(compatibility) > 1e-11 * max(scale, np.finfo(float).tiny):
             raise ValueError("incompatible pure Neumann source and outward flux")
-        integral = np.zeros(skeleton.size)
-        offset = 0.0
+        integral = np.zeros(skeleton.size, dtype=dtype)
+        offset = dtype(0.0)
         for cell, data in enumerate(cells):
             n = data.cell_count
             np.add.at(
@@ -217,14 +261,22 @@ def _condense_moments(
                 skeleton.cell_dofs(cell),
                 data.integral[n:] - data.integral[:n] @ lifts[cell],
             )
-            offset += float(data.integral[:n] @ sources[cell])
+            offset += (data.integral[:n] @ sources[cell]).item()
         augmented = sparse.bmat(
             [[matrix, integral[:, None]], [integral[None, :], None]], format="csc"
         )
-        values = solve_linear(augmented, np.r_[rhs, mean_target - offset], solver=solver)[:-1]
+        values = _moment_solve(
+            augmented,
+            np.r_[rhs, mean_target - offset],
+            solver=solver,
+            refinement_precision=refinement_precision,
+        )[:-1]
     elif len(free):
-        values[free] = solve_linear(
-            matrix[free][:, free], (rhs - matrix @ values)[free], solver=solver
+        values[free] = _moment_solve(
+            matrix[free][:, free],
+            (rhs - matrix @ values)[free],
+            solver=solver,
+            refinement_precision=refinement_precision,
         )
     defect = (matrix @ values - rhs)[free]
     residual = float(
@@ -259,6 +311,7 @@ def solve_mshho(
     source_variant: Literal["projected", "reconstructed"] = "projected",
     quadrature_order: int = 6,
     solver: str = "scipy",
+    local_refinement_precision: Literal["double", "extended"] = "double",
 ) -> MsHHOSolution:
     """Solve multiscale HHO with local continuous Pk energy reconstructions.
 
@@ -272,6 +325,10 @@ def solve_mshho(
     This finite-dimensional realization uses the same local variational
     spaces as primal MHM, allowing exact discrete equivalence checks for
     polynomial/projected sources. Raw gradients need not be H(div) conforming.
+    ``local_refinement_precision='extended'`` retains reconstruction, represented
+    Galerkin operators and moment-coordinate digits through defect corrections.
+    Factors remain binary64 and the original residual criterion stays 1e-10;
+    platforms without a wider long-double type raise ``SolverUnavailableError``.
     """
     cell_degree = positive_int(cell_degree, "cell_degree", -1)
     degree = positive_int(degree, "degree")
@@ -279,6 +336,8 @@ def solve_mshho(
     order = positive_int(quadrature_order, "quadrature order")
     if source_variant not in {"projected", "reconstructed"}:
         raise ValueError("source_variant must be projected or reconstructed")
+    if local_refinement_precision not in {"double", "extended"}:
+        raise ValueError("local_refinement_precision must be double or extended")
     if cell_degree == -1 and source_variant != "reconstructed":
         raise ValueError("m=-1 requires the reconstructed-source variant")
     skeleton = (
@@ -300,6 +359,7 @@ def solve_mshho(
             refinement,
             order,
             source_variant,
+            local_refinement_precision,
         )
         for cell in range(len(mesh.cells))
     )
@@ -339,6 +399,7 @@ def solve_mshho(
         constants,
         mean_pressure * float(mesh.areas.sum()) if pure_neumann else None,
         solver,
+        local_refinement_precision,
     )
     return MsHHOSolution(
         skeleton,
@@ -351,4 +412,5 @@ def solve_mshho(
         degree,
         permeability,
         source_variant,
+        local_refinement_precision,
     )

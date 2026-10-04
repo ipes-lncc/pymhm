@@ -18,6 +18,7 @@ import numpy as np
 from examples.marmousi_campaign import evaluate_fields
 from examples.marmousi_comparison import BrokenQField
 from examples.marmousi_fields import PixelCGField, load_reference
+from examples.marmousi_records import checked_mhm, checked_reference
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -26,7 +27,8 @@ def centre_fields(
     candidate: BrokenQField, reference: PixelCGField, *, batch_size: int = 65536
 ) -> tuple[np.ndarray, np.ndarray]:
     """Sample both fields at original pixel centres, preserving every macro side."""
-    values = [np.empty(reference.counts, dtype=complex) for _ in range(2)]
+    dtype = np.result_type(candidate.pressure.dtype, reference.nodes.dtype)
+    values = [np.empty(reference.counts, dtype=dtype) for _ in range(2)]
     lower = np.asarray(reference.bounds)[[0, 2]]
     for start in range(0, values[0].size, batch_size):
         index = np.arange(start, min(start + batch_size, values[0].size))
@@ -99,10 +101,10 @@ def main() -> None:
     parser.add_argument("reference", type=Path)
     parser.add_argument("--output", type=Path, default=ROOT / "docs/figures/marmousi")
     args = parser.parse_args()
+    candidate_record = checked_mhm(args.candidate)
+    reference_record = checked_reference(args.reference)
     candidate = BrokenQField.load(args.candidate)
     reference = load_reference(args.reference)
-    candidate_record = json.loads(args.candidate.read_text())
-    reference_record = json.loads(args.reference.read_text())
     if (
         any(
             candidate_record[key] != reference_record[key]

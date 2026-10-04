@@ -4,7 +4,7 @@ from typing import Any
 
 import numpy as np
 import pytest
-from numpy.testing import assert_allclose
+from numpy.testing import assert_allclose, assert_array_equal
 
 from pymhm.hybrid import HybridSystem, LocalProblem
 from pymhm.offline import (
@@ -198,3 +198,102 @@ def test_exact_matrix_factor_cache_has_no_tolerance_matching() -> None:
         cache.__enter__()
     assert len(condense_cached(cells)) == 3
     assert condense_cached([]) == ()
+
+
+@pytest.mark.parametrize("kind", ["kernel", "retained", "petrov"])
+def test_original_online_check_preserves_fields_and_factors(kind, monkeypatch):
+    """Check original nonsymmetric rows and inhomogeneous weak data without refactoring."""
+    from pymhm import solvers
+
+    cells = problems(kind)
+    loads = [np.array([1.0, 2.0]), np.array([-1.0, 0.5])]
+    boundary = np.array([2.0, 0.0, 2.0])
+    with OfflineHybridSystem(cells) as online:
+        assert online.original_residuals is None
+        expected = online.solve(loads, boundary_load=boundary)
+
+        def forbidden(*args, **kwargs):
+            raise AssertionError("checking original rows must not factor a new operator")
+
+        monkeypatch.setattr(solvers, "factorize", forbidden)
+        actual = online.solve(loads, boundary_load=boundary, check_original=True)
+        assert_array_equal(actual.trace, expected.trace)
+        for field, reference in zip(actual.fields, expected.fields, strict=True):
+            assert_array_equal(field, reference)
+        local = [
+            p.matrix @ u + p.coupling @ actual.trace[p.trace_dofs] - f
+            for p, u, f in zip(cells, actual.fields, loads, strict=True)
+        ]
+        weak = boundary.copy()
+        for p, u in zip(cells, actual.fields, strict=True):
+            np.add.at(weak, p.trace_dofs, -p.test_coupling.T @ u)
+        assert np.linalg.norm(np.concatenate([*local, weak])) < 2e-14
+        residual, rhs = online.original_residuals
+        assert residual <= 1e-10 * rhs
+        assert_allclose(rhs, np.linalg.norm(np.concatenate([*loads, boundary])), rtol=2e-15)
+        online.solve(loads)
+        assert online.original_residuals is None
+
+
+def test_original_online_check_accounts_for_physical_gauge_and_fixed_trace():
+    """Check physical moments and move prescribed fluxes to the physical RHS."""
+    cells = problems("kernel")
+    weights = [np.ones(2) / 2] * 2
+    loads = [np.array([1.0, 0.0]), np.array([0.0, -1.0])]
+    fixed = {0: 0.2, 2: 0.2}
+    with OfflineHybridSystem(cells, fixed=fixed, moments=[(weights, 2.0)]) as online:
+        actual = online.solve(loads, check_original=True)
+        assert_allclose(sum(w @ u for w, u in zip(weights, actual.fields, strict=True)), 2.0)
+        residual, rhs = online.original_residuals
+        prescribed = np.array([0.2, 0.0, 0.2])
+        expected = np.r_[
+            *(f - p.coupling @ prescribed[p.trace_dofs] for p, f in zip(cells, loads, strict=True)),
+            0.0,
+            2.0,
+        ]
+        assert_allclose(rhs, np.linalg.norm(expected), rtol=2e-15)
+        assert residual <= 1e-10 * rhs
+    cell = LocalProblem([[2.0]], [[1.0]], [2.0], np.array([0]))
+    with OfflineHybridSystem([cell], fixed={0: 2.0}) as online:
+        online.solve([[2.0]], check_original=True)
+        assert online.original_residuals == (0.0, 0.0)
+
+
+def test_original_online_gate_rejects_bad_local_field_with_small_schur_residual(monkeypatch):
+    """A reduced-system solve must not certify a damaged physical reconstruction."""
+    from dataclasses import replace
+
+    cell = LocalProblem([[2.0]], [[1.0]], [1.0], np.array([0]))
+    original = HybridSystem.solve
+
+    def damaged(system, **kwargs):
+        solved = original(system, **kwargs)
+        return replace(solved, fields=(solved.fields[0] + 1e-5,))
+
+    with OfflineHybridSystem([cell], fixed={0: 0.0}) as online:
+        online.solve([[1.0]], check_original=True)
+        assert online.original_residuals is not None
+        monkeypatch.setattr(HybridSystem, "solve", damaged)
+        with pytest.raises(LinearSolveError, match="original hybrid residual.*after 0 corrections"):
+            online.solve([[1.0]], check_original=True)
+        assert online.original_residuals is None
+        for value in (None, 1, "yes"):
+            with pytest.raises(ValueError, match="check_original"):
+                online.solve([[1.0]], check_original=value)
+
+
+@pytest.mark.parametrize("kind", ["kernel", "retained", "petrov"])
+def test_native_pardiso_online_original_gate(kind):
+    """Execute original-row checks on reusable native PARDISO factors."""
+    pytest.importorskip("pypardiso")
+    cells = problems(kind)
+    loads = [np.array([1.0, 2.0]), np.array([-1.0, 0.5])]
+    boundary = np.array([2.0, 0.0, 2.0])
+    with OfflineHybridSystem(cells, local_solver="pypardiso", solver="pypardiso") as online:
+        actual = online.solve(loads, boundary_load=boundary, check_original=True)
+        residual, rhs = online.original_residuals
+        assert residual <= 1e-10 * rhs
+    expected = HybridSystem(
+        [p.with_load(f) for p, f in zip(cells, loads, strict=True)], boundary_load=boundary
+    ).solve()
+    assert_allclose(actual.fields, expected.fields, atol=2e-13, rtol=2e-13)

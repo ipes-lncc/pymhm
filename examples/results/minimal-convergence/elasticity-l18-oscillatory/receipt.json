@@ -1,0 +1,46 @@
+{
+  "schema": "pymhm-initial-scalar-publication-receipt-v1",
+  "accepted": true,
+  "complete": true,
+  "initial_three_levels": true,
+  "row_count": 3,
+  "original_execution_record_sha256": "a0e635ee6cbdd52d49613e87bd4a1d1eefe9b9696a73c8f6ede407e748226a6a",
+  "published_metadata_record_sha256": "a0e635ee6cbdd52d49613e87bd4a1d1eefe9b9696a73c8f6ede407e748226a6a",
+  "evidence": {
+    "examples/results/minimal-convergence/elasticity-l18-oscillatory/evidence/s1.json": {
+      "original_execution_record_sha256": "0881193cab0f3a459996d59ea7d98998f18e732babdbcdf8a66eccecd57a54d0",
+      "published_metadata_record_sha256": "0881193cab0f3a459996d59ea7d98998f18e732babdbcdf8a66eccecd57a54d0",
+      "acquisition_uuid": "67517292-6a9f-4de9-9fa2-5a40155762cf"
+    },
+    "examples/results/minimal-convergence/elasticity-l18-oscillatory/evidence/s1-resource.json": {
+      "original_execution_record_sha256": "e0aed882bde3090cf09f4105cc8cd5395cc5992a15f754a24d4bc69ba7965efa",
+      "published_metadata_record_sha256": "e0aed882bde3090cf09f4105cc8cd5395cc5992a15f754a24d4bc69ba7965efa"
+    },
+    "examples/results/minimal-convergence/elasticity-l18-oscillatory/evidence/s2.json": {
+      "original_execution_record_sha256": "a025c5688d3aa6208cd338cdd8e0ab83f0ac6138e448d2e52a7ca6340abdfec4",
+      "published_metadata_record_sha256": "a025c5688d3aa6208cd338cdd8e0ab83f0ac6138e448d2e52a7ca6340abdfec4",
+      "acquisition_uuid": "aca08c8a-1380-4188-8e39-325f9cdf55ee"
+    },
+    "examples/results/minimal-convergence/elasticity-l18-oscillatory/evidence/s2-resource.json": {
+      "original_execution_record_sha256": "aa48b61121b80cbf3a29c61c751221042b3587f9855265000c44fdd5740d2fd6",
+      "published_metadata_record_sha256": "aa48b61121b80cbf3a29c61c751221042b3587f9855265000c44fdd5740d2fd6"
+    },
+    "examples/results/minimal-convergence/elasticity-l18-oscillatory/evidence/s4.json": {
+      "original_execution_record_sha256": "f051d390af32daa1bc4bc4097237bee1d9267c45a20218b8db4496c285478a0f",
+      "published_metadata_record_sha256": "f051d390af32daa1bc4bc4097237bee1d9267c45a20218b8db4496c285478a0f",
+      "acquisition_uuid": "fc4fbe34-fb33-49ef-837b-59f87bb90090"
+    },
+    "examples/results/minimal-convergence/elasticity-l18-oscillatory/evidence/s4-resource.json": {
+      "original_execution_record_sha256": "f02f2523c728cdef29c4780d48d158d6c0a9d5fa5471a5ac834014d918568f01",
+      "published_metadata_record_sha256": "f02f2523c728cdef29c4780d48d158d6c0a9d5fa5471a5ac834014d918568f01"
+    }
+  },
+  "figures": {
+    "docs/figures/minimal-convergence/elasticity-l18-oscillatory/convergence.png": "a8ed17e2fe29383cb2dacbdb3f4b7dca44a3bd06594340318325a0c176117ef4",
+    "docs/figures/minimal-convergence/elasticity-l18-oscillatory/convergence.svg": "a811a068c8cbbffd3b1d877633d9606a83705cbbd97d1bbc5b0384925898e7ac"
+  },
+  "figure_original_size_inspected": true,
+  "pde_solves_during_publication": 0,
+  "coefficient_vectors_persisted_by_publication": false,
+  "historical_literature_reproduction": false
+}

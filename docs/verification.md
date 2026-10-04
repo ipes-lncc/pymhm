@@ -137,7 +137,7 @@ or `examples.mh2m_crisscross_campaign`.
 
 ## Direct comparisons
 
-The [published-result comparison](cases/reproduction.md) matches all four
+The [published-result comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/reproduction.md) matches all four
 Darcy Figure 5 curves of Harder et al. (2013) at five resolutions within the
 1% digitization allowance; the largest difference is 0.20%. It explicitly
 distinguishes primal P1 from classical RT0 and its quadratic potential.
@@ -210,13 +210,15 @@ RT2 recovery. Error integration is independent of the estimator quadrature.
 This verifies the stated experiment and identities, not an adaptive algorithm
 or a guaranteed bound for coefficients outside its identity-diffusion scope.
 
-The [periodic-material study](cases/periodic.md) separates local and skeletal
-refinement and uses a Q5 classical reference with 26.2 million unknowns. Its own
-last spatial refinement changes the H1 field by 1.856%; the finest recorded MHM
-field differs by 5.905%. A smaller difference against a Q1 reference reflects
-shared discretization error and does not establish greater accuracy.
+The [current periodic controls](cases/minimal-convergence.md#periodic-local-reference)
+separate local and skeletal refinement from classical Q1 refinement. The five
+Q1 levels reach 4096 subdivisions per axis; the final pair changes pressure L2
+by 0.98654% and full H1 by 9.76864%, relative to the finer numerical field.
+Reference accuracy remains unresolved. The MHM r128-to-r256 local increments
+retain the published Q1/P0 spaces and remain approximately 19% in broken H1.
+A comparison against another discretization does not establish greater accuracy.
 
-The [mixed-elasticity geological case](cases/hpc4e.md) uses the original HPC4e
+The [mixed-elasticity geological case](https://github.com/volpatto/pymhm/blob/main/docs/cases/hpc4e.md) uses the original HPC4e
 material arrays and the published RT1/Q1/P1 and 16 × 8 macro partition. Digitized
 stress-profile intervals and independently assembled classical mixed fields
 provide distinct checks of historical agreement and approximation error.
@@ -227,7 +229,7 @@ Against that finer reference, the finest MHM differences are 4.15940% in stress
 and 7.33891% in compliance. The measured reference increments are not continuum
 error bounds.
 
-The [tetrahedral and prismatic well study](cases/mixed-well-geometries.md)
+The [tetrahedral and prismatic well study](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-well-geometries.md)
 separates classical refinement from macro-trace restriction on a common
 faceted domain. Its 18 calculations check analytical pressure, vector flux,
 physical residuals, production and quadrature sensitivity; independent
@@ -239,8 +241,8 @@ replay checks across native thread counts. Fine-space approximation and skeletal
 restriction errors are measured separately; agreement between implementations
 does not remove the measured coarse-trace flux error.
 
-The adaptive [SPE10](cases/spe10-adaptive.md) and
-[Stokes–Brinkman cavity](cases/stokes-adaptive.md) campaigns compare estimator
+The adaptive [SPE10](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10-adaptive.md) and
+[Stokes–Brinkman cavity](https://github.com/volpatto/pymhm/blob/main/docs/cases/stokes-adaptive.md) campaigns compare estimator
 histories with independently refined classical solutions. The constant cavity
 lid has singular upper corners: pressure and velocity-gradient comparisons use
 a fixed interior exclusion, while global velocity L2 remains meaningful.
@@ -341,11 +343,10 @@ The divergence norm is reported rather than silently assumed to vanish. Weak
 incompressibility and global pressure normalization do not imply pointwise
 incompressibility of a Taylor–Hood or stabilized P1 velocity field.
 
-![Measured pressure and velocity convergence for the analytical test problems](figures/convergence.svg)
-
-The five-level curves are generated from `darcy-audit.json` and `flow-audit.json`
-by `examples/plot_verification.py`. The tables above use `verification.json`;
-all these values are numerical calculations rather than digitized paper figures.
+The current refinement series and their original-equation checks are collected
+in the [initial convergence studies](cases/minimal-convergence.md). The tables
+above use `verification.json`; these values are numerical calculations rather
+than digitized paper figures.
 
 ## Native optional-backend evidence
 
@@ -385,7 +386,7 @@ identical physical quadrature points and independently computed inverse
 constants are used. This checks the implemented formulas without identifying
 one convention as the undocumented historical heterogeneous implementation.
 
-An additional [SPE10 Brinkman control](cases/spe10.md) independently assembles
+An additional [SPE10 Brinkman control](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10.md) independently assembles
 classical conforming P2/P1 Taylor–Hood elements with DOLFINx/UFL and solves them
 with PETSc/MUMPS. It uses the same PDE, coefficient and physical boundary
 conditions as the MHM case, with no residual stabilization. Successively refined
@@ -425,19 +426,20 @@ on the nonmatching meshes. Successive reference differences, MHM distances and
 display samples are distinct diagnostics; none is substituted for an exact
 solution or a certified error bound.
 
-The [SPE10 comparison](cases/spe10.md) matches the reported Darcy geometry,
+The [SPE10 comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10.md) matches the reported Darcy geometry,
 spaces and boundary conditions, including the 9,738,625-unknown Q3 reference.
 Its published pressure curve is compared at digitized coordinates with an
 explicit raster uncertainty; original field coefficients and the historical
 local Q1 refinement are unavailable. The separate
-[Darcy flux study](cases/spe10-flux.md) integrates physical vector-field differences
+[Darcy flux study](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10-flux.md) integrates physical vector-field differences
 against refined conforming Q3, native MSL_CG P1 and native NeoPZ RT0/P0 solutions.
 It reports each reference's own refinement changes; these numerical fields are
 not exact solutions. The published RT2 flux image uses different MHM spaces and
 provides a qualitative comparison, not field-error data.
 The [quarter-five-spot study](cases/quarter-five-spot.md)
-checks point-well normalization against MSL and an analytical series, and checks
-a separate obstacle problem against MSL and NeoPZ. The obstacle is an additional
+checks point-well normalization against an analytical series, and compares
+the complete finite-well obstacle against an independently assembled Basix P1
+saddle and native NeoPZ RT0/P0 operators. The obstacle is an additional
 benchmark, not a figure attributed to an article.
 
 No exact-table claim is made for certified adaptive Oseen, unfitted

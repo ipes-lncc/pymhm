@@ -524,7 +524,7 @@ including when $\lambda_L$ varies spatially. If the entire material is exactly
 incompressible, compatibility requires zero boundary volume flux and one global
 pressure mean instead. The unconstrained physical equations are checked after
 this augmentation; a nonzero imposed mean does not replace equilibrium.
-The [elasticity cases](cases/elasticity.md) and
+The [elasticity cases](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity.md) and
 [MSL comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity-reference.md) provide non-affine verification.
 
 ### Implemented weak-symmetry stress method

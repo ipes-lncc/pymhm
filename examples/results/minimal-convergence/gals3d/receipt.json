@@ -1,0 +1,100 @@
+{
+  "schema": "pymhm-initial-scalar-publication-receipt-v1",
+  "accepted": true,
+  "complete": true,
+  "initial_three_levels": true,
+  "row_count": 9,
+  "original_execution_record_sha256": "5faac15358d0f3ab5b3565cfcc170780586c17871fd41ba245d45c1b56f3e0f6",
+  "published_metadata_record_sha256": "5faac15358d0f3ab5b3565cfcc170780586c17871fd41ba245d45c1b56f3e0f6",
+  "evidence": {
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-gals-p1-n1.json": {
+      "original_execution_record_sha256": "a63e64c674537a10c3bfd16c9ef6e1f9cfd8a3f738bb7b531fcb47c521cf03f4",
+      "published_metadata_record_sha256": "a63e64c674537a10c3bfd16c9ef6e1f9cfd8a3f738bb7b531fcb47c521cf03f4",
+      "acquisition_uuid": "bb7ddd57-0d75-4703-afc1-2a4ac4e1c634"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-gals-p1-n1-resource.json": {
+      "original_execution_record_sha256": "c51517bb93efa096271fdcb8533f0c4a82b4fb95afbe54d76178347957dd911b",
+      "published_metadata_record_sha256": "c51517bb93efa096271fdcb8533f0c4a82b4fb95afbe54d76178347957dd911b"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-gals-p1-n2.json": {
+      "original_execution_record_sha256": "36a37ae1bd954dd7bcc9e25a88426e1e07fc5530e18bd832426498251601b41e",
+      "published_metadata_record_sha256": "36a37ae1bd954dd7bcc9e25a88426e1e07fc5530e18bd832426498251601b41e",
+      "acquisition_uuid": "a99327d0-a956-4345-8ada-fe60d5717dab"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-gals-p1-n2-resource.json": {
+      "original_execution_record_sha256": "75282d40de1e718379daeb6110a2c67dec65987436682d8e5724da827aeefcc9",
+      "published_metadata_record_sha256": "75282d40de1e718379daeb6110a2c67dec65987436682d8e5724da827aeefcc9"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-gals-p1-n3.json": {
+      "original_execution_record_sha256": "f33005fed562de70c4beec66ce435cf5103aa8db0984db23df6e8338e4db4315",
+      "published_metadata_record_sha256": "f33005fed562de70c4beec66ce435cf5103aa8db0984db23df6e8338e4db4315",
+      "acquisition_uuid": "fa24d3b7-9d8b-4bb3-949b-3bbcf7feb990"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-gals-p1-n3-resource.json": {
+      "original_execution_record_sha256": "c194d3ae58806fdb81b210c74da083ba62190dd4013971d3a56db16f17f31722",
+      "published_metadata_record_sha256": "c194d3ae58806fdb81b210c74da083ba62190dd4013971d3a56db16f17f31722"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-gals-p2-n1.json": {
+      "original_execution_record_sha256": "2a3578885cca81df8d4306d07bb011a861832f4474b0625c4bb314e765311e8e",
+      "published_metadata_record_sha256": "2a3578885cca81df8d4306d07bb011a861832f4474b0625c4bb314e765311e8e",
+      "acquisition_uuid": "f4a496b5-5743-475f-b33e-d7682b8d51c1"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-gals-p2-n1-resource.json": {
+      "original_execution_record_sha256": "5d4e88373753c4787536b8e016b86a03b684b00f00768a3f8cd8d7f9d85a2ece",
+      "published_metadata_record_sha256": "5d4e88373753c4787536b8e016b86a03b684b00f00768a3f8cd8d7f9d85a2ece"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-gals-p2-n2.json": {
+      "original_execution_record_sha256": "b64ab47434a970e17846b384ab1e78b5b1d9bf5ca70edf899de5a90368ebc656",
+      "published_metadata_record_sha256": "b64ab47434a970e17846b384ab1e78b5b1d9bf5ca70edf899de5a90368ebc656",
+      "acquisition_uuid": "49a39a5b-7e26-4389-b7e7-a6f6932239c7"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-gals-p2-n2-resource.json": {
+      "original_execution_record_sha256": "32bfa2405895157f4fc8e940b875d97d2d7586f33aa66de93eb1504fb5cc495d",
+      "published_metadata_record_sha256": "32bfa2405895157f4fc8e940b875d97d2d7586f33aa66de93eb1504fb5cc495d"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-gals-p2-n3.json": {
+      "original_execution_record_sha256": "b352d2e77ee52b9b2db9c9607d1f925a16277104a3af38bcdc37a64e51d42e5d",
+      "published_metadata_record_sha256": "b352d2e77ee52b9b2db9c9607d1f925a16277104a3af38bcdc37a64e51d42e5d",
+      "acquisition_uuid": "ebd729c2-2b2a-4ca4-82d4-c7b18775aa76"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-gals-p2-n3-resource.json": {
+      "original_execution_record_sha256": "c192ff30df0b35cb2e240795e664ad38ca7b518515895eeaa06fd1f95a6e740e",
+      "published_metadata_record_sha256": "c192ff30df0b35cb2e240795e664ad38ca7b518515895eeaa06fd1f95a6e740e"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-th-p2-n1.json": {
+      "original_execution_record_sha256": "9aaedbb1852bb1f332cf1833f47fd43a2ba1c91bfeaa5326971b8f250a5c96d2",
+      "published_metadata_record_sha256": "9aaedbb1852bb1f332cf1833f47fd43a2ba1c91bfeaa5326971b8f250a5c96d2",
+      "acquisition_uuid": "b5b5aa89-c958-45cd-bad9-df8c5a578b99"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-th-p2-n1-resource.json": {
+      "original_execution_record_sha256": "009517e6051903b8c684bbc4b417b966b62a30650595c0fc52941cbac784b003",
+      "published_metadata_record_sha256": "009517e6051903b8c684bbc4b417b966b62a30650595c0fc52941cbac784b003"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-th-p2-n2.json": {
+      "original_execution_record_sha256": "7f32ed42ac1d5435385cd375c585ff8cff50238d9c2ebd27a0b713e4812b20fd",
+      "published_metadata_record_sha256": "7f32ed42ac1d5435385cd375c585ff8cff50238d9c2ebd27a0b713e4812b20fd",
+      "acquisition_uuid": "dbf29ba0-56e0-405d-a7ff-7670eae162c0"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-th-p2-n2-resource.json": {
+      "original_execution_record_sha256": "362c056e5237047d2f3b9944088ddb1d68f92174045bcac7890b8b586c3e98f2",
+      "published_metadata_record_sha256": "362c056e5237047d2f3b9944088ddb1d68f92174045bcac7890b8b586c3e98f2"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-th-p2-n3.json": {
+      "original_execution_record_sha256": "31b1624f09e8776e326a01baa470643f28190c04a389447dc5f87f1ca803df3d",
+      "published_metadata_record_sha256": "31b1624f09e8776e326a01baa470643f28190c04a389447dc5f87f1ca803df3d",
+      "acquisition_uuid": "f97d2f6f-173f-40a0-8b4e-c973da786d54"
+    },
+    "examples/results/minimal-convergence/gals3d/evidence/gals3d-th-p2-n3-resource.json": {
+      "original_execution_record_sha256": "98f250e3ecb941f0bc882ea1a6144c0ba8609e095f109a7865c2f4fb1d72c2b1",
+      "published_metadata_record_sha256": "98f250e3ecb941f0bc882ea1a6144c0ba8609e095f109a7865c2f4fb1d72c2b1"
+    }
+  },
+  "figures": {
+    "docs/figures/minimal-convergence/gals3d/convergence.png": "5a4b388c426dd8c8dab3c30620b841e96cf0b1731a38b41045d94b9d110a086d",
+    "docs/figures/minimal-convergence/gals3d/convergence.svg": "503f0842f7e8b2f8ade2e6722f1da08cb506147c74a52cff3957c13ee9843010"
+  },
+  "figure_original_size_inspected": true,
+  "pde_solves_during_publication": 0,
+  "coefficient_vectors_persisted_by_publication": false,
+  "historical_literature_reproduction": false
+}

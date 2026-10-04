@@ -1,6 +1,7 @@
 """Physical signs, exact complex patches, materials and local Helmholtz inversion."""
 
 import importlib
+from dataclasses import replace
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -9,7 +10,7 @@ import pytest
 from scipy import sparse
 from scipy.sparse.linalg import spsolve
 
-from pymhm.helmholtz import solve_helmholtz
+from pymhm.helmholtz import local_helmholtz_error_squared, solve_helmholtz
 from pymhm.helmholtz_forms import (
     acoustic_space,
     complex_vector,
@@ -25,6 +26,42 @@ from pymhm.polygon import PolygonMesh
 from pymhm.quadrilateral import CartesianMacroMesh
 from pymhm.reservoir import CartesianCellField
 from pymhm.solvers import LinearSolveError
+
+
+@pytest.mark.parametrize("rectangle", [False, True])
+def test_streamed_local_errors_preserve_broken_norm_and_independent_interface_values(rectangle):
+    """Cellwise complex affine fields have their independently integrated broken norms."""
+    mesh = CartesianMacroMesh(2) if rectangle else TriangleMesh.unit_square(2)
+    solution = solve_helmholtz(mesh, omega=2, degree=2)
+    fields = []
+    pressure_squared, gradient_squared = 0.0, 0.0
+    for cell, fine in enumerate(solution.local_meshes):
+        _, nodes = acoustic_space(fine, 2)
+        amplitude = (cell + 1) * (1 + 2j)
+        fields.append(amplitude * nodes[:, 0])
+        gradient_squared += abs(amplitude) ** 2 * fine.areas.sum()
+        pressure_squared += local_helmholtz_error_squared(fine, fields[-1], 2, 0, 4)
+        assert (
+            local_helmholtz_error_squared(fine, fields[-1], 2, [amplitude, 0], 4, derivative=True)
+            < 1e-27
+        )
+    broken = replace(solution, pressure=tuple(fields))
+    assert broken.l2_error(0, 4) ** 2 == pytest.approx(pressure_squared, abs=2e-13)
+    assert broken.gradient_l2_error([0, 0], 4) ** 2 == pytest.approx(gradient_squared, abs=2e-12)
+
+    # This analytical field has exact domain integrals 5*int(x^2)=5/3 and 5*area=5.
+    def exact(points):
+        """Complex affine pressure with an independently known domain integral."""
+        return (1 + 2j) * points[:, 0]
+
+    assert solution.l2_error(exact, 4) ** 2 == pytest.approx(5 / 3, abs=2e-14)
+    assert solution.gradient_l2_error([1 + 2j, 0], 4) ** 2 == pytest.approx(5, abs=3e-14)
+    fine = solution.local_meshes[0]
+    for invalid in (fields[0][:-1], np.full(fields[0].shape, np.nan), np.array(["invalid"])):
+        with pytest.raises(ValueError, match="finite nodal vector"):
+            local_helmholtz_error_squared(fine, invalid, 2, 0)
+    with pytest.raises(ValueError, match="exact fields must be finite"):
+        local_helmholtz_error_squared(fine, fields[0], 2, [np.inf, 0], derivative=True)
 
 
 @pytest.mark.parametrize("rectangle", [False, True])

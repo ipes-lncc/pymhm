@@ -33,11 +33,19 @@ def test_frequency_filename_collision_rejected_before_solve(example, tmp_path, m
         ell=0,
         omega=20 * np.pi,
         local_space="Q3 on 2x2 fine cells per macrocell",
+        requested_assembly_order=12,
+        norm_order=16,
+        projection_order=24,
         rows=[],
     )
     path = tmp_path / "ell0-frequency10.json"
     raw = json.dumps(record)
     path.write_text(raw)
+
+    def unexpected_solve(*args, **kwargs):
+        raise AssertionError("filename collisions must be rejected before solving")
+
+    monkeypatch.setattr(m, "solve_helmholtz", unexpected_solve)
     with pytest.raises(ValueError, match="identity"):
         m.run(tmp_path, 0, 10.000001, [8], 1)
     assert path.read_text() == raw
@@ -83,6 +91,12 @@ def test_article_complete_configuration_and_archive(example, tmp_path):
         **c.__dict__,
         "key": c.key,
         "local_degree": 4,
+        "requested_assembly_order": 10,
+        "assembly_order": 10,
+        "error_order": 12,
+        "trace_basis": "polynomial",
+        "macro_edge_length": 1 / c.n,
+        "macro_diameter": np.sqrt(2) / c.n,
         **m.archive_identity(p),
         **dict.fromkeys(
             (
@@ -98,11 +112,28 @@ def test_article_complete_configuration_and_archive(example, tmp_path):
             ),
             0.1,
         ),
+        "original_field_trace_residual": 1e-15,
+        "original_local_equation_residual_max": 1e-15,
     }
     m.validate_row(row, tmp_path)
-    for changed in ({"omega": 11.0}, {"local_degree": 5}, {"pressure_l2": None}):
+    for changed in (
+        {"omega": 11.0},
+        {"local_degree": 5},
+        {"pressure_l2": None},
+        {"requested_assembly_order": 12},
+        {"original_field_trace_residual": 2e-10},
+        {"assembly_order": 9},
+        {"error_order": 8},
+        {"trace_basis": "oscillatory"},
+        {"macro_edge_length": 1 / (c.n + 1)},
+    ):
         with pytest.raises(ValueError):
             m.validate_row({**row, **changed}, tmp_path)
+    for key in ("requested_assembly_order", "assembly_order", "error_order"):
+        incomplete = dict(row)
+        incomplete.pop(key)
+        with pytest.raises(ValueError, match="mathematical identity"):
+            m.validate_row(incomplete, tmp_path)
     p.write_bytes(b"different")
     with pytest.raises(ValueError, match="digest"):
         m.validate_row(row, tmp_path)
@@ -186,6 +217,8 @@ def test_helmholtz_campaign_rejects_changed_wave_number(example, tmp_path):
         energy_relative_error=0.1,
         residual=1e-15,
         macro_balance_max=1e-15,
+        original_field_trace_residual=1e-15,
+        original_local_equation_residual_max=1e-15,
     )
     path = tmp_path / "comparison.json"
     path.write_text(

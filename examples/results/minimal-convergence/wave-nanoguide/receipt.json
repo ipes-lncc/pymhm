@@ -1,0 +1,66 @@
+{
+  "schema": "pymhm-initial-convergence-public-verification-v1",
+  "status": "verified_initial_study",
+  "case": "nanoguide",
+  "study_sha256": "15ccd5714f4e00653c0d87cf4c72caa7afcd70114f8d28c93225df61e04beb93",
+  "generation_id": "60efa624-a2c4-4435-aad6-59103d977bf0",
+  "identity_convention": "Original producer UUID when recorded; original execution record SHA256 otherwise",
+  "levels": [
+    16,
+    32,
+    64
+  ],
+  "scope": "Initial independently assembled DG Q2 refinement on the complete selected device",
+  "original_equation_threshold": 1e-10,
+  "original_equation_maximum": 2.3340448380009093e-16,
+  "quadrature_sensitivity_threshold": 1e-10,
+  "quadrature_sensitivity_maximum": 3.737282950092555e-16,
+  "exact_solution_available": false,
+  "asymptotic_convergence_verified": false,
+  "historical_literal_reproduction": false,
+  "figures_sha256": {
+    "docs/figures/minimal-convergence/wave-nanoguide/convergence.png": "367fa31b75709fd5ecb90661ed873c8c8688a2aaa3ca67b38b7bc2ab5f7cb096",
+    "docs/figures/minimal-convergence/wave-nanoguide/convergence.svg": "e24a28485b590d4c1b4c1b35240fdbb066aaef8ffd8269f689afd081bbb100d7"
+  },
+  "rendered_inspection": "All five PNGs inspected at 1024x640 publication size; no clipping or overlap",
+  "aggregate_private_verification_sha256": "1b5b6b5d388bd620135f3a779bae8e7878873a1af71abc50eec9b8230fa3b83f",
+  "original_executed_source_manifests": [
+    {
+      "manifest": "build/results/minimal-wave-nanoguide-v1/executed-sources/manifest.json",
+      "sha256": "64cef335dedca2c85171e98cdd0a8bfbcba79a325447cecd2d98de58247128bd",
+      "generation_id": null,
+      "files": 130
+    },
+    {
+      "manifest": "build/results/minimal-wave-nanoguide-n32-v2/executed-sources/manifest.json",
+      "sha256": "19488d1f6b6dc5a29a0df17002511632b894e3e5e57edf28c79eeff3926ea90c",
+      "generation_id": "6704de92-c9cf-4122-bacf-f93b2f052a29",
+      "files": 130
+    },
+    {
+      "manifest": "build/results/minimal-wave-nanoguide-n64-v2/executed-sources/manifest.json",
+      "sha256": "39deab18358dcd4f5c0c3cafc36aedfd3b02de1ab66a0c28f92fb64a6bf38ae1",
+      "generation_id": "7a83b39b-e459-4328-8c1b-215fd6c03a2a",
+      "files": 130
+    },
+    {
+      "manifest": "build/results/minimal-wave-nanoguide-assembled-v1/executed-consumer/manifest.json",
+      "sha256": "03ae4a265a2dbe41c78c0cfe90deaa5e2b875dafdeb33f96b91c09141cfaaaba",
+      "generation_id": "60efa624-a2c4-4435-aad6-59103d977bf0",
+      "files": 130
+    }
+  ],
+  "native_threads": 1,
+  "workers": 1,
+  "coefficient_and_reference_source_archives_remain_private": true,
+  "original_execution_record_sha256": "fb69db10104ce9ef724436b4f03b21e791c127e685a8704c02c547587bf6112b",
+  "published_metadata_record_sha256": "15ccd5714f4e00653c0d87cf4c72caa7afcd70114f8d28c93225df61e04beb93",
+  "publication_consumer": "Private metadata normalization; numerical field values and executed SHA256 values unchanged",
+  "private_path_alias_scheme": "private-comparison/<project>/<module>",
+  "numeric_fields_unchanged": true,
+  "source_and_basis_sha256_values_unchanged": true,
+  "original_execution_snapshot_unchanged": true,
+  "pde_solves_during_publication": 0,
+  "byte_equality_with_original_execution_record": false,
+  "figure_source_execution_record_sha256": "fb69db10104ce9ef724436b4f03b21e791c127e685a8704c02c547587bf6112b"
+}

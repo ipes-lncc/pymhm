@@ -18,6 +18,7 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.campaign_provenance import file_digest
 from examples.hpc4e_parallel import (
     checked_solve,
     compact_matrix,
@@ -262,6 +263,8 @@ def main() -> None:
         Path(__file__),
         root / "examples/marmousi_data.py",
         root / "examples/hpc4e_parallel.py",
+        root / "examples/campaign_provenance.py",
+        *sorted((root / "src/pymhm").rglob("*.py")),
     ]
     before = {
         str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
@@ -290,7 +293,7 @@ def main() -> None:
         archive, coordinates=result.pop("coordinates"), pressure=result.pop("pressure")
     )
     archives = comm.gather(
-        {"archive": archive.name, "sha256": hashlib.sha256(archive.read_bytes()).hexdigest()},
+        {"archive": archive.name, "sha256": file_digest(archive)},
         root=0,
     )
     if comm.rank == 0:
@@ -298,6 +301,10 @@ def main() -> None:
             degree=args.degree,
             method="DOLFINx/UFL conforming triangular CG",
             geometry=[2048, 512],
+            bounds=[0, 10240, 0, 2560],
+            boundary=(
+                "Top conforming Dirichlet zero; other sides outgoing first-order absorption zero"
+            ),
             material=material.provenance,
             omega=40 * np.pi,
             point_source=[5000, 50, 1.0],

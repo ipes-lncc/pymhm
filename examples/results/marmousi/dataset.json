@@ -1,0 +1,45 @@
+{
+  "dataset": "Marmousi II, Martin, Wiley and Marfurt (2006)",
+  "doi": "10.1190/1.2172306",
+  "sources": {
+    "vp": {
+      "filename": "vp_marmousi-ii.segy",
+      "url": "https://ahay.org/data/marm2/vp_marmousi-ii.segy",
+      "sha256": "2722a5de0645d8fcf5750f380893d4875383af9b24988ece0bd07b943f5b0c91"
+    },
+    "density": {
+      "filename": "density_marmousi-ii.segy",
+      "url": "https://ahay.org/data/marm2/density_marmousi-ii.segy",
+      "sha256": "10ec5c4274a63ffde2ac94dda4f062d5b83827efcefeb1a2ab22438a85f32967"
+    }
+  },
+  "primary_shape": [
+    13601,
+    2801
+  ],
+  "primary_spacing_m": 1.25,
+  "crop_origin_m": [
+    3395.0,
+    515.0
+  ],
+  "cell_shape": [
+    2048,
+    512
+  ],
+  "cell_spacing_m": 5.0,
+  "sampling": "Primary nodes at material-cell centres; no interpolation",
+  "coordinate_order": [
+    "x",
+    "depth"
+  ],
+  "density_unit": "kg/m^3",
+  "velocity_unit": "m/s",
+  "bulk_modulus_unit": "Pa",
+  "historical_article_arrays_identified": false,
+  "input_bytes": {
+    "vp": 155653444,
+    "density": 155653444
+  },
+  "input_integrity": "Both complete primary SEG-Y files verified against the checked-in SHA-256 digests before crop loading",
+  "scope": "Input acquisition and declared crop; no numerical field or historical-array reproduction is inferred"
+}

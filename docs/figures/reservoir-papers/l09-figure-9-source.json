@@ -30,5 +30,22 @@
     "Initial MHM pressure",
     "Final adapted MHM pressure"
   ],
-  "profile": "Domain diagonal, distance coordinate along (0,0) to (1200,2200)"
+  "profile": "Domain diagonal, distance coordinate along (0,0) to (1200,2200)",
+  "acquisition_manifest": "../primary-raster-extractions.json",
+  "rendering_tool": "pdftoppm version 0.86.1",
+  "display_bbox_pdf_points_top_left": [
+    140,
+    96,
+    369,
+    261
+  ],
+  "bbox_precision": "Integer PDF-point display coordinates reported by pdftohtml -zoom 1; no raster pixels are cropped by this bbox",
+  "embedded_object": [
+    774,
+    0
+  ],
+  "effective_embedded_dpi": [
+    345,
+    345
+  ]
 }

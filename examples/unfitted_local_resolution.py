@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import json
 import math
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
@@ -20,7 +21,7 @@ from threadpoolctl import threadpool_limits
 
 from examples.archive_precision import restore_precision
 from pymhm.elements import p1_geometry, triangle_quadrature
-from pymhm.lagrange import nodal_space, reference_basis
+from pymhm.lagrange import multiindices, nodal_space, reference_basis
 from pymhm.mesh import TriangleMesh
 
 
@@ -62,22 +63,123 @@ def containing_cells(mesh: TriangleMesh, vertices: np.ndarray) -> np.ndarray:
     return owners
 
 
-def read_uniform(path: Path) -> tuple[TriangleMesh, TriangleMesh, int, np.ndarray]:
+def _phase_data(path: Path) -> dict[str, np.ndarray]:
+    """Verify the accepted phase history and its actual archived local bases."""
+    from examples.unfitted_phases import UnfittedAcquisition
+
+    matches = []
+    for receipt in path.parent.glob("*-phases.json"):
+        record = json.loads(receipt.read_text())
+        for name, row in record.get("fields", {}).items():
+            if row.get("archive") == path.name:
+                matches.append((receipt, record, name))
+    if len(matches) != 1:
+        raise ValueError("phase field requires its unique executed acquisition receipt")
+    receipt, record, name = matches[0]
+    if record.get("schema") != "pymhm-unfitted-phases-v2" or not record.get("complete"):
+        raise ValueError("unsupported or incomplete unfitted phase field schema")
+    config = record["configuration"]
+    run = UnfittedAcquisition(
+        path.parent,
+        refinement=config["local_refinement"],
+        names=config["requested_names"],
+        degree=config["local_degree"],
+        assembly_order=config["requested_assembly_order"],
+        norm_orders=config["norm_orders"],
+        local_solver=config["local_solver"],
+        refinement_precision=config["local_refinement_precision"],
+        original_refinement_steps=config["original_refinement_steps"],
+    )
+    if run.path != receipt:
+        raise ValueError("phase field receipt differs from its declared configuration")
+    try:
+        arrays = run._field(name)
+    except KeyError as error:
+        raise ValueError("phase field is missing its declared archived basis or history") from error
+    if int(arrays["degree"]) != config["local_degree"]:
+        raise ValueError("phase field degree differs from its executed cardinal basis")
+    for cell in range(len(run.mesh.cells)):
+        stored = run._cell(cell)
+        for key in ("points", "cells", "nodal_dofs", "nodal_points", "multiindices", "constraints"):
+            if f"{key}_{cell}" not in arrays or not np.array_equal(
+                arrays[f"{key}_{cell}"], stored[key]
+            ):
+                raise ValueError(
+                    "phase archived cardinal basis or local map differs from execution"
+                )
+    run._current_sources()
+    return arrays
+
+
+@dataclass
+class _UniformField:
+    """Keep each executed physical mesh and cardinal map with its coefficients."""
+
+    macro: TriangleMesh
+    fine: TriangleMesh
+    degree: int
+    fields: np.ndarray
+    local_meshes: tuple[TriangleMesh, ...]
+    dofs: tuple[np.ndarray, ...]
+
+
+def _read_uniform(path: Path) -> _UniformField:
     """Restore exact field components and verify the archived uniform local topology.
 
     Wider coefficients require a wider native NumPy type for numerical replay.
     Their portable float64 components remain readable on other platforms, but
     this comparison never silently discards a nonzero correction or tail.
     """
-    with np.load(path) as data:
+    with np.load(path, allow_pickle=False) as archive:
+        phased = any(
+            name in archive
+            for name in (
+                "acquisition_id",
+                "refinement_steps",
+                "retained_basis_0",
+                "multiindices_0",
+                "initial_pressure_0",
+                "initial_trace",
+            )
+        )
+        if (
+            not phased
+            and "field_archive_version" not in archive
+            and any(
+                name in archive for name in ("basis_multiindices", "nodal_dofs_0", "macro_faces")
+            )
+        ):
+            raise ValueError("archived cardinal basis requires a supported field schema")
+        data = _phase_data(path) if phased else archive
+        if "coefficient_precision_bits" in data and np.finfo(np.longdouble).nmant + 1 < int(
+            data["coefficient_precision_bits"]
+        ):
+            raise ValueError("replaying field coefficients requires their declared precision")
         macro = TriangleMesh(data["macro_points"], data["macro_cells"])
         degree = int(data["degree"])
+        declared_basis = phased or "field_archive_version" in data
+        if declared_basis:
+            if not phased and int(data["field_archive_version"]) != 2:
+                raise ValueError("unsupported unfitted field archive version")
+            expected_maps = dict(
+                macro_faces=macro.faces,
+                macro_face_cells=macro.face_cells,
+                macro_normals=macro.normals,
+                macro_signs=macro.signs,
+                macro_cell_faces=macro.cell_faces,
+            )
+            if not phased:
+                expected_maps["basis_multiindices"] = multiindices(degree)
+            for name, expected_map in expected_maps.items():
+                if name not in data or not np.array_equal(data[name], expected_map):
+                    raise ValueError("archived cardinal basis or macro orientation differs")
         count = len(data["cells_0"])
         refinement = math.isqrt(count)
         if refinement**2 != count:
             raise ValueError("the archive is not a uniform local triangular subdivision")
         fine = template(refinement)
-        fields = []
+        _, canonical_nodes = nodal_space(fine, degree)
+        fields, local_meshes, archived_dofs = [], [], []
         for cell, nodes in enumerate(macro.cells):
             vertices = macro.points[nodes]
             expected = vertices[0] + fine.points @ (vertices[1:] - vertices[:1])
@@ -89,8 +191,28 @@ def read_uniform(path: Path) -> tuple[TriangleMesh, TriangleMesh, int, np.ndarra
                 or np.max(np.abs(actual - expected)) > 64 * np.finfo(float).eps * scale
             ):
                 raise ValueError("archived geometry differs from the uniform local lattice")
+            local = TriangleMesh(actual, data[f"cells_{cell}"])
+            dofs, coordinates = nodal_space(local, degree)
+            if declared_basis:
+                expected_maps = {
+                    f"nodal_dofs_{cell}": dofs,
+                    f"nodal_points_{cell}": coordinates,
+                }
+                if phased:
+                    expected_maps[f"multiindices_{cell}"] = multiindices(degree)
+                for name, expected_map in expected_maps.items():
+                    if name not in data or not np.array_equal(data[name], expected_map):
+                        raise ValueError("archived cardinal coordinates or nodal DOF map differs")
+                dofs = data[f"nodal_dofs_{cell}"]
+            # The declared equidistant nodes and multiindices uniquely fix the
+            # cardinal polynomials. Evaluation retains the archived physical
+            # geometry and checked DOF map rather than inferring coefficient order.
+            local_meshes.append(local)
+            archived_dofs.append(dofs)
             name = f"pressure_{cell}"
             values = data[name]
+            if values.shape != (len(canonical_nodes),):
+                raise ValueError("archived field coefficients differ from their nodal basis")
             if f"{name}_correction" in data:
                 low, tail = data[f"{name}_correction"], data[f"{name}_tail"]
                 if np.finfo(np.longdouble).eps >= np.finfo(float).eps and (
@@ -98,14 +220,31 @@ def read_uniform(path: Path) -> tuple[TriangleMesh, TriangleMesh, int, np.ndarra
                 ):
                     raise ValueError("replaying wider field coefficients requires wider longdouble")
                 values = restore_precision(values, low, tail)
+            if np.iscomplexobj(values) or not np.isfinite(values).all():
+                raise ValueError("archived field coefficients must be finite real nodal values")
             fields.append(values)
-    return macro, fine, degree, np.stack(fields)
+    return _UniformField(
+        macro, fine, degree, np.stack(fields), tuple(local_meshes), tuple(archived_dofs)
+    )
+
+
+def read_uniform(path: Path) -> tuple[TriangleMesh, TriangleMesh, int, np.ndarray]:
+    """Verify monolithic v2 or accepted phase v2 bases before restoring coefficients.
+
+    Legacy geometry-only archives use the declared canonical cardinal ordering.
+    A phase archive requires its complete source-verified acquisition receipt,
+    executed retained basis and ordered field history; it cannot enter that
+    legacy path. Wider portable coefficients require their declared host precision.
+    """
+    field = _read_uniform(path)
+    return field.macro, field.fine, field.degree, field.fields
 
 
 def difference(first: Path, second: Path, *, order: int = 13) -> dict[str, float]:
     """Integrate pressure and broken-gradient differences without sampling transfer."""
-    macro, mesh_a, degree_a, fields_a = read_uniform(first)
-    other, mesh_b, degree_b, fields_b = read_uniform(second)
+    field_a, field_b = _read_uniform(first), _read_uniform(second)
+    macro, other = field_a.macro, field_b.macro
+    mesh_a, mesh_b = field_a.fine, field_b.fine
     if not np.array_equal(macro.cells, other.cells) or not np.array_equal(
         macro.points, other.points
     ):
@@ -115,34 +254,36 @@ def difference(first: Path, second: Path, *, order: int = 13) -> dict[str, float
     vertices = common.points[common.cells]
     owners_a, owners_b = containing_cells(mesh_a, vertices), containing_cells(mesh_b, vertices)
     quadrature, weights = triangle_quadrature(order)
-    inverse_macro = np.linalg.inv(
-        (macro.points[macro.cells[:, 1:]] - macro.points[macro.cells[:, :1]]).swapaxes(1, 2)
-    )
     metadata = []
-    for mesh, degree, coefficients, owners in (
-        (mesh_a, degree_a, fields_a, owners_a),
-        (mesh_b, degree_b, fields_b, owners_b),
-    ):
-        nodes = mesh.points[mesh.cells]
-        inverse = np.linalg.inv((nodes[:, 1:] - nodes[:, :1]).swapaxes(1, 2))
-        dofs, _ = nodal_space(mesh, degree)
-        metadata.append((nodes, inverse, dofs, p1_geometry(mesh)[0], coefficients, owners, degree))
+    for field, owners in ((field_a, owners_a), (field_b, owners_b)):
+        nodes = np.stack([mesh.points[mesh.cells] for mesh in field.local_meshes])
+        inverse = np.linalg.inv((nodes[:, :, 1:] - nodes[:, :, :1]).swapaxes(2, 3))
+        geometry = np.stack([p1_geometry(mesh)[0] for mesh in field.local_meshes])
+        metadata.append(
+            (nodes, inverse, np.stack(field.dofs), geometry, field.fields, owners, field.degree)
+        )
     totals = np.zeros(2, dtype=np.longdouble)
-    for start in range(0, len(vertices), 32):
-        stop = min(start + 32, len(vertices))
-        points = np.einsum("qi,tia->tqa", quadrature, vertices[start:stop])
+    for start in range(0, len(vertices), 8):
+        stop = min(start + 8, len(vertices))
+        reference_points = np.einsum("qi,tia->tqa", quadrature, vertices[start:stop])
+        points = np.einsum(
+            "tqi,mia->mtqa",
+            np.concatenate(
+                (1 - reference_points.sum(axis=2, keepdims=True), reference_points), axis=2
+            ),
+            macro.points[macro.cells],
+        )
         values = []
         for nodes, inverse, dofs, geometry, coefficients, owners, degree in metadata:
             ids = owners[start:stop]
-            coordinates = np.einsum("tij,tqj->tqi", inverse[ids], points - nodes[ids, :1])
-            bary = np.concatenate((1 - coordinates.sum(axis=2, keepdims=True), coordinates), axis=2)
+            coordinates = np.einsum("mtij,mtqj->mtqi", inverse[:, ids], points - nodes[:, ids, :1])
+            bary = np.concatenate((1 - coordinates.sum(axis=3, keepdims=True), coordinates), axis=3)
             basis, derivative, _ = reference_basis(degree, bary.reshape(-1, 3))
-            basis = basis.reshape(*bary.shape[:2], -1)
-            derivative = derivative.reshape(*bary.shape[:2], -1, 3)
-            local = coefficients[:, dofs[ids]]
-            pressure = np.einsum("tqi,mti->mtq", basis, local)
-            reference_gradient = np.einsum("tqib,tba,mti->mtqa", derivative, geometry[ids], local)
-            gradient = np.einsum("mtqb,mba->mtqa", reference_gradient, inverse_macro)
+            basis = basis.reshape(*bary.shape[:3], -1)
+            derivative = derivative.reshape(*bary.shape[:3], -1, 3)
+            local = coefficients[np.arange(len(macro.cells))[:, None, None], dofs[:, ids]]
+            pressure = np.einsum("mtqi,mti->mtq", basis, local)
+            gradient = np.einsum("mtqib,mtba,mti->mtqa", derivative, geometry[:, ids], local)
             values.append((pressure, gradient))
         dp = values[0][0] - values[1][0]
         dg = values[0][1] - values[1][1]

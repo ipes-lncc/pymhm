@@ -1,0 +1,1169 @@
+{
+  "schema": "pymhm-initial-analytical-scalar-record-v1",
+  "family": "flow3d",
+  "case": "oseen-p2",
+  "resolution": 2,
+  "acquisition_uuid": "bcd694da-dadf-4e99-8b7e-c0ab891acc70",
+  "source_sha256": {
+    "src/pymhm/__init__.py": "a3273ccef37cce0b25b1e1cbf9faf150dfaaf715aafc6bd87e6d4809b431898c",
+    "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+    "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+    "src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+    "src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+    "src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+    "src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+    "src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+    "src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+    "src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+    "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+    "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+    "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+    "src/pymhm/darcy.py": "945eb63777daa94f02cd89f77ec6299cf1fe8722b3d98c027c70b7d318e097fc",
+    "src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+    "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+    "src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+    "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+    "src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+    "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+    "src/pymhm/darcy_transport.py": "3f9331d82dae0d16b30c53085981646942574a552601ec34631ba3b00eab5b7e",
+    "src/pymhm/darcy_velocity.py": "83c0dc577fe731a4316962b389ed286e711fcf9264836094188206d6eb276558",
+    "src/pymhm/distributed.py": "c6cf5f26bd9033a72328d18f5d099ab0d9b867f92a6babe472c2035ff1abd7ae",
+    "src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+    "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+    "src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+    "src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+    "src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+    "src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+    "src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+    "src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+    "src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+    "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+    "src/pymhm/elastodynamics.py": "21d7d7327f85b61399e2166f4babdd0098d220031a3cc0f507014655fd539f6c",
+    "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+    "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+    "src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+    "src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+    "src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+    "src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+    "src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+    "src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+    "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+    "src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+    "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+    "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+    "src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+    "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+    "src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+    "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+    "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+    "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+    "src/pymhm/helmholtz.py": "603a3e5eccf84830f8819657d97d3f7f22d856f97f21482e992f3a64fb67c1b4",
+    "src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+    "src/pymhm/helmholtz_spaces.py": "a0805d5ea9a95636062df0917dba98cfad8bc7ec298eba55c5fc1e6320a44bfb",
+    "src/pymhm/hybrid.py": "e4ca37cd8fa05dcb505d2cc7d36c975bbd25ac9ee01564bc86dd70d1d042dbb3",
+    "src/pymhm/hybrid_refinement.py": "b3ac92f5403b0fbc9a509e04626b7981cbd9767654ea149a894f1c82b74ecc16",
+    "src/pymhm/lagrange.py": "db5552571ee459630678dad97a887d4c49d1a2eb700cd2847b3f0a5f4ee8a2b7",
+    "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+    "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+    "src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+    "src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+    "src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+    "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+    "src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+    "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+    "src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+    "src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+    "src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+    "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+    "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+    "src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+    "src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+    "src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+    "src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+    "src/pymhm/mshho.py": "557b02892d7b93d2560deff999ef543bc7b95e762024139b6c8968d6b4ede0ee",
+    "src/pymhm/mshho3d.py": "522668e3fa23cd7661c958151caacdcc9e9a0e013c6f44e2974f5745dd3a4089",
+    "src/pymhm/nested.py": "4414c4fba66266017d97b5a75eda9a24ad90393647bd75d1245b5f4f93bc0049",
+    "src/pymhm/offline.py": "7b40681863239cf07f5df220ad893f044d26314c9a5bb8563fff587ef3df4932",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+    "src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+    "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+    "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+    "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+    "src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+    "src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+    "src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+    "src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+    "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+    "src/pymhm/rad.py": "d1f3d5c948bcc9370333050e8dfc1b15d5372ef745d51f04d8f700065d40c1e7",
+    "src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+    "src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+    "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+    "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+    "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+    "src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+    "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+    "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+    "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+    "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+    "src/pymhm/scalar_boundary.py": "5c2d4970ef3e032f93caee5f9b36ce36f535f65a924ef1e666f0e4aa5f4b69b3",
+    "src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+    "src/pymhm/scalar_transient.py": "c68b44eec515d94c114ba555e09d01705754ce2a2dda5199c753dc6b8f7f0ef5",
+    "src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+    "src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+    "src/pymhm/solvers.py": "2d360c2f7d71d8c04caa1966125291849b45daa5a886f5030772981e1cdaa751",
+    "src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+    "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+    "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+    "src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+    "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+    "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+    "src/pymhm/triangle_fields.py": "60e456d358ec5615d98375d6588e6ac88de972304d2fd3ac505f1ca998f67f4c",
+    "src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+    "src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+    "src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+    "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94",
+    "examples/minimal_flow_originals.py": "f70c7e85b2b5bdb826a70dcffcfa339bccea7e727aa81ab9ba6a90e64dc1833e",
+    "examples/core_elasticity_field_archive.py": "c33037bb41044d7e4815d3bcfb859c13b8951e5c7699c9311b9f8485fb2a72e0",
+    "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+    "examples/campaign_provenance.py": "32a86b873f1dc5cb5e134f057e80abbd06c831f531850262bc909fb4adf7e736",
+    "examples/transport_checkpoints.py": "c9c09536afbe7ae247fb97e2c626a410279a1df9358c7984405d888e9a25f518",
+    "examples/local_response_cache.py": "4921332802aa6400356e9536366244e4285981d0cd7451abff376cf64ab7f5d5",
+    "pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57",
+    "pixi.toml": "c6d1234f9f6715265cdb85aadfcda86df379f542f6c579ed79e48835bdc29870",
+    "pyproject.toml": "9fe172ddcb0fc2407c85c8140de8d263808d3a2e57db016aea3a012a475efbc9",
+    "examples/minimal_flow_studies.py": "b5779867cdd6223c2e6110fed78b16dad8d39f9a8587219848a1e1b686ba3814",
+    "examples/flow3d_data.py": "72ab684f95768877affda8192d4227f19432383a58e9d1ae2827c3414063315e",
+    "examples/gals3d_data.py": "b76fb53170c67757d33a380db28c287fc86f7f306b3efe2f564d560dd0607b63",
+    "examples/solve_elasticity3d.py": "615372001cf2d7454abc47d5008411c1703d4cdae93a5806cb709553aa66e80a",
+    "examples/solve_oseen.py": "b1b4d34cc67515f1626e063cb7e12d70dd4824159741dfac54a3664de2732dcb",
+    "examples/solve_stokes_adaptive.py": "35fd80a65383a2804095f3f7556ccacbc4973e62933b84820424eee04f8cf2fa",
+    "examples/field_sampling.py": "8822c5adf3914f9e0285d1cc871f32c69617114a40aa3975ccf82a009a837556",
+    "examples/plot_mesh.py": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6"
+  },
+  "degree": 2,
+  "formulation": "oseen",
+  "local_refinement": 2,
+  "macro_cells": 48,
+  "fine_cells": 384,
+  "assembly_order": 6,
+  "norm_orders": [
+    7,
+    8
+  ],
+  "norms_by_order": {
+    "7": {
+      "velocity_l2": 0.025107894975375546,
+      "pressure_l2": 0.035786397997112036,
+      "velocity_h1_seminorm": 0.49141166566536,
+      "divergence_l2": 0.04544913537997329
+    },
+    "8": {
+      "velocity_l2": 0.025107894975375595,
+      "pressure_l2": 0.03578639799711206,
+      "velocity_h1_seminorm": 0.49141166566536043,
+      "divergence_l2": 0.04544913537997332
+    }
+  },
+  "terminal_norms": {
+    "velocity_l2": 0.025107894975375595,
+    "pressure_l2": 0.03578639799711206,
+    "velocity_h1_seminorm": 0.49141166566536043,
+    "divergence_l2": 0.04544913537997332
+  },
+  "physical_error_quadrature_relative_changes": {
+    "velocity_l2": 1.934541202079566e-15,
+    "pressure_l2": 5.816925669189054e-16,
+    "velocity_h1_seminorm": 9.037009922195798e-16
+  },
+  "original_equations": {
+    "accepted": true,
+    "criterion": 1e-10,
+    "full_uncondensed_relative_to_physical_rhs": 9.545962327150465e-15,
+    "physical_rhs_row_norm": 0.8738207949475201,
+    "maximum_original_block_backward_error": 4.1756012997481596e-16,
+    "global_weak_row_absolute_residual_norm": 8.16530124074322e-15,
+    "physical_mean_relative_defect": 3.589133871631868e-16,
+    "reduced_gauge_relative_defect": 1.2148681987869899e-16,
+    "physical_mean_values": [
+      1.297247899378906e-16
+    ],
+    "physical_mean_targets": [
+      0.0
+    ],
+    "gauge_multipliers": [
+      -5.575017041769372e-16
+    ],
+    "blocks": [
+      {
+        "macrocell": 0,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 6.2947407486396e-16,
+            "row_action_scale_norm": 1.6851108048697465,
+            "backward_error": 3.735505540910802e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.6374109709851435e-17,
+            "row_action_scale_norm": 0.4146771114180262,
+            "backward_error": 3.9486408241483776e-17
+          }
+        }
+      },
+      {
+        "macrocell": 1,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.6557422999284967e-16,
+            "row_action_scale_norm": 1.415300333294169,
+            "backward_error": 1.1698875927448483e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 8.821174276191906e-18,
+            "row_action_scale_norm": 0.39246334681950573,
+            "backward_error": 2.247642830261235e-17
+          }
+        }
+      },
+      {
+        "macrocell": 2,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 2.897390458984083e-16,
+            "row_action_scale_norm": 1.4294274226953192,
+            "backward_error": 2.0269587759277643e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.9848248823465565e-17,
+            "row_action_scale_norm": 0.393009934378894,
+            "backward_error": 5.050317329721802e-17
+          }
+        }
+      },
+      {
+        "macrocell": 3,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 2.1312491582635495e-16,
+            "row_action_scale_norm": 1.6571738602459947,
+            "backward_error": 1.2860745691144212e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.777928039936785e-17,
+            "row_action_scale_norm": 0.4155219465004509,
+            "backward_error": 4.278782516568847e-17
+          }
+        }
+      },
+      {
+        "macrocell": 4,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 4.438537686899877e-16,
+            "row_action_scale_norm": 1.6123215397555337,
+            "backward_error": 2.7528861814826744e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 3.5047148371988423e-17,
+            "row_action_scale_norm": 0.41445091340461687,
+            "backward_error": 8.456284505222665e-17
+          }
+        }
+      },
+      {
+        "macrocell": 5,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.950154185469139e-16,
+            "row_action_scale_norm": 1.387527932521309,
+            "backward_error": 1.4054882354155342e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 3.227311600365892e-17,
+            "row_action_scale_norm": 0.3927867624424406,
+            "backward_error": 8.216446960426336e-17
+          }
+        }
+      },
+      {
+        "macrocell": 6,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 2.1403116061090856e-16,
+            "row_action_scale_norm": 1.407231765887064,
+            "backward_error": 1.5209375299739037e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.8410908772303905e-17,
+            "row_action_scale_norm": 0.34749057625489393,
+            "backward_error": 5.298246925349422e-17
+          }
+        }
+      },
+      {
+        "macrocell": 7,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.1340348450782068e-16,
+            "row_action_scale_norm": 1.0609436036639885,
+            "backward_error": 1.0688926736178966e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.5100458937461515e-17,
+            "row_action_scale_norm": 0.2585779671353683,
+            "backward_error": 5.839808822364306e-17
+          }
+        }
+      },
+      {
+        "macrocell": 8,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.46300076267012e-16,
+            "row_action_scale_norm": 1.2165652764695751,
+            "backward_error": 1.202566595452807e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.7554867160474807e-17,
+            "row_action_scale_norm": 0.3218860039871065,
+            "backward_error": 5.4537528637554524e-17
+          }
+        }
+      },
+      {
+        "macrocell": 9,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 2.981643010186639e-16,
+            "row_action_scale_norm": 1.5082927355782612,
+            "backward_error": 1.9768331039819754e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 2.1664553982195763e-17,
+            "row_action_scale_norm": 0.3356098916744265,
+            "backward_error": 6.455278738688798e-17
+          }
+        }
+      },
+      {
+        "macrocell": 10,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 2.093069528210652e-16,
+            "row_action_scale_norm": 1.23809556503547,
+            "backward_error": 1.6905557109807497e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.6265995849696574e-17,
+            "row_action_scale_norm": 0.273136941834728,
+            "backward_error": 5.955252973264577e-17
+          }
+        }
+      },
+      {
+        "macrocell": 11,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.2545830072365927e-16,
+            "row_action_scale_norm": 1.2999652509693607,
+            "backward_error": 9.650896485895087e-17
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.5403000637800205e-17,
+            "row_action_scale_norm": 0.32221370243541275,
+            "backward_error": 4.7803679736083575e-17
+          }
+        }
+      },
+      {
+        "macrocell": 12,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 3.717756938075232e-16,
+            "row_action_scale_norm": 1.5234958501497318,
+            "backward_error": 2.4402803182626615e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 3.113270916286966e-17,
+            "row_action_scale_norm": 0.33501757345843414,
+            "backward_error": 9.292858533205369e-17
+          }
+        }
+      },
+      {
+        "macrocell": 13,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.4797593364321247e-16,
+            "row_action_scale_norm": 1.255324211092067,
+            "backward_error": 1.1787865822685047e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 2.0237748226549348e-17,
+            "row_action_scale_norm": 0.32196240546480803,
+            "backward_error": 6.285748858576417e-17
+          }
+        }
+      },
+      {
+        "macrocell": 14,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 3.2063355426062784e-16,
+            "row_action_scale_norm": 1.2481379765458187,
+            "backward_error": 2.5688951084396196e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.8545613150516364e-17,
+            "row_action_scale_norm": 0.32219755242340303,
+            "backward_error": 5.755975801500003e-17
+          }
+        }
+      },
+      {
+        "macrocell": 15,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 2.1931072854576246e-16,
+            "row_action_scale_norm": 1.2468800058613325,
+            "backward_error": 1.7588759745510935e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.757221963884207e-17,
+            "row_action_scale_norm": 0.2730732233328471,
+            "backward_error": 6.434984516011447e-17
+          }
+        }
+      },
+      {
+        "macrocell": 16,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 2.673437826563356e-16,
+            "row_action_scale_norm": 1.3904524013826012,
+            "backward_error": 1.9227107838463322e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 2.4126887130388797e-17,
+            "row_action_scale_norm": 0.3482184183955799,
+            "backward_error": 6.928664842472632e-17
+          }
+        }
+      },
+      {
+        "macrocell": 17,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.278556231146449e-16,
+            "row_action_scale_norm": 1.0551372613995114,
+            "backward_error": 1.2117439862284832e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.6269617253038868e-17,
+            "row_action_scale_norm": 0.25906904799450303,
+            "backward_error": 6.280031280843738e-17
+          }
+        }
+      },
+      {
+        "macrocell": 18,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.7919144084009685e-16,
+            "row_action_scale_norm": 0.8995367000715527,
+            "backward_error": 1.9920414678561003e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 2.9084150810724587e-17,
+            "row_action_scale_norm": 0.21175440804976522,
+            "backward_error": 1.3734850234564847e-16
+          }
+        }
+      },
+      {
+        "macrocell": 19,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.3788421800061553e-16,
+            "row_action_scale_norm": 0.8522902884321781,
+            "backward_error": 1.617808156118487e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.0994229916736274e-17,
+            "row_action_scale_norm": 0.20061719907525638,
+            "backward_error": 5.480203077011394e-17
+          }
+        }
+      },
+      {
+        "macrocell": 20,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.0487213218456115e-16,
+            "row_action_scale_norm": 0.6851411905325119,
+            "backward_error": 1.5306645350435205e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 8.822952402943227e-18,
+            "row_action_scale_norm": 0.15958997414565124,
+            "backward_error": 5.5285129596492565e-17
+          }
+        }
+      },
+      {
+        "macrocell": 21,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.4436718005818604e-16,
+            "row_action_scale_norm": 0.9766317175923502,
+            "backward_error": 1.4782151496583426e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.0376447187745386e-17,
+            "row_action_scale_norm": 0.20208199917828717,
+            "backward_error": 5.134770652476942e-17
+          }
+        }
+      },
+      {
+        "macrocell": 22,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 2.1278922585810196e-16,
+            "row_action_scale_norm": 1.1813715087825205,
+            "backward_error": 1.801204991623634e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 2.1860772945824145e-17,
+            "row_action_scale_norm": 0.24389597441327363,
+            "backward_error": 8.963154475350951e-17
+          }
+        }
+      },
+      {
+        "macrocell": 23,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.4458673047019743e-16,
+            "row_action_scale_norm": 1.0847032044186875,
+            "backward_error": 1.3329612181581426e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.818405704284149e-17,
+            "row_action_scale_norm": 0.261581586738934,
+            "backward_error": 6.951581443303082e-17
+          }
+        }
+      },
+      {
+        "macrocell": 24,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 3.6515828944052985e-16,
+            "row_action_scale_norm": 1.2842260187654226,
+            "backward_error": 2.8434113941373883e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.6637038982200222e-17,
+            "row_action_scale_norm": 0.2726889765367043,
+            "backward_error": 6.101104340006519e-17
+          }
+        }
+      },
+      {
+        "macrocell": 25,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.996805632844903e-16,
+            "row_action_scale_norm": 1.2783617158461733,
+            "backward_error": 1.5620036239298492e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 2.649356603063713e-17,
+            "row_action_scale_norm": 0.3215628210843705,
+            "backward_error": 8.239001617567549e-17
+          }
+        }
+      },
+      {
+        "macrocell": 26,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.511982777134412e-16,
+            "row_action_scale_norm": 1.1153316306184222,
+            "backward_error": 1.355635163234864e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.5378055439460696e-17,
+            "row_action_scale_norm": 0.2591427074593816,
+            "backward_error": 5.934203431856586e-17
+          }
+        }
+      },
+      {
+        "macrocell": 27,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 3.4537500036975584e-16,
+            "row_action_scale_norm": 1.4635296853846982,
+            "backward_error": 2.359876972901795e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 2.6522267511398065e-17,
+            "row_action_scale_norm": 0.34854576859484104,
+            "backward_error": 7.609407401020054e-17
+          }
+        }
+      },
+      {
+        "macrocell": 28,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 3.9868343905441923e-16,
+            "row_action_scale_norm": 1.4858441046586002,
+            "backward_error": 2.6832117703628407e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.7326132888041603e-17,
+            "row_action_scale_norm": 0.3352486237609863,
+            "backward_error": 5.168144374067342e-17
+          }
+        }
+      },
+      {
+        "macrocell": 29,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 2.1365300727668492e-16,
+            "row_action_scale_norm": 1.2431505087751709,
+            "backward_error": 1.718641514189534e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 2.21656319925525e-17,
+            "row_action_scale_norm": 0.3223676654973997,
+            "backward_error": 6.875885631504595e-17
+          }
+        }
+      },
+      {
+        "macrocell": 30,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 2.1710662467702652e-16,
+            "row_action_scale_norm": 1.1741259315916426,
+            "backward_error": 1.849091471667926e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 2.044206479107693e-17,
+            "row_action_scale_norm": 0.24304920641850186,
+            "backward_error": 8.41066921892274e-17
+          }
+        }
+      },
+      {
+        "macrocell": 31,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.1888890573208848e-16,
+            "row_action_scale_norm": 1.0686740777708363,
+            "backward_error": 1.112489843302653e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.573431475906139e-17,
+            "row_action_scale_norm": 0.26113784417156205,
+            "backward_error": 6.025290899133056e-17
+          }
+        }
+      },
+      {
+        "macrocell": 32,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.3146032362247606e-16,
+            "row_action_scale_norm": 0.841695078600546,
+            "backward_error": 1.5618521120623644e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.2767529676074861e-17,
+            "row_action_scale_norm": 0.20061794986439735,
+            "backward_error": 6.364101360174776e-17
+          }
+        }
+      },
+      {
+        "macrocell": 33,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 3.5325690480179935e-16,
+            "row_action_scale_norm": 0.9459798351454832,
+            "backward_error": 3.734296352601127e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 3.1920498214457424e-17,
+            "row_action_scale_norm": 0.21236217356985523,
+            "backward_error": 1.503116005918887e-16
+          }
+        }
+      },
+      {
+        "macrocell": 34,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.3139497949607345e-16,
+            "row_action_scale_norm": 0.9958976960260068,
+            "backward_error": 1.319362219838314e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.5404266161426692e-17,
+            "row_action_scale_norm": 0.2027579504010878,
+            "backward_error": 7.597367270163552e-17
+          }
+        }
+      },
+      {
+        "macrocell": 35,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.5968817925997818e-16,
+            "row_action_scale_norm": 0.7593346516430928,
+            "backward_error": 2.103001343537208e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.1180077657544609e-17,
+            "row_action_scale_norm": 0.1598273108638443,
+            "backward_error": 6.995098395335471e-17
+          }
+        }
+      },
+      {
+        "macrocell": 36,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 2.293283281374293e-16,
+            "row_action_scale_norm": 1.0360385530289804,
+            "backward_error": 2.2135115287646489e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.8881836684687362e-17,
+            "row_action_scale_norm": 0.20201714657680722,
+            "backward_error": 9.346650521820166e-17
+          }
+        }
+      },
+      {
+        "macrocell": 37,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.8300430754312286e-16,
+            "row_action_scale_norm": 0.7365359526692004,
+            "backward_error": 2.4846622473745744e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 2.2640197866107497e-17,
+            "row_action_scale_norm": 0.1600500489868776,
+            "backward_error": 1.4145698804480685e-16
+          }
+        }
+      },
+      {
+        "macrocell": 38,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 4.3521774858470787e-16,
+            "row_action_scale_norm": 1.1090042996565268,
+            "backward_error": 3.924400912778251e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 2.8972717420157566e-17,
+            "row_action_scale_norm": 0.2618018821208995,
+            "backward_error": 1.1066657422568884e-16
+          }
+        }
+      },
+      {
+        "macrocell": 39,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 2.408537147718171e-16,
+            "row_action_scale_norm": 1.2273284222928582,
+            "backward_error": 1.9624226930381141e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 2.1121766434982022e-17,
+            "row_action_scale_norm": 0.24416318187717717,
+            "backward_error": 8.650676270104896e-17
+          }
+        }
+      },
+      {
+        "macrocell": 40,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 2.436646025620064e-16,
+            "row_action_scale_norm": 0.9277041670881414,
+            "backward_error": 2.626533448985314e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.6336608889740166e-17,
+            "row_action_scale_norm": 0.21251680651856378,
+            "backward_error": 7.687207970684959e-17
+          }
+        }
+      },
+      {
+        "macrocell": 41,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 2.0624075164824079e-16,
+            "row_action_scale_norm": 0.8602878106028339,
+            "backward_error": 2.3973459708062193e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.9879183105528036e-17,
+            "row_action_scale_norm": 0.2013334031372569,
+            "backward_error": 9.873763019828168e-17
+          }
+        }
+      },
+      {
+        "macrocell": 42,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 2.3767533489037935e-16,
+            "row_action_scale_norm": 0.5692002608216309,
+            "backward_error": 4.1756012997481596e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.1722087227179819e-17,
+            "row_action_scale_norm": 0.1153250783045356,
+            "backward_error": 1.0164386965535495e-16
+          }
+        }
+      },
+      {
+        "macrocell": 43,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.0115579494846069e-16,
+            "row_action_scale_norm": 0.551026880686647,
+            "backward_error": 1.8357687890363568e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 8.805295563007825e-18,
+            "row_action_scale_norm": 0.11130125132323351,
+            "backward_error": 7.911227823877815e-17
+          }
+        }
+      },
+      {
+        "macrocell": 44,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 9.50089701579719e-17,
+            "row_action_scale_norm": 0.5353985875970815,
+            "backward_error": 1.7745465221412137e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.155939468617526e-17,
+            "row_action_scale_norm": 0.11119899397954802,
+            "backward_error": 1.0395233151391002e-16
+          }
+        }
+      },
+      {
+        "macrocell": 45,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.5659272968703112e-16,
+            "row_action_scale_norm": 0.5833760214047284,
+            "backward_error": 2.684250362398626e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.1070618398084007e-17,
+            "row_action_scale_norm": 0.11598189965839359,
+            "backward_error": 9.545125946971699e-17
+          }
+        }
+      },
+      {
+        "macrocell": 46,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.0274489477809913e-16,
+            "row_action_scale_norm": 0.5950851641679232,
+            "backward_error": 1.7265578267568137e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 6.731706390372241e-18,
+            "row_action_scale_norm": 0.11593207213129017,
+            "backward_error": 5.80659541972885e-17
+          }
+        }
+      },
+      {
+        "macrocell": 47,
+        "blocks": {
+          "momentum": {
+            "row_count": 105,
+            "absolute_row_residual_norm": 1.1209257273285946e-16,
+            "row_action_scale_norm": 0.5741970622744972,
+            "backward_error": 1.9521620728751335e-16
+          },
+          "continuity": {
+            "row_count": 35,
+            "absolute_row_residual_norm": 1.0845605099080111e-17,
+            "row_action_scale_norm": 0.11130382827933934,
+            "backward_error": 9.744143814946674e-17
+          }
+        }
+      }
+    ],
+    "norm_convention": "Original coefficient-row block norms; physical field L2 errors are separate",
+    "coefficient_vectors_persisted": false,
+    "field_replay_claimed": false
+  },
+  "accepted": true,
+  "conventions": "Raw grad-grad/Oseen pseudostress multiplier; physical zero-mean pressure; velocity divergence is a separate L2 diagnostic",
+  "elapsed_seconds": 13.027568139135838,
+  "workers": 1,
+  "native_threads": 1,
+  "coefficient_vectors_persisted": false,
+  "field_replay_claimed": false,
+  "historical_literature_reproduction": false,
+  "uniform_inf_sup_proven": false,
+  "independent_native_whole_case_verified": false,
+  "source_changed": false,
+  "runtime_module_origins": {
+    "__main__": "examples/minimal_flow_studies.py",
+    "examples.flow3d_data": "examples/flow3d_data.py",
+    "examples.gals3d_data": "examples/gals3d_data.py",
+    "examples.campaign_provenance": "examples/campaign_provenance.py",
+    "examples.archive_precision": "examples/archive_precision.py",
+    "pymhm.mesh": "src/pymhm/mesh.py",
+    "pymhm._geometry_roundoff": "src/pymhm/_geometry_roundoff.py",
+    "pymhm.elements": "src/pymhm/elements.py",
+    "pymhm.planar_material": "src/pymhm/planar_material.py",
+    "pymhm.tetra_lagrange": "src/pymhm/tetra_lagrange.py",
+    "pymhm.tetrahedral": "src/pymhm/tetrahedral.py",
+    "pymhm.planar_fitting": "src/pymhm/planar_fitting.py",
+    "pymhm.planar_quadrature": "src/pymhm/planar_quadrature.py",
+    "pymhm.reservoir": "src/pymhm/reservoir.py",
+    "pymhm.triangle_fields": "src/pymhm/triangle_fields.py",
+    "pymhm.cut_cells": "src/pymhm/cut_cells.py",
+    "__mp_main__": "examples/minimal_flow_studies.py",
+    "pymhm.parallel": "src/pymhm/parallel.py",
+    "pymhm.solvers": "src/pymhm/solvers.py",
+    "pymhm.hybrid": "src/pymhm/hybrid.py",
+    "pymhm.hybrid_refinement": "src/pymhm/hybrid_refinement.py",
+    "pymhm.lagrange": "src/pymhm/lagrange.py",
+    "pymhm.polygon": "src/pymhm/polygon.py",
+    "pymhm.quadrilateral": "src/pymhm/quadrilateral.py",
+    "pymhm.loads": "src/pymhm/loads.py",
+    "pymhm.darcy": "src/pymhm/darcy.py",
+    "pymhm.estimator_spaces": "src/pymhm/estimator_spaces.py",
+    "pymhm.refinement": "src/pymhm/refinement.py",
+    "pymhm.rt": "src/pymhm/rt.py",
+    "pymhm.darcy_rt": "src/pymhm/darcy_rt.py",
+    "pymhm.reconstruction_moments": "src/pymhm/reconstruction_moments.py",
+    "pymhm.estimator": "src/pymhm/estimator.py",
+    "pymhm.weighted_estimator": "src/pymhm/weighted_estimator.py",
+    "pymhm.adaptive_darcy": "src/pymhm/adaptive_darcy.py",
+    "pymhm.tetra_validation": "src/pymhm/tetra_validation.py",
+    "pymhm.darcy3d": "src/pymhm/darcy3d.py",
+    "pymhm.rad3d": "src/pymhm/rad3d.py",
+    "pymhm.mapped_rt": "src/pymhm/mapped_rt.py",
+    "pymhm.hdiv3d_family": "src/pymhm/hdiv3d_family.py",
+    "pymhm.hdiv3d_mesh": "src/pymhm/hdiv3d_mesh.py",
+    "pymhm.hdiv3d_general": "src/pymhm/hdiv3d_general.py",
+    "pymhm.rt3d": "src/pymhm/rt3d.py",
+    "pymhm.reconstruction3d": "src/pymhm/reconstruction3d.py",
+    "pymhm.estimator3d": "src/pymhm/estimator3d.py",
+    "pymhm.refinement3d": "src/pymhm/refinement3d.py",
+    "pymhm.adaptive_darcy3d": "src/pymhm/adaptive_darcy3d.py",
+    "pymhm.adaptive_darcy_balanced": "src/pymhm/adaptive_darcy_balanced.py",
+    "pymhm.longest_edge": "src/pymhm/longest_edge.py",
+    "pymhm.adaptive_darcy_budget": "src/pymhm/adaptive_darcy_budget.py",
+    "pymhm.analytic": "src/pymhm/analytic.py",
+    "pymhm.bdm_family": "src/pymhm/bdm_family.py",
+    "pymhm.block": "src/pymhm/block.py",
+    "pymhm.conforming": "src/pymhm/conforming.py",
+    "pymhm.darcy_hdiv3d": "src/pymhm/darcy_hdiv3d.py",
+    "pymhm.scalar_boundary": "src/pymhm/scalar_boundary.py",
+    "pymhm.darcy_jump_estimator": "src/pymhm/darcy_jump_estimator.py",
+    "pymhm.darcy_local_error": "src/pymhm/darcy_local_error.py",
+    "pymhm.bdm": "src/pymhm/bdm.py",
+    "pymhm.darcy_mixed": "src/pymhm/darcy_mixed.py",
+    "pymhm.darcy_velocity": "src/pymhm/darcy_velocity.py",
+    "pymhm.transport": "src/pymhm/transport.py",
+    "pymhm.unusual": "src/pymhm/unusual.py",
+    "pymhm.vector": "src/pymhm/vector.py",
+    "pymhm.rad": "src/pymhm/rad.py",
+    "pymhm.scalar_transient": "src/pymhm/scalar_transient.py",
+    "pymhm.darcy_transport": "src/pymhm/darcy_transport.py",
+    "pymhm.distributed": "src/pymhm/distributed.py",
+    "pymhm.elasticity_compatibility": "src/pymhm/elasticity_compatibility.py",
+    "pymhm.elasticity": "src/pymhm/elasticity.py",
+    "pymhm.elasticity3d": "src/pymhm/elasticity3d.py",
+    "pymhm.elasticity_primal": "src/pymhm/elasticity_primal.py",
+    "pymhm.flow": "src/pymhm/flow.py",
+    "pymhm.flow_estimator": "src/pymhm/flow_estimator.py",
+    "pymhm.elasticity_estimator": "src/pymhm/elasticity_estimator.py",
+    "pymhm.elasticity_compliance": "src/pymhm/elasticity_compliance.py",
+    "pymhm.elasticity_mixed": "src/pymhm/elasticity_mixed.py",
+    "pymhm.elasticity_mixed3d_forms": "src/pymhm/elasticity_mixed3d_forms.py",
+    "pymhm.elasticity_mixed3d": "src/pymhm/elasticity_mixed3d.py",
+    "pymhm.offline": "src/pymhm/offline.py",
+    "pymhm.tensor_rt": "src/pymhm/tensor_rt.py",
+    "pymhm.elasticity_tensor_rt": "src/pymhm/elasticity_tensor_rt.py",
+    "pymhm.helmholtz_forms": "src/pymhm/helmholtz_forms.py",
+    "pymhm.maxwell_dg": "src/pymhm/maxwell_dg.py",
+    "pymhm.elastodynamics": "src/pymhm/elastodynamics.py",
+    "pymhm.flow3d_forms": "src/pymhm/flow3d_forms.py",
+    "pymhm.flow3d": "src/pymhm/flow3d.py",
+    "pymhm.flow_local_refinement": "src/pymhm/flow_local_refinement.py",
+    "pymhm.scalar_adaptive": "src/pymhm/scalar_adaptive.py",
+    "pymhm.flow_adaptive": "src/pymhm/flow_adaptive.py",
+    "pymhm.flow_macro_adaptive": "src/pymhm/flow_macro_adaptive.py",
+    "pymhm.gals3d_forms": "src/pymhm/gals3d_forms.py",
+    "pymhm.gals3d": "src/pymhm/gals3d.py",
+    "pymhm.gpu": "src/pymhm/gpu.py",
+    "pymhm.helmholtz_spaces": "src/pymhm/helmholtz_spaces.py",
+    "pymhm.helmholtz": "src/pymhm/helmholtz.py",
+    "pymhm.maxwell": "src/pymhm/maxwell.py",
+    "pymhm.meshing": "src/pymhm/meshing.py",
+    "pymhm.meshing3d": "src/pymhm/meshing3d.py",
+    "pymhm.polyhedral_geometry": "src/pymhm/polyhedral_geometry.py",
+    "pymhm.polyhedral": "src/pymhm/polyhedral.py",
+    "pymhm.mesh_exchange": "src/pymhm/mesh_exchange.py",
+    "pymhm.meshing_native3d": "src/pymhm/meshing_native3d.py",
+    "pymhm.metric_adapt": "src/pymhm/metric_adapt.py",
+    "pymhm.mh_boundary": "src/pymhm/mh_boundary.py",
+    "pymhm.scalar_trace_integration": "src/pymhm/scalar_trace_integration.py",
+    "pymhm.mh": "src/pymhm/mh.py",
+    "pymhm.mh2m": "src/pymhm/mh2m.py",
+    "pymhm.mh_trace3d": "src/pymhm/mh_trace3d.py",
+    "pymhm.mh2m3d": "src/pymhm/mh2m3d.py",
+    "pymhm.mh3d": "src/pymhm/mh3d.py",
+    "pymhm.mshho": "src/pymhm/mshho.py",
+    "pymhm.polyhedral_rad": "src/pymhm/polyhedral_rad.py",
+    "pymhm.mshho3d": "src/pymhm/mshho3d.py",
+    "pymhm.nested": "src/pymhm/nested.py",
+    "pymhm.pgmhm": "src/pymhm/pgmhm.py",
+    "pymhm.separable": "src/pymhm/separable.py",
+    "pymhm.separable_krylov": "src/pymhm/separable_krylov.py",
+    "pymhm.subspaces": "src/pymhm/subspaces.py",
+    "pymhm": "src/pymhm/__init__.py",
+    "examples.local_response_cache": "examples/local_response_cache.py",
+    "examples.transport_checkpoints": "examples/transport_checkpoints.py",
+    "examples.core_elasticity_field_archive": "examples/core_elasticity_field_archive.py",
+    "examples.minimal_flow_originals": "examples/minimal_flow_originals.py",
+    "examples.solve_elasticity3d": "examples/solve_elasticity3d.py"
+  },
+  "python_version": "3.13.15",
+  "numpy_version": "2.5.3",
+  "native_libraries": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libopenblas",
+      "filepath": "/prj/thermophase/volpatto/Work/pymhm/.pixi/envs/test/lib/libopenblasp-r0.3.34.so",
+      "version": "0.3.34",
+      "threading_layer": "pthreads",
+      "architecture": "SkylakeX"
+    }
+  ]
+}

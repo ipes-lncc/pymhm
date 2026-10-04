@@ -136,6 +136,10 @@ class TransientTransportResult:
     residuals sum the original discrete physical equations on each macrocell,
     including essential-boundary reaction forces. They measure the discrete
     weak balance, not independent error or fine-cell conservation.
+    When requested, ``original_residual_norms`` and ``original_rhs_norms``
+    include every executed step, in ``integration_times[1:]`` order. They check
+    the full original physical rows and free trace equations, not just their
+    macro sums, using the shared original-equation convention.
     """
 
     times: FloatArray
@@ -145,6 +149,8 @@ class TransientTransportResult:
     balance_residuals: tuple[FloatArray, ...]
     operator_builds: int
     integration_times: FloatArray | None = None
+    original_residual_norms: FloatArray | None = None
+    original_rhs_norms: FloatArray | None = None
 
     def total_mass(self) -> FloatArray:
         """Integrate capacity*u at the initial time and every retained output time."""
@@ -186,6 +192,7 @@ def solve_transient_transport(
     local_solver: str = "scipy",
     output_steps: Any = None,
     on_step: Callable[[int, float, ScalarSolution, FloatArray], None] | None = None,
+    check_original: bool = False,
 ) -> TransientTransportResult:
     """Advance rho*u_t-div(K grad(u))+div(beta*u)+c*u=f by backward Euler.
 
@@ -213,6 +220,11 @@ def solve_transient_transport(
     each computed step, including outputs not retained in memory. Its numerical
     arrays are read-only; it may persist them without changing the subsequent
     evolution. Exceptions propagate after native factorizations are closed.
+
+    ``check_original=True`` additionally checks every executed time step using
+    the shared original-equation verifier, without correcting the solution.
+    Its residual and physical RHS Euclidean norms are stored for all steps,
+    including discarded outputs, in the order of ``integration_times[1:]``.
     """
     from pymhm.offline import OfflineHybridSystem
 
@@ -238,6 +250,8 @@ def solve_transient_transport(
         )
     if on_step is not None and not callable(on_step):
         raise ValueError("on_step must be callable or None")
+    if type(check_original) is not bool:
+        raise ValueError("check_original must be a bool")
     retained_steps = set(map(int, selected))
     for name, value in (
         ("degree", degree),
@@ -287,6 +301,7 @@ def solve_transient_transport(
             raise ValueError("constant diffusion must have zero divergence")
         coefficients.append((k, beta, div_beta, div_k, c, rho))
     solutions, balances = [], []
+    original_checks = []
     operators: dict[float, Any] = {}
     mass_moments: tuple[FloatArray, ...] = ()
     roundoff = 16 * np.finfo(float).eps * max(float(np.max(np.abs(times))), np.finfo(float).tiny)
@@ -360,7 +375,11 @@ def solve_transient_transport(
                 )
                 for cell, (load_map, old) in enumerate(zip(maps, previous, strict=True))
             ]
-            solved = prepared.solve(loads, boundary_load=boundary_load, fixed=fixed)
+            solved = prepared.solve(
+                loads, boundary_load=boundary_load, fixed=fixed, check_original=check_original
+            )
+            if check_original:
+                original_checks.append(prepared.original_residuals)
             previous = tuple(
                 field[: load_map.count] for field, load_map in zip(solved.fields, maps, strict=True)
             )
@@ -410,4 +429,6 @@ def solve_transient_transport(
         tuple(balances),
         len(operators),
         times.copy(),
+        np.asarray(original_checks)[:, 0] if check_original else None,
+        np.asarray(original_checks)[:, 1] if check_original else None,
     )

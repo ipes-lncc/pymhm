@@ -45,6 +45,26 @@ class TimeDependentTriangleField(Protocol):
         ...
 
 
+@runtime_checkable
+class SeparableTriangleField(Protocol):
+    """Explicit spatial quadrature snapshot multiplied by a real scalar in time.
+
+    This opt-in contract is f(t,x)=time_scale(t)*spatial_field(x). Both methods
+    use the same physical force-density convention as ``at_time``. Preparation
+    integrates the spatial snapshot through the original local basis/rule once;
+    a changing support, material-weighted load or nonseparable callback must
+    continue to use the ordinary ``at_time``/callback path.
+    """
+
+    def spatial_field(self) -> TriangleQuadratureField:
+        """Return the declared time-independent spatial force-density provider."""
+        ...
+
+    def time_scale(self, time: float) -> float:
+        """Return its finite real scalar amplitude at a finite real time."""
+        ...
+
+
 def triangle_field_quadrature(
     mesh: TriangleMesh, field: TriangleQuadratureField, order: int
 ) -> tuple[FloatArray, FloatArray, FloatArray]:
@@ -356,10 +376,24 @@ class RadialDiskLoad:
 
     def at_time(self, time: float) -> RadialDiskLoad:
         """Return a spatial force-density field at a finite physical time."""
-        if not np.isfinite(time):
+        scale = self.time_scale(time)
+        return replace(self, amplitude=self.amplitude * scale, time_function=None)
+
+    def spatial_field(self) -> RadialDiskLoad:
+        """Preserve the exact disk, amplitude and quadrature controls without temporal scaling."""
+        return replace(self, time_function=None)
+
+    def time_scale(self, time: float) -> float:
+        """Evaluate a finite real scalar temporal factor without changing spatial support."""
+        if np.iscomplexobj(time) or np.ndim(time) != 0 or not np.isfinite(time):
             raise ValueError("load time must be finite")
         scale = 1.0 if self.time_function is None else self.time_function(time)
-        return replace(self, amplitude=self.amplitude * scale, time_function=None)
+        if np.iscomplexobj(scale) or np.ndim(scale) != 0 or not np.isfinite(scale):
+            raise ValueError("load time scale must be a finite real scalar")
+        scale = float(scale)
+        if not np.isfinite(scale):
+            raise ValueError("load time scale must be finite in binary64")
+        return scale
 
     def __call__(self, points: Any) -> FloatArray:
         """Evaluate the static amplitude; call at_time first for a temporal modulation."""

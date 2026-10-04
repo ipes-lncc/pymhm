@@ -5,7 +5,7 @@ from dataclasses import replace
 
 import numpy as np
 import pytest
-from numpy.testing import assert_array_equal
+from numpy.testing import assert_allclose, assert_array_equal
 
 import examples.helmholtz_response_store as owner
 from examples.helmholtz_compact_family import CompactFactory, CompactFamily
@@ -74,6 +74,12 @@ def test_streamed_responses_match_every_buffer_and_all_five_fields(
     expected = CompactFamily.prepare(factory, local_refinement_precision=precision)
     store = prepare(factory, tmp_path, local_refinement_precision=precision)
     assert store.storage_bytes == sum(item.storage_bytes for item in expected.local)
+    measured = store.acquisition_seconds
+    assert measured is not None and measured > 0
+    assert (
+        prepare(factory, tmp_path, local_refinement_precision=precision).acquisition_seconds
+        == measured
+    )
     assert store.record["complete"]
     for actual, original in zip(store, expected.local, strict=True):
         for name in owner._ARRAYS:
@@ -82,6 +88,8 @@ def test_streamed_responses_match_every_buffer_and_all_five_fields(
         if precision == "extended":
             assert actual.source.dtype == np.dtype(np.longdouble)
             assert actual.lifts.dtype == np.dtype(np.longdouble)
+            assert expected.matrix.dtype == np.dtype(np.longdouble)
+            assert expected.rhs.dtype == np.dtype(np.longdouble)
         for name in ("matrix", "coupling"):
             first, second = getattr(actual, name), getattr(original, name)
             assert first.format == second.format
@@ -95,11 +103,71 @@ def test_streamed_responses_match_every_buffer_and_all_five_fields(
     assert_array_equal(streamed.rhs, expected.rhs, strict=True)
     for degree in range(5):
         first, second = streamed.solve(degree), expected.solve(degree)
+        trace = streamed.solve_trace(degree)
+        reconstructed = list(streamed.reconstruct(trace.prepared_coordinates))
+        assert_array_equal(trace.trace, first.trace, strict=True)
+        assert_array_equal([item[0] for item in reconstructed], first.pressure, strict=True)
+        assert_array_equal([item[1] for item in reconstructed], first.balance, strict=True)
+        assert trace.residual == first.residual
         assert_array_equal(first.trace, second.trace, strict=True)
         assert_array_equal(first.pressure, second.pressure, strict=True)
         assert_array_equal(first.balance, second.balance, strict=True)
         assert first.residual == second.residual
         assert first.local_residual_max == second.local_residual_max
+    store.record["batches"][0].pop("acquisition_seconds")
+    assert store.acquisition_seconds is None
+
+
+@pytest.mark.parametrize("homogeneous", [True, False])
+def test_exact_cache_survives_batch_boundaries_and_matches_full_original_fields(
+    tmp_path, homogeneous
+):
+    mesh = CartesianMacroMesh(4)
+    skeleton = helmholtz_skeleton(mesh, 1.2, degree=2)
+    factory = _HelmholtzFactory(
+        mesh,
+        skeleton,
+        1.2,
+        3,
+        2,
+        9,
+        1.0,
+        1.0,
+        0j,
+        split_point_sources(mesh, ()),
+        0j,
+        dict.fromkeys(
+            mesh.boundary_faces, 0j if homogeneous else lambda x, n: 1 + x[:, 0] + 0.4j * x[:, 1]
+        ),
+        {},
+        None,
+    )
+    direct = CompactFamily.prepare(factory)
+    cached = CompactFamily.prepare(factory, exact_response_cache=True)
+    store = prepare(factory, tmp_path, exact_response_cache=True)
+    counters = [row["exact_response_cache"] for row in store.record["batches"]]
+    assert sum(row["factorizations"] for row in counters) < len(mesh.cells)
+    assert sum(row["exact_source_hits"] for row in counters) > 0
+    for degree in range(3):
+        expected = direct.solve(degree)
+        for family in (cached, CompactFamily.from_locals(skeleton, store)):
+            actual = family.solve(degree)
+            assert_allclose(actual.pressure, expected.pressure, rtol=2e-13, atol=2e-14)
+            assert_allclose(actual.trace, expected.trace, rtol=2e-13, atol=2e-14)
+            assert actual.original_trace_residual < 1e-12
+            assert actual.local_residual_max < 1e-12
+    assert prepare(factory, tmp_path, exact_response_cache=True).record == store.record
+    with pytest.raises(ValueError, match="identity"):
+        prepare(factory, tmp_path)
+
+
+@pytest.mark.parametrize("backend,workers", [("process", 1), ("serial", 2)])
+def test_exact_cache_rejects_nonserial_native_factor_ownership(tmp_path, factory, backend, workers):
+    with pytest.raises(ValueError, match="serial"):
+        prepare(factory, tmp_path, exact_response_cache=True, backend=backend, workers=workers)
+    assert not (tmp_path / "responses.json").exists()
+    with pytest.raises(ValueError, match="serial"):
+        CompactFamily.prepare(factory, exact_response_cache=True, backend=backend, workers=workers)
 
 
 def test_spawn_store_preserves_serial_responses(tmp_path, factory):

@@ -2,27 +2,57 @@
 
 from __future__ import annotations
 
+import argparse
+import hashlib
 import json
 from pathlib import Path
+from time import perf_counter
+from typing import Any
+from uuid import uuid4
 
-import matplotlib
-
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.collections import LineCollection
 from threadpoolctl import threadpool_limits
 
 from pymhm import FaceSpace, HybridSystem, SkeletonSpace
 from pymhm.conforming import ConformingQuadrilateralSolution
+from pymhm.elements import boundary_data
 from pymhm.nested import nest_hybrid_system, nested_trace_map
 from pymhm.quadrilateral import (
     CartesianMacroMesh,
     _assemble_quad,
     _QuadTask,
+    qk_basis,
     quadrilateral_quadrature,
-    solve_darcy_quadrilateral,
 )
+
+try:
+    from .nested_field_archive import (
+        capture_display,
+        display_fields,
+        executed_arrays,
+        field_norms,
+        original_checks,
+        read_archive,
+        replay_responses,
+        restore,
+        write_archive,
+    )
+except ImportError:
+    import sys
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from examples.nested_field_archive import (
+        capture_display,
+        display_fields,
+        executed_arrays,
+        field_norms,
+        original_checks,
+        read_archive,
+        replay_responses,
+        restore,
+        write_archive,
+    )
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -43,8 +73,48 @@ def source(x: np.ndarray) -> np.ndarray:
     return 2 * np.pi**2 * exact(x)
 
 
-def acquire(n: int) -> tuple[dict, list]:
-    """Compare identical leaf spaces before and after a second hybridization."""
+def nonhomogeneous_exact(x: np.ndarray) -> np.ndarray:
+    """Pressure with affine Dirichlet lifting and the unchanged sine source."""
+    return 1 + x[:, 0] - x[:, 1] + exact(x)
+
+
+def nonhomogeneous_gradient(x: np.ndarray) -> np.ndarray:
+    """Return the derivative of the affine lifting plus the independent sine gradient."""
+    return gradient(x) + np.array([1.0, -1.0])
+
+
+def dirichlet(x: np.ndarray) -> np.ndarray:
+    """Exact affine pressure on every exterior side, excluding sine roundoff."""
+    return 1 + x[:, 0] - x[:, 1]
+
+
+def acquire(
+    n: int, *, nonhomogeneous: bool = False, archive: Path | None = None
+) -> tuple[dict[str, Any], list[ConformingQuadrilateralSolution]]:
+    """Acquire actual recursive/flat responses and compare unchanged Q2 leaf spaces.
+
+    Dirichlet pressure fixes the global constant; every Neumann leaf and nested
+    parent declares its physical constant mode and volume moment. The archive
+    stores these executed bases, including E and both levels' original data.
+    Numerical raw flux means minus the polynomial gradient, independently of
+    the conservative macro normal-flux multiplier. No fine-cell conservation
+    or mesh-uniform inf-sup estimate is inferred from this finite acquisition.
+    """
+    if type(n) is not int or n not in {1, 2, 4, 8, 16} or type(nonhomogeneous) is not bool:
+        raise ValueError("levels1,2,4,8,16 and an explicit boolean boundary selection required")
+    started = perf_counter()
+    source_files = [
+        Path(__file__),
+        Path(__file__).with_name("nested_field_archive.py"),
+        Path(__file__).with_name("archive_precision.py"),
+        Path(__file__).with_name("transport_checkpoints.py"),
+        Path(__file__).with_name("campaign_provenance.py"),
+        ROOT / "pixi.lock",
+        *sorted((ROOT / "src/pymhm").rglob("*.py")),
+    ]
+    executed_sources = {
+        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_files
+    }
     macro = CartesianMacroMesh(n)
     outer = SkeletonSpace(macro, tuple(FaceSpace.uniform(1, 2) for _ in macro.faces))
     children = []
@@ -69,59 +139,150 @@ def acquire(n: int) -> tuple[dict, list]:
                 constraints=constraint,
             )
         )
-    parent = HybridSystem([child.problem for child in children])
-    result = parent.solve()
+    boundary, fixed = boundary_data(outer, dirichlet if nonhomogeneous else 0.0, order=8)
+    parent = HybridSystem([child.problem for child in children], boundary_load=boundary)
+    result = parent.solve(fixed=fixed)
+    recovered = [
+        child.reconstruct(field) for child, field in zip(children, result.fields, strict=True)
+    ]
     flat_mesh = CartesianMacroMesh(2 * n)
-    flat = solve_darcy_quadrilateral(
-        flat_mesh,
-        skeleton=SkeletonSpace(flat_mesh, tuple(FaceSpace.uniform(1) for _ in flat_mesh.faces)),
-        degree=2,
-        local_refinement=2,
-        source=source,
-        quadrature_order=6,
+    flat_skeleton = SkeletonSpace(flat_mesh, tuple(FaceSpace.uniform(1) for _ in flat_mesh.faces))
+    flat_boundary, flat_fixed = boundary_data(
+        flat_skeleton, dirichlet if nonhomogeneous else 0.0, order=8
     )
-    difference, norm, errors = 0.0, 0.0, np.zeros(2)
-    largest_inner_residual = 0.0
-    output = []
-    quad, weights = quadrilateral_quadrature(6)
-    for cell, (child, field) in enumerate(zip(children, result.fields, strict=True)):
-        recovered = child.reconstruct(field)
-        largest_inner_residual = max(largest_inner_residual, recovered.interior_residual)
-        for subcell, values in enumerate(recovered.fields):
-            i, j = 2 * (cell % n) + subcell % 2, 2 * (cell // n) + subcell // 2
-            comparison = flat.pressure[j * 2 * n + i]
-            difference += float(np.sum((values - comparison) ** 2))
-            norm += float(np.sum(comparison**2))
-            mesh = child.inner.local_metadata[subcell][0]
-            local = ConformingQuadrilateralSolution(mesh, 2, values, 1.0, result.residual)
-            physical = mesh.points[mesh.cells[:, 0], None] + quad[None] * mesh.spacing
-            points = physical.reshape(-1, 2)
-            p, g = local.evaluate(points)
-            integrand = np.column_stack(
-                ((p - exact(points)) ** 2, np.sum((g - gradient(points)) ** 2, axis=1))
-            )
-            errors += np.prod(mesh.spacing) * np.einsum(
-                "q,tqi->i", weights, integrand.reshape(-1, len(weights), 2)
-            )
-            if n == 4:
-                output.append(local)
-    return dict(
+    flat = HybridSystem.from_local_factory(
+        _assemble_quad,
+        [
+            _QuadTask(flat_mesh, i, (2, 2), flat_skeleton, 2, 1.0, source, 6)
+            for i in range(4 * n * n)
+        ],
+        boundary_load=flat_boundary,
+    )
+    flat_result = flat.solve(fixed=flat_fixed)
+    arrays = executed_arrays(
+        n,
+        outer,
+        parent,
+        result,
+        children,
+        recovered,
+        flat,
+        flat_result,
+        flat_skeleton,
+        flat_boundary,
+        boundary,
+    )
+    for order in (6, 8, 10):
+        reference, weights = quadrilateral_quadrature(order)
+        basis, derivatives = qk_basis(2, reference)
+        arrays.update(
+            {
+                f"q{order}_reference": reference,
+                f"q{order}_weights": weights,
+                f"q{order}_basis": basis,
+                f"q{order}_gradient": derivatives,
+            }
+        )
+    capture_display(arrays)
+    analytical = nonhomogeneous_exact if nonhomogeneous else exact
+    analytical_gradient = nonhomogeneous_gradient if nonhomogeneous else gradient
+    norms = {
+        f"quadrature_{q}": field_norms(arrays, analytical, analytical_gradient, q) for q in (8, 10)
+    }
+    before, after = norms.values()
+    sensitivity = max(
+        abs(before[k] - after[k]) / max(abs(after[k]), np.finfo(float).tiny)
+        for k in ("pressure_l2", "flux_l2")
+    )
+    difference = restore(arrays, "leaf_pressure_recursive") - restore(arrays, "leaf_pressure_flat")
+    relative_difference = float(
+        np.linalg.norm(difference) / np.linalg.norm(restore(arrays, "leaf_pressure_flat"))
+    )
+    checks = original_checks(arrays)
+    replay = max(
+        float(
+            np.linalg.norm(replay_responses(arrays, prefix) - restore(arrays, f"{prefix}_pressure"))
+            / max(np.linalg.norm(restore(arrays, f"{prefix}_pressure")), np.finfo(float).tiny)
+        )
+        for prefix in ("leaf", "flat", "parent")
+    )
+    if (
+        max(checks.values()) > 1e-10
+        or relative_difference > 1e-11
+        or replay > 1e-11
+        or sensitivity > 1e-9
+        or max(
+            after["pressure_relative_flat_difference"], after["raw_flux_relative_flat_difference"]
+        )
+        > 1e-9
+    ):
+        raise RuntimeError(
+            "original equations, executed-basis replay or physical field gate failed"
+        )
+    row: dict[str, Any] = dict(
+        schema=2,
+        acquisition_uuid=str(uuid4()),
         n=n,
         macro_cells=n * n,
         inner_macro_cells=4 * n * n,
         fine_cells=16 * n * n,
+        boundary_case="affine_plus_sine" if nonhomogeneous else "sine_zero_dirichlet",
         outer_global_dofs=len(parent.rhs),
-        flat_global_dofs=flat.skeleton.size + 4 * n * n,
-        relative_leaf_difference=np.sqrt(difference / norm),
-        pressure_l2=float(np.sqrt(errors[0])),
-        flux_l2=float(np.sqrt(errors[1])),
+        flat_global_dofs=len(flat.rhs),
+        relative_leaf_difference=relative_difference,
+        pressure_l2=after["pressure_l2"],
+        flux_l2=after["flux_l2"],
         outer_residual=result.residual,
-        inner_residual=largest_inner_residual,
-    ), output
+        inner_residual=max(value.interior_residual for value in recovered),
+        original_physical_checks=checks,
+        executed_response_replay_relative_difference=replay,
+        norm_quadrature_relative_sensitivity=sensitivity,
+        norms=norms,
+        assembly_quadrature_order=6,
+        boundary_quadrature_order=8,
+        boundary="Dirichlet pressure; no additional physical gauge",
+        physical_trace="signed macro normal Darcy flux; parameter basis [1,2t-1]",
+        raw_flux="minus the one-sided Q2 polynomial gradient; not an H(div) reconstruction",
+        method=(
+            "Original two-level recursive MHM and a separately executed flat MHM "
+            "in identical leaf spaces"
+        ),
+        literature="10.1007/978-3-319-41640-3_13; recursive construction and analytical square",
+        finite_case_acceptance=True,
+        literal_literature_reproduction=False,
+        mesh_uniform_inf_sup_estimate_verified=False,
+        elapsed_seconds=perf_counter() - started,
+        source_sha256=executed_sources,
+        precision_convention=(
+            "Executed coefficient arithmetic; portable float64 high/correction/tail"
+        ),
+        local_kernel="Declared physical constant, paired with its actual volume integral",
+        recursive_map="Signed exact P1 restriction; parent reactions and one-sided leaves retained",
+    )
+    if executed_sources != {
+        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_files
+    }:
+        raise RuntimeError("executed acquisition source changed")
+    if archive is not None:
+        row = write_archive(archive, arrays, row)
+    fields = []
+    if n == 4 and not nonhomogeneous:
+        for i, values in enumerate(restore(arrays, "leaf_pressure_recursive")):
+            fine = flat.local_metadata[i][0]
+            fields.append(ConformingQuadrilateralSolution(fine, 2, values, 1.0, result.residual))
+    return row, fields
 
 
-def plots(rows: list[dict], fields: list) -> None:
-    """Render convergence, component fields and both actual macro partitions."""
+def plots(rows: list[dict[str, Any]], archive: Path | None = None) -> None:
+    """Render current convergence and one-sided fields from executed saved display tables."""
+    if not rows:
+        return
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.collections import LineCollection
+
     output = ROOT / "docs/figures/nested"
     output.mkdir(parents=True, exist_ok=True)
     fig, axes = plt.subplots(1, 2, figsize=(9, 3.5), layout="constrained")
@@ -137,15 +298,19 @@ def plots(rows: list[dict], fields: list) -> None:
     for ext in ("png", "svg"):
         fig.savefig(output / f"convergence.{ext}", dpi=180)
     plt.close(fig)
+    if archive is None:
+        return
+    record, arrays = read_archive(archive)
+    if record["boundary_case"] != "sine_zero_dirichlet":
+        raise ValueError("the selected field panel requires the declared sine boundary case")
+    points, pressure, flux = display_fields(arrays)
     fig, axes = plt.subplots(1, 3, figsize=(11, 3.7), layout="constrained")
     titles = ("Pressure", r"Flux $q_x$", r"Flux $q_y$")
     for k, ax in enumerate(axes):
-        for field in fields:
-            xmin, xmax, ymin, ymax = field.mesh.bounds
-            x, y = np.linspace(xmin, xmax, 17), np.linspace(ymin, ymax, 17)
-            xx, yy = np.meshgrid(x, y)
-            p, g = field.evaluate(np.column_stack((xx.ravel(), yy.ravel())))
-            values = p if k == 0 else -g[:, k - 1]
+        all_values = pressure if k == 0 else flux[..., k - 1]
+        limit = float(np.max(abs(all_values)))
+        for physical, values in zip(points, all_values, strict=True):
+            xx, yy = physical.T.reshape(2, 17, 17)
             image = ax.pcolormesh(
                 xx,
                 yy,
@@ -153,14 +318,14 @@ def plots(rows: list[dict], fields: list) -> None:
                 shading="gouraud",
                 rasterized=True,
                 cmap="viridis" if k == 0 else "RdBu_r",
-                vmin=0 if k == 0 else -np.pi,
-                vmax=1 if k == 0 else np.pi,
+                vmin=min(float(all_values.min()), 0) if k == 0 else -limit,
+                vmax=float(all_values.max()) if k == 0 else limit,
             )
-        for n, color, width in ((8, ".6", 0.4), (4, ".1", 1.0)):
-            macro = CartesianMacroMesh(n)
-            ax.add_collection(
-                LineCollection(macro.points[macro.faces], colors=color, linewidths=width)
-            )
+        for endpoints, color, width in (
+            (arrays["flat_face_endpoints"], ".6", 0.4),
+            (arrays["outer_face_endpoints"], ".1", 1.0),
+        ):
+            ax.add_collection(LineCollection(endpoints, colors=color, linewidths=width))
         ax.set(xlabel="x", ylabel="y", title=titles[k], aspect="equal")
         fig.colorbar(image, ax=ax, shrink=0.8, pad=0.04)
     for ext in ("png", "svg"):
@@ -169,23 +334,66 @@ def plots(rows: list[dict], fields: list) -> None:
 
 
 def main() -> None:
-    """Run research verification and serialize scientific evidence separately from CI."""
-    rows, fields = [], []
-    with threadpool_limits(1):
-        for n in (1, 2, 4, 8, 16):
-            row, selected = acquire(n)
-            rows.append(row)
-            fields.extend(selected)
-            print(row, flush=True)
+    """Acquire fresh field archives for selected levels and both physical boundary cases."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--levels", type=int, nargs="+", default=[1, 2, 4, 8, 16])
+    parser.add_argument("--output", type=Path, default=ROOT / "examples/results/nested-current")
+    parser.add_argument(
+        "--boundary", choices=("both", "homogeneous", "nonhomogeneous"), default="both"
+    )
+    parser.add_argument("--native-threads", type=int, default=1)
+    parser.add_argument("--acquire-only", action="store_true")
+    args = parser.parse_args()
+    if (
+        not args.levels
+        or len(set(args.levels)) != len(args.levels)
+        or any(n not in {1, 2, 4, 8, 16} for n in args.levels)
+        or type(args.native_threads) is not int
+        or args.native_threads <= 0
+    ):
+        raise ValueError("distinct supported levels and positive native thread count required")
+    if args.output.exists():
+        raise ValueError("a fresh acquisition output directory is required")
+    args.output.mkdir(parents=True)
+    rows = []
+    selected_archive = None
+    cases = (False, True) if args.boundary == "both" else (args.boundary == "nonhomogeneous",)
+    with threadpool_limits(args.native_threads):
+        for n in args.levels:
+            for nonhomogeneous in cases:
+                name = "affine" if nonhomogeneous else "homogeneous"
+                path = args.output / f"n{n}-{name}.npz"
+                row, _ = acquire(n, nonhomogeneous=nonhomogeneous, archive=path)
+                rows.append(row)
+                if n == 4 and not nonhomogeneous:
+                    selected_archive = path
+                print(
+                    json.dumps(
+                        {
+                            k: row[k]
+                            for k in (
+                                "n",
+                                "boundary_case",
+                                "relative_leaf_difference",
+                                "original_physical_checks",
+                                "elapsed_seconds",
+                            )
+                        }
+                    ),
+                    flush=True,
+                )
     record = dict(
-        method="Original recursive MHM, based on nested local variational decompositions",
-        reference="10.1007/978-3-319-41640-3_13, sections 2 and 4.1",
+        schema=2,
+        method="Original recursive MHM in declared Q2/r2 and P1 leaf spaces",
         local_space="Q2, 2x2 fine cells per inner macrocell",
         trace="P1 per inner face; two P1 segments per outer face",
         rows=rows,
     )
-    (ROOT / "examples/results/nested.json").write_text(json.dumps(record, indent=2) + "\n")
-    plots(rows, fields)
+    (args.output / "nested.json").write_text(json.dumps(record, indent=2) + "\n")
+    if not args.acquire_only:
+        plots(
+            [row for row in rows if row["boundary_case"] == "sine_zero_dirichlet"], selected_archive
+        )
 
 
 if __name__ == "__main__":

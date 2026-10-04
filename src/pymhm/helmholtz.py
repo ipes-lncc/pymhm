@@ -53,6 +53,50 @@ def _boundary_values(value: Any, points: FloatArray, normal: FloatArray) -> Any:
     )
 
 
+def local_helmholtz_error_squared(
+    fine: TriangleMesh | CartesianMacroMesh,
+    coefficients: Any,
+    degree: int,
+    exact: Any,
+    order: int = 8,
+    *,
+    derivative: bool = False,
+) -> float:
+    """Integrate one local complex pressure or physical-gradient squared error.
+
+    Coefficients use the continuous local Pk/Qk nodal ordering from
+    :func:`pymhm.helmholtz_forms.acoustic_space`. ``exact(points)`` returns
+    pressure values or, with ``derivative=True``, two physical gradient
+    components. The Hermitian absolute square is integrated using the declared
+    physical Gauss order. No frequency weight or interface averaging is applied;
+    summing these integrals gives the squared broken norm across macro cells.
+    """
+    degree = positive_int(degree, "degree")
+    order = positive_int(order, "order")
+    dofs, points, weights, basis, gradient, _ = acoustic_quadrature(fine, degree, 1.0, order)
+    coefficients = np.asarray(coefficients)
+    if (
+        coefficients.dtype.kind not in "biufc"
+        or coefficients.shape != (int(dofs.max()) + 1,)
+        or not np.isfinite(coefficients).all()
+    ):
+        raise ValueError("local Helmholtz coefficients must be a finite nodal vector")
+    if derivative:
+        truth = np.asarray(
+            exact(points.reshape(-1, 2)) if callable(exact) else exact, dtype=complex
+        )
+        truth = np.broadcast_to(truth, (points.size // 2, 2))
+        approximate = np.einsum("tqia,ti->tqa", gradient, coefficients[dofs])
+        square = np.sum(abs(approximate - truth.reshape(points.shape)) ** 2, axis=-1)
+    else:
+        truth = complex_values(exact, points.reshape(-1, 2)).reshape(weights.shape)
+        approximate = np.einsum("tqi,ti->tq", basis, coefficients[dofs])
+        square = abs(approximate - truth) ** 2
+    if not np.isfinite(square).all():
+        raise ValueError("exact fields must be finite")
+    return float(np.sum(weights * square))
+
+
 @dataclass(frozen=True)
 class _HelmholtzFactory:
     """Portable complete local assembly followed by the shared exact condensation."""
@@ -245,23 +289,9 @@ class HelmholtzSolution:
         order = positive_int(order, "order")
         total = 0.0
         for fine, coefficients in zip(self.local_meshes, self.pressure, strict=True):
-            dofs, points, weights, basis, gradient, _ = acoustic_quadrature(
-                fine, self.degree, 1.0, order
+            total += local_helmholtz_error_squared(
+                fine, coefficients, self.degree, exact, order, derivative=derivative
             )
-            if derivative:
-                truth = np.asarray(
-                    exact(points.reshape(-1, 2)) if callable(exact) else exact, dtype=complex
-                )
-                truth = np.broadcast_to(truth, (points.size // 2, 2))
-                approximate = np.einsum("tqia,ti->tqa", gradient, coefficients[dofs])
-                square = np.sum(abs(approximate - truth.reshape(points.shape)) ** 2, axis=-1)
-            else:
-                truth = complex_values(exact, points.reshape(-1, 2)).reshape(weights.shape)
-                approximate = np.einsum("tqi,ti->tq", basis, coefficients[dofs])
-                square = abs(approximate - truth) ** 2
-            if not np.isfinite(square).all():
-                raise ValueError("exact fields must be finite")
-            total += float(np.sum(weights * square))
         return float(np.sqrt(total))
 
     def conservation_residuals(self) -> Any:

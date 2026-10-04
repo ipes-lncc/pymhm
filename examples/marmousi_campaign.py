@@ -18,6 +18,8 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.campaign_provenance import file_digest
+from examples.helmholtz_trace_family import verify_helmholtz_solution
 from examples.marmousi_data import load_marmousi_crop
 from pymhm.helmholtz import solve_helmholtz
 from pymhm.helmholtz_spaces import helmholtz_skeleton
@@ -76,26 +78,9 @@ def source_hashes() -> dict[str, str]:
     names = [
         "examples/marmousi_campaign.py",
         "examples/marmousi_data.py",
-        *[
-            f"src/pymhm/{name}.py"
-            for name in (
-                "helmholtz",
-                "helmholtz_forms",
-                "helmholtz_spaces",
-                "scalar_boundary",
-                "mesh",
-                "elements",
-                "lagrange",
-                "_geometry_roundoff",
-                "quadrilateral",
-                "reservoir",
-                "cut_cells",
-                "hybrid",
-                "solvers",
-                "parallel",
-                "loads",
-            )
-        ],
+        "examples/campaign_provenance.py",
+        "examples/helmholtz_trace_family.py",
+        *(str(path.relative_to(ROOT)) for path in sorted((ROOT / "src/pymhm").rglob("*.py"))),
     ]
     return {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
 
@@ -136,6 +121,7 @@ def main() -> None:
         )
         elapsed = time.perf_counter() - start
         balance = float(np.max(abs(solution.conservation_residuals())))
+        field_diagnostics = verify_helmholtz_solution(solution)
     if before != source_hashes():
         raise RuntimeError("acquisition sources changed during the acoustic solve")
     coefficients = np.asarray(solution.pressure)
@@ -184,11 +170,13 @@ def main() -> None:
         "global_complex_dofs_free": (2 * len(mesh.cells) - mesh.ny) * (args.trace_degree + 1),
         "algebraic_residual": solution.hybrid.residual,
         "macro_balance_max": balance,
-        "assembly_order": 8,
+        "requested_assembly_order": 8,
+        "assembly_order": solution.quadrature_order,
+        **field_diagnostics,
         "elapsed_seconds": elapsed,
         "workers": args.workers,
         "archive": archive.name,
-        "archive_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
+        "archive_sha256": file_digest(archive),
         "source_sha256": before,
         "source_changed_during_run": False,
         "sampling": "513 by129 nodes; four incident macro values, without averaging",

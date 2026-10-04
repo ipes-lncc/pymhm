@@ -76,7 +76,7 @@ native refinement steps, with a pivot-perturbation threshold of \(10^{-13}\).
 The profiles are separate choices: matching is not uniformly more accurate,
 and neither is an automatic fallback for the other. Residuals and correction
 equations use the complete original matrix and the requested tolerance.
-The [HPC4e case](cases/hpc4e.md) checks complete physical fields against the
+The [HPC4e case](https://github.com/volpatto/pymhm/blob/main/docs/cases/hpc4e.md) checks complete physical fields against the
 SciPy factorization.
 
 `petsc-symmetric` requests the MUMPS symmetric-indefinite factorization through

@@ -1,0 +1,470 @@
+{
+  "schema_version": 1,
+  "convention": "External Image/SVG inputs read by the checked-in notebooks; images produced in the same notebook are excluded. Notebook40 mesh pages additionally follow its selected adaptive record.",
+  "notebooks": {
+    "07": [
+      "docs/figures/elasticity/refinement.svg"
+    ],
+    "11": [
+      "docs/figures/reproduction/darcy-2013-comparison.png",
+      "docs/figures/reproduction/mixed/darcy-2013-comparison.png"
+    ],
+    "12": [
+      "docs/figures/flow-audit/convergence.png",
+      "docs/figures/flow-audit/pressure-profiles.png",
+      "docs/figures/flow-audit/trace-local.png"
+    ],
+    "13": [
+      "docs/figures/reproduction/stokes/crisscross-p2/stokes-2017-convergence.png",
+      "docs/figures/reproduction/stokes/crisscross-p2/stokes-2017-pressure-n16.png",
+      "docs/figures/reproduction/stokes/crisscross-p3/stokes-2017-convergence.png",
+      "docs/figures/reproduction/stokes/crisscross-p3/stokes-2017-pressure-n16.png"
+    ],
+    "14": [
+      "docs/figures/neopz/cos-fields-n8-s1.png",
+      "docs/figures/neopz/darcy-convergence.png",
+      "docs/figures/neopz/layer-fields-n4-s1.png",
+      "docs/figures/neopz/layer-profiles.png",
+      "docs/figures/neopz/layer1000-fields-n4-s1.png"
+    ],
+    "15": [
+      "docs/figures/elasticity-reference/convergence.svg",
+      "docs/figures/elasticity-reference/field-differences.svg",
+      "docs/figures/elasticity-reference/pressure.svg",
+      "docs/figures/elasticity-reference/stress11.svg",
+      "docs/figures/elasticity-reference/u1.svg"
+    ],
+    "16": [
+      "docs/figures/mixed-elasticity/convergence-and-incompressibility.png",
+      "docs/figures/mixed-elasticity/native-displacement-rotation.png",
+      "docs/figures/mixed-elasticity/native-stress.png",
+      "docs/figures/mixed-elasticity/oscillatory-fields.png",
+      "docs/figures/mixed-elasticity/smooth-fields.png"
+    ],
+    "17": [
+      "docs/figures/darcy-bdm/convergence-and-trace.png",
+      "docs/figures/darcy-bdm/cosine-fields.png"
+    ],
+    "18": [
+      "docs/figures/reconstruction-moments/convergence-and-conservation.png",
+      "docs/figures/reconstruction-moments/divergence-fields.png",
+      "docs/figures/reconstruction-moments/flux-fields.png"
+    ],
+    "19": [
+      "docs/figures/high-order/darcy-convergence.svg",
+      "docs/figures/high-order/darcy-p4-flux.svg",
+      "docs/figures/high-order/darcy-p4.svg",
+      "docs/figures/high-order/flow-convergence.svg",
+      "docs/figures/high-order/heat-convergence.svg",
+      "docs/figures/high-order/heat-p3.svg",
+      "docs/figures/high-order/layer-errors.svg",
+      "docs/figures/high-order/layer-profiles.svg",
+      "docs/figures/high-order/rad-convergence.svg",
+      "docs/figures/high-order/tensor-brinkman-pressure.svg",
+      "docs/figures/high-order/tensor-brinkman.svg",
+      "docs/figures/high-order/variable-rad.svg"
+    ],
+    "20": [
+      "docs/figures/estimator/components.svg",
+      "docs/figures/estimator/convergence.svg",
+      "docs/figures/estimator/local-indicators.svg",
+      "docs/figures/estimator/potential.svg"
+    ],
+    "21": [
+      "docs/figures/reservoir-papers/l07-figure-5.png",
+      "docs/figures/reservoir-papers/l13-figure-18.png",
+      "docs/figures/spe10/layers.png",
+      "docs/figures/spe10/volume-and-slice.png"
+    ],
+    "22": [
+      "docs/figures/quarter-five-spot/point-flux-elevation.png",
+      "docs/figures/quarter-five-spot/obstacle-macro-cut.png",
+      "docs/figures/quarter-five-spot/classical-vs-mhm-components.png"
+    ],
+    "23": [
+      "docs/figures/reservoir-papers/l07-figure-6.png",
+      "docs/figures/reservoir-papers/l07-figure-7-8.png",
+      "docs/figures/reservoir-papers/l09-figure-6.png",
+      "docs/figures/spe10/brinkman-layer1-profiles.png",
+      "docs/figures/spe10/brinkman-layer1.png",
+      "docs/figures/spe10/brinkman-taylor-hood-fields.png",
+      "docs/figures/spe10/brinkman-taylor-hood-profiles-detail.png",
+      "docs/figures/spe10/brinkman-taylor-hood-profiles.png",
+      "docs/figures/spe10/brinkman-taylor-hood-refinement.png",
+      "docs/figures/spe10/darcy-fields.png",
+      "docs/figures/spe10/darcy-flux-classical-references.png",
+      "docs/figures/spe10/darcy-flux-msl.png",
+      "docs/figures/spe10/darcy-flux-neopz.png",
+      "docs/figures/spe10/darcy-flux-q3-components.png",
+      "docs/figures/spe10/darcy-flux-q3.png",
+      "docs/figures/spe10/darcy-flux-reference-refinement.png",
+      "docs/figures/spe10/darcy-profiles.png",
+      "docs/figures/spe10/darcy-reference-fields.png",
+      "docs/figures/spe10/darcy-refinement.png"
+    ],
+    "24": [
+      "docs/figures/mshho/convergence.png",
+      "docs/figures/mshho/fields.png"
+    ],
+    "25": [
+      "docs/figures/tensor-rt/convergence.png"
+    ],
+    "26": [
+      "docs/figures/transport/adaptive-0.png",
+      "docs/figures/transport/adaptive-4.png",
+      "docs/figures/transport/darcy-transient.png",
+      "docs/figures/transport/mixed-convergence.png",
+      "docs/figures/transport/mixed-face-resolution.png",
+      "docs/figures/transport/mixed-fields.png",
+      "docs/figures/transport/mixed-local-resolution.png",
+      "docs/figures/transport/mixed-profiles.png",
+      "docs/figures/transport/mixed-published-comparison.png",
+      "docs/figures/transport/refinement.png"
+    ],
+    "27": [
+      "docs/figures/oseen/boundary-nu0.01-l1-adaptive-fields.png",
+      "docs/figures/oseen/boundary-nu0.01-l1-adaptive-history.png",
+      "docs/figures/oseen/internal-nu0.001-l1-adaptive-fields.png",
+      "docs/figures/oseen/internal-nu0.001-l1-adaptive-history.png",
+      "docs/figures/oseen/smooth-nu1-l1-uniform-history.png",
+      "docs/figures/oseen/variable-nu1-l1-uniform-history.png"
+    ],
+    "28": [
+      "docs/figures/elasticity-families/bdm1-enrichment2-fields.png",
+      "docs/figures/elasticity-families/bdm2-enrichment1-fields.png",
+      "docs/figures/elasticity-families/convergence.png",
+      "docs/figures/elasticity-families/incompressible-sweep.png"
+    ],
+    "29": [
+      "docs/figures/darcy3d/convergence.png",
+      "docs/figures/darcy3d/fields.png"
+    ],
+    "30": [
+      "docs/figures/polygons/convergence.png",
+      "docs/figures/polygons/fields.png"
+    ],
+    "31": [
+      "docs/figures/weighted-estimator/convergence.png"
+    ],
+    "32": [
+      "docs/figures/primal-elasticity/constant-convergence.png",
+      "docs/figures/primal-elasticity/variable-convergence.png",
+      "docs/figures/primal-elasticity/variable-p2-fields.png"
+    ],
+    "33": [
+      "docs/figures/darcy-rt/convergence.png",
+      "docs/figures/darcy-rt/fields.png"
+    ],
+    "34": [
+      "docs/figures/elasticity-tensor-rt/convergence.png",
+      "docs/figures/elasticity-tensor-rt/incompressible-sweep.png",
+      "docs/figures/elasticity-tensor-rt/rt1-enrichment1-fields.png"
+    ],
+    "35": [
+      "docs/figures/elasticity3d/components-p2.png",
+      "docs/figures/elasticity3d/components-p3.png",
+      "docs/figures/elasticity3d/convergence.png",
+      "docs/figures/elasticity3d/fields-p2.png",
+      "docs/figures/elasticity3d/fields-p3.png",
+      "docs/figures/elasticity3d/lame-sweep.png"
+    ],
+    "36": [
+      "docs/figures/nested/convergence.png",
+      "docs/figures/nested/fields.png"
+    ],
+    "37": [
+      "docs/figures/periodic/convergence.png",
+      "docs/figures/periodic/fields.png",
+      "docs/figures/periodic/problem.png"
+    ],
+    "38": [
+      "docs/figures/unfitted/contrast-convergence.png",
+      "docs/figures/unfitted/fields-fitted-r16.png",
+      "docs/figures/unfitted/interface-flux-traces.png",
+      "docs/figures/unfitted/normal-flux-validation.png",
+      "docs/figures/unfitted/perturbation-fitted-r16.png",
+      "docs/figures/unfitted/publication-comparison.png",
+      "docs/figures/unfitted/trace-h-convergence.png",
+      "docs/figures/unfitted/trace-p-convergence.png"
+    ],
+    "39": [
+      "docs/figures/adaptive-darcy/fields.png",
+      "docs/figures/adaptive-darcy/meshes-ell1.png",
+      "docs/figures/adaptive-darcy/refinement.png"
+    ],
+    "40": [
+      "docs/figures/reservoir-papers/l09-figure-9.png",
+      "docs/figures/spe10-adaptive/diagonal-profile.png",
+      "docs/figures/spe10-adaptive/flux-components.png",
+      "docs/figures/spe10-adaptive/flux-magnitude.png",
+      "docs/figures/spe10-adaptive/pressure.png",
+      "docs/figures/spe10-adaptive/reference-refinement.png",
+      "docs/figures/spe10-adaptive/refinement.png",
+      "docs/figures/spe10-adaptive/resolution-diagnostics.png",
+      "docs/figures/spe10-adaptive/resolution/flux-components.png",
+      "docs/figures/spe10-adaptive/resolution/independent-resolution.png",
+      "docs/figures/spe10-adaptive/resolution/joint-flux-components.png",
+      "docs/figures/spe10-adaptive/resolution/material-fitting.png",
+      "docs/figures/spe10-adaptive/resolution/material-flux-components.png"
+    ],
+    "41": [
+      "docs/figures/rad3d/convergence.png",
+      "docs/figures/rad3d/flux.png",
+      "docs/figures/rad3d/scalar.png"
+    ],
+    "42": [
+      "docs/figures/darcy-jump/refinement.png"
+    ],
+    "43": [
+      "docs/figures/analytic/source-comparison.png"
+    ],
+    "44": [
+      "docs/figures/mapped-well/convergence.png",
+      "docs/figures/mapped-well/profiles.png",
+      "docs/figures/mapped-well/reservoir-macro1.png",
+      "docs/figures/mapped-well/reservoir-macro8.png",
+      "docs/figures/mapped-well/well-macro1.png",
+      "docs/figures/mapped-well/well-macro8.png"
+    ],
+    "45": [
+      "docs/figures/rad-conditioning/epsilon.png",
+      "docs/figures/rad-conditioning/mesh.png",
+      "docs/figures/rad-conditioning/omega.png"
+    ],
+    "46": [
+      "docs/figures/rad-layer/convergence.png",
+      "docs/figures/rad-layer/elevation.png",
+      "docs/figures/rad-layer/fields.png",
+      "docs/figures/rad-layer/native-comparison.png",
+      "docs/figures/rad-layer/profile.png",
+      "docs/figures/rad-layer/published-figure5.png",
+      "docs/figures/rad-layer/published-figure6.png",
+      "docs/figures/rad-layer/published-norm.png"
+    ],
+    "47": [
+      "docs/figures/mapped-well-oscillatory/convergence.png",
+      "docs/figures/mapped-well-oscillatory/flux-components-fine16.png",
+      "docs/figures/mapped-well-oscillatory/flux-components-fine8.png",
+      "docs/figures/mapped-well-oscillatory/flux-logarithmic-fine16.png",
+      "docs/figures/mapped-well-oscillatory/flux-logarithmic.png",
+      "docs/figures/mapped-well-oscillatory/local-resolution.png",
+      "docs/figures/mapped-well-oscillatory/macro1.png",
+      "docs/figures/mapped-well-oscillatory/macro2.png",
+      "docs/figures/mapped-well-oscillatory/macro4-fine16.png",
+      "docs/figures/mapped-well-oscillatory/macro4.png",
+      "docs/figures/mapped-well-oscillatory/material.png",
+      "docs/figures/mapped-well-oscillatory/native-comparison.png",
+      "docs/figures/mapped-well-oscillatory/profiles.png"
+    ],
+    "48": [
+      "docs/figures/stokes-adaptive/cavity-constant-macro-nu1-g0-l0-longest-edge-theta0.1-comparison-physical-convergence.png",
+      "docs/figures/stokes-adaptive/cavity-constant-macro-nu1-g0-l0-longest-edge-theta0.1-comparison-profiles.png",
+      "docs/figures/stokes-adaptive/cavity-constant-macro-nu1-g10000-l0-longest-edge-theta0.1-continued-comparison-comparison-physical-convergence.png",
+      "docs/figures/stokes-adaptive/cavity-constant-macro-nu1-g10000-l0-longest-edge-theta0.1-continued-comparison-physical-convergence.png",
+      "docs/figures/stokes-adaptive/cavity-constant-macro-nu1-g10000-l0-longest-edge-theta0.1-continued-comparison-profiles.png",
+      "docs/figures/stokes-adaptive/cavity-constant-macro-nu1-g10000-l0-longest-edge-theta0.1-continued-comparison-upper-layer.png",
+      "docs/figures/stokes-adaptive/cavity-constant-reference-convergence.png",
+      "docs/figures/stokes-adaptive/cavity-face-nu1-g0-l0-comparison-fields.png",
+      "docs/figures/stokes-adaptive/cavity-face-nu1-g0-l0-history.png",
+      "docs/figures/stokes-adaptive/cavity-face-nu1-g10000-l0-comparison-fields.png",
+      "docs/figures/stokes-adaptive/cavity-face-nu1-g10000-l0-history.png",
+      "docs/figures/stokes-adaptive/cavity-macro-nu1-g0-l0-comparison-fields.png",
+      "docs/figures/stokes-adaptive/cavity-macro-nu1-g0-l0-history.png",
+      "docs/figures/stokes-adaptive/cavity-macro-nu1-g10000-l0-comparison-fields.png",
+      "docs/figures/stokes-adaptive/cavity-macro-nu1-g10000-l0-history.png",
+      "docs/figures/stokes-adaptive/cavity-reference-convergence.png",
+      "docs/figures/stokes-adaptive/polynomial-face-nu0.01-g0-l1-fields.png",
+      "docs/figures/stokes-adaptive/polynomial-face-nu0.01-g0-l1-history.png",
+      "docs/figures/stokes-adaptive/polynomial-macro-nu0.01-g0-l0-fields.png",
+      "docs/figures/stokes-adaptive/polynomial-macro-nu0.01-g0-l0-history.png",
+      "docs/figures/stokes-adaptive/published-components.png"
+    ],
+    "49": [
+      "docs/figures/polyhedral-rad/convergence.png",
+      "docs/figures/polyhedral-rad/fields.png",
+      "docs/figures/polyhedral-rad/geometry.png"
+    ],
+    "50": [
+      "docs/figures/hpc4e/displacement-vectors.png",
+      "docs/figures/hpc4e/material.png",
+      "docs/figures/hpc4e/published-profile-comparison.png",
+      "docs/figures/hpc4e/reference-sensitivity.png",
+      "docs/figures/hpc4e/stress-displacement-fields.png",
+      "docs/figures/hpc4e/stress-profiles.png"
+    ],
+    "51": [
+      "docs/figures/mixed-well-geometries/convergence.png",
+      "docs/figures/mixed-well-geometries/geometry.png",
+      "docs/figures/mixed-well-geometries/prism-p1-fields.png",
+      "docs/figures/mixed-well-geometries/prism-p1-trace-comparison.png",
+      "docs/figures/mixed-well-geometries/tetrahedron-p1-fields.png",
+      "docs/figures/mixed-well-geometries/tetrahedron-p1-trace-comparison.png",
+      "docs/figures/mixed-well-geometries/tetrahedron-p2-fields.png",
+      "docs/figures/mixed-well-geometries/tetrahedron-p2-trace-comparison.png"
+    ],
+    "52": [
+      "docs/figures/mh2m/convergence.png",
+      "docs/figures/mh2m/enrichment.png",
+      "docs/figures/mh2m/oscillatory-flux.png",
+      "docs/figures/mh2m/oscillatory-pressure.png",
+      "docs/figures/mh2m/pressure-trace-enrichment.png",
+      "docs/figures/mh2m/smooth-fields.png"
+    ],
+    "53": [
+      "docs/figures/unusual-spe10/boundary-layer.png",
+      "docs/figures/unusual-spe10/profiles.png",
+      "docs/figures/unusual-spe10/reaction-layer.png",
+      "docs/figures/unusual-spe10/resolution.png",
+      "docs/figures/unusual/convergence.png",
+      "docs/figures/unusual/native-comparison.png",
+      "docs/figures/unusual/profiles.png",
+      "docs/figures/unusual/resolved-layer-flux.png",
+      "docs/figures/unusual/tensor-flux.png"
+    ],
+    "54": [
+      "docs/figures/flow3d/brinkman-usfem1-fields.png",
+      "docs/figures/flow3d/brinkman-usfem2-fields.png",
+      "docs/figures/flow3d/convergence.png",
+      "docs/figures/flow3d/oseen-p2-components.png",
+      "docs/figures/flow3d/oseen-p2-fields.png",
+      "docs/figures/flow3d/stokes-th2-fields.png"
+    ],
+    "55": [
+      "docs/figures/gals3d/gals-p1-fields.png",
+      "docs/figures/gals3d/gals-p2-fields.png",
+      "docs/figures/gals3d/lambda.png",
+      "docs/figures/gals3d/refinement.png",
+      "docs/figures/gals3d/th-p2-fields.png"
+    ],
+    "56": [
+      "docs/figures/mh/L-polygons-fields.png",
+      "docs/figures/mh/convergence.png",
+      "docs/figures/mh/triangles-fields.png",
+      "docs/figures/mh/vanishing-robin.png"
+    ],
+    "57": [
+      "docs/figures/core-extensions/elasticity-convergence.png",
+      "docs/figures/core-extensions/hdiv3d-convergence.png",
+      "docs/figures/core-extensions/mshho3d-convergence.png",
+      "docs/figures/core-extensions/polygon-bdm2-displacement-profiles.png"
+    ],
+    "58": [
+      "docs/figures/reconstruction3d/adaptive-components.png",
+      "docs/figures/reconstruction3d/adaptive-convergence.png",
+      "docs/figures/reconstruction3d/adaptive-profile-errors.png",
+      "docs/figures/reconstruction3d/adaptive-profiles.png",
+      "docs/figures/reconstruction3d/uniform-convergence.png"
+    ],
+    "59": [
+      "docs/figures/pgmhm-inclusions/material-profile.png",
+      "docs/figures/pgmhm-inclusions/physical-norms.png",
+      "docs/figures/pgmhm-inclusions/pressure-fields.png",
+      "docs/figures/pgmhm-spe10/control-flux-components.png",
+      "docs/figures/pgmhm-spe10/fields.png",
+      "docs/figures/pgmhm-spe10/material-profiles.png",
+      "docs/figures/pgmhm-spe10/norms.png",
+      "docs/figures/pgmhm-spe10/resolution-controls.png",
+      "docs/figures/pgmhm/L-polygons-convergence.png",
+      "docs/figures/pgmhm/L-polygons-fields.png",
+      "docs/figures/pgmhm/skeleton-convergence.png",
+      "docs/figures/pgmhm/triangles-convergence.png",
+      "docs/figures/pgmhm/triangles-fields.png"
+    ],
+    "61": [
+      "docs/figures/helmholtz/article-convergence.png",
+      "docs/figures/helmholtz/article-directions.png",
+      "docs/figures/helmholtz/article-local-control.png",
+      "docs/figures/helmholtz/convergence.png",
+      "docs/figures/helmholtz/directions.png",
+      "docs/figures/helmholtz/hankel-oscillatory-fields.png",
+      "docs/figures/helmholtz/plane-oscillatory-fields.png",
+      "docs/figures/helmholtz/pml-convergence.png",
+      "docs/figures/helmholtz/pml-fields.png",
+      "docs/figures/helmholtz/stability-errors.png",
+      "docs/figures/helmholtz/stability-ratio.png"
+    ],
+    "62": [
+      "docs/figures/maxwell/cavity-2d-ell2-n8-fields.png",
+      "docs/figures/maxwell/cavity-3d-ell1-n4-electric.png",
+      "docs/figures/maxwell/cavity-3d-ell1-n4-magnetic.png",
+      "docs/figures/maxwell/convergence.png",
+      "docs/figures/maxwell/time-energy.png"
+    ],
+    "63": [
+      "docs/figures/planar3d/components.png",
+      "docs/figures/planar3d/fields.png",
+      "docs/figures/planar3d/geometry.png"
+    ],
+    "64": [
+      "docs/figures/tetra-pk/fixed-components-rt2.png",
+      "docs/figures/tetra-pk/fixed-components-rt3.png",
+      "docs/figures/tetra-pk/fixed-profiles.png",
+      "docs/figures/tetra-pk/fixed-resolution.png",
+      "docs/figures/tetra-pk/uniform-convergence.png"
+    ],
+    "65": [
+      "docs/figures/mh/boundary-convergence.png"
+    ],
+    "66": [
+      "docs/figures/maxwell-nanoguide/components.png",
+      "docs/figures/maxwell-nanoguide/errors.png",
+      "docs/figures/maxwell-nanoguide/material.png",
+      "docs/figures/maxwell-nanoguide/profiles.png",
+      "docs/figures/maxwell-nanoguide/published-coarse.png",
+      "docs/figures/maxwell-nanoguide/published-electric.png"
+    ],
+    "67": [
+      "docs/figures/star-polyhedra/convergence.png",
+      "docs/figures/star-polyhedra/fields.png",
+      "docs/figures/star-polyhedra/geometry.png"
+    ],
+    "68": [
+      "docs/figures/mixed-elasticity3d/bdm2-fields.png",
+      "docs/figures/mixed-elasticity3d/bdm3-fields.png",
+      "docs/figures/mixed-elasticity3d/convergence.png",
+      "docs/figures/mixed-elasticity3d/incompressibility.png"
+    ],
+    "69": [
+      "docs/figures/mh3d/convergence.png",
+      "docs/figures/mh3d/mh-fields.png",
+      "docs/figures/mh3d/mh2m-fields.png"
+    ],
+    "70": [
+      "docs/figures/mh2m-heterogeneous/crisscross/fields-asinh.png",
+      "docs/figures/mh2m-heterogeneous/crisscross/fields.png",
+      "docs/figures/mh2m-heterogeneous/crisscross/figure-6-lower-profiles.png",
+      "docs/figures/mh2m-heterogeneous/crisscross/figure-6-upper-profiles.png",
+      "docs/figures/mh2m-heterogeneous/crisscross/fixed-gamma.png",
+      "docs/figures/mh2m-heterogeneous/crisscross/profiles.png",
+      "docs/figures/mh2m-heterogeneous/crisscross/published-figure-7-comparison.png",
+      "docs/figures/mh2m-heterogeneous/crisscross/published-figure-8-comparison.png",
+      "docs/figures/mh2m-heterogeneous/crisscross/refinement.png",
+      "docs/figures/mh2m-heterogeneous/fields.png",
+      "docs/figures/mh2m-heterogeneous/fixed-gamma.png",
+      "docs/figures/mh2m-heterogeneous/profiles.png",
+      "docs/figures/mh2m-heterogeneous/refinement.png"
+    ],
+    "71": [
+      "docs/figures/elastodynamics/convergence.png",
+      "docs/figures/elastodynamics/displacement-components.png",
+      "docs/figures/elastodynamics/native-displacement.png",
+      "docs/figures/elastodynamics/native-velocity.png",
+      "docs/figures/elastodynamics/profiles.png",
+      "docs/figures/elastodynamics/velocity-components.png"
+    ],
+    "72": [
+      "docs/figures/marmousi/material.png",
+      "docs/figures/marmousi/classical-fields-H20.png",
+      "docs/figures/marmousi/classical-fields-H80.png",
+      "docs/figures/marmousi/classical-profiles.png",
+      "docs/figures/marmousi/mhm-H20-ell1-fields.png",
+      "docs/figures/marmousi/mhm-H20-ell1-profiles.png"
+    ],
+    "73": [
+      "docs/figures/minimal-convergence/scalar-mh2m/convergence.png",
+      "docs/figures/minimal-convergence/darcy-spe10/convergence.png",
+      "docs/figures/minimal-convergence/wave-elastic-wave/convergence.png",
+      "docs/figures/minimal-convergence/wave-three-layer/convergence.png"
+    ]
+  }
+}

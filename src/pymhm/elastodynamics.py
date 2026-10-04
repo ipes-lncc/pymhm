@@ -8,8 +8,10 @@ claim is made for the primal displacement spatial discretization.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from contextlib import ExitStack
 from dataclasses import dataclass
+from dataclasses import field as dataclass_field
 from functools import partial
 from types import TracebackType
 from typing import Any, Literal
@@ -22,7 +24,7 @@ from pymhm.elasticity3d import _KELVIN3, _boundary_vector, constitutive_values_3
 from pymhm.elasticity3d import _local as elastic_local_3d
 from pymhm.elasticity_primal import _KELVIN, _local_primal, constitutive_values
 from pymhm.elements import boundary_data, triangle_quadrature, vector_values
-from pymhm.lagrange import nodal_space, tabulate
+from pymhm.lagrange import nodal_space, reference_values, tabulate
 from pymhm.maxwell_dg import physical_basis, physical_points, quadrature
 from pymhm.mesh import FaceSpace, FloatArray, IntArray, SkeletonSpace, TriangleMesh, positive_int
 from pymhm.parallel import map_local
@@ -36,6 +38,7 @@ from pymhm.tetrahedral import (
     tetrahedron_quadrature,
 )
 from pymhm.triangle_fields import (
+    SeparableTriangleField,
     TimeDependentTriangleField,
     TriangleQuadratureField,
     triangle_field_quadrature,
@@ -100,7 +103,7 @@ class ElastodynamicLocal:
             )
             if not np.any(normalized):
                 return np.zeros(self.mass.shape[0])
-            basis, _ = physical_basis(self.mesh, self.degree, bary)
+            basis = reference_values(self.degree, bary.reshape(-1, 3)).reshape(*bary.shape[:2], -1)
             points = physical_points(self.mesh, bary)
             values = evaluate(data, points.reshape(-1, dimension)).reshape(points.shape)
             weights = normalized * self.mesh.areas[:, None]
@@ -119,6 +122,8 @@ class ElastodynamicLocal:
         A provider with ``at_time`` returns a spatial quadrature field. Both
         paths supply physical force density, with no implicit density factor.
         """
+        if isinstance(source, PreparedElastodynamicSource):
+            return source.load_at_time(self, time)
         if isinstance(source, TimeDependentTriangleField):
             return self.load(source.at_time(time))
         if isinstance(source, TriangleQuadratureField):
@@ -128,6 +133,69 @@ class ElastodynamicLocal:
             if callable(source)
             else source
         )
+
+
+@dataclass(frozen=True)
+class PreparedElastodynamicSource:
+    """Read-only original spatial force vectors in their executed local nodal bases.
+
+    Loads use binary64 and have no implicit density weighting. Preparation is
+    explicit: vectors belong to the exact local objects that integrated the
+    source. They cannot be reused on another stepper or approximation space.
+    The temporal factor is evaluated at every original endpoint/substep time.
+    This snapshot owns no native factorization and imposes no time update.
+    """
+
+    locals: tuple[ElastodynamicLocal, ...]
+    loads: tuple[FloatArray, ...]
+    time_function: Callable[[float], float]
+    _indices: dict[int, int] = dataclass_field(init=False, repr=False)
+
+    def __post_init__(self) -> None:
+        """Validate and copy original nodal vectors without narrowing their dtype."""
+        if (
+            not self.locals
+            or len(self.locals) != len(self.loads)
+            or len({id(local) for local in self.locals}) != len(self.locals)
+            or not callable(self.time_function)
+        ):
+            raise ValueError("provide distinct executed locals, matching loads and a time function")
+        loads = []
+        for local, raw in zip(self.locals, self.loads, strict=True):
+            values = np.asarray(raw)
+            if (
+                local.nodes.shape[1] != 2
+                or values.dtype != np.dtype(float)
+                or values.shape != (local.mass.shape[0],)
+                or not np.isfinite(values).all()
+            ):
+                raise ValueError(
+                    "prepared loads require finite binary64 original planar nodal vectors"
+                )
+            owned = values.copy()
+            owned.setflags(write=False)
+            loads.append(owned)
+        object.__setattr__(self, "loads", tuple(loads))
+        object.__setattr__(self, "_indices", {id(local): i for i, local in enumerate(self.locals)})
+
+    def load_at_time(self, local: ElastodynamicLocal, time: float) -> FloatArray:
+        """Scale the original vector, rejecting a different basis/mesh and nonreal time data."""
+        index = self._indices.get(id(local))
+        if index is None or self.locals[index] is not local:
+            raise ValueError("prepared source belongs to different executed local operators")
+        if np.iscomplexobj(time) or np.ndim(time) != 0 or not np.isfinite(time):
+            raise ValueError("prepared source time must be finite and real")
+        factor = self.time_function(time)
+        if np.iscomplexobj(factor) or np.ndim(factor) != 0 or not np.isfinite(factor):
+            raise ValueError("prepared source time scale must be a finite real scalar")
+        factor = float(factor)
+        if not np.isfinite(factor):
+            raise ValueError("prepared source time scale must be finite in binary64")
+        with np.errstate(over="ignore", invalid="ignore"):
+            load = self.loads[index] * factor
+        if not np.isfinite(load).all():
+            raise ValueError("prepared source scaled load must remain finite")
+        return load
 
 
 def _make_local(
@@ -437,6 +505,29 @@ class ElastodynamicStepper:
         for local, field in zip(self.locals, fields, strict=True):
             np.add.at(result, local.trace_dofs, local.coupling.T @ field)
         return result
+
+    def prepare_source(self, source: SeparableTriangleField) -> PreparedElastodynamicSource:
+        """Integrate an explicitly separable planar source once in the original local bases.
+
+        The spatial provider/rule, force units and nodal ordering are unchanged.
+        This opt-in snapshot preserves original Newmark and boundary equations;
+        it is passed to ``advance`` like an ordinary source. Algebraic temporal
+        scaling may differ by rounding from integrating a pre-scaled field.
+        Nonseparable sources and three-dimensional sources keep their existing
+        integration path. Native resources remain owned by this stepper.
+        """
+        if self._closed:
+            raise RuntimeError("prepare a source on an open elastodynamic stepper")
+        if self.dimension != 2:
+            raise ValueError("prepared triangular sources require two dimensions")
+        if not isinstance(source, SeparableTriangleField):
+            raise TypeError("source must declare an explicit separable triangular field")
+        spatial = source.spatial_field()
+        if not isinstance(spatial, TriangleQuadratureField):
+            raise TypeError("separable spatial source must provide triangular quadrature")
+        return PreparedElastodynamicSource(
+            self.locals, tuple(local.load(spatial) for local in self.locals), source.time_scale
+        )
 
     def _local_step(
         self, index: int, u: FloatArray, v: FloatArray, old: FloatArray, new: FloatArray

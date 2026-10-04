@@ -1,5 +1,6 @@
 """Polynomial and oscillatory skeleton spaces for frequency-domain Helmholtz."""
 
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -97,16 +98,7 @@ class OscillatoryFaceSpace(FaceSpace):
 
     def __post_init__(self) -> None:
         """Validate the frequency and compute independent segment basis transforms."""
-        super().__post_init__()
-        if (
-            self.continuous
-            or np.iscomplexobj(self.wave_number_length)
-            or not np.isfinite(self.wave_number_length)
-            or self.wave_number_length <= 0
-        ):
-            raise ValueError(
-                "oscillatory faces require a positive frequency and discontinuous segments"
-            )
+        self._validate_definition()
         transforms = []
         for segment, degree in enumerate(self.degrees):
             frequency = self.wave_number_length * np.diff(self.breaks)[segment]
@@ -123,6 +115,68 @@ class OscillatoryFaceSpace(FaceSpace):
             transform.setflags(write=False)
             transforms.append(transform)
         object.__setattr__(self, "transforms", tuple(transforms))
+
+    def _validate_definition(self) -> None:
+        """Share the declared partition/frequency conditions between acquisition and replay."""
+        super().__post_init__()
+        if (
+            self.continuous
+            or np.iscomplexobj(self.wave_number_length)
+            or not np.isfinite(self.wave_number_length)
+            or self.wave_number_length <= 0
+        ):
+            raise ValueError(
+                "oscillatory faces require a positive frequency and discontinuous segments"
+            )
+
+    @classmethod
+    def from_executed_transforms(
+        cls,
+        breaks: tuple[float, ...],
+        degrees: tuple[int, ...],
+        transforms: Sequence[Any],
+        *,
+        wave_number_length: float,
+        continuous: bool = False,
+    ) -> "OscillatoryFaceSpace":
+        """Restore owned binary64 segment coordinate matrices without recomputing QR.
+
+        Matrices multiply the declared raw columns on the right. They must
+        be finite, square, nonsingular real binary64 arrays of size degree+1;
+        their input bytes are copied and protected from later mutation. Face
+        orientation is the direction of increasing parameter, including
+        reversed evaluation at 1-t. Evaluation and the representation of one
+        use these exact executed matrices. Callers verify their persisted
+        digest and associate the same partition, degree, frequency and mesh
+        orientation with the archived coefficient vector before restoration.
+        This reconstruction does not reassert the current QR's conditioning
+        test or the approximation hypotheses for an arbitrary supplied basis.
+        """
+        space = cls.__new__(cls)
+        object.__setattr__(space, "breaks", breaks)
+        object.__setattr__(space, "degrees", degrees)
+        object.__setattr__(space, "continuous", continuous)
+        object.__setattr__(space, "wave_number_length", wave_number_length)
+        space._validate_definition()
+        if len(transforms) != len(space.degrees):
+            raise ValueError("provide exactly one executed transform per face segment")
+        restored = []
+        for degree, values in zip(space.degrees, transforms, strict=True):
+            matrix = np.array(values, copy=True)
+            if (
+                matrix.shape != (degree + 1, degree + 1)
+                or matrix.dtype.kind != "f"
+                or matrix.dtype.itemsize != 8
+                or not np.isfinite(matrix).all()
+            ):
+                raise ValueError("executed transforms require finite square real binary64 matrices")
+            sign, _ = np.linalg.slogdet(matrix)
+            if sign == 0:
+                raise ValueError("executed transforms must be nonsingular")
+            matrix.setflags(write=False)
+            restored.append(matrix)
+        object.__setattr__(space, "transforms", tuple(restored))
+        return space
 
     @staticmethod
     def _raw(degree: int, frequency: float, parameter: FloatArray) -> FloatArray:

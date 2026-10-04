@@ -99,7 +99,50 @@ def test_threaded_order_and_quadrature(driver):
             assert_allclose(serial[key], higher[key], rtol=2e-14)
 
 
-def test_archive_digest_and_geometry(driver, tmp_path):
+def test_radial_domain_matches_independent_affine_disk_integral(driver):
+    """Keep full pressure integration separate from one common derivative disk."""
+    mesh = CartesianMacroMesh(2, 2, (-1, 1, -1, 1))
+    values = []
+    for cell in range(4):
+        _, points = qk_space(mesh.submesh(cell, 8), 1)
+        values.append(points[:, 0] + 2j * points[:, 1])
+    candidate = driver.BrokenQField(np.asarray(values), mesh, 8, 1)
+    axis = np.linspace(-1, 1, 9)
+    x, y = np.meshgrid(axis, axis, indexing="ij")
+    reference = driver.PixelCGField(2 * (x + 2j * y), 1, mesh.bounds)
+    material = np.ones((8, 8))
+    for order in (8, 12):
+        actual = driver.mhm_difference(
+            candidate,
+            reference,
+            material,
+            material,
+            omega=2.0,
+            order=order,
+            gradient_exclusion=(0.0, 0.0, 0.4),
+        )
+        assert abs(actual["gradient_domain_area"] - (4 - np.pi * 0.4**2)) < 0.004
+        assert_allclose(
+            actual["gradient_difference"] ** 2, 5 * actual["gradient_domain_area"], rtol=3e-13
+        )
+        assert_allclose(
+            actual["reference_gradient_norm"] ** 2, 20 * actual["gradient_domain_area"], rtol=3e-13
+        )
+        assert actual["gradient_relative_difference"] == pytest.approx(0.5, abs=1e-14)
+        assert_allclose(actual["pressure_difference"] ** 2, 20 / 3, rtol=3e-13)
+    with pytest.raises(ValueError, match="one derivative exclusion"):
+        driver.mhm_difference(
+            candidate,
+            reference,
+            material,
+            material,
+            omega=2.0,
+            gradient_exclusion=(0.0, 0.0, 0.4),
+            gradient_cutout=(-1, 0, -1, 0),
+        )
+
+
+def test_archive_digest_and_geometry(driver, tmp_path, monkeypatch):
     """Load the executed local coefficient vectors only with their exact macro geometry."""
     candidate, _ = fields(driver)
     archive = tmp_path / "mhm.npz"
@@ -119,6 +162,15 @@ def test_archive_digest_and_geometry(driver, tmp_path):
         local_degree=3,
     )
     record.write_text(json.dumps(data))
+    original_read_bytes = Path.read_bytes
+
+    def bounded_read_bytes(path):
+        """Prevent an archive-sized extra buffer while preserving ordinary source reads."""
+        if path.suffix == ".npz":
+            pytest.fail("field archive digests must stream rather than allocate the full file")
+        return original_read_bytes(path)
+
+    monkeypatch.setattr(Path, "read_bytes", bounded_read_bytes)
     assert np.array_equal(driver.BrokenQField.load(record).pressure, candidate.pressure)
     data["macro_shape"] = [3, 2]
     record.write_text(json.dumps(data))

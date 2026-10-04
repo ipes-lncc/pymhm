@@ -1,0 +1,106 @@
+{
+  "case": "tetra-p0",
+  "resolution": 1,
+  "macro_cells": 6,
+  "fine_cells": 48,
+  "degree": 2,
+  "cell_degree": 0,
+  "face_degree": 0,
+  "local_refinement": 2,
+  "source_variant": "projected",
+  "local_refinement_precision": "extended",
+  "coefficient_nmant": 63,
+  "algebraic_residual": 1.1587860934853347e-20,
+  "original_physical_checks": {
+    "original_projected_source_relative_residual": 5.057751314341329e-17,
+    "original_projected_source_residual_norm": 4.4045698460614333e-17,
+    "physical_rhs_norm": 0.8708553608739541,
+    "duplicate_trace_absolute_difference": 1.4907779871675686e-19
+  },
+  "ideal_constant_moment_space_audit": {
+    "definition": "U^{0,0}: constant divergence and original-face normal derivatives",
+    "primary_source": "10.1051/m2an/2021082, Equation(2.19)",
+    "geometry": "tetra",
+    "permeability": "identity",
+    "dimension": 5,
+    "relative_tolerance": 1e-10,
+    "executed_lift_replaced": false,
+    "uniform_inf_sup_verified": false,
+    "general_polyhedral_exactness_claimed": false,
+    "macro_cells": 6,
+    "maxima": {
+      "lift_relative_linf": 3.4328731986684347e-15,
+      "moment_inverse_defect": 1.4489277833096281e-15,
+      "moment_matrix_condition": 271.0989641780812
+    },
+    "rows": [
+      {
+        "cell": 0,
+        "dimension": 5,
+        "lift_relative_linf": 3.389215991189679e-15,
+        "moment_inverse_defect": 1.4489277833096281e-15,
+        "moment_matrix_condition": 271.098964178081
+      },
+      {
+        "cell": 1,
+        "dimension": 5,
+        "lift_relative_linf": 3.4328731986684347e-15,
+        "moment_inverse_defect": 1.0547118733938987e-15,
+        "moment_matrix_condition": 271.09896417808096
+      },
+      {
+        "cell": 2,
+        "dimension": 5,
+        "lift_relative_linf": 3.125610302986043e-15,
+        "moment_inverse_defect": 1.0794316829265682e-15,
+        "moment_matrix_condition": 271.09896417808073
+      },
+      {
+        "cell": 3,
+        "dimension": 5,
+        "lift_relative_linf": 3.354015560656316e-15,
+        "moment_inverse_defect": 1.119764003743029e-15,
+        "moment_matrix_condition": 271.0989641780812
+      },
+      {
+        "cell": 4,
+        "dimension": 5,
+        "lift_relative_linf": 3.063666218864699e-15,
+        "moment_inverse_defect": 1.4489277833096281e-15,
+        "moment_matrix_condition": 271.09896417808073
+      },
+      {
+        "cell": 5,
+        "dimension": 5,
+        "lift_relative_linf": 3.353148198918334e-15,
+        "moment_inverse_defect": 1.0794316829265682e-15,
+        "moment_matrix_condition": 271.09896417808085
+      }
+    ],
+    "accepted": true
+  },
+  "error_quadrature": [
+    10,
+    12
+  ],
+  "error_quadrature_absolute_change": 4.323874591705135e-12,
+  "error_quadrature_relative_change": 1.0309982986732307e-11,
+  "norms": {
+    "quadrature_10": {
+      "pressure_l2": 0.12898153033016388,
+      "flux_l2": 1.1747780228184757
+    },
+    "quadrature_12": {
+      "pressure_l2": 0.12898153033149368,
+      "flux_l2": 1.1747780228141518
+    }
+  },
+  "pressure_l2": 0.12898153033149368,
+  "flux_l2": 1.1747780228141518,
+  "elapsed_seconds": 2.188598020002246,
+  "archive": "tetra-p0-n1.npz",
+  "sha256": "a00d5665556aa34e8e128538318e998585ed77b36489f51c260fa2e4da833639",
+  "acquisition_uuid": "2ab0f277-7324-46aa-a17f-6cfa2046498d",
+  "finite_case_accepted": true,
+  "native_whole_field_agreement_verified": false
+}

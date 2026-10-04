@@ -1,0 +1,100 @@
+{
+  "schema": "pymhm-initial-scalar-publication-receipt-v1",
+  "accepted": true,
+  "complete": true,
+  "initial_three_levels": true,
+  "row_count": 9,
+  "original_execution_record_sha256": "12a7c7707272633f5be8b6055589a1aa15feeb6a90a55ed921590418d1835bd5",
+  "published_metadata_record_sha256": "12a7c7707272633f5be8b6055589a1aa15feeb6a90a55ed921590418d1835bd5",
+  "evidence": {
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-boundary-n2.json": {
+      "original_execution_record_sha256": "384a53bad1044dfa66d5c8f37b8fd5147fd900ea81c38fbba11b9e4e02a3bfea",
+      "published_metadata_record_sha256": "384a53bad1044dfa66d5c8f37b8fd5147fd900ea81c38fbba11b9e4e02a3bfea",
+      "acquisition_uuid": "87ea8915-46c7-45cf-be3e-65db8133b622"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-boundary-n2-resource.json": {
+      "original_execution_record_sha256": "9878eee88b02f811b9d2cdec65b943af3ebac84afa7b1c3cc4f6dd1d86f25d7d",
+      "published_metadata_record_sha256": "9878eee88b02f811b9d2cdec65b943af3ebac84afa7b1c3cc4f6dd1d86f25d7d"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-boundary-n4.json": {
+      "original_execution_record_sha256": "464b42dd742744e3c036f6ebe91060035757124d772e700cae2968d63a631c11",
+      "published_metadata_record_sha256": "464b42dd742744e3c036f6ebe91060035757124d772e700cae2968d63a631c11",
+      "acquisition_uuid": "86da14b2-e285-4195-8b5c-a25b8bf3a622"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-boundary-n4-resource.json": {
+      "original_execution_record_sha256": "42297b2cc3df60cc813f8661e0f58905d2017b1e0198b8474223a48258d584a6",
+      "published_metadata_record_sha256": "42297b2cc3df60cc813f8661e0f58905d2017b1e0198b8474223a48258d584a6"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-boundary-n8.json": {
+      "original_execution_record_sha256": "21bf6e0cbdc38c76587303571056dc60571b8f47587660cb61e8cd5e444bac43",
+      "published_metadata_record_sha256": "21bf6e0cbdc38c76587303571056dc60571b8f47587660cb61e8cd5e444bac43",
+      "acquisition_uuid": "e291ca47-5d90-4e37-8eab-8b2b9c598ca1"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-boundary-n8-resource.json": {
+      "original_execution_record_sha256": "33fe4e51b55b5f3a11186879fc19e723f88740ac3e22b852da25722f5d49637f",
+      "published_metadata_record_sha256": "33fe4e51b55b5f3a11186879fc19e723f88740ac3e22b852da25722f5d49637f"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-internal-n2.json": {
+      "original_execution_record_sha256": "cf99070604ae29dc2568d3c26bfad3e0d2743ad11362c64e0dc481cd218b623f",
+      "published_metadata_record_sha256": "cf99070604ae29dc2568d3c26bfad3e0d2743ad11362c64e0dc481cd218b623f",
+      "acquisition_uuid": "6e948f5f-7708-47ad-8344-26128dba84e5"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-internal-n2-resource.json": {
+      "original_execution_record_sha256": "4f9a9a994b3368b28f7b9841da547d9357e0d6b52c9732b5c798b4453bef587f",
+      "published_metadata_record_sha256": "4f9a9a994b3368b28f7b9841da547d9357e0d6b52c9732b5c798b4453bef587f"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-internal-n4.json": {
+      "original_execution_record_sha256": "9ed7d179427fc1f2a1e293692de1de46a4ccb022111c973c0180a07f7676134f",
+      "published_metadata_record_sha256": "9ed7d179427fc1f2a1e293692de1de46a4ccb022111c973c0180a07f7676134f",
+      "acquisition_uuid": "44055ad9-715b-40f1-bcbe-b2a30679e6ec"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-internal-n4-resource.json": {
+      "original_execution_record_sha256": "cd73d8bc59c05719d8ae3055089de49cbd4a38dd51e487c0418f4a841cd2db7f",
+      "published_metadata_record_sha256": "cd73d8bc59c05719d8ae3055089de49cbd4a38dd51e487c0418f4a841cd2db7f"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-internal-n8.json": {
+      "original_execution_record_sha256": "b8bb56087135b661271091391026e837051396bdcfbdc7b148b78ea745bebfc8",
+      "published_metadata_record_sha256": "b8bb56087135b661271091391026e837051396bdcfbdc7b148b78ea745bebfc8",
+      "acquisition_uuid": "748ac21c-591c-421a-bd50-a7a962f971e5"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-internal-n8-resource.json": {
+      "original_execution_record_sha256": "b5f930391622ab4e3d8035370884c8720e950f2bebaa1b732a837f745316d4ca",
+      "published_metadata_record_sha256": "b5f930391622ab4e3d8035370884c8720e950f2bebaa1b732a837f745316d4ca"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-variable-n2.json": {
+      "original_execution_record_sha256": "d79417b68fb7c70b5436efd5bb21b1e5e3afeb07124c6b2b369d22a4510a5b8c",
+      "published_metadata_record_sha256": "d79417b68fb7c70b5436efd5bb21b1e5e3afeb07124c6b2b369d22a4510a5b8c",
+      "acquisition_uuid": "c945883a-e1ef-4319-a0ce-f7915ce5f04f"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-variable-n2-resource.json": {
+      "original_execution_record_sha256": "60b030a47656269a59aa1010c7ebb2be97c28eaa574639e802bf68d28a6317ae",
+      "published_metadata_record_sha256": "60b030a47656269a59aa1010c7ebb2be97c28eaa574639e802bf68d28a6317ae"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-variable-n4.json": {
+      "original_execution_record_sha256": "6ed189678984145606094de85860838229a63fb336aa3d60afee29062544107a",
+      "published_metadata_record_sha256": "6ed189678984145606094de85860838229a63fb336aa3d60afee29062544107a",
+      "acquisition_uuid": "8ad2825f-4be2-40d4-ae56-9298cd0089d2"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-variable-n4-resource.json": {
+      "original_execution_record_sha256": "f6f50f5dcacc98c8b6969e693ba0bd52dc04d869e0de020bf3e25fc391689b9e",
+      "published_metadata_record_sha256": "f6f50f5dcacc98c8b6969e693ba0bd52dc04d869e0de020bf3e25fc391689b9e"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-variable-n8.json": {
+      "original_execution_record_sha256": "4306e1897d4466eead550ac67dc241c587c3caffa3aa88ab910362f017663d49",
+      "published_metadata_record_sha256": "4306e1897d4466eead550ac67dc241c587c3caffa3aa88ab910362f017663d49",
+      "acquisition_uuid": "33f467cb-365a-4056-9520-5f4266b55c35"
+    },
+    "examples/results/minimal-convergence/oseen2d-data/evidence/flow2d-oseen-variable-n8-resource.json": {
+      "original_execution_record_sha256": "ad799421f3c5823618cdf5b86732447b36e31bf0de47fd49a1c6a2aeb4b13ef6",
+      "published_metadata_record_sha256": "ad799421f3c5823618cdf5b86732447b36e31bf0de47fd49a1c6a2aeb4b13ef6"
+    }
+  },
+  "figures": {
+    "docs/figures/minimal-convergence/oseen2d-data/convergence.png": "50f3508b2cebc695d890f9e52ba30c2306f11708ff0be7f824615f22d740f095",
+    "docs/figures/minimal-convergence/oseen2d-data/convergence.svg": "04d3f129fd35766808c4d63803f91b0adb57c2c3be6888a5e4f54ed8aad06a4a"
+  },
+  "figure_original_size_inspected": true,
+  "pde_solves_during_publication": 0,
+  "coefficient_vectors_persisted_by_publication": false,
+  "historical_literature_reproduction": false
+}

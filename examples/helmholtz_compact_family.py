@@ -7,15 +7,21 @@ operators, response coefficients or polynomial trace subspaces.
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
+from contextlib import nullcontext
 from dataclasses import dataclass
 from typing import Any, Literal
 
 import numpy as np
 from scipy import sparse
 
-from examples.helmholtz_trace_family import solve_restricted_coordinates
-from pymhm.helmholtz_forms import complex_vector
+from examples.helmholtz_trace_family import (
+    solve_restricted_coordinates,
+    verify_helmholtz_local_field,
+    verify_helmholtz_trace_fields,
+)
+from examples.local_response_cache import ExactResponseCache
+from pymhm.helmholtz_forms import complex_vector, real_vector
 from pymhm.hybrid import LocalResponse
 from pymhm.parallel import map_local
 
@@ -64,18 +70,10 @@ class CompactLocal:
         """Recover coefficients and check the original local equations and balance."""
         local_trace = trace[self.dofs]
         values = self.source - self.lifts @ local_trace
-        boundary_action = self.coupling @ local_trace
-        defect = self.matrix @ values + boundary_action - self.load
-        scale = max(
-            np.linalg.norm(abs(self.matrix) @ abs(values)),
-            np.linalg.norm(boundary_action),
-            np.linalg.norm(self.load),
-            np.finfo(float).tiny,
+        balance, residual = verify_helmholtz_local_field(
+            self.matrix, self.coupling, self.load, values, local_trace
         )
-        residual = float(np.linalg.norm(defect) / scale)
-        if residual > 1e-10:
-            raise ValueError("compact reconstruction fails original local equations")
-        return complex_vector(values), complex(np.sum(complex_vector(defect))), residual
+        return complex_vector(values), balance, residual
 
     @property
     def storage_bytes(self) -> int:
@@ -118,6 +116,41 @@ class CompactFactory:
         )
 
 
+def acquire_local_responses(
+    factory: Any,
+    cells: Iterable[int],
+    *,
+    backend: str = "serial",
+    workers: int = 1,
+    local_solver: str = "scipy",
+    local_refinement_precision: Literal["double", "extended"] = "double",
+    cache: ExactResponseCache | None = None,
+) -> list[CompactLocal]:
+    """Assemble every original cell and optionally reuse identical inverse contracts.
+
+    Cached execution is serial because the caller owns live native factors.
+    Every cell is assembled and fingerprinted; each response retains its own
+    global trace injection map. No geometric or coefficient grouping bypasses
+    the original algebraic identity check.
+    """
+    if cache is None:
+        return map_local(
+            CompactFactory(factory, local_solver, local_refinement_precision),
+            cells,
+            backend=backend,
+            workers=workers,
+        )
+    if backend != "serial" or workers != 1:
+        raise ValueError("exact response caching requires one serial native factor owner")
+    result = []
+    for cell in cells:
+        assembled = factory(cell)
+        result.append(
+            CompactLocal.from_response(cache.condense(assembled.problem), assembled.metadata)
+        )
+    return result
+
+
 @dataclass(frozen=True)
 class CompactField:
     """Physical fields and original-equation diagnostics in one restricted space."""
@@ -127,6 +160,24 @@ class CompactField:
     residual: float
     local_residual_max: float
     balance: np.ndarray
+    original_trace_residual: float
+
+
+@dataclass(frozen=True)
+class CompactTrace:
+    """Solved trace with its real coordinates in the prepared execution basis.
+
+    ``trace`` uses complex coefficients in the requested polynomial subspace.
+    ``prepared_coordinates`` retains interleaved real/imaginary coefficients
+    after injection into the original response basis. Local reconstruction
+    consumes those coordinates without loading or retaining every local field.
+    """
+
+    trace: np.ndarray
+    prepared_coordinates: np.ndarray
+    residual: float
+    degree: int
+    free_dofs: np.ndarray
 
 
 @dataclass(frozen=True)
@@ -147,16 +198,28 @@ class CompactFamily:
         workers: int = 1,
         local_solver: str = "scipy",
         local_refinement_precision: Literal["double", "extended"] = "double",
+        exact_response_cache: bool = False,
     ) -> CompactFamily:
         """Assemble original local blocks and accumulate COO arrays in cell order."""
-        local = tuple(
-            map_local(
-                CompactFactory(factory, local_solver, local_refinement_precision),
-                range(len(factory.mesh.cells)),
-                backend=backend,
-                workers=workers,
-            )
+        if not isinstance(exact_response_cache, bool):
+            raise ValueError("exact_response_cache must be a boolean")
+        owner = (
+            ExactResponseCache(solver=local_solver, refinement_precision=local_refinement_precision)
+            if exact_response_cache
+            else nullcontext(None)
         )
+        with owner as cache:
+            local = tuple(
+                acquire_local_responses(
+                    factory,
+                    range(len(factory.mesh.cells)),
+                    backend=backend,
+                    workers=workers,
+                    local_solver=local_solver,
+                    local_refinement_precision=local_refinement_precision,
+                    cache=cache,
+                )
+            )
         return cls.from_locals(factory.skeleton, local)
 
     @classmethod
@@ -169,11 +232,15 @@ class CompactFamily:
         """
         if iter(local) is local:
             raise ValueError("local responses must be repeatable, not a one-shot iterator")
-        count = sum(len(item.dofs) ** 2 for item in local)
+        count = 0
+        dtype = np.dtype(float)
+        for item in local:
+            count += len(item.dofs) ** 2
+            dtype = np.result_type(dtype, item.schur.dtype, item.rhs.dtype, item.boundary.dtype)
         rows = np.empty(count, dtype=np.int64)
         columns = np.empty_like(rows)
-        entries = np.empty(count)
-        rhs = np.zeros(skeleton.size)
+        entries = np.empty(count, dtype=dtype)
+        rhs = np.zeros(skeleton.size, dtype=dtype)
         start = 0
         for item in local:
             stop = start + len(item.dofs) ** 2
@@ -190,23 +257,67 @@ class CompactFamily:
             rhs[item.dofs] -= item.boundary
         return cls(skeleton, local, matrix, rhs)
 
-    def solve(self, degree: int, *, solver: str = "scipy") -> CompactField:
-        """Restrict the original Schur form and reuse unmodified source/trace lifts."""
+    def solve_trace(self, degree: int, *, solver: str = "scipy") -> CompactTrace:
+        """Solve only the original trace equations, retaining no reconstructed fields."""
         fixed = {dof: value for item in self.local for dof, value in item.fixed.items()}
-        _, injection, _, trace, residual = solve_restricted_coordinates(
+        _, injection, free, trace, residual = solve_restricted_coordinates(
             self.skeleton, self.matrix, self.rhs, fixed, degree, solver=solver
         )
         lifted = np.asarray(injection @ trace).ravel()
-        pressure, balance, local_residual = [], [], []
+        return CompactTrace(complex_vector(trace), lifted, residual, degree, free)
+
+    def verify_fields(self, trace: CompactTrace, fields: Iterable[np.ndarray]) -> float:
+        """Check original weak continuity from physical fields in the requested space.
+
+        Each original equation is ``sum(B.T u)=g`` on free lower-degree trace
+        coordinates. The prescribed Neumann coordinates are excluded, while
+        the Dirichlet functional ``g`` is retained. No Schur blocks or response
+        coefficients enter this check. The scale accumulates absolute physical
+        coupling actions before cancellation. Both inputs stream in cell order.
+        """
+        return verify_helmholtz_trace_fields(
+            self.skeleton,
+            trace.degree,
+            trace.free_dofs,
+            (
+                (item.coupling, item.dofs, item.boundary, real_vector(coefficients))
+                for item, coefficients in zip(self.local, fields, strict=True)
+            ),
+            dtype=np.result_type(self.matrix.dtype, self.rhs.dtype),
+        )
+
+    def reconstruct(
+        self, prepared_coordinates: np.ndarray
+    ) -> Iterator[tuple[np.ndarray, complex, float]]:
+        """Yield one physical field and its original-equation checks in cell order.
+
+        Coordinates are real and interleaved in the prepared trace basis, rather
+        than complex coefficients in a possibly smaller requested subspace.
+        A repeatable disk store releases each local response after its yield.
+        """
+        trace = np.asarray(prepared_coordinates)
+        if (
+            np.iscomplexobj(trace)
+            or trace.shape != (self.skeleton.size,)
+            or not np.isfinite(trace).all()
+        ):
+            raise ValueError("prepared trace must contain finite real interleaved coordinates")
         for item in self.local:
-            values, conservation, error = item.reconstruct(lifted)
+            yield item.reconstruct(trace)
+
+    def solve(self, degree: int, *, solver: str = "scipy") -> CompactField:
+        """Restrict the original Schur form and reuse unmodified source/trace lifts."""
+        trace = self.solve_trace(degree, solver=solver)
+        pressure, balance, local_residual = [], [], []
+        for values, conservation, error in self.reconstruct(trace.prepared_coordinates):
             pressure.append(values)
             balance.append(conservation)
             local_residual.append(error)
         return CompactField(
             tuple(pressure),
-            complex_vector(trace),
-            residual,
+            trace.trace,
+            trace.residual,
             max(local_residual),
             np.asarray(balance),
+            self.verify_fields(trace, pressure),
         )

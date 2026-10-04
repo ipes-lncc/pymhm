@@ -245,6 +245,68 @@ Those parameters and the layer interfaces are required for a quantitative
 reproduction of Figures 6–9. Absorbing elastic boundaries are mentioned in
 Section 2 as a possible extension and are not used in these examples.
 
+The [three-layer verification record](../figures/elastodynamics/three-layer-2017-whole301-verification.json)
+reports complete original-equation and coefficient-coordinate comparisons for a specified
+interpretation of this problem. Its domain is $1000\times450\,\mathrm m$,
+with depth increasing downward and the radial source centered at
+$(500,225)\,\mathrm m$. Digitized interfaces and material-table layers 1, 7
+and 15 define the three materials. The force has radius $20\,\mathrm m$,
+unit amplitude in $\mathrm{N/m^3}$, selected Ormsby corners
+$(5,10,15,20)\,\mathrm{Hz}$, time shift $0.2\,\mathrm s$ and duration
+$0.4\,\mathrm s$. These declared inputs define a reproducible physical
+case; the unavailable original mesh, horizons and source parameters prevent
+identifying it as a literal reproduction of Figures 6–9.
+
+The physical plane-strain convention preserves the tabulated wave speeds:
+
+$$
+\mu=\rho V_s^2,\qquad
+\lambda=\rho(V_p^2-2V_s^2),\qquad
+\sigma=2\mu\epsilon(u)+\lambda\operatorname{tr}(\epsilon(u))I.
+$$
+
+The article prints $\rho(V_p^2-V_s^2)$ for its second coefficient.
+Substituting that value into the stated stress law changes the compressional
+speed to $\sqrt{V_p^2+V_s^2}$; the record explicitly distinguishes the
+executed physical convention from that printed expression.
+
+Both implementations use the same 341 triangular macros, continuous local
+vector P3 spaces on 64 fine triangles per macro, vector P2 traction traces
+on eight segments per original face, zero initial data and homogeneous
+exterior traction. Newmark parameters $(\beta,\gamma)=(1/4,1/2)$ and
+$\Delta t=0.001\,\mathrm s$ give 301 saved states through
+$T=0.3\,\mathrm s$. No rigid-motion gauge is added: the transient mass
+operator and initial data determine that component. The independent
+reference uses native FEniCS Basix/UFL/DOLFINx operators; its verified
+revisions and executed binary, basis, operator and state digests appear in
+the record. It is an instrumented comparison implementation.
+
+All 301 states pass the unchanged relative $10^{-10}$ coordinate comparison
+criterion. Volume differences use native Basix Gram matrices after a nodal
+coefficient bijection. These values therefore describe a common Basix
+interpretation; evaluation with each implementation's own executed volume
+basis remains a separate required comparison. The maximum differences in
+that common interpretation and the declared P2 traction convention are:
+
+| Common-basis volume norm or P2 traction norm | Maximum relative difference |
+| --- | ---: |
+| Displacement, volume L2 | $2.170\times10^{-13}$ |
+| Velocity, volume L2 | $2.874\times10^{-13}$ |
+| Raw displacement gradient, volume L2 | $8.580\times10^{-13}$ |
+| Raw Cauchy stress, volume L2 | $4.800\times10^{-13}$ |
+| Negative mean physical traction, skeleton L2 | $4.404\times10^{-11}$ |
+| Full broken H1 in the declared normalized variables | $8.580\times10^{-13}$ |
+
+The multiplier is the negative physical traction averaged over the preceding
+time slab. Every original macroface is integrated once. Raw Cauchy stress
+is not an H(div) stress reconstruction. The source remains active at the
+final time, so the energy balance includes its work. Original momentum
+residuals are at most $2.318\times10^{-13}$ in PyMHM and
+$2.101\times10^{-13}$ in the native reference. Original-equation and
+coordinate agreement do not establish physical resolution. A classical conforming
+reference on several finer meshes and space, time and quadrature refinement
+remain required; such a numerical reference is not an exact solution.
+
 Portable checks compare a complete displacement/traction saddle with local
 condensation, verify physical energy, independent local step counts, material
 mass integration, boundary signs and serial/process trajectories. Native

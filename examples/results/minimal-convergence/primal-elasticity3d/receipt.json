@@ -1,0 +1,46 @@
+{
+  "schema": "pymhm-initial-scalar-publication-receipt-v1",
+  "accepted": true,
+  "complete": true,
+  "initial_three_levels": true,
+  "row_count": 3,
+  "original_execution_record_sha256": "42174904ec3d7c1bdb305925479914a85034d480ebbb0cd7c1330ec7a5274858",
+  "published_metadata_record_sha256": "42174904ec3d7c1bdb305925479914a85034d480ebbb0cd7c1330ec7a5274858",
+  "evidence": {
+    "examples/results/minimal-convergence/primal-elasticity3d/evidence/elasticity3d-anisotropic-p3-n1.json": {
+      "original_execution_record_sha256": "d63b19ea7ce430092d765344f737b4357f8b4e91d9211ccf45ebb22abc582227",
+      "published_metadata_record_sha256": "d63b19ea7ce430092d765344f737b4357f8b4e91d9211ccf45ebb22abc582227",
+      "acquisition_uuid": "208ab281-960f-4820-86ea-e8934a365b29"
+    },
+    "examples/results/minimal-convergence/primal-elasticity3d/evidence/elasticity3d-anisotropic-p3-n1-resource.json": {
+      "original_execution_record_sha256": "f44c6239b25556a3e3cde210990727770aee1f2810d1dbd23a4c096d738572b2",
+      "published_metadata_record_sha256": "f44c6239b25556a3e3cde210990727770aee1f2810d1dbd23a4c096d738572b2"
+    },
+    "examples/results/minimal-convergence/primal-elasticity3d/evidence/elasticity3d-anisotropic-p3-n2.json": {
+      "original_execution_record_sha256": "7a9cd796252075fa52f55d44fb4c2aa70a5770e78d162ec75700a52d453149db",
+      "published_metadata_record_sha256": "7a9cd796252075fa52f55d44fb4c2aa70a5770e78d162ec75700a52d453149db",
+      "acquisition_uuid": "f7b0246f-b209-4917-be59-8a2a0557683c"
+    },
+    "examples/results/minimal-convergence/primal-elasticity3d/evidence/elasticity3d-anisotropic-p3-n2-resource.json": {
+      "original_execution_record_sha256": "fd082640802dd11d8079b76253cd0aa5b1ce7c2d49801a8c25ed4e18ed9f247a",
+      "published_metadata_record_sha256": "fd082640802dd11d8079b76253cd0aa5b1ce7c2d49801a8c25ed4e18ed9f247a"
+    },
+    "examples/results/minimal-convergence/primal-elasticity3d/evidence/elasticity3d-anisotropic-p3-n3.json": {
+      "original_execution_record_sha256": "1cf4d5e444b2124e0e9efc41cb5e83a23480160d9855f9a275e1eb3333860cc1",
+      "published_metadata_record_sha256": "1cf4d5e444b2124e0e9efc41cb5e83a23480160d9855f9a275e1eb3333860cc1",
+      "acquisition_uuid": "1a7f08cf-fa32-4459-9920-add1c1dc12c4"
+    },
+    "examples/results/minimal-convergence/primal-elasticity3d/evidence/elasticity3d-anisotropic-p3-n3-resource.json": {
+      "original_execution_record_sha256": "aa702c0bf19223659bf98c22ad2ea81297bf874ba9422f911a370df7113f6ff6",
+      "published_metadata_record_sha256": "aa702c0bf19223659bf98c22ad2ea81297bf874ba9422f911a370df7113f6ff6"
+    }
+  },
+  "figures": {
+    "docs/figures/minimal-convergence/primal-elasticity3d/convergence.png": "68c0d9b7d11733a3b8e3d822d23b8b2842077e1a0e20255a5288c83ca2073240",
+    "docs/figures/minimal-convergence/primal-elasticity3d/convergence.svg": "c774feac21ec041e544494589e1e2b6eaa4d8152e4cea85e7fecb5147068ddd5"
+  },
+  "figure_original_size_inspected": true,
+  "pde_solves_during_publication": 0,
+  "coefficient_vectors_persisted_by_publication": false,
+  "historical_literature_reproduction": false
+}

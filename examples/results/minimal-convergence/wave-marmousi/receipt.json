@@ -1,0 +1,48 @@
+{
+  "schema": "pymhm-initial-convergence-public-verification-v1",
+  "status": "verified_initial_study",
+  "case": "marmousi",
+  "study_sha256": "f3271184809ab1e7b0f435c11b7361c65023b9da06c13bf9dae347b133c152d2",
+  "generation_id": "b745af76-66f0-496e-957b-389061c00311",
+  "identity_convention": "Original producer UUID when recorded; original execution record SHA256 otherwise",
+  "levels": [
+    2,
+    4,
+    8
+  ],
+  "scope": "Explicit smaller primary-data crop pilot; initial macro refinement on a fixed fine mesh",
+  "original_equation_threshold": 1e-10,
+  "original_equation_maximum": 1.0023425508744228e-14,
+  "quadrature_sensitivity_threshold": 1e-10,
+  "quadrature_sensitivity_maximum": 2.4903588524183103e-16,
+  "exact_solution_available": false,
+  "asymptotic_convergence_verified": false,
+  "historical_literal_reproduction": false,
+  "figures_sha256": {
+    "docs/figures/minimal-convergence/wave-marmousi/convergence.png": "da0182b47699a7898550f532a43565427d48a1cf7d4c57c14321ef39268626da",
+    "docs/figures/minimal-convergence/wave-marmousi/convergence.svg": "5c9ed096a2ee0256ef0a6589c8f9ca4800331d50d3e1cf1c04a2e45936346a7d"
+  },
+  "rendered_inspection": "All five PNGs inspected at 1024x640 publication size; no clipping or overlap",
+  "aggregate_private_verification_sha256": "1b5b6b5d388bd620135f3a779bae8e7878873a1af71abc50eec9b8230fa3b83f",
+  "original_executed_source_manifests": [
+    {
+      "manifest": "build/results/minimal-wave-marmousi-v1/executed-sources/manifest.json",
+      "sha256": "d2851862542e30f8e6783dc1a174f6039aa74a50918b02a928ea8a15c9c7e624",
+      "generation_id": "b745af76-66f0-496e-957b-389061c00311",
+      "files": 125
+    }
+  ],
+  "native_threads": 1,
+  "workers": 1,
+  "coefficient_and_reference_source_archives_remain_private": true,
+  "original_execution_record_sha256": "f3271184809ab1e7b0f435c11b7361c65023b9da06c13bf9dae347b133c152d2",
+  "published_metadata_record_sha256": "f3271184809ab1e7b0f435c11b7361c65023b9da06c13bf9dae347b133c152d2",
+  "publication_consumer": "Private metadata normalization; numerical field values and executed SHA256 values unchanged",
+  "private_path_alias_scheme": "private-comparison/<project>/<module>",
+  "numeric_fields_unchanged": true,
+  "source_and_basis_sha256_values_unchanged": true,
+  "original_execution_snapshot_unchanged": true,
+  "pde_solves_during_publication": 0,
+  "byte_equality_with_original_execution_record": true,
+  "figure_source_execution_record_sha256": "f3271184809ab1e7b0f435c11b7361c65023b9da06c13bf9dae347b133c152d2"
+}

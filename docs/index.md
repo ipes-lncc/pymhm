@@ -88,7 +88,7 @@ or accepted conda-forge feedstock.
 
 The [MSL GaLS comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity-reference.md) checks displacement,
 pressure, gradients and full stress for P1/P1, P2/P2 and P3/P3 elasticity.
-The [near-incompressibility study](cases/elasticity.md) includes finite material
+The [near-incompressibility study](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity.md) includes finite material
 ratios through $10^8$, the exact incompressible limit and six refinement points.
 [BDM2 Darcy](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy-bdm.md) and [mixed elasticity](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-elasticity.md)
 include independent DOLFINx/Basix assembly checks and analytical convergence cases.

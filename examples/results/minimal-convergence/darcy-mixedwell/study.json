@@ -1,0 +1,5237 @@
+{
+  "schema": "pymhm-minimal-darcy-convergence-v1",
+  "case": "mixedwell",
+  "acquisition_id": "8b32e1a7-8f04-49b0-8f1c-4a8c10957b2d",
+  "source_sha256": {
+    "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+    "examples/field_sampling.py": "8822c5adf3914f9e0285d1cc871f32c69617114a40aa3975ccf82a009a837556",
+    "examples/mh_campaign.py": "31d15659dfe754a1a865685d4697b6a0acbf4eb8b81459c536c59541862e79f3",
+    "examples/minimal_darcy_convergence.py": "2e4c941846a0fb37001da680349708831bef9a4d0daf489d8735c7acee42fe5d",
+    "examples/pgmhm_campaign.py": "94e7f8d085a61c8e55d49176c161aef86100f3bed14d3abd93b98aade00689ac",
+    "examples/results/spe10/layer-36.npz": "ffe319ce6c126d338a8ad95e497a0121c87e3d7d3eadafb4021ebbe7d3998512",
+    "examples/solve_mapped_well.py": "0c00ec837510eb9c06458f4223cd88e25eebb9ccbe3f72daa7ac8974d148c7b3",
+    "examples/solve_spe10.py": "b3c04f170979b860d95bf512f000c201124eb195d6d0ddb1b0115478216fb729",
+    "examples/solve_unusual.py": "585b9a6670f69815a5f0383af90f2574732c771eae74a75d79648fae4fd10625",
+    "pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57",
+    "src/pymhm/__init__.py": "a3273ccef37cce0b25b1e1cbf9faf150dfaaf715aafc6bd87e6d4809b431898c",
+    "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+    "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+    "src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+    "src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+    "src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+    "src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+    "src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+    "src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+    "src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+    "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+    "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+    "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+    "src/pymhm/darcy.py": "945eb63777daa94f02cd89f77ec6299cf1fe8722b3d98c027c70b7d318e097fc",
+    "src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+    "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+    "src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+    "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+    "src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+    "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+    "src/pymhm/darcy_transport.py": "3f9331d82dae0d16b30c53085981646942574a552601ec34631ba3b00eab5b7e",
+    "src/pymhm/darcy_velocity.py": "83c0dc577fe731a4316962b389ed286e711fcf9264836094188206d6eb276558",
+    "src/pymhm/distributed.py": "c6cf5f26bd9033a72328d18f5d099ab0d9b867f92a6babe472c2035ff1abd7ae",
+    "src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+    "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+    "src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+    "src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+    "src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+    "src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+    "src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+    "src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+    "src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+    "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+    "src/pymhm/elastodynamics.py": "21d7d7327f85b61399e2166f4babdd0098d220031a3cc0f507014655fd539f6c",
+    "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+    "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+    "src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+    "src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+    "src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+    "src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+    "src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+    "src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+    "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+    "src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+    "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+    "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+    "src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+    "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+    "src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+    "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+    "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+    "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+    "src/pymhm/helmholtz.py": "603a3e5eccf84830f8819657d97d3f7f22d856f97f21482e992f3a64fb67c1b4",
+    "src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+    "src/pymhm/helmholtz_spaces.py": "a0805d5ea9a95636062df0917dba98cfad8bc7ec298eba55c5fc1e6320a44bfb",
+    "src/pymhm/hybrid.py": "e4ca37cd8fa05dcb505d2cc7d36c975bbd25ac9ee01564bc86dd70d1d042dbb3",
+    "src/pymhm/hybrid_refinement.py": "b3ac92f5403b0fbc9a509e04626b7981cbd9767654ea149a894f1c82b74ecc16",
+    "src/pymhm/lagrange.py": "db5552571ee459630678dad97a887d4c49d1a2eb700cd2847b3f0a5f4ee8a2b7",
+    "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+    "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+    "src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+    "src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+    "src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+    "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+    "src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+    "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+    "src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+    "src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+    "src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+    "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+    "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+    "src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+    "src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+    "src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+    "src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+    "src/pymhm/mshho.py": "557b02892d7b93d2560deff999ef543bc7b95e762024139b6c8968d6b4ede0ee",
+    "src/pymhm/mshho3d.py": "522668e3fa23cd7661c958151caacdcc9e9a0e013c6f44e2974f5745dd3a4089",
+    "src/pymhm/nested.py": "4414c4fba66266017d97b5a75eda9a24ad90393647bd75d1245b5f4f93bc0049",
+    "src/pymhm/offline.py": "7b40681863239cf07f5df220ad893f044d26314c9a5bb8563fff587ef3df4932",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+    "src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+    "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+    "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+    "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+    "src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+    "src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+    "src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+    "src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+    "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+    "src/pymhm/rad.py": "d1f3d5c948bcc9370333050e8dfc1b15d5372ef745d51f04d8f700065d40c1e7",
+    "src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+    "src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+    "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+    "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+    "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+    "src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+    "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+    "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+    "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+    "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+    "src/pymhm/scalar_boundary.py": "5c2d4970ef3e032f93caee5f9b36ce36f535f65a924ef1e666f0e4aa5f4b69b3",
+    "src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+    "src/pymhm/scalar_transient.py": "c68b44eec515d94c114ba555e09d01705754ce2a2dda5199c753dc6b8f7f0ef5",
+    "src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+    "src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+    "src/pymhm/solvers.py": "2d360c2f7d71d8c04caa1966125291849b45daa5a886f5030772981e1cdaa751",
+    "src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+    "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+    "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+    "src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+    "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+    "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+    "src/pymhm/triangle_fields.py": "60e456d358ec5615d98375d6588e6ac88de972304d2fd3ac505f1ca998f67f4c",
+    "src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+    "src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+    "src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+    "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94"
+  },
+  "rows": [
+    {
+      "level": 1,
+      "h": 43.231633996287464,
+      "h_convention": "maximum physical fine-cell vertex diameter, metres",
+      "approximation": "tetrahedron 18-dimensional H(div) flux/P1 pressure; P1 coarse normal moments",
+      "macro_cells": 192,
+      "fine_cells": 192,
+      "assembly_order": 5,
+      "boundary_order": 12,
+      "norm_orders": [
+        7,
+        10
+      ],
+      "norms": {
+        "7": {
+          "pressure_l2": 19008614.27583545,
+          "flux_l2": 0.0005030044574855953
+        },
+        "10": {
+          "pressure_l2": 19008658.024634212,
+          "flux_l2": 0.0005030046671250938
+        }
+      },
+      "pressure_l2_error": 19008658.024634212,
+      "flux_l2_error": 0.0005030046671250938,
+      "global_condensed_residual": 1.6958826869465382e-16,
+      "original_physical_block_residual_max": 6.589923277413057e-16,
+      "fine_pressure_moment_defect_max": 1.20173568618708e-18,
+      "flux_convention": "physical H(div) Darcy flux; contravariant affine Piola",
+      "physical_case": "Dupuit-Thiem radial pressure on a fixed planar octagonal annulus, radii 0.2/50m, height 10m; radial pressure on polygonal walls and zero outward flux on caps",
+      "refinement": "local fine factor1/2/4 with macro factor1 and identical polygonal domain",
+      "elapsed_seconds": 8.016508433967829,
+      "checked_original_solves": [
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.5301366779629966e-09,
+          "original_rhs_relative_max": 5.405202326364886e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.4547192420666926e-09,
+          "original_rhs_relative_max": 1.4396945177708269e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.3766869828265582e-09,
+          "original_rhs_relative_max": 9.591550735403514e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.83232065273446e-09,
+          "original_rhs_relative_max": 8.765096329902201e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.200636159496798e-09,
+          "original_rhs_relative_max": 2.0850890694639543e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.950954357106243e-09,
+          "original_rhs_relative_max": 1.4181040241080148e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.106759179557923e-09,
+          "original_rhs_relative_max": 4.6179649993012235e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.4126294923092156e-09,
+          "original_rhs_relative_max": 1.3980394820581533e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.2151450517803915e-09,
+          "original_rhs_relative_max": 1.1368865392992708e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.65393505445148e-09,
+          "original_rhs_relative_max": 1.443021593130908e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.548417692041108e-09,
+          "original_rhs_relative_max": 2.257718986584986e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.683674807076128e-09,
+          "original_rhs_relative_max": 2.3825110205045486e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 7.99593412180866e-10,
+          "original_rhs_relative_max": 4.311950064141491e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.3211325049804896e-09,
+          "original_rhs_relative_max": 1.2213579571034938e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.145880315301415e-09,
+          "original_rhs_relative_max": 8.585552164619224e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.161125512703235e-09,
+          "original_rhs_relative_max": 9.271236741227276e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.739730042450941e-09,
+          "original_rhs_relative_max": 1.8563069826058242e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.225399837143831e-09,
+          "original_rhs_relative_max": 1.7831406352385196e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.1365986506505827e-09,
+          "original_rhs_relative_max": 5.020855740444711e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.4328176287182857e-09,
+          "original_rhs_relative_max": 1.4180191100658713e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.1402557419471987e-09,
+          "original_rhs_relative_max": 1.4194107966897223e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.0584783704032588e-09,
+          "original_rhs_relative_max": 5.583937263251465e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.3088678525380216e-09,
+          "original_rhs_relative_max": 2.6351871264855334e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.164075311394366e-09,
+          "original_rhs_relative_max": 1.6699056509181335e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.1193615263019745e-09,
+          "original_rhs_relative_max": 3.7966241959232566e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.7202442110573806e-09,
+          "original_rhs_relative_max": 1.7024770747981632e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.3876958949987108e-09,
+          "original_rhs_relative_max": 1.0031207845586629e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.7873158935427653e-09,
+          "original_rhs_relative_max": 8.212478369496174e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.910435672099087e-09,
+          "original_rhs_relative_max": 1.941040920266815e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.919874714446723e-09,
+          "original_rhs_relative_max": 1.8371584801840264e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.0218309036636622e-09,
+          "original_rhs_relative_max": 6.020699602917169e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.7125624962957435e-09,
+          "original_rhs_relative_max": 1.6948746988141153e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.0647466916002788e-09,
+          "original_rhs_relative_max": 1.4120480697288202e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.7361202871724345e-09,
+          "original_rhs_relative_max": 1.5722928031654557e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.5285513376891427e-09,
+          "original_rhs_relative_max": 1.7514832387052969e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.4281964300450715e-09,
+          "original_rhs_relative_max": 1.503560642771589e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.0668438754094575e-09,
+          "original_rhs_relative_max": 6.751439716761024e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.492578030416025e-09,
+          "original_rhs_relative_max": 1.477162290561504e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.962433174008569e-09,
+          "original_rhs_relative_max": 2.550477498478174e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.7314349418951502e-09,
+          "original_rhs_relative_max": 4.212131366635767e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.2452229142011e-09,
+          "original_rhs_relative_max": 2.1072208017413673e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.361618434410319e-09,
+          "original_rhs_relative_max": 3.768320678819021e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.184296335639677e-09,
+          "original_rhs_relative_max": 3.8256343061300486e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.7791384843937247e-09,
+          "original_rhs_relative_max": 1.761208968249046e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.4006701879816565e-09,
+          "original_rhs_relative_max": 1.898847791801814e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.071491402960349e-09,
+          "original_rhs_relative_max": 7.414583285898029e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.9207497960240094e-09,
+          "original_rhs_relative_max": 1.4497690519281183e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.3748046911553513e-09,
+          "original_rhs_relative_max": 1.6565765753695267e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.6613846177435717e-10,
+          "original_rhs_relative_max": 1.268667028467945e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.747036475992192e-10,
+          "original_rhs_relative_max": 1.4211085906289322e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.674863248598286e-10,
+          "original_rhs_relative_max": 1.814925685538189e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.199914333165888e-10,
+          "original_rhs_relative_max": 1.079321017062608e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.295724473440097e-10,
+          "original_rhs_relative_max": 1.5810548335510353e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.464255359858695e-10,
+          "original_rhs_relative_max": 1.523771725869694e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.3729874387027643e-10,
+          "original_rhs_relative_max": 1.1687376218770227e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.614953675456144e-10,
+          "original_rhs_relative_max": 1.7502766134158525e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.866991737488747e-10,
+          "original_rhs_relative_max": 1.876371911488586e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.465439951222247e-10,
+          "original_rhs_relative_max": 1.6478047479539068e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 7.648415357420552e-10,
+          "original_rhs_relative_max": 1.4576863188467417e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.063810042916081e-09,
+          "original_rhs_relative_max": 1.7127640828109988e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.0525792286872124e-10,
+          "original_rhs_relative_max": 1.4042156682402897e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.0983102288755405e-10,
+          "original_rhs_relative_max": 1.3347881725784959e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.68262015704766e-10,
+          "original_rhs_relative_max": 2.1372248877921104e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.870400688788084e-10,
+          "original_rhs_relative_max": 1.7183029212596004e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 7.392132222028537e-10,
+          "original_rhs_relative_max": 1.408842159271958e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.2275908791595767e-09,
+          "original_rhs_relative_max": 1.9764558345843367e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.97234588367139e-10,
+          "original_rhs_relative_max": 1.0299156230519792e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.000613601627797e-10,
+          "original_rhs_relative_max": 1.5172807613394777e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.724085580160797e-10,
+          "original_rhs_relative_max": 2.7901230934821503e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.030757068473947e-10,
+          "original_rhs_relative_max": 9.255984801546702e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.181298225856264e-10,
+          "original_rhs_relative_max": 1.1780732917179186e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.06885114930415e-09,
+          "original_rhs_relative_max": 1.7208804058487532e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.951969979496404e-10,
+          "original_rhs_relative_max": 1.0228553875124645e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.7024614165235194e-10,
+          "original_rhs_relative_max": 1.0249409525291232e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.313098180553699e-10,
+          "original_rhs_relative_max": 1.6992265602267932e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.498770078827029e-10,
+          "original_rhs_relative_max": 1.1313477500186518e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.356334263085596e-10,
+          "original_rhs_relative_max": 1.2114328341657294e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.2236237322965043e-09,
+          "original_rhs_relative_max": 1.9700686165809395e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.81467188750986e-10,
+          "original_rhs_relative_max": 9.752817014455164e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.5067035025888923e-10,
+          "original_rhs_relative_max": 1.3299594237331408e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.616652515176649e-10,
+          "original_rhs_relative_max": 1.7963088219006318e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.6360325402826e-10,
+          "original_rhs_relative_max": 1.2163730685380269e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.870452452634091e-10,
+          "original_rhs_relative_max": 1.3094169284066373e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.560292601432755e-10,
+          "original_rhs_relative_max": 1.3782311798727188e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.8635401147793753e-10,
+          "original_rhs_relative_max": 9.922145056027353e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.471027016558635e-10,
+          "original_rhs_relative_max": 1.1508116439861567e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.391502682239279e-10,
+          "original_rhs_relative_max": 1.4044833623214846e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.664820698224206e-10,
+          "original_rhs_relative_max": 9.86168470873461e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.525395409956631e-10,
+          "original_rhs_relative_max": 1.6248270616991888e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.0047813483380255e-09,
+          "original_rhs_relative_max": 1.6177262246879744e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.1807836978620824e-10,
+          "original_rhs_relative_max": 1.3001365666070435e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.100434153299037e-10,
+          "original_rhs_relative_max": 1.1802728734569467e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.063336949915382e-10,
+          "original_rhs_relative_max": 1.9310800209535733e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 7.833314452048499e-10,
+          "original_rhs_relative_max": 1.364982565305063e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.16988468034653e-10,
+          "original_rhs_relative_max": 9.90683699642079e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.4794452736942473e-09,
+          "original_rhs_relative_max": 2.3893083169581867e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.2023119490981307e-10,
+          "original_rhs_relative_max": 1.2360436150352816e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.4072443672628012e-10,
+          "original_rhs_relative_max": 1.4556264861346541e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.1142889085876553e-10,
+          "original_rhs_relative_max": 2.257944150674396e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.892753479098227e-10,
+          "original_rhs_relative_max": 9.921116161338526e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.0222463306610471e-10,
+          "original_rhs_relative_max": 1.0654310079937357e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.238997873517055e-10,
+          "original_rhs_relative_max": 1.8061746061679672e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.5745229296860106e-10,
+          "original_rhs_relative_max": 1.6186972236488958e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.231886527014303e-10,
+          "original_rhs_relative_max": 1.2742397115593327e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.0462131066779747e-10,
+          "original_rhs_relative_max": 2.1852429421971207e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.063784819225945e-10,
+          "original_rhs_relative_max": 1.0817599412525004e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.8266512166608354e-10,
+          "original_rhs_relative_max": 9.623807038303525e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.8110791699721853e-10,
+          "original_rhs_relative_max": 1.5675526848118369e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.937298565543841e-11,
+          "original_rhs_relative_max": 1.021609612368343e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.4065126723888876e-10,
+          "original_rhs_relative_max": 2.489250386527767e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.754347228868343e-10,
+          "original_rhs_relative_max": 2.941491197862794e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.564156734449343e-10,
+          "original_rhs_relative_max": 8.198733130531758e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.8932329636780905e-10,
+          "original_rhs_relative_max": 9.974596438996366e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.0148514042710853e-10,
+          "original_rhs_relative_max": 1.681182964733303e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.1171347227585442e-10,
+          "original_rhs_relative_max": 1.1484766846371978e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.7419756815007312e-10,
+          "original_rhs_relative_max": 1.8018661145021954e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.731913708270323e-10,
+          "original_rhs_relative_max": 1.849588488677279e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.9017180322651327e-10,
+          "original_rhs_relative_max": 9.968105045144853e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.7027627792666513e-10,
+          "original_rhs_relative_max": 8.971094355726925e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.2776406787400355e-10,
+          "original_rhs_relative_max": 1.8277231394583135e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.39326369320487e-10,
+          "original_rhs_relative_max": 1.4323526380471776e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.300675443612936e-10,
+          "original_rhs_relative_max": 1.3453936428045807e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.9527965165098435e-10,
+          "original_rhs_relative_max": 2.0854791670151364e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.4538948942344853e-10,
+          "original_rhs_relative_max": 7.620781201231513e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.5306107923406667e-10,
+          "original_rhs_relative_max": 8.064102649633838e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.457276762409625e-10,
+          "original_rhs_relative_max": 1.3702605132530058e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.80393580622796e-11,
+          "original_rhs_relative_max": 1.0078991782950957e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.349345700156149e-10,
+          "original_rhs_relative_max": 1.3957372193427966e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.280366374517611e-10,
+          "original_rhs_relative_max": 2.4353057407732045e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.053610510814888e-10,
+          "original_rhs_relative_max": 1.0764269437585297e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.469474177210207e-10,
+          "original_rhs_relative_max": 1.3010553274088571e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.958321010763888e-10,
+          "original_rhs_relative_max": 2.2072934814679843e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.042403891213203e-11,
+          "original_rhs_relative_max": 8.268038911802952e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.792033399322622e-10,
+          "original_rhs_relative_max": 1.85364485428051e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.9819144385903676e-10,
+          "original_rhs_relative_max": 2.1165755046889914e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.699787814373281e-10,
+          "original_rhs_relative_max": 8.909661264529552e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.9908100543004348e-10,
+          "original_rhs_relative_max": 1.0488686421223568e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.0785171419682935e-10,
+          "original_rhs_relative_max": 1.7166851302801965e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.3280602589231458e-10,
+          "original_rhs_relative_max": 1.4017260269608354e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.6042193114552675e-10,
+          "original_rhs_relative_max": 1.7072562062773843e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.529253333655195e-10,
+          "original_rhs_relative_max": 1.5617167838252992e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.7721898282977018e-10,
+          "original_rhs_relative_max": 9.370937392275905e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.9572189335109484e-10,
+          "original_rhs_relative_max": 1.016831088824675e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.8104539886636645e-10,
+          "original_rhs_relative_max": 1.623117135386804e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.0169326740170546e-10,
+          "original_rhs_relative_max": 2.6825496165892363e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.0955613263979341e-10,
+          "original_rhs_relative_max": 1.4718519825315435e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.171293000158595e-11,
+          "original_rhs_relative_max": 8.426340495110346e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.919843120686627e-10,
+          "original_rhs_relative_max": 1.4114878340726323e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.2243713455372986e-10,
+          "original_rhs_relative_max": 8.470620175518186e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.9384784523272217e-10,
+          "original_rhs_relative_max": 1.2998624431805128e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.32462055083053e-10,
+          "original_rhs_relative_max": 1.7617644835311043e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.0883742967166544e-10,
+          "original_rhs_relative_max": 1.4621964355256204e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.719422021320038e-11,
+          "original_rhs_relative_max": 1.1905579409423245e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.9577006776732216e-10,
+          "original_rhs_relative_max": 1.4393210880184969e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.528790615288886e-10,
+          "original_rhs_relative_max": 1.0576696912427405e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.421532260204143e-10,
+          "original_rhs_relative_max": 1.6237780906001303e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.0890420302878764e-10,
+          "original_rhs_relative_max": 1.448441645292916e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.0144453675684773e-10,
+          "original_rhs_relative_max": 1.3628752580512931e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.505664061699742e-11,
+          "original_rhs_relative_max": 1.1613712315889626e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.1379372674906052e-10,
+          "original_rhs_relative_max": 1.5718328287126995e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.1524748081985455e-10,
+          "original_rhs_relative_max": 7.973215313871151e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.4943701154022477e-10,
+          "original_rhs_relative_max": 1.0020619970733688e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.997933421976586e-10,
+          "original_rhs_relative_max": 2.6572803366905013e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 7.768026994510745e-11,
+          "original_rhs_relative_max": 1.0436098515653791e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.833465974935596e-11,
+          "original_rhs_relative_max": 1.2061296077639864e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.8894482576091438e-10,
+          "original_rhs_relative_max": 1.3891412272119513e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.2537861476800752e-10,
+          "original_rhs_relative_max": 8.674121847945964e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.1409990230653882e-10,
+          "original_rhs_relative_max": 7.651061460124985e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.1018381720892273e-10,
+          "original_rhs_relative_max": 2.7954751565608795e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.004114810294493e-11,
+          "original_rhs_relative_max": 1.0753275027219175e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.36172376841228e-11,
+          "original_rhs_relative_max": 1.1417174909194594e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.8185965581375073e-10,
+          "original_rhs_relative_max": 1.3370503502283049e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.349158882809721e-10,
+          "original_rhs_relative_max": 9.33394308382193e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.3545526367774927e-10,
+          "original_rhs_relative_max": 9.08306253156626e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.5976483107629808e-10,
+          "original_rhs_relative_max": 2.124895351586454e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.139815981372925e-11,
+          "original_rhs_relative_max": 1.2279053621203606e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.990389996013378e-11,
+          "original_rhs_relative_max": 1.227556158625031e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.8372967355466429e-10,
+          "original_rhs_relative_max": 1.3507989074013231e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.4687016651151633e-10,
+          "original_rhs_relative_max": 1.0160980981535624e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.2137631536591383e-10,
+          "original_rhs_relative_max": 1.4844568316370497e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.5302634057210377e-10,
+          "original_rhs_relative_max": 2.0352724536519625e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.443096900240518e-11,
+          "original_rhs_relative_max": 1.1343033577301656e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 7.499492552440288e-11,
+          "original_rhs_relative_max": 1.0239876438500299e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.624651896407266e-10,
+          "original_rhs_relative_max": 1.194460298173601e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.4109150876025764e-10,
+          "original_rhs_relative_max": 9.761193653012767e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.9810169280077503e-10,
+          "original_rhs_relative_max": 1.3283869629454244e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.292551863745041e-10,
+          "original_rhs_relative_max": 1.7575193448693884e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.812952000743342e-10,
+          "original_rhs_relative_max": 2.3732380040436026e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.0159568825077143e-10,
+          "original_rhs_relative_max": 1.3871969164550771e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.7640979843696195e-10,
+          "original_rhs_relative_max": 1.3452014617349228e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.1762752631048037e-10,
+          "original_rhs_relative_max": 8.11946232084232e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            35,
+            35
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.5544572667120342e-10,
+          "original_rhs_relative_max": 1.0974633793196904e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            1200,
+            1200
+          ],
+          "rhs_columns": 1,
+          "owner_rtol": 1e-12,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.659875819081492e-05,
+          "original_rhs_relative_max": 3.9271124707409533e-13,
+          "zero_rhs_columns": 0,
+          "original_owner_criterion_passed": true
+        }
+      ],
+      "checked_original_solve_count": 193
+    },
+    {
+      "level": 2,
+      "h": 39.83305252664558,
+      "h_convention": "maximum physical fine-cell vertex diameter, metres",
+      "approximation": "tetrahedron 18-dimensional H(div) flux/P1 pressure; P1 coarse normal moments",
+      "macro_cells": 192,
+      "fine_cells": 1536,
+      "assembly_order": 5,
+      "boundary_order": 12,
+      "norm_orders": [
+        7,
+        10
+      ],
+      "norms": {
+        "7": {
+          "pressure_l2": 13423937.978372473,
+          "flux_l2": 0.0005004394702030771
+        },
+        "10": {
+          "pressure_l2": 13423937.375917587,
+          "flux_l2": 0.0005004394810327152
+        }
+      },
+      "pressure_l2_error": 13423937.375917587,
+      "flux_l2_error": 0.0005004394810327152,
+      "global_condensed_residual": 8.788776149284742e-17,
+      "original_physical_block_residual_max": 1.259991809083337e-15,
+      "fine_pressure_moment_defect_max": 1.4536755807209831e-18,
+      "flux_convention": "physical H(div) Darcy flux; contravariant affine Piola",
+      "physical_case": "Dupuit-Thiem radial pressure on a fixed planar octagonal annulus, radii 0.2/50m, height 10m; radial pressure on polygonal walls and zero outward flux on caps",
+      "refinement": "local fine factor1/2/4 with macro factor1 and identical polygonal domain",
+      "elapsed_seconds": 18.31860464438796,
+      "checked_original_solves": [
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.808624344503436e-09,
+          "original_rhs_relative_max": 2.4479084965713938e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.390079890064587e-09,
+          "original_rhs_relative_max": 6.1759845870607545e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.387899782866952e-09,
+          "original_rhs_relative_max": 2.206775311054517e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.300058353295363e-09,
+          "original_rhs_relative_max": 4.872555990374257e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.0733366112034246e-08,
+          "original_rhs_relative_max": 1.735998664675975e-13,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.269248341719425e-09,
+          "original_rhs_relative_max": 4.079157268864158e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.034113991842242e-09,
+          "original_rhs_relative_max": 1.7890232951088023e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.564778576911817e-09,
+          "original_rhs_relative_max": 6.913562140085416e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.774571501013239e-09,
+          "original_rhs_relative_max": 2.3981968018986003e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.81519098982694e-09,
+          "original_rhs_relative_max": 3.6239861629777036e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.478154563647934e-09,
+          "original_rhs_relative_max": 2.1046994376473557e-13,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.904048909829907e-09,
+          "original_rhs_relative_max": 4.755777025354302e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.6798384201880897e-09,
+          "original_rhs_relative_max": 1.9337418559744504e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.416059219227472e-09,
+          "original_rhs_relative_max": 5.3630436816206846e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.6287680407661936e-09,
+          "original_rhs_relative_max": 3.404662185552212e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.401315465221499e-09,
+          "original_rhs_relative_max": 3.642200183078675e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.0264399788495359e-08,
+          "original_rhs_relative_max": 1.7361407144496065e-13,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.364589179204922e-09,
+          "original_rhs_relative_max": 3.7501001589862034e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.0502825492388643e-09,
+          "original_rhs_relative_max": 1.7977526193599858e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.404884075782263e-09,
+          "original_rhs_relative_max": 6.393790202473867e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.0423558882891416e-09,
+          "original_rhs_relative_max": 2.5288792484840613e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.597830359703854e-09,
+          "original_rhs_relative_max": 2.6781851145453596e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.253331780621244e-08,
+          "original_rhs_relative_max": 2.8148653453939353e-13,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 7.517546805471761e-09,
+          "original_rhs_relative_max": 4.29938354394294e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.6246282012276138e-09,
+          "original_rhs_relative_max": 2.30308577365183e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.94801388745562e-09,
+          "original_rhs_relative_max": 6.3606038965615834e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.941890214188684e-09,
+          "original_rhs_relative_max": 2.318655525371758e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 7.835088965875444e-09,
+          "original_rhs_relative_max": 3.8915751079708287e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.1089674749823812e-08,
+          "original_rhs_relative_max": 1.9757429593884482e-13,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.0161501328330514e-08,
+          "original_rhs_relative_max": 6.371291970575487e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.50658305980099e-09,
+          "original_rhs_relative_max": 2.3464489067372825e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.979515529687665e-09,
+          "original_rhs_relative_max": 4.697852918430877e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.8964310329398024e-09,
+          "original_rhs_relative_max": 3.0690062094869764e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.824051022961768e-09,
+          "original_rhs_relative_max": 3.8725424544686884e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.345723002346216e-09,
+          "original_rhs_relative_max": 1.4582525233542418e-13,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.063605454388319e-09,
+          "original_rhs_relative_max": 4.993431445283151e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.3500537410259746e-09,
+          "original_rhs_relative_max": 1.8189247491819256e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.255698419064204e-09,
+          "original_rhs_relative_max": 7.086842309415397e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.053854608105742e-09,
+          "original_rhs_relative_max": 2.829910625587141e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.7833961036374905e-09,
+          "original_rhs_relative_max": 3.7641371059668054e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.0371278141979734e-08,
+          "original_rhs_relative_max": 1.9813564766548627e-13,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.246128615034744e-09,
+          "original_rhs_relative_max": 4.6572666749194086e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.458552313371724e-09,
+          "original_rhs_relative_max": 1.961413162169987e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.001947569511017e-09,
+          "original_rhs_relative_max": 8.714432706489712e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.0565817830602676e-09,
+          "original_rhs_relative_max": 3.0205058163245246e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.885427678500737e-09,
+          "original_rhs_relative_max": 2.7732127706430132e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.839424767203028e-09,
+          "original_rhs_relative_max": 7.297488486102556e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.523369046171043e-09,
+          "original_rhs_relative_max": 4.80717709699545e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.617895146530774e-10,
+          "original_rhs_relative_max": 2.244588290706607e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 7.698132423438076e-10,
+          "original_rhs_relative_max": 8.213929477221418e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.2927678962419134e-09,
+          "original_rhs_relative_max": 2.7195907654144197e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.7887006279323179e-09,
+          "original_rhs_relative_max": 2.6212488502366488e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.8362541472184675e-09,
+          "original_rhs_relative_max": 1.376809790899953e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.27574572396249e-09,
+          "original_rhs_relative_max": 2.657829542328364e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.803167305082482e-10,
+          "original_rhs_relative_max": 1.7638812899420287e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.552377002134573e-10,
+          "original_rhs_relative_max": 8.214515459607057e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.5025431284826982e-09,
+          "original_rhs_relative_max": 2.0563931049265627e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.3246927077196724e-09,
+          "original_rhs_relative_max": 3.0022041630753003e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.6822636910129984e-09,
+          "original_rhs_relative_max": 1.1895697623987681e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.8942316231502476e-09,
+          "original_rhs_relative_max": 3.416877718597265e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.977705297627057e-10,
+          "original_rhs_relative_max": 2.2572503030852304e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.432087295852531e-10,
+          "original_rhs_relative_max": 9.558719450627414e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.2298632113490302e-09,
+          "original_rhs_relative_max": 2.3911975889025106e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.6600292019370192e-09,
+          "original_rhs_relative_max": 3.3145775938876666e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.6544313398215173e-09,
+          "original_rhs_relative_max": 1.3324687458895986e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.4305322491198072e-09,
+          "original_rhs_relative_max": 3.286527280729857e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.796656819542872e-10,
+          "original_rhs_relative_max": 2.336006033844549e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.764155336961449e-10,
+          "original_rhs_relative_max": 1.0522164382974915e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.1056059172045895e-09,
+          "original_rhs_relative_max": 2.4716792689327186e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.6292306697248226e-09,
+          "original_rhs_relative_max": 2.1311056136318135e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.4791289003185224e-09,
+          "original_rhs_relative_max": 7.989908581652765e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.607306206258042e-09,
+          "original_rhs_relative_max": 2.551625173337289e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.846852076988743e-10,
+          "original_rhs_relative_max": 2.1186819243458355e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.721479665492999e-10,
+          "original_rhs_relative_max": 1.0393599837298773e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.2301390013156764e-09,
+          "original_rhs_relative_max": 2.578201797978018e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.9221625204725993e-09,
+          "original_rhs_relative_max": 3.533422835860872e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.748151536671031e-09,
+          "original_rhs_relative_max": 1.3991673630172233e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.7382502963144697e-09,
+          "original_rhs_relative_max": 2.8838124448281784e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.938874756170796e-10,
+          "original_rhs_relative_max": 1.7078416886300386e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.550433537008668e-10,
+          "original_rhs_relative_max": 9.227243616159606e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.4265884351604409e-09,
+          "original_rhs_relative_max": 2.1700544842913594e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.7419470003757504e-09,
+          "original_rhs_relative_max": 2.9147136180338456e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.108922245203716e-09,
+          "original_rhs_relative_max": 1.2096719566594155e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.3453937013210044e-09,
+          "original_rhs_relative_max": 2.8212580373882215e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.156988085244667e-10,
+          "original_rhs_relative_max": 2.0140699629579815e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.262552780158014e-10,
+          "original_rhs_relative_max": 9.692350602231848e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.4034063680936448e-09,
+          "original_rhs_relative_max": 2.0348358601928427e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.9835306032824308e-09,
+          "original_rhs_relative_max": 3.237275898766804e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.11450984485274e-09,
+          "original_rhs_relative_max": 1.1258575693965132e-14,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.2091509470569934e-09,
+          "original_rhs_relative_max": 2.5220900689620534e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.256412239311247e-10,
+          "original_rhs_relative_max": 2.1040481257514128e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.4120611039139224e-09,
+          "original_rhs_relative_max": 6.854401526675737e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.123760166624558e-09,
+          "original_rhs_relative_max": 2.5543265024697528e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.6086566170120244e-09,
+          "original_rhs_relative_max": 2.8310685382453824e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.5185257476701563e-09,
+          "original_rhs_relative_max": 1.0414706808504386e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.8336152224805312e-09,
+          "original_rhs_relative_max": 4.369441632508919e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.214707233129358e-10,
+          "original_rhs_relative_max": 1.4334588419663266e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.406481710064152e-10,
+          "original_rhs_relative_max": 1.0195870436183675e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.139943582773265e-10,
+          "original_rhs_relative_max": 1.4997620373512843e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.658473909162349e-10,
+          "original_rhs_relative_max": 1.0986747773390835e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.529703389558936e-10,
+          "original_rhs_relative_max": 1.7181575778402082e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.510206935174674e-10,
+          "original_rhs_relative_max": 9.905656024592597e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.38553788129399e-10,
+          "original_rhs_relative_max": 1.1147096883244346e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.134575552973455e-10,
+          "original_rhs_relative_max": 1.1634098288186638e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.354608729615865e-10,
+          "original_rhs_relative_max": 1.6019313133416562e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.156923972379954e-10,
+          "original_rhs_relative_max": 1.4549828958066388e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.101980720585035e-10,
+          "original_rhs_relative_max": 1.8359733098748432e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.707177099852601e-10,
+          "original_rhs_relative_max": 1.0599708230331718e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.4679155033112277e-10,
+          "original_rhs_relative_max": 1.1545575016034742e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.476107582742989e-10,
+          "original_rhs_relative_max": 1.2670807932943284e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.84303957211946e-10,
+          "original_rhs_relative_max": 1.2288949989651098e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.538932312952377e-10,
+          "original_rhs_relative_max": 1.1003486874283273e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 9.257577769198215e-10,
+          "original_rhs_relative_max": 2.223890457490676e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 7.203137813063273e-10,
+          "original_rhs_relative_max": 1.0704397015338968e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.65945111675405e-10,
+          "original_rhs_relative_max": 1.5439161806914026e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.284910587143108e-10,
+          "original_rhs_relative_max": 1.0514460862892855e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.565014531548531e-10,
+          "original_rhs_relative_max": 1.277797762125952e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.5979785625326e-10,
+          "original_rhs_relative_max": 1.0428859951316782e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 7.669029151154337e-10,
+          "original_rhs_relative_max": 1.694901406139648e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 7.47805783301429e-10,
+          "original_rhs_relative_max": 1.1346848825496393e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.4995765778550203e-10,
+          "original_rhs_relative_max": 1.3415772356116452e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.581077782898491e-10,
+          "original_rhs_relative_max": 1.2913691628114725e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.642176136867964e-10,
+          "original_rhs_relative_max": 1.5134560146024688e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.193569627634341e-10,
+          "original_rhs_relative_max": 8.764089914176516e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.18579057803833e-10,
+          "original_rhs_relative_max": 1.8235104781770125e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 7.200738562159009e-10,
+          "original_rhs_relative_max": 9.445533295935393e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.731025051883435e-10,
+          "original_rhs_relative_max": 1.1620144520953736e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.667229040474046e-10,
+          "original_rhs_relative_max": 1.0799196666125355e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.477824688459329e-10,
+          "original_rhs_relative_max": 1.0677344575110721e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.701341496682429e-10,
+          "original_rhs_relative_max": 1.0468823996506771e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.0088740161206277e-09,
+          "original_rhs_relative_max": 1.9053517636244547e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 8.434143838639963e-10,
+          "original_rhs_relative_max": 1.1848476622719063e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.4025483734783056e-10,
+          "original_rhs_relative_max": 1.8513494591811163e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.375239746070405e-10,
+          "original_rhs_relative_max": 1.0123581694731575e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.479743495746974e-10,
+          "original_rhs_relative_max": 1.280936799522306e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.822370851999187e-10,
+          "original_rhs_relative_max": 8.489497994524296e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.0315726418805723e-09,
+          "original_rhs_relative_max": 2.624152325552466e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 7.44135115116406e-10,
+          "original_rhs_relative_max": 9.700403461505237e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.0771807419903633e-10,
+          "original_rhs_relative_max": 9.902800435109116e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.368202957144287e-10,
+          "original_rhs_relative_max": 1.3636387518668646e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.308218674947639e-10,
+          "original_rhs_relative_max": 9.688979068965078e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 1.0264156413979488e-09,
+          "original_rhs_relative_max": 2.3935041232088266e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 7.201306168532878e-10,
+          "original_rhs_relative_max": 1.0808925922115471e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.017267048808937e-10,
+          "original_rhs_relative_max": 1.1887538417094152e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.086378338668616e-10,
+          "original_rhs_relative_max": 1.3942533577267392e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.9347484119668454e-10,
+          "original_rhs_relative_max": 1.1418250751684417e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.654283089690894e-10,
+          "original_rhs_relative_max": 1.8815252046311694e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.791162860881506e-10,
+          "original_rhs_relative_max": 1.1506279449641363e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.008853429822901e-10,
+          "original_rhs_relative_max": 2.3778176662650845e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.659286101191241e-10,
+          "original_rhs_relative_max": 2.081205430306567e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.408635611788156e-10,
+          "original_rhs_relative_max": 1.3232478817724254e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.676993057493365e-10,
+          "original_rhs_relative_max": 1.039461810977865e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.859824239119196e-10,
+          "original_rhs_relative_max": 1.3127059187125002e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.284910763028113e-10,
+          "original_rhs_relative_max": 1.2309600156525108e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.203052313915411e-10,
+          "original_rhs_relative_max": 2.9086542156709507e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.054784771613284e-10,
+          "original_rhs_relative_max": 1.8868017686345692e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.408291427282808e-10,
+          "original_rhs_relative_max": 1.273653749500087e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.2440475955601323e-10,
+          "original_rhs_relative_max": 9.86167683867439e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.204316014368054e-10,
+          "original_rhs_relative_max": 1.4248799039028325e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.802565812223633e-10,
+          "original_rhs_relative_max": 9.637739156137643e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.411160496626545e-10,
+          "original_rhs_relative_max": 1.8758643165740415e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.060254295176757e-10,
+          "original_rhs_relative_max": 2.5687277420707278e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.1671299269797564e-10,
+          "original_rhs_relative_max": 1.3435109290363692e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.321141024027027e-10,
+          "original_rhs_relative_max": 9.388647760192962e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.0940485671160973e-10,
+          "original_rhs_relative_max": 1.315965389859254e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.546538130447604e-10,
+          "original_rhs_relative_max": 1.0228823139073414e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.735812120796798e-10,
+          "original_rhs_relative_max": 2.940733174281487e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.582872196590467e-10,
+          "original_rhs_relative_max": 2.08036698838243e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.745086586865526e-10,
+          "original_rhs_relative_max": 1.9172750572602423e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.4799781897658024e-10,
+          "original_rhs_relative_max": 1.0570866877559264e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.9785288633911927e-10,
+          "original_rhs_relative_max": 1.3273755372664413e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.452562942035017e-10,
+          "original_rhs_relative_max": 8.81497426156851e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.847929436449947e-10,
+          "original_rhs_relative_max": 2.572043773094679e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.224735392491552e-10,
+          "original_rhs_relative_max": 1.7867038931949972e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.268083423034917e-10,
+          "original_rhs_relative_max": 1.7433126816915722e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.317655462633119e-10,
+          "original_rhs_relative_max": 9.378794306835465e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.18663185984358e-10,
+          "original_rhs_relative_max": 1.4800351802864381e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.418254095016802e-10,
+          "original_rhs_relative_max": 1.148862488150763e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.796459330629494e-10,
+          "original_rhs_relative_max": 2.18740153924073e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 5.162211767581196e-10,
+          "original_rhs_relative_max": 2.425010342726977e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.7201886964711157e-10,
+          "original_rhs_relative_max": 1.6208790467196406e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.819585247822842e-10,
+          "original_rhs_relative_max": 1.0799438761077286e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.061050690610919e-10,
+          "original_rhs_relative_max": 1.5200456616408026e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.6148747422198276e-10,
+          "original_rhs_relative_max": 8.528313040062194e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.947077894890764e-10,
+          "original_rhs_relative_max": 1.887972409818614e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.9564048022841146e-10,
+          "original_rhs_relative_max": 1.7824097796692635e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.4101782574989655e-10,
+          "original_rhs_relative_max": 9.56297566573058e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 3.0511135770473154e-10,
+          "original_rhs_relative_max": 9.201422283802705e-16,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.5167589462365724e-10,
+          "original_rhs_relative_max": 1.048602377639429e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 6.732263567556918e-10,
+          "original_rhs_relative_max": 6.562239561064409e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.591016659718993e-10,
+          "original_rhs_relative_max": 1.4608263088387285e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            201,
+            201
+          ],
+          "rhs_columns": 14,
+          "owner_rtol": 1e-10,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 4.26233619156685e-10,
+          "original_rhs_relative_max": 1.206527443542205e-15,
+          "zero_rhs_columns": 1,
+          "original_owner_criterion_passed": true
+        },
+        {
+          "matrix_shape": [
+            1200,
+            1200
+          ],
+          "rhs_columns": 1,
+          "owner_rtol": 1e-12,
+          "owner_atol": 0.0,
+          "original_defect_norm_max": 2.4038481892040668e-05,
+          "original_rhs_relative_max": 2.0258441572488307e-13,
+          "zero_rhs_columns": 0,
+          "original_owner_criterion_passed": true
+        }
+      ],
+      "checked_original_solve_count": 193
+    }
+  ],
+  "complete": false,
+  "persisted_coefficients": false,
+  "replay_claim": false,
+  "independently_assembled_reference": false,
+  "interpretation": "Initial three-resolution study; neither a converged numerical baseline nor historical paper reproduction",
+  "residual_convention": "Actual checked original augmented linear systems, by RHS column; Euclidean coefficient-row norms, separate from physical field errors. These diagnostics alone are not full uncondensed PDE/uniqueness/inf-sup certificates.",
+  "requested_levels": [
+    1,
+    2,
+    4
+  ]
+}

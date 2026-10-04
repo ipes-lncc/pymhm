@@ -6,13 +6,45 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 
-from examples.helmholtz_article import Configuration, solve_configuration
-from examples.helmholtz_campaign import source_hashes
+from examples.campaign_checkpoint import require_sources
+from examples.helmholtz_article import (
+    Configuration,
+    article_hashes,
+    complete_rows,
+    solve_configuration,
+    validate_row,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def configurations() -> list[Configuration]:
+    """Return the four fixed macro/trace cases with local refinement eight."""
+    return [
+        Configuration("local-control-fine", n, ell, oscillatory, omega, np.pi / 13, 8)
+        for ell, n, omega in ((2, 11, 20 * np.pi), (4, 21, 40 * np.pi))
+        for oscillatory in (False, True)
+    ]
+
+
+def hashes() -> dict[str, str]:
+    """Bind the analytical, incident and local-control numerical owners."""
+    result = article_hashes()
+    result[str(Path(__file__).relative_to(ROOT))] = hashlib.sha256(
+        Path(__file__).read_bytes()
+    ).hexdigest()
+    return result
+
+
+def publication_rows(output: Path) -> list[dict[str, Any]]:
+    """Require all four current local-resolution controls before rendering them."""
+    record = json.loads((output / "local-refinement-eight.json").read_text())
+    require_sources(record["source_sha256"], hashes())
+    return complete_rows(record, configurations(), output)
 
 
 def main() -> None:
@@ -23,31 +55,27 @@ def main() -> None:
     output = args.output
     output.mkdir(parents=True, exist_ok=True)
     path = output / "local-refinement-eight.json"
-    hashes = source_hashes()
-    for name in ("helmholtz_article", "helmholtz_local_control"):
-        source = ROOT / "examples" / f"{name}.py"
-        hashes[str(source.relative_to(ROOT))] = hashlib.sha256(source.read_bytes()).hexdigest()
-    record = {"source_sha256": hashes, "rows": []}
+    sources = hashes()
+    record = {"source_sha256": sources, "rows": []}
     if path.exists():
         record = json.loads(path.read_text())
-        if record["source_sha256"] != hashes:
-            raise ValueError("local-resolution acquisition sources changed")
+        require_sources(record["source_sha256"], sources)
+        for row in record["rows"]:
+            validate_row(row, output)
     done = {row["key"] for row in record["rows"]}
-    for ell, n, omega in ((2, 11, 20 * np.pi), (4, 21, 40 * np.pi)):
-        for oscillatory in (False, True):
-            config = Configuration("local-control-fine", n, ell, oscillatory, omega, np.pi / 13, 8)
-            if config.key in done:
-                continue
-            row = solve_configuration(config, output)
-            if hashes != {
-                name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in hashes
-            }:
-                raise RuntimeError("local-resolution sources changed during acquisition")
-            record["rows"].append(row)
-            temporary = path.with_suffix(".json.new")
-            temporary.write_text(json.dumps(record, indent=2) + "\n")
-            temporary.replace(path)
-            print(json.dumps(row), flush=True)
+    for config in configurations():
+        if config.key in done:
+            continue
+        row = solve_configuration(config, output)
+        if sources != {
+            name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in sources
+        }:
+            raise RuntimeError("local-resolution sources changed during acquisition")
+        record["rows"].append(row)
+        temporary = path.with_suffix(".json.new")
+        temporary.write_text(json.dumps(record, indent=2) + "\n")
+        temporary.replace(path)
+        print(json.dumps(row), flush=True)
 
 
 if __name__ == "__main__":

@@ -9,7 +9,9 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from collections.abc import Iterator, Mapping
+from contextlib import nullcontext
 from pathlib import Path
 from typing import Any, Literal
 
@@ -18,9 +20,9 @@ from scipy import sparse
 
 from examples.campaign_checkpoint import require_sources
 from examples.campaign_provenance import file_digest, require_equal
-from examples.helmholtz_compact_family import CompactFactory, CompactLocal
+from examples.helmholtz_compact_family import CompactLocal, acquire_local_responses
+from examples.local_response_cache import ExactResponseCache
 from pymhm.mesh import positive_int
-from pymhm.parallel import map_local
 
 _ARRAYS = ("load", "dofs", "source", "lifts", "schur", "rhs", "boundary")
 
@@ -126,6 +128,17 @@ class ResponseStore:
         """Return the acquired numeric-buffer count without loading coefficients."""
         return sum(row["storage_bytes"] for row in self.record["batches"])
 
+    @property
+    def acquisition_seconds(self) -> float | None:
+        """Sum measured batch assembly/export times, including prior resumed batches.
+
+        Historical batches without acquisition timing return ``None`` rather
+        than inventing a zero setup cost. Global assembly, archive validation,
+        factorization and field evaluation have separate caller measurements.
+        """
+        values = [row.get("acquisition_seconds") for row in self.record["batches"]]
+        return None if any(value is None for value in values) else float(sum(values))
+
     @classmethod
     def prepare(
         cls,
@@ -139,6 +152,7 @@ class ResponseStore:
         workers: int = 1,
         local_solver: str = "scipy",
         local_refinement_precision: Literal["double", "extended"] = "double",
+        exact_response_cache: bool = False,
     ) -> ResponseStore:
         """Acquire missing batches with the original assembler and exact condensation.
 
@@ -151,6 +165,10 @@ class ResponseStore:
         subsequent global trace factorization has its own solver contract.
         """
         batch_size = positive_int(batch_size, "batch_size")
+        if not isinstance(exact_response_cache, bool):
+            raise ValueError("exact_response_cache must be a boolean")
+        if exact_response_cache and (backend != "serial" or workers != 1):
+            raise ValueError("exact response caching requires one serial native factor owner")
         count = len(factory.mesh.cells)
         if not configuration:
             raise ValueError("response storage requires a physical-input configuration")
@@ -168,6 +186,8 @@ class ResponseStore:
         if local_solver != "scipy" or local_refinement_precision != "double":
             identity["local_solver"] = local_solver
             identity["local_refinement_precision"] = local_refinement_precision
+        if exact_response_cache:
+            identity["exact_response_cache"] = True
         directory.mkdir(parents=True, exist_ok=True)
         path = directory / "responses.json"
         if path.exists():
@@ -194,13 +214,58 @@ class ResponseStore:
         if start == count and not record["complete"]:
             record["complete"] = True
             _write_record(path, record)
+        owner = (
+            ExactResponseCache(solver=local_solver, refinement_precision=local_refinement_precision)
+            if exact_response_cache
+            else nullcontext(None)
+        )
+        with owner as cache:
+            cls._acquire(
+                factory,
+                directory,
+                record,
+                path,
+                start,
+                count,
+                batch_size,
+                backend,
+                workers,
+                local_solver,
+                local_refinement_precision,
+                cache,
+            )
+        return cls(directory, record)
+
+    @staticmethod
+    def _acquire(
+        factory: Any,
+        directory: Path,
+        record: dict[str, Any],
+        path: Path,
+        start: int,
+        count: int,
+        batch_size: int,
+        backend: str,
+        workers: int,
+        local_solver: str,
+        local_refinement_precision: Literal["double", "extended"],
+        cache: ExactResponseCache | None,
+    ) -> None:
+        """Commit bounded batches while one optional exact factor owner stays open."""
         for first in range(start, count, batch_size):
+            started = time.perf_counter()
             stop = min(first + batch_size, count)
-            local = map_local(
-                CompactFactory(factory, local_solver, local_refinement_precision),
+            before = (
+                (cache.factorizations, cache.source_solves, cache.response_hits) if cache else None
+            )
+            local = acquire_local_responses(
+                factory,
                 range(first, stop),
                 backend=backend,
                 workers=workers,
+                local_solver=local_solver,
+                local_refinement_precision=local_refinement_precision,
+                cache=cache,
             )
             archive = directory / f"responses-{first:07d}.npz"
             _write_batch(archive, local)
@@ -211,9 +276,19 @@ class ResponseStore:
                     archive=archive.name,
                     sha256=file_digest(archive),
                     storage_bytes=sum(item.storage_bytes for item in local),
+                    acquisition_seconds=time.perf_counter() - started,
                 )
             )
+            if cache is not None:
+                assert before is not None
+                after = (cache.factorizations, cache.source_solves, cache.response_hits)
+                record["batches"][-1]["exact_response_cache"] = dict(
+                    zip(
+                        ("factorizations", "source_solves", "exact_source_hits"),
+                        (value - prior for value, prior in zip(after, before, strict=True)),
+                        strict=True,
+                    )
+                )
             record["complete"] = stop == count
             _write_record(path, record)
             del local
-        return cls(directory, record)

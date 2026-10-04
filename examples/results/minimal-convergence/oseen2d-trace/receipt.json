@@ -1,0 +1,46 @@
+{
+  "schema": "pymhm-initial-scalar-publication-receipt-v1",
+  "accepted": true,
+  "complete": true,
+  "initial_three_levels": true,
+  "row_count": 3,
+  "original_execution_record_sha256": "d657d4b5567991d41296793202afbe7a1c0131862295ee6a2239c17f13190c48",
+  "published_metadata_record_sha256": "d657d4b5567991d41296793202afbe7a1c0131862295ee6a2239c17f13190c48",
+  "evidence": {
+    "examples/results/minimal-convergence/oseen2d-trace/evidence/flow2d-oseen-smooth-l1-n2.json": {
+      "original_execution_record_sha256": "30b216cd28ed916c294033b7324c8b699f66729a7be299706e82260450c30d11",
+      "published_metadata_record_sha256": "30b216cd28ed916c294033b7324c8b699f66729a7be299706e82260450c30d11",
+      "acquisition_uuid": "89357780-de04-4343-8922-c59b701463af"
+    },
+    "examples/results/minimal-convergence/oseen2d-trace/evidence/flow2d-oseen-smooth-l1-n2-resource.json": {
+      "original_execution_record_sha256": "0234f7409e2156d8a0a44a86c1a939cf15e18c3c999aa57147bbffa41dc70a97",
+      "published_metadata_record_sha256": "0234f7409e2156d8a0a44a86c1a939cf15e18c3c999aa57147bbffa41dc70a97"
+    },
+    "examples/results/minimal-convergence/oseen2d-trace/evidence/flow2d-oseen-smooth-l1-n4.json": {
+      "original_execution_record_sha256": "77e77a04b922c33d59eb815a72aeaedbab2873d3d5f86e7344cf5243e12cf171",
+      "published_metadata_record_sha256": "77e77a04b922c33d59eb815a72aeaedbab2873d3d5f86e7344cf5243e12cf171",
+      "acquisition_uuid": "17392e5d-0399-4232-b14e-4564fc23ae9b"
+    },
+    "examples/results/minimal-convergence/oseen2d-trace/evidence/flow2d-oseen-smooth-l1-n4-resource.json": {
+      "original_execution_record_sha256": "a5793ddd27d9e793c85790be8a0701bbf79fdab557c6e408721ded8a82ab5e70",
+      "published_metadata_record_sha256": "a5793ddd27d9e793c85790be8a0701bbf79fdab557c6e408721ded8a82ab5e70"
+    },
+    "examples/results/minimal-convergence/oseen2d-trace/evidence/flow2d-oseen-smooth-l1-n8.json": {
+      "original_execution_record_sha256": "ae27cf063e54609f688ccfdaeef73a3a443747c600b0c14849eb20ac8b9c7079",
+      "published_metadata_record_sha256": "ae27cf063e54609f688ccfdaeef73a3a443747c600b0c14849eb20ac8b9c7079",
+      "acquisition_uuid": "c531f02a-aa58-4fb0-b536-6a4940f07221"
+    },
+    "examples/results/minimal-convergence/oseen2d-trace/evidence/flow2d-oseen-smooth-l1-n8-resource.json": {
+      "original_execution_record_sha256": "b609bf510b82ecff3d7677363d0282befe6f6ac2529b56cb3a4f6bc852a8504c",
+      "published_metadata_record_sha256": "b609bf510b82ecff3d7677363d0282befe6f6ac2529b56cb3a4f6bc852a8504c"
+    }
+  },
+  "figures": {
+    "docs/figures/minimal-convergence/oseen2d-trace/convergence.png": "f7c9dd32a3c0d371903d7e5e6aea4f3777fcbc107cfa991c9eca35fb8a503842",
+    "docs/figures/minimal-convergence/oseen2d-trace/convergence.svg": "7a3c49bc360754c14e020611e14256ac1b8535cd7ffa5b3fe7de8d68136a8ab0"
+  },
+  "figure_original_size_inspected": true,
+  "pde_solves_during_publication": 0,
+  "coefficient_vectors_persisted_by_publication": false,
+  "historical_literature_reproduction": false
+}

@@ -1,0 +1,73 @@
+{
+  "schema": "pymhm-initial-scalar-publication-receipt-v1",
+  "accepted": true,
+  "complete": true,
+  "initial_three_levels": true,
+  "row_count": 6,
+  "original_execution_record_sha256": "d9129a3d78294d579e49ef681b2f8b4f0b8e4a6bfde8cac6c17615bb68c6bb5b",
+  "published_metadata_record_sha256": "d9129a3d78294d579e49ef681b2f8b4f0b8e4a6bfde8cac6c17615bb68c6bb5b",
+  "evidence": {
+    "examples/results/minimal-convergence/oseen2d-viscosity/evidence/flow2d-oseen-smooth-l1-n2.json": {
+      "original_execution_record_sha256": "30b216cd28ed916c294033b7324c8b699f66729a7be299706e82260450c30d11",
+      "published_metadata_record_sha256": "30b216cd28ed916c294033b7324c8b699f66729a7be299706e82260450c30d11",
+      "acquisition_uuid": "89357780-de04-4343-8922-c59b701463af"
+    },
+    "examples/results/minimal-convergence/oseen2d-viscosity/evidence/flow2d-oseen-smooth-l1-n2-resource.json": {
+      "original_execution_record_sha256": "0234f7409e2156d8a0a44a86c1a939cf15e18c3c999aa57147bbffa41dc70a97",
+      "published_metadata_record_sha256": "0234f7409e2156d8a0a44a86c1a939cf15e18c3c999aa57147bbffa41dc70a97"
+    },
+    "examples/results/minimal-convergence/oseen2d-viscosity/evidence/flow2d-oseen-smooth-l1-n4.json": {
+      "original_execution_record_sha256": "77e77a04b922c33d59eb815a72aeaedbab2873d3d5f86e7344cf5243e12cf171",
+      "published_metadata_record_sha256": "77e77a04b922c33d59eb815a72aeaedbab2873d3d5f86e7344cf5243e12cf171",
+      "acquisition_uuid": "17392e5d-0399-4232-b14e-4564fc23ae9b"
+    },
+    "examples/results/minimal-convergence/oseen2d-viscosity/evidence/flow2d-oseen-smooth-l1-n4-resource.json": {
+      "original_execution_record_sha256": "a5793ddd27d9e793c85790be8a0701bbf79fdab557c6e408721ded8a82ab5e70",
+      "published_metadata_record_sha256": "a5793ddd27d9e793c85790be8a0701bbf79fdab557c6e408721ded8a82ab5e70"
+    },
+    "examples/results/minimal-convergence/oseen2d-viscosity/evidence/flow2d-oseen-smooth-l1-n8.json": {
+      "original_execution_record_sha256": "ae27cf063e54609f688ccfdaeef73a3a443747c600b0c14849eb20ac8b9c7079",
+      "published_metadata_record_sha256": "ae27cf063e54609f688ccfdaeef73a3a443747c600b0c14849eb20ac8b9c7079",
+      "acquisition_uuid": "c531f02a-aa58-4fb0-b536-6a4940f07221"
+    },
+    "examples/results/minimal-convergence/oseen2d-viscosity/evidence/flow2d-oseen-smooth-l1-n8-resource.json": {
+      "original_execution_record_sha256": "b609bf510b82ecff3d7677363d0282befe6f6ac2529b56cb3a4f6bc852a8504c",
+      "published_metadata_record_sha256": "b609bf510b82ecff3d7677363d0282befe6f6ac2529b56cb3a4f6bc852a8504c"
+    },
+    "examples/results/minimal-convergence/oseen2d-viscosity/evidence/flow2d-oseen-smooth-nu001-n2.json": {
+      "original_execution_record_sha256": "f6320c9205aad2146c2298ffadaa8c514b1a34cf0340ce2b43bc4ddd46672f91",
+      "published_metadata_record_sha256": "f6320c9205aad2146c2298ffadaa8c514b1a34cf0340ce2b43bc4ddd46672f91",
+      "acquisition_uuid": "9d80ecc1-a8fe-446f-870f-35ef270942ef"
+    },
+    "examples/results/minimal-convergence/oseen2d-viscosity/evidence/flow2d-oseen-smooth-nu001-n2-resource.json": {
+      "original_execution_record_sha256": "d918397e11c00917fffe4c78b882df95e168cca7f200c03a97284897f86dba6d",
+      "published_metadata_record_sha256": "d918397e11c00917fffe4c78b882df95e168cca7f200c03a97284897f86dba6d"
+    },
+    "examples/results/minimal-convergence/oseen2d-viscosity/evidence/flow2d-oseen-smooth-nu001-n4.json": {
+      "original_execution_record_sha256": "793846d19ec582be036ad6a4a69caac22f82764713dec9041e36eac657eabf08",
+      "published_metadata_record_sha256": "793846d19ec582be036ad6a4a69caac22f82764713dec9041e36eac657eabf08",
+      "acquisition_uuid": "b95747e9-0465-4895-9eb2-d19481306aa3"
+    },
+    "examples/results/minimal-convergence/oseen2d-viscosity/evidence/flow2d-oseen-smooth-nu001-n4-resource.json": {
+      "original_execution_record_sha256": "f46fcfeb475928b756812e853c2f2fee3fd7995ae8e8c552868efa74bfbcedc0",
+      "published_metadata_record_sha256": "f46fcfeb475928b756812e853c2f2fee3fd7995ae8e8c552868efa74bfbcedc0"
+    },
+    "examples/results/minimal-convergence/oseen2d-viscosity/evidence/flow2d-oseen-smooth-nu001-n8.json": {
+      "original_execution_record_sha256": "e715b864bca496e23a3767849c2c6dcb01d5a924bbb351c506b8b500c7a75323",
+      "published_metadata_record_sha256": "e715b864bca496e23a3767849c2c6dcb01d5a924bbb351c506b8b500c7a75323",
+      "acquisition_uuid": "55785fd6-f507-4a9f-8cca-4ec01cee0ef2"
+    },
+    "examples/results/minimal-convergence/oseen2d-viscosity/evidence/flow2d-oseen-smooth-nu001-n8-resource.json": {
+      "original_execution_record_sha256": "bb8cd62d392032d7043e3061cdb59eedd9a29eba8d537dafd7badfb99aa5ac31",
+      "published_metadata_record_sha256": "bb8cd62d392032d7043e3061cdb59eedd9a29eba8d537dafd7badfb99aa5ac31"
+    }
+  },
+  "figures": {
+    "docs/figures/minimal-convergence/oseen2d-viscosity/convergence.png": "7c39845679071d2101d0b6e7c9e46c9ee56289b411a4c8079a016f48c7f0788f",
+    "docs/figures/minimal-convergence/oseen2d-viscosity/convergence.svg": "bfc68be4adca0000d9489b3e0fa652d89d59e3d55cc362c53b909f6005d0ac3a"
+  },
+  "figure_original_size_inspected": true,
+  "pde_solves_during_publication": 0,
+  "coefficient_vectors_persisted_by_publication": false,
+  "historical_literature_reproduction": false
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "pymhm-initial-scalar-visual-verification-v1",
+  "inspected_native_pngs": 8,
+  "inspected_browser_png_svg": 16,
+  "width": 893,
+  "overlap_or_clipping": false,
+  "all_panels_inspected": true,
+  "browser_record_sha256": "5803ab77a1c3c3cf1875a5a404d7a32d1ac30dea2fac6e2ee89c84070d709d26",
+  "resource_sha256": "f700d5ecaf269f3856530f7b6655c5971f9f3dfc8291ece13eaf11fe42e4e6b8",
+  "pde_solves": 0,
+  "study_sha256": "5c29535e9bf1301d79f597ff6b704314d7f3dd85c1ff2eb9fdf336fb05ff7a08",
+  "figure_sha256": {
+    "png": "fcd5ccde153fed3eb140367c85619e020e72f35097bdd656fff194d7aab1be56",
+    "svg": "2ceb7d6cd62dd304b81f8a90568a21e5b735a4daddbefa166a02ec9b0b89a5bd"
+  }
+}

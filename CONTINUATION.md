@@ -1,13 +1,276 @@
 # PyMHM: retomada com um clone leve, sem transferência de resultados
 
-Estado revisado em **2 de outubro de 2026**. Roteiro operacional, separado dos
+Estado revisado em **3 de outubro de 2026**. Roteiro operacional, separado dos
 docs científicos e excluído dos pacotes distribuídos.
 
 **A implementação integral e a reprodução integral da literatura ainda não estão
 concluídas.** Faltam controles de resolução, comparações independentes completas
-e alguns drivers de casos. A retomada parte exclusivamente das fontes versionadas:
-nenhum campo, checkpoint, ambiente ou comparador da máquina anterior será enviado.
+e alguns drivers de casos. A retomada usa as fontes versionadas e as referências
+primárias preservadas em `.tmp`; campos e ambientes são adquiridos novamente.
 As quedas interromperam execuções; sua causa não foi estabelecida.
+
+### Entrega reduzida autorizada em 3 de outubro
+
+O escopo corrente é uma entrega inicial **até hoje**, conforme a solicitação do
+usuário: estudos de convergência curtos para as famílias de casos, reutilizando
+aquisições válidas e completando séries pequenas quando viável. Cada estudo
+declara o parâmetro refinado, os campos e normas, os resíduos das equações
+originais, a quadratura, as bases executadas e as limitações. Três níveis
+constituem uma observação inicial; não certificam automaticamente a faixa
+assintótica, a estabilidade uniforme ou uma referência numérica resolvida.
+
+As campanhas extensas, a reprodução integral das tabelas, as referências ainda
+não resolvidas, a galeria integral e os notebooks dependentes desses campos
+continuam neste roteiro como trabalho posterior. Não são critérios de fechamento
+da entrega reduzida. Nenhuma tolerância numérica ou cobertura foi relaxada.
+Casos que excedem os orçamentos curtos têm sua limitação registrada, sem substituir
+silenciosamente o domínio ou os espaços publicados.
+
+A reconstrução unfitted r64 foi interrompida no próximo checkpoint por essa
+mudança de escopo. Seus arquivos parciais foram preservados e não têm aceitação
+física final. Recibo: `r64-user-requested-interruption-v1/receipt.json` em
+`build/reports/resume/unfitted-source-generation-d5eb89fa1606-v2/`.
+
+### Fechamento da entrega reduzida
+
+**Entrega reduzida concluída em 3 de outubro de 2026.** O catálogo corrente
+contém **31 grupos** de observações iniciais e o renderizador público gera
+**84 painéis** apenas dos registros JSON, sem uma nova solução das PDEs.
+Índice: `docs/cases/minimal-convergence.md`; dados:
+`examples/results/minimal-convergence/catalogue.json`. As cinco comparações
+detalhadas selecionadas continuam em `docs/cases/index.md`.
+
+O notebook `notebooks/73_initial_convergence.ipynb` foi executado e validou os
+31 registros e as figuras; saída em `build/notebooks/73_initial_convergence.ipynb`.
+Reprodução somente dos gráficos:
+
+```bash
+pixi run --locked -e notebooks python examples/plot_initial_convergence.py \
+  --output build/initial-convergence-figures
+```
+
+Gates finais: lint, format-check, typecheck, test-cov e docs-check passaram;
+**4194 testes**, 279 skips opcionais; **99,9136% de linhas** e **99,6419% de
+branches**, sem relaxar critérios. Integrações nativas adicionais: **30 testes**
+DOLFINx/Basix. Documentação: 39 HTML, **370 expressões MathJax** verificadas no
+navegador e 31 figuras do catálogo carregadas. Wheel, sdist e Conda 0.1.0 foram
+construídos e inspecionados; os 117 módulos do core são idênticos à árvore atual.
+Os códigos privados de comparação e arquivos grandes de campos permanecem
+fora dos artefatos distribuídos.
+
+Recibo consolidado: `build/reports/completion/initial-delivery-final-receipt.json`;
+plano atualizado: `build/reports/completion/workplan.json`. As aquisições mantêm
+seus UUIDs, fontes executadas e bases originais; consumidores e aliases públicos
+têm identidades próprias. O H(div) 3D fecha 20 comparações nativas e os replays
+na publicação atual (`hdiv3d-current-publication-final-receipt.json`).
+
+Pendências científicas preservadas: fluxo SPE10 e controles H1 periódicos ainda
+não resolvidos; divergência crescente na camada interna Oseen; mixed-well com
+dois níveis; SPE10 Brinkman com um nível; HPC4e original adiado. Nanoguide é um
+controle DG independente, Three layers é temporal em malha espacial fixa e
+Marmousi usa o recorte explicitado. Reprodução integral das tabelas, referências
+refinadas, todos os notebooks/figuras dependentes e campanhas de desempenho
+continuam como trabalho posterior, fora do fechamento solicitado.
+
+### Estado da retomada neste host
+
+Pixi está instalado em `/prj/thermophase/volpatto/.pixi/bin/pixi`; se não estiver
+no PATH, usar esse executável. Instalar e executar com o lockfile existente.
+Os ambientes `test`, `test-py311`, `test-py312`, `notebooks`, `docs`, `packaging`,
+`fem` e `intel` foram instalados com `--locked`.
+
+- Os gates finais da entrega inicial estão no fechamento acima. As suítes
+  completas anteriores Python 3.11 e 3.12 verificaram o mesmo núcleo de 117
+  fontes com 3969 testes e 278 skips; regressões novas dos consumidores foram
+  verificadas nos ambientes correspondentes quando introduzidas. A suíte final
+  padrão contém os novos controles e registra 4194 testes e 279 skips.
+- Integrações executadas: DOLFINx para os controles unfitted; PARDISO em serial
+  e spawn; comparação periódica independente nos **64 macros**, Q1/r32 e P0
+  em 1/2/4/8/16 segmentos. As diferenças relativas de pressão, gradiente bruto
+  e fluxo físico são no máximo **5,07×10⁻¹³**, com normas nativas q8/q10.
+  O controle completo r64/s32 também executou: 270400 pressões, 4608 traços;
+  normas físicas dos campos em fases concordam em até **3,51×10⁻¹²** relativos.
+- Controle periódico completo r128/s32 independente: **1.069.632 incógnitas**;
+  todas as 64 matrizes de acoplamento coincidem byte a byte. O solve nativo
+  passou o critério original após uma correção sobre as mesmas equações,
+  de 7,04×10⁻¹⁰ para 2,70×10⁻¹⁴. A aquisição faseada atual dos seis traços,
+  UUID `ad352997-c845-4301-b6e6-070414b3c38a`, passou com resíduos originais
+  **2,714–2,800×10⁻¹⁴**, após uma correção com A/B/f inalterados. O confronto
+  físico r128/s32 concorda em pressão, gradiente e fluxo até **1,43×10⁻¹²**.
+  Replay com duas threads e bases recém-calculadas de orientação equivalente
+  reproduziu exatamente os digests dos seis campos. Aquisição: 25m34s/643 MiB;
+  replay: 5m47s/515 MiB. Isso verifica a aritmética e o contrato de replay;
+  resolução local, estabilidade e curva publicada ainda exigem os controles
+  r256/r512 e referências refinadas. O resumo consolidado está em
+  `build/reports/resume/periodic-acceptance-stream-r128-verification.json`.
+- Periódico r256: os seis traços passaram o limite original 10⁻¹⁰, com
+  resíduos relativos **1,128–1,165×10⁻¹³** após uma correção das mesmas
+  equações. UUID `5a6eeb7e-b8f8-4471-9d8b-7ac2dd3077e3`; aquisição
+  **1h50m12s/2,520 GiB**. Replay com duas threads e 192 remontagens de bases
+  equivalentes reproduziu exatamente campos/trace/coarse/kernel em
+  **22m28s/1,93 GiB**. O incremento r128→r256 permanece **18,95–19,13% no
+  H1 quebrado** e **3,63–3,71% em L2**, com r256 como denominador: a resolução
+  local ainda não está resolvida. A árvore imutável das 121 fontes executadas
+  foi restaurada e verificada para os controles independentes dessa geração;
+  os recibos não recebem os hashes de código posterior. O confronto nativo
+  r256/s32 completo, com **4.231.744 incógnitas/37.994.560 não zeros**, passou:
+  resíduo original **1,13×10⁻¹³**, pressão/gradiente/fluxo físico relativos
+  até **2,97×10⁻¹¹**, estáveis em q8/q10. As 64 matrizes B são byte a byte
+  iguais. Execução **8m16s/13,59 GiB**, usando somente as fontes imutáveis
+  da aquisição; nenhuma fórmula ou tolerância depende da curva publicada.
+  r512, resolução local e referências refinadas permanecem pendentes.
+  Evidências: `periodic-acceptance-stream-r256-verification.json`,
+  `periodic-local-r128-r256.json` e
+  `periodic-source-generation-r256-final-restore.json` e
+  `periodic-acceptance-stream-r256-final-verification.json`, em
+  `build/reports/resume/`.
+- A janela coordenada posterior ao r256 integrou quatro owners: restauração
+  das matrizes executadas de faces oscilatórias Helmholtz, tabulação cardinal
+  somente de valores, protocolo de fonte triangular separável e preparação
+  dos vetores espaciais originais no stepper elástico. Os 91 testes Helmholtz
+  e 165 testes das fontes/callers passaram em cada ambiente Python; os owners
+  isolados têm cobertura de linhas e ramos 100%, com duas integrações FEM reais.
+  Lint, format-check, typecheck e o gate completo de cobertura passaram.
+  Fonte espacial preparada conserva unidades e bases e
+  avalia a amplitude nos tempos originais; não implementa restart. Registros
+  em `build/reports/completion/core-integration-window-20261003/`.
+- Referência periódica conforming Q1: os níveis atuais 256, 512, 1024, 2048
+  e 4096 passaram o limite original de 10⁻¹⁰. O nível histórico 4096 tem
+  16.777.216 células e 16.785.409 nós; execução **7m09s/11,58 GiB**, resíduo
+  original **5,41×10⁻¹³**. Os incrementos H1 completo 512→1024, 1024→2048
+  e 2048→4096 são **34,49%, 19,12% e 9,77%**, com o nível mais fino como
+  denominador: 4096 ainda não demonstra resolução do erro espacial. A
+  sensibilidade q4→q6 no nível 512 é 9,23×10⁻¹⁰ em H1. A coleção e as fontes
+  realmente executadas estão em `periodic-literal-q1-current-verification.json`,
+  em `build/reports/resume/`. O confronto Basix independente Q1/512 passou:
+  pressão/gradiente/fluxo físico relativos até **2,03×10⁻¹²**, normas q8/q10
+  estáveis. Evidência: `periodic-literal-q1-512-native.json` no mesmo diretório.
+  Q1/4096 não é solução exata; referência Q5 refinada permanece pendente.
+- Aquisição periódica em fases está implementada e validada: contribuições
+  compactas, reconstrução em arquivos temporários, publicação atômica, bases
+  executadas e guardas de configuração/fontes. Os pilotos de replay estão em
+  `build/results/periodic-guarded-r32` e `periodic-guarded-r64`. Replay com
+  threads 2/base recém-calculada rotacionada é exato em r32; em r64, mantém
+  traço/coarse/kernel exatos e pressão até 1,89×10⁻¹⁷. O incremento local
+  r32→r64 é **52,58–53,13% no H1 quebrado**, com r64 como denominador, nos
+  mesmos traços s1…16: o refino local continua insuficiente. O resíduo original
+  local r64 relativo só à carga volumétrica chega a 1,94×10⁻¹⁰; a escala com
+  tração dá 3,95×10⁻¹². São métricas distintas, sem relaxar critérios.
+- L10: `--assembly-order` e `--norm-orders` estão disponíveis. O controle P8/r16,
+  P2/s32 em q11/q13 foi executado nos **16 macros**. A diferença de campos em
+  norma de gradiente é 1,1015×10⁻¹⁰, estável entre integração q13/q15. P3/s32
+  nessa mesma malha tem núcleo exato do multiplicador e é rejeitado em ambas
+  quadraturas; a receita de varredura completa usa r32.
+- Obstáculo quadrado: 16 aquisições públicas P1/RT0, oito confrontos Basix P1
+  q6/q8 e oito NeoPZ RT0 executaram nos 200 macros. Referências clássicas
+  r4/r8/r16/r32 passaram nas equações físicas livres, energia, gauge e replay
+  da base nativa executada. O incremento r16→r32 é 0,512606% em pressão e
+  1,72552% em fluxo; a sensibilidade ainda exige refino antes de uma alegação
+  de precisão. Os registros e figuras do obstáculo usam os campos atuais.
+  Os seis casos pontuais completos P2/RT0, com 2048 macros, foram adquiridos
+  com campos/bases executadas e passaram as equações originais. As seis montagens
+  Basix independentes passaram o mesmo critério de campos, sem alterar limites;
+  diferenças relativas máximas de fluxo P2/RT0: 1,71×10⁻¹¹/7,27×10⁻¹².
+  A referência usa uma política aritmética uniforme sobre o operador original,
+  com controle adicional de estabilidade independente do candidato. Treze figuras
+  atuais do caso foram inspecionadas. A série Green completa de seis níveis
+  executou em 5m08s/387 MiB, com resíduo original máximo 3,53×10⁻¹⁴. O notebook
+  22 executou seus quatro blocos de código, 35 arquivos/101,6 MB e três figuras,
+  em 11,4s/386 MiB; relatório `quarter-notebook-current-verification.json`.
+- Marmousi: os dois SEG-Y primários foram adquiridos, verificados por SHA e
+  carregados no recorte declarado em unidades SI. O piloto de domínio reduzido
+  não é reprodução da tabela nem referência refinada. As campanhas completas
+  MHM e clássicas permanecem pendentes.
+- O inventário de notebooks filtra a seleção antes de ler manifestos e verifica
+  campos e figuras antes do kernel. Onze notebooks executaram com suas figuras;
+  campos ausentes ainda impedem os notebooks de campanhas. O notebook 22 está
+  restrito às três figuras centrais e verifica bases completas dos campos pontuais.
+- MsHHO: a campanha atual de cinco níveis e quatro contrastes foi adquirida
+  e renderizada, com bases/R/E/coeficientes executados arquivados. A política
+  explícita usa armazenamento local estendido e duas correções nas mesmas
+  equações MHM, mantendo 10⁻¹⁰ e o padrão público de mínimo zero. A diferença
+  nodal relativa máxima é 4,36×10⁻¹³; os resíduos físicos originais próprios
+  são no máximo 5,35×10⁻¹². A montagem Basix independente nos oito macros
+  aprova pressão/gradiente/fluxo em 10⁻⁹, incluindo Dirichlet homogêneo em
+  κ=10⁶. A inserção cruzada com dados afins em κ=10⁶ permanece reprovada:
+  cerca de 5,19×10⁻⁹ nos dois sentidos, acima de 10⁻¹⁰. A ação da diferença
+  dos operadores arredondados explica esse resultado; a certificação discreta
+  conjunta permanece pendente. Não é reprodução dos espaços locais exatos
+  de L06 nem prova de inf-sup uniforme. Registros públicos em
+  `examples/results/mshho.json` e `examples/results/mshho/native-verification.json`.
+  O notebook 24 executa os registros e as duas figuras atuais.
+- Wheel/sdist, Conda noarch e metadados foram reconstruídos e inspecionados na
+  geração MsHHO atual. As 117 fontes nos três artefatos coincidem com as verificadas;
+  a instalação limpa executa os mesmos campos em modo direto e `spawn`, sem
+  importar FEM/CAD/MPI/aceleradores opcionais. Evidência:
+  `mshho-core-integration-window-20261003/closed.json` em `build/reports/completion/`.
+  `docs-check` ainda falha por **71 assets selecionados ausentes**, de 175. A auditoria
+  matemática e a renderização MathJax passaram separadamente; isso não substitui
+  o gate estrito da galeria. Ainda não se pode declarar a entrega pronta.
+
+Evidências desta execução: `build/reports/resume/` e `build/reports/completion/`. Nenhum commit, push ou
+publicação de pacote foi executado. Continuar pelos controles de P1 abaixo,
+preservando a distinção entre aquisição atual, registros históricos e reprodução
+literal da literatura.
+
+### Fechamentos e contratos de campos nesta retomada
+
+- Nested Q2/P1: os dez casos homogêneos e afins foram adquiridos, comparados
+  integralmente com Basix e publicados com bases executadas e replay bit a bit
+  em 1/2 threads. Figuras atuais e notebook 36 executado; referência em
+  `examples/results/nested-current/native-verification.json`.
+- MsHHO3D: dez casos P2/P0 em cinco resoluções, tetraedros e cubos, com
+  fontes projetadas e bases executadas. O confronto independente inteiro
+  tem diferença física máxima de 1,327e-14 e inserção nas equações nativas
+  de 2,559e-14. A caracterização ideal quadrática aplica-se apenas aos casos
+  K=I/P0 selecionados. Figuras atuais e registro em
+  `examples/results/core-extensions/mshho3d-current/native-verification.json`.
+  O consumidor de seções verifica a mesma norma q12 publicada, mantendo q10
+  como controle. Seus 28 testes passaram nos três ambientes Python.
+- H(div) 3D: os 20 casos analíticos tetraédricos/prismáticos em n1…5 foram
+  adquiridos com C/T/DOFs, coeficientes e equações originais efetivamente
+  executados. O confronto independente Basix dos 20 casos passou: diferenças
+  relativas máximas em pressão/fluxo/divergência de
+  5,029e-14/3,952e-13/6,412e-13. Resíduos originais completos próprios/nativos
+  são no máximo 5,435e-13/1,533e-12. Cinco aquisições nativas aceitas foram
+  preservadas com suas gerações originais; apenas as 15 restantes foram
+  calculadas. Replay nativo em 1/2 threads e rotações coerentes das bolhas
+  passaram nos 20 casos. Recibo em
+  `build/reports/completion/hdiv3d-native-whole20-v2-final-receipt.json`;
+  os 2845 artefatos foram novamente verificados na revisão root.
+  O replay adicional dos arquivos próprios e as seções/figuras atuais ainda
+  estão em execução/preparação; o notebook 57 também depende da elasticidade.
+  O consumidor de seções literal passou 48 testes nos três ambientes Python,
+  preservando as saídas MsHHO3D. Erros físicos L2 por campo são separados dos
+  resíduos algébricos por bloco; estes não são renomeados como normas L2 físicas.
+- Unfitted: comparação dos 16 macros r32 nas duas bases efetivamente
+  executadas passou em normas físicas, máximo 3,977e-11. A inserção nodal
+  direta nas equações nativas continua reprovada: limite inferior global
+  conservador de 1,402e-10, acima de 1e-10. Condensação r64 dos 16 macros
+  fechou em 2h47m18,5s/7,217GiB. Os sistemas reduzidos de 2704/3600 incógnitas
+  passaram em 10,49s/655,01MiB, com resíduos 1,518e-15/2,684e-15. A reconstrução
+  física dos 16 macros está em execução na geração imutável de 145 fontes,
+  sob guarda de 8 GiB/28800 s. O controle volumétrico inicial ficou em
+  1,077e-10/1,079e-10 e acionou o refinamento compartilhado das mesmas
+  equações, com mínimo zero/máximo dois e limite 1e-10 inalterados. A aceitação
+  original completa, o confronto independente e a publicação permanecem pendentes.
+- Três camadas: ambas as trajetórias de 301 estados passaram as equações
+  originais. A comparação de volume arquivada usa uma interpretação comum
+  Basix após bijeção nodal e não certifica avaliação nas duas bases próprias;
+  os registros públicos explicitam esse limite. A referência clássica h8
+  tem uma nova aquisição de 301 estados com a matriz Basix literal e DOFs
+  executados, geração `afd43c6b731c`: 424,44 s/1,950 GiB, resíduo original
+  máximo 1,185e-13; os coeficientes são byte a byte iguais à geração anterior.
+  Replay próprio em 1/2 threads e q8/q10 passou. Isso ainda não é referência
+  espacial refinada: as malhas h4/h2 têm apenas controles estruturais, sem
+  trajetórias; a viabilidade do solve h2 continua pendente. O produtor MHM
+  da receita Polynomial efetiva e o consumidor entre malhas estão preparados,
+  mas os 341 macros/301 estados próprios ainda exigem aquisição atual. Os
+  recibos antigos permanecem imutáveis, sem novos hashes.
+- Seis rasters primários selecionados foram extraídos diretamente dos PDFs
+  locais, com SHA/página/recorte/DPI e inspeção. Não substituem as 71 imagens
+  científicas ausentes do perfil canônico; o gate estrito de docs continua
+  reprovado. A inspeção suplementar MsHHO3D não altera esse perfil.
 
 ## 1. Git e preparação no destino
 
@@ -102,7 +365,8 @@ Na nova máquina, reduzir o custo sem mudar o problema matemático:
 5. Publicar somente registros leves e figuras selecionadas; campos volumosos
    continuam ignorados. Não anunciar restart/controle de RAM ainda inexistente.
 
-Os drivers monolíticos precisam dessas melhorias antes de suas maiores execuções.
+O periódico já dispõe dessas fases. Os demais drivers monolíticos precisam
+dessas melhorias antes de suas maiores execuções.
 
 ### Atenção aos resumos que fazem o driver pular cálculos
 
@@ -192,17 +456,30 @@ históricos ausentes. Ainda faltam drivers de aquisição e comparação.
 ### Artigos e referências externas
 
 [docs/literature.md](docs/literature.md) e [docs/roadmap.md](docs/roadmap.md)
-registram fontes/DOIs, formulações e limites. Reobter os artigos pelas fontes
-citadas quando for necessário conferir uma hipótese; o núcleo não precisa da
-biblioteca de PDFs para funcionar.
+registram fontes/DOIs, formulações e limites. **Consultar primeiro `.tmp`: ali
+estão as referências principais de conhecimento**, não somente backups de
+resultados. Os PDFs ficam em `.tmp/refs/mhm/literature/`; o estudo periódico
+inclui `ParValVerf.pdf`, L08 é `chaumontfrelet_paredes_valentin_2022a.pdf` e L10
+é `1-s2.0-S0898122126000192-main.pdf`. Conferir versão, SHA e páginas contra os
+relatórios de auditoria em `build/reports/resume/`. Reobter pela fonte/DOI somente
+o material ausente. O núcleo portátil não depende dessa biblioteca.
 
 MSL (`msl_mhm`, `msl_cg`, `msl_core`), `msl_mfem`, `mhm-mfem` e os códigos de
-Santiago não acompanham o clone. MSL exige obter acesso privado novamente.
+Santiago não acompanham o clone versionado. Neste host, cópias de fontes MSL e
+comparadores privados estão preservadas em `.tmp`, sem compilados. As cópias
+MSL não têm Git próprio: seus commits upstream são registros históricos **não
+verificados**; os hashes atuais das 728 fontes conferem com o manifesto de
+migração. Não usar `git -C` que encontre o Git do PyMHM como revisão externa.
+MSL exige reconstruir core→cg→mhm→driver; caso a fonte esteja ausente, obter acesso.
 NeoPZ/MHM/iMRS têm fontes públicas Labmec. Obter código externo em árvore
 ignorada, por exemplo `build/reference-sources/`, fixar revisão/URL e manter
 comparadores fora da distribuição. Inspeção não conta como execução. Sem acesso
-a MSL, construir uma montagem independente DOLFINx/UFL, Basix ou NeoPZ do mesmo
-caso completo, declarando o limite de acesso.
+a MSL executável, usar uma montagem independente DOLFINx/UFL, Basix ou NeoPZ do
+mesmo caso completo, declarando o limite de acesso. O comparador periódico
+`.tmp/comparisons/periodic-ufl/compare.py` já executou neste host. O wrapper
+`.tmp/validation/unfitted-msl-smooth/run.py` tem CLI portátil, mas depende do
+binário ausente `reference_export`; seus locais P1 são controles independentes,
+não a discretização P8 da campanha.
 
 ### Figuras extraídas das publicações
 
@@ -233,8 +510,8 @@ aquisição; resolver essa entrada antes de declarar a galeria completa.
 A revisão estática conferiu 91 comandos de drivers, 21 chamadas de tasks e a
 sintaxe dos três blocos Python: arquivos, flags, escolhas, argumentos, ambientes,
 imports locais e nomes de tasks. Não houve inconsistências após as correções.
-Isso não é uma execução das campanhas: **solves grandes não foram executados
-nesta preparação**. Executar um grupo por vez. Valores pequenos são pilotos,
+Isso não certifica todas as campanhas. Os controles executados neste host estão
+listados no estado da retomada. Executar um grupo por vez. Valores pequenos são pilotos,
 não substitutos do artigo. Comparações devem usar arquivos produzidos na nova
 aquisição, não JSONs antigos sem seus campos.
 
@@ -243,14 +520,22 @@ aquisição, não JSONs antigos sem seus campos.
 ### L04 periódico
 
 ```bash
-pixi run -e test python examples/verify_periodic.py --reference-levels 32 --macro 8 --local-refinement 32 --segments 1 2 4 8 16 32 --workers 1 --native-threads 1
+for stage in condense solve reconstruct; do
+  pixi run --locked -e test python examples/verify_periodic.py --macro 8 --local-refinement 32 --segments 1 2 4 8 16 --workers 1 --native-threads 1 --stage "$stage" --artifacts build/results/periodic-pilot-r32
+done
+pixi run --locked -e test python examples/verify_periodic.py --macro 8 --local-refinement 64 --segments 1 2 4 8 16 32 --workers 1 --native-threads 1 --stage all --reference-levels 32 --artifacts build/results/periodic-pilot-r64 --output build/reports/resume/periodic-pilot-r64.json
 pixi run -e test python examples/periodic_reference.py --sizes 32 64 --order 10 --native-threads 1
 ```
 
-Antes de r512, implementar fases e replay públicos validados em r32. Persistência
-anterior não está disponível e sua aceitação não estava concluída. Repetir a
-primeira chamada com r128/r256/r512: Q1 local/P0 por segmento, 64 macros. Referência
-32 só evita uma montagem grande simultânea; não é baseline final.
+Fases e replay estão implementados; repetir o controle em r128/r256/r512 antes
+da campanha final: Q1 local/P0 por segmento, 64 macros. Q1/r32 com 32 segmentos
+admite um traço alternado que anula todas as integrações locais sob Dirichlet
+fraco; não é par admissível. Para testar os seis traços em piloto, usar r64.
+O replay deve usar a base/constraints arquivadas mesmo após uma rotação equivalente
+da base recém-calculada. Conferir invariância por threads, campos e orientação.
+Referência 32 só evita uma montagem grande simultânea; não é baseline final.
+O incremento Q5/32→64 medido neste host é **57,03% em H1**: está sub-resolvido,
+sem certificado de precisão. Os campos clássicos finais continuam pendentes.
 
 Clássico Q5: executar separadamente `periodic_reference.py --sizes 512`, depois
 1024 e, conforme incremento, 2048, mantendo `--order 10 --native-threads 1`.
@@ -274,15 +559,20 @@ na partição comum, além do residual CSR.
 ```bash
 pixi run -e notebooks python -m examples.unfitted_campaign --collect --refinement 16
 pixi run -e notebooks python -m examples.unfitted_campaign --collect --refinement 16 --fit-locals
-pixi run -e intel python -m examples.unfitted_convergence --study smooth --refinement 16 --degree 8 --maximum-segments 32 --workers 1 --local-solver pypardiso
+pixi run -e intel python -m examples.unfitted_convergence --study smooth --refinement 32 --degree 8 --maximum-segments 32 --workers 1 --local-solver pypardiso --assembly-order 13 --norm-orders 13 15
 pixi run -e intel python -m examples.unfitted_convergence --study contrast --refinement 16 --workers 1 --local-solver pypardiso --contrasts 10 100 1000 10000 100000 1000000
 ```
 
 Repetir local r24/r32/r64 mantendo dados e traços. Comparar r32→r64 com
 `python -m examples.unfitted_local_resolution first second --order 13 --output ...`.
-Implementar seleção de quadratura no módulo compartilhado: o CLI atual usa `degree+3`, logo P8
-monta q11, sem flag q13. Resolver o incremento local de ell2 e a dependência
-q9/q11 de ell3; conferir q13 sem afrouxar tolerância. Integração exata de K não
+O CLI mantém o padrão `degree+3` (P8 monta q11); a flag `--assembly-order 13`
+controla a montagem e `--norm-orders 13 15` integra os erros independentemente.
+As convenções e validações de quadratura são centralizadas no assembler Darcy.
+O índice q de regularidade em L10 satisfaz 0≤q≤ell e **não** é a ordem de Gauss.
+O par P8/r16 com P3/s32 tem posto local 383/384 e modo global exato do
+multiplicador; q11/q13 não o removem. r32 com esse traço tem posto completo.
+O controle q11/q13 de ell2-s32 em r16 já foi adquirido; ainda falta o incremento
+local r32→r64 e a comparação independente completa de L10. Integração exata de K não
 cria salto de gradiente no triângulo polinomial. Recriar montagem independente
 do caso completo. A discrepância da figura S2 não foi reconciliada.
 
@@ -426,6 +716,112 @@ layered que também não substitui o obstáculo.
 
 ### Transporte L11 §5.4
 
+As entradas selecionadas estão em `examples/transport_random_problem.py` e
+`examples/data/transport-random-2015/permeability.json`: array real 64×16,
+seed PCG64 20261003, logaritmos iid uniformes, domínio [0,3]×[0,1], pressão
+3/0 nas faces verticais e fluxo nulo nas horizontais. O artigo não fornece
+o array, a lei probabilística, o seed ou esse acionamento Darcy; a seleção
+não é uma identificação retrospectiva. Treze testes de identidade, eixos,
+geometria, interfaces e BC passaram nos três ambientes Python. Um piloto do
+domínio inteiro com 32 macros, P3/r8 e os traços 2/8, realizou cinco passos
+dt=.001 em 32,53 s/212 MiB: equações originais ≤4,73×10⁻¹⁷ e Gram dos traços
+livres de posto completo nesse piloto. Não é a campanha 512/T7 nem comparação
+independente. Usar as entradas arquivadas, sem redesenhar o campo por seed.
+`OfflineHybridSystem.solve` e `solve_transient_transport` já oferecem
+`check_original=True`: verificação compartilhada com `refine_hybrid(max_steps=0)`,
+sem mudar campos ou fatorizações, inclusive nos passos não retidos. Normas
+originais e da carga física ficam disponíveis por passo. O controle passou
+89 testes nos três ambientes e três casos nativos PARDISO. A campanha aleatória
+completa e suas referências ainda precisam ser executadas. O driver público
+`examples/transport_random_campaign.py` está implementado com as configurações
+512/T7 declaradas e entrada arquivada. Salva campos físicos portáteis, bases
+executadas, mapas/orientações e reações nodais; não arquiva coarse sem sua base
+nem implementa restart. O contrato distingue Robin interior, fluxo difusivo
+natural exterior e traço removido no inflow forte. A velocidade normal numérica
+é o multiplicador Darcy, distinta da normal do vetor bruto volumétrico.
+
+O piloto público atual q8, UUID `e02bdb85-7a39-4b2b-8738-da69c11d027a`, executou
+32 macros/cinco passos em 21,17 s/177 MiB. Seu replay data-only com threads 1/2
+reproduziu exatamente os digests portáteis de pressão, gradiente, fluxo Darcy,
+concentração e gradiente da concentração. Integração independente dos campos
+arquivados reproduziu as três massas observadas, inclusive IC zero. Preserva
+os mínimos nodais negativos: -0,3679839 no primeiro passo e -0,3390840 no quinto;
+não há corte nem alegação de positividade. Os 37 testes de arquivos/entradas/
+checkpoints/normas passaram nos três ambientes; o contrato final por face passou
+cinco regressões nos três ambientes. Lint e typecheck dos novos owners passaram.
+
+Pilotos q8/q10/q12 do mesmo material, BC, espaços e cinco passos mediram
+sensibilidade de quadratura, sem trocar a realização. Em t=.005, os incrementos
+q8→q10/q10→q12 são 0,0241232%/0,0117330% em L2 da concentração e
+0,0280562%/0,0134792% no H1 quebrado. Os denominadores são os campos computados
+de quadratura maior; não constituem uma solução exata nem controle da campanha
+512/T7. Evidências: `build/reports/completion/transport-random-current-pilot-q8-verification.json`
+e `transport-random-pilot-quadrature-control.json`. Comparação independente
+Basix P3/P2 executou nos 32 macros: 10.652 incógnitas/174.944 nnz,
+resíduo original 1,24×10⁻¹⁶ e concordância dos campos físicos ≤1,79×10⁻¹².
+Os dois campos foram avaliados em suas bases executadas sobre a mesma regra
+positiva q6, adequada aos produtos polinomiais e K fitted. O candidato nas
+equações originais nativas deu 5,51×10⁻¹³. Regressões independentes com pressão
+3-x/fluxo (1,0), q3 admissível e q2 imediatamente excluído passaram; orientação,
+pressões fracas e N0 foram revisadas separadamente. Isso é controle Darcy do
+piloto, sem norma H(div), conservação fina ou referência refinada.
+
+O transporte também foi montado de forma independente nos 32 macros, com
+todos os cinco estados nativos, massa consistente, Robin interior e reações
+nodais dos dados fortes. O confronto nos tempos observados .001/.005 passou:
+concentração L2/gradiente/H1 quebrado ≤7,44×10⁻¹³ relativos, Robin interior
+≤3,53×10⁻¹², reação dual nodal ≤2,88×10⁻¹². O candidato inserido no sistema
+original aumentado deu ≤1,29×10⁻¹³, contra o estado anterior nativo declarado;
+os limites 10⁻¹⁰/10⁻⁹ foram fixados antes da leitura e mantidos. A condição
+forte deriva das faces exteriores incidentes de medida positiva; um macro que
+toca a entrada apenas por um vértice não recebe uma condição nodal adicional.
+O controle homogêneo preservou u=1 por cinco passos em ≤1,21×10⁻¹³. Posto
+finito: B local 71/72, B global após eliminação essencial 912/912; isso não
+fornece uma cota uniforme inf-sup. Relatório:
+`build/reports/completion/transport-random-native-transport-comparison-face-current.json`.
+O piloto nativo levou cerca de 7,7s/140 MiB; o confronto sem solve, 3,22s/135 MiB.
+A trajetória completa 512/T7 e referências espaço/tempo permanecem pendentes.
+O controle adicional com o Darcy heterogêneo arquivado e IC u=1 preservou
+u=1 por cinco passos em ≤3,37×10⁻¹²: confirma o acoplamento fraco macro,
+sem transformar a velocidade bruta em H(div). A escolha de IC é um parâmetro
+separado do controle homogêneo; os padrões IC0/K arquivado são mantidos.
+
+O novo adaptador clássico privado usa RT0/P0 global e concentração contínua
+P3, no domínio inteiro e com os mesmos dados físicos salvos. Pilotos de cinco
+passos executaram em 2048 e 8192 triângulos, com todas as equações originais
+abaixo de 10⁻¹⁰. Matrizes/bases/orientações/campos efetivos estão arquivados;
+o contrato v2 inclui também a matriz BE efetivamente executada em binary64
+e os coeficientes predecessores dos checkpoints. Replay com threads 1/2 é
+idêntico, sem novo solve; dez controles nativos analíticos e de normas passaram.
+O incremento 2048→8192 permanece **36,15% no fluxo Darcy L2** e **52,72% no
+H1 da concentração**, em t=.005, com o campo mais fino no denominador. A
+sensibilidade q8→q10 é da ordem de 10⁻¹⁵ nesse piloto. Portanto, ainda não
+é baseline resolvido nem substitui T7. Resultados compactos:
+`examples/results/transport-random-classical-pilot-verification.json`.
+Custos observados com o contrato v2: 2048/q8 6,59s/135 MiB;
+8192/q8 13,93s/269 MiB, durante a campanha unfitted, sem alegação de
+desempenho controlado. Ambos verificaram a matriz executada e os RHS dos
+checkpoints pelos coeficientes predecessores. Próximo nível
+32768 precisa de lease pesada; corresponde a uma malha selecionada, distinta
+da conectividade histórica indisponível de 32000 triângulos.
+O controle temporal clássico adicional manteve 2048 triângulos e adquiriu
+dt=.0005/10 passos e dt=.00025/20 passos, ambos até t=.005. Os incrementos
+H1 dt=.001→.0005→.00025 são **0,5955%/0,3141%**, estáveis em normas q6/q8.
+Todos os checkpoints passaram o replay BLAS1/2 e seus RHS predecessores;
+os owners da aquisição e as 117 fontes do core permaneceram inalterados.
+O comparador compartilhado exige tempo físico comum, dados completos iguais
+e índices explícitos entre trajetórias com dt diferente. Os 21 controles
+nativos passaram. Custos dos dois novos controles: 5,53s/129,5 MiB e
+6,23s/134,3 MiB, sob guarda de 60s/512 MiB durante a lease unfitted.
+Esses incrementos iniciais não resolvem o baseline espacial ou T7. Recibo:
+`build/reports/completion/transport-classical-current-temporal-verification.json`.
+Ferramentas permanecem em
+`.tmp/comparisons/transport-random-basix`, fora dos artefatos distribuídos.
+
+```bash
+pixi run --locked -e test python -m examples.transport_random_campaign
+```
+
 ```bash
 pixi run -e test python -m examples.transport_mixed_campaign --workers 1
 pixi run -e test python -m examples.transport_coefficient_controls --epsilon 0.1 --resolutions 8 16 32 64 128 --local-refinement 16 --workers 1 --local-workers 1
@@ -433,11 +829,9 @@ pixi run -e test python -m examples.transport_face_resolution --local-refinement
 pixi run -e notebooks python -m examples.transport_campaign --collect
 ```
 
-Não são o caso aleatório acoplado §5.4. Criar driver: material exponencial 64×16,
-realização/seed salvos; Darcy primal P3/traço P2 em 2 segmentos; transporte
-Galerkin P3/traço P2 em 8 segmentos; inflow=1/IC=0/fonte=0/T=7 e controle de dt.
-APIs `darcy_transport`/`scalar_transient` fornecem `output_steps`/`on_step`; callback
-não restaura integrador sozinho. Validar fluxo normal/volumétrico físico,
+Esses comandos complementares não são o caso aleatório acoplado §5.4. Executar
+o driver aleatório completo, controles de dt e quadratura e referências refinadas
+com o mesmo material e condições de contorno. Validar fluxo normal/volumétrico físico,
 conservação, BC não homogênea, trajetória contra conformante independente e
 refinos espaço/tempo/quadratura. Realização selecionada não identifica seed antiga.
 
@@ -653,10 +1047,10 @@ pixi run -e notebooks python scripts/notebook_data.py --notebook 23 --check
 Antes desses comandos, atualizar os seletores de arquivos do notebook e de
 `scripts/notebook_data.py` para os resultados novos. O helper ainda contém nomes
 históricos, como Q3 768×1408 e Brinkman q5; os solves acima não recriam esses nomes.
-Além disso, ele lê os manifestos de todas as famílias antes de filtrar o notebook
-escolhido: um manifesto ausente de outra família pode interromper o inventário.
-Ajustar o inventário para seleção por notebook quando necessário, sem contornar
-as conferências dos hashes.
+O inventário seleciona agora o notebook antes de ler os manifestos; ausências
+de outra família não interrompem essa seleção. Manifestos, arrays e hashes da
+família escolhida continuam obrigatórios. Os nomes históricos de arquivos não
+foram alterados; atualizar seletores somente junto com os resultados adquiridos.
 
 O primeiro comando lista dependências/ausências quando seus manifestos existem;
 o segundo exige campos reais, sem download automático. Usar
@@ -716,7 +1110,8 @@ Executar integrações PARDISO/GPU quando alvo da entrega; mocks não são integ
 Gates de linhas e branches ambos >=99%, sem esconder falhas. Inspecionar wheel/sdist,
 instalação limpa e receita Conda noarch. PyPI/conda-forge não foram publicados.
 
-Nesta preparação foram verificados scripts/infraestrutura, seleção leve e
-artefatos. Não foram repetidas cobertura completa, campanhas científicas nem
-todas integrações nativas. Não usar percentuais históricos como resultado atual.
-A conclusão depende da matriz científica e das comparações acima.
+Os gates e controles executados neste host estão descritos no estado da
+retomada. Todas as integrações opcionais e campanhas restantes continuam
+pendentes; não confundir esses resultados atuais com a aceitação integral.
+A conclusão depende da matriz científica, das referências refinadas e dos
+assets reais exigidos pelo gate da galeria.

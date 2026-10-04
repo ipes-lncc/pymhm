@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+from pathlib import Path
 
 import matplotlib
 import numpy as np
@@ -13,11 +14,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 if __package__:
+    from . import compare_periodic
     from .compare_periodic import load_fields, load_reference
     from .plot_mesh import draw_macro_mesh
     from .plot_style import set_refinement_ticks
     from .verify_periodic import ROOT, material, source
 else:
+    import compare_periodic
     from compare_periodic import load_fields, load_reference
     from plot_mesh import draw_macro_mesh
     from plot_style import set_refinement_ticks
@@ -26,6 +29,8 @@ else:
 from pymhm.quadrilateral import CartesianMacroMesh
 
 FOLDER = ROOT / "docs/figures/periodic"
+COMPARISON = ROOT / "examples/results/periodic-comparison.json"
+RECORDS = ROOT / "examples/results"
 
 
 def save(figure: plt.Figure, name: str) -> None:
@@ -87,16 +92,21 @@ def reference_changes(records: list[dict], comparisons: list[dict], reference: s
     ]
 
 
-def convergence(reference: str) -> None:
+def convergence(reference: str, *, macro: int = 8, refinement: int | None = None) -> int:
     """Separate historical markers from measured baseline and local-grid uncertainty."""
-    records = [
-        json.loads(path.read_text())
-        for path in sorted((ROOT / "examples/results").glob("periodic*.json"))
-    ]
+    records = [json.loads(path.read_text()) for path in sorted(RECORDS.glob("periodic*.json"))]
     records = [item for item in records if "mhm" in item and "reference" in item]
-    comparisons = json.loads((ROOT / "examples/results/periodic-comparison.json").read_text())[
-        "comparisons"
+    comparisons = json.loads(COMPARISON.read_text())["comparisons"]
+    selected = [
+        row
+        for row in comparisons
+        if row["reference"] == reference and "segments" in row and row["macro"] == macro
     ]
+    if not selected:
+        raise ValueError("selected reference has no recorded MHM norm comparisons")
+    finest = max(row["refinement"] for row in selected) if refinement is None else refinement
+    if not any(row["refinement"] == finest for row in selected):
+        raise ValueError("selected local refinement has no recorded MHM norm comparisons")
     with (ROOT / "examples/results/published/paredes2017_figure6.csv").open() as stream:
         published = [row for row in csv.DictReader(stream) if row["series"] == "face"]
     fig, axes = plt.subplots(1, 3, figsize=(16, 5.3), layout="constrained")
@@ -104,42 +114,22 @@ def convergence(reference: str) -> None:
     h = np.array([float(row["effective_h"]) for row in published])
     values = np.array([float(row["relative_h1"]) for row in published])
     limits = np.array([[float(row[key]) for row in published] for key in ("lower", "upper")])
-    ax.errorbar(
-        h,
-        values,
-        yerr=np.abs(limits - values),
-        color="black",
-        marker="x",
-        capsize=3,
-        ls="--",
-        label="Published Figure 6 (digitized)",
-    )
-    finest = max(row["refinement"] for item in records for row in item["mhm"])
-    rows = sorted(
-        [
-            row
-            for item in records
-            for row in item["mhm"]
-            if row["refinement"] == finest
-            and row["reference_degree"] == 1
-            and row["reference_n"] == 4096
-        ],
-        key=lambda row: row["segments"],
-    )
-    ax.plot(
-        [1 / (8 * r["segments"]) for r in rows],
-        [r["relative_h1"] for r in rows],
-        "o-",
-        label="MHM / conforming Q1 4096²",
-    )
-    selected = [row for row in comparisons if row["reference"] == reference and "segments" in row]
-    if not selected:
-        raise ValueError("selected reference has no recorded MHM norm comparisons")
+    if macro == 8:
+        ax.errorbar(
+            h,
+            values,
+            yerr=np.abs(limits - values),
+            color="black",
+            marker="x",
+            capsize=3,
+            ls="--",
+            label="Published Figure 6 (digitized; 8×8 macros)",
+        )
     rows = sorted(
         [row for row in selected if row["refinement"] == finest], key=lambda r: r["segments"]
     )
     ax.plot(
-        [1 / (8 * r["segments"]) for r in rows],
+        [1 / (macro * r["segments"]) for r in rows],
         [r["relative_h1"] for r in rows],
         "s-",
         label=f"MHM / conforming Q{reference.split(':')[0]} {reference.split(':')[1]}²",
@@ -149,7 +139,7 @@ def convergence(reference: str) -> None:
         yscale="log",
         xlabel="Face segment length h",
         ylabel="Relative broken H1 difference",
-        title=f"Face enrichment; local r={finest}",
+        title=f"Face enrichment; {macro}×{macro} macros; local r={finest}",
     )
     set_refinement_ticks(ax, h, [f"1/{8 * int(r['subdivisions'])}" for r in published])
     ax.legend(fontsize=8, loc="best")
@@ -191,15 +181,17 @@ def convergence(reference: str) -> None:
     for ax in axes:
         ax.grid(alpha=0.2)
     save(fig, "convergence")
+    return finest
 
 
-def field_maps(reference_specification: str) -> None:
+def field_maps(
+    reference_specification: str, *, macro: int = 8, refinement: int = 512, samples: int = 512
+) -> None:
     """Sample each broken physical field directly with shared signed component scales."""
-    macro, refinement = 8, 512
     mesh = CartesianMacroMesh(macro)
     reference, _ = load_reference(reference_specification)
     local = [load_fields(macro, refinement, segments)[0] for segments in (1, 32)]
-    n = 512
+    n = samples
     coordinates = (np.arange(n) + 0.5) / n
     points = np.array(np.meshgrid(coordinates, coordinates)).reshape(2, -1).T
     owners = (points[:, 0] * macro).astype(int) + macro * (points[:, 1] * macro).astype(int)
@@ -245,7 +237,65 @@ def field_maps(reference_specification: str) -> None:
     save(fig, "fields")
 
 
-def problem_maps() -> None:
+def profile_maps(
+    reference_specification: str,
+    *,
+    macro: int = 8,
+    refinement: int = 512,
+    samples: int = 512,
+    ordinate: float = 0.37,
+) -> None:
+    """Draw independent one-sided pressure and Darcy-flux limits across macrofaces.
+
+    Each macro interval is a separate line artist with both endpoints retained.
+    The classical field is evaluated from inside that interval at its endpoints;
+    the plotting coordinates stay on the physical face. The horizontal ordinate
+    must avoid macrofaces so each interval has an unambiguous adjacent macrocell.
+    Samples describe displayed profiles and never enter the integrated norms.
+    """
+    if not 0 < ordinate < 1 or np.isclose(
+        ordinate * macro, round(ordinate * macro), rtol=0, atol=1e-12
+    ):
+        raise ValueError("profile ordinate must lie strictly inside a row of macrocells")
+    reference, _ = load_reference(reference_specification)
+    collections = [load_fields(macro, refinement, segments)[0] for segments in (1, 32)]
+    fig, axes = plt.subplots(2, 2, figsize=(13, 8), layout="constrained")
+    labels = ("Pressure", "Darcy flux qx", "Darcy flux qy", "Darcy flux magnitude")
+    titles = (f"Classical Q{reference.degree}", "MHM / 1 segment", "MHM / 32 segments")
+    styles = (("black", "-"), ("tab:blue", "--"), ("tab:orange", "-"))
+    row = int(ordinate * macro)
+    for column in range(macro):
+        x = np.linspace(column / macro, (column + 1) / macro, max(2, samples // macro + 1))
+        points = np.column_stack((x, np.full(len(x), ordinate)))
+        inside = points.copy()
+        midpoint = (column + 0.5) / macro
+        inside[[0, -1], 0] = np.nextafter(inside[[0, -1], 0], midpoint)
+        values = []
+        for index in range(3):
+            field = reference if index == 0 else collections[index - 1][row * macro + column]
+            pressure, gradient = field.evaluate(inside if index == 0 else points)
+            flux = -material(points)[:, None] * gradient
+            values.append(np.column_stack((pressure, flux, np.linalg.norm(flux, axis=1))))
+        for ax, component, label in zip(axes.flat, range(4), labels, strict=True):
+            for title, (color, linestyle), value in zip(titles, styles, values, strict=True):
+                ax.plot(
+                    x,
+                    value[:, component],
+                    color=color,
+                    ls=linestyle,
+                    label=title if column == 0 else None,
+                )
+            ax.set(xlabel="x", ylabel=label, title=f"y = {ordinate:g}")
+    for ax in axes.flat:
+        for face in np.arange(1, macro) / macro:
+            ax.axvline(face, color="0.45", lw=0.7, alpha=0.7)
+        ax.set_xlim(0, 1)
+        ax.grid(alpha=0.2)
+        ax.legend(fontsize=9)
+    save(fig, "profiles")
+
+
+def problem_maps(*, macro: int = 8) -> None:
     """Show the declared periodic coefficient and source on the actual fixed macrogrid."""
     n = 600
     coordinates = (np.arange(n) + 0.5) / n
@@ -264,7 +314,7 @@ def problem_maps() -> None:
             cmap="viridis",
             interpolation="nearest",
         )
-        draw_macro_mesh(ax, CartesianMacroMesh(8))
+        draw_macro_mesh(ax, CartesianMacroMesh(macro))
         ax.set(xlabel="x", ylabel="y", aspect="equal")
         fig.colorbar(artist, ax=ax, label=label, shrink=0.85)
     save(fig, "problem")
@@ -272,18 +322,41 @@ def problem_maps() -> None:
 
 def main() -> None:
     """Render only archived current fields; never run a numerical solve while plotting."""
+    global FOLDER, COMPARISON, RECORDS
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reference", help="Archived degree:n[:quadrature[:assembly]]")
+    parser.add_argument("--artifacts", type=Path, default=compare_periodic.ARTIFACTS)
+    parser.add_argument("--records", type=Path, default=RECORDS)
+    parser.add_argument("--comparison", type=Path, default=COMPARISON)
+    parser.add_argument("--output", type=Path, default=FOLDER)
+    parser.add_argument("--macro", type=int, default=8)
+    parser.add_argument("--local-refinement", type=int)
+    parser.add_argument("--samples", type=int, default=512)
+    parser.add_argument("--profile-y", type=float, default=0.37)
     args = parser.parse_args()
-    reference = args.reference or json.loads(
-        (ROOT / "examples/results/periodic-comparison.json").read_text()
-    ).get("primary_reference")
+    if (
+        args.macro < 1
+        or args.samples < 2
+        or (args.local_refinement is not None and args.local_refinement < 1)
+    ):
+        parser.error("macro, local refinement and sample count must be positive")
+    FOLDER, COMPARISON, RECORDS = args.output, args.comparison, args.records
+    compare_periodic.ARTIFACTS = args.artifacts
+    compare_periodic.REFERENCE_RECORDS = args.records
+    reference = args.reference or json.loads(COMPARISON.read_text()).get("primary_reference")
     if reference is None:
         parser.error("supply --reference or select primary_reference in the comparison record")
     plt.rcParams.update({"font.size": 11, "axes.titlesize": 12})
-    convergence(reference)
-    field_maps(reference)
-    problem_maps()
+    finest = convergence(reference, macro=args.macro, refinement=args.local_refinement)
+    field_maps(reference, macro=args.macro, refinement=finest, samples=args.samples)
+    profile_maps(
+        reference,
+        macro=args.macro,
+        refinement=finest,
+        samples=args.samples,
+        ordinate=args.profile_y,
+    )
+    problem_maps(macro=args.macro)
 
 
 if __name__ == "__main__":

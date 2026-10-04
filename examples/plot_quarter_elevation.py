@@ -10,11 +10,19 @@ from __future__ import annotations
 
 import hashlib
 import json
+from pathlib import Path
 
 import numpy as np
 import pyvista as pv
-from plot_pyvista_layout import horizontal_color_scale
-from plot_quarter_spot import FIGURES, OUTPUT
+
+if __package__:
+    from .campaign_provenance import file_digest, verify_archive
+    from .plot_pyvista_layout import horizontal_color_scale
+    from .plot_quarter_spot import FIGURES, OUTPUT
+else:
+    from campaign_provenance import file_digest, verify_archive
+    from plot_pyvista_layout import horizontal_color_scale
+    from plot_quarter_spot import FIGURES, OUTPUT
 
 from pymhm import TriangleMesh
 from pymhm.visualization import macro_edges
@@ -97,7 +105,8 @@ def render_elevation(grids: list[pv.UnstructuredGrid], macro: TriangleMesh, radi
         plotter.add_mesh(pv.Line((0, 0.484375, 0), (1, 0.484375, 0)), color="#c53b27", line_width=3)
         region = "Complete domain" if not radius else f"Outside well neighborhoods: radius {radius}"
         heading = plotter.add_text(
-            f"{name}: flux magnitude elevation\n2048 macrotriangles; local r=2; trace P0\n{region}",
+            f"{name}: flux magnitude elevation\n{len(macro.cells)} macrotriangles; "
+            f"local r=2; trace P0\n{region}",
             position=(0.04, 0.98),
             viewport=True,
             font_size=18,
@@ -134,9 +143,33 @@ def render_elevation(grids: list[pv.UnstructuredGrid], macro: TriangleMesh, radi
 
 
 def main() -> None:
-    """Read original numerical archives and write the two elevation views."""
+    """Verify acquired point fields and display bytes before both elevation views."""
+    record_path = OUTPUT / "point-wells.json"
+    acquisition = json.loads(record_path.read_text())
+    verify_archive(OUTPUT / "macro.npz", acquisition["macro_archive_sha256"])
     with np.load(OUTPUT / "macro.npz") as data:
         macro = TriangleMesh(data["points"], data["cells"])
+    selected = []
+    for method in ("primal", "mixed"):
+        rows = [
+            row
+            for row in acquisition["rows"]
+            if row["name"] == "layer-offset" and row["formulation"] == method
+        ]
+        if len(rows) != 1:
+            raise ValueError("elevation needs one acquired offset-layer row per formulation")
+        row = rows[0]
+        if (
+            row["macro_triangles"] != len(macro.cells)
+            or row["local_refinement"] != 2
+            or row["trace_degree"] != 0
+            or row["original_saddle_relative_load_residual"] > 1e-10
+            or row["material"] != {"below": 1000.0, "above": 1.0, "interface_y": 0.484375}
+        ):
+            raise ValueError("elevation inputs differ from the stated discrete point-well case")
+        verify_archive(OUTPUT / row["field_archive"], row["field_archive_sha256"])
+        verify_archive(OUTPUT / f"layer-offset-{method}.vtu", row["display_archive_sha256"])
+        selected.append(row)
     paths = [OUTPUT / f"layer-offset-{method}.vtu" for method in ("primal", "mixed")]
     grids = [pv.read(path) for path in paths]
     FIGURES.mkdir(parents=True, exist_ok=True)
@@ -147,6 +180,14 @@ def main() -> None:
         "local_refinement": 2,
         "trace_degree": 0,
         "display_sampling": "Existing one-sided nodal display fields; independent cell vertices",
+        "acquisition_record_sha256": file_digest(record_path),
+        "physical_field_archives_sha256": {
+            row["field_archive"]: row["field_archive_sha256"] for row in selected
+        },
+        "original_saddle_relative_load_residuals": [
+            row["original_saddle_relative_load_residual"] for row in selected
+        ],
+        "renderer_sha256": file_digest(Path(__file__)),
         "source_sha256": {
             path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
         },

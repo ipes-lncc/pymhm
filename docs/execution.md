@@ -6,6 +6,32 @@ operator for new loads, distribute local and global algebra across MPI ranks,
 and assemble/factor batches of affine P1 local operators on a GPU. Choosing one
 does not implicitly enable the others.
 
+## Compact condensation and a second reconstruction pass
+
+`HybridSystem.from_contributions(contributions, trace_size=..., coarse_sizes=...)`
+assembles the tuples produced by `LocalResponse.global_contribution(coarse_dofs)`.
+It stores the global matrix and load without retaining local lifts. A caller can
+assemble, condense and release one local response at a time, solve the compact
+system, then rebuild local responses to reconstruct fields. The returned field
+tuple is empty; trace and coarse coefficients retain their ordinary global
+equation conventions.
+
+`coarse_sizes` declares the number of retained coordinates in each cell. Their
+global slots follow the trace slots, in cell order. Each cell's returned coarse
+vector follows ascending global slot order. If `coarse_dofs` permutes slots
+within a cell, the caller must apply that mapping before reconstructing in the
+local basis order. Passing increasing slots preserves the basis order directly.
+Contributions must cover the declared global numbering and cannot use another
+cell's coarse slots. Boundary moments have the same sign and additive action as
+the ordinary in-memory assembly.
+
+Physical mean rows must be supplied explicitly to `solve`; the compact system
+cannot infer them from missing local lifts. Persist the executed local basis,
+constraints, orientation maps and operator identity alongside coarse and trace
+coefficients. A matching matrix dimension does not identify a reconstruction
+basis. The [periodic acquisition](https://github.com/volpatto/pymhm/blob/main/docs/cases/periodic.md) implements this procedure
+for its declared constant kernel and fixed Q1/P0 spaces.
+
 ## Repeated sources and boundary values
 
 ```python

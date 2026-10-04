@@ -3,6 +3,7 @@
 import hashlib
 import json
 import runpy
+import shutil
 import sys
 from dataclasses import replace
 from pathlib import Path
@@ -14,6 +15,7 @@ from numpy.testing import assert_allclose
 from examples.archive_precision import restore_precision
 from examples.unfitted_convergence import save_field
 from examples.unfitted_local_resolution import containing_cells, difference, read_uniform, template
+from examples.unfitted_phases import UnfittedAcquisition, fingerprint
 from pymhm import solve_darcy
 from pymhm.lagrange import nodal_space
 from pymhm.mesh import TriangleMesh
@@ -58,7 +60,7 @@ def test_nonnested_exact_quadratic_and_distinct_nonzero_norms(tmp_path):
 
 
 def test_portable_campaign_archive_preserves_complete_field_coordinates(tmp_path):
-    """Replay pressure, trace and coarse remainders without platform-specific NPZ types."""
+    """Replay complete fields in their executed cardinal basis and physical trace maps."""
     solution = solve_darcy(TriangleMesh.unit_square(), source=1, degree=2, local_refinement=2)
 
     def extend(values):
@@ -77,17 +79,39 @@ def test_portable_campaign_archive_preserves_complete_field_coordinates(tmp_path
     assert save_field(solution, path) == hashlib.sha256(path.read_bytes()).hexdigest()
     with np.load(path) as arrays:
         assert all(arrays[name].dtype.itemsize <= 8 for name in arrays.files)
-        for name, expected in (
-            ("trace", hybrid.trace),
-            ("coarse", np.concatenate(hybrid.coarse)),
-        ):
+        assert arrays["field_archive_version"] == 2
+        assert arrays["coefficient_precision_bits"] == np.finfo(np.longdouble).nmant + 1
+        assert not any(name.startswith("coarse") for name in arrays.files)
+        for name, expected in (("trace", hybrid.trace),):
             actual = restore_precision(
                 arrays[name], arrays[f"{name}_correction"], arrays[f"{name}_tail"]
             )
             np.testing.assert_array_equal(actual, expected)
+        for cell, mesh in enumerate(solution.local_meshes):
+            dofs, nodes = nodal_space(mesh, solution.degree)
+            np.testing.assert_array_equal(arrays[f"nodal_dofs_{cell}"], dofs)
+            np.testing.assert_array_equal(arrays[f"nodal_points_{cell}"], nodes)
+        for face, space in enumerate(solution.skeleton.faces):
+            np.testing.assert_array_equal(arrays[f"trace_breaks_{face}"], space.breaks)
+            np.testing.assert_array_equal(arrays[f"trace_degrees_{face}"], space.degrees)
+            np.testing.assert_array_equal(
+                arrays[f"trace_dofs_{face}"], solution.skeleton.dofs(face)
+            )
+        np.testing.assert_array_equal(arrays["macro_normals"], solution.skeleton.mesh.normals)
+        np.testing.assert_array_equal(arrays["macro_signs"], solution.skeleton.mesh.signs)
+    assert not path.with_suffix(".npz.part").exists()
     _, _, degree, actual = read_uniform(path)
     assert degree == 2
     np.testing.assert_array_equal(actual, np.stack(pressure))
+    with pytest.raises(ValueError, match="primal cardinal"):
+        save_field(replace(solution, formulation="mixed"), tmp_path / "invalid-p0.npz")
+    assert not (tmp_path / "invalid-p0.npz").exists()
+    with pytest.raises(ValueError, match="declared nodal basis"):
+        save_field(
+            replace(solution, pressure=(pressure[0][:-1], *pressure[1:])),
+            tmp_path / "invalid-cardinal.npz",
+        )
+    assert not (tmp_path / "invalid-cardinal.npz").exists()
 
 
 def test_wider_archive_rejects_silent_precision_loss(tmp_path, monkeypatch):
@@ -107,6 +131,171 @@ def test_wider_archive_rejects_silent_precision_loss(tmp_path, monkeypatch):
         arrays[f"pressure_{cell}_correction"][:] = 0
     np.savez(path, **arrays)
     np.testing.assert_array_equal(read_uniform(path)[3], np.ones((2, 3)))
+
+
+def test_archive_declared_significand_rejects_a_narrower_extended_consumer(tmp_path):
+    """Portable data on a narrower host cannot silently discard executed digits."""
+    path = tmp_path / "wider-extended.npz"
+    archive(path, 1, 1, lambda points: np.ones(len(points)))
+    with np.load(path) as loaded:
+        arrays = {name: loaded[name] for name in loaded.files}
+    arrays["coefficient_precision_bits"] = np.finfo(np.longdouble).nmant + 2
+    np.savez(path, **arrays)
+    with pytest.raises(ValueError, match="declared precision"):
+        read_uniform(path)
+
+
+@pytest.mark.parametrize("schema", ["legacy", "monolithic-v2"])
+@pytest.mark.parametrize("invalid", [np.nan, np.inf, 1j])
+def test_raw_coefficients_require_finite_real_values(tmp_path, schema, invalid):
+    """A valid nodal map cannot authorize nonphysical raw real-pressure coefficients."""
+    path = tmp_path / "raw.npz"
+    if schema == "legacy":
+        archive(path, 1, 1, lambda nodes: nodes[:, 0])
+    else:
+        solution = solve_darcy(TriangleMesh.unit_square(), source=1, degree=1)
+        save_field(solution, path)
+    with np.load(path, allow_pickle=False) as stored:
+        arrays = {key: stored[key] for key in stored.files}
+    arrays.pop("pressure_0_correction", None)
+    arrays.pop("pressure_0_tail", None)
+    np.savez(path, **arrays)
+    read_uniform(path)
+    arrays["pressure_0"] = arrays["pressure_0"].astype(np.result_type(invalid))
+    arrays["pressure_0"][0] = invalid
+    np.savez(path, **arrays)
+    with pytest.raises(ValueError, match="finite real nodal"):
+        read_uniform(path)
+
+
+@pytest.mark.parametrize(
+    "changed",
+    [
+        "basis_multiindices",
+        "macro_faces",
+        "macro_face_cells",
+        "macro_normals",
+        "macro_signs",
+        "macro_cell_faces",
+        "nodal_dofs_0",
+        "nodal_points_0",
+        "missing_macro_map",
+        "missing_nodal_map",
+        "field",
+        "version",
+        "missing_version",
+    ],
+)
+def test_replay_checks_executed_cardinal_and_orientation_contract(tmp_path, changed):
+    """Equal geometry and dimensions cannot authorize changed coefficient coordinates."""
+    path = tmp_path / "declared-cardinal.npz"
+    solution = solve_darcy(TriangleMesh.unit_square(), source=1, degree=2, local_refinement=2)
+    save_field(solution, path)
+    with np.load(path, allow_pickle=False) as loaded:
+        arrays = {name: loaded[name] for name in loaded.files}
+    if changed == "missing_macro_map":
+        arrays.pop("macro_normals")
+    elif changed == "missing_nodal_map":
+        arrays.pop("nodal_points_0")
+    elif changed == "field":
+        arrays["pressure_0"] = arrays["pressure_0"][:-1]
+    elif changed == "version":
+        arrays["field_archive_version"] = np.array(3)
+    elif changed == "missing_version":
+        arrays.pop("field_archive_version")
+    elif changed == "nodal_dofs_0":
+        arrays[changed].flat[:2] = arrays[changed].flat[:2][::-1]
+    else:
+        arrays[changed].flat[0] += 1
+    np.savez(path, **arrays)
+    with pytest.raises(ValueError, match="archive version|archived cardinal|nodal basis"):
+        read_uniform(path)
+
+
+@pytest.fixture(scope="module")
+def phase_archive(tmp_path_factory):
+    """Acquire one complete small phase case with its actually executed bases."""
+    directory = tmp_path_factory.mktemp("uniform-phase")
+    run = UnfittedAcquisition(
+        directory,
+        refinement=1,
+        names=["ell0-s1"],
+        degree=2,
+        assembly_order=4,
+        norm_orders=[4],
+        refinement_precision="double",
+    )
+    for stage in (run.condense, run.solve, run.reconstruct, run.norms):
+        stage()
+    return run
+
+
+def test_phase_archive_preserves_executed_coordinates_and_zero_self_difference(phase_archive):
+    """Accepted phase fields use their receipt, ordered history and cardinal basis."""
+    run = phase_archive
+    path = run.directory / run.record["fields"]["ell0-s1"]["archive"]
+    _, _, degree, actual = read_uniform(path)
+    assert degree == 2
+    expected = run._field("ell0-s1")
+    np.testing.assert_array_equal(actual, np.stack([expected[f"pressure_{i}"] for i in range(16)]))
+    assert difference(path, path, order=4)["broken_gradient_l2"] == 0
+
+
+@pytest.mark.parametrize(
+    "changed",
+    [
+        "nodal_dofs_0",
+        "nodal_points_0",
+        "multiindices_0",
+        "constraints_0",
+        "retained_basis_0",
+        "missing_nodal_map",
+        "degree",
+        "schema",
+        "incomplete",
+        "missing_receipt",
+        "duplicate_receipt",
+        "missing_acquisition_id",
+    ],
+)
+def test_phase_replay_rejects_contradictory_bases_with_updated_digest(
+    tmp_path, phase_archive, changed
+):
+    """Digest-consistent dimensions cannot substitute a different executed field basis."""
+    directory = tmp_path / "phase"
+    shutil.copytree(phase_archive.directory, directory)
+    receipt = directory / phase_archive.path.name
+    record = json.loads(receipt.read_text())
+    row = record["fields"]["ell0-s1"]
+    path = directory / row["archive"]
+    with np.load(path, allow_pickle=False) as archive:
+        arrays = {key: archive[key] for key in archive.files}
+    if changed == "schema":
+        record["schema"] = "pymhm-unfitted-phases-v3"
+    elif changed == "incomplete":
+        record["complete"] = False
+    elif changed == "missing_nodal_map":
+        arrays.pop("nodal_points_0")
+    elif changed == "missing_acquisition_id":
+        arrays.pop("acquisition_id")
+    elif changed in {"missing_receipt", "duplicate_receipt"}:
+        pass
+    elif changed == "nodal_dofs_0":
+        arrays[changed][0, :2] = arrays[changed][0, :2][::-1]
+    else:
+        arrays[changed].flat[0] += 1
+    np.savez(path, **arrays)
+    row["sha256"] = fingerprint(path)
+    record["cases"][0]["archive_sha256"] = row["sha256"]
+    receipt.write_text(json.dumps(record))
+    if changed == "missing_receipt":
+        receipt.unlink()
+    elif changed == "duplicate_receipt":
+        shutil.copyfile(receipt, directory / "duplicate-phases.json")
+    with pytest.raises(
+        ValueError, match="cardinal|local map|retained basis|receipt|schema|archived basis"
+    ):
+        read_uniform(path)
 
 
 def test_containment_proves_vertices_and_falls_back_from_spatial_candidates(monkeypatch):

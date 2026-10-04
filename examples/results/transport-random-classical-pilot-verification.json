@@ -1,0 +1,715 @@
+{
+  "schema": "pymhm-selected-classical-transport-pilot-verification-v1",
+  "scope": "Selected saved L11 physical realization, whole-domain initial controls through time 0.005",
+  "historical_literature_reproduction": false,
+  "full_T7_trajectory_verified": false,
+  "reference_accuracy_resolved": false,
+  "physical_input": {
+    "permeability_sha256": "8c9c5ea609bcc941661a5ca20192499a26d1a44990e1452578139c0253bcfe12",
+    "domain": [
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "pressure_left": 3.0,
+    "pressure_right": 0.0,
+    "horizontal_normal_darcy_flux": 0.0,
+    "capacity": 1.0,
+    "initial_concentration": 0.0,
+    "inflow_concentration": 1.0,
+    "natural_diffusive_flux": 0.0,
+    "molecular": 1e-06,
+    "longitudinal": 0.01,
+    "transverse": 0.001
+  },
+  "method": {
+    "darcy": "Conforming RT0/P0 with physical integral-normal coordinates, contravariant Piola and absolute pressure data",
+    "transport": "Continuous equispaced CGP3, consistent mass, conservative volume and exterior advective term, backward Euler",
+    "stabilization": "none",
+    "positivity_clipping": false
+  },
+  "native_reference": {
+    "project": "FEniCS basix",
+    "module": "basix.finite_element and basix.polynomials",
+    "version": "0.9.0",
+    "upstream_revision": "19555f5b629b4090b14014f9db5f2c9ac80984f9",
+    "verified_source_url": "https://github.com/FEniCS/basix/tree/19555f5b629b4090b14014f9db5f2c9ac80984f9",
+    "attribution": "Independent instrumented conforming adapter; not original article application"
+  },
+  "acquisitions": [
+    {
+      "uuid": "3b2c0d25-c2fd-483b-b2fc-ab1b6b606588",
+      "configuration": {
+        "nx": 64,
+        "ny": 16,
+        "triangles": 2048,
+        "steps": 5,
+        "dt": 0.001,
+        "final_time": 0.005,
+        "darcy_order": 4,
+        "transport_order": 8,
+        "sample_every": 1000,
+        "darcy_flux_space": "global RT0 H(div)",
+        "darcy_pressure_space": "discontinuous P0",
+        "concentration_space": "continuous equispaced P3",
+        "time_integrator": "backward Euler",
+        "capacity": 1.0,
+        "stabilization": "none",
+        "initial_concentration": 0.0,
+        "inflow_concentration": 1.0,
+        "natural_diffusive_normal_flux": 0.0,
+        "molecular_diffusion": 1e-06,
+        "longitudinal_dispersivity": 0.01,
+        "transverse_dispersivity": 0.001
+      },
+      "source_sha256": {
+        "classical_reference.py": "6daf7913783f4d5b62a1d668db9a4e3c97a478d06cdd8c85e6d4a50efdd6b8c9",
+        "acquire_classical.py": "582bca3d2a9aa391886573fd38c9d0c2f14d3be8a13dd895d4dbcfd75a67353d",
+        "native_darcy.py": "8f9b2428884173ae2f405a913fab47d08443916202bfa7bc276522919bd2f195",
+        "native_transport.py": "f697788331cc34ed232a03b443324279670c1a16de6a0a68e140c010f5d9ebfc",
+        "trace_rank.py": "fdf9192f394a6b74b52c035d25411c6bfc6f49164c390eaee531ffbefb1523e5",
+        "reference_basis.py": "577724148fd9d102651aa5a6148df7be3f41dc7a13000bc69efc468affe8e1d7",
+        "archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+        "campaign_provenance.py": "32a86b873f1dc5cb5e134f057e80abbd06c831f531850262bc909fb4adf7e736",
+        "transport_checkpoints.py": "c9c09536afbe7ae247fb97e2c626a410279a1df9358c7984405d888e9a25f518",
+        "local_response_cache.py": "4921332802aa6400356e9536366244e4285981d0cd7451abff376cf64ab7f5d5",
+        "permeability.json": "4850aa7a196662359b001cd5ec34edf009999737ef8a76cc7161839a744bd037",
+        "pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57"
+      },
+      "basis_sha256": {
+        "executed_rt_basis": "eb3ff7099f911676a3f380511bbe3add2c043bf63396543cd9d35bd88401072e",
+        "executed_p0_basis": "a2144e06d371e7f8ef4a20191d89444100e14fd09d44fd40cafe99b46a585c6d",
+        "executed_p3_basis": "862d530b5a4913d546fd8166b502943f052f48f033f6889c278df43dcaf072cc",
+        "executed_p3_interpolation_points": "ff3695396636242bac366685616f23412f205253c06de4a35ec9549a186b3bfe",
+        "flux_basis_normalization": "e4bc4d3a443d54862f583d265478f1f349b8fa6b9aaa6371ddbf619943edf5a5",
+        "global_unit_normals": "90b7246403eec70dd919e7cb4c38a9d3ec61aaa05e3674e032e1b0f59c70f9e6",
+        "flux_dofs": "23562517a1aa2f4d64218bbdfb751ec6ce3222f31fb82749d8f96e0eeaef721b",
+        "nodes": "1acff84abc984303bf43729f8d30d2d1c7960d91d0f4bef2cd9f2bcb0b1dd67f",
+        "nodal_dofs": "447b52c725d3e0130299d1400655b73d6fac965d3c99fc117d095b075d187628",
+        "strong_nodes": "cdec63e44839a8d2e4cc98d35b567a679a2272a373459bbc37656649d67bf509"
+      },
+      "native_binary_sha256": {
+        "_basixcpp.cpython-313-x86_64-linux-gnu.so": "fa14b18f7b393882c9a49e8af6f9e86b47c14f880daee89b7213a894fc8a9fdb",
+        "_superlu.cpython-313-x86_64-linux-gnu.so": "d500940309839b1433d3703440224827bcce56437b90679d99939193b0bdbe61"
+      },
+      "dtype_contract": {
+        "operators_and_basis": "binary64",
+        "operator_precision_bits": 53,
+        "coefficient_accumulation_bits": 64,
+        "portable_coefficients": "three binary64 components retaining the executed wider values"
+      },
+      "darcy_original_relative": 3.6606958878782584e-19,
+      "maximum_transport_original_relative": 6.107460453365016e-21,
+      "nodal_minimum_final": -0.36552572423635554,
+      "nodal_maximum_final": 1.0,
+      "acquisition_record_sha256": "ffcaa0a8c63c64bd1f29695ba9a6ec9301e34f38aecb6bc752afd5d0216e6982"
+    },
+    {
+      "uuid": "9aed0f4a-a538-4b7c-8ffd-9f8102572d09",
+      "configuration": {
+        "nx": 64,
+        "ny": 16,
+        "triangles": 2048,
+        "steps": 5,
+        "dt": 0.001,
+        "final_time": 0.005,
+        "darcy_order": 4,
+        "transport_order": 10,
+        "sample_every": 1000,
+        "darcy_flux_space": "global RT0 H(div)",
+        "darcy_pressure_space": "discontinuous P0",
+        "concentration_space": "continuous equispaced P3",
+        "time_integrator": "backward Euler",
+        "capacity": 1.0,
+        "stabilization": "none",
+        "initial_concentration": 0.0,
+        "inflow_concentration": 1.0,
+        "natural_diffusive_normal_flux": 0.0,
+        "molecular_diffusion": 1e-06,
+        "longitudinal_dispersivity": 0.01,
+        "transverse_dispersivity": 0.001
+      },
+      "source_sha256": {
+        "classical_reference.py": "6e400bea11fa8317b7a3dd02abf315539ba7ee9b9279adee82d66a298e5e9dc1",
+        "acquire_classical.py": "90b7efb40ea8cd651e7c2f6ed1d8486ba5764404a69a88bda92ed038d6bbb1ea",
+        "native_darcy.py": "8f9b2428884173ae2f405a913fab47d08443916202bfa7bc276522919bd2f195",
+        "native_transport.py": "f697788331cc34ed232a03b443324279670c1a16de6a0a68e140c010f5d9ebfc",
+        "trace_rank.py": "fdf9192f394a6b74b52c035d25411c6bfc6f49164c390eaee531ffbefb1523e5",
+        "reference_basis.py": "577724148fd9d102651aa5a6148df7be3f41dc7a13000bc69efc468affe8e1d7",
+        "archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+        "campaign_provenance.py": "32a86b873f1dc5cb5e134f057e80abbd06c831f531850262bc909fb4adf7e736",
+        "transport_checkpoints.py": "c9c09536afbe7ae247fb97e2c626a410279a1df9358c7984405d888e9a25f518",
+        "local_response_cache.py": "4921332802aa6400356e9536366244e4285981d0cd7451abff376cf64ab7f5d5",
+        "permeability.json": "4850aa7a196662359b001cd5ec34edf009999737ef8a76cc7161839a744bd037",
+        "pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57"
+      },
+      "basis_sha256": {
+        "executed_rt_basis": "eb3ff7099f911676a3f380511bbe3add2c043bf63396543cd9d35bd88401072e",
+        "executed_p0_basis": "a2144e06d371e7f8ef4a20191d89444100e14fd09d44fd40cafe99b46a585c6d",
+        "executed_p3_basis": "862d530b5a4913d546fd8166b502943f052f48f033f6889c278df43dcaf072cc",
+        "executed_p3_interpolation_points": "ff3695396636242bac366685616f23412f205253c06de4a35ec9549a186b3bfe",
+        "flux_basis_normalization": "e4bc4d3a443d54862f583d265478f1f349b8fa6b9aaa6371ddbf619943edf5a5",
+        "global_unit_normals": "90b7246403eec70dd919e7cb4c38a9d3ec61aaa05e3674e032e1b0f59c70f9e6",
+        "flux_dofs": "23562517a1aa2f4d64218bbdfb751ec6ce3222f31fb82749d8f96e0eeaef721b",
+        "nodes": "1acff84abc984303bf43729f8d30d2d1c7960d91d0f4bef2cd9f2bcb0b1dd67f",
+        "nodal_dofs": "447b52c725d3e0130299d1400655b73d6fac965d3c99fc117d095b075d187628",
+        "strong_nodes": "cdec63e44839a8d2e4cc98d35b567a679a2272a373459bbc37656649d67bf509"
+      },
+      "native_binary_sha256": {
+        "_basixcpp.cpython-313-x86_64-linux-gnu.so": "fa14b18f7b393882c9a49e8af6f9e86b47c14f880daee89b7213a894fc8a9fdb",
+        "_superlu.cpython-313-x86_64-linux-gnu.so": "d500940309839b1433d3703440224827bcce56437b90679d99939193b0bdbe61"
+      },
+      "dtype_contract": {
+        "operators_and_basis": "binary64",
+        "operator_precision_bits": 53,
+        "coefficient_accumulation_bits": 64,
+        "portable_coefficients": "three binary64 components retaining the executed wider values"
+      },
+      "darcy_original_relative": 3.6606958878782584e-19,
+      "maximum_transport_original_relative": 5.879140012891792e-21,
+      "nodal_minimum_final": -0.36552572423635704,
+      "nodal_maximum_final": 1.0,
+      "acquisition_record_sha256": "29ddb4f54c7a74f276a5f2ac5649481193842e26653c3c539c720f529943e294"
+    },
+    {
+      "uuid": "7ec700a6-4409-4e5e-9ef9-62115f346d49",
+      "configuration": {
+        "nx": 128,
+        "ny": 32,
+        "triangles": 8192,
+        "steps": 5,
+        "dt": 0.001,
+        "final_time": 0.005,
+        "darcy_order": 4,
+        "transport_order": 8,
+        "sample_every": 1000,
+        "darcy_flux_space": "global RT0 H(div)",
+        "darcy_pressure_space": "discontinuous P0",
+        "concentration_space": "continuous equispaced P3",
+        "time_integrator": "backward Euler",
+        "capacity": 1.0,
+        "stabilization": "none",
+        "initial_concentration": 0.0,
+        "inflow_concentration": 1.0,
+        "natural_diffusive_normal_flux": 0.0,
+        "molecular_diffusion": 1e-06,
+        "longitudinal_dispersivity": 0.01,
+        "transverse_dispersivity": 0.001
+      },
+      "source_sha256": {
+        "classical_reference.py": "6daf7913783f4d5b62a1d668db9a4e3c97a478d06cdd8c85e6d4a50efdd6b8c9",
+        "acquire_classical.py": "582bca3d2a9aa391886573fd38c9d0c2f14d3be8a13dd895d4dbcfd75a67353d",
+        "native_darcy.py": "8f9b2428884173ae2f405a913fab47d08443916202bfa7bc276522919bd2f195",
+        "native_transport.py": "f697788331cc34ed232a03b443324279670c1a16de6a0a68e140c010f5d9ebfc",
+        "trace_rank.py": "fdf9192f394a6b74b52c035d25411c6bfc6f49164c390eaee531ffbefb1523e5",
+        "reference_basis.py": "577724148fd9d102651aa5a6148df7be3f41dc7a13000bc69efc468affe8e1d7",
+        "archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+        "campaign_provenance.py": "32a86b873f1dc5cb5e134f057e80abbd06c831f531850262bc909fb4adf7e736",
+        "transport_checkpoints.py": "c9c09536afbe7ae247fb97e2c626a410279a1df9358c7984405d888e9a25f518",
+        "local_response_cache.py": "4921332802aa6400356e9536366244e4285981d0cd7451abff376cf64ab7f5d5",
+        "permeability.json": "4850aa7a196662359b001cd5ec34edf009999737ef8a76cc7161839a744bd037",
+        "pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57"
+      },
+      "basis_sha256": {
+        "executed_rt_basis": "eb3ff7099f911676a3f380511bbe3add2c043bf63396543cd9d35bd88401072e",
+        "executed_p0_basis": "a2144e06d371e7f8ef4a20191d89444100e14fd09d44fd40cafe99b46a585c6d",
+        "executed_p3_basis": "862d530b5a4913d546fd8166b502943f052f48f033f6889c278df43dcaf072cc",
+        "executed_p3_interpolation_points": "ff3695396636242bac366685616f23412f205253c06de4a35ec9549a186b3bfe",
+        "flux_basis_normalization": "edd0c7080384feeef62ef083446329d5dcdf7e8830e117289fdd680805dfc508",
+        "global_unit_normals": "e5537c4545cab46768f5632b5d3c01eb75d771baded6be510bcf4ca702ddea06",
+        "flux_dofs": "df8eba475de7342d870327651b972782198670b1b613330232d62162c26960d5",
+        "nodes": "62a22047d77c1948733f4bf11c373a4e313c97d204db0bb5d30e787c35b4e07a",
+        "nodal_dofs": "706b386e11c31bd9f02e5a811fabfc5b9628f09a63d8f1d86c612e62d62edb88",
+        "strong_nodes": "d5eafe25f00079c3b6aec83be5e8b0260342f2c113220e60be7f725a49ae4e9f"
+      },
+      "native_binary_sha256": {
+        "_basixcpp.cpython-313-x86_64-linux-gnu.so": "fa14b18f7b393882c9a49e8af6f9e86b47c14f880daee89b7213a894fc8a9fdb",
+        "_superlu.cpython-313-x86_64-linux-gnu.so": "d500940309839b1433d3703440224827bcce56437b90679d99939193b0bdbe61"
+      },
+      "dtype_contract": {
+        "operators_and_basis": "binary64",
+        "operator_precision_bits": 53,
+        "coefficient_accumulation_bits": 64,
+        "portable_coefficients": "three binary64 components retaining the executed wider values"
+      },
+      "darcy_original_relative": 5.344453376651635e-19,
+      "maximum_transport_original_relative": 1.9846996312648375e-21,
+      "nodal_minimum_final": -0.33792831078510693,
+      "nodal_maximum_final": 1.0,
+      "acquisition_record_sha256": "7a615a995f45847ac5f082bf4b6451ce0ed32353cd902fb42b936f6e9e6ce8cb"
+    }
+  ],
+  "own_refinement": {
+    "scope": "Own classical refinement increment; not an exact error or certified bound",
+    "coarse_uuid": "3b2c0d25-c2fd-483b-b2fc-ab1b6b606588",
+    "fine_uuid": "7ec700a6-4409-4e5e-9ef9-62115f346d49",
+    "step": 5,
+    "time": 0.005,
+    "positive_duffy_order": 6,
+    "denominator": "Norm of finer computed field",
+    "norms": {
+      "pressure_l2": {
+        "difference": 0.027904831733201386,
+        "fine_norm": 2.913331495532371,
+        "relative": 0.009578323570796451
+      },
+      "darcy_flux_l2": {
+        "difference": 0.1704177111690475,
+        "fine_norm": 0.47139613189800367,
+        "relative": 0.36151699099202816
+      },
+      "concentration_l2": {
+        "difference": 0.025100198325307466,
+        "fine_norm": 0.0470644062420895,
+        "relative": 0.5333159457318398
+      },
+      "concentration_gradient_l2": {
+        "difference": 6.608278607388833,
+        "fine_norm": 12.53406177029768,
+        "relative": 0.5272256295280638
+      },
+      "concentration_h1": {
+        "difference": 6.6083262762085875,
+        "fine_norm": 12.534150131539542,
+        "relative": 0.5272257158927856
+      }
+    }
+  },
+  "quadrature_sensitivity": {
+    "scope": "Same-space assembly quadrature sensitivity q8 to q10; not a continuum error bound",
+    "coarse_uuid": "c2a69da8-d824-459d-bc3f-edd271ead3f6",
+    "fine_uuid": "9aed0f4a-a538-4b7c-8ffd-9f8102572d09",
+    "step": 5,
+    "time": 0.005,
+    "positive_duffy_order": 6,
+    "denominator": "Norm of finer computed field",
+    "norms": {
+      "pressure_l2": {
+        "difference": 0.0,
+        "fine_norm": 2.9053754757209562,
+        "relative": 0.0
+      },
+      "darcy_flux_l2": {
+        "difference": 0.0,
+        "fine_norm": 0.40930093182799304,
+        "relative": 0.0
+      },
+      "concentration_l2": {
+        "difference": 6.22211761358872e-17,
+        "fine_norm": 0.056520651181159905,
+        "relative": 1.100857382843237e-15
+      },
+      "concentration_gradient_l2": {
+        "difference": 9.691909658976624e-15,
+        "fine_norm": 10.275012541614858,
+        "relative": 9.432503969920614e-16
+      },
+      "concentration_h1": {
+        "difference": 9.692109384056916e-15,
+        "fine_norm": 10.2751679944589,
+        "relative": 9.432555642188613e-16
+      }
+    }
+  },
+  "verification": {
+    "native_invariant_and_field_tests": 10,
+    "thread_replay_identical": true,
+    "threads": [
+      1,
+      2
+    ],
+    "fresh_replay_field_solves": 0,
+    "archived_predecessor_RHS_verified_steps": [
+      1,
+      5
+    ],
+    "archived_predecessor_RHS_verified": "Both q8 mesh levels, checkpoints 1 and 5; original executed time matrices byte-verified"
+  },
+  "limitations": [
+    "Historical permeability realization, Darcy drive and 32000-triangle connectivity unavailable",
+    "Measured own refinement increments are not exact errors or certified bounds",
+    "Five-step pilot does not replace the full 512-macro MHM trajectory or a refined classical T7 baseline",
+    "Reference uses classical RT0 velocity, a different approximation from the declared primal Darcy volume/skeletal pair"
+  ],
+  "cost_qualification": "Observed acquisition resource costs while one guarded unfitted campaign ran; no controlled performance or speedup claim",
+  "temporal_control": {
+    "scope": "Three time steps on the same 2048-triangle spatial discretization, at common time 0.005",
+    "time_steps": [
+      0.001,
+      0.0005,
+      0.00025
+    ],
+    "positive_error_quadrature_orders": [
+      6,
+      8
+    ],
+    "acquisitions": [
+      {
+        "uuid": "ca3bfda8-dd0a-47cf-973a-bbbf81907729",
+        "configuration": {
+          "nx": 64,
+          "ny": 16,
+          "triangles": 2048,
+          "steps": 10,
+          "dt": 0.0005,
+          "final_time": 0.005,
+          "darcy_order": 4,
+          "transport_order": 8,
+          "sample_every": 2,
+          "darcy_flux_space": "global RT0 H(div)",
+          "darcy_pressure_space": "discontinuous P0",
+          "concentration_space": "continuous equispaced P3",
+          "time_integrator": "backward Euler",
+          "capacity": 1.0,
+          "stabilization": "none",
+          "initial_concentration": 0.0,
+          "inflow_concentration": 1.0,
+          "natural_diffusive_normal_flux": 0.0,
+          "molecular_diffusion": 1e-06,
+          "longitudinal_dispersivity": 0.01,
+          "transverse_dispersivity": 0.001
+        },
+        "source_sha256": {
+          "classical_reference.py": "6daf7913783f4d5b62a1d668db9a4e3c97a478d06cdd8c85e6d4a50efdd6b8c9",
+          "acquire_classical.py": "582bca3d2a9aa391886573fd38c9d0c2f14d3be8a13dd895d4dbcfd75a67353d",
+          "native_darcy.py": "8f9b2428884173ae2f405a913fab47d08443916202bfa7bc276522919bd2f195",
+          "native_transport.py": "f697788331cc34ed232a03b443324279670c1a16de6a0a68e140c010f5d9ebfc",
+          "trace_rank.py": "fdf9192f394a6b74b52c035d25411c6bfc6f49164c390eaee531ffbefb1523e5",
+          "reference_basis.py": "577724148fd9d102651aa5a6148df7be3f41dc7a13000bc69efc468affe8e1d7",
+          "archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+          "campaign_provenance.py": "32a86b873f1dc5cb5e134f057e80abbd06c831f531850262bc909fb4adf7e736",
+          "transport_checkpoints.py": "c9c09536afbe7ae247fb97e2c626a410279a1df9358c7984405d888e9a25f518",
+          "local_response_cache.py": "4921332802aa6400356e9536366244e4285981d0cd7451abff376cf64ab7f5d5",
+          "permeability.json": "4850aa7a196662359b001cd5ec34edf009999737ef8a76cc7161839a744bd037",
+          "pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57"
+        },
+        "basis_sha256": {
+          "executed_rt_basis": "eb3ff7099f911676a3f380511bbe3add2c043bf63396543cd9d35bd88401072e",
+          "executed_p0_basis": "a2144e06d371e7f8ef4a20191d89444100e14fd09d44fd40cafe99b46a585c6d",
+          "executed_p3_basis": "862d530b5a4913d546fd8166b502943f052f48f033f6889c278df43dcaf072cc",
+          "executed_p3_interpolation_points": "ff3695396636242bac366685616f23412f205253c06de4a35ec9549a186b3bfe",
+          "flux_basis_normalization": "e4bc4d3a443d54862f583d265478f1f349b8fa6b9aaa6371ddbf619943edf5a5",
+          "global_unit_normals": "90b7246403eec70dd919e7cb4c38a9d3ec61aaa05e3674e032e1b0f59c70f9e6",
+          "flux_dofs": "23562517a1aa2f4d64218bbdfb751ec6ce3222f31fb82749d8f96e0eeaef721b",
+          "nodes": "1acff84abc984303bf43729f8d30d2d1c7960d91d0f4bef2cd9f2bcb0b1dd67f",
+          "nodal_dofs": "447b52c725d3e0130299d1400655b73d6fac965d3c99fc117d095b075d187628",
+          "strong_nodes": "cdec63e44839a8d2e4cc98d35b567a679a2272a373459bbc37656649d67bf509"
+        },
+        "dtype_contract": {
+          "operators_and_basis": "binary64",
+          "operator_precision_bits": 53,
+          "coefficient_accumulation_bits": 64,
+          "portable_coefficients": "three binary64 components retaining the executed wider values"
+        },
+        "native_binary_sha256": {
+          "_basixcpp.cpython-313-x86_64-linux-gnu.so": "fa14b18f7b393882c9a49e8af6f9e86b47c14f880daee89b7213a894fc8a9fdb",
+          "_superlu.cpython-313-x86_64-linux-gnu.so": "d500940309839b1433d3703440224827bcce56437b90679d99939193b0bdbe61"
+        },
+        "darcy_original_relative": 3.6606958878782584e-19,
+        "maximum_transport_original_relative": 1.1879702824352625e-20,
+        "nodal_minimum_final": -0.36552218820453414,
+        "nodal_maximum_final": 1.0,
+        "acquisition_record_sha256": "6ee7d8e69f86061665e9108c1e86d2c34f878c83db133245a6e8dfd208eed8f2",
+        "thread_replay_identical": true,
+        "fresh_replay_field_solves": 0,
+        "checkpoint_rhs_verified_from_archived_predecessors": [
+          1,
+          2,
+          4,
+          6,
+          8,
+          10
+        ],
+        "measured_control_resources": {
+          "elapsed_seconds": 5.530891712754965,
+          "peak_owned_rss_bytes": 135786496
+        }
+      },
+      {
+        "uuid": "0e366251-02c4-4db9-aec2-457d2cb9780c",
+        "configuration": {
+          "nx": 64,
+          "ny": 16,
+          "triangles": 2048,
+          "steps": 20,
+          "dt": 0.00025,
+          "final_time": 0.005,
+          "darcy_order": 4,
+          "transport_order": 8,
+          "sample_every": 4,
+          "darcy_flux_space": "global RT0 H(div)",
+          "darcy_pressure_space": "discontinuous P0",
+          "concentration_space": "continuous equispaced P3",
+          "time_integrator": "backward Euler",
+          "capacity": 1.0,
+          "stabilization": "none",
+          "initial_concentration": 0.0,
+          "inflow_concentration": 1.0,
+          "natural_diffusive_normal_flux": 0.0,
+          "molecular_diffusion": 1e-06,
+          "longitudinal_dispersivity": 0.01,
+          "transverse_dispersivity": 0.001
+        },
+        "source_sha256": {
+          "classical_reference.py": "6daf7913783f4d5b62a1d668db9a4e3c97a478d06cdd8c85e6d4a50efdd6b8c9",
+          "acquire_classical.py": "582bca3d2a9aa391886573fd38c9d0c2f14d3be8a13dd895d4dbcfd75a67353d",
+          "native_darcy.py": "8f9b2428884173ae2f405a913fab47d08443916202bfa7bc276522919bd2f195",
+          "native_transport.py": "f697788331cc34ed232a03b443324279670c1a16de6a0a68e140c010f5d9ebfc",
+          "trace_rank.py": "fdf9192f394a6b74b52c035d25411c6bfc6f49164c390eaee531ffbefb1523e5",
+          "reference_basis.py": "577724148fd9d102651aa5a6148df7be3f41dc7a13000bc69efc468affe8e1d7",
+          "archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+          "campaign_provenance.py": "32a86b873f1dc5cb5e134f057e80abbd06c831f531850262bc909fb4adf7e736",
+          "transport_checkpoints.py": "c9c09536afbe7ae247fb97e2c626a410279a1df9358c7984405d888e9a25f518",
+          "local_response_cache.py": "4921332802aa6400356e9536366244e4285981d0cd7451abff376cf64ab7f5d5",
+          "permeability.json": "4850aa7a196662359b001cd5ec34edf009999737ef8a76cc7161839a744bd037",
+          "pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57"
+        },
+        "basis_sha256": {
+          "executed_rt_basis": "eb3ff7099f911676a3f380511bbe3add2c043bf63396543cd9d35bd88401072e",
+          "executed_p0_basis": "a2144e06d371e7f8ef4a20191d89444100e14fd09d44fd40cafe99b46a585c6d",
+          "executed_p3_basis": "862d530b5a4913d546fd8166b502943f052f48f033f6889c278df43dcaf072cc",
+          "executed_p3_interpolation_points": "ff3695396636242bac366685616f23412f205253c06de4a35ec9549a186b3bfe",
+          "flux_basis_normalization": "e4bc4d3a443d54862f583d265478f1f349b8fa6b9aaa6371ddbf619943edf5a5",
+          "global_unit_normals": "90b7246403eec70dd919e7cb4c38a9d3ec61aaa05e3674e032e1b0f59c70f9e6",
+          "flux_dofs": "23562517a1aa2f4d64218bbdfb751ec6ce3222f31fb82749d8f96e0eeaef721b",
+          "nodes": "1acff84abc984303bf43729f8d30d2d1c7960d91d0f4bef2cd9f2bcb0b1dd67f",
+          "nodal_dofs": "447b52c725d3e0130299d1400655b73d6fac965d3c99fc117d095b075d187628",
+          "strong_nodes": "cdec63e44839a8d2e4cc98d35b567a679a2272a373459bbc37656649d67bf509"
+        },
+        "dtype_contract": {
+          "operators_and_basis": "binary64",
+          "operator_precision_bits": 53,
+          "coefficient_accumulation_bits": 64,
+          "portable_coefficients": "three binary64 components retaining the executed wider values"
+        },
+        "native_binary_sha256": {
+          "_basixcpp.cpython-313-x86_64-linux-gnu.so": "fa14b18f7b393882c9a49e8af6f9e86b47c14f880daee89b7213a894fc8a9fdb",
+          "_superlu.cpython-313-x86_64-linux-gnu.so": "d500940309839b1433d3703440224827bcce56437b90679d99939193b0bdbe61"
+        },
+        "darcy_original_relative": 3.6606958878782584e-19,
+        "maximum_transport_original_relative": 2.4588030562229665e-20,
+        "nodal_minimum_final": -0.36552066075708656,
+        "nodal_maximum_final": 1.0,
+        "acquisition_record_sha256": "8044b5d5a7b041e55f1c64f4cc4e6be2f1c453acd66dd49905ca56349dac79d4",
+        "thread_replay_identical": true,
+        "fresh_replay_field_solves": 0,
+        "checkpoint_rhs_verified_from_archived_predecessors": [
+          1,
+          4,
+          8,
+          12,
+          16,
+          20
+        ],
+        "measured_control_resources": {
+          "elapsed_seconds": 6.227875716984272,
+          "peak_owned_rss_bytes": 140820480
+        }
+      }
+    ],
+    "increments": [
+      {
+        "scope": "Own classical increment; no exact error, certified bound or smooth-rate claim",
+        "coarse_uuid": "3b2c0d25-c2fd-483b-b2fc-ab1b6b606588",
+        "fine_uuid": "ca3bfda8-dd0a-47cf-973a-bbbf81907729",
+        "coarse_record_sha256": "ffcaa0a8c63c64bd1f29695ba9a6ec9301e34f38aecb6bc752afd5d0216e6982",
+        "fine_record_sha256": "6ee7d8e69f86061665e9108c1e86d2c34f878c83db133245a6e8dfd208eed8f2",
+        "executed_comparison_owner_sha256": {
+          "compare_classical_control.py": "43a76aa276218e2379de0a09c781f084669ce9f58a9c2388bb80cdf093d4b7dc",
+          "classical_fields.py": "ee01df9d23e1516ea5bea8b754d21dbdcd8dd200f01012b772d65b4d76364ebb",
+          "classical_reference.py": "6daf7913783f4d5b62a1d668db9a4e3c97a478d06cdd8c85e6d4a50efdd6b8c9",
+          "reference_basis.py": "577724148fd9d102651aa5a6148df7be3f41dc7a13000bc69efc468affe8e1d7"
+        },
+        "fresh_field_solves": 0,
+        "same_physical_input_sha256": "4850aa7a196662359b001cd5ec34edf009999737ef8a76cc7161839a744bd037",
+        "increments": [
+          {
+            "scope": "Own classical refinement increment; not an exact error or certified bound",
+            "coarse_uuid": "3b2c0d25-c2fd-483b-b2fc-ab1b6b606588",
+            "fine_uuid": "ca3bfda8-dd0a-47cf-973a-bbbf81907729",
+            "step": 5,
+            "fine_step": 10,
+            "time": 0.005,
+            "fine_time": 0.005,
+            "time_step_ratio": 2.0,
+            "spatial_refinement_ratio": 1,
+            "positive_duffy_order": 6,
+            "denominator": "Norm of finer computed field",
+            "norms": {
+              "pressure_l2": {
+                "difference": 0.0,
+                "fine_norm": 2.9053754757209562,
+                "relative": 0.0
+              },
+              "darcy_flux_l2": {
+                "difference": 0.0,
+                "fine_norm": 0.40930093182799304,
+                "relative": 0.0
+              },
+              "concentration_l2": {
+                "difference": 0.00030195303962586627,
+                "fine_norm": 0.056590084122309606,
+                "relative": 0.005335794146784574
+              },
+              "concentration_gradient_l2": {
+                "difference": 0.06112970647328576,
+                "fine_norm": 10.265741260848566,
+                "relative": 0.005954728929943124
+              },
+              "concentration_h1": {
+                "difference": 0.06113045222430646,
+                "fine_norm": 10.265897236594066,
+                "relative": 0.005954711099814964
+              }
+            }
+          },
+          {
+            "scope": "Own classical refinement increment; not an exact error or certified bound",
+            "coarse_uuid": "3b2c0d25-c2fd-483b-b2fc-ab1b6b606588",
+            "fine_uuid": "ca3bfda8-dd0a-47cf-973a-bbbf81907729",
+            "step": 5,
+            "fine_step": 10,
+            "time": 0.005,
+            "fine_time": 0.005,
+            "time_step_ratio": 2.0,
+            "spatial_refinement_ratio": 1,
+            "positive_duffy_order": 8,
+            "denominator": "Norm of finer computed field",
+            "norms": {
+              "pressure_l2": {
+                "difference": 0.0,
+                "fine_norm": 2.9053754757209562,
+                "relative": 0.0
+              },
+              "darcy_flux_l2": {
+                "difference": 0.0,
+                "fine_norm": 0.4093009318279931,
+                "relative": 0.0
+              },
+              "concentration_l2": {
+                "difference": 0.0003019530396258664,
+                "fine_norm": 0.05659008412230978,
+                "relative": 0.005335794146784561
+              },
+              "concentration_gradient_l2": {
+                "difference": 0.06112970647328586,
+                "fine_norm": 10.265741260848587,
+                "relative": 0.005954728929943122
+              },
+              "concentration_h1": {
+                "difference": 0.061130452224306554,
+                "fine_norm": 10.265897236594087,
+                "relative": 0.005954711099814962
+              }
+            }
+          }
+        ]
+      },
+      {
+        "scope": "Own classical increment; no exact error, certified bound or smooth-rate claim",
+        "coarse_uuid": "ca3bfda8-dd0a-47cf-973a-bbbf81907729",
+        "fine_uuid": "0e366251-02c4-4db9-aec2-457d2cb9780c",
+        "coarse_record_sha256": "6ee7d8e69f86061665e9108c1e86d2c34f878c83db133245a6e8dfd208eed8f2",
+        "fine_record_sha256": "8044b5d5a7b041e55f1c64f4cc4e6be2f1c453acd66dd49905ca56349dac79d4",
+        "executed_comparison_owner_sha256": {
+          "compare_classical_control.py": "43a76aa276218e2379de0a09c781f084669ce9f58a9c2388bb80cdf093d4b7dc",
+          "classical_fields.py": "ee01df9d23e1516ea5bea8b754d21dbdcd8dd200f01012b772d65b4d76364ebb",
+          "classical_reference.py": "6daf7913783f4d5b62a1d668db9a4e3c97a478d06cdd8c85e6d4a50efdd6b8c9",
+          "reference_basis.py": "577724148fd9d102651aa5a6148df7be3f41dc7a13000bc69efc468affe8e1d7"
+        },
+        "fresh_field_solves": 0,
+        "same_physical_input_sha256": "4850aa7a196662359b001cd5ec34edf009999737ef8a76cc7161839a744bd037",
+        "increments": [
+          {
+            "scope": "Own classical refinement increment; not an exact error or certified bound",
+            "coarse_uuid": "ca3bfda8-dd0a-47cf-973a-bbbf81907729",
+            "fine_uuid": "0e366251-02c4-4db9-aec2-457d2cb9780c",
+            "step": 10,
+            "fine_step": 20,
+            "time": 0.005,
+            "fine_time": 0.005,
+            "time_step_ratio": 2.0,
+            "spatial_refinement_ratio": 1,
+            "positive_duffy_order": 6,
+            "denominator": "Norm of finer computed field",
+            "norms": {
+              "pressure_l2": {
+                "difference": 0.0,
+                "fine_norm": 2.9053754757209562,
+                "relative": 0.0
+              },
+              "darcy_flux_l2": {
+                "difference": 0.0,
+                "fine_norm": 0.40930093182799304,
+                "relative": 0.0
+              },
+              "concentration_l2": {
+                "difference": 0.00015846215331932124,
+                "fine_norm": 0.05662679701466091,
+                "relative": 0.002798359816789474
+              },
+              "concentration_gradient_l2": {
+                "difference": 0.03222715351078274,
+                "fine_norm": 10.261129774465681,
+                "relative": 0.0031407022636998926
+              },
+              "concentration_h1": {
+                "difference": 0.032227543090679295,
+                "fine_norm": 10.261286022841691,
+                "relative": 0.0031406924062871424
+              }
+            }
+          },
+          {
+            "scope": "Own classical refinement increment; not an exact error or certified bound",
+            "coarse_uuid": "ca3bfda8-dd0a-47cf-973a-bbbf81907729",
+            "fine_uuid": "0e366251-02c4-4db9-aec2-457d2cb9780c",
+            "step": 10,
+            "fine_step": 20,
+            "time": 0.005,
+            "fine_time": 0.005,
+            "time_step_ratio": 2.0,
+            "spatial_refinement_ratio": 1,
+            "positive_duffy_order": 8,
+            "denominator": "Norm of finer computed field",
+            "norms": {
+              "pressure_l2": {
+                "difference": 0.0,
+                "fine_norm": 2.9053754757209562,
+                "relative": 0.0
+              },
+              "darcy_flux_l2": {
+                "difference": 0.0,
+                "fine_norm": 0.4093009318279931,
+                "relative": 0.0
+              },
+              "concentration_l2": {
+                "difference": 0.00015846215331932132,
+                "fine_norm": 0.05662679701466108,
+                "relative": 0.002798359816789467
+              },
+              "concentration_gradient_l2": {
+                "difference": 0.03222715351078279,
+                "fine_norm": 10.261129774465703,
+                "relative": 0.0031407022636998918
+              },
+              "concentration_h1": {
+                "difference": 0.03222754309067934,
+                "fine_norm": 10.261286022841713,
+                "relative": 0.003140692406287141
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "reference_accuracy_resolved": false,
+    "full_T7_trajectory_verified": false,
+    "qualification": "Own increments at one initial time, not an exact time error or a smooth-problem convergence-rate claim. Spatial reference accuracy remains unresolved."
+  }
+}

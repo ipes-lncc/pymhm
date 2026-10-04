@@ -1,0 +1,2286 @@
+{
+  "schema": "pymhm-initial-scalar-publication-v1",
+  "title": "Tensor RT family, face degree 1",
+  "id": "scalar-tensor-rt-k1",
+  "studies": [
+    {
+      "case": "tensor-rt",
+      "variant": "1-0",
+      "acquisition_uuid": "4b646265-09c6-489f-87a3-21b623f99d03",
+      "producer_source_sha256": {
+        "examples/minimal_scalar_convergence.py": "80ffc132fb6a59e0d9c8b2bd6ccada284fbb3f19549cc45cf936a7cc6596475c",
+        "examples/verify_tensor_rt.py": "8a039a276fc0c0db1d7124f2f06edb176d47b9b6cc2bf0cb876b5edb1fbcf70c",
+        "pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57",
+        "pixi.toml": "c6d1234f9f6715265cdb85aadfcda86df379f542f6c579ed79e48835bdc29870",
+        "pyproject.toml": "9fe172ddcb0fc2407c85c8140de8d263808d3a2e57db016aea3a012a475efbc9",
+        "src/pymhm/__init__.py": "a3273ccef37cce0b25b1e1cbf9faf150dfaaf715aafc6bd87e6d4809b431898c",
+        "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+        "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+        "src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+        "src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+        "src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+        "src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+        "src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+        "src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+        "src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+        "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+        "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+        "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+        "src/pymhm/darcy.py": "945eb63777daa94f02cd89f77ec6299cf1fe8722b3d98c027c70b7d318e097fc",
+        "src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+        "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+        "src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+        "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+        "src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+        "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+        "src/pymhm/darcy_transport.py": "3f9331d82dae0d16b30c53085981646942574a552601ec34631ba3b00eab5b7e",
+        "src/pymhm/darcy_velocity.py": "83c0dc577fe731a4316962b389ed286e711fcf9264836094188206d6eb276558",
+        "src/pymhm/distributed.py": "c6cf5f26bd9033a72328d18f5d099ab0d9b867f92a6babe472c2035ff1abd7ae",
+        "src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+        "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+        "src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+        "src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+        "src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+        "src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+        "src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+        "src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+        "src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+        "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+        "src/pymhm/elastodynamics.py": "21d7d7327f85b61399e2166f4babdd0098d220031a3cc0f507014655fd539f6c",
+        "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+        "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+        "src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+        "src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+        "src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+        "src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+        "src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+        "src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+        "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+        "src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+        "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+        "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+        "src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+        "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+        "src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+        "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+        "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+        "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+        "src/pymhm/helmholtz.py": "603a3e5eccf84830f8819657d97d3f7f22d856f97f21482e992f3a64fb67c1b4",
+        "src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+        "src/pymhm/helmholtz_spaces.py": "a0805d5ea9a95636062df0917dba98cfad8bc7ec298eba55c5fc1e6320a44bfb",
+        "src/pymhm/hybrid.py": "e4ca37cd8fa05dcb505d2cc7d36c975bbd25ac9ee01564bc86dd70d1d042dbb3",
+        "src/pymhm/hybrid_refinement.py": "b3ac92f5403b0fbc9a509e04626b7981cbd9767654ea149a894f1c82b74ecc16",
+        "src/pymhm/lagrange.py": "db5552571ee459630678dad97a887d4c49d1a2eb700cd2847b3f0a5f4ee8a2b7",
+        "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+        "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+        "src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+        "src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+        "src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+        "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+        "src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+        "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+        "src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+        "src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+        "src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+        "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+        "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+        "src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+        "src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+        "src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+        "src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+        "src/pymhm/mshho.py": "557b02892d7b93d2560deff999ef543bc7b95e762024139b6c8968d6b4ede0ee",
+        "src/pymhm/mshho3d.py": "522668e3fa23cd7661c958151caacdcc9e9a0e013c6f44e2974f5745dd3a4089",
+        "src/pymhm/nested.py": "4414c4fba66266017d97b5a75eda9a24ad90393647bd75d1245b5f4f93bc0049",
+        "src/pymhm/offline.py": "7b40681863239cf07f5df220ad893f044d26314c9a5bb8563fff587ef3df4932",
+        "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+        "src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+        "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+        "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+        "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+        "src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+        "src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+        "src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+        "src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+        "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+        "src/pymhm/rad.py": "d1f3d5c948bcc9370333050e8dfc1b15d5372ef745d51f04d8f700065d40c1e7",
+        "src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+        "src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+        "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+        "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+        "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+        "src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+        "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+        "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+        "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+        "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+        "src/pymhm/scalar_boundary.py": "5c2d4970ef3e032f93caee5f9b36ce36f535f65a924ef1e666f0e4aa5f4b69b3",
+        "src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+        "src/pymhm/scalar_transient.py": "c68b44eec515d94c114ba555e09d01705754ce2a2dda5199c753dc6b8f7f0ef5",
+        "src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+        "src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+        "src/pymhm/solvers.py": "2d360c2f7d71d8c04caa1966125291849b45daa5a886f5030772981e1cdaa751",
+        "src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+        "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+        "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+        "src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+        "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+        "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+        "src/pymhm/triangle_fields.py": "60e456d358ec5615d98375d6588e6ac88de972304d2fd3ac505f1ca998f67f4c",
+        "src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+        "src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+        "src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+        "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94"
+      },
+      "conventions": {
+        "problem": "analytical cosine pressure, K=I, exact weak Dirichlet",
+        "spaces": "tensor RT face degree 1, interior degree 1; DG Q1",
+        "local_refinement": 2,
+        "assembly_order": 10,
+        "multiplier": "physical globally oriented Darcy normal flux",
+        "literature_attribution": "Duran et al. (2019), analytical tensor RT family"
+      },
+      "norm_orders": [
+        12,
+        14
+      ],
+      "rows": [
+        {
+          "level": 2,
+          "norms": {
+            "pressure_l2": 0.06278814518032211,
+            "flux_l2": 0.40544290843358294,
+            "divergence_l2": 4.946160547851358
+          },
+          "quadrature": {
+            "12": {
+              "pressure_l2": 0.06278814518032212,
+              "flux_l2": 0.40544290843358305,
+              "divergence_l2": 4.94616054785136
+            },
+            "14": {
+              "pressure_l2": 0.06278814518032211,
+              "flux_l2": 0.40544290843358294,
+              "divergence_l2": 4.946160547851358
+            }
+          },
+          "quadrature_relative_change": 3.5913853224435076e-16,
+          "original_equations": {
+            "local_original_rows": [
+              {
+                "euclidean_norm": 1.6259352219150192e-15,
+                "action_scale": 4.298639395228394,
+                "relative": 3.782441541199877e-16
+              },
+              {
+                "euclidean_norm": 1.0952366347626407e-15,
+                "action_scale": 4.2986393952283946,
+                "relative": 2.5478681370165237e-16
+              },
+              {
+                "euclidean_norm": 9.846819168317836e-16,
+                "action_scale": 4.2986393952283946,
+                "relative": 2.290682763306006e-16
+              },
+              {
+                "euclidean_norm": 9.623334955088646e-16,
+                "action_scale": 4.2986393952283946,
+                "relative": 2.2386932399518803e-16
+              }
+            ],
+            "local_original_max": 3.782441541199877e-16,
+            "original_trace_rows": {
+              "euclidean_norm": 1.085145466780686e-16,
+              "action_scale": 1.4039469461342988,
+              "relative": 7.729248386262618e-17
+            },
+            "full_uncondensed_relative_to_physical_rhs": {
+              "euclidean_norm": 2.398055102107666e-15,
+              "action_scale": 8.616363135012115,
+              "relative": 2.7831407109146803e-16
+            },
+            "free_condensed_rows": {
+              "euclidean_norm": 3.9032025331469297e-22,
+              "action_scale": 1.4039472481971276,
+              "relative": 2.780163242001585e-22
+            },
+            "scope": "Original A*u+B*lambda=f and C.T*u=g; free reduced rows separately"
+          },
+          "elapsed_seconds": 0.721069447696209
+        },
+        {
+          "level": 4,
+          "norms": {
+            "pressure_l2": 0.017328435697044946,
+            "flux_l2": 0.2471913106475304,
+            "divergence_l2": 1.272049081233573
+          },
+          "quadrature": {
+            "12": {
+              "pressure_l2": 0.017328435697044953,
+              "flux_l2": 0.24719131064753053,
+              "divergence_l2": 1.272049081233573
+            },
+            "14": {
+              "pressure_l2": 0.017328435697044946,
+              "flux_l2": 0.2471913106475304,
+              "divergence_l2": 1.272049081233573
+            }
+          },
+          "quadrature_relative_change": 5.614189176577799e-16,
+          "original_equations": {
+            "local_original_rows": [
+              {
+                "euclidean_norm": 6.1434142904995e-16,
+                "action_scale": 1.629019945302111,
+                "relative": 3.77123331621343e-16
+              },
+              {
+                "euclidean_norm": 7.728894741312588e-16,
+                "action_scale": 1.623109592770016,
+                "relative": 4.761782430305506e-16
+              },
+              {
+                "euclidean_norm": 4.1149207708447016e-16,
+                "action_scale": 1.623109592770016,
+                "relative": 2.53520821340359e-16
+              },
+              {
+                "euclidean_norm": 5.569846528503448e-16,
+                "action_scale": 1.6290199453021104,
+                "relative": 3.419139553549475e-16
+              },
+              {
+                "euclidean_norm": 5.79624707100318e-16,
+                "action_scale": 1.6231095927700165,
+                "relative": 3.5710756050127466e-16
+              },
+              {
+                "euclidean_norm": 5.906903163803809e-16,
+                "action_scale": 1.6171421336935121,
+                "relative": 3.652680268933808e-16
+              },
+              {
+                "euclidean_norm": 4.698067844403812e-16,
+                "action_scale": 1.6171421336935121,
+                "relative": 2.905166927828133e-16
+              },
+              {
+                "euclidean_norm": 4.234782782530364e-16,
+                "action_scale": 1.6231095927700159,
+                "relative": 2.609055359782108e-16
+              },
+              {
+                "euclidean_norm": 4.47907356417061e-16,
+                "action_scale": 1.6231095927700165,
+                "relative": 2.759563238441943e-16
+              },
+              {
+                "euclidean_norm": 7.576674377423562e-16,
+                "action_scale": 1.617142133693512,
+                "relative": 4.685224767546332e-16
+              },
+              {
+                "euclidean_norm": 5.307981016636414e-16,
+                "action_scale": 1.6171421336935128,
+                "relative": 3.2823218850362376e-16
+              },
+              {
+                "euclidean_norm": 4.758094339342103e-16,
+                "action_scale": 1.6231095927700163,
+                "relative": 2.931468312760008e-16
+              },
+              {
+                "euclidean_norm": 3.6572857183885034e-16,
+                "action_scale": 1.6290199453021106,
+                "relative": 2.24508344967516e-16
+              },
+              {
+                "euclidean_norm": 7.385262243139624e-16,
+                "action_scale": 1.6231095927700152,
+                "relative": 4.550069986670377e-16
+              },
+              {
+                "euclidean_norm": 3.2885400134204466e-16,
+                "action_scale": 1.6231095927700168,
+                "relative": 2.026073918895512e-16
+              },
+              {
+                "euclidean_norm": 4.22899823428829e-16,
+                "action_scale": 1.6290199453021106,
+                "relative": 2.5960383397908606e-16
+              }
+            ],
+            "local_original_max": 4.761782430305506e-16,
+            "original_trace_rows": {
+              "euclidean_norm": 7.44855508972323e-16,
+              "action_scale": 1.6144164898174875,
+              "relative": 4.613775402260231e-16
+            },
+            "full_uncondensed_relative_to_physical_rhs": {
+              "euclidean_norm": 2.3115066052571093e-15,
+              "action_scale": 4.813728579491536,
+              "relative": 4.801904733692462e-16
+            },
+            "free_condensed_rows": {
+              "euclidean_norm": 1.0278639238757783e-15,
+              "action_scale": 8.048535399149342,
+              "relative": 1.2770819446037527e-16
+            },
+            "scope": "Original A*u+B*lambda=f and C.T*u=g; free reduced rows separately"
+          },
+          "elapsed_seconds": 0.4243358299136162,
+          "observed_rates": {
+            "pressure_l2": 1.8573507715251993,
+            "flux_l2": 0.7138707487316744,
+            "divergence_l2": 1.9591547318510365
+          }
+        },
+        {
+          "level": 8,
+          "norms": {
+            "pressure_l2": 0.004116451839585839,
+            "flux_l2": 0.06083239380805377,
+            "divergence_l2": 0.320160583033628
+          },
+          "quadrature": {
+            "12": {
+              "pressure_l2": 0.004116451839585839,
+              "flux_l2": 0.06083239380805384,
+              "divergence_l2": 0.3201605830336281
+            },
+            "14": {
+              "pressure_l2": 0.004116451839585839,
+              "flux_l2": 0.06083239380805377,
+              "divergence_l2": 0.320160583033628
+            }
+          },
+          "quadrature_relative_change": 1.1406577103971486e-15,
+          "original_equations": {
+            "local_original_rows": [
+              {
+                "euclidean_norm": 3.6394337291749215e-16,
+                "action_scale": 0.7124706047466339,
+                "relative": 5.1081879096880955e-16
+              },
+              {
+                "euclidean_norm": 3.0809631348623315e-16,
+                "action_scale": 0.6795702852231859,
+                "relative": 4.533693132051051e-16
+              },
+              {
+                "euclidean_norm": 3.3851318813680054e-16,
+                "action_scale": 0.6795127936045825,
+                "relative": 4.981704411201798e-16
+              },
+              {
+                "euclidean_norm": 2.761946532007002e-16,
+                "action_scale": 0.7118204434593359,
+                "relative": 3.880116899402852e-16
+              },
+              {
+                "euclidean_norm": 2.8170231886317166e-16,
+                "action_scale": 0.7118204434593361,
+                "relative": 3.9574912669569086e-16
+              },
+              {
+                "euclidean_norm": 2.5947794472924095e-16,
+                "action_scale": 0.6795127936045837,
+                "relative": 3.8185880703260773e-16
+              },
+              {
+                "euclidean_norm": 3.9506307662378536e-16,
+                "action_scale": 0.6795702852231873,
+                "relative": 5.813424824689578e-16
+              },
+              {
+                "euclidean_norm": 3.688351975640702e-16,
+                "action_scale": 0.7124706047466332,
+                "relative": 5.176847930382116e-16
+              },
+              {
+                "euclidean_norm": 1.9120900419504494e-16,
+                "action_scale": 0.6795702852231847,
+                "relative": 2.8136751761040875e-16
+              },
+              {
+                "euclidean_norm": 1.366401766875745e-16,
+                "action_scale": 0.4166811745768148,
+                "relative": 3.2792500603452387e-16
+              },
+              {
+                "euclidean_norm": 1.929887804181404e-16,
+                "action_scale": 0.41659902031453755,
+                "relative": 4.632482819389047e-16
+              },
+              {
+                "euclidean_norm": 2.0516854560444584e-16,
+                "action_scale": 0.6776384833771761,
+                "relative": 3.027699143973325e-16
+              },
+              {
+                "euclidean_norm": 2.527482694423853e-16,
+                "action_scale": 0.6776384833771782,
+                "relative": 3.729839370732785e-16
+              },
+              {
+                "euclidean_norm": 1.7615260814611146e-16,
+                "action_scale": 0.4165990203145365,
+                "relative": 4.228349073243486e-16
+              },
+              {
+                "euclidean_norm": 1.6245416156008648e-16,
+                "action_scale": 0.41668117457681414,
+                "relative": 3.8987641264349576e-16
+              },
+              {
+                "euclidean_norm": 1.9844425172603952e-16,
+                "action_scale": 0.6795702852231832,
+                "relative": 2.9201431557718393e-16
+              },
+              {
+                "euclidean_norm": 2.311870842367307e-16,
+                "action_scale": 0.6795127936045823,
+                "relative": 3.4022477047174125e-16
+              },
+              {
+                "euclidean_norm": 1.5910481439586173e-16,
+                "action_scale": 0.41659902031453794,
+                "relative": 3.8191355869184574e-16
+              },
+              {
+                "euclidean_norm": 1.3581979738980066e-16,
+                "action_scale": 0.41651843679636835,
+                "relative": 3.2608351849788964e-16
+              },
+              {
+                "euclidean_norm": 2.3584563612804957e-16,
+                "action_scale": 0.6775819621355108,
+                "relative": 3.4806953152168235e-16
+              },
+              {
+                "euclidean_norm": 2.091154833019228e-16,
+                "action_scale": 0.6775819621355107,
+                "relative": 3.0862020388332216e-16
+              },
+              {
+                "euclidean_norm": 1.4029765486281611e-16,
+                "action_scale": 0.4165184367963673,
+                "relative": 3.368342010065849e-16
+              },
+              {
+                "euclidean_norm": 1.8278189325607113e-16,
+                "action_scale": 0.4165990203145374,
+                "relative": 4.387477750621414e-16
+              },
+              {
+                "euclidean_norm": 2.5623283377478483e-16,
+                "action_scale": 0.6795127936045811,
+                "relative": 3.7708316338763544e-16
+              },
+              {
+                "euclidean_norm": 3.878434957000655e-16,
+                "action_scale": 0.7118204434593353,
+                "relative": 5.448614173192431e-16
+              },
+              {
+                "euclidean_norm": 3.5162221011143447e-16,
+                "action_scale": 0.6776384833771766,
+                "relative": 5.188935084664015e-16
+              },
+              {
+                "euclidean_norm": 2.630432361670234e-16,
+                "action_scale": 0.6775819621355097,
+                "relative": 3.8820873468650183e-16
+              },
+              {
+                "euclidean_norm": 1.731833741125733e-16,
+                "action_scale": 0.7111701024743484,
+                "relative": 2.4351891834319617e-16
+              },
+              {
+                "euclidean_norm": 2.792220358422801e-16,
+                "action_scale": 0.7111701024743486,
+                "relative": 3.926234171976478e-16
+              },
+              {
+                "euclidean_norm": 3.121396979896574e-16,
+                "action_scale": 0.6775819621355123,
+                "relative": 4.606670711922396e-16
+              },
+              {
+                "euclidean_norm": 2.870724101632464e-16,
+                "action_scale": 0.6776384833771781,
+                "relative": 4.236365218405991e-16
+              },
+              {
+                "euclidean_norm": 2.986642429884302e-16,
+                "action_scale": 0.7118204434593358,
+                "relative": 4.1957806316571746e-16
+              },
+              {
+                "euclidean_norm": 2.5342493777745025e-16,
+                "action_scale": 0.7118204434593359,
+                "relative": 3.560236856163399e-16
+              },
+              {
+                "euclidean_norm": 3.163191657117057e-16,
+                "action_scale": 0.6776384833771774,
+                "relative": 4.667963426977342e-16
+              },
+              {
+                "euclidean_norm": 3.422133040404787e-16,
+                "action_scale": 0.6775819621355093,
+                "relative": 5.050507881909047e-16
+              },
+              {
+                "euclidean_norm": 3.1881052430060495e-16,
+                "action_scale": 0.7111701024743483,
+                "relative": 4.482901111722485e-16
+              },
+              {
+                "euclidean_norm": 3.1914800024926756e-16,
+                "action_scale": 0.7111701024743468,
+                "relative": 4.487646473591454e-16
+              },
+              {
+                "euclidean_norm": 3.0724519949632364e-16,
+                "action_scale": 0.6775819621355089,
+                "relative": 4.534435930496006e-16
+              },
+              {
+                "euclidean_norm": 3.8039886444562734e-16,
+                "action_scale": 0.6776384833771766,
+                "relative": 5.613595947942874e-16
+              },
+              {
+                "euclidean_norm": 4.0529006563549477e-16,
+                "action_scale": 0.7118204434593357,
+                "relative": 5.693712078088804e-16
+              },
+              {
+                "euclidean_norm": 2.1698314326566746e-16,
+                "action_scale": 0.6795127936045827,
+                "relative": 3.193216453139111e-16
+              },
+              {
+                "euclidean_norm": 1.6052930247411128e-16,
+                "action_scale": 0.4165990203145375,
+                "relative": 3.85332885211563e-16
+              },
+              {
+                "euclidean_norm": 1.883730085129004e-16,
+                "action_scale": 0.4165184367963669,
+                "relative": 4.522561113062918e-16
+              },
+              {
+                "euclidean_norm": 2.62669511550457e-16,
+                "action_scale": 0.6775819621355121,
+                "relative": 3.8765717836202483e-16
+              },
+              {
+                "euclidean_norm": 1.8758193769226826e-16,
+                "action_scale": 0.6775819621355105,
+                "relative": 2.7684021738281386e-16
+              },
+              {
+                "euclidean_norm": 1.583754547665789e-16,
+                "action_scale": 0.4165184367963679,
+                "relative": 3.8023636116738625e-16
+              },
+              {
+                "euclidean_norm": 1.853359586957401e-16,
+                "action_scale": 0.4165990203145376,
+                "relative": 4.448785274526308e-16
+              },
+              {
+                "euclidean_norm": 2.7993467281087873e-16,
+                "action_scale": 0.6795127936045819,
+                "relative": 4.119638003074548e-16
+              },
+              {
+                "euclidean_norm": 2.7032484544869924e-16,
+                "action_scale": 0.6795702852231861,
+                "relative": 3.9778791293076995e-16
+              },
+              {
+                "euclidean_norm": 1.582955766314778e-16,
+                "action_scale": 0.4166811745768153,
+                "relative": 3.7989615631722275e-16
+              },
+              {
+                "euclidean_norm": 1.1929594200645753e-16,
+                "action_scale": 0.4165990203145371,
+                "relative": 2.863567511905998e-16
+              },
+              {
+                "euclidean_norm": 2.9206804473559403e-16,
+                "action_scale": 0.6776384833771767,
+                "relative": 4.310086453177831e-16
+              },
+              {
+                "euclidean_norm": 3.166273268606396e-16,
+                "action_scale": 0.677638483377177,
+                "relative": 4.672511001480464e-16
+              },
+              {
+                "euclidean_norm": 1.515161416423096e-16,
+                "action_scale": 0.4165990203145377,
+                "relative": 3.636977867300622e-16
+              },
+              {
+                "euclidean_norm": 2.0103115272347655e-16,
+                "action_scale": 0.416681174576815,
+                "relative": 4.82457967839909e-16
+              },
+              {
+                "euclidean_norm": 2.1111103895825812e-16,
+                "action_scale": 0.6795702852231859,
+                "relative": 3.106537227255671e-16
+              },
+              {
+                "euclidean_norm": 4.230884022891948e-16,
+                "action_scale": 0.7124706047466339,
+                "relative": 5.938327833744831e-16
+              },
+              {
+                "euclidean_norm": 3.281211330771513e-16,
+                "action_scale": 0.6795702852231855,
+                "relative": 4.828361984211673e-16
+              },
+              {
+                "euclidean_norm": 3.147312036434812e-16,
+                "action_scale": 0.6795127936045834,
+                "relative": 4.631718587282803e-16
+              },
+              {
+                "euclidean_norm": 3.081354262574349e-16,
+                "action_scale": 0.7118204434593359,
+                "relative": 4.328836423409603e-16
+              },
+              {
+                "euclidean_norm": 3.3900106251336246e-16,
+                "action_scale": 0.7118204434593361,
+                "relative": 4.762451902418962e-16
+              },
+              {
+                "euclidean_norm": 3.5955239549223925e-16,
+                "action_scale": 0.6795127936045829,
+                "relative": 5.291326357299864e-16
+              },
+              {
+                "euclidean_norm": 2.886920988671011e-16,
+                "action_scale": 0.6795702852231843,
+                "relative": 4.2481565946087373e-16
+              },
+              {
+                "euclidean_norm": 4.0324141295407865e-16,
+                "action_scale": 0.7124706047466336,
+                "relative": 5.659762104816634e-16
+              }
+            ],
+            "local_original_max": 5.938327833744831e-16,
+            "original_trace_rows": {
+              "euclidean_norm": 1.4668879572643424e-15,
+              "action_scale": 1.553985707570389,
+              "relative": 9.439520261468676e-16
+            },
+            "full_uncondensed_relative_to_physical_rhs": {
+              "euclidean_norm": 2.637208236311454e-15,
+              "action_scale": 2.4952272653283494,
+              "relative": 1.0569010177774013e-15
+            },
+            "free_condensed_rows": {
+              "euclidean_norm": 1.5207649114696023e-15,
+              "action_scale": 4.713156324325826,
+              "relative": 3.2266379615302356e-16
+            },
+            "scope": "Original A*u+B*lambda=f and C.T*u=g; free reduced rows separately"
+          },
+          "elapsed_seconds": 1.2299642227590084,
+          "observed_rates": {
+            "pressure_l2": 2.073668170384528,
+            "flux_l2": 2.0227163482752473,
+            "divergence_l2": 1.9902867324849143
+          }
+        }
+      ],
+      "owned_elapsed_seconds": 3.4698173236101866,
+      "owned_peak_rss_bytes": 127143936
+    },
+    {
+      "case": "tensor-rt",
+      "variant": "1-1",
+      "acquisition_uuid": "f43d08a7-f6fb-4a7c-8845-5ff611c527eb",
+      "producer_source_sha256": {
+        "examples/minimal_scalar_convergence.py": "80ffc132fb6a59e0d9c8b2bd6ccada284fbb3f19549cc45cf936a7cc6596475c",
+        "examples/verify_tensor_rt.py": "8a039a276fc0c0db1d7124f2f06edb176d47b9b6cc2bf0cb876b5edb1fbcf70c",
+        "pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57",
+        "pixi.toml": "c6d1234f9f6715265cdb85aadfcda86df379f542f6c579ed79e48835bdc29870",
+        "pyproject.toml": "9fe172ddcb0fc2407c85c8140de8d263808d3a2e57db016aea3a012a475efbc9",
+        "src/pymhm/__init__.py": "a3273ccef37cce0b25b1e1cbf9faf150dfaaf715aafc6bd87e6d4809b431898c",
+        "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+        "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+        "src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+        "src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+        "src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+        "src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+        "src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+        "src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+        "src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+        "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+        "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+        "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+        "src/pymhm/darcy.py": "945eb63777daa94f02cd89f77ec6299cf1fe8722b3d98c027c70b7d318e097fc",
+        "src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+        "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+        "src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+        "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+        "src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+        "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+        "src/pymhm/darcy_transport.py": "3f9331d82dae0d16b30c53085981646942574a552601ec34631ba3b00eab5b7e",
+        "src/pymhm/darcy_velocity.py": "83c0dc577fe731a4316962b389ed286e711fcf9264836094188206d6eb276558",
+        "src/pymhm/distributed.py": "c6cf5f26bd9033a72328d18f5d099ab0d9b867f92a6babe472c2035ff1abd7ae",
+        "src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+        "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+        "src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+        "src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+        "src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+        "src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+        "src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+        "src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+        "src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+        "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+        "src/pymhm/elastodynamics.py": "21d7d7327f85b61399e2166f4babdd0098d220031a3cc0f507014655fd539f6c",
+        "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+        "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+        "src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+        "src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+        "src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+        "src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+        "src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+        "src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+        "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+        "src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+        "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+        "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+        "src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+        "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+        "src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+        "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+        "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+        "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+        "src/pymhm/helmholtz.py": "603a3e5eccf84830f8819657d97d3f7f22d856f97f21482e992f3a64fb67c1b4",
+        "src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+        "src/pymhm/helmholtz_spaces.py": "a0805d5ea9a95636062df0917dba98cfad8bc7ec298eba55c5fc1e6320a44bfb",
+        "src/pymhm/hybrid.py": "e4ca37cd8fa05dcb505d2cc7d36c975bbd25ac9ee01564bc86dd70d1d042dbb3",
+        "src/pymhm/hybrid_refinement.py": "b3ac92f5403b0fbc9a509e04626b7981cbd9767654ea149a894f1c82b74ecc16",
+        "src/pymhm/lagrange.py": "db5552571ee459630678dad97a887d4c49d1a2eb700cd2847b3f0a5f4ee8a2b7",
+        "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+        "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+        "src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+        "src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+        "src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+        "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+        "src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+        "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+        "src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+        "src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+        "src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+        "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+        "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+        "src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+        "src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+        "src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+        "src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+        "src/pymhm/mshho.py": "557b02892d7b93d2560deff999ef543bc7b95e762024139b6c8968d6b4ede0ee",
+        "src/pymhm/mshho3d.py": "522668e3fa23cd7661c958151caacdcc9e9a0e013c6f44e2974f5745dd3a4089",
+        "src/pymhm/nested.py": "4414c4fba66266017d97b5a75eda9a24ad90393647bd75d1245b5f4f93bc0049",
+        "src/pymhm/offline.py": "7b40681863239cf07f5df220ad893f044d26314c9a5bb8563fff587ef3df4932",
+        "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+        "src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+        "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+        "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+        "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+        "src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+        "src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+        "src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+        "src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+        "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+        "src/pymhm/rad.py": "d1f3d5c948bcc9370333050e8dfc1b15d5372ef745d51f04d8f700065d40c1e7",
+        "src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+        "src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+        "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+        "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+        "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+        "src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+        "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+        "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+        "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+        "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+        "src/pymhm/scalar_boundary.py": "5c2d4970ef3e032f93caee5f9b36ce36f535f65a924ef1e666f0e4aa5f4b69b3",
+        "src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+        "src/pymhm/scalar_transient.py": "c68b44eec515d94c114ba555e09d01705754ce2a2dda5199c753dc6b8f7f0ef5",
+        "src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+        "src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+        "src/pymhm/solvers.py": "2d360c2f7d71d8c04caa1966125291849b45daa5a886f5030772981e1cdaa751",
+        "src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+        "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+        "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+        "src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+        "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+        "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+        "src/pymhm/triangle_fields.py": "60e456d358ec5615d98375d6588e6ac88de972304d2fd3ac505f1ca998f67f4c",
+        "src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+        "src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+        "src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+        "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94"
+      },
+      "conventions": {
+        "problem": "analytical cosine pressure, K=I, exact weak Dirichlet",
+        "spaces": "tensor RT face degree 1, interior degree 2; DG Q2",
+        "local_refinement": 2,
+        "assembly_order": 10,
+        "multiplier": "physical globally oriented Darcy normal flux",
+        "literature_attribution": "Duran et al. (2019), analytical tensor RT family"
+      },
+      "norm_orders": [
+        12,
+        14
+      ],
+      "rows": [
+        {
+          "level": 2,
+          "norms": {
+            "pressure_l2": 0.010738584163646092,
+            "flux_l2": 0.24322029644476412,
+            "divergence_l2": 0.6617820363624225
+          },
+          "quadrature": {
+            "12": {
+              "pressure_l2": 0.010738584163646092,
+              "flux_l2": 0.24322029644476426,
+              "divergence_l2": 0.6617820363624239
+            },
+            "14": {
+              "pressure_l2": 0.010738584163646092,
+              "flux_l2": 0.24322029644476412,
+              "divergence_l2": 0.6617820363624225
+            }
+          },
+          "quadrature_relative_change": 2.180914338421678e-15,
+          "original_equations": {
+            "local_original_rows": [
+              {
+                "euclidean_norm": 1.5622356966112714e-15,
+                "action_scale": 4.306277519188738,
+                "relative": 3.6278100741300616e-16
+              },
+              {
+                "euclidean_norm": 2.5203745484868756e-15,
+                "action_scale": 4.306277519188738,
+                "relative": 5.852791737773766e-16
+              },
+              {
+                "euclidean_norm": 2.4062717412626855e-15,
+                "action_scale": 4.306277519188738,
+                "relative": 5.587823196578386e-16
+              },
+              {
+                "euclidean_norm": 2.481847028102595e-15,
+                "action_scale": 4.306277519188739,
+                "relative": 5.763323466830701e-16
+              }
+            ],
+            "local_original_max": 5.852791737773766e-16,
+            "original_trace_rows": {
+              "euclidean_norm": 1.0653168162158815e-16,
+              "action_scale": 1.4039469455303784,
+              "relative": 7.588013347708304e-17
+            },
+            "full_uncondensed_relative_to_physical_rhs": {
+              "euclidean_norm": 4.555647659698573e-15,
+              "action_scale": 8.631605607454437,
+              "relative": 5.277868182211917e-16
+            },
+            "free_condensed_rows": {
+              "euclidean_norm": 3.4513090889483125e-22,
+              "action_scale": 1.4039472481971274,
+              "relative": 2.4582897209138706e-22
+            },
+            "scope": "Original A*u+B*lambda=f and C.T*u=g; free reduced rows separately"
+          },
+          "elapsed_seconds": 0.7733871843665838
+        },
+        {
+          "level": 4,
+          "norms": {
+            "pressure_l2": 0.0068003742163174,
+            "flux_l2": 0.2299229787604159,
+            "divergence_l2": 0.08457141119193423
+          },
+          "quadrature": {
+            "12": {
+              "pressure_l2": 0.006800374216317416,
+              "flux_l2": 0.22992297876041606,
+              "divergence_l2": 0.08457141119193518
+            },
+            "14": {
+              "pressure_l2": 0.0068003742163174,
+              "flux_l2": 0.2299229787604159,
+              "divergence_l2": 0.08457141119193423
+            }
+          },
+          "quadrature_relative_change": 1.11584938412543e-14,
+          "original_equations": {
+            "local_original_rows": [
+              {
+                "euclidean_norm": 4.922350668374525e-16,
+                "action_scale": 1.6305757830700578,
+                "relative": 3.018780678262432e-16
+              },
+              {
+                "euclidean_norm": 6.003146819687766e-16,
+                "action_scale": 1.6240440088065156,
+                "relative": 3.696418808317506e-16
+              },
+              {
+                "euclidean_norm": 4.845920801842536e-16,
+                "action_scale": 1.6240440088065158,
+                "relative": 2.983860520752591e-16
+              },
+              {
+                "euclidean_norm": 4.460737801580461e-16,
+                "action_scale": 1.630575783070057,
+                "relative": 2.7356826023637856e-16
+              },
+              {
+                "euclidean_norm": 6.262095774409467e-16,
+                "action_scale": 1.6240440088065158,
+                "relative": 3.8558658142591726e-16
+              },
+              {
+                "euclidean_norm": 9.707942778102627e-16,
+                "action_scale": 1.6174419774391533,
+                "relative": 6.002034640817792e-16
+              },
+              {
+                "euclidean_norm": 5.336055934971971e-16,
+                "action_scale": 1.6174419774391542,
+                "relative": 3.299071008049626e-16
+              },
+              {
+                "euclidean_norm": 8.749600528757403e-16,
+                "action_scale": 1.6240440088065153,
+                "relative": 5.387539057631417e-16
+              },
+              {
+                "euclidean_norm": 4.0058751059794007e-16,
+                "action_scale": 1.6240440088065162,
+                "relative": 2.4666050207120027e-16
+              },
+              {
+                "euclidean_norm": 5.848682218385765e-16,
+                "action_scale": 1.6174419774391535,
+                "relative": 3.616007436412529e-16
+              },
+              {
+                "euclidean_norm": 3.4469873471971293e-16,
+                "action_scale": 1.6174419774391546,
+                "relative": 2.1311350856953994e-16
+              },
+              {
+                "euclidean_norm": 4.814020678245237e-16,
+                "action_scale": 1.624044008806516,
+                "relative": 2.964218119792815e-16
+              },
+              {
+                "euclidean_norm": 5.457884983087376e-16,
+                "action_scale": 1.6305757830700582,
+                "relative": 3.3472133216717076e-16
+              },
+              {
+                "euclidean_norm": 8.949806293549418e-16,
+                "action_scale": 1.6240440088065156,
+                "relative": 5.510815128788591e-16
+              },
+              {
+                "euclidean_norm": 4.700273447243179e-16,
+                "action_scale": 1.624044008806516,
+                "relative": 2.894178619394271e-16
+              },
+              {
+                "euclidean_norm": 7.988868042957211e-16,
+                "action_scale": 1.6305757830700573,
+                "relative": 4.899415363520072e-16
+              }
+            ],
+            "local_original_max": 6.002034640817792e-16,
+            "original_trace_rows": {
+              "euclidean_norm": 1.1086022813898095e-15,
+              "action_scale": 1.6142102377520076,
+              "relative": 6.867768865929625e-16
+            },
+            "full_uncondensed_relative_to_physical_rhs": {
+              "euclidean_norm": 2.731571157473996e-15,
+              "action_scale": 4.814233970408898,
+              "relative": 5.673947660757314e-16
+            },
+            "free_condensed_rows": {
+              "euclidean_norm": 1.4682088254781188e-15,
+              "action_scale": 8.048509768943811,
+              "relative": 1.8241995942446234e-16
+            },
+            "scope": "Original A*u+B*lambda=f and C.T*u=g; free reduced rows separately"
+          },
+          "elapsed_seconds": 0.5395734030753374,
+          "observed_rates": {
+            "pressure_l2": 0.6591177492836775,
+            "flux_l2": 0.0811129671697985,
+            "divergence_l2": 2.9681141738534693
+          }
+        },
+        {
+          "level": 8,
+          "norms": {
+            "pressure_l2": 0.0007550377661580618,
+            "flux_l2": 0.05613806502218444,
+            "divergence_l2": 0.010629840538215534
+          },
+          "quadrature": {
+            "12": {
+              "pressure_l2": 0.0007550377661580509,
+              "flux_l2": 0.05613806502218453,
+              "divergence_l2": 0.010629840538213146
+            },
+            "14": {
+              "pressure_l2": 0.0007550377661580618,
+              "flux_l2": 0.05613806502218444,
+              "divergence_l2": 0.010629840538215534
+            }
+          },
+          "quadrature_relative_change": 2.2471778554272317e-13,
+          "original_equations": {
+            "local_original_rows": [
+              {
+                "euclidean_norm": 2.698414001179169e-16,
+                "action_scale": 0.7126031652569494,
+                "relative": 3.786699432083183e-16
+              },
+              {
+                "euclidean_norm": 1.8133356962572877e-16,
+                "action_scale": 0.6797734837940901,
+                "relative": 2.66755873756112e-16
+              },
+              {
+                "euclidean_norm": 2.762468397133058e-16,
+                "action_scale": 0.679707819768546,
+                "relative": 4.0641998176124163e-16
+              },
+              {
+                "euclidean_norm": 2.595107873383515e-16,
+                "action_scale": 0.7118899842656955,
+                "relative": 3.645377699842669e-16
+              },
+              {
+                "euclidean_norm": 2.851143248679069e-16,
+                "action_scale": 0.7118899842656958,
+                "relative": 4.0050335187957193e-16
+              },
+              {
+                "euclidean_norm": 2.1567387653189033e-16,
+                "action_scale": 0.6797078197685483,
+                "relative": 3.1730380357449886e-16
+              },
+              {
+                "euclidean_norm": 2.15741384413066e-16,
+                "action_scale": 0.6797734837940902,
+                "relative": 3.173724623810365e-16
+              },
+              {
+                "euclidean_norm": 2.788833378297352e-16,
+                "action_scale": 0.7126031652569506,
+                "relative": 3.91358544877043e-16
+              },
+              {
+                "euclidean_norm": 2.9219360469635236e-16,
+                "action_scale": 0.679773483794091,
+                "relative": 4.298396622732349e-16
+              },
+              {
+                "euclidean_norm": 2.26131978584044e-16,
+                "action_scale": 0.416746947458727,
+                "relative": 5.426122013921631e-16
+              },
+              {
+                "euclidean_norm": 1.747532775655459e-16,
+                "action_scale": 0.41665096033915217,
+                "relative": 4.1942367641081984e-16
+              },
+              {
+                "euclidean_norm": 2.532545802266807e-16,
+                "action_scale": 0.677655298340223,
+                "relative": 3.737218329834882e-16
+              },
+              {
+                "euclidean_norm": 3.117647891665003e-16,
+                "action_scale": 0.6776552983402231,
+                "relative": 4.600639734244001e-16
+              },
+              {
+                "euclidean_norm": 2.30920925287913e-16,
+                "action_scale": 0.41665096033915117,
+                "relative": 5.542311125358859e-16
+              },
+              {
+                "euclidean_norm": 2.1822206138420316e-16,
+                "action_scale": 0.4167469474587251,
+                "relative": 5.236320570909905e-16
+              },
+              {
+                "euclidean_norm": 2.486711086818942e-16,
+                "action_scale": 0.6797734837940927,
+                "relative": 3.65814664164244e-16
+              },
+              {
+                "euclidean_norm": 3.197671240921407e-16,
+                "action_scale": 0.6797078197685467,
+                "relative": 4.704479112819791e-16
+              },
+              {
+                "euclidean_norm": 2.2414934482622817e-16,
+                "action_scale": 0.41665096033915205,
+                "relative": 5.37978706790383e-16
+              },
+              {
+                "euclidean_norm": 2.011577713310818e-16,
+                "action_scale": 0.41655672660793414,
+                "relative": 4.829060689263884e-16
+              },
+              {
+                "euclidean_norm": 2.4881046282920606e-16,
+                "action_scale": 0.6775893084602982,
+                "relative": 3.671995111531258e-16
+              },
+              {
+                "euclidean_norm": 3.209123161208189e-16,
+                "action_scale": 0.6775893084603003,
+                "relative": 4.736088838975845e-16
+              },
+              {
+                "euclidean_norm": 2.23166772472812e-16,
+                "action_scale": 0.41655672660793475,
+                "relative": 5.357416126492123e-16
+              },
+              {
+                "euclidean_norm": 1.9597365169849135e-16,
+                "action_scale": 0.4166509603391517,
+                "relative": 4.703544941765401e-16
+              },
+              {
+                "euclidean_norm": 2.046153396664498e-16,
+                "action_scale": 0.6797078197685452,
+                "relative": 3.010342587144659e-16
+              },
+              {
+                "euclidean_norm": 2.3841463607476985e-16,
+                "action_scale": 0.7118899842656953,
+                "relative": 3.349037651101262e-16
+              },
+              {
+                "euclidean_norm": 2.0070271843408555e-16,
+                "action_scale": 0.6776552983402229,
+                "relative": 2.961722854165909e-16
+              },
+              {
+                "euclidean_norm": 1.9734620169166442e-16,
+                "action_scale": 0.6775893084602989,
+                "relative": 2.9124751413226775e-16
+              },
+              {
+                "euclidean_norm": 2.450024898321952e-16,
+                "action_scale": 0.7111738297537441,
+                "relative": 3.445043666989707e-16
+              },
+              {
+                "euclidean_norm": 2.7194781324694243e-16,
+                "action_scale": 0.7111738297537444,
+                "relative": 3.8239288605587303e-16
+              },
+              {
+                "euclidean_norm": 2.397769071075191e-16,
+                "action_scale": 0.677589308460298,
+                "relative": 3.538676069909807e-16
+              },
+              {
+                "euclidean_norm": 2.4775012947339995e-16,
+                "action_scale": 0.6776552983402243,
+                "relative": 3.6559904435221325e-16
+              },
+              {
+                "euclidean_norm": 2.7244916856666446e-16,
+                "action_scale": 0.7118899842656957,
+                "relative": 3.8271246202134993e-16
+              },
+              {
+                "euclidean_norm": 3.4222042541196367e-16,
+                "action_scale": 0.7118899842656964,
+                "relative": 4.807209442129725e-16
+              },
+              {
+                "euclidean_norm": 2.5599668802661442e-16,
+                "action_scale": 0.6776552983402235,
+                "relative": 3.777682970289251e-16
+              },
+              {
+                "euclidean_norm": 2.3269627342749236e-16,
+                "action_scale": 0.6775893084602994,
+                "relative": 3.434178646594248e-16
+              },
+              {
+                "euclidean_norm": 2.726274712627426e-16,
+                "action_scale": 0.711173829753745,
+                "relative": 3.8334857085101695e-16
+              },
+              {
+                "euclidean_norm": 2.560544099636445e-16,
+                "action_scale": 0.711173829753745,
+                "relative": 3.600447587509053e-16
+              },
+              {
+                "euclidean_norm": 2.488445090990079e-16,
+                "action_scale": 0.677589308460301,
+                "relative": 3.672497573263988e-16
+              },
+              {
+                "euclidean_norm": 2.88718360291306e-16,
+                "action_scale": 0.677655298340223,
+                "relative": 4.2605489988562345e-16
+              },
+              {
+                "euclidean_norm": 3.0636665878965327e-16,
+                "action_scale": 0.7118899842656949,
+                "relative": 4.3035674831928757e-16
+              },
+              {
+                "euclidean_norm": 2.966440129160486e-16,
+                "action_scale": 0.6797078197685479,
+                "relative": 4.3642871876486713e-16
+              },
+              {
+                "euclidean_norm": 2.4591337628119547e-16,
+                "action_scale": 0.416650960339153,
+                "relative": 5.902143513146412e-16
+              },
+              {
+                "euclidean_norm": 2.188998392345873e-16,
+                "action_scale": 0.41655672660793414,
+                "relative": 5.254982701086405e-16
+              },
+              {
+                "euclidean_norm": 2.0484374427594632e-16,
+                "action_scale": 0.6775893084603005,
+                "relative": 3.0231253905321615e-16
+              },
+              {
+                "euclidean_norm": 2.3718503082367237e-16,
+                "action_scale": 0.6775893084602962,
+                "relative": 3.500424635722693e-16
+              },
+              {
+                "euclidean_norm": 1.869348984610878e-16,
+                "action_scale": 0.4165567266079343,
+                "relative": 4.487621649596648e-16
+              },
+              {
+                "euclidean_norm": 1.6157416583919602e-16,
+                "action_scale": 0.4166509603391531,
+                "relative": 3.877926159288699e-16
+              },
+              {
+                "euclidean_norm": 2.696298952870397e-16,
+                "action_scale": 0.6797078197685453,
+                "relative": 3.9668499823770496e-16
+              },
+              {
+                "euclidean_norm": 2.7476107942383804e-16,
+                "action_scale": 0.6797734837940923,
+                "relative": 4.041950531672473e-16
+              },
+              {
+                "euclidean_norm": 2.2387740430933904e-16,
+                "action_scale": 0.4167469474587275,
+                "relative": 5.372022654863255e-16
+              },
+              {
+                "euclidean_norm": 2.3557229494392597e-16,
+                "action_scale": 0.4166509603391517,
+                "relative": 5.653948205283658e-16
+              },
+              {
+                "euclidean_norm": 2.565877435234726e-16,
+                "action_scale": 0.6776552983402234,
+                "relative": 3.786405037368279e-16
+              },
+              {
+                "euclidean_norm": 3.1100536818522183e-16,
+                "action_scale": 0.677655298340223,
+                "relative": 4.589433137274443e-16
+              },
+              {
+                "euclidean_norm": 2.5439718906030826e-16,
+                "action_scale": 0.41665096033915056,
+                "relative": 6.105762695308106e-16
+              },
+              {
+                "euclidean_norm": 2.341335528831506e-16,
+                "action_scale": 0.41674694745872626,
+                "relative": 5.6181228035590755e-16
+              },
+              {
+                "euclidean_norm": 2.5121608113400617e-16,
+                "action_scale": 0.6797734837940911,
+                "relative": 3.695585178343049e-16
+              },
+              {
+                "euclidean_norm": 2.200553176041049e-16,
+                "action_scale": 0.7126031652569506,
+                "relative": 3.0880485567974894e-16
+              },
+              {
+                "euclidean_norm": 2.224922048052124e-16,
+                "action_scale": 0.679773483794091,
+                "relative": 3.2730344755931537e-16
+              },
+              {
+                "euclidean_norm": 2.231730698281661e-16,
+                "action_scale": 0.6797078197685487,
+                "relative": 3.2833676961986417e-16
+              },
+              {
+                "euclidean_norm": 2.000255125578177e-16,
+                "action_scale": 0.7118899842656962,
+                "relative": 2.8097812439957422e-16
+              },
+              {
+                "euclidean_norm": 2.3476325107223325e-16,
+                "action_scale": 0.7118899842656959,
+                "relative": 3.297746228504508e-16
+              },
+              {
+                "euclidean_norm": 2.2192013242284907e-16,
+                "action_scale": 0.6797078197685459,
+                "relative": 3.2649342256856383e-16
+              },
+              {
+                "euclidean_norm": 1.9424566784213868e-16,
+                "action_scale": 0.6797734837940905,
+                "relative": 2.8575058085227906e-16
+              },
+              {
+                "euclidean_norm": 2.597297147457612e-16,
+                "action_scale": 0.7126031652569507,
+                "relative": 3.644801586758428e-16
+              }
+            ],
+            "local_original_max": 6.105762695308106e-16,
+            "original_trace_rows": {
+              "euclidean_norm": 2.630356444567242e-15,
+              "action_scale": 1.5539643773718113,
+              "relative": 1.6926748662127706e-15
+            },
+            "full_uncondensed_relative_to_physical_rhs": {
+              "euclidean_norm": 3.2909424088870815e-15,
+              "action_scale": 2.4952431578018777,
+              "relative": 1.318886457456978e-15
+            },
+            "free_condensed_rows": {
+              "euclidean_norm": 2.666183269834825e-15,
+              "action_scale": 4.713153542507911,
+              "relative": 5.656898816871824e-16
+            },
+            "scope": "Original A*u+B*lambda=f and C.T*u=g; free reduced rows separately"
+          },
+          "elapsed_seconds": 1.7833225950598717,
+          "observed_rates": {
+            "pressure_l2": 3.17099342492658,
+            "flux_l2": 2.0340994150973564,
+            "divergence_l2": 2.9920500975273026
+          }
+        }
+      ],
+      "owned_elapsed_seconds": 4.2377045676112175,
+      "owned_peak_rss_bytes": 130834432
+    },
+    {
+      "case": "tensor-rt",
+      "variant": "1-2",
+      "acquisition_uuid": "a551f1ef-3274-4602-a4ab-4b0ffbd2e6c8",
+      "producer_source_sha256": {
+        "examples/minimal_scalar_convergence.py": "80ffc132fb6a59e0d9c8b2bd6ccada284fbb3f19549cc45cf936a7cc6596475c",
+        "examples/verify_tensor_rt.py": "8a039a276fc0c0db1d7124f2f06edb176d47b9b6cc2bf0cb876b5edb1fbcf70c",
+        "pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57",
+        "pixi.toml": "c6d1234f9f6715265cdb85aadfcda86df379f542f6c579ed79e48835bdc29870",
+        "pyproject.toml": "9fe172ddcb0fc2407c85c8140de8d263808d3a2e57db016aea3a012a475efbc9",
+        "src/pymhm/__init__.py": "a3273ccef37cce0b25b1e1cbf9faf150dfaaf715aafc6bd87e6d4809b431898c",
+        "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+        "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+        "src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+        "src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+        "src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+        "src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+        "src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+        "src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+        "src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+        "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+        "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+        "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+        "src/pymhm/darcy.py": "945eb63777daa94f02cd89f77ec6299cf1fe8722b3d98c027c70b7d318e097fc",
+        "src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+        "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+        "src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+        "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+        "src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+        "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+        "src/pymhm/darcy_transport.py": "3f9331d82dae0d16b30c53085981646942574a552601ec34631ba3b00eab5b7e",
+        "src/pymhm/darcy_velocity.py": "83c0dc577fe731a4316962b389ed286e711fcf9264836094188206d6eb276558",
+        "src/pymhm/distributed.py": "c6cf5f26bd9033a72328d18f5d099ab0d9b867f92a6babe472c2035ff1abd7ae",
+        "src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+        "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+        "src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+        "src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+        "src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+        "src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+        "src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+        "src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+        "src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+        "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+        "src/pymhm/elastodynamics.py": "21d7d7327f85b61399e2166f4babdd0098d220031a3cc0f507014655fd539f6c",
+        "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+        "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+        "src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+        "src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+        "src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+        "src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+        "src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+        "src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+        "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+        "src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+        "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+        "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+        "src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+        "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+        "src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+        "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+        "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+        "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+        "src/pymhm/helmholtz.py": "603a3e5eccf84830f8819657d97d3f7f22d856f97f21482e992f3a64fb67c1b4",
+        "src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+        "src/pymhm/helmholtz_spaces.py": "a0805d5ea9a95636062df0917dba98cfad8bc7ec298eba55c5fc1e6320a44bfb",
+        "src/pymhm/hybrid.py": "e4ca37cd8fa05dcb505d2cc7d36c975bbd25ac9ee01564bc86dd70d1d042dbb3",
+        "src/pymhm/hybrid_refinement.py": "b3ac92f5403b0fbc9a509e04626b7981cbd9767654ea149a894f1c82b74ecc16",
+        "src/pymhm/lagrange.py": "db5552571ee459630678dad97a887d4c49d1a2eb700cd2847b3f0a5f4ee8a2b7",
+        "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+        "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+        "src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+        "src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+        "src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+        "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+        "src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+        "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+        "src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+        "src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+        "src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+        "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+        "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+        "src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+        "src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+        "src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+        "src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+        "src/pymhm/mshho.py": "557b02892d7b93d2560deff999ef543bc7b95e762024139b6c8968d6b4ede0ee",
+        "src/pymhm/mshho3d.py": "522668e3fa23cd7661c958151caacdcc9e9a0e013c6f44e2974f5745dd3a4089",
+        "src/pymhm/nested.py": "4414c4fba66266017d97b5a75eda9a24ad90393647bd75d1245b5f4f93bc0049",
+        "src/pymhm/offline.py": "7b40681863239cf07f5df220ad893f044d26314c9a5bb8563fff587ef3df4932",
+        "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+        "src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+        "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+        "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+        "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+        "src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+        "src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+        "src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+        "src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+        "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+        "src/pymhm/rad.py": "d1f3d5c948bcc9370333050e8dfc1b15d5372ef745d51f04d8f700065d40c1e7",
+        "src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+        "src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+        "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+        "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+        "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+        "src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+        "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+        "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+        "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+        "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+        "src/pymhm/scalar_boundary.py": "5c2d4970ef3e032f93caee5f9b36ce36f535f65a924ef1e666f0e4aa5f4b69b3",
+        "src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+        "src/pymhm/scalar_transient.py": "c68b44eec515d94c114ba555e09d01705754ce2a2dda5199c753dc6b8f7f0ef5",
+        "src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+        "src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+        "src/pymhm/solvers.py": "2d360c2f7d71d8c04caa1966125291849b45daa5a886f5030772981e1cdaa751",
+        "src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+        "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+        "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+        "src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+        "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+        "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+        "src/pymhm/triangle_fields.py": "60e456d358ec5615d98375d6588e6ac88de972304d2fd3ac505f1ca998f67f4c",
+        "src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+        "src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+        "src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+        "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94"
+      },
+      "conventions": {
+        "problem": "analytical cosine pressure, K=I, exact weak Dirichlet",
+        "spaces": "tensor RT face degree 1, interior degree 3; DG Q3",
+        "local_refinement": 2,
+        "assembly_order": 10,
+        "multiplier": "physical globally oriented Darcy normal flux",
+        "literature_attribution": "Duran et al. (2019), analytical tensor RT family"
+      },
+      "norm_orders": [
+        12,
+        14
+      ],
+      "rows": [
+        {
+          "level": 2,
+          "norms": {
+            "pressure_l2": 0.006813329331967148,
+            "flux_l2": 0.23276348722016182,
+            "divergence_l2": 0.06577889213338341
+          },
+          "quadrature": {
+            "12": {
+              "pressure_l2": 0.006813329331967146,
+              "flux_l2": 0.23276348722016196,
+              "divergence_l2": 0.06577889213338635
+            },
+            "14": {
+              "pressure_l2": 0.006813329331967148,
+              "flux_l2": 0.23276348722016182,
+              "divergence_l2": 0.06577889213338341
+            }
+          },
+          "quadrature_relative_change": 4.4726977299812656e-14,
+          "original_equations": {
+            "local_original_rows": [
+              {
+                "euclidean_norm": 1.2796833986372837e-15,
+                "action_scale": 4.306375597047138,
+                "relative": 2.971601918594274e-16
+              },
+              {
+                "euclidean_norm": 1.4818816623466005e-15,
+                "action_scale": 4.306375597047138,
+                "relative": 3.4411342646533665e-16
+              },
+              {
+                "euclidean_norm": 1.0938750669440884e-15,
+                "action_scale": 4.306375597047139,
+                "relative": 2.540129262515219e-16
+              },
+              {
+                "euclidean_norm": 1.5521393784632374e-15,
+                "action_scale": 4.306375597047139,
+                "relative": 3.604282402880817e-16
+              }
+            ],
+            "local_original_max": 3.604282402880817e-16,
+            "original_trace_rows": {
+              "euclidean_norm": 1.1868877989285167e-16,
+              "action_scale": 1.4039469454966766,
+              "relative": 8.453936259739711e-17
+            },
+            "full_uncondensed_relative_to_physical_rhs": {
+              "euclidean_norm": 2.730082269946755e-15,
+              "action_scale": 8.631801330251411,
+              "relative": 3.162818704340173e-16
+            },
+            "free_condensed_rows": {
+              "euclidean_norm": 2.661686620124981e-22,
+              "action_scale": 1.4039472481971276,
+              "relative": 1.8958594231677676e-22
+            },
+            "scope": "Original A*u+B*lambda=f and C.T*u=g; free reduced rows separately"
+          },
+          "elapsed_seconds": 0.6573476567864418
+        },
+        {
+          "level": 4,
+          "norms": {
+            "pressure_l2": 0.006754089413344098,
+            "flux_l2": 0.2290187605881225,
+            "divergence_l2": 0.004188870222847435
+          },
+          "quadrature": {
+            "12": {
+              "pressure_l2": 0.006754089413344108,
+              "flux_l2": 0.22901876058812265,
+              "divergence_l2": 0.004188870222849401
+            },
+            "14": {
+              "pressure_l2": 0.006754089413344098,
+              "flux_l2": 0.2290187605881225,
+              "divergence_l2": 0.004188870222847435
+            }
+          },
+          "quadrature_relative_change": 4.694127426757778e-13,
+          "original_equations": {
+            "local_original_rows": [
+              {
+                "euclidean_norm": 5.393378832661311e-16,
+                "action_scale": 1.6306804829857382,
+                "relative": 3.307440598532313e-16
+              },
+              {
+                "euclidean_norm": 6.269235947511323e-16,
+                "action_scale": 1.624104234195294,
+                "relative": 3.860119206337507e-16
+              },
+              {
+                "euclidean_norm": 4.891125807485775e-16,
+                "action_scale": 1.6241042341952963,
+                "relative": 3.0115836807169016e-16
+              },
+              {
+                "euclidean_norm": 6.765663992425886e-16,
+                "action_scale": 1.6306804829857386,
+                "relative": 4.148982012735021e-16
+              },
+              {
+                "euclidean_norm": 6.234217030555275e-16,
+                "action_scale": 1.6241042341952958,
+                "relative": 3.838557217754055e-16
+              },
+              {
+                "euclidean_norm": 4.963546550244718e-16,
+                "action_scale": 1.6174567163368765,
+                "relative": 3.068735317681869e-16
+              },
+              {
+                "euclidean_norm": 4.376139351380044e-16,
+                "action_scale": 1.6174567163368774,
+                "relative": 2.7055681349488424e-16
+              },
+              {
+                "euclidean_norm": 4.586213413768584e-16,
+                "action_scale": 1.624104234195295,
+                "relative": 2.8238417936524524e-16
+              },
+              {
+                "euclidean_norm": 6.278834710989808e-16,
+                "action_scale": 1.6241042341952945,
+                "relative": 3.8660293956445616e-16
+              },
+              {
+                "euclidean_norm": 6.168382520795654e-16,
+                "action_scale": 1.617456716336877,
+                "relative": 3.813630657619978e-16
+              },
+              {
+                "euclidean_norm": 5.797007956371315e-16,
+                "action_scale": 1.6174567163368776,
+                "relative": 3.584026637510303e-16
+              },
+              {
+                "euclidean_norm": 6.480753561209379e-16,
+                "action_scale": 1.6241042341952956,
+                "relative": 3.990355683310213e-16
+              },
+              {
+                "euclidean_norm": 4.307156265817167e-16,
+                "action_scale": 1.630680482985738,
+                "relative": 2.6413244720577413e-16
+              },
+              {
+                "euclidean_norm": 4.478696835569937e-16,
+                "action_scale": 1.6241042341952958,
+                "relative": 2.757641253111456e-16
+              },
+              {
+                "euclidean_norm": 4.233083874079718e-16,
+                "action_scale": 1.6241042341952956,
+                "relative": 2.606411451280471e-16
+              },
+              {
+                "euclidean_norm": 5.656917496592225e-16,
+                "action_scale": 1.6306804829857384,
+                "relative": 3.469053291319547e-16
+              }
+            ],
+            "local_original_max": 4.148982012735021e-16,
+            "original_trace_rows": {
+              "euclidean_norm": 1.2813738470588438e-15,
+              "action_scale": 1.6141955907508787,
+              "relative": 7.938157274130481e-16
+            },
+            "full_uncondensed_relative_to_physical_rhs": {
+              "euclidean_norm": 2.544750451150784e-15,
+              "action_scale": 4.8142355688021805,
+              "relative": 5.285886855312189e-16
+            },
+            "free_condensed_rows": {
+              "euclidean_norm": 1.5173465783596733e-15,
+              "action_scale": 8.048509914976801,
+              "relative": 1.8852515489061764e-16
+            },
+            "scope": "Original A*u+B*lambda=f and C.T*u=g; free reduced rows separately"
+          },
+          "elapsed_seconds": 0.7891686707735062,
+          "observed_rates": {
+            "pressure_l2": 0.012598664721523453,
+            "flux_l2": 0.023398980778029103,
+            "divergence_l2": 3.972991616835193
+          }
+        },
+        {
+          "level": 8,
+          "norms": {
+            "pressure_l2": 0.000748733395192157,
+            "flux_l2": 0.05587020354378897,
+            "divergence_l2": 0.0002630311529116645
+          },
+          "quadrature": {
+            "12": {
+              "pressure_l2": 0.000748733395192154,
+              "flux_l2": 0.05587020354378906,
+              "divergence_l2": 0.00026303115291094416
+            },
+            "14": {
+              "pressure_l2": 0.000748733395192157,
+              "flux_l2": 0.05587020354378897,
+              "divergence_l2": 0.0002630311529116645
+            }
+          },
+          "quadrature_relative_change": 2.738625883000585e-12,
+          "original_equations": {
+            "local_original_rows": [
+              {
+                "euclidean_norm": 3.7730052491379677e-16,
+                "action_scale": 0.7126112176217757,
+                "relative": 5.294619500559871e-16
+              },
+              {
+                "euclidean_norm": 1.4327435121333844e-16,
+                "action_scale": 0.679785991438341,
+                "relative": 2.1076390660859027e-16
+              },
+              {
+                "euclidean_norm": 2.444781976433997e-16,
+                "action_scale": 0.6797197463727983,
+                "relative": 3.5967499686159397e-16
+              },
+              {
+                "euclidean_norm": 3.549983640607619e-16,
+                "action_scale": 0.7118942068495272,
+                "relative": 4.986673028732734e-16
+              },
+              {
+                "euclidean_norm": 2.5066822299895744e-16,
+                "action_scale": 0.711894206849528,
+                "relative": 3.5211443018799675e-16
+              },
+              {
+                "euclidean_norm": 1.7683609268254773e-16,
+                "action_scale": 0.6797197463727981,
+                "relative": 2.6016029933836946e-16
+              },
+              {
+                "euclidean_norm": 2.0912166794935453e-16,
+                "action_scale": 0.6797859914383414,
+                "relative": 3.076286810601664e-16
+              },
+              {
+                "euclidean_norm": 3.191072536369739e-16,
+                "action_scale": 0.7126112176217764,
+                "relative": 4.477999303771028e-16
+              },
+              {
+                "euclidean_norm": 3.433285612741709e-16,
+                "action_scale": 0.6797859914383407,
+                "relative": 5.050538928402031e-16
+              },
+              {
+                "euclidean_norm": 1.498197351187035e-16,
+                "action_scale": 0.4167512733757173,
+                "relative": 3.594943667601832e-16
+              },
+              {
+                "euclidean_norm": 2.278488515422731e-16,
+                "action_scale": 0.41665421839068917,
+                "relative": 5.468535814237775e-16
+              },
+              {
+                "euclidean_norm": 4.0369993970767215e-16,
+                "action_scale": 0.6776564497424115,
+                "relative": 5.957295025541707e-16
+              },
+              {
+                "euclidean_norm": 3.240742986359445e-16,
+                "action_scale": 0.6776564497424142,
+                "relative": 4.782280147398128e-16
+              },
+              {
+                "euclidean_norm": 1.3292411727545572e-16,
+                "action_scale": 0.41665421839068945,
+                "relative": 3.1902741268015936e-16
+              },
+              {
+                "euclidean_norm": 2.4881527132378993e-16,
+                "action_scale": 0.41675127337571666,
+                "relative": 5.97035419492225e-16
+              },
+              {
+                "euclidean_norm": 4.3117165425799877e-16,
+                "action_scale": 0.6797859914383412,
+                "relative": 6.342755803862537e-16
+              },
+              {
+                "euclidean_norm": 3.4496092144026706e-16,
+                "action_scale": 0.6797197463727978,
+                "relative": 5.075046344925081e-16
+              },
+              {
+                "euclidean_norm": 1.7853771247783338e-16,
+                "action_scale": 0.41665421839068933,
+                "relative": 4.2850331185275965e-16
+              },
+              {
+                "euclidean_norm": 1.953701299195746e-16,
+                "action_scale": 0.4165589281089654,
+                "relative": 4.690095848058952e-16
+              },
+              {
+                "euclidean_norm": 3.4962279566940507e-16,
+                "action_scale": 0.6775897256312052,
+                "relative": 5.159800723715457e-16
+              },
+              {
+                "euclidean_norm": 3.714446070495916e-16,
+                "action_scale": 0.6775897256312071,
+                "relative": 5.481851229423134e-16
+              },
+              {
+                "euclidean_norm": 1.7709129032344167e-16,
+                "action_scale": 0.4165589281089663,
+                "relative": 4.2512902346703983e-16
+              },
+              {
+                "euclidean_norm": 1.920619645896952e-16,
+                "action_scale": 0.41665421839068933,
+                "relative": 4.609624866670667e-16
+              },
+              {
+                "euclidean_norm": 3.4225957784187633e-16,
+                "action_scale": 0.6797197463727982,
+                "relative": 5.035304324587932e-16
+              },
+              {
+                "euclidean_norm": 2.652065856435004e-16,
+                "action_scale": 0.711894206849527,
+                "relative": 3.7253651327936304e-16
+              },
+              {
+                "euclidean_norm": 2.0282669280358478e-16,
+                "action_scale": 0.677656449742413,
+                "relative": 2.993060759337303e-16
+              },
+              {
+                "euclidean_norm": 1.7778298381697482e-16,
+                "action_scale": 0.6775897256312067,
+                "relative": 2.623755601538403e-16
+              },
+              {
+                "euclidean_norm": 2.577081016161257e-16,
+                "action_scale": 0.711173910311616,
+                "relative": 3.623700165030033e-16
+              },
+              {
+                "euclidean_norm": 2.674270577760842e-16,
+                "action_scale": 0.7111739103116173,
+                "relative": 3.7603609173304015e-16
+              },
+              {
+                "euclidean_norm": 1.9610160465157782e-16,
+                "action_scale": 0.6775897256312073,
+                "relative": 2.8941053447777675e-16
+              },
+              {
+                "euclidean_norm": 2.537273519453294e-16,
+                "action_scale": 0.6776564497424126,
+                "relative": 3.74418854925346e-16
+              },
+              {
+                "euclidean_norm": 2.369234696267266e-16,
+                "action_scale": 0.7118942068495273,
+                "relative": 3.3280713250249127e-16
+              },
+              {
+                "euclidean_norm": 2.738751085593393e-16,
+                "action_scale": 0.7118942068495275,
+                "relative": 3.847132143009952e-16
+              },
+              {
+                "euclidean_norm": 1.9699061131386767e-16,
+                "action_scale": 0.6776564497424133,
+                "relative": 2.9069392225034754e-16
+              },
+              {
+                "euclidean_norm": 1.6663986528774834e-16,
+                "action_scale": 0.6775897256312067,
+                "relative": 2.459303306768937e-16
+              },
+              {
+                "euclidean_norm": 3.425304446912174e-16,
+                "action_scale": 0.7111739103116166,
+                "relative": 4.816409034762398e-16
+              },
+              {
+                "euclidean_norm": 2.565948899482601e-16,
+                "action_scale": 0.7111739103116163,
+                "relative": 3.6080470083024766e-16
+              },
+              {
+                "euclidean_norm": 1.9825239760277086e-16,
+                "action_scale": 0.6775897256312058,
+                "relative": 2.9258471624269347e-16
+              },
+              {
+                "euclidean_norm": 3.0329983582296553e-16,
+                "action_scale": 0.6776564497424126,
+                "relative": 4.475716802197549e-16
+              },
+              {
+                "euclidean_norm": 3.453678432499664e-16,
+                "action_scale": 0.7118942068495272,
+                "relative": 4.851392804253662e-16
+              },
+              {
+                "euclidean_norm": 3.5826297492747803e-16,
+                "action_scale": 0.6797197463727992,
+                "relative": 5.270745433530263e-16
+              },
+              {
+                "euclidean_norm": 1.5302002385430705e-16,
+                "action_scale": 0.4166542183906888,
+                "relative": 3.6725902943054587e-16
+              },
+              {
+                "euclidean_norm": 2.313760213997414e-16,
+                "action_scale": 0.4165589281089639,
+                "relative": 5.554460744608451e-16
+              },
+              {
+                "euclidean_norm": 4.3852499412331675e-16,
+                "action_scale": 0.677589725631208,
+                "relative": 6.471836533749228e-16
+              },
+              {
+                "euclidean_norm": 3.3239129331001158e-16,
+                "action_scale": 0.6775897256312071,
+                "relative": 4.905494884834229e-16
+              },
+              {
+                "euclidean_norm": 1.6364263051634622e-16,
+                "action_scale": 0.41655892810896344,
+                "relative": 3.9284389188158416e-16
+              },
+              {
+                "euclidean_norm": 2.435347855689484e-16,
+                "action_scale": 0.4166542183906876,
+                "relative": 5.845009478353369e-16
+              },
+              {
+                "euclidean_norm": 3.6932928790247876e-16,
+                "action_scale": 0.6797197463727976,
+                "relative": 5.433552429120063e-16
+              },
+              {
+                "euclidean_norm": 3.971413040563937e-16,
+                "action_scale": 0.6797859914383418,
+                "relative": 5.842151928080962e-16
+              },
+              {
+                "euclidean_norm": 1.698861360432989e-16,
+                "action_scale": 0.41675127337571755,
+                "relative": 4.076439519121515e-16
+              },
+              {
+                "euclidean_norm": 1.8712870969891768e-16,
+                "action_scale": 0.41665421839068845,
+                "relative": 4.491223211940477e-16
+              },
+              {
+                "euclidean_norm": 3.3381733393544715e-16,
+                "action_scale": 0.6776564497424135,
+                "relative": 4.926055585574899e-16
+              },
+              {
+                "euclidean_norm": 3.458492685514736e-16,
+                "action_scale": 0.6776564497424137,
+                "relative": 5.10360771572285e-16
+              },
+              {
+                "euclidean_norm": 1.6336188161995507e-16,
+                "action_scale": 0.41665421839068867,
+                "relative": 3.9208022962286144e-16
+              },
+              {
+                "euclidean_norm": 1.8387861555136404e-16,
+                "action_scale": 0.41675127337571705,
+                "relative": 4.412190850958493e-16
+              },
+              {
+                "euclidean_norm": 3.4382945068696464e-16,
+                "action_scale": 0.6797859914383406,
+                "relative": 5.057907268131038e-16
+              },
+              {
+                "euclidean_norm": 2.148060330910526e-16,
+                "action_scale": 0.7126112176217761,
+                "relative": 3.014350992227329e-16
+              },
+              {
+                "euclidean_norm": 2.684660045828723e-16,
+                "action_scale": 0.6797859914383403,
+                "relative": 3.9492723881354565e-16
+              },
+              {
+                "euclidean_norm": 2.0309662670541936e-16,
+                "action_scale": 0.6797197463727969,
+                "relative": 2.987946543986816e-16
+              },
+              {
+                "euclidean_norm": 2.941695231802992e-16,
+                "action_scale": 0.7118942068495269,
+                "relative": 4.132208414535923e-16
+              },
+              {
+                "euclidean_norm": 2.998691250841313e-16,
+                "action_scale": 0.7118942068495263,
+                "relative": 4.2122708992280777e-16
+              },
+              {
+                "euclidean_norm": 2.150306501226201e-16,
+                "action_scale": 0.6797197463727962,
+                "relative": 3.163519248485762e-16
+              },
+              {
+                "euclidean_norm": 2.2711440996620964e-16,
+                "action_scale": 0.679785991438341,
+                "relative": 3.3409692583641557e-16
+              },
+              {
+                "euclidean_norm": 2.5206425783221144e-16,
+                "action_scale": 0.7126112176217761,
+                "relative": 3.537191831942175e-16
+              }
+            ],
+            "local_original_max": 6.471836533749228e-16,
+            "original_trace_rows": {
+              "euclidean_norm": 1.6043539104248322e-15,
+              "action_scale": 1.5539631015990467,
+              "relative": 1.032427287864128e-15
+            },
+            "full_uncondensed_relative_to_physical_rhs": {
+              "euclidean_norm": 2.719775462118697e-15,
+              "action_scale": 2.4952431703213827,
+              "relative": 1.0899841323955592e-15
+            },
+            "free_condensed_rows": {
+              "euclidean_norm": 1.6503539916168512e-15,
+              "action_scale": 4.713153544325291,
+              "relative": 3.5015918240217376e-16
+            },
+            "scope": "Original A*u+B*lambda=f and C.T*u=g; free reduced rows separately"
+          },
+          "elapsed_seconds": 2.738339366391301,
+          "observed_rates": {
+            "pressure_l2": 3.173237270010279,
+            "flux_l2": 2.0353148034048094,
+            "divergence_l2": 3.993255603335661
+          }
+        }
+      ],
+      "owned_elapsed_seconds": 5.1347075421363115,
+      "owned_peak_rss_bytes": 136376320
+    }
+  ],
+  "inputs": [
+    {
+      "path": "build/results/minimal-studies/scalar-tensor-rt-1-0-v1/study.json",
+      "sha256": "91c28fc90ac8ef6e7b582bac0e0ef1cf5dd3fd34d7f275e9840707d14b73a6fc",
+      "resource": "build/reports/completion/minimal-scalar-tensor-rt-1-0-v1-resource.json",
+      "resource_sha256": "d1d0cb0d7dcc8da1b4469fb9a31b470280345b75e994f85b868c4af53688e6a0"
+    },
+    {
+      "path": "build/results/minimal-studies/scalar-tensor-rt-1-1-v1/study.json",
+      "sha256": "f2426ea628c21bc9aa6df6204ec6d4a43eba0b530b6f443bd084e617d797069d",
+      "resource": "build/reports/completion/minimal-scalar-tensor-rt-1-1-v1-resource.json",
+      "resource_sha256": "ecc5b7a2d9902473a2ff0deac70321e317ab1c6087f1d665a1b7a1c36d282e20"
+    },
+    {
+      "path": "build/results/minimal-studies/scalar-tensor-rt-1-2-v1/study.json",
+      "sha256": "ad0e8c957c8be84aea247cffb072bda675ab4f1b157543ffbab282927819a050",
+      "resource": "build/reports/completion/minimal-scalar-tensor-rt-1-2-v1-resource.json",
+      "resource_sha256": "90dd9b44b65517294ed7ac7afc621f2729ad7c380adcab10e5b8fa56480228ff"
+    }
+  ],
+  "panels": [
+    {
+      "title": "Darcy flux divergence L2 error",
+      "xlabel": "Declared macro resolution n",
+      "ylabel": "Darcy flux divergence L2 error",
+      "series": [
+        {
+          "label": "tensor-rt / 1-0",
+          "x": [
+            2,
+            4,
+            8
+          ],
+          "y": [
+            4.946160547851358,
+            1.272049081233573,
+            0.320160583033628
+          ]
+        },
+        {
+          "label": "tensor-rt / 1-1",
+          "x": [
+            2,
+            4,
+            8
+          ],
+          "y": [
+            0.6617820363624225,
+            0.08457141119193423,
+            0.010629840538215534
+          ]
+        },
+        {
+          "label": "tensor-rt / 1-2",
+          "x": [
+            2,
+            4,
+            8
+          ],
+          "y": [
+            0.06577889213338341,
+            0.004188870222847435,
+            0.0002630311529116645
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Darcy flux L2 error",
+      "xlabel": "Declared macro resolution n",
+      "ylabel": "Darcy flux L2 error",
+      "series": [
+        {
+          "label": "tensor-rt / 1-0",
+          "x": [
+            2,
+            4,
+            8
+          ],
+          "y": [
+            0.40544290843358294,
+            0.2471913106475304,
+            0.06083239380805377
+          ]
+        },
+        {
+          "label": "tensor-rt / 1-1",
+          "x": [
+            2,
+            4,
+            8
+          ],
+          "y": [
+            0.24322029644476412,
+            0.2299229787604159,
+            0.05613806502218444
+          ]
+        },
+        {
+          "label": "tensor-rt / 1-2",
+          "x": [
+            2,
+            4,
+            8
+          ],
+          "y": [
+            0.23276348722016182,
+            0.2290187605881225,
+            0.05587020354378897
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Pressure L2 error",
+      "xlabel": "Declared macro resolution n",
+      "ylabel": "Pressure L2 error",
+      "series": [
+        {
+          "label": "tensor-rt / 1-0",
+          "x": [
+            2,
+            4,
+            8
+          ],
+          "y": [
+            0.06278814518032211,
+            0.017328435697044946,
+            0.004116451839585839
+          ]
+        },
+        {
+          "label": "tensor-rt / 1-1",
+          "x": [
+            2,
+            4,
+            8
+          ],
+          "y": [
+            0.010738584163646092,
+            0.0068003742163174,
+            0.0007550377661580618
+          ]
+        },
+        {
+          "label": "tensor-rt / 1-2",
+          "x": [
+            2,
+            4,
+            8
+          ],
+          "y": [
+            0.006813329331967148,
+            0.006754089413344098,
+            0.000748733395192157
+          ]
+        }
+      ]
+    }
+  ],
+  "consumer_sha256": "9c550d657c1ad7c63fe45ac303fbfa009fd333bf7c1856426055d4e20a75c883",
+  "pde_solves_during_collection": 0,
+  "coefficient_vectors_persisted": false,
+  "historical_literature_reproduction": false,
+  "uniform_stability_claimed": false,
+  "limitations": "Initial observations on explicitly constructed meshes; three levels do not establish asymptotic rates, uniform stability or a matched historical reproduction. Raw gradients and H(div) Darcy fluxes retain their distinct conventions.",
+  "norm_convention": "Separate physical field errors and original Euclidean coefficient rows"
+}

@@ -58,7 +58,10 @@
       1500,
       890
     ],
-    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified."
+    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified.",
+    "image_sha256": "63ec98a38ce9a1a66438928bdf5e6fb6e0862bae2d7dc8314ce7400c58f2932f",
+    "source_pdf_sha256": "9473480617f42e94e31d0906303eed4a1ab5ac7bfbb686cde76ae91706eeabab",
+    "primary_url": "https://doi.org/10.1016/j.cam.2023.115415"
   },
   {
     "article": "L07",
@@ -73,7 +76,20 @@
       1500,
       860
     ],
-    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified."
+    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified.",
+    "image_sha256": "0b5c2a2947f5cb7ba447ca41d8ff835003cc1ebd954f38148e66cac76e386713",
+    "source_pdf_sha256": "9473480617f42e94e31d0906303eed4a1ab5ac7bfbb686cde76ae91706eeabab",
+    "primary_url": "https://doi.org/10.1016/j.cam.2023.115415",
+    "width_pixels": 1500,
+    "height_pixels": 860,
+    "rendering_dpi": 213.28249023465114,
+    "acquisition_manifest": "../primary-raster-extractions.json",
+    "crop_pdf_points_xyxy": [
+      21.942729545454544,
+      351.0836727272727,
+      528.3134113636363,
+      641.4028636363636
+    ]
   },
   {
     "article": "L07",
@@ -84,11 +100,24 @@
     "file": "l07-figure-7-8.png",
     "crop_pixels_at_2200_long_edge": [
       65,
-      110,
+      145,
       1500,
-      1450
+      1415
     ],
-    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified."
+    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified.",
+    "image_sha256": "117b832d61edb0aa40b11340212497665aaa4c183b284b5f1bc859f5f2f77258",
+    "source_pdf_sha256": "9473480617f42e94e31d0906303eed4a1ab5ac7bfbb686cde76ae91706eeabab",
+    "primary_url": "https://doi.org/10.1016/j.cam.2023.115415",
+    "width_pixels": 1500,
+    "height_pixels": 1415,
+    "rendering_dpi": 213.28249023465114,
+    "acquisition_manifest": "../primary-raster-extractions.json",
+    "crop_pdf_points_xyxy": [
+      21.942729545454544,
+      48.94916590909091,
+      528.3134113636363,
+      526.6255090909091
+    ]
   },
   {
     "article": "L09",
@@ -99,13 +128,19 @@
     "file": "l09-figure-6.png",
     "rendering": "Direct PDF crop containing Figure 6 and its caption. Field values, colors and labels are unchanged; no interpolation of scientific values or image retouching.",
     "crop_pdf_points_xyxy": [
-      70.0,
-      338.0,
-      444.0,
-      514.0
+      69.84,
+      337.86,
+      444.06,
+      514.08
     ],
     "rendering_dpi": 400,
-    "source_manifest": "l09-figure-6-source.json"
+    "source_manifest": "l09-figure-6-source.json",
+    "image_sha256": "1feb2612953110ce9d9586ad2c5a9f4c6bd3b7994032d8e3621624ae4ede8fbd",
+    "source_pdf_sha256": "b7beee7f1f6ed73bad343813eba19addaab683f3f417ddff4564cf3826fea5dc",
+    "primary_url": "https://doi.org/10.1137/24M1673073",
+    "width_pixels": 2079,
+    "height_pixels": 979,
+    "acquisition_manifest": "../primary-raster-extractions.json"
   },
   {
     "article": "L13",
@@ -115,12 +150,15 @@
     "figure": "18",
     "file": "l13-figure-18.png",
     "crop_pixels_at_2200_long_edge": [
-      65,
+      0,
       1030,
-      1500,
+      1613,
       690
     ],
-    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified."
+    "rendering": "Direct PDF clip using pdftoppm; figure values, labels and colors unmodified.",
+    "image_sha256": "02389b551e01fe045835bd8f0420304a1f85ea86744f7456085a228225c83d04",
+    "source_pdf_sha256": "f6cf5335d3dfa51584dbf22ce829ae2c41d9700e15667839acc5273fe0da6618",
+    "primary_url": "https://doi.org/10.1016/j.cma.2017.05.027"
   },
   {
     "article": "L13",

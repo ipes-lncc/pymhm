@@ -15,12 +15,47 @@ from typing import Any
 
 DEFAULT_MAX_BYTES = 3 * 1024**3
 PLACEHOLDER_HEADER = b"version https://git-lfs.github.com/spec/v1\n"
+IMAGE_MANIFEST = Path(__file__).with_name("notebook_images.json")
 
 
-def required_archives(root: Path) -> dict[str, set[Path]]:
-    """Return notebook identifiers and actual field-byte dependencies from their JSON selectors."""
+def required_images(root: Path, notebooks: set[str] | None = None) -> dict[str, set[Path]]:
+    """Return existing notebook image contracts before any notebook is executed.
+
+    Paths are external inputs displayed through ``Image``/``SVG``, excluding
+    images produced earlier in that notebook. Adaptive mesh pages follow the
+    selected campaign's number of records. Selection precedes campaign reads.
+    """
+    catalog = json.loads(IMAGE_MANIFEST.read_text(encoding="utf-8"))["notebooks"]
+    result = {
+        notebook: {root / name for name in names}
+        for notebook, names in catalog.items()
+        if notebooks is None or notebook in notebooks
+    }
+    if notebooks is None or "40" in notebooks:
+        rows = json.loads(
+            (root / "examples/results/spe10-adaptive/published/adaptive.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        for page in range((len(rows) + 3) // 4):
+            name = "meshes" if page == 0 else f"meshes-{page + 1}"
+            result.setdefault("40", set()).add(root / f"docs/figures/spe10-adaptive/{name}.png")
+    return result
+
+
+def required_archives(root: Path, notebooks: set[str] | None = None) -> dict[str, set[Path]]:
+    """Return field dependencies, reading manifests only for selected notebook IDs.
+
+    ``None`` selects every notebook; an empty set selects none. Missing selected
+    manifests still raise ``FileNotFoundError``. Field hashes remain checked by
+    the scientific notebooks when they consume the generated payloads.
+    """
     base = root / "examples/results"
     found: dict[str, set[Path]] = {}
+
+    def selected(notebook: str) -> bool:
+        """Select a family before reading any of its scientific records."""
+        return notebooks is None or notebook in notebooks
 
     def read(path: Path) -> Any:
         """Read a versioned scientific record without opening its field arrays."""
@@ -38,103 +73,138 @@ def required_archives(root: Path) -> dict[str, set[Path]]:
             if key in row:
                 add(notebook, folder / row[key])
 
-    rows("14", base / "neopz", read(base / "neopz/comparison.json")["rows"])
-    rows("15", base, read(base / "elasticity-reference.json")["rows"])
-    report = read(base / "native-extensions/report.json")
-    for name in ("darcy", "flow", "rad", "layer", "heat"):
-        for row in report[name]:
-            if "fields" in row:
-                add("19", base / "native-extensions" / row["fields"]["file"])
-    add("21", base / "spe10/layer-36.npz")
-    folder = base / "quarter-five-spot/reference"
-    report = read(folder / "classical-convergence.json")
-    rows("22", folder, read(folder / "comparison.json")["cases"], "fields")
-    rows("22", folder, report["levels"] + report["mhm_trace_enrichment"], "fields")
-    folder = base / "spe10"
-    for path in folder.glob("darcy-q1-r*-s32.json"):
-        row = read(path)
-        if row["coefficient_pixels_aligned"]:
-            add("23", folder / row["archive"])
-    add("23", folder / read(folder / "reference-q3-768x1408-order5.json")["archive"])
-    report = read(folder / "darcy-flux-comparison.json")
-    rows("23", folder, [report["mhm"], *report["references"].values()])
-    add(
-        "23",
-        folder / read(folder / "flow-layer1-n6x11-p3-r10-s10-q5-pointwise-2017.json")["archive"],
-    )
-    th = sorted(
-        [read(path) for path in folder.glob("taylor-hood-[0-9]*x[0-9]*.json")],
-        key=lambda row: row["unknowns"],
-    )
-    rows("23", folder, th)
-    add("23", folder / "layer-1.npz")
-    nx, ny = th[-1]["mesh_shape"]
-    add("23", folder / read(folder / f"taylor-hood-mhm-{nx}x{ny}.json")["mhm"])
+    if selected("14"):
+        rows("14", base / "neopz", read(base / "neopz/comparison.json")["rows"])
+    if selected("15"):
+        rows("15", base, read(base / "elasticity-reference.json")["rows"])
+    if selected("19"):
+        report = read(base / "native-extensions/report.json")
+        for name in ("darcy", "flow", "rad", "layer", "heat"):
+            for row in report[name]:
+                if "fields" in row:
+                    add("19", base / "native-extensions" / row["fields"]["file"])
+    if selected("21"):
+        add("21", base / "spe10/layer-36.npz")
+    if selected("22"):
+        folder = base / "quarter-five-spot/reference"
+        report = read(folder / "classical-convergence.json")
+        rows("22", folder, read(folder / "comparison.json")["cases"], "fields")
+        rows("22", folder, report["levels"] + report["mhm_trace_enrichment"], "fields")
+        point = base / "quarter-five-spot"
+        rows("22", point, read(point / "point-wells.json")["rows"], "field_archive")
+        rows("22", point, read(point / "point-convergence.json")["rows"])
+    if selected("23"):
+        folder = base / "spe10"
+        for path in folder.glob("darcy-q1-r*-s32.json"):
+            row = read(path)
+            if row["coefficient_pixels_aligned"]:
+                add("23", folder / row["archive"])
+        add("23", folder / read(folder / "reference-q3-768x1408-order5.json")["archive"])
+        report = read(folder / "darcy-flux-comparison.json")
+        rows("23", folder, [report["mhm"], *report["references"].values()])
+        add(
+            "23",
+            folder
+            / read(folder / "flow-layer1-n6x11-p3-r10-s10-q5-pointwise-2017.json")["archive"],
+        )
+        th = sorted(
+            [read(path) for path in folder.glob("taylor-hood-[0-9]*x[0-9]*.json")],
+            key=lambda row: row["unknowns"],
+        )
+        rows("23", folder, th)
+        add("23", folder / "layer-1.npz")
+        nx, ny = th[-1]["mesh_shape"]
+        add("23", folder / read(folder / f"taylor-hood-mhm-{nx}x{ny}.json")["mhm"])
     for notebook, name in [("33", "darcy-rt"), ("41", "rad3d")]:
-        add(notebook, base / read(base / f"{name}.json")["rows"][-1]["fields"])
-    folder = base / "unfitted/convergence/msl-smooth"
-    rows("38", folder, read(folder / "comparison.json")["rows"])
-    folder = base / "unfitted/convergence"
-    for name in read(folder / "comparison.json")["acquisition_sha256"]:
-        rows("38", folder, read(folder / name)["cases"])
-    rows("38", folder, read(folder / "smooth-p8-r64-endpoints.json")["cases"])
-    folder = base / "mixed-well-geometries"
-    rows("51", folder, [read(path) for path in folder.glob("*-fine*-macro*.json")])
-    folder = base / "unusual"
-    for name in ("analytical", "resolution-control"):
-        rows("53", folder, read(folder / f"{name}.json")["rows"])
-    folder = base / "unusual-spe10"
-    add("53", folder / read(folder / "classical-cg2-graded-xy-1440x498.json")["archive"])
-    for path in folder.glob("mhm-unusual-*-comparison.json"):
-        row = read(path)
-        if len(row["rows"]) == 2:
-            add("53", folder / row["archive"])
+        if selected(notebook):
+            add(notebook, base / read(base / f"{name}.json")["rows"][-1]["fields"])
+    if selected("36"):
+        # The notebook replays only the explicitly selected one-sided field;
+        # numerical archive validation remains in the scientific reader.
+        add("36", base / read(base / "nested.json")["display_field"]["archive"])
+    if selected("38"):
+        folder = base / "unfitted/convergence/msl-smooth"
+        rows("38", folder, read(folder / "comparison.json")["rows"])
+        folder = base / "unfitted/convergence"
+        for name in read(folder / "comparison.json")["acquisition_sha256"]:
+            rows("38", folder, read(folder / name)["cases"])
+        rows("38", folder, read(folder / "smooth-p8-r64-endpoints.json")["cases"])
+    if selected("51"):
+        folder = base / "mixed-well-geometries"
+        rows("51", folder, [read(path) for path in folder.glob("*-fine*-macro*.json")])
+    if selected("53"):
+        folder = base / "unusual"
+        for name in ("analytical", "resolution-control"):
+            rows("53", folder, read(folder / f"{name}.json")["rows"])
+        folder = base / "unusual-spe10"
+        add("53", folder / read(folder / "classical-cg2-graded-xy-1440x498.json")["archive"])
+        for path in folder.glob("mhm-unusual-*-comparison.json"):
+            row = read(path)
+            if len(row["rows"]) == 2:
+                add("53", folder / row["archive"])
     for notebook, name in [("54", "flow3d"), ("55", "gals3d"), ("63", "planar3d")]:
-        folder = base / name
-        rows(notebook, folder, read(folder / "campaign.json")["rows"], "fields")
-    folder = base / "pgmhm-inclusions"
-    for path in [
-        *folder.glob("classical-cg2-*.json"),
-        *folder.glob("mhm-pgmhm-*-comparison.json"),
-        *(base / "pgmhm-spe10/kx").rglob("*-comparison.json"),
-    ]:
-        row = read(path)
-        for name in ("archive", "reference", "mhm"):
-            if name in row and name + "_sha256" in row:
-                add("59", record_archive(path, row[name]))
-    folder = base / "tetra-pk"
-    recovered = read(folder / "reconstruction-order.json")
-    rows(
-        "64",
-        folder,
-        read(folder / "uniform.json")["rows"] + read(folder / "fixed.json")["rows"] + [recovered],
-    )
-    add("64", folder / recovered["parent_archive"])
-    folder = base / "maxwell-nanoguide"
-    report = read(folder / "comparison.json")
-    controls = read(folder / "refinement-controls.json")
-    for row in [*report["comparisons"], *controls.values()]:
-        for name in ("field", "reference"):
-            add("66", folder / row[name]["file"])
-    folder = base / "star-polyhedra"
-    rows("67", folder, read(folder / "comparison.json")["rows"])
-    folder = base / "mixed-elasticity3d"
-    rows("68", folder, read(folder / "comparison.json")["convergence"])
-    folder = base / "mh2m-heterogeneous/crisscross"
-    rows("70", folder, read(folder / "comparison.json")["cases"])
-    folder = base / "mh2m-heterogeneous/cg3"
-    report = read(folder / "comparison.json")
-    rows(
-        "70",
-        folder,
-        report["reference_acquisitions"] + [report["assembly_quadrature_control"]["acquisition"]],
-    )
-    folder = base / "elastodynamics"
-    for name in read(folder / "comparison.json")["field_sha256"]:
-        add("71", folder / name)
-    folder = base / "marmousi"
-    rows("72", folder, read(folder / "classical-convergence.json")["references"], "sample_archive")
-    add("72", folder / read(folder / "mhm-H20-ell1.json")["archive"])
+        if selected(notebook):
+            folder = base / name
+            rows(notebook, folder, read(folder / "campaign.json")["rows"], "fields")
+    if selected("59"):
+        folder = base / "pgmhm-inclusions"
+        for path in [
+            *folder.glob("classical-cg2-*.json"),
+            *folder.glob("mhm-pgmhm-*-comparison.json"),
+            *(base / "pgmhm-spe10/kx").rglob("*-comparison.json"),
+        ]:
+            row = read(path)
+            for name in ("archive", "reference", "mhm"):
+                if name in row and name + "_sha256" in row:
+                    add("59", record_archive(path, row[name]))
+    if selected("64"):
+        folder = base / "tetra-pk"
+        recovered = read(folder / "reconstruction-order.json")
+        rows(
+            "64",
+            folder,
+            read(folder / "uniform.json")["rows"]
+            + read(folder / "fixed.json")["rows"]
+            + [recovered],
+        )
+        add("64", folder / recovered["parent_archive"])
+    if selected("66"):
+        folder = base / "maxwell-nanoguide"
+        report = read(folder / "comparison.json")
+        controls = read(folder / "refinement-controls.json")
+        for row in [*report["comparisons"], *controls.values()]:
+            for name in ("field", "reference"):
+                add("66", folder / row[name]["file"])
+    if selected("67"):
+        folder = base / "star-polyhedra"
+        rows("67", folder, read(folder / "comparison.json")["rows"])
+    if selected("68"):
+        folder = base / "mixed-elasticity3d"
+        rows("68", folder, read(folder / "comparison.json")["convergence"])
+    if selected("70"):
+        folder = base / "mh2m-heterogeneous/crisscross"
+        rows("70", folder, read(folder / "comparison.json")["cases"])
+        folder = base / "mh2m-heterogeneous/cg3"
+        report = read(folder / "comparison.json")
+        rows(
+            "70",
+            folder,
+            report["reference_acquisitions"]
+            + [report["assembly_quadrature_control"]["acquisition"]],
+        )
+    if selected("71"):
+        folder = base / "elastodynamics"
+        for name in read(folder / "comparison.json")["field_sha256"]:
+            add("71", folder / name)
+    if selected("72"):
+        folder = base / "marmousi"
+        rows(
+            "72",
+            folder,
+            read(folder / "classical-convergence.json")["references"],
+            "sample_archive",
+        )
+        add("72", folder / read(folder / "mhm-H20-ell1.json")["archive"])
     return found
 
 
@@ -156,7 +226,11 @@ def archive_size(path: Path) -> int:
     return path.stat().st_size
 
 
-def dependency_plan(root: Path, dependencies: dict[str, set[Path]]) -> dict[str, Any]:
+def dependency_plan(
+    root: Path,
+    dependencies: dict[str, set[Path]],
+    images: dict[str, set[Path]] | None = None,
+) -> dict[str, Any]:
     """List exact field paths and missing payloads before their calculation."""
     root = root.resolve()
     result: dict[str, Any] = {"notebooks": {}, "archives": {}, "payload_bytes": 0, "missing": []}
@@ -181,6 +255,28 @@ def dependency_plan(root: Path, dependencies: dict[str, set[Path]]) -> dict[str,
                     result["payload_bytes"] += size
         result["notebooks"][notebook] = names
     result["archive_count"] = len(result["archives"])
+    result.update(notebook_images={}, images={}, image_bytes=0, missing_images=[])
+    for notebook, paths in sorted((images or {}).items()):
+        names = []
+        for path in sorted(paths):
+            relative = path.resolve().relative_to(root).as_posix()
+            if (
+                not relative.startswith("docs/figures/")
+                or path.suffix.lower() not in {".png", ".jpg", ".jpeg", ".svg", ".pdf"}
+                or any(character in relative for character in ",*?[]\\\n\r")
+            ):
+                raise ValueError(f"Unsafe or unsupported notebook image path: {relative}")
+            names.append(relative)
+            if relative not in result["images"]:
+                available = path.is_file()
+                size = archive_size(path) if available else None
+                result["images"][relative] = {"bytes": size, "available": available}
+                if size is None:
+                    result["missing_images"].append(relative)
+                else:
+                    result["image_bytes"] += size
+        result["notebook_images"][notebook] = names
+    result["image_count"] = len(result["images"])
     return result
 
 
@@ -196,7 +292,15 @@ def validate_archives(root: Path, plan: dict[str, Any], maximum_bytes: int) -> N
             "Generate the corresponding public cases described in the documentation "
             "and CONTINUATION.md. No automatic result download is configured."
         )
-    total = sum(archive_size(root / name) for name in plan["archives"])
+    missing_images = [name for name in plan.get("images", {}) if not (root / name).is_file()]
+    if missing_images:
+        sample = ", ".join(missing_images[:5])
+        raise ValueError(
+            f"Missing {len(missing_images)} notebook image asset(s): {sample}. "
+            "Generate the current case figures or extract their attributed primary rasters "
+            "before executing the selected notebook."
+        )
+    total = sum(archive_size(root / name) for name in (*plan["archives"], *plan.get("images", {})))
     if total > maximum_bytes:
         raise ValueError(
             f"Notebook archives require {total:,} bytes, exceeding "
@@ -212,13 +316,14 @@ def main() -> None:
     parser.add_argument("--notebook", action="append", help="Select an ID, for example 23 or 47")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
-    dependencies = required_archives(root)
     if args.notebook:
         available = {path.name.split("_", 1)[0] for path in (root / "notebooks").glob("*.ipynb")}
         if set(args.notebook) - available:
             parser.error("Unknown notebook identifier")
-        dependencies = {key: value for key, value in dependencies.items() if key in args.notebook}
-    plan = dependency_plan(root, dependencies)
+    dependencies = required_archives(root, set(args.notebook) if args.notebook else None)
+    plan = dependency_plan(
+        root, dependencies, required_images(root, set(args.notebook) if args.notebook else None)
+    )
     print(json.dumps(plan, indent=2), flush=True)
     if args.check:
         try:

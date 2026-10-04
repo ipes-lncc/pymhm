@@ -1,0 +1,165 @@
+{
+  "schema": "pymhm-minimal-public-record-verification-v1",
+  "id": "darcy-mixedwell",
+  "published_scalar_record_sha256": "ad5280af9d19dd0e5d80b7d3e016119b43eba40ff05841f819bbcf07375efb26",
+  "original_scalar_record": {
+    "path": "build/results/minimal-studies/mixedwell-f1-f2-f4-v2/minimal-convergence.json",
+    "sha256": "ad5280af9d19dd0e5d80b7d3e016119b43eba40ff05841f819bbcf07375efb26"
+  },
+  "literal_record_copy": true,
+  "original_norm_verification": {
+    "schema": "pymhm-minimal-darcy-summary-v1",
+    "case": "mixedwell",
+    "acquisition_id": "8b32e1a7-8f04-49b0-8f1c-4a8c10957b2d",
+    "acquisition_complete": false,
+    "accepted_level_count": 2,
+    "requested_levels": [
+      1,
+      2,
+      4
+    ],
+    "acquisition_record": {
+      "path": "build/results/minimal-studies/mixedwell-f1-f2-f4-v2/minimal-convergence.json",
+      "sha256": "ad5280af9d19dd0e5d80b7d3e016119b43eba40ff05841f819bbcf07375efb26"
+    },
+    "resource_phases": [
+      {
+        "path": "build/reports/preliminary/minimal-darcy-v2/mixedwell-resource.json",
+        "sha256": "fab050e9db87597e04697b6099e7c1c2ec0a2ffd116e120f5b8d96e7d54c1e80",
+        "role": "interrupted after accepted levels"
+      }
+    ],
+    "executed_source_copies_verified": 127,
+    "elapsed_seconds": 60.27925837598741,
+    "elapsed_scope": "Sum of original sequential acquisition phases, including interrupted work",
+    "peak_owned_rss_bytes": 381206528,
+    "peak_scope": "Maximum of measured sequential owned-process phase peaks",
+    "native_threads": 1,
+    "workers": 1,
+    "physical_field_norms_separate": true,
+    "quadrature_checks": [
+      {
+        "level": 1,
+        "orders": [
+          7,
+          10
+        ],
+        "field_relative_changes": {
+          "pressure_l2": 2.3015195867494006e-06,
+          "flux_l2": 4.167744599016755e-07
+        }
+      },
+      {
+        "level": 2,
+        "orders": [
+          7,
+          10
+        ],
+        "field_relative_changes": {
+          "pressure_l2": 4.487914901340453e-08,
+          "flux_l2": 2.1640255188725144e-08
+        }
+      }
+    ],
+    "observed_initial_rates": {},
+    "original_checked_rhs_relative_max": 3.9271124707409533e-13,
+    "interpretation": "Two accepted levels on the fixed polygonal well geometry; the third level did not close within its acquisition deadline. These two points are an initial resolution comparison, not an established three-level convergence rate.",
+    "historical_reproduction": false,
+    "converged_numerical_reference": false,
+    "persisted_coefficients": false,
+    "figures": {
+      "png": {
+        "path": "build/results/minimal-studies/mixedwell-f1-f2-f4-v2/convergence.png",
+        "sha256": "5b60172705fd6a13e9021956225636a86bea9d75b29d1b08ed3452ec592662d3"
+      },
+      "svg": {
+        "path": "build/results/minimal-studies/mixedwell-f1-f2-f4-v2/convergence.svg",
+        "sha256": "470337e9e9a79bb5694dee66e071d226d502cbf5c5a36031fc6daa08c3eb5024"
+      }
+    },
+    "renderer_source_sha256": "0f73de8d25a95ddaecf2cb2468219b0f49d85599f05cb88e7b95760248c8614f",
+    "uncompleted_level_attempts": [
+      {
+        "level": 4,
+        "resource_receipt": {
+          "path": "build/reports/preliminary/minimal-darcy-v3/mixedwell-f4-resource.json",
+          "sha256": "ba709a1b1bf1ce4c3a360c62d37c705cfcd69c6a96d0b771f5f62aa1f59d40b8"
+        },
+        "acquisition_record": {
+          "path": "build/results/minimal-studies/mixedwell-f4-v3/minimal-convergence.json",
+          "sha256": "588cab712c23e82008e77d478c72c10b7fd6731f455937d16fe76f783c9f149b"
+        },
+        "complete": false,
+        "accepted_levels": [],
+        "guard_reason": "elapsed deadline",
+        "elapsed_seconds": 60.31079086102545,
+        "peak_owned_rss_bytes": 487550976
+      }
+    ],
+    "total_attempted_elapsed_seconds": 120.59004923701286,
+    "maximum_attempted_owned_rss_bytes": 487550976,
+    "third_level_accepted": false,
+    "rate_interpretation": "Two accepted resolutions; no three-level convergence rate asserted"
+  },
+  "norm_verification_sha256": "bd02fcf627353b60d7b24231625038b7ada304e53d925b72678e286643ce6ef4",
+  "rendered_inspection": {
+    "schema": "pymhm-minimal-figure-inspection-v1",
+    "native_png_dimensions": [
+      1344,
+      600
+    ],
+    "intended_viewing_width_px": 893,
+    "inspected_png_native_and_893": true,
+    "fields_in_distinct_panels": true,
+    "title_axes_footer_regions_separate": true,
+    "no_observed_clipping_or_overlap": true,
+    "svg_generated_from_same_matplotlib_figure": true,
+    "svg_independent_browser_inspection": false,
+    "artifacts": {
+      "convergence.png": "5b60172705fd6a13e9021956225636a86bea9d75b29d1b08ed3452ec592662d3",
+      "convergence.svg": "470337e9e9a79bb5694dee66e071d226d502cbf5c5a36031fc6daa08c3eb5024",
+      "convergence-view893.png": "5fef6ad897bfffa02f3b1ecbe0861779f7d4df488def73eae4b9d41ff58be576"
+    }
+  },
+  "resource_receipts": [
+    {
+      "path": "build/reports/preliminary/minimal-darcy-v2/mixedwell-resource.json",
+      "sha256": "fab050e9db87597e04697b6099e7c1c2ec0a2ffd116e120f5b8d96e7d54c1e80",
+      "elapsed_seconds": 60.27925837598741,
+      "peak_owned_rss_bytes": 381206528,
+      "guard_reason": "elapsed deadline",
+      "returncode": -15,
+      "owned_group_empty": true,
+      "changed_sources": [],
+      "native_threads": 1,
+      "workers": 1
+    },
+    {
+      "path": "build/reports/preliminary/minimal-darcy-v3/mixedwell-f4-resource.json",
+      "sha256": "ba709a1b1bf1ce4c3a360c62d37c705cfcd69c6a96d0b771f5f62aa1f59d40b8",
+      "elapsed_seconds": 60.31079086102545,
+      "peak_owned_rss_bytes": 487550976,
+      "guard_reason": "elapsed deadline",
+      "returncode": -15,
+      "owned_group_empty": true,
+      "changed_sources": [],
+      "native_threads": 1,
+      "workers": 1
+    }
+  ],
+  "public_figures": {
+    "png": {
+      "path": "docs/figures/minimal-convergence/darcy-mixedwell/convergence.png",
+      "sha256": "5b60172705fd6a13e9021956225636a86bea9d75b29d1b08ed3452ec592662d3"
+    },
+    "svg": {
+      "path": "docs/figures/minimal-convergence/darcy-mixedwell/convergence.svg",
+      "sha256": "470337e9e9a79bb5694dee66e071d226d502cbf5c5a36031fc6daa08c3eb5024"
+    }
+  },
+  "limitations": [
+    "Only two of three requested levels are accepted; no three-level convergence rate is asserted.",
+    "Fixed polygonal geometry, measured physical fine-cell diameters; this is not the historical curved mesh.",
+    "The initial joint phase and the separate F4 phase each stopped at the 60-second bound."
+  ]
+}

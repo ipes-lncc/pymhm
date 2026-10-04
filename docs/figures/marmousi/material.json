@@ -1,0 +1,90 @@
+{
+  "material": {
+    "dataset": "Marmousi II, Martin, Wiley and Marfurt (2006)",
+    "doi": "10.1190/1.2172306",
+    "sources": {
+      "vp": {
+        "filename": "vp_marmousi-ii.segy",
+        "url": "https://ahay.org/data/marm2/vp_marmousi-ii.segy",
+        "sha256": "2722a5de0645d8fcf5750f380893d4875383af9b24988ece0bd07b943f5b0c91"
+      },
+      "density": {
+        "filename": "density_marmousi-ii.segy",
+        "url": "https://ahay.org/data/marm2/density_marmousi-ii.segy",
+        "sha256": "10ec5c4274a63ffde2ac94dda4f062d5b83827efcefeb1a2ab22438a85f32967"
+      }
+    },
+    "primary_shape": [
+      13601,
+      2801
+    ],
+    "primary_spacing_m": 1.25,
+    "crop_origin_m": [
+      3395.0,
+      515.0
+    ],
+    "cell_shape": [
+      2048,
+      512
+    ],
+    "cell_spacing_m": 5.0,
+    "sampling": "Primary nodes at material-cell centres; no interpolation",
+    "coordinate_order": [
+      "x",
+      "depth"
+    ],
+    "density_unit": "kg/m^3",
+    "velocity_unit": "m/s",
+    "bulk_modulus_unit": "Pa",
+    "historical_article_arrays_identified": false
+  },
+  "scope": "Primary material input visualization; no acoustic field solution",
+  "macro_overlay": {
+    "H_m": [
+      20,
+      80
+    ],
+    "bounds_m": [
+      0,
+      10240,
+      0,
+      2560
+    ],
+    "meaning": "Declared MHM comparison partitions"
+  },
+  "color_ranges": {
+    "P-wave velocity": {
+      "minimum": 1027.9998779296875,
+      "maximum": 4699.999809265137,
+      "unit": "m/s"
+    },
+    "Density": {
+      "minimum": 1589.9991989135742,
+      "maximum": 2626.999855041504,
+      "unit": "kg/m\u00b3"
+    }
+  },
+  "display": {
+    "coordinate_order": [
+      "x",
+      "depth"
+    ],
+    "interpolation": "nearest",
+    "color_scales": "Independent colorbar for every panel; no clipping or rescaling",
+    "source_marker_m": [
+      5000,
+      50
+    ],
+    "source_marker_meaning": "Declared acoustic forcing location"
+  },
+  "source_sha256": "fc26accbb2bbee6dca4ffacbdecd94ae422d4d3f126a7f47e7b34c8859bf0659",
+  "dependency_sha256": {
+    "examples/marmousi_data.py": "18d767b1ca068f85341d6e2d742d8111cc3fde53c33352e9ab30a4fa4305fa5c",
+    "examples/plot_mesh.py": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6",
+    "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3"
+  },
+  "figure_sha256": {
+    "material.png": "729801166b3974cae5afec0e6fdbb4428459a0cefc19dde6010f20c2c5b34729",
+    "material.svg": "4f03a873d93125d6c1e4204d45a3a68ad05cc6f48f0f4353ed1990aa472c418b"
+  }
+}

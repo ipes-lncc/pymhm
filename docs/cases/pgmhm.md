@@ -105,10 +105,20 @@ is rejected when Dirichlet faces are present.
 ## Stability hypotheses and parameter choice
 
 The local degree is required to satisfy $k\ge\ell+2$ in two dimensions.
-The stated Fortin result and theorem 4.3 assume $\ell\ge1$ and sufficiently
-small $\alpha$; the article also includes $\ell=0$ numerical experiments.
+Lemma 2 and Theorem 4 of the published article require $k\ge\ell+d$
+and $\ell\ge1$; Theorem 4 also requires sufficiently small $\alpha$.
+The article includes $\ell=0$ numerical experiments separately from these
+stated stability hypotheses.
 Fine triangulations must be shape regular and compatible with the skeleton
 moments.
+
+The approximation estimate in Theorem 6 assumes $k\ge\ell+d$,
+$u\in H^{s+1}(\mathcal P)$ and $K\nabla u\in[H^m(\mathcal P)]^d$, with
+$1\le s\le k$ and $1\le m\le\ell+1$. Although its statement allows
+$\ell\ge0$, its proof uses the stability estimate (50) from Theorem 4.
+The $\ell=0$ results below remain numerical observations under their declared
+discretizations.
+
 `local_refinement_precision="extended"` explicitly retains additional correction
 digits in both local responses and enrichment solves where the platform provides
 a wider real type. It preserves the original operator and residual threshold;

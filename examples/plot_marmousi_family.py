@@ -23,6 +23,13 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 from matplotlib.ticker import NullFormatter
 
+from examples.marmousi_records import (
+    checked_comparison,
+    checked_convergence,
+    checked_mhm,
+    checked_reference,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
 COLORS = {20: "#0072B2", 40: "#D55E00", 80: "#009E73"}
 
@@ -30,25 +37,15 @@ COLORS = {20: "#0072B2", 40: "#D55E00", 80: "#009E73"}
 def read_rows(source: Path) -> list[dict[str, Any]]:
     """Require all fifteen accepted fields and matching physical-comparison digests."""
     reference = source / "classical-p4.json"
-    reference_digest = hashlib.sha256(reference.read_bytes()).hexdigest()
+    checked_reference(reference)
     rows = []
     for width in (20, 40, 80):
         for degree in range(5):
             path = source / "family" / f"mhm-H{width}-ell{degree}-q9.json"
             comparison = path.with_name(f"{path.stem}-vs-classical-p4.json")
-            record = json.loads(path.read_text())
-            norms = json.loads(comparison.read_text())
+            record = checked_mhm(path)
+            norms = checked_comparison(comparison, path, reference)
             digest = hashlib.sha256(path.read_bytes()).hexdigest()
-            if record["source_changed_during_run"] or norms["source_changed_during_run"]:
-                raise ValueError("a trace-family record has changed acquisition sources")
-            if (
-                norms["candidate_record_sha256"] != digest
-                or norms["reference_record_sha256"] != reference_digest
-            ):
-                raise ValueError("the physical comparison does not identify the current fields")
-            sides = [tuple(row["incident_side"]) for row in norms["sampled_pressure"]]
-            if set(sides) != {(-1, -1), (-1, 1), (1, -1), (1, 1)} or len(sides) != 4:
-                raise ValueError("four distinct incident sampling conventions are required")
             if record["H_m"] != width or record["trace_degree"] != degree:
                 raise ValueError("trace-family filename and discretization disagree")
             rows.append(
@@ -120,6 +117,8 @@ def plot_family(
                 label=f"H={width} m",
             )
     finest = reference["references"][-1]["increment_quadrature_check"]
+    if finest.get("gradient_exclusion") != [5000.0, 50.0, 50.0]:
+        raise ValueError("classical refinement requires the same 50 m derivative exclusion")
     for axis, name in zip(
         (axes[0, 1], axes[1, 0], axes[1, 1]),
         ("pressure_relative_difference", "flux_relative_difference", "graph_relative_difference"),
@@ -133,8 +132,8 @@ def plot_family(
         (
             "513×129 pressure samples\nDeclared crop and published table",
             "Global pressure L² difference\nDeclared crop; P4 denominator",
-            "Acoustic flux difference outside source cutout\nq = −ρ⁻¹∇p; P4 denominator",
-            "Graph-norm difference outside source cutout\nSame cutout in both positive terms",
+            "Acoustic flux outside the 50 m source disk\nq = −ρ⁻¹∇p; P4 denominator",
+            "Graph norm outside the 50 m source disk\nSame domain in both positive terms",
         ),
         strict=True,
     ):
@@ -177,9 +176,8 @@ def main() -> None:
     rows = read_rows(args.source)
     published_path = args.source / "published-table.json"
     reference_path = args.source / "classical-convergence.json"
-    published, reference = (
-        json.loads(path.read_text()) for path in (published_path, reference_path)
-    )
+    published = json.loads(published_path.read_text())
+    reference = checked_convergence(reference_path, args.source / "classical-p4.json")
     args.output.mkdir(parents=True, exist_ok=True)
     plot_family(rows, published, reference, args.output)
     record = {
@@ -187,7 +185,7 @@ def main() -> None:
         "reference": "Pixel-conforming classical triangular P4 on the declared Marmousi crop",
         "historical_article_arrays_identified": False,
         "incident_sampling": "All four incident conventions retained; no pressure averaging",
-        "gradient_cutout_m": [4975.0, 5025.0, 25.0, 75.0],
+        "gradient_exclusion_m": [5000.0, 50.0, 50.0],
         "published_table_sha256": hashlib.sha256(published_path.read_bytes()).hexdigest(),
         "reference_series_sha256": hashlib.sha256(reference_path.read_bytes()).hexdigest(),
         "plot_source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),

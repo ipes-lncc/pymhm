@@ -2,6 +2,14 @@
 
 ## 0.1.0 — unreleased
 
+- Add compact hybrid assembly and staged periodic acquisition with atomic
+  archives, bounded local-response lifetime and executed-basis replay checks.
+- Restore oscillatory Helmholtz face spaces from executed segment matrices,
+  preserving their orientation and constant moments.
+- Expose independent assembly and error quadrature controls for unfitted studies;
+  verify admissible and excluded finite local/trace pairs.
+- Scope notebook archive inventories to the selected notebooks before reading
+  their scientific manifests.
 - Add arbitrary-degree tetrahedral scalar elements and certified star-shaped
   nonconvex polyhedra with original polygonal faces.
 - Add three-dimensional BDM mixed-stress elasticity with weak symmetry,

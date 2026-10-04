@@ -1,0 +1,4749 @@
+{
+  "schema": "pymhm-initial-flow-elasticity-convergence-v1",
+  "group": "initial-elasticity2d",
+  "rows": [
+    {
+      "case": "triangle-bdm2",
+      "resolution": 1,
+      "macro_cells": 2,
+      "fine_cells": 2,
+      "stress_space": "BDM2",
+      "displacement_space": "cardinal P1",
+      "rotation_space": "total P1",
+      "interior_traction_space": "P1",
+      "exterior_traction_space": "full fine P2",
+      "local_refinement": 1,
+      "assembly_order": 8,
+      "norm_orders": [
+        9,
+        10
+      ],
+      "norms": {
+        "quadrature_9": {
+          "displacement_l2": 0.11285338056573971,
+          "stress_l2": 0.5535032668127792,
+          "divergence_l2": 1.7539321827863055,
+          "rotation_l2": 0.04304757646449881
+        },
+        "quadrature_10": {
+          "displacement_l2": 0.11285338056573975,
+          "stress_l2": 0.5535032668127795,
+          "divergence_l2": 1.7539321827863066,
+          "rotation_l2": 0.04304757646449881
+        }
+      },
+      "norm_quadrature_relative_changes": {
+        "displacement_l2": 3.689155186555617e-16,
+        "stress_l2": 6.01743345265938e-16,
+        "divergence_l2": 6.329908507987178e-16,
+        "rotation_l2": 0.0
+      },
+      "displacement_l2": 0.11285338056573975,
+      "stress_l2": 0.5535032668127795,
+      "divergence_l2": 1.7539321827863066,
+      "rotation_l2": 0.04304757646449881,
+      "original_physical_checks": {
+        "accepted": true,
+        "criterion": 1e-10,
+        "full_uncondensed_relative_to_physical_rhs": 1.7624761854734837e-15,
+        "local_volume_relative_to_force": 1.6777918824436365e-15,
+        "body_force_norm": 5.000556290006038,
+        "physical_rhs_with_prescribed_traction_norm": 5.064665930473276,
+        "maximum_physical_block_backward_error": 2.7141955985724464e-16,
+        "compact_physical_relative_residual": 8.155543927535397e-16,
+        "augmented_compact_relative_residual": 7.667968816981103e-16,
+        "physical_mean_relative_defect": 5.752005630580499e-17,
+        "reduced_gauge_relative_defect": 3.939728766550439e-17,
+        "physical_mean_values": [
+          3.888425650188606
+        ],
+        "physical_mean_targets": [
+          3.8884256501886063
+        ],
+        "gauge_multipliers": [
+          2.2921876982473036e-15
+        ],
+        "rows": [
+          {
+            "macro": 0,
+            "physical_block_backward_errors": [
+              2.2816772565548443e-16,
+              2.7141955985724464e-16,
+              7.979574108592252e-17,
+              2.5877933225273188e-17
+            ],
+            "executed_reconstruction_relative_error": 1.2615619424840696e-16
+          },
+          {
+            "macro": 1,
+            "physical_block_backward_errors": [
+              1.221790727296976e-16,
+              7.252707824861704e-17,
+              4.051565597234142e-17,
+              3.5635252202231715e-17
+            ],
+            "executed_reconstruction_relative_error": 2.3397456901920233e-16
+          }
+        ]
+      },
+      "basis_checks": {
+        "maximum_canonical_normal_moment_defect": 4.7369515717341935e-15,
+        "maximum_divergence_theorem_defect": 4.9795600383846345e-15,
+        "maximum_executed_bdm_table_defect": 0.0
+      },
+      "sha256": "0da27f8757e31698c8fd5fbb38795178c8e569f5d1ef47898e17c28867327499",
+      "acquisition_uuid": "527f9db1-ed62-4ba4-b338-79b63777a485",
+      "finite_case_accepted": true,
+      "native_whole_field_agreement_verified": false,
+      "elapsed_seconds": 0.3761923387646675,
+      "acquisition_provenance": {
+        "original_record": "build/results/core-elasticity-micro-v1/elasticity.json",
+        "original_record_sha256": "714b32aced129c981ecfcae35f80a2069fe868abf1581d0bc6c8025d63ed8aef",
+        "original_verification_sha256": "7d364b90a7622efefa7cb01a914f06143e207c0772ba1b26c697b2094b60d77d",
+        "runtime_sha256": "53d4f707fa66a232f6c20a83d3ea140525414f2c6a18ecff87995003320845da",
+        "source_generation_sha256": "7fa4597c119713a31e5a58ffb0d71026b9f40c72372c0ee1682f086159aa2f67",
+        "original_micro_reused": true
+      },
+      "terminal_norms": {
+        "displacement_l2": 0.11285338056573975,
+        "stress_l2": 0.5535032668127795,
+        "divergence_l2": 1.7539321827863066,
+        "rotation_l2": 0.04304757646449881
+      },
+      "original_coefficient_archive_sha256": "0da27f8757e31698c8fd5fbb38795178c8e569f5d1ef47898e17c28867327499",
+      "basis_replay_proof": {
+        "case": "triangle-bdm2",
+        "resolution": 1,
+        "archive_sha256": "0da27f8757e31698c8fd5fbb38795178c8e569f5d1ef47898e17c28867327499",
+        "acquisition_uuid": "527f9db1-ed62-4ba4-b338-79b63777a485",
+        "original_micro_reused": true,
+        "original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 1.7624761854734837e-15,
+          "local_volume_relative_to_force": 1.6777918824436365e-15,
+          "body_force_norm": 5.000556290006038,
+          "physical_rhs_with_prescribed_traction_norm": 5.064665930473276,
+          "maximum_physical_block_backward_error": 2.7141955985724464e-16,
+          "compact_physical_relative_residual": 8.155543927535397e-16,
+          "augmented_compact_relative_residual": 7.667968816981103e-16,
+          "physical_mean_relative_defect": 5.752005630580499e-17,
+          "reduced_gauge_relative_defect": 3.939728766550439e-17,
+          "physical_mean_values": [
+            3.888425650188606
+          ],
+          "physical_mean_targets": [
+            3.8884256501886063
+          ],
+          "gauge_multipliers": [
+            2.2921876982473036e-15
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                2.2816772565548443e-16,
+                2.7141955985724464e-16,
+                7.979574108592252e-17,
+                2.5877933225273188e-17
+              ],
+              "executed_reconstruction_relative_error": 1.2615619424840696e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                1.221790727296976e-16,
+                7.252707824861704e-17,
+                4.051565597234142e-17,
+                3.5635252202231715e-17
+              ],
+              "executed_reconstruction_relative_error": 2.3397456901920233e-16
+            }
+          ]
+        },
+        "basis_checks": {
+          "maximum_canonical_normal_moment_defect": 4.7369515717341935e-15,
+          "maximum_divergence_theorem_defect": 4.9795600383846345e-15,
+          "maximum_executed_bdm_table_defect": 0.0
+        },
+        "replay_blas_1_2_bitwise": true,
+        "coherent_retained_rotation_bitwise": true,
+        "rotated_original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 1.7624761854734837e-15,
+          "local_volume_relative_to_force": 1.6777918824436365e-15,
+          "body_force_norm": 5.000556290006038,
+          "physical_rhs_with_prescribed_traction_norm": 5.064665930473276,
+          "maximum_physical_block_backward_error": 2.7141955985724464e-16,
+          "compact_physical_relative_residual": 8.155537658959182e-16,
+          "augmented_compact_relative_residual": 7.667960819565877e-16,
+          "physical_mean_relative_defect": 5.752005630580499e-17,
+          "reduced_gauge_relative_defect": 3.939728766550439e-17,
+          "physical_mean_values": [
+            3.888425650188606
+          ],
+          "physical_mean_targets": [
+            3.8884256501886063
+          ],
+          "gauge_multipliers": [
+            2.2921876982473036e-15
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                2.2816772565548443e-16,
+                2.7141955985724464e-16,
+                7.979574108592252e-17,
+                2.5877933225273188e-17
+              ],
+              "executed_reconstruction_relative_error": 1.2615619424840696e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                1.221790727296976e-16,
+                7.252707824861704e-17,
+                4.051565597234142e-17,
+                3.5635252202231715e-17
+              ],
+              "executed_reconstruction_relative_error": 2.3397456901920233e-16
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": "triangle-bdm2",
+      "resolution": 2,
+      "macro_cells": 8,
+      "fine_cells": 8,
+      "stress_space": "BDM2",
+      "displacement_space": "cardinal P1",
+      "rotation_space": "total P1",
+      "interior_traction_space": "P1",
+      "exterior_traction_space": "full fine P2",
+      "local_refinement": 1,
+      "assembly_order": 8,
+      "norm_orders": [
+        9,
+        10
+      ],
+      "norms": {
+        "quadrature_9": {
+          "displacement_l2": 0.03291940565919555,
+          "stress_l2": 0.17243184968821543,
+          "divergence_l2": 0.4384830456965758,
+          "rotation_l2": 0.015565345341037732
+        },
+        "quadrature_10": {
+          "displacement_l2": 0.03291940565919557,
+          "stress_l2": 0.1724318496882159,
+          "divergence_l2": 0.4384830456965764,
+          "rotation_l2": 0.015565345341037734
+        }
+      },
+      "norm_quadrature_relative_changes": {
+        "displacement_l2": 6.32352902334579e-16,
+        "stress_l2": 2.736413176097465e-15,
+        "divergence_l2": 1.39257987175718e-15,
+        "rotation_l2": 1.114477988100426e-16
+      },
+      "displacement_l2": 0.03291940565919557,
+      "stress_l2": 0.1724318496882159,
+      "divergence_l2": 0.4384830456965764,
+      "rotation_l2": 0.015565345341037734,
+      "original_physical_checks": {
+        "accepted": true,
+        "criterion": 1e-10,
+        "full_uncondensed_relative_to_physical_rhs": 2.850368815120786e-15,
+        "local_volume_relative_to_force": 2.8817382679338503e-15,
+        "body_force_norm": 2.805311338307017,
+        "physical_rhs_with_prescribed_traction_norm": 2.876174956764147,
+        "maximum_physical_block_backward_error": 5.768474769782328e-16,
+        "compact_physical_relative_residual": 4.915242073162752e-16,
+        "augmented_compact_relative_residual": 4.709804882107775e-16,
+        "physical_mean_relative_defect": 1.576921719842104e-16,
+        "reduced_gauge_relative_defect": 8.314387928952302e-17,
+        "physical_mean_values": [
+          3.8884256501886036
+        ],
+        "physical_mean_targets": [
+          3.888425650188605
+        ],
+        "gauge_multipliers": [
+          1.0086746371434363e-15
+        ],
+        "rows": [
+          {
+            "macro": 0,
+            "physical_block_backward_errors": [
+              3.40690128716797e-16,
+              1.5121569714268415e-16,
+              1.7197544703805875e-16,
+              1.9811487073144078e-17
+            ],
+            "executed_reconstruction_relative_error": 2.698351772328974e-16
+          },
+          {
+            "macro": 1,
+            "physical_block_backward_errors": [
+              1.1689009260092136e-16,
+              5.768474769782328e-16,
+              4.517039575958573e-17,
+              2.0225242225463057e-17
+            ],
+            "executed_reconstruction_relative_error": 1.511742999815791e-16
+          },
+          {
+            "macro": 2,
+            "physical_block_backward_errors": [
+              8.383246007528883e-17,
+              8.111444802888177e-17,
+              7.820851248654459e-17,
+              2.1940601691699718e-17
+            ],
+            "executed_reconstruction_relative_error": 3.9868761555165606e-16
+          },
+          {
+            "macro": 3,
+            "physical_block_backward_errors": [
+              9.921482780433207e-17,
+              1.431936613619522e-16,
+              1.0394616961555821e-16,
+              1.342325883883889e-17
+            ],
+            "executed_reconstruction_relative_error": 9.330106866096365e-17
+          },
+          {
+            "macro": 4,
+            "physical_block_backward_errors": [
+              2.2165716150119215e-16,
+              1.735677236299325e-16,
+              1.525173934423152e-16,
+              1.5570340060077573e-17
+            ],
+            "executed_reconstruction_relative_error": 2.0910923594580133e-16
+          },
+          {
+            "macro": 5,
+            "physical_block_backward_errors": [
+              2.2352080692622787e-16,
+              7.148905365590554e-17,
+              1.4379072425381014e-16,
+              2.1521444235603152e-17
+            ],
+            "executed_reconstruction_relative_error": 2.0380082860011443e-16
+          },
+          {
+            "macro": 6,
+            "physical_block_backward_errors": [
+              3.0121305726534643e-16,
+              8.966412013554453e-17,
+              2.48130643919447e-16,
+              1.3378677807174824e-17
+            ],
+            "executed_reconstruction_relative_error": 2.5498272138538353e-16
+          },
+          {
+            "macro": 7,
+            "physical_block_backward_errors": [
+              6.246662032434616e-17,
+              5.437212572130933e-17,
+              4.708311630872344e-17,
+              1.429363013085127e-17
+            ],
+            "executed_reconstruction_relative_error": 1.3467412490326418e-16
+          }
+        ]
+      },
+      "basis_checks": {
+        "maximum_canonical_normal_moment_defect": 4.7369515717341935e-15,
+        "maximum_divergence_theorem_defect": 4.9795600383846345e-15,
+        "maximum_executed_bdm_table_defect": 0.0
+      },
+      "sha256": "57d4c6c28b4c767b6854603ac44f031d1b94fdf82dfb270b8f76f61c47d9d811",
+      "acquisition_uuid": "98ce9f19-198c-4c78-ac7c-ca48ded384ad",
+      "finite_case_accepted": true,
+      "native_whole_field_agreement_verified": false,
+      "elapsed_seconds": 0.8711020238697529,
+      "acquisition_provenance": {
+        "original_record": "build/results/core-elasticity-initial-nine-v1/triangle-bdm2-n2/elasticity.json",
+        "original_record_sha256": "2c0ac9a9bc823f67f062204fd2b55f0dee809a82d0dbaa5cce08712f01dd7d9f",
+        "original_verification_sha256": "310f490f8d183aa91ce85ab33a77e6f3bb9c5d854c36082a9789ad79657a8e51",
+        "runtime_sha256": "53d4f707fa66a232f6c20a83d3ea140525414f2c6a18ecff87995003320845da",
+        "source_generation_sha256": "7fa4597c119713a31e5a58ffb0d71026b9f40c72372c0ee1682f086159aa2f67",
+        "original_micro_reused": false
+      },
+      "terminal_norms": {
+        "displacement_l2": 0.03291940565919557,
+        "stress_l2": 0.1724318496882159,
+        "divergence_l2": 0.4384830456965764,
+        "rotation_l2": 0.015565345341037734
+      },
+      "original_coefficient_archive_sha256": "57d4c6c28b4c767b6854603ac44f031d1b94fdf82dfb270b8f76f61c47d9d811",
+      "basis_replay_proof": {
+        "case": "triangle-bdm2",
+        "resolution": 2,
+        "archive_sha256": "57d4c6c28b4c767b6854603ac44f031d1b94fdf82dfb270b8f76f61c47d9d811",
+        "acquisition_uuid": "98ce9f19-198c-4c78-ac7c-ca48ded384ad",
+        "original_micro_reused": false,
+        "original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 2.850368815120786e-15,
+          "local_volume_relative_to_force": 2.8817382679338503e-15,
+          "body_force_norm": 2.805311338307017,
+          "physical_rhs_with_prescribed_traction_norm": 2.876174956764147,
+          "maximum_physical_block_backward_error": 5.768474769782328e-16,
+          "compact_physical_relative_residual": 4.915242073162752e-16,
+          "augmented_compact_relative_residual": 4.709804882107775e-16,
+          "physical_mean_relative_defect": 1.576921719842104e-16,
+          "reduced_gauge_relative_defect": 8.314387928952302e-17,
+          "physical_mean_values": [
+            3.8884256501886036
+          ],
+          "physical_mean_targets": [
+            3.888425650188605
+          ],
+          "gauge_multipliers": [
+            1.0086746371434363e-15
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                3.40690128716797e-16,
+                1.5121569714268415e-16,
+                1.7197544703805875e-16,
+                1.9811487073144078e-17
+              ],
+              "executed_reconstruction_relative_error": 2.698351772328974e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                1.1689009260092136e-16,
+                5.768474769782328e-16,
+                4.517039575958573e-17,
+                2.0225242225463057e-17
+              ],
+              "executed_reconstruction_relative_error": 1.511742999815791e-16
+            },
+            {
+              "macro": 2,
+              "physical_block_backward_errors": [
+                8.383246007528883e-17,
+                8.111444802888177e-17,
+                7.820851248654459e-17,
+                2.1940601691699718e-17
+              ],
+              "executed_reconstruction_relative_error": 3.9868761555165606e-16
+            },
+            {
+              "macro": 3,
+              "physical_block_backward_errors": [
+                9.921482780433207e-17,
+                1.431936613619522e-16,
+                1.0394616961555821e-16,
+                1.342325883883889e-17
+              ],
+              "executed_reconstruction_relative_error": 9.330106866096365e-17
+            },
+            {
+              "macro": 4,
+              "physical_block_backward_errors": [
+                2.2165716150119215e-16,
+                1.735677236299325e-16,
+                1.525173934423152e-16,
+                1.5570340060077573e-17
+              ],
+              "executed_reconstruction_relative_error": 2.0910923594580133e-16
+            },
+            {
+              "macro": 5,
+              "physical_block_backward_errors": [
+                2.2352080692622787e-16,
+                7.148905365590554e-17,
+                1.4379072425381014e-16,
+                2.1521444235603152e-17
+              ],
+              "executed_reconstruction_relative_error": 2.0380082860011443e-16
+            },
+            {
+              "macro": 6,
+              "physical_block_backward_errors": [
+                3.0121305726534643e-16,
+                8.966412013554453e-17,
+                2.48130643919447e-16,
+                1.3378677807174824e-17
+              ],
+              "executed_reconstruction_relative_error": 2.5498272138538353e-16
+            },
+            {
+              "macro": 7,
+              "physical_block_backward_errors": [
+                6.246662032434616e-17,
+                5.437212572130933e-17,
+                4.708311630872344e-17,
+                1.429363013085127e-17
+              ],
+              "executed_reconstruction_relative_error": 1.3467412490326418e-16
+            }
+          ]
+        },
+        "basis_checks": {
+          "maximum_canonical_normal_moment_defect": 4.7369515717341935e-15,
+          "maximum_divergence_theorem_defect": 4.9795600383846345e-15,
+          "maximum_executed_bdm_table_defect": 0.0
+        },
+        "replay_blas_1_2_bitwise": true,
+        "coherent_retained_rotation_bitwise": true,
+        "rotated_original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 2.850368815120786e-15,
+          "local_volume_relative_to_force": 2.8817382679338503e-15,
+          "body_force_norm": 2.805311338307017,
+          "physical_rhs_with_prescribed_traction_norm": 2.876174956764147,
+          "maximum_physical_block_backward_error": 5.768474769782328e-16,
+          "compact_physical_relative_residual": 4.9152407311279e-16,
+          "augmented_compact_relative_residual": 4.709803741121602e-16,
+          "physical_mean_relative_defect": 1.576921719842104e-16,
+          "reduced_gauge_relative_defect": 8.314387928952302e-17,
+          "physical_mean_values": [
+            3.8884256501886036
+          ],
+          "physical_mean_targets": [
+            3.888425650188605
+          ],
+          "gauge_multipliers": [
+            1.0086746371434363e-15
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                3.40690128716797e-16,
+                1.5121569714268415e-16,
+                1.7197544703805875e-16,
+                1.9811487073144078e-17
+              ],
+              "executed_reconstruction_relative_error": 2.698351772328974e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                1.1689009260092136e-16,
+                5.768474769782328e-16,
+                4.517039575958573e-17,
+                2.0225242225463057e-17
+              ],
+              "executed_reconstruction_relative_error": 1.511742999815791e-16
+            },
+            {
+              "macro": 2,
+              "physical_block_backward_errors": [
+                8.383246007528883e-17,
+                8.111444802888177e-17,
+                7.820851248654459e-17,
+                2.1940601691699718e-17
+              ],
+              "executed_reconstruction_relative_error": 3.9868761555165606e-16
+            },
+            {
+              "macro": 3,
+              "physical_block_backward_errors": [
+                9.921482780433207e-17,
+                1.431936613619522e-16,
+                1.0394616961555821e-16,
+                1.342325883883889e-17
+              ],
+              "executed_reconstruction_relative_error": 9.330106866096365e-17
+            },
+            {
+              "macro": 4,
+              "physical_block_backward_errors": [
+                2.2165716150119215e-16,
+                1.735677236299325e-16,
+                1.525173934423152e-16,
+                1.5570340060077573e-17
+              ],
+              "executed_reconstruction_relative_error": 2.0910923594580133e-16
+            },
+            {
+              "macro": 5,
+              "physical_block_backward_errors": [
+                2.2352080692622787e-16,
+                7.148905365590554e-17,
+                1.4379072425381014e-16,
+                2.1521444235603152e-17
+              ],
+              "executed_reconstruction_relative_error": 2.0380082860011443e-16
+            },
+            {
+              "macro": 6,
+              "physical_block_backward_errors": [
+                3.0121305726534643e-16,
+                8.966412013554453e-17,
+                2.48130643919447e-16,
+                1.3378677807174824e-17
+              ],
+              "executed_reconstruction_relative_error": 2.5498272138538353e-16
+            },
+            {
+              "macro": 7,
+              "physical_block_backward_errors": [
+                6.246662032434616e-17,
+                5.437212572130933e-17,
+                4.708311630872344e-17,
+                1.429363013085127e-17
+              ],
+              "executed_reconstruction_relative_error": 1.3467412490326418e-16
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": "triangle-bdm2",
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 32,
+      "stress_space": "BDM2",
+      "displacement_space": "cardinal P1",
+      "rotation_space": "total P1",
+      "interior_traction_space": "P1",
+      "exterior_traction_space": "full fine P2",
+      "local_refinement": 1,
+      "assembly_order": 8,
+      "norm_orders": [
+        9,
+        10
+      ],
+      "norms": {
+        "quadrature_9": {
+          "displacement_l2": 0.008516113016055447,
+          "stress_l2": 0.04946247835315471,
+          "divergence_l2": 0.1096207614241436,
+          "rotation_l2": 0.006240590876572529
+        },
+        "quadrature_10": {
+          "displacement_l2": 0.008516113016055447,
+          "stress_l2": 0.04946247835315516,
+          "divergence_l2": 0.10962076142414363,
+          "rotation_l2": 0.006240590876572531
+        }
+      },
+      "norm_quadrature_relative_changes": {
+        "displacement_l2": 0.0,
+        "stress_l2": 9.118590874757476e-15,
+        "divergence_l2": 2.5319634031948834e-16,
+        "rotation_l2": 4.169613527676617e-16
+      },
+      "displacement_l2": 0.008516113016055447,
+      "stress_l2": 0.04946247835315516,
+      "divergence_l2": 0.10962076142414363,
+      "rotation_l2": 0.006240590876572531,
+      "original_physical_checks": {
+        "accepted": true,
+        "criterion": 1e-10,
+        "full_uncondensed_relative_to_physical_rhs": 8.481749787769603e-15,
+        "local_volume_relative_to_force": 7.517429025726999e-15,
+        "body_force_norm": 1.4411137989612817,
+        "physical_rhs_with_prescribed_traction_norm": 1.5136678207481828,
+        "maximum_physical_block_backward_error": 4.684770908979602e-15,
+        "compact_physical_relative_residual": 6.011995387344987e-15,
+        "augmented_compact_relative_residual": 6.015692984529234e-15,
+        "physical_mean_relative_defect": 6.804966910338578e-17,
+        "reduced_gauge_relative_defect": 1.037384223586996e-16,
+        "physical_mean_values": [
+          3.8884256501886045
+        ],
+        "physical_mean_targets": [
+          3.888425650188604
+        ],
+        "gauge_multipliers": [
+          1.5343674278246934e-15
+        ],
+        "rows": [
+          {
+            "macro": 0,
+            "physical_block_backward_errors": [
+              3.258154806438009e-16,
+              1.6872066626321604e-16,
+              9.441302672963703e-17,
+              1.7408556556164846e-17
+            ],
+            "executed_reconstruction_relative_error": 1.9598018620110896e-16
+          },
+          {
+            "macro": 1,
+            "physical_block_backward_errors": [
+              7.707074006147628e-17,
+              1.0761378111146357e-16,
+              6.237086851931482e-17,
+              1.760807394030213e-17
+            ],
+            "executed_reconstruction_relative_error": 5.689521980677242e-16
+          },
+          {
+            "macro": 2,
+            "physical_block_backward_errors": [
+              9.721772831641761e-17,
+              4.562989196389367e-15,
+              7.857859555918875e-17,
+              1.3099694839058948e-17
+            ],
+            "executed_reconstruction_relative_error": 1.9502576739953125e-16
+          },
+          {
+            "macro": 3,
+            "physical_block_backward_errors": [
+              7.015991269742373e-17,
+              4.684770908979602e-15,
+              6.536170575969216e-17,
+              1.1019518868465124e-17
+            ],
+            "executed_reconstruction_relative_error": 1.9711752817277708e-16
+          },
+          {
+            "macro": 4,
+            "physical_block_backward_errors": [
+              7.320393242921839e-17,
+              1.0598577061510907e-16,
+              9.667650212229717e-17,
+              1.5491153125110473e-17
+            ],
+            "executed_reconstruction_relative_error": 5.074723516468684e-16
+          },
+          {
+            "macro": 5,
+            "physical_block_backward_errors": [
+              1.3928278370728812e-16,
+              8.720787468523149e-17,
+              1.6228737469238428e-16,
+              9.40915100600477e-18
+            ],
+            "executed_reconstruction_relative_error": 3.9575830690528625e-16
+          },
+          {
+            "macro": 6,
+            "physical_block_backward_errors": [
+              6.784031355177334e-17,
+              1.0657866433820117e-16,
+              1.2794193340287185e-16,
+              2.358704696727359e-17
+            ],
+            "executed_reconstruction_relative_error": 6.847686134167745e-16
+          },
+          {
+            "macro": 7,
+            "physical_block_backward_errors": [
+              4.3004948098371716e-17,
+              7.691913735837662e-17,
+              6.521124145163653e-17,
+              2.434733540724081e-17
+            ],
+            "executed_reconstruction_relative_error": 4.5433714507470525e-16
+          },
+          {
+            "macro": 8,
+            "physical_block_backward_errors": [
+              2.5067819196205646e-16,
+              1.1659522642177984e-16,
+              1.1977381918369936e-16,
+              2.0550502764011794e-17
+            ],
+            "executed_reconstruction_relative_error": 7.611189055444351e-16
+          },
+          {
+            "macro": 9,
+            "physical_block_backward_errors": [
+              1.6036066424369687e-16,
+              2.7398942146706923e-16,
+              1.004242753905507e-16,
+              2.860420811820021e-17
+            ],
+            "executed_reconstruction_relative_error": 1.4588493671377607e-16
+          },
+          {
+            "macro": 10,
+            "physical_block_backward_errors": [
+              1.7220814160712168e-16,
+              1.2536715863089662e-15,
+              8.497937395161105e-17,
+              1.3704981717252988e-17
+            ],
+            "executed_reconstruction_relative_error": 3.176269008044546e-16
+          },
+          {
+            "macro": 11,
+            "physical_block_backward_errors": [
+              8.333437690626985e-17,
+              4.183256275858074e-15,
+              8.272284168373061e-17,
+              1.5465102469066513e-17
+            ],
+            "executed_reconstruction_relative_error": 2.2781027564043736e-16
+          },
+          {
+            "macro": 12,
+            "physical_block_backward_errors": [
+              7.05483283098736e-17,
+              1.4867296167482604e-15,
+              1.1531104656107044e-16,
+              1.1646997166364381e-17
+            ],
+            "executed_reconstruction_relative_error": 2.1135463070336673e-16
+          },
+          {
+            "macro": 13,
+            "physical_block_backward_errors": [
+              7.033155521803497e-17,
+              3.5341794759128827e-15,
+              7.699857625923199e-17,
+              1.1566224523883992e-17
+            ],
+            "executed_reconstruction_relative_error": 1.7557925566391468e-16
+          },
+          {
+            "macro": 14,
+            "physical_block_backward_errors": [
+              1.8152073900144084e-16,
+              1.1020372544395428e-16,
+              6.477626255445451e-17,
+              7.195476569869832e-18
+            ],
+            "executed_reconstruction_relative_error": 2.1254004556882572e-16
+          },
+          {
+            "macro": 15,
+            "physical_block_backward_errors": [
+              6.358321262177736e-17,
+              1.6146382089904943e-16,
+              4.0489215879076023e-17,
+              8.188085719483767e-18
+            ],
+            "executed_reconstruction_relative_error": 1.1375746925701312e-16
+          },
+          {
+            "macro": 16,
+            "physical_block_backward_errors": [
+              1.401334831318303e-16,
+              7.95251099842231e-17,
+              5.458391117635797e-17,
+              1.418678201789416e-17
+            ],
+            "executed_reconstruction_relative_error": 3.8110654581569236e-16
+          },
+          {
+            "macro": 17,
+            "physical_block_backward_errors": [
+              2.553798311059536e-16,
+              8.819361374527419e-17,
+              2.0989475340673098e-16,
+              1.726264470853965e-17
+            ],
+            "executed_reconstruction_relative_error": 3.8744368611034733e-16
+          },
+          {
+            "macro": 18,
+            "physical_block_backward_errors": [
+              1.6318885951545412e-16,
+              9.426529701067186e-16,
+              6.586261750509389e-17,
+              5.428926886215518e-18
+            ],
+            "executed_reconstruction_relative_error": 2.8363337970895753e-16
+          },
+          {
+            "macro": 19,
+            "physical_block_backward_errors": [
+              6.248314726732808e-17,
+              6.081896439718697e-17,
+              3.042313560864152e-17,
+              1.0315105100310746e-17
+            ],
+            "executed_reconstruction_relative_error": 2.347788423481764e-16
+          },
+          {
+            "macro": 20,
+            "physical_block_backward_errors": [
+              1.7129566324439465e-16,
+              2.1109393232823863e-16,
+              2.0961884349438437e-16,
+              1.759023829575451e-17
+            ],
+            "executed_reconstruction_relative_error": 3.3227047538859597e-16
+          },
+          {
+            "macro": 21,
+            "physical_block_backward_errors": [
+              5.285055328621064e-17,
+              1.6980408012299398e-15,
+              4.0971177865573626e-17,
+              1.9991820764025722e-17
+            ],
+            "executed_reconstruction_relative_error": 2.4741023101215757e-16
+          },
+          {
+            "macro": 22,
+            "physical_block_backward_errors": [
+              1.897811314212109e-16,
+              2.765961393162886e-16,
+              7.244400039244334e-17,
+              9.020281644853704e-18
+            ],
+            "executed_reconstruction_relative_error": 1.7126117869876605e-16
+          },
+          {
+            "macro": 23,
+            "physical_block_backward_errors": [
+              7.350952409143389e-17,
+              2.0580273781889047e-16,
+              5.719340153675773e-17,
+              1.2230631574707198e-17
+            ],
+            "executed_reconstruction_relative_error": 1.4145690858351219e-16
+          },
+          {
+            "macro": 24,
+            "physical_block_backward_errors": [
+              1.3826487235474064e-16,
+              1.1959905902597528e-16,
+              5.989805314418206e-17,
+              2.2202076421964674e-17
+            ],
+            "executed_reconstruction_relative_error": 4.981459736213152e-16
+          },
+          {
+            "macro": 25,
+            "physical_block_backward_errors": [
+              1.3172600548984464e-16,
+              1.2037030777862938e-16,
+              1.0506149565770279e-16,
+              3.525930491371735e-17
+            ],
+            "executed_reconstruction_relative_error": 3.966932781202537e-16
+          },
+          {
+            "macro": 26,
+            "physical_block_backward_errors": [
+              1.0761291703893622e-16,
+              6.569180442333031e-17,
+              5.3443042257108e-17,
+              6.013988609483654e-18
+            ],
+            "executed_reconstruction_relative_error": 5.102899544765737e-16
+          },
+          {
+            "macro": 27,
+            "physical_block_backward_errors": [
+              6.159423152026301e-17,
+              8.063534819277253e-17,
+              7.163262819919205e-17,
+              1.1283776382704908e-17
+            ],
+            "executed_reconstruction_relative_error": 2.4496413558906224e-16
+          },
+          {
+            "macro": 28,
+            "physical_block_backward_errors": [
+              1.7857396629929871e-16,
+              8.091803147144862e-17,
+              2.1442619727129037e-16,
+              4.8395792016112896e-18
+            ],
+            "executed_reconstruction_relative_error": 6.42173415076886e-16
+          },
+          {
+            "macro": 29,
+            "physical_block_backward_errors": [
+              3.795542551762655e-17,
+              8.904297214182667e-17,
+              5.832309098686952e-17,
+              8.674529688758053e-18
+            ],
+            "executed_reconstruction_relative_error": 1.7492156911323986e-16
+          },
+          {
+            "macro": 30,
+            "physical_block_backward_errors": [
+              2.8885809270677935e-16,
+              7.696593059226942e-17,
+              1.4656204719375407e-16,
+              8.41763055125904e-18
+            ],
+            "executed_reconstruction_relative_error": 5.174664582523099e-16
+          },
+          {
+            "macro": 31,
+            "physical_block_backward_errors": [
+              1.1166777726868385e-16,
+              6.250774192442372e-17,
+              6.111908104692083e-17,
+              1.2008915609472937e-17
+            ],
+            "executed_reconstruction_relative_error": 2.5815191382537094e-16
+          }
+        ]
+      },
+      "basis_checks": {
+        "maximum_canonical_normal_moment_defect": 4.7369515717341935e-15,
+        "maximum_divergence_theorem_defect": 4.9795600383846345e-15,
+        "maximum_executed_bdm_table_defect": 0.0
+      },
+      "sha256": "62376f72d317429e1201f041064eaada1d09965bb64bf2e3519d8fdfe2200b46",
+      "acquisition_uuid": "870d2235-6889-48fd-aca5-d6dead898016",
+      "finite_case_accepted": true,
+      "native_whole_field_agreement_verified": false,
+      "elapsed_seconds": 2.624784240499139,
+      "acquisition_provenance": {
+        "original_record": "build/results/core-elasticity-initial-nine-v1/triangle-bdm2-n4/elasticity.json",
+        "original_record_sha256": "9666e1803ebfbc9c4042bc0d1f280b50af6a7aba45c2fc7eb68e2ff4a2664fd2",
+        "original_verification_sha256": "90bb3a39c0c4ceb5bdda9f11eb712b2db4508d31fa719c52ea00ab8f894a0575",
+        "runtime_sha256": "53d4f707fa66a232f6c20a83d3ea140525414f2c6a18ecff87995003320845da",
+        "source_generation_sha256": "7fa4597c119713a31e5a58ffb0d71026b9f40c72372c0ee1682f086159aa2f67",
+        "original_micro_reused": false
+      },
+      "terminal_norms": {
+        "displacement_l2": 0.008516113016055447,
+        "stress_l2": 0.04946247835315516,
+        "divergence_l2": 0.10962076142414363,
+        "rotation_l2": 0.006240590876572531
+      },
+      "original_coefficient_archive_sha256": "62376f72d317429e1201f041064eaada1d09965bb64bf2e3519d8fdfe2200b46",
+      "basis_replay_proof": {
+        "case": "triangle-bdm2",
+        "resolution": 4,
+        "archive_sha256": "62376f72d317429e1201f041064eaada1d09965bb64bf2e3519d8fdfe2200b46",
+        "acquisition_uuid": "870d2235-6889-48fd-aca5-d6dead898016",
+        "original_micro_reused": false,
+        "original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 8.481749787769603e-15,
+          "local_volume_relative_to_force": 7.517429025726999e-15,
+          "body_force_norm": 1.4411137989612817,
+          "physical_rhs_with_prescribed_traction_norm": 1.5136678207481828,
+          "maximum_physical_block_backward_error": 4.684770908979602e-15,
+          "compact_physical_relative_residual": 6.011995387344987e-15,
+          "augmented_compact_relative_residual": 6.015692984529234e-15,
+          "physical_mean_relative_defect": 6.804966910338578e-17,
+          "reduced_gauge_relative_defect": 1.037384223586996e-16,
+          "physical_mean_values": [
+            3.8884256501886045
+          ],
+          "physical_mean_targets": [
+            3.888425650188604
+          ],
+          "gauge_multipliers": [
+            1.5343674278246934e-15
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                3.258154806438009e-16,
+                1.6872066626321604e-16,
+                9.441302672963703e-17,
+                1.7408556556164846e-17
+              ],
+              "executed_reconstruction_relative_error": 1.9598018620110896e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                7.707074006147628e-17,
+                1.0761378111146357e-16,
+                6.237086851931482e-17,
+                1.760807394030213e-17
+              ],
+              "executed_reconstruction_relative_error": 5.689521980677242e-16
+            },
+            {
+              "macro": 2,
+              "physical_block_backward_errors": [
+                9.721772831641761e-17,
+                4.562989196389367e-15,
+                7.857859555918875e-17,
+                1.3099694839058948e-17
+              ],
+              "executed_reconstruction_relative_error": 1.9502576739953125e-16
+            },
+            {
+              "macro": 3,
+              "physical_block_backward_errors": [
+                7.015991269742373e-17,
+                4.684770908979602e-15,
+                6.536170575969216e-17,
+                1.1019518868465124e-17
+              ],
+              "executed_reconstruction_relative_error": 1.9711752817277708e-16
+            },
+            {
+              "macro": 4,
+              "physical_block_backward_errors": [
+                7.320393242921839e-17,
+                1.0598577061510907e-16,
+                9.667650212229717e-17,
+                1.5491153125110473e-17
+              ],
+              "executed_reconstruction_relative_error": 5.074723516468684e-16
+            },
+            {
+              "macro": 5,
+              "physical_block_backward_errors": [
+                1.3928278370728812e-16,
+                8.720787468523149e-17,
+                1.6228737469238428e-16,
+                9.40915100600477e-18
+              ],
+              "executed_reconstruction_relative_error": 3.9575830690528625e-16
+            },
+            {
+              "macro": 6,
+              "physical_block_backward_errors": [
+                6.784031355177334e-17,
+                1.0657866433820117e-16,
+                1.2794193340287185e-16,
+                2.358704696727359e-17
+              ],
+              "executed_reconstruction_relative_error": 6.847686134167745e-16
+            },
+            {
+              "macro": 7,
+              "physical_block_backward_errors": [
+                4.3004948098371716e-17,
+                7.691913735837662e-17,
+                6.521124145163653e-17,
+                2.434733540724081e-17
+              ],
+              "executed_reconstruction_relative_error": 4.5433714507470525e-16
+            },
+            {
+              "macro": 8,
+              "physical_block_backward_errors": [
+                2.5067819196205646e-16,
+                1.1659522642177984e-16,
+                1.1977381918369936e-16,
+                2.0550502764011794e-17
+              ],
+              "executed_reconstruction_relative_error": 7.611189055444351e-16
+            },
+            {
+              "macro": 9,
+              "physical_block_backward_errors": [
+                1.6036066424369687e-16,
+                2.7398942146706923e-16,
+                1.004242753905507e-16,
+                2.860420811820021e-17
+              ],
+              "executed_reconstruction_relative_error": 1.4588493671377607e-16
+            },
+            {
+              "macro": 10,
+              "physical_block_backward_errors": [
+                1.7220814160712168e-16,
+                1.2536715863089662e-15,
+                8.497937395161105e-17,
+                1.3704981717252988e-17
+              ],
+              "executed_reconstruction_relative_error": 3.176269008044546e-16
+            },
+            {
+              "macro": 11,
+              "physical_block_backward_errors": [
+                8.333437690626985e-17,
+                4.183256275858074e-15,
+                8.272284168373061e-17,
+                1.5465102469066513e-17
+              ],
+              "executed_reconstruction_relative_error": 2.2781027564043736e-16
+            },
+            {
+              "macro": 12,
+              "physical_block_backward_errors": [
+                7.05483283098736e-17,
+                1.4867296167482604e-15,
+                1.1531104656107044e-16,
+                1.1646997166364381e-17
+              ],
+              "executed_reconstruction_relative_error": 2.1135463070336673e-16
+            },
+            {
+              "macro": 13,
+              "physical_block_backward_errors": [
+                7.033155521803497e-17,
+                3.5341794759128827e-15,
+                7.699857625923199e-17,
+                1.1566224523883992e-17
+              ],
+              "executed_reconstruction_relative_error": 1.7557925566391468e-16
+            },
+            {
+              "macro": 14,
+              "physical_block_backward_errors": [
+                1.8152073900144084e-16,
+                1.1020372544395428e-16,
+                6.477626255445451e-17,
+                7.195476569869832e-18
+              ],
+              "executed_reconstruction_relative_error": 2.1254004556882572e-16
+            },
+            {
+              "macro": 15,
+              "physical_block_backward_errors": [
+                6.358321262177736e-17,
+                1.6146382089904943e-16,
+                4.0489215879076023e-17,
+                8.188085719483767e-18
+              ],
+              "executed_reconstruction_relative_error": 1.1375746925701312e-16
+            },
+            {
+              "macro": 16,
+              "physical_block_backward_errors": [
+                1.401334831318303e-16,
+                7.95251099842231e-17,
+                5.458391117635797e-17,
+                1.418678201789416e-17
+              ],
+              "executed_reconstruction_relative_error": 3.8110654581569236e-16
+            },
+            {
+              "macro": 17,
+              "physical_block_backward_errors": [
+                2.553798311059536e-16,
+                8.819361374527419e-17,
+                2.0989475340673098e-16,
+                1.726264470853965e-17
+              ],
+              "executed_reconstruction_relative_error": 3.8744368611034733e-16
+            },
+            {
+              "macro": 18,
+              "physical_block_backward_errors": [
+                1.6318885951545412e-16,
+                9.426529701067186e-16,
+                6.586261750509389e-17,
+                5.428926886215518e-18
+              ],
+              "executed_reconstruction_relative_error": 2.8363337970895753e-16
+            },
+            {
+              "macro": 19,
+              "physical_block_backward_errors": [
+                6.248314726732808e-17,
+                6.081896439718697e-17,
+                3.042313560864152e-17,
+                1.0315105100310746e-17
+              ],
+              "executed_reconstruction_relative_error": 2.347788423481764e-16
+            },
+            {
+              "macro": 20,
+              "physical_block_backward_errors": [
+                1.7129566324439465e-16,
+                2.1109393232823863e-16,
+                2.0961884349438437e-16,
+                1.759023829575451e-17
+              ],
+              "executed_reconstruction_relative_error": 3.3227047538859597e-16
+            },
+            {
+              "macro": 21,
+              "physical_block_backward_errors": [
+                5.285055328621064e-17,
+                1.6980408012299398e-15,
+                4.0971177865573626e-17,
+                1.9991820764025722e-17
+              ],
+              "executed_reconstruction_relative_error": 2.4741023101215757e-16
+            },
+            {
+              "macro": 22,
+              "physical_block_backward_errors": [
+                1.897811314212109e-16,
+                2.765961393162886e-16,
+                7.244400039244334e-17,
+                9.020281644853704e-18
+              ],
+              "executed_reconstruction_relative_error": 1.7126117869876605e-16
+            },
+            {
+              "macro": 23,
+              "physical_block_backward_errors": [
+                7.350952409143389e-17,
+                2.0580273781889047e-16,
+                5.719340153675773e-17,
+                1.2230631574707198e-17
+              ],
+              "executed_reconstruction_relative_error": 1.4145690858351219e-16
+            },
+            {
+              "macro": 24,
+              "physical_block_backward_errors": [
+                1.3826487235474064e-16,
+                1.1959905902597528e-16,
+                5.989805314418206e-17,
+                2.2202076421964674e-17
+              ],
+              "executed_reconstruction_relative_error": 4.981459736213152e-16
+            },
+            {
+              "macro": 25,
+              "physical_block_backward_errors": [
+                1.3172600548984464e-16,
+                1.2037030777862938e-16,
+                1.0506149565770279e-16,
+                3.525930491371735e-17
+              ],
+              "executed_reconstruction_relative_error": 3.966932781202537e-16
+            },
+            {
+              "macro": 26,
+              "physical_block_backward_errors": [
+                1.0761291703893622e-16,
+                6.569180442333031e-17,
+                5.3443042257108e-17,
+                6.013988609483654e-18
+              ],
+              "executed_reconstruction_relative_error": 5.102899544765737e-16
+            },
+            {
+              "macro": 27,
+              "physical_block_backward_errors": [
+                6.159423152026301e-17,
+                8.063534819277253e-17,
+                7.163262819919205e-17,
+                1.1283776382704908e-17
+              ],
+              "executed_reconstruction_relative_error": 2.4496413558906224e-16
+            },
+            {
+              "macro": 28,
+              "physical_block_backward_errors": [
+                1.7857396629929871e-16,
+                8.091803147144862e-17,
+                2.1442619727129037e-16,
+                4.8395792016112896e-18
+              ],
+              "executed_reconstruction_relative_error": 6.42173415076886e-16
+            },
+            {
+              "macro": 29,
+              "physical_block_backward_errors": [
+                3.795542551762655e-17,
+                8.904297214182667e-17,
+                5.832309098686952e-17,
+                8.674529688758053e-18
+              ],
+              "executed_reconstruction_relative_error": 1.7492156911323986e-16
+            },
+            {
+              "macro": 30,
+              "physical_block_backward_errors": [
+                2.8885809270677935e-16,
+                7.696593059226942e-17,
+                1.4656204719375407e-16,
+                8.41763055125904e-18
+              ],
+              "executed_reconstruction_relative_error": 5.174664582523099e-16
+            },
+            {
+              "macro": 31,
+              "physical_block_backward_errors": [
+                1.1166777726868385e-16,
+                6.250774192442372e-17,
+                6.111908104692083e-17,
+                1.2008915609472937e-17
+              ],
+              "executed_reconstruction_relative_error": 2.5815191382537094e-16
+            }
+          ]
+        },
+        "basis_checks": {
+          "maximum_canonical_normal_moment_defect": 4.7369515717341935e-15,
+          "maximum_divergence_theorem_defect": 4.9795600383846345e-15,
+          "maximum_executed_bdm_table_defect": 0.0
+        },
+        "replay_blas_1_2_bitwise": true,
+        "coherent_retained_rotation_bitwise": true,
+        "rotated_original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 8.481749787769603e-15,
+          "local_volume_relative_to_force": 7.517429025726999e-15,
+          "body_force_norm": 1.4411137989612817,
+          "physical_rhs_with_prescribed_traction_norm": 1.5136678207481828,
+          "maximum_physical_block_backward_error": 4.684770908979602e-15,
+          "compact_physical_relative_residual": 6.0119950156531855e-15,
+          "augmented_compact_relative_residual": 6.015692582467283e-15,
+          "physical_mean_relative_defect": 6.804966910338578e-17,
+          "reduced_gauge_relative_defect": 1.037384223586996e-16,
+          "physical_mean_values": [
+            3.8884256501886045
+          ],
+          "physical_mean_targets": [
+            3.888425650188604
+          ],
+          "gauge_multipliers": [
+            1.5343674278246934e-15
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                3.258154806438009e-16,
+                1.6872066626321604e-16,
+                9.441302672963703e-17,
+                1.7408556556164846e-17
+              ],
+              "executed_reconstruction_relative_error": 1.9598018620110896e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                7.707074006147628e-17,
+                1.0761378111146357e-16,
+                6.237086851931482e-17,
+                1.760807394030213e-17
+              ],
+              "executed_reconstruction_relative_error": 5.689521980677242e-16
+            },
+            {
+              "macro": 2,
+              "physical_block_backward_errors": [
+                9.721772831641761e-17,
+                4.562989196389367e-15,
+                7.857859555918875e-17,
+                1.3099694839058948e-17
+              ],
+              "executed_reconstruction_relative_error": 1.9502576739953125e-16
+            },
+            {
+              "macro": 3,
+              "physical_block_backward_errors": [
+                7.015991269742373e-17,
+                4.684770908979602e-15,
+                6.536170575969216e-17,
+                1.1019518868465124e-17
+              ],
+              "executed_reconstruction_relative_error": 1.9711752817277708e-16
+            },
+            {
+              "macro": 4,
+              "physical_block_backward_errors": [
+                7.320393242921839e-17,
+                1.0598577061510907e-16,
+                9.667650212229717e-17,
+                1.5491153125110473e-17
+              ],
+              "executed_reconstruction_relative_error": 5.074723516468684e-16
+            },
+            {
+              "macro": 5,
+              "physical_block_backward_errors": [
+                1.3928278370728812e-16,
+                8.720787468523149e-17,
+                1.6228737469238428e-16,
+                9.40915100600477e-18
+              ],
+              "executed_reconstruction_relative_error": 3.9575830690528625e-16
+            },
+            {
+              "macro": 6,
+              "physical_block_backward_errors": [
+                6.784031355177334e-17,
+                1.0657866433820117e-16,
+                1.2794193340287185e-16,
+                2.358704696727359e-17
+              ],
+              "executed_reconstruction_relative_error": 6.847686134167745e-16
+            },
+            {
+              "macro": 7,
+              "physical_block_backward_errors": [
+                4.3004948098371716e-17,
+                7.691913735837662e-17,
+                6.521124145163653e-17,
+                2.434733540724081e-17
+              ],
+              "executed_reconstruction_relative_error": 4.5433714507470525e-16
+            },
+            {
+              "macro": 8,
+              "physical_block_backward_errors": [
+                2.5067819196205646e-16,
+                1.1659522642177984e-16,
+                1.1977381918369936e-16,
+                2.0550502764011794e-17
+              ],
+              "executed_reconstruction_relative_error": 7.611189055444351e-16
+            },
+            {
+              "macro": 9,
+              "physical_block_backward_errors": [
+                1.6036066424369687e-16,
+                2.7398942146706923e-16,
+                1.004242753905507e-16,
+                2.860420811820021e-17
+              ],
+              "executed_reconstruction_relative_error": 1.4588493671377607e-16
+            },
+            {
+              "macro": 10,
+              "physical_block_backward_errors": [
+                1.7220814160712168e-16,
+                1.2536715863089662e-15,
+                8.497937395161105e-17,
+                1.3704981717252988e-17
+              ],
+              "executed_reconstruction_relative_error": 3.176269008044546e-16
+            },
+            {
+              "macro": 11,
+              "physical_block_backward_errors": [
+                8.333437690626985e-17,
+                4.183256275858074e-15,
+                8.272284168373061e-17,
+                1.5465102469066513e-17
+              ],
+              "executed_reconstruction_relative_error": 2.2781027564043736e-16
+            },
+            {
+              "macro": 12,
+              "physical_block_backward_errors": [
+                7.05483283098736e-17,
+                1.4867296167482604e-15,
+                1.1531104656107044e-16,
+                1.1646997166364381e-17
+              ],
+              "executed_reconstruction_relative_error": 2.1135463070336673e-16
+            },
+            {
+              "macro": 13,
+              "physical_block_backward_errors": [
+                7.033155521803497e-17,
+                3.5341794759128827e-15,
+                7.699857625923199e-17,
+                1.1566224523883992e-17
+              ],
+              "executed_reconstruction_relative_error": 1.7557925566391468e-16
+            },
+            {
+              "macro": 14,
+              "physical_block_backward_errors": [
+                1.8152073900144084e-16,
+                1.1020372544395428e-16,
+                6.477626255445451e-17,
+                7.195476569869832e-18
+              ],
+              "executed_reconstruction_relative_error": 2.1254004556882572e-16
+            },
+            {
+              "macro": 15,
+              "physical_block_backward_errors": [
+                6.358321262177736e-17,
+                1.6146382089904943e-16,
+                4.0489215879076023e-17,
+                8.188085719483767e-18
+              ],
+              "executed_reconstruction_relative_error": 1.1375746925701312e-16
+            },
+            {
+              "macro": 16,
+              "physical_block_backward_errors": [
+                1.401334831318303e-16,
+                7.95251099842231e-17,
+                5.458391117635797e-17,
+                1.418678201789416e-17
+              ],
+              "executed_reconstruction_relative_error": 3.8110654581569236e-16
+            },
+            {
+              "macro": 17,
+              "physical_block_backward_errors": [
+                2.553798311059536e-16,
+                8.819361374527419e-17,
+                2.0989475340673098e-16,
+                1.726264470853965e-17
+              ],
+              "executed_reconstruction_relative_error": 3.8744368611034733e-16
+            },
+            {
+              "macro": 18,
+              "physical_block_backward_errors": [
+                1.6318885951545412e-16,
+                9.426529701067186e-16,
+                6.586261750509389e-17,
+                5.428926886215518e-18
+              ],
+              "executed_reconstruction_relative_error": 2.8363337970895753e-16
+            },
+            {
+              "macro": 19,
+              "physical_block_backward_errors": [
+                6.248314726732808e-17,
+                6.081896439718697e-17,
+                3.042313560864152e-17,
+                1.0315105100310746e-17
+              ],
+              "executed_reconstruction_relative_error": 2.347788423481764e-16
+            },
+            {
+              "macro": 20,
+              "physical_block_backward_errors": [
+                1.7129566324439465e-16,
+                2.1109393232823863e-16,
+                2.0961884349438437e-16,
+                1.759023829575451e-17
+              ],
+              "executed_reconstruction_relative_error": 3.3227047538859597e-16
+            },
+            {
+              "macro": 21,
+              "physical_block_backward_errors": [
+                5.285055328621064e-17,
+                1.6980408012299398e-15,
+                4.0971177865573626e-17,
+                1.9991820764025722e-17
+              ],
+              "executed_reconstruction_relative_error": 2.4741023101215757e-16
+            },
+            {
+              "macro": 22,
+              "physical_block_backward_errors": [
+                1.897811314212109e-16,
+                2.765961393162886e-16,
+                7.244400039244334e-17,
+                9.020281644853704e-18
+              ],
+              "executed_reconstruction_relative_error": 1.7126117869876605e-16
+            },
+            {
+              "macro": 23,
+              "physical_block_backward_errors": [
+                7.350952409143389e-17,
+                2.0580273781889047e-16,
+                5.719340153675773e-17,
+                1.2230631574707198e-17
+              ],
+              "executed_reconstruction_relative_error": 1.4145690858351219e-16
+            },
+            {
+              "macro": 24,
+              "physical_block_backward_errors": [
+                1.3826487235474064e-16,
+                1.1959905902597528e-16,
+                5.989805314418206e-17,
+                2.2202076421964674e-17
+              ],
+              "executed_reconstruction_relative_error": 4.981459736213152e-16
+            },
+            {
+              "macro": 25,
+              "physical_block_backward_errors": [
+                1.3172600548984464e-16,
+                1.2037030777862938e-16,
+                1.0506149565770279e-16,
+                3.525930491371735e-17
+              ],
+              "executed_reconstruction_relative_error": 3.966932781202537e-16
+            },
+            {
+              "macro": 26,
+              "physical_block_backward_errors": [
+                1.0761291703893622e-16,
+                6.569180442333031e-17,
+                5.3443042257108e-17,
+                6.013988609483654e-18
+              ],
+              "executed_reconstruction_relative_error": 5.102899544765737e-16
+            },
+            {
+              "macro": 27,
+              "physical_block_backward_errors": [
+                6.159423152026301e-17,
+                8.063534819277253e-17,
+                7.163262819919205e-17,
+                1.1283776382704908e-17
+              ],
+              "executed_reconstruction_relative_error": 2.4496413558906224e-16
+            },
+            {
+              "macro": 28,
+              "physical_block_backward_errors": [
+                1.7857396629929871e-16,
+                8.091803147144862e-17,
+                2.1442619727129037e-16,
+                4.8395792016112896e-18
+              ],
+              "executed_reconstruction_relative_error": 6.42173415076886e-16
+            },
+            {
+              "macro": 29,
+              "physical_block_backward_errors": [
+                3.795542551762655e-17,
+                8.904297214182667e-17,
+                5.832309098686952e-17,
+                8.674529688758053e-18
+              ],
+              "executed_reconstruction_relative_error": 1.7492156911323986e-16
+            },
+            {
+              "macro": 30,
+              "physical_block_backward_errors": [
+                2.8885809270677935e-16,
+                7.696593059226942e-17,
+                1.4656204719375407e-16,
+                8.41763055125904e-18
+              ],
+              "executed_reconstruction_relative_error": 5.174664582523099e-16
+            },
+            {
+              "macro": 31,
+              "physical_block_backward_errors": [
+                1.1166777726868385e-16,
+                6.250774192442372e-17,
+                6.111908104692083e-17,
+                1.2008915609472937e-17
+              ],
+              "executed_reconstruction_relative_error": 2.5815191382537094e-16
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": "rectangle-rt1",
+      "resolution": 1,
+      "macro_cells": 1,
+      "fine_cells": 1,
+      "stress_space": "RT1",
+      "displacement_space": "Q1",
+      "rotation_space": "total P1",
+      "interior_traction_space": "P1",
+      "exterior_traction_space": "full fine P1",
+      "local_refinement": 1,
+      "assembly_order": 8,
+      "norm_orders": [
+        9,
+        10
+      ],
+      "norms": {
+        "quadrature_9": {
+          "displacement_l2": 0.08099293621614377,
+          "stress_l2": 0.7411241992814132,
+          "divergence_l2": 1.3588189316052695,
+          "rotation_l2": 0.04706249885500926
+        },
+        "quadrature_10": {
+          "displacement_l2": 0.08099293621614381,
+          "stress_l2": 0.7411241992814136,
+          "divergence_l2": 1.3588189316052701,
+          "rotation_l2": 0.04706249885500928
+        }
+      },
+      "norm_quadrature_relative_changes": {
+        "displacement_l2": 5.140369687590713e-16,
+        "stress_l2": 5.992102407135632e-16,
+        "divergence_l2": 4.90230007310939e-16,
+        "rotation_l2": 4.4231994089081355e-16
+      },
+      "displacement_l2": 0.08099293621614381,
+      "stress_l2": 0.7411241992814136,
+      "divergence_l2": 1.3588189316052701,
+      "rotation_l2": 0.04706249885500928,
+      "original_physical_checks": {
+        "accepted": true,
+        "criterion": 1e-10,
+        "full_uncondensed_relative_to_physical_rhs": 4.2773161488274653e-16,
+        "local_volume_relative_to_force": 4.215106783698554e-16,
+        "body_force_norm": 12.443969624408338,
+        "physical_rhs_with_prescribed_traction_norm": 12.469680652236164,
+        "maximum_physical_block_backward_error": 1.6740309782186023e-16,
+        "compact_physical_relative_residual": 1.29528616724405e-16,
+        "augmented_compact_relative_residual": 1.286674792141512e-16,
+        "physical_mean_relative_defect": 3.928330221443907e-17,
+        "reduced_gauge_relative_defect": 6.226809289558659e-17,
+        "physical_mean_values": [
+          3.888425650188606
+        ],
+        "physical_mean_targets": [
+          3.8884256501886063
+        ],
+        "gauge_multipliers": [
+          -8.304318786663532e-17
+        ],
+        "rows": [
+          {
+            "macro": 0,
+            "physical_block_backward_errors": [
+              1.4738341556149962e-16,
+              1.6740309782186023e-16,
+              1.3992039911364335e-16,
+              1.4410473928666074e-16
+            ],
+            "executed_reconstruction_relative_error": 2.2868797126304736e-16
+          }
+        ]
+      },
+      "basis_checks": {
+        "maximum_canonical_normal_moment_defect": 5.551115123125783e-16,
+        "maximum_divergence_theorem_defect": 8.881784197001252e-16,
+        "maximum_executed_bdm_table_defect": 0.0
+      },
+      "sha256": "1b14f96a506d8138299651a07e2941d9aab8adf8337cc53b550d989f4dbb90d8",
+      "acquisition_uuid": "8093f7a8-9ddd-4964-a075-4d736b0ce2ef",
+      "finite_case_accepted": true,
+      "native_whole_field_agreement_verified": false,
+      "elapsed_seconds": 0.27442499436438084,
+      "acquisition_provenance": {
+        "original_record": "build/results/core-elasticity-micro-v1/elasticity.json",
+        "original_record_sha256": "714b32aced129c981ecfcae35f80a2069fe868abf1581d0bc6c8025d63ed8aef",
+        "original_verification_sha256": "f67996e07bae8fcb660aad7450d6e3d5d332424a144a57b72e9197073116d8c0",
+        "runtime_sha256": "53d4f707fa66a232f6c20a83d3ea140525414f2c6a18ecff87995003320845da",
+        "source_generation_sha256": "7fa4597c119713a31e5a58ffb0d71026b9f40c72372c0ee1682f086159aa2f67",
+        "original_micro_reused": true
+      },
+      "terminal_norms": {
+        "displacement_l2": 0.08099293621614381,
+        "stress_l2": 0.7411241992814136,
+        "divergence_l2": 1.3588189316052701,
+        "rotation_l2": 0.04706249885500928
+      },
+      "original_coefficient_archive_sha256": "1b14f96a506d8138299651a07e2941d9aab8adf8337cc53b550d989f4dbb90d8",
+      "basis_replay_proof": {
+        "case": "rectangle-rt1",
+        "resolution": 1,
+        "archive_sha256": "1b14f96a506d8138299651a07e2941d9aab8adf8337cc53b550d989f4dbb90d8",
+        "acquisition_uuid": "8093f7a8-9ddd-4964-a075-4d736b0ce2ef",
+        "original_micro_reused": true,
+        "original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 4.2773161488274653e-16,
+          "local_volume_relative_to_force": 4.215106783698554e-16,
+          "body_force_norm": 12.443969624408338,
+          "physical_rhs_with_prescribed_traction_norm": 12.469680652236164,
+          "maximum_physical_block_backward_error": 1.6740309782186023e-16,
+          "compact_physical_relative_residual": 1.29528616724405e-16,
+          "augmented_compact_relative_residual": 1.286674792141512e-16,
+          "physical_mean_relative_defect": 3.928330221443907e-17,
+          "reduced_gauge_relative_defect": 6.226809289558659e-17,
+          "physical_mean_values": [
+            3.888425650188606
+          ],
+          "physical_mean_targets": [
+            3.8884256501886063
+          ],
+          "gauge_multipliers": [
+            -8.304318786663532e-17
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                1.4738341556149962e-16,
+                1.6740309782186023e-16,
+                1.3992039911364335e-16,
+                1.4410473928666074e-16
+              ],
+              "executed_reconstruction_relative_error": 2.2868797126304736e-16
+            }
+          ]
+        },
+        "basis_checks": {
+          "maximum_canonical_normal_moment_defect": 5.551115123125783e-16,
+          "maximum_divergence_theorem_defect": 8.881784197001252e-16,
+          "maximum_executed_bdm_table_defect": 0.0
+        },
+        "replay_blas_1_2_bitwise": true,
+        "coherent_retained_rotation_bitwise": true,
+        "rotated_original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 4.2773161488274653e-16,
+          "local_volume_relative_to_force": 4.215106783698554e-16,
+          "body_force_norm": 12.443969624408338,
+          "physical_rhs_with_prescribed_traction_norm": 12.469680652236164,
+          "maximum_physical_block_backward_error": 1.6740309782186023e-16,
+          "compact_physical_relative_residual": 1.2952870767816576e-16,
+          "augmented_compact_relative_residual": 1.2866757132381785e-16,
+          "physical_mean_relative_defect": 3.928330221443907e-17,
+          "reduced_gauge_relative_defect": 6.226809289558659e-17,
+          "physical_mean_values": [
+            3.888425650188606
+          ],
+          "physical_mean_targets": [
+            3.8884256501886063
+          ],
+          "gauge_multipliers": [
+            -8.304318786663532e-17
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                1.4738341556149962e-16,
+                1.6740309782186023e-16,
+                1.3992039911364335e-16,
+                1.4410473928666074e-16
+              ],
+              "executed_reconstruction_relative_error": 2.2868797126304736e-16
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": "rectangle-rt1",
+      "resolution": 2,
+      "macro_cells": 4,
+      "fine_cells": 4,
+      "stress_space": "RT1",
+      "displacement_space": "Q1",
+      "rotation_space": "total P1",
+      "interior_traction_space": "P1",
+      "exterior_traction_space": "full fine P1",
+      "local_refinement": 1,
+      "assembly_order": 8,
+      "norm_orders": [
+        9,
+        10
+      ],
+      "norms": {
+        "quadrature_9": {
+          "displacement_l2": 0.02163178182062222,
+          "stress_l2": 0.19136155198800422,
+          "divergence_l2": 0.3397047329013176,
+          "rotation_l2": 0.013309938644372082
+        },
+        "quadrature_10": {
+          "displacement_l2": 0.02163178182062222,
+          "stress_l2": 0.19136155198800417,
+          "divergence_l2": 0.3397047329013174,
+          "rotation_l2": 0.013309938644372086
+        }
+      },
+      "norm_quadrature_relative_changes": {
+        "displacement_l2": 0.0,
+        "stress_l2": 2.900851851093768e-16,
+        "divergence_l2": 4.902300073109392e-16,
+        "rotation_l2": 2.6066588619629884e-16
+      },
+      "displacement_l2": 0.02163178182062222,
+      "stress_l2": 0.19136155198800417,
+      "divergence_l2": 0.3397047329013174,
+      "rotation_l2": 0.013309938644372086,
+      "original_physical_checks": {
+        "accepted": true,
+        "criterion": 1e-10,
+        "full_uncondensed_relative_to_physical_rhs": 5.294350372358394e-16,
+        "local_volume_relative_to_force": 4.936676038854391e-16,
+        "body_force_norm": 6.888014928972236,
+        "physical_rhs_with_prescribed_traction_norm": 6.91716656139877,
+        "maximum_physical_block_backward_error": 4.550795155400754e-16,
+        "compact_physical_relative_residual": 4.625731826360795e-16,
+        "augmented_compact_relative_residual": 4.632591547753728e-16,
+        "physical_mean_relative_defect": 1.4757601541001154e-16,
+        "reduced_gauge_relative_defect": 5.226005868966053e-17,
+        "physical_mean_values": [
+          3.8884256501886063
+        ],
+        "physical_mean_targets": [
+          3.888425650188605
+        ],
+        "gauge_multipliers": [
+          2.324643078345785e-16
+        ],
+        "rows": [
+          {
+            "macro": 0,
+            "physical_block_backward_errors": [
+              1.7279555673967846e-16,
+              1.2089352676071948e-16,
+              1.6765203589627945e-16,
+              1.4560600153427209e-16
+            ],
+            "executed_reconstruction_relative_error": 1.7641838563078702e-16
+          },
+          {
+            "macro": 1,
+            "physical_block_backward_errors": [
+              8.866326594154455e-17,
+              1.7734678473111506e-16,
+              5.470521072520573e-17,
+              8.940849050733188e-17
+            ],
+            "executed_reconstruction_relative_error": 1.916671691947714e-16
+          },
+          {
+            "macro": 2,
+            "physical_block_backward_errors": [
+              1.4390665542031405e-16,
+              4.550795155400754e-16,
+              1.0880254796721905e-16,
+              7.795386762210404e-17
+            ],
+            "executed_reconstruction_relative_error": 9.069651939238959e-17
+          },
+          {
+            "macro": 3,
+            "physical_block_backward_errors": [
+              9.206633032649437e-17,
+              4.99781571085261e-17,
+              9.484310398151196e-17,
+              6.700742133686904e-17
+            ],
+            "executed_reconstruction_relative_error": 1.5213075823909104e-16
+          }
+        ]
+      },
+      "basis_checks": {
+        "maximum_canonical_normal_moment_defect": 5.551115123125783e-16,
+        "maximum_divergence_theorem_defect": 8.881784197001252e-16,
+        "maximum_executed_bdm_table_defect": 0.0
+      },
+      "sha256": "6db5e8f15fb5757b06729b219dd85e7f394658f516052a6ee6e16243a0242d89",
+      "acquisition_uuid": "62cefd63-c47e-48f5-8f70-59646b95892c",
+      "finite_case_accepted": true,
+      "native_whole_field_agreement_verified": false,
+      "elapsed_seconds": 0.530834499746561,
+      "acquisition_provenance": {
+        "original_record": "build/results/core-elasticity-initial-nine-v1/rectangle-rt1-n2/elasticity.json",
+        "original_record_sha256": "fc1f37d17be0461ab809d4678fc4d7e59205c8182d92fede122fc04a238ca0a7",
+        "original_verification_sha256": "2ae1b283b6212ed260b0202af9f7c448bf16041687d28fffc24f73be772fbe28",
+        "runtime_sha256": "53d4f707fa66a232f6c20a83d3ea140525414f2c6a18ecff87995003320845da",
+        "source_generation_sha256": "7fa4597c119713a31e5a58ffb0d71026b9f40c72372c0ee1682f086159aa2f67",
+        "original_micro_reused": false
+      },
+      "terminal_norms": {
+        "displacement_l2": 0.02163178182062222,
+        "stress_l2": 0.19136155198800417,
+        "divergence_l2": 0.3397047329013174,
+        "rotation_l2": 0.013309938644372086
+      },
+      "original_coefficient_archive_sha256": "6db5e8f15fb5757b06729b219dd85e7f394658f516052a6ee6e16243a0242d89",
+      "basis_replay_proof": {
+        "case": "rectangle-rt1",
+        "resolution": 2,
+        "archive_sha256": "6db5e8f15fb5757b06729b219dd85e7f394658f516052a6ee6e16243a0242d89",
+        "acquisition_uuid": "62cefd63-c47e-48f5-8f70-59646b95892c",
+        "original_micro_reused": false,
+        "original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 5.294350372358394e-16,
+          "local_volume_relative_to_force": 4.936676038854391e-16,
+          "body_force_norm": 6.888014928972236,
+          "physical_rhs_with_prescribed_traction_norm": 6.91716656139877,
+          "maximum_physical_block_backward_error": 4.550795155400754e-16,
+          "compact_physical_relative_residual": 4.625731826360795e-16,
+          "augmented_compact_relative_residual": 4.632591547753728e-16,
+          "physical_mean_relative_defect": 1.4757601541001154e-16,
+          "reduced_gauge_relative_defect": 5.226005868966053e-17,
+          "physical_mean_values": [
+            3.8884256501886063
+          ],
+          "physical_mean_targets": [
+            3.888425650188605
+          ],
+          "gauge_multipliers": [
+            2.324643078345785e-16
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                1.7279555673967846e-16,
+                1.2089352676071948e-16,
+                1.6765203589627945e-16,
+                1.4560600153427209e-16
+              ],
+              "executed_reconstruction_relative_error": 1.7641838563078702e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                8.866326594154455e-17,
+                1.7734678473111506e-16,
+                5.470521072520573e-17,
+                8.940849050733188e-17
+              ],
+              "executed_reconstruction_relative_error": 1.916671691947714e-16
+            },
+            {
+              "macro": 2,
+              "physical_block_backward_errors": [
+                1.4390665542031405e-16,
+                4.550795155400754e-16,
+                1.0880254796721905e-16,
+                7.795386762210404e-17
+              ],
+              "executed_reconstruction_relative_error": 9.069651939238959e-17
+            },
+            {
+              "macro": 3,
+              "physical_block_backward_errors": [
+                9.206633032649437e-17,
+                4.99781571085261e-17,
+                9.484310398151196e-17,
+                6.700742133686904e-17
+              ],
+              "executed_reconstruction_relative_error": 1.5213075823909104e-16
+            }
+          ]
+        },
+        "basis_checks": {
+          "maximum_canonical_normal_moment_defect": 5.551115123125783e-16,
+          "maximum_divergence_theorem_defect": 8.881784197001252e-16,
+          "maximum_executed_bdm_table_defect": 0.0
+        },
+        "replay_blas_1_2_bitwise": true,
+        "coherent_retained_rotation_bitwise": true,
+        "rotated_original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 5.294350372358394e-16,
+          "local_volume_relative_to_force": 4.936676038854391e-16,
+          "body_force_norm": 6.888014928972236,
+          "physical_rhs_with_prescribed_traction_norm": 6.91716656139877,
+          "maximum_physical_block_backward_error": 4.550795155400754e-16,
+          "compact_physical_relative_residual": 4.625730047451588e-16,
+          "augmented_compact_relative_residual": 4.632589779213926e-16,
+          "physical_mean_relative_defect": 1.4757601541001154e-16,
+          "reduced_gauge_relative_defect": 5.226005868966053e-17,
+          "physical_mean_values": [
+            3.8884256501886063
+          ],
+          "physical_mean_targets": [
+            3.888425650188605
+          ],
+          "gauge_multipliers": [
+            2.324643078345785e-16
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                1.7279555673967846e-16,
+                1.2089352676071948e-16,
+                1.6765203589627945e-16,
+                1.4560600153427209e-16
+              ],
+              "executed_reconstruction_relative_error": 1.7641838563078702e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                8.866326594154455e-17,
+                1.7734678473111506e-16,
+                5.470521072520573e-17,
+                8.940849050733188e-17
+              ],
+              "executed_reconstruction_relative_error": 1.916671691947714e-16
+            },
+            {
+              "macro": 2,
+              "physical_block_backward_errors": [
+                1.4390665542031405e-16,
+                4.550795155400754e-16,
+                1.0880254796721905e-16,
+                7.795386762210404e-17
+              ],
+              "executed_reconstruction_relative_error": 9.069651939238959e-17
+            },
+            {
+              "macro": 3,
+              "physical_block_backward_errors": [
+                9.206633032649437e-17,
+                4.99781571085261e-17,
+                9.484310398151196e-17,
+                6.700742133686904e-17
+              ],
+              "executed_reconstruction_relative_error": 1.5213075823909104e-16
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": "rectangle-rt1",
+      "resolution": 4,
+      "macro_cells": 16,
+      "fine_cells": 16,
+      "stress_space": "RT1",
+      "displacement_space": "Q1",
+      "rotation_space": "total P1",
+      "interior_traction_space": "P1",
+      "exterior_traction_space": "full fine P1",
+      "local_refinement": 1,
+      "assembly_order": 8,
+      "norm_orders": [
+        9,
+        10
+      ],
+      "norms": {
+        "quadrature_9": {
+          "displacement_l2": 0.005486572027669456,
+          "stress_l2": 0.04792008690509864,
+          "divergence_l2": 0.08492618322532942,
+          "rotation_l2": 0.003398669300978139
+        },
+        "quadrature_10": {
+          "displacement_l2": 0.005486572027669448,
+          "stress_l2": 0.04792008690509859,
+          "divergence_l2": 0.08492618322532934,
+          "rotation_l2": 0.0033986693009781387
+        }
+      },
+      "norm_quadrature_relative_changes": {
+        "displacement_l2": 1.4227928846149724e-15,
+        "stress_l2": 1.1584109048297984e-15,
+        "divergence_l2": 9.804600146218786e-16,
+        "rotation_l2": 1.2760313834281795e-16
+      },
+      "displacement_l2": 0.005486572027669448,
+      "stress_l2": 0.04792008690509859,
+      "divergence_l2": 0.08492618322532934,
+      "rotation_l2": 0.0033986693009781387,
+      "original_physical_checks": {
+        "accepted": true,
+        "criterion": 1e-10,
+        "full_uncondensed_relative_to_physical_rhs": 1.1520619317411754e-15,
+        "local_volume_relative_to_force": 9.168468659821706e-16,
+        "body_force_norm": 3.53182862191765,
+        "physical_rhs_with_prescribed_traction_norm": 3.5620484738593983,
+        "maximum_physical_block_backward_error": 4.1619636089814906e-16,
+        "compact_physical_relative_residual": 7.674057826449927e-16,
+        "augmented_compact_relative_residual": 7.67263750013512e-16,
+        "physical_mean_relative_defect": 7.972563755510505e-19,
+        "reduced_gauge_relative_defect": 4.426350365877059e-17,
+        "physical_mean_values": [
+          3.888425650188604
+        ],
+        "physical_mean_targets": [
+          3.888425650188604
+        ],
+        "gauge_multipliers": [
+          -1.8388068845354175e-16
+        ],
+        "rows": [
+          {
+            "macro": 0,
+            "physical_block_backward_errors": [
+              1.8360140660246294e-16,
+              1.152013168667505e-16,
+              1.2801345982723668e-16,
+              1.4689881801205775e-16
+            ],
+            "executed_reconstruction_relative_error": 2.472077826532312e-16
+          },
+          {
+            "macro": 1,
+            "physical_block_backward_errors": [
+              7.54504752589113e-17,
+              6.358882725603334e-17,
+              7.90689649920566e-17,
+              8.942966249602963e-17
+            ],
+            "executed_reconstruction_relative_error": 2.6215519618220907e-16
+          },
+          {
+            "macro": 2,
+            "physical_block_backward_errors": [
+              1.094242639926333e-16,
+              4.030153815066059e-17,
+              4.631250773861424e-17,
+              7.579366832597785e-17
+            ],
+            "executed_reconstruction_relative_error": 1.6944699422606062e-16
+          },
+          {
+            "macro": 3,
+            "physical_block_backward_errors": [
+              1.0431457237421522e-16,
+              5.353791950645726e-17,
+              1.0031117382172707e-16,
+              6.70414897945793e-17
+            ],
+            "executed_reconstruction_relative_error": 1.3931300141504904e-16
+          },
+          {
+            "macro": 4,
+            "physical_block_backward_errors": [
+              1.406803535719204e-16,
+              4.1619636089814906e-16,
+              1.643408023074705e-16,
+              7.835595156209874e-17
+            ],
+            "executed_reconstruction_relative_error": 1.3400361303926006e-16
+          },
+          {
+            "macro": 5,
+            "physical_block_backward_errors": [
+              8.235870451395898e-17,
+              5.634985560187281e-17,
+              1.246067706357454e-16,
+              6.713814764952569e-17
+            ],
+            "executed_reconstruction_relative_error": 1.644705195324569e-16
+          },
+          {
+            "macro": 6,
+            "physical_block_backward_errors": [
+              9.433130681505294e-17,
+              1.4723150881016983e-16,
+              7.369484666679607e-17,
+              7.274101292997827e-17
+            ],
+            "executed_reconstruction_relative_error": 1.9659055803314006e-16
+          },
+          {
+            "macro": 7,
+            "physical_block_backward_errors": [
+              7.046729237599693e-17,
+              1.1688269249568387e-16,
+              1.2502511145170293e-16,
+              7.775685550737997e-17
+            ],
+            "executed_reconstruction_relative_error": 1.6033920892759845e-16
+          },
+          {
+            "macro": 8,
+            "physical_block_backward_errors": [
+              1.3283952647356805e-16,
+              9.799452953521398e-17,
+              2.0260203567202889e-16,
+              1.0077887031873031e-16
+            ],
+            "executed_reconstruction_relative_error": 1.1106964718927606e-16
+          },
+          {
+            "macro": 9,
+            "physical_block_backward_errors": [
+              8.716818127796484e-17,
+              1.6046967837467207e-16,
+              1.151421599907965e-16,
+              9.51109318805051e-17
+            ],
+            "executed_reconstruction_relative_error": 1.1520356514840604e-16
+          },
+          {
+            "macro": 10,
+            "physical_block_backward_errors": [
+              6.001296887722408e-17,
+              6.2572889303053e-17,
+              8.388225032579511e-17,
+              4.652488992711415e-17
+            ],
+            "executed_reconstruction_relative_error": 1.9799636101492423e-16
+          },
+          {
+            "macro": 11,
+            "physical_block_backward_errors": [
+              6.410513176499993e-17,
+              9.108764484182949e-17,
+              1.1723750089027439e-16,
+              5.8926033346538e-17
+            ],
+            "executed_reconstruction_relative_error": 1.494722658814585e-16
+          },
+          {
+            "macro": 12,
+            "physical_block_backward_errors": [
+              2.0853942561373818e-16,
+              3.532738428337004e-16,
+              1.8090570392353515e-16,
+              5.443613477369446e-17
+            ],
+            "executed_reconstruction_relative_error": 1.1506613449603145e-16
+          },
+          {
+            "macro": 13,
+            "physical_block_backward_errors": [
+              1.0019540376329134e-16,
+              5.4620215768096557e-17,
+              9.30414151922717e-17,
+              6.147104299106713e-17
+            ],
+            "executed_reconstruction_relative_error": 1.4622149166327813e-16
+          },
+          {
+            "macro": 14,
+            "physical_block_backward_errors": [
+              6.892571294610288e-17,
+              1.3220848801647885e-16,
+              7.057156453134879e-17,
+              8.055139566199895e-17
+            ],
+            "executed_reconstruction_relative_error": 1.8757981286754459e-16
+          },
+          {
+            "macro": 15,
+            "physical_block_backward_errors": [
+              5.734757858577882e-17,
+              2.0370846109753938e-16,
+              7.566070109993133e-17,
+              1.1428199598026099e-16
+            ],
+            "executed_reconstruction_relative_error": 1.8353429086461624e-16
+          }
+        ]
+      },
+      "basis_checks": {
+        "maximum_canonical_normal_moment_defect": 5.551115123125783e-16,
+        "maximum_divergence_theorem_defect": 8.881784197001252e-16,
+        "maximum_executed_bdm_table_defect": 0.0
+      },
+      "sha256": "eda4a849b3b7010f35c5b1d6d28ec3cc0095f16f52da4f23cf27a894d234c5b4",
+      "acquisition_uuid": "d258c433-e64f-4b57-9459-83aedf629c55",
+      "finite_case_accepted": true,
+      "native_whole_field_agreement_verified": false,
+      "elapsed_seconds": 1.4551824480295181,
+      "acquisition_provenance": {
+        "original_record": "build/results/core-elasticity-initial-nine-v1/rectangle-rt1-n4/elasticity.json",
+        "original_record_sha256": "0dc6f6bc6427672efc5926425c90d8abb05e5ac3b14069873b7f0bcaf4198ab6",
+        "original_verification_sha256": "6aecee48621249b1f4c93ea5b19b888b61f3b005297c228b41a8adf85e82f63a",
+        "runtime_sha256": "53d4f707fa66a232f6c20a83d3ea140525414f2c6a18ecff87995003320845da",
+        "source_generation_sha256": "7fa4597c119713a31e5a58ffb0d71026b9f40c72372c0ee1682f086159aa2f67",
+        "original_micro_reused": false
+      },
+      "terminal_norms": {
+        "displacement_l2": 0.005486572027669448,
+        "stress_l2": 0.04792008690509859,
+        "divergence_l2": 0.08492618322532934,
+        "rotation_l2": 0.0033986693009781387
+      },
+      "original_coefficient_archive_sha256": "eda4a849b3b7010f35c5b1d6d28ec3cc0095f16f52da4f23cf27a894d234c5b4",
+      "basis_replay_proof": {
+        "case": "rectangle-rt1",
+        "resolution": 4,
+        "archive_sha256": "eda4a849b3b7010f35c5b1d6d28ec3cc0095f16f52da4f23cf27a894d234c5b4",
+        "acquisition_uuid": "d258c433-e64f-4b57-9459-83aedf629c55",
+        "original_micro_reused": false,
+        "original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 1.1520619317411754e-15,
+          "local_volume_relative_to_force": 9.168468659821706e-16,
+          "body_force_norm": 3.53182862191765,
+          "physical_rhs_with_prescribed_traction_norm": 3.5620484738593983,
+          "maximum_physical_block_backward_error": 4.1619636089814906e-16,
+          "compact_physical_relative_residual": 7.674057826449927e-16,
+          "augmented_compact_relative_residual": 7.67263750013512e-16,
+          "physical_mean_relative_defect": 7.972563755510505e-19,
+          "reduced_gauge_relative_defect": 4.426350365877059e-17,
+          "physical_mean_values": [
+            3.888425650188604
+          ],
+          "physical_mean_targets": [
+            3.888425650188604
+          ],
+          "gauge_multipliers": [
+            -1.8388068845354175e-16
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                1.8360140660246294e-16,
+                1.152013168667505e-16,
+                1.2801345982723668e-16,
+                1.4689881801205775e-16
+              ],
+              "executed_reconstruction_relative_error": 2.472077826532312e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                7.54504752589113e-17,
+                6.358882725603334e-17,
+                7.90689649920566e-17,
+                8.942966249602963e-17
+              ],
+              "executed_reconstruction_relative_error": 2.6215519618220907e-16
+            },
+            {
+              "macro": 2,
+              "physical_block_backward_errors": [
+                1.094242639926333e-16,
+                4.030153815066059e-17,
+                4.631250773861424e-17,
+                7.579366832597785e-17
+              ],
+              "executed_reconstruction_relative_error": 1.6944699422606062e-16
+            },
+            {
+              "macro": 3,
+              "physical_block_backward_errors": [
+                1.0431457237421522e-16,
+                5.353791950645726e-17,
+                1.0031117382172707e-16,
+                6.70414897945793e-17
+              ],
+              "executed_reconstruction_relative_error": 1.3931300141504904e-16
+            },
+            {
+              "macro": 4,
+              "physical_block_backward_errors": [
+                1.406803535719204e-16,
+                4.1619636089814906e-16,
+                1.643408023074705e-16,
+                7.835595156209874e-17
+              ],
+              "executed_reconstruction_relative_error": 1.3400361303926006e-16
+            },
+            {
+              "macro": 5,
+              "physical_block_backward_errors": [
+                8.235870451395898e-17,
+                5.634985560187281e-17,
+                1.246067706357454e-16,
+                6.713814764952569e-17
+              ],
+              "executed_reconstruction_relative_error": 1.644705195324569e-16
+            },
+            {
+              "macro": 6,
+              "physical_block_backward_errors": [
+                9.433130681505294e-17,
+                1.4723150881016983e-16,
+                7.369484666679607e-17,
+                7.274101292997827e-17
+              ],
+              "executed_reconstruction_relative_error": 1.9659055803314006e-16
+            },
+            {
+              "macro": 7,
+              "physical_block_backward_errors": [
+                7.046729237599693e-17,
+                1.1688269249568387e-16,
+                1.2502511145170293e-16,
+                7.775685550737997e-17
+              ],
+              "executed_reconstruction_relative_error": 1.6033920892759845e-16
+            },
+            {
+              "macro": 8,
+              "physical_block_backward_errors": [
+                1.3283952647356805e-16,
+                9.799452953521398e-17,
+                2.0260203567202889e-16,
+                1.0077887031873031e-16
+              ],
+              "executed_reconstruction_relative_error": 1.1106964718927606e-16
+            },
+            {
+              "macro": 9,
+              "physical_block_backward_errors": [
+                8.716818127796484e-17,
+                1.6046967837467207e-16,
+                1.151421599907965e-16,
+                9.51109318805051e-17
+              ],
+              "executed_reconstruction_relative_error": 1.1520356514840604e-16
+            },
+            {
+              "macro": 10,
+              "physical_block_backward_errors": [
+                6.001296887722408e-17,
+                6.2572889303053e-17,
+                8.388225032579511e-17,
+                4.652488992711415e-17
+              ],
+              "executed_reconstruction_relative_error": 1.9799636101492423e-16
+            },
+            {
+              "macro": 11,
+              "physical_block_backward_errors": [
+                6.410513176499993e-17,
+                9.108764484182949e-17,
+                1.1723750089027439e-16,
+                5.8926033346538e-17
+              ],
+              "executed_reconstruction_relative_error": 1.494722658814585e-16
+            },
+            {
+              "macro": 12,
+              "physical_block_backward_errors": [
+                2.0853942561373818e-16,
+                3.532738428337004e-16,
+                1.8090570392353515e-16,
+                5.443613477369446e-17
+              ],
+              "executed_reconstruction_relative_error": 1.1506613449603145e-16
+            },
+            {
+              "macro": 13,
+              "physical_block_backward_errors": [
+                1.0019540376329134e-16,
+                5.4620215768096557e-17,
+                9.30414151922717e-17,
+                6.147104299106713e-17
+              ],
+              "executed_reconstruction_relative_error": 1.4622149166327813e-16
+            },
+            {
+              "macro": 14,
+              "physical_block_backward_errors": [
+                6.892571294610288e-17,
+                1.3220848801647885e-16,
+                7.057156453134879e-17,
+                8.055139566199895e-17
+              ],
+              "executed_reconstruction_relative_error": 1.8757981286754459e-16
+            },
+            {
+              "macro": 15,
+              "physical_block_backward_errors": [
+                5.734757858577882e-17,
+                2.0370846109753938e-16,
+                7.566070109993133e-17,
+                1.1428199598026099e-16
+              ],
+              "executed_reconstruction_relative_error": 1.8353429086461624e-16
+            }
+          ]
+        },
+        "basis_checks": {
+          "maximum_canonical_normal_moment_defect": 5.551115123125783e-16,
+          "maximum_divergence_theorem_defect": 8.881784197001252e-16,
+          "maximum_executed_bdm_table_defect": 0.0
+        },
+        "replay_blas_1_2_bitwise": true,
+        "coherent_retained_rotation_bitwise": true,
+        "rotated_original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 1.1520619317411754e-15,
+          "local_volume_relative_to_force": 9.168468659821706e-16,
+          "body_force_norm": 3.53182862191765,
+          "physical_rhs_with_prescribed_traction_norm": 3.5620484738593983,
+          "maximum_physical_block_backward_error": 4.1619636089814906e-16,
+          "compact_physical_relative_residual": 7.674063675981285e-16,
+          "augmented_compact_relative_residual": 7.672643350698905e-16,
+          "physical_mean_relative_defect": 7.972563755510505e-19,
+          "reduced_gauge_relative_defect": 4.426350365877059e-17,
+          "physical_mean_values": [
+            3.888425650188604
+          ],
+          "physical_mean_targets": [
+            3.888425650188604
+          ],
+          "gauge_multipliers": [
+            -1.8388068845354175e-16
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                1.8360140660246294e-16,
+                1.152013168667505e-16,
+                1.2801345982723668e-16,
+                1.4689881801205775e-16
+              ],
+              "executed_reconstruction_relative_error": 2.472077826532312e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                7.54504752589113e-17,
+                6.358882725603334e-17,
+                7.90689649920566e-17,
+                8.942966249602963e-17
+              ],
+              "executed_reconstruction_relative_error": 2.6215519618220907e-16
+            },
+            {
+              "macro": 2,
+              "physical_block_backward_errors": [
+                1.094242639926333e-16,
+                4.030153815066059e-17,
+                4.631250773861424e-17,
+                7.579366832597785e-17
+              ],
+              "executed_reconstruction_relative_error": 1.6944699422606062e-16
+            },
+            {
+              "macro": 3,
+              "physical_block_backward_errors": [
+                1.0431457237421522e-16,
+                5.353791950645726e-17,
+                1.0031117382172707e-16,
+                6.70414897945793e-17
+              ],
+              "executed_reconstruction_relative_error": 1.3931300141504904e-16
+            },
+            {
+              "macro": 4,
+              "physical_block_backward_errors": [
+                1.406803535719204e-16,
+                4.1619636089814906e-16,
+                1.643408023074705e-16,
+                7.835595156209874e-17
+              ],
+              "executed_reconstruction_relative_error": 1.3400361303926006e-16
+            },
+            {
+              "macro": 5,
+              "physical_block_backward_errors": [
+                8.235870451395898e-17,
+                5.634985560187281e-17,
+                1.246067706357454e-16,
+                6.713814764952569e-17
+              ],
+              "executed_reconstruction_relative_error": 1.644705195324569e-16
+            },
+            {
+              "macro": 6,
+              "physical_block_backward_errors": [
+                9.433130681505294e-17,
+                1.4723150881016983e-16,
+                7.369484666679607e-17,
+                7.274101292997827e-17
+              ],
+              "executed_reconstruction_relative_error": 1.9659055803314006e-16
+            },
+            {
+              "macro": 7,
+              "physical_block_backward_errors": [
+                7.046729237599693e-17,
+                1.1688269249568387e-16,
+                1.2502511145170293e-16,
+                7.775685550737997e-17
+              ],
+              "executed_reconstruction_relative_error": 1.6033920892759845e-16
+            },
+            {
+              "macro": 8,
+              "physical_block_backward_errors": [
+                1.3283952647356805e-16,
+                9.799452953521398e-17,
+                2.0260203567202889e-16,
+                1.0077887031873031e-16
+              ],
+              "executed_reconstruction_relative_error": 1.1106964718927606e-16
+            },
+            {
+              "macro": 9,
+              "physical_block_backward_errors": [
+                8.716818127796484e-17,
+                1.6046967837467207e-16,
+                1.151421599907965e-16,
+                9.51109318805051e-17
+              ],
+              "executed_reconstruction_relative_error": 1.1520356514840604e-16
+            },
+            {
+              "macro": 10,
+              "physical_block_backward_errors": [
+                6.001296887722408e-17,
+                6.2572889303053e-17,
+                8.388225032579511e-17,
+                4.652488992711415e-17
+              ],
+              "executed_reconstruction_relative_error": 1.9799636101492423e-16
+            },
+            {
+              "macro": 11,
+              "physical_block_backward_errors": [
+                6.410513176499993e-17,
+                9.108764484182949e-17,
+                1.1723750089027439e-16,
+                5.8926033346538e-17
+              ],
+              "executed_reconstruction_relative_error": 1.494722658814585e-16
+            },
+            {
+              "macro": 12,
+              "physical_block_backward_errors": [
+                2.0853942561373818e-16,
+                3.532738428337004e-16,
+                1.8090570392353515e-16,
+                5.443613477369446e-17
+              ],
+              "executed_reconstruction_relative_error": 1.1506613449603145e-16
+            },
+            {
+              "macro": 13,
+              "physical_block_backward_errors": [
+                1.0019540376329134e-16,
+                5.4620215768096557e-17,
+                9.30414151922717e-17,
+                6.147104299106713e-17
+              ],
+              "executed_reconstruction_relative_error": 1.4622149166327813e-16
+            },
+            {
+              "macro": 14,
+              "physical_block_backward_errors": [
+                6.892571294610288e-17,
+                1.3220848801647885e-16,
+                7.057156453134879e-17,
+                8.055139566199895e-17
+              ],
+              "executed_reconstruction_relative_error": 1.8757981286754459e-16
+            },
+            {
+              "macro": 15,
+              "physical_block_backward_errors": [
+                5.734757858577882e-17,
+                2.0370846109753938e-16,
+                7.566070109993133e-17,
+                1.1428199598026099e-16
+              ],
+              "executed_reconstruction_relative_error": 1.8353429086461624e-16
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": "polygon-bdm2",
+      "resolution": 1,
+      "macro_cells": 2,
+      "fine_cells": 8,
+      "stress_space": "BDM2",
+      "displacement_space": "cardinal P1",
+      "rotation_space": "total P1",
+      "interior_traction_space": "P1",
+      "exterior_traction_space": "full fine P2",
+      "local_refinement": 1,
+      "assembly_order": 8,
+      "norm_orders": [
+        9,
+        10
+      ],
+      "norms": {
+        "quadrature_9": {
+          "displacement_l2": 0.018718800065497754,
+          "stress_l2": 0.09748722747525713,
+          "divergence_l2": 0.5378911659406949,
+          "rotation_l2": 0.010498186589972867
+        },
+        "quadrature_10": {
+          "displacement_l2": 0.018718800065497768,
+          "stress_l2": 0.09748722747525695,
+          "divergence_l2": 0.5378911659406951,
+          "rotation_l2": 0.01049818658997287
+        }
+      },
+      "norm_quadrature_relative_changes": {
+        "displacement_l2": 7.413823407085694e-16,
+        "stress_l2": 1.8506141386303942e-15,
+        "divergence_l2": 4.1280582204154053e-16,
+        "rotation_l2": 3.304805951217695e-16
+      },
+      "displacement_l2": 0.018718800065497768,
+      "stress_l2": 0.09748722747525695,
+      "divergence_l2": 0.5378911659406951,
+      "rotation_l2": 0.01049818658997287,
+      "original_physical_checks": {
+        "accepted": true,
+        "criterion": 1e-10,
+        "full_uncondensed_relative_to_physical_rhs": 1.5956115095352272e-14,
+        "local_volume_relative_to_force": 1.6287665080211146e-14,
+        "body_force_norm": 2.850184953662129,
+        "physical_rhs_with_prescribed_traction_norm": 2.9199597509495443,
+        "maximum_physical_block_backward_error": 7.607593611749534e-16,
+        "compact_physical_relative_residual": 5.021297828157842e-16,
+        "augmented_compact_relative_residual": 4.943780705655077e-16,
+        "physical_mean_relative_defect": 1.2432612188343297e-16,
+        "reduced_gauge_relative_defect": 1.2222012335549904e-16,
+        "physical_mean_values": [
+          3.8884256501886036
+        ],
+        "physical_mean_targets": [
+          3.888425650188605
+        ],
+        "gauge_multipliers": [
+          -1.409186739558532e-15
+        ],
+        "rows": [
+          {
+            "macro": 0,
+            "physical_block_backward_errors": [
+              6.720382977205436e-16,
+              3.533382365879686e-16,
+              7.607593611749534e-16,
+              1.7802110147384458e-17
+            ],
+            "executed_reconstruction_relative_error": 3.4246221482380367e-16
+          },
+          {
+            "macro": 1,
+            "physical_block_backward_errors": [
+              2.9443200609218484e-16,
+              1.3154181985035078e-16,
+              2.0732202806011823e-16,
+              1.1071326091489421e-17
+            ],
+            "executed_reconstruction_relative_error": 8.573047938487971e-17
+          }
+        ]
+      },
+      "basis_checks": {
+        "maximum_canonical_normal_moment_defect": 4.7369515717341935e-15,
+        "maximum_divergence_theorem_defect": 5.346227140338958e-15,
+        "maximum_executed_bdm_table_defect": 0.0
+      },
+      "sha256": "ff56e827ab800d734937dad73e301e6ac2bc4e2c85bc46464a857bc2f18b4b41",
+      "acquisition_uuid": "3b73d54e-ba72-4a08-b658-1063a8ded5d8",
+      "finite_case_accepted": true,
+      "native_whole_field_agreement_verified": false,
+      "elapsed_seconds": 0.49618149921298027,
+      "acquisition_provenance": {
+        "original_record": "build/results/core-elasticity-micro-v1/elasticity.json",
+        "original_record_sha256": "714b32aced129c981ecfcae35f80a2069fe868abf1581d0bc6c8025d63ed8aef",
+        "original_verification_sha256": "acaa05406b34b36cb1703962fea98bf2e95af2420e6c75bbf8b62bcfddf54bfe",
+        "runtime_sha256": "53d4f707fa66a232f6c20a83d3ea140525414f2c6a18ecff87995003320845da",
+        "source_generation_sha256": "7fa4597c119713a31e5a58ffb0d71026b9f40c72372c0ee1682f086159aa2f67",
+        "original_micro_reused": true
+      },
+      "terminal_norms": {
+        "displacement_l2": 0.018718800065497768,
+        "stress_l2": 0.09748722747525695,
+        "divergence_l2": 0.5378911659406951,
+        "rotation_l2": 0.01049818658997287
+      },
+      "original_coefficient_archive_sha256": "ff56e827ab800d734937dad73e301e6ac2bc4e2c85bc46464a857bc2f18b4b41",
+      "basis_replay_proof": {
+        "case": "polygon-bdm2",
+        "resolution": 1,
+        "archive_sha256": "ff56e827ab800d734937dad73e301e6ac2bc4e2c85bc46464a857bc2f18b4b41",
+        "acquisition_uuid": "3b73d54e-ba72-4a08-b658-1063a8ded5d8",
+        "original_micro_reused": true,
+        "original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 1.5956115095352272e-14,
+          "local_volume_relative_to_force": 1.6287665080211146e-14,
+          "body_force_norm": 2.850184953662129,
+          "physical_rhs_with_prescribed_traction_norm": 2.9199597509495443,
+          "maximum_physical_block_backward_error": 7.607593611749534e-16,
+          "compact_physical_relative_residual": 5.021297828157842e-16,
+          "augmented_compact_relative_residual": 4.943780705655077e-16,
+          "physical_mean_relative_defect": 1.2432612188343297e-16,
+          "reduced_gauge_relative_defect": 1.2222012335549904e-16,
+          "physical_mean_values": [
+            3.8884256501886036
+          ],
+          "physical_mean_targets": [
+            3.888425650188605
+          ],
+          "gauge_multipliers": [
+            -1.409186739558532e-15
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                6.720382977205436e-16,
+                3.533382365879686e-16,
+                7.607593611749534e-16,
+                1.7802110147384458e-17
+              ],
+              "executed_reconstruction_relative_error": 3.4246221482380367e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                2.9443200609218484e-16,
+                1.3154181985035078e-16,
+                2.0732202806011823e-16,
+                1.1071326091489421e-17
+              ],
+              "executed_reconstruction_relative_error": 8.573047938487971e-17
+            }
+          ]
+        },
+        "basis_checks": {
+          "maximum_canonical_normal_moment_defect": 4.7369515717341935e-15,
+          "maximum_divergence_theorem_defect": 5.346227140338958e-15,
+          "maximum_executed_bdm_table_defect": 0.0
+        },
+        "replay_blas_1_2_bitwise": true,
+        "coherent_retained_rotation_bitwise": true,
+        "rotated_original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 1.5956115095352272e-14,
+          "local_volume_relative_to_force": 1.6287665080211146e-14,
+          "body_force_norm": 2.850184953662129,
+          "physical_rhs_with_prescribed_traction_norm": 2.9199597509495443,
+          "maximum_physical_block_backward_error": 7.607593611749534e-16,
+          "compact_physical_relative_residual": 5.021318573190069e-16,
+          "augmented_compact_relative_residual": 4.94380040092798e-16,
+          "physical_mean_relative_defect": 1.2432612188343297e-16,
+          "reduced_gauge_relative_defect": 1.2222012335549904e-16,
+          "physical_mean_values": [
+            3.8884256501886036
+          ],
+          "physical_mean_targets": [
+            3.888425650188605
+          ],
+          "gauge_multipliers": [
+            -1.409186739558532e-15
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                6.720382977205436e-16,
+                3.533382365879686e-16,
+                7.607593611749534e-16,
+                1.7802110147384458e-17
+              ],
+              "executed_reconstruction_relative_error": 3.4246221482380367e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                2.9443200609218484e-16,
+                1.3154181985035078e-16,
+                2.0732202806011823e-16,
+                1.1071326091489421e-17
+              ],
+              "executed_reconstruction_relative_error": 8.573047938487971e-17
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": "polygon-bdm2",
+      "resolution": 2,
+      "macro_cells": 8,
+      "fine_cells": 32,
+      "stress_space": "BDM2",
+      "displacement_space": "cardinal P1",
+      "rotation_space": "total P1",
+      "interior_traction_space": "P1",
+      "exterior_traction_space": "full fine P2",
+      "local_refinement": 1,
+      "assembly_order": 8,
+      "norm_orders": [
+        9,
+        10
+      ],
+      "norms": {
+        "quadrature_9": {
+          "displacement_l2": 0.005862870726358343,
+          "stress_l2": 0.02649802510648799,
+          "divergence_l2": 0.13447279148517338,
+          "rotation_l2": 0.0029122171376892367
+        },
+        "quadrature_10": {
+          "displacement_l2": 0.005862870726358348,
+          "stress_l2": 0.026498025106487563,
+          "divergence_l2": 0.1344727914851738,
+          "rotation_l2": 0.0029122171376892367
+        }
+      },
+      "norm_quadrature_relative_changes": {
+        "displacement_l2": 7.397073707330018e-16,
+        "stress_l2": 1.6104670947187473e-14,
+        "divergence_l2": 3.096043665311553e-15,
+        "rotation_l2": 0.0
+      },
+      "displacement_l2": 0.005862870726358348,
+      "stress_l2": 0.026498025106487563,
+      "divergence_l2": 0.1344727914851738,
+      "rotation_l2": 0.0029122171376892367,
+      "original_physical_checks": {
+        "accepted": true,
+        "criterion": 1e-10,
+        "full_uncondensed_relative_to_physical_rhs": 2.485533123013768e-14,
+        "local_volume_relative_to_force": 2.5866437943726246e-14,
+        "body_force_norm": 1.4463675802531497,
+        "physical_rhs_with_prescribed_traction_norm": 1.518670624993875,
+        "maximum_physical_block_backward_error": 7.702522058354732e-16,
+        "compact_physical_relative_residual": 1.0141980493568136e-15,
+        "augmented_compact_relative_residual": 9.533536811779122e-16,
+        "physical_mean_relative_defect": 6.720752872913584e-17,
+        "reduced_gauge_relative_defect": 4.562082189186261e-17,
+        "physical_mean_values": [
+          3.888425650188603
+        ],
+        "physical_mean_targets": [
+          3.888425650188604
+        ],
+        "gauge_multipliers": [
+          -4.072462671284346e-15
+        ],
+        "rows": [
+          {
+            "macro": 0,
+            "physical_block_backward_errors": [
+              6.402373485911308e-16,
+              3.767337340532891e-16,
+              7.702522058354732e-16,
+              1.202265483282599e-17
+            ],
+            "executed_reconstruction_relative_error": 4.874552331918455e-16
+          },
+          {
+            "macro": 1,
+            "physical_block_backward_errors": [
+              2.818537701130614e-16,
+              1.3808353015090482e-16,
+              2.1148556494855566e-16,
+              7.398390641795831e-18
+            ],
+            "executed_reconstruction_relative_error": 1.3513374720342452e-16
+          },
+          {
+            "macro": 2,
+            "physical_block_backward_errors": [
+              4.388099777659019e-16,
+              3.102225912320555e-16,
+              3.7244133999178973e-16,
+              6.091523671854953e-18
+            ],
+            "executed_reconstruction_relative_error": 5.186354486048577e-16
+          },
+          {
+            "macro": 3,
+            "physical_block_backward_errors": [
+              3.8082548857641835e-16,
+              1.591110548659716e-16,
+              1.8194634415037816e-16,
+              3.90848587558718e-18
+            ],
+            "executed_reconstruction_relative_error": 1.2311789202842692e-16
+          },
+          {
+            "macro": 4,
+            "physical_block_backward_errors": [
+              4.839997930980266e-16,
+              2.773648061291034e-16,
+              4.255695856777573e-16,
+              9.282215629252344e-18
+            ],
+            "executed_reconstruction_relative_error": 4.396983518014478e-16
+          },
+          {
+            "macro": 5,
+            "physical_block_backward_errors": [
+              2.2588115046508263e-16,
+              1.3552208123722997e-16,
+              1.1739938726258633e-16,
+              6.898680603211696e-18
+            ],
+            "executed_reconstruction_relative_error": 2.5665511107152624e-16
+          },
+          {
+            "macro": 6,
+            "physical_block_backward_errors": [
+              2.766940654899627e-16,
+              2.981547345487801e-16,
+              2.8031625381915393e-16,
+              4.68665569492106e-18
+            ],
+            "executed_reconstruction_relative_error": 3.874073146974151e-16
+          },
+          {
+            "macro": 7,
+            "physical_block_backward_errors": [
+              1.300848714783747e-16,
+              1.2265312430312997e-16,
+              1.7353564466200047e-16,
+              3.8205993644143414e-18
+            ],
+            "executed_reconstruction_relative_error": 8.724302026118256e-17
+          }
+        ]
+      },
+      "basis_checks": {
+        "maximum_canonical_normal_moment_defect": 4.7369515717341935e-15,
+        "maximum_divergence_theorem_defect": 5.346227140338958e-15,
+        "maximum_executed_bdm_table_defect": 0.0
+      },
+      "sha256": "dfc7a31eaccc95644fdac39ad45a5545111a72057c2e3a21931cb7b6f428fcdf",
+      "acquisition_uuid": "03bd96a5-5315-47ac-8b0f-fac135767824",
+      "finite_case_accepted": true,
+      "native_whole_field_agreement_verified": false,
+      "elapsed_seconds": 1.4040858577936888,
+      "acquisition_provenance": {
+        "original_record": "build/results/core-elasticity-initial-nine-v1/polygon-bdm2-n2/elasticity.json",
+        "original_record_sha256": "34514240b4bfe99a91e5d9fa495c2706717470e2624685b09208d41545395423",
+        "original_verification_sha256": "94abd944bb3689137e888b485d894b42fbcedd7b74ef8e88f4fb82b6d25dff83",
+        "runtime_sha256": "53d4f707fa66a232f6c20a83d3ea140525414f2c6a18ecff87995003320845da",
+        "source_generation_sha256": "7fa4597c119713a31e5a58ffb0d71026b9f40c72372c0ee1682f086159aa2f67",
+        "original_micro_reused": false
+      },
+      "terminal_norms": {
+        "displacement_l2": 0.005862870726358348,
+        "stress_l2": 0.026498025106487563,
+        "divergence_l2": 0.1344727914851738,
+        "rotation_l2": 0.0029122171376892367
+      },
+      "original_coefficient_archive_sha256": "dfc7a31eaccc95644fdac39ad45a5545111a72057c2e3a21931cb7b6f428fcdf",
+      "basis_replay_proof": {
+        "case": "polygon-bdm2",
+        "resolution": 2,
+        "archive_sha256": "dfc7a31eaccc95644fdac39ad45a5545111a72057c2e3a21931cb7b6f428fcdf",
+        "acquisition_uuid": "03bd96a5-5315-47ac-8b0f-fac135767824",
+        "original_micro_reused": false,
+        "original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 2.485533123013768e-14,
+          "local_volume_relative_to_force": 2.5866437943726246e-14,
+          "body_force_norm": 1.4463675802531497,
+          "physical_rhs_with_prescribed_traction_norm": 1.518670624993875,
+          "maximum_physical_block_backward_error": 7.702522058354732e-16,
+          "compact_physical_relative_residual": 1.0141980493568136e-15,
+          "augmented_compact_relative_residual": 9.533536811779122e-16,
+          "physical_mean_relative_defect": 6.720752872913584e-17,
+          "reduced_gauge_relative_defect": 4.562082189186261e-17,
+          "physical_mean_values": [
+            3.888425650188603
+          ],
+          "physical_mean_targets": [
+            3.888425650188604
+          ],
+          "gauge_multipliers": [
+            -4.072462671284346e-15
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                6.402373485911308e-16,
+                3.767337340532891e-16,
+                7.702522058354732e-16,
+                1.202265483282599e-17
+              ],
+              "executed_reconstruction_relative_error": 4.874552331918455e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                2.818537701130614e-16,
+                1.3808353015090482e-16,
+                2.1148556494855566e-16,
+                7.398390641795831e-18
+              ],
+              "executed_reconstruction_relative_error": 1.3513374720342452e-16
+            },
+            {
+              "macro": 2,
+              "physical_block_backward_errors": [
+                4.388099777659019e-16,
+                3.102225912320555e-16,
+                3.7244133999178973e-16,
+                6.091523671854953e-18
+              ],
+              "executed_reconstruction_relative_error": 5.186354486048577e-16
+            },
+            {
+              "macro": 3,
+              "physical_block_backward_errors": [
+                3.8082548857641835e-16,
+                1.591110548659716e-16,
+                1.8194634415037816e-16,
+                3.90848587558718e-18
+              ],
+              "executed_reconstruction_relative_error": 1.2311789202842692e-16
+            },
+            {
+              "macro": 4,
+              "physical_block_backward_errors": [
+                4.839997930980266e-16,
+                2.773648061291034e-16,
+                4.255695856777573e-16,
+                9.282215629252344e-18
+              ],
+              "executed_reconstruction_relative_error": 4.396983518014478e-16
+            },
+            {
+              "macro": 5,
+              "physical_block_backward_errors": [
+                2.2588115046508263e-16,
+                1.3552208123722997e-16,
+                1.1739938726258633e-16,
+                6.898680603211696e-18
+              ],
+              "executed_reconstruction_relative_error": 2.5665511107152624e-16
+            },
+            {
+              "macro": 6,
+              "physical_block_backward_errors": [
+                2.766940654899627e-16,
+                2.981547345487801e-16,
+                2.8031625381915393e-16,
+                4.68665569492106e-18
+              ],
+              "executed_reconstruction_relative_error": 3.874073146974151e-16
+            },
+            {
+              "macro": 7,
+              "physical_block_backward_errors": [
+                1.300848714783747e-16,
+                1.2265312430312997e-16,
+                1.7353564466200047e-16,
+                3.8205993644143414e-18
+              ],
+              "executed_reconstruction_relative_error": 8.724302026118256e-17
+            }
+          ]
+        },
+        "basis_checks": {
+          "maximum_canonical_normal_moment_defect": 4.7369515717341935e-15,
+          "maximum_divergence_theorem_defect": 5.346227140338958e-15,
+          "maximum_executed_bdm_table_defect": 0.0
+        },
+        "replay_blas_1_2_bitwise": true,
+        "coherent_retained_rotation_bitwise": true,
+        "rotated_original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 2.485533123013768e-14,
+          "local_volume_relative_to_force": 2.5866437943726246e-14,
+          "body_force_norm": 1.4463675802531497,
+          "physical_rhs_with_prescribed_traction_norm": 1.518670624993875,
+          "maximum_physical_block_backward_error": 7.702522058354732e-16,
+          "compact_physical_relative_residual": 1.0141977568798218e-15,
+          "augmented_compact_relative_residual": 9.53352768441839e-16,
+          "physical_mean_relative_defect": 6.720752872913584e-17,
+          "reduced_gauge_relative_defect": 4.562082189186261e-17,
+          "physical_mean_values": [
+            3.888425650188603
+          ],
+          "physical_mean_targets": [
+            3.888425650188604
+          ],
+          "gauge_multipliers": [
+            -4.072462671284346e-15
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                6.402373485911308e-16,
+                3.767337340532891e-16,
+                7.702522058354732e-16,
+                1.202265483282599e-17
+              ],
+              "executed_reconstruction_relative_error": 4.874552331918455e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                2.818537701130614e-16,
+                1.3808353015090482e-16,
+                2.1148556494855566e-16,
+                7.398390641795831e-18
+              ],
+              "executed_reconstruction_relative_error": 1.3513374720342452e-16
+            },
+            {
+              "macro": 2,
+              "physical_block_backward_errors": [
+                4.388099777659019e-16,
+                3.102225912320555e-16,
+                3.7244133999178973e-16,
+                6.091523671854953e-18
+              ],
+              "executed_reconstruction_relative_error": 5.186354486048577e-16
+            },
+            {
+              "macro": 3,
+              "physical_block_backward_errors": [
+                3.8082548857641835e-16,
+                1.591110548659716e-16,
+                1.8194634415037816e-16,
+                3.90848587558718e-18
+              ],
+              "executed_reconstruction_relative_error": 1.2311789202842692e-16
+            },
+            {
+              "macro": 4,
+              "physical_block_backward_errors": [
+                4.839997930980266e-16,
+                2.773648061291034e-16,
+                4.255695856777573e-16,
+                9.282215629252344e-18
+              ],
+              "executed_reconstruction_relative_error": 4.396983518014478e-16
+            },
+            {
+              "macro": 5,
+              "physical_block_backward_errors": [
+                2.2588115046508263e-16,
+                1.3552208123722997e-16,
+                1.1739938726258633e-16,
+                6.898680603211696e-18
+              ],
+              "executed_reconstruction_relative_error": 2.5665511107152624e-16
+            },
+            {
+              "macro": 6,
+              "physical_block_backward_errors": [
+                2.766940654899627e-16,
+                2.981547345487801e-16,
+                2.8031625381915393e-16,
+                4.68665569492106e-18
+              ],
+              "executed_reconstruction_relative_error": 3.874073146974151e-16
+            },
+            {
+              "macro": 7,
+              "physical_block_backward_errors": [
+                1.300848714783747e-16,
+                1.2265312430312997e-16,
+                1.7353564466200047e-16,
+                3.8205993644143414e-18
+              ],
+              "executed_reconstruction_relative_error": 8.724302026118256e-17
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": "polygon-bdm2",
+      "resolution": 4,
+      "macro_cells": 32,
+      "fine_cells": 128,
+      "stress_space": "BDM2",
+      "displacement_space": "cardinal P1",
+      "rotation_space": "total P1",
+      "interior_traction_space": "P1",
+      "exterior_traction_space": "full fine P2",
+      "local_refinement": 1,
+      "assembly_order": 8,
+      "norm_orders": [
+        9,
+        10
+      ],
+      "norms": {
+        "quadrature_9": {
+          "displacement_l2": 0.0015707461807335373,
+          "stress_l2": 0.007225715426606488,
+          "divergence_l2": 0.033618197871292915,
+          "rotation_l2": 0.0007785745314811707
+        },
+        "quadrature_10": {
+          "displacement_l2": 0.0015707461807335406,
+          "stress_l2": 0.007225715426606029,
+          "divergence_l2": 0.03361819787129403,
+          "rotation_l2": 0.0007785745314811713
+        }
+      },
+      "norm_quadrature_relative_changes": {
+        "displacement_l2": 2.070739726986025e-15,
+        "stress_l2": 6.350019787748316e-14,
+        "divergence_l2": 3.323086867434343e-14,
+        "rotation_l2": 8.355286195320846e-16
+      },
+      "displacement_l2": 0.0015707461807335406,
+      "stress_l2": 0.007225715426606029,
+      "divergence_l2": 0.03361819787129403,
+      "rotation_l2": 0.0007785745314811713,
+      "original_physical_checks": {
+        "accepted": true,
+        "criterion": 1e-10,
+        "full_uncondensed_relative_to_physical_rhs": 5.1260961798094274e-14,
+        "local_volume_relative_to_force": 5.596285463234635e-14,
+        "body_force_norm": 0.7260241061856959,
+        "physical_rhs_with_prescribed_traction_norm": 0.7975237447648733,
+        "maximum_physical_block_backward_error": 7.588572889519928e-16,
+        "compact_physical_relative_residual": 1.7052089959068618e-15,
+        "augmented_compact_relative_residual": 1.6671378285991975e-15,
+        "physical_mean_relative_defect": 1.6035372627461722e-16,
+        "reduced_gauge_relative_defect": 2.8944537747825534e-16,
+        "physical_mean_values": [
+          3.888425650188606
+        ],
+        "physical_mean_targets": [
+          3.888425650188604
+        ],
+        "gauge_multipliers": [
+          -3.432486994447826e-15
+        ],
+        "rows": [
+          {
+            "macro": 0,
+            "physical_block_backward_errors": [
+              6.627685383314902e-16,
+              3.675278969692877e-16,
+              7.588572889519928e-16,
+              1.2327366331317353e-17
+            ],
+            "executed_reconstruction_relative_error": 7.061677511872007e-16
+          },
+          {
+            "macro": 1,
+            "physical_block_backward_errors": [
+              2.851966632169946e-16,
+              1.360916313428326e-16,
+              2.0762969623557776e-16,
+              7.95046275597622e-18
+            ],
+            "executed_reconstruction_relative_error": 2.918930790941223e-16
+          },
+          {
+            "macro": 2,
+            "physical_block_backward_errors": [
+              4.520924162094061e-16,
+              4.41846786206559e-16,
+              3.848988591896363e-16,
+              6.1194843620679314e-18
+            ],
+            "executed_reconstruction_relative_error": 8.242075383865779e-16
+          },
+          {
+            "macro": 3,
+            "physical_block_backward_errors": [
+              3.841015860002451e-16,
+              1.5035943543149845e-16,
+              1.9902173262861222e-16,
+              4.4717318203247366e-18
+            ],
+            "executed_reconstruction_relative_error": 2.347057729419406e-16
+          },
+          {
+            "macro": 4,
+            "physical_block_backward_errors": [
+              3.558100272516594e-16,
+              3.355883823774742e-16,
+              4.622951830794014e-16,
+              4.5629229344282824e-18
+            ],
+            "executed_reconstruction_relative_error": 6.071752439620662e-16
+          },
+          {
+            "macro": 5,
+            "physical_block_backward_errors": [
+              2.9741710347151153e-16,
+              1.0495583137715985e-16,
+              1.321811297298285e-16,
+              3.2884738091032794e-18
+            ],
+            "executed_reconstruction_relative_error": 1.349216955892417e-16
+          },
+          {
+            "macro": 6,
+            "physical_block_backward_errors": [
+              4.625097602441049e-16,
+              1.883706822348542e-16,
+              3.3182996518579855e-16,
+              3.2586779330388865e-18
+            ],
+            "executed_reconstruction_relative_error": 5.797819180077899e-16
+          },
+          {
+            "macro": 7,
+            "physical_block_backward_errors": [
+              1.448211212417117e-16,
+              9.493940698534324e-17,
+              9.296388000295531e-17,
+              2.5580460491089503e-18
+            ],
+            "executed_reconstruction_relative_error": 1.4870373712981048e-16
+          },
+          {
+            "macro": 8,
+            "physical_block_backward_errors": [
+              5.278953455940611e-16,
+              2.391806353550542e-16,
+              4.769115579793573e-16,
+              8.563278020768493e-18
+            ],
+            "executed_reconstruction_relative_error": 8.864028167108691e-16
+          },
+          {
+            "macro": 9,
+            "physical_block_backward_errors": [
+              2.2626313923085567e-16,
+              1.7226714211903904e-16,
+              8.711284707414988e-17,
+              5.234707455821631e-18
+            ],
+            "executed_reconstruction_relative_error": 2.646822280505678e-16
+          },
+          {
+            "macro": 10,
+            "physical_block_backward_errors": [
+              2.8913084211800823e-16,
+              2.951669706200279e-16,
+              2.8429236890979684e-16,
+              3.979041541618935e-18
+            ],
+            "executed_reconstruction_relative_error": 8.494441759179694e-16
+          },
+          {
+            "macro": 11,
+            "physical_block_backward_errors": [
+              8.439219253379639e-17,
+              1.040676328290175e-16,
+              1.377872730006846e-16,
+              3.3419891929747615e-18
+            ],
+            "executed_reconstruction_relative_error": 2.209812004554212e-16
+          },
+          {
+            "macro": 12,
+            "physical_block_backward_errors": [
+              3.771019159114043e-16,
+              2.370336288702108e-16,
+              2.9635506133451087e-16,
+              3.2863215063175636e-18
+            ],
+            "executed_reconstruction_relative_error": 8.82595010686015e-16
+          },
+          {
+            "macro": 13,
+            "physical_block_backward_errors": [
+              1.295683580723351e-16,
+              8.597059417690439e-17,
+              1.2066015781432125e-16,
+              2.8674701112221203e-18
+            ],
+            "executed_reconstruction_relative_error": 1.3983314292520093e-16
+          },
+          {
+            "macro": 14,
+            "physical_block_backward_errors": [
+              3.1546534288262813e-16,
+              1.7218970544705282e-16,
+              2.6224751577946535e-16,
+              2.5511336175247716e-18
+            ],
+            "executed_reconstruction_relative_error": 5.213308641562952e-16
+          },
+          {
+            "macro": 15,
+            "physical_block_backward_errors": [
+              1.6172828505515886e-16,
+              7.741488426258713e-17,
+              1.0115337280103949e-16,
+              2.1405014137161633e-18
+            ],
+            "executed_reconstruction_relative_error": 2.1676565811937982e-16
+          },
+          {
+            "macro": 16,
+            "physical_block_backward_errors": [
+              2.696771742479997e-16,
+              2.4522690257729393e-16,
+              4.412905751717621e-16,
+              5.331187436436271e-18
+            ],
+            "executed_reconstruction_relative_error": 7.484395140076978e-16
+          },
+          {
+            "macro": 17,
+            "physical_block_backward_errors": [
+              1.1037775298642213e-16,
+              1.2449726490747717e-16,
+              6.87055943291172e-17,
+              3.987173907902154e-18
+            ],
+            "executed_reconstruction_relative_error": 2.4904486173757975e-16
+          },
+          {
+            "macro": 18,
+            "physical_block_backward_errors": [
+              5.06791394123928e-16,
+              2.374336162546151e-16,
+              3.1072464884064396e-16,
+              3.3423428150856903e-18
+            ],
+            "executed_reconstruction_relative_error": 7.729344920261548e-16
+          },
+          {
+            "macro": 19,
+            "physical_block_backward_errors": [
+              9.150505643246018e-17,
+              1.1032182912436249e-16,
+              4.428920287739156e-17,
+              2.9625424775681315e-18
+            ],
+            "executed_reconstruction_relative_error": 2.306540147341471e-16
+          },
+          {
+            "macro": 20,
+            "physical_block_backward_errors": [
+              4.303165381207831e-16,
+              2.7727520420328866e-16,
+              3.1625273939399736e-16,
+              2.4701399307967293e-18
+            ],
+            "executed_reconstruction_relative_error": 4.716274282169122e-16
+          },
+          {
+            "macro": 21,
+            "physical_block_backward_errors": [
+              1.257976024363213e-16,
+              1.0011516223796269e-16,
+              1.5074671599749108e-16,
+              2.4205604385227204e-18
+            ],
+            "executed_reconstruction_relative_error": 2.3775863216137287e-16
+          },
+          {
+            "macro": 22,
+            "physical_block_backward_errors": [
+              1.999802251136663e-16,
+              2.5927714441451194e-16,
+              2.664409886127149e-16,
+              2.1412152431344986e-18
+            ],
+            "executed_reconstruction_relative_error": 5.781827855973505e-16
+          },
+          {
+            "macro": 23,
+            "physical_block_backward_errors": [
+              1.5913957131299248e-16,
+              1.043461388859044e-16,
+              1.3715701931486635e-16,
+              1.7216766965883706e-18
+            ],
+            "executed_reconstruction_relative_error": 1.7532304895332505e-16
+          },
+          {
+            "macro": 24,
+            "physical_block_backward_errors": [
+              2.350224389129415e-16,
+              2.6839288834137827e-16,
+              3.1222307060192e-16,
+              4.395553480276593e-18
+            ],
+            "executed_reconstruction_relative_error": 7.029490388102704e-16
+          },
+          {
+            "macro": 25,
+            "physical_block_backward_errors": [
+              1.5101711515979828e-16,
+              1.300243876109554e-16,
+              8.73732777721174e-17,
+              3.6083582524519515e-18
+            ],
+            "executed_reconstruction_relative_error": 2.2183293050295687e-16
+          },
+          {
+            "macro": 26,
+            "physical_block_backward_errors": [
+              2.671573451037667e-16,
+              2.83017601484152e-16,
+              3.5337115625021684e-16,
+              3.0752784833547713e-18
+            ],
+            "executed_reconstruction_relative_error": 9.594572119930262e-16
+          },
+          {
+            "macro": 27,
+            "physical_block_backward_errors": [
+              8.698097614079026e-17,
+              1.0950332530184606e-16,
+              1.084364738583873e-16,
+              2.7769993953760022e-18
+            ],
+            "executed_reconstruction_relative_error": 2.1575321463710606e-16
+          },
+          {
+            "macro": 28,
+            "physical_block_backward_errors": [
+              2.855554949135761e-16,
+              2.2118937824529682e-16,
+              2.7561117285543794e-16,
+              2.362035866197739e-18
+            ],
+            "executed_reconstruction_relative_error": 4.3337748885647326e-16
+          },
+          {
+            "macro": 29,
+            "physical_block_backward_errors": [
+              1.7423863128518443e-16,
+              1.3105861796886952e-16,
+              1.0717416930932572e-16,
+              2.0807348147766515e-18
+            ],
+            "executed_reconstruction_relative_error": 2.425984587355728e-16
+          },
+          {
+            "macro": 30,
+            "physical_block_backward_errors": [
+              2.79594602789877e-16,
+              1.7005761439641854e-16,
+              2.5842488387819525e-16,
+              2.0215505694484475e-18
+            ],
+            "executed_reconstruction_relative_error": 6.853048538066688e-16
+          },
+          {
+            "macro": 31,
+            "physical_block_backward_errors": [
+              1.286874841011166e-16,
+              1.220820255634275e-16,
+              1.1952702693013823e-16,
+              1.7628006431881148e-18
+            ],
+            "executed_reconstruction_relative_error": 1.246610338037875e-16
+          }
+        ]
+      },
+      "basis_checks": {
+        "maximum_canonical_normal_moment_defect": 4.7369515717341935e-15,
+        "maximum_divergence_theorem_defect": 5.346227140338958e-15,
+        "maximum_executed_bdm_table_defect": 6.821210263296962e-13
+      },
+      "sha256": "f58bfbd6fbc8e534f022a03daa273f3a3aa4e8d00dcffa6a4993f35ebd35c8ce",
+      "acquisition_uuid": "6eaa8857-924f-4555-b391-1b0e4a52c77a",
+      "finite_case_accepted": true,
+      "native_whole_field_agreement_verified": false,
+      "elapsed_seconds": 4.14294334128499,
+      "acquisition_provenance": {
+        "original_record": "build/results/core-elasticity-initial-nine-v1/polygon-bdm2-n4/elasticity.json",
+        "original_record_sha256": "6ad5069d5f5e2f901e77e88fb5eeaa0da33fc88418c00f5b6a6db864756bae95",
+        "original_verification_sha256": "7a03e79c444131c60eabc06c8dcae12dd745edae54a595a72575e9bae58412a2",
+        "runtime_sha256": "53d4f707fa66a232f6c20a83d3ea140525414f2c6a18ecff87995003320845da",
+        "source_generation_sha256": "7fa4597c119713a31e5a58ffb0d71026b9f40c72372c0ee1682f086159aa2f67",
+        "original_micro_reused": false
+      },
+      "terminal_norms": {
+        "displacement_l2": 0.0015707461807335406,
+        "stress_l2": 0.007225715426606029,
+        "divergence_l2": 0.03361819787129403,
+        "rotation_l2": 0.0007785745314811713
+      },
+      "original_coefficient_archive_sha256": "f58bfbd6fbc8e534f022a03daa273f3a3aa4e8d00dcffa6a4993f35ebd35c8ce",
+      "basis_replay_proof": {
+        "case": "polygon-bdm2",
+        "resolution": 4,
+        "archive_sha256": "f58bfbd6fbc8e534f022a03daa273f3a3aa4e8d00dcffa6a4993f35ebd35c8ce",
+        "acquisition_uuid": "6eaa8857-924f-4555-b391-1b0e4a52c77a",
+        "original_micro_reused": false,
+        "original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 5.1260961798094274e-14,
+          "local_volume_relative_to_force": 5.596285463234635e-14,
+          "body_force_norm": 0.7260241061856959,
+          "physical_rhs_with_prescribed_traction_norm": 0.7975237447648733,
+          "maximum_physical_block_backward_error": 7.588572889519928e-16,
+          "compact_physical_relative_residual": 1.7052089959068618e-15,
+          "augmented_compact_relative_residual": 1.6671378285991975e-15,
+          "physical_mean_relative_defect": 1.6035372627461722e-16,
+          "reduced_gauge_relative_defect": 2.8944537747825534e-16,
+          "physical_mean_values": [
+            3.888425650188606
+          ],
+          "physical_mean_targets": [
+            3.888425650188604
+          ],
+          "gauge_multipliers": [
+            -3.432486994447826e-15
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                6.627685383314902e-16,
+                3.675278969692877e-16,
+                7.588572889519928e-16,
+                1.2327366331317353e-17
+              ],
+              "executed_reconstruction_relative_error": 7.061677511872007e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                2.851966632169946e-16,
+                1.360916313428326e-16,
+                2.0762969623557776e-16,
+                7.95046275597622e-18
+              ],
+              "executed_reconstruction_relative_error": 2.918930790941223e-16
+            },
+            {
+              "macro": 2,
+              "physical_block_backward_errors": [
+                4.520924162094061e-16,
+                4.41846786206559e-16,
+                3.848988591896363e-16,
+                6.1194843620679314e-18
+              ],
+              "executed_reconstruction_relative_error": 8.242075383865779e-16
+            },
+            {
+              "macro": 3,
+              "physical_block_backward_errors": [
+                3.841015860002451e-16,
+                1.5035943543149845e-16,
+                1.9902173262861222e-16,
+                4.4717318203247366e-18
+              ],
+              "executed_reconstruction_relative_error": 2.347057729419406e-16
+            },
+            {
+              "macro": 4,
+              "physical_block_backward_errors": [
+                3.558100272516594e-16,
+                3.355883823774742e-16,
+                4.622951830794014e-16,
+                4.5629229344282824e-18
+              ],
+              "executed_reconstruction_relative_error": 6.071752439620662e-16
+            },
+            {
+              "macro": 5,
+              "physical_block_backward_errors": [
+                2.9741710347151153e-16,
+                1.0495583137715985e-16,
+                1.321811297298285e-16,
+                3.2884738091032794e-18
+              ],
+              "executed_reconstruction_relative_error": 1.349216955892417e-16
+            },
+            {
+              "macro": 6,
+              "physical_block_backward_errors": [
+                4.625097602441049e-16,
+                1.883706822348542e-16,
+                3.3182996518579855e-16,
+                3.2586779330388865e-18
+              ],
+              "executed_reconstruction_relative_error": 5.797819180077899e-16
+            },
+            {
+              "macro": 7,
+              "physical_block_backward_errors": [
+                1.448211212417117e-16,
+                9.493940698534324e-17,
+                9.296388000295531e-17,
+                2.5580460491089503e-18
+              ],
+              "executed_reconstruction_relative_error": 1.4870373712981048e-16
+            },
+            {
+              "macro": 8,
+              "physical_block_backward_errors": [
+                5.278953455940611e-16,
+                2.391806353550542e-16,
+                4.769115579793573e-16,
+                8.563278020768493e-18
+              ],
+              "executed_reconstruction_relative_error": 8.864028167108691e-16
+            },
+            {
+              "macro": 9,
+              "physical_block_backward_errors": [
+                2.2626313923085567e-16,
+                1.7226714211903904e-16,
+                8.711284707414988e-17,
+                5.234707455821631e-18
+              ],
+              "executed_reconstruction_relative_error": 2.646822280505678e-16
+            },
+            {
+              "macro": 10,
+              "physical_block_backward_errors": [
+                2.8913084211800823e-16,
+                2.951669706200279e-16,
+                2.8429236890979684e-16,
+                3.979041541618935e-18
+              ],
+              "executed_reconstruction_relative_error": 8.494441759179694e-16
+            },
+            {
+              "macro": 11,
+              "physical_block_backward_errors": [
+                8.439219253379639e-17,
+                1.040676328290175e-16,
+                1.377872730006846e-16,
+                3.3419891929747615e-18
+              ],
+              "executed_reconstruction_relative_error": 2.209812004554212e-16
+            },
+            {
+              "macro": 12,
+              "physical_block_backward_errors": [
+                3.771019159114043e-16,
+                2.370336288702108e-16,
+                2.9635506133451087e-16,
+                3.2863215063175636e-18
+              ],
+              "executed_reconstruction_relative_error": 8.82595010686015e-16
+            },
+            {
+              "macro": 13,
+              "physical_block_backward_errors": [
+                1.295683580723351e-16,
+                8.597059417690439e-17,
+                1.2066015781432125e-16,
+                2.8674701112221203e-18
+              ],
+              "executed_reconstruction_relative_error": 1.3983314292520093e-16
+            },
+            {
+              "macro": 14,
+              "physical_block_backward_errors": [
+                3.1546534288262813e-16,
+                1.7218970544705282e-16,
+                2.6224751577946535e-16,
+                2.5511336175247716e-18
+              ],
+              "executed_reconstruction_relative_error": 5.213308641562952e-16
+            },
+            {
+              "macro": 15,
+              "physical_block_backward_errors": [
+                1.6172828505515886e-16,
+                7.741488426258713e-17,
+                1.0115337280103949e-16,
+                2.1405014137161633e-18
+              ],
+              "executed_reconstruction_relative_error": 2.1676565811937982e-16
+            },
+            {
+              "macro": 16,
+              "physical_block_backward_errors": [
+                2.696771742479997e-16,
+                2.4522690257729393e-16,
+                4.412905751717621e-16,
+                5.331187436436271e-18
+              ],
+              "executed_reconstruction_relative_error": 7.484395140076978e-16
+            },
+            {
+              "macro": 17,
+              "physical_block_backward_errors": [
+                1.1037775298642213e-16,
+                1.2449726490747717e-16,
+                6.87055943291172e-17,
+                3.987173907902154e-18
+              ],
+              "executed_reconstruction_relative_error": 2.4904486173757975e-16
+            },
+            {
+              "macro": 18,
+              "physical_block_backward_errors": [
+                5.06791394123928e-16,
+                2.374336162546151e-16,
+                3.1072464884064396e-16,
+                3.3423428150856903e-18
+              ],
+              "executed_reconstruction_relative_error": 7.729344920261548e-16
+            },
+            {
+              "macro": 19,
+              "physical_block_backward_errors": [
+                9.150505643246018e-17,
+                1.1032182912436249e-16,
+                4.428920287739156e-17,
+                2.9625424775681315e-18
+              ],
+              "executed_reconstruction_relative_error": 2.306540147341471e-16
+            },
+            {
+              "macro": 20,
+              "physical_block_backward_errors": [
+                4.303165381207831e-16,
+                2.7727520420328866e-16,
+                3.1625273939399736e-16,
+                2.4701399307967293e-18
+              ],
+              "executed_reconstruction_relative_error": 4.716274282169122e-16
+            },
+            {
+              "macro": 21,
+              "physical_block_backward_errors": [
+                1.257976024363213e-16,
+                1.0011516223796269e-16,
+                1.5074671599749108e-16,
+                2.4205604385227204e-18
+              ],
+              "executed_reconstruction_relative_error": 2.3775863216137287e-16
+            },
+            {
+              "macro": 22,
+              "physical_block_backward_errors": [
+                1.999802251136663e-16,
+                2.5927714441451194e-16,
+                2.664409886127149e-16,
+                2.1412152431344986e-18
+              ],
+              "executed_reconstruction_relative_error": 5.781827855973505e-16
+            },
+            {
+              "macro": 23,
+              "physical_block_backward_errors": [
+                1.5913957131299248e-16,
+                1.043461388859044e-16,
+                1.3715701931486635e-16,
+                1.7216766965883706e-18
+              ],
+              "executed_reconstruction_relative_error": 1.7532304895332505e-16
+            },
+            {
+              "macro": 24,
+              "physical_block_backward_errors": [
+                2.350224389129415e-16,
+                2.6839288834137827e-16,
+                3.1222307060192e-16,
+                4.395553480276593e-18
+              ],
+              "executed_reconstruction_relative_error": 7.029490388102704e-16
+            },
+            {
+              "macro": 25,
+              "physical_block_backward_errors": [
+                1.5101711515979828e-16,
+                1.300243876109554e-16,
+                8.73732777721174e-17,
+                3.6083582524519515e-18
+              ],
+              "executed_reconstruction_relative_error": 2.2183293050295687e-16
+            },
+            {
+              "macro": 26,
+              "physical_block_backward_errors": [
+                2.671573451037667e-16,
+                2.83017601484152e-16,
+                3.5337115625021684e-16,
+                3.0752784833547713e-18
+              ],
+              "executed_reconstruction_relative_error": 9.594572119930262e-16
+            },
+            {
+              "macro": 27,
+              "physical_block_backward_errors": [
+                8.698097614079026e-17,
+                1.0950332530184606e-16,
+                1.084364738583873e-16,
+                2.7769993953760022e-18
+              ],
+              "executed_reconstruction_relative_error": 2.1575321463710606e-16
+            },
+            {
+              "macro": 28,
+              "physical_block_backward_errors": [
+                2.855554949135761e-16,
+                2.2118937824529682e-16,
+                2.7561117285543794e-16,
+                2.362035866197739e-18
+              ],
+              "executed_reconstruction_relative_error": 4.3337748885647326e-16
+            },
+            {
+              "macro": 29,
+              "physical_block_backward_errors": [
+                1.7423863128518443e-16,
+                1.3105861796886952e-16,
+                1.0717416930932572e-16,
+                2.0807348147766515e-18
+              ],
+              "executed_reconstruction_relative_error": 2.425984587355728e-16
+            },
+            {
+              "macro": 30,
+              "physical_block_backward_errors": [
+                2.79594602789877e-16,
+                1.7005761439641854e-16,
+                2.5842488387819525e-16,
+                2.0215505694484475e-18
+              ],
+              "executed_reconstruction_relative_error": 6.853048538066688e-16
+            },
+            {
+              "macro": 31,
+              "physical_block_backward_errors": [
+                1.286874841011166e-16,
+                1.220820255634275e-16,
+                1.1952702693013823e-16,
+                1.7628006431881148e-18
+              ],
+              "executed_reconstruction_relative_error": 1.246610338037875e-16
+            }
+          ]
+        },
+        "basis_checks": {
+          "maximum_canonical_normal_moment_defect": 4.7369515717341935e-15,
+          "maximum_divergence_theorem_defect": 5.346227140338958e-15,
+          "maximum_executed_bdm_table_defect": 6.821210263296962e-13
+        },
+        "replay_blas_1_2_bitwise": true,
+        "coherent_retained_rotation_bitwise": true,
+        "rotated_original_checks": {
+          "accepted": true,
+          "criterion": 1e-10,
+          "full_uncondensed_relative_to_physical_rhs": 5.1260961798094274e-14,
+          "local_volume_relative_to_force": 5.596285463234635e-14,
+          "body_force_norm": 0.7260241061856959,
+          "physical_rhs_with_prescribed_traction_norm": 0.7975237447648733,
+          "maximum_physical_block_backward_error": 7.588572889519928e-16,
+          "compact_physical_relative_residual": 1.7052088580701673e-15,
+          "augmented_compact_relative_residual": 1.6671377219693801e-15,
+          "physical_mean_relative_defect": 1.6035372627461722e-16,
+          "reduced_gauge_relative_defect": 2.8944537747825534e-16,
+          "physical_mean_values": [
+            3.888425650188606
+          ],
+          "physical_mean_targets": [
+            3.888425650188604
+          ],
+          "gauge_multipliers": [
+            -3.432486994447826e-15
+          ],
+          "rows": [
+            {
+              "macro": 0,
+              "physical_block_backward_errors": [
+                6.627685383314902e-16,
+                3.675278969692877e-16,
+                7.588572889519928e-16,
+                1.2327366331317353e-17
+              ],
+              "executed_reconstruction_relative_error": 7.061677511872007e-16
+            },
+            {
+              "macro": 1,
+              "physical_block_backward_errors": [
+                2.851966632169946e-16,
+                1.360916313428326e-16,
+                2.0762969623557776e-16,
+                7.95046275597622e-18
+              ],
+              "executed_reconstruction_relative_error": 2.918930790941223e-16
+            },
+            {
+              "macro": 2,
+              "physical_block_backward_errors": [
+                4.520924162094061e-16,
+                4.41846786206559e-16,
+                3.848988591896363e-16,
+                6.1194843620679314e-18
+              ],
+              "executed_reconstruction_relative_error": 8.242075383865779e-16
+            },
+            {
+              "macro": 3,
+              "physical_block_backward_errors": [
+                3.841015860002451e-16,
+                1.5035943543149845e-16,
+                1.9902173262861222e-16,
+                4.4717318203247366e-18
+              ],
+              "executed_reconstruction_relative_error": 2.347057729419406e-16
+            },
+            {
+              "macro": 4,
+              "physical_block_backward_errors": [
+                3.558100272516594e-16,
+                3.355883823774742e-16,
+                4.622951830794014e-16,
+                4.5629229344282824e-18
+              ],
+              "executed_reconstruction_relative_error": 6.071752439620662e-16
+            },
+            {
+              "macro": 5,
+              "physical_block_backward_errors": [
+                2.9741710347151153e-16,
+                1.0495583137715985e-16,
+                1.321811297298285e-16,
+                3.2884738091032794e-18
+              ],
+              "executed_reconstruction_relative_error": 1.349216955892417e-16
+            },
+            {
+              "macro": 6,
+              "physical_block_backward_errors": [
+                4.625097602441049e-16,
+                1.883706822348542e-16,
+                3.3182996518579855e-16,
+                3.2586779330388865e-18
+              ],
+              "executed_reconstruction_relative_error": 5.797819180077899e-16
+            },
+            {
+              "macro": 7,
+              "physical_block_backward_errors": [
+                1.448211212417117e-16,
+                9.493940698534324e-17,
+                9.296388000295531e-17,
+                2.5580460491089503e-18
+              ],
+              "executed_reconstruction_relative_error": 1.4870373712981048e-16
+            },
+            {
+              "macro": 8,
+              "physical_block_backward_errors": [
+                5.278953455940611e-16,
+                2.391806353550542e-16,
+                4.769115579793573e-16,
+                8.563278020768493e-18
+              ],
+              "executed_reconstruction_relative_error": 8.864028167108691e-16
+            },
+            {
+              "macro": 9,
+              "physical_block_backward_errors": [
+                2.2626313923085567e-16,
+                1.7226714211903904e-16,
+                8.711284707414988e-17,
+                5.234707455821631e-18
+              ],
+              "executed_reconstruction_relative_error": 2.646822280505678e-16
+            },
+            {
+              "macro": 10,
+              "physical_block_backward_errors": [
+                2.8913084211800823e-16,
+                2.951669706200279e-16,
+                2.8429236890979684e-16,
+                3.979041541618935e-18
+              ],
+              "executed_reconstruction_relative_error": 8.494441759179694e-16
+            },
+            {
+              "macro": 11,
+              "physical_block_backward_errors": [
+                8.439219253379639e-17,
+                1.040676328290175e-16,
+                1.377872730006846e-16,
+                3.3419891929747615e-18
+              ],
+              "executed_reconstruction_relative_error": 2.209812004554212e-16
+            },
+            {
+              "macro": 12,
+              "physical_block_backward_errors": [
+                3.771019159114043e-16,
+                2.370336288702108e-16,
+                2.9635506133451087e-16,
+                3.2863215063175636e-18
+              ],
+              "executed_reconstruction_relative_error": 8.82595010686015e-16
+            },
+            {
+              "macro": 13,
+              "physical_block_backward_errors": [
+                1.295683580723351e-16,
+                8.597059417690439e-17,
+                1.2066015781432125e-16,
+                2.8674701112221203e-18
+              ],
+              "executed_reconstruction_relative_error": 1.3983314292520093e-16
+            },
+            {
+              "macro": 14,
+              "physical_block_backward_errors": [
+                3.1546534288262813e-16,
+                1.7218970544705282e-16,
+                2.6224751577946535e-16,
+                2.5511336175247716e-18
+              ],
+              "executed_reconstruction_relative_error": 5.213308641562952e-16
+            },
+            {
+              "macro": 15,
+              "physical_block_backward_errors": [
+                1.6172828505515886e-16,
+                7.741488426258713e-17,
+                1.0115337280103949e-16,
+                2.1405014137161633e-18
+              ],
+              "executed_reconstruction_relative_error": 2.1676565811937982e-16
+            },
+            {
+              "macro": 16,
+              "physical_block_backward_errors": [
+                2.696771742479997e-16,
+                2.4522690257729393e-16,
+                4.412905751717621e-16,
+                5.331187436436271e-18
+              ],
+              "executed_reconstruction_relative_error": 7.484395140076978e-16
+            },
+            {
+              "macro": 17,
+              "physical_block_backward_errors": [
+                1.1037775298642213e-16,
+                1.2449726490747717e-16,
+                6.87055943291172e-17,
+                3.987173907902154e-18
+              ],
+              "executed_reconstruction_relative_error": 2.4904486173757975e-16
+            },
+            {
+              "macro": 18,
+              "physical_block_backward_errors": [
+                5.06791394123928e-16,
+                2.374336162546151e-16,
+                3.1072464884064396e-16,
+                3.3423428150856903e-18
+              ],
+              "executed_reconstruction_relative_error": 7.729344920261548e-16
+            },
+            {
+              "macro": 19,
+              "physical_block_backward_errors": [
+                9.150505643246018e-17,
+                1.1032182912436249e-16,
+                4.428920287739156e-17,
+                2.9625424775681315e-18
+              ],
+              "executed_reconstruction_relative_error": 2.306540147341471e-16
+            },
+            {
+              "macro": 20,
+              "physical_block_backward_errors": [
+                4.303165381207831e-16,
+                2.7727520420328866e-16,
+                3.1625273939399736e-16,
+                2.4701399307967293e-18
+              ],
+              "executed_reconstruction_relative_error": 4.716274282169122e-16
+            },
+            {
+              "macro": 21,
+              "physical_block_backward_errors": [
+                1.257976024363213e-16,
+                1.0011516223796269e-16,
+                1.5074671599749108e-16,
+                2.4205604385227204e-18
+              ],
+              "executed_reconstruction_relative_error": 2.3775863216137287e-16
+            },
+            {
+              "macro": 22,
+              "physical_block_backward_errors": [
+                1.999802251136663e-16,
+                2.5927714441451194e-16,
+                2.664409886127149e-16,
+                2.1412152431344986e-18
+              ],
+              "executed_reconstruction_relative_error": 5.781827855973505e-16
+            },
+            {
+              "macro": 23,
+              "physical_block_backward_errors": [
+                1.5913957131299248e-16,
+                1.043461388859044e-16,
+                1.3715701931486635e-16,
+                1.7216766965883706e-18
+              ],
+              "executed_reconstruction_relative_error": 1.7532304895332505e-16
+            },
+            {
+              "macro": 24,
+              "physical_block_backward_errors": [
+                2.350224389129415e-16,
+                2.6839288834137827e-16,
+                3.1222307060192e-16,
+                4.395553480276593e-18
+              ],
+              "executed_reconstruction_relative_error": 7.029490388102704e-16
+            },
+            {
+              "macro": 25,
+              "physical_block_backward_errors": [
+                1.5101711515979828e-16,
+                1.300243876109554e-16,
+                8.73732777721174e-17,
+                3.6083582524519515e-18
+              ],
+              "executed_reconstruction_relative_error": 2.2183293050295687e-16
+            },
+            {
+              "macro": 26,
+              "physical_block_backward_errors": [
+                2.671573451037667e-16,
+                2.83017601484152e-16,
+                3.5337115625021684e-16,
+                3.0752784833547713e-18
+              ],
+              "executed_reconstruction_relative_error": 9.594572119930262e-16
+            },
+            {
+              "macro": 27,
+              "physical_block_backward_errors": [
+                8.698097614079026e-17,
+                1.0950332530184606e-16,
+                1.084364738583873e-16,
+                2.7769993953760022e-18
+              ],
+              "executed_reconstruction_relative_error": 2.1575321463710606e-16
+            },
+            {
+              "macro": 28,
+              "physical_block_backward_errors": [
+                2.855554949135761e-16,
+                2.2118937824529682e-16,
+                2.7561117285543794e-16,
+                2.362035866197739e-18
+              ],
+              "executed_reconstruction_relative_error": 4.3337748885647326e-16
+            },
+            {
+              "macro": 29,
+              "physical_block_backward_errors": [
+                1.7423863128518443e-16,
+                1.3105861796886952e-16,
+                1.0717416930932572e-16,
+                2.0807348147766515e-18
+              ],
+              "executed_reconstruction_relative_error": 2.425984587355728e-16
+            },
+            {
+              "macro": 30,
+              "physical_block_backward_errors": [
+                2.79594602789877e-16,
+                1.7005761439641854e-16,
+                2.5842488387819525e-16,
+                2.0215505694484475e-18
+              ],
+              "executed_reconstruction_relative_error": 6.853048538066688e-16
+            },
+            {
+              "macro": 31,
+              "physical_block_backward_errors": [
+                1.286874841011166e-16,
+                1.220820255634275e-16,
+                1.1952702693013823e-16,
+                1.7628006431881148e-18
+              ],
+              "executed_reconstruction_relative_error": 1.246610338037875e-16
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "source_sha256": {
+    "src/pymhm/__init__.py": "a3273ccef37cce0b25b1e1cbf9faf150dfaaf715aafc6bd87e6d4809b431898c",
+    "src/pymhm/_geometry_roundoff.py": "7682dec2f30aa8dfbd64c9952ec41399d965c72cf1b017da82050036b458012e",
+    "src/pymhm/adaptive_darcy.py": "48d8ae0ceb3b4dbf5587b5dcb79bac384e6ab46c955d726f3a3609da55a31c4b",
+    "src/pymhm/adaptive_darcy3d.py": "5facb2103bebe6ba910c367726c22ff190fb95a4be5fde3a013a2724a29f7928",
+    "src/pymhm/adaptive_darcy_balanced.py": "c2ef8cb13c060aebf13f8a6b4e6afab9aec6388d713b7dca125b8d1c95b833e1",
+    "src/pymhm/adaptive_darcy_budget.py": "cb5a61ac471984f7384011a61b2025ca3c7762b5d4224b2f4e1da1264a30c5c7",
+    "src/pymhm/analytic.py": "a317699fabfbd3151765e96c695c3c90f68037b18f45eb40c1bf0ded7746c037",
+    "src/pymhm/bdm.py": "33422b3e294b198c0d34f499f5095ab885127ca37e929e0e023e63868fdc365a",
+    "src/pymhm/bdm_family.py": "64d7125f6f221d8f750efb49554db79300c980327243104792126d15ce16a369",
+    "src/pymhm/block.py": "47b033ef6433759d87d3cd769b432e37498efadb21c68e9c8f52fc80c06d33a2",
+    "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+    "src/pymhm/crisscross.py": "e0d1a21f1c3b9d140a63ee9b21b9a97ee8f15b343de8b6f5c3de70cbe02f9230",
+    "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+    "src/pymhm/darcy.py": "945eb63777daa94f02cd89f77ec6299cf1fe8722b3d98c027c70b7d318e097fc",
+    "src/pymhm/darcy3d.py": "b10bb4372effd34434eb25ff419bbb2e0d0539ac32a262c67b6cfc6a0879df72",
+    "src/pymhm/darcy_hdiv3d.py": "946806fe382408305faaf7976550e22ce9c68a63138f7c10ac690ec93b61ba77",
+    "src/pymhm/darcy_jump_estimator.py": "dfcca29a10093f2dc77abf8f9120790244c8fd1d9c50d4067adb75219eb95179",
+    "src/pymhm/darcy_local_error.py": "9598ef6c8331c4aca72f58145b583922e3a29ac1d307d1e8afeb332a571f62e6",
+    "src/pymhm/darcy_mixed.py": "645ed2c1731b5fb9552f00c39b0395ffc84ab9a7d92f8088091d8a4c7942297f",
+    "src/pymhm/darcy_rt.py": "8f75b099b4ad0293d6bc859004ef3998f8b2daae877fd36537fa712e1ea39a4a",
+    "src/pymhm/darcy_transport.py": "3f9331d82dae0d16b30c53085981646942574a552601ec34631ba3b00eab5b7e",
+    "src/pymhm/darcy_velocity.py": "83c0dc577fe731a4316962b389ed286e711fcf9264836094188206d6eb276558",
+    "src/pymhm/distributed.py": "c6cf5f26bd9033a72328d18f5d099ab0d9b867f92a6babe472c2035ff1abd7ae",
+    "src/pymhm/elasticity.py": "03055993afd0c4b6c10d1d855d9425934d22faed2bf53c405314ac4bcd3d42c4",
+    "src/pymhm/elasticity3d.py": "33865b942edeefca4c500d599eea3592e80e1bbbaebf7d2e6a5cd4fdddcf1097",
+    "src/pymhm/elasticity_compatibility.py": "0a303a473f56a470f845267107dda65c94a5493a3f5800f73885d4e2eef36327",
+    "src/pymhm/elasticity_compliance.py": "c233b85b02d1b5d01b8239e1d3923559db0796c55f24d40ae1fc9c83e3330c1f",
+    "src/pymhm/elasticity_estimator.py": "3eb8b3a370f8d2d2209788ecc2382ba67b5185ed7bc6c98d7832ef366d8ec643",
+    "src/pymhm/elasticity_mixed.py": "e6424628fadff522904bbce90a2ffd47f5a55a20d67bcbac41e9f6967fe8eb3a",
+    "src/pymhm/elasticity_mixed3d.py": "87967cf92e122408f2ef47ac366f7d41b5e38c813b161b99575b2ceb68d258bf",
+    "src/pymhm/elasticity_mixed3d_forms.py": "001eab263d948abcd5c5cb4897ef2e141c90bf19942a0c000455ea716f21373c",
+    "src/pymhm/elasticity_primal.py": "175aa39305c904b2bd917a373d224cfc108914da36674256d85f4ddfa2cbd508",
+    "src/pymhm/elasticity_tensor_rt.py": "4608944fdb04a28ddb5af9b05819dbc35bfe3d2f1ef1bb5dd14bf4e825e418d0",
+    "src/pymhm/elastodynamics.py": "21d7d7327f85b61399e2166f4babdd0098d220031a3cc0f507014655fd539f6c",
+    "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+    "src/pymhm/estimator.py": "eaf39679c6aaa0b2dc5e74fe35215848f4113d36b685be7b14e76aa639b70cbd",
+    "src/pymhm/estimator3d.py": "e1de62f7246d4886a5dd8d57e211644220ec8c3b0bf5ef3d3e84aa10ebf80c4c",
+    "src/pymhm/estimator_spaces.py": "c1a37acf9c97f0b36c002f4d0f8a0d58a1c91ae7e6d957b2cb1eb89bb3883b4e",
+    "src/pymhm/fenics.py": "71232a5bb4eb7bf636cf9476a5f9f2bcd817670a856196c3ce1c6d5c594040fe",
+    "src/pymhm/flow.py": "3cb5967a6baed9e0f9008f3c1a990fefc070ec69f49556be51745187a5b6bb90",
+    "src/pymhm/flow3d.py": "55dd9b5a41ac6d1a0064e806b97b1e77388d4515e338802576c0cb10d410d704",
+    "src/pymhm/flow3d_forms.py": "53b889f916d47d7d75d44841866fe0f2a8a675f2cfa6c7e0021398f0ca66754b",
+    "src/pymhm/flow_adaptive.py": "5ed739edcff87d6351c9da766a601e6c761b36b1562e91492476d476bb474e16",
+    "src/pymhm/flow_estimator.py": "d96a10c929d1ea94d895ea4881203051d8f9f054113d743c60b0f94ce348a3e5",
+    "src/pymhm/flow_local_refinement.py": "1e36f9cdaef85f7070feadab57d1e3c0d5894f21dde3d301b8047d8045e6294d",
+    "src/pymhm/flow_macro_adaptive.py": "ac1601cb9d377eebd3770853dc4d4fc384893e177b694a6705eb477d7d123cec",
+    "src/pymhm/gals3d.py": "6526b5e624054eb5ed5bf47ab3682b4b37015aeb0922e909477d432d1ad4a44e",
+    "src/pymhm/gals3d_forms.py": "4ffca26258a094e9038ef82138d18de8bd8672766fda1da3637f60ac0881b727",
+    "src/pymhm/gpu.py": "3fa3c1dd0521d816b77a97da2e1192aba89166ee401b1e6b04c298c908361a64",
+    "src/pymhm/hdiv3d_family.py": "809969b1ba809f2819378aa8f3f54dbddee9172f8eb34fea8865917de2454138",
+    "src/pymhm/hdiv3d_general.py": "f1c255cb1439f2cf36d7e05463201f0434e62265c7fbd8d1af47555c36a4166b",
+    "src/pymhm/hdiv3d_mesh.py": "45f6b868b4e5eb3f1733ad66052a059ffd23e837a5460748f9230aa255c99e8b",
+    "src/pymhm/helmholtz.py": "603a3e5eccf84830f8819657d97d3f7f22d856f97f21482e992f3a64fb67c1b4",
+    "src/pymhm/helmholtz_forms.py": "26be08048da3e6dc07a090922a732c1e85576f6627b299007f4c79569efef860",
+    "src/pymhm/helmholtz_spaces.py": "a0805d5ea9a95636062df0917dba98cfad8bc7ec298eba55c5fc1e6320a44bfb",
+    "src/pymhm/hybrid.py": "e4ca37cd8fa05dcb505d2cc7d36c975bbd25ac9ee01564bc86dd70d1d042dbb3",
+    "src/pymhm/hybrid_refinement.py": "b3ac92f5403b0fbc9a509e04626b7981cbd9767654ea149a894f1c82b74ecc16",
+    "src/pymhm/lagrange.py": "db5552571ee459630678dad97a887d4c49d1a2eb700cd2847b3f0a5f4ee8a2b7",
+    "src/pymhm/loads.py": "ebb3cbdb1e7aa2c9431ea415841a88e7c1162f8960ffe2a7466e02db644864ca",
+    "src/pymhm/longest_edge.py": "3ed782db319ee37a32a7fc91e3d818f7c44303451ea5fe91e1f028f0e8d6775d",
+    "src/pymhm/mapped_rt.py": "375bbbb482ac6c4e4da672328937536d177b4a99811fbe875394c5b363e55f1b",
+    "src/pymhm/maxwell.py": "cbac3dc28ab0357ba3e0a32767c028babb945db613c09399fcaef280ae279996",
+    "src/pymhm/maxwell_dg.py": "5a328d3bdbc8a7d6f1df8dc10eb4bd497c34258661ed2e9c3c515d4cd5c7f166",
+    "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+    "src/pymhm/mesh_exchange.py": "6e7ba75d1f69aae9d27e937e6902f82f6309b7f5a6ef8ec948f67cfb6934cc16",
+    "src/pymhm/meshing.py": "82f6e9536a480dc6a4845e6b75b44a012edf14f2046593716d873d39f3c1d733",
+    "src/pymhm/meshing3d.py": "c698f64c088630eecd1fc659f55de6042733e44c8193cc74ea6287c2bef34835",
+    "src/pymhm/meshing_native3d.py": "c1a0c4143ba29cc4b86a8255b52404162c265bd7a3ccc96fea85a6e3562c0d0c",
+    "src/pymhm/metric_adapt.py": "68aebbf75cc2f358acabf8cb5cd6194e07218bba9afefe11707c8c74a5b8f63c",
+    "src/pymhm/mh.py": "3e3bb91bc3e40ff8e7f998862fe640964d2b813b081c2d6ab84fec33bc6a0d4f",
+    "src/pymhm/mh2m.py": "ca093bd8d864fa08cc8f5e297d4f5c130b414ec732110708fef6c569a68ec0c4",
+    "src/pymhm/mh2m3d.py": "7b7e3c69fa8cf3c4ca1adb29e511f6309030710793c409f929384cc191612251",
+    "src/pymhm/mh3d.py": "b263cc220fe94832c4a0a44f07a1945f8b976fb9f79be95383f434f32251a226",
+    "src/pymhm/mh_boundary.py": "4592198e2ff0ffa19755b471411c95e8e6e9d7bd35aa05032bf2097ac8b381f7",
+    "src/pymhm/mh_trace3d.py": "74957a0e26ead0fb142fd742678280ac3193196c653fb5b27fb23f411473ad34",
+    "src/pymhm/mshho.py": "557b02892d7b93d2560deff999ef543bc7b95e762024139b6c8968d6b4ede0ee",
+    "src/pymhm/mshho3d.py": "522668e3fa23cd7661c958151caacdcc9e9a0e013c6f44e2974f5745dd3a4089",
+    "src/pymhm/nested.py": "4414c4fba66266017d97b5a75eda9a24ad90393647bd75d1245b5f4f93bc0049",
+    "src/pymhm/offline.py": "7b40681863239cf07f5df220ad893f044d26314c9a5bb8563fff587ef3df4932",
+    "src/pymhm/parallel.py": "bc42202b0096efbe4e79d7c95130b8cb5b46769e51371ad3a167fd25c731eb64",
+    "src/pymhm/pgmhm.py": "203cd2f87d9de603cda8a17d6476ba3b1ea3eb3981ee13679eb5b2ade2b80b28",
+    "src/pymhm/planar_fitting.py": "cf553a70215c2027b327ac0bc487fec658662422ff0fedfd718faf97ce83d5c3",
+    "src/pymhm/planar_material.py": "57fb28660fcf195219c5b526813a0d7648adfe87788e99ed4a9d7c18d678d4cc",
+    "src/pymhm/planar_quadrature.py": "f28220818644001e890552f383cfbe8b53edfe9b61dd23adb24a5070f02f1984",
+    "src/pymhm/polygon.py": "8b07cd90f94ba0bdc9a0dc00197aade6fd61798e5fe33d37b79d60a8ca615537",
+    "src/pymhm/polyhedral.py": "7f738ae79756d2fdf93880ef8322bc7d4e146eb7e5ee5b827e7a549507492774",
+    "src/pymhm/polyhedral_geometry.py": "38b8350bc37e4da72a1e1d3d81d05c57d02adb97912515cdb4332e232f03a509",
+    "src/pymhm/polyhedral_rad.py": "679adf386dc87d91b2938a3f70c4fa185d8b7e364f4edb525ce4cf787cacf147",
+    "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+    "src/pymhm/rad.py": "d1f3d5c948bcc9370333050e8dfc1b15d5372ef745d51f04d8f700065d40c1e7",
+    "src/pymhm/rad3d.py": "13bcaefd7f94ab9d4af17ceaf00e08c43a66fa075ab10c403e89fc92408dbbb2",
+    "src/pymhm/reconstruction.py": "cdbb81bc0768519158f91e1970da7b88bd9c85281cd683d1a17699234e97fc76",
+    "src/pymhm/reconstruction3d.py": "9f7df5e94071cba07fe7e389875bfd2ff02df55fdff60475af7b92ce16cf6849",
+    "src/pymhm/reconstruction_moments.py": "b0c9068c0facc1c1ecf2c3870108b2c0360169c54c7f2c9d1a5c83cfc4463e1f",
+    "src/pymhm/refinement.py": "87b1422dcd1d96c8164bf0c72bfe5b3af71f1c18cc62d7bd751ab9dda015835a",
+    "src/pymhm/refinement3d.py": "96b96bf4c03129bc0e52540a5cbf2907f8d8084840449f5260d00384b70d2c1e",
+    "src/pymhm/reservoir.py": "577bebb4388e7c0cd36036229dfa98c1a2c63520387b1172d32636308813bbf1",
+    "src/pymhm/rt.py": "e34337ec0f62aa50feca2a0e0ac92bc34d85cad7e296b046f634695446f52ca4",
+    "src/pymhm/rt3d.py": "fb7f7b65b111a3a1cece30670eee1f7dc66cc4d47eb09279b1201626bd106de1",
+    "src/pymhm/scalar_adaptive.py": "182b3de609ba8f1a05be814a557a71256c8e1eb658753d1f2d522857bb2ac748",
+    "src/pymhm/scalar_boundary.py": "5c2d4970ef3e032f93caee5f9b36ce36f535f65a924ef1e666f0e4aa5f4b69b3",
+    "src/pymhm/scalar_trace_integration.py": "eaba824901f45fe3aebc81e13741da7b3e1c4e9f8dc7cc8a0f59d42330c2ec9e",
+    "src/pymhm/scalar_transient.py": "c68b44eec515d94c114ba555e09d01705754ce2a2dda5199c753dc6b8f7f0ef5",
+    "src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+    "src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+    "src/pymhm/solvers.py": "2d360c2f7d71d8c04caa1966125291849b45daa5a886f5030772981e1cdaa751",
+    "src/pymhm/subspaces.py": "f5ceadb985ae84b27b7b0d7df4057ad8e8c4e4783b6166b21bfed0f4f3cb42e3",
+    "src/pymhm/tensor_rt.py": "d8e01b455e4f9b6bf95b5bf65f8a9d5d665f217c76139b6fe90f8e5c24e0730e",
+    "src/pymhm/tetra_lagrange.py": "f189efa0efc9ad6b722f88de7781a08cb502a5991e92d5987526eed4b0bca2ee",
+    "src/pymhm/tetra_validation.py": "2aa64d19cb2678368e9ed8cb1d1ebd26dc36f36c673242f7423f7b9b47d4c72c",
+    "src/pymhm/tetrahedral.py": "72be0df86defabcbc26f0617a8345f2e15a231c2912b4231b1b609a4dbd9e50a",
+    "src/pymhm/transport.py": "097330163a50c9e49fbfd25c68616bd9c2c085707f74ea47070c80c8fee72296",
+    "src/pymhm/triangle_fields.py": "60e456d358ec5615d98375d6588e6ac88de972304d2fd3ac505f1ca998f67f4c",
+    "src/pymhm/unusual.py": "2d23c111474223b39937a392e44d1223f9367573faeb146facf38547097d6011",
+    "src/pymhm/vector.py": "bb8c8a63bfcccaf543d9808e81c9db9c93673f6cd4375b9569090b8547203b37",
+    "src/pymhm/visualization.py": "4f674ea95cfc11d0ea4542ea5d4e2e5b856b0e253bb341d9aae59514bc3242c8",
+    "src/pymhm/weighted_estimator.py": "9155f55327b8ff406b4ea873854ba5603034032e7734d996a7990e48c0a75c94",
+    "examples/verify_core_elasticity.py": "3d66484a5aa21dc3db3ea9b7cfc0b9e14649d7d2aed389eceaad27eaafa7ec93",
+    "examples/core_elasticity_field_archive.py": "c33037bb41044d7e4815d3bcfb859c13b8951e5c7699c9311b9f8485fb2a72e0",
+    "examples/core_extension_data.py": "e2138ee96c930b9f0559d20bdde5eae2c6ace802d36c88b8286eb6f8559651f2",
+    "examples/solve_core_extensions.py": "dc5c5677b2f704dfb7cdb44d863137f031eed6e259b86098039c61e28a2a6565",
+    "examples/archive_precision.py": "6dfd3e8d4821bfd34b1fb5b10db29de23f11ae1f2aefab4910cd13ebb57a8fe3",
+    "examples/campaign_provenance.py": "32a86b873f1dc5cb5e134f057e80abbd06c831f531850262bc909fb4adf7e736",
+    "examples/local_response_cache.py": "4921332802aa6400356e9536366244e4285981d0cd7451abff376cf64ab7f5d5",
+    "examples/transport_checkpoints.py": "c9c09536afbe7ae247fb97e2c626a410279a1df9358c7984405d888e9a25f518",
+    "pixi.lock": "80900204082bb85dc2bebfda316053f106277124ca7f252ad9f45271f3591c57",
+    "pixi.toml": "c6d1234f9f6715265cdb85aadfcda86df379f542f6c579ed79e48835bdc29870",
+    "pyproject.toml": "9fe172ddcb0fc2407c85c8140de8d263808d3a2e57db016aea3a012a475efbc9"
+  },
+  "configuration": {
+    "macro_resolutions": [
+      1,
+      2,
+      4
+    ],
+    "families": [
+      "triangle-bdm2",
+      "rectangle-rt1",
+      "polygon-bdm2"
+    ],
+    "assembly_order": 8,
+    "norm_orders": [
+      9,
+      10
+    ],
+    "local_refinement": 1
+  },
+  "observed_orders": {
+    "triangle-bdm2": {
+      "displacement_l2": [
+        1.7774394415693253,
+        1.9506712881523525
+      ],
+      "stress_l2": [
+        1.6825655543345126,
+        1.801619843651516
+      ],
+      "rotation_l2": [
+        1.4675944320581493,
+        1.318583046499482
+      ],
+      "divergence_l2": [
+        2.0000000000000004,
+        2.000000000000006
+      ]
+    },
+    "rectangle-rt1": {
+      "displacement_l2": [
+        1.9046435834022233,
+        1.9791755557894342
+      ],
+      "stress_l2": [
+        1.9534143376143138,
+        1.9975985656682984
+      ],
+      "rotation_l2": [
+        1.822074003898335,
+        1.9694620248004981
+      ],
+      "divergence_l2": [
+        2.0000000000000004,
+        2.0000000000000004
+      ]
+    },
+    "polygon-bdm2": {
+      "displacement_l2": [
+        1.6748088051276753,
+        1.9001571741355299
+      ],
+      "stress_l2": [
+        1.8793283732104442,
+        1.8746724971197701
+      ],
+      "rotation_l2": [
+        1.8499503113130051,
+        1.9032108707452347
+      ],
+      "divergence_l2": [
+        1.9999999999999998,
+        1.999999999999975
+      ]
+    }
+  },
+  "expected_levels": [
+    1,
+    2,
+    4
+  ],
+  "three_levels_complete": true,
+  "selected_cases": [
+    "triangle-bdm2",
+    "rectangle-rt1",
+    "polygon-bdm2"
+  ],
+  "original_execution_record_sha256": "1e8939c100443edbdd0052d71289ba7dbf864004598f1c0a9cc1b973031dd283",
+  "original_field_closure_sha256": "6d92999b4800fb344663678b4d78e223e0c944d9dd1dd07f325b2d6a35176402",
+  "historical_literature_reproduction": false,
+  "uniform_inf_sup_proven": false,
+  "independent_native_whole_field_agreement_verified": false,
+  "coefficient_archives_duplicated": false,
+  "pde_solves_during_collection": 0,
+  "basis_replay_verified_blas_1_2": true,
+  "coherent_retained_kernel_rotation_replay_verified": true,
+  "conventions": "lambda=-Cauchy stress*n; anisotropic Kelvin compliance physical hydrostatic mean; triangle/polygon BDM2/P1/P1 and rectangle RT1/Q1/total-P1 rotation; local refinement r1; full exterior traces"
+}

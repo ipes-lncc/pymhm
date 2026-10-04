@@ -83,7 +83,15 @@ from pymhm.hdiv3d_mesh import AffineMixedMesh
 from pymhm.helmholtz import HelmholtzSolution, solve_helmholtz
 from pymhm.helmholtz_spaces import OscillatoryFaceSpace, PolynomialNeumannTrace, helmholtz_skeleton
 from pymhm.hybrid import HybridSolution, HybridSystem, LocalAssembly, LocalProblem, LocalResponse
-from pymhm.hybrid_refinement import HybridRefinement, refine_hybrid
+from pymhm.hybrid_refinement import (
+    HybridRefinement,
+    HybridRefinementCase,
+    HybridRefinementLocal,
+    HybridRefinementStore,
+    HybridStreamRefinement,
+    refine_hybrid,
+    refine_hybrid_stream,
+)
 from pymhm.longest_edge import refine_longest_edge
 from pymhm.mapped_rt import HexMesh, HexSkeleton, MappedRTDarcySolution, solve_darcy_mapped_rt
 from pymhm.maxwell import MaxwellSolution, MaxwellStepper, solve_maxwell
@@ -396,6 +404,11 @@ __all__ = [
     "HybridSystem",
     "HybridRefinement",
     "refine_hybrid",
+    "HybridRefinementCase",
+    "HybridRefinementLocal",
+    "HybridRefinementStore",
+    "HybridStreamRefinement",
+    "refine_hybrid_stream",
     "LocalAssembly",
     "LocalProblem",
     "LocalResponse",

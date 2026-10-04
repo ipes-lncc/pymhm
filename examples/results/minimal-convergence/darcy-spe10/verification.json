@@ -1,0 +1,142 @@
+{
+  "schema": "pymhm-minimal-public-record-verification-v1",
+  "id": "darcy-spe10",
+  "published_scalar_record_sha256": "fd37f16e4d05876c44a108914791229063ec0b8c64004b78799294de422969da",
+  "original_scalar_record": {
+    "path": "build/results/minimal-studies/spe10-r4-r8-r16-v2/minimal-convergence.json",
+    "sha256": "fd37f16e4d05876c44a108914791229063ec0b8c64004b78799294de422969da"
+  },
+  "literal_record_copy": true,
+  "original_norm_verification": {
+    "schema": "pymhm-minimal-darcy-summary-v1",
+    "case": "spe10",
+    "acquisition_id": "d7a0a90d-fc61-4647-8682-def263caf3a8",
+    "acquisition_complete": true,
+    "accepted_level_count": 3,
+    "requested_levels": [
+      4,
+      8,
+      16
+    ],
+    "acquisition_record": {
+      "path": "build/results/minimal-studies/spe10-r4-r8-r16-v2/minimal-convergence.json",
+      "sha256": "fd37f16e4d05876c44a108914791229063ec0b8c64004b78799294de422969da"
+    },
+    "resource_phases": [
+      {
+        "path": "build/reports/preliminary/minimal-darcy-v2/spe10-resource.json",
+        "sha256": "d9f8bfe9aac89262f70597bc62aa2f19553f30043126394d45e5c69131e6714e",
+        "role": "completed acquisition"
+      }
+    ],
+    "executed_source_copies_verified": 127,
+    "elapsed_seconds": 25.93088753335178,
+    "elapsed_scope": "Sum of original sequential acquisition phases, including interrupted work",
+    "peak_owned_rss_bytes": 210968576,
+    "peak_scope": "Maximum of measured sequential owned-process phase peaks",
+    "native_threads": 1,
+    "workers": 1,
+    "physical_field_norms_separate": true,
+    "quadrature_checks": [
+      {
+        "level": 4,
+        "orders": [
+          5,
+          7
+        ],
+        "field_relative_changes": {
+          "pressure_l2_norm": 0.0,
+          "flux_l2_norm": 5.693413436478264e-16
+        }
+      },
+      {
+        "level": 8,
+        "orders": [
+          5,
+          7
+        ],
+        "field_relative_changes": {
+          "pressure_l2_norm": 0.0,
+          "flux_l2_norm": 1.6657169713940578e-15
+        }
+      },
+      {
+        "level": 16,
+        "orders": [
+          5,
+          7
+        ],
+        "field_relative_changes": {
+          "pressure_l2_norm": 0.0,
+          "flux_l2_norm": 6.010037827078309e-15
+        }
+      }
+    ],
+    "observed_initial_rates": {},
+    "original_checked_rhs_relative_max": 6.146237531677606e-11,
+    "interpretation": "SPE10 pressure increments decrease, but the relative Darcy-flux increments exceed unity and increase. These local levels do not establish flux convergence or a sufficiently refined numerical reference.",
+    "historical_reproduction": false,
+    "converged_numerical_reference": false,
+    "persisted_coefficients": false,
+    "figures": {
+      "png": {
+        "path": "build/results/minimal-studies/spe10-r4-r8-r16-v2/convergence.png",
+        "sha256": "699ed844af4f0de81e5727437934a7539992ef6ef676d542d9d28d43fedd779d"
+      },
+      "svg": {
+        "path": "build/results/minimal-studies/spe10-r4-r8-r16-v2/convergence.svg",
+        "sha256": "30f868dd3192bff5228db9c2ef80aa1066da045f68384ca7be063d95e5d53cad"
+      }
+    },
+    "renderer_source_sha256": "0f73de8d25a95ddaecf2cb2468219b0f49d85599f05cb88e7b95760248c8614f"
+  },
+  "norm_verification_sha256": "e4cb1190391cd5162686ae21f0d3f417d4a5c247e1c5b976c087ec4f3f8338d4",
+  "rendered_inspection": {
+    "schema": "pymhm-minimal-figure-inspection-v1",
+    "native_png_dimensions": [
+      1344,
+      600
+    ],
+    "intended_viewing_width_px": 893,
+    "inspected_png_native_and_893": true,
+    "fields_in_distinct_panels": true,
+    "title_axes_footer_regions_separate": true,
+    "no_observed_clipping_or_overlap": true,
+    "svg_generated_from_same_matplotlib_figure": true,
+    "svg_independent_browser_inspection": false,
+    "artifacts": {
+      "convergence.png": "699ed844af4f0de81e5727437934a7539992ef6ef676d542d9d28d43fedd779d",
+      "convergence.svg": "30f868dd3192bff5228db9c2ef80aa1066da045f68384ca7be063d95e5d53cad",
+      "convergence-view893.png": "b64a023a0e0fbcf0f3bc86a6b11b90ee0e29b331a25382f32e108eedb95f6313"
+    }
+  },
+  "resource_receipts": [
+    {
+      "path": "build/reports/preliminary/minimal-darcy-v2/spe10-resource.json",
+      "sha256": "d9f8bfe9aac89262f70597bc62aa2f19553f30043126394d45e5c69131e6714e",
+      "elapsed_seconds": 25.93088753335178,
+      "peak_owned_rss_bytes": 210968576,
+      "guard_reason": null,
+      "returncode": 0,
+      "owned_group_empty": true,
+      "changed_sources": [],
+      "native_threads": 1,
+      "workers": 1
+    }
+  ],
+  "public_figures": {
+    "png": {
+      "path": "docs/figures/minimal-convergence/darcy-spe10/convergence.png",
+      "sha256": "699ed844af4f0de81e5727437934a7539992ef6ef676d542d9d28d43fedd779d"
+    },
+    "svg": {
+      "path": "docs/figures/minimal-convergence/darcy-spe10/convergence.svg",
+      "sha256": "30f868dd3192bff5228db9c2ef80aa1066da045f68384ca7be063d95e5d53cad"
+    }
+  },
+  "limitations": [
+    "The three local resolutions do not establish flux convergence or a converged numerical reference.",
+    "The r2 local/trace pairing is excluded by a rank-8 coupling with 12 trace columns.",
+    "No exact solution or same-operator converged conforming reference is supplied."
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "schema": "pymhm-initial-scalar-publication-receipt-v1",
+  "accepted": true,
+  "complete": true,
+  "initial_three_levels": true,
+  "row_count": 9,
+  "original_execution_record_sha256": "7b1368bd7005090d90de44360669067130f0dc1b390a683854b71ed3f23f2a94",
+  "published_metadata_record_sha256": "7b1368bd7005090d90de44360669067130f0dc1b390a683854b71ed3f23f2a94",
+  "evidence": {
+    "examples/results/minimal-convergence/initial-elasticity2d/evidence/core-elasticity-micro-v1-resource.json": {
+      "original_execution_record_sha256": "87aa14f175ba6d3e5cf93281cc39777dc7a34c34ddce844c7396cb706a7aaead",
+      "published_metadata_record_sha256": "87aa14f175ba6d3e5cf93281cc39777dc7a34c34ddce844c7396cb706a7aaead"
+    },
+    "examples/results/minimal-convergence/initial-elasticity2d/evidence/core-elasticity-initial-triangle-bdm2-n2-v1-resource.json": {
+      "original_execution_record_sha256": "deb770476db8d0a18deee0d5aa0b8df8798b88d05bf4e355dd77f46d6be2b8c8",
+      "published_metadata_record_sha256": "deb770476db8d0a18deee0d5aa0b8df8798b88d05bf4e355dd77f46d6be2b8c8"
+    },
+    "examples/results/minimal-convergence/initial-elasticity2d/evidence/core-elasticity-initial-triangle-bdm2-n4-v1-resource.json": {
+      "original_execution_record_sha256": "4eebe741ef080d12761f5b405a2831f4774bb1e1bced9096d56a172abe154518",
+      "published_metadata_record_sha256": "4eebe741ef080d12761f5b405a2831f4774bb1e1bced9096d56a172abe154518"
+    },
+    "examples/results/minimal-convergence/initial-elasticity2d/evidence/core-elasticity-initial-rectangle-rt1-n2-v1-resource.json": {
+      "original_execution_record_sha256": "ff57f52f9dc8950462a1801ca142e3248b3547befac79960d385424f85a4c073",
+      "published_metadata_record_sha256": "ff57f52f9dc8950462a1801ca142e3248b3547befac79960d385424f85a4c073"
+    },
+    "examples/results/minimal-convergence/initial-elasticity2d/evidence/core-elasticity-initial-rectangle-rt1-n4-v1-resource.json": {
+      "original_execution_record_sha256": "afaa2ff2929dd1e45929d9a88080a94affc81a62935f9737957ad8db9f0b729f",
+      "published_metadata_record_sha256": "afaa2ff2929dd1e45929d9a88080a94affc81a62935f9737957ad8db9f0b729f"
+    },
+    "examples/results/minimal-convergence/initial-elasticity2d/evidence/core-elasticity-initial-polygon-bdm2-n2-v1-resource.json": {
+      "original_execution_record_sha256": "b4c98dcf27639252e01aa7bfc42dd683c3c1ccd8615f52282c543bedd4eeae36",
+      "published_metadata_record_sha256": "b4c98dcf27639252e01aa7bfc42dd683c3c1ccd8615f52282c543bedd4eeae36"
+    },
+    "examples/results/minimal-convergence/initial-elasticity2d/evidence/core-elasticity-initial-polygon-bdm2-n4-v1-resource.json": {
+      "original_execution_record_sha256": "2d2b6d069d31e039371c56b8ef759bee0361c1131850e5cc3b2b70f79c44c838",
+      "published_metadata_record_sha256": "2d2b6d069d31e039371c56b8ef759bee0361c1131850e5cc3b2b70f79c44c838"
+    }
+  },
+  "figures": {
+    "docs/figures/minimal-convergence/initial-elasticity2d/convergence.png": "447283143a2d2db772ef08f5ca8f93cc832a5dcbee9757817530440e0522ec34",
+    "docs/figures/minimal-convergence/initial-elasticity2d/convergence.svg": "a57354f1fab99ce1b4d0accb6325b0b1c9556898b6444ed728d0504e587e0d21"
+  },
+  "figure_original_size_inspected": true,
+  "pde_solves_during_publication": 0,
+  "coefficient_vectors_persisted_by_publication": false,
+  "historical_literature_reproduction": false,
+  "basis_and_original_equations_proof_sha256": "8424418e5cfe0018186c45820b71e518364d2ac0fb2eab49789c0b0ec7eaa965",
+  "original_field_closure_sha256": "6d92999b4800fb344663678b4d78e223e0c944d9dd1dd07f325b2d6a35176402",
+  "owned_resource_count": 7,
+  "initial_n1_original_generation_preserved": true
+}

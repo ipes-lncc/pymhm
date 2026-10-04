@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import platform
+import subprocess
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -14,19 +17,41 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pyvista as pv
-from field_sampling import sample_field
-from plot_quarter_reference import finish_quarter_panel
-from threadpoolctl import threadpool_limits
+from threadpoolctl import threadpool_info, threadpool_limits
 
-from pymhm import SkeletonSpace, TriangleMesh, solve_darcy
+if __package__:
+    from .field_sampling import sample_field
+    from .plot_quarter_reference import finish_quarter_panel
+    from .quarter_point_archive import point_field_arrays, write_point_archive, write_point_record
+else:
+    from field_sampling import sample_field
+    from plot_quarter_reference import finish_quarter_panel
+    from quarter_point_archive import point_field_arrays, write_point_archive, write_point_record
+
+from pymhm import DarcySolution, SkeletonSpace, TriangleMesh, solve_darcy
 from pymhm.elements import rt0_evaluate
 from pymhm.lagrange import tabulate
+from pymhm.mesh import positive_int
 from pymhm.visualization import macro_edges
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/quarter-five-spot"
 FIGURES = ROOT / "docs/figures/quarter-five-spot"
 WELLS = np.array([[0.0, 0.0, -1.0], [1.0, 1.0, 1.0]])
+
+
+def _source_digests() -> dict[str, str]:
+    """Fingerprint the complete portable solver and its point-case evaluators."""
+    sources = [
+        Path(__file__),
+        ROOT / "examples/quarter_point_archive.py",
+        ROOT / "examples/field_sampling.py",
+        *sorted((ROOT / "src/pymhm").glob("*.py")),
+    ]
+    return {
+        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in sources
+    }
 
 
 @dataclass(frozen=True)
@@ -76,7 +101,9 @@ def series_reference(points: np.ndarray, terms: int = 1024) -> tuple[np.ndarray,
     return np.concatenate(pressure), np.concatenate(flux)
 
 
-def sampled_centroids(solution) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+def sampled_centroids(
+    solution: DarcySolution,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Evaluate pressure and physical flux at fine-triangle centroids."""
     positions, pressures, fluxes, areas = [], [], [], []
     for mesh, p, q in zip(solution.local_meshes, solution.pressure, solution.flux, strict=True):
@@ -92,7 +119,7 @@ def sampled_centroids(solution) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.
     return tuple(np.concatenate(values) for values in (positions, pressures, fluxes, areas))
 
 
-def sampled_grid(solution) -> pv.UnstructuredGrid:
+def sampled_grid(solution: DarcySolution) -> pv.UnstructuredGrid:
     """Build independent display triangles, preserving all one-sided fields."""
     if solution.formulation == "primal":
         fields = sample_field(
@@ -134,24 +161,70 @@ def sampled_grid(solution) -> pv.UnstructuredGrid:
     return grid
 
 
-def run_cases() -> None:
+def run_cases(
+    *,
+    macro_resolution: int = 32,
+    names: tuple[str, ...] = ("homogeneous", "layer-half", "layer-offset"),
+    formulations: tuple[str, ...] = ("primal", "mixed"),
+    output: Path = OUTPUT,
+) -> dict:
     """Compute the published physical cases with explicitly normalized point wells."""
-    OUTPUT.mkdir(parents=True, exist_ok=True)
+    positive_int(macro_resolution, "macro_resolution")
+    materials = {
+        "homogeneous": 1.0,
+        "layer-half": LayeredPermeability(0.5),
+        "layer-offset": LayeredPermeability(0.484375),
+    }
+    if not names or len(set(names)) != len(names) or any(name not in materials for name in names):
+        raise ValueError("point cases require distinct supported material names")
+    if (
+        not formulations
+        or len(set(formulations)) != len(formulations)
+        or any(method not in ("primal", "mixed") for method in formulations)
+    ):
+        raise ValueError("point cases require distinct primal or mixed formulations")
+    # Both discontinuous layers must fit the fine edges; no cut-cell material
+    # approximation is substituted for the published local P2/RT0 spaces.
+    for name in names:
+        coefficient = materials[name]
+        if isinstance(coefficient, LayeredPermeability) and not np.isclose(
+            coefficient.height * 2 * macro_resolution,
+            round(coefficient.height * 2 * macro_resolution),
+            rtol=0,
+            atol=1e-12,
+        ):
+            raise ValueError("the chosen layer must fit the original local fine edges")
+    source_digests = _source_digests()
+    output.mkdir(parents=True, exist_ok=True)
     report = {
+        "schema": "pymhm-quarter-point-v2",
         "well_functional": "v(1,1)-v(0,0); unit intensity chosen explicitly",
         "boundary": "zero exterior normal flux; domain mean pressure zero",
-        "macro_connectivity": "32x32 squares, southwest-to-northeast diagonal",
+        "macro_connectivity": (
+            f"{macro_resolution}x{macro_resolution} squares, southwest-to-northeast diagonal"
+        ),
         "point_sharing": "incident-angle partition, without duplicated strengths",
+        "source_sha256": source_digests,
+        "lockfile_sha256": hashlib.sha256((ROOT / "pixi.lock").read_bytes()).hexdigest(),
+        "git_revision": subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, capture_output=True, text=True
+        ).stdout.strip(),
+        "python": platform.python_version(),
+        "numpy": np.__version__,
+        "native_libraries": threadpool_info(),
+        "scope": (
+            "Specified discrete point-well case; singular exact fields have no finite global "
+            "energy norm. Original-equation checks do not certify reference accuracy."
+        ),
         "rows": [],
     }
-    mesh = TriangleMesh.unit_square(32)
-    np.savez_compressed(OUTPUT / "macro.npz", points=mesh.points, cells=mesh.cells)
-    for name, coefficient in (
-        ("homogeneous", 1.0),
-        ("layer-half", LayeredPermeability(0.5)),
-        ("layer-offset", LayeredPermeability(0.484375)),
-    ):
-        for method, degree in (("primal", 2), ("mixed", 1)):
+    mesh = TriangleMesh.unit_square(macro_resolution)
+    np.savez_compressed(output / "macro.npz", points=mesh.points, cells=mesh.cells)
+    report["macro_archive_sha256"] = hashlib.sha256((output / "macro.npz").read_bytes()).hexdigest()
+    for name in names:
+        coefficient = materials[name]
+        for method in formulations:
+            degree = 2 if method == "primal" else 1
             start = time.perf_counter()
             solution = solve_darcy(
                 mesh,
@@ -163,6 +236,18 @@ def run_cases() -> None:
                 local_refinement=2,
                 skeleton=SkeletonSpace(mesh),
             )
+            solve_seconds = time.perf_counter() - start
+            arrays, field_record = point_field_arrays(solution)
+            if _source_digests() != source_digests:
+                raise ValueError("point acquisition source changed during execution")
+            field_path = output / f"{name}-{method}-fields.npz"
+            field_record.update(
+                archive=field_path.name,
+                archive_sha256=write_point_archive(field_path, arrays),
+                source_sha256=source_digests,
+                lockfile_sha256=report["lockfile_sha256"],
+            )
+            write_point_record(field_path.with_suffix(".json"), field_record)
             row = {
                 "name": name,
                 "formulation": method,
@@ -170,8 +255,22 @@ def run_cases() -> None:
                 "macro_triangles": len(mesh.cells),
                 "local_refinement": 2,
                 "trace_degree": 0,
+                "executed_assembly_quadrature_order": solution.quadrature_order,
+                "norm_quadrature_order": field_record["norm_order"],
+                "material": (
+                    {"below": 1000.0, "above": 1.0, "interface_y": coefficient.height}
+                    if isinstance(coefficient, LayeredPermeability)
+                    else {"constant": coefficient}
+                ),
+                "relative_condensed_residual": float(solution.hybrid.residual),
+                "original_saddle_relative_load_residual": field_record[
+                    "original_saddle_relative_load_residual"
+                ],
+                "physical_pressure_integral": field_record["physical_pressure_integral"],
+                "field_archive": field_path.name,
+                "field_archive_sha256": field_record["archive_sha256"],
                 "macro_balance_max": float(np.max(abs(solution.conservation_residuals()))),
-                "seconds": time.perf_counter() - start,
+                "solve_seconds": solve_seconds,
             }
             if method == "mixed":
                 row["fine_balance_max"] = float(
@@ -179,16 +278,26 @@ def run_cases() -> None:
                 )
             points, p, q, area = sampled_centroids(solution)
             np.savez_compressed(
-                OUTPUT / f"{name}-{method}.npz", points=points, pressure=p, flux=q, areas=area
+                output / f"{name}-{method}.npz", points=points, pressure=p, flux=q, areas=area
             )
-            sampled_grid(solution).save(OUTPUT / f"{name}-{method}.vtu")
+            row["centroid_archive_sha256"] = hashlib.sha256(
+                (output / f"{name}-{method}.npz").read_bytes()
+            ).hexdigest()
+            sampled_grid(solution).save(output / f"{name}-{method}.vtu")
+            row["display_archive_sha256"] = hashlib.sha256(
+                (output / f"{name}-{method}.vtu").read_bytes()
+            ).hexdigest()
+            row["seconds"] = time.perf_counter() - start
             report["rows"].append(row)
-            (OUTPUT / "point-wells.json").write_text(json.dumps(report, indent=2) + "\n")
+            write_point_record(output / "point-wells.json", report)
             print(json.dumps(row), flush=True)
+    return report
 
 
-def convergence() -> None:
+def convergence(*, output: Path = OUTPUT) -> None:
     """Check six refinements against the Green series away from the singular wells."""
+    output.mkdir(parents=True, exist_ok=True)
+    source_digests = _source_digests()
     rows = []
     for n in (8, 12, 16, 24, 32, 48):
         mesh = TriangleMesh.unit_square(n)
@@ -199,6 +308,9 @@ def convergence() -> None:
             degree=2,
             local_refinement=2,
         )
+        arrays, record = point_field_arrays(solution)
+        if _source_digests() != source_digests:
+            raise ValueError("point convergence source changed during execution")
         points, p, q, area = sampled_centroids(solution)
         selected = (
             np.minimum(np.linalg.norm(points, axis=1), np.linalg.norm(points - 1, axis=1)) > 0.125
@@ -227,19 +339,37 @@ def convergence() -> None:
                 np.max(abs(reference_q[selected] - check_q[selected]))
             ),
             "macro_balance_max": float(np.max(abs(solution.conservation_residuals()))),
+            "original_saddle_relative_load_residual": record[
+                "original_saddle_relative_load_residual"
+            ],
+            "physical_pressure_integral": record["physical_pressure_integral"],
         }
+        arrays.update(
+            centroid_points=points,
+            centroid_pressure=p,
+            centroid_flux=q,
+            centroid_areas=area,
+            selected_centroids=selected,
+            reference_centroid_pressure=reference_p,
+            reference_centroid_flux=reference_q,
+            check_centroid_pressure=check_p,
+            check_centroid_flux=check_q,
+        )
+        archive = output / f"point-convergence-n{n}.npz"
+        row.update(archive=archive.name, archive_sha256=write_point_archive(archive, arrays))
+        record.update(**row, source_sha256=source_digests)
+        write_point_record(archive.with_suffix(".json"), record)
         rows.append(row)
-        (OUTPUT / "point-convergence.json").write_text(
-            json.dumps(
-                {
-                    "reference_terms": 2048,
-                    "check_terms": 4096,
-                    "excluded_radius": 0.125,
-                    "rows": rows,
-                },
-                indent=2,
-            )
-            + "\n"
+        write_point_record(
+            output / "point-convergence.json",
+            {
+                "reference_terms": 2048,
+                "check_terms": 4096,
+                "excluded_radius": 0.125,
+                "source_sha256": source_digests,
+                "lockfile_sha256": hashlib.sha256((ROOT / "pixi.lock").read_bytes()).hexdigest(),
+                "rows": rows,
+            },
         )
         print(json.dumps(row), flush=True)
 
@@ -281,7 +411,7 @@ def plot_cases() -> None:
                 finish_quarter_panel(
                     plotter,
                     actor,
-                    title=f"{method}: {name}\nUnit point wells\n2048 macrotriangles",
+                    title=f"{method}: {name}\nUnit point wells\n{len(mesh.cells)} macrotriangles",
                     scalar=scalar,
                     scientific=False,
                 )
@@ -314,12 +444,31 @@ def main() -> None:
     """Compute and/or redraw the archived quarter-five-spot experiments."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reuse-results", action="store_true")
+    parser.add_argument("--stage", choices=("all", "cases", "convergence", "plot"), default="all")
+    parser.add_argument("--macro", type=int, default=32)
+    parser.add_argument("--names", nargs="+", choices=("homogeneous", "layer-half", "layer-offset"))
+    parser.add_argument("--formulations", nargs="+", choices=("primal", "mixed"))
+    parser.add_argument("--output", type=Path, default=OUTPUT)
     args = parser.parse_args()
+    if args.stage in ("all", "plot") and args.output != OUTPUT:
+        parser.error("plotting reads the gallery output directory; select cases or convergence")
     with threadpool_limits(limits=1):
         if not args.reuse_results:
-            run_cases()
-            convergence()
-        plot_cases()
+            if args.stage in ("all", "cases"):
+                run_cases(
+                    macro_resolution=args.macro,
+                    names=tuple(args.names)
+                    if args.names
+                    else ("homogeneous", "layer-half", "layer-offset"),
+                    formulations=tuple(args.formulations)
+                    if args.formulations
+                    else ("primal", "mixed"),
+                    output=args.output,
+                )
+            if args.stage in ("all", "convergence"):
+                convergence(output=args.output)
+        if args.stage in ("all", "plot"):
+            plot_cases()
 
 
 if __name__ == "__main__":

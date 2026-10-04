@@ -1,12 +1,15 @@
 # MHM and multiscale HHO
 
 `solve_mshho` constructs multiscale HHO cell and face unknowns from constrained
-local energy minimization. It implements the projected-source formulation (4.6)
-and reconstructed-source formulation (5.1) of
+local energy minimization. It uses finite conforming Galerkin realizations of
+the projected-source formulation (4.6) and reconstructed-source formulation (5.1) of
 [Chaumont-Frelet, Ern, Lemaire and Valentin (2022)](https://doi.org/10.1051/m2an/2021082).
-The article establishes an equivalence theorem; it does not provide a numerical
-benchmark table. The comparisons here verify that theorem against the independent
-MHM construction in PyMHM.
+The article establishes an equivalence theorem with exactly solved local problems;
+it does not provide a numerical benchmark table. The comparisons here measure a
+finite Galerkin analogue against the MHM construction in PyMHM. They do not reproduce
+the exact local multiscale spaces of that theorem. Remark 7.7 describes particular
+second-level multiscale or local HHO spaces for two-level equivalence; an arbitrary
+conforming $P_k$ local space does not automatically satisfy those hypotheses.
 
 ## Spaces and source convention
 
@@ -15,13 +18,19 @@ independent polynomial moments. The reconstructed field minimizes
 $\int_K A\nabla v\cdot\nabla v$ subject to those cell and face moments.
 Its implementation uses a conforming local $P_k$ discretization of that
 minimization. Cell moments are eliminated before assembling the global face
-operator. This operator is symmetric positive definite after Dirichlet elimination.
+operator. For the symmetric diffusion form, independent local moment constraints
+and physical Dirichlet elimination give a symmetric positive definite face operator
+in exact arithmetic. The assembled reduction retains the represented Galerkin
+operator $R^TAR$, including its floating-point antisymmetry.
 
 For `source_variant="projected"`, the load uses the cellwise $L^2$ projection
 of the source onto $P_m(K)$. For `source_variant="reconstructed"`, the original
 load acts on the reconstructed test function. Polynomial sources in $P_m(K)$
-give identical fields. A general source requires the corresponding projection
-when applying the article's MHM equivalence theorem. The face-only setting
+give identical fields. Theorem 5.1 distinguishes the original MHM construction
+with a source in $P_m(K)$ from its fully explicit projected-source construction
+for general $L^2$ sources. Remark 5.3 relates the reconstructed-source variant to
+a corresponding approximate MHM source lifting; it does not identify it with
+an arbitrary full-source finite-element MHM solve. The face-only setting
 `cell_degree=-1` uses the reconstructed-source variant, as in Remark 5.4;
 it is not the same method as MHM with a source lifting.
 
@@ -65,17 +74,43 @@ to be globally $H(\mathrm{div})$ conforming.
 The polynomial-source comparison uses $A=\mathrm{diag}(\kappa,1)$, $f=4$,
 nonzero affine boundary data, local $P_3$ and degree-one face/cell moments.
 The records include field differences and residuals for each $\kappa$.
-Agreement is verified through $\kappa=10^6$. The relative maximum field
-differences for $\kappa=1,10^3,10^4,10^6$ are respectively
-$1.38\times10^{-14}$, $1.29\times10^{-12}$, $2.78\times10^{-11}$ and
-$1.65\times10^{-8}$. The MHM local factors remain in double precision, while
-iterative corrections accumulate in extended precision; the physical residual
-criterion is unchanged. Both complete global residuals are below
-$1.5\times10^{-16}$ in this campaign. This precision option requires a platform
-whose `longdouble` has more mantissa bits than `float64`; an unsupported platform
-reports an availability error. These measured differences delimit the numerical
-equivalence check and do not imply a contrast-independent floating-point error.
+For the shared assembled operator, the maximum relative nodal pressure difference
+through $\kappa=10^6$ is $4.36\times10^{-13}$. Both complete original saddle
+residuals are at most $5.35\times10^{-12}$, with the original criterion
+$10^{-10}$. MsHHO retains wider digits in its reconstructions, Galerkin reductions
+and moment coordinates. MHM uses wider local accumulation and two full original
+equation corrections, requested with `hybrid_refinement_steps=2` and
+`hybrid_refinement_min_steps=2`. Factors remain binary64. The default minimum is
+zero, which permits stopping once the original residual criterion is met.
+The wider mode requires a platform whose `longdouble` has more mantissa bits
+than `float64`; an unsupported platform raises `SolverUnavailableError`.
 
-Run `pixi run -e notebooks verify-mshho` to acquire and render the study.
+The independently assembled comparison uses
+[FEniCS Basix 0.9.0, revision 19555f5](https://github.com/FEniCS/basix/tree/19555f5b629b4090b14014f9db5f2c9ac80984f9),
+through `basix.finite_element` and `basix.polynomials`. The executed comparison
+adapter assembles its geometry, cardinal bases, volume and face integrals
+independently. It shares the checked SciPy factorization and original-residual
+arithmetic with PyMHM. It uses all eight macrocells, the same
+local $P_3$ spaces, materials, source, Dirichlet data and physical field norms.
+Pressure, raw gradient and Darcy flux differences meet the declared $10^{-9}$
+criterion at all four contrasts. The homogeneous Dirichlet control at
+$\kappa=10^6$ also meets this criterion. A separate insertion into the other
+assembly's original saddle has residual about $5.19\times10^{-9}$ at
+$\kappa=10^6$, exceeding its declared $10^{-10}$ criterion in both directions.
+The measured action of the difference between the two rounded operators explains
+this discrepancy. Joint certification of that insertion remains unresolved;
+field agreement and each assembly's own accepted equations are recorded separately.
+These finite-case checks do not establish a contrast-independent error bound or
+uniform inf-sup stability.
+
+The compact record `examples/results/mshho/native-verification.json` identifies
+the executed binary and adapter digests, actual archived bases and coefficient
+vectors, quadrature controls, and each separate acceptance result. Field replay
+uses those archived bases and reproduces sampled fields and original rows
+bitwise with one and two BLAS threads. Coherent basis reordering preserves the
+physical fields; inconsistent reordering is rejected. The external solver sources
+and comparison tools are kept outside the package's release artifacts.
+
+Run `pixi run --locked -e notebooks verify-mshho` to acquire and render the study.
 The numerical record is `examples/results/mshho.json`; compact algebraic,
 source-convention and polynomial-patch checks run in the test suite.

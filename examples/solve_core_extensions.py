@@ -24,11 +24,10 @@ from pymhm.elasticity_tensor_rt import solve_elasticity_tensor_rt
 from pymhm.hdiv3d_mesh import AffineMixedMesh, hdiv3d_basis, hdiv3d_dofs
 from pymhm.lagrange import reference_basis
 from pymhm.mesh import TriangleMesh
-from pymhm.mshho3d import solve_mshho_3d
 from pymhm.polygon import PolygonMesh, solve_elasticity_mixed_polygons
 from pymhm.polyhedral import PolyhedralMesh
 from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.tetrahedral import TetraMesh, tetra_basis, tetra_nodal_space
+from pymhm.tetrahedral import tetra_basis, tetra_nodal_space
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/core-extensions"
@@ -194,6 +193,23 @@ def measure(solution: Any, suite: str, name: str, order: int) -> dict[str, float
 
 def run(suite: str, levels: list[int] | None = None) -> None:
     """Acquire all selected formulations, saving every completed numerical record."""
+    if suite in {"mshho3d", "hdiv3d"}:
+        selected = levels or [1, 2, 3, 4, 5]
+        output = OUTPUT / f"{suite}-current"
+        if suite == "mshho3d":
+            from examples.verify_mshho3d import run as acquire_mshho3d
+
+            report = acquire_mshho3d(selected, output=output)
+        else:
+            from examples.verify_hdiv3d import CASES
+            from examples.verify_hdiv3d import run as acquire_hdiv3d
+
+            report = acquire_hdiv3d(selected, list(CASES), output)
+        # Consumers resolve field names relative to the summary location.
+        for field in report["fields"].values():
+            field["archive"] = str(Path(output.name) / field["archive"])
+        (OUTPUT / f"{suite}.json").write_text(json.dumps(report, indent=2) + "\n")
+        return
     OUTPUT.mkdir(parents=True, exist_ok=True)
     modules = (
         ["elasticity_compliance", "elasticity_mixed", "elasticity_tensor_rt", "polygon"]
@@ -261,17 +277,6 @@ def run(suite: str, levels: list[int] | None = None) -> None:
                 diagnostics = {
                     "macro_equilibrium": float(np.max(abs(solution.equilibrium_residuals())))
                 }
-            elif suite == "mshho3d":
-                mesh = (
-                    TetraMesh.unit_cube(n) if name.startswith("tetra") else PolyhedralMesh.cubes(n)
-                )
-                solution = solve_mshho_3d(
-                    mesh,
-                    source=data.source3d,
-                    quadrature_order=9,
-                    local_refinement=2 if name.startswith("tetra") else 1,
-                )
-                diagnostics = {"algebraic_residual": solution.residual}
             else:
                 kind = "prism" if name.startswith("prism") else "tetrahedron"
                 p, k = (2, 2) if kind == "prism" else (int(name[7]), int(name[10]))

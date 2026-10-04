@@ -1,0 +1,46 @@
+{
+  "schema": "pymhm-initial-scalar-publication-receipt-v1",
+  "accepted": true,
+  "complete": true,
+  "initial_three_levels": true,
+  "row_count": 3,
+  "original_execution_record_sha256": "5ba74f8a2e1e8a62d8c440970529b79617cfffd663840b005b33d7aaa19907bf",
+  "published_metadata_record_sha256": "5ba74f8a2e1e8a62d8c440970529b79617cfffd663840b005b33d7aaa19907bf",
+  "evidence": {
+    "examples/results/minimal-convergence/stokes2d/evidence/flow2d-stokes-usfem-l1-n2.json": {
+      "original_execution_record_sha256": "f4e55c59e650c4aa687c5fd4be29848f829daef41b7442aac08abadec1f57155",
+      "published_metadata_record_sha256": "f4e55c59e650c4aa687c5fd4be29848f829daef41b7442aac08abadec1f57155",
+      "acquisition_uuid": "943c537a-2148-4f9e-8ccd-df8140994961"
+    },
+    "examples/results/minimal-convergence/stokes2d/evidence/flow2d-stokes-usfem-l1-n2-resource.json": {
+      "original_execution_record_sha256": "34addc3294c109bf5baf458b2a2346ab95f472b72000082cd2da4ddaf4e50543",
+      "published_metadata_record_sha256": "34addc3294c109bf5baf458b2a2346ab95f472b72000082cd2da4ddaf4e50543"
+    },
+    "examples/results/minimal-convergence/stokes2d/evidence/flow2d-stokes-usfem-l1-n4.json": {
+      "original_execution_record_sha256": "55065302c81af94fc6730528963f8a31ba9cd774867e6c3d2b09f22d30609440",
+      "published_metadata_record_sha256": "55065302c81af94fc6730528963f8a31ba9cd774867e6c3d2b09f22d30609440",
+      "acquisition_uuid": "f4145ab3-8754-44b2-88f8-b36d99af50db"
+    },
+    "examples/results/minimal-convergence/stokes2d/evidence/flow2d-stokes-usfem-l1-n4-resource.json": {
+      "original_execution_record_sha256": "80073e31765400c5b50340c80111dfd3555ade33539483fb5a37cf69130eade6",
+      "published_metadata_record_sha256": "80073e31765400c5b50340c80111dfd3555ade33539483fb5a37cf69130eade6"
+    },
+    "examples/results/minimal-convergence/stokes2d/evidence/flow2d-stokes-usfem-l1-n8.json": {
+      "original_execution_record_sha256": "80820c809e439a1893487257a86e74d8f7e9b789ca323ae35ab548769caab92a",
+      "published_metadata_record_sha256": "80820c809e439a1893487257a86e74d8f7e9b789ca323ae35ab548769caab92a",
+      "acquisition_uuid": "cfde2352-06c6-47ac-9f5b-c922955bd35d"
+    },
+    "examples/results/minimal-convergence/stokes2d/evidence/flow2d-stokes-usfem-l1-n8-resource.json": {
+      "original_execution_record_sha256": "3526d4c509b760972a3c15d3f4afb370f4ed9cb4200a6d0ce4234e36de4a4f72",
+      "published_metadata_record_sha256": "3526d4c509b760972a3c15d3f4afb370f4ed9cb4200a6d0ce4234e36de4a4f72"
+    }
+  },
+  "figures": {
+    "docs/figures/minimal-convergence/stokes2d/convergence.png": "8c74fa59e31e838013f006aab640507c7df367248909470d9c324cdccc8b1a5e",
+    "docs/figures/minimal-convergence/stokes2d/convergence.svg": "71e871b06f8cf2767bf5a2706b9ac690e9ae503c745fcf1f5cdcc696cec8e437"
+  },
+  "figure_original_size_inspected": true,
+  "pde_solves_during_publication": 0,
+  "coefficient_vectors_persisted_by_publication": false,
+  "historical_literature_reproduction": false
+}

@@ -47,15 +47,18 @@ def _read_samples(path: Path, ix: Any, iz: Any, *, shape: tuple[int, int]) -> An
     if path.stat().st_size != 3600 + nx * stride:
         raise ValueError("SEG-Y file size does not match the declared sample grid")
     mapped = np.memmap(path, mode="r", dtype=np.uint8)
-    if int.from_bytes(mapped[3224:3226].tobytes(), "big") != 1:
-        raise ValueError("Marmousi reader requires SEG-Y IBM float format 1")
-    if int.from_bytes(mapped[3220:3222].tobytes(), "big") != nz:
-        raise ValueError("SEG-Y binary-header sample count differs from the grid")
-    counts = np.ndarray((nx,), dtype=">u2", buffer=mapped, offset=3714, strides=(stride,))
-    if np.any(counts != nz):
-        raise ValueError("SEG-Y trace sample counts must agree with the grid")
-    words = np.ndarray((nx, nz), dtype=">u4", buffer=mapped, offset=3840, strides=(stride, 4))
-    return _ibm_values(words[np.ix_(ix, iz)])
+    try:
+        if int.from_bytes(mapped[3224:3226].tobytes(), "big") != 1:
+            raise ValueError("Marmousi reader requires SEG-Y IBM float format 1")
+        if int.from_bytes(mapped[3220:3222].tobytes(), "big") != nz:
+            raise ValueError("SEG-Y binary-header sample count differs from the grid")
+        counts = np.ndarray((nx,), dtype=">u2", buffer=mapped, offset=3714, strides=(stride,))
+        if np.any(counts != nz):
+            raise ValueError("SEG-Y trace sample counts must agree with the grid")
+        words = np.ndarray((nx, nz), dtype=">u4", buffer=mapped, offset=3840, strides=(stride, 4))
+        return _ibm_values(words[np.ix_(ix, iz)])
+    finally:
+        mapped._mmap.close()
 
 
 @dataclass(frozen=True)

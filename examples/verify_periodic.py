@@ -18,21 +18,49 @@ if __package__:
 else:
     from periodic_norms import difference
 
-from pymhm import FaceSpace, HybridSystem, SkeletonSpace
 from pymhm.conforming import ConformingQuadrilateralSolution, solve_conforming_quadrilateral
-from pymhm.quadrilateral import (
-    CartesianMacroMesh,
-    _assemble_quad,
-    _QuadTask,
-)
+from pymhm.quadrilateral import CartesianMacroMesh
 from pymhm.separable import SeparableField, solve_separable_diffusion
 from pymhm.separable_krylov import solve_separable_krylov
-from pymhm.subspaces import restrict_response
 
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACTS = ROOT / "build/results/periodic"
 RECORD = ROOT / "examples/results/periodic.json"
 EPSILON = np.pi / 150
+
+
+def case_conventions() -> dict[str, float | str]:
+    """Declare the selected dimensionless unit-square Darcy data and physical BC."""
+    return dict(
+        epsilon=EPSILON,
+        coefficient="1+100*cos(pi*x/epsilon)^2*sin(pi*y/epsilon)^2",
+        source="sin(x)*sin(y)",
+        boundary="homogeneous Dirichlet pressure on every exterior face",
+    )
+
+
+def validate_case_provenance(record: dict, *, allow_legacy: bool = False) -> bool:
+    """Reject a manifest that would reinterpret archived fields with different data.
+
+    Provided case conventions must match the selected physical problem, and a
+    provided source manifest must identify this executed case owner. Historical
+    records without source hashes are accepted only with ``allow_legacy=True``;
+    the returned False explicitly leaves their material provenance unverified.
+    Hash equality verifies source identity, rather than a numerical error bound.
+    """
+    for declared in (record.get("configuration"), record.get("case_conventions")):
+        if declared is not None and any(
+            declared.get(key) != value for key, value in case_conventions().items()
+        ):
+            raise ValueError("periodic material/case conventions differ from the archived problem")
+    hashes = record.get("source_hashes", record.get("source_sha256"))
+    if hashes is None:
+        if allow_legacy:
+            return False
+        raise ValueError("periodic material/case source provenance is unavailable")
+    if hashes.get("examples/verify_periodic.py") != fingerprint(Path(__file__)):
+        raise ValueError("periodic material/case source provenance mismatch")
+    return True
 
 
 def material(points: np.ndarray) -> np.ndarray:
@@ -90,6 +118,7 @@ def save(record: dict) -> None:
 
 def main() -> None:
     """Acquire reference refinement separately from the MHM face study."""
+    global ARTIFACTS, RECORD
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reference-levels", nargs="+", type=int, default=[512, 1024, 2048, 4096])
     parser.add_argument("--local-refinement", type=int, default=128)
@@ -104,15 +133,46 @@ def main() -> None:
     parser.add_argument("--reference-quadrature", type=int)
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--native-threads", type=int, default=1)
+    parser.add_argument("--refinement-precision", choices=("double", "extended"), default="double")
+    parser.add_argument("--original-refinement-steps", type=int, default=2)
+    parser.add_argument(
+        "--stage", choices=("all", "condense", "solve", "reconstruct", "norms"), default="all"
+    )
+    parser.add_argument("--artifacts", type=Path, default=ARTIFACTS)
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     if args.native_threads < 1:
         parser.error("native-threads must be positive")
     if args.reference_assembly == "lor" and args.reference_solver != "pyamg":
         parser.error("the lor reference uses its declared PyAMG preconditioned CG solver")
+    if args.workers != 1 and not args.reference_only:
+        parser.error("cellwise periodic phases currently require workers=1")
+    if args.reference_only and args.stage != "all":
+        parser.error("reference-only acquisition uses stage=all")
+    ARTIFACTS = args.artifacts
+    if __package__:
+        from .periodic_phases import PeriodicAcquisition, load_fields
+    else:
+        from periodic_phases import PeriodicAcquisition, load_fields
+    acquisition = (
+        None
+        if args.reference_only
+        else PeriodicAcquisition(
+            ARTIFACTS,
+            macro=args.macro,
+            refinement=args.local_refinement,
+            segments=args.segments,
+            native_threads=args.native_threads,
+            refinement_precision=args.refinement_precision,
+            original_refinement_steps=args.original_refinement_steps,
+        )
+    )
+    if args.stage in {"condense", "solve", "reconstruct"}:
+        getattr(acquisition, args.stage)()
+        return
     acquisition_sources = source_hashes(snapshot=True)
     reference_order = args.reference_quadrature or max(4, args.reference_degree + 1)
     ARTIFACTS.mkdir(parents=True, exist_ok=True)
-    global RECORD
     if args.reference_degree != 1:
         RECORD = RECORD.with_name(f"periodic-q{args.reference_degree}.json")
     suffix = f"-order{reference_order}" if args.reference_quadrature else ""
@@ -120,6 +180,9 @@ def main() -> None:
         suffix += f"-{args.reference_assembly}"
     if suffix:
         RECORD = RECORD.with_name(f"{RECORD.stem}{suffix}.json")
+    if args.output is not None:
+        RECORD = args.output
+    RECORD.parent.mkdir(parents=True, exist_ok=True)
     record = (
         json.loads(RECORD.read_text())
         if RECORD.exists()
@@ -138,14 +201,62 @@ def main() -> None:
             path = ARTIFACTS / f"reference-q{args.reference_degree}-{n}{suffix}.npz"
             if path.exists():
                 with np.load(path) as data:
+                    pressure, residual = data["pressure"], float(data["residual"])
+                    if (
+                        pressure.shape != ((n * args.reference_degree + 1) ** 2,)
+                        or not np.isfinite(pressure).all()
+                        or not np.isfinite(residual)
+                        or residual < 0
+                    ):
+                        raise ValueError(
+                            "periodic reference arrays violate their acquisition contract"
+                        )
                     reference = ConformingQuadrilateralSolution(
                         CartesianMacroMesh(n),
                         args.reference_degree,
-                        data["pressure"],
+                        pressure,
                         material,
-                        float(data["residual"]),
+                        residual,
+                    )
+                if path.with_suffix(".json").exists():
+                    row = json.loads(path.with_suffix(".json").read_text())
+                    if row["archive_sha256"] != fingerprint(path) or (
+                        row["degree"],
+                        row["n"],
+                        row["quadrature_order"],
+                        row["assembly"],
+                    ) != (args.reference_degree, n, reference_order, args.reference_assembly):
+                        raise ValueError("periodic reference manifest mismatch")
+                    validate_case_provenance(row, allow_legacy=True)
+                    if (
+                        "basis_sha256" in row
+                        or "coefficient_storage" in row
+                        or row.get("schema") == "pymhm-conforming-periodic-reference-v1"
+                    ):
+                        if __package__:
+                            from .periodic_reference import validate_reference_archive
+                        else:
+                            from periodic_reference import validate_reference_archive
+                        validate_reference_archive(path, row)
+                else:
+                    row = next(
+                        (
+                            dict(old)
+                            for old in record["reference"]
+                            if old["n"] == n and old.get("archive_sha256") == fingerprint(path)
+                        ),
+                        dict(
+                            n=n,
+                            degree=args.reference_degree,
+                            residual=residual,
+                            quadrature_order=reference_order,
+                            assembly=args.reference_assembly,
+                            acquisition_provenance="unavailable for legacy nodal archive",
+                        ),
                     )
             else:
+                if args.stage == "norms":
+                    raise ValueError("the norms phase requires an acquired reference archive")
                 start = perf_counter()
                 assemble = {
                     "elementwise": solve_conforming_quadrilateral,
@@ -199,15 +310,22 @@ def main() -> None:
                     python=sys.version.split()[0],
                     platform=platform.platform(),
                     numpy=np.__version__,
+                    case_conventions=case_conventions(),
                 )
-                record["reference"].append(row)
-                save(record)
                 print("reference", {k: v for k, v in row.items() if "hash" not in k}, flush=True)
-            row = next(r for r in record["reference"] if r["n"] == n)
             row["archive"] = path.name
             row["archive_sha256"] = fingerprint(path)
+            row["material_case_provenance_verified"] = validate_case_provenance(
+                row, allow_legacy=True
+            )
+            reference_material_verified = row["material_case_provenance_verified"]
+            record["reference"] = [old for old in record["reference"] if old["n"] != n]
+            record["reference"].append(row)
+            manifest = path.with_suffix(".json")
+            temporary = manifest.with_suffix(".json.part")
+            temporary.write_text(json.dumps(row, indent=2) + "\n")
+            temporary.replace(manifest)
             if previous is not None:
-                row = next(r for r in record["reference"] if r["n"] == n)
                 row["difference_to_previous"] = difference(reference, (previous,))
                 row["comparison_source_hashes"] = acquisition_sources
                 save(record)
@@ -216,98 +334,46 @@ def main() -> None:
             previous = reference
         if args.reference_only:
             return
-        macro = CartesianMacroMesh(args.macro)
-        max_segments = max(args.segments)
-        if any(max_segments % s for s in args.segments):
-            raise ValueError("each face partition must divide the largest prepared partition")
-        prepared_space = SkeletonSpace(
-            macro, tuple(FaceSpace.uniform(0, max_segments) for _ in macro.faces)
-        )
-        prepared = None
+        if args.stage == "all":
+            acquisition.condense()
+            acquisition.solve()
+            acquisition.reconstruct()
         for segments in args.segments:
-            old = next(
-                (
-                    r
-                    for r in record["mhm"]
-                    if r["macro"] == args.macro
-                    and r["refinement"] == args.local_refinement
-                    and r["segments"] == segments
-                    and r["reference_n"] == reference.mesh.nx
-                    and r.get("reference_degree", 1) == reference.degree
-                ),
-                None,
-            )
-            if old is not None:
-                continue
-            skeleton = SkeletonSpace(
-                macro, tuple(FaceSpace.uniform(0, segments) for _ in macro.faces)
-            )
             field_path = ARTIFACTS / f"mhm-{args.macro}-r{args.local_refinement}-s{segments}.npz"
-            acquired = not field_path.exists()
-            if field_path.exists():
-                with np.load(field_path) as data:
-                    fields, residual = data["fields"], float(data["residual"])
-            else:
-                if prepared is None:
-                    prepared = HybridSystem.from_local_factory(
-                        _assemble_quad,
-                        [
-                            _QuadTask(
-                                macro,
-                                cell,
-                                (args.local_refinement,) * 2,
-                                prepared_space,
-                                1,
-                                material,
-                                source,
-                                4,
-                            )
-                            for cell in range(len(macro.cells))
-                        ],
-                        backend="process" if args.workers > 1 else "serial",
-                        workers=args.workers,
-                    )
-                    print("Prepared maximum trace responses", flush=True)
-                if segments == max_segments:
-                    system = prepared
-                else:
-                    face_map = np.eye(segments)[
-                        np.arange(max_segments) // (max_segments // segments)
-                    ]
-                    injection = np.kron(np.eye(4), face_map)
-                    system = HybridSystem.from_responses(
-                        [
-                            restrict_response(response, injection, skeleton.cell_dofs(cell))
-                            for cell, response in enumerate(prepared.responses)
-                        ]
-                    )
-                result = system.solve()
-                fields, residual = result.fields, result.residual
-                np.savez_compressed(field_path, fields=np.array(fields), residual=residual)
-                del result, system
-            local = tuple(
-                ConformingQuadrilateralSolution(
-                    macro.submesh(cell, args.local_refinement), 1, p, material, residual
-                )
-                for cell, p in enumerate(fields)
+            local = load_fields(
+                field_path, macro=args.macro, refinement=args.local_refinement, segments=segments
             )
-            errors = difference(reference, local)
+            metadata = json.loads(field_path.with_suffix(".json").read_text())
             row = dict(
                 macro=args.macro,
                 refinement=args.local_refinement,
                 segments=segments,
                 reference_n=reference.mesh.nx,
                 reference_degree=reference.degree,
-                trace_dofs=skeleton.size,
-                residual=residual,
+                trace_dofs=args.macro * (args.macro + 1) * 2 * segments,
+                residual=local[0].residual,
                 archive=field_path.name,
                 archive_sha256=fingerprint(field_path),
+                acquisition_id=metadata["acquisition_id"],
+                acquisition_source_hashes=metadata["source_hashes"],
                 comparison_source_hashes=acquisition_sources,
-                **errors,
+                material_case_provenance_verified=True,
+                reference_material_case_provenance_verified=reference_material_verified,
+                reference_archive=path.name,
+                reference_archive_sha256=fingerprint(path),
+                **difference(reference, local),
             )
-            if acquired:
-                row["acquisition_source_hashes"] = acquisition_sources
-                row["acquisition_source_changed"] = acquisition_sources != source_hashes()
+            record["mhm"] = [
+                old
+                for old in record["mhm"]
+                if not (
+                    old["macro"] == args.macro
+                    and old["refinement"] == args.local_refinement
+                    and old["segments"] == segments
+                    and old["reference_n"] == reference.mesh.nx
+                    and old.get("reference_degree", 1) == reference.degree
+                )
+            ]
             record["mhm"].append(row)
             save(record)
             print("MHM", {k: v for k, v in row.items() if "hash" not in k}, flush=True)

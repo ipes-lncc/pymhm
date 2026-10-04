@@ -1,0 +1,47 @@
+{
+  "n": 32,
+  "degree": 5,
+  "quadrature_order": 10,
+  "dofs": 25921,
+  "residual": 2.557129716782717e-15,
+  "relative_equation_residual": 2.557129716782717e-15,
+  "iterations": 682,
+  "preconditioner_levels": 5,
+  "solver": "low-order-refined-pyamg-cg",
+  "native_threads_requested": 1,
+  "native_libraries_during_solve": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "num_threads": 1,
+      "prefix": "libopenblas",
+      "version": "0.3.34",
+      "threading_layer": "pthreads",
+      "architecture": "SkylakeX"
+    }
+  ],
+  "source_sha256": {
+    "examples/periodic_reference.py": "da5beb96242b3f2dd413d2e9dd7c521851aaf29aecab48c027b1493383667eaf",
+    "examples/verify_periodic.py": "622d1c3e5f6ee2223652e1d7c30be10f96d856cf607dd2d3dbc7317c3479f98c",
+    "src/pymhm/separable_krylov.py": "814e98d01b9b36b491b53cada499c1967c134ee3e08054450e43d31cae47bab6",
+    "src/pymhm/separable.py": "8dcc53d91a4aa167158b478ea7ca8c64dd31beb651ae6f4c7f7db7b4b51cce72",
+    "src/pymhm/conforming.py": "cffc6ed568b1a40700f58b8012631085feba49b74416cc08450ef6d2f6a86901",
+    "src/pymhm/quadrilateral.py": "7c01f091d7a18c87c243b74a43fcafa1f942d8c7117cd40d49d1ec5a03685cf3",
+    "src/pymhm/solvers.py": "e2edf37d18f95a1f9949cf322568a26ac51741afb93015a1e052693609e17e4d",
+    "src/pymhm/mesh.py": "09039a041b55d7e9aaee489e8d1716d4819c7929bdd18b2c8112dba424ffa46e",
+    "src/pymhm/elements.py": "807feb82ccd1c93e0c261ce56252e68ff133c32b23e8187f8c07ffc5538d7bc1",
+    "src/pymhm/cut_cells.py": "9f80b942051ba4f640c2b19ce8e9ef1ccfbab66296b42263164c5c8c4c88a816",
+    "src/pymhm/hybrid.py": "244e15cba7a09d76f630a1a2b670c9b8bfc86e3cda7f864e9ce5e97862c1a75e",
+    "src/pymhm/lagrange.py": "830158d70cddd6f4e92cefe8909cb6855a8dcaa0c7bf32cb85fbf638d490feb9"
+  },
+  "case_conventions": {
+    "epsilon": 0.020943951023931952,
+    "coefficient": "1+100*cos(pi*x/epsilon)^2*sin(pi*y/epsilon)^2",
+    "source": "sin(x)*sin(y)",
+    "boundary": "homogeneous Dirichlet pressure on every exterior face"
+  },
+  "material_case_provenance_verified": true,
+  "archive": "reference-q5-32-current-order10-lor.npz",
+  "archive_sha256": "74d5a0e9c9877447633083d444c3967a23f38ca7f1d66b5a33b7fd5da8f194bc",
+  "elapsed_seconds": 4.527209438383579
+}

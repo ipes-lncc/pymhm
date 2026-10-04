@@ -18,7 +18,9 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.campaign_provenance import file_digest
 from examples.marmousi_data import load_marmousi_crop
+from examples.marmousi_records import checked_reference
 from pymhm.elements import triangle_quadrature
 from pymhm.lagrange import multiindices, reference_basis
 
@@ -97,20 +99,33 @@ class PixelCGField:
 
 
 def load_reference(record: Path) -> PixelCGField:
-    """Verify MPI archive digests and reconstruct the native global nodal field."""
+    """Verify MPI archive digests and preserve their executed nodal coefficient dtype.
+
+    A first bounded archive pass determines the common dtype before allocation;
+    a second copies each unique owned node. Digests stream without reading an
+    entire compressed field archive into an extra byte buffer. Replay never
+    converts a wider persisted coefficient vector to double precision.
+    """
     metadata = json.loads(record.read_text())
     degree = int(metadata["degree"])
     counts = np.asarray(metadata["geometry"], dtype=int)
     bounds = tuple(metadata.get("bounds", (0.0, 10240.0, 0.0, 2560.0)))
     lower = np.asarray(bounds)[[0, 2]]
     spacing = np.diff(np.asarray(bounds).reshape(2, 2), axis=1)[:, 0] / counts
-    nodes = np.empty(tuple(counts * degree + 1), dtype=complex)
+    dtype = np.dtype(complex)
+    for entry in metadata["archives"]:
+        path = record.parent / entry["archive"]
+        if file_digest(path) != entry["sha256"]:
+            raise ValueError("reference archive digest does not match its acquisition record")
+        with np.load(path, allow_pickle=False) as archive:
+            dtype = np.result_type(dtype, archive["pressure"].dtype)
+    nodes = np.empty(tuple(counts * degree + 1), dtype=dtype)
     seen = np.zeros(nodes.shape, dtype=bool)
     for entry in metadata["archives"]:
         path = record.parent / entry["archive"]
-        if hashlib.sha256(path.read_bytes()).hexdigest() != entry["sha256"]:
+        if file_digest(path) != entry["sha256"]:
             raise ValueError("reference archive digest does not match its acquisition record")
-        with np.load(path) as archive:
+        with np.load(path, allow_pickle=False) as archive:
             coordinates = archive["coordinates"][:, :2]
             pressure = archive["pressure"]
         scaled = (coordinates - lower) / spacing * degree
@@ -149,12 +164,18 @@ def acoustic_norm_contributions(
     positive graph-norm contributions use the same derivative-domain mask.
     Inputs have cell/point axes; gradients add the physical component axis.
     """
+    keep = np.asarray(keep)
+    if keep.dtype.kind != "b" or keep.shape not in (pressure.shape, pressure.shape[:1]):
+        raise ValueError(
+            "the common derivative mask must select cells or physical quadrature points"
+        )
+    mask = keep if keep.ndim == 2 else keep[:, None]
     p_difference = np.abs(pressure - reference_pressure) ** 2
     p_reference = np.abs(reference_pressure) ** 2
     g_difference = np.sum(np.abs(gradient - reference_gradient) ** 2, axis=2)
     g_reference = np.sum(np.abs(reference_gradient) ** 2, axis=2)
-    g_difference *= keep[:, None]
-    g_reference *= keep[:, None]
+    g_difference *= mask
+    g_reference *= mask
     return [
         p_difference,
         p_reference,
@@ -162,11 +183,33 @@ def acoustic_norm_contributions(
         g_reference,
         g_difference / density[:, None],
         g_reference / density[:, None],
-        omega**2 * p_difference * keep[:, None] / bulk_modulus[:, None],
-        omega**2 * p_reference * keep[:, None] / bulk_modulus[:, None],
+        omega**2 * p_difference * mask / bulk_modulus[:, None],
+        omega**2 * p_reference * mask / bulk_modulus[:, None],
         g_difference / density[:, None] ** 2,
         g_reference / density[:, None] ** 2,
     ]
+
+
+def radial_exclusion_mask(points: np.ndarray, exclusion: tuple[float, float, float]) -> np.ndarray:
+    """Keep physical points outside the declared open disk (center x, center y, radius).
+
+    Boundary points are retained. The same mask must multiply numerator and
+    denominator integrands of each restricted measure. Full-domain pressure
+    L2 and the published complete sampling grid have separate conventions.
+    A pointwise quadrature mask requires a stated boundary integration control.
+    """
+    points, disk = np.asarray(points), np.asarray(exclusion)
+    if (
+        points.shape[-1:] != (2,)
+        or np.iscomplexobj(points)
+        or np.iscomplexobj(disk)
+        or not np.isfinite(points).all()
+        or disk.shape != (3,)
+        or not np.isfinite(disk).all()
+        or disk[2] <= 0
+    ):
+        raise ValueError("radial exclusion requires finite physical points and positive radius")
+    return np.sum((points - disk[:2]) ** 2, axis=-1) >= disk[2] ** 2
 
 
 def acoustic_norm_result(totals: np.ndarray, metadata: dict[str, Any]) -> dict[str, Any]:
@@ -197,6 +240,7 @@ def reference_difference(
     order: int = 8,
     batch_size: int = 2048,
     gradient_cutout: tuple[float, float, float, float] | None = None,
+    gradient_exclusion: tuple[float, float, float] | None = None,
 ) -> dict[str, Any]:
     """Integrate reference increments on their shared original pixel triangulation.
 
@@ -207,9 +251,16 @@ def reference_difference(
     regularity of the continuum solution with a point source. If supplied,
     ``gradient_cutout`` excludes a fixed pixel-aligned rectangle from gradient
     and graph norms only. Pressure L2 differences retain the complete domain.
+    Alternatively ``gradient_exclusion`` declares a circular center/radius in
+    physical units. Its boundary is integrated with a pointwise quadrature
+    mask; separate quadrature orders control that geometric integration error.
     """
     if coarse.counts != fine.counts or coarse.bounds != fine.bounds:
         raise ValueError("reference levels must share the same material-pixel triangulation")
+    if gradient_exclusion is not None:
+        radial_exclusion_mask(np.zeros((1, 2)), gradient_exclusion)
+        if gradient_cutout is not None:
+            raise ValueError("declare one derivative exclusion geometry")
     density, bulk_modulus = np.asarray(density), np.asarray(bulk_modulus)
     if (
         density.shape != fine.counts
@@ -248,6 +299,7 @@ def reference_difference(
         ]
     )
     sums: list[list[float]] = [[] for _ in range(10)]
+    areas = []
     for start in range(0, np.prod(fine.counts), batch_size):
         index = np.arange(start, min(start + batch_size, np.prod(fine.counts)))
         cells = np.column_stack((index // fine.counts[1], index % fine.counts[1]))
@@ -257,6 +309,20 @@ def reference_difference(
         if cutout is not None:
             keep = ~np.all((cells >= cutout[:, 0]) & (cells < cutout[:, 1]), axis=1)
         for half in (0, 1):
+            mask = keep
+            if gradient_exclusion is not None:
+                corners = np.array(
+                    [[0, 0], [1, 0], [1, 1]] if half == 0 else [[0, 0], [1, 1], [0, 1]]
+                )
+                points = (cells[:, None, :] + (bary @ corners)[None, :, :]) * fine.spacing
+                points += np.asarray(fine.bounds)[[0, 2]]
+                mask = radial_exclusion_mask(points, gradient_exclusion)
+            measure = (
+                mask
+                if mask.ndim == 2
+                else np.broadcast_to(mask[:, None], (len(cells), len(weights)))
+            )
+            areas.append(float(np.sum(measure @ weights) * hx * hy / 2))
             values, derivatives = [], []
             for field, (basis, derivative) in zip((coarse, fine), tables, strict=True):
                 coefficients = field.coefficients(cells, half)
@@ -264,7 +330,7 @@ def reference_difference(
                 physical = np.einsum("qib,bd->qid", derivative, gradients[half])
                 derivatives.append(np.einsum("qid,ti->tqd", physical, coefficients))
             integrands = acoustic_norm_contributions(
-                values[0], values[1], derivatives[0], derivatives[1], rho, kappa, omega, keep
+                values[0], values[1], derivatives[0], derivatives[1], rho, kappa, omega, mask
             )
             for total, integrand in zip(sums, integrands, strict=True):
                 total.append(float(np.sum(integrand @ weights) * hx * hy / 2))
@@ -273,12 +339,18 @@ def reference_difference(
         "quadrature_order": order,
         "domain_area": hx * hy * np.prod(fine.counts),
         "gradient_cutout": gradient_cutout,
-        "gradient_domain_area": hx
+        "gradient_exclusion": gradient_exclusion,
+        "gradient_domain_area": fsum(areas)
+        if gradient_exclusion is not None
+        else hx
         * hy
         * (
             np.prod(fine.counts)
             - (np.prod(cutout[:, 1] - cutout[:, 0]) if cutout is not None else 0)
         ),
+        "derivative_domain_integration": "Physical quadrature-point disk mask"
+        if gradient_exclusion
+        else "Pixel-aligned rectangle or full domain",
     }
     return acoustic_norm_result(totals, result)
 
@@ -295,19 +367,20 @@ def main() -> None:
     sources = [
         Path(__file__),
         Path(__file__).with_name("marmousi_data.py"),
-        root / "src/pymhm/lagrange.py",
-        root / "src/pymhm/elements.py",
+        Path(__file__).with_name("campaign_provenance.py"),
+        Path(__file__).with_name("marmousi_records.py"),
+        *sorted((root / "src/pymhm").rglob("*.py")),
     ]
     hashes = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
     x, y = np.meshgrid(np.linspace(0, 10240, 513), np.linspace(0, 2560, 129), indexing="ij")
     points = np.column_stack((x.ravel(), y.ravel()))
     rows = []
-    cutout = (4975.0, 5025.0, 25.0, 75.0)
+    exclusion = (5000.0, 50.0, 50.0)
     previous, previous_samples = None, None
     args.output.mkdir(parents=True, exist_ok=True)
     with threadpool_limits(1):
         for path in args.records:
-            metadata = json.loads(path.read_text())
+            metadata = checked_reference(path)
             if metadata["material"] != material.provenance:
                 raise ValueError(
                     "all reference records must use the declared primary material crop"
@@ -329,7 +402,7 @@ def main() -> None:
                 material.bulk_modulus.values,
                 omega=omega,
                 order=8,
-                gradient_cutout=cutout,
+                gradient_exclusion=exclusion,
             )
             samples = field.sample(points)
             archive = args.output / f"classical-p{field.degree}-samples.npz"
@@ -344,7 +417,7 @@ def main() -> None:
                     norms["reference_pressure_norm"] / metadata["pressure_l2"] - 1
                 ),
                 "sample_archive": archive.name,
-                "sample_archive_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
+                "sample_archive_sha256": file_digest(archive),
             }
             if row["native_pressure_norm_relative_difference"] > 1e-11:
                 raise ValueError(
@@ -358,7 +431,7 @@ def main() -> None:
                     material.bulk_modulus.values,
                     omega=omega,
                     order=6,
-                    gradient_cutout=cutout,
+                    gradient_exclusion=exclusion,
                 )
                 row["increment_quadrature_check"] = reference_difference(
                     previous,
@@ -367,7 +440,7 @@ def main() -> None:
                     material.bulk_modulus.values,
                     omega=omega,
                     order=8,
-                    gradient_cutout=cutout,
+                    gradient_exclusion=exclusion,
                 )
                 row["sample_relative_increment"] = float(
                     np.linalg.norm(samples - previous_samples) / np.linalg.norm(samples)
@@ -379,10 +452,11 @@ def main() -> None:
                 "material": material.provenance,
                 "sampling": "513 by 129 uniform points; unweighted complex Euclidean norm",
                 "gradient_scope": (
-                    "Fixed rectangular cutout excludes the source from gradient and graph norms; "
+                    "A declared open disk of radius 50 m excludes the source from gradient "
+                    "and graph norms; "
                     "pressure L2 and sampled norms retain the complete domain"
                 ),
-                "gradient_cutout_m": cutout,
+                "gradient_exclusion_m": exclusion,
                 "graph_norm": "Integral rho^-1 |grad p|^2 + omega^2 kappa^-1 |p|^2",
                 "source_sha256": hashes,
                 "source_changed_during_run": hashes

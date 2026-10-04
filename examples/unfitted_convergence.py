@@ -12,9 +12,11 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import time
 from collections.abc import Callable
 from pathlib import Path
+from typing import Any, Protocol
 
 import numpy as np
 from threadpoolctl import threadpool_limits
@@ -24,10 +26,10 @@ from examples.layered_poisson import LayeredPoissonSeries
 from examples.unfitted_geometry import macro_mesh
 from examples.unfitted_trace_family import ScalarTraceFamily
 from pymhm.cut_cells import fit_material_faces, fit_material_mesh, material_triangle_quadrature
-from pymhm.darcy import DarcySolution, solve_darcy
+from pymhm.darcy import DarcySolution, _assembly_quadrature_order, solve_darcy
 from pymhm.elements import tensor_values
-from pymhm.lagrange import element_tabulate
-from pymhm.mesh import FaceSpace, SkeletonSpace
+from pymhm.lagrange import element_tabulate, multiindices, nodal_space
+from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh, positive_int
 from pymhm.reservoir import CartesianCellField
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -80,7 +82,31 @@ def smooth_source(points: np.ndarray) -> np.ndarray:
     return 8 * np.pi**2 * smooth_field(points)[0]
 
 
-def error_norms(solution: DarcySolution, exact: Callable, order: int) -> dict[str, float]:
+class ScalarErrorFields(Protocol):
+    """Original broken cardinal coefficients and material for physical norms."""
+
+    @property
+    def local_meshes(self) -> tuple[TriangleMesh, ...]:
+        """Expose the original affine local triangulations."""
+        ...
+
+    @property
+    def pressure(self) -> tuple[np.ndarray, ...]:
+        """Expose complete broken cardinal pressure coefficient vectors."""
+        ...
+
+    @property
+    def permeability(self) -> Any:
+        """Expose the physical diffusion tensor or material field."""
+        ...
+
+    @property
+    def degree(self) -> int:
+        """Declare the cardinal polynomial degree in every local mesh."""
+        ...
+
+
+def error_norms(solution: ScalarErrorFields, exact: Callable, order: int) -> dict[str, float]:
     """Integrate distinct physical norms using material cuts and original local fields."""
     totals = np.zeros(8, dtype=np.longdouble)
     for mesh, coefficients in zip(solution.local_meshes, solution.pressure, strict=True):
@@ -118,25 +144,59 @@ def error_norms(solution: DarcySolution, exact: Callable, order: int) -> dict[st
 
 
 def save_field(solution: DarcySolution, path: Path) -> str:
-    """Persist complete fields as portable high/correction/tail float64 components.
+    """Persist complete primal physical fields with their cardinal basis and trace maps.
 
-    Trace and coarse coefficients accompany every broken pressure field; the
-    complete field includes any original-equation defect-source corrections.
+    Pressure and physical normal-flux coefficients retain all digits as portable
+    high/correction/tail float64 components. Local nodal DOFs, coordinates and
+    barycentric multiindices declare the executed cardinal basis. Complete fields
+    include original-equation defect-source corrections; replay evaluates these
+    fields without repeating the solve. Unused coarse coordinates are omitted
+    because ``DarcySolution`` does not expose their executed retained matrix E.
     """
+    if solution.formulation != "primal":
+        raise ValueError("unfitted field archive requires primal cardinal pressure fields")
+    skeleton = solution.skeleton
     arrays = dict(
-        macro_points=solution.skeleton.mesh.points,
-        macro_cells=solution.skeleton.mesh.cells,
+        field_archive_version=np.array(2),
+        macro_points=skeleton.mesh.points,
+        macro_cells=skeleton.mesh.cells,
+        macro_faces=skeleton.mesh.faces,
+        macro_face_cells=skeleton.mesh.face_cells,
+        macro_normals=skeleton.mesh.normals,
+        macro_signs=skeleton.mesh.signs,
+        macro_cell_faces=skeleton.mesh.cell_faces,
         degree=np.array(solution.degree),
+        coefficient_precision_bits=np.array(
+            max(
+                np.finfo(np.asarray(values).dtype).nmant + 1
+                for values in (*solution.pressure, solution.hybrid.trace)
+            )
+        ),
+        basis_multiindices=multiindices(solution.degree),
         **precision_fields("trace", solution.hybrid.trace),
-        **precision_fields("coarse", np.concatenate(solution.hybrid.coarse)),
     )
+    for face, space in enumerate(skeleton.faces):
+        arrays[f"trace_breaks_{face}"] = np.array(space.breaks)
+        arrays[f"trace_degrees_{face}"] = np.array(space.degrees)
+        arrays[f"trace_continuous_{face}"] = np.array(space.continuous)
+        arrays[f"trace_dofs_{face}"] = skeleton.dofs(face)
     for index, (mesh, pressure) in enumerate(
         zip(solution.local_meshes, solution.pressure, strict=True)
     ):
+        dofs, nodes = nodal_space(mesh, solution.degree)
+        if np.shape(pressure) != (len(nodes),):
+            raise ValueError("unfitted pressure coefficients differ from the declared nodal basis")
         arrays[f"points_{index}"] = mesh.points
         arrays[f"cells_{index}"] = mesh.cells
+        arrays[f"nodal_dofs_{index}"] = dofs
+        arrays[f"nodal_points_{index}"] = nodes
         arrays.update(precision_fields(f"pressure_{index}", pressure))
-    np.savez_compressed(path, **arrays)
+    temporary = path.with_suffix(path.suffix + ".part")
+    with temporary.open("wb") as stream:
+        np.savez_compressed(stream, **arrays)
+        stream.flush()
+        os.fsync(stream.fileno())
+    temporary.replace(path)
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
@@ -153,6 +213,18 @@ def main() -> None:
     parser.add_argument("--study", choices=("smooth", "contrast"), required=True)
     parser.add_argument("--refinement", type=int, required=True)
     parser.add_argument("--degree", type=int, default=8)
+    parser.add_argument(
+        "--assembly-order",
+        type=int,
+        help="Gauss points per Duffy coordinate/boundary interval "
+        "(default: degree+3; floor: degree+2)",
+    )
+    parser.add_argument(
+        "--norm-orders",
+        nargs="+",
+        type=int,
+        help="Distinct independent norm Gauss counts (default: degree+3 degree+5)",
+    )
     parser.add_argument("--maximum-segments", type=int, default=32)
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument("--local-solver", default="scipy")
@@ -162,8 +234,16 @@ def main() -> None:
         "--contrasts", nargs="+", type=float, default=[10, 100, 1000, 10000, 100000, 1000000]
     )
     args = parser.parse_args()
+    degree = positive_int(args.degree if args.study == "smooth" else 4, "degree")
+    requested_order = degree + 3 if args.assembly_order is None else args.assembly_order
+    assembly_order = _assembly_quadrature_order(degree, requested_order)
+    norm_orders = sorted(
+        positive_int(order, "norm_orders")
+        for order in ([degree + 3, degree + 5] if args.norm_orders is None else args.norm_orders)
+    )
+    if len(norm_orders) != len(set(norm_orders)):
+        raise ValueError("norm_orders must contain distinct Gauss counts")
     args.output.mkdir(parents=True, exist_ok=True)
-    degree = args.degree if args.study == "smooth" else 4
     configuration = dict(
         study=args.study,
         local_degree=degree,
@@ -173,14 +253,22 @@ def main() -> None:
         requested_names=args.names,
         maximum_segments=args.maximum_segments if args.study == "smooth" else None,
         contrasts=args.contrasts if args.study == "contrast" else None,
-        assembly_order=degree + 3,
-        norm_orders=[degree + 3, degree + 5],
+        requested_assembly_order=requested_order,
+        assembly_order=assembly_order,
+        norm_orders=norm_orders,
+        quadrature_convention="Gauss points per Duffy coordinate; boundary count also has "
+        "trace degree+2 floor; trace coupling has a separate exact polynomial rule",
         material_fitted_local_meshes=args.study == "contrast",
         contrast_delta="1/6 (declared control, not restated in Figure 7)",
         local_refinement_precision="double" if args.study == "smooth" else "extended",
         hybrid_refinement_steps=0 if args.study == "smooth" else 3,
     )
-    path = args.output / f"{args.study}-p{degree}-r{args.refinement}.json"
+    acquisition = f"{args.study}-p{degree}-r{args.refinement}"
+    if assembly_order != degree + 3:
+        acquisition += f"-q{assembly_order}"
+    if norm_orders != [degree + 3, degree + 5]:
+        acquisition += "-nq" + "-".join(str(order) for order in norm_orders)
+    path = args.output / f"{acquisition}.json"
     before = source_hashes()
     record = (
         json.loads(path.read_text())
@@ -301,7 +389,7 @@ def main() -> None:
                     LayeredPoissonSeries(second, 2047).evaluate,
                     configuration["norm_orders"][-1],
                 )
-            archive = args.output / f"{args.study}-p{degree}-r{args.refinement}-{name}.npz"
+            archive = args.output / f"{acquisition}-{name}.npz"
             row.update(
                 archive=archive.name,
                 archive_sha256=save_field(solution, archive),

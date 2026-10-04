@@ -18,6 +18,7 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.campaign_provenance import file_digest
 from examples.marmousi_campaign import evaluate_fields
 from examples.marmousi_data import load_marmousi_crop
 from examples.marmousi_fields import (
@@ -25,7 +26,9 @@ from examples.marmousi_fields import (
     acoustic_norm_contributions,
     acoustic_norm_result,
     load_reference,
+    radial_exclusion_mask,
 )
+from examples.marmousi_records import checked_mhm, checked_reference
 from pymhm.elements import triangle_quadrature
 from pymhm.lagrange import reference_basis
 from pymhm.quadrilateral import CartesianMacroMesh, qk_basis
@@ -69,11 +72,11 @@ class BrokenQField:
         """Verify the executed archive digest and its complete Cartesian macro geometry."""
         metadata = json.loads(record.read_text())
         path = record.parent / metadata["archive"]
-        if hashlib.sha256(path.read_bytes()).hexdigest() != metadata["archive_sha256"]:
+        if file_digest(path) != metadata["archive_sha256"]:
             raise ValueError("MHM archive digest does not match its acquisition record")
         bounds = tuple(metadata.get("bounds", (0, 10240, 0, 2560)))
         mesh = CartesianMacroMesh(*metadata["macro_shape"], bounds)
-        with np.load(path) as archive:
+        with np.load(path, allow_pickle=False) as archive:
             if not np.array_equal(archive["macro_points"], mesh.points) or not np.array_equal(
                 archive["macro_cells"], mesh.cells
             ):
@@ -93,6 +96,7 @@ def mhm_difference(
     batch_size: int = 1024,
     workers: int = 1,
     gradient_cutout: tuple[float, float, float, float] | None = None,
+    gradient_exclusion: tuple[float, float, float] | None = None,
 ) -> dict[str, Any]:
     """Integrate physical complex differences on an exact nested common triangulation.
 
@@ -100,8 +104,15 @@ def mhm_difference(
     integer. An optional cutout follows the original pixel boundaries. Ordered
     batch reductions are identical for serial and threaded execution; fields
     remain shared and memory is bounded by the number of concurrent batches.
+    A circular ``gradient_exclusion`` instead uses the shared physical point
+    mask on both restricted numerator and denominator; quadrature controls
+    include its curved boundary. Full-domain pressure remains a separate norm.
     """
     spacing = candidate.mesh.spacing / candidate.refinement
+    if gradient_exclusion is not None:
+        radial_exclusion_mask(np.zeros((1, 2)), gradient_exclusion)
+        if gradient_cutout is not None:
+            raise ValueError("declare one derivative exclusion geometry")
     ratio = reference.spacing / spacing
     if (
         candidate.mesh.bounds != reference.bounds
@@ -171,6 +182,7 @@ def mhm_difference(
                         q_gradient / spacing,
                         p_basis,
                         np.einsum("qib,bd->qid", p_derivative, gradients[reference_half]),
+                        points,
                     )
                 )
     count = int(np.prod(reference.counts))
@@ -185,18 +197,29 @@ def mhm_difference(
             keep = ~np.all((cells >= cutout[:, 0]) & (cells < cutout[:, 1]), axis=1)
         p_coefficients = [reference.coefficients(cells, side) for side in (0, 1)]
         result = []
-        for offset, side, q_basis, q_gradient, p_basis, p_gradient in tables:
+        for offset, side, q_basis, q_gradient, p_basis, p_gradient, points in tables:
+            mask = keep
+            if gradient_exclusion is not None:
+                physical = (division * cells[:, None, :] + offset + points[None, :, :]) * spacing
+                physical += np.asarray(reference.bounds)[[0, 2]]
+                mask = radial_exclusion_mask(physical, gradient_exclusion)
             q_coefficients = candidate.coefficients(division * cells + offset)
             values = np.einsum("qi,ti->tq", q_basis, q_coefficients)
             derivatives = np.einsum("qid,ti->tqd", q_gradient, q_coefficients)
             p_values = np.einsum("qi,ti->tq", p_basis, p_coefficients[side])
             p_derivatives = np.einsum("qid,ti->tqd", p_gradient, p_coefficients[side])
             integrands = acoustic_norm_contributions(
-                values, p_values, derivatives, p_derivatives, rho, kappa, omega, keep
+                values, p_values, derivatives, p_derivatives, rho, kappa, omega, mask
             )
             result.append(
                 [float(np.sum(value @ weights) * np.prod(spacing) / 2) for value in integrands]
             )
+            measure = (
+                mask
+                if mask.ndim == 2
+                else np.broadcast_to(mask[:, None], (len(cells), len(weights)))
+            )
+            result[-1].append(float(np.sum(measure @ weights) * np.prod(spacing) / 2))
         return result
 
     starts = range(0, count, batch_size)
@@ -214,10 +237,16 @@ def mhm_difference(
             "common_triangles": 2 * count * division**2,
             "domain_area": float(np.prod(reference.spacing) * count),
             "gradient_cutout": gradient_cutout,
-            "gradient_domain_area": float(
+            "gradient_exclusion": gradient_exclusion,
+            "gradient_domain_area": fsum(row[10] for batch in batches for row in batch)
+            if gradient_exclusion is not None
+            else float(
                 np.prod(reference.spacing)
                 * (count - (np.prod(cutout[:, 1] - cutout[:, 0]) if cutout is not None else 0))
             ),
+            "derivative_domain_integration": "Physical quadrature-point disk mask"
+            if gradient_exclusion
+            else "Pixel-aligned rectangle or full domain",
         },
     )
 
@@ -232,7 +261,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     material = load_marmousi_crop(args.data)
-    metadata = [json.loads(path.read_text()) for path in (args.candidate, args.reference)]
+    metadata = [checked_mhm(args.candidate), checked_reference(args.reference)]
     for record in metadata:
         if (
             record["material"] != material.provenance
@@ -247,11 +276,14 @@ def main() -> None:
             Path(__file__).with_name(f"marmousi_{name}.py")
             for name in ("fields", "campaign", "data")
         ),
-        *(root / f"src/pymhm/{name}.py" for name in ("elements", "lagrange", "quadrilateral")),
+        root / "examples/campaign_provenance.py",
+        root / "examples/helmholtz_trace_family.py",
+        root / "examples/marmousi_records.py",
+        *sorted((root / "src/pymhm").rglob("*.py")),
     ]
     hashes = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
     candidate, reference = BrokenQField.load(args.candidate), load_reference(args.reference)
-    cutout = (4975.0, 5025.0, 25.0, 75.0)
+    exclusion = (5000.0, 50.0, 50.0)
     measured = {
         str(order): mhm_difference(
             candidate,
@@ -261,11 +293,11 @@ def main() -> None:
             omega=40 * np.pi,
             order=order,
             workers=args.workers,
-            gradient_cutout=cutout,
+            gradient_exclusion=exclusion,
         )
         for order in (8, 10)
     }
-    with np.load(args.candidate.parent / metadata[0]["archive"]) as archive:
+    with np.load(args.candidate.parent / metadata[0]["archive"], allow_pickle=False) as archive:
         points = archive["sample_points"]
         stored = archive["sample_pressure"]
         sides = archive["incident_sides"]

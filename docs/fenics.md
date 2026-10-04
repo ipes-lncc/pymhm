@@ -173,7 +173,7 @@ boundary terms and, in the Stokes limit, different rigid-motion modes. They must
 not be interchanged while keeping the same boundary and kernel definitions.
 See [the published construction](https://doi.org/10.1016/j.cma.2017.05.027) and
 [the literature map](literature.md).
-The [high-order reproduction](cases/reproduction.md#stokes-2017-equal-order-local-spaces-and-direct-figure-comparison)
+The [high-order reproduction](https://github.com/volpatto/pymhm/blob/main/docs/cases/reproduction.md#stokes-2017-equal-order-local-spaces-and-direct-figure-comparison)
 used P2/P2 and P3/P3 local spaces through DOLFINx with a computed inverse
 estimate, then compared their numerical errors with digitized article curves.
 These calculations use pyMHM with DOLFINx local assembly; they do not execute

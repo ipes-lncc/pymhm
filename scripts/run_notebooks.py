@@ -8,7 +8,13 @@ from pathlib import Path
 
 import nbformat
 from nbclient import NotebookClient
-from notebook_data import DEFAULT_MAX_BYTES, dependency_plan, required_archives, validate_archives
+from notebook_data import (
+    DEFAULT_MAX_BYTES,
+    dependency_plan,
+    required_archives,
+    required_images,
+    validate_archives,
+)
 
 
 def main() -> None:
@@ -30,18 +36,21 @@ def main() -> None:
     if args.timeout < 1:
         raise SystemExit("Cell timeout must be positive")
     selected = {path.name.split("_", 1)[0] for path in notebooks}
-    dependencies = {
-        identifier: paths
-        for identifier, paths in required_archives(root).items()
-        if identifier in selected
-    }
+    dependencies = required_archives(root, selected)
     try:
-        validate_archives(root, dependency_plan(root, dependencies), args.max_data_bytes)
+        validate_archives(
+            root,
+            dependency_plan(root, dependencies, required_images(root, selected)),
+            args.max_data_bytes,
+        )
     except ValueError as error:
         raise SystemExit(str(error)) from error
     output = root / "build" / "notebooks"
     output.mkdir(parents=True, exist_ok=True)
-    os.environ.setdefault("MPLBACKEND", "Agg")
+    kernel_environment = {
+        **os.environ,
+        "MPLBACKEND": "module://matplotlib_inline.backend_inline",
+    }
     for path in notebooks:
         print(f"Executing {path.name}", flush=True)
         notebook = nbformat.read(path, as_version=4)
@@ -51,7 +60,7 @@ def main() -> None:
             kernel_name="python3",
             resources={"metadata": {"path": str(root)}},
         )
-        client.execute()
+        client.execute(env=kernel_environment)
         nbformat.write(notebook, output / path.name)
     print(f"Executed {len(notebooks)} notebooks; outputs: {output}")
 

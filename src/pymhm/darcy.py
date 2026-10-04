@@ -23,6 +23,20 @@ from pymhm.loads import point_load_vector, split_point_sources
 from pymhm.mesh import FloatArray, SkeletonSpace, TriangleMesh, positive_int
 
 
+def _assembly_quadrature_order(degree: int, quadrature_order: int) -> int:
+    """Resolve Darcy's volume and requested boundary count, with the degree+2 floor.
+
+    The order counts points in each Duffy coordinate on triangles and in each
+    boundary integration interval; it is not a polynomial exactness degree.
+    Boundary data also apply the trace degree+2 floor, and polynomial trace
+    coupling uses its own exact degree-dependent rule.
+    Variable coefficients and nonpolynomial loads require independent controls.
+    """
+    return max(
+        positive_int(quadrature_order, "quadrature_order"), positive_int(degree, "degree") + 2
+    )
+
+
 @dataclass(frozen=True)
 class DarcySolution:
     """Broken pressure and conservative skeleton flux of a Darcy solve.
@@ -235,6 +249,7 @@ def solve_darcy(
     local_solver: str = "scipy",
     local_refinement_precision: Literal["double", "extended"] = "double",
     hybrid_refinement_steps: int = 0,
+    hybrid_refinement_min_steps: int = 0,
     backend: Literal["serial", "thread", "process"] = "serial",
     workers: int | None = None,
     parallel_assembly: bool = False,
@@ -252,6 +267,11 @@ def solve_darcy(
     problems do not have a finite H1 pressure energy in two dimensions.
     ``degree`` selects the primal local polynomial degree. RT0 supports
     piecewise constant skeletons aligned with fine boundary faces.
+    ``quadrature_order`` requests Gauss points per Duffy coordinate and boundary
+    integration interval, with an effective minimum of ``degree+2``. The executed
+    volume order is retained on the solution. Boundary data additionally apply
+    the trace degree+2 floor; polynomial trace coupling uses an exact
+    degree-dependent rule. Nonpolynomial data require independent order controls.
     ``local_meshes`` optionally supplies one validated conforming triangular
     partition per macrocell for the primal formulation; it takes precedence over
     uniform ``local_refinement``. Material-fitted local meshes do not change the
@@ -267,6 +287,10 @@ def solve_darcy(
     at most 1e-10; failure raises ``LinearSolveError``. Persist the resulting
     local fields: trace and coarse coefficients alone do not replay these
     additional defect-source responses.
+    ``hybrid_refinement_min_steps`` optionally requires a minimum number of
+    these same corrections, including after residual acceptance. It cannot
+    exceed ``hybrid_refinement_steps``. Its default is zero; the requested
+    count and a small residual alone do not establish field accuracy.
     ``parallel_assembly=True`` assembles and condenses each local problem in
     the selected worker backend. Spawn workers require picklable material/source
     callbacks. The default assembles in the parent and retains compatibility
@@ -275,9 +299,12 @@ def solve_darcy(
     positive_int(local_refinement, "local_refinement")
     positive_int(degree, "degree")
     positive_int(hybrid_refinement_steps, "hybrid_refinement_steps", 0)
+    positive_int(hybrid_refinement_min_steps, "hybrid_refinement_min_steps", 0)
+    if hybrid_refinement_min_steps > hybrid_refinement_steps:
+        raise ValueError("hybrid_refinement_min_steps must not exceed hybrid_refinement_steps")
     if formulation == "mixed" and degree != 1:
         raise ValueError("RT0 uses degree=1; higher-order primal locals use formulation=primal")
-    quadrature_order = max(quadrature_order, degree + 2)
+    quadrature_order = _assembly_quadrature_order(degree, quadrature_order)
     if formulation not in ("primal", "mixed"):
         raise ValueError("formulation must be 'primal' or 'mixed'")
     skeleton = SkeletonSpace(mesh) if skeleton is None else skeleton
@@ -346,6 +373,7 @@ def solve_darcy(
             if pure_neumann
             else (),
             max_steps=hybrid_refinement_steps,
+            min_steps=hybrid_refinement_min_steps,
             solver=solver,
             local_solver=local_solver,
             refinement_precision=local_refinement_precision,

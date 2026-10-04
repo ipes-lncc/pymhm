@@ -1,0 +1,82 @@
+{
+  "schema": "pymhm-published-rad-layer-figure-provenance-v1",
+  "figures": [
+    {
+      "output": "docs/figures/rad-layer/published-figure5.png",
+      "output_sha256": "53fbfb77797a45c74982cd34b00356f07a69bc7449dd81dda8f70e65028a6efc",
+      "pixels": [
+        1460,
+        605
+      ],
+      "pdf_sha256": "04eabc1621ba87498d211092f482e079a56cd65618d7a47c387307fdf7eb5bfb",
+      "doi": "10.1016/j.cma.2024.117089",
+      "primary_url": "https://doi.org/10.1016/j.cma.2024.117089",
+      "source_url": "https://doi.org/10.1016/j.cma.2024.117089",
+      "source_pdf_url": null,
+      "version": "Computer Methods in Applied Mechanics and Engineering 428 (2024) 117089",
+      "pdf_page_one_based": 19,
+      "printed_page": "19",
+      "figure": "5",
+      "source_access": "Existing local primary PDF read and SHA verified; no claim of fresh publisher download",
+      "operation": "Direct PDF crop only; no scientific value interpolation, curve smoothing, retouching or additional macrooverlay",
+      "consuming_notebooks": [
+        "46"
+      ],
+      "crop_pixels_at_2200_long_edge": [
+        80,
+        720,
+        1460,
+        605
+      ],
+      "crop_pdf_points_xyxy": [
+        27.006436363636364,
+        243.05792727272728,
+        519.8739,
+        447.2941022727273
+      ],
+      "rasterization_dpi": 213.28249023465114,
+      "source_pdf_filename": "1-s2.0-S0045782524003451-main.pdf",
+      "inspection": "All panels, published axes/ticks/legends and full crop captions retained; no scientific retouching",
+      "primary_information_limit": "The original profile panel has no coordinate tick labels or axis names; the full primary caption and curves are retained without adding labels"
+    },
+    {
+      "output": "docs/figures/rad-layer/published-figure6.png",
+      "output_sha256": "0ba948f2f2e5406c164c53b97ab5c544f839581eff1e833d474a3fe12bdd70b2",
+      "pixels": [
+        1460,
+        555
+      ],
+      "pdf_sha256": "04eabc1621ba87498d211092f482e079a56cd65618d7a47c387307fdf7eb5bfb",
+      "doi": "10.1016/j.cma.2024.117089",
+      "primary_url": "https://doi.org/10.1016/j.cma.2024.117089",
+      "source_url": "https://doi.org/10.1016/j.cma.2024.117089",
+      "source_pdf_url": null,
+      "version": "Computer Methods in Applied Mechanics and Engineering 428 (2024) 117089",
+      "pdf_page_one_based": 19,
+      "printed_page": "19",
+      "figure": "6",
+      "source_access": "Existing local primary PDF read and SHA verified; no claim of fresh publisher download",
+      "operation": "Direct PDF crop only; no scientific value interpolation, curve smoothing, retouching or additional macrooverlay",
+      "consuming_notebooks": [
+        "46"
+      ],
+      "crop_pixels_at_2200_long_edge": [
+        85,
+        1330,
+        1460,
+        555
+      ],
+      "crop_pdf_points_xyxy": [
+        28.694338636363636,
+        448.9820045454545,
+        521.5618022727273,
+        636.3391568181818
+      ],
+      "rasterization_dpi": 213.28249023465114,
+      "source_pdf_filename": "1-s2.0-S0045782524003451-main.pdf",
+      "inspection": "All panels, published axes/ticks/legends and full crop captions retained; no scientific retouching"
+    }
+  ],
+  "acquisition_manifest": "../primary-raster-extractions.json",
+  "scientific_scope": "Unmodified published Figures5/6; these are literature results, distinct from a current PyMHM acquisition"
+}

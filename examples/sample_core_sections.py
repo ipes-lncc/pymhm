@@ -20,12 +20,13 @@ from scipy.spatial import ConvexHull
 from threadpoolctl import threadpool_limits
 
 from examples import core_extension_data as exact
-from pymhm.hdiv3d_family import HDiv3DFamily, cell_quadrature
-from pymhm.hdiv3d_mesh import AffineMixedMesh, hdiv3d_dofs, hdiv3d_transform
+from examples.hdiv3d_field_archive import read_field as read_hdiv_field
+from examples.hdiv3d_sections import replay_section as replay_hdiv_section
+from examples.mshho3d_field_archive import read_field
+from examples.mshho3d_sections import replay_section
+from examples.verify_hdiv3d import physical_errors as hdiv_physical_errors
+from examples.verify_mshho3d import physical_errors
 from pymhm.mesh import TriangleMesh
-from pymhm.mshho3d import solve_mshho_3d
-from pymhm.polyhedral import PolyhedralMesh
-from pymhm.tetrahedral import TetraMesh, tetra_basis, tetra_nodal_space
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/core-extensions"
@@ -89,95 +90,26 @@ def section_samples(
 def mixed_fields(
     archive: dict[str, np.ndarray], kind: str, refinement: int, order: int
 ) -> tuple[dict[str, np.ndarray], dict[str, float]]:
-    """Replay archived flux coordinates using the executed basis and independent volume norms."""
-    family = HDiv3DFamily(kind, int(archive["pressure_degree"]), int(archive["normal_degree"]))
-    basis_matrix = archive["basis_coefficients"]
-    meshes = tuple(
-        AffineMixedMesh(points, cells, kind)
-        for points, cells in zip(archive["local_points"], archive["local_cells"], strict=True)
-    )
-    transforms = tuple(hdiv3d_transform(m, family, coefficients=basis_matrix) for m in meshes)
-    dofs = tuple(hdiv3d_dofs(m, family) for m in meshes)
-
-    def evaluate(macro: int, cell: int, points: np.ndarray) -> np.ndarray:
-        """Use the owning affine map, physical Piola transform and stored polynomial basis."""
-        fine = meshes[macro]
-        xi = (points - fine.points[fine.cells[cell, 0]]) @ fine.inverse[cell].T
-        values, _, pressure = family.tabulate(xi, coefficients=basis_matrix)
-        reference = np.einsum(
-            "qia,ij,j->qa",
-            values,
-            transforms[macro][cell],
-            archive["flux"][macro][dofs[macro][cell]],
-        )
-        flux = reference @ fine.jacobian[cell].T / fine.determinants[cell]
-        scalar = pressure @ archive["pressure"][macro][cell]
-        return np.column_stack((scalar, flux))
-
-    points, weights = cell_quadrature(kind, order)
-    reference_values, _, scalar = family.tabulate(points, coefficients=basis_matrix)
-    total = np.zeros(2)
-    for macro, fine in enumerate(meshes):
-        physical = fine.points[fine.cells[:, 0], None] + np.einsum(
-            "tab,qb->tqa", fine.jacobian, points
-        )
-        pressure = archive["pressure"][macro] @ scalar.T
-        reference_coefficients = np.einsum(
-            "tij,tj->ti", transforms[macro], archive["flux"][macro][dofs[macro]]
-        )
-        reference_flux = np.einsum("ti,qib->tqb", reference_coefficients, reference_values)
-        flux = np.einsum("tab,tqb->tqa", fine.jacobian, reference_flux)
-        flux /= fine.determinants[:, None, None]
-        target = physical.reshape(-1, 3)
-        pe = pressure - exact.pressure3d(target).reshape(pressure.shape)
-        qe = flux - exact.flux3d(target).reshape(flux.shape)
-        total += np.array(
-            [
-                fine.determinants @ (pe**2 @ weights),
-                fine.determinants @ (np.sum(qe**2, axis=-1) @ weights),
-            ]
-        )
-    errors = dict(zip(("pressure_l2", "flux_l2"), np.sqrt(total).tolist(), strict=True))
-    return section_samples(meshes, evaluate, refinement), errors
+    """Use literal producer C/T/DOFs and the acquisition's terminal physical norm rule."""
+    declared = ("tetrahedron", "prism")[int(archive["cell_kind_code"])]
+    if kind != declared or order != int(archive["norm_orders"][-1]):
+        raise ValueError("Declared geometry and terminal executed norm rule are required")
+    return replay_hdiv_section(archive, refinement), hdiv_physical_errors(archive, order)
 
 
 def mshho_fields(
-    name: str, resolution: int, refinement: int
+    name: str, resolution: int, refinement: int, *, archive: dict[str, np.ndarray]
 ) -> tuple[dict[str, np.ndarray], dict[str, float], dict[str, np.ndarray]]:
-    """Recompute a finest MsHHO state, retaining complete local pressure coefficients."""
-    tetra = name.startswith("tetra")
-    macro = TetraMesh.unit_cube(resolution) if tetra else PolyhedralMesh.cubes(resolution)
-    solution = solve_mshho_3d(
-        macro, source=exact.source3d, quadrature_order=9, local_refinement=2 if tetra else 1
-    )
-    meshes = tuple(local.mesh for local in solution.local)
-    dofs = tuple(tetra_nodal_space(mesh, solution.degree)[0] for mesh in meshes)
-    inverses = tuple(
-        np.linalg.inv(np.concatenate((np.ones((len(m.cells), 4, 1)), m.points[m.cells]), axis=2))
-        for m in meshes
-    )
-
-    def evaluate(cell: int, fine_cell: int, points: np.ndarray) -> np.ndarray:
-        """Evaluate the original continuous local pressure and its broken physical gradient."""
-        inverse = inverses[cell][fine_cell]
-        bary = np.column_stack((np.ones(len(points)), points)) @ inverse
-        basis, derivative = tetra_basis(solution.degree, bary)
-        coefficients = solution.pressure[cell][dofs[cell][fine_cell]]
-        pressure = basis @ coefficients
-        flux = -np.einsum("i,qib,ba->qa", coefficients, derivative, inverse[1:].T)
-        return np.column_stack((pressure, flux))
-
-    errors = dict(
-        pressure_l2=solution.l2_error(exact.pressure3d, 10),
-        flux_l2=solution.flux_l2_error(exact.flux3d, 10),
-    )
-    payload = dict(
-        degree=np.array(solution.degree),
-        pressure=np.array(solution.pressure),
-        local_points=np.array([m.points for m in meshes]),
-        local_cells=np.array([m.cells for m in meshes]),
-    )
-    return section_samples(meshes, evaluate, refinement), errors, payload
+    """Replay sections and the terminal executed norm rule used by the acquisition."""
+    if (
+        name not in {"tetra-p0", "cube-p0"}
+        or type(resolution) is not int
+        or resolution < 1
+        or archive.get("display_refinement") != refinement
+    ):
+        raise ValueError("Current acquired case and its executed section refinement required")
+    order = int(archive["norm_orders"][-1])
+    return replay_section(archive), physical_errors(archive, order), {}
 
 
 def run(suite: str, refinement: int = 6) -> None:
@@ -199,6 +131,13 @@ def run(suite: str, refinement: int = 6) -> None:
         Path(__file__),
         ROOT / "examples/core_extension_data.py",
     ]
+    if suite == "hdiv3d":
+        paths += [
+            ROOT / "examples/hdiv3d_field_archive.py",
+            ROOT / "examples/hdiv3d_sections.py",
+            ROOT / "examples/verify_hdiv3d.py",
+            ROOT / "examples/archive_precision.py",
+        ]
     hashes = {str(p.relative_to(ROOT)): digest(p) for p in paths}
     report = dict(
         suite=suite,
@@ -218,32 +157,39 @@ def run(suite: str, refinement: int = 6) -> None:
         path = DATA / original["archive"]
         if digest(path) != original["sha256"]:
             raise ValueError("a numerical input differs from its acquisition digest")
-        with np.load(path) as source:
-            archive = {key: source[key] for key in source.files}
+        if suite == "mshho3d":
+            archive, _ = read_field(path)
+        else:
+            archive, _ = read_hdiv_field(path)
         row = [r for r in record["rows"] if r["case"] == name][-1]
         if suite == "hdiv3d":
             fields, errors = mixed_fields(
-                archive, "prism" if name.startswith("prism") else "tetrahedron", refinement, 12
+                archive,
+                "prism" if name.startswith("prism") else "tetrahedron",
+                refinement,
+                int(archive["norm_orders"][-1]),
             )
             coefficients = {}
         else:
-            fields, errors, coefficients = mshho_fields(name, row["resolution"], refinement)
+            fields, errors, coefficients = mshho_fields(
+                name, row["resolution"], refinement, archive=archive
+            )
         for key, value in errors.items():
             if not np.isclose(value, row[key], rtol=2e-10, atol=2e-13):
                 raise ArithmeticError(
                     f"{name}: replayed {key} does not reproduce the acquired norm"
                 )
-        fields["macro_edges"] = archive["macro_edges"]
         output = DATA / f"{name}-polynomial-fields.npz"
         np.savez_compressed(output, **fields, **coefficients)
         info = dict(
             archive=output.name,
             sha256=digest(output),
-            original_archive=path.name,
+            original_archive=str(path.relative_to(DATA)),
             original_sha256=digest(path),
             resolution=row["resolution"],
             **errors,
         )
+        info["norm_order"] = int(archive["norm_orders"][-1])
         report["cases"][name] = info
         print(json.dumps({name: info}), flush=True)
     report["source_changed"] = hashes != {str(p.relative_to(ROOT)): digest(p) for p in paths}

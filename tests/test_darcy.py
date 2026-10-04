@@ -160,3 +160,10 @@ def test_quadrature_can_separate_discrete_balance_from_source_integration_error(
     result = solve_darcy(mesh, source=lambda x: x[:, 0] ** 7, quadrature_order=5)
     assert_allclose(result.conservation_residuals(), 0, atol=1e-13)
     assert_allclose(result.conservation_residuals(order=8), 0, atol=1e-13)
+
+
+@pytest.mark.parametrize("order", [0, -1, 2.5, True])
+def test_darcy_rejects_invalid_quadrature_before_applying_degree_floor(order):
+    """The shared floor must not conceal invalid volume/boundary integration requests."""
+    with pytest.raises(ValueError, match="quadrature_order"):
+        solve_darcy(TriangleMesh.unit_square(), quadrature_order=order)

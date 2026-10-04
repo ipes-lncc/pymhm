@@ -170,6 +170,7 @@ class OfflineHybridSystem:
         """Prepare local lifts and the constrained global factorization once."""
         self._resources = ExitStack()
         self._closed = False
+        self._original_residuals: tuple[float, float] | None = None
         self.fixed = {} if fixed is None else dict(fixed)
         self.moments = tuple(
             (tuple(np.array(w, dtype=float, copy=True) for w in weights), float(target))
@@ -218,6 +219,17 @@ class OfflineHybridSystem:
             self.close()
             raise
 
+    @property
+    def original_residuals(self) -> tuple[float, float] | None:
+        """Return the last checked original residual and physical RHS Euclidean norms.
+
+        The residual includes original local rows, free weak trace equations
+        and physical moments. The RHS accounts for prescribed trace values.
+        An unchecked or failed online query clears this record. These norms
+        measure algebraic satisfaction, not approximation error or stability.
+        """
+        return self._original_residuals
+
     def solve(
         self,
         loads: Sequence[Any],
@@ -225,10 +237,20 @@ class OfflineHybridSystem:
         boundary_load: Any = None,
         fixed: dict[int, float] | None = None,
         targets: Sequence[float] | None = None,
+        check_original: bool = False,
     ) -> HybridSolution:
-        """Solve one new source query without rebuilding or refactoring operators."""
+        """Solve one new source query without rebuilding or refactoring operators.
+
+        ``check_original=True`` checks the executed solution against the original
+        physical equations with the shared ``refine_hybrid(max_steps=0)``
+        criterion, ``residual <= 1e-10 * rhs_norm``. It performs no corrections,
+        returns the same solution, and records the norms in ``original_residuals``.
+        """
         if self._closed:
             raise RuntimeError("offline system is closed")
+        self._original_residuals = None
+        if type(check_original) is not bool:
+            raise ValueError("check_original must be a bool")
         if len(loads) != len(self.locals):
             raise ValueError("one load vector per local problem is required")
         fixed = self.fixed if fixed is None else fixed
@@ -265,7 +287,23 @@ class OfflineHybridSystem:
             system.mean_constraint(weights, target)
             for (weights, _), target in zip(self.moments, targets, strict=True)
         ]
-        return system.solve(fixed=fixed, constraints=constraints, factorization=self.factor)
+        solution = system.solve(fixed=fixed, constraints=constraints, factorization=self.factor)
+        if check_original:
+            from pymhm.hybrid_refinement import refine_hybrid
+
+            verification = refine_hybrid(
+                system,
+                solution,
+                boundary_load=boundary,
+                fixed=fixed,
+                moments=tuple(
+                    (weights, target)
+                    for (weights, _), target in zip(self.moments, targets, strict=True)
+                ),
+                max_steps=0,
+            )
+            self._original_residuals = (verification.residual_norms[-1], verification.rhs_norm)
+        return solution
 
     def solve_many(
         self, loads: Iterable[Sequence[Any]], **kwargs: Any

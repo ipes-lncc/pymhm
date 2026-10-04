@@ -28,6 +28,13 @@ preserving the prescribed total well rate. Primal Pk applies the exact discrete
 point functional; the mixed P0 test space receives the integrated well rate in incident fine cells.
 No finite-area source is substituted in this point-well experiment.
 
+The homogeneous Neumann data describe the exterior edges away from the corner
+well points; the signed corner functional supplies their rates in the discrete
+weak problem. Zero boundary trace coefficients impose those Neumann data.
+For primal P2 this is a weak boundary convention, and the raw gradient flux
+can have nonzero pointwise exterior normal values. The mixed RT0 field instead
+satisfies the prescribed fine-edge normal moments exactly, up to solver error.
+
 The comparison uses 32×32 squares split along the southwest-to-northeast
 diagonal, 2048 macrotriangles, two local subdivisions and constant traces.
 Primal pressure is P2; the mixed method is RT0/P0. The offset material interface
@@ -35,12 +42,46 @@ cuts macrotriangles but aligns with the fine mesh. The paper specifies its
 resolution but not enough connectivity details to assert identical historical
 matrices.
 
+### Independent assembly of the six discrete cases
+
+An independently assembled Basix reference executes all three materials in
+both local spaces, with the same 2048 macrotriangles, 8192 fine triangles,
+point allocations, exterior data and physical zero-mean pressure. It solves
+the original uncondensed saddle system: 33,729 unknowns for primal P2 and
+41,921 for mixed RT0/P0. The reference uses
+[FEniCS Basix 0.9.0, `basix.finite_element`, revision
+19555f5b](https://github.com/FEniCS/basix/tree/19555f5b629b4090b14014f9db5f2c9ac80984f9)
+for its executed polynomial and Piola bases, together with SciPy SuperLU.
+This is an instrumented independent comparison, not an original-author application.
+
+Pressure, raw gradient and physical Darcy flux are compared in broken physical
+L2 norms on the common fine partition, with independent one-sided values and
+the native norm as denominator. A positive four-point Gauss rule in each
+coordinate of a triangle Duffy map integrates these polynomial squared norms
+exactly up to floating-point arithmetic. Across the three P2 cases, the
+largest relative differences are 3.02×10⁻¹¹ in pressure, 1.43×10⁻¹¹ in raw
+gradient and 1.71×10⁻¹¹ in Darcy flux. Across the three RT0/P0 cases, they are
+7.30×10⁻¹⁵ in pressure and 7.27×10⁻¹² in Darcy flux.
+
+The reference evaluates the original physical equations separately from its
+gauge equation; their relative load residual is at most 8.87×10⁻¹³. Inserting
+the PyMHM fields into the independently assembled physical equations gives
+at most 1.35×10⁻¹¹. The reference uniformly uses extended residual and
+coefficient accumulation with the fixed double-precision operator. A further
+correction of those same equations changes its physical fields by at most
+1.13×10⁻¹⁵ relatively. Replay from the archived executed bases is identical
+with one and two native threads. The
+[verification record](../figures/quarter-five-spot/reference/point-native-verification.json)
+identifies the sources, bases, maps, inputs and coefficients. This establishes
+discrete agreement for the specified cases; it does not establish continuum
+accuracy or recover the historical well intensity and connectivity.
+
 
 **Expected result.** Pressure has logarithmic corner singularities and flux
 grows near both wells. Their peak values depend on mesh resolution and display
 sampling; equal peak values on different meshes are not an accuracy criterion.
-The solution is antisymmetric in pressure under a half-turn about the center,
-with flux directed from injection toward extraction.
+For homogeneous permeability, pressure is antisymmetric under a half-turn
+about the center. Flux is directed from injection toward extraction.
 
 
 The red line is the material interface; dark edges are the macro mesh. The
@@ -115,15 +156,11 @@ integrated rates, and the RT0 fine-cell balance includes the allocated rates.
 From 128 to 4608 macrotriangles, sampled pressure RMS decreases from 0.01124
 to 0.0003692, and flux RMS from 0.3511 to 0.06424. At the finest level,
 doubling the series changes the flux away from wells by at most
-8.3×10⁻¹⁰. Macro balance defects stay below 9.1×10⁻¹⁶.
-
-MSL's native P1 primal formulation was also executed with the same point
-functional and angular sharing: five macro resolutions from 2×2 to 32×32,
-homogeneous and layered K, plus two segmented-trace checks. Across these
-12 matched cases, the largest physical pressure and flux L2 differences
-against PyMHM are 8.62×10⁻¹⁵ and 8.40×10⁻¹², respectively. This validates
-the discrete point-load handling and primal operator against MSL; it does
-not recover the unspecified historical well intensity or macro connectivity.
+8.3×10⁻¹⁰. Macro balance defects stay below 7.6×10⁻¹⁵, and the full original
+physical-equation residual stays below 3.6×10⁻¹⁴ relative to the point load.
+Every level retains its executed physical coefficients and evaluation matrices;
+the [six-level record](../figures/quarter-five-spot/point-convergence.json)
+identifies the archives by SHA-256.
 
 ## Supplemental central obstacle
 
@@ -151,7 +188,7 @@ has mean zero.
 
 **Expected result.** Most flow bypasses the obstacle through the surrounding
 permeable region. Pressure gradients can be steep near its corners, but normal
-flux must balance across interfaces. Concentrated Darcy velocity in a thin
+flux must balance across interfaces. Concentrated Darcy flux in a thin
 conductive corridor is physical. Verification includes material integrals, integrated well rates and the
 linear-system residual.
 
@@ -160,12 +197,14 @@ square grid, each split along its southwest-to-northeast diagonal. The
 obstacle boundary crosses macrocell interiors: 38 macrotriangles contain
 positive areas of both materials. The well boundaries
 remain on macrofaces. Local refinement uses four, eight or sixteen
-subdivisions per macroedge, with one or two constant trace segments.
+subdivisions per macroedge, with one or two constant trace segments;
+the eight- and sixteen-subdivision meshes also use four segments.
 These local meshes fit the material interface exactly: their coordinate
 spacings are 0.025, 0.0125 and 0.00625, respectively. The permeability is
 constant within each fine triangle, including those inside heterogeneous
-macrocells. MSL uses native
-`msl_mhm`/`msl_cg` primal P1 assembly. NeoPZ supplies the native RT0 operator,
+macrocells. Basix tabulates the P1 basis and quadrature for an independently
+assembled full primal saddle system, including signed skeletal moments and the
+physical mean-pressure gauge. NeoPZ supplies the native RT0 operator,
 with the prescribed boundary fluxes, macro trace restriction and mean gauge
 applied to that operator. This algebraically restricted reference is distinct
 from NeoPZ's native MHM controller. Each comparison verifies the original or
@@ -214,13 +253,14 @@ measure reference sensitivity; this numerical reference is not an exact
 solution. Both formulations impose zero exterior normal flux and zero
 mean pressure.
 
-The classical reference uses local-equivalent subdivisions \(r=4,8,16\).
+The classical reference uses local-equivalent subdivisions \(r=4,8,16,32\).
 Its successive relative flux difference is
 \(\|q_{r}-q_{r/2}\|_{L^2}/\|q_r\|_{L^2}\), with the corresponding
 definition for pressure. Fields on nested meshes are compared by
 integration on the finer triangles. The MHM trace study holds \(r=16\)
-fixed and uses one, two or four segments per macroface, with differences
-normalized by the finest classical field norm. The last classical
+fixed and uses one, two or four segments per macroface. Its same-grid differences
+use the classical \(r=16\) field norm; the comparisons with \(r=32\) use that
+finer reference norm. The last classical
 refinement increment provides a sensitivity scale, not an error bound.
 
 | Classical refinement | Fine triangles | Free flux and pressure unknowns | Relative pressure change | Relative flux change |
@@ -228,10 +268,11 @@ refinement increment provides a sensitivity scale, not an error bound.
 | 4 | 3,200 | 7,920 | — | — |
 | 8 | 12,800 | 31,840 | 2.06108% | 5.30059% |
 | 16 | 51,200 | 127,680 | 1.02736% | 2.99132% |
+| 32 | 204,800 | 511,360 | 0.512606% | 1.72552% |
 
 The unknown counts exclude exterior fluxes fixed to zero and the additional
 mean-pressure multiplier. The finest field norms are
-\(\|p\|_{L^2}=0.7536654\) and \(\|q\|_{L^2}=1.9328324\).
+\(\|p\|_{L^2}=0.7533793\) and \(\|q\|_{L^2}=1.9325449\).
 NeoPZ supplies the native RT0/P0 matrices and field evaluation; SciPy
 SuperLU solves the global system with the physical mean-pressure gauge.
 The three-point positive triangular quadrature integrates the squared
@@ -239,11 +280,11 @@ RT0 and P0 differences exactly on these nested affine meshes, up to
 floating-point evaluation and summation.
 The classical fields satisfy
 \(\int_\Omega K^{-1}|q_h|^2=\int_\Omega p_h f\) with a relative
-defect below 1.10×10⁻¹⁴; the relative residual of the original free
-algebraic equations is at most 7.07×10⁻¹¹. The energy identity uses the
+defect below 4.76×10⁻¹⁶; the relative residual of the original free
+algebraic equations is at most 8.80×10⁻¹³. The energy identity uses the
 homogeneous normal-flux boundary condition and the resolved source.
 
-| MHM trace segments per macroface, at \(r=16\) | Pressure difference / classical pressure norm | Flux difference / classical flux norm |
+| MHM trace segments per macroface, at \(r=16\) | Pressure difference / same-grid classical pressure norm | Flux difference / same-grid classical flux norm |
 | ---: | ---: | ---: |
 | 1 | 26.5680% | 42.8987% |
 | 2 | 0.422949% | 6.20369% |
@@ -251,9 +292,19 @@ homogeneous normal-flux boundary condition and the resolved source.
 
 The two-segment trace resolves the midpoint material intersections;
 four segments further enrich the same RT0/P0 MHM approximation. The
-four-segment result is an additional PyMHM experiment, separate from
-the twelve matched MSL/NeoPZ cases below. The classical flux changes
-by 2.99132% on its last refinement, so these percentages remain
+four-segment result is included in the matched NeoPZ comparisons below.
+Comparing those MHM fields with the finer classical \(r=32\) field gives:
+
+| MHM trace segments, at \(r=16\) | Pressure difference / classical \(r=32\) pressure norm | Flux difference / classical \(r=32\) flux norm |
+| ---: | ---: | ---: |
+| 1 | 26.6235% | 42.9397% |
+| 2 | 0.689218% | 6.44000% |
+| 4 | 0.528682% | 3.07375% |
+
+The classical flux changes
+by 1.72552% on its last refinement. Reference sensitivity remains material for
+the four-segment comparison, which requires further classical refinement before
+an accuracy claim. These percentages remain
 differences between numerical fields. They are not certified errors
 against the exact PDE solution, including when the MHM/classical
 difference is smaller than that last refinement increment.
@@ -266,13 +317,20 @@ difference is smaller than that last refinement increment.
 
 | Reference | Matched configurations | Largest pressure L2 difference | Largest flux L2 difference |
 | --- | ---: | ---: | ---: |
-| MSL `msl_mhm` + `msl_cg`, primal P1 | 6 | 9.11×10⁻¹² | 2.07×10⁻¹² |
-| NeoPZ `EHDivConstant`, restricted RT0/P0 | 6 | 2.17×10⁻¹² | 1.13×10⁻¹² |
+| Basix, independently assembled primal P1 | 8 | 1.44×10⁻¹¹ | 2.77×10⁻¹² |
+| NeoPZ `EHDivConstant`, restricted RT0/P0 | 8 | 7.62×10⁻¹³ | 2.28×10⁻¹² |
 
-The largest macro conservation defect is 1.11×10⁻¹⁵. The native MSL and
-restricted NeoPZ relative algebraic residuals are at most 2.58×10⁻¹⁴ and
-9.41×10⁻¹⁴, respectively. The native RT0 fine-cell balance defect is at
-most 8.12×10⁻¹⁵. These compare matching discrete formulations; agreement
+The full original Basix saddle residual, normalized by its physical load, is at
+most 9.61×10⁻¹³. The corresponding gauge-augmented restricted NeoPZ residual
+is at most 3.30×10⁻¹³. The native RT0 fine-cell balance defect is at most
+7.12×10⁻¹⁵. The PyMHM macro balance defect is at most 7.41×10⁻¹⁴; its full
+original free-equation residual is at most 6.04×10⁻¹¹, with the physical load
+as denominator. Pressure integrals have magnitude at most 3.38×10⁻¹⁶ and
+exterior trace values are zero.
+Basix assembly orders six and eight change the integrated pressure and flux by
+at most 1.26×10⁻¹¹ and 1.80×10⁻¹², respectively. The material and well interfaces
+fit the fine mesh, so these integrands are polynomial on every integration cell.
+These compare matching discrete formulations; agreement
 between codes does not by itself measure their error against the exact PDE
 solution.
 
@@ -291,15 +349,23 @@ their own small color scales; their patterns must be interpreted against the
 reported absolute values. Flux difference means the norm of the **vector
 difference**, not subtraction of the two magnitudes.
 
-The numerical records identify MSL core revision `7f15f455`, CG `afb76d14`,
-MHM `4cb8cf81`, and [NeoPZ](https://github.com/labmec/neopz) revision
-`4c6b6d27`. Full revisions, quadrature orders, source fingerprints, gauge
-conventions and original-equation residuals accompany each archived case.
+The numerical records identify
+[Basix 0.9.0](https://github.com/FEniCS/basix/tree/19555f5b629b4090b14014f9db5f2c9ac80984f9),
+module `basix.finite_element`, revision `19555f5b`, and
+[NeoPZ](https://github.com/labmec/neopz/commit/4c6b6d277ce097b97bfc8dea1b6725860f4fe05a),
+module `TPZMixedDarcyFlow` with `EHDivConstant`, revision `4c6b6d27`.
+The upstream sources are unchanged. Private instrumented drivers assemble the
+comparisons; they are distinct from an original author application. Preserved
+MSL sources lack a verified upstream revision and executable for this acquisition,
+so no current MSL execution is attributed. Full revisions, executed basis matrices,
+coefficient maps, quadrature orders, source fingerprints, gauge conventions and
+original-equation residuals accompany each archived case.
 
 ## Reproduction
 
 ```bash
 pixi run -e notebooks python examples/plot_quarter_spot.py
+pixi run --locked -e test python -m examples.solve_quarter_obstacle --refinements 4 8 16 --segments 1 2 --formulations primal mixed --workers 1 --native-threads 1
 pixi run -e notebooks gallery-quarter-elevation
 pixi run -e notebooks gallery-quarter-geometry
 pixi run -e notebooks gallery-quarter-reference
@@ -309,8 +375,10 @@ pixi run -e notebooks gallery-quarter-classical
 The source program reproduces the PyMHM point-well cases and analytical-series
 comparison. `--reuse-results` redraws archived fields without recomputing them.
 Reference-program numerical arrays, revisions and measured differences are
-available in the accompanying records. The second command redraws the
-offset-layer elevation views. The geometry command displays the material
+available in the accompanying records. The obstacle acquisition command runs
+the original public Darcy solvers; the private independent comparisons are
+identified by their executed revisions and source digests in the records.
+The elevation task redraws the offset-layer views. The geometry command displays the material
 cuts through macrocells and the fitted local mesh. The reference command
 renders the archived square-obstacle comparisons, including signed components and
 vector directions, without executing the reference programs. The classical
