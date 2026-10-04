@@ -314,7 +314,7 @@ def test_single_q2_with_four_linear_face_traces_has_one_redundant_constraint():
     )
     local = assemble_local(macro, skeleton, 0, 2, 1, 1, 5)
     assert np.linalg.matrix_rank(local.coupling.toarray(), tol=1e-13) == 7
-    with pytest.raises(LinearSolveError, match="rank"):
+    with pytest.raises(LinearSolveError, match="rank|singular"):
         MaxwellStepper(macro, time_step=0.001, degree=2)
 
 

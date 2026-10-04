@@ -1,5 +1,6 @@
 """Independent physical moments for nonaligned layers and finite-radius forces."""
 
+import pickle
 from dataclasses import replace
 
 import numpy as np
@@ -155,6 +156,38 @@ def test_force_load_owner_and_temporal_provider():
         local.load(source, density_weighted=True)
     with pytest.raises(ValueError, match="two dimensions"):
         replace(local, nodes=np.zeros((len(local.nodes), 3))).load(source)
+
+
+@pytest.mark.parametrize("scale", [0.0, -1.4, 1.4])
+def test_radial_time_snapshot_preserves_physical_values_and_separable_contract(scale):
+    """Frozen time samples are pickleable; replacements reset their integration metadata."""
+    source = RadialDiskLoad([0.25, 0.25], 0.1, 3.0, time_function=lambda time: scale)
+    snapshot = source.at_time(0.7)
+    physical = RadialDiskLoad(source.center, source.radius, source.amplitude * scale)
+    points = np.array([[0.25, 0.25], [0.26, 0.27], [0.31, 0.25], [0.9, 0.9]])
+    mesh = TriangleMesh([[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]], [[0, 1, 2]])
+    for sample in (snapshot, snapshot.at_time(0.5), pickle.loads(pickle.dumps(snapshot))):
+        assert not sample.center.flags.writeable
+        assert not sample.spatial_field().center.flags.writeable
+        assert sample.amplitude == physical.amplitude
+        assert sample.time_scale(0.5) == scale
+        assert sample.spatial_field().amplitude == source.amplitude
+        np.testing.assert_array_equal(sample(points), physical(points))
+        for actual, expected in zip(
+            sample.triangle_quadrature(mesh, 3), physical.triangle_quadrature(mesh, 3), strict=True
+        ):
+            np.testing.assert_array_equal(actual, expected)
+    for changed in (
+        replace(snapshot, amplitude=7.0),
+        replace(snapshot, center=[0.3, 0.3]),
+        replace(snapshot, radius=0.2),
+    ):
+        assert changed.time_scale(0.5) == 1.0
+        assert changed.spatial_field().amplitude == changed.amplitude
+        np.testing.assert_array_equal(changed.spatial_field()(points), changed(points))
+    modulated = replace(snapshot, time_function=lambda time: 2 * time)
+    assert modulated.time_scale(0.5) == 1.0
+    assert modulated.spatial_field().amplitude == snapshot.amplitude
 
 
 def test_kelvin_elasticity_and_density_use_their_own_material_partitions():

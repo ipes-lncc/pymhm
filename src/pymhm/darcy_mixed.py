@@ -27,8 +27,6 @@ def _pressure_basis(family: BDMFamily, bary: FloatArray) -> FloatArray:
     degree = family.polynomial_degree - 1
     if degree == 0:
         return np.ones((*bary.shape[:-1], 1))
-    if degree == 1:
-        return bary
     basis = reference_basis(degree, bary.reshape(-1, 3))[0]
     return basis.reshape(*bary.shape[:-1], basis.shape[-1])
 

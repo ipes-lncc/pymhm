@@ -7,6 +7,7 @@ from typing import Any, Literal
 
 import numpy as np
 
+from pymhm.element_backends import monomial_tabulation
 from pymhm.elements import triangle_quadrature
 from pymhm.hybrid import HybridSolution, HybridSystem, LocalAssembly, LocalProblem
 from pymhm.mesh import FloatArray, IntArray, positive_int
@@ -22,7 +23,7 @@ from pymhm.tetrahedral import (
     TetraMesh,
     _dyadic,
     scalar_values_3d,
-    tetra_basis,
+    tetra_face_basis,
     tetra_nodal_space,
     tetrahedron_quadrature,
 )
@@ -83,7 +84,9 @@ class PolygonalSkeleton3D:
         if not self.degrees[face]:
             return np.ones((len(points), 1))
         local = (points - self.mesh.face_origins[face]) @ self.mesh.face_tangents[face].T
-        return np.column_stack((np.ones(len(points)), local / np.sqrt(self.mesh.areas[face])))
+        return monomial_tabulation(
+            local / np.sqrt(self.mesh.areas[face]), ((0, 0), (1, 0), (0, 1)), nderiv=0
+        )[0]
 
 
 def polygonal_trace_coupling(
@@ -109,7 +112,8 @@ def polygonal_trace_coupling(
             for j, node in enumerate(ids):
                 bary[:, np.flatnonzero(fine.cells[element] == node)[0]] = bary_face[:, j]
             physical = corners[0] + bary_face[:, 1:] @ (corners[1:] - corners[0])
-            values = tetra_basis(degree, bary)[0]
+            opposite = int(np.flatnonzero(fine.cell_faces[element] == fine_face)[0])
+            values = tetra_face_basis(degree, bary, opposite_vertex=opposite)
             trace = skeleton.basis(int(face), physical)
             block = (
                 mesh.signs[cell][side]

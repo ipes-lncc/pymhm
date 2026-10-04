@@ -4,9 +4,9 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 import numpy as np
-from numpy.polynomial.legendre import legvander
 
 from pymhm.darcy3d import TriangularSkeleton, tetra_trace_coupling
+from pymhm.element_backends import legendre_values
 from pymhm.elements import triangle_quadrature
 from pymhm.mesh import FloatArray, positive_int
 from pymhm.mshho import MsHHOLocal, MsHHOSolution, _condense_moments, _energy_reconstruction
@@ -83,7 +83,7 @@ def _local(
     if cell_degree < 0:
         cell_basis = np.empty((*physical.shape[:2], 0))
     else:
-        factors = [legvander(coordinates[..., a], cell_degree) for a in range(3)]
+        factors = [legendre_values(coordinates[..., a], cell_degree) for a in range(3)]
         cell_basis = np.stack(
             [
                 factors[0][..., i] * factors[1][..., j] * factors[2][..., k]

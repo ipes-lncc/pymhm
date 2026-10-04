@@ -37,6 +37,20 @@ def exact(points):
     return 1 + points[:, 0] + 2 * points[:, 1] - points[:, 2]
 
 
+@pytest.mark.parametrize("subdivisions", [1, 2, 3])
+def test_unit_cube_preserves_prescribed_exterior_planes(subdivisions):
+    """Mesh coordinates retain the exact grid and all eight physical corners."""
+    mesh = HexMesh.unit_cube(subdivisions)
+    grid = np.arange(subdivisions + 1) / subdivisions
+    np.testing.assert_array_equal(np.unique(mesh.points), grid)
+    for corner in _CORNERS:
+        assert np.count_nonzero(np.all(mesh.points == corner, axis=1)) == 1
+    for face in mesh.boundary_faces:
+        coordinates = mesh.points[mesh.faces[face]]
+        exterior = np.all(coordinates == 0, axis=0) | np.all(coordinates == 1, axis=0)
+        assert np.count_nonzero(exterior) == 1
+
+
 @pytest.mark.parametrize("degree", [0, 1, 2])
 def test_piola_normal_moments_and_divergence_theorem(degree):
     """Every oriented flux basis has its canonical facet moment and matching volume balance."""

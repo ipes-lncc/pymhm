@@ -217,7 +217,11 @@ nav:
 - FEniCS local forms: fenics.md
 - Linear solvers: solvers.md
 - MPI, GPU and operator reuse: execution.md
-- Tutorials: tutorials.md
+- Tutorials:
+  - Guide and notebooks: tutorials.md
+  - Scalar formulations: tutorials/scalar.md
+  - Vector formulations: tutorials/vector.md
+  - Local providers and assembly: tutorials/providers.md
 - Case gallery:
   - Evidence guide: cases/index.md
   - Initial convergence studies: cases/minimal-convergence.md

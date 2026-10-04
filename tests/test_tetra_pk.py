@@ -7,9 +7,11 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 from scipy.spatial import cKDTree
+from simplex_native_bounds import gamma, reference_roundoff_bounds
 from threadpoolctl import threadpool_limits
 
 from pymhm import TetraMesh, TriangularSkeleton, estimate_darcy_error_3d, solve_darcy_3d
+from pymhm.element_backends import simplex_lagrange_basis, tabulate_reference
 from pymhm.flow import _laplacian_inverse_bound
 from pymhm.tetra_lagrange import (
     _compositions,
@@ -55,8 +57,34 @@ def test_unrestricted_topology_cardinality_and_derivative_partition(degree):
     assert np.all(indices.sum(axis=1) == degree)
     assert len(np.unique(indices, axis=0)) == len(indices)
     assert not indices.flags.writeable
-    values, _, _ = tetra_polynomials(degree, indices / degree)
-    assert_allclose(values, np.eye(len(indices)), atol=2e-13)
+    import basix
+
+    values, node_first, node_second = tetra_polynomials(degree, indices / degree)
+    native = simplex_lagrange_basis("tetrahedron", degree, nodes=indices / degree)
+    raw = tabulate_reference(native.element, indices[:, 1:] / degree, nderiv=2)[
+        :, :, native.permutation, 0
+    ]
+    assert np.array_equal(values, np.eye(len(indices)))
+    node_bound, _, _ = reference_roundoff_bounds(
+        "tetrahedron", degree, indices / degree, indices / degree
+    )
+    assert np.all(abs(raw[0] - values) <= node_bound)
+    assert np.array_equal(node_first[..., 0], np.zeros_like(values))
+    assert np.array_equal(node_second[..., 0, :], np.zeros((*values.shape, 4)))
+    assert np.array_equal(node_second[..., :, 0], np.zeros((*values.shape, 4)))
+    for axis in range(3):
+        direction = np.eye(3, dtype=int)[axis]
+        assert np.array_equal(node_first[..., axis + 1], raw[basix.index(*direction)])
+        for other in range(3):
+            assert np.array_equal(
+                node_second[..., axis + 1, other + 1],
+                raw[basix.index(*(direction + np.eye(3, dtype=int)[other]))],
+            )
+    probe = np.array([[0.17, 0.21, 0.29, 0.33]])
+    assert np.array_equal(
+        tetra_polynomials(degree, probe)[0],
+        tabulate_reference(native.element, probe[:, 1:])[:, :, native.permutation, 0][0],
+    )
     bary = np.vstack((np.eye(4), [[0.5, 0.5, 0, 0]], [[0.1, 0.2, 0.3, 0.4]]))
     values, first, second = tetra_polynomials(degree, bary)
     direct = tetra_values_gradients(degree, bary)
@@ -64,9 +92,19 @@ def test_unrestricted_topology_cardinality_and_derivative_partition(degree):
     assert np.array_equal(first, direct[1])
     gradient = first[..., 1:] - first[..., :1]
     hessian = second[..., 1:, 1:] - second[..., 1:, :1] - second[..., :1, 1:] + second[..., :1, :1]
-    assert_allclose(values.sum(axis=1), 1, atol=2e-13)
-    assert_allclose(gradient.sum(axis=1), 0, atol=3e-12)
-    assert_allclose(hessian.sum(axis=1), 0, atol=4e-10)
+    bound0, bound1, bound2 = reference_roundoff_bounds(
+        "tetrahedron", degree, bary, indices / degree
+    )
+    accumulation = gamma(len(indices))
+    assert np.all(
+        abs(values.sum(axis=1) - 1) <= bound0.sum(axis=1) + accumulation * abs(values).sum(axis=1)
+    )
+    assert np.all(
+        abs(gradient.sum(axis=1)) <= bound1.sum(axis=1) + accumulation * abs(gradient).sum(axis=1)
+    )
+    assert np.all(
+        abs(hessian.sum(axis=1)) <= bound2.sum(axis=1) + accumulation * abs(hessian).sum(axis=1)
+    )
     assert np.array_equal(second, second.swapaxes(-1, -2))
     empty = tetra_polynomials(degree, np.empty((0, 4)))
     assert empty[0].shape == (0, len(indices))

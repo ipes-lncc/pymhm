@@ -26,6 +26,7 @@ from pymhm.tetrahedral import (
     scalar_values_3d,
     tensor_values_3d,
     tetra_basis,
+    tetra_face_basis,
     tetra_nodal_space,
     tetra_tabulate,
     tetrahedron_quadrature,
@@ -128,7 +129,10 @@ def recover_potential_3d(
             bary[:, int(np.flatnonzero(mesh.cells[owner] == vertex)[0])] = face_bary[:, j]
         samples = face_bary @ mesh.points[mesh.faces[fine_face]]
         expected = scalar_values_3d(dirichlet, samples)
-        actual = tetra_basis(solution.degree, bary)[0] @ values[dofs[owner]]
+        opposite = int(np.flatnonzero(mesh.cell_faces[owner] == fine_face)[0])
+        actual = (
+            tetra_face_basis(solution.degree, bary, opposite_vertex=opposite) @ values[dofs[owner]]
+        )
         scale = max(np.max(abs(expected)), np.max(abs(actual)), np.finfo(float).tiny)
         if np.max(abs(actual - expected)) > 1e-10 * scale:
             raise ValueError("Dirichlet data must be represented by the fine polynomial trace")

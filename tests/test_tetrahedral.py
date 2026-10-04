@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 from scipy import sparse
 from scipy.sparse.linalg import spsolve
+from simplex_native_bounds import gamma, reference_roundoff_bounds
 
 from pymhm.darcy3d import TriangularSkeleton, _DarcyFactory, solve_darcy_3d, tetra_trace_coupling
 from pymhm.tetrahedral import (
@@ -102,7 +103,8 @@ def test_positive_quadrature_and_cardinal_polynomials():
         dofs, points = tetra_nodal_space(mesh, degree)
         nodes = np.column_stack((points, 1 - points.sum(axis=1)))
         values, grad = tetra_basis(degree, nodes)
-        np.testing.assert_allclose(values, np.eye(len(points)))
+        bound, _, _ = reference_roundoff_bounds("tetrahedron", degree, nodes, nodes)
+        assert np.all(abs(values - np.eye(len(points))) <= bound)
         basis = tetra_basis(degree, bary)[0]
         np.testing.assert_allclose(basis.sum(axis=1), 1)
         assert len(dofs[0]) == len(points)
@@ -119,7 +121,11 @@ def test_tetra_operators_against_polynomial_integrals(degree):
     mesh = TetraMesh.unit_cube(1).submesh(0, 2)
     A, M, f = tetra_operators(mesh, degree, diffusion=np.diag([2.0, 3.0, 4.0]), source=3.0)
     dofs, nodes = tetra_nodal_space(mesh, degree)
-    np.testing.assert_allclose(A @ np.ones(len(nodes)), 0, atol=3e-15)
+    # Native dualized polynomial evaluation and the assembled row summation
+    # have a finite cancellation error; test backward error in the original
+    # matrix rather than exact zeros from a specific cardinal factor formula.
+    row_terms = int(np.max(np.diff(A.tocsr().indptr)))
+    assert np.all(abs(A @ np.ones(len(nodes))) <= gamma(row_terms) * (abs(A) @ np.ones(len(nodes))))
     np.testing.assert_allclose(M @ np.ones(len(nodes)) * 3, f, atol=1e-16)
     np.testing.assert_allclose(M.sum(), mesh.volumes.sum())
     p = affine(nodes)

@@ -4,14 +4,19 @@ from __future__ import annotations
 
 from functools import lru_cache
 from itertools import combinations, permutations
-from typing import Any
+from typing import Any, Literal
 
 import numpy as np
 from numpy.polynomial.legendre import leggauss
 from scipy import sparse
 
+from pymhm.elements import _scalar_diffusion_blocks
 from pymhm.mesh import FloatArray, IntArray, positive_int
-from pymhm.tetra_lagrange import continuous_tetra_nodes, tetra_polynomials, tetra_values_gradients
+from pymhm.tetra_lagrange import (
+    continuous_tetra_nodes,
+    tetra_indices,
+    tetra_values_gradients,
+)
 
 _EDGES = tuple(combinations(range(4), 2))
 
@@ -194,50 +199,103 @@ def tetra_nodal_space(mesh: TetraMesh, degree: int) -> tuple[IntArray, FloatArra
 
 
 def tetra_basis(degree: int, bary: FloatArray) -> tuple[FloatArray, FloatArray]:
-    """Evaluate Pk cardinal functions and barycentric first derivatives."""
-    degree = positive_int(degree, "degree")
-    if degree > 2:
-        return tetra_values_gradients(degree, bary)
-    bary = _real(bary, "barycentric points")
-    if bary.ndim != 2 or bary.shape[1] != 4:
-        raise ValueError("barycentric points must have shape (n, 4)")
-    if degree == 1:
-        return bary, np.broadcast_to(np.eye(4), (len(bary), 4, 4))
-    values = np.column_stack(
-        (bary * (2 * bary - 1), *(4 * bary[:, i] * bary[:, j] for i, j in _EDGES))
-    )
-    derivatives = np.zeros((len(bary), 10, 4))
-    for i in range(4):
-        derivatives[:, i, i] = 4 * bary[:, i] - 1
-    for k, (i, j) in enumerate(_EDGES):
-        derivatives[:, 4 + k, i] = 4 * bary[:, j]
-        derivatives[:, 4 + k, j] = 4 * bary[:, i]
-    return values, derivatives
+    """Return Basix Pk values and canonical four-axis barycentric derivatives.
+
+    The extension and unit-sum point convention follow
+    :func:`pymhm.tetra_lagrange.tetra_values_gradients` for every degree.
+    """
+    return tetra_values_gradients(degree, bary)
 
 
-def tetra_tabulate(
-    mesh: TetraMesh, degree: int, bary: FloatArray
-) -> tuple[IntArray, FloatArray, FloatArray, FloatArray]:
-    """Return nodal DOFs/coordinates, basis values and physical gradients."""
-    dofs, points = tetra_nodal_space(mesh, degree)
-    values, derivatives = tetra_basis(degree, bary)
-    jacobian = (mesh.points[mesh.cells[:, 1:]] - mesh.points[mesh.cells[:, :1]]).transpose(0, 2, 1)
-    inverse = np.linalg.inv(jacobian)
-    gradients = np.concatenate((-inverse.sum(axis=1)[:, None], inverse), axis=1)
-    return dofs, points, values, np.einsum("qia,taj->tqij", derivatives, gradients)
+def tetra_face_basis(degree: int, bary: FloatArray, *, opposite_vertex: int) -> FloatArray:
+    """Restrict the executed nodal Pk basis to one exact reference face.
+
+    ``bary`` has four unit-sum coordinates with coordinate ``opposite_vertex``
+    exactly zero. Entries whose integer nodal weight on that vertex is nonzero
+    have identically zero trace and are excluded through the declared topology.
+    Values on the face support retain the native volume table unchanged. The
+    volume basis, its coefficients and physical derivative maps are unaffected.
+    """
+    opposite = positive_int(opposite_vertex, "opposite_vertex", 0)
+    if opposite >= 4:
+        raise ValueError("opposite_vertex must identify one of four reference vertices")
+    values = tetra_basis(degree, bary)[0].copy()
+    if np.any(np.asarray(bary)[:, opposite] != 0):
+        raise ValueError("face barycentric coordinates must vanish at opposite_vertex")
+    values[:, tetra_indices(degree)[:, opposite] != 0] = 0.0
+    return values
 
 
-def tetra_element_tabulate(
-    mesh: TetraMesh, degree: int, bary: FloatArray
-) -> tuple[IntArray, FloatArray, FloatArray, FloatArray, FloatArray]:
-    """Tabulate continuous Pk values, physical gradients and physical Hessians."""
-    dofs, points, values, gradient = tetra_tabulate(mesh, degree, bary)
-    _, _, second = tetra_polynomials(degree, bary)
+def tetra_barycentric_gradients(mesh: TetraMesh) -> FloatArray:
+    """Return affine gradients of lambda_0,...,lambda_3 on each tetrahedron.
+
+    Axes are ``(cell, barycentric_coordinate, physical_coordinate)``. The
+    inverse vertex Jacobian gives the last three rows; the first row is their
+    negative sum. These geometric maps contain no finite-element tabulation.
+    """
     inverse = np.linalg.inv(
         (mesh.points[mesh.cells[:, 1:]] - mesh.points[mesh.cells[:, :1]]).transpose(0, 2, 1)
     )
-    gradients = np.concatenate((-inverse.sum(axis=1)[:, None], inverse), axis=1)
-    hessian = np.einsum("qiab,tac,tbd->tqicd", second, gradients, gradients)
+    return np.concatenate((-inverse.sum(axis=1)[:, None], inverse), axis=1)
+
+
+def tetra_tabulate(
+    mesh: TetraMesh,
+    degree: int,
+    bary: FloatArray,
+    *,
+    backend: Literal["portable", "basix"] = "basix",
+) -> tuple[IntArray, FloatArray, FloatArray, FloatArray]:
+    """Return nodal DOFs/coordinates, basis values and physical gradients.
+
+    Basix supplies equispaced Pk values/Cartesian derivatives in the literal
+    :func:`tetra_indices` node order. Barycentric points must sum to one.
+    PyMHM supplies the affine cell geometry and continuous DOF topology.
+    ``backend='portable'`` is a compatibility spelling for this same Basix
+    execution; there is no separate cardinal-polynomial implementation.
+    """
+    from pymhm.element_backends import physical_simplex_tabulation
+
+    if backend not in ("basix", "portable"):
+        raise ValueError("backend must be portable or basix")
+    dofs, points = tetra_nodal_space(mesh, degree)
+    inverse = tetra_barycentric_gradients(mesh)[:, 1:]
+    values, gradient, _ = physical_simplex_tabulation(
+        "tetrahedron",
+        degree,
+        bary,
+        nodes=tetra_indices(degree) / degree,
+        reference_gradients=inverse,
+        nderiv=1,
+    )
+    return dofs, points, values, gradient
+
+
+def tetra_element_tabulate(
+    mesh: TetraMesh,
+    degree: int,
+    bary: FloatArray,
+    *,
+    backend: Literal["portable", "basix"] = "basix",
+) -> tuple[IntArray, FloatArray, FloatArray, FloatArray, FloatArray]:
+    """Tabulate continuous Pk values, physical gradients and physical Hessians.
+
+    ``backend`` follows :func:`tetra_tabulate`. Basix tabulates both
+    derivative orders to the library before applying the affine Jacobian.
+    """
+    from pymhm.element_backends import physical_simplex_tabulation
+
+    if backend not in ("basix", "portable"):
+        raise ValueError("backend must be portable or basix")
+    dofs, points = tetra_nodal_space(mesh, degree)
+    inverse = tetra_barycentric_gradients(mesh)[:, 1:]
+    values, gradient, hessian = physical_simplex_tabulation(
+        "tetrahedron",
+        degree,
+        bary,
+        nodes=tetra_indices(degree) / degree,
+        reference_gradients=inverse,
+    )
     return dofs, points, values, gradient, hessian
 
 
@@ -270,17 +328,28 @@ def tensor_values_3d(coefficient: Any, points: FloatArray) -> FloatArray:
 
 
 def tetra_operators(
-    mesh: TetraMesh, degree: int = 2, *, diffusion: Any = 1.0, source: Any = 0.0, order: int = 5
+    mesh: TetraMesh,
+    degree: int = 2,
+    *,
+    diffusion: Any = 1.0,
+    source: Any = 0.0,
+    order: int = 5,
+    element_backend: Literal["portable", "basix"] = "basix",
 ) -> tuple[Any, Any, FloatArray]:
-    """Assemble sparse scalar diffusion, consistent mass and source using positive quadrature."""
+    """Assemble scalar diffusion, consistent mass and source with positive quadrature.
+
+    Basix tabulates equispaced Pk in the declared nodal order. Integration and
+    affine geometry retain their conventions. ``element_backend='portable'``
+    is a compatibility spelling for this same Basix execution.
+    Diffusion products accumulate in NumPy's widest real dtype before returning
+    binary64 blocks; mass, source and the physical operator keep their formulas.
+    """
     bary, weights = tetrahedron_quadrature(max(order, degree + 2))
-    dofs, points, values, gradients = tetra_tabulate(mesh, degree, bary)
+    dofs, points, values, gradients = tetra_tabulate(mesh, degree, bary, backend=element_backend)
     x = np.einsum("qi,tij->tqj", bary, mesh.points[mesh.cells])
     tensors = tensor_values_3d(diffusion, x.reshape(-1, 3)).reshape(*x.shape[:2], 3, 3)
     force = scalar_values_3d(source, x.reshape(-1, 3)).reshape(x.shape[:2])
-    stiffness = np.einsum(
-        "t,q,tqia,tqab,tqjb->tij", mesh.volumes, weights, gradients, tensors, gradients
-    )
+    stiffness = _scalar_diffusion_blocks(weights, gradients, tensors, mesh.volumes)
     mass = np.einsum("t,q,qi,qj->tij", mesh.volumes, weights, values, values)
     load = np.einsum("t,q,qi,tq->ti", mesh.volumes, weights, values, force)
     rows = np.broadcast_to(dofs[:, :, None], stiffness.shape).ravel()

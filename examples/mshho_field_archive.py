@@ -456,21 +456,21 @@ def replay(
 
     This operation uses the saved tables, coefficients, dof order and material
     values. It computes no new reconstruction, basis or interface average.
+    Contraction operands use C layout so equivalent archive layouts preserve
+    the accumulation order, including on hosts with extended precision.
     """
     cell = positive_int(cell, "macro cell", 0)
     if cell >= int(arrays["local_count"]):
         raise ValueError("MsHHO replay cell is outside the executed macro partition")
-    nodal = restore(arrays, f"pressure_{cell}")[arrays[f"nodal_dofs_{cell}"]]
-    pressure = np.einsum("ti,qi->tq", nodal, arrays["executed_cardinal_values"], optimize=False)
-    derivative = np.einsum(
-        "ti,qia->tqa", nodal, arrays["executed_cardinal_derivatives"], optimize=False
-    )
-    gradient = np.einsum(
-        "tqa,tab->tqb", derivative, arrays[f"physical_barycentric_gradients_{cell}"], optimize=False
-    )
-    flux = -np.einsum(
-        "tqab,tqb->tqa", arrays[f"permeability_tensors_{cell}"], gradient, optimize=False
-    )
+    nodal = np.ascontiguousarray(restore(arrays, f"pressure_{cell}")[arrays[f"nodal_dofs_{cell}"]])
+    values = np.ascontiguousarray(arrays["executed_cardinal_values"])
+    derivatives = np.ascontiguousarray(arrays["executed_cardinal_derivatives"])
+    barycentric_gradients = np.ascontiguousarray(arrays[f"physical_barycentric_gradients_{cell}"])
+    material = np.ascontiguousarray(arrays[f"permeability_tensors_{cell}"])
+    pressure = np.einsum("ti,qi->tq", nodal, values, optimize=False)
+    derivative = np.einsum("ti,qia->tqa", nodal, derivatives, optimize=False)
+    gradient = np.einsum("tqa,tab->tqb", derivative, barycentric_gradients, optimize=False)
+    flux = -np.einsum("tqab,tqb->tqa", material, gradient, optimize=False)
     return pressure, gradient, flux
 
 

@@ -46,6 +46,23 @@ Module, class, function and member links below retain their identifiers across
 the family pages. Numerical conventions and supported inputs are documented
 with each object.
 
+### Variational descriptions and local providers
+
+- [`LocalForm`](api/hybrid.md#pymhm.variational.LocalForm) and
+  [`compile_local_forms`](api/hybrid.md#pymhm.variational.compile_local_forms)
+  describe and compile local equations while preserving their declared maps and bases.
+- [`GlobalForm`](api/hybrid.md#pymhm.variational.GlobalForm) and
+  [`HybridProblem`](api/hybrid.md#pymhm.assembly.HybridProblem) combine condensed
+  global equations, physical constraints and a callable local provider.
+- [`assemble_hybrid`](api/hybrid.md#pymhm.assembly.assemble_hybrid) and
+  [`solve_hybrid`](api/hybrid.md#pymhm.assembly.solve_hybrid) use
+  [`ExecutionConfig`](api/backends.md#pymhm.parallel.ExecutionConfig) and
+  [`SolverConfig`](api/hybrid.md#pymhm.assembly.SolverConfig).
+- [`LocalLinearSolver`](api/hybrid.md#pymhm.assembly.LocalLinearSolver) specifies
+  checked local response columns for an external numerical solver.
+- [`assemble_local_forms`](api/backends.md#pymhm.fenics.assemble_local_forms)
+  provides optional DOLFINx assembly of UFL local forms.
+
 ### Meshes and geometric refinement
 
 <a id="pymhm.mesh"></a>**[pymhm.mesh](api/geometry.md#pymhm.mesh)**

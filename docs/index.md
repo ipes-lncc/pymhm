@@ -6,12 +6,14 @@ lifts; a sparse global saddle problem couples their skeleton fluxes and kernel
 modes. Local discretization, skeleton approximation and linear solvers are
 separate choices.
 
-The portable reference implementation uses NumPy and SciPy. The optional
+The reference implementation uses NumPy, SciPy and Basix. The optional
 [FEniCS interface](fenics.md) assembles user-defined scalar, vector, mixed and
 H(div) local forms with UFL/DOLFINx. [Meshing](meshing.md) connects Gmsh, Netgen
 and meshio.
 
-Start with the [visual case gallery](cases/index.md) to compare numerical fields
+Start with the [introductory tutorials](tutorials.md) for scalar and vector
+formulations and interchangeable local providers. Use the
+[visual case gallery](cases/index.md) to compare numerical fields
 with exact references, inspect profiles and errors, and read what each case is
 expected to demonstrate.
 

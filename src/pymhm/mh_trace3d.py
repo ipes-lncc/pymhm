@@ -11,7 +11,7 @@ from pymhm.darcy3d import TriangularSkeleton
 from pymhm.elements import triangle_quadrature
 from pymhm.lagrange import multiindices, reference_basis
 from pymhm.mesh import FloatArray, IntArray, positive_int
-from pymhm.tetrahedral import TetraMesh, _dyadic, tetra_basis, tetra_nodal_space
+from pymhm.tetrahedral import TetraMesh, _dyadic, tetra_face_basis, tetra_nodal_space
 
 
 @dataclass(frozen=True)
@@ -133,11 +133,12 @@ def boundary_rules(
             local_bary = np.zeros((len(weights), 4))
             for j, node in enumerate(ids):
                 local_bary[:, np.flatnonzero(fine.cells[owner] == node)[0]] = bary[:, j]
+            opposite = int(np.flatnonzero(fine.cell_faces[owner] == fine_face)[0])
             rules.append(
                 (
                     int(face),
                     dofs[owner],
-                    tetra_basis(degree, local_bary)[0],
+                    tetra_face_basis(degree, local_bary, opposite_vertex=opposite),
                     bary @ fine.points[ids],
                     weights * fine.areas[fine_face],
                     bary @ macro_bary[ids][:, macro_vertices],

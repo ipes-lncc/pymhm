@@ -14,9 +14,9 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 import numpy as np
-from numpy.polynomial.legendre import legvander
 from scipy import sparse
 
+from pymhm.element_backends import legendre_values
 from pymhm.elements import scalar_values, tensor_values, triangle_quadrature
 from pymhm.lagrange import scalar_operators, tabulate, trace_coupling
 from pymhm.mesh import FaceSpace, FloatArray, SkeletonSpace, TriangleMesh, positive_int
@@ -162,8 +162,8 @@ def _local_reconstruction(
         cell_basis = np.empty((*points.shape[:2], 0))
     else:
         coordinates = 2 * (points - vertices.min(axis=0)) / np.ptp(vertices, axis=0) - 1
-        px = legvander(coordinates[..., 0], cell_degree)
-        py = legvander(coordinates[..., 1], cell_degree)
+        px = legendre_values(coordinates[..., 0], cell_degree)
+        py = legendre_values(coordinates[..., 1], cell_degree)
         cell_basis = np.stack(
             [
                 px[..., i] * py[..., j]

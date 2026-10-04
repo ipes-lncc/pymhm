@@ -124,6 +124,8 @@ class ElastodynamicLocal:
         """
         if isinstance(source, PreparedElastodynamicSource):
             return source.load_at_time(self, time)
+        if isinstance(source, SeparableTriangleField):
+            return _scale_source_load(self.load(source.spatial_field()), source.time_scale, time)
         if isinstance(source, TimeDependentTriangleField):
             return self.load(source.at_time(time))
         if isinstance(source, TriangleQuadratureField):
@@ -183,19 +185,26 @@ class PreparedElastodynamicSource:
         index = self._indices.get(id(local))
         if index is None or self.locals[index] is not local:
             raise ValueError("prepared source belongs to different executed local operators")
-        if np.iscomplexobj(time) or np.ndim(time) != 0 or not np.isfinite(time):
-            raise ValueError("prepared source time must be finite and real")
-        factor = self.time_function(time)
-        if np.iscomplexobj(factor) or np.ndim(factor) != 0 or not np.isfinite(factor):
-            raise ValueError("prepared source time scale must be a finite real scalar")
-        factor = float(factor)
-        if not np.isfinite(factor):
-            raise ValueError("prepared source time scale must be finite in binary64")
-        with np.errstate(over="ignore", invalid="ignore"):
-            load = self.loads[index] * factor
-        if not np.isfinite(load).all():
-            raise ValueError("prepared source scaled load must remain finite")
-        return load
+        return _scale_source_load(self.loads[index], self.time_function, time)
+
+
+def _scale_source_load(
+    spatial: FloatArray, time_function: Callable[[float], float], time: float
+) -> FloatArray:
+    """Apply the declared separable temporal factor after the spatial integration."""
+    if np.iscomplexobj(time) or np.ndim(time) != 0 or not np.isfinite(time):
+        raise ValueError("prepared source time must be finite and real")
+    factor = time_function(time)
+    if np.iscomplexobj(factor) or np.ndim(factor) != 0 or not np.isfinite(factor):
+        raise ValueError("prepared source time scale must be a finite real scalar")
+    factor = float(factor)
+    if not np.isfinite(factor):
+        raise ValueError("prepared source time scale must be finite in binary64")
+    with np.errstate(over="ignore", invalid="ignore"):
+        load = spatial * factor
+    if not np.isfinite(load).all():
+        raise ValueError("prepared source scaled load must remain finite")
+    return load
 
 
 def _make_local(

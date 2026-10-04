@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from math import factorial
 from typing import Any, Literal
 
 import numpy as np
@@ -18,7 +17,7 @@ from pymhm.tetrahedral import (
     _real,
     scalar_values_3d,
     tensor_values_3d,
-    tetra_basis,
+    tetra_face_basis,
     tetra_nodal_space,
     tetra_operators,
     tetra_tabulate,
@@ -114,13 +113,12 @@ class TriangularSkeleton:
         ):
             raise ValueError("subface barycentric points must be finite real triples")
         degree = int(self.degrees[face])
-        values = []
-        for i in range(degree, -1, -1):
-            for j in range(degree - i, -1, -1):
-                k = degree - i - j
-                factor = factorial(degree) / (factorial(i) * factorial(j) * factorial(k))
-                values.append(factor * bary[:, 0] ** i * bary[:, 1] ** j * bary[:, 2] ** k)
-        return np.column_stack(values)
+        from pymhm.element_backends import bernstein_tabulation
+
+        exponents = tuple(
+            (i, j, degree - i - j) for i in range(degree, -1, -1) for j in range(degree - i, -1, -1)
+        )
+        return bernstein_tabulation(bary[:, 1:], exponents)[0]
 
     def dofs(self, face: int) -> IntArray:
         """Return the global coefficients for one validated macroface index."""
@@ -171,7 +169,8 @@ def tetra_trace_coupling(
             bary = np.zeros((len(weights), 4))
             for j, node in enumerate(ids):
                 bary[:, np.flatnonzero(fine.cells[local] == node)[0]] = bary_face[:, j]
-            values = tetra_basis(degree, bary)[0]
+            opposite = int(np.flatnonzero(fine.cell_faces[local] == fine_face)[0])
+            values = tetra_face_basis(degree, bary, opposite_vertex=opposite)
             if skeleton.degrees[face] == 0:
                 matrix[dofs[local], offset + segment] += (
                     coarse.signs[cell, side] * fine.areas[fine_face] * (weights @ values)

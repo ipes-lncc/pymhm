@@ -68,6 +68,36 @@ def p1_geometry(mesh: TriangleMesh) -> tuple[FloatArray, FloatArray]:
     return gradients, mesh.areas
 
 
+def _scalar_diffusion_blocks(
+    weights: FloatArray,
+    gradients: FloatArray,
+    tensors: FloatArray,
+    measures: FloatArray | float,
+) -> FloatArray:
+    """Accumulate scalar gradient Gram blocks, then return binary64 entries.
+
+    Trailing axes are q, (q,basis,dimension), (q,dimension,dimension),
+    respectively; leading cell axes broadcast. Measures have only cell axes.
+    NumPy's widest real type accumulates the quadrature and tensor contractions
+    before the final binary64 rounding. No kernel projection or operator-entry
+    truncation is applied. On platforms with binary64 longdouble this uses
+    that platform's real precision.
+    """
+    operands = tuple(
+        np.asarray(value, dtype=np.longdouble) for value in (weights, gradients, tensors, measures)
+    )
+    return np.asarray(
+        np.einsum(
+            "...q,...qia,...qab,...qjb,...->...ij",
+            *operands[:3],
+            operands[1],
+            operands[3],
+            optimize=True,
+        ),
+        dtype=np.float64,
+    )
+
+
 def p1_operators(
     mesh: TriangleMesh,
     diffusion: Any = 1.0,
@@ -84,7 +114,13 @@ def p1_operators(
     from pymhm.cut_cells import material_triangle_quadrature
 
     bary, weights, material = material_triangle_quadrature(mesh, diffusion, order)
-    gradients, areas = p1_geometry(mesh)
+    from pymhm.element_backends import physical_simplex_tabulation
+
+    geometry, areas = p1_geometry(mesh)
+    basis, derivatives, _ = physical_simplex_tabulation(
+        "triangle", 1, bary, nodes=np.eye(3), reference_gradients=geometry[:, 1:], nderiv=1
+    )
+    gradients = derivatives[:, 0]
     vertices = mesh.points[mesh.cells]
     points = np.einsum("tqi,tij->tqj", bary, vertices)
     flat = points.reshape(-1, 2)
@@ -94,11 +130,11 @@ def p1_operators(
         raise ValueError("reaction must be nonnegative")
     forces = scalar_values(source, flat).reshape(len(areas), -1)
     velocity = vector_values(advection, flat).reshape(*weights.shape, 2)
-    local_mass = np.einsum("tq,tqi,tqj,t->tij", weights, bary, bary, areas)
-    blocks = np.einsum("tq,tia,tqab,tjb,t->tij", weights, gradients, tensors, gradients, areas)
-    blocks += np.einsum("tq,tq,tqi,tqj,t->tij", weights, coefficients, bary, bary, areas)
-    blocks += np.einsum("tq,tqi,tqa,tja,t->tij", weights, bary, velocity, gradients, areas)
-    rhs = np.einsum("tq,tq,tqi,t->ti", weights, forces, bary, areas)
+    local_mass = np.einsum("tq,tqi,tqj,t->tij", weights, basis, basis, areas)
+    blocks = _scalar_diffusion_blocks(weights, gradients[:, None], tensors, areas)
+    blocks += np.einsum("tq,tq,tqi,tqj,t->tij", weights, coefficients, basis, basis, areas)
+    blocks += np.einsum("tq,tqi,tqa,tja,t->tij", weights, basis, velocity, gradients, areas)
+    rhs = np.einsum("tq,tq,tqi,t->ti", weights, forces, basis, areas)
     n = len(mesh.points)
     rows = np.repeat(mesh.cells, 3, axis=1).ravel()
     cols = np.tile(mesh.cells, (1, 3)).ravel()
@@ -146,9 +182,9 @@ def face_integration(
                 parameter = left + (gauss + 1) * (right - left) / 2
                 weights = gauss_weights * (right - left) / 2 * np.sqrt(length2) * sign
                 basis = space.evaluate(parameter)
-                nodal = np.column_stack(
-                    ((parameter - t[1]) / (t[0] - t[1]), (parameter - t[0]) / (t[1] - t[0]))
-                )
+                from pymhm.scalar_boundary import edge_basis
+
+                nodal = edge_basis(1, (parameter - t[0]) / (t[1] - t[0]))
                 p1[nodes, offset : offset + space.size] += nodal.T @ (weights[:, None] * basis)
                 rt[row, offset : offset + space.size] += weights @ basis
         offset += space.size
@@ -243,6 +279,7 @@ def rt0_operators(
     basis associated with side (i,j) is ``sign*(x-opposite)/(2*area)``.
     """
     from pymhm.cut_cells import material_triangle_quadrature
+    from pymhm.rt import rt_basis
 
     bary, weights, material = material_triangle_quadrature(mesh, permeability, order)
     vertices = mesh.points[mesh.cells]
@@ -250,10 +287,7 @@ def rt0_operators(
     inverse = np.linalg.inv(tensor_values(material, points.reshape(-1, 2))).reshape(
         *weights.shape, 2, 2
     )
-    basis = (points[:, :, None, :] - vertices[:, None, [2, 0, 1], :]) / (
-        2 * mesh.areas[:, None, None, None]
-    )
-    basis *= mesh.signs[:, None, :, None]
+    basis = rt_basis(mesh, 0, bary)[0]
     blocks = np.einsum("tq,tqia,tqab,tqjb,t->tij", weights, basis, inverse, basis, mesh.areas)
     nfaces = len(mesh.faces)
     mass = sparse.coo_matrix(
@@ -281,10 +315,7 @@ def rt0_operators(
 
 def rt0_evaluate(mesh: TriangleMesh, flux: FloatArray, barycentric: FloatArray) -> FloatArray:
     """Evaluate RT0 at common (q,3) or cellwise (t,q,3) barycentric points."""
-    vertices = mesh.points[mesh.cells]
-    bary = np.broadcast_to(barycentric, (len(mesh.cells), *barycentric.shape[-2:]))
-    points = np.einsum("tqi,tij->tqj", bary, vertices)
-    basis = (points[:, :, None, :] - vertices[:, None, [2, 0, 1], :]) / (
-        2 * mesh.areas[:, None, None, None]
-    )
-    return np.einsum("tqia,ti->tqa", basis, flux[mesh.cell_faces] * mesh.signs)
+    from pymhm.rt import rt_basis
+
+    basis = rt_basis(mesh, 0, barycentric)[0]
+    return np.einsum("tqia,ti->tqa", basis, flux[mesh.cell_faces])

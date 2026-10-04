@@ -14,9 +14,18 @@ from itertools import product
 from typing import Any, Literal
 
 import numpy as np
-from numpy.polynomial.legendre import Legendre, leggauss, legvander
+from numpy.polynomial.legendre import leggauss
 from scipy import sparse
 
+from pymhm.element_backends import (
+    ReferenceElementSpec,
+    create_reference_element,
+    interpolate_reference,
+    legendre_values,
+    reference_interpolation_points,
+    tensor_lagrange_tabulation,
+)
+from pymhm.hdiv_reference import vector_tabulation
 from pymhm.hybrid import HybridSolution, HybridSystem, LocalAssembly, LocalProblem
 from pymhm.mesh import FloatArray, IntArray, positive_int
 from pymhm.rad3d import vector_values_3d
@@ -57,15 +66,7 @@ def _geometry(
     vertices: FloatArray, points: FloatArray
 ) -> tuple[FloatArray, FloatArray, FloatArray]:
     """Evaluate a trilinear geometric map, Jacobian and positive determinant."""
-    factors = np.where(_CORNERS[None], points[:, None], 1 - points[:, None])
-    shape = factors.prod(axis=2)
-    gradients = np.stack(
-        [
-            (2 * _CORNERS[:, a] - 1) * np.prod(factors[:, :, np.arange(3) != a], axis=2)
-            for a in range(3)
-        ],
-        axis=2,
-    )
+    shape, gradients = tensor_lagrange_tabulation("hexahedron", 1, points, nodes=_CORNERS, nderiv=1)
     physical = np.einsum("qi,tia->tqa", shape, vertices)
     jacobian = np.einsum("qib,tia->tqab", gradients, vertices)
     determinant = np.linalg.det(jacobian)
@@ -253,9 +254,13 @@ class HexMesh:
 
     @classmethod
     def unit_cube(cls, subdivisions: int = 1) -> "HexMesh":
-        """Create a conforming uniform unit-cube grid."""
+        """Create a uniform grid with exact rational geometric corner weights.
+
+        Mesh vertices use topological interpolation rather than floating-point
+        finite-element tabulation, preserving the prescribed exterior planes.
+        """
         base = cls(_CORNERS.astype(float), np.arange(8)[None])
-        return base.submesh(0, subdivisions)[0]
+        return base.refined(subdivisions)
 
     @classmethod
     def annular_prism(cls, radii: FloatArray, height: float, sectors: int = 8) -> "HexMesh":
@@ -299,7 +304,7 @@ class HexMesh:
 
 def _modal(degree: int, points: FloatArray) -> FloatArray:
     """Evaluate tensor Legendre polynomials, with the last coordinate varying fastest."""
-    tables = [legvander(2 * points[:, a] - 1, degree) for a in range(points.shape[1])]
+    tables = [legendre_values(2 * points[:, a] - 1, degree) for a in range(points.shape[1])]
     return np.column_stack(
         [
             np.prod([tables[a][:, index[a]] for a in range(len(tables))], axis=0)
@@ -321,6 +326,35 @@ def mapped_rt_dofs(mesh: HexMesh, degree: int) -> IntArray:
     return np.column_stack((face, inner))
 
 
+@lru_cache(maxsize=8)
+def _reference_rt_map(degree: int) -> FloatArray:
+    """Express declared hexahedral face lifts and bubble coefficients in native RT."""
+    k = degree
+    element = create_reference_element(
+        ReferenceElementSpec("RT", "hexahedron", k + 1, lagrange_variant="legendre")
+    )
+    points = reference_interpolation_points(element)
+    count = (k + 1) ** 2
+    values = np.zeros((len(points), 3 * (k + 2) * count, 3))
+    normalizers = np.array([(2 * i + 1) * (2 * j + 1) for i, j in product(range(k + 1), repeat=2)])
+    for side in range(6):
+        axis, end = divmod(side, 2)
+        face = _modal(k, points[:, np.arange(3) != axis]) * normalizers
+        indices = slice(side * count, (side + 1) * count)
+        values[:, indices, axis] = (points[:, axis] - (1 - end))[:, None] * face
+    modal = _modal(k, points)
+    offset = 6 * count
+    for axis in range(3):
+        for index in product(*(range(k) if a == axis else range(k + 1) for a in range(3))):
+            column = index[0] * (k + 1) ** 2 + index[1] * (k + 1) + index[2]
+            t = points[:, axis]
+            values[:, offset, axis] = t * (1 - t) * modal[:, column]
+            offset += 1
+    result = interpolate_reference(element, values)
+    result.setflags(write=False)
+    return result
+
+
 def mapped_rt_basis(
     mesh: HexMesh, degree: int, points: FloatArray
 ) -> tuple[FloatArray, FloatArray, FloatArray]:
@@ -330,33 +364,28 @@ def mapped_rt_basis(
     _, jacobian, determinant = mesh.geometry(points)
     count = (k + 1) ** 2
     width = 3 * (k + 2) * count
-    reference = np.zeros((len(mesh.cells), len(points), width, 3))
-    divergence = np.zeros(reference.shape[:-1])
-    normalizers = np.array([(2 * i + 1) * (2 * j + 1) for i, j in product(range(k + 1), repeat=2)])
+    native, native_divergence = vector_tabulation("RT", "hexahedron", k + 1, points)
+    transform = _reference_rt_map(k)
+    local = np.einsum("qia,ij->qja", native, transform)
+    local_divergence = native_divergence @ transform
+    reference = np.broadcast_to(local, (len(mesh.cells), len(points), width, 3)).copy()
+    divergence = np.broadcast_to(local_divergence, reference.shape[:-1]).copy()
+    exponents = np.array(list(product(range(k + 1), repeat=2)))
     for side in range(6):
-        axis, end = divmod(side, 2)
-        uv = np.column_stack((np.ones(len(points)), points[:, np.arange(3) != axis]))
-        canonical = np.einsum("qi,tia->tqa", uv, mesh.face_transforms[:, side])
-        face = _modal(k, canonical.reshape(-1, 2)).reshape(len(mesh.cells), len(points), count)
-        face *= normalizers * mesh.signs[:, side, None, None]
+        linear = mesh.face_transforms[:, side, 1:]
+        local_exponents = np.einsum("tab,ib->tia", np.abs(linear), exponents).astype(int)
+        permutation = local_exponents[..., 0] * (k + 1) + local_exponents[..., 1]
+        phase = np.prod(linear.sum(axis=1)[:, None, :] ** exponents[None], axis=-1)
+        phase *= mesh.signs[:, side, None]
         indices = slice(side * count, (side + 1) * count)
-        reference[:, :, indices, axis] = (points[:, axis] - (1 - end))[None, :, None] * face
-        divergence[:, :, indices] = face
-    offset = 6 * count
-    for axis in range(3):
-        for index in product(*(range(k) if a == axis else range(k + 1) for a in range(3))):
-            t = points[:, axis]
-            polynomial = np.ones(len(t))
-            for a in range(3):
-                polynomial *= Legendre.basis(index[a])(2 * points[:, a] - 1)
-            transverse = np.ones(len(t))
-            for a in range(3):
-                if a != axis:
-                    transverse *= Legendre.basis(index[a])(2 * points[:, a] - 1)
-            derivative = 2 * Legendre.basis(index[axis]).deriv()(2 * t - 1) * transverse
-            reference[:, :, offset, axis] = t * (1 - t) * polynomial
-            divergence[:, :, offset] = (1 - 2 * t) * polynomial + t * (1 - t) * derivative
-            offset += 1
+        reference[:, :, indices] = (
+            np.take_along_axis(reference[:, :, indices], permutation[:, None, :, None], axis=2)
+            * phase[:, None, :, None]
+        )
+        divergence[:, :, indices] = (
+            np.take_along_axis(divergence[:, :, indices], permutation[:, None, :], axis=2)
+            * phase[:, None, :]
+        )
     values = np.einsum("tqab,tqib->tqia", jacobian, reference) / determinant[:, :, None, None]
     return values, divergence / determinant[:, :, None], _modal(k, points)
 

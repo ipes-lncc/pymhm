@@ -487,7 +487,7 @@ def acquire(
             "source_sha256": before,
             "input_sha256": case.input_sha256,
             "basis_contract": (
-                "Executed analytic Polynomial factors/derivatives, actual held local mass "
+                "Executed native Basix coefficient matrix, actual held local mass "
                 "tables, original mesh/DOFs and literal one-sided field q5/q7 tables; "
                 "interleaved Cartesian components"
             ),

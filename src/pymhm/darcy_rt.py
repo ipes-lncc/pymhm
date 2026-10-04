@@ -6,10 +6,11 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 import numpy as np
-from numpy.polynomial.legendre import leggauss, legvander
+from numpy.polynomial.legendre import leggauss
 from scipy import sparse
 
 from pymhm.cut_cells import material_triangle_quadrature
+from pymhm.element_backends import legendre_values
 from pymhm.elements import boundary_data, scalar_values, tensor_values, vector_values
 from pymhm.hybrid import HybridSolution, HybridSystem, LocalAssembly, LocalProblem
 from pymhm.lagrange import reference_basis
@@ -78,7 +79,7 @@ def rt_trace_map(
     result = np.zeros((count * len(fine.boundary_faces), len(skeleton.cell_dofs(cell))))
     x, w = leggauss(m + 3)
     parameter = (x + 1) / 2
-    basis = legvander(x, m)
+    basis = legendre_values(x, m)
     offset = 0
     for side, face in enumerate(coarse.cell_faces[cell]):
         space = skeleton.faces[face]
@@ -355,7 +356,7 @@ def solve_darcy_rt_conforming(
     A = sparse.bmat([[M, -D.T], [-D, None]], format="csc")
     b = np.r_[np.zeros(nq), -f]
     x, w = leggauss(order)
-    basis = legvander(x, m)
+    basis = legendre_values(x, m)
     fixed: dict[int, float] = {}
     lengths = mesh.lengths
     for face in mesh.boundary_faces:

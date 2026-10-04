@@ -11,6 +11,12 @@ from itertools import product
 
 import numpy as np
 
+from pymhm.element_backends import (
+    ReferenceElementSpec,
+    create_reference_element,
+    interpolate_reference,
+    reference_interpolation_points,
+)
 from pymhm.hdiv3d_family import (
     HDiv3DFamily,
     _powers,
@@ -23,6 +29,7 @@ from pymhm.hdiv3d_family import (
     reference_vertices,
 )
 from pymhm.hdiv3d_general import _bernstein
+from pymhm.hdiv_reference import vector_tabulation
 from pymhm.mesh import FloatArray, positive_int
 
 
@@ -35,15 +42,28 @@ def rt3d_interior_tests(points: FloatArray, degree: int) -> FloatArray:
     return np.concatenate([scalar[..., None] * np.eye(3)[axis] for axis in range(3)], axis=1)
 
 
-def _candidates(points: FloatArray, degree: int) -> tuple[FloatArray, FloatArray]:
-    """Evaluate stable polynomial vector candidates and their analytic divergence."""
-    scalar, gradient = _bernstein(points, degree)
+@cache
+def _candidate_map(degree: int) -> FloatArray:
+    """Express the archived RT candidate rows in the native Basix basis."""
+    element = create_reference_element(
+        ReferenceElementSpec("RT", "tetrahedron", degree + 1, lagrange_variant="legendre")
+    )
+    points = reference_interpolation_points(element)
+    scalar = _bernstein(points, degree)[0]
     homogeneous = tuple(e for e in product(range(degree + 1), repeat=3) if sum(e) == degree)
     radial = _scalar(points, homogeneous)
     fields = [scalar[..., None] * np.eye(3)[axis] for axis in range(3)]
     fields.append(radial[..., None] * points[:, None])
-    div = [gradient[..., axis] for axis in range(3)] + [(degree + 3) * radial]
-    return np.concatenate(fields, axis=1), np.column_stack(div)
+    result = interpolate_reference(element, np.concatenate(fields, axis=1))
+    result.setflags(write=False)
+    return result
+
+
+def _candidates(points: FloatArray, degree: int) -> tuple[FloatArray, FloatArray]:
+    """Tabulate native RT in the unchanged archived Bernstein/radial coordinates."""
+    values, divergence = vector_tabulation("RT", "tetrahedron", degree + 1, points)
+    transform = _candidate_map(degree)
+    return np.einsum("qia,ij->qja", values, transform), divergence @ transform
 
 
 @cache

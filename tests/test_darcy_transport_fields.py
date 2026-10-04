@@ -78,6 +78,7 @@ def test_exact_nonradial_dispersion_derivative_and_zero_convention():
     nodes = np.einsum("qi,tij->tqj", multiindices(2) / 2, mesh.points[mesh.cells])
     velocity = PolynomialDarcyVelocity(mesh, _flux(nodes.reshape(-1, 2)).reshape(2, 6, 2), 2)
     points = np.array([[0.2, 0.4], [0.4, 0.2], [0.0, 0.0]])
+    assert_array_equal(velocity(points[-1:]), np.zeros((1, 2)))
     assert_allclose(velocity.gradient(points), _gradient(points), atol=3e-14)
     material = HydrodynamicDispersion(velocity, 0.1, 0.2, 0.03)
     actual = material.divergence(points)
@@ -91,6 +92,22 @@ def test_exact_nonradial_dispersion_derivative_and_zero_convention():
     assert_allclose(actual[:2], expected, rtol=3e-9, atol=3e-10)
     assert_array_equal(actual[2], np.zeros(2))
     assert_array_equal(material(points)[2], 0.1 * np.eye(2))
+
+
+def test_nonzero_nodal_velocity_is_not_replaced_by_the_zero_convention() -> None:
+    """Exact nodal interpolation preserves physically small nonzero dispersion."""
+    mesh = TriangleMesh.unit_square()
+    scale = 1e-100
+    vector = scale * np.array([1.0, -2.0])
+    velocity = PolynomialDarcyVelocity(mesh, np.tile(vector, (2, 6, 1)), 2)
+    point = np.array([[0.0, 0.0]])
+    assert_array_equal(velocity(point), vector[None])
+    material = HydrodynamicDispersion(velocity, 0.1, 0.2, 0.03)
+    tensor = material(point)
+    expected = -2 * (0.2 - 0.03) * scale / np.sqrt(5)
+    assert tensor[0, 0, 1] != 0
+    assert_allclose(tensor[0, 0, 1], expected, rtol=2e-15, atol=0)
+    assert_array_equal(tensor[:, 0, 1], tensor[:, 1, 0])
 
 
 def test_published_primal_degrees_preserve_constant_concentration_and_weak_darcy_balance():

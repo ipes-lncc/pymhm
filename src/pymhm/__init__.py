@@ -1,6 +1,6 @@
 """Composable Multiscale Hybrid Mixed finite element methods.
 
-The portable reference backend requires only NumPy, SciPy and threadpoolctl.
+The reference backend uses NumPy, SciPy, threadpoolctl and Basix.
 FEniCS, meshing and accelerator adapters import their dependencies on demand.
 """
 
@@ -14,6 +14,13 @@ from pymhm.analytic import (
     analytic_darcy_local,
     solve_darcy_analytic,
 )
+from pymhm.assembly import (
+    HybridProblem,
+    LocalLinearSolver,
+    SolverConfig,
+    assemble_hybrid,
+    solve_hybrid,
+)
 from pymhm.bdm_family import BDMFamily
 from pymhm.block import SaddleBlockSolver
 from pymhm.conforming import ConformingQuadrilateralSolution, solve_conforming_quadrilateral
@@ -24,7 +31,7 @@ from pymhm.cut_cells import (
     fit_material_mesh,
     material_triangle_quadrature,
 )
-from pymhm.darcy import DarcySolution, solve_darcy
+from pymhm.darcy import DarcySolution, darcy_local_provider, solve_darcy
 from pymhm.darcy3d import Darcy3DSolution, TriangularSkeleton, solve_darcy_3d
 from pymhm.darcy_hdiv3d import Mixed3DDarcySolution, Mixed3DSkeleton, solve_darcy_hdiv3d
 from pymhm.darcy_jump_estimator import DarcyJumpEstimator, estimate_darcy_jumps
@@ -58,6 +65,28 @@ from pymhm.elastodynamics import (
     ElastodynamicStepper,
     solve_elastodynamics,
 )
+from pymhm.element_backends import (
+    NodalReferenceBasis,
+    ReferenceElement,
+    ReferenceElementSpec,
+    barycentric_simplex_tabulation,
+    create_reference_element,
+    interpolate_reference,
+    legendre_tabulation,
+    legendre_values,
+    monomial_tabulation,
+    nodal_base_transformations,
+    orthogonal_polynomial_tabulation,
+    reference_base_transformations,
+    reference_entity_dofs,
+    reference_entity_transformations,
+    reference_interpolation_points,
+    simplex_lagrange_basis,
+    simplex_lagrange_tabulation,
+    tabulate_reference,
+    tensor_lagrange_basis,
+    tensor_lagrange_tabulation,
+)
 from pymhm.estimator import (
     ConformingPotential,
     DarcyEstimator,
@@ -82,7 +111,24 @@ from pymhm.hdiv3d_family import HDiv3DFamily
 from pymhm.hdiv3d_mesh import AffineMixedMesh
 from pymhm.helmholtz import HelmholtzSolution, solve_helmholtz
 from pymhm.helmholtz_spaces import OscillatoryFaceSpace, PolynomialNeumannTrace, helmholtz_skeleton
-from pymhm.hybrid import HybridSolution, HybridSystem, LocalAssembly, LocalProblem, LocalResponse
+from pymhm.hybrid import (
+    HybridSolution,
+    HybridSystem,
+    LocalAssembly,
+    LocalProblem,
+    LocalResponse,
+    assemble_hybrid_contributions,
+    condense_local,
+    hybrid_mean_constraint,
+    local_condensation_matrix,
+    local_condensation_system,
+    local_condensed_load,
+    local_global_contribution,
+    local_response_from_solution,
+    reconstruct_local,
+    reconstruct_response,
+    solve_hybrid_system,
+)
 from pymhm.hybrid_refinement import (
     HybridRefinement,
     HybridRefinementCase,
@@ -121,6 +167,7 @@ from pymhm.offline import (
     OfflineLocalProblem,
     condense_cached,
 )
+from pymhm.parallel import ExecutionConfig, iter_local, map_local
 from pymhm.pgmhm import PGMHMSolution, solve_pgmhm
 from pymhm.planar_fitting import (
     PlanarFittedMesh,
@@ -191,6 +238,7 @@ from pymhm.tetrahedral import TetraMesh
 from pymhm.transport import ScalarSolution, solve_heat, solve_transport
 from pymhm.triangle_fields import PolylineLayerField, RadialDiskLoad
 from pymhm.unusual import UnusualParameters
+from pymhm.variational import GlobalForm, LocalForm, LocalProvider, compile_local_forms
 from pymhm.vector import VectorSolution, solve_brinkman, solve_elasticity
 from pymhm.weighted_estimator import (
     PublishedDarcyIndicator,
@@ -395,6 +443,7 @@ __all__ = [
     "estimate_darcy_error",
     "recover_potential",
     "DarcySolution",
+    "darcy_local_provider",
     "BDMDarcySolution",
     "solve_darcy_bdm",
     "ElasticitySolution",
@@ -402,6 +451,49 @@ __all__ = [
     "FaceSpace",
     "HybridSolution",
     "HybridSystem",
+    "HybridProblem",
+    "GlobalForm",
+    "LocalForm",
+    "LocalProvider",
+    "LocalLinearSolver",
+    "SolverConfig",
+    "ExecutionConfig",
+    "ReferenceElementSpec",
+    "ReferenceElement",
+    "NodalReferenceBasis",
+    "create_reference_element",
+    "barycentric_simplex_tabulation",
+    "interpolate_reference",
+    "legendre_tabulation",
+    "legendre_values",
+    "monomial_tabulation",
+    "orthogonal_polynomial_tabulation",
+    "reference_interpolation_points",
+    "tensor_lagrange_basis",
+    "tensor_lagrange_tabulation",
+    "tabulate_reference",
+    "reference_entity_transformations",
+    "reference_entity_dofs",
+    "reference_base_transformations",
+    "simplex_lagrange_basis",
+    "simplex_lagrange_tabulation",
+    "nodal_base_transformations",
+    "assemble_hybrid",
+    "solve_hybrid",
+    "compile_local_forms",
+    "iter_local",
+    "map_local",
+    "assemble_hybrid_contributions",
+    "hybrid_mean_constraint",
+    "solve_hybrid_system",
+    "condense_local",
+    "local_condensation_matrix",
+    "local_condensation_system",
+    "local_condensed_load",
+    "local_global_contribution",
+    "local_response_from_solution",
+    "reconstruct_local",
+    "reconstruct_response",
     "HybridRefinement",
     "refine_hybrid",
     "HybridRefinementCase",

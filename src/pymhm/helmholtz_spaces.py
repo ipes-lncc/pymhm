@@ -7,6 +7,7 @@ from typing import Any
 import numpy as np
 from numpy.polynomial.legendre import leggauss
 
+from pymhm.element_backends import legendre_values
 from pymhm.mesh import FaceSpace, FloatArray, SkeletonSpace, positive_int
 
 
@@ -45,7 +46,7 @@ class PolynomialNeumannTrace:
         points = np.atleast_1d(np.asarray(parameter, dtype=float))
         if points.ndim != 1 or not np.isfinite(points).all() or np.any((points < 0) | (points > 1)):
             raise ValueError("face coordinates must be a finite vector in [0, 1]")
-        return np.polynomial.legendre.legval(2 * points - 1, self.coefficients)
+        return legendre_values(2 * points - 1, len(self.coefficients) - 1) @ self.coefficients
 
     def coefficients_on(self, space: FaceSpace) -> np.ndarray:
         """Transfer declared data exactly in degree to every target face segment.

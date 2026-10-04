@@ -1,6 +1,6 @@
 # PyMHM: retomada com um clone leve, sem transferência de resultados
 
-Estado revisado em **3 de outubro de 2026**. Roteiro operacional, separado dos
+Estado revisado em **4 de outubro de 2026**. Roteiro operacional, separado dos
 docs científicos e excluído dos pacotes distribuídos.
 
 **A implementação integral e a reprodução integral da literatura ainda não estão
@@ -42,10 +42,107 @@ retornam contribuições por célula e o coordenador reduz em ordem fixa; nenhum
 escrita concorrente nos coeficientes de faces compartilhadas. Recursos FEM/MPI/
 PETSc/CUDA são criados e liberados no worker, preservando spawn multiplataforma.
 
-A primeira revisão é de arquitetura e contratos, sem mudanças no núcleo.
-UFL local e contribuições globais já existem em forma limitada; a DSL global e
-providers ML ainda precisam ser definidos e verificados. preCICE é candidato a
-adaptador externo opcional; sua adoção não foi decidida como dependência do núcleo.
+A implementação de engenharia fornece funções livres para condensação,
+reconstrução e montagem global; os objetos históricos delegam a elas. Os novos
+`LocalForm`, `GlobalForm`, `HybridProblem`, `SolverConfig` e `ExecutionConfig`
+separam formas, providers e execução. `darcy_local_provider` expõe os locais
+primais Pk e mistos RT0 existentes, incluindo seus sinais, momentos e metadata.
+Providers são callables; um solver externo recebe todas as colunas do sistema
+local aumentado, com verificação das equações originais e do posto numérico.
+
+`LocalForm` aceita UFL por meio do adaptador DOLFINx real. `GlobalForm` descreve
+a forma híbrida condensada em coordenadas declaradas; não é um compilador de
+formas UFL arbitrárias numa malha independente do esqueleto. Qualificar modelos
+ML e acoplamentos preCICE permanece separado do contrato implementado. preCICE
+é candidato a adaptador opcional, sem dependência obrigatória no core.
+
+Basix é dependência de runtime e fornece as bases/tabulações das famílias
+nodais, RT e BDM. O nome histórico `portable` é apenas uma grafia compatível
+para a mesma execução Basix. Os mapas de coordenadas preservam os momentos,
+restrições normais, bolhas, orientações e bases persistidas dos espaços MHM;
+um BDM completo não substitui as restrições H(div) publicadas. Polinômios
+Legendre, Bernstein e coordenadas monomiais também usam tabulação nativa.
+As integrações DOLFINx/UFL, PETSc e MPI permanecem opcionais. FIAT/FInAT não
+são integrações executadas nesta entrega.
+
+Tutoriais introdutórios em `docs/tutorials/{scalar,vector,providers}.md` usam
+28 patches escalares e 17 variantes vetoriais, mais providers primais/mistos
+com execução serial, threads ou processos spawn em lotes limitados. São exemplos
+analíticos pequenos; não substituem estudos de convergência ou reproduções.
+
+Preservação da refatoração estrutural anterior: 19 casos, 1.056 arrays de operadores, bases, soluções,
+campos e métricas coincidem literalmente com o baseline. Os 39 registros aceitos
+e 11 recibos preservam seus bytes e proveniência. Comparação final:
+`build/refactoring/equivalence-v3/equivalence.json`. Os recibos iniciais abaixo
+continuam associados à fonte que executaram.
+
+**Refatoração estrutural concluída em 4 de outubro de 2026, antes da migração
+integral das tabulações para Basix.** Lint,
+format-check, typecheck, test-cov e docs-check passaram na fonte congelada:
+**4.540 testes**, 284 skips opcionais, **99,9274% de linhas** e **99,6741% de
+branches**. As seleções Python 3.11/3.12 tiveram 208 testes cada; a seleção
+DOLFINx/UFL nativa teve 52. O adaptador Basix passou 59 controles em cada
+versão executada (0.11.0 e 0.9.0), incluindo ordenação, orientação e replay.
+
+A inspeção de navegador validou 42 páginas, 486 expressões MathJax e 46 imagens,
+sem erros ou overflow; seis capturas dos tutoriais e interfaces foram inspecionadas.
+Wheel, sdist e Conda 0.1.0 foram construídos e inspecionados: os 120 módulos do
+core coincidem com a fonte final. Os pacotes isolados reproduzem literalmente
+as montagens serial/spawn em lotes 1 e 2, para providers primais e mistos, sem
+importações FEM opcionais ou processos remanescentes. O runtime Windows não
+foi executado nesta validação Linux.
+
+Recibo consolidado: `build/reports/completion/engineering-final-readiness-v1.json`.
+As limitações da DSL global e das
+qualificações externas permanecem explícitas acima. A campanha Brinkman em
+2D/3D e regimes extremos continua como a próxima etapa científica autorizada;
+não foi reaberta durante esta refatoração.
+
+### Migração das tabulações para Basix
+
+**Substituição concluída em 4 de outubro de 2026.** Basix fornece as tabulações
+nodais de intervalos, triângulos, tetraedros e tensores cartesianos, RT/BDM e
+polinômios de momentos/traços. Os mapas MHM conservam os espaços restritos,
+momentos físicos, bolhas e orientações declarados. As bases novas persistem suas
+matrizes executadas e digests; os consumidores de representações históricas
+preservam os dados originais. As entradas nodais literalmente coincidentes têm
+valores de Kronecker; derivadas e pontos vizinhos usam as tabelas nativas.
+A restrição tetraédrica usa o suporte topológico exato da face. A contração
+difusiva compartilhada acumula na precisão real mais larga do NumPy antes de
+retornar entradas binary64, com as quadraturas e tolerâncias originais.
+
+Os 19 controles finais contêm 1.058 arrays e 54 operadores esparsos, com
+diferença relativa máxima de 3,76×10⁻¹⁴ nos operadores. As mudanças mínimas do
+suporte esparso e as duas matrizes opcionais de modos retidos estão discriminadas
+no recibo. No controle Brinkman com resistência 10⁸, a diferença na norma do erro
+de pressão é 1,96×10⁻⁹; isso é preservação do controle de engenharia, não uma
+certificação de resolução desse regime. Os 39 registros científicos e 11 recibos
+aceitos mantêm seus bytes e proveniência. Foram reproduzidos literalmente 36
+campos históricos Three Layers/MsHHO, com uma e duas threads BLAS, sem gerar
+bases novas nem resolver PDEs. O replay com matrizes H(div) antigas apresentou
+diferença relativa máxima de 4,46×10⁻¹⁴.
+
+Validação global: **4.692 testes distintos aprovados**, 284 skips opcionais;
+**99,9386% de linhas** e **99,7274% de branches**. A suíte integral foi seguida
+pela repetição dos 20 testes tetraédricos afetados por uma atualização exclusiva
+das expectativas de interpolação, com cobertura acumulada e os 121 módulos
+de produção idênticos entre as etapas. As seleções Python 3.11/3.12 aprovaram
+535 testes distintos cada. Basix/DOLFINx 0.9 aprovaram a seleção nativa de 173
+testes, 33 controles tetraédricos suplementares e quatro controles nodais de
+graus elevados. Lint, format-check, typecheck e docs-check passaram.
+
+O navegador validou 42 páginas, 486 expressões e 46 imagens, com inspeção das
+capturas de interfaces e tutoriais. Wheel, sdist e Conda 0.1.0 foram construídos
+e inspecionados: seus 121 módulos coincidem com a fonte validada, e o sdist
+contém os 855 arquivos de produção, configuração, testes e documentação
+congelados. Os 16 controles dos pacotes instalados fora do checkout aprovaram
+providers primais/mistos, contornos Dirichlet/Neumann e execução serial/spawn;
+os recursos e processos foram encerrados. O runtime Windows não foi executado.
+
+Recibo consolidado:
+`build/reports/completion/basix-migration-final-readiness-v1.json`.
+Os recibos anteriores continuam associados às fontes que executaram. A campanha
+Brinkman 2D/3D em regimes extremos permanece como próxima etapa científica.
 
 ### Entrega reduzida autorizada em 3 de outubro
 
@@ -92,7 +189,8 @@ Gates finais: lint, format-check, typecheck, test-cov e docs-check passaram;
 branches**, sem relaxar critérios. Integrações nativas adicionais: **30 testes**
 DOLFINx/Basix. Documentação: 39 HTML, **370 expressões MathJax** verificadas no
 navegador e 31 figuras do catálogo carregadas. Wheel, sdist e Conda 0.1.0 foram
-construídos e inspecionados; os 117 módulos do core são idênticos à árvore atual.
+construídos e inspecionados; os 117 módulos do core são idênticos à fonte
+executada naquele fechamento, anterior à refatoração de engenharia.
 Os códigos privados de comparação e arquivos grandes de campos permanecem
 fora dos artefatos distribuídos.
 

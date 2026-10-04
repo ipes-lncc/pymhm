@@ -8,13 +8,22 @@ MHM family of Duran et al. (2019), without copying a reference implementation.
 """
 
 from dataclasses import dataclass
+from functools import cache
 from typing import Any, cast
 
 import numpy as np
-from numpy.polynomial.legendre import Legendre, leggauss, legvander
+from numpy.polynomial.legendre import leggauss
 from scipy import sparse
 
+from pymhm.element_backends import (
+    ReferenceElementSpec,
+    create_reference_element,
+    interpolate_reference,
+    legendre_values,
+    reference_interpolation_points,
+)
 from pymhm.elements import boundary_data, scalar_values, tensor_values, vector_values
+from pymhm.hdiv_reference import vector_tabulation
 from pymhm.hybrid import HybridSolution, HybridSystem, LocalProblem
 from pymhm.mesh import FaceSpace, FloatArray, IntArray, SkeletonSpace, TriangleMesh, positive_int
 from pymhm.offline import condense_cached
@@ -25,6 +34,35 @@ from pymhm.quadrilateral import (
     quadrilateral_quadrature,
 )
 from pymhm.reservoir import CartesianCellField
+
+
+@cache
+def _reference_map(degree: int, enriched_degree: int) -> FloatArray:
+    """Express declared face lifts and bubble coordinates in native rectangular RT."""
+    k, s = degree, enriched_degree
+    element = create_reference_element(
+        ReferenceElementSpec("RT", "quadrilateral", s + 1, lagrange_variant="legendre")
+    )
+    points = reference_interpolation_points(element)
+    x, y = points.T
+    lx, ly = legendre_values(2 * x - 1, s), legendre_values(2 * y - 1, s)
+    values = np.zeros((len(points), 4 * (k + 1) + 2 * s * (s + 1), 2))
+    for edge in range(4):
+        parameter = (x, y, 1 - x, 1 - y)[edge]
+        moments = legendre_values(2 * parameter - 1, k) * (2 * np.arange(k + 1) + 1)
+        indices = slice(edge * (k + 1), (edge + 1) * (k + 1))
+        axis = 1 if edge in (0, 2) else 0
+        values[:, indices, axis] = (y - 1, x, y, x - 1)[edge][:, None] * moments
+    offset = 4 * (k + 1)
+    for axis in range(2):
+        for b in range(s + 1 if axis == 0 else s):
+            for a in range(s if axis == 0 else s + 1):
+                t = x if axis == 0 else y
+                values[:, offset, axis] = t * (1 - t) * lx[:, a] * ly[:, b]
+                offset += 1
+    result = interpolate_reference(element, values)
+    result.setflags(write=False)
+    return result
 
 
 def tensor_rt_basis(
@@ -51,31 +89,12 @@ def tensor_rt_basis(
         raise ValueError("reference points must be finite real pairs")
     points = np.asarray(raw, dtype=float).reshape(-1, 2)
     x, y = points.T
-    lx, ly = legvander(2 * x - 1, s), legvander(2 * y - 1, s)
+    lx, ly = legendre_values(2 * x - 1, s), legendre_values(2 * y - 1, s)
     width = 4 * (k + 1) + 2 * s * (s + 1)
-    values: FloatArray = np.zeros((len(points), width, 2))
-    divergence: FloatArray = np.zeros((len(points), width))
-    for edge in range(4):
-        parameter = (x, y, 1 - x, 1 - y)[edge]
-        polynomials = legvander(2 * parameter - 1, k) * (2 * np.arange(k + 1) + 1)
-        indices = slice(edge * (k + 1), (edge + 1) * (k + 1))
-        axis = 1 if edge in (0, 2) else 0
-        extension = (y - 1, x, y, x - 1)[edge]
-        values[:, indices, axis] = extension[:, None] * polynomials
-        divergence[:, indices] = polynomials
-    offset = 4 * (k + 1)
-    for axis in range(2):
-        for b in range(s + 1 if axis == 0 else s):
-            for a in range(s if axis == 0 else s + 1):
-                t, d = (x, a) if axis == 0 else (y, b)
-                cardinal = lx[:, a] if axis == 0 else ly[:, b]
-                derivative = 2 * Legendre.basis(d).deriv()(2 * t - 1)
-                transverse = ly[:, b] if axis == 0 else lx[:, a]
-                values[:, offset, axis] = t * (1 - t) * cardinal * transverse
-                divergence[:, offset] = (
-                    (1 - 2 * t) * cardinal + t * (1 - t) * derivative
-                ) * transverse
-                offset += 1
+    native, native_divergence = vector_tabulation("RT", "quadrilateral", s + 1, points)
+    transform = _reference_map(k, s)
+    values = np.einsum("qia,ij->qja", native, transform)
+    divergence = native_divergence @ transform
     orientation = np.ones((len(mesh.cells), width))
     orientation[:, : 4 * (k + 1)] = (mesh.signs[:, :, None] ** np.arange(1, k + 2)).reshape(
         len(mesh.cells), -1
@@ -138,7 +157,7 @@ def _trace_map(
             mapping[(degree + 1) * row : (degree + 1) * (row + 1), offset : offset + space.size] = (
                 fine.lengths[edge]
                 * mesh.signs[cell, side]
-                * legvander(x, degree).T
+                * legendre_values(x, degree).T
                 @ (w[:, None] / 2 * space.evaluate(parameter))
             )
         offset += skeleton.faces[face_id].size

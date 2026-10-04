@@ -2,13 +2,14 @@
 
 from dataclasses import dataclass
 from functools import cache, lru_cache
-from math import factorial, prod
 from typing import Any
 
 import numpy as np
-from numpy.polynomial.legendre import leggauss, legvander
+from numpy.polynomial.legendre import leggauss
 
+from pymhm.element_backends import legendre_values, monomial_tabulation
 from pymhm.elements import triangle_quadrature, vector_values
+from pymhm.hdiv_reference import bernstein_tabulation, vector_tabulation
 from pymhm.mesh import FloatArray, IntArray, TriangleMesh, positive_int
 
 
@@ -28,43 +29,18 @@ def rt_interior_tests(degree: int, points: FloatArray) -> FloatArray:
     if m >= 3:
         return _bernstein(m - 1, points)[0] @ _interior_transform(m)
     return (
-        np.column_stack([points[:, 0] ** i * points[:, 1] ** j for i, j in _powers(m - 1)])
+        monomial_tabulation(points, _powers(m - 1), nderiv=0)[0]
         if m
         else np.empty((len(points), 0))
     )
 
 
 def _bernstein(degree: int, points: FloatArray) -> tuple[FloatArray, FloatArray, tuple]:
-    """Tabulate total-degree Bernstein functions and physical reference derivatives."""
-    bary = np.column_stack((1 - points.sum(axis=1), points))
+    """Tabulate Basix Bernstein functions in the declared interior-test order."""
     exponents = tuple(
         (degree - i - j, i, j) for j in range(degree + 1) for i in range(degree + 1 - j)
     )
-
-    def monomial(exponent: tuple[int, ...]) -> FloatArray:
-        """Evaluate one normalized barycentric monomial, including derivative zeros."""
-        if min(exponent) < 0:
-            return np.zeros(len(points))
-        multiplier = factorial(sum(exponent)) / prod(factorial(e) for e in exponent)
-        return np.asarray(multiplier * np.prod(bary**exponent, axis=1), dtype=float)
-
-    values = np.column_stack([monomial(e) for e in exponents])
-    derivatives = np.stack(
-        [
-            np.column_stack(
-                [
-                    degree
-                    * (
-                        monomial(tuple(e[i] - (i == axis) for i in range(3)))
-                        - monomial(tuple(e[i] - (i == 0) for i in range(3)))
-                    )
-                    for e in exponents
-                ]
-            )
-            for axis in (1, 2)
-        ],
-        axis=-1,
-    )
+    values, derivatives = bernstein_tabulation(points, exponents)
     return values, derivatives, exponents
 
 
@@ -78,44 +54,9 @@ def _interior_transform(degree: int) -> FloatArray:
     return np.linalg.solve(lower, np.eye(len(lower))).T
 
 
-def _bernstein_vectors(degree: int, points: FloatArray) -> tuple[FloatArray, FloatArray]:
-    """Span RTk with Bernstein Pk vectors and the homogeneous radial enrichment."""
-    basis, gradients, exponents = _bernstein(degree, points)
-    count = len(exponents)
-    values = np.zeros((len(points), (degree + 1) * (degree + 3), 2))
-    divergence = np.zeros(values.shape[:2])
-    values[:, : 2 * count : 2, 0], values[:, 1 : 2 * count : 2, 1] = basis, basis
-    divergence[:, : 2 * count : 2], divergence[:, 1 : 2 * count : 2] = (
-        gradients[..., 0],
-        gradients[..., 1],
-    )
-    homogeneous = basis[:, [i for i, exponent in enumerate(exponents) if exponent[0] == 0]]
-    values[:, 2 * count :] = points[:, None, :] * homogeneous[..., None]
-    divergence[:, 2 * count :] = (degree + 2) * homogeneous
-    return values, divergence
-
-
 def _polynomials(degree: int, points: FloatArray) -> tuple[FloatArray, FloatArray]:
-    """Evaluate [P_m]^2 plus x times homogeneous P_m and their divergences."""
-    if degree >= 3:
-        return _bernstein_vectors(degree, points)
-    powers = _powers(degree)
-    size = (degree + 1) * (degree + 3)
-    values = np.zeros((len(points), size, 2))
-    divergence = np.zeros((len(points), size))
-    x, y = points.T
-    for n, (i, j) in enumerate(powers):
-        monomial = x**i * y**j
-        values[:, 2 * n, 0], values[:, 2 * n + 1, 1] = monomial, monomial
-        if i:
-            divergence[:, 2 * n] = i * x ** (i - 1) * y**j
-        if j:
-            divergence[:, 2 * n + 1] = j * x**i * y ** (j - 1)
-    for n, i in enumerate(range(degree, -1, -1), start=2 * len(powers)):
-        monomial = x**i * y ** (degree - i)
-        values[:, n] = points * monomial[:, None]
-        divergence[:, n] = (degree + 2) * monomial
-    return values, divergence
+    """Tabulate native Basix RT_m candidates before the declared moment transform."""
+    return vector_tabulation("RT", "triangle", degree + 1, points)
 
 
 @lru_cache(maxsize=8)
@@ -131,7 +72,7 @@ def _dual_coefficients(degree: int) -> FloatArray:
         tangent = end - start
         normal_measure = np.array([tangent[1], -tangent[0]])
         basis, _ = _polynomials(degree, start + parameter[:, None] * tangent)
-        matrix[(degree + 1) * edge : (degree + 1) * (edge + 1)] = legvander(x, degree).T @ (
+        matrix[(degree + 1) * edge : (degree + 1) * (edge + 1)] = legendre_values(x, degree).T @ (
             w[:, None] / 2 * (basis @ normal_measure)
         )
     if degree:
@@ -341,7 +282,7 @@ def rt_interpolate(mesh: TriangleMesh, field: Any, degree: int, order: int = 6) 
     values = vector_values(field, points.reshape(-1, 2)).reshape(points.shape)
     normal = np.einsum("fqa,fa->fq", values, mesh.normals)
     coefficients[: (m + 1) * len(mesh.faces)] = np.einsum(
-        "q,qi,fq,f->fi", w / 2, legvander(x, m), normal, mesh.lengths
+        "q,qi,fq,f->fi", w / 2, legendre_values(x, m), normal, mesh.lengths
     ).ravel()
     if m:
         bary, weights = triangle_quadrature(order)

@@ -10,9 +10,11 @@ from dataclasses import dataclass
 from functools import cache
 
 import numpy as np
-from numpy.polynomial.legendre import leggauss, legvander
+from numpy.polynomial.legendre import leggauss
 
+from pymhm.element_backends import legendre_values, monomial_tabulation
 from pymhm.elements import triangle_quadrature
+from pymhm.hdiv_reference import vector_tabulation
 from pymhm.mesh import FloatArray, IntArray, SkeletonSpace, TriangleMesh, positive_int
 
 
@@ -22,20 +24,8 @@ def _powers(degree: int) -> tuple[tuple[int, int], ...]:
 
 
 def _polynomials(points: FloatArray, degree: int) -> tuple[FloatArray, FloatArray]:
-    """Evaluate vector monomials and divergences on the reference triangle."""
-    x, y = points.T
-    powers = _powers(degree)
-    scalar = np.array([x**i * y**j for i, j in powers]).T
-    count = len(powers)
-    values = np.zeros((len(points), 2 * count, 2))
-    values[:, :count, 0], values[:, count:, 1] = scalar, scalar
-    derivative = np.zeros((len(points), 2 * count))
-    for column, (i, j) in enumerate(powers):
-        if i:
-            derivative[:, column] = i * x ** (i - 1) * y**j
-        if j:
-            derivative[:, column + count] = j * x**i * y ** (j - 1)
-    return values, derivative
+    """Tabulate native Basix BDM candidates before the declared moment transform."""
+    return vector_tabulation("BDM", "triangle", degree, points)
 
 
 @cache
@@ -51,17 +41,22 @@ def _full_dual(degree: int) -> FloatArray:
         tangent = end - start
         normal_measure = np.array([tangent[1], -tangent[0]])
         values = _polynomials(start + (x[:, None] + 1) * tangent / 2, degree)[0]
-        dual[side * (degree + 1) : (side + 1) * (degree + 1)] = legvander(x, degree).T @ (
+        dual[side * (degree + 1) : (side + 1) * (degree + 1)] = legendre_values(x, degree).T @ (
             weights[:, None] / 2 * (values @ normal_measure)
         )
     if degree > 1:
         bary, weights = triangle_quadrature(degree + 2)
         points = bary[:, 1:]
-        tests = list(np.moveaxis(_polynomials(points, degree - 2)[0], 1, 0))
+        scalar = monomial_tabulation(points, _powers(degree - 2), nderiv=0)[0]
+        tests = [
+            scalar[:, i, None] * np.eye(2)[axis]
+            for axis in range(2)
+            for i in range(scalar.shape[1])
+        ]
         # Homogeneous degree k-2 times x-perp completes Nedelec(k-2).
         for i in range(degree - 1):
-            scalar = points[:, 0] ** (degree - 2 - i) * points[:, 1] ** i
-            tests.append(scalar[:, None] * np.column_stack((-points[:, 1], points[:, 0])))
+            homogeneous = scalar[:, len(_powers(degree - 3)) + i]
+            tests.append(homogeneous[:, None] * np.column_stack((-points[:, 1], points[:, 0])))
         dual[face_count:] = np.einsum(
             "q,iqa,qja->ij", weights / 2, np.asarray(tests), _polynomials(points, degree)[0]
         )
@@ -208,7 +203,7 @@ class BDMFamily:
         )
         x, weights = leggauss(self.degree + 2)
         parameter, weights = (x + 1) / 2, weights / 2
-        fine_basis = legvander(x, self.degree)
+        fine_basis = legendre_values(x, self.degree)
         offset = 0
         for side, face in enumerate(mesh.cell_faces[cell]):
             space = skeleton.faces[face]

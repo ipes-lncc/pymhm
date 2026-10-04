@@ -8,10 +8,10 @@ not necessarily against individual discontinuous fine-cell constants.
 
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import Any, Literal, cast
+from typing import Any, Literal
 
 import numpy as np
-from numpy.polynomial.legendre import leggauss, legvander
+from numpy.polynomial.legendre import leggauss
 from scipy import sparse
 
 from pymhm.cut_cells import (
@@ -21,6 +21,7 @@ from pymhm.cut_cells import (
 )
 from pymhm.darcy import DarcySolution
 from pymhm.darcy_rt import rt_trace_map
+from pymhm.element_backends import legendre_values
 from pymhm.elements import (
     p1_geometry,
     scalar_values,
@@ -225,7 +226,7 @@ def _cut_face_moments(
             parameter = (points - start) @ tangent / (tangent @ tangent)
             point_parts.append(points)
             weight_parts.append(weights * mesh.lengths[face])
-            basis_parts.append(legvander(2 * parameter - 1, degree))
+            basis_parts.append(legendre_values(2 * parameter - 1, degree))
         counts = np.array([len(part) for part in point_parts])
         starts = np.r_[0, np.cumsum(counts)[:-1]]
         points = np.concatenate(point_parts)
@@ -347,7 +348,7 @@ def reconstruct_flux_moments(
     if trace.shape != (skeleton.size,) or not np.isfinite(trace).all():
         raise ValueError("trace must be finite with the skeleton size")
     x, w = leggauss(order)
-    parameter, legendre = (x + 1) / 2, cast(FloatArray, legvander(x, m))
+    parameter, legendre = (x + 1) / 2, legendre_values(x, m)
     factory = _MomentFactory(
         skeleton, trace, meshes, evaluators, m, order, material, parameter, legendre, w
     )

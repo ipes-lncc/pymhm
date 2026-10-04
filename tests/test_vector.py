@@ -2,9 +2,11 @@
 
 import numpy as np
 import pytest
-from numpy.testing import assert_allclose
+from numpy.testing import assert_allclose, assert_array_equal
+from simplex_native_bounds import reference_roundoff_bounds
 
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_brinkman, solve_elasticity
+from pymhm.lagrange import multiindices, reference_basis
 from pymhm.vector import _lagrange
 
 
@@ -71,7 +73,9 @@ def test_lagrange_partition_unity_gradient_and_nodal_values():
         _, _, basis, gradient = _lagrange(mesh, degree, bary)
         assert_allclose(basis.sum(axis=1), 1)
         assert_allclose(gradient.sum(axis=2), 0, atol=1e-14)
-    assert_allclose(basis, np.eye(6))
+    bound = reference_roundoff_bounds("triangle", 2, bary, multiindices(2) / 2)[0]
+    assert np.all(abs(basis - np.eye(6)) <= bound)
+    assert_array_equal(basis, reference_basis(2, bary)[0])
 
 
 @pytest.mark.parametrize(

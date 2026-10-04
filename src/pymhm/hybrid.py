@@ -216,74 +216,7 @@ class LocalProblem:
         changing their residual criterion. AMG local projection currently accepts
         only the default double-precision accumulation.
         """
-        if refinement_precision not in {"double", "extended"}:
-            raise ValueError("refinement_precision must be double or extended")
-        n, k = self.matrix.shape[0], self.coarse_basis.shape[1]
-        general = k != self.kernel.shape[1]
-        if solver in {"pyamg", "amgx"}:
-            if refinement_precision != "double":
-                raise ValueError("AMG local solvers require double refinement precision")
-            if general:
-                raise ValueError("AMG local solvers do not support a general coarse_basis")
-            if not np.array_equal(self.kernel, self.left_kernel) or not np.array_equal(
-                self.constraints, self.test_constraints
-            ):
-                raise ValueError("AMG kernel projection requires matching test and trial spaces")
-            if self._correct_kernel:
-                rhs = np.column_stack((self.load, self.coupling, self._retained_action))
-                response = np.zeros_like(rhs)
-                _, _, pivots = linalg.qr(self.kernel.T, pivoting=True)
-                free = np.setdiff1d(np.arange(n), pivots[:k])
-                pairing = self.kernel.T @ self.constraints
-                for step in range(4):
-                    defect = rhs - _matrix_action(self.matrix, response)
-                    defect -= self.constraints @ np.linalg.solve(pairing, self.kernel.T @ defect)
-                    norms = np.linalg.norm(rhs, axis=0)
-                    if step and np.all(np.linalg.norm(defect, axis=0) <= 1e-10 * norms):
-                        break
-                    correction = np.zeros_like(rhs)
-                    if len(free):
-                        correction[free] = solve_linear(
-                            self.matrix[free][:, free], defect[free], solver=solver
-                        )
-                    correction -= self.kernel @ np.linalg.solve(
-                        self.constraints.T @ self.kernel, self.constraints.T @ correction
-                    )
-                    response += correction
-                else:
-                    raise ValueError("AMG constrained residual refinement did not converge")
-                width = self.coupling.shape[1] + 1
-                return LocalResponse(
-                    self,
-                    response[:, 0],
-                    response[:, 1:width],
-                    self.coarse_basis - response[:, width:],
-                )
-            rhs = np.column_stack((self.load, self.coupling))
-            if k:
-                # Pin independent kernel coordinates only during the elliptic solve.
-                # Afterwards restore the physical mean, with no dense rank update.
-                rhs -= self.constraints @ np.linalg.solve(
-                    self.kernel.T @ self.constraints, self.kernel.T @ rhs
-                )
-                _, _, pivots = linalg.qr(self.kernel.T, pivoting=True)
-                free = np.setdiff1d(np.arange(n), pivots[:k])
-                response = np.zeros_like(rhs)
-                if len(free):
-                    response[free] = solve_linear(
-                        self.matrix[free][:, free], rhs[free], solver=solver
-                    )
-                response -= self.kernel @ np.linalg.solve(
-                    self.constraints.T @ self.kernel, self.constraints.T @ response
-                )
-            else:
-                response = solve_linear(self.matrix, rhs, solver=solver)
-            return LocalResponse(self, response[:, 0], response[:, 1:])
-        matrix, rhs = self.condensation_system()
-        with factorize(matrix, solver=solver) as decomposition:
-            return self.response_from_solution(
-                decomposition.solve(rhs, refinement_precision=refinement_precision)
-            )
+        return condense_local(self, solver, refinement_precision=refinement_precision)
 
     def condensation_system(self) -> tuple[Any, FloatArray]:
         """Return the constrained operator and source/trace/retained-mode right sides.
@@ -296,18 +229,7 @@ class LocalProblem:
         Its inverse is never explicitly formed. Backends may factor this matrix
         once, retain the factorization, and solve new source columns online.
         """
-        n, k = self.matrix.shape[0], self.coarse_basis.shape[1]
-        general = k != self.kernel.shape[1] or self._correct_kernel
-        matrix = self.condensation_matrix()
-        width = self.coupling.shape[1] + 1
-        rhs = np.zeros(
-            (n + k, width + (k if general else 0)), dtype=np.result_type(self.load.dtype, float)
-        )
-        rhs[:n, 0] = self.load
-        rhs[:n, 1:width] = self.coupling
-        if general:
-            rhs[:n, width:] = self._retained_action
-        return matrix, rhs
+        return local_condensation_system(self)
 
     def condensation_matrix(self) -> Any:
         """Return the augmented operator without allocating response right-hand sides.
@@ -316,24 +238,7 @@ class LocalProblem:
         ``condensation_system``. It permits one caller-owned factorization for
         several direct reconstructions, including nonsymmetric Petrov data.
         """
-        k = self.coarse_basis.shape[1]
-        matrix = self.matrix
-        if k:
-            scale = float(np.max(np.abs(matrix.data), initial=0.0)) or 1.0
-            left = self.test_constraints * np.minimum(
-                1.0, scale / np.max(np.abs(self.test_constraints), axis=0)
-            )
-            right = self.constraints * np.minimum(
-                1.0, scale / np.max(np.abs(self.constraints), axis=0)
-            )
-            matrix = sparse.bmat(
-                [
-                    [matrix, sparse.csc_matrix(left)],
-                    [sparse.csc_matrix(right.T), None],
-                ],
-                format="csc",
-            )
-        return matrix
+        return local_condensation_matrix(self)
 
     def reconstruct(
         self,
@@ -362,61 +267,19 @@ class LocalProblem:
         remains caller-owned. The linear residual uses the combined augmented
         RHS; full physical compatibility remains a global original-equation check.
         """
-        n, k = self.matrix.shape[0], self.coarse_basis.shape[1]
-
-        def coefficients(value: Any, shape: tuple[int, ...], name: str) -> FloatArray:
-            """Validate coefficient dimensions without truncating archived wider values."""
-            checked = _array(value, shape, name)
-            raw = np.asarray(value)
-            return raw.copy() if raw.dtype.kind == "f" else checked
-
-        raw_trace = np.asarray(trace)
-        if raw_trace.ndim not in (1, 2) or (raw_trace.ndim == 2 and not raw_trace.shape[1]):
-            raise ValueError("trace must be a vector or a nonempty column array")
-        suffix = raw_trace.shape[1:]
-        local_trace = coefficients(trace, (self.coupling.shape[1], *suffix), "trace")
-        local_coarse = coefficients(coarse, (k, *suffix), "coarse")
-        basis = (
-            self.coarse_basis
-            if retained_basis is None
-            else coefficients(retained_basis, (n, k), "retained_basis")
+        return reconstruct_local(
+            self,
+            trace,
+            coarse,
+            retained_basis=retained_basis,
+            solver=solver,
+            factorization=factorization,
+            refinement_precision=refinement_precision,
         )
-        dtype = np.result_type(local_trace.dtype, local_coarse.dtype, basis.dtype)
-        if refinement_precision == "extended":
-            dtype = np.result_type(dtype, np.longdouble)
-        load = self.load[:, None] if suffix else self.load
-        forcing = load.astype(dtype) - np.einsum(
-            "ij,j...->i...", self.coupling, local_trace, dtype=dtype
-        )
-        if retained_basis is None:
-            forcing -= np.einsum("ij,j...->i...", self._retained_action, local_coarse, dtype=dtype)
-        rhs = np.concatenate((forcing, np.zeros((k, *suffix), dtype=dtype)))
-        matrix = self.condensation_matrix()
-        if factorization is not None:
-            if not factorization.matches(matrix):
-                raise ValueError("prepared factorization does not match the local augmented matrix")
-            solved = factorization.solve(rhs, refinement_precision=refinement_precision)
-        else:
-            solved = solve_linear(
-                matrix, rhs, solver=solver, refinement_precision=refinement_precision
-            )
-        return solved[:n] + basis @ local_coarse
 
     def response_from_solution(self, solution: Any) -> "LocalResponse":
         """Decode finite real responses, preserving explicitly retained wider precision."""
-        n, k = self.matrix.shape[0], self.coarse_basis.shape[1]
-        width = self.coupling.shape[1] + 1
-        general = k != self.kernel.shape[1] or self._correct_kernel
-        shape = (n + k, width + (k if general else 0))
-        if np.iscomplexobj(solution):
-            raise ValueError("condensation solution must be real")
-        dtype = np.longdouble if np.asarray(solution).dtype == np.dtype(np.longdouble) else float
-        response = np.array(solution, dtype=dtype, copy=True)
-        if response.shape != shape or not np.isfinite(response).all():
-            raise ValueError(f"condensation solution must be finite with shape {shape}")
-        response = response[:n]
-        coarse_vectors = self.coarse_basis - response[:, width:] if general else None
-        return LocalResponse(self, response[:, 0], response[:, 1:width], coarse_vectors)
+        return local_response_from_solution(self, solution)
 
     def condensed_load(
         self, source_response: Any, *, load: Any = None, corrected_retained: bool | None = None
@@ -431,26 +294,9 @@ class LocalProblem:
         ``corrected_retained`` can preserve an executed LocalResponse branch.
         It does not change the augmented operator or test/trial conventions.
         """
-        raw = np.asarray(source_response)
-        if raw.ndim not in (1, 2) or (raw.ndim == 2 and not raw.shape[1]):
-            raise ValueError("source_response must be a vector or nonempty column array")
-        n = len(self.load)
-        suffix = raw.shape[1:]
-        response = _preserved_array(source_response, (n, *suffix), "source_response")
-        forcing = self.load if load is None else load
-        if suffix and np.asarray(forcing).ndim == 1:
-            forcing = np.broadcast_to(np.asarray(forcing)[:, None], (n, *suffix))
-        forcing = _preserved_array(forcing, (n, *suffix), "load")
-        if corrected_retained is not None and not isinstance(corrected_retained, (bool, np.bool_)):
-            raise ValueError("corrected_retained must be a boolean or None")
-        general = self.coarse_basis.shape[1] != self.kernel.shape[1] or self._correct_kernel
-        corrected = general if corrected_retained is None else corrected_retained
-        coarse_rhs = (
-            self._test_action.T @ response - self.test_basis.T @ forcing
-            if corrected
-            else -self.left_kernel.T @ forcing
+        return local_condensed_load(
+            self, source_response, load=load, corrected_retained=corrected_retained
         )
-        return np.concatenate((self.test_coupling.T @ response, coarse_rhs), axis=0)
 
     def with_load(self, load: Any, *, preserve_precision: bool = False) -> "LocalProblem":
         """Copy this contract with a different finite source vector.
@@ -514,7 +360,7 @@ class LocalResponse:
 
     def reconstruct(self, trace: FloatArray, coarse: FloatArray) -> FloatArray:
         """Recover local coefficients from skeleton and retained coarse amplitudes."""
-        return self.source - self.lifts @ trace + self.retained_basis @ coarse
+        return reconstruct_response(self, trace, coarse)
 
     def kernel_roundoff_bound(self, field: FloatArray) -> FloatArray:
         """Bound floating-point evaluation of retained kernel equations.
@@ -550,27 +396,7 @@ class LocalResponse:
         W.T (A u+B lambda-f)=0. The negative signs preserve the symmetric
         saddle convention whenever C=B and test/trial data coincide.
         """
-        p = self.problem
-        coarse_dofs = np.asarray(coarse_dofs)
-        if (
-            coarse_dofs.shape != (p.coarse_basis.shape[1],)
-            or not np.issubdtype(coarse_dofs.dtype, np.integer)
-            or np.any(coarse_dofs < 0)
-        ):
-            raise ValueError("coarse_dofs must contain one nonnegative integer per retained mode")
-        g = p.test_coupling.T @ self.retained_basis
-        if self.coarse_vectors is None:
-            coarse_trace = p.left_kernel.T @ p.coupling
-            coarse_matrix = np.zeros((len(coarse_dofs), len(coarse_dofs)))
-        else:
-            coarse_trace = p.test_basis.T @ p.coupling - p._test_action.T @ self.lifts
-            coarse_matrix = p._test_action.T @ self.retained_basis
-        block = np.block([[p.test_coupling.T @ self.lifts, -g], [-coarse_trace, -coarse_matrix]])
-        return (
-            np.r_[p.trace_dofs, coarse_dofs].astype(np.int64),
-            block,
-            self.global_load(),
-        )
+        return local_global_contribution(self, coarse_dofs)
 
 
 @dataclass(frozen=True)
@@ -610,6 +436,8 @@ class HybridSystem:
         local_refinement_precision: Literal["double", "extended"] = "double",
         backend: Literal["serial", "thread", "process"] = "serial",
         workers: int | None = None,
+        native_threads: int | None = 1,
+        batch_size: int | None = None,
     ) -> None:
         """Condense independent subdomains and assemble their sparse contributions."""
         responses = tuple(
@@ -622,6 +450,8 @@ class HybridSystem:
                 problems,
                 backend=backend,
                 workers=workers,
+                native_threads=native_threads,
+                batch_size=batch_size,
             )
         )
         self._assemble_global(responses, (None,) * len(responses), boundary_load)
@@ -637,6 +467,8 @@ class HybridSystem:
         local_refinement_precision: Literal["double", "extended"] = "double",
         backend: Literal["serial", "thread", "process"] = "serial",
         workers: int | None = None,
+        native_threads: int | None = 1,
+        batch_size: int | None = None,
     ) -> "HybridSystem":
         """Assemble and condense each independent local problem inside its worker.
 
@@ -650,8 +482,12 @@ class HybridSystem:
         requires picklable factories, items and metadata, and an executable
         script protected by ``if __name__ == '__main__':``. Native FEM, PETSc,
         MPI and CUDA resources must be created and released inside a worker,
-        never sent to or returned from a worker. Native thread pools are limited
-        to one thread; backend library thread safety is the factory's concern.
+        never sent to or returned from a worker. ``native_threads`` defaults to
+        one thread; backend library thread safety is the factory's concern.
+        ``batch_size`` limits submitted local jobs while preserving input order.
+        Responses are retained before global assembly because this constructor
+        infers the global layout. For immediate serial contribution with an
+        explicitly declared layout, use ``assemble_hybrid``.
         """
         assembled = map_local(
             partial(
@@ -663,6 +499,8 @@ class HybridSystem:
             items,
             backend=backend,
             workers=workers,
+            native_threads=native_threads,
+            batch_size=batch_size,
         )
         system = cls.__new__(cls)
         system._assemble_global(
@@ -769,60 +607,12 @@ class HybridSystem:
         boundary_load: Any,
     ) -> None:
         """Accumulate cell blocks and loads without truncating wider real arithmetic."""
-        size = int(self.kernel_offsets[-1])
-        rhs = np.zeros(size)
-        load_scale = np.zeros(size)
-        rows: list[int] = []
-        columns: list[int] = []
-        entries: list[float] = []
-        all_indices = []
-        for cell, (indices, block, local_rhs) in enumerate(contributions):
-            indices = np.asarray(indices)
-            if (
-                indices.ndim != 1
-                or not np.issubdtype(indices.dtype, np.integer)
-                or np.any(indices < 0)
-                or np.any(indices >= size)
-                or len(np.unique(indices)) != len(indices)
-            ):
-                raise ValueError("contribution indices must be distinct valid global integers")
-            if not np.array_equal(
-                np.sort(indices[indices >= self.trace_size]),
-                np.arange(self.kernel_offsets[cell], self.kernel_offsets[cell + 1]),
-            ):
-                raise ValueError(
-                    "contribution coarse indices must match its ordered cell partition"
-                )
-            checked_block = _array(block, (len(indices), len(indices)), "contribution matrix")
-            checked_rhs = _array(local_rhs, (len(indices),), "contribution rhs")
-            # Real floating inputs may contain explicitly retained correction digits.
-            # Validation remains identical for lists and other convertible inputs.
-            block, local_rhs = np.asarray(block), np.asarray(local_rhs)
-            block = block if block.dtype.kind == "f" else checked_block
-            local_rhs = local_rhs if local_rhs.dtype.kind == "f" else checked_rhs
-            dtype = np.result_type(rhs.dtype, local_rhs.dtype)
-            rhs, load_scale = rhs.astype(dtype, copy=False), load_scale.astype(dtype, copy=False)
-            all_indices.append(indices)
-            rows.extend(np.repeat(indices, len(indices)))
-            columns.extend(np.tile(indices, len(indices)))
-            entries.extend(block.ravel())
-            np.add.at(rhs, indices, local_rhs)
-            np.add.at(load_scale, indices, np.abs(local_rhs))
-        if not np.array_equal(np.unique(np.concatenate(all_indices)), np.arange(size)):
-            raise ValueError("contributions must cover the contiguous global numbering")
-        self.matrix = sparse.coo_matrix((entries, (rows, columns)), shape=(size, size)).tocsc()
-        self.matrix.eliminate_zeros()
-        if boundary_load is not None:
-            boundary = _array(boundary_load, (self.trace_size,), "boundary_load")
-            raw_boundary = np.asarray(boundary_load)
-            if raw_boundary.dtype.kind == "f":
-                boundary = raw_boundary
-            dtype = np.result_type(rhs.dtype, boundary.dtype)
-            rhs, load_scale = rhs.astype(dtype, copy=False), load_scale.astype(dtype, copy=False)
-            rhs[: self.trace_size] -= boundary
-            load_scale[: self.trace_size] += np.abs(boundary)
-        self.rhs = rhs
-        self.load_scale = load_scale
+        self.matrix, self.rhs, self.load_scale = assemble_hybrid_contributions(
+            contributions,
+            trace_size=self.trace_size,
+            kernel_offsets=self.kernel_offsets,
+            boundary_load=boundary_load,
+        )
 
     def mean_constraint(
         self, local_weights: list[FloatArray] | tuple[FloatArray, ...], value: float = 0.0
@@ -832,32 +622,7 @@ class HybridSystem:
         For incompressible flow, weights integrate only the pressure components;
         for scalar pure Neumann diffusion, they integrate the pressure field.
         """
-        if not self.responses:
-            raise ValueError("compact contributions require explicit physical mean rows")
-        if len(local_weights) != len(self.responses) or not np.isfinite(value):
-            raise ValueError("one weight vector per local problem and finite value required")
-        weights = tuple(
-            _preserved_array(w, r.source.shape, "local_weights")
-            for w, r in zip(local_weights, self.responses, strict=True)
-        )
-        moment_value = _preserved_array([value], (1,), "value")[0]
-        dtype = np.result_type(
-            np.asarray(moment_value).dtype,
-            float,
-            *(response.source.dtype for response in self.responses),
-            *(response.lifts.dtype for response in self.responses),
-            *(response.retained_basis.dtype for response in self.responses),
-            *(w.dtype for w in weights),
-        )
-        row = np.zeros(len(self.rhs), dtype=dtype)
-        target = np.asarray(moment_value, dtype=dtype).item()
-        for i, (response, local) in enumerate(zip(self.responses, weights, strict=True)):
-            np.add.at(row, response.problem.trace_dofs, -response.lifts.T @ local)
-            row[self.kernel_offsets[i] : self.kernel_offsets[i + 1]] = (
-                response.retained_basis.T @ local
-            )
-            target -= local @ response.source
-        return row, target
+        return hybrid_mean_constraint(self, local_weights, value)
 
     def with_rhs(self, rhs: Any, *, load_scale: Any = None) -> "HybridSystem":
         """Reuse the executed condensed matrix with a new explicit reduced load.
@@ -928,139 +693,631 @@ class HybridSystem:
         represented operator nor the raw residual or previously accepted result.
         General retained modes receive no kernel allowance.
         """
-        if refinement_precision not in {"double", "extended"}:
-            raise ValueError("refinement_precision must be double or extended")
-        if rtol is not None and (np.iscomplexobj(rtol) or not np.isfinite(rtol) or rtol <= 0):
-            raise ValueError("global rtol must be finite and positive")
-        if factorization is not None and rtol is not None and rtol != factorization.rtol:
-            raise ValueError("explicit rtol must match the prepared factorization tolerance")
-        solve_rtol = 1e-10 if rtol is None else float(rtol)
-        extended = refinement_precision == "extended"
-        if extended and np.finfo(np.longdouble).eps >= np.finfo(float).eps:
-            raise SolverUnavailableError("extended refinement requires a wider long-double type")
-        fixed = {} if fixed is None else fixed
-        n = len(self.rhs)
-        solution = np.zeros(n, dtype=np.longdouble if extended else float)
-        indices = np.array(list(fixed), dtype=int)
-        if (
-            any(
-                not isinstance(i, (int, np.integer))
-                or isinstance(i, bool)
-                or i < 0
-                or i >= self.trace_size
-                for i in fixed
-            )
-            or not np.isfinite(list(fixed.values())).all()
-        ):
-            raise ValueError("fixed DOFs must be valid trace indices with finite values")
-        solution[indices] = list(fixed.values())
-        free = np.setdiff1d(np.arange(n), indices)
-        matrix = self.matrix[free][:, free]
-        prescribed_action = (self.matrix @ solution)[free]
-        prescribed_matrix = self.matrix[free][:, indices]
-        rounding_units = (prescribed_matrix.getnnz(axis=1) + 1) * np.finfo(float).eps
-        prescribed_roundoff = (rounding_units / (1 - rounding_units)) * (
-            abs(prescribed_matrix) @ np.abs(solution[indices])
+        return solve_hybrid_system(
+            self,
+            solver=solver,
+            fixed=fixed,
+            constraints=constraints,
+            factorization=factorization,
+            refinement_precision=refinement_precision,
+            rtol=rtol,
         )
-        rhs = self.rhs[free] - prescribed_action
-        physical_matrix, physical_rhs = matrix, rhs
-        count = len(constraints) if constraints else 0
-        if constraints:
-            array = _preserved_array if extended else _array
-            rows = np.array([array(row, (n,), "constraint") for row, _ in constraints])
-            targets = (
-                array([target for _, target in constraints], (count,), "constraint targets")
-                - rows @ solution
-            )
-            matrix = sparse.bmat(
-                [
-                    [matrix, sparse.csc_matrix(rows[:, free].T)],
-                    [sparse.csc_matrix(rows[:, free]), None],
-                ],
-                format="csc",
-            )
-            rhs = np.r_[rhs, targets]
-        if factorization is not None and (not len(rhs) or not factorization.matches(matrix)):
-            raise ValueError("prepared factorization does not match the constrained global matrix")
-        if len(rhs) and solver != "scipy" and factorization is None:
-            validate_invertible(matrix)
-        if factorization is not None:
+
+
+def solve_hybrid_system(
+    system: HybridSystem,
+    *,
+    solver: str = "scipy",
+    fixed: dict[int, float] | None = None,
+    constraints: list[tuple[FloatArray, float]] | None = None,
+    factorization: LinearFactorization | None = None,
+    refinement_precision: Literal["double", "extended"] = "double",
+    rtol: float | None = None,
+) -> HybridSolution:
+    """Solve the saddle system, enforce gauges and verify original equations.
+
+    A singular skeleton typically indicates missing gauges or a trace space
+    richer than the local response space. Such systems are never repaired by
+    an undocumented diagonal perturbation or least-squares solution. For a
+    nonsymmetric global operator, the symmetric gauge augmentation requires
+    constraint rows pairing with both left and right nullspaces.
+    A supplied ``factorization`` must match the complete constrained matrix
+    exactly. It is reused without transferring ownership, allowing repeated
+    sources and boundary values through an offline/online preparation.
+    Explicit ``refinement_precision="extended"`` retains correction digits
+    in trace, coarse coefficients and reconstructed fields. Backend factors
+    remain double precision. ``rtol`` selects the global linear-solver
+    relative residual tolerance; ``None`` uses 1e-10 for a fresh solve or
+    the tolerance of a supplied factorization. An explicit tolerance must
+    match that prepared factorization. Physical compatibility and local
+    reconstruction criteria remain unchanged. Extended arithmetic requires
+    a wider NumPy long-double type.
+    The original-equation residual uses the absolute local load contributions
+    before assembly, and the net prescribed action before elimination. This
+    accounts for cancellation roundoff without applying a relative tolerance
+    to cancelled large prescribed fluxes or to artificial gauge equations.
+    Prescribed elimination also admits its componentwise floating-point
+    bound ``gamma_(m+1) * abs(A_fixed) @ abs(x_fixed)`` per physical row,
+    where ``m`` is its number of terms and gamma uses double precision.
+    A gauged declared kernel can additionally use the componentwise
+    evaluation bound of its retained physical rows. This bound is consulted
+    only after the usual compatibility test fails; it changes neither the
+    represented operator nor the raw residual or previously accepted result.
+    General retained modes receive no kernel allowance.
+    """
+    if refinement_precision not in {"double", "extended"}:
+        raise ValueError("refinement_precision must be double or extended")
+    if rtol is not None and (np.iscomplexobj(rtol) or not np.isfinite(rtol) or rtol <= 0):
+        raise ValueError("global rtol must be finite and positive")
+    if factorization is not None and rtol is not None and rtol != factorization.rtol:
+        raise ValueError("explicit rtol must match the prepared factorization tolerance")
+    solve_rtol = 1e-10 if rtol is None else float(rtol)
+    extended = refinement_precision == "extended"
+    if extended and np.finfo(np.longdouble).eps >= np.finfo(float).eps:
+        raise SolverUnavailableError("extended refinement requires a wider long-double type")
+    fixed = {} if fixed is None else fixed
+    n = len(system.rhs)
+    solution = np.zeros(n, dtype=np.longdouble if extended else float)
+    indices = np.array(list(fixed), dtype=int)
+    if (
+        any(
+            not isinstance(i, (int, np.integer))
+            or isinstance(i, bool)
+            or i < 0
+            or i >= system.trace_size
+            for i in fixed
+        )
+        or not np.isfinite(list(fixed.values())).all()
+    ):
+        raise ValueError("fixed DOFs must be valid trace indices with finite values")
+    solution[indices] = list(fixed.values())
+    free = np.setdiff1d(np.arange(n), indices)
+    matrix = system.matrix[free][:, free]
+    prescribed_action = (system.matrix @ solution)[free]
+    prescribed_matrix = system.matrix[free][:, indices]
+    rounding_units = (prescribed_matrix.getnnz(axis=1) + 1) * np.finfo(float).eps
+    prescribed_roundoff = (rounding_units / (1 - rounding_units)) * (
+        abs(prescribed_matrix) @ np.abs(solution[indices])
+    )
+    rhs = system.rhs[free] - prescribed_action
+    physical_matrix, physical_rhs = matrix, rhs
+    count = len(constraints) if constraints else 0
+    if constraints:
+        array = _preserved_array if extended else _array
+        rows = np.array([array(row, (n,), "constraint") for row, _ in constraints])
+        targets = (
+            array([target for _, target in constraints], (count,), "constraint targets")
+            - rows @ solution
+        )
+        matrix = sparse.bmat(
+            [
+                [matrix, sparse.csc_matrix(rows[:, free].T)],
+                [sparse.csc_matrix(rows[:, free]), None],
+            ],
+            format="csc",
+        )
+        rhs = np.r_[rhs, targets]
+    if factorization is not None and (not len(rhs) or not factorization.matches(matrix)):
+        raise ValueError("prepared factorization does not match the constrained global matrix")
+    if len(rhs) and solver != "scipy" and factorization is None:
+        validate_invertible(matrix)
+    if factorization is not None:
+        solved = (
+            factorization.solve(rhs, refinement_precision="extended")
+            if extended
+            else factorization.solve(rhs)
+        )
+    else:
+        if extended:
             solved = (
-                factorization.solve(rhs, refinement_precision="extended")
-                if extended
-                else factorization.solve(rhs)
+                solve_linear(
+                    matrix, rhs, solver=solver, rtol=solve_rtol, refinement_precision="extended"
+                )
+                if len(rhs)
+                else np.empty(0, dtype=np.longdouble)
             )
         else:
-            if extended:
-                solved = (
-                    solve_linear(
-                        matrix, rhs, solver=solver, rtol=solve_rtol, refinement_precision="extended"
-                    )
-                    if len(rhs)
-                    else np.empty(0, dtype=np.longdouble)
-                )
-            else:
-                solved = (
-                    solve_linear(matrix, rhs, solver=solver, rtol=solve_rtol)
-                    if len(rhs)
-                    else np.empty(0)
-                )
-        solution[free] = solved[: len(free)]
-        multipliers = solved[len(free) :]
-        action_scale = abs(physical_matrix) @ np.abs(solution[free])
-        norm = (
-            np.linalg.norm
-            if extended or self.matrix.dtype.itemsize > np.dtype(float).itemsize
-            else linalg.norm
-        )
-        physical_defect = physical_matrix @ solution[free] - physical_rhs
-        raw_residual_norm = float(norm(physical_defect))
-        physical_scale = max(
-            norm(self.rhs[free]),
-            norm(self.load_scale[free]),
-            norm(prescribed_action),
-            norm(physical_rhs),
-            norm(action_scale),
-            norm(prescribed_roundoff) / 1e-8,
-            np.finfo(float).tiny,
-        )
-        raw_residual = float(norm(physical_defect) / physical_scale)
-        residual = raw_residual
-        if residual > 1e-8 and constraints:
-            bounds = np.zeros(n)
-            for cell, response in enumerate(self.responses):
-                first, last = self.kernel_offsets[cell : cell + 2]
-                field = response.reconstruct(
-                    solution[response.problem.trace_dofs], solution[first:last]
-                )
-                bounds[first:last] = response.kernel_roundoff_bound(field)
-            # This is an absolute evaluation-error certificate, not a relaxed
-            # relative tolerance on the small, cancelled retained equation.
-            certified_defect = np.maximum(abs(physical_defect) - bounds[free], 0)
-            residual = float(norm(certified_defect) / physical_scale)
-        if residual > 1e-8:
-            raise ValueError("incompatible data: gauge changed physical equations")
-        coarse = tuple(
-            solution[self.kernel_offsets[i] : self.kernel_offsets[i + 1]].copy()
-            for i in range(len(self.kernel_offsets) - 1)
-        )
-        fields = (
-            tuple(
-                response.reconstruct(solution[response.problem.trace_dofs], c)
-                for response, c in zip(self.responses, coarse, strict=True)
+            solved = (
+                solve_linear(matrix, rhs, solver=solver, rtol=solve_rtol)
+                if len(rhs)
+                else np.empty(0)
             )
-            if self.responses
-            else ()
+    solution[free] = solved[: len(free)]
+    multipliers = solved[len(free) :]
+    action_scale = abs(physical_matrix) @ np.abs(solution[free])
+    norm = (
+        np.linalg.norm
+        if extended or system.matrix.dtype.itemsize > np.dtype(float).itemsize
+        else linalg.norm
+    )
+    physical_defect = physical_matrix @ solution[free] - physical_rhs
+    raw_residual_norm = float(norm(physical_defect))
+    physical_scale = max(
+        norm(system.rhs[free]),
+        norm(system.load_scale[free]),
+        norm(prescribed_action),
+        norm(physical_rhs),
+        norm(action_scale),
+        norm(prescribed_roundoff) / 1e-8,
+        np.finfo(float).tiny,
+    )
+    raw_residual = float(norm(physical_defect) / physical_scale)
+    residual = raw_residual
+    if residual > 1e-8 and constraints:
+        bounds = np.zeros(n)
+        for cell, response in enumerate(system.responses):
+            first, last = system.kernel_offsets[cell : cell + 2]
+            field = response.reconstruct(
+                solution[response.problem.trace_dofs], solution[first:last]
+            )
+            bounds[first:last] = response.kernel_roundoff_bound(field)
+        # This is an absolute evaluation-error certificate, not a relaxed
+        # relative tolerance on the small, cancelled retained equation.
+        certified_defect = np.maximum(abs(physical_defect) - bounds[free], 0)
+        residual = float(norm(certified_defect) / physical_scale)
+    if residual > 1e-8:
+        raise ValueError("incompatible data: gauge changed physical equations")
+    coarse = tuple(
+        solution[system.kernel_offsets[i] : system.kernel_offsets[i + 1]].copy()
+        for i in range(len(system.kernel_offsets) - 1)
+    )
+    fields = (
+        tuple(
+            response.reconstruct(solution[response.problem.trace_dofs], c)
+            for response, c in zip(system.responses, coarse, strict=True)
         )
-        return HybridSolution(
-            solution[: self.trace_size],
-            coarse,
-            fields,
-            residual,
-            multipliers,
-            raw_residual,
-            raw_residual_norm,
+        if system.responses
+        else ()
+    )
+    return HybridSolution(
+        solution[: system.trace_size],
+        coarse,
+        fields,
+        residual,
+        multipliers,
+        raw_residual,
+        raw_residual_norm,
+    )
+
+
+def hybrid_mean_constraint(
+    system: HybridSystem,
+    local_weights: list[FloatArray] | tuple[FloatArray, ...],
+    value: float = 0.0,
+) -> tuple[FloatArray, float]:
+    """Express a prescribed integral of reconstructed fields as ``r.T x=b``.
+
+    For incompressible flow, weights integrate only the pressure components;
+    for scalar pure Neumann diffusion, they integrate the pressure field.
+    """
+    if not system.responses:
+        raise ValueError("compact contributions require explicit physical mean rows")
+    if len(local_weights) != len(system.responses) or not np.isfinite(value):
+        raise ValueError("one weight vector per local problem and finite value required")
+    weights = tuple(
+        _preserved_array(w, r.source.shape, "local_weights")
+        for w, r in zip(local_weights, system.responses, strict=True)
+    )
+    moment_value = _preserved_array([value], (1,), "value")[0]
+    dtype = np.result_type(
+        np.asarray(moment_value).dtype,
+        float,
+        *(response.source.dtype for response in system.responses),
+        *(response.lifts.dtype for response in system.responses),
+        *(response.retained_basis.dtype for response in system.responses),
+        *(w.dtype for w in weights),
+    )
+    row = np.zeros(len(system.rhs), dtype=dtype)
+    target = np.asarray(moment_value, dtype=dtype).item()
+    for i, (response, local) in enumerate(zip(system.responses, weights, strict=True)):
+        np.add.at(row, response.problem.trace_dofs, -response.lifts.T @ local)
+        row[system.kernel_offsets[i] : system.kernel_offsets[i + 1]] = (
+            response.retained_basis.T @ local
         )
+        target -= local @ response.source
+    return row, target
+
+
+def condense_local(
+    problem: LocalProblem,
+    solver: str = "scipy",
+    *,
+    refinement_precision: Literal["double", "extended"] = "double",
+) -> LocalResponse:
+    """Factor once for source, trace and retained responses, with explicit precision.
+
+    ``problem`` declares A u+B lambda=f and the oriented local trace columns.
+    The response stores R f, R B and the executed retained basis E=Z-R A Z;
+    an exactly represented kernel uses Z directly. Constraints, Petrov test
+    data and solver residual criteria remain those of the supplied problem.
+    Direct factors can retain corrected lifts in extended precision without
+    changing their residual criterion. AMG local projection currently accepts
+    only the default double-precision accumulation.
+    """
+    if refinement_precision not in {"double", "extended"}:
+        raise ValueError("refinement_precision must be double or extended")
+    n, k = problem.matrix.shape[0], problem.coarse_basis.shape[1]
+    general = k != problem.kernel.shape[1]
+    if solver in {"pyamg", "amgx"}:
+        if refinement_precision != "double":
+            raise ValueError("AMG local solvers require double refinement precision")
+        if general:
+            raise ValueError("AMG local solvers do not support a general coarse_basis")
+        if not np.array_equal(problem.kernel, problem.left_kernel) or not np.array_equal(
+            problem.constraints, problem.test_constraints
+        ):
+            raise ValueError("AMG kernel projection requires matching test and trial spaces")
+        if problem._correct_kernel:
+            rhs = np.column_stack((problem.load, problem.coupling, problem._retained_action))
+            response = np.zeros_like(rhs)
+            _, _, pivots = linalg.qr(problem.kernel.T, pivoting=True)
+            free = np.setdiff1d(np.arange(n), pivots[:k])
+            pairing = problem.kernel.T @ problem.constraints
+            for step in range(4):
+                defect = rhs - _matrix_action(problem.matrix, response)
+                defect -= problem.constraints @ np.linalg.solve(pairing, problem.kernel.T @ defect)
+                norms = np.linalg.norm(rhs, axis=0)
+                if step and np.all(np.linalg.norm(defect, axis=0) <= 1e-10 * norms):
+                    break
+                correction = np.zeros_like(rhs)
+                if len(free):
+                    correction[free] = solve_linear(
+                        problem.matrix[free][:, free], defect[free], solver=solver
+                    )
+                correction -= problem.kernel @ np.linalg.solve(
+                    problem.constraints.T @ problem.kernel, problem.constraints.T @ correction
+                )
+                response += correction
+            else:
+                raise ValueError("AMG constrained residual refinement did not converge")
+            width = problem.coupling.shape[1] + 1
+            return LocalResponse(
+                problem,
+                response[:, 0],
+                response[:, 1:width],
+                problem.coarse_basis - response[:, width:],
+            )
+        rhs = np.column_stack((problem.load, problem.coupling))
+        if k:
+            # Pin independent kernel coordinates only during the elliptic solve.
+            # Afterwards restore the physical mean, with no dense rank update.
+            rhs -= problem.constraints @ np.linalg.solve(
+                problem.kernel.T @ problem.constraints, problem.kernel.T @ rhs
+            )
+            _, _, pivots = linalg.qr(problem.kernel.T, pivoting=True)
+            free = np.setdiff1d(np.arange(n), pivots[:k])
+            response = np.zeros_like(rhs)
+            if len(free):
+                response[free] = solve_linear(
+                    problem.matrix[free][:, free], rhs[free], solver=solver
+                )
+            response -= problem.kernel @ np.linalg.solve(
+                problem.constraints.T @ problem.kernel, problem.constraints.T @ response
+            )
+        else:
+            response = solve_linear(problem.matrix, rhs, solver=solver)
+        return LocalResponse(problem, response[:, 0], response[:, 1:])
+    matrix, rhs = problem.condensation_system()
+    with factorize(matrix, solver=solver) as decomposition:
+        return problem.response_from_solution(
+            decomposition.solve(rhs, refinement_precision=refinement_precision)
+        )
+
+
+def local_condensation_system(problem: LocalProblem) -> tuple[Any, FloatArray]:
+    """Return the constrained operator and source/trace/retained-mode right sides.
+
+    The augmented operator is ``[[A, C_left], [C_right.T, 0]]`` with
+    constraint columns scaled down only when they exceed the operator's
+    largest entry. This change of auxiliary coordinates prevents constraints
+    from dominating small-unit operators without magnifying constraints in
+    mixed high-contrast saddles. It leaves the physical complement unchanged.
+    Its inverse is never explicitly formed. Backends may factor this matrix
+    once, retain the factorization, and solve new source columns online.
+    """
+    n, k = problem.matrix.shape[0], problem.coarse_basis.shape[1]
+    general = k != problem.kernel.shape[1] or problem._correct_kernel
+    matrix = problem.condensation_matrix()
+    width = problem.coupling.shape[1] + 1
+    rhs = np.zeros(
+        (n + k, width + (k if general else 0)), dtype=np.result_type(problem.load.dtype, float)
+    )
+    rhs[:n, 0] = problem.load
+    rhs[:n, 1:width] = problem.coupling
+    if general:
+        rhs[:n, width:] = problem._retained_action
+    return matrix, rhs
+
+
+def local_condensation_matrix(problem: LocalProblem) -> Any:
+    """Return the augmented operator without allocating response right-hand sides.
+
+    This is the same scaled left/right constraint operator returned by
+    ``condensation_system``. It permits one caller-owned factorization for
+    several direct reconstructions, including nonsymmetric Petrov data.
+    """
+    k = problem.coarse_basis.shape[1]
+    matrix = problem.matrix
+    if k:
+        scale = float(np.max(np.abs(matrix.data), initial=0.0)) or 1.0
+        left = problem.test_constraints * np.minimum(
+            1.0, scale / np.max(np.abs(problem.test_constraints), axis=0)
+        )
+        right = problem.constraints * np.minimum(
+            1.0, scale / np.max(np.abs(problem.constraints), axis=0)
+        )
+        matrix = sparse.bmat(
+            [
+                [matrix, sparse.csc_matrix(left)],
+                [sparse.csc_matrix(right.T), None],
+            ],
+            format="csc",
+        )
+    return matrix
+
+
+def reconstruct_local(
+    problem: LocalProblem,
+    trace: Any,
+    coarse: Any,
+    *,
+    retained_basis: Any = None,
+    solver: str = "scipy",
+    factorization: LinearFactorization | None = None,
+    refinement_precision: Literal["double", "extended"] = "double",
+) -> FloatArray:
+    """Reconstruct local fields without storing every trace response.
+
+    ``trace`` uses local coupling-column order and ``coarse`` uses retained
+    trial coordinates. Vectors produce one field; matching nonempty column
+    arrays produce several fields with one factorization. With R the
+    volumetric block of the augmented inverse,
+    the field is R(f-B trace-A Z coarse)+Z coarse for an arbitrary retained Z.
+    This includes nonsymmetric Petrov problems and an empty retained basis.
+    ``retained_basis`` supplies an executed E=Z-R A Z for persisted coarse
+    coordinates; then the field is R(f-B trace)+E coarse. Its numerical basis
+    and orientation belong to the caller's archived coefficient contract.
+    Only combined source columns are solved. Explicit extended precision preserves
+    forcing and correction digits; backend factors stay double precision.
+    A supplied factorization must match the augmented operator exactly and
+    remains caller-owned. The linear residual uses the combined augmented
+    RHS; full physical compatibility remains a global original-equation check.
+    """
+    n, k = problem.matrix.shape[0], problem.coarse_basis.shape[1]
+
+    def coefficients(value: Any, shape: tuple[int, ...], name: str) -> FloatArray:
+        """Validate coefficient dimensions without truncating archived wider values."""
+        checked = _array(value, shape, name)
+        raw = np.asarray(value)
+        return raw.copy() if raw.dtype.kind == "f" else checked
+
+    raw_trace = np.asarray(trace)
+    if raw_trace.ndim not in (1, 2) or (raw_trace.ndim == 2 and not raw_trace.shape[1]):
+        raise ValueError("trace must be a vector or a nonempty column array")
+    suffix = raw_trace.shape[1:]
+    local_trace = coefficients(trace, (problem.coupling.shape[1], *suffix), "trace")
+    local_coarse = coefficients(coarse, (k, *suffix), "coarse")
+    basis = (
+        problem.coarse_basis
+        if retained_basis is None
+        else coefficients(retained_basis, (n, k), "retained_basis")
+    )
+    dtype = np.result_type(local_trace.dtype, local_coarse.dtype, basis.dtype)
+    if refinement_precision == "extended":
+        dtype = np.result_type(dtype, np.longdouble)
+    load = problem.load[:, None] if suffix else problem.load
+    forcing = load.astype(dtype) - np.einsum(
+        "ij,j...->i...", problem.coupling, local_trace, dtype=dtype
+    )
+    if retained_basis is None:
+        forcing -= np.einsum("ij,j...->i...", problem._retained_action, local_coarse, dtype=dtype)
+    rhs = np.concatenate((forcing, np.zeros((k, *suffix), dtype=dtype)))
+    matrix = problem.condensation_matrix()
+    if factorization is not None:
+        if not factorization.matches(matrix):
+            raise ValueError("prepared factorization does not match the local augmented matrix")
+        solved = factorization.solve(rhs, refinement_precision=refinement_precision)
+    else:
+        solved = solve_linear(matrix, rhs, solver=solver, refinement_precision=refinement_precision)
+    return solved[:n] + basis @ local_coarse
+
+
+def local_response_from_solution(problem: LocalProblem, solution: Any) -> LocalResponse:
+    """Decode finite real responses, preserving explicitly retained wider precision."""
+    n, k = problem.matrix.shape[0], problem.coarse_basis.shape[1]
+    width = problem.coupling.shape[1] + 1
+    general = k != problem.kernel.shape[1] or problem._correct_kernel
+    shape = (n + k, width + (k if general else 0))
+    if np.iscomplexobj(solution):
+        raise ValueError("condensation solution must be real")
+    dtype = np.longdouble if np.asarray(solution).dtype == np.dtype(np.longdouble) else float
+    response = np.array(solution, dtype=dtype, copy=True)
+    if response.shape != shape or not np.isfinite(response).all():
+        raise ValueError(f"condensation solution must be finite with shape {shape}")
+    response = response[:n]
+    coarse_vectors = problem.coarse_basis - response[:, width:] if general else None
+    return LocalResponse(problem, response[:, 0], response[:, 1:width], coarse_vectors)
+
+
+def local_condensed_load(
+    problem: LocalProblem,
+    source_response: Any,
+    *,
+    load: Any = None,
+    corrected_retained: bool | None = None,
+) -> FloatArray:
+    """Project executed source responses to the original reduced Petrov RHS.
+
+    ``source_response`` is R times the supplied ``load`` (the stored source
+    by default). A vector gives one reduced RHS; nonempty column arrays give
+    several. Real wider source/load digits are preserved. The trace part is
+    test_coupling.T R load. General or rounded retained modes use
+    (A.T W).T R load-W.T load; exact represented kernels use -W.T load.
+    ``corrected_retained`` can preserve an executed LocalResponse branch.
+    It does not change the augmented operator or test/trial conventions.
+    """
+    raw = np.asarray(source_response)
+    if raw.ndim not in (1, 2) or (raw.ndim == 2 and not raw.shape[1]):
+        raise ValueError("source_response must be a vector or nonempty column array")
+    n = len(problem.load)
+    suffix = raw.shape[1:]
+    response = _preserved_array(source_response, (n, *suffix), "source_response")
+    forcing = problem.load if load is None else load
+    if suffix and np.asarray(forcing).ndim == 1:
+        forcing = np.broadcast_to(np.asarray(forcing)[:, None], (n, *suffix))
+    forcing = _preserved_array(forcing, (n, *suffix), "load")
+    if corrected_retained is not None and not isinstance(corrected_retained, (bool, np.bool_)):
+        raise ValueError("corrected_retained must be a boolean or None")
+    general = problem.coarse_basis.shape[1] != problem.kernel.shape[1] or problem._correct_kernel
+    corrected = general if corrected_retained is None else corrected_retained
+    coarse_rhs = (
+        problem._test_action.T @ response - problem.test_basis.T @ forcing
+        if corrected
+        else -problem.left_kernel.T @ forcing
+    )
+    return np.concatenate((problem.test_coupling.T @ response, coarse_rhs), axis=0)
+
+
+def reconstruct_response(
+    response: LocalResponse, trace: FloatArray, coarse: FloatArray
+) -> FloatArray:
+    """Recover one local coefficient vector from trace and retained amplitudes.
+
+    ``trace`` follows the local coupling columns, and ``coarse`` follows the
+    executed retained basis columns. The field is source-lifts@trace+E@coarse;
+    wider real operands follow NumPy's existing arithmetic promotion. This
+    cached-response operation takes vectors; ``reconstruct_local`` also accepts
+    matching nonempty RHS column arrays.
+    """
+    return response.source - response.lifts @ trace + response.retained_basis @ coarse
+
+
+def local_global_contribution(
+    response: LocalResponse, coarse_dofs: Any
+) -> tuple[IntArray, FloatArray, FloatArray]:
+    """Return indices, matrix and RHS of this cell's reduced Petrov equations.
+
+    This is the common assembly contract for serial, MPI and accelerator
+    backends. The trace rows enforce C.T u=g; retained test rows enforce
+    W.T (A u+B lambda-f)=0. The negative signs preserve the symmetric
+    saddle convention whenever C=B and test/trial data coincide.
+    """
+    p = response.problem
+    coarse_dofs = np.asarray(coarse_dofs)
+    if (
+        coarse_dofs.shape != (p.coarse_basis.shape[1],)
+        or not np.issubdtype(coarse_dofs.dtype, np.integer)
+        or np.any(coarse_dofs < 0)
+    ):
+        raise ValueError("coarse_dofs must contain one nonnegative integer per retained mode")
+    g = p.test_coupling.T @ response.retained_basis
+    if response.coarse_vectors is None:
+        coarse_trace = p.left_kernel.T @ p.coupling
+        coarse_matrix = np.zeros((len(coarse_dofs), len(coarse_dofs)))
+    else:
+        coarse_trace = p.test_basis.T @ p.coupling - p._test_action.T @ response.lifts
+        coarse_matrix = p._test_action.T @ response.retained_basis
+    block = np.block([[p.test_coupling.T @ response.lifts, -g], [-coarse_trace, -coarse_matrix]])
+    return (
+        np.r_[p.trace_dofs, coarse_dofs].astype(np.int64),
+        block,
+        response.global_load(),
+    )
+
+
+def assemble_hybrid_contributions(
+    contributions: Iterable[tuple[IntArray, FloatArray, FloatArray]],
+    *,
+    trace_size: int,
+    kernel_offsets: IntArray,
+    boundary_load: Any = None,
+) -> tuple[Any, FloatArray, FloatArray]:
+    """Reduce ordered cell contributions to a CSC operator, RHS and load scale.
+
+    ``kernel_offsets`` starts at ``trace_size`` and bounds each cell's retained
+    global coordinates. Exactly one contribution per interval is consumed in
+    iterable order, without retaining a tuple of contributions. Shared trace
+    entries are added in that order; wider real matrix and load digits survive.
+    The COO matrix entries remain stored until the final CSC conversion.
+    ``load_scale`` sums absolute loads before cancellation. The weak Dirichlet
+    ``boundary_load`` is subtracted once from the trace RHS and its absolute
+    value added to that scale. No trace orientation, gauge or local basis is
+    inferred. The caller supplies the executed, consistently numbered blocks.
+    """
+    if (
+        isinstance(trace_size, (bool, np.bool_))
+        or not isinstance(trace_size, (int, np.integer))
+        or trace_size < 0
+    ):
+        raise ValueError("trace_size must be a nonnegative integer")
+    kernel_offsets = np.asarray(kernel_offsets)
+    if (
+        kernel_offsets.ndim != 1
+        or len(kernel_offsets) < 2
+        or not np.issubdtype(kernel_offsets.dtype, np.integer)
+        or kernel_offsets[0] != trace_size
+        or np.any(kernel_offsets[1:] < kernel_offsets[:-1])
+    ):
+        raise ValueError(
+            "kernel_offsets must be an ordered integer partition starting at trace_size"
+        )
+    size = int(kernel_offsets[-1])
+    rhs = np.zeros(size)
+    load_scale = np.zeros(size)
+    rows: list[int] = []
+    columns: list[int] = []
+    entries: list[float] = []
+    all_indices = []
+    count = 0
+    for cell, (indices, block, local_rhs) in enumerate(contributions):
+        if cell >= len(kernel_offsets) - 1:
+            raise ValueError("one contribution per coarse cell partition is required")
+        count += 1
+        indices = np.asarray(indices)
+        if (
+            indices.ndim != 1
+            or not np.issubdtype(indices.dtype, np.integer)
+            or np.any(indices < 0)
+            or np.any(indices >= size)
+            or len(np.unique(indices)) != len(indices)
+        ):
+            raise ValueError("contribution indices must be distinct valid global integers")
+        if not np.array_equal(
+            np.sort(indices[indices >= trace_size]),
+            np.arange(kernel_offsets[cell], kernel_offsets[cell + 1]),
+        ):
+            raise ValueError("contribution coarse indices must match its ordered cell partition")
+        checked_block = _array(block, (len(indices), len(indices)), "contribution matrix")
+        checked_rhs = _array(local_rhs, (len(indices),), "contribution rhs")
+        # Real floating inputs may contain explicitly retained correction digits.
+        # Validation remains identical for lists and other convertible inputs.
+        block, local_rhs = np.asarray(block), np.asarray(local_rhs)
+        block = block if block.dtype.kind == "f" else checked_block
+        local_rhs = local_rhs if local_rhs.dtype.kind == "f" else checked_rhs
+        dtype = np.result_type(rhs.dtype, local_rhs.dtype)
+        rhs, load_scale = rhs.astype(dtype, copy=False), load_scale.astype(dtype, copy=False)
+        all_indices.append(indices)
+        rows.extend(np.repeat(indices, len(indices)))
+        columns.extend(np.tile(indices, len(indices)))
+        entries.extend(block.ravel())
+        np.add.at(rhs, indices, local_rhs)
+        np.add.at(load_scale, indices, np.abs(local_rhs))
+    if count != len(kernel_offsets) - 1:
+        raise ValueError("one contribution per coarse cell partition is required")
+    if not np.array_equal(np.unique(np.concatenate(all_indices)), np.arange(size)):
+        raise ValueError("contributions must cover the contiguous global numbering")
+    matrix = sparse.coo_matrix((entries, (rows, columns)), shape=(size, size)).tocsc()
+    matrix.eliminate_zeros()
+    if boundary_load is not None:
+        boundary = _array(boundary_load, (trace_size,), "boundary_load")
+        raw_boundary = np.asarray(boundary_load)
+        if raw_boundary.dtype.kind == "f":
+            boundary = raw_boundary
+        dtype = np.result_type(rhs.dtype, boundary.dtype)
+        rhs, load_scale = rhs.astype(dtype, copy=False), load_scale.astype(dtype, copy=False)
+        rhs[:trace_size] -= boundary
+        load_scale[:trace_size] += np.abs(boundary)
+    return matrix, rhs, load_scale
 
 
 def _condense(

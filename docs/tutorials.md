@@ -1,5 +1,18 @@
 # Tutorials and notebooks
 
+Start with the small executable tutorials:
+
+- [Scalar formulations](tutorials/scalar.md): primal Galerkin, mixed H(div),
+  alternative hybrid formulations, transport and complex fields.
+- [Vector formulations](tutorials/vector.md): displacement, mixed stress,
+  velocity–pressure and electromagnetic fields.
+- [Local providers and assembly](tutorials/providers.md): define local and
+  global forms, supply a local solver, and select serial or parallel batches.
+
+Each tutorial states its approximation spaces, interface convention and physical
+gauge. The small checks introduce the APIs; the case gallery contains the separate
+convergence and reference comparisons.
+
 The notebooks combine small executable numerical checks with readers for the
 larger research campaigns. Archived comparison notebooks identify the solver,
 spaces, data and reference uncertainty; they do not execute external comparison

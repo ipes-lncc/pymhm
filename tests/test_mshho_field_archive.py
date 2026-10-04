@@ -83,6 +83,23 @@ def test_coherent_sign_change_of_executed_moment_basis(solution: MsHHOSolution) 
             assert np.array_equal(a, b)
 
 
+@pytest.mark.parametrize("order", ["C", "F"])
+def test_archive_memory_layout_preserves_literal_field_replay(
+    solution: MsHHOSolution, order: str
+) -> None:
+    """C/F storage of identical archived numbers preserves extended contractions."""
+    arrays = field_arrays(solution, 4)
+    altered = {name: np.array(value, order=order, copy=True) for name, value in arrays.items()}
+    validate_arrays(altered)
+    with threadpool_limits(1):
+        expected = [replay(arrays, cell) for cell in range(len(solution.local))]
+    with threadpool_limits(2):
+        actual = [replay(altered, cell) for cell in range(len(solution.local))]
+    for first, second in zip(expected, actual, strict=True):
+        for a, b in zip(first, second, strict=True):
+            np.testing.assert_array_equal(a, b)
+
+
 def test_coherent_nodal_permutation(solution: MsHHOSolution) -> None:
     """Actual nodes, matrices, coefficients and dof maps retain the same polynomial."""
     arrays = field_arrays(solution, 4)

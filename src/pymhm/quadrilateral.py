@@ -10,12 +10,22 @@ from functools import lru_cache
 from typing import Any, Literal, cast
 
 import numpy as np
-from numpy.polynomial import polynomial
-from numpy.polynomial.legendre import leggauss
+from numpy.polynomial import Polynomial
+from numpy.polynomial.legendre import Legendre, leggauss
 from scipy import sparse
 
 from pymhm._geometry_roundoff import cartesian_coordinates, coordinate_difference
-from pymhm.elements import boundary_data, scalar_values, tensor_values, vector_values
+from pymhm.element_backends import (
+    simplex_lagrange_basis,
+    simplex_lagrange_tabulation,
+)
+from pymhm.elements import (
+    _scalar_diffusion_blocks,
+    boundary_data,
+    scalar_values,
+    tensor_values,
+    vector_values,
+)
 from pymhm.hybrid import HybridSolution, HybridSystem, LocalAssembly, LocalProblem
 from pymhm.mesh import FloatArray, IntArray, SkeletonSpace, TriangleMesh, positive_int
 from pymhm.reservoir import CartesianCellField
@@ -181,44 +191,43 @@ def quadrilateral_quadrature(order: int = 4) -> tuple[FloatArray, FloatArray]:
 
 @lru_cache(maxsize=16)
 def _cardinals(degree: int) -> tuple[FloatArray, ...]:
-    """Build the exact nodal cardinal polynomials in ascending power order."""
-    nodes = np.linspace(0, 1, degree + 1)
-    return tuple(
-        polynomial.polyfromroots(np.delete(nodes, i)) / np.prod(nodes[i] - np.delete(nodes, i))
-        for i in range(degree + 1)
+    """Export the reordered Basix interval basis in ascending power coordinates.
+
+    This representation conversion supports coefficient archives; evaluation
+    and derivatives use Basix directly. The orthonormal native polynomial j
+    equals sqrt(2j+1) times the shifted conventional Legendre polynomial.
+    """
+    degree = positive_int(degree, "degree")
+    coordinates = np.linspace(0, 1, degree + 1)
+    basis = simplex_lagrange_basis(
+        "interval", degree, nodes=np.column_stack((1 - coordinates, coordinates))
     )
+    transformation = np.zeros((degree + 1, degree + 1))
+    for j in range(degree + 1):
+        coefficients = Legendre.basis(j, domain=[0, 1]).convert(kind=Polynomial).coef
+        transformation[j, : len(coefficients)] = np.sqrt(2 * j + 1) * coefficients
+    return tuple(np.asarray(row) for row in basis.basis_matrix @ transformation)
 
 
 def _cardinal_values(degree: int, points: FloatArray) -> tuple[FloatArray, FloatArray]:
-    """Evaluate nodal polynomials and derivatives without high-order cancellation.
-
-    The product recurrence remains defined at every interpolation node. The
-    established low-order path is retained to preserve stored Q1--Q4 fields.
-    """
-    if degree <= 4:
-        coefficients = _cardinals(degree)
-        return (
-            np.column_stack([polynomial.polyval(points, c) for c in coefficients]),
-            np.column_stack(
-                [polynomial.polyval(points, polynomial.polyder(c)) for c in coefficients]
-            ),
-        )
-    nodes = np.linspace(0, 1, degree + 1)
-    values = np.ones((len(points), degree + 1))
-    derivatives = np.zeros_like(values)
-    for i, node in enumerate(nodes):
-        for other in np.delete(nodes, i):
-            factor = (points - other) / (node - other)
-            derivatives[:, i] = derivatives[:, i] * factor + values[:, i] / (node - other)
-            values[:, i] *= factor
-    return values, derivatives
+    """Tabulate Basix interval Pk in increasing equispaced nodal order."""
+    coordinates = np.linspace(0, 1, degree + 1)
+    values, derivatives, _ = simplex_lagrange_tabulation(
+        "interval",
+        degree,
+        np.column_stack((1 - points, points)),
+        nodes=np.column_stack((1 - coordinates, coordinates)),
+        nderiv=1,
+    )
+    return values, derivatives[..., 0]
 
 
 def qk_basis(degree: int, points: Any) -> tuple[FloatArray, FloatArray]:
     """Evaluate equidistant Qk basis and reference gradients at unit-square points.
 
-    Nodes and basis functions are ordered first in x, then in y. Polynomial
-    derivatives are evaluated analytically, including exactly at nodal points.
+    Nodes and basis functions are ordered first in x, then in y. Basix
+    interval factors supply values and derivatives, including at nodal points;
+    their tensor product retains the historical coefficient order.
     """
     degree = positive_int(degree, "degree")
     if np.iscomplexobj(points):
@@ -375,17 +384,7 @@ def quadrilateral_operators(
                 len(origins), -1, 2, 2
             )
             force = scalar_values(source, points.reshape(-1, 2)).reshape(len(origins), -1)
-            blocks.append(
-                area
-                * np.einsum(
-                    "tq,tqia,tqab,tqjb->tij",
-                    cell_weights,
-                    cell_gradient,
-                    tensors,
-                    cell_gradient,
-                    optimize=True,
-                )
-            )
+            blocks.append(_scalar_diffusion_blocks(cell_weights, cell_gradient, tensors, area))
             loads.append(area * np.einsum("tq,tqi,tq->ti", cell_weights, cell_basis, force))
         else:
             points = origins[:, None, :] + reference[None, :, :] * mesh.spacing
@@ -393,12 +392,7 @@ def quadrilateral_operators(
                 len(origins), len(weights), 2, 2
             )
             force = scalar_values(source, points.reshape(-1, 2)).reshape(len(origins), len(weights))
-            blocks.append(
-                area
-                * np.einsum(
-                    "q,qia,tqab,qjb->tij", weights, gradient, tensors, gradient, optimize=True
-                )
-            )
+            blocks.append(_scalar_diffusion_blocks(weights, gradient, tensors, area))
             loads.append(area * np.einsum("q,qi,tq->ti", weights, basis, force))
     row = np.repeat(dofs, width, axis=1).ravel()
     column = np.tile(dofs, (1, width)).ravel()

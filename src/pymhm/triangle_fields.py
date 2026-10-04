@@ -9,7 +9,7 @@ tensor axes, so a two-dimensional Kelvin stiffness may have shape (3, 3).
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from typing import Any, Protocol, runtime_checkable
 
 import numpy as np
@@ -352,6 +352,10 @@ class RadialDiskLoad:
     time_function: Callable[[float], float] | None = None
     tolerance: float = 1e-12
     max_depth: int = 12
+    _spatial_snapshot: RadialDiskLoad | None = field(
+        default=None, init=False, repr=False, compare=False
+    )
+    _sampled_scale: float = field(default=1.0, init=False, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         """Freeze a finite center and reject invalid support or integration parameters."""
@@ -374,20 +378,37 @@ class RadialDiskLoad:
         center.setflags(write=False)
         object.__setattr__(self, "center", center)
 
+    def __setstate__(self, state: dict[str, Any]) -> None:
+        """Restore validated, read-only spatial coordinates after pickle/spawn."""
+        self.__dict__.update(state)
+        self.__post_init__()
+
     def at_time(self, time: float) -> RadialDiskLoad:
-        """Return a spatial force-density field at a finite physical time."""
+        """Freeze the physical field and its declared base-vector temporal scaling.
+
+        Public amplitude and samples carry the physical product. The separable
+        protocol retains the unscaled spatial provider and sampled scalar, so
+        force assembly integrates the same spatial load before multiplying it.
+        Replacing public data resets this private snapshot contract.
+        """
         scale = self.time_scale(time)
-        return replace(self, amplitude=self.amplitude * scale, time_function=None)
+        spatial = self.spatial_field()
+        result = replace(spatial, amplitude=spatial.amplitude * scale, time_function=None)
+        object.__setattr__(result, "_spatial_snapshot", spatial)
+        object.__setattr__(result, "_sampled_scale", scale)
+        return result
 
     def spatial_field(self) -> RadialDiskLoad:
-        """Preserve the exact disk, amplitude and quadrature controls without temporal scaling."""
+        """Return the declared unscaled disk and its original quadrature controls."""
+        if self._spatial_snapshot is not None:
+            return self._spatial_snapshot
         return replace(self, time_function=None)
 
     def time_scale(self, time: float) -> float:
         """Evaluate a finite real scalar temporal factor without changing spatial support."""
         if np.iscomplexobj(time) or np.ndim(time) != 0 or not np.isfinite(time):
             raise ValueError("load time must be finite")
-        scale = 1.0 if self.time_function is None else self.time_function(time)
+        scale = self._sampled_scale if self.time_function is None else self.time_function(time)
         if np.iscomplexobj(scale) or np.ndim(scale) != 0 or not np.isfinite(scale):
             raise ValueError("load time scale must be a finite real scalar")
         scale = float(scale)

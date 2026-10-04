@@ -1,5 +1,81 @@
 # Architecture
 
+## Data and operations
+
+Problem descriptions, execution settings, local responses and solutions are
+separate objects. Numerical operations are free functions; the existing
+`LocalProblem`, `LocalResponse` and `HybridSystem` methods delegate to the same
+implementations. Both interfaces use the same represented operators, oriented
+maps, executed retained bases and residual checks.
+
+| Responsibility | Objects | Functions |
+| --- | --- | --- |
+| Describe local variational equations | `LocalForm`, `LocalProblem` | `compile_local_forms`, `fenics.assemble_local_forms` |
+| Describe the global problem | `GlobalForm`, `HybridProblem` | `assemble_hybrid`, `solve_hybrid` |
+| Execute independent cells | `ExecutionConfig`, callable provider | `iter_local`, `map_local` |
+| Eliminate and reconstruct | `LocalResponse`, `SolverConfig` | `condense_local`, `local_condensation_system`, `reconstruct_local`, `reconstruct_response` |
+| Reduce and solve global equations | `HybridSystem`, `HybridSolution` | `local_global_contribution`, `assemble_hybrid_contributions`, `solve_hybrid_system`, `hybrid_mean_constraint` |
+
+Each formula has one owner. Offline factors, GPU batching, refinement and
+existing PDE drivers reach that owner through the compatible methods or the
+free functions. A factorization remains an object with an explicit lifetime;
+it owns native resources rather than defining the physical problem.
+
+## Variational descriptions and providers
+
+`LocalForm(a, L, trace_forms, trace_dofs, ...)` describes
+
+$$
+a_K(u_K,v_K)+\sum_j\lambda_j b_{K,j}(v_K)=L_K(v_K).
+$$
+
+Expressions can be UFL forms or another compiler's input. The portable core
+stores them without importing a FEM backend. `compile_local_forms` accepts an
+ordinary callable compiler and checks that its assembled `LocalProblem`
+preserves the declared trace map and literal kernel or retained basis.
+`pymhm.fenics.assemble_local_forms` supplies the DOLFINx compiler. Physical
+moment forms, signed trace forms and integration choices remain explicit.
+`LocalForm` does not describe independent trial/test trace couplings or left
+retained bases. Such Petrov–Galerkin blocks can be supplied directly as a
+`LocalProblem` by the same provider interface; the DOLFINx adapter requires
+matching trial and test spaces.
+
+`GlobalForm` declares the skeleton dimension, the retained dimension per cell,
+boundary moments, prescribed trace coefficients and physical constraint rows.
+If `P_K` gathers a cell's trace and retained coordinates, and `S_K`, `g_K` are
+its condensed block and load, the global form is
+
+$$
+\begin{aligned}
+\sum_K(P_Ky)^T S_K(P_Kx)
+&=\sum_K(P_Ky)^Tg_K-y_\Lambda^Tg_D,\\
+x&=(\lambda,c),\qquad Q^Tx=d.
+\end{aligned}
+$$
+
+This interface composes the condensed hybrid form in declared coordinates.
+It does not compile an arbitrary UFL form on an independent skeleton mesh.
+The boundary convention is the same as `HybridSystem`; physical gauges must
+describe the complete reconstructed field. Local physical weights can be
+converted to a constraint with `hybrid_mean_constraint` after assembly.
+Declared arrays preserve their stored precision. Local operators and native
+element tabulations use binary64; retaining wider correction digits through a
+solve requires the explicit `extended` refinement setting.
+
+A local provider is a callable `provider(item) -> LocalProblem | LocalAssembly`.
+It can use portable kernels, UFL/FEniCS or another simulation package. No
+framework superclass is required. `HybridProblem` combines that provider, its
+ordered items and the global form. `LocalAssembly.metadata` carries portable
+evaluation data such as local coordinates, never a live native mesh or factor.
+
+`SolverConfig.local_solver` also accepts a callable on the constrained matrix
+and all source/trace/retained-mode right-hand sides. This permits an external
+linear solver or response model to supply local coefficients. Every returned
+column must satisfy the unchanged original residual criterion before its
+response is decoded. Machine-learning accuracy, preCICE coupling and backend
+specific discretization stability require their own scientific qualification;
+no such qualification follows from implementing a callable.
+
 ## Local operators
 
 `LocalProblem(A, B, f, trace_dofs, kernel=Z, constraints=C)` represents
@@ -67,7 +143,77 @@ and physical-rate checks separately from pressure and flux approximation.
 
 ## Local backends
 
-The portable FEM kernels provide auditable reference implementations. FEniCS
+### Reference-element libraries
+
+`pymhm.element_backends` delegates reference-element creation, values,
+Cartesian derivatives and entity transformations to
+[Basix](https://docs.fenicsproject.org/basix/v0.11.0/python/index.html).
+`ReferenceElementSpec` uses the library's own family, cell, degree and variant
+names. `create_reference_element` records the native coefficient matrix after
+dualization, its digest, mapping, polynomial set and backend version.
+`tabulate_reference` supports the installed library's derivative orders and
+element shapes; it applies no physical Piola map or global face orientation.
+An explicit `dof_ordering` reorders both the archived coefficient matrix and
+the full orientation maps into the executed coefficient order. Entity-local
+maps keep their intrinsic order; `reference_entity_dofs` identifies their
+global slots in that executed order.
+
+```python
+from pymhm.element_backends import (
+    ReferenceElementSpec, create_reference_element, tabulate_reference,
+)
+
+element = create_reference_element(
+    ReferenceElementSpec("P", "triangle", 4, lagrange_variant="equispaced")
+)
+table = tabulate_reference(element, [[0.2, 0.3]], nderiv=2)
+```
+
+Basix supplies the built-in interval, triangular and tetrahedral Pk tabulations.
+Nodal permutations preserve PyMHM's topological numbering; affine Jacobians map
+Cartesian reference derivatives into physical coordinates. The public
+barycentric derivative representation uses the extension
+`p(lambda_1,...,lambda_d)`, with zero lambda_0 derivatives, on the unit-sum
+hyperplane. Cartesian Qk bases use native interval factors in declared tensor
+order. The historical `backend="portable"` keyword is a compatibility spelling
+for the same Basix implementation.
+
+At literally declared interpolation nodes, nodal values equal their Kronecker
+rows. This applies the interpolation functional without a proximity threshold;
+nearby points and derivatives use the executed native tables. Tetrahedral face
+values use the exact topological support of the nodal trace. Scalar diffusion
+contractions accumulate in NumPy's widest real type before returning binary64
+matrix entries; quadrature, coefficients and physical operators retain their
+declared conventions. On platforms with binary64 `longdouble`, the accumulation
+uses that precision.
+
+RT and BDM tabulations use native elements, transformed into the declared
+normal/interior moment coordinates. Basix RT degree one denotes mathematical
+RT0; simplicial BDM uses its vector polynomial degree. Restricted/enriched MHM
+spaces retain the stated normal restriction and all prescribed bubble modes.
+Their subspace maps, physical gauges, Piola transformations and face orientations
+remain explicit PyMHM responsibilities. Prism spaces use native simplex and
+interval polynomial factors. The persisted candidate-coordinate matrices retain
+their meaning during field replay.
+
+Conventional Legendre moment tests and declared monomial coordinates delegate
+repeated value and derivative evaluation to Basix's orthogonal polynomial sets.
+Their normalization and representation maps preserve existing coefficient
+conventions. Exports of ascending-power coefficients are representation adapters
+for archives; they do not provide a second finite-element tabulator. New
+three-layer and elastic-wave archives record the executed native basis matrices;
+legacy archives retain consumers for their original persisted representations.
+
+Basix is a runtime dependency loaded at element creation or polynomial
+tabulation. DOLFINx, UFL, PETSc and MPI remain separate optional integrations.
+The algebraic local-provider and global-assembly contracts do not depend on a
+native element handle. The lockfile includes Windows packages; native execution
+checks in this workspace run on Linux. FIAT/FInAT can participate through a local
+provider or form compiler; a built-in FIAT adapter is not supplied.
+
+### Local finite-element assembly
+
+The built-in FEM assembly uses Basix reference bases. FEniCS
 assembles the same `LocalProblem` from UFL forms. Arbitrary forms do not imply
 that their discretizations have been analyzed or benchmarked. In particular,
 H(div) normal boundary conditions are essential and require a correct lifting,

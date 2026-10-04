@@ -5,7 +5,7 @@ from numbers import Integral
 from typing import Any
 
 import numpy as np
-from numpy.polynomial.legendre import leggauss, legvander
+from numpy.polynomial.legendre import leggauss
 from numpy.typing import NDArray
 
 FloatArray = NDArray[np.float64]
@@ -199,7 +199,16 @@ class FaceSpace:
         return 1 + sum(self.degrees) if self.continuous else sum(p + 1 for p in self.degrees)
 
     def evaluate(self, parameter: Any) -> FloatArray:
-        """Evaluate every scalar basis at oriented coordinates in [0, 1]."""
+        """Evaluate Basix scalar bases at oriented coordinates in [0, 1].
+
+        Continuous segment nodes are ordered left endpoint, right endpoint,
+        then increasing interior nodes. Discontinuous modes use conventional
+        unnormalized Legendre polynomials, whose degree-j squared mass on a
+        segment of length L is L/(2j+1). Internal breaks belong to the segment
+        on their right; a face endpoint belongs to its adjacent segment.
+        """
+        from pymhm.element_backends import legendre_values, simplex_lagrange_tabulation
+
         t = np.atleast_1d(np.asarray(parameter, dtype=float))
         if t.ndim != 1 or not np.isfinite(t).all() or np.any((t < 0) | (t > 1)):
             raise ValueError("face coordinates must be a finite vector in [0, 1]")
@@ -211,16 +220,18 @@ class FaceSpace:
             local = (t[mask] - lo) / (hi - lo)
             if self.continuous:
                 nodes = np.r_[0.0, 1.0, np.arange(1, degree) / degree]
-                basis = np.ones((len(local), degree + 1))
-                for a, node in enumerate(nodes):
-                    for b, other in enumerate(nodes):
-                        if a != b:
-                            basis[:, a] *= (local - other) / (node - other)
+                basis, _, _ = simplex_lagrange_tabulation(
+                    "interval",
+                    degree,
+                    np.column_stack((1 - local, local)),
+                    nodes=np.column_stack((1 - nodes, nodes)),
+                    nderiv=0,
+                )
                 ids = np.r_[i, i + 1, len(self.breaks) + offset + np.arange(degree - 1)]
                 values[np.ix_(mask, ids)] = basis
                 offset += degree - 1
             else:
-                values[mask, offset : offset + degree + 1] = legvander(2 * local - 1, degree)
+                values[mask, offset : offset + degree + 1] = legendre_values(2 * local - 1, degree)
                 offset += degree + 1
         return values
 

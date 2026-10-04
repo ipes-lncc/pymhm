@@ -84,25 +84,63 @@ def test_affine_lifting_preserves_source_and_oriented_physical_flux(acquired, n)
 
 def test_archived_cardinal_tables_and_one_sided_raw_gradient(acquired):
     """Executed monomial coefficients agree with both saved rules and exact Q2 derivatives."""
+    from pymhm.element_backends import simplex_lagrange_basis
+
     arrays = {k: v.copy() for k, v in acquired[2, True][2].items()}
     x, y = arrays["leaf_nodes"].transpose(2, 0, 1)
     polynomial = 1 + x**2 + 3 * x * y + 2 * y**2
     arrays.update(precision_fields("leaf_pressure_recursive", polynomial))
+    nodes = np.linspace(0, 1, 3)
+    factor = simplex_lagrange_basis("interval", 2, nodes=np.column_stack((1 - nodes, nodes)))
+    modes = np.arange(3)
+    normalization = np.sqrt(2 * modes + 1)
+    factor_value_bound = np.abs(factor.basis_matrix) @ normalization
+    factor_derivative_bound = np.abs(factor.basis_matrix) @ (normalization * modes * (modes + 1))
     for q in (8, 10):
         points = arrays[f"q{q}_reference"]
         powers = arrays["q2_monomial_powers"]
         monomials = np.prod(points[:, None] ** powers[None], axis=-1)
-        np.testing.assert_allclose(
-            monomials @ arrays["q2_cardinal_matrix"].T,
-            arrays[f"q{q}_basis"],
-            atol=3e-15,
-            rtol=0,
+        # Seventeen multiply/add operations in the nine-term power dot;
+        # The native degree-two interval value/first-derivative graph has at
+        # most 47 scalar operations: 12 for the values, 26 for the derivative
+        # recurrences and nine for normalization. Counting the entire graph
+        # also counts exact/zero terms and operations the compiler may remove.
+        # Five coefficient-dot operations and one tensor multiplication follow.
+        epsilon = np.finfo(arrays["q2_cardinal_matrix"].dtype).eps
+        operations = 17 + 47 + 5 + 1
+        gamma = operations * epsilon / (1 - operations * epsilon)
+        basis_bound = gamma * (
+            monomials @ np.abs(arrays["q2_cardinal_matrix"]).T
+            + np.outer(factor_value_bound, factor_value_bound).ravel()
         )
+        represented = monomials @ arrays["q2_cardinal_matrix"].T
+        assert np.all(np.abs(represented - arrays[f"q{q}_basis"]) <= basis_bound)
         physical, pressure, raw, _ = archive.evaluate(arrays, "recursive", q)
         x, y = physical.transpose(3, 0, 1, 2)
         np.testing.assert_allclose(pressure, 1 + x * x + 3 * x * y + 2 * y * y, atol=5e-15, rtol=0)
-        np.testing.assert_allclose(raw[..., 0], 2 * x + 3 * y, atol=5e-14, rtol=0)
-        np.testing.assert_allclose(raw[..., 1], 3 * x + 4 * y, atol=5e-14, rtol=0)
+        # Forward arithmetic bound for the executed SDK factors, rather than
+        # an absolute threshold tied to the previous polynomial representation.
+        # |L_j| <= 1 and |d L_j(2s-1)/ds| <= j(j+1) on [0,1].
+        # Conservatively count all 47 native interval operations above, five
+        # three-term coefficient-dot operations, a tensor product, seventeen
+        # nine-term field-dot operations and one physical-width division.
+        gradient_bound = np.stack(
+            (
+                np.outer(factor_value_bound, factor_derivative_bound).ravel(),
+                np.outer(factor_derivative_bound, factor_value_bound).ravel(),
+            ),
+            axis=-1,
+        )
+        coefficients = archive.restore(arrays, "leaf_pressure_recursive")
+        values = coefficients[np.arange(len(coefficients))[:, None, None], arrays["leaf_dofs"]]
+        widths = (arrays["leaf_points"][:, 8] - arrays["leaf_points"][:, 0]) / 2
+        operation_count = 47 + 5 + 1 + 17 + 1
+        epsilon = np.finfo(factor.basis_matrix.dtype).eps
+        gamma = operation_count * epsilon / (1 - operation_count * epsilon)
+        bound = gamma * np.einsum("cfj,ja->cfa", np.abs(values), gradient_bound)
+        bound = bound[:, :, None] / widths[:, None, None]
+        expected = np.stack((2 * x + 3 * y, 3 * x + 4 * y), axis=-1)
+        assert np.all(np.abs(raw - expected) <= bound)
     # Change only one independent leaf's constant; its neighbor must remain unchanged.
     polynomial[0] += 2
     arrays.update(precision_fields("leaf_pressure_recursive", polynomial))

@@ -3,7 +3,8 @@
 Composable Multiscale Hybrid Mixed finite element methods in Python.
 
 `pymhm` couples independent local variational problems through an explicitly
-oriented skeleton. The portable NumPy/SciPy backend is complemented by optional
+oriented skeleton. The NumPy/SciPy backend uses Basix for finite-element
+bases and tabulation, and is complemented by optional
 FEniCS/UFL assembly, meshio/Gmsh/Netgen interfaces and CPU/GPU sparse solvers.
 
 Version 0.1.0 is research software in pre-alpha development. Built-in workflows
@@ -31,6 +32,11 @@ solution = solve_darcy(
 )
 print(solution.l2_error(lambda x: 1.0 + x[:, 0]))
 ```
+
+The introductory [scalar](docs/tutorials/scalar.md),
+[vector](docs/tutorials/vector.md) and [provider](docs/tutorials/providers.md)
+tutorials use small executable problems. They cover primal and mixed H(div)
+locals, explicit interface conventions, physical gauges and custom local solvers.
 
 Install from a checkout with `python -m pip install .`. Wheel, source distribution,
 trusted PyPI publishing and a Conda recipe are provided; no registry publication
@@ -67,13 +73,17 @@ is implied by the presence of those files.
 - Independent face partitions and degrees, including continuous subface traces;
   physical local kernel constraints, source/trace factorization reuse and
   conservative RT0 flux equilibration.
-- User-defined UFL local operators; optional mesh import/export with physical tags.
+- User-defined UFL local operators, explicit local/global form descriptions and
+  callable providers; optional mesh import/export with physical tags.
+- Basix reference elements, nodal simplex/tensor bases and RT/BDM tabulation,
+  with explicit native basis ordering, transformations and coefficient digests.
 - PyVista/VTK export and rendering, including broken finite-element fields and
   actual macro-mesh overlays (`pip install '.[visualization]'` from a checkout).
 - SciPy, PETSc, PARDISO, CuPy and cuDSS solvers; CPU PyAMG and optional GPU AmgX.
   AMG local Neumann solves use a compatible SPD complement.
-- Deterministic serial/thread/process local execution with native thread limits;
-  factories distribute local assembly and condensation and retain mesh/DOF metadata.
+- Deterministic serial/thread/process local execution with bounded batches and
+  native thread limits; the coordinator reduces shared-face contributions in
+  cell order and retains mesh/DOF metadata for reconstruction.
 - Distributed PETSc/MPI assembly, reusable offline operators, resident GPU P1
   batches and augmented CPU/GPU AMG saddle preconditioners.
 

@@ -1,7 +1,9 @@
 # Defining local problems with FEniCSx
 
-`pymhm.fenics.from_ufl` assembles local forms using DOLFINx and returns an
-ordinary `LocalProblem`. Global skeleton numbering and condensation remain
+`LocalForm` records local variational expressions and explicit trace maps;
+`pymhm.fenics.assemble_local_forms` compiles them using DOLFINx and returns an
+ordinary `LocalProblem`. The lower-level `pymhm.fenics.from_ufl` accepts the same
+assembly inputs directly. Global skeleton numbering and condensation remain
 independent of DOLFINx. The same adapter accepts scalar, vector, mixed and
 H(div) spaces, provided the supplied local equations and constraints are
 well posed.
@@ -14,7 +16,7 @@ examples assemble their local forms directly through UFL and DOLFINx.
 Use the optional environment:
 
 ```bash
-pixi run -e fem pytest -m fem
+pixi run --locked -e fem pytest -m fem
 ```
 
 The adapter uses the native DOLFINx CSR/vector assembly interface and requires
@@ -66,12 +68,15 @@ import numpy as np
 import ufl
 from mpi4py import MPI
 from dolfinx import fem, mesh
-from pymhm.fenics import from_ufl, primal_darcy_forms
+from pymhm.fenics import assemble_local_forms
+from pymhm.variational import LocalForm
 
 local_mesh = mesh.create_unit_square(MPI.COMM_SELF, 4, 4)
 V = fem.functionspace(local_mesh, ("Lagrange", 1))
-v = ufl.TestFunction(V)
-a, load = primal_darcy_forms(V, permeability=1.0, source=0.0)
+u, v = ufl.TrialFunction(V), ufl.TestFunction(V)
+dx = ufl.dx(domain=local_mesh)
+a = ufl.inner(ufl.grad(u), ufl.grad(v)) * dx
+load = 0.0 * v * dx
 
 predicates = [
     lambda x: np.isclose(x[0], 0.0),
@@ -95,10 +100,12 @@ ds = ufl.Measure("ds", domain=local_mesh, subdomain_data=tags)
 # These signs assume every global face normal is locally outward.
 # Interior macrofaces must use opposite signs in their two adjacent cells.
 trace_forms = [v * ds(marker) for marker in range(1, 5)]
-local = from_ufl(
-    a, load, trace_forms, np.arange(4),
-    kernel=np.ones((V.dofmap.index_map.size_local, 1)),
-    constraint_forms=[v * ufl.dx],
+local = assemble_local_forms(
+    LocalForm(
+        a, load, tuple(trace_forms), np.arange(4),
+        kernel=np.ones((V.dofmap.index_map.size_local, 1)),
+        moment_forms=(v * dx,),
+    )
 )
 response = local.condense()
 ```
@@ -108,6 +115,88 @@ complete two-macrotriangle problem: it creates independent fine meshes, assemble
 signed interface traces, compares local matrices and moments with the native P1
 implementation, solves the common skeleton system, and recovers the exact affine
 pressure and globally oriented flux.
+
+## Local provider and global hybrid form
+
+An ordinary callable `provider(cell)` supplies a `LocalProblem` or
+`LocalAssembly(problem, metadata)`. No provider base class is required.
+`compile_local_forms(forms, compiler)` also accepts an ordinary callable
+compiler and checks that it returns a validated local problem with the exact
+declared trace map and retained coefficient basis. A rotated basis is a
+different coefficient contract, even when it spans the same space. Compilation
+does not certify quadrature accuracy or stability of the selected spaces.
+
+`GlobalForm` declares the global trace size, the retained width of each cell,
+boundary loads, prescribed trace coefficients and physical gauge rows. Its
+bilinear and linear forms are the sum of the condensed local records. Writing
+the local reduced trial/test vectors as `x_K` and `y_K`, their blocks and loads
+as `S_K` and `h_K`, and the boundary trace load as `g_D`, this means
+
+$$
+\begin{aligned}
+\mathcal B(x,y) &= \sum_K y_K^\mathsf{T} S_K x_K,\\
+\mathcal L(y) &= \sum_K y_K^\mathsf{T} h_K-\mu^\mathsf{T}g_D,\\
+r_j^\mathsf{T}x &= m_j.
+\end{aligned}
+$$
+
+Here `x=(lambda,c)` contains the trace and ordered cell-retained coefficients,
+`mu` is the trace part of the test vector, and `(r_j,m_j)` are declared physical
+constraints. The blocks come from `LocalResponse.global_contribution`, including
+its signed hybrid saddle convention. This scoped algebraic form uses the shared
+hybrid assembler; it does not compile arbitrary UFL expressions on the global
+skeleton. `boundary_load` follows the pressure-boundary sign convention above,
+and `fixed_trace` prescribes oriented flux coefficients. Physical local moments
+can be converted to global rows with `system.mean_constraint` after assembly.
+
+The complete affine Darcy example uses continuous local P1 pressure, one
+constant moment per macrotriangle and constant signed face traces. It recovers
+`p=1+x+2y` and Darcy flux `(-1,-2)` on the unit square. For its native provider,
+the same local expressions shown above are constructed inside each worker.
+
+```python
+from examples.variational_darcy import DarcyProvider, affine_pressure
+from pymhm.assembly import HybridProblem, solve_hybrid
+from pymhm.elements import boundary_data
+from pymhm.mesh import SkeletonSpace, TriangleMesh
+from pymhm.parallel import ExecutionConfig
+from pymhm.variational import GlobalForm
+
+macro_mesh = TriangleMesh.unit_square()
+skeleton = SkeletonSpace(macro_mesh)
+provider = DarcyProvider(macro_mesh, skeleton, kind="fenics", subdivisions=2)
+boundary, _ = boundary_data(skeleton, affine_pressure)
+global_form = GlobalForm(
+    skeleton.size, coarse_sizes=(1, 1), boundary_load=boundary,
+)
+problem = HybridProblem(global_form, provider, range(2))
+solution = solve_hybrid(problem, execution=ExecutionConfig())
+```
+
+Run the complete script with either assembly provider:
+
+```bash
+pixi run --locked -e test python -m examples.variational_darcy --provider portable
+pixi run --locked -e fem python -m examples.variational_darcy --provider fenics --backend process --workers 2 --batch-size 1
+```
+
+The `--backend` choices are `serial`, `thread` and `process`; `--batch-size`
+bounds work submitted together in parallel, while serial execution solves one
+cell at a time. Shared faces are accumulated by the coordinator in cell order.
+Responses remain available for reconstruction, so this bound applies to
+in-flight work rather than the total stored response and global matrix size.
+Spawn execution requires a top-level picklable provider and a guarded script
+entry point, as in this example. Its DOLFINx provider creates a `COMM_SELF`
+mesh inside the invocation and returns only numerical arrays and point
+metadata. Live UFL, DOLFINx, MPI and factorization objects do not cross workers.
+Native thread safety remains the provider's responsibility in thread mode;
+separate processes give each invocation its own native state.
+
+Native provider tests execute serial and actual spawn-process assembly with
+batch sizes one and two. They compare the same local operators, signed
+couplings, integral moments, global records and affine fields against the
+portable P1 implementation, with the DOLFINx coefficient permutation stated
+explicitly. This verifies the common discrete problem and scheduling contract.
 
 ## Volume-form helpers
 

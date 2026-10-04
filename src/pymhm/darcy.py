@@ -1,5 +1,6 @@
 """Primal Pk and locally H(div)-conforming RT0/P0 Darcy MHM methods."""
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, Literal
 
@@ -158,6 +159,7 @@ class _DarcyLocalFactory:
     degree: int
     formulation: str
     quadrature_order: int
+    element_backend: Literal["portable", "basix"] = "basix"
 
     def __call__(self, cell: int) -> LocalAssembly:
         """Use a dimensionless local average and retain physical integral weights for gauges.
@@ -179,7 +181,12 @@ class _DarcyLocalFactory:
         if formulation == "primal":
             coupling = trace_coupling(mesh, cell, fine, skeleton, degree)
             matrix, mass, load = scalar_operators(
-                fine, degree, diffusion=permeability, source=source, order=quadrature_order
+                fine,
+                degree,
+                diffusion=permeability,
+                source=source,
+                order=quadrature_order,
+                element_backend=self.element_backend,
             )
             if len(point_parts[cell]):
                 load += point_load_vector(fine, degree, point_parts[cell])
@@ -228,6 +235,70 @@ class _DarcyLocalFactory:
                 matrix, coupling_mixed, load, skeleton.cell_dofs(cell), kernel, constraints
             )
         return LocalAssembly(problem, (fine, physical_mean[:, 0]))
+
+
+def darcy_local_provider(
+    mesh: TriangleMesh,
+    *,
+    skeleton: SkeletonSpace | None = None,
+    permeability: Any = 1.0,
+    source: Any = 0.0,
+    formulation: Literal["primal", "mixed"] = "primal",
+    degree: int = 1,
+    local_refinement: int = 4,
+    quadrature_order: int = 4,
+    element_backend: Literal["portable", "basix"] = "basix",
+) -> Callable[[int], LocalAssembly]:
+    """Create a portable callable for primal Pk or flux-prescribing RT0 cells.
+
+    The provider reuses the original Darcy local construction on one refined
+    triangle per macrocell. ``primal`` represents nodal pressure and its
+    physical constant mode; ``mixed`` represents RT0 flux, cellwise constant
+    pressure and auxiliary boundary-pressure multipliers with their joint
+    pressure mode. It enforces prescribed skeletal normal flux through the
+    augmented local equations. This is not a pressure-trace hybridization.
+
+    ``skeleton`` must belong to ``mesh`` and have one component. Its oriented
+    global coefficients represent Darcy normal flux. Primal weak pressure
+    boundary moments enter ``GlobalForm.boundary_load`` unchanged; mixed RT0
+    uses their negative because its augmented coupling is ``-flux_map``.
+    RT0 requires piecewise constant traces aligned with refined boundary edges
+    and retains the legacy ``degree=1`` setting. Higher RT/BDM and restricted
+    H(div) families have their own discretization contracts and public solvers.
+
+    Return metadata is ``(local_mesh, physical_pressure_mean_weights)`` in the
+    original local coefficient order. These weights can form physical global
+    gauges; auxiliary multipliers do not contribute to the pressure mean.
+    Basix tabulates primal Pk and mixed RT0 in their declared nodal/moment
+    coordinates. The portable spelling selects the same implementation.
+    All native resources remain invocation-local; callbacks must be picklable
+    for process execution.
+    """
+    refinement = positive_int(local_refinement, "local_refinement")
+    degree = positive_int(degree, "degree")
+    order = _assembly_quadrature_order(degree, quadrature_order)
+    if formulation not in {"primal", "mixed"}:
+        raise ValueError("formulation must be primal or mixed")
+    if formulation == "mixed" and degree != 1:
+        raise ValueError("RT0 uses degree=1; primal Pk has its own degree")
+    if element_backend not in {"portable", "basix"}:
+        raise ValueError("element_backend must be portable or basix")
+    skeleton = SkeletonSpace(mesh) if skeleton is None else skeleton
+    if skeleton.mesh is not mesh or skeleton.components != 1:
+        raise ValueError("Darcy requires a scalar skeleton on the supplied mesh")
+    return _DarcyLocalFactory(
+        mesh,
+        skeleton,
+        permeability,
+        source,
+        tuple(np.empty((0, 3)) for _ in mesh.cells),
+        refinement,
+        None,
+        degree,
+        formulation,
+        order,
+        element_backend,
+    )
 
 
 def solve_darcy(

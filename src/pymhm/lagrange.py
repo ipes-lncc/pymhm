@@ -1,10 +1,8 @@
-"""Continuous nodal simplex elements with exact first and second derivatives."""
+"""Continuous nodal triangle topology and Basix Pk tabulation."""
 
-from math import factorial
-from typing import Any
+from typing import Any, Literal
 
 import numpy as np
-from numpy.polynomial import Polynomial
 from numpy.polynomial.legendre import leggauss
 
 from pymhm.elements import p1_geometry
@@ -24,61 +22,42 @@ def multiindices(degree: int) -> IntArray:
     return np.asarray(indices, dtype=np.int64)
 
 
-def _reference_table(degree: int, bary: FloatArray, derivatives: int) -> FloatArray:
-    """Centralize the cardinal factors for the requested derivative orders only."""
-    table = np.empty((3, degree + 1, derivatives + 1, len(bary)))
-    for i in range(3):
-        for k in range(degree + 1):
-            polynomial = (
-                Polynomial.fromroots(np.arange(k) / degree) * degree**k / factorial(k)
-                if k
-                else Polynomial([1.0])
-            )
-            for derivative in range(derivatives + 1):
-                table[i, k, derivative] = polynomial.deriv(derivative)(bary[:, i])
-    return table
-
-
-def _reference_values(indices: IntArray, table: FloatArray) -> FloatArray:
-    """Multiply the same executed cardinal factors in the same node/coordinate order."""
-    values = np.ones((table.shape[-1], len(indices)))
-    for node, index in enumerate(indices):
-        for coordinate in range(3):
-            values[:, node] *= table[coordinate, index[coordinate], 0]
-    return values
-
-
 def reference_values(degree: int, bary: FloatArray) -> FloatArray:
-    """Evaluate triangular cardinal Pk values without allocating derivatives.
+    """Evaluate native equispaced triangular Pk values in PyMHM node order.
 
     ``bary`` is a finite real array of shape (points, 3); evaluation is allowed
-    outside the reference triangle. Coordinates and returned values use
-    binary64, with the same node order as :func:`multiindices`. The cardinal
-    polynomial factors and product order are shared with :func:`reference_basis`.
+    outside the reference triangle on the unit-sum barycentric hyperplane.
+    Coordinates and returned values use binary64, with the same node order as
+    :func:`multiindices`. Basix tabulates values without allocating derivatives.
     """
-    indices = multiindices(degree)
+    from pymhm.element_backends import simplex_lagrange_tabulation
+
+    nodes = multiindices(degree) / degree
     if np.iscomplexobj(bary):
         raise ValueError("barycentric coordinates must be finite real triples")
     bary = np.asarray(bary, dtype=float)
     if bary.ndim != 2 or bary.shape[1] != 3 or not np.isfinite(bary).all():
         raise ValueError("barycentric coordinates must be finite real triples")
-    return _reference_values(indices, _reference_table(degree, bary, 0))
+    return simplex_lagrange_tabulation("triangle", degree, bary, nodes=nodes, nderiv=0)[0]
 
 
 def reference_basis(degree: int, bary: FloatArray) -> tuple[FloatArray, FloatArray, FloatArray]:
-    """Evaluate cardinal polynomials and their barycentric derivatives analytically."""
-    indices = multiindices(degree)
-    table = _reference_table(degree, bary, 2)
-    values = _reference_values(indices, table)
-    gradient = np.ones((*values.shape, 3))
-    hessian = np.ones((*values.shape, 3, 3))
-    for node, index in enumerate(indices):
-        for i in range(3):
-            for a in range(3):
-                gradient[:, node, a] *= table[i, index[i], int(i == a)]
-                for b in range(3):
-                    hessian[:, node, a, b] *= table[i, index[i], int(i == a) + int(i == b)]
-    return values, gradient, hessian
+    """Return Basix Pk values and derivatives in the canonical barycentric extension.
+
+    Shapes are ``(points, basis)``, ``(points, basis, 3)`` and
+    ``(points, basis, 3, 3)``. The extension is ``p(lambda_1,lambda_2)``:
+    lambda_0 derivatives are zero, while the other entries are Cartesian
+    reference derivatives. Contract with all three physical barycentric
+    gradients to obtain physical derivatives. Input coordinates must sum to
+    one; off-triangle points on that hyperplane are supported. The node order
+    remains :func:`multiindices`; independent off-hyperplane extensions are
+    not part of the finite-element field.
+    """
+    from pymhm.element_backends import barycentric_simplex_tabulation
+
+    return barycentric_simplex_tabulation(
+        "triangle", degree, bary, nodes=multiindices(degree) / degree
+    )
 
 
 def nodal_space(mesh: TriangleMesh, degree: int) -> tuple[IntArray, FloatArray]:
@@ -112,46 +91,76 @@ def nodal_space(mesh: TriangleMesh, degree: int) -> tuple[IntArray, FloatArray]:
 
 
 def tabulate(
-    mesh: TriangleMesh, degree: int, bary: FloatArray
+    mesh: TriangleMesh,
+    degree: int,
+    bary: FloatArray,
+    *,
+    backend: Literal["portable", "basix"] = "basix",
 ) -> tuple[IntArray, FloatArray, FloatArray, FloatArray, FloatArray]:
-    """Return DOFs, coordinates, values, physical gradients and physical Hessians."""
+    """Return DOFs, coordinates, values, physical gradients and physical Hessians.
+
+    Basix supplies equispaced Pk values and Cartesian derivatives in
+    :func:`multiindices` order. Points must sum to one. The affine geometry,
+    continuous topology and nodal coefficient order are explicit PyMHM data.
+    ``backend='portable'`` is a compatibility spelling for this same Basix
+    execution; there is no separate polynomial implementation.
+    """
+    from pymhm.element_backends import physical_simplex_tabulation
+
+    if backend not in ("basix", "portable"):
+        raise ValueError("backend must be portable or basix")
     dofs, points = nodal_space(mesh, degree)
-    basis, derivative, second = reference_basis(degree, bary)
-    gradients, _ = p1_geometry(mesh)
-    return (
-        dofs,
-        points,
-        basis,
-        np.einsum("qin,tna->tqia", derivative, gradients),
-        np.einsum("qinm,tna,tmb->tqiab", second, gradients, gradients),
+    geometry, _ = p1_geometry(mesh)
+    basis, first, second = physical_simplex_tabulation(
+        "triangle",
+        degree,
+        bary,
+        nodes=multiindices(degree) / degree,
+        reference_gradients=geometry[:, 1:],
     )
+    return dofs, points, basis, first, second
 
 
 def element_tabulate(
-    mesh: TriangleMesh, degree: int, bary: FloatArray
+    mesh: TriangleMesh,
+    degree: int,
+    bary: FloatArray,
+    *,
+    backend: Literal["portable", "basix"] = "basix",
 ) -> tuple[IntArray, FloatArray, FloatArray, FloatArray, FloatArray]:
     """Tabulate Pk at separate barycentric quadrature points in each triangle.
 
     ``bary`` has shape ``(cells, points, 3)``. All returned basis arrays retain
     the leading cell axis, so material intersections do not require evaluating
     every element's basis at every other element's quadrature points.
+    ``backend`` follows :func:`tabulate`; tabulation preserves the declared
+    continuous topology and nodal coefficient order.
     """
     if bary.strides[0] == 0:
-        dofs, nodes, values, first, second = tabulate(mesh, degree, bary[0])
+        dofs, nodes, values, first, second = tabulate(mesh, degree, bary[0], backend=backend)
         return dofs, nodes, np.broadcast_to(values, (len(mesh.cells), *values.shape)), first, second
+    from pymhm.element_backends import physical_simplex_tabulation
+
+    if backend not in ("basix", "portable"):
+        raise ValueError("backend must be portable or basix")
     dofs, nodes = nodal_space(mesh, degree)
-    values, first, second = reference_basis(degree, bary.reshape(-1, 3))
-    shape = (*bary.shape[:2], values.shape[1])
     geometry, _ = p1_geometry(mesh)
-    gradient = np.einsum("tqib,tba->tqia", first.reshape(*shape, 3), geometry)
-    hessian = np.einsum("tqibc,tba,tcd->tqiad", second.reshape(*shape, 3, 3), geometry, geometry)
-    return dofs, nodes, values.reshape(shape), gradient, hessian
+    values, first, second = physical_simplex_tabulation(
+        "triangle",
+        degree,
+        bary,
+        nodes=multiindices(degree) / degree,
+        reference_gradients=geometry[:, 1:],
+    )
+    return dofs, nodes, values, first, second
 
 
 def trace_coupling(
     coarse: TriangleMesh, cell: int, fine: TriangleMesh, skeleton: SkeletonSpace, degree: int
 ) -> FloatArray:
     """Integrate signed nodal traces over independently subdivided macrofaces."""
+    from pymhm.element_backends import simplex_lagrange_tabulation
+
     _, points = nodal_space(fine, degree)
     width = sum(skeleton.faces[f].size for f in coarse.cell_faces[cell])
     matrix = np.zeros((len(points), width))
@@ -180,11 +189,13 @@ def trace_coupling(
                 weights = gauss_weights * (right - left) / 2 * length * coarse.signs[cell, side]
                 s = (parameter - t[0]) / (t[1] - t[0])
                 nodes_1d = np.r_[0.0, 1.0, np.arange(1, degree) / degree]
-                basis = np.ones((len(s), degree + 1))
-                for i, node in enumerate(nodes_1d):
-                    for j, other in enumerate(nodes_1d):
-                        if i != j:
-                            basis[:, i] *= (s - other) / (node - other)
+                basis = simplex_lagrange_tabulation(
+                    "interval",
+                    degree,
+                    np.column_stack((1 - s, s)),
+                    nodes=np.column_stack((1 - nodes_1d, nodes_1d)),
+                    nderiv=0,
+                )[0]
                 matrix[ids, offset : offset + space.size] += basis.T @ (
                     weights[:, None] * space.evaluate(parameter)
                 )
@@ -202,20 +213,24 @@ def scalar_operators(
     advection: Any = (0.0, 0.0),
     skew_advection: bool = False,
     order: int = 6,
+    element_backend: Literal["portable", "basix"] = "basix",
 ) -> tuple[Any, Any, FloatArray]:
     """Assemble continuous Pk scalar diffusion, reaction and advective operators.
 
     With ``skew_advection=False`` the convection term is ``(beta.grad(u),v)``.
     Its antisymmetric part is selected when ``skew_advection=True``. A variable
     conservative velocity also requires half its divergence in ``reaction``.
+    Basix tabulates local Pk values and derivatives in the same nodal
+    coefficient order. ``element_backend='portable'`` is a compatibility
+    spelling for this same execution.
     """
     from scipy import sparse
 
     from pymhm.cut_cells import material_triangle_quadrature
-    from pymhm.elements import scalar_values, tensor_values, vector_values
+    from pymhm.elements import _scalar_diffusion_blocks, scalar_values, tensor_values, vector_values
 
     bary, weights, material = material_triangle_quadrature(mesh, diffusion, max(order, degree + 2))
-    dofs, nodes, basis, gradients, _ = element_tabulate(mesh, degree, bary)
+    dofs, nodes, basis, gradients, _ = element_tabulate(mesh, degree, bary, backend=element_backend)
     physical = np.einsum("tqi,tij->tqj", bary, mesh.points[mesh.cells])
     flat = physical.reshape(-1, 2)
     coefficient = tensor_values(material, flat).reshape(*weights.shape, 2, 2)
@@ -225,9 +240,7 @@ def scalar_operators(
     beta = vector_values(advection, flat).reshape(*weights.shape, 2)
     force = scalar_values(source, flat).reshape(weights.shape)
     mass_blocks = np.einsum("tq,tqi,tqj,t->tij", weights, basis, basis, mesh.areas)
-    blocks = np.einsum(
-        "tq,tqia,tqab,tqjb,t->tij", weights, gradients, coefficient, gradients, mesh.areas
-    )
+    blocks = _scalar_diffusion_blocks(weights, gradients, coefficient, mesh.areas)
     blocks += np.einsum("tq,tqi,tqj,tq,t->tij", weights, basis, basis, scalar, mesh.areas)
     convection = np.einsum("tq,tqi,tqa,tqja,t->tij", weights, basis, beta, gradients, mesh.areas)
     blocks += (convection - convection.swapaxes(1, 2)) / 2 if skew_advection else convection

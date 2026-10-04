@@ -6,6 +6,67 @@ operator for new loads, distribute local and global algebra across MPI ranks,
 and assemble/factor batches of affine P1 local operators on a GPU. Choosing one
 does not implicitly enable the others.
 
+## Serial cells and bounded parallel batches
+
+`assemble_hybrid` consumes the explicitly declared layout in `GlobalForm`.
+Serial execution constructs, condenses and accumulates one macrocell before
+requesting the next. Parallel execution completes a bounded batch of local
+jobs, then accumulates each contribution in input order. Only the coordinator
+updates shared global face entries. Matrix entries are not pre-summed per batch;
+loads and their absolute scales use the same cellwise reduction as ordinary
+`HybridSystem` assembly.
+
+```python
+from pymhm import (
+    ExecutionConfig, GlobalForm, HybridProblem, assemble_hybrid,
+)
+
+form = GlobalForm(
+    trace_size=skeleton.size,
+    coarse_sizes=(1,) * len(macro_mesh.cells),
+    boundary_load=boundary_moments,
+)
+problem = HybridProblem(form, local_provider, range(len(macro_mesh.cells)))
+system = assemble_hybrid(
+    problem,
+    execution=ExecutionConfig(backend="process", workers=10, batch_size=10),
+)
+solution = system.solve()
+```
+
+Run process examples inside a script protected by
+`if __name__ == "__main__":`. The backend uses `spawn` on every platform.
+Providers create and release FEM, PETSc, MPI and accelerator resources within
+their own worker invocation. Return portable numerical operators and metadata.
+Thread execution additionally requires the provider's native libraries to be
+thread safe.
+
+`native_threads` defaults to one supported BLAS/OpenMP thread per local job.
+`None` leaves native settings unchanged. Thread limits are process wide during
+each thread batch and are restored before results are yielded; overlapping
+executions must not request conflicting limits. `batch_size=None` uses the
+effective worker count in parallel. Serial execution consumes one item at a
+time regardless of batch size.
+
+The generic `iter_local` exposes the same ordered scheduling for other local
+operations. Close it when stopping early, for example with `contextlib.closing`,
+so running tasks finish and workers are joined. `map_local` collects its results
+into a list. `assemble_hybrid` closes the iterator on success and on exceptions.
+Both interfaces bound submitted jobs; `assemble_hybrid` still retains local
+responses for field reconstruction and the assembled sparse global matrix.
+This is not a constant-memory global solve.
+
+For an external local solver, use
+`SolverConfig(local_solver=solve_local_columns)`. The callable receives copies
+of the constrained operator and RHS and returns coefficients with the same
+shape, including local moment multipliers. Verification uses the untouched
+original operator, independently for every RHS column. The callable owns its
+native precision and resource lifecycle. The augmented local operator also
+passes the existing equilibrated sparse-LU numerical rank diagnostic; its
+cost is part of this interface's setup. This diagnostic is not a mathematical
+inf-sup proof. This extension does not silently
+replace a failed solve or change tolerances.
+
 ## Compact condensation and a second reconstruction pass
 
 `HybridSystem.from_contributions(contributions, trace_size=..., coarse_sizes=...)`

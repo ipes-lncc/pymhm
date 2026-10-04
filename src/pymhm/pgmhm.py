@@ -9,10 +9,11 @@ from dataclasses import dataclass
 from typing import Any, Literal, cast
 
 import numpy as np
-from numpy.polynomial.legendre import leggauss, legval, legvander
+from numpy.polynomial.legendre import leggauss
 from scipy import sparse
 
 from pymhm.darcy import DarcySolution, _DarcyLocalFactory
+from pymhm.element_backends import legendre_values
 from pymhm.elements import boundary_data, scalar_values, tensor_values
 from pymhm.hybrid import HybridSolution, HybridSystem, LocalAssembly
 from pymhm.lagrange import nodal_space
@@ -75,7 +76,9 @@ class _FacePenalty:
             np.searchsorted(self.breaks, parameter, side="right") - 1, 0, len(self.breaks) - 2
         )
         t = 2 * (parameter - self.breaks[owners]) / np.diff(self.breaks)[owners] - 1
-        return np.asarray(legval(t, self.projection[owners].T, tensor=False), dtype=float)
+        return np.einsum(
+            "qi,qi->q", legendre_values(t, self.projection.shape[1] - 1), self.projection[owners]
+        )
 
 
 @dataclass(frozen=True)
@@ -145,7 +148,7 @@ def _penalty(
         start, end = mesh.points[mesh.faces[face]]
         points = start + parameter[:, None] * (end - start)
         values = scalar_values(dirichlet, points).reshape(-1, len(gauss))
-        basis = legvander(gauss, degree)
+        basis = legendre_values(gauss, degree)
         projection = (values * weights / 2) @ basis * (2 * np.arange(degree + 1) + 1)
         prescribed = (projection @ basis.T).ravel()
     else:

@@ -2,6 +2,13 @@
 
 ## 0.1.0 — unreleased
 
+- Expose free functions for local condensation, reconstruction and global
+  assembly, with compatible object delegations and unchanged numerical results.
+- Add local/global form descriptions, callable local providers, verified external
+  local solvers and ordered serial/thread/spawn execution in bounded batches.
+- Use Basix as a runtime dependency for nodal, RT/BDM and polynomial trace
+  tabulation, preserving declared node/moment coordinates and archived bases.
+- Add introductory scalar, vector and provider tutorials.
 - Add compact hybrid assembly and staged periodic acquisition with atomic
   archives, bounded local-response lifetime and executed-basis replay checks.
 - Restore oscillatory Helmholtz face spaces from executed segment matrices,

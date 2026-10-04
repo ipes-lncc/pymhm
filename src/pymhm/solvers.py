@@ -139,6 +139,35 @@ def _checked(matrix: sparse.csr_matrix, rhs: Array, result: Any, rtol: float, at
     return solution
 
 
+def check_linear_solution(
+    matrix: Any,
+    rhs: Any,
+    solution: Any,
+    *,
+    rtol: float = 1e-10,
+    atol: float = 0.0,
+) -> Array:
+    """Check an external solver result against each original right-hand side.
+
+    Require ``||A x-b|| <= max(atol, rtol*||b||)`` separately for every column,
+    using the same residual evaluation as the native solver adapters. This
+    function does not correct a result or select another solver. The operator
+    is represented in real or complex binary64; explicitly wider right-hand
+    sides and solution digits remain available to residual evaluation.
+    Passing this algebraic check does not establish discretization stability
+    or accuracy of physical fields.
+    """
+    _tolerances(rtol, atol)
+    operator = _matrix(matrix)
+    raw = np.asarray(rhs)
+    forcing = _rhs(
+        rhs,
+        operator.shape[0],
+        preserve_extended=raw.dtype in (np.dtype(np.longdouble), np.dtype(np.clongdouble)),
+    )
+    return _checked(operator, forcing, solution, rtol, atol)
+
+
 def _optional(module: str, installation: str) -> ModuleType:
     """Import one optional module while preserving the underlying diagnosis."""
     try:

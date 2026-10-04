@@ -10,13 +10,13 @@ from functools import partial
 from typing import Any, Literal, cast
 
 import numpy as np
-from numpy.polynomial.legendre import legvander
 from scipy import sparse
 
 from pymhm.elasticity import _boundary_volume_flux
 from pymhm.elasticity_compatibility import require_compatible_displacement_flux
 from pymhm.elasticity_compliance import compliance_products
 from pymhm.elasticity_mixed import _bulk_compliance, _rigid_values, _scatter
+from pymhm.element_backends import legendre_values
 from pymhm.elements import boundary_data, scalar_values, vector_values
 from pymhm.hybrid import HybridSolution, HybridSystem, LocalAssembly, LocalProblem
 from pymhm.mesh import FaceSpace, FloatArray, SkeletonSpace, positive_int
@@ -32,7 +32,7 @@ from pymhm.tensor_rt import _trace_map, tensor_rt_basis, tensor_rt_dofs
 def _rotation_basis(degree: int, points: FloatArray) -> FloatArray:
     """Tabulate total-degree Legendre products P_s, excluding the Q_s cross corners."""
     x, y = np.moveaxis(points, -1, 0)
-    lx, ly = legvander(2 * x - 1, degree), legvander(2 * y - 1, degree)
+    lx, ly = legendre_values(2 * x - 1, degree), legendre_values(2 * y - 1, degree)
     return np.stack(
         [lx[..., a] * ly[..., b] for b in range(degree + 1) for a in range(degree + 1 - b)], axis=-1
     )

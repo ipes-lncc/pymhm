@@ -13,8 +13,13 @@ from typing import Literal
 
 import numpy as np
 from scipy.linalg import null_space
-from scipy.special import eval_jacobi, eval_legendre
 
+from pymhm.element_backends import (
+    monomial_tabulation,
+    orthogonal_polynomial_tabulation,
+    simplex_lagrange_tabulation,
+    tensor_lagrange_tabulation,
+)
 from pymhm.elements import triangle_quadrature
 from pymhm.mapped_rt import cube_quadrature
 from pymhm.mesh import FloatArray, positive_int
@@ -75,11 +80,12 @@ def face_quadrature(corners: int, order: int) -> tuple[FloatArray, FloatArray]:
 
 def face_shape(uv: FloatArray, corners: int) -> FloatArray:
     """Evaluate affine triangle or bilinear tensor-square geometric shape functions."""
-    u, v = np.asarray(uv).T
     if corners == 3:
-        return np.column_stack((1 - u - v, u, v))
+        bary = np.column_stack((1 - np.asarray(uv).sum(axis=1), uv))
+        return simplex_lagrange_tabulation("triangle", 1, bary, nodes=np.eye(3), nderiv=0)[0]
     if corners == 4:
-        return np.column_stack(((1 - u) * (1 - v), u * (1 - v), (1 - u) * v, u * v))
+        nodes = np.array([[0.0, 0.0], [1.0, 0.0], [0.0, 1.0], [1.0, 1.0]])
+        return tensor_lagrange_tabulation("quadrilateral", 1, uv, nodes=nodes, nderiv=0)[0]
     raise ValueError("a face must have three or four corners")
 
 
@@ -95,7 +101,6 @@ def face_polynomials(uv: FloatArray, corners: int, degree: int = 1) -> FloatArra
     degree = positive_int(degree, "face degree", 0)
     if corners not in (3, 4):
         raise ValueError("a face must have three or four corners")
-    u, v = np.asarray(uv).T
     powers = sorted(
         (
             (a, b)
@@ -105,27 +110,14 @@ def face_polynomials(uv: FloatArray, corners: int, degree: int = 1) -> FloatArra
         key=lambda e: (sum(e), -e[0]),
     )
     if degree < 2:
-        return np.column_stack([u**a * v**b for a, b in powers])
-    values = []
-    for a, b in powers:
-        if corners == 4:
-            value = (
-                np.sqrt((2 * a + 1) * (2 * b + 1))
-                * eval_legendre(a, 2 * u - 1)
-                * eval_legendre(b, 2 * v - 1)
-            )
-        else:
-            coefficients = np.polynomial.legendre.leg2poly(np.eye(a + 1)[a])
-            homogeneous = sum(
-                c * (2 * u + v - 1) ** j * (1 - v) ** (a - j) for j, c in enumerate(coefficients)
-            )
-            value = (
-                np.sqrt((2 * a + 1) * (a + b + 1))
-                * homogeneous
-                * eval_jacobi(b, 2 * a + 1, 0, 2 * v - 1)
-            )
-        values.append(value)
-    return np.column_stack(values)
+        return monomial_tabulation(uv, tuple(powers), nderiv=0)[0]
+    if corners == 3:
+        # Native triangle Legendre functions are normalized in area measure;
+        # declared Dubiner moments use the face mean-square measure instead.
+        order = [total * (total + 1) // 2 + a for a, b in powers for total in (a + b,)]
+        return orthogonal_polynomial_tabulation("triangle", degree, uv)[0][:, order] / np.sqrt(2)
+    order = [a * (degree + 1) + b for a, b in powers]
+    return orthogonal_polynomial_tabulation("quadrilateral", degree, uv)[0][:, order]
 
 
 def face_size(corners: int, degree: int) -> int:
@@ -146,23 +138,20 @@ def _powers(kind: CellKind, degree: int) -> tuple[tuple[int, int, int], ...]:
 
 
 def _scalar(points: FloatArray, powers: tuple) -> FloatArray:
-    """Evaluate an explicitly listed scalar polynomial basis."""
-    return np.column_stack([np.prod(points**e, axis=1) for e in powers])
+    """Tabulate an explicitly ordered monomial basis through Basix."""
+    return monomial_tabulation(points, powers, nderiv=0)[0]
 
 
 def _vectors(points: FloatArray, powers: tuple) -> tuple[FloatArray, FloatArray]:
-    """Evaluate component monomials and their analytic reference divergence."""
-    scalar = _scalar(points, powers)
+    """Tabulate component monomials and Cartesian divergence through Basix."""
+    table = monomial_tabulation(points, powers, nderiv=1)
+    scalar = table[0]
     size = len(powers)
     values = np.zeros((len(points), 3 * size, 3))
     div = np.zeros((len(points), 3 * size))
     for axis in range(3):
         values[:, axis * size : (axis + 1) * size, axis] = scalar
-        for i, exponent in enumerate(powers):
-            if exponent[axis]:
-                lower = np.array(exponent)
-                lower[axis] -= 1
-                div[:, axis * size + i] = exponent[axis] * np.prod(points**lower, axis=1)
+        div[:, axis * size : (axis + 1) * size] = table[axis + 1]
     return values, div
 
 
@@ -268,7 +257,7 @@ def _coefficients(kind: CellKind, pressure_degree: int) -> FloatArray:
     bubbles = null_space(moments)
     bubble_values = np.einsum("qia,ij->qja", sampled, bubbles)
     seeds = _interior_seeds(kind, pressure_degree)
-    tests = np.column_stack([np.prod(xyz**exponent, axis=1) for _, exponent in seeds])
+    tests = _scalar(xyz, tuple(exponent for _, exponent in seeds))
     seed_moments = np.stack(
         [
             np.einsum("q,qi,q->i", w, bubble_values[..., axis], tests[:, i])

@@ -23,6 +23,12 @@ def local():
 
 def _rehash(record, arrays):
     record["arrays_sha256"] = {key: archive.array_digest(value) for key, value in arrays.items()}
+    if "native_basis_matrix" in arrays:
+        import hashlib
+
+        record["native_basis_sha256"] = hashlib.sha256(
+            arrays["native_basis_matrix"].tobytes()
+        ).hexdigest()
     record["recipe_arrays_sha256"] = {
         key: archive.array_digest(arrays[key]) for key in record["recipe_arrays_sha256"]
     }
@@ -30,12 +36,12 @@ def _rehash(record, arrays):
 
 def test_observer_has_no_shared_mutation_and_exact_original_tables(local):
     """Observing factor derivatives leaves operators, force and owner object bitwise intact."""
-    owner = lagrange.Polynomial
+    owner = lagrange.reference_basis
     original_mass, original_stiffness = local.mass.data.copy(), local.stiffness.data.copy()
     force = local.load(lambda x: np.column_stack((x[:, 0] ** 3, x[:, 1] ** 2)))
     record, arrays = archive.capture_field_basis(local)
     archive.validate_field_basis(record, arrays)
-    assert lagrange.Polynomial is owner
+    assert lagrange.reference_basis is owner
     assert arrays["actual_mass_basis_values"] is local.basis
     assert arrays["actual_mass_quadrature_points"] is local.points
     assert arrays["actual_mass_quadrature_weights"] is local.weights
@@ -47,8 +53,8 @@ def test_observer_has_no_shared_mutation_and_exact_original_tables(local):
     bary = np.array([[0.143, 0.278, 0.579], [-0.1, 0.4, 0.7]])
     original = lagrange.reference_basis(3, bary)
     values, gradient = archive.tabulate_product(arrays, bary)
-    np.testing.assert_array_equal(values, original[0])
-    np.testing.assert_array_equal(gradient, original[1])
+    np.testing.assert_allclose(values, original[0], rtol=0, atol=2e-14)
+    np.testing.assert_allclose(gradient, original[1], rtol=0, atol=8e-14)
     for count in (1, 2):
         with threadpool_limits(limits=count):
             replay = archive.tabulate_product(arrays, bary)
@@ -89,9 +95,9 @@ def test_reject_semantic_basis_tampering_even_with_new_digests(local, defect):
     record, raw = archive.capture_field_basis(local)
     record, arrays = deepcopy(record), {key: value.copy() for key, value in raw.items()}
     if defect == "factor":
-        arrays["product_factor_coefficients"][0, 3, 0, 0] += 1e-5
+        arrays["native_basis_matrix"][3, 0] += 1e-5
     elif defect == "derivative":
-        arrays["product_factor_coefficients"][0, 3, 2, 0] += 1e-5
+        arrays["field_q7_gradients"][0, 0, 3, 0] += 1e-5
     elif defect == "table":
         arrays["field_q5_gradients"][0, 0, 0, 0] += 1e-5
     elif defect == "nodes":
@@ -101,7 +107,7 @@ def test_reject_semantic_basis_tampering_even_with_new_digests(local, defect):
     elif defect == "bits":
         record["coefficient_precision_bits"] = 64
     elif defect == "runtime":
-        record["recipe_runtime"]["polynomial_source_sha256"] = "0" * 64
+        record["recipe_runtime"]["basix_source_sha256"] = "0" * 64
     elif defect == "degree":
         record["degree"] = 2
     else:
@@ -118,6 +124,7 @@ def test_coherent_basis_permutation_preserves_field(local):
     coefficients = np.arange(2 * len(local.nodes), dtype=float) / 100
     expected = archive.evaluate_saved_field(arrays, local.dofs, coefficients)
     permutation = np.array([3, 7, 2, 1, 9, 5, 0, 6, 8, 4])
+    arrays["native_basis_matrix"] = arrays["native_basis_matrix"][permutation]
     arrays["product_multiindices"] = arrays["product_multiindices"][permutation]
     arrays["product_reference_nodes"] = arrays["product_reference_nodes"][permutation]
     arrays["product_local_dofs"] = arrays["product_local_dofs"][:, permutation]

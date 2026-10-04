@@ -14,6 +14,7 @@ python = ">=3.11,<3.14"
 numpy = ">=1.26"
 scipy = ">=1.12"
 threadpoolctl = ">=3.2"
+fenics-basix = ">=0.9"
 
 [pypi-dependencies]
 pymhm = { path = ".", editable = true }
@@ -33,7 +34,6 @@ pytest-xdist = ">=3.6"
 hypothesis = ">=6.116"
 pyamg = ">=5.3"
 fenics-ufl = ">=2024.2"
-fenics-basix = ">=0.9"
 
 [feature.py311]
 platforms = ["linux-64", "win-64", "osx-64", "osx-arm64"]

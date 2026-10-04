@@ -8,23 +8,17 @@ the independent 99% line and branch coverage gates. Optional-backend contract
 tests check dispatch, error handling and resource cleanup; native integration
 tests are separately marked and must run with their dependencies installed.
 
-The current portable suite passed **3296 tests** on Python 3.13, with 270
-optional cases skipped. The Python 3.13 coverage run covered
-**16573 of 16585 executable lines (99.9276%)** and
-**4729 of 4744 branches (99.6838%)**. Complete suites on Python 3.11 and
-3.12 passed the same 3296 tests, with the same 270 skips. The installed-package
-suite using the minimum supported NumPy 1.26.4 and SciPy 1.12.0 versions
-also passed 3296 tests, with 270 skips. Skipped cases are not counted as passed.
+Coverage reports identify the executed source tree and count lines and branches
+separately. Skipped optional cases are not counted as passed. Python 3.11 and
+3.12 use their own locked Pixi environments; checks on another interpreter or
+an older source tree do not substitute for executing the current implementation.
 
-Separate native runs passed 216 DOLFINx/PETSc integration checks, with two
-optional cases skipped, including global AFW/BDM reference comparisons.
-The current PyVista/VTK integration suite passed 95 checks. Earlier separate
-native runs passed 19 meshing checks,
-nine MPI checks, eight GPU checks, and the selected PARDISO and PyAMG
-integrations. The solver selections
-overlap in their PyAMG cases and should not be added as independent test counts.
-Native FreeFEM/BAMG execution is verified
-separately from the portable metric-transfer and marking tests.
+Native qualification includes DOLFINx/Basix operators and field comparisons,
+real spawn workers constructing UFL local problems, and PARDISO execution.
+Native MPI, GPU, meshing, PyVista and FreeFEM/BAMG checks have separate environment
+requirements and execution records. An API contract test with a substituted
+backend is not a native integration result, and overlapping selections must
+not be added as independent counts.
 Source notebooks retain no execution output; executed copies are stored separately.
 Ruff, formatting, static typing and strict MkDocs checks passed.
 Release validation checks wheel/sdist contents and the noarch Conda
@@ -35,6 +29,23 @@ release. Building artifacts does not publish a release.
 Archived comparison notebooks read preserved numerical results; executing them
 does not rerun an external reference program. CI is configured to exercise
 Linux, Windows and macOS; the native executions recorded here were on Linux.
+
+## Engineering equivalence
+
+The provider and functional interfaces retain the existing local and global
+equations, signed trace maps, physical moments and executed retained bases.
+Before/after checks run identical inputs in isolated processes using the
+archived implementation and the current implementation, under the same locked
+environment and native thread count. The representative 19-case comparison
+includes homogeneous and nonhomogeneous scalar problems, a Neumann gauge,
+RT0 Darcy, Robin MH, MH²M, MsHHO, Brinkman in two and three dimensions,
+elasticity, complex Helmholtz, Petrov kernels and extended precision.
+All **1056 arrays** match exactly in values, dtypes and shapes: original and
+condensed operators, loads, absolute load scales, bases, coefficient fields
+and recorded physical metrics. This is a preservation check for those inputs;
+it does not certify an unexecuted regime or reproduce additional literature.
+Long-double storage padding is not a numerical coefficient. Field replay must
+still use the archived executed basis and orientation maps.
 
 The reference-backend suite includes:
 
@@ -351,7 +362,7 @@ than digitized paper figures.
 ## Native optional-backend evidence
 
 Real DOLFINx tests assemble two independent macrotriangles, compare local
-operators/moments with the portable backend, and reconstruct an affine pressure.
+operators/moments with the built-in Basix/SciPy assembly, and reconstruct an affine pressure.
 Additional real UFL tests cover RT/DG pressure data, Taylor–Hood, elasticity and
 USFEM residual terms. Gmsh, Netgen and meshio tests generate meshes and verify
 MSH/VTU round trips, physical markers and ownership of Gmsh sessions.

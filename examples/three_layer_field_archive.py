@@ -1,10 +1,8 @@
 """Executed analytic P3 basis recipes and literal one-sided three-layer tables.
 
-The cardinal basis is a product of ordered barycentric Polynomial factors;
-it has no arbitrary nullspace or fitted cardinal matrix. Its actual factor
-coefficients and derivatives are observed through the shared owner's unchanged
-code object. Local mass tables remain the arrays held by the actual producer.
-New field quadrature tables are separate, explicitly executed observations.
+Native P3 coefficient matrices, their digests and literal one-sided field tables
+preserve the executed basis. Legacy product recipes remain readable for their
+archived fields; new acquisitions use the Basix basis owned by the package.
 """
 
 from __future__ import annotations
@@ -13,7 +11,6 @@ import hashlib
 import json
 from functools import lru_cache
 from pathlib import Path
-from types import FunctionType
 from typing import Any
 
 import numpy as np
@@ -22,11 +19,13 @@ from numpy.polynomial import Polynomial
 from pymhm import lagrange
 from pymhm.elasticity_primal import _KELVIN, constitutive_values
 from pymhm.elastodynamics import ElastodynamicLocal
+from pymhm.element_backends import orthogonal_polynomial_tabulation, simplex_lagrange_basis
 from pymhm.elements import p1_geometry
-from pymhm.lagrange import element_tabulate, multiindices, reference_basis
+from pymhm.lagrange import element_tabulate, multiindices
 from pymhm.maxwell_dg import physical_points, quadrature
 
-SCHEMA = "pymhm-three-layer-product-basis-v1"
+SCHEMA = "pymhm-three-layer-basix-basis-v2"
+LEGACY_SCHEMA = "pymhm-three-layer-product-basis-v1"
 
 
 def array_digest(array: np.ndarray) -> str:
@@ -44,7 +43,7 @@ def _file_digest(path: Path) -> str:
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
-def product_runtime() -> dict[str, Any]:
+def _legacy_runtime() -> dict[str, Any]:
     """Identify the actual Polynomial evaluator and effective binary64 significand."""
     import numpy.polynomial.polynomial as owner
 
@@ -56,48 +55,25 @@ def product_runtime() -> dict[str, Any]:
     }
 
 
-def _observed_recipe(bary: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    """Observe real factor coefficients through the unchanged shared code objects.
+def product_runtime() -> dict[str, Any]:
+    """Identify the native basis library and binary64 coefficient convention."""
+    import basix
 
-    A separate function-globals dictionary owns the delegating Polynomial
-    subclass. Neither the shared module nor Polynomial class is mutated, so
-    threads and spawned processes cannot see an observer left behind.
-    """
-    observed: list[tuple[int, np.ndarray]] = []
+    return {
+        "numpy": np.__version__,
+        "basix": basix.__version__,
+        "basix_source_sha256": _file_digest(Path(basix.__file__)),
+        "basis_dtype": np.dtype(float).str,
+        "basis_precision_bits": np.finfo(float).nmant + 1,
+    }
 
-    class ObservedPolynomial(lagrange.Polynomial):
-        def deriv(self, m: int = 1) -> Polynomial:
-            result = super().deriv(m)
-            observed.append((m, np.array(result.coef, copy=True)))
-            return result
 
-    original_table = lagrange._reference_table
-    table_globals = original_table.__globals__ | {"Polynomial": ObservedPolynomial}
-    table = FunctionType(original_table.__code__, table_globals)
-    original_basis = lagrange.reference_basis
-    basis = FunctionType(
-        original_basis.__code__, original_basis.__globals__ | {"_reference_table": table}
-    )
-    actual = basis(3, bary)
-    expected = reference_basis(3, bary)
-    if any(not np.array_equal(a, b) for a, b in zip(actual, expected, strict=True)):
-        raise ArithmeticError("Observed shared P3 values or derivatives are not bitwise identical")
-    if len(observed) != 36:
-        raise ArithmeticError("Shared ordered P3 factor construction changed")
-    coefficients = np.zeros((3, 4, 3, 4))
-    sizes = np.zeros((3, 4, 3), dtype=np.int64)
-    for coordinate in range(3):
-        for exponent in range(4):
-            for derivative in range(3):
-                index = (coordinate * 4 + exponent) * 3 + derivative
-                order, values = observed[index]
-                if order != derivative:
-                    raise ArithmeticError("Shared P3 derivative evaluation order changed")
-                # These are the derivative coefficients actually consumed by
-                # the delegated Polynomial, rather than a fitted basis matrix.
-                coefficients[coordinate, exponent, derivative, : len(values)] = values
-                sizes[coordinate, exponent, derivative] = len(values)
-    return coefficients, sizes
+def _basis_payload_keys(arrays: Any) -> set[str]:
+    """Identify the persisted representation without constructing a new basis."""
+    common = {"product_multiindices", "product_reference_nodes"}
+    if "native_basis_matrix" in arrays:
+        return common | {"native_basis_matrix"}
+    return common | {"product_factor_coefficients", "product_factor_sizes"}
 
 
 def tabulate_product(arrays: Any, bary: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -112,6 +88,12 @@ def tabulate_product(arrays: Any, bary: np.ndarray) -> tuple[np.ndarray, np.ndar
         raise ValueError("Finite binary64 barycentric triples required")
     if not np.isfinite(bary).all():
         raise ValueError("Finite binary64 barycentric triples required")
+    if "native_basis_matrix" in arrays:
+        table = orthogonal_polynomial_tabulation("triangle", 3, bary[:, 1:], 1)
+        result = table @ arrays["native_basis_matrix"].T
+        first = np.zeros((*result[0].shape, 3))
+        first[..., 1:] = result[1:].transpose(1, 2, 0)
+        return result[0], first
     coefficients = arrays["product_factor_coefficients"]
     sizes = arrays["product_factor_sizes"]
     indices = arrays["product_multiindices"]
@@ -152,27 +134,22 @@ def _physical_gradients(first: np.ndarray, arrays: Any) -> np.ndarray:
 
 @lru_cache(maxsize=4)
 def _recipe(owner_sha256: str, runtime_json: str) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
-    """Cache a fixed observed recipe without exposing mutable backing arrays."""
+    """Archive the executed native coefficient matrix in declared nodal order."""
     nodes = multiindices(3) / 3
-    factors, sizes = _observed_recipe(nodes)
+    basis = simplex_lagrange_basis("triangle", 3, nodes=nodes)
     arrays = {
-        "product_factor_coefficients": factors,
-        "product_factor_sizes": sizes,
+        "native_basis_matrix": basis.basis_matrix,
         "product_multiindices": multiindices(3),
         "product_reference_nodes": nodes,
     }
     for key, value in arrays.items():
         arrays[key] = np.frombuffer(value.tobytes(), dtype=value.dtype).reshape(value.shape)
-    values, first = tabulate_product(arrays, nodes)
-    actual = reference_basis(3, nodes)
-    if not np.array_equal(values, actual[0]) or not np.array_equal(first, actual[1]):
-        raise ArithmeticError("Archived recipe differs from executed shared P3 basis")
     record = {
         "schema": SCHEMA,
         "degree": 3,
         "dimension": 2,
         "scalar_dimension": 10,
-        "basis_representation": "ordered analytic barycentric Polynomial product recipe",
+        "basis_representation": "executed Basix coefficient matrix in ordered nodal coordinates",
         "multiply_order": [0, 1, 2],
         "field_arithmetic_column_order": (
             "shared canonical multiindices(3), before coordinate permutation"
@@ -180,15 +157,15 @@ def _recipe(owner_sha256: str, runtime_json: str) -> tuple[dict[str, Any], dict[
         "component_convention": "global coefficient2*node+Cartesian component",
         "shared_lagrange_source_sha256": owner_sha256,
         "recipe_runtime": json.loads(runtime_json),
-        "observation_bitwise_identical_to_shared_owner": True,
-        "arbitrary_or_fitted_basis_matrix_used": False,
+        "native_basis_sha256": basis.basis_sha256,
+        "polynomial_set": basis.element.polyset_type,
         "recipe_arrays_sha256": {key: array_digest(value) for key, value in arrays.items()},
     }
     return record, arrays
 
 
 def product_recipe() -> tuple[dict[str, Any], dict[str, np.ndarray]]:
-    """Capture the producer's actual deterministic P3 factors, retaining their order."""
+    """Capture the producer's actual native P3 matrix, retaining its node order."""
     record, arrays = _recipe(
         _file_digest(Path(lagrange.__file__)), json.dumps(product_runtime(), sort_keys=True)
     )
@@ -244,10 +221,18 @@ def capture_field_basis(
         recipe_values, recipe_first = tabulate_product(arrays, bary.reshape(-1, 3))
         shape = (*bary.shape[:2], 10)
         recipe_gradient = _physical_gradients(recipe_first.reshape(*shape, 3), arrays)
-        if not np.array_equal(values, recipe_values.reshape(shape)) or not np.array_equal(
-            gradient, recipe_gradient
+        scale = np.maximum(1, np.max(abs(arrays["native_basis_matrix"])))
+        if not np.allclose(
+            values, recipe_values.reshape(shape), rtol=0, atol=256 * np.finfo(float).eps * scale
+        ) or not np.allclose(
+            gradient,
+            recipe_gradient,
+            rtol=0,
+            atol=256 * np.finfo(float).eps * scale * np.maximum(1, abs(geometry).sum()),
         ):
-            raise ArithmeticError("Literal field values/gradients differ from archived recipe")
+            raise ArithmeticError(
+                "Literal field values/gradients differ from archived native basis"
+            )
         points = physical_points(local.mesh, bary)
         constitutive = constitutive_values(
             material,
@@ -285,7 +270,7 @@ def capture_field_basis(
         arrays_sha256={key: array_digest(value) for key, value in arrays.items()},
         capture_scope=(
             "Actual held local mass tables plus newly executed producer field tables; "
-            "same analytic P3 coefficients, no operator replacement or fitted basis"
+            "same executed P3 coordinates and native coefficient matrix"
         ),
     )
     return record, arrays
@@ -302,8 +287,12 @@ def validate_field_basis(
     tabulated recipe. Bitwise recipe replay requires the original evaluator.
     """
     if (
-        record.get("schema") != SCHEMA
-        or (replay_recipe and record.get("recipe_runtime") != product_runtime())
+        record.get("schema") not in (SCHEMA, LEGACY_SCHEMA)
+        or (
+            replay_recipe
+            and record.get("recipe_runtime")
+            != (product_runtime() if record.get("schema") == SCHEMA else _legacy_runtime())
+        )
         or record.get("multiply_order") != [0, 1, 2]
         or record.get("field_arithmetic_column_order")
         != "shared canonical multiindices(3), before coordinate permutation"
@@ -319,7 +308,15 @@ def validate_field_basis(
         runtime.get("basis_dtype") != np.dtype(float).str
         or runtime.get("basis_precision_bits") != 53
         or not isinstance(runtime.get("numpy"), str)
-        or len(runtime.get("polynomial_source_sha256", "")) != 64
+        or len(
+            runtime.get(
+                "basix_source_sha256"
+                if record.get("schema") == SCHEMA
+                else "polynomial_source_sha256",
+                "",
+            )
+        )
+        != 64
     ):
         raise ValueError("Actual producer Polynomial runtime and precision required")
     hashes = record.get("arrays_sha256", {})
@@ -339,7 +336,7 @@ def validate_field_basis(
     ):
         raise ValueError("Declared executed field quadrature orders required")
     required = (
-        set(product_recipe()[1])
+        _basis_payload_keys(arrays)
         | {
             "actual_mass_basis_values",
             "actual_mass_quadrature_points",
@@ -361,7 +358,7 @@ def validate_field_basis(
     if set(hashes) != required:
         raise ValueError("Complete declared executed basis payload required")
     recipe_hashes = record.get("recipe_arrays_sha256", {})
-    if set(recipe_hashes) != set(product_recipe()[1]) or any(
+    if set(recipe_hashes) != _basis_payload_keys(arrays) or any(
         hashes.get(key) != value for key, value in recipe_hashes.items()
     ):
         raise ValueError("Executed recipe and field payload digests differ")
@@ -385,20 +382,34 @@ def validate_field_basis(
         arrays["product_reference_nodes"], indices / 3
     ):
         raise ValueError("Executed product nodes and coefficient order differ")
-    if (
-        arrays["product_factor_coefficients"].shape != (3, 4, 3, 4)
-        or arrays["product_factor_sizes"].shape != (3, 4, 3)
-        or arrays["product_factor_sizes"].dtype.kind not in "iu"
-        or np.any(arrays["product_factor_sizes"] < 1)
-        or np.any(arrays["product_factor_sizes"] > 4)
-    ):
-        raise ValueError("Complete finite executed product factors required")
-    canonical = product_recipe()[1]
-    if any(
-        not np.array_equal(arrays[key], canonical[key])
-        for key in ("product_factor_coefficients", "product_factor_sizes")
-    ):
-        raise ValueError("Executed analytic product factors or derivative coefficients differ")
+    if record.get("schema") == SCHEMA:
+        matrix = arrays["native_basis_matrix"]
+        if matrix.shape != (10, 10) or record.get("polynomial_set") != "standard":
+            raise ValueError("Complete native P3 polynomial coefficient matrix required")
+        if hashlib.sha256(matrix.tobytes(order="C")).hexdigest() != record.get(
+            "native_basis_sha256"
+        ):
+            raise ValueError("Executed native coefficient matrix digest differs")
+    else:
+        if (
+            arrays["product_factor_coefficients"].shape != (3, 4, 3, 4)
+            or arrays["product_factor_sizes"].shape != (3, 4, 3)
+            or arrays["product_factor_sizes"].dtype.kind not in "iu"
+            or np.any(arrays["product_factor_sizes"] < 1)
+            or np.any(arrays["product_factor_sizes"] > 4)
+        ):
+            raise ValueError("Complete finite executed product factors required")
+        for coordinate in range(3):
+            for exponent in range(4):
+                coefficients = arrays["product_factor_coefficients"][coordinate, exponent]
+                sizes = arrays["product_factor_sizes"][coordinate, exponent]
+                polynomial = Polynomial(coefficients[0, : sizes[0]])
+                for derivative in (1, 2):
+                    if not np.array_equal(
+                        polynomial.deriv(derivative).coef,
+                        coefficients[derivative, : sizes[derivative]],
+                    ):
+                        raise ValueError("Archived product derivative coefficients differ")
     cells, points = arrays["product_local_cells"], arrays["product_local_points"]
     nodes, dofs = arrays["product_local_nodes"], arrays["product_local_dofs"]
     if (
@@ -477,7 +488,7 @@ def validate_field_basis(
         values, first = tabulate_product(arrays, bary.reshape(-1, 3))
         shape = (*bary.shape[:2], 10)
         gradient = _physical_gradients(first.reshape(*shape, 3), arrays)
-        if replay_recipe:
+        if replay_recipe and record.get("schema") == LEGACY_SCHEMA:
             if not np.array_equal(
                 values.reshape(shape), arrays[f"field_q{order}_values"]
             ) or not np.array_equal(gradient, arrays[f"field_q{order}_gradients"]):
@@ -487,9 +498,19 @@ def validate_field_basis(
             # absolute-sum bound. It never replaces the producer's tables or
             # claims a bitwise replay in that runtime. The P3 factor/product
             # and three-term affine contraction need fewer than32 operations.
-            absolute = dict(arrays)
-            absolute["product_factor_coefficients"] = abs(arrays["product_factor_coefficients"])
-            positive_values, positive_first = tabulate_product(absolute, abs(bary.reshape(-1, 3)))
+            if record.get("schema") == SCHEMA:
+                raw = orthogonal_polynomial_tabulation("triangle", 3, bary.reshape(-1, 3)[:, 1:], 1)
+                positive_values = abs(raw[0]) @ abs(arrays["native_basis_matrix"]).T
+                positive_first = np.zeros((*positive_values.shape, 3))
+                positive_first[..., 1:] = (
+                    abs(raw[1:]) @ abs(arrays["native_basis_matrix"]).T
+                ).transpose(1, 2, 0)
+            else:
+                absolute = dict(arrays)
+                absolute["product_factor_coefficients"] = abs(arrays["product_factor_coefficients"])
+                positive_values, positive_first = tabulate_product(
+                    absolute, abs(bary.reshape(-1, 3))
+                )
             value_bound = 256 * np.finfo(float).eps * np.maximum(1, positive_values.reshape(shape))
             gradient_bound = (
                 256

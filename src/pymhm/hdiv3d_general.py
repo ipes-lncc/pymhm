@@ -8,14 +8,20 @@ factors; no singular-vector orientation defines persisted coordinates.
 
 from functools import cache
 from itertools import product
-from math import factorial, prod
 
 import numpy as np
 from scipy.linalg import block_diag
 
+from pymhm.element_backends import (
+    ReferenceElementSpec,
+    create_reference_element,
+    interpolate_reference,
+    reference_interpolation_points,
+)
 from pymhm.hdiv3d_family import (
     CellKind,
     _powers,
+    _scalar,
     cell_quadrature,
     face_polynomials,
     face_quadrature,
@@ -23,32 +29,15 @@ from pymhm.hdiv3d_family import (
     reference_faces,
     reference_vertices,
 )
+from pymhm.hdiv_reference import bernstein_tabulation, vector_tabulation
 from pymhm.mesh import FloatArray
 
 
 def _bernstein(points: FloatArray, degree: int) -> tuple[FloatArray, FloatArray]:
-    """Tabulate a simplex Bernstein basis and analytic Cartesian derivatives."""
+    """Tabulate native Basix Bernstein functions in lexicographic exponent order."""
     dimension = points.shape[1]
-    bary = np.column_stack((1 - points.sum(axis=1), points))
     powers = tuple(e for e in product(range(degree + 1), repeat=dimension + 1) if sum(e) == degree)
-    values = np.column_stack(
-        [
-            factorial(degree) / prod(factorial(a) for a in e) * np.prod(bary**e, axis=1)
-            for e in powers
-        ]
-    )
-    gradient = np.zeros((*values.shape, dimension))
-    for i, exponent in enumerate(powers):
-        factor = factorial(degree) / prod(factorial(a) for a in exponent)
-        for axis in range(dimension):
-            for coordinate, sign in ((0, -1), (axis + 1, 1)):
-                if exponent[coordinate]:
-                    lower = np.array(exponent)
-                    lower[coordinate] -= 1
-                    gradient[:, i, axis] += (
-                        sign * exponent[coordinate] * factor * np.prod(bary**lower, axis=1)
-                    )
-    return values, gradient
+    return bernstein_tabulation(points, powers)
 
 
 def candidates(kind: CellKind, degree: int, points: FloatArray) -> tuple[FloatArray, FloatArray]:
@@ -59,25 +48,39 @@ def candidates(kind: CellKind, degree: int, points: FloatArray) -> tuple[FloatAr
     the triangle first and then the interval. Horizontal prism degrees are
     (degree+1, degree), and vertical degrees are (degree, degree+1).
     """
+    if kind == "tetrahedron":
+        values, divergence = vector_tabulation("BDM", "tetrahedron", degree + 1, points)
+        transform = _tetrahedral_candidate_map(degree)
+        return np.einsum("qia,ij->qja", values, transform), divergence @ transform
     fields, derivatives = [], []
     for axis in range(3):
-        if kind == "tetrahedron":
-            scalar, gradient = _bernstein(points, degree + 1)
-            derivative = gradient[..., axis]
-        else:
-            triangle_degree = degree + (axis < 2)
-            interval_degree = degree + (axis == 2)
-            triangle, dtriangle = _bernstein(points[:, :2], triangle_degree)
-            interval, dinterval = _bernstein(points[:, 2:], interval_degree)
-            scalar = np.einsum("qi,qj->qij", triangle, interval).reshape(len(points), -1)
-            derivative = np.einsum(
-                "qi,qj->qij",
-                dtriangle[..., axis] if axis < 2 else triangle,
-                interval if axis < 2 else dinterval[..., 0],
-            ).reshape(len(points), -1)
+        triangle_degree = degree + (axis < 2)
+        interval_degree = degree + (axis == 2)
+        triangle, dtriangle = _bernstein(points[:, :2], triangle_degree)
+        interval, dinterval = _bernstein(points[:, 2:], interval_degree)
+        scalar = np.einsum("qi,qj->qij", triangle, interval).reshape(len(points), -1)
+        derivative = np.einsum(
+            "qi,qj->qij",
+            dtriangle[..., axis] if axis < 2 else triangle,
+            interval if axis < 2 else dinterval[..., 0],
+        ).reshape(len(points), -1)
         fields.append(scalar[..., None] * np.eye(3)[axis])
         derivatives.append(derivative)
     return np.concatenate(fields, axis=1), np.concatenate(derivatives, axis=1)
+
+
+@cache
+def _tetrahedral_candidate_map(degree: int) -> FloatArray:
+    """Preserve archived component/Bernstein rows through native BDM interpolation."""
+    element = create_reference_element(
+        ReferenceElementSpec("BDM", "tetrahedron", degree + 1, lagrange_variant="legendre")
+    )
+    points = reference_interpolation_points(element)
+    scalar = _bernstein(points, degree + 1)[0]
+    fields = np.concatenate([scalar[..., None] * np.eye(3)[axis] for axis in range(3)], axis=1)
+    result = interpolate_reference(element, fields)
+    result.setflags(write=False)
+    return result
 
 
 def interior_tests(kind: CellKind, degree: int, points: FloatArray) -> FloatArray:
@@ -91,9 +94,11 @@ def interior_tests(kind: CellKind, degree: int, points: FloatArray) -> FloatArra
     x = np.asarray(points)
     tests = []
     if kind == "tetrahedron":
-        for exponent in _powers(kind, degree - 1):
+        powers = _powers(kind, degree - 1)
+        scalar = _scalar(x, powers)
+        for i in range(len(powers)):
             for axis in range(3):
-                tests.append(np.prod(x**exponent, axis=1)[:, None] * np.eye(3)[axis])
+                tests.append(scalar[:, i, None] * np.eye(3)[axis])
         homogeneous = [e for e in _powers(kind, degree - 1) if sum(e) == degree - 1]
         for axis in range(3):
             for exponent in homogeneous:
@@ -101,21 +106,21 @@ def interior_tests(kind: CellKind, degree: int, points: FloatArray) -> FloatArra
                 # in the final component removes exactly that dependency.
                 if axis == 2 and exponent[2]:
                     continue
-                tests.append(np.cross(x, np.eye(3)[axis]) * np.prod(x**exponent, axis=1)[:, None])
+                tests.append(np.cross(x, np.eye(3)[axis]) * scalar[:, powers.index(exponent), None])
     else:
         for z in range(degree + 1):
             for a, b in product(range(degree), repeat=2):
                 if a + b <= degree - 1:
-                    scalar = x[:, 0] ** a * x[:, 1] ** b * x[:, 2] ** z
+                    scalar = _scalar(x, ((a, b, z),))[:, 0]
                     tests.extend(scalar[:, None] * np.eye(3)[axis] for axis in range(2))
             for a in range(degree):
-                scalar = x[:, 0] ** a * x[:, 1] ** (degree - 1 - a) * x[:, 2] ** z
+                scalar = _scalar(x, ((a, degree - 1 - a, z),))[:, 0]
                 tests.append(
                     scalar[:, None] * np.column_stack((-x[:, 1], x[:, 0], np.zeros(len(x))))
                 )
         for a, b, z in product(range(degree + 1), range(degree + 1), range(degree)):
             if a + b <= degree:
-                scalar = x[:, 0] ** a * x[:, 1] ** b * x[:, 2] ** z
+                scalar = _scalar(x, ((a, b, z),))[:, 0]
                 tests.append(scalar[:, None] * np.eye(3)[2])
     return np.stack(tests, axis=1) if tests else np.empty((len(x), 0, 3))
 
@@ -139,13 +144,7 @@ def coefficients(kind: CellKind, pressure_degree: int, normal_degree: int) -> Fl
         elif len(indices) == 3:
             full = face_polynomials(uv, 3, degree)
         else:
-            full = np.column_stack(
-                [
-                    uv[:, 0] ** a * uv[:, 1] ** b
-                    for a in range(degree + 2)
-                    for b in range(degree + 1)
-                ]
-            )
+            full = _scalar(uv, tuple((a, b) for a in range(degree + 2) for b in range(degree + 1)))
         low = face_polynomials(uv, len(indices), normal_degree)
         face_moments.append(full.T @ (w[:, None] * normal_values))
         embeddings.append((full.T @ (w[:, None] * low)) @ np.linalg.inv(low.T @ (w[:, None] * low)))

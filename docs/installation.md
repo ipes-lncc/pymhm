@@ -1,6 +1,7 @@
 # Installation and environments
 
-The core supports Python 3.11–3.13 and requires NumPy, SciPy and threadpoolctl.
+The core supports Python 3.11–3.13 and requires NumPy, SciPy, threadpoolctl and `fenics-basix>=0.9`.
+Basix supplies the built-in polynomial bases without requiring DOLFINx, PETSc or MPI.
 Optional native dependencies are loaded only when their functionality is called.
 
 ## From a checkout

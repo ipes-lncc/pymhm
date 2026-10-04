@@ -15,13 +15,13 @@ from pymhm.mesh import FloatArray, IntArray, TriangleMesh
 
 def edge_basis(degree: int, parameter: FloatArray) -> FloatArray:
     """Evaluate edge nodes ordered as endpoints followed by interior nodes."""
+    from pymhm.element_backends import simplex_lagrange_tabulation
+
     nodes = np.r_[0.0, 1.0, np.arange(1, degree) / degree]
-    result = np.ones((len(parameter), degree + 1))
-    for i, node in enumerate(nodes):
-        for j, other in enumerate(nodes):
-            if i != j:
-                result[:, i] *= (parameter - other) / (node - other)
-    return result
+    bary = np.column_stack((1 - parameter, parameter))
+    return simplex_lagrange_tabulation(
+        "interval", degree, bary, nodes=np.column_stack((1 - nodes, nodes)), nderiv=0
+    )[0]
 
 
 def edge_pieces(

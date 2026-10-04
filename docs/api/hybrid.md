@@ -4,6 +4,14 @@ Local condensation, operator reuse, recursive problems and distinct multiscale f
 
 [All API families](../api.md)
 
+::: pymhm.variational
+    options:
+      show_source: false
+
+::: pymhm.assembly
+    options:
+      show_source: false
+
 ::: pymhm.hybrid
     options:
       show_source: false

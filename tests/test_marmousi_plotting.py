@@ -27,19 +27,33 @@ def test_pixel_centre_values_keep_complex_macro_jumps(driver) -> None:
     np.testing.assert_array_equal(truth, np.full((2, 2), 3 + 5j))
 
 
-def test_pixel_centre_difference_preserves_executed_extended_mantissa(driver) -> None:
-    """A physical sample difference below double epsilon survives field-buffer assembly."""
+@pytest.mark.parametrize("perturbed", ["candidate", "reference"])
+def test_pixel_centre_difference_preserves_executed_extended_mantissa(driver, perturbed) -> None:
+    """Below-double perturbations survive each field's own executed sampling basis.
+
+    Q1 and P1 tabulators have different partition-of-unity roundoff. Measuring
+    the change through the same tabulator isolates preservation of coefficient
+    mantissa bits from that independent representation error.
+    """
     if np.finfo(np.longdouble).nmant <= np.finfo(float).nmant:
         pytest.skip("the host has no wider floating-point mantissa")
     mesh = CartesianMacroMesh(2, 2, (0, 40, 0, 40))
     increment = np.ldexp(np.longdouble(1), -60)
-    candidate = driver.BrokenQField(
-        np.full((4, 4), np.clongdouble(1) + increment, dtype=np.clongdouble), mesh, 1, 1
-    )
+    candidate = driver.BrokenQField(np.ones((4, 4), dtype=np.clongdouble), mesh, 1, 1)
     reference = driver.PixelCGField(np.ones((3, 3), dtype=np.clongdouble), 1, mesh.bounds)
-    values, truth = driver.centre_fields(candidate, reference, batch_size=1)
-    assert values.dtype == truth.dtype == np.dtype(np.clongdouble)
-    np.testing.assert_array_equal(values - truth, np.full((2, 2), increment))
+    baseline = driver.centre_fields(candidate, reference, batch_size=1)
+    coefficients = candidate.pressure if perturbed == "candidate" else reference.nodes
+    coefficients += increment
+    sampled = driver.centre_fields(candidate, reference, batch_size=1)
+    selected = 0 if perturbed == "candidate" else 1
+    assert all(value.dtype == np.dtype(np.clongdouble) for value in sampled)
+    np.testing.assert_array_equal(
+        sampled[selected] - baseline[selected], np.full((2, 2), increment)
+    )
+    np.testing.assert_array_equal(sampled[1 - selected], baseline[1 - selected])
+    coefficients[...] = coefficients.astype(np.complex128)
+    narrowed = driver.centre_fields(candidate, reference, batch_size=1)
+    np.testing.assert_array_equal(narrowed[selected], baseline[selected])
 
 
 def test_profiles_retain_two_exact_incident_values_at_each_macro_face(driver) -> None:

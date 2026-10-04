@@ -34,6 +34,7 @@ requirements:
     - numpy >=1.26
     - scipy >=1.12
     - threadpoolctl >=3.2
+    - fenics-basix >=0.9
 
 tests:
   - python:

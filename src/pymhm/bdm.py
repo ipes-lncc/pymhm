@@ -9,35 +9,17 @@ normal moments and divergence; odd edge moments include parameter reversal.
 from functools import lru_cache
 
 import numpy as np
-from numpy.polynomial.legendre import leggauss, legvander
+from numpy.polynomial.legendre import leggauss
 
+from pymhm.element_backends import legendre_values
 from pymhm.elements import triangle_quadrature
+from pymhm.hdiv_reference import vector_tabulation
 from pymhm.mesh import FloatArray, IntArray, SkeletonSpace, TriangleMesh
 
 
 def _polynomials(points: FloatArray) -> tuple[FloatArray, FloatArray]:
-    """Evaluate vector P2 monomials and their reference divergences."""
-    x, y = points.T
-    scalar = np.column_stack((np.ones(len(x)), x, y, x * x, x * y, y * y))
-    values = np.zeros((len(points), 12, 2))
-    values[:, :6, 0], values[:, 6:, 1] = scalar, scalar
-    divergence = np.column_stack(
-        (
-            np.zeros(len(x)),
-            np.ones(len(x)),
-            np.zeros(len(x)),
-            2 * x,
-            y,
-            np.zeros(len(x)),
-            np.zeros(len(x)),
-            np.zeros(len(x)),
-            np.ones(len(x)),
-            np.zeros(len(x)),
-            x,
-            2 * y,
-        )
-    )
-    return values, divergence
+    """Tabulate native Basix BDM2 before applying the declared moment coordinates."""
+    return vector_tabulation("BDM", "triangle", 2, points)
 
 
 @lru_cache(maxsize=1)
@@ -52,7 +34,9 @@ def _dual_coefficients() -> FloatArray:
         tangent = end - start
         normal_measure = np.array([tangent[1], -tangent[0]])
         values, _ = _polynomials(start + t[:, None] * tangent)
-        dual[3 * edge : 3 * edge + 3] = legvander(x, 2).T @ (w[:, None] * (values @ normal_measure))
+        dual[3 * edge : 3 * edge + 3] = legendre_values(x, 2).T @ (
+            w[:, None] * (values @ normal_measure)
+        )
     bary, weights = triangle_quadrature(4)
     points = bary[:, 1:]
     values, _ = _polynomials(points)
@@ -161,7 +145,7 @@ def bdm2_trace_map(
     result = np.zeros((3 * len(fine.boundary_faces), count))
     x, w = leggauss(4)
     parameter, weights = (x + 1) / 2, w / 2
-    fine_basis = legvander(x, 2)
+    fine_basis = legendre_values(x, 2)
     offset = 0
     for side, face in enumerate(mesh.cell_faces[cell]):
         space = skeleton.faces[face]

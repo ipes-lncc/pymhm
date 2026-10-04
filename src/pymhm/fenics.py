@@ -17,6 +17,7 @@ from scipy import sparse
 
 from pymhm.hybrid import LocalProblem
 from pymhm.mesh import FloatArray
+from pymhm.variational import LocalForm, compile_local_forms
 
 
 def _require(module: str) -> ModuleType:
@@ -142,6 +143,31 @@ def _apply_coefficient(ufl: ModuleType, coefficient: Any, vector: Any) -> Any:
     """Apply a scalar isotropic or rank-two tensor coefficient to a vector."""
     coefficient = ufl.as_ufl(coefficient)
     return coefficient * vector if coefficient.ufl_shape == () else ufl.dot(coefficient, vector)
+
+
+def assemble_local_forms(forms: LocalForm) -> LocalProblem:
+    """Compile a ``LocalForm`` through the native DOLFINx/UFL adapter.
+
+    Signed trace forms and literal retained coefficients are passed unchanged
+    to ``from_ufl``; physical ``moment_forms`` become its constraint forms.
+    The existing real-valued, same trial/test space, single-rank restrictions
+    apply. No boundary elimination, trace space, gauge or stabilization is
+    inferred. Native modules are imported only when this function executes.
+    """
+    return compile_local_forms(forms, _compile_local_forms)
+
+
+def _compile_local_forms(forms: LocalForm) -> LocalProblem:
+    """Pass the declared forms to the existing owner of native assembly."""
+    return from_ufl(
+        forms.a,
+        forms.L,
+        forms.trace_forms,
+        forms.trace_dofs,
+        kernel=forms.kernel,
+        constraint_forms=forms.moment_forms,
+        coarse_basis=forms.coarse_basis,
+    )
 
 
 def primal_darcy_forms(space: Any, permeability: Any, source: Any) -> tuple[Any, Any]:
