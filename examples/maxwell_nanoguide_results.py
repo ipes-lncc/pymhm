@@ -11,7 +11,7 @@ from typing import Any
 import numpy as np
 from numpy.polynomial.legendre import leggauss
 
-from pymhm.quadrilateral import qk_basis
+from pymhm.fem.scalar.quadrilateral import qk_basis
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/maxwell-nanoguide"

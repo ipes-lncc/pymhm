@@ -7,10 +7,9 @@ from typing import Any
 import numpy as np
 import pytest
 
-from pymhm import meshing
-from pymhm.darcy import solve_darcy
-from pymhm.mesh import TriangleMesh
-from pymhm.meshing import (
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.io import planar as meshing
+from pymhm.io.planar import (
     MeshData,
     from_gmsh,
     from_netgen,
@@ -19,6 +18,7 @@ from pymhm.meshing import (
     unit_square_netgen,
     write_mesh,
 )
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.fixture

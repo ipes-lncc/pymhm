@@ -7,6 +7,7 @@ import os
 import pickle
 import subprocess
 import sys
+from dataclasses import replace
 from typing import Any
 
 import numpy as np
@@ -16,19 +17,20 @@ from numpy.testing import assert_allclose, assert_array_equal
 from examples.tutorial_local_provider import (
     Boundary,
     Formulation,
+    TutorialProvider,
     build_problem,
-    coefficient_compiler,
-    declared_local,
     diagnostics,
     run_tutorial,
     source,
 )
-from pymhm.darcy import darcy_local_provider
-from pymhm.elements import triangle_quadrature
-from pymhm.hybrid import LocalProblem
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.parallel import ExecutionConfig
-from pymhm.variational import LocalForm
+from pymhm._legacy.models.darcy.primal import darcy_local_provider
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.equations import Equation, LocalEquations, compile_local_equations
+from pymhm.core.multiscale import assemble
+from pymhm.execution.cpu import ExecutionConfig
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("formulation", ["primal", "mixed"])
@@ -68,7 +70,7 @@ def test_manufactured_fields_original_rows_and_physical_gauge(
 def test_local_form_compiler_preserves_executed_operator_and_basis(
     formulation: Formulation,
 ) -> None:
-    """The tutorial delegates physical assembly without rotating its coefficients."""
+    """Explicit user equations preserve the established executed coefficients."""
     mesh = TriangleMesh.unit_square()
     factory = darcy_local_provider(
         mesh,
@@ -77,10 +79,11 @@ def test_local_form_compiler_preserves_executed_operator_and_basis(
         local_refinement=2,
         source=source,
     )
-    restored = pickle.loads(pickle.dumps(factory))
+    provider = TutorialProvider(mesh, SkeletonSpace(mesh), formulation)
+    restored = pickle.loads(pickle.dumps(provider))
     for cell in range(len(mesh.cells)):
         original = factory(cell)
-        compiled = declared_local(cell, provider=restored)
+        compiled = compile_local_equations(restored(cell))
         for name in ("matrix", "coupling", "load", "trace_dofs", "kernel", "constraints"):
             a, b = getattr(original.problem, name), getattr(compiled.problem, name)
             assert_array_equal(
@@ -109,16 +112,49 @@ def test_ordered_batches_preserve_the_mixed_physical_solution(backend: Any) -> N
 
 def test_numeric_compiler_can_request_default_coefficient_moments() -> None:
     """A declared kernel may omit physical moments when no physical gauge is claimed."""
-    forms = LocalForm(
+    forms = LocalEquations(
         a=np.array([[1.0, -1.0], [-1.0, 1.0]]),
         L=np.zeros(2),
-        trace_forms=(np.array([1.0, 0.0]),),
-        trace_dofs=np.array([0]),
+        b=np.array([[1.0], [0.0]]),
+        c=np.array([[-1.0, 0.0]]),
+        dofs=np.array([0]),
         kernel=np.ones((2, 1)),
     )
-    local = coefficient_compiler(forms)
+    local = compile_local_equations(forms).problem
     assert isinstance(local, LocalProblem)
     assert_array_equal(local.constraints, local.kernel)
+
+
+def test_user_global_form_contributes_to_declared_coordinates() -> None:
+    """A user global form changes the reduced equation without choosing a model."""
+    problem = build_problem()
+    baseline = assemble(problem)
+    operator = np.diag(np.arange(1, len(baseline.rhs) + 1, dtype=float))
+    forcing = np.linspace(0.2, 1.2, len(baseline.rhs))
+    equation = Equation(operator, problem.global_equation.L + forcing)
+    modified = assemble(replace(problem, global_equation=equation))
+    assert_allclose(modified.matrix.toarray(), baseline.matrix.toarray() + operator)
+    assert_allclose(modified.rhs, baseline.rhs + forcing)
+    actual = modified.solve()
+    coefficients = np.r_[actual.trace, *actual.coarse]
+    expected = np.linalg.solve(modified.matrix.toarray(), modified.rhs)
+    assert_allclose(coefficients, expected, atol=3e-13, rtol=3e-13)
+
+
+@pytest.mark.parametrize(
+    "kwargs, match",
+    [
+        ({"formulation": "unknown"}, "formulation"),
+        ({"element_backend": "unknown"}, "element_backend"),
+        ({"local_refinement": 0}, "local_refinement"),
+    ],
+)
+def test_application_provider_rejects_invalid_declared_spaces(
+    kwargs: dict[str, Any], match: str
+) -> None:
+    mesh = TriangleMesh.unit_square()
+    with pytest.raises(ValueError, match=match):
+        TutorialProvider(mesh, SkeletonSpace(mesh), **kwargs)
 
 
 @pytest.mark.parametrize(
@@ -146,16 +182,14 @@ def test_provider_requires_its_own_scalar_skeleton(wrong_mesh: bool, components:
         TriangleMesh.unit_square() if wrong_mesh else mesh, components=components
     )
     with pytest.raises(ValueError, match="scalar skeleton"):
-        darcy_local_provider(mesh, skeleton=skeleton)
+        TutorialProvider(mesh, skeleton)
 
 
 @pytest.mark.parametrize("face", [FaceSpace.uniform(1), FaceSpace.uniform(0, 3)])
 def test_rt0_requires_constant_aligned_trace_segments(face: FaceSpace) -> None:
     mesh = TriangleMesh.unit_square()
     skeleton = SkeletonSpace(mesh, tuple(face for _ in mesh.faces))
-    provider = darcy_local_provider(
-        mesh, skeleton=skeleton, formulation="mixed", local_refinement=2
-    )
+    provider = TutorialProvider(mesh, skeleton, formulation="mixed", local_refinement=2)
     with pytest.raises(ValueError, match="degree-zero trace segments aligned"):
         provider(0)
 

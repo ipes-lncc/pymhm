@@ -8,9 +8,9 @@ from typing import Any
 
 import numpy as np
 
-from examples.campaign_provenance import file_digest
 from examples.helmholtz_compact_family import CompactFamily, CompactTrace
-from pymhm.mesh import positive_int
+from pymhm.core.validation import positive_int
+from pymhm.io.provenance import file_digest
 
 
 def write_coefficients(

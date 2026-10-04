@@ -54,7 +54,8 @@ def test_stress_archive_preserves_physical_fields(tmp_path):
     _example("hpc4e_data")
     archive = _example("solve_hpc4e_mhm").archive
     field_type = _example("hpc4e_fields").RectangularElasticityField
-    from pymhm import CartesianMacroMesh, solve_elasticity_tensor_rt
+    from pymhm import CartesianMacroMesh
+    from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
 
     mesh = CartesianMacroMesh(2, 1, (0, 1, 0, 0.45))
     solution = solve_elasticity_tensor_rt(

@@ -3,8 +3,8 @@
 import numpy as np
 import pytest
 
-from pymhm.helmholtz import solve_helmholtz
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.waves.helmholtz import solve_helmholtz
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @pytest.mark.skipif(

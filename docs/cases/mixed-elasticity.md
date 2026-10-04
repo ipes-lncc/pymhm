@@ -69,7 +69,8 @@ moments, with no independent rotation gauge.
 
 ```python
 import numpy as np
-from pymhm import TriangleMesh, solve_elasticity_mixed
+from pymhm import TriangleMesh
+from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
 
 
 def displacement(x):

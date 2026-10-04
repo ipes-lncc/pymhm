@@ -4,12 +4,13 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.elasticity_compliance import stress_compliance_values
-from pymhm.elasticity_mixed import solve_elasticity_mixed
-from pymhm.elasticity_tensor_rt import solve_elasticity_tensor_rt
-from pymhm.mesh import TriangleMesh
-from pymhm.polygon import PolygonMesh, solve_elasticity_mixed_polygons
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
+from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
+from pymhm._legacy.models.geometry import solve_elasticity_mixed_polygons
+from pymhm.materials.elasticity import stress_compliance_values
+from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.meshes.polygonal import PolygonMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def anisotropic_compliance():

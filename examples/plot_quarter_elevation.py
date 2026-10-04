@@ -25,7 +25,7 @@ else:
     from plot_quarter_spot import FIGURES, OUTPUT
 
 from pymhm import TriangleMesh
-from pymhm.visualization import macro_edges
+from pymhm.postprocessing.visualization import macro_edges
 
 
 def corner_well_distance(segments: np.ndarray) -> np.ndarray:

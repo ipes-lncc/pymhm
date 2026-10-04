@@ -43,7 +43,8 @@ that requires interior enrichment. Material pixels cut through fine rectangles
 are integrated over their exact intersections.
 
 ```python
-from pymhm import CartesianMacroMesh, solve_darcy_tensor_rt
+from pymhm import CartesianMacroMesh
+from pymhm._legacy.models.darcy.tensor import solve_darcy_tensor_rt
 
 solution = solve_darcy_tensor_rt(
     CartesianMacroMesh(4), degree=2, enrichment=1,

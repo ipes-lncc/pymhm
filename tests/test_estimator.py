@@ -6,9 +6,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.estimator import estimate_darcy_error, recover_potential
-from pymhm.lagrange import nodal_space
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.estimators.darcy import estimate_darcy_error, recover_potential
+from pymhm.fem.scalar.triangle import nodal_space
 
 
 def exact(points):

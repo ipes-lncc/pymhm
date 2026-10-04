@@ -15,7 +15,7 @@ from matplotlib.tri import Triangulation
 from plot_mesh import draw_macro_mesh
 from plot_style import set_refinement_ticks
 
-from pymhm.mesh import TriangleMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/stokes-adaptive"

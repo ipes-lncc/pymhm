@@ -13,7 +13,7 @@ from threadpoolctl import threadpool_limits
 
 from examples.solve_spe10 import load_layer, pressure_boundary
 from examples.spe10_adaptive import DATA, ROOT, hashes, mesh_rectangle, natural_faces
-from pymhm.adaptive_darcy import solve_adaptive_darcy
+from pymhm.adaptivity.darcy import solve_adaptive_darcy
 
 
 def acquire(levels: int = 5) -> list[dict[str, Any]]:

@@ -7,7 +7,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from pymhm.tetrahedral import TetraMesh, tetra_nodal_space
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 @pytest.fixture

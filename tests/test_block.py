@@ -6,12 +6,14 @@ import numpy as np
 import pytest
 from scipy import sparse
 
-from pymhm import block
-from pymhm.block import SaddleBlockSolver, _positive
-from pymhm.elements import face_integration, p1_operators
-from pymhm.hybrid import HybridSystem, LocalProblem
-from pymhm.mesh import SkeletonSpace, TriangleMesh
-from pymhm.solvers import LinearSolveError
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.system import HybridSystem
+from pymhm.fem.scalar.operators import face_integration, p1_operators
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.linalg import block
+from pymhm.linalg.block import SaddleBlockSolver, _positive
+from pymhm.linalg.linear import LinearSolveError
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def mhm_system(n=2):

@@ -22,7 +22,9 @@ from manufactured import (
     stokes_velocity,
 )
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_brinkman, solve_darcy
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm._legacy.models.vector import solve_brinkman
 
 
 def run() -> dict[str, object]:

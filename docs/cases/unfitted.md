@@ -131,9 +131,10 @@ same sixteen macrotriangles as the campaign and initial local refinement four.
 ```python
 import numpy as np
 from examples.unfitted_geometry import macro_mesh
-from pymhm import FaceSpace, SkeletonSpace, solve_darcy
-from pymhm.cut_cells import fit_material_faces, fit_material_mesh
-from pymhm.reservoir import CartesianCellField
+from pymhm import FaceSpace, SkeletonSpace
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.quadrature.material import fit_material_faces, fit_material_mesh
+from pymhm.io.reservoir import CartesianCellField
 
 macro = macro_mesh(delta=1/6)
 a = CartesianCellField(np.array([[10.0, 1.0]]), (1.0, 0.5))

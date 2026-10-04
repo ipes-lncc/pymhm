@@ -9,8 +9,9 @@ import numpy as np
 from elasticity_data import ElasticityData
 from threadpoolctl import threadpool_limits
 
-from pymhm.elasticity_tensor_rt import solve_elasticity_tensor_rt
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/elasticity-tensor-rt"
@@ -113,8 +114,8 @@ def main() -> None:
     sources = [
         Path(__file__),
         ROOT / "examples/elasticity_data.py",
-        ROOT / "src/pymhm/elasticity_tensor_rt.py",
-        ROOT / "src/pymhm/tensor_rt.py",
+        ROOT / "src/pymhm/_legacy/models/elasticity/stress_tensor.py",
+        ROOT / "src/pymhm/fem/hdiv/tensor_rt.py",
     ]
     report = dict(
         case="Original bounded-force polynomial elasticity",
@@ -127,9 +128,9 @@ def main() -> None:
         error_quadrature=10,
         archive=path.name,
         sha256=digest,
-        source_hashes={
-            str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources
-        },
+        source_hashes=current_source_manifest(
+            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+        ),
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
 

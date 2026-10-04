@@ -211,6 +211,7 @@ nav:
 - Mathematical foundations: theory.md
 - Literature and scope: literature.md
 - Architecture: architecture.md
+- Variational problems: variational.md
 - Mesh generation: meshing.md
 - Cartesian Qk Darcy: quadrilateral.md
 - PyVista visualization: visualization.md

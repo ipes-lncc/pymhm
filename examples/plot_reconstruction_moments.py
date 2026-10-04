@@ -15,11 +15,12 @@ import numpy as np
 from plot_mesh import draw_macro_mesh
 from threadpoolctl import threadpool_limits
 
-from pymhm import DarcySolution, FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import tabulate
-from pymhm.reconstruction_moments import MomentFluxSolution, reconstruct_darcy_moments
-from pymhm.rt import rt_evaluate
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import DarcySolution, solve_darcy
+from pymhm.fem.hdiv.rt import rt_evaluate
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import tabulate
+from pymhm.recovery.moments import MomentFluxSolution, reconstruct_darcy_moments
 
 ROOT = Path(__file__).resolve().parents[1]
 FIGURES = ROOT / "docs/figures/reconstruction-moments"

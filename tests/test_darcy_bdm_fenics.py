@@ -4,11 +4,12 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.bdm import bdm2_evaluate
-from pymhm.darcy_mixed import solve_darcy_bdm
-from pymhm.elements import triangle_quadrature
-from pymhm.fenics import from_ufl
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.mixed_bdm import solve_darcy_bdm
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.hdiv.bdm import bdm2_evaluate
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
 
 pytestmark = pytest.mark.fem
 

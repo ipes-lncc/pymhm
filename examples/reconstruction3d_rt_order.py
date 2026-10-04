@@ -10,8 +10,9 @@ from threadpoolctl import threadpool_limits
 
 from examples.reconstruction3d_data import fields
 from pymhm import TetraMesh, TriangularSkeleton, reconstruct_darcy_moments_3d
-from pymhm.darcy3d import Darcy3DSolution
-from pymhm.hybrid import HybridSolution
+from pymhm._legacy.models.darcy.primal_3d import Darcy3DSolution
+from pymhm.core.contracts import HybridSolution
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/reconstruction3d"
@@ -33,18 +34,20 @@ def run() -> None:
     if hashlib.sha256(archive_path.read_bytes()).hexdigest() != row["archive_sha256"]:
         raise ValueError("the original field archive differs from its recorded digest")
     owners = [
-        ROOT / "src/pymhm" / f"{name}.py"
+        ROOT / f"src/pymhm/{name}.py"
         for name in (
-            "darcy3d",
-            "reconstruction3d",
-            "rt3d",
-            "hdiv3d_mesh",
-            "hdiv3d_family",
-            "tetrahedral",
-            "tetra_lagrange",
+            "_legacy/models/darcy/primal_3d",
+            "recovery/moments_3d",
+            "fem/hdiv/rt_3d",
+            "meshes/mixed",
+            "fem/hdiv/family_3d",
+            "fem/scalar/tetrahedron",
+            "fem/scalar/tetrahedron_topology",
         )
     ] + [Path(__file__), ROOT / "examples/reconstruction3d_data.py"]
-    hashes = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    )
     with np.load(archive_path) as archive:
         arrays = {key: archive[key].copy() for key in archive.files}
     macro = TetraMesh(arrays["macro_points"], arrays["macro_cells"])
@@ -127,7 +130,9 @@ def run() -> None:
             "Continuous-test equilibrium differs from separate fine-cell source balance."
         ),
     )
-    current = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    current = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    )
     if current != hashes:
         raise RuntimeError("sources changed during the reconstruction control")
     result["source_changed_during_run"] = False

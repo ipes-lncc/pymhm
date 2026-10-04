@@ -5,9 +5,14 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.elasticity3d import _KELVIN3, constitutive_values_3d, rigid_modes_3d, solve_elasticity_3d
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.elasticity.primal_3d import (
+    _KELVIN3,
+    constitutive_values_3d,
+    rigid_modes_3d,
+    solve_elasticity_3d,
+)
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 @pytest.fixture(autouse=True)

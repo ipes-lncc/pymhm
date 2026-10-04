@@ -50,8 +50,9 @@ values in RT face moments are one-sided traces selected by the incident fine
 cell, without moving quadrature points or averaging the permeability.
 
 ```python
-from pymhm.darcy3d import TriangularSkeleton, solve_darcy_3d
-from pymhm.planar_fitting import fit_planar_material, planar_face_partitions
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from pymhm.meshes.fitting import fit_planar_material, planar_face_partitions
 
 parts = planar_face_partitions(macro, material)
 skeleton = TriangularSkeleton(macro, degree=1, face_partitions=parts)
@@ -124,5 +125,5 @@ pixi run -e fem pytest tests/test_planar3d_fenics.py
 
 The [campaign JSON](../figures/planar3d/campaign.json) records geometry counts,
 area ranges, boundary conventions, source and field hashes, norms and residuals.
-[Notebook 63](https://github.com/volpatto/pymhm/blob/main/notebooks/63_planar3d.ipynb)
+[Notebook 63](https://github.com/volpatto/pymhm/blob/main/notebooks/darcy/63_planar3d.ipynb)
 executes a light mixed-boundary patch and replays the accepted records and figures.

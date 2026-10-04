@@ -86,12 +86,12 @@ def test_every_current_numerical_owner_is_in_the_acquisition_identity():
     """Quadrature/material, geometry and response precision helpers share one guard."""
     hashes = article.article_hashes()
     for name in (
-        "reservoir",
-        "planar_material",
-        "planar_quadrature",
-        "_geometry_roundoff",
-        "hybrid",
-        "solvers",
+        "io/reservoir",
+        "materials/planar",
+        "fem/quadrature/planar",
+        "meshes/roundoff",
+        "core/contracts",
+        "linalg/linear",
     ):
         assert f"src/pymhm/{name}.py" in hashes
     assert "examples/helmholtz_incident_family.py" in hashes

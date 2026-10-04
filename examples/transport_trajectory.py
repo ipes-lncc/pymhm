@@ -15,10 +15,12 @@ import numpy as np
 
 from examples.archive_precision import precision_fields, restore_precision
 from examples.local_response_cache import array_identity
-from pymhm.elements import p1_geometry, triangle_quadrature
-from pymhm.lagrange import nodal_space, reference_basis
-from pymhm.mesh import SkeletonSpace, TriangleMesh, positive_int
-from pymhm.refinement import validate_submesh
+from pymhm.core.validation import positive_int
+from pymhm.fem.scalar.operators import p1_geometry, triangle_quadrature
+from pymhm.fem.scalar.triangle import nodal_space, reference_basis
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.meshes.refinement import validate_submesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def scalar_geometry(

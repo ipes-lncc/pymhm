@@ -49,17 +49,18 @@ else:
     )
 
 from pymhm import FaceSpace, HybridSystem, SkeletonSpace
-from pymhm.conforming import ConformingQuadrilateralSolution
-from pymhm.hybrid import HybridSolution, LocalProblem
-from pymhm.hybrid_refinement import (
+from pymhm._legacy.models.darcy.cartesian import _assemble_quad, _QuadTask
+from pymhm._legacy.models.darcy.conforming import ConformingQuadrilateralSolution
+from pymhm.core.contracts import HybridSolution, LocalProblem
+from pymhm.core.refinement import (
     HybridRefinementCase,
     HybridRefinementLocal,
     refine_hybrid_stream,
 )
-from pymhm.mesh import positive_int
-from pymhm.quadrilateral import CartesianMacroMesh, _assemble_quad, _QuadTask
-from pymhm.solvers import LinearSolveError, SolverUnavailableError, _accurate_residual
-from pymhm.subspaces import restrict_response
+from pymhm.core.subspaces import restrict_response
+from pymhm.core.validation import positive_int
+from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError, _accurate_residual
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 def array_digest(value: np.ndarray) -> str:

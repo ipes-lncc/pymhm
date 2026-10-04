@@ -1,41 +1,77 @@
 # Hybrid operators and multiscale constructions
 
-Local condensation, operator reuse, recursive problems and distinct multiscale formulations.
+User-defined variational equations, local condensation, recursive reconstruction
+and distinct multiscale formulations. The [variational guide](../variational.md)
+describes the four blocks, global additions and current compilation limits.
 
 [All API families](../api.md)
 
-::: pymhm.variational
+::: pymhm.core.equations
     options:
       show_source: false
 
-::: pymhm.assembly
+::: pymhm.core.multiscale
     options:
       show_source: false
 
-::: pymhm.hybrid
+::: pymhm.core.moments
     options:
       show_source: false
 
-::: pymhm.hybrid_refinement
+## Shared numerical operations and fixed hybrid contracts
+
+::: pymhm.core.variational
     options:
       show_source: false
 
-::: pymhm.offline
+::: pymhm.core.assembly
     options:
       show_source: false
 
-::: pymhm.nested
+::: pymhm.core.contracts
     options:
       show_source: false
 
-::: pymhm.subspaces
+::: pymhm.core.condensation
     options:
       show_source: false
 
-::: pymhm.mshho
+::: pymhm.core.reconstruction
     options:
       show_source: false
 
-::: pymhm.mshho3d
+::: pymhm.core.contributions
+    options:
+      show_source: false
+
+::: pymhm.core.system
+    options:
+      show_source: false
+
+::: pymhm.core.refinement
+    options:
+      show_source: false
+
+::: pymhm.core.offline
+    options:
+      show_source: false
+
+::: pymhm.core.nested
+    options:
+      show_source: false
+
+::: pymhm.core.subspaces
+    options:
+      show_source: false
+
+::: pymhm.methods.hho
+    options:
+      show_source: false
+
+::: pymhm.methods.hho_3d
+    options:
+      show_source: false
+
+::: pymhm._legacy.models.geometry
     options:
       show_source: false

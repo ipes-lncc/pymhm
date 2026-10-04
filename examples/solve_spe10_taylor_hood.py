@@ -158,7 +158,7 @@ def difference(
     ``corner_cutout`` is a fraction of each side length. Nonzero cutouts must
     align with fine-grid lines so that quadrature covers the exact retained domain.
     """
-    from pymhm.elements import triangle_quadrature
+    from pymhm.fem.scalar.operators import triangle_quadrature
 
     nx, ny = fine.shape
     if fine.bounds != coarse.bounds:
@@ -239,8 +239,8 @@ def mhm_difference(
     L2 norm, not an RMS of pixel-center display samples.
     """
     from pymhm import TriangleMesh
-    from pymhm.elements import triangle_quadrature
-    from pymhm.lagrange import nodal_space, reference_basis
+    from pymhm.fem.scalar.operators import triangle_quadrature
+    from pymhm.fem.scalar.triangle import nodal_space, reference_basis
 
     bary, weights = triangle_quadrature(order)
     basis = reference_basis(3, bary)[0]

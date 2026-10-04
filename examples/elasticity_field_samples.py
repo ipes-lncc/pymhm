@@ -5,9 +5,9 @@ from typing import Any
 import numpy as np
 
 from examples.plot_mesh import macro_profile_breaks
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import reference_basis
-from pymhm.mesh import TriangleMesh
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import reference_basis
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def sample_elasticity_fields(solution: Any, refinement: int = 6) -> dict[str, np.ndarray]:

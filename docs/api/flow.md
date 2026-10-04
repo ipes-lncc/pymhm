@@ -4,30 +4,30 @@ Incompressible-flow formulations, residual estimators and adaptive policies.
 
 [All API families](../api.md)
 
-::: pymhm.vector
+::: pymhm.fem.vector.operators
     options:
       show_source: false
 
-::: pymhm.flow
+::: pymhm._legacy.models.flow.solver
     options:
       show_source: false
 
-::: pymhm.flow_estimator
+::: pymhm.estimators.flow
     options:
       show_source: false
 
-::: pymhm.flow_adaptive
+::: pymhm.adaptivity.flow
     options:
       show_source: false
 
-::: pymhm.flow_macro_adaptive
+::: pymhm.adaptivity.flow_macro
     options:
       show_source: false
 
-::: pymhm.flow3d
+::: pymhm._legacy.models.flow.solver_3d
     options:
       show_source: false
 
-::: pymhm.flow3d_forms
+::: pymhm._legacy.models.flow.forms_3d
     options:
       show_source: false

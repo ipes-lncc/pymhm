@@ -7,8 +7,9 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.loads import split_point_sources
-from pymhm.quadrilateral import CartesianMacroMesh, qk_space
+from pymhm.fem.loads import split_point_sources
+from pymhm.fem.scalar.quadrilateral import qk_space
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 def test_signed_incident_samples_preserve_complex_polynomials(monkeypatch):

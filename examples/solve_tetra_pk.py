@@ -12,7 +12,10 @@ from threadpoolctl import threadpool_limits
 
 from examples.reconstruction3d_data import fields
 from examples.reconstruction3d_resolution import reference_norms
-from pymhm import TetraMesh, TriangularSkeleton, estimate_darcy_error_3d, solve_darcy_3d
+from pymhm import TetraMesh, TriangularSkeleton
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from pymhm.estimators.darcy_3d import estimate_darcy_error_3d
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/tetra-pk"
@@ -26,19 +29,19 @@ def source(points: np.ndarray) -> np.ndarray:
 def source_files() -> list[Path]:
     """Identify executed numerical owners and analytical data for reproducible acquisition."""
     names = (
-        "darcy3d",
-        "tetrahedral",
-        "tetra_lagrange",
-        "tetra_validation",
-        "hybrid",
-        "solvers",
-        "parallel",
-        "reconstruction3d",
-        "rt3d",
-        "hdiv3d_family",
-        "hdiv3d_mesh",
-        "estimator3d",
-        "estimator_spaces",
+        "_legacy/models/darcy/primal_3d",
+        "fem/scalar/tetrahedron",
+        "fem/scalar/tetrahedron_topology",
+        "meshes/validation",
+        "core/contracts",
+        "linalg/linear",
+        "execution/cpu",
+        "recovery/moments_3d",
+        "fem/hdiv/rt_3d",
+        "fem/hdiv/family_3d",
+        "meshes/mixed",
+        "estimators/darcy_3d",
+        "fem/conditions",
     )
     return [ROOT / f"src/pymhm/{name}.py" for name in names] + [
         Path(__file__),
@@ -171,7 +174,9 @@ def run(suite: str, workers: int) -> None:
     """Acquire five uniform resolutions or two fixed-geometry controls without changing the PDE."""
     OUTPUT.mkdir(parents=True, exist_ok=True)
     owners = source_files()
-    hashes = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    )
     snapshot = ROOT / "build/results/tetra-pk/acquisition-sources"
     snapshot.mkdir(parents=True, exist_ok=True)
     for path in owners:
@@ -233,9 +238,9 @@ def run(suite: str, workers: int) -> None:
                 workers=workers,
             )
         )
-        if hashes != {
-            str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners
-        }:
+        if hashes != current_source_manifest(
+            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        ):
             raise RuntimeError("campaign sources changed during acquisition")
         record["source_changed_during_run"] = False
         (OUTPUT / f"{suite}.json").write_text(json.dumps(record, indent=2) + "\n")

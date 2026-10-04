@@ -23,9 +23,11 @@ from uuid import uuid4
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_transport
-from pymhm.hybrid import HybridSystem
-from pymhm.solvers import _accurate_residual
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.transport.solver import solve_transport
+from pymhm.core.system import HybridSystem
+from pymhm.io.provenance import current_source_manifest
+from pymhm.linalg.linear import _accurate_residual
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES = ("mh", "mh2m", "tensor-rt", "polygons", "rad-layer", "transport-layer")
@@ -39,7 +41,7 @@ def digest(path: Path) -> str:
 
 def source_hashes() -> dict[str, str]:
     """Identify the locked core and actually imported example numerical owners."""
-    files = set((ROOT / "src/pymhm").glob("*.py"))
+    files = set((ROOT / "src/pymhm").rglob("*.py"))
     files.update(ROOT / name for name in ("pixi.lock", "pixi.toml", "pyproject.toml"))
     files.add(Path(__file__))
     for module in tuple(sys.modules.values()):
@@ -48,7 +50,9 @@ def source_hashes() -> dict[str, str]:
             path = Path(name).resolve()
             if path.is_relative_to(ROOT / "examples") and path.suffix == ".py":
                 files.add(path)
-    return {str(path.relative_to(ROOT)): digest(path) for path in sorted(files)}
+    return current_source_manifest(
+        {str(path.relative_to(ROOT)): digest(path) for path in sorted(files)}
+    )
 
 
 def residual_record(defect: Any, scale: Any) -> dict[str, float]:
@@ -161,7 +165,7 @@ def _acquire(case: str, variant: str, n: int) -> tuple[Any, dict, dict]:
     result: Any
     mesh: Any
     if case == "mh":
-        from pymhm.mh import solve_mh
+        from pymhm.methods.robin import solve_mh
 
         data = importlib.import_module("examples.mh_campaign")
         mesh = TriangleMesh.unit_square(n) if variant == "triangles" else data.l_mesh(n)
@@ -191,7 +195,7 @@ def _acquire(case: str, variant: str, n: int) -> tuple[Any, dict, dict]:
             "assembly_order": 12,
         }
     elif case == "mh2m":
-        from pymhm.mh2m import PressureTraceSpace, solve_mh2m
+        from pymhm.methods.three_field import PressureTraceSpace, solve_mh2m
 
         data = importlib.import_module("examples.mh2m_campaign")
         mesh = TriangleMesh.unit_square(n)
@@ -222,8 +226,8 @@ def _acquire(case: str, variant: str, n: int) -> tuple[Any, dict, dict]:
             "assembly_order": 8,
         }
     elif case == "tensor-rt":
-        from pymhm.quadrilateral import CartesianMacroMesh
-        from pymhm.tensor_rt import solve_darcy_tensor_rt
+        from pymhm._legacy.models.darcy.tensor import solve_darcy_tensor_rt
+        from pymhm.meshes.cartesian import CartesianMacroMesh
 
         data = importlib.import_module("examples.verify_tensor_rt")
         k, enrichment = map(int, variant.split("-"))
@@ -255,7 +259,7 @@ def _acquire(case: str, variant: str, n: int) -> tuple[Any, dict, dict]:
             "multiplier": "physical globally oriented Darcy normal flux",
         }
     else:
-        from pymhm.polygon import solve_transport_polygons
+        from pymhm._legacy.models.geometry import solve_transport_polygons
 
         polygon_partition = importlib.import_module("examples.polygon_meshes").polygon_partition
 

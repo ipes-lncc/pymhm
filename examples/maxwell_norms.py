@@ -5,7 +5,7 @@ from typing import Any
 import numpy as np
 
 from examples.maxwell_data import CavityMode
-from pymhm.maxwell_dg import physical_basis, physical_points, quadrature
+from pymhm.fem.vector.curl import physical_basis, physical_points, quadrature
 
 
 class MaxwellNorms:

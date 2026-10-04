@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.reservoir import CartesianCellField
+from pymhm.materials.cartesian import CartesianCellField
 
 pytestmark = pytest.mark.fem
 
@@ -52,8 +52,8 @@ def test_native_point_load_matches_complex_conforming_solve(reference):
     from scipy import sparse
     from scipy.sparse.linalg import spsolve
 
-    from pymhm.helmholtz_forms import volume_forms
-    from pymhm.mesh import TriangleMesh
+    from pymhm.fem.scalar.helmholtz import volume_forms
+    from pymhm.meshes.triangle import TriangleMesh
 
     n, omega = 4, 2.3
     mesh = TriangleMesh.unit_square(n)
@@ -106,9 +106,9 @@ def test_native_reference_matches_condensed_quadrilateral_patch(reference):
     pytest.importorskip("dolfinx")
     from mpi4py import MPI
 
-    from pymhm.helmholtz import solve_helmholtz
-    from pymhm.helmholtz_spaces import helmholtz_skeleton
-    from pymhm.quadrilateral import CartesianMacroMesh
+    from pymhm._legacy.models.waves.helmholtz import solve_helmholtz
+    from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+    from pymhm.meshes.cartesian import CartesianMacroMesh
 
     pressure, omega = 1.0 + 0.3j, 2.3
     density, modulus = 2.0, 7.0

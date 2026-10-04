@@ -3,11 +3,13 @@
 import numpy as np
 import pytest
 
-from pymhm import TriangleMesh, solve_darcy
-from pymhm.lagrange import nodal_space
-from pymhm.loads import point_load_vector, split_point_sources
-from pymhm.polygon import PolygonMesh
-from pymhm.quadrilateral import CartesianMacroMesh, qk_space
+from pymhm import TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.loads import point_load_vector, split_point_sources
+from pymhm.fem.scalar.quadrilateral import qk_space
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.meshes.polygonal import PolygonMesh
 
 
 @pytest.mark.parametrize("degree", [1, 2, 3, 4])
@@ -84,7 +86,7 @@ def test_quarter_wells_mean_gauge_conservation_sign_and_symmetry(formulation, de
         if formulation == "mixed":
             mean += fine.areas @ p
         else:
-            from pymhm.lagrange import scalar_operators
+            from pymhm.fem.scalar.triangle import scalar_operators
 
             _, mass, _ = scalar_operators(fine, degree)
             mean += np.ones(len(p)) @ (mass @ p)

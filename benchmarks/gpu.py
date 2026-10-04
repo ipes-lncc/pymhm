@@ -19,8 +19,8 @@ import cupy
 from scaling import exact_pressure, machine_information, source_fingerprint, verify_solution
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy import solve_darcy
-from pymhm.mesh import TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def measure_gpu_case(

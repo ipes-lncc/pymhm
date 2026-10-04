@@ -12,9 +12,10 @@ from examples.helmholtz_basis_archive import basis_payload
 from examples.helmholtz_campaign import AcousticWave, norms
 from examples.helmholtz_trace_family import verify_helmholtz_solution
 from examples.minimal_wave_convergence import digest, quadrature_change, require_original, write
-from pymhm.helmholtz import solve_helmholtz
-from pymhm.helmholtz_spaces import helmholtz_skeleton
-from pymhm.quadrilateral import CartesianMacroMesh, _cardinals
+from pymhm._legacy.models.waves.helmholtz import solve_helmholtz
+from pymhm.fem.scalar.quadrilateral import _cardinals
+from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 def acquire(output: Path) -> dict[str, Any]:

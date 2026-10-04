@@ -3,14 +3,14 @@
 import numpy as np
 import pytest
 
-from pymhm.mesh import FaceSpace, SkeletonSpace
-from pymhm.polygon import (
-    PolygonMesh,
+from pymhm._legacy.models.geometry import (
     solve_brinkman_polygons,
     solve_darcy_polygons,
     solve_mshho_polygons,
     solve_transport_polygons,
 )
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.polygonal import PolygonMesh
 
 
 def partition():

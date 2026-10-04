@@ -4,38 +4,38 @@ Stationary and transient scalar problems, conservative transport and stabilizati
 
 [All API families](../api.md)
 
-::: pymhm.transport
+::: pymhm._legacy.models.transport.solver
     options:
       show_source: false
 
-::: pymhm.rad
+::: pymhm._legacy.models.transport.rad
     options:
       show_source: false
 
-::: pymhm.rad3d
+::: pymhm._legacy.models.transport.rad_3d
     options:
       show_source: false
 
-::: pymhm.scalar_adaptive
+::: pymhm.adaptivity.transport
     options:
       show_source: false
 
-::: pymhm.scalar_transient
+::: pymhm._legacy.models.transport.transient
     options:
       show_source: false
 
-::: pymhm.darcy_transport
+::: pymhm._legacy.models.transport.dispersion
     options:
       show_source: false
 
-::: pymhm.darcy_velocity
+::: pymhm._legacy.models.darcy.velocity
     options:
       show_source: false
 
-::: pymhm.unusual
+::: pymhm._legacy.models.transport.stabilization
     options:
       show_source: false
 
-::: pymhm.polyhedral_rad
+::: pymhm._legacy.models.transport.polyhedral
     options:
       show_source: false

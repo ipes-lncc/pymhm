@@ -9,10 +9,11 @@ import numpy as np
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton, solve_darcy_3d
-from pymhm.planar_fitting import fit_planar_material, planar_face_partitions
-from pymhm.reconstruction3d import reconstruct_darcy_moments_3d
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.meshes.fitting import fit_planar_material, planar_face_partitions
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.recovery.moments_3d import reconstruct_darcy_moments_3d
 
 path = Path(__file__).resolve().parents[1] / "examples/planar3d_data.py"
 spec = importlib.util.spec_from_file_location("planar3d_data", path)

@@ -22,13 +22,16 @@ import numpy as np
 from scaling import exact_pressure, machine_information, source_fingerprint, verify_solution
 from threadpoolctl import threadpool_limits
 
-import pymhm.darcy as darcy_module
-import pymhm.hybrid as hybrid_module
-from pymhm.darcy import DarcySolution
-from pymhm.elements import boundary_data, face_integration, p1_geometry, p1_operators, tensor_values
-from pymhm.hybrid import HybridSystem, LocalAssembly, LocalProblem, LocalResponse
-from pymhm.mesh import SkeletonSpace, TriangleMesh
-from pymhm.parallel import map_local
+import pymhm._legacy.models.darcy.primal as darcy_module
+import pymhm.core.system as hybrid_module
+from pymhm._legacy.models.darcy.primal import DarcySolution
+from pymhm.core.contracts import LocalAssembly, LocalProblem, LocalResponse
+from pymhm.core.system import HybridSystem
+from pymhm.execution.cpu import map_local
+from pymhm.fem.scalar.operators import boundary_data, face_integration, p1_geometry, p1_operators
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.materials.evaluation import tensor_values
+from pymhm.meshes.triangle import TriangleMesh
 
 PHASES = (
     "local_assembly",

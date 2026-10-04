@@ -9,7 +9,8 @@ from threadpoolctl import threadpool_limits
 from examples.mapped_well_fields import MappedWellField, difference
 from examples.solve_mapped_oscillatory_well import OscillatoryWellData
 from examples.solve_mapped_well import WellData
-from pymhm.mapped_rt import HexMesh, solve_darcy_mapped_rt
+from pymhm._legacy.models.darcy.mapped import solve_darcy_mapped_rt
+from pymhm.meshes.hexahedron import HexMesh
 
 
 def archived(solution):
@@ -193,7 +194,7 @@ def test_invariant_subspace_rejects_tilted_caps_and_preserves_global_mobility_sc
 
 def test_archived_field_scoped_tables_preserve_point_values_bitwise():
     """Reusing reference tables preserves all physical values without a global cache."""
-    from pymhm.mapped_rt import mapped_rt_basis
+    from pymhm.fem.hdiv.mapped import mapped_rt_basis
 
     mesh = HexMesh.annular_prism(np.array([0.2, 0.5]), 1.0, 4)
     rng = np.random.default_rng(913)

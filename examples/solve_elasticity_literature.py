@@ -14,7 +14,8 @@ from plot_mixed_elasticity import metrics, oscillatory_fields, oscillatory_modul
 from threadpoolctl import threadpool_limits
 
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.elasticity_mixed import solve_elasticity_mixed
+from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/elasticity-families"
@@ -78,8 +79,8 @@ def main() -> None:
     sources = [
         Path(__file__),
         ROOT / "examples/plot_mixed_elasticity.py",
-        ROOT / "src/pymhm/elasticity_mixed.py",
-        ROOT / "src/pymhm/bdm_family.py",
+        ROOT / "src/pymhm/_legacy/models/elasticity/stress.py",
+        ROOT / "src/pymhm/fem/hdiv/bdm_family.py",
     ]
     report = dict(
         case="L18 section 6.1.2/Table 3 oscillatory Young modulus",
@@ -91,9 +92,9 @@ def main() -> None:
         assembly_quadrature=args.order,
         error_quadrature=10,
         rows=rows,
-        source_hashes={
-            str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources
-        },
+        source_hashes=current_source_manifest(
+            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+        ),
     )
     (OUTPUT / f"l18-k{args.trace_degree}-enrichment{args.enrichment}.json").write_text(
         json.dumps(report, indent=2) + "\n"

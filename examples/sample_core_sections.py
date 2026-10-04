@@ -26,7 +26,8 @@ from examples.mshho3d_field_archive import read_field
 from examples.mshho3d_sections import replay_section
 from examples.verify_hdiv3d import physical_errors as hdiv_physical_errors
 from examples.verify_mshho3d import physical_errors
-from pymhm.mesh import TriangleMesh
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/core-extensions"
@@ -116,16 +117,22 @@ def run(suite: str, refinement: int = 6) -> None:
     """Publish display samples only after coefficient replay reproduces the acquired norms."""
     record_path = DATA / f"{suite}.json"
     record = json.loads(record_path.read_text())
-    names = ["hdiv3d_family", "hdiv3d_general", "hdiv3d_mesh", "tetrahedral", "tetra_lagrange"]
+    names = [
+        "fem/hdiv/family_3d",
+        "fem/hdiv/moments_3d",
+        "meshes/mixed",
+        "fem/scalar/tetrahedron",
+        "fem/scalar/tetrahedron_topology",
+    ]
     if suite == "mshho3d":
         names += [
-            "mshho",
-            "mshho3d",
-            "darcy3d",
-            "polyhedral",
-            "polyhedral_rad",
-            "hybrid",
-            "solvers",
+            "methods/hho",
+            "methods/hho_3d",
+            "_legacy/models/darcy/primal_3d",
+            "meshes/polyhedral",
+            "_legacy/models/transport/polyhedral",
+            "core/contracts",
+            "linalg/linear",
         ]
     paths = [ROOT / f"src/pymhm/{name}.py" for name in names] + [
         Path(__file__),
@@ -138,7 +145,7 @@ def run(suite: str, refinement: int = 6) -> None:
             ROOT / "examples/verify_hdiv3d.py",
             ROOT / "examples/archive_precision.py",
         ]
-    hashes = {str(p.relative_to(ROOT)): digest(p) for p in paths}
+    hashes = current_source_manifest({str(p.relative_to(ROOT)): digest(p) for p in paths})
     report = dict(
         suite=suite,
         section_height=HEIGHT,
@@ -192,7 +199,9 @@ def run(suite: str, refinement: int = 6) -> None:
         info["norm_order"] = int(archive["norm_orders"][-1])
         report["cases"][name] = info
         print(json.dumps({name: info}), flush=True)
-    report["source_changed"] = hashes != {str(p.relative_to(ROOT)): digest(p) for p in paths}
+    report["source_changed"] = hashes != current_source_manifest(
+        {str(p.relative_to(ROOT)): digest(p) for p in paths}
+    )
     if report["source_changed"]:
         raise RuntimeError("a polynomial replay source changed during acquisition")
     (DATA / f"{suite}-field-sampling.json").write_text(json.dumps(report, indent=2) + "\n")

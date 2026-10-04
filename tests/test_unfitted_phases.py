@@ -13,9 +13,9 @@ from numpy.testing import assert_allclose, assert_array_equal
 import examples.unfitted_phases as owner
 from examples.archive_precision import precision_fields
 from examples.unfitted_convergence import error_norms, smooth_field, smooth_source
-from pymhm.darcy import solve_darcy
-from pymhm.hybrid import LocalProblem
-from pymhm.solvers import LinearSolveError, SolverUnavailableError
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.core.contracts import LocalProblem
+from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError
 
 
 def acquisition(directory: Path, *, threads: int = 1, precision: str = "double"):

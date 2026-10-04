@@ -17,9 +17,10 @@ from plot_mesh import draw_macro_mesh
 from plot_reconstruction_moments import flux, pressure, source
 from threadpoolctl import threadpool_limits
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.estimator import DarcyEstimator, estimate_darcy_error
-from pymhm.lagrange import tabulate
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.estimators.darcy import DarcyEstimator, estimate_darcy_error
+from pymhm.fem.scalar.triangle import tabulate
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "examples/results"

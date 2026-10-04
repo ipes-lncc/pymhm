@@ -18,17 +18,17 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.campaign_checkpoint import archive_path, require_sources, verify_checkpoint
-from examples.campaign_provenance import file_digest
 from examples.helmholtz_campaign import AcousticWave, source_hashes
 from examples.helmholtz_compact_family import CompactFamily
 from examples.helmholtz_response_store import ResponseStore
 from examples.helmholtz_stability import checkpoint, continuous_local_resonance, projected_trace
-from pymhm.helmholtz import _HelmholtzFactory, local_helmholtz_error_squared
-from pymhm.helmholtz_spaces import helmholtz_skeleton
-from pymhm.loads import split_point_sources
-from pymhm.mesh import positive_int
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.solvers import LinearSolveError
+from pymhm._legacy.models.waves.helmholtz import _HelmholtzFactory, local_helmholtz_error_squared
+from pymhm.core.validation import positive_int
+from pymhm.fem.loads import split_point_sources
+from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.io.provenance import file_digest
+from pymhm.linalg.linear import LinearSolveError
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 

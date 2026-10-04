@@ -4,7 +4,7 @@ import numpy as np
 from scipy.spatial import Voronoi
 
 from pymhm import TriangleMesh
-from pymhm.polygon import PolygonMesh
+from pymhm.meshes.polygonal import PolygonMesh
 
 
 def rhombus_partition(n: int) -> PolygonMesh:

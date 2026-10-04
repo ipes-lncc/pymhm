@@ -20,7 +20,7 @@ from examples.mh2m_heterogeneous import load_field
 from examples.plot_mesh import macro_profile_breaks, mark_macro_interfaces
 from examples.plot_mh2m_heterogeneous import fields, save
 from examples.plot_style import set_refinement_ticks
-from pymhm.mesh import TriangleMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 

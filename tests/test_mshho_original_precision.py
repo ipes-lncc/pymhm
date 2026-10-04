@@ -8,14 +8,17 @@ import numpy as np
 import pytest
 from scipy import sparse
 
-import pymhm.solvers as solvers
+import pymhm.linalg.linear as solvers
 from examples.mshho_field_archive import attach_mhm, field_arrays
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.mshho import MsHHOLocal, _condense_moments, _energy_reconstruction, solve_mshho
-from pymhm.mshho3d import solve_mshho_3d
-from pymhm.polyhedral import PolyhedralMesh
-from pymhm.solvers import SolverUnavailableError
-from pymhm.tetrahedral import TetraMesh, tetra_operators
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.core.moments import energy_reconstruction as _energy_reconstruction
+from pymhm.fem.scalar.tetrahedron import tetra_operators
+from pymhm.linalg.linear import SolverUnavailableError
+from pymhm.meshes.polyhedral import PolyhedralMesh
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.methods.hho import MsHHOLocal, _condense_moments, solve_mshho
+from pymhm.methods.hho_3d import solve_mshho_3d
 
 HAS_EXTENDED = np.finfo(np.longdouble).nmant > np.finfo(float).nmant
 

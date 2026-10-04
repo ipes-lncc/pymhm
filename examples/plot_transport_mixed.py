@@ -19,7 +19,7 @@ from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks
 from examples.plot_style import set_refinement_ticks
 from examples.transport_mixed_campaign import exact
 from examples.verify_transport_published import checked_endpoint, checked_rows
-from pymhm.mesh import TriangleMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/transport"

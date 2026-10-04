@@ -18,23 +18,28 @@ from threadpoolctl import threadpool_limits
 from examples.field_sampling import sample_field
 from examples.pgmhm_campaign import crisscross
 from examples.transport_campaign import layer, natural_horizontal
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import tabulate
-from pymhm.mesh import SkeletonSpace
-from pymhm.scalar_adaptive import TransportBounds, estimate_transport_faces, refine_skeleton_faces
-from pymhm.scalar_boundary import prepare_scalar_trace
-from pymhm.transport import ScalarSolution, solve_transport
+from pymhm._legacy.models.transport.solver import ScalarSolution, solve_transport
+from pymhm.adaptivity.transport import (
+    TransportBounds,
+    estimate_transport_faces,
+    refine_skeleton_faces,
+)
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import tabulate
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.fem.traces.scalar import prepare_scalar_trace
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/transport"
 SOURCES = (
-    "src/pymhm/scalar_adaptive.py",
-    "src/pymhm/rad.py",
-    "src/pymhm/transport.py",
-    "src/pymhm/scalar_boundary.py",
-    "src/pymhm/lagrange.py",
-    "src/pymhm/hybrid.py",
-    "src/pymhm/solvers.py",
+    "src/pymhm/adaptivity/transport.py",
+    "src/pymhm/_legacy/models/transport/rad.py",
+    "src/pymhm/_legacy/models/transport/solver.py",
+    "src/pymhm/fem/traces/scalar.py",
+    "src/pymhm/fem/scalar/triangle.py",
+    "src/pymhm/core/contracts.py",
+    "src/pymhm/linalg/linear.py",
     "examples/transport_mixed_campaign.py",
     "examples/transport_campaign.py",
     "examples/pgmhm_campaign.py",
@@ -174,7 +179,7 @@ def record(solution: ScalarSolution, name: str, refinement: int) -> dict[str, An
 
 def collect() -> dict[str, Any]:
     """Run bounded spatial, adaptive and same-skeleton local-resolution controls."""
-    source_hashes = {name: digest(ROOT / name) for name in SOURCES}
+    source_hashes = current_source_manifest({name: digest(ROOT / name) for name in SOURCES})
     start = perf_counter()
     report: dict[str, Any] = dict(
         source_hashes=source_hashes,
@@ -226,7 +231,7 @@ def collect() -> dict[str, Any]:
 
 def spatial_control(resolution: int) -> dict[str, Any]:
     """Acquire one additional unchanged P1/P0/r16 macro-resolution control."""
-    before = {name: digest(ROOT / name) for name in SOURCES}
+    before = current_source_manifest({name: digest(ROOT / name) for name in SOURCES})
     start = perf_counter()
     with threadpool_limits(1):
         row = record(

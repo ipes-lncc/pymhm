@@ -5,21 +5,22 @@ import pytest
 from numpy.polynomial import Polynomial
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.bdm import bdm2_basis
-from pymhm.cut_cells import (
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.mixed_bdm import _operators as bdm_operators
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm._legacy.models.transport.rad import _rad_local
+from pymhm._legacy.models.transport.transient import solve_transient_transport
+from pymhm.fem.hdiv.bdm import bdm2_basis
+from pymhm.fem.hdiv.rt import rt_basis
+from pymhm.fem.quadrature.material import (
     cartesian_edge_quadrature,
     cartesian_trace_values,
     fit_material_faces,
     material_triangle_quadrature,
 )
-from pymhm.darcy_mixed import _operators as bdm_operators
-from pymhm.elements import p1_geometry, p1_operators, rt0_operators, triangle_quadrature
-from pymhm.lagrange import element_tabulate, scalar_operators, tabulate
-from pymhm.rad import _rad_local
-from pymhm.reservoir import CartesianCellField
-from pymhm.rt import rt_basis
-from pymhm.scalar_transient import solve_transient_transport
+from pymhm.fem.scalar.operators import p1_geometry, p1_operators, rt0_operators, triangle_quadrature
+from pymhm.fem.scalar.triangle import element_tabulate, scalar_operators, tabulate
+from pymhm.materials.cartesian import CartesianCellField
 
 
 def triangle():
@@ -246,9 +247,9 @@ def test_transient_loads_use_the_same_cut_rule_as_the_operator(stabilization):
 
 def test_material_fitted_local_mesh_represents_interface_gradient_jump():
     """Fitting the approximation mesh resolves a transmission kink exactly."""
-    from pymhm import solve_darcy
-    from pymhm.cut_cells import fit_material_mesh
-    from pymhm.refinement import validate_submesh
+    from pymhm._legacy.models.darcy.primal import solve_darcy
+    from pymhm.fem.quadrature.material import fit_material_mesh
+    from pymhm.meshes.refinement import validate_submesh
 
     coarse = TriangleMesh.unit_square()
     material = CartesianCellField(np.array([[1.0], [7.0]]), (0.5, 1.0))
@@ -282,8 +283,8 @@ def test_material_fitted_local_mesh_represents_interface_gradient_jump():
 
 def test_fitted_cartesian_junctions_and_submesh_validation():
     """Grid corners retain conformity and invalid local-domain replacements fail."""
-    from pymhm.cut_cells import fit_material_mesh
-    from pymhm.refinement import validate_submesh
+    from pymhm.fem.quadrature.material import fit_material_mesh
+    from pymhm.meshes.refinement import validate_submesh
 
     mesh = TriangleMesh.unit_square()
     field = CartesianCellField(np.arange(6).reshape(3, 2) + 1.0, (1 / 3, 0.5))
@@ -313,7 +314,7 @@ def test_fitted_cartesian_junctions_and_submesh_validation():
 
 def test_material_mesh_area_guard_and_reaction_validation(monkeypatch):
     """Reject a clipping operator that loses measure and invalid elliptic reaction."""
-    import pymhm.cut_cells as cutting
+    import pymhm.fem.quadrature.material as cutting
 
     mesh = TriangleMesh.unit_square()
     field = CartesianCellField(np.ones((1, 1)), (1.0, 1.0))
@@ -335,7 +336,7 @@ def test_material_mesh_area_guard_and_reaction_validation(monkeypatch):
 
 def test_fitted_area_accounts_for_global_coordinate_roundoff():
     """Small translated cells retain their area under material intersection and merging."""
-    from pymhm.cut_cells import fit_material_mesh
+    from pymhm.fem.quadrature.material import fit_material_mesh
 
     points = np.array([[1096.875, 550.0], [1101.5625, 550.0], [1115.625, 584.375]])
     material = CartesianCellField(np.ones((60, 220)), (20.0, 10.0))

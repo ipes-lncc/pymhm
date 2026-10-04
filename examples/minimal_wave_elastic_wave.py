@@ -12,20 +12,19 @@ import numpy as np
 
 from examples.elastodynamics_campaign import ElasticWave, norms
 from examples.minimal_wave_convergence import digest, quadrature_change, require_original, write
-from pymhm.elastodynamics import ElastodynamicLocal, ElastodynamicStepper, _stress_from_gradient
-from pymhm.element_backends import (
+from pymhm._legacy.models.waves.elastodynamics import (
+    ElastodynamicLocal,
+    ElastodynamicStepper,
+    _stress_from_gradient,
+)
+from pymhm.fem.reference import (
     monomial_tabulation,
     orthogonal_polynomial_tabulation,
     simplex_lagrange_basis,
 )
-from pymhm.tetra_lagrange import tetra_indices
-from pymhm.tetrahedral import (
-    TetraMesh,
-    tetra_barycentric_gradients,
-    tetra_nodal_space,
-    tetra_tabulate,
-    tetrahedron_quadrature,
-)
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space, tetra_tabulate, tetrahedron_quadrature
+from pymhm.fem.scalar.tetrahedron_topology import tetra_indices
+from pymhm.meshes.tetrahedron import TetraMesh, tetra_barycentric_gradients
 
 
 def executed_basis_arrays(degree: int) -> dict[str, np.ndarray]:

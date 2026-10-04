@@ -3,8 +3,8 @@
 import numpy as np
 import pytest
 
-from pymhm.mesh import TriangleMesh
-from pymhm.mshho import solve_mshho
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.hho import solve_mshho
 
 
 @pytest.mark.parametrize("pure", [False, True])

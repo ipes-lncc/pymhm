@@ -4,8 +4,8 @@ import numpy as np
 from numpy.testing import assert_allclose
 
 from examples.solve_spe10_taylor_hood import TaylorHoodField
-from pymhm.lagrange import nodal_space
-from pymhm.mesh import TriangleMesh
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def test_solenoidal_data_and_smooth_lid():

@@ -16,8 +16,8 @@ interior macrofaces and full fine-edge Pk on the external boundary; custom
 traces must have degree at most k and fine-edge-aligned segmentation.
 
 ```python
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.elasticity_tensor_rt import solve_elasticity_tensor_rt
+from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
 
 solution = solve_elasticity_tensor_rt(
     CartesianMacroMesh(4), degree=1, enrichment=1,

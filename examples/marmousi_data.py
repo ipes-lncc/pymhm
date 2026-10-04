@@ -15,7 +15,7 @@ from typing import Any
 
 import numpy as np
 
-from pymhm.reservoir import CartesianCellField
+from pymhm.materials.cartesian import CartesianCellField
 
 FILES = {
     "vp": (

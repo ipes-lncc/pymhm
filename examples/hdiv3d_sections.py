@@ -7,7 +7,7 @@ from collections.abc import Mapping
 import numpy as np
 
 from examples.hdiv3d_field_archive import reference_tables, restore
-from pymhm.hdiv3d_mesh import AffineMixedMesh
+from pymhm.meshes.mixed import AffineMixedMesh
 
 
 def evaluate(

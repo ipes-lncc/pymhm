@@ -6,9 +6,10 @@ from numpy.testing import assert_allclose
 from scipy.spatial import cKDTree
 from threadpoolctl import threadpool_limits
 
-from pymhm.planar_fitting import fit_planar_material
-from pymhm.planar_material import PlanarMaterial, PlanarRegion
-from pymhm.tetrahedral import TetraMesh, tetra_nodal_space, tetra_operators
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space, tetra_operators
+from pymhm.materials.planar import PlanarMaterial, PlanarRegion
+from pymhm.meshes.fitting import fit_planar_material
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 @pytest.mark.fem

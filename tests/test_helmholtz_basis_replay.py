@@ -7,9 +7,9 @@ import pytest
 from threadpoolctl import threadpool_limits
 
 from examples.helmholtz_basis_archive import basis_payload, restore_trace_skeleton
-from pymhm.helmholtz_spaces import OscillatoryFaceSpace, helmholtz_skeleton
-from pymhm.mesh import FaceSpace, SkeletonSpace
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm.fem.traces.helmholtz import OscillatoryFaceSpace, helmholtz_skeleton
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 def test_owned_rotated_coordinates_preserve_field_orientation_and_constant_moments(monkeypatch):

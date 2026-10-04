@@ -27,7 +27,8 @@ compatibility is checked and `mean_pressure` selects the physical volume mean.
 The global mean is not a coordinate-dependent choice of one nodal value.
 
 ```python
-from pymhm import TetraMesh, solve_mshho_3d
+from pymhm import TetraMesh
+from pymhm.methods.hho_3d import solve_mshho_3d
 
 solution = solve_mshho_3d(
     TetraMesh.unit_cube(2), source=1.0, degree=2,

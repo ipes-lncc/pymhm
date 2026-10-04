@@ -12,13 +12,13 @@ import numpy as np
 from examples.elastodynamics_campaign import ElasticWave
 from examples.reconstruction3d_replay import line_intervals
 from examples.tetra_section_samples import section_grid
-from pymhm.tetrahedral import (
-    TetraMesh,
+from pymhm.fem.scalar.tetrahedron import (
     tetra_basis,
     tetra_element_tabulate,
     tetra_nodal_space,
     tetrahedron_quadrature,
 )
+from pymhm.meshes.tetrahedron import TetraMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/elastodynamics"

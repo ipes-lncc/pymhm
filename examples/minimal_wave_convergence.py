@@ -20,6 +20,8 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_info, threadpool_limits
 
+from pymhm.io.provenance import current_source_manifest
+
 ROOT = Path(__file__).resolve().parents[1]
 CASES = ("helmholtz", "elastic-wave", "three-layer", "marmousi")
 
@@ -34,7 +36,7 @@ def source_hashes(extra: tuple[Path, ...] = ()) -> dict[str, str]:
     """Identify all core, lock and already loaded example/private numerical owners."""
     import sys
 
-    files = set((ROOT / "src/pymhm").glob("*.py"))
+    files = set((ROOT / "src/pymhm").rglob("*.py"))
     files.update((ROOT / name) for name in ("pixi.lock", "pixi.toml", "pyproject.toml"))
     files.update(extra)
     for module in tuple(sys.modules.values()):
@@ -48,7 +50,9 @@ def source_hashes(extra: tuple[Path, ...] = ()) -> dict[str, str]:
                 and not path.is_relative_to(ROOT / ".pixi")
             ):
                 files.add(path)
-    return {str(path.relative_to(ROOT)): digest(path) for path in sorted(files)}
+    return current_source_manifest(
+        {str(path.relative_to(ROOT)): digest(path) for path in sorted(files)}
+    )
 
 
 def require_original(values: dict[str, float], threshold: float = 1e-10) -> None:

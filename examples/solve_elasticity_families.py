@@ -15,8 +15,9 @@ from elasticity_data import ElasticityData
 from threadpoolctl import threadpool_limits
 
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.elasticity_mixed import solve_elasticity_mixed
-from pymhm.lagrange import reference_basis
+from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
+from pymhm.fem.scalar.triangle import reference_basis
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/elasticity-families"
@@ -129,8 +130,8 @@ def main() -> None:
     sources = (
         Path(__file__),
         ROOT / "examples/elasticity_data.py",
-        ROOT / "src/pymhm/bdm_family.py",
-        ROOT / "src/pymhm/elasticity_mixed.py",
+        ROOT / "src/pymhm/fem/hdiv/bdm_family.py",
+        ROOT / "src/pymhm/_legacy/models/elasticity/stress.py",
     )
     report = dict(
         case="original bounded-force polynomial elasticity",
@@ -141,9 +142,9 @@ def main() -> None:
         local_refinement=1,
         archive=name + ".npz",
         sha256=checksum,
-        source_hashes={
-            str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources
-        },
+        source_hashes=current_source_manifest(
+            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+        ),
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
 

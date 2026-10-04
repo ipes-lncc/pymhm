@@ -12,7 +12,8 @@ from threadpoolctl import threadpool_limits
 from examples.polygon_meshes import polygon_partition
 from examples.solve_rad3d import exact, gradient, physical_flux, source
 from pymhm import PolyhedralMesh
-from pymhm.polyhedral_rad import PolygonalSkeleton3D, solve_polyhedral_rad
+from pymhm._legacy.models.transport.polyhedral import PolygonalSkeleton3D, solve_polyhedral_rad
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/star-polyhedra"
@@ -29,19 +30,21 @@ def run(workers: int) -> None:
     owners = [
         ROOT / f"src/pymhm/{name}.py"
         for name in (
-            "polyhedral",
-            "polyhedral_geometry",
-            "polyhedral_rad",
-            "polygon",
-            "tetrahedral",
-            "tetra_lagrange",
-            "rad3d",
-            "hybrid",
-            "solvers",
-            "parallel",
+            "meshes/polyhedral",
+            "meshes/geometry",
+            "_legacy/models/transport/polyhedral",
+            "meshes/polygonal",
+            "fem/scalar/tetrahedron",
+            "fem/scalar/tetrahedron_topology",
+            "_legacy/models/transport/rad_3d",
+            "core/contracts",
+            "linalg/linear",
+            "execution/cpu",
         )
     ] + [Path(__file__), ROOT / "examples/polygon_meshes.py", ROOT / "examples/solve_rad3d.py"]
-    hashes = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    )
     snapshot = ROOT / "build/results/star-polyhedra/acquisition-sources"
     snapshot.mkdir(parents=True, exist_ok=True)
     for path in owners:
@@ -159,9 +162,9 @@ def run(workers: int) -> None:
             archive_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
             elapsed_seconds=perf_counter() - started,
         )
-        if hashes != {
-            str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners
-        }:
+        if hashes != current_source_manifest(
+            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        ):
             raise RuntimeError("campaign sources changed during acquisition")
         record["rows"].append(row)
         record["source_changed_during_run"] = False

@@ -6,9 +6,10 @@ from numpy.testing import assert_allclose
 from scipy.spatial import cKDTree
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton, tetra_trace_coupling
-from pymhm.tetra_lagrange import tetra_indices, tetra_polynomials
-from pymhm.tetrahedral import TetraMesh, tetra_operators
+from pymhm.fem.scalar.tetrahedron import tetra_operators
+from pymhm.fem.scalar.tetrahedron_topology import tetra_indices, tetra_polynomials
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton, tetra_trace_coupling
+from pymhm.meshes.tetrahedron import TetraMesh
 
 pytestmark = pytest.mark.fem
 

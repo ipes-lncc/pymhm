@@ -12,10 +12,11 @@ import numpy as np
 from solve_mapped_well import WellData
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy_hdiv3d import solve_darcy_hdiv3d
-from pymhm.hdiv3d_family import cell_quadrature
-from pymhm.hdiv3d_mesh import AffineMixedMesh
-from pymhm.mapped_rt import HexMesh
+from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
+from pymhm.fem.hdiv.family_3d import cell_quadrature
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.hexahedron import HexMesh
+from pymhm.meshes.mixed import AffineMixedMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -36,16 +37,18 @@ def acquire(
         int(f): 0.0 for f in mesh.boundary_faces if np.ptp(mesh.points[mesh.faces[f], 2]) < 1e-12
     }
     watched = [
-        ROOT / "src/pymhm" / name
+        ROOT / f"src/pymhm/{name}"
         for name in (
-            "hdiv3d_family.py",
-            "hdiv3d_mesh.py",
-            "darcy_hdiv3d.py",
-            "hybrid.py",
-            "solvers.py",
+            "fem/hdiv/family_3d.py",
+            "meshes/mixed.py",
+            "_legacy/models/darcy/hdiv_3d.py",
+            "core/contracts.py",
+            "linalg/linear.py",
         )
     ] + [Path(__file__), ROOT / "examples/solve_mapped_well.py"]
-    hashes = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in watched}
+    hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in watched}
+    )
     started = time.perf_counter()
     with threadpool_limits(1):
         solution = solve_darcy_hdiv3d(
@@ -75,9 +78,9 @@ def acquire(
             pnorm += np.sum(fine.determinants[:, None] * w * p * p)
             qnorm += np.sum(fine.determinants[:, None] * w * np.sum(q * q, axis=2))
         balance = max(float(np.max(abs(v))) for v in solution.equilibrium_residuals())
-    current = {
-        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in watched
-    }
+    current = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in watched}
+    )
     if current != hashes:
         raise RuntimeError("acquisition source changed during the solve")
     directory = ROOT / "examples/results/mixed-well-geometries"

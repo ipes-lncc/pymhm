@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import pytest
 
 from examples import spe10_plot_records as records
-from pymhm.mesh import TriangleMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def comparison(tmp_path, reference="classical-rt2-480x1760.npz"):

@@ -5,11 +5,12 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.elasticity3d import rigid_modes_3d
-from pymhm.gals3d import solve_elasticity_gals_3d
-from pymhm.gals3d_forms import tetra_elasticity_pressure_operators
-from pymhm.tetrahedral import TetraMesh, tetrahedron_quadrature
+from pymhm._legacy.models.elasticity.mixed_pressure_3d import solve_elasticity_gals_3d
+from pymhm._legacy.models.elasticity.pressure_forms_3d import tetra_elasticity_pressure_operators
+from pymhm._legacy.models.elasticity.primal_3d import rigid_modes_3d
+from pymhm.fem.scalar.tetrahedron import tetrahedron_quadrature
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 @pytest.fixture(autouse=True)

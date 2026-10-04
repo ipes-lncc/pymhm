@@ -7,9 +7,9 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.mesh import TriangleMesh
-from pymhm.pgmhm import solve_pgmhm
-from pymhm.reservoir import CartesianCellField
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.petrov_galerkin import solve_pgmhm
 
 
 @pytest.fixture

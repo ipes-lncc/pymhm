@@ -11,10 +11,10 @@ import numpy as np
 from solve_spe10_taylor_hood import TaylorHoodField
 from threadpoolctl import threadpool_limits
 
-from pymhm.cut_cells import _clip_polygon
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import element_tabulate, nodal_space, reference_basis
-from pymhm.mesh import TriangleMesh
+from pymhm.fem.quadrature.material import _clip_polygon
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import element_tabulate, nodal_space, reference_basis
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/stokes-adaptive"

@@ -20,10 +20,12 @@ from threadpoolctl import threadpool_limits
 
 from examples.field_sampling import sample_field
 from examples.mh_campaign import l_mesh
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import tabulate
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.pgmhm import PGMHMSolution, solve_pgmhm
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import tabulate
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.petrov_galerkin import PGMHMSolution, solve_pgmhm
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/pgmhm"
@@ -122,20 +124,22 @@ def archive(solution: PGMHMSolution, path: Path) -> None:
 def source_hashes() -> dict[str, str]:
     """Identify the formulation, FEM, geometry and acquisition sources actually used."""
     names = (
-        "src/pymhm/pgmhm.py",
-        "src/pymhm/darcy.py",
-        "src/pymhm/mh.py",
-        "src/pymhm/lagrange.py",
-        "src/pymhm/scalar_boundary.py",
-        "src/pymhm/elements.py",
-        "src/pymhm/mesh.py",
-        "src/pymhm/polygon.py",
-        "src/pymhm/hybrid.py",
-        "src/pymhm/solvers.py",
+        "src/pymhm/methods/petrov_galerkin.py",
+        "src/pymhm/_legacy/models/darcy/primal.py",
+        "src/pymhm/methods/robin.py",
+        "src/pymhm/fem/scalar/triangle.py",
+        "src/pymhm/fem/traces/scalar.py",
+        "src/pymhm/fem/scalar/operators.py",
+        "src/pymhm/meshes/triangle.py",
+        "src/pymhm/meshes/polygonal.py",
+        "src/pymhm/core/contracts.py",
+        "src/pymhm/linalg/linear.py",
         "examples/pgmhm_campaign.py",
         "examples/mh_campaign.py",
     )
-    return {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    return current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    )
 
 
 def run(output: Path, resolutions: list[int], segments: list[int], workers: int) -> None:

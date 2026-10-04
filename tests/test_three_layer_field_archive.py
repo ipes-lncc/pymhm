@@ -8,9 +8,10 @@ import pytest
 from threadpoolctl import threadpool_limits
 
 from examples import three_layer_field_archive as archive
-from pymhm import TriangleMesh, lagrange
-from pymhm.elastodynamics import _make_local, _stress_from_gradient
-from pymhm.mesh import FaceSpace, SkeletonSpace
+from pymhm import TriangleMesh
+from pymhm._legacy.models.waves.elastodynamics import _make_local, _stress_from_gradient
+from pymhm.fem.scalar import triangle as lagrange
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 
 
 @pytest.fixture

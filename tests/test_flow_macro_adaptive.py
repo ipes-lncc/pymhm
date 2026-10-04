@@ -6,8 +6,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.flow_macro_adaptive import adapt_flow_macros, mark_flow_cells
-from pymhm.mesh import TriangleMesh
+from pymhm.adaptivity.flow_macro import adapt_flow_macros, mark_flow_cells
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def test_macro_adaptation_reduces_physical_pressure_error() -> None:

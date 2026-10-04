@@ -8,9 +8,10 @@ from pathlib import Path
 import numpy as np
 from hpc4e_data import HPC4EData
 
-from pymhm.elasticity_tensor_rt import _rotation_basis
-from pymhm.quadrilateral import CartesianMacroMesh, quadrilateral_quadrature
-from pymhm.tensor_rt import tensor_rt_basis
+from pymhm._legacy.models.elasticity.stress_tensor import _rotation_basis
+from pymhm.fem.hdiv.tensor_rt import tensor_rt_basis
+from pymhm.fem.scalar.quadrilateral import quadrilateral_quadrature
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @dataclass(frozen=True)

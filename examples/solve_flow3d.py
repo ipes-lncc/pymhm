@@ -14,9 +14,10 @@ import numpy as np
 from flow3d_data import Flow3DData
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.flow3d import Flow3DSolution, solve_flow_3d
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.flow.solver_3d import Flow3DSolution, solve_flow_3d
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.tetrahedron import TetraMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES = (
@@ -42,23 +43,26 @@ def snapshot() -> dict[str, str]:
     """Hash the exact shared runtime and original analytic acquisition sources."""
     files = [Path(__file__), ROOT / "examples/flow3d_data.py"]
     files.extend(
-        ROOT / "src/pymhm" / name
+        ROOT / f"src/pymhm/{name}"
         for name in (
-            "flow3d.py",
-            "flow3d_forms.py",
-            "flow.py",
-            "darcy3d.py",
-            "rad3d.py",
-            "tetrahedral.py",
-            "tetra_lagrange.py",
-            "hybrid.py",
-            "solvers.py",
-            "parallel.py",
+            "_legacy/models/flow/solver_3d.py",
+            "_legacy/models/flow/forms_3d.py",
+            "_legacy/models/flow/solver.py",
+            "_legacy/models/darcy/primal_3d.py",
+            "_legacy/models/transport/rad_3d.py",
+            "fem/scalar/tetrahedron.py",
+            "fem/scalar/tetrahedron_topology.py",
+            "core/contracts.py",
+            "linalg/linear.py",
+            "execution/cpu.py",
         )
     )
-    return {
-        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in files
-    }
+    return current_source_manifest(
+        {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in files
+        }
+    )
 
 
 def main() -> None:

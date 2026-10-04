@@ -8,9 +8,9 @@ import pytest
 from numpy.testing import assert_allclose
 from scipy import sparse
 
-from pymhm.elements import triangle_quadrature
-from pymhm.fenics import from_ufl
-from pymhm.polygon import solve_elasticity_mixed_polygons
+from pymhm._legacy.models.geometry import solve_elasticity_mixed_polygons
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.scalar.operators import triangle_quadrature
 
 
 def native_mumps_solve(matrix: sparse.spmatrix, rhs: np.ndarray) -> np.ndarray:

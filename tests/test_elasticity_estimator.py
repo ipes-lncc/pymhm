@@ -6,8 +6,9 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_elasticity
-from pymhm.elasticity_estimator import estimate_primal_elasticity_error
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.vector import solve_elasticity
+from pymhm.estimators.elasticity import estimate_primal_elasticity_error
 
 
 def test_affine_tensor_patch_has_zero_face_indicator() -> None:
@@ -50,7 +51,7 @@ def test_zero_jump_does_not_certify_interior_discretization_error() -> None:
     result = solve_elasticity(
         mesh, formulation="primal", degree=3, local_refinement=1, skeleton=skeleton
     )
-    from pymhm.lagrange import nodal_space
+    from pymhm.fem.scalar.triangle import nodal_space
 
     _, points = nodal_space(result.local_meshes[0], 3)
     bubble = points[:, 0] * points[:, 1] * (1 - points.sum(axis=1))

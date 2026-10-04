@@ -9,17 +9,13 @@ executed-source manifest and does not imply that it was recomputed.
 
 from __future__ import annotations
 
-import hashlib
 import json
 from collections.abc import Callable, Collection, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
-
-def file_digest(path: Path) -> str:
-    """Hash a source or archive in bounded memory, including large field files."""
-    with path.open("rb") as stream:
-        return hashlib.file_digest(stream, "sha256").hexdigest()
+from pymhm.io.provenance import current_source_manifest as current_source_manifest
+from pymhm.io.provenance import file_digest as file_digest
 
 
 def positive_integers(

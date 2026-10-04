@@ -15,11 +15,12 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.plot_style import set_refinement_ticks
-from pymhm.darcy import solve_darcy
-from pymhm.darcy_jump_estimator import estimate_darcy_jumps
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import tabulate
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.estimators.darcy_jump import estimate_darcy_jumps
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import tabulate
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/darcy-jump"

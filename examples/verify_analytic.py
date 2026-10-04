@@ -14,9 +14,10 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from plot_style import set_refinement_ticks
 
-from pymhm import TriangleMesh, solve_darcy
-from pymhm.analytic import solve_darcy_analytic
-from pymhm.elements import rt0_evaluate, triangle_quadrature
+from pymhm import TriangleMesh
+from pymhm._legacy.models.darcy.analytic import solve_darcy_analytic
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.scalar.operators import rt0_evaluate, triangle_quadrature
 
 
 def pressure(points):

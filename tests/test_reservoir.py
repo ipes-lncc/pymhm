@@ -6,14 +6,11 @@ from io import BytesIO
 import numpy as np
 import pytest
 
-import pymhm.reservoir as reservoir
-from pymhm.reservoir import (
-    CartesianCellField,
-    ReservoirData,
-    download_spe10_model2,
-    load_spe10_model2,
-    read_eclipse_properties,
-)
+import pymhm.io.datasets.spe10 as reservoir
+import pymhm.io.reservoir as property_io
+from pymhm.io.datasets.spe10 import download_spe10_model2, load_spe10_model2
+from pymhm.io.reservoir import ReservoirData, read_eclipse_properties
+from pymhm.materials.cartesian import CartesianCellField
 
 
 def test_cartesian_index_order_interfaces_endpoints_and_copy():
@@ -156,7 +153,7 @@ def test_spe10_loader_shape_and_i_fastest_order(monkeypatch, tmp_path):
     index = np.arange(np.prod(shape), dtype=float)
     mapping = {"PERMX": index + 1, "PERMY": index + 2, "PERMZ": index + 3}
     monkeypatch.setattr(
-        reservoir,
+        property_io,
         "read_eclipse_properties",
         lambda path: {"PORO": index / index.max()} if "PHI" in path.name else mapping,
     )
@@ -172,7 +169,7 @@ def test_spe10_loader_shape_and_i_fastest_order(monkeypatch, tmp_path):
 @pytest.mark.parametrize("keys", [("PERMX",), ("PERMX", "PERMY", "PERMZ", "PORO")])
 def test_spe10_loader_rejects_missing_or_short_properties(monkeypatch, tmp_path, keys):
     monkeypatch.setattr(
-        reservoir, "read_eclipse_properties", lambda path: {key: np.ones(2) for key in keys}
+        property_io, "read_eclipse_properties", lambda path: {key: np.ones(2) for key in keys}
     )
     with pytest.raises(ValueError, match="60"):
         load_spe10_model2(tmp_path)

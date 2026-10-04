@@ -25,8 +25,9 @@ import scipy
 from threadpoolctl import threadpool_info, threadpool_limits
 
 import pymhm
-from pymhm.darcy import DarcySolution, solve_darcy
-from pymhm.mesh import TriangleMesh
+from pymhm._legacy.models.darcy.primal import DarcySolution, solve_darcy
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def exact_pressure(points: np.ndarray) -> np.ndarray:
@@ -42,13 +43,16 @@ def exact_flux(points: np.ndarray) -> np.ndarray:
 def source_fingerprint(root: Path) -> dict[str, str]:
     """Hash numerical sources and the lockfile to identify the measured state."""
     paths = [
-        *sorted((root / "src/pymhm").glob("*.py")),
-        *sorted((root / "benchmarks").glob("*.py")),
+        *sorted((root / "src/pymhm").rglob("*.py")),
+        *sorted((root / "benchmarks").rglob("*.py")),
         root / "pixi.lock",
     ]
-    return {
-        str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
-    }
+    return current_source_manifest(
+        {
+            str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in paths
+        }
+    )
 
 
 def machine_information(root: Path) -> dict[str, Any]:

@@ -17,15 +17,16 @@ import numpy as np
 from scipy import sparse
 
 from examples.archive_precision import precision_fields, restore_precision
-from examples.campaign_provenance import file_digest
 from examples.local_response_cache import array_identity
 from examples.transport_checkpoints import checkpoint_field, write_progress
-from pymhm.darcy import DarcySolution, _DarcyLocalFactory
-from pymhm.elements import boundary_data, p1_geometry, tensor_values, triangle_quadrature
-from pymhm.lagrange import multiindices, nodal_space, reference_basis
-from pymhm.mesh import positive_int
-from pymhm.mshho import MsHHOSolution
-from pymhm.solvers import LinearSolveError, _accurate_residual
+from pymhm._legacy.models.darcy.primal import DarcySolution, _DarcyLocalFactory
+from pymhm.core.validation import positive_int
+from pymhm.fem.scalar.operators import boundary_data, p1_geometry, triangle_quadrature
+from pymhm.fem.scalar.triangle import multiindices, nodal_space, reference_basis
+from pymhm.io.provenance import file_digest
+from pymhm.linalg.linear import LinearSolveError, _accurate_residual
+from pymhm.materials.evaluation import tensor_values
+from pymhm.methods.hho import MsHHOSolution
 
 SCHEMA = "pymhm-mshho-field-archive-v2"
 LEGACY_SCHEMA = "pymhm-mshho-field-archive-v1"

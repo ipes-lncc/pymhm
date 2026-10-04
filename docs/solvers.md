@@ -51,7 +51,7 @@ an elliptic AMG preset is not a supported shortcut.
 ```python
 import numpy as np
 from scipy import sparse
-from pymhm.solvers import factorize
+from pymhm.linalg.linear import factorize
 
 A = sparse.csr_matrix([[3.0, 1.0], [1.0, 2.0]])
 with factorize(A, solver="scipy") as factors:
@@ -209,7 +209,7 @@ remain significant for small local problems. See the measured
 ```python
 import numpy as np
 import pyamg
-from pymhm.solvers import solve_linear
+from pymhm.linalg.linear import solve_linear
 
 A = pyamg.gallery.poisson((32, 32), format="csr")
 b = np.ones(A.shape[0])
@@ -254,7 +254,7 @@ configuration dictionaries are not supported by this adapter.
 ## Local parallelism
 
 ```python
-from pymhm.parallel import map_local
+from pymhm.execution.cpu import map_local
 
 
 def local_work(value):
@@ -297,7 +297,7 @@ native GPU correctness or performance.
 
 ## AMG block preconditioners for mixed saddle systems
 
-`pymhm.block.SaddleBlockSolver` accepts a real symmetric matrix partitioned as
+`pymhm.linalg.block.SaddleBlockSolver` accepts a real symmetric matrix partitioned as
 
 $$
 \mathcal A=\begin{bmatrix}A&B\\B^T&-C\end{bmatrix}.
@@ -318,7 +318,7 @@ scale balances the largest entry of `A` against the largest diagonal of `BB.T`;
 structures are rejected. This is not a general AMG solver for indefinite inputs.
 
 ```python
-from pymhm.block import SaddleBlockSolver
+from pymhm.linalg.block import SaddleBlockSolver
 
 with SaddleBlockSolver(system.matrix, system.trace_size, backend="pyamg") as block:
     solution = system.solve(factorization=block.as_factorization())

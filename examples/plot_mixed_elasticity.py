@@ -15,8 +15,9 @@ import numpy as np
 from plot_mesh import draw_macro_mesh
 from threadpoolctl import threadpool_limits
 
-from pymhm import MixedElasticitySolution, TriangleMesh, solve_elasticity_mixed
-from pymhm.bdm import bdm2_evaluate
+from pymhm import TriangleMesh
+from pymhm._legacy.models.elasticity.stress import MixedElasticitySolution, solve_elasticity_mixed
+from pymhm.fem.hdiv.bdm import bdm2_evaluate
 
 ROOT = Path(__file__).resolve().parents[1]
 FIGURES = ROOT / "docs/figures/mixed-elasticity"

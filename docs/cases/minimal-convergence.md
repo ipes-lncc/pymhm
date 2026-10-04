@@ -42,7 +42,7 @@ pixi run --locked -e notebooks python examples/plot_initial_convergence.py \
   --output build/initial-convergence-figures
 ```
 
-The [overview notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/73_initial_convergence.ipynb)
+The [overview notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/convergence/73_initial_convergence.ipynb)
 checks the catalogue identities and displays representative completed series.
 
 ## Remaining scientific limits

@@ -7,9 +7,9 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm import meshing_native3d as native
-from pymhm.darcy3d import solve_darcy_3d
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from pymhm.io import native as native
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 class GmshModel:

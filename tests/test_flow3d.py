@@ -7,11 +7,16 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.flow3d import _boundary_flow, solve_flow_3d
-from pymhm.flow3d_forms import _minimum_resistance_3d, resistance_values_3d, tetra_flow_operators
-from pymhm.reservoir import CartesianCellField
-from pymhm.tetrahedral import TetraMesh, tetrahedron_quadrature
+from pymhm._legacy.models.flow.forms_3d import (
+    _minimum_resistance_3d,
+    resistance_values_3d,
+    tetra_flow_operators,
+)
+from pymhm._legacy.models.flow.solver_3d import _boundary_flow, solve_flow_3d
+from pymhm.fem.scalar.tetrahedron import tetrahedron_quadrature
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.tetrahedron import TetraMesh
 
 GRADIENT = np.array([[1.0, 0.3, -0.2], [0.2, -2.0, 0.4], [-0.1, 0.5, 1.0]])
 TENSOR = np.array([[2.0, 0.2, 0.1], [0.2, 3.0, 0.4], [0.1, 0.4, 4.0]])
@@ -400,7 +405,7 @@ def test_declared_translation_must_preserve_every_dirichlet_component():
 
 def test_boundary_tangency_preserves_planar_coordinates_without_erasing_small_flux():
     """Keep exact face coordinates while rejecting genuinely nonzero tiny normal transport."""
-    from pymhm.rad3d import _boundary_tangent_3d
+    from pymhm._legacy.models.transport.rad_3d import _boundary_tangent_3d
 
     skeleton = TriangularSkeleton(TetraMesh.unit_cube())
 
@@ -433,7 +438,7 @@ def test_nonrepresentable_robin_translation_is_rejected_before_imposing_a_gauge(
 @pytest.mark.parametrize("formulation,degree", [("taylor-hood", 2), ("usfem", 1), ("usfem", 2)])
 def test_invisible_trace_modes_are_not_regularized(formulation, degree):
     """A deficient local/trace pairing fails instead of being repaired by a diagonal shift."""
-    from pymhm.solvers import LinearSolveError
+    from pymhm.linalg.linear import LinearSolveError
 
     with pytest.raises(LinearSolveError, match="numerical rank"):
         solve_flow_3d(

@@ -10,7 +10,8 @@ from solve_unusual import configuration, errors
 from threadpoolctl import threadpool_limits
 
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.rad import solve_rad
+from pymhm._legacy.models.transport.rad import solve_rad
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGET = ROOT / "examples/results/unusual"
@@ -20,12 +21,14 @@ def main() -> None:
     """Check P3/P2 spaces over three additional meshes at unchanged epsilon=0.001."""
     rows = []
     names = (
-        "src/pymhm/rad.py",
-        "src/pymhm/unusual.py",
+        "src/pymhm/_legacy/models/transport/rad.py",
+        "src/pymhm/_legacy/models/transport/stabilization.py",
         "examples/solve_unusual.py",
         "examples/verify_unusual_resolution.py",
     )
-    hashes = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    hashes = current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    )
     with threadpool_limits(1):
         for n in (8, 16, 32):
             mesh = TriangleMesh.unit_square(n)

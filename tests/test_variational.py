@@ -11,9 +11,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm import fenics
-from pymhm.hybrid import HybridSystem, LocalAssembly, LocalProblem
-from pymhm.variational import GlobalForm, LocalForm, LocalProvider, compile_local_forms
+from pymhm.backends import fenics
+from pymhm.core.contracts import LocalAssembly, LocalProblem
+from pymhm.core.system import HybridSystem
+from pymhm.core.variational import GlobalForm, LocalForm, LocalProvider, compile_local_forms
 
 
 def array_compiler(forms: LocalForm) -> LocalProblem:
@@ -44,7 +45,7 @@ def interval_form(dofs: Any = (0, 1)) -> LocalForm:
 
 def test_portable_import_does_not_load_optional_backends() -> None:
     script = (
-        "import sys; import pymhm.variational; "
+        "import sys; import pymhm.core.variational; "
         "assert not any(name.split('.')[0] in "
         "{'dolfinx','ufl','basix','mpi4py','petsc4py','cupy','gmsh'} for name in sys.modules)"
     )

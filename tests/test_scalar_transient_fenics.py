@@ -4,11 +4,12 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.fenics import from_ufl
-from pymhm.lagrange import nodal_space
-from pymhm.mesh import SkeletonSpace, TriangleMesh
-from pymhm.rad import _rad_local
-from pymhm.scalar_transient import _load_map, _StepReaction
+from pymhm._legacy.models.transport.rad import _rad_local
+from pymhm._legacy.models.transport.transient import _load_map, _StepReaction
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.fem

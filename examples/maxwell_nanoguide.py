@@ -13,10 +13,11 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm.maxwell import MaxwellStepper
-from pymhm.maxwell_dg import MaxwellSkeleton
-from pymhm.mesh import FaceSpace, SkeletonSpace
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.waves.maxwell import MaxwellStepper
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.fem.vector.curl import TangentialTraceSpace as MaxwellSkeleton
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -58,21 +59,23 @@ class NanoWaveguide:
 def hashes() -> dict[str, str]:
     """Record immutable acquisition, operator, geometry and algebra sources."""
     paths = [Path(__file__)] + [
-        ROOT / "src/pymhm" / f"{name}.py"
+        ROOT / f"src/pymhm/{name}.py"
         for name in (
-            "maxwell",
-            "maxwell_dg",
-            "quadrilateral",
-            "helmholtz_forms",
-            "mesh",
-            "hybrid",
-            "solvers",
-            "cut_cells",
-            "scalar_boundary",
-            "planar_quadrature",
+            "_legacy/models/waves/maxwell",
+            "fem/vector/curl",
+            "_legacy/models/darcy/cartesian",
+            "fem/scalar/helmholtz",
+            "meshes/triangle",
+            "core/contracts",
+            "linalg/linear",
+            "fem/quadrature/material",
+            "fem/traces/scalar",
+            "fem/quadrature/planar",
         )
     ]
-    return {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+    return current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+    )
 
 
 def save_fields(solution: Any, path: Path, fine_resolution: int) -> None:

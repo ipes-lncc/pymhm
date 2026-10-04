@@ -54,7 +54,8 @@ with 20 for full P3.
 
 ```python
 import numpy as np
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_elasticity
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.vector import solve_elasticity
 
 mesh = TriangleMesh.unit_square(4)
 trace = SkeletonSpace(mesh, tuple(FaceSpace.uniform(1) for _ in mesh.faces), 2)

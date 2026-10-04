@@ -18,8 +18,8 @@ from threadpoolctl import threadpool_limits
 
 from examples.field_sampling import sample_field
 from examples.plot_mesh import draw_macro_mesh
-from pymhm.adaptive_darcy import solve_adaptive_darcy
-from pymhm.mesh import TriangleMesh
+from pymhm.adaptivity.darcy import solve_adaptive_darcy
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/adaptive-darcy"

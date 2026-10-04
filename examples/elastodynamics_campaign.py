@@ -11,12 +11,14 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm.elastodynamics import (
+from pymhm._legacy.models.waves.elastodynamics import (
     ElastodynamicSolution,
     ElastodynamicStepper,
     _stress_from_gradient,
 )
-from pymhm.tetrahedral import TetraMesh, tetra_element_tabulate, tetrahedron_quadrature
+from pymhm.fem.scalar.tetrahedron import tetra_element_tabulate, tetrahedron_quadrature
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.tetrahedron import TetraMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -168,19 +170,21 @@ def run(
 ) -> None:
     """Acquire source-frozen P3/P1 tetrahedral MHM at one spatial/temporal resolution."""
     files = [Path(__file__)] + [
-        ROOT / "src/pymhm" / (name + ".py")
+        ROOT / f"src/pymhm/{name}.py"
         for name in (
-            "elastodynamics",
-            "elasticity3d",
-            "tetrahedral",
-            "tetra_lagrange",
-            "darcy3d",
-            "hybrid",
-            "solvers",
-            "parallel",
+            "_legacy/models/waves/elastodynamics",
+            "_legacy/models/elasticity/primal_3d",
+            "fem/scalar/tetrahedron",
+            "fem/scalar/tetrahedron_topology",
+            "_legacy/models/darcy/primal_3d",
+            "core/contracts",
+            "linalg/linear",
+            "execution/cpu",
         )
     ]
-    original = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
+    original = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
+    )
     model = ElasticWave()
     start = time.perf_counter()
     steps = round(final / dt)
@@ -256,9 +260,9 @@ def run(
             "elapsed_seconds": time.perf_counter() - start,
             "source_sha256": original,
         }
-        if original != {
-            str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in files
-        }:
+        if original != current_source_manifest(
+            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
+        ):
             raise RuntimeError("elastodynamic acquisition sources changed")
         (output / (name + ".json")).write_text(json.dumps(record, indent=2) + "\n")
         print(json.dumps({k: v for k, v in record.items() if k != "history"}), flush=True)

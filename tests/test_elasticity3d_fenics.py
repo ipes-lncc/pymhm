@@ -4,10 +4,11 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.elasticity3d import _local
-from pymhm.fenics import from_ufl
-from pymhm.tetrahedral import TetraMesh, tetra_nodal_space
+from pymhm._legacy.models.elasticity.primal_3d import _local
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 @pytest.mark.fem

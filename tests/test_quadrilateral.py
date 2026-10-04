@@ -6,16 +6,16 @@ from numpy.testing import assert_allclose
 from scipy import sparse
 
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.quadrilateral import (
-    CartesianMacroMesh,
+from pymhm._legacy.models.darcy.cartesian import solve_darcy_quadrilateral
+from pymhm.fem.scalar.quadrilateral import (
     qk_basis,
     qk_space,
     quadrilateral_operators,
     quadrilateral_quadrature,
     quadrilateral_trace_coupling,
-    solve_darcy_quadrilateral,
 )
-from pymhm.solvers import LinearSolveError
+from pymhm.linalg.linear import LinearSolveError
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 def affine(x):
@@ -373,8 +373,8 @@ def test_sampling_positive_side_survives_coordinate_roundoff():
 
 
 def test_exact_cartesian_cut_quadrature_has_unit_moments_and_padding():
-    from pymhm.quadrilateral import _cartesian_rectangle_quadrature
-    from pymhm.reservoir import CartesianCellField
+    from pymhm.fem.scalar.quadrilateral import _cartesian_rectangle_quadrature
+    from pymhm.materials.cartesian import CartesianCellField
 
     field = CartesianCellField(np.ones((5, 6)), (0.2, 0.15))
     points, weights = _cartesian_rectangle_quadrature(
@@ -394,7 +394,7 @@ def test_exact_cartesian_cut_quadrature_has_unit_moments_and_padding():
 
 @pytest.mark.parametrize("degree", [1, 2, 3])
 def test_cartesian_material_cut_operator_is_quadrature_invariant(degree):
-    from pymhm.reservoir import CartesianCellField
+    from pymhm.materials.cartesian import CartesianCellField
 
     tensors = np.zeros((5, 4, 2, 2))
     for i in range(5):
@@ -415,7 +415,7 @@ def test_cartesian_material_cut_operator_is_quadrature_invariant(degree):
 
 
 def test_exact_material_energy_on_a_rectangle_spanning_many_pixels():
-    from pymhm.reservoir import CartesianCellField
+    from pymhm.materials.cartesian import CartesianCellField
 
     values = np.arange(1.0, 13.0).reshape(3, 4)
     field = CartesianCellField(values, (2.0, 1.0))
@@ -428,7 +428,7 @@ def test_exact_material_energy_on_a_rectangle_spanning_many_pixels():
 
 
 def test_material_aligned_fast_path_matches_plain_callback():
-    from pymhm.reservoir import CartesianCellField
+    from pymhm.materials.cartesian import CartesianCellField
 
     field = CartesianCellField(np.array([[1.0, 2.0], [3.0, 1000.0]]), (0.5, 0.5))
     mesh = CartesianMacroMesh(4, 6)
@@ -438,8 +438,8 @@ def test_material_aligned_fast_path_matches_plain_callback():
 
 
 def test_cartesian_cut_material_validation():
-    from pymhm.quadrilateral import _cartesian_rectangle_quadrature
-    from pymhm.reservoir import CartesianCellField
+    from pymhm.fem.scalar.quadrilateral import _cartesian_rectangle_quadrature
+    from pymhm.materials.cartesian import CartesianCellField
 
     field3d = CartesianCellField(np.ones((2, 2, 2)), (0.5, 0.5, 0.5))
     with pytest.raises(ValueError, match="two-dimensional"):

@@ -6,8 +6,8 @@ import numpy as np
 import pytest
 
 from examples.minimal_flow_studies import vector_gradient_error
-from pymhm.lagrange import nodal_space
-from pymhm.mesh import TriangleMesh
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("order", [3, 4, 5])

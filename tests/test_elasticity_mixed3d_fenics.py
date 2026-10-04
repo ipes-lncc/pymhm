@@ -6,11 +6,11 @@ from numpy.testing import assert_allclose
 from scipy import sparse
 from threadpoolctl import threadpool_limits
 
-from pymhm.elasticity_mixed3d import solve_elasticity_mixed_3d
-from pymhm.elasticity_mixed3d_forms import mixed_elasticity_operators_3d
-from pymhm.fenics import from_ufl
-from pymhm.hdiv3d_family import HDiv3DFamily, cell_quadrature
-from pymhm.hdiv3d_mesh import AffineMixedMesh, hdiv3d_basis
+from pymhm._legacy.models.elasticity.stress_3d import solve_elasticity_mixed_3d
+from pymhm._legacy.models.elasticity.stress_forms_3d import mixed_elasticity_operators_3d
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.hdiv.family_3d import HDiv3DFamily, cell_quadrature
+from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_basis
 
 
 def native_space(mesh, degree):

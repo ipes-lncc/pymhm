@@ -7,7 +7,8 @@ import numpy as np
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm import TetraMesh, TriangularSkeleton, reconstruct_darcy_moments_3d, solve_darcy_3d
+from pymhm import TetraMesh, TriangularSkeleton, reconstruct_darcy_moments_3d
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
 
 
 def test_quadratic_physical_replay_on_distinct_tetrahedral_orientations(monkeypatch):

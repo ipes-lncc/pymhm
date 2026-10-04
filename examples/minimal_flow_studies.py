@@ -30,15 +30,15 @@ from examples.minimal_flow_originals import (
     write_record,
 )
 from examples.solve_elasticity3d import ElasticityData3D
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.elasticity3d import solve_elasticity_3d
-from pymhm.elements import triangle_quadrature
-from pymhm.flow import solve_flow
-from pymhm.flow3d import solve_flow_3d
-from pymhm.gals3d import solve_elasticity_gals_3d
-from pymhm.lagrange import tabulate
-from pymhm.mesh import FaceSpace, SkeletonSpace
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.elasticity.mixed_pressure_3d import solve_elasticity_gals_3d
+from pymhm._legacy.models.elasticity.primal_3d import solve_elasticity_3d
+from pymhm._legacy.models.flow.solver import solve_flow
+from pymhm._legacy.models.flow.solver_3d import solve_flow_3d
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import tabulate
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.meshes.tetrahedron import TetraMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 

@@ -5,8 +5,8 @@ from typing import Any
 import numpy as np
 
 from pymhm import AffineMixedMesh, RTTetraFamily, TetraMesh
-from pymhm.hdiv3d_mesh import hdiv3d_basis, hdiv3d_dofs
-from pymhm.tetrahedral import tetra_basis, tetra_nodal_space
+from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
+from pymhm.meshes.mixed import hdiv3d_basis, hdiv3d_dofs
 
 
 def evaluate(archive: Any, macro: int, owners: np.ndarray, bary: np.ndarray) -> np.ndarray:

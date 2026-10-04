@@ -43,18 +43,22 @@ from examples.unfitted_convergence import (
 )
 from examples.unfitted_geometry import macro_mesh
 from examples.unfitted_trace_family import nested_trace_injection
-from pymhm.darcy import _assembly_quadrature_order, _DarcyLocalFactory
-from pymhm.hybrid import HybridSolution, HybridSystem, LocalProblem
-from pymhm.hybrid_refinement import (
+from pymhm._legacy.models.darcy.primal import _assembly_quadrature_order, _DarcyLocalFactory
+from pymhm.core.contracts import HybridSolution, LocalProblem
+from pymhm.core.refinement import (
     HybridRefinementCase,
     HybridRefinementLocal,
     HybridStreamRefinement,
     refine_hybrid_stream,
 )
-from pymhm.lagrange import multiindices, nodal_space
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh, positive_int
-from pymhm.solvers import LinearSolveError, SolverUnavailableError, _accurate_residual
-from pymhm.subspaces import restrict_response
+from pymhm.core.subspaces import restrict_response
+from pymhm.core.system import HybridSystem
+from pymhm.core.validation import positive_int
+from pymhm.fem.scalar.triangle import multiindices, nodal_space
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError, _accurate_residual
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def fingerprint(path: Path) -> str:
@@ -65,10 +69,12 @@ def fingerprint(path: Path) -> str:
 
 def core_source_hashes() -> dict[str, str]:
     """Identify the complete portable-core generation, including trace restriction."""
-    return {
-        path.relative_to(ROOT).as_posix(): fingerprint(path)
-        for path in sorted((ROOT / "src/pymhm").rglob("*.py"))
-    }
+    return current_source_manifest(
+        {
+            path.relative_to(ROOT).as_posix(): fingerprint(path)
+            for path in sorted((ROOT / "src/pymhm").rglob("*.py"))
+        }
+    )
 
 
 def array_digest(value: np.ndarray) -> str:
@@ -182,9 +188,9 @@ class _RefinementStore:
             archive=path.name,
             sha256=fingerprint(path),
             values_sha256=array_digest(values),
-            case_values_sha256={
-                case: array_digest(values[:, column]) for column, case in enumerate(self.fields)
-            },
+            case_values_sha256=current_source_manifest(
+                {case: array_digest(values[:, column]) for column, case in enumerate(self.fields)}
+            ),
         )
 
     def read_record(self, name: str, step: int, cell: int) -> np.ndarray:

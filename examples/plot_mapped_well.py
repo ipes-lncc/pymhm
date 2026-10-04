@@ -16,7 +16,8 @@ from matplotlib.colors import Normalize
 
 from examples.plot_style import set_refinement_ticks
 from examples.solve_mapped_well import WellData
-from pymhm.mapped_rt import HexMesh, mapped_rt_basis, mapped_rt_dofs
+from pymhm.fem.hdiv.mapped import mapped_rt_basis, mapped_rt_dofs
+from pymhm.meshes.hexahedron import HexMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 INPUT = ROOT / "examples/results/mapped-well"

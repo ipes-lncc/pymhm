@@ -18,16 +18,18 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples import core_extension_data as data
-from pymhm.darcy_hdiv3d import solve_darcy_hdiv3d
-from pymhm.elasticity_mixed import solve_elasticity_mixed
-from pymhm.elasticity_tensor_rt import solve_elasticity_tensor_rt
-from pymhm.hdiv3d_mesh import AffineMixedMesh, hdiv3d_basis, hdiv3d_dofs
-from pymhm.lagrange import reference_basis
-from pymhm.mesh import TriangleMesh
-from pymhm.polygon import PolygonMesh, solve_elasticity_mixed_polygons
-from pymhm.polyhedral import PolyhedralMesh
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.tetrahedral import tetra_basis, tetra_nodal_space
+from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
+from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
+from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
+from pymhm._legacy.models.geometry import solve_elasticity_mixed_polygons
+from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
+from pymhm.fem.scalar.triangle import reference_basis
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_basis, hdiv3d_dofs
+from pymhm.meshes.polygonal import PolygonMesh
+from pymhm.meshes.polyhedral import PolyhedralMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/core-extensions"
@@ -212,27 +214,46 @@ def run(suite: str, levels: list[int] | None = None) -> None:
         return
     OUTPUT.mkdir(parents=True, exist_ok=True)
     modules = (
-        ["elasticity_compliance", "elasticity_mixed", "elasticity_tensor_rt", "polygon"]
+        [
+            "materials/elasticity",
+            "_legacy/models/elasticity/stress",
+            "_legacy/models/elasticity/stress_tensor",
+            "meshes/polygonal",
+        ]
         if suite == "elasticity"
-        else ["mshho", "mshho3d", "darcy3d", "polyhedral_rad"]
+        else [
+            "methods/hho",
+            "methods/hho_3d",
+            "_legacy/models/darcy/primal_3d",
+            "_legacy/models/transport/polyhedral",
+        ]
         if suite == "mshho3d"
-        else ["hdiv3d_family", "hdiv3d_general", "hdiv3d_mesh", "darcy_hdiv3d"]
+        else [
+            "fem/hdiv/family_3d",
+            "fem/hdiv/moments_3d",
+            "meshes/mixed",
+            "_legacy/models/darcy/hdiv_3d",
+        ]
     )
     modules += [
-        "mesh",
-        "elements",
-        "tetrahedral",
-        "tetra_lagrange",
-        "lagrange",
-        "hybrid",
-        "solvers",
+        "meshes/triangle",
+        "fem/scalar/operators",
+        "fem/scalar/tetrahedron",
+        "fem/scalar/tetrahedron_topology",
+        "fem/scalar/triangle",
+        "core/contracts",
+        "linalg/linear",
     ]
-    modules += ["bdm_family", "bdm", "quadrilateral"] if suite == "elasticity" else []
+    modules += (
+        ["fem/hdiv/bdm_family", "fem/hdiv/bdm", "_legacy/models/darcy/cartesian"]
+        if suite == "elasticity"
+        else []
+    )
     paths = [ROOT / f"src/pymhm/{name}.py" for name in modules] + [
         Path(__file__),
         ROOT / "examples/core_extension_data.py",
     ]
-    hashes = {str(path.relative_to(ROOT)): digest(path) for path in paths}
+    hashes = current_source_manifest({str(path.relative_to(ROOT)): digest(path) for path in paths})
     report: dict[str, Any] = {
         "suite": suite,
         "reference": "analytical",

@@ -18,7 +18,8 @@ from threadpoolctl import threadpool_limits
 from examples.solve_unusual_spe10 import ROOT, UnusualSPE10Field
 from examples.solve_unusual_spe10_reference import CG2Field
 from examples.spe10_adaptive_norms import _clip_affine_polygon
-from pymhm.elements import triangle_quadrature
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.io.provenance import current_source_manifest
 
 _FIELDS: tuple[UnusualSPE10Field, CG2Field] | None = None
 _LIMIT: Any = None
@@ -202,10 +203,12 @@ def acquire(
         "examples/solve_unusual_spe10.py",
         "examples/solve_unusual_spe10_reference.py",
         "examples/spe10_adaptive_norms.py",
-        "src/pymhm/elements.py",
-        "src/pymhm/mesh.py",
+        "src/pymhm/fem/scalar/operators.py",
+        "src/pymhm/meshes/triangle.py",
     ]
-    fingerprint = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in sources}
+    fingerprint = current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in sources}
+    )
     with np.load(archive) as arrays:
         count = len(arrays["macro_cells"])
         cell_counts = np.diff(arrays["cell_offsets"])

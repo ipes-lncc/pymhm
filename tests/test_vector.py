@@ -5,9 +5,10 @@ import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 from simplex_native_bounds import reference_roundoff_bounds
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_brinkman, solve_elasticity
-from pymhm.lagrange import multiindices, reference_basis
-from pymhm.vector import _lagrange
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.vector import solve_brinkman, solve_elasticity
+from pymhm.fem.scalar.triangle import multiindices, reference_basis
+from pymhm.fem.vector.operators import _lagrange
 
 
 def rotation(x):

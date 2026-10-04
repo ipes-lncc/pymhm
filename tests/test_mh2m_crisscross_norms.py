@@ -6,7 +6,7 @@ from numpy.testing import assert_allclose
 
 from examples.mh2m_crisscross_norms import PATTERN, CrossedP1, common_triangles
 from examples.mh2m_heterogeneous_norms import StructuredP1, difference
-from pymhm.mesh import TriangleMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def crossed(n, function):

@@ -19,7 +19,7 @@ from plot_mesh import draw_macro_mesh
 from threadpoolctl import threadpool_limits
 
 from pymhm import TriangleMesh
-from pymhm.lagrange import reference_basis
+from pymhm.fem.scalar.triangle import reference_basis
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RECORD = ROOT / "examples/results/elasticity-reference.json"

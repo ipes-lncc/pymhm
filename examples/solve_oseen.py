@@ -22,9 +22,10 @@ from numpy.polynomial import Polynomial
 from threadpoolctl import threadpool_limits
 
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.flow import solve_flow
-from pymhm.flow_adaptive import adapt_flow
-from pymhm.flow_estimator import estimate_flow_error
+from pymhm._legacy.models.flow.solver import solve_flow
+from pymhm.adaptivity.flow import adapt_flow
+from pymhm.estimators.flow import estimate_flow_error
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/oseen"
@@ -262,9 +263,9 @@ def main() -> None:
         checksum = archive(solution, data, OUTPUT / filename)
     sources = [
         Path(__file__),
-        ROOT / "src/pymhm/flow.py",
-        ROOT / "src/pymhm/flow_estimator.py",
-        ROOT / "src/pymhm/flow_adaptive.py",
+        ROOT / "src/pymhm/_legacy/models/flow/solver.py",
+        ROOT / "src/pymhm/estimators/flow.py",
+        ROOT / "src/pymhm/adaptivity/flow.py",
     ]
     report = dict(
         case=args.case,
@@ -287,10 +288,12 @@ def main() -> None:
         versions=dict(
             python=platform.python_version(), numpy=np.__version__, scipy=scipy.__version__
         ),
-        source_hashes={
-            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in sources
-        },
+        source_hashes=current_source_manifest(
+            {
+                str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+                for path in sources
+            }
+        ),
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
 

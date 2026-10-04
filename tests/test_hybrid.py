@@ -5,9 +5,12 @@ import pytest
 from numpy.testing import assert_allclose
 from scipy import sparse
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_brinkman, solve_darcy
-from pymhm.hybrid import HybridSystem, LocalProblem
-from pymhm.solvers import LinearSolveError
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm._legacy.models.vector import solve_brinkman
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.system import HybridSystem
+from pymhm.linalg.linear import LinearSolveError
 
 
 def interval_problem(dofs, force=0.0):
@@ -94,7 +97,7 @@ def test_no_trace_and_no_free_equations():
     [
         ({"matrix": [[1j]]}, "real"),
         ({"matrix": [[1, 2]]}, "square"),
-        ({"matrix": sparse.csc_matrix((0, 0))}, "square"),
+        ({"matrix": sparse.csc_matrix((0, 0))}, "coupling"),
         ({"matrix": [[np.nan]]}, "finite"),
         ({"trace_dofs": np.array([0.5])}, "indices"),
         ({"trace_dofs": np.array([-1])}, "indices"),
@@ -246,7 +249,7 @@ def test_zero_source_neumann_balance_accepts_only_prescribed_roundoff(scale):
 
 def test_global_tolerance_contract_and_prepared_factorization(monkeypatch):
     """A requested solve tolerance is forwarded and cannot contradict a reused factor."""
-    import pymhm.hybrid as module
+    import pymhm.core.system as module
 
     problem = LocalProblem(np.eye(2), np.eye(2), [2.0, 3.0], np.arange(2))
     system = HybridSystem([problem])
@@ -261,7 +264,9 @@ def test_global_tolerance_contract_and_prepared_factorization(monkeypatch):
     monkeypatch.setattr(module, "solve_linear", checked)
     actual = system.solve(rtol=3e-13)
     assert requested == [3e-13]
-    with module.factorize(system.matrix, rtol=2e-13) as prepared:
+    from pymhm.linalg.linear import factorize
+
+    with factorize(system.matrix, rtol=2e-13) as prepared:
         reused = system.solve(factorization=prepared)
         explicit = system.solve(factorization=prepared, rtol=2e-13)
         assert_allclose(reused.trace, actual.trace)

@@ -5,12 +5,13 @@ import pytest
 from numpy.testing import assert_allclose
 from scipy import sparse
 
-from pymhm.bdm import bdm2_evaluate
-from pymhm.elasticity_mixed import solve_elasticity_mixed
-from pymhm.elements import triangle_quadrature
-from pymhm.fenics import from_ufl
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.solvers import solve_linear
+from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.hdiv.bdm import bdm2_evaluate
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.linalg.linear import solve_linear
+from pymhm.meshes.triangle import TriangleMesh
 
 pytestmark = pytest.mark.fem
 

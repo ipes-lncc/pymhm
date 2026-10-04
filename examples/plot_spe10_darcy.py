@@ -14,7 +14,7 @@ import pyvista as pv
 from plot_mesh import mark_macro_interfaces
 from plot_spe10_data import FIGURES, OUTPUT, data_grid, macro_mesh, panel
 
-from pymhm.visualization import structured_cell_grid
+from pymhm.postprocessing.visualization import structured_cell_grid
 
 
 def records() -> list[dict]:

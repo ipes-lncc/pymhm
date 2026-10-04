@@ -8,8 +8,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.lagrange import nodal_space
-from pymhm.mesh import TriangleMesh
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.fixture

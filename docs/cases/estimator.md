@@ -1,6 +1,6 @@
 # Conforming potential and an energy-error estimator
 
-The scalar estimator in `pymhm.estimator` implements the unit-diffusion case of
+The scalar estimator in `pymhm.estimators.darcy` implements the unit-diffusion case of
 Section 5 in [Barrenechea et al.](https://doi.org/10.1137/24M1673073).
 It combines the [RT moment reconstruction](https://github.com/volpatto/pymhm/blob/main/docs/cases/reconstruction-moments.md) with a
 continuous recovered potential. The original broken MHM solution is preserved.
@@ -61,8 +61,9 @@ coefficient weights and boundary liftings require their own derivation.
 ## API and numerical safeguards
 
 ```python
-from pymhm import TriangleMesh, solve_darcy
-from pymhm.estimator import estimate_darcy_error
+from pymhm import TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.estimators.darcy import estimate_darcy_error
 
 solution = solve_darcy(
     TriangleMesh.unit_square(4), degree=2,

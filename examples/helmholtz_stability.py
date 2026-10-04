@@ -20,12 +20,13 @@ from threadpoolctl import threadpool_limits
 from examples.campaign_checkpoint import require_sources, verify_checkpoint
 from examples.helmholtz_campaign import AcousticWave, norms, source_hashes
 from examples.helmholtz_threshold import sampled_threshold
-from pymhm.helmholtz import HelmholtzSolution, solve_helmholtz
-from pymhm.helmholtz_forms import complex_vector, real_vector
-from pymhm.helmholtz_spaces import helmholtz_skeleton
-from pymhm.mesh import SkeletonSpace, positive_int
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.solvers import LinearSolveError
+from pymhm._legacy.models.waves.helmholtz import HelmholtzSolution, solve_helmholtz
+from pymhm.core.validation import positive_int
+from pymhm.fem.scalar.helmholtz import complex_vector, real_vector
+from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.linalg.linear import LinearSolveError
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 

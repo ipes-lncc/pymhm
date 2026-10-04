@@ -19,10 +19,11 @@ import numpy as np
 from scipy import sparse
 
 from examples.campaign_checkpoint import require_sources
-from examples.campaign_provenance import file_digest, require_equal
+from examples.campaign_provenance import require_equal
 from examples.helmholtz_compact_family import CompactLocal, acquire_local_responses
 from examples.local_response_cache import ExactResponseCache
-from pymhm.mesh import positive_int
+from pymhm.core.validation import positive_int
+from pymhm.io.provenance import file_digest
 
 _ARRAYS = ("load", "dofs", "source", "lifts", "schur", "rhs", "boundary")
 

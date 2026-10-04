@@ -23,12 +23,14 @@ from examples.archive_precision import precision_fields
 from examples.solve_spe10 import load_layer, pressure_boundary
 from examples.solve_spe10_balanced import offsets
 from examples.spe10_adaptive import DATA, hashes, natural_faces, source_path
-from pymhm.cut_cells import fit_material_mesh
-from pymhm.darcy import solve_darcy
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh, positive_int
-from pymhm.parallel import map_local
-from pymhm.reconstruction_moments import reconstruct_darcy_moments
-from pymhm.reservoir import CartesianCellField
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.core.validation import positive_int
+from pymhm.execution.cpu import map_local
+from pymhm.fem.quadrature.material import fit_material_mesh
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.recovery.moments import reconstruct_darcy_moments
 
 
 @dataclass(frozen=True)
@@ -67,10 +69,10 @@ def acquire(
     skeleton = SkeletonSpace(mesh, tuple(FaceSpace.uniform(0, segments) for _ in mesh.faces))
     fingerprint = hashes()
     for name in (
-        "src/pymhm/_geometry_roundoff.py",
-        "src/pymhm/lagrange.py",
-        "src/pymhm/hybrid.py",
-        "src/pymhm/parallel.py",
+        "src/pymhm/meshes/roundoff.py",
+        "src/pymhm/fem/scalar/triangle.py",
+        "src/pymhm/core/contracts.py",
+        "src/pymhm/execution/cpu.py",
         "examples/solve_spe10_resolution.py",
         "examples/archive_precision.py",
     ):

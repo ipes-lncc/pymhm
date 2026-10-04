@@ -11,9 +11,10 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.mixed_elasticity3d_data import SolenoidalElasticity3D
-from pymhm.elasticity_mixed3d import solve_elasticity_mixed_3d
-from pymhm.hdiv3d_mesh import AffineMixedMesh
-from pymhm.mapped_rt import cube_quadrature
+from pymhm._legacy.models.elasticity.stress_3d import solve_elasticity_mixed_3d
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.hexahedron import cube_quadrature
+from pymhm.meshes.mixed import AffineMixedMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/mixed-elasticity3d"
@@ -138,20 +139,22 @@ def run(workers: int) -> None:
     owners = [
         ROOT / f"src/pymhm/{name}.py"
         for name in (
-            "elasticity_mixed3d",
-            "elasticity_mixed3d_forms",
-            "elasticity_compatibility",
-            "hdiv3d_family",
-            "hdiv3d_general",
-            "hdiv3d_mesh",
-            "darcy_hdiv3d",
-            "hybrid",
-            "solvers",
-            "parallel",
+            "_legacy/models/elasticity/stress_3d",
+            "_legacy/models/elasticity/stress_forms_3d",
+            "_legacy/models/elasticity/boundary",
+            "fem/hdiv/family_3d",
+            "fem/hdiv/moments_3d",
+            "meshes/mixed",
+            "_legacy/models/darcy/hdiv_3d",
+            "core/contracts",
+            "linalg/linear",
+            "execution/cpu",
         )
     ]
     owners += [Path(__file__), ROOT / "examples/mixed_elasticity3d_data.py"]
-    hashes = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    )
     snapshot = ROOT / "build/results/mixed-elasticity3d/acquisition-sources"
     snapshot.mkdir(parents=True, exist_ok=True)
     for p in owners:
@@ -179,9 +182,9 @@ def run(workers: int) -> None:
     jobs += [("locking", 2, 2, 2, lam) for lam in (0.0, 1.0, 1e2, 1e4, 1e6, 1e8, np.inf)]
     for group, n, k, r, lam in jobs:
         row = acquire(n, k, r, lam, workers, data, control, group == "convergence")
-        if hashes != {
-            str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners
-        }:
+        if hashes != current_source_manifest(
+            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        ):
             raise RuntimeError("AFW3D acquisition sources changed during the run")
         record[group].append(row)
         record["source_changed_during_run"] = False

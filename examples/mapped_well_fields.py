@@ -9,7 +9,8 @@ from pathlib import Path
 
 import numpy as np
 
-from pymhm.mapped_rt import HexMesh, _geometry, cube_quadrature, mapped_rt_basis, mapped_rt_dofs
+from pymhm.fem.hdiv.mapped import mapped_rt_basis, mapped_rt_dofs
+from pymhm.meshes.hexahedron import HexMesh, _geometry, cube_quadrature
 
 
 @dataclass(frozen=True)

@@ -4,10 +4,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.elements import triangle_quadrature
-from pymhm.fenics import from_ufl
-from pymhm.mesh import TriangleMesh
-from pymhm.rt import rt_evaluate, rt_interpolate
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.hdiv.rt import rt_evaluate, rt_interpolate
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.meshes.triangle import TriangleMesh
 
 pytestmark = pytest.mark.fem
 

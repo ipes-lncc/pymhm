@@ -11,8 +11,8 @@ from polygon_meshes import polygon_partition
 from threadpoolctl import threadpool_limits
 
 from pymhm import FaceSpace, HybridSystem, LocalProblem, SkeletonSpace
-from pymhm.rad import _rad_local
-from pymhm.solvers import LinearSolveError
+from pymhm._legacy.models.transport.rad import _rad_local
+from pymhm.linalg.linear import LinearSolveError
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES = (

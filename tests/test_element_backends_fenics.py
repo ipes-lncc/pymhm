@@ -8,9 +8,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm.lagrange import element_tabulate, tabulate
-from pymhm.mesh import TriangleMesh
-from pymhm.tetrahedral import TetraMesh, tetra_element_tabulate, tetra_tabulate
+from pymhm.fem.scalar.tetrahedron import tetra_element_tabulate, tetra_tabulate
+from pymhm.fem.scalar.triangle import element_tabulate, tabulate
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 pytestmark = pytest.mark.fem
 

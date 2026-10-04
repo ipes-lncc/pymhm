@@ -19,7 +19,7 @@ import pyvista as pv
 from plot_pyvista_layout import signed_asinh_scale
 from plot_spe10_data import FIGURES, OUTPUT, macro_mesh, panel
 
-from pymhm.visualization import structured_cell_grid
+from pymhm.postprocessing.visualization import structured_cell_grid
 
 
 def archive(record: dict) -> dict[str, np.ndarray]:

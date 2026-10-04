@@ -23,26 +23,28 @@ from threadpoolctl import threadpool_limits
 
 from examples import pgmhm_campaign, solve_spe10, solve_unusual
 from examples.solve_mapped_well import WellData
-from pymhm.darcy_hdiv3d import solve_darcy_hdiv3d
-from pymhm.hdiv3d_mesh import AffineMixedMesh
-from pymhm.mapped_rt import HexMesh
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.pgmhm import solve_pgmhm
-from pymhm.quadrilateral import (
-    CartesianMacroMesh,
+from pymhm._legacy.models.darcy.cartesian import solve_darcy_quadrilateral
+from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
+from pymhm._legacy.models.transport.rad import solve_rad
+from pymhm.fem.scalar.quadrilateral import (
     _cartesian_rectangle_quadrature,
     quadrilateral_trace_coupling,
-    solve_darcy_quadrilateral,
 )
-from pymhm.rad import solve_rad
-from pymhm.solvers import LinearFactorization, _accurate_residual
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.linalg.linear import LinearFactorization, _accurate_residual
+from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.meshes.hexahedron import HexMesh
+from pymhm.meshes.mixed import AffineMixedMesh
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.petrov_galerkin import solve_pgmhm
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def source_hashes() -> dict[str, str]:
     """Identify every portable core owner, imported case helper and the Pixi lock."""
-    paths = list((ROOT / "src/pymhm").glob("*.py"))
+    paths = list((ROOT / "src/pymhm").rglob("*.py"))
     paths += [Path(__file__), ROOT / "pixi.lock"]
     paths += [
         ROOT / "examples" / name
@@ -57,10 +59,12 @@ def source_hashes() -> dict[str, str]:
         )
     ]
     paths.append(ROOT / "examples/results/spe10/layer-36.npz")
-    return {
-        path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in sorted(paths)
-    }
+    return current_source_manifest(
+        {
+            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in sorted(paths)
+        }
+    )
 
 
 @contextmanager

@@ -11,7 +11,6 @@ import pytest
 from threadpoolctl import threadpool_limits
 
 from examples.archive_precision import precision_fields
-from examples.campaign_provenance import file_digest
 from examples.local_response_cache import array_identity
 from examples.mshho_field_archive import (
     ROOT,
@@ -23,8 +22,10 @@ from examples.mshho_field_archive import (
     validate_arrays,
     write_field,
 )
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.mshho import MsHHOSolution, solve_mshho
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.methods.hho import MsHHOSolution, solve_mshho
 
 
 @pytest.fixture(scope="module")
@@ -45,7 +46,9 @@ def solution() -> MsHHOSolution:
 
 def sources() -> dict[str, str]:
     """Use an actual checked-in lock and numerical owner in the fixture contract."""
-    return {name: file_digest(ROOT / name) for name in ("pixi.lock", "src/pymhm/mshho.py")}
+    return current_source_manifest(
+        {name: file_digest(ROOT / name) for name in ("pixi.lock", "src/pymhm/methods/hho.py")}
+    )
 
 
 def test_affine_pressure_gradient_physical_flux_and_thread_replay(solution: MsHHOSolution) -> None:

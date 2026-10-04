@@ -37,7 +37,7 @@ else:
     )
 
 from pymhm import TriangleMesh
-from pymhm.visualization import macro_edges
+from pymhm.postprocessing.visualization import macro_edges
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/quarter-five-spot/reference"

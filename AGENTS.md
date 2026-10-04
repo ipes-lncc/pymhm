@@ -1,5 +1,12 @@
 # Scientific development
 
+Instructional examples are Jupyter notebooks under `notebooks/<problem>/`,
+organized by physical problem and identifying the methods used. Update the
+notebook catalogue and index when adding examples. Reuse importable Python
+helpers for scientific acquisition, archive reading and spawn-worker callables;
+keep numerical algorithms in their package owners. Do not replace a notebook
+example with a standalone CLI script or duplicate solver formulas in cells.
+
 Use Pixi environments and the checked-in lockfile. Keep the portable core
 independent of optional FEM, CAD, MPI and accelerator imports. Public functions
 and classes require docstrings, type annotations and explicit numerical

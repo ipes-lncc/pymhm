@@ -7,14 +7,18 @@ from scipy.spatial import cKDTree
 from threadpoolctl import threadpool_limits
 
 from pymhm import PolygonMesh, PolyhedralMesh
-from pymhm.polyhedral_geometry import (
+from pymhm._legacy.models.transport.polyhedral import (
+    PolygonalSkeleton3D,
+    polygonal_trace_coupling,
+    solve_polyhedral_rad,
+)
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space
+from pymhm.meshes.geometry import (
     kernel_center,
     oriented_cell_faces,
     triangle_in_face,
     validate_disjoint_cones,
 )
-from pymhm.polyhedral_rad import PolygonalSkeleton3D, polygonal_trace_coupling, solve_polyhedral_rad
-from pymhm.tetrahedral import tetra_nodal_space
 
 
 @pytest.fixture(autouse=True)
@@ -301,7 +305,7 @@ def test_collapsed_face_overlapping_cells_and_nonorientable_topology():
 def test_native_meshio_nonconvex_face_and_tag_roundtrip(tmp_path):
     """VTU polyhedron exchange preserves concave original faces, volumes and material tags."""
     pytest.importorskip("meshio")
-    from pymhm.mesh_exchange import VolumeMeshData, read_volume_mesh, write_volume_mesh
+    from pymhm.io.volume import VolumeMeshData, read_volume_mesh, write_volume_mesh
 
     mesh = l_prism()
     tags = np.arange(len(mesh.cells)) + 10

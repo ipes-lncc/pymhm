@@ -12,9 +12,10 @@ import numpy as np
 from hpc4e_data import BOUNDS, DATA_DIRECTORY, LENGTH_SCALE, STRESS_SCALE, load_data
 from threadpoolctl import threadpool_limits
 
-from pymhm import FaceSpace, SkeletonSpace, solve_elasticity_tensor_rt
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.tensor_rt import tensor_rt_dofs
+from pymhm import FaceSpace, SkeletonSpace
+from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
+from pymhm.fem.hdiv.tensor_rt import tensor_rt_dofs
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -79,10 +80,10 @@ def main() -> None:
     for path in (
         Path(__file__),
         ROOT / "examples/hpc4e_data.py",
-        ROOT / "src/pymhm/elasticity_tensor_rt.py",
-        ROOT / "src/pymhm/tensor_rt.py",
-        ROOT / "src/pymhm/hybrid.py",
-        ROOT / "src/pymhm/solvers.py",
+        ROOT / "src/pymhm/_legacy/models/elasticity/stress_tensor.py",
+        ROOT / "src/pymhm/fem/hdiv/tensor_rt.py",
+        ROOT / "src/pymhm/core/contracts.py",
+        ROOT / "src/pymhm/linalg/linear.py",
     ):
         content = path.read_bytes()
         digest = hashlib.sha256(content).hexdigest()

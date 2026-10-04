@@ -20,7 +20,7 @@ import numpy as np
 from scipy import sparse
 from threadpoolctl import threadpool_info, threadpool_limits
 
-from pymhm.solvers import factorize
+from pymhm.linalg.linear import factorize
 
 
 def _digest(path: Path) -> str:
@@ -92,7 +92,7 @@ def solve_archive(
             for pool in threadpool_info()
         ]
     np.save(solution_path, solution, allow_pickle=False)
-    solver_source = Path(importlib.import_module("pymhm.solvers").__file__)
+    solver_source = Path(importlib.import_module("pymhm.linalg.linear").__file__)
     return dict(
         solver=solver,
         equilibration=equilibration,

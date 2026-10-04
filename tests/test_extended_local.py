@@ -5,11 +5,12 @@ from typing import Any
 import numpy as np
 import pytest
 
-from pymhm import solvers
-from pymhm.darcy import solve_darcy
-from pymhm.hybrid import HybridSystem, LocalProblem
-from pymhm.mesh import TriangleMesh
-from pymhm.solvers import LinearSolveError, SolverUnavailableError, factorize
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.system import HybridSystem
+from pymhm.linalg import linear as solvers
+from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError, factorize
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def affine(points: np.ndarray) -> np.ndarray:

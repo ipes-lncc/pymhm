@@ -18,7 +18,8 @@ from threadpoolctl import threadpool_info, threadpool_limits
 
 from examples.mapped_well_comparison import differences
 from examples.mapped_well_fields import MappedWellField
-from pymhm.parallel import map_local
+from pymhm.execution.cpu import map_local
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 DIRECTORY = ROOT / "examples/results/mapped-well-oscillatory"
@@ -26,15 +27,15 @@ SOURCE_PATHS = (
     Path(__file__),
     ROOT / "examples/mapped_well_comparison.py",
     ROOT / "examples/mapped_well_fields.py",
-    ROOT / "src/pymhm/mapped_rt.py",
+    ROOT / "src/pymhm/_legacy/models/darcy/mapped.py",
 )
 
 
 def _source_hashes() -> dict[str, str]:
     """Record the actual analysis and Piola-map implementation bytes."""
-    return {
-        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in SOURCE_PATHS
-    }
+    return current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in SOURCE_PATHS}
+    )
 
 
 def _order_job(job: tuple) -> dict:

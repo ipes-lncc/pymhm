@@ -5,8 +5,8 @@ from functools import lru_cache
 import numpy as np
 from numpy.polynomial.legendre import leggauss
 
-from pymhm.conforming import ConformingQuadrilateralSolution
-from pymhm.quadrilateral import quadrilateral_quadrature
+from pymhm._legacy.models.darcy.conforming import ConformingQuadrilateralSolution
+from pymhm.fem.scalar.quadrilateral import quadrilateral_quadrature
 
 
 @lru_cache(maxsize=32)

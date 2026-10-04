@@ -16,9 +16,10 @@ from examples.elasticity_field_samples import (
 )
 from examples.solve_core_extensions import polygon_grid
 from pymhm import CartesianMacroMesh, TriangleMesh
-from pymhm.elasticity_mixed import solve_elasticity_mixed
-from pymhm.elasticity_tensor_rt import solve_elasticity_tensor_rt
-from pymhm.polygon import solve_elasticity_mixed_polygons
+from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
+from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
+from pymhm._legacy.models.geometry import solve_elasticity_mixed_polygons
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/core-extensions"
@@ -30,10 +31,12 @@ def projection_study() -> None:
         Path(__file__),
         ROOT / "examples/elasticity_field_samples.py",
         ROOT / "examples/core_extension_data.py",
-        ROOT / "src/pymhm/elasticity_mixed.py",
-        ROOT / "src/pymhm/bdm_family.py",
+        ROOT / "src/pymhm/_legacy/models/elasticity/stress.py",
+        ROOT / "src/pymhm/fem/hdiv/bdm_family.py",
     ]
-    hashes = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    )
     rows = []
     for n in (2, 4, 8, 16):
         solution = solve_elasticity_mixed_polygons(
@@ -47,9 +50,9 @@ def projection_study() -> None:
         decomposition, _ = projection_decomposition(solution, data.displacement, 9)
         rows.append({"resolution": n, **decomposition})
         print(json.dumps(rows[-1]), flush=True)
-    if hashes != {
-        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners
-    }:
+    if hashes != current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    ):
         raise RuntimeError("projection study sources changed during acquisition")
     (OUTPUT / "elasticity-projection.json").write_text(
         json.dumps({"source_sha256": hashes, "rows": rows}, indent=2) + "\n"

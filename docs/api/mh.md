@@ -4,22 +4,22 @@ Native two- and three-dimensional local maps, physical boundary conventions and 
 
 [All API families](../api.md)
 
-::: pymhm.mh2m
+::: pymhm.methods.three_field
     options:
       show_source: false
 
-::: pymhm.mh
+::: pymhm.methods.robin
     options:
       show_source: false
 
-::: pymhm.mh3d
+::: pymhm.methods.robin_3d
     options:
       show_source: false
 
-::: pymhm.mh2m3d
+::: pymhm.methods.three_field_3d
     options:
       show_source: false
 
-::: pymhm.mh_trace3d
+::: pymhm.fem.traces.pressure_3d
     options:
       show_source: false

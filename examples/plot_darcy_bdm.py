@@ -15,9 +15,10 @@ import numpy as np
 from plot_mesh import draw_macro_mesh
 from threadpoolctl import threadpool_limits
 
-from pymhm.bdm import bdm2_evaluate
-from pymhm.darcy_mixed import BDMDarcySolution, solve_darcy_bdm
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.mixed_bdm import BDMDarcySolution, solve_darcy_bdm
+from pymhm.fem.hdiv.bdm import bdm2_evaluate
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 FIGURES = ROOT / "docs/figures/darcy-bdm"

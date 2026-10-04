@@ -5,8 +5,9 @@ from dataclasses import replace
 import numpy as np
 import pytest
 
-from pymhm import TriangleMesh, solve_darcy
-from pymhm.darcy_local_error import estimate_darcy_local_refinement
+from pymhm import TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.estimators.darcy_local import estimate_darcy_local_refinement
 
 
 def test_affine_pressure_has_zero_local_refinement_defect():

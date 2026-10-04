@@ -20,8 +20,9 @@ from examples.mh2m_campaign import (
     source,
     source_hashes,
 )
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.mh2m import PressureTraceSpace, solve_mh2m
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.three_field import PressureTraceSpace, solve_mh2m
 
 
 def main() -> None:

@@ -16,8 +16,8 @@ from polygon_meshes import polygon_partition
 from threadpoolctl import threadpool_limits
 
 from pymhm import FaceSpace, SkeletonSpace
-from pymhm.lagrange import tabulate
-from pymhm.polygon import solve_transport_polygons
+from pymhm._legacy.models.geometry import solve_transport_polygons
+from pymhm.fem.scalar.triangle import tabulate
 
 ROOT = Path(__file__).resolve().parents[1]
 

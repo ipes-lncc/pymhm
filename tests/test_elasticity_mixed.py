@@ -4,10 +4,11 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.bdm import bdm2_evaluate
-from pymhm.elasticity_mixed import _local_problem, solve_elasticity_mixed
-from pymhm.elements import triangle_quadrature
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.elasticity.stress import _local_problem, solve_elasticity_mixed
+from pymhm.fem.hdiv.bdm import bdm2_evaluate
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def affine(points):
@@ -289,7 +290,7 @@ def test_mixed_stress_homogeneous_boundary_converges_to_exact_incompressible_lim
 
 
 def test_bulk_compliance_avoids_overflow_in_the_sum_of_large_moduli():
-    from pymhm.elasticity_mixed import _bulk_compliance
+    from pymhm._legacy.models.elasticity.stress import _bulk_compliance
 
     with np.errstate(over="raise", invalid="raise"):
         value = _bulk_compliance(1e308, np.array([1e308]), np.zeros((1, 2)))

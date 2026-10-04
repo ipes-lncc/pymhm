@@ -11,6 +11,8 @@ from typing import Any
 
 import matplotlib
 
+from pymhm.io.provenance import current_source_manifest
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,7 +23,7 @@ from examples.marmousi_data import MarmousiMaterial, load_marmousi_crop
 from examples.marmousi_fields import load_reference
 from examples.marmousi_records import checked_reference
 from examples.plot_mesh import draw_macro_mesh
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 BOUNDS = (0, 10240, 0, 2560)
@@ -136,14 +138,16 @@ def render_material(material: MarmousiMaterial, directory: Path) -> None:
             "source_marker_meaning": "Declared acoustic forcing location",
         },
         "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-        "dependency_sha256": {
-            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in (
-                Path(__file__).with_name("marmousi_data.py"),
-                Path(__file__).with_name("plot_mesh.py"),
-                ROOT / "src/pymhm/quadrilateral.py",
-            )
-        },
+        "dependency_sha256": current_source_manifest(
+            {
+                str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+                for path in (
+                    Path(__file__).with_name("marmousi_data.py"),
+                    Path(__file__).with_name("plot_mesh.py"),
+                    ROOT / "src/pymhm/_legacy/models/darcy/cartesian.py",
+                )
+            }
+        ),
         "figure_sha256": {
             f"material.{suffix}": hashlib.sha256(
                 (directory / f"material.{suffix}").read_bytes()

@@ -20,11 +20,13 @@ from scipy.spatial import cKDTree
 from threadpoolctl import threadpool_limits
 
 from examples.field_sampling import sample_field
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import scalar_operators
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.mh2m import MH2MSolution, PressureTraceSpace, solve_mh2m
-from pymhm.solvers import solve_linear
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import scalar_operators
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.linalg.linear import solve_linear
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.three_field import MH2MSolution, PressureTraceSpace, solve_mh2m
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/mh2m"
@@ -57,15 +59,17 @@ def oscillatory(points: np.ndarray) -> np.ndarray:
 def source_hashes() -> dict[str, str]:
     """Hash the actually used formulation, FEM, geometry and example sources."""
     names = [
-        "src/pymhm/mh2m.py",
-        "src/pymhm/lagrange.py",
-        "src/pymhm/elements.py",
-        "src/pymhm/mesh.py",
-        "src/pymhm/cut_cells.py",
-        "src/pymhm/solvers.py",
+        "src/pymhm/methods/three_field.py",
+        "src/pymhm/fem/scalar/triangle.py",
+        "src/pymhm/fem/scalar/operators.py",
+        "src/pymhm/meshes/triangle.py",
+        "src/pymhm/fem/quadrature/material.py",
+        "src/pymhm/linalg/linear.py",
         "examples/mh2m_campaign.py",
     ]
-    return {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    return current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    )
 
 
 def diagnostics(result: MH2MSolution) -> dict[str, float | int]:

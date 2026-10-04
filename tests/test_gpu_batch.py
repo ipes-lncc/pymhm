@@ -10,9 +10,10 @@ import pytest
 from numpy.testing import assert_allclose
 from scipy import linalg
 
-from pymhm import gpu
-from pymhm.hybrid import HybridSystem, LocalProblem
-from pymhm.solvers import LinearSolveError
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.system import HybridSystem
+from pymhm.execution import cuda as gpu
+from pymhm.linalg.linear import LinearSolveError
 
 
 class HostPointerArray(np.ndarray):
@@ -288,8 +289,8 @@ def test_native_gpu_batched_condensation_and_resident_repeated_rhs() -> None:
     )
     expected_system = HybridSystem(cells, boundary_load=[1.0, 0.0, 0.0, 0.0, -2.0])
     assert_allclose(actual_system.solve().fields, expected_system.solve().fields, atol=1e-12)
-    from pymhm.elements import p1_operators
-    from pymhm.mesh import TriangleMesh
+    from pymhm.fem.scalar.operators import p1_operators
+    from pymhm.meshes.triangle import TriangleMesh
 
     mesh = TriangleMesh.unit_square(3)
     a, m, f = gpu.assemble_p1_batch(
@@ -305,7 +306,8 @@ def test_native_gpu_batched_condensation_and_resident_repeated_rhs() -> None:
         assert_allclose(cupy.asnumpy(a[index]), expected_a.toarray(), atol=1e-13)
         assert_allclose(cupy.asnumpy(m[index]), expected_m.toarray(), atol=1e-14)
         assert_allclose(cupy.asnumpy(f[index]), expected_f, atol=1e-14)
-    from pymhm.tetrahedral import TetraMesh, tetra_operators
+    from pymhm.fem.scalar.tetrahedron import tetra_operators
+    from pymhm.meshes.tetrahedron import TetraMesh
 
     tetra = TetraMesh.unit_cube(1).submesh(0, 2)
     tensor = [[2.0, 0.2, 0.0], [0.2, 1.0, 0.1], [0.0, 0.1, 3.0]]

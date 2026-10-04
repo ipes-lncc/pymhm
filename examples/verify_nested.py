@@ -14,16 +14,13 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from pymhm import FaceSpace, HybridSystem, SkeletonSpace
-from pymhm.conforming import ConformingQuadrilateralSolution
-from pymhm.elements import boundary_data
-from pymhm.nested import nest_hybrid_system, nested_trace_map
-from pymhm.quadrilateral import (
-    CartesianMacroMesh,
-    _assemble_quad,
-    _QuadTask,
-    qk_basis,
-    quadrilateral_quadrature,
-)
+from pymhm._legacy.models.darcy.cartesian import _assemble_quad, _QuadTask
+from pymhm._legacy.models.darcy.conforming import ConformingQuadrilateralSolution
+from pymhm.core.nested import nest_hybrid_system, nested_trace_map
+from pymhm.fem.scalar.operators import boundary_data
+from pymhm.fem.scalar.quadrilateral import qk_basis, quadrilateral_quadrature
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 try:
     from .nested_field_archive import (
@@ -112,9 +109,9 @@ def acquire(
         ROOT / "pixi.lock",
         *sorted((ROOT / "src/pymhm").rglob("*.py")),
     ]
-    executed_sources = {
-        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_files
-    }
+    executed_sources = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_files}
+    )
     macro = CartesianMacroMesh(n)
     outer = SkeletonSpace(macro, tuple(FaceSpace.uniform(1, 2) for _ in macro.faces))
     children = []
@@ -259,9 +256,9 @@ def acquire(
         local_kernel="Declared physical constant, paired with its actual volume integral",
         recursive_map="Signed exact P1 restriction; parent reactions and one-sided leaves retained",
     )
-    if executed_sources != {
-        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_files
-    }:
+    if executed_sources != current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_files}
+    ):
         raise RuntimeError("executed acquisition source changed")
     if archive is not None:
         row = write_archive(archive, arrays, row)

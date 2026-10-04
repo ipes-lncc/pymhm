@@ -4,11 +4,12 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.darcy_rt import solve_darcy_rt, solve_darcy_rt_conforming
-from pymhm.elements import triangle_quadrature
-from pymhm.reconstruction_moments import reconstruct_darcy_moments
-from pymhm.rt import rt_evaluate, rt_interpolate
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.mixed_rt import solve_darcy_rt, solve_darcy_rt_conforming
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.hdiv.rt import rt_evaluate, rt_interpolate
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.recovery.moments import reconstruct_darcy_moments
 
 
 @pytest.mark.parametrize("degree", [3, 4, 5, 6])

@@ -15,7 +15,7 @@ from matplotlib.collections import LineCollection
 from matplotlib.colors import SymLogNorm
 from matplotlib.ticker import FormatStrFormatter, NullFormatter
 
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "docs/figures/hpc4e"

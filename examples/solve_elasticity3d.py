@@ -9,8 +9,9 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm.elasticity3d import solve_elasticity_3d
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.elasticity.primal_3d import solve_elasticity_3d
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.tetrahedron import TetraMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/elasticity3d"
@@ -152,13 +153,13 @@ def main() -> None:
     data = ElasticityData3D(not args.sweep)
     sources = [
         Path(__file__),
-        ROOT / "src/pymhm/elasticity3d.py",
-        ROOT / "src/pymhm/tetrahedral.py",
-        ROOT / "src/pymhm/tetra_lagrange.py",
+        ROOT / "src/pymhm/_legacy/models/elasticity/primal_3d.py",
+        ROOT / "src/pymhm/fem/scalar/tetrahedron.py",
+        ROOT / "src/pymhm/fem/scalar/tetrahedron_topology.py",
     ]
-    start_hashes = {
-        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources
-    }
+    start_hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+    )
     rows = []
     with threadpool_limits(1):
         for n, lam in (
@@ -179,9 +180,9 @@ def main() -> None:
         local_cells=np.stack([m.cells for m in solution.local_meshes]),
         values=np.stack(solution.values),
     )
-    if start_hashes != {
-        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources
-    }:
+    if start_hashes != current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+    ):
         raise RuntimeError("Acquisition sources changed during the numerical campaign")
     record = dict(
         case="Original solenoidal trigonometric 3D elasticity",
@@ -196,9 +197,9 @@ def main() -> None:
         workers=args.workers,
         archive=path.name,
         sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
-        source_hashes={
-            str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources
-        },
+        source_hashes=current_source_manifest(
+            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+        ),
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(record, indent=2) + "\n")
 

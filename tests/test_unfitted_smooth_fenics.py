@@ -8,10 +8,11 @@ from scipy.spatial import cKDTree
 from threadpoolctl import threadpool_limits
 
 from examples.unfitted_convergence import error_norms, smooth_field, smooth_source
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.fenics import from_ufl
-from pymhm.lagrange import nodal_space, scalar_operators, trace_coupling
-from pymhm.solvers import solve_linear
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.scalar.triangle import nodal_space, scalar_operators, trace_coupling
+from pymhm.linalg.linear import solve_linear
 
 
 def _compare(trace_degree: int, segments_count: int) -> tuple[dict, np.ndarray]:

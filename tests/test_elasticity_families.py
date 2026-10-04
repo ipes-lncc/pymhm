@@ -5,7 +5,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 from pymhm import TriangleMesh
-from pymhm.elasticity_mixed import solve_elasticity_mixed
+from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
 
 
 def affine_displacement(points: np.ndarray) -> np.ndarray:

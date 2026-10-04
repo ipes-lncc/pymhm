@@ -48,7 +48,7 @@ def test_stability_threshold_keeps_rejected_resolutions(monkeypatch):
 
 def test_stability_acquisition_checkpoints_failed_attempts(tmp_path, monkeypatch):
     """A rejected solve is persisted and remains a barrier on a subsequent resume."""
-    from pymhm.solvers import LinearSolveError
+    from pymhm.linalg.linear import LinearSolveError
 
     monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1]))
     campaign = importlib.import_module("examples.helmholtz_stability")

@@ -6,14 +6,21 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm.assembly import HybridProblem, assemble_hybrid
-from pymhm.darcy3d import TriangularSkeleton, _boundary, tetra_trace_coupling
-from pymhm.elements import boundary_data
-from pymhm.hybrid import LocalAssembly, LocalProblem
-from pymhm.lagrange import element_tabulate, nodal_space, scalar_operators, trace_coupling
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.tetrahedral import TetraMesh, tetra_nodal_space, tetra_operators
-from pymhm.variational import GlobalForm
+from pymhm.core.assembly import HybridProblem, assemble_hybrid
+from pymhm.core.contracts import LocalAssembly, LocalProblem
+from pymhm.core.variational import GlobalForm
+from pymhm.fem.scalar.operators import boundary_data
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space, tetra_operators
+from pymhm.fem.scalar.triangle import (
+    element_tabulate,
+    nodal_space,
+    scalar_operators,
+    trace_coupling,
+)
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton, _boundary, tetra_trace_coupling
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def exact_pressure(points):

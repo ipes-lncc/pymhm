@@ -1,21 +1,31 @@
 # Scalar methods and local element choices
 
 This tutorial solves small analytical problems through the public high-level
-interfaces. Select a method and a local element family with `--variant`; each
+interfaces. Select a method and a local element family in its notebook cell; each
 choice assembles its declared spaces and measures the scalar and available flux
 errors separately. The examples exercise boundary conventions and physical
 fields. They are analytical patches, not convergence studies or reproductions
 of a paper's meshes and data.
 
+The primary notebook cells declare local and global equations through the
+generic variational interface. Their method-family comparisons retain the
+predefined solvers. The [provider tutorial](providers.md) and
+[variational guide](../variational.md) explain the form contract independently
+of those comparisons.
+
+Open the [problem notebook catalogue](../tutorials.md). Darcy examples are
+`notebooks/darcy/primal_galerkin.ipynb`, `mixed_hdiv.ipynb` and
+`hybrid_methods.ipynb`; transport and Helmholtz have their own problem folders.
+The notebooks expose the same analytical patch choices through `selected_methods`.
+
 ```bash
-pixi run --locked -e test python -m examples.tutorial_scalar_variants --variant all
-pixi run --locked -e test python -m examples.tutorial_scalar_variants --variant bdm-plus
-pixi run --locked -e test python -m examples.tutorial_scalar_variants \
-  --variant primal-neumann --output build/tutorials/neumann.json
+pixi run --locked -e notebooks notebooks-run darcy/primal_galerkin.ipynb
+pixi run --locked -e notebooks notebooks-run darcy/mixed_hdiv.ipynb
+pixi run --locked -e notebooks notebooks-run darcy/hybrid_methods.ipynb
 ```
 
 The default patches use two macrotriangles, two macrorectangles, six
-macrotetrahedra or two macroprisms on a unit square/cube. `--refinement` changes
+macrotetrahedra or two macroprisms on a unit square/cube. The `refinement` argument changes
 the local edge subdivisions independently of the unsplit macroface space.
 Tetrahedral and mixed 3D subdivisions must be powers of two. For
 `classical-rt1`, this argument instead subdivides the globally conforming mesh;
@@ -49,7 +59,8 @@ A direct public solve contains the same information as the corresponding
 tutorial choice:
 
 ```python
-from pymhm import TriangleMesh, solve_darcy_bdm
+from pymhm import TriangleMesh
+from pymhm._legacy.models.darcy.mixed_bdm import solve_darcy_bdm
 from examples.tutorial_scalar_variants import affine_pressure, affine_flux
 
 solution = solve_darcy_bdm(
@@ -76,7 +87,7 @@ $P_k$ denotes complete total-degree polynomials; $Q_k$ denotes tensor-product
 polynomials. Continuity of a primal local pressure applies inside one
 macrocell. Different macrocells retain independent reconstructed values.
 
-| CLI choice | Public solver and local space | Macroface variable |
+| Notebook choice | Public solver and local space | Macroface variable |
 | --- | --- | --- |
 | `primal`, `primal-neumann` | `solve_darcy`, continuous $P_2$ pressure inside each macrocell | $P_0$ physical normal flux |
 | `primal-quadratic` | `solve_darcy`, continuous $P_2$ pressure | $P_1$ physical normal flux |
@@ -120,7 +131,7 @@ These choices use `solve_darcy_hdiv3d` on `AffineMixedMesh.unit_cube`.
 They expose the concrete spaces used by the mixed-local framework associated
 with the Unicamp references; a degree label alone does not identify a space.
 
-| CLI choice | Executed fine-cell flux | Pressure/divergence | Normal trace |
+| Notebook choice | Executed fine-cell flux | Pressure/divergence | Normal trace |
 | --- | --- | --- | --- |
 | `hdiv-tetra` | $\{v\in[P_2]^3:v\cdot n\vert_F\in P_1(F)\}$, dimension 18 | $P_1$ | $P_1$ on triangles |
 | `hdiv-tetra-plus` | $P_1$ face modes and all zero-normal $[P_3]^3$ bubbles, dimension 32 | $P_2$ | $P_1$ on triangles |
@@ -136,7 +147,8 @@ order labels in the paper. The
 gives the explicit tensor factors, Piola convention and physical mean gauge.
 
 ```python
-from pymhm import AffineMixedMesh, solve_darcy_hdiv3d
+from pymhm import AffineMixedMesh
+from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
 from examples.tutorial_scalar_variants import affine_pressure, affine_flux
 
 solution = solve_darcy_hdiv3d(
@@ -157,7 +169,7 @@ The following methods retain their distinct variational forms and unknowns.
 Their shared use of local linear algebra does not make their skeleton variables
 interchangeable.
 
-| CLI choice | Local approximation and convention |
+| Notebook choice | Local approximation and convention |
 | --- | --- |
 | `mh-robin`, `mh-robin3d` | $P_2$ Robin locals with $\nu=0.1$ and $\sigma=\nu(x-x_0)/d$; the $P_1$ multiplier is $(q-p\sigma)\cdot n$, rather than physical $q\cdot n$ |
 | `mh2m`, `mh2m3d` | $P_2$ locals, continuous pressure trace $\Gamma=P_1$ and independent outward conormal $\Lambda=P_0$; conormal is $K\nabla p\cdot n=-q\cdot n$ |
@@ -219,11 +231,11 @@ constitutive, divergence and prescribed-normal-flux residuals.
 `algebraic_relative_residual` is a reduced-system diagnostic, not a combined
 L2 field residual or a stability certificate. Missing diagnostics are omitted.
 
-Changing `--variant` switches the supported high-level local/method choice.
+Selecting a notebook method chooses its stated predefined discretization.
 For a common explicit provider interface, continue with
-[local providers and execution](providers.md): `darcy_local_provider` feeds
-primal or RT0 `LocalAssembly` records into the same
-`HybridProblem(GlobalForm(...), provider, items)` contract. The provider owns
+[local providers and execution](providers.md): the notebook declares primal
+or RT0 `LocalEquations` and an additional global `Equation`, then uses
+`MultiscaleProblem` and `assemble`. The provider owns
 the actual spaces, local kernel, physical moments and oriented trace maps;
 the shared assembler owns ordered global reduction. MH2M and MsHHO retain
 their dedicated global trace/moment contracts. Native element replacement

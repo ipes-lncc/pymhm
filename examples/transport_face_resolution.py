@@ -17,8 +17,10 @@ from examples.transport_checkpoints import checkpoint_field, checkpoint_norm
 from examples.transport_coefficient_controls import norm_contribution
 from examples.transport_mixed_campaign import SOURCES
 from examples.transport_trace_family import TransportTraceFamily, gradient_projection_squared
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.parallel import map_local
+from pymhm.execution.cpu import map_local
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/transport"
@@ -50,9 +52,11 @@ def acquire(refinement: int, workers: int, *, endpoint_only: bool = False) -> di
         "examples/transport_trace_family.py",
         "examples/unfitted_trace_family.py",
         "examples/transport_coefficient_controls.py",
-        "src/pymhm/parallel.py",
+        "src/pymhm/execution/cpu.py",
     )
-    hashes = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in paths}
+    hashes = current_source_manifest(
+        {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in paths}
+    )
     start = perf_counter()
     macro = crisscross(8)
     backend = "process" if workers > 1 else "serial"

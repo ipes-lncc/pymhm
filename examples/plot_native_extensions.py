@@ -15,6 +15,8 @@ from typing import Any
 
 import matplotlib
 
+from pymhm.io.provenance import current_source_manifest
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -38,15 +40,10 @@ from native_extension_data import (
 from plot_mesh import draw_macro_mesh, mark_macro_interfaces
 from threadpoolctl import threadpool_limits
 
-from pymhm import (
-    FaceSpace,
-    SkeletonSpace,
-    TriangleMesh,
-    solve_brinkman,
-    solve_darcy,
-    solve_heat,
-    solve_transport,
-)
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm._legacy.models.transport.solver import solve_heat, solve_transport
+from pymhm._legacy.models.vector import solve_brinkman
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/native-extensions"
@@ -80,15 +77,18 @@ def add_case(report: dict[str, Any], section: str, row: dict[str, Any]) -> None:
 def snapshot() -> dict[str, str]:
     """Record numerical sources and the original analytical-data implementation."""
     paths = [
-        *sorted((ROOT / "src/pymhm").glob("*.py")),
+        *sorted((ROOT / "src/pymhm").rglob("*.py")),
         Path(__file__).resolve(),
         ROOT / "examples/native_extension_data.py",
         ROOT / "examples/field_sampling.py",
         ROOT / "examples/manufactured.py",
     ]
-    return {
-        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
-    }
+    return current_source_manifest(
+        {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in paths
+        }
+    )
 
 
 def save_fields(name: str, mesh: TriangleMesh, arrays: dict[str, np.ndarray]) -> dict[str, str]:

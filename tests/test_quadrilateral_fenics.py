@@ -4,15 +4,15 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.mesh import FaceSpace, SkeletonSpace
-from pymhm.quadrilateral import (
-    CartesianMacroMesh,
+from pymhm.fem.scalar.quadrilateral import (
     qk_basis,
     qk_space,
     quadrilateral_operators,
     quadrilateral_quadrature,
     quadrilateral_trace_coupling,
 )
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @pytest.mark.fem

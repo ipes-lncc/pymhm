@@ -1,6 +1,6 @@
 """Geometry shared by the published two-dimensional unfitted scalar cases."""
 
-from pymhm.mesh import TriangleMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def macro_mesh(delta: float) -> TriangleMesh:

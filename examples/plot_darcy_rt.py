@@ -14,8 +14,8 @@ import numpy as np
 from matplotlib.colors import Normalize, TwoSlopeNorm
 from plot_mesh import draw_macro_mesh
 
-from pymhm.mesh import TriangleMesh
-from pymhm.rt import rt_evaluate
+from pymhm.fem.hdiv.rt import rt_evaluate
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -70,7 +70,7 @@ def main() -> None:
     pressure = []
     magnitude = []
     centers = []
-    from pymhm.darcy_rt import pressure_basis
+    from pymhm._legacy.models.darcy.mixed_rt import pressure_basis
 
     bary = np.ones((1, 3)) / 3
     for i in range(len(data["local_points"])):

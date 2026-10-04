@@ -13,10 +13,13 @@ import numpy as np
 from planar3d_data import Planar3DData
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton, solve_darcy_3d
-from pymhm.planar_fitting import fit_planar_material, planar_face_partitions
-from pymhm.reconstruction3d import reconstruct_darcy_moments_3d
-from pymhm.tetrahedral import TetraMesh, tetrahedron_quadrature
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from pymhm.fem.scalar.tetrahedron import tetrahedron_quadrature
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.fitting import fit_planar_material, planar_face_partitions
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.recovery.moments_3d import reconstruct_darcy_moments_3d
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -25,25 +28,28 @@ def snapshot() -> dict[str, str]:
     """Capture executed numerical owners and analytical data without local machine paths."""
     paths = [Path(__file__), ROOT / "examples/planar3d_data.py"]
     paths.extend(
-        ROOT / "src/pymhm" / name
+        ROOT / f"src/pymhm/{name}"
         for name in (
-            "darcy3d.py",
-            "tetra_validation.py",
-            "tetrahedral.py",
-            "tetra_lagrange.py",
-            "planar_material.py",
-            "planar_fitting.py",
-            "hybrid.py",
-            "solvers.py",
-            "reconstruction3d.py",
-            "rt3d.py",
-            "hdiv3d_family.py",
-            "hdiv3d_mesh.py",
+            "_legacy/models/darcy/primal_3d.py",
+            "meshes/validation.py",
+            "fem/scalar/tetrahedron.py",
+            "fem/scalar/tetrahedron_topology.py",
+            "materials/planar.py",
+            "meshes/fitting.py",
+            "core/contracts.py",
+            "linalg/linear.py",
+            "recovery/moments_3d.py",
+            "fem/hdiv/rt_3d.py",
+            "fem/hdiv/family_3d.py",
+            "meshes/mixed.py",
         )
     )
-    return {
-        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
-    }
+    return current_source_manifest(
+        {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in paths
+        }
+    )
 
 
 def main() -> None:

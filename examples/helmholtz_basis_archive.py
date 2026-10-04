@@ -16,8 +16,8 @@ from typing import Any
 
 import numpy as np
 
-from pymhm.helmholtz_spaces import OscillatoryFaceSpace
-from pymhm.mesh import FaceSpace, SkeletonSpace
+from pymhm.fem.traces.helmholtz import OscillatoryFaceSpace
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 
 
 def transform_digest(matrix: np.ndarray) -> str:

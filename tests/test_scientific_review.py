@@ -7,11 +7,12 @@ import pytest
 from numpy.testing import assert_allclose
 from scipy import linalg
 
-from pymhm import TriangleMesh, solve_brinkman
-from pymhm.elements import triangle_quadrature
-from pymhm.fenics import from_ufl
-from pymhm.hybrid import LocalAssembly
-from pymhm.lagrange import nodal_space
+from pymhm import TriangleMesh
+from pymhm._legacy.models.vector import solve_brinkman
+from pymhm.backends.fenics import from_ufl
+from pymhm.core.contracts import LocalAssembly
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import nodal_space
 
 
 def _independent_inverse_constants(mesh: TriangleMesh, degree: int) -> np.ndarray:
@@ -62,12 +63,12 @@ def test_usfem_matrix_and_force_match_independent_ufl(
     import ufl
     from mpi4py import MPI
 
-    import pymhm.flow
+    import pymhm._legacy.models.flow.solver
 
     native_problems = []
     native_constants = []
-    assemble = pymhm.flow._flow_local
-    inverse_bound = pymhm.flow._laplacian_inverse_bound
+    assemble = pymhm._legacy.models.flow.solver._flow_local
+    inverse_bound = pymhm._legacy.models.flow.solver._laplacian_inverse_bound
 
     def capture(cell: int, **kwargs: Any) -> LocalAssembly:
         """Capture the exact native local matrix before global condensation."""
@@ -92,8 +93,8 @@ def test_usfem_matrix_and_force_match_independent_ufl(
             )
         return np.broadcast_to(drag * np.eye(2), (len(points), 2, 2))
 
-    monkeypatch.setattr(pymhm.flow, "_flow_local", capture)
-    monkeypatch.setattr(pymhm.flow, "_laplacian_inverse_bound", capture_bound)
+    monkeypatch.setattr(pymhm._legacy.models.flow.solver, "_flow_local", capture)
+    monkeypatch.setattr(pymhm._legacy.models.flow.solver, "_laplacian_inverse_bound", capture_bound)
     viscosity = 2.0
     square = TriangleMesh.unit_square()
     coarse = TriangleMesh(square.points @ np.array([[1.1, 0.25], [-0.15, 0.85]]), square.cells)

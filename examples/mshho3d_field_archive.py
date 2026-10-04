@@ -19,19 +19,18 @@ import numpy as np
 from scipy import sparse
 
 from examples.archive_precision import precision_fields, restore_precision
-from examples.campaign_provenance import file_digest
 from examples.local_response_cache import array_identity
 from examples.transport_checkpoints import checkpoint_field, write_progress
-from pymhm.mshho3d import MsHHO3DSolution, _face_rule
-from pymhm.solvers import LinearSolveError, _accurate_residual
-from pymhm.tetrahedral import (
-    scalar_values_3d,
-    tensor_values_3d,
+from pymhm.fem.scalar.tetrahedron import (
     tetra_basis,
     tetra_nodal_space,
     tetra_operators,
     tetrahedron_quadrature,
 )
+from pymhm.io.provenance import file_digest
+from pymhm.linalg.linear import LinearSolveError, _accurate_residual
+from pymhm.materials.evaluation import scalar_values_3d, tensor_values_3d
+from pymhm.methods.hho_3d import MsHHO3DSolution, _face_rule
 
 SCHEMA = "pymhm-mshho3d-p2-p0-field-v1"
 ROOT = Path(__file__).resolve().parents[1]

@@ -4,7 +4,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
-from pymhm import TriangleMesh, solve_transient_transport
+from pymhm import TriangleMesh
+from pymhm._legacy.models.transport.transient import solve_transient_transport
 
 
 def _options():
@@ -88,7 +89,7 @@ def test_invalid_callback_is_rejected():
 
 def test_callback_failure_closes_every_prepared_native_factor(monkeypatch):
     """Callback exceptions preserve the explicit lifetime of local/global factors."""
-    from pymhm.offline import OfflineHybridSystem
+    from pymhm.core.offline import OfflineHybridSystem
 
     closed = []
     original = OfflineHybridSystem.close

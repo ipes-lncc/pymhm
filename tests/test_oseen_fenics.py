@@ -6,9 +6,9 @@ from numpy.testing import assert_allclose
 from test_scientific_review import _independent_inverse_constants
 
 from pymhm import SkeletonSpace, TriangleMesh
-from pymhm.fenics import from_ufl
-from pymhm.flow import _flow_local
-from pymhm.lagrange import nodal_space
+from pymhm._legacy.models.flow.solver import _flow_local
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.scalar.triangle import nodal_space
 
 
 @pytest.mark.fem

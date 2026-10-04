@@ -17,11 +17,11 @@ from unittest.mock import patch
 import numpy as np
 from scipy import sparse
 
-from examples.campaign_provenance import file_digest
 from examples.core_elasticity_field_archive import ProductionObservation
 from examples.transport_checkpoints import write_progress
-from pymhm.hybrid import HybridSystem
-from pymhm.solvers import _accurate_residual
+from pymhm.core.system import HybridSystem
+from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.linalg.linear import _accurate_residual
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -77,7 +77,7 @@ def observe_originals() -> Iterator[ProductionObservation]:
 def capture_sources(output: Path, extra: Sequence[Path]) -> dict[str, str]:
     """Copy exact core, observer, analytical data and lock bytes before solving."""
     paths = [
-        *sorted((ROOT / "src/pymhm").glob("*.py")),
+        *sorted((ROOT / "src/pymhm").rglob("*.py")),
         ROOT / "examples/minimal_flow_originals.py",
         ROOT / "examples/core_elasticity_field_archive.py",
         ROOT / "examples/archive_precision.py",
@@ -89,7 +89,9 @@ def capture_sources(output: Path, extra: Sequence[Path]) -> dict[str, str]:
         ROOT / "pyproject.toml",
         *extra,
     ]
-    hashes = {str(path.relative_to(ROOT)): file_digest(path) for path in paths}
+    hashes = current_source_manifest(
+        {str(path.relative_to(ROOT)): file_digest(path) for path in paths}
+    )
     for name, expected in hashes.items():
         target = output / "executed-sources/files" / name
         target.parent.mkdir(parents=True, exist_ok=True)

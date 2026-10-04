@@ -6,14 +6,15 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm.hybrid import HybridSystem, LocalProblem
-from pymhm.offline import (
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.offline import (
     LocalFactorCache,
     OfflineHybridSystem,
     OfflineLocalProblem,
     condense_cached,
 )
-from pymhm.solvers import LinearSolveError, factorize
+from pymhm.core.system import HybridSystem
+from pymhm.linalg.linear import LinearSolveError, factorize
 
 
 def problems(kind: str) -> list[LocalProblem]:
@@ -44,7 +45,7 @@ def test_online_sources_and_boundary_values_match_reassembly(
     kind: str, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """Reuse local/global factors for changing sources and inhomogeneous boundary moments."""
-    from pymhm import solvers
+    from pymhm.linalg import linear as solvers
 
     cells = problems(kind)
     count = []
@@ -106,7 +107,7 @@ def test_offline_local_lifecycle_and_cleanup(monkeypatch: pytest.MonkeyPatch) ->
         prepared.response([0.0, 0.0])
     with pytest.raises(TypeError, match="LocalProblem"):
         OfflineLocalProblem(None)
-    from pymhm import offline
+    from pymhm.core import offline
 
     class BrokenFactor:
         """Expose failed-solve cleanup without simulating numerical correctness."""
@@ -203,7 +204,7 @@ def test_exact_matrix_factor_cache_has_no_tolerance_matching() -> None:
 @pytest.mark.parametrize("kind", ["kernel", "retained", "petrov"])
 def test_original_online_check_preserves_fields_and_factors(kind, monkeypatch):
     """Check original nonsymmetric rows and inhomogeneous weak data without refactoring."""
-    from pymhm import solvers
+    from pymhm.linalg import linear as solvers
 
     cells = problems(kind)
     loads = [np.array([1.0, 2.0]), np.array([-1.0, 0.5])]

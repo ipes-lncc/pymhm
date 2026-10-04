@@ -8,11 +8,11 @@ import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
 from examples.helmholtz_compact_family import CompactFamily, CompactLocal
-from pymhm.helmholtz import _HelmholtzFactory, solve_helmholtz
-from pymhm.helmholtz_spaces import helmholtz_skeleton
-from pymhm.loads import split_point_sources
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.reservoir import CartesianCellField
+from pymhm._legacy.models.waves.helmholtz import _HelmholtzFactory, solve_helmholtz
+from pymhm.fem.loads import split_point_sources
+from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @pytest.mark.parametrize("boundary", ["absorbing", "dirichlet", "mixed"])
@@ -89,7 +89,7 @@ def test_compact_all_degrees_match_original_equations(boundary):
 
 
 def test_compact_rejects_retained_modes_and_corrupted_responses():
-    from pymhm.hybrid import LocalProblem
+    from pymhm.core.contracts import LocalProblem
 
     problem = LocalProblem(
         np.eye(2), np.eye(2), np.ones(2), np.arange(2), coarse_basis=np.ones((2, 1))
@@ -183,7 +183,7 @@ def test_trace_only_solve_defers_reconstruction_and_checks_coordinate_contract(m
 )
 def test_global_assembly_keeps_executed_schur_and_load_correction_digits():
     """A representable correction below double epsilon survives the sparse assembly."""
-    from pymhm.hybrid import LocalProblem
+    from pymhm.core.contracts import LocalProblem
 
     response = LocalProblem(np.eye(2), np.eye(2), np.ones(2), np.arange(2)).condense()
     original = CompactLocal.from_response(response, (None, None, np.zeros(2), {}))

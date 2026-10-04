@@ -8,11 +8,12 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.elements import boundary_data, face_integration, p1_operators
-from pymhm.fenics import assemble_local_forms, from_ufl
-from pymhm.hybrid import HybridSystem
-from pymhm.mesh import SkeletonSpace, TriangleMesh
-from pymhm.variational import LocalForm
+from pymhm.backends.fenics import assemble_local_forms, from_ufl
+from pymhm.core.system import HybridSystem
+from pymhm.core.variational import LocalForm
+from pymhm.fem.scalar.operators import boundary_data, face_integration, p1_operators
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
 
 pytestmark = pytest.mark.fem
 

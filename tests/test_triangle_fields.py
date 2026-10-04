@@ -7,11 +7,11 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-import pymhm.triangle_fields as triangle_fields
+import pymhm.materials.sources as triangle_fields
 from pymhm import PolylineLayerField, RadialDiskLoad, TriangleMesh, material_triangle_quadrature
-from pymhm.elastodynamics import ElastodynamicStepper, _make_local
-from pymhm.mesh import FaceSpace, SkeletonSpace
-from pymhm.triangle_fields import triangle_field_quadrature
+from pymhm._legacy.models.waves.elastodynamics import ElastodynamicStepper, _make_local
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.materials.sources import triangle_field_quadrature
 
 
 def physical_rule(mesh, field, order=4):

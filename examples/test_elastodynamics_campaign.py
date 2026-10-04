@@ -5,7 +5,8 @@ from numpy.testing import assert_allclose
 
 from examples.elastodynamics_campaign import ElasticWave
 from examples.elastodynamics_results import difference
-from pymhm.tetrahedral import TetraMesh, tetra_nodal_space
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 def test_archived_physical_time_difference_on_a_rigid_translation(tmp_path):

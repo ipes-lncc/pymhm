@@ -20,7 +20,7 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples import core_extension_data as exact
-from examples.campaign_provenance import file_digest, positive_integers
+from examples.campaign_provenance import positive_integers
 from examples.core_elasticity_field_archive import (
     field_arrays,
     observe_system,
@@ -30,11 +30,12 @@ from examples.core_elasticity_field_archive import (
 )
 from examples.solve_core_extensions import polygon_grid
 from examples.transport_checkpoints import write_progress
-from pymhm.elasticity_mixed import solve_elasticity_mixed
-from pymhm.elasticity_tensor_rt import solve_elasticity_tensor_rt
-from pymhm.mesh import TriangleMesh
-from pymhm.polygon import solve_elasticity_mixed_polygons
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
+from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
+from pymhm._legacy.models.geometry import solve_elasticity_mixed_polygons
+from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES = ("triangle-bdm2", "rectangle-rt1", "polygon-bdm2")
@@ -88,7 +89,9 @@ def capture_sources(output: Path) -> dict[str, str]:
         ROOT / "pixi.toml",
         ROOT / "pyproject.toml",
     ]
-    hashes = {str(path.relative_to(ROOT)): file_digest(path) for path in paths}
+    hashes = current_source_manifest(
+        {str(path.relative_to(ROOT)): file_digest(path) for path in paths}
+    )
     for name, expected in hashes.items():
         target = output / "executed-sources/files" / name
         target.parent.mkdir(parents=True, exist_ok=True)

@@ -14,8 +14,10 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton, solve_darcy_3d
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.tetrahedron import TetraMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -51,13 +53,22 @@ def hashes() -> dict[str, str]:
     paths = [
         Path(__file__),
         *(
-            ROOT / "src" / "pymhm" / name
-            for name in ("tetrahedral.py", "darcy3d.py", "hybrid.py", "parallel.py", "solvers.py")
+            ROOT / f"src/pymhm/{name}"
+            for name in (
+                "fem/scalar/tetrahedron.py",
+                "_legacy/models/darcy/primal_3d.py",
+                "core/contracts.py",
+                "execution/cpu.py",
+                "linalg/linear.py",
+            )
         ),
     ]
-    return {
-        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
-    }
+    return current_source_manifest(
+        {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in paths
+        }
+    )
 
 
 def run(output: Path, refinement: int = 4) -> None:

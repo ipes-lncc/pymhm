@@ -10,7 +10,8 @@ import pytest
 from numpy.polynomial.legendre import leggauss
 from numpy.testing import assert_allclose
 
-from pymhm.quadrilateral import CartesianMacroMesh, qk_space
+from pymhm.fem.scalar.quadrilateral import qk_space
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @pytest.fixture

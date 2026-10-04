@@ -19,8 +19,9 @@ Positive local degrees are supported. The [general tetrahedral Pk study](https:/
 includes independent P5/P6 element checks and a P5/P2 estimator campaign.
 
 ```python
-from pymhm.tetrahedral import TetraMesh
-from pymhm.darcy3d import TriangularSkeleton, solve_darcy_3d
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
 
 mesh = TetraMesh.unit_cube(2)
 skeleton = TriangularSkeleton(mesh, subdivisions=2)
@@ -139,7 +140,7 @@ Thread and spawn-process results coincide with serial fields. Native optional
 tests compare the P1/P2 volume matrices and loads with independent DOLFINx/UFL
 assembly on a distorted tetrahedron, matching DOFs by coordinates.
 
-`pymhm.meshing3d.read_tetra_mesh` and `write_tetra_mesh` exchange linear tetrahedra
+`pymhm.io.tetrahedral.read_tetra_mesh` and `write_tetra_mesh` exchange linear tetrahedra
 through meshio, including integer material and triangular-face IDs and finite
 point/volume fields. A native VTU roundtrip verifies geometry, tags and fields.
 Gmsh tetrahedral files can be imported through meshio; this does not add a

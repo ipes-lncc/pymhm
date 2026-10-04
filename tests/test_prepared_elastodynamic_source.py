@@ -5,12 +5,15 @@ from dataclasses import replace
 import numpy as np
 import pytest
 
-from pymhm import ElastodynamicStepper, PolylineLayerField, RadialDiskLoad, TetraMesh, TriangleMesh
-from pymhm.elastodynamics import PreparedElastodynamicSource
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import multiindices, reference_basis, reference_values
-from pymhm.mesh import FaceSpace, SkeletonSpace
-from pymhm.triangle_fields import SeparableTriangleField
+from pymhm import PolylineLayerField, RadialDiskLoad, TetraMesh, TriangleMesh
+from pymhm._legacy.models.waves.elastodynamics import (
+    ElastodynamicStepper,
+    PreparedElastodynamicSource,
+)
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import multiindices, reference_basis, reference_values
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.materials.sources import SeparableTriangleField
 
 
 @pytest.mark.parametrize("degree", [1, 2, 3, 4, 5, 6])
@@ -85,7 +88,7 @@ def test_load_tabulation_uses_values_without_discarded_derivatives(monkeypatch):
     ) as stepper:
         local = stepper.locals[0]
         monkeypatch.setattr(
-            "pymhm.elastodynamics.physical_basis",
+            "pymhm._legacy.models.waves.elastodynamics.physical_basis",
             lambda *args: pytest.fail("derivative tabulation in load"),
         )
         source = RadialDiskLoad([0.25, 0.25], 0.1, 3.0, time_function=lambda t: 2 * t)
@@ -164,7 +167,7 @@ def test_generic_separable_source_snapshot_reuses_every_original_spatial_vector(
             np.testing.assert_array_equal(owned[i], local.load(field))
         stepper.initialize()
         monkeypatch.setattr(
-            "pymhm.elastodynamics.ElastodynamicLocal.load",
+            "pymhm._legacy.models.waves.elastodynamics.ElastodynamicLocal.load",
             lambda *args, **kw: pytest.fail("spatial rule reintegrated"),
         )
         for _ in range(3):

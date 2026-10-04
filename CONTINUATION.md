@@ -9,10 +9,85 @@ e alguns drivers de casos. A retomada usa as fontes versionadas e as referência
 primárias preservadas em `.tmp`; campos e ambientes são adquiridos novamente.
 As quedas interromperam execuções; sua causa não foi estabelecida.
 
+### Imports canônicos da organização atual
+
+A orientação atual do usuário é remover a preservação dos imports anteriores à
+refatoração. Use exclusivamente os módulos e submódulos atuais; não reintroduza
+`MODULE_ALIASES`, `_compat`, exports físicos ocultos na raiz nem redirecionamentos
+de solvers em módulos de malhas/FEM. A API principal da DSL continua na raiz.
+Consumidores, notebooks, exemplos, testes e documentação usam os donos atuais.
+Pickles novos usam esses donos; caminhos antigos não são uma interface suportada.
+As fórmulas, tolerâncias, bases e registros científicos aceitos são preservados.
+A evidência desta limpeza está em `build/refactoring/canonical-imports-v1/`.
+A etapa está concluída: 5.413 testes portáteis distintos e 250 integrações
+DOLFINx aprovados; cobertura de 99,9305% de linhas e 99,6964% de branches.
+As 19 comparações preservam os valores/bits significativos de 1.058 arrays.
+Lint, formato, tipos, documentação/MathJax e artefatos instalados passaram.
+Recibo final: `build/reports/completion/canonical-imports-final-readiness-v1.json`.
+Os recibos abaixo descrevem a etapa anterior e não autorizam compatibilidade
+de imports; seus hashes e aquisições históricas permanecem imutáveis.
+
+### API variacional independente do modelo físico
+
+**Etapa de engenharia concluída em 4 de outubro de 2026.** A API principal usa
+`Equation`, `LocalEquations`, `MultiscaleProblem`, `assemble` e `solve`, com UFL
+nativa opcional ou blocos numéricos explícitos. São as mesmas abstrações para
+campos escalares, vetoriais e mistos; modelos e variantes são declarações da
+aplicação. `NestedEquations` permite vários níveis, e `leaf_moment` compõe gauges
+físicos das folhas. D/g também representam formas face-only, sem incógnitas de
+volume nem fatorizações locais artificiais. Os operadores de momentos, curl e
+Newmark têm donos numéricos compartilhados. Basix continua obrigatório.
+
+Os solvers por física permanecem em `_legacy` como implementações privadas
+para comparações e campanhas de aquisição. Os 85 notebooks, organizados por problema,
+não têm chamadas físicas legadas nos caminhos primários de cálculo; 24 chamadas
+em 15 notebooks são comparações explícitas. As fontes não guardam outputs.
+As células de cálculo atuais foram executadas e comparadas com os mesmos inputs;
+as execuções completas e os leitores de galerias têm escopos distintos nos recibos.
+Arquivos/figuras preexistentes ausentes no clone leve continuam impedindo algumas
+execuções integrais. Não readquirir campanhas pesadas só para esconder esse limite.
+
+Os 19 controles finais preservam literalmente 1.058 arrays, incluindo operadores,
+bases e campos; o NPZ tem o mesmo digest do baseline. Os 39 registros científicos
+e 11 recibos anteriores preservam os bytes e a identidade de execução. Nos 28
+históricos do lote maior, 1.692 arrays físicos foram comparados, com diferença
+máxima de 1,09×10⁻¹³; outros lotes e os controles de fronteira/spawn têm recibos
+próprios. Nenhuma tolerância de solver foi relaxada.
+
+Validação: 5.403 testes portáteis distintos aprovados, 303 skips opcionais;
+99,9097% de linhas e 99,6786% de branches. A suíte integral foi seguida pelos
+46 testes híbridos/face-only afetados pela expectativa de rejeição de A vazia:
+o mesmo input malformado continua rejeitado pela dimensão de B, agora que A 0×0
+é permitido. A cobertura acumulada usa os mesmos 178 módulos, sem alteração de
+implementação entre as etapas. As integrações nativas DOLFINx aprovaram 250 testes.
+Lint, format-check, typecheck, test-cov e docs-check passaram.
+
+O navegador validou 43 páginas/517 expressões, 85 fontes de notebooks/443
+expressões e 25 cópias históricas executadas/98 células/180 expressões, sem erros
+MathJax ou overflow matemático. As capturas e os painéis atuais foram inspecionados;
+os recibos anteriores dos tutoriais e notebooks FEM permanecem associados às
+suas fontes. Importar o helper de elasticidade preserva o backend gráfico ativo,
+e sua execução CLI seleciona Agg.
+
+Wheel, sdist e Conda 0.1.0 foram construídos e inspecionados. Os 180 arquivos
+runtime/tipagem coincidem com a fonte validada. Nos artefatos instalados fora do
+checkout, 16 controles compatíveis e 124 testes genéricos passaram, incluindo
+hierarquia, face-only e spawn; fatores e workers foram encerrados. O payload
+Conda noarch foi extraído em venv isolada com dependências do Pixi lock, sem uma
+resolução Conda nova. Windows não foi executado; nenhum artefato foi publicado.
+
+Recibo consolidado:
+`build/reports/completion/variational-dsl-final-readiness-v1.json`.
+A interface resolve sistemas lineares reais; a numeração de formas UFL globais
+e os mapas do esqueleto são declarados explicitamente. Contratos para compiladores
+e solvers externos estão implementados, mas integrações ML/preCICE de produção
+não foram qualificadas. Reprodução integral da literatura e campanha Brinkman
+2D/3D em regimes extremos permanecem etapas científicas separadas.
+
 ### Prioridade de engenharia definida pelo usuário
 
-A campanha focada de Brinkman fica para uma etapa posterior. A prioridade atual
-é organizar a arquitetura do PyMHM segundo os padrões de `voids` e `torch-flash`:
+A campanha focada de Brinkman fica para uma etapa posterior. A etapa de engenharia
+organiza a arquitetura do PyMHM segundo os padrões de `voids` e `torch-flash`:
 operações em funções livres com delegações explícitas; objetos próprios para
 problemas, configurações, bases, sistemas e soluções; definição variacional dos
 problemas locais e globais aproveitando UFL; providers locais por contratos
@@ -42,19 +117,28 @@ retornam contribuições por célula e o coordenador reduz em ordem fixa; nenhum
 escrita concorrente nos coeficientes de faces compartilhadas. Recursos FEM/MPI/
 PETSc/CUDA são criados e liberados no worker, preservando spawn multiplataforma.
 
-A implementação de engenharia fornece funções livres para condensação,
-reconstrução e montagem global; os objetos históricos delegam a elas. Os novos
-`LocalForm`, `GlobalForm`, `HybridProblem`, `SolverConfig` e `ExecutionConfig`
-separam formas, providers e execução. `darcy_local_provider` expõe os locais
-primais Pk e mistos RT0 existentes, incluindo seus sinais, momentos e metadata.
-Providers são callables; um solver externo recebe todas as colunas do sistema
-local aumentado, com verificação das equações originais e do posto numérico.
+A API principal é variacional e independente do modelo físico. `Equation(a, L)`
+declara a equação global; `LocalEquations(a, L, b, c, dofs, d=..., g=...)` declara
+os quatro blocos A u+B lambda=f e C u+D lambda=g, com mapas de teste/trial,
+orientações, kernels e momentos explícitos. `MultiscaleProblem` reúne essas formas
+com um provider; `assemble`, `solve`, `leaf_moment` e `with_global_equation` são
+funções livres. Os objetos delegam as operações ao núcleo compartilhado.
+`LocalForm`, `GlobalForm`, providers por física e os `solve_*` históricos permanecem
+como formulações privadas predefinidas; não são a API introdutória.
 
-`LocalForm` aceita UFL por meio do adaptador DOLFINx real. `GlobalForm` descreve
-a forma híbrida condensada em coordenadas declaradas; não é um compilador de
-formas UFL arbitrárias numa malha independente do esqueleto. Qualificar modelos
-ML e acoplamentos preCICE permanece separado do contrato implementado. preCICE
-é candidato a adaptador opcional, sem dependência obrigatória no core.
+As formas podem ser arrays, operadores esparsos, colunas/linhas de formas lineares
+ou UFL montada pela integração DOLFINx nativa opcional. Isso inclui formas globais
+bilineares/lineares nas coordenadas reduzidas explicitamente declaradas, com
+verificação contra montagem monolítica independente. Não há mapeamento automático
+entre uma malha UFL global e as bases do esqueleto. Outros compiladores e solvers
+locais entram pelos mesmos contratos, sem um dispatcher de PDEs.
+
+Um problema local pode ser outro `MultiscaleProblem`; `NestedEquations` declara
+suas restrições e reações de fronteira. A reconstrução recupera todos os níveis,
+usando as bases executadas e sem resolver novamente os globais filhos. Locais
+sem incógnitas de volume declaram A 0×0 e contribuem diretamente por D/g, como
+no MsHHO face-only. Qualificar modelos ML e acoplamentos preCICE permanece
+separado do contrato implementado; preCICE não é dependência do core.
 
 Basix é dependência de runtime e fornece as bases/tabulações das famílias
 nodais, RT e BDM. O nome histórico `portable` é apenas uma grafia compatível
@@ -144,6 +228,118 @@ Recibo consolidado:
 Os recibos anteriores continuam associados às fontes que executaram. A campanha
 Brinkman 2D/3D em regimes extremos permanece como próxima etapa científica.
 
+### Organização do código-fonte por responsabilidades
+
+**Organização concluída em 4 de outubro de 2026.** Os módulos estão distribuídos
+entre `core`, `fem`, `meshes`, `materials`, `models`, `methods`, `recovery`,
+`estimators`, `adaptivity`, `linalg`, `execution`, `backends`, `io` e
+`postprocessing`. Geometria, espaços de traço, tabulações, montagem, condensação,
+reconstrução e execução têm responsáveis próprios. As famílias Darcy reutilizam
+a montagem mista e o saddle de fluxo normal, conservando seus espaços, momentos,
+quadraturas e gauges. Os casos científicos e seus drivers permanecem em
+`examples/`, notebooks e documentação.
+
+O núcleo usa funções livres com delegações explícitas dos objetos. Os 278
+exports públicos e os 120 caminhos históricos de módulos continuam disponíveis;
+a camada de compatibilidade resolve os mesmos objetos sem outra implementação.
+Basix continua obrigatório para tabulação; integrações FEM/MPI e visualização
+continuam opcionais. Há 168 módulos Python e 1.311 definições documentadas e
+anotadas, incluindo funções privadas e locais; `source-check` integra o lint.
+O desmembramento em responsabilidades não reduz a contagem total de arquivos.
+Arquitetura e convenções atuais: `docs/architecture.md`.
+
+Contra o baseline desta organização, os 19 controles com 1.058 arrays e 54
+operadores esparsos coincidem **bit a bit**. Nove controles adicionais de Darcy
+preservam literalmente 207 arrays, incluindo contornos homogêneos,
+não homogêneos e gauge Neumann. Dez objetos históricos preservam 438 arrays
+de estado, orientação, condensação e reconstrução. Foram reproduzidos 36 campos
+históricos com uma e duas threads BLAS, sem bases novas nem solves de PDEs.
+Os 39 registros científicos e 11 recibos mantêm seus bytes originais.
+Os 73 notebooks versionados preservam Markdown e metadados; 27 células mudam
+apenas imports. Eles não contêm outputs ou attachments salvos, e esta conferência
+não é uma reexecução dos notebooks.
+
+Validação: **5.148 testes distintos aprovados**, 284 skips opcionais;
+**99,9180% de linhas** e **99,7087% de branches**. A suíte integral foi seguida
+pela repetição dos 41 testes do arquivo cuja simulação de alteração de fonte
+foi atualizada para o responsável atual, com cobertura acumulada e todos os 170
+arquivos de implementação/tipagem idênticos entre as etapas. Lint, format-check,
+typecheck e o gate test-cov passaram. A suíte FEM nativa aprovou **237 testes**;
+quatro skips de coleta referem-se a módulos de gráficos sem Matplotlib.
+`docs-check` passou, e o navegador validou 42 páginas, 486 expressões MathJax e
+46 imagens, com 16 capturas inspecionadas.
+
+Wheel, sdist e Conda 0.1.0 foram construídos e inspecionados: os 170 arquivos
+de implementação e tipagem têm nomes e bytes exatos. Os 16 controles instalados
+fora do checkout preservam literalmente os campos serial/spawn, com recursos
+e processos encerrados. A execução foi Linux/Python 3.13, com dependências
+bloqueadas; o payload Conda foi instalado num ambiente isolado com essas
+dependências, sem uma resolução Conda independente. Windows não foi executado.
+Nenhum artefato foi publicado.
+
+Recibo consolidado:
+`build/reports/completion/package-layout-final-readiness-v1.json`.
+As fontes executadas e os recibos anteriores preservam suas identidades.
+Esta organização mantém as capacidades verificadas; a reprodução integral da
+literatura e a campanha Brinkman em regimes extremos continuam como trabalho
+científico posterior.
+
+### Exemplos em notebooks organizados por problema
+
+**Organização concluída em 4 de outubro de 2026.** Os 73 notebooks existentes
+estão em subpastas de `darcy`, `flow`, `elasticity`, `transport`, `waves`,
+`foundations` e `convergence`. Seus nomes e IDs históricos foram preservados;
+as 322 células científicas mantêm o AST computacional, com imports e bootstrap
+ajustados para os novos caminhos. O conteúdo científico em Markdown, metadados,
+contagens de execução e entradas foram preservados; links relativos foram
+atualizados. Os originais não tinham outputs salvos.
+
+Dez exemplos introdutórios adicionais apresentam as 28 variantes escalares,
+17 vetoriais e providers locais/globais, incluindo UFL. Os notebooks mostram
+chamadas explícitas das APIs, parâmetros e convenções de cada método. Todos
+os dez foram executados, com 34 células de código; as 45 variantes e oito
+chamadas representativas têm normas físicas **bit a bit** iguais às rotinas
+existentes. Três controles homogêneos/incompressíveis também coincidem.
+Todas as células do provider UFL foram executadas no Pixi FEM, com erro nodal
+máximo de pressão 1,78×10⁻¹⁵ e resíduo global original 1,11×10⁻¹⁶.
+
+Os exemplos didáticos atuais e futuros são notebooks, conforme `AGENTS.md` e
+`CONTRIBUTING.md`. Rotinas Python de dados, campanhas, leitura e workers
+continuam reutilizáveis, com seus 224 entry points auxiliares compatíveis.
+Os 305 módulos de apoio e os 170 arquivos
+do runtime mantêm os mesmos bytes do pacote anterior, assim como os 39 registros
+científicos e 11 recibos. A campanha Brinkman permanece separada desta entrega.
+
+Índice dos 83 notebooks: `notebooks/README.md`; métodos e caminhos:
+`notebooks/catalogue.json`. O executor descobre subpastas e aceita grupos,
+caminhos e IDs históricos; as cópias executadas preservam a hierarquia em
+`build/notebooks`. Nomes ambíguos requerem caminho qualificado. O inventário de
+arquivos continua exigindo os campos e figuras efetivamente consumidos.
+
+```bash
+pixi run --locked -e notebooks notebooks-run darcy/primal_galerkin.ipynb
+pixi run --locked -e notebooks notebooks-run flow/introductory_methods.ipynb
+pixi run --locked -e notebooks notebooks-run 01
+```
+
+Validação: lint, format-check, typecheck, test-cov e docs-check passaram;
+**5.176 testes aprovados**, 290 skips opcionais, **99,9180% de linhas** e
+**99,7087% de branches**. O executor/inventário aprovou 42 testes no ambiente
+de notebooks, incluindo kernel real, PNG e paths nested/externos. Oito notebooks
+históricos pequenos foram executados; o 07 depende da figura local ausente
+`docs/figures/elasticity/refinement.svg`. Os demais estudos com dados grandes
+não foram reexecutados nesta organização.
+
+O navegador verificou 42 páginas, 486 expressões MathJax e 46 imagens da
+documentação; os dez notebooks executados também foram exportados e inspecionados.
+Wheel, sdist e Conda 0.1.0 foram construídos e inspecionados: o sdist preserva
+literalmente os 83 notebooks e seus dois índices; o wheel contém apenas o pacote.
+Os 16 controles dos artefatos instalados preservam os campos serial/spawn e
+encerram fatores e processos. Runtime Windows não foi executado; nada publicado.
+
+Recibo consolidado:
+`build/reports/completion/notebook-layout-final-readiness-v1.json`.
+
 ### Entrega reduzida autorizada em 3 de outubro
 
 O escopo corrente é uma entrega inicial **até hoje**, conforme a solicitação do
@@ -175,8 +371,8 @@ contém **31 grupos** de observações iniciais e o renderizador público gera
 `examples/results/minimal-convergence/catalogue.json`. As cinco comparações
 detalhadas selecionadas continuam em `docs/cases/index.md`.
 
-O notebook `notebooks/73_initial_convergence.ipynb` foi executado e validou os
-31 registros e as figuras; saída em `build/notebooks/73_initial_convergence.ipynb`.
+O notebook `notebooks/convergence/73_initial_convergence.ipynb` foi executado e validou os
+31 registros e as figuras; saída em `build/notebooks/convergence/73_initial_convergence.ipynb`.
 Reprodução somente dos gráficos:
 
 ```bash

@@ -16,9 +16,11 @@ from examples.transport_coefficient_controls import norm_contribution
 from examples.transport_face_resolution import local_bound
 from examples.transport_mixed_campaign import SOURCES, continuity_moments
 from examples.transport_trace_family import TransportTraceFamily
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.parallel import map_local
-from pymhm.scalar_adaptive import TransportBounds, estimate_transport_faces
+from pymhm.adaptivity.transport import TransportBounds, estimate_transport_faces
+from pymhm.execution.cpu import map_local
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/transport"
@@ -51,9 +53,11 @@ def acquire(refinement: int, workers: int) -> dict:
         "examples/transport_face_resolution.py",
         "examples/transport_coefficient_controls.py",
         "examples/unfitted_trace_family.py",
-        "src/pymhm/parallel.py",
+        "src/pymhm/execution/cpu.py",
     )
-    hashes = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in paths}
+    hashes = current_source_manifest(
+        {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in paths}
+    )
     backend = "process" if workers > 1 else "serial"
     with threadpool_limits(1):
         # All accepted adaptive knots lie on eighths; the exact injection checks this.

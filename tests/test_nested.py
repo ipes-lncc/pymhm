@@ -5,15 +5,15 @@ import pytest
 from numpy.testing import assert_allclose
 
 from pymhm import FaceSpace, HybridSystem, LocalProblem, SkeletonSpace
-from pymhm.elements import boundary_data
-from pymhm.nested import nest_hybrid_system, nested_trace_map
-from pymhm.quadrilateral import (
-    CartesianMacroMesh,
+from pymhm._legacy.models.darcy.cartesian import (
     _assemble_quad,
     _QuadTask,
-    qk_space,
     solve_darcy_quadrilateral,
 )
+from pymhm.core.nested import nest_hybrid_system, nested_trace_map
+from pymhm.fem.scalar.operators import boundary_data
+from pymhm.fem.scalar.quadrilateral import qk_space
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @pytest.mark.parametrize("natural", [False, True])

@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 from numpy.testing import assert_allclose
 
-from pymhm.tetrahedral import TetraMesh
+from pymhm.meshes.tetrahedron import TetraMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:

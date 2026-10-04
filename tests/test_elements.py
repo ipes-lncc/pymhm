@@ -5,26 +5,25 @@ from math import factorial
 import numpy as np
 import pytest
 
-from pymhm.elements import (
+from pymhm.fem.scalar.operators import (
     boundary_data,
     face_integration,
     p1_geometry,
     p1_operators,
     rt0_evaluate,
     rt0_operators,
-    scalar_values,
-    tensor_values,
     triangle_quadrature,
-    vector_values,
 )
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.materials.evaluation import scalar_values, tensor_values, vector_values
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("scale", [1.0, 1e-25])
 @pytest.mark.parametrize("partition", [(0.0, 1.0), (0.0, 0.17, 0.63, 1.0)])
 def test_boundary_volume_preserves_small_physical_dilatation(scale, partition):
     """The same trace moments retain true volume changes without a zero cutoff."""
-    from pymhm.elasticity import _boundary_volume_flux
+    from pymhm._legacy.models.elasticity.mixed_pressure import _boundary_volume_flux
 
     mesh = TriangleMesh.unit_square()
     face = FaceSpace(partition, (2,) * (len(partition) - 1))
@@ -36,7 +35,7 @@ def test_boundary_volume_preserves_small_physical_dilatation(scale, partition):
 
 def test_boundary_solenoidal_quadratic_has_no_artificial_volume_change():
     """Opposite constant moments cancel before finite bulk compliance amplifies them."""
-    from pymhm.elasticity import _boundary_volume_flux
+    from pymhm._legacy.models.elasticity.mixed_pressure import _boundary_volume_flux
 
     mesh = TriangleMesh.unit_square()
     skeleton = SkeletonSpace(mesh, tuple(FaceSpace.uniform(2) for _ in mesh.faces), components=2)

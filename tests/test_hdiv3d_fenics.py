@@ -6,7 +6,7 @@ from numpy.testing import assert_allclose
 from scipy.linalg import null_space
 from threadpoolctl import threadpool_limits
 
-from pymhm.hdiv3d_family import HDiv3DFamily, cell_quadrature
+from pymhm.fem.hdiv.family_3d import HDiv3DFamily, cell_quadrature
 
 pytestmark = pytest.mark.fem
 

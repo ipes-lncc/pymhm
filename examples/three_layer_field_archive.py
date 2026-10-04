@@ -16,13 +16,13 @@ from typing import Any
 import numpy as np
 from numpy.polynomial import Polynomial
 
-from pymhm import lagrange
-from pymhm.elasticity_primal import _KELVIN, constitutive_values
-from pymhm.elastodynamics import ElastodynamicLocal
-from pymhm.element_backends import orthogonal_polynomial_tabulation, simplex_lagrange_basis
-from pymhm.elements import p1_geometry
-from pymhm.lagrange import element_tabulate, multiindices
-from pymhm.maxwell_dg import physical_points, quadrature
+from pymhm._legacy.models.elasticity.primal import _KELVIN, constitutive_values
+from pymhm._legacy.models.waves.elastodynamics import ElastodynamicLocal
+from pymhm.fem.reference import orthogonal_polynomial_tabulation, simplex_lagrange_basis
+from pymhm.fem.scalar import triangle as lagrange
+from pymhm.fem.scalar.operators import p1_geometry
+from pymhm.fem.scalar.triangle import element_tabulate, multiindices
+from pymhm.fem.vector.curl import physical_points, quadrature
 
 SCHEMA = "pymhm-three-layer-basix-basis-v2"
 LEGACY_SCHEMA = "pymhm-three-layer-product-basis-v1"
@@ -262,9 +262,13 @@ def capture_field_basis(
             for path in (
                 Path(__file__),
                 Path(lagrange.__file__),
-                Path(__import__("pymhm.elements", fromlist=["__file__"]).__file__),
-                Path(__import__("pymhm.maxwell_dg", fromlist=["__file__"]).__file__),
-                Path(__import__("pymhm.elasticity_primal", fromlist=["__file__"]).__file__),
+                Path(__import__("pymhm.fem.scalar.operators", fromlist=["__file__"]).__file__),
+                Path(__import__("pymhm.fem.vector.curl", fromlist=["__file__"]).__file__),
+                Path(
+                    __import__(
+                        "pymhm._legacy.models.elasticity.primal", fromlist=["__file__"]
+                    ).__file__
+                ),
             )
         },
         arrays_sha256={key: array_digest(value) for key, value in arrays.items()},

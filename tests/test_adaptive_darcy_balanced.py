@@ -4,12 +4,12 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.adaptive_darcy import solve_adaptive_darcy
-from pymhm.adaptive_darcy_balanced import solve_balanced_adaptive_darcy
-from pymhm.cut_cells import fit_material_mesh
-from pymhm.darcy_local_error import estimate_darcy_local_refinement
-from pymhm.mesh import TriangleMesh
-from pymhm.reservoir import CartesianCellField
+from pymhm.adaptivity.darcy import solve_adaptive_darcy
+from pymhm.adaptivity.darcy_balanced import solve_balanced_adaptive_darcy
+from pymhm.estimators.darcy_local import estimate_darcy_local_refinement
+from pymhm.fem.quadrature.material import fit_material_mesh
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def oscillation(points):

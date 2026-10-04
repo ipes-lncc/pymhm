@@ -12,9 +12,10 @@ import numpy as np
 from matplotlib.ticker import NullLocator
 from threadpoolctl import threadpool_limits
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.reservoir import CartesianCellField
-from pymhm.weighted_estimator import estimate_weighted_darcy_error
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.estimators.darcy_energy import estimate_weighted_darcy_error
+from pymhm.materials.cartesian import CartesianCellField
 
 ROOT = Path(__file__).resolve().parents[1]
 

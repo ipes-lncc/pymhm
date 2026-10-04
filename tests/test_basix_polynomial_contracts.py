@@ -5,7 +5,7 @@ import pytest
 from numpy.polynomial.legendre import legder, legval, legvander
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm.element_backends import (
+from pymhm.fem.reference import (
     ReferenceElementSpec,
     barycentric_simplex_tabulation,
     create_reference_element,

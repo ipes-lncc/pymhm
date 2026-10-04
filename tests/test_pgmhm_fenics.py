@@ -6,9 +6,10 @@ from numpy.polynomial.legendre import leggauss, legvander
 from numpy.testing import assert_allclose
 from scipy.linalg import block_diag
 
-from pymhm.lagrange import nodal_space
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.pgmhm import solve_pgmhm
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.petrov_galerkin import solve_pgmhm
 
 pytestmark = pytest.mark.fem
 

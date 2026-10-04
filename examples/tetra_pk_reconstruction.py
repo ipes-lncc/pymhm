@@ -9,9 +9,11 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.reconstruction3d_data import fields
-from pymhm import TetraMesh, TriangularSkeleton, estimate_darcy_error_3d
-from pymhm.darcy3d import Darcy3DSolution
-from pymhm.hybrid import HybridSolution
+from pymhm import TetraMesh, TriangularSkeleton
+from pymhm._legacy.models.darcy.primal_3d import Darcy3DSolution
+from pymhm.core.contracts import HybridSolution
+from pymhm.estimators.darcy_3d import estimate_darcy_error_3d
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/tetra-pk"
@@ -31,19 +33,21 @@ def run() -> None:
     owners = [
         ROOT / f"src/pymhm/{name}.py"
         for name in (
-            "darcy3d",
-            "tetrahedral",
-            "tetra_lagrange",
-            "reconstruction3d",
-            "estimator3d",
-            "estimator_spaces",
-            "rt3d",
-            "hdiv3d_family",
-            "hdiv3d_mesh",
-            "solvers",
+            "_legacy/models/darcy/primal_3d",
+            "fem/scalar/tetrahedron",
+            "fem/scalar/tetrahedron_topology",
+            "recovery/moments_3d",
+            "estimators/darcy_3d",
+            "fem/conditions",
+            "fem/hdiv/rt_3d",
+            "fem/hdiv/family_3d",
+            "meshes/mixed",
+            "linalg/linear",
         )
     ] + [Path(__file__), ROOT / "examples/reconstruction3d_data.py"]
-    hashes = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    )
     snapshot = ROOT / "build/results/tetra-pk/acquisition-sources"
     snapshot.mkdir(parents=True, exist_ok=True)
     for owner in owners:
@@ -118,9 +122,9 @@ def run() -> None:
         elapsed_seconds=perf_counter() - started,
     )
     result.pop("errors_by_order")
-    if hashes != {
-        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners
-    }:
+    if hashes != current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    ):
         raise RuntimeError("reconstruction sources changed during acquisition")
     result["source_changed_during_run"] = False
     (OUTPUT / "reconstruction-order.json").write_text(json.dumps(result, indent=2) + "\n")

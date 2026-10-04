@@ -14,7 +14,7 @@ from plot_mesh import mark_macro_interfaces
 from plot_spe10_data import FIGURES, OUTPUT, data_grid, panel
 
 from pymhm import TriangleMesh
-from pymhm.visualization import broken_triangle_grid
+from pymhm.postprocessing.visualization import broken_triangle_grid
 
 
 def run(layer: int = 1) -> None:

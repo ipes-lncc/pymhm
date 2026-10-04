@@ -6,9 +6,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm import TriangleMesh, solve_darcy
-from pymhm.hybrid import HybridSystem
-from pymhm.lagrange import tabulate
+from pymhm import TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.core.system import HybridSystem
+from pymhm.fem.scalar.triangle import tabulate
 
 
 def pressure(points):
@@ -85,7 +86,7 @@ def test_zero_refinement_preserves_default_bitwise(monkeypatch, formulation):
         """Fail if an explicitly disabled refinement path is entered."""
         raise AssertionError("zero steps must bypass refinement")
 
-    monkeypatch.setattr("pymhm.darcy.refine_hybrid", forbidden)
+    monkeypatch.setattr("pymhm._legacy.models.darcy.primal.refine_hybrid", forbidden)
     current = solve_darcy(
         mesh, dirichlet=pressure, formulation=formulation, hybrid_refinement_steps=0
     )

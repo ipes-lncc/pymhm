@@ -3,21 +3,26 @@
 import numpy as np
 import pytest
 
-from pymhm.darcy3d import TriangularSkeleton, solve_darcy_3d
-from pymhm.rad3d import (
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from pymhm._legacy.models.transport.rad_3d import (
     _boundary_tangent_3d,
     solve_rad_3d,
     solve_rad_3d_conforming,
     tetra_rad_operators,
-    vector_values_3d,
 )
-from pymhm.tetra_lagrange import continuous_tetra_nodes, tetra_indices, tetra_polynomials
-from pymhm.tetrahedral import (
-    TetraMesh,
+from pymhm.fem.scalar.tetrahedron import (
     tetra_element_tabulate,
     tetra_nodal_space,
     tetrahedron_quadrature,
 )
+from pymhm.fem.scalar.tetrahedron_topology import (
+    continuous_tetra_nodes,
+    tetra_indices,
+    tetra_polynomials,
+)
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.materials.evaluation import vector_values_3d
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 def affine(points):

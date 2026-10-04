@@ -11,12 +11,11 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.reconstruction3d_data import fields
-from pymhm import (
-    TetraMesh,
-    estimate_darcy_error_3d,
-    solve_adaptive_darcy_3d,
-    solve_darcy_3d,
-)
+from pymhm import TetraMesh
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from pymhm.adaptivity.darcy_3d import solve_adaptive_darcy_3d
+from pymhm.estimators.darcy_3d import estimate_darcy_error_3d
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/reconstruction3d"
@@ -27,23 +26,25 @@ def run(suite: str) -> None:
     OUTPUT.mkdir(parents=True, exist_ok=True)
     localized = suite == "adaptive"
     modules = [
-        "reconstruction3d",
-        "estimator3d",
-        "estimator_spaces",
-        "rt3d",
-        "darcy3d",
-        "refinement3d",
-        "adaptive_darcy3d",
-        "tetrahedral",
-        "tetra_lagrange",
-        "hybrid",
-        "solvers",
+        "recovery/moments_3d",
+        "estimators/darcy_3d",
+        "fem/conditions",
+        "fem/hdiv/rt_3d",
+        "_legacy/models/darcy/primal_3d",
+        "meshes/refinement_3d",
+        "adaptivity/darcy_3d",
+        "fem/scalar/tetrahedron",
+        "fem/scalar/tetrahedron_topology",
+        "core/contracts",
+        "linalg/linear",
     ]
     owners = [ROOT / f"src/pymhm/{name}.py" for name in modules] + [
         Path(__file__),
         ROOT / "examples/reconstruction3d_data.py",
     ]
-    hashes = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    )
     report: dict[str, Any] = dict(
         suite=suite,
         reference="analytical",
@@ -184,9 +185,9 @@ def run(suite: str) -> None:
             solution = solve_darcy_3d(TetraMesh.unit_cube(n), **options)
             estimate = estimate_darcy_error_3d(solution, quadrature_order=12)
             capture(n, solution, estimate)
-    if hashes != {
-        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners
-    }:
+    if hashes != current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    ):
         raise RuntimeError("campaign sources changed during acquisition")
     report["source_changed_during_run"] = False
     (OUTPUT / f"{suite}.json").write_text(json.dumps(report, indent=2) + "\n")

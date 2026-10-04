@@ -25,10 +25,12 @@ from examples.mh2m_campaign_contracts import verify_difference_result as verify_
 from examples.mh2m_crisscross_norms import CrossedP1, common_triangles
 from examples.mh2m_heterogeneous import OscillatoryCoefficient, load_field, source_hashes
 from examples.mh2m_heterogeneous_norms import difference
-from pymhm.crisscross import crisscross_submesh
-from pymhm.darcy import solve_darcy
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.mh2m import PressureTraceSpace, solve_mh2m
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.crisscross import crisscross_submesh
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.three_field import PressureTraceSpace, solve_mh2m
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -63,12 +65,12 @@ def hashes() -> dict[str, str]:
     for name in (
         "examples/mh2m_crisscross_campaign.py",
         "examples/mh2m_crisscross_norms.py",
-        "src/pymhm/crisscross.py",
-        "src/pymhm/refinement.py",
-        "src/pymhm/_geometry_roundoff.py",
+        "src/pymhm/meshes/crisscross.py",
+        "src/pymhm/meshes/refinement.py",
+        "src/pymhm/meshes/roundoff.py",
     ):
         result[name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
-    return result
+    return current_source_manifest(result)
 
 
 def acquire(name: str, method: str, n: int, r: int, gamma: int, flux: int, output: Path) -> dict:

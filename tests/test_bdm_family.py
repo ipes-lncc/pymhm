@@ -6,10 +6,10 @@ from numpy.polynomial.legendre import leggauss, legvander
 from numpy.testing import assert_allclose
 
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.bdm import bdm2_basis, bdm2_dofs, bdm2_trace_map
-from pymhm.bdm_family import BDMFamily
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import reference_basis
+from pymhm.fem.hdiv.bdm import bdm2_basis, bdm2_dofs, bdm2_trace_map
+from pymhm.fem.hdiv.bdm_family import BDMFamily
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import reference_basis
 
 
 @pytest.mark.parametrize(

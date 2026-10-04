@@ -7,10 +7,10 @@ from numpy.testing import assert_allclose, assert_array_equal
 from examples.helmholtz_compact_family import CompactFamily
 from examples.helmholtz_response_store import ResponseStore
 from examples.helmholtz_trace_family import restrict_helmholtz_trace
-from pymhm.helmholtz import _HelmholtzFactory, solve_helmholtz
-from pymhm.helmholtz_spaces import helmholtz_skeleton
-from pymhm.loads import split_point_sources
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.waves.helmholtz import _HelmholtzFactory, solve_helmholtz
+from pymhm.fem.loads import split_point_sources
+from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 def constant_callback(points, normals):
@@ -138,7 +138,7 @@ def test_constant_projection_uses_executed_oscillatory_coordinates():
 def test_declared_degree_and_oriented_segment_pullback(coefficients):
     """Match prescribed scalar, affine and quadratic traces with direct low-degree solves."""
     from pymhm import PolynomialNeumannTrace
-    from pymhm.mesh import FaceSpace, SkeletonSpace
+    from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 
     data = PolynomialNeumannTrace(coefficients)
     mesh = CartesianMacroMesh(2, 1, (-0.7, 1.2, 0.3, 1.9))
@@ -253,8 +253,8 @@ def test_declared_neumann_validation_rejects_invalid_parameter(points):
 def test_declared_trace_continuous_nodes_and_constant_oscillatory_basis():
     """Retain exact span contracts in both ordinary nodal and oscillatory bases."""
     from pymhm import PolynomialNeumannTrace
-    from pymhm.helmholtz_spaces import OscillatoryFaceSpace
-    from pymhm.mesh import FaceSpace
+    from pymhm.fem.traces.helmholtz import OscillatoryFaceSpace
+    from pymhm.fem.traces.interval import FaceSpace
 
     data = PolynomialNeumannTrace((0.2 + 0.1j, -0.3, 0j, 0j))
     assert len(data.coefficients) == 2

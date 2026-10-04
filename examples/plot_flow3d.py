@@ -17,7 +17,8 @@ from matplotlib.colors import Normalize, TwoSlopeNorm
 from plot_darcy3d import slice_polygon
 from plot_style import set_refinement_ticks
 
-from pymhm.tetrahedral import TetraMesh, tetra_basis, tetra_nodal_space
+from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
+from pymhm.meshes.tetrahedron import TetraMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 LABELS = {

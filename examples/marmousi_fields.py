@@ -18,11 +18,11 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from examples.campaign_provenance import file_digest
 from examples.marmousi_data import load_marmousi_crop
 from examples.marmousi_records import checked_reference
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import multiindices, reference_basis
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import multiindices, reference_basis
+from pymhm.io.provenance import current_source_manifest, file_digest
 
 
 @dataclass(frozen=True)
@@ -371,7 +371,9 @@ def main() -> None:
         Path(__file__).with_name("marmousi_records.py"),
         *sorted((root / "src/pymhm").rglob("*.py")),
     ]
-    hashes = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+    hashes = current_source_manifest(
+        {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+    )
     x, y = np.meshgrid(np.linspace(0, 10240, 513), np.linspace(0, 2560, 129), indexing="ij")
     points = np.column_stack((x.ravel(), y.ravel()))
     rows = []
@@ -460,10 +462,12 @@ def main() -> None:
                 "graph_norm": "Integral rho^-1 |grad p|^2 + omega^2 kappa^-1 |p|^2",
                 "source_sha256": hashes,
                 "source_changed_during_run": hashes
-                != {
-                    str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
-                    for p in sources
-                },
+                != current_source_manifest(
+                    {
+                        str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
+                        for p in sources
+                    }
+                ),
             }
             if result["source_changed_during_run"]:
                 raise RuntimeError("reference postprocessing sources changed during evaluation")

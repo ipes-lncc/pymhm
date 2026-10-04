@@ -12,6 +12,8 @@ from uuid import uuid4
 
 import matplotlib
 
+from pymhm.io.provenance import current_source_manifest
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
@@ -19,15 +21,17 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.archive_precision import precision_fields
-from examples.campaign_provenance import file_digest, positive_integers
+from examples.campaign_provenance import positive_integers
 from examples.local_response_cache import array_identity
 from examples.mshho_field_archive import attach_mhm, field_arrays, replay, write_field
 from examples.plot_mesh import draw_macro_mesh
 from examples.transport_checkpoints import write_progress
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.lagrange import tabulate
-from pymhm.mshho import solve_mshho
-from pymhm.solvers import LinearSolveError
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.scalar.triangle import tabulate
+from pymhm.io.provenance import file_digest
+from pymhm.linalg.linear import LinearSolveError
+from pymhm.methods.hho import solve_mshho
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -76,7 +80,9 @@ def main() -> None:
             "examples/plot_mesh.py",
         )
     ]
-    sources = {str(path.relative_to(ROOT)): file_digest(path) for path in files}
+    sources = current_source_manifest(
+        {str(path.relative_to(ROOT)): file_digest(path) for path in files}
+    )
     args.output.mkdir(parents=True)
     for name in sources:
         destination = args.output / "executed_sources" / name

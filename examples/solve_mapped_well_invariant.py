@@ -18,8 +18,10 @@ from scipy import sparse
 from threadpoolctl import threadpool_limits
 
 from examples.solve_mapped_oscillatory_well import OUTPUT, ROOT, OscillatoryWellData
-from pymhm.mapped_rt import HexMesh, _geometry, cube_quadrature, mapped_rt_basis
-from pymhm.solvers import factorize
+from pymhm.fem.hdiv.mapped import mapped_rt_basis
+from pymhm.io.provenance import current_source_manifest
+from pymhm.linalg.linear import factorize
+from pymhm.meshes.hexahedron import HexMesh, _geometry, cube_quadrature
 
 FLUX_MODES = np.array([0, 2, 4, 6, 8, 10, 12, 14, 24, 26, 28, 30])
 PRESSURE_MODES = np.array([0, 2, 4, 6])
@@ -204,12 +206,15 @@ def main() -> None:
         Path(__file__),
         ROOT / "examples/solve_mapped_oscillatory_well.py",
         ROOT / "examples/solve_mapped_well.py",
-        ROOT / "src/pymhm/mapped_rt.py",
-        ROOT / "src/pymhm/solvers.py",
+        ROOT / "src/pymhm/_legacy/models/darcy/mapped.py",
+        ROOT / "src/pymhm/linalg/linear.py",
     ]
-    hashes = {
-        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
-    }
+    hashes = current_source_manifest(
+        {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in paths
+        }
+    )
     snapshots = ROOT / "build/source-snapshots/mapped-well-oscillatory"
     snapshots.mkdir(parents=True, exist_ok=True)
     for path in paths:

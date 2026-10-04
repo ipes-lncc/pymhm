@@ -9,7 +9,7 @@ import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
 from pymhm import FaceSpace, SkeletonSpace
-from pymhm.lagrange import trace_coupling
+from pymhm.fem.scalar.triangle import trace_coupling
 
 
 @pytest.fixture

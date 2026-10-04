@@ -11,8 +11,9 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy_rt import solve_darcy_rt, solve_darcy_rt_conforming
-from pymhm.mesh import TriangleMesh
+from pymhm._legacy.models.darcy.mixed_rt import solve_darcy_rt, solve_darcy_rt_conforming
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -47,20 +48,20 @@ def main() -> None:
     paths = [
         Path(__file__),
         *(
-            ROOT / "src/pymhm" / name
+            ROOT / f"src/pymhm/{name}"
             for name in (
-                "darcy_rt.py",
-                "rt.py",
-                "hybrid.py",
-                "solvers.py",
-                "mesh.py",
-                "elements.py",
-                "cut_cells.py",
-                "lagrange.py",
+                "_legacy/models/darcy/mixed_rt.py",
+                "fem/hdiv/rt.py",
+                "core/contracts.py",
+                "linalg/linear.py",
+                "meshes/triangle.py",
+                "fem/scalar/operators.py",
+                "fem/quadrature/material.py",
+                "fem/scalar/triangle.py",
             )
         ),
     ]
-    hashes = {str(p.relative_to(ROOT)): digest(p) for p in paths}
+    hashes = current_source_manifest({str(p.relative_to(ROOT)): digest(p) for p in paths})
     rows = []
     with threadpool_limits(limits=1):
         for degree in (0, 1, 2):

@@ -5,11 +5,12 @@ import pytest
 from numpy.testing import assert_allclose
 from scipy import linalg, sparse
 
-from pymhm.elastodynamics import ElastodynamicStepper, solve_elastodynamics
-from pymhm.mesh import SkeletonSpace, TriangleMesh
-from pymhm.planar_material import PlanarMaterial, PlanarRegion
-from pymhm.solvers import LinearSolveError
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.waves.elastodynamics import ElastodynamicStepper, solve_elastodynamics
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.linalg.linear import LinearSolveError
+from pymhm.materials.planar import PlanarMaterial, PlanarRegion
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("backend", ["thread", "process"])

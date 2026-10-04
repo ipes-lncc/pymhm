@@ -5,9 +5,9 @@ import pytest
 
 from examples.transport_campaign import layer
 from examples.transport_coefficient_controls import norm_contribution, norm_contributions
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import tabulate
-from pymhm.mesh import TriangleMesh
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import tabulate
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("epsilon", [0.1, 1.0])

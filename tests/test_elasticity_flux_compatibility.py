@@ -4,16 +4,16 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.elasticity import solve_displacement_pressure
-from pymhm.elasticity_compatibility import require_compatible_displacement_flux
-from pymhm.elasticity_mixed import solve_elasticity_mixed
-from pymhm.elasticity_mixed3d import solve_elasticity_mixed_3d
-from pymhm.elasticity_tensor_rt import solve_elasticity_tensor_rt
-from pymhm.gals3d import solve_elasticity_gals_3d
-from pymhm.hdiv3d_mesh import AffineMixedMesh
-from pymhm.mesh import TriangleMesh
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.elasticity.boundary import require_compatible_displacement_flux
+from pymhm._legacy.models.elasticity.mixed_pressure import solve_displacement_pressure
+from pymhm._legacy.models.elasticity.mixed_pressure_3d import solve_elasticity_gals_3d
+from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
+from pymhm._legacy.models.elasticity.stress_3d import solve_elasticity_mixed_3d
+from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
+from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.meshes.mixed import AffineMixedMesh
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("scale", [1e-20, 1.0, 1e20])

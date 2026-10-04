@@ -7,8 +7,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.mesh import TriangleMesh
-from pymhm.metric_adapt import remesh_freefem, residual_mesh_size
+from pymhm.adaptivity.metric import remesh_freefem, residual_mesh_size
+from pymhm.meshes.triangle import TriangleMesh
 
 PROGRAM = (
     os.environ.get("PYMHM_FREEFEM") or shutil.which("FreeFem++-nw") or shutil.which("FreeFem++")

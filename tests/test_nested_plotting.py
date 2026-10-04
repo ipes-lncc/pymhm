@@ -37,7 +37,7 @@ def test_fresh_producer_source_identity_is_not_retagged_as_previous_snapshot(tmp
     output.mkdir()
     archive = folder / "n4-homogeneous.npz"
     archive.write_bytes(b"executed archive")
-    sources = {"src/pymhm/nested.py": "fresh-source-digest"}
+    sources = {"src/pymhm/core/nested.py": "fresh-source-digest"}
     record = dict(
         schema=2,
         rows=[
@@ -72,7 +72,7 @@ def test_fresh_producer_source_identity_is_not_retagged_as_previous_snapshot(tmp
     assert provenance["numerical_source_identity_sha256"] == expected
     assert provenance["acquisition_uuid"] == "fresh"
     assert provenance["actual_display_digests"] == {"points": "saved"}
-    record["rows"][0]["source_sha256"] = {"src/pymhm/nested.py": "changed"}
+    record["rows"][0]["source_sha256"] = {"src/pymhm/core/nested.py": "changed"}
     record_path.write_text(json.dumps(record))
     with pytest.raises(ValueError, match="unchanged executed source"):
         plotting.render(record_path, output)

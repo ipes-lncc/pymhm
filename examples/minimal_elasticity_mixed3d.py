@@ -26,9 +26,9 @@ from examples.minimal_flow_originals import (
     write_record,
 )
 from examples.mixed_elasticity3d_data import SolenoidalElasticity3D
-from pymhm.elasticity_mixed3d import solve_elasticity_mixed_3d
-from pymhm.hdiv3d_family import cell_quadrature
-from pymhm.hdiv3d_mesh import AffineMixedMesh
+from pymhm._legacy.models.elasticity.stress_3d import solve_elasticity_mixed_3d
+from pymhm.fem.hdiv.family_3d import cell_quadrature
+from pymhm.meshes.mixed import AffineMixedMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 

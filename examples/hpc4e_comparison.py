@@ -14,7 +14,7 @@ from pathlib import Path
 
 import numpy as np
 
-from pymhm.quadrilateral import quadrilateral_quadrature
+from pymhm.fem.scalar.quadrilateral import quadrilateral_quadrature
 
 if __package__:
     from .hpc4e_data import DATA_DIRECTORY, HPC4EData, load_data

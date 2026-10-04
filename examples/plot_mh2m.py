@@ -17,7 +17,7 @@ from matplotlib.ticker import MaxNLocator
 from examples.mh2m_campaign import _owners, exact, oscillatory
 from examples.plot_mesh import draw_macro_mesh
 from examples.plot_style import set_refinement_ticks
-from pymhm.mesh import TriangleMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "examples/results/mh2m"

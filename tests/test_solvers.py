@@ -10,8 +10,11 @@ import pytest
 from numpy.testing import assert_allclose
 from scipy import sparse
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_brinkman, solve_darcy, solvers
-from pymhm.solvers import LinearSolveError, SolverUnavailableError, factorize, solve_linear
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm._legacy.models.vector import solve_brinkman
+from pymhm.linalg import linear as solvers
+from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError, factorize, solve_linear
 
 
 @pytest.mark.parametrize("solver", ["scipy", "cg", "minres", "gmres"])

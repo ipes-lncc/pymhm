@@ -50,8 +50,9 @@ does not establish those estimates.
 
 ```python
 import numpy as np
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.reconstruction_moments import reconstruct_darcy_moments
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.recovery.moments import reconstruct_darcy_moments
 
 mesh = TriangleMesh.unit_square(4)
 skeleton = SkeletonSpace(mesh, tuple(FaceSpace.uniform(1) for _ in mesh.faces))

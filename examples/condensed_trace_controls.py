@@ -12,10 +12,11 @@ from dataclasses import replace
 import numpy as np
 from scipy import sparse
 
-from pymhm.hybrid import HybridSolution, HybridSystem
-from pymhm.mesh import SkeletonSpace
-from pymhm.pgmhm import PGMHMSolution
-from pymhm.solvers import solve_linear
+from pymhm.core.contracts import HybridSolution
+from pymhm.core.system import HybridSystem
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.linalg.linear import solve_linear
+from pymhm.methods.petrov_galerkin import PGMHMSolution
 
 
 def p0_injection(coarse: SkeletonSpace, fine: SkeletonSpace) -> sparse.csr_matrix:

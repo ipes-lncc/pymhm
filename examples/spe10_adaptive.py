@@ -14,10 +14,11 @@ from threadpoolctl import threadpool_limits
 
 import pymhm
 from examples.solve_spe10 import load_layer, pressure_boundary
-from pymhm.cut_cells import material_triangle_quadrature
-from pymhm.darcy_rt import pressure_basis, solve_darcy_rt_conforming
-from pymhm.mesh import TriangleMesh
-from pymhm.rt import RTField
+from pymhm._legacy.models.darcy.mixed_rt import pressure_basis, solve_darcy_rt_conforming
+from pymhm.fem.hdiv.rt import RTField
+from pymhm.fem.quadrature.material import material_triangle_quadrature
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/spe10-adaptive"
@@ -48,21 +49,23 @@ def hashes() -> dict[str, str]:
     names = [
         f"src/pymhm/{name}.py"
         for name in (
-            "darcy_rt",
-            "rt",
-            "cut_cells",
-            "solvers",
-            "mesh",
-            "reservoir",
-            "darcy",
-            "adaptive_darcy",
-            "refinement",
-            "weighted_estimator",
-            "reconstruction_moments",
+            "_legacy/models/darcy/mixed_rt",
+            "fem/hdiv/rt",
+            "fem/quadrature/material",
+            "linalg/linear",
+            "meshes/triangle",
+            "io/reservoir",
+            "_legacy/models/darcy/primal",
+            "adaptivity/darcy",
+            "meshes/refinement",
+            "estimators/darcy_energy",
+            "recovery/moments",
         )
     ]
     names += ["examples/spe10_adaptive.py", "examples/results/spe10/layer-36.npz"]
-    return {name: hashlib.sha256(source_path(name).read_bytes()).hexdigest() for name in names}
+    return current_source_manifest(
+        {name: hashlib.sha256(source_path(name).read_bytes()).hexdigest() for name in names}
+    )
 
 
 class StructuredRT:

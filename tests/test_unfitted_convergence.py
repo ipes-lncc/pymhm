@@ -16,7 +16,7 @@ from examples.unfitted_convergence import (
     smooth_source,
 )
 from examples.unfitted_trace_family import ScalarTraceFamily
-from pymhm.mesh import TriangleMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def test_distinct_pressure_gradient_flux_and_energy_norms_have_analytic_values():

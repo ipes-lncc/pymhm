@@ -4,12 +4,14 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.cut_cells import fit_material_mesh
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.pgmhm import solve_pgmhm
-from pymhm.polygon import PolygonMesh, solve_darcy_polygons
-from pymhm.refinement import validate_submesh
-from pymhm.reservoir import CartesianCellField
+from pymhm._legacy.models.geometry import solve_darcy_polygons
+from pymhm.fem.quadrature.material import fit_material_mesh
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.polygonal import PolygonMesh
+from pymhm.meshes.refinement import validate_submesh
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.petrov_galerkin import solve_pgmhm
 
 
 def l_macro(shift=(0.0, 0.0)):

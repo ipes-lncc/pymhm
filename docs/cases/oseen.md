@@ -105,7 +105,7 @@ limit and returns a distinct stop reason.
 ```python
 import numpy as np
 from pymhm import TriangleMesh
-from pymhm.flow_adaptive import adapt_flow
+from pymhm.adaptivity.flow import adapt_flow
 
 result = adapt_flow(
     TriangleMesh.unit_square(2),

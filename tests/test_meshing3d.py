@@ -5,9 +5,9 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from pymhm import meshing3d
-from pymhm.meshing3d import TetraMeshData, read_tetra_mesh, write_tetra_mesh
-from pymhm.tetrahedral import TetraMesh
+from pymhm.io import tetrahedral as meshing3d
+from pymhm.io.tetrahedral import TetraMeshData, read_tetra_mesh, write_tetra_mesh
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 def mesh():

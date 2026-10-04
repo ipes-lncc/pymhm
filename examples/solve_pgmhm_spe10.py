@@ -26,13 +26,15 @@ from examples.field_sampling import local_values
 from examples.pgmhm_campaign import diagnostics
 from examples.spe10_adaptive import DOMAIN, ROOT, StructuredRT, mesh_rectangle, natural_faces
 from examples.spe10_adaptive_norms import overlay_quadrature
-from pymhm.cut_cells import fit_material_faces, fit_material_mesh
-from pymhm.darcy_rt import solve_darcy_rt_conforming
-from pymhm.elements import p1_geometry, triangle_quadrature
-from pymhm.lagrange import nodal_space, reference_basis
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.pgmhm import solve_pgmhm
-from pymhm.reservoir import CartesianCellField
+from pymhm._legacy.models.darcy.mixed_rt import solve_darcy_rt_conforming
+from pymhm.fem.quadrature.material import fit_material_faces, fit_material_mesh
+from pymhm.fem.scalar.operators import p1_geometry, triangle_quadrature
+from pymhm.fem.scalar.triangle import nodal_space, reference_basis
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.petrov_galerkin import solve_pgmhm
 
 OUTPUT = ROOT / "examples/results/pgmhm-spe10"
 
@@ -65,19 +67,19 @@ def fingerprint() -> dict[str, str]:
     names = [
         f"src/pymhm/{name}.py"
         for name in (
-            "pgmhm",
-            "darcy",
-            "darcy_rt",
-            "rt",
-            "mh",
-            "lagrange",
-            "cut_cells",
-            "elements",
-            "hybrid",
-            "solvers",
-            "mesh",
-            "reservoir",
-            "scalar_boundary",
+            "methods/petrov_galerkin",
+            "_legacy/models/darcy/primal",
+            "_legacy/models/darcy/mixed_rt",
+            "fem/hdiv/rt",
+            "methods/robin",
+            "fem/scalar/triangle",
+            "fem/quadrature/material",
+            "fem/scalar/operators",
+            "core/contracts",
+            "linalg/linear",
+            "meshes/triangle",
+            "io/reservoir",
+            "fem/traces/scalar",
         )
     ]
     names += [
@@ -87,7 +89,9 @@ def fingerprint() -> dict[str, str]:
         "examples/archive_precision.py",
         "examples/results/spe10/layer-1.npz",
     ]
-    return {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    return current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    )
 
 
 def write_record(path: Path, row: dict[str, Any], hashes: dict[str, str]) -> None:

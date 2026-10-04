@@ -7,7 +7,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.flow_adaptive import _aligned_refinement, adapt_flow, mark_flow_faces
+from pymhm.adaptivity.flow import _aligned_refinement, adapt_flow, mark_flow_faces
 
 
 def test_adaptive_pressure_problem_reduces_error_and_refines_only_selected_faces() -> None:

@@ -151,7 +151,7 @@ def main() -> None:
         ]
     )
     smoke = (
-        "import numpy as np; from pymhm.solvers import solve_linear; "
+        "import numpy as np; from pymhm.linalg.linear import solve_linear; "
         "from scipy.sparse import diags; "
         "a=diags([-np.ones(99),2*np.ones(100),-np.ones(99)],[-1,0,1]); "
         "x=solve_linear(a,np.ones(100),solver='amgx'); "

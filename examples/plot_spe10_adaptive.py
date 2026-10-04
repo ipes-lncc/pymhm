@@ -20,9 +20,9 @@ from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro
 from examples.plot_style import set_refinement_ticks
 from examples.spe10_adaptive import DATA, DOMAIN, ROOT, StructuredRT
 from examples.spe10_adaptive_norms import BrokenP2
-from pymhm.cut_cells import fit_material_mesh
-from pymhm.darcy_rt import pressure_basis
-from pymhm.mesh import TriangleMesh
+from pymhm._legacy.models.darcy.mixed_rt import pressure_basis
+from pymhm.fem.quadrature.material import fit_material_mesh
+from pymhm.meshes.triangle import TriangleMesh
 
 FIGURES = ROOT / "docs/figures/spe10-adaptive"
 

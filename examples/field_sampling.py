@@ -7,7 +7,7 @@ from typing import Any
 import numpy as np
 
 from pymhm import TriangleMesh
-from pymhm.lagrange import nodal_space, reference_basis, tabulate
+from pymhm.fem.scalar.triangle import nodal_space, reference_basis, tabulate
 
 
 def sample_field(

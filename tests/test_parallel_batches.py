@@ -16,8 +16,8 @@ import numpy as np
 import pytest
 from threadpoolctl import threadpool_info
 
-from pymhm import parallel
-from pymhm.parallel import ExecutionConfig, iter_local, map_local
+from pymhm.execution import cpu as parallel
+from pymhm.execution.cpu import ExecutionConfig, iter_local, map_local
 
 Backend = Literal["serial", "thread", "process"]
 

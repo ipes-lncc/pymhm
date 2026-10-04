@@ -18,6 +18,7 @@ from examples.compare_unusual_spe10 import overlay_quadrature
 from examples.pgmhm_inclusion_data import axis
 from examples.solve_pgmhm_inclusions_reference import InclusionField, load_field
 from examples.solve_unusual_spe10_reference import CG2Field
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 _DATA: tuple[InclusionField, InclusionField, np.ndarray, np.ndarray, np.ndarray] | None = None
@@ -120,9 +121,11 @@ def acquire(reference: Path, previous: Path, output: Path, workers: int = 4) -> 
         ROOT / "examples/solve_unusual_spe10_reference.py",
         ROOT / "examples/pgmhm_inclusion_data.py",
         ROOT / "examples/spe10_adaptive_norms.py",
-        ROOT / "src/pymhm/elements.py",
+        ROOT / "src/pymhm/fem/scalar/operators.py",
     ]
-    hashes = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+    hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+    )
     record = dict(
         reference=reference.name,
         reference_sha256=hashlib.sha256(reference.read_bytes()).hexdigest(),
@@ -161,9 +164,9 @@ def acquire(reference: Path, previous: Path, output: Path, workers: int = 4) -> 
                 }
             )
         record["rows"].append(row)
-        record["source_changed_during_run"] = hashes != {
-            str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths
-        }
+        record["source_changed_during_run"] = hashes != current_source_manifest(
+            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+        )
         if record["source_changed_during_run"]:
             raise RuntimeError("reference comparison sources changed during integration")
         output.parent.mkdir(parents=True, exist_ok=True)

@@ -4,22 +4,23 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.darcy_mixed import _evaluate, solve_darcy_bdm
-from pymhm.darcy_rt import solve_darcy_rt, solve_darcy_rt_conforming
-from pymhm.darcy_transport import HydrodynamicDispersion, solve_darcy_transport
-from pymhm.darcy_velocity import (
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.mixed_bdm import _evaluate, solve_darcy_bdm
+from pymhm._legacy.models.darcy.mixed_rt import solve_darcy_rt, solve_darcy_rt_conforming
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm._legacy.models.darcy.velocity import (
     PolynomialDarcyVelocity,
     PrimalDarcyVelocity,
     polynomial_darcy_velocity,
 )
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import multiindices, nodal_space
-from pymhm.reconstruction_moments import reconstruct_flux_moments
-from pymhm.reservoir import CartesianCellField
-from pymhm.rt import rt_evaluate
-from pymhm.scalar_boundary import diffusive_boundary_matrix
-from pymhm.scalar_transient import MacroCoefficient, solve_transient_transport
+from pymhm._legacy.models.transport.dispersion import HydrodynamicDispersion, solve_darcy_transport
+from pymhm._legacy.models.transport.transient import MacroCoefficient, solve_transient_transport
+from pymhm.fem.hdiv.rt import rt_evaluate
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import multiindices, nodal_space
+from pymhm.fem.traces.scalar import diffusive_boundary_matrix
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.recovery.moments import reconstruct_flux_moments
 
 
 def _pressure(x):

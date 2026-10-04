@@ -5,8 +5,8 @@ import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
 from examples.local_response_cache import ExactResponseCache, array_identity, operator_identity
-from pymhm.hybrid import LocalProblem
-from pymhm.solvers import LinearSolveError
+from pymhm.core.contracts import LocalProblem
+from pymhm.linalg.linear import LinearSolveError
 
 
 def problem(kind="plain", load=None, dofs=(0, 1), **kwargs):

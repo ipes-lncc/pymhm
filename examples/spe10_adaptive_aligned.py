@@ -22,7 +22,7 @@ from examples.spe10_adaptive import (
     natural_faces,
     reference_integrals,
 )
-from pymhm.darcy_rt import solve_darcy_rt_conforming
+from pymhm._legacy.models.darcy.mixed_rt import solve_darcy_rt_conforming
 
 
 def peak_resident_memory_kib() -> int | None:

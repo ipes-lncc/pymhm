@@ -6,11 +6,12 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_brinkman
-from pymhm.cut_cells import cartesian_triangle_quadrature
-from pymhm.elements import triangle_quadrature
-from pymhm.flow import _flow_local
-from pymhm.reservoir import CartesianCellField
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.flow.solver import _flow_local
+from pymhm._legacy.models.vector import solve_brinkman
+from pymhm.fem.quadrature.material import cartesian_triangle_quadrature
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.materials.cartesian import CartesianCellField
 
 
 def triangle():

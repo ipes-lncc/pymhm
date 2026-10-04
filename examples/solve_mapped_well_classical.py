@@ -12,7 +12,9 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.solve_mapped_oscillatory_well import OUTPUT, ROOT, OscillatoryWellData
-from pymhm.mapped_rt import HexMesh, cube_quadrature, solve_darcy_mapped_rt
+from pymhm._legacy.models.darcy.mapped import solve_darcy_mapped_rt
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.hexahedron import HexMesh, cube_quadrature
 
 
 def main() -> None:
@@ -43,11 +45,13 @@ def main() -> None:
         Path(__file__),
         ROOT / "examples/solve_mapped_oscillatory_well.py",
         ROOT / "examples/solve_mapped_well.py",
-        ROOT / "src/pymhm/mapped_rt.py",
-        ROOT / "src/pymhm/solvers.py",
-        ROOT / "src/pymhm/hybrid.py",
+        ROOT / "src/pymhm/_legacy/models/darcy/mapped.py",
+        ROOT / "src/pymhm/linalg/linear.py",
+        ROOT / "src/pymhm/core/contracts.py",
     ]
-    hashes = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+    hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+    )
     snapshot = ROOT / "build/source-snapshots/mapped-well-oscillatory"
     snapshot.mkdir(parents=True, exist_ok=True)
     for p in sources:

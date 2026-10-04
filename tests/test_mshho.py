@@ -4,8 +4,9 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.mshho import solve_mshho
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.methods.hho import solve_mshho
 
 
 @pytest.mark.parametrize("face_degree,cell_degree", [(0, 0), (1, 0), (1, 1)])

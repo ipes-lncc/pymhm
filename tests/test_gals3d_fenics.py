@@ -5,9 +5,10 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.fenics import from_ufl
-from pymhm.gals3d_forms import tetra_elasticity_pressure_operators
-from pymhm.tetrahedral import TetraMesh, tetra_nodal_space, tetrahedron_quadrature
+from pymhm._legacy.models.elasticity.pressure_forms_3d import tetra_elasticity_pressure_operators
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space, tetrahedron_quadrature
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 @pytest.mark.fem

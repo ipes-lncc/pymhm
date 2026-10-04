@@ -9,7 +9,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 from pymhm import TriangleMesh
-from pymhm.lagrange import nodal_space
+from pymhm.fem.scalar.triangle import nodal_space
 
 
 @pytest.mark.parametrize("degree", [1, 2, 3, 4])

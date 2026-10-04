@@ -13,15 +13,15 @@ import pyvista as pv
 from plot_pyvista_layout import horizontal_color_scale
 
 from pymhm import TriangleMesh
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.reservoir import (
+from pymhm.io.datasets.spe10 import (
     SPE10_FILES,
     SPE10_REVISION,
-    ReservoirData,
     download_spe10_model2,
     load_spe10_model2,
 )
-from pymhm.visualization import macro_edges, structured_cell_grid
+from pymhm.io.reservoir import ReservoirData
+from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.postprocessing.visualization import macro_edges, structured_cell_grid
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/spe10"

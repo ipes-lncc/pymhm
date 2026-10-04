@@ -9,8 +9,12 @@ from scipy.spatial import cKDTree
 from threadpoolctl import threadpool_limits
 
 from pymhm import PolygonMesh, PolyhedralMesh
-from pymhm.polyhedral_rad import PolygonalSkeleton3D, polygonal_trace_coupling, solve_polyhedral_rad
-from pymhm.tetrahedral import tetra_nodal_space, tetra_operators
+from pymhm._legacy.models.transport.polyhedral import (
+    PolygonalSkeleton3D,
+    polygonal_trace_coupling,
+    solve_polyhedral_rad,
+)
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space, tetra_operators
 
 pytestmark = pytest.mark.fem
 

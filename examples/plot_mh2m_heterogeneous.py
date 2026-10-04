@@ -22,7 +22,7 @@ from matplotlib.colors import AsinhNorm, Normalize
 from examples.mh2m_heterogeneous import OscillatoryCoefficient, load_field
 from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from examples.plot_style import set_refinement_ticks
-from pymhm.mesh import TriangleMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 

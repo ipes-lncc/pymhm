@@ -17,8 +17,8 @@ from examples.layered_poisson import LayeredPoissonSeries
 from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks
 from examples.unfitted_campaign import macro_mesh, save
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.cut_cells import cartesian_trace_values, fit_material_faces
-from pymhm.reservoir import CartesianCellField
+from pymhm.fem.quadrature.material import cartesian_trace_values, fit_material_faces
+from pymhm.materials.cartesian import CartesianCellField
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/unfitted"

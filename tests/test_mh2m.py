@@ -6,11 +6,12 @@ from numpy.testing import assert_allclose
 from scipy import sparse
 from scipy.sparse.linalg import spsolve
 
-from pymhm.lagrange import nodal_space
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.mh2m import PressureTraceSpace, solve_mh2m
-from pymhm.polygon import PolygonMesh
-from pymhm.solvers import LinearSolveError
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.linalg.linear import LinearSolveError
+from pymhm.meshes.polygonal import PolygonMesh
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.three_field import PressureTraceSpace, solve_mh2m
 
 
 def polynomial(x):
@@ -174,7 +175,9 @@ def test_zero_neumann_and_nonzero_pressure_gauge():
 
 def test_original_trace_equations_reject_an_inaccurate_backend(monkeypatch):
     """An inaccurate backend return must not bypass the original physical equations."""
-    monkeypatch.setattr("pymhm.mh2m.solve_linear", lambda a, b, **kw: np.zeros_like(b))
+    monkeypatch.setattr(
+        "pymhm.methods.three_field.solve_linear", lambda a, b, **kw: np.zeros_like(b)
+    )
     with pytest.raises(ValueError, match="original trace equations"):
         solve_mh2m(TriangleMesh.unit_square(2), source=1.0)
 

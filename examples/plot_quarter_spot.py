@@ -13,6 +13,8 @@ from pathlib import Path
 
 import matplotlib
 
+from pymhm.io.provenance import current_source_manifest
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -28,11 +30,12 @@ else:
     from plot_quarter_reference import finish_quarter_panel
     from quarter_point_archive import point_field_arrays, write_point_archive, write_point_record
 
-from pymhm import DarcySolution, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.elements import rt0_evaluate
-from pymhm.lagrange import tabulate
-from pymhm.mesh import positive_int
-from pymhm.visualization import macro_edges
+from pymhm import SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import DarcySolution, solve_darcy
+from pymhm.core.validation import positive_int
+from pymhm.fem.scalar.operators import rt0_evaluate
+from pymhm.fem.scalar.triangle import tabulate
+from pymhm.postprocessing.visualization import macro_edges
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/quarter-five-spot"
@@ -46,12 +49,14 @@ def _source_digests() -> dict[str, str]:
         Path(__file__),
         ROOT / "examples/quarter_point_archive.py",
         ROOT / "examples/field_sampling.py",
-        *sorted((ROOT / "src/pymhm").glob("*.py")),
+        *sorted((ROOT / "src/pymhm").rglob("*.py")),
     ]
-    return {
-        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in sources
-    }
+    return current_source_manifest(
+        {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in sources
+        }
+    )
 
 
 @dataclass(frozen=True)

@@ -280,7 +280,7 @@ every discontinuous microcell constant. An independently equilibrated
 reconstruction imposing all microcell balances is a different algorithm requiring
 its own validation.
 
-`pymhm.reconstruction_moments` implements the boundary, averaged interior-face
+`pymhm.recovery.moments` implements the boundary, averaged interior-face
 and volume moments for nonnegative RT orders. It exposes raw divergence and its
 continuous macro-local projection separately. Normal orientation, polynomial
 moments, projected convergence and independent Basix/DOLFINx interpolation are

@@ -4,8 +4,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import TetraMesh, solve_rad_3d
-from pymhm.polygon import PolygonMesh, solve_transport_polygons
+from pymhm import TetraMesh
+from pymhm._legacy.models.geometry import solve_transport_polygons
+from pymhm._legacy.models.transport.rad_3d import solve_rad_3d
+from pymhm.meshes.polygonal import PolygonMesh
 
 
 @pytest.mark.parametrize("dimension", [2, 3])
@@ -102,8 +104,8 @@ def test_selective_diffusive_faces_require_tangency():
 def test_true_tiny_normal_advection_is_not_classified_as_zero():
     """Tangency checks are relative to the physical field, with no absolute floor."""
     from pymhm import SkeletonSpace, TriangularSkeleton
-    from pymhm.rad import _boundary_tangent
-    from pymhm.rad3d import _boundary_tangent_3d
+    from pymhm._legacy.models.transport.rad import _boundary_tangent
+    from pymhm._legacy.models.transport.rad_3d import _boundary_tangent_3d
 
     square = PolygonMesh(np.array([[0, 0], [1, 0], [1, 1], [0, 1]]), (np.arange(4),))
     tetra = TetraMesh(np.vstack((np.zeros(3), np.eye(3))), np.arange(4)[None])

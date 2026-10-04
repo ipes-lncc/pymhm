@@ -11,7 +11,8 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.transport_face_resolution import local_bound
-from pymhm.mesh import TriangleMesh
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/transport"
@@ -125,16 +126,18 @@ def coarse_gradient_bound() -> Path:
         gradient_dg0_projection_error=norms,
         archive=row["archive"],
         archive_sha256=row["archive_sha256"],
-        source_hashes={
-            p: digest(ROOT / p)
-            for p in (
-                "examples/verify_transport_published.py",
-                "examples/transport_trace_family.py",
-                "examples/transport_face_resolution.py",
-                "src/pymhm/elements.py",
-                "src/pymhm/mesh.py",
-            )
-        },
+        source_hashes=current_source_manifest(
+            {
+                p: digest(ROOT / p)
+                for p in (
+                    "examples/verify_transport_published.py",
+                    "examples/transport_trace_family.py",
+                    "examples/transport_face_resolution.py",
+                    "src/pymhm/fem/scalar/operators.py",
+                    "src/pymhm/meshes/triangle.py",
+                )
+            }
+        ),
     )
     output = DATA / "mixed-gradient-bound-r16.json"
     output.write_text(json.dumps(report, indent=2) + "\n")

@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.mesh import TriangleMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 class ConstantReference:
@@ -119,8 +119,8 @@ def test_fitted_display_uses_original_owners_without_recutting(monkeypatch):
     pytest.importorskip("matplotlib")
     monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1]))
     module = importlib.import_module("examples.plot_spe10_adaptive")
-    from pymhm.cut_cells import fit_material_mesh
-    from pymhm.reservoir import CartesianCellField
+    from pymhm.fem.quadrature.material import fit_material_mesh
+    from pymhm.materials.cartesian import CartesianCellField
 
     material = CartesianCellField(np.array([[1.0, 7.0]]), (1.0, 0.5))
     mesh = fit_material_mesh(TriangleMesh.unit_square(2), material)

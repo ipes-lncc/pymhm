@@ -20,13 +20,13 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples import core_extension_data as exact
-from examples.campaign_provenance import file_digest
 from examples.mshho3d_field_archive import original_checks, read_field, replay, write_field
 from examples.mshho3d_ideal_p0 import ideal_p0_audit
 from examples.transport_checkpoints import write_progress
-from pymhm.mshho3d import solve_mshho_3d
-from pymhm.polyhedral import PolyhedralMesh
-from pymhm.tetrahedral import TetraMesh
+from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.meshes.polyhedral import PolyhedralMesh
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.methods.hho_3d import solve_mshho_3d
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -69,7 +69,9 @@ def capture_sources(output: Path) -> dict[str, str]:
         ROOT / "pixi.toml",
         ROOT / "pyproject.toml",
     ]
-    hashes = {str(path.relative_to(ROOT)): file_digest(path) for path in paths}
+    hashes = current_source_manifest(
+        {str(path.relative_to(ROOT)): file_digest(path) for path in paths}
+    )
     for name, expected in hashes.items():
         target = output / "executed-sources/files" / name
         target.parent.mkdir(parents=True, exist_ok=True)

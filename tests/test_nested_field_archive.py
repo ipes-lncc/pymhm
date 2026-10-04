@@ -84,7 +84,7 @@ def test_affine_lifting_preserves_source_and_oriented_physical_flux(acquired, n)
 
 def test_archived_cardinal_tables_and_one_sided_raw_gradient(acquired):
     """Executed monomial coefficients agree with both saved rules and exact Q2 derivatives."""
-    from pymhm.element_backends import simplex_lagrange_basis
+    from pymhm.fem.reference import simplex_lagrange_basis
 
     arrays = {k: v.copy() for k, v in acquired[2, True][2].items()}
     x, y = arrays["leaf_nodes"].transpose(2, 0, 1)

@@ -19,8 +19,9 @@ from threadpoolctl import threadpool_limits
 
 from examples.solve_elasticity3d import ElasticityData3D
 from examples.tetra_section_samples import section_grid
-from pymhm.elasticity3d import constitutive_values_3d
-from pymhm.tetrahedral import TetraMesh, tetra_basis, tetra_nodal_space
+from pymhm._legacy.models.elasticity.primal_3d import constitutive_values_3d
+from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
+from pymhm.meshes.tetrahedron import TetraMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 INPUT = ROOT / "examples/results/elasticity3d"

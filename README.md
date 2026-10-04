@@ -2,10 +2,12 @@
 
 Composable Multiscale Hybrid Mixed finite element methods in Python.
 
-`pymhm` couples independent local variational problems through an explicitly
-oriented skeleton. The NumPy/SciPy backend uses Basix for finite-element
-bases and tabulation, and is complemented by optional
-FEniCS/UFL assembly, meshio/Gmsh/Netgen interfaces and CPU/GPU sparse solvers.
+`pymhm` couples user-defined local and global variational equations through
+explicitly oriented trace coordinates. Declare the forms, choose a local
+provider, then call `assemble` or `solve`. Scalar, vector and mixed fields use
+the same interface; a local operator can itself be another multiscale problem.
+NumPy/SciPy coefficients and optional FEniCS/UFL forms share this contract.
+Basix supplies finite-element bases and tabulation.
 
 Version 0.1.0 is research software in pre-alpha development. Built-in workflows
 include triangular and polygonal meshes, Cartesian quadrilaterals, tetrahedra,
@@ -21,17 +23,28 @@ pixi run -e test test-cov
 ```
 
 ```python
-from pymhm import TriangleMesh, solve_darcy
+from pymhm import Equation, LocalEquations, MultiscaleProblem, solve
 
-mesh = TriangleMesh.unit_square(4)
-solution = solve_darcy(
-    mesh,
-    permeability=1.0,
-    dirichlet=lambda x: 1.0 + x[:, 0],
-    local_refinement=4,
+def local(cell):
+    return LocalEquations(
+        a=[[2.0]], L=[1.0], b=[[1.0]], c=[[-1.0]],
+        d=[[1.0]], dofs=[0],
+    )
+
+problem = MultiscaleProblem(
+    Equation(0, 0), local, items=[0], trace_size=1, coarse_sizes=(0,),
 )
-print(solution.l2_error(lambda x: 1.0 + x[:, 0]))
+solution = solve(problem)
+print(solution.trace, solution.fields)  # lambda = u = 1/3
 ```
+
+This coefficient example declares $2u+\lambda=1$ and $-u+\lambda=0$.
+The [variational guide](docs/variational.md) shows how local and global UFL
+forms, retained modes, physical constraints and recursive problems fit this
+same interface. It states the supported compilation and elimination limits.
+The [vector UFL](notebooks/foundations/operators/vector_ufl.ipynb) and
+[three-level hierarchy](notebooks/foundations/operators/variational_hierarchy.ipynb)
+notebooks provide direct vector forms and recursive coefficient verification.
 
 The introductory [scalar](docs/tutorials/scalar.md),
 [vector](docs/tutorials/vector.md) and [provider](docs/tutorials/providers.md)
@@ -42,7 +55,12 @@ Install from a checkout with `python -m pip install .`. Wheel, source distributi
 trusted PyPI publishing and a Conda recipe are provided; no registry publication
 is implied by the presence of those files.
 
-## Implemented capabilities
+## Verified discretizations and integrations
+
+The predefined physical formulations live in the private `_legacy.models`
+package and are imported from their implementation owners. Their numerical
+records and stored coefficient contracts document the verified discretizations,
+materials and boundary data; they do not qualify arbitrary user-defined forms.
 
 - Primal Pk, general triangular RT/BDM and enriched rectangular RT Darcy;
   anisotropic permeability, mixed boundary data and physical pure-Neumann gauges.
@@ -119,10 +137,17 @@ run the public calculations and address the remaining scientific work.
 
 Generate only the cases being evaluated, using their documented public commands;
 then check their numerical acceptance before plotting or reporting reproduction.
-For example, `pixi run -e notebooks gallery-darcy` computes and plots the stated
-analytical Darcy problems. This is an analytical verification, not a published
-benchmark reproduction. Do not use the aggregate `gallery` task as an unattended
-scientific completion step.
+The [notebook catalogue](notebooks/README.md) groups examples by physical problem
+and lists their methods. Start with a small analytical example:
+
+```bash
+pixi run --locked -e notebooks notebooks-run darcy/primal_galerkin.ipynb
+pixi run --locked -e notebooks notebooks-run flow/introductory_methods.ipynb
+```
+
+Executed copies retain the problem folders under `build/notebooks`. Historical
+numeric IDs also select their notebooks. Analytical patches introduce the API;
+they do not replace a published benchmark reproduction.
 
 Before executing a notebook that reads computed fields, inspect its required
 local inputs and generate the corresponding calculations:

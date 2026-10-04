@@ -14,11 +14,12 @@ from typing import Any
 import numpy as np
 from scipy import sparse
 
-from pymhm.helmholtz import HelmholtzSolution
-from pymhm.helmholtz_forms import complex_vector, real_vector
-from pymhm.hybrid import HybridSolution
-from pymhm.mesh import FaceSpace, SkeletonSpace, positive_int
-from pymhm.solvers import solve_linear
+from pymhm._legacy.models.waves.helmholtz import HelmholtzSolution
+from pymhm.core.contracts import HybridSolution
+from pymhm.core.validation import positive_int
+from pymhm.fem.scalar.helmholtz import complex_vector, real_vector
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.linalg.linear import solve_linear
 
 
 @dataclass(frozen=True)

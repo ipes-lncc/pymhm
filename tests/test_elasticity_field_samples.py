@@ -8,7 +8,9 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm import CartesianMacroMesh, solve_elasticity_mixed_polygons, solve_elasticity_tensor_rt
+from pymhm import CartesianMacroMesh
+from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
+from pymhm._legacy.models.geometry import solve_elasticity_mixed_polygons
 
 
 @pytest.fixture

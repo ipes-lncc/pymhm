@@ -5,8 +5,11 @@ import pytest
 from numpy.testing import assert_allclose
 
 from pymhm import FaceSpace, SkeletonSpace
-from pymhm.elasticity_tensor_rt import _rotation_basis, solve_elasticity_tensor_rt
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.elasticity.stress_tensor import (
+    _rotation_basis,
+    solve_elasticity_tensor_rt,
+)
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 def affine(points: np.ndarray) -> np.ndarray:
@@ -168,7 +171,7 @@ def test_skeleton_and_traction_pressure_contracts() -> None:
 
 def test_cartesian_material_alignment_contract() -> None:
     """Declared discontinuous material uses aligned cells instead of aliased Gaussian sampling."""
-    from pymhm.reservoir import CartesianCellField
+    from pymhm.materials.cartesian import CartesianCellField
 
     coefficient = CartesianCellField(np.array([[1.0], [2.0]]), spacing=(0.5, 1.0))
     with pytest.raises(ValueError, match="must align"):

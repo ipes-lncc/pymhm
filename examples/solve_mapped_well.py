@@ -11,7 +11,10 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm.mapped_rt import HexMesh, cube_quadrature, mapped_rt_dofs, solve_darcy_mapped_rt
+from pymhm._legacy.models.darcy.mapped import solve_darcy_mapped_rt
+from pymhm.fem.hdiv.mapped import mapped_rt_dofs
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.hexahedron import HexMesh, cube_quadrature
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/mapped-well"
@@ -76,15 +79,17 @@ def main() -> None:
     }
     sources = [
         Path(__file__),
-        ROOT / "src/pymhm/mapped_rt.py",
-        ROOT / "src/pymhm/solvers.py",
+        ROOT / "src/pymhm/_legacy/models/darcy/mapped.py",
+        ROOT / "src/pymhm/linalg/linear.py",
     ]
-    hybrid_source = ROOT / "src/pymhm/hybrid.py"
+    hybrid_source = ROOT / "src/pymhm/core/contracts.py"
     hybrid_start = hashlib.sha256(hybrid_source.read_bytes()).hexdigest()
     snapshot = ROOT / "build/source-snapshots/mapped-well"
     snapshot.mkdir(parents=True, exist_ok=True)
     (snapshot / f"{hybrid_start}-hybrid.py").write_bytes(hybrid_source.read_bytes())
-    hashes = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+    hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+    )
     with threadpool_limits(1):
         result = solve_darcy_mapped_rt(
             mesh,
@@ -195,9 +200,9 @@ def main() -> None:
         hybrid_source_hash_end=hashlib.sha256(hybrid_source.read_bytes()).hexdigest(),
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
-    if hashes != {
-        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources
-    }:
+    if hashes != current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+    ):
         raise RuntimeError("Acquisition source changed during the numerical solve")
     print(json.dumps(report), flush=True)
 

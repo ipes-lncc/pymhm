@@ -22,27 +22,30 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from pymhm import HybridSystem, LocalProblem, SkeletonSpace, TriangleMesh
-from pymhm.elements import boundary_data, face_integration, p1_geometry, p1_operators
-from pymhm.hybrid import LocalAssembly
-from pymhm.offline import OfflineHybridSystem
+from pymhm.core.contracts import LocalAssembly
+from pymhm.core.offline import OfflineHybridSystem
+from pymhm.fem.scalar.operators import boundary_data, face_integration, p1_geometry, p1_operators
+from pymhm.io.provenance import current_source_manifest
 
 
 def hashes() -> dict[str, str]:
     """Capture public numerical-source digests without machine-specific paths."""
     names = (
-        "hybrid",
-        "parallel",
-        "solvers",
-        "mesh",
-        "elements",
-        "lagrange",
-        "offline",
-        "distributed",
-        "gpu",
+        "core/contracts",
+        "execution/cpu",
+        "linalg/linear",
+        "meshes/triangle",
+        "fem/scalar/operators",
+        "fem/scalar/triangle",
+        "core/offline",
+        "execution/mpi",
+        "execution/cuda",
     )
-    files = [Path("src/pymhm") / f"{name}.py" for name in names]
+    files = [Path(f"src/pymhm/{name}.py") for name in names]
     files.append(Path("benchmarks/execution_modes.py"))
-    return {str(path): sha256(path.read_bytes()).hexdigest() for path in files}
+    return current_source_manifest(
+        {str(path): sha256(path.read_bytes()).hexdigest() for path in files}
+    )
 
 
 def exact(points: Any) -> Any:
@@ -67,7 +70,7 @@ def mpi_campaign(arguments: argparse.Namespace) -> dict[str, Any] | None:
     from mpi4py import MPI
     from petsc4py import PETSc
 
-    from pymhm.distributed import solve_distributed
+    from pymhm.execution.mpi import solve_distributed
 
     comm = MPI.COMM_WORLD
     mesh = TriangleMesh.unit_square(arguments.mesh)
@@ -203,7 +206,7 @@ def gpu_campaign(arguments: argparse.Namespace) -> dict[str, Any]:
     """Measure resident P1 volume assembly, batched LU and repeated device RHS solves."""
     import cupy as cp
 
-    from pymhm.gpu import BatchedFactorization, assemble_p1_batch
+    from pymhm.execution.cuda import BatchedFactorization, assemble_p1_batch
 
     fine = TriangleMesh.unit_square(1).submesh(0, arguments.refinement)
     count = arguments.batch

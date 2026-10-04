@@ -4,8 +4,9 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_brinkman
-from pymhm.elements import boundary_data
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.vector import solve_brinkman
+from pymhm.fem.scalar.operators import boundary_data
 
 
 def channel_mesh():

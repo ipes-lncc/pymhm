@@ -9,10 +9,10 @@ from numpy.testing import assert_allclose
 from examples import helmholtz_stability_phases as phases
 from examples.helmholtz_campaign import AcousticWave, norms
 from examples.helmholtz_stability import projected_solution
-from pymhm.helmholtz import solve_helmholtz
-from pymhm.helmholtz_spaces import helmholtz_skeleton
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.solvers import LinearSolveError
+from pymhm._legacy.models.waves.helmholtz import solve_helmholtz
+from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.linalg.linear import LinearSolveError
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @pytest.mark.parametrize("ell", [0, 1])

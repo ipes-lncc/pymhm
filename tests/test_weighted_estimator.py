@@ -6,10 +6,11 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.estimator import estimate_darcy_error
-from pymhm.reservoir import CartesianCellField
-from pymhm.weighted_estimator import estimate_weighted_darcy_error, recover_dirichlet_potential
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.estimators.darcy import estimate_darcy_error
+from pymhm.estimators.darcy_energy import estimate_weighted_darcy_error, recover_dirichlet_potential
+from pymhm.materials.cartesian import CartesianCellField
 
 
 def sine(x):
@@ -159,7 +160,8 @@ def test_degree_zero_projection_and_zero_source():
 
 def test_polygon_cannot_reuse_the_triangular_reliability_constant():
     """A valid polygon Darcy solution does not satisfy the estimator geometry contract."""
-    from pymhm.polygon import PolygonMesh, solve_darcy_polygons
+    from pymhm._legacy.models.geometry import solve_darcy_polygons
+    from pymhm.meshes.polygonal import PolygonMesh
 
     mesh = PolygonMesh(np.array([[0, 0], [1, 0], [1, 1], [0, 1]]), (np.arange(4),))
     solution = solve_darcy_polygons(mesh, degree=2, dirichlet=1.0)

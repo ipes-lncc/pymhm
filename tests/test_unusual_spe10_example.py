@@ -8,8 +8,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.mesh import TriangleMesh
-from pymhm.reservoir import CartesianCellField
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def modules(monkeypatch):
@@ -111,8 +111,8 @@ def test_reaction_layer_refinement_preserves_geometry_and_physical_metric(monkey
 def test_material_trace_control_keeps_affine_heterogeneous_patch(monkeypatch, tmp_path):
     """Added P0 moments resolve physical flux jumps without changing the UNUSUAL form."""
     driver, _, _ = modules(monkeypatch)
-    from pymhm.cut_cells import fit_material_mesh
-    from pymhm.rad import solve_rad
+    from pymhm._legacy.models.transport.rad import solve_rad
+    from pymhm.fem.quadrature.material import fit_material_mesh
 
     mesh = TriangleMesh.unit_square()
     material = CartesianCellField(np.array([[1.0, 10.0]]), (1.0, 0.5))

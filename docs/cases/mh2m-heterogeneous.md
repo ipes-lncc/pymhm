@@ -541,7 +541,7 @@ pixi run -e fem python -m examples.mh2m_cg_reference --sizes 512 --order 12
 pixi run -e notebooks mh2m-cg3-comparison
 pixi run -e notebooks mh2m-cg3-controls
 pixi run -e notebooks gallery-mh2m-cg3
-pixi run -e notebooks python scripts/run_notebooks.py notebooks/70_mh2m_heterogeneous.ipynb
+pixi run -e notebooks python scripts/run_notebooks.py notebooks/darcy/70_mh2m_heterogeneous.ipynb
 ```
 
 The $P_1$ controls use a separate global conforming assembly with the

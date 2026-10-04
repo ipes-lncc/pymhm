@@ -25,9 +25,9 @@ from examples.campaign_checkpoint import archive_identity, require_sources, veri
 from examples.helmholtz_campaign import AcousticWave, archive, norms, source_hashes
 from examples.helmholtz_incident_family import IncidentFamily
 from examples.helmholtz_trace_family import verify_helmholtz_solution
-from pymhm.helmholtz import HelmholtzSolution, solve_helmholtz
-from pymhm.helmholtz_spaces import helmholtz_skeleton
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.waves.helmholtz import HelmholtzSolution, solve_helmholtz
+from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 

@@ -9,12 +9,14 @@ import pytest
 from numpy.testing import assert_allclose
 from scipy import sparse
 
-from pymhm.elements import boundary_data
-from pymhm.hybrid import HybridSystem, LocalProblem
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.pgmhm import solve_pgmhm
-from pymhm.rad import _rad_local, solve_rad
-from pymhm.unusual import UnusualParameters
+from pymhm._legacy.models.transport.rad import _rad_local, solve_rad
+from pymhm._legacy.models.transport.stabilization import UnusualParameters
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.system import HybridSystem
+from pymhm.fem.scalar.operators import boundary_data
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.petrov_galerkin import solve_pgmhm
 
 
 def helper(monkeypatch):

@@ -14,9 +14,13 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.campaign_checkpoint import require_sources, verify_checkpoint
-from pymhm.elasticity3d import solve_elasticity_3d
-from pymhm.gals3d import GaLS3DSolution, solve_elasticity_gals_3d
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.elasticity.mixed_pressure_3d import (
+    GaLS3DSolution,
+    solve_elasticity_gals_3d,
+)
+from pymhm._legacy.models.elasticity.primal_3d import solve_elasticity_3d
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.tetrahedron import TetraMesh
 
 if __package__:
     from .gals3d_data import GaLS3DData
@@ -31,23 +35,26 @@ def snapshot() -> dict[str, str]:
     """Capture the exact operators and original analytic-data source bytes."""
     paths = [Path(__file__), ROOT / "examples/gals3d_data.py"]
     paths.extend(
-        ROOT / "src/pymhm" / name
+        ROOT / f"src/pymhm/{name}"
         for name in (
-            "gals3d.py",
-            "gals3d_forms.py",
-            "elasticity.py",
-            "elasticity3d.py",
-            "darcy3d.py",
-            "tetrahedral.py",
-            "tetra_lagrange.py",
-            "hybrid.py",
-            "solvers.py",
-            "parallel.py",
+            "_legacy/models/elasticity/mixed_pressure_3d.py",
+            "_legacy/models/elasticity/pressure_forms_3d.py",
+            "_legacy/models/elasticity/mixed_pressure.py",
+            "_legacy/models/elasticity/primal_3d.py",
+            "_legacy/models/darcy/primal_3d.py",
+            "fem/scalar/tetrahedron.py",
+            "fem/scalar/tetrahedron_topology.py",
+            "core/contracts.py",
+            "linalg/linear.py",
+            "execution/cpu.py",
         )
     )
-    return {
-        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
-    }
+    return current_source_manifest(
+        {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in paths
+        }
+    )
 
 
 def norms(solution: GaLS3DSolution, data: GaLS3DData, order: int) -> dict[str, float]:

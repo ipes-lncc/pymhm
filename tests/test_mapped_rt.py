@@ -5,16 +5,9 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.mapped_rt import (
-    _CORNERS,
-    HexMesh,
-    _modal,
-    _trace_map,
-    cube_quadrature,
-    mapped_rt_basis,
-    mapped_rt_dofs,
-    solve_darcy_mapped_rt,
-)
+from pymhm._legacy.models.darcy.mapped import _trace_map, solve_darcy_mapped_rt
+from pymhm.fem.hdiv.mapped import _modal, mapped_rt_basis, mapped_rt_dofs
+from pymhm.meshes.hexahedron import _CORNERS, HexMesh, cube_quadrature
 
 
 @pytest.fixture(autouse=True)
@@ -306,7 +299,7 @@ def test_physical_block_gate_rejects_corrupted_reconstruction(monkeypatch):
     """Deliberately corrupt a returned flux coefficient to verify the physical residual gate."""
     from dataclasses import replace
 
-    from pymhm.hybrid import HybridSystem
+    from pymhm.core.system import HybridSystem
 
     original = HybridSystem.solve
 
@@ -325,7 +318,7 @@ def test_physical_block_gate_rejects_corrupted_reconstruction(monkeypatch):
 
 def test_anisotropic_quadrature_and_streamed_mixed_operators(monkeypatch):
     """Streaming preserves a complete independent anisotropic tensor-Gauss assembly."""
-    import pymhm.mapped_rt as module
+    import pymhm._legacy.models.darcy.mapped as module
 
     mesh = warped_mesh()
     points, weights = cube_quadrature((5, 6, 7))

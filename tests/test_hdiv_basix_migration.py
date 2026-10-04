@@ -7,11 +7,12 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.bdm import validate_bdm2_trace
-from pymhm.hdiv3d_family import face_polynomials, face_size
-from pymhm.hdiv_reference import bernstein_tabulation
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.rt3d import _candidates
+from pymhm.fem.hdiv.bdm import validate_bdm2_trace
+from pymhm.fem.hdiv.family_3d import face_polynomials, face_size
+from pymhm.fem.hdiv.reference import bernstein_tabulation
+from pymhm.fem.hdiv.rt_3d import _candidates
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("dimension", [1, 2, 3])

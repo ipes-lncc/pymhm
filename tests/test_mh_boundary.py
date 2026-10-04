@@ -5,12 +5,13 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.lagrange import nodal_space
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.mh import solve_mh
-from pymhm.mh2m import PressureTraceSpace, solve_mh2m
-from pymhm.polygon import PolygonMesh
-from pymhm.scalar_trace_integration import integrate_dirichlet_trace
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.fem.traces.integration import integrate_dirichlet_trace
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.polygonal import PolygonMesh
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.robin import solve_mh
+from pymhm.methods.three_field import PressureTraceSpace, solve_mh2m
 
 
 @pytest.fixture(autouse=True)
@@ -151,7 +152,7 @@ def test_invalid_neumann_metadata_and_original_equation_gate(monkeypatch):
         with pytest.raises(ValueError, match="distinct exterior"):
             integrate_dirichlet_trace(result.skeleton, result.local_meshes, 0, 2, 4, faces=faces)
     monkeypatch.setattr(
-        "pymhm.mh_boundary.solve_linear", lambda matrix, rhs, **kwargs: np.zeros_like(rhs)
+        "pymhm.methods.boundary.solve_linear", lambda matrix, rhs, **kwargs: np.zeros_like(rhs)
     )
     with pytest.raises(ValueError, match="original boundary equations"):
         solve_mh(mesh, source=1, neumann={int(mesh.boundary_faces[0]): 0})

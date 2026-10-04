@@ -20,14 +20,14 @@ import numpy as np
 from scipy import sparse
 
 from examples.archive_precision import precision_fields, restore_precision
-from examples.campaign_provenance import file_digest
 from examples.local_response_cache import array_identity
 from examples.transport_checkpoints import checkpoint_field, write_progress
-from pymhm.darcy_hdiv3d import Mixed3DDarcySolution
-from pymhm.hdiv3d_family import cell_quadrature
-from pymhm.hdiv3d_mesh import hdiv3d_dofs, hdiv3d_transform
-from pymhm.hybrid import HybridSystem
-from pymhm.solvers import _accurate_residual
+from pymhm._legacy.models.darcy.hdiv_3d import Mixed3DDarcySolution
+from pymhm.core.system import HybridSystem
+from pymhm.fem.hdiv.family_3d import cell_quadrature
+from pymhm.io.provenance import file_digest
+from pymhm.linalg.linear import _accurate_residual
+from pymhm.meshes.mixed import hdiv3d_dofs, hdiv3d_transform
 
 SCHEMA = "pymhm-affine-hdiv3d-executed-field-v1"
 
@@ -48,7 +48,7 @@ def observe_system() -> Iterator[ProductionObservation]:
     The original method and its arguments are delegated unchanged. This observer
     is process scoped and must not overlap another solve in the same process.
     """
-    import pymhm.darcy_hdiv3d as owner
+    import pymhm._legacy.models.darcy.hdiv_3d as owner
 
     observed = ProductionObservation()
     original = HybridSystem.solve
@@ -227,7 +227,7 @@ def reference_tables(
     No numerical nullspace or new flux basis is constructed. The monomial or
     Bernstein candidate convention follows the recorded family orders.
     """
-    from pymhm.hdiv3d_family import _powers, _scalar, _vectors
+    from pymhm.fem.hdiv.family_3d import _powers, _scalar, _vectors
 
     kind = ("tetrahedron", "prism")[int(arrays["cell_kind_code"])]
     degree = int(arrays["pressure_degree"])
@@ -235,7 +235,7 @@ def reference_tables(
     if normal == 1 and degree in ((1, 2) if kind == "tetrahedron" else (1,)):
         raw, divergence = _vectors(points, _powers(kind, degree + 1))
     else:
-        from pymhm.hdiv3d_general import candidates
+        from pymhm.fem.hdiv.moments_3d import candidates
 
         raw, divergence = candidates(kind, degree, points)
     coefficients = arrays["basis_coefficients"]
@@ -441,7 +441,7 @@ def verify_orientation(arrays: Mapping[str, np.ndarray]) -> dict[str, float]:
     basis. Every face moment tests all flux columns, including interior bubbles.
     This is a finite basis invariant, rather than a uniform inf-sup estimate.
     """
-    from pymhm.hdiv3d_family import (
+    from pymhm.fem.hdiv.family_3d import (
         face_polynomials,
         face_quadrature,
         face_shape,
@@ -449,7 +449,7 @@ def verify_orientation(arrays: Mapping[str, np.ndarray]) -> dict[str, float]:
         reference_faces,
         reference_vertices,
     )
-    from pymhm.hdiv3d_mesh import AffineMixedMesh
+    from pymhm.meshes.mixed import AffineMixedMesh
 
     kind = ("tetrahedron", "prism")[int(arrays["cell_kind_code"])]
     normal_degree = int(arrays["normal_degree"])

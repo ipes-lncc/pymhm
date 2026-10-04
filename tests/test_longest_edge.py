@@ -4,9 +4,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.longest_edge import refine_longest_edge
-from pymhm.refinement import transfer_skeleton, validate_submesh
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.meshes.longest_edge import refine_longest_edge
+from pymhm.meshes.refinement import transfer_skeleton, validate_submesh
 
 
 def minimum_angle(mesh):
@@ -94,8 +95,8 @@ def test_skeleton_and_neumann_data_follow_exact_ancestry():
 
 def test_adaptive_loops_use_the_selected_macro_refiner():
     """The weighted estimator drives either loop through the same explicit geometry operation."""
-    from pymhm.adaptive_darcy import solve_adaptive_darcy
-    from pymhm.adaptive_darcy_balanced import solve_balanced_adaptive_darcy
+    from pymhm.adaptivity.darcy import solve_adaptive_darcy
+    from pymhm.adaptivity.darcy_balanced import solve_balanced_adaptive_darcy
 
     mesh = TriangleMesh.unit_square()
     ordinary = solve_adaptive_darcy(

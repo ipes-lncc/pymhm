@@ -320,7 +320,7 @@ slices without downloading the complete reservoir:
 pixi run -e notebooks python examples/plot_spe10_data.py --layers-only
 ```
 
-Use `pymhm.reservoir` for strict include-file reading and piecewise constant
+Use `pymhm.io.reservoir` for strict include-file reading and piecewise constant
 coefficient evaluation, and [the PyVista adapter](../visualization.md) for
 VTK grids, export and composed views. The numerical records include layer
 indices, physical units, material extrema, source hashes and file provenance.

@@ -6,9 +6,9 @@ from numpy.testing import assert_allclose, assert_array_equal
 from threadpoolctl import threadpool_limits
 
 from examples.unfitted_trace_family import ScalarTraceFamily
-from pymhm.darcy import solve_darcy
-from pymhm.mesh import TriangleMesh
-from pymhm.reservoir import CartesianCellField
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def _source(points):

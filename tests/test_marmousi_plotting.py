@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @pytest.fixture

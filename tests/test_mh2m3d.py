@@ -5,12 +5,12 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.mesh import TriangleMesh
-from pymhm.mh2m3d import solve_mh2m_3d
-from pymhm.mh_trace3d import PressureTraceSpace3D
-from pymhm.solvers import LinearSolveError
-from pymhm.tetrahedral import TetraMesh
+from pymhm.fem.traces.pressure_3d import PressureTraceSpace3D
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.linalg.linear import LinearSolveError
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.three_field_3d import solve_mh2m_3d
 
 
 @pytest.fixture(autouse=True)
@@ -139,7 +139,9 @@ def test_rank_and_boundary_contracts(monkeypatch):
     for options, message in invalid:
         with pytest.raises(ValueError, match=message):
             solve_mh2m_3d(mesh, **options)
-    monkeypatch.setattr("pymhm.mh2m3d.solve_linear", lambda matrix, rhs, **kw: np.zeros(len(rhs)))
+    monkeypatch.setattr(
+        "pymhm.methods.three_field_3d.solve_linear", lambda matrix, rhs, **kw: np.zeros(len(rhs))
+    )
     with pytest.raises(ValueError, match="trace equations"):
         solve_mh2m_3d(
             mesh,

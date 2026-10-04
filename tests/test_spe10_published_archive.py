@@ -9,8 +9,8 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.lagrange import nodal_space
-from pymhm.mesh import TriangleMesh
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.skipif(

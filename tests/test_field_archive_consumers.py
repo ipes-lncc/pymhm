@@ -10,10 +10,10 @@ from examples import solve_pgmhm_spe10 as pgmhm
 from examples import solve_unusual_spe10 as unusual
 from examples import spe10_adaptive_norms as adaptive
 from examples.archive_precision import precision_fields
-from pymhm.lagrange import nodal_space
-from pymhm.mesh import TriangleMesh
-from pymhm.refinement import refine_triangles
-from pymhm.rt import rt_interpolate
+from pymhm.fem.hdiv.rt import rt_interpolate
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.meshes.refinement import refine_triangles
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def field_archive(tmp_path, kind, *, ragged=True):

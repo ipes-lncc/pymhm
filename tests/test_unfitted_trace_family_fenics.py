@@ -5,9 +5,9 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.fenics import from_ufl
-from pymhm.lagrange import nodal_space, scalar_operators
-from pymhm.mesh import TriangleMesh
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.scalar.triangle import nodal_space, scalar_operators
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.fem

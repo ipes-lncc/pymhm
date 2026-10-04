@@ -184,7 +184,7 @@ not imposed by the rendering.
 The [numerical records](../figures/elastodynamics/comparison.json) retain all
 seven spatial levels, all eight temporal comparisons, acquisition source
 hashes and field archive hashes. The
-[elastodynamic notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/71_elastodynamics.ipynb) replays these
+[elastodynamic notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/waves/elastodynamics/71_elastodynamics.ipynb) replays these
 results.
 
 ## Independent verification
@@ -325,5 +325,5 @@ for dt in 0.1 0.05 0.025 0.0125 0.00625 0.003125 0.0015625 0.00078125 0.00019531
 done
 pixi run -e notebooks python -m examples.elastodynamics_results
 pixi run -e notebooks python -m examples.plot_elastodynamics_native
-pixi run -e notebooks notebooks-run notebooks/71_elastodynamics.ipynb
+pixi run -e notebooks notebooks-run notebooks/waves/elastodynamics/71_elastodynamics.ipynb
 ```

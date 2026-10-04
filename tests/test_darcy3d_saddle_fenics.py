@@ -11,8 +11,10 @@ from scipy.sparse.linalg import splu
 from scipy.spatial import cKDTree
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton, solve_darcy_3d, tetra_trace_coupling
-from pymhm.tetrahedral import TetraMesh, tetra_nodal_space, tetra_operators
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space, tetra_operators
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton, tetra_trace_coupling
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 def _source(points: np.ndarray) -> np.ndarray:

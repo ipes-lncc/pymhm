@@ -69,7 +69,8 @@ $10^{-10}$ backward-error check. Fine-cell conservation tests every pressure
 moment, including the constant.
 
 ```python
-from pymhm import AffineMixedMesh, solve_darcy_hdiv3d
+from pymhm import AffineMixedMesh
+from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
 
 mesh = AffineMixedMesh.unit_cube(kind="prism")
 solution = solve_darcy_hdiv3d(

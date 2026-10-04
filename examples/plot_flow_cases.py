@@ -29,9 +29,9 @@ from numpy.typing import NDArray
 from plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from threadpoolctl import threadpool_limits
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_brinkman
-from pymhm.elements import p1_geometry
-from pymhm.vector import VectorSolution
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.vector import VectorSolution, solve_brinkman
+from pymhm.fem.scalar.operators import p1_geometry
 
 FloatArray = NDArray[np.float64]
 LABELS = {"taylor-hood": "Taylor–Hood P2/P1", "usfem": "USFEM P1/P1"}

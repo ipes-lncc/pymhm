@@ -15,13 +15,11 @@ import examples.periodic_phases as owner
 from examples.periodic_phases import PeriodicAcquisition, array_digest, load_fields
 from examples.verify_periodic import material, source
 from pymhm import FaceSpace, SkeletonSpace
-from pymhm.hybrid import LocalAssembly, LocalProblem
-from pymhm.quadrilateral import (
-    CartesianMacroMesh,
-    quadrilateral_trace_coupling,
-    solve_darcy_quadrilateral,
-)
-from pymhm.solvers import LinearSolveError, SolverUnavailableError, _accurate_residual
+from pymhm._legacy.models.darcy.cartesian import solve_darcy_quadrilateral
+from pymhm.core.contracts import LocalAssembly, LocalProblem
+from pymhm.fem.scalar.quadrilateral import quadrilateral_trace_coupling
+from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError, _accurate_residual
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 def _acquisition(directory, threads=1, precision="double"):

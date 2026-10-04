@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from examples.campaign_checkpoint import retrospective_files
-from examples.campaign_provenance import file_digest
+from pymhm.io.provenance import file_digest
 
 
 def inspect_manifest(path: Path) -> dict[str, Any]:

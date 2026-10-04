@@ -4,9 +4,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_elasticity
-from pymhm.elasticity_primal import _KELVIN, constitutive_values
-from pymhm.solvers import LinearSolveError
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.elasticity.primal import _KELVIN, constitutive_values
+from pymhm._legacy.models.vector import solve_elasticity
+from pymhm.linalg.linear import LinearSolveError
 
 STIFFNESS = np.array([[5.0, 1.0, 0.4], [1.0, 4.0, 0.3], [0.4, 0.3, 2.0]])
 STRAIN = np.array([1.0, 3.0, 1 / np.sqrt(2)])
@@ -210,7 +211,7 @@ def test_minimal_enrichment_contract(degree: int, refinement: int, trace: int) -
 
 def test_minimal_embedding_requires_one_missing_trace_direction() -> None:
     """Do not silently choose one mode when the trace coupling has a larger nullspace."""
-    from pymhm.elasticity_primal import _minimal_embedding
+    from pymhm._legacy.models.elasticity.primal import _minimal_embedding
 
     mesh = TriangleMesh([[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]], [[0, 1, 2]])
     with pytest.raises(ValueError, match="exactly one"):
@@ -219,7 +220,7 @@ def test_minimal_embedding_requires_one_missing_trace_direction() -> None:
 
 def test_minimal_embedding_rejects_multiple_fine_triangles() -> None:
     """The single polynomial enrichment is not silently applied to a composite local grid."""
-    from pymhm.elasticity_primal import _minimal_embedding
+    from pymhm._legacy.models.elasticity.primal import _minimal_embedding
 
     with pytest.raises(ValueError, match="one local triangle"):
         _minimal_embedding(TriangleMesh.unit_square(), 2, np.zeros((16, 2)))
@@ -235,7 +236,7 @@ def test_cartesian_tensor_error_norm_integrates_unfitted_interfaces() -> None:
     """Cellwise quadrature preserves the exact stress norm for a layered stiffness."""
     from dataclasses import replace
 
-    from pymhm.reservoir import CartesianCellField
+    from pymhm.materials.cartesian import CartesianCellField
 
     mesh = TriangleMesh.unit_square()
     result = solve_elasticity(mesh, formulation="primal", local_refinement=1, dirichlet=(0, 0))

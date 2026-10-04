@@ -13,7 +13,8 @@ from numbers import Real
 from pathlib import Path
 from typing import Any
 
-from examples.campaign_provenance import file_digest, require_equal, verify_archive
+from examples.campaign_provenance import require_equal, verify_archive
+from pymhm.io.provenance import file_digest
 
 
 def require_sources(recorded: Mapping[str, str], current: Mapping[str, str]) -> None:

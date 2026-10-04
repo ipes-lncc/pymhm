@@ -4,26 +4,26 @@ Moment reconstruction, conforming potentials and dimension-dependent estimator h
 
 [All API families](../api.md)
 
-::: pymhm.reconstruction
+::: pymhm.recovery.equilibrated
     options:
       show_source: false
 
-::: pymhm.reconstruction_moments
+::: pymhm.recovery.moments
     options:
       show_source: false
 
-::: pymhm.reconstruction3d
+::: pymhm.recovery.moments_3d
     options:
       show_source: false
 
-::: pymhm.estimator
+::: pymhm.estimators.darcy
     options:
       show_source: false
 
-::: pymhm.weighted_estimator
+::: pymhm.estimators.darcy_energy
     options:
       show_source: false
 
-::: pymhm.estimator3d
+::: pymhm.estimators.darcy_3d
     options:
       show_source: false

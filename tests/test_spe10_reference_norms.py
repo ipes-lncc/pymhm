@@ -7,8 +7,8 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from pymhm.mesh import TriangleMesh
-from pymhm.reservoir import CartesianCellField
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def test_reference_boundary_selection_constructs_normals_once(monkeypatch):

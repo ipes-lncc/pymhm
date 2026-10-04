@@ -6,8 +6,9 @@ import numpy as np
 import pytest
 from scipy import sparse
 
-from pymhm.hybrid import HybridSystem, LocalProblem
-from pymhm.solvers import _accurate_residual
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.system import HybridSystem
+from pymhm.linalg.linear import _accurate_residual
 
 
 @pytest.mark.parametrize("scale", [1e-18, 1.0, 1e18])
@@ -80,7 +81,7 @@ def simulated_petsc(monkeypatch: pytest.MonkeyPatch) -> None:
     """Use the serial PETSc API simulation only for interface regression coverage."""
     from petsc_contract import PETSC
 
-    from pymhm import distributed
+    from pymhm.execution import mpi as distributed
 
     monkeypatch.setattr(distributed, "_optional", lambda *args: PETSC)
 
@@ -90,7 +91,7 @@ def test_distributed_kernel_bound(simulated_petsc: Any, reaction: float) -> None
     """Distributed acceptance uses the same bound and rejects physical reaction."""
     from types import SimpleNamespace
 
-    from pymhm.distributed import solve_distributed
+    from pymhm.execution.mpi import solve_distributed
 
     A = np.array([[1.0, -1.0], [-1.0, 1.0]]) + reaction * np.eye(2)
     A[0, 0] = np.nextafter(A[0, 0], np.inf)
@@ -113,7 +114,7 @@ def test_distributed_kernel_bound(simulated_petsc: Any, reaction: float) -> None
 
 def test_nested_report_keeps_original_kernel_bound() -> None:
     """A nested field reports the same small retained roundoff without altering data."""
-    from pymhm.nested import NestedLocalProblem
+    from pymhm.core.nested import NestedLocalProblem
 
     A = np.array([[1.0, -1.0], [-1.0, 1.0]])
     A[0, 0] = np.nextafter(A[0, 0], np.inf)
@@ -132,7 +133,7 @@ def test_previously_accepted_equations_do_not_consult_kernel_allowance(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Keep the complete accepted solve branch unchanged, including reported residuals."""
-    from pymhm.hybrid import LocalResponse
+    from pymhm.core.contracts import LocalResponse
 
     matrix = 1e6 * np.array([[1.0, -1, 0], [-1, 2, -1], [0, -1, 1]])
     matrix += np.diag([1e-5, -2e-5, 1e-5])
@@ -164,7 +165,7 @@ def test_large_kernel_bound_cannot_hide_uncertified_row(
     """A certificate belongs to its row, never to another trace or retained equation."""
     from types import SimpleNamespace
 
-    from pymhm.distributed import solve_distributed
+    from pymhm.execution.mpi import solve_distributed
 
     matrix = 1e12 * np.array([[1.0, -1], [-1, 1]])
     matrix[0, 0] = np.nextafter(matrix[0, 0], np.inf)

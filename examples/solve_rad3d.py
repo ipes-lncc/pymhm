@@ -11,9 +11,14 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.rad3d import RAD3DSolution, solve_rad_3d, solve_rad_3d_conforming
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.transport.rad_3d import (
+    RAD3DSolution,
+    solve_rad_3d,
+    solve_rad_3d_conforming,
+)
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.tetrahedron import TetraMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 WAVE = 2 * np.pi * np.array([3.0, 2.0, 1.0])
@@ -69,19 +74,21 @@ def main() -> None:
     paths = [
         Path(__file__),
         *(
-            ROOT / "src/pymhm" / name
+            ROOT / f"src/pymhm/{name}"
             for name in (
-                "rad3d.py",
-                "darcy3d.py",
-                "tetrahedral.py",
-                "tetra_lagrange.py",
-                "hybrid.py",
-                "solvers.py",
-                "parallel.py",
+                "_legacy/models/transport/rad_3d.py",
+                "_legacy/models/darcy/primal_3d.py",
+                "fem/scalar/tetrahedron.py",
+                "fem/scalar/tetrahedron_topology.py",
+                "core/contracts.py",
+                "linalg/linear.py",
+                "execution/cpu.py",
             )
         ),
     ]
-    hashes = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+    hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+    )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     rows = []
     with threadpool_limits(limits=1):

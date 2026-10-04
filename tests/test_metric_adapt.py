@@ -7,8 +7,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.mesh import TriangleMesh
-from pymhm.metric_adapt import _read_mesh, remesh_freefem, residual_mesh_size
+from pymhm.adaptivity.metric import _read_mesh, remesh_freefem, residual_mesh_size
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def test_lumped_metric_moments_and_scaling():
@@ -57,7 +57,7 @@ def test_invalid_remesher_sizes(values):
 
 def test_remesher_validation_and_missing_executable(monkeypatch):
     """Optional execution is explicit, and time/complexity parameters are validated."""
-    import pymhm.metric_adapt as module
+    import pymhm.adaptivity.metric as module
 
     mesh = TriangleMesh.unit_square()
     with pytest.raises(ValueError, match="max_vertices"):
@@ -71,7 +71,7 @@ def test_remesher_validation_and_missing_executable(monkeypatch):
 
 def test_optional_remesher_protocol(monkeypatch):
     """The bridge transfers physical nodal sizes and leaves the PDE assembly local."""
-    import pymhm.metric_adapt as module
+    import pymhm.adaptivity.metric as module
 
     mesh = TriangleMesh.unit_square(2)
     sizes = np.linspace(0.1, 0.4, len(mesh.points))
@@ -95,7 +95,7 @@ def test_optional_remesher_protocol(monkeypatch):
 
 def test_remesher_failures_and_area_guard(monkeypatch, tmp_path):
     """A failed engine or a changed domain is rejected independently of its exit status."""
-    import pymhm.metric_adapt as module
+    import pymhm.adaptivity.metric as module
 
     monkeypatch.setattr(module.shutil, "which", lambda name: "/native/freefem")
     monkeypatch.setattr(

@@ -7,9 +7,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_brinkman
-from pymhm.flow_estimator import estimate_flow_error
-from pymhm.lagrange import nodal_space
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.vector import solve_brinkman
+from pymhm.estimators.flow import estimate_flow_error
+from pymhm.fem.scalar.triangle import nodal_space
 
 
 def zero_solution(degree: int = 2, subdivisions: int = 1) -> Any:
@@ -159,7 +160,7 @@ def test_invalid_local_refinement_vector() -> None:
 
 def test_scoped_evaluation_tables_preserve_every_indicator_bit(monkeypatch):
     """Repeated edge evaluation reuses topology without changing arithmetic or input fields."""
-    import pymhm.flow_estimator as module
+    import pymhm.estimators.flow as module
 
     rng = np.random.default_rng(712)
     base = zero_solution()

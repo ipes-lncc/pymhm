@@ -2,8 +2,8 @@
 
 import numpy as np
 
-from pymhm.element_backends import orthogonal_polynomial_tabulation, simplex_lagrange_basis
-from pymhm.mesh import FloatArray
+from pymhm.core.validation import FloatArray
+from pymhm.fem.reference import orthogonal_polynomial_tabulation, simplex_lagrange_basis
 
 
 def gamma(operations: int) -> float:

@@ -22,25 +22,31 @@ from scipy import sparse
 from scipy.linalg import block_diag, cholesky, solve_triangular
 from threadpoolctl import threadpool_limits
 
-from examples.campaign_provenance import file_digest, require_equal, verify_archive
+from examples.campaign_provenance import require_equal, verify_archive
 from examples.three_layer_2017 import DATA, ThreeLayerCase, assembly_order, load_case
 from examples.three_layer_field_archive import (
     actual_local_tables,
     capture_field_basis,
     product_recipe,
 )
-from pymhm import ElastodynamicSolution, ElastodynamicStepper, TriangleMesh
-from pymhm.elasticity import _rigid
-from pymhm.elastodynamics import ElastodynamicLocal, _make_local
-from pymhm.mesh import FaceSpace, SkeletonSpace
-from pymhm.solvers import factorize
+from pymhm import TriangleMesh
+from pymhm._legacy.models.elasticity.mixed_pressure import _rigid
+from pymhm._legacy.models.waves.elastodynamics import (
+    ElastodynamicLocal,
+    ElastodynamicSolution,
+    ElastodynamicStepper,
+    _make_local,
+)
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import file_digest
+from pymhm.linalg.linear import factorize
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def source_hashes() -> dict[str, str]:
     """Identify actual imported numerical owners and the acquisition/input/lock bytes."""
-    import pymhm.elastodynamics as owner
+    import pymhm as owner
 
     package = Path(owner.__file__).parent
     files = {f"pymhm/{path.relative_to(package)}": path for path in sorted(package.rglob("*.py"))}

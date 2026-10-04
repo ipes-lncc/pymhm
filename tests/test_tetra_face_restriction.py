@@ -7,8 +7,8 @@ import pytest
 from numpy.testing import assert_array_equal
 from simplex_native_bounds import reference_roundoff_bounds
 
-from pymhm.tetra_lagrange import tetra_indices
-from pymhm.tetrahedral import tetra_basis, tetra_face_basis
+from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_face_basis
+from pymhm.fem.scalar.tetrahedron_topology import tetra_indices
 
 
 @pytest.mark.parametrize("degree", range(1, 7))

@@ -10,7 +10,7 @@ from typing import Any
 
 import numpy as np
 
-from examples.campaign_provenance import file_digest
+from pymhm.io.provenance import file_digest
 
 
 def write_progress(path: Path, record: dict[str, Any]) -> None:

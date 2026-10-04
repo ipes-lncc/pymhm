@@ -8,17 +8,17 @@ from scipy import sparse
 from scipy.sparse.linalg import spsolve
 from simplex_native_bounds import gamma, reference_roundoff_bounds
 
-from pymhm.darcy3d import TriangularSkeleton, _DarcyFactory, solve_darcy_3d, tetra_trace_coupling
-from pymhm.tetrahedral import (
-    TetraMesh,
-    scalar_values_3d,
-    tensor_values_3d,
+from pymhm._legacy.models.darcy.primal_3d import _DarcyFactory, solve_darcy_3d
+from pymhm.fem.scalar.tetrahedron import (
     tetra_basis,
     tetra_nodal_space,
     tetra_operators,
     tetra_tabulate,
     tetrahedron_quadrature,
 )
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton, tetra_trace_coupling
+from pymhm.materials.evaluation import scalar_values_3d, tensor_values_3d
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 def affine(points):

@@ -3,11 +3,11 @@
 import numpy as np
 import pytest
 
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.mshho3d import solve_mshho_3d
-from pymhm.polyhedral import PolyhedralMesh
-from pymhm.polyhedral_rad import PolygonalSkeleton3D
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.transport.polyhedral import PolygonalSkeleton3D
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.meshes.polyhedral import PolyhedralMesh
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.methods.hho_3d import solve_mshho_3d
 
 
 def affine(x):

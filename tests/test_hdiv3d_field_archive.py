@@ -10,7 +10,6 @@ from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
 from examples import core_extension_data as exact
-from examples.campaign_provenance import file_digest
 from examples.hdiv3d_field_archive import (
     field_arrays,
     observe_system,
@@ -21,9 +20,10 @@ from examples.hdiv3d_field_archive import (
     write_field,
 )
 from examples.local_response_cache import array_identity
-from pymhm.darcy_hdiv3d import solve_darcy_hdiv3d
-from pymhm.hdiv3d_family import cell_quadrature
-from pymhm.hdiv3d_mesh import AffineMixedMesh
+from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
+from pymhm.fem.hdiv.family_3d import cell_quadrature
+from pymhm.io.provenance import file_digest
+from pymhm.meshes.mixed import AffineMixedMesh
 
 
 @pytest.fixture(
@@ -68,8 +68,8 @@ def test_literal_physical_replay_and_original_equations(acquired):
 
 def test_archive_round_trip_without_new_nullspace(acquired, tmp_path, monkeypatch):
     """Reading/replay consumes actual executed C/T rather than regenerating flux coordinates."""
-    import pymhm.hdiv3d_family as legacy
-    import pymhm.hdiv3d_general as general
+    import pymhm.fem.hdiv.family_3d as legacy
+    import pymhm.fem.hdiv.moments_3d as general
 
     _, arrays = acquired
     path = tmp_path / "field.npz"

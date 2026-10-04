@@ -9,9 +9,11 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_elasticity
-from pymhm.elasticity_estimator import estimate_primal_elasticity_error
-from pymhm.lagrange import nodal_space, reference_basis
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.vector import solve_elasticity
+from pymhm.estimators.elasticity import estimate_primal_elasticity_error
+from pymhm.fem.scalar.triangle import nodal_space, reference_basis
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/primal-elasticity"
@@ -180,8 +182,8 @@ def main() -> None:
     digest = archive(solution, data, path)
     sources = [
         Path(__file__),
-        ROOT / "src/pymhm/elasticity_primal.py",
-        ROOT / "src/pymhm/elasticity_estimator.py",
+        ROOT / "src/pymhm/_legacy/models/elasticity/primal.py",
+        ROOT / "src/pymhm/estimators/elasticity.py",
     ]
     report = dict(
         case="Original trigonometric anisotropic elasticity",
@@ -195,9 +197,9 @@ def main() -> None:
         rows=rows,
         archive=path.name,
         sha256=digest,
-        source_hashes={
-            str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources
-        },
+        source_hashes=current_source_manifest(
+            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+        ),
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
 

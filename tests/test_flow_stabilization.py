@@ -4,9 +4,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_brinkman
-from pymhm.flow import _minimum_resistance
-from pymhm.reservoir import CartesianCellField
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.flow.solver import _minimum_resistance
+from pymhm._legacy.models.vector import solve_brinkman
+from pymhm.materials.cartesian import CartesianCellField
 
 
 @pytest.mark.parametrize(

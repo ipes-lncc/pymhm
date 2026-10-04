@@ -14,12 +14,14 @@ from numpy.polynomial import Polynomial
 from solve_oseen import crisscross
 from threadpoolctl import threadpool_limits
 
-from pymhm.flow import solve_flow
-from pymhm.flow_adaptive import adapt_flow
-from pymhm.flow_estimator import estimate_flow_error
-from pymhm.flow_macro_adaptive import adapt_flow_macros
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.vector import VectorSolution
+from pymhm._legacy.models.flow.solver import solve_flow
+from pymhm._legacy.models.vector import VectorSolution
+from pymhm.adaptivity.flow import adapt_flow
+from pymhm.adaptivity.flow_macro import adapt_flow_macros
+from pymhm.estimators.flow import estimate_flow_error
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/stokes-adaptive"
@@ -181,15 +183,17 @@ def main() -> None:
     )
     paths = [
         Path(__file__),
-        ROOT / "src/pymhm/flow.py",
-        ROOT / "src/pymhm/flow_estimator.py",
-        ROOT / "src/pymhm/flow_adaptive.py",
-        ROOT / "src/pymhm/flow_macro_adaptive.py",
-        ROOT / "src/pymhm/refinement.py",
-        ROOT / "src/pymhm/flow_local_refinement.py",
-        ROOT / "src/pymhm/longest_edge.py",
+        ROOT / "src/pymhm/_legacy/models/flow/solver.py",
+        ROOT / "src/pymhm/estimators/flow.py",
+        ROOT / "src/pymhm/adaptivity/flow.py",
+        ROOT / "src/pymhm/adaptivity/flow_macro.py",
+        ROOT / "src/pymhm/meshes/refinement.py",
+        ROOT / "src/pymhm/adaptivity/flow_local_mesh.py",
+        ROOT / "src/pymhm/meshes/longest_edge.py",
     ]
-    hashes = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+    hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+    )
     snapshots = ROOT / "build/source-snapshots/stokes-adaptive"
     snapshots.mkdir(parents=True, exist_ok=True)
     for path in paths:

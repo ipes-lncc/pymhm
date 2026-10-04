@@ -4,8 +4,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm.tetra_validation import validate_face_partition, validate_tetra_submesh
-from pymhm.tetrahedral import TetraMesh
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.meshes.validation import validate_face_partition, validate_tetra_submesh
 
 
 def face_fan():

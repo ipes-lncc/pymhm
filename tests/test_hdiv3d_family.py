@@ -5,7 +5,7 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.hdiv3d_family import (
+from pymhm.fem.hdiv.family_3d import (
     HDiv3DFamily,
     cell_quadrature,
     face_polynomials,
@@ -14,7 +14,7 @@ from pymhm.hdiv3d_family import (
     reference_faces,
     reference_vertices,
 )
-from pymhm.hdiv3d_mesh import AffineMixedMesh, hdiv3d_basis, hdiv3d_dofs, reference_submesh
+from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_basis, hdiv3d_dofs, reference_submesh
 
 
 @pytest.fixture(autouse=True)
@@ -160,8 +160,8 @@ def test_mesh_contracts_and_zero_degree_tests():
 @pytest.mark.parametrize("kind", ["tetrahedron", "prism"])
 def test_octagonal_well_partition_preserves_boundary_and_volume(kind):
     """Tetra/prism subdivisions preserve the exact faceted hexahedral reservoir domain."""
-    from pymhm.hdiv3d_mesh import hdiv3d_transform
-    from pymhm.mapped_rt import HexMesh, cube_quadrature
+    from pymhm.meshes.hexahedron import HexMesh, cube_quadrature
+    from pymhm.meshes.mixed import hdiv3d_transform
 
     hexa = HexMesh.annular_prism(np.geomspace(0.2, 50, 5), 10, 8)
     mesh = AffineMixedMesh.from_extruded_hexahedra(hexa.points, hexa.cells, kind)
@@ -208,7 +208,7 @@ def test_topological_nonmanifold_and_overlap_rejection():
 
 def test_polynomial_dimension_diagnostic(monkeypatch):
     """A failed constraint rank is rejected before a malformed family can be used."""
-    import pymhm.hdiv3d_family as module
+    import pymhm.fem.hdiv.family_3d as module
 
     module._coefficients.cache_clear()
     with monkeypatch.context() as patch:
@@ -246,7 +246,7 @@ def test_canonical_interior_moments_and_orthogonality(kind, degree):
 @pytest.mark.parametrize("kind,degree", [("tetrahedron", 1), ("tetrahedron", 2), ("prism", 1)])
 def test_basis_coordinates_ignore_nullspace_rotations_and_blas_threads(kind, degree, monkeypatch):
     """Interior coordinates remain fixed when singular-vector frames or BLAS threads change."""
-    import pymhm.hdiv3d_family as module
+    import pymhm.fem.hdiv.family_3d as module
 
     module._coefficients.cache_clear()
     family = HDiv3DFamily(kind, degree)
@@ -284,7 +284,7 @@ def test_basis_coordinates_ignore_nullspace_rotations_and_blas_threads(kind, deg
 @pytest.mark.parametrize("kind,degree", [("tetrahedron", 1), ("tetrahedron", 2), ("prism", 1)])
 def test_archived_basis_replays_the_executed_field(kind, degree, tmp_path):
     """An archive's explicit basis preserves fields even when its bubble coordinates differ."""
-    from pymhm.hdiv3d_mesh import hdiv3d_transform
+    from pymhm.meshes.mixed import hdiv3d_transform
 
     family = HDiv3DFamily(kind, degree)
     mesh = AffineMixedMesh.unit_cube(kind=kind)

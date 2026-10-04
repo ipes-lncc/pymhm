@@ -5,9 +5,14 @@ from typing import Any
 import numpy as np
 import pytest
 
-from pymhm.conforming import solve_conforming_quadrilateral
-from pymhm.quadrilateral import CartesianMacroMesh, qk_space, quadrilateral_operators
-from pymhm.separable import SeparableField, separable_diffusion_operators, solve_separable_diffusion
+from pymhm._legacy.models.darcy.conforming import solve_conforming_quadrilateral
+from pymhm._legacy.models.darcy.separable import (
+    SeparableField,
+    separable_diffusion_operators,
+    solve_separable_diffusion,
+)
+from pymhm.fem.scalar.quadrilateral import qk_space, quadrilateral_operators
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 def material() -> SeparableField:

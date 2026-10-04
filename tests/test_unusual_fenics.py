@@ -5,10 +5,10 @@ import pytest
 from numpy.testing import assert_allclose
 
 from pymhm import SkeletonSpace, TriangleMesh
-from pymhm.fenics import from_ufl
-from pymhm.lagrange import nodal_space
-from pymhm.rad import _rad_local
-from pymhm.unusual import UnusualParameters
+from pymhm._legacy.models.transport.rad import _rad_local
+from pymhm._legacy.models.transport.stabilization import UnusualParameters
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.scalar.triangle import nodal_space
 
 
 @pytest.mark.fem

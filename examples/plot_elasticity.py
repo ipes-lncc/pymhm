@@ -2,6 +2,8 @@
 
 Run ``pixi run -e notebooks python examples/plot_elasticity.py --workers 4``.
 Use ``--reuse-results`` to redraw the archived results without solving a PDE.
+Importing the field helpers preserves the caller's Matplotlib backend; the
+command-line entry point selects Agg for file rendering.
 """
 
 from __future__ import annotations
@@ -14,8 +16,6 @@ from pathlib import Path
 from typing import Any
 
 import matplotlib
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 import numpy as np
@@ -23,16 +23,15 @@ from elasticity_data import TrigonometricElasticityData
 from plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from threadpoolctl import threadpool_limits
 
-from pymhm import (
-    FaceSpace,
-    SkeletonSpace,
-    TriangleMesh,
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.elasticity.mixed_pressure import (
+    ElasticitySolution,
     solve_displacement_pressure,
-    solve_elasticity,
 )
-from pymhm.elasticity import ElasticitySolution
-from pymhm.lagrange import nodal_space, reference_basis, tabulate
-from pymhm.solvers import LinearSolveError
+from pymhm._legacy.models.vector import solve_elasticity
+from pymhm.fem.scalar.triangle import nodal_space, reference_basis, tabulate
+from pymhm.io.provenance import current_source_manifest
+from pymhm.linalg.linear import LinearSolveError
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "examples/results/elasticity.json"
@@ -71,13 +70,16 @@ def metrics(result: ElasticitySolution, exact: TrigonometricElasticityData) -> d
 def snapshot_hashes() -> dict[str, str]:
     """Record the public numerical and analytical sources used for acquisition."""
     paths = [
-        *sorted((ROOT / "src/pymhm").glob("*.py")),
+        *sorted((ROOT / "src/pymhm").rglob("*.py")),
         Path(__file__).resolve(),
         ROOT / "examples/elasticity_data.py",
     ]
-    return {
-        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
-    }
+    return current_source_manifest(
+        {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in paths
+        }
+    )
 
 
 def write_report(report: dict[str, Any]) -> None:
@@ -448,6 +450,7 @@ def plot_fields(report: dict[str, Any]) -> None:
 
 def main() -> None:
     """Generate original numerical results or render the existing public dataset."""
+    matplotlib.use("Agg")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reuse-results", action="store_true")
     parser.add_argument("--workers", type=int, default=1)

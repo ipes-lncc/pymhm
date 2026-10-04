@@ -13,6 +13,8 @@ from hpc4e_data import DATA_DIRECTORY, load_data
 from hpc4e_fields import RectangularElasticityField, compare_fields
 from threadpoolctl import threadpool_limits
 
+from pymhm.io.provenance import current_source_manifest
+
 ROOT = Path(__file__).resolve().parents[1]
 ARCHIVES = ROOT / "build/results/hpc4e"
 
@@ -63,14 +65,21 @@ def main() -> None:
         Path(__file__).with_name("hpc4e_data.py"),
         Path(__file__).with_name("results") / "hpc4e/dataset.json",
         *(
-            ROOT / "src/pymhm" / f"{name}.py"
-            for name in ("tensor_rt", "elasticity_tensor_rt", "quadrilateral", "reservoir")
+            ROOT / f"src/pymhm/{name}.py"
+            for name in (
+                "fem/hdiv/tensor_rt",
+                "_legacy/models/elasticity/stress_tensor",
+                "_legacy/models/darcy/cartesian",
+                "io/reservoir",
+            )
         ),
     ]
-    source_hashes = {
-        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in sources
-    }
+    source_hashes = current_source_manifest(
+        {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in sources
+        }
+    )
     input_paths = [*args.approximations, args.reference]
     if len({path.name for path in input_paths}) != len(input_paths):
         parser.error("comparison archives must have distinct filenames")
@@ -87,10 +96,12 @@ def main() -> None:
             print(json.dumps(row), flush=True)
     if inputs != {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in input_paths}:
         raise RuntimeError("HPC4E comparison archives changed during integration")
-    if source_hashes != {
-        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in sources
-    }:
+    if source_hashes != current_source_manifest(
+        {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in sources
+        }
+    ):
         raise RuntimeError("HPC4E comparison sources changed during integration")
     report = dict(
         comparison="Physical L2 and compliance norms on the common material-aligned grid",

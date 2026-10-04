@@ -6,10 +6,10 @@ from numpy.polynomial.legendre import leggauss
 from scipy.linalg import block_diag
 from threadpoolctl import threadpool_limits
 
-from pymhm.lagrange import nodal_space
-from pymhm.mesh import TriangleMesh
-from pymhm.pgmhm import solve_pgmhm
-from pymhm.reservoir import CartesianCellField
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.petrov_galerkin import solve_pgmhm
 
 pytestmark = pytest.mark.fem
 

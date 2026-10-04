@@ -7,14 +7,15 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm.hybrid import HybridSolution, HybridSystem, LocalProblem
-from pymhm.hybrid_refinement import (
+from pymhm.core.contracts import HybridSolution, LocalProblem
+from pymhm.core.refinement import (
     HybridRefinementCase,
     HybridRefinementLocal,
     refine_hybrid,
     refine_hybrid_stream,
 )
-from pymhm.solvers import LinearSolveError, SolverUnavailableError
+from pymhm.core.system import HybridSystem
+from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError
 
 
 class MemoryStore:
@@ -262,7 +263,7 @@ def test_failing_local_correction_releases_factor_and_preserves_rejection(monkey
     """An inaccurate local inverse cannot be accepted by the reduced residual alone."""
     from contextlib import contextmanager
 
-    import pymhm.hybrid_refinement as owner
+    import pymhm.core.refinement as owner
 
     closed = []
 
@@ -307,7 +308,7 @@ def test_wide_storage_cannot_silently_cast_executed_fields(monkeypatch):
     case, store, factory, _ = simple()
     with pytest.raises(ValueError, match="precision"):
         refine_hybrid_stream([case], factory, store, refinement_precision="extended")
-    import pymhm.hybrid_refinement as owner
+    import pymhm.core.refinement as owner
 
     actual = np.finfo
     monkeypatch.setattr(owner.np, "finfo", lambda dtype: actual(float))
@@ -394,7 +395,7 @@ def test_full_system_can_supply_physical_moment_rows():
 )
 def test_original_wide_defect_load_is_preserved_in_both_shared_owners(monkeypatch):
     """Original wide forcing reaches a factor with an explicitly stricter test criterion."""
-    import pymhm.hybrid_refinement as owner
+    import pymhm.core.refinement as owner
 
     actual_factorize = owner.factorize
     captured = []

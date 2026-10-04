@@ -7,8 +7,9 @@ Darcy. Both the source response and the face responses are assembled and
 condensed inside the selected local worker.
 
 ```python
-from pymhm.mesh import FaceSpace, SkeletonSpace
-from pymhm.quadrilateral import CartesianMacroMesh, solve_darcy_quadrilateral
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm._legacy.models.darcy.cartesian import solve_darcy_quadrilateral
 
 mesh = CartesianMacroMesh(6, 11, bounds=(0, 1200, 0, 2200))
 skeleton = SkeletonSpace(

@@ -16,8 +16,8 @@ import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 from threadpoolctl import threadpool_limits
 
-from pymhm import element_backends as providers
-from pymhm.element_backends import (
+from pymhm.fem import reference as providers
+from pymhm.fem.reference import (
     ReferenceElementSpec,
     create_reference_element,
     nodal_base_transformations,
@@ -29,8 +29,8 @@ from pymhm.element_backends import (
     simplex_lagrange_tabulation,
     tabulate_reference,
 )
-from pymhm.lagrange import multiindices
-from pymhm.tetra_lagrange import tetra_indices
+from pymhm.fem.scalar.tetrahedron_topology import tetra_indices
+from pymhm.fem.scalar.triangle import multiindices
 
 
 def test_import_leaves_optional_libraries_unloaded() -> None:
@@ -38,7 +38,7 @@ def test_import_leaves_optional_libraries_unloaded() -> None:
         [
             sys.executable,
             "-c",
-            "import sys; import pymhm.element_backends; "
+            "import sys; import pymhm.fem.reference; "
             "assert not any(name.split('.')[0] in {'basix', 'dolfinx', 'ufl', 'FIAT', 'finat'} "
             "for name in sys.modules)",
         ],

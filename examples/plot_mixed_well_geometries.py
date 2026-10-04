@@ -19,9 +19,9 @@ from mpl_toolkits.mplot3d.art3d import Line3DCollection
 from plot_style import set_refinement_ticks
 from solve_mapped_well import WellData
 
-from pymhm.hdiv3d_family import HDiv3DFamily, reference_faces
-from pymhm.hdiv3d_mesh import AffineMixedMesh, hdiv3d_dofs, hdiv3d_transform
-from pymhm.mapped_rt import HexMesh
+from pymhm.fem.hdiv.family_3d import HDiv3DFamily, reference_faces
+from pymhm.meshes.hexahedron import HexMesh
+from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_dofs, hdiv3d_transform
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "docs/figures/mixed-well-geometries"

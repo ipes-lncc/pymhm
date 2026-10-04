@@ -7,7 +7,6 @@ import json
 import pytest
 
 from examples.campaign_provenance import (
-    file_digest,
     index_records,
     positive_integers,
     require_equal,
@@ -16,6 +15,7 @@ from examples.campaign_provenance import (
     verify_archive,
     verify_result,
 )
+from pymhm.io.provenance import file_digest
 
 
 @pytest.mark.parametrize("values", [[], [0], [-1], [True], [1.0], [2, 2], [4, 2]])

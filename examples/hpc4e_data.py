@@ -15,7 +15,7 @@ from urllib.request import urlopen
 
 import numpy as np
 
-from pymhm.reservoir import CartesianCellField
+from pymhm.materials.cartesian import CartesianCellField
 
 REVISION = "f978f29d657d28fe58bcea20fabee68953093482"
 BASE_URL = f"https://raw.githubusercontent.com/labmec/MHM/{REVISION}/Data_13_Set"

@@ -15,7 +15,7 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from pymhm import CartesianMacroMesh
-from pymhm.tensor_rt import solve_darcy_tensor_rt
+from pymhm._legacy.models.darcy.tensor import solve_darcy_tensor_rt
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/tensor-rt.json"

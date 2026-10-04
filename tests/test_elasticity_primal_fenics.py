@@ -5,9 +5,9 @@ import pytest
 from numpy.testing import assert_allclose
 
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.elasticity_primal import _local_primal
-from pymhm.fenics import from_ufl
-from pymhm.lagrange import nodal_space
+from pymhm._legacy.models.elasticity.primal import _local_primal
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.scalar.triangle import nodal_space
 
 
 @pytest.mark.fem

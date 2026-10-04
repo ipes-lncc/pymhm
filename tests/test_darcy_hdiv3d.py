@@ -8,16 +8,16 @@ from numpy.testing import assert_allclose
 from scipy import sparse
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy_hdiv3d import Mixed3DSkeleton, hdiv3d_operators, solve_darcy_hdiv3d
-from pymhm.hdiv3d_family import (
+from pymhm._legacy.models.darcy.hdiv_3d import Mixed3DSkeleton, hdiv3d_operators, solve_darcy_hdiv3d
+from pymhm.fem.hdiv.family_3d import (
     HDiv3DFamily,
     cell_quadrature,
     face_polynomials,
     face_quadrature,
     face_shape,
 )
-from pymhm.hdiv3d_mesh import AffineMixedMesh, hdiv3d_basis, hdiv3d_dofs
-from pymhm.solvers import solve_linear
+from pymhm.linalg.linear import solve_linear
+from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_basis, hdiv3d_dofs
 
 
 @dataclass(frozen=True)
@@ -132,7 +132,7 @@ def test_complete_trace_equals_classical_conforming_system(kind, degree):
 @pytest.mark.parametrize("backend", ["thread", "process"])
 def test_factory_parallel_field_equality(backend):
     """Workers and callers with different BLAS settings reconstruct identical physical fields."""
-    from pymhm.hdiv3d_family import _coefficients
+    from pymhm.fem.hdiv.family_3d import _coefficients
 
     mesh = AffineMixedMesh.unit_cube(kind="prism")
     data = Analytic()
@@ -181,7 +181,7 @@ def test_coarse_traces_mixed_boundary_and_invalid_contracts():
 
 def test_trace_alignment_and_missing_parent_diagnostics():
     """A fine face crossing a subface or leaving the macro boundary cannot define a trace map."""
-    from pymhm.darcy_hdiv3d import _partition, _trace_mapping
+    from pymhm._legacy.models.darcy.hdiv_3d import _partition, _trace_mapping
 
     partition = _partition(3, 2, 1, 1.0)
     with pytest.raises(ValueError, match="align"):
@@ -197,7 +197,7 @@ def test_corrupted_reconstruction_fails_physical_block_gate(monkeypatch):
     """A returned field must satisfy every physical mixed block, independently of solver status."""
     from dataclasses import replace
 
-    from pymhm.hybrid import HybridSystem
+    from pymhm.core.system import HybridSystem
 
     original = HybridSystem.solve
 

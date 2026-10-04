@@ -12,11 +12,11 @@ from examples.helmholtz_trace_family import (
     restrict_helmholtz_trace,
     solve_restricted_coordinates,
 )
-from pymhm.helmholtz import solve_helmholtz
-from pymhm.helmholtz_spaces import helmholtz_skeleton
-from pymhm.mesh import FaceSpace, SkeletonSpace
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.reservoir import CartesianCellField
+from pymhm._legacy.models.waves.helmholtz import solve_helmholtz
+from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @pytest.mark.parametrize("boundary", ["absorbing", "dirichlet", "mixed"])

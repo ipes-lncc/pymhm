@@ -8,7 +8,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from examples.mh2m_heterogeneous_norms import overlay_triangles
-from pymhm.cut_cells import _clip_polygon
+from pymhm.fem.quadrature.material import _clip_polygon
 
 PATTERN = np.array(
     [

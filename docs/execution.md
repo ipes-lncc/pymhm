@@ -8,7 +8,9 @@ does not implicitly enable the others.
 
 ## Serial cells and bounded parallel batches
 
-`assemble_hybrid` consumes the explicitly declared layout in `GlobalForm`.
+`assemble` consumes the forms and coordinate layout of `MultiscaleProblem`.
+`assemble_hybrid` uses its fixed `GlobalForm` construction;
+both delegate scheduling and reduction to the same owners.
 Serial execution constructs, condenses and accumulates one macrocell before
 requesting the next. Parallel execution completes a bounded batch of local
 jobs, then accumulates each contribution in input order. Only the coordinator
@@ -18,21 +20,26 @@ loads and their absolute scales use the same cellwise reduction as ordinary
 
 ```python
 from pymhm import (
-    ExecutionConfig, GlobalForm, HybridProblem, assemble_hybrid,
+    Equation, ExecutionConfig, MultiscaleProblem, assemble,
 )
 
-form = GlobalForm(
+problem = MultiscaleProblem(
+    global_equation=Equation(global_matrix, global_rhs),
+    local_provider=local_provider,
+    items=range(len(macro_mesh.cells)),
     trace_size=skeleton.size,
     coarse_sizes=(1,) * len(macro_mesh.cells),
-    boundary_load=boundary_moments,
 )
-problem = HybridProblem(form, local_provider, range(len(macro_mesh.cells)))
-system = assemble_hybrid(
+system = assemble(
     problem,
     execution=ExecutionConfig(backend="process", workers=10, batch_size=10),
 )
 solution = system.solve()
 ```
+
+The provider returns the explicit local equations. `global_matrix` and
+`global_rhs` contain additional global forms in the complete reduced coordinate
+order. See the [variational guide](variational.md) for their signs and sizes.
 
 Run process examples inside a script protected by
 `if __name__ == "__main__":`. The backend uses `spawn` on every platform.
@@ -96,7 +103,7 @@ for its declared constant kernel and fixed Q1/P0 spaces.
 ## Repeated sources and boundary values
 
 ```python
-from pymhm.offline import OfflineHybridSystem
+from pymhm.core.offline import OfflineHybridSystem
 
 # problems contains assembled LocalProblem instances.
 with OfflineHybridSystem(problems, boundary_load=boundary_moments) as prepared:
@@ -125,12 +132,12 @@ Both APIs own their native resources and support context managers.
 
 ## Distributed MPI assembly
 
-`pymhm.distributed.solve_distributed` is collective on the supplied mpi4py
+`pymhm.execution.mpi.solve_distributed` is collective on the supplied mpi4py
 communicator. Each rank supplies only its own cell specifications:
 
 ```python
 from mpi4py import MPI
-from pymhm.distributed import solve_distributed
+from pymhm.execution.mpi import solve_distributed
 
 comm = MPI.COMM_WORLD
 owned_cells = range(comm.rank, number_of_cells, comm.size)
@@ -177,7 +184,7 @@ communication efficiency.
 
 ## Resident batches on one GPU
 
-`pymhm.gpu.assemble_p1_batch(points, cells, diffusion=..., source=...)` performs
+`pymhm.execution.cuda.assemble_p1_batch(points, cells, diffusion=..., source=...)` performs
 geometry, affine P1 volume assembly, consistent mass assembly and load assembly
 on the device. `points` has shape `(batch, points_per_mesh, dimension)` and
 `cells` is shared connectivity, with dimension two or three. Diffusion may be

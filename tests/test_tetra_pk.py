@@ -10,20 +10,22 @@ from scipy.spatial import cKDTree
 from simplex_native_bounds import gamma, reference_roundoff_bounds
 from threadpoolctl import threadpool_limits
 
-from pymhm import TetraMesh, TriangularSkeleton, estimate_darcy_error_3d, solve_darcy_3d
-from pymhm.element_backends import simplex_lagrange_basis, tabulate_reference
-from pymhm.flow import _laplacian_inverse_bound
-from pymhm.tetra_lagrange import (
-    _compositions,
-    tetra_indices,
-    tetra_polynomials,
-    tetra_values_gradients,
-)
-from pymhm.tetrahedral import (
+from pymhm import TetraMesh, TriangularSkeleton
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from pymhm._legacy.models.flow.solver import _laplacian_inverse_bound
+from pymhm.estimators.darcy_3d import estimate_darcy_error_3d
+from pymhm.fem.reference import simplex_lagrange_basis, tabulate_reference
+from pymhm.fem.scalar.tetrahedron import (
     tetra_element_tabulate,
     tetra_nodal_space,
     tetra_operators,
     tetrahedron_quadrature,
+)
+from pymhm.fem.scalar.tetrahedron_topology import (
+    _compositions,
+    tetra_indices,
+    tetra_polynomials,
+    tetra_values_gradients,
 )
 
 

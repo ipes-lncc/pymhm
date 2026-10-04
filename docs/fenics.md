@@ -1,8 +1,29 @@
 # Defining local problems with FEniCSx
 
+Use `LocalEquations` to declare both local equations and `Equation` for
+additional global forms. `pymhm.backends.forms.assemble_form` compiles real
+linear and bilinear UFL forms into owned numerical arrays. `columns` and
+`rows` declare independent trace pairings; the native adapter supports linear
+forms on either test or trial arguments, distinct spaces and rectangular
+blocks. The local pivot and the complete global operator must be square.
+
+Forms run on single-rank DOLFINx domains. Quadrature, orientation, boundary
+elimination and physical gauges remain explicit. Cross-mesh forms require
+declared `entity_maps`. A provider constructs and compiles native resources
+inside its worker; no live native object crosses a spawn boundary. See the
+[variational guide](variational.md) for all compilation and recursion limits.
+
+The [UFL provider notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/foundations/operators/ufl_provider.ipynb)
+defines its scalar volume operator, both trace pairings and physical mean
+directly. The [provider tutorial](tutorials/providers.md) also declares mixed
+flux, pressure and auxiliary boundary fields without a PDE-specific solver.
+Both use `MultiscaleProblem`, `assemble` and `solve`.
+
+## Fixed hybrid local-form adapter
+
 `LocalForm` records local variational expressions and explicit trace maps;
-`pymhm.fenics.assemble_local_forms` compiles them using DOLFINx and returns an
-ordinary `LocalProblem`. The lower-level `pymhm.fenics.from_ufl` accepts the same
+`pymhm.backends.fenics.assemble_local_forms` compiles them using DOLFINx and returns an
+ordinary `LocalProblem`. The lower-level `pymhm.backends.fenics.from_ufl` accepts the same
 assembly inputs directly. Global skeleton numbering and condensation remain
 independent of DOLFINx. The same adapter accepts scalar, vector, mixed and
 H(div) spaces, provided the supplied local equations and constraints are
@@ -68,8 +89,8 @@ import numpy as np
 import ufl
 from mpi4py import MPI
 from dolfinx import fem, mesh
-from pymhm.fenics import assemble_local_forms
-from pymhm.variational import LocalForm
+from pymhm.backends.fenics import assemble_local_forms
+from pymhm.core.variational import LocalForm
 
 local_mesh = mesh.create_unit_square(MPI.COMM_SELF, 4, 4)
 V = fem.functionspace(local_mesh, ("Lagrange", 1))
@@ -156,31 +177,31 @@ the same local expressions shown above are constructed inside each worker.
 
 ```python
 from examples.variational_darcy import DarcyProvider, affine_pressure
-from pymhm.assembly import HybridProblem, solve_hybrid
-from pymhm.elements import boundary_data
-from pymhm.mesh import SkeletonSpace, TriangleMesh
-from pymhm.parallel import ExecutionConfig
-from pymhm.variational import GlobalForm
+from pymhm import Equation, MultiscaleProblem, solve
+from pymhm.fem.scalar.operators import boundary_data
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.execution.cpu import ExecutionConfig
+import numpy as np
 
 macro_mesh = TriangleMesh.unit_square()
 skeleton = SkeletonSpace(macro_mesh)
 provider = DarcyProvider(macro_mesh, skeleton, kind="fenics", subdivisions=2)
 boundary, _ = boundary_data(skeleton, affine_pressure)
-global_form = GlobalForm(
-    skeleton.size, coarse_sizes=(1, 1), boundary_load=boundary,
+problem = MultiscaleProblem(
+    Equation(0, -np.r_[boundary, np.zeros(2)]), provider, range(2),
+    trace_size=skeleton.size, coarse_sizes=(1, 1),
 )
-problem = HybridProblem(global_form, provider, range(2))
-solution = solve_hybrid(problem, execution=ExecutionConfig())
+solution = solve(problem, execution=ExecutionConfig())
 ```
 
-Run the complete script with either assembly provider:
+Run the provider notebook and select its assembly provider:
 
 ```bash
-pixi run --locked -e test python -m examples.variational_darcy --provider portable
-pixi run --locked -e fem python -m examples.variational_darcy --provider fenics --backend process --workers 2 --batch-size 1
+pixi run --locked -e notebooks notebooks-run foundations/operators/ufl_provider.ipynb
 ```
 
-The `--backend` choices are `serial`, `thread` and `process`; `--batch-size`
+The `backend` choices are `serial`, `thread` and `process`; `batch_size`
 bounds work submitted together in parallel, while serial execution solves one
 cell at a time. Shared faces are accumulated by the coordinator in cell order.
 Responses remain available for reconstruction, so this bound applies to
@@ -198,12 +219,16 @@ couplings, integral moments, global records and affine fields against the
 portable P1 implementation, with the DOLFINx coefficient permutation stated
 explicitly. This verifies the common discrete problem and scheduling contract.
 
-## Volume-form helpers
+## Predefined volume-form helpers
+
+These helpers retain the established physical conventions and native
+integration tests. New user-defined equations can write their UFL forms
+directly and use the generic compiler above.
 
 | Helper | Unknowns and equation | Boundary/nullspace responsibility |
 |---|---|---|
 | `primal_darcy_forms` | Pressure, \(-\nabla\cdot(K\nabla p)=f\) | Normal Darcy flux multiplies the pressure test; one constant local mode for pure diffusion. |
-| `mixed_darcy_forms` | H(div) velocity and L2 pressure, \(K^{-1}u+\nabla p=0\), \(\nabla\cdot u=f\) | Pressure is natural data, normal velocity is essential; RT/DG stability and essential constraints must be supplied. |
+| `mixed_darcy_forms` | H(div) Darcy flux and L2 pressure, \(K^{-1}u+\nabla p=0\), \(\nabla\cdot u=f\) | Pressure is natural data, normal Darcy flux is essential; RT/DG stability and essential constraints must be supplied. |
 | `brinkman_forms` | H1 velocity and pressure, \(-\nabla\cdot(2\mu\varepsilon(u))+Ru+\nabla p=f\) | Select a stable pair and supply traction, the actual local kernel and any required global pressure gauge. Rigid motions form the kernel in the zero-drag Stokes limit; positive-definite drag removes them. |
 | `elasticity_forms` | Displacement, stress \(2\mu\varepsilon(u)+\lambda\operatorname{div}(u)I\) | Supply rigid motions and signed traction forms. The 2D default interpretation is plane strain. |
 | `usfem_brinkman_forms` | Equal-order velocity/pressure with vector-Laplacian pseudostress and residual stabilization | Use compatible pseudotractions, the stated inverse estimate and the appropriate global pressure constraint. |
@@ -212,9 +237,9 @@ The mixed Darcy and incompressible helpers negate the pressure test equation to
 produce a symmetric saddle operator. Accordingly, a divergence source \(g\)
 contributes \(-\int gq\). For mixed Darcy, imposed pressure contributes
 \(-\int_{\partial K}p_D(v\cdot n_K)\). The native integration test checks this
-sign by recovering constant pressure and zero RT velocity.
+sign by recovering constant pressure and zero RT Darcy flux.
 
-The adapter does not infer essential normal-velocity constraints for H(div)
+The adapter does not infer essential normal-flux constraints for H(div)
 spaces. An arbitrary mixed volume form plus a boundary pressure coupling is not
 a replacement for the flux-multiplier MHM construction: choose the intended
 hybrid formulation and enforce its essential conditions through elimination or

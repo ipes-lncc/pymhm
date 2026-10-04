@@ -8,8 +8,7 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.elements import boundary_data, face_integration, p1_operators
-from pymhm.fenics import (
+from pymhm.backends.fenics import (
     brinkman_forms,
     elasticity_forms,
     from_ufl,
@@ -17,8 +16,10 @@ from pymhm.fenics import (
     primal_darcy_forms,
     usfem_brinkman_forms,
 )
-from pymhm.hybrid import HybridSystem
-from pymhm.mesh import SkeletonSpace, TriangleMesh
+from pymhm.core.system import HybridSystem
+from pymhm.fem.scalar.operators import boundary_data, face_integration, p1_operators
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
 
 pytestmark = pytest.mark.fem
 

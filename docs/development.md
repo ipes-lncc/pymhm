@@ -1,19 +1,25 @@
 # Development and release
 
-Development uses Pixi, a `src` layout and Hatchling. Runtime imports have no
-mandatory FEM, MPI, CAD or accelerator dependency. Public functions and classes
-have docstrings; the package includes its typing marker.
+Development uses Pixi, a `src` layout and Hatchling. Basix supplies native
+reference-element tabulation as a standard dependency. It is loaded on demand;
+the algebraic core requires no optional FEM compiler, MPI, CAD or accelerator
+runtime. Functions and classes, including private and nested helpers, have
+docstrings and type annotations. The package includes its typing marker and
+typed root interface.
 
 ## Quality gates
 
 - Ruff checks style, imports, common mistakes and documentation.
+- The recursive source contract checks docstrings and annotations on every
+  module and named definition, including implementation helpers.
 - Mypy checks annotations against the resolved development environment.
 - Pytest measures branch and line coverage, each with an independent **99% minimum**.
 - Analytical patches, convergence, conservation, gauges and independent
   uncondensed comparisons check numerical meaning beyond coverage.
 - Native integration tests run separately from optional-dependency contract tests.
 - MkDocs builds strictly; notebooks execute with nbclient and bounded cell timeouts.
-- Wheel and source distribution metadata and installed contents are checked.
+- Wheel and source distribution metadata are checked, and every runtime module,
+  typing stub and marker must match the current source tree byte for byte.
 
 ```bash
 pixi run -e test lint

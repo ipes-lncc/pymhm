@@ -4,9 +4,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.adaptive_darcy import mark_dorfler, solve_adaptive_darcy
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.refinement import refine_triangles, transfer_skeleton
+from pymhm.adaptivity.darcy import mark_dorfler, solve_adaptive_darcy
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.refinement import refine_triangles, transfer_skeleton
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def sine(points):

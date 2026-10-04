@@ -8,8 +8,9 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.hybrid import HybridSystem, LocalProblem
-from pymhm.solvers import SolverUnavailableError, factorize, solve_linear
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.system import HybridSystem
+from pymhm.linalg.linear import SolverUnavailableError, factorize, solve_linear
 
 
 def local_problem(kind: str) -> LocalProblem:

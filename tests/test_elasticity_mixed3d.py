@@ -9,14 +9,18 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.elasticity_mixed3d import TractionSkeleton3D, _Factory, solve_elasticity_mixed_3d
-from pymhm.elasticity_mixed3d_forms import (
+from pymhm._legacy.models.elasticity.stress_3d import (
+    TractionSkeleton3D,
+    _Factory,
+    solve_elasticity_mixed_3d,
+)
+from pymhm._legacy.models.elasticity.stress_forms_3d import (
     compliance_action,
     mixed_elasticity_operators_3d,
     rigid_values,
 )
-from pymhm.hdiv3d_family import HDiv3DFamily, cell_quadrature
-from pymhm.hdiv3d_mesh import AffineMixedMesh
+from pymhm.fem.hdiv.family_3d import HDiv3DFamily, cell_quadrature
+from pymhm.meshes.mixed import AffineMixedMesh
 
 
 @pytest.fixture(autouse=True)
@@ -328,7 +332,7 @@ def test_nonaffine_bulk_modulus_limit():
 @pytest.mark.parametrize("lam", [2.0, np.inf])
 def test_nonaffine_complementary_energy_identity(lam):
     """Stress energy equals body-force work with homogeneous displacement and weak symmetry."""
-    from pymhm.hdiv3d_family import cell_quadrature
+    from pymhm.fem.hdiv.family_3d import cell_quadrature
 
     def force(points):
         """A nonconservative affine body force with exact polynomial work quadrature."""

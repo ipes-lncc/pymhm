@@ -5,8 +5,9 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.mh2m3d import solve_mh2m_3d
-from pymhm.tetrahedral import TetraMesh, tetra_nodal_space
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.methods.three_field_3d import solve_mh2m_3d
 
 pytestmark = pytest.mark.fem
 

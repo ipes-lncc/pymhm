@@ -6,8 +6,9 @@ import numpy as np
 from mpi4py import MPI
 from numpy.testing import assert_allclose
 
-from pymhm.distributed import solve_distributed
-from pymhm.hybrid import HybridSystem, LocalAssembly, LocalProblem
+from pymhm.core.contracts import LocalAssembly, LocalProblem
+from pymhm.core.system import HybridSystem
+from pymhm.execution.mpi import solve_distributed
 
 
 def local_cell(index: int) -> LocalAssembly:

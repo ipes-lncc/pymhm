@@ -12,7 +12,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 from pymhm import HybridSystem, LocalAssembly, LocalProblem
-from pymhm.solvers import LinearSolveError
+from pymhm.linalg.linear import LinearSolveError
 
 
 def make_problem(item: tuple[int, float]) -> LocalProblem:
@@ -161,7 +161,8 @@ def test_full_darcy_factory_reconstructs_physical_fields(
 
     from threadpoolctl import threadpool_limits
 
-    from pymhm import TriangleMesh, solve_darcy
+    from pymhm import TriangleMesh
+    from pymhm._legacy.models.darcy.primal import solve_darcy
 
     monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "benchmarks"))
     benchmark = importlib.import_module("large_local")

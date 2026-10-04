@@ -19,7 +19,7 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples import core_extension_data as exact
-from examples.campaign_provenance import file_digest, positive_integers
+from examples.campaign_provenance import positive_integers
 from examples.hdiv3d_field_archive import (
     field_arrays,
     observe_system,
@@ -29,8 +29,9 @@ from examples.hdiv3d_field_archive import (
 )
 from examples.transport_checkpoints import write_progress
 from examples.verify_mshho3d import capture_sources as capture_shared_sources
-from pymhm.darcy_hdiv3d import solve_darcy_hdiv3d
-from pymhm.hdiv3d_mesh import AffineMixedMesh
+from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
+from pymhm.io.provenance import file_digest
+from pymhm.meshes.mixed import AffineMixedMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES = {

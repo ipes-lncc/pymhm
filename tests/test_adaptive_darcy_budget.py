@@ -4,11 +4,11 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.adaptive_darcy import mark_dorfler
-from pymhm.adaptive_darcy_budget import refine_darcy_budget
-from pymhm.longest_edge import refine_longest_edge
-from pymhm.mesh import TriangleMesh
-from pymhm.refinement import TriangleRefinement
+from pymhm.adaptivity.darcy import mark_dorfler
+from pymhm.adaptivity.darcy_budget import refine_darcy_budget
+from pymhm.meshes.longest_edge import refine_longest_edge
+from pymhm.meshes.refinement import TriangleRefinement
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def test_budget_enlarges_bulk_without_reference_field():

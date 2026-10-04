@@ -11,11 +11,12 @@ from time import perf_counter
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.mh2m3d import solve_mh2m_3d
-from pymhm.mh3d import solve_mh_3d
-from pymhm.mh_trace3d import PressureTraceSpace3D
-from pymhm.tetrahedral import TetraMesh
+from pymhm.fem.traces.pressure_3d import PressureTraceSpace3D
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.methods.robin_3d import solve_mh_3d
+from pymhm.methods.three_field_3d import solve_mh2m_3d
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -46,21 +47,23 @@ def source_hashes() -> dict[str, str]:
         *(
             f"src/pymhm/{name}.py"
             for name in (
-                "mh3d",
-                "mh2m3d",
-                "mh_boundary",
-                "mh_trace3d",
-                "mh2m",
-                "darcy3d",
-                "tetrahedral",
-                "tetra_lagrange",
-                "lagrange",
-                "hybrid",
-                "solvers",
+                "methods/robin_3d",
+                "methods/three_field_3d",
+                "methods/boundary",
+                "fem/traces/pressure_3d",
+                "methods/three_field",
+                "_legacy/models/darcy/primal_3d",
+                "fem/scalar/tetrahedron",
+                "fem/scalar/tetrahedron_topology",
+                "fem/scalar/triangle",
+                "core/contracts",
+                "linalg/linear",
             )
         ),
     ]
-    return {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in paths}
+    return current_source_manifest(
+        {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in paths}
+    )
 
 
 def run(resolutions: list[int], output: Path) -> None:

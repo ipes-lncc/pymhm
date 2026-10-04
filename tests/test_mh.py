@@ -7,14 +7,15 @@ from scipy import sparse
 from scipy.sparse.linalg import spsolve
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy import solve_darcy
-from pymhm.elements import boundary_data
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.mh import solve_mh
-from pymhm.polygon import PolygonMesh
-from pymhm.reservoir import CartesianCellField
-from pymhm.scalar_trace_integration import integrate_dirichlet_trace
-from pymhm.solvers import LinearSolveError
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.scalar.operators import boundary_data
+from pymhm.fem.traces.integration import integrate_dirichlet_trace
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.linalg.linear import LinearSolveError
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.polygonal import PolygonMesh
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.robin import solve_mh
 
 
 @pytest.fixture(autouse=True)

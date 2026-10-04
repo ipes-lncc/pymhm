@@ -6,11 +6,12 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm.assembly import HybridProblem, SolverConfig, assemble_hybrid, solve_hybrid
-from pymhm.hybrid import HybridSystem, LocalAssembly, LocalProblem
-from pymhm.parallel import ExecutionConfig
-from pymhm.solvers import LinearSolveError, check_linear_solution
-from pymhm.variational import GlobalForm
+from pymhm.core.assembly import HybridProblem, SolverConfig, assemble_hybrid, solve_hybrid
+from pymhm.core.contracts import LocalAssembly, LocalProblem
+from pymhm.core.system import HybridSystem
+from pymhm.core.variational import GlobalForm
+from pymhm.execution.cpu import ExecutionConfig
+from pymhm.linalg.linear import LinearSolveError, check_linear_solution
 
 
 def local_cell(cell, *, metadata=False):
@@ -61,7 +62,7 @@ def test_shared_face_batches_preserve_operator_fields_and_boundary(backend, batc
 
 def test_serial_provider_contributes_before_consuming_next_item(monkeypatch):
     """Serial assembly streams actual cell contributions, not just factory calls."""
-    import pymhm.assembly as assembly
+    import pymhm.core.assembly as assembly
 
     events = []
     original = assembly.local_global_contribution

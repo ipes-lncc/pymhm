@@ -291,3 +291,102 @@ def test_image_selection_precedes_unrelated_adaptive_manifest(api, tmp_path):
     assert tmp_path / "docs/figures/spe10-adaptive/meshes-2.png" in images
     assert tmp_path / "docs/figures/spe10-adaptive/meshes-3.png" not in images
     assert "40" in api.required_images(tmp_path)
+
+
+def test_recursive_catalogue_preserves_numeric_contracts_and_unnumbered_tutorials(api, tmp_path):
+    """Nested sources retain historical IDs while new tutorials need no numeric prefix."""
+    base = tmp_path / "notebooks"
+    sources = [
+        base / "darcy/14_neopz.ipynb",
+        base / "flow/brinkman_oseen/vector_tutorial.ipynb",
+        base / "waves/maxwell/66_nanoguide.ipynb",
+    ]
+    for source in sources:
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_text("{}")
+    checkpoint = base / "darcy/.ipynb_checkpoints/14_neopz-checkpoint.ipynb"
+    checkpoint.parent.mkdir()
+    checkpoint.write_text("{}")
+    assert api.discover_notebooks(tmp_path) == sources
+    assert api.selected_notebook_ids(tmp_path, sources) == {"14", "vector_tutorial", "66"}
+    assert api.required_archives(tmp_path, {"vector_tutorial"}) == {}
+    assert api.required_images(tmp_path, {"vector_tutorial"}) == {}
+
+
+@pytest.mark.parametrize(
+    "selector",
+    ["14", "14_neopz", "14_neopz.ipynb", "darcy", "darcy/14_neopz.ipynb", "notebooks/darcy"],
+)
+def test_nested_catalogue_selection_by_identity_path_and_group(api, tmp_path, selector):
+    """IDs and folder selectors identify the same source independently of tree depth."""
+    source = tmp_path / "notebooks/darcy/14_neopz.ipynb"
+    source.parent.mkdir(parents=True)
+    source.write_text("{}")
+    assert api.select_notebooks(tmp_path, [selector, str(source)]) == [source]
+
+
+def test_nested_group_selection_and_ambiguous_basename(api, tmp_path):
+    """Parent groups include descendants, while equal tutorial names require full paths."""
+    base = tmp_path / "notebooks"
+    sources = [base / "waves/helmholtz/tutorial.ipynb", base / "waves/maxwell/tutorial.ipynb"]
+    for source in sources:
+        source.parent.mkdir(parents=True)
+        source.write_text("{}")
+    assert api.select_notebooks(tmp_path, ["waves", "waves/maxwell"]) == sources
+    assert api.select_notebooks(tmp_path, ["notebooks"]) == sources
+    assert api.select_notebooks(tmp_path, ["waves/maxwell/tutorial.ipynb"]) == [sources[1]]
+    with pytest.raises(ValueError, match="Ambiguous"):
+        api.select_notebooks(tmp_path, ["tutorial"])
+
+
+def test_historical_notebook_ids_cannot_be_duplicated_between_problem_groups(api, tmp_path):
+    """One scientific archive contract cannot silently refer to two separate notebooks."""
+    for name in ["darcy/14_neopz.ipynb", "elasticity/14_reference.ipynb"]:
+        source = tmp_path / "notebooks" / name
+        source.parent.mkdir(parents=True)
+        source.write_text("{}")
+    with pytest.raises(ValueError, match="Duplicate notebook identifier 14"):
+        api.discover_notebooks(tmp_path)
+
+
+def test_external_selection_is_explicit_and_has_no_internal_data_contract(api, tmp_path):
+    """An external notebook named like a historical case does not read its case manifests."""
+    root = tmp_path / "checkout"
+    source = tmp_path / "14_external.ipynb"
+    source.write_text("{}")
+    with pytest.raises(ValueError, match="Unknown notebook"):
+        api.select_notebooks(root, [str(source)])
+    paths = api.select_notebooks(root, [str(source)], allow_external=True)
+    assert paths == [source]
+    assert api.selected_notebook_ids(root, paths) == set()
+    with pytest.raises(ValueError, match="Unknown notebook"):
+        api.select_notebooks(root, [str(tmp_path)], allow_external=True)
+
+
+def test_catalogue_rejects_symlink_escape(api, tmp_path):
+    """A source tree alias cannot silently import a notebook from outside the catalogue."""
+    external = tmp_path / "outside.ipynb"
+    external.write_text("{}")
+    link = tmp_path / "notebooks/darcy/tutorial.ipynb"
+    link.parent.mkdir(parents=True)
+    try:
+        link.symlink_to(external)
+    except OSError:
+        pytest.skip("Symlinks are unavailable on this platform")
+    with pytest.raises(ValueError, match="escapes"):
+        api.discover_notebooks(tmp_path)
+
+
+def test_cli_selects_nested_unnumbered_tutorial_without_historical_fields(
+    api, tmp_path, monkeypatch, capsys
+):
+    """A new problem tutorial can be preflighted without unrelated campaign acquisition."""
+    path = tmp_path / "notebooks/transport/scalar_intro.ipynb"
+    path.parent.mkdir(parents=True)
+    path.write_text("{}")
+    monkeypatch.setattr(api, "__file__", str(tmp_path / "scripts/notebook_data.py"))
+    monkeypatch.setattr(sys, "argv", ["notebook_data.py", "--notebook", "transport", "--check"])
+    api.main()
+    plan = json.loads(capsys.readouterr().out)
+    assert plan["notebook_paths"] == ["transport/scalar_intro.ipynb"]
+    assert plan["archive_count"] == plan["image_count"] == 0

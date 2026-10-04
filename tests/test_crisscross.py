@@ -4,11 +4,12 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.crisscross import crisscross_submesh
-from pymhm.lagrange import trace_coupling
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.mh2m import PressureTraceSpace, solve_mh2m
-from pymhm.refinement import validate_submesh
+from pymhm.fem.scalar.triangle import trace_coupling
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.crisscross import crisscross_submesh
+from pymhm.meshes.refinement import validate_submesh
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.three_field import PressureTraceSpace, solve_mh2m
 
 
 @pytest.mark.parametrize("count", [1, 2, 3, 4, 8])

@@ -5,12 +5,13 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy import solve_darcy
-from pymhm.elements import boundary_data
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.pgmhm import _trace_matrix, solve_pgmhm
-from pymhm.polygon import PolygonMesh
-from pymhm.reservoir import CartesianCellField
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.scalar.operators import boundary_data
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.polygonal import PolygonMesh
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.petrov_galerkin import _trace_matrix, solve_pgmhm
 
 
 @pytest.fixture(autouse=True)

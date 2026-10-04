@@ -1,0 +1,40 @@
+"""Scalar basis tabulation, vector trace coupling and generic element scatter."""
+
+from typing import Any
+
+import numpy as np
+from scipy import sparse
+
+from pymhm.core.validation import FloatArray
+from pymhm.fem.scalar.triangle import tabulate
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
+
+
+def _lagrange(
+    mesh: TriangleMesh, degree: int, bary: FloatArray
+) -> tuple[Any, FloatArray, FloatArray, FloatArray]:
+    """Tabulate P1 or P2 scalar nodal bases and physical gradients."""
+    dofs, points, basis, gradients, _ = tabulate(mesh, degree, bary)
+    return dofs, points, basis, gradients
+
+
+def _p2_coupling(
+    coarse: TriangleMesh, cell: int, fine: TriangleMesh, skeleton: SkeletonSpace
+) -> FloatArray:
+    """Integrate P2 boundary traces using the shared arbitrary-degree assembler."""
+    from pymhm.fem.scalar.triangle import trace_coupling
+
+    return trace_coupling(coarse, cell, fine, skeleton, 2)
+
+
+def _assemble_blocks(blocks: FloatArray, dofs: Any, size: int) -> Any:
+    """Scatter square element matrices to a sparse CSC operator."""
+    count = dofs.shape[1]
+    return sparse.coo_matrix(
+        (
+            blocks.ravel(),
+            (np.repeat(dofs, count, axis=1).ravel(), np.tile(dofs, (1, count)).ravel()),
+        ),
+        shape=(size, size),
+    ).tocsc()

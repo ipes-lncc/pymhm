@@ -16,20 +16,22 @@ from typing import Any, Literal
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm.elasticity import solve_displacement_pressure
-from pymhm.elasticity3d import solve_elasticity_3d
-from pymhm.elasticity_mixed import solve_elasticity_mixed
-from pymhm.elasticity_mixed3d import solve_elasticity_mixed_3d
-from pymhm.elasticity_primal import solve_primal_elasticity
-from pymhm.elasticity_tensor_rt import solve_elasticity_tensor_rt
-from pymhm.flow import solve_flow
-from pymhm.flow3d import solve_flow_3d
-from pymhm.gals3d import solve_elasticity_gals_3d
-from pymhm.hdiv3d_mesh import AffineMixedMesh
-from pymhm.maxwell import MaxwellStepper
-from pymhm.mesh import FaceSpace, FloatArray, SkeletonSpace, TriangleMesh
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.elasticity.mixed_pressure import solve_displacement_pressure
+from pymhm._legacy.models.elasticity.mixed_pressure_3d import solve_elasticity_gals_3d
+from pymhm._legacy.models.elasticity.primal import solve_primal_elasticity
+from pymhm._legacy.models.elasticity.primal_3d import solve_elasticity_3d
+from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
+from pymhm._legacy.models.elasticity.stress_3d import solve_elasticity_mixed_3d
+from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
+from pymhm._legacy.models.flow.solver import solve_flow
+from pymhm._legacy.models.flow.solver_3d import solve_flow_3d
+from pymhm._legacy.models.waves.maxwell import MaxwellStepper
+from pymhm.core.validation import FloatArray
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.meshes.mixed import AffineMixedMesh
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 VARIANTS = (
     "elasticity-primal-2d",

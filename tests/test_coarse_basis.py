@@ -13,7 +13,8 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm import FaceSpace, HybridSystem, LocalProblem, SkeletonSpace, TriangleMesh, solve_brinkman
+from pymhm import FaceSpace, HybridSystem, LocalProblem, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.vector import solve_brinkman
 
 
 @pytest.mark.parametrize("kind", ["spd", "indefinite", "nonsymmetric"])
@@ -59,7 +60,7 @@ def test_general_coarse_basis_matches_full_saddle_and_gauge(kind: str) -> None:
 
 def test_true_kernel_keeps_original_rhs_cost(monkeypatch: pytest.MonkeyPatch) -> None:
     """Use one real LU per local problem, adding A Z loads only for a general basis."""
-    import pymhm.hybrid as hybrid
+    import pymhm.core.condensation as hybrid
 
     widths = []
     original = hybrid.factorize

@@ -13,15 +13,20 @@ from time import perf_counter
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from pymhm.io.provenance import current_source_manifest
+
 if __package__:
     from .periodic_norms import difference
 else:
     from periodic_norms import difference
 
-from pymhm.conforming import ConformingQuadrilateralSolution, solve_conforming_quadrilateral
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.separable import SeparableField, solve_separable_diffusion
-from pymhm.separable_krylov import solve_separable_krylov
+from pymhm._legacy.models.darcy.conforming import (
+    ConformingQuadrilateralSolution,
+    solve_conforming_quadrilateral,
+)
+from pymhm._legacy.models.darcy.separable import SeparableField, solve_separable_diffusion
+from pymhm.linalg.separable import solve_separable_krylov
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACTS = ROOT / "build/results/periodic"
@@ -96,7 +101,7 @@ def fingerprint(path: Path) -> str:
 def source_hashes(*, snapshot: bool = False) -> dict[str, str]:
     """Record the implementation used by a new acquisition, without inferring old hashes."""
     sources = [Path(__file__), ROOT / "examples/periodic_norms.py"]
-    sources += sorted((ROOT / "src/pymhm").glob("*.py"))
+    sources += sorted((ROOT / "src/pymhm").rglob("*.py"))
     result = {}
     for path in sources:
         digest = fingerprint(path)
@@ -105,7 +110,7 @@ def source_hashes(*, snapshot: bool = False) -> dict[str, str]:
             destination = ARTIFACTS / "acquisition-sources" / f"{digest}.py"
             destination.parent.mkdir(parents=True, exist_ok=True)
             destination.write_bytes(path.read_bytes())
-    return result
+    return current_source_manifest(result)
 
 
 def save(record: dict) -> None:

@@ -4,10 +4,11 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.elements import triangle_quadrature
-from pymhm.reconstruction_moments import reconstruct_darcy_moments, reconstruct_flux_moments
-from pymhm.rt import rt_evaluate
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.hdiv.rt import rt_evaluate
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.recovery.moments import reconstruct_darcy_moments, reconstruct_flux_moments
 
 
 def exact(points):
@@ -45,9 +46,9 @@ def test_cut_face_batches_match_independent_one_sided_moments(degree):
     """Cut quadrature and both material sides survive batched callback evaluation."""
     from numpy.polynomial.legendre import legvander
 
-    from pymhm.cut_cells import cartesian_edge_quadrature, cartesian_trace_values
-    from pymhm.reconstruction_moments import _cut_face_moments
-    from pymhm.reservoir import CartesianCellField
+    from pymhm.fem.quadrature.material import cartesian_edge_quadrature, cartesian_trace_values
+    from pymhm.materials.cartesian import CartesianCellField
+    from pymhm.recovery.moments import _cut_face_moments
 
     mesh = TriangleMesh.unit_square(5)
     field = CartesianCellField(np.arange(12).reshape(3, 4) + 1.0, (1 / 3, 0.25))
@@ -79,7 +80,7 @@ def test_cut_face_batches_match_independent_one_sided_moments(degree):
 
 def test_raw_flux_tabulation_memory_is_bounded():
     """No callback receives more than the declared 4096-point working batch."""
-    from pymhm.reconstruction_moments import _batched_flux_values
+    from pymhm.recovery.moments import _batched_flux_values
 
     points = np.column_stack((np.arange(8200) / 8200, np.ones(8200)))
     owners = np.arange(8200) % 3
@@ -113,7 +114,7 @@ def test_continuous_moments_hold_without_fictitious_fine_cell_equilibrium(degree
 @pytest.mark.parametrize("degree", [1, 2])
 def test_volume_moments_match_raw_flux_independently(degree):
     """RT volume moments equal the original Pk flux for every polynomial test."""
-    from pymhm.lagrange import tabulate
+    from pymhm.fem.scalar.triangle import tabulate
 
     solution = solve(degree)
     result = reconstruct_darcy_moments(solution, degree=degree)

@@ -16,7 +16,7 @@ pixi run -e meshing test-meshing
 ## Generate a mesh
 
 ```python
-from pymhm.meshing import unit_square_gmsh, unit_square_netgen
+from pymhm.io.planar import unit_square_gmsh, unit_square_netgen
 
 gmsh_data = unit_square_gmsh(size=0.2)
 netgen_data = unit_square_netgen(maxh=0.2)
@@ -45,7 +45,7 @@ the resulting mesh:
 
 ```python
 import gmsh
-from pymhm.meshing import from_gmsh
+from pymhm.io.planar import from_gmsh
 
 gmsh.initialize()
 try:
@@ -62,7 +62,7 @@ tags are remapped to the contiguous indices of `TriangleMesh`.
 
 ```python
 from netgen.geom2d import SplineGeometry
-from pymhm.meshing import from_netgen
+from pymhm.io.planar import from_netgen
 
 geometry = SplineGeometry()
 geometry.AddRectangle((0, 0), (2, 1), bcs=["bottom", "right", "top", "left"])
@@ -100,7 +100,7 @@ Overlapping physical surface groups are rejected during Gmsh conversion.
 ## Import and export
 
 ```python
-from pymhm.meshing import read_mesh, write_mesh
+from pymhm.io.planar import read_mesh, write_mesh
 
 data = read_mesh("domain.msh")
 write_mesh("domain.vtu", data)
@@ -155,7 +155,7 @@ verify that an existing Gmsh model survives generation.
 
 ## Tetrahedral exchange and other macro geometries
 
-`pymhm.meshing3d.read_tetra_mesh` and `write_tetra_mesh` separately exchange
+`pymhm.io.tetrahedral.read_tetra_mesh` and `write_tetra_mesh` separately exchange
 linear tetrahedra and integer volume/boundary tags through meshio. Their
 `TetraMeshData` container keeps volume cells distinct from boundary triangles.
 Use the [three-dimensional Darcy](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy3d.md),
@@ -236,7 +236,7 @@ explicit complexity target.
 
 ## Three-dimensional generation and exchange
 
-`pymhm.mesh_exchange` provides `VolumeMeshData`, `from_meshio`, `to_meshio`,
+`pymhm.io.volume` provides `VolumeMeshData`, `from_meshio`, `to_meshio`,
 `read_volume_mesh` and `write_volume_mesh`. A volume mesh contains one supported
 family; a mixture of tetrahedra and prisms is not implicitly split into unrelated
 problems. The finite-element degree is independent of the geometric cell order.
@@ -263,8 +263,8 @@ multiple overlapping nonzero IDs on the same face are outside this contract.
 Tags do not prescribe a PDE boundary condition automatically.
 
 ```python
-from pymhm.hdiv3d_mesh import AffineMixedMesh
-from pymhm.mesh_exchange import VolumeMeshData, read_volume_mesh, write_volume_mesh
+from pymhm.meshes.mixed import AffineMixedMesh
+from pymhm.io.volume import VolumeMeshData, read_volume_mesh, write_volume_mesh
 
 mesh = AffineMixedMesh.unit_cube(kind="prism")
 data = VolumeMeshData(mesh, cell_data={"volume": mesh.volumes})
@@ -282,10 +282,10 @@ that reader can associate the field blocks inconsistently. `from_meshio` accepts
 any correctly paired in-memory block order. Cell order can change when cells are
 grouped by type; use physical IDs or explicit cell fields to identify cells.
 
-`pymhm.meshing_native3d` supplies optional native generators and converters:
+`pymhm.io.native` supplies optional native generators and converters:
 
 ```python
-from pymhm.meshing_native3d import unit_cube_gmsh, unit_cube_netgen
+from pymhm.io.native import unit_cube_gmsh, unit_cube_netgen
 
 gmsh_volume = unit_cube_gmsh(size=0.35)
 netgen_volume = unit_cube_netgen(maxh=0.35)

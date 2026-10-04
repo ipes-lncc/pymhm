@@ -17,7 +17,8 @@ from matplotlib.ticker import MaxNLocator
 
 from examples.elastodynamics_results import evaluate
 from examples.tetra_section_samples import section_grid
-from pymhm.tetrahedral import TetraMesh, tetra_nodal_space
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space
+from pymhm.meshes.tetrahedron import TetraMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/elastodynamics/native"

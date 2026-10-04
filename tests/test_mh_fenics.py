@@ -4,9 +4,9 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.lagrange import nodal_space
-from pymhm.mesh import TriangleMesh
-from pymhm.mh import solve_mh
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.robin import solve_mh
 
 pytestmark = pytest.mark.fem
 

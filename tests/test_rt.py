@@ -5,9 +5,16 @@ import pytest
 from numpy.polynomial.legendre import leggauss, legvander
 from numpy.testing import assert_allclose
 
-from pymhm.elements import triangle_quadrature
-from pymhm.mesh import TriangleMesh
-from pymhm.rt import rt_basis, rt_degree, rt_dofs, rt_evaluate, rt_interior_tests, rt_interpolate
+from pymhm.fem.hdiv.rt import (
+    rt_basis,
+    rt_degree,
+    rt_dofs,
+    rt_evaluate,
+    rt_interior_tests,
+    rt_interpolate,
+)
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("degree", [0, 1, 2])
@@ -110,7 +117,7 @@ def test_rt_validation_and_empty_interior_space():
 @pytest.mark.parametrize("degree", [0, 1, 2])
 def test_incident_point_evaluation_matches_cellwise_tabulation(degree):
     """Arbitrary point order and explicit interface sides preserve physical RT fields."""
-    from pymhm.rt import rt_evaluate_points
+    from pymhm.fem.hdiv.rt import rt_evaluate_points
 
     mesh = TriangleMesh.unit_square(2)
     size = (degree + 1) * len(mesh.faces) + degree * (degree + 1) * len(mesh.cells)

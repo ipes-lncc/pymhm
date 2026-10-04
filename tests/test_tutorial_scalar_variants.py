@@ -15,8 +15,8 @@ from examples.tutorial_scalar_variants import (
     measure_variant,
     solve_variant,
 )
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import tabulate
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import tabulate
 
 
 @pytest.fixture(scope="module", params=tuple(VARIANTS))

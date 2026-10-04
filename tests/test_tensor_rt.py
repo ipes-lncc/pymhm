@@ -6,14 +6,15 @@ from numpy.polynomial.legendre import leggauss, legvander
 from numpy.testing import assert_allclose
 
 from pymhm import CartesianMacroMesh, FaceSpace, SkeletonSpace
-from pymhm.quadrilateral import quadrilateral_quadrature
-from pymhm.reservoir import CartesianCellField
-from pymhm.tensor_rt import solve_darcy_tensor_rt, tensor_rt_basis, tensor_rt_dofs
+from pymhm._legacy.models.darcy.tensor import solve_darcy_tensor_rt
+from pymhm.fem.hdiv.tensor_rt import tensor_rt_basis, tensor_rt_dofs
+from pymhm.fem.scalar.quadrilateral import quadrilateral_quadrature
+from pymhm.materials.cartesian import CartesianCellField
 
 
 def test_unfitted_inverse_mass_uses_exact_material_intersections():
     """A displaced pixel grid gives an analytically integrable RT0 inverse mass."""
-    from pymhm.tensor_rt import _operators
+    from pymhm.fem.hdiv.tensor_rt import _operators
 
     mesh = CartesianMacroMesh(1, 1)
     material = CartesianCellField(np.array([[1.0], [10.0], [10.0]]), (0.4, 1.0))

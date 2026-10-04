@@ -7,9 +7,10 @@ from collections.abc import Mapping
 import numpy as np
 
 from examples.archive_precision import precision_fields, restore_precision
-from pymhm.mshho3d import MsHHO3DSolution
-from pymhm.polyhedral import PolyhedralMesh
-from pymhm.tetrahedral import tensor_values_3d, tetra_basis, tetra_nodal_space
+from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
+from pymhm.materials.evaluation import tensor_values_3d
+from pymhm.meshes.polyhedral import PolyhedralMesh
+from pymhm.methods.hho_3d import MsHHO3DSolution
 
 
 def capture_section(

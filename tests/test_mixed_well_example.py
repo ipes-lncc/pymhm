@@ -10,8 +10,8 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.hdiv3d_family import HDiv3DFamily
-from pymhm.hdiv3d_mesh import AffineMixedMesh, hdiv3d_dofs
+from pymhm.fem.hdiv.family_3d import HDiv3DFamily
+from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_dofs
 
 
 @pytest.fixture(autouse=True)
@@ -121,7 +121,7 @@ def test_archive_read_preserves_stored_coefficients_and_rejects_changed_digest(
     metadata = tmp_path / "field.json"
     metadata.write_text(json.dumps(record))
     loaded = verification.read_field("field", tmp_path)
-    from pymhm.hdiv3d_mesh import hdiv3d_basis
+    from pymhm.meshes.mixed import hdiv3d_basis
 
     points = np.array([[0.1, 0.2, 0.3], [0.3, 0.2, 0.1]])
     expected = np.einsum(

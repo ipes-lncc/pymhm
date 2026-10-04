@@ -5,8 +5,8 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.hdiv3d_family import cell_quadrature
-from pymhm.rt3d import RTTetraFamily
+from pymhm.fem.hdiv.family_3d import cell_quadrature
+from pymhm.fem.hdiv.rt_3d import RTTetraFamily
 
 pytestmark = pytest.mark.fem
 

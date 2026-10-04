@@ -4,12 +4,12 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.adaptive_darcy import solve_adaptive_darcy
-from pymhm.darcy import solve_darcy
-from pymhm.mesh import TriangleMesh
-from pymhm.reconstruction_moments import reconstruct_darcy_moments
-from pymhm.reservoir import CartesianCellField
-from pymhm.weighted_estimator import estimate_darcy_indicator, estimate_weighted_darcy_error
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.adaptivity.darcy import solve_adaptive_darcy
+from pymhm.estimators.darcy_energy import estimate_darcy_indicator, estimate_weighted_darcy_error
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.recovery.moments import reconstruct_darcy_moments
 
 
 def boundary(points):

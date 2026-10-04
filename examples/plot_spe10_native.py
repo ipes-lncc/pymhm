@@ -19,7 +19,7 @@ from threadpoolctl import threadpool_limits
 from examples.archive_precision import restore_precision
 from examples.plot_mesh import draw_macro_mesh
 from examples.spe10_adaptive_norms import BrokenP2
-from pymhm.lagrange import reference_basis
+from pymhm.fem.scalar.triangle import reference_basis
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/spe10-adaptive/published"

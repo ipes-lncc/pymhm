@@ -6,11 +6,11 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm import mesh_exchange as exchange
-from pymhm.hdiv3d_mesh import AffineMixedMesh
-from pymhm.mapped_rt import HexMesh
-from pymhm.polyhedral import PolyhedralMesh
-from pymhm.tetrahedral import TetraMesh
+from pymhm.io import volume as exchange
+from pymhm.meshes.hexahedron import HexMesh
+from pymhm.meshes.mixed import AffineMixedMesh
+from pymhm.meshes.polyhedral import PolyhedralMesh
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 def families():
@@ -212,7 +212,7 @@ def test_native_meshio_vtu_geometry_and_data(tmp_path, index):
 def test_native_polyhedra_with_different_vertex_and_face_counts(tmp_path):
     """Ragged polyhedron groups retain paired fields and tags when meshio groups cell types."""
     pytest.importorskip("meshio")
-    from pymhm.polygon import PolygonMesh
+    from pymhm.meshes.polygonal import PolygonMesh
 
     polygon = PolygonMesh(
         [[0.0, 0.0], [1.0, 0.0], [1.0, 1.0], [0.0, 1.0], [2.0, 0.0]], [[0, 1, 2, 3], [1, 4, 2]]

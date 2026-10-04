@@ -20,8 +20,8 @@ from typing import Any
 import numpy as np
 
 from pymhm import TriangleMesh
-from pymhm.mesh import positive_int
-from pymhm.reservoir import CartesianCellField
+from pymhm.core.validation import positive_int
+from pymhm.materials.cartesian import CartesianCellField
 
 DEFAULT_SEED = 20261003
 SHAPE = (64, 16)

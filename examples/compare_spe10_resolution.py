@@ -54,7 +54,7 @@ def acquire(
         Path(__file__),
         Path(__file__).with_name("spe10_adaptive_norms.py"),
         Path(__file__).with_name("spe10_adaptive.py"),
-        Path(__file__).resolve().parents[1] / "src/pymhm/rt.py",
+        Path(__file__).resolve().parents[1] / "src/pymhm/fem/hdiv/rt.py",
     )
     fingerprint = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in sources}
     result: dict[str, Any] = {

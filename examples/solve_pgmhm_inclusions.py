@@ -20,9 +20,10 @@ from examples.pgmhm_inclusion_data import (
     coefficient,
     local_meshes,
 )
-from pymhm.mesh import FaceSpace, SkeletonSpace
-from pymhm.pgmhm import solve_pgmhm
-from pymhm.polygon import solve_darcy_polygons
+from pymhm._legacy.models.geometry import solve_darcy_polygons
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.methods.petrov_galerkin import solve_pgmhm
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/pgmhm-inclusions"
@@ -38,18 +39,20 @@ def acquire(factor: int, *, segments: int = 2, workers: int = 8) -> dict:
     ] + [
         f"src/pymhm/{name}.py"
         for name in (
-            "pgmhm",
-            "darcy",
-            "polygon",
-            "refinement",
-            "lagrange",
-            "hybrid",
-            "solvers",
-            "parallel",
-            "scalar_boundary",
+            "methods/petrov_galerkin",
+            "_legacy/models/darcy/primal",
+            "meshes/polygonal",
+            "meshes/refinement",
+            "fem/scalar/triangle",
+            "core/contracts",
+            "linalg/linear",
+            "execution/cpu",
+            "fem/traces/scalar",
         )
     ]
-    hashes = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    hashes = current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    )
     mesh, local = local_meshes(factor)
     skeleton = SkeletonSpace(mesh, tuple(FaceSpace.uniform(0, segments) for _ in mesh.faces))
     options = dict(
@@ -120,9 +123,9 @@ def acquire(factor: int, *, segments: int = 2, workers: int = 8) -> dict:
         archive_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
         source_hashes=hashes,
     )
-    row["source_changed_during_run"] = hashes != {
-        name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names
-    }
+    row["source_changed_during_run"] = hashes != current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    )
     if row["source_changed_during_run"]:
         raise RuntimeError("numerical source changed during acquisition")
     path.with_suffix(".json").write_text(json.dumps(row, indent=2) + "\n")

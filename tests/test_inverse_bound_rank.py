@@ -4,13 +4,13 @@ import numpy as np
 import pytest
 from threadpoolctl import threadpool_limits
 
-from pymhm.elasticity import _inverse_constant, _strain_and_divergence
-from pymhm.elements import triangle_quadrature
-from pymhm.flow import _laplacian_inverse_bound
-from pymhm.gals3d_forms import tetra_elasticity_pressure_operators
-from pymhm.lagrange import tabulate
-from pymhm.mesh import TriangleMesh
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.elasticity.mixed_pressure import _inverse_constant, _strain_and_divergence
+from pymhm._legacy.models.elasticity.pressure_forms_3d import tetra_elasticity_pressure_operators
+from pymhm._legacy.models.flow.solver import _laplacian_inverse_bound
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import tabulate
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("operator", ["flow", "elasticity"])

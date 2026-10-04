@@ -4,42 +4,42 @@ Displacement, displacement–pressure and weakly symmetric stress formulations.
 
 [All API families](../api.md)
 
-::: pymhm.elasticity
+::: pymhm._legacy.models.elasticity.mixed_pressure
     options:
       show_source: false
 
-::: pymhm.elasticity_mixed
+::: pymhm._legacy.models.elasticity.stress
     options:
       show_source: false
 
-::: pymhm.elasticity_mixed3d
+::: pymhm._legacy.models.elasticity.stress_3d
     options:
       show_source: false
 
-::: pymhm.elastodynamics
+::: pymhm._legacy.models.waves.elastodynamics
     options:
       show_source: false
 
-::: pymhm.elasticity_primal
+::: pymhm._legacy.models.elasticity.primal
     options:
       show_source: false
 
-::: pymhm.elasticity_tensor_rt
+::: pymhm._legacy.models.elasticity.stress_tensor
     options:
       show_source: false
 
-::: pymhm.elasticity3d
+::: pymhm._legacy.models.elasticity.primal_3d
     options:
       show_source: false
 
-::: pymhm.elasticity_compliance
+::: pymhm.materials.elasticity
     options:
       show_source: false
 
-::: pymhm.gals3d
+::: pymhm._legacy.models.elasticity.mixed_pressure_3d
     options:
       show_source: false
 
-::: pymhm.gals3d_forms
+::: pymhm._legacy.models.elasticity.pressure_forms_3d
     options:
       show_source: false

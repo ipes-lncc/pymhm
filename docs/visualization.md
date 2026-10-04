@@ -1,7 +1,7 @@
 # Optional PyVista visualization
 
 From a checkout, run `python -m pip install '.[visualization]'`, or use the locked `visualization` and `notebooks`
-Pixi environments. `pymhm.visualization` loads PyVista only when a conversion or
+Pixi environments. `pymhm.postprocessing.visualization` loads PyVista only when a conversion or
 plot is requested. Importing the numerical package requires neither VTK nor a
 windowing system.
 
@@ -16,7 +16,7 @@ A reconstructed MHM field has independent values on opposite sides of a
 macroface. Keep these values separate during conversion:
 
 ```python
-from pymhm.visualization import broken_triangle_grid, plot_field
+from pymhm.postprocessing.visualization import broken_triangle_grid, plot_field
 
 grid = broken_triangle_grid(
     result.local_meshes,
@@ -61,7 +61,7 @@ Geometry is mandatory and explicit; a final array axis of length three is
 never used to guess spatial dimension:
 
 ```python
-from pymhm.visualization import structured_cell_grid
+from pymhm.postprocessing.visualization import structured_cell_grid
 
 grid = structured_cell_grid(
     (nx, ny, nz),

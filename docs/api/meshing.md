@@ -4,22 +4,26 @@ Optional mesh generators, mesh-file exchange and visualization adapters.
 
 [All API families](../api.md)
 
-::: pymhm.meshing
+::: pymhm.io.planar
     options:
       show_source: false
 
-::: pymhm.meshing3d
+::: pymhm.io.tetrahedral
     options:
       show_source: false
 
-::: pymhm.mesh_exchange
+::: pymhm.io.volume
     options:
       show_source: false
 
-::: pymhm.meshing_native3d
+::: pymhm.io.native
     options:
       show_source: false
 
-::: pymhm.visualization
+::: pymhm.postprocessing.visualization
+    options:
+      show_source: false
+
+::: pymhm.io.provenance
     options:
       show_source: false

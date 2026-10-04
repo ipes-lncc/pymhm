@@ -5,9 +5,10 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.mh3d import solve_mh_3d
-from pymhm.tetrahedral import TetraMesh, tetra_nodal_space
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.methods.robin_3d import solve_mh_3d
 
 pytestmark = pytest.mark.fem
 

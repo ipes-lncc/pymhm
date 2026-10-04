@@ -1,97 +1,89 @@
 # Local providers, forms and execution
 
-This tutorial constructs the same Darcy problem with primal Galerkin and
-mixed $H(\mathrm{div})$ local spaces through `LocalForm`, `GlobalForm` and
-`HybridProblem`. A local provider is an ordinary callable; changing its
-assembly backend does not require subclassing the hybrid solver. The runnable
-example delegates physical assembly to the public `darcy_local_provider`.
+This tutorial declares primal Galerkin and mixed $H(\mathrm{div})$ Darcy
+problems through `LocalEquations`, `Equation` and `MultiscaleProblem`.
+A provider is an ordinary callable. It supplies the physical equations and
+coefficient maps; `assemble` supplies compilation, local elimination and
+ordered shared-face reduction. Changing the assembly backend does not require
+subclassing the solver or selecting a PDE-specific runtime entry point.
+
+Open the [local/global provider notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/foundations/operators/local_global_providers.ipynb)
+and edit the forms, boundary, local solver and execution cells. The
+[UFL notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/foundations/operators/ufl_provider.ipynb)
+contains user-written UFL forms and reports whether DOLFINx executed.
 
 ```bash
-pixi run --locked -e test python -m examples.tutorial_local_provider
-pixi run --locked -e test python -m examples.tutorial_local_provider \
-  --formulation mixed --boundary neumann --local-solver external \
-  --backend process --workers 2 --batch-size 1
-pixi run --locked -e fem python -m examples.tutorial_local_provider \
-  --element-backend basix
+pixi run --locked -e notebooks notebooks-run foundations/operators/local_global_providers.ipynb
+pixi run --locked -e notebooks notebooks-run foundations/operators/ufl_provider.ipynb
 ```
 
-The example uses two macrotriangles in the unit square and two subdivisions
-per local edge. Its independently differentiated analytical fields are
+The first example uses two macrotriangles and two subdivisions per local
+edge. Its independently differentiated analytical data are
 
 $$
 p=1+x^2+y^2,\qquad q=-\nabla p=-2(x,y),\qquad f=\nabla\cdot q=-4.
 $$
 
-The primal local space is continuous $P_2$ pressure. The mixed local space is
-RT0 Darcy flux with $P_0$ pressure and auxiliary boundary-pressure multipliers.
-Both use a $P_0$ normal-flux skeleton. The exact normal flux is constant on each
-straight edge, so this skeletal choice represents its boundary data. Primal
-pressure and flux are exact up to floating-point errors on this patch; mixed
-pressure has a nonzero approximation error because the quadratic pressure
-does not belong to $P_0$. This patch checks the declared construction; it is
-not a literature reproduction or an inf-sup convergence proof.
+The primal local space is continuous $P_2$ pressure; the mixed space is RT0
+Darcy flux with $P_0$ pressure and local boundary-pressure multipliers.
+Both use a $P_0$ normal-flux skeleton. Exact normal flux is constant on each
+straight edge. Primal pressure and flux are exact up to floating-point errors
+on this patch; mixed pressure has a nonzero approximation error because it
+is piecewise constant. This patch checks the declared equations. It does not
+replace a literature reproduction or an inf-sup convergence study.
 
-## Declare the local and global contracts
+## Declare the local and global forms
 
-`LocalForm` describes signed local forms in a literal coefficient basis:
+The two equations are explicit:
 
 $$
-a(u,v)+\sum_j\lambda_j b_j(v)=L(v).
+\begin{aligned}
+a(u,v)+b(\lambda,v)&=L(v),\\
+c(u,\mu)+d(\lambda,\mu)&=g(\mu).
+\end{aligned}
 $$
 
-Its `trace_forms` and `trace_dofs` have the same order. `kernel` contains the
-actual nullspace coefficients; `moment_forms` specifies one physical moment
-per retained mode. `coarse_basis` can instead retain modes that are not a
-kernel. The compiler returns a validated `LocalProblem` without changing
-these maps or rotating the declared basis.
+The notebook's `TutorialProvider` integrates its stated local spaces with
+shared FEM operations. It returns `LocalEquations` with $B$ and the explicitly
+chosen $C=-B^T$, literal kernel coefficients and physical pressure moments.
+It does not call a packaged Darcy solver. `columns` and `rows` preserve the
+ordered trace pairings and their signs.
 
 ```python
-from functools import partial
-from pymhm import (
-    GlobalForm, HybridProblem, SkeletonSpace, TriangleMesh,
-    assemble_hybrid, darcy_local_provider, solve_hybrid_system,
-)
-from examples.tutorial_local_provider import declared_local, exact_pressure, source
-from pymhm.elements import boundary_data
+import numpy as np
+from pymhm import Equation, MultiscaleProblem, SkeletonSpace, TriangleMesh, assemble
+from pymhm.fem.scalar.operators import boundary_data
+from examples.tutorial_local_provider import TutorialProvider, exact_pressure
 
 mesh = TriangleMesh.unit_square()
 skeleton = SkeletonSpace(mesh)
-provider = darcy_local_provider(
-    mesh, skeleton=skeleton, formulation="primal", degree=2,
-    local_refinement=2, permeability=1.0, source=source,
-    quadrature_order=4,
-)
-load, fixed = boundary_data(skeleton, exact_pressure, order=4)
-form = GlobalForm(
+provider = TutorialProvider(mesh, skeleton, formulation="primal", local_refinement=2)
+boundary, fixed = boundary_data(skeleton, exact_pressure, order=4)
+problem = MultiscaleProblem(
+    global_equation=Equation(0, -np.r_[boundary, np.zeros(len(mesh.cells))]),
+    local_provider=provider,
+    items=range(len(mesh.cells)),
     trace_size=skeleton.size,
     coarse_sizes=(1,) * len(mesh.cells),
-    boundary_load=load,
-    fixed_trace=fixed,
+    fixed=fixed,
 )
-problem = HybridProblem(
-    form, partial(declared_local, provider=provider), range(len(mesh.cells))
-)
-system = assemble_hybrid(problem)
-solution = solve_hybrid_system(system, fixed=fixed)
+system = assemble(problem)
+solution = system.solve()
 ```
 
-The example's `declared_local` function exposes the provider's assembled
-matrix, source vector, signed trace columns and pressure moments as a
-`LocalForm`. Its small numeric compiler passes these coefficients to
-`LocalProblem`; it does not reimplement Darcy integration. A UFL compiler
-can consume the same record with different form expressions.
+The global load is declared in trace-first, retained-cell-second coordinates.
+The primal Dirichlet pairing is `-boundary`; it follows the chosen global
+rows $C=-B^T$. An additional global bilinear form could supply other
+couplings. `Equation(0, L)` supplies no such addition. This interface accepts
+actual numerical or UFL global forms; the fixed hybrid `GlobalForm` record only
+specifies the fixed hybrid construction's layout and boundary convention.
+See the [variational guide](../variational.md) for independent trial/test maps,
+direct local global terms and compilation limits.
 
-`GlobalForm` declares the trace size, retained-mode sizes, boundary load,
-fixed trace coordinates and optional linear constraints. It represents the
-supported algebraic hybrid form. It does not compile arbitrary global UFL
-forms or infer their geometry. `HybridProblem` combines that record with a
-provider and an ordered iterable of cell specifications. `LocalAssembly`
-adds evaluation metadata without changing the local equations.
+## Keep mixed fields and boundary variables explicit
 
-## Keep the mixed flux prescription explicit
-
-For the mixed provider, the local coefficient order is flux $q_h$, pressure
-$p_h$, then boundary-pressure multipliers $\eta_h$. Its original equations are
+For the mixed provider, local coefficients are flux $q_h$, pressure $p_h$,
+then boundary-pressure multipliers $\eta_h$. The original local equations are
 
 $$
 \begin{bmatrix}
@@ -104,49 +96,45 @@ S^T&0&0
 =\begin{bmatrix}0\\-f_h\\0\end{bmatrix}.
 $$
 
-$M$ is the inverse-permeability RT0 mass matrix, $D$ is integrated divergence,
-$S$ selects fine boundary normal-flux coefficients, and $F$ maps signed
-skeletal flux density to those integrated coefficients. The joint pressure
-kernel shifts $p_h$ and $\eta_h$ together. Physical pressure moments integrate
-only $p_h$; they give zero weight to the auxiliary multipliers.
+$M$ is the inverse-permeability RT0 mass matrix; $D$ is integrated divergence;
+$S$ selects fine boundary normal-flux coefficients; $F$ maps oriented skeletal
+flux density to those integrated coefficients. The joint kernel shifts $p_h$
+and $\eta_h$ together. Physical moments integrate only $p_h$ and give zero
+weight to auxiliary boundary multipliers.
 
-This is flux-prescribing mixed MHM. Its skeleton is physical normal Darcy
-flux, and its auxiliary boundary variable is pressure. The mixed global
-boundary load is `-load`, whereas the primal load is `load`, consistently
-with their actual coupling signs. RT0 requires degree-zero skeleton segments
-aligned with fine boundary edges. Here the legacy provider parameter
-`degree=1` selects RT0; use the high-level mixed solvers for other RT/BDM
-orders and enriched families.
+This is flux-prescribing mixed MHM: the skeleton is physical normal Darcy
+flux, and the local boundary variable is pressure. Its declared global
+Dirichlet load is `boundary`, consistently with its actual coupling signs.
+RT0 needs degree-zero trace segments aligned with fine boundary edges.
+Primal volume flux is the raw gradient field $-\nabla p_h$; mixed RT0 flux is
+$H(\mathrm{div})$ conforming within each local mesh. Macro conservation alone
+does not imply fine-cell conservation of a general primal reconstruction.
 
-The `--boundary neumann` option prescribes the compatible outward flux on
-every exterior face and fixes the physical pressure integral to $5/3$:
+The notebook also constructs a pure-Neumann problem with compatible outward
+flux and physical pressure integral $5/3$. For that problem, form the gauge
+from the provider's executed physical weights:
 
 ```python
-from pymhm import hybrid_mean_constraint
+from examples.tutorial_local_provider import build_problem
 
-physical_weights = [record[1] for record in system.local_metadata]
-gauge = hybrid_mean_constraint(system, physical_weights, value=5 / 3)
-solution = solve_hybrid_system(
-    system, fixed=fixed, constraints=[gauge]
-)
+problem = build_problem(formulation="mixed", boundary="neumann")
+system = assemble(problem)
+weights = [record[1] for record in system.local_metadata]
+gauge = system.mean_constraint(weights, value=5 / 3)
+solution = system.solve(constraints=[gauge])
 ```
 
-Use this gauge with the Neumann problem built by `build_problem` or
-`run_tutorial`, rather than adding it to the preceding Dirichlet example.
-The returned metadata is `(fine_mesh, physical_pressure_mean_weights)` in
-the executed local coefficient order. The tutorial reports separate physical
-field errors and original algebraic row norms by field block. Its assembly
-quadrature uses four Gauss points per Duffy coordinate; field errors use eight.
-Primal volume flux is the raw gradient field $-\nabla p_h$; RT0 flux is
-$H(\mathrm{div})$ conforming inside each local mesh. Macro conservation alone
-does not imply fine-cell conservation for a general primal reconstruction.
+The metadata is `(fine_mesh, physical_pressure_weights)` in the executed
+coefficient order. The notebook reports physical field errors and original
+algebraic row norms separately by field block. Assembly uses four Gauss points
+per Duffy coordinate and error integration uses eight.
 
 ## Replace the numerical local solver
 
-`SolverConfig.local_solver` accepts a callable as well as a solver name.
-The callback receives owned copies of the constrained sparse local operator
-and every source, trace and retained-mode right-hand-side column. It returns
-the complete response array, including constraint multipliers, in that basis.
+`SolverConfig.local_solver` accepts a callable on owned copies of the
+constrained sparse operator and all source, trace and retained-mode
+right-hand-side columns. It returns every response column, including constraint
+multipliers, in that coefficient basis.
 
 ```python
 import numpy as np
@@ -155,87 +143,76 @@ from pymhm import SolverConfig
 def dense_response(matrix, rhs):
     return np.linalg.solve(matrix.toarray(), rhs)
 
-system = assemble_hybrid(
-    problem, solvers=SolverConfig(local_solver=dense_response)
-)
+system = assemble(problem, solvers=SolverConfig(local_solver=dense_response))
 ```
 
-An external solver or response model can implement this contract. PyMHM
-checks the original constrained operator's rank and accepts each returned
-column only at the existing relative residual tolerance $10^{-10}$. This
-check preserves the declared equations; it does not establish approximation
-accuracy or a mesh-independent inf-sup constant. The callback releases its
-native resources before returning arrays.
+An external solver or response model can implement this contract. The shared
+solver checks the original augmented operator and each returned column at
+its unchanged relative residual criterion. These checks preserve the equations;
+they do not establish approximation accuracy or a mesh-independent inf-sup
+constant. Release native resources before returning coefficient arrays.
 
 ## Choose bounded execution independently
 
 ```python
 from pymhm import ExecutionConfig
 
-system = assemble_hybrid(
+system = assemble(
     problem,
     execution=ExecutionConfig(
-        backend="process", workers=2, native_threads=1, batch_size=1
+        backend="process", workers=2, native_threads=1, batch_size=1,
     ),
 )
 ```
 
-Serial execution constructs and contributes one cell before requesting the
-next. Thread and process execution consume strictly bounded batches, return
-results in cell order and accumulate trace entries in that same order. With
-`batch_size=None`, the effective parallel worker count bounds the batch.
-The standalone `iter_local` generator must be closed when iteration stops
-early; `assemble_hybrid` owns that cleanup. Process execution uses spawn, so
-providers, callbacks and items must be picklable and executable entry points
-need the usual `if __name__ == "__main__"` guard. Construct optional native
-objects inside the worker instead of serializing them. Closures remain
-available for serial and thread execution.
+Serial execution builds and contributes one cell before taking the next.
+Thread and process execution use bounded batches; the coordinator sums shared
+trace entries in cell order. With `batch_size=None`, the effective worker
+count bounds the parallel batch. Assembly owns early-exit cleanup.
 
-## Compile UFL forms or reuse Basix elements
+Processes use spawn. Providers, compilers, callbacks and items must be
+picklable, and executable process entry points need a `__main__` guard.
+Construct native meshes and forms within the worker; return owned numerical
+operators and portable reconstruction metadata. Closures can be used in
+serial and thread execution. Recursive children use this same form interface
+but assemble serially inside their owning worker, so the outer executor controls
+the worker budget.
 
-The optional native adapter accepts continuous primal or stable mixed volume
-forms. For a primal local space `V`, the declaration has this structure:
+## Write native UFL forms directly
+
+The UFL notebook supplies a native context inside each worker and defines
+both pairings as forms. Its affine solution is $p=1+x+2y$ on the same two
+macrotriangles, with continuous local $P_1$ pressure and a $P_0$ normal-flux
+skeleton. On each local space `V`, the essential declaration is
 
 ```python
-from pymhm import LocalForm
-from pymhm.fenics import assemble_local_forms, primal_darcy_forms
+import ufl
+from pymhm import LocalEquations, columns, rows
 
-a, L = primal_darcy_forms(V, permeability, source_expression)
-forms = LocalForm(
-    a=a, L=L, trace_forms=tuple(signed_trace_forms), trace_dofs=trace_dofs,
-    kernel=constant_coefficients, moment_forms=(pressure_integral_form,),
+p, v = ufl.TrialFunction(V), ufl.TestFunction(V)
+forms = LocalEquations(
+    a=ufl.inner(ufl.grad(p), ufl.grad(v)) * dx,
+    L=0.0 * v * dx,
+    b=columns(*(sign * v * ds(i + 1) for i, sign in enumerate(signs))),
+    c=rows(*(-sign * p * ds(i + 1) for i, sign in enumerate(signs))),
+    dofs=trace_dofs,
+    kernel=constant_coefficients,
+    moments=columns(v * dx),
 )
-local = assemble_local_forms(forms)
 ```
 
-`V`, the signed trace forms, literal kernel coefficients and physical moment
-form belong to the local provider. The fully runnable
-`examples.variational_darcy` example supplies
-that geometry and native assembly. `mixed_darcy_forms(W, K_inverse, f)`
-defines the symmetric $H(\mathrm{div})\times L^2$ **volume** form and source;
-the provider must still supply its boundary prescription, augmented variables,
-trace coupling and compatible kernel. Choosing RT/DG volume spaces alone does
-not construct flux-prescribing MHM.
+The provider supplies `V`, its local measures, marked macrofaces, orientation
+signs and literal constant coefficients. No physical form helper selects the
+operator. `pymhm.backends.forms` compiles real linear and bilinear UFL forms;
+linear trial-side argument number one is supported. The local pivot is square,
+and domains use a single-rank communicator. Cross-mesh integration requires
+explicit entity maps. These native restrictions are distinct from the more
+fixed hybrid `LocalForm` adapter described in the [FEniCS page](../fenics.md).
 
-Basix is the default element implementation for primal pressure and mixed RT0.
-It preserves PyMHM's nodal order, physical derivatives and declared RT0 moments.
-`--element-backend portable` is a compatibility spelling for the same library.
-More general reference elements can be obtained
-without importing a FEM framework:
-
-```python
-from pymhm import ReferenceElementSpec, create_reference_element, tabulate_reference
-
-element = create_reference_element(ReferenceElementSpec("RT", "triangle", 1))
-values = tabulate_reference(element, reference_points, nderiv=1)
-```
-
-Native Basix RT degree `m+1` represents mathematical $\mathrm{RT}_m$; native
-simplex BDM degree `m` represents $\mathrm{BDM}_m$. Restricted/enriched
-BDM$(k,n)$ is a separate construction. The reference provider exposes the
-executed coefficient matrix and native entity transformations; physical Piola
-maps and globally conforming orientation remain the consuming assembler's
-responsibility. A persisted coefficient vector also needs its actual basis,
-digest and orientation maps. Supported native versions are tested separately
-from the declared PyMHM node order, following the
-[Basix reference API](https://docs.fenicsproject.org/basix/v0.11.0/python/_autosummary/basix.finite_element.html).
+Basix is a required runtime dependency, loaded when element or polynomial
+operations are used. It supplies nodal bases, RT/BDM elements and entity
+transformations; PyMHM supplies its declared coefficient order, physical maps,
+moment restrictions and trace incidence. Native Basix RT degree `m+1` denotes
+mathematical $\mathrm{RT}_m$; simplicial BDM degree `m` denotes
+$\mathrm{BDM}_m$. Persisted coefficients also need their actual executed basis,
+digest and orientation maps. See the [reference-element API](../api/elements.md).

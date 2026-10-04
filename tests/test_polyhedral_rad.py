@@ -3,9 +3,9 @@
 import numpy as np
 import pytest
 
-from pymhm.polyhedral import PolyhedralMesh
-from pymhm.polyhedral_rad import PolygonalSkeleton3D, solve_polyhedral_rad
-from pymhm.solvers import LinearSolveError
+from pymhm._legacy.models.transport.polyhedral import PolygonalSkeleton3D, solve_polyhedral_rad
+from pymhm.linalg.linear import LinearSolveError
+from pymhm.meshes.polyhedral import PolyhedralMesh
 
 
 def exact(points: np.ndarray) -> np.ndarray:

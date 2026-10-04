@@ -4,8 +4,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.darcy import solve_darcy
-from pymhm.mesh import TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def quadratic_pressure(points):

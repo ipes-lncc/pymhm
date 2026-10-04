@@ -116,7 +116,8 @@ nvidia-cudss-cu12 = "==0.8.*"
 cuda-bindings = ">=12.9.2,<13"
 
 [tasks]
-lint = "ruff check src tests scripts benchmarks examples"
+source-check = "python scripts/check_source_structure.py"
+lint = { cmd = "ruff check src tests scripts benchmarks examples", depends-on = ["source-check"] }
 format = "ruff format src tests scripts benchmarks examples"
 format-check = "ruff format --check src tests scripts benchmarks examples"
 typecheck = "mypy"

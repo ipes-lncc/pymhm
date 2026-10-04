@@ -14,8 +14,9 @@ from polygon_meshes import polygon_partition
 from solve_rad3d import exact, gradient, physical_flux, source
 from threadpoolctl import threadpool_limits
 
-from pymhm.polyhedral import PolyhedralMesh
-from pymhm.polyhedral_rad import PolygonalSkeleton3D, solve_polyhedral_rad
+from pymhm._legacy.models.transport.polyhedral import PolygonalSkeleton3D, solve_polyhedral_rad
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.polyhedral import PolyhedralMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -49,19 +50,21 @@ def main() -> None:
     folder.mkdir(exist_ok=True, parents=True)
     paths = [Path(__file__), ROOT / "examples/polygon_meshes.py", ROOT / "examples/solve_rad3d.py"]
     paths += [
-        ROOT / "src/pymhm" / name
+        ROOT / f"src/pymhm/{name}"
         for name in (
-            "polyhedral.py",
-            "polyhedral_rad.py",
-            "tetrahedral.py",
-            "tetra_lagrange.py",
-            "rad3d.py",
-            "hybrid.py",
-            "solvers.py",
-            "parallel.py",
+            "meshes/polyhedral.py",
+            "_legacy/models/transport/polyhedral.py",
+            "fem/scalar/tetrahedron.py",
+            "fem/scalar/tetrahedron_topology.py",
+            "_legacy/models/transport/rad_3d.py",
+            "core/contracts.py",
+            "linalg/linear.py",
+            "execution/cpu.py",
         )
     ]
-    hashes = {str(path.relative_to(ROOT)): fingerprint(path) for path in paths}
+    hashes = current_source_manifest(
+        {str(path.relative_to(ROOT)): fingerprint(path) for path in paths}
+    )
     snapshots = folder / "acquisition-sources"
     snapshots.mkdir(exist_ok=True)
     for path in paths:

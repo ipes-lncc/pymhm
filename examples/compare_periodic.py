@@ -32,8 +32,8 @@ else:
         validate_case_provenance,
     )
 
-from pymhm.conforming import ConformingQuadrilateralSolution
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.darcy.conforming import ConformingQuadrilateralSolution
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 REFERENCE_RECORDS: Path | None = None
 

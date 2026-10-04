@@ -18,8 +18,9 @@ from threadpoolctl import threadpool_limits
 
 from examples.mh_campaign import l_mesh
 from pymhm import FaceSpace, SkeletonSpace
-from pymhm.mh import solve_mh
-from pymhm.mh2m import PressureTraceSpace, solve_mh2m
+from pymhm.io.provenance import current_source_manifest
+from pymhm.methods.robin import solve_mh
+from pymhm.methods.three_field import PressureTraceSpace, solve_mh2m
 
 ROOT = Path(__file__).resolve().parents[1]
 MATERIAL = np.array([[3.0, 0.4], [0.4, 2.0]])
@@ -52,19 +53,21 @@ def source(points: np.ndarray) -> np.ndarray:
 def source_hashes() -> dict[str, str]:
     """Record the executed solver, geometry and boundary-integrator source bytes."""
     paths = (
-        "src/pymhm/mh.py",
-        "src/pymhm/mh2m.py",
-        "src/pymhm/scalar_trace_integration.py",
-        "src/pymhm/scalar_boundary.py",
-        "src/pymhm/polygon.py",
-        "src/pymhm/mesh.py",
-        "src/pymhm/lagrange.py",
-        "src/pymhm/hybrid.py",
-        "src/pymhm/solvers.py",
+        "src/pymhm/methods/robin.py",
+        "src/pymhm/methods/three_field.py",
+        "src/pymhm/fem/traces/integration.py",
+        "src/pymhm/fem/traces/scalar.py",
+        "src/pymhm/meshes/polygonal.py",
+        "src/pymhm/meshes/triangle.py",
+        "src/pymhm/fem/scalar/triangle.py",
+        "src/pymhm/core/contracts.py",
+        "src/pymhm/linalg/linear.py",
         "examples/mh_campaign.py",
         "examples/mh_boundary_campaign.py",
     )
-    return {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in paths}
+    return current_source_manifest(
+        {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in paths}
+    )
 
 
 def run(resolutions: list[int], output: Path) -> None:

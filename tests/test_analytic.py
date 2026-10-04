@@ -4,10 +4,12 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import TetraMesh, TriangleMesh, solve_darcy, solve_darcy_3d
-from pymhm.analytic import analytic_darcy_local, solve_darcy_analytic
-from pymhm.elements import triangle_quadrature
-from pymhm.tetrahedral import tetrahedron_quadrature
+from pymhm import TetraMesh, TriangleMesh
+from pymhm._legacy.models.darcy.analytic import analytic_darcy_local, solve_darcy_analytic
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.tetrahedron import tetrahedron_quadrature
 
 
 @pytest.mark.parametrize("dimension", [2, 3])
@@ -83,8 +85,8 @@ def test_variable_source_matches_full_p2_mhm(dimension):
     assert_allclose(result.hybrid.trace, classical.hybrid.trace, atol=2e-12)
     assert_allclose(result.hybrid.coarse, classical.hybrid.coarse, atol=2e-12)
     bary, _ = triangle_quadrature(3) if dimension == 2 else tetrahedron_quadrature(3)
-    from pymhm.lagrange import tabulate
-    from pymhm.tetrahedral import tetra_tabulate
+    from pymhm.fem.scalar.tetrahedron import tetra_tabulate
+    from pymhm.fem.scalar.triangle import tabulate
 
     for cell, fine in enumerate(result.source_meshes):
         if dimension == 2:

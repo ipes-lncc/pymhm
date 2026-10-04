@@ -8,9 +8,9 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.lagrange import nodal_space
-from pymhm.mesh import TriangleMesh
-from pymhm.reservoir import CartesianCellField
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def example(monkeypatch):

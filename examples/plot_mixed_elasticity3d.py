@@ -15,8 +15,8 @@ from threadpoolctl import threadpool_limits
 from examples.mixed_elasticity3d_data import SolenoidalElasticity3D
 from examples.plot_style import set_refinement_ticks
 from examples.tetra_section_samples import section_grid
-from pymhm.hdiv3d_family import HDiv3DFamily
-from pymhm.hdiv3d_mesh import AffineMixedMesh, hdiv3d_dofs, hdiv3d_transform
+from pymhm.fem.hdiv.family_3d import HDiv3DFamily
+from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_dofs, hdiv3d_transform
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/mixed-elasticity3d"

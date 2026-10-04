@@ -22,12 +22,14 @@ from threadpoolctl import threadpool_limits
 from examples.field_sampling import local_values
 from examples.solve_spe10 import load_layer, pressure_boundary
 from examples.unusual_spe10_refinement import prepare_local
-from pymhm.cut_cells import fit_material_faces, fit_material_mesh
-from pymhm.elements import p1_geometry
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.parallel import map_local
-from pymhm.rad import solve_rad
-from pymhm.transport import ScalarSolution
+from pymhm._legacy.models.transport.rad import solve_rad
+from pymhm._legacy.models.transport.solver import ScalarSolution
+from pymhm.execution.cpu import map_local
+from pymhm.fem.quadrature.material import fit_material_faces, fit_material_mesh
+from pymhm.fem.scalar.operators import p1_geometry
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/unusual-spe10"
@@ -45,24 +47,26 @@ def hashes() -> dict[str, str]:
     names += [
         f"src/pymhm/{name}.py"
         for name in (
-            "rad",
-            "unusual",
-            "lagrange",
-            "cut_cells",
-            "_geometry_roundoff",
-            "reservoir",
-            "quadrilateral",
-            "refinement",
-            "elements",
-            "mesh",
-            "longest_edge",
-            "hybrid",
-            "solvers",
-            "parallel",
-            "scalar_boundary",
+            "_legacy/models/transport/rad",
+            "_legacy/models/transport/stabilization",
+            "fem/scalar/triangle",
+            "fem/quadrature/material",
+            "meshes/roundoff",
+            "io/reservoir",
+            "_legacy/models/darcy/cartesian",
+            "meshes/refinement",
+            "fem/scalar/operators",
+            "meshes/triangle",
+            "meshes/longest_edge",
+            "core/contracts",
+            "linalg/linear",
+            "execution/cpu",
+            "fem/traces/scalar",
         )
     ]
-    return {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    return current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    )
 
 
 class UnusualSPE10Field:

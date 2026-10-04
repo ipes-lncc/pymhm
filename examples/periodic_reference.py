@@ -15,6 +15,8 @@ import numpy as np
 import scipy
 from threadpoolctl import threadpool_info, threadpool_limits
 
+from pymhm.io.provenance import current_source_manifest
+
 if __package__:
     from .verify_periodic import (
         ARTIFACTS,
@@ -36,31 +38,32 @@ else:
         validate_case_provenance,
     )
 
-from pymhm.mesh import positive_int
-from pymhm.quadrilateral import CartesianMacroMesh, qk_basis, qk_space
-from pymhm.separable import SeparableField, _line_data
-from pymhm.separable_krylov import solve_separable_krylov
+from pymhm._legacy.models.darcy.separable import SeparableField, _line_data
+from pymhm.core.validation import positive_int
+from pymhm.fem.scalar.quadrilateral import qk_basis, qk_space
+from pymhm.linalg.separable import solve_separable_krylov
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 def sources() -> dict[str, str]:
     """Fingerprint the executed acquisition and all numerical dependency owners."""
     paths = [Path(__file__), ROOT / "examples/verify_periodic.py"]
     paths += [
-        ROOT / "src/pymhm" / f"{name}.py"
+        ROOT / f"src/pymhm/{name}.py"
         for name in (
-            "separable_krylov",
-            "separable",
-            "conforming",
-            "quadrilateral",
-            "solvers",
-            "mesh",
-            "elements",
-            "cut_cells",
-            "hybrid",
-            "lagrange",
+            "linalg/separable",
+            "_legacy/models/darcy/separable",
+            "_legacy/models/darcy/conforming",
+            "_legacy/models/darcy/cartesian",
+            "linalg/linear",
+            "meshes/triangle",
+            "fem/scalar/operators",
+            "fem/quadrature/material",
+            "core/contracts",
+            "fem/scalar/triangle",
         )
     ]
-    return {str(p.relative_to(ROOT)): fingerprint(p) for p in paths}
+    return current_source_manifest({str(p.relative_to(ROOT)): fingerprint(p) for p in paths})
 
 
 def _array_digest(values: np.ndarray) -> str:
@@ -150,7 +153,13 @@ def validate_reference_archive(path: Path, record: dict) -> None:
     order = positive_int(record.get("quadrature_order"), "order", minimum=degree + 1)
     validate_case_provenance(record)
     owner_hashes = record.get("source_sha256", {})
-    owners = ("quadrilateral", "conforming", "mesh", "elements", "separable")
+    owners = (
+        "_legacy/models/darcy/cartesian",
+        "_legacy/models/darcy/conforming",
+        "meshes/triangle",
+        "fem/scalar/operators",
+        "_legacy/models/darcy/separable",
+    )
     if (
         any(
             owner_hashes.get(f"src/pymhm/{owner}.py") != fingerprint(ROOT / f"src/pymhm/{owner}.py")

@@ -3,10 +3,11 @@
 import numpy as np
 import pytest
 
-from pymhm.quadrilateral import CartesianMacroMesh, qk_space, quadrilateral_operators
-from pymhm.separable import SeparableField, solve_separable_diffusion
-from pymhm.separable_krylov import solve_separable_krylov, tensor_diffusion_operator
-from pymhm.solvers import LinearSolveError
+from pymhm._legacy.models.darcy.separable import SeparableField, solve_separable_diffusion
+from pymhm.fem.scalar.quadrilateral import qk_space, quadrilateral_operators
+from pymhm.linalg.linear import LinearSolveError
+from pymhm.linalg.separable import solve_separable_krylov, tensor_diffusion_operator
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 def coefficient() -> SeparableField:
@@ -169,7 +170,7 @@ def test_narrow_extended_platform_contract(monkeypatch: pytest.MonkeyPatch) -> N
     monkeypatch.setattr(
         np, "finfo", lambda dtype: original(float if dtype is np.longdouble else dtype)
     )
-    from pymhm.solvers import SolverUnavailableError
+    from pymhm.linalg.linear import SolverUnavailableError
 
     with pytest.raises(SolverUnavailableError, match="wider"):
         solve_separable_krylov(

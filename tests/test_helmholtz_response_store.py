@@ -10,11 +10,11 @@ from numpy.testing import assert_allclose, assert_array_equal
 import examples.helmholtz_response_store as owner
 from examples.helmholtz_compact_family import CompactFactory, CompactFamily
 from examples.helmholtz_response_store import ResponseStore
-from pymhm.helmholtz import _HelmholtzFactory
-from pymhm.helmholtz_spaces import helmholtz_skeleton
-from pymhm.loads import split_point_sources
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.reservoir import CartesianCellField
+from pymhm._legacy.models.waves.helmholtz import _HelmholtzFactory
+from pymhm.fem.loads import split_point_sources
+from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @pytest.fixture

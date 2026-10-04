@@ -5,9 +5,9 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.adaptive_darcy3d import solve_adaptive_darcy_3d
-from pymhm.refinement3d import refine_tetrahedra
-from pymhm.tetrahedral import TetraMesh
+from pymhm.adaptivity.darcy_3d import solve_adaptive_darcy_3d
+from pymhm.meshes.refinement_3d import refine_tetrahedra
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 @pytest.fixture(autouse=True)

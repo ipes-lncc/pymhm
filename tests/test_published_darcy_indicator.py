@@ -4,15 +4,15 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.adaptive_darcy import solve_adaptive_darcy
-from pymhm.adaptive_darcy_balanced import solve_balanced_adaptive_darcy
-from pymhm.darcy import solve_darcy
-from pymhm.mesh import TriangleMesh
-from pymhm.weighted_estimator import (
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.adaptivity.darcy import solve_adaptive_darcy
+from pymhm.adaptivity.darcy_balanced import solve_balanced_adaptive_darcy
+from pymhm.estimators.darcy_energy import (
     PublishedDarcyIndicator,
     estimate_darcy_indicator,
     estimate_weighted_darcy_error,
 )
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def data(points):

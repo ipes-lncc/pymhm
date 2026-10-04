@@ -102,8 +102,9 @@ trace space.
 
 ```python
 import numpy as np
-from pymhm import TriangleMesh, solve_transport
-from pymhm.unusual import UnusualParameters
+from pymhm import TriangleMesh
+from pymhm._legacy.models.transport.solver import solve_transport
+from pymhm._legacy.models.transport.stabilization import UnusualParameters
 
 mesh = TriangleMesh.unit_square(4)
 A0 = np.array([[2.0, 0.3], [0.3, 1.0]])

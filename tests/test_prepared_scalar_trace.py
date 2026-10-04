@@ -3,11 +3,12 @@
 import numpy as np
 import pytest
 
-import pymhm.scalar_boundary as owner
-from pymhm.lagrange import nodal_space
-from pymhm.longest_edge import refine_longest_edge
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.scalar_boundary import edge_basis, prepare_scalar_trace, scalar_trace
+import pymhm.fem.traces.scalar as owner
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.fem.traces.scalar import edge_basis, prepare_scalar_trace, scalar_trace
+from pymhm.meshes.longest_edge import refine_longest_edge
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def legacy(pieces, degree, coefficients, parameter):
@@ -128,10 +129,10 @@ class LegacyPrepared:
 
 def test_estimators_bitwise_and_one_preparation_per_incident_face(monkeypatch):
     """Both common jump indicators retain all integrated values on supplied fine meshes."""
-    import pymhm.darcy_jump_estimator as darcy
-    import pymhm.scalar_adaptive as transport
-    from pymhm.darcy import solve_darcy
-    from pymhm.transport import solve_transport
+    import pymhm.adaptivity.transport as transport
+    import pymhm.estimators.darcy_jump as darcy
+    from pymhm._legacy.models.darcy.primal import solve_darcy
+    from pymhm._legacy.models.transport.solver import solve_transport
 
     mesh = TriangleMesh.unit_square(1)
     fine = (mesh.submesh(0, 3), mesh.submesh(1, 5))
@@ -184,7 +185,7 @@ def test_pgmhm_prepared_trace_is_reused_for_flux_and_sparse_sampling(monkeypatch
     """Field evaluation reuses owned geometry and retains the first/last ownership contracts."""
     from scipy import sparse
 
-    from pymhm.pgmhm import _trace_matrix, solve_pgmhm
+    from pymhm.methods.petrov_galerkin import _trace_matrix, solve_pgmhm
 
     mesh = TriangleMesh.unit_square(1)
     solution = solve_pgmhm(

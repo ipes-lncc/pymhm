@@ -18,12 +18,13 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from examples.campaign_provenance import file_digest
 from examples.helmholtz_trace_family import verify_helmholtz_solution
 from examples.marmousi_data import load_marmousi_crop
-from pymhm.helmholtz import solve_helmholtz
-from pymhm.helmholtz_spaces import helmholtz_skeleton
-from pymhm.quadrilateral import CartesianMacroMesh, qk_basis
+from pymhm._legacy.models.waves.helmholtz import solve_helmholtz
+from pymhm.fem.scalar.quadrilateral import qk_basis
+from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -82,7 +83,9 @@ def source_hashes() -> dict[str, str]:
         "examples/helmholtz_trace_family.py",
         *(str(path.relative_to(ROOT)) for path in sorted((ROOT / "src/pymhm").rglob("*.py"))),
     ]
-    return {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    return current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    )
 
 
 def main() -> None:

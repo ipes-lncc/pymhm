@@ -5,8 +5,8 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton, solve_darcy_3d
-from pymhm.hdiv3d_family import (
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from pymhm.fem.hdiv.family_3d import (
     cell_quadrature,
     face_polynomials,
     face_quadrature,
@@ -14,9 +14,10 @@ from pymhm.hdiv3d_family import (
     reference_faces,
     reference_vertices,
 )
-from pymhm.reconstruction3d import reconstruct_darcy_moments_3d
-from pymhm.rt3d import RTTetraFamily, rt3d_interior_tests
-from pymhm.tetrahedral import TetraMesh
+from pymhm.fem.hdiv.rt_3d import RTTetraFamily, rt3d_interior_tests
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.recovery.moments_3d import reconstruct_darcy_moments_3d
 
 
 @pytest.fixture(autouse=True)
@@ -127,8 +128,8 @@ def test_invalid_rt_and_skeletal_contracts():
 
 def test_unaligned_or_nonincident_boundary_is_rejected():
     """Reject jumps inside a fine face and boundary faces outside their macrocell."""
-    from pymhm.hdiv3d_mesh import AffineMixedMesh
-    from pymhm.reconstruction3d import _boundary_moments
+    from pymhm.meshes.mixed import AffineMixedMesh
+    from pymhm.recovery.moments_3d import _boundary_moments
 
     mesh = TetraMesh.unit_cube()
     fine = mesh.submesh(0, 1)

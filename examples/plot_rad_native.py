@@ -15,7 +15,7 @@ import numpy as np
 from matplotlib.collections import LineCollection
 from matplotlib.ticker import MaxNLocator
 
-from pymhm.lagrange import reference_basis
+from pymhm.fem.scalar.triangle import reference_basis
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/rad-native"

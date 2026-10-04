@@ -23,11 +23,12 @@ from field_sampling import local_values
 from plot_mesh import macro_profile_breaks
 from threadpoolctl import threadpool_limits
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_brinkman
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import nodal_space, tabulate
-from pymhm.reservoir import CartesianCellField
-from pymhm.vector import VectorSolution
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.vector import VectorSolution, solve_brinkman
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import nodal_space, tabulate
+from pymhm.io.provenance import current_source_manifest
+from pymhm.materials.cartesian import CartesianCellField
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/spe10"
@@ -167,10 +168,13 @@ def physical_diagnostics(solution: VectorSolution, refinement: int) -> dict[str,
 
 def source_hashes() -> dict[str, str]:
     """Record all package sources and this driver at the time of acquisition."""
-    paths = [*sorted((ROOT / "src/pymhm").glob("*.py")), Path(__file__).resolve()]
-    return {
-        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
-    }
+    paths = [*sorted((ROOT / "src/pymhm").rglob("*.py")), Path(__file__).resolve()]
+    return current_source_manifest(
+        {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in paths
+        }
+    )
 
 
 def run_case(args: argparse.Namespace) -> dict[str, Any]:

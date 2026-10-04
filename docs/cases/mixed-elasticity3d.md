@@ -81,8 +81,8 @@ constitutive law determines this mean.
 
 ```python
 import numpy as np
-from pymhm.hdiv3d_mesh import AffineMixedMesh
-from pymhm.elasticity_mixed3d import solve_elasticity_mixed_3d
+from pymhm.meshes.mixed import AffineMixedMesh
+from pymhm._legacy.models.elasticity.stress_3d import solve_elasticity_mixed_3d
 
 solution = solve_elasticity_mixed_3d(
     AffineMixedMesh.unit_cube(2),

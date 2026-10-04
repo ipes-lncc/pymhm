@@ -15,8 +15,8 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.spe10_adaptive_norms import BrokenP2
-from pymhm.cut_cells import material_triangle_quadrature
-from pymhm.reconstruction_moments import _PrimalFlux
+from pymhm.fem.quadrature.material import material_triangle_quadrature
+from pymhm.recovery.moments import _PrimalFlux
 
 _FIELDS: tuple[BrokenP2, BrokenP2, int] | None = None
 _LIMIT: Any = None

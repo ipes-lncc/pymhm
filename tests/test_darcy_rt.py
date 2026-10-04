@@ -4,11 +4,12 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.darcy_rt import solve_darcy_rt, solve_darcy_rt_conforming
-from pymhm.elements import triangle_quadrature
-from pymhm.reservoir import CartesianCellField
-from pymhm.rt import rt_evaluate
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.mixed_rt import solve_darcy_rt, solve_darcy_rt_conforming
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.hdiv.rt import rt_evaluate
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.materials.cartesian import CartesianCellField
 
 
 def affine(x):
@@ -202,7 +203,7 @@ def test_native_dolfinx_classical_rt_fields(degree):
     indices = np.repeat(cells, len(bary)).astype(np.int32)
     q_native = function.sub(0).eval(padded, indices).reshape(*points.shape)
     p_native = function.sub(1).eval(padded, indices).reshape(points.shape[:2])
-    from pymhm.darcy_rt import pressure_basis
+    from pymhm._legacy.models.darcy.mixed_rt import pressure_basis
 
     q_actual = rt_evaluate(mesh, numerical.flux[0], degree, bary)[0]
     p_actual = numerical.pressure[0] @ pressure_basis(degree, bary).T

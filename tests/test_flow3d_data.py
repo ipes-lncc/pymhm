@@ -54,7 +54,8 @@ def test_manufactured_source_by_independent_finite_differences(kind):
 
 def test_manufactured_pressure_has_zero_cube_mean_and_named_cases():
     """The global pressure target follows the exact physical integral."""
-    from pymhm.tetrahedral import TetraMesh, tetrahedron_quadrature
+    from pymhm.fem.scalar.tetrahedron import tetrahedron_quadrature
+    from pymhm.meshes.tetrahedron import TetraMesh
 
     data = _load_data()()
     mesh = TetraMesh.unit_cube()

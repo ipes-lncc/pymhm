@@ -20,7 +20,7 @@ from examples.plot_pgmhm_spe10 import (
 from examples.solve_pgmhm_spe10 import OUTPUT, PGMHMField
 from examples.spe10_adaptive import StructuredRT
 from examples.spe10_plot_records import checked_comparison, comparison_reference, digest
-from pymhm.lagrange import reference_basis
+from pymhm.fem.scalar.triangle import reference_basis
 
 DATA = OUTPUT / "kx"
 

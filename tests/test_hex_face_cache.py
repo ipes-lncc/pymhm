@@ -7,7 +7,7 @@ import pytest
 from numpy.testing import assert_array_equal
 from threadpoolctl import threadpool_limits
 
-from pymhm import mapped_rt as candidate
+from pymhm._legacy.models.darcy import mapped as candidate
 
 original = candidate
 

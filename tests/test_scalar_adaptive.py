@@ -6,15 +6,16 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_transport
-from pymhm.scalar_adaptive import (
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.transport.solver import solve_transport
+from pymhm.adaptivity.transport import (
     FaceIndicators,
     TransportBounds,
     estimate_transport_faces,
     refine_skeleton_faces,
     solve_adaptive_transport,
 )
-from pymhm.scalar_boundary import scalar_trace
+from pymhm.fem.traces.scalar import scalar_trace
 
 
 @pytest.mark.parametrize("continuous", [False, True])

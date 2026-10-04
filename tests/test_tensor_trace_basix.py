@@ -5,8 +5,8 @@ import pytest
 from numpy.polynomial.polynomial import polyval
 from numpy.testing import assert_allclose
 
-from pymhm.mesh import FaceSpace
-from pymhm.quadrilateral import _cardinals, qk_basis, quadrilateral_quadrature
+from pymhm.fem.scalar.quadrilateral import _cardinals, qk_basis, quadrilateral_quadrature
+from pymhm.fem.traces.interval import FaceSpace
 
 
 @pytest.mark.parametrize("degree", [1, 2, 3, 4, 6])

@@ -18,10 +18,11 @@ from examples.campaign_checkpoint import require_sources, verify_checkpoint
 from examples.solve_spe10 import load_layer, pressure_boundary
 from examples.solve_spe10_balanced import macro_quality, offsets
 from examples.spe10_adaptive import DATA, hashes, mesh_rectangle, natural_faces, source_path
-from pymhm.adaptive_darcy import solve_adaptive_darcy
-from pymhm.darcy_local_error import estimate_darcy_local_refinement
-from pymhm.mesh import TriangleMesh, positive_int
-from pymhm.metric_adapt import remesh_freefem, residual_mesh_size
+from pymhm.adaptivity.darcy import solve_adaptive_darcy
+from pymhm.adaptivity.metric import remesh_freefem, residual_mesh_size
+from pymhm.core.validation import positive_int
+from pymhm.estimators.darcy_local import estimate_darcy_local_refinement
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def validate_state(
@@ -84,19 +85,19 @@ def acquire(
     mesh = mesh_rectangle(16, 16)
     fingerprint = hashes()
     for name in (
-        "src/pymhm/metric_adapt.py",
-        "src/pymhm/darcy_local_error.py",
-        "src/pymhm/estimator.py",
-        "src/pymhm/hybrid.py",
-        "src/pymhm/parallel.py",
+        "src/pymhm/adaptivity/metric.py",
+        "src/pymhm/estimators/darcy_local.py",
+        "src/pymhm/estimators/darcy.py",
+        "src/pymhm/core/contracts.py",
+        "src/pymhm/execution/cpu.py",
         "examples/solve_spe10_published.py",
         "examples/solve_spe10_balanced.py",
         "examples/archive_precision.py",
         "examples/solve_spe10.py",
-        "src/pymhm/estimator_spaces.py",
-        "src/pymhm/reconstruction.py",
-        "src/pymhm/lagrange.py",
-        "src/pymhm/elements.py",
+        "src/pymhm/fem/conditions.py",
+        "src/pymhm/recovery/equilibrated.py",
+        "src/pymhm/fem/scalar/triangle.py",
+        "src/pymhm/fem/scalar/operators.py",
     ):
         fingerprint[name] = hashlib.sha256(source_path(name).read_bytes()).hexdigest()
     program = shutil.which(executable)

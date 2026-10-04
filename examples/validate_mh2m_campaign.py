@@ -20,7 +20,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-from examples.campaign_provenance import file_digest, verify_archive
+from examples.campaign_provenance import verify_archive
 from examples.compare_mh2m_cg3 import (
     DATA,
     ROOT,
@@ -34,6 +34,7 @@ from examples.compare_mh2m_cg3_controls import validate_existing as validate_con
 from examples.mh2m_crisscross_campaign import validate_campaign_resume as validate_crisscross
 from examples.mh2m_heterogeneous import data_conventions
 from examples.mh2m_heterogeneous import validate_campaign_resume as validate_structured
+from pymhm.io.provenance import file_digest
 
 KINDS = {
     "structured": "comparison.json",

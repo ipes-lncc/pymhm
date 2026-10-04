@@ -27,7 +27,7 @@ from examples.minimal_flow_originals import (
     write_record,
 )
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.elasticity_mixed import solve_elasticity_mixed
+from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
 
 ROOT = Path(__file__).resolve().parents[1]
 

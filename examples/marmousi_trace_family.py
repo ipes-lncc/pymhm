@@ -17,16 +17,16 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from examples.campaign_provenance import file_digest
 from examples.helmholtz_compact_family import CompactFamily
 from examples.helmholtz_field_store import write_coefficients
 from examples.helmholtz_response_store import ResponseStore
 from examples.marmousi_campaign import evaluate_fields, source_hashes
 from examples.marmousi_data import load_marmousi_crop
-from pymhm.helmholtz import _HelmholtzFactory
-from pymhm.helmholtz_spaces import helmholtz_skeleton
-from pymhm.loads import split_point_sources
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.waves.helmholtz import _HelmholtzFactory
+from pymhm.fem.loads import split_point_sources
+from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.io.provenance import file_digest
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 

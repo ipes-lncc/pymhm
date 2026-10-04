@@ -6,10 +6,10 @@ from numpy.testing import assert_array_equal
 
 from examples.helmholtz_compact_family import CompactFamily
 from examples.helmholtz_field_store import write_coefficients
-from pymhm.helmholtz import _HelmholtzFactory
-from pymhm.helmholtz_spaces import helmholtz_skeleton
-from pymhm.loads import split_point_sources
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.waves.helmholtz import _HelmholtzFactory
+from pymhm.fem.loads import split_point_sources
+from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @pytest.mark.parametrize("precision", ["double", "extended"])

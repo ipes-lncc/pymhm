@@ -225,7 +225,7 @@ pixi run -e fem pytest tests/test_pgmhm_fenics.py
 
 The [numerical record](../figures/pgmhm/comparison.json) includes every
 resolution, the two pressures' norms, enriched and unenriched balances,
-global dimensions and source digests. The repository notebook `notebooks/59_pgmhm.ipynb`
+global dimensions and source digests. The repository notebook `notebooks/darcy/59_pgmhm.ipynb`
 combines a small executable patch with these archived studies. These
 experiments address the analytical case; the article's 27-by-27 inclusions
 and first-layer SPE10 comparisons require their own heterogeneous reference

@@ -4,15 +4,22 @@ from __future__ import annotations
 
 import os
 import pickle
+from dataclasses import replace
 from typing import Any
 
 import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from examples.variational_darcy import affine_pressure, build_problem
-from pymhm.assembly import assemble_hybrid, solve_hybrid
-from pymhm.parallel import ExecutionConfig
+from examples.variational_darcy import (
+    NativeLocalContext,
+    affine_pressure,
+    build_problem,
+    native_local_forms,
+)
+from pymhm.core.equations import LocalEquations
+from pymhm.core.multiscale import assemble, solve
+from pymhm.execution.cpu import ExecutionConfig
 
 pytestmark = pytest.mark.fem
 
@@ -26,6 +33,27 @@ def assert_numerical_payload(value: Any) -> None:
         assert isinstance(value, (int, np.ndarray))
 
 
+def double_permeability_forms(context: NativeLocalContext) -> LocalEquations:
+    """Supply a distinct user operator while preserving the native signed traces."""
+    forms = native_local_forms(context)
+    return replace(forms, a=2 * forms.a)
+
+
+def test_user_native_form_callback_changes_physical_operator() -> None:
+    """The generic assembler consumes user A rather than selecting a Darcy solver."""
+    pytest.importorskip("dolfinx")
+    problem = build_problem(provider="fenics")
+    original = assemble(problem)
+    callback = replace(problem.local_provider, native_forms=double_permeability_forms)
+    modified = assemble(replace(problem, local_provider=callback))
+    old, new = original.solve(), modified.solve()
+    assert_allclose(new.trace, 2 * old.trace, atol=3e-13, rtol=3e-13)
+    for a, b in zip(old.fields, new.fields, strict=True):
+        assert_allclose(a, b, atol=3e-13, rtol=3e-13)
+    for a, b in zip(original.responses, modified.responses, strict=True):
+        assert_allclose(b.problem.matrix.toarray(), 2 * a.problem.matrix.toarray())
+
+
 @pytest.mark.parametrize("backend,batch_size", [("serial", 1), ("process", 1), ("process", 2)])
 def test_native_provider_matches_same_portable_operator_and_fields(
     backend: Any, batch_size: int
@@ -34,8 +62,8 @@ def test_native_provider_matches_same_portable_operator_and_fields(
     portable_problem = build_problem(provider="portable", subdivisions=2)
     native_problem = build_problem(provider="fenics", subdivisions=2)
     execution = ExecutionConfig(backend, workers=2, native_threads=1, batch_size=batch_size)
-    portable = assemble_hybrid(portable_problem)
-    native = assemble_hybrid(native_problem, execution=execution)
+    portable = assemble(portable_problem)
+    native = assemble(native_problem, execution=execution)
     expected, actual = portable.solve(), native.solve()
     assert_allclose(native.matrix.toarray(), portable.matrix.toarray(), atol=3e-14)
     assert_allclose(native.rhs, portable.rhs, atol=3e-14)
@@ -74,6 +102,6 @@ def test_native_provider_matches_same_portable_operator_and_fields(
         )
         assert_allclose(actual.fields[cell], expected.fields[cell][permutation], atol=3e-13)
         assert_allclose(actual.fields[cell], affine_pressure(nrecord["points"]), atol=3e-13)
-    solved = solve_hybrid(native_problem, execution=execution)
+    solved = solve(native_problem, execution=execution)
     assert_allclose(solved.trace, actual.trace, atol=3e-13)
     assert_allclose(solved.fields, actual.fields, atol=3e-13)

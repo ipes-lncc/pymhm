@@ -18,6 +18,96 @@ PLACEHOLDER_HEADER = b"version https://git-lfs.github.com/spec/v1\n"
 IMAGE_MANIFEST = Path(__file__).with_name("notebook_images.json")
 
 
+def notebook_identifier(path: Path) -> str:
+    """Return a historical numeric prefix, or the stem of an unnumbered tutorial.
+
+    Moving a notebook between problem folders does not change its data contract.
+    A new tutorial need not reserve a numeric identifier.
+    """
+    prefix = path.stem.split("_", 1)[0]
+    return prefix if prefix.isdecimal() else path.stem
+
+
+def discover_notebooks(root: Path) -> list[Path]:
+    """Find notebook sources recursively, excluding Jupyter checkpoint copies.
+
+    Historical numeric identifiers must remain unique across problem folders.
+    Notebook sources discovered inside the checkout cannot point outside it.
+    """
+    base = (root / "notebooks").resolve()
+    notebooks = []
+    numbered: dict[str, Path] = {}
+    for path in sorted(base.rglob("*.ipynb")):
+        if ".ipynb_checkpoints" in path.relative_to(base).parts or not path.is_file():
+            continue
+        if not path.resolve().is_relative_to(base):
+            raise ValueError(f"Notebook source escapes the notebook directory: {path}")
+        identifier = notebook_identifier(path)
+        if identifier.isdecimal():
+            if identifier in numbered:
+                raise ValueError(
+                    f"Duplicate notebook identifier {identifier}: "
+                    f"{numbered[identifier].relative_to(base)} and {path.relative_to(base)}"
+                )
+            numbered[identifier] = path
+        notebooks.append(path)
+    return notebooks
+
+
+def select_notebooks(
+    root: Path, selectors: list[str] | None = None, *, allow_external: bool = False
+) -> list[Path]:
+    """Select sources by identifier, path, filename or problem folder.
+
+    Folder selection includes its descendants; repeated selections execute a
+    source once. Ambiguous basenames require a qualified path. Existing external
+    ``.ipynb`` files are accepted only when explicitly enabled by the runner.
+    """
+    base = (root / "notebooks").resolve()
+    available = discover_notebooks(root)
+    if not selectors:
+        return available
+    selected: set[Path] = set()
+    for selector in selectors:
+        name = Path(selector).as_posix().removeprefix("./").rstrip("/")
+        matches = []
+        for path in available:
+            relative = path.relative_to(base).as_posix()
+            if name in {
+                notebook_identifier(path),
+                path.name,
+                path.stem,
+                relative,
+                f"notebooks/{relative}",
+                path.as_posix(),
+            }:
+                matches.append(path)
+        if len(matches) > 1:
+            raise ValueError(f"Ambiguous notebook selector {selector!r}; use a qualified path")
+        if not matches:
+            group = name.removeprefix("notebooks/")
+            matches = [
+                path
+                for path in available
+                if name == "notebooks"
+                or group in {parent.as_posix() for parent in path.relative_to(base).parents}
+            ]
+        if not matches and allow_external:
+            candidate = Path(selector).expanduser().resolve()
+            if candidate.is_file() and candidate.suffix == ".ipynb":
+                matches = [candidate]
+        if not matches:
+            raise ValueError(f"Unknown notebook identifier, path or problem group: {selector}")
+        selected.update(matches)
+    return sorted(selected)
+
+
+def selected_notebook_ids(root: Path, notebooks: list[Path]) -> set[str]:
+    """Select internal data contracts without assigning them to external notebooks."""
+    base = (root / "notebooks").resolve()
+    return {notebook_identifier(path) for path in notebooks if path.resolve().is_relative_to(base)}
+
+
 def required_images(root: Path, notebooks: set[str] | None = None) -> dict[str, set[Path]]:
     """Return existing notebook image contracts before any notebook is executed.
 
@@ -313,17 +403,19 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="Require the selected local payloads")
     parser.add_argument("--max-bytes", type=int, default=DEFAULT_MAX_BYTES)
-    parser.add_argument("--notebook", action="append", help="Select an ID, for example 23 or 47")
+    parser.add_argument(
+        "--notebook", action="append", help="Select an ID, path or problem folder, e.g. 23 or darcy"
+    )
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
-    if args.notebook:
-        available = {path.name.split("_", 1)[0] for path in (root / "notebooks").glob("*.ipynb")}
-        if set(args.notebook) - available:
-            parser.error("Unknown notebook identifier")
-    dependencies = required_archives(root, set(args.notebook) if args.notebook else None)
-    plan = dependency_plan(
-        root, dependencies, required_images(root, set(args.notebook) if args.notebook else None)
-    )
+    try:
+        paths = select_notebooks(root, args.notebook)
+    except ValueError as error:
+        parser.error(str(error))
+    selected = selected_notebook_ids(root, paths) if args.notebook else None
+    dependencies = required_archives(root, selected)
+    plan = dependency_plan(root, dependencies, required_images(root, selected))
+    plan["notebook_paths"] = [path.relative_to(root / "notebooks").as_posix() for path in paths]
     print(json.dumps(plan, indent=2), flush=True)
     if args.check:
         try:

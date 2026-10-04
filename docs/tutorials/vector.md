@@ -4,32 +4,39 @@ Run 17 small, executable analytical patches: primal elasticity, Herrmann
 displacement–pressure elasticity, weak-symmetry H(div) stress families,
 incompressible flow and a vector Maxwell trajectory. Every stationary variant
 uses two macrocells with explicit affine physical fields. The default boundary
-data are nonhomogeneous; `--homogeneous` supplies zero fields and loads.
+data are nonhomogeneous; `homogeneous=True` supplies zero fields and loads.
 These controls demonstrate the stated discrete formulations. Convergence
 studies and literature comparisons are documented separately in the case gallery.
 
+The primary elasticity and Brinkman cells declare their UFL equations through
+the generic variational interface and require the Pixi `fem` kernel. Their
+method-family comparisons use the predefined solvers.
+The primary Maxwell trajectory declares coefficient forms for each mass/curl
+stage and composes them with free time-integration functions in the example.
+Scalar, vector and mixed user-defined forms share the
+[variational interface](../variational.md); its space and stability choices
+remain explicit.
+
+Choose the [problem notebook](../tutorials.md) and edit `selected_methods`.
+The elasticity, flow and Maxwell notebooks expose their own supported variants.
+
 ```bash
-pixi run --locked -e test python -m examples.tutorial_vector_variants \
-  --variant all
-pixi run --locked -e test python -m examples.tutorial_vector_variants \
-  --variant elasticity-bdm-plus-2d --backend process --workers 2
-pixi run --locked -e test python -m examples.tutorial_vector_variants \
-  --variant elasticity-gals-3d --incompressible
-pixi run --locked -e test python -m examples.tutorial_vector_variants \
-  --variant flow-usfem-3d --homogeneous
+pixi run --locked -e notebooks notebooks-run elasticity/introductory_methods.ipynb
+pixi run --locked -e notebooks notebooks-run flow/introductory_methods.ipynb
+pixi run --locked -e notebooks notebooks-run waves/maxwell/introductory_methods.ipynb
 ```
 
-The script prints each physical field's error separately, its original-equation
+The notebooks report each physical field's error separately, its original-equation
 residual where exposed, the local spaces, boundary convention and gauge. One
 native BLAS/OpenMP thread is used per worker. The Maxwell stepper has its own
 serial trajectory interface; select a stationary elasticity/flow variant for
-`--backend thread` or `--backend process`. Its factors are closed by a context
-manager. All variants are available through `--variant`; no reference solver
+`backend="thread"` or `backend="process"`. Its factors are closed by a context
+manager. All variants are available through `selected_methods`; no reference solver
 or external project is loaded by this tutorial.
 
 ## Choose the unknowns and spaces
 
-| CLI variants | Local unknowns and approximation | Macroface data |
+| Notebook variants | Local unknowns and approximation | Macroface data |
 |---|---|---|
 | `elasticity-primal-2d`, `elasticity-primal-3d` | H1 Lagrange P3 displacement; raw symmetric stress is evaluated from strain | P1 vector traction coordinates; prescribed displacement |
 | `elasticity-gals-2d`, `elasticity-gals-3d` | H1 P3 displacement and P3 Herrmann pressure, with GaLS stabilization | P1 vector Cauchy-traction coordinates; prescribed displacement |
@@ -63,16 +70,19 @@ availability of scalar H(div) bases on other cell types.
 
 The unknown of a local problem can be displacement, `(u,p)`, or
 `(sigma,u,rotation)`. Its coefficient order is declared by that local assembler.
-Every method supplies the same numerical record
+The generic provider declares both its local equations and global balance
 
 $$
-A_K w_K+B_K\lambda_K=f_K.
+\begin{aligned}
+A_K w_K+B_K\lambda_K&=f_K,\\
+C_K w_K+D_K\lambda_K&=g_K.
+\end{aligned}
 $$
 
-`LocalProblem` carries the original operator, signed trace map, literal retained
-basis and physical moment columns. `LocalAssembly` adds reconstruction metadata.
-An ordinary callable provider returns one of these records, and `HybridProblem`
-combines it with a `GlobalForm` and the ordered macrocell specifications. The
+`LocalEquations` carries independent blocks, trace maps, literal retained
+bases and physical moment columns. Its `metadata` supplies reconstruction data.
+An ordinary callable provider returns this record, and `MultiscaleProblem`
+combines it with an additional global `Equation` and ordered item specifications. The
 shared assembler reduces each contribution in cell order, regardless of which
 local spaces generated it. It does not infer the spaces, trace signs, gauge or
 essential constraints from the number of vector components.
@@ -102,10 +112,13 @@ L = ufl.inner(force, v) * dx
 
 Here `local_mesh` is owned by the provider on `MPI.COMM_SELF`, and `force` is
 the explicitly supplied physical source. Signed trace forms, retained
-translation coefficients and moment forms complete the `LocalForm`. See the
-[complete local/global provider example](../fenics.md#local-provider-and-global-hybrid-form).
+translation coefficients and moment forms complete `LocalEquations`, with
+independently declared trial/test trace pairings. See the
+[variational guide](../variational.md).
+With the positive reaction in this example, translations are retained modes
+rather than exact null vectors; use `coarse_basis` when retaining them.
 This volume form supplies neither USFEM/Oseen stabilization nor the interface
-conditions by itself. `pymhm.fenics.brinkman_forms` instead defines symmetric
+conditions by itself. `pymhm.backends.fenics.brinkman_forms` instead defines symmetric
 strain diffusion; it has a different natural traction and rigid-motion kernel.
 
 An H(div) stress formulation also needs its stress/displacement/rotation spaces,
@@ -132,7 +145,7 @@ p=-\lambda\operatorname{div}u,
 $$
 
 At finite lambda, the boundary compressibility identity determines pressure;
-an arbitrary pressure mean is not imposed. `--incompressible` applies to the
+an arbitrary pressure mean is not imposed. `incompressible=True` applies to the
 mixed-elasticity variants, chooses a solenoidal affine displacement, and
 prescribes the physical mean pressure 2.3. Its stress includes `-2.3 I`.
 Primal elasticity requires finite lambda. The weak rotation is an independent

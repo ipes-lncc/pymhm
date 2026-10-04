@@ -13,9 +13,11 @@ from threadpoolctl import threadpool_limits
 
 from examples.mh2m_campaign import diagnostics, source, source_hashes
 from examples.mh2m_heterogeneous import OscillatoryCoefficient
-from pymhm.crisscross import crisscross_submesh
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.mh2m import PressureTraceSpace, solve_mh2m
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.crisscross import crisscross_submesh
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.three_field import PressureTraceSpace, solve_mh2m
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -26,12 +28,12 @@ def hashes() -> dict[str, str]:
     for name in (
         "examples/mh2m_crisscross.py",
         "examples/mh2m_heterogeneous.py",
-        "src/pymhm/crisscross.py",
-        "src/pymhm/refinement.py",
-        "src/pymhm/_geometry_roundoff.py",
+        "src/pymhm/meshes/crisscross.py",
+        "src/pymhm/meshes/refinement.py",
+        "src/pymhm/meshes/roundoff.py",
     ):
         result[name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
-    return result
+    return current_source_manifest(result)
 
 
 def main() -> None:

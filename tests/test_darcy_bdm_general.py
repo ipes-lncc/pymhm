@@ -5,7 +5,8 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm import BDMFamily, FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy_bdm
+from pymhm import BDMFamily, FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.mixed_bdm import solve_darcy_bdm
 
 
 def pressure(x):

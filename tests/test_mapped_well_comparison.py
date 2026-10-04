@@ -10,7 +10,7 @@ import numpy as np
 import pytest
 from threadpoolctl import threadpool_limits
 
-from pymhm.mapped_rt import HexMesh, _geometry
+from pymhm.meshes.hexahedron import HexMesh, _geometry
 
 
 def _example(name: str) -> ModuleType:

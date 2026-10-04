@@ -25,16 +25,18 @@ import scipy
 from scipy import sparse
 from threadpoolctl import threadpool_info, threadpool_limits
 
+from pymhm.io.provenance import current_source_manifest
+
 if __package__:
     from .quarter_spot_problem import coefficient, macro_mesh, source
 else:
     from quarter_spot_problem import coefficient, macro_mesh, source
 
-from pymhm import DarcySolution, FaceSpace, SkeletonSpace, solve_darcy
-from pymhm.darcy import _DarcyLocalFactory
-from pymhm.elements import rt0_evaluate
-from pymhm.mesh import positive_int
-from pymhm.solvers import _accurate_residual
+from pymhm import FaceSpace, SkeletonSpace
+from pymhm._legacy.models.darcy.primal import DarcySolution, _DarcyLocalFactory, solve_darcy
+from pymhm.core.validation import positive_int
+from pymhm.fem.scalar.operators import rt0_evaluate
+from pymhm.linalg.linear import _accurate_residual
 
 ROOT = Path(__file__).resolve().parents[1]
 BARYCENTRIC = np.array([[2 / 3, 1 / 6, 1 / 6], [1 / 6, 2 / 3, 1 / 6], [1 / 6, 1 / 6, 2 / 3]])
@@ -268,7 +270,7 @@ def acquire(
     sources = [
         Path(__file__),
         ROOT / "examples/quarter_spot_problem.py",
-        *sorted((ROOT / "src/pymhm").glob("*.py")),
+        *sorted((ROOT / "src/pymhm").rglob("*.py")),
     ]
     record = {
         "schema": "pymhm-quarter-obstacle-v1",
@@ -302,7 +304,9 @@ def acquire(
         "physical_checks": checks,
         "archive": archive.name,
         "archive_sha256": _fingerprint(archive),
-        "source_sha256": {str(path.relative_to(ROOT)): _fingerprint(path) for path in sources},
+        "source_sha256": current_source_manifest(
+            {str(path.relative_to(ROOT)): _fingerprint(path) for path in sources}
+        ),
         "lockfile_sha256": _fingerprint(ROOT / "pixi.lock"),
         "git_revision": subprocess.run(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, text=True, capture_output=True

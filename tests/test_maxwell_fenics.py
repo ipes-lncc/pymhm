@@ -5,13 +5,15 @@ import pytest
 from numpy.testing import assert_allclose
 from scipy import sparse
 
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.lagrange import multiindices
-from pymhm.maxwell_dg import MaxwellSkeleton, assemble_local, derivatives, physical_points
-from pymhm.mesh import SkeletonSpace, TriangleMesh
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.tetra_lagrange import tetra_indices
-from pymhm.tetrahedral import TetraMesh
+from pymhm.fem.scalar.tetrahedron_topology import tetra_indices
+from pymhm.fem.scalar.triangle import multiindices
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.fem.vector.curl import TangentialTraceSpace as MaxwellSkeleton
+from pymhm.fem.vector.curl import assemble_local, derivatives, physical_points
+from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 pytestmark = pytest.mark.fem
 

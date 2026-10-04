@@ -13,11 +13,14 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm.block import SaddleBlockSolver
-from pymhm.elements import boundary_data, face_integration, p1_operators
-from pymhm.hybrid import HybridSystem, LocalProblem
-from pymhm.mesh import SkeletonSpace, TriangleMesh
-from pymhm.solvers import factorize
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.system import HybridSystem
+from pymhm.fem.scalar.operators import boundary_data, face_integration, p1_operators
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.linalg.block import SaddleBlockSolver
+from pymhm.linalg.linear import factorize
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -46,13 +49,22 @@ def main() -> None:
     paths = [
         Path(__file__),
         *(
-            ROOT / "src/pymhm" / name
-            for name in ("block.py", "solvers.py", "hybrid.py", "elements.py", "mesh.py")
+            ROOT / f"src/pymhm/{name}"
+            for name in (
+                "linalg/block.py",
+                "linalg/linear.py",
+                "core/contracts.py",
+                "fem/scalar/operators.py",
+                "meshes/triangle.py",
+            )
         ),
     ]
-    hashes = {
-        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
-    }
+    hashes = current_source_manifest(
+        {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in paths
+        }
+    )
     rows = []
     with threadpool_limits(limits=1):
         for n in (2, 4, 8):

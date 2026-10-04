@@ -17,7 +17,8 @@ from typing import Literal
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm.mapped_rt import HexMesh, _geometry, cube_quadrature, mapped_rt_basis
+from pymhm.fem.hdiv.mapped import mapped_rt_basis
+from pymhm.meshes.hexahedron import HexMesh, _geometry, cube_quadrature
 
 if __package__:
     from .mapped_well_fields import MappedWellField

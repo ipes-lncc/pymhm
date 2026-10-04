@@ -5,8 +5,10 @@ import pytest
 from numpy.testing import assert_allclose
 from scipy import sparse
 
-from pymhm.fenics import from_ufl
-from pymhm.mapped_rt import HexMesh, _operators, cube_quadrature, mapped_rt_basis
+from pymhm._legacy.models.darcy.mapped import _operators
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.hdiv.mapped import mapped_rt_basis
+from pymhm.meshes.hexahedron import HexMesh, cube_quadrature
 
 
 @pytest.mark.fem

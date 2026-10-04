@@ -10,8 +10,8 @@ from threadpoolctl import threadpool_limits
 from examples import core_extension_data as exact
 from examples.hdiv3d_field_archive import field_arrays, observe_system, replay
 from examples.hdiv3d_sections import evaluate, replay_section
-from pymhm.darcy_hdiv3d import solve_darcy_hdiv3d
-from pymhm.hdiv3d_mesh import AffineMixedMesh
+from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
+from pymhm.meshes.mixed import AffineMixedMesh
 
 
 @pytest.fixture(
@@ -72,9 +72,9 @@ def test_interface_values_remain_separate_and_plane_has_unit_area(executed):
 
 def test_sections_do_not_construct_a_new_basis_or_moment_map(executed, monkeypatch):
     """Fresh basis/nullspace/orientation constructors cannot affect persisted fields."""
-    import pymhm.hdiv3d_family as legacy
-    import pymhm.hdiv3d_general as general
-    import pymhm.hdiv3d_mesh as maps
+    import pymhm.fem.hdiv.family_3d as legacy
+    import pymhm.fem.hdiv.moments_3d as general
+    import pymhm.meshes.mixed as maps
 
     def forbidden(*args, **kwargs):
         raise AssertionError("Fresh numerical field coordinates are forbidden")

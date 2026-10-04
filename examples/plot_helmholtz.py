@@ -15,7 +15,7 @@ from matplotlib.collections import LineCollection
 
 from examples.helmholtz_campaign import AcousticWave
 from examples.plot_style import set_refinement_ticks
-from pymhm.quadrilateral import qk_basis
+from pymhm.fem.scalar.quadrilateral import qk_basis
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "examples/results/helmholtz"

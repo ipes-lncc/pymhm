@@ -5,8 +5,8 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy_hdiv3d import solve_darcy_hdiv3d
-from pymhm.hdiv3d_family import (
+from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
+from pymhm.fem.hdiv.family_3d import (
     HDiv3DFamily,
     cell_quadrature,
     face_polynomials,
@@ -15,8 +15,8 @@ from pymhm.hdiv3d_family import (
     reference_faces,
     reference_vertices,
 )
-from pymhm.hdiv3d_general import coefficients
-from pymhm.hdiv3d_mesh import AffineMixedMesh, hdiv3d_basis, hdiv3d_dofs
+from pymhm.fem.hdiv.moments_3d import coefficients
+from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_basis, hdiv3d_dofs
 
 
 @pytest.fixture(autouse=True)

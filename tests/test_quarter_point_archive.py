@@ -14,8 +14,9 @@ from examples.quarter_point_archive import (
     write_point_archive,
     write_point_record,
 )
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.solvers import LinearSolveError
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.linalg.linear import LinearSolveError
 
 
 def point_solution(formulation: str = "primal", *, refinement: int = 2, segments: int = 1):

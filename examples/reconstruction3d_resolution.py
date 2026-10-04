@@ -10,7 +10,9 @@ from numpy.polynomial.legendre import leggauss
 from threadpoolctl import threadpool_limits
 
 from examples.reconstruction3d_data import fields
-from pymhm import TetraMesh, TriangularSkeleton, reconstruct_darcy_moments_3d, solve_darcy_3d
+from pymhm import TetraMesh, TriangularSkeleton, reconstruct_darcy_moments_3d
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/reconstruction3d"
@@ -37,20 +39,22 @@ def run() -> None:
     macro = TetraMesh(np.asarray(geometry["macro_points"]), np.asarray(geometry["macro_cells"]))
     norms = reference_norms()
     owners = [
-        ROOT / "src/pymhm" / f"{name}.py"
+        ROOT / f"src/pymhm/{name}.py"
         for name in (
-            "darcy3d",
-            "reconstruction3d",
-            "rt3d",
-            "hdiv3d_mesh",
-            "hdiv3d_family",
-            "tetrahedral",
-            "tetra_lagrange",
-            "hybrid",
-            "solvers",
+            "_legacy/models/darcy/primal_3d",
+            "recovery/moments_3d",
+            "fem/hdiv/rt_3d",
+            "meshes/mixed",
+            "fem/hdiv/family_3d",
+            "fem/scalar/tetrahedron",
+            "fem/scalar/tetrahedron_topology",
+            "core/contracts",
+            "linalg/linear",
         )
     ] + [Path(__file__), ROOT / "examples/reconstruction3d_data.py"]
-    hashes = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    )
     record = dict(
         reference="analytical",
         fixed_macro_input=str(path.relative_to(ROOT)),
@@ -137,9 +141,9 @@ def run() -> None:
         record["rows"].append(row)
         (OUTPUT / "resolution.json").write_text(json.dumps(record, indent=2) + "\n")
         print(json.dumps(row), flush=True)
-    if hashes != {
-        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners
-    }:
+    if hashes != current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+    ):
         raise RuntimeError("campaign sources changed during acquisition")
     record["source_changed_during_run"] = False
     (OUTPUT / "resolution.json").write_text(json.dumps(record, indent=2) + "\n")

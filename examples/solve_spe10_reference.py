@@ -23,13 +23,9 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.solve_spe10 import OUTPUT, ROOT, load_layer
-from pymhm.quadrilateral import (
-    CartesianMacroMesh,
-    qk_basis,
-    qk_space,
-    quadrilateral_operators,
-)
-from pymhm.solvers import solve_linear
+from pymhm.fem.scalar.quadrilateral import qk_basis, qk_space, quadrilateral_operators
+from pymhm.linalg.linear import solve_linear
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 def evaluate(

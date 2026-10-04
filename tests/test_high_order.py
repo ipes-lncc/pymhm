@@ -4,10 +4,12 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_brinkman, solve_darcy
-from pymhm.elements import p1_operators, triangle_quadrature
-from pymhm.lagrange import scalar_operators, tabulate
-from pymhm.reconstruction import equilibrate_flux
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm._legacy.models.vector import solve_brinkman
+from pymhm.fem.scalar.operators import p1_operators, triangle_quadrature
+from pymhm.fem.scalar.triangle import scalar_operators, tabulate
+from pymhm.recovery.equilibrated import equilibrate_flux
 
 
 @pytest.mark.parametrize("degrees", [(1, 1), (2, 3), (4, 2)])
@@ -171,7 +173,7 @@ def test_high_order_flow_exact_polynomial_and_consistent_source(method, degree, 
 
 
 def test_flow_inverse_constant_obeys_polynomial_inequality():
-    from pymhm.flow import _laplacian_inverse_bound
+    from pymhm._legacy.models.flow.solver import _laplacian_inverse_bound
 
     mesh = TriangleMesh.unit_square()
     bary, weights = triangle_quadrature(6)
@@ -250,8 +252,8 @@ def test_brinkman_resistance_rejects_invalid_material(drag):
 
 
 def test_p2_trace_wrapper_matches_shared_assembly():
-    from pymhm.lagrange import trace_coupling
-    from pymhm.vector import _p2_coupling
+    from pymhm.fem.scalar.triangle import trace_coupling
+    from pymhm.fem.vector.operators import _p2_coupling
 
     mesh = TriangleMesh.unit_square()
     fine = mesh.submesh(0, 3)

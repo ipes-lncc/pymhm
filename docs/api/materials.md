@@ -4,26 +4,38 @@ Material fields, physical loads and integration across interfaces.
 
 [All API families](../api.md)
 
-::: pymhm.reservoir
+::: pymhm.io.datasets.spe10
     options:
       show_source: false
 
-::: pymhm.loads
+::: pymhm.fem.loads
     options:
       show_source: false
 
-::: pymhm.cut_cells
+::: pymhm.fem.quadrature.material
     options:
       show_source: false
 
-::: pymhm.planar_material
+::: pymhm.materials.planar
     options:
       show_source: false
 
-::: pymhm.planar_fitting
+::: pymhm.meshes.fitting
     options:
       show_source: false
 
-::: pymhm.planar_quadrature
+::: pymhm.fem.quadrature.planar
+    options:
+      show_source: false
+
+::: pymhm.materials.cartesian
+    options:
+      show_source: false
+
+::: pymhm.materials.sources
+    options:
+      show_source: false
+
+::: pymhm.materials.evaluation
     options:
       show_source: false

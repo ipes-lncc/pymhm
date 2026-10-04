@@ -6,11 +6,11 @@ from numpy.testing import assert_allclose
 from scipy import sparse
 
 from pymhm import TriangleMesh
-from pymhm.bdm_family import BDMFamily
-from pymhm.elasticity_mixed import _operators
-from pymhm.elements import triangle_quadrature
-from pymhm.fenics import from_ufl
-from pymhm.lagrange import reference_basis
+from pymhm._legacy.models.elasticity.stress import _operators
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.hdiv.bdm_family import BDMFamily
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import reference_basis
 
 
 @pytest.mark.fem

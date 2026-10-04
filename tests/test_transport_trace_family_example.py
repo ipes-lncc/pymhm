@@ -7,9 +7,10 @@ import pytest
 
 from examples.pgmhm_campaign import crisscross
 from examples.transport_trace_family import TransportTraceFamily, gradient_projection_squared
-from pymhm.hybrid import HybridSystem
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.transport import solve_transport
+from pymhm._legacy.models.transport.solver import solve_transport
+from pymhm.core.system import HybridSystem
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def forcing(points):

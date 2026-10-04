@@ -6,8 +6,9 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.hybrid import HybridSystem, LocalProblem
-from pymhm.solvers import LinearSolveError, SolverUnavailableError, factorize
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.system import HybridSystem
+from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError, factorize
 
 
 def difficult_system() -> HybridSystem:
@@ -83,7 +84,9 @@ def test_extended_global_validates_precision_and_platform(monkeypatch: pytest.Mo
 @pytest.mark.parametrize("dimension", [2, 3])
 def test_rad_interfaces_retain_explicit_global_precision(dimension: int) -> None:
     """The public PDE paths retain the opt-in coefficient type through physical fields."""
-    from pymhm import TetraMesh, TriangleMesh, solve_rad_3d, solve_transport
+    from pymhm import TetraMesh, TriangleMesh
+    from pymhm._legacy.models.transport.rad_3d import solve_rad_3d
+    from pymhm._legacy.models.transport.solver import solve_transport
 
     if np.finfo(np.longdouble).eps >= np.finfo(float).eps:
         pytest.skip("NumPy longdouble is not wider than double")

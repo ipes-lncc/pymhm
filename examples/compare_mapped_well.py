@@ -11,7 +11,8 @@ from threadpoolctl import threadpool_limits
 
 from examples.mapped_well_comparison import differences
 from examples.mapped_well_fields import MappedWellField
-from pymhm.parallel import map_local
+from pymhm.execution.cpu import map_local
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 DIRECTORY = ROOT / "examples/results/mapped-well-oscillatory"
@@ -71,11 +72,11 @@ def main() -> None:
         Path(__file__),
         ROOT / "examples/mapped_well_fields.py",
         ROOT / "examples/mapped_well_comparison.py",
-        ROOT / "src/pymhm/mapped_rt.py",
+        ROOT / "src/pymhm/_legacy/models/darcy/mapped.py",
     ]
-    source_hashes = {
-        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_paths
-    }
+    source_hashes = current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_paths}
+    )
     classical = {}
     for path in DIRECTORY.glob("classical-*.json"):
         record = json.loads(path.read_text())
@@ -165,9 +166,9 @@ def main() -> None:
         norm_workers=args.workers,
         source_hashes=source_hashes,
     )
-    if source_hashes != {
-        str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_paths
-    }:
+    if source_hashes != current_source_manifest(
+        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_paths}
+    ):
         raise RuntimeError("Physical-norm sources changed during acquisition")
     (DIRECTORY / "comparisons.json").write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report), flush=True)

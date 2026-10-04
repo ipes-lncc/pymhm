@@ -14,10 +14,12 @@ from field_sampling import sample_field, sample_profile
 from threadpoolctl import threadpool_limits
 
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.elements import tensor_values, triangle_quadrature
-from pymhm.lagrange import nodal_space, tabulate
-from pymhm.rad import solve_rad
-from pymhm.unusual import UnusualParameters
+from pymhm._legacy.models.transport.rad import solve_rad
+from pymhm._legacy.models.transport.stabilization import UnusualParameters
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import nodal_space, tabulate
+from pymhm.io.provenance import current_source_manifest
+from pymhm.materials.evaluation import tensor_values
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGET = ROOT / "examples/results/unusual"
@@ -208,8 +210,14 @@ def main() -> None:
     )
     arguments = parser.parse_args()
     TARGET.mkdir(parents=True, exist_ok=True)
-    sources = ("src/pymhm/unusual.py", "src/pymhm/rad.py", "examples/solve_unusual.py")
-    hashes = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in sources}
+    sources = (
+        "src/pymhm/_legacy/models/transport/stabilization.py",
+        "src/pymhm/_legacy/models/transport/rad.py",
+        "examples/solve_unusual.py",
+    )
+    hashes = current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in sources}
+    )
     levels = (2, 4) if arguments.smoke else (2, 4, 8, 16, 32)
     settings = [
         (case, n, epsilon, method)

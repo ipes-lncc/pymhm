@@ -264,8 +264,8 @@ def test_reference_acquisition_accepts_review_destinations_and_reuses_verified_c
 @pytest.mark.parametrize("degree,order", [(1, 2), (5, 6)])
 def test_reference_acquisition_uses_the_requested_qk_space(tmp_path, degree, order):
     """The public Q1/Q5 path matches direct conforming assembly on the same data."""
-    from pymhm.quadrilateral import CartesianMacroMesh
-    from pymhm.separable import SeparableField, solve_separable_diffusion
+    from pymhm._legacy.models.darcy.separable import SeparableField, solve_separable_diffusion
+    from pymhm.meshes.cartesian import CartesianMacroMesh
 
     acquisition = _example("periodic_reference")
     artifacts, records = tmp_path / "arrays", tmp_path / "records"
@@ -426,7 +426,7 @@ def test_new_reference_consumer_requires_the_executed_basis_contract(
     elif changed == "orientation":
         record["basis_convention"] = "Q1 equidistant nodal cardinal functions; y index fastest"
     elif changed == "owner":
-        record["source_sha256"]["src/pymhm/quadrilateral.py"] = "0" * 64
+        record["source_sha256"]["src/pymhm/_legacy/models/darcy/cartesian.py"] = "0" * 64
     elif changed == "missing":
         record.pop("basis_sha256")
     record_path.write_text(json.dumps(record))

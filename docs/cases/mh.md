@@ -335,6 +335,6 @@ pixi run -e notebooks python -m examples.plot_mh_boundary
 
 The [numerical record](../figures/mh/comparison.json) includes dimensions,
 absolute and relative norms, balances, residuals and executed source hashes.
-The repository notebook `notebooks/56_mh.ipynb` combines a small executable patch
+The repository notebook `notebooks/darcy/56_mh.ipynb` combines a small executable patch
 with the archived multilevel evidence. The portable solver does not require
 FEniCS; DOLFINx is an optional independent verification backend.

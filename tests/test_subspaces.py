@@ -5,7 +5,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 from pymhm import LocalProblem
-from pymhm.subspaces import restrict_response
+from pymhm.core.subspaces import restrict_response
 
 
 @pytest.mark.parametrize("retained", ["none", "kernel", "general"])

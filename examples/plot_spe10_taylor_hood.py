@@ -24,7 +24,7 @@ from plot_spe10_data import FIGURES, OUTPUT, ROOT, panel
 from solve_spe10_taylor_hood import load_field
 
 from pymhm import TriangleMesh
-from pymhm.visualization import broken_triangle_grid
+from pymhm.postprocessing.visualization import broken_triangle_grid
 
 MHM = "flow-layer1-n6x11-p3-r10-s10-q8-pointwise-2017.npz"
 SAMPLES = OUTPUT / "taylor-hood-display.npz"

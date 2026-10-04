@@ -4,11 +4,12 @@ import numpy as np
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.cut_cells import material_triangle_quadrature
-from pymhm.darcy import solve_darcy
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.reconstruction_moments import _primal_flux
-from pymhm.reservoir import CartesianCellField
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.quadrature.material import material_triangle_quadrature
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.recovery.moments import _primal_flux
 
 
 def physical_energy_difference(first, second):

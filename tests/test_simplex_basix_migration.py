@@ -11,24 +11,23 @@ from numpy.testing import assert_allclose, assert_array_equal
 from threadpoolctl import threadpool_limits
 
 from examples.minimal_wave_elastic_wave import executed_basis_arrays, saved_tabulation
-from pymhm import element_backends as providers
-from pymhm.elements import p1_geometry
-from pymhm.lagrange import (
+from pymhm.fem import reference as providers
+from pymhm.fem.scalar.operators import p1_geometry
+from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_element_tabulate, tetra_nodal_space
+from pymhm.fem.scalar.tetrahedron_topology import (
+    tetra_indices,
+    tetra_polynomials,
+    tetra_values_gradients,
+)
+from pymhm.fem.scalar.triangle import (
     element_tabulate,
     reference_basis,
     reference_values,
     scalar_operators,
     tabulate,
 )
-from pymhm.mesh import TriangleMesh
-from pymhm.tetra_lagrange import tetra_indices, tetra_polynomials, tetra_values_gradients
-from pymhm.tetrahedral import (
-    TetraMesh,
-    tetra_barycentric_gradients,
-    tetra_basis,
-    tetra_element_tabulate,
-    tetra_nodal_space,
-)
+from pymhm.meshes.tetrahedron import TetraMesh, tetra_barycentric_gradients
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("degree", range(1, 7))

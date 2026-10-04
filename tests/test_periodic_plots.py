@@ -11,8 +11,8 @@ import pytest
 pytest.importorskip("matplotlib")
 
 from examples import plot_periodic
-from pymhm.conforming import ConformingQuadrilateralSolution
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.darcy.conforming import ConformingQuadrilateralSolution
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 def test_profiles_keep_both_macro_side_values_and_mark_faces(monkeypatch):

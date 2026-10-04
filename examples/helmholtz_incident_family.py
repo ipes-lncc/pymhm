@@ -15,11 +15,12 @@ import numpy as np
 
 from examples.helmholtz_trace_family import verify_helmholtz_solution
 from examples.local_response_cache import array_identity, operator_identity
-from pymhm.helmholtz import HelmholtzSolution, _HelmholtzFactory
-from pymhm.helmholtz_forms import complex_vector
-from pymhm.hybrid import HybridSystem, LocalResponse
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.solvers import LinearFactorization, factorize
+from pymhm._legacy.models.waves.helmholtz import HelmholtzSolution, _HelmholtzFactory
+from pymhm.core.contracts import LocalResponse
+from pymhm.core.system import HybridSystem
+from pymhm.fem.scalar.helmholtz import complex_vector
+from pymhm.linalg.linear import LinearFactorization, factorize
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 class IncidentFamily:

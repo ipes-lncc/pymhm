@@ -5,10 +5,11 @@ import pytest
 from numpy.testing import assert_allclose
 from scipy import sparse
 
-from pymhm.elasticity_tensor_rt import _operators, _rotation_basis
-from pymhm.fenics import from_ufl
-from pymhm.quadrilateral import CartesianMacroMesh, quadrilateral_quadrature
-from pymhm.tensor_rt import tensor_rt_basis
+from pymhm._legacy.models.elasticity.stress_tensor import _operators, _rotation_basis
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.hdiv.tensor_rt import tensor_rt_basis
+from pymhm.fem.scalar.quadrilateral import quadrilateral_quadrature
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @pytest.mark.fem

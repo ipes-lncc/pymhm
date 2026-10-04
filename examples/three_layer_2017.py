@@ -17,10 +17,12 @@ from typing import Any, cast
 import numpy as np
 from numpy.typing import NDArray
 
-from examples.campaign_provenance import file_digest, verify_archive
+from examples.campaign_provenance import verify_archive
 from pymhm import PolylineLayerField, RadialDiskLoad, TriangleMesh
-from pymhm.elasticity_primal import constitutive_values
-from pymhm.mesh import FaceSpace, SkeletonSpace, positive_int
+from pymhm._legacy.models.elasticity.primal import constitutive_values
+from pymhm.core.validation import positive_int
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import file_digest
 
 DATA = Path(__file__).resolve().parent / "data/three-layer-2017"
 Array = NDArray[np.float64]

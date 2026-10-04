@@ -7,22 +7,26 @@ from scipy import sparse
 from scipy.linalg import solve_triangular
 from scipy.sparse.linalg import spsolve
 
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.maxwell import MaxwellStepper, field_values, solve_maxwell
-from pymhm.maxwell_dg import (
-    MaxwellSkeleton,
+from pymhm._legacy.models.waves.maxwell import MaxwellStepper, field_values, solve_maxwell
+from pymhm.fem.scalar.quadrilateral import qk_basis
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.fem.vector.curl import (
+    TangentialTraceSpace as MaxwellSkeleton,
+)
+from pymhm.fem.vector.curl import (
     assemble_local,
     derivatives,
     physical_basis,
     physical_points,
     quadrature,
 )
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.planar_material import PlanarMaterial, PlanarRegion
-from pymhm.quadrilateral import CartesianMacroMesh, qk_basis
-from pymhm.reservoir import CartesianCellField
-from pymhm.solvers import LinearSolveError
-from pymhm.tetrahedral import TetraMesh
+from pymhm.linalg.linear import LinearSolveError
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.materials.planar import PlanarMaterial, PlanarRegion
+from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("amplitude", [1e-20, 1.0, 1e20])

@@ -16,10 +16,11 @@ from plot_style import set_refinement_ticks
 from polygon_meshes import polygon_partition
 from threadpoolctl import threadpool_limits
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_transport_polygons
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import nodal_space, reference_basis, scalar_operators, tabulate
-from pymhm.solvers import solve_linear
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.geometry import solve_transport_polygons
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import nodal_space, reference_basis, scalar_operators, tabulate
+from pymhm.linalg.linear import solve_linear
 
 ROOT = Path(__file__).resolve().parents[1]
 EPSILON = 0.01

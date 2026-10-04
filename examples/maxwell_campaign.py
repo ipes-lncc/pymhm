@@ -16,11 +16,13 @@ from threadpoolctl import threadpool_limits
 
 from examples.maxwell_data import CavityMode
 from examples.maxwell_norms import MaxwellNorms
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.maxwell import MaxwellSolution, MaxwellStepper
-from pymhm.maxwell_dg import MaxwellSkeleton
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.waves.maxwell import MaxwellSolution, MaxwellStepper
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.fem.vector.curl import TangentialTraceSpace as MaxwellSkeleton
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/maxwell"
@@ -29,25 +31,28 @@ OUTPUT = ROOT / "examples/results/maxwell"
 def source_hashes() -> dict[str, str]:
     """Identify all formulation, geometry, norm and acquisition owners used here."""
     names = (
-        "maxwell",
-        "maxwell_dg",
-        "helmholtz_forms",
-        "mesh",
-        "lagrange",
-        "tetrahedral",
-        "tetra_lagrange",
-        "darcy3d",
-        "cut_cells",
-        "planar_quadrature",
-        "elements",
-        "hybrid",
-        "solvers",
+        "_legacy/models/waves/maxwell",
+        "fem/vector/curl",
+        "fem/scalar/helmholtz",
+        "meshes/triangle",
+        "fem/scalar/triangle",
+        "fem/scalar/tetrahedron",
+        "fem/scalar/tetrahedron_topology",
+        "_legacy/models/darcy/primal_3d",
+        "fem/quadrature/material",
+        "fem/quadrature/planar",
+        "fem/scalar/operators",
+        "core/contracts",
+        "linalg/linear",
     )
     paths = [ROOT / f"src/pymhm/{name}.py" for name in names]
     paths += [Path(__file__), ROOT / "examples/maxwell_data.py", ROOT / "examples/maxwell_norms.py"]
-    return {
-        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
-    }
+    return current_source_manifest(
+        {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in paths
+        }
+    )
 
 
 def archive(solution: MaxwellSolution, path: Path, mode: CavityMode) -> None:

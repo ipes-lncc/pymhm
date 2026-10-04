@@ -16,12 +16,12 @@ from typing import Any
 import numpy as np
 from scipy import sparse
 
-from pymhm import DarcySolution
-from pymhm.darcy import _DarcyLocalFactory
-from pymhm.elements import rt0_evaluate, tensor_values, triangle_quadrature
-from pymhm.lagrange import tabulate
-from pymhm.mesh import positive_int
-from pymhm.solvers import LinearSolveError, _accurate_residual
+from pymhm._legacy.models.darcy.primal import DarcySolution, _DarcyLocalFactory
+from pymhm.core.validation import positive_int
+from pymhm.fem.scalar.operators import rt0_evaluate, triangle_quadrature
+from pymhm.fem.scalar.triangle import tabulate
+from pymhm.linalg.linear import LinearSolveError, _accurate_residual
+from pymhm.materials.evaluation import tensor_values
 
 
 def matrix_digest(array: np.ndarray) -> str:

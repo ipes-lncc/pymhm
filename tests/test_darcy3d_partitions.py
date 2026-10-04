@@ -5,11 +5,12 @@ import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton, _boundary, solve_darcy_3d, tetra_trace_coupling
-from pymhm.mesh import FloatArray
-from pymhm.mshho3d import _face_rule
-from pymhm.reconstruction3d import reconstruct_darcy_moments_3d
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from pymhm.core.validation import FloatArray
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton, _boundary, tetra_trace_coupling
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.methods.hho_3d import _face_rule
+from pymhm.recovery.moments_3d import reconstruct_darcy_moments_3d
 
 
 def pressure(points: FloatArray) -> FloatArray:
@@ -204,8 +205,8 @@ def test_quadratic_pressure_uses_nonuniform_flux_means(setup) -> None:
 
 def test_vector_equilibrium_uses_nonuniform_area_fractions(setup) -> None:
     """Exact affine symmetric stress obeys force and torque on the partitioned boundary."""
-    from pymhm.elasticity3d import Elasticity3DSolution
-    from pymhm.hybrid import HybridSolution
+    from pymhm._legacy.models.elasticity.primal_3d import Elasticity3DSolution
+    from pymhm.core.contracts import HybridSolution
 
     mesh, skeleton, locals_ = setup
     tensor = np.array([[2.0, 0.3, 0.1], [0.3, 1.0, 0.2], [0.1, 0.2, 3.0]])

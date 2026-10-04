@@ -181,9 +181,9 @@ variable tensors and all stabilization selections. Their inverse constants are
 computed with an independent monomial basis.
 
 ```python
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.flow3d import solve_flow_3d
-from pymhm.tetrahedral import TetraMesh
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm._legacy.models.flow.solver_3d import solve_flow_3d
+from pymhm.meshes.tetrahedron import TetraMesh
 
 mesh = TetraMesh.unit_cube(2)
 solution = solve_flow_3d(

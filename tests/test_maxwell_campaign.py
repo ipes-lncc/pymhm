@@ -7,9 +7,9 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.maxwell import MaxwellStepper
-from pymhm.mesh import TriangleMesh
-from pymhm.tetrahedral import TetraMesh
+from pymhm._legacy.models.waves.maxwell import MaxwellStepper
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def differentiated(field, points):

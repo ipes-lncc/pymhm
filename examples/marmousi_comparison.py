@@ -18,7 +18,6 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from examples.campaign_provenance import file_digest
 from examples.marmousi_campaign import evaluate_fields
 from examples.marmousi_data import load_marmousi_crop
 from examples.marmousi_fields import (
@@ -29,9 +28,11 @@ from examples.marmousi_fields import (
     radial_exclusion_mask,
 )
 from examples.marmousi_records import checked_mhm, checked_reference
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import reference_basis
-from pymhm.quadrilateral import CartesianMacroMesh, qk_basis
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.quadrilateral import qk_basis
+from pymhm.fem.scalar.triangle import reference_basis
+from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @dataclass(frozen=True)
@@ -281,7 +282,9 @@ def main() -> None:
         root / "examples/marmousi_records.py",
         *sorted((root / "src/pymhm").rglob("*.py")),
     ]
-    hashes = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+    hashes = current_source_manifest(
+        {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+    )
     candidate, reference = BrokenQField.load(args.candidate), load_reference(args.reference)
     exclusion = (5000.0, 50.0, 50.0)
     measured = {
@@ -324,9 +327,9 @@ def main() -> None:
                 "relative_difference": difference / denominator if denominator else None,
             }
         )
-    if hashes != {
-        str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources
-    }:
+    if hashes != current_source_manifest(
+        {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+    ):
         raise RuntimeError("comparison sources changed during integration")
     result = {
         "candidate": args.candidate.name,

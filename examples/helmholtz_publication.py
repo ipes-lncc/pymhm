@@ -9,8 +9,8 @@ from typing import Any
 import numpy as np
 
 from examples.campaign_checkpoint import require_sources, verify_checkpoint
-from examples.campaign_provenance import file_digest
 from examples.helmholtz_article import article_hashes
+from pymhm.io.provenance import file_digest
 
 
 def support_rows(

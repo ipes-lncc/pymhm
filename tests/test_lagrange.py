@@ -6,9 +6,16 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import multiindices, nodal_space, reference_basis, tabulate, trace_coupling
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import (
+    multiindices,
+    nodal_space,
+    reference_basis,
+    tabulate,
+    trace_coupling,
+)
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("degree", [1, 2, 3, 4])

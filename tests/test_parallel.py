@@ -9,7 +9,7 @@ from typing import Any
 import numpy as np
 import pytest
 
-from pymhm.parallel import _limited_call, map_local
+from pymhm.execution.cpu import _limited_call, map_local
 
 
 def square(value: int) -> int:
@@ -29,7 +29,7 @@ def identify(value: int) -> tuple[int, str]:
 
 def solve_local(value: int) -> float:
     """Run a native solve within a worker to check ordered numerical parity."""
-    from pymhm.solvers import solve_linear
+    from pymhm.linalg.linear import solve_linear
 
     return float(solve_linear(np.diag([2.0, 4.0]), [value, value])[0])
 
@@ -90,7 +90,7 @@ class CountedFactory:
 
 def test_process_factory_is_transferred_once_per_worker(monkeypatch: pytest.MonkeyPatch) -> None:
     """Mesh-bearing factories must not be serialized again for every macrocell."""
-    from pymhm import parallel
+    from pymhm.execution import cpu as parallel
 
     factory = CountedFactory()
     assert map_local(factory, range(9), backend="process", workers=1) == list(range(1, 10))

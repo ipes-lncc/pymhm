@@ -13,10 +13,10 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.maxwell_nanoguide import ROOT, NanoWaveguide, hashes, save_fields
-from pymhm.maxwell import MaxwellStepper
-from pymhm.maxwell_dg import MaxwellSkeleton
-from pymhm.mesh import FaceSpace, SkeletonSpace
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.waves.maxwell import MaxwellStepper
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.fem.vector.curl import TangentialTraceSpace as MaxwellSkeleton
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 def run(output: Path, dt: float, order: int) -> None:

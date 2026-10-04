@@ -12,8 +12,8 @@ import numpy as np
 import pytest
 
 from examples import marmousi_records as driver
-from examples.campaign_provenance import file_digest
 from examples.marmousi_data import FILES
+from pymhm.io.provenance import current_source_manifest, file_digest
 
 
 @pytest.fixture
@@ -34,7 +34,9 @@ def sources() -> dict[str, str]:
         *sorted((driver.ROOT / "src/pymhm").rglob("*.py")),
         *(driver.ROOT / f"examples/{name}.py" for name in names),
     ]
-    return {str(path.relative_to(driver.ROOT)): file_digest(path) for path in paths}
+    return current_source_manifest(
+        {str(path.relative_to(driver.ROOT)): file_digest(path) for path in paths}
+    )
 
 
 @pytest.fixture
@@ -167,9 +169,9 @@ def test_stale_or_different_acquisition_is_not_published(mhm, defect):
     """Identity validation happens independently of stored physical residual magnitudes."""
     path, record = mhm
     if defect == "missing_core":
-        record["source_sha256"].pop("src/pymhm/helmholtz.py")
+        record["source_sha256"].pop("src/pymhm/_legacy/models/waves/helmholtz.py")
     elif defect == "changed_core":
-        record["source_sha256"]["src/pymhm/helmholtz.py"] = "0" * 64
+        record["source_sha256"]["src/pymhm/_legacy/models/waves/helmholtz.py"] = "0" * 64
     elif defect == "changed_archive":
         (path.parent / record["archive"]).write_bytes(b"different coefficients")
     elif defect == "quadrature":

@@ -9,9 +9,14 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.elastodynamics import ElastodynamicLocal, ElastodynamicSolution, _stress_from_gradient
-from pymhm.mesh import TriangleMesh
-from pymhm.tetrahedral import TetraMesh, tetra_nodal_space
+from pymhm._legacy.models.waves.elastodynamics import (
+    ElastodynamicLocal,
+    ElastodynamicSolution,
+    _stress_from_gradient,
+)
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def _local(mesh: Any, degree: int, **material: Any) -> ElastodynamicLocal:

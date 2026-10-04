@@ -12,8 +12,9 @@ from examples.minimal_wave_convergence import quadrature_change, require_origina
 from examples.minimal_wave_elastic_wave import field_norms, original_update
 from examples.minimal_wave_marmousi import physical_norm
 from examples.minimal_wave_three_layer import physical_norms
-from pymhm.quadrilateral import _cardinals
-from pymhm.tetrahedral import TetraMesh, tetra_tabulate, tetrahedron_quadrature
+from pymhm.fem.scalar.quadrilateral import _cardinals
+from pymhm.fem.scalar.tetrahedron import tetra_tabulate, tetrahedron_quadrature
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 def test_newmark_original_force_and_kinematic_invariants() -> None:

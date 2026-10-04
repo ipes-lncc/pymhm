@@ -25,12 +25,19 @@ from examples.archive_precision import precision_fields
 from examples.layered_poisson import LayeredPoissonSeries
 from examples.unfitted_geometry import macro_mesh
 from examples.unfitted_trace_family import ScalarTraceFamily
-from pymhm.cut_cells import fit_material_faces, fit_material_mesh, material_triangle_quadrature
-from pymhm.darcy import DarcySolution, _assembly_quadrature_order, solve_darcy
-from pymhm.elements import tensor_values
-from pymhm.lagrange import element_tabulate, multiindices, nodal_space
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh, positive_int
-from pymhm.reservoir import CartesianCellField
+from pymhm._legacy.models.darcy.primal import DarcySolution, _assembly_quadrature_order, solve_darcy
+from pymhm.core.validation import positive_int
+from pymhm.fem.quadrature.material import (
+    fit_material_faces,
+    fit_material_mesh,
+    material_triangle_quadrature,
+)
+from pymhm.fem.scalar.triangle import element_tabulate, multiindices, nodal_space
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.materials.evaluation import tensor_values
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/unfitted/convergence"
@@ -41,23 +48,25 @@ SOURCES = (
     "examples/unfitted_campaign.py",
     "examples/unfitted_geometry.py",
     "examples/layered_poisson.py",
-    "src/pymhm/darcy.py",
-    "src/pymhm/lagrange.py",
-    "src/pymhm/hybrid.py",
-    "src/pymhm/hybrid_refinement.py",
-    "src/pymhm/solvers.py",
-    "src/pymhm/mesh.py",
-    "src/pymhm/elements.py",
-    "src/pymhm/cut_cells.py",
-    "src/pymhm/reservoir.py",
-    "src/pymhm/_geometry_roundoff.py",
-    "src/pymhm/refinement.py",
+    "src/pymhm/_legacy/models/darcy/primal.py",
+    "src/pymhm/fem/scalar/triangle.py",
+    "src/pymhm/core/contracts.py",
+    "src/pymhm/core/refinement.py",
+    "src/pymhm/linalg/linear.py",
+    "src/pymhm/meshes/triangle.py",
+    "src/pymhm/fem/scalar/operators.py",
+    "src/pymhm/fem/quadrature/material.py",
+    "src/pymhm/io/reservoir.py",
+    "src/pymhm/meshes/roundoff.py",
+    "src/pymhm/meshes/refinement.py",
 )
 
 
 def source_hashes() -> dict[str, str]:
     """Identify actual executed numerical sources without exposing local paths."""
-    return {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in SOURCES}
+    return current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in SOURCES}
+    )
 
 
 def smooth_field(points: np.ndarray) -> tuple[np.ndarray, np.ndarray]:

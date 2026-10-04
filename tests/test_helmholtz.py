@@ -10,8 +10,8 @@ import pytest
 from scipy import sparse
 from scipy.sparse.linalg import spsolve
 
-from pymhm.helmholtz import local_helmholtz_error_squared, solve_helmholtz
-from pymhm.helmholtz_forms import (
+from pymhm._legacy.models.waves.helmholtz import local_helmholtz_error_squared, solve_helmholtz
+from pymhm.fem.scalar.helmholtz import (
     acoustic_space,
     complex_vector,
     positive_values,
@@ -19,13 +19,14 @@ from pymhm.helmholtz_forms import (
     real_vector,
     volume_forms,
 )
-from pymhm.helmholtz_spaces import OscillatoryFaceSpace, helmholtz_skeleton
-from pymhm.mesh import SkeletonSpace, TriangleMesh
-from pymhm.planar_material import PlanarMaterial, PlanarRegion
-from pymhm.polygon import PolygonMesh
-from pymhm.quadrilateral import CartesianMacroMesh
-from pymhm.reservoir import CartesianCellField
-from pymhm.solvers import LinearSolveError
+from pymhm.fem.traces.helmholtz import OscillatoryFaceSpace, helmholtz_skeleton
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.linalg.linear import LinearSolveError
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.materials.planar import PlanarMaterial, PlanarRegion
+from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.meshes.polygonal import PolygonMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("rectangle", [False, True])

@@ -16,7 +16,7 @@ reconstructed flux only against continuous macro-local pressure functions.
 
 ```python
 from pymhm import TriangleMesh
-from pymhm.darcy_rt import solve_darcy_rt, solve_darcy_rt_conforming
+from pymhm._legacy.models.darcy.mixed_rt import solve_darcy_rt, solve_darcy_rt_conforming
 
 macro = TriangleMesh.unit_square(4)
 solution = solve_darcy_rt(

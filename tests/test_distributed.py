@@ -11,10 +11,11 @@ from typing import Any
 import numpy as np
 import pytest
 
-from pymhm import distributed
-from pymhm.distributed import _collective_error, _indices, _values, solve_distributed
-from pymhm.hybrid import HybridSystem, LocalAssembly, LocalProblem
-from pymhm.solvers import LinearSolveError, SolverUnavailableError
+from pymhm.core.contracts import LocalAssembly, LocalProblem
+from pymhm.core.system import HybridSystem
+from pymhm.execution import mpi as distributed
+from pymhm.execution.mpi import _collective_error, _indices, _values, solve_distributed
+from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError
 
 
 @pytest.fixture

@@ -337,6 +337,6 @@ The archived fields and primary material data generate the gallery with
 pixi run -e notebooks python -m examples.plot_marmousi --data build/data/marmousi
 ~~~
 
-[Notebook 72](https://github.com/volpatto/pymhm/blob/main/notebooks/72_marmousi.ipynb)
+[Notebook 72](https://github.com/volpatto/pymhm/blob/main/notebooks/waves/helmholtz/72_marmousi.ipynb)
 checks a nonzero analytical field and reads the archived norms and figures
 without executing the full reference solves.

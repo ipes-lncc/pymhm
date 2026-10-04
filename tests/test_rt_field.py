@@ -6,9 +6,9 @@ import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
-import pymhm.rt as rt
-from pymhm.elements import triangle_quadrature
-from pymhm.mesh import TriangleMesh
+import pymhm.fem.hdiv.rt as rt
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("degree", [0, 1, 2, 3])

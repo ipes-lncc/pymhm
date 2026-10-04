@@ -27,6 +27,7 @@ from examples.mh2m_cg_reference import CubicTriangularField, coefficient
 from examples.mh2m_crisscross_norms import CrossedP1, common_triangles
 from examples.mh2m_heterogeneous import load_field
 from examples.mh2m_heterogeneous_norms import difference
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/mh2m-heterogeneous"
@@ -38,8 +39,8 @@ SOURCES = (
     "examples/mh2m_cg_reference.py",
     "examples/mh2m_crisscross_norms.py",
     "examples/mh2m_heterogeneous_norms.py",
-    "src/pymhm/cut_cells.py",
-    "src/pymhm/elements.py",
+    "src/pymhm/fem/quadrature/material.py",
+    "src/pymhm/fem/scalar/operators.py",
 )
 
 
@@ -231,7 +232,7 @@ def main() -> None:
     configuration = mathematical_configuration(args)
     directory = args.data / "cg3"
     target = args.output if args.output is not None else directory / "comparison.json"
-    hashes = {name: digest(ROOT / name) for name in SOURCES}
+    hashes = current_source_manifest({name: digest(ROOT / name) for name in SOURCES})
     acquired_payload = target.read_bytes() if target.exists() else None
     record: dict[str, Any] = (
         json.loads(acquired_payload)
@@ -270,7 +271,7 @@ def main() -> None:
 
     def checkpoint() -> None:
         """Atomically persist only completed norms from unchanged source files."""
-        if hashes != {name: digest(ROOT / name) for name in SOURCES}:
+        if hashes != current_source_manifest({name: digest(ROOT / name) for name in SOURCES}):
             raise RuntimeError("comparison sources changed while integrating")
         validate_existing(record, acquisitions, control, case_rows, directory, configuration)
         target.parent.mkdir(parents=True, exist_ok=True)

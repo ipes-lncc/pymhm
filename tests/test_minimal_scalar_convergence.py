@@ -6,7 +6,8 @@ import numpy as np
 import pytest
 
 from examples.minimal_scalar_convergence import hybrid_original, residual_record
-from pymhm.hybrid import HybridSystem, LocalProblem
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.system import HybridSystem
 
 
 def test_reduced_solution_does_not_certify_corrupted_reconstruction() -> None:

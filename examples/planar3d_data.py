@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from pymhm.planar_material import PlanarMaterial, PlanarRegion
+from pymhm.materials.planar import PlanarMaterial, PlanarRegion
 
 
 @dataclass(frozen=True)

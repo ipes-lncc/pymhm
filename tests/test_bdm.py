@@ -5,9 +5,9 @@ import pytest
 from numpy.polynomial.legendre import leggauss, legvander
 from numpy.testing import assert_allclose
 
-from pymhm.bdm import bdm2_basis, bdm2_dofs, bdm2_evaluate
-from pymhm.elements import triangle_quadrature
-from pymhm.mesh import TriangleMesh
+from pymhm.fem.hdiv.bdm import bdm2_basis, bdm2_dofs, bdm2_evaluate
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def test_face_moments_and_affine_piola():

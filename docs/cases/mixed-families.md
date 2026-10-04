@@ -26,7 +26,8 @@ alone does not establish this local MHM requirement. The default BDM2/P1/P1
 solution and its coefficient conventions are preserved.
 
 ```python
-from pymhm import TriangleMesh, solve_elasticity_mixed
+from pymhm import TriangleMesh
+from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
 
 solution = solve_elasticity_mixed(
     TriangleMesh.unit_square(2),

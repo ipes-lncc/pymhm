@@ -19,7 +19,8 @@ from examples.compensated_reference import component_residual, refine_components
 from examples.inclusion_grading import graded_axis
 from examples.pgmhm_inclusion_data import axis, coefficient, material_array
 from examples.solve_unusual_spe10_reference import CG2Field, subdivide_axis
-from pymhm.elements import triangle_quadrature
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/pgmhm-inclusions"
@@ -384,9 +385,11 @@ def main() -> None:
         "examples/solve_unusual_spe10_reference.py",
         "examples/compensated_reference.py",
         "examples/cg2_physical_form.py",
-        "src/pymhm/elements.py",
+        "src/pymhm/fem/scalar/operators.py",
     )
-    hashes = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    hashes = current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    )
     with threadpool_limits(1):
         for factor in args.factors:
             field, row = solve(factor, patch=args.patch, graded=args.graded)
@@ -433,9 +436,9 @@ def main() -> None:
                 ]
                 row["previous_archive"] = previous.name
                 row["previous_sha256"] = hashlib.sha256(previous.read_bytes()).hexdigest()
-            if hashes != {
-                name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names
-            }:
+            if hashes != current_source_manifest(
+                {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+            ):
                 raise RuntimeError("reference sources changed during acquisition")
             path.with_suffix(".json").write_text(json.dumps(row, indent=2) + "\n")
             print(json.dumps(row), flush=True)

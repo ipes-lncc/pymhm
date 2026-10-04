@@ -4,7 +4,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.hybrid import HybridSystem, LocalProblem
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.system import HybridSystem
 
 
 @pytest.mark.parametrize("retained", ["none", "kernel", "general"])

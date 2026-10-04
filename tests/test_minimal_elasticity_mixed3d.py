@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 
 from examples.minimal_elasticity_mixed3d import physical_errors
-from pymhm.hdiv3d_mesh import AffineMixedMesh
+from pymhm.meshes.mixed import AffineMixedMesh
 
 
 @pytest.mark.parametrize("order", [3, 4, 5])

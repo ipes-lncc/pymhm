@@ -9,7 +9,7 @@ from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.elasticity import solve_displacement_pressure
+from pymhm._legacy.models.elasticity.mixed_pressure import solve_displacement_pressure
 
 
 @pytest.fixture(autouse=True)

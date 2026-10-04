@@ -4,7 +4,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
-from pymhm.hybrid import HybridSystem, LocalProblem
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.system import HybridSystem
 
 
 def _systems(boundary=None):

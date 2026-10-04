@@ -3,11 +3,11 @@
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy import solve_darcy
-from pymhm.mesh import TriangleMesh
-from pymhm.planar_fitting import fit_planar_material, fit_planar_skeleton
-from pymhm.planar_material import PlanarMaterial, PlanarRegion
-from pymhm.reconstruction_moments import reconstruct_darcy_moments
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.materials.planar import PlanarMaterial, PlanarRegion
+from pymhm.meshes.fitting import fit_planar_material, fit_planar_skeleton
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.recovery.moments import reconstruct_darcy_moments
 
 
 def test_fitted_planar_interface_preserves_exact_physical_flux() -> None:

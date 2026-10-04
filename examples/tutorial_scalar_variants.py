@@ -27,25 +27,24 @@ from pymhm import (
     TetraMesh,
     TriangleMesh,
     TriangularSkeleton,
-    solve_darcy,
-    solve_darcy_3d,
-    solve_darcy_bdm,
-    solve_darcy_hdiv3d,
-    solve_darcy_quadrilateral,
-    solve_darcy_rt,
-    solve_darcy_rt_conforming,
-    solve_darcy_tensor_rt,
-    solve_helmholtz,
-    solve_mh,
-    solve_mh2m,
-    solve_mh2m_3d,
-    solve_mh_3d,
-    solve_mshho,
-    solve_mshho_3d,
-    solve_pgmhm,
-    solve_transport,
 )
-from pymhm.mesh import FloatArray, positive_int
+from pymhm._legacy.models.darcy.cartesian import solve_darcy_quadrilateral
+from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
+from pymhm._legacy.models.darcy.mixed_bdm import solve_darcy_bdm
+from pymhm._legacy.models.darcy.mixed_rt import solve_darcy_rt, solve_darcy_rt_conforming
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from pymhm._legacy.models.darcy.tensor import solve_darcy_tensor_rt
+from pymhm._legacy.models.transport.solver import solve_transport
+from pymhm._legacy.models.waves.helmholtz import solve_helmholtz
+from pymhm.core.validation import FloatArray, positive_int
+from pymhm.methods.hho import solve_mshho
+from pymhm.methods.hho_3d import solve_mshho_3d
+from pymhm.methods.petrov_galerkin import solve_pgmhm
+from pymhm.methods.robin import solve_mh
+from pymhm.methods.robin_3d import solve_mh_3d
+from pymhm.methods.three_field import solve_mh2m
+from pymhm.methods.three_field_3d import solve_mh2m_3d
 
 
 class _PatchOptions(TypedDict):

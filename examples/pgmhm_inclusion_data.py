@@ -13,8 +13,8 @@ import numpy as np
 
 from examples.mh_campaign import l_mesh
 from examples.solve_unusual_spe10_reference import subdivide_axis
-from pymhm.mesh import TriangleMesh
-from pymhm.polygon import PolygonMesh
+from pymhm.meshes.polygonal import PolygonMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 COUNT = 27
 PERIOD = 1 / COUNT

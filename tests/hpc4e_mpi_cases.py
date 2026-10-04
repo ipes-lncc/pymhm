@@ -86,7 +86,7 @@ def run() -> None:
     from petsc4py import PETSc
     from scipy import sparse
 
-    from pymhm.solvers import _symmetric_equilibration
+    from pymhm.linalg.linear import _symmetric_equilibration
 
     comm = MPI.COMM_WORLD
     check_prescribed_coordinates()

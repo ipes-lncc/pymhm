@@ -15,10 +15,15 @@ from examples.pgmhm_campaign import crisscross
 from examples.transport_campaign import natural_horizontal
 from examples.transport_coefficient_controls import norm_contribution
 from examples.transport_mixed_campaign import SOURCES
-from pymhm.mesh import FaceSpace, SkeletonSpace
-from pymhm.parallel import map_local
-from pymhm.scalar_adaptive import TransportBounds, estimate_transport_faces, refine_skeleton_faces
-from pymhm.transport import solve_transport
+from pymhm._legacy.models.transport.solver import solve_transport
+from pymhm.adaptivity.transport import (
+    TransportBounds,
+    estimate_transport_faces,
+    refine_skeleton_faces,
+)
+from pymhm.execution.cpu import map_local
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/transport"
@@ -31,9 +36,11 @@ def acquire(skeleton: SkeletonSpace, name: str, *, refinement: int, workers: int
         *SOURCES,
         "examples/transport_face_controls.py",
         "examples/transport_coefficient_controls.py",
-        "src/pymhm/parallel.py",
+        "src/pymhm/execution/cpu.py",
     )
-    hashes = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in paths}
+    hashes = current_source_manifest(
+        {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in paths}
+    )
     mesh = skeleton.mesh
     with threadpool_limits(1):
         solution = solve_transport(

@@ -4,34 +4,46 @@ Geometric partitions, skeletal topology and conforming refinement.
 
 [All API families](../api.md)
 
-::: pymhm.mesh
+::: pymhm.meshes.triangle
     options:
       show_source: false
 
-::: pymhm.crisscross
+::: pymhm.meshes.crisscross
     options:
       show_source: false
 
-::: pymhm.polygon
+::: pymhm.meshes.polygonal
     options:
       show_source: false
 
-::: pymhm.polyhedral
+::: pymhm.meshes.polyhedral
     options:
       show_source: false
 
-::: pymhm.tetrahedral
+::: pymhm.meshes.tetrahedron
     options:
       show_source: false
 
-::: pymhm.refinement
+::: pymhm.meshes.refinement
     options:
       show_source: false
 
-::: pymhm.longest_edge
+::: pymhm.meshes.longest_edge
     options:
       show_source: false
 
-::: pymhm.refinement3d
+::: pymhm.meshes.refinement_3d
+    options:
+      show_source: false
+
+::: pymhm.meshes.cartesian
+    options:
+      show_source: false
+
+::: pymhm.meshes.hexahedron
+    options:
+      show_source: false
+
+::: pymhm.meshes.mixed
     options:
       show_source: false

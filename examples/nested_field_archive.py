@@ -22,10 +22,12 @@ try:
 except ImportError:
     from archive_precision import precision_fields, restore_precision
 from examples.transport_checkpoints import checkpoint_field, write_progress
-from pymhm.hybrid import HybridSolution, HybridSystem, LocalResponse
-from pymhm.mesh import SkeletonSpace
-from pymhm.nested import NestedLocalProblem, NestedSolution
-from pymhm.quadrilateral import CartesianMacroMesh, _cardinals, qk_basis, qk_space
+from pymhm.core.contracts import HybridSolution, LocalResponse
+from pymhm.core.nested import NestedLocalProblem, NestedSolution
+from pymhm.core.system import HybridSystem
+from pymhm.fem.scalar.quadrilateral import _cardinals, qk_basis, qk_space
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 SCHEMA = "pymhm-nested-field-archive-v1"
 

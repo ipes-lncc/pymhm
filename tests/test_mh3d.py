@@ -5,11 +5,11 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.mesh import TriangleMesh
-from pymhm.mh3d import solve_mh_3d
-from pymhm.mh_trace3d import PressureTraceSpace3D, boundary_rules, broken_face_basis
-from pymhm.tetrahedral import TetraMesh
+from pymhm.fem.traces.pressure_3d import PressureTraceSpace3D, boundary_rules, broken_face_basis
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.robin_3d import solve_mh_3d
 
 
 @pytest.fixture(autouse=True)

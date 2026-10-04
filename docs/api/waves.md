@@ -1,21 +1,24 @@
 # Helmholtz and Maxwell
 
-Time-harmonic acoustic and transient electromagnetic formulations.
+Predefined time-harmonic acoustic and transient electromagnetic
+formulations. User-defined problems declare their forms through the
+[variational interface](../variational.md); shared curl and tangential trace
+operations are documented with the [finite element infrastructure](elements.md).
 
 [All API families](../api.md)
 
-::: pymhm.helmholtz
+::: pymhm._legacy.models.waves.helmholtz
     options:
       show_source: false
 
-::: pymhm.helmholtz_spaces
+::: pymhm.fem.traces.helmholtz
     options:
       show_source: false
 
-::: pymhm.maxwell
+::: pymhm._legacy.models.waves.maxwell
     options:
       show_source: false
 
-::: pymhm.maxwell_dg.MaxwellSkeleton
+::: pymhm.fem.vector.curl.TangentialTraceSpace
     options:
       show_source: false

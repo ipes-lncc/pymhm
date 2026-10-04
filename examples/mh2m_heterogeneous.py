@@ -28,11 +28,13 @@ from examples.campaign_provenance import (
 from examples.mh2m_campaign import diagnostics, source
 from examples.mh2m_campaign_contracts import verify_difference_result as verify_result
 from examples.mh2m_heterogeneous_norms import StructuredP1, difference
-from pymhm.darcy import solve_darcy
-from pymhm.lagrange import scalar_operators
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.mh2m import PressureTraceSpace, solve_mh2m
-from pymhm.solvers import solve_linear
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.scalar.triangle import scalar_operators
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.linalg.linear import solve_linear
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.three_field import PressureTraceSpace, solve_mh2m
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/mh2m-heterogeneous"
@@ -64,18 +66,20 @@ def source_hashes() -> dict[str, str]:
         *(
             f"src/pymhm/{name}.py"
             for name in (
-                "mh2m",
-                "darcy",
-                "lagrange",
-                "elements",
-                "mesh",
-                "cut_cells",
-                "hybrid",
-                "solvers",
+                "methods/three_field",
+                "_legacy/models/darcy/primal",
+                "fem/scalar/triangle",
+                "fem/scalar/operators",
+                "meshes/triangle",
+                "fem/quadrature/material",
+                "core/contracts",
+                "linalg/linear",
             )
         ),
     ]
-    return {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    return current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    )
 
 
 def save_field(path: Path, mesh: TriangleMesh, fine: tuple, pressure: tuple) -> StructuredP1:

@@ -6,8 +6,9 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_brinkman
-from pymhm.flow import _flow_local
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.flow.solver import _flow_local
+from pymhm._legacy.models.vector import solve_brinkman
 
 
 @pytest.mark.parametrize("formulation", ["taylor-hood", "oseen"])

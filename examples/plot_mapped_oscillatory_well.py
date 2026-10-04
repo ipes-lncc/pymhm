@@ -16,7 +16,7 @@ from matplotlib.colors import LogNorm, Normalize
 from examples.mapped_well_fields import MappedWellField
 from examples.plot_style import set_refinement_ticks
 from examples.solve_mapped_oscillatory_well import OscillatoryWellData
-from pymhm.mapped_rt import _geometry
+from pymhm.meshes.hexahedron import _geometry
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/mapped-well-oscillatory"

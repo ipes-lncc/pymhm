@@ -17,9 +17,10 @@ from examples.archive_precision import restore_precision
 from examples.compare_unusual_spe10 import overlay_quadrature
 from examples.pgmhm_inclusion_data import coefficient
 from examples.solve_pgmhm_inclusions_reference import InclusionField, load_field
-from pymhm.elements import p1_geometry
-from pymhm.lagrange import nodal_space, reference_basis
-from pymhm.mesh import TriangleMesh
+from pymhm.fem.scalar.operators import p1_geometry
+from pymhm.fem.scalar.triangle import nodal_space, reference_basis
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 _FIELDS: tuple[InclusionMHMField, InclusionField] | None = None
@@ -129,9 +130,11 @@ def acquire(archive: Path, reference: Path, workers: int, output: Path | None = 
         "examples/solve_pgmhm_inclusions_reference.py",
         "examples/compare_unusual_spe10.py",
         "examples/spe10_adaptive_norms.py",
-        "src/pymhm/lagrange.py",
+        "src/pymhm/fem/scalar/triangle.py",
     )
-    hashes = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    hashes = current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    )
     with np.load(archive) as data:
         count = len(data["point_offsets"]) - 1
     row = dict(
@@ -177,9 +180,9 @@ def acquire(archive: Path, reference: Path, workers: int, output: Path | None = 
                 )
             }
         row["rows"].append(record)
-        row["source_changed_during_run"] = hashes != {
-            name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names
-        }
+        row["source_changed_during_run"] = hashes != current_source_manifest(
+            {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+        )
         if row["source_changed_during_run"]:
             raise RuntimeError("norm sources changed during acquisition")
         output.write_text(json.dumps(row, indent=2) + "\n")

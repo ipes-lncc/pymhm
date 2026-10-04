@@ -12,7 +12,6 @@ from scipy import sparse
 from threadpoolctl import threadpool_limits
 
 from examples import core_extension_data as exact
-from examples.campaign_provenance import file_digest
 from examples.core_elasticity_field_archive import (
     _csr,
     _put_csr,
@@ -27,6 +26,7 @@ from examples.core_elasticity_field_archive import (
 )
 from examples.local_response_cache import array_identity
 from examples.verify_core_elasticity import CASES, physical_errors, run, solve_case
+from pymhm.io.provenance import file_digest
 
 
 @pytest.fixture(scope="module", params=CASES)
@@ -73,7 +73,7 @@ def test_replay_own_bases_matches_producer_fields_and_norms(acquired):
             if name == "rectangle-rt1":
                 expected = solution.evaluate(cell, reference)
             else:
-                from pymhm.lagrange import reference_basis
+                from pymhm.fem.scalar.triangle import reference_basis
 
                 basis = reference_basis(1, reference)[0]
                 expected_sigma, expected_div = solution.family.evaluate(
@@ -105,9 +105,9 @@ def test_replay_own_bases_matches_producer_fields_and_norms(acquired):
 
 
 def test_reader_and_replay_require_no_new_basis_or_solve(acquired, tmp_path, monkeypatch):
-    import pymhm.bdm_family as bdm
-    import pymhm.tensor_rt as rt
-    from pymhm.hybrid import HybridSystem
+    import pymhm.fem.hdiv.bdm_family as bdm
+    import pymhm.fem.hdiv.tensor_rt as rt
+    from pymhm.core.system import HybridSystem
 
     _, _, arrays = acquired
     path = tmp_path / "actual.npz"
@@ -284,7 +284,7 @@ def test_coherent_retained_rotation_preserves_fields(acquired):
 
 
 def test_context_restores_shared_owners_on_failure():
-    from pymhm.hybrid import HybridSystem
+    from pymhm.core.system import HybridSystem
 
     original = HybridSystem.solve
     with pytest.raises(RuntimeError), observe_system():
@@ -314,8 +314,8 @@ def test_finite_kernel_and_gauge_ensure_small_case_uniqueness(acquired):
 
 def test_negative_cauchy_traction_and_three_physical_rigid_means():
     """A constant Cauchy stress on pure traction boundaries fixes physical sign and gauge."""
-    from pymhm.elasticity_mixed import solve_elasticity_mixed
-    from pymhm.mesh import TriangleMesh
+    from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
+    from pymhm.meshes.triangle import TriangleMesh
 
     mesh = TriangleMesh.unit_square()
     traction = {int(face): mesh.normals[face] for face in mesh.boundary_faces}

@@ -26,7 +26,7 @@ else:
     from plot_style import set_refinement_ticks
     from verify_periodic import ROOT, material, source
 
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 FOLDER = ROOT / "docs/figures/periodic"
 COMPARISON = ROOT / "examples/results/periodic-comparison.json"

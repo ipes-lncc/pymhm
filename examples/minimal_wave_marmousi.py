@@ -20,9 +20,10 @@ from examples.minimal_wave_convergence import (
     require_original,
     write,
 )
-from pymhm.helmholtz import solve_helmholtz
-from pymhm.helmholtz_spaces import helmholtz_skeleton
-from pymhm.quadrilateral import CartesianMacroMesh, _cardinals, qk_space
+from pymhm._legacy.models.waves.helmholtz import solve_helmholtz
+from pymhm.fem.scalar.quadrilateral import _cardinals, qk_space
+from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 def reference_values(matrix: np.ndarray, points: np.ndarray) -> np.ndarray:

@@ -17,8 +17,8 @@ from matplotlib.collections import LineCollection
 from examples.maxwell_data import CavityMode
 from examples.plot_darcy3d import slice_polygon
 from examples.plot_style import set_refinement_ticks
-from pymhm.maxwell_dg import scalar_basis
-from pymhm.mesh import TriangleMesh
+from pymhm.fem.vector.curl import scalar_basis
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "examples/results/maxwell"

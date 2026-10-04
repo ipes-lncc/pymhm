@@ -2,8 +2,27 @@
 
 ## 0.1.0 — unreleased
 
+- Make user-declared `Equation` and `LocalEquations` the primary API: independent
+  local A/B and global C/D blocks, rectangular trial/test trace maps, explicit
+  moments, additional global forms and recursive multiscale local operators.
+- Compile scalar, vector and mixed UFL forms through a generic native adapter;
+  preserve declared global coefficient ordering and support external compilers.
+- Recover physical finest-scale moments through recursive source offsets and
+  boundary reactions; retain numerical bases during global load updates.
+- Import predefined physical solvers from their implementation owners; the
+  primary namespace exposes formulation and numerical tools.
+- Present instructional examples as problem-oriented notebooks, with an indexed
+  catalogue of methods and introductory scalar, vector, provider and UFL cases.
+- Discover nested notebooks and select them by group, path or historical ID;
+  preserve problem folders in executed outputs and verify source notebooks in
+  distribution artifacts.
+- Organize implementation into responsibility packages, separate geometry,
+  reference spaces and predefined formulations, and share mixed Darcy assembly
+  and coefficient evaluation.
+- Validate private documentation and annotations recursively, and compare every
+  packaged source and typing file with its current implementation bytes.
 - Expose free functions for local condensation, reconstruction and global
-  assembly, with compatible object delegations and unchanged numerical results.
+  assembly, with explicit object delegations and unchanged numerical results.
 - Add local/global form descriptions, callable local providers, verified external
   local solvers and ordered serial/thread/spawn execution in bounded batches.
 - Use Basix as a runtime dependency for nodal, RT/BDM and polynomial trace

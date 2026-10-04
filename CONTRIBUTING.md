@@ -21,9 +21,23 @@ figures and MathJax as well as generated markup. Automatic documentation builds
 remain pending until the retained evidence can be generated and verified within
 a suitable CI budget.
 
-Document every public class and function, including mathematical conventions,
+Organize numerical operations by responsibility in the packages described in
+[the architecture guide](docs/architecture.md). Prefer free functions and explicit
+delegation; store problem, configuration and solution data in small objects.
+Write instructional examples as notebooks under `notebooks/<problem>/`, grouping
+the methods for each physical problem. Update `notebooks/catalogue.json` and
+`notebooks/README.md`. Keep reusable acquisition, archive-reading and plotting
+helpers in support modules or private tools; importable worker callables preserve
+spawn execution. Keep numerical algorithms in the package rather than copying
+their formulas into notebook cells.
+Import each operation from the module that owns its implementation. Keep the
+root exports focused on the generic variational and numerical interfaces; do
+not introduce module aliases or files that only re-export another module.
+
+Document every class and function, including private and nested helpers, with mathematical conventions,
 array shapes, coefficient assumptions, units where applicable, and failure
-conditions. Include reproducible tests for any numerical change. Coverage must
+conditions. The `source-check` dependency of `lint` validates these contracts
+and annotations recursively. Include reproducible tests for any numerical change. Coverage must
 remain at least 99% with branches enabled; coverage alone does not establish
 numerical correctness. Tests should include exact solutions, conservation,
 residuals, nullspaces, and convergence rates when relevant.
@@ -37,7 +51,7 @@ Use `pixi run -e fem test-fem` to exercise DOLFINx integration on supported Unix
 platforms. Contributions to accelerated backends should report hardware,
 software versions, thread counts, warmup, transfer costs, and correctness checks.
 
-Add documentation and executable notebooks for new formulations. Identify
+Add documentation and executable problem notebooks for new formulations. Identify
 whether a case is a manufactured verification, an independently reproduced
 published result, or an exploratory calculation. Provide citations and explicit
 tolerances; do not infer validation from a visually plausible field.
@@ -50,7 +64,7 @@ environment and PyPI trusted publisher; documentation publication is a separate 
 maintainers control these settings.
 
 Keep each release artifact within the 100,000,000-byte gate enforced by
-`check-dist`. The source archive retains tests, original examples, notebook and
+`check-dist`. The source archive retains tests, supporting scientific tools, notebook and
 documentation sources, JSON records and the three compact SPE10 input layers.
 Rendered figures and large numerical solution archives are excluded from the
 source distribution. Archived campaign and notebook checks require locally generated scientific

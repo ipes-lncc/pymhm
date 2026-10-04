@@ -5,9 +5,10 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm.darcy import _DarcyLocalFactory, solve_darcy
-from pymhm.hybrid import LocalProblem
-from pymhm.mesh import SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import _DarcyLocalFactory, solve_darcy
+from pymhm.core.contracts import LocalProblem
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.fixture(autouse=True)

@@ -3,8 +3,9 @@
 import numpy as np
 import pytest
 
-from pymhm.mesh import FaceSpace, SkeletonSpace
-from pymhm.quadrilateral import CartesianMacroMesh, quadrilateral_trace_coupling
+from pymhm.fem.scalar.quadrilateral import quadrilateral_trace_coupling
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @pytest.mark.parametrize("cell", [0, 1, 6, 7])

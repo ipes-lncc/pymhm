@@ -3,10 +3,14 @@
 import numpy as np
 import pytest
 
-from pymhm.polygon import PolygonMesh
-from pymhm.polyhedral import PolyhedralMesh
-from pymhm.polyhedral_rad import PolygonalSkeleton3D, polygonal_trace_coupling, solve_polyhedral_rad
-from pymhm.tetrahedral import tetra_nodal_space
+from pymhm._legacy.models.transport.polyhedral import (
+    PolygonalSkeleton3D,
+    polygonal_trace_coupling,
+    solve_polyhedral_rad,
+)
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space
+from pymhm.meshes.polygonal import PolygonMesh
+from pymhm.meshes.polyhedral import PolyhedralMesh
 
 
 def two_cells() -> PolyhedralMesh:

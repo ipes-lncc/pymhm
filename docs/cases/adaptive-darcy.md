@@ -71,7 +71,7 @@ separate from any claim about estimator contraction.
 ```python
 import numpy as np
 from pymhm import TriangleMesh
-from pymhm.adaptive_darcy import solve_adaptive_darcy
+from pymhm.adaptivity.darcy import solve_adaptive_darcy
 
 result = solve_adaptive_darcy(
     TriangleMesh.unit_square(2), iterations=5, theta=0.5,

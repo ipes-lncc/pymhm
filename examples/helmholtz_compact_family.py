@@ -21,9 +21,9 @@ from examples.helmholtz_trace_family import (
     verify_helmholtz_trace_fields,
 )
 from examples.local_response_cache import ExactResponseCache
-from pymhm.helmholtz_forms import complex_vector, real_vector
-from pymhm.hybrid import LocalResponse
-from pymhm.parallel import map_local
+from pymhm.core.contracts import LocalResponse
+from pymhm.execution.cpu import map_local
+from pymhm.fem.scalar.helmholtz import complex_vector, real_vector
 
 
 @dataclass(frozen=True)

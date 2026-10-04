@@ -20,14 +20,17 @@ from typing import Any, Literal
 
 import numpy as np
 
+from pymhm.io.provenance import current_source_manifest
+
 if __package__:
     from .hpc4e_data import BOUNDS, DATA_DIRECTORY, LENGTH_SCALE, STRESS_SCALE, HPC4EData, load_data
 else:
     from hpc4e_data import BOUNDS, DATA_DIRECTORY, LENGTH_SCALE, STRESS_SCALE, HPC4EData, load_data
 
-from pymhm.elasticity_tensor_rt import _rotation_basis
-from pymhm.quadrilateral import CartesianMacroMesh, quadrilateral_quadrature
-from pymhm.tensor_rt import tensor_rt_basis
+from pymhm._legacy.models.elasticity.stress_tensor import _rotation_basis
+from pymhm.fem.hdiv.tensor_rt import tensor_rt_basis
+from pymhm.fem.scalar.quadrilateral import quadrilateral_quadrature
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/hpc4e"
@@ -436,7 +439,7 @@ def _solve(
         elif equilibration == "symmetric" and factorization != "pypardiso-symmetric-matching":
             from scipy import sparse
 
-            from pymhm.solvers import LinearFactorization, _symmetric_equilibration
+            from pymhm.linalg.linear import LinearFactorization, _symmetric_equilibration
 
             pointer, indices, values = matrix.getValuesCSR()
             original_csr = sparse.csr_matrix((values, indices, pointer), shape=matrix.getSize())
@@ -461,7 +464,7 @@ def _solve(
         elif factorization == "ldlt":
             from scipy import sparse
 
-            from pymhm.solvers import _hermitian
+            from pymhm.linalg.linear import _hermitian
 
             pointer, indices, values = factor_matrix.getValuesCSR()
             _hermitian(
@@ -817,19 +820,21 @@ def main() -> None:
     sources = [
         Path(__file__),
         Path(__file__).with_name("hpc4e_data.py"),
-        ROOT / "src/pymhm/tensor_rt.py",
-        ROOT / "src/pymhm/quadrilateral.py",
-        ROOT / "src/pymhm/elasticity_tensor_rt.py",
-        ROOT / "src/pymhm/solvers.py",
+        ROOT / "src/pymhm/fem/hdiv/tensor_rt.py",
+        ROOT / "src/pymhm/_legacy/models/darcy/cartesian.py",
+        ROOT / "src/pymhm/_legacy/models/elasticity/stress_tensor.py",
+        ROOT / "src/pymhm/linalg/linear.py",
     ]
     if comm.size > 1:
         sources.append(Path(__file__).with_name("hpc4e_parallel.py"))
     if args.factorization == "pypardiso-symmetric-matching":
         sources.append(ROOT / "examples/solve_hpc4e_algebra.py")
-    source_hashes = {
-        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in sources
-    }
+    source_hashes = current_source_manifest(
+        {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in sources
+        }
+    )
     snapshots = ARCHIVES / "acquisition-sources"
     snapshots.mkdir(parents=True, exist_ok=True)
     for path in sources if comm.rank == 0 else []:
@@ -873,10 +878,12 @@ def main() -> None:
         source_changed=False,
         material_sha256=None
         if data is None
-        else {
-            name: hashlib.sha256(getattr(data, name).tobytes()).hexdigest()
-            for name in ("young", "poisson", "density")
-        },
+        else current_source_manifest(
+            {
+                name: hashlib.sha256(getattr(data, name).tobytes()).hexdigest()
+                for name in ("young", "poisson", "density")
+            }
+        ),
     )
     (OUTPUT / f"{stem}.json").write_text(json.dumps(record, indent=2) + "\n")
     print(record, flush=True)

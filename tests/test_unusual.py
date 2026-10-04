@@ -5,10 +5,11 @@ import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_transport
-from pymhm.rad import _rad_local
-from pymhm.reservoir import CartesianCellField
-from pymhm.unusual import UnusualParameters
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.transport.rad import _rad_local
+from pymhm._legacy.models.transport.solver import solve_transport
+from pymhm._legacy.models.transport.stabilization import UnusualParameters
+from pymhm.materials.cartesian import CartesianCellField
 
 
 @pytest.fixture(autouse=True)

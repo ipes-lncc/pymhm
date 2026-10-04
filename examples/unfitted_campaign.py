@@ -19,12 +19,18 @@ from examples.field_sampling import sample_field
 from examples.layered_poisson import LayeredPoissonSeries
 from examples.plot_mesh import draw_macro_mesh
 from examples.unfitted_geometry import macro_mesh
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.cut_cells import fit_material_faces, fit_material_mesh, material_triangle_quadrature
-from pymhm.lagrange import element_tabulate
-from pymhm.quadrilateral import CartesianMacroMesh, qk_space, quadrilateral_operators
-from pymhm.reservoir import CartesianCellField
-from pymhm.solvers import solve_linear
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.quadrature.material import (
+    fit_material_faces,
+    fit_material_mesh,
+    material_triangle_quadrature,
+)
+from pymhm.fem.scalar.quadrilateral import qk_space, quadrilateral_operators
+from pymhm.fem.scalar.triangle import element_tabulate
+from pymhm.linalg.linear import solve_linear
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/unfitted"

@@ -7,10 +7,11 @@ import pytest
 from numpy.testing import assert_allclose
 
 from examples.unfitted_trace_family import ScalarTraceFamily, _Cell, nested_trace_injection
-from pymhm.darcy import solve_darcy
-from pymhm.mesh import FaceSpace, TriangleMesh
-from pymhm.reservoir import CartesianCellField
-from pymhm.solvers import LinearSolveError
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.traces.interval import FaceSpace
+from pymhm.linalg.linear import LinearSolveError
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def _spawn_source(points):
@@ -306,7 +307,7 @@ def test_retained_kernel_contract_is_explicit():
             SimpleNamespace(problem=SimpleNamespace(kernel=np.zeros((2, 0)))),
             TriangleMesh.unit_square(1),
         )
-    from pymhm.hybrid import LocalProblem
+    from pymhm.core.contracts import LocalProblem
 
     matrix = 1e6 * (4 * np.eye(4) - np.ones((4, 4))) + 1e-5 * np.eye(4)
     problem = LocalProblem(matrix, np.eye(4), np.zeros(4), np.arange(4), kernel=np.ones((4, 1)))

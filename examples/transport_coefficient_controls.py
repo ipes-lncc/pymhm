@@ -19,11 +19,12 @@ from examples.pgmhm_campaign import crisscross
 from examples.transport_campaign import layer, natural_horizontal
 from examples.transport_checkpoints import checkpoint_field, checkpoint_norm
 from examples.transport_mixed_campaign import SOURCES
-from pymhm.elements import p1_geometry, triangle_quadrature
-from pymhm.lagrange import nodal_space, reference_basis
-from pymhm.mesh import TriangleMesh
-from pymhm.parallel import map_local
-from pymhm.transport import solve_transport
+from pymhm._legacy.models.transport.solver import solve_transport
+from pymhm.execution.cpu import map_local
+from pymhm.fem.scalar.operators import p1_geometry, triangle_quadrature
+from pymhm.fem.scalar.triangle import nodal_space, reference_basis
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/transport"
@@ -106,9 +107,11 @@ def acquire(
         "examples/transport_coefficient_controls.py",
         "examples/transport_checkpoints.py",
         "examples/campaign_provenance.py",
-        "src/pymhm/parallel.py",
+        "src/pymhm/execution/cpu.py",
     )
-    hashes = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in paths}
+    hashes = current_source_manifest(
+        {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in paths}
+    )
     start = perf_counter()
     mesh = crisscross(n)
     with threadpool_limits(1):

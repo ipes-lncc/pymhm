@@ -21,16 +21,16 @@ from numpy.polynomial.legendre import leggauss, legvander
 from scipy import sparse
 
 from examples.archive_precision import precision_fields, restore_precision
-from examples.campaign_provenance import file_digest
 from examples.local_response_cache import array_identity
 from examples.transport_checkpoints import checkpoint_field, write_progress
-from pymhm.bdm_family import BDMFamily
-from pymhm.elements import triangle_quadrature
-from pymhm.hybrid import HybridSystem
-from pymhm.lagrange import reference_basis
-from pymhm.quadrilateral import quadrilateral_quadrature
-from pymhm.solvers import _accurate_residual
-from pymhm.tensor_rt import tensor_rt_basis, tensor_rt_dofs
+from pymhm.core.system import HybridSystem
+from pymhm.fem.hdiv.bdm_family import BDMFamily
+from pymhm.fem.hdiv.tensor_rt import tensor_rt_basis, tensor_rt_dofs
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.quadrilateral import quadrilateral_quadrature
+from pymhm.fem.scalar.triangle import reference_basis
+from pymhm.io.provenance import file_digest
+from pymhm.linalg.linear import _accurate_residual
 
 SCHEMA = "pymhm-core-elasticity-executed-field-v1"
 
@@ -63,9 +63,9 @@ def observe_system() -> Iterator[ProductionObservation]:
     scoped observer must not overlap another production solve in that process.
     Assembly tables and BDM coefficient bytes come from the original calls.
     """
-    import pymhm.bdm_family as bdm
-    import pymhm.elasticity_mixed as triangle
-    import pymhm.elasticity_tensor_rt as rectangle
+    import pymhm._legacy.models.elasticity.stress as triangle
+    import pymhm._legacy.models.elasticity.stress_tensor as rectangle
+    import pymhm.fem.hdiv.bdm_family as bdm
 
     observed = ProductionObservation()
     original_solve, original_assemble = HybridSystem.solve, HybridSystem._assemble_global
@@ -223,7 +223,7 @@ def _tables(solution: Any, mesh: Any, points: np.ndarray) -> tuple[np.ndarray, .
         values, divergence = solution.family.basis(mesh, points)
         displacement = rotation = reference_basis(1, points)[0]
     else:
-        from pymhm.elasticity_tensor_rt import _rotation_basis
+        from pymhm._legacy.models.elasticity.stress_tensor import _rotation_basis
 
         values, divergence, displacement = tensor_rt_basis(mesh, 1, 0, points)
         rotation = _rotation_basis(1, points)
@@ -510,7 +510,7 @@ def basis_checks(arrays: Mapping[str, np.ndarray]) -> dict[str, float]:
     shared monomials; no new BDM inverse or fitted field coordinates are used.
     These finite identities do not establish a uniform inf-sup constant.
     """
-    from pymhm.bdm_family import _polynomials
+    from pymhm.fem.hdiv.bdm_family import _polynomials
 
     triangle = int(arrays["kind"]) == 0
     degree, sides = (2, 3) if triangle else (1, 4)

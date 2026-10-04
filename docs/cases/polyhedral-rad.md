@@ -78,8 +78,8 @@ The original physical equations are checked after imposing this mean.
 
 ```python
 import numpy as np
-from pymhm.polyhedral import PolyhedralMesh
-from pymhm.polyhedral_rad import solve_polyhedral_rad
+from pymhm.meshes.polyhedral import PolyhedralMesh
+from pymhm._legacy.models.transport.polyhedral import solve_polyhedral_rad
 
 mesh = PolyhedralMesh.cubes(2)
 solution = solve_polyhedral_rad(

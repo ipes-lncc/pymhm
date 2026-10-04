@@ -4,13 +4,14 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.flow import solve_flow
-from pymhm.flow_adaptive import adapt_flow
-from pymhm.flow_local_refinement import refine_flow_local_meshes
-from pymhm.longest_edge import refine_longest_edge
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.refinement import validate_submesh
-from pymhm.vector import solve_brinkman
+from pymhm._legacy.models.flow.solver import solve_flow
+from pymhm._legacy.models.vector import solve_brinkman
+from pymhm.adaptivity.flow import adapt_flow
+from pymhm.adaptivity.flow_local_mesh import refine_flow_local_meshes
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.longest_edge import refine_longest_edge
+from pymhm.meshes.refinement import validate_submesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def test_nonuniform_local_taylor_hood_patch_and_facade():

@@ -10,9 +10,9 @@ from typing import Any, Literal
 
 import numpy as np
 
-from pymhm.hybrid import LocalProblem, LocalResponse
-from pymhm.mesh import positive_int
-from pymhm.solvers import LinearFactorization, factorize
+from pymhm.core.contracts import LocalProblem, LocalResponse
+from pymhm.core.validation import positive_int
+from pymhm.linalg.linear import LinearFactorization, factorize
 
 _OPERATORS = (
     "coupling",

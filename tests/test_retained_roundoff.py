@@ -5,8 +5,9 @@ import pytest
 from numpy.testing import assert_allclose
 from scipy import sparse
 
-from pymhm.hybrid import HybridSystem, LocalProblem
-from pymhm.solvers import _accurate_residual
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.system import HybridSystem
+from pymhm.linalg.linear import _accurate_residual
 
 
 @pytest.mark.parametrize("solver,left_only", [("scipy", False), ("scipy", True), ("pyamg", False)])
@@ -35,8 +36,8 @@ def test_algebraic_kernel_action_is_retained(solver, left_only):
 @pytest.mark.parametrize("wide", [False, True])
 def test_retained_action_dtype_and_portable_cancellation(monkeypatch, wide):
     """Numerical-kernel correction works without a wider host floating-point dtype."""
-    import pymhm.solvers as solvers
-    from pymhm.hybrid import _matrix_action
+    import pymhm.linalg.linear as solvers
+    from pymhm.core.contracts import _matrix_action
 
     if wide and np.finfo(np.longdouble).eps >= np.finfo(float).eps:
         pytest.skip("the host does not provide a wider accumulator")
@@ -50,7 +51,7 @@ def test_retained_action_dtype_and_portable_cancellation(monkeypatch, wide):
 
 def test_amg_rejects_unresolved_constrained_original_equations(monkeypatch):
     """A failed correction solve cannot return a spuriously accepted condensed operator."""
-    import pymhm.hybrid as hybrid
+    import pymhm.core.condensation as hybrid
 
     matrix = 1e6 * np.array([[1.0, -1, 0], [-1, 2, -1], [0, -1, 1]])
     matrix += np.diag([1e-5, -2e-5, 1e-5])

@@ -6,12 +6,13 @@ from numpy.testing import assert_allclose
 from scipy import sparse
 from scipy.spatial import cKDTree
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.cut_cells import fit_material_faces, fit_material_mesh
-from pymhm.fenics import from_ufl
-from pymhm.lagrange import nodal_space, scalar_operators, trace_coupling
-from pymhm.reservoir import CartesianCellField
-from pymhm.solvers import solve_linear
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.quadrature.material import fit_material_faces, fit_material_mesh
+from pymhm.fem.scalar.triangle import nodal_space, scalar_operators, trace_coupling
+from pymhm.linalg.linear import solve_linear
+from pymhm.materials.cartesian import CartesianCellField
 
 
 @pytest.mark.fem

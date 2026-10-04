@@ -5,8 +5,7 @@ import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 from scipy.spatial import cKDTree
 
-from pymhm._geometry_roundoff import cartesian_coordinates
-from pymhm.cut_cells import (
+from pymhm.fem.quadrature.material import (
     _material_edge_breaks,
     _merge_grid_vertices,
     cartesian_edge_quadrature,
@@ -15,16 +14,17 @@ from pymhm.cut_cells import (
     fit_material_mesh,
     material_triangle_quadrature,
 )
-from pymhm.mesh import TriangleMesh
-from pymhm.polygon import PolygonMesh
-from pymhm.quadrilateral import (
-    CartesianMacroMesh,
+from pymhm.fem.scalar.quadrilateral import (
     _cartesian_rectangle_quadrature,
     _grid_resolves_material,
     quadrilateral_operators,
 )
-from pymhm.refinement import validate_submesh
-from pymhm.reservoir import CartesianCellField
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.meshes.polygonal import PolygonMesh
+from pymhm.meshes.refinement import validate_submesh
+from pymhm.meshes.roundoff import cartesian_coordinates
+from pymhm.meshes.triangle import TriangleMesh
 
 ORIGINS = [(0, 0), (500, 2100), (5000, 21000), (-500, -2100)]
 
@@ -169,7 +169,7 @@ def test_rectangle_integration_and_alignment_are_translation_covariant(origin):
 @pytest.mark.parametrize("origin", ORIGINS)
 def test_translated_fitted_nonconvex_affine_diffusion_patch(origin):
     """Recover a nonhomogeneous affine pressure with a discontinuous SPD material."""
-    from pymhm.polygon import solve_darcy_polygons
+    from pymhm._legacy.models.geometry import solve_darcy_polygons
 
     macro = l_shape(origin)
     tensor = np.zeros((7, 7, 2, 2))

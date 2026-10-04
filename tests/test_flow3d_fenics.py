@@ -8,9 +8,10 @@ from numpy.testing import assert_allclose
 from scipy import linalg
 from threadpoolctl import threadpool_limits
 
-from pymhm.fenics import from_ufl
-from pymhm.flow3d_forms import tetra_flow_operators
-from pymhm.tetrahedral import TetraMesh, tetra_nodal_space, tetrahedron_quadrature
+from pymhm._legacy.models.flow.forms_3d import tetra_flow_operators
+from pymhm.backends.fenics import from_ufl
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space, tetrahedron_quadrature
+from pymhm.meshes.tetrahedron import TetraMesh
 
 
 def _monomial_inverse_constant(vertices, degree):

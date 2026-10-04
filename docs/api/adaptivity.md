@@ -4,34 +4,34 @@ Darcy refinement policies, local error controls, metric remeshing and the primal
 
 [All API families](../api.md)
 
-::: pymhm.adaptive_darcy
+::: pymhm.adaptivity.darcy
     options:
       show_source: false
 
-::: pymhm.adaptive_darcy_balanced
+::: pymhm.adaptivity.darcy_balanced
     options:
       show_source: false
 
-::: pymhm.adaptive_darcy_budget
+::: pymhm.adaptivity.darcy_budget
     options:
       show_source: false
 
-::: pymhm.adaptive_darcy3d
+::: pymhm.adaptivity.darcy_3d
     options:
       show_source: false
 
-::: pymhm.darcy_jump_estimator
+::: pymhm.estimators.darcy_jump
     options:
       show_source: false
 
-::: pymhm.darcy_local_error
+::: pymhm.estimators.darcy_local
     options:
       show_source: false
 
-::: pymhm.metric_adapt
+::: pymhm.adaptivity.metric
     options:
       show_source: false
 
-::: pymhm.elasticity_estimator
+::: pymhm.estimators.elasticity
     options:
       show_source: false

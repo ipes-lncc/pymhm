@@ -20,12 +20,14 @@ from threadpoolctl import threadpool_limits
 
 from examples.campaign_checkpoint import archive_identity, require_sources, verify_checkpoint
 from examples.field_sampling import sample_field
-from pymhm.darcy import solve_darcy
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import tabulate
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.mh import MHSolution, solve_mh
-from pymhm.polygon import PolygonMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import tabulate
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.polygonal import PolygonMesh
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.robin import MHSolution, solve_mh
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/mh"
@@ -80,16 +82,18 @@ def l_mesh(n: int) -> PolygonMesh:
 def source_hashes() -> dict[str, str]:
     """Identify the executed formulation, geometry, condensation and campaign sources."""
     names = (
-        "src/pymhm/mh.py",
-        "src/pymhm/darcy.py",
-        "src/pymhm/lagrange.py",
-        "src/pymhm/mesh.py",
-        "src/pymhm/polygon.py",
-        "src/pymhm/hybrid.py",
-        "src/pymhm/solvers.py",
+        "src/pymhm/methods/robin.py",
+        "src/pymhm/_legacy/models/darcy/primal.py",
+        "src/pymhm/fem/scalar/triangle.py",
+        "src/pymhm/meshes/triangle.py",
+        "src/pymhm/meshes/polygonal.py",
+        "src/pymhm/core/contracts.py",
+        "src/pymhm/linalg/linear.py",
         "examples/mh_campaign.py",
     )
-    return {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    return current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+    )
 
 
 def diagnostics(result: MHSolution) -> dict[str, float | int]:

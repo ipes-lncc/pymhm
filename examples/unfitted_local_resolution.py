@@ -20,9 +20,10 @@ from scipy.spatial import cKDTree
 from threadpoolctl import threadpool_limits
 
 from examples.archive_precision import restore_precision
-from pymhm.elements import p1_geometry, triangle_quadrature
-from pymhm.lagrange import multiindices, nodal_space, reference_basis
-from pymhm.mesh import TriangleMesh
+from pymhm.fem.scalar.operators import p1_geometry, triangle_quadrature
+from pymhm.fem.scalar.triangle import multiindices, nodal_space, reference_basis
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def template(refinement: int) -> TriangleMesh:
@@ -309,11 +310,13 @@ def main() -> None:
     sources = (
         "examples/unfitted_local_resolution.py",
         "examples/archive_precision.py",
-        "src/pymhm/lagrange.py",
-        "src/pymhm/elements.py",
-        "src/pymhm/mesh.py",
+        "src/pymhm/fem/scalar/triangle.py",
+        "src/pymhm/fem/scalar/operators.py",
+        "src/pymhm/meshes/triangle.py",
     )
-    before = {name: hashlib.sha256((root / name).read_bytes()).hexdigest() for name in sources}
+    before = current_source_manifest(
+        {name: hashlib.sha256((root / name).read_bytes()).hexdigest() for name in sources}
+    )
     fields = [
         dict(name=p.name, sha256=hashlib.sha256(p.read_bytes()).hexdigest())
         for p in (args.first, args.second)

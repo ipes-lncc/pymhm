@@ -14,8 +14,9 @@ from scipy.spatial import cKDTree
 from solve_mapped_well import WellData
 from threadpoolctl import threadpool_limits
 
-from pymhm.hdiv3d_family import HDiv3DFamily, cell_quadrature, face_quadrature, face_shape
-from pymhm.hdiv3d_mesh import AffineMixedMesh, hdiv3d_dofs, hdiv3d_transform
+from pymhm.fem.hdiv.family_3d import HDiv3DFamily, cell_quadrature, face_quadrature, face_shape
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_dofs, hdiv3d_transform
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/mixed-well-geometries"
@@ -224,10 +225,12 @@ def main() -> None:
     watched = [
         Path(__file__),
         ROOT / "examples/solve_mapped_well.py",
-        ROOT / "src/pymhm/hdiv3d_family.py",
-        ROOT / "src/pymhm/hdiv3d_mesh.py",
+        ROOT / "src/pymhm/fem/hdiv/family_3d.py",
+        ROOT / "src/pymhm/meshes/mixed.py",
     ]
-    sources = {str(path.relative_to(ROOT)): digest(path) for path in watched}
+    sources = current_source_manifest(
+        {str(path.relative_to(ROOT)): digest(path) for path in watched}
+    )
     rows, replay = [], []
     for kind, degree in (("prism", 1), ("tetrahedron", 1), ("tetrahedron", 2)):
         prefix = f"{kind}-p{degree}-fine4"
@@ -271,7 +274,9 @@ def main() -> None:
                 **differences,
             }
         )
-    if sources != {str(path.relative_to(ROOT)): digest(path) for path in watched}:
+    if sources != current_source_manifest(
+        {str(path.relative_to(ROOT)): digest(path) for path in watched}
+    ):
         raise RuntimeError("field verification source changed during execution")
     metadata = {
         "source_hashes": sources,

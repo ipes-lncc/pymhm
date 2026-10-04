@@ -247,7 +247,7 @@ def integrated_difference(fine: CG2Field, coarse: CG2Field, order: int = 4) -> d
     Denominators are the fine reference's norms. The energy contains both
     ``K |grad p|²`` and ``p²``. The permeability must align with both meshes.
     """
-    from pymhm.elements import triangle_quadrature
+    from pymhm.fem.scalar.operators import triangle_quadrature
 
     nx, ny = fine.shape
     cx, cy = coarse.shape

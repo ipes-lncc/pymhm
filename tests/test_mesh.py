@@ -5,7 +5,9 @@ from math import factorial
 import numpy as np
 import pytest
 
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh, positive_int
+from pymhm.core.validation import positive_int
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("value", [True, False, 1.0, "2", -1, 0, np.nan])

@@ -15,8 +15,9 @@ from typing import Any
 
 import numpy as np
 
-from examples.campaign_provenance import file_digest, require_equal, verify_archive
+from examples.campaign_provenance import require_equal, verify_archive
 from examples.marmousi_data import FILES
+from pymhm.io.provenance import file_digest
 
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUSION = [5000.0, 50.0, 50.0]

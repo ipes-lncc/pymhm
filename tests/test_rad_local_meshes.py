@@ -4,11 +4,12 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.cut_cells import fit_material_faces, fit_material_mesh
-from pymhm.mesh import SkeletonSpace, TriangleMesh
-from pymhm.rad import solve_rad
-from pymhm.reservoir import CartesianCellField
-from pymhm.transport import solve_transport
+from pymhm._legacy.models.transport.rad import solve_rad
+from pymhm._legacy.models.transport.solver import solve_transport
+from pymhm.fem.quadrature.material import fit_material_faces, fit_material_mesh
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def test_material_fitted_unusual_patch_and_transport_forwarding():

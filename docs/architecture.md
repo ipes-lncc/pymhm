@@ -1,5 +1,47 @@
 # Architecture
 
+## Package responsibilities
+
+The runtime is organized by numerical responsibility. Variational records,
+element assembly, hybrid elimination, execution and linear solves have
+independent owners. Predefined physical formulations compose
+these operations and preserve the established discretizations and field data
+contracts.
+
+| Package | Responsibility |
+| --- | --- |
+| `core` | Variational records, local equations, condensation, reconstruction and global hybrid assembly. |
+| `fem` | Basix reference elements, scalar/vector operators, H(div) spaces, traces and material quadrature. |
+| `meshes` | Geometry, incidence, local submeshes and conforming refinement. |
+| `materials` | Material laws, discontinuous coefficients and separable source fields. |
+| `_legacy.models` | Predefined Darcy, flow, elasticity, transport and wave formulations. |
+| `methods` | Robin MH, three-field MH²M, MsHHO and residual Petrov–Galerkin constructions. |
+| `recovery` | Equilibrated and moment-based physical flux reconstruction. |
+| `estimators` | Field indicators and error estimators with their stated admissibility conditions. |
+| `adaptivity` | Marking, refinement decisions and adaptive solve policies. |
+| `linalg` | Sparse factors, block solves and separable iterative operators. |
+| `execution` | Ordered CPU batches, MPI assembly and accelerator execution. |
+| `backends` | Optional form compilers such as DOLFINx. |
+| `io` | Mesh/material exchange and executed-source fingerprints. |
+| `postprocessing` | Field conversion and optional visualization. |
+
+The private `_legacy.models` subpackages contain the predefined physical
+solvers used by the verified cases. Import these implementations directly from
+their owners. A geometry object stores topology and mappings; forms
+declare its physical operator, and a solver or estimator consumes the resulting
+operators without owning the basis construction. Scientific cases,
+manufactured data, campaign helpers and publication plots belong outside the
+runtime, with notebooks as their public entry points.
+
+The root resolves exports on demand, and its `__init__.pyi` declares the typed
+generic variational and numerical API. `__all__` and `dir(pymhm)` expose those
+same infrastructure names. Physical and method-specific operations are
+imported from their canonical submodules. Shared numerical operations likewise
+import their owners directly. Problem definitions use `Equation`,
+`LocalEquations` and `MultiscaleProblem`; `assemble` and `solve` operate on
+those descriptions. The [variational guide](variational.md) states their
+mathematical conventions and compilation limits.
+
 ## Data and operations
 
 Problem descriptions, execution settings, local responses and solutions are
@@ -10,71 +52,125 @@ maps, executed retained bases and residual checks.
 
 | Responsibility | Objects | Functions |
 | --- | --- | --- |
-| Describe local variational equations | `LocalForm`, `LocalProblem` | `compile_local_forms`, `fenics.assemble_local_forms` |
-| Describe the global problem | `GlobalForm`, `HybridProblem` | `assemble_hybrid`, `solve_hybrid` |
+| Describe local and global forms | `Equation`, `LocalEquations` | `columns`, `rows`, `compile_form`, `compile_local_equations` |
+| Assemble a variational hierarchy | `MultiscaleProblem`, `NestedEquations` | `assemble`, `solve` |
+| Reuse and recover an assembled hierarchy | `MultiscaleSystem`, `MultiscaleSolution` | `with_global_load`, `with_global_equation`, `solve_multiscale_system`, `reconstruct_multiscale`, `leaf_moment` |
+| Describe fixed hybrid forms | `LocalForm`, `GlobalForm`, `HybridProblem` | `compile_local_forms`, `assemble_hybrid`, `solve_hybrid` |
 | Execute independent cells | `ExecutionConfig`, callable provider | `iter_local`, `map_local` |
-| Eliminate and reconstruct | `LocalResponse`, `SolverConfig` | `condense_local`, `local_condensation_system`, `reconstruct_local`, `reconstruct_response` |
+| Eliminate and reconstruct | `LocalResponse`, `SolverConfig` | `condense_local`, `energy_reconstruction`, `local_condensation_system`, `reconstruct_local`, `reconstruct_response` |
 | Reduce and solve global equations | `HybridSystem`, `HybridSolution` | `local_global_contribution`, `assemble_hybrid_contributions`, `solve_hybrid_system`, `hybrid_mean_constraint` |
 
 Each formula has one owner. Offline factors, GPU batching, refinement and
-existing PDE drivers reach that owner through the compatible methods or the
+physical drivers reach that owner through object methods or the
 free functions. A factorization remains an object with an explicit lifetime;
 it owns native resources rather than defining the physical problem.
 
+Within `core`, `contracts` owns validated coefficient records, `condensation`
+owns constrained local elimination, `reconstruction` owns recovered local
+coefficients, and `contributions` owns oriented sparse reduction. `system`
+combines these operations for the assembled problem; `assembly` coordinates
+ordered local providers. The classes in `contracts` and `system` store data
+and offer methods that delegate to these same free functions.
+
+`equations` owns the four variational blocks, ordered trial/test trace maps and
+form compilation. `multiscale` composes those blocks with an additional global
+equation, ordered execution and recursive reconstruction. It delegates local
+elimination to the same numerical owners. `moments` owns reconstruction under
+declared physical moments; its saddle solve belongs to `linalg.moments`.
+The optional `backends.forms`
+adapter assembles user-defined UFL matrices and vectors; it selects no physical
+equation or boundary convention.
+
+`MultiscaleSystem.solve`, `reconstruct` and `with_rhs` delegate to the
+corresponding free functions. A global load update reuses the executed local
+responses and their literal bases; retained source-compatibility rows remain
+unchanged. Changing a volume source requires new local equations or explicitly
+cached local factors.
+`with_global_equation` adds an independent operator and load after local
+responses are available, including an explicitly assembled jump of reconstructed
+fields. It returns a new system and preserves the executed bases and children.
+
+## Darcy formulations
+
+The private predefined Darcy subpackage distinguishes approximation spaces
+and boundary variables. These are different discretizations of the same
+physical law, rather than separate campaign implementations.
+
+| Owner | Local approximation and scope |
+| --- | --- |
+| `_legacy.models.darcy.primal` and `primal_3d` | Conforming local scalar pressure on triangles or tetrahedra, coupled by a physical normal-flux skeleton. |
+| `_legacy.models.darcy.cartesian` | Tensor-product local pressure on Cartesian macrorectangles. |
+| `_legacy.models.darcy.mixed_rt` | Raviart–Thomas Darcy flux and discontinuous pressure, with hybrid or classical conforming assembly. |
+| `_legacy.models.darcy.mixed_bdm` | BDM flux with the declared normal restriction and interior enrichment, coupled to discontinuous pressure. |
+| `_legacy.models.darcy.hdiv_3d` and `mapped` | Mixed spaces on affine tetrahedra/prisms or mapped hexahedra, with their stated Piola and moment conventions. |
+| `_legacy.models.darcy.analytic` | An explicit analytical local-response space. |
+| `_legacy.models.darcy.conforming` and `separable` | Classical Cartesian reference discretizations and reusable separable operators. |
+| `_legacy.models.darcy.velocity` | Conversion of supported Darcy fields into physical transport velocities. |
+
+Shared mixed assembly integrates supplied flux/divergence/pressure tables and
+constructs the normal-flux saddle in one owner. Element families supply their
+actual DOF maps, boundary moments and basis coordinates. They retain distinct
+normal degrees, pressure spaces, kernels and physical gauges; selecting a
+different family does not silently replace those contracts. See the
+[scalar tutorials](tutorials/scalar.md) for the available variants and the
+[Darcy API](api/darcy.md) for their parameters.
+
+Coefficient evaluation belongs to `materials.evaluation`: scalar, vector and
+SPD tensor fields use the declared point-major layouts and dimension-specific
+validation. `fem.assembly.assemble_element_blocks` scatters supplied dense
+blocks into the explicitly indexed row and column spaces. Repeated coordinates
+are summed during sparse conversion. Physical models supply their quadrature,
+coefficients and signed operators to these shared operations.
+
 ## Variational descriptions and providers
 
-`LocalForm(a, L, trace_forms, trace_dofs, ...)` describes
-
-$$
-a_K(u_K,v_K)+\sum_j\lambda_j b_{K,j}(v_K)=L_K(v_K).
-$$
-
-Expressions can be UFL forms or another compiler's input. The portable core
-stores them without importing a FEM backend. `compile_local_forms` accepts an
-ordinary callable compiler and checks that its assembled `LocalProblem`
-preserves the declared trace map and literal kernel or retained basis.
-`pymhm.fenics.assemble_local_forms` supplies the DOLFINx compiler. Physical
-moment forms, signed trace forms and integration choices remain explicit.
-`LocalForm` does not describe independent trial/test trace couplings or left
-retained bases. Such Petrov–Galerkin blocks can be supplied directly as a
-`LocalProblem` by the same provider interface; the DOLFINx adapter requires
-matching trial and test spaces.
-
-`GlobalForm` declares the skeleton dimension, the retained dimension per cell,
-boundary moments, prescribed trace coefficients and physical constraint rows.
-If `P_K` gathers a cell's trace and retained coordinates, and `S_K`, `g_K` are
-its condensed block and load, the global form is
+The primary variational interface declares both local equations:
 
 $$
 \begin{aligned}
-\sum_K(P_Ky)^T S_K(P_Kx)
-&=\sum_K(P_Ky)^Tg_K-y_\Lambda^Tg_D,\\
-x&=(\lambda,c),\qquad Q^Tx=d.
+a_K(u_K,v_K)+b_K(\lambda_K,v_K)&=L_K(v_K),\\
+c_K(u_K,\mu_K)+d_K(\lambda_K,\mu_K)&=g_K(\mu_K).
 \end{aligned}
 $$
 
-This interface composes the condensed hybrid form in declared coordinates.
-It does not compile an arbitrary UFL form on an independent skeleton mesh.
-The boundary convention is the same as `HybridSystem`; physical gauges must
-describe the complete reconstructed field. Local physical weights can be
-converted to a constraint with `hybrid_mean_constraint` after assembly.
-Declared arrays preserve their stored precision. Local operators and native
-element tabulations use binary64; retaining wider correction digits through a
+`LocalEquations` stores these independent blocks and their explicit trial/test
+trace maps. `Equation` supplies additional global bilinear and linear terms in
+the complete reduced coordinate order. `MultiscaleProblem` combines the forms,
+ordered local items, a callable provider, trace and retained dimensions, fixed
+coefficients and physical constraint rows. A local operator can be another
+`MultiscaleProblem`, with its reduced coordinates serving as the parent local
+basis. Recursive children leave boundary data and gauges to their parent.
+`NestedEquations` additionally constrains child boundary trace coordinates
+through an explicit oriented restriction and boundary reactions, using the
+shared `core.nested` operation.
+
+A provider returns `LocalEquations` or `CompiledLocalEquations`. It can use
+assembled matrices, UFL/DOLFINx or another numerical package. The native
+compiler accepts real linear and bilinear forms, including distinct trial/test
+spaces, on single-rank meshes; local elimination needs a square local pivot.
+`columns` and `rows` describe signed linear trace pairings without requiring
+implicit cross-mesh assembly. Cross-mesh UFL integration requires explicit
+entity maps. The [variational guide](variational.md) explains compilation,
+retained modes, recursive limits and method-specific space conditions.
+
+`LocalForm`, `GlobalForm` and `HybridProblem` describe a fixed hybrid
+construction. `LocalForm` represents the
+local source and trace columns but does not declare independent trial/test
+pairings. `GlobalForm` describes the algebraic layout, boundary load and
+constraints of that construction; it is not an arbitrary global UFL form.
+Both interfaces delegate elimination and reconstruction to the same checked
+owners.
+
+`SolverConfig.local_solver` accepts a callable on the constrained matrix and
+all source/trace/retained-mode right-hand sides. Every returned column must
+satisfy the unchanged original residual criterion before decoding. A response
+model must provide the operator, coordinates and complete response contract;
+its implementation does not establish approximation accuracy or stability.
+Portable metadata contains evaluation data, not live native meshes or factors.
+
+Declared arrays preserve their stored precision. Native element tabulations
+and DOLFINx assembly use binary64; retaining wider correction digits through a
 solve requires the explicit `extended` refinement setting.
-
-A local provider is a callable `provider(item) -> LocalProblem | LocalAssembly`.
-It can use portable kernels, UFL/FEniCS or another simulation package. No
-framework superclass is required. `HybridProblem` combines that provider, its
-ordered items and the global form. `LocalAssembly.metadata` carries portable
-evaluation data such as local coordinates, never a live native mesh or factor.
-
-`SolverConfig.local_solver` also accepts a callable on the constrained matrix
-and all source/trace/retained-mode right-hand sides. This permits an external
-linear solver or response model to supply local coefficients. Every returned
-column must satisfy the unchanged original residual criterion before its
-response is decoded. Machine-learning accuracy, preCICE coupling and backend
-specific discretization stability require their own scientific qualification;
-no such qualification follows from implementing a callable.
 
 ## Local operators
 
@@ -145,7 +241,7 @@ and physical-rate checks separately from pressure and flux approximation.
 
 ### Reference-element libraries
 
-`pymhm.element_backends` delegates reference-element creation, values,
+`pymhm.fem.reference` delegates reference-element creation, values,
 Cartesian derivatives and entity transformations to
 [Basix](https://docs.fenicsproject.org/basix/v0.11.0/python/index.html).
 `ReferenceElementSpec` uses the library's own family, cell, degree and variant
@@ -159,7 +255,7 @@ maps keep their intrinsic order; `reference_entity_dofs` identifies their
 global slots in that executed order.
 
 ```python
-from pymhm.element_backends import (
+from pymhm.fem.reference import (
     ReferenceElementSpec, create_reference_element, tabulate_reference,
 )
 
@@ -175,8 +271,7 @@ Cartesian reference derivatives into physical coordinates. The public
 barycentric derivative representation uses the extension
 `p(lambda_1,...,lambda_d)`, with zero lambda_0 derivatives, on the unit-sum
 hyperplane. Cartesian Qk bases use native interval factors in declared tensor
-order. The historical `backend="portable"` keyword is a compatibility spelling
-for the same Basix implementation.
+order.
 
 At literally declared interpolation nodes, nodal values equal their Kronecker
 rows. This applies the interpolation functional without a proximity threshold;
@@ -200,9 +295,9 @@ Conventional Legendre moment tests and declared monomial coordinates delegate
 repeated value and derivative evaluation to Basix's orthogonal polynomial sets.
 Their normalization and representation maps preserve existing coefficient
 conventions. Exports of ascending-power coefficients are representation adapters
-for archives; they do not provide a second finite-element tabulator. New
-three-layer and elastic-wave archives record the executed native basis matrices;
-legacy archives retain consumers for their original persisted representations.
+for archives; they do not provide a second finite-element tabulator. Three-layer
+and elastic-wave archives record the executed native basis matrices. Persisted
+coefficient archives use their declared basis representations during replay.
 
 Basix is a runtime dependency loaded at element creation or polynomial
 tabulation. DOLFINx, UFL, PETSc and MPI remain separate optional integrations.
@@ -242,12 +337,12 @@ GaLS and equal-order flow use their complete strong residuals; prescribed
 coefficient derivatives enter the variable-material terms. A higher polynomial
 degree does not automatically validate an arbitrarily enriched trace space.
 
-`reconstruct_darcy_moments` in `pymhm.reconstruction_moments` recovers RT0, RT1
+`reconstruct_darcy_moments` in `pymhm.recovery.moments` recovers RT0, RT1
 or RT2 fields from skeletal, averaged interior-face and volume moments. Its
 source conservation is tested against continuous macro-local polynomials.
 `equilibrate_flux` instead adds fine-cell balance constraints to a minimum-energy
 RT0 correction. These reconstructions solve different mathematical problems.
-`pymhm.estimator` builds a separate conforming Oswald potential and evaluates
+`pymhm.estimators.darcy` builds a separate conforming Oswald potential and evaluates
 the complete four-term energy estimator for identity diffusion. The fine
 meshes must join conformingly, and boundary and continuous-test moments are
 checked. Its explicit coefficient and boundary restrictions are part of the
@@ -301,9 +396,11 @@ system requires a supported direct solver. This restriction does not affect the
 AMG path for elliptic locals with a true constant kernel.
 
 PDE drivers can pass assembled local operators to workers for **condensation**,
-or use a local factory to distribute assembly as well. The native primal Darcy
-convenience path uses the first arrangement; flow, displacement–pressure
-elasticity and conservative RAD use local factories.
+or use a local factory to distribute assembly as well. `solve_darcy` and
+`solve_darcy_bdm` assemble in the coordinator by default;
+`parallel_assembly=True` constructs and condenses each macrocell in a worker.
+The RT and affine H(div) Darcy solvers, flow, displacement–pressure elasticity
+and conservative RAD use local factories.
 `HybridSystem.from_local_factory(factory, items, ...)` additionally distributes
 **local construction and condensation together**. Each worker calls the factory
 once and factors that local problem once for its source and all trace lifts.

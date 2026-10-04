@@ -21,9 +21,10 @@ from examples.mshho3d_field_archive import (
 )
 from examples.mshho3d_ideal_p0 import ideal_p0_audit
 from examples.mshho3d_sections import capture_section, replay_section, validate_section
-from pymhm.mshho3d import solve_mshho_3d
-from pymhm.polyhedral import PolyhedralMesh
-from pymhm.tetrahedral import TetraMesh, tetra_nodal_space, tetra_operators
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space, tetra_operators
+from pymhm.meshes.polyhedral import PolyhedralMesh
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.methods.hho_3d import solve_mshho_3d
 
 PRECISION = "extended" if np.finfo(np.longdouble).nmant > np.finfo(float).nmant else "double"
 

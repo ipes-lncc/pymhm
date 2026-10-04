@@ -6,9 +6,9 @@ from typing import Any
 
 import numpy as np
 
-from pymhm.cut_cells import fit_material_mesh
-from pymhm.longest_edge import refine_longest_edge
-from pymhm.mesh import TriangleMesh
+from pymhm.fem.quadrature.material import fit_material_mesh
+from pymhm.meshes.longest_edge import refine_longest_edge
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def reaction_layer_mesh(

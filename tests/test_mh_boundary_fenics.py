@@ -6,9 +6,10 @@ from numpy.testing import assert_allclose
 from scipy.linalg import block_diag
 from threadpoolctl import threadpool_limits
 
-from pymhm.lagrange import nodal_space
-from pymhm.mesh import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.mh import solve_mh
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
+from pymhm.methods.robin import solve_mh
 
 pytestmark = pytest.mark.fem
 

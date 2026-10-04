@@ -12,9 +12,11 @@ from threadpoolctl import threadpool_limits
 
 from examples.field_sampling import sample_field
 from examples.plot_mesh import draw_macro_mesh
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy, solve_transport
-from pymhm.darcy_transport import solve_darcy_transport
-from pymhm.scalar_adaptive import TransportBounds, solve_adaptive_transport
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm._legacy.models.transport.dispersion import solve_darcy_transport
+from pymhm._legacy.models.transport.solver import solve_transport
+from pymhm.adaptivity.transport import TransportBounds, solve_adaptive_transport
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/transport"

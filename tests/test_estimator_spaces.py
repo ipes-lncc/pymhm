@@ -2,7 +2,7 @@
 
 import pytest
 
-from pymhm.estimator_spaces import minimum_estimator_degree, validate_estimator_spaces
+from pymhm.fem.conditions import minimum_estimator_degree, validate_estimator_spaces
 
 
 @pytest.mark.parametrize("dimension", [2, 3])

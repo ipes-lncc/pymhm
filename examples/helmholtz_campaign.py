@@ -17,10 +17,11 @@ from threadpoolctl import threadpool_limits
 from examples.campaign_checkpoint import archive_identity, require_sources, verify_checkpoint
 from examples.helmholtz_basis_archive import basis_payload
 from examples.helmholtz_trace_family import verify_helmholtz_solution
-from pymhm.helmholtz import HelmholtzSolution, solve_helmholtz
-from pymhm.helmholtz_forms import acoustic_quadrature
-from pymhm.helmholtz_spaces import helmholtz_skeleton
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.waves.helmholtz import HelmholtzSolution, solve_helmholtz
+from pymhm.fem.scalar.helmholtz import acoustic_quadrature
+from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.io.provenance import current_source_manifest
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "examples/results/helmholtz"
@@ -88,9 +89,12 @@ def source_hashes() -> dict[str, str]:
         ROOT / "examples/helmholtz_trace_family.py",
         ROOT / "examples/helmholtz_basis_archive.py",
     ]
-    return {
-        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
-    }
+    return current_source_manifest(
+        {
+            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in paths
+        }
+    )
 
 
 def norms(solution: HelmholtzSolution, wave: AcousticWave, order: int = 12) -> dict[str, float]:

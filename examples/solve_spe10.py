@@ -18,14 +18,14 @@ from time import perf_counter
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm.hybrid import HybridSolution
-from pymhm.mesh import FaceSpace, SkeletonSpace
-from pymhm.quadrilateral import (
-    CartesianMacroMesh,
+from pymhm._legacy.models.darcy.cartesian import (
     QuadrilateralDarcySolution,
     solve_darcy_quadrilateral,
 )
-from pymhm.reservoir import CartesianCellField
+from pymhm.core.contracts import HybridSolution
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/spe10"

@@ -1,37 +1,47 @@
 # pymhm
 
 `pymhm` is a research Python package for Multiscale Hybrid Mixed finite element
-methods. Independent local variational problems produce harmonic and source
-lifts; a sparse global saddle problem couples their skeleton fluxes and kernel
-modes. Local discretization, skeleton approximation and linear solvers are
-separate choices.
+methods. User-defined local and global equations declare their independent
+variational blocks, trace pairings and retained modes. `assemble` and `solve`
+reuse the shared elimination and reconstruction operations. A local operator
+can itself be another multiscale problem. Local discretization, skeleton
+approximation and linear solvers are separate choices.
 
 The reference implementation uses NumPy, SciPy and Basix. The optional
 [FEniCS interface](fenics.md) assembles user-defined scalar, vector, mixed and
 H(div) local forms with UFL/DOLFINx. [Meshing](meshing.md) connects Gmsh, Netgen
 and meshio.
 
-Start with the [introductory tutorials](tutorials.md) for scalar and vector
+Start with the [variational guide](variational.md) and
+[introductory tutorials](tutorials.md) for scalar and vector
 formulations and interchangeable local providers. Use the
 [visual case gallery](cases/index.md) to compare numerical fields
 with exact references, inspect profiles and errors, and read what each case is
 expected to demonstrate.
 
 ```python
-import numpy as np
-from pymhm import TriangleMesh, solve_darcy
+from pymhm import assemble
+from examples.tutorial_local_provider import build_problem
 
-mesh = TriangleMesh.unit_square(4)
-
-def pressure(x):
-    return np.sin(np.pi * x[:, 0]) * np.sin(np.pi * x[:, 1])
-
-result = solve_darcy(mesh, source=lambda x: 2*np.pi**2*pressure(x))
-print(result.l2_error(pressure))
-print(result.conservation_residuals())
+# The notebook's provider declares primal or mixed local forms and global rows.
+problem = build_problem(formulation="primal", boundary="dirichlet")
+system = assemble(problem)
+solution = system.solve()
+print(solution.trace)
 ```
 
+The [vector UFL notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/foundations/operators/vector_ufl.ipynb)
+declares a coercive two-component reaction-diffusion operator; it is separate
+from the mixed Brinkman formulations. The
+[three-level hierarchy](https://github.com/volpatto/pymhm/blob/main/notebooks/foundations/operators/variational_hierarchy.ipynb)
+checks recursive coefficients against an independently written full system.
+
 ## Executable formulations
+
+The following predefined physical formulations have numerical records for
+their stated discretizations. They are separate from the ability to
+declare a new variational problem; their case evidence does not qualify
+arbitrary user-supplied forms.
 
 | Problem | Local approximation | Skeleton / normalization |
 | --- | --- | --- |

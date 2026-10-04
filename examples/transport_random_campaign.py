@@ -21,7 +21,6 @@ import numpy as np
 import scipy
 from threadpoolctl import threadpool_info, threadpool_limits
 
-from examples.campaign_provenance import file_digest
 from examples.transport_checkpoints import checkpoint_field, write_progress
 from examples.transport_random_problem import (
     INPUT,
@@ -38,11 +37,13 @@ from examples.transport_trajectory import (
     uniform_trace_geometry,
     vector_coefficients,
 )
-from pymhm import FaceSpace, SkeletonSpace, solve_darcy
-from pymhm.darcy_transport import solve_darcy_transport
-from pymhm.mesh import positive_int
-from pymhm.scalar_boundary import strong_boundary_dofs
-from pymhm.transport import ScalarSolution
+from pymhm import FaceSpace, SkeletonSpace
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm._legacy.models.transport.dispersion import solve_darcy_transport
+from pymhm._legacy.models.transport.solver import ScalarSolution
+from pymhm.core.validation import positive_int
+from pymhm.fem.traces.scalar import strong_boundary_dofs
+from pymhm.io.provenance import current_source_manifest, file_digest
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -61,7 +62,7 @@ def time_grid(dt: float, final_time: float) -> np.ndarray:
 
 def source_digests() -> dict[str, str]:
     """Guard the actual input, lockfile, all core sources and acquisition owners."""
-    paths = [*sorted((ROOT / "src/pymhm").glob("*.py")), INPUT, ROOT / "pixi.lock"]
+    paths = [*sorted((ROOT / "src/pymhm").rglob("*.py")), INPUT, ROOT / "pixi.lock"]
     paths += [
         ROOT / "examples" / f"{name}.py"
         for name in (
@@ -74,7 +75,9 @@ def source_digests() -> dict[str, str]:
             "campaign_provenance",
         )
     ]
-    return {str(path.relative_to(ROOT)): file_digest(path) for path in paths}
+    return current_source_manifest(
+        {str(path.relative_to(ROOT)): file_digest(path) for path in paths}
+    )
 
 
 def acquire(

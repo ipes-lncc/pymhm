@@ -5,9 +5,9 @@ from dataclasses import replace
 import numpy as np
 import pytest
 
-from pymhm.darcy import solve_darcy
-from pymhm.darcy_jump_estimator import estimate_darcy_jumps
-from pymhm.mesh import TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.estimators.darcy_jump import estimate_darcy_jumps
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def test_constant_fields_and_interior_multiplicity():

@@ -199,7 +199,7 @@ pixi run --locked -e notebooks python examples/plot_nested.py \
   --record examples/results/nested-regenerated/nested.json \
   --output build/figures/nested-regenerated
 pixi run --locked -e notebooks python scripts/run_notebooks.py \
-  notebooks/36_recursive_mhm.ipynb --timeout 60
+  notebooks/darcy/36_recursive_mhm.ipynb --timeout 60
 ```
 
 The notebook validates the selected current archive and displays the current
@@ -208,6 +208,6 @@ attribution, source identities, numerical results and basis digests are public.
 The analytical Cartesian problem is distinct from a literal historical-mesh
 or published-figure reproduction.
 
-See the [nested API](../api/hybrid.md#pymhm.nested) and
+See the [nested API](../api/hybrid.md#pymhm.core.nested) and
 [operator reuse](../execution.md). `restrict_response` reuses prepared harmonic
 lifts on an exactly embedded skeletal subspace without refactoring a local matrix.

@@ -4,8 +4,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.conforming import solve_conforming_quadrilateral
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.darcy.conforming import solve_conforming_quadrilateral
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @pytest.mark.parametrize("degree", [1, 2, 3])

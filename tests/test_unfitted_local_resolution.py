@@ -16,9 +16,9 @@ from examples.archive_precision import restore_precision
 from examples.unfitted_convergence import save_field
 from examples.unfitted_local_resolution import containing_cells, difference, read_uniform, template
 from examples.unfitted_phases import UnfittedAcquisition, fingerprint
-from pymhm import solve_darcy
-from pymhm.lagrange import nodal_space
-from pymhm.mesh import TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.meshes.triangle import TriangleMesh
 
 
 def archive(path, refinement, degree, polynomial):
@@ -381,13 +381,14 @@ def test_cli_rejects_changed_input_or_evaluation_owner(tmp_path, monkeypatch, ch
         sys, "argv", ["unfitted_local_resolution", str(first), str(second), "--output", str(output)]
     )
     read = Path.read_bytes
+    evaluation_owner = Path(sys.modules[module.reference_basis.__module__].__file__).resolve()
     calls = 0
 
     def changed_bytes(path):
         """Simulate only a second guarded read; do not edit an actual numerical owner."""
         nonlocal calls
         data = read(path)
-        target = path == first if changed == "field" else path.name == "lagrange.py"
+        target = path == first if changed == "field" else path.resolve() == evaluation_owner
         if target:
             calls += 1
             if calls == 2:

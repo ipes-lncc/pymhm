@@ -6,9 +6,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.elements import face_integration
-from pymhm.reconstruction import equilibrate_flux
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import solve_darcy
+from pymhm.fem.scalar.operators import face_integration
+from pymhm.recovery.equilibrated import equilibrate_flux
 
 
 def test_equilibrated_affine_patch_and_pointwise_flux():

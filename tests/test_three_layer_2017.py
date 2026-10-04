@@ -10,9 +10,9 @@ from numpy.polynomial.legendre import leggauss
 
 from examples import three_layer_2017_acquire as acquisition
 from examples.three_layer_2017 import DATA, assembly_order, load_case
-from pymhm import ElastodynamicStepper, TriangleMesh
-from pymhm.elastodynamics import _make_local
-from pymhm.mesh import FaceSpace, SkeletonSpace
+from pymhm import TriangleMesh
+from pymhm._legacy.models.waves.elastodynamics import ElastodynamicStepper, _make_local
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 
 
 def test_selected_geometry_wave_speeds_units_and_unsmoothed_radial_force():

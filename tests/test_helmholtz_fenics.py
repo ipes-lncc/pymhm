@@ -4,10 +4,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.helmholtz import solve_helmholtz
-from pymhm.helmholtz_forms import acoustic_space, complex_vector
-from pymhm.mesh import TriangleMesh
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.waves.helmholtz import solve_helmholtz
+from pymhm.fem.scalar.helmholtz import acoustic_space, complex_vector
+from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 pytestmark = pytest.mark.fem
 

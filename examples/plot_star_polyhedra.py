@@ -18,7 +18,8 @@ from examples.polygon_meshes import polygon_partition
 from examples.solve_rad3d import exact, physical_flux
 from examples.tetra_section_samples import section_grid
 from pymhm import PolygonMesh, PolyhedralMesh
-from pymhm.tetrahedral import TetraMesh, tetra_basis, tetra_nodal_space
+from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
+from pymhm.meshes.tetrahedron import TetraMesh
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/star-polyhedra"

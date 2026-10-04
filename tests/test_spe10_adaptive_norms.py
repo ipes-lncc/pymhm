@@ -7,11 +7,11 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from pymhm.elements import triangle_quadrature
-from pymhm.lagrange import nodal_space
-from pymhm.mesh import TriangleMesh
-from pymhm.reservoir import CartesianCellField
-from pymhm.rt import rt_interpolate
+from pymhm.fem.hdiv.rt import rt_interpolate
+from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.fixture

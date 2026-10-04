@@ -15,11 +15,11 @@ from threadpoolctl import threadpool_limits
 from examples.archive_precision import restore_precision
 from examples.solve_spe10 import load_layer
 from examples.spe10_adaptive import DATA, DOMAIN, StructuredRT
-from pymhm.cut_cells import _clip_polygon, cartesian_trace_values
-from pymhm.elements import p1_geometry, triangle_quadrature
-from pymhm.lagrange import nodal_space, reference_basis
-from pymhm.mesh import TriangleMesh
-from pymhm.rt import rt_evaluate_points
+from pymhm.fem.hdiv.rt import rt_evaluate_points
+from pymhm.fem.quadrature.material import _clip_polygon, cartesian_trace_values
+from pymhm.fem.scalar.operators import p1_geometry, triangle_quadrature
+from pymhm.fem.scalar.triangle import nodal_space, reference_basis
+from pymhm.meshes.triangle import TriangleMesh
 
 
 class BrokenP2:

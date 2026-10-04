@@ -4,10 +4,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.mesh import TriangleMesh
-from pymhm.planar_fitting import fit_planar_material, fit_planar_skeleton, planar_face_partitions
-from pymhm.planar_material import PlanarMaterial, PlanarRegion
-from pymhm.tetrahedral import TetraMesh
+from pymhm.materials.planar import PlanarMaterial, PlanarRegion
+from pymhm.meshes.fitting import fit_planar_material, fit_planar_skeleton, planar_face_partitions
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @pytest.mark.parametrize("dimension", [2, 3])

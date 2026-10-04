@@ -19,13 +19,13 @@ from examples.archive_precision import precision_fields
 from examples.campaign_checkpoint import require_sources, verify_checkpoint
 from examples.solve_spe10 import load_layer, pressure_boundary
 from examples.spe10_adaptive import DATA, hashes, mesh_rectangle, natural_faces, source_path
-from pymhm.adaptive_darcy_balanced import solve_balanced_adaptive_darcy
-from pymhm.cut_cells import fit_material_mesh
-from pymhm.darcy_local_error import estimate_darcy_local_refinement
-from pymhm.longest_edge import refine_longest_edge
-from pymhm.mesh import TriangleMesh
-from pymhm.refinement import refine_triangles
-from pymhm.reservoir import CartesianCellField
+from pymhm.adaptivity.darcy_balanced import solve_balanced_adaptive_darcy
+from pymhm.estimators.darcy_local import estimate_darcy_local_refinement
+from pymhm.fem.quadrature.material import fit_material_mesh
+from pymhm.materials.cartesian import CartesianCellField
+from pymhm.meshes.longest_edge import refine_longest_edge
+from pymhm.meshes.refinement import refine_triangles
+from pymhm.meshes.triangle import TriangleMesh
 
 
 @dataclass(frozen=True)
@@ -61,18 +61,18 @@ def acquisition_hashes() -> dict[str, str]:
     fingerprint = hashes()
     for name in (
         "examples/solve_spe10_balanced.py",
-        "src/pymhm/adaptive_darcy_balanced.py",
-        "src/pymhm/darcy_local_error.py",
-        "src/pymhm/estimator.py",
-        "src/pymhm/hybrid.py",
-        "src/pymhm/parallel.py",
-        "src/pymhm/longest_edge.py",
+        "src/pymhm/adaptivity/darcy_balanced.py",
+        "src/pymhm/estimators/darcy_local.py",
+        "src/pymhm/estimators/darcy.py",
+        "src/pymhm/core/contracts.py",
+        "src/pymhm/execution/cpu.py",
+        "src/pymhm/meshes/longest_edge.py",
         "examples/archive_precision.py",
         "examples/solve_spe10.py",
-        "src/pymhm/estimator_spaces.py",
-        "src/pymhm/reconstruction.py",
-        "src/pymhm/lagrange.py",
-        "src/pymhm/elements.py",
+        "src/pymhm/fem/conditions.py",
+        "src/pymhm/recovery/equilibrated.py",
+        "src/pymhm/fem/scalar/triangle.py",
+        "src/pymhm/fem/scalar/operators.py",
     ):
         fingerprint[name] = hashlib.sha256(source_path(name).read_bytes()).hexdigest()
     return fingerprint

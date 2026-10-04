@@ -28,9 +28,10 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 from matplotlib.tri import Triangulation
 
-from pymhm import DarcySolution, FaceSpace, SkeletonSpace, TriangleMesh, solve_darcy
-from pymhm.elements import rt0_evaluate, rt0_operators, triangle_quadrature
-from pymhm.reconstruction import EquilibratedFlux, equilibrate_flux
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.darcy.primal import DarcySolution, solve_darcy
+from pymhm.fem.scalar.operators import rt0_evaluate, rt0_operators, triangle_quadrature
+from pymhm.recovery.equilibrated import EquilibratedFlux, equilibrate_flux
 
 Array = NDArray[np.float64]
 Field = Callable[[Array], Array]

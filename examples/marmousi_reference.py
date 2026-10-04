@@ -18,7 +18,6 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from examples.campaign_provenance import file_digest
 from examples.hpc4e_parallel import (
     checked_solve,
     compact_matrix,
@@ -26,7 +25,8 @@ from examples.hpc4e_parallel import (
     symmetric_equilibration,
 )
 from examples.marmousi_data import load_marmousi_crop
-from pymhm.reservoir import CartesianCellField
+from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.materials.cartesian import CartesianCellField
 
 
 def validate_material_grid(
@@ -266,10 +266,12 @@ def main() -> None:
         root / "examples/campaign_provenance.py",
         *sorted((root / "src/pymhm").rglob("*.py")),
     ]
-    before = {
-        str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in sources
-    }
+    before = current_source_manifest(
+        {
+            str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in sources
+        }
+    )
     with threadpool_limits(1):
         result = native_reference(
             (2048, 512),
@@ -281,10 +283,12 @@ def main() -> None:
             point_sources=((5000, 50, 1.0),),
             progress=True,
         )
-    after = {
-        str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in sources
-    }
+    after = current_source_manifest(
+        {
+            str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in sources
+        }
+    )
     if comm.allreduce(before != after, op=MPI.LOR):
         raise RuntimeError("reference acquisition sources changed during execution")
     args.output.mkdir(parents=True, exist_ok=True)

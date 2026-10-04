@@ -9,10 +9,11 @@ from numpy.testing import assert_allclose
 from examples.helmholtz_article import Configuration, solve_configuration, solve_direction_family
 from examples.helmholtz_campaign import AcousticWave, norms
 from examples.helmholtz_incident_family import IncidentFamily
-from pymhm.helmholtz import solve_helmholtz
-from pymhm.helmholtz_spaces import helmholtz_skeleton
-from pymhm.hybrid import HybridSystem, LocalProblem
-from pymhm.quadrilateral import CartesianMacroMesh
+from pymhm._legacy.models.waves.helmholtz import solve_helmholtz
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.system import HybridSystem
+from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @pytest.mark.parametrize("oscillatory", [False, True])
@@ -114,7 +115,7 @@ def test_incident_family_rejects_corrupted_physical_field_even_with_small_schur_
 
 
 def test_incident_family_rejects_changed_trace_injection_map(monkeypatch):
-    from pymhm.helmholtz import _HelmholtzFactory
+    from pymhm._legacy.models.waves.helmholtz import _HelmholtzFactory
 
     mesh = CartesianMacroMesh(2)
     prepared = solve_helmholtz(mesh, omega=2.0, degree=3, absorbing=1j)

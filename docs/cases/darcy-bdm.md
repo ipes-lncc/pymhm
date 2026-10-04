@@ -14,7 +14,7 @@ with the [mixed elasticity implementation](https://github.com/volpatto/pymhm/blo
 
 ```python
 from pymhm import TriangleMesh
-from pymhm.darcy_mixed import solve_darcy_bdm
+from pymhm._legacy.models.darcy.mixed_bdm import solve_darcy_bdm
 
 solution = solve_darcy_bdm(
     TriangleMesh.unit_square(4),

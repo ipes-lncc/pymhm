@@ -62,9 +62,9 @@ physical equations are checked after imposing that gauge. Local factories
 support serial, thread and spawned-process assembly and condensation.
 
 ```python
-from pymhm.tetrahedral import TetraMesh
-from pymhm.darcy3d import TriangularSkeleton
-from pymhm.rad3d import solve_rad_3d
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm._legacy.models.transport.rad_3d import solve_rad_3d
 
 mesh = TetraMesh.unit_cube(2)
 solution = solve_rad_3d(

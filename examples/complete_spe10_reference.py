@@ -22,6 +22,7 @@ from examples.spe10_adaptive import (
     reference_norm_record,
     reference_squared_batch,
 )
+from pymhm.io.provenance import current_source_manifest
 
 _FIELDS: tuple[StructuredRT, StructuredRT, Any] | None = None
 _LIMIT: Any = None
@@ -60,12 +61,14 @@ def complete(nx: int, previous: Path, output: Path, workers: int) -> dict[str, A
         "examples/complete_spe10_reference.py",
         "examples/spe10_adaptive.py",
         "examples/solve_spe10.py",
-        "src/pymhm/rt.py",
-        "src/pymhm/cut_cells.py",
-        "src/pymhm/mesh.py",
+        "src/pymhm/fem/hdiv/rt.py",
+        "src/pymhm/fem/quadrature/material.py",
+        "src/pymhm/meshes/triangle.py",
         "examples/results/spe10/layer-36.npz",
     ]
-    hashes = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in sources}
+    hashes = current_source_manifest(
+        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in sources}
+    )
     row["norm_source_hashes"] = hashes
     row["previous_archive"] = previous.name
     row["previous_archive_sha256"] = hashlib.sha256(previous.read_bytes()).hexdigest()

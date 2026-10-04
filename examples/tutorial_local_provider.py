@@ -9,28 +9,29 @@ from __future__ import annotations
 
 import argparse
 import json
-from collections.abc import Callable
 from dataclasses import dataclass
-from functools import partial
 from typing import Any, Literal
 
 import numpy as np
+from scipy import sparse
 
-from pymhm.assembly import HybridProblem, SolverConfig, assemble_hybrid
-from pymhm.darcy import darcy_local_provider
-from pymhm.elements import boundary_data, rt0_evaluate, triangle_quadrature
-from pymhm.hybrid import (
-    HybridSolution,
-    HybridSystem,
-    LocalAssembly,
-    LocalProblem,
-    hybrid_mean_constraint,
-    solve_hybrid_system,
+from pymhm.core.assembly import SolverConfig
+from pymhm.core.contracts import HybridSolution
+from pymhm.core.equations import Equation, LocalEquations, columns, rows
+from pymhm.core.multiscale import MultiscaleProblem, assemble
+from pymhm.core.system import HybridSystem, hybrid_mean_constraint, solve_hybrid_system
+from pymhm.core.validation import FloatArray, positive_int
+from pymhm.execution.cpu import ExecutionConfig
+from pymhm.fem.scalar.operators import (
+    boundary_data,
+    face_integration,
+    rt0_evaluate,
+    rt0_operators,
+    triangle_quadrature,
 )
-from pymhm.lagrange import tabulate
-from pymhm.mesh import FloatArray, SkeletonSpace, TriangleMesh
-from pymhm.parallel import ExecutionConfig
-from pymhm.variational import GlobalForm, LocalForm, compile_local_forms
+from pymhm.fem.scalar.triangle import scalar_operators, tabulate, trace_coupling
+from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.meshes.triangle import TriangleMesh
 
 Formulation = Literal["primal", "mixed"]
 Boundary = Literal["dirichlet", "neumann"]
@@ -52,41 +53,89 @@ def source(points: FloatArray) -> FloatArray:
     return np.full(points.shape[:-1], -4.0)
 
 
-def coefficient_compiler(forms: LocalForm) -> LocalProblem:
-    """Compile already integrated Galerkin forms without changing their basis.
+@dataclass(frozen=True)
+class TutorialProvider:
+    """User-written primal or RT0 equations, including their global balance rows.
 
-    This example compiler accepts a sparse ``a``, vector ``L`` and one numeric
-    column per trace or moment form. Physical assembly belongs to the supplied
-    Darcy provider. UFL expressions require their own compiler adapter.
+    The FEM kernels integrate volume and boundary terms. This application
+    declares A, f, B and C=-B.T rather than selecting a library PDE solver.
+    Mixed coefficients are flux, P0 pressure and local boundary pressure;
+    the third equation prescribes normal flux from the skeletal variable.
     """
-    coupling = np.column_stack(forms.trace_forms)
-    moments = None if forms.moment_forms is None else np.column_stack(forms.moment_forms)
-    return LocalProblem(
-        forms.a,
-        coupling,
-        forms.L,
-        forms.trace_dofs,
-        kernel=forms.kernel,
-        constraints=moments,
-        coarse_basis=forms.coarse_basis,
-    )
 
+    mesh: TriangleMesh
+    skeleton: SkeletonSpace
+    formulation: Formulation = "primal"
+    local_refinement: int = 2
+    element_backend: Literal["portable", "basix"] = "basix"
 
-def declared_local(cell: int, *, provider: Callable[[int], LocalAssembly]) -> LocalAssembly:
-    """Wrap the shared physical assembler in an explicit LocalForm contract."""
-    supplied = provider(cell)
-    local = supplied.problem
-    forms = LocalForm(
-        a=local.matrix,
-        L=local.load,
-        trace_forms=tuple(local.coupling[:, column] for column in range(local.coupling.shape[1])),
-        trace_dofs=local.trace_dofs,
-        kernel=local.kernel,
-        moment_forms=tuple(
-            local.constraints[:, column] for column in range(local.constraints.shape[1])
-        ),
-    )
-    return LocalAssembly(compile_local_forms(forms, coefficient_compiler), supplied.metadata)
+    def __post_init__(self) -> None:
+        """Validate the declared application spaces before local construction."""
+        if self.formulation not in {"primal", "mixed"}:
+            raise ValueError("formulation must be primal or mixed")
+        if self.element_backend not in {"portable", "basix"}:
+            raise ValueError("element_backend must be portable or basix")
+        positive_int(self.local_refinement, "local_refinement")
+        if self.skeleton.mesh is not self.mesh or self.skeleton.components != 1:
+            raise ValueError("TutorialProvider requires its own scalar skeleton")
+
+    def __call__(self, cell: int) -> LocalEquations:
+        """Supply actual local forms and independently declared trace-test rows."""
+        fine = self.mesh.submesh(cell, self.local_refinement)
+        if self.formulation == "primal":
+            a, mass, load = scalar_operators(
+                fine,
+                2,
+                diffusion=1.0,
+                source=source,
+                order=4,
+                element_backend=self.element_backend,
+            )
+            b = trace_coupling(self.mesh, cell, fine, self.skeleton, 2)
+            kernel = np.ones((a.shape[0], 1))
+            physical_mean = mass @ kernel
+        else:
+            for face in self.mesh.cell_faces[cell]:
+                space = self.skeleton.faces[face]
+                if any(space.degrees) or not np.allclose(
+                    np.asarray(space.breaks) * self.local_refinement,
+                    np.round(np.asarray(space.breaks) * self.local_refinement),
+                    atol=1e-12,
+                    rtol=0,
+                ):
+                    raise ValueError("RT0 needs degree-zero trace segments aligned with fine edges")
+            _, flux_map = face_integration(self.mesh, cell, fine, self.skeleton)
+            mass, divergence, force = rt0_operators(fine, 1.0, source, order=4)
+            nq, npres, nb = len(fine.faces), len(fine.cells), len(fine.boundary_faces)
+            normal = sparse.coo_matrix(
+                (np.ones(nb), (fine.boundary_faces, np.arange(nb))),
+                shape=(nq, nb),
+            ).tocsc()
+            zero = sparse.csc_matrix((npres, nb))
+            a = sparse.bmat(
+                [
+                    [mass, -divergence.T, normal],
+                    [-divergence, None, zero],
+                    [normal.T, zero.T, None],
+                ],
+                format="csc",
+            )
+            b = np.zeros((nq + npres + nb, flux_map.shape[1]))
+            b[nq + npres :] = -flux_map
+            load = np.r_[np.zeros(nq), -force, np.zeros(nb)]
+            kernel = np.r_[np.zeros(nq), np.ones(npres + nb)][:, None]
+            physical_mean = np.r_[np.zeros(nq), fine.areas, np.zeros(nb)][:, None]
+        moments = physical_mean / (kernel.T @ physical_mean).item()
+        return LocalEquations(
+            a,
+            load,
+            columns(*b.T),
+            rows(*(-b.T)),
+            self.skeleton.cell_dofs(cell),
+            kernel=kernel,
+            moments=moments,
+            metadata=(fine, physical_mean[:, 0]),
+        )
 
 
 def external_response(matrix: Any, rhs: FloatArray) -> FloatArray:
@@ -104,7 +153,7 @@ def build_problem(
     boundary: Boundary = "dirichlet",
     local_refinement: int = 2,
     element_backend: Literal["portable", "basix"] = "basix",
-) -> HybridProblem[int]:
+) -> MultiscaleProblem[int]:
     """Declare two macrocells with P2 primal pressure or RT0/P0 mixed locals.
 
     The scalar skeleton is P0 physical normal Darcy flux. RT0's legacy degree
@@ -115,17 +164,7 @@ def build_problem(
         raise ValueError("boundary must be dirichlet or neumann")
     mesh = TriangleMesh.unit_square()
     skeleton = SkeletonSpace(mesh)
-    provider = darcy_local_provider(
-        mesh,
-        skeleton=skeleton,
-        formulation=formulation,
-        degree=2 if formulation == "primal" else 1,
-        local_refinement=local_refinement,
-        permeability=1.0,
-        source=source,
-        quadrature_order=4,
-        element_backend=element_backend,
-    )
+    provider = TutorialProvider(mesh, skeleton, formulation, local_refinement, element_backend)
     neumann = (
         {
             int(face): float(
@@ -137,20 +176,23 @@ def build_problem(
         else None
     )
     load, fixed = boundary_data(skeleton, exact_pressure, neumann, order=4)
-    form = GlobalForm(
+    boundary_rhs = -load if formulation == "primal" else load
+    form = Equation(0, np.r_[boundary_rhs, np.zeros(len(mesh.cells))])
+    return MultiscaleProblem(
+        form,
+        provider,
+        range(len(mesh.cells)),
         skeleton.size,
         (1,) * len(mesh.cells),
-        boundary_load=load if formulation == "primal" else -load,
-        fixed_trace=fixed,
+        fixed=fixed,
     )
-    return HybridProblem(form, partial(declared_local, provider=provider), range(len(mesh.cells)))
 
 
 @dataclass(frozen=True)
 class TutorialResult:
     """Executed problem, solution and explicit field/runtime conventions."""
 
-    problem: HybridProblem[int]
+    problem: MultiscaleProblem[int]
     system: HybridSystem
     solution: HybridSolution
     formulation: Formulation
@@ -173,15 +215,13 @@ def run_tutorial(
         formulation=formulation, boundary=boundary, element_backend=element_backend
     )
     solver = SolverConfig(local_solver=external_response if local_solver == "external" else "scipy")
-    system = assemble_hybrid(problem, execution=execution, solvers=solver)
+    system = assemble(problem, execution=execution, solvers=solver)
     gauges = None
     if boundary == "neumann":
         # Integral of 1+x^2+y^2 over the unit square is 5/3.
         physical_weights = [record[1] for record in system.local_metadata]
         gauges = [hybrid_mean_constraint(system, physical_weights, 5 / 3)]
-    solution = solve_hybrid_system(
-        system, fixed=dict(problem.global_form.fixed_trace or {}), constraints=gauges
-    )
+    solution = solve_hybrid_system(system, fixed=dict(problem.fixed or {}), constraints=gauges)
     return TutorialResult(problem, system, solution, formulation, boundary, element_backend)
 
 

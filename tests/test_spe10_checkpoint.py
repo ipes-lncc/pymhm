@@ -10,7 +10,7 @@ import numpy as np
 import pytest
 
 from pymhm import TriangleMesh
-from pymhm.longest_edge import refine_longest_edge
+from pymhm.meshes.longest_edge import refine_longest_edge
 
 MATERIAL = "examples/results/spe10/layer-36.npz"
 

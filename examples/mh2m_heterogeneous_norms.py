@@ -13,8 +13,8 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm.cut_cells import _clip_polygon
-from pymhm.elements import triangle_quadrature
+from pymhm.fem.quadrature.material import _clip_polygon
+from pymhm.fem.scalar.operators import triangle_quadrature
 
 
 @dataclass(frozen=True)

@@ -19,8 +19,9 @@ from matplotlib.ticker import NullFormatter
 from plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from threadpoolctl import threadpool_limits
 
-from pymhm import FaceSpace, SkeletonSpace, TriangleMesh, solve_elasticity
-from pymhm.transport import solve_heat, solve_transport
+from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm._legacy.models.transport.solver import solve_heat, solve_transport
+from pymhm._legacy.models.vector import solve_elasticity
 
 ROOT = Path(__file__).resolve().parents[1]
 FIGURES = ROOT / "docs/figures/scalar-elasticity"

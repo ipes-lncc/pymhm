@@ -9,8 +9,8 @@ from numpy.testing import assert_allclose
 from scipy import sparse
 from threadpoolctl import threadpool_limits
 
-import pymhm.solvers as backend
-from pymhm.solvers import LinearFactorization, LinearSolveError, factorize, solve_linear
+import pymhm.linalg.linear as backend
+from pymhm.linalg.linear import LinearFactorization, LinearSolveError, factorize, solve_linear
 
 
 def conductive_factor(matrix: np.ndarray, ratio: float = 1e-3) -> tuple[LinearFactorization, list]:

@@ -7,9 +7,10 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from pymhm.hybrid import HybridSystem, LocalProblem
-from pymhm.hybrid_refinement import refine_hybrid
-from pymhm.solvers import LinearSolveError, SolverUnavailableError
+from pymhm.core.contracts import LocalProblem
+from pymhm.core.refinement import refine_hybrid
+from pymhm.core.system import HybridSystem
+from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError
 
 
 def perturbed(system, solution, fixed=()):
@@ -136,7 +137,7 @@ def test_failed_correction_releases_factors_and_reports_original_defect(monkeypa
     """An ineffective local inverse cannot silently mark unresolved fields as converged."""
     from contextlib import contextmanager
 
-    import pymhm.hybrid_refinement as owner
+    import pymhm.core.refinement as owner
 
     closed = []
 
@@ -179,7 +180,7 @@ def test_invalid_refinement_contracts_fail_before_factoring(options, match):
 
 def test_field_layout_and_extended_platform_validation(monkeypatch):
     """Reject incomplete fields and unsupported wide storage without a silent fallback."""
-    import pymhm.hybrid_refinement as owner
+    import pymhm.core.refinement as owner
 
     system, value = simple()
     with pytest.raises(ValueError, match="one field"):

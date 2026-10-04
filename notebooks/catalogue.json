@@ -1,0 +1,1015 @@
+{
+  "schema": "pymhm-problem-notebooks-v1",
+  "source_notebooks": "unexecuted; executed copies are written under build/notebooks with the same problem folders",
+  "rows": [
+    {
+      "path": "notebooks/convergence/73_initial_convergence.ipynb",
+      "family": "convergence",
+      "title": "Initial convergence studies",
+      "methods": [
+        "cross-family convergence catalogue"
+      ],
+      "id": 73,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/hybrid_methods.ipynb",
+      "family": "darcy",
+      "title": "Alternative hybrid methods for scalar diffusion",
+      "methods": [
+        "user-written three-field MH2M and MsHHO moment blocks",
+        "Robin MH",
+        "MH2M",
+        "MsHHO",
+        "PGMHM"
+      ],
+      "kind": "introductory",
+      "variants": [
+        "mh-robin",
+        "mh-robin3d",
+        "mh2m",
+        "mh2m3d",
+        "mshho",
+        "mshho3d",
+        "mshho-face",
+        "pgmhm"
+      ]
+    },
+    {
+      "path": "notebooks/darcy/mixed_hdiv.ipynb",
+      "family": "darcy",
+      "title": "Darcy with mixed H(div) local problems",
+      "methods": [
+        "user-written RT0/P0 mixed LocalEquations/Equation",
+        "RT0/RT1",
+        "BDM/BDM+/BDM++",
+        "tensor RT",
+        "restricted tetrahedral/prismatic H(div)",
+        "classical conforming RT1"
+      ],
+      "kind": "introductory",
+      "variants": [
+        "rt0",
+        "rt1",
+        "classical-rt1",
+        "bdm",
+        "bdm-plus",
+        "bdm-double-plus",
+        "tensor-rt",
+        "tensor-rt-plus",
+        "hdiv-tetra",
+        "hdiv-tetra-plus",
+        "hdiv-prism"
+      ]
+    },
+    {
+      "path": "notebooks/darcy/primal_galerkin.ipynb",
+      "family": "darcy",
+      "title": "Darcy with primal Galerkin local problems",
+      "methods": [
+        "user-written P2 primal LocalEquations/Equation",
+        "primal MHM",
+        "local Galerkin P2/Q2",
+        "physical Neumann mean gauge"
+      ],
+      "kind": "introductory",
+      "variants": [
+        "primal",
+        "primal-quadratic",
+        "primal-neumann",
+        "primal-rectangle",
+        "primal3d"
+      ]
+    },
+    {
+      "path": "notebooks/darcy/01_darcy_convergence.ipynb",
+      "family": "darcy",
+      "title": "Darcy: primal and mixed convergence",
+      "methods": [
+        "primal MHM",
+        "mixed RT0/P0 MHM"
+      ],
+      "id": 1,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/02_heterogeneous_darcy.ipynb",
+      "family": "darcy",
+      "title": "Darcy across a permeability jump",
+      "methods": [
+        "primal MHM",
+        "heterogeneous permeability"
+      ],
+      "id": 2,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/03_skeleton_hp.ipynb",
+      "family": "darcy",
+      "title": "Independent face partitions and degrees",
+      "methods": [
+        "primal MHM",
+        "independent hp face traces"
+      ],
+      "id": 3,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/04_mixed_and_reconstructed_flux.ipynb",
+      "family": "darcy",
+      "title": "Fine-cell conservation in H(div)",
+      "methods": [
+        "primal MHM",
+        "mixed RT0/P0 MHM",
+        "equilibrated H(div) flux"
+      ],
+      "id": 4,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/11_published_darcy_2013.ipynb",
+      "family": "darcy",
+      "title": "Published Darcy curves: archived results",
+      "methods": [
+        "primal MHM",
+        "mixed RT0/P0 MHM"
+      ],
+      "id": 11,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/14_neopz_hdiv_comparison.ipynb",
+      "family": "darcy",
+      "title": "NeoPZ H(div): archived comparison results",
+      "methods": [
+        "RT H(div) MHM",
+        "restricted NeoPZ reference"
+      ],
+      "id": 14,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/17_darcy_bdm.ipynb",
+      "family": "darcy",
+      "title": "BDM2/P1 Darcy: conservative high-order local flux",
+      "methods": [
+        "BDM2/P1 mixed Darcy MHM"
+      ],
+      "id": 17,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/18_reconstruction_moments.ipynb",
+      "family": "darcy",
+      "title": "RT moment reconstruction: normal conformity and continuous-test balance",
+      "methods": [
+        "primal MHM",
+        "RT moment reconstruction"
+      ],
+      "id": 18,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/20_darcy_estimator.ipynb",
+      "family": "darcy",
+      "title": "Unit-diffusion MHM energy estimator",
+      "methods": [
+        "primal MHM",
+        "Oswald potential recovery",
+        "energy estimator"
+      ],
+      "id": 20,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/21_spe10_pyvista.ipynb",
+      "family": "darcy",
+      "title": "SPE10 Model 2: physical layers and PyVista",
+      "methods": [
+        "SPE10 material data",
+        "PyVista visualization"
+      ],
+      "id": 21,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/22_quarter_five_spot.ipynb",
+      "family": "darcy",
+      "title": "Quarter-five spot: point wells, layered media and a square obstacle",
+      "methods": [
+        "primal MHM",
+        "mixed RT0/P0 MHM"
+      ],
+      "id": 22,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/23_spe10_mhm_comparison.ipynb",
+      "family": "darcy",
+      "title": "SPE10: published Darcy and Brinkman spaces",
+      "methods": [
+        "quadrilateral primal MHM",
+        "USFEM Brinkman"
+      ],
+      "id": 23,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/24_mshho.ipynb",
+      "family": "darcy",
+      "title": "MHM and MsHHO field equivalence",
+      "methods": [
+        "primal MHM",
+        "MsHHO"
+      ],
+      "id": 24,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/25_tensor_rt.ipynb",
+      "family": "darcy",
+      "title": "Enriched rectangular RT elements",
+      "methods": [
+        "rectangular RT mixed MHM"
+      ],
+      "id": 25,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/29_darcy3d.ipynb",
+      "family": "darcy",
+      "title": "Three-dimensional tetrahedral MHM",
+      "methods": [
+        "tetrahedral primal MHM"
+      ],
+      "id": 29,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/30_polygonal_macro_meshes.ipynb",
+      "family": "darcy",
+      "title": "Polygonal macro meshes",
+      "methods": [
+        "polygonal primal MHM"
+      ],
+      "id": 30,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/31_weighted_energy_estimator.ipynb",
+      "family": "darcy",
+      "title": "Material-weighted energy estimation",
+      "methods": [
+        "primal MHM",
+        "material-weighted energy estimator"
+      ],
+      "id": 31,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/33_darcy_rt.ipynb",
+      "family": "darcy",
+      "title": "Raviart–Thomas Darcy: RT0, RT1 and RT2",
+      "methods": [
+        "RT0",
+        "RT1",
+        "RT2"
+      ],
+      "id": 33,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/36_recursive_mhm.ipynb",
+      "family": "darcy",
+      "title": "Recursive MHM in identical leaf spaces",
+      "methods": [
+        "user-written Q2/P1 NestedEquations and leaf-integral gauges",
+        "recursive MHM",
+        "direct leaf-space MHM"
+      ],
+      "id": 36,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/37_periodic_darcy.ipynb",
+      "family": "darcy",
+      "title": "Periodic Darcy: separate face, local and reference refinement",
+      "methods": [
+        "periodic quadrilateral MHM"
+      ],
+      "id": 37,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/38_unfitted_darcy.ipynb",
+      "family": "darcy",
+      "title": "Material interfaces and skeletal partitions",
+      "methods": [
+        "material-fitted integration",
+        "independent skeletal partitions"
+      ],
+      "id": 38,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/39_adaptive_darcy.ipynb",
+      "family": "darcy",
+      "title": "Adaptive Darcy macro meshes",
+      "methods": [
+        "adaptive primal MHM",
+        "weighted energy estimator"
+      ],
+      "id": 39,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/40_spe10_adaptive.ipynb",
+      "family": "darcy",
+      "title": "Adaptive SPE10 Darcy: published indicators and classical RT2 comparison",
+      "methods": [
+        "adaptive primal MHM",
+        "classical RT2/P2 reference"
+      ],
+      "id": 40,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/42_darcy_jump_estimator.ipynb",
+      "family": "darcy",
+      "title": "Darcy face-jump indicator",
+      "methods": [
+        "primal MHM",
+        "pressure jump indicator"
+      ],
+      "id": 42,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/43_analytical_darcy.ipynb",
+      "family": "darcy",
+      "title": "Analytical Darcy MHM with full source moments",
+      "methods": [
+        "analytical local Darcy MHM"
+      ],
+      "id": 43,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/44_mapped_well.ipynb",
+      "family": "darcy",
+      "title": "Mapped hexahedral RT1 around a well",
+      "methods": [
+        "mapped hexahedral RT1 MHM"
+      ],
+      "id": 44,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/47_mapped_oscillatory_well.ipynb",
+      "family": "darcy",
+      "title": "Oscillatory 3D producing-well flow",
+      "methods": [
+        "mapped hexahedral RT1 MHM"
+      ],
+      "id": 47,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/51_mixed_well_geometries.ipynb",
+      "family": "darcy",
+      "title": "Mixed tetrahedral and prismatic Darcy",
+      "methods": [
+        "tetrahedral and prismatic H(div) Darcy MHM"
+      ],
+      "id": 51,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/52_mh2m.ipynb",
+      "family": "darcy",
+      "title": "Three-field multiscale Darcy: MH²M",
+      "methods": [
+        "three-field MH2M"
+      ],
+      "id": 52,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/56_mh.ipynb",
+      "family": "darcy",
+      "title": "Multiscale Hybrid diffusion with Robin local problems",
+      "methods": [
+        "Robin-local Multiscale Hybrid (MH)"
+      ],
+      "id": 56,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/58_reconstruction3d.ipynb",
+      "family": "darcy",
+      "title": "Tetrahedral flux reconstruction and adaptive resolution",
+      "methods": [
+        "tetrahedral primal MHM",
+        "3D RT moment reconstruction",
+        "energy estimator"
+      ],
+      "id": 58,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/59_pgmhm.ipynb",
+      "family": "darcy",
+      "title": "Petrov–Galerkin MHM on polytopes",
+      "methods": [
+        "Petrov-Galerkin MHM"
+      ],
+      "id": 59,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/63_planar3d.ipynb",
+      "family": "darcy",
+      "title": "Material-fitted 3D local meshes and nonuniform face partitions",
+      "methods": [
+        "material-fitted tetrahedral MHM",
+        "nonuniform face partitions",
+        "RT reconstruction"
+      ],
+      "id": 63,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/64_tetra_pk.ipynb",
+      "family": "darcy",
+      "title": "General tetrahedral degree and admissible P5/P2 estimation",
+      "methods": [
+        "tetrahedral Pk MHM",
+        "P5/P2 error estimation"
+      ],
+      "id": 64,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/65_mh_boundary.ipynb",
+      "family": "darcy",
+      "title": "Physical Neumann data and nonconvex macroelements in MH and MH²M",
+      "methods": [
+        "MH",
+        "MH2M",
+        "physical Neumann data"
+      ],
+      "id": 65,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/69_mh3d.ipynb",
+      "family": "darcy",
+      "title": "Tetrahedral MH and MH²M",
+      "methods": [
+        "tetrahedral MH",
+        "tetrahedral MH2M"
+      ],
+      "id": 69,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/darcy/70_mh2m_heterogeneous.ipynb",
+      "family": "darcy",
+      "title": "MH²M with independently refined conormals",
+      "methods": [
+        "MH2M",
+        "independent pressure and conormal traces"
+      ],
+      "id": 70,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/elasticity/introductory_methods.ipynb",
+      "family": "elasticity",
+      "title": "Primal and mixed elasticity methods",
+      "methods": [
+        "user-written UFL primal plane elasticity",
+        "primal Galerkin",
+        "GaLS displacement-pressure",
+        "BDM weak-symmetry stress",
+        "tensor RT stress"
+      ],
+      "kind": "introductory",
+      "variants": [
+        "elasticity-primal-2d",
+        "elasticity-primal-3d",
+        "elasticity-gals-2d",
+        "elasticity-gals-3d",
+        "elasticity-bdm-2d",
+        "elasticity-bdm-plus-2d",
+        "elasticity-bdm-plusplus-2d",
+        "elasticity-bdm-3d",
+        "elasticity-rt-2d",
+        "elasticity-rt-plus-2d"
+      ]
+    },
+    {
+      "path": "notebooks/elasticity/07_elasticity.ipynb",
+      "family": "elasticity",
+      "title": "Mixed elasticity and the incompressible limit",
+      "methods": [
+        "user-written P1/P1 GaLS equations and physical rigid/pressure gauges",
+        "GaLS elasticity MHM"
+      ],
+      "id": 7,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/elasticity/15_elasticity_reference.ipynb",
+      "family": "elasticity",
+      "title": "Independent MSL GaLS elasticity fields",
+      "methods": [
+        "GaLS elasticity MHM",
+        "independent MSL reference"
+      ],
+      "id": 15,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/elasticity/16_mixed_elasticity.ipynb",
+      "family": "elasticity",
+      "title": "Mixed elasticity: H(div) stress and weak symmetry",
+      "methods": [
+        "weak-symmetry H(div) elasticity MHM"
+      ],
+      "id": 16,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/elasticity/28_mixed_elasticity_families.ipynb",
+      "family": "elasticity",
+      "title": "Mixed H(div) elasticity families",
+      "methods": [
+        "BDM",
+        "BDM-plus",
+        "BDM-double-plus"
+      ],
+      "id": 28,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/elasticity/32_primal_tensor_elasticity.ipynb",
+      "family": "elasticity",
+      "title": "General-tensor primal elasticity",
+      "methods": [
+        "general-tensor primal elasticity MHM"
+      ],
+      "id": 32,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/elasticity/34_rectangular_mixed_elasticity.ipynb",
+      "family": "elasticity",
+      "title": "Rectangular RT mixed elasticity",
+      "methods": [
+        "rectangular RT mixed elasticity MHM"
+      ],
+      "id": 34,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/elasticity/35_elasticity3d.ipynb",
+      "family": "elasticity",
+      "title": "General-tensor tetrahedral elasticity",
+      "methods": [
+        "tetrahedral general-tensor primal elasticity MHM"
+      ],
+      "id": 35,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/elasticity/50_hpc4e_geomechanics.ipynb",
+      "family": "elasticity",
+      "title": "HPC4e heterogeneous mixed elasticity",
+      "methods": [
+        "rectangular RT mixed elasticity MHM"
+      ],
+      "id": 50,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/elasticity/55_gals3d.ipynb",
+      "family": "elasticity",
+      "title": "Three-dimensional nearly incompressible elasticity",
+      "methods": [
+        "user-written tetrahedral P2/P2 GaLS equations with physical inverse bound",
+        "tetrahedral GaLS elasticity MHM"
+      ],
+      "id": 55,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/elasticity/68_mixed_elasticity3d.ipynb",
+      "family": "elasticity",
+      "title": "Three-dimensional weak-symmetry mixed elasticity",
+      "methods": [
+        "3D Arnold-Falk-Winther mixed elasticity MHM"
+      ],
+      "id": 68,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/flow/introductory_methods.ipynb",
+      "family": "flow",
+      "title": "Stokes–Brinkman and Oseen introductory methods",
+      "methods": [
+        "user-written UFL P2/P1 Taylor-Hood Brinkman",
+        "Taylor-Hood",
+        "USFEM",
+        "Oseen"
+      ],
+      "kind": "introductory",
+      "variants": [
+        "flow-taylor-hood-2d",
+        "flow-taylor-hood-3d",
+        "flow-usfem-2d",
+        "flow-usfem-3d",
+        "flow-oseen-2d",
+        "flow-oseen-3d"
+      ]
+    },
+    {
+      "path": "notebooks/flow/54_flow3d.ipynb",
+      "family": "flow",
+      "title": "Native three-dimensional Stokes, Brinkman and Oseen",
+      "methods": [
+        "user-written tetrahedral P2/P1 velocity/pressure LocalEquations",
+        "3D Stokes MHM",
+        "3D Brinkman MHM",
+        "3D Oseen MHM"
+      ],
+      "id": 54,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/flow/brinkman_oseen/06_brinkman_and_oseen.ipynb",
+      "family": "flow/brinkman_oseen",
+      "title": "Brinkman stabilization and Oseen transport",
+      "methods": [
+        "user-written USFEM drag0/1/100 and skew Taylor–Hood Oseen blocks",
+        "USFEM Brinkman",
+        "Oseen MHM"
+      ],
+      "id": 6,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/flow/brinkman_oseen/27_oseen_adaptivity.ipynb",
+      "family": "flow/brinkman_oseen",
+      "title": "Stabilized Oseen flow and two-level adaptivity",
+      "methods": [
+        "stabilized Oseen MHM",
+        "macro and local adaptivity"
+      ],
+      "id": 27,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/flow/brinkman_oseen/48_stokes_adaptive.ipynb",
+      "family": "flow/brinkman_oseen",
+      "title": "Stokes–Brinkman: two levels of error and two adaptive strategies",
+      "methods": [
+        "Stokes-Brinkman MHM",
+        "local and macro adaptivity"
+      ],
+      "id": 48,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/flow/stokes/05_stokes_published_problem.ipynb",
+      "family": "flow/stokes",
+      "title": "The polynomial Stokes problem of Araya et al. (2017)",
+      "methods": [
+        "user-written Taylor–Hood and P1/P1 USFEM LocalEquations",
+        "Taylor-Hood MHM",
+        "USFEM MHM"
+      ],
+      "id": 5,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/flow/stokes/12_stokes_pressure_audit.ipynb",
+      "family": "flow/stokes",
+      "title": "Stokes pressure: archived convergence and interface jumps",
+      "methods": [
+        "Taylor-Hood MHM",
+        "USFEM MHM",
+        "conforming DOLFINx reference"
+      ],
+      "id": 12,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/flow/stokes/13_published_stokes_2017.ipynb",
+      "family": "flow/stokes",
+      "title": "Published Stokes experiment: archived high-order results",
+      "methods": [
+        "DOLFINx/UFL local USFEM MHM"
+      ],
+      "id": 13,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/foundations/general/10_visual_gallery.ipynb",
+      "family": "foundations/general",
+      "title": "Visual verification gallery",
+      "methods": [
+        "primal and mixed Darcy",
+        "Taylor-Hood and USFEM flow",
+        "RAD",
+        "heat",
+        "elasticity"
+      ],
+      "id": 10,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/foundations/general/19_native_extensions.ipynb",
+      "family": "foundations/general",
+      "title": "Higher-order local fields and variable operators",
+      "methods": [
+        "user-written Darcy, tensor USFEM, conservative SUPG and backward Euler equations",
+        "higher-order primal Darcy",
+        "USFEM flow",
+        "variable-coefficient RAD",
+        "heat"
+      ],
+      "id": 19,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/foundations/general/57_core_extensions.ipynb",
+      "family": "foundations/general",
+      "title": "Anisotropic stress and three-dimensional mixed spaces",
+      "methods": [
+        "anisotropic mixed elasticity",
+        "3D H(div) Darcy",
+        "3D MsHHO"
+      ],
+      "id": 57,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/foundations/geometry/60_mesh_exchange.ipynb",
+      "family": "foundations/geometry",
+      "title": "Three-dimensional mesh exchange",
+      "methods": [
+        "triangle/polygon/tetrahedron/prism/hexahedron/polyhedron geometry",
+        "volume mesh exchange"
+      ],
+      "id": 60,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/foundations/operators/local_global_providers.ipynb",
+      "family": "foundations/operators",
+      "title": "Local and global forms, providers and ordered batches",
+      "methods": [
+        "LocalEquations/Equation",
+        "primal and mixed local forms",
+        "serial/thread/spawn batches",
+        "external local solver"
+      ],
+      "kind": "introductory",
+      "variants": []
+    },
+    {
+      "path": "notebooks/foundations/operators/ufl_provider.ipynb",
+      "family": "foundations/operators",
+      "title": "User-written UFL local and global equations",
+      "methods": [
+        "UFL/DOLFINx forms",
+        "independent row and column pairings",
+        "COMM_SELF local assembly"
+      ],
+      "kind": "introductory",
+      "variants": []
+    },
+    {
+      "path": "notebooks/foundations/operators/variational_hierarchy.ipynb",
+      "family": "foundations/operators",
+      "title": "Three levels of user-defined equations",
+      "methods": [
+        "four-block variational equations",
+        "three-level operator recursion",
+        "independent full-system comparison"
+      ],
+      "kind": "introductory"
+    },
+    {
+      "path": "notebooks/foundations/operators/vector_ufl.ipynb",
+      "family": "foundations/operators",
+      "title": "User-written vector reaction-diffusion equations",
+      "methods": [
+        "vector reaction-diffusion",
+        "UFL/DOLFINx compilation",
+        "oriented trace pairings"
+      ],
+      "kind": "introductory"
+    },
+    {
+      "path": "notebooks/foundations/operators/09_local_operators_and_amg.ipynb",
+      "family": "foundations/operators",
+      "title": "Composing local operators and using AMG",
+      "methods": [
+        "free local operators",
+        "hybrid condensation",
+        "AMG"
+      ],
+      "id": 9,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/transport/introductory_methods.ipynb",
+      "family": "transport",
+      "title": "Scalar reaction–advection–diffusion methods",
+      "methods": [
+        "user-written UFL skew Galerkin RAD",
+        "RAD Galerkin",
+        "SUPG",
+        "UNUSUAL"
+      ],
+      "kind": "introductory",
+      "variants": [
+        "rad",
+        "rad-supg",
+        "rad-unusual"
+      ]
+    },
+    {
+      "path": "notebooks/transport/08_transport_and_heat.ipynb",
+      "family": "transport",
+      "title": "Robin transport and transient heat",
+      "methods": [
+        "user-written Robin transport and backward Euler LocalEquations",
+        "identical-space compatibility controls"
+      ],
+      "id": 8,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/transport/26_adaptive_transient_transport.ipynb",
+      "family": "transport",
+      "title": "Adaptive and Darcy-coupled transient transport",
+      "methods": [
+        "adaptive RAD",
+        "Darcy-coupled backward Euler transport"
+      ],
+      "id": 26,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/transport/41_rad3d.ipynb",
+      "family": "transport",
+      "title": "Three-dimensional conservative RAD: local P4 and face P1",
+      "methods": [
+        "tetrahedral conservative RAD"
+      ],
+      "id": 41,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/transport/45_rad_conditioning.ipynb",
+      "family": "transport",
+      "title": "Selective RAD kernels and conditioning",
+      "methods": [
+        "RAD",
+        "selective local kernels"
+      ],
+      "id": 45,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/transport/46_hexagonal_boundary_layer.ipynb",
+      "family": "transport",
+      "title": "Hexagonal boundary-layer problem",
+      "methods": [
+        "hexagonal conservative RAD"
+      ],
+      "id": 46,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/transport/49_polyhedral_rad.ipynb",
+      "family": "transport",
+      "title": "Conservative RAD on convex polyhedra",
+      "methods": [
+        "polyhedral conservative RAD"
+      ],
+      "id": 49,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/transport/53_unusual.ipynb",
+      "family": "transport",
+      "title": "Scalar MHM-UNUSUAL reaction–diffusion",
+      "methods": [
+        "scalar reaction-diffusion MHM-UNUSUAL"
+      ],
+      "id": 53,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/transport/67_star_polyhedra.ipynb",
+      "family": "transport",
+      "title": "Nonconvex star-shaped polyhedral RAD",
+      "methods": [
+        "star-shaped polyhedral conservative RAD"
+      ],
+      "id": 67,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/waves/elastodynamics/71_elastodynamics.ipynb",
+      "family": "waves/elastodynamics",
+      "title": "Elastodynamic MHM: spatial and temporal convergence",
+      "methods": [
+        "Newmark elastodynamic MHM"
+      ],
+      "id": 71,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/waves/helmholtz/introductory_methods.ipynb",
+      "family": "waves/helmholtz",
+      "title": "Complex scalar Helmholtz fields",
+      "methods": [
+        "user-written UFL real embedding of complex Helmholtz",
+        "complex hybrid Helmholtz"
+      ],
+      "kind": "introductory",
+      "variants": [
+        "helmholtz"
+      ]
+    },
+    {
+      "path": "notebooks/waves/helmholtz/61_helmholtz.ipynb",
+      "family": "waves/helmholtz",
+      "title": "Helmholtz MHM: complex fields and PML",
+      "methods": [
+        "complex Helmholtz MHM",
+        "PML"
+      ],
+      "id": 61,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/waves/helmholtz/72_marmousi.ipynb",
+      "family": "waves/helmholtz",
+      "title": "Marmousi acoustic point source",
+      "methods": [
+        "Q3 acoustic Helmholtz MHM",
+        "classical conforming reference"
+      ],
+      "id": 72,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/waves/maxwell/introductory_methods.ipynb",
+      "family": "waves/maxwell",
+      "title": "Vector Maxwell fields and a short trajectory",
+      "methods": [
+        "user-written DG mass/curl LocalEquations/Equation stages",
+        "DG Maxwell",
+        "tangential hybrid traces",
+        "staggered time stepping"
+      ],
+      "kind": "introductory",
+      "variants": [
+        "maxwell-vector-3d"
+      ]
+    },
+    {
+      "path": "notebooks/waves/maxwell/62_maxwell.ipynb",
+      "family": "waves/maxwell",
+      "title": "Time-domain Maxwell MHM in two and three dimensions",
+      "methods": [
+        "2D and 3D Maxwell MHM"
+      ],
+      "id": 62,
+      "kind": "study"
+    },
+    {
+      "path": "notebooks/waves/maxwell/66_maxwell_nanoguide.ipynb",
+      "family": "waves/maxwell",
+      "title": "Maxwell photonic device",
+      "methods": [
+        "Cartesian Maxwell MHM",
+        "classical numerical reference"
+      ],
+      "id": 66,
+      "kind": "study"
+    }
+  ],
+  "supporting_modules": {
+    "examples/tutorial_scalar_variants.py": "Shared analytical scalar patches used by Darcy, transport and Helmholtz introductory notebooks.",
+    "examples/tutorial_vector_variants.py": "Shared analytical elasticity, flow and Maxwell patches with importable spawn callables.",
+    "examples/tutorial_local_provider.py": "Shared local/global provider construction and per-field diagnostics.",
+    "examples/variational_darcy.py": "Basix/UFL provider with worker-owned native resources."
+  }
+}
