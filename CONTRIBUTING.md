@@ -77,8 +77,8 @@ Rendered figures and large numerical solution archives are excluded from the
 source distribution. Archived campaign and notebook checks require locally generated scientific
 fields and publication figures, as described in the installation guide. Git
 contains source code, JSON records and compact input layers; large computed
-outputs remain outside Git. [CONTINUATION.md](CONTINUATION.md) describes clean
-checkout execution and the remaining acceptance work. Do not add checkpoints,
+outputs remain outside Git. [ROADMAP.md](ROADMAP.md) defines implementation and
+validation priorities, dependencies and acceptance criteria. Do not add checkpoints,
 comparison tools or native environments to commits.
 Check both archive contents and installation from the built distribution.
 

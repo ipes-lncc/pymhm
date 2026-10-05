@@ -110,7 +110,7 @@ materials and boundary data; they do not qualify arbitrary user-defined forms.
 - Distributed PETSc/MPI assembly, reusable offline operators, resident GPU P1
   batches and augmented CPU/GPU AMG saddle preconditioners.
 
-The [scientific scope](docs/roadmap.md) maps each article to implemented paths,
+The [scientific scope](ROADMAP.md#scientific-scope-and-acceptance-criteria) maps each article to implemented paths,
 verification evidence and remaining reproduction limits. The stated geometry,
 space compatibility and estimator hypotheses are part of each capability.
 See [theory](docs/theory.md),
@@ -137,8 +137,8 @@ an analytical series, and MSL/NeoPZ comparisons for a low-permeability obstacle.
 Git contains sources, scientific JSON records and three compact SPE10 input
 layers. Large computed fields and figures are generated locally and stay outside
 Git. An ordinary package installation and core tests require no archived outputs.
-[CONTINUATION.md](CONTINUATION.md) describes how to start from a clean checkout,
-run the public calculations and address the remaining scientific work.
+[ROADMAP.md](ROADMAP.md) sets implementation and validation priorities,
+dependencies and acceptance criteria for the next milestones.
 
 Generate only the cases being evaluated, using their documented public commands;
 then check their numerical acceptance before plotting or reporting reproduction.

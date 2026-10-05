@@ -260,7 +260,7 @@ nav:
   - Finite element bases: api/elements.md
   - Helmholtz and Maxwell: api/waves.md
   - Solvers and execution backends: api/backends.md
-- Roadmap: roadmap.md
+- Roadmap: https://github.com/volpatto/pymhm/blob/main/ROADMAP.md
 - Development: development.md
 plugins:
 - search

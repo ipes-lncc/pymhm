@@ -59,6 +59,7 @@ only-include = [
   "tools/amgx/pixi.lock",
   "recipe",
   "README.md",
+  "ROADMAP.md",
   "LICENSE",
   "CITATION.cff",
   "CHANGELOG.md",

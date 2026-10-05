@@ -838,7 +838,7 @@ The [case evidence guide](cases/index.md) is the canonical map from this catalog
 to representative calculations, public acquisition programs and comparison limits.
 It distinguishes published comparisons, matched problem data, independent
 references and analytical verification. The case pages retain the numerical tables,
-reference refinement and approximation settings; the [scientific scope](roadmap.md)
+reference refinement and approximation settings; the [scientific scope](https://github.com/volpatto/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria)
 identifies historical targets that remain open.
 
 The collection is not fully reproduced. In particular, unresolved historical

@@ -380,7 +380,7 @@ def validate_archives(root: Path, plan: dict[str, Any], maximum_bytes: int) -> N
         raise ValueError(
             f"Missing {len(missing)} computed notebook field archive(s): {sample}. "
             "Generate the corresponding public cases described in the documentation "
-            "and CONTINUATION.md. No automatic result download is configured."
+            "and ROADMAP.md. No automatic result download is configured."
         )
     missing_images = [name for name in plan.get("images", {}) if not (root / name).is_file()]
     if missing_images:

@@ -21,7 +21,7 @@ Each numerical record identifies the actual operator, geometry, material,
 boundary convention, approximation spaces, gauge and integration rules. Darcy
 flux, raw gradient and a Robin or pseudo-traction multiplier are distinct fields.
 The [literature catalog](../literature.md) identifies the primary sources, and
-the [scope matrix](../roadmap.md) distinguishes implemented capabilities from
+the [scope matrix](https://github.com/volpatto/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria) distinguishes implemented capabilities from
 literature results and remaining comparisons.
 
 The full campaign profile is retained in `docs/publication-full.json`. Its

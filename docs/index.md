@@ -70,7 +70,7 @@ tetrahedra, affine prisms, star-shaped polyhedra with planar faces and trilinear
 mapped hexahedra.
 Nonconvex polyhedra require a certified positive-volume kernel and a conforming
 tetrahedral decomposition, as described in the [polyhedral case](https://github.com/volpatto/pymhm/blob/main/docs/cases/star-polyhedra.md).
-The [scope matrix](roadmap.md) identifies the formulations available on each
+The [scope matrix](https://github.com/volpatto/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria) identifies the formulations available on each
 geometry; they are not interchangeable backends for every equation.
 Face partitions and polynomial degrees are independent of local refinement.
 Planar edge bases can be discontinuous
@@ -78,7 +78,7 @@ Legendre polynomials or continuous nodal polynomials within each macroface.
 Normal-trace restrictions and local refinement must satisfy each formulation's
 compatibility conditions.
 
-[Scientific scope](roadmap.md) maps the literature to the implemented paths and
+[Scientific scope](https://github.com/volpatto/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria) maps the literature to the implemented paths and
 remaining mathematical requirements. The [literature catalog](literature.md)
 covers the 20-document reference collection, including the 2025–2026 analyses and
 reconstruction results; a catalog entry is not a claim of complete reproduction.
