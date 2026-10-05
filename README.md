@@ -1,6 +1,17 @@
-# pymhm
+# PyMHM
 
-Composable Multiscale Hybrid Mixed finite element methods in Python.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/volpatto/pymhm/main/docs/assets/branding/pymhm-logo-readme.png" width="720" alt="PyMHM — Composable Multiscale Hybrid Mixed finite element methods in Python">
+</p>
+
+[![Tests](https://github.com/volpatto/pymhm/actions/workflows/tests.yml/badge.svg)](https://github.com/volpatto/pymhm/actions/workflows/tests.yml)
+[![Lint and Quality](https://github.com/volpatto/pymhm/actions/workflows/lint-and-quality.yml/badge.svg)](https://github.com/volpatto/pymhm/actions/workflows/lint-and-quality.yml)
+[![Docs](https://github.com/volpatto/pymhm/actions/workflows/docs.yml/badge.svg)](https://volpatto.github.io/pymhm/)
+[![Publish to PyPI](https://github.com/volpatto/pymhm/actions/workflows/publish-pypi.yml/badge.svg)](https://github.com/volpatto/pymhm/actions/workflows/publish-pypi.yml)
+[![Version: 0.1.0](https://img.shields.io/badge/version-0.1.0-21918c.svg)](https://github.com/volpatto/pymhm/blob/main/pyproject.toml)
+[![Python: 3.11–3.13](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-3776ab.svg)](https://github.com/volpatto/pymhm/blob/main/pyproject.toml)
+[![Supported OS](https://img.shields.io/badge/OS-Linux%20%7C%20macOS%20%7C%20Windows-3776ab.svg)](https://github.com/volpatto/pymhm/actions/workflows/tests.yml)
+[![License: LGPL-2.1-only](https://img.shields.io/badge/license-LGPL--2.1--only-440154.svg)](https://github.com/volpatto/pymhm/blob/main/LICENSE)
 
 `pymhm` couples user-defined local and global variational equations through
 explicitly oriented trace coordinates. Declare the forms, choose a local
@@ -221,3 +232,25 @@ with GitHub Actions as its source and the `github-pages` environment to accept
 release tags; see [development](docs/development.md).
 
 Licensed under LGPL-2.1-only. Citation metadata is in `CITATION.cff`.
+
+## Institutional Support
+
+PyMHM is developed by the
+[Innovative Parallel numErical Solvers (IPES)](https://ipes.lncc.br/)
+research group and receives institutional support from the
+[Laboratório Nacional de Computação Científica (LNCC)](https://www.gov.br/lncc/pt-br),
+a research unit of the
+[Ministério da Ciência, Tecnologia e Inovação (MCTI)](https://www.gov.br/mcti/pt-br),
+Brazil.
+
+<p align="center">
+  <a href="https://ipes.lncc.br/">
+    <img src="https://raw.githubusercontent.com/volpatto/pymhm/main/docs/assets/institutions/ipes.png" width="300" alt="IPES — Innovative Parallel numErical Solvers">
+  </a>
+  <a href="https://www.gov.br/lncc/pt-br">
+    <img src="https://raw.githubusercontent.com/volpatto/pymhm/main/docs/assets/institutions/lncc-readme.svg" width="190" alt="LNCC — Laboratório Nacional de Computação Científica">
+  </a>
+  <a href="https://www.gov.br/mcti/pt-br">
+    <img src="https://raw.githubusercontent.com/volpatto/pymhm/main/docs/assets/institutions/mcti-readme.svg" width="270" alt="MCTI — Ministério da Ciência, Tecnologia e Inovação">
+  </a>
+</p>

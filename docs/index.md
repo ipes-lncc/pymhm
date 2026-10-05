@@ -1,4 +1,19 @@
-# pymhm
+---
+title: PyMHM
+hide:
+  - toc
+---
+
+# Composable multiscale methods
+
+<div class="pymhm-hero">
+  <div class="pymhm-signature-mobile">
+    <img src="assets/branding/pymhm-wordmark.svg" width="938" height="335" alt="PyMHM">
+    <p>Composable Multiscale Hybrid Mixed<br>finite element methods in Python</p>
+  </div>
+  <img class="pymhm-signature pymhm-signature--light" src="assets/branding/pymhm-logo.svg" width="938" height="444" alt="PyMHM — Composable Multiscale Hybrid Mixed finite element methods in Python">
+  <img class="pymhm-signature pymhm-signature--dark" src="assets/branding/pymhm-logo-dark.svg" width="938" height="444" alt="PyMHM — Composable Multiscale Hybrid Mixed finite element methods in Python">
+</div>
 
 `pymhm` is a research Python package for Multiscale Hybrid Mixed finite element
 methods. User-defined local and global equations declare their independent
@@ -6,6 +21,21 @@ variational blocks, trace pairings and retained modes. `assemble` and `solve`
 reuse the shared elimination and reconstruction operations. A local operator
 can itself be another multiscale problem. Local discretization, skeleton
 approximation and linear solvers are separate choices.
+
+<div class="pymhm-start-grid">
+  <a href="installation/">
+    <strong>Install PyMHM</strong>
+    <span>Set up the portable core and choose optional native backends.</span>
+  </a>
+  <a href="tutorials/">
+    <strong>Compose a problem</strong>
+    <span>Explore local equations, global traces and executable notebooks.</span>
+  </a>
+  <a href="cases/">
+    <strong>Inspect the evidence</strong>
+    <span>Read numerical results, discretization choices and scientific limits.</span>
+  </a>
+</div>
 
 The reference implementation uses NumPy, SciPy and Basix. The optional
 [FEniCS interface](fenics.md) assembles user-defined scalar, vector, mixed and
@@ -108,3 +138,29 @@ The [near-incompressibility study](https://github.com/volpatto/pymhm/blob/main/d
 ratios through $10^8$, the exact incompressible limit and six refinement points.
 [BDM2 Darcy](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy-bdm.md) and [mixed elasticity](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-elasticity.md)
 include independent DOLFINx/Basix assembly checks and analytical convergence cases.
+
+<section class="institutional-support" markdown="1">
+
+## Institutional Support
+
+PyMHM is developed by the
+[Innovative Parallel numErical Solvers (IPES)](https://ipes.lncc.br/)
+research group and receives institutional support from the
+[Laboratório Nacional de Computação Científica (LNCC)](https://www.gov.br/lncc/pt-br),
+a research unit of the
+[Ministério da Ciência, Tecnologia e Inovação (MCTI)](https://www.gov.br/mcti/pt-br),
+Brazil.
+
+<div class="institutional-logos">
+  <a href="https://ipes.lncc.br/">
+    <img src="assets/institutions/ipes.png" width="1671" height="631" loading="lazy" alt="IPES — Innovative Parallel numErical Solvers">
+  </a>
+  <a href="https://www.gov.br/lncc/pt-br">
+    <img src="assets/institutions/lncc.svg" loading="lazy" alt="LNCC — Laboratório Nacional de Computação Científica">
+  </a>
+  <a href="https://www.gov.br/mcti/pt-br">
+    <img src="assets/institutions/mcti.svg" width="460" height="120" loading="lazy" alt="MCTI — Ministério da Ciência, Tecnologia e Inovação">
+  </a>
+</div>
+
+</section>

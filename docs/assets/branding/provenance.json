@@ -1,0 +1,34 @@
+{
+  "identity": "PyMHM — Precisão técnica",
+  "signature": {
+    "file": "pymhm-logo.svg",
+    "description": "Selected PyMHM wordmark with macroblocks, subtriangles and the full library slogan in two lines.",
+    "wordmark_font": "Barlow Bold",
+    "slogan_font": "Inter, weight 450 and optical size 24",
+    "format": "Outlined SVG with no external font or asset dependencies",
+    "python_blue": "#3776AB",
+    "python_yellow": "#FFD43B",
+    "gradient": "Reverse Viridis adapted from Python yellow through #FDE725 to #440154",
+    "variants": {
+      "pymhm-logo-readme.png": "Signature composited on white for README and package-index rendering",
+      "pymhm-logo-dark.svg": "Same signature with a white background for the dark documentation theme",
+      "pymhm-wordmark.svg": "Original selected wordmark, paired with live slogan text on small documentation screens"
+    }
+  },
+  "icon": {
+    "file": "pymhm-icon.svg",
+    "description": "The selected wordmark's first M outline and macro mesh, with the same palette spanning that glyph on a white tile"
+  },
+  "fonts": [
+    {
+      "family": "Barlow",
+      "source_url": "https://github.com/google/fonts/tree/main/ofl/barlow",
+      "license_file": "Barlow-OFL.txt"
+    },
+    {
+      "family": "Inter",
+      "source_url": "https://github.com/google/fonts/tree/main/ofl/inter",
+      "license_file": "Inter-OFL.txt"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
-site_name: pymhm
-site_description: Composable multiscale hybrid mixed finite element methods
+site_name: PyMHM
+site_description: Composable Multiscale Hybrid Mixed finite element methods in Python
 site_url: https://volpatto.github.io/pymhm/
 repo_url: https://github.com/volpatto/pymhm
 repo_name: volpatto/pymhm
@@ -7,20 +7,28 @@ edit_uri: edit/main/docs/
 strict: true
 theme:
   name: material
+  logo: assets/branding/pymhm-icon.svg
+  favicon: assets/branding/pymhm-icon.svg
+  font: false
   features:
   - navigation.sections
+  - navigation.tracking
   - navigation.top
+  - navigation.footer
+  - toc.follow
+  - search.suggest
+  - search.highlight
   - content.code.copy
   palette:
   - scheme: default
-    primary: teal
-    accent: indigo
+    primary: custom
+    accent: custom
     toggle:
       icon: material/brightness-7
       name: Switch to dark mode
   - scheme: slate
-    primary: teal
-    accent: cyan
+    primary: custom
+    accent: custom
     toggle:
       icon: material/brightness-4
       name: Switch to light mode

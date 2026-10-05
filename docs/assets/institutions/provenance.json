@@ -1,0 +1,71 @@
+{
+  "purpose": "Institutional identification in the PyMHM README and documentation.",
+  "marks_notice": "The IPES, LNCC and MCTI institutional marks remain the property of their respective owners and are separate from the PyMHM software license.",
+  "assets": [
+    {
+      "file": "ipes.png",
+      "institution": "Innovative Parallel numErical Solvers (IPES)",
+      "source_url": "https://ipes.lncc.br/images/banner-logo-IPES-novo.png",
+      "website": "https://ipes.lncc.br/",
+      "dimensions": [
+        1671,
+        631
+      ],
+      "preparation": "Original official horizontal banner, unchanged.",
+      "sha256": "51c2d0925d545a12bf9c9e18cdbd91333144143263a44941eeb89c4cc25c19c8",
+      "size_bytes": 1081839
+    },
+    {
+      "file": "lncc.svg",
+      "institution": "Laboratório Nacional de Computação Científica (LNCC)",
+      "source_project": "ThermoPhase-FCSRG/torch-flash",
+      "source_revision": "a65b099b891df2c8f315cfbfc57ba820d6d4ca0f",
+      "source_url": "https://raw.githubusercontent.com/ThermoPhase-FCSRG/torch-flash/a65b099b891df2c8f315cfbfc57ba820d6d4ca0f/resources/logo/lncc.svg",
+      "website": "https://www.gov.br/lncc/pt-br",
+      "viewBox": [
+        498,
+        531,
+        2371,
+        892
+      ],
+      "preparation": "Original SVG used in the torch-flash README, unchanged.",
+      "sha256": "cf2141d0aeb2cc982463e94f9b33cd2370e4b32f3fc60a1e46a340d0219e36c9",
+      "size_bytes": 42441
+    },
+    {
+      "file": "mcti.svg",
+      "institution": "Ministério da Ciência, Tecnologia e Inovação (MCTI)",
+      "source_url": "https://www.cptec.inpe.br/treinamento-monan-2024/public/images/logo-ministerio-patrocinio-05.png",
+      "source_page": "https://www.cptec.inpe.br/treinamento-monan-2024/",
+      "website": "https://www.gov.br/mcti/pt-br",
+      "source_dimensions": [
+        500,
+        500
+      ],
+      "source_sha256": "95602536b0c7e004e4d8dff814eb92058b88aa6e98343bbec0e894089357e320",
+      "viewBox": [
+        20,
+        192,
+        460,
+        120
+      ],
+      "preparation": "Original CPTEC/INPE PNG bytes embedded unchanged in an SVG with a horizontal viewport and white margins. No artwork was redrawn or recolored.",
+      "sha256": "884917484a863c0073555d5d7afd67af7edbbd0a15c5c00fd1a40ffbad6ab570",
+      "size_bytes": 43909
+    }
+  ],
+  "readme_variants": [
+    {
+      "file": "lncc-readme.svg",
+      "source_file": "lncc.svg",
+      "preparation": "Original institutional artwork on a white background for consistent README rendering.",
+      "sha256": "25fbf7b77d411f958a7f209c28804e6662879520147a265cc39ceb1e55199098"
+    },
+    {
+      "file": "mcti-readme.svg",
+      "source_file": "mcti.svg",
+      "preparation": "Original institutional artwork on a white background for consistent README rendering.",
+      "sha256": "021640ca620349a8dd9711a2689bd09dedac49a755f00492e9f76f98890ebf36"
+    }
+  ]
+}
