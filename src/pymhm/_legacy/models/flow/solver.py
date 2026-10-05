@@ -4,12 +4,12 @@ from functools import partial
 from typing import Any, Literal, cast
 
 import numpy as np
-from scipy import linalg
 
 from pymhm._legacy.models.vector import VectorSolution
 from pymhm.core.contracts import LocalAssembly, LocalProblem
 from pymhm.core.system import HybridSystem
 from pymhm.core.validation import FloatArray, positive_int
+from pymhm.fem.inequalities import laplacian_inverse_bound
 from pymhm.fem.quadrature.material import cartesian_triangle_quadrature
 from pymhm.fem.scalar.operators import boundary_data, triangle_quadrature
 from pymhm.fem.scalar.triangle import element_tabulate as _element_tabulation
@@ -20,26 +20,6 @@ from pymhm.materials.cartesian import CartesianCellField
 from pymhm.materials.evaluation import scalar_values, vector_values
 from pymhm.meshes.refinement import validate_submesh
 from pymhm.meshes.triangle import TriangleMesh
-
-
-def _laplacian_inverse_bound(
-    gradient: FloatArray, hessian: FloatArray, weights: FloatArray, diameters: FloatArray
-) -> FloatArray:
-    """Compute m=min(1/3,C) with C*h²*||Delta v||² <= ||grad v||²."""
-    energy = np.einsum("q,tqia,tqja->tij", weights, gradient, gradient)
-    laplacian = np.trace(hessian, axis1=-2, axis2=-1)
-    strong = np.einsum("q,tqi,tqj->tij", weights, laplacian, laplacian)
-    constants = np.full(len(gradient), 1 / 3)
-    for cell, (stiffness, residual) in enumerate(zip(energy, strong, strict=True)):
-        values, vectors = linalg.eigh(stiffness)
-        selected = values > 1e-12 * values[-1]
-        if np.count_nonzero(selected) != len(values) - 1:
-            raise ValueError("inverse inequality requires exactly 1 resolved kernel modes")
-        basis = vectors[:, selected] / np.sqrt(values[selected])
-        maximum = max(0.0, float(linalg.eigvalsh(basis.T @ residual @ basis)[-1]))
-        if maximum > 0:
-            constants[cell] = min(1 / 3, 1 / (diameters[cell] ** 2 * maximum))
-    return constants
 
 
 def _resistance_values(field: Any, points: FloatArray) -> FloatArray:
@@ -217,7 +197,7 @@ def _flow_local(
         diameters = np.max(fine.lengths[fine.cell_faces], axis=1)
         # This geometric inverse constant integrates only polynomials. Material
         # interfaces must not affect its independently exact Gaussian evaluation.
-        inverse = _laplacian_inverse_bound(uniform[3], uniform[4], gauss_weights, diameters)
+        inverse = laplacian_inverse_bound(uniform[3], uniform[4], gauss_weights, diameters)
         viscous_scale = 4 * viscosity / inverse
         eigenvalues = np.linalg.eigvalsh(resistance)
         if formulation == "oseen":

@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
-from functools import partial
 from typing import Any, Generic, Literal, Protocol, TypeVar
 
 import numpy as np
@@ -37,7 +36,8 @@ class LocalLinearSolver(Protocol):
     source/trace/retained-mode right-hand sides. Return a finite real array of
     the same shape as ``rhs``, including moment multipliers. External codes or
     learned response models can implement this contract without inheritance.
-    They own and release any native resources before returning. The original
+    They own their native resources and may implement ``close()`` to release
+    resident solver state when local execution ends. The original
     constrained operator has an independent numerical rank check, and each
     column is checked before decoding a local response.
     """
@@ -87,10 +87,18 @@ class HybridProblem(Generic[Item]):
     ``LocalAssembly`` with oriented trace maps, actual bases and physical
     moments. It is called exactly once per item per assembly. An iterator is
     consumed once; use a reusable iterable for repeated assemblies. Native
-    resources belong to the provider invocation and must not cross a process
-    boundary. Providers and items must be picklable for the spawn backend.
+    resources remain worker-owned and must not cross a process boundary.
+    A provider may retain reusable workspaces between items and implement
+    ``close()`` for worker-lifetime cleanup. Threaded providers must keep
+    mutable native workspaces separate across concurrent calls. Providers and
+    items must be picklable for the spawn backend.
     ``contribution`` can supply explicit direct global terms in addition to a
-    cell's Schur block. Only the coordinator invokes it, in cell order. Set
+    cell's Schur block. By default only the coordinator invokes a custom
+    callback, in cell order. ``contribution_execution="worker"`` declares an
+    independent, picklable callback that runs after the local solve on that
+    worker; it must not write shared state or require coordinator resources.
+    The default Schur contribution always runs on its local worker. Only
+    the ordered coordinator reduction writes shared global entries. Set
     ``require_local_trace_coverage=False`` when a separate declared global form
     owns the remaining trace coordinates; retained intervals are checked.
     """
@@ -102,6 +110,7 @@ class HybridProblem(Generic[Item]):
         Callable[[LocalResponse, Any, IntArray], tuple[IntArray, FloatArray, FloatArray]] | None
     ) = None
     require_local_trace_coverage: bool = True
+    contribution_execution: Literal["coordinator", "worker"] = "coordinator"
 
     def __post_init__(self) -> None:
         """Check the global form and provider without consuming local items."""
@@ -111,6 +120,8 @@ class HybridProblem(Generic[Item]):
             raise TypeError("local_provider must be callable")
         if self.contribution is not None and not callable(self.contribution):
             raise TypeError("contribution must be callable")
+        if self.contribution_execution not in {"coordinator", "worker"}:
+            raise ValueError("contribution_execution must be coordinator or worker")
 
 
 _DEFAULT_EXECUTION = ExecutionConfig()
@@ -146,17 +157,101 @@ def _provide_response(
     return response, metadata
 
 
+def _provide_cell(
+    indexed_item: tuple[int, Item],
+    *,
+    provider: Callable[[Item], LocalProblem | LocalAssembly],
+    solvers: SolverConfig,
+    trace_size: int,
+    coarse_sizes: tuple[int, ...],
+    offsets: IntArray,
+    contribution: (
+        Callable[[LocalResponse, Any, IntArray], tuple[IntArray, FloatArray, FloatArray]] | None
+    ),
+    reduce_in_worker: bool,
+) -> tuple[LocalResponse, Any, tuple[IntArray, FloatArray, FloatArray] | None]:
+    """Own one local solve and its independent reduced block on the same worker.
+
+    Only coefficient arrays leave the worker. Global trace indices remain the
+    provider's oriented indices; retained coordinates come from the declared
+    item partition. No shared global entry is written here.
+    """
+    cell, item = indexed_item
+    if cell >= len(coarse_sizes):
+        raise ValueError("one local item per coarse cell partition is required")
+    response, record = _provide_response(item, provider=provider, solvers=solvers)
+    local = response.problem
+    if local.coarse_basis.shape[1] != coarse_sizes[cell]:
+        raise ValueError("local retained basis does not match its coarse cell partition")
+    if np.any(local.trace_dofs >= trace_size):
+        raise ValueError("local trace map exceeds the declared global trace space")
+    reduced = None
+    if reduce_in_worker:
+        coarse_dofs = np.arange(offsets[cell], offsets[cell + 1])
+        reduced = (
+            local_global_contribution(response, coarse_dofs)
+            if contribution is None
+            else contribution(response, record, coarse_dofs)
+        )
+    return response, record, reduced
+
+
+@dataclass(frozen=True)
+class _CellWorker(Generic[Item]):
+    """Own a local provider and its cleanup for one ordered execution lifetime."""
+
+    provider: Callable[[Item], LocalProblem | LocalAssembly]
+    solvers: SolverConfig
+    trace_size: int
+    coarse_sizes: tuple[int, ...]
+    offsets: IntArray
+    contribution: (
+        Callable[[LocalResponse, Any, IntArray], tuple[IntArray, FloatArray, FloatArray]] | None
+    )
+    reduce_in_worker: bool
+
+    def __call__(
+        self, indexed_item: tuple[int, Item]
+    ) -> tuple[LocalResponse, Any, tuple[IntArray, FloatArray, FloatArray] | None]:
+        """Delegate unchanged local algebra and oriented global contribution."""
+        return _provide_cell(
+            indexed_item,
+            provider=self.provider,
+            solvers=self.solvers,
+            trace_size=self.trace_size,
+            coarse_sizes=self.coarse_sizes,
+            offsets=self.offsets,
+            contribution=self.contribution,
+            reduce_in_worker=self.reduce_in_worker,
+        )
+
+    def close(self) -> None:
+        """Release the provider and solver's explicitly declared resident resources."""
+        try:
+            close = getattr(self.provider, "close", None)
+            if callable(close):
+                close()
+        finally:
+            close = getattr(self.solvers.local_solver, "close", None)
+            if callable(close):
+                close()
+
+
 def assemble_hybrid(
     problem: HybridProblem[Item],
     *,
     execution: ExecutionConfig = _DEFAULT_EXECUTION,
     solvers: SolverConfig = _DEFAULT_SOLVERS,
 ) -> HybridSystem:
-    """Assemble a hybrid form using ordered serial work or bounded parallel batches.
+    """Assemble a hybrid form using ordered serial work or bounded parallel jobs.
 
     Serial execution solves and adds each cell before requesting the next item.
     Thread/process execution completes one batch before consuming the next;
     contributions are reduced individually in input order by the coordinator.
+    With ``execution.pipeline=True``, a rolling window replaces batch barriers;
+    other workers continue while the coordinator scatters the next ordered
+    block. The default Schur reduction and explicitly worker-owned callbacks
+    run with the local solve, before that handoff.
     Shared faces therefore have no concurrent writes or batch-dependent sums.
     The declared trace and retained layout is checked against every response.
     Local responses are retained for reconstruction and physical mean rows;
@@ -168,33 +263,36 @@ def assemble_hybrid(
     )
     responses: list[LocalResponse] = []
     metadata: list[Any] = []
+    reduce_in_worker = problem.contribution is None or problem.contribution_execution == "worker"
     computed = iter_local(
-        partial(_provide_response, provider=problem.local_provider, solvers=solvers),
-        problem.items,
+        _CellWorker(
+            provider=problem.local_provider,
+            solvers=solvers,
+            trace_size=form.trace_size,
+            coarse_sizes=form.coarse_sizes,
+            offsets=offsets,
+            contribution=problem.contribution if reduce_in_worker else None,
+            reduce_in_worker=reduce_in_worker,
+        ),
+        enumerate(problem.items),
         backend=execution.backend,
         workers=execution.workers,
         native_threads=execution.native_threads,
         batch_size=execution.batch_size,
+        pipeline=execution.pipeline,
     )
 
     def contributions() -> Iterable[tuple[IntArray, FloatArray, FloatArray]]:
         """Yield each response's declared global block before requesting another."""
-        for cell, (response, record) in enumerate(computed):
-            if cell >= len(form.coarse_sizes):
-                raise ValueError("one local item per coarse cell partition is required")
-            local = response.problem
-            if local.coarse_basis.shape[1] != form.coarse_sizes[cell]:
-                raise ValueError("local retained basis does not match its coarse cell partition")
-            if np.any(local.trace_dofs >= form.trace_size):
-                raise ValueError("local trace map exceeds the declared global trace space")
+        for cell, (response, record, reduced) in enumerate(computed):
             responses.append(response)
             metadata.append(record)
             coarse_dofs = np.arange(offsets[cell], offsets[cell + 1])
-            yield (
-                local_global_contribution(response, coarse_dofs)
-                if problem.contribution is None
-                else problem.contribution(response, record, coarse_dofs)
-            )
+            if reduced is None:
+                # Arbitrary application callbacks retain coordinator ownership.
+                assert problem.contribution is not None
+                reduced = problem.contribution(response, record, coarse_dofs)
+            yield reduced
 
     try:
         matrix, rhs, load_scale = assemble_hybrid_contributions(

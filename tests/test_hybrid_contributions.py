@@ -5,7 +5,59 @@ import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
 from pymhm.core.contracts import LocalProblem
+from pymhm.core.contributions import local_global_contribution
 from pymhm.core.system import HybridSystem
+
+
+@pytest.mark.parametrize("matrix", [None, [[0.25]]])
+@pytest.mark.parametrize("load", [None, [0.75]])
+def test_declared_direct_trace_terms_add_once(matrix, load):
+    """Eliminate 2u+lambda=3 and -u+D lambda=g independently of shared algebra."""
+    response = LocalProblem([[2.0]], [[1.0]], [3.0], [4]).condense()
+    indices, block, rhs = local_global_contribution(
+        response, np.array([], dtype=int), direct_matrix=matrix, direct_load=load
+    )
+    assert_array_equal(indices, [4])
+    assert_array_equal(block, [[0.5 + (0.0 if matrix is None else 0.25)]])
+    assert_array_equal(rhs, [1.5 + (0.0 if load is None else 0.75)])
+    direct = 0.0 if matrix is None else 0.25
+    forcing = 0.0 if load is None else 0.75
+    full_solution = np.linalg.solve([[2.0, 1.0], [-1.0, direct]], [3.0, forcing])
+    reduced_trace = np.linalg.solve(block, rhs)
+    assert_allclose(reduced_trace, full_solution[1:], atol=1e-14)
+    assert_allclose(response.reconstruct(reduced_trace, np.empty(0)), full_solution[:1], atol=1e-14)
+
+
+def test_wide_direct_load_preserves_matrix_addition_digits():
+    """A shared real dtype is chosen before adding either direct trace term."""
+    response = LocalProblem([[2.0]], [[1.0]], [3.0], [0]).condense()
+    digit = np.finfo(float).eps / 4
+    _, matrix, load = local_global_contribution(
+        response,
+        np.array([], dtype=int),
+        direct_matrix=[[digit]],
+        direct_load=np.array([0.25], dtype=np.longdouble),
+    )
+    assert matrix.dtype == load.dtype == np.dtype(np.longdouble)
+    assert matrix[0, 0] == np.longdouble(0.5) + digit
+
+
+@pytest.mark.parametrize(
+    "kwargs,match",
+    [
+        ({"direct_matrix": [[1.0, 2.0]]}, "direct_matrix"),
+        ({"direct_matrix": [[1j]]}, "real"),
+        ({"direct_matrix": [[np.nan]]}, "direct_matrix"),
+        ({"direct_load": []}, "direct_load"),
+        ({"direct_load": [1j]}, "real"),
+        ({"direct_load": [np.inf]}, "direct_load"),
+    ],
+)
+def test_direct_trace_terms_require_finite_real_matching_shapes(kwargs, match):
+    """Reject unsupported terms in the common owner before global scatter."""
+    response = LocalProblem([[2.0]], [[1.0]], [3.0], [0]).condense()
+    with pytest.raises(ValueError, match=match):
+        local_global_contribution(response, np.array([], dtype=int), **kwargs)
 
 
 def _systems(boundary=None):

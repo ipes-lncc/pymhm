@@ -13,6 +13,8 @@ from pymhm.linalg.linear import (
     solve_linear,
 )
 
+_LOCAL_AMG_RTOL = 1e-12
+
 
 def condense_local(
     problem: LocalProblem,
@@ -28,7 +30,12 @@ def condense_local(
     data and solver residual criteria remain those of the supplied problem.
     Direct factors can retain corrected lifts in extended precision without
     changing their residual criterion. AMG local projection currently accepts
-    only the default double-precision accumulation.
+    only the default double-precision accumulation. AMG refines the projected
+    original equations to relative tolerance 1e-12
+    while each pinned correction solve keeps its 1e-10 residual criterion. This
+    reserves two decimal orders for source/trace combinations; their defects
+    add with the reconstruction coefficients. This reserve does not replace the
+    physical reconstructed-field residual criterion, checked independently.
     """
     if refinement_precision not in {"double", "extended"}:
         raise ValueError("refinement_precision must be double or extended")
@@ -45,58 +52,43 @@ def condense_local(
             problem.constraints, problem.test_constraints
         ):
             raise ValueError("AMG kernel projection requires matching test and trial spaces")
+        rhs = np.column_stack((problem.load, problem.coupling))
         if problem._correct_kernel:
-            rhs = np.column_stack((problem.load, problem.coupling, problem._retained_action))
-            response = np.zeros_like(rhs)
+            rhs = np.column_stack((rhs, problem._retained_action))
+        response = np.zeros_like(rhs)
+        free = np.arange(n)
+        if k:
             _, _, pivots = linalg.qr(problem.kernel.T, pivoting=True)
-            free = np.setdiff1d(np.arange(n), pivots[:k])
+            free = np.setdiff1d(free, pivots[:k])
             pairing = problem.kernel.T @ problem.constraints
-            for step in range(4):
-                defect = rhs - _matrix_action(problem.matrix, response)
+        norms = np.linalg.norm(rhs, axis=0)
+        for step in range(4):
+            defect = rhs - _matrix_action(problem.matrix, response)
+            if k:
                 defect -= problem.constraints @ np.linalg.solve(pairing, problem.kernel.T @ defect)
-                norms = np.linalg.norm(rhs, axis=0)
-                if step and np.all(np.linalg.norm(defect, axis=0) <= 1e-10 * norms):
-                    break
-                correction = np.zeros_like(rhs)
-                if len(free):
-                    correction[free] = solve_linear(
-                        problem.matrix[free][:, free], defect[free], solver=solver
-                    )
+            if step and np.all(np.linalg.norm(defect, axis=0) <= _LOCAL_AMG_RTOL * norms):
+                break
+            correction = np.zeros_like(rhs)
+            if len(free):
+                correction[free] = solve_linear(
+                    problem.matrix[free][:, free], defect[free], solver=solver, rtol=1e-10
+                )
+            if k:
                 correction -= problem.kernel @ np.linalg.solve(
                     problem.constraints.T @ problem.kernel, problem.constraints.T @ correction
                 )
-                response += correction
-            else:
-                raise ValueError("AMG constrained residual refinement did not converge")
-            width = problem.coupling.shape[1] + 1
-            return LocalResponse(
-                problem,
-                response[:, 0],
-                response[:, 1:width],
-                problem.coarse_basis - response[:, width:],
-            )
-        rhs = np.column_stack((problem.load, problem.coupling))
-        if k:
-            # Pin independent kernel coordinates only during the elliptic solve.
-            # Afterwards restore the physical mean, with no dense rank update.
-            rhs -= problem.constraints @ np.linalg.solve(
-                problem.kernel.T @ problem.constraints, problem.kernel.T @ rhs
-            )
-            _, _, pivots = linalg.qr(problem.kernel.T, pivoting=True)
-            free = np.setdiff1d(np.arange(n), pivots[:k])
-            response = np.zeros_like(rhs)
-            if len(free):
-                response[free] = solve_linear(
-                    problem.matrix[free][:, free], rhs[free], solver=solver
-                )
-            response -= problem.kernel @ np.linalg.solve(
-                problem.constraints.T @ problem.kernel, problem.constraints.T @ response
-            )
+            response += correction
         else:
-            response = solve_linear(problem.matrix, rhs, solver=solver)
-        return LocalResponse(problem, response[:, 0], response[:, 1:])
+            raise ValueError("AMG constrained residual refinement did not converge")
+        width = problem.coupling.shape[1] + 1
+        return LocalResponse(
+            problem,
+            response[:, 0],
+            response[:, 1:width],
+            problem.coarse_basis - response[:, width:] if problem._correct_kernel else None,
+        )
     matrix, rhs = problem.condensation_system()
-    with factorize(matrix, solver=solver) as decomposition:
+    with factorize(matrix, solver=solver, rhs_columns=rhs.shape[1]) as decomposition:
         return problem.response_from_solution(
             decomposition.solve(rhs, refinement_precision=refinement_precision)
         )

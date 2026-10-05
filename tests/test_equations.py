@@ -7,7 +7,16 @@ import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 from scipy import sparse
 
-from pymhm import LocalEquations, columns, compile_form, compile_local_equations, rows
+from pymhm import (
+    Equation,
+    LocalEquations,
+    MultiscaleProblem,
+    assemble,
+    columns,
+    compile_form,
+    compile_local_equations,
+    rows,
+)
 from pymhm.core.equations import LinearForms
 
 
@@ -150,3 +159,191 @@ def test_ufl_compilation_delegates_the_declared_form_and_shape(monkeypatch):
 def test_complex_zero_does_not_silently_change_scalar_field_type():
     with pytest.raises(ValueError, match="real"):
         compile_form(0j, (2, 2))
+
+
+@pytest.mark.parametrize("shape", [(3, 5), (0, 0), (0, 4), (7, 0)])
+@pytest.mark.parametrize("zero", [0, 0.0, -0.0, np.array(0.0)])
+def test_literal_zero_bilinear_forms_are_owned_sparse_operators(shape, zero):
+    operator = compile_form(zero, shape)
+    assert sparse.isspmatrix_csc(operator)
+    assert operator.shape == shape and operator.nnz == 0
+    assert operator.dtype == np.float64
+    assert operator is not compile_form(zero, shape)
+
+
+def test_large_literal_zero_operator_never_allocates_a_dense_matrix(monkeypatch):
+    """A zero global form scales with the CSC column index, not the matrix area."""
+    original_zeros = np.zeros
+
+    def guarded_zeros(shape, *args, **kwargs):
+        if isinstance(shape, tuple) and len(shape) == 2:
+            pytest.fail("a literal bilinear zero must not allocate a dense matrix")
+        return original_zeros(shape, *args, **kwargs)
+
+    monkeypatch.setattr(np, "zeros", guarded_zeros)
+    operator = compile_form(0, (10_000_000, 75_000))
+    assert sparse.isspmatrix_csc(operator)
+    assert operator.shape == (10_000_000, 75_000)
+    assert not operator.nnz and not np.count_nonzero(operator.indptr)
+    assert operator.indptr.nbytes < 1_000_000
+
+
+@pytest.mark.parametrize("shape", [(0,), (5,)])
+def test_literal_zero_loads_keep_dense_vector_storage(shape):
+    load = compile_form(0, shape)
+    assert isinstance(load, np.ndarray) and load.shape == shape
+    assert load.dtype == np.float64
+    assert_array_equal(load, np.zeros(shape))
+
+
+@pytest.mark.parametrize("shape", [(0, 0), (3, 5), (0,), (5,)])
+@pytest.mark.parametrize("zero", [0j, np.array(0j)])
+def test_complex_literal_zero_rejection_precedes_sparse_allocation(shape, zero):
+    with pytest.raises(ValueError, match="real"):
+        compile_form(zero, shape)
+
+
+def test_explicit_dense_zero_form_keeps_its_declared_representation():
+    form = np.zeros((2, 3), dtype=np.longdouble)
+    compiled = compile_form(form, form.shape)
+    assert isinstance(compiled, np.ndarray)
+    assert compiled.dtype == form.dtype and not compiled.flags.writeable
+    assert_array_equal(compiled, form)
+    for form in (0, 1):
+        with pytest.raises(ValueError, match="vector or matrix"):
+            compile_form(form)
+
+
+@pytest.mark.parametrize("moment", [0, sparse.csr_matrix((2, 0))])
+def test_empty_sparse_moments_reach_local_array_contract(moment):
+    equations = LocalEquations(np.eye(2), [1, 2], 0, 0, [], moments=moment, test_moments=moment)
+    compiled = compile_local_equations(equations)
+    assert compiled.problem.constraints.shape == (2, 0)
+    assert compiled.problem.test_constraints.shape == (2, 0)
+    assert isinstance(compiled.problem.constraints, np.ndarray)
+    assert isinstance(compiled.problem.test_constraints, np.ndarray)
+
+
+@pytest.mark.parametrize("test_moment", [False, True])
+@pytest.mark.parametrize("zero", [0, sparse.csr_matrix((2, 1))])
+def test_zero_retained_moments_keep_numerical_valueerror_contract(test_moment, zero):
+    moment = np.ones((2, 1))
+    equations = LocalEquations(
+        [[1, -1], [-1, 1]],
+        [0, 0],
+        0,
+        0,
+        [],
+        kernel=moment,
+        moments=moment if test_moment else zero,
+        test_moments=zero if test_moment else moment,
+    )
+    with pytest.raises(ValueError, match="test_constraints" if test_moment else "constraints"):
+        compile_local_equations(equations)
+
+
+def test_sparse_nonzero_moments_preserve_declared_physical_pairings():
+    moment = sparse.csr_matrix([[1.0], [2.0]])
+    equations = LocalEquations(
+        [[1, -1], [-1, 1]],
+        [0, 0],
+        0,
+        0,
+        [],
+        kernel=np.ones((2, 1)),
+        moments=moment,
+        test_moments=moment,
+    )
+    compiled = compile_local_equations(equations)
+    assert_array_equal(compiled.problem.constraints, moment.toarray())
+    assert_array_equal(compiled.problem.test_constraints, moment.toarray())
+
+
+def _dense_zero_compiler(form, shape=None):
+    """Represent literal real zero forms densely, as an external compiler may."""
+    if not sparse.issparse(form):
+        value = np.asarray(form)
+        if not np.iscomplexobj(value) and value.ndim == 0 and value == 0 and shape is not None:
+            return np.zeros(shape)
+    return compile_form(form, shape)
+
+
+def _zero_form_problem(compiler, *, nested, boundary_value):
+    """Declare a coupled leaf or hierarchy with source and nonhomogeneous boundary data."""
+
+    def leaf(_):
+        return LocalEquations(
+            [[2.0, -1.0], [-1.0, 2.0]],
+            [1.0, 3.0],
+            [[1.0], [0.0]],
+            [[-1.0, 0.0]],
+            [0],
+            d=[[3.0]],
+            g=[2.0],
+            moments=0,
+            test_moments=0,
+        )
+
+    child = MultiscaleProblem(Equation(0, 0), leaf, [0], 1, (0,), compiler=compiler)
+    if nested:
+
+        def provider(_):
+            return LocalEquations(child, 0, [[2.0]], [[-3.0]], [0], d=[[4.0]], g=[1.0])
+
+    else:
+        provider = leaf
+    return MultiscaleProblem(
+        Equation(0, [0.75]),
+        provider,
+        [0],
+        1,
+        (0,),
+        fixed={} if boundary_value is None else {0: boundary_value},
+        compiler=compiler,
+    )
+
+
+def test_custom_compiler_still_receives_and_owns_literal_global_forms():
+    """Only the default compiler chooses sparse zero storage; external assembly is delegated."""
+    seen = []
+
+    def compiler(form, shape=None):
+        if not sparse.issparse(form):
+            value = np.asarray(form)
+            if value.ndim == 0 and value == 0 and shape == (1, 1):
+                seen.append((form, shape))
+                return np.array([[2.0]])
+        return compile_form(form, shape)
+
+    original = assemble(_zero_form_problem(compile_form, nested=False, boundary_value=None))
+    custom = assemble(_zero_form_problem(compiler, nested=False, boundary_value=None))
+    assert seen == [(0, (1, 1))]
+    assert_array_equal(custom.matrix.toarray(), original.matrix.toarray() + 2.0)
+    assert_array_equal(custom.rhs, original.rhs)
+
+
+@pytest.mark.parametrize("nested", [False, True])
+@pytest.mark.parametrize("boundary_value", [None, 0.0, 2.0])
+def test_sparse_zero_and_external_dense_compilers_preserve_global_and_local_fields(
+    nested, boundary_value
+):
+    default = assemble(
+        _zero_form_problem(compile_form, nested=nested, boundary_value=boundary_value)
+    )
+    external = assemble(
+        _zero_form_problem(_dense_zero_compiler, nested=nested, boundary_value=boundary_value)
+    )
+    for actual, expected in (
+        (default.matrix.data, external.matrix.data),
+        (default.matrix.indices, external.matrix.indices),
+        (default.matrix.indptr, external.matrix.indptr),
+        (default.rhs, external.rhs),
+        (default.load_scale, external.load_scale),
+    ):
+        assert_array_equal(actual, expected)
+    actual, expected = default.solve(), external.solve()
+    assert_array_equal(actual.trace, expected.trace)
+    assert_array_equal(actual.fields, expected.fields)
+    if nested:
+        assert_array_equal(actual.children[0].trace, expected.children[0].trace)
+        assert_array_equal(actual.children[0].fields, expected.children[0].fields)

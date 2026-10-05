@@ -75,8 +75,9 @@ class FormCompiler(Protocol):
 def compile_form(form: Any, shape: tuple[int, ...] | None = None) -> Any:
     """Assemble arrays, linear pairings or native UFL without importing unused FEM.
 
-    Sparse matrices remain sparse. Finite wider real array precision is retained.
-    A nonzero scalar is not silently broadcast to a vector or operator. UFL
+    Sparse matrices remain sparse. Literal bilinear zeros use CSC storage;
+    literal linear zeros use dense vectors. Finite wider real array precision is
+    retained. A nonzero scalar is not silently broadcast to a vector or operator. UFL
     assembly currently requires a real serial DOLFINx mesh. Other backends can
     supply a callable compiler with this same form/shape contract.
     """
@@ -105,7 +106,7 @@ def compile_form(form: Any, shape: tuple[int, ...] | None = None) -> Any:
     if np.iscomplexobj(value):
         raise ValueError("forms must have real coefficients")
     if value.ndim == 0 and value == 0 and shape is not None:
-        return np.zeros(shape)
+        return sparse.csc_matrix(shape) if len(shape) == 2 else np.zeros(shape)
     if value.ndim not in {1, 2} or (shape is not None and value.shape != shape):
         raise ValueError("assembled form must be a vector or matrix of the declared shape")
     return _real_data(value, "form")
@@ -143,7 +144,8 @@ class LocalEquations:
 
     Scalar, vector and mixed unknowns use this same contract. A method with
     several local fields can use a mixed UFL space or a block matrix. Native
-    objects must be created and released inside a provider invocation when
+    objects must remain worker-owned, with optional reuse between provider
+    invocations and explicit ``close()`` cleanup at worker shutdown, when
     using spawn workers; ``metadata`` must then contain only picklable data.
     A 0-by-0 ``a`` declares no eliminated local coordinates: ``d`` and ``g``
     then contribute the complete face equation without a local factorization.
@@ -223,6 +225,10 @@ def compile_local_equations(
     test_moments = (
         None if equations.test_moments is None else compiler(equations.test_moments, (n, width))
     )
+    if moments is not None and sparse.issparse(moments):
+        moments = moments.toarray()
+    if test_moments is not None and sparse.issparse(test_moments):
+        test_moments = test_moments.toarray()
     problem = LocalProblem(
         a,
         coupling,

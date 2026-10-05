@@ -158,9 +158,10 @@ exclude_docs: '/cases/adaptive-darcy.md
 
   /cases/weighted-estimator.md
 
-  /performance.md
-
   /figures/**
+
+  !/figures/introduction-layers/**
+  !/figures/darcy-3d-scalability/**
 
   !/figures/core-extensions/cube-p0-fields.png
 
@@ -218,6 +219,7 @@ nav:
 - FEniCS local forms: fenics.md
 - Linear solvers: solvers.md
 - MPI, GPU and operator reuse: execution.md
+- Performance and scaling: performance.md
 - Tutorials:
   - Guide and notebooks: tutorials.md
   - Scalar formulations: tutorials/scalar.md
@@ -226,6 +228,8 @@ nav:
 - Case gallery:
   - Evidence guide: cases/index.md
   - Initial convergence studies: cases/minimal-convergence.md
+  - RAD and Brinkman boundary layers: cases/introduction-layers.md
+  - Three-dimensional Darcy scaling: cases/darcy-3d-scalability.md
   - Recursive MHM: cases/nested.md
   - MHM–MsHHO: cases/mshho.md
   - Quarter-five spot and obstacle: cases/quarter-five-spot.md

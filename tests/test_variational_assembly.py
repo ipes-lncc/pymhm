@@ -1,5 +1,7 @@
 """Physical and execution invariants of the provider-based hybrid interface."""
 
+import os
+import threading
 from functools import partial
 
 import numpy as np
@@ -8,6 +10,7 @@ from numpy.testing import assert_allclose, assert_array_equal
 
 from pymhm.core.assembly import HybridProblem, SolverConfig, assemble_hybrid, solve_hybrid
 from pymhm.core.contracts import LocalAssembly, LocalProblem
+from pymhm.core.contributions import local_global_contribution
 from pymhm.core.system import HybridSystem
 from pymhm.core.variational import GlobalForm
 from pymhm.execution.cpu import ExecutionConfig
@@ -30,6 +33,69 @@ def local_cell(cell, *, metadata=False):
 def external_solver(matrix, rhs):
     """Implement an independent dense linear solver through the portable hook."""
     return np.linalg.solve(matrix.toarray(), rhs)
+
+
+def owned_cell(cell):
+    """Declare coefficient-only metadata identifying the provider worker."""
+    return LocalAssembly(local_cell(cell), {"provider_owner": (os.getpid(), threading.get_ident())})
+
+
+def owned_contribution(response, record, slots):
+    """Build a pure cell block, recording ownership in worker-owned metadata."""
+    record["contribution_owner"] = (os.getpid(), threading.get_ident())
+    return local_global_contribution(response, slots)
+
+
+@pytest.mark.parametrize("backend", ["serial", "thread", "process"])
+@pytest.mark.parametrize("placement", ["coordinator", "worker"])
+def test_independent_contribution_runs_on_its_declared_owner(backend, placement):
+    """Ownership changes execution only; shared-face operators and fields agree."""
+    owner = (os.getpid(), threading.get_ident())
+    form = GlobalForm(3, (1, 1), boundary_load=[0.0, 0.0, 2.0])
+    system = assemble_hybrid(
+        HybridProblem(
+            form, owned_cell, range(2), owned_contribution, contribution_execution=placement
+        ),
+        execution=ExecutionConfig(backend=backend, workers=2, batch_size=2),
+    )
+    expected = HybridSystem([local_cell(0), local_cell(1)], boundary_load=form.boundary_load)
+    assert_array_equal(system.matrix.toarray(), expected.matrix.toarray())
+    assert_array_equal(system.rhs, expected.rhs)
+    actual, reference = system.solve(), expected.solve()
+    for field, baseline in zip(actual.fields, reference.fields, strict=True):
+        assert_array_equal(field, baseline)
+    for record in system.local_metadata:
+        assert record["contribution_owner"] == (
+            record["provider_owner"] if placement == "worker" else owner
+        )
+        if backend != "serial":
+            assert record["provider_owner"] != owner
+
+
+def test_default_schur_block_is_computed_on_local_thread(monkeypatch):
+    """An ordinary provider delegates all dense local reduction to its worker."""
+    import pymhm.core.assembly as assembly
+
+    coordinator = threading.get_ident()
+    owners = []
+
+    def record_owner(response, slots):
+        owners.append(threading.get_ident())
+        return local_global_contribution(response, slots)
+
+    monkeypatch.setattr(assembly, "local_global_contribution", record_owner)
+    assemble_hybrid(
+        HybridProblem(GlobalForm(3, (1, 1)), local_cell, range(2)),
+        execution=ExecutionConfig(backend="thread", workers=2),
+    )
+    assert len(owners) == 2
+    assert all(owner != coordinator for owner in owners)
+
+
+def test_contribution_placement_validation_is_immediate():
+    """Reject unknown placement before consuming local items."""
+    with pytest.raises(ValueError, match="contribution_execution"):
+        HybridProblem(GlobalForm(3, (1, 1)), local_cell, range(2), contribution_execution="gpu")
 
 
 @pytest.mark.parametrize("backend", ["serial", "thread", "process"])

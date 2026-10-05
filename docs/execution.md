@@ -3,7 +3,7 @@
 The execution APIs operate on the same local and condensed equations as
 `HybridSystem`. They provide three distinct capabilities: reuse an unchanged
 operator for new loads, distribute local and global algebra across MPI ranks,
-and assemble/factor batches of affine P1 local operators on a GPU. Choosing one
+and assemble affine P1 operators or condense general local systems on GPUs. Choosing one
 does not implicitly enable the others.
 
 ## Serial cells and bounded parallel batches
@@ -12,11 +12,17 @@ does not implicitly enable the others.
 `assemble_hybrid` uses its fixed `GlobalForm` construction;
 both delegate scheduling and reduction to the same owners.
 Serial execution constructs, condenses and accumulates one macrocell before
-requesting the next. Parallel execution completes a bounded batch of local
-jobs, then accumulates each contribution in input order. Only the coordinator
+requesting the next. With `pipeline=False`, parallel execution completes a
+bounded batch of local jobs, then accumulates each contribution in input order. Only the coordinator
 updates shared global face entries. Matrix entries are not pre-summed per batch;
 loads and their absolute scales use the same cellwise reduction as ordinary
 `HybridSystem` assembly.
+
+The workers compute the local Schur matrices and condensed loads as well as
+the local solutions. The coordinator only validates and scatters these small
+blocks into the global sparse system. A literal zero global bilinear form
+compiles directly to a sparse zero matrix; its storage does not grow as the
+square of the number of global unknowns.
 
 ```python
 from pymhm import (
@@ -32,7 +38,9 @@ problem = MultiscaleProblem(
 )
 system = assemble(
     problem,
-    execution=ExecutionConfig(backend="process", workers=10, batch_size=10),
+    execution=ExecutionConfig(
+        backend="process", workers=10, batch_size=20, pipeline=True,
+    ),
 )
 solution = system.solve()
 ```
@@ -43,17 +51,42 @@ order. See the [variational guide](variational.md) for their signs and sizes.
 
 Run process examples inside a script protected by
 `if __name__ == "__main__":`. The backend uses `spawn` on every platform.
-Providers create and release FEM, PETSc, MPI and accelerator resources within
-their own worker invocation. Return portable numerical operators and metadata.
-Thread execution additionally requires the provider's native libraries to be
-thread safe.
+Providers own FEM, PETSc, MPI and accelerator resources within their worker.
+A provider may initialize a reusable workspace on its first item and retain it
+for subsequent local problems. Implement `close()` to release that state:
+serial and thread execution call it after running jobs finish, including failure
+or early iterator closure; process execution calls it on each spawned provider
+copy at normal worker shutdown. The caller's process-provider copy remains
+caller-owned. Return portable numerical operators and metadata. Thread execution
+requires thread-safe native libraries and independent mutable workspaces for
+concurrent calls.
 
 `native_threads` defaults to one supported BLAS/OpenMP thread per local job.
 `None` leaves native settings unchanged. Thread limits are process wide during
-each thread batch and are restored before results are yielded; overlapping
+each complete thread batch and are restored before its results are yielded; overlapping
 executions must not request conflicting limits. `batch_size=None` uses the
 effective worker count in parallel. Serial execution consumes one item at a
 time regardless of batch size.
+
+With `pipeline=True`, the bound becomes an ordered rolling window. The
+coordinator waits for the next cell in input order, reduces it, and refills one
+slot while the remaining workers continue. This avoids a barrier after every
+worker-sized batch while preserving the order of every shared-face sum.
+Waiting for the next cell can still delay accumulation when that cell is slow;
+a window larger than the worker count gives the other workers more pending work.
+At most `batch_size` consumed inputs have unyielded outputs. In thread mode,
+the process-wide native-thread limit stays active during coordinator work until
+the iterator closes and workers join; in process mode the coordinator's pools
+remain unchanged. The default `pipeline=False` retains complete-batch failure
+semantics. In pipeline mode successful earlier cells can be yielded before a
+later failure is observed. Both modes cancel pending tasks and join running
+tasks on closure or failure.
+
+`HybridProblem` custom contribution callbacks run on the coordinator by
+default. Use `contribution_execution="worker"` only for an independent callback
+that uses its response, metadata and supplied coarse indices without writing
+shared state. `MultiscaleProblem`'s declared local forms satisfy that contract
+and assemble their complete reduced contributions on the workers.
 
 The generic `iter_local` exposes the same ordered scheduling for other local
 operations. Close it when stopping early, for example with `contextlib.closing`,
@@ -62,6 +95,12 @@ into a list. `assemble_hybrid` closes the iterator on success and on exceptions.
 Both interfaces bound submitted jobs; `assemble_hybrid` still retains local
 responses for field reconstruction and the assembled sparse global matrix.
 This is not a constant-memory global solve.
+Process execution transfers complete local responses, including fine-scale
+lifts and operators; those transfers remain part of the measured workflow.
+Serialization can change array strides and hence floating-point summation in
+field reconstruction. Verify the original equations and field agreement at
+the declared numerical precision, while recording the executed basis and its
+digest for coefficient replay.
 
 For an external local solver, use
 `SolverConfig(local_solver=solve_local_columns)`. The callable receives copies
@@ -151,8 +190,11 @@ solution = solve_distributed(
 )
 ```
 
-The factory returns `LocalProblem` or `LocalAssembly(problem, metadata)`. The
-rank assembles and condenses its own cells. Contributions enter a distributed
+The factory returns `LocalEquations`, `CompiledLocalEquations`, `LocalProblem`
+or `LocalAssembly(problem, metadata)`. Declared local forms use the same
+`compile_local_equations` and contribution owners as `MultiscaleProblem`,
+including distinct trial/test trace maps and explicit local `D/g` terms.
+The rank compiles, condenses and reduces its own cells. Contributions enter a distributed
 PETSc AIJ matrix using global skeleton indices; PETSc communicates entries to
 their row owners. Retained coarse modes receive disjoint rank-local numbering.
 MUMPS performs a distributed pivoted LU of the resulting saddle system. Only
@@ -160,12 +202,29 @@ the trace and coarse coefficients needed for owned cells are communicated back
 for reconstruction. There is no gather of every local matrix, response, field
 or global matrix onto one rank.
 
+`global_equation=Equation(a, L)` supplies additional **rank-owned additive**
+global forms in the physical trace/retained coordinate order, before gauge
+rows. Replicating a nonzero form on every rank counts it repeatedly. Sparse
+forms stay sparse through compilation and PETSc insertion. A custom `compiler`
+can integrate native local forms on `COMM_SELF`; native objects stay on that
+rank. Nested `MultiscaleProblem` local operators are currently unsupported by
+this distributed interface. The serial/CPU hierarchy uses the ordinary
+`MultiscaleProblem` API.
+
+The distributed algebra uses real binary64. The interface checks the real
+floating coefficient arrays returned by its compiler and the supplied compiled
+basis/direct records before converting them. Exactly representable wider
+floating arrays are accepted; supplied wider digits cannot be discarded there.
+A compiler can already normalize integer literals to floating point, as can
+construction of a `LocalProblem`; this check does not certify the original
+integer representation or undo a compiler's prior conversion.
+
 `boundary_load=(indices, values)` contains **additive rank-owned** contributions;
 replicating a complete boundary vector would count it once per rank. `fixed`
 and global physical targets must agree across ranks. `moments` contains each
 rank's local physical weight vectors and the common target. Ranks with no
 local cells participate normally. `DistributedHybridSolution` returns owned
-global rows, local trace values, local fields and collective residuals. The
+global coefficient entries, local trace values, local fields and collective residuals. The
 original free physical equations are checked separately from the gauge-augmented
 system, so a mean constraint cannot silently balance an incompatible source.
 
@@ -181,6 +240,14 @@ Native tests launch two MPI ranks and exercise nonhomogeneous Dirichlet data,
 Neumann mean constraints, an empty rank and collective error propagation.
 The recorded performance study uses one host; it cannot establish inter-node
 communication efficiency.
+
+`local_bases` stores the executed retained matrix for each owned cell. Archive
+these matrices and their digests with persisted coefficients; declared-kernel
+dimensions or source hashes alone do not specify a replayable numerical basis.
+Native controls compare one/two ranks, four-block forms and nonzero gauges
+against independently assembled full systems. The combined GPU/MPI controls
+assign the two GPUs to separate ranks and use distributed MUMPS globally.
+They verify one-host execution, not inter-node efficiency.
 
 ## Resident batches on one GPU
 
@@ -210,6 +277,108 @@ PDE application resident. For repeated resident solves, use
 `BatchedFactorization` directly. The numerical paths use cuBLAS batched LU,
 not explicit matrix inverses. GPU sparse direct solvers and GPU AMG remain
 separate [solver backends](solvers.md).
+
+## Local work across multiple GPUs
+
+`condense_multi_gpu` accepts ordinary host `LocalProblem` objects from any
+compiled local formulation:
+
+```python
+from pymhm import HybridSystem, condense_multi_gpu
+
+responses = condense_multi_gpu(
+    local_problems, devices=(0, 1), batch_size=8,
+    solver="auto", dense_size_limit=512,
+)
+# This example has no additional D/g or global Equation terms.
+system = HybridSystem.from_responses(responses, boundary_load=boundary_load)
+solution = system.solve()
+```
+
+This example uses the blocks carried by `LocalProblem`. Additional direct
+trace terms `D/g` and global `Equation` forms still belong to the declared
+contribution assembly; condensation does not include those terms implicitly.
+For distributed variational assembly, `solve_distributed` accepts complete
+`LocalEquations` and can use `local_solver="cudss"` on each rank's GPU.
+
+One dedicated worker owns each explicitly selected device, with at most one
+batch in flight per device. Completed slots are refilled independently;
+responses return in input order. `auto` selects dense batched LU for augmented
+systems up to the declared size limit and sparse cuDSS above it. The threshold
+is a storage policy, not a promised performance crossover. `solver="cudss"`
+keeps all nonempty local matrices sparse; `solver="batched"` explicitly selects
+dense storage. CPU compilation, transfers, synchronization and shutdown remain
+part of a complete workflow. This interface returns all responses to the host
+and uses the ordinary host global assembly.
+
+GPU factorizations stay on their construction device even if the caller changes
+the active device before a solve or cleanup. Batched resident arrays from a
+different device are rejected explicitly; host inputs are uploaded on the owner.
+Sparse cuDSS receives all source, trace and retained right-hand sides together,
+using one factorization and column-major solve blocks. Its `rhs_columns` hint
+sets the native width; subsequent widths reuse those factors through padded
+chunks. The original operator and every RHS retain the ordinary residual test.
+The adapter serializes cuDSS host API entry within each process, including
+analysis, factorization launch and cleanup, following the library's
+[thread-safety contract](https://docs.nvidia.com/cuda/cudss/general.html#thread-safety).
+Device transfers and asynchronous GPU work remain outside this entry lock.
+Separate MPI ranks have independent host analysis; a thread per GPU within
+one process does not make the host analysis parallel.
+
+Native controls exercise two NVIDIA RTX A5000 devices, heterogeneous dense and
+sparse systems, nonzero physical gauges, device switching and exception cleanup.
+These controls establish correctness and resource ownership. They establish no
+multiGPU speedup or inter-node scalability result.
+The [500×500 complete-workflow pilot](performance.md#one-and-two-gpu-local-condensation)
+reports comparable physical errors and no two-GPU speedup against its CPU
+or classical baselines, including setup, transfer and synchronization costs.
+
+## HPC placement and scaling interpretation
+
+The MPI path owns local responses and reconstructed fields on their ranks and
+keeps the skeleton matrix row-distributed. Assign one MPI rank to each GPU and
+enter that device's context before calling `solve_distributed` with
+`local_solver="cudss"`. Use the scheduler's node-local rank and visible GPU
+mapping; global rank modulo device count is unsuitable across nodes with
+different allocations. `CUDA_VISIBLE_DEVICES` can give each rank a single
+device, in which case its local CUDA ordinal is zero. Providers construct
+native objects inside their owning rank. No live factor, communicator or CUDA
+array is sent to another rank.
+
+The locked `hpc` Pixi environment combines MPI, PETSc/MUMPS, CuPy and cuDSS on
+Linux CUDA hosts. The separate `gpu` environment supports Linux and Windows
+CUDA platforms without importing MPI or PETSc into the portable core. Set
+native BLAS/OpenMP thread budgets before launching ranks and respect the batch
+memory bound; adding CPU workers around a GPU rank does not automatically
+create useful concurrent device work.
+
+[Gomes et al. (2017)](https://arxiv.org/abs/1703.10435v1) motivate independent
+local solves, task scheduling and a distributed global solve. Their reported
+baseline is a 24-core MHM implementation; the Galerkin table compares unknown
+counts, not measured classical runtimes. Their speedups cannot be transferred
+to this implementation or interpreted as a classical-solver crossover.
+[Penna et al. (2019)](https://doi.org/10.1002/cpe.5170) study workload-aware
+scheduling and reuse of cost estimates in elastodynamics. PyMHM's rolling
+window performs dynamic bounded scheduling; it does not implement BinLPT's
+cost estimator or longest-processing-time assignment.
+
+The inspected MSL_MHM `Facade/problem_mhmlocal.h` at recorded revision
+[`4cb8cf8`](https://github.com/ipes-lncc/msl_mhm/tree/4cb8cf81518284313b680b13fd586ee619f08b99)
+computes reduced blocks in each local worker. MSL_Core
+`Assemble/local_contrib_set.h` at recorded revision
+[`7f15f45`](https://github.com/ipes-lncc/msl_core/tree/7f15f455717173d29080d411a7e732c72c1e87f8)
+reduces numbered sparse contributions. This is source inspection, not execution
+of those revisions in the present campaign. Current anonymous upstream access
+could not be verified. PyMHM uses its own shared algebra and deterministic
+coordinator reduction; MPI uses PETSc's distributed additive assembly.
+
+Report local-work speedup separately from complete-solve speedup. Complete
+timers include setup, worker startup, transfer, sparse assembly, synchronization,
+global solve and reconstruction. Strong scaling fixes the entire discretization;
+weak scaling fixes local work per worker while reporting global skeleton growth.
+Compare classical methods at stated pressure and physical-flux accuracy, with
+their own refinement check. One-host two-rank/two-GPU controls cannot establish
+multi-node performance.
 
 ## Recorded measurements
 

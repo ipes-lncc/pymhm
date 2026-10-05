@@ -1,0 +1,22 @@
+{
+  "cpu_serial_condensation": {
+    "maximum_source_mass_moment": 3.341396084407955e-20,
+    "maximum_lift_mass_moment": 9.380200321173344e-20,
+    "maximum_field_mass_moment_retained_pairing_difference": 2.949029909160572e-17
+  },
+  "cpu_thread_condensation": {
+    "maximum_source_mass_moment": 3.341396084407955e-20,
+    "maximum_lift_mass_moment": 9.380200321173344e-20,
+    "maximum_field_mass_moment_retained_pairing_difference": 2.949029909160572e-17
+  },
+  "gpu_one": {
+    "maximum_source_mass_moment": 1.938911355824297e-21,
+    "maximum_lift_mass_moment": 7.498171785457788e-20,
+    "maximum_field_mass_moment_retained_pairing_difference": 2.6020852139652106e-17
+  },
+  "gpu_two": {
+    "maximum_source_mass_moment": 2.1043474783349024e-21,
+    "maximum_lift_mass_moment": 7.614473627446625e-20,
+    "maximum_field_mass_moment_retained_pairing_difference": 2.7755575615628914e-17
+  }
+}

@@ -9,6 +9,10 @@ local degrees of freedom.
     options:
       show_source: false
 
+::: pymhm.fem.inequalities
+    options:
+      show_source: false
+
 ::: pymhm.fem.scalar.triangle
     options:
       show_source: false

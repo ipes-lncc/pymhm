@@ -75,9 +75,11 @@ pending until these checks have a manageable, verified CI workflow.
 | Environment / extra | Purpose | Native requirements |
 | --- | --- | --- |
 | `pixi run -e fem ...` | UFL/DOLFINx assembly, PETSc | Unix FEniCS stack from conda-forge; PETSc with MUMPS |
+| `pixi run --locked -e introduction ...` | Self-contained introductory notebooks | Locked DOLFINx 0.9, UFL, Basix and notebook stack |
 | `pixi run -e meshing ...` | Gmsh, Netgen, meshio | Meshing libraries resolved by Pixi |
 | `pixi run -e intel ...` | PARDISO | Intel MKL, supported x86-64 platform |
 | `pixi run -e gpu ...` | CuPy QR and cuDSS | NVIDIA device and driver; locked CUDA 12.9 runtime |
+| `pixi run --locked -e hpc ...` | MPI, distributed MUMPS and local cuDSS on GPUs | Linux CUDA host; MPI/PETSc and CUDA resolved together |
 | `pip install '.[amg]'` | CPU algebraic multigrid | PyAMG |
 | `pip install '.[meshing]'` | Import/export and generators | Wheel availability depends on platform |
 | `pixi run -e notebooks ...` | Execute notebooks | Jupyter/nbclient and plotting stack |

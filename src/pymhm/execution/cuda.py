@@ -9,15 +9,19 @@ unless the caller explicitly requests host arrays.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
+from concurrent.futures import FIRST_COMPLETED, Future, ThreadPoolExecutor, wait
+from contextlib import ExitStack
+from itertools import islice
 from math import factorial
 from types import TracebackType
-from typing import Any
+from typing import Any, Literal
 
 import numpy as np
 
 from pymhm.core.contracts import LocalProblem, LocalResponse
-from pymhm.linalg.linear import LinearSolveError, _cuda, _tolerances
+from pymhm.core.validation import positive_int
+from pymhm.linalg.linear import LinearSolveError, _cuda, _tolerances, factorize
 
 
 def assemble_p1_batch(
@@ -165,8 +169,10 @@ class BatchedFactorization:
     Residual acceptance is checked in original units, separately for every
     matrix and RHS column. Refinement reuses the same factors. This is dense
     algebra; quadratic storage and cubic local factorization limit useful sizes.
-    A single object belongs to the CUDA device active at construction and must
-    not be shared concurrently between threads or processes.
+    A single object belongs to the CUDA device active at construction. Operations
+    enter that device and restore the caller's context. Host inputs are copied to
+    the owning device; resident arrays from another device are rejected. The
+    object must not be shared concurrently between threads or processes.
     """
 
     def __init__(self, matrices: Any, *, rtol: float = 1e-10, atol: float = 0.0) -> None:
@@ -174,73 +180,97 @@ class BatchedFactorization:
         _tolerances(rtol, atol)
         self.cupy = _cuda()
         cp = self.cupy
-        raw = cp.asarray(matrices)
-        if (
-            raw.ndim != 3
-            or raw.shape[0] == 0
-            or raw.shape[1] == 0
-            or raw.shape[1] != raw.shape[2]
-            or raw.dtype.kind == "c"
-            or not bool(cp.all(cp.isfinite(raw)))
-        ):
-            raise ValueError("matrices must be finite real arrays of shape (batch,n,n)")
-        self.matrix = raw.astype(cp.float64, copy=True)
-        row_max = cp.max(cp.abs(self.matrix), axis=2)
-        if bool(cp.any(row_max == 0)):
-            raise LinearSolveError("batched matrix contains a zero row")
-        self.row_scale = 1.0 / row_max
-        scaled = self.matrix * self.row_scale[:, :, None]
-        col_max = cp.max(cp.abs(scaled), axis=1)
-        if bool(cp.any(col_max == 0)):
-            raise LinearSolveError("batched matrix contains a zero column")
-        self.col_scale = 1.0 / col_max
-        self.factors: Any = _factor_batch(scaled * self.col_scale[:, None, :], cp)
-        self.rtol, self.atol = rtol, atol
+        self.device_id = int(cp.cuda.runtime.getDevice())
+        self.matrix: Any = None
+        self.row_scale: Any = None
+        self.col_scale: Any = None
+        self.factors: Any = None
         self._closed = False
+        try:
+            with cp.cuda.Device(self.device_id):
+                raw = self._owned_array(matrices)
+                if (
+                    raw.ndim != 3
+                    or raw.shape[0] == 0
+                    or raw.shape[1] == 0
+                    or raw.shape[1] != raw.shape[2]
+                    or raw.dtype.kind == "c"
+                    or not bool(cp.all(cp.isfinite(raw)))
+                ):
+                    raise ValueError("matrices must be finite real arrays of shape (batch,n,n)")
+                self.matrix = raw.astype(cp.float64, copy=True)
+                row_max = cp.max(cp.abs(self.matrix), axis=2)
+                if bool(cp.any(row_max == 0)):
+                    raise LinearSolveError("batched matrix contains a zero row")
+                self.row_scale = 1.0 / row_max
+                scaled = self.matrix * self.row_scale[:, :, None]
+                col_max = cp.max(cp.abs(scaled), axis=1)
+                if bool(cp.any(col_max == 0)):
+                    raise LinearSolveError("batched matrix contains a zero column")
+                self.col_scale = 1.0 / col_max
+                self.factors = _factor_batch(scaled * self.col_scale[:, None, :], cp)
+                self.rtol, self.atol = rtol, atol
+        except BaseException:
+            self.close()
+            raise
+
+    def _owned_array(self, value: Any) -> Any:
+        """Copy host operands to the owner and reject resident cross-device operands."""
+        if isinstance(value, self.cupy.ndarray) and value.device.id != self.device_id:
+            raise ValueError("resident arrays must belong to the factorization's CUDA device")
+        return self.cupy.asarray(value)
 
     def solve(self, rhs: Any, *, host: bool = False) -> Any:
         """Solve ``(batch,n,nrhs)`` loads; return resident arrays unless ``host=True``."""
         if self._closed:
             raise RuntimeError("batched factorization is closed")
         cp = self.cupy
-        raw = cp.asarray(rhs)
-        if (
-            raw.ndim != 3
-            or raw.shape[:2] != self.matrix.shape[:2]
-            or raw.shape[2] == 0
-            or raw.dtype.kind == "c"
-            or not bool(cp.all(cp.isfinite(raw)))
-        ):
-            raise ValueError("rhs must be finite real arrays of shape (batch,n,nrhs)")
-        forcing = raw.astype(cp.float64, copy=False)
-        result = self._apply(forcing)
-        for correction in range(3):
-            if not bool(cp.all(cp.isfinite(result))):
-                raise LinearSolveError("batched solver returned nonfinite coefficients")
-            residual = forcing - self.matrix @ result
-            scale = cp.maximum(self.atol, cp.max(cp.abs(forcing), axis=1))
-            scale = cp.where(scale > 0, scale, 1.0)
-            norms = cp.linalg.norm(residual / scale[:, None, :], axis=1)
-            limits = cp.maximum(
-                self.atol / scale, self.rtol * cp.linalg.norm(forcing / scale[:, None, :], axis=1)
-            )
-            if bool(cp.all(norms <= limits)):
-                return cp.asnumpy(result) if host else result
-            if correction < 2:
-                result += self._apply(residual)
-        raise LinearSolveError("batched residual criterion failed")
+        with cp.cuda.Device(self.device_id):
+            raw = self._owned_array(rhs)
+            if (
+                raw.ndim != 3
+                or raw.shape[:2] != self.matrix.shape[:2]
+                or raw.shape[2] == 0
+                or raw.dtype.kind == "c"
+                or not bool(cp.all(cp.isfinite(raw)))
+            ):
+                raise ValueError("rhs must be finite real arrays of shape (batch,n,nrhs)")
+            forcing = raw.astype(cp.float64, copy=False)
+            result = self._apply(forcing)
+            for correction in range(3):
+                if not bool(cp.all(cp.isfinite(result))):
+                    raise LinearSolveError("batched solver returned nonfinite coefficients")
+                residual = forcing - self.matrix @ result
+                scale = cp.maximum(self.atol, cp.max(cp.abs(forcing), axis=1))
+                scale = cp.where(scale > 0, scale, 1.0)
+                norms = cp.linalg.norm(residual / scale[:, None, :], axis=1)
+                limits = cp.maximum(
+                    self.atol / scale,
+                    self.rtol * cp.linalg.norm(forcing / scale[:, None, :], axis=1),
+                )
+                if bool(cp.all(norms <= limits)):
+                    return cp.asnumpy(result) if host else result
+                if correction < 2:
+                    result += self._apply(residual)
+            raise LinearSolveError("batched residual criterion failed")
 
     def _apply(self, rhs: Any) -> Any:
         """Apply row scaling, batched triangular solves and column scaling on device."""
-        return (
-            _solve_batch(self.factors, rhs * self.row_scale[:, :, None], self.cupy)
-            * self.col_scale[:, :, None]
-        )
+        with self.cupy.cuda.Device(self.device_id):
+            return (
+                _solve_batch(self.factors, rhs * self.row_scale[:, :, None], self.cupy)
+                * self.col_scale[:, :, None]
+            )
 
     def close(self) -> None:
-        """Drop owned device arrays without clearing the application's memory pool."""
-        self._closed = True
-        self.factors = self.matrix = self.row_scale = self.col_scale = None
+        """Synchronize the owner and release arrays without clearing its application pool."""
+        if not self._closed:
+            with self.cupy.cuda.Device(self.device_id):
+                try:
+                    self.cupy.cuda.get_current_stream().synchronize()
+                finally:
+                    self._closed = True
+                    self.factors = self.matrix = self.row_scale = self.col_scale = None
 
     def __enter__(self) -> BatchedFactorization:
         """Enter an open device-factorization context."""
@@ -280,3 +310,122 @@ def condense_batched(problems: Sequence[LocalProblem]) -> tuple[LocalResponse, .
         for (index, problem, _, _), result in zip(group, solved, strict=True):
             responses[index] = problem.response_from_solution(result)
     return tuple(responses[index] for index in range(len(problems)))
+
+
+def _condense_device(
+    problems: Sequence[LocalProblem],
+    device_id: int,
+    solver: Literal["auto", "batched", "cudss"],
+    dense_size_limit: int,
+) -> tuple[LocalResponse, ...]:
+    """Own one device batch, its transfers, factors and synchronization in one worker."""
+    cp = _cuda()
+    responses: dict[int, LocalResponse] = {}
+    small: list[tuple[int, LocalProblem]] = []
+    with cp.cuda.Device(device_id):
+        try:
+            for index, problem in enumerate(problems):
+                size = problem.matrix.shape[0] + problem.coarse_basis.shape[1]
+                if not problem.matrix.shape[0]:
+                    responses[index] = problem.condense()
+                elif solver == "batched" or (solver == "auto" and size <= dense_size_limit):
+                    small.append((index, problem))
+                else:
+                    matrix, rhs = problem.condensation_system()
+                    with factorize(matrix, solver="cudss", rhs_columns=rhs.shape[1]) as prepared:
+                        responses[index] = problem.response_from_solution(prepared.solve(rhs))
+            for (index, _), response in zip(
+                small, condense_batched([problem for _, problem in small]), strict=True
+            ):
+                responses[index] = response
+        finally:
+            cp.cuda.get_current_stream().synchronize()
+    return tuple(responses[index] for index in range(len(problems)))
+
+
+def condense_multi_gpu(
+    problems: Iterable[LocalProblem],
+    *,
+    devices: Sequence[int],
+    batch_size: int = 8,
+    solver: Literal["auto", "batched", "cudss"] = "auto",
+    dense_size_limit: int = 512,
+) -> tuple[LocalResponse, ...]:
+    """Condense generic host local problems on explicitly assigned CUDA devices.
+
+    One dedicated thread owns each unique device. At most one batch per device
+    is submitted; input is consumed incrementally and responses retain original
+    order. Returned responses remain host data suitable for the ordinary global
+    assembler. Local operators, moments, test/trial spaces and residual tolerances
+    come from the shared condensation contract; no PDE or trace is inferred.
+
+    ``auto`` uses dense batched LU up to ``dense_size_limit`` augmented rows and
+    sparse cuDSS above that limit. Explicit ``batched`` and ``cudss`` select one
+    path for all nonempty systems. Dense groups reuse :func:`condense_batched`;
+    sparse systems reuse the shared checked factorization owner. Host/device
+    transfers, native setup, stream synchronization and executor shutdown finish
+    before return. Factors are released within the owning device context on
+    normal and exceptional exit. Resident cross-device arrays are not accepted
+    by the batched factorization; this interface receives host ``LocalProblem``
+    objects. The bound controls submitted work, not total stored responses.
+    """
+    batch_size = positive_int(batch_size, "batch_size")
+    dense_size_limit = positive_int(dense_size_limit, "dense_size_limit")
+    device_ids = tuple(positive_int(value, "device", 0) for value in devices)
+    if not device_ids or len(set(device_ids)) != len(device_ids):
+        raise ValueError("devices must contain distinct explicit CUDA device IDs")
+    if solver not in {"auto", "batched", "cudss"}:
+        raise ValueError("solver must be auto, batched or cudss")
+    cp = _cuda()
+    if any(device >= cp.cuda.runtime.getDeviceCount() for device in device_ids):
+        raise ValueError("device ID is outside the visible CUDA devices")
+    iterator = enumerate(problems)
+    responses: dict[int, LocalResponse] = {}
+    pending: dict[
+        int, tuple[list[tuple[int, LocalProblem]], Future[tuple[LocalResponse, ...]]]
+    ] = {}
+
+    def submit(executor: ThreadPoolExecutor, device_id: int) -> bool:
+        """Consume only this device's next bounded batch and validate its host contract."""
+        batch = list(islice(iterator, batch_size))
+        if not batch:
+            return False
+        if not all(isinstance(problem, LocalProblem) for _, problem in batch):
+            raise TypeError("every multi-GPU batch entry must be a LocalProblem")
+        future = executor.submit(
+            _condense_device,
+            [problem for _, problem in batch],
+            device_id,
+            solver,
+            dense_size_limit,
+        )
+        pending[device_id] = batch, future
+        return True
+
+    with ExitStack() as resources:
+        executors = {
+            device: resources.enter_context(
+                ThreadPoolExecutor(max_workers=1, thread_name_prefix=f"pymhm-cuda-{device}")
+            )
+            for device in device_ids
+        }
+        try:
+            for device in device_ids:
+                submit(executors[device], device)
+            while pending:
+                completed, _ = wait(
+                    [future for _, future in pending.values()], return_when=FIRST_COMPLETED
+                )
+                for device in tuple(pending):
+                    batch, future = pending[device]
+                    if future not in completed:
+                        continue
+                    for (index, _), response in zip(batch, future.result(), strict=True):
+                        responses[index] = response
+                    del pending[device]
+                    submit(executors[device], device)
+        except BaseException:
+            for _, future in pending.values():
+                future.cancel()
+            raise
+    return tuple(responses[index] for index in range(len(responses)))

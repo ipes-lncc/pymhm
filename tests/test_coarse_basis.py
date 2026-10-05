@@ -62,13 +62,15 @@ def test_true_kernel_keeps_original_rhs_cost(monkeypatch: pytest.MonkeyPatch) ->
     """Use one real LU per local problem, adding A Z loads only for a general basis."""
     import pymhm.core.condensation as hybrid
 
-    widths = []
+    widths: list[int] = []
+    planned_widths: list[int] = []
     original = hybrid.factorize
 
     @contextmanager
-    def record_factorization(matrix: Any, *, solver: str) -> Any:
+    def record_factorization(matrix: Any, *, solver: str, rhs_columns: int = 1) -> Any:
         """Record the actual multiple-RHS solve while preserving native factor ownership."""
-        with original(matrix, solver=solver) as factor:
+        planned_widths.append(rhs_columns)
+        with original(matrix, solver=solver, rhs_columns=rhs_columns) as factor:
 
             def solve(rhs: np.ndarray, **kwargs: Any) -> np.ndarray:
                 """Record the load count and execute the actual SciPy factorization."""
@@ -87,6 +89,7 @@ def test_true_kernel_keeps_original_rhs_cost(monkeypatch: pytest.MonkeyPatch) ->
     assert first.coarse_vectors is None
     assert second.coarse_vectors is not None
     assert widths == [4, 5]
+    assert planned_widths == widths
 
 
 @pytest.mark.parametrize(

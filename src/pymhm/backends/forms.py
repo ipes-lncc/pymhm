@@ -85,6 +85,49 @@ def _real_coefficients(value: Any, *, rank: int) -> FloatArray:
     return array
 
 
+def _assemble_compiled(
+    compiled: Any,
+    rank: int,
+    expected: tuple[int, ...] | None,
+    buffer: Any = None,
+) -> tuple[FloatArray | sparse.csr_matrix, Any]:
+    """Assemble into a reusable native buffer and return an independent coefficient copy.
+
+    Native assembly accumulates entries. Reused buffers are therefore zeroed
+    before every invocation, and coefficients/constants are freshly packed by
+    DOLFINx. No numerical matrix, load or material-dependent response is cached.
+    """
+    fem = _require("dolfinx.fem")
+    if compiled.mesh.comm.size != 1:
+        raise ValueError("DOLFINx form domains must use a single-rank communicator (COMM_SELF)")
+    if rank == 1:
+        if buffer is None:
+            buffer = fem.assemble_vector(compiled)
+        else:
+            buffer.array.fill(0)
+            fem.assemble_vector(buffer.array, compiled)
+        buffer.scatter_reverse(_require("dolfinx.la").InsertMode.add)
+        result: FloatArray | sparse.csr_matrix = _real_coefficients(buffer.array, rank=1)
+    else:
+        if buffer is None:
+            buffer = fem.assemble_matrix(compiled)
+        else:
+            buffer.data.fill(0)
+            fem.assemble_matrix(buffer, compiled)
+        buffer.scatter_reverse()
+        native = buffer.to_scipy()
+        if np.iscomplexobj(native.data):
+            raise ValueError("the generic DOLFINx form adapter requires real-valued forms")
+        result = sparse.csr_matrix(native, dtype=np.float64, copy=True)
+        if not np.isfinite(result.data).all():
+            raise ValueError("assembled coefficients must be finite with the declared form rank")
+    if expected is not None and result.shape != expected:
+        raise ValueError(
+            f"assembled shape {result.shape} differs from the declared shape {expected}"
+        )
+    return result, buffer
+
+
 def assemble_form(
     form: Any,
     *,
@@ -136,7 +179,6 @@ def assemble_form(
     fem = _require("dolfinx.fem")
     compiled = None
     assembled = None
-    native = None
     result: FloatArray | sparse.csr_matrix
     try:
         compiled = fem.form(
@@ -146,30 +188,9 @@ def assemble_form(
             jit_options=dict(jit_options or {}),
             entity_maps=None if entity_maps is None else dict(entity_maps),
         )
-        if compiled.mesh.comm.size != 1:
-            raise ValueError("DOLFINx form domains must use a single-rank communicator (COMM_SELF)")
-        if rank == 1:
-            assembled = fem.assemble_vector(compiled)
-            assembled.scatter_reverse(_require("dolfinx.la").InsertMode.add)
-            result = _real_coefficients(assembled.array, rank=1)
-        else:
-            assembled = fem.assemble_matrix(compiled)
-            assembled.scatter_reverse()
-            native = assembled.to_scipy()
-            if np.iscomplexobj(native.data):
-                raise ValueError("the generic DOLFINx form adapter requires real-valued forms")
-            result = sparse.csr_matrix(native, dtype=np.float64, copy=True)
-            if not np.isfinite(result.data).all():
-                raise ValueError(
-                    "assembled coefficients must be finite with the declared form rank"
-                )
-        if expected is not None and result.shape != expected:
-            raise ValueError(
-                f"assembled shape {result.shape} differs from the declared shape {expected}"
-            )
+        result, assembled = _assemble_compiled(compiled, rank, expected)
         return result
     finally:
-        del native
         del assembled
         del compiled
 

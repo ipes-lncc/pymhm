@@ -1,0 +1,22 @@
+{
+  "scope": "Matplotlib drawing of already sampled HPC fields; no field evaluation or solve",
+  "environment": "introduction",
+  "python": "3.13.15 | packaged by conda-forge | (main, Aug 10 2026, 07:59:06) [GCC 14.4.0]",
+  "versions": {
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "fenics-basix": "0.9.0",
+    "matplotlib": "3.11.2"
+  },
+  "publisher_source_sha256": "08678691e2ac3d66d46b435f567ab0268a39e419d7f48e049a94ada8b86753f0",
+  "field_sampling": {
+    "environment": "hpc",
+    "native_backend": "0.11.0",
+    "executed_nodal_basis_equal_to_archived_basis": true,
+    "data_sha256": "d18b57a49cff5d54e1ad466acae57f290023c28bfa8f5411ecac0594b6b396d7",
+    "scope": "fine-cell center samples from archived fields; no operator assembly, solve or norms"
+  },
+  "native_field_sample_basis": "degree-one Basix interval tensor; x fastest",
+  "measured_routes_environment": "hpc",
+  "recorded_physical_norms_environment": "hpc"
+}

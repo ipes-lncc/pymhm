@@ -428,8 +428,10 @@ across exactly identical constrained matrices.
 
 GPU sparse direct solvers upload CPU matrices. The explicit batched GPU API
 also provides resident affine P1 volume assembly and dense batched LU with
-multiple RHS. It does not distribute work across GPUs or keep skeleton assembly
-on the device. See [execution contracts and measurements](execution.md).
+multiple RHS. `condense_multi_gpu` assigns bounded local batches to explicit
+devices and uses sparse cuDSS for larger systems. Responses and ordinary
+skeleton assembly return to the host; the separate MPI path owns distributed
+global rows. See [execution contracts and measurements](execution.md).
 
 ## Extension contract
 

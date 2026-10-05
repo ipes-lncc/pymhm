@@ -1,0 +1,776 @@
+{
+  "problem": "CILAMCE 2025 section 4.1 analytical reaction layer",
+  "source_url": "https://doi.org/10.55592/cilamce2025.v5i.14270",
+  "epsilon": 0.001,
+  "local_degree": 1,
+  "trace_degree": 0,
+  "local_subdivisions": 2,
+  "reference_backend": "DOLFINx 0.9.0; independent CG2 UFL",
+  "boundary": "strong u=0 vertical, zero physical flux horizontal",
+  "convergence": [
+    {
+      "method": "MHM-Galerkin",
+      "n": 2,
+      "H": 0.5,
+      "macro_cells": 8,
+      "fine_cells": 32,
+      "trace_dofs": 16,
+      "residual": 3.531215348117746e-18,
+      "scalar_l2": 0.25331511823245645,
+      "flux_l2": 0.004992295873729374,
+      "gradient_l2": 4.9922958737293746,
+      "scalar_relative_l2": 0.26625957192826877,
+      "nodal_error": 0.37771283714762327,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.3773441986275734
+    },
+    {
+      "method": "MHM-USFEM",
+      "n": 2,
+      "H": 0.5,
+      "macro_cells": 8,
+      "fine_cells": 32,
+      "trace_dofs": 16,
+      "residual": 1.4803862241201145e-17,
+      "scalar_l2": 0.34175259280093,
+      "flux_l2": 0.004894176612566582,
+      "gradient_l2": 4.894176612566581,
+      "scalar_relative_l2": 0.35921621930614284,
+      "nodal_error": 0.1971462356856153,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.1126151697555124
+    },
+    {
+      "method": "MHM-Galerkin",
+      "n": 4,
+      "H": 0.25,
+      "macro_cells": 32,
+      "fine_cells": 128,
+      "trace_dofs": 56,
+      "residual": 3.3901956506678536e-18,
+      "scalar_l2": 0.12112741146990824,
+      "flux_l2": 0.004115878117983088,
+      "gradient_l2": 4.115878117983088,
+      "scalar_relative_l2": 0.12731704665633645,
+      "nodal_error": 0.25980313859039594,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.240603178434425
+    },
+    {
+      "method": "MHM-USFEM",
+      "n": 4,
+      "H": 0.25,
+      "macro_cells": 32,
+      "fine_cells": 128,
+      "trace_dofs": 56,
+      "residual": 1.0526579630842185e-17,
+      "scalar_l2": 0.18208673599128516,
+      "flux_l2": 0.004130825618653843,
+      "gradient_l2": 4.130825618653843,
+      "scalar_relative_l2": 0.19139140497080442,
+      "nodal_error": 0.19374192827725978,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.1294675135664096
+    },
+    {
+      "method": "MHM-Galerkin",
+      "n": 8,
+      "H": 0.125,
+      "macro_cells": 128,
+      "fine_cells": 512,
+      "trace_dofs": 208,
+      "residual": 5.2119694416018505e-18,
+      "scalar_l2": 0.046568790126552996,
+      "flux_l2": 0.0027864628526269287,
+      "gradient_l2": 2.7864628526269284,
+      "scalar_relative_l2": 0.04894846470606229,
+      "nodal_error": 0.1443873756125632,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.1251874154565922
+    },
+    {
+      "method": "MHM-USFEM",
+      "n": 8,
+      "H": 0.125,
+      "macro_cells": 128,
+      "fine_cells": 512,
+      "trace_dofs": 208,
+      "residual": 1.2201419401972801e-17,
+      "scalar_l2": 0.07656209768491797,
+      "flux_l2": 0.002909494311749464,
+      "gradient_l2": 2.9094943117494636,
+      "scalar_relative_l2": 0.08047443633747021,
+      "nodal_error": 0.15551401548096844,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.101093805850416
+    },
+    {
+      "method": "MHM-Galerkin",
+      "n": 16,
+      "H": 0.0625,
+      "macro_cells": 512,
+      "fine_cells": 2048,
+      "trace_dofs": 800,
+      "residual": 1.1858156594776802e-17,
+      "scalar_l2": 0.01628077811869227,
+      "flux_l2": 0.0017204001144176641,
+      "gradient_l2": 1.7204001144176642,
+      "scalar_relative_l2": 0.017112729168277153,
+      "nodal_error": 0.15620122915430557,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.0320779526335584
+    },
+    {
+      "method": "MHM-USFEM",
+      "n": 16,
+      "H": 0.0625,
+      "macro_cells": 512,
+      "fine_cells": 2048,
+      "trace_dofs": 800,
+      "residual": 1.5455049560902228e-17,
+      "scalar_l2": 0.020197431303050697,
+      "flux_l2": 0.0017279805508186488,
+      "gradient_l2": 1.7279805508186488,
+      "scalar_relative_l2": 0.021229524121280277,
+      "nodal_error": 0.1212762367189939,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.0296587301268465
+    }
+  ],
+  "reference_refinement": [
+    {
+      "epsilon": 0.001,
+      "nx": 32,
+      "ny": 32,
+      "triangles": 2048,
+      "scalar_l2": 0.0009161727594715154,
+      "flux_l2": 0.0001923129555579362,
+      "gradient_l2": 0.1923129555579362,
+      "nodal_error": 0.0036629346928237494
+    },
+    {
+      "epsilon": 0.001,
+      "nx": 64,
+      "ny": 64,
+      "triangles": 8192,
+      "scalar_l2": 0.00012088991109426701,
+      "flux_l2": 5.03010656813264e-05,
+      "gradient_l2": 0.0503010656813264,
+      "nodal_error": 0.0005725428411261779
+    },
+    {
+      "epsilon": 0.001,
+      "nx": 128,
+      "ny": 128,
+      "triangles": 32768,
+      "scalar_l2": 1.533338211134431e-05,
+      "flux_l2": 1.2730634497974327e-05,
+      "gradient_l2": 0.012730634497974326,
+      "nodal_error": 7.912565137231653e-05
+    },
+    {
+      "epsilon": 1e-05,
+      "nx": 256,
+      "ny": 16,
+      "triangles": 8192,
+      "scalar_l2": 0.0006259597016899161,
+      "flux_l2": 8.965065539454617e-06,
+      "gradient_l2": 0.8965065539454617,
+      "nodal_error": 0.014094267650654968
+    },
+    {
+      "epsilon": 1e-05,
+      "nx": 512,
+      "ny": 16,
+      "triangles": 16384,
+      "scalar_l2": 0.00011317367584811515,
+      "flux_l2": 2.3880117579567326e-06,
+      "gradient_l2": 0.23880117579567323,
+      "nodal_error": 0.0026712043760518944
+    },
+    {
+      "epsilon": 1e-05,
+      "nx": 1024,
+      "ny": 16,
+      "triangles": 32768,
+      "scalar_l2": 2.400002563782595e-05,
+      "flux_l2": 6.071295005731435e-07,
+      "gradient_l2": 0.06071295005731434,
+      "nodal_error": 0.00051026058272996
+    }
+  ],
+  "provenance": {
+    "notebook": "notebooks/introduction/mhm_usfem_rad.ipynb",
+    "notebook_sha256": "de3ca0d407119b4d192e852826fff4aed4ad579ac30c090dc200fbff50ba3b2b",
+    "pixi_lock_sha256": "c54e433e408e8345516023d96526b305d09452a55d53c018ea6ea529535df9fd",
+    "versions": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "fenics-basix": "0.9.0",
+      "fenics-dolfinx": "0.9.0",
+      "pymhm": "0.1.0"
+    },
+    "basis_convention": "Basix equispaced Pk in PyMHM nodal_space order; no local nullspace modes",
+    "reference_project": "DOLFINx",
+    "reference_source_url": "https://docs.fenicsproject.org/dolfinx/v0.9.0/python/",
+    "literature_comparison": "same analytical PDE; declared SW-NE topology and strong exterior Dirichlet data; the refined family has 512 macros at n=16 and four P0 segments per face, but the historical matching local triangulation/connectivity is unresolved; no matched-figure reproduction"
+  },
+  "state_archives": [
+    {
+      "path": "build/introduction/rad-n2-mhm-galerkin-state.npz",
+      "sha256": "7f5aedb4e223f298eb65eb70d7e6861df15ffdfcbfd5c914e52130e4124676f6",
+      "executed_basis_sha256": "b1668c5ffee5480118dfb2d600a71c499a9a7fccea0562ffe2f32d6f3079f6e5",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-n2-mhm-usfem-state.npz",
+      "sha256": "7cd970a6aac09d90d9c4c1f08b46d6d918624ede957d079f0324cc221d78a39a",
+      "executed_basis_sha256": "b1668c5ffee5480118dfb2d600a71c499a9a7fccea0562ffe2f32d6f3079f6e5",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-n4-mhm-galerkin-state.npz",
+      "sha256": "9d1ddff74a375bb55420d3ecdd0f66a20a0d8400fd582c325768243c6942054d",
+      "executed_basis_sha256": "f93f18e9344d82c7c25d786d23873b109628a86558999bb896d41dfa7bbac8eb",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-n4-mhm-usfem-state.npz",
+      "sha256": "f7105f73c099f1f847422c253730dfdd320282b3b7da25fba7008e2b6a5659e9",
+      "executed_basis_sha256": "f93f18e9344d82c7c25d786d23873b109628a86558999bb896d41dfa7bbac8eb",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-n8-mhm-galerkin-state.npz",
+      "sha256": "715fe386cc44d90b28ed76fbb7577997ec536e40466318eb8a2540c55c1ce82b",
+      "executed_basis_sha256": "07ef58e8885ff639e8fe5426230190fc0ed61626b696fdd816dc7b5c6c972467",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-n8-mhm-usfem-state.npz",
+      "sha256": "448071d36296a029386b59cb2be4b740472a2b096bc6491709fcff981771748f",
+      "executed_basis_sha256": "07ef58e8885ff639e8fe5426230190fc0ed61626b696fdd816dc7b5c6c972467",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-n16-mhm-galerkin-state.npz",
+      "sha256": "bd865c70e8833370ba14e497ec76334bc07c39314092a730890836ec451c28e8",
+      "executed_basis_sha256": "342c737de23afd320ac3b19801f2ee8c93c6f959bd656f9471d4bd38536c337f",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-n16-mhm-usfem-state.npz",
+      "sha256": "1e703f8ba8ff4fee4f931bea2899ccbe7107421b3051f8a78a48462c1c71282f",
+      "executed_basis_sha256": "342c737de23afd320ac3b19801f2ee8c93c6f959bd656f9471d4bd38536c337f",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-reference-eps0.001-32x32-state.npz",
+      "sha256": "37a665588b3733ee8f5486cb17019ca2696a5483ee4d6dc34b11413f7e01d08f",
+      "basis_convention": "Basix canonical equispaced P2 nodal coefficients"
+    },
+    {
+      "path": "build/introduction/rad-reference-eps0.001-64x64-state.npz",
+      "sha256": "e5b6829c240c450527388926b79191c2ffb2a936e4bf920c5bf0898c803e5c06",
+      "basis_convention": "Basix canonical equispaced P2 nodal coefficients"
+    },
+    {
+      "path": "build/introduction/rad-reference-eps0.001-128x128-state.npz",
+      "sha256": "7f1e7ac081da4d65e9a17ad074d3aabf89b42d05b9909b35ec97b2513ddc1f83",
+      "basis_convention": "Basix canonical equispaced P2 nodal coefficients"
+    },
+    {
+      "path": "build/introduction/rad-reference-eps1e-05-256x16-state.npz",
+      "sha256": "86eeed4c121c2736ab9c52ae3a6addb39a7afff8ec97b2e77a8958f4d892f4c8",
+      "basis_convention": "Basix canonical equispaced P2 nodal coefficients"
+    },
+    {
+      "path": "build/introduction/rad-reference-eps1e-05-512x16-state.npz",
+      "sha256": "16eb4e63dc57830d72391ee284abc3bfbbfe97f26735a9b73a67b773265d09b2",
+      "basis_convention": "Basix canonical equispaced P2 nodal coefficients"
+    },
+    {
+      "path": "build/introduction/rad-reference-eps1e-05-1024x16-state.npz",
+      "sha256": "c23a1612ec5c48f95d1aae8a9168b102982785f90a851dab017be4c86a2e725c",
+      "basis_convention": "Basix canonical equispaced P2 nodal coefficients"
+    },
+    {
+      "path": "build/introduction/rad-eps0.01-mhm-galerkin-state.npz",
+      "sha256": "649a5d898b874a86df9513d781aa6a1993273cb2baf1898cff20a96fb3677f55",
+      "executed_basis_sha256": "07ef58e8885ff639e8fe5426230190fc0ed61626b696fdd816dc7b5c6c972467",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-eps0.01-mhm-usfem-state.npz",
+      "sha256": "a2ac59f5a6ffc971fab129541cbdec179c3d0121e2c1ce91e75bb934b31de796",
+      "executed_basis_sha256": "07ef58e8885ff639e8fe5426230190fc0ed61626b696fdd816dc7b5c6c972467",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-eps0.001-mhm-galerkin-state.npz",
+      "sha256": "715fe386cc44d90b28ed76fbb7577997ec536e40466318eb8a2540c55c1ce82b",
+      "executed_basis_sha256": "07ef58e8885ff639e8fe5426230190fc0ed61626b696fdd816dc7b5c6c972467",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-eps0.001-mhm-usfem-state.npz",
+      "sha256": "448071d36296a029386b59cb2be4b740472a2b096bc6491709fcff981771748f",
+      "executed_basis_sha256": "07ef58e8885ff639e8fe5426230190fc0ed61626b696fdd816dc7b5c6c972467",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-eps1e-05-mhm-galerkin-state.npz",
+      "sha256": "57910820eedcb3e7bdcd7d4123a8e6b5864c2673f9d3ae1c8004086044cc95c7",
+      "executed_basis_sha256": "07ef58e8885ff639e8fe5426230190fc0ed61626b696fdd816dc7b5c6c972467",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-eps1e-05-mhm-usfem-state.npz",
+      "sha256": "ea134646583b34c30f4e588eeb3d8b277b133d8d3ac48beb13d957b539743d5c",
+      "executed_basis_sha256": "07ef58e8885ff639e8fe5426230190fc0ed61626b696fdd816dc7b5c6c972467",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-resolved-eps1e-05-n4-mhm-galerkin-state.npz",
+      "sha256": "90604eb9965c3ec4a0c63c9a4d84de342bc587417048c7c822f2359cecdd2113",
+      "executed_basis_sha256": "0034d90d1a0b06c09071281b338795c3c89f8809255d4e5f38181c6a5d4af6b6",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-resolved-eps1e-05-n4-mhm-usfem-state.npz",
+      "sha256": "963756eb86e678742eff1e49815937fa60485a29938d19a08f8e07cf11ca31b4",
+      "executed_basis_sha256": "0034d90d1a0b06c09071281b338795c3c89f8809255d4e5f38181c6a5d4af6b6",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-resolved-eps1e-05-n8-mhm-galerkin-state.npz",
+      "sha256": "75e25d25e6eba915ead0073050c651afec419f0460e10bd9d1b6af9cdde22c57",
+      "executed_basis_sha256": "61cef528cb2a25fbff6a763afa8358aadc5aa10b1cc92002b67185ec1594ef09",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-resolved-eps1e-05-n8-mhm-usfem-state.npz",
+      "sha256": "3d51e793b3a17674f73bd718d1cb016ee8b4a276d2ed607e498997af22c279e7",
+      "executed_basis_sha256": "61cef528cb2a25fbff6a763afa8358aadc5aa10b1cc92002b67185ec1594ef09",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-resolved-eps1e-05-n16-mhm-galerkin-state.npz",
+      "sha256": "236fa919a3b5ee74bc70f92e4dd7e43732603082b2bd6e0ff86051c606687278",
+      "executed_basis_sha256": "02ffd174bd745d71841b4cc899c2bd276383cb4c047a24cbf0ef581534f4da2d",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-resolved-eps1e-05-n16-mhm-usfem-state.npz",
+      "sha256": "607fe0169f69b54c6ac8fc718184b6e7cf7eec33009a506ad3d18b60e2d8e756",
+      "executed_basis_sha256": "02ffd174bd745d71841b4cc899c2bd276383cb4c047a24cbf0ef581534f4da2d",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-resolved-eps0.001-n16-mhm-galerkin-state.npz",
+      "sha256": "e7b0d223b2b682969134179e9803a6349a01bfb6fa7b5cc92e88f6ee9a0529fd",
+      "executed_basis_sha256": "02ffd174bd745d71841b4cc899c2bd276383cb4c047a24cbf0ef581534f4da2d",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    },
+    {
+      "path": "build/introduction/rad-resolved-eps0.001-n16-mhm-usfem-state.npz",
+      "sha256": "4772c465c6dd492df995f70dc5a2fbd6ad4382a52766ca895f723bd15ae2d0d4",
+      "executed_basis_sha256": "02ffd174bd745d71841b4cc899c2bd276383cb4c047a24cbf0ef581534f4da2d",
+      "replay_blas_threads": [
+        1,
+        2
+      ]
+    }
+  ],
+  "reaction_sweep": [
+    {
+      "epsilon": 0.01,
+      "method": "MHM-Galerkin",
+      "overshoot": 0.0,
+      "scalar_l2": 0.015727506798012394,
+      "flux_l2": 0.006979403304451645,
+      "gradient_l2": 0.6979403304451645,
+      "scalar_relative_l2": 0.018796381471541432,
+      "nodal_error": 0.10172873787639791,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 0.9937189825987041
+    },
+    {
+      "epsilon": 0.01,
+      "method": "MHM-USFEM",
+      "overshoot": 0.0,
+      "scalar_l2": 0.01684209049020335,
+      "flux_l2": 0.006964009814822499,
+      "gradient_l2": 0.6964009814822498,
+      "scalar_relative_l2": 0.02012845148934158,
+      "nodal_error": 0.08559220444620452,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 0.990955611425232
+    },
+    {
+      "epsilon": 0.001,
+      "method": "MHM-Galerkin",
+      "overshoot": 0.12518741545659218,
+      "scalar_l2": 0.04656879012655297,
+      "flux_l2": 0.0027864628526269347,
+      "gradient_l2": 2.7864628526269346,
+      "scalar_relative_l2": 0.04894846470606226,
+      "nodal_error": 0.1443873756125632,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.1251874154565922
+    },
+    {
+      "epsilon": 0.001,
+      "method": "MHM-USFEM",
+      "overshoot": 0.10109380585041605,
+      "scalar_l2": 0.07656209768491792,
+      "flux_l2": 0.0029094943117494707,
+      "gradient_l2": 2.9094943117494707,
+      "scalar_relative_l2": 0.08047443633747016,
+      "nodal_error": 0.15551401548096844,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.101093805850416
+    },
+    {
+      "epsilon": 1e-05,
+      "method": "MHM-Galerkin",
+      "overshoot": 0.4291224985130555,
+      "scalar_l2": 0.16028915457590862,
+      "flux_l2": 0.00017088075366392442,
+      "gradient_l2": 17.08807536639244,
+      "scalar_relative_l2": 0.1610549256798726,
+      "nodal_error": 0.46175828742208314,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.4291224985130555
+    },
+    {
+      "epsilon": 1e-05,
+      "method": "MHM-USFEM",
+      "overshoot": 0.13255967904081012,
+      "scalar_l2": 0.1993607741408251,
+      "flux_l2": 0.0001690370709830444,
+      "gradient_l2": 16.903707098304437,
+      "scalar_relative_l2": 0.2003132073887566,
+      "nodal_error": 0.17865926802559684,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.1325596790408101
+    }
+  ],
+  "underresolved_configuration": {
+    "macro_divisions": 8,
+    "face_subdivisions": 1,
+    "local_subdivisions": 2,
+    "role": "fixed-space resolution control; stabilization has no nodal-bound guarantee"
+  },
+  "refined_convergence": [
+    {
+      "epsilon": 1e-05,
+      "method": "MHM-Galerkin",
+      "n": 4,
+      "H": 0.25,
+      "face_subdivisions": 4,
+      "local_subdivisions": 8,
+      "macro_cells": 32,
+      "fine_cells": 2048,
+      "trace_dofs": 224,
+      "residual": 4.536670056169429e-18,
+      "overshoot": 0.39719694724577814,
+      "scalar_l2": 0.10038241445937039,
+      "flux_l2": 0.00016200323188130994,
+      "gradient_l2": 16.200323188130994,
+      "scalar_relative_l2": 0.10086198497393516,
+      "nodal_error": 0.3972480272375427,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.3971969472457781
+    },
+    {
+      "epsilon": 1e-05,
+      "method": "MHM-USFEM",
+      "n": 4,
+      "H": 0.25,
+      "face_subdivisions": 4,
+      "local_subdivisions": 8,
+      "macro_cells": 32,
+      "fine_cells": 2048,
+      "trace_dofs": 224,
+      "residual": 5.9959085444105774e-18,
+      "overshoot": 0.020397021706184182,
+      "scalar_l2": 0.12651669686326633,
+      "flux_l2": 0.0001594287090734297,
+      "gradient_l2": 15.942870907342968,
+      "scalar_relative_l2": 0.12712112222743516,
+      "nodal_error": 0.1747988228416666,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.0203970217061842
+    },
+    {
+      "epsilon": 1e-05,
+      "method": "MHM-Galerkin",
+      "n": 8,
+      "H": 0.125,
+      "face_subdivisions": 4,
+      "local_subdivisions": 8,
+      "macro_cells": 128,
+      "fine_cells": 8192,
+      "trace_dofs": 832,
+      "residual": 1.7858973242614016e-18,
+      "overshoot": 0.2971069210013073,
+      "scalar_l2": 0.05166215678890528,
+      "flux_l2": 0.0001414541127895522,
+      "gradient_l2": 14.145411278955219,
+      "scalar_relative_l2": 0.051908969412891415,
+      "nodal_error": 0.3042539477792454,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.2971069210013073
+    },
+    {
+      "epsilon": 1e-05,
+      "method": "MHM-USFEM",
+      "n": 8,
+      "H": 0.125,
+      "face_subdivisions": 4,
+      "local_subdivisions": 8,
+      "macro_cells": 128,
+      "fine_cells": 8192,
+      "trace_dofs": 832,
+      "residual": 3.847784317911282e-18,
+      "overshoot": 0.015689415024548348,
+      "scalar_l2": 0.0718478396324243,
+      "flux_l2": 0.00013951315234044713,
+      "gradient_l2": 13.951315234044712,
+      "scalar_relative_l2": 0.07219108805505349,
+      "nodal_error": 0.18175214271977902,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.0156894150245483
+    },
+    {
+      "epsilon": 1e-05,
+      "method": "MHM-Galerkin",
+      "n": 16,
+      "H": 0.0625,
+      "face_subdivisions": 4,
+      "local_subdivisions": 8,
+      "macro_cells": 512,
+      "fine_cells": 32768,
+      "trace_dofs": 3200,
+      "residual": 1.4353191470113675e-18,
+      "overshoot": 0.07594422119889166,
+      "scalar_l2": 0.020178636803276615,
+      "flux_l2": 0.00010181469397222876,
+      "gradient_l2": 10.181469397222875,
+      "scalar_relative_l2": 0.020275038939916595,
+      "nodal_error": 0.16048431096663485,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.0759442211988917
+    },
+    {
+      "epsilon": 1e-05,
+      "method": "MHM-USFEM",
+      "n": 16,
+      "H": 0.0625,
+      "face_subdivisions": 4,
+      "local_subdivisions": 8,
+      "macro_cells": 512,
+      "fine_cells": 32768,
+      "trace_dofs": 3200,
+      "residual": 3.7991279987440205e-18,
+      "overshoot": 0.006882416786877954,
+      "scalar_l2": 0.033115431616295654,
+      "flux_l2": 0.00010318176578351813,
+      "gradient_l2": 10.318176578351812,
+      "scalar_relative_l2": 0.03327363845626651,
+      "nodal_error": 0.1530380547529956,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 1.006882416786878
+    },
+    {
+      "epsilon": 0.001,
+      "method": "MHM-Galerkin",
+      "n": 16,
+      "H": 0.0625,
+      "face_subdivisions": 4,
+      "local_subdivisions": 8,
+      "macro_cells": 512,
+      "fine_cells": 32768,
+      "trace_dofs": 3200,
+      "residual": 2.194955480397227e-17,
+      "overshoot": 0.0,
+      "scalar_l2": 0.0008317865677838924,
+      "flux_l2": 0.0004019769798175291,
+      "gradient_l2": 0.4019769798175291,
+      "scalar_relative_l2": 0.000874291029367575,
+      "nodal_error": 0.006999393894721706,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 0.9999997474222396
+    },
+    {
+      "epsilon": 0.001,
+      "method": "MHM-USFEM",
+      "n": 16,
+      "H": 0.0625,
+      "face_subdivisions": 4,
+      "local_subdivisions": 8,
+      "macro_cells": 512,
+      "fine_cells": 32768,
+      "trace_dofs": 3200,
+      "residual": 2.666665123369757e-17,
+      "overshoot": 0.0,
+      "scalar_l2": 0.001226347487215781,
+      "flux_l2": 0.00040196928701191604,
+      "gradient_l2": 0.40196928701191603,
+      "scalar_relative_l2": 0.0012890140914595654,
+      "nodal_error": 0.0055887100964258085,
+      "nodal_minimum": 0.0,
+      "nodal_maximum": 0.999999725960371
+    }
+  ],
+  "refined_configuration": {
+    "face_subdivisions": 4,
+    "local_subdivisions": 8,
+    "compatibility": "P1/P0; one red refinement of a face-matching four-subdivision mesh",
+    "boundary_variant": "strong exterior nodal Dirichlet data; continuous paper hybridization is weak",
+    "literature_status": "same PDE and declared admissible realization, not matched historical Fig2",
+    "unresolved_paper_input": "matching local triangulation and macro connectivity for Fig2"
+  },
+  "quadrature_controls": [
+    {
+      "family": "underresolved",
+      "method": "MHM-Galerkin",
+      "epsilon": 1e-05,
+      "orders": [
+        40,
+        48
+      ],
+      "norms": {
+        "scalar_l2": [
+          0.16028915457590862,
+          0.16028915457590864
+        ],
+        "flux_l2": [
+          0.00017088075366392442,
+          0.00017088075366392474
+        ]
+      }
+    },
+    {
+      "family": "underresolved",
+      "method": "MHM-USFEM",
+      "epsilon": 1e-05,
+      "orders": [
+        40,
+        48
+      ],
+      "norms": {
+        "scalar_l2": [
+          0.1993607741408251,
+          0.19936077414082506
+        ],
+        "flux_l2": [
+          0.0001690370709830444,
+          0.00016903707098304475
+        ]
+      }
+    },
+    {
+      "family": "refined",
+      "method": "MHM-Galerkin",
+      "epsilon": 1e-05,
+      "orders": [
+        24,
+        32
+      ],
+      "norms": {
+        "scalar_l2": [
+          0.020178636803276615,
+          0.020178636803276587
+        ],
+        "flux_l2": [
+          0.00010181469397222876,
+          0.00010181469397222888
+        ]
+      }
+    },
+    {
+      "family": "refined",
+      "method": "MHM-USFEM",
+      "epsilon": 1e-05,
+      "orders": [
+        24,
+        32
+      ],
+      "norms": {
+        "scalar_l2": [
+          0.033115431616295654,
+          0.03311543161629563
+        ],
+        "flux_l2": [
+          0.00010318176578351813,
+          0.00010318176578351829
+        ]
+      }
+    }
+  ]
+}

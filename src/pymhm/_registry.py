@@ -74,7 +74,12 @@ _EXPORT_GROUPS: dict[str, tuple[str, ...]] = {
     "pymhm.core.system": ("HybridSystem", "hybrid_mean_constraint", "solve_hybrid_system"),
     "pymhm.core.variational": ("GlobalForm", "LocalForm", "LocalProvider", "compile_local_forms"),
     "pymhm.execution.cpu": ("ExecutionConfig", "iter_local", "map_local"),
-    "pymhm.execution.cuda": ("BatchedFactorization", "assemble_p1_batch", "condense_batched"),
+    "pymhm.execution.cuda": (
+        "BatchedFactorization",
+        "assemble_p1_batch",
+        "condense_batched",
+        "condense_multi_gpu",
+    ),
     "pymhm.execution.mpi": ("DistributedHybridSolution", "solve_distributed"),
     "pymhm.fem.hdiv.bdm_family": ("BDMFamily",),
     "pymhm.fem.hdiv.family_3d": ("HDiv3DFamily",),

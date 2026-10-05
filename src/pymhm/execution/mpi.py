@@ -14,8 +14,18 @@ from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
+from scipy import sparse
 
 from pymhm.core.contracts import LocalAssembly, LocalProblem, LocalResponse
+from pymhm.core.contributions import local_global_contribution
+from pymhm.core.equations import (
+    CompiledLocalEquations,
+    Equation,
+    FormCompiler,
+    LocalEquations,
+    compile_form,
+    compile_local_equations,
+)
 from pymhm.core.validation import FloatArray, IntArray
 from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError, _optional, _tolerances
 
@@ -31,6 +41,8 @@ class DistributedHybridSolution:
     physical data beyond the componentwise evaluation bound for a declared
     kernel. General retained modes receive no such allowance. ``linear_residual``
     also checks the augmented boundary system.
+    ``local_bases`` stores each owned cell's executed retained basis in the same
+    order as ``coarse`` and ``fields``; persist it with coefficient vectors.
     """
 
     ownership: tuple[int, int]
@@ -45,6 +57,7 @@ class DistributedHybridSolution:
     global_size: int
     raw_residual: float | None = None
     raw_residual_norm: float | None = None
+    local_bases: tuple[FloatArray, ...] = ()
 
 
 def _collective_error(comm: Any, error: Exception | None) -> None:
@@ -71,7 +84,63 @@ def _values(values: Any, size: int, name: str) -> FloatArray:
     raw = np.asarray(values)
     if np.iscomplexobj(raw) or raw.shape != (size,) or not np.isfinite(raw).all():
         raise ValueError(f"{name} must be a real finite vector of length {size}")
-    return np.asarray(raw, dtype=float)
+    return _binary64(raw, name)
+
+
+def _binary64(values: Any, name: str) -> FloatArray:
+    """Reject complex, nonfinite or wider nonrepresentable PETSc coefficients.
+
+    The distributed backend uses real binary64. Exactly representable wider
+    input is accepted, while a conversion losing supplied digits is rejected.
+    This check concerns coefficients, not an extended-precision solver claim.
+    """
+    raw = np.asarray(values)
+    if np.iscomplexobj(raw) or not np.isfinite(raw).all():
+        raise ValueError(f"{name} must contain finite real binary64 coefficients")
+    with np.errstate(over="ignore"):
+        result = np.asarray(raw, dtype=float)
+    with np.errstate(invalid="ignore"):
+        equivalent = result.astype(raw.dtype) if raw.dtype.kind in "iu" else result
+    if not np.array_equal(raw, equivalent):
+        raise ValueError(f"{name} coefficients are not exactly representable in binary64")
+    return result
+
+
+def _compile_owned(built: Any, compiler: FormCompiler) -> tuple[LocalProblem, Any, Any, Any]:
+    """Compile one rank-owned local definition and retain its explicit D/g terms."""
+    from pymhm.core.multiscale import MultiscaleProblem, NestedEquations
+
+    if isinstance(built, NestedEquations) or (
+        isinstance(built, LocalEquations) and isinstance(built.a, MultiscaleProblem)
+    ):
+        raise TypeError(
+            "nested MultiscaleProblem equations are unsupported by distributed assembly"
+        )
+    if isinstance(built, LocalEquations):
+
+        def checked_compiler(form: Any, shape: tuple[int, ...] | None = None) -> Any:
+            """Check supplied form digits before LocalProblem's binary64 storage."""
+            result = compiler(form, shape)
+            if sparse.issparse(result):
+                result = result.copy()
+                result.data = _binary64(result.data, "local form")
+                return result
+            return _binary64(result, "local form")
+
+        for name in ("kernel", "coarse_basis", "left_kernel", "test_basis"):
+            value = getattr(built, name)
+            if value is not None:
+                _binary64(value, f"local {name}")
+        built = compile_local_equations(built, checked_compiler)
+    if isinstance(built, CompiledLocalEquations):
+        return built.problem, built.matrix, built.load, built.metadata
+    if isinstance(built, LocalAssembly):
+        return built.problem, None, None, built.metadata
+    if isinstance(built, LocalProblem):
+        return built, None, None, None
+    raise TypeError(
+        "factory must return LocalProblem, LocalAssembly, LocalEquations or CompiledLocalEquations"
+    )
 
 
 def _extract(vector: Any, indices: IntArray, petsc: Any, resources: ExitStack) -> FloatArray:
@@ -89,7 +158,9 @@ def _extract(vector: Any, indices: IntArray, petsc: Any, resources: ExitStack) -
 
 
 def solve_distributed(
-    factory: Callable[[Any], LocalProblem | LocalAssembly],
+    factory: Callable[
+        [Any], LocalProblem | LocalAssembly | LocalEquations | CompiledLocalEquations
+    ],
     local_items: Iterable[Any],
     *,
     trace_size: int,
@@ -97,6 +168,8 @@ def solve_distributed(
     boundary_load: tuple[Any, Any] | None = None,
     fixed: dict[int, float] | None = None,
     moments: Sequence[tuple[Sequence[FloatArray], float]] | None = None,
+    compiler: FormCompiler = compile_form,
+    global_equation: Equation | None = None,
     local_solver: str = "scipy",
     rtol: float = 1e-10,
     atol: float = 0.0,
@@ -110,6 +183,13 @@ def solve_distributed(
     rank, then by local input order. A distributed mesh partitioner is not
     inferred: the application assigns each physical cell to exactly one rank.
 
+    LocalEquations use the common compiler and contribution owner, including
+    explicit D/g and distinct trial/test trace maps. ``global_equation`` supplies
+    this rank's additive forms in the physical trace/retained coordinates, before
+    gauge rows; replicated nonzero forms would be counted once per rank. Sparse
+    forms stay sparse through insertion. Nested MultiscaleProblem equations are
+    currently unsupported. Native local UFL meshes normally use COMM_SELF.
+
     ``boundary_load=(indices, values)`` is an additive *owned* boundary-moment
     contribution, not a replicated full load. Contributions are subtracted as in
     ``HybridSystem``. Every physical moment supplies this rank's weight vectors
@@ -119,12 +199,15 @@ def solve_distributed(
     PETSc/MUMPS is mandatory; there is no sequential or iterative fallback. The
     numerical-library factorization detects singular pivots and the original
     equations are independently checked. This does not prove an inf-sup bound.
+    Coefficients must be real and exactly representable in binary64; this backend
+    does not retain wider real correction digits or complex coefficients.
     """
     petsc = _optional("petsc4py.PETSc", "Install MPI-enabled petsc4py with MUMPS.")
     if not petsc.Sys.hasExternalPackage("mumps"):
         raise SolverUnavailableError("distributed MHM requires PETSc with MUMPS")
     responses: list[LocalResponse] = []
     metadata: list[Any] = []
+    direct: list[tuple[Any, Any]] = []
     error = None
     fixed = {} if fixed is None else dict(fixed)
     moments = tuple(() if moments is None else moments)
@@ -136,19 +219,34 @@ def solve_distributed(
         _indices(list(fixed), trace_size, "fixed")
         _values(list(fixed.values()), len(fixed), "fixed values")
         for item in local_items:
-            built = factory(item)
-            problem = built.problem if isinstance(built, LocalAssembly) else built
-            if not isinstance(problem, LocalProblem):
-                raise TypeError("factory must return LocalProblem or LocalAssembly")
+            problem, matrix, load, data = _compile_owned(factory(item), compiler)
+            for name, value in (("direct matrix", matrix), ("direct load", load)):
+                if value is not None:
+                    _binary64(value, name)
             _indices(problem.trace_dofs, trace_size, "trace")
+            _binary64(problem.matrix.data, "local matrix")
+            for name in (
+                "load",
+                "coupling",
+                "test_coupling",
+                "kernel",
+                "left_kernel",
+                "constraints",
+                "test_constraints",
+                "coarse_basis",
+                "test_basis",
+            ):
+                _binary64(getattr(problem, name), f"local {name}")
             responses.append(problem.condense(local_solver))
-            metadata.append(built.metadata if isinstance(built, LocalAssembly) else None)
+            direct.append((matrix, load))
+            metadata.append(data)
         if boundary_load is not None:
             boundary_indices = _indices(boundary_load[0], trace_size, "boundary")
             boundary_values = _values(boundary_load[1], len(boundary_indices), "boundary values")
         for weights, target in moments:
             if len(weights) != len(responses) or not np.isfinite(target):
                 raise ValueError("moments require one weight per owned cell and finite targets")
+            _values([target], 1, "moment target")
             for weight, response in zip(weights, responses, strict=True):
                 _values(weight, len(response.source), "moment weights")
     except Exception as exc:
@@ -177,6 +275,41 @@ def solve_distributed(
     size = physical_size + len(moments)
     if not size:
         raise ValueError("distributed global system must contain at least one unknown")
+    contributions = []
+    extra = sparse.csr_matrix((physical_size, physical_size))
+    extra_load = np.zeros(physical_size)
+    error = None
+    try:
+        for index, (response, (direct_matrix, direct_load)) in enumerate(
+            zip(responses, direct, strict=True)
+        ):
+            dofs, block, load = local_global_contribution(
+                response,
+                np.arange(offsets[index], offsets[index + 1]),
+                direct_matrix=direct_matrix,
+                direct_load=direct_load,
+            )
+            contributions.append(
+                (
+                    dofs,
+                    _binary64(block, "local reduced matrix"),
+                    _binary64(load, "local reduced load"),
+                )
+            )
+        if global_equation is not None:
+            if not isinstance(global_equation, Equation):
+                raise TypeError("global_equation must be an Equation")
+            extra = sparse.csr_matrix(compiler(global_equation.a, (physical_size, physical_size)))
+            if extra.shape != (physical_size, physical_size):
+                raise ValueError("global matrix must match the physical reduced coordinates")
+            extra.data = _binary64(extra.data, "global matrix")
+            extra.eliminate_zeros()
+            extra_load = _values(
+                compiler(global_equation.L, (physical_size,)), physical_size, "global load"
+            )
+    except Exception as exc:
+        error = exc
+    _collective_error(comm, error)
     with ExitStack() as resources:
         matrix = petsc.Mat().createAIJ(size=(size, size), nnz=16, comm=comm)
         resources.callback(matrix.destroy)
@@ -187,15 +320,25 @@ def solve_distributed(
         resources.callback(coverage.destroy)
         load_scale = rhs.duplicate()
         resources.callback(load_scale.destroy)
-        for index, response in enumerate(responses):
-            dofs, block, load = response.global_contribution(
-                np.arange(offsets[index], offsets[index + 1])
-            )
+        for dofs, block, load in contributions:
             dofs = dofs.astype(petsc.IntType)
             matrix.setValues(dofs, dofs, block, addv=petsc.InsertMode.ADD_VALUES)
             rhs.setValues(dofs, load, addv=petsc.InsertMode.ADD_VALUES)
             load_scale.setValues(dofs, np.abs(load), addv=petsc.InsertMode.ADD_VALUES)
             coverage.setValues(dofs, np.ones(len(dofs)), addv=petsc.InsertMode.ADD_VALUES)
+        for row in np.flatnonzero(np.diff(extra.indptr)):
+            begin, end = extra.indptr[row : row + 2]
+            columns = extra.indices[begin:end].astype(petsc.IntType)
+            matrix.setValues(
+                [row], columns, extra.data[begin:end][None, :], addv=petsc.InsertMode.ADD_VALUES
+            )
+            coverage.setValue(row, 1.0, addv=petsc.InsertMode.ADD_VALUES)
+            coverage.setValues(columns, np.ones(len(columns)), addv=petsc.InsertMode.ADD_VALUES)
+        nonzero_load = np.flatnonzero(extra_load).astype(petsc.IntType)
+        rhs.setValues(nonzero_load, extra_load[nonzero_load], addv=petsc.InsertMode.ADD_VALUES)
+        load_scale.setValues(
+            nonzero_load, np.abs(extra_load[nonzero_load]), addv=petsc.InsertMode.ADD_VALUES
+        )
         rhs.setValues(
             boundary_indices.astype(petsc.IntType),
             -boundary_values,
@@ -385,4 +528,5 @@ def solve_distributed(
             size,
             raw_residual,
             raw_residual_norm,
+            tuple(np.array(response.retained_basis, copy=True) for response in responses),
         )

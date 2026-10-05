@@ -24,6 +24,7 @@ from scipy.sparse import linalg as splinalg
 
 Array = npt.NDArray[Any]
 _AMGX_LOCK = Lock()
+_CUDSS_HOST_LOCK = Lock()
 _EXTENDED_PRECISION = np.finfo(np.longdouble).eps < np.finfo(np.float64).eps
 
 
@@ -416,6 +417,7 @@ def factorize(
     rtol: float = 1e-10,
     atol: float = 0.0,
     equilibration: Literal["none", "symmetric"] = "none",
+    rhs_columns: int = 1,
 ) -> LinearFactorization:
     """Factor a fixed matrix once for repeated, independently checked solves.
 
@@ -438,8 +440,19 @@ def factorize(
     before the selected factorization: ``A' = D A D``, ``b' = D b``, ``x = D y``.
     It requires a Hermitian operator, preserves the original residual criterion,
     and is independent of the backend's own scaling. The default is ``"none"``.
+    ``rhs_columns`` is the positive cuDSS solve width. It permits one native
+    solve/transfer for all local response columns, instead of one per basis.
+    Other backends accept the hint without changing their multi-RHS behavior.
+    Subsequent cuDSS solves of another width reuse the same factors in chunks,
+    padding a final short chunk with zero loads. CUDA factors and cleanup stay
+    on their construction device and restore the caller's current device.
+    cuDSS host API entries are serialized within the process because its
+    analysis and factorization phases do not guarantee host thread safety.
+    Device transfers and asynchronous GPU work do not hold that entry lock.
     """
     _tolerances(rtol, atol)
+    if isinstance(rhs_columns, bool) or not isinstance(rhs_columns, int) or rhs_columns < 1:
+        raise ValueError("rhs_columns must be a positive integer")
     operator = _matrix(matrix)
     if equilibration not in {"none", "symmetric"}:
         raise ValueError("equilibration must be none or symmetric")
@@ -515,31 +528,53 @@ def factorize(
             )
         elif solver == "cudss":
             cupy = _cuda()
+            device = int(cupy.cuda.runtime.getDevice())
             gpu_sparse = _optional("cupyx.scipy.sparse", "Install a compatible CuPy package.")
             nvmath = _optional(
                 "nvmath.sparse.advanced", "Install nvmath-python with cuDSS and CUDA support."
             )
-            engine = nvmath.DirectSolver(
-                gpu_sparse.csr_matrix(backend_operator),
-                cupy.zeros(backend_operator.shape[0], dtype=backend_operator.dtype),
+            device_matrix = gpu_sparse.csr_matrix(backend_operator)
+            device_rhs = cupy.zeros(
+                (backend_operator.shape[0], rhs_columns),
+                dtype=backend_operator.dtype,
+                order="F",
             )
-            stack.callback(engine.free)
-            engine.plan_config.matching_algorithm = nvmath.DirectSolverMatchingAlg.MAX_DIAG_PRODUCT
-            engine.solution_config.ir_num_steps = 5
-            engine.plan()
-            engine.factorize()
+            with _CUDSS_HOST_LOCK:
+                engine = nvmath.DirectSolver(device_matrix, device_rhs)
+
+                def free_cudss() -> None:
+                    """Release native factors on their device with serialized host entry."""
+                    with cupy.cuda.Device(device), _CUDSS_HOST_LOCK:
+                        engine.free()
+
+                stack.callback(free_cudss)
+                engine.plan_config.matching_algorithm = (
+                    nvmath.DirectSolverMatchingAlg.MAX_DIAG_PRODUCT
+                )
+                engine.solution_config.ir_num_steps = 5
+                engine.plan()
+                engine.factorize()
 
             def solve_cudss(rhs: Array) -> Array:
-                """Reuse cuDSS factors, changing only a contiguous vector RHS."""
+                """Reuse factors for column-major blocks on the construction device."""
                 if np.iscomplexobj(rhs) and not np.iscomplexobj(backend_operator.data):
                     raise ValueError("complex rhs requires a complex matrix for cudss")
                 columns = rhs[:, None] if rhs.ndim == 1 else rhs
                 result = np.empty(columns.shape, dtype=backend_operator.dtype)
-                for index in range(columns.shape[1]):
-                    engine.reset_operands(
-                        b=cupy.asarray(columns[:, index], dtype=backend_operator.dtype)
-                    )
-                    result[:, index] = cupy.asnumpy(engine.solve())
+                with cupy.cuda.Device(device):
+                    for first in range(0, columns.shape[1], rhs_columns):
+                        last = min(first + rhs_columns, columns.shape[1])
+                        block = np.zeros(
+                            (columns.shape[0], rhs_columns),
+                            dtype=backend_operator.dtype,
+                            order="F",
+                        )
+                        block[:, : last - first] = columns[:, first:last]
+                        device_block = cupy.asarray(block, dtype=backend_operator.dtype, order="F")
+                        with _CUDSS_HOST_LOCK:
+                            engine.reset_operands(b=device_block)
+                            device_result = engine.solve()
+                        result[:, first:last] = cupy.asnumpy(device_result)[:, : last - first]
                 return result[:, 0] if rhs.ndim == 1 else result
 
             solve_function = solve_cudss
@@ -816,7 +851,12 @@ def solve_linear(
         )
     else:
         with factorize(
-            operator, solver=solver, rtol=rtol, atol=atol, equilibration=equilibration
+            operator,
+            solver=solver,
+            rtol=rtol,
+            atol=atol,
+            equilibration=equilibration,
+            rhs_columns=forcing.shape[1] if forcing.ndim == 2 else 1,
         ) as decomposition:
             if refinement_steps != 2:
                 return decomposition.solve(

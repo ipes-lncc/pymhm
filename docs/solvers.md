@@ -277,7 +277,9 @@ unchanged. In thread mode the limit is process-wide for the duration of the map;
 avoid overlapping maps with different limits. This scheduler provides independent local solves. The separate
 [`solve_distributed` API](execution.md#distributed-mpi-assembly) handles MPI
 ownership, distributed global assembly and MUMPS solution; automatic GPU load
-balancing is not part of either interface.
+balancing is not part of either CPU interface. The explicit
+[`condense_multi_gpu` API](execution.md#local-work-across-multiple-gpus) assigns
+bounded batches to named devices without selecting a physical model.
 
 For unchanged operators and varying loads,
 [`OfflineHybridSystem`](execution.md#repeated-sources-and-boundary-values)

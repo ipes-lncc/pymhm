@@ -13,6 +13,11 @@ from pymhm.core.validation import FloatArray
 from pymhm.core.validation import real_array as _real
 
 
+def _positive_isotropic(values: FloatArray) -> bool:
+    """Check scalar diffusion eigenvalues directly, including positive subnormals."""
+    return bool(np.isfinite(values).all() and np.all(values > 0))
+
+
 def scalar_values(field: Any, points: FloatArray) -> FloatArray:
     """Evaluate a finite real scalar coefficient on points shaped ``(n, 2)``."""
     value = field(points) if callable(field) else field
@@ -36,15 +41,20 @@ def vector_values(field: Any, points: FloatArray) -> FloatArray:
 
 
 def tensor_values(field: Any, points: FloatArray) -> FloatArray:
-    """Evaluate an isotropic scalar or symmetric positive-definite 2x2 tensor."""
+    """Evaluate positive scalar or SPD 2x2 diffusion in writable binary64 storage.
+
+    Scalar eigenvalues are checked directly; matrix inputs retain the explicit
+    symmetry and spectral checks. Scalars expand to the same diagonal tensors.
+    """
     raw = field(points) if callable(field) else field
     if np.iscomplexobj(raw):
         raise ValueError("diffusion tensor must be real")
     value = np.asarray(raw, dtype=float)
     if value.ndim == 0 or value.shape == (len(points),):
-        result = np.broadcast_to(value, (len(points),))[:, None, None] * np.eye(2)
-    else:
-        result = np.broadcast_to(value, (len(points), 2, 2)).copy()
+        if not _positive_isotropic(value):
+            raise ValueError("diffusion tensor must be finite, symmetric and positive definite")
+        return np.broadcast_to(value, (len(points),))[:, None, None] * np.eye(2)
+    result = np.broadcast_to(value, (len(points), 2, 2)).copy()
     if (
         not np.isfinite(result).all()
         or not np.allclose(result, result.swapaxes(1, 2), rtol=1e-12, atol=1e-14)
@@ -66,10 +76,17 @@ def scalar_values_3d(coefficient: Any, points: FloatArray) -> FloatArray:
 
 
 def tensor_values_3d(coefficient: Any, points: FloatArray) -> FloatArray:
-    """Evaluate positive scalar or symmetric positive-definite 3 by 3 diffusion."""
+    """Evaluate positive scalar or SPD 3x3 diffusion in read-only binary64 views.
+
+    Scalar eigenvalues are checked directly; matrix inputs retain their scaled
+    symmetry and spectral checks. Broadcasting preserves the tensor layout.
+    """
     values = _real(coefficient(points) if callable(coefficient) else coefficient, "diffusion")
     if values.ndim == 0 or values.shape == (len(points),):
+        if not _positive_isotropic(values):
+            raise ValueError("diffusion must be symmetric positive definite")
         values = np.broadcast_to(values, (len(points),))[:, None, None] * np.eye(3)
+        return np.broadcast_to(values, (len(points), 3, 3))
     try:
         values = np.broadcast_to(values, (len(points), 3, 3))
     except ValueError as exc:

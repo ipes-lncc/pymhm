@@ -6,12 +6,16 @@ from typing import Any
 import numpy as np
 from scipy import sparse
 
-from pymhm.core.contracts import LocalResponse, _array
+from pymhm.core.contracts import LocalResponse, _array, _preserved_array
 from pymhm.core.validation import FloatArray, IntArray
 
 
 def local_global_contribution(
-    response: LocalResponse, coarse_dofs: Any
+    response: LocalResponse,
+    coarse_dofs: Any,
+    *,
+    direct_matrix: Any = None,
+    direct_load: Any = None,
 ) -> tuple[IntArray, FloatArray, FloatArray]:
     """Return indices, matrix and RHS of this cell's reduced Petrov equations.
 
@@ -19,6 +23,10 @@ def local_global_contribution(
     backends. The trace rows enforce C.T u=g; retained test rows enforce
     W.T (A u+B lambda-f)=0. The negative signs preserve the symmetric
     saddle convention whenever C=B and test/trial data coincide.
+    ``direct_matrix`` and ``direct_load`` add explicitly declared local D/g
+    terms to the trace rows, in the same local trace ordering. Their defaults
+    are zero. Wider real floating digits are preserved. The same operation
+    therefore owns four-block variational forms in serial, CPU workers and MPI.
     """
     p = response.problem
     coarse_dofs = np.asarray(coarse_dofs)
@@ -36,10 +44,32 @@ def local_global_contribution(
         coarse_trace = p.test_basis.T @ p.coupling - p._test_action.T @ response.lifts
         coarse_matrix = p._test_action.T @ response.retained_basis
     block = np.block([[p.test_coupling.T @ response.lifts, -g], [-coarse_trace, -coarse_matrix]])
+    load = response.global_load()
+    count = len(p.trace_dofs)
+    direct = (
+        None
+        if direct_matrix is None
+        else _preserved_array(direct_matrix, (count, count), "direct_matrix")
+    )
+    forcing = (
+        None if direct_load is None else _preserved_array(direct_load, (count,), "direct_load")
+    )
+    if direct is not None or forcing is not None:
+        dtype = np.result_type(
+            block,
+            load,
+            *([] if direct is None else [direct]),
+            *([] if forcing is None else [forcing]),
+        )
+        block, load = block.astype(dtype, copy=False), load.astype(dtype, copy=False)
+    if direct is not None:
+        block[:count, :count] += direct
+    if forcing is not None:
+        load[:count] += forcing
     return (
         np.r_[p.trace_dofs, coarse_dofs].astype(np.int64),
         block,
-        response.global_load(),
+        load,
     )
 
 

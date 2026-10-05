@@ -1,0 +1,3351 @@
+{
+  "grid_n": 500,
+  "trace_segments": 4,
+  "route_labels": {
+    "cpu_serial_condensation": "parallel compile + serial condensation",
+    "cpu_thread_condensation": "parallel compile + threaded condensation",
+    "gpu_one": "parallel CPU compile + sparse condensation on one GPU",
+    "gpu_two": "parallel CPU compile + sparse condensation on two GPUs",
+    "cg_lu": "conforming CG with fresh sparse LU",
+    "cg_amg": "conforming CG with fresh AMG-preconditioned CG"
+  },
+  "warmup": {
+    "cpu_serial_condensation": {
+      "route": "cpu_serial_condensation",
+      "route_description": "shared parallel compilation then serial CPU condensation",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 1,
+      "gpu_batch_size": null,
+      "setup": 0.2602151110768318,
+      "local_compilation_and_zero_contract_check": 5.054323112592101,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 7.014454560354352,
+      "schur_and_sparse_global_assembly": 0.1107540875673294,
+      "global_solve_and_reconstruction": 0.02272065170109272,
+      "total": 12.462467523291707,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.514625845504838e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true
+    },
+    "cpu_thread_condensation": {
+      "route": "cpu_thread_condensation",
+      "route_description": "shared parallel compilation then threaded CPU condensation",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 8,
+      "gpu_batch_size": null,
+      "setup": 0.1882226187735796,
+      "local_compilation_and_zero_contract_check": 5.070631863549352,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 4.180830389261246,
+      "schur_and_sparse_global_assembly": 0.17557295598089695,
+      "global_solve_and_reconstruction": 0.02997199073433876,
+      "total": 9.645229818299413,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.514625845504838e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true
+    },
+    "gpu_one": {
+      "route": "gpu_one",
+      "route_description": "shared parallel compilation then sparse condensation on one GPU",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 1,
+      "gpu_batch_size": 4,
+      "setup": 0.26969250850379467,
+      "local_compilation_and_zero_contract_check": 5.637348720803857,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 4.183518094941974,
+      "schur_and_sparse_global_assembly": 0.173205541446805,
+      "global_solve_and_reconstruction": 0.030297929421067238,
+      "total": 10.294062795117497,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.5131906545927818e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true
+    },
+    "gpu_two": {
+      "route": "gpu_two",
+      "route_description": "shared parallel compilation then sparse condensation on two GPUs",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 2,
+      "gpu_batch_size": 4,
+      "setup": 0.2651053536683321,
+      "local_compilation_and_zero_contract_check": 5.640700232237577,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 6.42518775165081,
+      "schur_and_sparse_global_assembly": 0.20254276506602764,
+      "global_solve_and_reconstruction": 0.03291145898401737,
+      "total": 12.566447561606765,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.4684285352705676e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true
+    },
+    "cg_lu": {
+      "setup": 0.40025682002305984,
+      "assembly": 3.681540345773101,
+      "solve_reconstruct": 4.69127800129354,
+      "total": 8.7730751670897,
+      "pressure_equation_relative_L2": 1.188683937176915e-12,
+      "route": "cg_lu",
+      "solver": "scipy",
+      "grid_n": 500,
+      "fine_elements": 250000,
+      "full_nodal_dofs": 251001,
+      "free_nodal_dofs": 249001,
+      "native_threads": 1,
+      "solver_rtol": 1e-10,
+      "solver_atol": 0
+    },
+    "cg_amg": {
+      "setup": 0.22595840133726597,
+      "assembly": 3.4170920364558697,
+      "solve_reconstruct": 0.9679236002266407,
+      "total": 4.610974038019776,
+      "pressure_equation_relative_L2": 6.594894437477415e-11,
+      "route": "cg_amg",
+      "solver": "pyamg",
+      "grid_n": 500,
+      "fine_elements": 250000,
+      "full_nodal_dofs": 251001,
+      "free_nodal_dofs": 249001,
+      "native_threads": 1,
+      "solver_rtol": 1e-10,
+      "solver_atol": 0
+    }
+  },
+  "samples": [
+    {
+      "route": "gpu_two",
+      "route_description": "shared parallel compilation then sparse condensation on two GPUs",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 2,
+      "gpu_batch_size": 4,
+      "setup": 0.18340367637574673,
+      "local_compilation_and_zero_contract_check": 5.165122471749783,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 6.274812122806907,
+      "schur_and_sparse_global_assembly": 0.16536270454525948,
+      "global_solve_and_reconstruction": 0.02933385595679283,
+      "total": 11.818034831434488,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.4996158637471988e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true,
+      "external_quality": {
+        "maximum_global_matrix_absolute_difference": 8.17217387510949e-18,
+        "maximum_global_matrix_relative_difference": 3.268869550043763e-16,
+        "maximum_global_rhs_difference": 1.0740377771184528e-17,
+        "maximum_field_coefficient_difference": 1.2323475573339238e-14,
+        "original_local_equation_relative_L2": 5.162842468810281e-13,
+        "physical_CPU_difference": {
+          "pressure_L2": 1.340471426121082e-15,
+          "flux_L2": 1.0171938682463122e-13
+        },
+        "physical_exact_error": {
+          "pressure_L2": 1.9968257344326234e-06,
+          "flux_L2": 0.005100963654923262
+        },
+        "common_error_partition": [
+          500,
+          500
+        ],
+        "error_gauss_orders": [
+          5,
+          6
+        ],
+        "quadrature_relative_change": {
+          "pressure_L2": 4.057374662586388e-13,
+          "flux_L2": 1.734395758523555e-14
+        },
+        "CPU_GPU_bitwise_agreement_claimed": false,
+        "state_sha256": "06f0be71866cba1637d211faabaf43eb90bad11da0831c5d3553166fdba1ea58",
+        "diagnostics_reused_for_exact_state": false,
+        "fresh_BLAS_coefficient_replay": {
+          "1": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          },
+          "2": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          }
+        },
+        "archived_physical_replay_reused_for_exact_state": false,
+        "archived_physical_replay": {
+          "basis": "archived executed retained matrices; declared kernel is literal constant one",
+          "archive_reloaded": "results_500/sample_0_gpu_two.npz",
+          "archive_sha256": "91727081da6823f0e64afe13be2d0f0232319af4a14fa5121972dc68f7bc634d",
+          "physical_replay_partition": [
+            500,
+            500
+          ],
+          "physical_replay_gauss_order": 2,
+          "replay": {
+            "1": {
+              "maximum_field_difference": 0.0,
+              "consistent_retained_basis_sign_rotation_difference": 0.0,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.237086072878581e-17,
+                "flux_L2": 0.0
+              }
+            },
+            "2": {
+              "maximum_field_difference": 0.0,
+              "consistent_retained_basis_sign_rotation_difference": 0.0,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.237086072878581e-17,
+                "flux_L2": 0.0
+              }
+            }
+          }
+        }
+      },
+      "repetition": 0,
+      "randomized_order": [
+        "gpu_two",
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu",
+        "cg_amg"
+      ]
+    },
+    {
+      "route": "cpu_thread_condensation",
+      "route_description": "shared parallel compilation then threaded CPU condensation",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 8,
+      "gpu_batch_size": null,
+      "setup": 0.1938129272311926,
+      "local_compilation_and_zero_contract_check": 5.552159497514367,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 3.990807633846998,
+      "schur_and_sparse_global_assembly": 0.16599649749696255,
+      "global_solve_and_reconstruction": 0.02955004759132862,
+      "total": 9.932326603680849,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.514625845504838e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true,
+      "external_quality": {
+        "maximum_global_matrix_absolute_difference": 0.0,
+        "maximum_global_matrix_relative_difference": 0.0,
+        "maximum_global_rhs_difference": 0.0,
+        "maximum_field_coefficient_difference": 0.0,
+        "original_local_equation_relative_L2": 8.289962109403808e-13,
+        "physical_CPU_difference": {
+          "pressure_L2": 0.0,
+          "flux_L2": 0.0
+        },
+        "physical_exact_error": {
+          "pressure_L2": 1.9968257336045356e-06,
+          "flux_L2": 0.005100963654923257
+        },
+        "common_error_partition": [
+          500,
+          500
+        ],
+        "error_gauss_orders": [
+          5,
+          6
+        ],
+        "quadrature_relative_change": {
+          "pressure_L2": 4.14221260811152e-13,
+          "flux_L2": 1.785407398480132e-14
+        },
+        "CPU_GPU_bitwise_agreement_claimed": false,
+        "state_sha256": "35ef5ffe046c6fcc7b9eda4136045ef872a47f0e3e16a196f42ad62b5fe3f8b7",
+        "diagnostics_reused_for_exact_state": true,
+        "fresh_BLAS_coefficient_replay": {
+          "1": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          },
+          "2": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          }
+        },
+        "archived_physical_replay_reused_for_exact_state": true,
+        "archived_physical_replay": {
+          "basis": "archived executed retained matrices; declared kernel is literal constant one",
+          "archive_reloaded": "results_500/executed_cpu_thread_condensation.npz",
+          "archive_sha256": "77280edc5c125ef51b4a1c9d974872dccd7d40c0d42c6e599ad1566e73f0075c",
+          "physical_replay_partition": [
+            500,
+            500
+          ],
+          "physical_replay_gauss_order": 2,
+          "replay": {
+            "1": {
+              "maximum_field_difference": 1.1102230246251565e-16,
+              "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.505248535244727e-17,
+                "flux_L2": 2.38779640404506e-14
+              }
+            },
+            "2": {
+              "maximum_field_difference": 1.1102230246251565e-16,
+              "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.505248535244727e-17,
+                "flux_L2": 2.38779640404506e-14
+              }
+            }
+          }
+        }
+      },
+      "repetition": 0,
+      "randomized_order": [
+        "gpu_two",
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu",
+        "cg_amg"
+      ]
+    },
+    {
+      "route": "gpu_one",
+      "route_description": "shared parallel compilation then sparse condensation on one GPU",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 1,
+      "gpu_batch_size": 4,
+      "setup": 0.18412338010966778,
+      "local_compilation_and_zero_contract_check": 5.41506870649755,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 4.0495037995278835,
+      "schur_and_sparse_global_assembly": 0.14712337404489517,
+      "global_solve_and_reconstruction": 0.02828793413937092,
+      "total": 9.824107194319367,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.4823536081176532e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true,
+      "external_quality": {
+        "maximum_global_matrix_absolute_difference": 7.989214758502561e-18,
+        "maximum_global_matrix_relative_difference": 3.1956859034009923e-16,
+        "maximum_global_rhs_difference": 1.111307226797642e-17,
+        "maximum_field_coefficient_difference": 1.0436096431476471e-14,
+        "original_local_equation_relative_L2": 5.170977709941893e-13,
+        "physical_CPU_difference": {
+          "pressure_L2": 1.318503702754756e-15,
+          "flux_L2": 1.0242335160578096e-13
+        },
+        "physical_exact_error": {
+          "pressure_L2": 1.9968257344407037e-06,
+          "flux_L2": 0.005100963654923263
+        },
+        "common_error_partition": [
+          500,
+          500
+        ],
+        "error_gauss_orders": [
+          5,
+          6
+        ],
+        "quadrature_relative_change": {
+          "pressure_L2": 3.768925653626156e-13,
+          "flux_L2": 1.836419038436705e-14
+        },
+        "CPU_GPU_bitwise_agreement_claimed": false,
+        "state_sha256": "f1b3856769d582fdd61472aa2235f5bfd5ed71aba71b01e89c4c7d7ed1136511",
+        "diagnostics_reused_for_exact_state": false,
+        "fresh_BLAS_coefficient_replay": {
+          "1": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          },
+          "2": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          }
+        },
+        "archived_physical_replay_reused_for_exact_state": false,
+        "archived_physical_replay": {
+          "basis": "archived executed retained matrices; declared kernel is literal constant one",
+          "archive_reloaded": "results_500/sample_0_gpu_one.npz",
+          "archive_sha256": "c59a6688c087f9f6d0b05d855878b49bd83356164ba54582d7a10f83aa878c68",
+          "physical_replay_partition": [
+            500,
+            500
+          ],
+          "physical_replay_gauss_order": 2,
+          "replay": {
+            "1": {
+              "maximum_field_difference": 0.0,
+              "consistent_retained_basis_sign_rotation_difference": 0.0,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.240652738107793e-17,
+                "flux_L2": 0.0
+              }
+            },
+            "2": {
+              "maximum_field_difference": 0.0,
+              "consistent_retained_basis_sign_rotation_difference": 0.0,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.240652738107793e-17,
+                "flux_L2": 0.0
+              }
+            }
+          }
+        }
+      },
+      "repetition": 0,
+      "randomized_order": [
+        "gpu_two",
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu",
+        "cg_amg"
+      ]
+    },
+    {
+      "route": "cpu_serial_condensation",
+      "route_description": "shared parallel compilation then serial CPU condensation",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 1,
+      "gpu_batch_size": null,
+      "setup": 0.17070399597287178,
+      "local_compilation_and_zero_contract_check": 5.372370485216379,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 6.94210671633482,
+      "schur_and_sparse_global_assembly": 0.08902368694543839,
+      "global_solve_and_reconstruction": 0.019444309175014496,
+      "total": 12.593649193644524,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.514625845504838e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true,
+      "external_quality": {
+        "maximum_global_matrix_absolute_difference": 0.0,
+        "maximum_global_matrix_relative_difference": 0.0,
+        "maximum_global_rhs_difference": 0.0,
+        "maximum_field_coefficient_difference": 0.0,
+        "original_local_equation_relative_L2": 8.289962109403808e-13,
+        "physical_CPU_difference": {
+          "pressure_L2": 0.0,
+          "flux_L2": 0.0
+        },
+        "physical_exact_error": {
+          "pressure_L2": 1.9968257336045356e-06,
+          "flux_L2": 0.005100963654923257
+        },
+        "common_error_partition": [
+          500,
+          500
+        ],
+        "error_gauss_orders": [
+          5,
+          6
+        ],
+        "quadrature_relative_change": {
+          "pressure_L2": 4.14221260811152e-13,
+          "flux_L2": 1.785407398480132e-14
+        },
+        "CPU_GPU_bitwise_agreement_claimed": false,
+        "state_sha256": "35ef5ffe046c6fcc7b9eda4136045ef872a47f0e3e16a196f42ad62b5fe3f8b7",
+        "diagnostics_reused_for_exact_state": true,
+        "fresh_BLAS_coefficient_replay": {
+          "1": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          },
+          "2": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          }
+        },
+        "archived_physical_replay_reused_for_exact_state": true,
+        "archived_physical_replay": {
+          "basis": "archived executed retained matrices; declared kernel is literal constant one",
+          "archive_reloaded": "results_500/executed_cpu_thread_condensation.npz",
+          "archive_sha256": "77280edc5c125ef51b4a1c9d974872dccd7d40c0d42c6e599ad1566e73f0075c",
+          "physical_replay_partition": [
+            500,
+            500
+          ],
+          "physical_replay_gauss_order": 2,
+          "replay": {
+            "1": {
+              "maximum_field_difference": 1.1102230246251565e-16,
+              "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.505248535244727e-17,
+                "flux_L2": 2.38779640404506e-14
+              }
+            },
+            "2": {
+              "maximum_field_difference": 1.1102230246251565e-16,
+              "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.505248535244727e-17,
+                "flux_L2": 2.38779640404506e-14
+              }
+            }
+          }
+        }
+      },
+      "repetition": 0,
+      "randomized_order": [
+        "gpu_two",
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu",
+        "cg_amg"
+      ]
+    },
+    {
+      "setup": 0.22255098447203636,
+      "assembly": 3.447780478745699,
+      "solve_reconstruct": 4.65974778868258,
+      "total": 8.330079251900315,
+      "pressure_equation_relative_L2": 1.188683937176915e-12,
+      "route": "cg_lu",
+      "solver": "scipy",
+      "grid_n": 500,
+      "fine_elements": 250000,
+      "full_nodal_dofs": 251001,
+      "free_nodal_dofs": 249001,
+      "native_threads": 1,
+      "solver_rtol": 1e-10,
+      "solver_atol": 0,
+      "external_quality": {
+        "state_sha256": "0b43275878369b7efb82eb8dd8dc7e77f40873d9e8cbc731229d49bcd4a959a6",
+        "maximum_same_solver_warmup_coefficient_difference": 0.0,
+        "original_pressure_equation_relative_L2": 1.188683937176915e-12,
+        "boundary_values_exactly_zero": true,
+        "diagnostics_reused_for_exact_state": true,
+        "physical_diagnostics": {
+          "physical_exact_error": {
+            "pressure_L2": 1.95297413620255e-06,
+            "flux_L2": 0.0050990504675071996
+          },
+          "error_gauss_orders": [
+            5,
+            6
+          ],
+          "quadrature_relative_change": {
+            "pressure_L2": 3.012146300165342e-13,
+            "flux_L2": 1.803087551547968e-14
+          },
+          "physical_LU_difference": {
+            "pressure_L2": 0.0,
+            "flux_L2": 0.0
+          }
+        }
+      },
+      "repetition": 0,
+      "randomized_order": [
+        "gpu_two",
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu",
+        "cg_amg"
+      ]
+    },
+    {
+      "setup": 0.21366774663329124,
+      "assembly": 3.4034886565059423,
+      "solve_reconstruct": 0.8912672400474548,
+      "total": 4.508423643186688,
+      "pressure_equation_relative_L2": 6.594894437477415e-11,
+      "route": "cg_amg",
+      "solver": "pyamg",
+      "grid_n": 500,
+      "fine_elements": 250000,
+      "full_nodal_dofs": 251001,
+      "free_nodal_dofs": 249001,
+      "native_threads": 1,
+      "solver_rtol": 1e-10,
+      "solver_atol": 0,
+      "external_quality": {
+        "state_sha256": "68c1279ce3c2fe0f81d79b6c94f656ae2356648989d175eae10796576fbe0f8a",
+        "maximum_same_solver_warmup_coefficient_difference": 0.0,
+        "original_pressure_equation_relative_L2": 6.594894437477415e-11,
+        "boundary_values_exactly_zero": true,
+        "diagnostics_reused_for_exact_state": true,
+        "physical_diagnostics": {
+          "physical_exact_error": {
+            "pressure_L2": 1.9529741146804234e-06,
+            "flux_L2": 0.005099050467499091
+          },
+          "error_gauss_orders": [
+            5,
+            6
+          ],
+          "quadrature_relative_change": {
+            "pressure_L2": 2.9319091740117817e-13,
+            "flux_L2": 1.7690670317102537e-14
+          },
+          "physical_LU_difference": {
+            "pressure_L2": 9.183178015281053e-13,
+            "flux_L2": 2.0007352042038107e-11
+          }
+        }
+      },
+      "repetition": 0,
+      "randomized_order": [
+        "gpu_two",
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu",
+        "cg_amg"
+      ]
+    },
+    {
+      "setup": 0.21769373677670956,
+      "assembly": 3.4097401425242424,
+      "solve_reconstruct": 0.9142446182668209,
+      "total": 4.541678497567773,
+      "pressure_equation_relative_L2": 6.594894437477415e-11,
+      "route": "cg_amg",
+      "solver": "pyamg",
+      "grid_n": 500,
+      "fine_elements": 250000,
+      "full_nodal_dofs": 251001,
+      "free_nodal_dofs": 249001,
+      "native_threads": 1,
+      "solver_rtol": 1e-10,
+      "solver_atol": 0,
+      "external_quality": {
+        "state_sha256": "68c1279ce3c2fe0f81d79b6c94f656ae2356648989d175eae10796576fbe0f8a",
+        "maximum_same_solver_warmup_coefficient_difference": 0.0,
+        "original_pressure_equation_relative_L2": 6.594894437477415e-11,
+        "boundary_values_exactly_zero": true,
+        "diagnostics_reused_for_exact_state": true,
+        "physical_diagnostics": {
+          "physical_exact_error": {
+            "pressure_L2": 1.9529741146804234e-06,
+            "flux_L2": 0.005099050467499091
+          },
+          "error_gauss_orders": [
+            5,
+            6
+          ],
+          "quadrature_relative_change": {
+            "pressure_L2": 2.9319091740117817e-13,
+            "flux_L2": 1.7690670317102537e-14
+          },
+          "physical_LU_difference": {
+            "pressure_L2": 9.183178015281053e-13,
+            "flux_L2": 2.0007352042038107e-11
+          }
+        }
+      },
+      "repetition": 1,
+      "randomized_order": [
+        "cg_amg",
+        "gpu_two",
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu"
+      ]
+    },
+    {
+      "route": "gpu_two",
+      "route_description": "shared parallel compilation then sparse condensation on two GPUs",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 2,
+      "gpu_batch_size": 4,
+      "setup": 0.18480867519974709,
+      "local_compilation_and_zero_contract_check": 5.382782436907291,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 6.498170111328363,
+      "schur_and_sparse_global_assembly": 0.19198104366660118,
+      "global_solve_and_reconstruction": 0.03190411813557148,
+      "total": 12.289646385237575,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.512664729550674e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true,
+      "external_quality": {
+        "maximum_global_matrix_absolute_difference": 8.226383983733765e-18,
+        "maximum_global_matrix_relative_difference": 3.290553593493473e-16,
+        "maximum_global_rhs_difference": 1.0814916670542907e-17,
+        "maximum_field_coefficient_difference": 1.2712053631958042e-14,
+        "original_local_equation_relative_L2": 5.188229825241564e-13,
+        "physical_CPU_difference": {
+          "pressure_L2": 1.417169955610258e-15,
+          "flux_L2": 1.0247989660381264e-13
+        },
+        "physical_exact_error": {
+          "pressure_L2": 1.9968257345127887e-06,
+          "flux_L2": 0.005100963654923264
+        },
+        "common_error_partition": [
+          500,
+          500
+        ],
+        "error_gauss_orders": [
+          5,
+          6
+        ],
+        "quadrature_relative_change": {
+          "pressure_L2": 3.9788995644048536e-13,
+          "flux_L2": 1.8194151584511795e-14
+        },
+        "CPU_GPU_bitwise_agreement_claimed": false,
+        "state_sha256": "212c96eb184505b2629d7c5fa92fee7fb70eab79a6a8dc19aead8563c117a788",
+        "diagnostics_reused_for_exact_state": false,
+        "fresh_BLAS_coefficient_replay": {
+          "1": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          },
+          "2": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          }
+        },
+        "archived_physical_replay_reused_for_exact_state": false,
+        "archived_physical_replay": {
+          "basis": "archived executed retained matrices; declared kernel is literal constant one",
+          "archive_reloaded": "results_500/sample_1_gpu_two.npz",
+          "archive_sha256": "330ee9b2277450cf69037ea0f83b2cbb38054f9ee7e79166c42965b24a65467a",
+          "physical_replay_partition": [
+            500,
+            500
+          ],
+          "physical_replay_gauss_order": 2,
+          "replay": {
+            "1": {
+              "maximum_field_difference": 0.0,
+              "consistent_retained_basis_sign_rotation_difference": 0.0,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.2396749605681703e-17,
+                "flux_L2": 0.0
+              }
+            },
+            "2": {
+              "maximum_field_difference": 0.0,
+              "consistent_retained_basis_sign_rotation_difference": 0.0,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.2396749605681703e-17,
+                "flux_L2": 0.0
+              }
+            }
+          }
+        }
+      },
+      "repetition": 1,
+      "randomized_order": [
+        "cg_amg",
+        "gpu_two",
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu"
+      ]
+    },
+    {
+      "route": "cpu_thread_condensation",
+      "route_description": "shared parallel compilation then threaded CPU condensation",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 8,
+      "gpu_batch_size": null,
+      "setup": 0.18915381096303463,
+      "local_compilation_and_zero_contract_check": 5.89476702734828,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 3.9453558176755905,
+      "schur_and_sparse_global_assembly": 0.162920493632555,
+      "global_solve_and_reconstruction": 0.028672538697719574,
+      "total": 10.22086968831718,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.514625845504838e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true,
+      "external_quality": {
+        "maximum_global_matrix_absolute_difference": 0.0,
+        "maximum_global_matrix_relative_difference": 0.0,
+        "maximum_global_rhs_difference": 0.0,
+        "maximum_field_coefficient_difference": 0.0,
+        "original_local_equation_relative_L2": 8.289962109403808e-13,
+        "physical_CPU_difference": {
+          "pressure_L2": 0.0,
+          "flux_L2": 0.0
+        },
+        "physical_exact_error": {
+          "pressure_L2": 1.9968257336045356e-06,
+          "flux_L2": 0.005100963654923257
+        },
+        "common_error_partition": [
+          500,
+          500
+        ],
+        "error_gauss_orders": [
+          5,
+          6
+        ],
+        "quadrature_relative_change": {
+          "pressure_L2": 4.14221260811152e-13,
+          "flux_L2": 1.785407398480132e-14
+        },
+        "CPU_GPU_bitwise_agreement_claimed": false,
+        "state_sha256": "35ef5ffe046c6fcc7b9eda4136045ef872a47f0e3e16a196f42ad62b5fe3f8b7",
+        "diagnostics_reused_for_exact_state": true,
+        "fresh_BLAS_coefficient_replay": {
+          "1": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          },
+          "2": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          }
+        },
+        "archived_physical_replay_reused_for_exact_state": true,
+        "archived_physical_replay": {
+          "basis": "archived executed retained matrices; declared kernel is literal constant one",
+          "archive_reloaded": "results_500/executed_cpu_thread_condensation.npz",
+          "archive_sha256": "77280edc5c125ef51b4a1c9d974872dccd7d40c0d42c6e599ad1566e73f0075c",
+          "physical_replay_partition": [
+            500,
+            500
+          ],
+          "physical_replay_gauss_order": 2,
+          "replay": {
+            "1": {
+              "maximum_field_difference": 1.1102230246251565e-16,
+              "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.505248535244727e-17,
+                "flux_L2": 2.38779640404506e-14
+              }
+            },
+            "2": {
+              "maximum_field_difference": 1.1102230246251565e-16,
+              "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.505248535244727e-17,
+                "flux_L2": 2.38779640404506e-14
+              }
+            }
+          }
+        }
+      },
+      "repetition": 1,
+      "randomized_order": [
+        "cg_amg",
+        "gpu_two",
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu"
+      ]
+    },
+    {
+      "route": "gpu_one",
+      "route_description": "shared parallel compilation then sparse condensation on one GPU",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 1,
+      "gpu_batch_size": 4,
+      "setup": 0.184935811907053,
+      "local_compilation_and_zero_contract_check": 5.56334912031889,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 4.328791821375489,
+      "schur_and_sparse_global_assembly": 0.15800271183252335,
+      "global_solve_and_reconstruction": 0.03017755225300789,
+      "total": 10.265257017686963,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.5101963858648997e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true,
+      "external_quality": {
+        "maximum_global_matrix_absolute_difference": 8.131516293641283e-18,
+        "maximum_global_matrix_relative_difference": 3.252606517456481e-16,
+        "maximum_global_rhs_difference": 1.0842021724855044e-17,
+        "maximum_field_coefficient_difference": 1.071365218763276e-14,
+        "original_local_equation_relative_L2": 5.179557456155026e-13,
+        "physical_CPU_difference": {
+          "pressure_L2": 1.3340556023495818e-15,
+          "flux_L2": 1.0061542532148007e-13
+        },
+        "physical_exact_error": {
+          "pressure_L2": 1.9968257344630454e-06,
+          "flux_L2": 0.005100963654923261
+        },
+        "common_error_partition": [
+          500,
+          500
+        ],
+        "error_gauss_orders": [
+          5,
+          6
+        ],
+        "quadrature_relative_change": {
+          "pressure_L2": 4.167663989472445e-13,
+          "flux_L2": 1.7854073984801307e-14
+        },
+        "CPU_GPU_bitwise_agreement_claimed": false,
+        "state_sha256": "a3e2c4cb346b51a6fc723ec9e531dd5a72482633b52d31560838c79a4938e898",
+        "diagnostics_reused_for_exact_state": false,
+        "fresh_BLAS_coefficient_replay": {
+          "1": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          },
+          "2": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          }
+        },
+        "archived_physical_replay_reused_for_exact_state": false,
+        "archived_physical_replay": {
+          "basis": "archived executed retained matrices; declared kernel is literal constant one",
+          "archive_reloaded": "results_500/sample_1_gpu_one.npz",
+          "archive_sha256": "d7471444ea70f92cf2d23f6045fa3832b9a60283a278c8cc6e5d9f49e2fa038a",
+          "physical_replay_partition": [
+            500,
+            500
+          ],
+          "physical_replay_gauss_order": 2,
+          "replay": {
+            "1": {
+              "maximum_field_difference": 0.0,
+              "consistent_retained_basis_sign_rotation_difference": 0.0,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.236085047368678e-17,
+                "flux_L2": 0.0
+              }
+            },
+            "2": {
+              "maximum_field_difference": 0.0,
+              "consistent_retained_basis_sign_rotation_difference": 0.0,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.236085047368678e-17,
+                "flux_L2": 0.0
+              }
+            }
+          }
+        }
+      },
+      "repetition": 1,
+      "randomized_order": [
+        "cg_amg",
+        "gpu_two",
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu"
+      ]
+    },
+    {
+      "route": "cpu_serial_condensation",
+      "route_description": "shared parallel compilation then serial CPU condensation",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 1,
+      "gpu_batch_size": null,
+      "setup": 0.1850576512515545,
+      "local_compilation_and_zero_contract_check": 5.582160521298647,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 6.9370917696505785,
+      "schur_and_sparse_global_assembly": 0.09456890821456909,
+      "global_solve_and_reconstruction": 0.019538890570402145,
+      "total": 12.818417740985751,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.514625845504838e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true,
+      "external_quality": {
+        "maximum_global_matrix_absolute_difference": 0.0,
+        "maximum_global_matrix_relative_difference": 0.0,
+        "maximum_global_rhs_difference": 0.0,
+        "maximum_field_coefficient_difference": 0.0,
+        "original_local_equation_relative_L2": 8.289962109403808e-13,
+        "physical_CPU_difference": {
+          "pressure_L2": 0.0,
+          "flux_L2": 0.0
+        },
+        "physical_exact_error": {
+          "pressure_L2": 1.9968257336045356e-06,
+          "flux_L2": 0.005100963654923257
+        },
+        "common_error_partition": [
+          500,
+          500
+        ],
+        "error_gauss_orders": [
+          5,
+          6
+        ],
+        "quadrature_relative_change": {
+          "pressure_L2": 4.14221260811152e-13,
+          "flux_L2": 1.785407398480132e-14
+        },
+        "CPU_GPU_bitwise_agreement_claimed": false,
+        "state_sha256": "35ef5ffe046c6fcc7b9eda4136045ef872a47f0e3e16a196f42ad62b5fe3f8b7",
+        "diagnostics_reused_for_exact_state": true,
+        "fresh_BLAS_coefficient_replay": {
+          "1": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          },
+          "2": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          }
+        },
+        "archived_physical_replay_reused_for_exact_state": true,
+        "archived_physical_replay": {
+          "basis": "archived executed retained matrices; declared kernel is literal constant one",
+          "archive_reloaded": "results_500/executed_cpu_thread_condensation.npz",
+          "archive_sha256": "77280edc5c125ef51b4a1c9d974872dccd7d40c0d42c6e599ad1566e73f0075c",
+          "physical_replay_partition": [
+            500,
+            500
+          ],
+          "physical_replay_gauss_order": 2,
+          "replay": {
+            "1": {
+              "maximum_field_difference": 1.1102230246251565e-16,
+              "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.505248535244727e-17,
+                "flux_L2": 2.38779640404506e-14
+              }
+            },
+            "2": {
+              "maximum_field_difference": 1.1102230246251565e-16,
+              "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.505248535244727e-17,
+                "flux_L2": 2.38779640404506e-14
+              }
+            }
+          }
+        }
+      },
+      "repetition": 1,
+      "randomized_order": [
+        "cg_amg",
+        "gpu_two",
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu"
+      ]
+    },
+    {
+      "setup": 0.21685973182320595,
+      "assembly": 3.4048983585089445,
+      "solve_reconstruct": 4.678447747603059,
+      "total": 8.30020583793521,
+      "pressure_equation_relative_L2": 1.188683937176915e-12,
+      "route": "cg_lu",
+      "solver": "scipy",
+      "grid_n": 500,
+      "fine_elements": 250000,
+      "full_nodal_dofs": 251001,
+      "free_nodal_dofs": 249001,
+      "native_threads": 1,
+      "solver_rtol": 1e-10,
+      "solver_atol": 0,
+      "external_quality": {
+        "state_sha256": "0b43275878369b7efb82eb8dd8dc7e77f40873d9e8cbc731229d49bcd4a959a6",
+        "maximum_same_solver_warmup_coefficient_difference": 0.0,
+        "original_pressure_equation_relative_L2": 1.188683937176915e-12,
+        "boundary_values_exactly_zero": true,
+        "diagnostics_reused_for_exact_state": true,
+        "physical_diagnostics": {
+          "physical_exact_error": {
+            "pressure_L2": 1.95297413620255e-06,
+            "flux_L2": 0.0050990504675071996
+          },
+          "error_gauss_orders": [
+            5,
+            6
+          ],
+          "quadrature_relative_change": {
+            "pressure_L2": 3.012146300165342e-13,
+            "flux_L2": 1.803087551547968e-14
+          },
+          "physical_LU_difference": {
+            "pressure_L2": 0.0,
+            "flux_L2": 0.0
+          }
+        }
+      },
+      "repetition": 1,
+      "randomized_order": [
+        "cg_amg",
+        "gpu_two",
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu"
+      ]
+    },
+    {
+      "route": "cpu_thread_condensation",
+      "route_description": "shared parallel compilation then threaded CPU condensation",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 8,
+      "gpu_batch_size": null,
+      "setup": 0.18784102611243725,
+      "local_compilation_and_zero_contract_check": 5.335831405594945,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 4.101173508912325,
+      "schur_and_sparse_global_assembly": 0.14321096241474152,
+      "global_solve_and_reconstruction": 0.02747960202395916,
+      "total": 9.795536505058408,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.514625845504838e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true,
+      "external_quality": {
+        "maximum_global_matrix_absolute_difference": 0.0,
+        "maximum_global_matrix_relative_difference": 0.0,
+        "maximum_global_rhs_difference": 0.0,
+        "maximum_field_coefficient_difference": 0.0,
+        "original_local_equation_relative_L2": 8.289962109403808e-13,
+        "physical_CPU_difference": {
+          "pressure_L2": 0.0,
+          "flux_L2": 0.0
+        },
+        "physical_exact_error": {
+          "pressure_L2": 1.9968257336045356e-06,
+          "flux_L2": 0.005100963654923257
+        },
+        "common_error_partition": [
+          500,
+          500
+        ],
+        "error_gauss_orders": [
+          5,
+          6
+        ],
+        "quadrature_relative_change": {
+          "pressure_L2": 4.14221260811152e-13,
+          "flux_L2": 1.785407398480132e-14
+        },
+        "CPU_GPU_bitwise_agreement_claimed": false,
+        "state_sha256": "35ef5ffe046c6fcc7b9eda4136045ef872a47f0e3e16a196f42ad62b5fe3f8b7",
+        "diagnostics_reused_for_exact_state": true,
+        "fresh_BLAS_coefficient_replay": {
+          "1": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          },
+          "2": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          }
+        },
+        "archived_physical_replay_reused_for_exact_state": true,
+        "archived_physical_replay": {
+          "basis": "archived executed retained matrices; declared kernel is literal constant one",
+          "archive_reloaded": "results_500/executed_cpu_thread_condensation.npz",
+          "archive_sha256": "77280edc5c125ef51b4a1c9d974872dccd7d40c0d42c6e599ad1566e73f0075c",
+          "physical_replay_partition": [
+            500,
+            500
+          ],
+          "physical_replay_gauss_order": 2,
+          "replay": {
+            "1": {
+              "maximum_field_difference": 1.1102230246251565e-16,
+              "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.505248535244727e-17,
+                "flux_L2": 2.38779640404506e-14
+              }
+            },
+            "2": {
+              "maximum_field_difference": 1.1102230246251565e-16,
+              "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.505248535244727e-17,
+                "flux_L2": 2.38779640404506e-14
+              }
+            }
+          }
+        }
+      },
+      "repetition": 2,
+      "randomized_order": [
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu",
+        "cg_amg",
+        "gpu_two"
+      ]
+    },
+    {
+      "route": "gpu_one",
+      "route_description": "shared parallel compilation then sparse condensation on one GPU",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 1,
+      "gpu_batch_size": 4,
+      "setup": 0.19180803000926971,
+      "local_compilation_and_zero_contract_check": 5.3912446945905685,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 4.0630801022052765,
+      "schur_and_sparse_global_assembly": 0.1492410134524107,
+      "global_solve_and_reconstruction": 0.02794322744011879,
+      "total": 9.823317067697644,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.385045509622436e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true,
+      "external_quality": {
+        "maximum_global_matrix_absolute_difference": 7.989214758502561e-18,
+        "maximum_global_matrix_relative_difference": 3.1956859034009923e-16,
+        "maximum_global_rhs_difference": 1.0970770732837698e-17,
+        "maximum_field_coefficient_difference": 1.1213252548714081e-14,
+        "original_local_equation_relative_L2": 5.20153088971198e-13,
+        "physical_CPU_difference": {
+          "pressure_L2": 1.3420106211168174e-15,
+          "flux_L2": 1.0061177573974947e-13
+        },
+        "physical_exact_error": {
+          "pressure_L2": 1.996825734466943e-06,
+          "flux_L2": 0.005100963654923265
+        },
+        "common_error_partition": [
+          500,
+          500
+        ],
+        "error_gauss_orders": [
+          5,
+          6
+        ],
+        "quadrature_relative_change": {
+          "pressure_L2": 3.9598110271398815e-13,
+          "flux_L2": 1.751399638509079e-14
+        },
+        "CPU_GPU_bitwise_agreement_claimed": false,
+        "state_sha256": "58a3940582f986756cba9c90c4483f16dc1f182f63b867cba7b59165a9edf14c",
+        "diagnostics_reused_for_exact_state": false,
+        "fresh_BLAS_coefficient_replay": {
+          "1": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          },
+          "2": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          }
+        },
+        "archived_physical_replay_reused_for_exact_state": false,
+        "archived_physical_replay": {
+          "basis": "archived executed retained matrices; declared kernel is literal constant one",
+          "archive_reloaded": "results_500/sample_2_gpu_one.npz",
+          "archive_sha256": "062b058606cb24bebe22d1a0b5cc6d73305bdb97b8ef8c4ebcb22edfe05cb1e9",
+          "physical_replay_partition": [
+            500,
+            500
+          ],
+          "physical_replay_gauss_order": 2,
+          "replay": {
+            "1": {
+              "maximum_field_difference": 0.0,
+              "consistent_retained_basis_sign_rotation_difference": 0.0,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.2302771508117327e-17,
+                "flux_L2": 0.0
+              }
+            },
+            "2": {
+              "maximum_field_difference": 0.0,
+              "consistent_retained_basis_sign_rotation_difference": 0.0,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.2302771508117327e-17,
+                "flux_L2": 0.0
+              }
+            }
+          }
+        }
+      },
+      "repetition": 2,
+      "randomized_order": [
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu",
+        "cg_amg",
+        "gpu_two"
+      ]
+    },
+    {
+      "route": "cpu_serial_condensation",
+      "route_description": "shared parallel compilation then serial CPU condensation",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 1,
+      "gpu_batch_size": null,
+      "setup": 0.17850890569388866,
+      "local_compilation_and_zero_contract_check": 5.456195374950767,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 6.988302908837795,
+      "schur_and_sparse_global_assembly": 0.08836713992059231,
+      "global_solve_and_reconstruction": 0.019863344728946686,
+      "total": 12.73123767413199,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.514625845504838e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true,
+      "external_quality": {
+        "maximum_global_matrix_absolute_difference": 0.0,
+        "maximum_global_matrix_relative_difference": 0.0,
+        "maximum_global_rhs_difference": 0.0,
+        "maximum_field_coefficient_difference": 0.0,
+        "original_local_equation_relative_L2": 8.289962109403808e-13,
+        "physical_CPU_difference": {
+          "pressure_L2": 0.0,
+          "flux_L2": 0.0
+        },
+        "physical_exact_error": {
+          "pressure_L2": 1.9968257336045356e-06,
+          "flux_L2": 0.005100963654923257
+        },
+        "common_error_partition": [
+          500,
+          500
+        ],
+        "error_gauss_orders": [
+          5,
+          6
+        ],
+        "quadrature_relative_change": {
+          "pressure_L2": 4.14221260811152e-13,
+          "flux_L2": 1.785407398480132e-14
+        },
+        "CPU_GPU_bitwise_agreement_claimed": false,
+        "state_sha256": "35ef5ffe046c6fcc7b9eda4136045ef872a47f0e3e16a196f42ad62b5fe3f8b7",
+        "diagnostics_reused_for_exact_state": true,
+        "fresh_BLAS_coefficient_replay": {
+          "1": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          },
+          "2": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          }
+        },
+        "archived_physical_replay_reused_for_exact_state": true,
+        "archived_physical_replay": {
+          "basis": "archived executed retained matrices; declared kernel is literal constant one",
+          "archive_reloaded": "results_500/executed_cpu_thread_condensation.npz",
+          "archive_sha256": "77280edc5c125ef51b4a1c9d974872dccd7d40c0d42c6e599ad1566e73f0075c",
+          "physical_replay_partition": [
+            500,
+            500
+          ],
+          "physical_replay_gauss_order": 2,
+          "replay": {
+            "1": {
+              "maximum_field_difference": 1.1102230246251565e-16,
+              "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.505248535244727e-17,
+                "flux_L2": 2.38779640404506e-14
+              }
+            },
+            "2": {
+              "maximum_field_difference": 1.1102230246251565e-16,
+              "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.505248535244727e-17,
+                "flux_L2": 2.38779640404506e-14
+              }
+            }
+          }
+        }
+      },
+      "repetition": 2,
+      "randomized_order": [
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu",
+        "cg_amg",
+        "gpu_two"
+      ]
+    },
+    {
+      "setup": 0.21324419602751732,
+      "assembly": 3.448133544996381,
+      "solve_reconstruct": 4.697056233882904,
+      "total": 8.358433974906802,
+      "pressure_equation_relative_L2": 1.188683937176915e-12,
+      "route": "cg_lu",
+      "solver": "scipy",
+      "grid_n": 500,
+      "fine_elements": 250000,
+      "full_nodal_dofs": 251001,
+      "free_nodal_dofs": 249001,
+      "native_threads": 1,
+      "solver_rtol": 1e-10,
+      "solver_atol": 0,
+      "external_quality": {
+        "state_sha256": "0b43275878369b7efb82eb8dd8dc7e77f40873d9e8cbc731229d49bcd4a959a6",
+        "maximum_same_solver_warmup_coefficient_difference": 0.0,
+        "original_pressure_equation_relative_L2": 1.188683937176915e-12,
+        "boundary_values_exactly_zero": true,
+        "diagnostics_reused_for_exact_state": true,
+        "physical_diagnostics": {
+          "physical_exact_error": {
+            "pressure_L2": 1.95297413620255e-06,
+            "flux_L2": 0.0050990504675071996
+          },
+          "error_gauss_orders": [
+            5,
+            6
+          ],
+          "quadrature_relative_change": {
+            "pressure_L2": 3.012146300165342e-13,
+            "flux_L2": 1.803087551547968e-14
+          },
+          "physical_LU_difference": {
+            "pressure_L2": 0.0,
+            "flux_L2": 0.0
+          }
+        }
+      },
+      "repetition": 2,
+      "randomized_order": [
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu",
+        "cg_amg",
+        "gpu_two"
+      ]
+    },
+    {
+      "setup": 0.21104975789785385,
+      "assembly": 3.418727770447731,
+      "solve_reconstruct": 0.8911332730203867,
+      "total": 4.520910801365972,
+      "pressure_equation_relative_L2": 6.594894437477415e-11,
+      "route": "cg_amg",
+      "solver": "pyamg",
+      "grid_n": 500,
+      "fine_elements": 250000,
+      "full_nodal_dofs": 251001,
+      "free_nodal_dofs": 249001,
+      "native_threads": 1,
+      "solver_rtol": 1e-10,
+      "solver_atol": 0,
+      "external_quality": {
+        "state_sha256": "68c1279ce3c2fe0f81d79b6c94f656ae2356648989d175eae10796576fbe0f8a",
+        "maximum_same_solver_warmup_coefficient_difference": 0.0,
+        "original_pressure_equation_relative_L2": 6.594894437477415e-11,
+        "boundary_values_exactly_zero": true,
+        "diagnostics_reused_for_exact_state": true,
+        "physical_diagnostics": {
+          "physical_exact_error": {
+            "pressure_L2": 1.9529741146804234e-06,
+            "flux_L2": 0.005099050467499091
+          },
+          "error_gauss_orders": [
+            5,
+            6
+          ],
+          "quadrature_relative_change": {
+            "pressure_L2": 2.9319091740117817e-13,
+            "flux_L2": 1.7690670317102537e-14
+          },
+          "physical_LU_difference": {
+            "pressure_L2": 9.183178015281053e-13,
+            "flux_L2": 2.0007352042038107e-11
+          }
+        }
+      },
+      "repetition": 2,
+      "randomized_order": [
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu",
+        "cg_amg",
+        "gpu_two"
+      ]
+    },
+    {
+      "route": "gpu_two",
+      "route_description": "shared parallel compilation then sparse condensation on two GPUs",
+      "grid_n": 500,
+      "trace_segments": 4,
+      "compile_workers": 8,
+      "condensation_workers": 2,
+      "gpu_batch_size": 4,
+      "setup": 0.1805822253227234,
+      "local_compilation_and_zero_contract_check": 5.3268569223582745,
+      "condensation_including_transfer_executor_setup_sync_shutdown": 6.328313926234841,
+      "schur_and_sparse_global_assembly": 0.1534565221518278,
+      "global_solve_and_reconstruction": 0.031152518466114998,
+      "total": 12.020362114533782,
+      "macro_elements": 100,
+      "fine_elements": 250000,
+      "global_trace_dofs": 1100,
+      "global_retained_dofs": 100,
+      "global_nnz": 39600,
+      "raw_global_residual": 1.4973254512328484e-16,
+      "global_matrix_dtype": "float64",
+      "field_finite": true,
+      "external_quality": {
+        "maximum_global_matrix_absolute_difference": 7.901123331988114e-18,
+        "maximum_global_matrix_relative_difference": 3.160449332795214e-16,
+        "maximum_global_rhs_difference": 1.0862350515589148e-17,
+        "maximum_field_coefficient_difference": 1.1324274851176597e-14,
+        "original_local_equation_relative_L2": 5.172427023743182e-13,
+        "physical_CPU_difference": {
+          "pressure_L2": 1.437923895198121e-15,
+          "flux_L2": 1.0252564076033034e-13
+        },
+        "physical_exact_error": {
+          "pressure_L2": 1.996825734522109e-06,
+          "flux_L2": 0.005100963654923262
+        },
+        "common_error_partition": [
+          500,
+          500
+        ],
+        "error_gauss_orders": [
+          5,
+          6
+        ],
+        "quadrature_relative_change": {
+          "pressure_L2": 3.745595218926532e-13,
+          "flux_L2": 1.8534229184222302e-14
+        },
+        "CPU_GPU_bitwise_agreement_claimed": false,
+        "state_sha256": "2b5971ef5ea857b878c6de2fd8e5bf8b604c706a285fb72da6d7ce7c7d2d3587",
+        "diagnostics_reused_for_exact_state": false,
+        "fresh_BLAS_coefficient_replay": {
+          "1": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          },
+          "2": {
+            "maximum_field_difference": 0.0,
+            "consistent_retained_basis_sign_rotation_difference": 0.0
+          }
+        },
+        "archived_physical_replay_reused_for_exact_state": false,
+        "archived_physical_replay": {
+          "basis": "archived executed retained matrices; declared kernel is literal constant one",
+          "archive_reloaded": "results_500/sample_2_gpu_two.npz",
+          "archive_sha256": "97034aee66dd1c80accfe187ce2bee889116c603d0b08a0cc4a8ee2c2974952e",
+          "physical_replay_partition": [
+            500,
+            500
+          ],
+          "physical_replay_gauss_order": 2,
+          "replay": {
+            "1": {
+              "maximum_field_difference": 0.0,
+              "consistent_retained_basis_sign_rotation_difference": 0.0,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.2385331163716575e-17,
+                "flux_L2": 0.0
+              }
+            },
+            "2": {
+              "maximum_field_difference": 0.0,
+              "consistent_retained_basis_sign_rotation_difference": 0.0,
+              "archived_physical_field_difference": {
+                "pressure_L2": 4.2385331163716575e-17,
+                "flux_L2": 0.0
+              }
+            }
+          }
+        }
+      },
+      "repetition": 2,
+      "randomized_order": [
+        "cpu_thread_condensation",
+        "gpu_one",
+        "cpu_serial_condensation",
+        "cg_lu",
+        "cg_amg",
+        "gpu_two"
+      ]
+    }
+  ],
+  "accuracy": {
+    "cpu_serial_condensation": {
+      "maximum_global_matrix_absolute_difference": 0.0,
+      "maximum_global_matrix_relative_difference": 0.0,
+      "maximum_global_rhs_difference": 0.0,
+      "maximum_field_coefficient_difference": 0.0,
+      "original_local_equation_relative_L2": 8.289962109403808e-13,
+      "physical_CPU_difference": {
+        "pressure_L2": 0.0,
+        "flux_L2": 0.0
+      },
+      "physical_exact_error": {
+        "pressure_L2": 1.9968257336045356e-06,
+        "flux_L2": 0.005100963654923257
+      },
+      "common_error_partition": [
+        500,
+        500
+      ],
+      "error_gauss_orders": [
+        5,
+        6
+      ],
+      "quadrature_relative_change": {
+        "pressure_L2": 4.14221260811152e-13,
+        "flux_L2": 1.785407398480132e-14
+      },
+      "CPU_GPU_bitwise_agreement_claimed": false,
+      "state_sha256": "35ef5ffe046c6fcc7b9eda4136045ef872a47f0e3e16a196f42ad62b5fe3f8b7",
+      "diagnostics_reused_for_exact_state": true
+    },
+    "cpu_thread_condensation": {
+      "maximum_global_matrix_absolute_difference": 0.0,
+      "maximum_global_matrix_relative_difference": 0.0,
+      "maximum_global_rhs_difference": 0.0,
+      "maximum_field_coefficient_difference": 0.0,
+      "original_local_equation_relative_L2": 8.289962109403808e-13,
+      "physical_CPU_difference": {
+        "pressure_L2": 0.0,
+        "flux_L2": 0.0
+      },
+      "physical_exact_error": {
+        "pressure_L2": 1.9968257336045356e-06,
+        "flux_L2": 0.005100963654923257
+      },
+      "common_error_partition": [
+        500,
+        500
+      ],
+      "error_gauss_orders": [
+        5,
+        6
+      ],
+      "quadrature_relative_change": {
+        "pressure_L2": 4.14221260811152e-13,
+        "flux_L2": 1.785407398480132e-14
+      },
+      "CPU_GPU_bitwise_agreement_claimed": false,
+      "state_sha256": "35ef5ffe046c6fcc7b9eda4136045ef872a47f0e3e16a196f42ad62b5fe3f8b7",
+      "diagnostics_reused_for_exact_state": true
+    },
+    "gpu_one": {
+      "maximum_global_matrix_absolute_difference": 8.199278929421627e-18,
+      "maximum_global_matrix_relative_difference": 3.279711571768618e-16,
+      "maximum_global_rhs_difference": 1.0645510081092047e-17,
+      "maximum_field_coefficient_difference": 1.049160758270773e-14,
+      "original_local_equation_relative_L2": 5.19218766645151e-13,
+      "physical_CPU_difference": {
+        "pressure_L2": 1.3301360071720858e-15,
+        "flux_L2": 1.0267747894969978e-13
+      },
+      "physical_exact_error": {
+        "pressure_L2": 1.9968257344283603e-06,
+        "flux_L2": 0.005100963654923262
+      },
+      "common_error_partition": [
+        500,
+        500
+      ],
+      "error_gauss_orders": [
+        5,
+        6
+      ],
+      "quadrature_relative_change": {
+        "pressure_L2": 3.633184943557408e-13,
+        "flux_L2": 1.802411278465655e-14
+      },
+      "CPU_GPU_bitwise_agreement_claimed": false,
+      "state_sha256": "2035f439df780ee33c77241329352bfcde8e2287389ad9b8d3d60fa7d1d5b2a0",
+      "diagnostics_reused_for_exact_state": false
+    },
+    "gpu_two": {
+      "maximum_global_matrix_absolute_difference": 7.799479378317598e-18,
+      "maximum_global_matrix_relative_difference": 3.1197917513270075e-16,
+      "maximum_global_rhs_difference": 1.0869126779167182e-17,
+      "maximum_field_coefficient_difference": 1.1324274851176597e-14,
+      "original_local_equation_relative_L2": 5.199751139133386e-13,
+      "physical_CPU_difference": {
+        "pressure_L2": 1.4019961439795049e-15,
+        "flux_L2": 1.021609231353203e-13
+      },
+      "physical_exact_error": {
+        "pressure_L2": 1.996825734493758e-06,
+        "flux_L2": 0.005100963654923266
+      },
+      "common_error_partition": [
+        500,
+        500
+      ],
+      "error_gauss_orders": [
+        5,
+        6
+      ],
+      "quadrature_relative_change": {
+        "pressure_L2": 3.9704157700622994e-13,
+        "flux_L2": 1.819415158451179e-14
+      },
+      "CPU_GPU_bitwise_agreement_claimed": false,
+      "state_sha256": "4d5ea533b923ba0b60befd4d22d86e5bd77e0e2b636fa0987fd114977c30a964",
+      "diagnostics_reused_for_exact_state": false
+    }
+  },
+  "archives": {
+    "cpu_serial_condensation": {
+      "path": "results_500/executed_cpu_serial_condensation.npz",
+      "sha256": "77280edc5c125ef51b4a1c9d974872dccd7d40c0d42c6e599ad1566e73f0075c",
+      "array_count": 2120,
+      "executed_basis_sha256": {
+        "0": "4f0e20acb32225589044c50208bc5fea52457d76c89a43dc09184692dce55ea3",
+        "1": "bd6737e393b75fbaea7922e9940e33b69acc5ecaa7b42578a9daf68530afcd6b",
+        "2": "a483ece97651f80535b5c436ac261c48aadd1e5608ea254acc34c1e99e72a44e",
+        "3": "693c7b1c75608de299f260cb46add297e8cc711b5abdfef56e2874b3c4af3111",
+        "4": "ddfd4ce59935aa40387cb4b01e4e0fc86d05b97b01d37c3653d6af04ad52139f",
+        "5": "4ced3dc775ff61cf4b81b63908d9c6c46c530cdabe8f9c8d131246aaf86674a0",
+        "6": "761ed223835d394096437fd604762bff0b4f595d3ff4d5e46a5ff92fb5e71016",
+        "7": "d038ba34f8cb1c5c95c3e7e249bffeb3c69aa4d8584c5f6e1ad5c75b031d60d3",
+        "8": "5f37abc23819d050231107472636acd2e44f71f51f65b21d2a44a156d0d966b8",
+        "9": "047c15666b2439dfcbdef96970bc008a55fbdd5a790d9285931f1b9ad6841ec4",
+        "10": "59e27f9469826787cfed9047109aef16e0b50f6742b571063f947c43192e78c3",
+        "11": "8d519b2f1888acd7555edd205f24c05e48c1eb597308a761a08e9dfdf884b8a1",
+        "12": "3c1203e8eb1c2739fa034d4fd8f90bd38ac58c861c033e3988c5bac3d90f4b4e",
+        "13": "704f156b1688ed9896ef69d01868e667c717f9c8d454d57a50d500571df1f8bf",
+        "14": "cf27a5a457936289262be213ca48161fbb07e84a88a85d2f7632cd92b67c9679",
+        "15": "fad56fb1404cc1f15277bda867b602c39a6c342848c703b6c16270bc9966db9f",
+        "16": "e68e13cd89ec4c680a17c9f86b827644c3a3c18f51b169883f117ca65a8b01c0",
+        "17": "2f7fef3f6452463d720aa0b9c6b0fef9451abda05af45900b77f550c2f555797",
+        "18": "64efb749fbf68444727d5ee01a76bacebfb6c80677e64e8eb154f46e4f99b8b6",
+        "19": "3dcd93d95998e3d4a601c6a029abefaa0bdd1613b2d2500635d613fc05874d82",
+        "20": "cd5cf4bff175a7d989977364c13bc714010059354580851b5855d792f2e83132",
+        "21": "61b832da34cfc5663c9ed87e8e6e775dbb5d4a813468466d7d43ef623727cfab",
+        "22": "3669eb5e609498bbc65bcdb6154f2d6732d876328219bbfe72e41ac1e410809e",
+        "23": "27acd18014b069133cec8cf22c9381e312f19b584001c6d1ffee17d028fe09ab",
+        "24": "0f98836100e2aeb5cb5872472fe6d5105d53590bfe9876ffaf21252593a75114",
+        "25": "10606e11c40d2d4e6b34cc34f714180c209824499fbaf8e154763909ab73852d",
+        "26": "44658564bfc1f0c236507752edb308748c36d11a352c4a5bf49b85bdd684ea80",
+        "27": "e80f4d1f71d12c9a3dbc20101725f8bb499438cfb0ec1840942dc0cf891231c6",
+        "28": "9f78843fded5657b62df4e25c850d8cc65626676f673321272a4d8c27b7d999a",
+        "29": "6cfda3143a9fc4a982e9113602b63238092077ed8658242dcca5c937a8fb026c",
+        "30": "a5266f21f623857be3290e2423612f463a01b833ffefcf7ee6b1f6f6f4e4344e",
+        "31": "df95a4487eaa3d2d1e1ae319e7aa0ab21a780cc031ad931f84f6e82c7dd91c16",
+        "32": "7130bc8277dd6017e34a2d91fc99a0890a9fd6357d0d515aa24145cc26f409b1",
+        "33": "792f76d21215ed694a9b06daab7a3241b155a40b71860f50dfd000fabfb09fcf",
+        "34": "1c51bdc997961ecf3b9c7d3f253bbd6760d364571fc25c4de84e067a05246489",
+        "35": "b120de1caeb7a9a119bc33bdb1890bb923c5bc2cb207980e89fd59975247a1f1",
+        "36": "ac6bae53f1a6a53479e515b3d3b458b099a505180d41af459fe86dceb6a799ca",
+        "37": "31eb0c07d783a1dd7719430e2a11db33a98bcae59649b7f05a6d5fabc08b86b3",
+        "38": "da878474b5da7ece0026d32da1f1dea7519deef5166bdeb13240f4fc554c9f53",
+        "39": "a4fe00559c85e19ab2755d67bb0bba105b9d7984422f871fc916686e64a955cb",
+        "40": "e187b34a1f2fd80d3fa4a53ccdbd8193b6adddfb070a2c795be24e7d410310ff",
+        "41": "7301ab8f66ed045000fee0c77553cb3c2a32dd47b82836d0e216a1f96b3cc70f",
+        "42": "59a5cc3e93b30fa248498618cc0da7049455a8816004f49e1c7e590248044305",
+        "43": "b2467b68fb00e79af7b49adcca28ea7387e4bdcaadde0ce04d7260de5fcbf570",
+        "44": "977b3a3b2a1a92193e0958389b8273382b15488d9385a69c23bf7020bff3b7a7",
+        "45": "cdcc8d4ec65fd7cf1646d8b7f746cb7b6b8a9ac1fe85002127c4120f0a7384a1",
+        "46": "9017de1bbf45e7f4797afcc7517c7c0b948531cfab7bafa9d8def96aabccf35c",
+        "47": "cc204c6606ffd551a8d5f3be7ceaf08a765d89bb9856e2caf122dd3486d7de33",
+        "48": "3f1113d4f34a68156fd03b43d771b7a38ac0f11e1b1b6f5613821ea94bb52831",
+        "49": "7916b826df5463b2b392660a7da8b72937723524420ed3e56b64d95fad5f7f64",
+        "50": "d2a116d134930c754086a46236626d0f19103805938cde7bf3ecae0a2f93b523",
+        "51": "0ea1b42fc40a06df04148a0decd18e02c04fb62c3143d877c176d88812ebede0",
+        "52": "3c0c471dd4ea72c3b5518fc821cf5fa7dd747f25153cab441609fd69e6c92a9a",
+        "53": "1c8114aaadf1fb080a0e502498bc8801e71050bca889714b98f8957983910353",
+        "54": "bf0dc26aed6614aa275dd01db2315a6702caff7bc538f15c7d4f0aef9a83534b",
+        "55": "5e96dbafabaa4d5ad7b8676845011be6a092772878a019faf022344f6e3b60fe",
+        "56": "3f47d908c7b94d2384ca333ef9f39e4dd4016bf61c147b382dab52c68bbb316e",
+        "57": "1531ec4b9391f0a8cda2dbf5c3715c3ec8db8be7cd23b4c197407590ee18c89b",
+        "58": "5eb1425c4280eef2d116c0eebdcfafa7eddfe768d62cf8a2781baddbd88f03b9",
+        "59": "f0d5242d76d46305f9c7ad237676f0e79578bf99190ef9c772e68a1737daf19c",
+        "60": "e86cf16b4a4354b4d5cc306713a1d605677ae708c3935fa75b4950a603641fef",
+        "61": "5de20b91007fe28b6b4518a3ea2c635a6f8866eff5afeed4824f9a16ba25c126",
+        "62": "bf600c1bf20b02f65695d604ae7dc2ea42e6e663708fd065f9c556b4c7e28962",
+        "63": "68cd177c91d2005d976c1ecc34afbc63c1244665d21816a678162747cf8596b3",
+        "64": "ef5566d6dc3e1737af0356e4b45987bb673f75c8e48fddbc799799e98863a296",
+        "65": "4f6835726cf03ab2e1b734dd5091edeead702feda699c9195eaf9201d8d5ed54",
+        "66": "da9932dabac6ea76788ce125fb2d3012c33b97239e68dfb9464ab463acc282f6",
+        "67": "98a7379b6f158a191726c94c37905d49219ed55689879fa9d1c9befbdeffef3d",
+        "68": "e8aea1b8004e0ebc81f7291d7f33e444988263539885113a67ad886ff4cb5acd",
+        "69": "1b9728edc5d1b11b481c7501f8a6af23ebe7c84a662d20c0a920b8da8da5cfad",
+        "70": "4eb2e370575e214b305178df65959556b1b34c46161f720e5d2318af6579e6c0",
+        "71": "b2e561ad1dedd7c892b258ab59ef7b7caa04d8fa68f32ce60569d5381b99ea21",
+        "72": "fc3797b3c66e9d274c73812211a6a66e2b2e9292afcf9a3a086553ebaf5035f2",
+        "73": "0fada3c5393a497620560eb2f3660b030080bb66771f0662dd07fe01d1b1685d",
+        "74": "1916e9638d7f7c7ea49fcbc09047adf45147ac46a336c19fae101e8c8ec68903",
+        "75": "6cc2d6291519eab8bfb35e38b502f94f131ca6d954cf9668dd1181c6ecfef9be",
+        "76": "5d6981ab7a8c40d4293972d0707409588928dee337f243c299141e07c22b675e",
+        "77": "d17123f245d7df9cc56be61173a2ecae9f745a3ae074499d631b041adf56f00c",
+        "78": "a4499a020fceb6aa72378ec7ae72e1257c82f61abf5a6b8847c41f6728530d0f",
+        "79": "bb8ac38d2c711ed60bfbcbbf2305f11c8817be65c10daa421502176e45483b22",
+        "80": "69b538ed44f7dacfc79625560614ae44d36ea24130ccfe24fa317e62a04cb1e5",
+        "81": "116e83d51c62a236242200be06024597df1a5e50e8ade7647ce27b16e64ae15a",
+        "82": "8dd2c9eb20b063988f34e3f09ddaa61e8cd6953f6c260bad64df2115918f06e1",
+        "83": "c235ad78495fe9ebc787f2298ccaf5bd9fe88a60d42552e4f0c969e67ccfd909",
+        "84": "18d0606485f3bd373be3a37fd199ff38af9ddd1cc9ed9cde8b2fb6348e95daf3",
+        "85": "ba2d5b01568830ada51b98cb18599892c1cd8ef387f011b712b5ed0e91e523cb",
+        "86": "50e66468a6fa5ec8ebc36088609822ffa09dbf0a5e304957a09be0e32cf73377",
+        "87": "a815b8149e0fe474ee42e5986f20da749cfa953e823a3f3f5a2f45d6c6f0e792",
+        "88": "d1f2fcdccac4883b66389697835885f44f1363dba8ba5f569e8a5acadadc7331",
+        "89": "97be3e491c8cb9e3cf2d10b4d55547c97a427ef95546ce02474a355b835e3109",
+        "90": "c3dc28a8c16ea4827d698ad1645c872bacd4d6cd7f5b234e606a386038744457",
+        "91": "ed71039200bd32e5b1ebc43b06f6db3db88e95d275d16ee9efb8caa447eea685",
+        "92": "e05dbe58921b11d98d7ecf372ca93fbafeb3d3537ef01060c3abf29a364ead9a",
+        "93": "5fd3a8165698a0885e25d342b7da2e3ae0c17dd7d82a4a23f315bd60bdf029d5",
+        "94": "17a5912e73a1ad830abfc101daa4fac6aeb2a17c101901a1b1bc05388de8ddd0",
+        "95": "d83e31172cdd7e6cce52da8593b7e6876b4dd97a6a8a8fb667c242fe2d5706be",
+        "96": "25f6186cb3a6dda4f1e0f5d6815070e0dcb25ef9d16bcc52777ca450ad71d2e8",
+        "97": "3250ddd8dbfe669decf390ffe5e435469ffdaa4e10acd3bf536ea4a104c5432c",
+        "98": "d4730e4fde18ca64ff5c7b32ccd93717a790e2db5a404c277202c231dc540469",
+        "99": "52af758cb0e7b005389fd3e3572f2cda225f198e22ec8118e97d2a1ad23f07ff"
+      },
+      "executed_interval_basis_sha256": "172a9a17ea9a0208b13e25e33a99d8a1769874c4b546b744fac302918a1f55cc"
+    },
+    "cpu_thread_condensation": {
+      "path": "results_500/executed_cpu_thread_condensation.npz",
+      "sha256": "77280edc5c125ef51b4a1c9d974872dccd7d40c0d42c6e599ad1566e73f0075c",
+      "array_count": 2120,
+      "executed_basis_sha256": {
+        "0": "4f0e20acb32225589044c50208bc5fea52457d76c89a43dc09184692dce55ea3",
+        "1": "bd6737e393b75fbaea7922e9940e33b69acc5ecaa7b42578a9daf68530afcd6b",
+        "2": "a483ece97651f80535b5c436ac261c48aadd1e5608ea254acc34c1e99e72a44e",
+        "3": "693c7b1c75608de299f260cb46add297e8cc711b5abdfef56e2874b3c4af3111",
+        "4": "ddfd4ce59935aa40387cb4b01e4e0fc86d05b97b01d37c3653d6af04ad52139f",
+        "5": "4ced3dc775ff61cf4b81b63908d9c6c46c530cdabe8f9c8d131246aaf86674a0",
+        "6": "761ed223835d394096437fd604762bff0b4f595d3ff4d5e46a5ff92fb5e71016",
+        "7": "d038ba34f8cb1c5c95c3e7e249bffeb3c69aa4d8584c5f6e1ad5c75b031d60d3",
+        "8": "5f37abc23819d050231107472636acd2e44f71f51f65b21d2a44a156d0d966b8",
+        "9": "047c15666b2439dfcbdef96970bc008a55fbdd5a790d9285931f1b9ad6841ec4",
+        "10": "59e27f9469826787cfed9047109aef16e0b50f6742b571063f947c43192e78c3",
+        "11": "8d519b2f1888acd7555edd205f24c05e48c1eb597308a761a08e9dfdf884b8a1",
+        "12": "3c1203e8eb1c2739fa034d4fd8f90bd38ac58c861c033e3988c5bac3d90f4b4e",
+        "13": "704f156b1688ed9896ef69d01868e667c717f9c8d454d57a50d500571df1f8bf",
+        "14": "cf27a5a457936289262be213ca48161fbb07e84a88a85d2f7632cd92b67c9679",
+        "15": "fad56fb1404cc1f15277bda867b602c39a6c342848c703b6c16270bc9966db9f",
+        "16": "e68e13cd89ec4c680a17c9f86b827644c3a3c18f51b169883f117ca65a8b01c0",
+        "17": "2f7fef3f6452463d720aa0b9c6b0fef9451abda05af45900b77f550c2f555797",
+        "18": "64efb749fbf68444727d5ee01a76bacebfb6c80677e64e8eb154f46e4f99b8b6",
+        "19": "3dcd93d95998e3d4a601c6a029abefaa0bdd1613b2d2500635d613fc05874d82",
+        "20": "cd5cf4bff175a7d989977364c13bc714010059354580851b5855d792f2e83132",
+        "21": "61b832da34cfc5663c9ed87e8e6e775dbb5d4a813468466d7d43ef623727cfab",
+        "22": "3669eb5e609498bbc65bcdb6154f2d6732d876328219bbfe72e41ac1e410809e",
+        "23": "27acd18014b069133cec8cf22c9381e312f19b584001c6d1ffee17d028fe09ab",
+        "24": "0f98836100e2aeb5cb5872472fe6d5105d53590bfe9876ffaf21252593a75114",
+        "25": "10606e11c40d2d4e6b34cc34f714180c209824499fbaf8e154763909ab73852d",
+        "26": "44658564bfc1f0c236507752edb308748c36d11a352c4a5bf49b85bdd684ea80",
+        "27": "e80f4d1f71d12c9a3dbc20101725f8bb499438cfb0ec1840942dc0cf891231c6",
+        "28": "9f78843fded5657b62df4e25c850d8cc65626676f673321272a4d8c27b7d999a",
+        "29": "6cfda3143a9fc4a982e9113602b63238092077ed8658242dcca5c937a8fb026c",
+        "30": "a5266f21f623857be3290e2423612f463a01b833ffefcf7ee6b1f6f6f4e4344e",
+        "31": "df95a4487eaa3d2d1e1ae319e7aa0ab21a780cc031ad931f84f6e82c7dd91c16",
+        "32": "7130bc8277dd6017e34a2d91fc99a0890a9fd6357d0d515aa24145cc26f409b1",
+        "33": "792f76d21215ed694a9b06daab7a3241b155a40b71860f50dfd000fabfb09fcf",
+        "34": "1c51bdc997961ecf3b9c7d3f253bbd6760d364571fc25c4de84e067a05246489",
+        "35": "b120de1caeb7a9a119bc33bdb1890bb923c5bc2cb207980e89fd59975247a1f1",
+        "36": "ac6bae53f1a6a53479e515b3d3b458b099a505180d41af459fe86dceb6a799ca",
+        "37": "31eb0c07d783a1dd7719430e2a11db33a98bcae59649b7f05a6d5fabc08b86b3",
+        "38": "da878474b5da7ece0026d32da1f1dea7519deef5166bdeb13240f4fc554c9f53",
+        "39": "a4fe00559c85e19ab2755d67bb0bba105b9d7984422f871fc916686e64a955cb",
+        "40": "e187b34a1f2fd80d3fa4a53ccdbd8193b6adddfb070a2c795be24e7d410310ff",
+        "41": "7301ab8f66ed045000fee0c77553cb3c2a32dd47b82836d0e216a1f96b3cc70f",
+        "42": "59a5cc3e93b30fa248498618cc0da7049455a8816004f49e1c7e590248044305",
+        "43": "b2467b68fb00e79af7b49adcca28ea7387e4bdcaadde0ce04d7260de5fcbf570",
+        "44": "977b3a3b2a1a92193e0958389b8273382b15488d9385a69c23bf7020bff3b7a7",
+        "45": "cdcc8d4ec65fd7cf1646d8b7f746cb7b6b8a9ac1fe85002127c4120f0a7384a1",
+        "46": "9017de1bbf45e7f4797afcc7517c7c0b948531cfab7bafa9d8def96aabccf35c",
+        "47": "cc204c6606ffd551a8d5f3be7ceaf08a765d89bb9856e2caf122dd3486d7de33",
+        "48": "3f1113d4f34a68156fd03b43d771b7a38ac0f11e1b1b6f5613821ea94bb52831",
+        "49": "7916b826df5463b2b392660a7da8b72937723524420ed3e56b64d95fad5f7f64",
+        "50": "d2a116d134930c754086a46236626d0f19103805938cde7bf3ecae0a2f93b523",
+        "51": "0ea1b42fc40a06df04148a0decd18e02c04fb62c3143d877c176d88812ebede0",
+        "52": "3c0c471dd4ea72c3b5518fc821cf5fa7dd747f25153cab441609fd69e6c92a9a",
+        "53": "1c8114aaadf1fb080a0e502498bc8801e71050bca889714b98f8957983910353",
+        "54": "bf0dc26aed6614aa275dd01db2315a6702caff7bc538f15c7d4f0aef9a83534b",
+        "55": "5e96dbafabaa4d5ad7b8676845011be6a092772878a019faf022344f6e3b60fe",
+        "56": "3f47d908c7b94d2384ca333ef9f39e4dd4016bf61c147b382dab52c68bbb316e",
+        "57": "1531ec4b9391f0a8cda2dbf5c3715c3ec8db8be7cd23b4c197407590ee18c89b",
+        "58": "5eb1425c4280eef2d116c0eebdcfafa7eddfe768d62cf8a2781baddbd88f03b9",
+        "59": "f0d5242d76d46305f9c7ad237676f0e79578bf99190ef9c772e68a1737daf19c",
+        "60": "e86cf16b4a4354b4d5cc306713a1d605677ae708c3935fa75b4950a603641fef",
+        "61": "5de20b91007fe28b6b4518a3ea2c635a6f8866eff5afeed4824f9a16ba25c126",
+        "62": "bf600c1bf20b02f65695d604ae7dc2ea42e6e663708fd065f9c556b4c7e28962",
+        "63": "68cd177c91d2005d976c1ecc34afbc63c1244665d21816a678162747cf8596b3",
+        "64": "ef5566d6dc3e1737af0356e4b45987bb673f75c8e48fddbc799799e98863a296",
+        "65": "4f6835726cf03ab2e1b734dd5091edeead702feda699c9195eaf9201d8d5ed54",
+        "66": "da9932dabac6ea76788ce125fb2d3012c33b97239e68dfb9464ab463acc282f6",
+        "67": "98a7379b6f158a191726c94c37905d49219ed55689879fa9d1c9befbdeffef3d",
+        "68": "e8aea1b8004e0ebc81f7291d7f33e444988263539885113a67ad886ff4cb5acd",
+        "69": "1b9728edc5d1b11b481c7501f8a6af23ebe7c84a662d20c0a920b8da8da5cfad",
+        "70": "4eb2e370575e214b305178df65959556b1b34c46161f720e5d2318af6579e6c0",
+        "71": "b2e561ad1dedd7c892b258ab59ef7b7caa04d8fa68f32ce60569d5381b99ea21",
+        "72": "fc3797b3c66e9d274c73812211a6a66e2b2e9292afcf9a3a086553ebaf5035f2",
+        "73": "0fada3c5393a497620560eb2f3660b030080bb66771f0662dd07fe01d1b1685d",
+        "74": "1916e9638d7f7c7ea49fcbc09047adf45147ac46a336c19fae101e8c8ec68903",
+        "75": "6cc2d6291519eab8bfb35e38b502f94f131ca6d954cf9668dd1181c6ecfef9be",
+        "76": "5d6981ab7a8c40d4293972d0707409588928dee337f243c299141e07c22b675e",
+        "77": "d17123f245d7df9cc56be61173a2ecae9f745a3ae074499d631b041adf56f00c",
+        "78": "a4499a020fceb6aa72378ec7ae72e1257c82f61abf5a6b8847c41f6728530d0f",
+        "79": "bb8ac38d2c711ed60bfbcbbf2305f11c8817be65c10daa421502176e45483b22",
+        "80": "69b538ed44f7dacfc79625560614ae44d36ea24130ccfe24fa317e62a04cb1e5",
+        "81": "116e83d51c62a236242200be06024597df1a5e50e8ade7647ce27b16e64ae15a",
+        "82": "8dd2c9eb20b063988f34e3f09ddaa61e8cd6953f6c260bad64df2115918f06e1",
+        "83": "c235ad78495fe9ebc787f2298ccaf5bd9fe88a60d42552e4f0c969e67ccfd909",
+        "84": "18d0606485f3bd373be3a37fd199ff38af9ddd1cc9ed9cde8b2fb6348e95daf3",
+        "85": "ba2d5b01568830ada51b98cb18599892c1cd8ef387f011b712b5ed0e91e523cb",
+        "86": "50e66468a6fa5ec8ebc36088609822ffa09dbf0a5e304957a09be0e32cf73377",
+        "87": "a815b8149e0fe474ee42e5986f20da749cfa953e823a3f3f5a2f45d6c6f0e792",
+        "88": "d1f2fcdccac4883b66389697835885f44f1363dba8ba5f569e8a5acadadc7331",
+        "89": "97be3e491c8cb9e3cf2d10b4d55547c97a427ef95546ce02474a355b835e3109",
+        "90": "c3dc28a8c16ea4827d698ad1645c872bacd4d6cd7f5b234e606a386038744457",
+        "91": "ed71039200bd32e5b1ebc43b06f6db3db88e95d275d16ee9efb8caa447eea685",
+        "92": "e05dbe58921b11d98d7ecf372ca93fbafeb3d3537ef01060c3abf29a364ead9a",
+        "93": "5fd3a8165698a0885e25d342b7da2e3ae0c17dd7d82a4a23f315bd60bdf029d5",
+        "94": "17a5912e73a1ad830abfc101daa4fac6aeb2a17c101901a1b1bc05388de8ddd0",
+        "95": "d83e31172cdd7e6cce52da8593b7e6876b4dd97a6a8a8fb667c242fe2d5706be",
+        "96": "25f6186cb3a6dda4f1e0f5d6815070e0dcb25ef9d16bcc52777ca450ad71d2e8",
+        "97": "3250ddd8dbfe669decf390ffe5e435469ffdaa4e10acd3bf536ea4a104c5432c",
+        "98": "d4730e4fde18ca64ff5c7b32ccd93717a790e2db5a404c277202c231dc540469",
+        "99": "52af758cb0e7b005389fd3e3572f2cda225f198e22ec8118e97d2a1ad23f07ff"
+      },
+      "executed_interval_basis_sha256": "172a9a17ea9a0208b13e25e33a99d8a1769874c4b546b744fac302918a1f55cc"
+    },
+    "gpu_one": {
+      "path": "results_500/executed_gpu_one.npz",
+      "sha256": "b05bcf53660ed8f81b7905ca50ec5ff0594addd92fae84536b71faf8ea9ca1a3",
+      "array_count": 2120,
+      "executed_basis_sha256": {
+        "0": "4f0e20acb32225589044c50208bc5fea52457d76c89a43dc09184692dce55ea3",
+        "1": "bd6737e393b75fbaea7922e9940e33b69acc5ecaa7b42578a9daf68530afcd6b",
+        "2": "a483ece97651f80535b5c436ac261c48aadd1e5608ea254acc34c1e99e72a44e",
+        "3": "693c7b1c75608de299f260cb46add297e8cc711b5abdfef56e2874b3c4af3111",
+        "4": "ddfd4ce59935aa40387cb4b01e4e0fc86d05b97b01d37c3653d6af04ad52139f",
+        "5": "4ced3dc775ff61cf4b81b63908d9c6c46c530cdabe8f9c8d131246aaf86674a0",
+        "6": "761ed223835d394096437fd604762bff0b4f595d3ff4d5e46a5ff92fb5e71016",
+        "7": "d038ba34f8cb1c5c95c3e7e249bffeb3c69aa4d8584c5f6e1ad5c75b031d60d3",
+        "8": "5f37abc23819d050231107472636acd2e44f71f51f65b21d2a44a156d0d966b8",
+        "9": "047c15666b2439dfcbdef96970bc008a55fbdd5a790d9285931f1b9ad6841ec4",
+        "10": "59e27f9469826787cfed9047109aef16e0b50f6742b571063f947c43192e78c3",
+        "11": "8d519b2f1888acd7555edd205f24c05e48c1eb597308a761a08e9dfdf884b8a1",
+        "12": "3c1203e8eb1c2739fa034d4fd8f90bd38ac58c861c033e3988c5bac3d90f4b4e",
+        "13": "704f156b1688ed9896ef69d01868e667c717f9c8d454d57a50d500571df1f8bf",
+        "14": "cf27a5a457936289262be213ca48161fbb07e84a88a85d2f7632cd92b67c9679",
+        "15": "fad56fb1404cc1f15277bda867b602c39a6c342848c703b6c16270bc9966db9f",
+        "16": "e68e13cd89ec4c680a17c9f86b827644c3a3c18f51b169883f117ca65a8b01c0",
+        "17": "2f7fef3f6452463d720aa0b9c6b0fef9451abda05af45900b77f550c2f555797",
+        "18": "64efb749fbf68444727d5ee01a76bacebfb6c80677e64e8eb154f46e4f99b8b6",
+        "19": "3dcd93d95998e3d4a601c6a029abefaa0bdd1613b2d2500635d613fc05874d82",
+        "20": "cd5cf4bff175a7d989977364c13bc714010059354580851b5855d792f2e83132",
+        "21": "61b832da34cfc5663c9ed87e8e6e775dbb5d4a813468466d7d43ef623727cfab",
+        "22": "3669eb5e609498bbc65bcdb6154f2d6732d876328219bbfe72e41ac1e410809e",
+        "23": "27acd18014b069133cec8cf22c9381e312f19b584001c6d1ffee17d028fe09ab",
+        "24": "0f98836100e2aeb5cb5872472fe6d5105d53590bfe9876ffaf21252593a75114",
+        "25": "10606e11c40d2d4e6b34cc34f714180c209824499fbaf8e154763909ab73852d",
+        "26": "44658564bfc1f0c236507752edb308748c36d11a352c4a5bf49b85bdd684ea80",
+        "27": "e80f4d1f71d12c9a3dbc20101725f8bb499438cfb0ec1840942dc0cf891231c6",
+        "28": "9f78843fded5657b62df4e25c850d8cc65626676f673321272a4d8c27b7d999a",
+        "29": "6cfda3143a9fc4a982e9113602b63238092077ed8658242dcca5c937a8fb026c",
+        "30": "a5266f21f623857be3290e2423612f463a01b833ffefcf7ee6b1f6f6f4e4344e",
+        "31": "df95a4487eaa3d2d1e1ae319e7aa0ab21a780cc031ad931f84f6e82c7dd91c16",
+        "32": "7130bc8277dd6017e34a2d91fc99a0890a9fd6357d0d515aa24145cc26f409b1",
+        "33": "792f76d21215ed694a9b06daab7a3241b155a40b71860f50dfd000fabfb09fcf",
+        "34": "1c51bdc997961ecf3b9c7d3f253bbd6760d364571fc25c4de84e067a05246489",
+        "35": "b120de1caeb7a9a119bc33bdb1890bb923c5bc2cb207980e89fd59975247a1f1",
+        "36": "ac6bae53f1a6a53479e515b3d3b458b099a505180d41af459fe86dceb6a799ca",
+        "37": "31eb0c07d783a1dd7719430e2a11db33a98bcae59649b7f05a6d5fabc08b86b3",
+        "38": "da878474b5da7ece0026d32da1f1dea7519deef5166bdeb13240f4fc554c9f53",
+        "39": "a4fe00559c85e19ab2755d67bb0bba105b9d7984422f871fc916686e64a955cb",
+        "40": "e187b34a1f2fd80d3fa4a53ccdbd8193b6adddfb070a2c795be24e7d410310ff",
+        "41": "7301ab8f66ed045000fee0c77553cb3c2a32dd47b82836d0e216a1f96b3cc70f",
+        "42": "59a5cc3e93b30fa248498618cc0da7049455a8816004f49e1c7e590248044305",
+        "43": "b2467b68fb00e79af7b49adcca28ea7387e4bdcaadde0ce04d7260de5fcbf570",
+        "44": "977b3a3b2a1a92193e0958389b8273382b15488d9385a69c23bf7020bff3b7a7",
+        "45": "cdcc8d4ec65fd7cf1646d8b7f746cb7b6b8a9ac1fe85002127c4120f0a7384a1",
+        "46": "9017de1bbf45e7f4797afcc7517c7c0b948531cfab7bafa9d8def96aabccf35c",
+        "47": "cc204c6606ffd551a8d5f3be7ceaf08a765d89bb9856e2caf122dd3486d7de33",
+        "48": "3f1113d4f34a68156fd03b43d771b7a38ac0f11e1b1b6f5613821ea94bb52831",
+        "49": "7916b826df5463b2b392660a7da8b72937723524420ed3e56b64d95fad5f7f64",
+        "50": "d2a116d134930c754086a46236626d0f19103805938cde7bf3ecae0a2f93b523",
+        "51": "0ea1b42fc40a06df04148a0decd18e02c04fb62c3143d877c176d88812ebede0",
+        "52": "3c0c471dd4ea72c3b5518fc821cf5fa7dd747f25153cab441609fd69e6c92a9a",
+        "53": "1c8114aaadf1fb080a0e502498bc8801e71050bca889714b98f8957983910353",
+        "54": "bf0dc26aed6614aa275dd01db2315a6702caff7bc538f15c7d4f0aef9a83534b",
+        "55": "5e96dbafabaa4d5ad7b8676845011be6a092772878a019faf022344f6e3b60fe",
+        "56": "3f47d908c7b94d2384ca333ef9f39e4dd4016bf61c147b382dab52c68bbb316e",
+        "57": "1531ec4b9391f0a8cda2dbf5c3715c3ec8db8be7cd23b4c197407590ee18c89b",
+        "58": "5eb1425c4280eef2d116c0eebdcfafa7eddfe768d62cf8a2781baddbd88f03b9",
+        "59": "f0d5242d76d46305f9c7ad237676f0e79578bf99190ef9c772e68a1737daf19c",
+        "60": "e86cf16b4a4354b4d5cc306713a1d605677ae708c3935fa75b4950a603641fef",
+        "61": "5de20b91007fe28b6b4518a3ea2c635a6f8866eff5afeed4824f9a16ba25c126",
+        "62": "bf600c1bf20b02f65695d604ae7dc2ea42e6e663708fd065f9c556b4c7e28962",
+        "63": "68cd177c91d2005d976c1ecc34afbc63c1244665d21816a678162747cf8596b3",
+        "64": "ef5566d6dc3e1737af0356e4b45987bb673f75c8e48fddbc799799e98863a296",
+        "65": "4f6835726cf03ab2e1b734dd5091edeead702feda699c9195eaf9201d8d5ed54",
+        "66": "da9932dabac6ea76788ce125fb2d3012c33b97239e68dfb9464ab463acc282f6",
+        "67": "98a7379b6f158a191726c94c37905d49219ed55689879fa9d1c9befbdeffef3d",
+        "68": "e8aea1b8004e0ebc81f7291d7f33e444988263539885113a67ad886ff4cb5acd",
+        "69": "1b9728edc5d1b11b481c7501f8a6af23ebe7c84a662d20c0a920b8da8da5cfad",
+        "70": "4eb2e370575e214b305178df65959556b1b34c46161f720e5d2318af6579e6c0",
+        "71": "b2e561ad1dedd7c892b258ab59ef7b7caa04d8fa68f32ce60569d5381b99ea21",
+        "72": "fc3797b3c66e9d274c73812211a6a66e2b2e9292afcf9a3a086553ebaf5035f2",
+        "73": "0fada3c5393a497620560eb2f3660b030080bb66771f0662dd07fe01d1b1685d",
+        "74": "1916e9638d7f7c7ea49fcbc09047adf45147ac46a336c19fae101e8c8ec68903",
+        "75": "6cc2d6291519eab8bfb35e38b502f94f131ca6d954cf9668dd1181c6ecfef9be",
+        "76": "5d6981ab7a8c40d4293972d0707409588928dee337f243c299141e07c22b675e",
+        "77": "d17123f245d7df9cc56be61173a2ecae9f745a3ae074499d631b041adf56f00c",
+        "78": "a4499a020fceb6aa72378ec7ae72e1257c82f61abf5a6b8847c41f6728530d0f",
+        "79": "bb8ac38d2c711ed60bfbcbbf2305f11c8817be65c10daa421502176e45483b22",
+        "80": "69b538ed44f7dacfc79625560614ae44d36ea24130ccfe24fa317e62a04cb1e5",
+        "81": "116e83d51c62a236242200be06024597df1a5e50e8ade7647ce27b16e64ae15a",
+        "82": "8dd2c9eb20b063988f34e3f09ddaa61e8cd6953f6c260bad64df2115918f06e1",
+        "83": "c235ad78495fe9ebc787f2298ccaf5bd9fe88a60d42552e4f0c969e67ccfd909",
+        "84": "18d0606485f3bd373be3a37fd199ff38af9ddd1cc9ed9cde8b2fb6348e95daf3",
+        "85": "ba2d5b01568830ada51b98cb18599892c1cd8ef387f011b712b5ed0e91e523cb",
+        "86": "50e66468a6fa5ec8ebc36088609822ffa09dbf0a5e304957a09be0e32cf73377",
+        "87": "a815b8149e0fe474ee42e5986f20da749cfa953e823a3f3f5a2f45d6c6f0e792",
+        "88": "d1f2fcdccac4883b66389697835885f44f1363dba8ba5f569e8a5acadadc7331",
+        "89": "97be3e491c8cb9e3cf2d10b4d55547c97a427ef95546ce02474a355b835e3109",
+        "90": "c3dc28a8c16ea4827d698ad1645c872bacd4d6cd7f5b234e606a386038744457",
+        "91": "ed71039200bd32e5b1ebc43b06f6db3db88e95d275d16ee9efb8caa447eea685",
+        "92": "e05dbe58921b11d98d7ecf372ca93fbafeb3d3537ef01060c3abf29a364ead9a",
+        "93": "5fd3a8165698a0885e25d342b7da2e3ae0c17dd7d82a4a23f315bd60bdf029d5",
+        "94": "17a5912e73a1ad830abfc101daa4fac6aeb2a17c101901a1b1bc05388de8ddd0",
+        "95": "d83e31172cdd7e6cce52da8593b7e6876b4dd97a6a8a8fb667c242fe2d5706be",
+        "96": "25f6186cb3a6dda4f1e0f5d6815070e0dcb25ef9d16bcc52777ca450ad71d2e8",
+        "97": "3250ddd8dbfe669decf390ffe5e435469ffdaa4e10acd3bf536ea4a104c5432c",
+        "98": "d4730e4fde18ca64ff5c7b32ccd93717a790e2db5a404c277202c231dc540469",
+        "99": "52af758cb0e7b005389fd3e3572f2cda225f198e22ec8118e97d2a1ad23f07ff"
+      },
+      "executed_interval_basis_sha256": "172a9a17ea9a0208b13e25e33a99d8a1769874c4b546b744fac302918a1f55cc"
+    },
+    "gpu_two": {
+      "path": "results_500/executed_gpu_two.npz",
+      "sha256": "6d16dc452c5edb9cdadbaa4f4d62f6e3cf0d1ec685938568e704b693b54e1bdc",
+      "array_count": 2120,
+      "executed_basis_sha256": {
+        "0": "4f0e20acb32225589044c50208bc5fea52457d76c89a43dc09184692dce55ea3",
+        "1": "bd6737e393b75fbaea7922e9940e33b69acc5ecaa7b42578a9daf68530afcd6b",
+        "2": "a483ece97651f80535b5c436ac261c48aadd1e5608ea254acc34c1e99e72a44e",
+        "3": "693c7b1c75608de299f260cb46add297e8cc711b5abdfef56e2874b3c4af3111",
+        "4": "ddfd4ce59935aa40387cb4b01e4e0fc86d05b97b01d37c3653d6af04ad52139f",
+        "5": "4ced3dc775ff61cf4b81b63908d9c6c46c530cdabe8f9c8d131246aaf86674a0",
+        "6": "761ed223835d394096437fd604762bff0b4f595d3ff4d5e46a5ff92fb5e71016",
+        "7": "d038ba34f8cb1c5c95c3e7e249bffeb3c69aa4d8584c5f6e1ad5c75b031d60d3",
+        "8": "5f37abc23819d050231107472636acd2e44f71f51f65b21d2a44a156d0d966b8",
+        "9": "047c15666b2439dfcbdef96970bc008a55fbdd5a790d9285931f1b9ad6841ec4",
+        "10": "59e27f9469826787cfed9047109aef16e0b50f6742b571063f947c43192e78c3",
+        "11": "8d519b2f1888acd7555edd205f24c05e48c1eb597308a761a08e9dfdf884b8a1",
+        "12": "3c1203e8eb1c2739fa034d4fd8f90bd38ac58c861c033e3988c5bac3d90f4b4e",
+        "13": "704f156b1688ed9896ef69d01868e667c717f9c8d454d57a50d500571df1f8bf",
+        "14": "cf27a5a457936289262be213ca48161fbb07e84a88a85d2f7632cd92b67c9679",
+        "15": "fad56fb1404cc1f15277bda867b602c39a6c342848c703b6c16270bc9966db9f",
+        "16": "e68e13cd89ec4c680a17c9f86b827644c3a3c18f51b169883f117ca65a8b01c0",
+        "17": "2f7fef3f6452463d720aa0b9c6b0fef9451abda05af45900b77f550c2f555797",
+        "18": "64efb749fbf68444727d5ee01a76bacebfb6c80677e64e8eb154f46e4f99b8b6",
+        "19": "3dcd93d95998e3d4a601c6a029abefaa0bdd1613b2d2500635d613fc05874d82",
+        "20": "cd5cf4bff175a7d989977364c13bc714010059354580851b5855d792f2e83132",
+        "21": "61b832da34cfc5663c9ed87e8e6e775dbb5d4a813468466d7d43ef623727cfab",
+        "22": "3669eb5e609498bbc65bcdb6154f2d6732d876328219bbfe72e41ac1e410809e",
+        "23": "27acd18014b069133cec8cf22c9381e312f19b584001c6d1ffee17d028fe09ab",
+        "24": "0f98836100e2aeb5cb5872472fe6d5105d53590bfe9876ffaf21252593a75114",
+        "25": "10606e11c40d2d4e6b34cc34f714180c209824499fbaf8e154763909ab73852d",
+        "26": "44658564bfc1f0c236507752edb308748c36d11a352c4a5bf49b85bdd684ea80",
+        "27": "e80f4d1f71d12c9a3dbc20101725f8bb499438cfb0ec1840942dc0cf891231c6",
+        "28": "9f78843fded5657b62df4e25c850d8cc65626676f673321272a4d8c27b7d999a",
+        "29": "6cfda3143a9fc4a982e9113602b63238092077ed8658242dcca5c937a8fb026c",
+        "30": "a5266f21f623857be3290e2423612f463a01b833ffefcf7ee6b1f6f6f4e4344e",
+        "31": "df95a4487eaa3d2d1e1ae319e7aa0ab21a780cc031ad931f84f6e82c7dd91c16",
+        "32": "7130bc8277dd6017e34a2d91fc99a0890a9fd6357d0d515aa24145cc26f409b1",
+        "33": "792f76d21215ed694a9b06daab7a3241b155a40b71860f50dfd000fabfb09fcf",
+        "34": "1c51bdc997961ecf3b9c7d3f253bbd6760d364571fc25c4de84e067a05246489",
+        "35": "b120de1caeb7a9a119bc33bdb1890bb923c5bc2cb207980e89fd59975247a1f1",
+        "36": "ac6bae53f1a6a53479e515b3d3b458b099a505180d41af459fe86dceb6a799ca",
+        "37": "31eb0c07d783a1dd7719430e2a11db33a98bcae59649b7f05a6d5fabc08b86b3",
+        "38": "da878474b5da7ece0026d32da1f1dea7519deef5166bdeb13240f4fc554c9f53",
+        "39": "a4fe00559c85e19ab2755d67bb0bba105b9d7984422f871fc916686e64a955cb",
+        "40": "e187b34a1f2fd80d3fa4a53ccdbd8193b6adddfb070a2c795be24e7d410310ff",
+        "41": "7301ab8f66ed045000fee0c77553cb3c2a32dd47b82836d0e216a1f96b3cc70f",
+        "42": "59a5cc3e93b30fa248498618cc0da7049455a8816004f49e1c7e590248044305",
+        "43": "b2467b68fb00e79af7b49adcca28ea7387e4bdcaadde0ce04d7260de5fcbf570",
+        "44": "977b3a3b2a1a92193e0958389b8273382b15488d9385a69c23bf7020bff3b7a7",
+        "45": "cdcc8d4ec65fd7cf1646d8b7f746cb7b6b8a9ac1fe85002127c4120f0a7384a1",
+        "46": "9017de1bbf45e7f4797afcc7517c7c0b948531cfab7bafa9d8def96aabccf35c",
+        "47": "cc204c6606ffd551a8d5f3be7ceaf08a765d89bb9856e2caf122dd3486d7de33",
+        "48": "3f1113d4f34a68156fd03b43d771b7a38ac0f11e1b1b6f5613821ea94bb52831",
+        "49": "7916b826df5463b2b392660a7da8b72937723524420ed3e56b64d95fad5f7f64",
+        "50": "d2a116d134930c754086a46236626d0f19103805938cde7bf3ecae0a2f93b523",
+        "51": "0ea1b42fc40a06df04148a0decd18e02c04fb62c3143d877c176d88812ebede0",
+        "52": "3c0c471dd4ea72c3b5518fc821cf5fa7dd747f25153cab441609fd69e6c92a9a",
+        "53": "1c8114aaadf1fb080a0e502498bc8801e71050bca889714b98f8957983910353",
+        "54": "bf0dc26aed6614aa275dd01db2315a6702caff7bc538f15c7d4f0aef9a83534b",
+        "55": "5e96dbafabaa4d5ad7b8676845011be6a092772878a019faf022344f6e3b60fe",
+        "56": "3f47d908c7b94d2384ca333ef9f39e4dd4016bf61c147b382dab52c68bbb316e",
+        "57": "1531ec4b9391f0a8cda2dbf5c3715c3ec8db8be7cd23b4c197407590ee18c89b",
+        "58": "5eb1425c4280eef2d116c0eebdcfafa7eddfe768d62cf8a2781baddbd88f03b9",
+        "59": "f0d5242d76d46305f9c7ad237676f0e79578bf99190ef9c772e68a1737daf19c",
+        "60": "e86cf16b4a4354b4d5cc306713a1d605677ae708c3935fa75b4950a603641fef",
+        "61": "5de20b91007fe28b6b4518a3ea2c635a6f8866eff5afeed4824f9a16ba25c126",
+        "62": "bf600c1bf20b02f65695d604ae7dc2ea42e6e663708fd065f9c556b4c7e28962",
+        "63": "68cd177c91d2005d976c1ecc34afbc63c1244665d21816a678162747cf8596b3",
+        "64": "ef5566d6dc3e1737af0356e4b45987bb673f75c8e48fddbc799799e98863a296",
+        "65": "4f6835726cf03ab2e1b734dd5091edeead702feda699c9195eaf9201d8d5ed54",
+        "66": "da9932dabac6ea76788ce125fb2d3012c33b97239e68dfb9464ab463acc282f6",
+        "67": "98a7379b6f158a191726c94c37905d49219ed55689879fa9d1c9befbdeffef3d",
+        "68": "e8aea1b8004e0ebc81f7291d7f33e444988263539885113a67ad886ff4cb5acd",
+        "69": "1b9728edc5d1b11b481c7501f8a6af23ebe7c84a662d20c0a920b8da8da5cfad",
+        "70": "4eb2e370575e214b305178df65959556b1b34c46161f720e5d2318af6579e6c0",
+        "71": "b2e561ad1dedd7c892b258ab59ef7b7caa04d8fa68f32ce60569d5381b99ea21",
+        "72": "fc3797b3c66e9d274c73812211a6a66e2b2e9292afcf9a3a086553ebaf5035f2",
+        "73": "0fada3c5393a497620560eb2f3660b030080bb66771f0662dd07fe01d1b1685d",
+        "74": "1916e9638d7f7c7ea49fcbc09047adf45147ac46a336c19fae101e8c8ec68903",
+        "75": "6cc2d6291519eab8bfb35e38b502f94f131ca6d954cf9668dd1181c6ecfef9be",
+        "76": "5d6981ab7a8c40d4293972d0707409588928dee337f243c299141e07c22b675e",
+        "77": "d17123f245d7df9cc56be61173a2ecae9f745a3ae074499d631b041adf56f00c",
+        "78": "a4499a020fceb6aa72378ec7ae72e1257c82f61abf5a6b8847c41f6728530d0f",
+        "79": "bb8ac38d2c711ed60bfbcbbf2305f11c8817be65c10daa421502176e45483b22",
+        "80": "69b538ed44f7dacfc79625560614ae44d36ea24130ccfe24fa317e62a04cb1e5",
+        "81": "116e83d51c62a236242200be06024597df1a5e50e8ade7647ce27b16e64ae15a",
+        "82": "8dd2c9eb20b063988f34e3f09ddaa61e8cd6953f6c260bad64df2115918f06e1",
+        "83": "c235ad78495fe9ebc787f2298ccaf5bd9fe88a60d42552e4f0c969e67ccfd909",
+        "84": "18d0606485f3bd373be3a37fd199ff38af9ddd1cc9ed9cde8b2fb6348e95daf3",
+        "85": "ba2d5b01568830ada51b98cb18599892c1cd8ef387f011b712b5ed0e91e523cb",
+        "86": "50e66468a6fa5ec8ebc36088609822ffa09dbf0a5e304957a09be0e32cf73377",
+        "87": "a815b8149e0fe474ee42e5986f20da749cfa953e823a3f3f5a2f45d6c6f0e792",
+        "88": "d1f2fcdccac4883b66389697835885f44f1363dba8ba5f569e8a5acadadc7331",
+        "89": "97be3e491c8cb9e3cf2d10b4d55547c97a427ef95546ce02474a355b835e3109",
+        "90": "c3dc28a8c16ea4827d698ad1645c872bacd4d6cd7f5b234e606a386038744457",
+        "91": "ed71039200bd32e5b1ebc43b06f6db3db88e95d275d16ee9efb8caa447eea685",
+        "92": "e05dbe58921b11d98d7ecf372ca93fbafeb3d3537ef01060c3abf29a364ead9a",
+        "93": "5fd3a8165698a0885e25d342b7da2e3ae0c17dd7d82a4a23f315bd60bdf029d5",
+        "94": "17a5912e73a1ad830abfc101daa4fac6aeb2a17c101901a1b1bc05388de8ddd0",
+        "95": "d83e31172cdd7e6cce52da8593b7e6876b4dd97a6a8a8fb667c242fe2d5706be",
+        "96": "25f6186cb3a6dda4f1e0f5d6815070e0dcb25ef9d16bcc52777ca450ad71d2e8",
+        "97": "3250ddd8dbfe669decf390ffe5e435469ffdaa4e10acd3bf536ea4a104c5432c",
+        "98": "d4730e4fde18ca64ff5c7b32ccd93717a790e2db5a404c277202c231dc540469",
+        "99": "52af758cb0e7b005389fd3e3572f2cda225f198e22ec8118e97d2a1ad23f07ff"
+      },
+      "executed_interval_basis_sha256": "172a9a17ea9a0208b13e25e33a99d8a1769874c4b546b744fac302918a1f55cc"
+    },
+    "sample_0_gpu_two": {
+      "path": "results_500/sample_0_gpu_two.npz",
+      "sha256": "91727081da6823f0e64afe13be2d0f0232319af4a14fa5121972dc68f7bc634d",
+      "array_count": 2120,
+      "executed_basis_sha256": {
+        "0": "4f0e20acb32225589044c50208bc5fea52457d76c89a43dc09184692dce55ea3",
+        "1": "bd6737e393b75fbaea7922e9940e33b69acc5ecaa7b42578a9daf68530afcd6b",
+        "2": "a483ece97651f80535b5c436ac261c48aadd1e5608ea254acc34c1e99e72a44e",
+        "3": "693c7b1c75608de299f260cb46add297e8cc711b5abdfef56e2874b3c4af3111",
+        "4": "ddfd4ce59935aa40387cb4b01e4e0fc86d05b97b01d37c3653d6af04ad52139f",
+        "5": "4ced3dc775ff61cf4b81b63908d9c6c46c530cdabe8f9c8d131246aaf86674a0",
+        "6": "761ed223835d394096437fd604762bff0b4f595d3ff4d5e46a5ff92fb5e71016",
+        "7": "d038ba34f8cb1c5c95c3e7e249bffeb3c69aa4d8584c5f6e1ad5c75b031d60d3",
+        "8": "5f37abc23819d050231107472636acd2e44f71f51f65b21d2a44a156d0d966b8",
+        "9": "047c15666b2439dfcbdef96970bc008a55fbdd5a790d9285931f1b9ad6841ec4",
+        "10": "59e27f9469826787cfed9047109aef16e0b50f6742b571063f947c43192e78c3",
+        "11": "8d519b2f1888acd7555edd205f24c05e48c1eb597308a761a08e9dfdf884b8a1",
+        "12": "3c1203e8eb1c2739fa034d4fd8f90bd38ac58c861c033e3988c5bac3d90f4b4e",
+        "13": "704f156b1688ed9896ef69d01868e667c717f9c8d454d57a50d500571df1f8bf",
+        "14": "cf27a5a457936289262be213ca48161fbb07e84a88a85d2f7632cd92b67c9679",
+        "15": "fad56fb1404cc1f15277bda867b602c39a6c342848c703b6c16270bc9966db9f",
+        "16": "e68e13cd89ec4c680a17c9f86b827644c3a3c18f51b169883f117ca65a8b01c0",
+        "17": "2f7fef3f6452463d720aa0b9c6b0fef9451abda05af45900b77f550c2f555797",
+        "18": "64efb749fbf68444727d5ee01a76bacebfb6c80677e64e8eb154f46e4f99b8b6",
+        "19": "3dcd93d95998e3d4a601c6a029abefaa0bdd1613b2d2500635d613fc05874d82",
+        "20": "cd5cf4bff175a7d989977364c13bc714010059354580851b5855d792f2e83132",
+        "21": "61b832da34cfc5663c9ed87e8e6e775dbb5d4a813468466d7d43ef623727cfab",
+        "22": "3669eb5e609498bbc65bcdb6154f2d6732d876328219bbfe72e41ac1e410809e",
+        "23": "27acd18014b069133cec8cf22c9381e312f19b584001c6d1ffee17d028fe09ab",
+        "24": "0f98836100e2aeb5cb5872472fe6d5105d53590bfe9876ffaf21252593a75114",
+        "25": "10606e11c40d2d4e6b34cc34f714180c209824499fbaf8e154763909ab73852d",
+        "26": "44658564bfc1f0c236507752edb308748c36d11a352c4a5bf49b85bdd684ea80",
+        "27": "e80f4d1f71d12c9a3dbc20101725f8bb499438cfb0ec1840942dc0cf891231c6",
+        "28": "9f78843fded5657b62df4e25c850d8cc65626676f673321272a4d8c27b7d999a",
+        "29": "6cfda3143a9fc4a982e9113602b63238092077ed8658242dcca5c937a8fb026c",
+        "30": "a5266f21f623857be3290e2423612f463a01b833ffefcf7ee6b1f6f6f4e4344e",
+        "31": "df95a4487eaa3d2d1e1ae319e7aa0ab21a780cc031ad931f84f6e82c7dd91c16",
+        "32": "7130bc8277dd6017e34a2d91fc99a0890a9fd6357d0d515aa24145cc26f409b1",
+        "33": "792f76d21215ed694a9b06daab7a3241b155a40b71860f50dfd000fabfb09fcf",
+        "34": "1c51bdc997961ecf3b9c7d3f253bbd6760d364571fc25c4de84e067a05246489",
+        "35": "b120de1caeb7a9a119bc33bdb1890bb923c5bc2cb207980e89fd59975247a1f1",
+        "36": "ac6bae53f1a6a53479e515b3d3b458b099a505180d41af459fe86dceb6a799ca",
+        "37": "31eb0c07d783a1dd7719430e2a11db33a98bcae59649b7f05a6d5fabc08b86b3",
+        "38": "da878474b5da7ece0026d32da1f1dea7519deef5166bdeb13240f4fc554c9f53",
+        "39": "a4fe00559c85e19ab2755d67bb0bba105b9d7984422f871fc916686e64a955cb",
+        "40": "e187b34a1f2fd80d3fa4a53ccdbd8193b6adddfb070a2c795be24e7d410310ff",
+        "41": "7301ab8f66ed045000fee0c77553cb3c2a32dd47b82836d0e216a1f96b3cc70f",
+        "42": "59a5cc3e93b30fa248498618cc0da7049455a8816004f49e1c7e590248044305",
+        "43": "b2467b68fb00e79af7b49adcca28ea7387e4bdcaadde0ce04d7260de5fcbf570",
+        "44": "977b3a3b2a1a92193e0958389b8273382b15488d9385a69c23bf7020bff3b7a7",
+        "45": "cdcc8d4ec65fd7cf1646d8b7f746cb7b6b8a9ac1fe85002127c4120f0a7384a1",
+        "46": "9017de1bbf45e7f4797afcc7517c7c0b948531cfab7bafa9d8def96aabccf35c",
+        "47": "cc204c6606ffd551a8d5f3be7ceaf08a765d89bb9856e2caf122dd3486d7de33",
+        "48": "3f1113d4f34a68156fd03b43d771b7a38ac0f11e1b1b6f5613821ea94bb52831",
+        "49": "7916b826df5463b2b392660a7da8b72937723524420ed3e56b64d95fad5f7f64",
+        "50": "d2a116d134930c754086a46236626d0f19103805938cde7bf3ecae0a2f93b523",
+        "51": "0ea1b42fc40a06df04148a0decd18e02c04fb62c3143d877c176d88812ebede0",
+        "52": "3c0c471dd4ea72c3b5518fc821cf5fa7dd747f25153cab441609fd69e6c92a9a",
+        "53": "1c8114aaadf1fb080a0e502498bc8801e71050bca889714b98f8957983910353",
+        "54": "bf0dc26aed6614aa275dd01db2315a6702caff7bc538f15c7d4f0aef9a83534b",
+        "55": "5e96dbafabaa4d5ad7b8676845011be6a092772878a019faf022344f6e3b60fe",
+        "56": "3f47d908c7b94d2384ca333ef9f39e4dd4016bf61c147b382dab52c68bbb316e",
+        "57": "1531ec4b9391f0a8cda2dbf5c3715c3ec8db8be7cd23b4c197407590ee18c89b",
+        "58": "5eb1425c4280eef2d116c0eebdcfafa7eddfe768d62cf8a2781baddbd88f03b9",
+        "59": "f0d5242d76d46305f9c7ad237676f0e79578bf99190ef9c772e68a1737daf19c",
+        "60": "e86cf16b4a4354b4d5cc306713a1d605677ae708c3935fa75b4950a603641fef",
+        "61": "5de20b91007fe28b6b4518a3ea2c635a6f8866eff5afeed4824f9a16ba25c126",
+        "62": "bf600c1bf20b02f65695d604ae7dc2ea42e6e663708fd065f9c556b4c7e28962",
+        "63": "68cd177c91d2005d976c1ecc34afbc63c1244665d21816a678162747cf8596b3",
+        "64": "ef5566d6dc3e1737af0356e4b45987bb673f75c8e48fddbc799799e98863a296",
+        "65": "4f6835726cf03ab2e1b734dd5091edeead702feda699c9195eaf9201d8d5ed54",
+        "66": "da9932dabac6ea76788ce125fb2d3012c33b97239e68dfb9464ab463acc282f6",
+        "67": "98a7379b6f158a191726c94c37905d49219ed55689879fa9d1c9befbdeffef3d",
+        "68": "e8aea1b8004e0ebc81f7291d7f33e444988263539885113a67ad886ff4cb5acd",
+        "69": "1b9728edc5d1b11b481c7501f8a6af23ebe7c84a662d20c0a920b8da8da5cfad",
+        "70": "4eb2e370575e214b305178df65959556b1b34c46161f720e5d2318af6579e6c0",
+        "71": "b2e561ad1dedd7c892b258ab59ef7b7caa04d8fa68f32ce60569d5381b99ea21",
+        "72": "fc3797b3c66e9d274c73812211a6a66e2b2e9292afcf9a3a086553ebaf5035f2",
+        "73": "0fada3c5393a497620560eb2f3660b030080bb66771f0662dd07fe01d1b1685d",
+        "74": "1916e9638d7f7c7ea49fcbc09047adf45147ac46a336c19fae101e8c8ec68903",
+        "75": "6cc2d6291519eab8bfb35e38b502f94f131ca6d954cf9668dd1181c6ecfef9be",
+        "76": "5d6981ab7a8c40d4293972d0707409588928dee337f243c299141e07c22b675e",
+        "77": "d17123f245d7df9cc56be61173a2ecae9f745a3ae074499d631b041adf56f00c",
+        "78": "a4499a020fceb6aa72378ec7ae72e1257c82f61abf5a6b8847c41f6728530d0f",
+        "79": "bb8ac38d2c711ed60bfbcbbf2305f11c8817be65c10daa421502176e45483b22",
+        "80": "69b538ed44f7dacfc79625560614ae44d36ea24130ccfe24fa317e62a04cb1e5",
+        "81": "116e83d51c62a236242200be06024597df1a5e50e8ade7647ce27b16e64ae15a",
+        "82": "8dd2c9eb20b063988f34e3f09ddaa61e8cd6953f6c260bad64df2115918f06e1",
+        "83": "c235ad78495fe9ebc787f2298ccaf5bd9fe88a60d42552e4f0c969e67ccfd909",
+        "84": "18d0606485f3bd373be3a37fd199ff38af9ddd1cc9ed9cde8b2fb6348e95daf3",
+        "85": "ba2d5b01568830ada51b98cb18599892c1cd8ef387f011b712b5ed0e91e523cb",
+        "86": "50e66468a6fa5ec8ebc36088609822ffa09dbf0a5e304957a09be0e32cf73377",
+        "87": "a815b8149e0fe474ee42e5986f20da749cfa953e823a3f3f5a2f45d6c6f0e792",
+        "88": "d1f2fcdccac4883b66389697835885f44f1363dba8ba5f569e8a5acadadc7331",
+        "89": "97be3e491c8cb9e3cf2d10b4d55547c97a427ef95546ce02474a355b835e3109",
+        "90": "c3dc28a8c16ea4827d698ad1645c872bacd4d6cd7f5b234e606a386038744457",
+        "91": "ed71039200bd32e5b1ebc43b06f6db3db88e95d275d16ee9efb8caa447eea685",
+        "92": "e05dbe58921b11d98d7ecf372ca93fbafeb3d3537ef01060c3abf29a364ead9a",
+        "93": "5fd3a8165698a0885e25d342b7da2e3ae0c17dd7d82a4a23f315bd60bdf029d5",
+        "94": "17a5912e73a1ad830abfc101daa4fac6aeb2a17c101901a1b1bc05388de8ddd0",
+        "95": "d83e31172cdd7e6cce52da8593b7e6876b4dd97a6a8a8fb667c242fe2d5706be",
+        "96": "25f6186cb3a6dda4f1e0f5d6815070e0dcb25ef9d16bcc52777ca450ad71d2e8",
+        "97": "3250ddd8dbfe669decf390ffe5e435469ffdaa4e10acd3bf536ea4a104c5432c",
+        "98": "d4730e4fde18ca64ff5c7b32ccd93717a790e2db5a404c277202c231dc540469",
+        "99": "52af758cb0e7b005389fd3e3572f2cda225f198e22ec8118e97d2a1ad23f07ff"
+      },
+      "executed_interval_basis_sha256": "172a9a17ea9a0208b13e25e33a99d8a1769874c4b546b744fac302918a1f55cc"
+    },
+    "sample_0_gpu_one": {
+      "path": "results_500/sample_0_gpu_one.npz",
+      "sha256": "c59a6688c087f9f6d0b05d855878b49bd83356164ba54582d7a10f83aa878c68",
+      "array_count": 2120,
+      "executed_basis_sha256": {
+        "0": "4f0e20acb32225589044c50208bc5fea52457d76c89a43dc09184692dce55ea3",
+        "1": "bd6737e393b75fbaea7922e9940e33b69acc5ecaa7b42578a9daf68530afcd6b",
+        "2": "a483ece97651f80535b5c436ac261c48aadd1e5608ea254acc34c1e99e72a44e",
+        "3": "693c7b1c75608de299f260cb46add297e8cc711b5abdfef56e2874b3c4af3111",
+        "4": "ddfd4ce59935aa40387cb4b01e4e0fc86d05b97b01d37c3653d6af04ad52139f",
+        "5": "4ced3dc775ff61cf4b81b63908d9c6c46c530cdabe8f9c8d131246aaf86674a0",
+        "6": "761ed223835d394096437fd604762bff0b4f595d3ff4d5e46a5ff92fb5e71016",
+        "7": "d038ba34f8cb1c5c95c3e7e249bffeb3c69aa4d8584c5f6e1ad5c75b031d60d3",
+        "8": "5f37abc23819d050231107472636acd2e44f71f51f65b21d2a44a156d0d966b8",
+        "9": "047c15666b2439dfcbdef96970bc008a55fbdd5a790d9285931f1b9ad6841ec4",
+        "10": "59e27f9469826787cfed9047109aef16e0b50f6742b571063f947c43192e78c3",
+        "11": "8d519b2f1888acd7555edd205f24c05e48c1eb597308a761a08e9dfdf884b8a1",
+        "12": "3c1203e8eb1c2739fa034d4fd8f90bd38ac58c861c033e3988c5bac3d90f4b4e",
+        "13": "704f156b1688ed9896ef69d01868e667c717f9c8d454d57a50d500571df1f8bf",
+        "14": "cf27a5a457936289262be213ca48161fbb07e84a88a85d2f7632cd92b67c9679",
+        "15": "fad56fb1404cc1f15277bda867b602c39a6c342848c703b6c16270bc9966db9f",
+        "16": "e68e13cd89ec4c680a17c9f86b827644c3a3c18f51b169883f117ca65a8b01c0",
+        "17": "2f7fef3f6452463d720aa0b9c6b0fef9451abda05af45900b77f550c2f555797",
+        "18": "64efb749fbf68444727d5ee01a76bacebfb6c80677e64e8eb154f46e4f99b8b6",
+        "19": "3dcd93d95998e3d4a601c6a029abefaa0bdd1613b2d2500635d613fc05874d82",
+        "20": "cd5cf4bff175a7d989977364c13bc714010059354580851b5855d792f2e83132",
+        "21": "61b832da34cfc5663c9ed87e8e6e775dbb5d4a813468466d7d43ef623727cfab",
+        "22": "3669eb5e609498bbc65bcdb6154f2d6732d876328219bbfe72e41ac1e410809e",
+        "23": "27acd18014b069133cec8cf22c9381e312f19b584001c6d1ffee17d028fe09ab",
+        "24": "0f98836100e2aeb5cb5872472fe6d5105d53590bfe9876ffaf21252593a75114",
+        "25": "10606e11c40d2d4e6b34cc34f714180c209824499fbaf8e154763909ab73852d",
+        "26": "44658564bfc1f0c236507752edb308748c36d11a352c4a5bf49b85bdd684ea80",
+        "27": "e80f4d1f71d12c9a3dbc20101725f8bb499438cfb0ec1840942dc0cf891231c6",
+        "28": "9f78843fded5657b62df4e25c850d8cc65626676f673321272a4d8c27b7d999a",
+        "29": "6cfda3143a9fc4a982e9113602b63238092077ed8658242dcca5c937a8fb026c",
+        "30": "a5266f21f623857be3290e2423612f463a01b833ffefcf7ee6b1f6f6f4e4344e",
+        "31": "df95a4487eaa3d2d1e1ae319e7aa0ab21a780cc031ad931f84f6e82c7dd91c16",
+        "32": "7130bc8277dd6017e34a2d91fc99a0890a9fd6357d0d515aa24145cc26f409b1",
+        "33": "792f76d21215ed694a9b06daab7a3241b155a40b71860f50dfd000fabfb09fcf",
+        "34": "1c51bdc997961ecf3b9c7d3f253bbd6760d364571fc25c4de84e067a05246489",
+        "35": "b120de1caeb7a9a119bc33bdb1890bb923c5bc2cb207980e89fd59975247a1f1",
+        "36": "ac6bae53f1a6a53479e515b3d3b458b099a505180d41af459fe86dceb6a799ca",
+        "37": "31eb0c07d783a1dd7719430e2a11db33a98bcae59649b7f05a6d5fabc08b86b3",
+        "38": "da878474b5da7ece0026d32da1f1dea7519deef5166bdeb13240f4fc554c9f53",
+        "39": "a4fe00559c85e19ab2755d67bb0bba105b9d7984422f871fc916686e64a955cb",
+        "40": "e187b34a1f2fd80d3fa4a53ccdbd8193b6adddfb070a2c795be24e7d410310ff",
+        "41": "7301ab8f66ed045000fee0c77553cb3c2a32dd47b82836d0e216a1f96b3cc70f",
+        "42": "59a5cc3e93b30fa248498618cc0da7049455a8816004f49e1c7e590248044305",
+        "43": "b2467b68fb00e79af7b49adcca28ea7387e4bdcaadde0ce04d7260de5fcbf570",
+        "44": "977b3a3b2a1a92193e0958389b8273382b15488d9385a69c23bf7020bff3b7a7",
+        "45": "cdcc8d4ec65fd7cf1646d8b7f746cb7b6b8a9ac1fe85002127c4120f0a7384a1",
+        "46": "9017de1bbf45e7f4797afcc7517c7c0b948531cfab7bafa9d8def96aabccf35c",
+        "47": "cc204c6606ffd551a8d5f3be7ceaf08a765d89bb9856e2caf122dd3486d7de33",
+        "48": "3f1113d4f34a68156fd03b43d771b7a38ac0f11e1b1b6f5613821ea94bb52831",
+        "49": "7916b826df5463b2b392660a7da8b72937723524420ed3e56b64d95fad5f7f64",
+        "50": "d2a116d134930c754086a46236626d0f19103805938cde7bf3ecae0a2f93b523",
+        "51": "0ea1b42fc40a06df04148a0decd18e02c04fb62c3143d877c176d88812ebede0",
+        "52": "3c0c471dd4ea72c3b5518fc821cf5fa7dd747f25153cab441609fd69e6c92a9a",
+        "53": "1c8114aaadf1fb080a0e502498bc8801e71050bca889714b98f8957983910353",
+        "54": "bf0dc26aed6614aa275dd01db2315a6702caff7bc538f15c7d4f0aef9a83534b",
+        "55": "5e96dbafabaa4d5ad7b8676845011be6a092772878a019faf022344f6e3b60fe",
+        "56": "3f47d908c7b94d2384ca333ef9f39e4dd4016bf61c147b382dab52c68bbb316e",
+        "57": "1531ec4b9391f0a8cda2dbf5c3715c3ec8db8be7cd23b4c197407590ee18c89b",
+        "58": "5eb1425c4280eef2d116c0eebdcfafa7eddfe768d62cf8a2781baddbd88f03b9",
+        "59": "f0d5242d76d46305f9c7ad237676f0e79578bf99190ef9c772e68a1737daf19c",
+        "60": "e86cf16b4a4354b4d5cc306713a1d605677ae708c3935fa75b4950a603641fef",
+        "61": "5de20b91007fe28b6b4518a3ea2c635a6f8866eff5afeed4824f9a16ba25c126",
+        "62": "bf600c1bf20b02f65695d604ae7dc2ea42e6e663708fd065f9c556b4c7e28962",
+        "63": "68cd177c91d2005d976c1ecc34afbc63c1244665d21816a678162747cf8596b3",
+        "64": "ef5566d6dc3e1737af0356e4b45987bb673f75c8e48fddbc799799e98863a296",
+        "65": "4f6835726cf03ab2e1b734dd5091edeead702feda699c9195eaf9201d8d5ed54",
+        "66": "da9932dabac6ea76788ce125fb2d3012c33b97239e68dfb9464ab463acc282f6",
+        "67": "98a7379b6f158a191726c94c37905d49219ed55689879fa9d1c9befbdeffef3d",
+        "68": "e8aea1b8004e0ebc81f7291d7f33e444988263539885113a67ad886ff4cb5acd",
+        "69": "1b9728edc5d1b11b481c7501f8a6af23ebe7c84a662d20c0a920b8da8da5cfad",
+        "70": "4eb2e370575e214b305178df65959556b1b34c46161f720e5d2318af6579e6c0",
+        "71": "b2e561ad1dedd7c892b258ab59ef7b7caa04d8fa68f32ce60569d5381b99ea21",
+        "72": "fc3797b3c66e9d274c73812211a6a66e2b2e9292afcf9a3a086553ebaf5035f2",
+        "73": "0fada3c5393a497620560eb2f3660b030080bb66771f0662dd07fe01d1b1685d",
+        "74": "1916e9638d7f7c7ea49fcbc09047adf45147ac46a336c19fae101e8c8ec68903",
+        "75": "6cc2d6291519eab8bfb35e38b502f94f131ca6d954cf9668dd1181c6ecfef9be",
+        "76": "5d6981ab7a8c40d4293972d0707409588928dee337f243c299141e07c22b675e",
+        "77": "d17123f245d7df9cc56be61173a2ecae9f745a3ae074499d631b041adf56f00c",
+        "78": "a4499a020fceb6aa72378ec7ae72e1257c82f61abf5a6b8847c41f6728530d0f",
+        "79": "bb8ac38d2c711ed60bfbcbbf2305f11c8817be65c10daa421502176e45483b22",
+        "80": "69b538ed44f7dacfc79625560614ae44d36ea24130ccfe24fa317e62a04cb1e5",
+        "81": "116e83d51c62a236242200be06024597df1a5e50e8ade7647ce27b16e64ae15a",
+        "82": "8dd2c9eb20b063988f34e3f09ddaa61e8cd6953f6c260bad64df2115918f06e1",
+        "83": "c235ad78495fe9ebc787f2298ccaf5bd9fe88a60d42552e4f0c969e67ccfd909",
+        "84": "18d0606485f3bd373be3a37fd199ff38af9ddd1cc9ed9cde8b2fb6348e95daf3",
+        "85": "ba2d5b01568830ada51b98cb18599892c1cd8ef387f011b712b5ed0e91e523cb",
+        "86": "50e66468a6fa5ec8ebc36088609822ffa09dbf0a5e304957a09be0e32cf73377",
+        "87": "a815b8149e0fe474ee42e5986f20da749cfa953e823a3f3f5a2f45d6c6f0e792",
+        "88": "d1f2fcdccac4883b66389697835885f44f1363dba8ba5f569e8a5acadadc7331",
+        "89": "97be3e491c8cb9e3cf2d10b4d55547c97a427ef95546ce02474a355b835e3109",
+        "90": "c3dc28a8c16ea4827d698ad1645c872bacd4d6cd7f5b234e606a386038744457",
+        "91": "ed71039200bd32e5b1ebc43b06f6db3db88e95d275d16ee9efb8caa447eea685",
+        "92": "e05dbe58921b11d98d7ecf372ca93fbafeb3d3537ef01060c3abf29a364ead9a",
+        "93": "5fd3a8165698a0885e25d342b7da2e3ae0c17dd7d82a4a23f315bd60bdf029d5",
+        "94": "17a5912e73a1ad830abfc101daa4fac6aeb2a17c101901a1b1bc05388de8ddd0",
+        "95": "d83e31172cdd7e6cce52da8593b7e6876b4dd97a6a8a8fb667c242fe2d5706be",
+        "96": "25f6186cb3a6dda4f1e0f5d6815070e0dcb25ef9d16bcc52777ca450ad71d2e8",
+        "97": "3250ddd8dbfe669decf390ffe5e435469ffdaa4e10acd3bf536ea4a104c5432c",
+        "98": "d4730e4fde18ca64ff5c7b32ccd93717a790e2db5a404c277202c231dc540469",
+        "99": "52af758cb0e7b005389fd3e3572f2cda225f198e22ec8118e97d2a1ad23f07ff"
+      },
+      "executed_interval_basis_sha256": "172a9a17ea9a0208b13e25e33a99d8a1769874c4b546b744fac302918a1f55cc"
+    },
+    "sample_1_gpu_two": {
+      "path": "results_500/sample_1_gpu_two.npz",
+      "sha256": "330ee9b2277450cf69037ea0f83b2cbb38054f9ee7e79166c42965b24a65467a",
+      "array_count": 2120,
+      "executed_basis_sha256": {
+        "0": "4f0e20acb32225589044c50208bc5fea52457d76c89a43dc09184692dce55ea3",
+        "1": "bd6737e393b75fbaea7922e9940e33b69acc5ecaa7b42578a9daf68530afcd6b",
+        "2": "a483ece97651f80535b5c436ac261c48aadd1e5608ea254acc34c1e99e72a44e",
+        "3": "693c7b1c75608de299f260cb46add297e8cc711b5abdfef56e2874b3c4af3111",
+        "4": "ddfd4ce59935aa40387cb4b01e4e0fc86d05b97b01d37c3653d6af04ad52139f",
+        "5": "4ced3dc775ff61cf4b81b63908d9c6c46c530cdabe8f9c8d131246aaf86674a0",
+        "6": "761ed223835d394096437fd604762bff0b4f595d3ff4d5e46a5ff92fb5e71016",
+        "7": "d038ba34f8cb1c5c95c3e7e249bffeb3c69aa4d8584c5f6e1ad5c75b031d60d3",
+        "8": "5f37abc23819d050231107472636acd2e44f71f51f65b21d2a44a156d0d966b8",
+        "9": "047c15666b2439dfcbdef96970bc008a55fbdd5a790d9285931f1b9ad6841ec4",
+        "10": "59e27f9469826787cfed9047109aef16e0b50f6742b571063f947c43192e78c3",
+        "11": "8d519b2f1888acd7555edd205f24c05e48c1eb597308a761a08e9dfdf884b8a1",
+        "12": "3c1203e8eb1c2739fa034d4fd8f90bd38ac58c861c033e3988c5bac3d90f4b4e",
+        "13": "704f156b1688ed9896ef69d01868e667c717f9c8d454d57a50d500571df1f8bf",
+        "14": "cf27a5a457936289262be213ca48161fbb07e84a88a85d2f7632cd92b67c9679",
+        "15": "fad56fb1404cc1f15277bda867b602c39a6c342848c703b6c16270bc9966db9f",
+        "16": "e68e13cd89ec4c680a17c9f86b827644c3a3c18f51b169883f117ca65a8b01c0",
+        "17": "2f7fef3f6452463d720aa0b9c6b0fef9451abda05af45900b77f550c2f555797",
+        "18": "64efb749fbf68444727d5ee01a76bacebfb6c80677e64e8eb154f46e4f99b8b6",
+        "19": "3dcd93d95998e3d4a601c6a029abefaa0bdd1613b2d2500635d613fc05874d82",
+        "20": "cd5cf4bff175a7d989977364c13bc714010059354580851b5855d792f2e83132",
+        "21": "61b832da34cfc5663c9ed87e8e6e775dbb5d4a813468466d7d43ef623727cfab",
+        "22": "3669eb5e609498bbc65bcdb6154f2d6732d876328219bbfe72e41ac1e410809e",
+        "23": "27acd18014b069133cec8cf22c9381e312f19b584001c6d1ffee17d028fe09ab",
+        "24": "0f98836100e2aeb5cb5872472fe6d5105d53590bfe9876ffaf21252593a75114",
+        "25": "10606e11c40d2d4e6b34cc34f714180c209824499fbaf8e154763909ab73852d",
+        "26": "44658564bfc1f0c236507752edb308748c36d11a352c4a5bf49b85bdd684ea80",
+        "27": "e80f4d1f71d12c9a3dbc20101725f8bb499438cfb0ec1840942dc0cf891231c6",
+        "28": "9f78843fded5657b62df4e25c850d8cc65626676f673321272a4d8c27b7d999a",
+        "29": "6cfda3143a9fc4a982e9113602b63238092077ed8658242dcca5c937a8fb026c",
+        "30": "a5266f21f623857be3290e2423612f463a01b833ffefcf7ee6b1f6f6f4e4344e",
+        "31": "df95a4487eaa3d2d1e1ae319e7aa0ab21a780cc031ad931f84f6e82c7dd91c16",
+        "32": "7130bc8277dd6017e34a2d91fc99a0890a9fd6357d0d515aa24145cc26f409b1",
+        "33": "792f76d21215ed694a9b06daab7a3241b155a40b71860f50dfd000fabfb09fcf",
+        "34": "1c51bdc997961ecf3b9c7d3f253bbd6760d364571fc25c4de84e067a05246489",
+        "35": "b120de1caeb7a9a119bc33bdb1890bb923c5bc2cb207980e89fd59975247a1f1",
+        "36": "ac6bae53f1a6a53479e515b3d3b458b099a505180d41af459fe86dceb6a799ca",
+        "37": "31eb0c07d783a1dd7719430e2a11db33a98bcae59649b7f05a6d5fabc08b86b3",
+        "38": "da878474b5da7ece0026d32da1f1dea7519deef5166bdeb13240f4fc554c9f53",
+        "39": "a4fe00559c85e19ab2755d67bb0bba105b9d7984422f871fc916686e64a955cb",
+        "40": "e187b34a1f2fd80d3fa4a53ccdbd8193b6adddfb070a2c795be24e7d410310ff",
+        "41": "7301ab8f66ed045000fee0c77553cb3c2a32dd47b82836d0e216a1f96b3cc70f",
+        "42": "59a5cc3e93b30fa248498618cc0da7049455a8816004f49e1c7e590248044305",
+        "43": "b2467b68fb00e79af7b49adcca28ea7387e4bdcaadde0ce04d7260de5fcbf570",
+        "44": "977b3a3b2a1a92193e0958389b8273382b15488d9385a69c23bf7020bff3b7a7",
+        "45": "cdcc8d4ec65fd7cf1646d8b7f746cb7b6b8a9ac1fe85002127c4120f0a7384a1",
+        "46": "9017de1bbf45e7f4797afcc7517c7c0b948531cfab7bafa9d8def96aabccf35c",
+        "47": "cc204c6606ffd551a8d5f3be7ceaf08a765d89bb9856e2caf122dd3486d7de33",
+        "48": "3f1113d4f34a68156fd03b43d771b7a38ac0f11e1b1b6f5613821ea94bb52831",
+        "49": "7916b826df5463b2b392660a7da8b72937723524420ed3e56b64d95fad5f7f64",
+        "50": "d2a116d134930c754086a46236626d0f19103805938cde7bf3ecae0a2f93b523",
+        "51": "0ea1b42fc40a06df04148a0decd18e02c04fb62c3143d877c176d88812ebede0",
+        "52": "3c0c471dd4ea72c3b5518fc821cf5fa7dd747f25153cab441609fd69e6c92a9a",
+        "53": "1c8114aaadf1fb080a0e502498bc8801e71050bca889714b98f8957983910353",
+        "54": "bf0dc26aed6614aa275dd01db2315a6702caff7bc538f15c7d4f0aef9a83534b",
+        "55": "5e96dbafabaa4d5ad7b8676845011be6a092772878a019faf022344f6e3b60fe",
+        "56": "3f47d908c7b94d2384ca333ef9f39e4dd4016bf61c147b382dab52c68bbb316e",
+        "57": "1531ec4b9391f0a8cda2dbf5c3715c3ec8db8be7cd23b4c197407590ee18c89b",
+        "58": "5eb1425c4280eef2d116c0eebdcfafa7eddfe768d62cf8a2781baddbd88f03b9",
+        "59": "f0d5242d76d46305f9c7ad237676f0e79578bf99190ef9c772e68a1737daf19c",
+        "60": "e86cf16b4a4354b4d5cc306713a1d605677ae708c3935fa75b4950a603641fef",
+        "61": "5de20b91007fe28b6b4518a3ea2c635a6f8866eff5afeed4824f9a16ba25c126",
+        "62": "bf600c1bf20b02f65695d604ae7dc2ea42e6e663708fd065f9c556b4c7e28962",
+        "63": "68cd177c91d2005d976c1ecc34afbc63c1244665d21816a678162747cf8596b3",
+        "64": "ef5566d6dc3e1737af0356e4b45987bb673f75c8e48fddbc799799e98863a296",
+        "65": "4f6835726cf03ab2e1b734dd5091edeead702feda699c9195eaf9201d8d5ed54",
+        "66": "da9932dabac6ea76788ce125fb2d3012c33b97239e68dfb9464ab463acc282f6",
+        "67": "98a7379b6f158a191726c94c37905d49219ed55689879fa9d1c9befbdeffef3d",
+        "68": "e8aea1b8004e0ebc81f7291d7f33e444988263539885113a67ad886ff4cb5acd",
+        "69": "1b9728edc5d1b11b481c7501f8a6af23ebe7c84a662d20c0a920b8da8da5cfad",
+        "70": "4eb2e370575e214b305178df65959556b1b34c46161f720e5d2318af6579e6c0",
+        "71": "b2e561ad1dedd7c892b258ab59ef7b7caa04d8fa68f32ce60569d5381b99ea21",
+        "72": "fc3797b3c66e9d274c73812211a6a66e2b2e9292afcf9a3a086553ebaf5035f2",
+        "73": "0fada3c5393a497620560eb2f3660b030080bb66771f0662dd07fe01d1b1685d",
+        "74": "1916e9638d7f7c7ea49fcbc09047adf45147ac46a336c19fae101e8c8ec68903",
+        "75": "6cc2d6291519eab8bfb35e38b502f94f131ca6d954cf9668dd1181c6ecfef9be",
+        "76": "5d6981ab7a8c40d4293972d0707409588928dee337f243c299141e07c22b675e",
+        "77": "d17123f245d7df9cc56be61173a2ecae9f745a3ae074499d631b041adf56f00c",
+        "78": "a4499a020fceb6aa72378ec7ae72e1257c82f61abf5a6b8847c41f6728530d0f",
+        "79": "bb8ac38d2c711ed60bfbcbbf2305f11c8817be65c10daa421502176e45483b22",
+        "80": "69b538ed44f7dacfc79625560614ae44d36ea24130ccfe24fa317e62a04cb1e5",
+        "81": "116e83d51c62a236242200be06024597df1a5e50e8ade7647ce27b16e64ae15a",
+        "82": "8dd2c9eb20b063988f34e3f09ddaa61e8cd6953f6c260bad64df2115918f06e1",
+        "83": "c235ad78495fe9ebc787f2298ccaf5bd9fe88a60d42552e4f0c969e67ccfd909",
+        "84": "18d0606485f3bd373be3a37fd199ff38af9ddd1cc9ed9cde8b2fb6348e95daf3",
+        "85": "ba2d5b01568830ada51b98cb18599892c1cd8ef387f011b712b5ed0e91e523cb",
+        "86": "50e66468a6fa5ec8ebc36088609822ffa09dbf0a5e304957a09be0e32cf73377",
+        "87": "a815b8149e0fe474ee42e5986f20da749cfa953e823a3f3f5a2f45d6c6f0e792",
+        "88": "d1f2fcdccac4883b66389697835885f44f1363dba8ba5f569e8a5acadadc7331",
+        "89": "97be3e491c8cb9e3cf2d10b4d55547c97a427ef95546ce02474a355b835e3109",
+        "90": "c3dc28a8c16ea4827d698ad1645c872bacd4d6cd7f5b234e606a386038744457",
+        "91": "ed71039200bd32e5b1ebc43b06f6db3db88e95d275d16ee9efb8caa447eea685",
+        "92": "e05dbe58921b11d98d7ecf372ca93fbafeb3d3537ef01060c3abf29a364ead9a",
+        "93": "5fd3a8165698a0885e25d342b7da2e3ae0c17dd7d82a4a23f315bd60bdf029d5",
+        "94": "17a5912e73a1ad830abfc101daa4fac6aeb2a17c101901a1b1bc05388de8ddd0",
+        "95": "d83e31172cdd7e6cce52da8593b7e6876b4dd97a6a8a8fb667c242fe2d5706be",
+        "96": "25f6186cb3a6dda4f1e0f5d6815070e0dcb25ef9d16bcc52777ca450ad71d2e8",
+        "97": "3250ddd8dbfe669decf390ffe5e435469ffdaa4e10acd3bf536ea4a104c5432c",
+        "98": "d4730e4fde18ca64ff5c7b32ccd93717a790e2db5a404c277202c231dc540469",
+        "99": "52af758cb0e7b005389fd3e3572f2cda225f198e22ec8118e97d2a1ad23f07ff"
+      },
+      "executed_interval_basis_sha256": "172a9a17ea9a0208b13e25e33a99d8a1769874c4b546b744fac302918a1f55cc"
+    },
+    "sample_1_gpu_one": {
+      "path": "results_500/sample_1_gpu_one.npz",
+      "sha256": "d7471444ea70f92cf2d23f6045fa3832b9a60283a278c8cc6e5d9f49e2fa038a",
+      "array_count": 2120,
+      "executed_basis_sha256": {
+        "0": "4f0e20acb32225589044c50208bc5fea52457d76c89a43dc09184692dce55ea3",
+        "1": "bd6737e393b75fbaea7922e9940e33b69acc5ecaa7b42578a9daf68530afcd6b",
+        "2": "a483ece97651f80535b5c436ac261c48aadd1e5608ea254acc34c1e99e72a44e",
+        "3": "693c7b1c75608de299f260cb46add297e8cc711b5abdfef56e2874b3c4af3111",
+        "4": "ddfd4ce59935aa40387cb4b01e4e0fc86d05b97b01d37c3653d6af04ad52139f",
+        "5": "4ced3dc775ff61cf4b81b63908d9c6c46c530cdabe8f9c8d131246aaf86674a0",
+        "6": "761ed223835d394096437fd604762bff0b4f595d3ff4d5e46a5ff92fb5e71016",
+        "7": "d038ba34f8cb1c5c95c3e7e249bffeb3c69aa4d8584c5f6e1ad5c75b031d60d3",
+        "8": "5f37abc23819d050231107472636acd2e44f71f51f65b21d2a44a156d0d966b8",
+        "9": "047c15666b2439dfcbdef96970bc008a55fbdd5a790d9285931f1b9ad6841ec4",
+        "10": "59e27f9469826787cfed9047109aef16e0b50f6742b571063f947c43192e78c3",
+        "11": "8d519b2f1888acd7555edd205f24c05e48c1eb597308a761a08e9dfdf884b8a1",
+        "12": "3c1203e8eb1c2739fa034d4fd8f90bd38ac58c861c033e3988c5bac3d90f4b4e",
+        "13": "704f156b1688ed9896ef69d01868e667c717f9c8d454d57a50d500571df1f8bf",
+        "14": "cf27a5a457936289262be213ca48161fbb07e84a88a85d2f7632cd92b67c9679",
+        "15": "fad56fb1404cc1f15277bda867b602c39a6c342848c703b6c16270bc9966db9f",
+        "16": "e68e13cd89ec4c680a17c9f86b827644c3a3c18f51b169883f117ca65a8b01c0",
+        "17": "2f7fef3f6452463d720aa0b9c6b0fef9451abda05af45900b77f550c2f555797",
+        "18": "64efb749fbf68444727d5ee01a76bacebfb6c80677e64e8eb154f46e4f99b8b6",
+        "19": "3dcd93d95998e3d4a601c6a029abefaa0bdd1613b2d2500635d613fc05874d82",
+        "20": "cd5cf4bff175a7d989977364c13bc714010059354580851b5855d792f2e83132",
+        "21": "61b832da34cfc5663c9ed87e8e6e775dbb5d4a813468466d7d43ef623727cfab",
+        "22": "3669eb5e609498bbc65bcdb6154f2d6732d876328219bbfe72e41ac1e410809e",
+        "23": "27acd18014b069133cec8cf22c9381e312f19b584001c6d1ffee17d028fe09ab",
+        "24": "0f98836100e2aeb5cb5872472fe6d5105d53590bfe9876ffaf21252593a75114",
+        "25": "10606e11c40d2d4e6b34cc34f714180c209824499fbaf8e154763909ab73852d",
+        "26": "44658564bfc1f0c236507752edb308748c36d11a352c4a5bf49b85bdd684ea80",
+        "27": "e80f4d1f71d12c9a3dbc20101725f8bb499438cfb0ec1840942dc0cf891231c6",
+        "28": "9f78843fded5657b62df4e25c850d8cc65626676f673321272a4d8c27b7d999a",
+        "29": "6cfda3143a9fc4a982e9113602b63238092077ed8658242dcca5c937a8fb026c",
+        "30": "a5266f21f623857be3290e2423612f463a01b833ffefcf7ee6b1f6f6f4e4344e",
+        "31": "df95a4487eaa3d2d1e1ae319e7aa0ab21a780cc031ad931f84f6e82c7dd91c16",
+        "32": "7130bc8277dd6017e34a2d91fc99a0890a9fd6357d0d515aa24145cc26f409b1",
+        "33": "792f76d21215ed694a9b06daab7a3241b155a40b71860f50dfd000fabfb09fcf",
+        "34": "1c51bdc997961ecf3b9c7d3f253bbd6760d364571fc25c4de84e067a05246489",
+        "35": "b120de1caeb7a9a119bc33bdb1890bb923c5bc2cb207980e89fd59975247a1f1",
+        "36": "ac6bae53f1a6a53479e515b3d3b458b099a505180d41af459fe86dceb6a799ca",
+        "37": "31eb0c07d783a1dd7719430e2a11db33a98bcae59649b7f05a6d5fabc08b86b3",
+        "38": "da878474b5da7ece0026d32da1f1dea7519deef5166bdeb13240f4fc554c9f53",
+        "39": "a4fe00559c85e19ab2755d67bb0bba105b9d7984422f871fc916686e64a955cb",
+        "40": "e187b34a1f2fd80d3fa4a53ccdbd8193b6adddfb070a2c795be24e7d410310ff",
+        "41": "7301ab8f66ed045000fee0c77553cb3c2a32dd47b82836d0e216a1f96b3cc70f",
+        "42": "59a5cc3e93b30fa248498618cc0da7049455a8816004f49e1c7e590248044305",
+        "43": "b2467b68fb00e79af7b49adcca28ea7387e4bdcaadde0ce04d7260de5fcbf570",
+        "44": "977b3a3b2a1a92193e0958389b8273382b15488d9385a69c23bf7020bff3b7a7",
+        "45": "cdcc8d4ec65fd7cf1646d8b7f746cb7b6b8a9ac1fe85002127c4120f0a7384a1",
+        "46": "9017de1bbf45e7f4797afcc7517c7c0b948531cfab7bafa9d8def96aabccf35c",
+        "47": "cc204c6606ffd551a8d5f3be7ceaf08a765d89bb9856e2caf122dd3486d7de33",
+        "48": "3f1113d4f34a68156fd03b43d771b7a38ac0f11e1b1b6f5613821ea94bb52831",
+        "49": "7916b826df5463b2b392660a7da8b72937723524420ed3e56b64d95fad5f7f64",
+        "50": "d2a116d134930c754086a46236626d0f19103805938cde7bf3ecae0a2f93b523",
+        "51": "0ea1b42fc40a06df04148a0decd18e02c04fb62c3143d877c176d88812ebede0",
+        "52": "3c0c471dd4ea72c3b5518fc821cf5fa7dd747f25153cab441609fd69e6c92a9a",
+        "53": "1c8114aaadf1fb080a0e502498bc8801e71050bca889714b98f8957983910353",
+        "54": "bf0dc26aed6614aa275dd01db2315a6702caff7bc538f15c7d4f0aef9a83534b",
+        "55": "5e96dbafabaa4d5ad7b8676845011be6a092772878a019faf022344f6e3b60fe",
+        "56": "3f47d908c7b94d2384ca333ef9f39e4dd4016bf61c147b382dab52c68bbb316e",
+        "57": "1531ec4b9391f0a8cda2dbf5c3715c3ec8db8be7cd23b4c197407590ee18c89b",
+        "58": "5eb1425c4280eef2d116c0eebdcfafa7eddfe768d62cf8a2781baddbd88f03b9",
+        "59": "f0d5242d76d46305f9c7ad237676f0e79578bf99190ef9c772e68a1737daf19c",
+        "60": "e86cf16b4a4354b4d5cc306713a1d605677ae708c3935fa75b4950a603641fef",
+        "61": "5de20b91007fe28b6b4518a3ea2c635a6f8866eff5afeed4824f9a16ba25c126",
+        "62": "bf600c1bf20b02f65695d604ae7dc2ea42e6e663708fd065f9c556b4c7e28962",
+        "63": "68cd177c91d2005d976c1ecc34afbc63c1244665d21816a678162747cf8596b3",
+        "64": "ef5566d6dc3e1737af0356e4b45987bb673f75c8e48fddbc799799e98863a296",
+        "65": "4f6835726cf03ab2e1b734dd5091edeead702feda699c9195eaf9201d8d5ed54",
+        "66": "da9932dabac6ea76788ce125fb2d3012c33b97239e68dfb9464ab463acc282f6",
+        "67": "98a7379b6f158a191726c94c37905d49219ed55689879fa9d1c9befbdeffef3d",
+        "68": "e8aea1b8004e0ebc81f7291d7f33e444988263539885113a67ad886ff4cb5acd",
+        "69": "1b9728edc5d1b11b481c7501f8a6af23ebe7c84a662d20c0a920b8da8da5cfad",
+        "70": "4eb2e370575e214b305178df65959556b1b34c46161f720e5d2318af6579e6c0",
+        "71": "b2e561ad1dedd7c892b258ab59ef7b7caa04d8fa68f32ce60569d5381b99ea21",
+        "72": "fc3797b3c66e9d274c73812211a6a66e2b2e9292afcf9a3a086553ebaf5035f2",
+        "73": "0fada3c5393a497620560eb2f3660b030080bb66771f0662dd07fe01d1b1685d",
+        "74": "1916e9638d7f7c7ea49fcbc09047adf45147ac46a336c19fae101e8c8ec68903",
+        "75": "6cc2d6291519eab8bfb35e38b502f94f131ca6d954cf9668dd1181c6ecfef9be",
+        "76": "5d6981ab7a8c40d4293972d0707409588928dee337f243c299141e07c22b675e",
+        "77": "d17123f245d7df9cc56be61173a2ecae9f745a3ae074499d631b041adf56f00c",
+        "78": "a4499a020fceb6aa72378ec7ae72e1257c82f61abf5a6b8847c41f6728530d0f",
+        "79": "bb8ac38d2c711ed60bfbcbbf2305f11c8817be65c10daa421502176e45483b22",
+        "80": "69b538ed44f7dacfc79625560614ae44d36ea24130ccfe24fa317e62a04cb1e5",
+        "81": "116e83d51c62a236242200be06024597df1a5e50e8ade7647ce27b16e64ae15a",
+        "82": "8dd2c9eb20b063988f34e3f09ddaa61e8cd6953f6c260bad64df2115918f06e1",
+        "83": "c235ad78495fe9ebc787f2298ccaf5bd9fe88a60d42552e4f0c969e67ccfd909",
+        "84": "18d0606485f3bd373be3a37fd199ff38af9ddd1cc9ed9cde8b2fb6348e95daf3",
+        "85": "ba2d5b01568830ada51b98cb18599892c1cd8ef387f011b712b5ed0e91e523cb",
+        "86": "50e66468a6fa5ec8ebc36088609822ffa09dbf0a5e304957a09be0e32cf73377",
+        "87": "a815b8149e0fe474ee42e5986f20da749cfa953e823a3f3f5a2f45d6c6f0e792",
+        "88": "d1f2fcdccac4883b66389697835885f44f1363dba8ba5f569e8a5acadadc7331",
+        "89": "97be3e491c8cb9e3cf2d10b4d55547c97a427ef95546ce02474a355b835e3109",
+        "90": "c3dc28a8c16ea4827d698ad1645c872bacd4d6cd7f5b234e606a386038744457",
+        "91": "ed71039200bd32e5b1ebc43b06f6db3db88e95d275d16ee9efb8caa447eea685",
+        "92": "e05dbe58921b11d98d7ecf372ca93fbafeb3d3537ef01060c3abf29a364ead9a",
+        "93": "5fd3a8165698a0885e25d342b7da2e3ae0c17dd7d82a4a23f315bd60bdf029d5",
+        "94": "17a5912e73a1ad830abfc101daa4fac6aeb2a17c101901a1b1bc05388de8ddd0",
+        "95": "d83e31172cdd7e6cce52da8593b7e6876b4dd97a6a8a8fb667c242fe2d5706be",
+        "96": "25f6186cb3a6dda4f1e0f5d6815070e0dcb25ef9d16bcc52777ca450ad71d2e8",
+        "97": "3250ddd8dbfe669decf390ffe5e435469ffdaa4e10acd3bf536ea4a104c5432c",
+        "98": "d4730e4fde18ca64ff5c7b32ccd93717a790e2db5a404c277202c231dc540469",
+        "99": "52af758cb0e7b005389fd3e3572f2cda225f198e22ec8118e97d2a1ad23f07ff"
+      },
+      "executed_interval_basis_sha256": "172a9a17ea9a0208b13e25e33a99d8a1769874c4b546b744fac302918a1f55cc"
+    },
+    "sample_2_gpu_one": {
+      "path": "results_500/sample_2_gpu_one.npz",
+      "sha256": "062b058606cb24bebe22d1a0b5cc6d73305bdb97b8ef8c4ebcb22edfe05cb1e9",
+      "array_count": 2120,
+      "executed_basis_sha256": {
+        "0": "4f0e20acb32225589044c50208bc5fea52457d76c89a43dc09184692dce55ea3",
+        "1": "bd6737e393b75fbaea7922e9940e33b69acc5ecaa7b42578a9daf68530afcd6b",
+        "2": "a483ece97651f80535b5c436ac261c48aadd1e5608ea254acc34c1e99e72a44e",
+        "3": "693c7b1c75608de299f260cb46add297e8cc711b5abdfef56e2874b3c4af3111",
+        "4": "ddfd4ce59935aa40387cb4b01e4e0fc86d05b97b01d37c3653d6af04ad52139f",
+        "5": "4ced3dc775ff61cf4b81b63908d9c6c46c530cdabe8f9c8d131246aaf86674a0",
+        "6": "761ed223835d394096437fd604762bff0b4f595d3ff4d5e46a5ff92fb5e71016",
+        "7": "d038ba34f8cb1c5c95c3e7e249bffeb3c69aa4d8584c5f6e1ad5c75b031d60d3",
+        "8": "5f37abc23819d050231107472636acd2e44f71f51f65b21d2a44a156d0d966b8",
+        "9": "047c15666b2439dfcbdef96970bc008a55fbdd5a790d9285931f1b9ad6841ec4",
+        "10": "59e27f9469826787cfed9047109aef16e0b50f6742b571063f947c43192e78c3",
+        "11": "8d519b2f1888acd7555edd205f24c05e48c1eb597308a761a08e9dfdf884b8a1",
+        "12": "3c1203e8eb1c2739fa034d4fd8f90bd38ac58c861c033e3988c5bac3d90f4b4e",
+        "13": "704f156b1688ed9896ef69d01868e667c717f9c8d454d57a50d500571df1f8bf",
+        "14": "cf27a5a457936289262be213ca48161fbb07e84a88a85d2f7632cd92b67c9679",
+        "15": "fad56fb1404cc1f15277bda867b602c39a6c342848c703b6c16270bc9966db9f",
+        "16": "e68e13cd89ec4c680a17c9f86b827644c3a3c18f51b169883f117ca65a8b01c0",
+        "17": "2f7fef3f6452463d720aa0b9c6b0fef9451abda05af45900b77f550c2f555797",
+        "18": "64efb749fbf68444727d5ee01a76bacebfb6c80677e64e8eb154f46e4f99b8b6",
+        "19": "3dcd93d95998e3d4a601c6a029abefaa0bdd1613b2d2500635d613fc05874d82",
+        "20": "cd5cf4bff175a7d989977364c13bc714010059354580851b5855d792f2e83132",
+        "21": "61b832da34cfc5663c9ed87e8e6e775dbb5d4a813468466d7d43ef623727cfab",
+        "22": "3669eb5e609498bbc65bcdb6154f2d6732d876328219bbfe72e41ac1e410809e",
+        "23": "27acd18014b069133cec8cf22c9381e312f19b584001c6d1ffee17d028fe09ab",
+        "24": "0f98836100e2aeb5cb5872472fe6d5105d53590bfe9876ffaf21252593a75114",
+        "25": "10606e11c40d2d4e6b34cc34f714180c209824499fbaf8e154763909ab73852d",
+        "26": "44658564bfc1f0c236507752edb308748c36d11a352c4a5bf49b85bdd684ea80",
+        "27": "e80f4d1f71d12c9a3dbc20101725f8bb499438cfb0ec1840942dc0cf891231c6",
+        "28": "9f78843fded5657b62df4e25c850d8cc65626676f673321272a4d8c27b7d999a",
+        "29": "6cfda3143a9fc4a982e9113602b63238092077ed8658242dcca5c937a8fb026c",
+        "30": "a5266f21f623857be3290e2423612f463a01b833ffefcf7ee6b1f6f6f4e4344e",
+        "31": "df95a4487eaa3d2d1e1ae319e7aa0ab21a780cc031ad931f84f6e82c7dd91c16",
+        "32": "7130bc8277dd6017e34a2d91fc99a0890a9fd6357d0d515aa24145cc26f409b1",
+        "33": "792f76d21215ed694a9b06daab7a3241b155a40b71860f50dfd000fabfb09fcf",
+        "34": "1c51bdc997961ecf3b9c7d3f253bbd6760d364571fc25c4de84e067a05246489",
+        "35": "b120de1caeb7a9a119bc33bdb1890bb923c5bc2cb207980e89fd59975247a1f1",
+        "36": "ac6bae53f1a6a53479e515b3d3b458b099a505180d41af459fe86dceb6a799ca",
+        "37": "31eb0c07d783a1dd7719430e2a11db33a98bcae59649b7f05a6d5fabc08b86b3",
+        "38": "da878474b5da7ece0026d32da1f1dea7519deef5166bdeb13240f4fc554c9f53",
+        "39": "a4fe00559c85e19ab2755d67bb0bba105b9d7984422f871fc916686e64a955cb",
+        "40": "e187b34a1f2fd80d3fa4a53ccdbd8193b6adddfb070a2c795be24e7d410310ff",
+        "41": "7301ab8f66ed045000fee0c77553cb3c2a32dd47b82836d0e216a1f96b3cc70f",
+        "42": "59a5cc3e93b30fa248498618cc0da7049455a8816004f49e1c7e590248044305",
+        "43": "b2467b68fb00e79af7b49adcca28ea7387e4bdcaadde0ce04d7260de5fcbf570",
+        "44": "977b3a3b2a1a92193e0958389b8273382b15488d9385a69c23bf7020bff3b7a7",
+        "45": "cdcc8d4ec65fd7cf1646d8b7f746cb7b6b8a9ac1fe85002127c4120f0a7384a1",
+        "46": "9017de1bbf45e7f4797afcc7517c7c0b948531cfab7bafa9d8def96aabccf35c",
+        "47": "cc204c6606ffd551a8d5f3be7ceaf08a765d89bb9856e2caf122dd3486d7de33",
+        "48": "3f1113d4f34a68156fd03b43d771b7a38ac0f11e1b1b6f5613821ea94bb52831",
+        "49": "7916b826df5463b2b392660a7da8b72937723524420ed3e56b64d95fad5f7f64",
+        "50": "d2a116d134930c754086a46236626d0f19103805938cde7bf3ecae0a2f93b523",
+        "51": "0ea1b42fc40a06df04148a0decd18e02c04fb62c3143d877c176d88812ebede0",
+        "52": "3c0c471dd4ea72c3b5518fc821cf5fa7dd747f25153cab441609fd69e6c92a9a",
+        "53": "1c8114aaadf1fb080a0e502498bc8801e71050bca889714b98f8957983910353",
+        "54": "bf0dc26aed6614aa275dd01db2315a6702caff7bc538f15c7d4f0aef9a83534b",
+        "55": "5e96dbafabaa4d5ad7b8676845011be6a092772878a019faf022344f6e3b60fe",
+        "56": "3f47d908c7b94d2384ca333ef9f39e4dd4016bf61c147b382dab52c68bbb316e",
+        "57": "1531ec4b9391f0a8cda2dbf5c3715c3ec8db8be7cd23b4c197407590ee18c89b",
+        "58": "5eb1425c4280eef2d116c0eebdcfafa7eddfe768d62cf8a2781baddbd88f03b9",
+        "59": "f0d5242d76d46305f9c7ad237676f0e79578bf99190ef9c772e68a1737daf19c",
+        "60": "e86cf16b4a4354b4d5cc306713a1d605677ae708c3935fa75b4950a603641fef",
+        "61": "5de20b91007fe28b6b4518a3ea2c635a6f8866eff5afeed4824f9a16ba25c126",
+        "62": "bf600c1bf20b02f65695d604ae7dc2ea42e6e663708fd065f9c556b4c7e28962",
+        "63": "68cd177c91d2005d976c1ecc34afbc63c1244665d21816a678162747cf8596b3",
+        "64": "ef5566d6dc3e1737af0356e4b45987bb673f75c8e48fddbc799799e98863a296",
+        "65": "4f6835726cf03ab2e1b734dd5091edeead702feda699c9195eaf9201d8d5ed54",
+        "66": "da9932dabac6ea76788ce125fb2d3012c33b97239e68dfb9464ab463acc282f6",
+        "67": "98a7379b6f158a191726c94c37905d49219ed55689879fa9d1c9befbdeffef3d",
+        "68": "e8aea1b8004e0ebc81f7291d7f33e444988263539885113a67ad886ff4cb5acd",
+        "69": "1b9728edc5d1b11b481c7501f8a6af23ebe7c84a662d20c0a920b8da8da5cfad",
+        "70": "4eb2e370575e214b305178df65959556b1b34c46161f720e5d2318af6579e6c0",
+        "71": "b2e561ad1dedd7c892b258ab59ef7b7caa04d8fa68f32ce60569d5381b99ea21",
+        "72": "fc3797b3c66e9d274c73812211a6a66e2b2e9292afcf9a3a086553ebaf5035f2",
+        "73": "0fada3c5393a497620560eb2f3660b030080bb66771f0662dd07fe01d1b1685d",
+        "74": "1916e9638d7f7c7ea49fcbc09047adf45147ac46a336c19fae101e8c8ec68903",
+        "75": "6cc2d6291519eab8bfb35e38b502f94f131ca6d954cf9668dd1181c6ecfef9be",
+        "76": "5d6981ab7a8c40d4293972d0707409588928dee337f243c299141e07c22b675e",
+        "77": "d17123f245d7df9cc56be61173a2ecae9f745a3ae074499d631b041adf56f00c",
+        "78": "a4499a020fceb6aa72378ec7ae72e1257c82f61abf5a6b8847c41f6728530d0f",
+        "79": "bb8ac38d2c711ed60bfbcbbf2305f11c8817be65c10daa421502176e45483b22",
+        "80": "69b538ed44f7dacfc79625560614ae44d36ea24130ccfe24fa317e62a04cb1e5",
+        "81": "116e83d51c62a236242200be06024597df1a5e50e8ade7647ce27b16e64ae15a",
+        "82": "8dd2c9eb20b063988f34e3f09ddaa61e8cd6953f6c260bad64df2115918f06e1",
+        "83": "c235ad78495fe9ebc787f2298ccaf5bd9fe88a60d42552e4f0c969e67ccfd909",
+        "84": "18d0606485f3bd373be3a37fd199ff38af9ddd1cc9ed9cde8b2fb6348e95daf3",
+        "85": "ba2d5b01568830ada51b98cb18599892c1cd8ef387f011b712b5ed0e91e523cb",
+        "86": "50e66468a6fa5ec8ebc36088609822ffa09dbf0a5e304957a09be0e32cf73377",
+        "87": "a815b8149e0fe474ee42e5986f20da749cfa953e823a3f3f5a2f45d6c6f0e792",
+        "88": "d1f2fcdccac4883b66389697835885f44f1363dba8ba5f569e8a5acadadc7331",
+        "89": "97be3e491c8cb9e3cf2d10b4d55547c97a427ef95546ce02474a355b835e3109",
+        "90": "c3dc28a8c16ea4827d698ad1645c872bacd4d6cd7f5b234e606a386038744457",
+        "91": "ed71039200bd32e5b1ebc43b06f6db3db88e95d275d16ee9efb8caa447eea685",
+        "92": "e05dbe58921b11d98d7ecf372ca93fbafeb3d3537ef01060c3abf29a364ead9a",
+        "93": "5fd3a8165698a0885e25d342b7da2e3ae0c17dd7d82a4a23f315bd60bdf029d5",
+        "94": "17a5912e73a1ad830abfc101daa4fac6aeb2a17c101901a1b1bc05388de8ddd0",
+        "95": "d83e31172cdd7e6cce52da8593b7e6876b4dd97a6a8a8fb667c242fe2d5706be",
+        "96": "25f6186cb3a6dda4f1e0f5d6815070e0dcb25ef9d16bcc52777ca450ad71d2e8",
+        "97": "3250ddd8dbfe669decf390ffe5e435469ffdaa4e10acd3bf536ea4a104c5432c",
+        "98": "d4730e4fde18ca64ff5c7b32ccd93717a790e2db5a404c277202c231dc540469",
+        "99": "52af758cb0e7b005389fd3e3572f2cda225f198e22ec8118e97d2a1ad23f07ff"
+      },
+      "executed_interval_basis_sha256": "172a9a17ea9a0208b13e25e33a99d8a1769874c4b546b744fac302918a1f55cc"
+    },
+    "sample_2_gpu_two": {
+      "path": "results_500/sample_2_gpu_two.npz",
+      "sha256": "97034aee66dd1c80accfe187ce2bee889116c603d0b08a0cc4a8ee2c2974952e",
+      "array_count": 2120,
+      "executed_basis_sha256": {
+        "0": "4f0e20acb32225589044c50208bc5fea52457d76c89a43dc09184692dce55ea3",
+        "1": "bd6737e393b75fbaea7922e9940e33b69acc5ecaa7b42578a9daf68530afcd6b",
+        "2": "a483ece97651f80535b5c436ac261c48aadd1e5608ea254acc34c1e99e72a44e",
+        "3": "693c7b1c75608de299f260cb46add297e8cc711b5abdfef56e2874b3c4af3111",
+        "4": "ddfd4ce59935aa40387cb4b01e4e0fc86d05b97b01d37c3653d6af04ad52139f",
+        "5": "4ced3dc775ff61cf4b81b63908d9c6c46c530cdabe8f9c8d131246aaf86674a0",
+        "6": "761ed223835d394096437fd604762bff0b4f595d3ff4d5e46a5ff92fb5e71016",
+        "7": "d038ba34f8cb1c5c95c3e7e249bffeb3c69aa4d8584c5f6e1ad5c75b031d60d3",
+        "8": "5f37abc23819d050231107472636acd2e44f71f51f65b21d2a44a156d0d966b8",
+        "9": "047c15666b2439dfcbdef96970bc008a55fbdd5a790d9285931f1b9ad6841ec4",
+        "10": "59e27f9469826787cfed9047109aef16e0b50f6742b571063f947c43192e78c3",
+        "11": "8d519b2f1888acd7555edd205f24c05e48c1eb597308a761a08e9dfdf884b8a1",
+        "12": "3c1203e8eb1c2739fa034d4fd8f90bd38ac58c861c033e3988c5bac3d90f4b4e",
+        "13": "704f156b1688ed9896ef69d01868e667c717f9c8d454d57a50d500571df1f8bf",
+        "14": "cf27a5a457936289262be213ca48161fbb07e84a88a85d2f7632cd92b67c9679",
+        "15": "fad56fb1404cc1f15277bda867b602c39a6c342848c703b6c16270bc9966db9f",
+        "16": "e68e13cd89ec4c680a17c9f86b827644c3a3c18f51b169883f117ca65a8b01c0",
+        "17": "2f7fef3f6452463d720aa0b9c6b0fef9451abda05af45900b77f550c2f555797",
+        "18": "64efb749fbf68444727d5ee01a76bacebfb6c80677e64e8eb154f46e4f99b8b6",
+        "19": "3dcd93d95998e3d4a601c6a029abefaa0bdd1613b2d2500635d613fc05874d82",
+        "20": "cd5cf4bff175a7d989977364c13bc714010059354580851b5855d792f2e83132",
+        "21": "61b832da34cfc5663c9ed87e8e6e775dbb5d4a813468466d7d43ef623727cfab",
+        "22": "3669eb5e609498bbc65bcdb6154f2d6732d876328219bbfe72e41ac1e410809e",
+        "23": "27acd18014b069133cec8cf22c9381e312f19b584001c6d1ffee17d028fe09ab",
+        "24": "0f98836100e2aeb5cb5872472fe6d5105d53590bfe9876ffaf21252593a75114",
+        "25": "10606e11c40d2d4e6b34cc34f714180c209824499fbaf8e154763909ab73852d",
+        "26": "44658564bfc1f0c236507752edb308748c36d11a352c4a5bf49b85bdd684ea80",
+        "27": "e80f4d1f71d12c9a3dbc20101725f8bb499438cfb0ec1840942dc0cf891231c6",
+        "28": "9f78843fded5657b62df4e25c850d8cc65626676f673321272a4d8c27b7d999a",
+        "29": "6cfda3143a9fc4a982e9113602b63238092077ed8658242dcca5c937a8fb026c",
+        "30": "a5266f21f623857be3290e2423612f463a01b833ffefcf7ee6b1f6f6f4e4344e",
+        "31": "df95a4487eaa3d2d1e1ae319e7aa0ab21a780cc031ad931f84f6e82c7dd91c16",
+        "32": "7130bc8277dd6017e34a2d91fc99a0890a9fd6357d0d515aa24145cc26f409b1",
+        "33": "792f76d21215ed694a9b06daab7a3241b155a40b71860f50dfd000fabfb09fcf",
+        "34": "1c51bdc997961ecf3b9c7d3f253bbd6760d364571fc25c4de84e067a05246489",
+        "35": "b120de1caeb7a9a119bc33bdb1890bb923c5bc2cb207980e89fd59975247a1f1",
+        "36": "ac6bae53f1a6a53479e515b3d3b458b099a505180d41af459fe86dceb6a799ca",
+        "37": "31eb0c07d783a1dd7719430e2a11db33a98bcae59649b7f05a6d5fabc08b86b3",
+        "38": "da878474b5da7ece0026d32da1f1dea7519deef5166bdeb13240f4fc554c9f53",
+        "39": "a4fe00559c85e19ab2755d67bb0bba105b9d7984422f871fc916686e64a955cb",
+        "40": "e187b34a1f2fd80d3fa4a53ccdbd8193b6adddfb070a2c795be24e7d410310ff",
+        "41": "7301ab8f66ed045000fee0c77553cb3c2a32dd47b82836d0e216a1f96b3cc70f",
+        "42": "59a5cc3e93b30fa248498618cc0da7049455a8816004f49e1c7e590248044305",
+        "43": "b2467b68fb00e79af7b49adcca28ea7387e4bdcaadde0ce04d7260de5fcbf570",
+        "44": "977b3a3b2a1a92193e0958389b8273382b15488d9385a69c23bf7020bff3b7a7",
+        "45": "cdcc8d4ec65fd7cf1646d8b7f746cb7b6b8a9ac1fe85002127c4120f0a7384a1",
+        "46": "9017de1bbf45e7f4797afcc7517c7c0b948531cfab7bafa9d8def96aabccf35c",
+        "47": "cc204c6606ffd551a8d5f3be7ceaf08a765d89bb9856e2caf122dd3486d7de33",
+        "48": "3f1113d4f34a68156fd03b43d771b7a38ac0f11e1b1b6f5613821ea94bb52831",
+        "49": "7916b826df5463b2b392660a7da8b72937723524420ed3e56b64d95fad5f7f64",
+        "50": "d2a116d134930c754086a46236626d0f19103805938cde7bf3ecae0a2f93b523",
+        "51": "0ea1b42fc40a06df04148a0decd18e02c04fb62c3143d877c176d88812ebede0",
+        "52": "3c0c471dd4ea72c3b5518fc821cf5fa7dd747f25153cab441609fd69e6c92a9a",
+        "53": "1c8114aaadf1fb080a0e502498bc8801e71050bca889714b98f8957983910353",
+        "54": "bf0dc26aed6614aa275dd01db2315a6702caff7bc538f15c7d4f0aef9a83534b",
+        "55": "5e96dbafabaa4d5ad7b8676845011be6a092772878a019faf022344f6e3b60fe",
+        "56": "3f47d908c7b94d2384ca333ef9f39e4dd4016bf61c147b382dab52c68bbb316e",
+        "57": "1531ec4b9391f0a8cda2dbf5c3715c3ec8db8be7cd23b4c197407590ee18c89b",
+        "58": "5eb1425c4280eef2d116c0eebdcfafa7eddfe768d62cf8a2781baddbd88f03b9",
+        "59": "f0d5242d76d46305f9c7ad237676f0e79578bf99190ef9c772e68a1737daf19c",
+        "60": "e86cf16b4a4354b4d5cc306713a1d605677ae708c3935fa75b4950a603641fef",
+        "61": "5de20b91007fe28b6b4518a3ea2c635a6f8866eff5afeed4824f9a16ba25c126",
+        "62": "bf600c1bf20b02f65695d604ae7dc2ea42e6e663708fd065f9c556b4c7e28962",
+        "63": "68cd177c91d2005d976c1ecc34afbc63c1244665d21816a678162747cf8596b3",
+        "64": "ef5566d6dc3e1737af0356e4b45987bb673f75c8e48fddbc799799e98863a296",
+        "65": "4f6835726cf03ab2e1b734dd5091edeead702feda699c9195eaf9201d8d5ed54",
+        "66": "da9932dabac6ea76788ce125fb2d3012c33b97239e68dfb9464ab463acc282f6",
+        "67": "98a7379b6f158a191726c94c37905d49219ed55689879fa9d1c9befbdeffef3d",
+        "68": "e8aea1b8004e0ebc81f7291d7f33e444988263539885113a67ad886ff4cb5acd",
+        "69": "1b9728edc5d1b11b481c7501f8a6af23ebe7c84a662d20c0a920b8da8da5cfad",
+        "70": "4eb2e370575e214b305178df65959556b1b34c46161f720e5d2318af6579e6c0",
+        "71": "b2e561ad1dedd7c892b258ab59ef7b7caa04d8fa68f32ce60569d5381b99ea21",
+        "72": "fc3797b3c66e9d274c73812211a6a66e2b2e9292afcf9a3a086553ebaf5035f2",
+        "73": "0fada3c5393a497620560eb2f3660b030080bb66771f0662dd07fe01d1b1685d",
+        "74": "1916e9638d7f7c7ea49fcbc09047adf45147ac46a336c19fae101e8c8ec68903",
+        "75": "6cc2d6291519eab8bfb35e38b502f94f131ca6d954cf9668dd1181c6ecfef9be",
+        "76": "5d6981ab7a8c40d4293972d0707409588928dee337f243c299141e07c22b675e",
+        "77": "d17123f245d7df9cc56be61173a2ecae9f745a3ae074499d631b041adf56f00c",
+        "78": "a4499a020fceb6aa72378ec7ae72e1257c82f61abf5a6b8847c41f6728530d0f",
+        "79": "bb8ac38d2c711ed60bfbcbbf2305f11c8817be65c10daa421502176e45483b22",
+        "80": "69b538ed44f7dacfc79625560614ae44d36ea24130ccfe24fa317e62a04cb1e5",
+        "81": "116e83d51c62a236242200be06024597df1a5e50e8ade7647ce27b16e64ae15a",
+        "82": "8dd2c9eb20b063988f34e3f09ddaa61e8cd6953f6c260bad64df2115918f06e1",
+        "83": "c235ad78495fe9ebc787f2298ccaf5bd9fe88a60d42552e4f0c969e67ccfd909",
+        "84": "18d0606485f3bd373be3a37fd199ff38af9ddd1cc9ed9cde8b2fb6348e95daf3",
+        "85": "ba2d5b01568830ada51b98cb18599892c1cd8ef387f011b712b5ed0e91e523cb",
+        "86": "50e66468a6fa5ec8ebc36088609822ffa09dbf0a5e304957a09be0e32cf73377",
+        "87": "a815b8149e0fe474ee42e5986f20da749cfa953e823a3f3f5a2f45d6c6f0e792",
+        "88": "d1f2fcdccac4883b66389697835885f44f1363dba8ba5f569e8a5acadadc7331",
+        "89": "97be3e491c8cb9e3cf2d10b4d55547c97a427ef95546ce02474a355b835e3109",
+        "90": "c3dc28a8c16ea4827d698ad1645c872bacd4d6cd7f5b234e606a386038744457",
+        "91": "ed71039200bd32e5b1ebc43b06f6db3db88e95d275d16ee9efb8caa447eea685",
+        "92": "e05dbe58921b11d98d7ecf372ca93fbafeb3d3537ef01060c3abf29a364ead9a",
+        "93": "5fd3a8165698a0885e25d342b7da2e3ae0c17dd7d82a4a23f315bd60bdf029d5",
+        "94": "17a5912e73a1ad830abfc101daa4fac6aeb2a17c101901a1b1bc05388de8ddd0",
+        "95": "d83e31172cdd7e6cce52da8593b7e6876b4dd97a6a8a8fb667c242fe2d5706be",
+        "96": "25f6186cb3a6dda4f1e0f5d6815070e0dcb25ef9d16bcc52777ca450ad71d2e8",
+        "97": "3250ddd8dbfe669decf390ffe5e435469ffdaa4e10acd3bf536ea4a104c5432c",
+        "98": "d4730e4fde18ca64ff5c7b32ccd93717a790e2db5a404c277202c231dc540469",
+        "99": "52af758cb0e7b005389fd3e3572f2cda225f198e22ec8118e97d2a1ad23f07ff"
+      },
+      "executed_interval_basis_sha256": "172a9a17ea9a0208b13e25e33a99d8a1769874c4b546b744fac302918a1f55cc"
+    }
+  },
+  "replay": {
+    "cpu_serial_condensation": {
+      "basis": "archived executed retained matrices; declared kernel is literal constant one",
+      "archive_reloaded": "results_500/executed_cpu_serial_condensation.npz",
+      "archive_sha256": "77280edc5c125ef51b4a1c9d974872dccd7d40c0d42c6e599ad1566e73f0075c",
+      "physical_replay_partition": [
+        500,
+        500
+      ],
+      "physical_replay_gauss_order": 2,
+      "replay": {
+        "1": {
+          "maximum_field_difference": 1.1102230246251565e-16,
+          "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+          "archived_physical_field_difference": {
+            "pressure_L2": 4.505248535244727e-17,
+            "flux_L2": 2.38779640404506e-14
+          }
+        },
+        "2": {
+          "maximum_field_difference": 1.1102230246251565e-16,
+          "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+          "archived_physical_field_difference": {
+            "pressure_L2": 4.505248535244727e-17,
+            "flux_L2": 2.38779640404506e-14
+          }
+        }
+      }
+    },
+    "cpu_thread_condensation": {
+      "basis": "archived executed retained matrices; declared kernel is literal constant one",
+      "archive_reloaded": "results_500/executed_cpu_thread_condensation.npz",
+      "archive_sha256": "77280edc5c125ef51b4a1c9d974872dccd7d40c0d42c6e599ad1566e73f0075c",
+      "physical_replay_partition": [
+        500,
+        500
+      ],
+      "physical_replay_gauss_order": 2,
+      "replay": {
+        "1": {
+          "maximum_field_difference": 1.1102230246251565e-16,
+          "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+          "archived_physical_field_difference": {
+            "pressure_L2": 4.505248535244727e-17,
+            "flux_L2": 2.38779640404506e-14
+          }
+        },
+        "2": {
+          "maximum_field_difference": 1.1102230246251565e-16,
+          "consistent_retained_basis_sign_rotation_difference": 1.1102230246251565e-16,
+          "archived_physical_field_difference": {
+            "pressure_L2": 4.505248535244727e-17,
+            "flux_L2": 2.38779640404506e-14
+          }
+        }
+      }
+    },
+    "gpu_one": {
+      "basis": "archived executed retained matrices; declared kernel is literal constant one",
+      "archive_reloaded": "results_500/executed_gpu_one.npz",
+      "archive_sha256": "b05bcf53660ed8f81b7905ca50ec5ff0594addd92fae84536b71faf8ea9ca1a3",
+      "physical_replay_partition": [
+        500,
+        500
+      ],
+      "physical_replay_gauss_order": 2,
+      "replay": {
+        "1": {
+          "maximum_field_difference": 0.0,
+          "consistent_retained_basis_sign_rotation_difference": 0.0,
+          "archived_physical_field_difference": {
+            "pressure_L2": 4.2394351744600746e-17,
+            "flux_L2": 0.0
+          }
+        },
+        "2": {
+          "maximum_field_difference": 0.0,
+          "consistent_retained_basis_sign_rotation_difference": 0.0,
+          "archived_physical_field_difference": {
+            "pressure_L2": 4.2394351744600746e-17,
+            "flux_L2": 0.0
+          }
+        }
+      }
+    },
+    "gpu_two": {
+      "basis": "archived executed retained matrices; declared kernel is literal constant one",
+      "archive_reloaded": "results_500/executed_gpu_two.npz",
+      "archive_sha256": "6d16dc452c5edb9cdadbaa4f4d62f6e3cf0d1ec685938568e704b693b54e1bdc",
+      "physical_replay_partition": [
+        500,
+        500
+      ],
+      "physical_replay_gauss_order": 2,
+      "replay": {
+        "1": {
+          "maximum_field_difference": 0.0,
+          "consistent_retained_basis_sign_rotation_difference": 0.0,
+          "archived_physical_field_difference": {
+            "pressure_L2": 4.2411076976789143e-17,
+            "flux_L2": 0.0
+          }
+        },
+        "2": {
+          "maximum_field_difference": 0.0,
+          "consistent_retained_basis_sign_rotation_difference": 0.0,
+          "archived_physical_field_difference": {
+            "pressure_L2": 4.2411076976789143e-17,
+            "flux_L2": 0.0
+          }
+        }
+      }
+    }
+  },
+  "zero_form_proof": {
+    "cpu_serial_condensation": {
+      "global_a_literal_real_zero": true,
+      "global_L_literal_real_zero": true,
+      "every_compiled_D_exactly_zero": true,
+      "every_compiled_g_exactly_zero": true,
+      "homogeneous_weak_Dirichlet_pressure": true,
+      "additional_global_gauge": null
+    },
+    "cpu_thread_condensation": {
+      "global_a_literal_real_zero": true,
+      "global_L_literal_real_zero": true,
+      "every_compiled_D_exactly_zero": true,
+      "every_compiled_g_exactly_zero": true,
+      "homogeneous_weak_Dirichlet_pressure": true,
+      "additional_global_gauge": null
+    },
+    "gpu_one": {
+      "global_a_literal_real_zero": true,
+      "global_L_literal_real_zero": true,
+      "every_compiled_D_exactly_zero": true,
+      "every_compiled_g_exactly_zero": true,
+      "homogeneous_weak_Dirichlet_pressure": true,
+      "additional_global_gauge": null
+    },
+    "gpu_two": {
+      "global_a_literal_real_zero": true,
+      "global_L_literal_real_zero": true,
+      "every_compiled_D_exactly_zero": true,
+      "every_compiled_g_exactly_zero": true,
+      "homogeneous_weak_Dirichlet_pressure": true,
+      "additional_global_gauge": null
+    }
+  },
+  "diagnostic_cache_policy": "Only external quadrature diagnostics are reused for exactly identical bytes, shapes, layouts, geometry, material/source identity, executed basis and quadrature. Every timed run freshly constructs all operators, factors, hierarchies and responses. Original rows, coefficient agreement and BLAS1/2 reconstruction are rechecked after every stopped timer. Any changed fingerprint receives fresh physical diagnostics.",
+  "full_MultiscaleProblem_control_seconds": 9.35532696172595,
+  "full_MultiscaleProblem_shortcut_equivalence": {
+    "maximum_global_matrix_absolute_difference": 0.0,
+    "maximum_global_matrix_relative_difference": 0.0,
+    "maximum_global_rhs_difference": 0.0,
+    "maximum_field_coefficient_difference": 0.0,
+    "original_local_equation_relative_L2": 8.289962109403808e-13,
+    "physical_CPU_difference": {
+      "pressure_L2": 0.0,
+      "flux_L2": 0.0
+    },
+    "physical_exact_error": {
+      "pressure_L2": 1.9968257336045356e-06,
+      "flux_L2": 0.005100963654923257
+    },
+    "common_error_partition": [
+      500,
+      500
+    ],
+    "error_gauss_orders": [
+      5,
+      6
+    ],
+    "quadrature_relative_change": {
+      "pressure_L2": 4.14221260811152e-13,
+      "flux_L2": 1.785407398480132e-14
+    },
+    "CPU_GPU_bitwise_agreement_claimed": false,
+    "state_sha256": "35ef5ffe046c6fcc7b9eda4136045ef872a47f0e3e16a196f42ad62b5fe3f8b7",
+    "diagnostics_reused_for_exact_state": false
+  },
+  "classical_accuracy_and_archives": {
+    "operator": "the literal notebook permeability, source and Q1 quadrilateral forms",
+    "boundary": "homogeneous pressure on all exterior sides; no pressure gauge",
+    "material_period": 0.1,
+    "common_fine_element_count": 250000,
+    "approximation_spaces": {
+      "CG": "globally continuous nodal Q1 on the full fine Cartesian mesh",
+      "MHM": "local Q1 with weak continuity through the declared continuous P1 macroface trace space"
+    },
+    "same_element_count_is_not_space_equivalence": true,
+    "CG": {
+      "cg_lu": {
+        "physical_exact_error": {
+          "pressure_L2": 1.95297413620255e-06,
+          "flux_L2": 0.0050990504675071996
+        },
+        "original_pressure_equation_relative_L2": 1.188683937176915e-12,
+        "boundary_values_exactly_zero": true,
+        "error_gauss_orders": [
+          5,
+          6
+        ],
+        "quadrature_relative_change": {
+          "pressure_L2": 3.012146300165342e-13,
+          "flux_L2": 1.803087551547968e-14
+        },
+        "archive": "results_500/executed_cg_lu.npz",
+        "archive_sha256": "8258263c2ed2453abd7d383315f8b0ddec0676589fee12d7ad1d11df52d935a5",
+        "basis": "declared Q1 nodal reference functions and archived mesh connectivity"
+      },
+      "cg_amg": {
+        "physical_exact_error": {
+          "pressure_L2": 1.9529741146804234e-06,
+          "flux_L2": 0.005099050467499091
+        },
+        "original_pressure_equation_relative_L2": 6.594894437477415e-11,
+        "boundary_values_exactly_zero": true,
+        "error_gauss_orders": [
+          5,
+          6
+        ],
+        "quadrature_relative_change": {
+          "pressure_L2": 2.9319091740117817e-13,
+          "flux_L2": 1.7690670317102537e-14
+        },
+        "archive": "results_500/executed_cg_amg.npz",
+        "archive_sha256": "c14fba06b78165aacda93f8e41ffd97955195e5fecbd526c8c0c2143f053efe4",
+        "basis": "declared Q1 nodal reference functions and archived mesh connectivity"
+      }
+    },
+    "AMG_vs_LU": {
+      "physical_difference": {
+        "pressure_L2": 9.183178015281053e-13,
+        "flux_L2": 2.0007352042038107e-11
+      },
+      "difference_over_smaller_exact_error": {
+        "pressure_L2": 4.702150400382419e-07,
+        "flux_L2": 3.923740737528144e-09
+      },
+      "well_below_discretization_error": true,
+      "reported_solver_accuracy_threshold": 0.001
+    },
+    "MHM_vs_CG_exact_error_ratios": {
+      "cpu_serial_condensation": {
+        "cg_lu": {
+          "pressure_L2": 1.0224537522484822,
+          "flux_L2": 1.0003752046441292
+        },
+        "cg_amg": {
+          "pressure_L2": 1.0224537635161068,
+          "flux_L2": 1.00037520464572
+        }
+      },
+      "cpu_thread_condensation": {
+        "cg_lu": {
+          "pressure_L2": 1.0224537522484822,
+          "flux_L2": 1.0003752046441292
+        },
+        "cg_amg": {
+          "pressure_L2": 1.0224537635161068,
+          "flux_L2": 1.00037520464572
+        }
+      },
+      "gpu_one": {
+        "cg_lu": {
+          "pressure_L2": 1.022453752670313,
+          "flux_L2": 1.00037520464413
+        },
+        "cg_amg": {
+          "pressure_L2": 1.0224537639379376,
+          "flux_L2": 1.000375204645721
+        }
+      },
+      "gpu_two": {
+        "cg_lu": {
+          "pressure_L2": 1.0224537527037991,
+          "flux_L2": 1.0003752046441308
+        },
+        "cg_amg": {
+          "pressure_L2": 1.0224537639714237,
+          "flux_L2": 1.0003752046457217
+        }
+      }
+    },
+    "similar_accuracy_indicator": {
+      "cpu_serial_condensation": true,
+      "cpu_thread_condensation": true,
+      "gpu_one": true,
+      "gpu_two": true
+    },
+    "indicator_interval": [
+      0.8,
+      1.25
+    ],
+    "indicator_scope": "A descriptive comparison of measured pressure/flux errors, not a stability theorem or an acquisition gate. Ratios outside the interval remain reported; unequal accuracy qualifies timing comparisons."
+  },
+  "summary": {
+    "cpu_serial_condensation": {
+      "setup": {
+        "median": 0.17850890569388866,
+        "minimum": 0.17070399597287178,
+        "maximum": 0.1850576512515545
+      },
+      "local_compilation_and_zero_contract_check": {
+        "median": 5.456195374950767,
+        "minimum": 5.372370485216379,
+        "maximum": 5.582160521298647
+      },
+      "condensation_including_transfer_executor_setup_sync_shutdown": {
+        "median": 6.94210671633482,
+        "minimum": 6.9370917696505785,
+        "maximum": 6.988302908837795
+      },
+      "schur_and_sparse_global_assembly": {
+        "median": 0.08902368694543839,
+        "minimum": 0.08836713992059231,
+        "maximum": 0.09456890821456909
+      },
+      "global_solve_and_reconstruction": {
+        "median": 0.019538890570402145,
+        "minimum": 0.019444309175014496,
+        "maximum": 0.019863344728946686
+      },
+      "total": {
+        "median": 12.73123767413199,
+        "minimum": 12.593649193644524,
+        "maximum": 12.818417740985751
+      },
+      "label": "parallel compile + serial condensation"
+    },
+    "cpu_thread_condensation": {
+      "setup": {
+        "median": 0.18915381096303463,
+        "minimum": 0.18784102611243725,
+        "maximum": 0.1938129272311926
+      },
+      "local_compilation_and_zero_contract_check": {
+        "median": 5.552159497514367,
+        "minimum": 5.335831405594945,
+        "maximum": 5.89476702734828
+      },
+      "condensation_including_transfer_executor_setup_sync_shutdown": {
+        "median": 3.990807633846998,
+        "minimum": 3.9453558176755905,
+        "maximum": 4.101173508912325
+      },
+      "schur_and_sparse_global_assembly": {
+        "median": 0.162920493632555,
+        "minimum": 0.14321096241474152,
+        "maximum": 0.16599649749696255
+      },
+      "global_solve_and_reconstruction": {
+        "median": 0.028672538697719574,
+        "minimum": 0.02747960202395916,
+        "maximum": 0.02955004759132862
+      },
+      "total": {
+        "median": 9.932326603680849,
+        "minimum": 9.795536505058408,
+        "maximum": 10.22086968831718
+      },
+      "label": "parallel compile + threaded condensation"
+    },
+    "gpu_one": {
+      "setup": {
+        "median": 0.184935811907053,
+        "minimum": 0.18412338010966778,
+        "maximum": 0.19180803000926971
+      },
+      "local_compilation_and_zero_contract_check": {
+        "median": 5.41506870649755,
+        "minimum": 5.3912446945905685,
+        "maximum": 5.56334912031889
+      },
+      "condensation_including_transfer_executor_setup_sync_shutdown": {
+        "median": 4.0630801022052765,
+        "minimum": 4.0495037995278835,
+        "maximum": 4.328791821375489
+      },
+      "schur_and_sparse_global_assembly": {
+        "median": 0.1492410134524107,
+        "minimum": 0.14712337404489517,
+        "maximum": 0.15800271183252335
+      },
+      "global_solve_and_reconstruction": {
+        "median": 0.02828793413937092,
+        "minimum": 0.02794322744011879,
+        "maximum": 0.03017755225300789
+      },
+      "total": {
+        "median": 9.824107194319367,
+        "minimum": 9.823317067697644,
+        "maximum": 10.265257017686963
+      },
+      "label": "parallel CPU compile + sparse condensation on one GPU"
+    },
+    "gpu_two": {
+      "setup": {
+        "median": 0.18340367637574673,
+        "minimum": 0.1805822253227234,
+        "maximum": 0.18480867519974709
+      },
+      "local_compilation_and_zero_contract_check": {
+        "median": 5.3268569223582745,
+        "minimum": 5.165122471749783,
+        "maximum": 5.382782436907291
+      },
+      "condensation_including_transfer_executor_setup_sync_shutdown": {
+        "median": 6.328313926234841,
+        "minimum": 6.274812122806907,
+        "maximum": 6.498170111328363
+      },
+      "schur_and_sparse_global_assembly": {
+        "median": 0.16536270454525948,
+        "minimum": 0.1534565221518278,
+        "maximum": 0.19198104366660118
+      },
+      "global_solve_and_reconstruction": {
+        "median": 0.031152518466114998,
+        "minimum": 0.02933385595679283,
+        "maximum": 0.03190411813557148
+      },
+      "total": {
+        "median": 12.020362114533782,
+        "minimum": 11.818034831434488,
+        "maximum": 12.289646385237575
+      },
+      "label": "parallel CPU compile + sparse condensation on two GPUs"
+    },
+    "cg_lu": {
+      "setup": {
+        "median": 0.21685973182320595,
+        "minimum": 0.21324419602751732,
+        "maximum": 0.22255098447203636
+      },
+      "assembly": {
+        "median": 3.447780478745699,
+        "minimum": 3.4048983585089445,
+        "maximum": 3.448133544996381
+      },
+      "solve_reconstruct": {
+        "median": 4.678447747603059,
+        "minimum": 4.65974778868258,
+        "maximum": 4.697056233882904
+      },
+      "total": {
+        "median": 8.330079251900315,
+        "minimum": 8.30020583793521,
+        "maximum": 8.358433974906802
+      },
+      "label": "conforming CG with fresh sparse LU"
+    },
+    "cg_amg": {
+      "setup": {
+        "median": 0.21366774663329124,
+        "minimum": 0.21104975789785385,
+        "maximum": 0.21769373677670956
+      },
+      "assembly": {
+        "median": 3.4097401425242424,
+        "minimum": 3.4034886565059423,
+        "maximum": 3.418727770447731
+      },
+      "solve_reconstruct": {
+        "median": 0.8912672400474548,
+        "minimum": 0.8911332730203867,
+        "maximum": 0.9142446182668209
+      },
+      "total": {
+        "median": 4.520910801365972,
+        "minimum": 4.508423643186688,
+        "maximum": 4.541678497567773
+      },
+      "label": "conforming CG with fresh AMG-preconditioned CG"
+    }
+  },
+  "end_to_end_gain_against_staged_CPU_thread_condensation": {
+    "gpu_one": 1.0110156991593147,
+    "gpu_two": 0.8262917962905381
+  },
+  "end_to_end_gain_against_classical": {
+    "cg_lu": {
+      "cpu_serial_condensation": 0.6543023911041906,
+      "cpu_thread_condensation": 0.8386835818319998,
+      "gpu_one": 0.8479222678593176,
+      "gpu_two": 0.6929973633513455
+    },
+    "cg_amg": {
+      "cpu_serial_condensation": 0.3551037940758737,
+      "cpu_thread_condensation": 0.45517137945207664,
+      "gpu_one": 0.46018541043405103,
+      "gpu_two": 0.3761043767474985
+    }
+  },
+  "claim": "Measured workload-specific times; ratios below one are regressions. Classical ratios use fresh LU/AMG in this same locked HPC environment and are qualified by the reported physical error ratios. No CPU/GPU bitwise identity or general GPU speedup is claimed."
+}

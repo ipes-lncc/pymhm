@@ -173,14 +173,14 @@ def test_high_order_flow_exact_polynomial_and_consistent_source(method, degree, 
 
 
 def test_flow_inverse_constant_obeys_polynomial_inequality():
-    from pymhm._legacy.models.flow.solver import _laplacian_inverse_bound
+    from pymhm.fem.inequalities import laplacian_inverse_bound
 
     mesh = TriangleMesh.unit_square()
     bary, weights = triangle_quadrature(6)
     for degree in [1, 2, 3]:
         _, _, _, gradient, hessian = tabulate(mesh, degree, bary)
         diameters = np.max(mesh.lengths[mesh.cell_faces], axis=1)
-        m = _laplacian_inverse_bound(gradient, hessian, weights, diameters)
+        m = laplacian_inverse_bound(gradient, hessian, weights, diameters)
         assert np.all((m > 0) & (m <= 1 / 3))
         coefficients = np.random.default_rng(903).normal(size=(31, gradient.shape[2]))
         grad = np.einsum("tqia,ri->rtqa", gradient, coefficients)

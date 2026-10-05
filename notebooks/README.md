@@ -1,8 +1,11 @@
 # PyMHM examples by problem
 
-Start with an introductory notebook, then use the numbered notebooks for
-convergence records, geometry variants and literature comparisons. Local and
-global methods appear together under their physical problem.
+Start with the [ten self-contained tutorials](introduction/README.md), then
+use the problem folders and numbered notebooks for additional formulations,
+convergence records, geometry variants and literature comparisons. The new
+course defines the material, local forms, global equations, classical references
+and plots in its cells. It shows explicit operator assembly before introducing
+prepared functions as conveniences. All ten tutorials are in English.
 
 For user-written forms, begin with the local/global, UFL, vector UFL and
 hierarchy notebooks in `foundations/operators`. They use the generic
@@ -34,6 +37,25 @@ study or a matched paper reproduction. Native UFL cells require the Pixi `fem`
 kernel and report explicitly when the optional DOLFINx runtime has not executed.
 
 The machine-readable index is [catalogue.json](catalogue.json).
+
+## introduction
+
+| Notebook | Methods |
+| --- | --- |
+| [Multiscale Darcy and convergence](introduction/darcy_multiscale_convergence.ipynb) | Explicit primal local operators; quadrilateral MHM; conforming Galerkin; pressure and flux convergence |
+| [Parallel Darcy: speed-up and scalability](introduction/darcy_parallel_scalability.ipynb) | Q1 mesh-size sweep from 200×200 to 1000×1000; classical LU and AMG; matched fine-element counts; parallel local solves; complete solve timings; strong/weak scaling |
+| [Darcy with spawned processes](introduction/darcy_process_scalability.ipynb) | Explicit Q1 local forms; cross-platform spawn; matched fine-element counts; classical LU/AMG; complete strong/weak scaling |
+| [Three-dimensional Darcy: processes and AMG](introduction/darcy_3d_parallel_scalability.ipynb) | Explicit UFL local forms; matched hexahedral fine-cell counts; process strong/weak scaling; CPU AMG and independently measured native GPU condensation |
+| [Darcy on a SPE10 layer](introduction/darcy_spe10_layer.ipynb) | Heterogeneous primal locals; quadrilateral MHM; refined conforming Galerkin |
+| [Multiscale elasticity](introduction/multiscale_elasticity.ipynb) | Vector UFL local forms; rigid motions; primal MHM; conforming elasticity |
+| [MsHHO with an oscillatory coefficient](introduction/mshho_multiscale.ipynb) | Explicit scalar operators; constrained energy reconstruction; cell and face moments; conforming Galerkin |
+| [MH²M with an oscillatory coefficient](introduction/mh2m_multiscale.ipynb) | Explicit scalar operators; independent potential and conormal traces; local saddle equations; conforming Galerkin |
+| [MHM-USFEM for reaction–diffusion layers](introduction/mhm_usfem_rad.ipynb) | Explicit Galerkin and stabilized local operators; negative residual pairing; analytical layers; classical conforming reference |
+| [Stokes–Brinkman boundary-layer convergence](introduction/stokes_brinkman_boundary_layer.ipynb) | Velocity–pressure UFL; Taylor–Hood and USFEM local spaces; analytical layer; refined classical Taylor–Hood |
+
+```bash
+pixi run --locked -e introduction notebooks-run introduction --timeout 1800
+```
 
 ## convergence
 

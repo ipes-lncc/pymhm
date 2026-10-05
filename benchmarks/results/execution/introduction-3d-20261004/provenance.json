@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "scope": "First focused three-dimensional campaign; one completed measurement per configuration.",
+  "metadata": {
+    "scope": "First focused three-dimensional campaign; one completed measurement per configuration.",
+    "date_local": "2026-10-04",
+    "timezone": "America/Sao_Paulo",
+    "source_sha256": {
+      "src/pymhm/core/condensation.py": "3672d662de23aee32ebcdece313279caad14d20763502e0b4c0d9dca3682d0df",
+      "src/pymhm/linalg/linear.py": "a7aec1e216848d4875d0232ea3277386f56c67912ffc27484bc3cf00af5bee22",
+      "src/pymhm/core/multiscale.py": "2f95264264cde46269765311b3f20e39dacbaa928a06a3173a2077be2fb36f3d",
+      "src/pymhm/execution/cpu.py": "5b0a8b47f4204a9b79ff6c9de33cdfcbad008f450f84d94f7379a64dea9ddb80",
+      "src/pymhm/execution/cuda.py": "bc0c1aede2793b38492c602d37fcc5a19c8daf11a669c433614d1f3111376c9f",
+      "notebooks/introduction/darcy_3d_parallel_scalability.ipynb": "6408805662d7fdc8d60f48a1f177d62be470d772bb240e7aad58e8340e183920",
+      "pixi.lock": "c54e433e408e8345516023d96526b305d09452a55d53c018ea6ea529535df9fd"
+    },
+    "hardware": {
+      "physical_cpu_cores": 32,
+      "logical_cpu_threads": 64,
+      "gpus": [
+        "NVIDIA RTX A5000 24 GB",
+        "NVIDIA RTX A5000 24 GB"
+      ]
+    },
+    "resource_policy": "Classical MPI baseline used 32 physical cores. MHM 96^3 used CPUs0..27; strong64^3 uses CPUs2..25. Four other physical cores are reserved for independent QA. Native threads=1. CPU affinity and CPU budgets differ; this is not an equal-resource timing claim.",
+    "physical_acceptance_rtol": 1e-08,
+    "accuracy_policy": "Report achieved physical residuals and separate pressure/flux errors. Published MHM states additionally meet the stricter 1e-10 diagnostic. Algebraic residual does not replace discretization error.",
+    "local_amg_policy": {
+      "pinned_correction_rtol": 1e-10,
+      "projected_original_response_target": 1e-12,
+      "maximum_refinement_passes": 4
+    },
+    "timing_policy": "Fresh mesh, operators, hierarchies and pools. Includes setup, native worker initialization, transfers, synchronization, global solve and reconstruction. Form JIT cache warmup is separate. Validation, norms and archive writes are outside the timer.",
+    "discretization": "64 Cartesian macrohexahedra, local native conforming Q1, four tensor-Q1 modes per macroface, one retained constant per macrocell; 1024 coupled coordinates on the unit cube.",
+    "material_alignment": "Period0.1 and macro width0.25 give m=1 on macrofaces; interface data are smoother than the heterogeneous interior.",
+    "limitations": [
+      "One sample per configuration; no statistical variance claim.",
+      "Local refinement at fixed macro mesh and trace space is not full MHM convergence; pressure has a trace-resolution floor.",
+      "Equal fine-cell counts do not imply equal field accuracy or equal approximation spaces.",
+      "Cube Q1 application; no claim of matching a simplex discretization or published figure.",
+      "Large GPU AMG component did not pass the original-row criterion for roundoff-scale retained-action RHS; no accepted GPU speedup is available.",
+      "Large weak scaling remains unmeasured in this focused acquisition; executable notebook configurations are provided."
+    ]
+  },
+  "raw_records": "results.json",
+  "completed_configurations": {
+    "mhm": 5,
+    "classical": 4,
+    "weak": 0,
+    "gpu": 0
+  },
+  "runtime_sources_sha256": {
+    "src/pymhm/core/condensation.py": "3672d662de23aee32ebcdece313279caad14d20763502e0b4c0d9dca3682d0df",
+    "src/pymhm/linalg/linear.py": "a7aec1e216848d4875d0232ea3277386f56c67912ffc27484bc3cf00af5bee22",
+    "src/pymhm/execution/cpu.py": "5b0a8b47f4204a9b79ff6c9de33cdfcbad008f450f84d94f7379a64dea9ddb80",
+    "src/pymhm/execution/cuda.py": "bc0c1aede2793b38492c602d37fcc5a19c8daf11a669c433614d1f3111376c9f",
+    "notebooks/introduction/darcy_3d_parallel_scalability.ipynb": "6408805662d7fdc8d60f48a1f177d62be470d772bb240e7aad58e8340e183920",
+    "pixi.lock": "c54e433e408e8345516023d96526b305d09452a55d53c018ea6ea529535df9fd"
+  },
+  "accepted_states_only": true,
+  "classical_reference": "Independent native DOLFINx/UFL conforming Q1 assembly; same material, domain and full pressure Dirichlet data. Native archived serial coefficients integrated through UFL; MPI coefficients agree separately. Different approximation spaces and available CPU budgets.",
+  "native_accelerator": {
+    "software": "NVIDIA AmgX 2.5.0 and PyAMGX",
+    "amgx_revision": "91a8413ef267b1c32aff4014c02820e1c5897ac2",
+    "amgx_verified_source_url": "https://github.com/NVIDIA/AMGX/tree/91a8413ef267b1c32aff4014c02820e1c5897ac2",
+    "pyamgx_revision": "6229ff008ee5a264cfc1799eeb2f83d96da0aadc",
+    "pyamgx_verified_source_url": "https://github.com/shwina/pyamgx/tree/6229ff008ee5a264cfc1799eeb2f83d96da0aadc",
+    "verified_scope": "Small native multi-RHS 3D Neumann integration controls on both devices; no accepted large component performance state."
+  }
+}

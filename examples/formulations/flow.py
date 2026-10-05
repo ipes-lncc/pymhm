@@ -15,11 +15,12 @@ from typing import Any
 import numpy as np
 
 from pymhm import LocalEquations
-from pymhm._legacy.models.flow.solver import _laplacian_inverse_bound, _resistance_values
+from pymhm._legacy.models.flow.solver import _resistance_values
 from pymhm._legacy.models.vector import VectorSolution
 from pymhm.core.contracts import HybridSolution
 from pymhm.core.multiscale import MultiscaleSystem
 from pymhm.fem.assembly import assemble_element_blocks
+from pymhm.fem.inequalities import laplacian_inverse_bound
 from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.triangle import element_tabulate, tabulate, trace_coupling
 from pymhm.fem.traces.interval import SkeletonSpace
@@ -76,7 +77,7 @@ def tensor_residual_weight(
     """
     gradient, hessian, weights = tabulation
     h = np.max(fine.lengths[fine.cell_faces], axis=1)
-    m = _laplacian_inverse_bound(gradient, hessian, weights, h)
+    m = laplacian_inverse_bound(gradient, hessian, weights, h)
     viscous = 4 * viscosity / m
     upper = np.linalg.eigvalsh(resistance)[..., -1].max(axis=1)
     return h**2 / (np.maximum(upper * h**2, viscous) + viscous)

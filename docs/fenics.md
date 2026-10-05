@@ -204,6 +204,10 @@ pixi run --locked -e notebooks notebooks-run foundations/operators/ufl_provider.
 The `backend` choices are `serial`, `thread` and `process`; `batch_size`
 bounds work submitted together in parallel, while serial execution solves one
 cell at a time. Shared faces are accumulated by the coordinator in cell order.
+The Schur contribution is computed with its local solve on the worker.
+`pipeline=True` selects a bounded rolling window rather than complete batches;
+the order of global sums stays fixed. See [execution policies](execution.md)
+for failure delivery, thread limits and resource ownership.
 Responses remain available for reconstruction, so this bound applies to
 in-flight work rather than the total stored response and global matrix size.
 Spawn execution requires a top-level picklable provider and a guarded script
@@ -280,6 +284,13 @@ test checks the assembled pressure block against that exact coefficient.
 Viscosity must be constant per cell, and a higher-order pair requires a justified
 inverse estimate. Both viscosity and resistance cannot vanish simultaneously.
 The helper does not validate coercivity of user-provided coefficient fields.
+
+`pymhm.fem.inequalities.laplacian_inverse_bound` computes the scalar polynomial
+inverse quotient from physical gradients, Hessians, cell diameters and exact
+Gram-matrix quadrature. The same owner serves two- and three-dimensional flow
+assembly and the introductory polynomial-family comparison. The quotient
+requires one resolved constant kernel; it does not certify the separate
+velocity–pressure or skeletal approximation hypotheses.
 
 This form uses \(\nu\nabla u:\nabla v\), so its natural boundary quantity is
 pseudostress. The physical symmetric-stress form in `brinkman_forms` has different

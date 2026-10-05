@@ -222,6 +222,9 @@ from pymhm.execution.cuda import (
 from pymhm.execution.cuda import (
     condense_batched as condense_batched,
 )
+from pymhm.execution.cuda import (
+    condense_multi_gpu as condense_multi_gpu,
+)
 from pymhm.execution.mpi import (
     DistributedHybridSolution as DistributedHybridSolution,
 )

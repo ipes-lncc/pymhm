@@ -6,338 +6,250 @@ condensation factors its constrained matrix once and reuses that factorization
 for the source lift and all skeleton lifts. A `HybridSystem` retains those lifts
 for reconstruction.
 
-All timings on this page measure pyMHM's execution paths and solver backends.
-The [MSL comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/reference-comparison.md) and
-[NeoPZ comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/neopz.md) report numerical field agreement separately.
-The larger-local measurements compare `solve_darcy` with its default parent-process
-assembly against a factory path that assembles complete local problems inside workers.
+Timings include the complete numerical workflow. Numerical agreement and
+performance are verified separately: a faster execution must still satisfy the
+original equations and reproduce the physical fields at the stated accuracy.
 
-## Current execution model
+## Oscillatory Darcy with declared local and global forms
 
-`solve_darcy(..., backend="thread", workers=2)` or `backend="process"` distributes
-independent **local condensation** tasks. With `parallel_assembly=True`, the same
-solver instead builds and condenses each complete primal or RT0 local problem
-inside its worker. The default preserves parent-process assembly, including
-support for non-picklable material/source closures. Global assembly, the global
-solve and final field reconstruction remain sequential. Local independence
-alone does not establish an end-to-end speedup.
+The [thread notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/darcy_parallel_scalability.ipynb)
+defines its permeability, manufactured source, local UFL equations, skeletal
+couplings and conforming Q1 comparisons in executable cells. The
+[process companion](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/darcy_process_scalability.ipynb)
+defines the same physical case and exports its displayed worker definitions
+for `spawn`. Both use `LocalEquations`, `Equation` and `MultiscaleProblem`.
 
-Process execution uses `spawn` on every platform. Matrices and right-hand sides
-are serialized. For `parallel_assembly=True`, material/source callbacks and local
-mesh specifications must also be picklable; condensation-only mode evaluates
-those callbacks in the parent. Protect executable scripts with
-`if __name__ == "__main__":`. Each complete parallel solve creates a new worker pool.
+Matched fine-element counts specify the amount of fine geometry; the global
+spaces differ. Separate pressure and physical-flux errors accompany timings.
+Native UFL checks precede timing. Timed volume assembly uses the verified Basix
+operators in both methods. Configurations are warmed before three randomized
+fresh solves, including setup, pool startup, transfers,
+ordered assembly, synchronization, the global solve and reconstruction.
+Operators, factors and AMG hierarchies are rebuilt for every solve.
 
-`map_local` limits BLAS/OpenMP threads to one by default to avoid nested worker
-and native-thread oversubscription. Its `native_threads` argument can change that
-limit for custom local workflows. In thread mode, the limit applies to the whole
-process for the duration of the map. Avoid overlapping maps with conflicting
-thread settings.
+On the two-socket Xeon Silver 4216 workstation, the thread campaign measured:
 
-The ordinary `HybridSystem` global algebra is a single-process sparse system.
-Selecting `solver="petsc"` invokes its sequential factorization adapter. The
-separate [`solve_distributed` API](execution.md#distributed-mpi-assembly) assigns
-local construction, condensation and reconstruction to owning MPI ranks and
-assembles a distributed PETSc matrix solved by MUMPS. Its recorded one-, two-
-and four-rank campaign and the offline/online and resident GPU measurements
-are documented in [execution modes](execution.md#recorded-measurements).
+| Fine quadrilaterals in each method | Classical LU | Classical AMG | Best MHM thread time | Workers |
+| ---: | ---: | ---: | ---: | ---: |
+| 40,000 | 1.339 s | Not measured | 2.358 s | 1 |
+| 250,000 | 8.484 s | Not measured | 9.468 s | 8 |
+| 1,000,000 | 48.290 s | 20.813 s | 32.951 s | 8 |
 
-## Assemble complete local problems inside workers
+For one million elements, eight threads provide 2.125× speedup over one MHM
+thread and 1.466× over classical LU. Classical AMG is faster. Pressure and flux
+errors relative to the analytical solution agree within factors 1.003 and
+1.001, respectively, between MHM and the conforming reference.
+The smaller workloads have no speedup against classical LU.
 
-`HybridSystem.from_local_factory(factory, items, backend="process", workers=4)`
-executes `factory(item)` and one local condensation together inside each worker.
-The factory returns `LocalProblem`, or `LocalAssembly(problem, metadata)` when
-field reconstruction also needs a mesh or DOF map. The ordered metadata are
-available as `system.local_metadata`; they do not require remeshing or a second
-factorization in the parent. Global assembly, the skeleton solve and final field
-reconstruction remain sequential.
+For one million fine quadrilaterals, the process companion measured:
 
-The `HybridSystem(problems, ...)` interface accepts already assembled local
-problems. `solve_darcy(..., parallel_assembly=True)` uses the factory interface
-for its own finite-element assembly. The same interface accepts application-defined
-local operators. Factories,
-specifications and metadata must be picklable for spawn workers. Serial and thread execution accept closures, subject to the
-thread-safety requirements of the chosen finite-element backend.
+| Execution | Workers | Median complete time |
+| --- | ---: | ---: |
+| MHM serial | 1 | 69.531 s |
+| MHM processes | 1 | 81.504 s |
+| MHM processes | 4 | 24.772 s |
+| MHM processes | 8 | 17.140 s |
+| MHM processes | 16 | 13.287 s |
+| Classical LU | 1 | 48.181 s |
+| Classical AMG | 1 | 20.247 s |
 
-Create and release native FEM, PETSc, MPI and GPU resources inside a worker;
-transport numerical NumPy/SciPy data rather than native handles. GPU scheduling
-across multiple spawned workers is not established by the CPU measurements.
-The [architecture](architecture.md) describes the factory contract.
-`benchmarks/large_local.py` contains an executable P1 factory using the public
-element kernels and returning each fine mesh as metadata. Tests compare its
-complete pressure, physical flux and skeleton fields with `solve_darcy` under
-all three execution modes, and verify that each local problem is condensed once.
+Sixteen processes provide 5.233× speedup over serial MHM, 3.626× over classical
+LU and 1.524× over classical AMG. Its three complete durations range from
+13.243 to 13.428 s. Every configuration includes a fresh process pool where
+applicable; child imports, serialization and pool shutdown remain timed.
+Warm native initialization removes the common first-use cost from these
+medians, and the records also report that initialization separately.
+At 500×500 elements, eight processes take 6.153 s, compared with 8.118 s for
+classical LU and 4.540 s for classical AMG. Sixteen processes take 7.385 s;
+more workers do not improve that workload.
 
-## Reproducible CPU measurement
+Weak scaling retains 40,000 local fine elements per worker on an expanding
+domain. Median complete time rises from 2.326 s with one thread to 292.479 s
+with 64 threads, giving 0.795% weak efficiency. These small local problems do
+not scale efficiently with threads. The process study measures its own startup
+and transfer costs on the physical domains `[0, L] × [0, 1]`, with unchanged
+material period, source and boundary conditions:
 
-```bash
-pixi run -e test benchmark --output benchmark-results/scaling.json
-pixi run -e test benchmark --quick --output benchmark-results/quick.json
-pixi run -e test benchmark --parallel-assembly --workers 4 --output benchmark-results/worker-assembly.json
-```
+| Processes / domain length | Total fine elements | MHM processes | Classical LU | Classical AMG |
+| ---: | ---: | ---: | ---: | ---: |
+| 1 | 40,000 | 3.691 s | 1.043 s | 0.745 s |
+| 4 | 160,000 | 5.778 s | 4.616 s | 2.954 s |
+| 8 | 320,000 | 9.704 s | 10.318 s | 6.277 s |
+| 16 | 640,000 | 14.631 s | 20.074 s | 12.025 s |
 
-Render the recorded reports without rerunning the numerical benchmarks:
+Weak efficiency relative to one process is 25.229% at sixteen processes.
+Classical AMG remains faster on every weak workload. No inter-node efficiency
+follows from either one-host study.
 
-```bash
-pixi run -e notebooks python examples/plot_performance.py
-```
+The host has 32 physical and 64 logical cores. Native BLAS/OpenMP budgets are
+one thread, including the classical baselines. Project benchmarks run in
+separate timing windows; unrelated host applications remain active and there
+is no exclusive operating-system allocation or CPU affinity policy. Native
+initialization is recorded with the existing compiler cache, rather than as
+a cold-cache measurement. The
+[thread records and figures](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-threads-20261004)
+and [process records and figures](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-processes-20261004)
+contain every repetition, software versions, source and lockfile hashes,
+field checks and archived-basis replay conventions. This is an analytical
+application, rather than a matched reproduction of a literature experiment.
 
-`benchmarks/scaling.py` solves the affine manufactured Darcy problem
-\(K=I\), \(f=0\), \(p=1+x+2y\) on the unit square. It compares the entire
-pressure, flux and skeleton coefficient arrays against serial execution and
-checks pressure/flux errors, macroscopic conservation, and the global residual.
-These checks occur outside the timed interval. The complete solve, including
-pool startup and data movement, is timed. A serial warmup precedes each workload;
-at least three timed repetitions are required.
+## One- and two-GPU local condensation
 
-The report records individual durations, medians, spread, hardware, software,
-BLAS thread limits, and SHA-256 hashes of the source files and lockfile. A flag
-identifies source changes during measurement. Hashes describe the acquisition
-state, which need not match a later checkout or optional-environment update.
-These are workstation measurements
-without CPU affinity pinning or exclusive access to the machine.
+The 500×500 pilot uses the same physical problem, 100 macroelements and
+250,000 fine quadrilaterals with one or two NVIDIA RTX A5000 GPUs. Every MHM
+route compiles local equations on eight CPU threads, then condenses them with
+one CPU worker, eight CPU workers, one GPU or two GPUs. The CPU route with
+serial condensation therefore includes parallel compilation; it is not a
+complete serial MHM baseline.
 
-A Linux measurement on 28 September 2026 used an Intel Xeon E5-2698 v4,
-Python 3.13.15, NumPy 2.5.3, SciPy 1.18.1 and OpenBLAS 0.3.34. Native libraries
-were restricted to one thread, with two Python workers for parallel cases. Both
-workloads used eight subdivisions per macrotriangle and 45 local P1 pressure
-unknowns. Medians of three repetitions were:
+All six routes run in the same locked `hpc` environment. Its SciPy version
+differs from the `introduction` environment used for the thread/process
+notebooks, so the pilot reruns classical LU and AMG in `hpc`. Each route has
+one warmup and three randomized fresh executions. Complete GPU timers include
+CPU setup and compilation, transfers, cuDSS analysis/factorization, synchronization,
+global assembly/solution and field reconstruction. Factors and responses are
+rebuilt for every execution.
 
-| Macrotriangles | Fine triangles | Serial (s) | Threads (s) | Processes (s) | Thread speedup | Process speedup |
-| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 32 | 2,048 | 0.462 | 0.526 | 0.928 | 0.878 | 0.497 |
-| 128 | 8,192 | 1.839 | 2.266 | 2.353 | 0.812 | 0.782 |
+| Execution | Median complete time |
+| --- | ---: |
+| MHM, serial CPU condensation | 12.731 s |
+| MHM, eight CPU condensation workers | 9.932 s |
+| MHM, one GPU | 9.824 s |
+| MHM, two GPUs | 12.020 s |
+| Classical LU | 8.330 s |
+| Classical AMG | 4.521 s |
 
-![Complete CPU solve times and speedup for 32 and 128 macrotriangles](figures/performance/linux-cpu.png)
+The one-GPU and threaded CPU observed ranges overlap; their 1.1% median
+difference does not establish a performance advantage. Two GPUs are slower.
+Neither GPU route beats classical LU or AMG in this workload. Pressure and
+physical-flux errors agree with the classical baseline within factors 1.023
+and 1.001. Original equations, physical moments and archived-basis replay are
+checked independently of timings.
 
-[Download the CPU figure as SVG](figures/performance/linux-cpu.svg).
-Bars show medians and whiskers show the observed minimum–maximum range of three
-repetitions. Speedup uses the corresponding serial median as the fixed
-numerator; the dashed line marks one. These ranges are not confidence intervals.
+The [pilot records and figures](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-multigpu-20261004)
+include every sample, phase cost, initialization, actual basis digests and
+hardware/software provenance. CPU compilation and host analysis remain
+significant parts of this execution model. These measurements establish a
+node-local capability and its measured costs, without a multiGPU speedup or
+inter-node scalability claim.
 
-The measured parallel executions were slower for these workloads. Serial
-assembly, small local factorizations, dispatch, and process startup limit the
-benefit available from parallel condensation. This result does not establish
-behavior for larger local spaces, expensive constitutive models, or more workers.
-The [complete CPU report](https://github.com/volpatto/pymhm/blob/main/benchmarks/results/linux-cpu.json)
-contains the actual numerical errors and all individual timings.
+## Three-dimensional Darcy with process-local solves
 
-## Larger local spaces and complete worker assembly
+The [3D tutorial](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb)
+writes its anisotropic multiscale permeability, manufactured source, local UFL
+forms, oriented Q1 macroface coupling and global problem explicitly. It also
+shows the independent conforming Q1 reference, physical norm integration,
+complete timers and literal provider export for spawn workers. The default
+small demonstration is separate from the
+[resolved campaign](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-3d-20261004).
 
-The larger-local benchmark separates three workloads: the complete
-`solve_darcy`, condensation of already assembled local matrices, and the complete
-factory solve. All use the same native P1 variational kernels, constant macroface
-traces, coefficients and affine manufactured solution. The factory returns the
-fine mesh as metadata and reconstructs the same physical pressure and flux. It
-does not change the discretization to obtain a faster result.
+A unit-cube mesh of 64 macrohexahedra uses 16, 24 or 32 local fine cells per
+direction at global fine counts 64, 96 or 128. These configurations contain
+262,144, 884,736 or 2,097,152 fine hexahedra. The 128 setting is optional;
+the record identifies the configurations actually measured. Each unsplit
+macroface has four
+tensor-product Q1 trace modes. The coupled problem has 960 trace coordinates
+and 64 retained constants. The classical reference uses the same fine grid
+with a different global approximation space. Pressure and physical vector-flux
+errors accompany cost measurements; equal fine-element counts do not imply
+equal accuracy. Refining local meshes with fixed macro/trace spaces can leave
+an interface-error floor.
 
-```bash
-pixi run -e test python benchmarks/large_local.py --output benchmarks/results/large-local.json
-pixi run -e notebooks python examples/plot_large_local.py
-```
+Local direct solves factor the constrained Neumann matrix for its source and
+trace right-hand sides. The optional CPU/GPU AMG route projects the declared
+constant, pins one coordinate for an SPD elliptic solve, restores the physical
+volume moment and checks the original equations through the shared package
+owner. A hierarchy built for one solver call serves its multiple right-hand
+sides; refinement remains inside that owner and timer. Numerical data are
+rebuilt for each independent sample. Full pressure Dirichlet data require no global
+mean-zero gauge. The coupled global solve continues to use sparse direct
+algebra.
 
-Each workload measures serial execution and one, two, four and eight threads or
-spawned processes, with three repetitions and one native numerical thread per
-worker. The `solve_darcy`, factory and prepared-condensation paths alternate within
-each repetition. Complete times include worker-pool creation, serialization,
-local and global work, and final reconstruction. Prepared-condensation times
-exclude local assembly but include pool creation and input/output serialization.
-The manufactured-field and serial-reference comparisons occur outside timers.
+Complete process times contain setup, child startup/imports, native assembly,
+local solves, full response transfer, ordered shared-face accumulation,
+synchronization, pool join, global solution and reconstruction. Warmups use
+the existing compiler cache; fresh workers remain timed. Strong speedups use
+one spawned process as their denominator. True serial execution is a distinct
+configuration.
+Weak domains expand in x with fixed physical material period, local mesh size
+and macro width, including growth of the global problem.
 
-The archived high-level runs use `parallel_assembly=False`.
-These runs used the same Xeon workstation and software versions as the CPU
-measurement above. The machine was not exclusive: unrelated applications
-remained active, and CPU affinity was not pinned. Runtime sources, benchmark
-sources and the lockfile had identical SHA-256 hashes before and after the run.
+CPU1 classical PyAMG and multi-process MHM use different CPU budgets. The
+independent distributed PETSc CG/GAMG baseline uses 32 physical cores; MHM
+uses its recorded affinity of 24 or 28 physical cores. Optional GPU components
+have a separate local-condensation scope; no accepted large GPU timing is
+available in this campaign. Hardware, initialization, transfers, synchronization, raw
+samples and numerical controls remain part of the record. No multi-node
+performance claim follows from these workstation measurements. The
+[case description](cases/darcy-3d-scalability.md) states the physical data,
+spaces and relation to the published MHM experiments.
 
-The three cases contain 32,768, 73,728 and 131,072 fine triangles, respectively.
-Here \(r\) is the number of subdivisions along each macrotriangle edge. The
-table reports medians in seconds; the factory process column also includes the
-minimum–maximum of its three repetitions.
+### Recorded 3D complete workflow times
 
-| Macros | \(r\) | Local pressure DOFs | `solve_darcy` serial | Factory serial | Factory, 8 processes | Gain over factory serial | Gain over `solve_darcy` serial |
-| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 8 | 64 | 2,145 | 2.790 | 2.735 | 1.044 (1.021–1.048) | 2.620× | 2.672× |
-| 8 | 96 | 4,753 | 6.066 | 6.121 | 1.679 (1.647–1.695) | 3.645× | 3.612× |
-| 32 | 64 | 2,145 | 10.936 | 10.867 | 2.406 (2.344–2.496) | 4.516× | 4.545× |
+| Fine cells per unit axis | Method | Processes / ranks | Available physical CPU cores | Complete time (s) |
+| ---: | --- | ---: | ---: | ---: |
+| 64 | Classical PyAMG | 1 | 1 | 26.3190 |
+| 64 | Classical PETSc CG/GAMG | 32 | 32 | 3.8283 |
+| 64 | MHM PyAMG | 1 | 24 | 123.5853 |
+| 64 | MHM PyAMG | 8 | 24 | 19.5680 |
+| 64 | MHM PyAMG | 16 | 24 | 11.2846 |
+| 64 | MHM PyAMG | 32 | 24 | 8.8042 |
+| 96 | Classical PyAMG | 1 | 1 | 87.6479 |
+| 96 | Classical PETSc CG/GAMG | 32 | 32 | 9.2348 |
+| 96 | MHM PyAMG | 32 | 28 | 23.0012 |
 
-The `solve_darcy` path spent approximately 85%, 80% and 86% of its serial complete
-time in local assembly. Its best complete speedups among the measured worker
-configurations were only 1.028×, 1.058× and 1.077×, even though prepared local
-condensation achieved 1.499×, 1.956× and 1.975×. The factory path distributes both
-assembly and condensation among processes. Eight processes gave the lowest
-complete factory median in each case. The gains are
-sublinear, include startup and communication costs, and establish behavior only
-for these problem sizes, operators and implementation.
+Each row is one completed sample, including startup and initialization. The
+64-per-axis MHM process sweep reduces complete time from 123.5853 s with one
+process to 8.8042 s with 32 processes: a 14.04× internal speedup. All four
+MHM points share an affinity of 24 physical cores, so the 32-process point
+oversubscribes that CPU budget. The 96-per-axis MHM point uses 28 available
+physical cores.
 
-All complete runs passed the physical-error, conservation and serial-field
-comparisons. Across both solution paths and every worker configuration, the
-largest pressure and flux \(L^2\) errors were \(8.32\times10^{-14}\) and
-\(1.08\times10^{-12}\); the largest macrocell conservation defect and global
-relative residual were \(5.55\times10^{-16}\) and \(9.18\times10^{-17}\).
-This affine problem checks algebraic equivalence and execution cost; it does
-not measure convergence for heterogeneous or nonlinear models.
+The classical MPI reference uses 32 physical cores and is faster than the
+32-process MHM at both resolutions: 3.8283 versus 8.8042 s at 64, and 9.2348
+versus 23.0012 s at 96. These CPU budgets and approximation spaces differ;
+this is not an equal-resource or equal-accuracy comparison. The tables expose
+those differences instead of inferring a crossover from them.
 
-![Complete solve_darcy time, including its serial local assembly](figures/large-local/complete-solve.png)
+No completed large weak-scaling or accepted GPU-condensation timing is
+available. No complete 128-per-axis workflow is measured. The source notebook
+provides configurable procedures for these experiments; the present record
+establishes the CPU process sweep only.
 
-[Download the complete-solve figure as SVG](figures/large-local/complete-solve.svg).
+The [campaign record](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-3d-20261004)
+states the accompanying field errors, precision controls and unmeasured scopes.
 
-![Isolated condensation of prepared local matrices, including pool creation](figures/large-local/prepared-condensation.png)
+## Choosing and measuring an execution mode
 
-[Download the prepared-condensation figure as SVG](figures/large-local/prepared-condensation.svg).
+Use `assemble(problem, execution=ExecutionConfig(...))` with declared local and
+global forms. Serial execution builds, condenses and accumulates one cell at a
+time. Process execution constructs and reduces complete local equations inside
+spawned workers; ordered coordinator reduction handles shared faces. A bounded
+rolling window can overlap local work with global accumulation. The
+[execution guide](execution.md#serial-cells-and-bounded-parallel-batches)
+specifies ordering, thread limits, failure handling and cleanup.
 
-![Complete factory solve with local assembly and condensation in workers](figures/large-local/factory-complete-solve.png)
+Keep the full discretization fixed for strong scaling. For weak scaling, report
+both local work per worker and growth of the global skeleton. Retained lifts,
+serialized responses and the host global matrix all contribute to memory use.
+Separate initialization, local assembly/condensation, transfers, global work
+and reconstruction, while retaining a complete timer containing every phase.
+Report every repetition and any regression.
 
-[Download the factory figure as SVG](figures/large-local/factory-complete-solve.svg).
-The black horizontal line is the factory serial median; the red line is the
-`solve_darcy` serial median. Whiskers show the observed minimum–maximum
-range. Three repetitions in a fixed configuration order do not establish
-confidence intervals or machine-independent scaling.
+Ordinary `MultiscaleProblem` assembly has a host global solve. For distributed
+local ownership and global sparse algebra, use
+[`solve_distributed`](execution.md#distributed-mpi-assembly), with the caller
+assigning cells and globally consistent trace indices to MPI ranks. For
+node-local accelerator work,
+[`condense_multi_gpu`](execution.md#local-work-across-multiple-gpus)
+distributes local systems among explicitly selected devices. Transfers,
+synchronization and host work remain part of a complete GPU comparison.
+Native correctness controls and one-host measurements do not establish
+multi-node efficiency.
 
-![Serial solve_darcy phase costs and the distinction between complete and prepared speedup](figures/large-local/phase-profile.png)
-
-[Download the phase-profile figure as SVG](figures/large-local/phase-profile.svg).
-The stacked bars combine independently measured phase medians and omit the
-small parent-bookkeeping term. They are not an exact additive decomposition of
-the median complete solve. Every individual phase time, bookkeeping time,
-verification error and source hash is preserved in the
-[complete larger-local report](https://github.com/volpatto/pymhm/blob/main/benchmarks/results/large-local.json).
-
-## GPU and solver boundaries
-
-`solver` selects the global linear solver; `local_solver` selects local
-factorizations. The cuDSS adapter can therefore be used for local condensation,
-the global system, or both. The public numerical arrays remain NumPy/SciPy arrays.
-GPU adapters transfer matrices and right-hand sides to the device and bring
-solutions back to the host. For these sparse adapters, local assembly, stored lifts, global assembly and
-reconstruction remain on the CPU. The separate
-[resident batch API](execution.md#resident-batches-on-one-gpu) assembles affine
-P1 volume operators on the device and retains batched LU factors across RHS
-queries; it does not make the full PDE pipeline resident.
-
-CuPy sparse QR is a global solve option. cuDSS provides reusable device-side
-factorization through `nvmath-python`. Repeated tiny local systems can cost more
-to dispatch and transfer than to solve on the CPU. Benchmark transfer and setup
-costs, factorization reuse, warmup, and synchronization explicitly before making
-an acceleration claim. Simultaneous GPU work from independent Python worker
-processes is not a validated scheduling strategy here.
-
-`solve_darcy(..., local_solver="pyamg")` uses CPU algebraic multigrid for the
-local primal elliptic problems. The local kernel requires care: source and trace
-loads are projected onto the compatible subspace, independent kernel
-coordinates are pinned during the positive-definite solve, and the prescribed
-physical mean is restored afterward. This differs from applying an SPD solver
-directly to the indefinite constrained local matrix.
-
-The explicit general `coarse_basis` condensation path is currently unsupported
-by the PyAMG and AmgX adapters and raises an error. It requires retaining the
-nonzero action of the operator on the coarse modes, rather than applying the
-true-nullspace projection. This restriction matters for the constant modes
-retained in reaction–diffusion and heat, and the translations retained in
-Brinkman away from zero drag. Use a supported direct local solver for those
-retained-basis problems; no backend fallback occurs. The primal Darcy benchmark
-uses a true constant kernel and retains AMG support.
-
-With PyAMG local solves, the same CPU workloads gave the following medians.
-The coefficient comparison uses relative tolerance \(10^{-9}\) and absolute
-tolerance \(10^{-10}\), accommodating the iterative solver's \(10^{-10}\)
-relative residual target. The independent manufactured pressure/flux errors,
-conservation error, and global residual must each remain below \(10^{-9}\).
-
-| Macrotriangles | Serial (s) | Threads (s) | Processes (s) |
-| ---: | ---: | ---: | ---: |
-| 32 | 0.666 | 0.943 | 1.039 |
-| 128 | 2.550 | 4.132 | 2.732 |
-
-![CPU AMG solve times and speedup, shown separately from direct solvers](figures/performance/linux-cpu-amg.png)
-
-[Download the CPU AMG figure as SVG](figures/performance/linux-cpu-amg.svg).
-Here the speedup baseline is serial execution with the same AMG local solver.
-
-For these 45-unknown local problems, AMG setup and iteration cost more than the
-direct factorization. This comparison does not establish behavior at larger
-local resolutions. The [complete CPU AMG report](https://github.com/volpatto/pymhm/blob/main/benchmarks/results/linux-cpu-amg.json)
-records every repetition and verification error.
-
-The hybrid global system contains coarse constraints and is generally
-indefinite; use a solver appropriate to that algebraic structure. cuDSS uses
-maximum diagonal-product matching and iterative refinement to handle the zero
-coarse diagonal block, and every solve still passes the ordinary residual check.
-Backend availability, numerical correctness, and favorable timing are three
-separate checks.
-
-`HybridSystem.solve` without a prepared factorization first performs an
-equilibrated CPU sparse LU rank diagnostic for non-SciPy solvers. This rejects
-unsupported trace enrichment even when a compatible right-hand side admits a
-small residual. The diagnostic factorization is discarded before the requested
-backend runs, so the global GPU timings below include this CPU factorization.
-SciPy reuses its factorization for both diagnosis and solution. Prepared
-`OfflineHybridSystem` solves reuse their factors; distributed MPI assembly
-and solution follow the separate path described in [Execution](execution.md).
-
-```bash
-pixi run -e test benchmark --local-solver pyamg --output benchmark-results/cpu-amg.json
-pixi run -e gpu benchmark-gpu --output benchmark-results/gpu.json
-```
-
-The GPU benchmark compares a CPU baseline, a GPU global solve (CuPy or cuDSS),
-GPU local solves (cuDSS), and cuDSS in both positions. Each configuration has an
-untimed warmup; all device timings synchronize explicitly. `--amgx` additionally
-requires a working native AmgX/PyAMGX installation and measures AMG local solves.
-It fails if that requested backend is unavailable.
-
-On an NVIDIA GeForce RTX 3060 (12 GB, compute capability 8.6), the complete solves
-gave the following medians in seconds. The GPU environment used CuPy 14.2.0,
-CUDA runtime 12.9, nvmath-python 1.0.0 and cuDSS 0.8.0.10. AmgX 2.5.0 was
-compiled with CUDA 12.6 and GCC 12.4. Each cell reports three repetitions after
-an untimed warmup for that solver placement.
-
-| Macrotriangles | CPU | Global CuPy | Global cuDSS | Local cuDSS | Local + global cuDSS | Local AmgX |
-| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 32 | 0.485 | 0.494 | 0.512 | 0.850 | 0.858 | 2.437 |
-| 128 | 1.919 | 1.933 | 1.933 | 3.385 | 3.393 | 9.730 |
-
-![GPU solver placements with elapsed times, observed ranges and CPU baseline speedup](figures/performance/linux-gpu.png)
-
-[Download the GPU figure as SVG](figures/performance/linux-gpu.svg).
-Each workload uses its own CPU median as the speedup baseline. Both workload
-panels share zero-origin linear axes, preserving absolute time comparisons.
-
-All GPU configurations passed the analytical and coefficient checks; the
-largest pressure/flux error was \(1.08\times10^{-13}\). These measurements do
-not show GPU acceleration for the selected workloads. Per-local initialization,
-hierarchy construction, transfer and synchronization are included; larger
-local problems or a device-resident assembly and batching strategy require
-separate measurements. These are timings of the recorded implementation, not
-comparisons of peak solver performance. The [complete GPU report](https://github.com/volpatto/pymhm/blob/main/benchmarks/results/linux-gpu.json)
-records native revisions, build information, individual timings and source hashes.
-
-## Optional native AmgX installation
-
-AmgX is a separately compiled NVIDIA library. Its Python binding is not included
-in the root GPU lockfile. A pinned Linux build recipe is provided for Python
-3.13, CUDA 12.6 and GCC 12; the installed library was validated alongside the
-CUDA 12.9 dependencies in the GPU environment. An NVIDIA driver and sufficient
-memory for C++ and CUDA compilation are required.
-
-```bash
-pixi install -e gpu --locked
-pixi run --manifest-path tools/amgx/pixi.toml install-amgx --cuda-arch 86 --jobs 4
-pixi run -e gpu pytest -m gpu
-pixi run -e gpu benchmark-gpu --amgx --output benchmark-results/gpu-amgx.json
-```
-
-Architecture `86` selects the RTX 3060 used for validation. Omit `--cuda-arch`
-to ask CMake to detect the visible GPU, or select the architecture of the target
-device. The recipe fetches AmgX revision
-`91a8413ef267b1c32aff4014c02820e1c5897ac2` and PyAMGX revision
-`6229ff008ee5a264cfc1799eeb2f83d96da0aadc` from their public upstream repositories.
-The recipe builds the shared library and binding with optional NVTX profiling
-disabled, then verifies a numerical solve.
-
-The native library is installed into the GPU environment's library directory;
-the binding uses relative runtime library paths and requires no `PYTHONPATH`
-override. The resulting wheel is an installation artifact for that environment,
-not a portable wheel for distribution. Recreating the GPU environment requires
-running the native installation again. The build recipe currently targets Linux
-only; Windows AmgX compilation is not validated.
+[Recorded MPI, resident GPU and offline/online measurements](execution.md#recorded-measurements)
+state their own hardware, spaces and timing scopes. Earlier CPU measurements
+remain available in the
+[benchmark records](https://github.com/volpatto/pymhm/tree/main/benchmarks/results).
+Their measured workloads and acquisition hashes are distinct from the
+oscillatory application above.

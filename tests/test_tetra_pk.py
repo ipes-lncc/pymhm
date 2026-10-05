@@ -12,8 +12,8 @@ from threadpoolctl import threadpool_limits
 
 from pymhm import TetraMesh, TriangularSkeleton
 from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
-from pymhm._legacy.models.flow.solver import _laplacian_inverse_bound
 from pymhm.estimators.darcy_3d import estimate_darcy_error_3d
+from pymhm.fem.inequalities import laplacian_inverse_bound
 from pymhm.fem.reference import simplex_lagrange_basis, tabulate_reference
 from pymhm.fem.scalar.tetrahedron import (
     tetra_element_tabulate,
@@ -147,7 +147,7 @@ def test_physical_polynomial_derivatives_and_quadrature(degree):
     assert_allclose(2 * M @ np.ones(len(nodes)), load, atol=2e-15)
     assert_allclose(M.sum(), mesh.volumes.sum(), atol=2e-15)
     diameter = np.max(np.linalg.norm(mesh.points[:, None] - mesh.points[None, :], axis=-1))
-    inverse_bound = _laplacian_inverse_bound(gradient, hessian, weights, np.array([diameter]))
+    inverse_bound = laplacian_inverse_bound(gradient, hessian, weights, np.array([diameter]))
     coefficients = np.random.default_rng(degree).normal(size=(11, len(nodes)))
     gradients = np.einsum("si,qia->sqa", coefficients, gradient[0])
     laplacians = coefficients @ np.trace(hessian[0], axis1=-2, axis2=-1).T

@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+import threading
+import time
+from collections.abc import Iterator
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 from types import SimpleNamespace
 from typing import Any
 
@@ -228,6 +233,10 @@ def simulated_backends(monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace:
         factor_solver=None,
         setup_error=None,
         matrix_options={},
+        current_device=0,
+        reset_shapes=[],
+        solve_devices=[],
+        free_devices=[],
     )
 
     class DirectEngine:
@@ -256,6 +265,7 @@ def simulated_backends(monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace:
 
         def solve(self, matrix: Any = None, rhs: Any = None) -> Any:
             state.solves += 1
+            state.solve_devices.append(state.current_device)
             if matrix is not None:
                 self.matrix, self.rhs = matrix, rhs
             operator = self.matrix.toarray()
@@ -265,9 +275,11 @@ def simulated_backends(monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace:
 
         def reset_operands(self, *, b: Any) -> None:
             self.rhs = b
+            state.reset_shapes.append((b.shape, b.flags.f_contiguous))
 
         def free(self) -> None:
             state.frees += 1
+            state.free_devices.append(state.current_device)
 
         def free_memory(self, *, everything: bool) -> None:
             assert everything
@@ -343,8 +355,23 @@ def simulated_backends(monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace:
         def destroy(self) -> None:
             state.frees += 1
 
+    @contextmanager
+    def device_context(device: int):
+        """Simulate CUDA's thread-local current-device restoration."""
+        previous = state.current_device
+        state.current_device = device
+        try:
+            yield
+        finally:
+            state.current_device = previous
+
     cupy = SimpleNamespace(
-        cuda=SimpleNamespace(runtime=SimpleNamespace(getDeviceCount=lambda: 1)),
+        cuda=SimpleNamespace(
+            runtime=SimpleNamespace(
+                getDeviceCount=lambda: 2, getDevice=lambda: state.current_device
+            ),
+            Device=device_context,
+        ),
         zeros=np.zeros,
         asarray=np.asarray,
         asnumpy=np.asarray,
@@ -387,6 +414,7 @@ def test_simulated_optional_backend_contract(
     if backend == "cudss":
         assert simulated_backends.engine.plan_config.matching_algorithm == 5
         assert simulated_backends.engine.solution_config.ir_num_steps == 5
+        assert simulated_backends.solves == 1
     if backend.startswith("petsc"):
         assert simulated_backends.pc_type == ("cholesky" if backend.endswith("symmetric") else "lu")
         assert simulated_backends.matrix_options == (
@@ -404,6 +432,206 @@ def test_simulated_repeated_factorization_contract(backend: str, simulated_backe
         for rhs in (np.ones(2), np.eye(2)):
             assert_allclose(factor.solve(rhs), rhs)
     assert simulated_backends.factors == 1
+
+
+def test_cudss_response_columns_share_one_solve_and_owning_device(simulated_backends: Any) -> None:
+    """Batch all basis RHS, reuse factors for other widths, and release on owner."""
+    state = simulated_backends
+    matrix = np.array([[2.0, -1.0, 1.0], [-1.0, 2.0, 1.0], [1.0, 1.0, 0.0]])
+    expected = np.arange(15.0).reshape(3, 5)
+    with factorize(matrix, solver="cudss", rhs_columns=5) as factor:
+        state.current_device = 1
+        assert_allclose(factor.solve(matrix @ expected), expected, atol=1e-13)
+        assert state.solves == 1
+        assert state.current_device == 1
+        for width in (1, 3, 7):
+            exact = np.arange(3.0 * width).reshape(3, width)
+            assert_allclose(factor.solve(matrix @ exact), exact, atol=1e-13)
+        assert_allclose(factor.solve(matrix @ np.ones(3)), 1.0, atol=1e-13)
+    assert state.factors == 1
+    assert state.solves == 6
+    assert state.reset_shapes == [((3, 5), True)] * 6
+    assert state.solve_devices == [0] * 6
+    assert state.free_devices == [0]
+    assert state.current_device == 1
+
+
+@pytest.fixture
+def concurrent_cudss_contract(
+    simulated_backends: SimpleNamespace,
+) -> SimpleNamespace:
+    """Instrument native host entries with thread-local devices and separate transfers."""
+    state = simulated_backends
+    current = threading.local()
+    native_entry_lock = threading.Lock()
+    state.native_calls = []
+    state.failure_phase = None
+    state.transfer_barrier = None
+    base_engine = state.modules["nvmath.sparse.advanced"].DirectSolver
+
+    @contextmanager
+    def native_entry(phase: str) -> Iterator[None]:
+        """Reject overlapping native entrypoints and inject a one-time phase failure."""
+        assert native_entry_lock.acquire(blocking=False), "cuDSS native host entries overlap"
+        try:
+            state.native_calls.append((phase, getattr(current, "device", 0)))
+            # Release the GIL while a simulated native call remains active. Both
+            # workers start together; an unprotected owner cannot rely on the GIL.
+            time.sleep(0.002)
+            yield
+            if state.failure_phase == phase:
+                state.failure_phase = None
+                raise RuntimeError(f"injected cuDSS {phase} failure")
+        finally:
+            native_entry_lock.release()
+
+    class CheckedConfig(SimpleNamespace):
+        """Include native configuration writes in the host-entry contract."""
+
+        def __setattr__(self, name: str, value: Any) -> None:
+            """Record configuration mutation independently of engine construction."""
+            with native_entry("configuration"):
+                super().__setattr__(name, value)
+
+    class CheckedEngine(base_engine):
+        """Reuse the optional-backend fake while checking every native entrypoint."""
+
+        def __init__(self, matrix: Any, rhs: Any) -> None:
+            """Record the device that owns this engine's independent operands."""
+            with native_entry("create"):
+                super().__init__(matrix, rhs)
+                self.owner = getattr(current, "device", 0)
+                self.plan_config = CheckedConfig()
+                self.solution_config = CheckedConfig()
+
+        def plan(self) -> None:
+            """Record synchronous native analysis without sharing an engine."""
+            with native_entry("plan"):
+                super().plan()
+
+        def factorize(self) -> None:
+            """Record the numerical-factorization host launch."""
+            with native_entry("factorize"):
+                super().factorize()
+
+        def reset_operands(self, *, b: Any) -> None:
+            """Record native pointer updates for each response block."""
+            with native_entry("reset"):
+                assert getattr(current, "device", 0) == self.owner
+                super().reset_operands(b=b)
+
+        def solve(self) -> Any:
+            """Record an asynchronous solve launch on the owning device."""
+            with native_entry("solve"):
+                assert getattr(current, "device", 0) == self.owner
+                return super().solve()
+
+        def free(self) -> None:
+            """Record native cleanup after transfer or a failed phase."""
+            with native_entry("free"):
+                assert getattr(current, "device", 0) == self.owner
+                super().free()
+
+    @contextmanager
+    def device_context(device: int) -> Iterator[None]:
+        """Restore each worker's independent current-device state."""
+        previous = getattr(current, "device", 0)
+        current.device = device
+        try:
+            yield
+        finally:
+            current.device = previous
+
+    def host_transfer(result: Any) -> np.ndarray:
+        """Require both devices to enqueue a solve before either transfer finishes."""
+        if state.transfer_barrier is not None:
+            state.transfer_barrier.wait(timeout=5)
+        return np.asarray(result)
+
+    cupy = state.modules["cupy"]
+    cupy.cuda.Device = device_context
+    cupy.cuda.runtime.getDevice = lambda: getattr(current, "device", 0)
+    cupy.asnumpy = host_transfer
+    state.modules["nvmath.sparse.advanced"].DirectSolver = CheckedEngine
+    return state
+
+
+def test_cudss_serializes_host_entries_without_serializing_transfers(
+    concurrent_cudss_contract: SimpleNamespace,
+) -> None:
+    """Native entrypoints are exclusive while separate device workflows can progress."""
+    state = concurrent_cudss_contract
+    state.transfer_barrier = threading.Barrier(2)
+    ready = threading.Barrier(2)
+    cupy = state.modules["cupy"]
+    matrix = np.array([[2.0, -1.0, 1.0], [-1.0, 2.0, 1.0], [1.0, 1.0, 0.0]])
+    expected = np.arange(15.0).reshape(3, 5)
+
+    def worker(device: int) -> np.ndarray:
+        """Construct on one device and restore the caller's device after each solve."""
+        ready.wait(timeout=5)
+        with cupy.cuda.Device(device):
+            prepared = factorize(matrix, solver="cudss", rhs_columns=5)
+        with cupy.cuda.Device(1 - device), prepared:
+            actual = prepared.solve(matrix @ expected)
+            assert cupy.cuda.runtime.getDevice() == 1 - device
+        assert cupy.cuda.runtime.getDevice() == 0
+        return actual
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        futures = [executor.submit(worker, device) for device in (0, 1)]
+        for future in futures:
+            assert_allclose(future.result(timeout=10), expected, atol=1e-12)
+    assert state.factors == state.plans == state.solves == state.frees == 2
+    for phase in ("create", "configuration", "plan", "factorize", "reset", "solve", "free"):
+        assert {device for name, device in state.native_calls if name == phase} == {0, 1}
+
+
+@pytest.mark.parametrize("phase", ["configuration", "plan", "factorize", "reset", "solve", "free"])
+def test_cudss_host_entry_failure_releases_lock_and_owns_cleanup(
+    concurrent_cudss_contract: SimpleNamespace, phase: str
+) -> None:
+    """A failed native phase cannot retain the host-entry lock or another device's resources."""
+    state = concurrent_cudss_contract
+    state.failure_phase = phase
+    cupy = state.modules["cupy"]
+    matrix = np.array([[3.0, 1.0], [1.0, 2.0]])
+    expected = np.arange(4.0).reshape(2, 2)
+    with (
+        cupy.cuda.Device(1),
+        pytest.raises(RuntimeError, match=f"cuDSS {phase} failure"),
+        factorize(matrix, solver="cudss", rhs_columns=2) as prepared,
+    ):
+        prepared.solve(matrix @ expected)
+    assert state.frees == 1
+    assert ("free", 1) in state.native_calls
+    assert cupy.cuda.runtime.getDevice() == 0
+    recovered = []
+    errors = []
+
+    def recover() -> None:
+        """Use a different thread and device after the failed host call."""
+        try:
+            with factorize(matrix, solver="cudss", rhs_columns=2) as prepared:
+                recovered.append(prepared.solve(matrix @ expected))
+        except BaseException as exc:
+            errors.append(exc)
+
+    recovery = threading.Thread(target=recover, daemon=True)
+    recovery.start()
+    recovery.join(timeout=5)
+    assert not recovery.is_alive(), "failed native phase retained the host-entry lock"
+    assert not errors
+    assert_allclose(recovered[0], expected, atol=1e-12)
+    assert state.frees == 2
+    assert ("free", 0) in state.native_calls
+
+
+@pytest.mark.parametrize("width", [0, -1, True, 1.5, None])
+def test_factorization_rejects_invalid_rhs_width(width: Any) -> None:
+    """Reject invalid solve-width hints before optional resources are allocated."""
+    with pytest.raises(ValueError, match="rhs_columns"):
+        factorize([[1.0]], rhs_columns=width)
 
 
 @pytest.mark.parametrize("backend", ["pypardiso", "petsc", "petsc-symmetric"])
@@ -731,6 +959,25 @@ def test_native_cudss_indefinite_multiple_rhs() -> None:
     matrix = sparse.csr_matrix([[2.0, -1, 1], [-1, 2, 1], [1, 1, 0]])
     expected = np.column_stack((np.arange(1.0, 4.0), [-1.0, 0.5, 2.0]))
     assert_allclose(solve_linear(matrix, matrix @ expected, solver="cudss"), expected, atol=1e-12)
+
+
+@pytest.mark.gpu
+def test_native_cudss_matrix_rhs_and_device_restoration() -> None:
+    """Exercise one full matrix RHS, padded reuse and cleanup across CUDA devices."""
+    cupy = pytest.importorskip("cupy")
+    pytest.importorskip("nvmath.sparse.advanced")
+    if cupy.cuda.runtime.getDeviceCount() < 2:
+        pytest.skip("two CUDA devices required")
+    matrix = sparse.csr_matrix([[2.0, -1.0, 1.0], [-1.0, 2.0, 1.0], [1.0, 1.0, 0.0]])
+    with cupy.cuda.Device(0):
+        factor = factorize(matrix, solver="cudss", rhs_columns=5)
+    with cupy.cuda.Device(1):
+        with factor:
+            for width in (5, 1, 7):
+                exact = np.arange(3.0 * width).reshape(3, width)
+                assert_allclose(factor.solve(matrix @ exact), exact, atol=1e-12)
+                assert cupy.cuda.runtime.getDevice() == 1
+        assert cupy.cuda.runtime.getDevice() == 1
 
 
 @pytest.mark.parametrize("format", ["csr", "csc", "coo", "lil", "dok", "dia", "bsr"])

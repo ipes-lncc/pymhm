@@ -10,6 +10,7 @@ The selected detailed pages provide additional evidence:
 
 | Case | Verified scope | Scientific limit |
 | --- | --- | --- |
+| [RAD and Brinkman layers](introduction-layers.md) | Declared local/global UFL forms, resolution studies and independent native hybrid-system checks | Scalar layer resolution and Brinkman polynomial-family rates are distinct from algebraic residuals; historical mesh connectivity is not recovered |
 | [Recursive MHM](nested.md) | Ten analytical cases; equivalence to their complete leaf systems, independent assembly and literal basis replay | The recursive construction is not a reproduction of a historical mesh |
 | [MHM–MsHHO](mshho.md) | Five refinements and four contrasts; physical fields and original equations in the stated local spaces | Equivalence depends on source and space hypotheses; finite cases do not prove uniform inf-sup stability |
 | [Quarter-five spot and obstacle](quarter-five-spot.md) | Six point-well cases, independent mixed assemblies, and four classical obstacle refinements | The obstacle reference remains a numerical approximation with a nonzero refinement increment |

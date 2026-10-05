@@ -6,9 +6,9 @@ from typing import Any, cast
 import numpy as np
 from scipy import sparse
 
-from pymhm._legacy.models.flow.solver import _laplacian_inverse_bound
 from pymhm.core.validation import FloatArray, positive_int
 from pymhm.core.validation import real_array as _real
+from pymhm.fem.inequalities import laplacian_inverse_bound
 from pymhm.fem.scalar.tetrahedron import (
     tetra_element_tabulate,
     tetra_tabulate,
@@ -234,7 +234,7 @@ def tetra_flow_operators(
         diameters = np.max(
             np.linalg.norm(vertices[:, :, None] - vertices[:, None, :], axis=-1), axis=(1, 2)
         )
-        inverse = _laplacian_inverse_bound(gradient, hessian, weights, diameters)
+        inverse = laplacian_inverse_bound(gradient, hessian, weights, diameters)
         viscous = 4 * nu / inverse
         eigenvalues = np.linalg.eigvalsh(resistance)
         if formulation == "oseen":

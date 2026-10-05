@@ -1,0 +1,96 @@
+{
+  "schema": "pymhm.introduction.process-execution-validation.v1",
+  "source_notebook": "notebooks/introduction/darcy_process_scalability.ipynb",
+  "source_notebook_sha256": "7fccf9f73578314f36242533339551f54d94c5a238effd0117bca8748b458269",
+  "executed_notebook_sha256": "85ddfac022fc0f5a63f0957ff9369e955daa4667a33948bb0c2a58fc122466d2",
+  "all_61_cells_match_the_frozen_literal_source": true,
+  "all_41_code_cells_executed_without_error": true,
+  "source_outputs_empty": true,
+  "lockfile_sha256": "c54e433e408e8345516023d96526b305d09452a55d53c018ea6ea529535df9fd",
+  "runtime_owner_files": 175,
+  "runtime_owner_hashes_unchanged_and_match_measurements": true,
+  "started_utc": "2026-10-04T21:36:38Z",
+  "finished_utc": "2026-10-04T22:32:07Z",
+  "campaign_counts": {
+    "strong_warmup": 7,
+    "strong_samples": 21,
+    "crossover_warmup": 4,
+    "crossover_samples": 12,
+    "weak_warmup": 12,
+    "weak_samples": 36
+  },
+  "mhm_states_validated_after_timer": 44,
+  "maximum_pressure_coefficient_difference": 2.220446049250313e-16,
+  "maximum_original_local_rows_relative_L2": 2.609532863502879e-12,
+  "maximum_global_compatibility_residual": 1.8583561137093524e-16,
+  "coefficient_replay_blas_threads": [
+    1,
+    2
+  ],
+  "primary_physical_native_basis_replay_blas_threads": [
+    1,
+    2
+  ],
+  "additional_physical_native_basis_replay_checked_separately": true,
+  "large_replay_archive_sha256": {
+    "fields_and_executed_bases.npz": "459ead6388b6f36de7e4c5efa49bb6421e3e3a8a782dd79612acc5701707036a",
+    "weak_L1_fields_and_bases.npz": "2b89b2a91c8a6ffa771be3a912f0bd24e1ee14fa70452f52b5d3ee3e0f98ebc2",
+    "weak_L4_fields_and_bases.npz": "62dc2f0b9076b478f51765719c9947309d7c2a17b7979eec7f6bd4cc85e6511f",
+    "weak_L8_fields_and_bases.npz": "c10449084b358f446b58e1fa7669cad6f37c48a50cfeea45863ca1eadf9f54ab",
+    "weak_L16_fields_and_bases.npz": "c9d72e5b3aba8a9303680f726106e8d94d4dde9213fa7e645b732ebc9d468083",
+    "crossover_fields_and_bases.npz": "6edb6b08e3db0935326659462654da9f9498f5837f195705e2dd11ca5db89a53"
+  },
+  "figures": {
+    "flux_fields.png": {
+      "sha256": "e007c0c24448baae68051be917ce6c364576a67233f70fada6647abdd0cdba30",
+      "pixels": [
+        2040,
+        4080
+      ]
+    },
+    "pressure_fields.png": {
+      "sha256": "1040c5df4f2e2442de33a520ebbfda0a512b6d67baaef486d238ec37e7273259",
+      "pixels": [
+        2040,
+        4080
+      ]
+    },
+    "reference_refinement_errors.png": {
+      "sha256": "2a814f3f4e04c581ffded43700c037b81b29e0578dee12575f176b62d5ab3d77",
+      "pixels": [
+        1870,
+        1360
+      ]
+    },
+    "strong_and_weak_scaling.png": {
+      "sha256": "522f15be067f7d8083dd0db7fab018395e005feecae8c7d6d65110b41204218a",
+      "pixels": [
+        2720,
+        816
+      ]
+    },
+    "strong_stage_costs.png": {
+      "sha256": "ccc4ebe9332c4fcd4c8977bea6f205b7e42404083eedb77b3e766d216b5247e8",
+      "pixels": [
+        2040,
+        850
+      ]
+    },
+    "weak_efficiency_and_physical_errors.png": {
+      "sha256": "26acd526d5fd402a3afc7a8e3b1da27828f8d9276ad4101c379282c67a9023dd",
+      "pixels": [
+        2720,
+        782
+      ]
+    },
+    "workload_crossover.png": {
+      "sha256": "a3f863005e61d5a23f92dfbebd25d9b73cdeaab9d7f34a9be8e04ed9ae6c3e05",
+      "pixels": [
+        2040,
+        765
+      ]
+    }
+  },
+  "figure_inspection": "All seven final PNGs inspected; field panels include the actual macro mesh and independent colorbars",
+  "publication_copy": "Exact JSON and PNG copies; drivers and large numerical arrays remain outside the published result directory"
+}

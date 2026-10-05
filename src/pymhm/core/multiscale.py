@@ -141,6 +141,12 @@ class _Provider(Generic[Item]):
     compiler: FormCompiler
     solvers: SolverConfig
 
+    def close(self) -> None:
+        """Release an application's reusable local workspaces after execution."""
+        close = getattr(self.provider, "close", None)
+        if callable(close):
+            close()
+
     def __call__(self, item: Item) -> LocalAssembly:
         """Return one checked local operator with coefficient-only reconstruction data."""
         supplied = self.provider(item)
@@ -201,15 +207,12 @@ def _contribution(
     response: LocalResponse, record: _CellRecord, coarse_dofs: IntArray
 ) -> tuple[IntArray, FloatArray, FloatArray]:
     """Add D and g to this cell's Schur block before ordered shared-face reduction."""
-    indices, matrix, load = local_global_contribution(response, coarse_dofs)
-    count = len(response.problem.trace_dofs)
     direct = record.equations
-    dtype = np.result_type(matrix, direct.matrix, load, direct.load)
-    matrix = matrix.astype(dtype, copy=True)
-    load = load.astype(dtype, copy=True)
-    matrix[:count, :count] += direct.matrix
-    load[:count] += direct.load
-    return indices, matrix, load
+    indices, matrix, load = local_global_contribution(
+        response, coarse_dofs, direct_matrix=direct.matrix, direct_load=direct.load
+    )
+    dtype = np.result_type(matrix, load)
+    return indices, matrix.astype(dtype, copy=False), load.astype(dtype, copy=False)
 
 
 class MultiscaleSystem(HybridSystem):
@@ -435,7 +438,12 @@ def assemble(
     provider = _Provider(problem.local_provider, problem.compiler, solvers)
     hybrid = assemble_hybrid(
         HybridProblem(
-            layout, provider, problem.items, _contribution, require_local_trace_coverage=False
+            layout,
+            provider,
+            problem.items,
+            _contribution,
+            require_local_trace_coverage=False,
+            contribution_execution="worker",
         ),
         execution=execution,
         solvers=solvers,
