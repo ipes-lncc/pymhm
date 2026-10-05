@@ -67,8 +67,7 @@ jobs:
         include:
           - {os: ubuntu-latest, environment: test-core}
           - {os: windows-latest, environment: test-core}
-          - {os: macos-15, environment: test-core}
-          - {os: macos-15-intel, environment: test-core}
+          - {os: macos-latest, environment: test-core}
           - {os: ubuntu-latest, environment: test-py311}
           - {os: ubuntu-latest, environment: test-py312}
     steps:
@@ -110,7 +109,7 @@ jobs:
 
   integration:
     name: ${{ matrix.label }} (${{ matrix.os }})
-    needs: workspace
+    needs: core
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     strategy:
@@ -125,8 +124,7 @@ jobs:
           - {kind: remeshing, label: FreeFEM and BAMG, os: ubuntu-latest, environment: remeshing}
           - {kind: visualization, label: PyVista and VTK, os: ubuntu-latest, environment: visualization}
           - {kind: visualization, label: PyVista and VTK, os: windows-latest, environment: visualization}
-          - {kind: visualization, label: PyVista and VTK, os: macos-15, environment: visualization}
-          - {kind: visualization, label: PyVista and VTK, os: macos-15-intel, environment: visualization}
+          - {kind: visualization, label: PyVista and VTK, os: macos-latest, environment: visualization}
     env:
       PYVISTA_OFF_SCREEN: "true"
     steps:

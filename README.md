@@ -215,8 +215,9 @@ requires a Linux CUDA host with two NVIDIA devices. Its pinned AmgX setup and
 mandatory dependency checks are described in the [development guide](docs/development.md).
 Both suites use all available CPU workers and isolate tests marked `serial`.
 
-CI enforces at least 99% line and branch coverage independently. Executable
-notebooks and analytical PDE examples are available in the repository. Optional
+CI enforces at least 99% line and branch coverage independently on Linux x86-64,
+Windows x86-64 and macOS Apple Silicon (ARM64). Executable notebooks and
+analytical PDE examples are available in the repository. Optional
 dependency contracts and actual native-backend integrations are reported separately.
 
 Dedicated [Tests](https://github.com/volpatto/pymhm/actions/workflows/tests.yml),

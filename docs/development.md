@@ -105,10 +105,11 @@ The workflows use Pixi 0.76.2 and the checked-in lockfiles. Locked workspace
 validation checks both the package and separate AmgX toolchain without installing
 their environments.
 
-The Tests portable matrix uses `test-core` on Linux, Windows and both macOS
-architectures, with additional Python 3.11 and 3.12 jobs on Linux. The integration
-matrix exercises FEniCS/PETSc, MPI, meshing and FreeFEM on Linux, PARDISO on Linux
-and Windows, and PyVista/VTK on all four platforms. Every portable coverage job
+The Tests portable matrix uses `test-core` on Linux x86-64, Windows x86-64 and
+macOS Apple Silicon (ARM64), with additional Python 3.11 and 3.12 jobs on Linux.
+The Integration matrix starts only after every Core matrix job succeeds. It
+exercises FEniCS/PETSc, MPI, meshing and FreeFEM on Linux, PARDISO on Linux
+and Windows, and PyVista/VTK on those three CI targets. Every portable coverage job
 enforces the independent 99% line and branch gates.
 
 The complete CPU/GPU job is an explicit opt-in: dispatch Tests with `full_native`

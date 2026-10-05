@@ -126,9 +126,12 @@ of a particular graphics device. The package does not start displays or install
 system libraries at import time.
 
 The four-platform lockfile resolves Linux, Windows and both macOS architectures.
-CI is configured to exercise native conversion, VTI/VTU round trips, structured ordering and
-actual offscreen images. Portable unit tests also inspect data contracts without
-VTK; those checks are distinct from the native rendering tests.
+CI is configured to exercise native conversion, VTI/VTU round trips, structured
+ordering and actual offscreen images on Linux x86-64, Windows x86-64 and macOS
+Apple Silicon (ARM64).
+The macOS x86-64 resolution is available for local checkout use, without automatic
+CI qualification. Portable unit tests also inspect data contracts without VTK;
+those checks are distinct from the native rendering tests.
 
 ```bash
 pixi run -e visualization test-visualization

@@ -19,8 +19,9 @@ pixi run --locked -e test-core build
 pixi run --locked -e test-core check-dist
 ```
 
-These portable checks run on Linux, Windows and macOS. Full native acceptance
-uses the Linux CUDA `test` environment, including two-device GPU tests,
+CI runs these portable checks on Linux x86-64, Windows x86-64 and macOS Apple
+Silicon (ARM64). Full native acceptance uses the Linux CUDA `test` environment,
+including two-device GPU tests,
 FEniCS/PETSc, PARDISO, meshing, visualization and FreeFEM integrations. Follow
 [the development guide](docs/development.md) to prepare AmgX, check every required
 dependency and run the complete suite. Both suites use all available CPU workers;

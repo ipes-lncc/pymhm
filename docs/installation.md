@@ -22,8 +22,10 @@ pixi run -e docs docs-check
 
 The `test-core` environment contains the portable test and development tools.
 The lockfile resolves Linux x86-64, Windows x86-64, macOS x86-64 and macOS ARM64
-for the portable environments. A Linux run does not substitute for the native
-Windows/macOS CI jobs.
+for the portable environments. CI runs on Linux x86-64, Windows x86-64 and macOS
+Apple Silicon (ARM64). The macOS x86-64 resolution is available for local checkout
+use; it is not an automatically tested CI target. A Linux run does not substitute
+for the native Windows/macOS CI jobs.
 
 ```bash
 python -m pip install .
@@ -109,7 +111,8 @@ backends. See [development](development.md) for selectors and coverage policy.
 
 In CI, this complete profile runs only when the Tests workflow is manually
 dispatched with `full_native` enabled on the configured two-GPU runner. Portable
-and CPU integration jobs run independently after the shared lockfile checks.
+Core jobs run after the shared lockfile checks; the Integration matrix waits for
+every Core job to succeed.
 Tests, Lint and Quality, and Docs have dedicated workflows for pull requests and
 main-branch pushes; the release workflow reuses their checks before publishing.
 

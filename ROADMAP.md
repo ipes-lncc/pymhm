@@ -408,6 +408,10 @@ figuras e inspeção MathJax permanecem verificações separadas.
 
 Nos alvos portáteis, executar `test-core`, `test-py311` e `test-py312` conforme a
 matriz de plataformas; essas execuções não substituem as integrações nativas.
+A CI cobre Linux x86-64, Windows x86-64 e macOS Apple Silicon (ARM64). A resolução
+macOS x86-64 permanece disponível no lockfile para uso local, sem validação
+automática nesse alvo.
+
 Para notebooks UFL, usar `introduction`; para as demais campanhas, o perfil
 indicado na página do caso. Executar os notebooks afetados com `notebooks-run`
 e atualizar seus catálogos. Não exigir campanhas pesadas não afetadas em cada mudança.
