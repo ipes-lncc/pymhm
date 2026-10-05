@@ -798,6 +798,7 @@ def test_native_petsc_brinkman_saddle_and_pressure_gauge(formulation: str, drag:
     assert result.hybrid.residual < 1e-12
 
 
+@pytest.mark.serial
 @pytest.mark.gpu
 @pytest.mark.parametrize("backend", ["cupy", "cudss"])
 def test_native_optional_gpu_integration(backend: str) -> None:
@@ -1018,6 +1019,7 @@ def test_simulated_prepared_amgx_rejects_complex_rhs(simulated_amgx: Any) -> Non
         prepared.solve([1j, 0])
 
 
+@pytest.mark.serial
 @pytest.mark.gpu
 def test_native_optional_amgx_integration() -> None:
     """Exercise native GPU AMG when an AmgX/pyamgx installation is provided."""
@@ -1027,6 +1029,7 @@ def test_native_optional_amgx_integration() -> None:
     assert_allclose(matrix @ solve_linear(matrix, rhs, solver="amgx"), rhs, atol=1e-9)
 
 
+@pytest.mark.serial
 @pytest.mark.gpu
 def test_native_amgx_scaled_rhs_original_residual_and_reuse() -> None:
     """Native AMG preserves tiny loads, zero loads and fixed-operator true corrections."""
@@ -1040,6 +1043,7 @@ def test_native_amgx_scaled_rhs_original_residual_and_reuse() -> None:
         assert_allclose(prepared.solve(rhs[:, 1]), result[:, 1], rtol=1e-8, atol=0)
 
 
+@pytest.mark.serial
 @pytest.mark.gpu
 def test_native_cudss_indefinite_multiple_rhs() -> None:
     """Verify a zero-diagonal saddle block with cuDSS matching and refinement."""
@@ -1050,6 +1054,7 @@ def test_native_cudss_indefinite_multiple_rhs() -> None:
     assert_allclose(solve_linear(matrix, matrix @ expected, solver="cudss"), expected, atol=1e-12)
 
 
+@pytest.mark.serial
 @pytest.mark.gpu
 def test_native_cudss_matrix_rhs_and_device_restoration() -> None:
     """Exercise one full matrix RHS, padded reuse and cleanup across CUDA devices."""
@@ -1232,7 +1237,9 @@ def test_refinement_rejects_invalid_correction(bad: np.ndarray) -> None:
         ("pypardiso", "pypardiso"),
         ("pypardiso-symmetric", "pypardiso"),
         ("pypardiso-symmetric-matching", "pypardiso"),
-        pytest.param("cudss", "nvmath.sparse.advanced", marks=pytest.mark.gpu),
+        pytest.param(
+            "cudss", "nvmath.sparse.advanced", marks=[pytest.mark.gpu, pytest.mark.serial]
+        ),
     ],
 )
 def test_high_contrast_rt0_neumann_lifts_preserve_strict_residuals(

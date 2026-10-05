@@ -175,6 +175,7 @@ def test_simulated_gpu_amg_reuse_and_invalid_vector(simulated_amgx):
     assert events.count("destroy") == 6
 
 
+@pytest.mark.serial
 @pytest.mark.gpu
 def test_native_gpu_amg_saddle_fields():
     pytest.importorskip("pyamgx")

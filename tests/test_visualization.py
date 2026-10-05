@@ -323,6 +323,7 @@ def test_native_structured_cell_centers_and_vtk_export(tmp_path, shape):
     assert_array_equal(loaded.cell_data["pymhm:macro_cell"], broken.cell_data["pymhm:macro_cell"])
 
 
+@pytest.mark.serial
 @pytest.mark.visualization
 def test_native_offscreen_rendering_preserves_input_and_closes(tmp_path):
     """Produce an actual nonblank VTK image, with macro geometry kept separate."""
@@ -345,6 +346,7 @@ def test_native_offscreen_rendering_preserves_input_and_closes(tmp_path):
         plotter.close()
 
 
+@pytest.mark.serial
 @pytest.mark.visualization
 def test_native_reservoir_slice_and_three_dimensional_view(tmp_path):
     """Render a physical 3D reservoir block and preserve cell data on a slice."""

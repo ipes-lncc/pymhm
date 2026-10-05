@@ -44,6 +44,21 @@ def solution() -> MsHHOSolution:
     )
 
 
+@pytest.fixture(scope="module")
+def captured_arrays(solution: MsHHOSolution) -> dict[str, np.ndarray]:
+    """Capture the executed P3 tables once independently of reader corruption tests."""
+    arrays = {name: value.copy() for name, value in field_arrays(solution, 4).items()}
+    for value in arrays.values():
+        value.setflags(write=False)
+    return arrays
+
+
+@pytest.fixture
+def executed_arrays(captured_arrays: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
+    """Keep each reader's writable arrays separate from the immutable acquisition."""
+    return {name: value.copy() for name, value in captured_arrays.items()}
+
+
 def sources() -> dict[str, str]:
     """Use an actual checked-in lock and numerical owner in the fixture contract."""
     return current_source_manifest(
@@ -51,9 +66,11 @@ def sources() -> dict[str, str]:
     )
 
 
-def test_affine_pressure_gradient_physical_flux_and_thread_replay(solution: MsHHOSolution) -> None:
+def test_affine_pressure_gradient_physical_flux_and_thread_replay(
+    solution: MsHHOSolution, executed_arrays: dict[str, np.ndarray]
+) -> None:
     """Actual archived tables preserve one-sided physical fields across BLAS counts."""
-    arrays = field_arrays(solution, 4)
+    arrays = executed_arrays
     validate_arrays(arrays)
     with threadpool_limits(1):
         first = [replay(arrays, cell) for cell in range(len(solution.local))]
@@ -68,9 +85,11 @@ def test_affine_pressure_gradient_physical_flux_and_thread_replay(solution: MsHH
             assert np.array_equal(a, b)
 
 
-def test_coherent_sign_change_of_executed_moment_basis(solution: MsHHOSolution) -> None:
+def test_coherent_sign_change_of_executed_moment_basis(
+    solution: MsHHOSolution, executed_arrays: dict[str, np.ndarray]
+) -> None:
     """Stored matrices and their coordinates transform together; physical fields agree."""
-    arrays = field_arrays(solution, 4)
+    arrays = executed_arrays
     altered = {name: value.copy() for name, value in arrays.items()}
     altered.update(precision_fields("face_moments", -restore(arrays, "face_moments")))
     for cell in range(len(solution.local)):
@@ -88,10 +107,10 @@ def test_coherent_sign_change_of_executed_moment_basis(solution: MsHHOSolution) 
 
 @pytest.mark.parametrize("order", ["C", "F"])
 def test_archive_memory_layout_preserves_literal_field_replay(
-    solution: MsHHOSolution, order: str
+    solution: MsHHOSolution, executed_arrays: dict[str, np.ndarray], order: str
 ) -> None:
     """C/F storage of identical archived numbers preserves extended contractions."""
-    arrays = field_arrays(solution, 4)
+    arrays = executed_arrays
     altered = {name: np.array(value, order=order, copy=True) for name, value in arrays.items()}
     validate_arrays(altered)
     with threadpool_limits(1):
@@ -103,9 +122,11 @@ def test_archive_memory_layout_preserves_literal_field_replay(
             np.testing.assert_array_equal(a, b)
 
 
-def test_coherent_nodal_permutation(solution: MsHHOSolution) -> None:
+def test_coherent_nodal_permutation(
+    solution: MsHHOSolution, executed_arrays: dict[str, np.ndarray]
+) -> None:
     """Actual nodes, matrices, coefficients and dof maps retain the same polynomial."""
-    arrays = field_arrays(solution, 4)
+    arrays = executed_arrays
     altered = {name: value.copy() for name, value in arrays.items()}
     for cell in range(len(solution.local)):
         permutation = np.arange(len(arrays[f"nodes_{cell}"]))[::-1]
@@ -160,7 +181,7 @@ def test_excluded_quadrature(solution: MsHHOSolution, order: int) -> None:
 
 
 def test_excluded_coefficients_coordinates_and_missing_sources(
-    solution: MsHHOSolution, tmp_path: Path
+    solution: MsHHOSolution, executed_arrays: dict[str, np.ndarray], tmp_path: Path
 ) -> None:
     """Invalid basis membership, geometry and actual numerical-source identities fail."""
     with pytest.raises(ValueError, match="source variant"):
@@ -169,7 +190,7 @@ def test_excluded_coefficients_coordinates_and_missing_sources(
     broken[0] = broken[0] + 1
     with pytest.raises(ValueError, match="energy reconstruction"):
         field_arrays(replace(solution, pressure=tuple(broken)), 4)
-    arrays = field_arrays(solution, 4)
+    arrays = executed_arrays
     arrays["nodes_0"][0] += 0.1
     with pytest.raises(ValueError, match="physical cardinal"):
         validate_arrays(arrays)
@@ -185,7 +206,9 @@ def test_excluded_coefficients_coordinates_and_missing_sources(
         )
 
 
-def test_excluded_digest_and_duplicate_output(solution: MsHHOSolution, tmp_path: Path) -> None:
+def test_excluded_digest_and_duplicate_output(
+    solution: MsHHOSolution, executed_arrays: dict[str, np.ndarray], tmp_path: Path
+) -> None:
     """Completed field bytes and output identities cannot be silently replaced."""
     path = tmp_path / "field.npz"
     write_field(path, solution, {}, acquisition_uuid="fixture", source_sha256=sources(), order=4)
@@ -198,13 +221,15 @@ def test_excluded_digest_and_duplicate_output(solution: MsHHOSolution, tmp_path:
     with pytest.raises(ValueError, match="archive digest"):
         read_field(path)
     with pytest.raises(ValueError, match="outside"):
-        replay(field_arrays(solution, 4), len(solution.local))
+        replay(executed_arrays, len(solution.local))
 
 
-def test_executed_cardinal_tables_against_native_basix(solution: MsHHOSolution) -> None:
+def test_executed_cardinal_tables_against_native_basix(
+    executed_arrays: dict[str, np.ndarray],
+) -> None:
     """Independently ordered native P3 values and derivatives match the persisted basis."""
     basix = pytest.importorskip("basix")
-    arrays = field_arrays(solution, 4)
+    arrays = executed_arrays
     element = basix.create_element(
         basix.ElementFamily.P, basix.CellType.triangle, 3, basix.LagrangeVariant.equispaced
     )
@@ -230,10 +255,10 @@ def test_executed_cardinal_tables_against_native_basix(solution: MsHHOSolution) 
     ],
 )
 def test_reject_changed_discrete_degree_and_quadrature_headers(
-    solution: MsHHOSolution, name: str, value: np.ndarray
+    executed_arrays: dict[str, np.ndarray], name: str, value: np.ndarray
 ) -> None:
     """A coefficient vector cannot silently change space or its integration rule."""
-    arrays = field_arrays(solution, 4)
+    arrays = executed_arrays
     arrays[name] = value
     with pytest.raises(ValueError):
         validate_arrays(arrays)
@@ -249,27 +274,29 @@ def test_reject_changed_discrete_degree_and_quadrature_headers(
     ],
 )
 def test_reject_incompatible_physical_evaluation_maps(
-    solution: MsHHOSolution, name: str, change: float
+    executed_arrays: dict[str, np.ndarray], name: str, change: float
 ) -> None:
     """Invalid physical maps cannot pass through a small algebraic moment residual."""
-    arrays = field_arrays(solution, 4)
+    arrays = executed_arrays
     arrays[name].fill(change)
     with pytest.raises(ValueError):
         validate_arrays(arrays)
 
 
 @pytest.mark.parametrize("name", ["executed_cardinal_values", "executed_cardinal_derivatives"])
-def test_reject_rehashed_cardinal_tables(solution: MsHHOSolution, name: str) -> None:
+def test_reject_rehashed_cardinal_tables(executed_arrays: dict[str, np.ndarray], name: str) -> None:
     """A checksum update cannot change the declared P3 physical interpolation map."""
-    arrays = field_arrays(solution, 4)
+    arrays = executed_arrays
     arrays[name].flat[0] += 0.1
     with pytest.raises(ValueError, match="declared Pk"):
         validate_arrays(arrays)
 
 
-def test_both_original_saddles_for_anisotropic_affine_boundary(solution: MsHHOSolution) -> None:
+def test_both_original_saddles_for_anisotropic_affine_boundary(
+    solution: MsHHOSolution, executed_arrays: dict[str, np.ndarray]
+) -> None:
     """Both methods retain pressure and physical outward traces on the complete patch."""
-    arrays = field_arrays(solution, 4)
+    arrays = executed_arrays
     dual = solve_darcy(
         solution.skeleton.mesh,
         skeleton=solution.skeleton,

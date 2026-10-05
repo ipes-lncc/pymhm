@@ -282,6 +282,7 @@ def test_native_export_failure_releases_factors_and_options(
     _assert_petsc_released(handles, options, expected)
 
 
+@pytest.mark.serial
 @pytest.mark.fem
 @pytest.mark.mpi
 @pytest.mark.parametrize("ranks", [2, 4])

@@ -138,7 +138,7 @@ def test_direct_reconstruction_reuses_caller_owned_factor() -> None:
 
 def test_extended_combined_source_and_archived_coordinates_are_preserved() -> None:
     if np.finfo(np.longdouble).eps >= np.finfo(float).eps:
-        return
+        pytest.skip("extended reconstruction requires a wider native mantissa")
     epsilon = np.longdouble(2) ** -60
     problem = LocalProblem([[1]], [[1]], [1], np.array([0]))
     result = problem.reconstruct(np.array([1 - epsilon]), [], refinement_precision="extended")

@@ -101,6 +101,7 @@ addopts = "-ra --strict-config --strict-markers"
 testpaths = ["tests"]
 pythonpath = ["."]
 markers = [
+  "serial: requires exclusive execution after all xdist workers have exited",
   "fem: requires the DOLFINx finite element backend",
   "mpi: requires an MPI execution environment",
   "gpu: requires a compatible GPU and optional solver packages",

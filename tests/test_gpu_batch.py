@@ -531,6 +531,7 @@ def test_resident_assembly_invalid_contracts(
         gpu.assemble_p1_batch(points, cells, **kwargs)
 
 
+@pytest.mark.serial
 @pytest.mark.gpu
 @pytest.mark.parametrize("device_id", [0, 1])
 def test_native_factorization_device_switch_and_resource_release(device_id: int) -> None:
@@ -567,6 +568,7 @@ def test_native_factorization_device_switch_and_resource_release(device_id: int)
     prepared.close()
 
 
+@pytest.mark.serial
 @pytest.mark.gpu
 @pytest.mark.parametrize("devices", [(0,), (0, 1)])
 def test_native_multi_gpu_mixed_sizes_original_operator_and_physical_gauge(devices) -> None:
@@ -623,6 +625,7 @@ def test_native_multi_gpu_mixed_sizes_original_operator_and_physical_gauge(devic
         assert_allclose(response.problem.load, original[2], atol=0.0)
 
 
+@pytest.mark.serial
 @pytest.mark.gpu
 def test_native_multi_gpu_large_sparse_grid_repeated_condensation(monkeypatch) -> None:
     """Repeat two-device sparse Q1 saddles with 21 RHS and a nonzero physical mean.
@@ -731,6 +734,7 @@ def test_native_multi_gpu_large_sparse_grid_repeated_condensation(monkeypatch) -
             assert_allclose(cp.asnumpy(sentinel), device + 2.0, atol=0.0)
 
 
+@pytest.mark.serial
 @pytest.mark.gpu
 def test_native_gpu_batched_condensation_and_resident_repeated_rhs() -> None:
     """Exercise actual cuBLAS batches and MHM condensation on a visible CUDA device."""

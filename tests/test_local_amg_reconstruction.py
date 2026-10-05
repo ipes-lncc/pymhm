@@ -199,7 +199,10 @@ def test_amg_projected_source_preserves_cancelled_compatibility_moment(
     assert len(pinned) == 4
 
 
-@pytest.mark.parametrize("solver", ["pyamg", "amgx"])
+@pytest.mark.parametrize(
+    "solver",
+    ["pyamg", pytest.param("amgx", marks=[pytest.mark.gpu, pytest.mark.serial])],
+)
 def test_native_amg_neumann_reconstruction_matches_original_kkt(solver: str) -> None:
     """Check native reconstruction, its columnwise error budget and independent KKT.
 

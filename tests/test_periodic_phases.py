@@ -1,6 +1,7 @@
 """Executed constant kernels and oriented coefficients replay cellwise Q1 Darcy."""
 
 import json
+import shutil
 import subprocess
 import sys
 import weakref
@@ -31,6 +32,38 @@ def _acquisition(directory, threads=1, precision="double"):
         native_threads=threads,
         refinement_precision=precision,
     )
+
+
+@pytest.fixture(scope="module")
+def completed_snapshots(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Path]:
+    """Acquire each supported precision once for read-only replay test setup.
+
+    Every consumer copies the entire completed tree before loading a run, so
+    replays and corruptions exercise independent files and coefficient records.
+    Partial-stage, native-lifetime and independent producer checks create their
+    own acquisitions instead of using these completed snapshots.
+    """
+    snapshots = {}
+    precisions = ["double"]
+    if np.finfo(np.longdouble).eps < np.finfo(float).eps:
+        precisions.append("extended")
+    for precision in precisions:
+        acquisition = _acquisition(
+            tmp_path_factory.mktemp(f"periodic-{precision}"), precision=precision
+        )
+        acquisition.condense()
+        acquisition.solve()
+        acquisition.reconstruct()
+        snapshots[precision] = acquisition.directory
+    return snapshots
+
+
+def _copied_acquisition(
+    tmp_path: Path, snapshots: dict[str, Path], precision: str = "double"
+) -> PeriodicAcquisition:
+    """Return a new run and manifest over byte-identical private executed archives."""
+    shutil.copytree(snapshots[precision], tmp_path, dirs_exist_ok=True)
+    return _acquisition(tmp_path, precision=precision)
 
 
 @pytest.mark.parametrize("precision", ["double", "extended"])
@@ -88,14 +121,11 @@ def test_phases_match_original_operator_rhs_fields_and_macro_balance(tmp_path, p
 @pytest.mark.parametrize("threads", [1, 2])
 @pytest.mark.parametrize("precision", ["double", "extended"])
 def test_replay_uses_executed_basis_across_threads_and_equivalent_nullspace_rotation(
-    tmp_path, monkeypatch, threads, precision
+    tmp_path, completed_snapshots, monkeypatch, threads, precision
 ):
     if precision == "extended" and np.finfo(np.longdouble).eps >= np.finfo(float).eps:
         pytest.skip("requires wider accumulation")
-    acquisition = _acquisition(tmp_path, precision=precision)
-    acquisition.condense()
-    acquisition.solve()
-    acquisition.reconstruct()
+    _copied_acquisition(tmp_path, completed_snapshots, precision)
     path = tmp_path / "mhm-2-r4-s2.npz"
     with np.load(path) as data:
         original = data["fields"].copy()
@@ -122,13 +152,10 @@ def test_replay_uses_executed_basis_across_threads_and_equivalent_nullspace_rota
 
 
 def test_replay_uses_archived_retained_matrix_without_materializing_trace_lifts(
-    tmp_path, monkeypatch
+    tmp_path, completed_snapshots, monkeypatch
 ):
     """The second pass uses the archived E and solves only actual combined sources."""
-    acquisition = _acquisition(tmp_path)
-    acquisition.condense()
-    acquisition.solve()
-    acquisition.reconstruct()
+    acquisition = _copied_acquisition(tmp_path, completed_snapshots)
     path = tmp_path / "mhm-2-r4-s1.npz"
     with np.load(path) as data:
         expected = data["fields"].copy()
@@ -252,11 +279,10 @@ def test_cell_and_coefficient_hashes_are_verified(tmp_path):
 @pytest.mark.parametrize(
     "change", ["kernel", "signs", "fields", "residual", "configuration", "field_dtype", "precision"]
 )
-def test_final_field_contract_detects_basis_orientation_and_array_mismatches(tmp_path, change):
-    acquisition = _acquisition(tmp_path)
-    acquisition.condense()
-    acquisition.solve()
-    acquisition.reconstruct()
+def test_final_field_contract_detects_basis_orientation_and_array_mismatches(
+    tmp_path, completed_snapshots, change
+):
+    _copied_acquisition(tmp_path, completed_snapshots)
     path = tmp_path / "mhm-2-r4-s1.npz"
     manifest = path.with_suffix(".json")
     record = json.loads(manifest.read_text())
@@ -382,11 +408,10 @@ def test_each_cell_releases_volumetric_lifts_before_the_next_factorization(tmp_p
 
 
 @pytest.mark.parametrize("changed", ["coefficient", "epsilon", "source", "boundary", "provenance"])
-def test_manifested_pressure_cannot_use_a_different_material_or_physical_case(tmp_path, changed):
-    acquisition = _acquisition(tmp_path)
-    acquisition.condense()
-    acquisition.solve()
-    acquisition.reconstruct()
+def test_manifested_pressure_cannot_use_a_different_material_or_physical_case(
+    tmp_path, completed_snapshots, changed
+):
+    _copied_acquisition(tmp_path, completed_snapshots)
     path = tmp_path / "mhm-2-r4-s1.npz"
     manifest = path.with_suffix(".json")
     record = json.loads(manifest.read_text())
@@ -442,12 +467,9 @@ def test_actual_original_equation_correction_is_archived_and_replayed(
     )
 
 
-def test_ordered_correction_record_digest_is_checked_before_replay(tmp_path):
+def test_ordered_correction_record_digest_is_checked_before_replay(tmp_path, completed_snapshots):
     """A corrupted executed initial record cannot be replaced by a fresh conditional solve."""
-    acquisition = _acquisition(tmp_path)
-    acquisition.condense()
-    acquisition.solve()
-    acquisition.reconstruct()
+    acquisition = _copied_acquisition(tmp_path, completed_snapshots)
     values = acquisition.record["refinement"]["records"]["initial-0-cell-0"]
     path = acquisition.cell_directory / "original-refinement" / values["archive"]
     path.write_bytes(path.read_bytes() + b"corruption")
@@ -456,12 +478,9 @@ def test_ordered_correction_record_digest_is_checked_before_replay(tmp_path):
     assert not list(tmp_path.rglob("*.part"))
 
 
-def test_declared_portable_field_components_are_validated(tmp_path):
+def test_declared_portable_field_components_are_validated(tmp_path, completed_snapshots):
     """Consumers verify both native coefficients and their portable decomposition."""
-    acquisition = _acquisition(tmp_path)
-    acquisition.condense()
-    acquisition.solve()
-    acquisition.reconstruct()
+    _copied_acquisition(tmp_path, completed_snapshots)
     path = tmp_path / "mhm-2-r4-s1.npz"
     with np.load(path, allow_pickle=False) as data:
         arrays = {name: data[name] for name in data.files}

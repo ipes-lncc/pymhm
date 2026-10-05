@@ -29,8 +29,8 @@ from pymhm.methods.hho_3d import solve_mshho_3d
 PRECISION = "extended" if np.finfo(np.longdouble).nmant > np.finfo(float).nmant else "double"
 
 
-@pytest.fixture(params=("tetra", "cube"))
-def example(request):
+@pytest.fixture(scope="module", params=("tetra", "cube"))
+def captured_example(request):
     """Return the actual finite P2/P0 homogeneous solution and its complete tables."""
     tetra = request.param == "tetra"
     mesh = TetraMesh.unit_cube(1) if tetra else PolyhedralMesh.cubes(1)
@@ -41,7 +41,23 @@ def example(request):
         local_refinement=2 if tetra else 1,
         local_refinement_precision=PRECISION,
     )
-    return solution, field_arrays(solution, assembly_order=9, source=exact.source3d)
+    arrays = field_arrays(solution, assembly_order=9, source=exact.source3d)
+    captured = {name: value.copy() for name, value in arrays.items()}
+    for value in captured.values():
+        value.setflags(write=False)
+    return solution, captured
+
+
+@pytest.fixture
+def example(captured_example):
+    """Give each consumer its own dictionary of immutable executed tables.
+
+    Field readers consume the same independently acquired coefficients. Tests
+    that corrupt arrays explicitly copy them, so neither mutations nor section
+    keys can alter another test's numerical basis contract.
+    """
+    solution, arrays = captured_example
+    return solution, dict(arrays)
 
 
 def test_original_rows_csr_and_executed_energy(example):

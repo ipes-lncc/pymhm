@@ -170,6 +170,7 @@ def test_collective_error_contains_rank_and_diagnosis() -> None:
     np.testing.assert_array_equal(_values([1.0], 1, "input"), [1.0])
 
 
+@pytest.mark.serial
 @pytest.mark.mpi
 @pytest.mark.parametrize(
     "case",
@@ -518,6 +519,7 @@ def test_custom_compiler_wider_sparse_data_are_checked(simulated_petsc: Any) -> 
         )
 
 
+@pytest.mark.serial
 @pytest.mark.mpi
 @pytest.mark.parametrize("ranks", [1, 2])
 def test_native_variational_distributed_cpu(ranks: int) -> None:
@@ -525,6 +527,7 @@ def test_native_variational_distributed_cpu(ranks: int) -> None:
     _native_variational(ranks, gpu=False)
 
 
+@pytest.mark.serial
 @pytest.mark.mpi
 @pytest.mark.gpu
 @pytest.mark.parametrize("ranks", [1, 2])

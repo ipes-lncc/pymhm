@@ -30,10 +30,37 @@ pixi run -e docs docs-check
 pixi run -e test build
 ```
 
-The coverage task uses two test workers and one native numerical thread per
-worker. Each file's tests stay together; numerical tolerances and the two
-coverage thresholds are identical to a serial run. Larger literature campaigns
-run through their example commands, outside the CI test suite.
+The test tasks run two separate phases: tests without a `serial` mark use all
+CPUs available to the process by default, and `@pytest.mark.serial` tests run
+in a fresh pytest process after every worker has exited. The runner sets one native numerical thread per
+process by default. The `loadscope` scheduler keeps module fixtures on one worker,
+allowing independent
+checks to reuse expensive scientific acquisitions without sharing mutable data
+between processes. Serial marks are for shared native resources, exclusive
+subprocess campaigns and other tests that cannot overlap safely; computational
+cost alone does not require a serial mark.
+
+```bash
+pixi run -e test test
+pixi run -e test test --workers 8 -- -k conservation
+pixi run -e test test --distribution worksteal -- -m "not fem"
+```
+
+`PYMHM_TEST_WORKERS` or `--workers` can set a smaller worker count for resource
+planning; requested counts are capped to the CPUs available to the process,
+including Linux affinity restrictions. Direct
+`pytest -q` executes the whole selected suite sequentially. A direct xdist run
+must select `-m "not serial"`; attempting to distribute selected serial tests is
+an error. The phase filter respects user `-k` and `-m` selections. Requested
+JUnit XML reports receive `-parallel` and `-serial` filename suffixes so both
+results remain available.
+
+Coverage starts from fresh, separate measurements for the two phases and combines
+only successful phases. A failed parallel phase stops before the serial phase,
+and an incomplete run does not publish coverage reports. The independent line
+and branch thresholds remain **99%**, with unchanged numerical tolerances.
+Larger literature campaigns run through the problem notebooks outside the CI
+suite.
 
 The CI matrix exercises the core on native Linux, Windows and macOS runners and
 supported Python versions. Native FEniCS/PETSc and meshing jobs run on Linux;

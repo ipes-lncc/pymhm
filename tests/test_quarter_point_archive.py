@@ -34,11 +34,32 @@ def point_solution(formulation: str = "primal", *, refinement: int = 2, segments
     )
 
 
+@pytest.fixture(scope="module")
+def point_solutions():
+    """Acquire the two distinct point-source formulations once with physical gauges."""
+    return {formulation: point_solution(formulation) for formulation in ("primal", "mixed")}
+
+
+@pytest.fixture(scope="module")
+def point_fields(point_solutions):
+    """Capture each formulation's executed replay tables before any corruption test."""
+    result = {}
+    for formulation, solution in point_solutions.items():
+        arrays, record = point_field_arrays(solution)
+        captured = {name: value.copy() for name, value in arrays.items()}
+        for value in captured.values():
+            value.setflags(write=False)
+        result[formulation] = captured, record
+    return result
+
+
 @pytest.mark.parametrize("formulation", ["primal", "mixed"])
-def test_point_basis_replay_threads_and_original_saddle(tmp_path, formulation):
+def test_point_basis_replay_threads_and_original_saddle(
+    tmp_path, point_solutions, point_fields, formulation
+):
     """Actual archived matrices reproduce fields without recomputed orientations."""
-    solution = point_solution(formulation)
-    arrays, record = point_field_arrays(solution)
+    solution = point_solutions[formulation]
+    arrays, record = point_fields[formulation]
     assert record["original_saddle_relative_load_residual"] <= 1e-10
     assert abs(record["physical_pressure_integral"]) < 1e-10
     assert_allclose(arrays["point_sources"][:, 2].sum(), 0, atol=0)
@@ -64,10 +85,9 @@ def test_point_basis_replay_threads_and_original_saddle(tmp_path, formulation):
             replay_point_fields(damaged, record)
 
 
-def test_rt0_equivalent_rotated_executed_basis_replays_same_field():
+def test_rt0_equivalent_rotated_executed_basis_replays_same_field(point_fields):
     """Coefficient rotation is paired with the archived execution matrix."""
-    solution = point_solution("mixed")
-    arrays, record = point_field_arrays(solution)
+    arrays, record = point_fields["mixed"]
     rng = np.random.default_rng(17)
     width = arrays["flux_basis_values"].shape[2]
     rotation = np.linalg.qr(rng.standard_normal((width, width)))[0]
@@ -88,9 +108,9 @@ def test_rt0_equivalent_rotated_executed_basis_replays_same_field():
     assert_allclose(flux, arrays["flux_quadrature"], rtol=2e-14, atol=2e-14)
 
 
-def test_original_point_saddle_rejects_wrong_field_and_gauge():
+def test_original_point_saddle_rejects_wrong_field_and_gauge(point_solutions):
     """A reduced residual cannot certify inconsistent physical reconstruction."""
-    solution = point_solution()
+    solution = point_solutions["primal"]
     fields = list(solution.hybrid.fields)
     fields[0] = fields[0] + 1
     inconsistent = replace(
@@ -112,9 +132,9 @@ def test_original_point_saddle_rejects_wrong_field_and_gauge():
 
 
 @pytest.mark.parametrize("formulation", ["primal", "mixed"])
-def test_point_archive_rejects_coefficients_outside_checked_field(formulation):
+def test_point_archive_rejects_coefficients_outside_checked_field(point_solutions, formulation):
     """The equations must certify exactly the coefficients written to the archive."""
-    solution = point_solution(formulation)
+    solution = point_solutions[formulation]
     pressure = (solution.pressure[0] + 1, *solution.pressure[1:])
     with pytest.raises(ValueError, match="pressure coefficients"):
         point_field_arrays(replace(solution, pressure=pressure))
@@ -124,9 +144,9 @@ def test_point_archive_rejects_coefficients_outside_checked_field(formulation):
             point_field_arrays(replace(solution, flux=flux))
 
 
-def test_point_archive_requires_declared_local_and_trace_spaces():
+def test_point_archive_requires_declared_local_and_trace_spaces(point_solutions):
     """An archive cannot silently relabel other degrees, partitions or sources."""
-    solution = point_solution()
+    solution = point_solutions["primal"]
     with pytest.raises(ValueError, match="P2"):
         point_field_arrays(replace(solution, degree=1))
     with pytest.raises(ValueError, match="two local subdivisions"):

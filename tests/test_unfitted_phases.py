@@ -1,6 +1,7 @@
 """Original saddle acceptance, bounded local lifetime and executed-field replay."""
 
 import json
+import shutil
 import subprocess
 import sys
 import weakref
@@ -32,10 +33,10 @@ def acquisition(directory: Path, *, threads: int = 1, precision: str = "double")
     )
 
 
-@pytest.fixture
-def corrected_acquisition(tmp_path, monkeypatch):
+@pytest.fixture(scope="module")
+def corrected_snapshot(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """Inject a complementary arithmetic defect; preserve source, moments and spaces."""
-    run = acquisition(tmp_path)
+    run = acquisition(tmp_path_factory.mktemp("unfitted-corrected"))
     run.condense()
     run.solve()
     reconstruct = LocalProblem.reconstruct
@@ -48,12 +49,19 @@ def corrected_acquisition(tmp_path, monkeypatch):
             return pressure + np.asarray(1e-7, dtype=pressure.dtype) * direction[:, None]
         return pressure
 
-    with monkeypatch.context() as context:
+    with pytest.MonkeyPatch.context() as context:
         context.setattr(LocalProblem, "reconstruct", complementary)
         run.reconstruct()
     assert run.record["refinement"]["accepted"]
     assert 0 < run.record["refinement"]["steps"] <= 2
-    return run
+    return run.directory
+
+
+@pytest.fixture
+def corrected_acquisition(tmp_path: Path, corrected_snapshot: Path) -> owner.UnfittedAcquisition:
+    """Reload private corrected archives so mutation tests share no files or records."""
+    shutil.copytree(corrected_snapshot, tmp_path, dirs_exist_ok=True)
+    return acquisition(tmp_path)
 
 
 def rewrite_archive(path: Path, **arrays) -> str:
@@ -68,7 +76,7 @@ def rewrite_archive(path: Path, **arrays) -> str:
 @pytest.mark.parametrize("precision", ["double", "extended"])
 def test_two_pass_fields_match_full_shared_darcy_and_original_equations(tmp_path, precision):
     if precision == "extended" and np.finfo(np.longdouble).eps >= np.finfo(float).eps:
-        return
+        pytest.skip("requires a wider native long-double significand")
     run = acquisition(tmp_path, precision=precision)
     for stage in (run.condense, run.solve, run.reconstruct, run.norms):
         stage()

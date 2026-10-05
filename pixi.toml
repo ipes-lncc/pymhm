@@ -139,10 +139,10 @@ lint = { cmd = "ruff check src tests scripts benchmarks examples", depends-on = 
 format = "ruff format src tests scripts benchmarks examples"
 format-check = "ruff format --check src tests scripts benchmarks examples"
 typecheck = "mypy"
-test = "pytest -q"
-coverage-run = { cmd = "pytest -n 2 --dist=loadscope --cov=pymhm --cov-branch --cov-report=term-missing --cov-report=xml:build/reports/coverage/coverage.xml --cov-report=json:build/reports/coverage/coverage.json --cov-fail-under=99", env = { OMP_NUM_THREADS = "1", OPENBLAS_NUM_THREADS = "1", MKL_NUM_THREADS = "1", BLIS_NUM_THREADS = "1", VECLIB_MAXIMUM_THREADS = "1" } }
+test = "python scripts/run_tests.py"
+coverage-run = "python scripts/run_tests.py --coverage"
 test-cov = { cmd = "python scripts/check_coverage.py build/reports/coverage/coverage.json", depends-on = ["coverage-run"] }
-test-parallel = "pytest -q -n auto"
+test-parallel = "python scripts/run_tests.py"
 test-fem = "pytest -q -m fem"
 test-mpi = "pytest -q -m mpi"
 test-meshing = "pytest -q -m meshing"

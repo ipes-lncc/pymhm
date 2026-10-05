@@ -96,7 +96,9 @@ def test_hybrid_factory_and_darcy_preserve_local_extended_fields(backend: str) -
         ("scipy", "scipy"),
         ("pypardiso", "pypardiso"),
         pytest.param("petsc", "petsc4py", marks=pytest.mark.fem),
-        pytest.param("cudss", "nvmath.sparse.advanced", marks=pytest.mark.gpu),
+        pytest.param(
+            "cudss", "nvmath.sparse.advanced", marks=[pytest.mark.gpu, pytest.mark.serial]
+        ),
     ],
 )
 def test_native_direct_dispatch_preserves_requested_extended_precision(

@@ -38,6 +38,29 @@ def archive(path, refinement, degree, polynomial):
     np.savez(path, **arrays)
 
 
+@pytest.fixture(scope="module")
+def cardinal_solution():
+    """Acquire the P2/r2 model once for independent field-contract consumers."""
+    return solve_darcy(TriangleMesh.unit_square(), source=1, degree=2, local_refinement=2)
+
+
+@pytest.fixture(scope="module")
+def cardinal_archive_bytes(cardinal_solution, tmp_path_factory):
+    """Save the executed cardinal basis once; consumers write private archive bytes."""
+    path = tmp_path_factory.mktemp("cardinal-contract") / "field.npz"
+    save_field(cardinal_solution, path)
+    return path.read_bytes()
+
+
+@pytest.fixture(scope="module")
+def linear_archive_bytes(tmp_path_factory):
+    """Acquire a separate P1 model for finite-real coefficient schema validation."""
+    solution = solve_darcy(TriangleMesh.unit_square(), source=1, degree=1)
+    path = tmp_path_factory.mktemp("linear-contract") / "field.npz"
+    save_field(solution, path)
+    return path.read_bytes()
+
+
 def test_nonnested_exact_quadratic_and_distinct_nonzero_norms(tmp_path):
     """Use r2/r3 with equal nonzero fields and a separately integrated zero comparison."""
     first, second, zero = (tmp_path / f"{name}.npz" for name in ("a", "b", "zero"))
@@ -59,9 +82,11 @@ def test_nonnested_exact_quadratic_and_distinct_nonzero_norms(tmp_path):
         assert_allclose(measured["broken_gradient_l2"], np.sqrt(20 / 3), rtol=3e-15)
 
 
-def test_portable_campaign_archive_preserves_complete_field_coordinates(tmp_path):
+def test_portable_campaign_archive_preserves_complete_field_coordinates(
+    tmp_path, cardinal_solution
+):
     """Replay complete fields in their executed cardinal basis and physical trace maps."""
-    solution = solve_darcy(TriangleMesh.unit_square(), source=1, degree=2, local_refinement=2)
+    solution = cardinal_solution
 
     def extend(values):
         """Exercise representable digits beyond float64 whenever the platform provides them."""
@@ -147,14 +172,15 @@ def test_archive_declared_significand_rejects_a_narrower_extended_consumer(tmp_p
 
 @pytest.mark.parametrize("schema", ["legacy", "monolithic-v2"])
 @pytest.mark.parametrize("invalid", [np.nan, np.inf, 1j])
-def test_raw_coefficients_require_finite_real_values(tmp_path, schema, invalid):
+def test_raw_coefficients_require_finite_real_values(
+    tmp_path, linear_archive_bytes, schema, invalid
+):
     """A valid nodal map cannot authorize nonphysical raw real-pressure coefficients."""
     path = tmp_path / "raw.npz"
     if schema == "legacy":
         archive(path, 1, 1, lambda nodes: nodes[:, 0])
     else:
-        solution = solve_darcy(TriangleMesh.unit_square(), source=1, degree=1)
-        save_field(solution, path)
+        path.write_bytes(linear_archive_bytes)
     with np.load(path, allow_pickle=False) as stored:
         arrays = {key: stored[key] for key in stored.files}
     arrays.pop("pressure_0_correction", None)
@@ -186,11 +212,12 @@ def test_raw_coefficients_require_finite_real_values(tmp_path, schema, invalid):
         "missing_version",
     ],
 )
-def test_replay_checks_executed_cardinal_and_orientation_contract(tmp_path, changed):
+def test_replay_checks_executed_cardinal_and_orientation_contract(
+    tmp_path, cardinal_archive_bytes, changed
+):
     """Equal geometry and dimensions cannot authorize changed coefficient coordinates."""
     path = tmp_path / "declared-cardinal.npz"
-    solution = solve_darcy(TriangleMesh.unit_square(), source=1, degree=2, local_refinement=2)
-    save_field(solution, path)
+    path.write_bytes(cardinal_archive_bytes)
     with np.load(path, allow_pickle=False) as loaded:
         arrays = {name: loaded[name] for name in loaded.files}
     if changed == "missing_macro_map":
