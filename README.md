@@ -55,6 +55,14 @@ Install from a checkout with `python -m pip install .`. Wheel, source distributi
 trusted PyPI publishing and a Conda recipe are provided; no registry publication
 is implied by the presence of those files.
 
+The wheel contains every `pymhm` runtime module, typing files and distribution
+metadata. The source distribution contains `src/pymhm`, `pyproject.toml`,
+`README.md`, `LICENSE`, backend-required `.gitignore` and generated package metadata.
+Documentation, notebooks, examples, tests, scripts, benchmarks, recipes and
+environment files remain in the repository and are excluded from both archives.
+All implemented capabilities ship
+with the package; optional native backends require their separate dependencies.
+
 The [Windows guide](docs/windows.md) describes native portable-core execution,
 SciPy/PyPardiso selection, process workers and installed-wheel checks. The
 current native FEM/PETSc profiles use Linux or macOS; WSL2 provides those
@@ -191,7 +199,7 @@ mandatory dependency checks are described in the [development guide](docs/develo
 Both suites use all available CPU workers and isolate tests marked `serial`.
 
 CI enforces at least 99% line and branch coverage independently. Executable
-notebooks and analytical PDE examples accompany the package. Optional dependency
-contracts and actual native-backend integrations are reported separately.
+notebooks and analytical PDE examples are available in the repository. Optional
+dependency contracts and actual native-backend integrations are reported separately.
 
 Licensed under LGPL-2.1-only. Citation metadata is in `CITATION.cff`.

@@ -70,14 +70,20 @@ before building artifacts. PyPI publication requires a configured `pypi`
 environment and PyPI trusted publisher; documentation publication is a separate maintainer decision. Repository
 maintainers control these settings.
 
-Keep each release artifact within the 100,000,000-byte gate enforced by
-`check-dist`. The source archive retains tests, supporting scientific tools, notebook and
-documentation sources, JSON records and the three compact SPE10 input layers.
-Rendered figures and large numerical solution archives are excluded from the
-source distribution. Archived campaign and notebook checks require locally generated scientific
-fields and publication figures, as described in the installation guide. Git
-contains source code, JSON records and compact input layers; large computed
-outputs remain outside Git. [ROADMAP.md](ROADMAP.md) defines implementation and
+Keep release artifacts limited to installation and build requirements. The wheel
+contains every runtime module, typing file and distribution metadata. The source
+archive contains `src/pymhm`, `pyproject.toml`, `README.md`, `LICENSE`, the
+backend-required `.gitignore` and generated package metadata. `check-dist` validates
+the allowed paths and their source bytes;
+tests, scripts, examples, benchmarks, notebooks, documentation, recipes, roadmap
+and Pixi files must remain outside both artifacts. Optional backend integrations
+ship as runtime code, with their dependencies installed separately.
+
+Run tests, scientific acquisitions and documentation builds from a repository
+checkout. Archived campaign and notebook checks require locally generated fields
+and publication figures, as described in the installation guide. Git contains
+source code, JSON records and compact input layers; large computed outputs remain
+outside Git. [ROADMAP.md](ROADMAP.md) defines implementation and
 validation priorities, dependencies and acceptance criteria. Do not add checkpoints,
 comparison tools or native environments to commits.
 Check both archive contents and installation from the built distribution.

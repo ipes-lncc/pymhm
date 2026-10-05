@@ -122,12 +122,20 @@ Inspect the source archive as well as the installed runtime: reference solver
 sources and comparison runners are excluded from both version control and release
 artifacts. Plotting archived numerical results does not require those runners.
 
-Source distributions contain the Python implementation, tests, scientific
-examples, compact numerical records and documentation sources. Large field
-archives and the rendered figure gallery are available from the repository and
-published documentation rather than included in the PyPI archives. Build the
-complete documentation from a repository checkout. The package wheel contains
-only the runtime modules, typing marker and distribution metadata.
+The wheel contains every `pymhm` runtime module, typing stub and marker, plus
+distribution metadata and the license. The source distribution contains only
+`src/pymhm`, `pyproject.toml`, `README.md`, `LICENSE`, the backend-required `.gitignore`
+and generated package metadata.
+Build an installable wheel from that source archive without a repository checkout.
+`check-dist` verifies allowed archive paths and exact runtime source bytes; its
+source-archive rebuild check verifies identical wheel contents without repository
+resources.
+
+Tests, scripts, examples, benchmarks, documentation, notebooks, recipes, roadmap
+and Pixi files are repository resources and are excluded from both release
+archives. Use a checkout for those workflows, including scientific acquisitions,
+field replay and documentation builds. The full runtime includes the optional
+backend adapters; their native libraries are separate installation requirements.
 
 See the repository `CONTRIBUTING.md`, `SECURITY.md`, `CITATION.cff` and CI
 workflows for the maintained commands and policies.

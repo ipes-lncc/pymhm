@@ -29,14 +29,20 @@ Install from a checkout until a release is published. The repository includes
 a trusted-publishing workflow and a Conda recipe; building distribution artifacts
 does not publish them.
 
-The source distribution includes the package, tests, original examples, notebook
-sources, documentation sources, JSON records and compact SPE10 input layers.
-Rendered figures and large numerical solution archives are excluded. Replaying
-archived campaigns and their notebooks requires a checkout with the corresponding
-figures and result archives; the source distribution supports installation and
-core tests.
-Release checks enforce a 100,000,000-byte limit per artifact, within the default
-[PyPI file-size limit](https://docs.pypi.org/project-management/storage-limits/).
+Both release formats provide the complete `pymhm` runtime. The wheel contains
+runtime modules, typing files, license and distribution metadata. The source
+distribution contains `src/pymhm`, `pyproject.toml`, `README.md`, `LICENSE`, the
+backend-required `.gitignore` and generated package metadata, sufficient to build
+and install the same runtime.
+Documentation, scripts, examples, tests, benchmarks, notebooks, recipes, roadmap
+and Pixi files are excluded from both archives. Use the repository checkout for
+development, scientific acquisitions and notebooks, including the corresponding
+generated figures and field archives when required.
+
+Optional backend adapters are included in the package. Install their dependencies
+for the capabilities you use; native runtimes, drivers and solver libraries are
+not bundled in the `pymhm` archives. The environments below provide reproducible
+combinations, subject to their platform and hardware requirements.
 
 Computed field archives and publication figures are generated locally and remain
 outside the lightweight Git sources. The three compact SPE10 input layers are

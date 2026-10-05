@@ -310,6 +310,12 @@ não qualificam um pacote externo. Ver [providers](docs/tutorials/providers.md).
   os regimes, plataformas e backends com evidência válida para a fonte entregue.
 - [ ] Validar wheel/sdist, instalação isolada e receita Conda noarch; sincronizar
   versão, dependências, metadados, documentação e notas da release.
+- [x] Manter o wheel com todo o runtime, tipagem, licença e metadados; limitar o
+  sdist a `src/pymhm`, `pyproject.toml`, `README.md`, `LICENSE`, `.gitignore`
+  exigido pelo backend e metadados gerados. Verificar caminhos permitidos, fontes
+  idênticas e construção fora do checkout a partir do sdist. Docs, scripts,
+  exemplos, testes, benchmarks, notebooks, recipe, roadmap
+  e ambientes Pixi permanecem no checkout, fora dos arquivos de instalação.
 - [ ] Conferir notebooks, catálogo, assets e marcações da literatura. Publicar
   só registros/figuras atuais; fontes externas e ferramentas privadas de
   comparação ficam fora do repositório versionado e dos artefatos distribuídos.
@@ -543,3 +549,10 @@ Platform claims require native tests. PyPI readiness requires checked wheel/sdis
 clean-install verification and synchronized metadata; release automation does not
 mean an upload has occurred. Conda-forge additionally requires an accepted recipe
 and available dependencies on its target platforms.
+
+Both release formats include the complete runtime and typing files. The source
+archive also contains only the build configuration, README, license and generated
+metadata required for installation. Tests, scientific examples, notebooks,
+documentation and environment definitions are maintained in the repository.
+Optional backend adapters ship with the runtime; their native dependencies are
+installed separately for the supported target platform.

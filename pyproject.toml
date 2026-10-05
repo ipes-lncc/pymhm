@@ -47,54 +47,7 @@ Issues = "https://github.com/volpatto/pymhm/issues"
 packages = ["src/pymhm"]
 
 [tool.hatch.build.targets.sdist]
-only-include = [
-  "src",
-  "tests",
-  "scripts",
-  "examples",
-  "benchmarks",
-  "docs",
-  "notebooks",
-  "tools/amgx/pixi.toml",
-  "tools/amgx/pixi.lock",
-  "recipe",
-  "README.md",
-  "ROADMAP.md",
-  "LICENSE",
-  "CITATION.cff",
-  "CHANGELOG.md",
-  "CONTRIBUTING.md",
-  "mkdocs.yml",
-  "pyproject.toml",
-  "pixi.toml",
-  "pixi.lock",
-]
-exclude = [
-  "docs/figures/**",
-  "examples/results/checkpoint-validation.json",
-  "examples/results/checkpoint-validation/**",
-  "examples/results/mh2m-heterogeneous/**/*-validated-input-*.json",
-  "examples/results/mh2m-heterogeneous/**/*-resume-validation.json",
-  "examples/results/**/*.tmp",
-  "examples/results/**/*.part",
-  "examples/results/**/*.new",
-  "examples/results/**/*.progress.json",
-  "examples/results/**/*.npz",
-  "examples/results/**/*.vtu",
-  "!examples/results/spe10/layer-1.npz",
-  "!examples/results/spe10/layer-36.npz",
-  "!examples/results/spe10/layer-85.npz",
-  "tools/neopz/**",
-  "examples/generate_neopz_reference.py",
-  "examples/verify_neopz_darcy.py",
-  "examples/verify_reference_darcy.py",
-  "examples/audit_neopz_quadrature.py",
-  "examples/audit_darcy.py",
-  "examples/audit_flow.py",
-  "examples/reproduce_darcy_2013.py",
-  "examples/reproduce_stokes_2017.py",
-  "tests/test_darcy_independent.py",
-]
+only-include = ["src/pymhm", "pyproject.toml", "README.md", "LICENSE", ".gitignore"]
 
 [tool.pytest.ini_options]
 minversion = "8.0"

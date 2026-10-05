@@ -141,5 +141,7 @@ pixi run -e notebooks python -m examples.plot_tetra_pk
 Records in `examples/results/tetra-pk` include quadrature checks, source and
 archive digests, physical moments and the executed reconstruction basis.
 Notebook 64 checks the archived data and displays the figures without rerunning
-the numerical campaign. The source distribution omits large solution archives;
-a checkout containing those archives is required for field replay.
+the numerical campaign. Run these commands from a repository checkout containing
+the generated field archives. Release archives contain installation and build
+sources; scientific examples, records and notebook resources remain in the
+repository.
