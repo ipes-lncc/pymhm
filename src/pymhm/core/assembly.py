@@ -20,10 +20,10 @@ from pymhm.core.condensation import (
 )
 from pymhm.core.contracts import HybridSolution, LocalAssembly, LocalProblem, LocalResponse
 from pymhm.core.contributions import assemble_hybrid_contributions, local_global_contribution
-from pymhm.core.system import HybridSystem
+from pymhm.core.system import HybridSystem, _prepare_solver
 from pymhm.core.validation import FloatArray, IntArray
 from pymhm.core.variational import GlobalForm
-from pymhm.execution.cpu import ExecutionConfig, iter_local
+from pymhm.execution.cpu import ExecutionConfig, _prepare_callable, iter_local
 from pymhm.linalg.linear import check_linear_solution, validate_invertible
 
 Item = TypeVar("Item")
@@ -209,6 +209,11 @@ class _CellWorker(Generic[Item]):
         Callable[[LocalResponse, Any, IntArray], tuple[IntArray, FloatArray, FloatArray]] | None
     )
     reduce_in_worker: bool
+
+    def prepare_runtime(self) -> None:
+        """Load explicitly selected backend/provider libraries before native limits."""
+        _prepare_callable(self.provider)
+        _prepare_solver(self.solvers.local_solver)
 
     def __call__(
         self, indexed_item: tuple[int, Item]

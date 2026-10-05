@@ -31,7 +31,7 @@ from pymhm.core.nested import NestedLocalProblem, nest_hybrid_system
 from pymhm.core.system import HybridSystem, solve_hybrid_system
 from pymhm.core.validation import FloatArray, IntArray
 from pymhm.core.variational import GlobalForm
-from pymhm.execution.cpu import ExecutionConfig
+from pymhm.execution.cpu import ExecutionConfig, _prepare_callable
 
 Item = TypeVar("Item")
 _DEFAULT_EXECUTION = ExecutionConfig()
@@ -140,6 +140,11 @@ class _Provider(Generic[Item]):
     provider: Callable[[Item], LocalEquations | NestedEquations | CompiledLocalEquations]
     compiler: FormCompiler
     solvers: SolverConfig
+
+    def prepare_runtime(self) -> None:
+        """Forward explicit provider/compiler library initialization before limits."""
+        _prepare_callable(self.provider)
+        _prepare_callable(self.compiler)
 
     def close(self) -> None:
         """Release an application's reusable local workspaces after execution."""

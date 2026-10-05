@@ -12,9 +12,10 @@ import numpy as np
 import pytest
 
 from pymhm.core.assembly import HybridProblem, SolverConfig, assemble_hybrid
-from pymhm.core.contracts import LocalProblem
+from pymhm.core.contracts import LocalAssembly, LocalProblem
 from pymhm.core.equations import Equation, LocalEquations
 from pymhm.core.multiscale import MultiscaleProblem, assemble
+from pymhm.core.system import HybridSystem
 from pymhm.core.variational import GlobalForm
 from pymhm.execution import cpu
 from pymhm.execution.cpu import ExecutionConfig, iter_local, map_local
@@ -177,3 +178,90 @@ def test_external_solver_resident_resources_are_released(tmp_path: Path, backend
     for directory in (provider_path, solver_path):
         records = [json.loads(path.read_text()) for path in directory.glob("*.json")]
         assert records == [{"calls": 2, "releases": 1}]
+
+
+class _AssemblyProvider(_LocalProvider):
+    """Provide numerical local data and plain picklable metadata with resident resources."""
+
+    def __call__(self, cell: int) -> LocalAssembly:
+        """Attach the cell identity without retaining a native object in metadata."""
+        return LocalAssembly(super().__call__(cell), {"cell": cell})
+
+
+@pytest.mark.parametrize("backend", ["serial", "thread", "process"])
+@pytest.mark.parametrize("metadata", [False, True])
+def test_system_local_factory_forwards_resident_cleanup(
+    tmp_path: Path,
+    backend: Backend,
+    metadata: bool,
+) -> None:
+    """The inferred-layout constructor keeps numerical results after worker release."""
+    provider = _AssemblyProvider(tmp_path) if metadata else _LocalProvider(tmp_path)
+    system = HybridSystem.from_local_factory(provider, range(2), backend=backend, workers=1)
+    records = [json.loads(path.read_text()) for path in tmp_path.glob("*.json")]
+    assert records == [{"calls": 2, "releases": 1}]
+    assert system.local_metadata == (({"cell": 0}, {"cell": 1}) if metadata else (None, None))
+    np.testing.assert_allclose(system.solve().trace, [1.0, 1.0], atol=1e-14)
+
+
+@pytest.mark.parametrize("backend", ["serial", "thread", "process"])
+def test_system_local_factory_releases_after_failure(tmp_path: Path, backend: Backend) -> None:
+    """Failure propagates after the native factory's one worker-local release."""
+    provider = _LocalProvider(tmp_path, fail=True)
+    with pytest.raises(ArithmeticError, match="local item two"):
+        HybridSystem.from_local_factory(
+            provider, range(7), backend=backend, workers=1, batch_size=1
+        )
+    records = [json.loads(path.read_text()) for path in tmp_path.glob("*.json")]
+    assert records == [{"calls": 3, "releases": 1}]
+
+
+@pytest.mark.parametrize("backend", ["serial", "thread", "process"])
+def test_system_local_factory_releases_external_solver(tmp_path: Path, backend: Backend) -> None:
+    """Unsupported callable strategies release both supplied resource owners on rejection."""
+    provider_path, solver_path = tmp_path / "provider", tmp_path / "solver"
+    provider_path.mkdir()
+    solver_path.mkdir()
+    provider, solver = _LocalProvider(provider_path), _ResidentSolver(solver_path)
+    with pytest.raises(ValueError, match="Unsupported factorization solver"):
+        HybridSystem.from_local_factory(
+            provider, range(2), backend=backend, workers=1, local_solver=solver
+        )
+    for directory, calls in ((provider_path, 1), (solver_path, 0)):
+        records = [json.loads(path.read_text()) for path in directory.glob("*.json")]
+        assert records == [{"calls": calls, "releases": 1}]
+
+
+def test_system_factory_close_failure_still_releases_external_solver(tmp_path: Path) -> None:
+    """A reported provider cleanup error does not leak the independent solver owner."""
+
+    class BrokenProvider(_LocalProvider):
+        """Release its resource before reporting a native cleanup failure."""
+
+        def close(self) -> None:
+            """Persist the actual release and raise a visible cleanup error."""
+            super().close()
+            raise RuntimeError("factory cleanup failed")
+
+    provider_path, solver_path = tmp_path / "provider", tmp_path / "solver"
+    provider_path.mkdir()
+    solver_path.mkdir()
+    provider, solver = BrokenProvider(provider_path), _ResidentSolver(solver_path)
+    with pytest.raises(RuntimeError, match="factory cleanup failed"):
+        HybridSystem.from_local_factory(provider, range(2), local_solver=solver)
+    for directory, calls in ((provider_path, 1), (solver_path, 0)):
+        records = [json.loads(path.read_text()) for path in directory.glob("*.json")]
+        assert records == [{"calls": calls, "releases": 1}]
+
+
+@pytest.mark.parametrize("backend", ["serial", "thread", "process"])
+def test_system_preassembled_problems_release_external_solver(
+    tmp_path: Path, backend: Backend
+) -> None:
+    """Preassembled operators reject unsupported callable solvers after resource release."""
+    problems = [LocalProblem([[2.0 + cell]], [[1.0]], [1.0], [cell]) for cell in range(2)]
+    solver = _ResidentSolver(tmp_path)
+    with pytest.raises(ValueError, match="Unsupported factorization solver"):
+        HybridSystem(problems, local_solver=solver, backend=backend, workers=1)
+    records = [json.loads(path.read_text()) for path in tmp_path.glob("*.json")]
+    assert records == [{"calls": 0, "releases": 1}]

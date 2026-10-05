@@ -52,13 +52,18 @@ def _zero(form: Any) -> bool:
     return isinstance(form, ufl.ZeroBaseForm)
 
 
-def _serial_domains(form: Any) -> None:
-    """Check integral domains or base-form argument domains before collective JIT."""
-    domains = (
+def _form_domains(form: Any) -> tuple[Any, ...]:
+    """Read integral domains, or argument domains of an argument-preserving base form."""
+    return tuple(
         form.ufl_domains()
         if callable(getattr(form, "integrals", None))
         else tuple(argument.ufl_function_space().ufl_domain() for argument in form.arguments())
     )
+
+
+def _serial_domains(form: Any) -> None:
+    """Check integral domains or base-form argument domains before collective JIT."""
+    domains = _form_domains(form)
     for domain in domains:
         mesh = domain.ufl_cargo()
         if mesh is not None and mesh.comm.size != 1:

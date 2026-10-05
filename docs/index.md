@@ -12,6 +12,10 @@ The reference implementation uses NumPy, SciPy and Basix. The optional
 H(div) local forms with UFL/DOLFINx. [Meshing](meshing.md) connects Gmsh, Netgen
 and meshio.
 
+The [Windows guide](windows.md) covers the portable core, SciPy/PyPardiso,
+spawn workers and installed-wheel verification, with the native FEM scope
+stated separately.
+
 Start with the [variational guide](variational.md) and
 [introductory tutorials](tutorials.md) for scalar and vector
 formulations and interchangeable local providers. Use the

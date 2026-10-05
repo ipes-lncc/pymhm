@@ -1,0 +1,112 @@
+{
+  "mode": "native-default-acquisition-plus-literal-publication-readout",
+  "source_notebook": "notebooks/introduction/darcy_3d_parallel_scalability.ipynb",
+  "source_notebook_sha256": "81c9c85906df8daf5481419718a3e0bb66c1677843c1dfe9fd33ecb534c343e1",
+  "original_executed_notebook_sha256": "815fabfe470fd7a1b15e3cf195e29292506621ce039637f049400b89de82ac8a",
+  "original_native_execution_receipt": "build/performance3d-lu/notebook-default-execution-receipt.json",
+  "original_native_execution_receipt_sha256": "d9a044ab2a560bd83fbef4a0e08e667fed95d0a3b1c2709eabf6dd549494c9bd",
+  "publication_input": "benchmarks/results/execution/introduction-3d-workspace-lu-20261005/results.json",
+  "publication_input_sha256": "77caae6514b14ca692b4914103318871626b964460ed835dff041a4bbf96fe1c",
+  "readout_started_utc": "2026-10-05T05:18:48.424483+00:00",
+  "readout_finished_utc": "2026-10-05T05:18:53.280338+00:00",
+  "readout_cells": [
+    {
+      "index_zero_based": 1,
+      "source_sha256": "63097e9b8bc341a9aa8fe8a2ac996c4100351b91deac6a1b4ad3abd940d934eb",
+      "fresh_kernel_execution_count": 1,
+      "assembled_execution_count": 1,
+      "output_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "index_zero_based": 38,
+      "source_sha256": "0dbcb798ce4821bede3aea3fbdc7d8f162a948d0efc1e9761d97a5dbcd917850",
+      "fresh_kernel_execution_count": 2,
+      "assembled_execution_count": 2,
+      "output_sha256": "735007810d5866ba605b0d2335dc1a6ef803b31bbf4248eaab9a943e35354475"
+    },
+    {
+      "index_zero_based": 40,
+      "source_sha256": "a0cfd0abf762ea110b0a8c5978dff9e7d797e5a4b7ee8af27783fcab0d7cbc7c",
+      "fresh_kernel_execution_count": 3,
+      "assembled_execution_count": 3,
+      "output_sha256": "592af17b78d6f81b668f131755932bd0d435f2a22585e914c1d146e65e77e14f"
+    },
+    {
+      "index_zero_based": 41,
+      "source_sha256": "24c5e6f681920676df66d64a8bd06b9b005ab37ad5eb26cd323553a6615f9b2b",
+      "fresh_kernel_execution_count": 4,
+      "assembled_execution_count": 4,
+      "output_sha256": "6209878c8f1e5fc5f7e8cf0745e8821cec73a8ec1704e196542a29f8b3a04c9f"
+    },
+    {
+      "index_zero_based": 43,
+      "source_sha256": "44a42eefa2d957728e05e60823daeb4c1af0add9bed50b123f931a8f17a3006a",
+      "fresh_kernel_execution_count": 5,
+      "assembled_execution_count": 5,
+      "output_sha256": "f39cafe0c5e1936f7e575ce6b3c6f82a1c131b77653276b61cde33fd18635a50"
+    }
+  ],
+  "preserved_cells_sha256": {
+    "0": "0bd8a0b6331a671b7a778cc48418ce897ee4ae78138a93c0d587bf35472082b3",
+    "2": "056b227fd0b37469a7039f5f2e4b070e51d88d8887b39a6a79e3ae16b0b97044",
+    "3": "8a7ae20b44e18b2a6edf2fbac6d5c01121db9dabfe153c8f80c8e4dda7019482",
+    "4": "e2f15907a10a80ed811d9820ee7b2503497c4f92d1956a7cc921e89a0dbd5417",
+    "5": "747174ee30bc39361665234f9acc656b1a371db2cca2f14765208d078653a594",
+    "6": "6c2a26802146d3b586c5b3efba811469c3f3380ba2c74094af94431f5a861a47",
+    "7": "b6f801c70c8632bd9a1d4adaa5b370318b65b4d5240ec980e1fe64039093c04c",
+    "8": "2c503797a0538b19100a2ba813acf6958dbb6dbaa8e1c17e3bbc56e4f8ad3901",
+    "9": "8a0392620f86051f273a77e306a74d80d7b131d2d56813133b7d1825a88aae1a",
+    "10": "4b74a5046aad051212456e6819c11b56fa96706d2f01a8389b4d85be792d1b74",
+    "11": "9a0b2b539342f9daafb0b55f64e6b11d93292990778a854e90e194b48874d489",
+    "12": "d66b09636a098a12bc3d9343931ab0ec9cc642cab2b72161470b2dd898218349",
+    "13": "ae05c0a260dd99885149ca3040eb184e67531376b4ca9dfc682f5c3c3d0a4cd7",
+    "14": "924297da4c230849fa8cc01b2757ec45656439e7d694d375263a434a06896159",
+    "15": "e9ad8c4ff14a1c55716b19e515d6bf8724940f556193bd222afab588ec4879ad",
+    "16": "0306e7ac856038348e0078dec077ea7d830467d63752b25d4d0036dfb31d9ea4",
+    "17": "f192a22e7e756d7b81e05b76d2dd937544c4c48e2ab678ba3faf08a15d9d44f4",
+    "18": "87b5dc47145c2baad7ddd9fcf5b8b895816a2c480c242a17247691709c477a4e",
+    "19": "470e2d24fb475ca23e259376d46a8d7995dbad396c017e72dbdb6e0b26e4d530",
+    "20": "3bc9353cb413d499cd48da30ee62377c487646f94541e538965dc28571d33c99",
+    "21": "844e0d575b60864fb89c0a6b7ca7a97d4c4c45a755d1af2463d1f79693d3fb16",
+    "22": "f15f8792e9edee22659422694825d5f5d6cd3f2de7e7f6e7548e5fe03d467fbf",
+    "23": "5b9dc09bbb9129b2dc125bbbb9d5198a2bfef9daf70bda1d0567d12ed6834462",
+    "24": "b2aea8905be1ebf12cbf15f193ad2961be6ab02c9f1bc11b6409864bcd971379",
+    "25": "d2433d22e68a826801bfd14040c09b35dd9615a7b127f706b06e01a34e05055c",
+    "26": "51bda2de4bf84ae0a2034e202f263cb24fba5e50ab184456291085926178b373",
+    "27": "3a9fa5809224f796aae33bc191d394c1de1445f0dade69e6b27739423cc35622",
+    "28": "f85e27a84f863e3e3ab675e793f688642bfd651d90a3be5de0a15f533f0eb109",
+    "29": "776540b4ffc0446e02a74f85bfbd2c9a99c7f71ad07821a2181f7cf77534d036",
+    "30": "f4b9f61c272795d04060995574627a234913431c8a5d6fb627deee6734ddb9f9",
+    "31": "23c43bcc435b29918749ab92743cbc5beb376b4a0a458a1603f734c453db3055",
+    "32": "7c2bcaab187f61aa38786b867d7b37d897a32028d4e8dfa3f05bda79b097af5e",
+    "33": "6d822333a99f5d98fafbad813532f80754d43359b81e2b5eef41685e4f0788e3",
+    "34": "6d6d276f329698136a076ca75ab4e45548833bf1f11f80b64addea91779233bf",
+    "35": "a3d83126fbf998cc0879be2a252b450605365e016d7532a67f6cbdbf8494cf5b",
+    "36": "58c4dca0485da677efb7781a443a97ddce43fc9f6ea99bb6023a05cb8b9d4fc2",
+    "37": "d7c0a73993a037f5a94844af4c99d741868b669088361d173ef381719b7b873f",
+    "42": "7138e37b2c9a315ee77229cf6007a07cd3f6eb796b8440d630ee7445ca5d9e65",
+    "44": "beee88c0c2b6d5ad34f3964ea40dd5011225c4098276d2e905d7a81761d39a98",
+    "45": "29562e04808f6004666adcd39ecda0d856b22f665ab01db56cb72a5f97ff730d",
+    "46": "98c1eb99925e96c92444ae53b036d1cf98c21d8d2ea0c11571bd984a959df7fb",
+    "47": "91a15414658209f8f7fdf207c52bc8da8bb3b37821e1ca2e34c00ec24acf6056",
+    "48": "ca427dcb43018f97c763e551780d457e3d1a83b51de86b68352da3909b073aff",
+    "49": "5493355259f6f487578175764e29c38c9db57984a49a83b70d5569fd2cfd8a9f",
+    "51": "87d3482e378d2b348464c1255dbbb6ca36bd9cf3ca1a091fa9dd17a5cdffe0e1"
+  },
+  "editorial_markdown_cells": [
+    39,
+    50
+  ],
+  "source_edit_receipt": "build/performance3d-lu/source-final-readout-receipt.json",
+  "source_edit_receipt_sha256": "df062c7cbfed7420467526be18732ab4656c13b9ffb7e50bd13dded5443e8717",
+  "executed_notebook_sha256": "194899a4b47a32b92e039ad7572a07a296aeef5b38f1db5d7b6d3756e35defe0",
+  "scope": "Only literal imports/configuration and publication JSON/plot cells executed in phase 2. All native numerical acquisition, validation, archives and scientific code/output payloads are retained byte-equivalent from phase 1. Two publication Markdown cells are updated without numerical execution. Phase 1 retains its actual executed source/environment digests.",
+  "affinity": [
+    24,
+    25
+  ],
+  "regenerated_figures": {
+    "scaling_summary.png": "97da6dbd5cc9045dcef795876137bb7fe020fe0b358449190d0d0e709f4a1cf8",
+    "physical_accuracy_by_resolution.png": "a8836bef92c90a5dcaaf5f887705103ac8829a9f6a132204dc77c5b3a4ef6f09"
+  }
+}

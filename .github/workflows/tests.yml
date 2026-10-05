@@ -46,6 +46,21 @@ jobs:
         run: pixi run -e ${{ matrix.environment }} metadata-check
       - name: Run tests with branch coverage
         run: pixi run -e ${{ matrix.environment }} test-cov
+      - name: Build a portable wheel on Windows
+        if: runner.os == 'Windows'
+        run: >-
+          pixi run --locked -e ${{ matrix.environment }} python -m build
+          --wheel --no-isolation --outdir build/windows-wheel
+      - name: Test the installed Windows wheel outside the checkout
+        if: runner.os == 'Windows'
+        run: >-
+          pixi run --locked -e ${{ matrix.environment }} python scripts/check_portable_wheel.py
+          build/windows-wheel --report build/reports/windows-wheel.json
+      - uses: actions/upload-artifact@v4
+        if: runner.os == 'Windows' && always()
+        with:
+          name: wheel-windows-${{ matrix.environment }}
+          path: build/reports/windows-wheel.*
       - uses: actions/upload-artifact@v4
         with:
           name: coverage-${{ matrix.os }}-${{ matrix.environment }}
@@ -145,6 +160,23 @@ jobs:
         run: pixi run -e intel python -c 'import pypardiso'
       - name: Exercise native PARDISO solver
         run: pixi run -e intel pytest -q tests/test_solvers.py tests/test_extended_local.py -k pardiso
+      - name: Check generic local/global equations with native PARDISO and spawn
+        run: pixi run --locked -e intel pytest -q tests/test_windows_portability.py
+      - name: Build a Windows wheel with locked Intel dependencies
+        if: runner.os == 'Windows'
+        run: >-
+          pixi run --locked -e intel python -m build
+          --wheel --no-isolation --outdir build/windows-wheel
+      - name: Test installed Windows wheel with native PARDISO
+        if: runner.os == 'Windows'
+        run: >-
+          pixi run --locked -e intel python scripts/check_portable_wheel.py build/windows-wheel
+          --require-pardiso --report build/reports/windows-pardiso-wheel.json
+      - uses: actions/upload-artifact@v4
+        if: runner.os == 'Windows' && always()
+        with:
+          name: wheel-windows-pardiso
+          path: build/reports/windows-pardiso-wheel.*
 
   meshing:
     name: Gmsh and Netgen integration

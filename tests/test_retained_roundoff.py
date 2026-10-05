@@ -49,6 +49,90 @@ def test_retained_action_dtype_and_portable_cancellation(monkeypatch, wide):
     assert_allclose(action[:, 0], [1, 0, 0], rtol=0, atol=0)
 
 
+@pytest.mark.parametrize("wide", [False, True])
+@pytest.mark.parametrize("multiple", [False, True])
+def test_rectangular_moment_action_preserves_output_shape_and_cancelled_values(
+    monkeypatch: pytest.MonkeyPatch, wide: bool, multiple: bool
+) -> None:
+    """Accurate dual moments use the operator's output rows for vectors and columns."""
+    import pymhm.linalg.linear as solvers
+    from pymhm.core.contracts import _matrix_action
+
+    if wide and np.finfo(np.longdouble).eps >= np.finfo(float).eps:
+        pytest.skip("the host does not provide a wider accumulator")
+    monkeypatch.setattr(solvers, "_EXTENDED_PRECISION", wide)
+    matrix = sparse.csr_matrix([[1e16, 1.0, -1e16, 1.0], [-1.0, 2.0, -3.0, 4.0]])
+    values = np.column_stack((np.ones(4), np.full(4, 2.0))) if multiple else np.ones(4)
+    expected = np.array([[2.0, 4.0], [2.0, 4.0]]) if multiple else np.array([2.0, 2.0])
+    result = _matrix_action(matrix, values)
+    assert result.dtype == values.dtype
+    assert result.shape == expected.shape
+    assert_allclose(result, expected, rtol=0, atol=0)
+
+
+@pytest.mark.parametrize("wide", [False, True])
+@pytest.mark.parametrize("modes", [1, 2])
+def test_constraint_admissibility_uses_accurate_pairing_and_rejects_exact_zero(
+    monkeypatch: pytest.MonkeyPatch, wide: bool, modes: int
+) -> None:
+    """A true unit moment is admissible even when ordinary summation erases it."""
+    import pymhm.linalg.linear as solvers
+    from pymhm.core.contracts import _matrix_action
+
+    if wide and np.finfo(np.longdouble).eps >= np.finfo(float).eps:
+        pytest.skip("the host does not provide a wider accumulator")
+    monkeypatch.setattr(solvers, "_EXTENDED_PRECISION", wide)
+    block = np.array([[1.0, -1.0, 0.0], [-1.0, 2.0, -1.0], [0.0, -1.0, 1.0]])
+    matrix = sparse.block_diag([block] * modes, format="csr")
+    kernel = np.kron(np.eye(modes), np.ones((3, 1)))
+    constraints = np.kron(np.eye(modes), np.array([[1e16], [1.0], [-1e16]]))
+    problem = LocalProblem(
+        matrix,
+        np.zeros((3 * modes, 0)),
+        np.zeros(3 * modes),
+        np.array([], dtype=np.int64),
+        kernel=kernel,
+        constraints=constraints,
+    )
+    assert_allclose(
+        _matrix_action(sparse.csr_matrix(problem.constraints.T), problem.kernel),
+        np.eye(modes),
+        rtol=0,
+        atol=0,
+    )
+    excluded = constraints.copy()
+    excluded[1::3] = 0.0
+    for arguments in (
+        {"constraints": excluded},
+        {"constraints": constraints, "test_constraints": excluded},
+    ):
+        with pytest.raises(ValueError, match="pair nonsingularly"):
+            LocalProblem(
+                matrix,
+                np.zeros((3 * modes, 0)),
+                np.zeros(3 * modes),
+                np.array([], dtype=np.int64),
+                kernel=kernel,
+                **arguments,
+            )
+
+
+@pytest.mark.parametrize("shape", [(0, 3), (2, 0)])
+@pytest.mark.parametrize("width", [0, 2])
+@pytest.mark.parametrize("wide", [False, True])
+def test_rectangular_moment_action_handles_empty_rows_columns_and_rhs(
+    shape: tuple[int, int], width: int, wide: bool, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Empty moment operators preserve their declared row and right-side dimensions."""
+    import pymhm.linalg.linear as solvers
+    from pymhm.core.contracts import _matrix_action
+
+    monkeypatch.setattr(solvers, "_EXTENDED_PRECISION", wide)
+    result = _matrix_action(sparse.csr_matrix(shape), np.zeros((shape[1], width)))
+    assert result.shape == (shape[0], width)
+    assert_allclose(result, 0.0, rtol=0, atol=0)
+
+
 def test_amg_rejects_unresolved_constrained_original_equations(monkeypatch):
     """A failed correction solve cannot return a spuriously accepted condensed operator."""
     import pymhm.core.condensation as hybrid

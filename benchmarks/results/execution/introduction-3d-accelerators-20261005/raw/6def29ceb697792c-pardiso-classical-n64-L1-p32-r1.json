@@ -1,0 +1,127 @@
+{
+  "setup": 1.849703622981906,
+  "assembly_transfer_elimination": 18.84850173816085,
+  "solve_reconstruct": 4.78290774859488,
+  "total": 25.73535300977528,
+  "equation_relative_L2_residual": 1.5866250480023116e-14,
+  "fine_grid": [
+    64,
+    64,
+    64
+  ],
+  "fine_cells": 262144,
+  "global_algebraic_size": 250047,
+  "matrix_nnz": 6539203,
+  "solver": "pypardiso",
+  "assembly_quadrature_degree": 8,
+  "timing_scope": "Fresh launcher/interpreter/native initialization, geometry/forms, matrix/load assembly, local or global PARDISO analysis/factorization, all RHS and original residual corrections, transfers, ordered global reduction, global solve/reconstruction and native cleanup. Lightweight native phase observations are included. JIT is warmed separately; field norms and persistent archives follow the complete workflow clock.",
+  "canonical_export_seconds": 0.2542399000376463,
+  "acquisition_method": "classical",
+  "material_period": 0.1,
+  "length": 1,
+  "warmup_only": false,
+  "qualification_only": false,
+  "cpu_affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ],
+  "native_threads_requested": 32,
+  "total_including_parent_startup_seconds": 26.94303250312805,
+  "parent_import_and_startup_seconds": 0.6105751991271973,
+  "complete_solve_seconds": 26.332457304000854,
+  "launch_epoch_utc": 1791181129.3675199,
+  "timed_end_epoch_utc": 1791181156.3105524,
+  "source_sha256": {
+    "src/pymhm/linalg/linear.py": "ccfb29b487297a70a4a86af9d45eccd06aaad7511594556015f8c59d1d51a4ca",
+    "src/pymhm/core/condensation.py": "909d406dea801f00f47cea4d084f48241e5a021b45cc12c75e7528259faadb49",
+    "src/pymhm/core/assembly.py": "0a430f71d61115bb41e62ed65b80d83ffd681d19bd13f3b2d80f9d69780086a9",
+    "src/pymhm/core/system.py": "7061c03a5d1ba854e15407b8192537988b5ab5c4f51991d47cf9871963c4611f",
+    "src/pymhm/core/multiscale.py": "02a58356cb4a193022a7347a13e922eacd4e52a57aebfa591b302d14d5785891",
+    "src/pymhm/backends/forms.py": "2851bb33336b878db2033bae5ba09f270ba5f27b819222f80bdbbe99307c9765",
+    "src/pymhm/backends/workspace.py": "7f2db8bbfce9805b069cbbf8f6aa68347d30332a692bf12bd867d1dfe4f249fd",
+    "src/pymhm/execution/cpu.py": "c6575ef455bfb969c96dc3ccb5d57cfd4ccf591b1fde85c8c097116b40409dbe",
+    "build/performance3d/native_baseline.py": "b3b22d810a132d68bbf5d5af1943c7394ee97c586449562d4961b9e42ee92f80",
+    "build/performance3d-lu/mhm_workspace.py": "3928434d3bcc1bdd5b978f8df1b087924b0df0c076d9fffce16ceb98f7298dd1",
+    "build/performance3d-lu/mhm_campaign.py": "2af26742a4cbd7fde5fb3fa2b6ef34b1b2f47975b85e5e6e7d65d79e236da52f",
+    "pixi.toml": "936e61b2af8d71ad784735602bab80f46bd1cce6ac6f4cf5f50bc82e101f6602",
+    "pixi.lock": "1f1a82a6551538b4317594359cc4b9cfaaabd10629ec15cb6300d489e76a5359",
+    "build/performance3d-accelerated/pardiso_campaign.py": "21b28ee36cb1a704483620ed74e2a00e05706db5c77b4a69a49ae4caf7b809cc"
+  },
+  "versions": {
+    "pypardiso": "0.4.7",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "fenics-dolfinx": "0.9.0",
+    "fenics-ffcx": "0.9.0",
+    "fenics-basix": "0.9.0",
+    "fenics-ufl": "2024.2.0"
+  },
+  "peak_parent_rss_bytes": 4155187200,
+  "cold_form_compilation_included": false,
+  "matrix_or_factor_reuse_across_macro_materials_or_acquisitions": false,
+  "independent_analytic_source_control": {
+    "maximum_source_absolute_difference": 7.532553922828811e-07,
+    "anisotropy_minimum_eigenvalue": 0.9576748571757887,
+    "anisotropy_maximum_eigenvalue": 2.182760165665916
+  },
+  "coefficient_archive": {
+    "path": "pardiso-classical-n64-L1-p32-r1.npz",
+    "sha256": "c498cc462af2b686e3c01b547b9a1ffd975ab6ada4ab71e1a48bec2c33b34b4b"
+  },
+  "native_source_control": {
+    "period": 0.1,
+    "point_count": 3,
+    "maximum_UFL_analytic_source_absolute_difference": 5.551115123125783e-17,
+    "scope": "Executed geometry maps three reference points per first owned cell; UFL -div(K grad(p_exact)) and independent analytic NumPy source use the requested material period"
+  },
+  "literal_classical_LU_coefficient_comparisons": {
+    "classical-lu-mpi-n64-r0.npz": {
+      "maximum_absolute": 6.772360450213455e-15,
+      "relative_nodal_L2": 4.2535743295835945e-15,
+      "sha256": "2bffbf8584d3d18ae49f5fe38d28355820e5f8ae23c700fbc93ceefffed3a04d"
+    },
+    "classical-lu-mpi-n64-r1.npz": {
+      "maximum_absolute": 6.217248937900877e-15,
+      "relative_nodal_L2": 4.1925895563736055e-15,
+      "sha256": "fabd6e5652183cd44585c406315e8420f11c271324c67709b58be176a749a525"
+    }
+  },
+  "native_phase_receipts": {
+    "pardiso-classical-n64-L1-p32-r1-native-548882.json": "eddae9fb894f4141166de71aad57d58f88c29138fe917b3c92d202141e086eb9"
+  },
+  "observed_MKL_thread_counts": [
+    32
+  ],
+  "validation_and_archive_seconds": 0.09331893920898438,
+  "receipt_complete": true
+}

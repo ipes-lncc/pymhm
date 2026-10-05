@@ -56,6 +56,7 @@ submodules documented below.
 | Select serial, threaded or spawned local execution | [`ExecutionConfig`](api/backends.md#pymhm.execution.cpu) |
 | Define and tabulate native reference elements | [Basix adapter](api/elements.md#pymhm.fem.reference) |
 | Compile user-written local and global UFL forms | [Generic DOLFINx compiler](api/backends.md#pymhm.backends.forms) |
+| Reuse local UFL kernels and worker-owned assembly buffers | [Native form workspaces](api/backends.md#pymhm.backends.workspace) |
 
 The family pages generate signatures and documentation directly from their
 owners. They contain the supported spaces, array conventions, orientations,

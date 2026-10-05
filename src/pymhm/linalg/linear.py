@@ -25,6 +25,7 @@ from scipy.sparse import linalg as splinalg
 Array = npt.NDArray[Any]
 _AMGX_LOCK = Lock()
 _CUDSS_HOST_LOCK = Lock()
+_PARDISO_HOST_LOCK = Lock()
 _EXTENDED_PRECISION = np.finfo(np.longdouble).eps < np.finfo(np.float64).eps
 
 
@@ -179,6 +180,40 @@ def _optional(module: str, installation: str) -> ModuleType:
         ) from exc
 
 
+def preload_solver_backend(solver: str) -> None:
+    """Load only the selected solver's native libraries before thread limits.
+
+    This idempotent preparation constructs no explicit factors, AMG hierarchy,
+    communicator or GPU session. Call before a new ``threadpool_limits`` context so newly
+    loaded BLAS/OpenMP libraries receive the same policy during assembly and
+    solution. Portable SciPy solvers require no additional imports. Optional
+    dependencies remain lazy until explicitly selected; unavailable backends
+    raise the same diagnostic as the numerical adapters. Native parameter
+    profiles, precision and residual tolerances are unchanged. PETSc preparation
+    imports only its Python package; PETSc/MPI initialization remains owned by
+    the existing numerical adapter.
+    """
+    modules = {
+        "scipy": (),
+        "cg": (),
+        "minres": (),
+        "gmres": (),
+        "pypardiso": ("pypardiso",),
+        "pypardiso-symmetric": ("pypardiso",),
+        "pypardiso-symmetric-matching": ("pypardiso",),
+        "petsc": ("petsc4py",),
+        "petsc-symmetric": ("petsc4py",),
+        "pyamg": ("pyamg",),
+        "amgx": ("cupy", "pyamgx"),
+        "cupy": ("cupy", "cupyx.scipy.sparse", "cupyx.scipy.sparse.linalg"),
+        "cudss": ("cupy", "cupyx.scipy.sparse", "nvmath.sparse.advanced"),
+    }
+    if solver not in modules:
+        raise ValueError(f"Unsupported solver: {solver!r}")
+    for module in modules[solver]:
+        _optional(module, f"Install the native dependencies for the {solver!r} backend.")
+
+
 def _cuda() -> ModuleType:
     """Require a CuPy runtime and at least one usable CUDA device."""
     cupy = _optional("cupy", "Install CuPy matching your CUDA runtime.")
@@ -195,9 +230,10 @@ def _cuda() -> ModuleType:
 class LinearFactorization:
     """Reusable fixed-matrix factorization with checked solves and explicit cleanup.
 
-    Create with :func:`factorize` and use as a context manager, or call ``close``
-    explicitly. A factorization is mutable backend state and must not be shared
-    concurrently between threads. The matrix is copied when constructed.
+    Create with :func:`factorize` or :func:`prepare_amgx` and use as a context
+    manager, or call ``close`` explicitly. The latter prepares an iterative AMG
+    hierarchy rather than direct factors. Prepared backend state must not be
+    shared concurrently between threads. The matrix is copied when constructed.
     """
 
     _matrix: sparse.csr_matrix
@@ -449,6 +485,8 @@ def factorize(
     cuDSS host API entries are serialized within the process because its
     analysis and factorization phases do not guarantee host thread safety.
     Device transfers and asynchronous GPU work do not hold that entry lock.
+    PARDISO construction, factorization, solve and cleanup entries are also
+    serialized per process; each factor retains its independent lifetime.
     """
     _tolerances(rtol, atol)
     if isinstance(rhs_columns, bool) or not isinstance(rhs_columns, int) or rhs_columns < 1:
@@ -492,34 +530,46 @@ def factorize(
                 # zeros in multiplier rows of a symmetric saddle system.
                 factored_operator.setdiag(backend_operator.diagonal())
                 factored_operator.sort_indices()
-                engine = pardiso.PyPardisoSolver(mtype=-2)
             else:
                 factored_operator = backend_operator
-                engine = pardiso.PyPardisoSolver()
-            stack.callback(engine.free_memory, everything=True)
-            if solver == "pypardiso-symmetric-matching":
-                # PyPardiso uses one-based IPARM indices. Explicit mode is
-                # necessary: automatic defaults otherwise replace these values.
-                # Matching changes the pivot strategy; neither profile is a
-                # fallback for the other, and both retain the physical gate.
-                for parameter, value in (
-                    (1, 1),
-                    (2, 2),
-                    (8, 5),
-                    (10, 13),
-                    (11, 1),
-                    (13, 1),
-                    (21, 1),
-                    (27, 1),
-                ):
-                    engine.set_iparm(parameter, value)
-            engine.factorize(factored_operator)
+            with _PARDISO_HOST_LOCK:
+                engine = (
+                    pardiso.PyPardisoSolver(mtype=-2)
+                    if solver != "pypardiso"
+                    else pardiso.PyPardisoSolver()
+                )
+
+            def release_pardiso() -> None:
+                """Release this factor's native memory under the shared entry lock."""
+                with _PARDISO_HOST_LOCK:
+                    engine.free_memory(everything=True)
+
+            stack.callback(release_pardiso)
+            with _PARDISO_HOST_LOCK:
+                if solver == "pypardiso-symmetric-matching":
+                    # PyPardiso uses one-based IPARM indices. Explicit mode is
+                    # necessary: automatic defaults otherwise replace these values.
+                    # Matching changes the pivot strategy; neither profile is a
+                    # fallback for the other, and both retain the physical gate.
+                    for parameter, value in (
+                        (1, 1),
+                        (2, 2),
+                        (8, 5),
+                        (10, 13),
+                        (11, 1),
+                        (13, 1),
+                        (21, 1),
+                        (27, 1),
+                    ):
+                        engine.set_iparm(parameter, value)
+                engine.factorize(factored_operator)
 
             def solve_pardiso(rhs: Array) -> Array:
                 """Reuse the PARDISO factorization without complex truncation."""
                 if np.iscomplexobj(rhs):
                     raise ValueError("pypardiso supports real right-hand sides only")
-                return np.asarray(engine.solve(factored_operator, rhs))
+                with _PARDISO_HOST_LOCK:
+                    return np.asarray(engine.solve(factored_operator, rhs))
 
             solve_function = solve_pardiso
         elif solver in {"petsc", "petsc-symmetric"}:
@@ -602,17 +652,50 @@ def _hermitian(matrix: sparse.csr_matrix, solver: str) -> None:
         raise ValueError(f"{solver} requires a Hermitian/symmetric matrix")
 
 
-def _amgx_solve(
-    matrix: sparse.csr_matrix, rhs: Array, rtol: float, atol: float, maxiter: int | None
-) -> Array:
-    """Run GPU FGMRES with aggregation AMG and scoped native-resource cleanup."""
-    if np.iscomplexobj(matrix.data) or np.iscomplexobj(rhs):
+def prepare_amgx(
+    matrix: Any,
+    *,
+    rtol: float = 1e-10,
+    atol: float = 0.0,
+    maxiter: int | None = None,
+) -> LinearFactorization:
+    """Prepare one GPU FGMRES/AMG hierarchy for repeated checked elliptic solves.
+
+    The real float64 operator is copied. It must be symmetric with positive
+    diagonal entries; these checks do not establish positive definiteness.
+    Each nonzero relative-tolerance RHS is divided by its largest absolute
+    entry, and the returned solution is multiplied by the same value. This
+    linear change of scale keeps tiny loads above AmgX's native absolute
+    stopping floor. Original RHS columns and tolerances define acceptance.
+
+    The returned :class:`LinearFactorization` reuses this hierarchy, native
+    buffers and transfers for all RHS columns and true-residual corrections.
+    It owns process-global AmgX initialize/finalize and holds the package's
+    lifecycle lock until ``close``; use a context manager and never overlap an
+    external pyamgx session in the same process. Separate spawned processes
+    can select separate GPUs before importing CUDA libraries. No numerical
+    matrix, response or hierarchy is reused for a different operator.
+    """
+    _tolerances(rtol, atol)
+    if maxiter is not None and (
+        isinstance(maxiter, bool) or not isinstance(maxiter, int) or maxiter < 1
+    ):
+        raise ValueError("maxiter must be a positive integer or None")
+    matrix = _matrix(matrix)
+    if np.iscomplexobj(matrix.data):
         raise ValueError("the amgx adapter currently supports real float64 systems only")
+    _hermitian(matrix, "amgx")
+    if np.any(matrix.diagonal() <= 0):
+        raise ValueError(
+            "AMG elliptic presets require positive diagonals; do not pass saddle systems"
+        )
     amgx = _optional(
         "pyamgx", "Build/install pyamgx against NVIDIA AmgX and a compatible CUDA runtime."
     )
     # AmgX initialization is process-global; serialize this package's lifecycles.
-    with _AMGX_LOCK, ExitStack() as stack:
+    with ExitStack() as stack:
+        _AMGX_LOCK.acquire()
+        stack.callback(_AMGX_LOCK.release)
         try:
             amgx.initialize()
         except Exception as exc:
@@ -659,18 +742,30 @@ def _amgx_solve(
         stack.callback(forcing.destroy)
         result = amgx.Vector().create(resources, mode="dDDI")
         stack.callback(result.destroy)
-        columns = rhs[:, None] if rhs.ndim == 1 else rhs
-        solution = np.zeros(columns.shape)
-        for index in range(columns.shape[1]):
-            if not np.any(columns[:, index]):
-                continue
-            forcing.upload(np.ascontiguousarray(columns[:, index]))
-            result.upload(np.zeros(matrix.shape[0]))
-            engine.solve(forcing, result, zero_initial_guess=True)
-            if engine.status != "success":
-                raise LinearSolveError(f"AmgX did not converge: {engine.status}")
-            solution[:, index] = result.download()
-        return solution[:, 0] if rhs.ndim == 1 else solution
+
+        def solve(rhs: Array) -> Array:
+            """Reuse native resources and map each RHS through its own scalar scale."""
+            if np.iscomplexobj(rhs):
+                raise ValueError("the amgx adapter currently supports real float64 systems only")
+            columns = rhs[:, None] if rhs.ndim == 1 else rhs
+            solution = np.zeros(columns.shape)
+            for index in range(columns.shape[1]):
+                column = columns[:, index]
+                scale = float(np.max(np.abs(column)))
+                if scale == 0:
+                    continue
+                if rtol == 0:
+                    scale = 1.0
+                forcing.upload(np.ascontiguousarray(column / scale))
+                result.upload(np.zeros(matrix.shape[0]))
+                engine.solve(forcing, result, zero_initial_guess=True)
+                if engine.status != "success":
+                    raise LinearSolveError(f"AmgX did not converge: {engine.status}")
+                solution[:, index] = result.download() * scale
+            return solution[:, 0] if rhs.ndim == 1 else solution
+
+        resources = stack.pop_all()
+    return LinearFactorization(matrix, solve, resources.close, "amgx", rtol, atol)
 
 
 def solve_linear(
@@ -717,8 +812,10 @@ def solve_linear(
     independently accumulated true residuals, reusing the preconditioner.
     Reusable direct factors use the same nonnegative correction limit, defaulting
     to two. Zero checks only the initial solve; extra corrections never relax the
-    requested criterion. CuPy QR and AmgX do not expose this correction loop and
-    reject nondefault values.
+    requested criterion. AmgX reuses one prepared hierarchy for all columns and
+    corrections. Its relative-tolerance operands are normalized per column to
+    avoid an absolute native stopping floor on tiny loads. CuPy QR does not
+    expose this correction loop and rejects nondefault values.
     ``refinement_precision="extended"`` retains the corrected solution in
     extended precision while matrix storage and correction solves remain in
     double precision. This explicit mixed-precision mode supports Krylov
@@ -729,7 +826,7 @@ def solve_linear(
     """
     _tolerances(rtol, atol)
     _refinement_steps(refinement_steps)
-    if refinement_steps != 2 and solver in {"cupy", "amgx"}:
+    if refinement_steps != 2 and solver == "cupy":
         raise ValueError("refinement_steps requires a Krylov or reusable direct backend")
     if equilibration not in {"none", "symmetric"}:
         raise ValueError("equilibration must be none or symmetric")
@@ -769,8 +866,10 @@ def solve_linear(
                 "AMG elliptic presets require positive diagonals; do not pass saddle systems"
             )
     if solver == "amgx":
-        result = _amgx_solve(operator, forcing, rtol, atol, maxiter)
-        return _checked(operator, forcing, result, rtol, atol)
+        if np.iscomplexobj(forcing):
+            raise ValueError("the amgx adapter currently supports real float64 systems only")
+        with prepare_amgx(operator, rtol=rtol, atol=atol, maxiter=maxiter) as prepared:
+            return prepared.solve(forcing, refinement_steps=refinement_steps)
     preconditioner = None
     method = solver
     if solver == "pyamg":

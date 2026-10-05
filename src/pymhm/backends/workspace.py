@@ -20,6 +20,7 @@ from scipy import sparse
 
 from pymhm.backends.forms import (
     _assemble_compiled,
+    _form_domains,
     _real_coefficients,
     _require,
     _serial_domains,
@@ -111,6 +112,24 @@ def _check_workspace(workspace: FormWorkspace) -> None:
         raise RuntimeError("a form workspace must be used by its owning thread")
 
 
+def _binary64_data(value: Any) -> None:
+    """Require native coordinate/coefficient/constant storage compatible with real kernels."""
+    if np.asarray(value).dtype != np.dtype(np.float64):
+        raise ValueError("native geometry, coefficient and constant data must use real binary64")
+
+
+def _compilation_domain(form: Any) -> Any:
+    """Validate one compiled integration domain and its native coordinate precision."""
+    domains = _form_domains(form)
+    if len(domains) != 1:
+        raise ValueError("each nonzero local form must have exactly one integration domain")
+    domain = domains[0]
+    prototype = domain.ufl_cargo()
+    if prototype is not None:
+        _binary64_data(prototype.geometry.x)
+    return domain
+
+
 def compile_form_bundle(
     forms: Mapping[str, Any],
     comm: Any,
@@ -122,7 +141,8 @@ def compile_form_bundle(
     """Compile named linear/bilinear UFL forms once, independently of native data.
 
     DOLFINx 0.9 or later is required. Forms retain their quadrature metadata;
-    compiler/JIT options are copied. The scalar type is real binary64. Literal
+    compiler/JIT options are copied. The scalar type is real binary64. Nonzero
+    forms each use one integration domain with binary64 native geometry. Literal
     zero forms skip native compilation and require ``shapes`` if UFL erased
     their arguments. A single-rank communicator is required for local assembly.
     """
@@ -150,6 +170,8 @@ def compile_form_bundle(
             raise ValueError("forms must be linear/bilinear; argument-free zeros require shape")
         if shape is not None and rank and rank != len(shape):
             raise ValueError("shape rank does not match the declared form arguments")
+        if not zero:
+            _compilation_domain(form)
         compiled[name] = (
             None
             if zero
@@ -239,12 +261,16 @@ def create_workspace(
     supply spaces and native data on that mesh explicitly. ``subdomains`` contains
     DOLFINx integration-domain
     pairs; if omitted, original tagged UFL integrals are packed on ``mesh``.
-    Tags and integration entities must describe the same topology. Rows follow
-    test arguments, columns trial arguments; no gauge, sign or boundary rule
+    Tags and integration entities must describe the same topology.
+    The bound mesh preserves the compiled coordinate element. Native mesh,
+    Function and Constant storage uses binary64 precision. All native argument
+    and coefficient spaces belong to this bound integration mesh.
+    Rows follow test arguments, columns trial arguments; no gauge, sign or boundary rule
     is inferred. A workspace holds no solver or material-dependent response.
     """
     if mesh.comm.size != 1:
         raise ValueError("local form workspaces require a single-rank communicator (COMM_SELF)")
+    _binary64_data(mesh.geometry.x)
     fem = _require("dolfinx.fem")
     spaces = dict(space_map or {})
     coefficients, constants = dict(coefficient_map or {}), dict(constant_map or {})
@@ -252,6 +278,11 @@ def create_workspace(
     expected: dict[str, tuple[int, ...]] = {}
     used_coefficients, used_constants = {}, {}
     for name, form in bundle.forms.items():
+        if bundle.compiled[name] is not None and (
+            _compilation_domain(form).ufl_coordinate_element()
+            != mesh.ufl_domain().ufl_coordinate_element()
+        ):
+            raise ValueError("native mesh must preserve the compiled coordinate element")
         native_spaces = [
             _binding(spaces.get(arg.number(), arg.ufl_function_space()), spaces)
             for arg in form.arguments()
@@ -268,9 +299,11 @@ def create_workspace(
         local_constants = {symbol: _binding(symbol, constants) for symbol in constant_symbols}
         for symbol, native in local_coefficients.items():
             _validate_space(symbol.ufl_function_space(), native.function_space, mesh)
+            _binary64_data(native.x.array)
         for symbol, native in local_constants.items():
             if symbol.ufl_shape != native.ufl_shape:
                 raise ValueError("native constants must preserve the compiled tensor shape")
+            _binary64_data(native.value)
         used_coefficients.update(local_coefficients)
         used_constants.update(local_constants)
         domains = (
@@ -448,10 +481,18 @@ class WorkspaceCache(Generic[Resource]):
 
     def close(self) -> None:
         """Close every retained resource once, then reject further cache use."""
-        for resource in self._items.values():
-            resource.close()
+        resources = tuple(self._items.values())
         self._items.clear()
         self._closed = True
+        error = None
+        for resource in resources:
+            try:
+                resource.close()
+            except Exception as failure:
+                if error is None:
+                    error = failure
+        if error is not None:
+            raise error
 
     def __enter__(self) -> WorkspaceCache[Resource]:
         """Scope the lifetime of all worker-owned cached native records."""

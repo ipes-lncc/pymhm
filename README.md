@@ -55,6 +55,11 @@ Install from a checkout with `python -m pip install .`. Wheel, source distributi
 trusted PyPI publishing and a Conda recipe are provided; no registry publication
 is implied by the presence of those files.
 
+The [Windows guide](docs/windows.md) describes native portable-core execution,
+SciPy/PyPardiso selection, process workers and installed-wheel checks. The
+current native FEM/PETSc profiles use Linux or macOS; WSL2 provides those
+environments on a Windows host.
+
 ## Verified discretizations and integrations
 
 The predefined physical formulations live in the private `_legacy.models`

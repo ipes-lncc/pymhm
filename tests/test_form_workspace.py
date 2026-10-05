@@ -25,7 +25,8 @@ class Space:
         self._cpp_object = object()
         self.mesh = mesh
         self.dofmap = SimpleNamespace(
-            index_map=SimpleNamespace(size_local=size), index_map_bs=1,
+            index_map=SimpleNamespace(size_local=size),
+            index_map_bs=1,
             list=np.arange(size).reshape(1, size),
         )
 
@@ -35,7 +36,7 @@ class Space:
 
     def ufl_domain(self) -> Any:
         """Expose the native mesh cargo required by pre-JIT domain validation."""
-        return SimpleNamespace(ufl_cargo=lambda: self.mesh)
+        return SimpleNamespace(ufl_cargo=lambda: self.mesh, ufl_coordinate_element=lambda: "P1")
 
 
 class Form:
@@ -95,17 +96,22 @@ def native_api(monkeypatch: pytest.MonkeyPatch) -> Any:
         dofmap=np.array([[0, 1]]),
     )
     topology = SimpleNamespace(
-        dim=2, cell_type="triangle", create_connectivity=lambda *x: None,
+        dim=2,
+        cell_type="triangle",
+        create_connectivity=lambda *x: None,
         connectivity=lambda *x: SimpleNamespace(array=np.array([0, 1]), offsets=np.array([0, 2])),
     )
     observed.mesh = SimpleNamespace(
         comm=SimpleNamespace(size=1), geometry=geometry, topology=topology
     )
     observed.space = Space(observed.mesh)
+    observed.mesh.ufl_domain = lambda: SimpleNamespace(ufl_coordinate_element=lambda: "P1")
     observed.coefficient = SimpleNamespace()
+
     # UFL symbols must be hashable while their native data handles are arbitrary.
     class Symbol:
         """Hashable UFL-like symbol with a native-independent approximation space."""
+
         ufl_shape = ()
 
         def ufl_function_space(self) -> Any:
@@ -114,14 +120,17 @@ def native_api(monkeypatch: pytest.MonkeyPatch) -> Any:
 
     observed.symbol, observed.constant = Symbol(), Symbol()
     observed.function = SimpleNamespace(
-        _cpp_object=object(), function_space=observed.space,
+        _cpp_object=object(),
+        function_space=observed.space,
         x=SimpleNamespace(array=np.array([1.0, 2.0]), scatter_forward=lambda: None),
     )
     observed.function.interpolate = lambda callback: observed.function.x.array.__setitem__(
         slice(None), callback(observed.mesh.geometry.x.T)
     )
     observed.native_constant = SimpleNamespace(
-        _cpp_object=object(), value=np.array(1.0), ufl_shape=(),
+        _cpp_object=object(),
+        value=np.array(1.0),
+        ufl_shape=(),
     )
 
     def compile_native(comm: Any, form: Any, **options: Any) -> Any:
@@ -253,9 +262,8 @@ def test_current_data_buffers_owned_copies_and_no_recompilation(native_api: Any)
         assert len(native_api.bindings[1][3]) == 0
         with pytest.raises(TypeError, match="cannot be pickled"):
             pickle.dumps(local)
-        with ThreadPoolExecutor(1) as pool:
-            with pytest.raises(RuntimeError, match="owning thread"):
-                pool.submit(local.assemble, "a").result()
+        with ThreadPoolExecutor(1) as pool, pytest.raises(RuntimeError, match="owning thread"):
+            pool.submit(local.assemble, "a").result()
     assert not local.buffers and local.mesh is None and local.bundle is None
     local.close()
     with pytest.raises(RuntimeError, match="closed"):
@@ -279,6 +287,124 @@ def test_geometry_updates_and_structural_keys_exclude_values(native_api: Any) ->
         assert_array_equal(native_api.mesh.geometry.x, before)
         with pytest.raises(KeyError):
             workspace.update_workspace(local, coefficients={object(): [1.0, 2.0]})
+
+
+def test_structural_key_records_tags_maps_options_and_real_connectivity(native_api: Any) -> None:
+    """Equal sizes never merge different entity, topology, FE-layout or compiler contracts."""
+    form = Form(native_api.space, [1.0, 2.0])
+    baseline = workspace.workspace_key(native_api.mesh, {"f": form})
+    assert (
+        workspace.workspace_key(
+            native_api.mesh,
+            {"f": form},
+            space_map={0: native_api.space},
+        )
+        == baseline
+    )
+    assert (
+        workspace.workspace_key(
+            native_api.mesh,
+            {"f": form},
+            form_compiler_options={"quadrature_degree": 7},
+        )
+        != baseline
+    )
+    assert (
+        workspace.workspace_key(
+            native_api.mesh,
+            {"f": form},
+            subdomains={"facet": [(1, np.array([2]))]},
+            entity_maps={object(): np.array([0, 1])},
+        )
+        != baseline
+    )
+    tags = SimpleNamespace(indices=np.array([0, 1]), values=np.array([1, 2]))
+    form._integrals = (SimpleNamespace(integrand=lambda: 1, subdomain_data=lambda: tags),)
+    tagged = workspace.workspace_key(native_api.mesh, {"f": form})
+    assert tagged != baseline
+    tags.values[:] = [2, 1]
+    assert workspace.workspace_key(native_api.mesh, {"f": form}) != tagged
+    form._integrals = (
+        SimpleNamespace(integrand=lambda: 1, subdomain_data=lambda: [(1, np.array([2]))]),
+    )
+    assert workspace.workspace_key(native_api.mesh, {"f": form}) != baseline
+
+
+def test_native_binding_mesh_element_and_constant_shape_validation(native_api: Any) -> None:
+    """Reject a stale mesh or incompatible element/tensor before native form creation."""
+    form = Form(native_api.space, [1.0, 2.0])
+    bundle = workspace.compile_form_bundle(
+        {"f": form}, native_api.mesh.comm, form_compiler_options={"scalar_type": np.float64}
+    )
+    other_mesh = SimpleNamespace(_cpp_object=object())
+    native_api.mesh._cpp_object = object()
+    other_space = Space(other_mesh)
+    with pytest.raises(ValueError, match="belong to the bound mesh"):
+        workspace.create_workspace(bundle, native_api.mesh, space_map={0: other_space})
+    other_mesh._cpp_object = native_api.mesh._cpp_object
+    other_space.ufl_element = lambda: "P2"
+    with pytest.raises(ValueError, match="compiled finite element"):
+        workspace.create_workspace(bundle, native_api.mesh, space_map={0: other_space})
+    other_space.ufl_element = lambda: "P1"
+    with workspace.create_workspace(bundle, native_api.mesh, space_map={0: other_space}):
+        pass
+    form.constants = (native_api.constant,)
+    bundle = workspace.compile_form_bundle({"f": form}, native_api.mesh.comm)
+    native_api.native_constant.ufl_shape = (2,)
+    with pytest.raises(ValueError, match="tensor shape"):
+        workspace.create_workspace(
+            bundle, native_api.mesh, constant_map={native_api.constant: native_api.native_constant}
+        )
+
+
+def test_geometry_element_integration_domain_and_precision_are_structural(native_api: Any) -> None:
+    """Reject incompatible coordinate kernels and native precision before pointer binding."""
+    form = Form(native_api.space, [1.0, 2.0])
+    bundle = workspace.compile_form_bundle({"f": form}, native_api.mesh.comm)
+    native_api.mesh.ufl_domain = lambda: SimpleNamespace(ufl_coordinate_element=lambda: "P2")
+    with pytest.raises(ValueError, match="compiled coordinate element"):
+        workspace.create_workspace(bundle, native_api.mesh)
+    native_api.mesh.ufl_domain = lambda: SimpleNamespace(ufl_coordinate_element=lambda: "P1")
+    native_api.mesh.geometry.x = native_api.mesh.geometry.x.astype(np.float32)
+    with pytest.raises(ValueError, match="binary64"):
+        workspace.compile_form_bundle({"f": form}, native_api.mesh.comm)
+    with pytest.raises(ValueError, match="binary64"):
+        workspace.create_workspace(bundle, native_api.mesh)
+    native_api.mesh.geometry.x = native_api.mesh.geometry.x.astype(np.float64)
+    form.ufl_domains = lambda: (native_api.space.ufl_domain(), native_api.space.ufl_domain())
+    with pytest.raises(ValueError, match="exactly one integration domain"):
+        workspace.compile_form_bundle({"f": form}, native_api.mesh.comm)
+    form.ufl_domains = lambda: (
+        SimpleNamespace(ufl_cargo=lambda: None, ufl_coordinate_element=lambda: "P1"),
+    )
+    with workspace.create_workspace(
+        workspace.compile_form_bundle({"f": form}, native_api.mesh.comm),
+        native_api.mesh,
+    ):
+        pass
+
+
+@pytest.mark.parametrize("kind", ["coefficient", "constant"])
+def test_native_data_precision_cannot_mismatch_kernel(kind: str, native_api: Any) -> None:
+    """Mixed precision native handles cannot enter binary64 compiled forms implicitly."""
+    form = Form(
+        native_api.space,
+        [1.0, 2.0],
+        coefficients=(native_api.symbol,),
+        constants=(native_api.constant,),
+    )
+    bundle = workspace.compile_form_bundle({"f": form}, native_api.mesh.comm)
+    if kind == "coefficient":
+        native_api.function.x.array = native_api.function.x.array.astype(np.float32)
+    else:
+        native_api.native_constant.value = native_api.native_constant.value.astype(np.float32)
+    with pytest.raises(ValueError, match="binary64"):
+        workspace.create_workspace(
+            bundle,
+            native_api.mesh,
+            coefficient_map={native_api.symbol: native_api.function},
+            constant_map={native_api.constant: native_api.native_constant},
+        )
 
 
 @pytest.mark.parametrize(
@@ -382,9 +508,8 @@ def test_generic_record_lru_eviction_cleanup_and_thread_boundaries() -> None:
         assert closed == ["b"]
         with pytest.raises(TypeError, match="cannot be pickled"):
             pickle.dumps(cache)
-        with ThreadPoolExecutor(1) as pool:
-            with pytest.raises(RuntimeError, match="another thread"):
-                pool.submit(cache.get, "a", lambda: a).result()
+        with ThreadPoolExecutor(1) as pool, pytest.raises(RuntimeError, match="another thread"):
+            pool.submit(cache.get, "a", lambda: a).result()
     assert closed == ["b", "a", "c"]
     cache.close()
     with pytest.raises(RuntimeError, match="closed"):
@@ -394,3 +519,22 @@ def test_generic_record_lru_eviction_cleanup_and_thread_boundaries() -> None:
     for invalid in (0, -1, True, 1.5):
         with pytest.raises(ValueError, match="positive integer"):
             workspace.WorkspaceCache(invalid)
+
+
+def test_cache_cleanup_attempts_every_record_even_when_a_close_fails() -> None:
+    """A failing native resource cannot prevent independent records from closing."""
+    closed = []
+
+    def failed_close() -> None:
+        """Represent a backend resource that reports an error while closing."""
+        closed.append("failed")
+        raise ValueError("native shutdown failed")
+
+    cache = workspace.WorkspaceCache[Any](3)
+    cache.get("a", lambda: SimpleNamespace(close=failed_close))
+    cache.get("b", lambda: SimpleNamespace(close=failed_close))
+    cache.get("c", lambda: SimpleNamespace(close=lambda: closed.append("last")))
+    with pytest.raises(ValueError, match="native shutdown failed"):
+        cache.close()
+    assert closed == ["failed", "failed", "last"]
+    cache.close()

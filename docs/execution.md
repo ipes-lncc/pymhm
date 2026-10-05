@@ -382,6 +382,12 @@ multi-node performance.
 
 ## Recorded measurements
 
+The [three-dimensional Darcy study](cases/darcy-3d-accelerators.md) reports
+complete CPU PARDISO and one/two-GPU workflows, strong and weak scaling,
+and separate pressure and physical-flux errors. Its
+[numerical records and figures](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-3d-accelerators-20261005)
+preserve the executed environments, timing scope and each field's own controls.
+
 The campaign in `benchmarks/execution_modes.py` records one untimed warmup and
 three repetitions, native library threads fixed to one, source hashes, hardware
 and numerical checks. MPI times include owned local assembly, condensation,

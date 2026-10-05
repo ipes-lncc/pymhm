@@ -86,7 +86,19 @@ def _initialize_process(function: Callable[[Any], Any], native_threads: int | No
     """Install one factory copy per spawned worker, independently of its item count."""
     global _PROCESS_FUNCTION, _PROCESS_THREADS
     _PROCESS_FUNCTION, _PROCESS_THREADS = function, native_threads
+    try:
+        _prepare_callable(function)
+    except BaseException:
+        _finalize_process_function()
+        raise
     Finalize(None, _finalize_process_function, exitpriority=10)
+
+
+def _prepare_callable(function: Any) -> None:
+    """Initialize only explicitly declared process-local libraries before limits."""
+    prepare = getattr(function, "prepare_runtime", None)
+    if callable(prepare):
+        prepare()
 
 
 def _release_callable(function: Callable[[Any], Any]) -> None:
@@ -141,11 +153,18 @@ def _iter_local(
     """Own the executor until exhaustion or explicit generator closure."""
     if config.backend == "serial":
         try:
+            _prepare_callable(function)
             for item in items:
                 yield _limited_call((function, item, config.native_threads))
         finally:
             _release_callable(function)
         return
+    if config.backend == "thread":
+        try:
+            _prepare_callable(function)
+        except BaseException:
+            _release_callable(function)
+            raise
     lifetime_limits = (
         threadpool_limits(limits=config.native_threads)
         if config.pipeline and config.backend == "thread"
@@ -226,6 +245,10 @@ def iter_local(
     are cancelled after a failure.
 
     Threads avoid serialization and suit native kernels that release the GIL.
+    A callable may implement an idempotent ``prepare_runtime()`` to load its
+    selected libraries before native thread limits and numerical work. It runs
+    once per serial/thread execution or spawned worker and creates no factors
+    or native sessions. Calls without this hook retain ordinary lazy execution.
     A callable may implement ``close()`` to release its resident resources.
     Serial/thread execution invokes it after all running jobs finish, including
     failure or early iterator closure. Process execution invokes it on each

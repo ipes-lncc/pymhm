@@ -1,6 +1,7 @@
 """Constrained local elimination and portable local assembly workers."""
 
 from collections.abc import Callable
+from contextlib import ExitStack
 from typing import Any, Literal
 
 import numpy as np
@@ -10,6 +11,7 @@ from pymhm.core.contracts import LocalAssembly, LocalProblem, LocalResponse, _ma
 from pymhm.core.validation import FloatArray
 from pymhm.linalg.linear import (
     factorize,
+    prepare_amgx,
     solve_linear,
 )
 
@@ -36,6 +38,11 @@ def condense_local(
     reserves two decimal orders for source/trace combinations; their defects
     add with the reconstruction coefficients. This reserve does not replace the
     physical reconstructed-field residual criterion, checked independently.
+    AmgX prepares the pinned operator once, reusing its hierarchy for every
+    column and projected correction, and closes it on success or failure.
+    Compatibility and gauge moments use the shared accurate accumulation,
+    including contractions across retained modes. All four permitted corrections
+    are checked against the original projected equations before acceptance.
     """
     if refinement_precision not in {"double", "extended"}:
         raise ValueError("refinement_precision must be double or extended")
@@ -60,26 +67,47 @@ def condense_local(
         if k:
             _, _, pivots = linalg.qr(problem.kernel.T, pivoting=True)
             free = np.setdiff1d(free, pivots[:k])
-            pairing = problem.kernel.T @ problem.constraints
+            kernel_moments = sparse.csr_matrix(problem.kernel.T)
+            constraint_moments = sparse.csr_matrix(problem.constraints.T)
+            kernel_modes = sparse.csr_matrix(problem.kernel)
+            constraint_modes = sparse.csr_matrix(problem.constraints)
+            pairing = _matrix_action(kernel_moments, problem.constraints)
+            gauge_pairing = _matrix_action(constraint_moments, problem.kernel)
         norms = np.linalg.norm(rhs, axis=0)
-        for step in range(4):
-            defect = rhs - _matrix_action(problem.matrix, response)
-            if k:
-                defect -= problem.constraints @ np.linalg.solve(pairing, problem.kernel.T @ defect)
-            if step and np.all(np.linalg.norm(defect, axis=0) <= _LOCAL_AMG_RTOL * norms):
-                break
-            correction = np.zeros_like(rhs)
-            if len(free):
-                correction[free] = solve_linear(
-                    problem.matrix[free][:, free], defect[free], solver=solver, rtol=1e-10
+        with ExitStack() as resources:
+            prepared = None
+            if solver == "amgx" and len(free):
+                prepared = resources.enter_context(
+                    prepare_amgx(problem.matrix[free][:, free], rtol=1e-10)
                 )
-            if k:
-                correction -= problem.kernel @ np.linalg.solve(
-                    problem.constraints.T @ problem.kernel, problem.constraints.T @ correction
-                )
-            response += correction
-        else:
-            raise ValueError("AMG constrained residual refinement did not converge")
+            for step in range(5):
+                defect = rhs - _matrix_action(problem.matrix, response)
+                if k:
+                    defect -= _matrix_action(
+                        constraint_modes,
+                        np.linalg.solve(pairing, _matrix_action(kernel_moments, defect)),
+                    )
+                if step and np.all(np.linalg.norm(defect, axis=0) <= _LOCAL_AMG_RTOL * norms):
+                    break
+                if step == 4:
+                    raise ValueError("AMG constrained residual refinement did not converge")
+                correction = np.zeros_like(rhs)
+                if len(free):
+                    correction[free] = (
+                        prepared.solve(defect[free])
+                        if prepared is not None
+                        else solve_linear(
+                            problem.matrix[free][:, free], defect[free], solver=solver, rtol=1e-10
+                        )
+                    )
+                if k:
+                    correction -= _matrix_action(
+                        kernel_modes,
+                        np.linalg.solve(
+                            gauge_pairing, _matrix_action(constraint_moments, correction)
+                        ),
+                    )
+                response += correction
         width = problem.coupling.shape[1] + 1
         return LocalResponse(
             problem,

@@ -1,13 +1,17 @@
-# Three-dimensional Darcy scalability
+# Three-dimensional Darcy: native workspaces, LU and AMG
 
 The [introductory notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb)
-defines the material, exact fields, local UFL equations, oriented face pairings,
-global problem, independent conforming method and complete timers in executable
-cells. It uses `LocalEquations`, `Equation` and `MultiscaleProblem`; the physical
-problem does not require a dedicated Darcy constructor. A small default
-reproduction accompanies the larger recorded campaign.
+defines the material, manufactured fields, local UFL forms, oriented trace
+pairings, global equations, reference methods and physical norm integration in
+executable cells. It introduces reusable native assembly resources after
+showing the mathematical forms. A small default demonstration accompanies the
+[recorded 3D campaign](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-3d-workspace-lu-20261005).
 
-## Physical problem
+The [CPU PARDISO and GPU extension](darcy-3d-accelerators.md) reports larger local
+grids, CPU strong/weak scaling and one/two-GPU complete workflows. Its acquisitions
+and field controls have separate immutable provenance.
+
+## Physical problem and two material periods
 
 On the box with integer length,
 
@@ -15,7 +19,7 @@ $$
 \Omega_L=(0,L)\times(0,1)^2,
 $$
 
-the pressure and physical Darcy flux satisfy
+solve
 
 $$
 \begin{aligned}
@@ -24,205 +28,271 @@ p&=0 &&\text{on }\partial\Omega_L.
 \end{aligned}
 $$
 
-The manufactured data are
+The manufactured fields and material are
 
 $$
 \begin{aligned}
 p_*(x)&=\prod_{i=1}^3\sin(\pi x_i),\\
-K(x)&=m(x)D, &
-m(x)&=\exp\!\left(\prod_{i=1}^3\sin(2\pi x_i/0.1)\right),\\
+K(x)&=m_\varepsilon(x)D, &
+m_\varepsilon(x)&=\exp\!\left(\prod_{i=1}^3\sin(2\pi x_i/\varepsilon)\right),\\
 D&=\begin{pmatrix}2&0.3&0.2\\0.3&1.5&0.1\\0.2&0.1&1\end{pmatrix}, &
 f&=\nabla\cdot(-K\nabla p_*).
 \end{aligned}
 $$
 
-The selected macro width is 0.25 and the material period is 0.1. Consequently
-the scalar multiplier equals one on every macroface: its coordinate factors
-there are sine values at integer multiples of five pi. The permeability on
-these interfaces is the constant tensor D. Interior volume heterogeneity and
-this interface alignment are both part of the benchmark data; the alignment
-affects the trace resolution required by this analytical application.
+The tensor is symmetric positive definite. Its off-diagonal entries require
+mixed pressure derivatives in the source. UFL differentiation and independently
+derived analytical formulas specify the same physical operator and source.
+Integer domain lengths preserve the exterior pressure data; the coefficient
+wavelength remains fixed when the box expands.
 
-The full symmetric positive-definite tensor includes mixed derivatives in the
-source. UFL differentiation and independent analytical pressure/material
-formulas specify the same physical operator. Integer lengths preserve the
-homogeneous exterior data while keeping the material wavelength fixed.
+Here ε is the permeability spatial period, measured in coordinate units.
+The principal material period is 0.1 and the macro width is 0.25. The scalar
+multiplier consequently equals one on every macroface, where its coordinate
+factors contain sine values at integer multiples of five pi. This alignment
+is a feature of these data and affects skeleton approximation. A separate
+period-0.137 case removes that alignment. Its 64 material matrices are all
+distinct; its timings and errors are reported separately. Neither material
+case reuses numerical factors or local responses between macrocells.
 
-## Declared discretization
+## Local and global discretization
 
-The unit-cube macro mesh has four cells per direction, hence 64 independent
-local problems. Each macrocell contains a structured conforming Q1 hexahedral
-mesh. A fine count of 64, 96 or 128 per unit direction corresponds to 16, 24 or
-32 local cells per direction and 262,144, 884,736 or 2,097,152 total fine cells.
-The 128-per-axis setting is optional; the results tables identify the actual
-recorded configurations. The independently assembled conforming Q1 reference
-uses the same fine grid.
+The unit cube has 64 macrohexahedra. Each contains a structured conforming Q1
+local volume mesh. Fine counts of 64 or 96 per unit direction give 16 or 24
+local cells per direction, hence 262,144 or 884,736 total fine hexahedra. The
+independent conforming reference uses the same fine grid. The optional
+128-per-direction configuration is not a completed measurement in this record.
 
-Each unsplit macroface carries a tensor-product Q1 trace with four modes. The
-unit-cube skeleton has 240 faces and 960 trace coordinates. One retained
-constant per macrocell gives a coupled system of 1,024 coordinates. These
-counts do not imply that its global approximation space equals the conforming
-reference space. The notebook also exposes the trace degree explicitly;
-changing it defines a different discretization.
-
-The local UFL operator and coupling are
+Each unsplit macroface carries four tensor-product Q1 modes. The unit-cube
+skeleton has 240 faces, 960 trace coordinates and 64 retained constants;
+the coupled system has 1,024 coordinates. These spaces differ from the
+conforming reference's global Q1 space. The local equations are
 
 $$
 \begin{aligned}
+a_T(p_T,v)+b_T(v,\lambda)&=(f,v)_T,\\
 a_T(p,v)&=\int_T K\nabla p\cdot\nabla v,\\
-b_T(v,\lambda)&=\sum_{F\subset\partial T}s_{T,F}\int_F v\lambda_F,\\
-a_T(p_T,v)+b_T(v,\lambda)&=\int_T f v\,dx.
+b_T(v,\lambda)&=\sum_{F\subset\partial T}s_{T,F}\int_F v\lambda_F.
 \end{aligned}
 $$
 
-The sign maps the canonical face flux to the cell's outward flux. Increasing
-physical tangent coordinates give the same Q1 face basis to both incident
-cells in this Cartesian application. Basix provides the tensor trace and field
-tabulation; DOLFINx/UFL assembles the volume and face forms.
+The sign maps the canonical face flux into each cell's outward orientation.
+Increasing physical tangent coordinates define the same face basis on both
+sides in this Cartesian application. Basix tabulates field and trace bases;
+DOLFINx/UFL assembles the declared volume and face forms.
 
-The constant local kernel is declared explicitly. Physical volume moments
-select zero-mean local source/trace responses, and retained amplitudes restore
-the physical cell means. There is no global zero-mean gauge under these full
-Dirichlet data: the exact unit-cube pressure mean is nonzero. Persisted
-coefficients include their executed retained basis, trace maps and geometry.
+The local kernel is the constant function. Physical volume moments select
+zero-mean source and trace responses; the retained constant restores the
+physical cell mean. Full Dirichlet pressure data impose no global zero-mean
+gauge: the exact unit-cube mean is nonzero. The global coupling tests pressure
+continuity with the pairing `c=-b.T` and retains the constant compatibility
+rows. `LocalEquations`, `Equation` and `MultiscaleProblem` perform condensation,
+assembly and reconstruction without a physical-model constructor.
 
-CPU AMG uses the generic Neumann projection and coordinate pinning owner.
-Pinning selects an SPD elliptic solve, then the owner restores the declared
-physical moment and checks the original rows. A hierarchy built for a solver
-call serves its multiple right-hand sides; original-row refinement remains
-inside the package owner and timer. Direct local solves instead factor the
-constrained matrix once for their right-hand sides. The coupled global problem uses
-its generic sparse direct solver. No elliptic AMG assumption is imposed on
-the global hybrid matrix.
+The Darcy flux evaluated here is the broken field `-K grad(p_h)`. It is not
+an H(div) reconstruction. Macro conservation of oriented trace moments does
+not imply pointwise interface continuity or fine-cell conservation. Field
+plots overlay the actual macro mesh and retain independent one-sided values.
 
-## Complete timings and accuracy
+## Reuse native resources without reusing material solves
 
-Every measured workflow constructs fresh geometry, local operators, solver
-hierarchies and responses. Complete MHM time includes process startup, child
-imports, local assembly and solves, serialization, ordered shared-face
-accumulation, synchronization, pool shutdown, the global solve and complete
-field reconstruction. Norm integration, plotting and archive writing occur
-after that timer.
+A process or concurrent thread owns its native workspace. The cache key
+includes volume and trace degrees, local topology/resolution, quadrature,
+physical cell extents and dtype. Compatible calls reuse the local mesh, finite
+element spaces, compiled UFL kernels and assembly buffers. Pickle transfers
+only declarations, and the executor closes native resources after running
+work completes. Incompatible keys build another bounded workspace.
 
-Warmup populates the existing compiler cache. This separates common first-use
-compilation from the warmed measurements without reusing numerical factors
-between independent trials. Fresh worker startup remains inside process
-timings. A cleared compiler cache is a different experiment.
+For every macrocell, the application updates physical geometry and the
+material's declared UFL constants, then assembles a fresh material matrix and
+source. Returned arrays own their data. Each material matrix gets its own
+factorization or AMG hierarchy and source/trace solves. No material parity,
+periodicity or response basis is used as a cache key.
 
-Strong scaling fixes the complete discretization and compares one process
-with several spawned processes. True serial execution is a distinct configuration. Weak scaling
-extends the x-domain with its length equal to the process count, preserving
-macro width, local cell size, trace degree and coefficient period. Both local
-work and the growing global problem remain in the reported total.
+Only unsigned trace and volume-moment blocks are reused here: their UFL forms
+contain geometry but no material coefficient. Face signs and global indices
+are applied anew for each macrocell. This application-specific independence
+must be rechecked for Robin or material-weighted coupling forms; the generic
+backend makes no such assumption.
 
-The [public record](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-3d-20261004)
-contains the actual timing samples, resource counts, physical errors,
-quadrature controls and provenance. CPU1 classical AMG and multi-process MHM
-use different CPU budgets. The classical MPI reference uses 32 physical cores,
-while MHM has 24 or 28 available physical cores. GPU condensation components
-have a separate scope; no accepted large GPU timing is available here.
+Independent native controls compare fresh and reused matrices, loads,
+oriented couplings, kernels, physical moments, retained bases, source/trace
+responses and full reconstructed fields. They include a material change and
+return, nonaligned coefficients, concurrent threads and spawned processes.
+The record preserves original physical equations and executed basis digests,
+so replay does not recompute an arbitrarily oriented nullspace.
 
-The local-resolution performance sweep integrates pressure and physical
-vector-flux errors separately against the analytical fields. Refining only local volume meshes with fixed macro/trace
-spaces can leave an interface-error floor. Equal fine-cell counts therefore
-measure a geometry budget, rather than equal accuracy. The conforming reference
-has its own refinement controls. The raw local field `-K grad(p)` is broken;
-macro conservation does not imply H(div) continuity or fine-cell conservation.
-Field plots overlay the actual macro mesh and preserve independent local
-values.
+## Solvers and measured timing scope
 
-The 96-per-axis MHM configuration with one process and sparse direct local
-solves is budget-censored at an invocation lower bound of 900 s. It has no
-completed workflow time or accepted field state. It is excluded from medians
-and speedup denominators; it is not assigned an estimated completion time.
+Direct local solves use SciPy SuperLU or PETSc/MUMPS on `MPI.COMM_SELF`. A
+factorization serves the source and 24 trace right-hand sides of one macrocell;
+it is rebuilt for another material matrix. CPU PyAMG uses the shared Neumann
+projection, coordinate pinning and physical-moment restoration owner. Its
+original-row refinement stays inside that owner and timer. A hierarchy serves
+multiple right-hand sides within a solver call; additional refinement passes
+can rebuild a hierarchy. The coupled global problem retains sparse direct
+algebra rather than an elliptic AMG preset.
 
-The optional native component uses
-[NVIDIA AmgX 2.5.0](https://github.com/NVIDIA/AMGX/tree/91a8413ef267b1c32aff4014c02820e1c5897ac2)
-at revision `91a8413ef267b1c32aff4014c02820e1c5897ac2` and
-[PyAMGX](https://github.com/shwina/pyamgx/tree/6229ff008ee5a264cfc1799eeb2f83d96da0aadc)
-at revision `6229ff008ee5a264cfc1799eeb2f83d96da0aadc`. Its recorded build targets
-CUDA architecture 8.6 with MPI disabled; each GPU has its own spawned process.
-CPU components use the same archived operators and component environment.
-The complete native-FEM CPU campaign and accelerator component record their
-own software versions and timing scopes separately.
+The independent classical comparison uses distributed PETSc/MUMPS LU or
+PETSc CG/GAMG on the same grid, material, source and full Dirichlet data.
+Thirty-two physical cores are available to the large parallel configurations,
+with one native thread per process or MPI rank. A serial classical large-grid
+LU measurement is not present. Classical GAMG and local PyAMG are different
+AMG implementations and solve different global algebraic structures.
 
-Additional physical-residual correction passes can rebuild an AMG hierarchy.
-Those passes, moment restoration, setup and transfers remain included in the
-component timer; there is no guarantee of one setup for an entire condensation.
+Reported complete times start at the parent launch and include interpreter
+imports, native initialization, geometry and forms, fresh material assembly,
+solver setup, response transfers, synchronization, shared-face accumulation,
+worker shutdown, global solution and reconstruction. Error integration,
+archive writing and plotting occur afterward. Compiler warmup populates the
+existing cache; measurements include fresh workers but exclude cold FFCx/JIT
+compilation. Raw records also retain the solver-pipeline time and startup
+cost separately. Per-process RSS high-water marks do not establish a
+simultaneous aggregate memory peak.
 
-## Recorded complete times and field errors
+Each accepted configuration is an actual completed sample. Timing windows
+separate competing project workloads. The measurements do not establish
+statistical variance, multi-node scaling or a large GPU speedup. The optional
+one-/two-GPU local-condensation procedure has a separate timing scope; no
+accepted large GPU timing is available in this edition.
 
-| Fine cells per unit axis | Method | Processes / ranks | Available physical CPU cores | Complete time (s) |
-| ---: | --- | ---: | ---: | ---: |
-| 64 | Classical PyAMG | 1 | 1 | 26.3190 |
-| 64 | Classical PETSc CG/GAMG | 32 | 32 | 3.8283 |
-| 64 | MHM PyAMG | 1 | 24 | 123.5853 |
-| 64 | MHM PyAMG | 8 | 24 | 19.5680 |
-| 64 | MHM PyAMG | 16 | 24 | 11.2846 |
-| 64 | MHM PyAMG | 32 | 24 | 8.8042 |
-| 96 | Classical PyAMG | 1 | 1 | 87.6479 |
-| 96 | Classical PETSc CG/GAMG | 32 | 32 | 9.2348 |
-| 96 | MHM PyAMG | 32 | 28 | 23.0012 |
+## Strong scaling
 
-| Fine cells per unit axis | Discretization / solver | Pressure L2 error | Physical vector-flux L2 error |
-| ---: | --- | ---: | ---: |
-| 64 | Classical PETSc CG/GAMG | 8.8900421e-05 | 4.8283419e-02 |
-| 64 | Classical pyamg | 8.8900421e-05 | 4.8283419e-02 |
-| 64 | MHM pyamg; macro4 / traceQ1 | 1.0714369e-03 | 7.5135753e-02 |
-| 96 | Classical PETSc CG/GAMG | 3.9629110e-05 | 3.2451356e-02 |
-| 96 | Classical pyamg | 3.9629110e-05 | 3.2451356e-02 |
-| 96 | MHM pyamg; macro4 / traceQ1 | 1.0801716e-03 | 6.6169010e-02 |
+Strong scaling fixes the full period-0.1 unit-cube discretization: 262,144 fine
+cells, 64 macrocells, Q1 volume/face spaces and 1,024 coupled coordinates.
+Each MHM curve uses one spawned process as its denominator, with fresh imports
+and worker setup. MHM configurations expose the same 32 physical cores with
+one native thread per worker. The classical CG/GAMG curve uses its own one-MPI-
+rank denominator and assigns one physical core per rank. Actual process/rank
+counts are 1, 2, 4, 8, 16 and 32. A serial call without a spawned worker is a
+different timing configuration.
 
-Each row is one completed sample, including startup and initialization. The
-64-per-axis MHM process sweep reduces complete time from 123.5853 s with one
-process to 8.8042 s with 32 processes: a 14.04× internal speedup. All four
-MHM points share an affinity of 24 physical cores, so the 32-process point
-oversubscribes that CPU budget. The 96-per-axis MHM point uses 28 available
-physical cores.
+| Local solver | Processes | Complete launch time (s) | Self-speedup | Efficiency (%) |
+| --- | ---: | ---: | ---: | ---: |
+| MHM MUMPS LU | 1 | 41.4881 | 1.000 | 100.00 |
+| MHM MUMPS LU | 2 | 23.8736 | 1.738 | 86.89 |
+| MHM MUMPS LU | 4 | 14.3390 | 2.893 | 72.33 |
+| MHM MUMPS LU | 8 | 8.7468 | 4.743 | 59.29 |
+| MHM MUMPS LU | 16 | 6.1865 | 6.706 | 41.91 |
+| MHM MUMPS LU | 32 | 5.1665 | 8.030 | 25.09 |
+| MHM PyAMG | 1 | 109.5554 | 1.000 | 100.00 |
+| MHM PyAMG | 2 | 58.0224 | 1.888 | 94.41 |
+| MHM PyAMG | 4 | 31.3542 | 3.494 | 87.35 |
+| MHM PyAMG | 8 | 18.7695 | 5.837 | 72.96 |
+| MHM PyAMG | 16 | 11.7759 | 9.303 | 58.15 |
+| MHM PyAMG | 32 | 8.2986 | 13.202 | 41.26 |
 
-The classical MPI reference uses 32 physical cores and is faster than the
-32-process MHM at both resolutions: 3.8283 versus 8.8042 s at 64, and 9.2348
-versus 23.0012 s at 96. These CPU budgets and approximation spaces differ;
-this is not an equal-resource or equal-accuracy comparison. The tables expose
-those differences instead of inferring a crossover from them.
+![Complete measured wall time and ideal T(1)/P references; markers identify acquired configurations.](../figures/darcy-3d-workspace-lu-20261005/strong-time.png)
 
-No completed large weak-scaling or accepted GPU-condensation timing is
-available. No complete 128-per-axis workflow is measured. The source notebook
-provides configurable procedures for these experiments; the present record
-establishes the CPU process sweep only.
+Complete measured wall time and ideal T(1)/P references; markers identify acquired configurations.
 
-Source/trace response residuals, reconstructed physical equation residuals and
-physical-volume moment defects are recorded separately. The campaign's
-physical-field acceptance threshold is `1e-8`; all five recorded MHM states
-also meet the stricter `1e-10` diagnostic. The largest reconstructed physical
-relative residual is `2.13e-13`. The relative quotient for the retained constant
-uses a roundoff-scale kernel-action right-hand side and is recorded separately
-from physical-field acceptance. AMG correction and projected-response targets
-remain `1e-10` and `1e-12`, respectively.
+![Strong process self-speedup, with the ideal linear reference.](../figures/darcy-3d-workspace-lu-20261005/strong-speedup.png)
 
-The conforming reference has observed two-mesh orders 1.993 for pressure and
-0.980 for physical vector flux between 64 and 96. MHM's pressure errors remain
-near `1.08e-3` while its flux error decreases; this is the fixed macro/trace
-resolution floor, rather than full MHM convergence. Assembly/error quadrature
-controls compare degrees 6, 8, 10 and 12 on patches at the actual fine-cell
-sizes. These integration controls are distinct from complete performance runs.
+Strong process self-speedup, with the ideal linear reference.
 
-Resource counts and actual errors define the scope of these comparisons.
-The [full record](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-3d-20261004)
-includes each actual sample, precision controls and unmeasured scopes.
+![Strong efficiency S(P)/P: startup, transfers and global work remain in the total.](../figures/darcy-3d-workspace-lu-20261005/strong-efficiency.png)
 
-## Relation to literature and HPC execution
+Strong efficiency S(P)/P: startup, transfers and global work remain in the total.
 
-[Gomes et al. (2017)](https://arxiv.org/abs/1703.10435) describe independent local
-response construction and a separately assembled coupled problem, with MPI
-local ownership and distributed sparse algebra. Their 3D performance problem
-uses a different coefficient, tetrahedral P2 spaces, face partitions and
-cluster resources. The present hexahedral analytical application is not a
-matched reproduction of that timing table.
+![Complete workflow phase fractions and actual elapsed seconds; local/ordered assembly includes independent material solves and worker communication.](../figures/darcy-3d-workspace-lu-20261005/strong-phases.png)
 
-[Penna et al.](https://doi.org/10.1002/cpe.5170) study cost-aware scheduling for
-heterogeneous MHM workloads. Its scheduling gains do not transfer directly to
-uniform one-shot local meshes. A bounded ordered process pipeline provides
-node-local execution here; multi-node efficiency requires a separately
-measured distributed campaign. See the [execution guide](../execution.md) and
-[performance report](../performance.md) for resource and timing conventions.
+Complete workflow phase fractions and actual elapsed seconds; local/ordered assembly includes independent material solves and worker communication.
+
+## Focused weak scaling
+
+Within each curve, macro width is 0.25, fine-cell width is 1/64, the material
+period and trace degree stay fixed, and both fine and macro cells per process
+are constant. The x-domain expands through integer lengths. Four- and
+eight-macrocell-per-process families remain separate. The baseline is the
+smallest actually measured process count in that family, not an assumed
+one-process run. Efficiency is its complete time divided by the measured
+larger-domain time. Growth of the skeleton and global solve remains included.
+These short curves establish focused node-local observations, rather than
+asymptotic or multi-node weak scalability.
+
+| Permeability spatial period, ε | Local solver | Macrocells / process | Processes | Box length | Fine cells | Coupled coordinates | Complete launch time (s) | Weak efficiency (%) |
+| ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 0.1 | MHM MUMPS LU | 8 | 8 | 1 | 262,144 | 1,024 | 8.7468 | 100.00 |
+| 0.1 | MHM MUMPS LU | 8 | 16 | 2 | 524,288 | 1,984 | 14.4457 | 60.55 |
+| 0.1 | MHM MUMPS LU | 8 | 32 | 4 | 1,048,576 | 3,904 | 18.7764 | 46.58 |
+| 0.1 | MHM PyAMG | 4 | 16 | 1 | 262,144 | 1,024 | 11.7759 | 100.00 |
+| 0.1 | MHM PyAMG | 4 | 32 | 2 | 524,288 | 1,984 | 20.0016 | 58.87 |
+| 0.1 | MHM PyAMG | 8 | 8 | 1 | 262,144 | 1,024 | 18.7695 | 100.00 |
+| 0.1 | MHM PyAMG | 8 | 16 | 2 | 524,288 | 1,984 | 24.3604 | 77.05 |
+| 0.1 | MHM PyAMG | 8 | 32 | 4 | 1,048,576 | 3,904 | 29.7701 | 63.05 |
+| 0.137 | MHM MUMPS LU | 4 | 16 | 1 | 262,144 | 1,024 | 6.3699 | 100.00 |
+| 0.137 | MHM MUMPS LU | 4 | 32 | 2 | 524,288 | 1,984 | 13.5564 | 46.99 |
+
+![Focused weak complete wall time and efficiency; each legend identifies its fixed work per process.](../figures/darcy-3d-workspace-lu-20261005/weak-scaling.png)
+
+Focused weak complete wall time and efficiency; each legend identifies its fixed work per process.
+
+## Cost and physical accuracy
+
+| Permeability spatial period, ε | Fine cells per unit axis | Method | Processes / ranks | Complete launch time (s) |
+| ---: | ---: | --- | ---: | ---: |
+| 0.1 | 64 | Classical PETSc CG/GAMG | 32 | 3.9623 |
+| 0.1 | 64 | Classical PETSc PREONLY/LU/MUMPS | 32 | 16.8697 |
+| 0.1 | 64 | MHM MUMPS LU | 32 | 5.1665 |
+| 0.1 | 64 | MHM PyAMG | 32 | 8.2986 |
+| 0.1 | 64 | MHM SuperLU | 32 | 6.0051 |
+| 0.137 | 64 | Classical PETSc CG/GAMG | 32 | 3.7496 |
+| 0.137 | 64 | Classical PETSc PREONLY/LU/MUMPS | 32 | 16.6027 |
+| 0.137 | 64 | MHM MUMPS LU | 32 | 5.0159 |
+| 0.137 | 64 | MHM PyAMG | 32 | 7.9710 |
+| 0.1 | 96 | Classical PETSc CG/GAMG | 32 | 9.2592 |
+| 0.1 | 96 | Classical PETSc PREONLY/LU/MUMPS | 32 | 96.3061 |
+| 0.1 | 96 | MHM MUMPS LU | 32 | 10.4146 |
+| 0.1 | 96 | MHM PyAMG | 32 | 22.5916 |
+| 0.1 | 96 | MHM SuperLU | 32 | 56.0215 |
+
+At matched 32-physical-core and fine-element budgets, local MUMPS MHM is
+3.27× faster than classical distributed MUMPS at 64 cells per unit
+axis and 9.25× faster at 96. The period-0.137 LU comparison gives
+3.31×. These are measured workflow ratios for different approximation
+spaces, with the physical errors shown alongside them. They are not
+equal-accuracy speedups.
+
+Classical distributed CG/GAMG remains faster than both MHM local MUMPS and
+MHM local PyAMG at the measured unit-cube resolutions. The favorable LU
+comparison therefore does not establish an advantage over the best classical
+solver measured here. Each timing point is an actual completed sample;
+no confidence interval or variance estimate is inferred.
+
+| Permeability spatial period, ε | Fine cells per unit axis | Approximation | Pressure L2 error | Physical vector-flux L2 error |
+| ---: | ---: | --- | ---: | ---: |
+| 0.1 | 64 | Conforming Q1 | 8.8900421e-05 | 4.8283419e-02 |
+| 0.1 | 64 | MHM; macro4 / traceQ1 | 1.0714369e-03 | 7.5135753e-02 |
+| 0.137 | 64 | Conforming Q1 | 8.9063230e-05 | 4.8612283e-02 |
+| 0.137 | 64 | MHM; macro4 / traceQ1 | 5.8898023e-03 | 4.1392472e-01 |
+| 0.1 | 96 | Conforming Q1 | 3.9629110e-05 | 3.2451356e-02 |
+| 0.1 | 96 | MHM; macro4 / traceQ1 | 1.0801716e-03 | 6.6169010e-02 |
+
+![Fine-element and 32-CPU budget comparisons display time, pressure error and physical vector-flux error together. Approximation spaces differ. Empty solver slots are unmeasured configurations; absent field integrals are labeled explicitly.](../figures/darcy-3d-workspace-lu-20261005/solver-comparison.png)
+
+Fine-element and 32-CPU budget comparisons display time, pressure error and physical vector-flux error together. Approximation spaces differ. Empty solver slots are unmeasured configurations; absent field integrals are labeled explicitly.
+
+Pressure and vector-flux errors are integrated separately against the exact
+fields. Refining only local volume meshes with a fixed macro grid and Q1
+trace leaves a pressure-error floor: the period-0.1 MHM pressure error stays
+near 1.08e-3 while the flux error decreases. This is a local-resolution
+performance sweep, not complete MHM convergence. The nonaligned period
+changes both volume and face permeability and gives larger MHM field errors
+in the same fixed trace space. Its interface-resolution study is a separate
+experiment; the aligned case's accuracy is not transferred to these data. The conforming method's own refinement and quadrature
+controls remain independent of the performance ratios.
+
+## Literature and scope
+
+[Gomes et al. (2017)](https://arxiv.org/abs/1703.10435) separate independent local
+response construction from the coupled global solve, with MPI ownership and
+distributed algebra. Their published 3D experiment has different coefficients,
+tetrahedral P2 spaces, face partitions and cluster resources. This Q1
+hexahedral analytical application is not a reproduction of that timing table;
+the simplex error estimates are not asserted for these cube spaces.
+
+[Penna et al.](https://doi.org/10.1002/cpe.5170) investigate cost-aware scheduling
+for heterogeneous MHM work. Their measured gains do not transfer to uniform
+local meshes without a matching experiment. The present curves use bounded
+node-local process execution, and establish no multi-node or large GPU gain.
+The [execution guide](../execution.md) specifies resource ownership and cleanup.

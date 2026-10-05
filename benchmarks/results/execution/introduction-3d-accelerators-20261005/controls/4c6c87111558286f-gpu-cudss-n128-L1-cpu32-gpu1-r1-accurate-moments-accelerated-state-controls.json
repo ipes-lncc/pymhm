@@ -1,0 +1,767 @@
+{
+  "scope": "Post-timing literal archived-state replay and physical integration; no assembly, numerical basis computation, factorization or new solver acquisition.",
+  "receipt": "/prj/thermophase/volpatto/Work/pymhm/build/performance3d-accelerated/gpu-cudss-n128-L1-cpu32-gpu1-r1-accurate-moments.json",
+  "receipt_sha256": "0b71a9aa37727cdd2fe552766df8473f24baf41a08b78d3f2dfb2ee3daa842d4",
+  "archive_sha256": "15932e7dea67b8d93841cf749c7609245f1cc76ba3f6298ff7ab6e20851b153f",
+  "executed_basis_sha256": [
+    "e668dfa15e7a26756cc902e347d37ae7722f41ebc015db9d5698aa3a7d089c27",
+    "22fa2870d29fa70c6c89fc5181b6b554a96fe9e6db9cc96b75987846d75bb51f",
+    "85367915bf1c3d3ad18cb5f47d5846c2ff10a60a4487b8ece7dc9a37dd8f42a5",
+    "769b5d4f6521108484c596ee781d7167fc9ce6a8d818cc2526c7d4e09644b033",
+    "31a17d9fda039d5ef467c63e2ace28a4c25943223017a56ff0f6d8aeb08bbbf1",
+    "0edd234b3623c1bb298438b5f200a3f9fc61b3cc7727795808f6d32c170b294f",
+    "dd64c63e5f14f351e700282b1ab530ac0d73e3ebef23e4063bac25de015511eb",
+    "0947dfacca29629452efde16abcae596e29af35224340dc745490320411668c7",
+    "013ae17a3264eb1ab20b8ab1a5a129747335730df215f21aea6fa9623505c142",
+    "251ab5c9c0d232cf663d2e7951f971f9506eb646c96f00a4cdbe5a901e451833",
+    "f814735214d9ae68a92bbed20f729c4dee08cd964dfc9f2a3597b94e0472d45e",
+    "f2120d25b77c1637b5c8e378d01e95cca02af87650f810dedb8b14bc0a47617b",
+    "eacdbc59c5bc53b8c640b0a9949ef5b244e7ef428b5c1129dbe1501465f6b750",
+    "17b92ede9385dbca0499a96a7e77a8f72da3602d5b3046dc60fb890ad5700aa0",
+    "697374bd2d5d3702fc9bf69eb1cc0c79e8c4fdd16c1ad9fec35bbf9b4fa7f956",
+    "80c640da43ef90bcf22981e122c8f2fc872c035c8d810682a8dfa83acc5f4066",
+    "e34d95c647d76ede9d6aa9b718262113e1a2b1be7d08775487b213992183ad1d",
+    "a25496350687137dccdbc304721e49dd54b78011daa83d2d82062a67fb464514",
+    "597f8d120474544981f62fd603cb33103ef94ca02196667c38a029420e622288",
+    "2a54369abf424b4153734b5c638ffdc974b4e1c043c7e674c4e9799ce1345a47",
+    "c67ea3bc056d31d80ab60b82b87440a107e9c5455b714850896ab826a38ef457",
+    "b65c2241c9173564389a89579f91f07a602a9c2426e3644a1b56eb21e142c641",
+    "b1c31ff95b631e3bebefd9b53e601f2c43b3f976215eef98c42c61361faf984c",
+    "2cfa32d101022f9fefb0ec47a80396426485ea13908ed3522fab2d21ed25ac9b",
+    "e3b5708fe849368cb77febba0280e15cfe9ae81d9de397533de651bf7743e8de",
+    "011a74ef6e265792bfd16a557c76acd8e5601d03cd3bdd3cf2046e00fedf93f1",
+    "d2efb32d3587ed9b91af8269028a2d5f085cc2d8b02e7910ffbf42dfbf24186d",
+    "19a9ed3e1686c0418a5894a98116d60d43b6330f412ce04165d9b10e248ffda5",
+    "35d3ef7990c7267f717c70be46c5034a32c0c1140724cf3112d52902e1a6555f",
+    "87998bcc8fed191ca98a46a13d4340a72a4444c0b2196249d5ac0e45700a1ae2",
+    "3ea23d7fd7a3147afd44eb165d3e3d511fa3049a8e6ebb6a5fc19642b9f38037",
+    "326361ac48981b71892cc1edb21580b0fb570a886d8e46eef98b110b54370f0b",
+    "974377b5596fced79071e7b7829436900efae124e4e20dcdbf94e1c4737992f8",
+    "ac4c4956f26a3faadf98cc99813f52b93d4c4a5f1b99abdd3e3f934c98c479bf",
+    "381bedfc24158e229ab04a271cc4b2e91d48ea424af7e8f7dc8fade176c94475",
+    "baad593605a3904cd3f83087e839688e87994ee7ec8d1679fd33b23be9eb1746",
+    "60f636ae253e77d8a5ff4c2abdc6421b8640076be60fd62b6bff15c3a81c1a8b",
+    "f4a6d1e2fe744d83b70da7feaebdb1d9731ebf8a4b7507dd61d7ad241aabee28",
+    "250394b00c812138261f3b7c1221685f03729cfcdfe5fa35a155bbb150ae3714",
+    "366c092bf8d823e0055c777f04404a1ddf7f86957790510ec852e5a42fee1252",
+    "d658229606e6bfbcd15ef2022a0414c65663d04b8ba020b64888ffe0b00ec658",
+    "557203209be5f3e3bcf253ed9bacbb0fdffbf53f29a5de156c56cbcbcec7366d",
+    "7663355527d999b47b89bd998e1e66139e6d80c8e1d08e5d8babd31ea7796a26",
+    "4f5fcea4f3ed6156430ad40161a3d0e9855b5801285f60d93bce5acc76eb74c6",
+    "088604ddc576cd3455c8be650e7657328ba4e6e05ec50d98e7640fb6026c6b69",
+    "48736145adb9e312780ddde4cadd9ffa4a0e9bbf64f28ea4c6208142bd2b4674",
+    "c925332f9907a658286c76535f0660a49b993bc296ad0be7b8c4c8c0ae4cc254",
+    "67eb2eb2a61a9908fed497f27d1c1bd02e5b7c6eeb1bac767edea577f0324c3a",
+    "6d9bd1e96c369aed9934e4562fcfb17e12316aea5fb576d9c0d636c0a8ce7128",
+    "ebe5973108a9cfa37a47e3b56f61aa4d2f133ddc784b7814d3fdc14cb1178e30",
+    "1a13297f3ed108df4d5d2ca47dd8d00725eaaead8ed8e423340231b7c1c19dfa",
+    "c9c7e2801e5afeb6fc71a1e8ef1bdda73e4d0b489dda674a1397802b1f72ce5b",
+    "de67ae53599df235c6e5086850a283d3ba26376e8d4fc1dd7a92176d249dacb9",
+    "fee08289a972af0f0cb5b2349e2d5c0299439629210f2bbf906bcd1eaaa5b75b",
+    "4f413560bf0fdaee4065e2ce892eaebb4c537be247b0a05279dfc8df1a378304",
+    "bdf621e7c6cf70e0736ca5e21752d6ba3297bee48749785223aa405347025687",
+    "6c74aeb88adc8dd5acb7bc1f1e3f524c48118376f21047f0154401ec81eb5c37",
+    "73506467b6117d52016afc3f21c0273085a3e3c46ed28215325e9d23e0040c96",
+    "84b908d6b9d993f3f2490bc1a313d09e95c65da60d6608129bd000a54d0932ce",
+    "476618e07ca4341e602a114d412a6e107cf5f0eea60635bc623bebab1ed9d098",
+    "76daae3428675b91c4fc7dc2a96bf620da9282c01409133355f5024456606fc8",
+    "7b8969a65e334e887888c7964219a085c743a112ed1a9663f1332a1f94ac871c",
+    "c84a37ead5decfad68ea88e5d4e64bd35ed6aab965a8b9094c2fbd2389cb6274",
+    "781fa0b1340674a3a98cb7025cfb4889630edf8dc1e5d514ece8607f663a5e49"
+  ],
+  "source_sha256": {
+    "build/performance3d-audit/accelerated_state_controls.py": "dda6d058271da2651cb24f884af26f3bdb062323e51e8155353b3da0a32de94a",
+    "build/performance3d-lu/replay_mhm_controls.py": "32bb35f61a7cee5d5f4c5c46168da9c832880852f09b8c98135e1fea072d293a",
+    "build/performance3d-lu/mhm_workspace.py": "3928434d3bcc1bdd5b978f8df1b087924b0df0c076d9fffce16ceb98f7298dd1",
+    "build/performance3d/native_baseline.py": "b3b22d810a132d68bbf5d5af1943c7394ee97c586449562d4961b9e42ee92f80",
+    "build/performance3d/campaign.py": "6919c5f8e0b625c27058dc184c85637f7b40a324a9e3781c4b581159a4074664",
+    "src/pymhm/meshes/hexahedron.py": "61d1497e5b53ba2a8f4d93013edefcefe96e5a89858929df0751ef74c78390b7",
+    "src/pymhm/fem/reference.py": "a97ae62812cab8fad42f398751d1768a1ba7fff43e80a3f3f3890f37d2379d07",
+    "pixi.lock": "1f1a82a6551538b4317594359cc4b9cfaaabd10629ec15cb6300d489e76a5359"
+  },
+  "post_timer_environment": {
+    "python_executable": "/prj/thermophase/volpatto/Work/pymhm/.pixi/envs/introduction/bin/python",
+    "python_version": "3.13.15 | packaged by conda-forge | (main, Aug 10 2026, 07:59:06) [GCC 14.4.0]",
+    "versions": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "fenics-basix": "0.9.0",
+      "fenics-ufl": "2024.2.0",
+      "threadpoolctl": "3.7.0"
+    }
+  },
+  "fine_n": 128,
+  "length": 1,
+  "material_period": 0.1,
+  "macro_cells": 64,
+  "anisotropy": [
+    [
+      2.0,
+      0.3,
+      0.2
+    ],
+    [
+      0.3,
+      1.5,
+      0.1
+    ],
+    [
+      0.2,
+      0.1,
+      1.0
+    ]
+  ],
+  "cpu_affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "quadrature_worker_cpus": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "blas_checks": {
+    "1": {
+      "maximum_archived_field_replay_difference": 0.0,
+      "maximum_equivalent_retained_sign_rotation_field_difference": 0.0,
+      "maximum_rotated_trace_orientation_map_difference": 0.0,
+      "maximum_complement_physical_moment": 8.342844396536331e-19,
+      "maximum_original_kernel_action_scaled_by_matrix_Frobenius_and_kernel_norm": 2.6144211946562107e-18,
+      "maximum_retained_physical_moment_difference_from_declared_constant_kernel": 3.469446951953614e-18,
+      "basis_rotation_scope": "The archived retained space and declared constant kernel have dimension one; their equivalent orthogonal rotations are the two signs. The executed E matrix and coarse coefficient are rotated together, including the B.T E trace orientation map.",
+      "pressure_integral": 0.2581310644655682,
+      "exact_pressure_integral": 0.25801227546559596,
+      "pressure_mean": 0.2581310644655682,
+      "exact_pressure_mean": 0.25801227546559596,
+      "volume": 1.0,
+      "original_checks": {
+        "source_response_max_relative_residual": 3.0099276685530857e-13,
+        "trace_response_max_relative_residual": 1.582238665322626e-14,
+        "retained_response_max_relative_residual": 0.1818743306348,
+        "moment_absolute_max": 3.0288441592922183e-18,
+        "reconstructed_physical_equation_max_relative_residual": 9.542944262787436e-14
+      },
+      "original_physical_residual_absolute_difference_from_acquisition": 0.0
+    },
+    "2": {
+      "maximum_archived_field_replay_difference": 0.0,
+      "maximum_equivalent_retained_sign_rotation_field_difference": 0.0,
+      "maximum_rotated_trace_orientation_map_difference": 0.0,
+      "maximum_complement_physical_moment": 8.342844396536331e-19,
+      "maximum_original_kernel_action_scaled_by_matrix_Frobenius_and_kernel_norm": 2.6144211946562107e-18,
+      "maximum_retained_physical_moment_difference_from_declared_constant_kernel": 3.469446951953614e-18,
+      "basis_rotation_scope": "The archived retained space and declared constant kernel have dimension one; their equivalent orthogonal rotations are the two signs. The executed E matrix and coarse coefficient are rotated together, including the B.T E trace orientation map.",
+      "pressure_integral": 0.2581310644655682,
+      "exact_pressure_integral": 0.25801227546559596,
+      "pressure_mean": 0.2581310644655682,
+      "exact_pressure_mean": 0.25801227546559596,
+      "volume": 1.0,
+      "maximum_BLAS1_BLAS2_field_difference": 0.0,
+      "original_checks": {
+        "source_response_max_relative_residual": 3.0099276685530857e-13,
+        "trace_response_max_relative_residual": 1.582238665322626e-14,
+        "retained_response_max_relative_residual": 0.1818743306348,
+        "moment_absolute_max": 3.0288441592922183e-18,
+        "reconstructed_physical_equation_max_relative_residual": 9.542944262787436e-14
+      },
+      "original_physical_residual_absolute_difference_from_acquisition": 0.0
+    }
+  },
+  "physical_errors": {
+    "5": {
+      "pressure_L2": 0.0010838383438960175,
+      "flux_L2": 0.06264851326297054,
+      "pressure_L2_per_sqrt_volume": 0.0010838383438960175,
+      "flux_L2_per_sqrt_volume": 0.06264851326297054,
+      "error_gauss_order": 5
+    },
+    "6": {
+      "pressure_L2": 0.0010838383438960203,
+      "flux_L2": 0.0626485132629844,
+      "pressure_L2_per_sqrt_volume": 0.0010838383438960203,
+      "flux_L2_per_sqrt_volume": 0.0626485132629844,
+      "error_gauss_order": 6
+    }
+  },
+  "norm_shards": [
+    {
+      "indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 3.370573464670827e-08,
+      "flux_error_square": 0.00011274255454527938,
+      "cpu_affinity": [
+        0
+      ],
+      "pid": 664228,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 9.713531142976588e-08,
+      "flux_error_square": 0.00032623590129262465,
+      "cpu_affinity": [
+        3
+      ],
+      "pid": 664220,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 9.430969600965883e-08,
+      "flux_error_square": 0.0002975487751180166,
+      "cpu_affinity": [
+        6
+      ],
+      "pid": 664211,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 3.1340719964963725e-08,
+      "flux_error_square": 8.503416909930395e-05,
+      "cpu_affinity": [
+        8
+      ],
+      "pid": 664218,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        16,
+        17,
+        18,
+        19
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 6.505368720952841e-08,
+      "flux_error_square": 0.0002237674247666457,
+      "cpu_affinity": [
+        2
+      ],
+      "pid": 664214,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        20,
+        21,
+        22,
+        23
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 1.0332432041859052e-07,
+      "flux_error_square": 0.0003762014073214052,
+      "cpu_affinity": [
+        7
+      ],
+      "pid": 664216,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        24,
+        25,
+        26,
+        27
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 1.0014499281278723e-07,
+      "flux_error_square": 0.0003461428093633937,
+      "cpu_affinity": [
+        4
+      ],
+      "pid": 664215,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        28,
+        29,
+        30,
+        31
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 6.233656918825578e-08,
+      "flux_error_square": 0.0001947447277213469,
+      "cpu_affinity": [
+        5
+      ],
+      "pid": 664217,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        32,
+        33,
+        34,
+        35
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 6.233894741416501e-08,
+      "flux_error_square": 0.00019474172874764004,
+      "cpu_affinity": [
+        9
+      ],
+      "pid": 664222,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        36,
+        37,
+        38,
+        39
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 1.0014833571397351e-07,
+      "flux_error_square": 0.0003461367973242913,
+      "cpu_affinity": [
+        10
+      ],
+      "pid": 664227,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        40,
+        41,
+        42,
+        43
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 1.0331423324915776e-07,
+      "flux_error_square": 0.0003762169247908425,
+      "cpu_affinity": [
+        1
+      ],
+      "pid": 664219,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        44,
+        45,
+        46,
+        47
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 6.50613270322189e-08,
+      "flux_error_square": 0.00022376049959806077,
+      "cpu_affinity": [
+        11
+      ],
+      "pid": 664225,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        48,
+        49,
+        50,
+        51
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 3.1341848583829206e-08,
+      "flux_error_square": 8.503204942934855e-05,
+      "cpu_affinity": [
+        12
+      ],
+      "pid": 664223,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        52,
+        53,
+        54,
+        55
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 9.430062296547541e-08,
+      "flux_error_square": 0.0002975607338433028,
+      "cpu_affinity": [
+        13
+      ],
+      "pid": 664221,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        56,
+        57,
+        58,
+        59
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 9.714845734530911e-08,
+      "flux_error_square": 0.0003262217991000143,
+      "cpu_affinity": [
+        14
+      ],
+      "pid": 664226,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        60,
+        61,
+        62,
+        63
+      ],
+      "gauss_order": 5,
+      "volume": 0.0625,
+      "pressure_error_square": 3.370075171487429e-08,
+      "flux_error_square": 0.00011274791199907834,
+      "cpu_affinity": [
+        15
+      ],
+      "pid": 664224,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 3.370573464670833e-08,
+      "flux_error_square": 0.00011274255454531467,
+      "cpu_affinity": [
+        0
+      ],
+      "pid": 664228,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 9.713531142976609e-08,
+      "flux_error_square": 0.00032623590129271724,
+      "cpu_affinity": [
+        2
+      ],
+      "pid": 664214,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 9.430969600965899e-08,
+      "flux_error_square": 0.0002975487751181052,
+      "cpu_affinity": [
+        3
+      ],
+      "pid": 664220,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 3.1340719964963765e-08,
+      "flux_error_square": 8.503416909933512e-05,
+      "cpu_affinity": [
+        4
+      ],
+      "pid": 664215,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        16,
+        17,
+        18,
+        19
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 6.505368720952857e-08,
+      "flux_error_square": 0.0002237674247667522,
+      "cpu_affinity": [
+        6
+      ],
+      "pid": 664211,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        20,
+        21,
+        22,
+        23
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 1.0332432041859167e-07,
+      "flux_error_square": 0.00037620140732162695,
+      "cpu_affinity": [
+        9
+      ],
+      "pid": 664222,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        24,
+        25,
+        26,
+        27
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 1.001449928127885e-07,
+      "flux_error_square": 0.00034614280936360334,
+      "cpu_affinity": [
+        7
+      ],
+      "pid": 664216,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        28,
+        29,
+        30,
+        31
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 6.233656918825603e-08,
+      "flux_error_square": 0.00019474472772144135,
+      "cpu_affinity": [
+        10
+      ],
+      "pid": 664227,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        32,
+        33,
+        34,
+        35
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 6.233894741416506e-08,
+      "flux_error_square": 0.00019474172874774331,
+      "cpu_affinity": [
+        8
+      ],
+      "pid": 664218,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        36,
+        37,
+        38,
+        39
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 1.0014833571397457e-07,
+      "flux_error_square": 0.0003461367973244985,
+      "cpu_affinity": [
+        1
+      ],
+      "pid": 664219,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        40,
+        41,
+        42,
+        43
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 1.0331423324915888e-07,
+      "flux_error_square": 0.0003762169247910492,
+      "cpu_affinity": [
+        5
+      ],
+      "pid": 664217,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        44,
+        45,
+        46,
+        47
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 6.506132703221909e-08,
+      "flux_error_square": 0.00022376049959816447,
+      "cpu_affinity": [
+        12
+      ],
+      "pid": 664223,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        48,
+        49,
+        50,
+        51
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 3.134184858382926e-08,
+      "flux_error_square": 8.503204942938067e-05,
+      "cpu_affinity": [
+        14
+      ],
+      "pid": 664226,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        52,
+        53,
+        54,
+        55
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 9.430062296547559e-08,
+      "flux_error_square": 0.00029756073384338145,
+      "cpu_affinity": [
+        13
+      ],
+      "pid": 664221,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        56,
+        57,
+        58,
+        59
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 9.714845734530927e-08,
+      "flux_error_square": 0.0003262217991001009,
+      "cpu_affinity": [
+        11
+      ],
+      "pid": 664225,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        60,
+        61,
+        62,
+        63
+      ],
+      "gauss_order": 6,
+      "volume": 0.0625,
+      "pressure_error_square": 3.370075171487429e-08,
+      "flux_error_square": 0.00011274791199911824,
+      "cpu_affinity": [
+        15
+      ],
+      "pid": 664224,
+      "blas_threads": 1
+    }
+  ],
+  "norm_provenance": "This acquisition's own literal archived field; disjoint macrocells reuse the owned physical_errors integrator. Squared absolute errors and volumes are summed without resampling interfaces.",
+  "norm_quadrature_relative_changes": {
+    "5_to_6": {
+      "pressure_L2": 2.6008727817556796e-15,
+      "flux_L2": 2.2129671237063615e-13
+    }
+  },
+  "elapsed_verification_seconds": 44.40539763122797
+}

@@ -1,0 +1,42 @@
+{
+  "qualified": true,
+  "algorithm_source_sha256": "dda6d058271da2651cb24f884af26f3bdb062323e51e8155353b3da0a32de94a",
+  "n64_control_sha256": "1ef17973aa00a639992a63eff648c77e332fdff092f3bedd3b44307922732fab",
+  "n16_control_sha256": "256c28af516d93168d4e1a346544345bf7ca1a7d6949b567ba4e844c4db65873",
+  "n64_scope": "Same actual archive compared with its previous owned Gauss5/6 norms; roundoff agreement.",
+  "n16_scope": "Serial versus16 disjoint native1 spawn shards at each literal order5/6/7; integration partition qualification, not coarse quadrature adequacy.",
+  "cpus": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "n64_verification_seconds": 6.755947532132268,
+  "n16_verification_seconds": 2.8780835457146168,
+  "n16_serial_absolute_differences": {
+    "5": {
+      "pressure_L2": 0.0,
+      "flux_L2": 0.0
+    },
+    "6": {
+      "pressure_L2": 0.0,
+      "flux_L2": 0.0
+    },
+    "7": {
+      "pressure_L2": 0.0,
+      "flux_L2": 0.0
+    }
+  }
+}

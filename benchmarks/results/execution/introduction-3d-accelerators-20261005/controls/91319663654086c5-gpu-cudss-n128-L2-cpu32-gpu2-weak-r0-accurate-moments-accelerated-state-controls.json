@@ -1,0 +1,959 @@
+{
+  "scope": "Post-timing literal archived-state replay and physical integration; no assembly, numerical basis computation, factorization or new solver acquisition.",
+  "receipt": "/prj/thermophase/volpatto/Work/pymhm/build/performance3d-accelerated/gpu-cudss-n128-L2-cpu32-gpu2-weak-r0-accurate-moments.json",
+  "receipt_sha256": "523174c7d43278614e8bccb7cbe67c21bf00917e9b5d6b3b90e12d7a920e43ed",
+  "archive_sha256": "12fb9977341892691c0b029ceb5ddd092def3953328eb3e6502368436200e08f",
+  "executed_basis_sha256": [
+    "e668dfa15e7a26756cc902e347d37ae7722f41ebc015db9d5698aa3a7d089c27",
+    "22fa2870d29fa70c6c89fc5181b6b554a96fe9e6db9cc96b75987846d75bb51f",
+    "85367915bf1c3d3ad18cb5f47d5846c2ff10a60a4487b8ece7dc9a37dd8f42a5",
+    "769b5d4f6521108484c596ee781d7167fc9ce6a8d818cc2526c7d4e09644b033",
+    "31a17d9fda039d5ef467c63e2ace28a4c25943223017a56ff0f6d8aeb08bbbf1",
+    "0edd234b3623c1bb298438b5f200a3f9fc61b3cc7727795808f6d32c170b294f",
+    "dd64c63e5f14f351e700282b1ab530ac0d73e3ebef23e4063bac25de015511eb",
+    "0947dfacca29629452efde16abcae596e29af35224340dc745490320411668c7",
+    "013ae17a3264eb1ab20b8ab1a5a129747335730df215f21aea6fa9623505c142",
+    "251ab5c9c0d232cf663d2e7951f971f9506eb646c96f00a4cdbe5a901e451833",
+    "f814735214d9ae68a92bbed20f729c4dee08cd964dfc9f2a3597b94e0472d45e",
+    "f2120d25b77c1637b5c8e378d01e95cca02af87650f810dedb8b14bc0a47617b",
+    "eacdbc59c5bc53b8c640b0a9949ef5b244e7ef428b5c1129dbe1501465f6b750",
+    "17b92ede9385dbca0499a96a7e77a8f72da3602d5b3046dc60fb890ad5700aa0",
+    "697374bd2d5d3702fc9bf69eb1cc0c79e8c4fdd16c1ad9fec35bbf9b4fa7f956",
+    "80c640da43ef90bcf22981e122c8f2fc872c035c8d810682a8dfa83acc5f4066",
+    "e34d95c647d76ede9d6aa9b718262113e1a2b1be7d08775487b213992183ad1d",
+    "a25496350687137dccdbc304721e49dd54b78011daa83d2d82062a67fb464514",
+    "597f8d120474544981f62fd603cb33103ef94ca02196667c38a029420e622288",
+    "2a54369abf424b4153734b5c638ffdc974b4e1c043c7e674c4e9799ce1345a47",
+    "c67ea3bc056d31d80ab60b82b87440a107e9c5455b714850896ab826a38ef457",
+    "b65c2241c9173564389a89579f91f07a602a9c2426e3644a1b56eb21e142c641",
+    "b1c31ff95b631e3bebefd9b53e601f2c43b3f976215eef98c42c61361faf984c",
+    "2cfa32d101022f9fefb0ec47a80396426485ea13908ed3522fab2d21ed25ac9b",
+    "e3b5708fe849368cb77febba0280e15cfe9ae81d9de397533de651bf7743e8de",
+    "011a74ef6e265792bfd16a557c76acd8e5601d03cd3bdd3cf2046e00fedf93f1",
+    "d2efb32d3587ed9b91af8269028a2d5f085cc2d8b02e7910ffbf42dfbf24186d",
+    "19a9ed3e1686c0418a5894a98116d60d43b6330f412ce04165d9b10e248ffda5",
+    "35d3ef7990c7267f717c70be46c5034a32c0c1140724cf3112d52902e1a6555f",
+    "87998bcc8fed191ca98a46a13d4340a72a4444c0b2196249d5ac0e45700a1ae2",
+    "3ea23d7fd7a3147afd44eb165d3e3d511fa3049a8e6ebb6a5fc19642b9f38037",
+    "326361ac48981b71892cc1edb21580b0fb570a886d8e46eef98b110b54370f0b",
+    "974377b5596fced79071e7b7829436900efae124e4e20dcdbf94e1c4737992f8",
+    "ac4c4956f26a3faadf98cc99813f52b93d4c4a5f1b99abdd3e3f934c98c479bf",
+    "381bedfc24158e229ab04a271cc4b2e91d48ea424af7e8f7dc8fade176c94475",
+    "baad593605a3904cd3f83087e839688e87994ee7ec8d1679fd33b23be9eb1746",
+    "60f636ae253e77d8a5ff4c2abdc6421b8640076be60fd62b6bff15c3a81c1a8b",
+    "f4a6d1e2fe744d83b70da7feaebdb1d9731ebf8a4b7507dd61d7ad241aabee28",
+    "250394b00c812138261f3b7c1221685f03729cfcdfe5fa35a155bbb150ae3714",
+    "366c092bf8d823e0055c777f04404a1ddf7f86957790510ec852e5a42fee1252",
+    "d658229606e6bfbcd15ef2022a0414c65663d04b8ba020b64888ffe0b00ec658",
+    "557203209be5f3e3bcf253ed9bacbb0fdffbf53f29a5de156c56cbcbcec7366d",
+    "7663355527d999b47b89bd998e1e66139e6d80c8e1d08e5d8babd31ea7796a26",
+    "4f5fcea4f3ed6156430ad40161a3d0e9855b5801285f60d93bce5acc76eb74c6",
+    "088604ddc576cd3455c8be650e7657328ba4e6e05ec50d98e7640fb6026c6b69",
+    "48736145adb9e312780ddde4cadd9ffa4a0e9bbf64f28ea4c6208142bd2b4674",
+    "c925332f9907a658286c76535f0660a49b993bc296ad0be7b8c4c8c0ae4cc254",
+    "67eb2eb2a61a9908fed497f27d1c1bd02e5b7c6eeb1bac767edea577f0324c3a",
+    "6d9bd1e96c369aed9934e4562fcfb17e12316aea5fb576d9c0d636c0a8ce7128",
+    "ebe5973108a9cfa37a47e3b56f61aa4d2f133ddc784b7814d3fdc14cb1178e30",
+    "1a13297f3ed108df4d5d2ca47dd8d00725eaaead8ed8e423340231b7c1c19dfa",
+    "c9c7e2801e5afeb6fc71a1e8ef1bdda73e4d0b489dda674a1397802b1f72ce5b",
+    "de67ae53599df235c6e5086850a283d3ba26376e8d4fc1dd7a92176d249dacb9",
+    "fee08289a972af0f0cb5b2349e2d5c0299439629210f2bbf906bcd1eaaa5b75b",
+    "4f413560bf0fdaee4065e2ce892eaebb4c537be247b0a05279dfc8df1a378304",
+    "bdf621e7c6cf70e0736ca5e21752d6ba3297bee48749785223aa405347025687",
+    "6c74aeb88adc8dd5acb7bc1f1e3f524c48118376f21047f0154401ec81eb5c37",
+    "73506467b6117d52016afc3f21c0273085a3e3c46ed28215325e9d23e0040c96",
+    "84b908d6b9d993f3f2490bc1a313d09e95c65da60d6608129bd000a54d0932ce",
+    "476618e07ca4341e602a114d412a6e107cf5f0eea60635bc623bebab1ed9d098",
+    "76daae3428675b91c4fc7dc2a96bf620da9282c01409133355f5024456606fc8",
+    "7b8969a65e334e887888c7964219a085c743a112ed1a9663f1332a1f94ac871c",
+    "c84a37ead5decfad68ea88e5d4e64bd35ed6aab965a8b9094c2fbd2389cb6274",
+    "781fa0b1340674a3a98cb7025cfb4889630edf8dc1e5d514ece8607f663a5e49",
+    "30ddf5d9f9d07396e7cfbcb167f27dd748fd4c6fd97fda74bddaff2be93476b2",
+    "dcf86965381095cd4d6c6ecbd8564204f7946803afa8dde15de67c32de4effe2",
+    "2b89f799ebfa3169e847efff20a687f1f5c4f2e02ac8da0cb83af1b60ca0474e",
+    "a4df3e8d2ad472e4b72e3992b5a5d0ad389b2cd9f482ee28cabcc7105e46dce7",
+    "c1d85758343a6bb6636437f592bcbea06d0d7b1c8991e6aee99a7ca20926d61f",
+    "982e253e9ab0a88a78d704acea6c3ea5eeca5cfc8b88cb65b2d435006e278034",
+    "4aae221944f32f31ea68d1c86202170b8306bdbcb8c9f3d0811e0836bc029f90",
+    "fed9e22b4e81d453488b881235220a9368eb46938b77b8e3ce0416ca98ceaa3a",
+    "ddf761e1d80dee78ca1dc90d87a94495b00744c02358ff6a413f7c1e99f790b8",
+    "48e75b4d65fba2890694fb2ba100f0b9b42996fdeecfe51c5737af70fb9945df",
+    "6b3ab55e59c96c601abeb227233d2d847b7f0bc235c39ea9fb6fb287ac13939e",
+    "31671a9f601d7aaf665f4be4c4c2a68021c64fdf33bcb78ad10bb10619e62845",
+    "94dfb3bdcaa467b0133e9d3e4c205432513ea48184428935b94a8d0475dd4bd8",
+    "e4d53993abe791a28e3815c120baf6f182049e7d08163e53c658e0c666b606f5",
+    "939d1781d728ba44cc187814288f882313c678adabca5ec793e4f758b740ad95",
+    "0fbbc0a5150f73d20f50cbcca33e49189824c5f4ee393f8fa10d84e7ab23e824",
+    "ef36fe265531a737f62dfdfb251a73c933ae4ed4a06f9e6671c579139e195dcd",
+    "93893a4d008767d466e5876793be47a09abbd6573998f46764020cc10769eeb3",
+    "74cc8f10a21a0e79d97563ca46333c1d1a3e33d34e9918b3008ed8580c21df64",
+    "88ab2ce5c230a1b2591e4151d9fa17b2c60d60ae1434146efd732dbde5379a22",
+    "fa70c00455040d1dc3a1cddc543723dd45661a8fc4d9835a229feb91a60322b5",
+    "c9fabc44d21f5d308af94ed994385b8c47e530bed50d718d0650390ad7916e9d",
+    "bb88a37592021c888ec0bac89bd5524216c6543e23958e72727088de042dcad6",
+    "1fc542ee15e8b7442059e5227e3a1252d547ac5574a2d3457d7fc91dd42c9cc6",
+    "a66a1660cde96068ddd5311958856409390cd8c9ae6fa40219713d25269f4bbf",
+    "e38dd406cb31d7696a5844443d8fe7f83673dfd39d16d66346e3796c4f19d384",
+    "0bd07c46d3d540f6e2c9b55b049a5b7a6b1ee73fc182b7f02136a341753f1562",
+    "2789634dc2430a6c571fcb80cab46e667470f8484727ab9f589da8512d5e6c51",
+    "7d89eaa0d0f60bc99ec14790994abb10d2e3a4439bbf71cc9a61a32f0489663a",
+    "1037f9d62ac37a1249d419a608478646086d2cfa60dc720fde24aa41e41ef589",
+    "31119ce2587bbaf1247fb5ab2323f174f98d6423ef6a33ba0bf866c7dd2cf1f9",
+    "50cbb235351b268bf2cd3da4706519987e59773ea6dd5540ce28eb3449a01e18",
+    "c0c3b6694c377d0c13e2295963bc16bf9350f85f537a577c75f50dd3e850648e",
+    "6a4ed76a861a5003eb24978b0ab9d957c4f55f02262e5ee437ae2797416d06c3",
+    "a7e8c2499892a3fbd639c6b3f0d715e7b013dc155b4d8e94d779668759ff3303",
+    "5c472ff2b6a46bc94e2a86f5b722c5bbcf28e0e634dcc8efca310022b0134d89",
+    "3485baf132faa25b0f7a50171d53eae4bc68c63d4f5adc66b0ab87b4064decb0",
+    "45c37594efb756aea9a2f1cfb13678e6f9cc40d33c346944ad723770bd40759b",
+    "5aa1e785b2ed212ffc0b10267e53aaeaff492afd8df3c0cccdeca6ae006b4020",
+    "fe553c5abc063bb91a14d5aa7ce70b49f6336a4c19185f9f78dce7e25dfb0bed",
+    "048365cf1ebe896f57462ae59d288286442486ddfcfe729879ca874f9c3d322d",
+    "67a0f8e62b9f6c36594a40df9dfb3c0a21fc43fbc269107c44f6a0ba6d3b6eed",
+    "1970044db2462211b180796b653d2f103c4d9570a95e0ba9282b7b45dbef4c05",
+    "a30b42b82039b7bed393d8fee30cd48feb4788614d10e040e9f2ff9181fd82d5",
+    "642bba0986ebc3fa2723262a35d5c79fe6e03550e0bec9ab6405595dee873529",
+    "6e3de7fc1b99f940b0aaba6f67eaf42ea6213f4fc1fe93f5f038b501e7715495",
+    "4c7c0d4409a5d54d4dc0fda93334607753655c23540c8ff043cfef7d53367bc2",
+    "3a828c13f01660b007abae0e5d40dd79bb0501f784a535e8ccae3f6cf1809e5f",
+    "ad8974d7ad841a331a93bbfd2f195c1fa1316de80645359ad89df9bb60b9de25",
+    "c8a7ef69630a99b1fb48146ca61fa7463a66f31832e54b2ffd2b23f31ff7f015",
+    "73fa1362cee84f67c8fdb57c19eeeb6be8eaa1450774e1a3d101bbe5b8d9eb17",
+    "fab4c7d8bcfea9d8f8e86307f701f1431f8e3bc964fb919ac1c1a7b7a19b7fa2",
+    "c2c7e6bb0089229b3c4be8b1acdd7d744cf6131574023a1bcf9733c57d7b6ea9",
+    "51115ce4f224758008726a2ad7f303e77733e9b5754c2dd57e415e1312a2a1fd",
+    "9a03fade875e8605cbd944bf5d1af40134d91bd8721303514c90062f25ae288b",
+    "c1948f35324d5f682db28b7ce8b851fcedd116e85b0a2aaf1ff64abef9c59c6b",
+    "18716103664ab623adaf03f65cbfcdfe659c0d15aa9bc50c91b3ff2cbf5bed79",
+    "0bcf2de1d3575afa40f7ea850a6dbf4f26fb49657ca77411f56807d3c264ce9d",
+    "6909daff9ef3d1c4d33c9652c6911edd0d423c7b69f90e20336f7726ee0c321a",
+    "8511b301c8929fefbc5462eeed2868a2a976e8e2f2432076945f6f0580456d8b",
+    "0b2550891b3dc288c3465dc058f4838f6f7aae12ff69c33da029b0b35710ab02",
+    "0efd8b2e5b404d5e8e77397f6244be2061da4580a9fab42287bfe342723f4f82",
+    "2c1f8b8d52a496ed3d6f1ce57c82839fe70f8f6eddab262a05f7723e10d8eb12",
+    "d87e0b08a2bb93038eb31021709d1d4c1ce6702e3f9b5b975ade5ee7b3737470"
+  ],
+  "source_sha256": {
+    "build/performance3d-audit/accelerated_state_controls.py": "dda6d058271da2651cb24f884af26f3bdb062323e51e8155353b3da0a32de94a",
+    "build/performance3d-lu/replay_mhm_controls.py": "32bb35f61a7cee5d5f4c5c46168da9c832880852f09b8c98135e1fea072d293a",
+    "build/performance3d-lu/mhm_workspace.py": "3928434d3bcc1bdd5b978f8df1b087924b0df0c076d9fffce16ceb98f7298dd1",
+    "build/performance3d/native_baseline.py": "b3b22d810a132d68bbf5d5af1943c7394ee97c586449562d4961b9e42ee92f80",
+    "build/performance3d/campaign.py": "6919c5f8e0b625c27058dc184c85637f7b40a324a9e3781c4b581159a4074664",
+    "src/pymhm/meshes/hexahedron.py": "61d1497e5b53ba2a8f4d93013edefcefe96e5a89858929df0751ef74c78390b7",
+    "src/pymhm/fem/reference.py": "a97ae62812cab8fad42f398751d1768a1ba7fff43e80a3f3f3890f37d2379d07",
+    "pixi.lock": "1f1a82a6551538b4317594359cc4b9cfaaabd10629ec15cb6300d489e76a5359"
+  },
+  "post_timer_environment": {
+    "python_executable": "/prj/thermophase/volpatto/Work/pymhm/.pixi/envs/introduction/bin/python",
+    "python_version": "3.13.15 | packaged by conda-forge | (main, Aug 10 2026, 07:59:06) [GCC 14.4.0]",
+    "versions": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "fenics-basix": "0.9.0",
+      "fenics-ufl": "2024.2.0",
+      "threadpoolctl": "3.7.0"
+    }
+  },
+  "fine_n": 128,
+  "length": 2,
+  "material_period": 0.1,
+  "macro_cells": 128,
+  "anisotropy": [
+    [
+      2.0,
+      0.3,
+      0.2
+    ],
+    [
+      0.3,
+      1.5,
+      0.1
+    ],
+    [
+      0.2,
+      0.1,
+      1.0
+    ]
+  ],
+  "cpu_affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "quadrature_worker_cpus": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "blas_checks": {
+    "1": {
+      "maximum_archived_field_replay_difference": 0.0,
+      "maximum_equivalent_retained_sign_rotation_field_difference": 0.0,
+      "maximum_rotated_trace_orientation_map_difference": 0.0,
+      "maximum_complement_physical_moment": 7.216952321178154e-19,
+      "maximum_original_kernel_action_scaled_by_matrix_Frobenius_and_kernel_norm": 2.6256943658089655e-18,
+      "maximum_retained_physical_moment_difference_from_declared_constant_kernel": 3.469446951953614e-18,
+      "basis_rotation_scope": "The archived retained space and declared constant kernel have dimension one; their equivalent orthogonal rotations are the two signs. The executed E matrix and coarse coefficient are rotated together, including the B.T E trace orientation map.",
+      "pressure_integral": -2.990245472674763e-09,
+      "exact_pressure_integral": 0.0,
+      "pressure_mean": -1.4951227363373815e-09,
+      "exact_pressure_mean": 0.0,
+      "volume": 2.0,
+      "original_checks": {
+        "source_response_max_relative_residual": 3.028135723789946e-13,
+        "trace_response_max_relative_residual": 1.6060911664110946e-14,
+        "retained_response_max_relative_residual": 0.18241059860464448,
+        "moment_absolute_max": 2.9658477382014048e-18,
+        "reconstructed_physical_equation_max_relative_residual": 9.54075783149614e-14
+      },
+      "original_physical_residual_absolute_difference_from_acquisition": 0.0
+    },
+    "2": {
+      "maximum_archived_field_replay_difference": 0.0,
+      "maximum_equivalent_retained_sign_rotation_field_difference": 0.0,
+      "maximum_rotated_trace_orientation_map_difference": 0.0,
+      "maximum_complement_physical_moment": 7.216952321178154e-19,
+      "maximum_original_kernel_action_scaled_by_matrix_Frobenius_and_kernel_norm": 2.6256943658089655e-18,
+      "maximum_retained_physical_moment_difference_from_declared_constant_kernel": 3.469446951953614e-18,
+      "basis_rotation_scope": "The archived retained space and declared constant kernel have dimension one; their equivalent orthogonal rotations are the two signs. The executed E matrix and coarse coefficient are rotated together, including the B.T E trace orientation map.",
+      "pressure_integral": -2.990245472674763e-09,
+      "exact_pressure_integral": 0.0,
+      "pressure_mean": -1.4951227363373815e-09,
+      "exact_pressure_mean": 0.0,
+      "volume": 2.0,
+      "maximum_BLAS1_BLAS2_field_difference": 0.0,
+      "original_checks": {
+        "source_response_max_relative_residual": 3.028135723789946e-13,
+        "trace_response_max_relative_residual": 1.6060911664110946e-14,
+        "retained_response_max_relative_residual": 0.18241059860464448,
+        "moment_absolute_max": 2.9658477382014048e-18,
+        "reconstructed_physical_equation_max_relative_residual": 9.54075783149614e-14
+      },
+      "original_physical_residual_absolute_difference_from_acquisition": 0.0
+    }
+  },
+  "physical_errors": {
+    "5": {
+      "pressure_L2": 0.0015330112869720361,
+      "flux_L2": 0.0886101915382978,
+      "pressure_L2_per_sqrt_volume": 0.0010840026766534433,
+      "flux_L2_per_sqrt_volume": 0.0626568673189692,
+      "error_gauss_order": 5
+    },
+    "6": {
+      "pressure_L2": 0.0015330112869720402,
+      "flux_L2": 0.08861019153831748,
+      "pressure_L2_per_sqrt_volume": 0.001084002676653446,
+      "flux_L2_per_sqrt_volume": 0.06265686731898312,
+      "error_gauss_order": 6
+    }
+  },
+  "norm_shards": [
+    {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.308400462589661e-07,
+      "flux_error_square": 0.00043897818025797464,
+      "cpu_affinity": [
+        0
+      ],
+      "pid": 667861,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.2565004634628472e-07,
+      "flux_error_square": 0.0003825828755197391,
+      "cpu_affinity": [
+        1
+      ],
+      "pid": 667858,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.6836836466004395e-07,
+      "flux_error_square": 0.000599959334006546,
+      "cpu_affinity": [
+        2
+      ],
+      "pid": 667852,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.6248070822345752e-07,
+      "flux_error_square": 0.0005408950063493125,
+      "cpu_affinity": [
+        6
+      ],
+      "pid": 667853,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.6243794864581022e-07,
+      "flux_error_square": 0.0005407486945450627,
+      "cpu_affinity": [
+        7
+      ],
+      "pid": 667851,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.6842577931284145e-07,
+      "flux_error_square": 0.0006001578514813806,
+      "cpu_affinity": [
+        3
+      ],
+      "pid": 667850,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.2543565563730807e-07,
+      "flux_error_square": 0.0003815937403232246,
+      "cpu_affinity": [
+        5
+      ],
+      "pid": 667849,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.314230951599012e-07,
+      "flux_error_square": 0.000440967533587763,
+      "cpu_affinity": [
+        4
+      ],
+      "pid": 667854,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.3141935665979352e-07,
+      "flux_error_square": 0.00044097610710198796,
+      "cpu_affinity": [
+        8
+      ],
+      "pid": 667857,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.2543986457689262e-07,
+      "flux_error_square": 0.0003815837740494737,
+      "cpu_affinity": [
+        9
+      ],
+      "pid": 667845,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.6842785012586665e-07,
+      "flux_error_square": 0.0006001486839598448,
+      "cpu_affinity": [
+        10
+      ],
+      "pid": 667859,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.6243240112170482e-07,
+      "flux_error_square": 0.0005407582209532933,
+      "cpu_affinity": [
+        11
+      ],
+      "pid": 667848,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.6248651552185272e-07,
+      "flux_error_square": 0.0005408860644285729,
+      "cpu_affinity": [
+        12
+      ],
+      "pid": 667860,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.683656764078986e-07,
+      "flux_error_square": 0.0005999678261101991,
+      "cpu_affinity": [
+        13
+      ],
+      "pid": 667856,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.2564207521210217e-07,
+      "flux_error_square": 0.00038259271691359453,
+      "cpu_affinity": [
+        14
+      ],
+      "pid": 667855,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127
+      ],
+      "gauss_order": 5,
+      "volume": 0.125,
+      "pressure_error_square": 1.3084822211293423e-07,
+      "flux_error_square": 0.00043896943486585344,
+      "cpu_affinity": [
+        15
+      ],
+      "pid": 667862,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.308400462589664e-07,
+      "flux_error_square": 0.0004389781802581026,
+      "cpu_affinity": [
+        2
+      ],
+      "pid": 667852,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.256500463462848e-07,
+      "flux_error_square": 0.0003825828755198588,
+      "cpu_affinity": [
+        0
+      ],
+      "pid": 667861,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.6836836466004514e-07,
+      "flux_error_square": 0.0005999593340068739,
+      "cpu_affinity": [
+        5
+      ],
+      "pid": 667849,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.6248070822345905e-07,
+      "flux_error_square": 0.0005408950063496184,
+      "cpu_affinity": [
+        7
+      ],
+      "pid": 667851,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.6243794864581112e-07,
+      "flux_error_square": 0.0005407486945453729,
+      "cpu_affinity": [
+        3
+      ],
+      "pid": 667850,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.6842577931284256e-07,
+      "flux_error_square": 0.000600157851481691,
+      "cpu_affinity": [
+        12
+      ],
+      "pid": 667860,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.2543565563730857e-07,
+      "flux_error_square": 0.00038159374032333655,
+      "cpu_affinity": [
+        1
+      ],
+      "pid": 667858,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.3142309515990145e-07,
+      "flux_error_square": 0.0004409675335878907,
+      "cpu_affinity": [
+        8
+      ],
+      "pid": 667857,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.3141935665979373e-07,
+      "flux_error_square": 0.00044097610710211677,
+      "cpu_affinity": [
+        14
+      ],
+      "pid": 667855,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.2543986457689283e-07,
+      "flux_error_square": 0.00038158377404959434,
+      "cpu_affinity": [
+        13
+      ],
+      "pid": 667856,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.6842785012586763e-07,
+      "flux_error_square": 0.0006001486839601738,
+      "cpu_affinity": [
+        4
+      ],
+      "pid": 667854,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.6243240112170602e-07,
+      "flux_error_square": 0.0005407582209535982,
+      "cpu_affinity": [
+        9
+      ],
+      "pid": 667845,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.6248651552185396e-07,
+      "flux_error_square": 0.0005408860644288849,
+      "cpu_affinity": [
+        10
+      ],
+      "pid": 667859,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.6836567640790029e-07,
+      "flux_error_square": 0.0005999678261105109,
+      "cpu_affinity": [
+        6
+      ],
+      "pid": 667853,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.2564207521210265e-07,
+      "flux_error_square": 0.0003825927169137061,
+      "cpu_affinity": [
+        15
+      ],
+      "pid": 667862,
+      "blas_threads": 1
+    },
+    {
+      "indices": [
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127
+      ],
+      "gauss_order": 6,
+      "volume": 0.125,
+      "pressure_error_square": 1.3084822211293458e-07,
+      "flux_error_square": 0.0004389694348659817,
+      "cpu_affinity": [
+        11
+      ],
+      "pid": 667848,
+      "blas_threads": 1
+    }
+  ],
+  "norm_provenance": "This acquisition's own literal archived field; disjoint macrocells reuse the owned physical_errors integrator. Squared absolute errors and volumes are summed without resampling interfaces.",
+  "norm_quadrature_relative_changes": {
+    "5_to_6": {
+      "pressure_L2": 2.6875002750844447e-15,
+      "flux_L2": 2.2208171283515721e-13
+    }
+  },
+  "elapsed_verification_seconds": 86.23002492077649
+}

@@ -1,0 +1,383 @@
+{
+  "method": "MHM native workspace",
+  "fine_n": 128,
+  "length": 1,
+  "workers": 32,
+  "backend": "process",
+  "local_solver": "pypardiso",
+  "trace_degree": 1,
+  "material_period": 0.1,
+  "setup": 0.05293959379196167,
+  "local_and_global_assembly": 20.512651849538088,
+  "global_solve_reconstruction": 0.32290210388600826,
+  "total": 20.888493547216058,
+  "fine_cells": 2097152,
+  "macro_cells": 64,
+  "local_nodal_dofs": 35937,
+  "trace_dofs": 960,
+  "global_dofs": 1024,
+  "global_relative_residual": 1.9231654403669468e-16,
+  "local_assembly_seconds_sum": 231.1153200007975,
+  "assembly_quadrature_degree": 8,
+  "native_workspace_builds": 32,
+  "workspace_worker_thread_counts": [
+    {
+      "process": 617986,
+      "thread": 140329706947776,
+      "builds": 1
+    },
+    {
+      "process": 617989,
+      "thread": 140094448403648,
+      "builds": 1
+    },
+    {
+      "process": 617990,
+      "thread": 139644323456192,
+      "builds": 1
+    },
+    {
+      "process": 617991,
+      "thread": 139850942579904,
+      "builds": 1
+    },
+    {
+      "process": 617992,
+      "thread": 140174730613952,
+      "builds": 1
+    },
+    {
+      "process": 617993,
+      "thread": 139717199135936,
+      "builds": 1
+    },
+    {
+      "process": 617994,
+      "thread": 139962174764224,
+      "builds": 1
+    },
+    {
+      "process": 617995,
+      "thread": 140487342769344,
+      "builds": 1
+    },
+    {
+      "process": 617996,
+      "thread": 140673414255808,
+      "builds": 1
+    },
+    {
+      "process": 617997,
+      "thread": 140450281624768,
+      "builds": 1
+    },
+    {
+      "process": 617998,
+      "thread": 140156520854720,
+      "builds": 1
+    },
+    {
+      "process": 617999,
+      "thread": 140468825580736,
+      "builds": 1
+    },
+    {
+      "process": 618000,
+      "thread": 140199549015232,
+      "builds": 1
+    },
+    {
+      "process": 618001,
+      "thread": 140401632646336,
+      "builds": 1
+    },
+    {
+      "process": 618002,
+      "thread": 139954785158336,
+      "builds": 1
+    },
+    {
+      "process": 618003,
+      "thread": 139686291551424,
+      "builds": 1
+    },
+    {
+      "process": 618004,
+      "thread": 140071881712832,
+      "builds": 1
+    },
+    {
+      "process": 618005,
+      "thread": 140299490190528,
+      "builds": 1
+    },
+    {
+      "process": 618006,
+      "thread": 140139580949696,
+      "builds": 1
+    },
+    {
+      "process": 618008,
+      "thread": 140131913483456,
+      "builds": 1
+    },
+    {
+      "process": 618013,
+      "thread": 140462194599104,
+      "builds": 1
+    },
+    {
+      "process": 618015,
+      "thread": 139673279714496,
+      "builds": 1
+    },
+    {
+      "process": 618016,
+      "thread": 140511323485376,
+      "builds": 1
+    },
+    {
+      "process": 618017,
+      "thread": 139749000410304,
+      "builds": 1
+    },
+    {
+      "process": 618018,
+      "thread": 139718616872128,
+      "builds": 1
+    },
+    {
+      "process": 618019,
+      "thread": 140002165236928,
+      "builds": 1
+    },
+    {
+      "process": 618020,
+      "thread": 140240057406656,
+      "builds": 1
+    },
+    {
+      "process": 618021,
+      "thread": 139629616882880,
+      "builds": 1
+    },
+    {
+      "process": 618022,
+      "thread": 140521588999360,
+      "builds": 1
+    },
+    {
+      "process": 618023,
+      "thread": 140259765548224,
+      "builds": 1
+    },
+    {
+      "process": 618024,
+      "thread": 140590427186368,
+      "builds": 1
+    },
+    {
+      "process": 618025,
+      "thread": 140548417668288,
+      "builds": 1
+    }
+  ],
+  "material_operator_assemblies": 64,
+  "material_load_assemblies": 64,
+  "reuse_scope": "mesh/space/native forms and geometry-only B/C; no numerical factor or response reuse",
+  "acquisition_method": "mhm",
+  "warmup_only": false,
+  "qualification_only": false,
+  "cpu_affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ],
+  "native_threads_requested": 1,
+  "total_including_parent_startup_seconds": 21.56730556488037,
+  "parent_import_and_startup_seconds": 0.6373565196990967,
+  "complete_solve_seconds": 20.929949045181274,
+  "launch_epoch_utc": 1791186688.2494464,
+  "timed_end_epoch_utc": 1791186709.816752,
+  "source_sha256": {
+    "src/pymhm/linalg/linear.py": "ccfb29b487297a70a4a86af9d45eccd06aaad7511594556015f8c59d1d51a4ca",
+    "src/pymhm/core/condensation.py": "42793141152dbfe46d77791b39f99f6234199519f705e6eac4f3aee22752b55c",
+    "src/pymhm/core/assembly.py": "0a430f71d61115bb41e62ed65b80d83ffd681d19bd13f3b2d80f9d69780086a9",
+    "src/pymhm/core/system.py": "7061c03a5d1ba854e15407b8192537988b5ab5c4f51991d47cf9871963c4611f",
+    "src/pymhm/core/multiscale.py": "02a58356cb4a193022a7347a13e922eacd4e52a57aebfa591b302d14d5785891",
+    "src/pymhm/backends/forms.py": "2851bb33336b878db2033bae5ba09f270ba5f27b819222f80bdbbe99307c9765",
+    "src/pymhm/backends/workspace.py": "7f2db8bbfce9805b069cbbf8f6aa68347d30332a692bf12bd867d1dfe4f249fd",
+    "src/pymhm/execution/cpu.py": "c6575ef455bfb969c96dc3ccb5d57cfd4ccf591b1fde85c8c097116b40409dbe",
+    "build/performance3d/native_baseline.py": "b3b22d810a132d68bbf5d5af1943c7394ee97c586449562d4961b9e42ee92f80",
+    "build/performance3d-lu/mhm_workspace.py": "3928434d3bcc1bdd5b978f8df1b087924b0df0c076d9fffce16ceb98f7298dd1",
+    "build/performance3d-lu/mhm_campaign.py": "2af26742a4cbd7fde5fb3fa2b6ef34b1b2f47975b85e5e6e7d65d79e236da52f",
+    "pixi.toml": "936e61b2af8d71ad784735602bab80f46bd1cce6ac6f4cf5f50bc82e101f6602",
+    "pixi.lock": "1f1a82a6551538b4317594359cc4b9cfaaabd10629ec15cb6300d489e76a5359",
+    "build/performance3d-accelerated/pardiso_campaign.py": "21b28ee36cb1a704483620ed74e2a00e05706db5c77b4a69a49ae4caf7b809cc"
+  },
+  "versions": {
+    "pypardiso": "0.4.7",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "fenics-dolfinx": "0.9.0",
+    "fenics-ffcx": "0.9.0",
+    "fenics-basix": "0.9.0",
+    "fenics-ufl": "2024.2.0"
+  },
+  "peak_parent_rss_bytes": 2438438912,
+  "cold_form_compilation_included": false,
+  "timing_scope": "Fresh launcher/interpreter/native initialization, geometry/forms, matrix/load assembly, local or global PARDISO analysis/factorization, all RHS and original residual corrections, transfers, ordered global reduction, global solve/reconstruction and native cleanup. Lightweight native phase observations are included. JIT is warmed separately; field norms and persistent archives follow the complete workflow clock.",
+  "matrix_or_factor_reuse_across_macro_materials_or_acquisitions": false,
+  "independent_analytic_source_control": {
+    "maximum_source_absolute_difference": 7.532553922828811e-07,
+    "anisotropy_minimum_eigenvalue": 0.9576748571757887,
+    "anisotropy_maximum_eigenvalue": 2.182760165665916
+  },
+  "local_checks": {
+    "source_response_max_relative_residual": 4.868449279049874e-14,
+    "trace_response_max_relative_residual": 1.5885871288928837e-14,
+    "retained_response_max_relative_residual": 0.17956157117555832,
+    "moment_absolute_max": 1.2781636184200011e-18,
+    "reconstructed_physical_equation_max_relative_residual": 9.631363147337783e-14
+  },
+  "executed_state": {
+    "path": "pardiso-mhm-n128-L1-p32-r0.npz",
+    "sha256": "32c4ee0ba23023ac69e09a102cf867dc28b42872dd92ad4ea3b5fa9a01af18a5",
+    "basis_sha256": [
+      "b79fb5103f4dd3efe87f18fdcb509b604ed145ce2992ff38f1815df04c88a53f",
+      "a1349a4a093bdd44b3e5f78ed28dc86175dd2993bea149a6ea5523648415377a",
+      "24b57daa1787fe1e97b6df966ffff9d263e21749cbb667a5c6cadd6d6130738c",
+      "228dc25c7c0aa0a8d4fe4d19e2f083c13f697ba70b77b793803f2f0f81e1b4a0",
+      "dfa9a2170f19de02996c14b5abd61d5b08ac4cdf810fcc7995320c020452604d",
+      "0279611300522e5bed1edb955a490ea2be6371b7edb0cb874c57c1ef7e1cc108",
+      "546a13a7e79d7ab2a2cb492f16f8074efe9eb437938333bd689a9ec67cceea8a",
+      "00e2d50fc11b1ed792bb7bb8f611e44966f420be05931cded389232d7b1bee75",
+      "c0ee4f0ad7ea63007d047bd8d7983fa68af922c3ffcca3729670e7d8aca27190",
+      "cd2aeae550ad2152dc6b563d3a7f473af66d016d32dd85321d133162b784b888",
+      "af99a4a1216ee66006f098d6713725999bc8cd7265bb023a1fabcfd435384d0f",
+      "04a4a546bd45f84f2c45c56d657836107ce75571b28ae4405999dc919d12285b",
+      "7ee87c26e8a11ac1f77c8e002731f11e3495296b8e69c63a787d1fec696ac914",
+      "aa17a134688ec7e9636fc392961b29a7a5bcfc89df0a6ec403090422167cf397",
+      "239c444ab58e127dfb57fb7da41e829a95ebdf7a6172a74339ad21be00596cf9",
+      "9476fc95dca643c9af729cd08bb0b97dbbb1d2b8aa5e36434f0ff3e0fa010b85",
+      "2ebed6def4e3f62b161d092bf375381a8de7b0ba2e528b9e2b9270be2c2a2df8",
+      "189441b1618aaf42462bb3e2e0208097645e8eaa1472766fe8cd3058229e596b",
+      "98b7a4e2d0fff56e4f91d25037f8b49fab86a2f6405fd5ea09198b9c3cdad47e",
+      "a703ce83dd32c83cb8b968d05d5f1399cfed4a201bce3526d4131cb28725c78c",
+      "8342955a6741425c164701df2d3fc6b1a225c7bfcbddff4f8f125fd1d27d9791",
+      "8d4acdc4e64b315b738c49591510d8c1d80fba33981a9957393444ae5f3579b4",
+      "eddcd82178e96d23f84e3c100e81f636d74d241e7939788bb6620ba8d714ab0c",
+      "19150692912e317884717ec37433590c191354dc20db23fdf626e0c87dd267f7",
+      "cf2a8c0a4ad510f2d319545ae28e653a154bdd00f9c23345d5118acc6a825fd4",
+      "c2607df929f3e6f9d3df0261c8d9737c33434ae6e2d86b0e583983317389a55c",
+      "175d876a22ff9a96521ceb7136395c5c04a6b410fbdb4a151cb76ea9ef7d70e6",
+      "8344417457925abe755733935a7e37b97d0e788e1cb227536ebd8d40e03002a5",
+      "af88dd8d7283955e16b20e44b6b45c9a11fa23de497356b00c94f2185d52c5df",
+      "7321e427397efd96f47993a0ba85fcc823c43d0a574d15e1cd1c00ac321f926f",
+      "831bffaf6e8daa5c11d3ff986c7b706b7d5026fe96e76cf6b1c40fa996dc0376",
+      "0c25b41b57cf48da131162f2b4e990944246fcc0dc70b04079bea895181693cc",
+      "c80c3ce796438a9ca06bb17f777b73236e25145b0644a1ba3306afcc4ee7dce0",
+      "f900dcd385c52bc758552a2a9b729f8ce5768a54dd7e5ecb16d998d26514b34f",
+      "a28c384be0b65f685236f948afdb113d22e2961bb24e8d47fe2213b54bea0bab",
+      "530220d7e02c8629791a438054f70aff699c13c2b9b9d6d9933c9515daeca69a",
+      "2bc2eec86a87670b1f136eb913ea58c9b25f608e0dd21441a6dc08f52906b08e",
+      "ef343122599d484b48ad3dc5354d34df7eb1be334716c0158b7cf4173c646b2c",
+      "a2192f4d8fcdb2c0299d3a06ac9a1ab296499262fe6b1b8b8b8ceb4715f9d862",
+      "4ba0a1275511697de11cfbe7a2a86e2ba244715f5d3560ea41ac73e7e5f0f562",
+      "539be28e59b1f4c15eaed59ecf6935a78430094e06cf3c6def173be8a1687f0f",
+      "ab658c61d87167cd32807365535e67e8ce8545dce65b96c42fabc047b48cf1eb",
+      "e3cc2d13ab2f0b73532b8b0eb900cb727eb4b5fc11dc337eb7bb3526f1697b32",
+      "c2b61adb291440630a0a1b6a6dfe0b19af081fa1d4b334666f617f4c65f5d4f1",
+      "9a22826be5f5643c7f04e002ed28a4b2fc70f319a1017a36c013f69ec6151849",
+      "5e3ed2e6bf018a7779fae42d7886ac3dc592bf47279ad5947c4a867a8dcba57b",
+      "d0e30e1c164d505531b028169c83da2f49f7f27070d0adecf266300a8b485afe",
+      "9b3542ee52ddee4861ced17250fe9e1c097eff38bddca76bcac9bbfa20492cbc",
+      "f1838fec06d63b39723e33c8125739d42b953d1e87600239f2d0da9c06d935b0",
+      "cf62e209a11e511c4ab6e3be4a2292fda26d0ff64313d484389d487bd4dff577",
+      "eca7eb0b338e4400ef830a372f9f2d17fd06a2e2fdcb9c92f0c0401232e3283d",
+      "710dff9968a063a826d5e834480992a27b605a55e04fe6b359f2256ec710843e",
+      "9d0cf8c8b63e8900b81140700456cd21e054aa568cfb8941e93752f7c2346973",
+      "6bbea843de9bff0b504a8cd7a51119f3dd0dea992537fa917fbbc6b76940d255",
+      "2b6c8dba3602f39e5c57d40d99acee93dc9eb71bbba7b4d2e001bd5680ac5a00",
+      "9d821ca7ab1f287433ea2e31bb29c3ea2a0880784e89dc7fb9b2a2060fd3dc7a",
+      "63fe2cfe7065770a5a26a3d14d9e7edd81617141e9874ccf807a48e8d5e2617b",
+      "f3a7643296b4d68bc284e51344e5f27873a6c317d7f5d0b960fb06a2fa9a071f",
+      "9f3930e73b00a3700e59a9831c1e15601b0c4195d1a190a428e8971c02871088",
+      "d958988e1beb1596106161126f3000da30a259066f4a7eb0dba39c991a63423b",
+      "b011f61b131f3645d49982c9a1554751eadd914b646393653c1708865778c7f7",
+      "ab7153f04986cc48a99b654924e41ed9f61f0798f3c067b097c69d782ee3faba",
+      "b09f127f5d9a5b222c59b002091e18ff9e42bb1729059105550786bd5d8d16a4",
+      "63cc97d50bd3b67695f7290f5bbe29031687c5e024db62da1e75bb0bd714dfbe"
+    ],
+    "maximum_replay_difference": 0.0,
+    "contract": "Original A/B/f, executed E, source/lifts, physical moments, native coordinates, trace maps and coefficients; no recomputed nullspace."
+  },
+  "native_phase_receipts": {
+    "pardiso-mhm-n128-L1-p32-r0-native-617986.json": "2e14263ace858e9782009454184b5c8124bdf1707d9a9d98cce40ddd554a7099",
+    "pardiso-mhm-n128-L1-p32-r0-native-617989.json": "258b146253c9f7c6bf74e1a933a70a92e38d47666c06c28d9edc050d9731c160",
+    "pardiso-mhm-n128-L1-p32-r0-native-617990.json": "8ed412832c4dcce96988a7ba112efc255d4eb9b1b102a0ce3878f7918c1065fa",
+    "pardiso-mhm-n128-L1-p32-r0-native-617991.json": "076b157503b43790a3e75b019d6b41f530e25204915da298f9f453ab9dd2d6ed",
+    "pardiso-mhm-n128-L1-p32-r0-native-617992.json": "71a065b112cc2d9232a55002057dac955f29c79a62fcf201ff0888a68da91ad1",
+    "pardiso-mhm-n128-L1-p32-r0-native-617993.json": "f9c0457a10571918b1ccf5f4568e0dc54434593162df85d172f56c76844511a5",
+    "pardiso-mhm-n128-L1-p32-r0-native-617994.json": "8b73bc20ccf72916576eb769f77205bb03f64c4d4025a744a260e3346dd796de",
+    "pardiso-mhm-n128-L1-p32-r0-native-617995.json": "69c87f46b362024937c8b93d56be16881109943510199732e9e668fe0fd607d5",
+    "pardiso-mhm-n128-L1-p32-r0-native-617996.json": "4659775aeea1febdf40cc6298dc7f386590e79964876b64efc17658f15494cf0",
+    "pardiso-mhm-n128-L1-p32-r0-native-617997.json": "5e9716ce4e57811cc068abe8291474dba840dda2118dc5103b825c86b2852b70",
+    "pardiso-mhm-n128-L1-p32-r0-native-617998.json": "e93fb8ed8b4624eca9f6d912cf67375b274bcf452b050820dce0fb1b76642e6f",
+    "pardiso-mhm-n128-L1-p32-r0-native-617999.json": "c925f685cbf770f497cf51cb9575a008c916152594305d00553f8120effef199",
+    "pardiso-mhm-n128-L1-p32-r0-native-618000.json": "1b3a9fe1b1efac88353e50308aad6cc284ab025caeaaa09fec256bcf3fbfdf0b",
+    "pardiso-mhm-n128-L1-p32-r0-native-618001.json": "7333637202a9b4dcda940e0e3d74ad1e8790870f9d34322e08f70df163b8081f",
+    "pardiso-mhm-n128-L1-p32-r0-native-618002.json": "cd32198b7dc7068e09f8b2012e99d7883fa8fb4831badebdf140fc5720679aa6",
+    "pardiso-mhm-n128-L1-p32-r0-native-618003.json": "9890e2ded7f0e127ef761d69d4128837d7f66bb582d29ea17cc2eedaeb558836",
+    "pardiso-mhm-n128-L1-p32-r0-native-618004.json": "9538fad5fe896a79ff4a7169d2074f322f011e24fa38d18171114b5f64adb904",
+    "pardiso-mhm-n128-L1-p32-r0-native-618005.json": "a243b7963ffa2d18a94c4bc78dada48698b7eeaf0cfd8d8bee2b461677b16574",
+    "pardiso-mhm-n128-L1-p32-r0-native-618006.json": "f351f0ec3f9ccf921fa1cc8da441427e6b0bcadb99e691f080509894e877cd2f",
+    "pardiso-mhm-n128-L1-p32-r0-native-618008.json": "72ca1e34fce74f15622cfd4ee83ef96e46c175ca20d9980ee2393e2a27c36d10",
+    "pardiso-mhm-n128-L1-p32-r0-native-618013.json": "d5789856ca22c56283986bc2b47ff1512f79d87c6d2872b2661165fb54b57d41",
+    "pardiso-mhm-n128-L1-p32-r0-native-618015.json": "0ffc5a22ec6142a4e1f02d046a2e24a7de0a4f702655700ee5498f098ebd571a",
+    "pardiso-mhm-n128-L1-p32-r0-native-618016.json": "eb3985695991b2a93d9010ca6f2bf83efe46acab92c8b07cda614b127185a6cd",
+    "pardiso-mhm-n128-L1-p32-r0-native-618017.json": "97a01da196e89e1adc5eb56c602d312172a9db59a133788589ad91bce6184cfa",
+    "pardiso-mhm-n128-L1-p32-r0-native-618018.json": "a3bc45b41eba7bbd6caba716439e34fe9ddaa2000b0b25c0d2991dd913406ef1",
+    "pardiso-mhm-n128-L1-p32-r0-native-618019.json": "815ef4eb0fbfa82b205a08d5da1dec2e19117de3accbba866f26cdbc394f2e09",
+    "pardiso-mhm-n128-L1-p32-r0-native-618020.json": "3bffb06cc36db884fa33cc2d6ef23e213d1da78b5f613880397c060fdd37a8cf",
+    "pardiso-mhm-n128-L1-p32-r0-native-618021.json": "7aa58f3203432927a3320b97307dada16eb0f5eae22d18fac62ae169556a4efe",
+    "pardiso-mhm-n128-L1-p32-r0-native-618022.json": "57c72d747f0a4da76c21a5217129ce934e09c40dbc1e0c58de509ba167838a29",
+    "pardiso-mhm-n128-L1-p32-r0-native-618023.json": "8c0df5f90d96586ad9f5887cfbe7c8ba7a54498fa3ef901a014c3b5d18eb9a4e",
+    "pardiso-mhm-n128-L1-p32-r0-native-618024.json": "b117ca21b76fcf22cadcefe476086d2b52a1400d444fa7314477f27bb45ba7f9",
+    "pardiso-mhm-n128-L1-p32-r0-native-618025.json": "f7077c20a082211bed0739b45ab31d7963a70794adc2d75d02e7c770f8279228"
+  },
+  "observed_MKL_thread_counts": [
+    1
+  ],
+  "validation_and_archive_seconds": 12.847990036010742,
+  "receipt_complete": true
+}

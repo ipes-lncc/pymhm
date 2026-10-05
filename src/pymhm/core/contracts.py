@@ -39,10 +39,16 @@ def _matrix_action(matrix: Any, values: FloatArray) -> FloatArray:
 
     The shared residual helper uses wider precision where available and
     compensated row sums otherwise; float64 accelerator inputs remain float64.
+    Rectangular moment operators use their own output dimension.
     """
     dtype = np.result_type(matrix.dtype, values.dtype)
     return np.asarray(
-        -_accurate_residual(matrix.tocsr(), np.zeros_like(values), values), dtype=dtype
+        -_accurate_residual(
+            matrix.tocsr(),
+            np.zeros_like(values, shape=(matrix.shape[0], *values.shape[1:])),
+            values,
+        ),
+        dtype=dtype,
     )
 
 
@@ -147,7 +153,11 @@ class LocalProblem:
         constraints = (
             basis.copy() if constraints is None else _array(constraints, basis.shape, "constraints")
         )
-        if basis.shape[1] and np.linalg.matrix_rank(constraints.T @ basis) != basis.shape[1]:
+        if (
+            basis.shape[1]
+            and np.linalg.matrix_rank(_matrix_action(sparse.csr_matrix(constraints.T), basis))
+            != basis.shape[1]
+        ):
             raise ValueError("constraints must pair nonsingularly with the retained basis")
         test_constraints = (
             (constraints if np.array_equal(test_basis, basis) else test_basis).copy()
@@ -156,7 +166,10 @@ class LocalProblem:
         )
         if (
             basis.shape[1]
-            and np.linalg.matrix_rank(test_basis.T @ test_constraints) != basis.shape[1]
+            and np.linalg.matrix_rank(
+                _matrix_action(sparse.csr_matrix(test_basis.T), test_constraints)
+            )
+            != basis.shape[1]
         ):
             raise ValueError("test_constraints must pair nonsingularly with the test basis")
         if kernel.shape[1]:

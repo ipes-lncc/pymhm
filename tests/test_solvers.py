@@ -19,7 +19,13 @@ from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 from pymhm._legacy.models.darcy.primal import solve_darcy
 from pymhm._legacy.models.vector import solve_brinkman
 from pymhm.linalg import linear as solvers
-from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError, factorize, solve_linear
+from pymhm.linalg.linear import (
+    LinearSolveError,
+    SolverUnavailableError,
+    factorize,
+    prepare_amgx,
+    solve_linear,
+)
 
 
 @pytest.mark.parametrize("solver", ["scipy", "cg", "minres", "gmres"])
@@ -31,6 +37,18 @@ def test_solvers_manufactured_system(solver: str, as_sparse: bool, multiple: boo
     rhs = matrix @ expected
     operator = sparse.coo_array(matrix) if as_sparse else matrix
     assert_allclose(solve_linear(operator, rhs, solver=solver), expected, atol=1e-12)
+
+
+def test_external_solution_checks_independently_scaled_original_columns() -> None:
+    """An accurate large column cannot mask an inaccurate small external response."""
+    matrix = np.array([[2.0, -1], [-1, 3]])
+    expected = np.array([[1.0, 1e-15], [-2.0, -2e-15]])
+    rhs = matrix @ expected
+    assert_allclose(solvers.check_linear_solution(matrix, rhs, expected), expected, rtol=0, atol=0)
+    altered = expected.copy()
+    altered[:, 1] *= 0.999
+    with pytest.raises(LinearSolveError, match="residual criterion"):
+        solvers.check_linear_solution(matrix, rhs, altered)
 
 
 @pytest.mark.parametrize("solver", ["scipy", "cg", "gmres"])
@@ -831,7 +849,7 @@ def test_pyamg_candidate_validation() -> None:
 def simulated_amgx(monkeypatch: pytest.MonkeyPatch) -> Any:
     """Simulate AmgX API/resource ownership, without claiming GPU execution."""
     state = SimpleNamespace(
-        created=[], destroyed=[], configuration=None, status="success", setups=0
+        created=[], destroyed=[], configuration=None, status="success", setups=0, solves=0, gain=1.0
     )
 
     class Resource:
@@ -872,7 +890,13 @@ def simulated_amgx(monkeypatch: pytest.MonkeyPatch) -> Any:
 
         def solve(self, rhs: Resource, result: Resource, *, zero_initial_guess: bool) -> None:
             assert zero_initial_guess
-            result.array = np.linalg.solve(self.matrix.toarray(), rhs.array)
+            state.solves += 1
+            # A native recursive stopping floor must not erase a tiny physical load.
+            result.array = (
+                state.gain * np.linalg.solve(self.matrix.toarray(), rhs.array)
+                if np.linalg.norm(rhs.array) > 1e-20
+                else np.zeros_like(rhs.array)
+            )
 
         @property
         def status(self) -> str:
@@ -926,6 +950,52 @@ def test_simulated_amgx_failure_cleanup(simulated_amgx: Any) -> None:
     assert simulated_amgx.destroyed[-1] == "finalize"
 
 
+def test_simulated_amgx_small_loads_and_prepared_reuse(simulated_amgx: Any) -> None:
+    """One fixed hierarchy preserves independently scaled and homogeneous loads."""
+    matrix = np.array([[3.0, -1], [-1, 2]])
+    vector = np.array([1.0, -2])
+    rhs = (matrix @ vector)[:, None] * np.array([1.0, 1e-15, 1e-120, 0.0])
+    with prepare_amgx(matrix) as prepared:
+        assert_allclose(
+            prepared.solve(rhs), vector[:, None] * [1, 1e-15, 1e-120, 0], rtol=1e-12, atol=0
+        )
+        assert_allclose(prepared.solve(rhs[:, 1]), vector * 1e-15, rtol=1e-12, atol=0)
+        assert prepared.matches(matrix)
+    assert simulated_amgx.setups == 1
+    assert simulated_amgx.solves == 4
+    assert simulated_amgx.destroyed[-1] == "finalize"
+
+
+def test_simulated_amgx_reuses_hierarchy_for_true_residual_corrections(
+    simulated_amgx: Any,
+) -> None:
+    """Native convergence cannot replace the unchanged original-equation criterion."""
+    simulated_amgx.gain = 0.999
+    matrix = np.array([[3.0, -1], [-1, 2]])
+    rhs = matrix @ np.array([1.0, -2])
+    with prepare_amgx(matrix, rtol=1e-13) as prepared:
+        with pytest.raises(LinearSolveError, match="residual criterion"):
+            prepared.solve(rhs * 1e-15, refinement_steps=3)
+        result = prepared.solve(rhs * 1e-15, refinement_steps=4)
+        assert_allclose(result, np.array([1.0, -2]) * 1e-15, rtol=2e-14, atol=0)
+    assert simulated_amgx.setups == 1
+    assert simulated_amgx.solves == 9
+
+
+@pytest.mark.parametrize("maxiter", [False, 0, -1, 1.5])
+def test_prepared_amgx_rejects_invalid_iteration_limit(maxiter: Any) -> None:
+    """Invalid limits fail before loading a native accelerator."""
+    with pytest.raises(ValueError, match="maxiter must"):
+        prepare_amgx(np.eye(2), maxiter=maxiter)
+
+
+@pytest.mark.parametrize("matrix", [[[1, 2], [0, 1]], [[-1, 0], [0, 1]]])
+def test_prepared_amgx_requires_elliptic_operator(matrix: Any) -> None:
+    """Nonsymmetric and saddle-like diagonals fail before native setup."""
+    with pytest.raises(ValueError, match="symmetric|positive diagonals"):
+        prepare_amgx(matrix)
+
+
 def test_simulated_amgx_initialization_error(simulated_amgx: Any) -> None:
     def fail_initialize() -> None:
         raise RuntimeError("missing device")
@@ -942,6 +1012,12 @@ def test_amgx_rejects_complex(matrix: Any, rhs: Any) -> None:
         solve_linear(matrix, rhs, solver="amgx")
 
 
+def test_simulated_prepared_amgx_rejects_complex_rhs(simulated_amgx: Any) -> None:
+    """Prepared real operators retain the same scalar-type contract on later loads."""
+    with prepare_amgx(np.eye(2)) as prepared, pytest.raises(ValueError, match="real float64"):
+        prepared.solve([1j, 0])
+
+
 @pytest.mark.gpu
 def test_native_optional_amgx_integration() -> None:
     """Exercise native GPU AMG when an AmgX/pyamgx installation is provided."""
@@ -949,6 +1025,19 @@ def test_native_optional_amgx_integration() -> None:
     matrix = sparse.diags([-np.ones(99), 2 * np.ones(100), -np.ones(99)], [-1, 0, 1], format="csr")
     rhs = np.ones(100)
     assert_allclose(matrix @ solve_linear(matrix, rhs, solver="amgx"), rhs, atol=1e-9)
+
+
+@pytest.mark.gpu
+def test_native_amgx_scaled_rhs_original_residual_and_reuse() -> None:
+    """Native AMG preserves tiny loads, zero loads and fixed-operator true corrections."""
+    pytest.importorskip("pyamgx")
+    matrix = sparse.diags([-np.ones(99), 2 * np.ones(100), -np.ones(99)], [-1, 0, 1], format="csr")
+    expected = np.linspace(-1, 1, 100)
+    rhs = (matrix @ expected)[:, None] * np.array([1.0, 1e-15, 1e-120, 0.0])
+    with prepare_amgx(matrix) as prepared:
+        result = prepared.solve(rhs)
+        assert_allclose(result, expected[:, None] * [1, 1e-15, 1e-120, 0], rtol=1e-8, atol=0)
+        assert_allclose(prepared.solve(rhs[:, 1]), result[:, 1], rtol=1e-8, atol=0)
 
 
 @pytest.mark.gpu

@@ -99,6 +99,14 @@ petsc4py = ">=3.22"
 [feature.introduction.dependencies]
 fenics-dolfinx = "0.9.*"
 
+[feature.fem-gpu]
+platforms = ["linux-64-cuda"]
+
+[feature.fem-gpu.dependencies]
+fenics-dolfinx = ">=0.9,<0.11"
+mpi4py = ">=4"
+petsc4py = ">=3.22"
+
 [feature.intel]
 platforms = ["linux-64", "win-64"]
 
@@ -280,6 +288,8 @@ test-py312 = { features = ["dev", "test", "py312"], solve-group = "py312" }
 docs = { features = ["native", "docs"], solve-group = "docs" }
 notebooks = { features = ["native", "notebooks", "visualization"], solve-group = "notebooks" }
 introduction = { features = ["dev", "test", "fem", "notebooks", "introduction"], solve-group = "introduction" }
+introduction-intel = { features = ["dev", "test", "fem", "notebooks", "introduction", "intel"], solve-group = "introduction-intel" }
+introduction-gpu = { features = ["dev", "test", "fem-gpu", "notebooks", "introduction", "gpu"], solve-group = "introduction-gpu" }
 packaging = { features = ["native", "dev", "packaging"], solve-group = "packaging" }
 meshing = { features = ["native", "dev", "test", "meshing"], solve-group = "meshing" }
 fem = { features = ["dev", "test", "fem"], solve-group = "fem" }

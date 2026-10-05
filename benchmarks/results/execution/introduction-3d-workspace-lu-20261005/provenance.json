@@ -1,0 +1,76 @@
+{
+  "schema": "pymhm-closed-scientific-publication-v1",
+  "closed_utc": "2026-10-05T05:19:46.565200+00:00",
+  "results": {
+    "path": "benchmarks/results/execution/introduction-3d-workspace-lu-20261005/results.json",
+    "sha256": "77caae6514b14ca692b4914103318871626b964460ed835dff041a4bbf96fe1c"
+  },
+  "figures": {
+    "solver-comparison.png": "6e48fc2e7ff7539ec2969b4856dbeebf1dadb2f2beb6127fb59647d0e61702af",
+    "strong-efficiency.png": "1f8df431146b3b05ad8523513ac5ee27ade84a3235f2210c58d14fa61287f31c",
+    "strong-phases.png": "4d6a1af03c23c2102feff715543fc08d632126873a60bf2fecec899e2a073d58",
+    "strong-speedup.png": "c8107786d8ee0d263fcb9b71dd033b55bab1b2a839721637ade8776f53344146",
+    "strong-time.png": "fcc0bc54a396e178418c5816715b0e39b14c59437541f5db737cff91183801dd",
+    "weak-scaling.png": "81fa047efad8361447f408f93feaa151f19a0047dfa60e00943446288d614439"
+  },
+  "readme": {
+    "path": "benchmarks/results/execution/introduction-3d-workspace-lu-20261005/README.md",
+    "sha256": "09878a2ab4df9f3ec56e75a0d01902610618b6908c81a87ad27a2eb1eaacd490"
+  },
+  "source_notebook": {
+    "path": "notebooks/introduction/darcy_3d_parallel_scalability.ipynb",
+    "sha256": "81c9c85906df8daf5481419718a3e0bb66c1677843c1dfe9fd33ecb534c343e1"
+  },
+  "executed_notebook_sha256": "194899a4b47a32b92e039ad7572a07a296aeef5b38f1db5d7b6d3756e35defe0",
+  "pixi_lock": {
+    "path": "pixi.lock",
+    "sha256": "c54e433e408e8345516023d96526b305d09452a55d53c018ea6ea529535df9fd"
+  },
+  "catalog_sha256": "902027f060bc5d5e368beae3c57d86aec1bbdd404c25b255ae1d562c8a83879c",
+  "distinct_measured_acquisitions": {
+    "MHM": 25,
+    "classical": 11
+  },
+  "weak_baseline_references": 4,
+  "scientific_controls": {
+    "workspace-equivalence.json": {
+      "path": "build/performance3d-lu/workspace-equivalence.json",
+      "sha256": "196646df499cf6f7e4e12646e45bc001fab6d570e2937f370f7a78eb6a417583"
+    },
+    "catalog-parallel-controls-complete.json": {
+      "path": "build/performance3d-lu/catalog-parallel-controls-complete.json",
+      "sha256": "9dd834a6015fdcc3f1aaf07c75da4e2f8ed6b31c70a74cd357702bdee89cba47"
+    },
+    "catalog-control-affinity-transition.json": {
+      "path": "build/performance3d-lu/catalog-control-affinity-transition.json",
+      "sha256": "dfd6c22918f24f9532b4f0620b43c580a62699ca644fe2936bf2f1ae99d77ba2"
+    }
+  },
+  "notebook_execution": {
+    "mode": "native-default-acquisition-plus-literal-publication-readout",
+    "native_acquisition_receipt": {
+      "path": "benchmarks/results/execution/introduction-3d-workspace-lu-20261005/notebook-native-execution.json",
+      "sha256": "d9a044ab2a560bd83fbef4a0e08e667fed95d0a3b1c2709eabf6dd549494c9bd"
+    },
+    "publication_readout_receipt": {
+      "path": "benchmarks/results/execution/introduction-3d-workspace-lu-20261005/notebook-publication-readout.json",
+      "sha256": "c36981c75f95f01731d4b146410582857a7c14c96051c101c8aa506b25ac2e7f"
+    },
+    "source_cell_edit_receipt": {
+      "path": "benchmarks/results/execution/introduction-3d-workspace-lu-20261005/notebook-source-cells.json",
+      "sha256": "df062c7cbfed7420467526be18732ab4656c13b9ffb7e50bd13dded5443e8717"
+    },
+    "phase_1_source_sha256": "ede05953c1a43520ee120d41eb02856d61b684af2b3dbe8b0f5b2dc5d3664c02",
+    "phase_2_source_sha256": "81c9c85906df8daf5481419718a3e0bb66c1677843c1dfe9fd33ecb534c343e1",
+    "phase_2_executed_cell_indices_zero_based": [
+      1,
+      38,
+      40,
+      41,
+      43
+    ],
+    "preserved_native_scope": "Completed native numerical acquisition and scientific output payloads are retained from phase 1. Phase 2 executes only the literal publication JSON readout and plotting cells. Each phase retains its actual executed source and environment digests; final qualification hashes are not reassigned to earlier acquisitions."
+  },
+  "archive_policy": "The public record contains executed-basis archive digests and replay controls. Large native state and basis NPZ archives remain private and are not included in release artifacts.",
+  "timing_scope": "Accepted times include complete parent launch and solver startup, assembly, independent material solves, communication, synchronization, global solution, reconstruction and shutdown. Scientific norm integration, archives and plotting occur after the measured solver workflow."
+}

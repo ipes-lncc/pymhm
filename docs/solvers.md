@@ -46,6 +46,33 @@ skeleton/kernel system is generally indefinite. Its solution requires an
 appropriate saddle-point solver or block preconditioner; passing it directly to
 an elliptic AMG preset is not a supported shortcut.
 
+## Native library initialization and worker limits
+
+`preload_solver_backend(name)` loads only the explicitly selected backend's
+libraries. It constructs no explicit numerical factors, AMG hierarchy,
+communicator or GPU session. PETSc preparation imports its Python package;
+PETSc/MPI initialization remains in the existing numerical adapter.
+Call it before a new `threadpool_limits` context when managing native thread
+counts directly, so that every loaded BLAS/OpenMP pool receives that policy.
+
+The ordered local executors prepare their named solver before operator assembly
+and before applying `native_threads`. Providers, compilers and custom solvers can
+supply an idempotent `prepare_runtime()` hook for the same library initialization
+step. Numerical resources remain local to their worker and are released through
+`close()` after execution. The hook is optional; portable callables need no
+additional protocol. Preparation does not change precision, native parameter
+profiles or the residual criterion.
+Library preparation leaves operator capability checks in their numerical owners.
+An unavailable optional library is reported when an admissible operator actually
+requires that backend; unused local spaces need no native solver initialization.
+
+PARDISO native construction, factorization, solve and cleanup entries are
+serialized within each process. Separate factors retain independent lifetimes;
+a single factor must not be used concurrently. Independent spawned processes
+have independent native locks. Linux native tests exercise serial, thread and
+spawn execution. Windows uses the same portable execution and cleanup contracts;
+its native runtime qualification is reported by Windows CI separately.
+
 ## Reusing direct factorizations
 
 ```python
@@ -126,8 +153,9 @@ For example, `factors.solve(rhs, refinement_precision="extended",
 refinement_steps=8)` permits eight corrections while preserving the requested
 residual criterion. Acceptance can occur earlier; exhaustion, stagnation or
 divergence still raises `LinearSolveError`. This limit is separate from the
-backend's internal refinement settings. CuPy sparse QR and AmgX expose no outer
-correction loop and reject nondefault limits.
+backend's internal refinement settings. AmgX reuses its prepared GPU hierarchy
+for these original-equation corrections. CuPy sparse QR exposes no outer
+correction loop and rejects nondefault limits.
 
 `HybridSystem.solve(refinement_precision="extended")` independently enables
 extended accumulation for the global solve and reconstructed coefficients.
@@ -214,7 +242,9 @@ from pymhm.linalg.linear import solve_linear
 A = pyamg.gallery.poisson((32, 32), format="csr")
 b = np.ones(A.shape[0])
 x = solve_linear(
-    A, b, solver="pyamg",
+    A,
+    b,
+    solver="pyamg",
     near_nullspace=np.ones((A.shape[0], 1)),
 )
 ```
@@ -238,7 +268,43 @@ work. See [PyAMG's aggregation API](https://pyamg.readthedocs.io/en/latest/gener
 FGMRES, one aggregation V-cycle per preconditioner application, block-Jacobi
 smoothing and a dense coarse solve. Matrix/RHS transfer, hierarchy setup and
 resource destruction are included in the call. One hierarchy is reused across
-RHS columns. This is GPU AMG; it does not dispatch to the CPU PyAMG package.
+RHS columns and independently checked true-residual corrections. The original
+operator and each original RHS define the residual criterion, including zero
+forcing. Relative-tolerance solves normalize every nonzero column by its largest
+absolute entry and undo this scale in the solution. This preserves the equations
+while keeping small physical loads above the native convergence test's
+[absolute stopping floor](https://github.com/NVIDIA/AMGX/blob/91a8413ef267b1c32aff4014c02820e1c5897ac2/src/convergence/relative_ini.cu).
+The original residual acceptance criterion is unchanged.
+
+For repeated loads on one fixed elliptic operator, prepare the hierarchy explicitly:
+
+```python
+from pymhm.linalg.linear import prepare_amgx
+
+with prepare_amgx(A, rtol=1e-10) as prepared:
+    solution = prepared.solve(rhs_columns)
+    another_solution = prepared.solve(another_rhs, refinement_steps=4)
+```
+
+The hierarchy belongs to that copied operator. A different material matrix needs
+a different setup. It accepts real symmetric operators with positive diagonals;
+the caller must establish positive definiteness. Closing the context releases
+all native vectors, solver, matrix, resource and configuration handles.
+
+For MHM Neumann locals, the shared condensation owner projects compatibility,
+pins one independent coordinate per declared kernel mode and restores the
+declared physical moment constraints after each correction. AmgX receives the
+pinned elliptic operator. Source, oriented trace and finite-precision retained
+mode responses share one hierarchy across every projected correction pass.
+Compatibility pairings, source moments and gauge restoration use the same
+extended or compensated accumulator as the original residual checks; native
+corrections and response storage remain double precision. Every permitted
+correction, including the fourth, is checked before acceptance.
+Their projected original-equation target is `1e-12`; each pinned solve keeps its
+`1e-10` criterion. Reconstructed fields also require an independent check of
+the original physical equations; the reduced global residual is insufficient.
+Trial and test kernels/moments must match, and a general coarse basis is outside
+this local AMG interface.
 
 AmgX and pyamgx have separate native build requirements. They are not silently
 installed by the standard Python package extra. Follow the
@@ -248,8 +314,12 @@ A working CUDA runtime and matching native library are required.
 
 The adapter owns AmgX's process-global initialization/finalization and serializes
 its own resource lifecycles. Do not overlap it with an independently managed
-pyamgx session in the same process. Multi-GPU distribution and external AmgX
-configuration dictionaries are not supported by this adapter.
+pyamgx session in the same process. Each prepared hierarchy uses one GPU.
+Several independent local problems can be assigned to separate spawned GPU
+processes, each setting `CUDA_VISIBLE_DEVICES` before its first CUDA import.
+Within one process the lifecycle lock remains held until the prepared hierarchy
+is closed. The adapter uses the stated fixed preset and does not accept external
+AmgX configuration dictionaries.
 
 ## Local parallelism
 

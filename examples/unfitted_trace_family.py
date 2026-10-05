@@ -30,7 +30,7 @@ from pymhm.core.validation import positive_int
 from pymhm.fem.scalar.operators import boundary_data
 from pymhm.fem.scalar.triangle import tabulate
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
-from pymhm.linalg.linear import solve_linear
+from pymhm.linalg.linear import preload_solver_backend, solve_linear
 from pymhm.materials.evaluation import tensor_values
 from pymhm.meshes.triangle import TriangleMesh
 
@@ -101,6 +101,7 @@ def _prepare_cell(
     factory: _DarcyLocalFactory, cell: int, trace_size: int, local_solver: str
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, _Cell]:
     """Assemble and condense one local problem with one native algebra thread."""
+    preload_solver_backend(local_solver)
     with threadpool_limits(1):
         assembly = factory(cell)
         response = assembly.problem.condense(solver=local_solver)

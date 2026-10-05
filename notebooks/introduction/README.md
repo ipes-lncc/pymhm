@@ -17,7 +17,7 @@ different spaces and local formulations.
 | [Multiscale Darcy and convergence](darcy_multiscale_convergence.ipynb) | Tensor permeability, explicit primal local forms, oriented flux traces, a physical mean gauge and separate pressure and flux convergence |
 | [Parallel Darcy: speed-up and scalability](darcy_parallel_scalability.ipynb) | Mesh-size sweep from 200×200 to 1000×1000, matched fine-element counts, classical LU and AMG comparisons, parallel local solves, complete timings and strong/weak scaling |
 | [Darcy with spawned processes](darcy_process_scalability.ipynb) | Notebook-defined worker operators, process startup and transfer costs, strong scaling at 1000×1000, weak scaling on growing rectangles and classical LU/AMG comparisons |
-| [Three-dimensional Darcy: processes and AMG](darcy_3d_parallel_scalability.ipynb) | Explicit UFL local forms; matched hexahedral fine-cell counts; process strong/weak scaling; CPU AMG and independently measured native GPU condensation |
+| [Three-dimensional Darcy: workspaces, LU and AMG](darcy_3d_parallel_scalability.ipynb) | Explicit UFL local forms; reusable native resources; independent material assembly; local LU/AMG; MPI classical baselines; strong and focused weak measurements |
 | [Darcy on a SPE10 layer](darcy_spe10_layer.ipynb) | Discontinuous reservoir material data, integration across material cells, pressure boundary data and a refined conforming comparison |
 | [Multiscale elasticity](multiscale_elasticity.ipynb) | Vector UFL forms, heterogeneous stiffness, rigid motions and displacement and stress comparisons |
 | [MsHHO with an oscillatory coefficient](mshho_multiscale.ipynb) | Cell and face moments, constrained energy reconstruction and the global moment equations |
@@ -115,3 +115,19 @@ repeated samples; solve times include per-run setup, executor startup, assembly,
 synchronization, the global solve and reconstruction. Observed native
 initialization with the current compiler cache is recorded separately and is
 not presented as a cold-cache measurement.
+
+The three-dimensional tutorial declares its material and local forms before
+introducing native workspace reuse. Every macrocell assembles its material
+matrix and load and builds its own local factors or AMG hierarchy. Compatible
+mesh/space/form resources and this application's material-independent face and
+volume-moment geometry can remain resident in each isolated worker. Local LU
+and AMG are compared with independent conforming references; the distributed
+LU reference uses PETSc/MUMPS. The aligned period 0.1 and nonaligned period
+0.137 define separate physical cases. Equal fine-cell counts do not establish
+equal field accuracy.
+
+The optional one/two-GPU section describes local condensation of original
+assembled operators. Its native small controls establish availability, while
+no accepted large GPU condensation or complete GPU-workflow speedup is
+available. GPU setup, transfer, synchronization and all physical checks remain
+part of that separately scoped experiment.

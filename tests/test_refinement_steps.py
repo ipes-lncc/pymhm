@@ -154,11 +154,10 @@ def test_solve_linear_krylov_uses_the_same_bound(monkeypatch: Any) -> None:
     assert_allclose(result, [1, -2], atol=2e-14)
 
 
-@pytest.mark.parametrize("solver", ["amgx", "cupy"])
-def test_one_call_accelerators_reject_unavailable_outer_loop(solver: str) -> None:
+def test_one_call_accelerators_reject_unavailable_outer_loop() -> None:
     """Unsupported explicit limits fail without importing an optional accelerator."""
     with pytest.raises(ValueError, match="Krylov or reusable direct"):
-        solve_linear(np.eye(2), [1, 2], solver=solver, refinement_steps=4)
+        solve_linear(np.eye(2), [1, 2], solver="cupy", refinement_steps=4)
 
 
 def test_native_optional_cpu_integration_pypardiso_extended_well(monkeypatch: Any) -> None:

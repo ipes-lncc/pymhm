@@ -1,7 +1,8 @@
 """Global hybrid layout, boundary elimination, gauges and physical compatibility."""
 
 from collections.abc import Callable, Iterable
-from functools import partial
+from contextlib import suppress
+from dataclasses import dataclass
 from typing import Any, Literal
 
 import numpy as np
@@ -18,13 +19,81 @@ from pymhm.core.contracts import (
 )
 from pymhm.core.contributions import assemble_hybrid_contributions
 from pymhm.core.validation import FloatArray, IntArray
-from pymhm.execution.cpu import map_local
+from pymhm.execution.cpu import _prepare_callable, map_local
 from pymhm.linalg.linear import (
     LinearFactorization,
     SolverUnavailableError,
+    preload_solver_backend,
     solve_linear,
     validate_invertible,
 )
+
+
+def _prepare_solver(solver: Any) -> None:
+    """Prepare libraries while leaving capability validation to numerical owners."""
+    if isinstance(solver, str):
+        # Unused or inadmissible operators retain their own diagnosis; a valid
+        # operator still requires the selected backend in its numerical owner.
+        with suppress(SolverUnavailableError):
+            preload_solver_backend(solver)
+    else:
+        _prepare_callable(solver)
+
+
+@dataclass(frozen=True)
+class _FactoryWorker:
+    """Retain the local factory and its cleanup for one ordered worker lifetime."""
+
+    factory: Callable[[Any], LocalProblem | LocalAssembly]
+    solver: str
+    refinement_precision: Literal["double", "extended"]
+
+    def prepare_runtime(self) -> None:
+        """Load declared solver/provider libraries before assembly thread limits."""
+        _prepare_callable(self.factory)
+        _prepare_solver(self.solver)
+
+    def __call__(self, item: Any) -> tuple[LocalResponse, Any]:
+        """Delegate unchanged local assembly and numerical condensation."""
+        return _assemble_and_condense(
+            item,
+            factory=self.factory,
+            solver=self.solver,
+            refinement_precision=self.refinement_precision,
+        )
+
+    def close(self) -> None:
+        """Release explicitly declared factory and external solver resources."""
+        try:
+            close = getattr(self.factory, "close", None)
+            if callable(close):
+                close()
+        finally:
+            close = getattr(self.solver, "close", None)
+            if callable(close):
+                close()
+
+
+@dataclass(frozen=True)
+class _CondenseWorker:
+    """Own external solver cleanup when all local operators are already assembled."""
+
+    solver: str
+    refinement_precision: Literal["double", "extended"]
+
+    def prepare_runtime(self) -> None:
+        """Load the selected backend without allocating numerical solver state."""
+        _prepare_solver(self.solver)
+
+    def __call__(self, problem: LocalProblem) -> LocalResponse:
+        """Delegate unchanged numerical elimination of the supplied local operator."""
+        return _condense(problem, self.solver, self.refinement_precision)
+
+    def close(self) -> None:
+        """Release an explicitly declared external solver's resident resources."""
+        close = getattr(self.solver, "close", None)
+        if callable(close):
+            close()
 
 
 class HybridSystem:
@@ -51,8 +120,7 @@ class HybridSystem:
         """Condense independent subdomains and assemble their sparse contributions."""
         responses = tuple(
             map_local(
-                partial(
-                    _condense,
+                _CondenseWorker(
                     solver=local_solver,
                     refinement_precision=local_refinement_precision,
                 ),
@@ -91,7 +159,9 @@ class HybridSystem:
         requires picklable factories, items and metadata, and an executable
         script protected by ``if __name__ == '__main__':``. Native FEM, PETSc,
         MPI and CUDA resources must be created and released inside a worker,
-        never sent to or returned from a worker. ``native_threads`` defaults to
+        never sent to or returned from a worker. An optional ``factory.close()``
+        or solver ``close()`` runs at the worker's lifetime boundary,
+        including local failures. ``native_threads`` defaults to
         one thread; backend library thread safety is the factory's concern.
         ``batch_size`` limits submitted local jobs while preserving input order.
         Responses are retained before global assembly because this constructor
@@ -99,8 +169,7 @@ class HybridSystem:
         explicitly declared layout, use ``assemble_hybrid``.
         """
         assembled = map_local(
-            partial(
-                _assemble_and_condense,
+            _FactoryWorker(
                 factory=factory,
                 solver=local_solver,
                 refinement_precision=local_refinement_precision,
