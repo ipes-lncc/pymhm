@@ -74,7 +74,7 @@ def hashes() -> dict[str, str]:
         )
     ]
     return current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     )
 
 

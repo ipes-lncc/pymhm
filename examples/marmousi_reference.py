@@ -268,7 +268,7 @@ def main() -> None:
     ]
     before = current_source_manifest(
         {
-            str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
+            path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in sources
         }
     )
@@ -285,7 +285,7 @@ def main() -> None:
         )
     after = current_source_manifest(
         {
-            str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
+            path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in sources
         }
     )

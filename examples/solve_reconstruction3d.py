@@ -43,7 +43,7 @@ def run(suite: str) -> None:
         ROOT / "examples/reconstruction3d_data.py",
     ]
     hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
     )
     report: dict[str, Any] = dict(
         suite=suite,
@@ -186,7 +186,7 @@ def run(suite: str) -> None:
             estimate = estimate_darcy_error_3d(solution, quadrature_order=12)
             capture(n, solution, estimate)
     if hashes != current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
     ):
         raise RuntimeError("campaign sources changed during acquisition")
     report["source_changed_during_run"] = False

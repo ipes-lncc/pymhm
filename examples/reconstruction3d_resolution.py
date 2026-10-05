@@ -53,11 +53,11 @@ def run() -> None:
         )
     ] + [Path(__file__), ROOT / "examples/reconstruction3d_data.py"]
     hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
     )
     record = dict(
         reference="analytical",
-        fixed_macro_input=str(path.relative_to(ROOT)),
+        fixed_macro_input=path.relative_to(ROOT).as_posix(),
         fixed_macro_input_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
         source_sha256=hashes,
         exact_norms=norms.tolist(),
@@ -142,7 +142,7 @@ def run() -> None:
         (OUTPUT / "resolution.json").write_text(json.dumps(record, indent=2) + "\n")
         print(json.dumps(row), flush=True)
     if hashes != current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
     ):
         raise RuntimeError("campaign sources changed during acquisition")
     record["source_changed_during_run"] = False

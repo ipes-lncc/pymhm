@@ -16,6 +16,7 @@ from pymhm.core.equations import (
     CompiledLocalEquations,
     Equation,
     LocalEquations,
+    columns,
     compile_form,
     compile_local_equations,
 )
@@ -439,9 +440,37 @@ def test_binary64_precision_contract_is_explicit(simulated_petsc: Any) -> None:
         _binary64([np.inf], "form")
     with pytest.raises(ValueError, match="finite real"):
         _binary64([1j], "form")
-    for value in (np.array([2**53 + 1], dtype=np.int64), np.array([2**64 - 1], dtype=np.uint64)):
+    for value in (
+        np.array([2**53 + 1], dtype=np.int64),
+        np.array([2**64 - 1], dtype=np.uint64),
+        [2**53 + 1, 0.0],
+        (0.0, [2**53 + 1]),
+    ):
         with pytest.raises(ValueError, match="exactly representable"):
             _binary64(value, "form")
+    np.testing.assert_array_equal(_binary64([2**53 + 2, 0.0], "form"), [2**53 + 2, 0.0])
+    with pytest.raises(ValueError, match="exactly representable"):
+        _values([2**53 + 1, 0.0], 2, "boundary values")
+    for dtype, values in (
+        (np.int64, [-(2**53), 2**53, 2**53 + 2, -(2**63)]),
+        (np.uint64, [2**53, 2**63, 2**64 - 2048]),
+    ):
+        integers = np.array(values, dtype=dtype)
+        np.testing.assert_array_equal(_binary64(integers, "form"), integers.astype(float))
+    with pytest.raises(ValueError, match="exactly representable"):
+        _binary64(np.array([-(2**53 + 1)], dtype=np.int64), "form")
+    for equation in (
+        Equation([[1.0]], np.array([2**53 + 1], dtype=np.int64)),
+        Equation(np.array([[2**53 + 1]], dtype=np.int64), [0.0]),
+    ):
+        with pytest.raises(ValueError, match="preparation failed.*binary64"):
+            solve_distributed(
+                lambda _: LocalProblem([[1.0]], [[1.0]], [0.0], np.array([0])),
+                [0],
+                trace_size=1,
+                comm=serial_comm(),
+                global_equation=equation,
+            )
     if np.finfo(np.longdouble).eps < np.finfo(float).eps:
         wider = np.ones(1, dtype=np.longdouble) + np.finfo(np.longdouble).eps
         with pytest.raises(ValueError, match="exactly representable"):
@@ -471,6 +500,7 @@ def test_binary64_precision_contract_is_explicit(simulated_petsc: Any) -> None:
         "coarse_basis",
         "left_kernel",
         "test_basis",
+        "pairing",
     ],
 )
 def test_local_forms_reject_wider_digits_before_contract_conversion(
@@ -479,9 +509,7 @@ def test_local_forms_reject_wider_digits_before_contract_conversion(
     """Check every declared form/basis before LocalProblem normalizes its arrays."""
     from dataclasses import replace
 
-    if np.finfo(np.longdouble).eps >= np.finfo(float).eps:
-        pytest.skip("this platform has no wider real coefficient dtype")
-    wider = np.ones((1, 1), dtype=np.longdouble) + np.finfo(np.longdouble).eps
+    wider = np.array([[2**53 + 1]], dtype=np.int64)
     definition = LocalEquations(
         [[1.0]],
         [0.0],
@@ -492,7 +520,11 @@ def test_local_forms_reject_wider_digits_before_contract_conversion(
         moments=[[1.0]],
         test_moments=[[1.0]],
     )
-    definition = replace(definition, **{name: wider.ravel() if name in {"L", "g"} else wider})
+    definition = (
+        replace(definition, b=columns(wider.ravel()))
+        if name == "pairing"
+        else replace(definition, **{name: wider.ravel() if name in {"L", "g"} else wider})
+    )
     with pytest.raises(ValueError, match="preparation failed.*binary64"):
         solve_distributed(lambda _: definition, [0], trace_size=1, comm=serial_comm())
 
@@ -501,15 +533,10 @@ def test_custom_compiler_wider_sparse_data_are_checked(simulated_petsc: Any) -> 
     """A sparse symbolic compiler cannot lose extra coefficients during local construction."""
     from scipy import sparse
 
-    if np.finfo(np.longdouble).eps >= np.finfo(float).eps:
-        pytest.skip("this platform has no wider real coefficient dtype")
-
     def compiler(form: Any, shape: tuple[int, ...] | None = None) -> Any:
         """Return one nonrepresentable sparse matrix from a symbolic operator."""
         if isinstance(form, str):
-            return sparse.csc_matrix(
-                np.ones((1, 1), dtype=np.longdouble) + np.finfo(np.longdouble).eps
-            )
+            return sparse.csc_matrix(np.array([[2**53 + 1]], dtype=np.int64))
         return compile_form(form, shape)
 
     definition = LocalEquations("wide", [0.0], [[1.0]], [[-1.0]], [0])
@@ -517,6 +544,46 @@ def test_custom_compiler_wider_sparse_data_are_checked(simulated_petsc: Any) -> 
         solve_distributed(
             lambda _: definition, [0], trace_size=1, comm=serial_comm(), compiler=compiler
         )
+
+
+def test_custom_compiler_owns_ragged_symbolic_containers(simulated_petsc: Any) -> None:
+    """Inspect numeric leaves while leaving symbolic form structure to its compiler."""
+    symbolic = ("piecewise", [[1.0, 2.0], [3.0]])
+
+    def compiler(form: Any, shape: tuple[int, ...] | None = None) -> Any:
+        """Compile a custom piecewise operator without a rectangular literal array."""
+        return np.eye(1) if form is symbolic else compile_form(form, shape)
+
+    definition = LocalEquations(symbolic, [1.0], [[1.0]], [[-1.0]], [0])
+    actual = solve_distributed(
+        lambda _: definition, [0], trace_size=1, comm=serial_comm(), compiler=compiler
+    )
+    np.testing.assert_allclose(actual.fields[0], [0.0], atol=1e-14)
+    np.testing.assert_allclose(actual.local_trace, [1.0], atol=1e-14)
+
+
+def test_sparse_duplicate_entries_are_cast_before_coalescing() -> None:
+    """Raw and compiler-produced sparse integers add without fixed-width overflow."""
+    from scipy import sparse
+
+    entries = sparse.coo_matrix(
+        (np.array([2**62, 2**62], dtype=np.int64), ([0, 0], [0, 0])), shape=(1, 1)
+    )
+
+    def compiler(form: Any, shape: tuple[int, ...] | None = None) -> Any:
+        """Return uncoalesced compiler output for the symbolic branch."""
+        return entries if isinstance(form, str) else compile_form(form, shape)
+
+    for form in (entries, "duplicate entries"):
+        actual = distributed._checked_form(form, (1, 1), compiler)
+        np.testing.assert_array_equal(actual.toarray(), [[float(2**63)]])
+        assert actual.dtype == np.dtype(float)
+    np.testing.assert_array_equal(entries.data, [2**62, 2**62])
+    nonrepresentable = sparse.coo_matrix(
+        (np.array([2**53 + 1, -1], dtype=np.int64), ([0, 0], [0, 0])), shape=(1, 1)
+    )
+    with pytest.raises(ValueError, match="exactly representable"):
+        distributed._checked_form(nonrepresentable, (1, 1), compiler)
 
 
 @pytest.mark.serial

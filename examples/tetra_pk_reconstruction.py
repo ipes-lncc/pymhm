@@ -46,12 +46,12 @@ def run() -> None:
         )
     ] + [Path(__file__), ROOT / "examples/reconstruction3d_data.py"]
     hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
     )
     snapshot = ROOT / "build/results/tetra-pk/acquisition-sources"
     snapshot.mkdir(parents=True, exist_ok=True)
     for owner in owners:
-        destination = snapshot / f"{hashes[str(owner.relative_to(ROOT))]}-{owner.name}"
+        destination = snapshot / f"{hashes[owner.relative_to(ROOT).as_posix()]}-{owner.name}"
         destination.write_bytes(owner.read_bytes())
     mesh = TetraMesh(arrays["macro_points"], arrays["macro_cells"])
     fine = tuple(
@@ -123,7 +123,7 @@ def run() -> None:
     )
     result.pop("errors_by_order")
     if hashes != current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
     ):
         raise RuntimeError("reconstruction sources changed during acquisition")
     result["source_changed_during_run"] = False

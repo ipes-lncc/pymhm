@@ -35,7 +35,7 @@ def sources() -> dict[str, str]:
         *(driver.ROOT / f"examples/{name}.py" for name in names),
     ]
     return current_source_manifest(
-        {str(path.relative_to(driver.ROOT)): file_digest(path) for path in paths}
+        {path.relative_to(driver.ROOT).as_posix(): file_digest(path) for path in paths}
     )
 
 

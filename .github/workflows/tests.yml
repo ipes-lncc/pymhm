@@ -80,6 +80,8 @@ jobs:
       - name: Check metadata
         run: pixi run --locked -e ${{ matrix.environment }} metadata-check
       - name: Run tests with branch coverage
+        env:
+          PYTEST_ADDOPTS: --junitxml=build/reports/tests/junit.xml
         run: pixi run --locked -e ${{ matrix.environment }} test-cov
       - name: Build a portable wheel on Windows
         if: runner.os == 'Windows'
@@ -97,9 +99,12 @@ jobs:
           name: wheel-windows-${{ matrix.environment }}
           path: build/reports/windows-wheel.*
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: coverage-${{ matrix.os }}-${{ matrix.environment }}
-          path: build/reports/coverage/coverage.xml
+          name: test-results-${{ matrix.os }}-${{ matrix.environment }}
+          path: |
+            build/reports/tests/*.xml
+            build/reports/coverage/coverage.xml
       - uses: codecov/codecov-action@v5
         if: matrix.os == 'ubuntu-latest' && matrix.environment == 'test-core'
         with:

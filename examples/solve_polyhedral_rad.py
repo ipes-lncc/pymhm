@@ -63,7 +63,7 @@ def main() -> None:
         )
     ]
     hashes = current_source_manifest(
-        {str(path.relative_to(ROOT)): fingerprint(path) for path in paths}
+        {path.relative_to(ROOT).as_posix(): fingerprint(path) for path in paths}
     )
     snapshots = folder / "acquisition-sources"
     snapshots.mkdir(exist_ok=True)
@@ -149,7 +149,7 @@ def main() -> None:
                     row["field_archive"] = archive.name
                     row["field_sha256"] = fingerprint(archive)
                 row["source_changed"] = any(
-                    fingerprint(path) != hashes[str(path.relative_to(ROOT))] for path in paths
+                    fingerprint(path) != hashes[path.relative_to(ROOT).as_posix()] for path in paths
                 )
                 record["convergence"].append(row)
                 temporary = destination.with_suffix(".json.part")

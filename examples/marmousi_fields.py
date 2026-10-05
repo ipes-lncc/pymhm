@@ -372,7 +372,10 @@ def main() -> None:
         *sorted((root / "src/pymhm").rglob("*.py")),
     ]
     hashes = current_source_manifest(
-        {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+        {
+            p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sources
+        }
     )
     x, y = np.meshgrid(np.linspace(0, 10240, 513), np.linspace(0, 2560, 129), indexing="ij")
     points = np.column_stack((x.ravel(), y.ravel()))
@@ -464,7 +467,7 @@ def main() -> None:
                 "source_changed_during_run": hashes
                 != current_source_manifest(
                     {
-                        str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
+                        p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
                         for p in sources
                     }
                 ),

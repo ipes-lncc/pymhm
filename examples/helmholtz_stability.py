@@ -154,11 +154,11 @@ def run(
     output.mkdir(parents=True, exist_ok=True)
     path = output / f"ell{ell}-frequency{frequency:g}.json"
     original = source_hashes()
-    original[str(Path(__file__).relative_to(ROOT))] = hashlib.sha256(
+    original[Path(__file__).relative_to(ROOT).as_posix()] = hashlib.sha256(
         Path(__file__).read_bytes()
     ).hexdigest()
     helper = ROOT / "examples/helmholtz_threshold.py"
-    original[str(helper.relative_to(ROOT))] = hashlib.sha256(helper.read_bytes()).hexdigest()
+    original[helper.relative_to(ROOT).as_posix()] = hashlib.sha256(helper.read_bytes()).hexdigest()
     record: dict[str, Any] = {
         "reference": "Chaumont-Frelet and Valentin (2020), Section 6.1, Equation (6.3)",
         "ell": ell,

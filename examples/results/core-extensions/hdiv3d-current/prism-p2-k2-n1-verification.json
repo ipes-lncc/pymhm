@@ -12,64 +12,64 @@
     12,
     13
   ],
-  "error_quadrature_absolute_change": 1.0366707492437399e-13,
-  "divergence_error_quadrature_absolute_change": 1.1239897901305085e-12,
+  "error_quadrature_absolute_change": 1.0363931934875836e-13,
+  "divergence_error_quadrature_absolute_change": 1.1242118347354335e-12,
   "norms": {
     "quadrature_12": {
-      "pressure_l2": 0.04807748104426059,
-      "flux_l2": 0.17260678180237576,
-      "divergence_l2": 1.4155283509349432
+      "pressure_l2": 0.04807748104426024,
+      "flux_l2": 0.17260678180236935,
+      "divergence_l2": 1.415528350934943
     },
     "quadrature_13": {
-      "pressure_l2": 0.04807748104429834,
-      "flux_l2": 0.1726067818022721,
+      "pressure_l2": 0.04807748104429801,
+      "flux_l2": 0.1726067818022657,
       "divergence_l2": 1.4155283509360672
     }
   },
-  "pressure_l2": 0.04807748104429834,
-  "flux_l2": 0.1726067818022721,
+  "pressure_l2": 0.04807748104429801,
+  "flux_l2": 0.1726067818022657,
   "divergence_l2": 1.4155283509360672,
   "original_physical_checks": {
     "accepted": true,
     "criterion": 1e-10,
-    "maximum_physical_block_backward_error": 2.221160366906566e-16,
-    "all_local_physical_rows_relative_to_source": 1.2753228248748213e-15,
-    "compact_original_relative_residual": 1.4976938443503358e-16,
+    "maximum_physical_block_backward_error": 2.8759285363229183e-16,
+    "all_local_physical_rows_relative_to_source": 1.6894581272523067e-15,
+    "compact_original_relative_residual": 1.7283339216539357e-16,
     "full_uncondensed_global_saddle_executed": true,
-    "original_full_saddle_relative_to_physical_rhs": 1.279568761582788e-15,
+    "original_full_saddle_relative_to_physical_rhs": 1.6949427627711703e-15,
     "native_whole_field_agreement_verified": false,
     "rows": [
       {
         "macro": 0,
         "physical_block_backward_errors": [
-          7.338500133092761e-17,
-          1.343391050316308e-16,
-          3.534143982077704e-17
+          8.378007119726543e-17,
+          2.8759285363229183e-16,
+          1.5909022553491686e-16
         ],
-        "physical_pressure_integral": 0.12792349677913842,
-        "coarse_constant_pressure_amplitude": 0.2558469935582779,
-        "physical_pressure_integral_minus_retained_pairing": 1.941535040378417e-16
+        "physical_pressure_integral": 0.1279234967791406,
+        "coarse_constant_pressure_amplitude": 0.2558469935582799,
+        "physical_pressure_integral_minus_retained_pairing": 1.4174452627260803e-15
       },
       {
         "macro": 1,
         "physical_block_backward_errors": [
-          8.06871662924856e-17,
-          2.221160366906566e-16,
-          4.7408520760021554e-17
+          1.1885378580274866e-16,
+          8.52526752796601e-17,
+          2.348068553058586e-16
         ],
-        "physical_pressure_integral": 0.12792349677913528,
-        "coarse_constant_pressure_amplitude": 0.2558469935582703,
-        "physical_pressure_integral_minus_retained_pairing": 8.093298167061169e-16
+        "physical_pressure_integral": 0.12792349677913742,
+        "coarse_constant_pressure_amplitude": 0.25584699355827795,
+        "physical_pressure_integral_minus_retained_pairing": -7.924840254511234e-16
       }
     ]
   },
   "orientation_checks": {
-    "maximum_canonical_normal_moment_defect": 3.3387609694651916e-14
+    "maximum_canonical_normal_moment_defect": 4.287263499050652e-14
   },
   "archive": "prism-p2-k2-n1.npz",
-  "sha256": "820df46fcfa1665bb1def8ee650a5e408315fe77cd8f5fe850beaf240dd19357",
-  "acquisition_uuid": "baf33511-a008-42a5-9f21-fe06a2886231",
+  "sha256": "8d6804c42a3c7dc4c8555170a1379f7c5a4dfbbe35ea3f77b876e6b13718b883",
+  "acquisition_uuid": "52e01df1-a009-4aa9-b37a-3b8588c1ea2e",
   "finite_case_accepted": true,
   "native_whole_field_agreement_verified": false,
-  "elapsed_seconds": 2.6266256887465715
+  "elapsed_seconds": 7.724292593076825
 }

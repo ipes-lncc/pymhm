@@ -51,7 +51,7 @@ def source_hashes() -> dict[str, str]:
             if path.is_relative_to(ROOT / "examples") and path.suffix == ".py":
                 files.add(path)
     return current_source_manifest(
-        {str(path.relative_to(ROOT)): digest(path) for path in sorted(files)}
+        {path.relative_to(ROOT).as_posix(): digest(path) for path in sorted(files)}
     )
 
 

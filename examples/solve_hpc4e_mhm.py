@@ -87,7 +87,7 @@ def main() -> None:
     ):
         content = path.read_bytes()
         digest = hashlib.sha256(content).hexdigest()
-        source_hashes[str(path.relative_to(ROOT))] = digest
+        source_hashes[path.relative_to(ROOT).as_posix()] = digest
         (snapshots / f"{digest}.py").write_bytes(content)
     mesh = CartesianMacroMesh(16, 8, BOUNDS)
     mids = mesh.points[mesh.faces].mean(axis=1)
@@ -158,7 +158,7 @@ def main() -> None:
                 workers=args.workers,
                 local_solver=args.local_solver,
                 diagnostics=diagnostics,
-                field_archive=str(target.relative_to(ROOT)),
+                field_archive=target.relative_to(ROOT).as_posix(),
                 sha256=digest,
                 source_hashes=source_hashes,
             )

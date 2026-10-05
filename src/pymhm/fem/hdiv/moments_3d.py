@@ -29,6 +29,7 @@ from pymhm.fem.reference import (
     ReferenceElementSpec,
     create_reference_element,
     interpolate_reference,
+    orthogonal_polynomial_tabulation,
     reference_interpolation_points,
 )
 
@@ -127,7 +128,14 @@ def interior_tests(kind: CellKind, degree: int, points: FloatArray) -> FloatArra
 
 @cache
 def coefficients(kind: CellKind, pressure_degree: int, normal_degree: int) -> FloatArray:
-    """Construct uniquely oriented face lifts and all normalized interior bubbles."""
+    """Construct uniquely oriented face lifts and all normalized interior bubbles.
+
+    Moment equations use orthogonal face tests and QR-conditioned interior
+    tests. The triangular change of tests is also applied to the right-hand
+    sides, preserving the declared Nedelec moment coordinates and their
+    positive-diagonal bubble orientation. This avoids an ill-conditioned
+    monomial moment inversion even when wider accumulation is unavailable.
+    """
     degree = pressure_degree
     xyz, weights = cell_quadrature(kind, degree + 4)
     values = candidates(kind, degree, xyz)[0]
@@ -144,24 +152,32 @@ def coefficients(kind: CellKind, pressure_degree: int, normal_degree: int) -> Fl
         elif len(indices) == 3:
             full = face_polynomials(uv, 3, degree)
         else:
-            full = _scalar(uv, tuple((a, b) for a in range(degree + 2) for b in range(degree + 1)))
+            first = orthogonal_polynomial_tabulation("interval", degree + 1, uv[:, :1])[0]
+            second = orthogonal_polynomial_tabulation("interval", degree, uv[:, 1:])[0]
+            full = np.einsum("qi,qj->qij", first, second).reshape(len(uv), -1)
         low = face_polynomials(uv, len(indices), normal_degree)
         face_moments.append(full.T @ (w[:, None] * normal_values))
         embeddings.append((full.T @ (w[:, None] * low)) @ np.linalg.inv(low.T @ (w[:, None] * low)))
     interior = interior_tests(kind, degree, xyz)
-    moments = np.vstack((*face_moments, np.einsum("q,qia,qja->ij", weights, interior, values)))
+    weighted = (interior * np.sqrt(weights)[:, None, None]).transpose(0, 2, 1)
+    orthogonal, change = np.linalg.qr(weighted.reshape(3 * len(xyz), interior.shape[1]))
+    tests = orthogonal.reshape(len(xyz), 3, interior.shape[1]).transpose(0, 2, 1)
+    tests /= np.sqrt(weights)[:, None, None]
+    moments = np.vstack((*face_moments, np.einsum("q,qia,qja->ij", weights, tests, values)))
     if moments.shape[0] != moments.shape[1]:
         raise ArithmeticError("BDM moment count does not match the polynomial dimension")
-    dual = np.linalg.solve(moments, np.eye(len(moments)))
+    boundary = sum(len(block) for block in face_moments)
+    right = np.eye(len(moments))
+    right[boundary:, boundary:] = np.linalg.solve(change.T, np.eye(len(change)))
+    dual = np.linalg.solve(moments, right)
     # Resolve cancellation in the higher-order moment dual before normalizing
     # bubbles. Residuals use the original moment equations, accumulated wider
     # than binary64 where available; the basis remains stored in binary64.
     extended_moments = moments.astype(np.longdouble)
-    identity = np.eye(len(moments), dtype=np.longdouble)
+    prescribed = right.astype(np.longdouble)
     for _ in range(3):
-        residual = identity - extended_moments @ dual.astype(np.longdouble)
+        residual = prescribed - extended_moments @ dual.astype(np.longdouble)
         dual += np.linalg.solve(moments, np.asarray(residual, dtype=float))
-    boundary = sum(len(block) for block in face_moments)
     bubbles = dual[:, boundary:]
     if bubbles.shape[1]:
         sampled = np.einsum("qia,ij->qja", values, bubbles)

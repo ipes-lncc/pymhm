@@ -218,11 +218,11 @@ def render(record_path: Path, output: Path) -> dict[str, Any]:
         numerical_source_identity_sha256=source_identity,
         numerical_source_identity_scope=source_scope,
         acquisition_uuid=acquisition["acquisition_uuid"],
-        input_archive=str(archive.relative_to(ROOT)),
+        input_archive=archive.relative_to(ROOT).as_posix(),
         input_archive_sha256=selected["archive_sha256"],
         input_record_sha256=hashlib.sha256(record_path.read_bytes()).hexdigest(),
         render_source_sha256={
-            str(Path(__file__).relative_to(ROOT)): hashlib.sha256(
+            Path(__file__).relative_to(ROOT).as_posix(): hashlib.sha256(
                 Path(__file__).read_bytes()
             ).hexdigest()
         },

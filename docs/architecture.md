@@ -277,10 +277,10 @@ At literally declared interpolation nodes, nodal values equal their Kronecker
 rows. This applies the interpolation functional without a proximity threshold;
 nearby points and derivatives use the executed native tables. Tetrahedral face
 values use the exact topological support of the nodal trace. Scalar diffusion
-contractions accumulate in NumPy's widest real type before returning binary64
-matrix entries; quadrature, coefficients and physical operators retain their
-declared conventions. On platforms with binary64 `longdouble`, the accumulation
-uses that precision.
+contractions use a wider native real type where available. Platforms with
+binary64 `longdouble` use compensated quadrature accumulation with bounded
+workspace; boundary moments also use compensated summation. Matrix entries,
+quadrature, coefficients and physical operators retain their declared conventions.
 
 RT and BDM tabulations use native elements, transformed into the declared
 normal/interior moment coordinates. Basix RT degree one denotes mathematical

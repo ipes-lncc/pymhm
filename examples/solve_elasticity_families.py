@@ -143,7 +143,10 @@ def main() -> None:
         archive=name + ".npz",
         sha256=checksum,
         source_hashes=current_source_manifest(
-            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+            {
+                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in sources
+            }
         ),
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")

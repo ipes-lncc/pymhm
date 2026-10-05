@@ -175,12 +175,12 @@ def run(suite: str, workers: int) -> None:
     OUTPUT.mkdir(parents=True, exist_ok=True)
     owners = source_files()
     hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
     )
     snapshot = ROOT / "build/results/tetra-pk/acquisition-sources"
     snapshot.mkdir(parents=True, exist_ok=True)
     for path in owners:
-        (snapshot / f"{hashes[str(path.relative_to(ROOT))]}-{path.name}").write_bytes(
+        (snapshot / f"{hashes[path.relative_to(ROOT).as_posix()]}-{path.name}").write_bytes(
             path.read_bytes()
         )
     norms = reference_norms()
@@ -221,7 +221,7 @@ def run(suite: str, workers: int) -> None:
         geometry = json.loads(path.read_text())
         mesh = TetraMesh(np.asarray(geometry["macro_points"]), np.asarray(geometry["macro_cells"]))
         record.update(
-            fixed_macro_input=str(path.relative_to(ROOT)),
+            fixed_macro_input=path.relative_to(ROOT).as_posix(),
             fixed_macro_input_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
         )
         cases = [(mesh, f"fixed-s{s}", 2, s, 12, (12, 14)) for s in (1, 2)]
@@ -239,7 +239,10 @@ def run(suite: str, workers: int) -> None:
             )
         )
         if hashes != current_source_manifest(
-            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+            {
+                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in owners
+            }
         ):
             raise RuntimeError("campaign sources changed during acquisition")
         record["source_changed_during_run"] = False

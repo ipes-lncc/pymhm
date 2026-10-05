@@ -10,7 +10,7 @@ import json
 from collections.abc import Mapping, Sequence
 from math import isfinite
 from numbers import Real
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 from examples.campaign_provenance import require_equal, verify_archive
@@ -123,8 +123,8 @@ def archive_path(directory: Path, name: str) -> Path:
         or not name
         or "\\" in name
         or ":" in name
-        or Path(name).is_absolute()
-        or ".." in Path(name).parts
+        or PurePosixPath(name).is_absolute()
+        or ".." in PurePosixPath(name).parts
     ):
         raise ValueError("archive name must be a safe relative path")
     return directory / name

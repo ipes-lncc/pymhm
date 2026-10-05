@@ -105,7 +105,7 @@ def source_hashes(*, snapshot: bool = False) -> dict[str, str]:
     result = {}
     for path in sources:
         digest = fingerprint(path)
-        result[str(path.relative_to(ROOT))] = digest
+        result[path.relative_to(ROOT).as_posix()] = digest
         if snapshot:
             destination = ARTIFACTS / "acquisition-sources" / f"{digest}.py"
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -284,7 +284,7 @@ def main() -> None:
                     permeability=coefficient,
                     source=forcing,
                     quadrature_order=reference_order,
-                    refinement_precision="extended",
+                    refinement_precision=args.refinement_precision,
                     **(
                         {"solver": args.reference_solver}
                         if args.reference_assembly != "lor"
@@ -299,7 +299,7 @@ def main() -> None:
                     dofs=len(reference.pressure),
                     residual=reference.residual,
                     acquisition_seconds=perf_counter() - start,
-                    refinement_precision="extended",
+                    refinement_precision=args.refinement_precision,
                     quadrature_order=reference_order,
                     solver="low-order-refined-pyamg-cg"
                     if args.reference_assembly == "lor"

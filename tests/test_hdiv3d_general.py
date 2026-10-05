@@ -1,5 +1,7 @@
 """General polynomial degrees, trace restriction and enriched mixed 3D invariants."""
 
+from types import SimpleNamespace
+
 import numpy as np
 import pytest
 from numpy.testing import assert_allclose
@@ -41,8 +43,14 @@ def one_thread():
         ("prism", 3, 2, 129),
     ],
 )
-def test_divergence_normal_space_and_bubble_moments(kind, p, k, size):
-    """Divergence is onto the pressure space and the actual normal polynomial has degree k."""
+def test_divergence_normal_space_and_bubble_moments(kind, p, k, size, monkeypatch):
+    """Face/volume identities hold even without a wider accumulation dtype."""
+    import pymhm.fem.hdiv.moments_3d as moments
+
+    # ARM/Windows longdouble has the binary64 mantissa. Exercise that arithmetic
+    # here on every host; the archive/replay tests also cover native precision.
+    monkeypatch.setattr(moments, "np", SimpleNamespace(**(vars(np) | {"longdouble": np.float64})))
+    coefficients.cache_clear()
     family = HDiv3DFamily(kind, p, k)
     points, w = cell_quadrature(kind, p + 4)
     values, div, pressure = family.tabulate(points)

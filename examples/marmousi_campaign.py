@@ -81,7 +81,7 @@ def source_hashes() -> dict[str, str]:
         "examples/marmousi_data.py",
         "examples/campaign_provenance.py",
         "examples/helmholtz_trace_family.py",
-        *(str(path.relative_to(ROOT)) for path in sorted((ROOT / "src/pymhm").rglob("*.py"))),
+        *(path.relative_to(ROOT).as_posix() for path in sorted((ROOT / "src/pymhm").rglob("*.py"))),
     ]
     return current_source_manifest(
         {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}

@@ -46,7 +46,7 @@ def run() -> None:
         )
     ] + [Path(__file__), ROOT / "examples/reconstruction3d_data.py"]
     hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
     )
     with np.load(archive_path) as archive:
         arrays = {key: archive[key].copy() for key in archive.files}
@@ -131,7 +131,7 @@ def run() -> None:
         ),
     )
     current = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
     )
     if current != hashes:
         raise RuntimeError("sources changed during the reconstruction control")

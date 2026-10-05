@@ -90,6 +90,15 @@ requires a NumPy `longdouble` type wider than float64, which standard Windows
 builds do not provide. PyMHM checks that requirement and reports an unsupported
 request without changing the numerical tolerances.
 
+Scientific acquisition commands that expose `--refinement-precision` can select
+`double` explicitly. Their records identify the executed mode and coefficient
+precision; replay validates that contract. Scientific defaults requiring extended
+precision still require a platform that actually provides it.
+
+Source and pinned text inputs use LF line endings in Git checkouts, and acquisition
+manifests use POSIX relative paths on every platform. Byte digests remain literal:
+changing an input or an archived field invalidates its recorded identity.
+
 ## Spawn workers and notebooks
 
 Process execution uses `spawn` on every operating system. Put worker callables

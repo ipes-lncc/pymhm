@@ -27,7 +27,9 @@ def test_frequency_filename_collision_rejected_before_solve(example, tmp_path, m
     # run writes only completed rows; construct its declared source and identity instead.
     sources = m.source_hashes()
     for path in (Path(m.__file__), m.ROOT / "examples/helmholtz_threshold.py"):
-        sources[str(path.relative_to(m.ROOT))] = m.hashlib.sha256(path.read_bytes()).hexdigest()
+        sources[path.relative_to(m.ROOT).as_posix()] = m.hashlib.sha256(
+            path.read_bytes()
+        ).hexdigest()
     record = dict(
         source_sha256=sources,
         ell=0,

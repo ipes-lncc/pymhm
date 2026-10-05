@@ -34,7 +34,7 @@ def configurations() -> list[Configuration]:
 def hashes() -> dict[str, str]:
     """Bind the analytical, incident and local-control numerical owners."""
     result = article_hashes()
-    result[str(Path(__file__).relative_to(ROOT))] = hashlib.sha256(
+    result[Path(__file__).relative_to(ROOT).as_posix()] = hashlib.sha256(
         Path(__file__).read_bytes()
     ).hexdigest()
     return result

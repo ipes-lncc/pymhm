@@ -16,7 +16,7 @@ import multiprocessing
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 from time import perf_counter
-from typing import Any
+from typing import Any, Literal
 
 import numpy as np
 from threadpoolctl import threadpool_limits
@@ -114,8 +114,14 @@ def acquire_mhm(
     refinement: int = 32,
     fitted: bool = False,
     trace_fitted: bool = False,
+    local_refinement_precision: Literal["double", "extended"] = "extended",
 ) -> None:
-    """Retain P2/P0 and the physical coefficient while explicitly varying resolution."""
+    """Retain P2/P0 and physical coefficients with explicit resolution and precision.
+
+    The extended default requires a wider native long double. Double accumulation
+    supports other hosts while retaining the original solver residual criterion.
+    The executed mode is recorded alongside the archived coefficient vectors.
+    """
     hashes = fingerprint()
     mesh = macro_mesh()
     skeleton = SkeletonSpace(mesh, tuple(FaceSpace.uniform(0, segments) for _ in mesh.faces))
@@ -142,7 +148,7 @@ def acquire_mhm(
         local_refinement=refinement,
         local_meshes=local,
         quadrature_order=order,
-        local_refinement_precision="extended",
+        local_refinement_precision=local_refinement_precision,
     )
     elapsed = perf_counter() - started
     save_mhm_solution(
@@ -157,6 +163,7 @@ def acquire_mhm(
         trace_fitted=trace_fitted,
         elapsed=elapsed,
         hashes=hashes,
+        local_refinement_precision=local_refinement_precision,
     )
 
 
@@ -173,6 +180,7 @@ def save_mhm_solution(
     trace_fitted: bool,
     elapsed: float,
     hashes: dict[str, str],
+    local_refinement_precision: Literal["double", "extended"] = "extended",
     reduced_trace: np.ndarray | None = None,
     reduced_skeleton: SkeletonSpace | None = None,
     reuse: dict[str, Any] | None = None,
@@ -241,7 +249,7 @@ def save_mhm_solution(
         "quadrature_order": order,
         "alpha": alpha,
         "source": 0.0,
-        "local_refinement_precision": "extended",
+        "local_refinement_precision": local_refinement_precision,
         "free_global_dofs": (
             skeleton.size
             + len(mesh.cells)
@@ -541,6 +549,9 @@ def main() -> None:
     parser.add_argument("--segments", nargs="+", type=int, default=[1, 2, 4])
     parser.add_argument("--order", type=int, default=5)
     parser.add_argument("--alpha", type=float, default=0.1)
+    parser.add_argument(
+        "--local-refinement-precision", choices=("double", "extended"), default="extended"
+    )
     parser.add_argument("--nx", nargs="+", type=int, default=[60, 120, 240])
     parser.add_argument("--solver", default="scipy")
     parser.add_argument("--reference", type=Path)
@@ -562,6 +573,7 @@ def main() -> None:
                     refinement=args.refinement,
                     fitted=args.material_fitted,
                     trace_fitted=args.trace_fitted,
+                    local_refinement_precision=args.local_refinement_precision,
                 )
         elif args.kind == "reference":
             for nx in args.nx:

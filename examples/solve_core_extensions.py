@@ -209,7 +209,7 @@ def run(suite: str, levels: list[int] | None = None) -> None:
             report = acquire_hdiv3d(selected, list(CASES), output)
         # Consumers resolve field names relative to the summary location.
         for field in report["fields"].values():
-            field["archive"] = str(Path(output.name) / field["archive"])
+            field["archive"] = (Path(output.name) / field["archive"]).as_posix()
         (OUTPUT / f"{suite}.json").write_text(json.dumps(report, indent=2) + "\n")
         return
     OUTPUT.mkdir(parents=True, exist_ok=True)
@@ -253,7 +253,9 @@ def run(suite: str, levels: list[int] | None = None) -> None:
         Path(__file__),
         ROOT / "examples/core_extension_data.py",
     ]
-    hashes = current_source_manifest({str(path.relative_to(ROOT)): digest(path) for path in paths})
+    hashes = current_source_manifest(
+        {path.relative_to(ROOT).as_posix(): digest(path) for path in paths}
+    )
     report: dict[str, Any] = {
         "suite": suite,
         "reference": "analytical",

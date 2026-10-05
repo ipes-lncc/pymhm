@@ -336,7 +336,7 @@ def combine(output: Path, directories: tuple[Path, ...]) -> dict[str, Any]:
             template = record
         sources.append(
             {
-                "record": str(path.relative_to(output.parents[2])),
+                "record": path.relative_to(output.parents[2]).as_posix(),
                 "sha256": digest(path),
                 "executed_sources": str(directory / "executed-sources/manifest.json"),
                 "executed_sources_sha256": digest(directory / "executed-sources/manifest.json"),

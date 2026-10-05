@@ -54,9 +54,9 @@ dependencies and acceptance conditions.
 - [x] Locally checked wheel, source archive, isolated wheel installation and
   noarch Conda package, with complete runtime modules and typing files.
 
-The latest local Linux verification records **5,776 passing tests**:
-5,744 with **64 workers**, followed by **32 exclusive serial tests**.
-Line coverage is **99.9327%** and branch coverage is **99.7098%**.
+The latest local Linux verification records **5,784 passing tests**:
+5,752 with **64 workers**, followed by **32 exclusive serial tests**.
+Line coverage is **99.9329%** and branch coverage is **99.6750%**.
 The source-checkout suite has one contextual installed-wheel ownership skip;
 all **eight isolated-wheel checks**, including native PARDISO, pass separately.
 These counts describe that execution rather than fixed suite-size targets.

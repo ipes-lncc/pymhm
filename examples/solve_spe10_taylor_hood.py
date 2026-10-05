@@ -504,7 +504,7 @@ def archive(field: TaylorHoodField, report: dict[str, Any]) -> Path:
     report.update(
         archive=path.name,
         sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
-        coefficient_archive=str(coefficient_path.relative_to(ROOT)),
+        coefficient_archive=coefficient_path.relative_to(ROOT).as_posix(),
         coefficient_sha256=hashlib.sha256(coefficient_path.read_bytes()).hexdigest(),
         layer_sha256=hashlib.sha256((OUTPUT / "layer-1.npz").read_bytes()).hexdigest(),
         driver_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
@@ -548,7 +548,7 @@ def main() -> None:
     elif not args.compare_only:
         if args.previous:
             report["successive_difference"] = difference(field, load_field(args.previous))
-            report["previous_coefficients"] = str(args.previous.resolve().relative_to(ROOT))
+            report["previous_coefficients"] = args.previous.resolve().relative_to(ROOT).as_posix()
         archive(field, report)
     print(json.dumps(report, indent=2), flush=True)
     if args.mhm:

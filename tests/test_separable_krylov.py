@@ -160,7 +160,7 @@ def test_unachievable_true_residual_is_rejected() -> None:
             permeability=coefficient(),
             source=forcing(),
             rtol=1e-30,
-            refinement_precision="extended",
+            refinement_precision="double",
         )
 
 

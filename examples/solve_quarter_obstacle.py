@@ -305,7 +305,7 @@ def acquire(
         "archive": archive.name,
         "archive_sha256": _fingerprint(archive),
         "source_sha256": current_source_manifest(
-            {str(path.relative_to(ROOT)): _fingerprint(path) for path in sources}
+            {path.relative_to(ROOT).as_posix(): _fingerprint(path) for path in sources}
         ),
         "lockfile_sha256": _fingerprint(ROOT / "pixi.lock"),
         "git_revision": subprocess.run(

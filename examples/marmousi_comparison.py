@@ -283,7 +283,10 @@ def main() -> None:
         *sorted((root / "src/pymhm").rglob("*.py")),
     ]
     hashes = current_source_manifest(
-        {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+        {
+            p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sources
+        }
     )
     candidate, reference = BrokenQField.load(args.candidate), load_reference(args.reference)
     exclusion = (5000.0, 50.0, 50.0)
@@ -328,7 +331,10 @@ def main() -> None:
             }
         )
     if hashes != current_source_manifest(
-        {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+        {
+            p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sources
+        }
     ):
         raise RuntimeError("comparison sources changed during integration")
     result = {

@@ -23,8 +23,11 @@ def test_pixel_centre_values_keep_complex_macro_jumps(driver) -> None:
     candidate = driver.BrokenQField(np.repeat(constants[:, None], 4, axis=1), mesh, 1, 1)
     reference = driver.PixelCGField(np.full((3, 3), 3 + 5j), 1, mesh.bounds)
     values, truth = driver.centre_fields(candidate, reference, batch_size=3)
-    np.testing.assert_array_equal(values, constants.reshape(2, 2).T)
-    np.testing.assert_array_equal(truth, np.full((2, 2), 3 + 5j))
+    # Constant reproduction evaluates a native polynomial partition of unity;
+    # its last rounding bit is independent of retaining the macro jumps.
+    roundoff = 4 * np.finfo(float).eps
+    np.testing.assert_allclose(values, constants.reshape(2, 2).T, rtol=roundoff, atol=0)
+    np.testing.assert_allclose(truth, np.full((2, 2), 3 + 5j), rtol=roundoff, atol=0)
 
 
 @pytest.mark.parametrize("perturbed", ["candidate", "reference"])

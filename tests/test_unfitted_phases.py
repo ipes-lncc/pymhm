@@ -235,11 +235,15 @@ def test_narrower_host_coefficient_precision_cannot_silently_replay(tmp_path):
 @pytest.mark.parametrize("names", [[], ["ell0-s1", "ell0-s1"], ["ell3-s3"], ["ell5-s1"]])
 def test_only_declared_printed_trace_configurations_are_accepted(tmp_path, names):
     with pytest.raises(ValueError, match="printed smooth"):
-        owner.UnfittedAcquisition(tmp_path, refinement=2, names=names)
+        owner.UnfittedAcquisition(
+            tmp_path, refinement=2, names=names, refinement_precision="double"
+        )
 
 
 def test_equal_boundary_dimension_nulltrace_remains_excluded(tmp_path):
-    run = owner.UnfittedAcquisition(tmp_path, refinement=1, names=["ell3-s2"])
+    run = owner.UnfittedAcquisition(
+        tmp_path, refinement=1, names=["ell3-s2"], refinement_precision="double"
+    )
     run.condense()
     with pytest.raises(LinearSolveError, match="rank"):
         run.solve()

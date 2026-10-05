@@ -82,12 +82,17 @@ def main() -> None:
         ROOT / "src/pymhm/core/contracts.py",
     ]
     hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+        {
+            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sources
+        }
     )
     snapshot = ROOT / "build/source-snapshots/mapped-well-oscillatory"
     snapshot.mkdir(parents=True, exist_ok=True)
     for p in sources:
-        (snapshot / f"{hashes[str(p.relative_to(ROOT))]}-{p.name}").write_bytes(p.read_bytes())
+        (snapshot / f"{hashes[p.relative_to(ROOT).as_posix()]}-{p.name}").write_bytes(
+            p.read_bytes()
+        )
     with threadpool_limits(1):
         solution = solve_darcy_mapped_rt(
             mesh,
@@ -169,7 +174,7 @@ def main() -> None:
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
     if any(
-        hashlib.sha256(p.read_bytes()).hexdigest() != hashes[str(p.relative_to(ROOT))]
+        hashlib.sha256(p.read_bytes()).hexdigest() != hashes[p.relative_to(ROOT).as_posix()]
         for p in sources
     ):
         raise RuntimeError(

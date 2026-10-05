@@ -27,7 +27,7 @@ def run(output: Path, dt: float, order: int) -> None:
         SkeletonSpace(mesh, tuple(FaceSpace.uniform(1, 8) for _ in mesh.faces))
     )
     original = hashes()
-    original[str(Path(__file__).relative_to(ROOT))] = hashlib.sha256(
+    original[Path(__file__).relative_to(ROOT).as_posix()] = hashlib.sha256(
         Path(__file__).read_bytes()
     ).hexdigest()
     start = time.perf_counter()

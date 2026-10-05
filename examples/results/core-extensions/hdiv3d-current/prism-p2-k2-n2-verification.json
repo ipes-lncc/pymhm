@@ -12,218 +12,218 @@
     12,
     13
   ],
-  "error_quadrature_absolute_change": 4.163336342344337e-17,
-  "divergence_error_quadrature_absolute_change": 2.7755575615628914e-16,
+  "error_quadrature_absolute_change": 1.3877787807814457e-17,
+  "divergence_error_quadrature_absolute_change": 5.551115123125783e-17,
   "norms": {
     "quadrature_12": {
       "pressure_l2": 0.012255771077798029,
-      "flux_l2": 0.043894748365141574,
-      "divergence_l2": 0.3626209630460807
+      "flux_l2": 0.04389474836514071,
+      "divergence_l2": 0.36262096304608044
     },
     "quadrature_13": {
       "pressure_l2": 0.012255771077798025,
-      "flux_l2": 0.04389474836514153,
-      "divergence_l2": 0.36262096304608044
+      "flux_l2": 0.04389474836514069,
+      "divergence_l2": 0.3626209630460804
     }
   },
   "pressure_l2": 0.012255771077798025,
-  "flux_l2": 0.04389474836514153,
-  "divergence_l2": 0.36262096304608044,
+  "flux_l2": 0.04389474836514069,
+  "divergence_l2": 0.3626209630460804,
   "original_physical_checks": {
     "accepted": true,
     "criterion": 1e-10,
-    "maximum_physical_block_backward_error": 4.998559743087132e-16,
-    "all_local_physical_rows_relative_to_source": 2.0056316731691646e-15,
-    "compact_original_relative_residual": 1.3071821957554772e-15,
+    "maximum_physical_block_backward_error": 3.2979239195712534e-16,
+    "all_local_physical_rows_relative_to_source": 1.901445622232413e-15,
+    "compact_original_relative_residual": 1.2266150544256226e-15,
     "full_uncondensed_global_saddle_executed": true,
-    "original_full_saddle_relative_to_physical_rhs": 2.2555887127581136e-15,
+    "original_full_saddle_relative_to_physical_rhs": 2.1584033552593336e-15,
     "native_whole_field_agreement_verified": false,
     "rows": [
       {
         "macro": 0,
         "physical_block_backward_errors": [
-          1.7969392739141833e-16,
-          2.261781171022729e-16,
-          8.051360225469827e-17
+          1.9898376794456305e-16,
+          5.310244328769459e-17,
+          9.285334955391316e-17
         ],
-        "physical_pressure_integral": 0.016122406381172124,
-        "coarse_constant_pressure_amplitude": 0.257958502098755,
-        "physical_pressure_integral_minus_retained_pairing": 2.514332600629665e-17
+        "physical_pressure_integral": 0.01612240638117228,
+        "coarse_constant_pressure_amplitude": 0.25795850209875787,
+        "physical_pressure_integral_minus_retained_pairing": 1.0842021724855044e-19
       },
       {
         "macro": 1,
         "physical_block_backward_errors": [
-          1.6689223591379823e-16,
-          9.426309411550848e-17,
-          9.995338824067328e-17
+          1.7660067941588526e-16,
+          6.690273660610043e-17,
+          8.81372217149347e-17
         ],
-        "physical_pressure_integral": 0.016122406381172016,
-        "coarse_constant_pressure_amplitude": 0.2579585020987533,
-        "physical_pressure_integral_minus_retained_pairing": 2.445553525312616e-17
+        "physical_pressure_integral": 0.016122406381172034,
+        "coarse_constant_pressure_amplitude": 0.2579585020987538,
+        "physical_pressure_integral_minus_retained_pairing": 9.086969458144134e-18
       },
       {
         "macro": 2,
         "physical_block_backward_errors": [
-          2.0303914196608008e-16,
-          1.201392266609364e-16,
-          3.192618925025781e-17
+          1.8490025533014587e-16,
+          1.9790056979439839e-16,
+          8.219521413175046e-17
         ],
-        "physical_pressure_integral": 0.006913288063050648,
-        "coarse_constant_pressure_amplitude": 0.11061260900881122,
-        "physical_pressure_integral_minus_retained_pairing": -1.6300302036961756e-17
+        "physical_pressure_integral": 0.006913288063050706,
+        "coarse_constant_pressure_amplitude": 0.11061260900881204,
+        "physical_pressure_integral_minus_retained_pairing": -8.715545510773123e-18
       },
       {
         "macro": 3,
         "physical_block_backward_errors": [
-          7.904366072021072e-17,
-          1.255099932121718e-16,
-          4.1112612692198005e-17
+          1.1183185093565658e-16,
+          7.752775295969151e-17,
+          5.093295862498879e-17
         ],
-        "physical_pressure_integral": 0.025325857710431925,
-        "coarse_constant_pressure_amplitude": 0.40521372336691314,
-        "physical_pressure_integral_minus_retained_pairing": -1.8888834723770898e-18
+        "physical_pressure_integral": 0.02532585771043212,
+        "coarse_constant_pressure_amplitude": 0.40521372336691613,
+        "physical_pressure_integral_minus_retained_pairing": -1.9668105035244854e-18
       },
       {
         "macro": 4,
         "physical_block_backward_errors": [
-          1.3046716062712807e-16,
-          1.180403292491842e-16,
-          3.9790480818814565e-17
+          9.186405802977024e-17,
+          1.735326755626995e-16,
+          7.058346289043922e-17
         ],
-        "physical_pressure_integral": 0.02532585771043183,
-        "coarse_constant_pressure_amplitude": 0.40521372336691247,
-        "physical_pressure_integral_minus_retained_pairing": -6.229419107287026e-17
+        "physical_pressure_integral": 0.02532585771043203,
+        "coarse_constant_pressure_amplitude": 0.4052137233669145,
+        "physical_pressure_integral_minus_retained_pairing": 6.422203806082105e-18
       },
       {
         "macro": 5,
         "physical_block_backward_errors": [
-          1.653132015244792e-16,
-          7.716334958094174e-17,
-          7.686032139592709e-17
+          1.3065397014100064e-16,
+          7.434957669506861e-17,
+          5.377037223626532e-17
         ],
-        "physical_pressure_integral": 0.006913288063050855,
+        "physical_pressure_integral": 0.006913288063050826,
         "coarse_constant_pressure_amplitude": 0.1106126090088137,
-        "physical_pressure_integral_minus_retained_pairing": 3.832824086325709e-17
+        "physical_pressure_integral_minus_retained_pairing": 7.358175212798107e-18
       },
       {
         "macro": 6,
         "physical_block_backward_errors": [
-          1.4872815109278524e-16,
-          1.4405273199439754e-16,
-          2.247413906316937e-17
+          1.4198602034500828e-16,
+          1.3017706873472836e-16,
+          2.7374734787678284e-16
         ],
-        "physical_pressure_integral": 0.016122406381171978,
-        "coarse_constant_pressure_amplitude": 0.25795850209875315,
-        "physical_pressure_integral_minus_retained_pairing": -6.674619624363887e-18
+        "physical_pressure_integral": 0.016122406381171968,
+        "coarse_constant_pressure_amplitude": 0.25795850209875293,
+        "physical_pressure_integral_minus_retained_pairing": -3.211948935988307e-18
       },
       {
         "macro": 7,
         "physical_block_backward_errors": [
-          1.5790327713147689e-16,
-          4.998559743087132e-16,
-          7.755188989568809e-17
+          1.388733964652058e-16,
+          3.2979239195712534e-16,
+          9.214587477012437e-17
         ],
-        "physical_pressure_integral": 0.016122406381171843,
-        "coarse_constant_pressure_amplitude": 0.25795850209875065,
-        "physical_pressure_integral_minus_retained_pairing": 1.8639807037278133e-17
+        "physical_pressure_integral": 0.016122406381171784,
+        "coarse_constant_pressure_amplitude": 0.25795850209874976,
+        "physical_pressure_integral_minus_retained_pairing": 1.037445953797067e-17
       },
       {
         "macro": 8,
         "physical_block_backward_errors": [
-          2.6699201580228264e-16,
-          1.4530977817623235e-16,
-          5.182998193468089e-17
+          2.1179119951057698e-16,
+          1.0897814982211518e-16,
+          8.94685211381299e-17
         ],
-        "physical_pressure_integral": 0.01612240638117198,
-        "coarse_constant_pressure_amplitude": 0.25795850209875315,
-        "physical_pressure_integral_minus_retained_pairing": -2.7054232335302353e-18
+        "physical_pressure_integral": 0.01612240638117196,
+        "coarse_constant_pressure_amplitude": 0.25795850209875276,
+        "physical_pressure_integral_minus_retained_pairing": 6.437450399132683e-19
       },
       {
         "macro": 9,
         "physical_block_backward_errors": [
-          2.7214288394159996e-16,
-          1.0543649666299146e-16,
-          1.6251478808853008e-16
+          2.0544147688218539e-16,
+          6.790449552689909e-17,
+          8.183696104179909e-17
         ],
-        "physical_pressure_integral": 0.016122406381171905,
-        "coarse_constant_pressure_amplitude": 0.2579585020987521,
-        "physical_pressure_integral_minus_retained_pairing": -9.056476272042979e-18
+        "physical_pressure_integral": 0.01612240638117196,
+        "coarse_constant_pressure_amplitude": 0.25795850209875265,
+        "physical_pressure_integral_minus_retained_pairing": 6.855884675076307e-18
       },
       {
         "macro": 10,
         "physical_block_backward_errors": [
-          1.7135128025221133e-16,
-          4.5605117899193996e-17,
-          4.309059093575744e-17
+          1.6973825776891262e-16,
+          2.0048795508635555e-16,
+          7.382697545037086e-17
         ],
-        "physical_pressure_integral": 0.0069132880630506585,
-        "coarse_constant_pressure_amplitude": 0.11061260900881109,
-        "physical_pressure_integral_minus_retained_pairing": 2.202709179334808e-18
+        "physical_pressure_integral": 0.0069132880630506715,
+        "coarse_constant_pressure_amplitude": 0.11061260900881124,
+        "physical_pressure_integral_minus_retained_pairing": 5.225769768085406e-18
       },
       {
         "macro": 11,
         "physical_block_backward_errors": [
-          1.1846304803644864e-16,
-          1.2062077740791746e-16,
-          7.928089109800774e-17
+          1.3151593655179406e-16,
+          1.270633047086238e-16,
+          4.775277389783012e-17
         ],
-        "physical_pressure_integral": 0.025325857710431894,
-        "coarse_constant_pressure_amplitude": 0.40521372336691236,
-        "physical_pressure_integral_minus_retained_pairing": 1.3400061225563031e-17
+        "physical_pressure_integral": 0.02532585771043181,
+        "coarse_constant_pressure_amplitude": 0.40521372336691125,
+        "physical_pressure_integral_minus_retained_pairing": -5.5124904207309866e-18
       },
       {
         "macro": 12,
         "physical_block_backward_errors": [
-          1.1756995063983023e-16,
-          1.3788723335490605e-16,
-          8.016802842411768e-17
+          1.304846656900868e-16,
+          9.826094990339585e-17,
+          8.382584650087142e-17
         ],
-        "physical_pressure_integral": 0.025325857710431714,
-        "coarse_constant_pressure_amplitude": 0.40521372336690975,
-        "physical_pressure_integral_minus_retained_pairing": -9.989906579917218e-18
+        "physical_pressure_integral": 0.025325857710431856,
+        "coarse_constant_pressure_amplitude": 0.40521372336691225,
+        "physical_pressure_integral_minus_retained_pairing": -2.335269835580106e-17
       },
       {
         "macro": 13,
         "physical_block_backward_errors": [
-          1.702575714612688e-16,
-          1.1249136601854866e-16,
-          8.876524123054502e-17
+          1.4397578065249108e-16,
+          1.3827664033995504e-16,
+          6.18185350665138e-17
         ],
-        "physical_pressure_integral": 0.006913288063050775,
-        "coarse_constant_pressure_amplitude": 0.11061260900881295,
-        "physical_pressure_integral_minus_retained_pairing": 4.328338360469475e-18
+        "physical_pressure_integral": 0.006913288063050842,
+        "coarse_constant_pressure_amplitude": 0.11061260900881402,
+        "physical_pressure_integral_minus_retained_pairing": 4.092439684659152e-18
       },
       {
         "macro": 14,
         "physical_block_backward_errors": [
-          9.230830565910496e-17,
-          1.3947240145035123e-16,
-          9.247707331976033e-17
+          1.2941649493527905e-16,
+          5.4292347442605525e-17,
+          1.0175299237879233e-16
         ],
-        "physical_pressure_integral": 0.016122406381171704,
-        "coarse_constant_pressure_amplitude": 0.2579585020987484,
-        "physical_pressure_integral_minus_retained_pairing": 1.5272004038995035e-17
+        "physical_pressure_integral": 0.016122406381171683,
+        "coarse_constant_pressure_amplitude": 0.2579585020987485,
+        "physical_pressure_integral_minus_retained_pairing": -1.2693635747552945e-17
       },
       {
         "macro": 15,
         "physical_block_backward_errors": [
-          1.0373535135968992e-16,
-          1.3045862318481671e-16,
-          9.842744823009175e-17
+          9.412452014369527e-17,
+          1.1013212376240822e-16,
+          4.2481486807221157e-17
         ],
-        "physical_pressure_integral": 0.016122406381171513,
-        "coarse_constant_pressure_amplitude": 0.25795850209874527,
-        "physical_pressure_integral_minus_retained_pairing": 2.4535156350168064e-17
+        "physical_pressure_integral": 0.01612240638117154,
+        "coarse_constant_pressure_amplitude": 0.25795850209874616,
+        "physical_pressure_integral_minus_retained_pairing": -5.675120746603812e-18
       }
     ]
   },
   "orientation_checks": {
-    "maximum_canonical_normal_moment_defect": 3.3387609694651916e-14
+    "maximum_canonical_normal_moment_defect": 4.287263499050652e-14
   },
   "archive": "prism-p2-k2-n2.npz",
-  "sha256": "d252a1f1d44267c6b4e15cd1a42f9eb732253ff8f3622a64b071cf111cbf1729",
-  "acquisition_uuid": "59b28b5a-628a-4ea4-bdcb-8c5b3bdf69d4",
+  "sha256": "54f568062706d4f41641264ea13b07443eed7c087af7f4ff84e62bfffc293ceb",
+  "acquisition_uuid": "e5d50fdd-460d-448f-851a-0904dc75c361",
   "finite_case_accepted": true,
   "native_whole_field_agreement_verified": false,
-  "elapsed_seconds": 7.375496810302138
+  "elapsed_seconds": 9.624148335307837
 }

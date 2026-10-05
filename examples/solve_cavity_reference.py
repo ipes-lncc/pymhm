@@ -185,7 +185,7 @@ def main() -> None:
                     bounds=np.array(field.bounds),
                 )
                 report.update(
-                    archive=str(path.relative_to(ROOT)),
+                    archive=path.relative_to(ROOT).as_posix(),
                     sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
                 )
             if previous is not None:

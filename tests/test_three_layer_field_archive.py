@@ -81,7 +81,15 @@ def test_literal_tables_recover_cubic_vector_field_and_raw_stress(local):
         expected_gradient[..., 1, 0] = y**2 - 1
         expected_gradient[..., 1, 1] = 2 * x * y
         np.testing.assert_allclose(values, expected, rtol=0, atol=2e-15)
-        np.testing.assert_allclose(gradient, expected_gradient, rtol=0, atol=3e-14)
+        local_coefficients = coefficients.reshape(-1, 2)[local.dofs]
+        absolute_contraction = np.einsum(
+            "tqjb,tja->tqab", abs(arrays[f"field_q{order}_gradients"]), abs(local_coefficients)
+        )
+        # The mapped P3 derivatives have cancellation even for a cubic patch.
+        # Bound native tabulation and ten-term contraction roundoff by their
+        # absolute operands; keep the polynomial and physical-map checks.
+        roundoff = 8 * local.dofs.shape[1] * np.finfo(float).eps * absolute_contraction
+        np.testing.assert_array_less(abs(gradient - expected_gradient), roundoff)
         np.testing.assert_array_equal(
             stress, _stress_from_gradient(local, arrays[f"field_q{order}_points"], gradient)
         )

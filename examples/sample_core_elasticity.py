@@ -35,7 +35,7 @@ def projection_study() -> None:
         ROOT / "src/pymhm/fem/hdiv/bdm_family.py",
     ]
     hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
     )
     rows = []
     for n in (2, 4, 8, 16):
@@ -51,7 +51,7 @@ def projection_study() -> None:
         rows.append({"resolution": n, **decomposition})
         print(json.dumps(rows[-1]), flush=True)
     if hashes != current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
     ):
         raise RuntimeError("projection study sources changed during acquisition")
     (OUTPUT / "elasticity-projection.json").write_text(

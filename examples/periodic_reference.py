@@ -10,6 +10,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from typing import Literal
 
 import numpy as np
 import scipy
@@ -41,6 +42,7 @@ else:
 from pymhm._legacy.models.darcy.separable import SeparableField, _line_data
 from pymhm.core.validation import positive_int
 from pymhm.fem.scalar.quadrilateral import qk_basis, qk_space
+from pymhm.linalg.linear import SolverUnavailableError
 from pymhm.linalg.separable import solve_separable_krylov
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
@@ -63,7 +65,7 @@ def sources() -> dict[str, str]:
             "fem/scalar/triangle",
         )
     ]
-    return current_source_manifest({str(p.relative_to(ROOT)): fingerprint(p) for p in paths})
+    return current_source_manifest({p.relative_to(ROOT).as_posix(): fingerprint(p) for p in paths})
 
 
 def _array_digest(values: np.ndarray) -> str:
@@ -116,13 +118,18 @@ def _check_archive(
     path: Path, record: dict, basis: dict[str, np.ndarray], n: int, degree: int
 ) -> None:
     """Verify canonical basis coordinates and effective native coefficient precision."""
+    precision = record.get("refinement_precision")
+    if precision not in {"double", "extended"}:
+        raise ValueError("reference acquisition requires explicit double or extended precision")
+    dtype = np.dtype(np.longdouble if precision == "extended" else float)
     with np.load(path, allow_pickle=False) as arrays:
         _check_field(arrays["pressure"], float(arrays["residual"]), n, degree)
         if (
             record.get("pressure_dtype") != arrays["pressure"].dtype.str
+            or arrays["pressure"].dtype != dtype
             or record.get("coefficient_precision_bits")
             != np.finfo(arrays["pressure"].dtype).nmant + 1
-            or record.get("coefficient_precision_bits") != np.finfo(np.longdouble).nmant + 1
+            or record.get("coefficient_precision_bits") != np.finfo(dtype).nmant + 1
             or record.get("relative_equation_residual") != float(arrays["residual"])
             or record.get("basis_sha256")
             != {name: _array_digest(values) for name, values in basis.items()}
@@ -144,7 +151,7 @@ def validate_reference_archive(path: Path, record: dict) -> None:
     Archived ordered nodal coordinates and cardinal/assembly matrices must
     match the shared Qk owner used by ``ConformingQuadrilateralSolution``.
     The evaluator's numerical owners and the physical case are source guarded.
-    Native extended NPZ coefficients require matching effective precision;
+    Native NPZ coefficients require the declared effective precision;
     they are not a portable high/remainder representation. Legacy manifests
     without this basis contract are handled separately by their consumers.
     """
@@ -171,7 +178,11 @@ def validate_reference_archive(path: Path, record: dict) -> None:
         or record.get("schema") != "pymhm-conforming-periodic-reference-v1"
         or record.get("assembly") != "lor"
         or record.get("solver") != "low-order-refined-pyamg-cg"
-        or record.get("refinement_precision") != "extended"
+        or record.get("refinement_precision") not in {"double", "extended"}
+        or (
+            record.get("refinement_precision") == "extended"
+            and np.finfo(np.longdouble).eps >= np.finfo(float).eps
+        )
         or record.get("original_equation_relative_criterion") != 1e-10
         or record.get("dofs") != (n * degree + 1) ** 2
         or record.get("basis_convention")
@@ -190,6 +201,7 @@ def run(
     native_threads: int = 1,
     *,
     degree: int = 5,
+    refinement_precision: Literal["double", "extended"] = "extended",
     artifacts: Path | None = None,
     records: Path | None = None,
 ) -> None:
@@ -199,12 +211,19 @@ def run(
     required so the recorded quadrature is the one executed by the shared
     operator. Float64 operators retain their 53-bit significands; extended
     coefficient accumulation and its effective native precision are explicit.
+    ``refinement_precision='double'`` supports hosts without a wider long double;
+    an explicit extended request is rejected on those hosts. Both modes retain
+    the same original-equation residual criterion.
     This acquisition does not certify continuum accuracy or reference resolution.
     """
     n = positive_int(n, "n")
     degree = positive_int(degree, "degree")
     order = positive_int(order, "order", minimum=degree + 1)
     native_threads = positive_int(native_threads, "native_threads")
+    if refinement_precision not in {"double", "extended"}:
+        raise ValueError("refinement_precision must be double or extended")
+    if refinement_precision == "extended" and np.finfo(np.longdouble).eps >= np.finfo(float).eps:
+        raise SolverUnavailableError("extended refinement requires a wider long-double type")
     original = sources()
     lockfile_digest = fingerprint(ROOT / "pixi.lock")
     directory = ARTIFACTS if artifacts is None else Path(artifacts)
@@ -225,6 +244,7 @@ def run(
             or record.get("operator_dtype") != np.dtype(float).str
             or record.get("operator_precision_bits") != np.finfo(float).nmant + 1
             or record.get("coefficient_storage") != "native-real-npz"
+            or record.get("refinement_precision") != refinement_precision
         ):
             raise ValueError("existing reference differs from its acquisition contract")
         validate_reference_archive(path, record)
@@ -239,7 +259,7 @@ def run(
             permeability=SeparableField(((1.0, 1.0), (factor_x, factor_y))),
             source=SeparableField(((np.sin, np.sin),)),
             quadrature_order=order,
-            refinement_precision="extended",
+            refinement_precision=refinement_precision,
         )
         native_libraries = [
             {key: value for key, value in info.items() if key != "filepath"}
@@ -291,7 +311,7 @@ def run(
         "operator_dtype": np.dtype(float).str,
         "operator_precision_bits": np.finfo(float).nmant + 1,
         "original_equation_relative_criterion": 1e-10,
-        "refinement_precision": "extended",
+        "refinement_precision": refinement_precision,
         "lockfile_sha256": lockfile_digest,
         "git_revision": revision,
         "git_dirty": dirty,
@@ -329,6 +349,9 @@ def main() -> None:
     parser.add_argument("--sizes", type=int, nargs="+", default=[512, 1024, 2048])
     parser.add_argument("--order", type=int, default=10)
     parser.add_argument("--degree", type=int, default=5)
+    parser.add_argument(
+        "--refinement-precision", choices=("double", "extended"), default="extended"
+    )
     parser.add_argument("--native-threads", type=int, default=1)
     parser.add_argument("--artifacts", type=Path, default=ARTIFACTS)
     parser.add_argument("--records", type=Path, default=ROOT / "examples/results")
@@ -341,6 +364,7 @@ def main() -> None:
             args.order,
             args.native_threads,
             degree=args.degree,
+            refinement_precision=args.refinement_precision,
             artifacts=args.artifacts,
             records=args.records,
         )

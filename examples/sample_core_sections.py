@@ -145,7 +145,7 @@ def run(suite: str, refinement: int = 6) -> None:
             ROOT / "examples/verify_hdiv3d.py",
             ROOT / "examples/archive_precision.py",
         ]
-    hashes = current_source_manifest({str(p.relative_to(ROOT)): digest(p) for p in paths})
+    hashes = current_source_manifest({p.relative_to(ROOT).as_posix(): digest(p) for p in paths})
     report = dict(
         suite=suite,
         section_height=HEIGHT,
@@ -191,7 +191,7 @@ def run(suite: str, refinement: int = 6) -> None:
         info = dict(
             archive=output.name,
             sha256=digest(output),
-            original_archive=str(path.relative_to(DATA)),
+            original_archive=path.relative_to(DATA).as_posix(),
             original_sha256=digest(path),
             resolution=row["resolution"],
             **errors,
@@ -200,7 +200,7 @@ def run(suite: str, refinement: int = 6) -> None:
         report["cases"][name] = info
         print(json.dumps({name: info}), flush=True)
     report["source_changed"] = hashes != current_source_manifest(
-        {str(p.relative_to(ROOT)): digest(p) for p in paths}
+        {p.relative_to(ROOT).as_posix(): digest(p) for p in paths}
     )
     if report["source_changed"]:
         raise RuntimeError("a polynomial replay source changed during acquisition")

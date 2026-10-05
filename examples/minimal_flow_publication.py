@@ -73,7 +73,7 @@ def collect(
             if record["family"] != family or record["case"] not in cases:
                 continue
             if not record["accepted"]:
-                rejected.append({"record": str(path.relative_to(ROOT)), "reason": "criteria"})
+                rejected.append({"record": path.relative_to(ROOT).as_posix(), "reason": "criteria"})
                 continue
             for source, expected in record["source_sha256"].items():
                 if digest(path.parent / "executed-sources/files" / source) != expected:
@@ -101,9 +101,9 @@ def collect(
                 )
             receipt, resource = accepted_resources[0]
             record.update(
-                numerical_record=str(path.relative_to(ROOT)),
+                numerical_record=path.relative_to(ROOT).as_posix(),
                 numerical_record_sha256=digest(path),
-                resource_record=str(receipt.relative_to(ROOT)),
+                resource_record=receipt.relative_to(ROOT).as_posix(),
                 resource_record_sha256=digest(receipt),
                 owned_elapsed_seconds=resource["elapsed_seconds"],
                 owned_peak_rss_bytes=resource["peak_owned_rss_bytes"],

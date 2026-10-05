@@ -34,7 +34,10 @@ SOURCE_PATHS = (
 def _source_hashes() -> dict[str, str]:
     """Record the actual analysis and Piola-map implementation bytes."""
     return current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in SOURCE_PATHS}
+        {
+            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in SOURCE_PATHS
+        }
     )
 
 
@@ -129,7 +132,9 @@ def main() -> None:
     snapshots = args.output.parent / "mapped-well-joint-sources"
     snapshots.mkdir(exist_ok=True)
     for path in SOURCE_PATHS:
-        (snapshots / f"{sources[str(path.relative_to(ROOT))]}.py").write_bytes(path.read_bytes())
+        (snapshots / f"{sources[path.relative_to(ROOT).as_posix()]}.py").write_bytes(
+            path.read_bytes()
+        )
     jobs = [
         (
             order,

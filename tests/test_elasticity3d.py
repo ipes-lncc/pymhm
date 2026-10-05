@@ -12,6 +12,7 @@ from pymhm._legacy.models.elasticity.primal_3d import (
     solve_elasticity_3d,
 )
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.linalg.linear import SolverUnavailableError
 from pymhm.meshes.tetrahedron import TetraMesh
 
 
@@ -182,7 +183,7 @@ def test_explicit_local_refinement_precision_contract() -> None:
     with pytest.raises(ValueError, match="refinement_precision"):
         solve_elasticity_3d(mesh, local_refinement_precision="unknown")
     if np.finfo(np.longdouble).eps == np.finfo(float).eps:
-        with pytest.raises(ValueError, match="extended"):
+        with pytest.raises(SolverUnavailableError, match="extended"):
             solve_elasticity_3d(mesh, local_refinement_precision="extended")
     else:
         result = solve_elasticity_3d(

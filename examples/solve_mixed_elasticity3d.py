@@ -153,12 +153,14 @@ def run(workers: int) -> None:
     ]
     owners += [Path(__file__), ROOT / "examples/mixed_elasticity3d_data.py"]
     hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
     )
     snapshot = ROOT / "build/results/mixed-elasticity3d/acquisition-sources"
     snapshot.mkdir(parents=True, exist_ok=True)
     for p in owners:
-        (snapshot / f"{hashes[str(p.relative_to(ROOT))]}-{p.name}").write_bytes(p.read_bytes())
+        (snapshot / f"{hashes[p.relative_to(ROOT).as_posix()]}-{p.name}").write_bytes(
+            p.read_bytes()
+        )
     data = SolenoidalElasticity3D()
     norms, control = exact_norms(data, 18), exact_norms(data, 22)
     if max(abs(norms[k] - control[k]) for k in norms) > 2e-11:
@@ -183,7 +185,10 @@ def run(workers: int) -> None:
     for group, n, k, r, lam in jobs:
         row = acquire(n, k, r, lam, workers, data, control, group == "convergence")
         if hashes != current_source_manifest(
-            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+            {
+                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in owners
+            }
         ):
             raise RuntimeError("AFW3D acquisition sources changed during the run")
         record[group].append(row)

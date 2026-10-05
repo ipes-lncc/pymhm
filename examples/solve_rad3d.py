@@ -87,7 +87,7 @@ def main() -> None:
         ),
     ]
     hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     rows = []
@@ -178,7 +178,7 @@ def main() -> None:
         rows=rows,
         source_sha256=hashes,
         source_changed_during_run=any(
-            hashlib.sha256(p.read_bytes()).hexdigest() != hashes[str(p.relative_to(ROOT))]
+            hashlib.sha256(p.read_bytes()).hexdigest() != hashes[p.relative_to(ROOT).as_posix()]
             for p in paths
         ),
         timestamp_utc=datetime.now(UTC).isoformat(),

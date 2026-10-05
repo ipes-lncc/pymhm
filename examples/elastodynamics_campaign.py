@@ -183,7 +183,7 @@ def run(
         )
     ]
     original = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
     )
     model = ElasticWave()
     start = time.perf_counter()
@@ -261,7 +261,10 @@ def run(
             "source_sha256": original,
         }
         if original != current_source_manifest(
-            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
+            {
+                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in files
+            }
         ):
             raise RuntimeError("elastodynamic acquisition sources changed")
         (output / (name + ".json")).write_text(json.dumps(record, indent=2) + "\n")

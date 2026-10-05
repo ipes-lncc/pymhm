@@ -8,21 +8,13 @@ repos:
         args: [--allow-multiple-documents]
       - id: end-of-file-fixer
       - id: trailing-whitespace
-  - repo: local
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.9
     hooks:
-      - id: ruff
-        name: Ruff lint
-        entry: pixi run -e test ruff check
-        language: system
-        types: [python]
+      - id: ruff-check
+        args: [--fix]
+        types_or: [python, pyi]
+        exclude: ^notebooks/
       - id: ruff-format
-        name: Ruff formatting
-        entry: pixi run -e test ruff format --check
-        language: system
-        types: [python]
-      - id: metadata
-        name: Release metadata consistency
-        entry: pixi run -e test metadata-check
-        language: system
-        pass_filenames: false
-        always_run: true
+        types_or: [python, pyi]
+        exclude: ^notebooks/

@@ -264,9 +264,9 @@ def run(gpu: bool, record: Path | None) -> None:
                     Path(solve_distributed.__code__.co_filename).resolve(),
                 ]
                 manifest = {
-                    str(path.relative_to(Path(__file__).resolve().parents[1])): hashlib.sha256(
-                        path.read_bytes()
-                    ).hexdigest()
+                    path.relative_to(
+                        Path(__file__).resolve().parents[1]
+                    ).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
                     for path in sources
                 }
                 record.write_text(

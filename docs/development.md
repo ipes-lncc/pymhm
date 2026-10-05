@@ -37,6 +37,27 @@ The `pixi run --locked -e packaging lock-check` task performs both checks; its
 - Wheel and source distribution metadata are checked, and every runtime module,
   typing stub and marker must match the current source tree byte for byte.
 
+## Git hooks and editor commits
+
+Install the Git hook once and run the checks with the portable environment:
+
+```bash
+pixi run --locked -e test-core pre-commit install
+pixi run --locked -e test-core pre-commit run
+```
+
+The hooks come from `pre-commit-hooks` and the official `ruff-pre-commit`
+repository, with pinned revisions. Pre-commit installs and manages their
+isolated environments, so editor commits do not require Pixi on the GUI's
+`PATH`. Ruff applies its safe lint fixes and formatting before a commit;
+review and stage any resulting changes, then retry the commit. Its hook version
+matches the portable `test-core` lockfile.
+
+Release metadata validation remains available as
+`pixi run --locked -e test-core metadata-check` and runs in CI.
+
+## Complete native validation
+
 The complete `test` environment targets Linux CUDA hosts and includes the
 FEniCS/PETSc/MPI, PARDISO, AMG, meshing, FreeFEM, visualization and accelerator
 stacks. Two NVIDIA devices are required for the native multi-GPU tests. Install
@@ -91,7 +112,9 @@ results remain available.
 Coverage starts from fresh, separate measurements for the two phases and combines
 only successful phases. A failed parallel phase stops before the serial phase,
 and an incomplete run does not publish coverage reports. The independent line
-and branch thresholds remain **99%**, with unchanged numerical tolerances.
+and branch thresholds remain **99%**. Numerical comparisons follow the
+[scale and precision conventions](verification.md#numerical-tests); coverage
+thresholds and scientific acceptance criteria are separate controls.
 Larger literature campaigns run through the problem notebooks outside the CI
 suite.
 

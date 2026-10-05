@@ -93,7 +93,10 @@ def main() -> None:
         error_quadrature=10,
         rows=rows,
         source_hashes=current_source_manifest(
-            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+            {
+                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in sources
+            }
         ),
     )
     (OUTPUT / f"l18-k{args.trace_degree}-enrichment{args.enrichment}.json").write_text(

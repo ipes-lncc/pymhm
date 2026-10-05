@@ -49,7 +49,10 @@ def source_hashes() -> dict[str, str]:
     import pymhm as owner
 
     package = Path(owner.__file__).parent
-    files = {f"pymhm/{path.relative_to(package)}": path for path in sorted(package.rglob("*.py"))}
+    files = {
+        f"pymhm/{path.relative_to(package).as_posix()}": path
+        for path in sorted(package.rglob("*.py"))
+    }
     files.update(
         {
             f"examples/{name}.py": ROOT / f"examples/{name}.py"

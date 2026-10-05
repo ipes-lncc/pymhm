@@ -25,36 +25,44 @@ from pymhm.fem.reference import (
 
 @pytest.mark.parametrize("cell", ["interval", "triangle", "tetrahedron"])
 def test_literal_simplex_interpolation_preserves_exact_zero_and_native_derivatives(cell):
-    element = create_reference_element(ReferenceElementSpec("P", cell, 2))
+    element = create_reference_element(
+        ReferenceElementSpec("P", cell, 2, lagrange_variant="equispaced")
+    )
     points = reference_interpolation_points(element)
     nodes = np.column_stack((1 - points.sum(axis=1), points))
     declared = simplex_lagrange_basis(cell, 2, nodes=nodes)
     values, first, _ = simplex_lagrange_tabulation(cell, 2, nodes, nodes=nodes)
     native = tabulate_reference(element, points, 1)[:, :, declared.permutation, 0]
     assert_array_equal(values, np.eye(len(nodes)))
-    assert_array_equal(first, native[1:].transpose(1, 2, 0))
+    roundoff = 8 * np.finfo(float).eps
+    assert_allclose(first, native[1:].transpose(1, 2, 0), rtol=roundoff, atol=roundoff)
     nearby = nodes.copy()
     nearby[:, 1] = np.nextafter(nearby[:, 1], np.inf)
     nearby[:, 0] = 1 - nearby[:, 1:].sum(axis=1)
     actual = simplex_lagrange_tabulation(cell, 2, nearby, nodes=nodes, nderiv=0)[0]
     expected = tabulate_reference(element, nearby[:, 1:])[0, :, declared.permutation, 0].T
-    assert_array_equal(actual, expected)
+    assert_allclose(actual, expected, rtol=roundoff, atol=roundoff)
+    assert not np.array_equal(actual, np.eye(len(nodes)))
 
 
 @pytest.mark.parametrize("cell", ["interval", "quadrilateral", "hexahedron"])
 def test_literal_tensor_interpolation_does_not_snap_nearby_coordinates(cell):
-    element = create_reference_element(ReferenceElementSpec("P", cell, 2))
+    element = create_reference_element(
+        ReferenceElementSpec("P", cell, 2, lagrange_variant="equispaced")
+    )
     nodes = reference_interpolation_points(element)
     declared = tensor_lagrange_basis(cell, 2, nodes=nodes)
     values, gradients = tensor_lagrange_tabulation(cell, 2, nodes, nodes=nodes)
     native = tabulate_reference(element, nodes, 1)[:, :, declared.permutation, 0]
     assert_array_equal(values, np.eye(len(nodes)))
-    assert_array_equal(gradients, native[1:].transpose(1, 2, 0))
+    roundoff = 8 * np.finfo(float).eps
+    assert_allclose(gradients, native[1:].transpose(1, 2, 0), rtol=roundoff, atol=roundoff)
     nearby = nodes.copy()
     nearby[:, 0] = np.nextafter(nearby[:, 0], np.inf)
     actual = tensor_lagrange_tabulation(cell, 2, nearby, nodes=nodes, nderiv=0)[0]
     expected = tabulate_reference(element, nearby)[0, :, declared.permutation, 0].T
-    assert_array_equal(actual, expected)
+    assert_allclose(actual, expected, rtol=roundoff, atol=roundoff)
+    assert not np.array_equal(actual, np.eye(len(nodes)))
 
 
 @pytest.mark.parametrize(

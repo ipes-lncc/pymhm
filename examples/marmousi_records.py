@@ -26,7 +26,7 @@ EXCLUSION = [5000.0, 50.0, 50.0]
 def check_sources(record: Mapping[str, Any], required: tuple[str, ...]) -> None:
     """Require executed public owners and all guarded core files to match current bytes."""
     hashes = record.get("source_sha256")
-    core = {str(path.relative_to(ROOT)) for path in (ROOT / "src/pymhm").rglob("*.py")}
+    core = {path.relative_to(ROOT).as_posix() for path in (ROOT / "src/pymhm").rglob("*.py")}
     if (
         record.get("source_changed_during_run") is not False
         or not isinstance(hashes, dict)

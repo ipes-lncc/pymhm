@@ -61,7 +61,7 @@ def main() -> None:
     ]
     hashes = current_source_manifest(
         {
-            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in paths
         }
     )
@@ -143,7 +143,8 @@ def main() -> None:
         ),
         source_sha256=hashes,
         source_changed_during_run=any(
-            hashlib.sha256(path.read_bytes()).hexdigest() != hashes[str(path.relative_to(ROOT))]
+            hashlib.sha256(path.read_bytes()).hexdigest()
+            != hashes[path.relative_to(ROOT).as_posix()]
             for path in paths
         ),
         timestamp_utc=datetime.now(UTC).isoformat(),

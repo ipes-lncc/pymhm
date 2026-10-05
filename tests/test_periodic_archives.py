@@ -223,7 +223,7 @@ def test_reference_acquisition_accepts_review_destinations_and_reuses_verified_c
 
     def solve(mesh, **kwargs):
         calls.append((mesh, kwargs))
-        pressure = np.zeros((11, 11), dtype=np.longdouble)
+        pressure = np.zeros((11, 11))
         pressure[1:-1, 1:-1] = np.arange(81).reshape(9, 9)
         return SimpleNamespace(
             pressure=pressure.ravel(),
@@ -235,8 +235,8 @@ def test_reference_acquisition_accepts_review_destinations_and_reuses_verified_c
 
     monkeypatch.setattr(acquisition, "solve_separable_krylov", solve)
     artifacts, records = tmp_path / "arrays", tmp_path / "records"
-    acquisition.run(2, 10, artifacts=artifacts, records=records)
-    acquisition.run(2, 10, artifacts=artifacts, records=records)
+    acquisition.run(2, 10, refinement_precision="double", artifacts=artifacts, records=records)
+    acquisition.run(2, 10, refinement_precision="double", artifacts=artifacts, records=records)
     assert len(calls) == 1
     assert calls[0][1]["degree"] == 5
     assert calls[0][1]["quadrature_order"] == 10
@@ -245,13 +245,13 @@ def test_reference_acquisition_accepts_review_destinations_and_reuses_verified_c
     assert record["archive_sha256"] == acquisition.fingerprint(path)
     assert record["source_sha256"] == acquisition.sources()
     assert record["assembly"] == "lor"
-    assert record["refinement_precision"] == "extended"
-    assert record["pressure_dtype"] == np.dtype(np.longdouble).str
-    assert record["coefficient_precision_bits"] == np.finfo(np.longdouble).nmant + 1
+    assert record["refinement_precision"] == "double"
+    assert record["pressure_dtype"] == np.dtype(float).str
+    assert record["coefficient_precision_bits"] == np.finfo(float).nmant + 1
     assert record["operator_precision_bits"] == 53
     assert record["lockfile_sha256"] == acquisition.fingerprint(acquisition.ROOT / "pixi.lock")
     assert record["git_revision"]
-    expected = np.zeros((11, 11), dtype=np.longdouble)
+    expected = np.zeros((11, 11))
     expected[1:-1, 1:-1] = np.arange(81).reshape(9, 9)
     with np.load(path) as arrays:
         assert_array_equal(arrays["pressure"], expected.ravel())
@@ -262,14 +262,35 @@ def test_reference_acquisition_accepts_review_destinations_and_reuses_verified_c
 
 
 @pytest.mark.parametrize("degree,order", [(1, 2), (5, 6)])
-def test_reference_acquisition_uses_the_requested_qk_space(tmp_path, degree, order):
+@pytest.mark.parametrize("precision", ["double", "extended"])
+def test_reference_acquisition_uses_the_requested_qk_space(tmp_path, degree, order, precision):
     """The public Q1/Q5 path matches direct conforming assembly on the same data."""
     from pymhm._legacy.models.darcy.separable import SeparableField, solve_separable_diffusion
+    from pymhm.linalg.linear import SolverUnavailableError
     from pymhm.meshes.cartesian import CartesianMacroMesh
 
     acquisition = _example("periodic_reference")
     artifacts, records = tmp_path / "arrays", tmp_path / "records"
-    acquisition.run(2, order, degree=degree, artifacts=artifacts, records=records)
+    if precision == "extended" and np.finfo(np.longdouble).eps >= np.finfo(float).eps:
+        with pytest.raises(SolverUnavailableError, match="wider"):
+            acquisition.run(
+                2,
+                order,
+                degree=degree,
+                refinement_precision=precision,
+                artifacts=artifacts,
+                records=records,
+            )
+        assert not artifacts.exists() and not records.exists()
+        return
+    acquisition.run(
+        2,
+        order,
+        degree=degree,
+        refinement_precision=precision,
+        artifacts=artifacts,
+        records=records,
+    )
     record = json.loads((records / f"periodic-reference-q{degree}-2-order{order}.json").read_text())
     direct = solve_separable_diffusion(
         CartesianMacroMesh(2),
@@ -288,6 +309,7 @@ def test_reference_acquisition_uses_the_requested_qk_space(tmp_path, degree, ord
     assert record["relative_equation_residual"] <= 1e-10
     assert record["degree"] == degree
     assert record["quadrature_order"] == order
+    assert record["refinement_precision"] == precision
     for name, digest in record["source_sha256"].items():
         assert (artifacts / "acquisition-sources" / f"{digest}.py").read_bytes() == (
             acquisition.ROOT / name
@@ -308,11 +330,12 @@ def test_reference_acquisition_uses_the_requested_qk_space(tmp_path, degree, ord
         dict(n=2, degree=1, order=2.5),
         dict(n=2, order=10, native_threads=0),
         dict(n=2, order=10, native_threads=True),
+        dict(n=2, order=10, refinement_precision="automatic"),
     ],
 )
 def test_reference_acquisition_rejects_immediately_excluded_inputs(tmp_path, arguments):
     acquisition = _example("periodic_reference")
-    with pytest.raises(ValueError, match="integer"):
+    with pytest.raises(ValueError, match="integer|precision"):
         acquisition.run(**arguments, artifacts=tmp_path, records=tmp_path)
     assert not list(tmp_path.iterdir())
 
@@ -326,9 +349,7 @@ def test_reference_acquisition_rejects_changes_during_solve(tmp_path, monkeypatc
 
     def solve(*args, **kwargs):
         state["solved"] = True
-        return SimpleNamespace(
-            pressure=np.zeros(9, dtype=np.longdouble), relative_equation_residual=0
-        )
+        return SimpleNamespace(pressure=np.zeros(9), relative_equation_residual=0)
 
     def sources():
         return (
@@ -348,16 +369,22 @@ def test_reference_acquisition_rejects_changes_during_solve(tmp_path, monkeypatc
     monkeypatch.setattr(acquisition, "sources", sources)
     monkeypatch.setattr(acquisition, "fingerprint", fingerprint)
     with pytest.raises(RuntimeError, match="sources or lockfile"):
-        acquisition.run(2, 2, degree=1, artifacts=tmp_path, records=tmp_path)
+        acquisition.run(
+            2, 2, degree=1, refinement_precision="double", artifacts=tmp_path, records=tmp_path
+        )
     assert not list(tmp_path.iterdir())
 
 
-@pytest.mark.parametrize("changed", ["basis", "bits", "degree", "order", "operator", "boundary"])
+@pytest.mark.parametrize(
+    "changed", ["basis", "bits", "degree", "order", "operator", "boundary", "precision"]
+)
 def test_reference_reuse_checks_the_archived_basis_and_precision(tmp_path, changed):
     """A rehashed archive cannot substitute a different coefficient coordinate system."""
     acquisition = _example("periodic_reference")
     artifacts, records = tmp_path / "arrays", tmp_path / "records"
-    acquisition.run(2, 2, degree=1, artifacts=artifacts, records=records)
+    acquisition.run(
+        2, 2, degree=1, refinement_precision="double", artifacts=artifacts, records=records
+    )
     record_path = records / "periodic-reference-q1-2-order2.json"
     record = json.loads(record_path.read_text())
     path = artifacts / record["archive"]
@@ -375,15 +402,18 @@ def test_reference_reuse_checks_the_archived_basis_and_precision(tmp_path, chang
         record["archive_sha256"] = acquisition.fingerprint(path)
     else:
         key, value = {
-            "bits": ("coefficient_precision_bits", np.finfo(np.longdouble).nmant + 2),
+            "bits": ("coefficient_precision_bits", np.finfo(float).nmant + 2),
             "degree": ("degree", 2),
             "order": ("quadrature_order", 3),
             "operator": ("operator_precision_bits", 64),
+            "precision": ("refinement_precision", "extended"),
         }[changed]
         record[key] = value
     record_path.write_text(json.dumps(record))
     with pytest.raises(ValueError, match="contract|Dirichlet"):
-        acquisition.run(2, 2, degree=1, artifacts=artifacts, records=records)
+        acquisition.run(
+            2, 2, degree=1, refinement_precision="double", artifacts=artifacts, records=records
+        )
 
 
 def test_reference_cli_keeps_q5_and_order10_defaults(monkeypatch):
@@ -405,7 +435,9 @@ def test_new_reference_consumer_requires_the_executed_basis_contract(
     """Compare/plot callers reject a rehashed coordinate or evaluator substitution."""
     acquisition = _example("periodic_reference")
     artifacts, records = tmp_path / "arrays", tmp_path / "records"
-    acquisition.run(2, 2, degree=1, artifacts=artifacts, records=records)
+    acquisition.run(
+        2, 2, degree=1, refinement_precision="double", artifacts=artifacts, records=records
+    )
     monkeypatch.setattr(compare_periodic, "ARTIFACTS", artifacts)
     monkeypatch.setattr(compare_periodic, "REFERENCE_RECORDS", records)
     record_path = records / "periodic-reference-q1-2-order2.json"
@@ -447,7 +479,9 @@ def test_verify_reference_sidecar_flow_enforces_the_new_basis_contract(tmp_path,
     """The reference-only CLI validates a complete new sidecar before using its field."""
     acquisition = _example("periodic_reference")
     artifacts, records = tmp_path / "arrays", tmp_path / "records"
-    acquisition.run(2, 2, degree=1, artifacts=artifacts, records=records)
+    acquisition.run(
+        2, 2, degree=1, refinement_precision="double", artifacts=artifacts, records=records
+    )
     record = json.loads((records / "periodic-reference-q1-2-order2.json").read_text())
     source = artifacts / record["archive"]
     path = artifacts / "reference-q1-2-order2-lor.npz"

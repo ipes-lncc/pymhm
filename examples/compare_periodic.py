@@ -159,7 +159,7 @@ def main() -> None:
     args = parser.parse_args()
     ARTIFACTS, REFERENCE_RECORDS = args.artifacts, args.reference_records
     sources = source_hashes()
-    sources[str(Path(__file__).relative_to(ROOT))] = fingerprint(Path(__file__))
+    sources[Path(__file__).relative_to(ROOT).as_posix()] = fingerprint(Path(__file__))
     for name, digest in sources.items():
         destination = ARTIFACTS / "acquisition-sources" / f"{digest}.py"
         destination.parent.mkdir(parents=True, exist_ok=True)

@@ -107,6 +107,7 @@ def test_compact_rejects_retained_modes_and_corrupted_responses():
 
 
 def test_compact_spawn_preserves_arrays_and_fields():
+    """Compare independent serial/spawn calculations with scaled roundoff bounds."""
     mesh = CartesianMacroMesh(2, 1)
     skeleton = helmholtz_skeleton(mesh, 1.2, degree=2)
     factory = _HelmholtzFactory(
@@ -127,11 +128,25 @@ def test_compact_spawn_preserves_arrays_and_fields():
     )
     serial = CompactFamily.prepare(factory)
     parallel = CompactFamily.prepare(factory, backend="process", workers=2)
-    assert_array_equal(serial.matrix.toarray(), parallel.matrix.toarray())
-    assert_array_equal(serial.rhs, parallel.rhs)
     first, second = serial.solve(1), parallel.solve(1)
-    assert_array_equal(first.trace, second.trace)
-    assert_array_equal(first.pressure, second.pressure)
+    # Both execution modes limit native threads to one, but independently loaded
+    # BLAS libraries can round differently. Local condition numbers are about
+    # 660; the field bounds match the independent direct-solve checks above.
+    # A unit scale is appropriate for this dimensionless, unit-amplitude source:
+    # symmetry makes the RHS and trace nearly zero, so relative error alone is
+    # meaningless. Exact response-copy/storage checks remain separate.
+    for original, spawned, rtol, atol in (
+        (serial.matrix.toarray(), parallel.matrix.toarray(), 2e-12, 2e-13),
+        (serial.rhs, parallel.rhs, 2e-12, 2e-13),
+        (first.trace, second.trace, 2e-10, 2e-11),
+        (np.asarray(first.pressure), np.asarray(second.pressure), 2e-10, 2e-11),
+    ):
+        scale = max(1.0, float(np.max(np.abs(original))))
+        assert_allclose(original, spawned, rtol=rtol, atol=atol * scale)
+    for value in (first, second):
+        assert value.residual < 1e-12
+        assert value.local_residual_max < 1e-12
+        assert value.original_trace_residual < 1e-12
 
 
 def test_trace_only_solve_defers_reconstruction_and_checks_coordinate_contract(monkeypatch):

@@ -1,3 +1,6 @@
-# Generated fields and figures are ignored; compact scientific inputs are binary.
+# Preserve source and pinned input bytes across platform checkouts.
+* text=auto eol=lf
+
+# Numerical archives retain their literal bytes.
 *.npz -text
 *.vtu -text

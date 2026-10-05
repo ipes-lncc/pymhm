@@ -152,7 +152,12 @@ def test_p1_reaction_advection_and_affine_patch_energy():
     transport = combined - diffusion - 2 * mass
     np.testing.assert_allclose(transport @ x, 2 * mass @ ones, atol=1e-15)
     np.testing.assert_allclose(transport @ y, -mass @ ones, atol=1e-15)
-    np.testing.assert_allclose(transport @ ones, 0.0, atol=1e-15)
+    # Extracting transport subtracts assembled diffusion and reaction terms.
+    # Its constant-kernel error therefore scales with those operands, even
+    # though the exact convection operator annihilates constants.
+    scale = abs(combined) + abs(diffusion) + 2 * abs(mass)
+    roundoff = 8 * np.finfo(float).eps * np.asarray(scale.sum(axis=1)).ravel()
+    np.testing.assert_array_less(abs(transport @ ones), roundoff)
     with pytest.raises(ValueError, match="reaction"):
         p1_operators(mesh, reaction=-1.0)
 

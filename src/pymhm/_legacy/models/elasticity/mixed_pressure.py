@@ -7,6 +7,7 @@ stress is ``2*mu*sym(grad(u))-p*I``. All local rigid motions are retained.
 
 from dataclasses import dataclass
 from functools import partial
+from math import fsum
 from typing import Any, Literal
 
 import numpy as np
@@ -479,16 +480,16 @@ def _boundary_volume_flux(
 
     This uses exactly the same quadrature as the global equations; a separate
     integration rule would make the finite-compressibility identity inconsistent.
-    Long-double accumulation reduces cancellation between opposite boundaries.
+    Compensated accumulation reduces cancellation between opposite boundaries
+    on platforms with or without a wider native real type.
     ``absolute`` sums uncancelled moments for scale-invariant compatibility.
     """
-    total = np.longdouble(0)
+    terms = []
     for face in skeleton.mesh.boundary_faces:
         start, end = skeleton.mesh.points[skeleton.mesh.faces[face]]
         tangent = end - start
         normal = np.array([tangent[1], -tangent[0]]) / skeleton.mesh.lengths[face]
         coefficients = skeleton.faces[face].constant_coefficients()[:, None] * normal
-        moments = boundary[skeleton.dofs(int(face))].astype(np.longdouble)
-        terms = moments * coefficients.ravel().astype(np.longdouble)
-        total += np.sum(abs(terms) if absolute else terms)
-    return float(total)
+        products = boundary[skeleton.dofs(int(face))] * coefficients.ravel()
+        terms.extend(abs(products) if absolute else products)
+    return fsum(terms)

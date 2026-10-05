@@ -12,7 +12,7 @@ import json
 import re
 from dataclasses import dataclass, field
 from html.parser import HTMLParser
-from pathlib import Path, PureWindowsPath
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any
 
 _IGNORED_TAGS = {"code", "pre", "script", "style", "textarea", "noscript", "title"}
@@ -213,7 +213,7 @@ def _profile_paths(entries: Any, docs_dir: Path, field_name: str) -> set[Path]:
             raise ValueError(f"Invalid Markdown source in publication profile: {entry!r}")
         path = Path(entry)
         if (
-            path.is_absolute()
+            PurePosixPath(entry).is_absolute()
             or PureWindowsPath(entry).drive
             or ".." in path.parts
             or "\\" in entry

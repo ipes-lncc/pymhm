@@ -1,10 +1,12 @@
 """Small, auditable triangular finite-element assembly and quadrature kernels."""
 
 from collections.abc import Mapping
+from math import fsum
 from typing import Any
 
 import numpy as np
 from numpy.polynomial.legendre import leggauss
+from numpy.typing import NDArray
 from scipy import sparse
 
 from pymhm.core.validation import FloatArray, positive_int
@@ -19,6 +21,30 @@ from pymhm.materials.evaluation import (
     vector_values as vector_values,
 )
 from pymhm.meshes.triangle import TriangleMesh
+
+_EXTENDED_PRECISION = np.finfo(np.longdouble).eps < np.finfo(float).eps
+
+
+def _boundary_moments(
+    basis: FloatArray, weights: FloatArray, values: FloatArray
+) -> NDArray[np.floating[Any]]:
+    """Integrate each real boundary moment with portable accurate accumulation.
+
+    A wider native real type retains product and summation digits where
+    available. Elsewhere, compensated summation avoids BLAS-dependent
+    reduction roundoff in opposite oriented constant moments. The represented
+    quadrature, basis and field values are unchanged; no moment is set to zero.
+    """
+    if _EXTENDED_PRECISION:
+        return basis.astype(np.longdouble).T @ (
+            weights[:, None].astype(np.longdouble) * values.astype(np.longdouble)
+        )
+    return np.array(
+        [
+            [fsum(basis[:, i] * weights * values[:, j]) for j in range(values.shape[1])]
+            for i in range(basis.shape[1])
+        ]
+    )
 
 
 def triangle_quadrature(order: int = 4) -> tuple[FloatArray, FloatArray]:
@@ -48,11 +74,42 @@ def _scalar_diffusion_blocks(
 
     Trailing axes are q, (q,basis,dimension), (q,dimension,dimension),
     respectively; leading cell axes broadcast. Measures have only cell axes.
-    NumPy's widest real type accumulates the quadrature and tensor contractions
-    before the final binary64 rounding. No kernel projection or operator-entry
-    truncation is applied. On platforms with binary64 longdouble this uses
-    that platform's real precision.
+    A wider native real type accumulates the quadrature and tensor contractions
+    before the final binary64 rounding where available. Otherwise a Neumaier
+    sum accumulates quadrature blocks with a compensation array of the same
+    size as the result. No kernel projection or operator-entry truncation is
+    applied; the same represented gradients, tensors and weights are used.
     """
+    if not _EXTENDED_PRECISION:
+        count = np.broadcast_shapes(
+            weights.shape[-1:], gradients.shape[-3:-2], tensors.shape[-3:-2]
+        )[0]
+        axes = np.broadcast_shapes(
+            weights.shape[:-1], gradients.shape[:-3], tensors.shape[:-3], np.shape(measures)
+        )
+        w = np.broadcast_to(weights, (*axes, count))
+        g = np.broadcast_to(gradients, (*axes, count, *gradients.shape[-2:]))
+        k = np.broadcast_to(tensors, (*axes, count, *tensors.shape[-2:]))
+        total = np.zeros((*axes, gradients.shape[-2], gradients.shape[-2]))
+        correction = np.zeros_like(total)
+        for q in range(count):
+            block = np.einsum(
+                "...,...ia,...ab,...jb,...->...ij",
+                w[..., q],
+                g[..., q, :, :],
+                k[..., q, :, :],
+                g[..., q, :, :],
+                measures,
+                optimize=False,
+            )
+            combined = total + block
+            correction += np.where(
+                abs(total) >= abs(block),
+                (total - combined) + block,
+                (block - combined) + total,
+            )
+            total = combined
+        return total + correction
     operands = tuple(
         np.asarray(value, dtype=np.longdouble) for value in (weights, gradients, tensors, measures)
     )
@@ -221,9 +278,7 @@ def boundary_data(
         # Keep the same quadrature in the trace equations and volume constraint.
         # Accumulate before narrowing so opposite oriented faces do not acquire
         # different rounding errors in their constant displacement moments.
-        moments = basis.astype(np.longdouble).T @ (
-            weights[:, None].astype(np.longdouble) * values.astype(np.longdouble)
-        )
+        moments = _boundary_moments(basis, weights, values)
         dofs = skeleton.dofs(int(face)).reshape(-1, skeleton.components)
         if np.any(prescribed):
             coefficients = np.linalg.solve(

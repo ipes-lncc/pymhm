@@ -158,7 +158,10 @@ def main() -> None:
         ROOT / "src/pymhm/fem/scalar/tetrahedron_topology.py",
     ]
     start_hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+        {
+            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sources
+        }
     )
     rows = []
     with threadpool_limits(1):
@@ -181,7 +184,10 @@ def main() -> None:
         values=np.stack(solution.values),
     )
     if start_hashes != current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+        {
+            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sources
+        }
     ):
         raise RuntimeError("Acquisition sources changed during the numerical campaign")
     record = dict(
@@ -198,7 +204,10 @@ def main() -> None:
         archive=path.name,
         sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
         source_hashes=current_source_manifest(
-            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+            {
+                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in sources
+            }
         ),
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(record, indent=2) + "\n")

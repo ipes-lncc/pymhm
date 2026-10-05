@@ -43,12 +43,12 @@ def run(workers: int) -> None:
         )
     ] + [Path(__file__), ROOT / "examples/polygon_meshes.py", ROOT / "examples/solve_rad3d.py"]
     hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
     )
     snapshot = ROOT / "build/results/star-polyhedra/acquisition-sources"
     snapshot.mkdir(parents=True, exist_ok=True)
     for path in owners:
-        destination = snapshot / f"{hashes[str(path.relative_to(ROOT))]}-{path.name}"
+        destination = snapshot / f"{hashes[path.relative_to(ROOT).as_posix()]}-{path.name}"
         destination.write_bytes(path.read_bytes())
     record = dict(
         reference="10.1016/j.cma.2024.117089, section 5.2.1 analytical 3D problem",
@@ -163,7 +163,10 @@ def run(workers: int) -> None:
             elapsed_seconds=perf_counter() - started,
         )
         if hashes != current_source_manifest(
-            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+            {
+                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in owners
+            }
         ):
             raise RuntimeError("campaign sources changed during acquisition")
         record["rows"].append(row)

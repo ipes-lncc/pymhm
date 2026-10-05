@@ -71,10 +71,14 @@ def test_operator_moments_test_basis_and_native_dtype_are_identity_inputs():
     assert len({operator_identity(p) for p in (base, altered, rotated)}) == 3
     for first, second in (
         (np.array([0.0]), np.array([-0.0])),
-        (np.ones(1), np.ones(1, dtype=np.longdouble)),
+        (np.ones(1), np.ones(1, dtype=np.float32)),
         (np.ones(1), np.ones((1, 1))),
     ):
         assert array_identity(first) != array_identity(second)
+    native = np.ones(1, dtype=np.longdouble)
+    assert (array_identity(np.ones(1)) == array_identity(native)) == (
+        native.dtype == np.dtype(float)
+    )
     with ExactResponseCache(max_operators=1, max_sources_per_operator=1) as cache:
         cache.condense(base)
         old = next(iter(cache._operators.values())).factor

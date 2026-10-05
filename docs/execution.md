@@ -211,13 +211,13 @@ rank. Nested `MultiscaleProblem` local operators are currently unsupported by
 this distributed interface. The serial/CPU hierarchy uses the ordinary
 `MultiscaleProblem` API.
 
-The distributed algebra uses real binary64. The interface checks the real
-floating coefficient arrays returned by its compiler and the supplied compiled
-basis/direct records before converting them. Exactly representable wider
-floating arrays are accepted; supplied wider digits cannot be discarded there.
-A compiler can already normalize integer literals to floating point, as can
-construction of a `LocalProblem`; this check does not certify the original
-integer representation or undo a compiler's prior conversion.
+The distributed algebra uses real binary64. The interface checks numerical
+literals in local/global forms before compilation, then checks the compiler's
+arrays and supplied basis/direct records before storage. Exactly representable
+integers and wider floating arrays are accepted; supplied digits cannot be
+discarded. A custom compiler retains responsibility for its opaque symbolic
+inputs. Previously rounded data, including a previously constructed
+`LocalProblem`, cannot reveal or recover digits lost before this interface.
 
 `boundary_load=(indices, values)` contains **additive rank-owned** contributions;
 replicating a complete boundary vector would count it once per rank. `fixed`

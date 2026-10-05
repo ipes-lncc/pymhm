@@ -81,7 +81,7 @@ def main() -> None:
         )
     ]
     sources = current_source_manifest(
-        {str(path.relative_to(ROOT)): file_digest(path) for path in files}
+        {path.relative_to(ROOT).as_posix(): file_digest(path) for path in files}
     )
     args.output.mkdir(parents=True)
     for name in sources:

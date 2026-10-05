@@ -13,6 +13,14 @@ separately. Skipped optional cases are not counted as passed. Python 3.11 and
 3.12 use their own locked Pixi environments; checks on another interpreter or
 an older source tree do not substitute for executing the current implementation.
 
+Floating-point comparisons use absolute and relative bounds appropriate to the
+field scale, conditioning and available precision. Independently rounded native
+tabulations and matrix arithmetic need not agree bit for bit. Field errors,
+conservation and convergence have their own stated criteria; solver residuals
+and discretization errors are assessed separately. Archive digests, declared
+basis identities and metadata contracts remain exact. Set scientific acceptance
+criteria before acquisition and retain them with the numerical records.
+
 Native qualification includes DOLFINx/Basix operators and field comparisons,
 real spawn workers constructing UFL local problems, and PARDISO execution.
 Native MPI, GPU, meshing, PyVista and FreeFEM/BAMG checks have separate environment
@@ -34,16 +42,19 @@ Linux, Windows and macOS; the native executions recorded here were on Linux.
 
 The provider and functional interfaces retain the existing local and global
 equations, signed trace maps, physical moments and executed retained bases.
-Before/after checks run identical inputs in isolated processes using the
-archived implementation and the current implementation, under the same locked
-environment and native thread count. The representative 19-case comparison
+Engineering comparisons run identical inputs in isolated processes using two
+identified source snapshots, under the same locked environment and native
+thread count. The recorded 19-case comparison
 includes homogeneous and nonhomogeneous scalar problems, a Neumann gauge,
 RT0 Darcy, Robin MH, MH²M, MsHHO, Brinkman in two and three dimensions,
 elasticity, complex Helmholtz, Petrov kernels and extended precision.
-All **1056 arrays** match exactly in values, dtypes and shapes: original and
+Its **1056 arrays** match exactly in values, dtypes and shapes: original and
 condensed operators, loads, absolute load scales, bases, coefficient fields
-and recorded physical metrics. This is a preservation check for those inputs;
-it does not certify an unexecuted regime or reproduce additional literature.
+and recorded physical metrics. This preservation result applies to the source
+snapshots and inputs of that acquisition; it does not certify later source
+changes, an unexecuted regime or additional literature reproductions. Current
+formulations are assessed through their native tests and case-specific field
+comparisons.
 Long-double storage padding is not a numerical coefficient. Field replay must
 still use the archived executed basis and orientation maps.
 

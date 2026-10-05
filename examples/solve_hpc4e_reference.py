@@ -831,14 +831,14 @@ def main() -> None:
         sources.append(ROOT / "examples/solve_hpc4e_algebra.py")
     source_hashes = current_source_manifest(
         {
-            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in sources
         }
     )
     snapshots = ARCHIVES / "acquisition-sources"
     snapshots.mkdir(parents=True, exist_ok=True)
     for path in sources if comm.rank == 0 else []:
-        (snapshots / f"{source_hashes[str(path.relative_to(ROOT))]}.py").write_bytes(
+        (snapshots / f"{source_hashes[path.relative_to(ROOT).as_posix()]}.py").write_bytes(
             path.read_bytes()
         )
     field, record = solve(
@@ -856,7 +856,8 @@ def main() -> None:
         out_of_core_directory=args.out_of_core_directory,
     )
     changed = any(
-        hashlib.sha256(path.read_bytes()).hexdigest() != source_hashes[str(path.relative_to(ROOT))]
+        hashlib.sha256(path.read_bytes()).hexdigest()
+        != source_hashes[path.relative_to(ROOT).as_posix()]
         for path in sources
     )
     if changed:
@@ -873,7 +874,7 @@ def main() -> None:
     record.update(
         archive=archive.name,
         archive_sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),
-        source_sha256=source_hashes[str(Path(__file__).relative_to(ROOT))],
+        source_sha256=source_hashes[Path(__file__).relative_to(ROOT).as_posix()],
         source_hashes=source_hashes,
         source_changed=False,
         material_sha256=None

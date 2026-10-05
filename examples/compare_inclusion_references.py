@@ -124,7 +124,7 @@ def acquire(reference: Path, previous: Path, output: Path, workers: int = 4) -> 
         ROOT / "src/pymhm/fem/scalar/operators.py",
     ]
     hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     )
     record = dict(
         reference=reference.name,
@@ -165,7 +165,10 @@ def acquire(reference: Path, previous: Path, output: Path, workers: int = 4) -> 
             )
         record["rows"].append(row)
         record["source_changed_during_run"] = hashes != current_source_manifest(
-            {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+            {
+                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in paths
+            }
         )
         if record["source_changed_during_run"]:
             raise RuntimeError("reference comparison sources changed during integration")

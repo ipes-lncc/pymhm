@@ -52,9 +52,12 @@ def quadratic_stress(points: np.ndarray) -> np.ndarray:
 @pytest.mark.parametrize("degree,enrichment", [(1, 2), (2, 1), (3, 0)])
 @pytest.mark.parametrize("lame_lambda", [2.0, 1e8, np.inf])
 def test_quadratic_patch_to_incompressible_limit(
-    degree: int, enrichment: int, lame_lambda: float
+    degree: int, enrichment: int, lame_lambda: float, monkeypatch
 ) -> None:
-    """Quadratic u and affine stress stay exact for large and infinite bulk modulus."""
+    """Portable boundary moments preserve stress at large and infinite bulk modulus."""
+    from pymhm.fem.scalar import operators
+
+    monkeypatch.setattr(operators, "_EXTENDED_PRECISION", False)
     solution = solve_elasticity_mixed(
         TriangleMesh.unit_square(),
         stress_degree=degree,
@@ -69,6 +72,22 @@ def test_quadratic_patch_to_incompressible_limit(
     assert solution.stress_l2_error(quadratic_stress) < 2e-10
     assert solution.rotation_l2_error(lambda x: x[:, 1]) < 2e-10
     assert solution.divergence_l2_error((2.0, 0.0)) < 2e-10
+
+
+def test_compensated_boundary_moments_preserve_tiny_physical_dilatation(monkeypatch) -> None:
+    """The binary64 path retains a true small volume change without a zero cutoff."""
+    from pymhm import FaceSpace, SkeletonSpace
+    from pymhm._legacy.models.elasticity.mixed_pressure import _boundary_volume_flux
+    from pymhm.fem.scalar import operators
+
+    monkeypatch.setattr(operators, "_EXTENDED_PRECISION", False)
+    mesh = TriangleMesh.unit_square()
+    face = FaceSpace((0.0, 0.17, 0.63, 1.0), (2, 2, 2))
+    skeleton = SkeletonSpace(mesh, tuple(face for _ in mesh.faces), components=2)
+    for scale in (1.0, 1e-25):
+        load, fixed = operators.boundary_data(skeleton, lambda x, s=scale: s * x, order=5)
+        assert fixed == {}
+        assert_allclose(_boundary_volume_flux(skeleton, load), 2 * scale, rtol=3e-15, atol=0)
 
 
 def test_enriched_family_pure_traction_rigid_gauge() -> None:

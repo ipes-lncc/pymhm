@@ -61,7 +61,7 @@ def main() -> None:
             )
         ),
     ]
-    hashes = current_source_manifest({str(p.relative_to(ROOT)): digest(p) for p in paths})
+    hashes = current_source_manifest({p.relative_to(ROOT).as_posix(): digest(p) for p in paths})
     rows = []
     with threadpool_limits(limits=1):
         for degree in (0, 1, 2):
@@ -118,7 +118,9 @@ def main() -> None:
         analytical_reference=True,
         rows=rows,
         source_sha256=hashes,
-        source_changed_during_run=any(digest(p) != hashes[str(p.relative_to(ROOT))] for p in paths),
+        source_changed_during_run=any(
+            digest(p) != hashes[p.relative_to(ROOT).as_posix()] for p in paths
+        ),
         timestamp_utc=datetime.now(UTC).isoformat(),
         native_threads=1,
     )

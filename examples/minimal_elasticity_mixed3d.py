@@ -124,7 +124,7 @@ def acquire(n: int, degree: int, output: Path) -> dict[str, Any]:
                 and path.suffix == ".py"
                 and path.relative_to(ROOT).parts[0] in ("src", "examples")
             ):
-                origins[name] = str(path.relative_to(ROOT))
+                origins[name] = path.relative_to(ROOT).as_posix()
     record: dict[str, Any] = {
         "schema": "pymhm-initial-analytical-scalar-record-v1",
         "family": "mixed-elasticity3d",

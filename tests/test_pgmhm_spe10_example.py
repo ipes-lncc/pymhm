@@ -100,7 +100,16 @@ def test_material_fitted_control_archives_ragged_polynomials(monkeypatch, tmp_pa
     module = example(monkeypatch)
     material = CartesianCellField(np.ones((1, 1)), (1200.0, 2200.0))
     monkeypatch.setattr(module, "load_material", lambda component="kx": material)
-    module.acquire_mhm(tmp_path, 1, 5, 0.1, refinement=1, fitted=True, trace_fitted=True)
+    module.acquire_mhm(
+        tmp_path,
+        1,
+        5,
+        0.1,
+        refinement=1,
+        fitted=True,
+        trace_fitted=True,
+        local_refinement_precision="double",
+    )
     path = tmp_path / "pgmhm-fitted-tracefit-r1-s1-q5.npz"
     field = module.PGMHMField(path)
     for macro, mesh in enumerate(field.meshes):

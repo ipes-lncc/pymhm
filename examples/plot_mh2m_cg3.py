@@ -190,7 +190,7 @@ def main() -> None:
         "physical_norm_reference": label,
         "historical_profile_reference": "Classical P1 n=128",
         "inputs": {
-            str(path.relative_to(args.source)): digest(path)
+            path.relative_to(args.source).as_posix(): digest(path)
             for path in (
                 cg / "comparison.json",
                 cg / "structured-comparison.json",

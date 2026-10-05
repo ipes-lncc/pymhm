@@ -229,7 +229,7 @@ def main() -> None:
         ROOT / "src/pymhm/meshes/mixed.py",
     ]
     sources = current_source_manifest(
-        {str(path.relative_to(ROOT)): digest(path) for path in watched}
+        {path.relative_to(ROOT).as_posix(): digest(path) for path in watched}
     )
     rows, replay = [], []
     for kind, degree in (("prism", 1), ("tetrahedron", 1), ("tetrahedron", 2)):
@@ -275,7 +275,7 @@ def main() -> None:
             }
         )
     if sources != current_source_manifest(
-        {str(path.relative_to(ROOT)): digest(path) for path in watched}
+        {path.relative_to(ROOT).as_posix(): digest(path) for path in watched}
     ):
         raise RuntimeError("field verification source changed during execution")
     metadata = {

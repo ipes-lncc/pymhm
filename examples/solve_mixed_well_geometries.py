@@ -47,7 +47,10 @@ def acquire(
         )
     ] + [Path(__file__), ROOT / "examples/solve_mapped_well.py"]
     hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in watched}
+        {
+            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in watched
+        }
     )
     started = time.perf_counter()
     with threadpool_limits(1):
@@ -79,7 +82,10 @@ def acquire(
             qnorm += np.sum(fine.determinants[:, None] * w * np.sum(q * q, axis=2))
         balance = max(float(np.max(abs(v))) for v in solution.equilibrium_residuals())
     current = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in watched}
+        {
+            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in watched
+        }
     )
     if current != hashes:
         raise RuntimeError("acquisition source changed during the solve")

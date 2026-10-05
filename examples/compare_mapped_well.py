@@ -75,7 +75,10 @@ def main() -> None:
         ROOT / "src/pymhm/_legacy/models/darcy/mapped.py",
     ]
     source_hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_paths}
+        {
+            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in source_paths
+        }
     )
     classical = {}
     for path in DIRECTORY.glob("classical-*.json"):
@@ -161,13 +164,16 @@ def main() -> None:
         reference=ref,
         units="m, Pa, s",
         rows=rows,
-        analysis_source_sha256=source_hashes[str(Path(__file__).relative_to(ROOT))],
+        analysis_source_sha256=source_hashes[Path(__file__).relative_to(ROOT).as_posix()],
         field_reader_sha256=source_hashes["examples/mapped_well_fields.py"],
         norm_workers=args.workers,
         source_hashes=source_hashes,
     )
     if source_hashes != current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_paths}
+        {
+            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in source_paths
+        }
     ):
         raise RuntimeError("Physical-norm sources changed during acquisition")
     (DIRECTORY / "comparisons.json").write_text(json.dumps(report, indent=2) + "\n")

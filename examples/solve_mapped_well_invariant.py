@@ -211,14 +211,14 @@ def main() -> None:
     ]
     hashes = current_source_manifest(
         {
-            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in paths
         }
     )
     snapshots = ROOT / "build/source-snapshots/mapped-well-oscillatory"
     snapshots.mkdir(parents=True, exist_ok=True)
     for path in paths:
-        (snapshots / f"{hashes[str(path.relative_to(ROOT))]}-{path.name}").write_bytes(
+        (snapshots / f"{hashes[path.relative_to(ROOT).as_posix()]}-{path.name}").write_bytes(
             path.read_bytes()
         )
     with threadpool_limits(1):
@@ -266,7 +266,7 @@ def main() -> None:
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
     if any(
-        hashlib.sha256(path.read_bytes()).hexdigest() != hashes[str(path.relative_to(ROOT))]
+        hashlib.sha256(path.read_bytes()).hexdigest() != hashes[path.relative_to(ROOT).as_posix()]
         for path in paths
     ):
         raise RuntimeError("Acquisition sources changed; inspect the preserved source snapshots")

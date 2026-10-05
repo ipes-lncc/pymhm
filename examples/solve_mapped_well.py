@@ -88,7 +88,10 @@ def main() -> None:
     snapshot.mkdir(parents=True, exist_ok=True)
     (snapshot / f"{hybrid_start}-hybrid.py").write_bytes(hybrid_source.read_bytes())
     hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+        {
+            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sources
+        }
     )
     with threadpool_limits(1):
         result = solve_darcy_mapped_rt(
@@ -201,7 +204,10 @@ def main() -> None:
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
     if hashes != current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}
+        {
+            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sources
+        }
     ):
         raise RuntimeError("Acquisition source changed during the numerical solve")
     print(json.dumps(report), flush=True)

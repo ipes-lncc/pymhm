@@ -76,7 +76,7 @@ def source_digests() -> dict[str, str]:
         )
     ]
     return current_source_manifest(
-        {str(path.relative_to(ROOT)): file_digest(path) for path in paths}
+        {path.relative_to(ROOT).as_posix(): file_digest(path) for path in paths}
     )
 
 

@@ -110,7 +110,10 @@ def acquire(
         *sorted((ROOT / "src/pymhm").rglob("*.py")),
     ]
     executed_sources = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_files}
+        {
+            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in source_files
+        }
     )
     macro = CartesianMacroMesh(n)
     outer = SkeletonSpace(macro, tuple(FaceSpace.uniform(1, 2) for _ in macro.faces))
@@ -257,7 +260,10 @@ def acquire(
         recursive_map="Signed exact P1 restriction; parent reactions and one-sided leaves retained",
     )
     if executed_sources != current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_files}
+        {
+            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in source_files
+        }
     ):
         raise RuntimeError("executed acquisition source changed")
     if archive is not None:

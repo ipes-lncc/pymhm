@@ -90,7 +90,7 @@ def capture_sources(output: Path, extra: Sequence[Path]) -> dict[str, str]:
         *extra,
     ]
     hashes = current_source_manifest(
-        {str(path.relative_to(ROOT)): file_digest(path) for path in paths}
+        {path.relative_to(ROOT).as_posix(): file_digest(path) for path in paths}
     )
     for name, expected in hashes.items():
         target = output / "executed-sources/files" / name

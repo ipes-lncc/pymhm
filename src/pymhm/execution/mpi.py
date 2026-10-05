@@ -22,6 +22,7 @@ from pymhm.core.equations import (
     CompiledLocalEquations,
     Equation,
     FormCompiler,
+    LinearForms,
     LocalEquations,
     compile_form,
     compile_local_equations,
@@ -84,7 +85,7 @@ def _values(values: Any, size: int, name: str) -> FloatArray:
     raw = np.asarray(values)
     if np.iscomplexobj(raw) or raw.shape != (size,) or not np.isfinite(raw).all():
         raise ValueError(f"{name} must be a real finite vector of length {size}")
-    return _binary64(raw, name)
+    return _binary64(values, name)
 
 
 def _binary64(values: Any, name: str) -> FloatArray:
@@ -94,14 +95,24 @@ def _binary64(values: Any, name: str) -> FloatArray:
     input is accepted, while a conversion losing supplied digits is rejected.
     This check concerns coefficients, not an extended-precision solver claim.
     """
+    if isinstance(values, (list, tuple)):
+        _check_literal_digits(values)
     raw = np.asarray(values)
     if np.iscomplexobj(raw) or not np.isfinite(raw).all():
         raise ValueError(f"{name} must contain finite real binary64 coefficients")
     with np.errstate(over="ignore"):
         result = np.asarray(raw, dtype=float)
-    with np.errstate(invalid="ignore"):
-        equivalent = result.astype(raw.dtype) if raw.dtype.kind in "iu" else result
-    if not np.array_equal(raw, equivalent):
+    # Mixed integer/float comparisons promote to float and can erase the very
+    # digits this contract checks. Python integers retain all supplied bits.
+    equivalent = (
+        all(
+            int(original) == int(converted)
+            for original, converted in zip(raw.flat, result.flat, strict=True)
+        )
+        if raw.dtype.kind in "iu"
+        else np.array_equal(raw, result)
+    )
+    if not equivalent:
         raise ValueError(f"{name} coefficients are not exactly representable in binary64")
     return result
 
@@ -120,12 +131,7 @@ def _compile_owned(built: Any, compiler: FormCompiler) -> tuple[LocalProblem, An
 
         def checked_compiler(form: Any, shape: tuple[int, ...] | None = None) -> Any:
             """Check supplied form digits before LocalProblem's binary64 storage."""
-            result = compiler(form, shape)
-            if sparse.issparse(result):
-                result = result.copy()
-                result.data = _binary64(result.data, "local form")
-                return result
-            return _binary64(result, "local form")
+            return _checked_form(form, shape, compiler)
 
         for name in ("kernel", "coarse_basis", "left_kernel", "test_basis"):
             value = getattr(built, name)
@@ -141,6 +147,42 @@ def _compile_owned(built: Any, compiler: FormCompiler) -> tuple[LocalProblem, An
     raise TypeError(
         "factory must return LocalProblem, LocalAssembly, LocalEquations or CompiledLocalEquations"
     )
+
+
+def _check_literal_digits(form: Any) -> None:
+    """Check numeric leaves without interpreting a custom compiler's containers."""
+    if isinstance(form, LinearForms):
+        for component in form.forms:
+            _check_literal_digits(component)
+    elif isinstance(form, (list, tuple)):
+        for component in form:
+            _check_literal_digits(component)
+    elif sparse.issparse(form):
+        _binary64(form.tocoo(copy=False).data, "literal form")
+    elif isinstance(form, (np.ndarray, int, float, complex, np.number)):
+        values = np.asarray(form)
+        if values.dtype.kind in "buifc":
+            _binary64(values, "literal form")
+
+
+def _binary64_sparse(form: Any, name: str) -> sparse.csc_matrix:
+    """Cast checked entries before duplicate indices are added in binary64."""
+    entries = form.tocoo(copy=True)
+    entries.data = _binary64(entries.data, name)
+    result = sparse.csc_matrix(entries)
+    _binary64(result.data, name)
+    return result
+
+
+def _checked_form(form: Any, shape: tuple[int, ...] | None, compiler: FormCompiler) -> Any:
+    """Compile a local or global form while preserving the binary64 input contract."""
+    _check_literal_digits(form)
+    if sparse.issparse(form):
+        form = _binary64_sparse(form, "literal form")
+    result = compiler(form, shape)
+    if sparse.issparse(result):
+        return _binary64_sparse(result, "compiled form")
+    return _binary64(result, "compiled form")
 
 
 def _extract(vector: Any, indices: IntArray, petsc: Any, resources: ExitStack) -> FloatArray:
@@ -299,13 +341,17 @@ def solve_distributed(
         if global_equation is not None:
             if not isinstance(global_equation, Equation):
                 raise TypeError("global_equation must be an Equation")
-            extra = sparse.csr_matrix(compiler(global_equation.a, (physical_size, physical_size)))
+            extra = sparse.csr_matrix(
+                _checked_form(global_equation.a, (physical_size, physical_size), compiler)
+            )
             if extra.shape != (physical_size, physical_size):
                 raise ValueError("global matrix must match the physical reduced coordinates")
             extra.data = _binary64(extra.data, "global matrix")
             extra.eliminate_zeros()
             extra_load = _values(
-                compiler(global_equation.L, (physical_size,)), physical_size, "global load"
+                _checked_form(global_equation.L, (physical_size,), compiler),
+                physical_size,
+                "global load",
             )
     except Exception as exc:
         error = exc

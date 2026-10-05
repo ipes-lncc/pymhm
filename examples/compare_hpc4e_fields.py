@@ -76,7 +76,7 @@ def main() -> None:
     ]
     source_hashes = current_source_manifest(
         {
-            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in sources
         }
     )
@@ -98,7 +98,7 @@ def main() -> None:
         raise RuntimeError("HPC4E comparison archives changed during integration")
     if source_hashes != current_source_manifest(
         {
-            str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in sources
         }
     ):

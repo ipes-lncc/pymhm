@@ -43,7 +43,7 @@ def save_coefficients(solution: VectorSolution, path: Path) -> dict:
         raw[f"pressure_{cell}"] = solution.pressure[cell]
     np.savez_compressed(path, **raw)
     return dict(
-        path=str(path.relative_to(ROOT)), sha256=hashlib.sha256(path.read_bytes()).hexdigest()
+        path=path.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(path.read_bytes()).hexdigest()
     )
 
 
@@ -192,12 +192,12 @@ def main() -> None:
         ROOT / "src/pymhm/meshes/longest_edge.py",
     ]
     hashes = current_source_manifest(
-        {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     )
     snapshots = ROOT / "build/source-snapshots/stokes-adaptive"
     snapshots.mkdir(parents=True, exist_ok=True)
     for path in paths:
-        (snapshots / f"{hashes[str(path.relative_to(ROOT))]}-{path.name}").write_bytes(
+        (snapshots / f"{hashes[path.relative_to(ROOT).as_posix()]}-{path.name}").write_bytes(
             path.read_bytes()
         )
     solutions, estimators = [], []
@@ -356,7 +356,7 @@ def main() -> None:
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
     if any(
-        hashlib.sha256(p.read_bytes()).hexdigest() != hashes[str(p.relative_to(ROOT))]
+        hashlib.sha256(p.read_bytes()).hexdigest() != hashes[p.relative_to(ROOT).as_posix()]
         for p in paths
     ):
         raise RuntimeError("Campaign numerical source changed during acquisition")

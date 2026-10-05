@@ -73,7 +73,7 @@ def capture_sources(output: Path) -> dict[str, str]:
     """Capture exact shared-core bytes and this producer before any field acquisition."""
     hashes = capture_shared_sources(output)
     for path in (Path(__file__), ROOT / "examples/hdiv3d_field_archive.py"):
-        name = str(path.relative_to(ROOT))
+        name = path.relative_to(ROOT).as_posix()
         hashes[name] = file_digest(path)
         target = output / "executed-sources/files" / name
         target.parent.mkdir(parents=True, exist_ok=True)

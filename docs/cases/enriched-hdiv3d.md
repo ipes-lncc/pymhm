@@ -45,6 +45,13 @@ The geometry is affine; this construction does not assert support for curved
 prisms or pyramids. Full matrix rank is not evidence of a uniform inf-sup
 constant as polynomial orders increase.
 
+Complete parent normal polynomials determine the face restrictions. Rectangular
+parent-face tests use Basix orthogonal interval polynomials. A weighted QR
+change of the interior Nedelec tests also transforms the prescribed moment
+right-hand sides, preserving the declared interior coordinates. Bubble
+normalization uses positive diagonal factors to fix their orientation. The
+executed basis matrix remains part of each archived coefficient vector.
+
 ## Five-level analytical comparison
 
 The unit cube has \(K=I\), zero prescribed pressure, and
@@ -85,8 +92,8 @@ yields third-order pressure and flux. An inaccurate coarse normal space cannot
 be repaired solely by adding local bubbles.
 
 The maximum original physical block backward error is
-\(1.936\times10^{-14}\); the full uncondensed original saddle residual is
-at most \(5.435\times10^{-13}\), relative to its physical right-hand side.
+\(2.342\times10^{-14}\); the full uncondensed original saddle residual is
+at most \(5.269\times10^{-13}\), relative to its physical right-hand side.
 The blocks distinguish constitutive flux rows, pressure/divergence balance
 rows and normal-flux/trace rows. These are coefficient-row algebraic checks.
 The physical L2 errors of pressure, H(div) flux and divergence are integrated
@@ -118,14 +125,16 @@ matrix alongside coefficients, so evaluation does not depend on a new nullspace
 orientation.
 
 The whole 20-case comparison uses a dedicated reference driver built on
-FEniCS/Basix 0.9.0. It independently constructs the restricted parent flux
+FEniCS/Basix 0.9.0. Acquisition runs in 16 independent process groups, each
+with one native thread during its solves. It independently constructs the
+restricted parent flux
 spaces, pressure bases, quadrature, source and boundary terms, and solves the
 full uncondensed saddle system. It shares the linear-solver arithmetic with
 `pymhm`; both sets of fields are evaluated in their own executed bases.
-The maximum relative differences are \(5.029\times10^{-14}\) in pressure,
-\(3.952\times10^{-13}\) in physical flux and \(6.412\times10^{-13}\) in
+The maximum relative differences are \(7.052\times10^{-14}\) in pressure,
+\(4.620\times10^{-13}\) in physical flux and \(4.773\times10^{-13}\) in
 divergence. The native full-original residual is at most
-\(1.533\times10^{-12}\), against the unchanged \(10^{-10}\) criterion.
+\(1.549\times10^{-12}\), against the declared \(10^{-10}\) criterion.
 Its interface multiplier represents pressure; comparison uses the physical
 fields, independently of the global normal-flux coordinates of `pymhm`.
 
@@ -137,6 +146,13 @@ threads and coherent saved bubble-basis changes verify the persisted data
 contract. The comparison certifies these finite affine discretizations;
 uniform inf-sup estimates and general material coefficients require separate
 analysis and verification.
+
+Four additional nonhomogeneous controls prescribe \(p=1+x-y+z\) on the
+complete exterior, with \(f=0\) and physical \(q=(-1,1,-1)\). Both the
+condensed and independent uncondensed formulations reproduce these fields.
+The largest pressure and flux errors of the condensed solve are
+\(1.4\times10^{-13}\) and \(9.0\times10^{-13}\), respectively; the
+independent reference also checks the zero physical divergence.
 
 ```bash
 pixi run --locked -e notebooks python -m examples.solve_core_extensions hdiv3d

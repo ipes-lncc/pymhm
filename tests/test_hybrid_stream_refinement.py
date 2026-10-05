@@ -306,7 +306,10 @@ def test_changed_original_operator_or_basis_is_rejected_between_passes(precision
 def test_wide_storage_cannot_silently_cast_executed_fields(monkeypatch):
     """Explicit extended correction requires a store that retains its full dtype."""
     case, store, factory, _ = simple()
-    with pytest.raises(ValueError, match="precision"):
+    error = (
+        ValueError if np.finfo(np.longdouble).eps < np.finfo(float).eps else SolverUnavailableError
+    )
+    with pytest.raises(error, match="precision|wider"):
         refine_hybrid_stream([case], factory, store, refinement_precision="extended")
     import pymhm.core.refinement as owner
 

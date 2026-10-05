@@ -274,7 +274,7 @@ def acquire(family: str, name: str, n: int, output: Path) -> dict[str, Any]:
                 and path.suffix == ".py"
                 and path.relative_to(ROOT).parts[0] in ("src", "examples")
             ):
-                origins[module_name] = str(path.relative_to(ROOT))
+                origins[module_name] = path.relative_to(ROOT).as_posix()
     if any(origin not in hashes for origin in origins.values()):
         raise ValueError("An executed numerical module was not captured")
     record = {

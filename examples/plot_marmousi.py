@@ -140,7 +140,7 @@ def render_material(material: MarmousiMaterial, directory: Path) -> None:
         "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "dependency_sha256": current_source_manifest(
             {
-                str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+                path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
                 for path in (
                     Path(__file__).with_name("marmousi_data.py"),
                     Path(__file__).with_name("plot_mesh.py"),

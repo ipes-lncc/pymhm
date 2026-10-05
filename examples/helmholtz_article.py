@@ -190,7 +190,7 @@ def article_hashes() -> dict[str, str]:
         ROOT / "examples/helmholtz_incident_family.py",
         ROOT / "examples/local_response_cache.py",
     ):
-        hashes[str(path.relative_to(ROOT))] = hashlib.sha256(path.read_bytes()).hexdigest()
+        hashes[path.relative_to(ROOT).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
     return hashes
 
 
