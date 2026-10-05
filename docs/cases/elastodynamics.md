@@ -316,12 +316,12 @@ second-order Newmark error. The source also passes an independent
 finite-difference check of acceleration and stress divergence.
 
 ```bash
-pixi run -e test python -m examples.elastodynamics_campaign --n 1 --dt 0.005 --order 12
+pixi run --locked -e test-core python -m examples.elastodynamics_campaign --n 1 --dt 0.005 --order 12
 for n in 2 3 4 5 6 8; do
-  pixi run -e test python -m examples.elastodynamics_campaign --n "$n" --dt 0.005 --order 8 --workers 4
+  pixi run --locked -e test-core python -m examples.elastodynamics_campaign --n "$n" --dt 0.005 --order 8 --workers 4
 done
 for dt in 0.1 0.05 0.025 0.0125 0.00625 0.003125 0.0015625 0.00078125 0.0001953125 0.00009765625; do
-  pixi run -e test python -m examples.elastodynamics_campaign --n 2 --dt "$dt" --order 8
+  pixi run --locked -e test-core python -m examples.elastodynamics_campaign --n 2 --dt "$dt" --order 8
 done
 pixi run -e notebooks python -m examples.elastodynamics_results
 pixi run -e notebooks python -m examples.plot_elastodynamics_native

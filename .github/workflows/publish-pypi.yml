@@ -20,21 +20,21 @@ jobs:
       - uses: prefix-dev/setup-pixi@v0.10.2
         with:
           pixi-version: v0.76.2
-          environments: test
+          environments: test-core
           locked: true
       - name: Validate release tag
         env:
           RELEASE_TAG: ${{ github.ref_name }}
-        run: pixi run -e test metadata-check --tag "$RELEASE_TAG"
-      - run: pixi run -e test lint
-      - run: pixi run -e test format-check
-      - run: pixi run -e test typecheck
-      - run: pixi run -e test test-cov
-      - run: pixi run -e test build
-      - run: pixi run -e test check-dist
+        run: pixi run --locked -e test-core metadata-check --tag "$RELEASE_TAG"
+      - run: pixi run --locked -e test-core lint
+      - run: pixi run --locked -e test-core format-check
+      - run: pixi run --locked -e test-core typecheck
+      - run: pixi run --locked -e test-core test-cov
+      - run: pixi run --locked -e test-core build
+      - run: pixi run --locked -e test-core check-dist
       - name: Check installed wheel
         run: |
-          pixi run -e test python -m venv .venv-smoke
+          pixi run --locked -e test-core python -m venv .venv-smoke
           .venv-smoke/bin/python -m pip install dist/*.whl
           cd "$RUNNER_TEMP"
           "$GITHUB_WORKSPACE/.venv-smoke/bin/python" -c 'import pymhm; print(pymhm.__version__)'

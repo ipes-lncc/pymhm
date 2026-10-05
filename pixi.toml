@@ -83,7 +83,7 @@ meshio = ">=5.3"
 netgen = ">=6.2"
 
 [feature.freefem]
-platforms = ["linux-64"]
+platforms = ["linux-64", "linux-64-cuda"]
 
 [feature.freefem.dependencies]
 freefem = { version = ">=4.13,<5", build = "*nompi*" }
@@ -108,7 +108,7 @@ mpi4py = ">=4"
 petsc4py = ">=3.22"
 
 [feature.intel]
-platforms = ["linux-64", "win-64"]
+platforms = ["linux-64", "win-64", "linux-64-cuda"]
 
 [feature.intel.dependencies]
 mkl = ">=2024"
@@ -133,6 +133,23 @@ platforms = ["linux-64-cuda"]
 mpi4py = ">=4"
 petsc4py = ">=3.22"
 
+[feature.full-test]
+platforms = ["linux-64-cuda"]
+
+[feature.full-test.dependencies]
+python = "3.13.*"
+
+[feature.full-test.activation.env]
+CUDA_PATH = "$CONDA_PREFIX/targets/x86_64-linux"
+PYVISTA_OFF_SCREEN = "true"
+
+[feature.full-test.tasks]
+test-dependencies = "python scripts/check_test_dependencies.py"
+test = { cmd = "python scripts/run_tests.py", depends-on = ["test-dependencies"] }
+coverage-run = { cmd = "python scripts/run_tests.py --coverage", depends-on = ["test-dependencies"] }
+test-parallel = { cmd = "python scripts/run_tests.py", depends-on = ["test-dependencies"] }
+test-setup-amgx = "pixi run --locked --manifest-path tools/amgx/pixi.toml python scripts/build_amgx.py --target-python .pixi/envs/test/bin/python"
+
 [tasks]
 source-check = "python scripts/check_source_structure.py"
 lint = { cmd = "ruff check src tests scripts benchmarks examples", depends-on = ["source-check"] }
@@ -143,10 +160,10 @@ test = "python scripts/run_tests.py"
 coverage-run = "python scripts/run_tests.py --coverage"
 test-cov = { cmd = "python scripts/check_coverage.py build/reports/coverage/coverage.json", depends-on = ["coverage-run"] }
 test-parallel = "python scripts/run_tests.py"
-test-fem = "pytest -q -m fem"
-test-mpi = "pytest -q -m mpi"
-test-meshing = "pytest -q -m meshing"
-test-visualization = "pytest -q tests/test_visualization.py"
+test-fem = "python scripts/run_tests.py -- -m fem"
+test-mpi = "python scripts/run_tests.py -- -m mpi"
+test-meshing = "python scripts/run_tests.py -- -m meshing"
+test-visualization = "python scripts/run_tests.py -- tests/test_visualization.py"
 build = "python -m build"
 check-dist = "python scripts/check_distribution.py"
 conda-build = "rattler-build build --recipe recipe/recipe.yaml --output-dir build/conda --no-include-recipe"
@@ -282,7 +299,8 @@ cmd = "python -m examples.plot_maxwell"
 
 [environments]
 default = { features = ["native", "dev", "test"], solve-group = "core" }
-test = { features = ["native", "dev", "test"], solve-group = "core" }
+test-core = { features = ["native", "dev", "test"], solve-group = "core" }
+test = { features = ["dev", "test", "fem-gpu", "notebooks", "visualization", "meshing", "gpu", "intel", "freefem", "full-test"], solve-group = "full-test" }
 test-py311 = { features = ["dev", "test", "py311"], solve-group = "py311" }
 test-py312 = { features = ["dev", "test", "py312"], solve-group = "py312" }
 docs = { features = ["native", "docs"], solve-group = "docs" }

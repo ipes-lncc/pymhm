@@ -111,7 +111,7 @@ execution controls.
 Inspect a recorded campaign with:
 
 ```bash
-pixi run -e test python -m examples.validate_campaign_checkpoint \
+pixi run --locked -e test-core python -m examples.validate_campaign_checkpoint \
   --manifest examples/results/gals3d/campaign.json \
   --output build/validation/gals3d-checkpoint.json
 ```
@@ -127,7 +127,7 @@ Existing results retain their original acquisition metadata. To calculate with
 changed sources or settings, select a fresh output directory:
 
 ```bash
-pixi run -e test python -m examples.solve_gals3d \
+pixi run --locked -e test-core python -m examples.solve_gals3d \
   --output build/new-gals3d --levels 1 2 3 4 5
 ```
 
@@ -135,7 +135,7 @@ The structured and crisscross MH²M campaigns and their CG3 comparisons also
 check reference identities, norm quadratures and complete finite norm records:
 
 ```bash
-pixi run -e test python -m examples.validate_mh2m_campaign
+pixi run --locked -e test-core python -m examples.validate_mh2m_campaign
 ```
 
 This command preserves acquired manifests and writes separate validation

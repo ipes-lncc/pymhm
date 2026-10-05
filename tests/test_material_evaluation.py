@@ -59,36 +59,49 @@ def test_empty_queries_do_not_admit_invalid_scalar_diffusion(
 
 
 @pytest.mark.parametrize("dimension", [2, 3])
-@pytest.mark.parametrize("as_callable", [False, True])
 @pytest.mark.parametrize("pointwise", [False, True])
 @pytest.mark.parametrize(
     "bad", [0.0, -0.0, -np.nextafter(0.0, 1.0), -1.0, np.nan, np.inf, -np.inf, 1.0 + 0.0j]
 )
 def test_invalid_isotropic_diffusion_remains_rejected(
-    dimension: int, as_callable: bool, pointwise: bool, bad: Any
+    dimension: int, pointwise: bool, bad: Any
 ) -> None:
-    """Scalar and per-point paths reject nonpositive, nonfinite and complex data."""
+    """Both dimension-specific scalar paths reject every invalid numerical class."""
     points = np.zeros((4, dimension))
     coefficient = np.array([1.0, bad, 2.0, 3.0]) if pointwise else bad
-    field = (lambda samples: coefficient) if as_callable else coefficient
+    evaluator = tensor_values if dimension == 2 else tensor_values_3d
+    with pytest.raises(ValueError):
+        evaluator(coefficient, points)
+
+
+@pytest.mark.parametrize("dimension", [2, 3])
+@pytest.mark.parametrize("pointwise,bad", [(False, np.nan), (True, 1.0 + 0.0j)])
+def test_callable_diffusion_preserves_input_points_and_rejection(
+    dimension: int, pointwise: bool, bad: Any
+) -> None:
+    """Callable data reach the same numerical validators without replacing samples."""
+    points = np.zeros((4, dimension))
+    coefficient = np.array([1.0, bad, 2.0, 3.0]) if pointwise else bad
+
+    def field(samples: np.ndarray) -> Any:
+        """Observe the requested points before returning the invalid coefficient."""
+        assert samples is points
+        return coefficient
+
     evaluator = tensor_values if dimension == 2 else tensor_values_3d
     with pytest.raises(ValueError):
         evaluator(field, points)
 
 
 @pytest.mark.parametrize("dimension", [2, 3])
-@pytest.mark.parametrize("as_callable", [False, True])
 @pytest.mark.parametrize("shape", [(3,), (4, 1), (4, 2, 3)])
-def test_diffusion_shape_contract_is_not_broadened(
-    dimension: int, as_callable: bool, shape: tuple[int, ...]
-) -> None:
+def test_diffusion_shape_contract_is_not_broadened(dimension: int, shape: tuple[int, ...]) -> None:
     """Wrong scalar counts and incompatible tensor axes still fail explicitly."""
     points = np.zeros((4, dimension))
     coefficient = np.ones(shape)
-    field = (lambda samples: coefficient) if as_callable else coefficient
     evaluator = tensor_values if dimension == 2 else tensor_values_3d
     with pytest.raises(ValueError):
-        evaluator(field, points)
+        evaluator(coefficient, points)
 
 
 @pytest.mark.parametrize("dimension", [2, 3])

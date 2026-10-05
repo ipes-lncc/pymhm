@@ -156,13 +156,20 @@ def test_ufl_compilation_delegates_the_declared_form_and_shape(monkeypatch):
     assert seen == [(form, (2, 2))]
 
 
-def test_complex_zero_does_not_silently_change_scalar_field_type():
-    with pytest.raises(ValueError, match="real"):
-        compile_form(0j, (2, 2))
-
-
-@pytest.mark.parametrize("shape", [(3, 5), (0, 0), (0, 4), (7, 0)])
-@pytest.mark.parametrize("zero", [0, 0.0, -0.0, np.array(0.0)])
+# Scalar spellings are normalized before dimensions determine CSC allocation.
+# Exercise every spelling and empty-axis case without their Cartesian product.
+@pytest.mark.parametrize(
+    "shape,zero",
+    [
+        ((3, 5), 0),
+        ((3, 5), 0.0),
+        ((3, 5), -0.0),
+        ((3, 5), np.array(0.0)),
+        ((0, 0), 0),
+        ((0, 4), 0),
+        ((7, 0), 0),
+    ],
+)
 def test_literal_zero_bilinear_forms_are_owned_sparse_operators(shape, zero):
     operator = compile_form(zero, shape)
     assert sparse.isspmatrix_csc(operator)
@@ -196,8 +203,7 @@ def test_literal_zero_loads_keep_dense_vector_storage(shape):
     assert_array_equal(load, np.zeros(shape))
 
 
-@pytest.mark.parametrize("shape", [(0, 0), (3, 5), (0,), (5,)])
-@pytest.mark.parametrize("zero", [0j, np.array(0j)])
+@pytest.mark.parametrize("shape,zero", [((3, 5), 0j), ((0, 0), np.array(0j)), ((5,), 0j)])
 def test_complex_literal_zero_rejection_precedes_sparse_allocation(shape, zero):
     with pytest.raises(ValueError, match="real"):
         compile_form(zero, shape)

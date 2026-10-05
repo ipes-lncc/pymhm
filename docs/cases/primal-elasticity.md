@@ -128,7 +128,7 @@ Assembly/error quadrature orders are 10/12.
 ![Variable-tensor P1 displacement and raw stress](../figures/primal-elasticity/variable-p1-fields.png)
 
 ```bash
-pixi run -e test python examples/solve_primal_elasticity.py --degree 2
-pixi run -e test python examples/solve_primal_elasticity.py --degree 2 --constant
+pixi run --locked -e test-core python examples/solve_primal_elasticity.py --degree 2
+pixi run --locked -e test-core python examples/solve_primal_elasticity.py --degree 2 --constant
 pixi run -e notebooks python examples/plot_elasticity_extensions.py
 ```

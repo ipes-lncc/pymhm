@@ -22,10 +22,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {os: ubuntu-latest, environment: test}
-          - {os: windows-latest, environment: test}
-          - {os: macos-15, environment: test}
-          - {os: macos-15-intel, environment: test}
+          - {os: ubuntu-latest, environment: test-core}
+          - {os: windows-latest, environment: test-core}
+          - {os: macos-15, environment: test-core}
+          - {os: macos-15-intel, environment: test-core}
           - {os: ubuntu-latest, environment: test-py311}
           - {os: ubuntu-latest, environment: test-py312}
     env:
@@ -43,9 +43,9 @@ jobs:
           environments: ${{ matrix.environment }}
           locked: true
       - name: Check metadata
-        run: pixi run -e ${{ matrix.environment }} metadata-check
+        run: pixi run --locked -e ${{ matrix.environment }} metadata-check
       - name: Run tests with branch coverage
-        run: pixi run -e ${{ matrix.environment }} test-cov
+        run: pixi run --locked -e ${{ matrix.environment }} test-cov
       - name: Build a portable wheel on Windows
         if: runner.os == 'Windows'
         run: >-
@@ -66,7 +66,7 @@ jobs:
           name: coverage-${{ matrix.os }}-${{ matrix.environment }}
           path: build/reports/coverage/coverage.xml
       - uses: codecov/codecov-action@v5
-        if: matrix.os == 'ubuntu-latest' && matrix.environment == 'test'
+        if: matrix.os == 'ubuntu-latest' && matrix.environment == 'test-core'
         with:
           files: build/reports/coverage/coverage.xml
           fail_ci_if_error: false
@@ -80,15 +80,15 @@ jobs:
       - uses: prefix-dev/setup-pixi@v0.10.2
         with:
           pixi-version: v0.76.2
-          environments: test packaging
+          environments: test-core packaging
           locked: true
-      - run: pixi run -e test lint
-      - run: pixi run -e test format-check
-      - run: pixi run -e test typecheck
-      - run: pixi run -e packaging ci-check
-      - run: pixi run -e test build
-      - run: pixi run -e test check-dist
-      - run: pixi run -e packaging conda-build
+      - run: pixi run --locked -e test-core lint
+      - run: pixi run --locked -e test-core format-check
+      - run: pixi run --locked -e test-core typecheck
+      - run: pixi run --locked -e packaging ci-check
+      - run: pixi run --locked -e test-core build
+      - run: pixi run --locked -e test-core check-dist
+      - run: pixi run --locked -e packaging conda-build
 
   fem:
     name: DOLFINx integration
@@ -106,11 +106,11 @@ jobs:
           pixi-version: v0.76.2
           environments: fem
           locked: true
-      - run: pixi run -e fem test-fem
+      - run: pixi run --locked -e fem test-fem
       - name: Require native PETSc
-        run: pixi run -e fem python -c 'from petsc4py import PETSc; print(PETSc.Sys.getVersion())'
+        run: pixi run --locked -e fem python -c 'from petsc4py import PETSc; print(PETSc.Sys.getVersion())'
       - name: Exercise native PETSc solver
-        run: pixi run -e fem pytest -q tests/test_solvers.py -k 'native_optional_cpu_integration and petsc'
+        run: pixi run --locked -e fem python scripts/run_tests.py -- tests/test_solvers.py -k 'native_optional_cpu_integration and petsc'
 
   mpi:
     name: Distributed MPI integration (two ranks)
@@ -129,12 +129,12 @@ jobs:
           locked: true
       - name: Require native MPI and MUMPS
         run: >-
-          pixi run -e fem python -c
+          pixi run --locked -e fem python -c
           'import shutil; from mpi4py import MPI; from petsc4py import PETSc;
           assert shutil.which("mpiexec"); assert PETSc.Sys.hasExternalPackage("mumps");
           print(MPI.Get_library_version())'
       - name: Exercise distributed assembly, solves and collective failures
-        run: pixi run -e fem test-mpi
+        run: pixi run --locked -e fem test-mpi
 
   intel:
     name: PARDISO integration (${{ matrix.os }})
@@ -157,11 +157,11 @@ jobs:
           environments: intel
           locked: true
       - name: Require native PARDISO
-        run: pixi run -e intel python -c 'import pypardiso'
+        run: pixi run --locked -e intel python -c 'import pypardiso'
       - name: Exercise native PARDISO solver
-        run: pixi run -e intel pytest -q tests/test_solvers.py tests/test_extended_local.py -k pardiso
+        run: pixi run --locked -e intel python scripts/run_tests.py -- tests/test_solvers.py tests/test_extended_local.py -k pardiso
       - name: Check generic local/global equations with native PARDISO and spawn
-        run: pixi run --locked -e intel pytest -q tests/test_windows_portability.py
+        run: pixi run --locked -e intel python scripts/run_tests.py -- tests/test_windows_portability.py
       - name: Build a Windows wheel with locked Intel dependencies
         if: runner.os == 'Windows'
         run: >-
@@ -189,7 +189,7 @@ jobs:
           pixi-version: v0.76.2
           environments: meshing
           locked: true
-      - run: pixi run -e meshing test-meshing
+      - run: pixi run --locked -e meshing test-meshing
 
   remeshing:
     name: FreeFEM and BAMG integration
@@ -207,9 +207,9 @@ jobs:
           environments: remeshing
           locked: true
       - name: Require native FreeFEM
-        run: pixi run -e remeshing python -c 'import shutil; assert shutil.which("FreeFem++-nw")'
+        run: pixi run --locked -e remeshing python -c 'import shutil; assert shutil.which("FreeFem++-nw")'
       - name: Verify metric remeshing and polygon boundaries
-        run: pixi run -e remeshing pytest -q tests/test_metric_freefem.py tests/test_metric_adapt.py
+        run: pixi run --locked -e remeshing python scripts/run_tests.py -- tests/test_metric_freefem.py tests/test_metric_adapt.py
 
   visualization:
     name: PyVista integration (${{ matrix.os }})
@@ -238,6 +238,6 @@ jobs:
           environments: visualization
           locked: true
       - name: Require native PyVista and VTK
-        run: pixi run -e visualization python -c 'import pyvista as pv; print(pv.__version__, pv.vtk_version_info)'
+        run: pixi run --locked -e visualization python -c 'import pyvista as pv; print(pv.__version__, pv.vtk_version_info)'
       - name: Validate native fields, file round trips and offscreen images
-        run: pixi run -e visualization test-visualization
+        run: pixi run --locked -e visualization test-visualization

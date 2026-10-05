@@ -284,8 +284,8 @@ by the comparisons reported here.
 ## Reproducing the package's analytical evidence
 
 ```sh
-pixi run -e test python examples/solve_unusual.py
-pixi run -e test python examples/verify_unusual_resolution.py
+pixi run --locked -e test-core python examples/solve_unusual.py
+pixi run --locked -e test-core python examples/verify_unusual_resolution.py
 pixi run -e notebooks python examples/plot_unusual.py
 pixi run -e fem python -m pytest -q tests/test_unusual_fenics.py
 ```

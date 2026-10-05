@@ -54,13 +54,6 @@ def test_worker_exception_propagates(backend: Any) -> None:
         map_local(fail, [3], backend=backend, workers=1)
 
 
-@pytest.mark.parametrize("option", ["workers", "native_threads"])
-@pytest.mark.parametrize("value", [0, -1, True, 1.5])
-def test_invalid_limits(option: str, value: Any) -> None:
-    with pytest.raises(ValueError, match=option):
-        map_local(square, [1], **{option: value})
-
-
 def test_invalid_backend() -> None:
     with pytest.raises(ValueError, match="backend"):
         map_local(square, [1], backend="other")

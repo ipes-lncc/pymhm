@@ -18,8 +18,8 @@ and distinguishes it from extensions described in the literature.
 ## Quick start
 
 ```bash
-pixi install -e test --locked
-pixi run -e test test-cov
+pixi install --locked -e test-core
+pixi run --locked -e test-core test-cov
 ```
 
 ```python
@@ -170,9 +170,9 @@ depend on those outputs.
 ## Development
 
 ```bash
-pixi run -e test lint
-pixi run -e test typecheck
-pixi run -e test test-cov
+pixi run --locked -e test-core lint
+pixi run --locked -e test-core typecheck
+pixi run --locked -e test-core test-cov
 pixi run -e fem test-fem
 pixi run -e meshing test-meshing
 pixi run -e packaging build
@@ -183,6 +183,12 @@ After generating and accepting the selected scientific cases, execute their
 notebooks and run `pixi run -e docs docs-check`. Inspect the rendered figures and
 MathJax in the browser. Automatic documentation generation remains pending until
 its retained scientific cases have a manageable, verified generation workflow.
+
+The portable `test-core` environment supports Linux, Windows and macOS. The
+complete `test` environment includes the native CPU and GPU integrations and
+requires a Linux CUDA host with two NVIDIA devices. Its pinned AmgX setup and
+mandatory dependency checks are described in the [development guide](docs/development.md).
+Both suites use all available CPU workers and isolate tests marked `serial`.
 
 CI enforces at least 99% line and branch coverage independently. Executable
 notebooks and analytical PDE examples accompany the package. Optional dependency

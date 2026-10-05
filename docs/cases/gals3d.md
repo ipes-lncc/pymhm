@@ -173,7 +173,7 @@ family approaching incompressibility, all six rigid moments, mixed boundaries,
 variable Lamé coefficients, and serial/thread/spawn parity.
 
 ```bash
-pixi run -e test python examples/solve_gals3d.py --workers 4 --primal-refinement-precision extended
+pixi run --locked -e test-core python examples/solve_gals3d.py --workers 4 --primal-refinement-precision extended
 pixi run -e notebooks python examples/solve_gals3d.py --primal-only \
   --primal-refinement-precision extended --output examples/results/gals3d/primal
 pixi run -e notebooks python examples/plot_gals3d.py

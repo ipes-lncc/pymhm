@@ -222,14 +222,28 @@ def test_runtime_passes_numerical_values_and_dtypes_unchanged(backend: Backend) 
         np.testing.assert_array_equal(value, _wide_array(item))
 
 
-@pytest.mark.parametrize("name", ["workers", "native_threads", "batch_size"])
-@pytest.mark.parametrize("value", [0, -1, True, False, 1.5, "2"])
+@pytest.mark.parametrize(
+    "name,value",
+    [
+        ("workers", 0),
+        ("workers", -1),
+        ("workers", True),
+        ("workers", False),
+        ("workers", 1.5),
+        ("workers", "2"),
+        ("native_threads", 0),
+        ("batch_size", 0),
+    ],
+)
 def test_invalid_configuration_is_immediate(name: str, value: Any) -> None:
+    """Shared limit validation rejects each type and field before consuming inputs."""
     items = iter([1, 2])
     with pytest.raises(ValueError, match=name):
         iter_local(_square, items, **{name: value})
     with pytest.raises(ValueError, match=name):
         ExecutionConfig(**{name: value})
+    with pytest.raises(ValueError, match=name):
+        map_local(_square, items, **{name: value})
     assert list(items) == [1, 2]
 
 

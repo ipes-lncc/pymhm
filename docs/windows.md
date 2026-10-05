@@ -19,9 +19,9 @@ Install [Pixi for Windows](https://pixi.prefix.dev/latest/installation/) and
 open PowerShell in a checkout. These commands use the existing lockfile:
 
 ```powershell
-pixi install --locked -e test
-pixi run --locked -e test pytest -q tests/test_windows_portability.py
-pixi run --locked -e test test-cov
+pixi install --locked -e test-core
+pixi run --locked -e test-core pytest -q tests/test_windows_portability.py
+pixi run --locked -e test-core test-cov
 ```
 
 For Intel MKL PARDISO:

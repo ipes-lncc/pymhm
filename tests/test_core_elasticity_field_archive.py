@@ -139,23 +139,31 @@ def _rewrite(path: Path, arrays: dict[str, np.ndarray]) -> None:
     sidecar.write_text(json.dumps(record))
 
 
+# Physical and basis mutations depend on the executed family. Identity,
+# precision, finite-real and CSR-index validation share one archive contract.
 @pytest.mark.parametrize(
-    "mutation",
+    "acquired,mutation",
     [
-        "load",
-        "retained_basis",
-        "boundary_sign",
-        "physical_field",
-        "face_basis",
-        "rotation_basis",
-        "norm_stress_basis",
-        "norm_divergence_basis",
-        "piola",
-        "nonfinite",
-        "uuid",
-        "precision",
-        "sparse_index",
+        pytest.param(name, mutation, id=f"{name}-{mutation}")
+        for name in CASES
+        for mutation in (
+            "load",
+            "retained_basis",
+            "boundary_sign",
+            "physical_field",
+            "face_basis",
+            "rotation_basis",
+            "norm_stress_basis",
+            "norm_divergence_basis",
+            "piola",
+            "nonfinite",
+            "uuid",
+            "precision",
+            "sparse_index",
+        )
+        if name == CASES[0] or mutation not in {"nonfinite", "uuid", "precision", "sparse_index"}
     ],
+    indirect=["acquired"],
 )
 def test_rehashed_semantic_corruption_rejected(acquired, tmp_path, mutation):
     _, _, arrays = acquired

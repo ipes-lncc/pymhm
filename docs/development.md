@@ -16,34 +16,52 @@ typed root interface.
 - Pytest measures branch and line coverage, each with an independent **99% minimum**.
 - Analytical patches, convergence, conservation, gauges and independent
   uncondensed comparisons check numerical meaning beyond coverage.
-- Native integration tests run separately from optional-dependency contract tests.
+- Native integration tests verify actual libraries and hardware independently
+  of portable optional-dependency contract tests.
 - MkDocs builds strictly; notebooks execute with nbclient and bounded cell timeouts.
 - Wheel and source distribution metadata are checked, and every runtime module,
   typing stub and marker must match the current source tree byte for byte.
 
+The complete `test` environment targets Linux CUDA hosts and includes the
+FEniCS/PETSc/MPI, PARDISO, AMG, meshing, FreeFEM, visualization and accelerator
+stacks. Two NVIDIA devices are required for the native multi-GPU tests. Install
+its locked dependencies and build the pinned AmgX/PyAMGX integration before the
+first complete run:
+
 ```bash
-pixi run -e test lint
-pixi run -e test format-check
-pixi run -e test typecheck
-pixi run -e test test-cov
-pixi run -e docs docs-check
-pixi run -e test build
+pixi install --locked -e test
+pixi run --locked -e test test-setup-amgx
+pixi run --locked -e test test-dependencies
+pixi run --locked -e test lint
+pixi run --locked -e test format-check
+pixi run --locked -e test typecheck
+pixi run --locked -e test test-cov
+pixi run --locked -e docs docs-check
+pixi run --locked -e test build
 ```
+
+`test` and `test-cov` require the dependency check; a missing native library,
+MPI launcher or CUDA device fails before collection. This profile does not turn
+unavailable native integrations into successful backend validation. The
+`test-core` environment provides the portable suite and development tools on
+Linux, Windows and macOS. It omits optional native integrations; their capability
+skips are separate from its line and branch coverage gates. `test-py311` and
+`test-py312` provide portable checks for those Python versions. The package's
+runtime dependencies remain independent of these full-test requirements.
 
 The test tasks run two separate phases: tests without a `serial` mark use all
 CPUs available to the process by default, and `@pytest.mark.serial` tests run
-in a fresh pytest process after every worker has exited. The runner sets one native numerical thread per
-process by default. The `loadscope` scheduler keeps module fixtures on one worker,
-allowing independent
-checks to reuse expensive scientific acquisitions without sharing mutable data
-between processes. Serial marks are for shared native resources, exclusive
-subprocess campaigns and other tests that cannot overlap safely; computational
+in a fresh pytest process after every worker has exited. The runner sets one
+native numerical thread per process. The `loadscope` scheduler keeps module
+fixtures on one worker so independent checks reuse scientific acquisitions
+without sharing mutable data between processes. Serial marks are for shared
+native resources, exclusive subprocess campaigns and other tests that cannot overlap safely; computational
 cost alone does not require a serial mark.
 
 ```bash
-pixi run -e test test
-pixi run -e test test --workers 8 -- -k conservation
-pixi run -e test test --distribution worksteal -- -m "not fem"
+pixi run --locked -e test test
+pixi run --locked -e test test --workers 8 -- -k conservation
+pixi run --locked -e test-core test --distribution worksteal -- -m "not fem"
 ```
 
 `PYMHM_TEST_WORKERS` or `--workers` can set a smaller worker count for resource
@@ -62,12 +80,14 @@ and branch thresholds remain **99%**, with unchanged numerical tolerances.
 Larger literature campaigns run through the problem notebooks outside the CI
 suite.
 
-The CI matrix exercises the core on native Linux, Windows and macOS runners and
-supported Python versions. Native FEniCS/PETSc and meshing jobs run on Linux;
-PARDISO integration runs on Linux and Windows. The
-manually dispatched GPU workflow requires a configured self-hosted Linux runner
-with the `gpu` label and an NVIDIA device. A skipped integration test is not a
-passed backend verification.
+The CI matrix uses `test-core` on Linux, Windows and both macOS architectures,
+with additional Python 3.11 and 3.12 jobs on Linux. Native FEniCS/PETSc, MPI,
+meshing and FreeFEM jobs run in their CPU environments; PARDISO integration runs
+on Linux and Windows. The manually dispatched full native workflow requires a
+configured self-hosted Linux runner with the `gpu` label and two NVIDIA devices.
+It prepares AmgX, requires the complete native stack and runs the whole suite
+with the same parallel/serial phases and independent coverage gates. A skipped
+integration test does not constitute passed backend verification.
 
 ## Reproducible science
 

@@ -98,8 +98,13 @@ def test_contribution_placement_validation_is_immediate():
         HybridProblem(GlobalForm(3, (1, 1)), local_cell, range(2), contribution_execution="gpu")
 
 
-@pytest.mark.parametrize("backend", ["serial", "thread", "process"])
-@pytest.mark.parametrize("batch_size", [1, 2, 3])
+# Serial execution does not dispatch batches. With two cells, sizes two and
+# three both dispatch one complete batch; sizes one/two test actual shared-face
+# reduction across and within parallel batches.
+@pytest.mark.parametrize(
+    "backend,batch_size",
+    [("serial", 1), ("thread", 1), ("thread", 2), ("process", 1), ("process", 2)],
+)
 @pytest.mark.parametrize("metadata", [False, True])
 def test_shared_face_batches_preserve_operator_fields_and_boundary(backend, batch_size, metadata):
     """Every batch arrangement has the same orientation and cellwise reduction."""

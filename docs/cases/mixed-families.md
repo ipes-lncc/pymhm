@@ -97,7 +97,7 @@ heterogeneous contrast or arbitrary skeletal space.
 
 
 ```bash
-pixi run -e test python examples/solve_elasticity_families.py --degree 2 --enrichment 1
+pixi run --locked -e test-core python examples/solve_elasticity_families.py --degree 2 --enrichment 1
 pixi run -e notebooks python examples/plot_elasticity_families.py
 ```
 

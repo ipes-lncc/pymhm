@@ -57,9 +57,20 @@ def test_literal_tensor_interpolation_does_not_snap_nearby_coordinates(cell):
     assert_array_equal(actual, expected)
 
 
-@pytest.mark.parametrize("shape", [(), (9,), (2, 3), (0,)])
-@pytest.mark.parametrize("degree", [0, 1, 5, 9])
+@pytest.mark.parametrize(
+    "shape,degree",
+    [
+        ((), 5),
+        ((9,), 5),
+        ((2, 3), 5),
+        ((0,), 5),
+        ((9,), 0),
+        ((9,), 1),
+        ((9,), 9),
+    ],
+)
 def test_conventional_legendre_values_derivatives_and_shape(shape, degree):
+    """Separate polynomial-degree boundaries from degree-independent input reshaping."""
     count = int(np.prod(shape))
     points = np.linspace(-1.07, 1.13, count).reshape(shape)
     actual = legendre_tabulation(points, degree, 2)

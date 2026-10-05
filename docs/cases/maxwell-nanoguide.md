@@ -144,6 +144,6 @@ detailed phase and amplitude of the historical images.
 
 
 ```bash
-pixi run -e test python -m examples.maxwell_nanoguide --help
+pixi run --locked -e test-core python -m examples.maxwell_nanoguide --help
 pixi run -e notebooks python -m examples.maxwell_nanoguide_results --plot
 ```

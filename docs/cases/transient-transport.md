@@ -116,7 +116,7 @@ declared inputs do not identify its historical realization. Acquisition reads
 the actual saved array rather than regenerating it from the seed.
 
 ```bash
-pixi run --locked -e test python -m examples.transport_random_campaign
+pixi run --locked -e test-core python -m examples.transport_random_campaign
 ```
 
 Each observed field retains its physical nodal coefficients, executed basis

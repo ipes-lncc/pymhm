@@ -25,11 +25,24 @@ def _spawn_boundary(points):
 
 
 @pytest.mark.parametrize(("resolution", "workers"), [(1, 3), (2, 2)])
-def test_spawn_collection_preserves_original_assembly_order_bitwise(resolution, workers):
-    """Preserve Schur entries, retained modes, reconstructed fields and physical residuals."""
+def test_spawn_collection_preserves_executed_assembly_order(resolution, workers, monkeypatch):
+    """Keep executed cell order exact and verify independently computed physical fields."""
     from numpy.testing import assert_array_equal
     from threadpoolctl import threadpool_limits
 
+    from examples import unfitted_trace_family as owner
+
+    original = owner._prepared_cells
+    captured = {}
+
+    def observe(factory, count, trace_size, workers, local_solver):
+        """Retain actual worker outputs in the order consumed by the coordinator."""
+        records = captured[workers] = []
+        for record in original(factory, count, trace_size, workers, local_solver):
+            records.append(record)
+            yield record
+
+    mesh = TriangleMesh.unit_square(resolution)
     options = dict(
         trace_degree=2,
         segments=2,
@@ -41,24 +54,66 @@ def test_spawn_collection_preserves_original_assembly_order_bitwise(resolution, 
         quadrature_order=6,
     )
     with threadpool_limits(1):
-        serial = ScalarTraceFamily.prepare(TriangleMesh.unit_square(resolution), **options)
-        parallel = ScalarTraceFamily.prepare(
-            TriangleMesh.unit_square(resolution), **options, workers=workers
-        )
-        assert_array_equal(serial.matrix.toarray(), parallel.matrix.toarray())
-        assert_array_equal(serial.load, parallel.load)
+        with monkeypatch.context() as observation:
+            observation.setattr(owner, "_prepared_cells", observe)
+            serial = ScalarTraceFamily.prepare(mesh, **options)
+            parallel = ScalarTraceFamily.prepare(mesh, **options, workers=workers)
+        # Identical executed contributions must be reduced in macrocell order
+        # with exactly the same coefficients. Reuse these records for replay;
+        # independent native initializations need not compute identical bits.
+        for family, count in ((serial, 1), (parallel, workers)):
+            records = captured[count]
+            assert len(records) == len(mesh.cells)
+            for cell, record in enumerate(records):
+                assert record[3] is family.cells[cell]
+                assert_array_equal(
+                    record[0], np.r_[family.cells[cell].trace_dofs, family.skeleton.size + cell]
+                )
+            with monkeypatch.context() as replay:
+                replay.setattr(
+                    owner, "_prepared_cells", lambda *args, records=records: iter(records)
+                )
+                repeated = ScalarTraceFamily.prepare(mesh, **options, workers=count)
+            assert_array_equal(family.matrix.toarray(), repeated.matrix.toarray())
+            assert_array_equal(family.load, repeated.load)
+        assert serial.degree == parallel.degree == 3
+        assert serial.quadrature_order == parallel.quadrature_order == 6
+        for name in ("points", "cells", "faces", "normals"):
+            assert_array_equal(
+                getattr(serial.skeleton.mesh, name), getattr(parallel.skeleton.mesh, name)
+            )
+        assert_allclose(serial.matrix.toarray(), parallel.matrix.toarray(), rtol=1e-11, atol=1e-12)
+        assert_allclose(serial.load, parallel.load, rtol=1e-11, atol=1e-12)
         for a, b in zip(serial.cells, parallel.cells, strict=True):
+            for name in ("points", "cells", "faces", "normals"):
+                assert_array_equal(getattr(a.mesh, name), getattr(b.mesh, name))
+            assert_array_equal(a.trace_dofs, b.trace_dofs)
             for name in ("matrix", "coupling"):
-                assert_array_equal(getattr(a, name).toarray(), getattr(b, name).toarray())
-            for name in ("load", "source", "lifts", "kernel", "trace_dofs"):
-                assert_array_equal(getattr(a, name), getattr(b, name))
-        first, first_diagnostics = serial.solve(1, 1)
-        second, second_diagnostics = parallel.solve(1, 1)
-    assert first_diagnostics == second_diagnostics
-    assert_array_equal(first.hybrid.trace, second.hybrid.trace)
-    assert_array_equal(first.hybrid.coarse, second.hybrid.coarse)
-    for a, b in zip(first.pressure, second.pressure, strict=True):
-        assert_array_equal(a, b)
+                assert_allclose(
+                    getattr(a, name).toarray(), getattr(b, name).toarray(), rtol=1e-11, atol=1e-12
+                )
+            for name in ("load", "source", "lifts", "kernel"):
+                assert_allclose(getattr(a, name), getattr(b, name), rtol=1e-11, atol=1e-12)
+        solutions = [family.solve(1, 1) for family in (serial, parallel)]
+        direct = solve_darcy(
+            mesh,
+            skeleton=solutions[0][0].skeleton,
+            degree=3,
+            local_refinement=4,
+            permeability=options["permeability"],
+            source=_spawn_source,
+            dirichlet=_spawn_boundary,
+            quadrature_order=6,
+        )
+    for result, diagnostics in solutions:
+        assert_allclose(result.hybrid.trace, direct.hybrid.trace, rtol=1e-11, atol=1e-12)
+        assert_allclose(result.hybrid.coarse, direct.hybrid.coarse, rtol=1e-11, atol=1e-12)
+        assert_allclose(result.pressure, direct.pressure, rtol=1e-11, atol=1e-12)
+        assert_allclose(result.flux, direct.flux, rtol=1e-11, atol=1e-12)
+        assert_allclose(result.conservation_residuals(), 0, atol=2e-13)
+        assert diagnostics["original_trace_residual"] < 1e-12
+        assert diagnostics["original_local_residual_max"] < 1e-12
+        assert diagnostics["local_componentwise_backward_error_max"] < 1e-12
 
 
 def test_spawn_worker_count_is_validated_before_assembly():

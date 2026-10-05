@@ -38,7 +38,7 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
                 outcome="failed",
                 longrepr=(
                     "Selected @pytest.mark.serial tests cannot run with xdist. "
-                    "Use pixi run -e test test, or exclude them with -m 'not serial'."
+                    "Use pixi run -e test-core test, or exclude them with -m 'not serial'."
                 ),
                 result=[],
             )

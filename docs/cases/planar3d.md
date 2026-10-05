@@ -117,9 +117,9 @@ Black/white lines mark the original macroface intersections.
 ## Reproduction
 
 ```bash
-pixi run -e test python examples/solve_planar3d.py
+pixi run --locked -e test-core python examples/solve_planar3d.py
 pixi run -e notebooks python examples/plot_planar3d.py
-pixi run -e test pytest tests/test_planar3d_example.py tests/test_planar_reconstruction.py
+pixi run --locked -e test-core pytest tests/test_planar3d_example.py tests/test_planar_reconstruction.py
 pixi run -e fem pytest tests/test_planar3d_fenics.py
 ```
 

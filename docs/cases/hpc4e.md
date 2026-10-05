@@ -222,16 +222,16 @@ suite.
 
 ```bash
 pixi install -e intel
-pixi run -e test python examples/solve_hpc4e_mhm.py --download --segments 1 2 4 8 --workers 8
+pixi run --locked -e test-core python examples/solve_hpc4e_mhm.py --download --segments 1 2 4 8 --workers 8
 pixi run -e fem python examples/solve_hpc4e_reference.py --degree 1 --factorization pypardiso-symmetric-matching --solver-python .pixi/envs/intel/bin/python --equilibration symmetric --threads 4
 pixi run -e fem python examples/solve_hpc4e_reference.py --degree 2 --factorization ldlt --equilibration symmetric --threads 4 --workspace-limit-mb 80000
-pixi run -e test python examples/compare_hpc4e.py
-pixi run -e test python examples/compare_hpc4e_fields.py --workers 4
+pixi run --locked -e test-core python examples/compare_hpc4e.py
+pixi run --locked -e test-core python examples/compare_hpc4e_fields.py --workers 4
 pixi run -e fem mpiexec -n 4 python examples/solve_hpc4e_reference.py \
   --nx 1024 --ny 512 --degree 2 --factorization ldlt \
   --equilibration symmetric --mpi --threads 2 --refinement-precision extended \
   --workspace-limit-mb 17500 --out-of-core-directory build/tmp/hpc4e-mumps-ooc
-pixi run -e test python examples/compare_hpc4e_fields.py --workers 2 \
+pixi run --locked -e test-core python examples/compare_hpc4e_fields.py --workers 2 \
   --reference build/results/hpc4e/classical-rt2-1024x512-mumps.npz \
   --approximations build/results/hpc4e/classical-rt2-512x256-mumps.npz \
     build/results/hpc4e/mhm-s1.npz build/results/hpc4e/mhm-s2.npz \

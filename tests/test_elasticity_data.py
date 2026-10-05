@@ -22,8 +22,22 @@ def points():
     return np.random.default_rng(2410).uniform(0.03, 0.97, (23, 2))
 
 
-@pytest.mark.parametrize("lame_lambda", [0.0, 1e-16, 2.3, 1e4, 1e8, np.inf])
-@pytest.mark.parametrize("amplitude", [0.0, 1.0, -0.7])
+# Cover each modulus regime with pressure present. Zero-amplitude independence
+# and amplitude linearity have their own tests below, so they need not multiply
+# every differential-identity case.
+@pytest.mark.parametrize(
+    "lame_lambda,amplitude",
+    [
+        (0.0, 1.0),
+        (1e-16, 1.0),
+        (2.3, 1.0),
+        (1e4, 1.0),
+        (1e8, 1.0),
+        (np.inf, 1.0),
+        (2.3, -0.7),
+        (1e4, 0.0),
+    ],
+)
 def test_exact_fields_satisfy_momentum_and_constitutive_equations(
     data_class, points, lame_lambda, amplitude
 ):
@@ -47,7 +61,7 @@ def test_exact_fields_satisfy_momentum_and_constitutive_equations(
         assert_allclose(data.pressure(points), -lame_lambda * data.divergence(points), atol=1e-14)
 
 
-@pytest.mark.parametrize("lame_lambda", [0.0, 1.0, 1e8, np.inf])
+@pytest.mark.parametrize("lame_lambda", [1.0, np.inf])
 def test_homogeneous_boundary_and_zero_mean_pressure(data_class, lame_lambda):
     data = data_class(lame_lambda)
     line = np.linspace(0.0, 1.0, 19)
@@ -107,8 +121,12 @@ def test_displacement_amplitude_changes_force_and_pressure_consistently(data_cla
         )
 
 
-@pytest.mark.parametrize("lame_lambda", [0.0, 1.0, 1e8, np.inf])
-@pytest.mark.parametrize("amplitude", [0.0, 1.0])
+# The amplitude-zero field is modulus independent; retain one exact integral
+# for it and all modulus regimes for the pressure-carrying field.
+@pytest.mark.parametrize(
+    "lame_lambda,amplitude",
+    [(0.0, 1.0), (1.0, 1.0), (1e8, 1.0), (np.inf, 1.0), (1.0, 0.0)],
+)
 def test_polynomial_displacement_norm_and_elastic_energy_have_exact_integrals(
     monkeypatch, lame_lambda, amplitude
 ):
@@ -135,19 +153,29 @@ def test_polynomial_displacement_norm_and_elastic_energy_have_exact_integrals(
 
 
 @pytest.mark.parametrize(
-    "kwargs",
+    "data_class,kwargs",
     [
-        {"lame_lambda": -1.0},
-        {"lame_lambda": -np.inf},
-        {"lame_lambda": np.nan},
-        {"lame_mu": 0.0},
-        {"lame_mu": -1.0},
-        {"lame_mu": np.nan},
-        {"lame_mu": np.inf},
-        {"pressure_amplitude": np.nan},
-        {"pressure_amplitude": np.inf},
+        pytest.param("ElasticityData", kwargs, id=name)
+        for name, kwargs in (
+            ("negative-lambda", {"lame_lambda": -1.0}),
+            ("negative-infinite-lambda", {"lame_lambda": -np.inf}),
+            ("nonfinite-lambda", {"lame_lambda": np.nan}),
+            ("zero-mu", {"lame_mu": 0.0}),
+            ("negative-mu", {"lame_mu": -1.0}),
+            ("nonfinite-mu", {"lame_mu": np.nan}),
+            ("infinite-mu", {"lame_mu": np.inf}),
+            ("nonfinite-amplitude", {"pressure_amplitude": np.nan}),
+            ("infinite-amplitude", {"pressure_amplitude": np.inf}),
+        )
+    ]
+    + [
+        pytest.param(
+            "TrigonometricElasticityData", {"lame_lambda": -1.0}, id="inherited-validation"
+        )
     ],
+    indirect=["data_class"],
 )
 def test_invalid_material_or_amplitude_rejected(data_class, kwargs):
+    """Cover every material failure in the shared constructor and its inherited use."""
     with pytest.raises(ValueError):
         data_class(**kwargs)

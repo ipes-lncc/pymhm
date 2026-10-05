@@ -321,7 +321,7 @@ pixi run -e fem python -m pytest -q tests/test_pgmhm_heterogeneous_fenics.py
 pixi run -e intel python -m examples.solve_pgmhm_spe10 mhm --component kx \
   --refinement 32 --segments 64 --material-fitted --trace-fitted \
   --output examples/results/pgmhm-spe10/kx/controls
-pixi run -e test python -m examples.solve_pgmhm_spe10 compare --component kx \
+pixi run --locked -e test-core python -m examples.solve_pgmhm_spe10 compare --component kx \
   --mhm examples/results/pgmhm-spe10/kx/controls/pgmhm-fitted-tracefit-r32-s64-q5.npz \
   --reference examples/results/pgmhm-spe10/kx/classical-rt2-240x880.npz \
   --output examples/results/pgmhm-spe10/kx/controls --workers 8

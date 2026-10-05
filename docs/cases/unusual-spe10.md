@@ -265,11 +265,11 @@ equation is also distinct from an unstabilized fine-cell conservation identity.
 The original acquisition and replay programs are:
 
 ```bash
-pixi run -e test python -m examples.solve_unusual_spe10 --refinement 8 16 32 --segments 8
-pixi run -e test python -m examples.solve_unusual_spe10 --refinement 32 --segments 16 32
-pixi run -e test python -m examples.solve_unusual_spe10 --refinement 32 --segments 32 --layer-resolution 0.5
-pixi run -e test python -m examples.solve_unusual_spe10 --refinement 32 --segments 32 --layer-resolution 0.5 --trace-fitted
-pixi run -e test python -m examples.solve_unusual_spe10 --refinement 32 --segments 32 --layer-resolution 0.25 --trace-fitted --max-local-cells 1000000
+pixi run --locked -e test-core python -m examples.solve_unusual_spe10 --refinement 8 16 32 --segments 8
+pixi run --locked -e test-core python -m examples.solve_unusual_spe10 --refinement 32 --segments 16 32
+pixi run --locked -e test-core python -m examples.solve_unusual_spe10 --refinement 32 --segments 32 --layer-resolution 0.5
+pixi run --locked -e test-core python -m examples.solve_unusual_spe10 --refinement 32 --segments 32 --layer-resolution 0.5 --trace-fitted
+pixi run --locked -e test-core python -m examples.solve_unusual_spe10 --refinement 32 --segments 32 --layer-resolution 0.25 --trace-fitted --max-local-cells 1000000
 ```
 
 `examples/solve_unusual_spe10_reference.py` acquires the independent classical

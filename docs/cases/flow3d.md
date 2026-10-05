@@ -197,9 +197,9 @@ solution = solve_flow_3d(
 ```
 
 ```bash
-pixi run -e test pytest -q tests/test_flow3d.py
+pixi run --locked -e test-core pytest -q tests/test_flow3d.py
 pixi run -e fem pytest -q tests/test_flow3d_fenics.py
-pixi run -e test python examples/solve_flow3d.py --workers 4
+pixi run --locked -e test-core python examples/solve_flow3d.py --workers 4
 pixi run -e notebooks python examples/plot_flow3d.py
 ```
 

@@ -310,10 +310,10 @@ give the same inaccurate flux in both codes.
 ## Reproduction
 
 ```bash
-pixi run -e test python examples/solve_mixed_well_geometries.py --kind prism --fine-factor 4 --macro-factor 1 --workers 4
-pixi run -e test python examples/solve_mixed_well_geometries.py --kind tetrahedron --pressure-degree 2 --fine-factor 4 --macro-factor 4 --workers 4
+pixi run --locked -e test-core python examples/solve_mixed_well_geometries.py --kind prism --fine-factor 4 --macro-factor 1 --workers 4
+pixi run --locked -e test-core python examples/solve_mixed_well_geometries.py --kind tetrahedron --pressure-degree 2 --fine-factor 4 --macro-factor 4 --workers 4
 pixi run -e notebooks python examples/plot_mixed_well_geometries.py
-pixi run -e test python examples/verify_mixed_well_fields.py
+pixi run --locked -e test-core python examples/verify_mixed_well_fields.py
 ```
 
 `51_mixed_well_geometries.ipynb` executes a small physical patch and reads the

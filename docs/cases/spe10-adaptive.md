@@ -445,8 +445,8 @@ fractions. The two energy identities are independently verified from the raw
 pressure gradients. Reproduce an individual control and its comparison with:
 
 ```bash
-pixi run -e test python -m examples.solve_spe10_resolution --refinement 4 --segments 4 --fit-material
-pixi run -e test python -m examples.compare_spe10_resolution examples/results/spe10-adaptive/resolution/mhm-fitted-r4-s4.npz --reference examples/results/spe10-adaptive/reference-rt2-480x1760.npz --orders 4 5 --workers 8
+pixi run --locked -e test-core python -m examples.solve_spe10_resolution --refinement 4 --segments 4 --fit-material
+pixi run --locked -e test-core python -m examples.compare_spe10_resolution examples/results/spe10-adaptive/resolution/mhm-fitted-r4-s4.npz --reference examples/results/spe10-adaptive/reference-rt2-480x1760.npz --orders 4 5 --workers 8
 pixi run -e notebooks python -m examples.plot_spe10_resolution
 ```
 

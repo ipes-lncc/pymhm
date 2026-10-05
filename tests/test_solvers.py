@@ -28,9 +28,14 @@ from pymhm.linalg.linear import (
 )
 
 
+# Matrix canonicalization is common to every solver; each backend still gets
+# both its vector and multiple-column return paths without a redundant product.
 @pytest.mark.parametrize("solver", ["scipy", "cg", "minres", "gmres"])
-@pytest.mark.parametrize("as_sparse", [False, True])
-@pytest.mark.parametrize("multiple", [False, True])
+@pytest.mark.parametrize(
+    ("as_sparse", "multiple"),
+    [(False, False), (True, True)],
+    ids=["dense-vector", "sparse-columns"],
+)
 def test_solvers_manufactured_system(solver: str, as_sparse: bool, multiple: bool) -> None:
     matrix = np.diag(np.arange(3, 9)) + 0.25 * np.ones((6, 6))
     expected = np.arange(6.0)[:, None] * np.array([1.0, -0.3]) if multiple else np.arange(6.0)
@@ -421,8 +426,20 @@ def simulated_backends(monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace:
     return state
 
 
-@pytest.mark.parametrize("backend", ["pypardiso", "petsc", "petsc-symmetric", "cudss", "cupy"])
-@pytest.mark.parametrize("multiple", [False, True])
+# Repeated-factor contracts below already exercise vector and matrix RHS for
+# reusable native adapters; this facade check keeps their batched dispatch.
+# CuPy has no reusable factor interface, so both RHS shapes belong here.
+@pytest.mark.parametrize(
+    ("backend", "multiple"),
+    [
+        ("pypardiso", True),
+        ("petsc", True),
+        ("petsc-symmetric", True),
+        ("cudss", True),
+        ("cupy", False),
+        ("cupy", True),
+    ],
+)
 def test_simulated_optional_backend_contract(
     backend: str, multiple: bool, simulated_backends: Any
 ) -> None:
@@ -1293,9 +1310,19 @@ def test_symmetric_pardiso_triangle_and_original_residual(multiple, backend, sim
     assert simulated_backends.frees == 1
 
 
-@pytest.mark.parametrize("scale", [1e-20, 1.0, 1e20])
+# Every symmetric backend must reject the decisive tiny nonsymmetric matrix.
+# Unit and large scales exercise the common normalized guard once through CG.
 @pytest.mark.parametrize(
-    "solver", ["cg", "minres", "pyamg", "pypardiso-symmetric", "petsc-symmetric"]
+    ("solver", "scale"),
+    [
+        ("cg", 1e-20),
+        ("cg", 1.0),
+        ("cg", 1e20),
+        ("minres", 1e-20),
+        ("pyamg", 1e-20),
+        ("pypardiso-symmetric", 1e-20),
+        ("petsc-symmetric", 1e-20),
+    ],
 )
 def test_symmetry_requirement_is_invariant_under_physical_scaling(
     scale, solver, simulated_backends

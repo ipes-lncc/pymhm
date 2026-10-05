@@ -43,15 +43,35 @@ def test_pardiso_spawn_preserves_equations_and_matches_direct_scipy(heterogeneou
     with threadpool_limits(1):
         serial = ScalarTraceFamily.prepare(mesh, **options)
         parallel = ScalarTraceFamily.prepare(mesh, **options, workers=2)
-        assert_array_equal(serial.matrix.toarray(), parallel.matrix.toarray())
-        assert_array_equal(serial.load, parallel.load)
+        assert serial.degree == parallel.degree == 3
+        assert serial.quadrature_order == parallel.quadrature_order == 6
+        for name in ("points", "cells", "faces", "normals"):
+            assert_array_equal(
+                getattr(serial.skeleton.mesh, name), getattr(parallel.skeleton.mesh, name)
+            )
+        # Independently initialized native libraries can produce slightly
+        # different floating-point Basix coefficients. Verify exact geometry
+        # and coordinate maps, numerical operators, and original equations
+        # rather than requiring bitwise equality of independently solved lifts.
+        assert_allclose(serial.matrix.toarray(), parallel.matrix.toarray(), rtol=2e-11, atol=2e-12)
+        assert_allclose(serial.load, parallel.load, rtol=2e-11, atol=2e-12)
         for first, second in zip(serial.cells, parallel.cells, strict=True):
-            assert_array_equal(first.source, second.source)
-            assert_array_equal(first.lifts, second.lifts)
-        result, diagnostics = parallel.solve(1, 2)
+            for name in ("points", "cells", "faces", "normals"):
+                assert_array_equal(getattr(first.mesh, name), getattr(second.mesh, name))
+            assert_array_equal(first.trace_dofs, second.trace_dofs)
+            for name in ("matrix", "coupling"):
+                assert_allclose(
+                    getattr(first, name).toarray(),
+                    getattr(second, name).toarray(),
+                    rtol=2e-11,
+                    atol=2e-12,
+                )
+            for name in ("load", "kernel", "source", "lifts"):
+                assert_allclose(getattr(first, name), getattr(second, name), rtol=2e-11, atol=2e-12)
+        solutions = [family.solve(1, 2) for family in (serial, parallel)]
         direct = solve_darcy(
             mesh,
-            skeleton=result.skeleton,
+            skeleton=solutions[0][0].skeleton,
             degree=3,
             local_refinement=8,
             permeability=material,
@@ -60,10 +80,13 @@ def test_pardiso_spawn_preserves_equations_and_matches_direct_scipy(heterogeneou
             quadrature_order=6,
             local_solver="scipy",
         )
-    assert_allclose(result.hybrid.trace, direct.hybrid.trace, rtol=2e-11, atol=2e-12)
-    assert_allclose(result.hybrid.coarse, direct.hybrid.coarse, rtol=2e-11, atol=2e-12)
-    for actual, expected in zip(result.pressure, direct.pressure, strict=True):
-        assert_allclose(actual, expected, rtol=2e-11, atol=2e-12)
-    assert_allclose(result.conservation_residuals(), 0, atol=2e-12)
-    assert diagnostics["original_trace_residual"] < 1e-10
-    assert diagnostics["local_componentwise_backward_error_max"] < 1e-10
+    for result, diagnostics in solutions:
+        assert_allclose(result.hybrid.trace, direct.hybrid.trace, rtol=2e-11, atol=2e-12)
+        assert_allclose(result.hybrid.coarse, direct.hybrid.coarse, rtol=2e-11, atol=2e-12)
+        for name in ("pressure", "flux"):
+            for actual, expected in zip(getattr(result, name), getattr(direct, name), strict=True):
+                assert_allclose(actual, expected, rtol=2e-11, atol=2e-12)
+        assert_allclose(result.conservation_residuals(), 0, atol=2e-12)
+        assert diagnostics["original_trace_residual"] < 1e-10
+        assert diagnostics["original_local_residual_max"] < 1e-10
+        assert diagnostics["local_componentwise_backward_error_max"] < 1e-10

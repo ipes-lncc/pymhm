@@ -430,6 +430,6 @@ preserve phase times and every repetition.
 
 ```bash
 pixi run -e fem mpiexec -n 4 python benchmarks/execution_modes.py mpi --mesh 8 --refinement 32 --output mpi.json
-pixi run -e test python benchmarks/execution_modes.py offline --mesh 4 --refinement 16 --queries 12 --output offline.json
+pixi run --locked -e test-core python benchmarks/execution_modes.py offline --mesh 4 --refinement 16 --queries 12 --output offline.json
 pixi run -e gpu python benchmarks/execution_modes.py gpu --refinement 24 --batch 64 --queries 12 --output gpu.json
 ```

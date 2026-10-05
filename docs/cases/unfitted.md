@@ -562,7 +562,7 @@ with the same independent norm orders, source, macro mesh and trace spaces:
 
 ```bash
 for order in 11 13; do
-  pixi run -e test python -m examples.unfitted_convergence \
+  pixi run --locked -e test-core python -m examples.unfitted_convergence \
     --study smooth --degree 8 --refinement 32 --maximum-segments 32 \
     --names ell2-s32 ell3-s32 --workers 1 --assembly-order "$order" \
     --norm-orders 13 15 --output build/results/unfitted/quadrature
@@ -825,7 +825,7 @@ series is separately checked for boundary values, transmission, differentiated
 forcing and its energy integral. The targeted suite can be run with:
 
 ```bash
-pixi run -e test python -m pytest -q tests/test_cut_cells.py tests/test_scalar_cut_material.py tests/test_layered_poisson_data.py
+pixi run --locked -e test-core python -m pytest -q tests/test_cut_cells.py tests/test_scalar_cut_material.py tests/test_layered_poisson_data.py
 ```
 
 The full numerical campaign is separate from CI. The published-value record

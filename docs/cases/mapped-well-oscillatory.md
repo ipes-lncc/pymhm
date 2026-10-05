@@ -359,9 +359,9 @@ source digests, physical block residuals, pressure-tested mass balances and
 integrated boundary rates. The command is invoked as a module, for example:
 
 ```sh
-pixi run -e test python -m examples.solve_mapped_oscillatory_well \
+pixi run --locked -e test-core python -m examples.solve_mapped_oscillatory_well \
   --fine-factor 8 --macro-factor 1 --quadrature-xy 40 --quadrature-z 10
-pixi run -e test python -m examples.solve_mapped_oscillatory_well \
+pixi run --locked -e test-core python -m examples.solve_mapped_oscillatory_well \
   --fine-factor 16 --macro-factor 4 --quadrature-xy 40 --quadrature-z 10
 ```
 
@@ -393,7 +393,7 @@ prevent an assertion of identical historical Figures 16–18.
 The complete norm table can be regenerated from the field archives with:
 
 ```sh
-pixi run -e test python -m examples.compare_mapped_well --workers 8
+pixi run --locked -e test-core python -m examples.compare_mapped_well --workers 8
 ```
 
 Each published comparison retains its field digests, numerical acquisition

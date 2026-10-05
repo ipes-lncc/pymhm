@@ -5,15 +5,22 @@ change. The Pixi runtime constraints are the source of truth for the matching
 PyPI metadata; `metadata-check` detects drift.
 
 ```bash
-pixi install -e test --locked
-pixi run -e test metadata-check
-pixi run -e test lint
-pixi run -e test format-check
-pixi run -e test typecheck
-pixi run -e test test-cov
-pixi run -e test build
-pixi run -e test check-dist
+pixi install --locked -e test-core
+pixi run --locked -e test-core metadata-check
+pixi run --locked -e test-core lint
+pixi run --locked -e test-core format-check
+pixi run --locked -e test-core typecheck
+pixi run --locked -e test-core test-cov
+pixi run --locked -e test-core build
+pixi run --locked -e test-core check-dist
 ```
+
+These portable checks run on Linux, Windows and macOS. Full native acceptance
+uses the Linux CUDA `test` environment, including two-device GPU tests,
+FEniCS/PETSc, PARDISO, meshing, visualization and FreeFEM integrations. Follow
+[the development guide](docs/development.md) to prepare AmgX, check every required
+dependency and run the complete suite. Both suites use all available CPU workers;
+mark a test `serial` only when shared native resources require isolation.
 
 After computing and accepting the scientific cases needed by a notebook or page,
 run its selected notebook and `pixi run -e docs docs-check`. Review rendered

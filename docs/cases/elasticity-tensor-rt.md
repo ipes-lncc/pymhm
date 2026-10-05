@@ -79,6 +79,6 @@ they do not establish robustness for every heterogeneous contrast.
 ![RT1-plus displacement and stress compared with exact fields](../figures/elasticity-tensor-rt/rt1-enrichment1-fields.png)
 
 ```bash
-pixi run -e test python examples/solve_elasticity_tensor_rt.py --degree 1 --enrichment 1
+pixi run --locked -e test-core python examples/solve_elasticity_tensor_rt.py --degree 1 --enrichment 1
 pixi run -e notebooks python examples/plot_elasticity_extensions.py
 ```

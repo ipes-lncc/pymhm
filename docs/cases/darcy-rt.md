@@ -118,7 +118,7 @@ assemble classical RT0/P0, RT1/P1 and RT2/P2 systems independently in
 DOLFINx/UFL and compare pressure and physical flux evaluations on matching cells.
 
 ```bash
-pixi run -e test python examples/solve_darcy_rt.py
+pixi run --locked -e test-core python examples/solve_darcy_rt.py
 pixi run -e notebooks python examples/plot_darcy_rt.py
 pixi run -e fem pytest tests/test_darcy_rt.py -m fem
 ```

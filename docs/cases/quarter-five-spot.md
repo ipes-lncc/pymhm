@@ -365,7 +365,7 @@ original-equation residuals accompany each archived case.
 
 ```bash
 pixi run -e notebooks python examples/plot_quarter_spot.py
-pixi run --locked -e test python -m examples.solve_quarter_obstacle --refinements 4 8 16 --segments 1 2 --formulations primal mixed --workers 1 --native-threads 1
+pixi run --locked -e test-core python -m examples.solve_quarter_obstacle --refinements 4 8 16 --segments 1 2 --formulations primal mixed --workers 1 --native-threads 1
 pixi run -e notebooks gallery-quarter-elevation
 pixi run -e notebooks gallery-quarter-geometry
 pixi run -e notebooks gallery-quarter-reference

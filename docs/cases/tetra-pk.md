@@ -132,9 +132,9 @@ balances on each fine tetrahedron; those residuals are recorded separately.
 ## Reproduction
 
 ```bash
-pixi run -e test python -m examples.solve_tetra_pk uniform --workers 4
-pixi run -e test python -m examples.solve_tetra_pk fixed --workers 4
-pixi run -e test python -m examples.tetra_pk_reconstruction
+pixi run --locked -e test-core python -m examples.solve_tetra_pk uniform --workers 4
+pixi run --locked -e test-core python -m examples.solve_tetra_pk fixed --workers 4
+pixi run --locked -e test-core python -m examples.tetra_pk_reconstruction
 pixi run -e notebooks python -m examples.plot_tetra_pk
 ```
 

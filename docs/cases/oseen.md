@@ -157,8 +157,8 @@ routine CI; CI covers analytical patches, exact estimator moments, marking,
 and small adaptive solves.
 
 ```bash
-pixi run -e test python examples/solve_oseen.py --case smooth --levels 2 4 8 16 32
-pixi run -e test python examples/solve_oseen.py --case boundary --viscosity .01 --levels 2 --adaptive --iterations 4 --order 20
+pixi run --locked -e test-core python examples/solve_oseen.py --case smooth --levels 2 4 8 16 32
+pixi run --locked -e test-core python examples/solve_oseen.py --case boundary --viscosity .01 --levels 2 --adaptive --iterations 4 --order 20
 pixi run -e notebooks python examples/plot_oseen.py
 ```
 

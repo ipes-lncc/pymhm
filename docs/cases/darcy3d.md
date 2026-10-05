@@ -148,7 +148,7 @@ three-dimensional CAD-generation wrapper. Higher-order geometric cells, prisms,
 hexahedra and polyhedra are explicitly rejected by this tetrahedral reader.
 
 ```bash
-pixi run -e test python examples/solve_darcy3d.py
+pixi run --locked -e test-core python examples/solve_darcy3d.py
 pixi run -e notebooks python examples/plot_darcy3d.py
 pixi run -e fem pytest tests/test_tetrahedral.py -m fem
 pixi run -e meshing pytest tests/test_meshing3d.py -m meshing

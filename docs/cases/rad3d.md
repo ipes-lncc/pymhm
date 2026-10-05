@@ -157,7 +157,7 @@ Optional native tests independently assemble P3/P4 Galerkin and full-residual
 SUPG matrices and loads with Basix/DOLFINx/UFL on a distorted tetrahedron.
 
 ```bash
-pixi run -e test python examples/solve_rad3d.py
+pixi run --locked -e test-core python examples/solve_rad3d.py
 pixi run -e notebooks python examples/plot_rad3d.py
 pixi run -e fem pytest tests/test_rad3d.py -m fem
 ```

@@ -328,7 +328,7 @@ Run the separate numerical campaigns and render their archived fields:
 pixi run -e notebooks python -m examples.mh2m_campaign
 pixi run -e notebooks python -m examples.mh2m_trace_campaign
 pixi run -e notebooks python -m examples.plot_mh2m
-pixi run -e test pytest -q tests/test_mh2m.py tests/test_mh2m_campaign.py
+pixi run --locked -e test-core pytest -q tests/test_mh2m.py tests/test_mh2m_campaign.py
 pixi run -e fem pytest -q tests/test_mh2m_fenics.py
 ```
 

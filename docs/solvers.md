@@ -427,7 +427,7 @@ study. The largest reconstructed pressure-coefficient difference was
 bound or an acceleration claim.
 
 ```bash
-pixi run -e test python benchmarks/block_solver.py --backend pyamg --output block-cpu.json
+pixi run --locked -e test-core python benchmarks/block_solver.py --backend pyamg --output block-cpu.json
 pixi run -e gpu python benchmarks/block_solver.py --backend amgx --output block-gpu.json
 ```
 

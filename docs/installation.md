@@ -7,13 +7,14 @@ Optional native dependencies are loaded only when their functionality is called.
 ## From a checkout
 
 ```bash
-pixi install -e test
-pixi run -e test test-cov
-pixi run -e test lint
-pixi run -e test typecheck
+pixi install --locked -e test-core
+pixi run --locked -e test-core test-cov
+pixi run --locked -e test-core lint
+pixi run --locked -e test-core typecheck
 pixi run -e docs docs-check
 ```
 
+The `test-core` environment contains the portable test and development tools.
 The lockfile resolves Linux x86-64, Windows x86-64, macOS x86-64 and macOS ARM64
 for the portable environments. A Linux run does not substitute for the native
 Windows/macOS CI jobs.
@@ -21,7 +22,7 @@ Windows/macOS CI jobs.
 ```bash
 python -m pip install .
 # Build an installable wheel and source distribution:
-pixi run -e test build
+pixi run --locked -e test-core build
 ```
 
 Install from a checkout until a release is published. The repository includes
@@ -70,6 +71,26 @@ and the full gallery are executed separately from source-only CI, with their
 numerical and rendering checks. Automatic documentation generation remains
 pending until these checks have a manageable, verified CI workflow.
 
+## Complete native tests on Linux
+
+The `test` environment includes the complete native test stack: DOLFINx,
+PETSc/MPI and MUMPS, PARDISO, PyAMG, Gmsh, Netgen, FreeFEM, PyVista/VTK, CuPy,
+nvmath and cuDSS. AmgX and its PyAMGX binding use the pinned build toolchain.
+The full suite requires two NVIDIA devices and a driver compatible with the
+locked CUDA runtime; `test-dependencies` checks these capabilities before tests.
+
+```bash
+pixi install --locked -e test
+pixi run --locked -e test test-setup-amgx
+pixi run --locked -e test test-dependencies
+pixi run --locked -e test test-cov
+```
+
+The complete and portable suites use all available CPU workers, followed by a
+separate phase for tests marked `serial`. Native integration skips in the portable
+suite identify capabilities that it does not provide; they do not qualify those
+backends. See [development](development.md) for selectors and coverage policy.
+
 ## Optional capabilities
 
 | Environment / extra | Purpose | Native requirements |
@@ -103,11 +124,11 @@ assert PETSc.Sys.hasExternalPackage("mumps")
 ## Development checks
 
 ```bash
-pixi run -e test pytest
+pixi run --locked -e test-core test
 pixi run -e fem test-fem
-pixi run -e meshing pytest tests/test_meshing.py
+pixi run --locked -e meshing test-meshing
 pixi run -e notebooks notebooks-run
-pixi run -e test python examples/verify.py
+pixi run --locked -e test-core python examples/verify.py
 ```
 
 Environment definitions and task names in `pixi.toml` are authoritative. The
