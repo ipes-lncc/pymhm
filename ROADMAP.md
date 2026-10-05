@@ -1,366 +1,372 @@
-# PyMHM: roadmap de implementação, verificação e validação
+# PyMHM implementation, verification and validation roadmap
 
-Atualizado em **5 de outubro de 2026**. Este é o plano canônico de implementação,
-verificação e validação do projeto. A [matriz científica](#scientific-scope-and-acceptance-criteria) relaciona as formulações à literatura;
-as [páginas dos casos](docs/cases/index.md) descrevem os resultados e seus limites.
-Este roadmap não certifica a reprodução integral da literatura.
+Updated **October 5, 2026**. This is the project's canonical roadmap.
+The [scientific scope](#scientific-scope-and-acceptance-criteria) and
+[literature acceptance matrix](#acceptance-by-literature-target) identify
+implemented capabilities and remaining evidence. Detailed results belong on the
+[case pages](docs/cases/index.md). This roadmap does not certify complete
+reproduction of the literature.
 
-## Como usar este roadmap
+## Using this roadmap
 
-Escolher uma entrega delimitada, conferir a evidência atual do caso e definir
-seus critérios de aceite antes de implementar ou executar uma campanha. Uma
-pendência de aquisição depende de dados, recursos e programas de referência;
-não significa necessariamente que falta implementar o método.
+Choose a bounded delivery, inspect its existing evidence and define acceptance
+criteria before implementation or acquisition. Missing reference data, programs
+or hardware do not necessarily imply that a method needs implementation.
 
-Usar quatro estados nas próximas atualizações:
+Use these states when updating milestones and case records:
 
-- **Implementado:** a capacidade existe, com seus contratos e restrições.
-- **Verificado:** há execução identificada que verifica a capacidade no escopo declarado.
-- **Pendente:** falta uma implementação, comparação ou controle especificado.
-- **Dependência externa:** faltam dados históricos, acesso a uma referência ou recursos.
+- **Implemented:** the capability exists with explicit contracts and restrictions.
+- **Verified:** an identified execution verifies the stated scope.
+- **Pending:** a specified implementation, comparison or control remains.
+- **External dependency:** historical inputs, reference access or resources are missing.
 
-Uma entrega só passa a verificada com evidência reproduzível. Atualizar aqui o
-estado e a próxima ação; resultados detalhados pertencem à página do caso.
-Não acumular diários, comandos obsoletos ou resultados intermediários neste arquivo.
-Não repetir uma campanha já aceita apenas porque uma anotação antiga a dizia pendente.
+Record the accepted evidence and next action here; keep numerical records on the
+case page. Retain accepted acquisitions unless a changed source, input or unresolved
+control requires a new execution. Keep this document focused on current scope,
+dependencies and acceptance conditions.
 
-## Base atual que deve ser preservada
+## Current baseline
 
-- [x] API variacional independente da física: `Equation`, `LocalEquations`,
-  `MultiscaleProblem`, `assemble` e `solve`; formas UFL locais e globais ou blocos
-  numéricos explícitos. Campos escalares, vetoriais e mistos usam esses contratos.
-- [x] Recursão por `NestedEquations`, modos retidos, momentos físicos,
-  reconstrução e problemas face-only. A recursão atual tem restrições de
-  execução; sua disponibilidade não qualifica automaticamente hierarquias MPI.
-- [x] Basix como dependência de runtime para elementos, polinômios e tabulações;
-  mapas MHM próprios preservam as restrições, momentos e orientações publicados.
-- [x] Imports canônicos, módulos organizados por responsabilidade, funções livres
-  e delegações explícitas. Os imports anteriores à refatoração não são suportados.
-- [x] Execução serial, threads e processos `spawn`, redução ordenada das
-  contribuições de faces, integração MPI e solvers CPU/GPU nos escopos documentados.
-- [x] Reúso de malhas, espaços e formas compiladas compatíveis por worker.
-  Matrizes materiais são montadas por macroelemento; fatores e hierarquias só
-  podem ser reutilizados quando a equivalência do operador estiver comprovada.
-- [x] Notebooks organizados por problema, incluindo os dez
-  [introdutórios](notebooks/introduction/README.md), em inglês, com formas,
-  condições de contorno, referências clássicas e campos definidos passo a passo.
-- [x] Estudos 2D/3D de desempenho; a
-  [campanha de aceleradores 3D](docs/cases/darcy-3d-accelerators.md) já inclui
-  PARDISO, escalabilidade forte/fraca CPU e uma/duas GPUs com cuDSS e AMGX.
-  Os ganhos têm o escopo medido: não estabelecem vantagem universal nem precisão equivalente.
-- [x] Ambiente `test` completo para Linux com duas GPUs; `test-core` portátil;
-  preflight de dependências, pytest-xdist e fase exclusiva `serial`.
+- [x] Physics-independent variational API: `Equation`, `LocalEquations`,
+  `MultiscaleProblem`, `assemble` and `solve`, using local/global UFL forms
+  or explicit numerical blocks for scalar, vector and mixed fields.
+- [x] `NestedEquations`, retained modes, physical moments, reconstruction and
+  face-only problems. Child assembly is serial within its owning worker; child
+  `fixed` and `constraints` must be empty, and trace restrictions must be
+  injective. Recursive local problems are outside the current MPI path.
+- [x] Basix runtime elements, polynomial sets and tabulations; MHM restrictions,
+  moments and orientations remain explicit. Canonical modules have defined
+  responsibilities, with free functions and clear delegation.
+- [x] Serial, thread and `spawn` process execution, ordered shared-face
+  reduction, MPI integration and CPU/GPU solvers within their documented scopes.
+- [x] Compatible meshes, spaces and compiled forms can be reused per worker.
+  Material matrices are assembled per macroelement; sharing factors or
+  hierarchies requires proven operator equivalence.
+- [x] English notebooks organized by problem, including
+  [introductory tutorials](notebooks/introduction/README.md) that define forms,
+  boundaries, classical references and field evaluation step by step.
+- [x] 2D/3D performance studies. The
+  [3D accelerator campaign](docs/cases/darcy-3d-accelerators.md) includes
+  PARDISO, strong/weak CPU scaling and one/two GPUs with cuDSS and AMGX.
+  Measurements apply to the recorded workloads, hardware and accuracy.
+- [x] Complete Linux `test` environment with two GPUs, portable `test-core`,
+  dependency preflight, pytest-xdist and an exclusive `serial` phase.
+- [x] Locally checked wheel, source archive, isolated wheel installation and
+  noarch Conda package, with complete runtime modules and typing files.
 
-A base de engenharia em `c11a2d2`, verificada em Linux, contém **5.771 testes
-aprovados**, **64 workers** e **32 testes exclusivos em série**, com cobertura de
-**99,9327% de linhas** e **99,7098% de ramos**. O único skip do checkout é o
-controle de propriedade do wheel instalado, executado separadamente: os oito
-controles da instalação isolada passaram. Foram removidos 451 casos redundantes
-sem perder linhas ou ramos cobertos. Essas contagens descrevem essa execução;
-não são metas para manter artificialmente nas próximas versões.
+The latest local Linux verification records **5,776 passing tests**:
+5,744 with **64 workers**, followed by **32 exclusive serial tests**.
+Line coverage is **99.9327%** and branch coverage is **99.7098%**.
+The source-checkout suite has one contextual installed-wheel ownership skip;
+all **eight isolated-wheel checks**, including native PARDISO, pass separately.
+These counts describe that execution rather than fixed suite-size targets.
 
-As comparações de engenharia preservam resultados nos casos executados. Elas
-não substituem testes de estabilidade, resolução ou reprodução de outros casos.
-A execução nativa da revisão em Windows e a qualificação de providers ML/preCICE
-continuam pendentes. As implementações privadas em `_legacy` ainda dão suporte
-a comparações; não devem voltar a definir a API principal.
+Engineering equivalence applies to the executed cases; it does not establish
+stability or resolution in other regimes. Native Windows verification of the
+delivered revision and ML/preCICE provider qualification remain pending.
+Private `_legacy` implementations support comparisons, not the primary API.
 
-## Prioridades e dependências
+## Scientific scope and acceptance criteria
 
-| Marco | Prioridade | Resultado esperado | Dependência |
+PyMHM separates local finite element problems from explicit skeletal coupling.
+A supported family requires a concrete operator, compatible spaces and numerical
+evidence. A backend dependency or generic matrix adapter alone does not supply
+a finite element discretization.
+
+The [initial convergence catalogue](docs/cases/minimal-convergence.md) records
+short studies, unresolved increments and incomplete levels. Extended historical
+campaigns are separate evidence. The [case evidence guide](docs/cases/index.md)
+and [literature catalogue](docs/literature.md) distinguish analytical verification,
+independent references, matched data and published comparisons.
+
+### Implemented constructions
+
+Applicable degrees, boundaries, material assumptions and executed evidence are
+specified on the linked pages.
+
+| Construction | Scope and limitations |
+| --- | --- |
+| Local/global hybrid algebra | Independent trial/test couplings and adjoint kernels, retained physical modes, constrained local solves, source lifts, offline/online reuse and [recursive MHM](docs/cases/nested.md). Supplied operators require kernel, compatibility and stability checks. |
+| Primal Darcy | Triangular Pk, rectangular Qk and tetrahedral Pk pressure, physical pressure means and scalar/SPD permeability. [2D](docs/api/darcy.md), [3D](docs/api/darcy3d.md) and [Cartesian](docs/quadrilateral.md) conventions are explicit. |
+| Mixed Darcy | Triangular RT/BDM, enriched rectangular RT, affine tetrahedral/prismatic families and mapped hexahedral RT. [Normal traces, pressure moments and interior enrichment](docs/api/darcy3d.md) are independent choices. Nonaffine prisms and pyramidal mixed elements are outside this path. |
+| Material interfaces | Exact integration over Cartesian/planar intersections, material-fitted local meshes and explicit macroface partitions. [Unfitted integration](docs/cases/unfitted.md) alone does not resolve a gradient jump in an uncut polynomial cell. |
+| Reconstruction and estimation | RT moment recovery, Oswald potentials and distinct published, energy-weighted and face-jump indicators. [Estimator estimates](docs/cases/reconstruction3d.md) require `k >= ell + d`; algebraic reconstruction has weaker conditions, including `ell <= m <= k`. Continuous-test equilibrium differs from fine-cell DG balance. |
+| Alternative multiscale formulations | [MsHHO](docs/cases/mshho.md), [Robin MH](docs/cases/mh.md), [MH²M](docs/cases/mh2m.md) and [PGMHM](docs/cases/pgmhm.md), each with stated face/cell/source conventions. Equivalence and injectivity depend on those spaces and assumptions. |
+| RAD and transport | Conservative Pk Galerkin/SUPG, tensor diffusion, reaction and explicit coefficient derivatives. [MHM-USFEM](docs/cases/unusual.md) uses the full unusual residual form; stabilization does not imply a maximum principle. |
+| Transient scalar problems | Backward Euler, positive capacity, changing loads/boundaries and prepared spatial operators. [Darcy coupling](docs/cases/transient-transport.md) distinguishes volume flux from numerical normal trace. Manufactured convergence does not reproduce an unavailable random realization. |
+| Stokes–Brinkman/Oseen | Taylor–Hood and full-residual equal-order USFEM in 2D/3D, tensor resistance, prescribed convection, component slip and pressure gauges. [Flow adaptation](docs/cases/stokes-adaptive.md) assumes constant viscosity, full Dirichlet data, uniform trace degree and resolved jumps. Nonlinear Navier–Stokes iteration is outside this scope. |
+| Primal and displacement–pressure elasticity | General material tensors, physical traction, three/six rigid modes, GaLS/Taylor–Hood and finite/infinite bulk limits. [Primal displacement](docs/cases/primal-elasticity.md) alone is not uniformly locking-free. |
+| Mixed elasticity | Row-wise BDM/enriched/rectangular RT stress, weak rotation, anisotropic compliance and [tetrahedral AFW](docs/cases/mixed-elasticity3d.md). Displacement must represent rigid modes; weak symmetry is a moment condition. Classical AFW stability does not cover arbitrary MHM traces. |
+| Polygonal/polyhedral geometry | Straight-sided simple polygons, including nonconvex cells, and [certified star-shaped polyhedra](docs/cases/star-polyhedra.md) with original polygonal face spaces. Empty-kernel cells, cavity shells and curved faces are outside the polyhedral path. |
+| Helmholtz | Complex triangular/polygonal Pk and Cartesian Qk locals, polynomial/oscillatory traces, absorbing boundaries, diagonal PML and local resonance checks. [Wave](docs/cases/helmholtz.md) and [Marmousi](docs/cases/marmousi.md) comparisons have distinct data contracts. |
+| Maxwell and elastodynamics | Tangentially coupled central-DG dynamics with mass-scaled CFL, and Newmark local responses with slabwise traction/substeps. [Maxwell](docs/cases/maxwell.md) and [elastodynamics](docs/cases/elastodynamics.md) distinguish analytical and heterogeneous comparisons. |
+
+See the [API](docs/api.md), [FEniCS local forms](docs/fenics.md),
+[meshing](docs/meshing.md) and [linear solvers](docs/solvers.md) for construction
+and backend details.
+
+## Priorities and dependencies
+
+| Milestone | Priority | Deliverable | Dependency |
 | --- | --- | --- | --- |
-| R1 — Brinkman | P0 | Matriz 2D/3D de regimes e espaços com limites de precisão demonstrados | Base variacional e referências independentes existentes |
-| R2 — Desempenho geral | P1 | Escalabilidade e custo a precisão equivalente, além dos benchmarks atuais | Controles físicos e profiling do fluxo completo |
-| R3 — Aceite científico | P1 | Fechamento progressivo dos controles de resolução e alvos da literatura | Dados identificados e referência refinada de cada caso |
-| R4 — API e arquitetura | P1 | Menos infraestrutura manual e duplicação, preservando a expressividade | Equivalência numérica antes/depois |
-| R5 — Windows | P1 | Execução nativa identificada do core, PARDISO e artefatos | Runner Windows e dependências daquele perfil |
-| R6 — Providers externos | P2 | Integrações substituíveis pelos contratos locais existentes | Contratos e controles físicos de R4 |
-| R7 — Distribuição | P2 | Release com escopo científico e plataformas efetivamente verificados | Gates e evidências das capacidades anunciadas |
+| R1 — Brinkman | P0 | 2D/3D regime and space matrix with demonstrated accuracy limits | Existing variational operators and independent references |
+| R2 — General performance | P1 | Scaling and cost at matched accuracy beyond current benchmarks | Physical controls and profiling of the complete execution |
+| R3 — Scientific acceptance | P1 | Progressive completion of literature targets and resolution controls | Identified inputs and refined references for each case |
+| R4 — API and architecture | P1 | Less manual infrastructure and duplication, preserving expressiveness | Numerical equivalence before/after each change |
+| R5 — Windows | P1 | Identified native execution of the core, PARDISO and installed artifacts | Windows runner and the target dependency profile |
+| R6 — External providers | P2 | Interchangeable providers using the local contracts | R4 contracts and physical controls |
+| R7 — Distribution | P2 | Release with demonstrated scientific and platform scope | Required gates and evidence for advertised capabilities |
 
-Começar por R1. R4 e R5 podem avançar em paralelo quando não alterarem a fonte
-de uma aquisição em andamento. Executar R3 por família, com entregas pequenas.
-Campanhas de desempenho precisam de recursos exclusivos; não misturar seus
-tempos com testes ou outras campanhas concorrentes.
+Start with R1. R4 and R5 may proceed in parallel when they do not change the
+source of an active acquisition. Work through R3 in bounded family-specific
+deliveries. Performance acquisitions require exclusive hardware; concurrent
+tests or campaigns must not contaminate timing.
 
-## R1 — Qualificar Stokes–Brinkman em 2D/3D
+## R1 — Qualify Stokes–Brinkman in 2D/3D
 
-Já existem casos analíticos, estudos de camadas para famílias polinomiais,
-referências Taylor–Hood refinadas e comparações nativas. O objetivo agora é
-ampliar a qualificação de robustez e resolução, usando
-[camadas](docs/cases/introduction-layers.md), [fluxo 3D](docs/cases/flow3d.md),
-[reprodução Stokes](docs/cases/reproduction.md) e [SPE10](docs/cases/spe10.md).
+Analytical cases, polynomial-family layer studies, refined Taylor–Hood references
+and native comparisons already exist. Extend their robustness and resolution
+evidence using [layers](docs/cases/introduction-layers.md),
+[3D flow](docs/cases/flow3d.md), [Stokes comparisons](docs/cases/reproduction.md)
+and [SPE10](docs/cases/spe10.md).
 
-- [ ] Definir uma matriz enxuta com Stokes, Brinkman intermediário, resistência
-  pequena/grande, viscosidade pequena, resistência tensorial admissível e alto
-  contraste, em ambas as dimensões. Identificar soluções exatas e referências numéricas.
-- [ ] Tratar MHM–Taylor–Hood e MHM-USFEM como discretizações distintas. Conferir
-  graus, malhas locais, kernels, traços, gauge de pressão, estabilização e fonte
-  contra a formulação adotada. Declarar se o operador usa gradiente ou deformação simétrica.
-- [ ] Separar pseudo-tração, multiplicador e tensão física. Verificar o limite
-  de resistência zero, dados homogêneos/não homogêneos e as condições de compatibilidade.
-- [ ] Refinar macro malha, malha local e espaço de traço separadamente. Usar
-  pelo menos três níveis quando a viabilidade permitir estimar uma taxa;
-  investigar platôs e camadas não resolvidas antes de atribuir uma ordem ao método.
-- [ ] Medir erro de velocidade, pressão e gradiente/tensão separadamente,
-  divergência e balanço macro. Controlar quadratura e resolução da referência
-  independente do mesmo problema. Resíduos físicos por campo acompanham esses erros.
-- [ ] Conferir os perfis de camada com valores unilaterais nas macrofaces;
-  medir oscilações sem assumir que a estabilização fornece um princípio do máximo.
-- [ ] Atualizar e executar o notebook introdutório e as figuras a partir dos
-  registros aceitos. Mostrar campos, erros, macro malha e taxas efetivamente observadas.
+- [ ] Select a minimal matrix covering Stokes, intermediate Brinkman, small/large
+  resistance, small viscosity, admissible tensor resistance and high contrast
+  in both dimensions. Define per-field criteria, reference type and estimated cost.
+- [ ] Qualify analytical 2D layers first, then 3D and extreme regimes after
+  operator and reference controls pass. Treat MHM–Taylor–Hood and MHM-USFEM
+  as distinct discretizations.
+- [ ] Check local degrees/meshes, kernels, traces, pressure gauge, stabilization
+  and source. Declare gradient versus symmetric-strain operators and the theorem's
+  resistance/inverse-inequality conventions: L13 and L16 use different parameters.
+- [ ] Distinguish pseudo-traction, the multiplier and physical stress. Verify
+  zero resistance, homogeneous/nonhomogeneous boundaries and compatibility.
+- [ ] Refine macro mesh, local mesh and trace space independently, using at least
+  three levels where feasible. Resolve plateaus and underresolved layers before
+  assigning an observed order.
+- [ ] Measure velocity, pressure and gradient/stress errors separately, plus
+  divergence, macro balance and physical residuals per field. Control reference
+  refinement and assembly/error quadrature independently.
+- [ ] Inspect one-sided layer profiles at macrofaces and quantify oscillations.
+  Publish resolution/error tables, fields, actual macro meshes and measured rates
+  in the case pages and executed introductory notebook.
+- [ ] Record the next unqualified configuration after accepting each delivery.
 
-**Aceite:** cada configuração tem espaços admissíveis, unicidade/gauge e
-controles do operador; normas e incrementos identificam sua resolução. As taxas
-são compatíveis com as hipóteses aplicáveis quando o regime assintótico é atingido.
-Regimes pré-assintóticos ou não resolvidos permanecem explicitamente limitados.
-Uma comparação analítica não recebe o rótulo de reprodução de uma figura histórica.
+**Acceptance:** each configuration has admissible spaces, operator/kernel checks
+and a physical gauge. Field norms and refinement increments demonstrate resolution.
+Rate claims meet the applicable regularity and asymptotic hypotheses. Unresolved
+or pre-asymptotic regimes retain explicit limits; analytical agreement does not
+establish reproduction of a historical figure.
 
-## R2 — Generalizar desempenho e preparar a execução HPC
+## R2 — Generalize performance and prepare HPC execution
 
-A primeira campanha CPU/multi-GPU está concluída no escopo declarado. O próximo
-passo parte dessas medições, das [estratégias de execução](docs/execution.md) e
-não pressupõe que MHM será mais rápido que o melhor baseline clássico.
+The recorded CPU/multi-GPU strong/weak campaign is complete within its stated
+scope. Classical CG/GAMG is faster on the larger grids in that campaign.
+Extend [execution strategies](docs/execution.md) and
+[performance evidence](docs/performance.md) without assuming universal MHM speedups.
 
-- [ ] Comparar custo para alvos comuns de erro de pressão e fluxo físico,
-  refinando também macro malha e traços. Manter separada a comparação já existente
-  com o mesmo número de elementos: espaços e precisão globais são diferentes.
-- [ ] Ampliar a diversidade de materiais, incluindo coeficientes não periódicos,
-  SPE10 e cargas locais desbalanceadas. Reusar kernels e infraestrutura por
-  compatibilidade; montar e resolver cada operador material necessário.
-- [ ] Medir montagem, fatores/hierarquias, todos os RHS, comunicação,
-  serialização, redução, solve global e reconstrução. Identificar o limite da
-  parte local, o gargalo global, a memória e o ponto de vantagem por tamanho/precisão.
-- [ ] Comparar LU SciPy/PARDISO/MUMPS e AMG CPU/GPU sob condições de uso
-  admissíveis e orçamento declarado. Justificar tolerâncias iterativas antes
-  dos ensaios por erro de campo e discretização; manter os critérios existentes
-  nos resultados atuais. Não alterar um limiar depois para aprovar uma amostra.
-- [ ] Qualificar scheduling de lotes heterogêneos, workspaces residentes e
-  transferência CPU/GPU com os mesmos controles do operador original. Reúso de
-  fatores exige identidade comprovada; sem equivalência, apenas infraestrutura é compartilhada.
-- [ ] Expandir o esqueleto global e avaliar pré-condicionamento/distribuição
-  sem reunir todas as matrizes locais num único processo. Separar AMG de blocos
-  positivos do tratamento de saddles e núcleos físicos.
-- [ ] Planejar campanhas multi-node e com mais de duas GPUs quando houver
-  recursos. Preservar posse dos recursos por worker/rank, `spawn`, limites de
-  threads, encerramento de fatores e semântica das faces compartilhadas.
+- [ ] Compare cost at common pressure and physical-flux error targets, refining
+  macro meshes and traces. Keep equal-element-budget comparisons separate:
+  they use different global approximation spaces and may have different accuracy.
+- [ ] Include nonperiodic materials, SPE10 and uneven local workloads. Share
+  compatible kernels/infrastructure while assembling each required material operator.
+- [ ] Profile assembly, factors/hierarchies, all right-hand sides, communication,
+  serialization, reduction, global solve, reconstruction and peak memory.
+  Identify local/global bottlenecks and crossover size at each accuracy target.
+- [ ] Compare SciPy/PARDISO/MUMPS LU and CPU/GPU AMG with admissible operators
+  and declared CPU/GPU/thread budgets. Define iterative tolerances before trials
+  using field and discretization error; retain existing acquisition criteria.
+- [ ] Qualify heterogeneous scheduling, resident workspaces and CPU/GPU transfers
+  against the original operator. Reuse factors only for proven equivalent operators.
+- [ ] Distribute the global skeleton without gathering all local matrices at
+  one rank. Distinguish AMG for positive blocks from saddle-system preconditioning
+  and treatment of physical kernels.
+- [ ] Extend to multiple nodes and more than two GPUs when resources permit,
+  preserving worker/rank ownership, spawn semantics, thread limits, resource cleanup
+  and correct shared-face reduction.
 
-**Aceite:** curvas de tempo, speed-up, eficiência forte/fraca, memória e custo
-versus erro usam aquisições reais, repetições e recursos identificados. Aquecer
-JIT separadamente e declarar o escopo do aquecimento. O tempo completo inclui
-setup, transferências, sincronização e encerramento; tempos de fases pertencem à
-mesma aquisição. Ganhos ausentes e regressões são publicados. Resultados de
-Gomes et al. e Penna et al., citados na página de aceleradores, orientam o estudo;
-escalabilidade histórica de clusters não é uma capacidade já reproduzida aqui.
+**Acceptance:** measured time, speedup, strong/weak efficiency, memory and
+cost-versus-error curves include repetitions and reproducible provenance. Separate
+JIT warmup and state what it warms. Complete time includes setup, transfers,
+synchronization and teardown; phase timings come from the same acquisition.
+Report absent gains and regressions. Gomes et al. and Penna et al. motivate these
+studies, but their historical 24–768-core and largest-mesh cluster results remain
+unreproduced on the current hardware.
 
-## R3 — Fechar a validação científica por família
+## R3 — Complete scientific acceptance by family
 
-A [matriz de alvos L01–L20 e adicionais](#acceptance-by-literature-target) deve continuar sendo o
-índice de aceite. Antes de abrir uma tarefa, conferir a página atual do caso:
-sistemas completos e referências já adquiridos não voltam a ser classificados
-como implementações ausentes. Priorizar controles cujo incremento ainda possa
-alterar a conclusão física.
+Use the following matrix as the single backlog for literature acceptance.
+Check each case's current evidence before scheduling work; existing complete
+systems and references are not missing implementations. Prioritize unresolved
+controls capable of changing the physical conclusion. Historical inputs that
+cannot be identified remain external dependencies.
 
-### Darcy, interfaces, estimadores e SPE10
+### Acceptance by literature target
 
-- [ ] Periódico: concluir controles local/traço e refinamento da referência
-  clássica, mantendo material, macro malha e espaços publicados. Referências
-  de graus diferentes são controles distintos, sem substituir a histórica Q1.
-- [ ] Interfaces: estender os incrementos locais aos traços superiores
-  admissíveis. Os endpoints r32→r64 de ℓ0/ℓ1 e os doze sistemas UFL S0/S2 já
-  existem. P8/r16–P3/s32 tem kernel exato do multiplicador; solver ou quadratura
-  não corrigem essa incompatibilidade. Identificar os dados históricos de S2.
-- [ ] SPE10: medir separadamente resolução local, de face e de material,
-  incrementos dos fluxos vetoriais e da referência; preservar camadas, unidades,
-  orientação e macro partições. Fechar o controle energético Q3/RT0 ainda fora
-  do critério declarado, sem modificar o limiar para obter aprovação.
-- [ ] Adaptatividade: aproveitar as comparações independentes inicial/final
-  já existentes e reduzir a sensibilidade restante da referência. Conferir
-  conectividade/marking quando a reprodução depender da malha histórica.
-- [ ] Poços e geometrias mapeadas: controlar singularidade, Piola, geometria
-  comum, `div(V)=Q`, pressão, graus interiores/de face e refinamento da referência.
-- [ ] Estimadores: conservar a distinção entre reconstrução algébrica e hipóteses
-  do teorema. Centralizar e testar `k >= ell + d` na fronteira admissível e nos
-  casos imediatamente excluídos de cada dimensão.
+The [literature catalogue](docs/literature.md) identifies publications,
+reference projects/modules, revisions and source URLs. A summary does not verify
+a new execution: reproduction requires its input fields and reference programs.
+Keep external reference solver sources and private comparison tools outside the
+versioned repository and release artifacts.
 
-Evidência: [periódico](docs/cases/periodic.md), [interfaces](docs/cases/unfitted.md),
-[fluxo SPE10](docs/cases/spe10-flux.md), [SPE10 adaptativo](docs/cases/spe10-adaptive.md),
-[poço oscilatório](docs/cases/mapped-well-oscillatory.md) e
-[reconstrução 3D](docs/cases/reconstruction3d.md).
+| Target and formulation | Case | Recorded evidence | Remaining acceptance condition |
+| --- | --- | --- | --- |
+| L01: primal Darcy MHM | Cosine, quarter five-spot, square obstacle and rough coefficients | Analytical fields, published curves, complete square-obstacle Basix/P1 and native NeoPZ/RT0 comparisons, and six full point-well Basix/P2 and RT0 comparisons on stated spaces | Resolve classical obstacle-reference refinement and singular-well controls; identify historical random inputs before literal reproduction. |
+| L02: elliptic error estimation | Cosine, inclusion and Dirac wells | [Reconstruction and estimators](docs/cases/reconstruction3d.md), analytical errors and indicator controls | Complete matched estimator/reference refinement while retaining Dirac regularity limits. Distinguish algebraic reconstruction from estimate hypotheses. |
+| L03: abstract hybrid algebra | Local/global and recursive systems | Independent full Petrov–Galerkin algebra, retained kernels and source lifts | User operators require kernel, compatibility and stability checks. Qualify more general recursion without bypassing child boundary, injectivity or execution restrictions; no published numerical table is supplied. |
+| L04: periodic Darcy robustness | [Periodic permeability](docs/cases/periodic.md), fixed macrogrid and face enrichment | Phased basis replay, complete 64-macro independent Q1/P0 assembly and five-level Q1 controls; Q5 accuracy is outside current acceptance | Resolve local/trace and classical-reference increments with injective finite space pairs. Preserve published material and macro spaces. The historical reference is Q1 on 4096² elements; its historical local refinement is unidentified. |
+| L05: mixed local Darcy | [Rectangular, tetrahedral and prismatic wells](docs/cases/mixed-well-geometries.md), [mapped oscillatory well](docs/cases/mapped-well-oscillatory.md) | Analytical fields and native NeoPZ space comparisons | Complete matched whole-case references and interior/face/quadrature refinements. Preserve common geometry, Piola conventions, pressure spaces and `div(V)=Q`; control singular forcing. |
+| L06: MHM–MsHHO connection | [Elliptic macro and skeletal refinement](docs/cases/mshho.md) | Analytical comparisons with declared source spaces and complete independent assembly; field differences meet their declared criterion | Complete convergence under the equivalence hypotheses. At contrast 10⁶, cross-insertion into the other rounded operator gives about `5.19e-9`, above its `1e-10` criterion; joint certification remains unresolved. |
+| L07: face-based robustness | Periodic medium and SPE10 layer 36 with continuous face interpolation | [Darcy flux](docs/cases/spe10-flux.md), Q1/C0-P1 MHM and Q3/MSL/NeoPZ references | Resolve local/face/material and classical-reference increments, preserving layer, units, orientation and the published 66-square macro partition. Q3/RT0 energy control is `1.80e-6` against `1e-7`; this is separate from solver residual acceptance. |
+| L08: unfitted preprint | [Two-layer interface](docs/cases/unfitted.md) | Analytical series and independent UFL systems | Identify preprint-specific inputs and hypotheses separately from final L10; their regularity endpoints differ. |
+| L09: H(div) recovery and adaptivity | [Adaptive SPE10](docs/cases/spe10-adaptive.md) | Published P2/r2/P0 spaces, RT2/Oswald recovery, full independent initial/final UFL systems and refined RT2 references | Reduce reference sensitivity and qualify historical BAMG connectivity/marking. Centralize `k >= ell + d` for estimates and `ell <= m <= k` for reconstruction; test admissible boundaries and immediately excluded cases in each dimension. |
+| L10: unfitted flux approximation | [Smooth h/p sweeps and two-layer contrast](docs/cases/unfitted.md) | Analytical norms, native assemblies, P8 r32→r64 endpoints for ell0/ell1 and twelve complete independent UFL S0/S2 contrast systems | Resolve local error for higher admissible traces. P8/r16–P3/s32 has an exact multiplier kernel that solver or quadrature changes cannot remove. Historical Figure-7 S2 inputs remain unspecified despite same-discretization agreement for declared cases. |
+| L11: advective/reactive MHM | [Mixed walls and random Darcy–transport](docs/cases/transient-transport.md) | Analytical and coefficient controls | Acquire the full §5.4 realization with 512 macros through T=7, coupled trajectory and independent space/time/quadrature refinements. Distinguish volume Darcy flux from numerical normal transfer. The literal mixed-wall curve remains quantitatively different; its epsilon=1 control is separate. |
+| L12: generalized RAD | [Polygonal/polyhedral diffusion and reaction layers](docs/cases/polygons.md) | Conditioning, boundary and layer controls | Complete matched conditioning/layer/star-polyhedron studies and independent fields, preserving full residuals, coefficient derivatives and boundary conventions. |
+| L13: equal-order Stokes–Brinkman | Smooth flow, layers and SPE10 layer one | [SPE10](docs/cases/spe10.md), published-space fields, analytical polynomial-family layer convergence and a five-level independent Taylor–Hood baseline with physical integration | Close local/trace/reference sensitivity and R1's 2D/3D extreme-regime matrix. Qualify historical mesh, stabilization and Stokes stress conventions before literal figure reproduction. |
+| L14: multilevel flow estimator | [Stokes adaptation and cavity](docs/cases/stokes-adaptive.md) | Analytical indicators and classical cavity comparisons | Complete adaptation/reference refinement with the same constant lid, pressure gauge and corner cutout. A regularized lid is a different physical case. |
+| L15: adaptive Oseen | [Smooth and boundary-layer flow](docs/cases/oseen.md) | Analytical refinement and independent operators | Complete layer/adaptive whole-case controls, quadrature and physical norms. Prescribed Oseen convection does not qualify nonlinear Navier–Stokes. |
+| L16: flow a priori analysis | Admissible Stokes–Brinkman spaces | Analytical/native verification and stated degree conditions | Verify dimension-dependent discretization, regularity and inverse inequalities for each rate claim. Preserve L13's minimum-resistance versus L16's cellwise maximum-resistance convention and squared/unsquared inverse constants. |
+| L17: primal elasticity | Analytical displacement and [HPC4E](docs/cases/hpc4e.md) | Analytical fields, independent DOLFINx/UFL RT1/RT2 stress–displacement–rotation references, equilibrium/work checks and RT2 spatial refinement | Reduce or quantify rotation/compliance reference sensitivity; preserve published skeletal spaces and full-stress norms. |
+| L18: weakly symmetric mixed elasticity | [Tensor families and oscillatory Table 3](docs/cases/mixed-families.md), [3D mixed spaces](docs/cases/mixed-elasticity3d.md) | Native fields and analytical norms | Complete BDM/RT/enrichment, geometry and tensor controls with physical rigid modes and weak rotation. The printed rotation-column inconsistency and unidentified historical connectivity/exterior traces limit literal table reproduction. |
+| L19: locking-free elasticity | [Finite/infinite bulk limits](docs/cases/elasticity.md) | GaLS, mixed-field and native comparisons | Complete matched Lamé sweeps and refinement for GaLS, Taylor–Hood and mixed methods. Qualify historical amplitude/stabilization choices; an affine primal patch does not prove uniform locking freedom. |
+| L20: scalable implementation | [Distributed local/global execution](docs/execution.md) | Spawn/MPI contracts and workload-specific CPU/GPU strong/weak measurements | Complete R2's material diversity and matched-accuracy comparisons; historical cluster scaling remains unverified. |
+| Additional MH | [Robin hybrid diffusion](docs/cases/mh.md) | Analytical boundary/parameter sweeps and independent UFL | Complete whole-case refinement; distinguish Robin multipliers from physical flux. |
+| Additional MH²M | [Oscillatory medium](docs/cases/mh2m-heterogeneous.md) | Crisscross/diagonal cases and refined independent CG3 fields | Complete overlay quadrature and baseline refinement under face/source hypotheses. Historical curve differences remain; do not fit material, source or method parameters to them. |
+| Additional PGMHM | [Inclusions](docs/cases/pgmhm.md) and [SPE10](docs/cases/pgmhm-spe10.md) | Analytical/native equations and independently refined classical fields | Complete matched whole-case comparisons with published enrichment and heterogeneous stabilization, resolving material interfaces and reactive lengths. |
+| Additional Unusual (MHM-USFEM) | [Reaction–diffusion](docs/cases/unusual.md) and [SPE10 layers](docs/cases/unusual-spe10.md) | Analytical/native fields and recorded FreeFem comparisons | Acquire the complete external comparison and qualify material, reaction-length and trace resolution. Distinguish published spaces from enriched controls. |
+| Additional Helmholtz | [Angular/stability studies](docs/cases/helmholtz.md) and [Marmousi](docs/cases/marmousi.md) | Plane/Hankel fields, native saddle systems and classical material-crop P1–P4 references | Complete angular/stability sequences and the 15-case Marmousi family, including phase-wise memory/storage, admissible resonances and reference refinement on the same physical crop. Retain historical input limits; 2D point-source derivative norms use a fixed physical cutout, without claiming finite global H1 norm. |
+| Additional Maxwell | [Nanoguide](docs/cases/maxwell-nanoguide.md) | Analytical dynamics, native operators, independent central-DG Q2 through 1024², matched staggered-time fields, CPU/GPU equivalence and space/time/material controls | Quantify reference and MHM temporal/spatial sensitivity over the trajectory, preserving staggering, CFL and balance. Identify historical incident phase, amplitude and turn-on before literal image reproduction. |
+| Additional elastodynamics | [Equation (53) and three layers](docs/cases/elastodynamics.md) | Analytical Newmark trajectories, complete independent 341-macro original equations and 301-state common-basis coordinate comparisons | Evaluate both executed field bases separately; common coordinates do not establish field agreement. Verify a conforming reference on several finer meshes and complete space/time/quadrature controls. Historical heterogeneous 2017 inputs remain unresolved. |
 
-### Variantes multiescala, RAD e fluxo
+**Acceptance:** close each target's specific condition, or identify the unresolved
+input/discrepancy and provide an independently assembled complete comparison of
+the same physical case. A manufactured solution, small patch or coverage result
+does not replace matched published-case acceptance. Missing private reference
+programs remain acquisition dependencies, not evidence of a new execution.
 
-- [ ] MsHHO, MH, MH²M e recursão: completar controles afetados de convergência
-  e fonte, respeitando as hipóteses de equivalência e os espaços de cada método.
-  Sistemas independentes e referências MH²M já existem; discrepâncias gráficas
-  históricas não autorizam ajustar coeficiente, fonte ou parâmetros pela figura.
-- [ ] PGMHM e USFEM: resolver comprimentos reativos e interfaces materiais;
-  separar espaços publicados dos controles enriquecidos. As comparações nativas
-  completas já existentes são a base para o refinamento.
-- [ ] RAD: complementar condicionamento, camadas e polytopes no mesmo caso físico;
-  preservar o residual completo, derivadas de coeficientes e convenções de fronteira.
-- [ ] Stokes adaptativo/Oseen: fechar controles de camada e baseline com o mesmo
-  lid, gauge e cutout dos cantos. Lid regularizado é outro problema; Oseen não
-  qualifica uma implementação não linear de Navier–Stokes.
+## R4 — Simplify the API without specializing it by physics
 
-Evidência: [MsHHO](docs/cases/mshho.md), [MH²M](docs/cases/mh2m-heterogeneous.md),
-[PGMHM SPE10](docs/cases/pgmhm-spe10.md), [USFEM SPE10](docs/cases/unusual-spe10.md),
-[Stokes adaptativo](docs/cases/stokes-adaptive.md) e [Oseen](docs/cases/oseen.md).
+- [ ] Reduce manual entity/DOF maps, orientations, boundaries and gauge composition.
+  Global UFL forms already assemble; skeleton numbering remains explicitly declared.
+- [ ] Consolidate repeated geometry, tabulation, assembly, condensation,
+  reconstruction and execution in their shared owners. Retire private legacy
+  implementations only after migrating consumers and proving field/variant equivalence.
+- [ ] Qualify more general nested hierarchies and their boundary/resource/parallel
+  restrictions. Keep unsupported MPI recursion explicit.
+- [ ] Present convenience operators after explicit form definitions. Keep scalar,
+  vector, primal, H(div), MH²M, MsHHO and USFEM tutorials synchronized with contracts.
 
-### Elasticidade
+**Acceptance:** users express local/global mathematics without PDE dispatchers
+or model-specific imports. New capabilities reuse Basix and general contracts.
+Functions and objects have defined responsibilities, docstrings, types and
+numerical conventions. Compare blocks, loads, bases, gauges and fields before/after,
+justify numerical agreement and preserve exact archive/replay identities.
+Keep [architecture](docs/architecture.md) and the
+[variational API](docs/variational.md) synchronized.
 
-- [ ] Completar os sweeps de Lamé finito/infinito e refinos para GaLS,
-  Taylor–Hood e formulações mistas. Um patch afim primal não prova ausência de locking.
-- [ ] HPC4E: refinar ou quantificar a sensibilidade restante em rotação e
-  compliance. Referências independentes RT1/RT2, equilíbrio/trabalho e
-  comparações completas já existem; preservar traços e normas de tensão publicados.
-- [ ] Elasticidade mista: complementar tensores, enriquecimentos e geometrias
-  com modos rígidos físicos e simetria fraca. A inconsistência impressa de
-  rotação na Tabela 3 e a conectividade desconhecida limitam a reprodução literal.
+## R5 — Verify native Windows execution
 
-Evidência: [GaLS](docs/cases/elasticity.md), [HPC4E](docs/cases/hpc4e.md),
-[famílias mistas](docs/cases/mixed-families.md) e
-[elasticidade mista 3D](docs/cases/mixed-elasticity3d.md).
+- [ ] Execute an identified revision on Windows x86-64: `test-core`, Basix,
+  SciPy/PyAMG, PARDISO, shared faces and serial/thread/spawn-process paths.
+- [ ] Build and install a wheel outside the checkout; verify import ownership,
+  MKL runtime, factor cleanup and fields against independent assembly.
+- [ ] Execute selected portable notebooks and publish the measured platform/backend
+  matrix. DOLFINx/PETSc remain outside the current native Windows profile.
+- [ ] Consider a PETSc-free Windows FEM backend only for a concrete need that
+  fits the general contracts. Keep WSL2 and native Windows qualification distinct.
 
-### Transporte e ondas
+**Acceptance:** a native Windows receipt identifies the revision, locked
+dependencies and supported options. The core has no mandatory optional-runtime
+imports; unsupported choices fail explicitly. Extended precision and worker limits
+follow the platform. CI configuration or lock resolution alone does not prove
+native execution. See [Windows support](docs/windows.md).
 
-- [ ] Transporte: completar o caso de 512 macros até T=7 com a mesma realização
-  material, comparando referências refinadas em espaço/tempo/quadratura.
-  Distinguir velocidade/fluxo de volume da transferência normal numérica.
-- [ ] Elastodinâmica: avaliar cada base executada separadamente nos estados
-  arquivados; comparação em coordenadas comuns não substitui esse controle.
-  Completar referência conformante e refinos de espaço, tempo e quadratura.
-- [ ] Helmholtz/Marmousi: completar as sequências e a família de quinze casos
-  com memória/armazenamento por fases, ressonâncias admissíveis e normas no
-  mesmo domínio físico. As referências P1–P4 existentes são a base do controle.
-  Para ponto-fonte 2D, manter o cutout físico fixo nas normas derivativas;
-  não afirmar que a norma H1 global é finita.
-- [ ] Maxwell: controlar a sensibilidade temporal/espacial da trajetória usando
-  a referência central-DG Q2 e as comparações CPU/GPU já executadas. Manter
-  tempos escalonados, CFL e balanço; fase/amplitude/turn-on históricos precisam
-  estar identificados antes de afirmar reprodução literal.
+## R6 — Qualify external local providers
 
-Evidência: [transporte](docs/cases/transient-transport.md),
-[elastodinâmica](docs/cases/elastodynamics.md), [Helmholtz](docs/cases/helmholtz.md),
-[Marmousi](docs/cases/marmousi.md) e [Maxwell](docs/cases/maxwell-nanoguide.md).
+- [ ] Demonstrate an independent provider delivering the maps, moments,
+  operators and source/trace responses required by the global formulation.
+- [ ] Qualify a learned provider against independent FEM on held-out data,
+  measuring field error and physical residuals. Define rejection/fallback outside
+  the contract without tying the interface to a particular ML architecture.
+- [ ] Evaluate optional preCICE integration for a justified coupling use case,
+  including transfers, synchronization, licensing and platform availability.
+  Keep it outside core dependencies; native Windows support requires evidence.
 
-**Aceite de R3:** cada alvo fecha sua condição específica, ou registra a entrada
-não identificada e a comparação independente do mesmo caso completo disponível.
-Dados históricos desconhecidos permanecem como dependência externa. Solução
-manufaturada, um patch pequeno ou cobertura não substituem esse aceite.
+**Acceptance:** providers are interchangeable without changing global equations,
+worker data support spawn transfer and native resources have explicit owners.
+Real integration demonstrates accuracy, stability and cost; mocks and API
+contracts do not qualify external software. See [providers](docs/tutorials/providers.md).
 
-## R4 — Tornar a API mais simples sem especializá-la por física
+## R7 — Release the demonstrated scope
 
-- [ ] Reduzir a infraestrutura manual para mapas de entidades/DOFs locais e
-  globais, orientação, fronteiras e composição de gauges. Formas UFL globais já
-  são montadas; a numeração do esqueleto continua explicitamente declarada.
-- [ ] Consolidar operações repetidas nos donos de geometria, tabulação,
-  montagem, condensação, reconstrução e execução. Retirar código privado legado
-  só após migrar consumidores e provar preservação das variantes e dos campos.
-- [ ] Qualificar a composição de hierarquias mais gerais e suas restrições de
-  fronteira, recursos e paralelismo. O MPI atual não suporta problemas locais
-  recursivos; não ocultar essa limitação sob a mesma opção de execução.
-- [ ] Manter operadores de conveniência como exemplos de composição, apresentados
-  depois da definição explícita. Atualizar os tutoriais escalares, vetoriais,
-  primais, H(div), MH²M, MsHHO e USFEM sempre que os contratos mudarem.
+- [ ] Select capabilities and cases for the release using evidence valid for
+  the delivered source; synchronize version, dependencies, metadata and release notes.
+- [x] Verify complete, minimal wheel/sdist and noarch Conda contents, byte-identical
+  runtime payloads, isolated wheel installation and rebuilding from the sdist
+  outside the checkout. Optional backend adapters ship with the package;
+  native dependencies are installed separately on supported platforms.
+- [ ] Keep notebooks, catalogues, literature labels and publication assets current.
+  Version only selected figures under an explicit allowlist. Large field archives
+  and intermediate outputs remain outside Git.
+- [ ] Verify administrative prerequisites for automatic publication: PyPI trusted
+  publisher for `publish-pypi.yml` and environment `pypi`; GitHub Actions as
+  the Pages source; release-tag deployment allowed in `github-pages`.
+- [ ] Publish validated `v*` releases through the workflow sequence below.
+  Submit the conda-forge recipe separately when target dependencies are available.
 
-**Aceite:** o usuário declara formas próximas da matemática sem precisar de um
-dispatcher de PDEs nem de imports por modelo. Novas capacidades reutilizam
-Basix e os contratos gerais; funções e objetos têm responsabilidades, docstrings,
-tipos e convenções explícitas. Comparar blocos, RHS, bases, gauges e campos antes/depois;
-a concordância numérica deve ser justificada, preservando identidades exatas de
-armazenamento/replay. [Arquitetura](docs/architecture.md) e
-[API variacional](docs/variational.md) permanecem sincronizadas.
+**Acceptance:** installed artifacts contain all runtime and typing files, license
+and required metadata. The sdist includes only `src/pymhm`, `pyproject.toml`,
+`README.md`, `LICENSE`, backend-required `.gitignore` and generated metadata.
+Docs, scripts, examples, tests, benchmarks, notebooks, recipes, roadmap and Pixi
+environments remain repository resources, outside Python/Conda installation
+artifacts. A checked build or configured workflow does not establish publication
+or conda-forge acceptance.
 
-## R5 — Qualificar Windows nativamente
+## Delivery acceptance protocol
 
-- [ ] Executar a revisão identificada em Windows x86-64: `test-core`, Basix,
-  SciPy/PyAMG, PARDISO, faces compartilhadas e serial/threads/processos `spawn`.
-- [ ] Construir e instalar wheel fora do checkout; verificar origem dos imports,
-  runtime MKL, liberação de fatores e os campos contra montagem independente.
-- [ ] Executar notebooks portáteis selecionados e documentar a matriz real de
-  plataformas/backends. DOLFINx/PETSc atuais continuam fora do perfil Windows nativo.
-- [ ] Avaliar backend FEM Windows sem PETSc apenas se couber nos contratos
-  gerais e houver necessidade concreta; WSL2 e Windows nativo são alvos distintos.
+1. **Define the experiment:** formulation, geometry, material, source, boundaries,
+   gauge, spaces/degrees, refinements, quadrature, tolerances and accuracy targets.
+   Independently derive manufactured data from the actual operator. Recheck
+   dimension-dependent regularity, degree, stability and injectivity hypotheses.
+2. **Verify the operator:** original physical equations, left/right kernels,
+   orientation, moments and condensation against independent full assembly.
+   A small reduced/scaled residual does not establish uniqueness, inf-sup stability
+   or field accuracy.
+3. **Validate physical fields:** errors and residuals per field/block, macro and
+   fine-cell conservation as appropriate, energy/work and separate macro/local/trace
+   refinements. Distinguish raw gradients, H(div) fluxes and multipliers. Without
+   an exact solution, refine a classical conforming reference on several meshes
+   with the same operator, material and boundaries; report its own increments
+   and quadrature controls.
+4. **Preserve provenance and replay:** archive source revision, lockfile, versions,
+   input/mesh/material hashes, actual executed basis matrices with digests, dtype,
+   solver, resources and timing scope. Fix nullspace orientation by declared
+   moments and use archived bases consistently in evaluation and orientation maps.
+   Check replay across BLAS thread counts and equivalent kernel rotations.
+   Source/input changes require identified reacquisition; replotting is not a PDE run.
+5. **Apply shared corrections:** fix the operation's owner, test the invariant,
+   audit consumers and reacquire affected cases, including homogeneous/nonhomogeneous
+   boundaries where relevant. Avoid case-specific formulas, coverage exclusions
+   or relaxed tolerances that conceal numerical failures.
+6. **Publish current evidence:** updated case page, lightweight records, executed
+   notebooks and inspected figures. Show actual macro meshes on analytical,
+   numerical and error panels, and intersections with independent one-sided
+   values on profiles. Label velocity and Darcy flux correctly; check layout,
+   colorbars and readability at publication size. Identify reference project,
+   module, revision and URL; distinguish inspection, execution and comparison drivers.
 
-**Aceite:** recibo de execução Windows da revisão, core sem imports opcionais
-obrigatórios, dependências resolvidas pelo lockfile e erro explícito para opções
-não suportadas. Precisão estendida e limites de workers respeitam a plataforma.
-Lockfile e configuração de CI isoladamente não certificam execução.
-Ver [Windows](docs/windows.md).
+Matched literature reproduction requires matching inputs, discretization and
+norms, with extraction uncertainty stated. Rate claims require the source theorem's
+hypotheses; singular or heterogeneous cases do not inherit smooth-problem rates.
+Software coverage is an engineering gate rather than scientific certification.
 
-## R6 — Qualificar providers externos
+## Engineering and release gates
 
-- [ ] Demonstrar um provider independente com os mesmos mapas, momentos,
-  operadores e respostas fonte/traço exigidos pelo problema global.
-- [ ] Qualificar um provider aprendido contra um FEM independente, com conjunto
-  de teste separado, erro de campo e resíduos físicos; definir rejeição/fallback
-  para respostas fora do contrato. Não restringir a interface a uma arquitetura ML.
-- [ ] Avaliar preCICE como adaptador opcional se houver acoplamento que o justifique,
-  considerando transferência, sincronização, licenciamento e plataformas.
-  Não torná-lo dependência do core nem presumir suporte Windows.
-
-**Aceite:** substituição do provider sem alterar a formulação global, dados
-transferíveis entre workers e gestão explícita de recursos. Precisão,
-estabilidade e custo são demonstrados por integração real; contratos ou mocks
-não qualificam um pacote externo. Ver [providers](docs/tutorials/providers.md).
-
-## R7 — Preparar a distribuição com escopo demonstrado
-
-- [ ] Selecionar quais capacidades e casos compõem a release; anunciar apenas
-  os regimes, plataformas e backends com evidência válida para a fonte entregue.
-- [ ] Validar wheel/sdist, instalação isolada e receita Conda noarch; sincronizar
-  versão, dependências, metadados, documentação e notas da release.
-- [x] Manter o wheel com todo o runtime, tipagem, licença e metadados; limitar o
-  sdist a `src/pymhm`, `pyproject.toml`, `README.md`, `LICENSE`, `.gitignore`
-  exigido pelo backend e metadados gerados. Verificar caminhos permitidos, fontes
-  idênticas e construção fora do checkout a partir do sdist. Docs, scripts,
-  exemplos, testes, benchmarks, notebooks, recipe, roadmap
-  e ambientes Pixi permanecem no checkout, fora dos arquivos de instalação.
-- [ ] Conferir notebooks, catálogo, assets e marcações da literatura. Publicar
-  só registros/figuras atuais; versionar somente as figuras selecionadas para
-  a documentação publicada, com allowlist explícita. Campos grandes e saídas
-  intermediárias ficam fora do Git; toda a documentação fica fora dos artefatos
-  Python/Conda. Fontes externas e ferramentas privadas de
-  comparação ficam fora do repositório versionado e dos artefatos distribuídos.
-- [ ] Configurar o trusted publisher PyPI para `publish-pypi.yml` e o ambiente
-  `pypi`; selecionar GitHub Actions como origem do Pages e permitir tags de release no ambiente
-  `github-pages`. Tags `v*` devem publicar automaticamente o pacote e o site
-  validados depois dos gates obrigatórios. Submissão ao conda-forge permanece
-  uma etapa própria; construção de artefatos não implica publicação.
-
-## Protocolo de aceite de qualquer entrega
-
-1. **Definir o experimento:** formulação, hipótese, geometria, material, fonte,
-   fronteira, gauge, espaços, graus, refinamentos, quadraturas, tolerâncias e
-   alvos de precisão. Conferir hipóteses dimensionais e estabilidade/injetividade.
-2. **Verificar o núcleo:** operador original, kernels esquerdo/direito, traços,
-   momentos e condensação contra sistema completo independente. Um resíduo
-   reduzido pequeno não estabelece unicidade, estabilidade ou erro de campo.
-3. **Validar os campos:** normas por campo, residual por bloco físico, conservação
-   macro/fina conforme a formulação, energia/trabalho quando aplicável e refinos
-   separados. Referência numérica tem seu próprio controle de refino e quadratura.
-4. **Preservar a proveniência:** revisão e fonte executada, lockfile, versões,
-   hashes de inputs, malhas, coeficientes, bases executadas e digests, dtype,
-   solver, recursos e tempos. Nova fonte/input inicia aquisição identificada;
-   replotar um arquivo não reexecuta sua PDE ou um código externo.
-5. **Verificar o replay:** usar a matriz de base arquivada em avaliações e
-   orientações; repetir com threads BLAS distintas e rotações equivalentes do
-   núcleo. Dimensões e hashes de fontes não substituem esse contrato.
-6. **Propagar correções:** corrigir o dono compartilhado, testar a invariante,
-   auditar os consumidores e readquirir os casos afetados. Não usar workaround
-   de notebook, exclusão de cobertura ou tolerância relaxada para esconder falhas.
-7. **Entregar a evidência:** página atual do caso, dados leves, figuras e notebook
-   executado. Mostrar macro malha nos campos/erros e interseções nos perfis,
-   preservar valores unilaterais e inspecionar legibilidade no tamanho final.
-   Declarar projeto/módulo/revisão/URL da referência e distinguir inspeção de execução.
-
-## Ambientes e gates de qualidade
-
-Usar Pixi 0.76.2 e os lockfiles versionados do workspace e da integração AmgX.
-Conferir `pixi --version` e executar `pixi list --locked --no-install -e test-core`
-antes de preparar um ambiente; mudanças de dependências exigem atualizar manifesto
-e lockfile juntos. Para preparar pela primeira vez o ambiente
-completo Linux com duas GPUs:
+Use **Pixi 0.76.2** and the checked-in workspace and AmgX integration lockfiles.
+Check `pixi --version` and `pixi list --locked --no-install -e test-core`
+before environment preparation. Update manifests and locks together when
+dependencies change. Initial full Linux/two-GPU setup:
 
 ```bash
 pixi install --locked -e test
@@ -368,7 +374,7 @@ pixi run --locked -e test test-setup-amgx
 pixi run --locked -e test test-dependencies
 ```
 
-Antes de aceitar alterações:
+Required engineering gates:
 
 ```bash
 pixi run --locked -e test lint
@@ -381,216 +387,47 @@ pixi run --locked -e packaging ci-check
 pixi run --locked -e packaging metadata-check
 pixi run --locked -e test build
 pixi run --locked -e test check-dist
+pixi run --locked -e packaging conda-build
 ```
 
-O runner usa todos os CPUs disponíveis, uma thread numérica por worker e uma
-segunda fase para `@pytest.mark.serial`. Marcar como serial apenas testes que
-precisam de exclusividade; custo elevado sozinho não justifica a marcação.
-Linhas e ramos mantêm gates independentes de **99%**. Conservar testes de
-invariantes e integrações reais; reduzir combinações redundantes sem esconder
-casos numéricos distintos. O ambiente completo não deve aprovar ausência de
-dependências como validação de backend.
+The test runner uses all available CPUs, one numerical thread per worker and an
+exclusive `@pytest.mark.serial` phase. Reserve that marker for tests requiring
+exclusive execution, not merely expensive tests. Maintain independent **99% line
+and branch coverage gates**. Test package behavior, meaningful numerical
+invariants and relevant script algorithms with native integrations alongside
+optional contracts. Reduce redundant combinations without losing distinct
+numerical cases; missing dependencies do not count as backend validation.
 
-Os workflows [Tests](https://github.com/volpatto/pymhm/actions/workflows/tests.yml),
+### CI and release ordering
+
+[Tests](https://github.com/volpatto/pymhm/actions/workflows/tests.yml),
 [Lint and Quality](https://github.com/volpatto/pymhm/actions/workflows/lint-and-quality.yml)
-e [Docs](https://github.com/volpatto/pymhm/actions/workflows/docs.yml) têm
-responsabilidades próprias e rodam independentemente em PRs e pushes de main.
-As verificações usam os dois workspaces travados e são reutilizáveis na release.
-A suíte completa com duas GPUs exige dispatch manual de Tests com `full_native`
-habilitado. O [workflow de release](https://github.com/volpatto/pymhm/actions/workflows/publish-pypi.yml)
-executa Tests e Quality em paralelo; depois Docs valida e publica o site; por
-fim, PyPI publica os artefatos verificados. Configurar o trusted publisher para
-`publish-pypi.yml`, a origem Pages como GitHub Actions e o ambiente `github-pages`
-para aceitar tags `v*`. A galeria usa figuras de
-publicação selecionadas e versionadas; campos grandes e intermediários continuam
-fora do Git. A aquisição científica, execução de notebooks, aceite de campos e
-figuras e inspeção MathJax permanecem verificações separadas.
+and [Docs](https://github.com/volpatto/pymhm/actions/workflows/docs.yml) have
+dedicated responsibilities and run independently on pull requests and main pushes.
+Within Tests, the Integration matrix starts only after **all Core matrix jobs
+succeed**. Reusable checks use both locked workspaces.
 
-Nos alvos portáteis, executar `test-core`, `test-py311` e `test-py312` conforme a
-matriz de plataformas; essas execuções não substituem as integrações nativas.
-A CI cobre Linux x86-64, Windows x86-64 e macOS Apple Silicon (ARM64). A resolução
-macOS x86-64 permanece disponível no lockfile para uso local, sem validação
-automática nesse alvo.
+The active matrix targets Linux x86-64, Windows x86-64 and Apple Silicon
+macOS ARM64 with `macos-latest`. macOS x86-64 resolution remains available
+for local use, without an active CI target. Use `test-core`, `test-py311`
+and `test-py312` on their configured platforms; these do not replace native
+backend qualification. Full two-GPU Tests requires manual dispatch with
+`full_native` enabled.
 
-Para notebooks UFL, usar `introduction`; para as demais campanhas, o perfil
-indicado na página do caso. Executar os notebooks afetados com `notebooks-run`
-e atualizar seus catálogos. Não exigir campanhas pesadas não afetadas em cada mudança.
+The [release workflow](https://github.com/volpatto/pymhm/actions/workflows/publish-pypi.yml)
+runs **Tests and Quality in parallel → Docs validation/deployment → PyPI
+publication of checked artifacts**. Administrative prerequisites are tracked in R7.
+Keep platform/release claims tied to successful identified runs.
 
-Inspecionar MathJax no navegador: `docs-check` valida markup, mas o build não
-compila TeX. Usar displays em blocos `$$` isolados e equações longas alinhadas.
-Ver [desenvolvimento](docs/development.md) e
-[verificação](docs/verification.md) para os procedimentos mantidos.
+### Scientific documentation and notebooks
 
-## Primeira entrega a executar
+Use `introduction` for UFL introductory notebooks and the case's documented
+profile for other acquisitions. Run affected notebooks with `notebooks-run`
+and update their catalogues. Unaffected heavy campaigns are separate from routine
+checks.
 
-- [ ] Selecionar a matriz mínima Brinkman de R1, com critérios por campo,
-  espaços admissíveis e custo estimado por configuração.
-- [ ] Fechar primeiro as camadas analíticas 2D de MHM e MHM-USFEM; ampliar para
-  3D e extremos após os controles do operador e da referência.
-- [ ] Registrar tabela de resolução/erro, campos e limites nas páginas dos
-  casos e no notebook correspondente.
-- [ ] Atualizar R1 com a evidência aceita e a próxima configuração pendente;
-  executar os gates sem alterar os critérios para obter aprovação.
-
-## Scientific scope and acceptance criteria
-
-PyMHM separates local finite element problems from an explicit skeletal coupling.
-A supported family needs a concrete operator, compatible spaces and numerical
-evidence. An optional dependency or a generic matrix adapter alone does not
-supply a finite element discretization.
-
-The [initial convergence catalogue](docs/cases/minimal-convergence.md) reports the
-current short studies, including unresolved numerical increments and incomplete
-levels. The extended historical campaigns and performance sweeps are separate
-from that evidence. The [case evidence guide](docs/cases/index.md) maps representative calculations to the
-[literature](docs/literature.md). Its labels distinguish published comparisons,
-matched data, independent references and analytical verification. The selected
-cases do not establish complete reproduction of the MHM literature.
-
-### Implemented constructions
-
-The table identifies implemented paths; applicable degrees, boundaries, material
-assumptions and executed evidence are specified on their linked pages.
-
-| Construction | Concrete scope and limitations |
-| --- | --- |
-| Local/global hybrid algebra | Independent trial/test couplings and adjoint kernels, retained physical modes, constrained local solves, source lifts, offline/online reuse and [recursive MHM](docs/cases/nested.md). Supplied operators require their own kernel and stability checks. |
-| Primal Darcy | Triangular Pk, rectangular Qk and tetrahedral Pk local pressure, physical pressure means and scalar/SPD permeability; [2D](docs/api/darcy.md), [3D](docs/api/darcy3d.md) and [Cartesian](docs/quadrilateral.md) conventions are explicit. |
-| Mixed Darcy | Triangular RT/BDM, enriched rectangular RT, affine tetrahedral/prismatic families and mapped hexahedral RT. [Normal traces, pressure moments and interior enrichment](docs/api/darcy3d.md) remain independent choices. Nonaffine prisms and pyramidal mixed elements are outside this path. |
-| Material interfaces | Exact integration over Cartesian/planar intersections, material-fitted local meshes and explicit macroface partitions. [Unfitted](https://github.com/volpatto/pymhm/blob/main/docs/cases/unfitted.md) integration alone does not resolve a gradient jump in an uncut polynomial cell. |
-| Reconstruction and estimation | RT moment recovery, Oswald potentials and distinct published, energy-weighted and face-jump indicators. [Estimator hypotheses](https://github.com/volpatto/pymhm/blob/main/docs/cases/reconstruction3d.md) require `k >= ell + d`; algebraic RT construction is weaker. Continuous-test equilibrium and fine-cell DG balance are different conditions. |
-| Alternative multiscale formulations | [MsHHO](docs/cases/mshho.md), [Robin MH](https://github.com/volpatto/pymhm/blob/main/docs/cases/mh.md), [MH²M](https://github.com/volpatto/pymhm/blob/main/docs/cases/mh2m.md) and [PGMHM](https://github.com/volpatto/pymhm/blob/main/docs/cases/pgmhm.md), with their own face/cell/source conventions. Equivalence and injectivity depend on the stated spaces and source assumptions. |
-| RAD and transport | Conservative Pk Galerkin/SUPG, tensor diffusion, reaction and explicit coefficient derivatives; [MHM-USFEM](https://github.com/volpatto/pymhm/blob/main/docs/cases/unusual.md) uses the full unusual residual form. Stabilization does not imply a maximum principle. |
-| Transient scalar problems | Backward Euler, positive capacity, changing loads/boundaries and prepared spatial operators. [Darcy coupling](https://github.com/volpatto/pymhm/blob/main/docs/cases/transient-transport.md) distinguishes volume flux from the numerical normal trace. Manufactured time convergence does not reproduce an unavailable random realization. |
-| Stokes–Brinkman/Oseen | Taylor–Hood and full-residual equal-order USFEM in 2D/3D, tensor resistance, prescribed convection, component slip and physical pressure gauges. [Flow adaptation](https://github.com/volpatto/pymhm/blob/main/docs/cases/stokes-adaptive.md) assumes constant viscosity, full Dirichlet data, uniform trace degree and resolved jumps. No nonlinear Navier–Stokes iteration is claimed. |
-| Primal and displacement–pressure elasticity | General material tensors, physical traction and three/six rigid modes; GaLS/Taylor–Hood and finite/infinite bulk limits. [Primal displacement](https://github.com/volpatto/pymhm/blob/main/docs/cases/primal-elasticity.md) alone is not uniformly locking-free. |
-| Mixed elasticity | Row-wise BDM/enriched/rectangular RT stress, weak rotation, anisotropic compliance and [tetrahedral AFW](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-elasticity3d.md). Displacement must represent rigid modes; weak symmetry is a moment condition. Classical AFW stability is not a theorem for arbitrary MHM traces. |
-| Polygonal/polyhedral geometry | Straight-sided simple polygons, including nonconvex cells, and [certified star-shaped polyhedra](https://github.com/volpatto/pymhm/blob/main/docs/cases/star-polyhedra.md) with original polygonal face spaces. Empty-kernel cells, cavity shells and curved faces are outside the polyhedral path. |
-| Helmholtz | Complex triangular/polygonal Pk and Cartesian Qk locals, polynomial/oscillatory traces, absorbing boundaries, diagonal PML and local resonance checks. [Wave](https://github.com/volpatto/pymhm/blob/main/docs/cases/helmholtz.md) and [Marmousi](https://github.com/volpatto/pymhm/blob/main/docs/cases/marmousi.md) comparisons retain their distinct data contracts. |
-| Maxwell and elastodynamics | Tangentially coupled central-DG dynamics with mass-scaled CFL, and Newmark local responses with slabwise traction/substeps. [Maxwell](https://github.com/volpatto/pymhm/blob/main/docs/cases/maxwell.md) and [elastodynamics](https://github.com/volpatto/pymhm/blob/main/docs/cases/elastodynamics.md) state their analytical and heterogeneous comparison scopes separately. |
-
-See the [API](docs/api.md), [FEniCS local forms](docs/fenics.md), [meshing](docs/meshing.md)
-and [linear solvers](docs/solvers.md) pages for construction and backend details.
-
-### Historical targets still requiring evidence
-
-Scientific completion is tied to a particular experiment, including its input
-fields, mesh, spaces, quadrature, boundary convention, gauge and norm. The following
-limits remain material to claims about the literature:
-
-- The [periodic](https://github.com/volpatto/pymhm/blob/main/docs/cases/periodic.md), [oscillatory well](https://github.com/volpatto/pymhm/blob/main/docs/cases/mapped-well-oscillatory.md)
-  and [SPE10](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10-adaptive.md) comparisons retain nonzero classical-reference
-  refinement increments and historical input/mesh qualifications. Local or face
-  enrichment controls are different discretizations from the published setup.
-- The literal L11 mixed-wall curve remains quantitatively different; its ε=1
-  control is separate. The [transient random-field example](https://github.com/volpatto/pymhm/blob/main/docs/cases/transient-transport.md)
-  requires a complete same-case acquisition and independent reference.
-- The [Stokes stress diagnostic](https://github.com/volpatto/pymhm/blob/main/docs/cases/reproduction.md), [GaLS elasticity
-  amplitudes/stabilization](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity.md) and historical exterior traces in
-  [mixed elasticity](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-families.md) prevent unqualified reproduction of
-  every printed ordinate or table.
-- The [Helmholtz angular ordinates](https://github.com/volpatto/pymhm/blob/main/docs/cases/helmholtz.md), [Marmousi material crop
-  and 15-case family](https://github.com/volpatto/pymhm/blob/main/docs/cases/marmousi.md), [historical Maxwell incident-wave phase,
-  amplitude and turn-on](https://github.com/volpatto/pymhm/blob/main/docs/cases/maxwell-nanoguide.md), and heterogeneous [2017
-  elastodynamic source case](https://github.com/volpatto/pymhm/blob/main/docs/cases/elastodynamics.md) have their own unresolved
-  data or comparison requirements. Analytical wave tests do not replace them.
-- [Historical cluster scaling](docs/execution.md) on 24–768 cores and the largest 3D
-  meshes is not reproduced. Available MPI/GPU measurements concern their declared
-  hardware and workloads; they do not establish an unmeasured speedup.
-
-The bibliographic catalog and detailed case pages retain the theorem hypotheses
-and numerical evidence behind each statement. Historical discrepancies are
-reported with independently assembled same-case comparisons where available;
-missing reference acquisition programs must be supplied before a clean execution
-can reproduce those comparisons.
-
-### Acceptance by literature target
-
-Each row identifies a formulation, its physical case, the available comparison
-and the remaining acceptance condition. The [catalog](docs/literature.md) identifies
-the publications and reference-code revisions. Numerical summaries retain their
-acquisition provenance; reproducing their results requires the corresponding
-fields and reference programs. A checked-in summary alone does not verify a new
-execution. Analytical tests and local operator comparisons remain separate from
-complete published-case comparisons.
-
-| Target and formulation | Case | Comparison and recorded evidence | Remaining acceptance condition |
-| --- | --- | --- | --- |
-| L01: primal Darcy MHM | Cosine, quarter five-spot, square obstacle and rough coefficients | Analytical fields, published curves, complete square-obstacle Basix/P1 and native NeoPZ/RT0 comparisons, and six full point-well Basix/P2 and RT0 comparisons on stated spaces | Resolve classical obstacle-reference refinement; identify historical random data before literal reproduction. |
-| L02: elliptic error estimation | Cosine, inclusion and Dirac wells | [Reconstruction and estimators](https://github.com/volpatto/pymhm/blob/main/docs/cases/reconstruction3d.md), analytical errors and indicator controls | Repeat the same-case estimator comparison and reference refinement; retain the Dirac regularity limitation. |
-| L03: abstract hybrid algebra | Local/global and recursive systems | Independent full Petrov–Galerkin algebra, retained kernels and source lifts | User-defined operators still require kernel, compatibility and stability hypotheses; no published numerical table is supplied. |
-| L04: periodic Darcy robustness | [Periodic permeability](https://github.com/volpatto/pymhm/blob/main/docs/cases/periodic.md), fixed macrogrid and face enrichment | Phased basis replay, complete 64-macro independent Q1/P0 assembly and current five-level Q1 controls; Q5 accuracy is outside the current acceptance | Resolve local and classical-reference refinement; finite local/trace pairs require injectivity. The historical reference is Q1 on 4096² elements, with unidentified historical local refinement. |
-| L05: mixed local Darcy | Rectangular, tetrahedral and prismatic wells | [Mixed wells](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-well-geometries.md), analytical fields and native NeoPZ spaces | Complete matched whole-case reference acquisition and interior/face/quadrature controls with compatible divergence spaces. |
-| L06: MHM–MsHHO connection | Elliptic macro and skeletal refinement | Analytical MsHHO/MHM comparisons with declared source spaces | Repeat convergence and same-case independent assembly under the equivalence hypotheses. |
-| L07: face-based robustness | Periodic medium and SPE10 layer 36 with continuous face interpolation | [Darcy flux](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10-flux.md), Q1/C0-P1 MHM and Q3/MSL/NeoPZ references | Resolve local/face refinement and the classical-reference increment while retaining the published 66-square macro partition and material. |
-| L08: unfitted preprint | Two-layer interface problem | [Unfitted study](https://github.com/volpatto/pymhm/blob/main/docs/cases/unfitted.md), analytical series and independent UFL | Identify preprint-specific data and hypotheses separately from final L10; the final regularity endpoint differs. |
-| L09: H(div) recovery and adaptivity | [Adaptive SPE10](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10-adaptive.md) | Published P2/r2/P0 spaces, RT2/Oswald recovery, full independent initial/final UFL systems and refined RT2 classical references | Reduce remaining reference sensitivity and qualify historical BAMG connectivity; estimator estimates require `k >= ell + d`. |
-| L10: unfitted flux approximation | Smooth h/p sweeps and two-layer contrast | [Unfitted study](https://github.com/volpatto/pymhm/blob/main/docs/cases/unfitted.md), analytical norms, native assemblies, P8 r32→r64 endpoints for ell0/ell1 and complete twelve-case independent UFL S0/S2 contrast systems | Resolve local error for higher enriched traces on admissible spaces; P8/r16–P3/s32 has an exact multiplier kernel. Historical Figure-7 S2 parameters remain unspecified despite same-discretization agreement for the declared cases. |
-| L11: advective/reactive MHM | Mixed walls and random Darcy–transport | [Transport](https://github.com/volpatto/pymhm/blob/main/docs/cases/transient-transport.md), analytical and coefficient controls | Acquire the complete §5.4 realization, coupled trajectory and independently refined space/time/quadrature reference. |
-| L12: generalized RAD | Polygonal/polyhedral diffusion and reaction layers | [Polytopes](https://github.com/volpatto/pymhm/blob/main/docs/cases/polygons.md), conditioning, boundary and layer controls | Repeat conditioning/layer/star-polyhedron studies and independent fields for the matched cases. |
-| L13: equal-order Stokes–Brinkman | Smooth flow and SPE10 layer one | [SPE10](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10.md), published-space fields, analytical polynomial-family layer convergence and a five-level independent Taylor–Hood baseline with physical field integration | Assess remaining local/trace and classical-reference sensitivity, qualify missing historical mesh/stabilization choices, and complete 2D/3D extreme-regime validation. |
-| L14: multilevel flow estimator | [Stokes adaptation and cavity](https://github.com/volpatto/pymhm/blob/main/docs/cases/stokes-adaptive.md) | Analytical indicators and classical cavity comparisons | Repeat adaptation and reference refinement with the same constant lid, physical pressure gauge and corner cutout. |
-| L15: adaptive Oseen | Smooth and boundary-layer flow | [Oseen](https://github.com/volpatto/pymhm/blob/main/docs/cases/oseen.md), analytical refinement and independent operators | Repeat layer/adaptive whole-case controls, quadrature and physical norms. |
-| L16: flow a priori analysis | Admissible Stokes–Brinkman spaces | Analytical/native flow verification and stated degree conditions | Verify the theorem's discretization and regularity conditions for each rate claim. |
-| L17: primal elasticity | Analytical displacement and HPC4E | [HPC4E](https://github.com/volpatto/pymhm/blob/main/docs/cases/hpc4e.md), analytical fields, independent DOLFINx/UFL RT1/RT2 stress–displacement–rotation references, physical equilibrium/work checks and RT2 spatial refinement | Reduce or quantify remaining reference sensitivity, especially rotation and compliance, while preserving the published skeletal spaces and full-stress norms. |
-| L18: weakly symmetric mixed elasticity | Tensor families and oscillatory Table 3 case | [Mixed elasticity](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-families.md), native fields and analytical norms | Repeat BDM/RT/enrichment and tensor controls; retain the printed rotation-column inconsistency explicitly. |
-| L19: locking-free elasticity | Finite/infinite bulk limits | [GaLS elasticity](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity.md), mixed-field and native comparisons | Execute matched Lamé sweeps and refinement; an affine primal patch does not establish uniform locking freedom. |
-| L20: scalable implementation | Distributed local/global execution | [Execution](docs/execution.md), spawn/MPI contracts and workload-specific measurements | Reproduce setup, transfers, synchronization and scaling at matched accuracy; historical cluster scaling remains unverified. |
-| Additional MH | Robin hybrid diffusion | Analytical boundary/parameter sweeps and independent UFL | Repeat complete refinement; distinguish the Robin multiplier from physical flux. |
-| Additional MH²M | [Oscillatory medium](https://github.com/volpatto/pymhm/blob/main/docs/cases/mh2m-heterogeneous.md) | Crisscross/diagonal cases and refined independent CG3 fields | Repeat same-case acquisition, overlay quadrature and baseline refinement; historical curve differences remain. |
-| Additional PGMHM | Inclusions and SPE10 | Analytical/native equations and separately refined classical fields | Acquire matched whole-case comparisons with published enrichment and heterogeneous stabilization. |
-| Additional Unusual | [Reaction–diffusion](https://github.com/volpatto/pymhm/blob/main/docs/cases/unusual.md) and SPE10 layers | Analytical/native fields and recorded FreeFem comparisons | Reacquire the full external comparison and verify material/reaction-length/trace resolution. |
-| Additional Helmholtz | [Angular and stability studies](https://github.com/volpatto/pymhm/blob/main/docs/cases/helmholtz.md), [Marmousi](https://github.com/volpatto/pymhm/blob/main/docs/cases/marmousi.md) | Plane/Hankel fields, native saddle systems and classical material-crop references | Repeat published angular/stability sequences; validate Marmousi storage phases and reference refinement while retaining historical-input limits. |
-| Additional Maxwell | [Nanoguide](https://github.com/volpatto/pymhm/blob/main/docs/cases/maxwell-nanoguide.md) | Analytical dynamics, native operators, independent central-DG Q2 reference through 1024², matched staggered-time fields, CPU/GPU equivalence and space/time/material controls | Quantify remaining reference and MHM temporal sensitivity over the declared trajectory; identify historical phase/amplitude/turn-on before claiming literal image reproduction. |
-| Additional elastodynamics | [Equation (53) and three layers](https://github.com/volpatto/pymhm/blob/main/docs/cases/elastodynamics.md) | Analytical Newmark trajectories, complete independent 341-macro original equations and 301-state common-basis coordinate comparisons for the selected three-layer case | Evaluate both executed field bases separately, verify the conforming reference on several finer meshes and complete space, time and quadrature refinement. Historical heterogeneous inputs remain unresolved. |
-
-### Numerical acceptance
-
-1. Verify geometry, quadrature, basis orientation, local/adjoint kernels,
-   constrained solves, trace signs, physical gauges and admissible spaces.
-2. Derive manufactured sources and boundary data from the actual operator.
-   Verify original physical equations and saved-field replay, rather than only
-   a scaled CSR residual or a patch solution.
-3. Refine macro, local and skeletal spaces independently. Measure physical
-   pressure/displacement and flux/stress separately, preserving broken traces.
-4. Compare matched fields and norms with an independent assembly. Without an
-   exact solution, also refine a classical reference and report its own increments.
-5. Claim a published reproduction only with matching data and discretization,
-   stated extraction uncertainty and compatible rate hypotheses. Singular forcing
-   or heterogeneous materials do not inherit smooth-problem rates automatically.
-
-Line and branch coverage of at least 99% is a software quality gate, not a proof of
-accuracy, inf-sup stability or literature completion. Optional API contract tests
-are accompanied by native integrations on available platforms.
-
-### Execution and distribution
-
-[Execution](docs/execution.md) and [performance](https://github.com/volpatto/pymhm/blob/main/docs/performance.md) record setup, assembly,
-factorization, repeated loads, global solve, reconstruction, transfers,
-synchronization and peak memory. Compare backends at equal accuracy and reproducible
-thread settings. Portable spawn semantics, MPI partitions, operator reuse and
-resident GPU batches retain their explicit numerical and platform restrictions.
-AMG on admissible positive systems and block preconditioning of saddle systems are
-distinct paths; backend availability does not establish acceleration.
-
-The portable core imports without optional FEM, CAD, MPI or accelerator runtimes.
-Platform claims require native tests. PyPI readiness requires checked wheel/sdist,
-clean-install verification and synchronized metadata; release automation does not
-mean an upload has occurred. Conda-forge additionally requires an accepted recipe
-and available dependencies on its target platforms.
-
-Validated release tags call the dedicated Tests and Quality workflows in parallel,
-then build and deploy Docs, then publish the checked package to PyPI.
-Maintainers configure the PyPI trusted publisher for `publish-pypi.yml`, GitHub
-Actions as the Pages source and the `github-pages` environment's release-tag
-deployment rules. The
-published gallery uses selected versioned figures; large field and intermediate
-archives remain outside Git, and documentation is excluded from Python and Conda
-installation artifacts.
-
-Both release formats include the complete runtime and typing files. The source
-archive also contains only the build configuration, README, license and generated
-metadata required for installation. Tests, scientific examples, notebooks,
-documentation and environment definitions are maintained in the repository.
-Optional backend adapters ship with the runtime; their native dependencies are
-installed separately for the supported target platform.
+Run `docs-check` and inspect MathJax in the browser: a successful Markdown/site
+build does not compile TeX. Use standalone `$$` display blocks with blank
+lines, aligned long equations and protected TeX table delimiters. Inspect final
+figures at their intended viewing size. Detailed maintained procedures are in
+[development](docs/development.md) and [verification](docs/verification.md).
