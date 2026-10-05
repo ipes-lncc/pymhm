@@ -6,7 +6,13 @@ Optional native dependencies are loaded only when their functionality is called.
 
 ## From a checkout
 
+Install Pixi 0.76.2; both the workspace and the pinned AmgX toolchain require this
+version. Check the workspace lockfile before installing an environment:
+
 ```bash
+pixi --version
+pixi list --locked --no-install -e test-core
+pixi list --locked --no-install --manifest-path tools/amgx/pixi.toml
 pixi install --locked -e test-core
 pixi run --locked -e test-core test-cov
 pixi run --locked -e test-core lint
@@ -26,8 +32,10 @@ pixi run --locked -e test-core build
 ```
 
 Install from a checkout until a release is published. The repository includes
-a trusted-publishing workflow and a Conda recipe; building distribution artifacts
-does not publish them.
+a Conda recipe and CI that automatically publishes checked PyPI distributions
+and documentation on validated release tags. Building distribution artifacts
+locally does not publish them. Release configuration and required repository
+settings are described in [development](development.md).
 
 Both release formats provide the complete `pymhm` runtime. The wheel contains
 runtime modules, typing files, license and distribution metadata. The source
@@ -44,10 +52,11 @@ for the capabilities you use; native runtimes, drivers and solver libraries are
 not bundled in the `pymhm` archives. The environments below provide reproducible
 combinations, subject to their platform and hardware requirements.
 
-Computed field archives and publication figures are generated locally and remain
-outside the lightweight Git sources. The three compact SPE10 input layers are
-ordinary Git files. Core tests generate small fixtures; installing the wheel or
-source distribution does not require previously computed scientific outputs.
+Selected publication figures and the three compact SPE10 input layers are
+ordinary Git files. Large computed field archives and intermediate outputs are
+generated locally and remain outside Git. Core tests generate small fixtures;
+installing the wheel or source distribution does not require previously computed
+scientific outputs.
 
 Generate a case with its documented public command. Before using its results,
 verify geometry, material and boundary data, approximation spaces, physical norms
@@ -69,13 +78,14 @@ the versioned JSON records; update `scripts/notebook_data.py` when adding field
 reads. The notebook runner checks its selected dependencies before execution.
 Existing checksum and numerical checks remain active.
 
-Build the visual documentation after generating the figures for its retained
-cases. For example, the public `gallery-darcy` task computes and plots stated
+The selected figures in Git support documentation builds from a checkout.
+Regenerate and accept figures when changing a scientific case. For example, the
+public `gallery-darcy` task computes and plots stated
 analytical problems; it does not reproduce a published numerical table. Source
 tests and package builds need no computed fields or figures. Scientific notebooks
 and the full gallery are executed separately from source-only CI, with their
-numerical and rendering checks. Automatic documentation generation remains
-pending until these checks have a manageable, verified CI workflow.
+numerical and rendering checks. CI checks documentation markup; it does not
+regenerate the scientific calculations, execute their notebooks or inspect figures.
 
 ## Complete native tests on Linux
 
@@ -96,6 +106,12 @@ The complete and portable suites use all available CPU workers, followed by a
 separate phase for tests marked `serial`. Native integration skips in the portable
 suite identify capabilities that it does not provide; they do not qualify those
 backends. See [development](development.md) for selectors and coverage policy.
+
+In CI, this complete profile runs only when the Tests workflow is manually
+dispatched with `full_native` enabled on the configured two-GPU runner. Portable
+and CPU integration jobs run independently after the shared lockfile checks.
+Tests, Lint and Quality, and Docs have dedicated workflows for pull requests and
+main-branch pushes; the release workflow reuses their checks before publishing.
 
 ## Optional capabilities
 
@@ -139,3 +155,5 @@ pixi run --locked -e test-core python examples/verify.py
 
 Environment definitions and task names in `pixi.toml` are authoritative. The
 metadata checker prevents release-version/dependency drift between manifests.
+Run `pixi run --locked -e packaging lock-check` to validate both the workspace
+and AmgX toolchain lockfiles without updating their resolutions.

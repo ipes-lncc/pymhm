@@ -5,17 +5,60 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      full_native:
+        description: Run the complete native suite on the two-GPU self-hosted runner
+        type: boolean
+        required: false
+        default: false
+  workflow_call:
+    inputs:
+      full_native:
+        description: Run the complete native suite on the two-GPU self-hosted runner
+        type: boolean
+        required: false
+        default: false
+    secrets:
+      CODECOV_TOKEN:
+        required: false
 
 permissions:
   contents: read
 
 concurrency:
   group: tests-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref_type != 'tag' }}
+
+env:
+  PYTHONFAULTHANDLER: "1"
+  OMP_NUM_THREADS: "1"
+  BLIS_NUM_THREADS: "1"
+  VECLIB_MAXIMUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+  NUMEXPR_NUM_THREADS: "1"
 
 jobs:
+  workspace:
+    name: Validate the complete locked workspace
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          pixi-version: v0.76.2
+          run-install: false
+      - name: Check every environment and platform without installing
+        run: pixi list --locked --no-install -e test-core --json > /dev/null
+      - name: Check the pinned AmgX toolchain without installing
+        run: >-
+          pixi list --locked --no-install --manifest-path tools/amgx/pixi.toml
+          --json > /dev/null
+
   core:
     name: Core (${{ matrix.os }}, ${{ matrix.environment }})
+    needs: workspace
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     strategy:
@@ -28,13 +71,6 @@ jobs:
           - {os: macos-15-intel, environment: test-core}
           - {os: ubuntu-latest, environment: test-py311}
           - {os: ubuntu-latest, environment: test-py312}
-    env:
-      PYTHONFAULTHANDLER: "1"
-      OMP_NUM_THREADS: "1"
-      BLIS_NUM_THREADS: "1"
-      VECLIB_MAXIMUM_THREADS: "1"
-      OPENBLAS_NUM_THREADS: "1"
-      MKL_NUM_THREADS: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: prefix-dev/setup-pixi@v0.10.2
@@ -72,172 +108,127 @@ jobs:
           fail_ci_if_error: false
           token: ${{ secrets.CODECOV_TOKEN }}
 
-  quality:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-      - uses: prefix-dev/setup-pixi@v0.10.2
-        with:
-          pixi-version: v0.76.2
-          environments: test-core packaging
-          locked: true
-      - run: pixi run --locked -e test-core lint
-      - run: pixi run --locked -e test-core format-check
-      - run: pixi run --locked -e test-core typecheck
-      - run: pixi run --locked -e packaging ci-check
-      - run: pixi run --locked -e test-core build
-      - run: pixi run --locked -e test-core check-dist
-      - run: pixi run --locked -e packaging conda-build
-
-  fem:
-    name: DOLFINx integration
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      OMP_NUM_THREADS: "1"
-      BLIS_NUM_THREADS: "1"
-      VECLIB_MAXIMUM_THREADS: "1"
-      OPENBLAS_NUM_THREADS: "1"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: prefix-dev/setup-pixi@v0.10.2
-        with:
-          pixi-version: v0.76.2
-          environments: fem
-          locked: true
-      - run: pixi run --locked -e fem test-fem
-      - name: Require native PETSc
-        run: pixi run --locked -e fem python -c 'from petsc4py import PETSc; print(PETSc.Sys.getVersion())'
-      - name: Exercise native PETSc solver
-        run: pixi run --locked -e fem python scripts/run_tests.py -- tests/test_solvers.py -k 'native_optional_cpu_integration and petsc'
-
-  mpi:
-    name: Distributed MPI integration (two ranks)
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    env:
-      OMP_NUM_THREADS: "1"
-      OPENBLAS_NUM_THREADS: "1"
-      BLIS_NUM_THREADS: "1"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: prefix-dev/setup-pixi@v0.10.2
-        with:
-          pixi-version: v0.76.2
-          environments: fem
-          locked: true
-      - name: Require native MPI and MUMPS
-        run: >-
-          pixi run --locked -e fem python -c
-          'import shutil; from mpi4py import MPI; from petsc4py import PETSc;
-          assert shutil.which("mpiexec"); assert PETSc.Sys.hasExternalPackage("mumps");
-          print(MPI.Get_library_version())'
-      - name: Exercise distributed assembly, solves and collective failures
-        run: pixi run --locked -e fem test-mpi
-
-  intel:
-    name: PARDISO integration (${{ matrix.os }})
+  integration:
+    name: ${{ matrix.label }} (${{ matrix.os }})
+    needs: workspace
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
-    env:
-      OMP_NUM_THREADS: "1"
-      BLIS_NUM_THREADS: "1"
-      VECLIB_MAXIMUM_THREADS: "1"
-      MKL_NUM_THREADS: "1"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: prefix-dev/setup-pixi@v0.10.2
-        with:
-          pixi-version: v0.76.2
-          environments: intel
-          locked: true
-      - name: Require native PARDISO
-        run: pixi run --locked -e intel python -c 'import pypardiso'
-      - name: Exercise native PARDISO solver
-        run: pixi run --locked -e intel python scripts/run_tests.py -- tests/test_solvers.py tests/test_extended_local.py -k pardiso
-      - name: Check generic local/global equations with native PARDISO and spawn
-        run: pixi run --locked -e intel python scripts/run_tests.py -- tests/test_windows_portability.py
-      - name: Build a Windows wheel with locked Intel dependencies
-        if: runner.os == 'Windows'
-        run: >-
-          pixi run --locked -e intel python -m build
-          --wheel --no-isolation --outdir build/windows-wheel
-      - name: Test installed Windows wheel with native PARDISO
-        if: runner.os == 'Windows'
-        run: >-
-          pixi run --locked -e intel python scripts/check_portable_wheel.py build/windows-wheel
-          --require-pardiso --report build/reports/windows-pardiso-wheel.json
-      - uses: actions/upload-artifact@v4
-        if: runner.os == 'Windows' && always()
-        with:
-          name: wheel-windows-pardiso
-          path: build/reports/windows-pardiso-wheel.*
-
-  meshing:
-    name: Gmsh and Netgen integration
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-      - uses: prefix-dev/setup-pixi@v0.10.2
-        with:
-          pixi-version: v0.76.2
-          environments: meshing
-          locked: true
-      - run: pixi run --locked -e meshing test-meshing
-
-  remeshing:
-    name: FreeFEM and BAMG integration
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    env:
-      OMP_NUM_THREADS: "1"
-      OPENBLAS_NUM_THREADS: "1"
-      BLIS_NUM_THREADS: "1"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: prefix-dev/setup-pixi@v0.10.2
-        with:
-          pixi-version: v0.76.2
-          environments: remeshing
-          locked: true
-      - name: Require native FreeFEM
-        run: pixi run --locked -e remeshing python -c 'import shutil; assert shutil.which("FreeFem++-nw")'
-      - name: Verify metric remeshing and polygon boundaries
-        run: pixi run --locked -e remeshing python scripts/run_tests.py -- tests/test_metric_freefem.py tests/test_metric_adapt.py
-
-  visualization:
-    name: PyVista integration (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-15, macos-15-intel]
+        include:
+          - {kind: fem, label: DOLFINx and PETSc, os: ubuntu-latest, environment: fem}
+          - {kind: mpi, label: MPI with two ranks, os: ubuntu-latest, environment: fem}
+          - {kind: intel, label: PARDISO, os: ubuntu-latest, environment: intel}
+          - {kind: intel, label: PARDISO, os: windows-latest, environment: intel}
+          - {kind: meshing, label: Gmsh and Netgen, os: ubuntu-latest, environment: meshing}
+          - {kind: remeshing, label: FreeFEM and BAMG, os: ubuntu-latest, environment: remeshing}
+          - {kind: visualization, label: PyVista and VTK, os: ubuntu-latest, environment: visualization}
+          - {kind: visualization, label: PyVista and VTK, os: windows-latest, environment: visualization}
+          - {kind: visualization, label: PyVista and VTK, os: macos-15, environment: visualization}
+          - {kind: visualization, label: PyVista and VTK, os: macos-15-intel, environment: visualization}
     env:
       PYVISTA_OFF_SCREEN: "true"
-      OMP_NUM_THREADS: "1"
-      BLIS_NUM_THREADS: "1"
-      VECLIB_MAXIMUM_THREADS: "1"
-      OPENBLAS_NUM_THREADS: "1"
     steps:
       - uses: actions/checkout@v4
       - name: Install Linux offscreen runtime
-        if: runner.os == 'Linux'
+        if: matrix.kind == 'visualization' && runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y libegl1 libegl-mesa0 libgl1 libgl1-mesa-dri libopengl0 libxrender1
       - uses: prefix-dev/setup-pixi@v0.10.2
         with:
           pixi-version: v0.76.2
-          environments: visualization
+          environments: ${{ matrix.environment }}
           locked: true
+      - name: Exercise native DOLFINx assembly
+        if: matrix.kind == 'fem'
+        run: pixi run --locked -e fem test-fem
+      - name: Require native PETSc
+        if: matrix.kind == 'fem'
+        run: pixi run --locked -e fem python -c 'from petsc4py import PETSc; print(PETSc.Sys.getVersion())'
+      - name: Exercise native PETSc solver
+        if: matrix.kind == 'fem'
+        run: pixi run --locked -e fem python scripts/run_tests.py -- tests/test_solvers.py -k 'native_optional_cpu_integration and petsc'
+      - name: Require native MPI and MUMPS
+        if: matrix.kind == 'mpi'
+        run: >-
+          pixi run --locked -e fem python -c
+          'import shutil; from mpi4py import MPI; from petsc4py import PETSc;
+          assert shutil.which("mpiexec"); assert PETSc.Sys.hasExternalPackage("mumps");
+          print(MPI.Get_library_version())'
+      - name: Exercise distributed assembly, solves and collective failures
+        if: matrix.kind == 'mpi'
+        run: pixi run --locked -e fem test-mpi
+      - name: Require native PARDISO
+        if: matrix.kind == 'intel'
+        run: pixi run --locked -e intel python -c 'import pypardiso'
+      - name: Exercise native PARDISO solver
+        if: matrix.kind == 'intel'
+        run: pixi run --locked -e intel python scripts/run_tests.py -- tests/test_solvers.py tests/test_extended_local.py -k pardiso
+      - name: Check generic local/global equations with native PARDISO and spawn
+        if: matrix.kind == 'intel'
+        run: pixi run --locked -e intel python scripts/run_tests.py -- tests/test_windows_portability.py
+      - name: Build a Windows wheel with locked Intel dependencies
+        if: matrix.kind == 'intel' && runner.os == 'Windows'
+        run: >-
+          pixi run --locked -e intel python -m build
+          --wheel --no-isolation --outdir build/windows-wheel
+      - name: Test installed Windows wheel with native PARDISO
+        if: matrix.kind == 'intel' && runner.os == 'Windows'
+        run: >-
+          pixi run --locked -e intel python scripts/check_portable_wheel.py build/windows-wheel
+          --require-pardiso --report build/reports/windows-pardiso-wheel.json
+      - uses: actions/upload-artifact@v4
+        if: matrix.kind == 'intel' && runner.os == 'Windows' && always()
+        with:
+          name: wheel-windows-pardiso
+          path: build/reports/windows-pardiso-wheel.*
+
+      - name: Exercise mesh generation and exchange
+        if: matrix.kind == 'meshing'
+        run: pixi run --locked -e meshing test-meshing
+      - name: Require native FreeFEM
+        if: matrix.kind == 'remeshing'
+        run: pixi run --locked -e remeshing python -c 'import shutil; assert shutil.which("FreeFem++-nw")'
+      - name: Verify metric remeshing and polygon boundaries
+        if: matrix.kind == 'remeshing'
+        run: pixi run --locked -e remeshing python scripts/run_tests.py -- tests/test_metric_freefem.py tests/test_metric_adapt.py
+
       - name: Require native PyVista and VTK
+        if: matrix.kind == 'visualization'
         run: pixi run --locked -e visualization python -c 'import pyvista as pv; print(pv.__version__, pv.vtk_version_info)'
       - name: Validate native fields, file round trips and offscreen images
+        if: matrix.kind == 'visualization'
         run: pixi run --locked -e visualization test-visualization
+
+  full-native:
+    name: Complete CPU and two-GPU suite
+    needs: workspace
+    if: github.event_name == 'workflow_dispatch' && inputs.full_native
+    runs-on: [self-hosted, linux, x64, gpu]
+    timeout-minutes: 60
+    concurrency:
+      group: full-native-integration
+      cancel-in-progress: false
+    env:
+      PYVISTA_OFF_SCREEN: "true"
+      MPLBACKEND: "Agg"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          pixi-version: v0.76.2
+          environments: test
+          locked: true
+      - name: Build pinned native AmgX and PyAMGX
+        run: pixi run --locked -e test test-setup-amgx
+      - name: Require the complete native stack and two CUDA devices
+        run: pixi run --locked -e test test-dependencies
+      - name: Run all CPU workers followed by exclusive serial tests
+        run: pixi run --locked -e test test-cov
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-full-native-linux-cuda
+          path: build/reports/coverage/

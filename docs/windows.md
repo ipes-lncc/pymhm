@@ -12,13 +12,17 @@ local/global checks against an independently assembled conforming system.
 An environment resolved in the lockfile or a Linux test run does not establish
 that a particular revision passed native Windows execution; inspect that
 revision's [Tests workflow](https://github.com/volpatto/pymhm/actions/workflows/tests.yml).
+Validated release tags automatically publish the portable package and its
+documentation; [development](development.md) describes the required release settings.
 
 ## Installation
 
-Install [Pixi for Windows](https://pixi.prefix.dev/latest/installation/) and
+Install [Pixi for Windows](https://pixi.prefix.dev/latest/installation/) version 0.76.2 and
 open PowerShell in a checkout. These commands use the existing lockfile:
 
 ```powershell
+pixi --version
+pixi list --locked --no-install -e test-core
 pixi install --locked -e test-core
 pixi run --locked -e test-core pytest -q tests/test_windows_portability.py
 pixi run --locked -e test-core test-cov

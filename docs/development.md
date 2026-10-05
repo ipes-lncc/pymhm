@@ -1,11 +1,26 @@
 # Development and release
 
-Development uses Pixi, a `src` layout and Hatchling. Basix supplies native
+Development uses Pixi 0.76.2, a `src` layout and Hatchling. The workspace and
+pinned AmgX toolchain require the same Pixi version. Basix supplies native
 reference-element tabulation as a standard dependency. It is loaded on demand;
 the algebraic core requires no optional FEM compiler, MPI, CAD or accelerator
 runtime. Functions and classes, including private and nested helpers, have
 docstrings and type annotations. The package includes its typing marker and
 typed root interface.
+
+Use the checked-in lockfiles for every environment. Validate workspace resolution
+without installing packages or changing the lockfile before preparing an environment:
+
+```bash
+pixi --version
+pixi list --locked --no-install -e test-core
+pixi list --locked --no-install --manifest-path tools/amgx/pixi.toml
+```
+
+Dependency changes require matching manifest and lockfile updates. An environment
+command with `--locked` fails if their resolutions disagree.
+The `pixi run --locked -e packaging lock-check` task performs both checks; its
+`amgx-lock-check` dependency validates the separate native build toolchain.
 
 ## Quality gates
 
@@ -80,14 +95,30 @@ and branch thresholds remain **99%**, with unchanged numerical tolerances.
 Larger literature campaigns run through the problem notebooks outside the CI
 suite.
 
-The CI matrix uses `test-core` on Linux, Windows and both macOS architectures,
-with additional Python 3.11 and 3.12 jobs on Linux. Native FEniCS/PETSc, MPI,
-meshing and FreeFEM jobs run in their CPU environments; PARDISO integration runs
-on Linux and Windows. The manually dispatched full native workflow requires a
-configured self-hosted Linux runner with the `gpu` label and two NVIDIA devices.
-It prepares AmgX, requires the complete native stack and runs the whole suite
-with the same parallel/serial phases and independent coverage gates. A skipped
-integration test does not constitute passed backend verification.
+CI separates responsibilities into four workflows: [Tests](https://github.com/volpatto/pymhm/actions/workflows/tests.yml),
+[Lint and Quality](https://github.com/volpatto/pymhm/actions/workflows/lint-and-quality.yml),
+[Docs](https://github.com/volpatto/pymhm/actions/workflows/docs.yml) and
+[Publish to PyPI](https://github.com/volpatto/pymhm/actions/workflows/publish-pypi.yml).
+Tests, Quality and Docs run independently on pull requests and main-branch pushes.
+They also expose `workflow_call` so release validation reuses the same checks.
+The workflows use Pixi 0.76.2 and the checked-in lockfiles. Locked workspace
+validation checks both the package and separate AmgX toolchain without installing
+their environments.
+
+The Tests portable matrix uses `test-core` on Linux, Windows and both macOS
+architectures, with additional Python 3.11 and 3.12 jobs on Linux. The integration
+matrix exercises FEniCS/PETSc, MPI, meshing and FreeFEM on Linux, PARDISO on Linux
+and Windows, and PyVista/VTK on all four platforms. Every portable coverage job
+enforces the independent 99% line and branch gates.
+
+The complete CPU/GPU job is an explicit opt-in: dispatch Tests with `full_native`
+enabled on a configured self-hosted Linux runner with the `gpu` label and two
+NVIDIA devices. It prepares AmgX, requires the complete native stack and runs the
+whole suite with the same parallel/serial phases and independent coverage gates.
+It is not scheduled by an ordinary push, pull request or release tag. A skipped
+integration test does not constitute passed backend verification. Scientific
+acquisitions, notebook execution, field and figure acceptance, and browser-side
+MathJax inspection remain separate from CI's documentation markup checks.
 
 ## Reproducible science
 
@@ -113,11 +144,30 @@ native DOLFINx integration tests remain executable parts of its test suite.
 
 ## Distribution
 
-The PyPI workflow uses trusted publishing and a version-tag check. It does not
-upload on ordinary pushes. The Conda recipe builds a portable package and tests
-its installed import/dependencies; conda-forge acceptance requires a feedstock
-review. Release maintainers must validate optional runtime compatibility and
-publish notes describing the actual scientific scope.
+The `publish-pypi.yml` release workflow runs for a `v*` tag pushed to
+`volpatto/pymhm`. It calls Tests and Lint and Quality in parallel for that revision.
+The quality gate validates the version tag against release metadata and uploads
+the checked distributions. Once both gates succeed, the release workflow calls
+Docs with `publish=true` to build, validate and deploy the documentation artifact
+to GitHub Pages through `github-pages`. The final PyPI job waits for Tests,
+Quality and Docs, downloads the checked Python distributions and publishes them
+through the configured `pypi` environment. The PyPI publishing job runs directly
+in `publish-pypi.yml`.
+
+Before a release, configure the PyPI trusted publisher with owner `volpatto`,
+repository `pymhm`, workflow `publish-pypi.yml` and environment `pypi`. Enable Pages in
+**Settings → Pages → Build and deployment → Source: GitHub Actions**.
+Allow release tags in the `github-pages` environment's deployment rules, and
+ensure the release jobs can run automatically under both environments' protection
+rules. The Pages job declares `pages: write`
+and `id-token: write`; the PyPI job declares `id-token: write`.
+
+Ordinary branch pushes, pull requests and manual dispatches do not publish a
+package or deploy documentation. The optional GPU job is qualified separately
+and does not block tag releases. The Conda recipe builds a portable package and
+tests its installed import/dependencies; conda-forge acceptance requires a
+feedstock review. Release maintainers must validate optional runtime compatibility
+and publish notes describing the actual scientific scope.
 Inspect the source archive as well as the installed runtime: reference solver
 sources and comparison runners are excluded from both version control and release
 artifacts. Plotting archived numerical results does not require those runners.
@@ -136,6 +186,13 @@ and Pixi files are repository resources and are excluded from both release
 archives. Use a checkout for those workflows, including scientific acquisitions,
 field replay and documentation builds. The full runtime includes the optional
 backend adapters; their native libraries are separate installation requirements.
+
+The selected figures required by the published gallery are versioned in an
+explicit `.gitignore` allowlist, so documentation builds need no field acquisition.
+Regenerate them from accepted scientific records when a case changes and inspect
+the rendered figures before updating the allowlist. Large field archives and
+intermediate outputs remain outside Git. Documentation and publication figures
+are excluded from Python and Conda installation artifacts.
 
 See the repository `CONTRIBUTING.md`, `SECURITY.md`, `CITATION.cff` and CI
 workflows for the maintained commands and policies.

@@ -17,7 +17,11 @@ and distinguishes it from extensions described in the literature.
 
 ## Quick start
 
+Use Pixi 0.76.2, the version required by the workspace and pinned AmgX toolchain.
+
 ```bash
+pixi --version
+pixi list --locked --no-install -e test-core
 pixi install --locked -e test-core
 pixi run --locked -e test-core test-cov
 ```
@@ -142,9 +146,10 @@ an analytical series, and MSL/NeoPZ comparisons for a low-permeability obstacle.
 
 ## Reproducible calculations
 
-Git contains sources, scientific JSON records and three compact SPE10 input
-layers. Large computed fields and figures are generated locally and stay outside
-Git. An ordinary package installation and core tests require no archived outputs.
+Git contains sources, scientific JSON records, three compact SPE10 input layers
+and the selected figures used by the published documentation. Large computed
+fields and intermediate outputs are generated locally and stay outside Git.
+An ordinary package installation and core tests require no archived outputs.
 [ROADMAP.md](ROADMAP.md) sets implementation and validation priorities,
 dependencies and acceptance criteria for the next milestones.
 
@@ -171,9 +176,10 @@ pixi run -e notebooks python scripts/notebook_data.py --notebook 68 --check
 ```
 
 Missing fields are reported explicitly. Neither notebooks nor documentation
-automatically download computed results. Build the documentation after generating
-the figures for its retained cases; CI source tests and package builds do not
-depend on those outputs.
+automatically download computed results. The publication figures included in Git
+support documentation builds from a checkout. Regenerating a scientific case or
+replaying its fields requires its documented calculations and local outputs;
+package builds and core tests do not depend on those outputs.
 
 ## Development
 
@@ -189,8 +195,8 @@ pixi run -e packaging check-dist
 
 After generating and accepting the selected scientific cases, execute their
 notebooks and run `pixi run -e docs docs-check`. Inspect the rendered figures and
-MathJax in the browser. Automatic documentation generation remains pending until
-its retained scientific cases have a manageable, verified generation workflow.
+MathJax in the browser. CI checks documentation markup; scientific acquisition,
+notebook execution and full gallery generation require their separate acceptance.
 
 The portable `test-core` environment supports Linux, Windows and macOS. The
 complete `test` environment includes the native CPU and GPU integrations and
@@ -201,5 +207,17 @@ Both suites use all available CPU workers and isolate tests marked `serial`.
 CI enforces at least 99% line and branch coverage independently. Executable
 notebooks and analytical PDE examples are available in the repository. Optional
 dependency contracts and actual native-backend integrations are reported separately.
+
+Dedicated [Tests](https://github.com/volpatto/pymhm/actions/workflows/tests.yml),
+[Lint and Quality](https://github.com/volpatto/pymhm/actions/workflows/lint-and-quality.yml)
+and [Docs](https://github.com/volpatto/pymhm/actions/workflows/docs.yml) workflows
+run independently on pull requests and main-branch pushes. The complete two-GPU
+suite is opt-in through manual dispatch. On a validated release tag,
+[Publish to PyPI](https://github.com/volpatto/pymhm/actions/workflows/publish-pypi.yml)
+reuses Tests and Quality in parallel, then builds and deploys the checked
+documentation to GitHub Pages, then publishes the checked Python distributions.
+Maintainers configure the PyPI trusted publisher for `publish-pypi.yml`, Pages
+with GitHub Actions as its source and the `github-pages` environment to accept
+release tags; see [development](docs/development.md).
 
 Licensed under LGPL-2.1-only. Citation metadata is in `CITATION.cff`.

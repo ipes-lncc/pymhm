@@ -1,5 +1,6 @@
 [workspace]
 name = "pymhm-amgx-build"
+requires-pixi = "==0.76.2"
 channels = ["conda-forge"]
 platforms = ["linux-64"]
 

@@ -317,10 +317,16 @@ não qualificam um pacote externo. Ver [providers](docs/tutorials/providers.md).
   exemplos, testes, benchmarks, notebooks, recipe, roadmap
   e ambientes Pixi permanecem no checkout, fora dos arquivos de instalação.
 - [ ] Conferir notebooks, catálogo, assets e marcações da literatura. Publicar
-  só registros/figuras atuais; fontes externas e ferramentas privadas de
+  só registros/figuras atuais; versionar somente as figuras selecionadas para
+  a documentação publicada, com allowlist explícita. Campos grandes e saídas
+  intermediárias ficam fora do Git; toda a documentação fica fora dos artefatos
+  Python/Conda. Fontes externas e ferramentas privadas de
   comparação ficam fora do repositório versionado e dos artefatos distribuídos.
-- [ ] Tratar publicação PyPI/conda-forge como uma etapa explícita posterior ao
-  aceite; construção ou configuração do workflow não implica publicação.
+- [ ] Configurar o trusted publisher PyPI para `publish-pypi.yml` e o ambiente
+  `pypi`; selecionar GitHub Actions como origem do Pages e permitir tags de release no ambiente
+  `github-pages`. Tags `v*` devem publicar automaticamente o pacote e o site
+  validados depois dos gates obrigatórios. Submissão ao conda-forge permanece
+  uma etapa própria; construção de artefatos não implica publicação.
 
 ## Protocolo de aceite de qualquer entrega
 
@@ -350,7 +356,10 @@ não qualificam um pacote externo. Ver [providers](docs/tutorials/providers.md).
 
 ## Ambientes e gates de qualidade
 
-Usar Pixi e o lockfile versionado. Para preparar pela primeira vez o ambiente
+Usar Pixi 0.76.2 e os lockfiles versionados do workspace e da integração AmgX.
+Conferir `pixi --version` e executar `pixi list --locked --no-install -e test-core`
+antes de preparar um ambiente; mudanças de dependências exigem atualizar manifesto
+e lockfile juntos. Para preparar pela primeira vez o ambiente
 completo Linux com duas GPUs:
 
 ```bash
@@ -367,6 +376,7 @@ pixi run --locked -e test format-check
 pixi run --locked -e test typecheck
 pixi run --locked -e test test-cov
 pixi run --locked -e docs docs-check
+pixi run --locked -e packaging lock-check
 pixi run --locked -e packaging ci-check
 pixi run --locked -e packaging metadata-check
 pixi run --locked -e test build
@@ -380,6 +390,21 @@ Linhas e ramos mantêm gates independentes de **99%**. Conservar testes de
 invariantes e integrações reais; reduzir combinações redundantes sem esconder
 casos numéricos distintos. O ambiente completo não deve aprovar ausência de
 dependências como validação de backend.
+
+Os workflows [Tests](https://github.com/volpatto/pymhm/actions/workflows/tests.yml),
+[Lint and Quality](https://github.com/volpatto/pymhm/actions/workflows/lint-and-quality.yml)
+e [Docs](https://github.com/volpatto/pymhm/actions/workflows/docs.yml) têm
+responsabilidades próprias e rodam independentemente em PRs e pushes de main.
+As verificações usam os dois workspaces travados e são reutilizáveis na release.
+A suíte completa com duas GPUs exige dispatch manual de Tests com `full_native`
+habilitado. O [workflow de release](https://github.com/volpatto/pymhm/actions/workflows/publish-pypi.yml)
+executa Tests e Quality em paralelo; depois Docs valida e publica o site; por
+fim, PyPI publica os artefatos verificados. Configurar o trusted publisher para
+`publish-pypi.yml`, a origem Pages como GitHub Actions e o ambiente `github-pages`
+para aceitar tags `v*`. A galeria usa figuras de
+publicação selecionadas e versionadas; campos grandes e intermediários continuam
+fora do Git. A aquisição científica, execução de notebooks, aceite de campos e
+figuras e inspeção MathJax permanecem verificações separadas.
 
 Nos alvos portáteis, executar `test-core`, `test-py311` e `test-py312` conforme a
 matriz de plataformas; essas execuções não substituem as integrações nativas.
@@ -549,6 +574,15 @@ Platform claims require native tests. PyPI readiness requires checked wheel/sdis
 clean-install verification and synchronized metadata; release automation does not
 mean an upload has occurred. Conda-forge additionally requires an accepted recipe
 and available dependencies on its target platforms.
+
+Validated release tags call the dedicated Tests and Quality workflows in parallel,
+then build and deploy Docs, then publish the checked package to PyPI.
+Maintainers configure the PyPI trusted publisher for `publish-pypi.yml`, GitHub
+Actions as the Pages source and the `github-pages` environment's release-tag
+deployment rules. The
+published gallery uses selected versioned figures; large field and intermediate
+archives remain outside Git, and documentation is excluded from Python and Conda
+installation artifacts.
 
 Both release formats include the complete runtime and typing files. The source
 archive also contains only the build configuration, README, license and generated

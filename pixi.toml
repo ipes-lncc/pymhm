@@ -1,6 +1,7 @@
 [workspace]
 name = "pymhm"
 version = "0.1.0"
+requires-pixi = "==0.76.2"
 description = "Composable multiscale hybrid mixed finite element methods"
 channels = ["conda-forge"]
 platforms = [
@@ -151,6 +152,8 @@ test-parallel = { cmd = "python scripts/run_tests.py", depends-on = ["test-depen
 test-setup-amgx = "pixi run --locked --manifest-path tools/amgx/pixi.toml python scripts/build_amgx.py --target-python .pixi/envs/test/bin/python"
 
 [tasks]
+amgx-lock-check = "pixi list --locked --no-install --manifest-path tools/amgx/pixi.toml"
+lock-check = { cmd = "pixi list --locked --no-install -e test-core", depends-on = ["amgx-lock-check"] }
 source-check = "python scripts/check_source_structure.py"
 lint = { cmd = "ruff check src tests scripts benchmarks examples", depends-on = ["source-check"] }
 format = "ruff format src tests scripts benchmarks examples"
