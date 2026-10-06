@@ -151,7 +151,7 @@ jobs:
         if: matrix.kind == 'fem'
         env:
           PYTEST_ADDOPTS: --capture=tee-sys --junitxml=build/reports/tests/fem.xml
-        run: pixi run --locked -e fem coverage-run -- -m 'fem and not mpi and not gpu'
+        run: pixi run --locked -e fem test-fem-cov
       - name: Exercise native PETSc solver
         if: matrix.kind == 'fem'
         env:
@@ -167,7 +167,7 @@ jobs:
         if: matrix.kind == 'fem'
         with:
           name: coverage-fem-linux
-          path: build/reports/coverage/.coverage
+          path: build/reports/fem-coverage/.coverage
           include-hidden-files: true
           if-no-files-found: error
       - name: Require native MPI and MUMPS

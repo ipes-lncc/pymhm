@@ -127,8 +127,7 @@ then combine them and check the thresholds:
 
 ```bash
 pixi run --locked -e test-core coverage-run
-pixi run --locked -e fem coverage-run --report-dir build/reports/fem-coverage -- \
-  -m "fem and not mpi and not gpu"
+pixi run --locked -e fem test-fem-cov
 mkdir -p build/reports/qualified-coverage
 pixi run --locked -e test-core python -m coverage combine --keep \
   --data-file=build/reports/qualified-coverage/.coverage \
@@ -184,6 +183,8 @@ on Linux and Windows. Core jobs collect coverage on each tested platform. The
 Linux FEM job collects native CPU coverage, and a separate Coverage job combines
 the Linux `test-core` and FEM datasets and enforces both 99% gates after Core and
 Integration succeed. `test-fem` selects CPU FEM tests without MPI;
+`test-fem-cov` measures that selection in `build/reports/fem-coverage`,
+leaving the core measurement in its own directory.
 `test-mpi` selects CPU MPI tests, including runs with one, two and four ranks.
 The FEM and MPI jobs upload separate parallel/serial JUnit reports even when a
 test fails. The FEM job checks native imports before starting the suite and

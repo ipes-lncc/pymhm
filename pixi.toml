@@ -178,6 +178,7 @@ coverage-run = "python scripts/run_tests.py --coverage"
 test-cov = { cmd = "python scripts/check_coverage.py build/reports/coverage/coverage.json", depends-on = ["coverage-run"] }
 test-parallel = "python scripts/run_tests.py"
 test-fem = "python scripts/run_tests.py -- -m 'fem and not mpi and not gpu'"
+test-fem-cov = "python scripts/run_tests.py --coverage --report-dir build/reports/fem-coverage -- -m 'fem and not mpi and not gpu'"
 test-mpi = "python scripts/run_tests.py -- -m 'mpi and not gpu'"
 test-meshing = "python scripts/run_tests.py -- -m meshing"
 test-visualization = "python scripts/run_tests.py -- tests/test_visualization.py"
