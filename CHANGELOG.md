@@ -1,23 +1,5 @@
 # Changelog
 
-## 1.0.1
-
-<!-- pymhm:generated:start -->
-<!-- Source: v1.0.0..a4d577a13e6375ae3d16cf5e2055058eed759645 -->
-
-### Documentation
-
-- add Codecov badge for coverage tracking (#2) ([4c57fe4](https://github.com/ipes-lncc/pymhm/commit/4c57fe417519d89ce5ad4086c88a8076a92194b5))
-
-
-### Other changes
-
-- Bump the actions group across 1 directory with 4 updates (#1) ([0e2394c](https://github.com/ipes-lncc/pymhm/commit/0e2394cb8fb8fe0f22a32741519ec0cf9f11b7e1))
-
-- Enhance documentation and references across various modules (#3) ([a4d577a](https://github.com/ipes-lncc/pymhm/commit/a4d577a13e6375ae3d16cf5e2055058eed759645))
-
-<!-- pymhm:generated:end -->
-
 ## Unreleased
 
 ### Features
@@ -46,6 +28,24 @@
   independent original-equation, basis-replay and native integration controls.
 - Carry pending changelog notes into release preparation without modifying
   historical release entries.
+
+## 1.0.1
+
+<!-- pymhm:generated:start -->
+<!-- Source: v1.0.0..a4d577a13e6375ae3d16cf5e2055058eed759645 -->
+
+### Documentation
+
+- add Codecov badge for coverage tracking (#2) ([4c57fe4](https://github.com/ipes-lncc/pymhm/commit/4c57fe417519d89ce5ad4086c88a8076a92194b5))
+
+
+### Other changes
+
+- Bump the actions group across 1 directory with 4 updates (#1) ([0e2394c](https://github.com/ipes-lncc/pymhm/commit/0e2394cb8fb8fe0f22a32741519ec0cf9f11b7e1))
+
+- Enhance documentation and references across various modules (#3) ([a4d577a](https://github.com/ipes-lncc/pymhm/commit/a4d577a13e6375ae3d16cf5e2055058eed759645))
+
+<!-- pymhm:generated:end -->
 
 ## 1.0.0
 
