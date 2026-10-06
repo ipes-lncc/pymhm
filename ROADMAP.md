@@ -108,7 +108,7 @@ and backend details.
 | R3 — Scientific acceptance | P1 | Progressive completion of literature targets and resolution controls | Identified inputs and refined references for each case |
 | R4 — API and architecture | P1 | Less manual infrastructure and duplication, preserving expressiveness | Numerical equivalence before/after each change |
 | R5 — Windows | P1 | Identified native execution of the core, PARDISO and installed artifacts | Windows runner and the target dependency profile |
-| R6 — External providers | P2 | Interchangeable providers using the local contracts | R4 contracts and physical controls |
+| R6 — External providers | P2 | Optional scikit-fem assembly and interchangeable providers using the local contracts | R4 contracts and physical controls |
 | R7 — Distribution | P2 | Release with demonstrated scientific and platform scope | Required gates and evidence for advertised capabilities |
 
 The contextual API is implemented; R4 now lists its remaining extensions. R1 remains
@@ -296,8 +296,9 @@ property is inferred from a PDE or method name.
   MKL runtime, factor cleanup and fields against independent assembly.
 - [ ] Execute selected portable notebooks and publish the measured platform/backend
   matrix. DOLFINx/PETSc remain outside the current native Windows profile.
-- [ ] Consider a PETSc-free Windows FEM backend only for a concrete need that
-  fits the general contracts. Keep WSL2 and native Windows qualification distinct.
+- [ ] Qualify the [optional scikit-fem backend](#optional-scikit-fem-local-assembly)
+  on native Windows using its portable dependency profile. Keep WSL2 and native
+  Windows qualification distinct.
 
 **Acceptance:** a native Windows receipt identifies the revision, locked
 dependencies and supported options. The core has no mandatory optional-runtime
@@ -306,6 +307,47 @@ follow the platform. CI configuration or lock resolution alone does not prove
 native execution. See [Windows support](docs/windows.md).
 
 ## R6 — Qualify external local providers
+
+### Optional scikit-fem local assembly
+
+**Pending:** add [scikit-fem](https://scikit-fem.readthedocs.io/en/stable/) as an
+optional local finite-element assembler, with a proposed `pymhm[skfem]` extra and
+a locked Pixi feature. Keep Basix as the reference-element provider and retain
+the DOLFINx/UFL backend. The portable core already supports Windows; this delivery
+adds portable user-defined FEM assembly through scikit-fem's NumPy/SciPy path,
+without requiring UFL, PETSc or MPI for that path.
+
+- [ ] Implement a `FormCompiler`/`LocalEquations` adapter, mesh and basis bindings,
+  signed trace pairings and field evaluation. Reuse PyMHM's condensation,
+  reconstruction and shared-face reduction owners. scikit-fem forms require
+  their own adapter; existing UFL forms are not interchangeable automatically.
+- [ ] Qualify primal Darcy P1/P2 on 2D triangles first, matching geometry, permeability,
+  source, boundary data and approximation spaces against independent conforming
+  assembly. Verify operators, local kernels, physical pressure moments, gauges,
+  trace orientation and quadrature with homogeneous/nonhomogeneous boundaries.
+  Compare pressure and physical-flux norms, macro balance and refinement rates
+  under their applicable hypotheses. Distinguish raw-gradient flux from H(div)
+  reconstruction and macro conservation from fine-cell conservation.
+- [ ] Gate 3D and mixed/stabilized extensions separately. Record supported
+  cell/family/degree combinations, Piola maps and derivative availability,
+  including Hessians where required. Check local/trace compatibility and inf-sup
+  conditions; an available element does not qualify a hybrid discretization.
+- [ ] Preserve explicit DOF and basis conventions, archived basis matrices and
+  replay identity. Validate coupling across local/trace partitions and field
+  replay across BLAS thread counts. Exercise serial/thread/spawn-process paths
+  and actual native integrations on Linux, macOS and Windows.
+- [ ] Add an executed instructional notebook and update its catalogue/index.
+  Measure complete assembly-to-reconstruction cost at matched accuracy,
+  including setup, transfers and worker overhead; report measured regressions
+  or absent speedups. Synchronize optional dependency metadata and lockfiles.
+
+**Acceptance:** identified native executions demonstrate original-equation and
+physical-field agreement within stated discretizations. Document supported spaces,
+boundaries and derivative limits; keep unqualified extensions pending. API mocks,
+package installation and small algebraic residuals do not establish scientific
+or platform qualification.
+
+### Other local providers
 
 - [ ] Demonstrate an independent provider delivering the maps, moments,
   operators and source/trace responses required by the global formulation.
