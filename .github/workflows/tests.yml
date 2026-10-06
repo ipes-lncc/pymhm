@@ -119,6 +119,9 @@ jobs:
     needs: core
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
+    env:
+      # Hosted VMs use sockets and shared memory, without requiring RDMA devices.
+      UCX_TLS: tcp,sm,self
     strategy:
       fail-fast: false
       matrix:

@@ -149,6 +149,12 @@ test fails. The FEM job checks native imports before starting the suite and
 leaves native standard error visible while capturing Python output. GPU
 integrations run in the complete native suite.
 
+Hosted integrations configure `UCX_TLS=tcp,sm,self` to use sockets, shared memory
+and loopback communication. They require no RDMA hardware. This transport
+selection applies only to the hosted Integration matrix; HPC and GPU runs use
+their own runtime configuration. See the
+[UCX transport conventions](https://openucx.readthedocs.io/en/master/faq.html#which-transports-does-ucx-use).
+
 The complete CPU/GPU job is an explicit opt-in: dispatch Tests with `full_native`
 enabled on a configured self-hosted Linux runner with the `gpu` label and two
 NVIDIA devices. After all Core jobs succeed, it prepares AmgX, requires the
