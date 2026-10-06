@@ -110,6 +110,7 @@ class NestedEquations:
     moments: Any = None
     test_moments: Any = None
     metadata: Any = None
+    trace_binding: Any = None
 
 
 @dataclass(frozen=True)
@@ -122,6 +123,20 @@ class MultiscaleSolution(HybridSolution):
     """
 
     children: tuple[MultiscaleSolution | None, ...] = ()
+    field_data: tuple[tuple[Any, ...], ...] = ()
+    trace_bindings: tuple[Any, ...] = ()
+
+    def field(self, name: str) -> Any:
+        """Return named mesh-associated views using their executed field definitions."""
+        from pymhm.postprocessing.fields import solution_field
+
+        return solution_field(self, name)
+
+    def local_trace(self, index: int, *, test: bool = False) -> FloatArray:
+        """Delegate trace recovery in the executed local basis, in assembly item order."""
+        from pymhm.postprocessing.fields import local_trace
+
+        return local_trace(self, index, test=test)
 
 
 @dataclass(frozen=True)
@@ -176,7 +191,11 @@ class _Provider(Generic[Item]):
             )
             count = len(nested.problem.trace_dofs)
             supplied = CompiledLocalEquations(
-                nested.problem, np.zeros((count, count)), np.zeros(count), supplied.metadata
+                nested.problem,
+                np.zeros((count, count)),
+                np.zeros(count),
+                supplied.metadata,
+                trace_binding=supplied.trace_binding,
             )
         if isinstance(supplied, LocalEquations):
             if isinstance(supplied.a, MultiscaleProblem):
@@ -231,6 +250,11 @@ class MultiscaleSystem(HybridSystem):
     layout: GlobalForm
     solvers: SolverConfig
     cells: tuple[_CellRecord, ...]
+
+    @property
+    def trace_bindings(self) -> tuple[Any, ...]:
+        """Expose executed interface maps for persistence and custom-basis replay."""
+        return tuple(record.equations.trace_binding for record in self.cells)
 
     def with_rhs(self, rhs: Any, *, load_scale: Any = None) -> MultiscaleSystem:
         """Delegate a compatible load update to :func:`with_global_load`."""
@@ -313,6 +337,8 @@ def _solution_tree(
         result.raw_residual,
         result.raw_residual_norm,
         tuple(children),
+        tuple(record.equations.field_data for record in system.cells),
+        system.trace_bindings,
     )
 
 
@@ -462,10 +488,18 @@ def assemble(
 
 
 def solve(
-    problem: MultiscaleProblem[Item],
+    problem: MultiscaleProblem[Item] | MultiscaleSystem,
     *,
     execution: ExecutionConfig = _DEFAULT_EXECUTION,
     solvers: SolverConfig = _DEFAULT_SOLVERS,
+    **options: Any,
 ) -> MultiscaleSolution:
-    """Assemble, solve and reconstruct a user-defined variational hierarchy."""
-    return assemble(problem, execution=execution, solvers=solvers).solve()
+    """Solve a problem description or an already assembled variational hierarchy.
+
+    execution and solvers configure assembly of a problem description. An
+    assembled system retains those settings; keyword options override its global
+    solve, boundary coefficients and physical constraints through the same owner.
+    """
+    if isinstance(problem, MultiscaleSystem):
+        return solve_multiscale_system(problem, **options)
+    return assemble(problem, execution=execution, solvers=solvers).solve(**options)

@@ -2,7 +2,9 @@
 
 Follow the numbered steps: state the variational problem, choose the local and trace spaces, declare the local and global equations, solve, and inspect the physical fields.
 
-This notebook builds primal MHM from `Equation`, `LocalEquations` and `MultiscaleProblem`, step by step. A small macro mesh controls the global problem; independent local fine meshes resolve the material oscillations. The baseline is classical conforming Galerkin assembled on several much finer global meshes.
+The main workflow is **meshes → spaces → local equations → global balance → assemble → solve → fields and errors**. `MeshHierarchy` associates macro and local meshes; `bind_interface` and `LocalContext` own supported numbering, geometric orientation and native coordinate conversions. The mathematical forms, physical trace meaning, local modes and gauge remain explicit in the cells below. Fully manual/custom spaces use the same numerical owners; see the [custom-interface notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/custom_interface.ipynb).
+
+This notebook builds primal MHM step by step: bind the macro and local meshes, declare the spaces, write local UFL equations and the global balance, then assemble and solve. A small macro mesh controls the global problem; independent local fine meshes resolve the material oscillations. The baseline is classical conforming Galerkin assembled on several much finer global meshes.
 
 Start Jupyter from the project root with `pixi run --locked -e introduction jupyter lab`. Run the cells in order. Every coefficient, source, equation, reference, field evaluation and plotting function is defined in this notebook. Imported PyMHM functions provide generic finite-element and algebraic operations.
 
@@ -25,7 +27,6 @@ from scipy import sparse
 from matplotlib.collections import LineCollection
 import matplotlib.pyplot as plt
 import ufl
-from scipy.spatial import cKDTree
 from pymhm.core.equations import compile_form
 
 ROOT = next(p for p in (Path.cwd(), *Path.cwd().parents)
@@ -49,6 +50,9 @@ from pymhm.fem.assembly import assemble_element_blocks
 
 Array = NDArray[np.float64]
 Evaluator = Callable[[Array], tuple[Array, Array]]
+from pymhm import MeshHierarchy, LocalContext, bind_interface, bind_problem
+from pymhm.backends.spaces import bind_space
+
 ```
 
 ## 1. Physical problem and an independently derived source
@@ -171,7 +175,7 @@ print({"macro_cells": len(macro.cells), "H": 1/4,
 
 ## 3. Translate the weak formulation into local and global objects
 
-On each macroelement $T$, pressure uses a continuous $Q_k$ fine space. The skeletal multiplier $\lambda$ is the physical normal Darcy flux in the unique orientation $\boldsymbol n_F$ of face $F$. `quadrilateral_trace_coupling` integrates $s_{TF}=\boldsymbol n_T\cdot\boldsymbol n_F$ with the actual macroface orientation.
+On each macroelement $T$, pressure uses a continuous $Q_k$ fine space. The skeletal multiplier $\lambda$ is the physical normal Darcy flux in the unique orientation $\boldsymbol n_F$ of face $F$. The normal interface binding derives $s_{TF}=\boldsymbol n_T\cdot\boldsymbol n_F$ from the macroface topology. Write the trace integrals in UFL; `LocalContext` supplies their basis supports and coefficient maps.
 
 
 
@@ -187,10 +191,10 @@ $$
 | Mathematical term | Code declaration |
 | --- | --- |
 | Local energy and source | `a=inner(K*grad(p),grad(v))*dx`, `L=f*v*dx` in UFL |
-| Oriented normal-flux pairing | `quadrilateral_trace_coupling` returns `b` |
+| Oriented normal-flux pairing | `local.trace_pairings(lambda phi, ds: phi*v*ds)` |
 | Constant kernel and physical average | `kernel`, `moments` in `LocalEquations` |
-| Weak pressure continuity | `c=-b.T` |
-| Macroface coordinates | `skeleton.cell_dofs(cell)` |
+| Weak pressure continuity | `local.trace_pairings(lambda phi, ds: -phi*p*ds, axis="rows")` |
+| Macroface coordinates | `bind_interface(skeleton, convention="normal")` supplies local/global maps |
 
 Interior faces have zero pressure-jump moments; Dirichlet faces have prescribed pressure moments. With the declared sign $C=-B^T$, the additional global right-hand side is
 
@@ -205,31 +209,21 @@ $$
 
 `Equation(0, ...)` stores this additional global term. One constant mode per macroelement gives the compatibility equation imposing **macro conservation**. The plotted raw flux $-K\nabla p_h$ is not an $H(\mathrm{div})$ reconstruction and is not guaranteed to conserve on every fine cell.
 
-The provider below declares the executable UFL weak forms and each coupling sign. The nodal map checks that native UFL coordinates and portable trace coordinates represent the same basis. The generic `assemble` operation owns elimination, assembly and reconstruction; no PDE-specific problem constructor is used.
+The provider below declares the executable UFL weak forms and each coupling sign. `local.native_space` owns the native geometry and coefficient convention, while `local.trace_pairings` binds both interface forms independently. The provider supplies no face DOF indices or nodal permutation. The generic `assemble` operation owns elimination, assembly and reconstruction; no PDE-specific problem constructor is used.
 
 
 ```python
 def native_scalar_space(fine: CartesianMacroMesh, degree: int) -> tuple[Any, Any, NDArray[np.int64]]:
-    """Create serial equispaced Qk and map portable scalar nodes to native DOFs."""
+    """Bind a user-declared Basix element; PyMHM owns topology and coefficient order."""
     import basix
     import basix.ufl
-    import ufl
-    from dolfinx import fem,mesh as native_mesh
-    from mpi4py import MPI
-    geometry=basix.ufl.element("Lagrange","quadrilateral",1,shape=(2,))
-    # Basix quadrilateral geometry orders SW,SE,NW,NE; our cells are counterclockwise.
-    domain=native_mesh.create_mesh(MPI.COMM_SELF,fine.cells[:,[0,1,3,2]],fine.points,
-                                  ufl.Mesh(geometry))
-    element=basix.ufl.element("Lagrange","quadrilateral",degree,
-                             lagrange_variant=basix.LagrangeVariant.equispaced)
-    space=fem.functionspace(domain,element)
-    _,nodes=qk_space(fine,degree)
-    native_nodes=space.tabulate_dof_coordinates()[:,:2]
-    distance,mapping=cKDTree(native_nodes).query(nodes)
-    tolerance=512*np.finfo(float).eps*max(1.,float(np.max(np.abs(nodes))))
-    if np.max(distance)>tolerance or len(np.unique(mapping))!=len(nodes):
-        raise ValueError("native and portable Qk coordinates must have a checked bijection")
-    return domain,space,mapping
+    element = basix.ufl.element(
+        "Lagrange", "quadrilateral", degree,
+        lagrange_variant=basix.LagrangeVariant.equispaced, shape=(),
+    )
+    binding = bind_space(fine, element)
+    return binding.mesh, binding.space, binding.mapping
+
 
 
 def ufl_coefficient_source(domain: Any, physical_data: OscillatoryDarcyData) -> tuple[Any, Any]:
@@ -258,10 +252,18 @@ class DarcyLocalProvider:
     refinement: int
     quadrature_order: int
 
-    def __call__(self, cell: int) -> LocalEquations:
+    def __call__(self, local: LocalContext) -> LocalEquations:
         """Declare K grad(p)·grad(v), f v, oriented normal flux and the constant average."""
-        fine=self.macro.submesh(cell,self.refinement)
-        domain,space,mapping=native_scalar_space(fine,self.degree)
+        cell, fine = local.cell, local.mesh
+        import basix
+        import basix.ufl
+        element = basix.ufl.element(
+            "Lagrange", "quadrilateral", self.degree,
+            lagrange_variant=basix.LagrangeVariant.equispaced,
+        )
+        binding = local.native_space(element)
+        domain, space = binding.mesh, binding.space
+        mapping = binding.mapping
         p,v=ufl.TrialFunction(space),ufl.TestFunction(space)
         K,f=ufl_coefficient_source(domain,self.data)
         dx=ufl.Measure("dx",domain=domain,
@@ -269,12 +271,12 @@ class DarcyLocalProvider:
         # These executed UFL forms are the local weak formulation, directly.
         a=ufl.inner(K*ufl.grad(p),ufl.grad(v))*dx
         load=f*v*dx
-        portable_b=quadrilateral_trace_coupling(
-            self.macro,cell,fine,self.skeleton,self.degree)
-        b=np.empty_like(portable_b);b[mapping]=portable_b
+        local.field("pressure", binding)
+        b = local.trace_pairings(lambda phi, ds: phi * v * ds)
+        c = local.trace_pairings(lambda phi, ds: -phi * p * ds, axis="rows")
         area=float(fine.areas.sum())
-        return LocalEquations(
-            a=a,L=load,b=b,c=-b.T,dofs=self.skeleton.cell_dofs(cell),
+        return local.equations(
+            a=a,L=load,b=b,c=c,
             kernel=np.ones((len(mapping),1)),moments=columns((v/area)*dx),
             metadata=(fine,mapping))
 
@@ -282,7 +284,7 @@ class DarcyLocalProvider:
 
 ## 4. Construct, assemble and solve the global problem
 
-`coarse_sizes=(1,...)` retains one pressure-average coordinate per macroelement. The global equation imposes pressure through boundary moments, without fixing local pressure nodes. Dirichlet data remove the global constant-pressure ambiguity, so no additional physical gauge is required.
+`retained=1` retains one pressure-average coordinate per macroelement; `bind_problem` derives its global coordinate layout. The global equation imposes pressure through boundary moments, without fixing local pressure nodes. Dirichlet data remove the global constant-pressure ambiguity, so no additional physical gauge is required.
 
 The local problems compute source responses and responses to trace basis functions. Their coefficients are recovered after solving for the macroface and retained coordinates. They do not create a large conforming global mesh.
 
@@ -292,6 +294,20 @@ Before reconstructing fields, define how the x-fastest Qk coefficients represent
 
 
 ```python
+def evaluate_bound_pressure(
+    macro: CartesianMacroMesh, fields: tuple[Any, ...], points: Array
+) -> tuple[Array, Array]:
+    """Evaluate named pressure and gradient on each owning macrocell, without averaging."""
+    coordinates = (points - macro.points[0]) / macro.spacing
+    indices = np.clip(np.floor(coordinates).astype(int), 0, [macro.nx - 1, int(macro.ny) - 1])
+    owners = indices[:, 1] * macro.nx + indices[:, 0]
+    pressure, gradient = np.empty(len(points)), np.empty((len(points), 2))
+    for cell in np.unique(owners):
+        selected = owners == cell
+        pressure[selected], gradient[selected] = fields[cell].values_and_gradient(points[selected])
+    return pressure, gradient
+
+# Optional explicit Basix evaluation for classical references and coefficient replay.
 def evaluate_qk(
     mesh: CartesianMacroMesh, degree: int, coefficients: Array, points: Array
 ) -> tuple[Array, Array]:
@@ -338,23 +354,34 @@ def evaluate_broken_qk(
 provider = DarcyLocalProvider(macro, skeleton, data,
                               local_degree, local_refinement, 7)
 boundary, fixed = boundary_data(skeleton, data.pressure, order=7)
-problem = MultiscaleProblem(
-    global_equation=Equation(0, np.r_[-boundary, np.zeros(len(macro.cells))]),
-    local_provider=provider, items=range(len(macro.cells)),
-    trace_size=skeleton.size, coarse_sizes=(1,)*len(macro.cells), fixed=fixed)
+hierarchy = MeshHierarchy(
+    macro, tuple(macro.submesh(cell, local_refinement) for cell in range(len(macro.cells)))
+)
+interface = bind_interface(skeleton, convention="normal")
+problem = bind_problem(
+    hierarchy, interface, provider,
+    global_equation=lambda global_problem: Equation(0, global_problem.trace_load(-boundary)),
+    retained=1, fixed=fixed,
+)
 system = assemble(problem, execution=ExecutionConfig("serial", native_threads=1))
 solution = system.solve()
-local_meshes = tuple(record[0] for record in system.local_metadata)
-mhm_fields = tuple(field[record[1]] for field,record in zip(solution.fields,system.local_metadata,strict=True))
-mhm_evaluator = partial(evaluate_broken_qk, macro, local_meshes,
-                        local_degree, mhm_fields)
+pressure_fields = solution.field("pressure")
+local_meshes = tuple(field.mesh for field in pressure_fields)
+mhm_fields = tuple(field.portable_coefficients for field in pressure_fields)
+mhm_evaluator = partial(evaluate_bound_pressure, macro, pressure_fields)
 print({"global_unknowns": system.matrix.shape[0],
        "largest_local_unknowns": max(len(v) for v in solution.fields),
        "original_equations_relative_residual": solution.raw_residual})
+# Named fields carry their mesh and executed basis; no index map is needed to evaluate.
+pressure_fields = solution.field("pressure")
+first_point = macro.points[macro.cells[0]].mean(axis=0, keepdims=True)
+print("First macrocell pressure at its center:", pressure_fields[0].evaluate(first_point))
+
 ```
 
 ```text
-{'global_unknowns': 136, 'largest_local_unknowns': 1089, 'original_equations_relative_residual': 1.6510917839655026e-16}
+{'global_unknowns': 136, 'largest_local_unknowns': 1089, 'original_equations_relative_residual': 1.068655151817424e-16}
+First macrocell pressure at its center: [0.14646015]
 ```
 
 ### Optional numerical equivalence after the UFL definition
@@ -363,7 +390,7 @@ The main formulation above is the executed UFL weak form. Once its operator and 
 
 
 ```python
-declared=provider(0)
+declared=problem.local_provider(0)
 fine,mapping=declared.metadata
 ufl_a=compile_form(declared.a)
 ufl_load=compile_form(declared.L,(len(mapping),))
@@ -553,8 +580,8 @@ Successive reference differences: [{'pressure_L2': 1.5234803545787962e-05, 'flux
 ```
 
 ```text
-MHM versus fine CG: {'pressure_L2': 0.00021110534459092416, 'flux_L2': 0.019092751630449985, 'flux_energy': 0.012636675043129987, 'pressure_relative': 0.00042221062868614076, 'flux_relative': 0.003890348483457582, 'energy_relative': 0.004432897017239536}
-MHM versus exact solution: {'pressure_L2': 0.00021110587827481527, 'flux_L2': 0.01909305299115349, 'flux_energy': 0.012636835728452565, 'pressure_relative': 0.00042221175654963053, 'flux_relative': 0.0038904095881633176, 'energy_relative': 0.004432953383924943}
+MHM versus fine CG: {'pressure_L2': 0.00021110534459098504, 'flux_L2': 0.019092751630456182, 'flux_energy': 0.012636675043133412, 'pressure_relative': 0.0004222106286862625, 'flux_relative': 0.0038903484834588446, 'energy_relative': 0.004432897017240737}
+MHM versus exact solution: {'pressure_L2': 0.00021110587827487606, 'flux_L2': 0.01909305299115969, 'flux_energy': 0.012636835728455987, 'pressure_relative': 0.0004222117565497521, 'flux_relative': 0.003890409588164581, 'energy_relative': 0.004432953383926143}
 ```
 
 ## 6. Plot the coefficient, pressure and physical flux
@@ -739,13 +766,17 @@ def run_discretization(n: int, refinement: int, segments: int) -> dict:
                                      for _ in grid.faces))
     local = DarcyLocalProvider(grid, trace, data, 2, refinement, 7)
     boundary, fixed = boundary_data(trace, data.pressure, order=7)
-    declared = MultiscaleProblem(
-        Equation(0, np.r_[-boundary, np.zeros(len(grid.cells))]), local,
-        range(len(grid.cells)), trace.size, (1,)*len(grid.cells), fixed=fixed)
+    hierarchy = MeshHierarchy(
+        grid, tuple(grid.submesh(cell, refinement) for cell in range(len(grid.cells)))
+    )
+    declared = bind_problem(
+        hierarchy, bind_interface(trace, convention="normal"), local,
+        global_equation=lambda global_problem: Equation(0, global_problem.trace_load(-boundary)),
+        retained=1, fixed=fixed,
+    )
     assembled = assemble(declared, execution=ExecutionConfig("serial", native_threads=1))
     resolved = assembled.solve()
-    evaluate = partial(evaluate_broken_qk, grid, tuple(record[0] for record in assembled.local_metadata), 2,
-                       tuple(field[record[1]] for field,record in zip(resolved.fields,assembled.local_metadata,strict=True)))
+    evaluate = partial(evaluate_bound_pressure, grid, resolved.field("pressure"))
     return {"H": 1/n, "h": 1/(n*refinement), "segments": segments,
             "trace_segment_length": 1/(n*segments),
             "global_unknowns": assembled.matrix.shape[0],
@@ -768,7 +799,7 @@ for name, rows, variable in (("H", macro_rows, "H"), ("h", local_rows, "h"),
 ```
 
 ```text
-H [{'H': 0.5, 'h': 0.015625, 'segments': 2, 'trace_segment_length': 0.25, 'global_unknowns': 40, 'residual': 2.5686651036001443e-16, 'pressure_L2': 0.0038440419910070315, 'flux_L2': 0.07258266496365394, 'flux_energy': 0.07565780837944536, 'pressure_relative': 0.007688083982014063, 'flux_relative': 0.01478947844746884, 'energy_relative': 0.026540468269351858}, {'H': 0.25, 'h': 0.015625, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.6510917839655026e-16, 'pressure_L2': 0.00021110587827481527, 'flux_L2': 0.01909305299115349, 'flux_energy': 0.012636835728452565, 'pressure_relative': 0.00042221175654963053, 'flux_relative': 0.0038904095881633176, 'energy_relative': 0.004432953383924943}, {'H': 0.125, 'h': 0.015625, 'segments': 2, 'trace_segment_length': 0.0625, 'global_unknowns': 496, 'residual': 1.108554207047561e-16, 'pressure_L2': 3.13681029287078e-05, 'flux_L2': 0.004601788846467462, 'flux_energy': 0.003121177398688155, 'pressure_relative': 6.27362058574156e-05, 'flux_relative': 0.0009376626912047576, 'energy_relative': 0.0010948970302899544}]
+H [{'H': 0.5, 'h': 0.015625, 'segments': 2, 'trace_segment_length': 0.25, 'global_unknowns': 40, 'residual': 1.749128621307829e-16, 'pressure_L2': 0.0038440419910070298, 'flux_L2': 0.07258266496359879, 'flux_energy': 0.07565780837943056, 'pressure_relative': 0.0076880839820140595, 'flux_relative': 0.014789478447457602, 'energy_relative': 0.026540468269346668}, {'H': 0.25, 'h': 0.015625, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.068655151817424e-16, 'pressure_L2': 0.00021110587827487606, 'flux_L2': 0.01909305299115969, 'flux_energy': 0.012636835728455987, 'pressure_relative': 0.0004222117565497521, 'flux_relative': 0.003890409588164581, 'energy_relative': 0.004432953383926143}, {'H': 0.125, 'h': 0.015625, 'segments': 2, 'trace_segment_length': 0.0625, 'global_unknowns': 496, 'residual': 9.738926168654487e-17, 'pressure_L2': 3.13681029287548e-05, 'flux_L2': 0.004601788846461332, 'flux_energy': 0.003121177398685673, 'pressure_relative': 6.27362058575096e-05, 'flux_relative': 0.0009376626912035086, 'energy_relative': 0.0010948970302890838}]
 Observed pressure rates: [4.18658544 2.75059657]
 Observed flux rates: [1.92657722 2.05278112]
 ```
@@ -779,7 +810,7 @@ Observed flux rates: [1.92657722 2.05278112]
 
 
 ```text
-h [{'H': 0.25, 'h': 0.125, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.3210560310816447e-16, 'pressure_L2': 0.012105242280670532, 'flux_L2': 0.12919546359592846, 'flux_energy': 0.09348496639326709, 'pressure_relative': 0.024210484561341065, 'flux_relative': 0.026324929310869702, 'energy_relative': 0.03279416675379144}, {'H': 0.25, 'h': 0.0625, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.339512762009965e-16, 'pressure_L2': 0.00022120794842641565, 'flux_L2': 0.01925385654937206, 'flux_energy': 0.011696612799026921, 'pressure_relative': 0.0004424158968528313, 'flux_relative': 0.0039231749979170205, 'energy_relative': 0.004103126795512717}, {'H': 0.25, 'h': 0.03125, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.3434425003451915e-16, 'pressure_L2': 0.0002070069240005869, 'flux_L2': 0.019169351587713844, 'flux_energy': 0.01258764699064359, 'pressure_relative': 0.0004140138480011738, 'flux_relative': 0.003905956226606072, 'energy_relative': 0.004415698163836077}, {'H': 0.25, 'h': 0.015625, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.6510917839655026e-16, 'pressure_L2': 0.00021110587827481527, 'flux_L2': 0.01909305299115349, 'flux_energy': 0.012636835728452565, 'pressure_relative': 0.00042221175654963053, 'flux_relative': 0.0038904095881633176, 'energy_relative': 0.004432953383924943}]
+h [{'H': 0.25, 'h': 0.125, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 9.231134756817656e-17, 'pressure_L2': 0.012105242280670614, 'flux_L2': 0.12919546359592954, 'flux_energy': 0.09348496639326725, 'pressure_relative': 0.024210484561341228, 'flux_relative': 0.02632492931086992, 'energy_relative': 0.032794166753791494}, {'H': 0.25, 'h': 0.0625, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 9.61531316556648e-17, 'pressure_L2': 0.00022120794842649276, 'flux_L2': 0.01925385654937096, 'flux_energy': 0.011696612799026125, 'pressure_relative': 0.0004424158968529855, 'flux_relative': 0.003923174997916797, 'energy_relative': 0.0041031267955124375}, {'H': 0.25, 'h': 0.03125, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.4723033894585078e-16, 'pressure_L2': 0.00020700692400061393, 'flux_L2': 0.019169351587717043, 'flux_energy': 0.01258764699064487, 'pressure_relative': 0.00041401384800122785, 'flux_relative': 0.0039059562266067238, 'energy_relative': 0.004415698163836526}, {'H': 0.25, 'h': 0.015625, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.068655151817424e-16, 'pressure_L2': 0.00021110587827487606, 'flux_L2': 0.01909305299115969, 'flux_energy': 0.012636835728455987, 'pressure_relative': 0.0004222117565497521, 'flux_relative': 0.003890409588164581, 'energy_relative': 0.004432953383926143}]
 Observed pressure rates: [ 5.77408492  0.0957242  -0.02828773]
 Observed flux rates: [2.74633606 0.00634591 0.00575373]
 ```
@@ -790,7 +821,7 @@ Observed flux rates: [2.74633606 0.00634591 0.00575373]
 
 
 ```text
-macroface segment [{'H': 0.25, 'h': 0.015625, 'segments': 1, 'trace_segment_length': 0.25, 'global_unknowns': 96, 'residual': 1.1366425726581136e-16, 'pressure_L2': 0.0038370471679656203, 'flux_L2': 0.09746442298583062, 'flux_energy': 0.09155965342167141, 'pressure_relative': 0.0076740943359312405, 'flux_relative': 0.01985939733496613, 'energy_relative': 0.03211877436633379}, {'H': 0.25, 'h': 0.015625, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.6510917839655026e-16, 'pressure_L2': 0.00021110587827481527, 'flux_L2': 0.01909305299115349, 'flux_energy': 0.012636835728452565, 'pressure_relative': 0.00042221175654963053, 'flux_relative': 0.0038904095881633176, 'energy_relative': 0.004432953383924943}, {'H': 0.25, 'h': 0.015625, 'segments': 4, 'trace_segment_length': 0.0625, 'global_unknowns': 216, 'residual': 1.6853287149955422e-16, 'pressure_L2': 2.4324400283813582e-05, 'flux_L2': 0.0032500837373538476, 'flux_energy': 0.0022417239887015145, 'pressure_relative': 4.8648800567627164e-05, 'flux_relative': 0.0006622386131748327, 'energy_relative': 0.0007863881556334026}]
+macroface segment [{'H': 0.25, 'h': 0.015625, 'segments': 1, 'trace_segment_length': 0.25, 'global_unknowns': 96, 'residual': 8.273871608877269e-17, 'pressure_L2': 0.003837047167965644, 'flux_L2': 0.09746442298581488, 'flux_energy': 0.09155965342166678, 'pressure_relative': 0.007674094335931288, 'flux_relative': 0.019859397334962923, 'energy_relative': 0.03211877436633216}, {'H': 0.25, 'h': 0.015625, 'segments': 2, 'trace_segment_length': 0.125, 'global_unknowns': 136, 'residual': 1.068655151817424e-16, 'pressure_L2': 0.00021110587827487606, 'flux_L2': 0.01909305299115969, 'flux_energy': 0.012636835728455987, 'pressure_relative': 0.0004222117565497521, 'flux_relative': 0.003890409588164581, 'energy_relative': 0.004432953383926143}, {'H': 0.25, 'h': 0.015625, 'segments': 4, 'trace_segment_length': 0.0625, 'global_unknowns': 216, 'residual': 1.4389516488569565e-16, 'pressure_L2': 2.4324400283789275e-05, 'flux_L2': 0.0032500837373435256, 'flux_energy': 0.0022417239886972436, 'pressure_relative': 4.864880056757855e-05, 'flux_relative': 0.0006622386131727295, 'energy_relative': 0.0007863881556319045}]
 Observed pressure rates: [4.18395784 3.11749061]
 Observed flux rates: [2.35182789 2.55449901]
 ```

@@ -13,9 +13,9 @@ Each tutorial
 defines its data, weak forms, operator assembly, local problems, global equations,
 classical baseline and field plots in its own cells. The primary path writes
 executable UFL weak forms before introducing prepared operator functions as
-conveniences. Geometry adapters and low-level assembly details are separate from
-the physical formulation. The notebooks use the generic `LocalEquations`, `Equation` and
-`MultiscaleProblem` contracts and are written in English.
+conveniences. `MeshHierarchy`, `LocalContext` and `bind_problem` provide mesh/space bindings
+and supported representation details. UFL expresses local/global mathematics
+before prepared conveniences. All notebooks are written in English.
 
 Read Darcy convergence first, then choose a scalar or vector application. The
 parallel tutorials assume familiarity with this local/global workflow.
@@ -67,6 +67,20 @@ page does not run a new timing campaign. The plots and numerical outputs retain
 the notebook's distinction between analytical solutions and classical numerical
 references.
 
+The 2D scaling notebooks execute a bounded current numerical control by default
+and show the checksum-verified campaign recorded on 2026-10-04 with its original
+revision. The historical timing plots retain that provenance; they do not measure
+the current revision. Set `PYMHM_RUN_CAMPAIGN=1` to execute the full acquisition
+procedure and obtain new strong, weak and crossover measurements.
+
+## Custom spaces and manual definitions
+
+The [custom-interface tutorial](tutorials/custom-interface.md) and its notebook
+show how to own the basis, numbering and orientation explicitly. Fully manual
+`LocalEquations`/`MultiscaleProblem` records reuse the same numerical owners.
+Choose that level for an external convention or a capability not supplied by
+the built-in mesh-associated adapters.
+
 ## Introductory examples
 
 | Problem | Notebook | Methods |
@@ -79,6 +93,7 @@ references.
 | Reaction–advection–diffusion | [Transport methods](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/transport/introductory_methods.ipynb) | Galerkin RAD, SUPG and UNUSUAL |
 | Complex acoustics | [Helmholtz fields](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/helmholtz/introductory_methods.ipynb) | Complex scalar Helmholtz and interleaved trace coordinates |
 | Electromagnetics | [Maxwell trajectory](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/maxwell/introductory_methods.ipynb) | Declared DG mass/curl stages, tangential hybrid traces and staggered time stepping |
+| Custom interface representations | [Custom interface](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/custom_interface.ipynb) | Nonorthogonal basis, arbitrary numbering, explicit maps and physical-field equivalence |
 | Local/global algebra | [Providers and batches](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/local_global_providers.ipynb) | Primal/mixed providers, physical gauges, external local solver, serial/spawn batches |
 | Native variational assembly | [UFL provider](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/ufl_provider.ipynb) | UFL/DOLFINx local pairings and an independently declared global Equation |
 | Vector variational assembly | [Vector UFL](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/vector_ufl.ipynb) | User-written coercive vector reaction-diffusion and oriented traces |
@@ -104,7 +119,7 @@ same data and spaces used by its predefined-formulation controls.
 ## Problem folders and detailed studies
 
 The complete [notebook catalogue](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/README.md)
-contains all 95 notebooks and the methods used by each. The
+contains all 96 notebooks and the methods used by each. The
 [machine-readable index](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/catalogue.json)
 uses paths relative to the repository root.
 

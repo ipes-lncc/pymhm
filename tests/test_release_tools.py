@@ -139,6 +139,15 @@ def test_prepare_syncs_every_version_and_preserves_previous_and_manual_notes(
     repository: Path, cliff: list[list[str]]
 ) -> None:
     previous = (repository / "CHANGELOG.md").read_bytes()
+    path = repository / "CHANGELOG.md"
+    path.write_bytes(
+        previous.replace(
+            b"# Changelog\n\n",
+            b"# Changelog\n\n## Unreleased\n\n- User-written pending feature.\n\n",
+            1,
+        )
+    )
+    assert release.check_release(repository) == ("0.1.0", "- Original release notes.")
     readme = repository / "README.md"
     readme.write_bytes(readme.read_bytes().replace(b"\n", b"\r\n"))
     release.prepare_release(repository, "1.0.0")
@@ -149,6 +158,8 @@ def test_prepare_syncs_every_version_and_preserves_previous_and_manual_notes(
     assert b"0.1.0" not in readme.read_bytes()
     changelog_path = repository / "CHANGELOG.md"
     changelog = changelog_path.read_text(encoding="utf-8")
+    assert "## Unreleased" not in changelog
+    assert changelog.count("- User-written pending feature.") == 1
     assert changelog.endswith(previous.decode().split("\n\n", 1)[1])
     changelog_path.write_text(
         changelog.replace(
@@ -158,6 +169,7 @@ def test_prepare_syncs_every_version_and_preserves_previous_and_manual_notes(
     )
     release.prepare_release(repository, "1.0.0")
     assert "- Manual migration note." in changelog_path.read_text(encoding="utf-8")
+    assert changelog_path.read_text(encoding="utf-8").count("- User-written pending feature.") == 1
     assert cliff[0][-1] == cliff[1][-1]
     assert _git(repository, "tag", "--list") == "v0.1.0"
     assert release.check_release(repository)[0] == "1.0.0"
@@ -309,6 +321,32 @@ def test_changelog_updates_reject_rewriting_old_or_unmarked_entries() -> None:
     assert updated.startswith(preamble + "## 0.3.0\n")
     assert updated.endswith(changelog.split("\n\n", 1)[1])
     assert "compatibility notes" not in release.release_notes(updated, "0.3.0")
+    pending = (
+        preamble + "## Unreleased\n\n- Pending manual addition.\n\n" + changelog.split("\n\n", 1)[1]
+    )
+    assert release.release_notes(pending, "0.2.0") == block
+    migrated = release.update_changelog(pending, "0.3.0", block)
+    assert migrated.startswith(preamble + "## 0.3.0\n")
+    assert release.release_notes(migrated, "0.3.0") == block + "\n\n- Pending manual addition."
+    assert migrated.endswith(changelog.split("\n\n", 1)[1])
+    assert release.update_changelog(migrated, "0.3.0", block) == migrated
+    # A manually edited git-cliff preview contributes only its handwritten notes.
+    preview = pending.replace(
+        "- Pending manual addition.", block + "\n\n- Pending manual addition."
+    )
+    moved = release.update_changelog(preview, "0.2.0", block)
+    assert moved.count(release.GENERATED_START) == 1
+    assert release.release_notes(moved, "0.2.0") == block + "\n\n- Pending manual addition."
+    assert release.update_changelog(moved, "0.2.0", block) == moved
+    windows = release.update_changelog(
+        pending.replace("\n", "\r\n"), "0.3.0", block.replace("\n", "\r\n")
+    )
+    assert "\r\r\n" not in windows and "\n" not in windows.replace("\r\n", "")
+    assert windows == migrated.replace("\n", "\r\n")
+    first = release.update_changelog(
+        "# Changelog\n\n## Unreleased\n\n- Initial manual note.\n", "0.1.0", block
+    )
+    assert release.release_notes(first, "0.1.0") == block + "\n\n- Initial manual note."
     with pytest.raises(ValueError, match="older changelog"):
         release.update_changelog(changelog, "0.1.0", block)
     for invalid in (
@@ -320,3 +358,10 @@ def test_changelog_updates_reject_rewriting_old_or_unmarked_entries() -> None:
     for notes in ("", "- TODO: describe the release."):
         with pytest.raises(ValueError, match="complete release notes"):
             release.release_notes(f"# Changelog\n\n## 0.2.0\n\n{notes}", "0.2.0")
+    for invalid in (
+        pending.replace("## 0.1.0", "## Unreleased"),
+        changelog + "\n## Unreleased\n\n- Misplaced note.\n",
+        pending.replace("- Pending manual addition.", release.GENERATED_START),
+    ):
+        with pytest.raises(ValueError):
+            release.update_changelog(invalid, "0.3.0", block)

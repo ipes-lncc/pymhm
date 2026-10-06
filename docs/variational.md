@@ -1,10 +1,17 @@
 # User-defined variational problems
 
-`Equation`, `LocalEquations` and `MultiscaleProblem` describe forms and their
-coefficient maps. `assemble` and `solve` supply compilation, constrained local
-elimination, ordered global assembly and reconstruction. Scalar, vector and
-mixed fields use the same records. The physical operator, boundary convention,
-trace space and retained modes belong to the problem definition.
+The principal workflow binds macro/local meshes, declared spaces and user-written
+local/global forms with `MeshHierarchy`, `bind_interface` and `bind_problem`.
+The local provider receives `LocalContext`: it supplies the local mesh, native
+space binding, supported trace pairings and coordinate maps. The global callback
+receives `GlobalContext` for represented boundary data and additional forms.
+`assemble` and `solve` reuse the shared compilation, constrained elimination,
+ordered assembly and reconstruction owners.
+
+The mathematical operator, physical trace meaning, boundary convention, retained
+modes and gauge remain explicit. Numbering, incidence signs and supported native
+coordinate conversions belong to their mesh/space adapters. Scalar, vector and
+mixed fields use the same contracts.
 
 For the abstract MHM decomposition and local/global interpretation, see
 [Harder and Valentin (2016)](https://doi.org/10.1007/978-3-319-41640-3_13).
@@ -20,7 +27,56 @@ The case gallery also documents predefined physical formulations imported from
 their implementation owners. Their numerical qualification applies to the
 stated data and spaces, rather than arbitrary variational forms.
 
-## Declare both equations
+## Bind spaces before writing the equations
+
+```python
+hierarchy = MeshHierarchy(macro_mesh, local_meshes)
+interface = bind_interface(skeleton, convention="normal")
+
+
+def local_equations(local):
+    space = local.native_space(local_element)
+    u, v = ufl.TrialFunction(space.space), ufl.TestFunction(space.space)
+    dx = ufl.Measure("dx", domain=space.mesh)
+    a = (ufl.inner(K * ufl.grad(u), ufl.grad(v)) + reaction * u * v) * dx
+    L = source * v * dx
+    b = local.trace_pairings(lambda phi, ds: phi * v * ds)
+    c = local.trace_pairings(lambda phi, ds: -phi * u * ds, axis="rows")
+    local.field("potential", space)
+    return local.equations(a=a, L=L, b=b, c=c)
+
+
+problem = bind_problem(
+    hierarchy, interface, local_equations,
+    global_equation=global_equation, retained=retained_modes,
+)
+system = assemble(problem)
+solution = solve(system)
+potential_fields = solution.field("potential")
+```
+
+This snippet assumes the displayed coefficient symbols are defined on the
+native domain and the declared operator has no unhandled kernel. A complete
+runnable example, including a singular local operator and exterior pressure
+moments, appears in the [overview](tutorials/overview.md).
+
+`retained` is the declared mode count per macroelement, either one count for
+all selected cells or a tuple following the hierarchy order. The binding derives
+coordinate sizes and offsets without solving local problems on the coordinator.
+Native trace pairing capabilities have stated geometric/space limits; generic
+UFL does not automatically couple unrelated meshes.
+
+For an additional supported global interface form, pass a builder to
+`global_problem.interface_equation`. Its arguments are the native interface
+trial/test functions and measure; the adapter transports the assembled form to
+the declared face coordinates and retains the complete global layout. Boundary
+loads and gauges are separate explicit data.
+
+The [custom-space tutorial](tutorials/custom-interface.md) shows how to own
+all numbering, basis and orientation conventions. Fully manual coefficient
+records remain available below and use the same numerical owners.
+
+## Explicit coefficient equations
 
 A provider returns the following four blocks for each local item:
 
@@ -138,8 +194,9 @@ local = LocalEquations(
 functions are supplied by the provider. Each `phi` represents one explicitly
 chosen trace basis function on the local integration mesh, including its
 support and orientation. `columns` assembles test-side linear forms as $B_K$;
-`rows` assembles trial-side linear forms as $C_K$. There is no automatic
-identification of basis functions on another mesh.
+`rows` assembles trial-side linear forms as $C_K$. This direct pairing path supplies its own support and coordinate convention.
+The bound `LocalContext.trace_pairings` path supplies those data for supported
+mesh-associated spaces; arbitrary cross-mesh identification remains explicit.
 
 The scalar example has no declared kernel. If `reaction=0` and the local
 volume operator is a Neumann diffusion operator, provide its constant
@@ -181,8 +238,9 @@ directly without a local factorization. Linear forms with UFL argument number
 zero or one are supported.
 The complete reduced global operator is also square.
 
-The adapter assembles binary64 coefficients. It infers no essential boundary
-elimination, gauge, normal orientation, quadrature or transpose relation.
+The direct adapter assembles binary64 coefficients. Essential boundary
+elimination, gauge, quadrature and transpose relations remain explicit.
+The higher-level context applies its declared interface orientation maps once.
 Cross-mesh integration requires explicit DOLFINx `entity_maps`; use
 `assemble_form` or a custom compiler to pass these maps and compilation options.
 Zero forms whose arguments were simplified away require an explicit shape.

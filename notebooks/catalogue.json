@@ -269,7 +269,7 @@
     {
       "path": "notebooks/darcy/33_darcy_rt.ipynb",
       "family": "darcy",
-      "title": "Raviart\u2013Thomas Darcy: RT0, RT1 and RT2",
+      "title": "Raviart–Thomas Darcy: RT0, RT1 and RT2",
       "methods": [
         "RT0",
         "RT1",
@@ -387,7 +387,7 @@
     {
       "path": "notebooks/darcy/52_mh2m.ipynb",
       "family": "darcy",
-      "title": "Three-field multiscale Darcy: MH\u00b2M",
+      "title": "Three-field multiscale Darcy: MH²M",
       "methods": [
         "three-field MH2M"
       ],
@@ -419,7 +419,7 @@
     {
       "path": "notebooks/darcy/59_pgmhm.ipynb",
       "family": "darcy",
-      "title": "Petrov\u2013Galerkin MHM on polytopes",
+      "title": "Petrov–Galerkin MHM on polytopes",
       "methods": [
         "Petrov-Galerkin MHM"
       ],
@@ -452,7 +452,7 @@
     {
       "path": "notebooks/darcy/65_mh_boundary.ipynb",
       "family": "darcy",
-      "title": "Physical Neumann data and nonconvex macroelements in MH and MH\u00b2M",
+      "title": "Physical Neumann data and nonconvex macroelements in MH and MH²M",
       "methods": [
         "MH",
         "MH2M",
@@ -464,7 +464,7 @@
     {
       "path": "notebooks/darcy/69_mh3d.ipynb",
       "family": "darcy",
-      "title": "Tetrahedral MH and MH\u00b2M",
+      "title": "Tetrahedral MH and MH²M",
       "methods": [
         "tetrahedral MH",
         "tetrahedral MH2M"
@@ -475,7 +475,7 @@
     {
       "path": "notebooks/darcy/70_mh2m_heterogeneous.ipynb",
       "family": "darcy",
-      "title": "MH\u00b2M with independently refined conormals",
+      "title": "MH²M with independently refined conormals",
       "methods": [
         "MH2M",
         "independent pressure and conormal traces"
@@ -616,7 +616,7 @@
     {
       "path": "notebooks/flow/introductory_methods.ipynb",
       "family": "flow",
-      "title": "Stokes\u2013Brinkman and Oseen introductory methods",
+      "title": "Stokes–Brinkman and Oseen introductory methods",
       "methods": [
         "user-written UFL P2/P1 Taylor-Hood Brinkman",
         "Taylor-Hood",
@@ -651,7 +651,7 @@
       "family": "flow/brinkman_oseen",
       "title": "Brinkman stabilization and Oseen transport",
       "methods": [
-        "user-written USFEM drag0/1/100 and skew Taylor\u2013Hood Oseen blocks",
+        "user-written USFEM drag0/1/100 and skew Taylor–Hood Oseen blocks",
         "USFEM Brinkman",
         "Oseen MHM"
       ],
@@ -672,7 +672,7 @@
     {
       "path": "notebooks/flow/brinkman_oseen/48_stokes_adaptive.ipynb",
       "family": "flow/brinkman_oseen",
-      "title": "Stokes\u2013Brinkman: two levels of error and two adaptive strategies",
+      "title": "Stokes–Brinkman: two levels of error and two adaptive strategies",
       "methods": [
         "Stokes-Brinkman MHM",
         "local and macro adaptivity"
@@ -685,7 +685,7 @@
       "family": "flow/stokes",
       "title": "The polynomial Stokes problem of Araya et al. (2017)",
       "methods": [
-        "user-written Taylor\u2013Hood and P1/P1 USFEM LocalEquations",
+        "user-written Taylor–Hood and P1/P1 USFEM LocalEquations",
         "Taylor-Hood MHM",
         "USFEM MHM"
       ],
@@ -766,6 +766,18 @@
       "kind": "study"
     },
     {
+      "path": "notebooks/foundations/operators/custom_interface.ipynb",
+      "family": "foundations/operators",
+      "title": "Custom interface spaces: own the basis, numbering and orientation",
+      "methods": [
+        "structural InterfaceSpace and TraceBinding",
+        "nonorthogonal face basis",
+        "arbitrary numbering and normal orientation",
+        "canonical/custom physical-field equivalence"
+      ],
+      "kind": "introductory"
+    },
+    {
       "path": "notebooks/foundations/operators/local_global_providers.ipynb",
       "family": "foundations/operators",
       "title": "Local and global forms, providers and ordered batches",
@@ -827,7 +839,7 @@
     {
       "path": "notebooks/transport/introductory_methods.ipynb",
       "family": "transport",
-      "title": "Scalar reaction\u2013advection\u2013diffusion methods",
+      "title": "Scalar reaction–advection–diffusion methods",
       "methods": [
         "user-written UFL skew Galerkin RAD",
         "RAD Galerkin",
@@ -907,7 +919,7 @@
     {
       "path": "notebooks/transport/53_unusual.ipynb",
       "family": "transport",
-      "title": "Scalar MHM-UNUSUAL reaction\u2013diffusion",
+      "title": "Scalar MHM-UNUSUAL reaction–diffusion",
       "methods": [
         "scalar reaction-diffusion MHM-UNUSUAL"
       ],
@@ -1032,10 +1044,10 @@
     {
       "path": "notebooks/introduction/mh2m_multiscale.ipynb",
       "family": "introduction",
-      "title": "MH\u00b2M with an oscillatory coefficient",
+      "title": "MH²M with an oscillatory coefficient",
       "methods": [
         "explicit scalar local operators",
-        "MH\u00b2M local saddle equations",
+        "MH²M local saddle equations",
         "independent potential and conormal traces",
         "classical conforming Galerkin"
       ],
@@ -1044,7 +1056,7 @@
     {
       "path": "notebooks/introduction/mhm_usfem_rad.ipynb",
       "family": "introduction",
-      "title": "MHM-USFEM for reaction\u2013diffusion layers",
+      "title": "MHM-USFEM for reaction–diffusion layers",
       "methods": [
         "explicit Galerkin and stabilized local operators",
         "primal MHM",
@@ -1080,12 +1092,12 @@
     {
       "path": "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb",
       "family": "introduction",
-      "title": "Stokes\u2013Brinkman boundary-layer convergence",
+      "title": "Stokes–Brinkman boundary-layer convergence",
       "methods": [
-        "user-written velocity\u2013pressure UFL",
-        "Taylor\u2013Hood local MHM",
+        "user-written velocity–pressure UFL",
+        "Taylor–Hood local MHM",
         "MHM-USFEM",
-        "classical Taylor\u2013Hood",
+        "classical Taylor–Hood",
         "analytical layer convergence"
       ],
       "kind": "introductory"

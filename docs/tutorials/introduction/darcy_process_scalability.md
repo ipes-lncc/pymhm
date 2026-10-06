@@ -2,6 +2,8 @@
 
 Follow the numbered steps: state the variational problem, choose the local and trace spaces, declare the local and global equations, solve, and inspect the physical fields.
 
+The main workflow is **meshes → spaces → local equations → global balance → assemble → solve → fields and errors**. `MeshHierarchy` associates macro and local meshes; `bind_interface` and `LocalContext` own supported numbering, geometric orientation and native coordinate conversions. The mathematical forms, physical trace meaning, local modes and gauge remain explicit in the cells below. Fully manual/custom spaces use the same numerical owners; see the [custom-interface notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/custom_interface.ipynb).
+
 This standalone companion to the thread study defines the physical data, weak
 forms, local equations, global balance, conforming baselines, validation and
 plots in executable cells. Only the scheduling policy changes between true
@@ -89,6 +91,12 @@ plt.rcParams.update({"figure.dpi": 110, "font.size": 10})
 SOURCE_NOTEBOOK = Path(os.environ.get("PYMHM_NOTEBOOK_SOURCE", ROOT / "notebooks/introduction/darcy_process_scalability.ipynb"))
 
 PARENT_IMPORT_SECONDS = time.perf_counter() - PARENT_IMPORT_START
+
+from pymhm import MeshHierarchy, LocalContext, bind_interface, bind_problem
+from pymhm.backends.spaces import bind_space
+
+# Opt in only when dedicated resources are available for the full campaign.
+RUN_CAMPAIGN = os.environ.get("PYMHM_RUN_CAMPAIGN", "0") == "1"
 
 ```
 
@@ -242,53 +250,10 @@ the actual stiffness, source, physical moment and oriented face integrals.
 
 ```python
 import ufl
-from dolfinx import fem as native_fem, mesh as native_mesh
-from mpi4py import MPI
-from pymhm.core.equations import columns, rows, compile_local_equations
+from pymhm.core.equations import compile_local_equations
 
-
-def native_geometry(
-    fine: CartesianMacroMesh,
-    macro: CartesianMacroMesh,
-    cell: int,
-) -> tuple[Any, Any, Any, np.ndarray]:
-    """Create serial native Q1 coordinates and tags for the four actual macrofaces."""
-    x0, x1, y0, y1 = fine.bounds
-    domain = native_mesh.create_rectangle(
-        MPI.COMM_SELF,
-        [np.array([x0, y0]), np.array([x1, y1])],
-        [fine.nx, fine.ny],
-        cell_type=native_mesh.CellType.quadrilateral,
-    )
-    space = native_fem.functionspace(domain, ("Lagrange", 1))
-    coordinates = space.tabulate_dof_coordinates()[:, :2]
-    indices = np.rint((coordinates - np.array([x0, y0])) / fine.spacing).astype(int)
-    native_to_cartesian = indices[:, 1] * (fine.nx + 1) + indices[:, 0]
-    assert len(np.unique(native_to_cartesian)) == len(coordinates)
-    domain.topology.create_connectivity(1, 2)
-    facets, labels = [], []
-    for side, face in enumerate(macro.cell_faces[cell]):
-        ends = macro.points[macro.faces[face]]
-        axis = int(np.flatnonzero(np.isclose(ends[0], ends[1], rtol=0, atol=1e-14))[0])
-        coordinate = ends[0, axis]
-        selected = native_mesh.locate_entities_boundary(
-            domain,
-            1,
-            lambda x, axis=axis, coordinate=coordinate: np.isclose(
-                x[axis], coordinate, atol=1e-13, rtol=0
-            ),
-        )
-        facets.extend(selected)
-        labels.extend([side + 1] * len(selected))
-    ordering = np.argsort(facets)
-    tags = native_mesh.meshtags(
-        domain,
-        1,
-        np.array(facets, dtype=np.int32)[ordering],
-        np.array(labels, dtype=np.int32)[ordering],
-    )
-    ds = ufl.Measure("ds", domain=domain, subdomain_data=tags, metadata={"quadrature_degree": 6})
-    return domain, space, ds, native_to_cartesian
+# LocalContext.native_space binds the geometry, Basix element and native DOF order.
+# LocalContext.trace_pairings binds each face basis to its integration support.
 
 ```
 
@@ -321,14 +286,12 @@ and face partitions are selected later from the pilot.
 
 
 ```python
-def define_ufl_local_equations(
-    macro: CartesianMacroMesh,
-    cell: int,
-    fine: CartesianMacroMesh,
-    skeleton: SkeletonSpace,
-) -> tuple[Any, np.ndarray]:
-    """Execute the user-written weak forms and return only numerical local data."""
-    domain, V, ds, native_order = native_geometry(fine, macro, cell)
+from pymhm.core.equations import columns
+
+def define_ufl_local_equations(local: LocalContext) -> LocalEquations:
+    """Write local volume and interface forms without numbering or orientation code."""
+    binding = local.native_space(degree=1)
+    domain, V = binding.mesh, binding.space
     p, v = ufl.TrialFunction(V), ufl.TestFunction(V)
     x, y = ufl.SpatialCoordinate(domain)
     frequency = 2 * np.pi / EPSILON
@@ -352,41 +315,36 @@ def define_ufl_local_equations(
     a = K * ufl.inner(ufl.grad(p), ufl.grad(v)) * dx
     L = f * v * dx
 
-    # Extend each continuous piecewise-P1 face shape into V. Only its
-    # boundary restriction enters ds; no extension is a new PDE solve.
-    coordinates = V.tabulate_dof_coordinates()[:, :2]
-    pairings = []
-    for side, face in enumerate(macro.cell_faces[cell]):
-        start, end = macro.points[macro.faces[face]]
-        parameter = np.clip((coordinates - start) @ (end - start) / macro.lengths[face] ** 2, 0, 1)
-        values = skeleton.faces[face].evaluate(parameter)
-        for column in range(values.shape[1]):
-            shape = native_fem.Function(V)
-            shape.x.array[:] = values[:, column]
-            pairings.append(macro.signs[cell, side] * shape * v * ds(side + 1))
-
-    equations = LocalEquations(
-        a=a,
-        L=L,
-        b=columns(*pairings),
-        c=rows(*pairings),
-        dofs=skeleton.cell_dofs(cell),
-        kernel=np.ones((len(coordinates), 1)),
-        moments=columns(v * dx),
+    # Write both mathematical pairings explicitly. The interface adapter supplies
+    # their basis, geometric support and outward-normal transport.
+    b = local.trace_pairings(lambda phi, ds: phi * v * ds)
+    c = local.trace_pairings(lambda phi, ds: phi * p * ds, axis="rows")
+    return local.equations(
+        a=a, L=L, b=b, c=c,
+        kernel=np.ones((len(binding.mapping), 1)), moments=columns(v * dx),
+        metadata={"native_to_cartesian": np.argsort(binding.mapping)},
     )
-    compiled = compile_local_equations(equations)
-    return compiled.problem, native_order
 
 
 demo_macro = CartesianMacroMesh(2, 2)
 demo_skeleton = SkeletonSpace(
     demo_macro, tuple(FaceSpace.uniform(1, 4, continuous=True) for _ in demo_macro.faces)
 )
+demo_problem = bind_problem(
+    MeshHierarchy(demo_macro, tuple(demo_macro.submesh(cell, 20) for cell in range(len(demo_macro.cells)))),
+    bind_interface(demo_skeleton, convention="normal"), define_ufl_local_equations,
+    retained=1,
+)
 native_demonstrations = {}
 # Include the interior sign reversals as well as exterior boundary orientations.
 for cell in range(len(demo_macro.cells)):
-    fine = demo_macro.submesh(cell, 20)
-    native_demonstrations[cell] = define_ufl_local_equations(demo_macro, cell, fine, demo_skeleton)
+    local = demo_problem.local_context(cell)
+    try:
+        equations = define_ufl_local_equations(local)
+        compiled = compile_local_equations(equations)
+        native_demonstrations[cell] = (compiled.problem, equations.metadata["native_to_cartesian"])
+    finally:
+        local.close()
 print(
     "Executed UFL stiffness, source, mean moments and signed interface forms on four macroelements."
 )
@@ -569,9 +527,13 @@ class LocalProvider:
     refinement: int = 20
     quadrature_order: int = 4
 
-    def __call__(self, cell: int) -> LocalEquations:
+    def local_mesh(self, cell: int) -> CartesianMacroMesh:
+        """Describe each fine mesh so it is created within its owning worker."""
+        return self.macro.submesh(cell, self.refinement)
+
+    def __call__(self, local: LocalContext) -> LocalEquations:
         """Declare A p+B lambda=f and C=B.T with the physical volume mean."""
-        fine = self.macro.submesh(cell, self.refinement)
+        cell, fine = local.cell, local.mesh
         A, mass, f = quadrilateral_operators(
             fine, 1, permeability=permeability, source=source, order=self.quadrature_order
         )
@@ -584,12 +546,12 @@ class LocalProvider:
             self.face_space,
         )
         constant = np.ones((len(f), 1))
-        return LocalEquations(
+        return local.equations(
             a=A,
             L=f,
             b=B,
             c=B.T,
-            dofs=self.skeleton.cell_dofs(cell),
+            coordinates="global",
             kernel=constant,
             moments=mass @ constant,
             metadata={"mesh": fine},
@@ -651,7 +613,9 @@ def literal_executed_definitions(names: tuple[str, ...]) -> str:
     return "\n\n\n".join([epsilon, *(definitions[name] for name in names)])
 
 
-MODULE_IMPORTS = """from dataclasses import dataclass
+MODULE_IMPORTS = """from __future__ import annotations
+from dataclasses import dataclass
+from pymhm import LocalContext
 import numpy as np
 from pymhm.core.equations import LocalEquations
 from pymhm.fem.scalar.quadrilateral import quadrilateral_operators, quadrilateral_trace_coupling
@@ -683,7 +647,7 @@ print({"literal_provider_sha256": provider_source_sha256,
 ```
 
 ```text
-{'literal_provider_sha256': 'df21dec4beb3577acc29ad221874b0e93b1f8f76dd8a576ac09c7428eb4df609', 'module_sha256': 'b5a679d8136c6cda5a856bca94d96888b9a516cd639ebe5df47dfa7ad569bb0e', 'one_time_export_import_seconds': 0.08803661540150642}
+{'literal_provider_sha256': '75a5366446fae8fc59e3f78355ca65a00a419c01199e2684a0201eebc39c5741', 'module_sha256': '1ca109553770ff6713acce5e5e6ef1c9e0e8071135e3d027e764fc0a9cd11c2b', 'one_time_export_import_seconds': 0.016314398497343063}
 ```
 
 ## 5. Declare the selected workloads and repetition protocol
@@ -882,13 +846,11 @@ def run_mhm(
         provider = SpawnLocalProvider(
             macro, skeleton, template, ends, lengths, face_space, refinement=refinement
         )
-        problem = MultiscaleProblem(
-            global_equation=Equation(a=0, L=0),
-            local_provider=provider,
-            items=range(len(macro.cells)),
-            trace_size=skeleton.size,
-            coarse_sizes=(1,) * len(macro.cells),
-        )
+        problem = bind_problem(
+                      MeshHierarchy(macro, provider.local_mesh),
+                      bind_interface(skeleton, convention="normal"), provider,
+                      global_equation=Equation(0, 0), retained=1,
+                  )
         execution = ExecutionConfig(
             backend=backend, workers=workers, native_threads=1, batch_size=workers,
             pipeline=True,
@@ -1142,6 +1104,327 @@ def mhm_state_digests(result: Any) -> dict[str, Any]:
 
 ```
 
+## Current API control and recorded performance campaign
+
+The default execution assembles and solves the **current implementation** on a
+200 × 200 fine-cell budget, using the bound mesh/interface API above. It checks
+physical pressure and Darcy flux against the analytical solution and the matched
+classical Q1 approximation. The small control uses two workers; its wall time is
+not a performance measurement.
+
+The scaling plots and large-workload tables below come from the complete campaign
+recorded on **2026-10-04**, at revision
+`1427bc29c1a62e3c25fe3d4b541fb285feb19ab7`. Their original coefficients,
+executed bases, source hashes, sample distributions and acquisition protocol remain
+in the versioned receipts. Reading those receipts does not measure the performance
+of the current revision. Every receipt and figure is checked against `SHA256SUMS`.
+
+Set `PYMHM_RUN_CAMPAIGN=1` before executing the notebook to acquire the full
+campaign with the current source on dedicated resources. The following sections
+retain its complete step-by-step acquisition procedure, including reference
+refinement, physical residual checks, cold and warm setup, repeated timing,
+strong and weak scaling and basis-aware archive replay. The acquisition cells
+are conditional on `RUN_CAMPAIGN` because these studies are substantially more
+expensive than the introductory numerical control.
+
+
+```python
+if not RUN_CAMPAIGN:
+    from IPython.display import Image, display
+
+    archive_folder = ROOT / "benchmarks/results/execution/introduction-processes-20261004"
+    # Verify every persisted receipt and figure before presenting its measurements.
+    for checksum in (archive_folder / "SHA256SUMS").read_text().splitlines():
+        expected, relative = checksum.split(maxsplit=1)
+        actual = hashlib.sha256((archive_folder / relative).read_bytes()).hexdigest()
+        if actual != expected:
+            raise ValueError(f"Archive integrity mismatch: {relative}")
+    _, current_mhm = run_mhm("process", workers=2, fine_n=200, trace_segments=4)
+    _, current_classical = run_classical(200, solver="scipy")
+    current_errors = {
+        "MHM": field_difference(mhm_evaluator(current_mhm), exact_evaluator, integration_n=200),
+        "classical": field_difference(classical_evaluator(current_classical), exact_evaluator, integration_n=200),
+        "MHM_to_classical": field_difference(mhm_evaluator(current_mhm), classical_evaluator(current_classical), integration_n=200),
+    }
+    archive_record = json.loads((archive_folder / "measurements.json").read_text())
+    print("Historical campaign provenance: 2026-10-04", archive_record["git_revision"])
+    print("Archived strong-scaling samples:", json.dumps(archive_record["strong_summary"], indent=2))
+    print("Archived weak-scaling samples:", json.dumps(archive_record["weak_summary"], indent=2))
+    print("Current 200 x 200 physical-field control:", json.dumps(current_errors, indent=2))
+    print("Current reduced-equation relative residual:", current_mhm[2].residual)
+    assert current_mhm[2].residual < 1e-9
+
+    # Show the current fields separately from the historical timing campaign.
+    axis_nodes = (np.arange(140) + 0.5) / 140
+    xx, yy = np.meshgrid(axis_nodes, axis_nodes)
+    sample_points = np.column_stack((xx.ravel(), yy.ravel()))
+    field_fig, field_axes = plt.subplots(1, 2, figsize=(10, 4), constrained_layout=True)
+    for ax, evaluator, title in zip(
+        field_axes,
+        (mhm_evaluator(current_mhm), classical_evaluator(current_classical)),
+        ("Current MHM pressure (200 x 200 total fine cells)", "Current classical Q1 pressure (200 x 200)"),
+        strict=True,
+    ):
+        values, _ = evaluator(sample_points)
+        artist = ax.pcolormesh(xx, yy, values.reshape(xx.shape), shading="nearest")
+        for location in np.linspace(0, 1, 11):
+            ax.axvline(location, color="black", alpha=0.3, linewidth=0.5)
+            ax.axhline(location, color="black", alpha=0.3, linewidth=0.5)
+        ax.set(title=title, xlabel="x", ylabel="y", aspect="equal")
+        field_fig.colorbar(artist, ax=ax, label="pressure")
+    plt.show()
+
+    print("Historical campaign figures (2026-10-04; original revision retained above):")
+    for figure_name in ('pressure_fields.png', 'flux_fields.png', 'reference_refinement_errors.png', 'strong_and_weak_scaling.png', 'strong_stage_costs.png', 'workload_crossover.png', 'weak_efficiency_and_physical_errors.png'):
+        display(Image(filename=str(archive_folder / "figures" / figure_name)))
+```
+
+??? note "Numerical output and provenance"
+
+    ```text
+    Historical campaign provenance: 2026-10-04 1427bc29c1a62e3c25fe3d4b541fb285feb19ab7
+    Archived strong-scaling samples: {
+      "serial_1": {
+        "median": 69.53116844594479,
+        "minimum": 69.47338071465492,
+        "maximum": 69.60875017009676,
+        "setup": 0.659412607550621,
+        "assembly": 68.78981604799628,
+        "solve_reconstruct": 0.08570471964776516,
+        "cold_total": 71.05097047612071
+      },
+      "process_1": {
+        "median": 81.50446711666882,
+        "minimum": 79.70296838879585,
+        "maximum": 81.94771174900234,
+        "setup": 0.6545804869383574,
+        "assembly": 80.74421610310674,
+        "solve_reconstruct": 0.10576724633574486,
+        "cold_total": 83.02426914684474
+      },
+      "process_4": {
+        "median": 24.77235463447869,
+        "minimum": 23.95788929052651,
+        "maximum": 24.81420043669641,
+        "setup": 0.6465272307395935,
+        "assembly": 24.015969736501575,
+        "solve_reconstruct": 0.10985766723752022,
+        "cold_total": 26.292156664654613
+      },
+      "process_8": {
+        "median": 17.139983143657446,
+        "minimum": 16.52059350349009,
+        "maximum": 17.187603337690234,
+        "setup": 0.6466614436358213,
+        "assembly": 16.362650826573372,
+        "solve_reconstruct": 0.17673631198704243,
+        "cold_total": 18.65978517383337
+      },
+      "process_16": {
+        "median": 13.286783238872886,
+        "minimum": 13.243331143632531,
+        "maximum": 13.427999714389443,
+        "setup": 0.6225218437612057,
+        "assembly": 12.505667017772794,
+        "solve_reconstruct": 0.17674684710800648,
+        "cold_total": 14.80658526904881
+      },
+      "classical_scipy_1": {
+        "median": 48.18146398663521,
+        "minimum": 47.865909576416016,
+        "maximum": 48.35075887478888,
+        "setup": 0.9650074001401663,
+        "assembly": 13.726923871785402,
+        "solve_reconstruct": 33.48706042021513,
+        "cold_total": 49.70126601681113
+      },
+      "classical_pyamg_1": {
+        "median": 20.24718576669693,
+        "minimum": 20.131983291357756,
+        "maximum": 20.42393846809864,
+        "setup": 0.9497230388224125,
+        "assembly": 13.682040309533477,
+        "solve_reconstruct": 5.6565128192305565,
+        "cold_total": 21.766987796872854
+      }
+    }
+    Archived weak-scaling samples: {
+      "process_1_L1": {
+        "median": 3.691325221210718,
+        "minimum": 3.434010224416852,
+        "maximum": 3.6958776023238897,
+        "setup": 0.07646768167614937,
+        "assembly": 3.5918801743537188,
+        "solve_reconstruct": 0.0258973129093647,
+        "cold_total": 5.2111272513866425
+      },
+      "classical_scipy_1_L1": {
+        "median": 1.043212654069066,
+        "minimum": 1.042268868535757,
+        "maximum": 1.0923038329929113,
+        "setup": 0.04256794974207878,
+        "assembly": 0.548406234011054,
+        "solve_reconstruct": 0.45938990265130997,
+        "cold_total": 2.5630146842449903
+      },
+      "classical_pyamg_1_L1": {
+        "median": 0.7449636813253164,
+        "minimum": 0.7050578966736794,
+        "maximum": 0.7506204918026924,
+        "setup": 0.041968513280153275,
+        "assembly": 0.5764635093510151,
+        "solve_reconstruct": 0.12549098767340183,
+        "cold_total": 2.2647657115012407
+      },
+      "process_4_L4": {
+        "median": 5.7782948538661,
+        "minimum": 5.672731289640069,
+        "maximum": 6.160258186981082,
+        "setup": 0.08070660755038261,
+        "assembly": 5.623150132596493,
+        "solve_reconstruct": 0.0785621888935566,
+        "cold_total": 7.298096884042025
+      },
+      "classical_scipy_1_L4": {
+        "median": 4.615961063653231,
+        "minimum": 4.570816563442349,
+        "maximum": 4.810904778540134,
+        "setup": 0.14355404488742352,
+        "assembly": 2.2253566700965166,
+        "solve_reconstruct": 2.249515676870942,
+        "cold_total": 6.135763093829155
+      },
+      "classical_pyamg_1_L4": {
+        "median": 2.9540700167417526,
+        "minimum": 2.9138920847326517,
+        "maximum": 3.137380950152874,
+        "setup": 0.13513772562146187,
+        "assembly": 2.266179893165827,
+        "solve_reconstruct": 0.5447558350861073,
+        "cold_total": 4.473872046917677
+      },
+      "process_8_L8": {
+        "median": 9.703571043908596,
+        "minimum": 9.326755460351706,
+        "maximum": 9.85034049488604,
+        "setup": 0.08151138015091419,
+        "assembly": 9.421834772452712,
+        "solve_reconstruct": 0.16865449212491512,
+        "cold_total": 11.22337307408452
+      },
+      "classical_scipy_1_L8": {
+        "median": 10.31785566918552,
+        "minimum": 10.225858103483915,
+        "maximum": 10.52542708069086,
+        "setup": 0.2922865469008684,
+        "assembly": 4.491326464340091,
+        "solve_reconstruct": 5.467080904170871,
+        "cold_total": 11.837657699361444
+      },
+      "classical_pyamg_1_L8": {
+        "median": 6.276633257046342,
+        "minimum": 6.211051797494292,
+        "maximum": 6.346785951405764,
+        "setup": 0.2788199055939913,
+        "assembly": 4.499747104942799,
+        "solve_reconstruct": 1.4792974777519703,
+        "cold_total": 7.796435287222266
+      },
+      "process_16_L16": {
+        "median": 14.631420096382499,
+        "minimum": 14.617014281451702,
+        "maximum": 14.792612310498953,
+        "setup": 0.08045429736375809,
+        "assembly": 14.19008588604629,
+        "solve_reconstruct": 0.3704590518027544,
+        "cold_total": 16.151222126558423
+      },
+      "classical_scipy_1_L16": {
+        "median": 20.074449062347412,
+        "minimum": 20.049793250858784,
+        "maximum": 20.27343798056245,
+        "setup": 0.5894117560237646,
+        "assembly": 9.067569229751825,
+        "solve_reconstruct": 10.421378085389733,
+        "cold_total": 21.594251092523336
+      },
+      "classical_pyamg_1_L16": {
+        "median": 12.025081707164645,
+        "minimum": 12.01772135682404,
+        "maximum": 12.082458697259426,
+        "setup": 0.6001557260751724,
+        "assembly": 9.041350284591317,
+        "solve_reconstruct": 2.376539047807455,
+        "cold_total": 13.54488373734057
+      }
+    }
+    Current 200 x 200 physical-field control: {
+      "MHM": {
+        "pressure_L2_per_sqrt_area": 1.2203901833006532e-05,
+        "flux_L2_per_sqrt_area": 0.012719053261234493
+      },
+      "classical": {
+        "pressure_L2_per_sqrt_area": 1.2192433581085124e-05,
+        "flux_L2_per_sqrt_area": 0.012718368057784214
+      },
+      "MHM_to_classical": {
+        "pressure_L2_per_sqrt_area": 3.715064914158009e-07,
+        "flux_L2_per_sqrt_area": 0.0001320487465734344
+      }
+    }
+    Current reduced-equation relative residual: 1.4123990698251368e-16
+    ```
+
+
+
+[![Figure 1 — Process-based MHM for multiscale Darcy](../../assets/tutorials/darcy_process_scalability/figure_34_1.png)](../../assets/tutorials/darcy_process_scalability/figure_34_1.png)
+
+
+```text
+Historical campaign figures (2026-10-04; original revision retained above):
+```
+
+
+
+[![Figure 2 — Process-based MHM for multiscale Darcy](../../assets/tutorials/darcy_process_scalability/figure_34_3.png)](../../assets/tutorials/darcy_process_scalability/figure_34_3.png)
+
+
+
+
+[![Figure 3 — Process-based MHM for multiscale Darcy](../../assets/tutorials/darcy_process_scalability/figure_34_4.png)](../../assets/tutorials/darcy_process_scalability/figure_34_4.png)
+
+
+
+
+[![Figure 4 — Process-based MHM for multiscale Darcy](../../assets/tutorials/darcy_process_scalability/figure_34_5.png)](../../assets/tutorials/darcy_process_scalability/figure_34_5.png)
+
+
+
+
+[![Figure 5 — Process-based MHM for multiscale Darcy](../../assets/tutorials/darcy_process_scalability/figure_34_6.png)](../../assets/tutorials/darcy_process_scalability/figure_34_6.png)
+
+
+
+
+[![Figure 6 — Process-based MHM for multiscale Darcy](../../assets/tutorials/darcy_process_scalability/figure_34_7.png)](../../assets/tutorials/darcy_process_scalability/figure_34_7.png)
+
+
+
+
+[![Figure 7 — Process-based MHM for multiscale Darcy](../../assets/tutorials/darcy_process_scalability/figure_34_8.png)](../../assets/tutorials/darcy_process_scalability/figure_34_8.png)
+
+
+
+
+[![Figure 8 — Process-based MHM for multiscale Darcy](../../assets/tutorials/darcy_process_scalability/figure_34_9.png)](../../assets/tutorials/darcy_process_scalability/figure_34_9.png)
+
+
+## Full campaign procedure (opt in with `RUN_CAMPAIGN`)
+
+The mathematical definitions and acquisition functions above are reused below.
+The recorded figures are shown in the preceding section; enabling the flag
+executes the complete procedure with the current package and emits new records.
+
 Every operator, local source and lift, executed basis, orientation map and
 global coordinate must agree byte for byte with true serial execution. Field
 reconstruction has a separate absolute $10^{-12}$ replay criterion. NumPy
@@ -1153,79 +1436,78 @@ with the shared solver's unchanged $10^{-10}$ relative criterion.
 
 
 ```python
-from pymhm.linalg.linear import check_linear_solution
+if RUN_CAMPAIGN:
+    from pymhm.linalg.linear import check_linear_solution
 
 
-def validate_mhm_state(result: Any, reference: Any, expected_digests: dict[str, Any]) -> dict[str, float]:
-    """Require exact nonfield contracts and measured reconstruction roundoff on original rows."""
-    if mhm_state_digests(result) != expected_digests:
-        raise ValueError("An operator, response value, executed basis, map or global coordinate changed")
-    _, system, solution = result
-    maximum, defect_square, forcing_square = 0.0, 0.0, 0.0
-    for response, actual, expected in zip(system.responses, solution.fields, reference[2].fields, strict=True):
-        np.testing.assert_allclose(actual, expected, rtol=0, atol=1e-12)
-        maximum = max(maximum, float(np.max(abs(actual - expected), initial=0)))
-        local_trace = solution.trace[response.problem.trace_dofs]
-        forcing = response.problem.load - response.problem.coupling @ local_trace
-        check_linear_solution(response.problem.matrix, forcing, actual, rtol=1e-10, atol=0)
-        defect = response.problem.matrix @ actual - forcing
-        defect_square += float(np.dot(defect, defect))
-        forcing_square += float(np.dot(forcing, forcing))
-    return {"maximum_pressure_coefficient_difference": maximum,
-            "original_local_rows_relative_L2": math.sqrt(defect_square / forcing_square),
-            "global_compatibility_residual": float(solution.residual)}
-
-```
-
-
-```python
-physical_norm_cache = {}
-
-
-def physical_norms_once(result: Any, kind: str, integration_n: int, length: int = 1) -> dict[str, Any]:
-    """Integrate each distinct executed field once, preserving the actual quadrature check."""
-    mesh = result[0]
-    if kind == "classical":
-        fields, evaluator = (result[1],), classical_evaluator(result)
-    elif kind == "mhm":
-        fields, evaluator = result[2].fields, mhm_evaluator(result)
-    else:
-        raise ValueError("Use the declared classical or broken MHM field representation")
-    key = (kind, mesh.nx, mesh.ny, tuple(float(x) for x in mesh.bounds), integration_n,
-           length, EPSILON, tuple(numerical_digest(field) for field in fields))
-    if key not in physical_norm_cache:
-        first = field_difference(evaluator, exact_evaluator, integration_n, length, order=5)
-        second = field_difference(evaluator, exact_evaluator, integration_n, length, order=7)
-        for quantity in first:
-            np.testing.assert_allclose(first[quantity], second[quantity], rtol=1e-3, atol=1e-12)
-        physical_norm_cache[key] = {"gauss5": first, "gauss7": second}
-    return physical_norm_cache[key]
+    def validate_mhm_state(result: Any, reference: Any, expected_digests: dict[str, Any]) -> dict[str, float]:
+        """Require exact nonfield contracts and measured reconstruction roundoff on original rows."""
+        if mhm_state_digests(result) != expected_digests:
+            raise ValueError("An operator, response value, executed basis, map or global coordinate changed")
+        _, system, solution = result
+        maximum, defect_square, forcing_square = 0.0, 0.0, 0.0
+        for response, actual, expected in zip(system.responses, solution.fields, reference[2].fields, strict=True):
+            np.testing.assert_allclose(actual, expected, rtol=0, atol=1e-12)
+            maximum = max(maximum, float(np.max(abs(actual - expected), initial=0)))
+            local_trace = solution.trace[response.problem.trace_dofs]
+            forcing = response.problem.load - response.problem.coupling @ local_trace
+            check_linear_solution(response.problem.matrix, forcing, actual, rtol=1e-10, atol=0)
+            defect = response.problem.matrix @ actual - forcing
+            defect_square += float(np.dot(defect, defect))
+            forcing_square += float(np.dot(forcing, forcing))
+        return {"maximum_pressure_coefficient_difference": maximum,
+                "original_local_rows_relative_L2": math.sqrt(defect_square / forcing_square),
+                "global_compatibility_residual": float(solution.residual)}
 
 ```
 
 
 ```python
-reference_fields, reference_accuracy, reference_refinement, reference_timings = {}, {}, {}, {}
-integration_n = REFERENCE_FINE_SIZES[-1]
-for fine_n in REFERENCE_FINE_SIZES:
-    reference_timings[str(fine_n)], result = run_classical(fine_n, "scipy")
-    reference_fields[fine_n] = result
-    reference_accuracy[str(fine_n)] = physical_norms_once(result, "classical", integration_n)["gauss5"]
-for a, b in zip(REFERENCE_FINE_SIZES, REFERENCE_FINE_SIZES[1:]):
-    reference_refinement[f"{a}_to_{b}"] = field_difference(
-        classical_evaluator(reference_fields[a]), classical_evaluator(reference_fields[b]), integration_n
-    )
-for quantity in ("pressure_L2_per_sqrt_area", "flux_L2_per_sqrt_area"):
-    errors = [reference_accuracy[str(n)][quantity] for n in REFERENCE_FINE_SIZES]
-    if any(b >= a for a, b in zip(errors, errors[1:])):
-        raise ValueError("The classical refinement has not established decreasing physical field errors")
-print({"classical_exact_errors": reference_accuracy,
-       "classical_successive_refinement_differences": reference_refinement})
+if RUN_CAMPAIGN:
+    physical_norm_cache = {}
+
+
+    def physical_norms_once(result: Any, kind: str, integration_n: int, length: int = 1) -> dict[str, Any]:
+        """Integrate each distinct executed field once, preserving the actual quadrature check."""
+        mesh = result[0]
+        if kind == "classical":
+            fields, evaluator = (result[1],), classical_evaluator(result)
+        elif kind == "mhm":
+            fields, evaluator = result[2].fields, mhm_evaluator(result)
+        else:
+            raise ValueError("Use the declared classical or broken MHM field representation")
+        key = (kind, mesh.nx, mesh.ny, tuple(float(x) for x in mesh.bounds), integration_n,
+               length, EPSILON, tuple(numerical_digest(field) for field in fields))
+        if key not in physical_norm_cache:
+            first = field_difference(evaluator, exact_evaluator, integration_n, length, order=5)
+            second = field_difference(evaluator, exact_evaluator, integration_n, length, order=7)
+            for quantity in first:
+                np.testing.assert_allclose(first[quantity], second[quantity], rtol=1e-3, atol=1e-12)
+            physical_norm_cache[key] = {"gauss5": first, "gauss7": second}
+        return physical_norm_cache[key]
 
 ```
 
-```text
-{'classical_exact_errors': {'200': {'pressure_L2_per_sqrt_area': 1.2192433581086097e-05, 'flux_L2_per_sqrt_area': 0.012718368057784191}, '500': {'pressure_L2_per_sqrt_area': 1.9529741362114812e-06, 'flux_L2_per_sqrt_area': 0.005099050467507207}, '1000': {'pressure_L2_per_sqrt_area': 4.88322585668252e-07, 'flux_L2_per_sqrt_area': 0.0025503666411529936}}, 'classical_successive_refinement_differences': {'200_to_500': {'pressure_L2_per_sqrt_area': 1.0873854973777027e-05, 'flux_L2_per_sqrt_area': 0.01321760426772491}, '500_to_1000': {'pressure_L2_per_sqrt_area': 1.5972091314067545e-06, 'flux_L2_per_sqrt_area': 0.004415744654280532}}}
+
+```python
+if RUN_CAMPAIGN:
+    reference_fields, reference_accuracy, reference_refinement, reference_timings = {}, {}, {}, {}
+    integration_n = REFERENCE_FINE_SIZES[-1]
+    for fine_n in REFERENCE_FINE_SIZES:
+        reference_timings[str(fine_n)], result = run_classical(fine_n, "scipy")
+        reference_fields[fine_n] = result
+        reference_accuracy[str(fine_n)] = physical_norms_once(result, "classical", integration_n)["gauss5"]
+    for a, b in zip(REFERENCE_FINE_SIZES, REFERENCE_FINE_SIZES[1:]):
+        reference_refinement[f"{a}_to_{b}"] = field_difference(
+            classical_evaluator(reference_fields[a]), classical_evaluator(reference_fields[b]), integration_n
+        )
+    for quantity in ("pressure_L2_per_sqrt_area", "flux_L2_per_sqrt_area"):
+        errors = [reference_accuracy[str(n)][quantity] for n in REFERENCE_FINE_SIZES]
+        if any(b >= a for a, b in zip(errors, errors[1:])):
+            raise ValueError("The classical refinement has not established decreasing physical field errors")
+    print({"classical_exact_errors": reference_accuracy,
+           "classical_successive_refinement_differences": reference_refinement})
+
 ```
 
 Plot the classical reference's measured refinement errors and observed rates.
@@ -1236,81 +1518,70 @@ conforming reference and do not assert an MHM rate from changing process counts.
 
 
 ```python
-reference_rates = {}
-figure, axes = plt.subplots(2, 2, figsize=(11, 8), layout="constrained")
-for column, quantity in enumerate(("pressure_L2_per_sqrt_area", "flux_L2_per_sqrt_area")):
-    errors = np.array([reference_accuracy[str(n)][quantity] for n in REFERENCE_FINE_SIZES])
-    sizes = np.array(REFERENCE_FINE_SIZES)
-    rates = np.log(errors[:-1] / errors[1:]) / np.log(sizes[1:] / sizes[:-1])
-    reference_rates[quantity] = rates.tolist()
-    axes[0, column].loglog(1 / sizes, errors, "o-", label="Conforming Q1 reference")
-    axes[0, column].set(xlabel="Fine-cell size h", ylabel=quantity.replace("_", " "),
-             title="Measured reference refinement")
-    axes[1, column].semilogx(1 / sizes[1:], rates, "s-", label="Observed successive rate")
-    axes[1, column].axhline(2 if column == 0 else 1, color="black", linestyle=":",
-                           label="Smooth Q1 asymptotic guide")
-    axes[1, column].set(xlabel="Finer cell size h", ylabel="Observed rate", title="Measured rates")
-for axis in axes.flat:
-    axis.grid(True, which="both", alpha=.3)
-    axis.legend()
-figure.savefig(OUTPUT / "reference_refinement_errors.png", dpi=170)
-plt.show()
-print({"observed_reference_rates": reference_rates})
+if RUN_CAMPAIGN:
+    reference_rates = {}
+    figure, axes = plt.subplots(2, 2, figsize=(11, 8), layout="constrained")
+    for column, quantity in enumerate(("pressure_L2_per_sqrt_area", "flux_L2_per_sqrt_area")):
+        errors = np.array([reference_accuracy[str(n)][quantity] for n in REFERENCE_FINE_SIZES])
+        sizes = np.array(REFERENCE_FINE_SIZES)
+        rates = np.log(errors[:-1] / errors[1:]) / np.log(sizes[1:] / sizes[:-1])
+        reference_rates[quantity] = rates.tolist()
+        axes[0, column].loglog(1 / sizes, errors, "o-", label="Conforming Q1 reference")
+        axes[0, column].set(xlabel="Fine-cell size h", ylabel=quantity.replace("_", " "),
+                 title="Measured reference refinement")
+        axes[1, column].semilogx(1 / sizes[1:], rates, "s-", label="Observed successive rate")
+        axes[1, column].axhline(2 if column == 0 else 1, color="black", linestyle=":",
+                               label="Smooth Q1 asymptotic guide")
+        axes[1, column].set(xlabel="Finer cell size h", ylabel="Observed rate", title="Measured rates")
+    for axis in axes.flat:
+        axis.grid(True, which="both", alpha=.3)
+        axis.legend()
+    figure.savefig(OUTPUT / "reference_refinement_errors.png", dpi=170)
+    plt.show()
+    print({"observed_reference_rates": reference_rates})
 
-```
-
-
-
-[![Figure 1 — Process-based MHM for multiscale Darcy](../../assets/tutorials/darcy_process_scalability/figure_38_0.png)](../../assets/tutorials/darcy_process_scalability/figure_38_0.png)
-
-
-```text
-{'observed_reference_rates': {'pressure_L2_per_sqrt_area': [1.9987784320588773, 1.999766431844334], 'flux_L2_per_sqrt_area': [0.9974922598129127, 0.9995239529294909]}}
 ```
 
 
 ```python
-validation_timings, validation_field = run_mhm(
-    "serial", 1, WORKLOAD["fine_n"], WORKLOAD["trace_segments"]
-)
-validation_macro = validation_field[0]
-serial_digests = mhm_state_digests(validation_field)
-process_validation_timings, process_validation_field = run_mhm(
-    "process", PROCESS_COUNTS[-1], WORKLOAD["fine_n"], WORKLOAD["trace_segments"]
-)
-process_state_validation = validate_mhm_state(process_validation_field, validation_field, serial_digests)
-classical_amg_validation_timings, classical_amg_field = run_classical(WORKLOAD["fine_n"], "pyamg")
-classical_lu_validation_timings, classical_lu_field = run_classical(WORKLOAD["fine_n"], "scipy")
-evaluators = {
-    "MHM serial": mhm_evaluator(validation_field),
-    "MHM process": mhm_evaluator(process_validation_field),
-    "Classical LU": classical_evaluator(classical_lu_field),
-    "Classical AMG-CG": classical_evaluator(classical_amg_field),
-}
-control_fields = {"MHM serial": (validation_field, "mhm"), "MHM process": (process_validation_field, "mhm"),
-                  "Classical LU": (classical_lu_field, "classical"), "Classical AMG-CG": (classical_amg_field, "classical")}
-control_physical_norms = {label: physical_norms_once(result, kind, integration_n)
-                          for label, (result, kind) in control_fields.items()}
-physical_errors = {label: norms["gauss5"] for label, norms in control_physical_norms.items()}
-quadrature_errors = {label: norms["gauss7"] for label, norms in control_physical_norms.items()}
-physical_agreement = {
-    "serial_to_process": field_difference(evaluators["MHM serial"], evaluators["MHM process"], integration_n),
-    "classical_LU_to_AMG": field_difference(evaluators["Classical LU"], evaluators["Classical AMG-CG"], integration_n),
-    "MHM_to_refined_conforming": field_difference(
-        evaluators["MHM serial"], classical_evaluator(reference_fields[integration_n]), integration_n
-    ),
-}
-print({"physical_errors": physical_errors, "physical_agreement": physical_agreement,
-       "fresh_MHM_to_classical_LU_exact_error_ratios": {
-           quantity: physical_errors["MHM serial"][quantity] / physical_errors["Classical LU"][quantity]
-           for quantity in physical_errors["MHM serial"]},
-       "process_state_validation": process_state_validation,
-       "global_MHM_residual": float(validation_field[2].residual)})
+if RUN_CAMPAIGN:
+    validation_timings, validation_field = run_mhm(
+        "serial", 1, WORKLOAD["fine_n"], WORKLOAD["trace_segments"]
+    )
+    validation_macro = validation_field[0]
+    serial_digests = mhm_state_digests(validation_field)
+    process_validation_timings, process_validation_field = run_mhm(
+        "process", PROCESS_COUNTS[-1], WORKLOAD["fine_n"], WORKLOAD["trace_segments"]
+    )
+    process_state_validation = validate_mhm_state(process_validation_field, validation_field, serial_digests)
+    classical_amg_validation_timings, classical_amg_field = run_classical(WORKLOAD["fine_n"], "pyamg")
+    classical_lu_validation_timings, classical_lu_field = run_classical(WORKLOAD["fine_n"], "scipy")
+    evaluators = {
+        "MHM serial": mhm_evaluator(validation_field),
+        "MHM process": mhm_evaluator(process_validation_field),
+        "Classical LU": classical_evaluator(classical_lu_field),
+        "Classical AMG-CG": classical_evaluator(classical_amg_field),
+    }
+    control_fields = {"MHM serial": (validation_field, "mhm"), "MHM process": (process_validation_field, "mhm"),
+                      "Classical LU": (classical_lu_field, "classical"), "Classical AMG-CG": (classical_amg_field, "classical")}
+    control_physical_norms = {label: physical_norms_once(result, kind, integration_n)
+                              for label, (result, kind) in control_fields.items()}
+    physical_errors = {label: norms["gauss5"] for label, norms in control_physical_norms.items()}
+    quadrature_errors = {label: norms["gauss7"] for label, norms in control_physical_norms.items()}
+    physical_agreement = {
+        "serial_to_process": field_difference(evaluators["MHM serial"], evaluators["MHM process"], integration_n),
+        "classical_LU_to_AMG": field_difference(evaluators["Classical LU"], evaluators["Classical AMG-CG"], integration_n),
+        "MHM_to_refined_conforming": field_difference(
+            evaluators["MHM serial"], classical_evaluator(reference_fields[integration_n]), integration_n
+        ),
+    }
+    print({"physical_errors": physical_errors, "physical_agreement": physical_agreement,
+           "fresh_MHM_to_classical_LU_exact_error_ratios": {
+               quantity: physical_errors["MHM serial"][quantity] / physical_errors["Classical LU"][quantity]
+               for quantity in physical_errors["MHM serial"]},
+           "process_state_validation": process_state_validation,
+           "global_MHM_residual": float(validation_field[2].residual)})
 
-```
-
-```text
-{'physical_errors': {'MHM serial': {'pressure_L2_per_sqrt_area': 4.895487809792774e-07, 'flux_L2_per_sqrt_area': 0.002550485692074089}, 'MHM process': {'pressure_L2_per_sqrt_area': 4.895487809792289e-07, 'flux_L2_per_sqrt_area': 0.0025504856920740898}, 'Classical LU': {'pressure_L2_per_sqrt_area': 4.88322585668252e-07, 'flux_L2_per_sqrt_area': 0.0025503666411529936}, 'Classical AMG-CG': {'pressure_L2_per_sqrt_area': 4.883225227706131e-07, 'flux_L2_per_sqrt_area': 0.0025503666411550037}}, 'physical_agreement': {'serial_to_process': {'pressure_L2_per_sqrt_area': 2.3138410977550337e-17, 'flux_L2_per_sqrt_area': 5.276985588744634e-14}, 'classical_LU_to_AMG': {'pressure_L2_per_sqrt_area': 1.3662563078239092e-13, 'flux_L2_per_sqrt_area': 2.7207908208911684e-12}, 'MHM_to_refined_conforming': {'pressure_L2_per_sqrt_area': 3.436383225908016e-08, 'flux_L2_per_sqrt_area': 2.4642727387852698e-05}}, 'fresh_MHM_to_classical_LU_exact_error_ratios': {'pressure_L2_per_sqrt_area': 1.00251103542415, 'flux_L2_per_sqrt_area': 1.0000466799240448}, 'process_state_validation': {'maximum_pressure_coefficient_difference': 2.220446049250313e-16, 'original_local_rows_relative_L2': 2.6068353809192087e-12, 'global_compatibility_residual': 1.8583561137093524e-16}, 'global_MHM_residual': 1.8583561137093524e-16}
 ```
 
 ## 8. Plot the represented pressure and physical Darcy flux
@@ -1325,52 +1596,43 @@ the macroface breaks. Norms use the complete resolving fine partition above.
 
 
 ```python
-def field_panels(evaluators: dict[str, Callable], display_n: int) -> None:
-    """Plot pressure, physical flux and errors with distinct colorbars and macrofaces."""
-    display = CartesianMacroMesh(display_n, display_n)
-    local = np.clip(np.array([[0., 0.], [1., 0.], [0., 1.], [1., 1.]]), 2e-10, 1 - 2e-10)
-    origins = display.points[display.cells[:, 0]]
-    points = (origins[:, None, :] + local[None, :, :] * display.spacing).reshape(-1, 2)
-    offsets = 4 * np.arange(len(display.cells))[:, None]
-    triangles = np.concatenate((offsets + [0, 1, 3], offsets + [0, 3, 2]))
-    exact_p, exact_grad = exact_evaluator(points)
-    for quantity in ("pressure", "flux"):
-        figure, axes = plt.subplots(len(evaluators), 2, figsize=(12, 4 * len(evaluators)), layout="constrained")
-        for row, (label, evaluator) in enumerate(evaluators.items()):
-            p, gradient = evaluator(points)
-            coefficient = permeability(points)[:, None]
-            values = p if quantity == "pressure" else np.linalg.norm(-coefficient * gradient, axis=1)
-            errors = abs(p - exact_p) if quantity == "pressure" else np.linalg.norm(-coefficient * (gradient - exact_grad), axis=1)
-            for column, (axis, data, title) in enumerate(zip(axes[row], (values, errors), (label, label + " error"), strict=True)):
-                limits = {"vmin": 0, "vmax": max(float(np.max(data)), np.finfo(float).eps)} if column or quantity == "flux" else {}
-                artist = axis.tripcolor(points[:, 0], points[:, 1], triangles, data, shading="gouraud", rasterized=True, **limits)
-                axis.add_collection(LineCollection(validation_macro.points[validation_macro.faces],
-                                                   colors="black", linewidths=.6, alpha=.65))
-                axis.set(xlim=(0, 1), ylim=(0, 1), xlabel="x", ylabel="y", aspect="equal",
-                         title=title + (" pressure" if quantity == "pressure" else " Darcy flux magnitude"))
-                figure.colorbar(artist, ax=axis, shrink=.82, pad=.025)
-        figure.savefig(OUTPUT / (quantity + "_fields.png"), dpi=170)
-        plt.show()
+if RUN_CAMPAIGN:
+    def field_panels(evaluators: dict[str, Callable], display_n: int) -> None:
+        """Plot pressure, physical flux and errors with distinct colorbars and macrofaces."""
+        display = CartesianMacroMesh(display_n, display_n)
+        local = np.clip(np.array([[0., 0.], [1., 0.], [0., 1.], [1., 1.]]), 2e-10, 1 - 2e-10)
+        origins = display.points[display.cells[:, 0]]
+        points = (origins[:, None, :] + local[None, :, :] * display.spacing).reshape(-1, 2)
+        offsets = 4 * np.arange(len(display.cells))[:, None]
+        triangles = np.concatenate((offsets + [0, 1, 3], offsets + [0, 3, 2]))
+        exact_p, exact_grad = exact_evaluator(points)
+        for quantity in ("pressure", "flux"):
+            figure, axes = plt.subplots(len(evaluators), 2, figsize=(12, 4 * len(evaluators)), layout="constrained")
+            for row, (label, evaluator) in enumerate(evaluators.items()):
+                p, gradient = evaluator(points)
+                coefficient = permeability(points)[:, None]
+                values = p if quantity == "pressure" else np.linalg.norm(-coefficient * gradient, axis=1)
+                errors = abs(p - exact_p) if quantity == "pressure" else np.linalg.norm(-coefficient * (gradient - exact_grad), axis=1)
+                for column, (axis, data, title) in enumerate(zip(axes[row], (values, errors), (label, label + " error"), strict=True)):
+                    limits = {"vmin": 0, "vmax": max(float(np.max(data)), np.finfo(float).eps)} if column or quantity == "flux" else {}
+                    artist = axis.tripcolor(points[:, 0], points[:, 1], triangles, data, shading="gouraud", rasterized=True, **limits)
+                    axis.add_collection(LineCollection(validation_macro.points[validation_macro.faces],
+                                                       colors="black", linewidths=.6, alpha=.65))
+                    axis.set(xlim=(0, 1), ylim=(0, 1), xlabel="x", ylabel="y", aspect="equal",
+                             title=title + (" pressure" if quantity == "pressure" else " Darcy flux magnitude"))
+                    figure.colorbar(artist, ax=axis, shrink=.82, pad=.025)
+            figure.savefig(OUTPUT / (quantity + "_fields.png"), dpi=170)
+            plt.show()
 
 
-field_panels({"Exact": exact_evaluator,
-              f"Fine conforming Q1 ({integration_n} per axis)": classical_evaluator(reference_fields[integration_n]),
-              "Classical LU": evaluators["Classical LU"],
-              "Classical AMG-CG": evaluators["Classical AMG-CG"],
-              "MHM serial": evaluators["MHM serial"],
-              "MHM process": evaluators["MHM process"]}, display_n=200)
+    field_panels({"Exact": exact_evaluator,
+                  f"Fine conforming Q1 ({integration_n} per axis)": classical_evaluator(reference_fields[integration_n]),
+                  "Classical LU": evaluators["Classical LU"],
+                  "Classical AMG-CG": evaluators["Classical AMG-CG"],
+                  "MHM serial": evaluators["MHM serial"],
+                  "MHM process": evaluators["MHM process"]}, display_n=200)
 
 ```
-
-
-
-[![Figure 2 — Process-based MHM for multiscale Darcy](../../assets/tutorials/darcy_process_scalability/figure_41_0.png)](../../assets/tutorials/darcy_process_scalability/figure_41_0.png)
-
-
-
-
-[![Figure 3 — Process-based MHM for multiscale Darcy](../../assets/tutorials/darcy_process_scalability/figure_41_1.png)](../../assets/tutorials/darcy_process_scalability/figure_41_1.png)
-
 
 ## 9. Measure strong scaling with fresh solves
 
@@ -1403,124 +1665,41 @@ single-process baselines; their physical errors have been measured separately.
 
 
 ```python
-strong_variants = [("serial", 1), *( ("process", p) for p in PROCESS_COUNTS ),
-                   ("classical_scipy", 1), ("classical_pyamg", 1)]
+if RUN_CAMPAIGN:
+    strong_variants = [("serial", 1), *( ("process", p) for p in PROCESS_COUNTS ),
+                       ("classical_scipy", 1), ("classical_pyamg", 1)]
 
 
-def execute_strong_variant(backend: str, workers: int) -> tuple[dict[str, Any], Any]:
-    """Select scheduling or the declared independent reference, preserving physical data."""
-    if backend.startswith("classical_"):
-        return run_classical(WORKLOAD["fine_n"], backend.removeprefix("classical_"))
-    return run_mhm(backend, workers, WORKLOAD["fine_n"], WORKLOAD["trace_segments"])
+    def execute_strong_variant(backend: str, workers: int) -> tuple[dict[str, Any], Any]:
+        """Select scheduling or the declared independent reference, preserving physical data."""
+        if backend.startswith("classical_"):
+            return run_classical(WORKLOAD["fine_n"], backend.removeprefix("classical_"))
+        return run_mhm(backend, workers, WORKLOAD["fine_n"], WORKLOAD["trace_segments"])
 
 
-warmup, strong_samples, strong_accuracy = [], [], {}
-for backend, workers in strong_variants:
-    timing, result = execute_strong_variant(backend, workers)
-    checks = validate_mhm_state(result, validation_field, serial_digests) if not backend.startswith("classical_") else {}
-    warmup.append({"backend": backend, "workers": workers, **timing,
-                   "scientific_checks_after_timer": checks})
-    strong_accuracy[f"{backend}_{workers}"] = physical_norms_once(
-        result, "classical" if backend.startswith("classical_") else "mhm", integration_n
-    )
-    del result
-rng = random.Random(RANDOM_SEED)
-for repetition in range(REPETITIONS):
-    order = strong_variants.copy()
-    rng.shuffle(order)
-    for backend, workers in order:
+    warmup, strong_samples, strong_accuracy = [], [], {}
+    for backend, workers in strong_variants:
         timing, result = execute_strong_variant(backend, workers)
         checks = validate_mhm_state(result, validation_field, serial_digests) if not backend.startswith("classical_") else {}
-        row = {"repetition": repetition, "backend": backend, "workers": workers, **timing}
-        row["scientific_checks_after_timer"] = checks
-        strong_samples.append(row)
-        print({key: row[key] for key in ("repetition", "backend", "workers", "total", "cold_total")}, flush=True)
+        warmup.append({"backend": backend, "workers": workers, **timing,
+                       "scientific_checks_after_timer": checks})
+        strong_accuracy[f"{backend}_{workers}"] = physical_norms_once(
+            result, "classical" if backend.startswith("classical_") else "mhm", integration_n
+        )
         del result
+    rng = random.Random(RANDOM_SEED)
+    for repetition in range(REPETITIONS):
+        order = strong_variants.copy()
+        rng.shuffle(order)
+        for backend, workers in order:
+            timing, result = execute_strong_variant(backend, workers)
+            checks = validate_mhm_state(result, validation_field, serial_digests) if not backend.startswith("classical_") else {}
+            row = {"repetition": repetition, "backend": backend, "workers": workers, **timing}
+            row["scientific_checks_after_timer"] = checks
+            strong_samples.append(row)
+            print({key: row[key] for key in ("repetition", "backend", "workers", "total", "cold_total")}, flush=True)
+            del result
 
-```
-
-```text
-{'repetition': 0, 'backend': 'process', 'workers': 16, 'total': 13.286783238872886, 'cold_total': 14.80658526904881}
-```
-
-```text
-{'repetition': 0, 'backend': 'classical_scipy', 'workers': 1, 'total': 48.35075887478888, 'cold_total': 49.870560904964805}
-```
-
-```text
-{'repetition': 0, 'backend': 'classical_pyamg', 'workers': 1, 'total': 20.131983291357756, 'cold_total': 21.65178532153368}
-```
-
-```text
-{'repetition': 0, 'backend': 'process', 'workers': 8, 'total': 17.187603337690234, 'cold_total': 18.70740536786616}
-```
-
-```text
-{'repetition': 0, 'backend': 'process', 'workers': 4, 'total': 23.95788929052651, 'cold_total': 25.477691320702434}
-```
-
-```text
-{'repetition': 0, 'backend': 'serial', 'workers': 1, 'total': 69.60875017009676, 'cold_total': 71.12855220027268}
-```
-
-```text
-{'repetition': 0, 'backend': 'process', 'workers': 1, 'total': 81.50446711666882, 'cold_total': 83.02426914684474}
-```
-
-```text
-{'repetition': 1, 'backend': 'process', 'workers': 4, 'total': 24.81420043669641, 'cold_total': 26.334002466872334}
-```
-
-```text
-{'repetition': 1, 'backend': 'process', 'workers': 16, 'total': 13.243331143632531, 'cold_total': 14.763133173808455}
-```
-
-```text
-{'repetition': 1, 'backend': 'serial', 'workers': 1, 'total': 69.53116844594479, 'cold_total': 71.05097047612071}
-```
-
-```text
-{'repetition': 1, 'backend': 'process', 'workers': 8, 'total': 16.52059350349009, 'cold_total': 18.040395533666015}
-```
-
-```text
-{'repetition': 1, 'backend': 'process', 'workers': 1, 'total': 79.70296838879585, 'cold_total': 81.22277041897178}
-```
-
-```text
-{'repetition': 1, 'backend': 'classical_scipy', 'workers': 1, 'total': 48.18146398663521, 'cold_total': 49.70126601681113}
-```
-
-```text
-{'repetition': 1, 'backend': 'classical_pyamg', 'workers': 1, 'total': 20.24718576669693, 'cold_total': 21.766987796872854}
-```
-
-```text
-{'repetition': 2, 'backend': 'process', 'workers': 8, 'total': 17.139983143657446, 'cold_total': 18.65978517383337}
-```
-
-```text
-{'repetition': 2, 'backend': 'classical_scipy', 'workers': 1, 'total': 47.865909576416016, 'cold_total': 49.38571160659194}
-```
-
-```text
-{'repetition': 2, 'backend': 'serial', 'workers': 1, 'total': 69.47338071465492, 'cold_total': 70.99318274483085}
-```
-
-```text
-{'repetition': 2, 'backend': 'classical_pyamg', 'workers': 1, 'total': 20.42393846809864, 'cold_total': 21.943740498274565}
-```
-
-```text
-{'repetition': 2, 'backend': 'process', 'workers': 1, 'total': 81.94771174900234, 'cold_total': 83.46751377917826}
-```
-
-```text
-{'repetition': 2, 'backend': 'process', 'workers': 4, 'total': 24.77235463447869, 'cold_total': 26.292156664654613}
-```
-
-```text
-{'repetition': 2, 'backend': 'process', 'workers': 16, 'total': 13.427999714389443, 'cold_total': 14.947801744565368}
 ```
 
 ## 10. Measure the smaller-workload crossover
@@ -1535,94 +1714,47 @@ workload or trace space after observing a slow sample.
 
 
 ```python
-crossover_variants = [("process", p) for p in WORKLOAD["crossover_process_counts"]] + [
-    ("classical_scipy", 1), ("classical_pyamg", 1)
-]
-crossover_warmup, crossover_samples, crossover_accuracy = [], [], {}
-crossover_control_field = None
+if RUN_CAMPAIGN:
+    crossover_variants = [("process", p) for p in WORKLOAD["crossover_process_counts"]] + [
+        ("classical_scipy", 1), ("classical_pyamg", 1)
+    ]
+    crossover_warmup, crossover_samples, crossover_accuracy = [], [], {}
+    crossover_control_field = None
 
 
-def execute_crossover_variant(backend: str, workers: int) -> tuple[dict[str, Any], Any]:
-    """Time the fixed smaller problem with matched material, source and exterior data."""
-    if backend.startswith("classical_"):
-        return run_classical(WORKLOAD["crossover_fine_n"], backend.removeprefix("classical_"))
-    return run_mhm(backend, workers, WORKLOAD["crossover_fine_n"], WORKLOAD["crossover_trace_segments"])
+    def execute_crossover_variant(backend: str, workers: int) -> tuple[dict[str, Any], Any]:
+        """Time the fixed smaller problem with matched material, source and exterior data."""
+        if backend.startswith("classical_"):
+            return run_classical(WORKLOAD["crossover_fine_n"], backend.removeprefix("classical_"))
+        return run_mhm(backend, workers, WORKLOAD["crossover_fine_n"], WORKLOAD["crossover_trace_segments"])
 
 
-for backend, workers in crossover_variants:
-    timing, result = execute_crossover_variant(backend, workers)
-    if backend == "process" and crossover_control_field is None:
-        crossover_control_field = result
-        crossover_digests = mhm_state_digests(result)
-    checks = validate_mhm_state(result, crossover_control_field, crossover_digests) if backend == "process" else {}
-    evaluator = mhm_evaluator(result) if backend == "process" else classical_evaluator(result)
-    crossover_accuracy[f"{backend}_{workers}"] = {
-        "exact": physical_norms_once(result, "mhm" if backend == "process" else "classical", integration_n),
-        "fine_reference": field_difference(evaluator, classical_evaluator(reference_fields[integration_n]), integration_n),
-    }
-    crossover_warmup.append({"backend": backend, "workers": workers, **timing,
-                             "scientific_checks_after_timer": checks})
-    del result
-for repetition in range(REPETITIONS):
-    order = crossover_variants.copy()
-    rng.shuffle(order)
-    for backend, workers in order:
+    for backend, workers in crossover_variants:
         timing, result = execute_crossover_variant(backend, workers)
+        if backend == "process" and crossover_control_field is None:
+            crossover_control_field = result
+            crossover_digests = mhm_state_digests(result)
         checks = validate_mhm_state(result, crossover_control_field, crossover_digests) if backend == "process" else {}
-        row = {"repetition": repetition, "backend": backend, "workers": workers, **timing,
-               "scientific_checks_after_timer": checks}
-        crossover_samples.append(row)
-        print({key: row[key] for key in ("repetition", "backend", "workers", "total", "cold_total")}, flush=True)
+        evaluator = mhm_evaluator(result) if backend == "process" else classical_evaluator(result)
+        crossover_accuracy[f"{backend}_{workers}"] = {
+            "exact": physical_norms_once(result, "mhm" if backend == "process" else "classical", integration_n),
+            "fine_reference": field_difference(evaluator, classical_evaluator(reference_fields[integration_n]), integration_n),
+        }
+        crossover_warmup.append({"backend": backend, "workers": workers, **timing,
+                                 "scientific_checks_after_timer": checks})
         del result
+    for repetition in range(REPETITIONS):
+        order = crossover_variants.copy()
+        rng.shuffle(order)
+        for backend, workers in order:
+            timing, result = execute_crossover_variant(backend, workers)
+            checks = validate_mhm_state(result, crossover_control_field, crossover_digests) if backend == "process" else {}
+            row = {"repetition": repetition, "backend": backend, "workers": workers, **timing,
+                   "scientific_checks_after_timer": checks}
+            crossover_samples.append(row)
+            print({key: row[key] for key in ("repetition", "backend", "workers", "total", "cold_total")}, flush=True)
+            del result
 
-```
-
-```text
-{'repetition': 0, 'backend': 'process', 'workers': 8, 'total': 6.2786894124001265, 'cold_total': 7.798491442576051}
-```
-
-```text
-{'repetition': 0, 'backend': 'classical_scipy', 'workers': 1, 'total': 8.24409981071949, 'cold_total': 9.763901840895414}
-```
-
-```text
-{'repetition': 0, 'backend': 'classical_pyamg', 'workers': 1, 'total': 4.539870548993349, 'cold_total': 6.059672579169273}
-```
-
-```text
-{'repetition': 0, 'backend': 'process', 'workers': 16, 'total': 7.298534844070673, 'cold_total': 8.818336874246597}
-```
-
-```text
-{'repetition': 1, 'backend': 'process', 'workers': 16, 'total': 7.40578387863934, 'cold_total': 8.925585908815265}
-```
-
-```text
-{'repetition': 1, 'backend': 'classical_pyamg', 'workers': 1, 'total': 4.686319561675191, 'cold_total': 6.206121591851115}
-```
-
-```text
-{'repetition': 1, 'backend': 'process', 'workers': 8, 'total': 6.1530814953148365, 'cold_total': 7.672883525490761}
-```
-
-```text
-{'repetition': 1, 'backend': 'classical_scipy', 'workers': 1, 'total': 8.118498092517257, 'cold_total': 9.638300122693181}
-```
-
-```text
-{'repetition': 2, 'backend': 'classical_pyamg', 'workers': 1, 'total': 4.458468377590179, 'cold_total': 5.978270407766104}
-```
-
-```text
-{'repetition': 2, 'backend': 'classical_scipy', 'workers': 1, 'total': 8.045475451275706, 'cold_total': 9.56527748145163}
-```
-
-```text
-{'repetition': 2, 'backend': 'process', 'workers': 8, 'total': 6.094100933521986, 'cold_total': 7.61390296369791}
-```
-
-```text
-{'repetition': 2, 'backend': 'process', 'workers': 16, 'total': 7.385456394404173, 'cold_total': 8.905258424580097}
 ```
 
 ## 11. Measure weak scaling on the same physical medium
@@ -1654,195 +1786,52 @@ not a premise.
 
 
 ```python
-weak_warmup, weak_samples, weak_accuracy = [], [], {}
-weak_serial_digests, weak_reference_fields, weak_control_timings = {}, {}, {}
-weak_variants = [(backend, workers, length)
-                 for length in PROCESS_COUNTS
-                 for backend, workers in (("process", length), ("classical_scipy", 1), ("classical_pyamg", 1))]
+if RUN_CAMPAIGN:
+    weak_warmup, weak_samples, weak_accuracy = [], [], {}
+    weak_serial_digests, weak_reference_fields, weak_control_timings = {}, {}, {}
+    weak_variants = [(backend, workers, length)
+                     for length in PROCESS_COUNTS
+                     for backend, workers in (("process", length), ("classical_scipy", 1), ("classical_pyamg", 1))]
 
 
-def execute_weak_variant(backend: str, workers: int, length: int) -> tuple[dict[str, Any], Any]:
-    """Solve the explicitly extended physical rectangle with unchanged H,h and period."""
-    if backend.startswith("classical_"):
-        return run_classical(WORKLOAD["weak_fine_n"], backend.removeprefix("classical_"), length)
-    return run_mhm(backend, workers, WORKLOAD["weak_fine_n"], WORKLOAD["weak_trace_segments"], length)
+    def execute_weak_variant(backend: str, workers: int, length: int) -> tuple[dict[str, Any], Any]:
+        """Solve the explicitly extended physical rectangle with unchanged H,h and period."""
+        if backend.startswith("classical_"):
+            return run_classical(WORKLOAD["weak_fine_n"], backend.removeprefix("classical_"), length)
+        return run_mhm(backend, workers, WORKLOAD["weak_fine_n"], WORKLOAD["weak_trace_segments"], length)
 
 
-for length in PROCESS_COUNTS:
-    timing, result = run_mhm("serial", 1, WORKLOAD["weak_fine_n"], WORKLOAD["weak_trace_segments"], length)
-    weak_reference_fields[length], weak_serial_digests[length] = result, mhm_state_digests(result)
-    weak_control_timings[str(length)] = timing
-    weak_control_timings[str(length)]["scientific_checks_after_timer"] = validate_mhm_state(
-        result, result, weak_serial_digests[length]
-    )
-
-for backend, workers, length in weak_variants:
-    timing, result = execute_weak_variant(backend, workers, length)
-    weak_warmup.append({"backend": backend, "workers": workers, "length": length, **timing})
-    weak_accuracy[f"{backend}_{workers}_L{length}"] = physical_norms_once(
-        result, "classical" if backend.startswith("classical_") else "mhm", WORKLOAD["weak_fine_n"], length
-    )
-    if backend == "process":
-        weak_warmup[-1]["scientific_checks_after_timer"] = validate_mhm_state(
-            result, weak_reference_fields[length], weak_serial_digests[length]
+    for length in PROCESS_COUNTS:
+        timing, result = run_mhm("serial", 1, WORKLOAD["weak_fine_n"], WORKLOAD["weak_trace_segments"], length)
+        weak_reference_fields[length], weak_serial_digests[length] = result, mhm_state_digests(result)
+        weak_control_timings[str(length)] = timing
+        weak_control_timings[str(length)]["scientific_checks_after_timer"] = validate_mhm_state(
+            result, result, weak_serial_digests[length]
         )
-    del result
-for repetition in range(REPETITIONS):
-    order = weak_variants.copy()
-    rng.shuffle(order)
-    for backend, workers, length in order:
+
+    for backend, workers, length in weak_variants:
         timing, result = execute_weak_variant(backend, workers, length)
-        checks = validate_mhm_state(result, weak_reference_fields[length], weak_serial_digests[length]) if not backend.startswith("classical_") else {}
-        row = {"repetition": repetition, "backend": backend, "workers": workers,
-               "length": length, **timing, "scientific_checks_after_timer": checks}
-        weak_samples.append(row)
-        print({key: row[key] for key in ("repetition", "backend", "workers", "length", "total", "cold_total")}, flush=True)
+        weak_warmup.append({"backend": backend, "workers": workers, "length": length, **timing})
+        weak_accuracy[f"{backend}_{workers}_L{length}"] = physical_norms_once(
+            result, "classical" if backend.startswith("classical_") else "mhm", WORKLOAD["weak_fine_n"], length
+        )
+        if backend == "process":
+            weak_warmup[-1]["scientific_checks_after_timer"] = validate_mhm_state(
+                result, weak_reference_fields[length], weak_serial_digests[length]
+            )
         del result
+    for repetition in range(REPETITIONS):
+        order = weak_variants.copy()
+        rng.shuffle(order)
+        for backend, workers, length in order:
+            timing, result = execute_weak_variant(backend, workers, length)
+            checks = validate_mhm_state(result, weak_reference_fields[length], weak_serial_digests[length]) if not backend.startswith("classical_") else {}
+            row = {"repetition": repetition, "backend": backend, "workers": workers,
+                   "length": length, **timing, "scientific_checks_after_timer": checks}
+            weak_samples.append(row)
+            print({key: row[key] for key in ("repetition", "backend", "workers", "length", "total", "cold_total")}, flush=True)
+            del result
 
-```
-
-```text
-{'repetition': 0, 'backend': 'classical_scipy', 'workers': 1, 'length': 8, 'total': 10.52542708069086, 'cold_total': 12.045229110866785}
-```
-
-```text
-{'repetition': 0, 'backend': 'classical_scipy', 'workers': 1, 'length': 4, 'total': 4.810904778540134, 'cold_total': 6.330706808716059}
-```
-
-```text
-{'repetition': 0, 'backend': 'classical_scipy', 'workers': 1, 'length': 16, 'total': 20.049793250858784, 'cold_total': 21.569595281034708}
-```
-
-```text
-{'repetition': 0, 'backend': 'classical_pyamg', 'workers': 1, 'length': 8, 'total': 6.211051797494292, 'cold_total': 7.730853827670217}
-```
-
-```text
-{'repetition': 0, 'backend': 'process', 'workers': 16, 'length': 16, 'total': 14.631420096382499, 'cold_total': 16.151222126558423}
-```
-
-```text
-{'repetition': 0, 'backend': 'classical_pyamg', 'workers': 1, 'length': 1, 'total': 0.7449636813253164, 'cold_total': 2.2647657115012407}
-```
-
-```text
-{'repetition': 0, 'backend': 'classical_scipy', 'workers': 1, 'length': 1, 'total': 1.043212654069066, 'cold_total': 2.5630146842449903}
-```
-
-```text
-{'repetition': 0, 'backend': 'process', 'workers': 1, 'length': 1, 'total': 3.434010224416852, 'cold_total': 4.953812254592776}
-```
-
-```text
-{'repetition': 0, 'backend': 'classical_pyamg', 'workers': 1, 'length': 4, 'total': 2.9138920847326517, 'cold_total': 4.433694114908576}
-```
-
-```text
-{'repetition': 0, 'backend': 'process', 'workers': 4, 'length': 4, 'total': 5.7782948538661, 'cold_total': 7.298096884042025}
-```
-
-```text
-{'repetition': 0, 'backend': 'classical_pyamg', 'workers': 1, 'length': 16, 'total': 12.082458697259426, 'cold_total': 13.60226072743535}
-```
-
-```text
-{'repetition': 0, 'backend': 'process', 'workers': 8, 'length': 8, 'total': 9.85034049488604, 'cold_total': 11.370142525061965}
-```
-
-```text
-{'repetition': 1, 'backend': 'classical_pyamg', 'workers': 1, 'length': 8, 'total': 6.276633257046342, 'cold_total': 7.796435287222266}
-```
-
-```text
-{'repetition': 1, 'backend': 'process', 'workers': 8, 'length': 8, 'total': 9.326755460351706, 'cold_total': 10.84655749052763}
-```
-
-```text
-{'repetition': 1, 'backend': 'process', 'workers': 4, 'length': 4, 'total': 5.672731289640069, 'cold_total': 7.192533319815993}
-```
-
-```text
-{'repetition': 1, 'backend': 'classical_pyamg', 'workers': 1, 'length': 1, 'total': 0.7506204918026924, 'cold_total': 2.2704225219786167}
-```
-
-```text
-{'repetition': 1, 'backend': 'classical_scipy', 'workers': 1, 'length': 8, 'total': 10.225858103483915, 'cold_total': 11.74566013365984}
-```
-
-```text
-{'repetition': 1, 'backend': 'classical_scipy', 'workers': 1, 'length': 1, 'total': 1.042268868535757, 'cold_total': 2.5620708987116814}
-```
-
-```text
-{'repetition': 1, 'backend': 'classical_scipy', 'workers': 1, 'length': 4, 'total': 4.615961063653231, 'cold_total': 6.135763093829155}
-```
-
-```text
-{'repetition': 1, 'backend': 'classical_scipy', 'workers': 1, 'length': 16, 'total': 20.074449062347412, 'cold_total': 21.594251092523336}
-```
-
-```text
-{'repetition': 1, 'backend': 'classical_pyamg', 'workers': 1, 'length': 16, 'total': 12.01772135682404, 'cold_total': 13.537523386999965}
-```
-
-```text
-{'repetition': 1, 'backend': 'process', 'workers': 1, 'length': 1, 'total': 3.6958776023238897, 'cold_total': 5.215679632499814}
-```
-
-```text
-{'repetition': 1, 'backend': 'classical_pyamg', 'workers': 1, 'length': 4, 'total': 3.137380950152874, 'cold_total': 4.657182980328798}
-```
-
-```text
-{'repetition': 1, 'backend': 'process', 'workers': 16, 'length': 16, 'total': 14.617014281451702, 'cold_total': 16.136816311627626}
-```
-
-```text
-{'repetition': 2, 'backend': 'classical_pyamg', 'workers': 1, 'length': 16, 'total': 12.025081707164645, 'cold_total': 13.54488373734057}
-```
-
-```text
-{'repetition': 2, 'backend': 'process', 'workers': 1, 'length': 1, 'total': 3.691325221210718, 'cold_total': 5.2111272513866425}
-```
-
-```text
-{'repetition': 2, 'backend': 'process', 'workers': 8, 'length': 8, 'total': 9.703571043908596, 'cold_total': 11.22337307408452}
-```
-
-```text
-{'repetition': 2, 'backend': 'process', 'workers': 16, 'length': 16, 'total': 14.792612310498953, 'cold_total': 16.312414340674877}
-```
-
-```text
-{'repetition': 2, 'backend': 'classical_scipy', 'workers': 1, 'length': 8, 'total': 10.31785566918552, 'cold_total': 11.837657699361444}
-```
-
-```text
-{'repetition': 2, 'backend': 'classical_pyamg', 'workers': 1, 'length': 8, 'total': 6.346785951405764, 'cold_total': 7.866587981581688}
-```
-
-```text
-{'repetition': 2, 'backend': 'classical_scipy', 'workers': 1, 'length': 16, 'total': 20.27343798056245, 'cold_total': 21.793240010738373}
-```
-
-```text
-{'repetition': 2, 'backend': 'classical_scipy', 'workers': 1, 'length': 4, 'total': 4.570816563442349, 'cold_total': 6.090618593618274}
-```
-
-```text
-{'repetition': 2, 'backend': 'classical_pyamg', 'workers': 1, 'length': 4, 'total': 2.9540700167417526, 'cold_total': 4.473872046917677}
-```
-
-```text
-{'repetition': 2, 'backend': 'classical_pyamg', 'workers': 1, 'length': 1, 'total': 0.7050578966736794, 'cold_total': 2.2248599268496037}
-```
-
-```text
-{'repetition': 2, 'backend': 'process', 'workers': 4, 'length': 4, 'total': 6.160258186981082, 'cold_total': 7.680060217157006}
-```
-
-```text
-{'repetition': 2, 'backend': 'classical_scipy', 'workers': 1, 'length': 1, 'total': 1.0923038329929113, 'cold_total': 2.6121058631688356}
 ```
 
 ## 12. Plot total times, stage costs and scaling
@@ -1856,156 +1845,131 @@ setup, local/global assembly including IPC, and global solve/reconstruction.
 
 
 ```python
-def summarize(samples: list[dict], backend: str, workers: int, length: int | None = None) -> dict[str, float]:
-    """Report observed medians and ranges for one matched numerical configuration."""
-    selected = [row for row in samples if row["backend"] == backend and row["workers"] == workers
-                and (length is None or row["length"] == length)]
-    values = np.array([row["total"] for row in selected])
-    return {"median": float(np.median(values)), "minimum": float(np.min(values)), "maximum": float(np.max(values)),
-            **{stage: float(np.median([row[stage] for row in selected]))
-               for stage in ("setup", "assembly", "solve_reconstruct", "cold_total")}}
+if RUN_CAMPAIGN:
+    def summarize(samples: list[dict], backend: str, workers: int, length: int | None = None) -> dict[str, float]:
+        """Report observed medians and ranges for one matched numerical configuration."""
+        selected = [row for row in samples if row["backend"] == backend and row["workers"] == workers
+                    and (length is None or row["length"] == length)]
+        values = np.array([row["total"] for row in selected])
+        return {"median": float(np.median(values)), "minimum": float(np.min(values)), "maximum": float(np.max(values)),
+                **{stage: float(np.median([row[stage] for row in selected]))
+                   for stage in ("setup", "assembly", "solve_reconstruct", "cold_total")}}
 
 
-strong_summary = {f"{backend}_{workers}": summarize(strong_samples, backend, workers)
-                  for backend, workers in strong_variants}
-weak_summary = {f"{backend}_{workers}_L{length}": summarize(weak_samples, backend, workers, length)
-                for backend, workers, length in weak_variants}
-crossover_summary = {f"{backend}_{workers}": summarize(crossover_samples, backend, workers)
-                     for backend, workers in crossover_variants}
-process_times = np.array([strong_summary[f"process_{p}"]["median"] for p in PROCESS_COUNTS])
-serial_time = strong_summary["serial_1"]["median"]
-one_process_time = strong_summary["process_1"]["median"]
-figure, axes = plt.subplots(1, 3, figsize=(16, 4.8), layout="constrained")
-ranges = np.array([[strong_summary[f"process_{p}"]["minimum"], strong_summary[f"process_{p}"]["maximum"]]
-                   for p in PROCESS_COUNTS])
-axes[0].errorbar(PROCESS_COUNTS, process_times, yerr=np.vstack((process_times - ranges[:, 0], ranges[:, 1] - process_times)),
-                fmt="o-", capsize=4, label="MHM processes")
-for label, key, style in (("True serial MHM", "serial_1", "--"),
-                          ("Classical LU", "classical_scipy_1", ":"),
-                          ("Classical AMG-CG", "classical_pyamg_1", "-.")):
-    line = axes[0].axhline(strong_summary[key]["median"], linestyle=style, label=label)
-    axes[0].axhspan(strong_summary[key]["minimum"], strong_summary[key]["maximum"],
-                    color=line.get_color(), alpha=.10)
-axes[1].plot(PROCESS_COUNTS, serial_time / process_times, "o-", label="Relative to true serial")
-axes[1].plot(PROCESS_COUNTS, one_process_time / process_times, "s-", label="Relative to process1")
-axes[1].plot(PROCESS_COUNTS, PROCESS_COUNTS, "k:", label="Ideal reference line")
-weak_process_times = np.array([weak_summary[f"process_{p}_L{p}"]["median"] for p in PROCESS_COUNTS])
-weak_minima = np.array([weak_summary[f"process_{p}_L{p}"]["minimum"] for p in PROCESS_COUNTS])
-weak_maxima = np.array([weak_summary[f"process_{p}_L{p}"]["maximum"] for p in PROCESS_COUNTS])
-axes[2].errorbar(PROCESS_COUNTS, weak_process_times,
-                 yerr=np.vstack((weak_process_times - weak_minima, weak_maxima - weak_process_times)),
-                 fmt="o-", capsize=4, label="MHM processes, growing domain")
-for backend, label in (("classical_scipy", "Classical LU"),
-                       ("classical_pyamg", "Classical AMG-CG")):
-    medians = np.array([weak_summary[f"{backend}_1_L{p}"]["median"] for p in PROCESS_COUNTS])
-    minima = np.array([weak_summary[f"{backend}_1_L{p}"]["minimum"] for p in PROCESS_COUNTS])
-    maxima = np.array([weak_summary[f"{backend}_1_L{p}"]["maximum"] for p in PROCESS_COUNTS])
-    axes[2].errorbar(PROCESS_COUNTS, medians, yerr=np.vstack((medians - minima, maxima - medians)),
-                     fmt="s--", capsize=4, label=label)
-for axis, title, ylabel in zip(axes, ("Strong: complete workflow", "Strong speedup", "Weak: complete growing workflow"),
-                              ("Time [s]", "Speedup", "Time [s]"), strict=True):
-    axis.set(xlabel="Processes", ylabel=ylabel, title=title, xticks=PROCESS_COUNTS)
-    axis.grid(alpha=.3)
-    axis.legend(fontsize=8)
-figure.savefig(OUTPUT / "strong_and_weak_scaling.png", dpi=170)
-plt.show()
-figure, axis = plt.subplots(figsize=(12, 5), layout="constrained")
-labels = list(strong_summary)
-bottom = np.zeros(len(labels))
-for stage in ("setup", "assembly", "solve_reconstruct"):
-    values = np.array([strong_summary[label][stage] for label in labels])
-    axis.bar(labels, values, bottom=bottom, label=stage.replace("_", " "))
-    bottom += values
-axis.set(ylabel="Time [s]", title="Strong scaling: all timed stages")
-axis.tick_params(axis="x", labelrotation=30)
-axis.legend()
-figure.savefig(OUTPUT / "strong_stage_costs.png", dpi=170)
-plt.show()
-print({"strong_efficiency_from_serial": (serial_time / process_times / np.array(PROCESS_COUNTS)).tolist(),
-       "weak_efficiency_from_process1": (weak_process_times[0] / weak_process_times).tolist()})
+    strong_summary = {f"{backend}_{workers}": summarize(strong_samples, backend, workers)
+                      for backend, workers in strong_variants}
+    weak_summary = {f"{backend}_{workers}_L{length}": summarize(weak_samples, backend, workers, length)
+                    for backend, workers, length in weak_variants}
+    crossover_summary = {f"{backend}_{workers}": summarize(crossover_samples, backend, workers)
+                         for backend, workers in crossover_variants}
+    process_times = np.array([strong_summary[f"process_{p}"]["median"] for p in PROCESS_COUNTS])
+    serial_time = strong_summary["serial_1"]["median"]
+    one_process_time = strong_summary["process_1"]["median"]
+    figure, axes = plt.subplots(1, 3, figsize=(16, 4.8), layout="constrained")
+    ranges = np.array([[strong_summary[f"process_{p}"]["minimum"], strong_summary[f"process_{p}"]["maximum"]]
+                       for p in PROCESS_COUNTS])
+    axes[0].errorbar(PROCESS_COUNTS, process_times, yerr=np.vstack((process_times - ranges[:, 0], ranges[:, 1] - process_times)),
+                    fmt="o-", capsize=4, label="MHM processes")
+    for label, key, style in (("True serial MHM", "serial_1", "--"),
+                              ("Classical LU", "classical_scipy_1", ":"),
+                              ("Classical AMG-CG", "classical_pyamg_1", "-.")):
+        line = axes[0].axhline(strong_summary[key]["median"], linestyle=style, label=label)
+        axes[0].axhspan(strong_summary[key]["minimum"], strong_summary[key]["maximum"],
+                        color=line.get_color(), alpha=.10)
+    axes[1].plot(PROCESS_COUNTS, serial_time / process_times, "o-", label="Relative to true serial")
+    axes[1].plot(PROCESS_COUNTS, one_process_time / process_times, "s-", label="Relative to process1")
+    axes[1].plot(PROCESS_COUNTS, PROCESS_COUNTS, "k:", label="Ideal reference line")
+    weak_process_times = np.array([weak_summary[f"process_{p}_L{p}"]["median"] for p in PROCESS_COUNTS])
+    weak_minima = np.array([weak_summary[f"process_{p}_L{p}"]["minimum"] for p in PROCESS_COUNTS])
+    weak_maxima = np.array([weak_summary[f"process_{p}_L{p}"]["maximum"] for p in PROCESS_COUNTS])
+    axes[2].errorbar(PROCESS_COUNTS, weak_process_times,
+                     yerr=np.vstack((weak_process_times - weak_minima, weak_maxima - weak_process_times)),
+                     fmt="o-", capsize=4, label="MHM processes, growing domain")
+    for backend, label in (("classical_scipy", "Classical LU"),
+                           ("classical_pyamg", "Classical AMG-CG")):
+        medians = np.array([weak_summary[f"{backend}_1_L{p}"]["median"] for p in PROCESS_COUNTS])
+        minima = np.array([weak_summary[f"{backend}_1_L{p}"]["minimum"] for p in PROCESS_COUNTS])
+        maxima = np.array([weak_summary[f"{backend}_1_L{p}"]["maximum"] for p in PROCESS_COUNTS])
+        axes[2].errorbar(PROCESS_COUNTS, medians, yerr=np.vstack((medians - minima, maxima - medians)),
+                         fmt="s--", capsize=4, label=label)
+    for axis, title, ylabel in zip(axes, ("Strong: complete workflow", "Strong speedup", "Weak: complete growing workflow"),
+                                  ("Time [s]", "Speedup", "Time [s]"), strict=True):
+        axis.set(xlabel="Processes", ylabel=ylabel, title=title, xticks=PROCESS_COUNTS)
+        axis.grid(alpha=.3)
+        axis.legend(fontsize=8)
+    figure.savefig(OUTPUT / "strong_and_weak_scaling.png", dpi=170)
+    plt.show()
+    figure, axis = plt.subplots(figsize=(12, 5), layout="constrained")
+    labels = list(strong_summary)
+    bottom = np.zeros(len(labels))
+    for stage in ("setup", "assembly", "solve_reconstruct"):
+        values = np.array([strong_summary[label][stage] for label in labels])
+        axis.bar(labels, values, bottom=bottom, label=stage.replace("_", " "))
+        bottom += values
+    axis.set(ylabel="Time [s]", title="Strong scaling: all timed stages")
+    axis.tick_params(axis="x", labelrotation=30)
+    axis.legend()
+    figure.savefig(OUTPUT / "strong_stage_costs.png", dpi=170)
+    plt.show()
+    print({"strong_efficiency_from_serial": (serial_time / process_times / np.array(PROCESS_COUNTS)).tolist(),
+           "weak_efficiency_from_process1": (weak_process_times[0] / weak_process_times).tolist()})
 
-```
-
-
-
-[![Figure 4 — Process-based MHM for multiscale Darcy](../../assets/tutorials/darcy_process_scalability/figure_49_0.png)](../../assets/tutorials/darcy_process_scalability/figure_49_0.png)
-
-
-
-
-[![Figure 5 — Process-based MHM for multiscale Darcy](../../assets/tutorials/darcy_process_scalability/figure_49_1.png)](../../assets/tutorials/darcy_process_scalability/figure_49_1.png)
-
-
-```text
-{'strong_efficiency_from_serial': [0.8530964118373418, 0.7017012459240535, 0.5070831157123571, 0.32706923487375217], 'weak_efficiency_from_process1': [1.0, 0.6388260403051175, 0.38040894475935666, 0.25228755629286925]}
 ```
 
 
 ```python
-figure, axes = plt.subplots(1, 2, figsize=(12, 4.5), layout="constrained")
-for n, summary, style in ((WORKLOAD["crossover_fine_n"], crossover_summary, "o-"),
-                           (WORKLOAD["fine_n"], strong_summary, "s--")):
-    counts = WORKLOAD["crossover_process_counts"]
-    times = np.array([summary[f"process_{p}"]["median"] for p in counts])
-    minima = np.array([summary[f"process_{p}"]["minimum"] for p in counts])
-    maxima = np.array([summary[f"process_{p}"]["maximum"] for p in counts])
-    axes[0].errorbar(counts, times, yerr=np.vstack((times - minima, maxima - times)),
-                     fmt=style, capsize=4, label=f"MHM processes, {n}² fine cells")
-    for solver, label in (("scipy", "LU"), ("pyamg", "AMG-CG")):
-        axes[1].plot(counts, [summary[f"classical_{solver}_1"]["median"] / value for value in times],
-                     style, label=f"Classical {label}/MHM, {n}² fine cells")
-axes[0].set(ylabel="Complete workflow time [s]", title="Measured workload crossover")
-axes[1].axhline(1, color="black", linestyle=":", label="Equal time")
-axes[1].set(ylabel="Matched classical time / MHM time", title="Gain includes every timed stage")
-for axis in axes:
-    axis.set(xlabel="Processes", xticks=WORKLOAD["crossover_process_counts"])
-    axis.grid(alpha=.3)
-    axis.legend(fontsize=8)
-figure.savefig(OUTPUT / "workload_crossover.png", dpi=170)
-plt.show()
-print({"separately_reported_warmups": {
-    "strong": [{key: row[key] for key in ("backend", "workers", "total")} for row in warmup],
-    "crossover": [{key: row[key] for key in ("backend", "workers", "total")} for row in crossover_warmup],
-    "weak": [{key: row[key] for key in ("backend", "workers", "length", "total")} for row in weak_warmup],
-}})
+if RUN_CAMPAIGN:
+    figure, axes = plt.subplots(1, 2, figsize=(12, 4.5), layout="constrained")
+    for n, summary, style in ((WORKLOAD["crossover_fine_n"], crossover_summary, "o-"),
+                               (WORKLOAD["fine_n"], strong_summary, "s--")):
+        counts = WORKLOAD["crossover_process_counts"]
+        times = np.array([summary[f"process_{p}"]["median"] for p in counts])
+        minima = np.array([summary[f"process_{p}"]["minimum"] for p in counts])
+        maxima = np.array([summary[f"process_{p}"]["maximum"] for p in counts])
+        axes[0].errorbar(counts, times, yerr=np.vstack((times - minima, maxima - times)),
+                         fmt=style, capsize=4, label=f"MHM processes, {n}² fine cells")
+        for solver, label in (("scipy", "LU"), ("pyamg", "AMG-CG")):
+            axes[1].plot(counts, [summary[f"classical_{solver}_1"]["median"] / value for value in times],
+                         style, label=f"Classical {label}/MHM, {n}² fine cells")
+    axes[0].set(ylabel="Complete workflow time [s]", title="Measured workload crossover")
+    axes[1].axhline(1, color="black", linestyle=":", label="Equal time")
+    axes[1].set(ylabel="Matched classical time / MHM time", title="Gain includes every timed stage")
+    for axis in axes:
+        axis.set(xlabel="Processes", xticks=WORKLOAD["crossover_process_counts"])
+        axis.grid(alpha=.3)
+        axis.legend(fontsize=8)
+    figure.savefig(OUTPUT / "workload_crossover.png", dpi=170)
+    plt.show()
+    print({"separately_reported_warmups": {
+        "strong": [{key: row[key] for key in ("backend", "workers", "total")} for row in warmup],
+        "crossover": [{key: row[key] for key in ("backend", "workers", "total")} for row in crossover_warmup],
+        "weak": [{key: row[key] for key in ("backend", "workers", "length", "total")} for row in weak_warmup],
+    }})
 
-```
-
-
-
-[![Figure 6 — Process-based MHM for multiscale Darcy](../../assets/tutorials/darcy_process_scalability/figure_50_0.png)](../../assets/tutorials/darcy_process_scalability/figure_50_0.png)
-
-
-```text
-{'separately_reported_warmups': {'strong': [{'backend': 'serial', 'workers': 1, 'total': 69.78442858159542}, {'backend': 'process', 'workers': 1, 'total': 84.80264373123646}, {'backend': 'process', 'workers': 4, 'total': 24.95106889680028}, {'backend': 'process', 'workers': 8, 'total': 16.263970589265227}, {'backend': 'process', 'workers': 16, 'total': 12.983882736414671}, {'backend': 'classical_scipy', 'workers': 1, 'total': 48.34545972570777}, {'backend': 'classical_pyamg', 'workers': 1, 'total': 20.230671850964427}], 'crossover': [{'backend': 'process', 'workers': 8, 'total': 6.1697843838483095}, {'backend': 'process', 'workers': 16, 'total': 7.3170565869659185}, {'backend': 'classical_scipy', 'workers': 1, 'total': 8.121809424832463}, {'backend': 'classical_pyamg', 'workers': 1, 'total': 4.538375988602638}], 'weak': [{'backend': 'process', 'workers': 1, 'length': 1, 'total': 3.7045919746160507}, {'backend': 'classical_scipy', 'workers': 1, 'length': 1, 'total': 1.1300754621624947}, {'backend': 'classical_pyamg', 'workers': 1, 'length': 1, 'total': 0.7122162636369467}, {'backend': 'process', 'workers': 4, 'length': 4, 'total': 5.946449084207416}, {'backend': 'classical_scipy', 'workers': 1, 'length': 4, 'total': 4.613737016916275}, {'backend': 'classical_pyamg', 'workers': 1, 'length': 4, 'total': 2.891600666567683}, {'backend': 'process', 'workers': 8, 'length': 8, 'total': 10.198394248262048}, {'backend': 'classical_scipy', 'workers': 1, 'length': 8, 'total': 10.342008527368307}, {'backend': 'classical_pyamg', 'workers': 1, 'length': 8, 'total': 6.31787041015923}, {'backend': 'process', 'workers': 16, 'length': 16, 'total': 15.090044099837542}, {'backend': 'classical_scipy', 'workers': 1, 'length': 16, 'total': 20.07284031994641}, {'backend': 'classical_pyamg', 'workers': 1, 'length': 16, 'total': 11.950095124542713}]}}
 ```
 
 
 ```python
-figure, axes = plt.subplots(1, 3, figsize=(16, 4.6), layout="constrained")
-axes[0].plot(PROCESS_COUNTS, weak_process_times[0] / weak_process_times, "o-", label="Measured process weak efficiency")
-axes[0].axhline(1, color="black", linestyle=":", label="Ideal reference line")
-axes[0].set(ylabel="Weak efficiency", title="Fixed work per process")
-for backend, label in (("process", "MHM processes"),
-                       ("classical_scipy", "Classical LU"), ("classical_pyamg", "Classical AMG-CG")):
-    for axis, quantity in zip(axes[1:], ("pressure_L2_per_sqrt_area", "flux_L2_per_sqrt_area"), strict=True):
-        values = [weak_accuracy[f"{backend}_{p if backend == 'process' else 1}_L{p}"]["gauss5"][quantity]
-                  for p in PROCESS_COUNTS]
-        axis.plot(PROCESS_COUNTS, values, "o-", label=label)
-        axis.set(ylabel=quantity.replace("_", " "), title="Exact physical error on each rectangle")
-for axis in axes:
-    axis.set(xlabel="Processes / physical rectangle length", xticks=PROCESS_COUNTS)
-    axis.grid(alpha=.3)
-    axis.legend(fontsize=8)
-figure.savefig(OUTPUT / "weak_efficiency_and_physical_errors.png", dpi=170)
-plt.show()
+if RUN_CAMPAIGN:
+    figure, axes = plt.subplots(1, 3, figsize=(16, 4.6), layout="constrained")
+    axes[0].plot(PROCESS_COUNTS, weak_process_times[0] / weak_process_times, "o-", label="Measured process weak efficiency")
+    axes[0].axhline(1, color="black", linestyle=":", label="Ideal reference line")
+    axes[0].set(ylabel="Weak efficiency", title="Fixed work per process")
+    for backend, label in (("process", "MHM processes"),
+                           ("classical_scipy", "Classical LU"), ("classical_pyamg", "Classical AMG-CG")):
+        for axis, quantity in zip(axes[1:], ("pressure_L2_per_sqrt_area", "flux_L2_per_sqrt_area"), strict=True):
+            values = [weak_accuracy[f"{backend}_{p if backend == 'process' else 1}_L{p}"]["gauss5"][quantity]
+                      for p in PROCESS_COUNTS]
+            axis.plot(PROCESS_COUNTS, values, "o-", label=label)
+            axis.set(ylabel=quantity.replace("_", " "), title="Exact physical error on each rectangle")
+    for axis in axes:
+        axis.set(xlabel="Processes / physical rectangle length", xticks=PROCESS_COUNTS)
+        axis.grid(alpha=.3)
+        axis.legend(fontsize=8)
+    figure.savefig(OUTPUT / "weak_efficiency_and_physical_errors.png", dpi=170)
+    plt.show()
 
 ```
-
-
-
-[![Figure 7 — Process-based MHM for multiscale Darcy](../../assets/tutorials/darcy_process_scalability/figure_51_0.png)](../../assets/tutorials/darcy_process_scalability/figure_51_0.png)
-
 
 ## 13. Archive source, coefficients, bases and resource provenance
 
@@ -2024,79 +1988,81 @@ algebraic residuals alone do not establish discrete stability or uniqueness.
 
 
 ```python
-from pymhm.fem.reference import orthogonal_polynomial_tabulation, simplex_lagrange_basis
+if RUN_CAMPAIGN:
+    from pymhm.fem.reference import orthogonal_polynomial_tabulation, simplex_lagrange_basis
 
-interval_basis = simplex_lagrange_basis("interval", 1, nodes=np.array([[1., 0.], [0., 1.]]))
-state = {
-    "trace": validation_field[2].trace,
-    "macro_points": validation_macro.points,
-    "macro_cells": validation_macro.cells,
-    "macro_faces": validation_macro.faces,
-    "macro_cell_faces": validation_macro.cell_faces,
-    "macro_signs": validation_macro.signs,
-    "macro_grid": np.array([validation_macro.nx, validation_macro.ny]),
-    "macro_bounds": np.asarray(validation_macro.bounds),
-    "interval_basis_matrix": interval_basis.basis_matrix,
-    "interval_native_basis_matrix": interval_basis.element.basis_matrix,
-    "interval_nodes": interval_basis.nodes,
-    "interval_permutation": interval_basis.permutation,
-    "interval_polyset_type": np.asarray(interval_basis.element.polyset_type),
-    "interval_backend_version": np.asarray(interval_basis.element.backend_version),
-    "trace_parameter_knots": np.linspace(0, 1, WORKLOAD["trace_segments"] + 1),
-    "trace_continuous_on_each_face": np.asarray(True),
-    "classical_LU_pressure": classical_lu_field[1],
-    "classical_AMG_pressure": classical_amg_field[1],
-}
-for cell, (response, field, coarse) in enumerate(zip(validation_field[1].responses, validation_field[2].fields,
-                                                  validation_field[2].coarse, strict=True)):
-    state[f"pressure_{cell}"] = field
-    state[f"coarse_{cell}"] = coarse
-    state[f"retained_basis_{cell}"] = response.retained_basis
-    state[f"source_{cell}"] = response.source
-    state[f"lifts_{cell}"] = response.lifts
-    state[f"trace_dofs_{cell}"] = response.problem.trace_dofs
-    fine = validation_field[1].local_metadata[cell]["mesh"]
-    state[f"fine_grid_{cell}"] = np.array([fine.nx, fine.ny])
-    state[f"fine_bounds_{cell}"] = np.asarray(fine.bounds)
-for fine_n, (_, coefficients) in reference_fields.items():
-    state[f"reference_pressure_{fine_n}"] = coefficients
-np.savez_compressed(OUTPUT / "fields_and_executed_bases.npz", **state)
+    interval_basis = simplex_lagrange_basis("interval", 1, nodes=np.array([[1., 0.], [0., 1.]]))
+    state = {
+        "trace": validation_field[2].trace,
+        "macro_points": validation_macro.points,
+        "macro_cells": validation_macro.cells,
+        "macro_faces": validation_macro.faces,
+        "macro_cell_faces": validation_macro.cell_faces,
+        "macro_signs": validation_macro.signs,
+        "macro_grid": np.array([validation_macro.nx, validation_macro.ny]),
+        "macro_bounds": np.asarray(validation_macro.bounds),
+        "interval_basis_matrix": interval_basis.basis_matrix,
+        "interval_native_basis_matrix": interval_basis.element.basis_matrix,
+        "interval_nodes": interval_basis.nodes,
+        "interval_permutation": interval_basis.permutation,
+        "interval_polyset_type": np.asarray(interval_basis.element.polyset_type),
+        "interval_backend_version": np.asarray(interval_basis.element.backend_version),
+        "trace_parameter_knots": np.linspace(0, 1, WORKLOAD["trace_segments"] + 1),
+        "trace_continuous_on_each_face": np.asarray(True),
+        "classical_LU_pressure": classical_lu_field[1],
+        "classical_AMG_pressure": classical_amg_field[1],
+    }
+    for cell, (response, field, coarse) in enumerate(zip(validation_field[1].responses, validation_field[2].fields,
+                                                      validation_field[2].coarse, strict=True)):
+        state[f"pressure_{cell}"] = field
+        state[f"coarse_{cell}"] = coarse
+        state[f"retained_basis_{cell}"] = response.retained_basis
+        state[f"source_{cell}"] = response.source
+        state[f"lifts_{cell}"] = response.lifts
+        state[f"trace_dofs_{cell}"] = response.problem.trace_dofs
+        fine = validation_field[1].local_metadata[cell]["mesh"]
+        state[f"fine_grid_{cell}"] = np.array([fine.nx, fine.ny])
+        state[f"fine_bounds_{cell}"] = np.asarray(fine.bounds)
+    for fine_n, (_, coefficients) in reference_fields.items():
+        state[f"reference_pressure_{fine_n}"] = coefficients
+    np.savez_compressed(OUTPUT / "fields_and_executed_bases.npz", **state)
 
 ```
 
 
 ```python
-def archive_additional_case(result: Any, name: str, trace_segments: int) -> dict[str, Any]:
-    """Persist a complete field replay contract for each additional physical mesh."""
-    macro, system, solution = result
-    arrays = {key: value for key, value in state.items() if key.startswith("interval_")}
-    arrays.update({"trace": solution.trace, "macro_grid": np.array([macro.nx, macro.ny]),
-                   "macro_bounds": np.asarray(macro.bounds), "macro_points": macro.points,
-                   "macro_cells": macro.cells, "macro_faces": macro.faces,
-                   "macro_cell_faces": macro.cell_faces, "macro_signs": macro.signs,
-                   "trace_parameter_knots": np.linspace(0, 1, trace_segments + 1)})
-    for cell, (response, field, coarse) in enumerate(zip(system.responses, solution.fields, solution.coarse, strict=True)):
-        for prefix, value in (("pressure", field), ("coarse", coarse),
-                              ("source", response.source), ("lifts", response.lifts),
-                              ("retained_basis", response.retained_basis),
-                              ("trace_dofs", response.problem.trace_dofs)):
-            arrays[f"{prefix}_{cell}"] = value
-        fine = system.local_metadata[cell]["mesh"]
-        arrays[f"fine_grid_{cell}"] = np.array([fine.nx, fine.ny])
-        arrays[f"fine_bounds_{cell}"] = np.asarray(fine.bounds)
-    destination = OUTPUT / (name + ".npz")
-    np.savez_compressed(destination, **arrays)
-    return {"archive": destination.name, "sha256": hashlib.sha256(destination.read_bytes()).hexdigest(),
-            "executed_basis_digests": {key: numerical_digest(value) for key, value in arrays.items() if "basis" in key}}
+if RUN_CAMPAIGN:
+    def archive_additional_case(result: Any, name: str, trace_segments: int) -> dict[str, Any]:
+        """Persist a complete field replay contract for each additional physical mesh."""
+        macro, system, solution = result
+        arrays = {key: value for key, value in state.items() if key.startswith("interval_")}
+        arrays.update({"trace": solution.trace, "macro_grid": np.array([macro.nx, macro.ny]),
+                       "macro_bounds": np.asarray(macro.bounds), "macro_points": macro.points,
+                       "macro_cells": macro.cells, "macro_faces": macro.faces,
+                       "macro_cell_faces": macro.cell_faces, "macro_signs": macro.signs,
+                       "trace_parameter_knots": np.linspace(0, 1, trace_segments + 1)})
+        for cell, (response, field, coarse) in enumerate(zip(system.responses, solution.fields, solution.coarse, strict=True)):
+            for prefix, value in (("pressure", field), ("coarse", coarse),
+                                  ("source", response.source), ("lifts", response.lifts),
+                                  ("retained_basis", response.retained_basis),
+                                  ("trace_dofs", response.problem.trace_dofs)):
+                arrays[f"{prefix}_{cell}"] = value
+            fine = system.local_metadata[cell]["mesh"]
+            arrays[f"fine_grid_{cell}"] = np.array([fine.nx, fine.ny])
+            arrays[f"fine_bounds_{cell}"] = np.asarray(fine.bounds)
+        destination = OUTPUT / (name + ".npz")
+        np.savez_compressed(destination, **arrays)
+        return {"archive": destination.name, "sha256": hashlib.sha256(destination.read_bytes()).hexdigest(),
+                "executed_basis_digests": {key: numerical_digest(value) for key, value in arrays.items() if "basis" in key}}
 
 
-additional_case_archives = {
-    f"weak_L{length}": archive_additional_case(result, f"weak_L{length}_fields_and_bases", WORKLOAD["weak_trace_segments"])
-    for length, result in weak_reference_fields.items()
-}
-additional_case_archives["crossover"] = archive_additional_case(
-    crossover_control_field, "crossover_fields_and_bases", WORKLOAD["crossover_trace_segments"]
-)
+    additional_case_archives = {
+        f"weak_L{length}": archive_additional_case(result, f"weak_L{length}_fields_and_bases", WORKLOAD["weak_trace_segments"])
+        for length, result in weak_reference_fields.items()
+    }
+    additional_case_archives["crossover"] = archive_additional_case(
+        crossover_control_field, "crossover_fields_and_bases", WORKLOAD["crossover_trace_segments"]
+    )
 
 ```
 
@@ -2109,219 +2075,208 @@ basis from the field-vector length.
 
 
 ```python
-def saved_q1_tables(degree: int, points: np.ndarray, saved_basis: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    """Evaluate the archived Q1 coefficient matrix through the shared native polynomial owner."""
-    if degree != 1:
-        raise ValueError("This archived tutorial uses tensor Q1 factors")
-    x_table = orthogonal_polynomial_tabulation("interval", 1, points[:, :1], nderiv=1)
-    y_table = orthogonal_polynomial_tabulation("interval", 1, points[:, 1:], nderiv=1)
-    x, dx = x_table[0] @ saved_basis.T, x_table[1] @ saved_basis.T
-    y, dy = y_table[0] @ saved_basis.T, y_table[1] @ saved_basis.T
-    values = np.einsum("qi,qj->qij", y, x).reshape(-1, 4)
-    gradients = np.stack((np.einsum("qi,qj->qij", y, dx), np.einsum("qi,qj->qij", dy, x)), axis=-1)
-    return values, gradients.reshape(-1, 4, 2)
+if RUN_CAMPAIGN:
+    def saved_q1_tables(degree: int, points: np.ndarray, saved_basis: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+        """Evaluate the archived Q1 coefficient matrix through the shared native polynomial owner."""
+        if degree != 1:
+            raise ValueError("This archived tutorial uses tensor Q1 factors")
+        x_table = orthogonal_polynomial_tabulation("interval", 1, points[:, :1], nderiv=1)
+        y_table = orthogonal_polynomial_tabulation("interval", 1, points[:, 1:], nderiv=1)
+        x, dx = x_table[0] @ saved_basis.T, x_table[1] @ saved_basis.T
+        y, dy = y_table[0] @ saved_basis.T, y_table[1] @ saved_basis.T
+        values = np.einsum("qi,qj->qij", y, x).reshape(-1, 4)
+        gradients = np.stack((np.einsum("qi,qj->qij", y, dx), np.einsum("qi,qj->qij", dy, x)), axis=-1)
+        return values, gradients.reshape(-1, 4, 2)
 
 
-def archived_evaluator(saved: dict[str, np.ndarray], fields: list[np.ndarray]) -> Callable:
-    """Restore geometry and evaluate fields through their saved native coefficient factors."""
-    macro = CartesianMacroMesh(*saved["macro_grid"], tuple(saved["macro_bounds"]))
-    fine_meshes = [CartesianMacroMesh(*saved[f"fine_grid_{cell}"], tuple(saved[f"fine_bounds_{cell}"]))
-                   for cell in range(len(macro.cells))]
+    def archived_evaluator(saved: dict[str, np.ndarray], fields: list[np.ndarray]) -> Callable:
+        """Restore geometry and evaluate fields through their saved native coefficient factors."""
+        macro = CartesianMacroMesh(*saved["macro_grid"], tuple(saved["macro_bounds"]))
+        fine_meshes = [CartesianMacroMesh(*saved[f"fine_grid_{cell}"], tuple(saved[f"fine_bounds_{cell}"]))
+                       for cell in range(len(macro.cells))]
 
-    def basis_tables(degree: int, points: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        """Use the archived ordered native factor matrix for every field evaluation."""
-        return saved_q1_tables(degree, points, saved["interval_basis_matrix"])
+        def basis_tables(degree: int, points: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+            """Use the archived ordered native factor matrix for every field evaluation."""
+            return saved_q1_tables(degree, points, saved["interval_basis_matrix"])
 
-    def evaluate(points: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        """Select independent local fields using the archived macrogeometry."""
-        cell_coordinates = np.floor((points - np.array(macro.bounds)[[0, 2]]) / macro.spacing).astype(int)
-        cell_coordinates[:, 0] = np.clip(cell_coordinates[:, 0], 0, macro.nx - 1)
-        cell_coordinates[:, 1] = np.clip(cell_coordinates[:, 1], 0, macro.ny - 1)
-        indices = cell_coordinates[:, 1] * macro.nx + cell_coordinates[:, 0]
-        pressure, gradient = np.empty(len(points)), np.empty((len(points), 2))
-        for cell in np.unique(indices):
-            mask = indices == cell
-            pressure[mask], gradient[mask] = evaluate_q1(fine_meshes[cell], fields[cell], points[mask], basis_tables)
-        return pressure, gradient
+        def evaluate(points: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+            """Select independent local fields using the archived macrogeometry."""
+            cell_coordinates = np.floor((points - np.array(macro.bounds)[[0, 2]]) / macro.spacing).astype(int)
+            cell_coordinates[:, 0] = np.clip(cell_coordinates[:, 0], 0, macro.nx - 1)
+            cell_coordinates[:, 1] = np.clip(cell_coordinates[:, 1], 0, macro.ny - 1)
+            indices = cell_coordinates[:, 1] * macro.nx + cell_coordinates[:, 0]
+            pressure, gradient = np.empty(len(points)), np.empty((len(points), 2))
+            for cell in np.unique(indices):
+                mask = indices == cell
+                pressure[mask], gradient[mask] = evaluate_q1(fine_meshes[cell], fields[cell], points[mask], basis_tables)
+            return pressure, gradient
 
-    return evaluate
+        return evaluate
 
 ```
 
 
 ```python
-from pymhm.core.contracts import LocalResponse
+if RUN_CAMPAIGN:
+    from pymhm.core.contracts import LocalResponse
 
-replay_checks = {}
-with np.load(OUTPUT / "fields_and_executed_bases.npz", allow_pickle=False) as saved:
+    replay_checks = {}
+    with np.load(OUTPUT / "fields_and_executed_bases.npz", allow_pickle=False) as saved:
+        for native_threads in (1, 2):
+            maximum = 0.0
+            with threadpool_limits(limits=native_threads):
+                for cell, original_response in enumerate(validation_field[1].responses):
+                    replay_response = LocalResponse(
+                        problem=original_response.problem,
+                        source=saved[f"source_{cell}"],
+                        lifts=saved[f"lifts_{cell}"],
+                        coarse_vectors=saved[f"retained_basis_{cell}"],
+                    )
+                    trace = saved["trace"][saved[f"trace_dofs_{cell}"]]
+                    coarse = saved[f"coarse_{cell}"]
+                    replayed = replay_response.reconstruct(trace, coarse)
+                    np.testing.assert_allclose(replayed, saved[f"pressure_{cell}"], rtol=5e-13, atol=1e-12)
+                    # This one-dimensional retained space has an equivalent sign
+                    # rotation. Rotate its coordinates and its saved basis together.
+                    rotated = replace(replay_response, coarse_vectors=-replay_response.retained_basis)
+                    rotated_field = rotated.reconstruct(trace, -coarse)
+                    np.testing.assert_allclose(rotated_field, replayed, rtol=5e-13, atol=1e-12)
+                    maximum = max(maximum, float(np.max(abs(replayed - saved[f"pressure_{cell}"]))))
+            replay_checks[str(native_threads)] = {"maximum_pressure_coefficient_difference": maximum,
+                                                  "equivalent_retained_sign_rotation": True}
+    print({"archived_replay": replay_checks})
+
+```
+
+
+```python
+if RUN_CAMPAIGN:
+    physical_basis_replay = {}
+    with np.load(OUTPUT / "fields_and_executed_bases.npz", allow_pickle=False) as archive:
+        saved = {name: archive[name] for name in archive.files}
+    np.testing.assert_array_equal(saved["interval_basis_matrix"],
+                                  saved["interval_native_basis_matrix"][saved["interval_permutation"]])
+    if str(saved["interval_polyset_type"]) != "standard" or str(saved["interval_backend_version"]) != version("fenics-basix"):
+        raise ValueError("Replay requires the declared native polynomial convention and backend version")
+    reference_points, _ = quadrilateral_quadrature(5)
+    saved_tables = saved_q1_tables(1, reference_points, saved["interval_basis_matrix"])
+    live_tables = qk_basis(1, reference_points)
+    for first, second in zip(saved_tables, live_tables, strict=True):
+        np.testing.assert_allclose(first, second, rtol=1e-14, atol=1e-14)
+    fields = [saved[f"pressure_{cell}"] for cell in range(len(validation_macro.cells))]
     for native_threads in (1, 2):
-        maximum = 0.0
         with threadpool_limits(limits=native_threads):
-            for cell, original_response in enumerate(validation_field[1].responses):
-                replay_response = LocalResponse(
-                    problem=original_response.problem,
-                    source=saved[f"source_{cell}"],
-                    lifts=saved[f"lifts_{cell}"],
-                    coarse_vectors=saved[f"retained_basis_{cell}"],
-                )
-                trace = saved["trace"][saved[f"trace_dofs_{cell}"]]
-                coarse = saved[f"coarse_{cell}"]
-                replayed = replay_response.reconstruct(trace, coarse)
-                np.testing.assert_allclose(replayed, saved[f"pressure_{cell}"], rtol=5e-13, atol=1e-12)
-                # This one-dimensional retained space has an equivalent sign
-                # rotation. Rotate its coordinates and its saved basis together.
-                rotated = replace(replay_response, coarse_vectors=-replay_response.retained_basis)
-                rotated_field = rotated.reconstruct(trace, -coarse)
-                np.testing.assert_allclose(rotated_field, replayed, rtol=5e-13, atol=1e-12)
-                maximum = max(maximum, float(np.max(abs(replayed - saved[f"pressure_{cell}"]))))
-        replay_checks[str(native_threads)] = {"maximum_pressure_coefficient_difference": maximum,
-                                              "equivalent_retained_sign_rotation": True}
-print({"archived_replay": replay_checks})
-
-```
-
-```text
-{'archived_replay': {'1': {'maximum_pressure_coefficient_difference': 2.220446049250313e-16, 'equivalent_retained_sign_rotation': True}, '2': {'maximum_pressure_coefficient_difference': 2.220446049250313e-16, 'equivalent_retained_sign_rotation': True}}}
-```
-
-
-```python
-physical_basis_replay = {}
-with np.load(OUTPUT / "fields_and_executed_bases.npz", allow_pickle=False) as archive:
-    saved = {name: archive[name] for name in archive.files}
-np.testing.assert_array_equal(saved["interval_basis_matrix"],
-                              saved["interval_native_basis_matrix"][saved["interval_permutation"]])
-if str(saved["interval_polyset_type"]) != "standard" or str(saved["interval_backend_version"]) != version("fenics-basix"):
-    raise ValueError("Replay requires the declared native polynomial convention and backend version")
-reference_points, _ = quadrilateral_quadrature(5)
-saved_tables = saved_q1_tables(1, reference_points, saved["interval_basis_matrix"])
-live_tables = qk_basis(1, reference_points)
-for first, second in zip(saved_tables, live_tables, strict=True):
-    np.testing.assert_allclose(first, second, rtol=1e-14, atol=1e-14)
-fields = [saved[f"pressure_{cell}"] for cell in range(len(validation_macro.cells))]
-for native_threads in (1, 2):
-    with threadpool_limits(limits=native_threads):
-        errors = field_difference(archived_evaluator(saved, fields), evaluators["MHM serial"], integration_n)
-    # Four Q1 cardinal contributions bound coefficient perturbations; raw
-    # derivatives add 1/h and the known permeability upper bound exp(1).
-    amplitude = max(float(np.max(abs(field))) for field in fields)
-    roundoff = 32 * np.finfo(float).eps * max(1, amplitude)
-    bounds = {"pressure_L2_per_sqrt_area": 4 * roundoff,
-              "flux_L2_per_sqrt_area": 4 * math.sqrt(2) * math.e * integration_n * roundoff}
-    if any(errors[name] > bounds[name] for name in errors):
-        raise ValueError("Physical replay exceeds the declared native-basis roundoff bound")
-    physical_basis_replay[str(native_threads)] = {"physical_differences": errors, "roundoff_bounds": bounds}
-print({"archived_native_basis_physical_replay": physical_basis_replay})
-del saved, fields
-
-```
-
-```text
-{'archived_native_basis_physical_replay': {'1': {'physical_differences': {'pressure_L2_per_sqrt_area': 4.23972953300356e-17, 'flux_L2_per_sqrt_area': 1.0212026937875121e-15}, 'roundoff_bounds': {'pressure_L2_per_sqrt_area': np.float64(2.842173574557028e-14), 'flux_L2_per_sqrt_area': np.float64(1.0925971842726037e-10)}}, '2': {'physical_differences': {'pressure_L2_per_sqrt_area': 4.23972953300356e-17, 'flux_L2_per_sqrt_area': 1.0212026937875121e-15}, 'roundoff_bounds': {'pressure_L2_per_sqrt_area': np.float64(2.842173574557028e-14), 'flux_L2_per_sqrt_area': np.float64(1.0925971842726037e-10)}}}}
-```
-
-
-```python
-additional_replay_checks = {}
-for name, original in [(f"weak_L{length}", result) for length, result in weak_reference_fields.items()] + [
-    ("crossover", crossover_control_field)
-]:
-    archive_path = OUTPUT / additional_case_archives[name]["archive"]
-    with np.load(archive_path, allow_pickle=False) as archive:
-        saved = {key: archive[key] for key in archive.files}
-    checks = {}
-    for native_threads in (1, 2):
-        maximum = 0.0
-        with threadpool_limits(limits=native_threads):
-            for cell, original_response in enumerate(original[1].responses):
-                response = LocalResponse(problem=original_response.problem,
-                                         source=saved[f"source_{cell}"], lifts=saved[f"lifts_{cell}"],
-                                         coarse_vectors=saved[f"retained_basis_{cell}"])
-                trace, coarse = saved["trace"][saved[f"trace_dofs_{cell}"]], saved[f"coarse_{cell}"]
-                replayed = response.reconstruct(trace, coarse)
-                rotated = replace(response, coarse_vectors=-response.retained_basis).reconstruct(trace, -coarse)
-                np.testing.assert_allclose(replayed, saved[f"pressure_{cell}"], rtol=0, atol=1e-12)
-                np.testing.assert_allclose(rotated, replayed, rtol=0, atol=1e-12)
-                maximum = max(maximum, float(np.max(abs(replayed - saved[f"pressure_{cell}"]))))
-        checks[str(native_threads)] = {"maximum_pressure_coefficient_difference": maximum,
-                                      "equivalent_retained_sign_rotation": True}
-    fields = [saved[f"pressure_{cell}"] for cell in range(len(original[0].cells))]
-    n = WORKLOAD["crossover_fine_n"] if name == "crossover" else WORKLOAD["weak_fine_n"]
-    length = 1 if name == "crossover" else int(name.removeprefix("weak_L"))
-    physical = field_difference(archived_evaluator(saved, fields), mhm_evaluator(original), n, length)
-    amplitude = max(float(np.max(abs(field))) for field in fields)
-    roundoff = 32 * np.finfo(float).eps * max(1, amplitude)
-    bounds = {"pressure_L2_per_sqrt_area": 4 * roundoff,
-              "flux_L2_per_sqrt_area": 4 * math.sqrt(2) * math.e * n * roundoff}
-    if any(physical[key] > bounds[key] for key in physical):
-        raise ValueError("Additional physical replay exceeds the native-basis roundoff bound")
-    additional_replay_checks[name] = {"coefficient_replay": checks, "physical_replay": physical,
-                                     "physical_roundoff_bounds": bounds}
+            errors = field_difference(archived_evaluator(saved, fields), evaluators["MHM serial"], integration_n)
+        # Four Q1 cardinal contributions bound coefficient perturbations; raw
+        # derivatives add 1/h and the known permeability upper bound exp(1).
+        amplitude = max(float(np.max(abs(field))) for field in fields)
+        roundoff = 32 * np.finfo(float).eps * max(1, amplitude)
+        bounds = {"pressure_L2_per_sqrt_area": 4 * roundoff,
+                  "flux_L2_per_sqrt_area": 4 * math.sqrt(2) * math.e * integration_n * roundoff}
+        if any(errors[name] > bounds[name] for name in errors):
+            raise ValueError("Physical replay exceeds the declared native-basis roundoff bound")
+        physical_basis_replay[str(native_threads)] = {"physical_differences": errors, "roundoff_bounds": bounds}
+    print({"archived_native_basis_physical_replay": physical_basis_replay})
     del saved, fields
-print({"additional_physical_mesh_replay": additional_replay_checks})
 
-```
-
-```text
-{'additional_physical_mesh_replay': {'weak_L1': {'coefficient_replay': {'1': {'maximum_pressure_coefficient_difference': 2.220446049250313e-16, 'equivalent_retained_sign_rotation': True}, '2': {'maximum_pressure_coefficient_difference': 2.220446049250313e-16, 'equivalent_retained_sign_rotation': True}}, 'physical_replay': {'pressure_L2_per_sqrt_area': 4.2414180842653633e-17, 'flux_L2_per_sqrt_area': 1.13521146342723e-16}, 'physical_roundoff_bounds': {'pressure_L2_per_sqrt_area': np.float64(2.842236688733716e-14), 'flux_L2_per_sqrt_area': np.float64(2.1852428936404756e-11)}}, 'weak_L4': {'coefficient_replay': {'1': {'maximum_pressure_coefficient_difference': 1.1102230246251565e-16, 'equivalent_retained_sign_rotation': True}, '2': {'maximum_pressure_coefficient_difference': 1.1102230246251565e-16, 'equivalent_retained_sign_rotation': True}}, 'physical_replay': {'pressure_L2_per_sqrt_area': 4.2430475709475134e-17, 'flux_L2_per_sqrt_area': 5.238059108986388e-16}, 'physical_roundoff_bounds': {'pressure_L2_per_sqrt_area': np.float64(2.842236631841556e-14), 'flux_L2_per_sqrt_area': np.float64(2.185242849899154e-11)}}, 'weak_L8': {'coefficient_replay': {'1': {'maximum_pressure_coefficient_difference': 1.1102230246251565e-16, 'equivalent_retained_sign_rotation': True}, '2': {'maximum_pressure_coefficient_difference': 1.1102230246251565e-16, 'equivalent_retained_sign_rotation': True}}, 'physical_replay': {'pressure_L2_per_sqrt_area': 4.246639326690411e-17, 'flux_L2_per_sqrt_area': 5.16872223916762e-16}, 'physical_roundoff_bounds': {'pressure_L2_per_sqrt_area': np.float64(2.842236631846141e-14), 'flux_L2_per_sqrt_area': np.float64(2.1852428499026793e-11)}}, 'weak_L16': {'coefficient_replay': {'1': {'maximum_pressure_coefficient_difference': 1.6653345369377348e-16, 'equivalent_retained_sign_rotation': True}, '2': {'maximum_pressure_coefficient_difference': 1.6653345369377348e-16, 'equivalent_retained_sign_rotation': True}}, 'physical_replay': {'pressure_L2_per_sqrt_area': 4.246093841760705e-17, 'flux_L2_per_sqrt_area': 5.448119177762493e-16}, 'physical_roundoff_bounds': {'pressure_L2_per_sqrt_area': np.float64(2.8422366318462274e-14), 'flux_L2_per_sqrt_area': np.float64(2.1852428499027456e-11)}}, 'crossover': {'coefficient_replay': {'1': {'maximum_pressure_coefficient_difference': 0.0, 'equivalent_retained_sign_rotation': True}, '2': {'maximum_pressure_coefficient_difference': 0.0, 'equivalent_retained_sign_rotation': True}}, 'physical_replay': {'pressure_L2_per_sqrt_area': 4.243238424637644e-17, 'flux_L2_per_sqrt_area': 6.36217041525495e-16}, 'physical_roundoff_bounds': {'pressure_L2_per_sqrt_area': np.float64(2.842181447779916e-14), 'flux_L2_per_sqrt_area': np.float64(5.4630010546068777e-11)}}}}
 ```
 
 
 ```python
-manifest = current_source_manifest({"literal_provider": module_sha256,
-                                   "source_notebook": hashlib.sha256(SOURCE_NOTEBOOK.read_bytes()).hexdigest(),
-                                   "pixi.lock": hashlib.sha256((ROOT / "pixi.lock").read_bytes()).hexdigest()})
-record = {
-    "schema": "pymhm.introduction.darcy-process-scalability.v1",
-    "workload": WORKLOAD, "source_manifest": manifest,
-    "git_revision": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
-    "versions": {name: version(name) for name in ("numpy", "scipy", "fenics-basix", "fenics-dolfinx", "pyamg", "threadpoolctl")},
-    "python": platform.python_version(), "platform": platform.platform(),
-    "cpu": CPU_METADATA, "affinity_after": sorted(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else None,
-    "load_average": list(os.getloadavg()) if hasattr(os, "getloadavg") else None,
-    "native_libraries": threadpool_info(), "native_threads": 1,
-    "one_time_parent_import_seconds": PARENT_IMPORT_SECONDS,
-    "one_time_literal_export_import_seconds": EXPORT_IMPORT_SECONDS,
-    "repetitions": REPETITIONS, "random_seed": RANDOM_SEED,
-    "strong_warmup": warmup, "strong_samples": strong_samples, "strong_summary": strong_summary,
-    "strong_physical_errors_once": strong_accuracy,
-    "weak_warmup": weak_warmup, "weak_samples": weak_samples, "weak_summary": weak_summary,
-    "crossover_warmup": crossover_warmup, "crossover_samples": crossover_samples,
-    "crossover_summary": crossover_summary, "crossover_physical_errors": crossover_accuracy,
-    "physical_errors": physical_errors, "physical_agreement": physical_agreement,
-    "error_quadrature_orders": [5, 7], "common_error_partition_per_unit_axis": integration_n,
-    "reference_exact_errors": reference_accuracy, "reference_refinement": reference_refinement,
-    "observed_reference_rates": reference_rates,
-    "untimed_scientific_controls": {"reference_refinement": reference_timings,
-        "MHM_serial": validation_timings, "MHM_process": process_validation_timings,
-        "classical_LU": classical_lu_validation_timings, "classical_AMG": classical_amg_validation_timings,
-        "weak_serial_each_domain": weak_control_timings},
-    "independent_rectangle_data_checks": rectangle_data_checks,
-    "weak_physical_errors_per_sqrt_area": weak_accuracy, "trace_geometry_controls": trace_control,
-    "unique_executed_fields_physically_integrated": len(physical_norm_cache),
-    "serial_state_digests": serial_digests,
-    "basis_array_digests": {name: numerical_digest(array) for name, array in state.items() if "basis" in name},
-    "field_archive_sha256": hashlib.sha256((OUTPUT / "fields_and_executed_bases.npz").read_bytes()).hexdigest(),
-    "archived_replay": replay_checks,
-    "archived_native_basis_physical_replay": physical_basis_replay,
-    "additional_field_archives": additional_case_archives,
-    "additional_mesh_replay": additional_replay_checks,
-    "timing_scope": "fresh setup, startup/imports, complete response transfer, ordered global assembly, join, solve and full reconstruction",
-    "classical_AMG": {"rtol": 1e-10, "atol": 0, "maxiter": 500, "near_nullspace": "one constant candidate",
-                      "refinement_precision": "double", "refinement_steps": 2, "equilibration": "none"},
-}
-(OUTPUT / "measurements.json").write_text(json.dumps(record, indent=2) + "\n")
-print({"record": str(OUTPUT / "measurements.json"), "archive_sha256": record["field_archive_sha256"]})
-
-# All generic assemble calls have completed and joined their workers.
-sys.path.remove(spawn_directory.name)
-sys.modules.pop(module_name, None)
-spawn_directory.cleanup()
+if RUN_CAMPAIGN:
+    additional_replay_checks = {}
+    for name, original in [(f"weak_L{length}", result) for length, result in weak_reference_fields.items()] + [
+        ("crossover", crossover_control_field)
+    ]:
+        archive_path = OUTPUT / additional_case_archives[name]["archive"]
+        with np.load(archive_path, allow_pickle=False) as archive:
+            saved = {key: archive[key] for key in archive.files}
+        checks = {}
+        for native_threads in (1, 2):
+            maximum = 0.0
+            with threadpool_limits(limits=native_threads):
+                for cell, original_response in enumerate(original[1].responses):
+                    response = LocalResponse(problem=original_response.problem,
+                                             source=saved[f"source_{cell}"], lifts=saved[f"lifts_{cell}"],
+                                             coarse_vectors=saved[f"retained_basis_{cell}"])
+                    trace, coarse = saved["trace"][saved[f"trace_dofs_{cell}"]], saved[f"coarse_{cell}"]
+                    replayed = response.reconstruct(trace, coarse)
+                    rotated = replace(response, coarse_vectors=-response.retained_basis).reconstruct(trace, -coarse)
+                    np.testing.assert_allclose(replayed, saved[f"pressure_{cell}"], rtol=0, atol=1e-12)
+                    np.testing.assert_allclose(rotated, replayed, rtol=0, atol=1e-12)
+                    maximum = max(maximum, float(np.max(abs(replayed - saved[f"pressure_{cell}"]))))
+            checks[str(native_threads)] = {"maximum_pressure_coefficient_difference": maximum,
+                                          "equivalent_retained_sign_rotation": True}
+        fields = [saved[f"pressure_{cell}"] for cell in range(len(original[0].cells))]
+        n = WORKLOAD["crossover_fine_n"] if name == "crossover" else WORKLOAD["weak_fine_n"]
+        length = 1 if name == "crossover" else int(name.removeprefix("weak_L"))
+        physical = field_difference(archived_evaluator(saved, fields), mhm_evaluator(original), n, length)
+        amplitude = max(float(np.max(abs(field))) for field in fields)
+        roundoff = 32 * np.finfo(float).eps * max(1, amplitude)
+        bounds = {"pressure_L2_per_sqrt_area": 4 * roundoff,
+                  "flux_L2_per_sqrt_area": 4 * math.sqrt(2) * math.e * n * roundoff}
+        if any(physical[key] > bounds[key] for key in physical):
+            raise ValueError("Additional physical replay exceeds the native-basis roundoff bound")
+        additional_replay_checks[name] = {"coefficient_replay": checks, "physical_replay": physical,
+                                         "physical_roundoff_bounds": bounds}
+        del saved, fields
+    print({"additional_physical_mesh_replay": additional_replay_checks})
 
 ```
 
-```text
-{'record': './build/introduction/darcy_process_scalability/measurements.json', 'archive_sha256': '459ead6388b6f36de7e4c5efa49bb6421e3e3a8a782dd79612acc5701707036a'}
+
+```python
+if RUN_CAMPAIGN:
+    manifest = current_source_manifest({"literal_provider": module_sha256,
+                                       "source_notebook": hashlib.sha256(SOURCE_NOTEBOOK.read_bytes()).hexdigest(),
+                                       "pixi.lock": hashlib.sha256((ROOT / "pixi.lock").read_bytes()).hexdigest()})
+    record = {
+        "schema": "pymhm.introduction.darcy-process-scalability.v1",
+        "workload": WORKLOAD, "source_manifest": manifest,
+        "git_revision": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+        "versions": {name: version(name) for name in ("numpy", "scipy", "fenics-basix", "fenics-dolfinx", "pyamg", "threadpoolctl")},
+        "python": platform.python_version(), "platform": platform.platform(),
+        "cpu": CPU_METADATA, "affinity_after": sorted(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else None,
+        "load_average": list(os.getloadavg()) if hasattr(os, "getloadavg") else None,
+        "native_libraries": threadpool_info(), "native_threads": 1,
+        "one_time_parent_import_seconds": PARENT_IMPORT_SECONDS,
+        "one_time_literal_export_import_seconds": EXPORT_IMPORT_SECONDS,
+        "repetitions": REPETITIONS, "random_seed": RANDOM_SEED,
+        "strong_warmup": warmup, "strong_samples": strong_samples, "strong_summary": strong_summary,
+        "strong_physical_errors_once": strong_accuracy,
+        "weak_warmup": weak_warmup, "weak_samples": weak_samples, "weak_summary": weak_summary,
+        "crossover_warmup": crossover_warmup, "crossover_samples": crossover_samples,
+        "crossover_summary": crossover_summary, "crossover_physical_errors": crossover_accuracy,
+        "physical_errors": physical_errors, "physical_agreement": physical_agreement,
+        "error_quadrature_orders": [5, 7], "common_error_partition_per_unit_axis": integration_n,
+        "reference_exact_errors": reference_accuracy, "reference_refinement": reference_refinement,
+        "observed_reference_rates": reference_rates,
+        "untimed_scientific_controls": {"reference_refinement": reference_timings,
+            "MHM_serial": validation_timings, "MHM_process": process_validation_timings,
+            "classical_LU": classical_lu_validation_timings, "classical_AMG": classical_amg_validation_timings,
+            "weak_serial_each_domain": weak_control_timings},
+        "independent_rectangle_data_checks": rectangle_data_checks,
+        "weak_physical_errors_per_sqrt_area": weak_accuracy, "trace_geometry_controls": trace_control,
+        "unique_executed_fields_physically_integrated": len(physical_norm_cache),
+        "serial_state_digests": serial_digests,
+        "basis_array_digests": {name: numerical_digest(array) for name, array in state.items() if "basis" in name},
+        "field_archive_sha256": hashlib.sha256((OUTPUT / "fields_and_executed_bases.npz").read_bytes()).hexdigest(),
+        "archived_replay": replay_checks,
+        "archived_native_basis_physical_replay": physical_basis_replay,
+        "additional_field_archives": additional_case_archives,
+        "additional_mesh_replay": additional_replay_checks,
+        "timing_scope": "fresh setup, startup/imports, complete response transfer, ordered global assembly, join, solve and full reconstruction",
+        "classical_AMG": {"rtol": 1e-10, "atol": 0, "maxiter": 500, "near_nullspace": "one constant candidate",
+                          "refinement_precision": "double", "refinement_steps": 2, "equilibration": "none"},
+    }
+    (OUTPUT / "measurements.json").write_text(json.dumps(record, indent=2) + "\n")
+    print({"record": str(OUTPUT / "measurements.json"), "archive_sha256": record["field_archive_sha256"]})
+
+    # All generic assemble calls have completed and joined their workers.
+    sys.path.remove(spawn_directory.name)
+    sys.modules.pop(module_name, None)
+    spawn_directory.cleanup()
+
 ```
 
 ## References

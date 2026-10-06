@@ -205,6 +205,46 @@ def tabulate_reference(element: ReferenceElement, points: ArrayLike, nderiv: int
     return np.asarray(element._native.tabulate(order, coordinates), dtype=np.float64)
 
 
+def tabulate_archived_nodal_basis(
+    cell: str, degree: int, basis_matrix: ArrayLike, points: ArrayLike, *, nderiv: int = 0
+) -> FloatArray:
+    """Evaluate an executed scalar polynomial basis from its archived matrix.
+
+    ``basis_matrix`` contains rows of the actual Basix ``coefficient_matrix``
+    in its native orthonormal Legendre polynomial coordinates. Its rows may
+    include a declared change of basis. The returned array has axes
+    ``(points, executed_basis)`` for ``nderiv=0``. Positive derivative orders
+    add a leading derivative axis in Basix's ``index`` convention, including
+    values at index zero. Evaluation uses the supplied matrix directly, without
+    dualizing or rebuilding finite-element basis coefficients. Physical maps,
+    continuity, vector blocking and global DOF order belong to the caller.
+    """
+    basix = _require_basix()
+    order = _integer(degree, "degree")
+    derivatives = _integer(nderiv, "nderiv")
+    try:
+        native_cell = basix.CellType[cell]
+    except KeyError as error:
+        raise ValueError("unknown archived basis reference cell") from error
+    dimension = basix.geometry(native_cell).shape[1]
+    coordinates = _points(points, dimension, "points")
+    matrix = np.asarray(basis_matrix)
+    if matrix.dtype.kind not in "fiu" or matrix.ndim != 2 or not np.isfinite(matrix).all():
+        raise ValueError("archived basis_matrix must be a finite real matrix")
+    width = basix.polynomials.dim(basix.PolynomialType.legendre, native_cell, order)
+    if matrix.shape[1] != width:
+        raise ValueError("archived basis columns must match the reference polynomial dimension")
+    if derivatives == 0:
+        polynomials = basix.polynomials.tabulate_polynomials(
+            basix.PolynomialType.legendre, native_cell, order, coordinates
+        )
+        return np.asarray(polynomials.T @ matrix.T, dtype=np.float64)
+    tables = basix.polynomials.tabulate_polynomial_set(
+        native_cell, basix.PolysetType.standard, order, derivatives, coordinates
+    )
+    return np.stack([table.T @ matrix.T for table in tables])
+
+
 def reference_interpolation_points(element: ReferenceElement) -> FloatArray:
     """Return read-only native interpolation points in reference coordinates."""
     if not isinstance(element, ReferenceElement):

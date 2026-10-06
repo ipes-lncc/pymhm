@@ -251,6 +251,7 @@ nav:
     - Three-dimensional Darcy scaling: tutorials/introduction/darcy_3d_parallel_scalability.md
   - Scalar formulations: tutorials/scalar.md
   - Vector formulations: tutorials/vector.md
+  - Custom interface spaces: tutorials/custom-interface.md
   - Local providers and assembly: tutorials/providers.md
 - Case gallery:
   - Evidence guide: cases/index.md

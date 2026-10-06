@@ -43,34 +43,50 @@ Windows commands, upgrades and native backend requirements.
 
 ## Quick start
 
-```python
-from pymhm import Equation, LocalEquations, MultiscaleProblem, solve
+Start with the [step-by-step UFL overview](docs/tutorials/overview.md) and the
+[introductory course with executed plots](docs/tutorials.md). They connect the
+mathematical local and global formulations to the code for scalar, vector and
+mixed problems.
 
-def local(cell):
-    return LocalEquations(
-        a=[[2.0]], L=[1.0], b=[[1.0]], c=[[-1.0]],
-        d=[[1.0]], dofs=[0],
+The mesh-associated binding API below is available in the current source checkout
+and will be included in the next release. The published PyPI 1.0.0 supports the
+explicit `Equation`/`MultiscaleProblem` interface; see the
+[source installation instructions](docs/installation.md#from-a-checkout).
+
+The portable coefficient interface follows the same mesh-to-solution workflow:
+
+```python
+import numpy as np
+from pymhm import (
+    CartesianMacroMesh, Equation, FaceSpace, LocalContext, LocalEquations,
+    MeshHierarchy, SkeletonSpace, assemble, bind_interface, bind_problem, solve,
+)
+
+macro = CartesianMacroMesh(1, 1)
+hierarchy = MeshHierarchy(macro, (macro.submesh(0, 2),))
+skeleton = SkeletonSpace(macro, tuple(FaceSpace.uniform(0) for _ in macro.faces))
+interface = bind_interface(skeleton, convention="value")
+
+def local(context: LocalContext) -> LocalEquations:
+    """Declare independent volume and interface equations."""
+    return context.equations(
+        a=[[2.0]], L=[1.0], b=np.ones((1, 4)), c=-np.ones((4, 1)),
+        d=np.eye(4),
     )
 
-problem = MultiscaleProblem(
-    Equation(0, 0), local, items=[0], trace_size=1, coarse_sizes=(0,),
-)
-solution = solve(problem)
-print(solution.trace, solution.fields)  # lambda = u = 1/3
+problem = bind_problem(hierarchy, interface, local, global_equation=Equation(0, 0))
+system = assemble(problem)
+solution = solve(system)
+print(solution.trace, solution.fields)  # every coordinate is 1/6
 ```
 
-This coefficient example declares $2u+\lambda=1$ and $-u+\lambda=0$.
-The [variational guide](docs/variational.md) shows how local and global UFL
-forms, retained modes, physical constraints and recursive problems fit this
-same interface. It states the supported compilation and elimination limits.
-The [vector UFL](notebooks/foundations/operators/vector_ufl.ipynb) and
-[three-level hierarchy](notebooks/foundations/operators/variational_hierarchy.ipynb)
-notebooks provide direct vector forms and recursive coefficient verification.
-
-The introductory [scalar](docs/tutorials/scalar.md),
-[vector](docs/tutorials/vector.md) and [provider](docs/tutorials/providers.md)
-tutorials use small executable problems. They cover primal and mixed H(div)
-locals, explicit interface conventions, physical gauges and custom local solvers.
+This small algebraic example declares $2u+\sum_F\lambda_F=1$ and
+$-u+\lambda_F=0$ on each face. The binding owns the shared numbering and geometric
+maps; the user supplies both equations. The
+[variational guide](docs/variational.md) describes UFL forms, retained modes,
+physical constraints and recursive problems, and states the supported limits.
+For complete control, see the [custom-space tutorial](docs/tutorials/custom-interface.md),
+which declares a nonorthogonal basis and its independent trial/test maps.
 
 The wheel contains every `pymhm` runtime module, typing files and distribution
 metadata. The source distribution contains `src/pymhm`, `pyproject.toml`,

@@ -4,6 +4,7 @@ _EXPORT_GROUPS: dict[str, tuple[str, ...]] = {
     "pymhm.adaptivity.darcy": ("mark_dorfler",),
     "pymhm.adaptivity.metric": ("ResidualMeshSize", "remesh_freefem", "residual_mesh_size"),
     "pymhm.backends.forms": ("assemble_form", "assemble_pairing"),
+    "pymhm.backends.spaces": ("NativeSpace", "bind_space", "create_native_mesh"),
     "pymhm.core.assembly": (
         "HybridProblem",
         "LocalLinearSolver",
@@ -19,6 +20,7 @@ _EXPORT_GROUPS: dict[str, tuple[str, ...]] = {
     ),
     "pymhm.core.contracts": ("HybridSolution", "LocalAssembly", "LocalProblem", "LocalResponse"),
     "pymhm.core.contributions": ("assemble_hybrid_contributions", "local_global_contribution"),
+    "pymhm.core.context": ("BoundProblem", "GlobalContext", "LocalContext", "bind_problem"),
     "pymhm.core.equations": (
         "Equation",
         "LinearForms",
@@ -71,6 +73,15 @@ _EXPORT_GROUPS: dict[str, tuple[str, ...]] = {
         "refine_hybrid_stream",
     ),
     "pymhm.core.subspaces": ("restrict_response",),
+    "pymhm.core.spaces": (
+        "BoundInterface",
+        "InterfaceSpace",
+        "MeshHierarchy",
+        "TraceBinding",
+        "bind_interface",
+        "bind_local_equations",
+        "validate_trace_binding",
+    ),
     "pymhm.core.system": ("HybridSystem", "hybrid_mean_constraint", "solve_hybrid_system"),
     "pymhm.core.variational": ("GlobalForm", "LocalForm", "LocalProvider", "compile_local_forms"),
     "pymhm.execution.cpu": ("ExecutionConfig", "iter_local", "map_local"),
@@ -120,7 +131,7 @@ _EXPORT_GROUPS: dict[str, tuple[str, ...]] = {
         "PolynomialNeumannTrace",
         "helmholtz_skeleton",
     ),
-    "pymhm.fem.traces.interval": ("FaceSpace", "SkeletonSpace"),
+    "pymhm.fem.traces.interval": ("FaceSpace", "SkeletonSpace", "interface_pairing"),
     "pymhm.fem.traces.pressure_3d": ("PressureTraceSpace3D",),
     "pymhm.fem.traces.triangle_3d": ("TriangularSkeleton",),
     "pymhm.fem.vector.curl": ("CurlOperators", "TangentialTraceSpace"),
@@ -178,6 +189,16 @@ _EXPORT_GROUPS: dict[str, tuple[str, ...]] = {
         "reconstruct_flux_moments",
     ),
     "pymhm.recovery.moments_3d": ("MomentFlux3DSolution", "reconstruct_darcy_moments_3d"),
+    "pymhm.postprocessing.fields": (
+        "DiscreteField",
+        "FieldDefinition",
+        "evaluate_field",
+        "evaluate_field_and_gradient",
+        "evaluate_field_gradient",
+        "local_trace",
+        "portable_field_coefficients",
+        "solution_field",
+    ),
 }
 
 PUBLIC_EXPORTS: dict[str, tuple[str, str]] = {

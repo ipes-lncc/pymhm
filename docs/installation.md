@@ -80,6 +80,11 @@ for the supported native integration; see [optional capabilities](#optional-capa
 for PETSc/MUMPS and AmgX requirements. Notebooks and their datasets are available
 in the repository, with an index in the [notebook catalogue](tutorials.md).
 
+The mesh-associated `bind_problem`/`LocalContext` workflow in the current
+tutorials is available from a source checkout and will be included in the next
+release. The published PyPI 1.0.0 provides the explicit
+`Equation`/`MultiscaleProblem` interface.
+
 ## From a checkout
 
 Install Pixi 0.76.2; both the workspace and the pinned AmgX toolchain require this

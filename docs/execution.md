@@ -8,7 +8,8 @@ does not implicitly enable the others.
 
 ## Serial cells and bounded parallel batches
 
-`assemble` consumes the forms and coordinate layout of `MultiscaleProblem`.
+`assemble` consumes bound user-written problems or the explicit forms and
+coordinate layout of `MultiscaleProblem`. Both reach the same execution owner.
 `assemble_hybrid` uses its fixed `GlobalForm` construction;
 both delegate scheduling and reduction to the same owners.
 Serial execution constructs, condenses and accumulates one macrocell before
@@ -26,15 +27,13 @@ square of the number of global unknowns.
 
 ```python
 from pymhm import (
-    Equation, ExecutionConfig, MultiscaleProblem, assemble,
+    Equation, ExecutionConfig, MeshHierarchy, assemble, bind_interface, bind_problem, solve,
 )
 
-problem = MultiscaleProblem(
-    global_equation=Equation(global_matrix, global_rhs),
-    local_provider=local_provider,
-    items=range(len(macro_mesh.cells)),
-    trace_size=skeleton.size,
-    coarse_sizes=(1,) * len(macro_mesh.cells),
+problem = bind_problem(
+    MeshHierarchy(macro_mesh, local_mesh_factory),
+    bind_interface(skeleton, convention="normal"), local_provider,
+    global_equation=Equation(global_matrix, global_rhs), retained=1,
 )
 system = assemble(
     problem,
@@ -42,10 +41,11 @@ system = assemble(
         backend="process", workers=10, batch_size=20, pipeline=True,
     ),
 )
-solution = system.solve()
+solution = solve(system)
 ```
 
-The provider returns the explicit local equations. `global_matrix` and
+The provider receives `LocalContext` and returns the explicitly written local
+equations. The mesh factory runs inside the owning worker when needed. `global_matrix` and
 `global_rhs` contain additional global forms in the complete reduced coordinate
 order. See the [variational guide](variational.md) for their signs and sizes.
 

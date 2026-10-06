@@ -39,6 +39,22 @@ on this patch; mixed pressure has a nonzero approximation error because it
 is piecewise constant. This patch checks the declared equations. It does not
 replace a literature reproduction or an inf-sup convergence study.
 
+## Mesh-associated providers and manual providers
+
+The [overview](overview.md) starts with `bind_problem`: a provider receives
+`LocalContext`, defines a native space and writes volume and interface UFL forms.
+The context supplies built-in coordinate maps and geometric orientation.
+`local.field(...)` registers a physical field with its executed space, and
+`solution.field(name)` exposes its mesh-aware evaluation contract.
+
+For a custom interface, supply `size` and `binding(cell)` through the structural
+`InterfaceSpace` contract. The [custom-space notebook](custom-interface.md)
+uses dense nonorthogonal bases and arbitrary global numbering. Fully manual
+`LocalEquations`/`MultiscaleProblem` definitions below remain supported and
+reuse the same numerical path. External FEM, simulator or learned response
+providers can choose either level; their physical checks and resource ownership
+requirements are identical.
+
 ## Declare the local and global forms
 
 The two equations are explicit:

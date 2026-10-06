@@ -7,9 +7,44 @@ The prepared GPU AMG solver reuses one hierarchy across its right-hand sides
 and original-equation corrections. A different material matrix requires a new
 setup. A `HybridSystem` retains the executed lifts for reconstruction.
 
-Timings include the complete numerical workflow. Numerical agreement and
-performance are verified separately: a faster execution must still satisfy the
-original equations and reproduce the physical fields at the stated accuracy.
+Performance campaigns time their declared numerical workflow; bounded assembly
+controls state any untimed preparation. Numerical agreement and performance
+are verified separately: a faster execution must still satisfy the original
+equations and reproduce the physical fields at the stated accuracy.
+
+## Cost of automatic native UFL trace assembly
+
+The contextual API supplies numbering and orientation without user-managed
+maps. Its introductory native UFL pairings also change the boundary assembly
+route compared with explicit Basix trace matrices. A warmed serial control
+uses the same 4×4 macro mesh, Q2 fields, 4×4 fine cells per macroelement,
+piecewise P1 traces and oscillatory material in both routes. Three alternating
+repetitions measure:
+
+| Timed operation | Explicit Basix trace blocks | Contextual native UFL pairings |
+| --- | ---: | ---: |
+| Description, local meshes, assembly, solution and one field sample | 0.979 s | 6.043 s |
+| Native form lookup/binding, included above | 0.561 s | 5.186 s |
+| Local condensation, included above | 0.037 s | 0.036 s |
+| Global solution and recovery, included above | 0.0027 s | 0.0028 s |
+
+The observed timed-operation ranges are 0.975–0.994 s and 6.017–6.121 s. The native
+UFL route is 6.17× slower in this small workload, with 432 native form calls
+instead of 48. Independent trial/test pairings remain explicit. Repeated
+native form construction dominates; condensation and global solution retain
+their shared owners. Reusable native workspaces are available for explicitly
+prepared providers, while automatic reuse for these general contextual forms
+remains an optimization target.
+
+Common macro geometry, data and callback definitions are prepared outside
+these timers. Both routes have an untimed warmup, one native thread and no
+concurrent project workload. Included timers overlap and are not additive.
+The [route-cost receipt](https://github.com/ipes-lncc/pymhm/blob/main/benchmarks/results/api-binding-20261006/route-cost.json)
+records every repetition, source snapshots, numerical equality checks,
+hardware and scope. This comparison changes the boundary assembly route as
+well as the API; it does not isolate Python abstraction overhead or predict
+large-problem scaling. The historical campaigns below retain their measured
+source revisions.
 
 ## Oscillatory Darcy with declared local and global forms
 
@@ -18,7 +53,11 @@ defines its permeability, manufactured source, local UFL equations, skeletal
 couplings and conforming Q1 comparisons in executable cells. The
 [process companion](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_process_scalability.ipynb)
 defines the same physical case and exports its displayed worker definitions
-for `spawn`. Both use `LocalEquations`, `Equation` and `MultiscaleProblem`.
+for `spawn`. Their introductory workflow uses `MeshHierarchy`, `bind_interface`
+and `bind_problem`, with user-written `LocalEquations` and `Equation` forms.
+The scaling tables below retain their original measured source revisions and
+execution provenance. The notebooks verify archived records and execute a fresh
+field control by default; `PYMHM_RUN_CAMPAIGN=1` requests new timing acquisitions.
 
 Matched fine-element counts specify the amount of fine geometry; the global
 spaces differ. Separate pressure and physical-flux errors accompany timings.

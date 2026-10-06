@@ -10,7 +10,7 @@ contracts.
 
 | Package | Responsibility |
 | --- | --- |
-| `core` | Variational records, local equations, condensation, reconstruction and global hybrid assembly. |
+| `core` | Mesh/space bindings, variational contexts, local equations, condensation, reconstruction and global hybrid assembly. |
 | `fem` | Basix reference elements, scalar/vector operators, H(div) spaces, traces and material quadrature. |
 | `meshes` | Geometry, incidence, local submeshes and conforming refinement. |
 | `materials` | Material laws, discontinuous coefficients and separable source fields. |
@@ -21,13 +21,13 @@ contracts.
 | `adaptivity` | Marking, refinement decisions and adaptive solve policies. |
 | `linalg` | Sparse factors, block solves and separable iterative operators. |
 | `execution` | Ordered CPU batches, MPI assembly and accelerator execution. |
-| `backends` | Optional form compilers such as DOLFINx. |
+| `backends` | Optional native space bindings, trace/global form adapters, compilation and reusable workspaces. |
 | `io` | Mesh/material exchange and executed-source fingerprints. |
-| `postprocessing` | Field conversion and optional visualization. |
+| `postprocessing` | Named fields with their executed basis, evaluation and optional visualization. |
 
 The private `_legacy.models` subpackages contain the predefined physical
-solvers used by the verified cases. Import these implementations directly from
-their owners. A geometry object stores topology and mappings; forms
+solvers used internally by the verified cases. User-written problems use the
+generic variational interface. A geometry object stores topology and mappings; forms
 declare its physical operator, and a solver or estimator consumes the resulting
 operators without owning the basis construction. Scientific cases,
 manufactured data, campaign helpers and publication plots belong outside the
@@ -37,9 +37,11 @@ The root resolves exports on demand, and its `__init__.pyi` declares the typed
 generic variational and numerical API. `__all__` and `dir(pymhm)` expose those
 same infrastructure names. Physical and method-specific operations are
 imported from their canonical submodules. Shared numerical operations likewise
-import their owners directly. Problem definitions use `Equation`,
-`LocalEquations` and `MultiscaleProblem`; `assemble` and `solve` operate on
-those descriptions. The [variational guide](variational.md) states their
+import their owners directly. The main problem-definition path binds `MeshHierarchy`, an interface space
+and user-written local/global forms with `bind_problem`. `LocalContext` and
+`GlobalContext` supply representation details. Fully explicit `Equation`,
+`LocalEquations` and `MultiscaleProblem` remain available; `assemble` and `solve`
+operate on both descriptions. The [variational guide](variational.md) states their
 mathematical conventions and compilation limits.
 
 ## Data and operations
@@ -52,6 +54,9 @@ maps, executed retained bases and residual checks.
 
 | Responsibility | Objects | Functions |
 | --- | --- | --- |
+| Bind mesh-associated problems | `MeshHierarchy`, `BoundInterface`, `BoundProblem`, `LocalContext`, `GlobalContext` | `bind_interface`, `bind_problem` |
+| Declare custom coefficient conventions | `InterfaceSpace`, `TraceBinding` | `bind_local_equations` |
+| Evaluate executed physical fields | `FieldDefinition`, `DiscreteField` | `solution_field`, `evaluate_field` |
 | Describe local and global forms | `Equation`, `LocalEquations` | `columns`, `rows`, `compile_form`, `compile_local_equations` |
 | Assemble a variational hierarchy | `MultiscaleProblem`, `NestedEquations` | `assemble`, `solve` |
 | Reuse and recover an assembled hierarchy | `MultiscaleSystem`, `MultiscaleSolution` | `with_global_load`, `with_global_equation`, `solve_multiscale_system`, `reconstruct_multiscale`, `leaf_moment` |
@@ -89,6 +94,45 @@ cached local factors.
 `with_global_equation` adds an independent operator and load after local
 responses are available, including an explicitly assembled jump of reconstructed
 fields. It returns a new system and preserves the executed bases and children.
+
+## Mesh-associated variational contexts
+
+`core.spaces` owns portable interface maps and the structural custom-space
+contract. `core.context` binds macro/local meshes, user forms and declared
+retained dimensions to the existing `MultiscaleProblem`; it implements no new
+condensation or solver. A worker creates `LocalContext` for one macroelement,
+compiles the user's independent pairings and releases local native bindings.
+`GlobalContext` supplies interface boundary moments, selectors and supported
+native global forms. Geometric signs are transported once; physical signs and
+trial/test relations remain explicit.
+
+`backends.spaces` binds supported portable meshes to user-selected native
+spaces. Nodal coordinate conversion uses incidence and Basix reference
+interpolation data. H(div)/H(curl) moment coordinates retain their declared
+native conventions. `backends.traces` binds supported planar polynomial
+traces and additional global interface UFL forms. Custom spaces may supply
+those capabilities independently; unsupported couplings fail explicitly.
+
+`postprocessing.fields` associates reconstructed vectors with named fields,
+meshes, components, declared reconstructions and executed basis descriptors.
+Its free functions own evaluation and the solution's convenience `field`
+method delegates to them. Independent one-sided values are preserved.
+
+Built-in bindings and fully manual definitions share the same numerical
+owners. See the [overview](tutorials/overview.md) for the principal workflow
+and [custom interfaces](tutorials/custom-interface.md) for arbitrary numbering,
+dense basis changes and explicitly supplied maps.
+
+The [API qualification record](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/api-binding-20261006)
+compares the explicit and contextual providers for the main Darcy, SPE10,
+elasticity, MsHHO and MH²M examples. Both routes use the same current numerical
+owners and unchanged physical data. Coefficients are compared in a common
+physical basis; deterministic value and gradient samples additionally check
+the native Lagrange field views. These controls establish agreement for those
+examples, independently of their convergence and literature acceptance studies.
+Local RAD and Stokes–Brinkman controls cover both Galerkin and USFEM operators,
+boundary/interior macrocells and mild/extreme coefficients, including their
+source, trace-lift and retained responses.
 
 ## Darcy formulations
 

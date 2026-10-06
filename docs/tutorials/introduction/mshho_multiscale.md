@@ -2,6 +2,8 @@
 
 Follow the numbered steps: state the variational problem, choose the local and trace spaces, declare the local and global equations, solve, and inspect the physical fields.
 
+The main workflow is **meshes → spaces → local equations → global balance → assemble → solve → fields and errors**. `MeshHierarchy` associates macro and local meshes; `bind_interface` and `LocalContext` own supported numbering, geometric orientation and native coordinate conversions. The mathematical forms, physical trace meaning, local modes and gauge remain explicit in the cells below. Fully manual/custom spaces use the same numerical owners; see the [custom-interface notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/custom_interface.ipynb).
+
 We build a simple **Multiscale Hybrid High-Order** Darcy problem and explain every local and global block. All case definitions, equations, boundary conditions, reference solves, norms and plots are visible in this notebook. The weak operator is written in UFL. PyMHM provides generic compilation, trace pairings, constrained reconstruction and linear algebra.
 
 The method family follows [Chaumont-Frelet, Ern, Lemaire and Valentin (2022)](https://doi.org/10.1051/m2an/2021082), sections 4–5. Their local spaces are defined by exactly solved PDEs. We use a finite local Galerkin realization on declared fine meshes. This original introductory problem is not a reproduction of an article figure or table.
@@ -51,6 +53,9 @@ from pymhm.meshes.triangle import TriangleMesh
 plt.rcParams.update({"figure.dpi": 110, "font.size": 10})
 
 from pymhm.core.moments import energy_reconstruction
+
+from pymhm import MeshHierarchy, LocalContext, bind_interface, bind_problem
+from pymhm.backends.spaces import bind_space
 
 ```
 
@@ -179,7 +184,7 @@ $$
 
 The Neumann stiffness has the constant kernel. Independent moments fix it; the stiffness must also be coercive on the moment-zero space. A small residual alone does not prove these properties.
 
-The P1 cell tests are represented exactly at P2 nodes, so `mass @ cell_tests` integrates their volume moments. `trace_coupling` includes the mesh normal orientation. **Pressure** moments are unsigned: we remove that orientation by multiplying each face block by `macro.signs`.
+The P1 cell tests are represented exactly at P2 nodes, so `mass @ cell_tests` integrates their volume moments. The face functionals are written directly as `phi * v * ds` with UFL. The value interface binding owns their geometry and numbering: **pressure** moments have no normal-incidence sign. The volume coefficients use the native space binding's executed nodal convention.
 
 `energy_reconstruction` solves the generic $A/C$ saddle above. It receives no physical-model or method selector. The constant source belongs to P1: in integral-moment coordinates the projected-source functional is simply $z_{K,0}$, hence load $(1,0,0)$ on cell coordinates and zero on face coordinates.
 
@@ -207,28 +212,24 @@ import basix.ufl
 import dolfinx
 import ufl
 from mpi4py import MPI
-from scipy.spatial import cKDTree
 from pymhm.core.equations import compile_form
+from pymhm.backends.forms import assemble_pairing
 from pymhm.fem.scalar.triangle import trace_coupling
 
 
 def native_scalar_space(fine: TriangleMesh, degree: int) -> tuple[Any, np.ndarray]:
-    """Use the existing triangles and bijectively map equispaced nodal coordinates."""
-    geometry = ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,)))
-    domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, fine.cells, fine.points, geometry)
-    element = basix.ufl.element("Lagrange", "triangle", degree,
-                                lagrange_variant=basix.LagrangeVariant.equispaced)
-    V = dolfinx.fem.functionspace(domain, element)
-    _, nodes = nodal_space(fine, degree)
-    distance, permutation = cKDTree(V.tabulate_dof_coordinates()[:, :2]).query(nodes)
-    assert distance.max() < 1e-12
-    assert len(np.unique(permutation)) == len(nodes)
-    return V, permutation
+    """Bind the declared nodal element with shared topology and coefficient maps."""
+    element = basix.ufl.element(
+        "Lagrange", "triangle", degree,
+        lagrange_variant=basix.LagrangeVariant.equispaced,
+    )
+    binding = bind_space(fine, element)
+    return binding.space, binding.mapping
 
 
-def user_volume_forms(fine: TriangleMesh, degree: int) -> tuple[Any, Any, np.ndarray]:
+def user_volume_forms(fine: TriangleMesh, degree: int, *, binding: Any = None) -> tuple[Any, Any, np.ndarray]:
     """Execute the user-written weak operator, mass and source in the stated basis."""
-    V, order = native_scalar_space(fine, degree)
+    V, order = native_scalar_space(fine, degree) if binding is None else (binding.space, binding.mapping)
     p, v = ufl.TrialFunction(V), ufl.TestFunction(V)
     x = ufl.SpatialCoordinate(V.mesh)
     a_epsilon = 2 + ufl.sin(2 * np.pi * x[0] / epsilon) * ufl.sin(2 * np.pi * x[1] / epsilon)
@@ -257,21 +258,22 @@ form_equivalence = {}  # Filled by the optional convenience check at the end.
 
 
 ```python
-def local_moment_equations(cell: int) -> LocalEquations:
+def local_moment_equations(local: LocalContext) -> LocalEquations:
     """Declare MsHHO P1 cell/face moments on a local conforming P2 space."""
-    fine = macro.submesh(cell, local_refinement)
-    stiffness, mass, force = user_volume_forms(fine, local_degree)
+    cell, fine = local.cell, local.mesh
+    binding = local.native_space(basix.ufl.element(
+        "Lagrange", "triangle", local_degree,
+        lagrange_variant=basix.LagrangeVariant.equispaced,
+    ))
+    stiffness, mass, force = user_volume_forms(fine, local_degree, binding=binding)
     _, nodes = nodal_space(fine, local_degree)
     vertices = macro.points[macro.cells[cell]]
     scaled_xy = 2 * (nodes - vertices.min(axis=0)) / np.ptp(vertices, axis=0) - 1
     cell_tests = np.column_stack((np.ones(len(nodes)), scaled_xy))
     volume_moments = mass @ cell_tests
-    face_moments = trace_coupling(macro, cell, fine, skeleton, local_degree)
-    offset = 0
-    for side, face in enumerate(macro.cell_faces[cell]):
-        width = skeleton.faces[face].size
-        face_moments[:, offset:offset + width] *= macro.signs[cell, side]
-        offset += width
+    v = ufl.TestFunction(binding.space)
+    face_functionals = local.trace_pairings(lambda phi, ds: phi * v * ds)
+    face_moments = assemble_pairing(face_functionals.forms, axis="columns")[binding.mapping]
     moments = np.column_stack((volume_moments, face_moments))
     reconstruction, energy = energy_reconstruction(stiffness, moments)
 
@@ -279,10 +281,10 @@ def local_moment_equations(cell: int) -> LocalEquations:
     # projected-source load is (1, 0, 0) in the cell block, zero on faces.
     moment_load = np.r_[1.0, 0.0, 0.0, np.zeros(face_moments.shape[1])]
     ncell = volume_moments.shape[1]
-    return LocalEquations(
+    return local.equations(
         a=energy[:ncell, :ncell], L=moment_load[:ncell],
         b=energy[:ncell, ncell:], c=energy[ncell:, :ncell],
-        dofs=skeleton.cell_dofs(cell),
+        coordinates="global",
         d=energy[ncell:, ncell:], g=moment_load[ncell:],
         metadata={"mesh": fine, "R": reconstruction, "C": moments,
                   "A": stiffness, "F": force, "energy": energy},
@@ -307,7 +309,7 @@ $$
 
 These are exactly `LocalEquations`: `a,L,b` define the first equation; `c,d,g` contribute the second. `assemble` eliminates the three cell moments and adds shared face contributions.
 
-`Equation(0, zeros)` supplies no additional global term. `coarse_sizes=(0,...)` retains no extra modes: the fine stiffness kernel has already been fixed in the constrained reconstruction, and cell moments are ordinary eliminated local unknowns. Prescribed exterior pressure moments remove the global pressure gauge.
+`Equation(0, zeros)` supplies no additional global term. `retained=0` retains no extra modes: the fine stiffness kernel has already been fixed in the constrained reconstruction, and cell moments are ordinary eliminated local unknowns. Prescribed exterior pressure moments remove the global pressure gauge.
 
 After solving, `solution.fields` contains **cell moments**. Multiplying the complete local moment vector by the executed $R_K$ recovers physical nodal pressure. The small field record below only associates coefficients with their declared mesh and Pk basis; it is not a solver.
 
@@ -355,11 +357,12 @@ def evaluate_scalar(field: ScalarField, points: np.ndarray) -> tuple[np.ndarray,
 
 
 ```python
-problem = MultiscaleProblem(
-    global_equation=Equation(0, np.zeros(skeleton.size)),
-    local_provider=local_moment_equations,
-    items=range(len(macro.cells)),
-    trace_size=skeleton.size, coarse_sizes=(0,) * len(macro.cells), fixed=fixed,
+hierarchy = MeshHierarchy(
+    macro, tuple(macro.submesh(cell, local_refinement) for cell in range(len(macro.cells)))
+)
+problem = bind_problem(
+    hierarchy, bind_interface(skeleton, convention="value"), local_moment_equations,
+    global_equation=Equation(0, 0), retained=0, fixed=fixed,
 )
 with threadpool_limits(1):
     system = assemble(problem)
@@ -368,7 +371,7 @@ with threadpool_limits(1):
 # solution.fields contains cell moments, not physical nodal pressures.
 physical_fields = tuple(
     ScalarField(data["mesh"], local_degree,
-                data["R"] @ np.r_[cell_moments, solution.trace[skeleton.cell_dofs(cell)]])
+                data["R"] @ np.r_[cell_moments, solution.local_trace(cell)])
     for cell, (data, cell_moments) in enumerate(zip(system.local_metadata, solution.fields, strict=True))
 )
 print({"global_free_unknowns": global_free_unknowns,
@@ -378,7 +381,7 @@ print({"global_free_unknowns": global_free_unknowns,
 ```
 
 ```text
-{'global_free_unknowns': 80, 'global_residual': 6.462215755491108e-17, 'local_nodal_unknowns_per_macrocell': 561}
+{'global_free_unknowns': 80, 'global_residual': 7.994602283557082e-17, 'local_nodal_unknowns_per_macrocell': 561}
 ```
 
 ### 5. Check the kernel and the executed moment basis
@@ -388,6 +391,8 @@ Check $A_K1=0$, $C_K^TR_K=I$, and the moments of the recovered pressure. Full pr
 The finite local Galerkin realization does not automatically inherit the ideal article space's $H(\mathrm{div})$ flux property. We report the raw physical flux $-a_\varepsilon\nabla p_h$ inside each fine element and do not assert fine-cell conservation.
 
 Archive each executed $R_K$ with its SHA256 digest and the complete moment vector. Field replay uses that same matrix; persisted moment coefficients must not be applied to a numerically changed basis.
+
+The physical reconstruction reads `solution.local_trace(cell)`: the bound space supplies the executed local face coefficients, including any declared basis changes. The value convention used here has no outward-normal sign. The method's reconstruction matrix remains an explicit part of its mathematical definition.
 
 
 
@@ -401,7 +406,7 @@ for cell, (data, field, cell_moments) in enumerate(
     zip(system.local_metadata, physical_fields, solution.fields, strict=True)
 ):
     A, C, R = data["A"], data["C"], data["R"]
-    target = np.r_[cell_moments, solution.trace[skeleton.cell_dofs(cell)]]
+    target = np.r_[cell_moments, solution.local_trace(cell)]
     diagnostics["constant_kernel_relative"] = max(
         diagnostics["constant_kernel_relative"],
         float(np.linalg.norm(A @ np.ones(A.shape[0])) / np.linalg.norm(A.data)),
@@ -422,7 +427,7 @@ print(diagnostics)
 ```
 
 ```text
-{'constant_kernel_relative': 3.644021074115437e-16, 'moment_identity_max': 3.552713678800501e-15, 'recovered_moment_max': 5.204170427930421e-18}
+{'constant_kernel_relative': 3.644021074115437e-16, 'moment_identity_max': 2.4424906541753444e-15, 'recovered_moment_max': 2.8189256484623115e-18}
 ```
 
 ### 6. A classical primal Galerkin baseline, with its own refinement check
@@ -702,7 +707,7 @@ plt.show()
 ```
 
 ```text
-{'physical_relative_errors': {'pressure_L2': 0.0003496968018570189, 'flux_L2': 0.022527859850014497, 'flux_energy': 0.015758818791433912, 'pressure_relative': 0.01646085034817636, 'flux_relative': 0.11789725454046812, 'energy_relative': 0.11721564816135269}, 'relative_norm_change_q8_q10': 1.3951828413288198e-15}
+{'physical_relative_errors': {'pressure_L2': 0.000349696801857094, 'flux_L2': 0.022527859850014417, 'flux_energy': 0.015758818791433923, 'pressure_relative': 0.016460850348179897, 'flux_relative': 0.1178972545404677, 'energy_relative': 0.11721564816135276}, 'relative_norm_change_q8_q10': 1.860243788438027e-15}
 ```
 
 

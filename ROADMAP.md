@@ -1,6 +1,6 @@
 # PyMHM implementation, verification and validation roadmap
 
-Updated **October 5, 2026**. This is the project's canonical roadmap.
+Updated **October 6, 2026**. This is the project's canonical roadmap.
 The [scientific scope](#scientific-scope-and-acceptance-criteria) and
 [literature acceptance matrix](#acceptance-by-literature-target) identify
 implemented capabilities and remaining evidence. Detailed results belong on the
@@ -27,43 +27,37 @@ dependencies and acceptance conditions.
 
 ## Current baseline
 
-- [x] Physics-independent variational API: `Equation`, `LocalEquations`,
-  `MultiscaleProblem`, `assemble` and `solve`, using local/global UFL forms
-  or explicit numerical blocks for scalar, vector and mixed fields.
-- [x] `NestedEquations`, retained modes, physical moments, reconstruction and
-  face-only problems. Child assembly is serial within its owning worker; child
-  `fixed` and `constraints` must be empty, and trace restrictions must be
-  injective. Recursive local problems are outside the current MPI path.
-- [x] Basix runtime elements, polynomial sets and tabulations; MHM restrictions,
-  moments and orientations remain explicit. Canonical modules have defined
-  responsibilities, with free functions and clear delegation.
-- [x] Serial, thread and `spawn` process execution, ordered shared-face
-  reduction, MPI integration and CPU/GPU solvers within their documented scopes.
-- [x] Compatible meshes, spaces and compiled forms can be reused per worker.
-  Material matrices are assembled per macroelement; sharing factors or
-  hierarchies requires proven operator equivalence.
-- [x] English notebooks organized by problem, including
-  [introductory tutorials](notebooks/introduction/README.md) that define forms,
-  boundaries, classical references and field evaluation step by step.
-- [x] 2D/3D performance studies. The
-  [3D accelerator campaign](docs/cases/darcy-3d-accelerators.md) includes
-  PARDISO, strong/weak CPU scaling and one/two GPUs with cuDSS and AMGX.
-  Measurements apply to the recorded workloads, hardware and accuracy.
-- [x] Complete Linux `test` environment with two GPUs, portable `test-core`,
-  dependency preflight, pytest-xdist and an exclusive `serial` phase.
-- [x] Locally checked wheel, source archive, isolated wheel installation and
-  noarch Conda package, with complete runtime modules and typing files.
+The contextual API follows **meshes → spaces → local/global equations →
+assembly → solve → named fields and errors**. `MeshHierarchy`, `bind_interface`
+and `bind_problem` supply coordinate maps through `LocalContext` and
+`GlobalContext`. Built-in and custom `InterfaceSpace`/`TraceBinding` providers
+lower to the existing `Equation`, `LocalEquations` and `MultiscaleProblem`
+owners. The fully explicit route remains available. See the
+[overview](docs/tutorials/overview.md), [architecture](docs/architecture.md) and
+[custom-interface tutorial](docs/tutorials/custom-interface.md).
 
-The latest local Linux verification records **5,784 passing tests**:
-5,752 with **64 workers**, followed by **32 exclusive serial tests**.
-Line coverage is **99.9329%** and branch coverage is **99.6750%**.
-The source-checkout suite has one contextual installed-wheel ownership skip;
-all **eight isolated-wheel checks**, including native PARDISO, pass separately.
-These counts describe that execution rather than fixed suite-size targets.
+Implemented geometry, physics and backend scopes appear in the table below.
+The [case pages](docs/cases/index.md) retain numerical results and the
+[performance reports](docs/performance.md) identify measured workloads, hardware
+and accuracy. Current-source contextual APIs are awaiting their next package
+release; the published 1.0.0 exposes the explicit variational interface.
 
-Engineering equivalence applies to the executed cases; it does not establish
-stability or resolution in other regimes. Native Windows verification of the
-delivered revision and ML/preCICE provider qualification remain pending.
+Local qualification includes **5,884 passing tests**, line coverage of
+**99.92%** and branch coverage of **99.66%**, together with lint, formatting,
+type checking and native FEM integrations. The installed wheel passes its eight
+portable execution and PARDISO checks outside the checkout. The
+[API qualification record](benchmarks/results/api-binding-20261006/README.md)
+identifies the numerical controls and their scope. Verification applies to the
+executed cases; it does not establish stability or resolution in other regimes.
+The ten introductory notebooks and custom-interface example have executed
+271 code cells and produced 62 inspected figures. Generated tutorial pages
+retain their numerical provenance; historical scaling measurements identify
+their original source revisions.
+The final strict docs check validates 59 pages; actual Chrome inspection of
+19 current API/tutorial/performance pages renders 464 expressions and loads
+all 62 tutorial figures without mathematical rendering errors.
+Native Windows and macOS qualification of this changed revision remains a CI
+acceptance gate.
 Private `_legacy` implementations support comparisons, not the primary API.
 
 ## Scientific scope and acceptance criteria
@@ -117,10 +111,11 @@ and backend details.
 | R6 — External providers | P2 | Interchangeable providers using the local contracts | R4 contracts and physical controls |
 | R7 — Distribution | P2 | Release with demonstrated scientific and platform scope | Required gates and evidence for advertised capabilities |
 
-Start with R1. R4 and R5 may proceed in parallel when they do not change the
-source of an active acquisition. Work through R3 in bounded family-specific
-deliveries. Performance acquisitions require exclusive hardware; concurrent
-tests or campaigns must not contaminate timing.
+The contextual API is implemented; R4 now lists its remaining extensions. R1 remains
+the highest-priority scientific qualification. Work through R3 in bounded
+family-specific deliveries; R5 may proceed independently when it does not change
+the source of an active acquisition. Performance acquisitions require exclusive
+hardware; concurrent tests or campaigns must not contaminate timing.
 
 ## R1 — Qualify Stokes–Brinkman in 2D/3D
 
@@ -247,23 +242,51 @@ programs remain acquisition dependencies, not evidence of a new execution.
 
 ## R4 — Simplify the API without specializing it by physics
 
-- [ ] Reduce manual entity/DOF maps, orientations, boundaries and gauge composition.
-  Global UFL forms already assemble; skeleton numbering remains explicitly declared.
-- [ ] Consolidate repeated geometry, tabulation, assembly, condensation,
-  reconstruction and execution in their shared owners. Retire private legacy
-  implementations only after migrating consumers and proving field/variant equivalence.
-- [ ] Qualify more general nested hierarchies and their boundary/resource/parallel
-  restrictions. Keep unsupported MPI recursion explicit.
-- [ ] Present convenience operators after explicit form definitions. Keep scalar,
-  vector, primal, H(div), MH²M, MsHHO and USFEM tutorials synchronized with contracts.
+The contextual workflow and automatic/custom binding paths are described in
+[the current API](docs/tutorials/overview.md). They use the existing numerical
+owners, including independent trial/test couplings, retained modes, physical
+moments, local boundary spaces, shared-face accumulation and named field views.
+The remaining extensions are:
 
-**Acceptance:** users express local/global mathematics without PDE dispatchers
-or model-specific imports. New capabilities reuse Basix and general contracts.
-Functions and objects have defined responsibilities, docstrings, types and
-numerical conventions. Compare blocks, loads, bases, gauges and fields before/after,
-justify numerical agreement and preserve exact archive/replay identities.
-Keep [architecture](docs/architecture.md) and the
-[variational API](docs/variational.md) synchronized.
+- [ ] Add automatic native 3D trace pairings and global interface UFL integration
+  for explicitly supported face families. Reuse Basix and existing topology,
+  orientation and quadrature owners; audit dimension-dependent hypotheses and
+  independently verify physical fields before extending capability claims.
+- [ ] Extend portable field descriptors to selected moment-based H(div)/H(curl)
+  and non-equispaced families. Preserve executed basis matrices, transformations,
+  Piola maps and their digests; verify replay against native fields and physical
+  moments. Native assembly support alone does not imply portable nodal conversion.
+- [ ] Extend exact recursive trace restrictions beyond compatible planar normal
+  spaces. Declare parent/child support and any projection explicitly; preserve
+  child boundary, gauge, injectivity and execution restrictions. Recursive MPI
+  requires a separate qualified implementation.
+- [ ] Qualify reusable native contexts and form workspaces for larger general
+  user-defined operators. Share compiled kernels across compatible spaces;
+  reuse material matrices or factors only after proving operator equivalence.
+  Record setup, compilation, transfers, reduction and field reconstruction costs.
+  The [bounded route-cost control](benchmarks/results/api-binding-20261006/route-cost.json)
+  measures 6.043 s for automatic UFL trace pairings versus 0.979 s for explicit
+  Basix boundary blocks on a small identical discretization; repeated native
+  form lookups dominate. Optimize general workspace reuse and remeasure,
+  preserving independent pairings and original-equation/field agreement.
+- [ ] Audit remaining advanced notebooks and legacy comparison consumers for
+  opportunities to replace duplicated infrastructure with the contextual owners.
+  Preserve their executed coefficients, spaces, boundary data and numerical
+  evidence; retain explicit operations when they explain mathematical choices.
+
+Automatic native local/global trace integration currently supports planar
+polynomial `SkeletonSpace` bases with fine-facet-aligned partitions. Separate
+local and global boundary spaces can use unsigned UFL pairings and the generic
+boundary mass owner. Other geometries and custom bases provide their capabilities
+or explicit numerical blocks. Tangential basis rotations remain explicit custom
+maps; unsupported capabilities fail before numerical assembly.
+
+**Acceptance for each extension:** users can express its local/global forms
+without infrastructure indexing, advanced users can supply those same maps, and
+both routes agree with independent original-equation and physical-field controls.
+Run native integrations, archive/replay controls, executed tutorials and the
+engineering gates below. No physical coupling sign, kernel, gauge or stability
+property is inferred from a PDE or method name.
 
 ## R5 — Verify native Windows execution
 
@@ -302,21 +325,12 @@ contracts do not qualify external software. See [providers](docs/tutorials/provi
 
 - [ ] Select capabilities and cases for the release using evidence valid for
   the delivered source; synchronize version, dependencies, metadata and release notes.
-- [x] Provide locked git-cliff release tasks that synchronize all current-version
-  fields, preserve handwritten and historical notes, and validate matching tags.
-- [x] Verify complete, minimal wheel/sdist and noarch Conda contents, byte-identical
-  runtime payloads, isolated wheel installation and rebuilding from the sdist
-  outside the checkout. Optional backend adapters ship with the package;
-  native dependencies are installed separately on supported platforms.
 - [ ] Keep notebooks, catalogues, literature labels and publication assets current.
   Version only selected figures under an explicit allowlist. Large field archives
   and intermediate outputs remain outside Git.
-- [ ] Verify administrative prerequisites for automatic publication: PyPI trusted
-  publisher for owner `ipes-lncc`, repository `pymhm`, workflow `publish-pypi.yml`
-  and environment `pypi`; GitHub Actions as the Pages source; `main` and `v*`
-  release-tag deployment allowed in `github-pages`.
-- [ ] Publish validated `v*` releases through the workflow sequence below.
-  Submit the conda-forge recipe separately when target dependencies are available.
+- [ ] Publish the next validated `v*` release with the contextual API through the
+  existing workflow sequence below. Submit the conda-forge recipe separately
+  when target dependencies are available.
 
 **Acceptance:** installed artifacts contain all runtime and typing files, license
 and required metadata. The sdist includes only `src/pymhm`, `pyproject.toml`,
@@ -431,7 +445,7 @@ Use `release-fetch`, `changelog-preview`, `release-prepare VERSION` and
 `version-check` in the locked `release` environment; initial preparation requires
 `--initial`. The [development guide](docs/development.md#prepare-versions-and-release-notes)
 describes the first-parent main history and version synchronization rules.
-Administrative prerequisites are tracked in R7.
+Release administration is described in the [development guide](docs/development.md).
 Docs also supports manual publication with `publish=true` from `main` or a `v*`
 tag, including an initial documentation deployment before the next release.
 Keep platform/release claims tied to successful identified runs.

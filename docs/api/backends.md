@@ -4,6 +4,18 @@ Finite-element adapters, sparse solvers, parallel execution and separable operat
 
 [All API families](../api.md)
 
+## Native spaces and interface forms
+
+::: pymhm.backends.spaces
+    options:
+      show_source: false
+
+::: pymhm.backends.traces
+    options:
+      show_source: false
+
+## Direct form compilation
+
 ::: pymhm.backends.forms
     options:
       show_source: false
