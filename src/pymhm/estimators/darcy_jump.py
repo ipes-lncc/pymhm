@@ -15,11 +15,13 @@ from pymhm.materials.evaluation import scalar_values
 
 @dataclass(frozen=True)
 class DarcyJumpEstimator:
-    """L02 face indicators with the original cell-side multiplicity.
+    """Face indicators with the original cell-side multiplicity.
 
-    Interior faces contribute once to each of their two incident cells. The
-    published reliability theorem concerns exact local lifts; this quantity
-    alone does not bound the error of finite-dimensional local solves.
+    The face indicators follow [Araya et al. (2013)](https://doi.org/10.1137/120888223).
+
+    Interior faces contribute once to each of their two incident cells. The published reliability
+    theorem concerns exact local lifts; this quantity alone does not bound the error of
+    finite-dimensional local solves.
     """
 
     face_squared: FloatArray

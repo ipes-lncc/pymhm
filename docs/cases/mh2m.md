@@ -1,9 +1,8 @@
 # Three-field multiscale Darcy: MH²M
 
-`solve_mh2m` implements the two-dimensional three-field method of de Barros,
-Madureira and Valentin, using the local operators and pressure-trace system in
-equations (25)–(29) of
-[A Three-Field Multiscale Method](https://arxiv.org/abs/2404.16978v3)
+`solve_mh2m` implements the two-dimensional three-field method of
+[de Barros, Madureira and Valentin (2026)](https://arxiv.org/abs/2404.16978v3), using its local operators and pressure-trace
+system in equations (25)–(29)
 (version 3, 5 August 2026). It has two independently specified interface spaces:
 a globally continuous pressure trace $\Gamma_{H_\Gamma}$ and a broken conormal
 space $\Lambda_{H_\Lambda}$. Refining $\Lambda$ changes local operators without
@@ -209,7 +208,7 @@ family and the independent interface spaces, not a numerical reproduction of
 Figures 5–8.
 
 The separate [oscillatory-material study](mh2m-heterogeneous.md) uses
-$\gamma=1.8$ and the source specified in de Barros's thesis, retaining the
+$\gamma=1.8$ and the source specified by [de Barros (2022)](https://www.lncc.br/~alm/students/frankdissert.pdf), retaining the
 article's $\varepsilon=1/14$. It checks a longer classical-reference series,
 includes Figure 5's stated mesh parameters, and tests the local injectivity
 requirement when the conormal partition is refined independently. Its data
@@ -341,3 +340,9 @@ The polygonal driver and the published-case studies on this page are
 two-dimensional. Their verification does not establish uniform stability for
 arbitrary independent face partitions. The tetrahedral implementation and its
 separate dimensional verification are described on the [MH/MH²M 3D page](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mh3d.md).
+
+## References
+
+- Franklin de Barros, Alexandre L. Madureira, and Frédéric Valentin (2026). *A three-field Multiscale Method*. arXiv preprint, version 3, 5 August 2026; first submitted 25 April 2024. [arXiv: 2404.16978v3](https://arxiv.org/abs/2404.16978v3).
+
+- Franklin da Conceição de Barros (2022). *The Multiscale Hybrid-Hybrid-Mixed Method*. Master’s dissertation in Computational Modeling, Laboratório Nacional de Computação Científica, Petrópolis, Brazil, 77 pages. [Institutional dissertation](https://www.lncc.br/~alm/students/frankdissert.pdf).

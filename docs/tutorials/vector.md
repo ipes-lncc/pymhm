@@ -8,6 +8,16 @@ data are nonhomogeneous; `homogeneous=True` supplies zero fields and loads.
 These controls demonstrate the stated discrete formulations. Convergence
 studies and literature comparisons are documented separately in the case gallery.
 
+The primal elasticity construction follows
+[Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046),
+the displacement–pressure GaLS construction follows
+[Gomes, Pereira and Valentin (2024, preprint v1)](https://arxiv.org/abs/2403.16890v1),
+and the two-dimensional weak-symmetry mixed construction follows
+[Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013).
+The separate three-dimensional BDM stress family uses the classical
+[Arnold, Falk and Winther (2007)](https://doi.org/10.1090/S0025-5718-07-01998-9)
+spaces; it does not transfer a two-dimensional enrichment theorem to tetrahedra.
+
 The primary elasticity and Brinkman cells declare their UFL equations through
 the generic variational interface and require the Pixi `fem` kernel. Their
 method-family comparisons use the predefined solvers.
@@ -121,6 +131,13 @@ This volume form supplies neither USFEM/Oseen stabilization nor the interface
 conditions by itself. `pymhm.backends.fenics.brinkman_forms` instead defines symmetric
 strain diffusion; it has a different natural traction and rigid-motion kernel.
 
+The vector-Laplacian MHM construction and USFEM conventions follow
+[Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027).
+Stable mixed local spaces and their additional hypotheses are analyzed by
+[Araya et al. (2025)](https://doi.org/10.1137/24M1649368).
+The Oseen extension follows
+[Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8).
+
 An H(div) stress formulation also needs its stress/displacement/rotation spaces,
 weak-symmetry pairing and normal-stress treatment. Normal H(div) constraints are
 essential data in the corresponding local variational formulation. Attaching
@@ -174,6 +191,11 @@ physical gauge under the fully prescribed velocity boundary.
 
 ## A short vector Maxwell trajectory
 
+The tangential hybrid construction follows
+[Lanteri et al. (2018)](https://doi.org/10.1137/16M110037X).
+The stationary trajectory below is an original orientation and time-update
+control, rather than a reproduction of a published wave experiment.
+
 `maxwell-vector-3d` advances four steps with `dt=0.001`, unit permittivity and
 permeability, constant `E=(1.2,-0.3,0.7)` and `H=(0.4,0.8,-0.2)`. The impedance
 boundary supplies `E_tan-(H cross n)` with coefficient one. These stationary
@@ -187,3 +209,21 @@ resolution claim. The stepper checks its original tangential equations at the
 shared tolerance; its result does not expose a scalar algebraic residual, which
 the tutorial records as `null`. The broken DG curl is not an H(curl)-conforming
 reconstruction. Complex scalar Helmholtz is covered in the scalar tutorial.
+
+## References
+
+- Christopher Harder, Alexandre L. Madureira, and Frédéric Valentin (2016). *A hybrid-mixed method for elasticity*, ESAIM: M2AN 50, 311–336. [DOI: 10.1051/m2an/2015046](https://doi.org/10.1051/m2an/2015046).
+
+- Antônio Tadeu Azevedo Gomes, Weslley da Silva Pereira, and Frédéric Valentin (2024). *A low-order locking-free multiscale finite element method for isotropic elasticity*, arXiv preprint, version 1, 25 March 2024. [arXiv: 2403.16890v1](https://arxiv.org/abs/2403.16890v1).
+
+- Philippe R. B. Devloo, Agnaldo M. Farias, Sônia M. Gomes, Weslley Pereira, Antonio J. B. dos Santos, and Frédéric Valentin (2021). *New H(div)-conforming multiscale hybrid-mixed methods for the elasticity problem on polygonal meshes*, ESAIM: M2AN 55, 1005–1037. [DOI: 10.1051/m2an/2021013](https://doi.org/10.1051/m2an/2021013).
+
+- Douglas N. Arnold, Richard S. Falk, and Ragnar Winther (2007). *Mixed finite element methods for linear elasticity with weakly imposed symmetry*. Mathematics of Computation 76, 1699–1723. [DOI: 10.1090/S0025-5718-07-01998-9](https://doi.org/10.1090/S0025-5718-07-01998-9). [Preprint: arXiv:math/0701506v1](https://arxiv.org/abs/math/0701506v1).
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2017). *Multiscale hybrid-mixed method for the Stokes and Brinkman equations—The method*, Computer Methods in Applied Mechanics and Engineering 324, 29–53. [DOI: 10.1016/j.cma.2017.05.027](https://doi.org/10.1016/j.cma.2017.05.027).
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2025). *Multiscale Hybrid-Mixed Methods for the Stokes and Brinkman Equations—A Priori Analysis*, SIAM Journal on Numerical Analysis 63(2), 588–618. [DOI: 10.1137/24M1649368](https://doi.org/10.1137/24M1649368).
+
+- Rodolfo Araya, Cristian Cárcamo, Abner H. Poza, and Frédéric Valentin (2021). *An adaptive multiscale hybrid-mixed method for the Oseen equations*, Advances in Computational Mathematics 47, article 15. [DOI: 10.1007/s10444-020-09833-8](https://doi.org/10.1007/s10444-020-09833-8).
+
+- Stéphane Lanteri, Diego Paredes, Claire Scheid, and Frédéric Valentin (2018). *The Multiscale Hybrid-Mixed method for the Maxwell Equations in Heterogeneous Media*. Multiscale Modeling & Simulation 16(4) 1648-1683. [DOI: 10.1137/16M110037X](https://doi.org/10.1137/16M110037X).

@@ -4,7 +4,7 @@ The mixed stress formulation accepts a full anisotropic compliance, including
 spatially varying coefficients. This analytical study checks that capability on
 triangular, rectangular and nonconvex polygonal macro meshes. It extends the
 weak-symmetry formulation of
-[the 2021 MHM elasticity paper](https://doi.org/10.1051/m2an/2021013);
+[Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013);
 the material and manufactured solution below define a reproducible verification
 problem rather than a reproduction of a figure from that paper.
 
@@ -162,3 +162,7 @@ constitutive data and the independently differentiated source.
 The independently reevaluated polynomial display fields and projection norms
 are recorded in `elasticity-field-sampling.json` in the same directory.
 The four-level projection decomposition is saved in `elasticity-projection.json`.
+
+## References
+
+- Philippe R. B. Devloo, Agnaldo M. Farias, Sônia M. Gomes, Weslley Pereira, Antonio J. B. dos Santos, and Frédéric Valentin (2021). *New H(div)-conforming multiscale hybrid-mixed methods for the elasticity problem on polygonal meshes*, ESAIM: M2AN 55, 1005–1037. [DOI: 10.1051/m2an/2021013](https://doi.org/10.1051/m2an/2021013).

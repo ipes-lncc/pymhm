@@ -5,7 +5,7 @@ Continuous tetrahedral local spaces solve the interior problems, while
 `PolygonalSkeleton3D` supplies one constant or one affine polynomial on each
 original macroface. Triangulation diagonals carry no independent global traces.
 This realizes the polyhedral geometry allowed by the generalized RAD formulation
-of [Araya, Jaillet, Paredes and Valentin (2024)](https://doi.org/10.1016/j.cma.2024.117089).
+of [Araya et al. (2024)](https://doi.org/10.1016/j.cma.2024.117089).
 
 ## Geometry and spaces
 
@@ -169,3 +169,7 @@ pixi run -e notebooks python examples/plot_polyhedral_rad.py
 Numerical summaries and source hashes are in `examples/results/polyhedral-rad.json`;
 local coefficients used by the figures are in `build/results/polyhedral-rad`.
 Notebook 49 reads those summaries and figures without rerunning the campaign.
+
+## References
+
+- Rodolfo Araya, Fabrice Jaillet, Diego Paredes, and Frédéric Valentin (2024). *Generalizing the multiscale hybrid-mixed method for reactive-advective-diffusive equations*, Computer Methods in Applied Mechanics and Engineering 428, 117089. [DOI: 10.1016/j.cma.2024.117089](https://doi.org/10.1016/j.cma.2024.117089).

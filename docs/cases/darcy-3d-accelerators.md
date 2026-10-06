@@ -299,10 +299,10 @@ reference has no assigned accelerator speedup.
 
 These finite node-local observations do not establish asymptotic or multi-node
 scaling. The local/trace space distinction and fixed-trace pressure floor remain
-scientific limitations. [Gomes et al.](https://arxiv.org/abs/1703.10435) motivate
+scientific limitations. [Gomes et al. (2017, preprint v1)](https://arxiv.org/abs/1703.10435v1) motivate
 independent MHM local work and CPU direct solvers; the present hexahedral
 manufactured application differs from their cluster experiment.
-[Penna et al.](https://doi.org/10.1002/cpe.5170) motivate workload-aware scheduling;
+[Penna et al. (2019)](https://doi.org/10.1002/cpe.5170) motivate workload-aware scheduling;
 their reported gains are not assigned to this implementation.
 
 [Intel PARDISO](https://www.intel.com/content/www/us/en/docs/onemkl/developer-reference-c/2025-0/pardiso.html),
@@ -311,3 +311,9 @@ their reported gains are not assigned to this implementation.
 capabilities. Independent local device owners in this study differ from a
 distributed global-matrix GPU solver. Executed bindings, profiles and resources
 determine the verified scope of each recorded acquisition.
+
+## References
+
+- Antônio Tadeu A. Gomes, Weslley S. Pereira, Frédéric Valentin, and Diego Paredes (2017). *On the Implementation of a Scalable Simulator for Multiscale Hybrid-Mixed Methods*, arXiv preprint, version 1, 30 March 2017. [arXiv: 1703.10435v1](https://arxiv.org/abs/1703.10435v1).
+
+- Pedro Henrique Penna, Antônio Tadeu A. Gomes, Márcio Castro, Patricia D.M. Plentz, Henrique C. Freitas, François Broquedis, and Jean‐François Méhaut (2019). *A comprehensive performance evaluation of the BinLPT workload‐aware loop scheduler*. Concurrency and Computation: Practice and Experience 31(18) e5170. [DOI: 10.1002/cpe.5170](https://doi.org/10.1002/cpe.5170).

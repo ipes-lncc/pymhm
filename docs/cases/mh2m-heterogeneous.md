@@ -1,7 +1,7 @@
 # MH²M with an oscillatory permeability
 
 This study uses the scalar coefficient in equation (61) of
-[de Barros, Madureira and Valentin, version 3](https://arxiv.org/abs/2404.16978v3):
+[de Barros, Madureira and Valentin (2026)](https://arxiv.org/abs/2404.16978v3):
 
 $$
 \begin{aligned}
@@ -20,7 +20,7 @@ $$
 The article explicitly gives $\varepsilon=1/14$, homogeneous pressure on the
 unit square, and local/interface degrees $P_1/P_0/P_1$. Section 8.2 does not
 specify $\gamma$ or restate the source. The preceding
-[MH²M dissertation by Barros (2022)](https://www.lncc.br/~alm/students/frankdissert.pdf)
+[de Barros (2022)](https://www.lncc.br/~alm/students/frankdissert.pdf)
 does specify both: Section 4.2.2.1, Equation (4.4), printed page 62
 (PDF page 64), gives $\gamma=1.8$ and uses the forcing of Equation (4.1),
 printed page 54 (PDF page 56). These are exactly the coefficient parameter
@@ -99,7 +99,7 @@ distinct from this verification.
 
 ## Recovered crisscross geometry
 
-Figure 4 of the [2022 dissertation](https://www.lncc.br/~alm/students/frankdissert.pdf),
+Figure 4 of the [de Barros (2022)](https://www.lncc.br/~alm/students/frankdissert.pdf),
 printed page 54 (PDF page 56), shows northwest-to-southeast macro diagonals
 uniformly throughout the square, and a Cartesian fine grid split across both
 diagonals. Definition 4.2.1, printed page 55, partitions **each** macroface
@@ -548,3 +548,9 @@ The $P_1$ controls use a separate global conforming assembly with the
 package's shared finite-element kernels. The additional $P_3$ reference is
 assembled independently with DOLFINx/UFL. Both are numerical references,
 not exact solutions.
+
+## References
+
+- Franklin de Barros, Alexandre L. Madureira, and Frédéric Valentin (2026). *A three-field Multiscale Method*. arXiv preprint, version 3, 5 August 2026; first submitted 25 April 2024. [arXiv: 2404.16978v3](https://arxiv.org/abs/2404.16978v3).
+
+- Franklin da Conceição de Barros (2022). *The Multiscale Hybrid-Hybrid-Mixed Method*. Master’s dissertation in Computational Modeling, Laboratório Nacional de Computação Científica, Petrópolis, Brazil, 77 pages. [Institutional dissertation](https://www.lncc.br/~alm/students/frankdissert.pdf).

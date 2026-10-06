@@ -91,7 +91,7 @@ f=12\pi^2p,\qquad K=I,
 $$
 
 on the unit cube with homogeneous pressure data. This is the PDE in the 3D
-performance example of [Gomes et al., §5](https://arxiv.org/abs/1703.10435).
+performance example of [Gomes et al. (2017, preprint v1), §5](https://arxiv.org/abs/1703.10435v1).
 The present study uses Freudenthal macrotriangulations and deterministic local
 red refinement: six macrotetrahedra per Cartesian cube, 64 fine tetrahedra and
 165 P2 unknowns per macrocell, with four P0 trace subtriangles per macroface.
@@ -156,3 +156,7 @@ pixi run -e meshing pytest tests/test_meshing3d.py -m meshing
 
 [Acquisition record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/darcy3d.json)
 and notebook `29_darcy3d.ipynb` retain the discretization, source hashes and checks.
+
+## References
+
+- Antônio Tadeu A. Gomes, Weslley S. Pereira, Frédéric Valentin, and Diego Paredes (2017). *On the Implementation of a Scalable Simulator for Multiscale Hybrid-Mixed Methods*, arXiv preprint, version 1, 30 March 2017. [arXiv: 1703.10435v1](https://arxiv.org/abs/1703.10435v1).

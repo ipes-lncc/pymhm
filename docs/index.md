@@ -27,9 +27,9 @@ approximation and linear solvers are separate choices.
     <strong>Install PyMHM</strong>
     <span>Set up the portable core and choose optional native backends.</span>
   </a>
-  <a href="tutorials/">
-    <strong>Compose a problem</strong>
-    <span>Explore local equations, global traces and executable notebooks.</span>
+  <a class="pymhm-tutorial-card" href="tutorials/overview/">
+    <strong>Start the tutorials</strong>
+    <span>New to PyMHM? Learn the API step by step with introductory cases, rendered code and field plots.</span>
   </a>
   <a href="cases/">
     <strong>Inspect the evidence</strong>
@@ -46,22 +46,35 @@ The [Windows guide](windows.md) covers the portable core, SciPy/PyPardiso,
 spawn workers and installed-wheel verification, with the native FEM scope
 stated separately.
 
-Start with the [variational guide](variational.md) and
-[introductory tutorials](tutorials.md) for scalar and vector
+Start with the [API overview tutorial](tutorials/overview.md) and the
+[rendered introductory course](tutorials.md) for scalar and vector
 formulations and interchangeable local providers. Use the
 [visual case gallery](cases/index.md) to compare numerical fields
 with exact references, inspect profiles and errors, and read what each case is
 expected to demonstrate.
 
-```python
-from pymhm import assemble
-from examples.tutorial_local_provider import build_problem
+The overview derives a small Galerkin problem from its weak form. Its two
+macrointervals contribute to one shared interface coordinate:
 
-# The notebook's provider declares primal or mixed local forms and global rows.
-problem = build_problem(formulation="primal", boundary="dirichlet")
+```python
+from pymhm import Equation, LocalEquations, MultiscaleProblem, assemble
+
+
+def local_equations(cell: int) -> LocalEquations:
+    """Declare the local volume equation and its interface contribution."""
+    return LocalEquations(
+        a=[[8.0]], L=[0.25], b=[[-4.0]],
+        c=[[-4.0]], d=[[4.0]], g=[0.125], dofs=[0],
+    )
+
+
+problem = MultiscaleProblem(
+    global_equation=Equation(0, 0), local_provider=local_equations,
+    items=(0, 1), trace_size=1, coarse_sizes=(0, 0),
+)
 system = assemble(problem)
 solution = system.solve()
-print(solution.trace)
+print(solution.trace)  # [0.125]
 ```
 
 The [vector UFL notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/vector_ufl.ipynb)

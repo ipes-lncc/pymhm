@@ -1,5 +1,6 @@
 """Replay general-tensor primal and rectangular mixed-elasticity numerical archives."""
 
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -75,8 +76,12 @@ def fields(record: dict, path: Path, directory: Path) -> None:
         save(figure, directory, path.stem + "-fields")
 
 
-def primal() -> None:
-    """Compare six declared primal spaces/materials and label jumps as indicators only."""
+def primal(*, include_fields: bool = True) -> None:
+    """Compare six primal spaces and optionally replay their archived spatial fields.
+
+    Convergence curves use compact JSON records; spatial fields additionally
+    require the original NPZ payloads. Face jumps remain indicators only.
+    """
     data = ROOT / "examples/results/primal-elasticity"
     output = ROOT / "docs/figures/primal-elasticity"
     for variable in (False, True):
@@ -100,15 +105,17 @@ def primal() -> None:
                 (
                     "Displacement L² error",
                     "Raw stress L² error",
-                    "L17 face indicator η (not full error)",
+                    "Face indicator η (not full error)",
                 ),
                 strict=True,
             ):
                 axis.loglog(h, [r[key] for r in rows], "o-", label=label)
                 axis.set(xlabel="Macro spacing 1/n", ylabel=title)
                 axis.grid(True, which="both", alpha=0.25)
-            fields(record, path, output)
+            if include_fields:
+                fields(record, path, output)
         axes[0].legend(fontsize=8)
+        axes[2].set_title("Harder et al. (2016)")
         figure.suptitle(
             f"{name.capitalize()} anisotropic stiffness — P1 macro traces, "
             "homogeneous displacement boundary"
@@ -160,8 +167,14 @@ def mixed_rectangular() -> None:
 
 def main() -> None:
     """Render archived results without solving or importing any reference-code runner."""
-    primal()
-    mixed_rectangular()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--convergence-only", action="store_true", help="Render primal curves from compact records"
+    )
+    args = parser.parse_args()
+    primal(include_fields=not args.convergence_only)
+    if not args.convergence_only:
+        mixed_rectangular()
 
 
 if __name__ == "__main__":

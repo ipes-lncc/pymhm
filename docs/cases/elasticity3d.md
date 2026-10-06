@@ -1,7 +1,7 @@
 # General-tensor elasticity in three dimensions
 
 `solve_elasticity_3d` implements the primal tetrahedral MHM construction of
-[L17](../literature.md), including all six rigid motions. It accepts continuous
+[Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046), including all six rigid motions. It accepts continuous
 local P1–P4 displacement fields, triangular vector traces containing P1, mixed
 physical boundary conditions and pure traction with six prescribed displacement
 moments. General stiffness is supplied as a symmetric positive-definite 6×6
@@ -35,7 +35,7 @@ Native DOLFINx/UFL assembly tests compare complete P1–P4 matrices and loads on
 a sheared tetrahedron with a spatially varying anisotropic stiffness. Additional
 patches verify variable coefficients, component ordering, traction signs, six
 rigid gauges and segmented traces. These checks complement the following
-original numerical cases; L17 itself does not specify a numerical benchmark.
+original numerical cases; the paper by [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046) itself does not specify a numerical benchmark.
 
 ## Spatial convergence with variable anisotropy
 
@@ -111,3 +111,7 @@ records and field hashes are stored in `examples/results/elasticity3d/`.
 in `docs/figures/elasticity3d/field-sampling.json`. Notebook
 `35_elasticity3d.ipynb` presents the archived results without rerunning the
 numerical campaign.
+
+## References
+
+- Christopher Harder, Alexandre L. Madureira, and Frédéric Valentin (2016). *A hybrid-mixed method for elasticity*, ESAIM: M2AN 50, 311–336. [DOI: 10.1051/m2an/2015046](https://doi.org/10.1051/m2an/2015046).

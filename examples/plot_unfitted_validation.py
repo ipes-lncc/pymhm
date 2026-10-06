@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -110,9 +111,16 @@ def published_comparison(rows: list[dict], published: dict) -> None:
     for setting, marker in (("S1", "x"), ("S2", "o")):
         values = [row["gradient_l2"] for row in rows if row["setting"] == setting]
         axes[0].semilogx(x, values, marker + "-", label=f"PyMHM {setting}")
-    axes[0].semilogx(x, published["S1"]["errors"], "k+--", label="L10 Fig. 5, S1 ticks")
+    axes[0].semilogx(
+        x, published["S1"]["errors"], "k+--", label="Chaumont-Frelet et al. (2026), Fig. 5, S1"
+    )
     axes[0].axhline(rows[0]["gradient_l2"], color="C2", label="PyMHM S0")
-    axes[0].axhline(published["S0"]["error"], color="black", ls=":", label="L10 Fig. 5, S0 tick")
+    axes[0].axhline(
+        published["S0"]["error"],
+        color="black",
+        ls=":",
+        label="Chaumont-Frelet et al. (2026), Fig. 5, S0",
+    )
     axes[0].set(xlabel="Macro perturbation δ", ylabel="Absolute broken-gradient L² error")
     fitted = json.loads((DATA / "mhm-fitted-r16.json").read_text())
     unfitted = json.loads((DATA / "mhm-r16.json").read_text())
@@ -130,7 +138,10 @@ def published_comparison(rows: list[dict], published: dict) -> None:
     for axis in axes:
         axis.grid(alpha=0.2)
         axis.legend(fontsize=8)
-    figure.suptitle("PyMHM P4 / trace P2 · printed L10 values are rounded, not solver data")
+    figure.suptitle(
+        "PyMHM P4 / trace P2 · Chaumont-Frelet et al. (2026)\n"
+        "Printed values are rounded, not solver data"
+    )
     save(figure, "publication-comparison")
 
 
@@ -216,8 +227,19 @@ def transmission(fields: list[dict[str, np.ndarray]]) -> None:
 
 def main() -> None:
     """Validate archived samples and regenerate figures plus their physical diagnostics."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--publication-only",
+        action="store_true",
+        help="Render published comparisons from compact records",
+    )
+    args = parser.parse_args()
     rows = json.loads((DATA / "mhm-fitted-r16.json").read_text())
     published = json.loads((DATA / "published-figure5.json").read_text())
+    if args.publication_only:
+        (ROOT / "docs/figures/unfitted").mkdir(parents=True, exist_ok=True)
+        published_comparison(rows, published)
+        return
     fields = [read_flux(setting) for setting in ("S0", "S1", "S2")]
     metrics = []
     for setting, data in zip(("S0", "S1", "S2"), fields, strict=True):

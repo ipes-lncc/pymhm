@@ -318,3 +318,7 @@ Notebook `60_mesh_exchange.ipynb` demonstrates the four in-memory geometries and
 real meshio round trips. For generator-specific CAD construction, consult the
 [Gmsh API](https://gmsh.info/doc/texinfo/) and
 [Netgen three-dimensional CSG tutorial](https://docu.ngsolve.org/latest/netgen_tutorials/csg_3d.html).
+
+## References
+
+- M. Cecilia Rivara (1984). *Algorithms for refining triangular grids suitable for adaptive and multigrid techniques*. International Journal for Numerical Methods in Engineering 20(4), 745–756. [DOI: 10.1002/nme.1620200412](https://doi.org/10.1002/nme.1620200412).

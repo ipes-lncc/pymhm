@@ -23,7 +23,9 @@
       });
       document.body.append(dialog);
     }
-    document.querySelectorAll(".md-content img[src*='figures/']").forEach(image => {
+    document.querySelectorAll(
+      ".md-content img[src*='figures/'], .md-content img[src*='assets/tutorials/']"
+    ).forEach(image => {
       if (image.dataset.scientificFigure) return;
       image.dataset.scientificFigure = "true";
       image.tabIndex = 0;
@@ -37,7 +39,10 @@
         dialog.querySelector("a").href = image.src;
         dialog.showModal();
       };
-      image.addEventListener("click", open);
+      image.addEventListener("click", event => {
+        event.preventDefault();
+        open();
+      });
       image.addEventListener("keydown", event => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();

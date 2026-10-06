@@ -1,15 +1,15 @@
-# Examples and notebooks by problem
+# Learn PyMHM: tutorials and notebooks
 
-All instructional examples are Jupyter notebooks. Start with the ten
-self-contained notebooks in `notebooks/introduction`, then select a problem
-folder for additional formulations, convergence and literature comparisons.
-Each notebook identifies its methods, local spaces, interface convention and
-physical gauge.
+Start with the [API overview](tutorials/overview.md): define local equations,
+couple them through global traces, assemble, solve and reconstruct a field.
+Then follow the introductory problems below. Their pages show the mathematical
+formulations, executable code, measured outputs and plots directly in the docs.
+The ten source notebooks remain available for interactive use. Select a plot
+to enlarge it, or use its original image to inspect the field labels and scales.
 
 ## Self-contained introductory course
 
-The [introduction index](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/README.md)
-provides a suggested reading order and execution instructions. Each notebook
+Each tutorial
 defines its data, weak forms, operator assembly, local problems, global equations,
 classical baseline and field plots in its own cells. The primary path writes
 executable UFL weak forms before introducing prepared operator functions as
@@ -17,21 +17,29 @@ conveniences. Geometry adapters and low-level assembly details are separate from
 the physical formulation. The notebooks use the generic `LocalEquations`, `Equation` and
 `MultiscaleProblem` contracts and are written in English.
 
-| Problem | Notebook |
+Read Darcy convergence first, then choose a scalar or vector application. The
+parallel tutorials assume familiarity with this local/global workflow.
+
+| Problem | Read the rendered tutorial |
 | --- | --- |
-| Oscillatory Darcy and convergence | [Multiscale Darcy](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_multiscale_convergence.ipynb) |
-| Parallel local solves and performance | [Darcy speed-up and scalability](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_parallel_scalability.ipynb) |
-| Spawned processes and complete workflow scaling | [Darcy process scalability](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_process_scalability.ipynb) |
-| Three-dimensional local AMG and parallel comparisons | [Darcy 3D scalability](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb) |
-| Reservoir permeability | [Darcy on a SPE10 layer](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_spe10_layer.ipynb) |
-| Heterogeneous vector elasticity | [Multiscale elasticity](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/multiscale_elasticity.ipynb) |
-| Cell and face moment reconstruction | [MsHHO](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/mshho_multiscale.ipynb) |
-| Independent skeletal spaces | [MH²M](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/mh2m_multiscale.ipynb) |
-| Reaction-dominated local layers | [MHM-USFEM](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/mhm_usfem_rad.ipynb) |
-| Analytical velocity and pressure layers | [Stokes–Brinkman convergence](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/stokes_brinkman_boundary_layer.ipynb) |
+| Oscillatory Darcy and convergence | [Multiscale Darcy](tutorials/introduction/darcy_multiscale_convergence.md) |
+| Reservoir permeability | [Darcy on a SPE10 layer](tutorials/introduction/darcy_spe10_layer.md) |
+| Heterogeneous vector elasticity | [Multiscale elasticity](tutorials/introduction/multiscale_elasticity.md) |
+| Cell and face moment reconstruction | [MsHHO](tutorials/introduction/mshho_multiscale.md) |
+| Independent skeletal spaces | [MH²M](tutorials/introduction/mh2m_multiscale.md) |
+| Reaction-dominated local layers | [MHM-USFEM](tutorials/introduction/mhm_usfem_rad.md) |
+| Analytical velocity and pressure layers | [Stokes–Brinkman convergence](tutorials/introduction/stokes_brinkman_boundary_layer.md) |
+| Parallel local solves and performance | [Darcy speed-up and scalability](tutorials/introduction/darcy_parallel_scalability.md) |
+| Spawned processes and complete workflow scaling | [Darcy process scalability](tutorials/introduction/darcy_process_scalability.md) |
+| Three-dimensional local AMG and parallel comparisons | [Darcy 3D scalability](tutorials/introduction/darcy_3d_parallel_scalability.md) |
+
+Each page links to its source notebook and gives a command for reproducing it
+from a repository checkout. The native UFL examples use the locked
+`introduction` environment. The [installation guide](installation.md) explains
+the portable pip installation and optional native backends separately.
 
 ```bash
-pixi run --locked -e introduction notebooks-run introduction --timeout 1800
+pixi run --locked -e introduction notebooks-run introduction/darcy_multiscale_convergence.ipynb --timeout 1800
 ```
 
 Every example compares with a classical conforming method on several finer
@@ -52,6 +60,12 @@ user-written equations before their comparisons of established formulations.
 The main computational paths declare local and global forms. Comparisons and
 scientific acquisition helpers also use predefined formulations with their
 verified discretizations; archive-only notebooks display the recorded results.
+
+Rendered pages preserve the outputs of the completed acquisitions. Performance
+measurements belong to their recorded hardware and configurations; rendering a
+page does not run a new timing campaign. The plots and numerical outputs retain
+the notebook's distinction between analytical solutions and classical numerical
+references.
 
 ## Introductory examples
 
@@ -117,6 +131,18 @@ A folder selects its notebooks recursively. Use a qualified path when different
 folders contain the same filename. Historical numeric identifiers remain valid.
 Executed copies are written to `build/notebooks` with the same subfolders; the
 source notebooks remain unexecuted in Git.
+
+To refresh the ten rendered introductory pages after executing their notebooks:
+
+```bash
+pixi run --locked -e introduction tutorials-render
+pixi run --locked -e docs docs-check
+```
+
+The renderer requires complete executed copies whose cell sources match the
+current notebooks. It writes Markdown, plot assets and a digest manifest;
+ordinary documentation builds use these saved pages and require no FEM solves
+or performance acquisitions.
 
 Some detailed studies read large locally computed fields and publication images.
 Their dependency inventory checks the selected notebooks before execution:

@@ -168,6 +168,27 @@ verification of an analytical problem from reproduction of a specific table.
 Do not use rounded paper values as an exact algebraic oracle. Store numerical
 outputs with environment and hardware provenance when measuring performance.
 
+### Cite the literature on each page
+
+Use an author–year citation beside the mathematical statement, theorem,
+comparison or attributed figure. Link it to the publisher's DOI record or to
+the exact version of an arXiv or HAL preprint. For example,
+`[Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019)`
+identifies the source without requiring a reader to interpret catalog codes.
+Include a `## References` section on the same page with the full authors,
+title, venue, year and persistent link for every work cited. Retain theorem,
+equation and section numbers beside the claim they support.
+
+The [literature catalog](literature.md) explains the scope of the methods; a
+link to that catalog does not replace a page's bibliography. Distinguish a
+preprint version from its journal publication, and distinguish an original
+PyMHM application from a reproduction of an article's numerical experiment.
+References in rendered introductory tutorials belong in their source
+notebooks. Regenerate those pages with
+`pixi run --locked -e introduction tutorials-render` after editing notebook
+Markdown; preserve the recorded execution and numerical outputs when only
+the exposition changes.
+
 Identify each reference implementation by its project name, module, revision
 and source URL when available. State whether the result comes from an unchanged
 application, an instrumented driver, or an independently assembled restriction.

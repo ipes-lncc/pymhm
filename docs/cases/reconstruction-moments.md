@@ -180,3 +180,7 @@ pixi run -e notebooks python examples/plot_reconstruction_moments.py
 The [archived numerical records](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/reconstruction-moments.json)
 and notebook `18_reconstruction_moments.ipynb` expose the measured errors and
 conservation quantities.
+
+## References
+
+- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).

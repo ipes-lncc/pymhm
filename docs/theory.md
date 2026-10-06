@@ -34,6 +34,9 @@ modes, independently of the normal sign.
 
 ## Darcy: primal local problems
 
+The primal hybridization follows [Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019); its elliptic
+analysis and estimator are developed by [Araya et al. (2013)](https://doi.org/10.1137/120888223).
+
 For a symmetric uniformly positive definite tensor $\mathsf K$, consider
 
 $$
@@ -86,6 +89,9 @@ normalization, such as $\int_\Omega p=0$, then fixes uniqueness. Prescribing
 all macroelement means to zero would remove physical coarse unknowns.
 
 ## Local matrices and condensation
+
+The decomposition into local complements and operator kernels follows
+[Harder and Valentin (2016)](https://doi.org/10.1007/978-3-319-41640-3_13).
 
 Write a local discrete hybrid equation as
 
@@ -209,7 +215,7 @@ global work. If the pressure space contains each microelement constant and
 quadrature is consistent, the divergence equation enforces microelement mass
 balance. The matching normal trace across every face gives global H(div)
 conformity. The lowest-order Raviart–Thomas pair uses a discontinuous constant
-pressure and is only the first member of the mixed family in L05.
+pressure and is only the first member of the mixed family in [Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013).
 
 A primal local solve gives a broken raw flux
 $q_h^{\rm raw}=-\mathsf K\nabla p_h$. Its normal component generally jumps
@@ -230,12 +236,12 @@ $$
 
 The fine-cell balance and prescribed trace must be compatible. The current
 operator requires piecewise constant trace segments aligned with fine boundary
-edges. It is not the face-moment reconstruction analyzed in L09: its defining
+edges. It is not the face-moment reconstruction analyzed in [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073): its defining
 constraints enforce fine-cell source moments explicitly.
 
 ## Stokes and Brinkman
 
-The convention in L13 and L16 is
+The convention used by [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) and [Araya et al. (2025)](https://doi.org/10.1137/24M1649368) is
 
 $$
 -\nu\Delta u+\Theta u+\nabla p=f,\qquad\nabla\cdot u=0.
@@ -277,7 +283,7 @@ pressure unknowns changes the formulation.
 
 Stable mixed local spaces, such as Taylor–Hood under the relevant mesh conditions,
 and stabilized equal-order spaces are both possible. The USFEM construction in
-L13 uses the momentum residual
+[Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) uses the momentum residual
 $R(u,p)=-\nu\Delta u+\Theta u+\nabla p$ and a matching test residual.
 Its load stabilization must be included as well. Keeping only a pressure-gradient
 penalty when Brinkman drag is present does not reproduce that formulation.
@@ -303,7 +309,7 @@ $$
 {\max(\gamma h_\tau^2,12\nu)+12\nu}.
 $$
 
-This is the L13 parameter with $m_\tau=1/3$, written without division by drag;
+This is the stabilization parameter of [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) with $m_\tau=1/3$, written without division by drag;
 its Stokes limit is $h_\tau^2/(24\nu)$. The minus sign in the residual term
 and the stabilized force are essential. The formula by itself is not a proof of
 uniform Darcy-limit accuracy for every local/skeletal space combination.
@@ -318,8 +324,8 @@ $$
 {\max(\theta_{\max,\tau}h_\tau^2,4\nu/m_\tau)+4\nu/m_\tau}.
 $$
 
-The largest resistance eigenvalue is the tensor bound in L16. For a scalar
-constant resistance this reduces to L13. The two papers state their inverse
+The largest resistance eigenvalue is the tensor bound in [Araya et al. (2025)](https://doi.org/10.1137/24M1649368). For a scalar
+constant resistance this reduces to the parameter in [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027). The two papers state their inverse
 inequalities using different squared/unsquared constant conventions; the
 computed constant above is defined by the displayed squared inequality.
 The local residual retains every component of $\Theta u$, including
@@ -330,11 +336,11 @@ The API makes the material parameter convention explicit:
 - `stabilization="tensor-2025"` uses the largest eigenvalue over the fine cell
   and is the default.
 - `stabilization="minimum-2017"` uses the minimum-eigenvalue expression printed
-  in L13 with a declared global lower bound `gamma_min`.
+  in [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) with a declared global lower bound `gamma_min`.
 - `stabilization="pointwise-2017"` evaluates that expression using the smallest
   eigenvalue at each integration point.
 
-L13 does not specify how its minimum is evaluated spatially for a heterogeneous
+The article by [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) does not specify how its minimum is evaluated spatially for a heterogeneous
 coefficient. These options expose that distinction; their names do not establish
 which was used in the historical program. A global lower bound does not control
 the negative squared-residual term in a much more resistant cell. For example,
@@ -355,7 +361,7 @@ normal continuity of the skeletal multiplier.
 
 ## Reactive–advective–diffusive equations
 
-The conservative model in L11–L12 is
+The conservative model in [Harder, Paredes and Valentin (2015)](https://doi.org/10.1137/130938499) and [Araya et al. (2024)](https://doi.org/10.1016/j.cma.2024.117089) is
 
 $$
 \nabla\cdot(-\mathsf K\nabla u+\alpha u)+\sigma u=f,
@@ -379,7 +385,7 @@ The physical transport flux is $j=-\mathsf K\nabla u+\alpha u$.
 These fields have different boundary balances, so the half-advection multiplier
 must not be inserted into a transport conservation diagnostic as if it were $j$.
 
-L12 defines the coarse constant space from the kernel of $a_K$ on each cell.
+[Araya et al. (2024)](https://doi.org/10.1016/j.cma.2024.117089) defines the coarse constant space from the kernel of $a_K$ on each cell.
 Positive effective reaction removes it; pure diffusion retains it. Divergence-free
 advection tangent to the cell boundary can also retain it. This explains the
 transition between skeletal systems with and without coarse constants. It also
@@ -423,7 +429,7 @@ benchmark.
 
 ## Oseen
 
-For prescribed convection $\alpha$, L15 considers
+For prescribed convection $\alpha$, [Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8) considers
 
 $$
 -\nu\Delta u+(\alpha\cdot\nabla)u+\gamma u+\nabla p=f,
@@ -469,7 +475,7 @@ the multiplier is $\lambda_K=-\tau n_K$. Some elasticity papers use
 $+\tau n_K$ and reverse the boundary signs; both conventions are valid when
 used consistently.
 
-The mixed weak-symmetry formulation of L18 uses stress in a tensor H(div) space,
+The mixed weak-symmetry formulation of [Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013) uses stress in a tensor H(div) space,
 displacement in a discontinuous space, and a rotation multiplier. In two dimensions,
 the weak symmetry equation tests $\tau_{12}-\tau_{21}$ against the rotation
 space. It enforces stress symmetry in moments, not necessarily pointwise.
@@ -482,7 +488,7 @@ $$
 \nabla\cdot u+\lambda_L^{-1}p=0.
 $$
 
-L19 combines this local mixed form with consistent least-squares stabilization and
+The method of [Gomes, Pereira and Valentin (2024, preprint v1)](https://arxiv.org/abs/2403.16890v1) combines this local mixed form with consistent least-squares stabilization and
 rigid-motion constraints. A primal displacement-only local method can lock as
 $\lambda_L/G\to\infty$. Accurate affine patches at one Poisson ratio cannot
 establish a locking-free claim; displacement, pressure, stress, and conditioning
@@ -510,7 +516,7 @@ derivative and material bounds used in the stabilization inequality. The
 inverse constant is computed without an exact solution or measured error.
 In two dimensions, a linear traction segment needs four fine intervals for
 P1, two for P2 and one for P3; the implemented sufficient conditions follow
-L19 Lemma 4.5 and reject incompatible trace/local choices before elimination.
+[Gomes, Pereira and Valentin (2024, preprint v1)](https://arxiv.org/abs/2403.16890v1) Lemma 4.5 and reject incompatible trace/local choices before elimination.
 
 A full displacement boundary determines the physical integral identity
 
@@ -534,7 +540,7 @@ vector displacement and discontinuous P1 scalar rotation. All local rigid
 motions are represented exactly; the rotation component of a rigid mode is
 retained together with its displacement. Physical traction moments restrict
 the macro boundary. Exterior faces may carry higher-resolution tractions than
-interior faces, following L18's construction. Compliance is evaluated through
+interior faces, following [Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013)'s construction. Compliance is evaluated through
 spherical and deviatoric parts to avoid subtracting nearly equal material
 coefficients. It supports heterogeneous isotropic Lamé fields and zero
 spherical compliance at infinite first Lamé modulus. For a fully prescribed
@@ -587,7 +593,7 @@ mesh eventually creates an error floor during a skeletal convergence study.
 Likewise, a coefficient sampled once per cell can change the PDE independently
 of finite element interpolation error.
 
-For the unfitted analysis in L10, the macro mesh may cross material interfaces,
+For the unfitted analysis in [Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016), the macro mesh may cross material interfaces,
 but every skeletal subface must belong to a single material region. Its extra
 half-order is a face-refinement statement with suitable physical-region
 regularity and sufficiently accurate local solves. It is not a blanket guarantee
@@ -595,15 +601,16 @@ for arbitrary unresolved cuts.
 
 ## Adaptivity and parallel execution
 
-The multilevel estimators in L14–L15 separate a skeletal contribution from local
+The multilevel estimators in [Araya, Rebolledo and Valentin (2021)](https://doi.org/10.1093/imanum/drz053) and [Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8) separate a skeletal contribution from local
 residual contributions. A practical adaptive step marks subfaces, assesses
 whether neighboring local errors dominate, updates affected local bases, and
 reassembles their contributions. The macro topology can remain fixed. A generic
 jump indicator is useful experimentally, but should not be called the published
 reliable estimator without all required terms and scaling.
 
-Local factorizations, multiple trace/source right-hand sides, and reconstruction
-are independent across macroelements. Assembly and the global solve remain
+The implementation study of [Gomes et al. (2017, preprint v1)](https://arxiv.org/abs/1703.10435v1) separates local and
+global work. Local factorizations, multiple trace/source right-hand sides, and
+reconstruction are independent across macroelements. Assembly and the global solve remain
 coupled. Effective implementations distinguish local assembly, factorization,
 triangular solves, global assembly, global solution, and reconstruction in their
 timings. Reuse is valid while geometry, coefficients, spaces, and stabilization
@@ -613,3 +620,35 @@ CPU workers, MPI ranks, and GPU batches exploit different levels of this
 independence. The mathematical decomposition permits these strategies but does
 not guarantee speedup. Scheduling, thread oversubscription, data transfer,
 factorization memory, and the global system determine observed performance.
+
+## References
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
+
+- Rodolfo Araya, Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *Multiscale Hybrid-Mixed Method*, SIAM Journal on Numerical Analysis 51(6), 3505–3531. [DOI: 10.1137/120888223](https://doi.org/10.1137/120888223).
+
+- Christopher Harder and Frédéric Valentin (2016). *Foundations of the MHM Method*, in *Building Bridges: Connections and Challenges in Modern Approaches to Numerical Partial Differential Equations*, Lecture Notes in Computational Science and Engineering 114, Springer. [DOI: 10.1007/978-3-319-41640-3_13](https://doi.org/10.1007/978-3-319-41640-3_13).
+
+- Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin (2019). *A multiscale hybrid method for Darcy’s problems using mixed finite element local solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244. [DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).
+
+- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2017). *Multiscale hybrid-mixed method for the Stokes and Brinkman equations—The method*, Computer Methods in Applied Mechanics and Engineering 324, 29–53. [DOI: 10.1016/j.cma.2017.05.027](https://doi.org/10.1016/j.cma.2017.05.027).
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2025). *Multiscale Hybrid-Mixed Methods for the Stokes and Brinkman Equations—A Priori Analysis*, SIAM Journal on Numerical Analysis 63(2), 588–618. [DOI: 10.1137/24M1649368](https://doi.org/10.1137/24M1649368).
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2015). *On a Multiscale Hybrid-Mixed Method for Advective-Reactive Dominated Problems with Heterogeneous Coefficients*, Multiscale Modeling & Simulation 13(2), 491–518. [DOI: 10.1137/130938499](https://doi.org/10.1137/130938499).
+
+- Rodolfo Araya, Fabrice Jaillet, Diego Paredes, and Frédéric Valentin (2024). *Generalizing the multiscale hybrid-mixed method for reactive-advective-diffusive equations*, Computer Methods in Applied Mechanics and Engineering 428, 117089. [DOI: 10.1016/j.cma.2024.117089](https://doi.org/10.1016/j.cma.2024.117089).
+
+- Rodolfo Araya, Cristian Cárcamo, Abner H. Poza, and Frédéric Valentin (2021). *An adaptive multiscale hybrid-mixed method for the Oseen equations*, Advances in Computational Mathematics 47, article 15. [DOI: 10.1007/s10444-020-09833-8](https://doi.org/10.1007/s10444-020-09833-8).
+
+- Philippe R. B. Devloo, Agnaldo M. Farias, Sônia M. Gomes, Weslley Pereira, Antonio J. B. dos Santos, and Frédéric Valentin (2021). *New H(div)-conforming multiscale hybrid-mixed methods for the elasticity problem on polygonal meshes*, ESAIM: M2AN 55, 1005–1037. [DOI: 10.1051/m2an/2021013](https://doi.org/10.1051/m2an/2021013).
+
+- Antônio Tadeu Azevedo Gomes, Weslley da Silva Pereira, and Frédéric Valentin (2024). *A low-order locking-free multiscale finite element method for isotropic elasticity*, arXiv preprint, version 1, 25 March 2024. [arXiv: 2403.16890v1](https://arxiv.org/abs/2403.16890v1).
+
+- Théophile Chaumont-Frelet, Diego Paredes, and Frédéric Valentin (2026). *Flux approximation on unfitted meshes and application to multiscale hybrid-mixed methods*, Computers & Mathematics with Applications 209, 16–27. [DOI: 10.1016/j.camwa.2026.01.016](https://doi.org/10.1016/j.camwa.2026.01.016).
+
+- Rodolfo Araya, Ramiro Rebolledo, and Frédéric Valentin (2021). *On a multiscale a posteriori error estimator for the Stokes and Brinkman equations*, IMA Journal of Numerical Analysis 41(1), 344–380. [DOI: 10.1093/imanum/drz053](https://doi.org/10.1093/imanum/drz053). An earlier version is [HAL: hal-01945934v1](https://hal.science/hal-01945934v1).
+
+- Antônio Tadeu A. Gomes, Weslley S. Pereira, Frédéric Valentin, and Diego Paredes (2017). *On the Implementation of a Scalable Simulator for Multiscale Hybrid-Mixed Methods*, arXiv preprint, version 1, 30 March 2017. [arXiv: 1703.10435v1](https://arxiv.org/abs/1703.10435v1).

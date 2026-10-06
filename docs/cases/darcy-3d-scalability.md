@@ -284,15 +284,21 @@ controls remain independent of the performance ratios.
 
 ## Literature and scope
 
-[Gomes et al. (2017)](https://arxiv.org/abs/1703.10435) separate independent local
+[Gomes et al. (2017, preprint v1)](https://arxiv.org/abs/1703.10435v1) separate independent local
 response construction from the coupled global solve, with MPI ownership and
 distributed algebra. Their published 3D experiment has different coefficients,
 tetrahedral P2 spaces, face partitions and cluster resources. This Q1
 hexahedral analytical application is not a reproduction of that timing table;
 the simplex error estimates are not asserted for these cube spaces.
 
-[Penna et al.](https://doi.org/10.1002/cpe.5170) investigate cost-aware scheduling
+[Penna et al. (2019)](https://doi.org/10.1002/cpe.5170) investigate cost-aware scheduling
 for heterogeneous MHM work. Their measured gains do not transfer to uniform
 local meshes without a matching experiment. The present curves use bounded
 node-local process execution, and establish no multi-node or large GPU gain.
 The [execution guide](../execution.md) specifies resource ownership and cleanup.
+
+## References
+
+- Antônio Tadeu A. Gomes, Weslley S. Pereira, Frédéric Valentin, and Diego Paredes (2017). *On the Implementation of a Scalable Simulator for Multiscale Hybrid-Mixed Methods*, arXiv preprint, version 1, 30 March 2017. [arXiv: 1703.10435v1](https://arxiv.org/abs/1703.10435v1).
+
+- Pedro Henrique Penna, Antônio Tadeu A. Gomes, Márcio Castro, Patricia D.M. Plentz, Henrique C. Freitas, François Broquedis, and Jean‐François Méhaut (2019). *A comprehensive performance evaluation of the BinLPT workload‐aware loop scheduler*. Concurrency and Computation: Practice and Experience 31(18) e5170. [DOI: 10.1002/cpe.5170](https://doi.org/10.1002/cpe.5170).

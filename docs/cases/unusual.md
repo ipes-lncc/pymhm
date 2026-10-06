@@ -1,7 +1,7 @@
 # Scalar MHM with UNUSUAL local stabilization
 
 PyMHM implements the scalar MHM-UNUSUAL formulation of
-[Santiago, Valentin and Martins, CILAMCE 2025](https://doi.org/10.55592/cilamce2025.v5i.14270),
+[Santiago, Valentin and Martins (2025)](https://doi.org/10.55592/cilamce2025.v5i.14270),
 Eqs. (14)–(19), for two-dimensional reaction–diffusion. The numerical evidence
 here includes independent DOLFINx/UFL operators, an executed comparison with
 **MHMUN-RAD_Parallel / FreeFem++**, and analytical tests over five spatial
@@ -296,3 +296,7 @@ replays those archives. Numerical records are available as
 [analytical results](../figures/unusual/analytical.json) and
 [native comparison](../figures/unusual/native-comparison.json), and
 [resolution control](../figures/unusual/resolution-control.json).
+
+## References
+
+- Juan Felipe Pacazuca Santiago, Frédéric Valentin, and Larissa Martins (2025). *A Multiscale Hybrid-Mixed Method with Local Stabilization*. Proceedings of the Ibero-Latin American Congress on Computational Methods in Engineering, CILAMCE 2025, volume 5, article 14270; published online 18 March 2026. [DOI: 10.55592/cilamce2025.v5i.14270](https://doi.org/10.55592/cilamce2025.v5i.14270).

@@ -1,7 +1,7 @@
 # Analytical Darcy lifts and source reconstruction
 
 `solve_darcy_analytic` implements the lowest-order exact harmonic lifts of
-[Harder, Paredes and Valentin, §4.1](https://doi.org/10.1016/j.jcp.2013.03.019)
+[Harder, Paredes and Valentin (2013), §4.1](https://doi.org/10.1016/j.jcp.2013.03.019)
 on affine triangles and tetrahedra. Each face carries a constant normal flux.
 The permeability is a constant symmetric positive-definite tensor in each
 local problem; the convenience solver uses one tensor throughout the domain.
@@ -96,3 +96,7 @@ The unrounded record is `examples/results/analytic.json`; notebook
 `43_analytical_darcy.ipynb` presents the numerical comparison. The
 [publication comparison](reproduction.md) retains the digitized data and
 the separately identified classical RT0 and primal P1 results.
+
+## References
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).

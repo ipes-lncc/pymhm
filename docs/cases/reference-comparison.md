@@ -127,7 +127,7 @@ The plotter displays that recorded evidence; it does not rerun the verification.
 ## Relation to the literature and other backends
 
 The sine problem is also used in the unfitted flux study discussed in
-[L10](../literature.md#l10-unfitted-flux-approximation-2026-publication).
+[Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016).
 That article fixes 16 macrotriangles and refines the skeleton, with local
 problems solved to sufficient accuracy. This experiment instead refines both
 macro and local meshes with fixed local ratio and P1 local approximation.
@@ -147,3 +147,7 @@ conditions and integration rules, so they are not used as a PyMHM agreement
 claim. This page's matched weak-boundary comparison uses `msl_mhm` + `msl_cg`.
 The [software provenance](../literature.md#software-provenance) distinguishes
 these components from the separate `ipes-lncc/mhm-mfem` project.
+
+## References
+
+- Théophile Chaumont-Frelet, Diego Paredes, and Frédéric Valentin (2026). *Flux approximation on unfitted meshes and application to multiscale hybrid-mixed methods*, Computers & Mathematics with Applications 209, 16–27. [DOI: 10.1016/j.camwa.2026.01.016](https://doi.org/10.1016/j.camwa.2026.01.016).

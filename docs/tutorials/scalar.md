@@ -7,6 +7,10 @@ errors separately. The examples exercise boundary conventions and physical
 fields. They are analytical patches, not convergence studies or reproductions
 of a paper's meshes and data.
 
+The primal Darcy construction follows
+[Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019).
+The analytical patches below use explicitly declared data and discretizations.
+
 The primary notebook cells declare local and global equations through the
 generic variational interface. Their method-family comparisons retain the
 predefined solvers. The [provider tutorial](providers.md) and
@@ -194,6 +198,13 @@ The dedicated pages describe
 [PGMHM](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/pgmhm.md),
 including their additional hypotheses.
 
+The corresponding constructions are described by
+[Barrenechea, Gomes and Paredes (2024)](https://doi.org/10.1137/22M1542556) for MH,
+[de Barros, Madureira and Valentin (2026, version 3)](https://arxiv.org/abs/2404.16978v3)
+for MH²M,
+[Chaumont-Frelet et al. (2022)](https://doi.org/10.1051/m2an/2021082) for MsHHO,
+and [Fernando et al. (2023)](https://doi.org/10.1007/s40314-023-02304-y) for PGMHM.
+
 ## Reaction, advection and complex acoustics
 
 `rad` and `rad-supg` solve the conservative scalar operator
@@ -211,6 +222,11 @@ reaction-diffusion UNUSUAL stabilization. The tutorial reports scalar L2 errors
 for these three choices; it does not infer physical flux balance from their
 algebraic residual. See the [transport conventions](../api/transport.md).
 
+The conservative RAD construction follows
+[Harder, Paredes and Valentin (2015)](https://doi.org/10.1137/130938499), while
+the scalar negative-residual stabilization follows
+[Santiago, Valentin and Martins (2025)](https://doi.org/10.55592/cilamce2025.v5i.14270).
+
 `helmholtz` uses $\rho=\kappa=1$, $\omega=1/2$, no absorbing faces and
 complex pressure $p=(1+i)(1+x+2y)$. Its independently differentiated source is
 $f=-\omega^2p$. The skeleton has two real components per complex mode; it
@@ -219,6 +235,10 @@ no pressure gauge. At unit density, the measured complex gradient error equals
 the physical flux error. A successful low-frequency patch does not certify
 wave-resolution or resonance conditions for another frequency. See
 [Helmholtz](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/helmholtz.md).
+
+The acoustic formulation is developed by
+[Chaumont-Frelet and Valentin (2020)](https://doi.org/10.1137/19M1255616);
+the affine low-frequency patch is this tutorial's separate analytical control.
 
 ## Read the output and move to providers
 
@@ -241,3 +261,23 @@ the shared assembler owns ordered global reduction. MH2M and MsHHO retain
 their dedicated global trace/moment contracts. Native element replacement
 must preserve the executed basis and its coefficient mapping, including the
 basis digest when coefficient vectors are persisted.
+
+## References
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
+
+- Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin (2019). *A multiscale hybrid method for Darcy’s problems using mixed finite element local solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244. [DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).
+
+- Gabriel R. Barrenechea, Antonio Tadeu A. Gomes, and Diego Paredes (2024). *A Multiscale Hybrid Method*. SIAM Journal on Scientific Computing 46(3), A1628–A1657. [DOI: 10.1137/22M1542556](https://doi.org/10.1137/22M1542556).
+
+- Franklin de Barros, Alexandre L. Madureira, and Frédéric Valentin (2026). *A three-field Multiscale Method*. arXiv preprint, version 3, 5 August 2026; first submitted 25 April 2024. [arXiv: 2404.16978v3](https://arxiv.org/abs/2404.16978v3).
+
+- Théophile Chaumont-Frelet, Alexandre Ern, Simon Lemaire, and Frédéric Valentin (2022). *Bridging the Multiscale Hybrid-Mixed and Multiscale Hybrid High-Order Methods*, ESAIM: M2AN 56, 261–285. [DOI: 10.1051/m2an/2021082](https://doi.org/10.1051/m2an/2021082).
+
+- Honório Fernando, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2023). *A Petrov–Galerkin multiscale hybrid-mixed method for the Darcy equation on polytopes*. Computational and Applied Mathematics 42, article 173. [DOI: 10.1007/s40314-023-02304-y](https://doi.org/10.1007/s40314-023-02304-y).
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2015). *On a Multiscale Hybrid-Mixed Method for Advective-Reactive Dominated Problems with Heterogeneous Coefficients*, Multiscale Modeling & Simulation 13(2), 491–518. [DOI: 10.1137/130938499](https://doi.org/10.1137/130938499).
+
+- Juan Felipe Pacazuca Santiago, Frédéric Valentin, and Larissa Martins (2025). *A Multiscale Hybrid-Mixed Method with Local Stabilization*. Proceedings of the Ibero-Latin American Congress on Computational Methods in Engineering, CILAMCE 2025, volume 5, article 14270; published online 18 March 2026. [DOI: 10.55592/cilamce2025.v5i.14270](https://doi.org/10.55592/cilamce2025.v5i.14270).
+
+- Théophile Chaumont-Frelet, and Frédéric Valentin (2020). *A Multiscale Hybrid-Mixed Method for the Helmholtz Equation in Heterogeneous Domains*. SIAM Journal on Numerical Analysis 58(2) 1029-1067. [DOI: 10.1137/19M1255616](https://doi.org/10.1137/19M1255616).

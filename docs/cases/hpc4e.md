@@ -251,3 +251,7 @@ The dataset manifest records the public data source, revision and checksums.
 Numerical records identify the approximation spaces and source hashes. The
 reference implementation described in the paper is NeoPZ; the newly assembled
 classical fields shown here are DOLFINx/UFL results and are identified accordingly.
+
+## References
+
+- Philippe R. B. Devloo, Agnaldo M. Farias, Sônia M. Gomes, Weslley Pereira, Antonio J. B. dos Santos, and Frédéric Valentin (2021). *New H(div)-conforming multiscale hybrid-mixed methods for the elasticity problem on polygonal meshes*, ESAIM: M2AN 55, 1005–1037. [DOI: 10.1051/m2an/2021013](https://doi.org/10.1051/m2an/2021013).

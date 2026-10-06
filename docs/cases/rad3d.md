@@ -166,3 +166,7 @@ The [numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/res
 stores all five levels, quadrature checks, field digests and acquisition-source
 hashes. Notebook `41_rad3d.ipynb` combines a small patch with replay of these
 results and figures.
+
+## References
+
+- Rodolfo Araya, Fabrice Jaillet, Diego Paredes, and Frédéric Valentin (2024). *Generalizing the multiscale hybrid-mixed method for reactive-advective-diffusive equations*, Computer Methods in Applied Mechanics and Engineering 428, 117089. [DOI: 10.1016/j.cma.2024.117089](https://doi.org/10.1016/j.cma.2024.117089).

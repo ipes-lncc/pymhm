@@ -1,11 +1,11 @@
 # Nearly incompressible elasticity in three dimensions
 
 `solve_elasticity_gals_3d` implements the displacement–pressure GaLS formulation
-of [Gomes, Pereira and Valentin, L19](../literature.md#l19-low-order-locking-free-elasticity-2024), whose analysis admits
+of [Gomes, Pereira and Valentin (2024, preprint v1)](https://arxiv.org/abs/2403.16890v1), whose analysis admits
 $d=2,3$. Continuous tetrahedral local spaces are $[P_k]^3/P_k$, $k=1,\ldots,4$;
 the alternative Taylor–Hood spaces use $[P_k]^3/P_{k-1}$, $k=2,\ldots,4$.
 The tests below are original three-dimensional manufactured cases. The numerical
-examples printed in L19 use two-dimensional geometries.
+examples printed in [Gomes, Pereira and Valentin (2024, preprint v1)](https://arxiv.org/abs/2403.16890v1) use two-dimensional geometries.
 
 ## Operator and physical constraints
 
@@ -187,3 +187,7 @@ spaces, stabilization bounds, quadrature comparisons and field digests.
 `--resume` validates all completed archives and requires identical operator and
 analytic-data sources before reusing checkpoints. Elapsed acquisition time includes
 concurrent machine activity and is not a scalability measurement.
+
+## References
+
+- Antônio Tadeu Azevedo Gomes, Weslley da Silva Pereira, and Frédéric Valentin (2024). *A low-order locking-free multiscale finite element method for isotropic elasticity*, arXiv preprint, version 1, 25 March 2024. [arXiv: 2403.16890v1](https://arxiv.org/abs/2403.16890v1).

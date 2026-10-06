@@ -255,3 +255,9 @@ pixi run --locked -e test-core python -m examples.compare_pgmhm_inclusions \
 
 The original analytical tests and native UFL integration tests are distributed;
 external reference-code comparison runners are not required by these commands.
+
+## References
+
+- Honório Fernando, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2023). *A Petrov–Galerkin multiscale hybrid-mixed method for the Darcy equation on polytopes*. Computational and Applied Mathematics 42, article 173. [DOI: 10.1007/s40314-023-02304-y](https://doi.org/10.1007/s40314-023-02304-y).
+
+- Gabriel R. Barrenechea, Fabrice Jaillet, Diego Paredes, and Frédéric Valentin (2020). *The multiscale hybrid mixed method in general polygonal meshes*. Numerische Mathematik 145(1), 197–237. [DOI: 10.1007/s00211-020-01103-5](https://doi.org/10.1007/s00211-020-01103-5).

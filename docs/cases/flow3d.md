@@ -5,8 +5,8 @@ independent conforming local meshes. It supports Taylor–Hood velocity/pressure
 pairs P2/P1 through P4/P3, equal-order USFEM P1/P1 through P4/P4, and the
 residual-stabilized Oseen form. This page reports an original three-dimensional
 manufactured-solution study. The formulations of
-[L13](../literature.md#l13-stokes-and-brinkman-construction-2017) and
-[L15](../literature.md#l15-adaptive-oseen-2021) admit dimension three; their
+[Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) and
+[Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8) admit dimension three; their
 historical two-dimensional numerical figures are separate evidence.
 
 ## Operator and physical conventions
@@ -92,7 +92,7 @@ Cartesian material-cut integration in three dimensions.
 
 Stabilized Oseen includes opposite convection signs in its trial and adjoint-test
 momentum residuals, the consistent load contribution, and positive grad-div
-stabilization. It uses the parameters of L15, equations (25)–(27). The strict
+stabilization. It uses the parameters of [Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8), equations (25)–(27). The strict
 coercivity hypothesis is $\gamma-\nabla\cdot\boldsymbol\beta/2>0$; an algebraic
 solution alone does not establish that hypothesis or a discrete inf-sup bound.
 
@@ -220,3 +220,9 @@ Navier–Stokes nonlinear/time integration.
 | oseen-p2 | 0.00222632 | 0.00459557 | 0.093462 | 2.761 |
 
 The last rate uses the two finest macro meshes. All four velocity, pressure and gradient errors decrease over the five reported meshes. The Brinkman P1 and P2 configurations have different local refinements; this comparison therefore does not isolate polynomial degree at a fixed local mesh. The measured rates do not establish a uniform stability bound. The largest order-seven/order-eight norm discrepancy is 5.25e-11. Absolute errors use the complete physical unit-cube volume, with a zero pressure mean.
+
+## References
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2017). *Multiscale hybrid-mixed method for the Stokes and Brinkman equations—The method*, Computer Methods in Applied Mechanics and Engineering 324, 29–53. [DOI: 10.1016/j.cma.2017.05.027](https://doi.org/10.1016/j.cma.2017.05.027).
+
+- Rodolfo Araya, Cristian Cárcamo, Abner H. Poza, and Frédéric Valentin (2021). *An adaptive multiscale hybrid-mixed method for the Oseen equations*, Advances in Computational Mathematics 47, article 15. [DOI: 10.1007/s10444-020-09833-8](https://doi.org/10.1007/s10444-020-09833-8).

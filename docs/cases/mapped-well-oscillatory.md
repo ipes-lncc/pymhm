@@ -1,7 +1,7 @@
 # Oscillatory anisotropic flow around a producing well
 
 This case uses the three-dimensional hexahedral RT1 MHM spaces of
-[L05, §7.4, Problem 5](../literature.md). The reservoir, producer pressure data,
+[Durán et al. (2019), §7.4, Problem 5](https://doi.org/10.1016/j.cma.2019.05.013). The reservoir, producer pressure data,
 physical units and explicitly graded polygonal geometry are those described in
 [the analytical well case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mapped-well.md). The prescribed pressure trace is
 continuous, while the discrete local mixed pressure is discontinuous.
@@ -404,3 +404,7 @@ separate quadrature and vertical-invariance checks. The additional F16 control
 has its own same-fine trace comparison, F128 comparison, local-refinement
 difference and material-quadrature check, each retaining its actual acquisition
 and analysis source digests.
+
+## References
+
+- Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin (2019). *A multiscale hybrid method for Darcy’s problems using mixed finite element local solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244. [DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).

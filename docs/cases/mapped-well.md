@@ -4,7 +4,7 @@
 conforming trilinear hexahedra. It uses tensor-product Raviart–Thomas fluxes,
 local discontinuous pressure and oriented normal-flux moments on quadrilateral
 macrofaces. The RT1 configuration is the hexahedral family used in
-[L05, §7.4](../literature.md). This is an H(div) formulation in three dimensions;
+[Durán et al. (2019), §7.4](https://doi.org/10.1016/j.cma.2019.05.013). This is an H(div) formulation in three dimensions;
 it is distinct from a tetrahedral primal pressure approximation.
 
 ## Mapping, spaces and physical equations
@@ -52,7 +52,7 @@ faces; exact cylindrical or general CAD surfaces are a separate capability.
 
 ## Dupuit–Thiem data and declared reservoir geometry
 
-The analytical case uses the physical parameters in L05, Table 1:
+The analytical case uses the physical parameters in [Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013), Table 1:
 
 | Quantity | Value |
 |---|---:|
@@ -157,7 +157,7 @@ The original acquisition and replay drivers are `examples/solve_mapped_well.py`
 and `examples/plot_mapped_well.py`. Numerical fields, physical diagnostics and
 source/field digests are archived in `examples/results/mapped-well/`.
 Notebook `44_mapped_well.ipynb` displays the recorded studies. The oscillatory
-three-dimensional coefficient of L05 Problem 5 and its historical field profiles
+three-dimensional coefficient of Problem 5 in [Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013) and its historical field profiles
 are not part of this analytical campaign.
 
 The global retained saddle can be resolved with an explicit `global_rtol` and
@@ -166,3 +166,7 @@ behavior. Extended correction accumulation requires a wider long-double type;
 the physical mixed-block acceptance criterion remains unchanged. A stricter
 linear-solver target is a numerical accuracy request, not a guarantee of an
 attainable physical residual for every parameter scale.
+
+## References
+
+- Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin (2019). *A multiscale hybrid method for Darcy’s problems using mixed finite element local solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244. [DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).

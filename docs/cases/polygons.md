@@ -15,7 +15,7 @@ both incident cells. Cells with holes require a partition into simple polygons.
 ## Oscillatory transport on five polygon families
 
 The data and approximation degrees follow section 5.2.1 of the
-[generalized MHM article (2024)](https://doi.org/10.1016/j.cma.2024.117089):
+[Araya et al. (2024)](https://doi.org/10.1016/j.cma.2024.117089):
 
 $$
 u=\sin(6\pi x)\sin(14\pi y),\qquad
@@ -57,3 +57,7 @@ All error norms use volume quadrature rather than image samples.
 Run `pixi run -e notebooks verify-polygons`. The records are stored in
 `examples/results/polygons.json`. These research runs are separate from the
 small polynomial and geometry checks used in CI.
+
+## References
+
+- Rodolfo Araya, Fabrice Jaillet, Diego Paredes, and Frédéric Valentin (2024). *Generalizing the multiscale hybrid-mixed method for reactive-advective-diffusive equations*, Computer Methods in Applied Mechanics and Engineering 428, 117089. [DOI: 10.1016/j.cma.2024.117089](https://doi.org/10.1016/j.cma.2024.117089).

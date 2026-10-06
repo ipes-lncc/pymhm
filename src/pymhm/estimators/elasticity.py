@@ -1,9 +1,10 @@
-"""The face residual of the one-level primal elasticity estimator of L17.
+"""Face residuals of the one-level primal elasticity estimator.
 
-The reliability theorem assumes exact local Neumann lifts. With computed local
-finite elements this is a face indicator, not a certified estimator of the
-full two-level error. In particular, an unresolved continuous local field can
-have a zero jump indicator and nonzero interior error.
+The estimator follows [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046).
+
+The reliability theorem assumes exact local Neumann lifts. With computed local finite elements this
+is a face indicator, not a certified estimator of the full two-level error. In particular, an
+unresolved continuous local field can have a zero jump indicator and nonzero interior error.
 """
 
 from dataclasses import dataclass
@@ -37,7 +38,11 @@ class PrimalElasticityIndicator:
 
     @property
     def eta(self) -> float:
-        """Return the L17 face indicator with the macrocell-boundary multiplicity."""
+        """Return the face indicator with the macrocell-boundary multiplicity.
+
+        The indicator follows
+        [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046).
+        """
         return float(
             np.sqrt(
                 sum(
@@ -71,14 +76,16 @@ def estimate_primal_elasticity_error(
     full_dirichlet: bool,
     quadrature_order: int = 8,
 ) -> PrimalElasticityIndicator:
-    """Evaluate L17 Eqs. (5.4)--(5.6), under an explicit full-Dirichlet contract.
+    """Evaluate the face estimator under an explicit full-Dirichlet contract.
 
-    Supply c_min such that A(x) epsilon:epsilon >= c_min² |epsilon|² everywhere.
-    The supplied bound is checked at face integration points, but only the user
-    can establish its global validity for a generic callable. The theorem's
-    constants depend on the material; no incompressibility-uniform or unit
-    reliability constant is claimed. For finite local approximations, refine
-    the local space separately to assess the unmeasured local consistency error.
+    Use equations (5.4)--(5.6) of
+    [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046).
+
+    Supply c_min such that A(x) epsilon:epsilon >= c_min² |epsilon|² everywhere. The supplied bound
+    is checked at face integration points, but only the user can establish its global validity for a
+    generic callable. The theorem's constants depend on the material; no incompressibility-uniform
+    or unit reliability constant is claimed. For finite local approximations, refine the local space
+    separately to assess the unmeasured local consistency error.
     """
     if full_dirichlet is not True:
         raise ValueError("the L17 face estimator requires full Dirichlet boundaries")

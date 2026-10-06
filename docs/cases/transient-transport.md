@@ -251,3 +251,7 @@ all levels, or omit `--collect` to render the archived results. The lightweight
 test suite separately checks a linear-in-time variable-coefficient patch,
 mass preservation with closed boundaries, the heat limit, exact RT0 evaluation,
 and the dispersion derivative.
+
+## References
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2015). *On a Multiscale Hybrid-Mixed Method for Advective-Reactive Dominated Problems with Heterogeneous Coefficients*, Multiscale Modeling & Simulation 13(2), 491–518. [DOI: 10.1137/130938499](https://doi.org/10.1137/130938499).

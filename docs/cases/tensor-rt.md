@@ -1,7 +1,7 @@
 # Rectangular RT spaces with interior enrichment
 
 This case reproduces the mixed-space configuration of Figure 3 in
-[Duran et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013).
+[Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013).
 The macro mesh consists of uniform squares, each containing four fine rectangles.
 Normal traces have degree $k=1,2,3$. The interior order is independently selected
 as $s=k+n$, with $n=0,1,2$, and pressure belongs to $Q_s$ on each fine rectangle.
@@ -85,7 +85,9 @@ selected center, with rows ordered by degree and columns by refinement.
 Marker selection uses only the raster and its legend; it does not use PyMHM
 values or alter the physical solutions.
 
-![Original Figure 3 from Duran and collaborators](../figures/tensor-rt/duran-2019-figure3.jpeg)
+![Original Figure 3 from Durán and collaborators](../figures/tensor-rt/duran-2019-figure3.jpeg)
+
+*Figure 3 of [Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013).*
 
 The expected pressure orders are approximately $k+1$ without enrichment and
 $k+2$ after interior enrichment; the skeletal approximation limits further
@@ -98,3 +100,7 @@ Use `--plot-only` to render stored results. The numerical, published and compari
 records are `examples/results/tensor-rt.json`, `tensor-rt-published.json` and
 `tensor-rt-comparison.json`. The full campaign is separate from the lightweight
 element, conservation and polynomial-patch tests used in CI.
+
+## References
+
+- Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin (2019). *A multiscale hybrid method for Darcy’s problems using mixed finite element local solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244. [DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).

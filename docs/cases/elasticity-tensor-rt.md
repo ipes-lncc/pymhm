@@ -1,7 +1,7 @@
 # Rectangular mixed elasticity
 
 `solve_elasticity_tensor_rt` implements the quadrilateral weak-symmetry family
-of [the 2021 MHM elasticity paper](https://doi.org/10.1051/m2an/2021013),
+of [Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013),
 Table 1 and section 4.3.2. For normal degree \(k\geq1\) and interior enrichment
 \(n\geq0\), put \(s=k+n\). Each stress row retains RT normal moments through
 Pk and all zero-normal interior modes of
@@ -82,3 +82,7 @@ they do not establish robustness for every heterogeneous contrast.
 pixi run --locked -e test-core python examples/solve_elasticity_tensor_rt.py --degree 1 --enrichment 1
 pixi run -e notebooks python examples/plot_elasticity_extensions.py
 ```
+
+## References
+
+- Philippe R. B. Devloo, Agnaldo M. Farias, Sônia M. Gomes, Weslley Pereira, Antonio J. B. dos Santos, and Frédéric Valentin (2021). *New H(div)-conforming multiscale hybrid-mixed methods for the elasticity problem on polygonal meshes*, ESAIM: M2AN 55, 1005–1037. [DOI: 10.1051/m2an/2021013](https://doi.org/10.1051/m2an/2021013).

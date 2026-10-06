@@ -3,8 +3,7 @@
 `solve_adaptive_darcy` combines the material-weighted energy estimator, bulk
 marking and conforming triangular macro refinement. This is an original adaptive
 policy using the reconstruction and estimator of
-[Barrenechea et al., *An H(div; Ω)-Conforming Flux Reconstruction for the
-Multiscale Hybrid-Mixed Method*](https://doi.org/10.1137/24M1673073).
+[Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073).
 The example uses their smooth problem in §6.1; its adaptive meshes and marking
 sequence are specified here rather than attributed to a published figure.
 
@@ -63,7 +62,7 @@ propagation paths. It bisects a boundary edge or an edge longest in both
 incident triangles, then repeats until every marked triangle has been
 replaced. Every intermediate partition is conforming. The algorithm's
 exact-arithmetic angle bound is half the initial minimum angle
-([Rivara, 1984](https://doi.org/10.1002/nme.1620200412)); floating-point
+([Rivara (1984)](https://doi.org/10.1002/nme.1620200412)); floating-point
 coordinates remain subject to the mesh validity checks. Cell and face ancestry
 is preserved through the entire propagation path. This geometric bound is
 separate from any claim about estimator contraction.
@@ -174,3 +173,9 @@ Light CI checks cover conformity, ancestry, deterministic bulk marking, mixed
 boundary transfer and the measured estimator bound on small analytical cases.
 The five-level campaign is executed separately. No SPE10 adaptive result is
 inferred from this smooth example.
+
+## References
+
+- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).
+
+- M. Cecilia Rivara (1984). *Algorithms for refining triangular grids suitable for adaptive and multigrid techniques*. International Journal for Numerical Methods in Engineering 20(4), 745–756. [DOI: 10.1002/nme.1620200412](https://doi.org/10.1002/nme.1620200412).

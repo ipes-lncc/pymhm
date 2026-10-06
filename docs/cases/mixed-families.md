@@ -169,3 +169,7 @@ The separate force, moment, fine-force and weak-symmetry diagnostics remain
 in each JSON record; they do not replace the approximation errors above.
 
 ![Four-level mixed-family convergence for the oscillatory-modulus problem](../figures/elasticity-families/oscillatory-convergence.png)
+
+## References
+
+- Philippe R. B. Devloo, Agnaldo M. Farias, Sônia M. Gomes, Weslley Pereira, Antonio J. B. dos Santos, and Frédéric Valentin (2021). *New H(div)-conforming multiscale hybrid-mixed methods for the elasticity problem on polygonal meshes*, ESAIM: M2AN 55, 1005–1037. [DOI: 10.1051/m2an/2021013](https://doi.org/10.1051/m2an/2021013).

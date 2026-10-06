@@ -11,7 +11,7 @@ $3.10\times10^{-11}$ in full Cauchy stress, measured in $L^2$.
 These are direct comparisons with an independently assembled reference
 operator. They validate the stated discrete configurations; they do not
 identify the data that generated every table in the
-[locking-free elasticity paper](https://arxiv.org/abs/2403.16890v1).
+[Gomes, Pereira and Valentin (2024, preprint v1)](https://arxiv.org/abs/2403.16890v1).
 The separate [elasticity gallery](elasticity.md) studies material limits and
 skeletal refinement against exact fields.
 
@@ -144,3 +144,7 @@ specified, and the printed exact-data coefficients require the consistency
 choices documented in the literature catalog. Consequently the present
 agreement establishes a direct code comparison, not reproduction of those
 six tables.
+
+## References
+
+- Antônio Tadeu Azevedo Gomes, Weslley da Silva Pereira, and Frédéric Valentin (2024). *A low-order locking-free multiscale finite element method for isotropic elasticity*, arXiv preprint, version 1, 25 March 2024. [arXiv: 2403.16890v1](https://arxiv.org/abs/2403.16890v1).

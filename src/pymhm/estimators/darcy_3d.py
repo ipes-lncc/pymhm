@@ -228,14 +228,15 @@ def estimate_darcy_error_3d(
     convention: Literal["energy", "published"] = "energy",
     quadrature_order: int = 7,
 ) -> Darcy3DEstimator:
-    """Evaluate the dimension-independent L09 decomposition on tetrahedra.
+    """Evaluate the dimension-independent energy decomposition on tetrahedra.
 
-    Require local k>=ell+3 and ell<=m<=k for skeletal degree ell and RT order m.
-    The degree offset is the spatial dimension in Theorem 5.2, not a
-    dimension-independent value of two.
-    The energy bound assumes exact integration, continuous-test equilibrium,
-    represented boundary data, and certified ellipticity. Numerical quadrature
-    supplies measured indicators, not interval-certified upper bounds.
+    Use the estimator of [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073).
+
+    Require local k>=ell+3 and ell<=m<=k for skeletal degree ell and RT order m. The degree offset
+    is the spatial dimension in Theorem 5.2, not a dimension-independent value of two. The energy
+    bound assumes exact integration, continuous-test equilibrium, represented boundary data, and
+    certified ellipticity. Numerical quadrature supplies measured indicators, not interval-certified
+    upper bounds.
     """
     ell = int(solution.skeleton.degrees.max())
     m = positive_int(degree, "RT degree", 0)

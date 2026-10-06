@@ -52,7 +52,7 @@ the boundary layer.
 
 ![Published boundary-layer comparison](../figures/rad-layer/published-figure5.png)
 
-*Araya et al. (2024), Figure 5: classical P2, MHM P3/P1 and the exact profile.*
+*[Araya et al. (2024)](https://doi.org/10.1016/j.cma.2024.117089), Figure 5: classical P2, MHM P3/P1 and the exact profile.*
 
 ## Independent refinements and integrated errors
 
@@ -90,7 +90,7 @@ skeletal approximation.
 
 ![Published convergence comparison](../figures/rad-layer/published-figure6.png)
 
-*Araya et al. (2024), Figure 6. The publication reports the $V$ norm and separates
+*[Araya et al. (2024)](https://doi.org/10.1016/j.cma.2024.117089), Figure 6. The publication reports the $V$ norm and separates
 macro refinement from skeletal refinement. Diffusion-weighted errors must not
 be compared directly to these ordinates.*
 
@@ -147,3 +147,7 @@ it does not identify the article's unavailable mesh connectivity.
 Run `pixi run -e notebooks verify-rad-layer`. Numerical records are in
 `examples/results/rad-layer.json`. The research campaign is separate from the
 small kernel, boundary and polynomial checks run in CI.
+
+## References
+
+- Rodolfo Araya, Fabrice Jaillet, Diego Paredes, and Frédéric Valentin (2024). *Generalizing the multiscale hybrid-mixed method for reactive-advective-diffusive equations*, Computer Methods in Applied Mechanics and Engineering 428, 117089. [DOI: 10.1016/j.cma.2024.117089](https://doi.org/10.1016/j.cma.2024.117089).

@@ -1,10 +1,9 @@
 # Recursive MHM local problems
 
 An MHM discretization can supply a local problem at the next scale. This
-multilevel interpretation appears in Harder, Paredes and Valentin
-([2013, Remarks 7 and 10](https://doi.org/10.1016/j.jcp.2013.03.019)) and the
-local variational decomposition of Harder and Valentin
-([2016, sections 2 and 4.1](https://doi.org/10.1007/978-3-319-41640-3_13)).
+multilevel interpretation appears in [Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019),
+Remarks 7 and 10, and the local variational decomposition of
+[Harder and Valentin (2016), sections 2 and 4.1](https://doi.org/10.1007/978-3-319-41640-3_13).
 The current study is an original recursive realization on a declared Cartesian
 mesh. It compares recursive and flat MHM with identical leaf spaces, and verifies
 both against an independently assembled complete original Q2/P1 hybrid system.
@@ -211,3 +210,9 @@ or published-figure reproduction.
 See the [nested API](../api/hybrid.md#pymhm.core.nested) and
 [operator reuse](../execution.md). `restrict_response` reuses prepared harmonic
 lifts on an exactly embedded skeletal subspace without refactoring a local matrix.
+
+## References
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
+
+- Christopher Harder and Frédéric Valentin (2016). *Foundations of the MHM Method*, in *Building Bridges: Connections and Challenges in Modern Approaches to Numerical Partial Differential Equations*, Lecture Notes in Computational Science and Engineering 114, Springer. [DOI: 10.1007/978-3-319-41640-3_13](https://doi.org/10.1007/978-3-319-41640-3_13).

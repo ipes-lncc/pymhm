@@ -437,3 +437,7 @@ controls. Without `--collect`, `examples.transport_campaign` only regenerates fi
 contains two independent error quadrature orders, all five spatial resolutions,
 all adaptive states, and the temporal study described in
 [Darcy-coupled transient transport](transient-transport.md).
+
+## References
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2015). *On a Multiscale Hybrid-Mixed Method for Advective-Reactive Dominated Problems with Heterogeneous Coefficients*, Multiscale Modeling & Simulation 13(2), 491–518. [DOI: 10.1137/130938499](https://doi.org/10.1137/130938499).

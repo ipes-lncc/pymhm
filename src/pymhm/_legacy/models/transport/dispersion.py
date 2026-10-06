@@ -107,7 +107,11 @@ class HydrodynamicDispersion:
             raise ValueError("require molecular>0 and longitudinal>=transverse>=0, all finite")
 
     def __call__(self, points: FloatArray) -> FloatArray:
-        """Evaluate the symmetric positive-definite tensor in equation (5.5) of L11."""
+        """Evaluate the symmetric positive-definite dispersion tensor.
+
+        Use equation (5.5) of
+        [Harder, Paredes and Valentin (2015)](https://doi.org/10.1137/130938499).
+        """
         return self._tensor(self.velocity(points))
 
     def _tensor(self, velocity: FloatArray) -> FloatArray:
@@ -182,24 +186,22 @@ def solve_darcy_transport(
 ) -> TransientTransportResult:
     """Couple an executed Darcy field to implicit passive transport.
 
-    Darcy is stationary and its computed flux drives both advection and the
-    dispersion tensor, as in L11 Section 5.4. The transport local mesh must match
-    Darcy's fine mesh so that coefficient jumps are integrated one-sided. These
-    actual meshes are passed to transport, including nonuniform partitions. Local
-    scalar degree and skeletal resolution may differ. ``hdiv`` accepts mixed
-    RT0, RT/BDM families and moment reconstructions, preserving their physical
-    vector polynomials and conservation constraints. ``primal`` explicitly uses
-    the raw -K grad(p_h) in volume integrals and the Darcy skeletal multiplier
-    as numerical normal velocity in the conservative Galerkin form. This pair
-    is not asserted to be H(div). Its broken material derivative must be supplied
-    as ``permeability_gradient``; zero denotes piecewise constant permeability.
-    Strong-residual stabilization is rejected for this discrete flux pair.
-    Other arguments, including capacity/porosity, are solve_transient_transport
-    options. The transport exterior conditions must be supplied explicitly.
-    An explicit ``local_meshes`` override must have identical points and cell
-    connectivity to the Darcy meshes; a different partition is rejected even
-    when the cell counts agree. ``local_refinement`` is only a consistency check
-    on the cell count when explicitly provided, not a request to rebuild meshes.
+    Darcy is stationary and its computed flux drives both advection and the dispersion tensor, as in
+    Section 5.4 of [Harder, Paredes and Valentin (2015)](https://doi.org/10.1137/130938499). The
+    transport local mesh must match Darcy's fine mesh so that coefficient jumps are integrated
+    one-sided. These actual meshes are passed to transport, including nonuniform partitions. Local
+    scalar degree and skeletal resolution may differ. ``hdiv`` accepts mixed RT0, RT/BDM families
+    and moment reconstructions, preserving their physical vector polynomials and conservation
+    constraints. ``primal`` explicitly uses the raw -K grad(p_h) in volume integrals and the Darcy
+    skeletal multiplier as numerical normal velocity in the conservative Galerkin form. This pair is
+    not asserted to be H(div). Its broken material derivative must be supplied as
+    ``permeability_gradient``; zero denotes piecewise constant permeability. Strong-residual
+    stabilization is rejected for this discrete flux pair. Other arguments, including
+    capacity/porosity, are solve_transient_transport options. The transport exterior conditions must
+    be supplied explicitly. An explicit ``local_meshes`` override must have identical points and
+    cell connectivity to the Darcy meshes; a different partition is rejected even when the cell
+    counts agree. ``local_refinement`` is only a consistency check on the cell count when explicitly
+    provided, not a request to rebuild meshes.
     """
     if velocity_representation not in ("hdiv", "primal"):
         raise ValueError("velocity_representation must be hdiv or primal")

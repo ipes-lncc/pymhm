@@ -170,3 +170,7 @@ scale in exact and numerical panels. Profiles evaluate the local polynomials dir
 Notebooks `05_stokes_published_problem.ipynb` and `06_brinkman_and_oseen.ipynb`
 provide shorter interactive versions of the analytical problem and consistency
 checks; see the [notebook guide](../tutorials.md).
+
+## References
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2017). *Multiscale hybrid-mixed method for the Stokes and Brinkman equations—The method*, Computer Methods in Applied Mechanics and Engineering 324, 29–53. [DOI: 10.1016/j.cma.2017.05.027](https://doi.org/10.1016/j.cma.2017.05.027).

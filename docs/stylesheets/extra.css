@@ -295,6 +295,11 @@ body {
   background: var(--md-accent-fg-color--transparent);
 }
 
+.md-typeset .pymhm-start-grid > .pymhm-tutorial-card {
+  border: 2px solid var(--md-accent-fg-color);
+  background: var(--md-accent-fg-color--transparent);
+}
+
 .pymhm-start-grid strong {
   color: var(--md-typeset-a-color);
   font-size: 0.82rem;

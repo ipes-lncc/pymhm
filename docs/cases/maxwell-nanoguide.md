@@ -147,3 +147,7 @@ detailed phase and amplitude of the historical images.
 pixi run --locked -e test-core python -m examples.maxwell_nanoguide --help
 pixi run -e notebooks python -m examples.maxwell_nanoguide_results --plot
 ```
+
+## References
+
+- Stéphane Lanteri, Diego Paredes, Claire Scheid, and Frédéric Valentin (2018). *The Multiscale Hybrid-Mixed method for the Maxwell Equations in Heterogeneous Media*. Multiscale Modeling & Simulation 16(4) 1648-1683. [DOI: 10.1137/16M110037X](https://doi.org/10.1137/16M110037X).

@@ -433,3 +433,9 @@ pixi run -e fem mpiexec -n 4 python benchmarks/execution_modes.py mpi --mesh 8 -
 pixi run --locked -e test-core python benchmarks/execution_modes.py offline --mesh 4 --refinement 16 --queries 12 --output offline.json
 pixi run -e gpu python benchmarks/execution_modes.py gpu --refinement 24 --batch 64 --queries 12 --output gpu.json
 ```
+
+## References
+
+- Antônio Tadeu A. Gomes, Weslley S. Pereira, Frédéric Valentin, and Diego Paredes (2017). *On the Implementation of a Scalable Simulator for Multiscale Hybrid-Mixed Methods*, arXiv preprint, version 1, 30 March 2017. [arXiv: 1703.10435v1](https://arxiv.org/abs/1703.10435v1).
+
+- Pedro Henrique Penna, Antônio Tadeu A. Gomes, Márcio Castro, Patricia D.M. Plentz, Henrique C. Freitas, François Broquedis, and Jean‐François Méhaut (2019). *A comprehensive performance evaluation of the BinLPT workload‐aware loop scheduler*. Concurrency and Computation: Practice and Experience 31(18) e5170. [DOI: 10.1002/cpe.5170](https://doi.org/10.1002/cpe.5170).

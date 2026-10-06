@@ -1,8 +1,7 @@
 # Material interfaces inside macroelements
 
-The two-layer problem in §6.2 of Chaumont-Frelet, Paredes and Valentin,
-[*Flux approximation on unfitted meshes and application to multiscale hybrid-mixed
-methods*](https://doi.org/10.1016/j.camwa.2026.01.016), isolates the role of the
+The two-layer problem in §6.2 of
+[Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016) isolates the role of the
 skeletal partition. On the unit square,
 
 $$
@@ -19,9 +18,9 @@ selected published numerical values. It is not a complete reproduction of the
 article.** The S0 and S1 gradient errors agree closely with the rounded values
 in Figure 5; the S2 curve agrees in its lower sensitivity to the perturbation,
 but not in all its numerical values. The comparisons below distinguish these
-two statements. The 2022 preprint [L08](../literature.md#l08-unfitted-flux-approximation-2022-preprint)
+two statements. The 2022 preprint [Chaumont-Frelet, Paredes and Valentin (2022, preprint v1)](https://inria.hal.science/hal-03834748v1)
 is an earlier version of the same work; the numerical target is the final
-2026 publication [L10](../literature.md#l10-unfitted-flux-approximation-2026-publication),
+2026 publication [Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016),
 §6.2 and Figures 4–6, printed pages 24–26.
 
 The macro mesh contains 16 crisscross triangles. S0 uses a middle row at
@@ -45,7 +44,8 @@ interface. An additional campaign keeps local triangles unfitted and integrates
 their material intersections exactly; its error is shown separately below.
 
 The theoretical mechanism is that each skeletal subface belongs to one physical
-material region. L10 Theorem 2 and equation (20) use piecewise regularity on the
+material region. Theorem 2 and equation (20) of
+[Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016) use piecewise regularity on the
 physical partition, positive coefficient bounds and geometric regularity. They
 do not cover a multiplier segment that straddles an unresolved coefficient
 jump. S1 is such a diagnostic configuration; S2 restores the fitted-subface
@@ -90,7 +90,7 @@ moments and the source balance against each retained constant. Consequently,
 the reconstructed pressure can still jump across macrofaces, and its raw
 gradient need not produce an H(div)-conforming flux.
 
-To relate this convention to L10 equations (11)–(15), define the positive
+To relate this convention to equations (11)–(15) of [Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016), define the positive
 local maps by
 
 $$
@@ -189,7 +189,7 @@ E_A^2&=\sum_K\int_K a\,\lvert\nabla p-\nabla p_h\rvert^2.
 \end{aligned}
 $$
 
-Figure 5 of L10 reports \(E_g\). The coefficient-weighted energy error is
+Figure 5 of [Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016) reports \(E_g\). The coefficient-weighted energy error is
 \(E_A\), while the physical flux error would weight the squared gradient error
 by \(a^2\). Those are different norms. None includes an added macroface jump
 penalty, and no denominator such as the exact solution norm is used here.
@@ -224,8 +224,8 @@ sensitivity is recorded separately from the perturbation sequence.
 ### Direct comparison with Figure 5
 
 
-Original Figure 5, p. 25, from Chaumont-Frelet, Paredes and Valentin,
-[Computers & Mathematics with Applications 209 (2026), 16–27](https://doi.org/10.1016/j.camwa.2026.01.016),
+Original Figure 5, p. 25, from
+[Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016),
 © 2026 Elsevier Ltd.; this PDF extract retains all axes, curves and the caption
 so that the published S2 curve can be compared directly with the results below.
 
@@ -234,7 +234,7 @@ y-axis tick labels at the S1 markers. Their rounding is retained; they are not
 original solver output. The signed difference uses the printed value as its
 denominator and measures agreement between studies, not PDE error.
 
-| Perturbation | L10 printed S1 value | PyMHM S1 value | Difference from printed value |
+| Perturbation | Published S1 value | PyMHM S1 value | Difference from printed value |
 |---:|---:|---:|---:|
 | 1/126 | 0.005220 | 0.00524884 | +0.553% |
 | 1/62 | 0.006935 | 0.00692767 | −0.106% |
@@ -271,7 +271,7 @@ coordinates, segment degrees and continuity flags are recorded in
 variant or fixed crisscross centers as explanations of the present S2 result;
 they do not recover the unpublished historical local solve.
 
-![Printed L10 values against PyMHM and a separate local-approximation comparison](../figures/unfitted/publication-comparison.png)
+![Published values of Chaumont-Frelet, Paredes and Valentin (2026) against PyMHM and a separate local-approximation comparison](../figures/unfitted/publication-comparison.png)
 
 The right panel keeps S2 and the same macro and skeletal spaces, comparing
 material-fitted versus unfitted local P4 triangles. At \(\delta=1/6\), their
@@ -333,7 +333,7 @@ raw S2 values, and the executable norm-evaluation procedure. Section 6 states
 that local errors are negligible without giving those local parameters.
 The [institutional software page](https://ipes.lncc.br/#software) describes
 access to the authors' implementations by request; the article and its
-[institutional preprint](https://www.ci2ma.udec.cl/pdf/pre-publicaciones2/2023/pp23-02.pdf)
+institutional preprint by [Chaumont-Frelet, Paredes and Valentin (2023)](https://www.ci2ma.udec.cl/pdf/pre-publicaciones2/2023/pp23-02.pdf)
 do not identify a Figure 5 input archive. Inspection of MSL Core, MSL MHM and
 the separately supplied MHMUN-RAD source does not establish which implementation
 generated this figure. The present evidence therefore establishes the stated
@@ -535,7 +535,7 @@ for norms. Requested and executed assembly orders are recorded separately.
 Filename labels such as `q13` and `nq13-15` denote these quadrature counts;
 the physical Darcy field $q=-a\nabla p$ has a separate meaning.
 
-The integer $q$ in L10 Theorem 2 is a regularity index, with
+The integer $q$ in Theorem 2 of [Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016) is a regularity index, with
 $0\leq q\leq\ell$; it does not denote a numerical Gauss count. The theorem
 uses exact local solution maps and does not prescribe a finite local polynomial
 degree or refinement. A finite local space must resolve the skeletal functionals:
@@ -839,3 +839,11 @@ differences prevent a claim of complete historical reproduction.
 It validates the stated two-dimensional, two-layer scalar problem and the
 material/skeleton operations used for it; it is not a validation of arbitrary
 three-dimensional interfaces or an unconditional robustness result.
+
+## References
+
+- Théophile Chaumont-Frelet, Diego Paredes, and Frédéric Valentin (2026). *Flux approximation on unfitted meshes and application to multiscale hybrid-mixed methods*, Computers & Mathematics with Applications 209, 16–27. [DOI: 10.1016/j.camwa.2026.01.016](https://doi.org/10.1016/j.camwa.2026.01.016).
+
+- Théophile Chaumont-Frelet, Diego Paredes, and Frédéric Valentin (2022). *Flux approximation on unfitted meshes and application to multiscale hybrid-mixed methods*, preprint, HAL version 1, 31 October 2022. [HAL: hal-03834748v1](https://inria.hal.science/hal-03834748v1).
+
+- Théophile Chaumont-Frelet, Diego Paredes, and Frédéric Valentin (2023). *Flux approximation on unfitted meshes and application to multiscale hybrid-mixed methods*. Universidad de Concepción, CI²MA, Preprint 2023-02. [Institutional preprint](https://www.ci2ma.udec.cl/pdf/pre-publicaciones2/2023/pp23-02.pdf).

@@ -1,8 +1,7 @@
 # Multiscale Hybrid diffusion with Robin local problems
 
-`solve_mh` implements the Multiscale Hybrid method of Barrenechea, Gomes and
-Paredes, [SIAM Journal on Scientific Computing 46(3), A1628–A1657
-(2024)](https://doi.org/10.1137/22M1542556). Its local problems and condensed
+`solve_mh` implements the Multiscale Hybrid method of
+[Barrenechea, Gomes and Paredes (2024)](https://doi.org/10.1137/22M1542556). Its local problems and condensed
 global Dirichlet problem are elliptic. This formulation differs from both the
 kernel-constrained MHM and the [three-field MH²M method](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mh2m.md).
 
@@ -338,3 +337,7 @@ absolute and relative norms, balances, residuals and executed source hashes.
 The repository notebook `notebooks/darcy/56_mh.ipynb` combines a small executable patch
 with the archived multilevel evidence. The portable solver does not require
 FEniCS; DOLFINx is an optional independent verification backend.
+
+## References
+
+- Gabriel R. Barrenechea, Antonio Tadeu A. Gomes, and Diego Paredes (2024). *A Multiscale Hybrid Method*. SIAM Journal on Scientific Computing 46(3), A1628–A1657. [DOI: 10.1137/22M1542556](https://doi.org/10.1137/22M1542556).

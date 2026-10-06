@@ -332,3 +332,7 @@ macro restriction. The meshes resolve every material pixel and use the same
 operator, boundary conditions and pressure datum. Its own refinement increment
 must be assessed before using it as a numerical baseline. Raw PGMHM fluxes
 remain $-K\nabla p$; they are not $H(\operatorname{div})$ reconstructions.
+
+## References
+
+- Honório Fernando, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2023). *A Petrov–Galerkin multiscale hybrid-mixed method for the Darcy equation on polytopes*. Computational and Applied Mathematics 42, article 173. [DOI: 10.1007/s40314-023-02304-y](https://doi.org/10.1007/s40314-023-02304-y).

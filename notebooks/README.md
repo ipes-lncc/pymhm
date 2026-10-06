@@ -1,6 +1,8 @@
 # PyMHM examples by problem
 
-Start with the [ten self-contained tutorials](introduction/README.md), then
+Start with the [API overview](https://ipes-lncc.github.io/pymhm/tutorials/overview/)
+and the [ten rendered introductory tutorials](https://ipes-lncc.github.io/pymhm/tutorials/).
+Their [source notebooks](introduction/README.md) are available for interactive use. Then
 use the problem folders and numbered notebooks for additional formulations,
 convergence records, geometry variants and literature comparisons. The new
 course defines the material, local forms, global equations, classical references

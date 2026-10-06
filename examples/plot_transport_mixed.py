@@ -1,7 +1,8 @@
-"""Replay the mixed-boundary L11 campaign without solving numerical problems."""
+"""Replay the mixed-boundary Harder et al. (2015) campaign without solving problems."""
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -45,7 +46,7 @@ def load(row: dict) -> dict[str, np.ndarray]:
 def convergence(report: dict) -> None:
     """Separate errors, jump indicators and same-skeleton local resolution."""
     figure, axes = plt.subplots(1, 3, figsize=(13, 4.4))
-    figure.subplots_adjust(left=0.065, right=0.985, bottom=0.22, top=0.85, wspace=0.32)
+    figure.subplots_adjust(left=0.065, right=0.985, bottom=0.22, top=0.79, wspace=0.32)
     for index, key in enumerate(("l2_error", "broken_h1_error")):
         for section, label, marker in (
             ("adaptive", "Face adaptation: fixed 16 macros", "o"),
@@ -81,7 +82,9 @@ def convergence(report: dict) -> None:
     figure.legend(handles, labels, loc="lower left", bbox_to_anchor=(0.06, 0.015), frameon=False)
     handles, labels = axes[2].get_legend_handles_labels()
     figure.legend(handles, labels, loc="lower right", bbox_to_anchor=(0.985, 0.015), frameon=False)
-    figure.suptitle("L11 mixed walls: ε = 0.1, P1 Galerkin locals and P0 multipliers")
+    figure.suptitle(
+        "Harder et al. (2015) mixed walls\nε = 0.1, P1 Galerkin locals and P0 multipliers"
+    )
     save(figure, "mixed-convergence")
 
 
@@ -147,7 +150,10 @@ def published_comparison(report: dict) -> None:
         ncol=2,
         frameon=False,
     )
-    figure.suptitle("L11 Figure 12 and explicit coefficient controls; P1/P0 local/trace spaces")
+    figure.suptitle(
+        "Harder et al. (2015), Figure 12 and explicit coefficient controls\n"
+        "P1/P0 local/trace spaces"
+    )
     figure.text(
         0.5,
         0.015,
@@ -402,10 +408,19 @@ def profiles(report: dict) -> None:
 
 def main() -> None:
     """Replay archived fields and current numerical comparisons."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--comparisons-only",
+        action="store_true",
+        help="Render comparison curves from compact records",
+    )
+    args = parser.parse_args()
     FIGURES.mkdir(parents=True, exist_ok=True)
     report = json.loads((DATA / "mixed-campaign.json").read_text())
     convergence(report)
     published_comparison(report)
+    if args.comparisons_only:
+        return
     face_resolution()
     local_resolution()
     fields(report)

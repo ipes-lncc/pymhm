@@ -177,18 +177,20 @@ def estimate_flow_error(
     variant: Literal["oseen-2021", "stokes-brinkman-2021"] = "oseen-2021",
     quadrature_order: int = 8,
 ) -> FlowEstimator:
-    """Evaluate L15 Eqs. (33)--(34) or L14 Eqs. (4.1)--(4.7).
+    """Evaluate the two-level Oseen or Stokes--Brinkman estimator.
 
-    Supply the same physical coefficients and Dirichlet data used in the
-    solve. The formula assumes full Dirichlet boundaries, constant positive
-    viscosity, and uniform skeletal polynomial degree ell. Piecewise trace
-    partitions and nonmatching local submesh refinements are supported; edge
-    integration is cut at every fine and skeletal breakpoint. The supplied
-    full_dirichlet declaration is explicit because VectorSolution does not
-    retain boundary data. Volume integration is Gaussian; a discontinuous
-    material must therefore be aligned with local cells for this estimator.
-    The Oseen theorem additionally assumes gamma-div(beta)/2>0. A finite
-    estimator for a case outside that hypothesis is not a reliability proof.
+    Use equations (33)--(34) of [Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8) or
+    equations (4.1)--(4.7) of
+    [Araya, Rebolledo and Valentin (2021)](https://doi.org/10.1093/imanum/drz053).
+
+    Supply the same physical coefficients and Dirichlet data used in the solve. The formula assumes
+    full Dirichlet boundaries, constant positive viscosity, and uniform skeletal polynomial degree
+    ell. Piecewise trace partitions and nonmatching local submesh refinements are supported; edge
+    integration is cut at every fine and skeletal breakpoint. The supplied full_dirichlet
+    declaration is explicit because VectorSolution does not retain boundary data. Volume integration
+    is Gaussian; a discontinuous material must therefore be aligned with local cells for this
+    estimator. The Oseen theorem additionally assumes gamma-div(beta)/2>0. A finite estimator for a
+    case outside that hypothesis is not a reliability proof.
     """
     if full_dirichlet is not True:
         raise ValueError("the published flow estimator requires full_dirichlet=True")
