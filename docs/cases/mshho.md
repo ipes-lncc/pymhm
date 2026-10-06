@@ -1,7 +1,13 @@
-# MHM and multiscale HHO
+# MsHHO: cell and face moment reconstruction
 
-`solve_mshho` constructs multiscale HHO cell and face unknowns from constrained
-local energy minimization. It uses finite conforming Galerkin realizations of
+MsHHO means **Multiscale Hybrid High-Order**. `solve_mshho` constructs its cell
+and face pressure moments from constrained local energy minimization. MsHHO is
+the macro discretization: after eliminating cell moments, it solves a global
+system in shared face-pressure moments. The local reconstructions use conforming
+finite elements on fine submeshes of the macrocells; the implemented local
+discretization is not an HHO method on a second mesh.
+
+It uses finite conforming Galerkin realizations of
 the projected-source formulation (4.6) and reconstructed-source formulation (5.1) of
 [Chaumont-Frelet et al. (2022)](https://doi.org/10.1051/m2an/2021082).
 The article establishes an equivalence theorem with exactly solved local problems;

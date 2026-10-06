@@ -132,7 +132,7 @@ materials and boundary data; they do not qualify arbitrary user-defined forms.
 - Polygonal local partitions and star-shaped polyhedra with original polygonal face
   spaces; tetrahedral Pk operators, tetrahedral/prismatic mixed H(div) families,
   and mapped hexahedral RT Darcy fields.
-- MHM–MsHHO constructions, recursive local problems, material-fitted integration,
+- MsHHO cell/face moment constructions, recursive local problems, material-fitted integration,
   moment reconstruction, and equation-specific error estimation and adaptation.
 - MH²M pressure traces, Robin-local MH, residual Petrov–Galerkin MHM and
   unusual reaction–diffusion stabilization, with independent finite element checks.

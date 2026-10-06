@@ -105,7 +105,7 @@ arbitrary user-supplied forms.
 | Conservative scalar RAD | Pk Galerkin or SUPG with variable coefficients | Robin multiplier with half the advective flux |
 | Heat equation | Pk and backward Euler | Flux skeleton, prescribed scalar boundary values |
 | Equilibrated Darcy flux | Constrained minimum-energy RT0 reconstruction | Fine-cell balances and preserved macro fluxes |
-| MHM–MsHHO | Multiscale energy reconstruction and cell/face moment spaces | Condensed face system and source-dependent field equivalence |
+| MsHHO | Cell and face pressure moments with constrained local energy reconstruction | Condensed face-pressure moment system; conditional field equivalence with MHM |
 | Adaptive methods | RT moment recovery, potential estimators and equation-specific residual indicators | Independent macro, face and local controls with stated marking rules |
 
 Built-in geometries include triangles, rectangular cells, simple planar polygons,
