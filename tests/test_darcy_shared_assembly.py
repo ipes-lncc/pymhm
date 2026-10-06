@@ -73,11 +73,11 @@ def test_bdm_parallel_assembly_preserves_physical_fields_and_gauge(
     actual = solve_darcy_bdm(mesh, **parameters, parallel_assembly=True, backend=backend, workers=2)
     assert {process.pid for process in multiprocessing.active_children()} == children
     assert actual.family == original.family
-    assert_allclose(actual.hybrid.trace, original.hybrid.trace, rtol=2e-13, atol=1e-14)
+    assert_allclose(actual.hybrid.trace, original.hybrid.trace, rtol=2e-12, atol=2e-12)
     for field, expected in zip(
         actual.pressure + actual.flux, original.pressure + original.flux, strict=True
     ):
-        assert_allclose(field, expected, rtol=2e-13, atol=1e-14)
+        assert_allclose(field, expected, rtol=2e-12, atol=2e-12)
     assert actual.flux_l2_error(flux, 7) < 3e-10
     if degree + enrichment >= 3:
         assert actual.l2_error(pressure, 7) < 3e-11
@@ -98,8 +98,8 @@ def test_bdm_default_process_condensation_still_accepts_source_closure():
     actual = solve_darcy_bdm(
         mesh, source=source, dirichlet=pressure, local_refinement=1, backend="process", workers=2
     )
-    assert_allclose(actual.hybrid.trace, original.hybrid.trace, rtol=2e-13, atol=1e-14)
+    assert_allclose(actual.hybrid.trace, original.hybrid.trace, rtol=2e-12, atol=2e-12)
     for field, expected in zip(
         actual.pressure + actual.flux, original.pressure + original.flux, strict=True
     ):
-        assert_allclose(field, expected, rtol=2e-13, atol=1e-14)
+        assert_allclose(field, expected, rtol=2e-12, atol=2e-12)

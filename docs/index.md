@@ -128,9 +128,9 @@ Darcy. Their case pages record the source revisions, discrete spaces, boundary
 conditions and complete-field comparisons. Labmec/MHM's positive-order
 controller has a separate source-level description from the executed RT0 NeoPZ driver.
 
-This is version 0.1.0, a pre-alpha research implementation. Distribution machinery
-is present; an installable artifact is not evidence of a published PyPI release
-or accepted conda-forge feedstock.
+This is version 1.0.0, an official release of PyMHM. The
+[installation guide](installation.md) explains package installation through pip,
+optional backends and the locked environments used for reproducible studies.
 
 The [MSL GaLS comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity-reference.md) checks displacement,
 pressure, gradients and full stress for P1/P1, P2/P2 and P3/P3 elasticity.

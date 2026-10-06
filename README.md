@@ -8,7 +8,7 @@
 [![Lint and Quality](https://github.com/ipes-lncc/pymhm/actions/workflows/lint-and-quality.yml/badge.svg)](https://github.com/ipes-lncc/pymhm/actions/workflows/lint-and-quality.yml)
 [![Docs](https://github.com/ipes-lncc/pymhm/actions/workflows/docs.yml/badge.svg)](https://ipes-lncc.github.io/pymhm/)
 [![Publish to PyPI](https://github.com/ipes-lncc/pymhm/actions/workflows/publish-pypi.yml/badge.svg)](https://github.com/ipes-lncc/pymhm/actions/workflows/publish-pypi.yml)
-[![Version: 0.1.0](https://img.shields.io/badge/version-0.1.0-21918c.svg)](https://github.com/ipes-lncc/pymhm/blob/main/pyproject.toml)
+[![Version: 1.0.0](https://img.shields.io/badge/version-1.0.0-21918c.svg)](https://github.com/ipes-lncc/pymhm/blob/main/pyproject.toml)
 [![Python: 3.11–3.13](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-3776ab.svg)](https://github.com/ipes-lncc/pymhm/blob/main/pyproject.toml)
 [![Supported OS](https://img.shields.io/badge/OS-Linux%20%7C%20macOS%20%7C%20Windows-3776ab.svg)](https://github.com/ipes-lncc/pymhm/actions/workflows/tests.yml)
 [![License: LGPL-2.1-only](https://img.shields.io/badge/license-LGPL--2.1--only-440154.svg)](https://github.com/ipes-lncc/pymhm/blob/main/LICENSE)
@@ -20,22 +20,27 @@ the same interface; a local operator can itself be another multiscale problem.
 NumPy/SciPy coefficients and optional FEniCS/UFL forms share this contract.
 Basix supplies finite-element bases and tabulation.
 
-Version 0.1.0 is research software in pre-alpha development. Built-in workflows
+Version 1.0.0 is an official release of PyMHM. Built-in workflows
 include triangular and polygonal meshes, Cartesian quadrilaterals, tetrahedra,
 affine prisms, star-shaped polyhedra and mapped hexahedra. Available equations and approximation
 spaces depend on the geometry; the documentation states each verified scope
 and distinguishes it from extensions described in the literature.
 
-## Quick start
+## Installation
 
-Use Pixi 0.76.2, the version required by the workspace and pinned AmgX toolchain.
+Use Python 3.11–3.13 on Linux, macOS or Windows:
 
 ```bash
-pixi --version
-pixi list --locked --no-install -e test-core
-pixi install --locked -e test-core
-pixi run --locked -e test-core test-cov
+python -m pip install pymhm
 ```
+
+The base package includes NumPy, SciPy and Basix. Optional extras add CPU AMG,
+PARDISO, MPI, CUDA solvers, meshing or visualization; for example,
+`python -m pip install "pymhm[amg]"` adds PyAMG.
+The [installation guide](docs/installation.md) covers virtual environments,
+Windows commands, upgrades and native backend requirements.
+
+## Quick start
 
 ```python
 from pymhm import Equation, LocalEquations, MultiscaleProblem, solve
@@ -65,10 +70,6 @@ The introductory [scalar](docs/tutorials/scalar.md),
 [vector](docs/tutorials/vector.md) and [provider](docs/tutorials/providers.md)
 tutorials use small executable problems. They cover primal and mixed H(div)
 locals, explicit interface conventions, physical gauges and custom local solvers.
-
-Install from a checkout with `python -m pip install .`. Wheel, source distribution,
-trusted PyPI publishing and a Conda recipe are provided; no registry publication
-is implied by the presence of those files.
 
 The wheel contains every `pymhm` runtime module, typing files and distribution
 metadata. The source distribution contains `src/pymhm`, `pyproject.toml`,
@@ -124,7 +125,7 @@ materials and boundary data; they do not qualify arbitrary user-defined forms.
 - Basix reference elements, nodal simplex/tensor bases and RT/BDM tabulation,
   with explicit native basis ordering, transformations and coefficient digests.
 - PyVista/VTK export and rendering, including broken finite-element fields and
-  actual macro-mesh overlays (`pip install '.[visualization]'` from a checkout).
+  actual macro-mesh overlays (`python -m pip install "pymhm[visualization]"`).
 - SciPy, PETSc, PARDISO, CuPy and cuDSS solvers; CPU PyAMG and optional GPU AmgX.
   AMG local Neumann solves use a compatible SPD complement.
 - Deterministic serial/thread/process local execution with bounded batches and
@@ -238,7 +239,9 @@ release tags; see [development](docs/development.md).
 Prepare release notes and synchronize current versions with
 `pixi run --locked -e release release-prepare VERSION`, after running
 `release-fetch` in the same environment. The task uses git-cliff and preserves
-handwritten notes; the first release requires `--initial`.
+handwritten notes. Official releases use `X.Y.Z` versions and matching `vX.Y.Z`
+tags; for example, prepare `1.1.0` and tag `v1.1.0`. Use `--initial` only when no
+canonical release tag exists in the fetched main-branch history.
 
 Licensed under LGPL-2.1-only. Citation metadata is in `CITATION.cff`.
 

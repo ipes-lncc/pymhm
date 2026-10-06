@@ -8,6 +8,12 @@ import pytest
 from pymhm import TriangleMesh
 from pymhm._legacy.models.darcy.primal import solve_darcy
 from pymhm.estimators.darcy_local import estimate_darcy_local_refinement
+from pymhm.fem.scalar.triangle import nodal_space
+
+
+def _nonpolynomial_source(points: np.ndarray) -> np.ndarray:
+    """Provide picklable asymmetric data with distinct, nonzero local energy defects."""
+    return np.exp(points[:, 0] + 2 * points[:, 1])
 
 
 def test_affine_pressure_has_zero_local_refinement_defect():
@@ -27,16 +33,12 @@ def test_nonpolynomial_local_energy_difference_reduces_with_refinement():
     """Measure convergence of local lifts for a smooth nonpolynomial source."""
     mesh = TriangleMesh.unit_square()
 
-    def source(points):
-        """Use nonpolynomial data without a pure-Neumann compatibility cancellation."""
-        return np.exp(points.sum(axis=1))
-
     differences = []
     for refinement in (2, 4):
         solution = solve_darcy(
             mesh,
             degree=2,
-            source=source,
+            source=_nonpolynomial_source,
             local_refinement=refinement,
             quadrature_order=8,
         )
@@ -61,9 +63,22 @@ def test_local_refinement_contract_rejects_nonenergy_problems():
 @pytest.mark.parametrize("backend", ["thread", "process"])
 def test_local_energy_workers_preserve_order_and_fields(backend):
     """Spawned or threaded factors reconstruct the same physical local pressures."""
-    solution = solve_darcy(TriangleMesh.unit_square(), degree=2, source=1.0)
+    solution = solve_darcy(
+        TriangleMesh.unit_square(), degree=2, source=_nonpolynomial_source, quadrature_order=8
+    )
     serial = estimate_darcy_local_refinement(solution)
     parallel = estimate_darcy_local_refinement(solution, backend=backend, workers=2)
-    np.testing.assert_allclose(serial.local_squared, parallel.local_squared, rtol=1e-13)
-    for first, second in zip(serial.pressure, parallel.pressure, strict=True):
-        np.testing.assert_allclose(first, second, rtol=0, atol=1e-14)
+    assert np.all(serial.local_squared > 1e-5)
+    assert not np.isclose(serial.local_squared[0], serial.local_squared[1], rtol=0.1, atol=0)
+    np.testing.assert_allclose(serial.local_squared, parallel.local_squared, rtol=2e-12, atol=2e-12)
+    for first_mesh, second_mesh, first, second in zip(
+        serial.local_meshes, parallel.local_meshes, serial.pressure, parallel.pressure, strict=True
+    ):
+        np.testing.assert_array_equal(first_mesh.points, second_mesh.points)
+        np.testing.assert_array_equal(first_mesh.cells, second_mesh.cells)
+        np.testing.assert_allclose(first, second, rtol=2e-12, atol=2e-12)
+        dofs, _ = nodal_space(first_mesh, 2)
+        # A triangular P2 field integrates to area/3 times its three midpoint values.
+        for field in (first, second):
+            integral = first_mesh.areas @ field[dofs[:, 3:]].sum(axis=1) / 3
+            assert abs(integral) < 2e-12

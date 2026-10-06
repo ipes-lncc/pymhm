@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pymhm"
-version = "0.1.0"
+version = "1.0.0"
 description = "Composable multiscale hybrid mixed finite element methods"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
@@ -13,7 +13,7 @@ license-files = ["LICENSE"]
 authors = [{ name = "Diego Volpatto", email = "volpatto@lncc.br" }]
 keywords = ["finite-elements", "multiscale", "hybrid-mixed", "darcy", "brinkman", "scientific-computing"]
 classifiers = [
-  "Development Status :: 2 - Pre-Alpha",
+  "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Science/Research",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",

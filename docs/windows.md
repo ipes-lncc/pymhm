@@ -17,6 +17,23 @@ documentation; [development](development.md) describes the required release sett
 
 ## Installation
 
+For an application, install the portable package from PyPI with Python 3.11–3.13.
+For example, with Python 3.12 installed, run these commands in PowerShell:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install pymhm
+.\.venv\Scripts\python.exe -c "import pymhm; print(pymhm.__version__)"
+```
+
+For Intel MKL PARDISO, install `"pymhm[intel]"` instead of `pymhm` in the same
+environment. These commands use the virtual environment's interpreter directly;
+activation, a repository checkout and Pixi are unnecessary. See the
+[installation guide](installation.md) for extras and upgrades.
+
+### Repository development with Pixi
+
 Install [Pixi for Windows](https://pixi.prefix.dev/latest/installation/) version 0.76.2 and
 open PowerShell in a checkout. These commands use the existing lockfile:
 
@@ -42,15 +59,7 @@ the generic API. Cells calling the DOLFINx adapter require a supported native
 FEM environment; the `introduction` FEM environment is not a native Windows profile.
 See the [notebook catalogue](tutorials.md) for the physical examples and methods.
 
-For a package installation outside Pixi, the ordinary wheel installs the core
-dependencies. The Intel extra selects PyPardiso on supported x86-64 platforms:
-
-```powershell
-python -m pip install .
-python -m pip install ".[intel]"
-```
-
-These pip commands resolve their own environment. Use Pixi's locked profiles
+Pip commands resolve their own environment. Use Pixi's locked profiles
 for the repository's reproducible development and scientific checks.
 
 ## Local assembly and solver selection

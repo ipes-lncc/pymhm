@@ -1,8 +1,109 @@
 # Changelog
 
+## 1.0.0
+
+<!-- pymhm:generated:start -->
+<!-- Source: v0.1.1..2b47121916a405ca938a7853e9da714e20113fdc -->
+
+### Maintenance
+
+- adopt official release metadata ([2b47121](https://github.com/ipes-lncc/pymhm/commit/2b47121916a405ca938a7853e9da714e20113fdc))
+
+<!-- pymhm:generated:end -->
+
+### Official release
+
+- PyMHM 1.0.0 provides the composable variational API for global and local
+  multiscale problems, user-defined local providers and nested multiscale solves.
+  Basix supplies finite-element bases and tabulation.
+- The portable core supports Linux, macOS and Windows, with serial, threaded and
+  process-based execution. Optional integrations provide native FEM, MPI and
+  accelerator capabilities within their documented platform and numerical scope.
+- Installation guides cover `pip install pymhm`, optional dependencies and
+  platform requirements. Scientific documentation and introductory notebooks
+  describe the supported formulations, numerical results and limitations.
+
+## 0.1.1
+
+<!-- pymhm:generated:start -->
+<!-- Source: v0.1.0..73e0ac18f60ac65dbba34213bef51f0f62d44ec5 -->
+
+### Documentation
+
+- explain PyPI filename reuse restrictions ([65dd8f2](https://github.com/ipes-lncc/pymhm/commit/65dd8f28a71aed7b47b7e9d7454dcf777586ab78))
+
+- document pip setup and optional backends ([73e0ac1](https://github.com/ipes-lncc/pymhm/commit/73e0ac18f60ac65dbba34213bef51f0f62d44ec5))
+
+<!-- pymhm:generated:end -->
+
 ## 0.1.0
 
 <!-- pymhm:generated:start -->
+<!-- Source: origin/main@45dc1b1538a47726fa57284c5ca1d993bf5eaaae (initial release) -->
+
+### Features
+
+- update pixi version requirement and add CI tests ([b2720c6](https://github.com/ipes-lncc/pymhm/commit/b2720c68b5d2b88533c1e8408ace693552223251))
+
+- enhance caching and memory management in CI workflows and examples ([9d1c19c](https://github.com/ipes-lncc/pymhm/commit/9d1c19c3f9e78708bef667916911bcba3a02a223))
+
+- enhance numerical precision in tests and verification documentation ([cdbd486](https://github.com/ipes-lncc/pymhm/commit/cdbd486d969c91efeb352447dbe5c0e10446fcd2))
+
+- add release preparation scripts and metadata validation ([8a1b844](https://github.com/ipes-lncc/pymhm/commit/8a1b8444613b78a2bf234fa0ec5eeb84dd939382))
+
+
+### Fixes
+
+- grant reusable documentation permissions for releases ([a4fdd5c](https://github.com/ipes-lncc/pymhm/commit/a4fdd5c16524f5609b1de0afb77ae5bf71d719a9))
+
+
+### Maintenance
+
+- update CI configuration for macOS and improve test descriptions ([4f43032](https://github.com/ipes-lncc/pymhm/commit/4f43032c18a1ca6f6d0c979e4f31b7d564dc55d2))
+
+- update CHANGELOG with recent features, maintenance, and refactoring details ([9de2617](https://github.com/ipes-lncc/pymhm/commit/9de2617f3772cb6139c8f9771932d14cb5f79cb3))
+
+
+### Other changes
+
+- Initial commit ([743753a](https://github.com/ipes-lncc/pymhm/commit/743753a585ebdb56d38a36a412cdcf615afc5cfb))
+
+- Add PyMHM v0 -- still unusable ([503328b](https://github.com/ipes-lncc/pymhm/commit/503328b08267ea327a392d9abcc7b5c2b044fbb2))
+
+- Add comprehensive tests for unfitted phases and trace family ([57f6e4c](https://github.com/ipes-lncc/pymhm/commit/57f6e4c394fbef5057a538d7b9871a1f8258c6ca))
+
+- Add user-defined engineering priorities and architecture guidelines ([a63f43a](https://github.com/ipes-lncc/pymhm/commit/a63f43a111ab474cfba3078a4e8b7a0df13e7cdc))
+
+- Add comprehensive tests for scalar and vector variants, variational assembly, and Fenics integration ([a6fbc61](https://github.com/ipes-lncc/pymhm/commit/a6fbc61f58a80448f6a2f06877530ea9e8bf55bb))
+
+- Add comprehensive tests for hybrid execution and worker lifetime management ([7a607b0](https://github.com/ipes-lncc/pymhm/commit/7a607b0964ed651ac078512bf8ee30c1047af2f6))
+
+- Add comprehensive tests for runtime preparation and solver behavior ([3694cdb](https://github.com/ipes-lncc/pymhm/commit/3694cdb97efa954d8aaac03002e0977240cc6a33))
+
+- Add serial markers to tests and implement pytest suite for process isolation ([25f0cd1](https://github.com/ipes-lncc/pymhm/commit/25f0cd1280cf89de2897600e135741645514a11d))
+
+- Refactor tests and improve error handling across multiple modules ([c11a2d2](https://github.com/ipes-lncc/pymhm/commit/c11a2d270e13522051fd3c5aa7a521716962f93b))
+
+- Update documentation links and remove obsolete roadmap file ([6479f70](https://github.com/ipes-lncc/pymhm/commit/6479f707fb3c299faedfbfdcf92c9043289744c8))
+
+- Refactor installation documentation and update build scripts ([c2e081f](https://github.com/ipes-lncc/pymhm/commit/c2e081f0dba0a4249efcf6741f407d2b6c1f466c))
+
+- Add institutional support section and logos to documentation ([a1b8cc7](https://github.com/ipes-lncc/pymhm/commit/a1b8cc7e8e7fbbc23ad8bcfcbdcb547667bfb923))
+
+- Update and consolidate the ROADMAP ([4a97ce4](https://github.com/ipes-lncc/pymhm/commit/4a97ce46a19a28debe5646341aba5752cecdee93))
+
+- Refactor tests for precision handling and numerical stability ([48a9135](https://github.com/ipes-lncc/pymhm/commit/48a91351030a4a4aba556828d418402819fe0b9b))
+
+
+### Refactoring
+
+- **Breaking:** reorganize PyMHM around a composable variational API ([1427bc2](https://github.com/ipes-lncc/pymhm/commit/1427bc29c1a62e3c25fe3d4b541fb285feb19ab7))
+
+
+### Tests
+
+- verify parallel refinement beyond roundoff ([45dc1b1](https://github.com/ipes-lncc/pymhm/commit/45dc1b1538a47726fa57284c5ca1d993bf5eaaae))
+
 <!-- pymhm:generated:end -->
 
 - Make user-declared `Equation` and `LocalEquations` the primary API: independent
@@ -150,7 +251,7 @@
   adaptive flow campaigns with independently refined classical references,
   signed physical fields and explicit publication comparisons.
 
-The release is pre-alpha. Supported equations, geometry classes, approximation
-spaces and estimator hypotheses are specified in the scientific scope. Material
+Supported equations, geometry classes, approximation spaces and estimator
+hypotheses are specified in the scientific scope. Material
 limits and selected published comparisons do not establish robustness for
 arbitrary meshes, contrasts or trace choices, or reproduce every historical table.
