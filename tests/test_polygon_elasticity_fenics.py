@@ -69,8 +69,8 @@ def compare_polygon_problem(n: int) -> dict[str, Any]:
     domain = dolfinx.mesh.create_mesh(
         MPI.COMM_SELF,
         np.array(cells),
-        points,
-        ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
+        x=points,
+        e=ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
     )
     bdm = basix.ufl.element("BDM", "triangle", 2)
     scalar = basix.ufl.element(

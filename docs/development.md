@@ -178,17 +178,33 @@ artifacts.
 The Tests portable matrix uses `test-core` on Linux x86-64, Windows x86-64 and
 macOS Apple Silicon (ARM64), with additional Python 3.11 and 3.12 jobs on Linux.
 The Integration matrix starts only after every Core matrix job succeeds. It
-contains four native solver jobs: FEniCS/PETSc and MPI on Linux, and PARDISO
-on Linux and Windows. Core jobs collect coverage on each tested platform. The
-Linux FEM job collects native CPU coverage, and a separate Coverage job combines
-the Linux `test-core` and FEM datasets and enforces both 99% gates after Core and
-Integration succeed. `test-fem` selects CPU FEM tests without MPI;
+executes native DOLFINx assembly and SciPy solves on Linux, Windows and macOS,
+FEM/PARDISO in `fem-intel` on Linux and Windows, PETSc/MUMPS and distributed MPI
+on Linux, and the separate PARDISO solver checks on Linux and Windows.
+Windows FEM configures Visual Studio's compiler environment for FFCx JIT.
+`fem-portable-check` requires native DOLFINx/SciPy execution, and
+`fem-portable-pardiso-check` requires native PARDISO as well. They write
+platform, dependency, solver-package and numerical receipts under
+`build/reports/fem-portable-*.json`; unavailable required backends fail the check.
+Receipts include Git HEAD as `source_revision` and the executed tracked
+`src/pymhm` contents as `executed_source_sha256`, including working-tree changes.
+The digest combines sorted tracked POSIX paths and literal file bytes with NUL
+delimiters; the snapshot is checked again after the run. CI artifacts also
+identify their workflow revision.
+`test-fem-portable` runs the corresponding tests. The native processes block
+PETSc imports and verify the assembly dependency boundary separately
+from a Unix environment's PETSc availability. Core jobs collect coverage on
+each tested platform. The Linux FEM job collects native CPU coverage, and a
+separate Coverage job combines the Linux `test-core` and FEM datasets and
+enforces both 99% gates after Core and
+Integration succeed. The Unix `test-fem` selection includes CPU FEM tests
+without MPI, including tests whose independent references require PETSc;
 `test-fem-cov` measures that selection in `build/reports/fem-coverage`,
 leaving the core measurement in its own directory.
 `test-mpi` selects CPU MPI tests, including runs with one, two and four ranks.
 The FEM and MPI jobs upload separate parallel/serial JUnit reports even when a
-test fails. The FEM job checks native imports before starting the suite and
-leaves native standard error visible while capturing Python output. GPU
+test fails. FEM jobs check native imports before starting the suite and
+leave native standard error visible while capturing Python output. GPU
 integrations run in the complete native suite.
 
 Hosted integrations configure `UCX_TLS=tcp,sm,self` to use sockets, shared memory

@@ -22,7 +22,9 @@ def test_canonical_interpolation_matches_basix_and_native_divergence(degree):
 
     mesh = TriangleMesh.unit_square(2)
     coordinate_element = ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,)))
-    domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, mesh.cells, mesh.points, coordinate_element)
+    domain = dolfinx.mesh.create_mesh(
+        MPI.COMM_SELF, mesh.cells, x=mesh.points, e=coordinate_element
+    )
     space = dolfinx.fem.functionspace(domain, basix.ufl.element("RT", "triangle", degree + 1))
     field = dolfinx.fem.Function(space)
 

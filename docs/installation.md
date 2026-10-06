@@ -84,7 +84,7 @@ in the repository, with an index in the [notebook catalogue](tutorials.md).
 `python -m pip install pymhm` installs the coefficient API and Basix polynomial
 core. UFL describes symbolic variational forms; its `fenics-ufl` pip package
 does not supply the DOLFINx native mesh, function-space and assembly runtime.
-For native UFL applications on Linux or macOS, create a Conda environment with
+For native UFL applications on Linux, macOS or Windows, create a Conda environment with
 compatible DOLFINx packages, then install PyMHM using that environment's Python:
 
 ```bash
@@ -94,12 +94,24 @@ python -m pip install pymhm
 python -c "import dolfinx, ufl, pymhm; print(dolfinx.__version__, pymhm.__version__)"
 ```
 
-This follows the [official DOLFINx Conda installation guidance](https://github.com/FEniCS/dolfinx/blob/v0.10.0/README.md#conda).
-For a repository checkout, `pixi run --locked -e fem ...` provides native
-DOLFINx/UFL assembly and PETSc/MUMPS; `pixi run --locked -e introduction ...`
-adds the introductory notebook stack with DOLFINx 0.9. These locked native
-profiles target Linux and macOS; see the [Windows guide](windows.md) for the
-supported portable capabilities.
+This follows the [official DOLFINx Conda installation guidance](https://github.com/FEniCS/dolfinx/blob/main/README.md#conda).
+On Windows, install Visual Studio's C/C++ compiler and Windows SDK and run from
+a developer terminal so the compiler is available for DOLFINx/FFCx JIT.
+Upstream describes its native Windows Conda packages as beta; they do not include
+PETSc or `petsc4py`. See the [Windows guide](windows.md#native-fem-scope).
+
+For a repository checkout, `pixi run --locked -e fem ...` supplies the native
+DOLFINx/UFL stack on Linux, macOS and Windows. Assembly uses native CSR matrices
+and vectors, with no PETSc dependency. It requires an MPI runtime and
+single-rank local meshes such as `MPI.COMM_SELF`; worker processes own their
+native meshes and compiled forms. Choose the numerical solver separately with
+`SolverConfig`: SciPy is the default. The locked `fem-intel` profile adds
+PARDISO on Linux and Windows; other optional solvers retain their stated
+operator and platform requirements. PETSc/MUMPS is included in the Unix FEM
+resolution for the optional `petsc` solvers and distributed assembly. Native
+execution is qualified separately for each platform in CI. The `introduction`
+profile adds the introductory notebook stack; notebook sections using distributed
+PETSc references still require PETSc.
 
 The mesh-associated `bind_problem`/`LocalContext` workflow in the current
 tutorials is available from a source checkout and will be included in the next
@@ -226,7 +238,8 @@ main-branch pushes; the release workflow reuses their checks before publishing.
 
 | Environment / extra | Purpose | Native requirements |
 | --- | --- | --- |
-| `pixi run -e fem ...` | UFL/DOLFINx assembly, PETSc | Unix FEniCS stack from conda-forge; PETSc with MUMPS |
+| `pixi run -e fem ...` | UFL/DOLFINx assembly with independently selected solvers | Linux, macOS or Windows; MPI runtime and JIT compiler; optional PETSc/MUMPS on Unix |
+| `pixi run --locked -e fem-intel ...` | Native UFL/DOLFINx assembly and PARDISO factors | Linux or Windows x86-64; locked MPI, compiler and Intel MKL stack |
 | `pixi run --locked -e introduction ...` | Self-contained introductory notebooks | Locked DOLFINx 0.9, UFL, Basix and notebook stack |
 | `pixi run -e meshing ...` | Gmsh, Netgen, meshio | Meshing libraries resolved by Pixi |
 | `pixi run -e intel ...` | PARDISO | Intel MKL, supported x86-64 platform |
@@ -241,8 +254,9 @@ binding is built against that library; it is not treated as an ordinary
 self-contained Python wheel. See [performance](https://github.com/ipes-lncc/pymhm/blob/main/docs/performance.md) for the verified
 runtime combinations. PETSc scalar types and available factorization packages
 are properties of the installed PETSc build. The `petsc` solver requires MUMPS
-for pivoted factorization of local and global saddle matrices. The locked `fem`
-environment includes it. For a custom PETSc installation, enable MUMPS when
+for pivoted factorization of local and global saddle matrices. The locked Unix
+`fem` environments include it; native DOLFINx assembly with SciPy or PARDISO
+needs neither PETSc nor MUMPS. For a custom PETSc installation, enable MUMPS when
 building PETSc, for example with `--download-mumps`; installing `petsc4py` alone
 does not add a missing native factorization package. Check availability with:
 
@@ -257,6 +271,7 @@ assert PETSc.Sys.hasExternalPackage("mumps")
 ```bash
 pixi run --locked -e test-core test
 pixi run -e fem test-fem
+pixi run --locked -e fem-intel test-fem-portable
 pixi run --locked -e meshing test-meshing
 pixi run -e notebooks notebooks-run
 pixi run --locked -e test-core python examples/verify.py

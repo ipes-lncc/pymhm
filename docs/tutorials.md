@@ -95,6 +95,7 @@ the built-in mesh-associated adapters.
 | Electromagnetics | [Maxwell trajectory](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/maxwell/introductory_methods.ipynb) | Declared DG mass/curl stages, tangential hybrid traces and staggered time stepping |
 | Custom interface representations | [Custom interface](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/custom_interface.ipynb) | Nonorthogonal basis, arbitrary numbering, explicit maps and physical-field equivalence |
 | Local/global algebra | [Providers and batches](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/local_global_providers.ipynb) | Primal/mixed providers, physical gauges, external local solver, serial/spawn batches |
+| Native assembly and sparse solvers | [DOLFINx/UFL with independent sparse solvers](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/dolfinx_sparse_solvers.ipynb) | Native CSR assembly without PETSc; independent SciPy/PARDISO local/global solves; primal P1 Darcy; integral pressure moments; signed normal-flux traces; serial/spawn execution |
 | Native variational assembly | [UFL provider](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/ufl_provider.ipynb) | UFL/DOLFINx local pairings and an independently declared global Equation |
 | Vector variational assembly | [Vector UFL](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/vector_ufl.ipynb) | User-written coercive vector reaction-diffusion and oriented traces |
 | Recursive variational equations | [Three-level hierarchy](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/variational_hierarchy.ipynb) | Independent A/B/C/D blocks, operator recursion and full-matrix comparison |
@@ -119,7 +120,7 @@ same data and spaces used by its predefined-formulation controls.
 ## Problem folders and detailed studies
 
 The complete [notebook catalogue](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/README.md)
-contains all 96 notebooks and the methods used by each. The
+contains all 97 notebooks and the methods used by each. The
 [machine-readable index](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/catalogue.json)
 uses paths relative to the repository root.
 
@@ -140,6 +141,7 @@ uses paths relative to the repository root.
 pixi run --locked -e notebooks notebooks-run darcy/primal_galerkin.ipynb
 pixi run --locked -e notebooks notebooks-run flow/introductory_methods.ipynb
 pixi run --locked -e notebooks notebooks-run 01
+pixi run --locked -e introduction-intel notebooks-run foundations/operators/dolfinx_sparse_solvers.ipynb
 ```
 
 A folder selects its notebooks recursively. Use a qualified path when different

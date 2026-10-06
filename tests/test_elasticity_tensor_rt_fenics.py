@@ -29,8 +29,8 @@ def test_tensor_mixed_operator_against_independent_ufl(
     domain = dolfinx.mesh.create_mesh(
         MPI.COMM_SELF,
         mesh.cells[:, [0, 1, 3, 2]],
-        mesh.points,
-        ufl.Mesh(basix.ufl.element("Lagrange", "quadrilateral", 1, shape=(2,))),
+        x=mesh.points,
+        e=ufl.Mesh(basix.ufl.element("Lagrange", "quadrilateral", 1, shape=(2,))),
     )
     rt = basix.ufl.element("RT", "quadrilateral", s + 1)
     scalar = basix.ufl.element(

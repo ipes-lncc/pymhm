@@ -260,7 +260,7 @@ nav:
   - Three-dimensional Darcy scaling: cases/darcy-3d-scalability.md
   - Three-dimensional CPU and GPU scaling: cases/darcy-3d-accelerators.md
   - Recursive MHM: cases/nested.md
-  - MHM–MsHHO: cases/mshho.md
+  - MsHHO: cases/mshho.md
   - Quarter-five spot and obstacle: cases/quarter-five-spot.md
   - MsHHO in 3D: cases/mshho3d.md
   - Mixed H(div) in 3D: cases/enriched-hdiv3d.md

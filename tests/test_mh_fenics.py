@@ -35,7 +35,7 @@ def test_robin_operator_and_local_response_match_independent_ufl(degree):
     )
     fine = result.local_meshes[0]
     coordinate = ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,)))
-    domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, fine.cells, fine.points, coordinate)
+    domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, fine.cells, x=fine.points, e=coordinate)
     space = dolfinx.fem.functionspace(
         domain,
         basix.ufl.element(

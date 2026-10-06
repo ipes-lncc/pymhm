@@ -279,7 +279,9 @@ def test_native_coordinate_element_and_precision_exclusions() -> None:
         basix.ElementFamily.P, basix.CellType.triangle, 2, basix.LagrangeVariant.equispaced
     )
     domain = ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 2, shape=(2,)))
-    quadratic = mesh.create_mesh(MPI.COMM_SELF, np.arange(6).reshape(1, 6), element.points, domain)
+    quadratic = mesh.create_mesh(
+        MPI.COMM_SELF, np.arange(6).reshape(1, 6), x=element.points, e=domain
+    )
     quadratic_space = fem.functionspace(quadratic, ("Lagrange", 1))
     with pytest.raises(ValueError, match="compiled coordinate element"):
         create_workspace(bundle, quadratic, space_map={0: quadratic_space, 1: quadratic_space})

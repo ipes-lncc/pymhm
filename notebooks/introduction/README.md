@@ -42,8 +42,14 @@ pixi run --locked -e introduction notebooks-run introduction --timeout 3600
 
 The `introduction` environment includes Basix, UFL, DOLFINx, Matplotlib and the
 notebook runner. Its DOLFINx version is pinned to the tested 0.9 backend.
-The native FEM environment is available on Linux and macOS. The introductory
-UFL cells require DOLFINx; the package's portable core remains independent of
+The locked native FEM profile resolves on Linux, macOS and Windows. UFL
+assembly uses DOLFINx's native CSR/vector interfaces independently of PETSc;
+SciPy is the default numerical solver. Windows needs a compatible MPI runtime
+and Visual Studio's C/C++ compiler and Windows SDK available to FFCx JIT.
+The three-dimensional performance notebook's distributed conforming reference
+sections require PETSc/MUMPS and the Unix stack. Native notebook execution is
+qualified separately for each platform; lockfile resolution alone is not a
+native execution receipt. The package's portable core remains independent of
 this optional backend. For interactive execution, open Jupyter with that
 environment:
 

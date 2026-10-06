@@ -129,17 +129,55 @@ jobs:
       matrix:
         include:
           - {kind: fem, label: DOLFINx and PETSc, os: ubuntu-latest, environment: fem}
+          - {kind: fem-portable, label: DOLFINx with SciPy and PARDISO, os: ubuntu-latest, environment: fem-intel}
+          - {kind: fem-portable, label: DOLFINx with SciPy and PARDISO, os: windows-latest, environment: fem-intel}
+          - {kind: fem-portable, label: DOLFINx with SciPy, os: macos-latest, environment: fem}
           - {kind: mpi, label: MPI and MUMPS, os: ubuntu-latest, environment: fem}
           - {kind: intel, label: PARDISO, os: ubuntu-latest, environment: intel}
           - {kind: intel, label: PARDISO, os: windows-latest, environment: intel}
     steps:
       - uses: actions/checkout@v7
+      - name: Activate the Windows C compiler for UFL JIT
+        if: matrix.kind == 'fem-portable' && runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
       - uses: prefix-dev/setup-pixi@v0.10.2
         with:
           pixi-version: v0.76.2
           environments: ${{ matrix.environment }}
           locked: true
           cache: true
+      - name: Require native DOLFINx assembly without selecting PETSc
+        if: matrix.kind == 'fem-portable'
+        run: >-
+          pixi run --locked -e ${{ matrix.environment }} python -c
+          'import dolfinx, basix, ufl; from dolfinx import fem, mesh;
+          from mpi4py import MPI; print("DOLFINx:", dolfinx.__version__);
+          print("Basix:", basix.__version__); print("UFL:", ufl.__version__);
+          print(MPI.Get_library_version())'
+      - name: Verify native UFL equations and fields with SciPy and blocked PETSc
+        if: matrix.kind == 'fem-portable'
+        run: pixi run --locked -e ${{ matrix.environment }} fem-portable-check
+      - name: Verify native UFL equations and fields with PARDISO and blocked PETSc
+        if: matrix.kind == 'fem-portable' && runner.os != 'macOS'
+        run: pixi run --locked -e ${{ matrix.environment }} fem-portable-pardiso-check
+      - name: Exercise generic native forms, spaces, contexts and workspaces
+        if: matrix.kind == 'fem-portable'
+        env:
+          PYTEST_ADDOPTS: --junitxml=build/reports/tests/fem-portable.xml
+        run: >-
+          pixi run --locked -e ${{ matrix.environment }} python scripts/run_tests.py --
+          tests/test_generic_forms_fenics.py tests/test_bound_spaces_fenics.py
+          tests/test_bound_traces_fenics.py tests/test_context_fenics.py
+          tests/test_form_workspace_fenics.py tests/test_fenics_integration.py
+      - uses: actions/upload-artifact@v7
+        if: matrix.kind == 'fem-portable' && always()
+        with:
+          name: fem-portable-${{ matrix.os }}
+          path: |
+            build/reports/fem-portable-*.json
+            build/reports/tests/fem-portable-*.xml
       - name: Require native DOLFINx and PETSc
         if: matrix.kind == 'fem'
         run: >-

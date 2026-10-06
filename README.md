@@ -102,9 +102,14 @@ All implemented capabilities ship
 with the package; optional native backends require their separate dependencies.
 
 The [Windows guide](docs/windows.md) describes native portable-core execution,
-SciPy/PyPardiso selection, process workers and installed-wheel checks. The
-current native FEM/PETSc profiles use Linux or macOS; WSL2 provides those
-environments on a Windows host.
+SciPy/PyPardiso selection, process workers, installed-wheel checks and the
+native DOLFINx/UFL profile. Local FEM assembly uses DOLFINx's CSR/vector
+interfaces independently of PETSc; choose compatible numerical solvers through
+`SolverConfig`. The locked `fem-intel` profile combines FEM assembly with
+PARDISO on Linux and Windows. Native Windows requires an MPI runtime and a
+Visual Studio JIT compiler. PETSc/MUMPS solvers and distributed PETSc workflows
+use the Unix stack, including WSL2 on a Windows host. CI reports qualify each
+platform separately.
 
 ## Verified discretizations and integrations
 
@@ -127,7 +132,7 @@ materials and boundary data; they do not qualify arbitrary user-defined forms.
 - Polygonal local partitions and star-shaped polyhedra with original polygonal face
   spaces; tetrahedral Pk operators, tetrahedral/prismatic mixed H(div) families,
   and mapped hexahedral RT Darcy fields.
-- MHM–MsHHO constructions, recursive local problems, material-fitted integration,
+- MsHHO cell/face moment constructions, recursive local problems, material-fitted integration,
   moment reconstruction, and equation-specific error estimation and adaptation.
 - MH²M pressure traces, Robin-local MH, residual Petrov–Galerkin MHM and
   unusual reaction–diffusion stabilization, with independent finite element checks.
@@ -222,6 +227,7 @@ pixi run --locked -e test-core lint
 pixi run --locked -e test-core typecheck
 pixi run --locked -e test-core coverage-run
 pixi run -e fem test-fem
+pixi run --locked -e fem-intel test-fem-portable
 pixi run -e meshing test-meshing
 pixi run -e packaging build
 pixi run -e packaging check-dist

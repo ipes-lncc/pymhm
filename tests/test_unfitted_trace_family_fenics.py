@@ -33,8 +33,8 @@ def test_high_order_scalar_local_against_native_ufl(degree):
         domain = dolfinx.mesh.create_mesh(
             MPI.COMM_SELF,
             mesh.cells,
-            mesh.points,
-            ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
+            x=mesh.points,
+            e=ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
         )
         space = dolfinx.fem.functionspace(
             domain,

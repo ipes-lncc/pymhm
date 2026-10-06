@@ -61,6 +61,15 @@ caller-owned. Return portable numerical operators and metadata. Thread execution
 requires thread-safe native libraries and independent mutable workspaces for
 concurrent calls.
 
+UFL/DOLFINx local assembly uses native CSR/vector interfaces and does not
+require PETSc. Each local mesh must use a single-rank communicator such as
+`MPI.COMM_SELF`; the MPI runtime remains a DOLFINx dependency. These local
+operators can be solved with SciPy, PARDISO or another compatible configured
+backend in serial, thread or spawn-process execution. Solver choice is
+independent of the provider. Distributed PETSc assembly below is a separate
+path with its own PETSc/MUMPS requirements; see the
+[FEniCS adapter](fenics.md) and [Windows FEM scope](windows.md#native-fem-scope).
+
 `native_threads` defaults to one supported BLAS/OpenMP thread per local job.
 `None` leaves native settings unchanged. Thread limits are process wide during
 each complete thread batch and are restored before its results are yielded; overlapping

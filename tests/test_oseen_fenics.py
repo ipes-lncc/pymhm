@@ -52,8 +52,8 @@ def test_oseen_operator_and_load_against_ufl(degree: int, variable: bool) -> Non
     domain = dolfinx.mesh.create_mesh(
         MPI.COMM_SELF,
         fine.cells,
-        fine.points,
-        ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
+        x=fine.points,
+        e=ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
     )
     variant = basix.LagrangeVariant.equispaced
     space = dolfinx.fem.functionspace(

@@ -8,7 +8,7 @@ The module imports no optional FEM, UFL, MPI or PETSc package at import time.
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping
+from collections.abc import Iterable, Mapping, Sequence
 from importlib import import_module
 from types import ModuleType
 from typing import Any, Literal, cast
@@ -17,6 +17,15 @@ import numpy as np
 from scipy import sparse
 
 from pymhm.core.validation import FloatArray
+
+EntityMaps = Mapping[Any, Any] | Sequence[Any]
+
+
+def _copy_entity_maps(entity_maps: EntityMaps | None) -> dict[Any, Any] | list[Any] | None:
+    """Copy the caller's explicit release-specific entity-map container."""
+    if entity_maps is None:
+        return None
+    return dict(entity_maps) if isinstance(entity_maps, Mapping) else list(entity_maps)
 
 
 def _require(module: str) -> ModuleType:
@@ -139,7 +148,7 @@ def assemble_form(
     shape: tuple[int, ...] | None = None,
     form_compiler_options: Mapping[str, Any] | None = None,
     jit_options: Mapping[str, Any] | None = None,
-    entity_maps: Mapping[Any, Any] | None = None,
+    entity_maps: EntityMaps | None = None,
 ) -> FloatArray | sparse.csr_matrix:
     """Assemble one linear or bilinear UFL form into owned real coefficients.
 
@@ -157,7 +166,11 @@ def assemble_form(
 
     All form domains must use a single-rank communicator, normally COMM_SELF.
     Compiler and JIT options are copied before delegation; ``entity_maps``
-    explicitly describes cross-mesh integration to DOLFINx. This function
+    explicitly describes cross-mesh integration to DOLFINx. Supply the mapping
+    of meshes to index arrays accepted by DOLFINx 0.9, or the sequence of native
+    ``EntityMap`` objects accepted by DOLFINx 0.10. Only the container is copied;
+    its declared indices or native maps are forwarded without conversion.
+    This function
     infers no trace map, normal orientation, quadrature, boundary elimination,
     gauge or transposed coupling. Native matrices, vectors and compiled-form
     references are released before returning their independent array copies.
@@ -191,7 +204,7 @@ def assemble_form(
             dtype=np.float64,
             form_compiler_options=dict(form_compiler_options or {}),
             jit_options=dict(jit_options or {}),
-            entity_maps=None if entity_maps is None else dict(entity_maps),
+            entity_maps=_copy_entity_maps(entity_maps),
         )
         result, assembled = _assemble_compiled(compiled, rank, expected)
         return result
@@ -207,7 +220,7 @@ def assemble_pairing(
     size: int | None = None,
     form_compiler_options: Mapping[str, Any] | None = None,
     jit_options: Mapping[str, Any] | None = None,
-    entity_maps: Mapping[Any, Any] | None = None,
+    entity_maps: EntityMaps | None = None,
 ) -> FloatArray:
     """Assemble ordered linear basis pairings as independent columns or rows.
 

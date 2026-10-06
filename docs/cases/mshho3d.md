@@ -1,9 +1,12 @@
-# Multiscale HHO in three dimensions
+# MsHHO in three dimensions
 
 `solve_mshho_3d` constructs cell and face moments on tetrahedral or convex
 polyhedral macro meshes. The local field minimizes physical diffusion energy
 subject to these moments. Local volume moments are condensed before the global
-face solve. It uses the same projected-source and reconstructed-source
+face-pressure moment solve. MsHHO is the macro discretization, while the local
+energy reconstructions use conforming tetrahedral finite elements on fine
+submeshes. The implemented local discretization is not an HHO method on a
+second mesh. It uses the same projected-source and reconstructed-source
 conventions as the [two-dimensional implementation](mshho.md), following
 [Chaumont-Frelet et al. (2022)](https://doi.org/10.1051/m2an/2021082).
 The article proves equivalence for its ideal local reconstruction spaces.

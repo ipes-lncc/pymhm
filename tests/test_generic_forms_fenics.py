@@ -9,6 +9,7 @@ import pytest
 from numpy.testing import assert_allclose, assert_array_equal
 
 from pymhm.backends.forms import assemble_form, assemble_pairing
+from pymhm.backends.workspace import compile_form_bundle, create_workspace, workspace_key
 
 pytestmark = pytest.mark.fem
 
@@ -100,23 +101,47 @@ def test_native_matrix_vector_and_hdiv_spaces_require_no_named_model(
         assert np.linalg.eigvalsh(operator.toarray()).min() > 0
 
 
+@pytest.mark.parametrize("integration_mesh", ["parent", "submesh"])
 def test_native_submesh_entity_map_is_forwarded_explicitly(
+    integration_mesh: str,
     native_spaces: tuple[Any, Any, Any, Any],
 ) -> None:
-    """A second mesh can supply an argument through DOLFINx's explicit entity map."""
+    """Explicit maps preserve affine cross-mesh moments in either integration direction."""
     import ufl
     from dolfinx import fem, mesh
 
-    domain, _, test, dx = native_spaces
+    domain, _, test, parent_dx = native_spaces
     domain.topology.create_connectivity(2, 2)
     local, local_to_parent, _, _ = mesh.create_submesh(domain, 2, np.array([0, 1], dtype=np.int32))
     space = fem.functionspace(local, ("Lagrange", 1))
     u, v = ufl.TrialFunction(space), ufl.TestFunction(test)
-    parent_to_local = np.full(domain.topology.index_map(2).size_local, -1, dtype=np.int32)
-    parent_to_local[local_to_parent] = np.arange(len(local_to_parent), dtype=np.int32)
-    operator = assemble_form(u * v * dx, entity_maps={local: parent_to_local})
+    dx = parent_dx if integration_mesh == "parent" else ufl.Measure("dx", domain=local)
+    entity_maps: Any
+    if hasattr(local_to_parent, "sub_topology_to_topology"):
+        entity_maps = [local_to_parent]
+    elif integration_mesh == "parent":
+        parent_to_local = np.full(domain.topology.index_map(2).size_local, -1, dtype=np.int32)
+        parent_to_local[local_to_parent] = np.arange(len(local_to_parent), dtype=np.int32)
+        entity_maps = {local: parent_to_local}
+    else:
+        entity_maps = {domain: local_to_parent}
+    form = u * v * dx
+    operator = assemble_form(form, entity_maps=entity_maps)
     assert operator.shape == (9, 4)
-    assert_allclose(operator @ np.ones(4), assemble_form(v * dx), atol=2e-14)
+    assert_allclose(operator @ np.ones(4), assemble_form(v * parent_dx), atol=2e-14)
+    points = space.tabulate_dof_coordinates()
+    affine = 1 + points[:, 0] + 2 * points[:, 1]
+    x = ufl.SpatialCoordinate(domain)
+    assert_allclose(
+        operator @ affine, assemble_form((1 + x[0] + 2 * x[1]) * v * parent_dx), atol=2e-14
+    )
+    bound_mesh = domain if integration_mesh == "parent" else local
+    structural_key = workspace_key(bound_mesh, {"a": form}, entity_maps=entity_maps)
+    assert structural_key == workspace_key(bound_mesh, {"a": form}, entity_maps=entity_maps)
+    assert structural_key != workspace_key(bound_mesh, {"a": form})
+    bundle = compile_form_bundle({"a": form}, bound_mesh.comm)
+    with pytest.raises(ValueError, match="belong to the bound mesh"):
+        create_workspace(bundle, bound_mesh, entity_maps=entity_maps)
 
 
 def test_native_declared_moment_reconstruction_uses_the_generic_operator(

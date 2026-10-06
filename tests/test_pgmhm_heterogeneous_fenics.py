@@ -63,7 +63,7 @@ def test_native_unfitted_high_contrast_operator_and_mixed_boundary_fields():
         coarse = mesh.submesh(cell, 1)
         fine = mesh.submesh(cell, 2)
         coordinate = ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,)))
-        domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, fine.cells, fine.points, coordinate)
+        domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, fine.cells, x=fine.points, e=coordinate)
         space = dolfinx.fem.functionspace(
             domain,
             basix.ufl.element(

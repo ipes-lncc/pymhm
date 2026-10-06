@@ -40,8 +40,8 @@ def test_general_3d_tensor_operator_against_ufl(degree: int) -> None:
     domain = dolfinx.mesh.create_mesh(
         MPI.COMM_SELF,
         fine.cells,
-        fine.points,
-        ufl.Mesh(basix.ufl.element("Lagrange", "tetrahedron", 1, shape=(3,))),
+        x=fine.points,
+        e=ufl.Mesh(basix.ufl.element("Lagrange", "tetrahedron", 1, shape=(3,))),
     )
     space = dolfinx.fem.functionspace(
         domain,

@@ -171,7 +171,7 @@ def _fenics_local(
     from mpi4py import MPI
 
     domain = ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,)))
-    local_mesh = mesh.create_mesh(MPI.COMM_SELF, fine.cells, fine.points, domain)
+    local_mesh = mesh.create_mesh(MPI.COMM_SELF, fine.cells, x=fine.points, e=domain)
     space = fem.functionspace(local_mesh, ("Lagrange", 1))
     entities, tags = [], []
     for side, face in enumerate(coarse.cell_faces[cell]):

@@ -51,7 +51,7 @@ def create_native_mesh(mesh: Any) -> Any:
     native = _require("dolfinx.mesh")
     mpi = _require("mpi4py.MPI")
     coordinates = basix.element("Lagrange", cell, 1, shape=(mesh.points.shape[1],))
-    return native.create_mesh(mpi.COMM_SELF, connectivity, mesh.points, ufl.Mesh(coordinates))
+    return native.create_mesh(mpi.COMM_SELF, connectivity, x=mesh.points, e=ufl.Mesh(coordinates))
 
 
 def _native_cells(mesh: Any, native: Any) -> IntArray:

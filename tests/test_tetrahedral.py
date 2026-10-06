@@ -267,7 +267,7 @@ def test_native_dolfinx_tetrahedral_operator(degree):
         [[0.1, 0.2, 0.3], [1.3, 0.1, 0.2], [0.2, 1.1, 0.4], [0.3, 0.1, 1.4]], [[0, 1, 2, 3]]
     ).submesh(0, 2)
     geometry = ufl.Mesh(basix.element("Lagrange", "tetrahedron", 1, shape=(3,)))
-    domain = dolfinx.mesh.create_mesh(mpi.COMM_SELF, mesh.cells, mesh.points, geometry)
+    domain = dolfinx.mesh.create_mesh(mpi.COMM_SELF, mesh.cells, x=mesh.points, e=geometry)
     space = dolfinx.fem.functionspace(domain, ("Lagrange", degree))
     u, v = ufl.TrialFunction(space), ufl.TestFunction(space)
     x = ufl.SpatialCoordinate(domain)

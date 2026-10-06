@@ -41,8 +41,8 @@ def test_general_tensor_operator_against_independent_ufl(degree: int, minimal: b
     domain = dolfinx.mesh.create_mesh(
         MPI.COMM_SELF,
         fine.cells,
-        fine.points,
-        ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
+        x=fine.points,
+        e=ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
     )
     full_degree = degree + int(minimal)
     space = dolfinx.fem.functionspace(

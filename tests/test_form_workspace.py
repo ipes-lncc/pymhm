@@ -330,6 +330,48 @@ def test_structural_key_records_tags_maps_options_and_real_connectivity(native_a
     assert workspace.workspace_key(native_api.mesh, {"f": form}) != baseline
 
 
+def test_structural_key_records_native_entity_map_correspondence(native_api: Any) -> None:
+    """Native map keys distinguish declared indices, dimensions and topology identities."""
+    form = Form(native_api.space, [1.0, 2.0])
+    parent = SimpleNamespace(_cpp_object=object())
+    submesh = SimpleNamespace(
+        _cpp_object=object(),
+        index_map=lambda dim: SimpleNamespace(size_local=1, num_ghosts=1),
+    )
+    correspondence = np.array([1, 3], dtype=np.int32)
+    observed_entities: list[np.ndarray[Any, Any]] = []
+
+    def map_entities(entities: Any, inverse: bool) -> Any:
+        """Return only the supplied forward correspondence, including ghost entries."""
+        assert inverse is False
+        observed_entities.append(entities.copy())
+        return correspondence[entities]
+
+    entity_map = SimpleNamespace(
+        topology=parent,
+        sub_topology=submesh,
+        dim=1,
+        sub_topology_to_topology=map_entities,
+    )
+    maps = [entity_map]
+    key = workspace.workspace_key(native_api.mesh, {"f": form}, entity_maps=maps)
+    assert_array_equal(observed_entities[0], [0, 1])
+    assert workspace.workspace_key(native_api.mesh, {"f": form}, entity_maps=maps) == key
+    assert workspace.workspace_key(native_api.mesh, {"f": form}, entity_maps=[]) != key
+    correspondence[:] = [3, 1]
+    assert workspace.workspace_key(native_api.mesh, {"f": form}, entity_maps=maps) != key
+    correspondence[:] = [1, 3]
+    entity_map.dim = 2
+    assert workspace.workspace_key(native_api.mesh, {"f": form}, entity_maps=maps) != key
+    entity_map.dim = 1
+    original_parent = parent._cpp_object
+    parent._cpp_object = object()
+    assert workspace.workspace_key(native_api.mesh, {"f": form}, entity_maps=maps) != key
+    parent._cpp_object = original_parent
+    submesh._cpp_object = object()
+    assert workspace.workspace_key(native_api.mesh, {"f": form}, entity_maps=maps) != key
+
+
 def test_native_binding_mesh_element_and_constant_shape_validation(native_api: Any) -> None:
     """Reject a stale mesh or incompatible element/tensor before native form creation."""
     form = Form(native_api.space, [1.0, 2.0])
@@ -450,9 +492,24 @@ def test_bundle_shape_rank_dtype_domain_and_plain_binding_contracts(native_api: 
         assert_array_equal(local.assemble("z"), np.zeros(3))
 
 
-def test_tagged_domains_explicit_domains_and_space_map(native_api: Any) -> None:
+@pytest.mark.parametrize("domain_arity", [3, 4])
+@pytest.mark.parametrize("map_kind", ["mapping", "sequence"])
+def test_tagged_domains_explicit_domains_and_space_map(
+    domain_arity: int,
+    map_kind: str,
+    native_api: Any,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """Integrals pack unique marker ids; caller domains/entity maps are copied."""
     tags = SimpleNamespace(find=lambda identifier: np.array([identifier], dtype=np.int32), dim=1)
+    if domain_arity == 3:
+
+        def domains(kind: Any, topology: Any, entities: Any) -> Any:
+            """Model the public DOLFINx 0.10 integration-domain signature."""
+            native_api.domains.append((kind, entities.copy(), None))
+            return entities
+
+        monkeypatch.setattr(forms._require("dolfinx.fem"), "compute_integration_domains", domains)
 
     def integral(data: Any, marker: Any) -> Any:
         """Declare one exterior-facet integration domain."""
@@ -479,16 +536,20 @@ def test_tagged_domains_explicit_domains_and_space_map(native_api: Any) -> None:
     assert options == {"quadrature_degree": 4} and jit == {"timeout": 10}
     with workspace.create_workspace(bundle, native_api.mesh, space_map={0: native_api.space}):
         assert len(native_api.domains) == 2
+        assert all(item[2] == (1 if domain_arity == 4 else None) for item in native_api.domains)
     manual = [(1, np.array([4]))]
     form._integrals = (integral(manual, 1),)
     with workspace.create_workspace(bundle, native_api.mesh):
         assert_array_equal(native_api.bindings[-1][1]["facet"][0][1], [4])
     supplied = {"facet": manual}
-    entity_maps = {"mesh": np.array([0])}
+    native_map = np.array([0])
+    entity_maps: Any = {"mesh": native_map} if map_kind == "mapping" else (native_map,)
     with workspace.create_workspace(
         bundle, native_api.mesh, subdomains=supplied, entity_maps=entity_maps
     ):
         assert native_api.bindings[-1][4]["entity_maps"] is not entity_maps
+        supplied_map = native_api.bindings[-1][4]["entity_maps"]
+        assert (supplied_map["mesh"] if map_kind == "mapping" else supplied_map[0]) is native_map
         assert native_api.bindings[-1][1]["facet"][0][1] is not manual[0][1]
 
 

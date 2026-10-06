@@ -28,8 +28,8 @@ def test_mixed_family_operator_against_independent_ufl(degree: int, enrichment: 
     domain = dolfinx.mesh.create_mesh(
         MPI.COMM_SELF,
         mesh.cells,
-        mesh.points,
-        ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
+        x=mesh.points,
+        e=ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
     )
     vector = basix.ufl.element("BDM", "triangle", order)
     scalar = basix.ufl.element(
