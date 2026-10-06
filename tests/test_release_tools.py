@@ -47,9 +47,9 @@ def repository(tmp_path: Path) -> Path:
         "recipe/recipe.yaml": 'context:\n  version: "0.1.0"\n',
         "README.md": (
             "[![Version: 0.1.0](https://img.shields.io/badge/version-0.1.0-21918c.svg)](url)\n"
-            "Version 0.1.0 is research software.\n"
+            "Version 0.1.0 is an official release of PyMHM.\n"
         ),
-        "docs/index.md": "This is version 0.1.0, a research implementation.\n",
+        "docs/index.md": "This is version 0.1.0, an official release of PyMHM.\n",
         "CHANGELOG.md": "# Changelog\n\n## 0.1.0\n\n- Original release notes.\n",
         "cliff.toml": (ROOT / "cliff.toml").read_text(encoding="utf-8"),
     }
@@ -141,10 +141,12 @@ def test_prepare_syncs_every_version_and_preserves_previous_and_manual_notes(
     previous = (repository / "CHANGELOG.md").read_bytes()
     readme = repository / "README.md"
     readme.write_bytes(readme.read_bytes().replace(b"\n", b"\r\n"))
-    release.prepare_release(repository, "0.2.0rc1")
-    assert validate_metadata(repository) == "0.2.0rc1"
-    assert b"Version 0.2.0rc1" in readme.read_bytes()
-    assert b"\r\n" in readme.read_bytes()
+    release.prepare_release(repository, "1.0.0")
+    assert validate_metadata(repository) == "1.0.0"
+    assert b"Version 1.0.0 is an official release of PyMHM.\r\n" in readme.read_bytes()
+    assert b"version-1.0.0-21918c.svg" in readme.read_bytes()
+    assert b"Version: 1.0.0" in readme.read_bytes()
+    assert b"0.1.0" not in readme.read_bytes()
     changelog_path = repository / "CHANGELOG.md"
     changelog = changelog_path.read_text(encoding="utf-8")
     assert changelog.endswith(previous.decode().split("\n\n", 1)[1])
@@ -154,14 +156,14 @@ def test_prepare_syncs_every_version_and_preserves_previous_and_manual_notes(
         ),
         encoding="utf-8",
     )
-    release.prepare_release(repository, "0.2.0rc1")
+    release.prepare_release(repository, "1.0.0")
     assert "- Manual migration note." in changelog_path.read_text(encoding="utf-8")
     assert cliff[0][-1] == cliff[1][-1]
     assert _git(repository, "tag", "--list") == "v0.1.0"
-    assert release.check_release(repository)[0] == "0.2.0rc1"
+    assert release.check_release(repository)[0] == "1.0.0"
     pending = _snapshot(repository)
     with pytest.raises(ValueError, match="untagged release"):
-        release.prepare_release(repository, "0.2.0")
+        release.prepare_release(repository, "1.0.1")
     assert _snapshot(repository) == pending
 
 
@@ -204,6 +206,19 @@ def test_prepare_preflight_rejects_existing_tags_old_versions_and_metadata_drift
         release.prepare_release(repository, "0.2.0")
     assert _snapshot(repository) == inconsistent
     citation.write_bytes(original["CITATION.cff"])
+    readme = repository / "README.md"
+    official = b"Version 0.1.0 is an official release of PyMHM.\n"
+    for invalid, message in (
+        (original["README.md"].replace(official, official.replace(b"0.1.0", b"9.9.9")), "version"),
+        (original["README.md"].replace(official, b""), "expected one"),
+        (original["README.md"] + official, "expected one"),
+    ):
+        readme.write_bytes(invalid)
+        inconsistent = _snapshot(repository)
+        with pytest.raises(ValueError, match=f"README.md: {message}"):
+            release.prepare_release(repository, "1.0.0")
+        assert _snapshot(repository) == inconsistent
+    readme.write_bytes(original["README.md"])
     main = _git(repository, "rev-parse", release.MAIN_REF)
     _git(repository, "checkout", "--detach", "v0.1.0")
     with pytest.raises(ValueError, match="branch must include origin/main"):

@@ -192,16 +192,15 @@ Use the locked `release` environment, which provides Git and git-cliff 2.13.1:
 ```bash
 pixi run --locked -e release release-fetch
 pixi run --locked -e release changelog-preview
-pixi run --locked -e release release-prepare 0.2.0
+pixi run --locked -e release release-prepare 1.1.0
 pixi run --locked -e release version-check
 ```
 
 For the first release, before any canonical release tag exists on `origin/main`,
 add `--initial` to both `changelog-preview` and `release-prepare`. For example,
-`pixi run --locked -e release release-prepare 0.1.0 --initial` prepares an initial
-`0.1.0` release. Subsequent releases require a version newer than the last
-release. Supported versions use `X.Y.Z`, optionally followed by `aN`, `bN` or
-`rcN`; their tags are exactly `vVERSION`.
+`pixi run --locked -e release release-prepare 1.0.0 --initial` prepares an initial
+`1.0.0` release. Subsequent releases require a version newer than the last
+release. Official versions use `X.Y.Z`; their tags are exactly `vVERSION`.
 
 Merge the changes to release into `main` before fetching and preparing. Preparation
 uses the nearest canonical release tag on `origin/main`'s first-parent history
@@ -231,9 +230,9 @@ before tagging the resulting main commit. The tasks create no commit or tag:
 ```bash
 git add CHANGELOG.md pyproject.toml pixi.toml src/pymhm/__init__.py
 git add CITATION.cff recipe/recipe.yaml README.md docs/index.md
-git commit -m "chore(release): prepare 0.2.0"
-git tag -a v0.2.0 -m "PyMHM 0.2.0"
-git push origin main v0.2.0
+git commit -m "chore(release): prepare 1.1.0"
+git tag -a v1.1.0 -m "PyMHM 1.1.0"
+git push origin main v1.1.0
 ```
 
 ### Automatic publication
@@ -245,9 +244,9 @@ validation then run in parallel. Quality builds and checks the distributions;
 after all checks pass, PyPI receives those same artifacts through trusted
 publishing. The workflow then creates a GitHub Release using the matching
 CHANGELOG section and checked wheel/sdist, and deploys the documentation through
-`github-pages`. Alpha, beta and release-candidate versions are marked as
-prereleases on GitHub. Push one release tag at a time; release workflows share a
-single concurrency group and never cancel an active publication.
+`github-pages`. Official versions are published as regular GitHub Releases.
+Push one release tag at a time; release workflows share a single concurrency
+group and never cancel an active publication.
 
 Ordinary pushes to `main` check versions and notes without publishing a package.
 The PyPI job runs directly in `publish-pypi.yml`.
@@ -276,15 +275,15 @@ under the same filename; publishing the standard wheel and source archive then
 requires a version whose filenames have not previously been uploaded.
 Keep the prepared version metadata and CHANGELOG section; do not run
 `release-prepare` again, because that command rejects an existing release tag.
-For an unpublished `v0.1.0`, run these commands in Bash after committing:
+For an unpublished `v1.1.0`, run these commands in Bash after committing:
 
 ```bash
 pixi run --locked -e release version-check
-previous_release_tag=$(git rev-parse refs/tags/v0.1.0)
-git tag -f -a v0.1.0 -m "PyMHM 0.1.0" main
+previous_release_tag=$(git rev-parse refs/tags/v1.1.0)
+git tag -f -a v1.1.0 -m "PyMHM 1.1.0" main
 git push --atomic \
-  --force-with-lease="refs/tags/v0.1.0:$previous_release_tag" \
-  origin main refs/tags/v0.1.0
+  --force-with-lease="refs/tags/v1.1.0:$previous_release_tag" \
+  origin main refs/tags/v1.1.0
 ```
 
 The explicit [Git lease](https://git-scm.com/docs/git-push) guards only the tag

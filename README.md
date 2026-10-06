@@ -20,7 +20,7 @@ the same interface; a local operator can itself be another multiscale problem.
 NumPy/SciPy coefficients and optional FEniCS/UFL forms share this contract.
 Basix supplies finite-element bases and tabulation.
 
-Version 0.1.1 is research software in pre-alpha development. Built-in workflows
+Version 0.1.1 is an official release of PyMHM. Built-in workflows
 include triangular and polygonal meshes, Cartesian quadrilaterals, tetrahedra,
 affine prisms, star-shaped polyhedra and mapped hexahedra. Available equations and approximation
 spaces depend on the geometry; the documentation states each verified scope
@@ -239,7 +239,9 @@ release tags; see [development](docs/development.md).
 Prepare release notes and synchronize current versions with
 `pixi run --locked -e release release-prepare VERSION`, after running
 `release-fetch` in the same environment. The task uses git-cliff and preserves
-handwritten notes; the first release requires `--initial`.
+handwritten notes. Official releases use `X.Y.Z` versions and matching `vX.Y.Z`
+tags; for example, prepare `1.1.0` and tag `v1.1.0`. Use `--initial` only when no
+canonical release tag exists in the fetched main-branch history.
 
 Licensed under LGPL-2.1-only. Citation metadata is in `CITATION.cff`.
 

@@ -228,7 +228,7 @@
   adaptive flow campaigns with independently refined classical references,
   signed physical fields and explicit publication comparisons.
 
-The release is pre-alpha. Supported equations, geometry classes, approximation
-spaces and estimator hypotheses are specified in the scientific scope. Material
+Supported equations, geometry classes, approximation spaces and estimator
+hypotheses are specified in the scientific scope. Material
 limits and selected published comparisons do not establish robustness for
 arbitrary meshes, contrasts or trace choices, or reproduce every historical table.

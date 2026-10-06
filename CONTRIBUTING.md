@@ -77,18 +77,18 @@ Git and git-cliff; preparation creates no commit, tag or publication:
 ```bash
 pixi run --locked -e release release-fetch
 pixi run --locked -e release changelog-preview
-pixi run --locked -e release release-prepare 0.2.0
+pixi run --locked -e release release-prepare 1.1.0
 pixi run --locked -e release version-check
 ```
 
-Replace `0.2.0` with the intended version. Supported canonical PEP 440 versions
-are `X.Y.Z`, optionally followed by `aN`, `bN` or `rcN`, such as `0.2.0rc1`.
-The tag must be exactly `vVERSION`. For the first release, before a canonical
+Replace `1.1.0` with the intended version. Official releases use canonical
+`X.Y.Z` versions and the tag must be exactly `vVERSION`.
+For the first release, before a canonical
 release tag exists on `origin/main`, use `--initial` for both commands:
 
 ```bash
 pixi run --locked -e release changelog-preview --initial
-pixi run --locked -e release release-prepare 0.1.0 --initial
+pixi run --locked -e release release-prepare 1.0.0 --initial
 ```
 
 Notes cover the nearest canonical release on the first-parent history of
@@ -127,7 +127,7 @@ Review the eight prepared files and commit them on the preparation branch:
 ```bash
 git add CHANGELOG.md pyproject.toml pixi.toml src/pymhm/__init__.py
 git add CITATION.cff recipe/recipe.yaml README.md docs/index.md
-git commit -m "chore(release): prepare 0.2.0"
+git commit -m "chore(release): prepare 1.1.0"
 ```
 
 Merge that branch into `main` before tagging. If preparation was performed
@@ -138,8 +138,8 @@ directly on `main`, the reviewed commit is already there. From the synchronized
 git switch main
 git pull --ff-only origin main
 pixi run --locked -e release version-check
-git tag -a v0.2.0 -m "PyMHM 0.2.0"
-git push origin main v0.2.0
+git tag -a v1.1.0 -m "PyMHM 1.1.0"
+git push origin main v1.1.0
 ```
 
 Adjust the version consistently in these commands. Push one release tag at a
@@ -147,9 +147,9 @@ time. A `v*` tag pushed to `ipes-lncc/pymhm` triggers validation of synchronized
 versions, usable changelog notes and inclusion in `main`. Tests, Lint and
 Quality, and Docs checks then run in parallel. On success, the workflow publishes
 the checked wheel and sdist to PyPI, creates a GitHub Release with their notes and
-artifacts, and deploys the documentation to GitHub Pages. Alpha, beta and release
-candidates are marked as GitHub prereleases. Ordinary pushes to `main` validate
-the changes without publishing.
+artifacts, and deploys the documentation to GitHub Pages. Official releases are
+published as regular GitHub Releases. Ordinary pushes to `main` validate the
+changes without publishing.
 
 Rerunning a workflow uses its original tagged commit and workflow revision.
 Pushing a fix to `main` does not update an existing tag's workflow. If a release

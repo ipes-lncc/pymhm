@@ -18,7 +18,7 @@ VERSION_FIELDS: dict[str, tuple[str, ...]] = {
     "README.md": (
         r"\[!\[Version: (?P<version>[^\]\r\n]+)\]\(",
         r"https://img\.shields\.io/badge/version-(?P<version>[^/\r\n]+)-21918c\.svg",
-        r"(?m)^Version (?P<version>\S+) is research software",
+        r"(?m)^Version (?P<version>\S+) is an official release of PyMHM\.",
     ),
     "docs/index.md": (r"(?m)^This is version (?P<version>[^,\s]+),",),
 }

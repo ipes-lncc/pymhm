@@ -128,7 +128,7 @@ Darcy. Their case pages record the source revisions, discrete spaces, boundary
 conditions and complete-field comparisons. Labmec/MHM's positive-order
 controller has a separate source-level description from the executed RT0 NeoPZ driver.
 
-This is version 0.1.1, a pre-alpha research implementation. The
+This is version 0.1.1, an official release of PyMHM. The
 [installation guide](installation.md) explains package installation through pip,
 optional backends and the locked environments used for reproducible studies.
 

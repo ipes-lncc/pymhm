@@ -1,7 +1,7 @@
 # Security policy
 
-The package is pre-alpha. Security fixes target the latest development revision
-and the latest release, when one is available.
+Security fixes target the latest official release and the latest development
+revision.
 
 Report vulnerabilities privately through
 [GitHub private vulnerability reporting](https://github.com/ipes-lncc/pymhm/security/advisories/new).
