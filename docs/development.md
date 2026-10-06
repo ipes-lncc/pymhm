@@ -107,7 +107,8 @@ including Linux affinity restrictions. Direct
 must select `-m "not serial"`; attempting to distribute selected serial tests is
 an error. The phase filter respects user `-k` and `-m` selections. Requested
 JUnit XML reports receive `-parallel` and `-serial` filename suffixes so both
-results remain available.
+results remain available. Workers that exit abnormally are not restarted: the
+run fails and retains the failing test's report instead of retrying it.
 
 Coverage starts from fresh, separate measurements for the two phases and combines
 only successful phases. A failed parallel phase stops before the serial phase,
@@ -143,8 +144,10 @@ contains four native solver jobs: FEniCS/PETSc and MPI on Linux, and PARDISO
 on Linux and Windows. Every portable coverage job enforces the independent
 99% line and branch gates. `test-fem` selects CPU FEM tests without MPI;
 `test-mpi` selects CPU MPI tests, including runs with one, two and four ranks.
-The MPI job uploads separate parallel/serial JUnit reports even when a test
-fails. GPU integrations run in the complete native suite.
+The FEM and MPI jobs upload separate parallel/serial JUnit reports even when a
+test fails. The FEM job checks native imports before starting the suite and
+leaves native standard error visible while capturing Python output. GPU
+integrations run in the complete native suite.
 
 The complete CPU/GPU job is an explicit opt-in: dispatch Tests with `full_native`
 enabled on a configured self-hosted Linux runner with the `gpu` label and two

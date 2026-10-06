@@ -36,7 +36,9 @@ def _pytest_arguments(arguments: list[str]) -> list[str]:
     for argument in arguments:
         if (
             argument.startswith("-n")
-            or argument.startswith(("--numprocesses", "--dist", "--cov", "--no-cov"))
+            or argument.startswith(
+                ("--numprocesses", "--dist", "--max-worker-restart", "--cov", "--no-cov")
+            )
             or argument.startswith("--pymhm-test-phase")
         ):
             raise ValueError(
@@ -106,7 +108,8 @@ def run_suite(
     exit code 5. A failed parallel phase stops before serial execution. Coverage
     uses separate temporary measurements and combines them only after both
     phases succeed; the existing check_coverage.py enforces the independent
-    line and branch gates on the resulting JSON.
+    line and branch gates on the resulting JSON. A native worker crash stops
+    the run without restarting workers or repeating the crashing test.
     """
     if workers < 1:
         raise ValueError("workers must be a positive integer")
@@ -130,7 +133,10 @@ def run_suite(
         data_paths = []
         statuses = []
         for phase, scheduling in (
-            ("parallel", ["-n", str(workers), f"--dist={distribution}"]),
+            (
+                "parallel",
+                ["-n", str(workers), f"--dist={distribution}", "--max-worker-restart=0"],
+            ),
             ("serial", ["-n", "0"]),
         ):
             command = [
