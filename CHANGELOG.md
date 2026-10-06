@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0
+
+<!-- pymhm:generated:start -->
+<!-- Source: v1.1.0..93851ed794ba2a9b522b8c2e93635753ca957379 -->
+
+### Features
+
+- **Breaking:** Improve FEniCSx backend multiplatform flexibility (#8) ([93851ed](https://github.com/ipes-lncc/pymhm/commit/93851ed794ba2a9b522b8c2e93635753ca957379))
+
+<!-- pymhm:generated:end -->
+
 ## 1.1.0
 
 <!-- pymhm:generated:start -->
