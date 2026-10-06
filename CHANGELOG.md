@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.1
+
+<!-- pymhm:generated:start -->
+<!-- Source: v0.1.0..73e0ac18f60ac65dbba34213bef51f0f62d44ec5 -->
+
+### Documentation
+
+- explain PyPI filename reuse restrictions ([65dd8f2](https://github.com/ipes-lncc/pymhm/commit/65dd8f28a71aed7b47b7e9d7454dcf777586ab78))
+
+- document pip setup and optional backends ([73e0ac1](https://github.com/ipes-lncc/pymhm/commit/73e0ac18f60ac65dbba34213bef51f0f62d44ec5))
+
+<!-- pymhm:generated:end -->
+
 ## 0.1.0
 
 <!-- pymhm:generated:start -->

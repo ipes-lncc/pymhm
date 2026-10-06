@@ -1,6 +1,6 @@
 [workspace]
 name = "pymhm"
-version = "0.1.0"
+version = "0.1.1"
 requires-pixi = "==0.76.2"
 description = "Composable multiscale hybrid mixed finite element methods"
 channels = ["conda-forge"]
