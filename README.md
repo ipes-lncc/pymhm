@@ -26,16 +26,21 @@ affine prisms, star-shaped polyhedra and mapped hexahedra. Available equations a
 spaces depend on the geometry; the documentation states each verified scope
 and distinguishes it from extensions described in the literature.
 
-## Quick start
+## Installation
 
-Use Pixi 0.76.2, the version required by the workspace and pinned AmgX toolchain.
+Use Python 3.11–3.13 on Linux, macOS or Windows:
 
 ```bash
-pixi --version
-pixi list --locked --no-install -e test-core
-pixi install --locked -e test-core
-pixi run --locked -e test-core test-cov
+python -m pip install pymhm
 ```
+
+The base package includes NumPy, SciPy and Basix. Optional extras add CPU AMG,
+PARDISO, MPI, CUDA solvers, meshing or visualization; for example,
+`python -m pip install "pymhm[amg]"` adds PyAMG.
+The [installation guide](docs/installation.md) covers virtual environments,
+Windows commands, upgrades and native backend requirements.
+
+## Quick start
 
 ```python
 from pymhm import Equation, LocalEquations, MultiscaleProblem, solve
@@ -65,10 +70,6 @@ The introductory [scalar](docs/tutorials/scalar.md),
 [vector](docs/tutorials/vector.md) and [provider](docs/tutorials/providers.md)
 tutorials use small executable problems. They cover primal and mixed H(div)
 locals, explicit interface conventions, physical gauges and custom local solvers.
-
-Install from a checkout with `python -m pip install .`. Wheel, source distribution,
-trusted PyPI publishing and a Conda recipe are provided; no registry publication
-is implied by the presence of those files.
 
 The wheel contains every `pymhm` runtime module, typing files and distribution
 metadata. The source distribution contains `src/pymhm`, `pyproject.toml`,
@@ -124,7 +125,7 @@ materials and boundary data; they do not qualify arbitrary user-defined forms.
 - Basix reference elements, nodal simplex/tensor bases and RT/BDM tabulation,
   with explicit native basis ordering, transformations and coefficient digests.
 - PyVista/VTK export and rendering, including broken finite-element fields and
-  actual macro-mesh overlays (`pip install '.[visualization]'` from a checkout).
+  actual macro-mesh overlays (`python -m pip install "pymhm[visualization]"`).
 - SciPy, PETSc, PARDISO, CuPy and cuDSS solvers; CPU PyAMG and optional GPU AmgX.
   AMG local Neumann solves use a compatible SPD complement.
 - Deterministic serial/thread/process local execution with bounded batches and

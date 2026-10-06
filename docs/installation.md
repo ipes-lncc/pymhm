@@ -4,6 +4,82 @@ The core supports Python 3.11–3.13 and requires NumPy, SciPy, threadpoolctl an
 Basix supplies the built-in polynomial bases without requiring DOLFINx, PETSc or MPI.
 Optional native dependencies are loaded only when their functionality is called.
 
+## Install from PyPI with pip
+
+Use Python 3.11, 3.12 or 3.13. A package installation needs no repository checkout
+or Pixi installation. Create a [virtual environment](https://docs.python.org/3/library/venv.html)
+for your application, then install `pymhm` from PyPI.
+
+On Linux or macOS, with Python 3.12 installed:
+
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install pymhm
+python -c "import pymhm; print(pymhm.__version__)"
+```
+
+On Windows, with Python 3.12 installed, run in PowerShell:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install pymhm
+.\.venv\Scripts\python.exe -c "import pymhm; print(pymhm.__version__)"
+```
+
+Replace `3.12` with `3.11` or `3.13` to select another supported interpreter.
+The Windows commands call the virtual environment's interpreter directly and
+do not require activation. In the commands below, use that interpreter in place
+of `python` if your environment is not activated.
+
+The default installation includes the generic local/global problem API, Basix
+reference elements, portable assembly, SciPy direct and iterative solvers, and
+serial, thread and process execution. Pip installs NumPy, SciPy, threadpoolctl
+and Basix automatically. See the [variational guide](variational.md) for defining
+your equations and selecting solvers, and the [Windows guide](windows.md) for
+native Windows capabilities.
+
+To update an existing installation:
+
+```bash
+python -m pip install --upgrade pymhm
+```
+
+### Optional pip extras
+
+Install extras for the capabilities your application uses. Each extra includes
+the same `pymhm` package and adds the dependencies listed below.
+
+| Command | Additional capability | Requirements |
+| --- | --- | --- |
+| `python -m pip install "pymhm[amg]"` | CPU algebraic multigrid with PyAMG | Supported NumPy/SciPy environment |
+| `python -m pip install "pymhm[intel]"` | Intel MKL PARDISO through PyPardiso | Linux or Windows x86-64; the extra has no PyPardiso dependency on other platforms |
+| `python -m pip install "pymhm[mpi]"` | MPI communication through mpi4py | Compatible MPI runtime and launcher; follow the [mpi4py installation guide](https://mpi4py.readthedocs.io/en/stable/install.html) |
+| `python -m pip install "pymhm[gpu]"` | CuPy and nvmath CUDA solvers | Linux or Windows with a compatible NVIDIA GPU and driver; CUDA 12 packages |
+| `python -m pip install "pymhm[meshing]"` | Gmsh, Netgen and meshio | Native library and wheel availability for your platform |
+| `python -m pip install "pymhm[visualization]"` | PyVista and VTK plotting | A compatible graphics or offscreen rendering environment |
+
+Combine extras in one installation, for example:
+
+```bash
+python -m pip install "pymhm[amg,intel,meshing,visualization]"
+```
+
+The GPU extra selects CUDA 12 Python packages; it does not install a GPU driver
+or qualify a particular machine. Follow the [CuPy installation guide](https://docs.cupy.dev/en/stable/install.html)
+and [nvmath installation guide](https://docs.nvidia.com/cuda/nvmath-python/latest/installation.html)
+for runtime requirements. The package's [execution guide](execution.md) documents
+GPU solver configuration and verified measurements.
+
+DOLFINx, UFL, PETSc/MUMPS and AmgX are separate backend installations. There is
+no `fem` or `amgx` pip extra. Installing the `mpi` extra supplies mpi4py, rather
+than a complete FEniCS/PETSc stack. Use the locked FEM/HPC environments below
+for the supported native integration; see [optional capabilities](#optional-capabilities)
+for PETSc/MUMPS and AmgX requirements. Notebooks and their datasets are available
+in the repository, with an index in the [notebook catalogue](tutorials.md).
+
 ## From a checkout
 
 Install Pixi 0.76.2; both the workspace and the pinned AmgX toolchain require this
@@ -33,11 +109,12 @@ python -m pip install .
 pixi run --locked -e test-core build
 ```
 
-Install from a checkout until a release is published. The repository includes
-a Conda recipe and CI that automatically publishes checked PyPI distributions
-and documentation on validated release tags. Building distribution artifacts
-locally does not publish them. Release configuration and required repository
-settings are described in [development](development.md).
+Use a checkout for development, notebooks and reproducible scientific runs.
+The repository includes a Conda recipe and CI that automatically publishes
+checked PyPI distributions and documentation on validated release tags.
+Building distribution artifacts locally does not publish them. Release
+configuration and required repository settings are described in
+[development](development.md).
 
 Both release formats provide the complete `pymhm` runtime. The wheel contains
 runtime modules, typing files, license and distribution metadata. The source
@@ -126,8 +203,8 @@ main-branch pushes; the release workflow reuses their checks before publishing.
 | `pixi run -e intel ...` | PARDISO | Intel MKL, supported x86-64 platform |
 | `pixi run -e gpu ...` | CuPy QR and cuDSS | NVIDIA device and driver; locked CUDA 12.9 runtime |
 | `pixi run --locked -e hpc ...` | MPI, distributed MUMPS and local cuDSS on GPUs | Linux CUDA host; MPI/PETSc and CUDA resolved together |
-| `pip install '.[amg]'` | CPU algebraic multigrid | PyAMG |
-| `pip install '.[meshing]'` | Import/export and generators | Wheel availability depends on platform |
+| `python -m pip install "pymhm[amg]"` | CPU algebraic multigrid | PyAMG |
+| `python -m pip install "pymhm[meshing]"` | Import/export and generators | Wheel availability depends on platform |
 | `pixi run -e notebooks ...` | Execute notebooks | Jupyter/nbclient and plotting stack |
 
 AmgX uses the optional `pyamgx` bindings and the native NVIDIA AmgX library. The
