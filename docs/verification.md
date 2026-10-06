@@ -21,6 +21,17 @@ and discretization errors are assessed separately. Archive digests, declared
 basis identities and metadata contracts remain exact. Set scientific acceptance
 criteria before acquisition and retain them with the numerical records.
 
+For independently computed unit-scale bases and tabulations, use explicit
+absolute and relative comparison budgets of $10^{-12}$. Unit-scale solved-field
+patch checks typically allow $10^{-10}$. Derivative cancellation checks scale
+their absolute bound by the sum of the absolute contributions, accounting for
+physical inverse lengths.
+These are comparison budgets, not solver stopping tolerances. Small physical
+quantities and deliberate precision-limit tests retain bounds tied to their own
+scale rather than a unit-scale absolute floor. A freshly computed basis may
+vary within its numerical comparison budget; each archived basis digest still
+identifies the exact matrix used for reconstruction.
+
 Native qualification includes DOLFINx/Basix operators and field comparisons,
 real spawn workers constructing UFL local problems, and PARDISO execution.
 Native MPI, GPU, meshing, PyVista and FreeFEM/BAMG checks have separate environment

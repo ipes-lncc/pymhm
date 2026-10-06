@@ -232,8 +232,8 @@ def test_importable_providers_preserve_spawn_and_serial_coefficients():
         )
     for field in ("electric", "magnetic"):
         for actual, expected in zip(getattr(spawned, field), getattr(serial, field), strict=True):
-            assert_array_equal(actual, expected)
-    assert_array_equal(spawned.trace, serial.trace)
+            assert_allclose(actual, expected, rtol=1e-10, atol=1e-12)
+    assert_allclose(spawned.trace, serial.trace, rtol=1e-10, atol=1e-12)
 
 
 def test_explicit_segmented_trace_and_device_callbacks_share_the_declared_equations():

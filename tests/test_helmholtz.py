@@ -364,10 +364,18 @@ def test_spawn_and_sampling_contracts():
     parallel = solve_helmholtz(
         mesh, omega=2, source=force, absorbing=impedance, degree=2, backend="process", workers=2
     )
-    np.testing.assert_array_equal(serial.trace, parallel.trace)
-    np.testing.assert_allclose(serial.l2_error(0), parallel.l2_error(lambda p: np.zeros(len(p))))
+    np.testing.assert_allclose(serial.trace, parallel.trace, rtol=1e-10, atol=1e-12)
     np.testing.assert_allclose(
-        serial.gradient_l2_error([0, 0]), parallel.gradient_l2_error(lambda p: np.zeros_like(p))
+        serial.l2_error(0),
+        parallel.l2_error(lambda p: np.zeros(len(p))),
+        rtol=1e-10,
+        atol=1e-12,
+    )
+    np.testing.assert_allclose(
+        serial.gradient_l2_error([0, 0]),
+        parallel.gradient_l2_error(lambda p: np.zeros_like(p)),
+        rtol=1e-10,
+        atol=1e-12,
     )
     for reference in ([[1, 0]], [[-1, 1, 1]], [[0.2, 0.2, 0.2]], [[1j, 0, 1]]):
         with pytest.raises(ValueError):

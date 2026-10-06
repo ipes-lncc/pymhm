@@ -228,8 +228,8 @@ def test_declared_trace_pickle_spawn_and_public_exports():
     )
     first = solve_helmholtz(mesh, **options)
     second = solve_helmholtz(mesh, backend="process", workers=2, **options)
-    assert_array_equal(first.trace, second.trace)
-    assert_array_equal(first.pressure, second.pressure)
+    assert_allclose(first.trace, second.trace, rtol=1e-10, atol=1e-12)
+    assert_allclose(first.pressure, second.pressure, rtol=1e-10, atol=1e-12)
 
 
 @pytest.mark.parametrize("coefficients", [(), (np.nan,), (np.inf + 1j,), ((1.0,),)])

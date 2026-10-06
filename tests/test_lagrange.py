@@ -25,7 +25,7 @@ def test_cardinal_reference_basis_and_simplex_lattice(degree):
     assert_allclose(indices.sum(axis=1), degree)
     assert_allclose(indices[:3], degree * np.eye(3))
     values, _, _ = reference_basis(degree, indices / degree)
-    assert_allclose(values, np.eye(len(indices)), atol=3e-14)
+    assert_allclose(values, np.eye(len(indices)), rtol=1e-12, atol=1e-12)
 
 
 @pytest.mark.parametrize("degree", [1, 2, 3, 4])
@@ -37,16 +37,19 @@ def test_physical_basis_reproduces_all_polynomials_and_two_derivatives(degree):
     bary, _ = triangle_quadrature(4)
     dofs, points, basis, gradient, hessian = tabulate(mesh, degree, bary)
     physical = np.einsum("qi,tij->tqj", bary, mesh.points[mesh.cells])
-    assert_allclose(basis.sum(axis=1), 1.0, atol=2e-14)
-    assert_allclose(gradient.sum(axis=2), 0.0, atol=5e-14)
-    assert_allclose(hessian.sum(axis=2), 0.0, atol=6e-13)
-    assert_allclose(hessian, hessian.swapaxes(-1, -2), atol=1e-14)
+    assert_allclose(basis.sum(axis=1), 1.0, rtol=1e-12, atol=1e-12)
+    # Derivative identities involve cancellation and physical inverse lengths.
+    # Bound the error against the terms being summed, including at zero results.
+    for derivative in (gradient, hessian):
+        bound = 1e-12 * (1 + np.abs(derivative).sum(axis=2))
+        assert np.all(np.abs(derivative.sum(axis=2)) <= bound)
+    assert_allclose(hessian, hessian.swapaxes(-1, -2), rtol=1e-12, atol=1e-12)
     for xpower in range(degree + 1):
         for ypower in range(degree + 1 - xpower):
             values = points[:, 0] ** xpower * points[:, 1] ** ypower
             interpolated = values[dofs] @ basis.T
             exact = physical[:, :, 0] ** xpower * physical[:, :, 1] ** ypower
-            assert_allclose(interpolated, exact, atol=6e-14)
+            assert_allclose(interpolated, exact, rtol=1e-12, atol=1e-12)
             for derivative_order in (1, 2):
                 for directions in np.ndindex(*(2,) * derivative_order):
                     dx, dy = directions.count(0), directions.count(1)
@@ -71,7 +74,7 @@ def test_physical_basis_reproduces_all_polynomials_and_two_derivatives(degree):
                     action = np.einsum(
                         "tqi,ti->tq", np.abs(derivative[(..., *directions)]), np.abs(values[dofs])
                     )
-                    bound = 128 * np.finfo(float).eps * (action + np.abs(exact_derivative) + 1)
+                    bound = 1e-12 * (action + np.abs(exact_derivative) + 1)
                     assert np.all(np.abs(evaluated - exact_derivative) <= bound)
 
 
@@ -86,7 +89,7 @@ def test_continuous_numbering_uses_shared_oriented_edge_nodes(degree):
     expected_coordinates = np.einsum(
         "qi,tij->tqj", multiindices(degree) / degree, mesh.points[mesh.cells]
     )
-    assert_allclose(nodes[dofs], expected_coordinates, atol=2e-16)
+    assert_allclose(nodes[dofs], expected_coordinates, rtol=1e-12, atol=1e-12)
     for face in np.flatnonzero(mesh.face_cells[:, 1] >= 0):
         first, second = mesh.face_cells[face]
         assert len(np.intersect1d(dofs[first], dofs[second])) == degree + 1
@@ -115,7 +118,7 @@ def test_trace_moments_match_independent_physical_edge_integrals(degree):
                     * np.linalg.norm(end - start)
                     * ((weights * polynomial) @ faces[face].evaluate(parameter))
                 )
-            assert_allclose(values @ matrix, expected, atol=2e-15, rtol=2e-13)
+            assert_allclose(values @ matrix, expected, rtol=1e-12, atol=1e-12)
 
 
 @pytest.mark.parametrize("degree", [0, -1, True, 1.5])

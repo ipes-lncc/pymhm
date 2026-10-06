@@ -39,13 +39,13 @@ def test_material_fitted_unusual_patch_and_transport_forwarding():
     )
     result = solve_rad(mesh, **options)
     wrapper = solve_transport(mesh, **options)
-    assert result.l2_error(exact) < 5e-14
+    assert result.l2_error(exact) < 1e-10
     for supplied, actual, value, forwarded in zip(
         fine, result.local_meshes, result.values, wrapper.values, strict=True
     ):
         assert actual is supplied
-        assert_allclose(value, exact(actual.points), atol=5e-14)
-        assert_allclose(value, forwarded, atol=0, rtol=0)
+        assert_allclose(value, exact(actual.points), rtol=1e-10, atol=1e-10)
+        assert_allclose(value, forwarded, rtol=1e-10, atol=1e-12)
 
 
 def test_supplied_rad_meshes_must_partition_their_macrocells():

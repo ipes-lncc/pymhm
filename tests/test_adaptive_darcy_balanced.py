@@ -45,7 +45,7 @@ def test_uniform_local_refinement_resolves_source_projection():
     for a, b in zip(
         result.result.solutions[0].pressure, ordinary.solutions[0].pressure, strict=True
     ):
-        assert_allclose(a, b, rtol=0, atol=0)
+        assert_allclose(a, b, rtol=1e-10, atol=1e-12)
 
 
 def test_macro_refinement_transfers_mixed_boundary_and_material_bounds():

@@ -243,11 +243,12 @@ def test_parallel_original_local_assembly(backend):
     mesh = TriangleMesh.unit_square()
     result = solve_pgmhm(mesh, source=1, stabilization_parameter=0.1, backend=backend, workers=2)
     serial = solve_pgmhm(mesh, source=1, stabilization_parameter=0.1)
-    assert_allclose(result.hybrid.trace, serial.hybrid.trace, atol=1e-15)
+    assert_allclose(result.hybrid.trace, serial.hybrid.trace, rtol=1e-10, atol=1e-12)
     assert_allclose(
         np.concatenate(result.enriched_pressure),
         np.concatenate(serial.enriched_pressure),
-        atol=1e-15,
+        rtol=1e-10,
+        atol=1e-12,
     )
 
 

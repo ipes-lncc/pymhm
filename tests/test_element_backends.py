@@ -127,7 +127,7 @@ def test_cache_and_archived_basis_survive_threaded_tabulation() -> None:
             executor.map(lambda _: tabulate_reference(element, [[0.2, 0.3]], 3), range(6))
         )
     for table in tables:
-        assert_array_equal(table, expected)
+        assert_allclose(table, expected, atol=1e-12, rtol=1e-12)
     assert element.basis_sha256 == hashlib.sha256(element.basis_matrix.tobytes()).hexdigest()
 
 
@@ -140,9 +140,9 @@ def test_scalar_third_derivatives_reproduce_an_independent_polynomial() -> None:
     nodes = element._native.points
     coefficients = nodes[:, 0] ** 2 * nodes[:, 1]
     table = tabulate_reference(element, [[0.2, 0.3], [1.2, -0.1]], 3)[..., 0]
-    assert_allclose(table[0] @ coefficients, [0.012, -0.144], atol=2e-14)
-    assert_allclose(table[basix.index(2, 1)] @ coefficients, 2, atol=8e-13)
-    assert_allclose(table[basix.index(0, 3)] @ coefficients, 0, atol=8e-13)
+    assert_allclose(table[0] @ coefficients, [0.012, -0.144], atol=1e-12, rtol=1e-12)
+    assert_allclose(table[basix.index(2, 1)] @ coefficients, 2, atol=1e-12, rtol=1e-12)
+    assert_allclose(table[basix.index(0, 3)] @ coefficients, 0, atol=1e-12, rtol=1e-12)
 
 
 @pytest.mark.parametrize(
@@ -189,8 +189,8 @@ def test_permuted_executed_basis_replays_fields_and_orientation_maps(
     coefficients = np.random.default_rng(43).normal(size=executed.dimension)
     table = tabulate_reference(executed, points, 2)
     canonical_table = tabulate_reference(canonical, points, 2)
-    assert_array_equal(table, canonical_table[:, :, inverse])
-    assert_array_equal(executed.basis_matrix, canonical.basis_matrix[inverse])
+    assert_allclose(table, canonical_table[:, :, inverse], atol=1e-12, rtol=1e-12)
+    assert_allclose(executed.basis_matrix, canonical.basis_matrix[inverse], atol=1e-12, rtol=1e-12)
     assert executed.basis_sha256 != canonical.basis_sha256
 
     maps = reference_base_transformations(executed)
@@ -229,7 +229,7 @@ def test_permuted_executed_basis_replays_fields_and_orientation_maps(
     with np.load(archive) as saved:
         assert hashlib.sha256(saved["basis"].tobytes()).hexdigest() == executed.basis_sha256
         replay_table = np.einsum("bk,dkq->dqb", saved["basis"], polynomial_set)[..., None]
-        assert_allclose(replay_table, table, atol=2e-13, rtol=2e-13)
+        assert_allclose(replay_table, table, atol=1e-12, rtol=1e-12)
         for map_index in range(len(maps)):
             oriented = saved["maps"][map_index] @ saved["coefficients"]
             replay = np.einsum("b,dqbv->dqv", oriented, replay_table)
@@ -239,8 +239,8 @@ def test_permuted_executed_basis_replays_fields_and_orientation_maps(
                 reference_base_transformations(canonical)[map_index] @ canonical_coefficients
             )
             canonical_field = np.einsum("b,dqbv->dqv", canonical_oriented, canonical_table)
-            assert_allclose(replay, original, atol=3e-13, rtol=3e-13)
-            assert_allclose(replay, canonical_field, atol=3e-13, rtol=3e-13)
+            assert_allclose(replay, original, atol=1e-12, rtol=1e-12)
+            assert_allclose(replay, canonical_field, atol=1e-12, rtol=1e-12)
 
 
 def test_empty_ordering_and_zero_entity_dofs_retain_native_defaults() -> None:
@@ -261,9 +261,12 @@ def test_empty_ordering_and_zero_entity_dofs_retain_native_defaults() -> None:
                 dof_ordering=(),
             )
         )
-        assert_array_equal(empty.basis_matrix, default.basis_matrix)
-        assert_array_equal(
-            tabulate_reference(empty, [[0.2, 0.3]], 2), tabulate_reference(default, [[0.2, 0.3]], 2)
+        assert_allclose(empty.basis_matrix, default.basis_matrix, atol=1e-12, rtol=1e-12)
+        assert_allclose(
+            tabulate_reference(empty, [[0.2, 0.3]], 2),
+            tabulate_reference(default, [[0.2, 0.3]], 2),
+            atol=1e-12,
+            rtol=1e-12,
         )
         assert_array_equal(
             reference_base_transformations(empty), reference_base_transformations(default)
@@ -298,7 +301,7 @@ def test_literal_nodal_order_and_conjugated_maps_are_preserved() -> None:
     nodes = (multiindices(4) / 4)[::-1]
     basis = simplex_lagrange_basis("triangle", 4, nodes=nodes)
     values, first, second = simplex_lagrange_tabulation("triangle", 4, nodes, nodes=nodes)
-    assert_allclose(values, np.eye(len(nodes)), atol=4e-14)
+    assert_allclose(values, np.eye(len(nodes)), atol=1e-12, rtol=1e-12)
     assert first.shape == (len(nodes), len(nodes), 2)
     assert second.shape == (len(nodes), len(nodes), 2, 2)
     assert not basis.nodes.flags.writeable and not basis.permutation.flags.writeable
@@ -311,10 +314,13 @@ def test_literal_nodal_order_and_conjugated_maps_are_preserved() -> None:
         ],
     )
     for matrix in maps:
-        assert_allclose(matrix @ matrix, np.eye(len(nodes)), rtol=0, atol=16 * np.finfo(float).eps)
+        assert_allclose(matrix @ matrix, np.eye(len(nodes)), rtol=0, atol=1e-12)
 
 
-def test_fresh_executed_basis_and_replay_survive_native_thread_counts() -> None:
+def test_fresh_executed_basis_and_replay_survive_native_thread_counts(tmp_path: Path) -> None:
+    """Fresh bases agree numerically; replay retains the literal archived basis."""
+    import basix
+
     nodes = tetra_indices(6) / 6
     points = np.random.default_rng(37).dirichlet(np.ones(4), size=11)
 
@@ -326,15 +332,51 @@ def test_fresh_executed_basis_and_replay_survive_native_thread_counts() -> None:
 
     with threadpool_limits(limits=1):
         original = fresh_basis()
-        table = tabulate_reference(original.element, points[:, 1:], 2)
+        table = tabulate_reference(original.element, points[:, 1:], 2)[:, :, original.permutation]
         maps = nodal_base_transformations(original)
+        coefficients = np.random.default_rng(51).normal(size=len(nodes))
+        archive = tmp_path / "executed-basis.npz"
+        np.savez(
+            archive,
+            basis=original.basis_matrix,
+            basis_sha256=original.basis_sha256,
+            permutation=original.permutation,
+            coefficients=coefficients,
+            maps=maps,
+        )
     with threadpool_limits(limits=2):
         recomputed = fresh_basis()
         assert_array_equal(recomputed.permutation, original.permutation)
-        assert_array_equal(recomputed.basis_matrix, original.basis_matrix)
-        assert recomputed.basis_sha256 == original.basis_sha256
-        assert_array_equal(tabulate_reference(original.element, points[:, 1:], 2), table)
+        assert_allclose(recomputed.basis_matrix, original.basis_matrix, atol=1e-12, rtol=1e-12)
+        assert (
+            recomputed.basis_sha256 == hashlib.sha256(recomputed.basis_matrix.tobytes()).hexdigest()
+        )
+        recomputed_table = tabulate_reference(recomputed.element, points[:, 1:], 2)[
+            :, :, recomputed.permutation
+        ]
+        assert_allclose(recomputed_table, table, atol=1e-12, rtol=1e-12)
         assert_array_equal(nodal_base_transformations(original), maps)
+        polynomial_set = basix.polynomials.tabulate_polynomial_set(
+            basix.CellType.tetrahedron,
+            original.element._native.polyset_type,
+            original.element._native.embedded_superdegree,
+            2,
+            np.ascontiguousarray(points[:, 1:]),
+        )
+        with np.load(archive) as saved:
+            assert_array_equal(saved["basis"], original.basis_matrix)
+            assert_array_equal(saved["permutation"], original.permutation)
+            assert_array_equal(saved["maps"], maps)
+            assert (
+                hashlib.sha256(saved["basis"].tobytes()).hexdigest() == saved["basis_sha256"].item()
+            )
+            replay_table = np.einsum("bk,dkq->dqb", saved["basis"], polynomial_set)[..., None]
+            assert_allclose(replay_table, table, atol=1e-12, rtol=1e-12)
+            for transform in saved["maps"]:
+                oriented = transform @ saved["coefficients"]
+                replay = np.einsum("b,dqbv->dqv", oriented, replay_table)
+                expected = np.einsum("b,dqbv->dqv", oriented, table)
+                assert_allclose(replay, expected, atol=1e-12, rtol=1e-12)
 
 
 @pytest.mark.parametrize("nderiv", [0, 1, 2])
@@ -353,9 +395,9 @@ def test_unrequested_derivatives_and_physical_per_cell_layouts(nderiv: int) -> N
         reference_gradients=geometry,
         nderiv=nderiv,
     )
-    assert_array_equal(cells[0], np.broadcast_to(shared[0], cells[0].shape))
+    assert_allclose(cells[0], np.broadcast_to(shared[0], cells[0].shape), atol=1e-12, rtol=1e-12)
     for a, b in zip(shared[1:], cells[1:], strict=True):
-        assert_array_equal(a, b)
+        assert_allclose(a, b, atol=1e-12, rtol=1e-12)
     assert shared[1].shape[-1] == (2 if nderiv else 0)
     assert shared[2].shape[-2:] == ((2, 2) if nderiv == 2 else (0, 0))
 

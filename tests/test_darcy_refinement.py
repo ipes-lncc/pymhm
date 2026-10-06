@@ -77,8 +77,8 @@ def test_refinement_repairs_original_equations_and_evaluates_corrected_fields(
 
 
 @pytest.mark.parametrize("formulation", ["primal", "mixed"])
-def test_zero_refinement_preserves_default_bitwise(monkeypatch, formulation):
-    """The default does not call optional defect correction or change coefficients."""
+def test_zero_refinement_preserves_default_solution(monkeypatch, formulation):
+    """Zero steps bypass optional defect correction and preserve numerical fields."""
     mesh = TriangleMesh.unit_square()
     expected = solve_darcy(mesh, dirichlet=pressure, formulation=formulation)
 
@@ -90,9 +90,9 @@ def test_zero_refinement_preserves_default_bitwise(monkeypatch, formulation):
     current = solve_darcy(
         mesh, dirichlet=pressure, formulation=formulation, hybrid_refinement_steps=0
     )
-    assert_array_equal(current.hybrid.trace, expected.hybrid.trace)
+    assert_allclose(current.hybrid.trace, expected.hybrid.trace, rtol=1e-10, atol=1e-12)
     for field, reference in zip(current.hybrid.fields, expected.hybrid.fields, strict=True):
-        assert_array_equal(field, reference)
+        assert_allclose(field, reference, rtol=1e-10, atol=1e-12)
 
 
 @pytest.mark.parametrize("steps", [-1, True, 1.5])

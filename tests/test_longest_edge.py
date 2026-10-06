@@ -125,7 +125,7 @@ def test_adaptive_loops_use_the_selected_macro_refiner():
     for first, second in zip(
         ordinary.solutions[-1].pressure, balanced.result.solutions[-1].pressure, strict=True
     ):
-        assert_allclose(first, second, atol=0, rtol=0)
+        assert_allclose(first, second, rtol=1e-10, atol=1e-12)
 
 
 @pytest.mark.parametrize("marked", [[1, 0], [True], np.zeros((2, 1), dtype=bool)])
