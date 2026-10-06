@@ -5,6 +5,7 @@
 </p>
 
 [![Tests](https://github.com/ipes-lncc/pymhm/actions/workflows/tests.yml/badge.svg)](https://github.com/ipes-lncc/pymhm/actions/workflows/tests.yml)
+[![Coverage](https://codecov.io/github/ipes-lncc/pymhm/branch/main/graph/badge.svg)](https://app.codecov.io/github/ipes-lncc/pymhm)
 [![Lint and Quality](https://github.com/ipes-lncc/pymhm/actions/workflows/lint-and-quality.yml/badge.svg)](https://github.com/ipes-lncc/pymhm/actions/workflows/lint-and-quality.yml)
 [![Docs](https://github.com/ipes-lncc/pymhm/actions/workflows/docs.yml/badge.svg)](https://ipes-lncc.github.io/pymhm/)
 [![Publish to PyPI](https://github.com/ipes-lncc/pymhm/actions/workflows/publish-pypi.yml/badge.svg)](https://github.com/ipes-lncc/pymhm/actions/workflows/publish-pypi.yml)
