@@ -16,6 +16,8 @@
 
 ### Documentation
 
+- Explain installing PyMHM with pip inside a DOLFINx-enabled environment and
+  distinguish symbolic UFL forms from native finite-element assembly.
 - Present the mesh, space, local/global formulation, assembly, solve and
   postprocessing workflow in the overview and introductory notebooks. Add an
   advanced custom-interface tutorial and document native integration limits.
@@ -24,6 +26,9 @@
 
 ### Maintenance
 
+- Qualify full-package line and branch coverage from portable core tests and
+  native DOLFINx integrations, retaining the independent 99% thresholds and
+  uploading the combined report to Codecov.
 - Preserve existing numerical discretizations and solver criteria through
   independent original-equation, basis-replay and native integration controls.
 - Carry pending changelog notes into release preparation without modifying

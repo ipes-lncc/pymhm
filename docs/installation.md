@@ -74,11 +74,32 @@ for runtime requirements. The package's [execution guide](execution.md) document
 GPU solver configuration and verified measurements.
 
 DOLFINx, UFL, PETSc/MUMPS and AmgX are separate backend installations. There is
-no `fem` or `amgx` pip extra. Installing the `mpi` extra supplies mpi4py, rather
-than a complete FEniCS/PETSc stack. Use the locked FEM/HPC environments below
-for the supported native integration; see [optional capabilities](#optional-capabilities)
-for PETSc/MUMPS and AmgX requirements. Notebooks and their datasets are available
+no `fem` or `amgx` pip extra. Installing the `mpi` extra supplies mpi4py. See
+[optional capabilities](#optional-capabilities) for PETSc/MUMPS and AmgX
+requirements. Notebooks and their datasets are available
 in the repository, with an index in the [notebook catalogue](tutorials.md).
+
+### Native UFL assembly
+
+`python -m pip install pymhm` installs the coefficient API and Basix polynomial
+core. UFL describes symbolic variational forms; its `fenics-ufl` pip package
+does not supply the DOLFINx native mesh, function-space and assembly runtime.
+For native UFL applications on Linux or macOS, create a Conda environment with
+compatible DOLFINx packages, then install PyMHM using that environment's Python:
+
+```bash
+conda create -n pymhm-fem -c conda-forge python=3.12 "fenics-dolfinx>=0.9,<0.11" pip
+conda activate pymhm-fem
+python -m pip install pymhm
+python -c "import dolfinx, ufl, pymhm; print(dolfinx.__version__, pymhm.__version__)"
+```
+
+This follows the [official DOLFINx Conda installation guidance](https://github.com/FEniCS/dolfinx/blob/v0.10.0/README.md#conda).
+For a repository checkout, `pixi run --locked -e fem ...` provides native
+DOLFINx/UFL assembly and PETSc/MUMPS; `pixi run --locked -e introduction ...`
+adds the introductory notebook stack with DOLFINx 0.9. These locked native
+profiles target Linux and macOS; see the [Windows guide](windows.md) for the
+supported portable capabilities.
 
 The mesh-associated `bind_problem`/`LocalContext` workflow in the current
 tutorials is available from a source checkout and will be included in the next
@@ -95,7 +116,7 @@ pixi --version
 pixi list --locked --no-install -e test-core
 pixi list --locked --no-install --manifest-path tools/amgx/pixi.toml
 pixi install --locked -e test-core
-pixi run --locked -e test-core test-cov
+pixi run --locked -e test-core coverage-run
 pixi run --locked -e test-core lint
 pixi run --locked -e test-core typecheck
 pixi run -e docs docs-check
@@ -107,6 +128,9 @@ for the portable environments. CI runs on Linux x86-64, Windows x86-64 and macOS
 Apple Silicon (ARM64). The macOS x86-64 resolution is available for local checkout
 use; it is not an automatically tested CI target. A Linux run does not substitute
 for the native Windows/macOS CI jobs.
+The core run collects coverage. The independent 99% line and branch gates use
+combined Linux core and native FEM measurements; follow the
+[coverage procedure](development.md#coverage) to qualify them locally.
 
 ```bash
 python -m pip install .

@@ -14,13 +14,16 @@ pixi run --locked -e test-core metadata-check
 pixi run --locked -e test-core lint
 pixi run --locked -e test-core format-check
 pixi run --locked -e test-core typecheck
-pixi run --locked -e test-core test-cov
+pixi run --locked -e test-core coverage-run
 pixi run --locked -e test-core build
 pixi run --locked -e test-core check-dist
 ```
 
 CI runs these portable checks on Linux x86-64, Windows x86-64 and macOS Apple
-Silicon (ARM64). Full native acceptance uses the Linux CUDA `test` environment,
+Silicon (ARM64). The core run collects coverage; the combined Linux core and
+native FEM measurements must pass independent 99% line and branch gates. Follow
+the [coverage procedure](docs/development.md#coverage) to qualify them locally.
+Full native acceptance uses the Linux CUDA `test` environment,
 including two-device GPU tests,
 FEniCS/PETSc, PARDISO, meshing, visualization and FreeFEM integrations. Follow
 [the development guide](docs/development.md) to prepare AmgX, check every required
@@ -60,7 +63,10 @@ optional backends must distinguish dependency availability from successful
 execution on actual hardware.
 
 Use `pixi run -e fem test-fem` to exercise DOLFINx integration on supported Unix
-platforms. Contributions to accelerated backends should report hardware,
+platforms. Pip installs the coefficient/Basix core; native UFL assembly needs a
+compatible DOLFINx environment, as described in the
+[installation guide](docs/installation.md#native-ufl-assembly).
+Contributions to accelerated backends should report hardware,
 software versions, thread counts, warmup, transfer costs, and correctness checks.
 
 Add documentation and executable problem notebooks for new formulations. Identify
@@ -113,7 +119,8 @@ limitations and migration instructions outside that block. `version-set` is an
 alias for the same preparation; use these tasks instead of editing versions
 individually.
 
-Run the portable quality, coverage and distribution checks above, then validate
+Run the portable quality and distribution checks above, qualify the combined
+core/FEM coverage, then validate
 the documentation, workflows and Conda artifact:
 
 ```bash

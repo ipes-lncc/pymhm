@@ -427,6 +427,11 @@ on Linux, plus PARDISO on Windows. Optional native mesh-generation, remeshing
 and visualization checks run in the manually dispatched full Linux/two-GPU
 suite after Core succeeds. Reusable checks use both locked workspaces.
 
+Core and Linux FEM runs collect branch coverage. After Core and Integration
+succeed, the Coverage job combines the Linux core and native FEM measurements
+from the same revision and enforces independent 99% line and branch gates.
+Codecov receives the combined XML report after those gates pass.
+
 Jobs that install environments explicitly enable `setup-pixi` caching, keyed
 by platform, requested environments, Pixi binary, lockfile and paths. The
 workspace-only validation job installs no environments and disables caching.

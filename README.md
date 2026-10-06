@@ -35,7 +35,12 @@ Use Python 3.11–3.13 on Linux, macOS or Windows:
 python -m pip install pymhm
 ```
 
-The base package includes NumPy, SciPy and Basix. Optional extras add CPU AMG,
+The base package provides the coefficient interface with NumPy, SciPy and Basix.
+Native UFL assembly also requires DOLFINx; installing the symbolic
+`fenics-ufl` package with pip does not provide its native assembler. Follow the
+[native UFL installation instructions](docs/installation.md#native-ufl-assembly)
+for a Conda environment or the locked Pixi `fem` and `introduction` profiles.
+Optional extras add CPU AMG,
 PARDISO, MPI, CUDA solvers, meshing or visualization; for example,
 `python -m pip install "pymhm[amg]"` adds PyAMG.
 The [installation guide](docs/installation.md) covers virtual environments,
@@ -215,7 +220,7 @@ package builds and core tests do not depend on those outputs.
 ```bash
 pixi run --locked -e test-core lint
 pixi run --locked -e test-core typecheck
-pixi run --locked -e test-core test-cov
+pixi run --locked -e test-core coverage-run
 pixi run -e fem test-fem
 pixi run -e meshing test-meshing
 pixi run -e packaging build
@@ -233,8 +238,11 @@ requires a Linux CUDA host with two NVIDIA devices. Its pinned AmgX setup and
 mandatory dependency checks are described in the [development guide](docs/development.md).
 Both suites use all available CPU workers and isolate tests marked `serial`.
 
-CI enforces at least 99% line and branch coverage independently on Linux x86-64,
-Windows x86-64 and macOS Apple Silicon (ARM64). Executable notebooks and
+CI tests the portable core on Linux x86-64, Windows x86-64 and macOS Apple
+Silicon (ARM64). It enforces independent 99% line and branch coverage gates on
+the combined Linux core and native FEM measurements from the same revision.
+The [development guide](docs/development.md#coverage) provides the local commands.
+Executable notebooks and
 analytical PDE examples are available in the repository. Optional
 dependency contracts and actual native-backend integrations are reported separately.
 

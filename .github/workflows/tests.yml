@@ -84,7 +84,7 @@ jobs:
       - name: Run tests with branch coverage
         env:
           PYTEST_ADDOPTS: --junitxml=build/reports/tests/junit.xml
-        run: pixi run --locked -e ${{ matrix.environment }} test-cov
+        run: pixi run --locked -e ${{ matrix.environment }} coverage-run
       - name: Build a portable wheel on Windows
         if: runner.os == 'Windows'
         run: >-
@@ -107,12 +107,14 @@ jobs:
           path: |
             build/reports/tests/*.xml
             build/reports/coverage/coverage.xml
-      - uses: codecov/codecov-action@v7
+      - name: Retain the Linux core coverage measurement
+        uses: actions/upload-artifact@v7
         if: matrix.os == 'ubuntu-latest' && matrix.environment == 'test-core'
         with:
-          files: build/reports/coverage/coverage.xml
-          fail_ci_if_error: false
-          token: ${{ secrets.CODECOV_TOKEN }}
+          name: coverage-core-linux
+          path: build/reports/coverage/.coverage
+          include-hidden-files: true
+          if-no-files-found: error
 
   integration:
     name: ${{ matrix.label }} (${{ matrix.os }})
@@ -145,11 +147,11 @@ jobs:
           'import dolfinx; from mpi4py import MPI; from petsc4py import PETSc;
           print("DOLFINx:", dolfinx.__version__);
           print("PETSc:", PETSc.Sys.getVersion()); print(MPI.Get_library_version())'
-      - name: Exercise native DOLFINx assembly
+      - name: Exercise native DOLFINx assembly with branch coverage
         if: matrix.kind == 'fem'
         env:
           PYTEST_ADDOPTS: --capture=tee-sys --junitxml=build/reports/tests/fem.xml
-        run: pixi run --locked -e fem test-fem
+        run: pixi run --locked -e fem coverage-run -- -m 'fem and not mpi and not gpu'
       - name: Exercise native PETSc solver
         if: matrix.kind == 'fem'
         env:
@@ -160,6 +162,14 @@ jobs:
         with:
           name: test-results-fem-${{ matrix.os }}
           path: build/reports/tests/*.xml
+      - name: Retain the native FEM coverage measurement
+        uses: actions/upload-artifact@v7
+        if: matrix.kind == 'fem'
+        with:
+          name: coverage-fem-linux
+          path: build/reports/coverage/.coverage
+          include-hidden-files: true
+          if-no-files-found: error
       - name: Require native MPI and MUMPS
         if: matrix.kind == 'mpi'
         run: >-
@@ -201,6 +211,55 @@ jobs:
         with:
           name: wheel-windows-pardiso
           path: build/reports/windows-pardiso-wheel.*
+
+  coverage:
+    name: Combined core and native coverage
+    needs: [core, integration]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          pixi-version: v0.76.2
+          environments: test-core
+          locked: true
+          cache: true
+      - uses: actions/download-artifact@v8
+        with:
+          name: coverage-core-linux
+          path: build/reports/coverage-input/core
+      - uses: actions/download-artifact@v8
+        with:
+          name: coverage-fem-linux
+          path: build/reports/coverage-input/fem
+      - name: Combine measurements from this checkout
+        run: |
+          mkdir -p build/reports/coverage
+          pixi run --locked -e test-core python -m coverage combine --keep \
+            --data-file=build/reports/coverage/.coverage \
+            build/reports/coverage-input/core/.coverage \
+            build/reports/coverage-input/fem/.coverage
+      - name: Report and enforce independent 99% line and branch gates
+        run: |
+          pixi run --locked -e test-core python -m coverage xml --fail-under=0 \
+            -o build/reports/coverage/coverage.xml
+          pixi run --locked -e test-core python -m coverage json --fail-under=0 \
+            -o build/reports/coverage/coverage.json
+          pixi run --locked -e test-core python scripts/check_coverage.py \
+            build/reports/coverage/coverage.json
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: coverage-combined
+          path: |
+            build/reports/coverage/coverage.xml
+            build/reports/coverage/coverage.json
+      - uses: codecov/codecov-action@v7
+        with:
+          files: build/reports/coverage/coverage.xml
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   full-native:
     name: Complete CPU and two-GPU suite
