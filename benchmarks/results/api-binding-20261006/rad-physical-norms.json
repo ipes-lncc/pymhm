@@ -1,0 +1,644 @@
+{
+  "scope": "Fresh current RAD notebook compared with prior archived physical-norm report on identical listed cases. This is physical-result preservation, not an old-distribution run. Original archival report provenance is retained; its whole-notebook hash differs from HEAD after editorial updates.",
+  "baseline_report": "build/api-binding-validation/baseline-physical-reports/mhm-usfem-rad.json",
+  "baseline_report_sha256": "2781bc311fd719e32a7ff0fa019b83ef2f9b8246cd3d1316ab447362331f6ef0",
+  "baseline_provenance": {
+    "notebook": "notebooks/introduction/mhm_usfem_rad.ipynb",
+    "notebook_sha256": "de3ca0d407119b4d192e852826fff4aed4ad579ac30c090dc200fbff50ba3b2b",
+    "pixi_lock_sha256": "c54e433e408e8345516023d96526b305d09452a55d53c018ea6ea529535df9fd",
+    "versions": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "fenics-basix": "0.9.0",
+      "fenics-dolfinx": "0.9.0",
+      "pymhm": "0.1.0"
+    },
+    "basis_convention": "Basix equispaced Pk in PyMHM nodal_space order; no local nullspace modes",
+    "reference_project": "DOLFINx",
+    "reference_source_url": "https://docs.fenicsproject.org/dolfinx/v0.9.0/python/",
+    "literature_comparison": "same analytical PDE; declared SW-NE topology and strong exterior Dirichlet data; the refined family has 512 macros at n=16 and four P0 segments per face, but the historical matching local triangulation/connectivity is unresolved; no matched-figure reproduction"
+  },
+  "current_report": "build/introduction/mhm-usfem-rad.json",
+  "current_report_sha256": "88e83f0d95d8db41fbffa4278d806c74c23aa25d284997adde981ce72a6aabb6",
+  "current_provenance": {
+    "notebook": "notebooks/introduction/mhm_usfem_rad.ipynb",
+    "notebook_sha256": "96a5756e87aa408c66b06e2d9f1901200de4fd5a37bef3319b127af1776bba0f",
+    "pixi_lock_sha256": "9bc037fce59b1ff50c7c05164720d6817649d5d7cc129522bdbd91eb4b07af32",
+    "versions": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "fenics-basix": "0.9.0",
+      "fenics-dolfinx": "0.9.0",
+      "pymhm": "1.0.0"
+    },
+    "basis_convention": "Basix equispaced Pk in PyMHM nodal_space order; no local nullspace modes",
+    "reference_project": "DOLFINx",
+    "reference_source_url": "https://docs.fenicsproject.org/dolfinx/v0.9.0/python/",
+    "literature_comparison": "same analytical PDE; declared SW-NE topology and strong exterior Dirichlet data; the refined family has 512 macros at n=16 and four P0 segments per face, but the historical matching local triangulation/connectivity is unresolved; no matched-figure reproduction",
+    "publication_regeneration": {
+      "scope": "Cell39 profile/publication code was re-executed against checked fresh current persisted local bases/coefficients, conforming reference coefficients and physical rows. The only code change discards write_text's return value. All other numerical code, acquired field archives and physical rows remain unchanged; no PDE solves or old-result substitution. The full numerical acquisition SHA remains separate from this final publication source SHA.",
+      "created_utc": "2026-10-06T16:57:47.786246+00:00",
+      "acquisition_notebook_sha256": "96a5756e87aa408c66b06e2d9f1901200de4fd5a37bef3319b127af1776bba0f",
+      "publication_notebook_sha256": "a8ac8fd830317a784376f6038defbe69bdc70740f85c427408a71232f946cae2",
+      "numerical_code_sha256": "0655519881e891b7c5f81e94e5cdcfe9c0c622b5a9a0a0d4046eb58745837e55",
+      "provider_code_sha256": "fcfce6b0258cae6e7f7599cf6874fa2dd7ecf2ac2dd7121ba1b676fbcd2c309c",
+      "numerical_code_byte_identical_outside_cell39": true,
+      "sole_code_change": "Assign write_text return value to underscore.",
+      "reexecuted_cell_indices": [
+        39
+      ],
+      "physical_data_sha256": "196c94ef1dd77a56cf654f30d07334546287d253aec7ce54a0b5da53debbe78e",
+      "acquisition_report_sha256_before_publication_provenance": "f00ef94c0847922c34c0e883706e709df5ad6cb19d7052db77db93b932591dd4",
+      "current_report": "build/introduction/mhm-usfem-rad.json"
+    }
+  },
+  "quantities": [
+    "scalar_l2",
+    "flux_l2",
+    "gradient_l2",
+    "scalar_relative_l2",
+    "nodal_error",
+    "nodal_minimum",
+    "nodal_maximum"
+  ],
+  "records": [
+    {
+      "group": "convergence",
+      "case": {
+        "method": "MHM-Galerkin",
+        "n": 2
+      },
+      "absolute_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 8.673617379884035e-19,
+        "gradient_l2": 8.881784197001252e-16,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      },
+      "relative_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 1.737400506553835e-16,
+        "gradient_l2": 1.779098118711127e-16,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      }
+    },
+    {
+      "group": "convergence",
+      "case": {
+        "method": "MHM-USFEM",
+        "n": 2
+      },
+      "absolute_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 8.673617379884035e-19,
+        "gradient_l2": 8.881784197001252e-16,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 1.1102230246251565e-16,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      },
+      "relative_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 1.7722321988979994e-16,
+        "gradient_l2": 1.8147657716715517e-16,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 5.631469557428448e-16,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      }
+    },
+    {
+      "group": "convergence",
+      "case": {
+        "method": "MHM-Galerkin",
+        "n": 4
+      },
+      "absolute_difference": {
+        "scalar_l2": 2.7755575615628914e-17,
+        "flux_l2": 1.734723475976807e-18,
+        "gradient_l2": 1.7763568394002505e-15,
+        "scalar_relative_l2": 2.7755575615628914e-17,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      },
+      "relative_difference": {
+        "scalar_l2": 2.2914363709096724e-16,
+        "flux_l2": 4.2147105095203287e-16,
+        "gradient_l2": 4.3158635617488165e-16,
+        "scalar_relative_l2": 2.1800360866482246e-16,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      }
+    },
+    {
+      "group": "convergence",
+      "case": {
+        "method": "MHM-USFEM",
+        "n": 4
+      },
+      "absolute_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 8.673617379884035e-19,
+        "gradient_l2": 8.881784197001252e-16,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 2.220446049250313e-16
+      },
+      "relative_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 2.0997297345876833e-16,
+        "gradient_l2": 2.1501232482177876e-16,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 1.9659228995786047e-16
+      }
+    },
+    {
+      "group": "convergence",
+      "case": {
+        "method": "MHM-Galerkin",
+        "n": 8
+      },
+      "absolute_difference": {
+        "scalar_l2": 5.551115123125783e-17,
+        "flux_l2": 2.6020852139652106e-18,
+        "gradient_l2": 2.220446049250313e-15,
+        "scalar_relative_l2": 5.551115123125783e-17,
+        "nodal_error": 2.220446049250313e-16,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 2.220446049250313e-16
+      },
+      "relative_difference": {
+        "scalar_l2": 1.1920247676695814e-15,
+        "flux_l2": 9.338309360600674e-16,
+        "gradient_l2": 7.968690654379243e-16,
+        "scalar_relative_l2": 1.1340733885037e-15,
+        "nodal_error": 1.5378394681876268e-15,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 1.9734010696780443e-16
+      }
+    },
+    {
+      "group": "convergence",
+      "case": {
+        "method": "MHM-USFEM",
+        "n": 8
+      },
+      "absolute_difference": {
+        "scalar_l2": 5.551115123125783e-17,
+        "flux_l2": 1.734723475976807e-18,
+        "gradient_l2": 1.7763568394002505e-15,
+        "scalar_relative_l2": 5.551115123125783e-17,
+        "nodal_error": 1.1102230246251565e-16,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 2.220446049250313e-16
+      },
+      "relative_difference": {
+        "scalar_l2": 7.250474178451489e-16,
+        "flux_l2": 5.962285160591109e-16,
+        "gradient_l2": 6.1053800044452965e-16,
+        "scalar_relative_l2": 6.89798571542289e-16,
+        "nodal_error": 7.139054452368789e-16,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 2.0165820908740644e-16
+      }
+    },
+    {
+      "group": "convergence",
+      "case": {
+        "method": "MHM-Galerkin",
+        "n": 16
+      },
+      "absolute_difference": {
+        "scalar_l2": 3.469446951953614e-17,
+        "flux_l2": 2.6020852139652106e-18,
+        "gradient_l2": 2.6645352591003757e-15,
+        "scalar_relative_l2": 3.8163916471489756e-17,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 2.220446049250313e-16
+      },
+      "relative_difference": {
+        "scalar_l2": 2.1310080677103977e-15,
+        "flux_l2": 1.5124883985758086e-15,
+        "gradient_l2": 1.548788120141628e-15,
+        "scalar_relative_l2": 2.230147868069834e-15,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 2.1514324994390103e-16
+      }
+    },
+    {
+      "group": "convergence",
+      "case": {
+        "method": "MHM-USFEM",
+        "n": 16
+      },
+      "absolute_difference": {
+        "scalar_l2": 3.8163916471489756e-17,
+        "flux_l2": 1.951563910473908e-18,
+        "gradient_l2": 1.9984014443252818e-15,
+        "scalar_relative_l2": 4.163336342344337e-17,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      },
+      "relative_difference": {
+        "scalar_l2": 1.8895430759913183e-15,
+        "flux_l2": 1.129389974643716e-15,
+        "gradient_l2": 1.1564953340351651e-15,
+        "scalar_relative_l2": 1.961106767424451e-15,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      }
+    },
+    {
+      "group": "refined_convergence",
+      "case": {
+        "method": "MHM-Galerkin",
+        "epsilon": 1e-05,
+        "n": 4
+      },
+      "absolute_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      },
+      "relative_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      }
+    },
+    {
+      "group": "refined_convergence",
+      "case": {
+        "method": "MHM-USFEM",
+        "epsilon": 1e-05,
+        "n": 4
+      },
+      "absolute_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      },
+      "relative_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      }
+    },
+    {
+      "group": "refined_convergence",
+      "case": {
+        "method": "MHM-Galerkin",
+        "epsilon": 1e-05,
+        "n": 8
+      },
+      "absolute_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      },
+      "relative_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      }
+    },
+    {
+      "group": "refined_convergence",
+      "case": {
+        "method": "MHM-USFEM",
+        "epsilon": 1e-05,
+        "n": 8
+      },
+      "absolute_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      },
+      "relative_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      }
+    },
+    {
+      "group": "refined_convergence",
+      "case": {
+        "method": "MHM-Galerkin",
+        "epsilon": 1e-05,
+        "n": 16
+      },
+      "absolute_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      },
+      "relative_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      }
+    },
+    {
+      "group": "refined_convergence",
+      "case": {
+        "method": "MHM-USFEM",
+        "epsilon": 1e-05,
+        "n": 16
+      },
+      "absolute_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 2.220446049250313e-16
+      },
+      "relative_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 2.2052684724956364e-16
+      }
+    },
+    {
+      "group": "refined_convergence",
+      "case": {
+        "method": "MHM-Galerkin",
+        "epsilon": 0.001,
+        "n": 16
+      },
+      "absolute_difference": {
+        "scalar_l2": 2.168404344971009e-19,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 2.168404344971009e-19,
+        "nodal_error": 1.1102230246251565e-16,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 1.1102230246251565e-16
+      },
+      "relative_difference": {
+        "scalar_l2": 2.6069239741971705e-16,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 2.4801859702707236e-16,
+        "nodal_error": 1.5861702332003116e-14,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 1.1102233050428725e-16
+      }
+    },
+    {
+      "group": "refined_convergence",
+      "case": {
+        "method": "MHM-USFEM",
+        "epsilon": 0.001,
+        "n": 16
+      },
+      "absolute_difference": {
+        "scalar_l2": 2.168404344971009e-18,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 2.3852447794681098e-18,
+        "nodal_error": 2.220446049250313e-16,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      },
+      "relative_difference": {
+        "scalar_l2": 1.768181015230856e-15,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 1.8504411978671776e-15,
+        "nodal_error": 3.9730922000594955e-14,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      }
+    },
+    {
+      "group": "reaction_sweep",
+      "case": {
+        "method": "MHM-Galerkin",
+        "epsilon": 0.01
+      },
+      "absolute_difference": {
+        "scalar_l2": 3.469446951953614e-18,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 3.469446951953614e-18,
+        "nodal_error": 2.220446049250313e-16,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 1.1102230246251565e-16
+      },
+      "relative_difference": {
+        "scalar_l2": 2.205973900702478e-16,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 1.8458057776740238e-16,
+        "nodal_error": 2.1827126686150295e-15,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 1.1172404312150496e-16
+      }
+    },
+    {
+      "group": "reaction_sweep",
+      "case": {
+        "method": "MHM-USFEM",
+        "epsilon": 0.01
+      },
+      "absolute_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 1.734723475976807e-18,
+        "gradient_l2": 1.1102230246251565e-16,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 1.1102230246251565e-16,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 1.1102230246251565e-16
+      },
+      "relative_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 2.49098367478539e-16,
+        "gradient_l2": 1.5942295518626497e-16,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 1.297107641763032e-15,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 1.120355959262786e-16
+      }
+    },
+    {
+      "group": "reaction_sweep",
+      "case": {
+        "method": "MHM-Galerkin",
+        "epsilon": 0.001
+      },
+      "absolute_difference": {
+        "scalar_l2": 6.938893903907228e-18,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 6.938893903907228e-18,
+        "nodal_error": 2.220446049250313e-16,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 2.220446049250313e-16
+      },
+      "relative_difference": {
+        "scalar_l2": 1.4900309595869774e-16,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 1.417591735629626e-16,
+        "nodal_error": 1.5378394681876268e-15,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 1.9734010696780443e-16
+      }
+    },
+    {
+      "group": "reaction_sweep",
+      "case": {
+        "method": "MHM-USFEM",
+        "epsilon": 0.001
+      },
+      "absolute_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 1.1102230246251565e-16,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 2.220446049250313e-16
+      },
+      "relative_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 7.139054452368789e-16,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 2.0165820908740644e-16
+      }
+    },
+    {
+      "group": "reaction_sweep",
+      "case": {
+        "method": "MHM-Galerkin",
+        "epsilon": 1e-05
+      },
+      "absolute_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      },
+      "relative_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      }
+    },
+    {
+      "group": "reaction_sweep",
+      "case": {
+        "method": "MHM-USFEM",
+        "epsilon": 1e-05
+      },
+      "absolute_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      },
+      "relative_difference": {
+        "scalar_l2": 0.0,
+        "flux_l2": 0.0,
+        "gradient_l2": 0.0,
+        "scalar_relative_l2": 0.0,
+        "nodal_error": 0.0,
+        "nodal_minimum": 0.0,
+        "nodal_maximum": 0.0
+      }
+    }
+  ],
+  "publication_regeneration": {
+    "scope": "Cell39 profile/publication code was re-executed against checked fresh current persisted local bases/coefficients, conforming reference coefficients and physical rows. The only code change discards write_text's return value. All other numerical code, acquired field archives and physical rows remain unchanged; no PDE solves or old-result substitution. The full numerical acquisition SHA remains separate from this final publication source SHA.",
+    "created_utc": "2026-10-06T16:57:47.786246+00:00",
+    "acquisition_notebook_sha256": "96a5756e87aa408c66b06e2d9f1901200de4fd5a37bef3319b127af1776bba0f",
+    "publication_notebook_sha256": "a8ac8fd830317a784376f6038defbe69bdc70740f85c427408a71232f946cae2",
+    "numerical_code_sha256": "0655519881e891b7c5f81e94e5cdcfe9c0c622b5a9a0a0d4046eb58745837e55",
+    "provider_code_sha256": "fcfce6b0258cae6e7f7599cf6874fa2dd7ecf2ac2dd7121ba1b676fbcd2c309c",
+    "numerical_code_byte_identical_outside_cell39": true,
+    "sole_code_change": "Assign write_text return value to underscore.",
+    "reexecuted_cell_indices": [
+      39
+    ],
+    "physical_data_sha256": "196c94ef1dd77a56cf654f30d07334546287d253aec7ce54a0b5da53debbe78e",
+    "acquisition_report_sha256_before_publication_provenance": "f00ef94c0847922c34c0e883706e709df5ad6cb19d7052db77db93b932591dd4",
+    "current_report": "build/introduction/mhm-usfem-rad.json",
+    "executed_notebook_sha256": "f32bd3fc425fb4c7f786ad06d3ba63166105f180ad4274924af698531bed0bb0",
+    "profile_png_sha256": "6620f193f3db787beb24c61ee219cfbb99a9fd28eb76af1cc0d80eea6cf55946",
+    "profile_png_identical_to_fresh_acquisition": true,
+    "replayed_archive_count": 10
+  }
+}

@@ -2,6 +2,8 @@
 
 Follow the numbered steps: state the variational problem, choose the local and trace spaces, declare the local and global equations, solve, and inspect the physical fields.
 
+The main workflow is **meshes → spaces → local equations → global balance → assemble → solve → fields and errors**. `MeshHierarchy` associates macro and local meshes; `bind_interface` and `LocalContext` own supported numbering, geometric orientation and native coordinate conversions. The mathematical forms, physical trace meaning, local modes and gauge remain explicit in the cells below. Fully manual/custom spaces use the same numerical owners; see the [custom-interface notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/custom_interface.ipynb).
+
 We explicitly construct `Equation`, `LocalEquations` and `MultiscaleProblem`, then connect each code block to the physical formulation. **MHM-USFEM** is the name used here for scalar **MHM-UNUSUAL** of [Santiago, Valentin and Martins (2025), Eqs. (14)–(15), §4.1](https://doi.org/10.55592/cilamce2025.v5i.14270). This is a scalar reaction–diffusion example; the separate Stokes–Brinkman tutorial treats velocity and pressure. Advection is zero here, and the negative residual stabilization is different from SUPG.
 
 Run with the project's locked Pixi `introduction` environment. Exact data, sources, local and global forms, boundary conditions, independent references, norms and plots are all defined below. PyMHM supplies generic UFL compilation, oriented trace integration, condensation and checked linear algebra.
@@ -40,16 +42,10 @@ from pymhm.linalg.linear import solve_linear
 from threadpoolctl import threadpool_limits
 
 threadpool_limits(limits=1)
+from pymhm import MeshHierarchy, LocalContext, bind_interface, bind_problem
+from pymhm.backends.spaces import bind_space
+
 ```
-
-
-
-
-```text
-<threadpoolctl.threadpool_limits at 0x7f80920e96a0>
-```
-
-
 
 ## 1. Identify the equation, boundary data and difficult length scale
 
@@ -143,7 +139,7 @@ $$
 
 
 
-Summing the $C_Ku_K$ equations imposes continuity of scalar trace moments on internal faces. `trace_coupling` includes the two opposite incident orientations. On active flux faces, $\lambda=q\cdot n_F$ uses a single global face normal; with zero advection there is no Robin correction to the physical diffusive flux.
+Summing the $C_Ku_K$ equations imposes continuity of scalar trace moments on internal faces. The normal interface binding supplies the two opposite incident orientations; `b` and `c` are declared independently with UFL boundary forms. On active flux faces, $\lambda=q\cdot n_F$ uses a single global face normal; with zero advection there is no Robin correction to the physical diffusive flux.
 
 The complete strong reaction–diffusion operator is $Lw=w-\epsilon\Delta w$. USFEM changes the local bilinear and linear forms:
 
@@ -160,7 +156,7 @@ $$
 
 
 
-Locals are P1, hence $\Delta v_h=0$ inside each fine triangle and $Lv_h=v_h$. This justifies the published $m=1/3$ for this space. Below we declare the Galerkin form directly in UFL, then add the **negative** residual form and its matching source. `compile_form` actually executes native assembly; the short coordinate permutation only aligns native nodal numbering with the generic oriented trace integrator.
+Locals are P1, hence $\Delta v_h=0$ inside each fine triangle and $Lv_h=v_h$. This justifies the published $m=1/3$ for this space. Below we declare the Galerkin form directly in UFL, then add the **negative** residual form and its matching source. `compile_form` actually executes native assembly; the native space binding owns the coefficient convention, while context trace pairings supply the declared UFL interface integrals.
 
 Reaction makes the local operator invertible: constants are not a kernel, and no retained coarse amplitudes are required. On vertical exterior faces, zero scalar data are imposed strongly by removing their nodal coordinates and exterior flux columns. Horizontal exterior faces prescribe zero normal flux. Vertical Dirichlet faces are absent from flux coupling: their zero dummy trace coordinates do not prescribe the physical flux. The global balance is tested on the free internal trace coordinates.
 
@@ -190,7 +186,7 @@ def rad_forms(domain: Any, *, epsilon: float, stabilized: bool) -> tuple[Any, An
     return V, a, L
 ```
 
-The following two small adapters only create a serial affine native mesh and match nodal coordinates. They do not choose the operator, source, boundary data or multiscale method. Keeping this geometry plumbing separate lets the next cell read directly as the mathematical formulation.
+The native mesh and coefficient conversions come from the shared backend binding. The provider below writes the volume and boundary forms, chooses its physical boundary conditions and registers the scalar field. The explicit restriction to free scalar coordinates imposes the declared vertical Dirichlet data; it is part of the formulation.
 
 
 ```python
@@ -199,39 +195,19 @@ import basix.ufl
 import dolfinx
 import ufl
 from mpi4py import MPI
-from scipy.spatial import cKDTree
 
 
-def native_mesh(fine: TriangleMesh) -> Any:
-    """Create a serial native affine mesh from the declared PyMHM geometry."""
-    coordinate_element = basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))
-    return dolfinx.mesh.create_mesh(
-        MPI.COMM_SELF, fine.cells.copy(), fine.points.copy(), ufl.Mesh(coordinate_element)
-    )
+from pymhm.backends.spaces import create_native_mesh, coefficient_map
 
 
-def canonical_nodal_order(
-    space: Any, fine: TriangleMesh, degree: int, components: int = 1, parent_dofs: Any = None
-) -> np.ndarray:
-    """Map canonical nodal coefficients to native coordinates, including mixed subspaces.
-
-    This is only a coordinate permutation. It neither changes the physical
-    form nor constructs a multiscale method or boundary condition.
-    """
-    _, nodes = nodal_space(fine, degree)
-    coordinates = space.tabulate_dof_coordinates()[:, :2]
-    distances, indices = cKDTree(coordinates).query(nodes)
-    assert distances.max() < 1e-12 and len(np.unique(indices)) == len(nodes)
-    order = (components * indices[:, None] + np.arange(components)).ravel()
-    return order if parent_dofs is None else np.asarray(parent_dofs)[order]
 ```
 
-`LocalEquations` now receives the executed forms after a geometry-only nodal permutation. The following provider applies the vertical Dirichlet nodes, keeps the horizontal physical-flux convention, and exposes the two oriented trace blocks directly.
+`LocalEquations` now receives the executed forms through the shared native-space binding. `LocalContext` owns the mesh and interface maps. The following provider applies the vertical Dirichlet nodes, keeps the horizontal physical-flux convention, and exposes the two oriented trace blocks directly.
 
 
 ```python
 def local_rad(
-    cell: int,
+    local: LocalContext,
     *,
     macro: TriangleMesh,
     skeleton: SkeletonSpace,
@@ -240,33 +216,32 @@ def local_rad(
     local_subdivisions: int = LOCAL_SUBDIVISIONS,
 ) -> LocalEquations:
     """Declare and execute the local scalar UFL form, then apply explicit mixed data."""
-    fine = macro.submesh(cell, local_subdivisions)
-    domain = native_mesh(fine)
+    cell, fine = local.cell, local.mesh
+    domain = create_native_mesh(fine)
     V, a, L = rad_forms(domain, epsilon=epsilon, stabilized=stabilized)
     # Generic native assembly and coordinate permutation, independent of the PDE.
-    order = canonical_nodal_order(V, fine, 1)
+    binding = local.native_space(V)
+    order = binding.mapping
     native_A, native_F = compile_form(a), compile_form(L)
     A, F = native_A[order][:, order], native_F[order]
     _, nodes = nodal_space(fine, 1)
-    B = trace_coupling(macro, cell, fine, skeleton, 1)
-    vertical = [
-        int(face)
-        for face in macro.cell_faces[cell]
-        if face in macro.boundary_faces and abs(macro.normals[face, 0]) > 0.99
-    ]
+    from pymhm.backends.forms import assemble_pairing
+    u, v = ufl.TrialFunction(V), ufl.TestFunction(V)
+    pair_b = local.trace_pairings(lambda phi, ds: phi * v * ds)
+    pair_c = local.trace_pairings(lambda phi, ds: -phi * u * ds, axis="rows")
+    B = assemble_pairing(pair_b.forms, axis="columns")[order]
+    C = assemble_pairing(pair_c.forms, axis="rows")[:, order]
     fixed_nodes = np.flatnonzero(
         np.isclose(nodes[:, 0], 0, atol=1e-12) | np.isclose(nodes[:, 0], 1, atol=1e-12)
     )
     free = np.setdiff1d(np.arange(len(nodes)), fixed_nodes)
-    for face in vertical:
-        B[:, np.isin(skeleton.cell_dofs(cell), skeleton.dofs(face))] = 0
-    B = B[free]
-    return LocalEquations(
+    local.field("scalar", binding, reconstruction=binding.to_native(np.eye(len(nodes))[:, free]))
+    B, C = B[free], C[:, free]
+    return local.equations(
         a=A[free][:, free],
         L=F[free],
         b=B,
-        c=-B.T,
-        dofs=skeleton.cell_dofs(cell),
+        c=C,
         metadata={
             "mesh": fine,
             "free": free,
@@ -285,9 +260,13 @@ from pymhm.fem.scalar.triangle import scalar_operators
 
 probe_macro = TriangleMesh.unit_square(2)
 probe_skeleton = SkeletonSpace(probe_macro, tuple(FaceSpace.uniform(0) for _ in probe_macro.faces))
-probe_equation = local_rad(
-    0, macro=probe_macro, skeleton=probe_skeleton, epsilon=EPSILON, stabilized=False
+probe_problem = bind_problem(
+    MeshHierarchy(probe_macro, tuple(probe_macro.submesh(cell, LOCAL_SUBDIVISIONS) for cell in range(len(probe_macro.cells)))),
+    bind_interface(probe_skeleton, convention="normal"), lambda local: local_rad(
+        local, macro=probe_macro, skeleton=probe_skeleton, epsilon=EPSILON, stabilized=False
+    ),
 )
+probe_equation = probe_problem.local_provider(0)
 ready_A, _, ready_F = scalar_operators(
     probe_equation.metadata["mesh"],
     1,
@@ -311,7 +290,7 @@ We measure the broken scalar error and physical flux $-\epsilon\nabla u_h$ again
 ```python
 def scalar_error_norms(
     meshes: Sequence[TriangleMesh],
-    coefficients: Sequence[np.ndarray],
+    coefficients: Sequence[Any],
     degree: int,
     exact: Callable[[np.ndarray], np.ndarray],
     exact_gradient: Callable[[np.ndarray], np.ndarray],
@@ -333,8 +312,17 @@ def scalar_error_norms(
         points = np.einsum("qi,tia->tqa", bary, mesh.points[mesh.cells], optimize=True)
         truth = exact(points.reshape(-1, 2)).reshape(points.shape[:2])
         grad_truth = exact_gradient(points.reshape(-1, 2)).reshape(points.shape)
-        delta = values[dofs] @ basis.T - truth
-        grad_delta = np.einsum("ti,tqia->tqa", values[dofs], gradient, optimize=True) - grad_truth
+        if hasattr(values, "values_and_gradient"):
+            # Explicit cell owners retain independent one-sided fine-cell gradients.
+            owners = np.repeat(np.arange(len(mesh.cells)), len(bary))
+            numerical, derivative = values.values_and_gradient(points.reshape(-1, 2), cells=owners)
+            delta = numerical.reshape(points.shape[:2]) - truth
+            grad_delta = derivative.reshape(points.shape) - grad_truth
+            values = values.portable_coefficients
+        else:
+            # The independent classical reference supplies its declared nodal vector.
+            delta = values[dofs] @ basis.T - truth
+            grad_delta = np.einsum("ti,tqia->tqa", values[dofs], gradient, optimize=True) - grad_truth
         integrands = (delta**2, np.sum(grad_delta**2, axis=-1), truth**2)
         totals += [float(mesh.areas @ (value @ weights)) for value in integrands]
         maximum = max(maximum, float(values.max()))
@@ -428,29 +416,23 @@ for n in (2, 4, 8, 16):
     macro = TriangleMesh.unit_square(n)
     skeleton = SkeletonSpace(macro, tuple(FaceSpace.uniform(TRACE_DEGREE) for _ in macro.faces))
     for method, stabilized in (("MHM-Galerkin", False), ("MHM-USFEM", True)):
-        provider = lambda cell, m=macro, s=skeleton, flag=stabilized: local_rad(
-            cell, macro=m, skeleton=s, epsilon=EPSILON, stabilized=flag
+        provider = lambda local, m=macro, s=skeleton, flag=stabilized: local_rad(
+            local, macro=m, skeleton=s, epsilon=EPSILON, stabilized=flag
         )
-        problem = MultiscaleProblem(
-            global_equation=Equation(0, 0),
-            local_provider=provider,
-            items=range(len(macro.cells)),
-            trace_size=skeleton.size,
-            coarse_sizes=(0,) * len(macro.cells),
-            fixed={
+        problem = bind_problem(
+                      MeshHierarchy(macro, tuple(macro.submesh(cell, LOCAL_SUBDIVISIONS) for cell in range(len(macro.cells)))),
+                      bind_interface(skeleton, convention="normal"), provider,
+                      global_equation=Equation(0, 0), retained=0, fixed={
                 int(dof): 0.0 for face in macro.boundary_faces for dof in skeleton.dofs(int(face))
             },
-        )
+                  )
         system = assemble(problem)
         solution = system.solve()
-        meshes = tuple(data["mesh"] for data in system.local_metadata)
-        fields = []
-        for data, field in zip(system.local_metadata, solution.fields, strict=True):
-            full = np.zeros(data["nodes"])
-            full[data["free"]] = field
-            fields.append(full)
+        scalar_fields = solution.field("scalar")
+        meshes = tuple(field.mesh for field in scalar_fields)
+        fields = tuple(field.portable_coefficients for field in scalar_fields)
         metrics = scalar_error_norms(
-            meshes, fields, 1, truth.value, truth.gradient, EPSILON, order=ERROR_ORDER
+            meshes, scalar_fields, 1, truth.value, truth.gradient, EPSILON, order=ERROR_ORDER
         )
         rows.append(
             dict(
@@ -485,10 +467,10 @@ rows
       'macro_cells': 8,
       'fine_cells': 32,
       'trace_dofs': 16,
-      'residual': 3.531215348117746e-18,
+      'residual': 2.043158148055947e-18,
       'scalar_l2': 0.25331511823245645,
-      'flux_l2': 0.004992295873729374,
-      'gradient_l2': 4.9922958737293746,
+      'flux_l2': 0.0049922958737293735,
+      'gradient_l2': 4.992295873729374,
       'scalar_relative_l2': 0.26625957192826877,
       'nodal_error': 0.37771283714762327,
       'nodal_minimum': 0.0,
@@ -499,12 +481,12 @@ rows
       'macro_cells': 8,
       'fine_cells': 32,
       'trace_dofs': 16,
-      'residual': 1.4803862241201145e-17,
+      'residual': 1.0314124678157315e-17,
       'scalar_l2': 0.34175259280093,
-      'flux_l2': 0.004894176612566582,
-      'gradient_l2': 4.894176612566581,
+      'flux_l2': 0.004894176612566581,
+      'gradient_l2': 4.89417661256658,
       'scalar_relative_l2': 0.35921621930614284,
-      'nodal_error': 0.1971462356856153,
+      'nodal_error': 0.19714623568561518,
       'nodal_minimum': 0.0,
       'nodal_maximum': 1.1126151697555124},
      {'method': 'MHM-Galerkin',
@@ -513,11 +495,11 @@ rows
       'macro_cells': 32,
       'fine_cells': 128,
       'trace_dofs': 56,
-      'residual': 3.3901956506678536e-18,
-      'scalar_l2': 0.12112741146990824,
-      'flux_l2': 0.004115878117983088,
-      'gradient_l2': 4.115878117983088,
-      'scalar_relative_l2': 0.12731704665633645,
+      'residual': 2.3581389225557654e-18,
+      'scalar_l2': 0.12112741146990827,
+      'flux_l2': 0.004115878117983086,
+      'gradient_l2': 4.115878117983086,
+      'scalar_relative_l2': 0.12731704665633647,
       'nodal_error': 0.25980313859039594,
       'nodal_minimum': 0.0,
       'nodal_maximum': 1.240603178434425},
@@ -527,67 +509,67 @@ rows
       'macro_cells': 32,
       'fine_cells': 128,
       'trace_dofs': 56,
-      'residual': 1.0526579630842185e-17,
+      'residual': 7.655488364338492e-18,
       'scalar_l2': 0.18208673599128516,
-      'flux_l2': 0.004130825618653843,
-      'gradient_l2': 4.130825618653843,
+      'flux_l2': 0.004130825618653842,
+      'gradient_l2': 4.130825618653842,
       'scalar_relative_l2': 0.19139140497080442,
       'nodal_error': 0.19374192827725978,
       'nodal_minimum': 0.0,
-      'nodal_maximum': 1.1294675135664096},
+      'nodal_maximum': 1.1294675135664094},
      {'method': 'MHM-Galerkin',
       'n': 8,
       'H': 0.125,
       'macro_cells': 128,
       'fine_cells': 512,
       'trace_dofs': 208,
-      'residual': 5.2119694416018505e-18,
-      'scalar_l2': 0.046568790126552996,
-      'flux_l2': 0.0027864628526269287,
-      'gradient_l2': 2.7864628526269284,
-      'scalar_relative_l2': 0.04894846470606229,
-      'nodal_error': 0.1443873756125632,
+      'residual': 4.5916800562639076e-18,
+      'scalar_l2': 0.04656879012655305,
+      'flux_l2': 0.002786462852626926,
+      'gradient_l2': 2.786462852626926,
+      'scalar_relative_l2': 0.048948464706062345,
+      'nodal_error': 0.14438737561256298,
       'nodal_minimum': 0.0,
-      'nodal_maximum': 1.1251874154565922},
+      'nodal_maximum': 1.125187415456592},
      {'method': 'MHM-USFEM',
       'n': 8,
       'H': 0.125,
       'macro_cells': 128,
       'fine_cells': 512,
       'trace_dofs': 208,
-      'residual': 1.2201419401972801e-17,
-      'scalar_l2': 0.07656209768491797,
-      'flux_l2': 0.002909494311749464,
-      'gradient_l2': 2.9094943117494636,
-      'scalar_relative_l2': 0.08047443633747021,
-      'nodal_error': 0.15551401548096844,
+      'residual': 1.1365012103379582e-17,
+      'scalar_l2': 0.07656209768491802,
+      'flux_l2': 0.002909494311749462,
+      'gradient_l2': 2.909494311749462,
+      'scalar_relative_l2': 0.08047443633747027,
+      'nodal_error': 0.15551401548096855,
       'nodal_minimum': 0.0,
-      'nodal_maximum': 1.101093805850416},
+      'nodal_maximum': 1.1010938058504158},
      {'method': 'MHM-Galerkin',
       'n': 16,
       'H': 0.0625,
       'macro_cells': 512,
       'fine_cells': 2048,
       'trace_dofs': 800,
-      'residual': 1.1858156594776802e-17,
-      'scalar_l2': 0.01628077811869227,
-      'flux_l2': 0.0017204001144176641,
-      'gradient_l2': 1.7204001144176642,
-      'scalar_relative_l2': 0.017112729168277153,
+      'residual': 1.1955824945521019e-17,
+      'scalar_l2': 0.016280778118692305,
+      'flux_l2': 0.0017204001144176615,
+      'gradient_l2': 1.7204001144176615,
+      'scalar_relative_l2': 0.01711272916827719,
       'nodal_error': 0.15620122915430557,
       'nodal_minimum': 0.0,
-      'nodal_maximum': 1.0320779526335584},
+      'nodal_maximum': 1.0320779526335582},
      {'method': 'MHM-USFEM',
       'n': 16,
       'H': 0.0625,
       'macro_cells': 512,
       'fine_cells': 2048,
       'trace_dofs': 800,
-      'residual': 1.5455049560902228e-17,
-      'scalar_l2': 0.020197431303050697,
-      'flux_l2': 0.0017279805508186488,
-      'gradient_l2': 1.7279805508186488,
-      'scalar_relative_l2': 0.021229524121280277,
+      'residual': 1.4707313764539898e-17,
+      'scalar_l2': 0.020197431303050736,
+      'flux_l2': 0.0017279805508186468,
+      'gradient_l2': 1.7279805508186468,
+      'scalar_relative_l2': 0.02122952412128032,
       'nodal_error': 0.1212762367189939,
       'nodal_minimum': 0.0,
       'nodal_maximum': 1.0296587301268465}]
@@ -607,14 +589,12 @@ import basix.ufl
 import dolfinx
 import ufl
 from mpi4py import MPI
-from scipy.spatial import cKDTree
 
 reference_rows, references = [], {}
 settings = [(EPSILON, n, n) for n in (32, 64, 128)] + [(1e-5, n, 16) for n in (256, 512, 1024)]
 for epsilon, nx, ny in settings:
-    domain = dolfinx.mesh.create_unit_square(
-        MPI.COMM_SELF, nx, ny, diagonal=dolfinx.mesh.DiagonalType.right
-    )
+    reference_mesh = TriangleMesh.unit_square(nx, ny)
+    domain = create_native_mesh(reference_mesh)
     V = dolfinx.fem.functionspace(domain, basix.ufl.element("Lagrange", "triangle", 2))
     u, v = ufl.TrialFunction(V), ufl.TestFunction(V)
     dx = ufl.Measure("dx", domain=domain, metadata={"quadrature_degree": 20})
@@ -643,11 +623,8 @@ for epsilon, nx, ny in settings:
             )
         )
     )
-    reference_mesh = TriangleMesh.unit_square(nx, ny)
     _, nodes = nodal_space(reference_mesh, 2)
-    distances, indices = cKDTree(coordinates).query(nodes)
-    assert distances.max() < 1e-12
-    nodal = coefficients[indices]
+    nodal = bind_space(reference_mesh, V).to_portable(coefficients)
     reference_rows.append(
         dict(
             epsilon=epsilon,
@@ -681,27 +658,27 @@ for epsilon, nx, ny in settings:
 ```
 
 ```text
-CG2 reference 0.001 (32, 32) 0.0009161727594715154 0.0001923129555579362
+CG2 reference 0.001 (32, 32) 0.0009161727594715088 0.0001923129555579351
 ```
 
 ```text
-CG2 reference 0.001 (64, 64) 0.00012088991109426701 5.03010656813264e-05
+CG2 reference 0.001 (64, 64) 0.00012088991109419018 5.030106568132461e-05
 ```
 
 ```text
-CG2 reference 0.001 (128, 128) 1.533338211134431e-05 1.2730634497974327e-05
+CG2 reference 0.001 (128, 128) 1.5333382111264132e-05 1.2730634497972802e-05
 ```
 
 ```text
-CG2 reference 1e-05 (256, 16) 0.0006259597016899161 8.965065539454617e-06
+CG2 reference 1e-05 (256, 16) 0.0006259597016897307 8.965065539454321e-06
 ```
 
 ```text
-CG2 reference 1e-05 (512, 16) 0.00011317367584811515 2.3880117579567326e-06
+CG2 reference 1e-05 (512, 16) 0.00011317367584808531 2.388011757956421e-06
 ```
 
 ```text
-CG2 reference 1e-05 (1024, 16) 2.400002563782595e-05 6.071295005731435e-07
+CG2 reference 1e-05 (1024, 16) 2.400002563838651e-05 6.071295005724848e-07
 ```
 
 ## 5. Inspect fields and observed convergence rates
@@ -916,25 +893,19 @@ skeleton = SkeletonSpace(macro, tuple(FaceSpace.uniform(0) for _ in macro.faces)
 for epsilon in (1e-2, 1e-3, 1e-5):
     exact = ReactionLayer(epsilon)
     for method, stabilized in (("MHM-Galerkin", False), ("MHM-USFEM", True)):
-        provider = lambda cell, e=epsilon, flag=stabilized: local_rad(
-            cell, macro=macro, skeleton=skeleton, epsilon=e, stabilized=flag
+        provider = lambda local, e=epsilon, flag=stabilized: local_rad(
+            local, macro=macro, skeleton=skeleton, epsilon=e, stabilized=flag
         )
-        problem = MultiscaleProblem(
-            Equation(0, 0),
-            provider,
-            range(len(macro.cells)),
-            skeleton.size,
-            (0,) * len(macro.cells),
-            fixed={int(d): 0.0 for f in macro.boundary_faces for d in skeleton.dofs(int(f))},
-        )
+        problem = bind_problem(
+                      MeshHierarchy(macro, tuple(macro.submesh(cell, LOCAL_SUBDIVISIONS) for cell in range(len(macro.cells)))),
+                      bind_interface(skeleton, convention="normal"), provider,
+                      global_equation=Equation(0, 0), retained=0, fixed={int(d): 0.0 for f in macro.boundary_faces for d in skeleton.dofs(int(f))},
+                  )
         system = assemble(problem)
         solution = system.solve()
-        meshes, fields = [], []
-        for data, field in zip(system.local_metadata, solution.fields, strict=True):
-            full = np.zeros(data["nodes"])
-            full[data["free"]] = field
-            meshes.append(data["mesh"])
-            fields.append(full)
+        scalar_fields = solution.field("scalar")
+        meshes = tuple(field.mesh for field in scalar_fields)
+        fields = tuple(field.portable_coefficients for field in scalar_fields)
         metrics = scalar_error_norms(
             meshes, fields, 1, exact.value, exact.gradient, epsilon, order=40
         )
@@ -962,43 +933,43 @@ sweep
     [{'epsilon': 0.01,
       'method': 'MHM-Galerkin',
       'overshoot': 0.0,
-      'scalar_l2': 0.015727506798012394,
+      'scalar_l2': 0.015727506798012398,
       'flux_l2': 0.006979403304451645,
       'gradient_l2': 0.6979403304451645,
-      'scalar_relative_l2': 0.018796381471541432,
-      'nodal_error': 0.10172873787639791,
+      'scalar_relative_l2': 0.018796381471541435,
+      'nodal_error': 0.10172873787639769,
       'nodal_minimum': 0.0,
-      'nodal_maximum': 0.9937189825987041},
+      'nodal_maximum': 0.9937189825987042},
      {'epsilon': 0.01,
       'method': 'MHM-USFEM',
       'overshoot': 0.0,
       'scalar_l2': 0.01684209049020335,
-      'flux_l2': 0.006964009814822499,
-      'gradient_l2': 0.6964009814822498,
+      'flux_l2': 0.006964009814822497,
+      'gradient_l2': 0.6964009814822497,
       'scalar_relative_l2': 0.02012845148934158,
-      'nodal_error': 0.08559220444620452,
+      'nodal_error': 0.08559220444620463,
       'nodal_minimum': 0.0,
-      'nodal_maximum': 0.990955611425232},
+      'nodal_maximum': 0.9909556114252319},
      {'epsilon': 0.001,
       'method': 'MHM-Galerkin',
-      'overshoot': 0.12518741545659218,
-      'scalar_l2': 0.04656879012655297,
+      'overshoot': 0.12518741545659196,
+      'scalar_l2': 0.046568790126552975,
       'flux_l2': 0.0027864628526269347,
       'gradient_l2': 2.7864628526269346,
-      'scalar_relative_l2': 0.04894846470606226,
-      'nodal_error': 0.1443873756125632,
+      'scalar_relative_l2': 0.04894846470606227,
+      'nodal_error': 0.14438737561256298,
       'nodal_minimum': 0.0,
-      'nodal_maximum': 1.1251874154565922},
+      'nodal_maximum': 1.125187415456592},
      {'epsilon': 0.001,
       'method': 'MHM-USFEM',
-      'overshoot': 0.10109380585041605,
+      'overshoot': 0.10109380585041583,
       'scalar_l2': 0.07656209768491792,
       'flux_l2': 0.0029094943117494707,
       'gradient_l2': 2.9094943117494707,
       'scalar_relative_l2': 0.08047443633747016,
-      'nodal_error': 0.15551401548096844,
+      'nodal_error': 0.15551401548096855,
       'nodal_minimum': 0.0,
-      'nodal_maximum': 1.101093805850416},
+      'nodal_maximum': 1.1010938058504158},
      {'epsilon': 1e-05,
       'method': 'MHM-Galerkin',
       'overshoot': 0.4291224985130555,
@@ -1100,34 +1071,28 @@ for epsilon, resolutions in ((1e-5, (4, 8, 16)), (1e-3, (16,))):
             tuple(FaceSpace.uniform(0, FACE_SUBDIVISIONS) for _ in refined_macro.faces),
         )
         for method, stabilized in (("MHM-Galerkin", False), ("MHM-USFEM", True)):
-            provider = lambda cell, m=refined_macro, s=refined_skeleton, e=epsilon, flag=stabilized: local_rad(
-                cell,
+            provider = lambda local, m=refined_macro, s=refined_skeleton, e=epsilon, flag=stabilized: local_rad(
+                local,
                 macro=m,
                 skeleton=s,
                 epsilon=e,
                 stabilized=flag,
                 local_subdivisions=RESOLVED_LOCAL_SUBDIVISIONS,
             )
-            problem = MultiscaleProblem(
-                global_equation=Equation(0, 0),
-                local_provider=provider,
-                items=range(len(refined_macro.cells)),
-                trace_size=refined_skeleton.size,
-                coarse_sizes=(0,) * len(refined_macro.cells),
-                fixed={
+            problem = bind_problem(
+                          MeshHierarchy(refined_macro, tuple(refined_macro.submesh(cell, RESOLVED_LOCAL_SUBDIVISIONS) for cell in range(len(refined_macro.cells)))),
+                          bind_interface(refined_skeleton, convention="normal"), provider,
+                          global_equation=Equation(0, 0), retained=0, fixed={
                     int(dof): 0.0
                     for face in refined_macro.boundary_faces
                     for dof in refined_skeleton.dofs(int(face))
                 },
-            )
+                      )
             system = assemble(problem)
             solution = system.solve()
-            meshes, fields = [], []
-            for data, field in zip(system.local_metadata, solution.fields, strict=True):
-                full = np.zeros(data["nodes"])
-                full[data["free"]] = field
-                meshes.append(data["mesh"])
-                fields.append(full)
+            scalar_fields = solution.field("scalar")
+            meshes = tuple(field.mesh for field in scalar_fields)
+            fields = tuple(field.portable_coefficients for field in scalar_fields)
             metrics = scalar_error_norms(
                 meshes, fields, 1, exact.value, exact.gradient, epsilon, order=ERROR_ORDER
             )
@@ -1184,15 +1149,15 @@ Refined P1/P0 1e-05 16 MHM-Galerkin {'scalar_l2': 0.020178636803276615, 'flux_l2
 ```
 
 ```text
-Refined P1/P0 1e-05 16 MHM-USFEM {'scalar_l2': 0.033115431616295654, 'flux_l2': 0.00010318176578351813, 'gradient_l2': 10.318176578351812, 'scalar_relative_l2': 0.03327363845626651, 'nodal_error': 0.1530380547529956, 'nodal_minimum': 0.0, 'nodal_maximum': 1.006882416786878}
+Refined P1/P0 1e-05 16 MHM-USFEM {'scalar_l2': 0.033115431616295654, 'flux_l2': 0.00010318176578351813, 'gradient_l2': 10.318176578351812, 'scalar_relative_l2': 0.03327363845626651, 'nodal_error': 0.1530380547529956, 'nodal_minimum': 0.0, 'nodal_maximum': 1.0068824167868782}
 ```
 
 ```text
-Refined P1/P0 0.001 16 MHM-Galerkin {'scalar_l2': 0.0008317865677838924, 'flux_l2': 0.0004019769798175291, 'gradient_l2': 0.4019769798175291, 'scalar_relative_l2': 0.000874291029367575, 'nodal_error': 0.006999393894721706, 'nodal_minimum': 0.0, 'nodal_maximum': 0.9999997474222396}
+Refined P1/P0 0.001 16 MHM-Galerkin {'scalar_l2': 0.0008317865677838922, 'flux_l2': 0.0004019769798175291, 'gradient_l2': 0.4019769798175291, 'scalar_relative_l2': 0.0008742910293675748, 'nodal_error': 0.006999393894721817, 'nodal_minimum': 0.0, 'nodal_maximum': 0.9999997474222397}
 ```
 
 ```text
-Refined P1/P0 0.001 16 MHM-USFEM {'scalar_l2': 0.001226347487215781, 'flux_l2': 0.00040196928701191604, 'gradient_l2': 0.40196928701191603, 'scalar_relative_l2': 0.0012890140914595654, 'nodal_error': 0.0055887100964258085, 'nodal_minimum': 0.0, 'nodal_maximum': 0.999999725960371}
+Refined P1/P0 0.001 16 MHM-USFEM {'scalar_l2': 0.0012263474872157788, 'flux_l2': 0.00040196928701191604, 'gradient_l2': 0.40196928701191603, 'scalar_relative_l2': 0.001289014091459563, 'nodal_error': 0.0055887100964260306, 'nodal_minimum': 0.0, 'nodal_maximum': 0.999999725960371}
 ```
 
 
@@ -1210,7 +1175,7 @@ Refined P1/P0 0.001 16 MHM-USFEM {'scalar_l2': 0.001226347487215781, 'flux_l2': 
       'macro_cells': 32,
       'fine_cells': 2048,
       'trace_dofs': 224,
-      'residual': 4.536670056169429e-18,
+      'residual': 3.582091155950077e-18,
       'overshoot': 0.39719694724577814,
       'scalar_l2': 0.10038241445937039,
       'flux_l2': 0.00016200323188130994,
@@ -1228,7 +1193,7 @@ Refined P1/P0 0.001 16 MHM-USFEM {'scalar_l2': 0.001226347487215781, 'flux_l2': 
       'macro_cells': 32,
       'fine_cells': 2048,
       'trace_dofs': 224,
-      'residual': 5.9959085444105774e-18,
+      'residual': 5.996360824405177e-18,
       'overshoot': 0.020397021706184182,
       'scalar_l2': 0.12651669686326633,
       'flux_l2': 0.0001594287090734297,
@@ -1246,7 +1211,7 @@ Refined P1/P0 0.001 16 MHM-USFEM {'scalar_l2': 0.001226347487215781, 'flux_l2': 
       'macro_cells': 128,
       'fine_cells': 8192,
       'trace_dofs': 832,
-      'residual': 1.7858973242614016e-18,
+      'residual': 1.647047208981743e-18,
       'overshoot': 0.2971069210013073,
       'scalar_l2': 0.05166215678890528,
       'flux_l2': 0.0001414541127895522,
@@ -1264,7 +1229,7 @@ Refined P1/P0 0.001 16 MHM-USFEM {'scalar_l2': 0.001226347487215781, 'flux_l2': 
       'macro_cells': 128,
       'fine_cells': 8192,
       'trace_dofs': 832,
-      'residual': 3.847784317911282e-18,
+      'residual': 3.602925898094949e-18,
       'overshoot': 0.015689415024548348,
       'scalar_l2': 0.0718478396324243,
       'flux_l2': 0.00013951315234044713,
@@ -1282,7 +1247,7 @@ Refined P1/P0 0.001 16 MHM-USFEM {'scalar_l2': 0.001226347487215781, 'flux_l2': 
       'macro_cells': 512,
       'fine_cells': 32768,
       'trace_dofs': 3200,
-      'residual': 1.4353191470113675e-18,
+      'residual': 1.4601526170143782e-18,
       'overshoot': 0.07594422119889166,
       'scalar_l2': 0.020178636803276615,
       'flux_l2': 0.00010181469397222876,
@@ -1300,15 +1265,15 @@ Refined P1/P0 0.001 16 MHM-USFEM {'scalar_l2': 0.001226347487215781, 'flux_l2': 
       'macro_cells': 512,
       'fine_cells': 32768,
       'trace_dofs': 3200,
-      'residual': 3.7991279987440205e-18,
-      'overshoot': 0.006882416786877954,
+      'residual': 3.344955980707496e-18,
+      'overshoot': 0.006882416786878176,
       'scalar_l2': 0.033115431616295654,
       'flux_l2': 0.00010318176578351813,
       'gradient_l2': 10.318176578351812,
       'scalar_relative_l2': 0.03327363845626651,
       'nodal_error': 0.1530380547529956,
       'nodal_minimum': 0.0,
-      'nodal_maximum': 1.006882416786878},
+      'nodal_maximum': 1.0068824167868782},
      {'epsilon': 0.001,
       'method': 'MHM-Galerkin',
       'n': 16,
@@ -1318,15 +1283,15 @@ Refined P1/P0 0.001 16 MHM-USFEM {'scalar_l2': 0.001226347487215781, 'flux_l2': 
       'macro_cells': 512,
       'fine_cells': 32768,
       'trace_dofs': 3200,
-      'residual': 2.194955480397227e-17,
+      'residual': 2.3064649475921167e-17,
       'overshoot': 0.0,
-      'scalar_l2': 0.0008317865677838924,
+      'scalar_l2': 0.0008317865677838922,
       'flux_l2': 0.0004019769798175291,
       'gradient_l2': 0.4019769798175291,
-      'scalar_relative_l2': 0.000874291029367575,
-      'nodal_error': 0.006999393894721706,
+      'scalar_relative_l2': 0.0008742910293675748,
+      'nodal_error': 0.006999393894721817,
       'nodal_minimum': 0.0,
-      'nodal_maximum': 0.9999997474222396},
+      'nodal_maximum': 0.9999997474222397},
      {'epsilon': 0.001,
       'method': 'MHM-USFEM',
       'n': 16,
@@ -1336,13 +1301,13 @@ Refined P1/P0 0.001 16 MHM-USFEM {'scalar_l2': 0.001226347487215781, 'flux_l2': 
       'macro_cells': 512,
       'fine_cells': 32768,
       'trace_dofs': 3200,
-      'residual': 2.666665123369757e-17,
+      'residual': 2.4620553040580394e-17,
       'overshoot': 0.0,
-      'scalar_l2': 0.001226347487215781,
+      'scalar_l2': 0.0012263474872157788,
       'flux_l2': 0.00040196928701191604,
       'gradient_l2': 0.40196928701191603,
-      'scalar_relative_l2': 0.0012890140914595654,
-      'nodal_error': 0.0055887100964258085,
+      'scalar_relative_l2': 0.001289014091459563,
+      'nodal_error': 0.0055887100964260306,
       'nodal_minimum': 0.0,
       'nodal_maximum': 0.999999725960371}]
     ```
@@ -1515,12 +1480,12 @@ quadrature_controls
   'epsilon': 1e-05,
   'orders': [24, 32],
   'norms': {'scalar_l2': [0.020178636803276615, 0.020178636803276587],
-   'flux_l2': [0.00010181469397222876, 0.00010181469397222888]}},
+   'flux_l2': [0.00010181469397222876, 0.00010181469397222887]}},
  {'family': 'refined',
   'method': 'MHM-USFEM',
   'epsilon': 1e-05,
   'orders': [24, 32],
-  'norms': {'scalar_l2': [0.033115431616295654, 0.03311543161629563],
+  'norms': {'scalar_l2': [0.033115431616295654, 0.033115431616295626],
    'flux_l2': [0.00010318176578351813, 0.00010318176578351829]}}]
 ```
 
@@ -1660,7 +1625,7 @@ for column, epsilon in enumerate((1e-3, 1e-5)):
         ax.legend(fontsize=8)
 fig.savefig(REPORTS / "rad-layer-profiles.png", dpi=160)
 plt.show()
-(REPORTS / "mhm-usfem-rad.json").write_text(
+_ = (REPORTS / "mhm-usfem-rad.json").write_text(
     json.dumps(
         {
             "problem": "CILAMCE 2025 section 4.1 analytical reaction layer",
@@ -1699,15 +1664,6 @@ plt.show()
 
 
 [![Figure 9 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_39_0.png)](../../assets/tutorials/mhm_usfem_rad/figure_39_0.png)
-
-
-
-
-
-```text
-24806
-```
-
 
 
 ## Interpret the different error measures

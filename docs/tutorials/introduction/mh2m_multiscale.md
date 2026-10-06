@@ -2,6 +2,8 @@
 
 Follow the numbered steps: state the variational problem, choose the local and trace spaces, declare the local and global equations, solve, and inspect the physical fields.
 
+The main workflow is **meshes → spaces → local equations → global balance → assemble → solve → fields and errors**. `MeshHierarchy` associates macro and local meshes; `bind_interface` and `LocalContext` own supported numbering, geometric orientation and native coordinate conversions. The mathematical forms, physical trace meaning, local modes and gauge remain explicit in the cells below. Fully manual/custom spaces use the same numerical owners; see the [custom-interface notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/custom_interface.ipynb).
+
 The **Multiscale-Hybrid-Hybrid Method** uses three fields: local pressure, local boundary conormal and a shared global pressure trace. We declare all three equations explicitly and let `LocalEquations` and `MultiscaleProblem` eliminate the local fields.
 
 Our two-dimensional P1/P0/P1 family follows [de Barros, Madureira and Valentin (2026, version 3)](https://arxiv.org/abs/2404.16978v3), equations (7), (28)–(29) and section 6.2. The oscillatory material and meshes below define an original introductory case, not a reproduction of the article's heterogeneous figures.
@@ -51,6 +53,10 @@ from pymhm.meshes.triangle import TriangleMesh
 plt.rcParams.update({"figure.dpi": 110, "font.size": 10})
 
 from pymhm.methods.three_field import PressureTraceSpace
+
+from pymhm import MeshHierarchy, LocalContext, bind_interface, bind_problem, solve
+from pymhm.backends.spaces import bind_space
+from pymhm.backends.forms import assemble_pairing
 
 ```
 
@@ -155,16 +161,16 @@ conormal = SkeletonSpace(
 )
 assert conormal_segments == 2 * gamma_segments
 assert local_refinement == 2 * conormal_segments
-fixed = {int(dof): 0.0 for face in macro.boundary_faces for dof in gamma.face_dofs[int(face)]}
-global_free_unknowns = gamma.size - len(fixed)
-print({"global_pressure_trace_free": global_free_unknowns,
+pressure_interface = bind_interface(gamma, convention="value")
+conormal_interface = bind_interface(conormal, convention="value")
+print({"global_pressure_trace_coordinates": gamma.size,
        "local_conormal_unknowns_per_macrocell": 3 * conormal_segments,
        "local_P1_nodes_per_macrocell": (local_refinement + 1) * (local_refinement + 2) // 2})
 
 ```
 
 ```text
-{'global_pressure_trace_free': 129, 'local_conormal_unknowns_per_macrocell': 24, 'local_P1_nodes_per_macrocell': 153}
+{'global_pressure_trace_coordinates': 193, 'local_conormal_unknowns_per_macrocell': 24, 'local_P1_nodes_per_macrocell': 153}
 ```
 
 ### 3. Write the three variational equations
@@ -203,7 +209,7 @@ $$
 
 
 
-Integrate $P$ on the union of both face partitions. `trace_coupling` includes a global mesh orientation; multiplying each block by `macro.signs` gives the unsigned local boundary pairing $B$. Therefore the saddle contains **$-B$ and $-B^T$** for our outward conormal convention.
+Write the boundary pairing $B$ as `phi * v * ds` in UFL, selecting the private conormal space as its interface. `local.interface_pairing(conormal_interface)` integrates $P$ on the union of the pressure and conormal partitions and accumulates shared pressure vertices. Both are unsigned local boundary pairings: their mathematical signs are the explicit **$-B$ and $-B^T$** in the saddle. The context owns face ordering and coefficient transport.
 
 
 ### Write the local differential operator in UFL
@@ -219,7 +225,7 @@ $$
 
 
 
-The small geometry adapter keeps the same fine triangles and equispaced nodal basis. It maps native coefficients by their physical coordinates; it contains no PDE. `compile_form` assembles the expressions and releases native assembly resources. The interface pairing is introduced separately, with its declared normal convention.
+`local.native_space` binds the declared fine mesh and equispaced element. The local saddle keeps its native pressure coordinates; `compile_form` assembles the expressions and releases native assembly resources. The same weak form can return portable nodal matrices for the independent classical baseline. The following section declares the two boundary spaces and their pairings.
 
 
 
@@ -229,28 +235,27 @@ import basix.ufl
 import dolfinx
 import ufl
 from mpi4py import MPI
-from scipy.spatial import cKDTree
 from pymhm.core.equations import compile_form
-from pymhm.fem.scalar.triangle import trace_coupling
 
 
 def native_scalar_space(fine: TriangleMesh, degree: int) -> tuple[Any, np.ndarray]:
-    """Use the existing triangles and bijectively map equispaced nodal coordinates."""
-    geometry = ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,)))
-    domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, fine.cells, fine.points, geometry)
-    element = basix.ufl.element("Lagrange", "triangle", degree,
-                                lagrange_variant=basix.LagrangeVariant.equispaced)
-    V = dolfinx.fem.functionspace(domain, element)
-    _, nodes = nodal_space(fine, degree)
-    distance, permutation = cKDTree(V.tabulate_dof_coordinates()[:, :2]).query(nodes)
-    assert distance.max() < 1e-12
-    assert len(np.unique(permutation)) == len(nodes)
-    return V, permutation
+    """Bind the declared nodal element with shared topology and coefficient maps."""
+    element = basix.ufl.element(
+        "Lagrange", "triangle", degree,
+        lagrange_variant=basix.LagrangeVariant.equispaced,
+    )
+    binding = bind_space(fine, element)
+    return binding.space, binding.mapping
 
 
-def user_volume_forms(fine: TriangleMesh, degree: int) -> tuple[Any, Any, np.ndarray]:
-    """Execute the user-written weak operator, mass and source in the stated basis."""
-    V, order = native_scalar_space(fine, degree)
+def user_volume_forms(
+    fine: TriangleMesh, degree: int, *, binding: Any = None, portable: bool = True,
+) -> tuple[Any, Any, np.ndarray]:
+    """Assemble the user weak form in native or declared portable nodal coordinates."""
+    if binding is None:
+        V, order = native_scalar_space(fine, degree)
+    else:
+        V, order = binding.space, binding.mapping
     p, v = ufl.TrialFunction(V), ufl.TestFunction(V)
     x = ufl.SpatialCoordinate(V.mesh)
     a_epsilon = 2 + ufl.sin(2 * np.pi * x[0] / epsilon) * ufl.sin(2 * np.pi * x[1] / epsilon)
@@ -259,7 +264,9 @@ def user_volume_forms(fine: TriangleMesh, degree: int) -> tuple[Any, Any, np.nda
     mass = p * v * dx
     L = source * v * dx
     A, M, F = compile_form(a), compile_form(mass), compile_form(L)
-    return A[order][:, order].tocsc(), M[order][:, order].tocsc(), F[order]
+    if portable:
+        return A[order][:, order].tocsc(), M[order][:, order].tocsc(), F[order]
+    return A, M, F
 
 ```
 
@@ -279,31 +286,33 @@ form_equivalence = {}  # Filled by the optional convenience check at the end.
 
 
 ```python
-def local_three_field_equations(cell: int) -> LocalEquations:
-    """Declare local pressure/conormal equations and the shared pressure balance."""
-    fine = macro.submesh(cell, local_refinement)
-    stiffness, mass, force = user_volume_forms(fine, local_degree)
-    B = trace_coupling(macro, cell, fine, conormal, local_degree)
-    ids = gamma.cell_dofs(cell)
-    P = np.zeros((B.shape[1], len(ids)))
-    offset = 0
-    for side, face in enumerate(macro.cell_faces[cell]):
-        mu, rho = conormal.faces[face], gamma.faces[face]
-        width = mu.size
-        B[:, offset:offset + width] *= macro.signs[cell, side]
-        cuts = tuple(sorted(set(mu.breaks) | set(rho.breaks)))
-        integration_space = FaceSpace(cuts, (0,) * (len(cuts) - 1))
-        t, weights = integration_space.quadrature(4)
-        pair = macro.lengths[face] * (mu.evaluate(t).T @ (weights[:, None] * rho.evaluate(t)))
-        P[np.ix_(np.arange(offset, offset + width), np.searchsorted(ids, gamma.face_dofs[face]))] = pair
-        offset += width
+def local_three_field_equations(local: LocalContext) -> LocalEquations:
+    """Declare native pressure/conormal equations and the shared pressure balance."""
+    fine = local.mesh
+    element = basix.ufl.element(
+        "Lagrange", "triangle", local_degree,
+        lagrange_variant=basix.LagrangeVariant.equispaced,
+    )
+    pressure_space = local.native_space(element)
+    stiffness, mass, force = user_volume_forms(
+        fine, local_degree, binding=pressure_space, portable=False,
+    )
+    v = ufl.TestFunction(pressure_space.space)
+    boundary_forms = local.trace_pairings(
+        lambda phi, ds: phi * v * ds, interface=conormal_interface,
+    )
+    B = assemble_pairing(boundary_forms.forms)
+    P = local.interface_pairing(conormal_interface, order=4)
 
-    npressure = stiffness.shape[0]
+    # These block dimensions express the three-field formulation itself.
+    npressure, nconormal = stiffness.shape[0], B.shape[1]
     local_saddle = sparse.bmat([[stiffness, -B], [-B.T, None]], format="csc")
-    coupling = np.vstack((np.zeros((npressure, len(ids))), P))
-    return LocalEquations(
-        a=local_saddle, L=np.r_[force, np.zeros(B.shape[1])],
-        b=coupling, c=coupling.T, dofs=ids,
+    coupling = np.vstack((np.zeros((npressure, P.shape[1])), P))
+    pressure_reconstruction = np.hstack((np.eye(npressure), np.zeros((npressure, nconormal))))
+    local.field("pressure", pressure_space, reconstruction=pressure_reconstruction)
+    return local.equations(
+        a=local_saddle, L=np.r_[force, np.zeros(nconormal)],
+        b=coupling, c=coupling.T,
         metadata={"mesh": fine, "A": stiffness, "F": force, "B": B, "P": P,
                   "pressure_count": npressure, "volume_moments": np.asarray(mass.sum(axis=1)).ravel()},
     )
@@ -362,19 +371,23 @@ def evaluate_scalar(field: ScalarField, points: np.ndarray) -> tuple[np.ndarray,
 
 
 ```python
-problem = MultiscaleProblem(
-    global_equation=Equation(0, np.zeros(gamma.size)),
-    local_provider=local_three_field_equations,
-    items=range(len(macro.cells)), trace_size=gamma.size,
-    coarse_sizes=(0,) * len(macro.cells), fixed=fixed,
+hierarchy = MeshHierarchy(
+    macro, tuple(macro.submesh(cell, local_refinement) for cell in range(len(macro.cells)))
+)
+problem = bind_problem(
+    hierarchy, pressure_interface, local_three_field_equations,
+    global_equation=Equation(0, 0), retained=0,
+    fixed=lambda global_context: global_context.fix_faces(macro.boundary_faces, 0),
 )
 with threadpool_limits(1):
     system = assemble(problem)
-    solution = system.solve()
+    solution = solve(system)
+pressure_fields = solution.field("pressure")
 physical_fields = tuple(
-    ScalarField(data["mesh"], local_degree, mixed[:data["pressure_count"]])
-    for data, mixed in zip(system.local_metadata, solution.fields, strict=True)
+    ScalarField(field.mesh, local_degree, field.portable_coefficients)
+    for field in pressure_fields
 )
+global_free_unknowns = gamma.size - len(problem.fixed)
 conormal_fields = tuple(
     mixed[data["pressure_count"]:] for data, mixed in zip(system.local_metadata, solution.fields, strict=True)
 )
@@ -384,7 +397,7 @@ print({"global_pressure_trace_free": global_free_unknowns,
 ```
 
 ```text
-{'global_pressure_trace_free': 129, 'global_residual': 9.071683659192879e-17}
+{'global_pressure_trace_free': 129, 'global_residual': 1.087033410919318e-16}
 ```
 
 ### 5. Check injectivity, trace moments and macro conservation
@@ -403,6 +416,8 @@ Thus physical outward flux $q\cdot n_K=-\eta_K$ conserves on each macrocell. Che
 
 These are execution diagnostics. Uniform stability depends on the compatible spaces and M1/M2 conditions, not merely a small algebraic residual. Raw $-a_\varepsilon\nabla p_h$ need not equal $-\eta_K$ pointwise on a boundary and is not claimed to be an $H(\mathrm{div})$ field on the fine mesh.
 
+The physical reconstruction reads `solution.local_trace(cell)`: the bound space supplies the executed local face coefficients, including any declared basis changes. The value convention used here has no outward-normal sign. The method's reconstruction matrix remains an explicit part of its mathematical definition.
+
 
 
 ```python
@@ -415,29 +430,38 @@ for cell, (data, field, eta) in enumerate(
     zip(system.local_metadata, physical_fields, conormal_fields, strict=True)
 ):
     A, F, B, P = data["A"], data["F"], data["B"], data["P"]
-    rho = solution.trace[gamma.cell_dofs(cell)]
+    executed_pressure = pressure_fields[cell].coefficients
+    rho = solution.local_trace(cell)
     diagnostics["constant_kernel_relative"] = max(
         diagnostics["constant_kernel_relative"],
         float(np.linalg.norm(A @ np.ones(A.shape[0])) / np.linalg.norm(A.data)),
     )
     diagnostics["trace_moment_max"] = max(
-        diagnostics["trace_moment_max"], float(np.max(abs(B.T @ field.values - P @ rho))),
+        diagnostics["trace_moment_max"], float(np.max(abs(B.T @ executed_pressure - P @ rho))),
     )
     diagnostics["macro_conservation_max"] = max(
         diagnostics["macro_conservation_max"], float(abs(B.sum(axis=0) @ eta + F.sum())),
     )
-    defect = A @ field.values - B @ eta - F
-    scale = max(np.linalg.norm(F), np.linalg.norm(A @ field.values), np.linalg.norm(B @ eta))
+    defect = A @ executed_pressure - B @ eta - F
+    scale = max(np.linalg.norm(F), np.linalg.norm(A @ executed_pressure), np.linalg.norm(B @ eta))
     diagnostics["original_local_relative_residual"] = max(
         diagnostics["original_local_relative_residual"], float(np.linalg.norm(defect) / scale),
     )
     digest = hashlib.sha256(np.ascontiguousarray(B).tobytes())
     digest.update(np.ascontiguousarray(P).tobytes())
     basis_digests.append(digest.hexdigest())
-    archive.update({f"points_{cell}": field.mesh.points, f"cells_{cell}": field.mesh.cells,
+    descriptor = pressure_fields[cell].definition.descriptor
+    binding = solution.trace_bindings[cell]
+    archive.update({f"executed_pressure_{cell}": executed_pressure,
+                    f"executed_pressure_mapping_{cell}": descriptor.mapping,
+                    f"executed_pressure_basis_{cell}": descriptor.basis_matrix,
+                    f"executed_pressure_basis_points_{cell}": descriptor.basis_points,
+                    f"pressure_basis_digest_{cell}": np.array(pressure_fields[cell].basis_digest),
+                    f"trace_trial_map_{cell}": binding.trial_map,
+                    f"points_{cell}": field.mesh.points, f"cells_{cell}": field.mesh.cells,
                     f"pressure_{cell}": field.values, f"conormal_{cell}": eta,
                     f"boundary_pairing_{cell}": B, f"pressure_trace_pairing_{cell}": P,
-                    f"gamma_dofs_{cell}": gamma.cell_dofs(cell)})
+                    f"gamma_dofs_{cell}": binding.dofs})
 assert np.linalg.matrix_rank(system.local_metadata[0]["B"]) == 3 * conormal_segments
 assert max(diagnostics.values()) < 1e-10
 print(diagnostics)
@@ -445,7 +469,7 @@ print(diagnostics)
 ```
 
 ```text
-{'constant_kernel_relative': 2.1893677844509427e-16, 'trace_moment_max': 6.505213034913027e-19, 'macro_conservation_max': 1.141448047192739e-15, 'original_local_relative_residual': 8.445169615836852e-14}
+{'constant_kernel_relative': 2.1836088566646393e-16, 'trace_moment_max': 6.505213034913027e-19, 'macro_conservation_max': 9.124645483638005e-16, 'original_local_relative_residual': 8.20673263589874e-14}
 ```
 
 ### 6. A classical primal Galerkin baseline, with its own refinement check
@@ -725,7 +749,7 @@ plt.show()
 ```
 
 ```text
-{'physical_relative_errors': {'pressure_L2': 0.00019495407271246995, 'flux_L2': 0.019449591904094107, 'flux_energy': 0.013412679562910597, 'pressure_relative': 0.009176834899964497, 'flux_relative': 0.10178745352163292, 'energy_relative': 0.0997648332247902}, 'relative_norm_change_q8_q10': 2.3635614116455743e-15}
+{'physical_relative_errors': {'pressure_L2': 0.00019495407271238573, 'flux_L2': 0.019449591904094187, 'flux_energy': 0.01341267956291061, 'pressure_relative': 0.009176834899960531, 'flux_relative': 0.10178745352163333, 'energy_relative': 0.09976483322479031}, 'relative_norm_change_q8_q10': 2.085495363217584e-15}
 ```
 
 

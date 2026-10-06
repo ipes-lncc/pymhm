@@ -5,9 +5,9 @@ and the [ten rendered introductory tutorials](https://ipes-lncc.github.io/pymhm/
 Their [source notebooks](introduction/README.md) are available for interactive use. Then
 use the problem folders and numbered notebooks for additional formulations,
 convergence records, geometry variants and literature comparisons. The new
-course defines the material, local forms, global equations, classical references
-and plots in its cells. It shows explicit operator assembly before introducing
-prepared functions as conveniences. All ten tutorials are in English.
+course defines meshes, spaces, material, local forms, global equations, classical
+references and plots in its cells. `LocalContext` supplies representation details
+while UFL expresses the mathematics; prepared operators follow as conveniences. All ten tutorials are in English.
 
 For user-written forms, begin with the local/global, UFL, vector UFL and
 hierarchy notebooks in `foundations/operators`. They use the generic
@@ -167,6 +167,7 @@ pixi run --locked -e introduction notebooks-run introduction --timeout 1800
 
 | Notebook | Methods |
 | --- | --- |
+| [Custom interface spaces](foundations/operators/custom_interface.ipynb) | MeshHierarchy/bind_problem; structural InterfaceSpace/TraceBinding; nonorthogonal bases; manual numbering/orientation; physical-field equivalence |
 | [Start here: Local and global forms, providers and ordered batches](foundations/operators/local_global_providers.ipynb) | LocalEquations/Equation; primal and mixed local forms; serial/thread/spawn batches; external local solver |
 | [Start here: User-written UFL local and global equations](foundations/operators/ufl_provider.ipynb) | UFL/DOLFINx forms; independent row and column pairings; COMM_SELF local assembly |
 | [Start here: Three levels of user-defined equations](foundations/operators/variational_hierarchy.ipynb) | four-block equations; three-level operator recursion; independent full-system comparison |

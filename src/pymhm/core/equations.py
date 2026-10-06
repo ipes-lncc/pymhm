@@ -166,6 +166,8 @@ class LocalEquations:
     test_basis: Any = None
     test_moments: Any = None
     metadata: Any = None
+    field_data: tuple[Any, ...] = ()
+    trace_binding: Any = None
 
     def __post_init__(self) -> None:
         """Freeze explicit maps without assembling forms or inspecting native spaces."""
@@ -188,6 +190,8 @@ class CompiledLocalEquations:
     matrix: FloatArray
     load: FloatArray
     metadata: Any = None
+    field_data: tuple[Any, ...] = ()
+    trace_binding: Any = None
 
 
 def compile_local_equations(
@@ -249,4 +253,11 @@ def compile_local_equations(
     load = compiler(equations.g, (len(test),))
     global_load = np.zeros(len(union), dtype=np.result_type(load, float))
     global_load[test_indices] = load
-    return CompiledLocalEquations(problem, matrix, global_load, equations.metadata)
+    return CompiledLocalEquations(
+        problem,
+        matrix,
+        global_load,
+        equations.metadata,
+        equations.field_data,
+        equations.trace_binding,
+    )

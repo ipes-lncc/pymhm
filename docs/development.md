@@ -7,6 +7,9 @@ the algebraic core requires no optional FEM compiler, MPI, CAD or accelerator
 runtime. Functions and classes, including private and nested helpers, have
 docstrings and type annotations. The package includes its typing marker and
 typed root interface.
+Pip installs the coefficient/Basix core. Symbolic `fenics-ufl` alone does not
+provide native assembly; the [installation guide](installation.md#native-ufl-assembly)
+describes DOLFINx environments for UFL applications.
 
 Use the checked-in lockfiles for every environment. Validate workspace resolution
 without installing packages or changing the lockfile before preparing an environment:
@@ -28,7 +31,8 @@ The `pixi run --locked -e packaging lock-check` task performs both checks; its
 - The recursive source contract checks docstrings and annotations on every
   module and named definition, including implementation helpers.
 - Mypy checks annotations against the resolved development environment.
-- Pytest measures branch and line coverage, each with an independent **99% minimum**.
+- Combined Linux core and native FEM coverage has independent **99% minimums**
+  for lines and branches.
 - Analytical patches, convergence, conservation, gauges and independent
   uncondensed comparisons check numerical meaning beyond coverage.
 - Native integration tests verify actual libraries and hardware independently
@@ -80,8 +84,8 @@ pixi run --locked -e test build
 MPI launcher or CUDA device fails before collection. This profile does not turn
 unavailable native integrations into successful backend validation. The
 `test-core` environment provides the portable suite and development tools on
-Linux, Windows and macOS. It omits optional native integrations; their capability
-skips are separate from its line and branch coverage gates. `test-py311` and
+Linux, Windows and macOS. It omits optional native integrations; its coverage
+measurement is combined with native FEM coverage for qualification. `test-py311` and
 `test-py312` provide portable checks for those Python versions. The package's
 runtime dependencies remain independent of these full-test requirements.
 
@@ -110,7 +114,41 @@ JUnit XML reports receive `-parallel` and `-serial` filename suffixes so both
 results remain available. Workers that exit abnormally are not restarted: the
 run fails and retains the failing test's report instead of retrying it.
 
-Coverage starts from fresh, separate measurements for the two phases and combines
+### Coverage
+
+`coverage-run` collects coverage without applying the package-wide gate.
+`test-cov` collects coverage and checks both independent 99% thresholds; use it
+with the complete native `test` environment. Portable Core runs and native FEM
+runs each measure the package, and their combined Linux dataset qualifies
+the package-wide coverage. Optional-backend skips remain explicit in each run.
+
+From one checkout on Linux, collect both datasets into separate directories,
+then combine them and check the thresholds:
+
+```bash
+pixi run --locked -e test-core coverage-run
+pixi run --locked -e fem test-fem-cov
+mkdir -p build/reports/qualified-coverage
+pixi run --locked -e test-core python -m coverage combine --keep \
+  --data-file=build/reports/qualified-coverage/.coverage \
+  build/reports/coverage/.coverage build/reports/fem-coverage/.coverage
+pixi run --locked -e test-core python -m coverage xml --fail-under=0 \
+  --data-file=build/reports/qualified-coverage/.coverage \
+  -o build/reports/qualified-coverage/coverage.xml
+pixi run --locked -e test-core python -m coverage json --fail-under=0 \
+  --data-file=build/reports/qualified-coverage/.coverage \
+  -o build/reports/qualified-coverage/coverage.json
+pixi run --locked -e test-core python scripts/check_coverage.py \
+  build/reports/qualified-coverage/coverage.json
+```
+
+Both measurements must come from the same source revision and checkout paths.
+`--keep` preserves the input datasets, and the combined output has its own
+directory. The JSON checker enforces line and branch coverage separately.
+CI combines only the Linux `test-core` and FEM datasets from the current
+workflow run; Codecov receives their XML report after the gate passes.
+
+Each runner starts from fresh, separate measurements for the two phases and combines
 only successful phases. A failed parallel phase stops before the serial phase,
 and an incomplete run does not publish coverage reports. The independent line
 and branch thresholds remain **99%**. Numerical comparisons follow the
@@ -141,8 +179,12 @@ The Tests portable matrix uses `test-core` on Linux x86-64, Windows x86-64 and
 macOS Apple Silicon (ARM64), with additional Python 3.11 and 3.12 jobs on Linux.
 The Integration matrix starts only after every Core matrix job succeeds. It
 contains four native solver jobs: FEniCS/PETSc and MPI on Linux, and PARDISO
-on Linux and Windows. Every portable coverage job enforces the independent
-99% line and branch gates. `test-fem` selects CPU FEM tests without MPI;
+on Linux and Windows. Core jobs collect coverage on each tested platform. The
+Linux FEM job collects native CPU coverage, and a separate Coverage job combines
+the Linux `test-core` and FEM datasets and enforces both 99% gates after Core and
+Integration succeed. `test-fem` selects CPU FEM tests without MPI;
+`test-fem-cov` measures that selection in `build/reports/fem-coverage`,
+leaving the core measurement in its own directory.
 `test-mpi` selects CPU MPI tests, including runs with one, two and four ranks.
 The FEM and MPI jobs upload separate parallel/serial JUnit reports even when a
 test fails. The FEM job checks native imports before starting the suite and

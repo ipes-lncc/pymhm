@@ -1,0 +1,20 @@
+{
+  "scope": "The final profile/publication cell executes from ten checksummed current local/reference archives through the shared archive replay owner. Physical rows and state archives are unchanged, and the profile image is byte-identical. The numerical acquisition and final publication source snapshots are recorded separately.",
+  "created_utc": "2026-10-06T16:57:47.786246+00:00",
+  "acquisition_notebook_sha256": "96a5756e87aa408c66b06e2d9f1901200de4fd5a37bef3319b127af1776bba0f",
+  "publication_notebook_sha256": "a8ac8fd830317a784376f6038defbe69bdc70740f85c427408a71232f946cae2",
+  "numerical_code_sha256": "0655519881e891b7c5f81e94e5cdcfe9c0c622b5a9a0a0d4046eb58745837e55",
+  "provider_code_sha256": "fcfce6b0258cae6e7f7599cf6874fa2dd7ecf2ac2dd7121ba1b676fbcd2c309c",
+  "numerical_code_byte_identical_outside_cell39": true,
+  "sole_code_change": "Assign write_text return value to underscore.",
+  "reexecuted_cell_indices": [
+    39
+  ],
+  "physical_data_sha256": "196c94ef1dd77a56cf654f30d07334546287d253aec7ce54a0b5da53debbe78e",
+  "acquisition_report_sha256_before_publication_provenance": "f00ef94c0847922c34c0e883706e709df5ad6cb19d7052db77db93b932591dd4",
+  "current_report": "build/introduction/mhm-usfem-rad.json",
+  "executed_notebook_sha256": "f32bd3fc425fb4c7f786ad06d3ba63166105f180ad4274924af698531bed0bb0",
+  "profile_png_sha256": "6620f193f3db787beb24c61ee219cfbb99a9fd28eb76af1cc0d80eea6cf55946",
+  "profile_png_identical_to_fresh_acquisition": true,
+  "replayed_archive_count": 10
+}

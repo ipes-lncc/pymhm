@@ -5,7 +5,7 @@ PyMHM's portable core targets native Windows x86-64. It uses the same
 as Linux and macOS. The checked-in Pixi lockfile includes Windows NumPy, SciPy,
 Basix and optional Intel MKL/PyPardiso packages. PETSc is optional.
 
-The Windows CI jobs are configured to exercise the core coverage gates, native
+The Windows CI jobs are configured to collect core coverage and exercise native
 PARDISO, signed shared-face assembly, local physical moments and serial/thread/process reconstruction.
 They also install a built wheel outside the checkout and repeat the generic
 local/global checks against an independently assembled conforming system.
@@ -31,6 +31,10 @@ For Intel MKL PARDISO, install `"pymhm[intel]"` instead of `pymhm` in the same
 environment. These commands use the virtual environment's interpreter directly;
 activation, a repository checkout and Pixi are unnecessary. See the
 [installation guide](installation.md) for extras and upgrades.
+The pip installation provides the coefficient/Basix core. Native UFL assembly
+requires a separate DOLFINx environment; see
+[native UFL assembly](installation.md#native-ufl-assembly) for the supported
+Linux/macOS setup.
 
 ### Repository development with Pixi
 
@@ -42,8 +46,12 @@ pixi --version
 pixi list --locked --no-install -e test-core
 pixi install --locked -e test-core
 pixi run --locked -e test-core pytest -q tests/test_windows_portability.py
-pixi run --locked -e test-core test-cov
+pixi run --locked -e test-core coverage-run
 ```
+
+Coverage qualification combines Linux core and native FEM measurements from
+the same revision and checks both 99% thresholds. The
+[coverage procedure](development.md#coverage) describes those commands.
 
 For Intel MKL PARDISO:
 

@@ -1,0 +1,775 @@
+{
+  "scope": "Fresh current Brinkman notebook compared with prior archived physical-norm report on identical listed cases and declared spaces/data. This checks physical result preservation; it is not a fresh old-distribution run. The original archival provenance is retained. The current bounded single-element family uses levels 8,16,32 for each ell; only those common cases are compared. The original full single-element levels remain available through PYMHM_FULL_STUDY=1. The current conforming reference reports velocity/pressure L2 and velocity H1 seminorm; divergence and pseudostress comparisons apply to the MHM groups only.",
+  "baseline_report": "build/api-binding-validation/baseline-physical-reports/stokes-brinkman-boundary-layer.json",
+  "baseline_report_sha256": "78f5f28be9a0d4c8c3c626b041fff6beb3d600292eff65dfdd1661f5d1e1c55e",
+  "baseline_provenance": {
+    "notebook": "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb",
+    "notebook_sha256": "c7e5282b428a45313966f935973a52ae90cd603d020a41f7f828b65714f57154",
+    "pixi_lock_sha256": "c54e433e408e8345516023d96526b305d09452a55d53c018ea6ea529535df9fd",
+    "versions": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "fenics-basix": "0.9.0",
+      "fenics-dolfinx": "0.9.0",
+      "pymhm": "0.1.0"
+    },
+    "basis_convention": "Basix equispaced Pk in PyMHM nodal_space order; no local nullspace modes",
+    "reference_project": "DOLFINx",
+    "reference_source_url": "https://docs.fenicsproject.org/dolfinx/v0.9.0/python/",
+    "literature_comparison": "same analytical PDE; declared tutorial discretization, no matched-figure reproduction",
+    "execution": {
+      "mode": "staged acquisition and archived-state/figure replay",
+      "source_notebook_sha256": "c7e5282b428a45313966f935973a52ae90cd603d020a41f7f828b65714f57154",
+      "replayed_cell_indices": [
+        21,
+        23,
+        26,
+        28,
+        32,
+        33,
+        38,
+        39,
+        41,
+        44
+      ],
+      "literal_cell_indices": [
+        1,
+        3,
+        4,
+        6,
+        8,
+        9,
+        11,
+        14,
+        17,
+        18,
+        20,
+        24,
+        31,
+        36,
+        43,
+        46,
+        47
+      ],
+      "receipt_sha256": "4b8ee0bc13832ff9b48314c95d0e57085cfd8ad264c540c9d16ab184f2d66d07",
+      "phase1_manifest_sha256": "573aeea4edc1c1b6d9abbbdc18be82cbd4b2159e6ef0eb71c7b7954fbdeded3e",
+      "phase1": "MHM numerical acquisition; original closed coefficient/lift/basis archives",
+      "phase2": "literal conforming reference acquisition and figures using archived MHM states",
+      "phase3": "archived-state reconstruction, literal physical norms/quadrature and byte-preserved figure replay",
+      "unavailable_phase1_diagnostics": [
+        "global_solver_residual",
+        "n4 gauged singular values"
+      ]
+    }
+  },
+  "current_report": "build/introduction/stokes-brinkman-boundary-layer.json",
+  "current_report_sha256": "b22e3ff31411b65301d5966087ad4b762c69d72006f9055793dd2258585a2f5b",
+  "current_provenance": {
+    "notebook": "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb",
+    "notebook_sha256": "e8a810b3f270acc34f50c234bb2ec829760fd56c71d13fcbfd0832d1c5ccf2bd",
+    "pixi_lock_sha256": "9bc037fce59b1ff50c7c05164720d6817649d5d7cc129522bdbd91eb4b07af32",
+    "versions": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "fenics-basix": "0.9.0",
+      "fenics-dolfinx": "0.9.0",
+      "pymhm": "1.0.0"
+    },
+    "study_profile": "introductory three-level profile",
+    "single_element_levels": {
+      "0": [
+        8,
+        16,
+        32
+      ],
+      "1": [
+        8,
+        16,
+        32
+      ],
+      "2": [
+        8,
+        16,
+        32
+      ]
+    },
+    "full_qualification_levels": {
+      "0": [
+        8,
+        16,
+        32,
+        64,
+        128
+      ],
+      "1": [
+        8,
+        16,
+        32,
+        64
+      ],
+      "2": [
+        8,
+        16,
+        32,
+        64
+      ]
+    },
+    "basis_convention": "Basix equispaced Pk in PyMHM nodal_space order; no local nullspace modes",
+    "reference_project": "DOLFINx",
+    "reference_source_url": "https://docs.fenicsproject.org/dolfinx/v0.9.0/python/",
+    "literature_comparison": "same analytical PDE; declared tutorial discretization, no matched-figure reproduction",
+    "plot_regeneration": {
+      "scope": "Only convergence plot tick selection changed. Cells31/32/33 were re-executed against exact rows from the immediately preceding successful current notebook acquisition. All numerical definitions, solver/study cells, persisted bases and physical rows remain unchanged; no numerical PDE rerun or legacy-output substitution.",
+      "created_utc": "2026-10-06T16:46:11.448952+00:00",
+      "acquisition_notebook_sha256": "e8a810b3f270acc34f50c234bb2ec829760fd56c71d13fcbfd0832d1c5ccf2bd",
+      "plot_notebook_sha256": "827c68c1fd185947e4e7f9331fc22ed5ae6956d93b58097622bb612755ae871d",
+      "executed_notebook_sha256": "cc74346788233cc3e36e79f77784fa7cdb19fd4749e90fbe2578fe14e149154c",
+      "numerical_code_sha256": "66a1c3c1e16b798e5ab867f0127ccbd22b54dd3e273203f9ebf7407b33f28cf4",
+      "numerical_code_byte_identical_outside_cell31": true,
+      "reexecuted_cell_indices": [
+        31,
+        32,
+        33
+      ],
+      "physical_rows_sha256": "5fedb654edbe3547ab5ab329bdb0c2eba0997ac22c940459eaa3881314da6130",
+      "acquisition_report_sha256_before_plot_provenance": "6b945ed51f49f2ee0e829ad897d7e05976be515d586e758a1d2222da1891a0ce",
+      "current_report": "build/introduction/stokes-brinkman-boundary-layer.json"
+    }
+  },
+  "quantities": [
+    "velocity_l2",
+    "pressure_l2",
+    "velocity_h1_seminorm",
+    "divergence_l2",
+    "pseudostress_l2"
+  ],
+  "records": [
+    {
+      "group": "convergence",
+      "case": {
+        "method": "MHM Taylor-Hood",
+        "n": 4
+      },
+      "absolute_difference": {
+        "velocity_l2": 9.43689570931383e-16,
+        "pressure_l2": 4.440892098500626e-16,
+        "velocity_h1_seminorm": 8.881784197001252e-16,
+        "divergence_l2": 1.4432899320127035e-15,
+        "pseudostress_l2": 6.38378239159465e-16
+      },
+      "relative_difference": {
+        "velocity_l2": 2.4012683728184643e-15,
+        "pressure_l2": 3.985546535157312e-15,
+        "velocity_h1_seminorm": 1.1599907941774835e-16,
+        "divergence_l2": 1.9498493222411693e-15,
+        "pseudostress_l2": 3.6437944544219795e-15
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 6.117068657163216e-16,
+        "pressure_integral": 7.025630077706069e-17
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "convergence",
+      "case": {
+        "method": "MHM-USFEM",
+        "n": 4
+      },
+      "absolute_difference": {
+        "velocity_l2": 8.881784197001252e-16,
+        "pressure_l2": 4.718447854656915e-16,
+        "velocity_h1_seminorm": 2.6645352591003757e-15,
+        "divergence_l2": 2.7755575615628914e-16,
+        "pseudostress_l2": 6.106226635438361e-16
+      },
+      "relative_difference": {
+        "velocity_l2": 2.260422078807124e-15,
+        "pressure_l2": 4.197443959469841e-15,
+        "velocity_h1_seminorm": 3.478095654029905e-16,
+        "divergence_l2": 7.540042741069495e-16,
+        "pseudostress_l2": 3.459943724102228e-15
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 8.977193988179977e-16,
+        "pressure_integral": 7.936359902593892e-17
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "convergence",
+      "case": {
+        "method": "MHM Taylor-Hood",
+        "n": 8
+      },
+      "absolute_difference": {
+        "velocity_l2": 3.3861802251067274e-15,
+        "pressure_l2": 1.582067810090848e-15,
+        "velocity_h1_seminorm": 1.4210854715202004e-14,
+        "divergence_l2": 3.6637359812630166e-15,
+        "pseudostress_l2": 1.6237011735142914e-15
+      },
+      "relative_difference": {
+        "velocity_l2": 1.5677394211490855e-14,
+        "pressure_l2": 2.459284512290335e-14,
+        "velocity_h1_seminorm": 2.220758806716043e-15,
+        "divergence_l2": 9.789441092582238e-15,
+        "pseudostress_l2": 1.4597964315396116e-14
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 8.954425742557781e-16,
+        "pressure_integral": 1.3812735677465326e-16
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "convergence",
+      "case": {
+        "method": "MHM-USFEM",
+        "n": 8
+      },
+      "absolute_difference": {
+        "velocity_l2": 4.440892098500626e-15,
+        "pressure_l2": 2.248201624865942e-15,
+        "velocity_h1_seminorm": 2.042810365310288e-14,
+        "divergence_l2": 1.557087792036782e-14,
+        "pseudostress_l2": 2.456368441983159e-15
+      },
+      "relative_difference": {
+        "velocity_l2": 2.0562597161617164e-14,
+        "pressure_l2": 3.474013674484747e-14,
+        "velocity_h1_seminorm": 3.1923587180478894e-15,
+        "divergence_l2": 1.0008946337738349e-13,
+        "pseudostress_l2": 2.1997087767580822e-14
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 4.700151942996222e-16,
+        "pressure_integral": 2.2551405187698492e-17
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "convergence",
+      "case": {
+        "method": "MHM Taylor-Hood",
+        "n": 16
+      },
+      "absolute_difference": {
+        "velocity_l2": 1.534883331544279e-14,
+        "pressure_l2": 7.757683384568281e-15,
+        "velocity_h1_seminorm": 2.220446049250313e-14,
+        "divergence_l2": 7.222000775186643e-14,
+        "pseudostress_l2": 7.827072323607354e-15
+      },
+      "relative_difference": {
+        "velocity_l2": 1.1497553868153784e-13,
+        "pressure_l2": 1.7286736321282935e-13,
+        "velocity_h1_seminorm": 3.6700775540089e-15,
+        "divergence_l2": 5.117888992292171e-13,
+        "pseudostress_l2": 8.926611294523086e-14
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 9.013497820299296e-16,
+        "pressure_integral": 5.757113535898029e-17
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "convergence",
+      "case": {
+        "method": "MHM-USFEM",
+        "n": 16
+      },
+      "absolute_difference": {
+        "velocity_l2": 9.492406860545088e-15,
+        "pressure_l2": 6.106226635438361e-15,
+        "velocity_h1_seminorm": 8.348877145181177e-14,
+        "divergence_l2": 5.079270337660091e-14,
+        "pseudostress_l2": 5.870304242705515e-15
+      },
+      "relative_difference": {
+        "velocity_l2": 7.11091363150587e-14,
+        "pressure_l2": 1.3581724655077806e-13,
+        "velocity_h1_seminorm": 1.3801885038349892e-14,
+        "divergence_l2": 6.965656700363299e-13,
+        "pseudostress_l2": 6.689074348924198e-14
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 1.1374652982747493e-15,
+        "pressure_integral": 2.1575623232461538e-17
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "enriched_control",
+      "case": {
+        "method": "MHM Taylor-Hood",
+        "n": 4
+      },
+      "absolute_difference": {
+        "velocity_l2": 0.0,
+        "pressure_l2": 1.97758476261356e-16,
+        "velocity_h1_seminorm": 0.0,
+        "divergence_l2": 5.2735593669694936e-15,
+        "pseudostress_l2": 1.1449174941446927e-16
+      },
+      "relative_difference": {
+        "velocity_l2": 0.0,
+        "pressure_l2": 2.5039622877702094e-14,
+        "velocity_h1_seminorm": 0.0,
+        "divergence_l2": 1.1399334315314285e-14,
+        "pseudostress_l2": 4.083150905237648e-15
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 1.872959252968709e-16,
+        "pressure_integral": 1.3010426069826053e-18
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "enriched_control",
+      "case": {
+        "method": "MHM-USFEM",
+        "n": 4
+      },
+      "absolute_difference": {
+        "velocity_l2": 5.724587470723463e-17,
+        "pressure_l2": 1.1449174941446927e-16,
+        "velocity_h1_seminorm": 4.440892098500626e-16,
+        "divergence_l2": 6.078471059822732e-15,
+        "pseudostress_l2": 1.1449174941446927e-16
+      },
+      "relative_difference": {
+        "velocity_l2": 3.889986728515325e-15,
+        "pressure_l2": 1.059637498543679e-14,
+        "velocity_h1_seminorm": 1.7357384248636102e-16,
+        "divergence_l2": 2.7781175834046703e-14,
+        "pseudostress_l2": 3.822610339003708e-15
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 7.268897940157504e-17,
+        "pressure_integral": 8.196568423990414e-17
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "enriched_control",
+      "case": {
+        "method": "MHM Taylor-Hood",
+        "n": 8
+      },
+      "absolute_difference": {
+        "velocity_l2": 3.127706427186183e-15,
+        "pressure_l2": 2.0643209364124004e-16,
+        "velocity_h1_seminorm": 1.7763568394002505e-15,
+        "divergence_l2": 6.716849298982197e-15,
+        "pseudostress_l2": 1.4224732503009818e-16
+      },
+      "relative_difference": {
+        "velocity_l2": 8.740009375404788e-13,
+        "pressure_l2": 4.667942209652795e-14,
+        "velocity_h1_seminorm": 1.7007984715913159e-15,
+        "divergence_l2": 2.9149154998845696e-14,
+        "pseudostress_l2": 1.168490284071924e-14
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 3.742191560969499e-17,
+        "pressure_integral": 5.996722216017325e-16
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "enriched_control",
+      "case": {
+        "method": "MHM-USFEM",
+        "n": 8
+      },
+      "absolute_difference": {
+        "velocity_l2": 2.9763518039072068e-15,
+        "pressure_l2": 4.490331717565965e-15,
+        "velocity_h1_seminorm": 3.552713678800501e-15,
+        "divergence_l2": 1.2838341501009154e-13,
+        "pseudostress_l2": 3.845881946240581e-15
+      },
+      "relative_difference": {
+        "velocity_l2": 8.451673451718988e-13,
+        "pressure_l2": 8.06715977651019e-13,
+        "velocity_h1_seminorm": 3.446782698193624e-15,
+        "divergence_l2": 1.1632740721543271e-12,
+        "pseudostress_l2": 2.9452567087603404e-13
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 8.350559013801245e-17,
+        "pressure_integral": 8.03231179485886e-16
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "enriched_control",
+      "case": {
+        "method": "MHM Taylor-Hood",
+        "n": 16
+      },
+      "absolute_difference": {
+        "velocity_l2": 5.53264031810663e-14,
+        "pressure_l2": 7.9732227764584e-15,
+        "velocity_h1_seminorm": 1.9373391779708982e-14,
+        "divergence_l2": 1.064495713798408e-12,
+        "pseudostress_l2": 6.75327849197771e-15
+      },
+      "relative_difference": {
+        "velocity_l2": 7.592243023207297e-11,
+        "pressure_l2": 4.050221390070336e-12,
+        "velocity_h1_seminorm": 5.014208196203511e-14,
+        "divergence_l2": 1.0687518963964237e-11,
+        "pseudostress_l2": 1.4180908612969566e-12
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 9.212923257400848e-17,
+        "pressure_integral": 6.745838154569028e-16
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "enriched_control",
+      "case": {
+        "method": "MHM-USFEM",
+        "n": 16
+      },
+      "absolute_difference": {
+        "velocity_l2": 5.1461981377676214e-14,
+        "pressure_l2": 6.847820921418446e-15,
+        "velocity_h1_seminorm": 6.672440377997191e-14,
+        "divergence_l2": 6.192962809237201e-13,
+        "pseudostress_l2": 5.82953824102006e-15
+      },
+      "relative_difference": {
+        "velocity_l2": 7.159196851566474e-11,
+        "pressure_l2": 2.821425946598107e-12,
+        "velocity_h1_seminorm": 1.7632981452253739e-13,
+        "divergence_l2": 1.3024751224985097e-11,
+        "pseudostress_l2": 1.1305237939322595e-12
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 2.835045479541949e-16,
+        "pressure_integral": 7.668155390175291e-16
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "single_element_family",
+      "case": {
+        "method": "MHM-USFEM single element",
+        "n": 8,
+        "ell": 0
+      },
+      "absolute_difference": {
+        "velocity_l2": 8.326672684688674e-17,
+        "pressure_l2": 6.938893903907228e-17,
+        "velocity_h1_seminorm": 1.7763568394002505e-15,
+        "divergence_l2": 8.326672684688674e-15,
+        "pseudostress_l2": 5.551115123125783e-17
+      },
+      "relative_difference": {
+        "velocity_l2": 3.6545132003090226e-16,
+        "pressure_l2": 9.289447859772241e-16,
+        "velocity_h1_seminorm": 2.140968137876508e-16,
+        "divergence_l2": 1.0945047787023511e-14,
+        "pseudostress_l2": 4.152503745548381e-16
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 5.814034149953518e-17,
+        "pressure_integral": 8.456776945386935e-18
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "single_element_family",
+      "case": {
+        "method": "MHM-USFEM single element",
+        "n": 16,
+        "ell": 0
+      },
+      "absolute_difference": {
+        "velocity_l2": 6.439293542825908e-15,
+        "pressure_l2": 2.248201624865942e-15,
+        "velocity_h1_seminorm": 1.5987211554602254e-14,
+        "divergence_l2": 1.7541523789077473e-14,
+        "pseudostress_l2": 2.1510571102112408e-15
+      },
+      "relative_difference": {
+        "velocity_l2": 4.705459057416523e-14,
+        "pressure_l2": 4.4186389063453276e-14,
+        "velocity_h1_seminorm": 2.2857703001672653e-15,
+        "divergence_l2": 5.3895337824779487e-14,
+        "pseudostress_l2": 2.1520455362908325e-14
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 1.487275505930672e-16,
+        "pressure_integral": 7.41594285980085e-17
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "single_element_family",
+      "case": {
+        "method": "MHM-USFEM single element",
+        "n": 32,
+        "ell": 0
+      },
+      "absolute_difference": {
+        "velocity_l2": 1.9165224962591765e-14,
+        "pressure_l2": 5.2111093218343285e-15,
+        "velocity_h1_seminorm": 1.7763568394002505e-14,
+        "divergence_l2": 2.5673907444456745e-14,
+        "pseudostress_l2": 4.884981308350689e-15
+      },
+      "relative_difference": {
+        "velocity_l2": 2.98196782956276e-13,
+        "pressure_l2": 1.6213764867558967e-13,
+        "velocity_h1_seminorm": 3.2784920176988432e-15,
+        "divergence_l2": 2.397493571058965e-13,
+        "pseudostress_l2": 6.919734695177658e-14
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 1.7187579637122476e-16,
+        "pressure_integral": 2.6869240339622014e-16
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "single_element_family",
+      "case": {
+        "method": "MHM-USFEM single element",
+        "n": 8,
+        "ell": 1
+      },
+      "absolute_difference": {
+        "velocity_l2": 4.163336342344337e-17,
+        "pressure_l2": 9.71445146547012e-17,
+        "velocity_h1_seminorm": 2.6645352591003757e-15,
+        "divergence_l2": 5.856426454897701e-15,
+        "pseudostress_l2": 9.71445146547012e-17
+      },
+      "relative_difference": {
+        "velocity_l2": 6.933819692943386e-16,
+        "pressure_l2": 3.0987027431259496e-15,
+        "velocity_h1_seminorm": 5.773337812577851e-16,
+        "divergence_l2": 3.4557992981451547e-14,
+        "pseudostress_l2": 1.5243388715898135e-15
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 1.4176053254833318e-16,
+        "pressure_integral": 1.1850329745266563e-16
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "single_element_family",
+      "case": {
+        "method": "MHM-USFEM single element",
+        "n": 16,
+        "ell": 1
+      },
+      "absolute_difference": {
+        "velocity_l2": 5.863365348801608e-16,
+        "pressure_l2": 7.563394355258879e-16,
+        "velocity_h1_seminorm": 1.4210854715202004e-14,
+        "divergence_l2": 5.487971188600227e-14,
+        "pseudostress_l2": 4.926614671774132e-16
+      },
+      "relative_difference": {
+        "velocity_l2": 2.6663910621312115e-14,
+        "pressure_l2": 4.518810444526323e-14,
+        "velocity_h1_seminorm": 5.424903615662734e-15,
+        "divergence_l2": 1.0960272623517119e-12,
+        "pseudostress_l2": 1.3953142901180559e-14
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 6.296106226291317e-16,
+        "pressure_integral": 1.326385832764454e-16
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "single_element_family",
+      "case": {
+        "method": "MHM-USFEM single element",
+        "n": 32,
+        "ell": 1
+      },
+      "absolute_difference": {
+        "velocity_l2": 9.410874857174178e-16,
+        "pressure_l2": 6.496539417533143e-16,
+        "velocity_h1_seminorm": 4.8627768478581856e-14,
+        "divergence_l2": 1.1056086601790582e-13,
+        "pseudostress_l2": 7.632783294297951e-17
+      },
+      "relative_difference": {
+        "velocity_l2": 1.70804220838835e-13,
+        "pressure_l2": 9.391769899217677e-14,
+        "velocity_h1_seminorm": 4.248903196553542e-14,
+        "divergence_l2": 5.100751508604665e-12,
+        "pseudostress_l2": 5.051254360128489e-15
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 8.283029188004304e-17,
+        "pressure_integral": 2.0469271148405334e-16
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "single_element_family",
+      "case": {
+        "method": "MHM-USFEM single element",
+        "n": 8,
+        "ell": 2
+      },
+      "absolute_difference": {
+        "velocity_l2": 1.4224732503009818e-16,
+        "pressure_l2": 1.2663481374630692e-16,
+        "velocity_h1_seminorm": 2.220446049250313e-15,
+        "divergence_l2": 2.1010970741031088e-14,
+        "pseudostress_l2": 4.85722573273506e-17
+      },
+      "relative_difference": {
+        "velocity_l2": 5.893790244966768e-15,
+        "pressure_l2": 8.703192923117895e-15,
+        "velocity_h1_seminorm": 8.890033051747747e-16,
+        "divergence_l2": 2.2935610345447064e-13,
+        "pseudostress_l2": 1.5009361609601585e-15
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 1.9660477602816502e-16,
+        "pressure_integral": 4.710858439449517e-17
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "single_element_family",
+      "case": {
+        "method": "MHM-USFEM single element",
+        "n": 16,
+        "ell": 2
+      },
+      "absolute_difference": {
+        "velocity_l2": 6.930220286527344e-16,
+        "pressure_l2": 4.640385298237959e-16,
+        "velocity_h1_seminorm": 6.38378239159465e-14,
+        "divergence_l2": 9.087522401252102e-14,
+        "pseudostress_l2": 1.1362438767648086e-15
+      },
+      "relative_difference": {
+        "velocity_l2": 1.3231855300255087e-13,
+        "pressure_l2": 8.02602845908963e-14,
+        "velocity_h1_seminorm": 7.182573250286752e-14,
+        "divergence_l2": 3.5392139180558006e-12,
+        "pseudostress_l2": 9.383407883170866e-14
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 2.0020407213831599e-16,
+        "pressure_integral": 3.352014304146278e-16
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "single_element_family",
+      "case": {
+        "method": "MHM-USFEM single element",
+        "n": 32,
+        "ell": 2
+      },
+      "absolute_difference": {
+        "velocity_l2": 6.765421556309548e-17,
+        "pressure_l2": 9.32630708772031e-16,
+        "velocity_h1_seminorm": 6.636358129696873e-14,
+        "divergence_l2": 2.488894507157724e-14,
+        "pseudostress_l2": 5.854691731421724e-17
+      },
+      "relative_difference": {
+        "velocity_l2": 9.748233442208835e-14,
+        "pressure_l2": 6.405371621204832e-13,
+        "velocity_h1_seminorm": 3.1372864807430137e-13,
+        "divergence_l2": 4.133284351206734e-12,
+        "pseudostress_l2": 1.9739814645382986e-14
+      },
+      "diagnostic_absolute_difference": {
+        "macro_mass_defect": 1.5603585343237327e-16,
+        "pressure_integral": 2.4528464789884755e-16
+      },
+      "norms_not_reported_in_current_group": []
+    },
+    {
+      "group": "reference_refinement",
+      "case": {
+        "n": 32
+      },
+      "absolute_difference": {
+        "velocity_l2": 5.551115123125783e-17,
+        "pressure_l2": 3.2772179067719343e-15,
+        "velocity_h1_seminorm": 3.5083047578154947e-14
+      },
+      "relative_difference": {
+        "velocity_l2": 5.1069640959728285e-15,
+        "pressure_l2": 3.532952143217165e-12,
+        "velocity_h1_seminorm": 1.5026672102490083e-14
+      },
+      "diagnostic_absolute_difference": {
+        "pressure_integral": 1.9786689647860456e-18
+      },
+      "norms_not_reported_in_current_group": [
+        "divergence_l2",
+        "pseudostress_l2"
+      ]
+    },
+    {
+      "group": "reference_refinement",
+      "case": {
+        "n": 64
+      },
+      "absolute_difference": {
+        "velocity_l2": 2.3201926491189795e-16,
+        "pressure_l2": 7.462075662240109e-15,
+        "velocity_h1_seminorm": 6.361577931102147e-14
+      },
+      "relative_difference": {
+        "velocity_l2": 1.2277072152641022e-13,
+        "pressure_l2": 6.114126526166868e-11,
+        "velocity_h1_seminorm": 8.034339338751062e-14
+      },
+      "diagnostic_absolute_difference": {
+        "pressure_integral": 5.319366908757006e-17
+      },
+      "norms_not_reported_in_current_group": [
+        "divergence_l2",
+        "pseudostress_l2"
+      ]
+    },
+    {
+      "group": "reference_refinement",
+      "case": {
+        "n": 128
+      },
+      "absolute_difference": {
+        "velocity_l2": 1.802486111757151e-16,
+        "pressure_l2": 8.211037440795411e-15,
+        "velocity_h1_seminorm": 2.2792878695554464e-13
+      },
+      "relative_difference": {
+        "velocity_l2": 6.845267485908592e-13,
+        "pressure_l2": 6.673999722149092e-10,
+        "velocity_h1_seminorm": 1.0405558048180798e-12
+      },
+      "diagnostic_absolute_difference": {
+        "pressure_integral": 9.409858417637473e-17
+      },
+      "norms_not_reported_in_current_group": [
+        "divergence_l2",
+        "pseudostress_l2"
+      ]
+    }
+  ],
+  "matched_cases": 24,
+  "maximum_relative_norm_difference": 6.673999722149092e-10,
+  "maximum_absolute_diagnostic_difference": 1.1374652982747493e-15
+}

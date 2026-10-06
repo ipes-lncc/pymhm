@@ -6,6 +6,22 @@ describes the four blocks, global additions and current compilation limits.
 
 [All API families](../api.md)
 
+## Mesh, interface and variational contexts
+
+::: pymhm.core.spaces
+    options:
+      show_source: false
+
+::: pymhm.core.context
+    options:
+      show_source: false
+
+::: pymhm.postprocessing.fields
+    options:
+      show_source: false
+
+## Explicit equations and shared hierarchy
+
 ::: pymhm.core.equations
     options:
       show_source: false

@@ -18,6 +18,15 @@ from pymhm.backends.forms import (
 from pymhm.backends.forms import (
     assemble_pairing as assemble_pairing,
 )
+from pymhm.backends.spaces import (
+    NativeSpace as NativeSpace,
+)
+from pymhm.backends.spaces import (
+    bind_space as bind_space,
+)
+from pymhm.backends.spaces import (
+    create_native_mesh as create_native_mesh,
+)
 from pymhm.core.assembly import (
     HybridProblem as HybridProblem,
 )
@@ -44,6 +53,18 @@ from pymhm.core.condensation import (
 )
 from pymhm.core.condensation import (
     local_response_from_solution as local_response_from_solution,
+)
+from pymhm.core.context import (
+    BoundProblem as BoundProblem,
+)
+from pymhm.core.context import (
+    GlobalContext as GlobalContext,
+)
+from pymhm.core.context import (
+    LocalContext as LocalContext,
+)
+from pymhm.core.context import (
+    bind_problem as bind_problem,
 )
 from pymhm.core.contracts import (
     HybridSolution as HybridSolution,
@@ -179,6 +200,27 @@ from pymhm.core.refinement import (
 )
 from pymhm.core.refinement import (
     refine_hybrid_stream as refine_hybrid_stream,
+)
+from pymhm.core.spaces import (
+    BoundInterface as BoundInterface,
+)
+from pymhm.core.spaces import (
+    InterfaceSpace as InterfaceSpace,
+)
+from pymhm.core.spaces import (
+    MeshHierarchy as MeshHierarchy,
+)
+from pymhm.core.spaces import (
+    TraceBinding as TraceBinding,
+)
+from pymhm.core.spaces import (
+    bind_interface as bind_interface,
+)
+from pymhm.core.spaces import (
+    bind_local_equations as bind_local_equations,
+)
+from pymhm.core.spaces import (
+    validate_trace_binding as validate_trace_binding,
 )
 from pymhm.core.subspaces import (
     restrict_response as restrict_response,
@@ -339,6 +381,9 @@ from pymhm.fem.traces.interval import (
 from pymhm.fem.traces.interval import (
     SkeletonSpace as SkeletonSpace,
 )
+from pymhm.fem.traces.interval import (
+    interface_pairing as interface_pairing,
+)
 from pymhm.fem.traces.pressure_3d import (
     PressureTraceSpace3D as PressureTraceSpace3D,
 )
@@ -497,6 +542,30 @@ from pymhm.methods.three_field import (
 )
 from pymhm.methods.three_field_3d import (
     MH2M3DSolution as MH2M3DSolution,
+)
+from pymhm.postprocessing.fields import (
+    DiscreteField as DiscreteField,
+)
+from pymhm.postprocessing.fields import (
+    FieldDefinition as FieldDefinition,
+)
+from pymhm.postprocessing.fields import (
+    evaluate_field as evaluate_field,
+)
+from pymhm.postprocessing.fields import (
+    evaluate_field_and_gradient as evaluate_field_and_gradient,
+)
+from pymhm.postprocessing.fields import (
+    evaluate_field_gradient as evaluate_field_gradient,
+)
+from pymhm.postprocessing.fields import (
+    local_trace as local_trace,
+)
+from pymhm.postprocessing.fields import (
+    portable_field_coefficients as portable_field_coefficients,
+)
+from pymhm.postprocessing.fields import (
+    solution_field as solution_field,
 )
 from pymhm.recovery.moments import (
     MomentFluxSolution as MomentFluxSolution,

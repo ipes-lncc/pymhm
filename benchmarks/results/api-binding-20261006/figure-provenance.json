@@ -1,0 +1,17 @@
+{
+  "scope": "The convergence plotting cells31/32/33 execute against the physical rows and persisted states of the current numerical acquisition. Numerical definitions, solver/study cells, persisted bases and physical rows are byte-identical across the acquisition and plotting source snapshots.",
+  "created_utc": "2026-10-06T16:46:11.448952+00:00",
+  "acquisition_notebook_sha256": "e8a810b3f270acc34f50c234bb2ec829760fd56c71d13fcbfd0832d1c5ccf2bd",
+  "plot_notebook_sha256": "827c68c1fd185947e4e7f9331fc22ed5ae6956d93b58097622bb612755ae871d",
+  "executed_notebook_sha256": "cc74346788233cc3e36e79f77784fa7cdb19fd4749e90fbe2578fe14e149154c",
+  "numerical_code_sha256": "66a1c3c1e16b798e5ab867f0127ccbd22b54dd3e273203f9ebf7407b33f28cf4",
+  "numerical_code_byte_identical_outside_cell31": true,
+  "reexecuted_cell_indices": [
+    31,
+    32,
+    33
+  ],
+  "physical_rows_sha256": "5fedb654edbe3547ab5ab329bdb0c2eba0997ac22c940459eaa3881314da6130",
+  "acquisition_report_sha256_before_plot_provenance": "6b945ed51f49f2ee0e829ad897d7e05976be515d586e758a1d2222da1891a0ce",
+  "current_report": "build/introduction/stokes-brinkman-boundary-layer.json"
+}

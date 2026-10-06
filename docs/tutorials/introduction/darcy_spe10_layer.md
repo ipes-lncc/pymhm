@@ -2,6 +2,8 @@
 
 Follow the numbered steps: state the variational problem, choose the local and trace spaces, declare the local and global equations, solve, and inspect the physical fields.
 
+The main workflow is **meshes → spaces → local equations → global balance → assemble → solve → fields and errors**. `MeshHierarchy` associates macro and local meshes; `bind_interface` and `LocalContext` own supported numbering, geometric orientation and native coordinate conversions. The mathematical forms, physical trace meaning, local modes and gauge remain explicit in the cells below. Fully manual/custom spaces use the same numerical owners; see the [custom-interface notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/custom_interface.ipynb).
+
 Build the local/global API explicitly for the complete layer 36 of SPE10 Model 2: all $60\times220$ material pixels are retained, without cropping, smoothing or contrast clipping. MHM uses a $6\times11$ macro grid. The classical reference uses a much finer single conforming grid.
 
 The geometry, layer and Darcy boundary data follow [Paredes, Valentin and Versieux (2024)](https://doi.org/10.1016/j.cam.2023.115415). Their local refinement is not specified; ours is explicit, so this tutorial does not claim a matched discrete reproduction.
@@ -25,7 +27,6 @@ from scipy import sparse
 from matplotlib.collections import LineCollection
 import matplotlib.pyplot as plt
 import ufl
-from scipy.spatial import cKDTree
 from pymhm.core.equations import compile_form
 
 ROOT = next(p for p in (Path.cwd(), *Path.cwd().parents)
@@ -49,6 +50,9 @@ from pymhm.fem.assembly import assemble_element_blocks
 
 Array = NDArray[np.float64]
 Evaluator = Callable[[Array], tuple[Array, Array]]
+from pymhm import MeshHierarchy, LocalContext, bind_interface, bind_problem
+from pymhm.backends.spaces import bind_space
+
 ```
 
 ## 1. Read the unchanged data and verify provenance
@@ -120,7 +124,7 @@ Our explicitly integrated local grids align with every material pixel boundary. 
 
 ## 3. Translate the weak formulation into local and global objects
 
-On each macroelement $T$, pressure uses a continuous $Q_k$ fine space. The skeletal multiplier $\lambda$ is the physical normal Darcy flux in the unique orientation $\boldsymbol n_F$ of face $F$. `quadrilateral_trace_coupling` integrates $s_{TF}=\boldsymbol n_T\cdot\boldsymbol n_F$ with the actual macroface orientation.
+On each macroelement $T$, pressure uses a continuous $Q_k$ fine space. The skeletal multiplier $\lambda$ is the physical normal Darcy flux in the unique orientation $\boldsymbol n_F$ of face $F$. The normal interface binding derives $s_{TF}=\boldsymbol n_T\cdot\boldsymbol n_F$ from the macroface topology. Write the trace integrals in UFL; `LocalContext` supplies their basis supports and coefficient maps.
 
 
 
@@ -136,10 +140,10 @@ $$
 | Mathematical term | Code declaration |
 | --- | --- |
 | Local energy and source | `a=inner(K*grad(p),grad(v))*dx`, `L=f*v*dx` in UFL |
-| Oriented normal-flux pairing | `quadrilateral_trace_coupling` returns `b` |
+| Oriented normal-flux pairing | `local.trace_pairings(lambda phi, ds: phi*v*ds)` |
 | Constant kernel and physical average | `kernel`, `moments` in `LocalEquations` |
-| Weak pressure continuity | `c=-b.T` |
-| Macroface coordinates | `skeleton.cell_dofs(cell)` |
+| Weak pressure continuity | `local.trace_pairings(lambda phi, ds: -phi*p*ds, axis="rows")` |
+| Macroface coordinates | `bind_interface(skeleton, convention="normal")` supplies local/global maps |
 
 Interior faces have zero pressure-jump moments; Dirichlet faces have prescribed pressure moments. With the declared sign $C=-B^T$, the additional global right-hand side is
 
@@ -154,31 +158,21 @@ $$
 
 `Equation(0, ...)` stores this additional global term. One constant mode per macroelement gives the compatibility equation imposing **macro conservation**. The plotted raw flux $-K\nabla p_h$ is not an $H(\mathrm{div})$ reconstruction and is not guaranteed to conserve on every fine cell.
 
-The provider below declares the executable UFL weak forms and each coupling sign. The nodal map checks that native UFL coordinates and portable trace coordinates represent the same basis. The generic `assemble` operation owns elimination, assembly and reconstruction; no PDE-specific problem constructor is used.
+The provider below declares the executable UFL weak forms and each coupling sign. `local.native_space` owns the native geometry and coefficient convention, while `local.trace_pairings` binds both interface forms independently. The provider supplies no face DOF indices or nodal permutation. The generic `assemble` operation owns elimination, assembly and reconstruction; no PDE-specific problem constructor is used.
 
 
 ```python
 def native_scalar_space(fine: CartesianMacroMesh, degree: int) -> tuple[Any, Any, NDArray[np.int64]]:
-    """Create serial equispaced Qk and map portable scalar nodes to native DOFs."""
+    """Bind a user-declared Basix element; PyMHM owns topology and coefficient order."""
     import basix
     import basix.ufl
-    import ufl
-    from dolfinx import fem,mesh as native_mesh
-    from mpi4py import MPI
-    geometry=basix.ufl.element("Lagrange","quadrilateral",1,shape=(2,))
-    # Basix quadrilateral geometry orders SW,SE,NW,NE; our cells are counterclockwise.
-    domain=native_mesh.create_mesh(MPI.COMM_SELF,fine.cells[:,[0,1,3,2]],fine.points,
-                                  ufl.Mesh(geometry))
-    element=basix.ufl.element("Lagrange","quadrilateral",degree,
-                             lagrange_variant=basix.LagrangeVariant.equispaced)
-    space=fem.functionspace(domain,element)
-    _,nodes=qk_space(fine,degree)
-    native_nodes=space.tabulate_dof_coordinates()[:,:2]
-    distance,mapping=cKDTree(native_nodes).query(nodes)
-    tolerance=512*np.finfo(float).eps*max(1.,float(np.max(np.abs(nodes))))
-    if np.max(distance)>tolerance or len(np.unique(mapping))!=len(nodes):
-        raise ValueError("native and portable Qk coordinates must have a checked bijection")
-    return domain,space,mapping
+    element = basix.ufl.element(
+        "Lagrange", "quadrilateral", degree,
+        lagrange_variant=basix.LagrangeVariant.equispaced, shape=(),
+    )
+    binding = bind_space(fine, element)
+    return binding.mesh, binding.space, binding.mapping
+
 
 
 def ufl_coefficient_source(domain: Any, material: CartesianCellField) -> tuple[Any, Any]:
@@ -203,13 +197,21 @@ class DarcyLocalProvider:
     refinement: int
     quadrature_order: int
 
-    def __call__(self, cell: int) -> LocalEquations:
+    def __call__(self, local: LocalContext) -> LocalEquations:
         """Declare K grad(p)·grad(v), f v, oriented normal flux and the constant average."""
-        fine=self.macro.submesh(cell,self.refinement)
+        cell, fine = local.cell, local.mesh
         ratios=np.asarray(self.data.spacing)/fine.spacing
         assert np.allclose(ratios,np.round(ratios)) and np.all(ratios>=1), \
             "DG0 must represent pixels exactly: local cells must fit material boundaries"
-        domain,space,mapping=native_scalar_space(fine,self.degree)
+        import basix
+        import basix.ufl
+        element = basix.ufl.element(
+            "Lagrange", "quadrilateral", self.degree,
+            lagrange_variant=basix.LagrangeVariant.equispaced,
+        )
+        binding = local.native_space(element)
+        domain, space = binding.mesh, binding.space
+        mapping = binding.mapping
         p,v=ufl.TrialFunction(space),ufl.TestFunction(space)
         K,f=ufl_coefficient_source(domain,self.data)
         dx=ufl.Measure("dx",domain=domain,
@@ -217,12 +219,12 @@ class DarcyLocalProvider:
         # These executed UFL forms are the local weak formulation, directly.
         a=ufl.inner(K*ufl.grad(p),ufl.grad(v))*dx
         load=f*v*dx
-        portable_b=quadrilateral_trace_coupling(
-            self.macro,cell,fine,self.skeleton,self.degree)
-        b=np.empty_like(portable_b);b[mapping]=portable_b
+        local.field("pressure", binding)
+        b = local.trace_pairings(lambda phi, ds: phi * v * ds)
+        c = local.trace_pairings(lambda phi, ds: -phi * p * ds, axis="rows")
         area=float(fine.areas.sum())
-        return LocalEquations(
-            a=a,L=load,b=b,c=-b.T,dofs=self.skeleton.cell_dofs(cell),
+        return local.equations(
+            a=a,L=load,b=b,c=c,
             kernel=np.ones((len(mapping),1)),moments=columns((v/area)*dx),
             metadata=(fine,mapping))
 
@@ -240,6 +242,20 @@ Before reconstructing fields, define how the x-fastest Qk coefficients represent
 
 
 ```python
+def evaluate_bound_pressure(
+    macro: CartesianMacroMesh, fields: tuple[Any, ...], points: Array
+) -> tuple[Array, Array]:
+    """Evaluate named pressure and gradient on each owning macrocell, without averaging."""
+    coordinates = (points - macro.points[0]) / macro.spacing
+    indices = np.clip(np.floor(coordinates).astype(int), 0, [macro.nx - 1, int(macro.ny) - 1])
+    owners = indices[:, 1] * macro.nx + indices[:, 0]
+    pressure, gradient = np.empty(len(points)), np.empty((len(points), 2))
+    for cell in np.unique(owners):
+        selected = owners == cell
+        pressure[selected], gradient[selected] = fields[cell].values_and_gradient(points[selected])
+    return pressure, gradient
+
+# Optional explicit Basix evaluation for classical references and coefficient replay.
 def evaluate_qk(
     mesh: CartesianMacroMesh, degree: int, coefficients: Array, points: Array
 ) -> tuple[Array, Array]:
@@ -288,23 +304,36 @@ no_flow = {int(face): 0. for face in macro.boundary_faces
 boundary, fixed = boundary_data(skeleton, pressure_boundary, no_flow, order=5)
 provider = DarcyLocalProvider(macro, skeleton, permeability,
                               local_degree, local_refinement, 5)
-problem = MultiscaleProblem(
-    Equation(0, np.r_[-boundary, np.zeros(len(macro.cells))]), provider,
-    range(len(macro.cells)), skeleton.size, (1,)*len(macro.cells), fixed=fixed)
+hierarchy = MeshHierarchy(
+    macro, tuple(macro.submesh(cell, local_refinement) for cell in range(len(macro.cells)))
+)
+interface = bind_interface(skeleton, convention="normal")
+problem = bind_problem(
+    hierarchy, interface, provider,
+    global_equation=lambda global_problem: Equation(0, global_problem.trace_load(-boundary)),
+    retained=1, fixed=fixed,
+)
 system = assemble(problem, execution=ExecutionConfig("serial", native_threads=1))
 solution = system.solve()
-mhm_evaluator = partial(evaluate_broken_qk, macro, tuple(record[0] for record in system.local_metadata),
-                        local_degree, tuple(field[record[1]] for field,record in zip(solution.fields,system.local_metadata,strict=True)))
+pressure_fields = solution.field("pressure")
+mhm_fields = tuple(field.portable_coefficients for field in pressure_fields)
+mhm_evaluator = partial(evaluate_bound_pressure, macro, pressure_fields)
 print({"macro_cells": len(macro.cells), "local_refinement": local_refinement,
        "trace_degree": 1, "trace_segments": trace_segments,
        "global_unknowns": system.matrix.shape[0],
        "fixed_trace_coefficients": len(fixed),
        "largest_local_unknowns": max(len(v) for v in solution.fields),
        "original_equations_relative_residual": solution.raw_residual})
+# Named fields carry their mesh and executed basis; no index map is needed to evaluate.
+pressure_fields = solution.field("pressure")
+first_point = macro.points[macro.cells[0]].mean(axis=0, keepdims=True)
+print("First macrocell pressure at its center:", pressure_fields[0].evaluate(first_point))
+
 ```
 
 ```text
-{'macro_cells': 66, 'local_refinement': 80, 'trace_degree': 1, 'trace_segments': 16, 'global_unknowns': 2599, 'fixed_trace_coefficients': 374, 'largest_local_unknowns': 6561, 'original_equations_relative_residual': 2.3965133936134753e-15}
+{'macro_cells': 66, 'local_refinement': 80, 'trace_degree': 1, 'trace_segments': 16, 'global_unknowns': 2599, 'fixed_trace_coefficients': 374, 'largest_local_unknowns': 6561, 'original_equations_relative_residual': 1.8700433007440573e-15}
+First macrocell pressure at its center: [0.90553461]
 ```
 
 ### Optional numerical equivalence after the UFL definition
@@ -313,7 +342,7 @@ The main formulation above is the executed UFL weak form. Once its operator and 
 
 
 ```python
-declared=provider(0)
+declared=problem.local_provider(0)
 fine,mapping=declared.metadata
 ufl_a=compile_form(declared.a)
 ufl_load=compile_form(declared.L,(len(mapping),))
@@ -470,7 +499,7 @@ assert reference_refinement[-1]["flux_L2"] < reference_refinement[0]["flux_L2"]
 
 ```text
 Reference refinement: [{'pressure_L2': 0.36075975492633133, 'flux_L2': 0.07688807776026059, 'flux_energy': 0.023104875710699337, 'pressure_relative': 0.00043936012735082316, 'flux_relative': 0.07769816509694663, 'energy_relative': 0.05943437881778285}, {'pressure_L2': 0.17543128502605765, 'flux_L2': 0.05321939892675533, 'flux_energy': 0.014178452433032068, 'pressure_relative': 0.00021361645648628177, 'flux_relative': 0.05387567022744448, 'energy_relative': 0.03649656316095937}]
-MHM versus finest conforming reference: {'pressure_L2': 8.635719145904968, 'flux_L2': 0.15414976910517303, 'flux_energy': 0.06575786952330091, 'pressure_relative': 0.010515409055374314, 'flux_relative': 0.15605065621610814, 'energy_relative': 0.16926644496095047}
+MHM versus finest conforming reference: {'pressure_L2': 8.635719145906874, 'flux_L2': 0.15414976910511155, 'flux_energy': 0.06575786952330288, 'pressure_relative': 0.010515409055376635, 'flux_relative': 0.1560506562160459, 'energy_relative': 0.16926644496095555}
 ```
 
 ### Plot the baseline refinement evidence
@@ -525,7 +554,7 @@ print("Reference uncertainty/MHM difference ratios:",
 
 
 ```text
-Reference uncertainty/MHM difference ratios: {'pressure_L2': 0.020314612143129577, 'flux_L2': 0.34524475278613553, 'flux_energy': 0.21561605532259553}
+Reference uncertainty/MHM difference ratios: {'pressure_L2': 0.020314612143125094, 'flux_L2': 0.3452447527862732, 'flux_energy': 0.21561605532258907}
 ```
 
 ## 6. Fields with the actual macro mesh
@@ -566,10 +595,9 @@ def broken_quad_panel(system: Any,solution: Any,degree: int,material: CartesianC
     """Collect disconnected fine-element panels without merging any interface values."""
     points,triangles,values=[],[],[]
     count=0
-    for record,field in zip(system.local_metadata,solution.fields,strict=True):
-        fine,mapping=record
+    for field in solution.field("pressure"):
         local_points,local_triangles,local_values=fine_quad_panel(
-            fine,degree,field[mapping],material,quantity)
+            field.mesh,degree,field.portable_coefficients,material,quantity)
         points.append(local_points);triangles.append(local_triangles+count);values.append(local_values)
         count+=len(local_points)
     return np.vstack(points),np.vstack(triangles),np.concatenate(values)
@@ -696,8 +724,8 @@ for cell in range(len(macro.cells)):
 print("Maximum integrated macro imbalance:", float(np.max(np.abs(macro_balance))))
 fig,axes = plt.subplots(1,2,figsize=(12,4),constrained_layout=True)
 for row in range(11):
-    fine,mapping=system.local_metadata[row*6]
-    y,p,qy=fine_line_profile(fine,local_degree,solution.fields[row*6][mapping],permeability,199.)
+    field = pressure_fields[row*6]
+    y,p,qy=fine_line_profile(field.mesh,local_degree,field.portable_coefficients,permeability,199.)
     axes[0].plot(y,p,color="C0",label="MHM" if row==0 else None)
     axes[1].plot(y,qy,color="C0",label="MHM" if row==0 else None)
 y,pref,qref=fine_line_profile(reference_meshes[-1],3,
@@ -712,7 +740,7 @@ plt.show()
 ```
 
 ```text
-Maximum integrated macro imbalance: 1.6522280765762787e-10
+Maximum integrated macro imbalance: 1.6522272439090102e-10
 ```
 
 

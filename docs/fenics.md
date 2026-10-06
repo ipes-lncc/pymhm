@@ -1,23 +1,66 @@
 # Defining local problems with FEniCSx
 
-Use `LocalEquations` to declare both local equations and `Equation` for
-additional global forms. `pymhm.backends.forms.assemble_form` compiles real
-linear and bilinear UFL forms into owned numerical arrays. `columns` and
-`rows` declare independent trace pairings; the native adapter supports linear
-forms on either test or trial arguments, distinct spaces and rectangular
-blocks. The local pivot and the complete global operator must be square.
+The introductory path binds the macro/local meshes and interface space first.
+A provider then receives `LocalContext` and declares its volume and boundary
+forms directly with UFL:
 
-Forms run on single-rank DOLFINx domains. Quadrature, orientation, boundary
-elimination and physical gauges remain explicit. Cross-mesh forms require
-declared `entity_maps`. A provider constructs and compiles native resources
-inside its worker; no live native object crosses a spawn boundary. See the
-[variational guide](variational.md) for all compilation and recursion limits.
+```python
+def local_equations(local):
+    binding = local.native_space(element)
+    u, v = ufl.TrialFunction(binding.space), ufl.TestFunction(binding.space)
+    dx = ufl.Measure("dx", domain=binding.mesh)
+    b = local.trace_pairings(lambda phi, ds: phi * v * ds)
+    c = local.trace_pairings(lambda phi, ds: -phi * u * ds, axis="rows")
+    local.field("pressure", binding)
+    return local.equations(
+        a=ufl.inner(ufl.grad(u), ufl.grad(v)) * dx, L=f * v * dx,
+        b=b, c=c, kernel=constant, moments=columns(v * dx),
+    )
+```
 
-The [UFL provider notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/ufl_provider.ipynb)
-defines its scalar volume operator, both trace pairings and physical mean
-directly. The [provider tutorial](tutorials/providers.md) also declares mixed
-flux, pressure and auxiliary boundary fields without a PDE-specific solver.
-Both use `MultiscaleProblem`, `assemble` and `solve`.
+`element`, `f`, `constant` and the physical kernel moments belong to the user's
+formulation. The [complete UFL overview](tutorials/overview.md) defines each
+input, the global boundary equation, `bind_problem`, `assemble` and `solve`.
+`native_space` owns geometry and coefficient order; the interface binding applies
+outward-normal incidence signs once. Physical signs in `b` and `c` remain
+independent, explicit mathematical choices.
+
+Register `local.field(...)` before returning `local.equations(...)`, which
+snapshots those definitions. `solution.field(name)` returns views in selected
+`MeshHierarchy.items` order. Named fields carry their executed basis and mesh. `field.evaluate`,
+`field.gradient` and `field.values_and_gradient` support physical values and raw
+spatial derivatives, including explicit one-sided fine-cell owners. Scalar
+gradients have axes `(point, derivative)`; vector gradients have axes
+`(point, component, derivative)`. A raw gradient is not an H(div) reconstruction.
+
+Native mesh bindings cover existing triangles, tetrahedra, Cartesian
+quadrilaterals and hexahedra. Automatic portable coefficient maps and named-field
+descriptors currently cover supported equispaced nodal Lagrange fields and mixed
+components on triangles, tetrahedra and quadrilaterals. Hexahedral native assembly
+and direct evaluation remain available, but automatic hex nodal maps and
+`local.field(name, hex_space)` descriptors are not provided. Use an explicit
+custom named-field evaluator and executed basis contract instead.
+Moment-based H(div)/H(curl) elements retain their native conventions unless an
+adapter declares its evaluation and basis contract. Automatic local/global
+interface UFL capabilities currently use supported planar polynomial face spaces;
+local trace breakpoints must align with boundary facets. Arbitrary cross-mesh UFL
+forms and custom or three-dimensional interfaces require their declared adapter
+capabilities or explicit assembled blocks. See [custom spaces](tutorials/custom-interface.md)
+and the [variational guide](variational.md) for exact limits.
+
+Providers construct and compile native resources in their owning worker. No live
+DOLFINx object crosses a spawn boundary. Prepared blocks use
+`coordinates="global"` when their canonical orientation has already been applied;
+raw local UFL pairings use the default local convention.
+
+## Explicit assembled-form interfaces
+
+`LocalEquations` and `MultiscaleProblem` remain available for complete manual
+control. `pymhm.backends.forms.assemble_form` compiles real linear and bilinear
+UFL forms into owned numerical arrays. `columns` and `rows` supply independent
+rectangular pairings on supported native spaces. The local pivot and full global
+operator must be square. These interfaces require the explicit basis maps that
+the bound introductory path derives from declared spaces.
 
 ## Fixed hybrid local-form adapter
 
@@ -58,7 +101,7 @@ $$
 
 `a` defines \(A_K\), `load` defines \(f_K\), and every entry of `trace_forms`
 defines one column of \(B_K\). `trace_dofs` maps those columns to the global
-skeleton. A trace form must contain its orientation sign already. For primal
+skeleton. For this explicit `LocalForm`/`from_ufl` interface, a trace form must contain its orientation sign already. The bound `LocalContext` path above applies its declared geometric map instead. For primal
 Darcy, a face basis \(\psi_j\) produces
 \(B_{K,j}(v)=s_{K,F}\int_F\psi_jv\), where \(s_{K,F}\) relates the outward
 normal of the local cell to the fixed global face normal.

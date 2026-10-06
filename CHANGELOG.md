@@ -1,5 +1,39 @@
 # Changelog
 
+## Unreleased
+
+### Features
+
+- Bind macro/local mesh hierarchies and interface spaces to user-written local
+  and global equations through portable contexts, using the existing assembly
+  and solver pipeline. Native UFL pairings manage finite-element numbering and
+  geometric orientation independently of the mathematical coupling signs.
+- Support custom interface spaces with independent trial/test maps, dense basis
+  changes and explicit capability checks. The fully explicit equation API remains
+  available for advanced providers and external solvers.
+- Recover named mesh-associated fields and local traces using their executed
+  basis and coefficient maps, including serial, threaded and spawn execution.
+
+### Documentation
+
+- Explain installing PyMHM with pip inside a DOLFINx-enabled environment and
+  distinguish symbolic UFL forms from native finite-element assembly.
+- Present the mesh, space, local/global formulation, assembly, solve and
+  postprocessing workflow in the overview and introductory notebooks. Add an
+  advanced custom-interface tutorial and document native integration limits.
+- Retain reproducible performance campaigns as optional acquisitions, with
+  archived measurements attributed to their original source revision.
+
+### Maintenance
+
+- Qualify full-package line and branch coverage from portable core tests and
+  native DOLFINx integrations, retaining the independent 99% thresholds and
+  uploading the combined report to Codecov.
+- Preserve existing numerical discretizations and solver criteria through
+  independent original-equation, basis-replay and native integration controls.
+- Carry pending changelog notes into release preparation without modifying
+  historical release entries.
+
 ## 1.0.1
 
 <!-- pymhm:generated:start -->

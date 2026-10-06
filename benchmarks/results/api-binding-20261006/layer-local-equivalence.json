@@ -1,0 +1,1009 @@
+{
+  "baseline_notebook_revision": "a4d577a13e6375ae3d16cf5e2055058eed759645",
+  "runtime_scope": "Original explicit notebook provider versus bound provider with current shared numerical owners, locked introduction environment; local blocks and responses only, no global convergence or old-distribution execution claim.",
+  "basis_convention": "Both tutorials explicitly express local differential/saddle matrices in the same portable equispaced nodal coordinates. Bound context applies global normal trace maps once.",
+  "pixi_lock_sha256": "9bc037fce59b1ff50c7c05164720d6817649d5d7cc129522bdbd91eb4b07af32",
+  "records": [
+    {
+      "notebook": "mhm_usfem_rad",
+      "coefficient": 0.001,
+      "stabilized": false,
+      "macro_resolution": 4,
+      "cell": 0,
+      "local_subdivisions": 2,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.0834667307208316e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.0834667307208316e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 7.105427357601002e-15,
+          "relative": 1.0443139253463452e-16
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "e91722998e6b17b8389af76b195e2cce14cc9d27293e437f00e1ef597855f4d5",
+      "current_notebook_sha256": "a8ac8fd830317a784376f6038defbe69bdc70740f85c427408a71232f946cae2",
+      "numerical_code_sha256": "0655519881e891b7c5f81e94e5cdcfe9c0c622b5a9a0a0d4046eb58745837e55",
+      "provider_code_sha256": "fcfce6b0258cae6e7f7599cf6874fa2dd7ecf2ac2dd7121ba1b676fbcd2c309c",
+      "publication_only_source_update": {
+        "original_control_notebook_sha256": "96a5756e87aa408c66b06e2d9f1901200de4fd5a37bef3319b127af1776bba0f",
+        "unchanged_provider_code": true,
+        "reexecuted_publication_cells": [
+          39
+        ]
+      }
+    },
+    {
+      "notebook": "mhm_usfem_rad",
+      "coefficient": 0.001,
+      "stabilized": false,
+      "macro_resolution": 4,
+      "cell": 10,
+      "local_subdivisions": 2,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.199177923332954e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.199177923332954e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 7.105427357601002e-15,
+          "relative": 1.3851814284569714e-16
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "e91722998e6b17b8389af76b195e2cce14cc9d27293e437f00e1ef597855f4d5",
+      "current_notebook_sha256": "a8ac8fd830317a784376f6038defbe69bdc70740f85c427408a71232f946cae2",
+      "numerical_code_sha256": "0655519881e891b7c5f81e94e5cdcfe9c0c622b5a9a0a0d4046eb58745837e55",
+      "provider_code_sha256": "fcfce6b0258cae6e7f7599cf6874fa2dd7ecf2ac2dd7121ba1b676fbcd2c309c",
+      "publication_only_source_update": {
+        "original_control_notebook_sha256": "96a5756e87aa408c66b06e2d9f1901200de4fd5a37bef3319b127af1776bba0f",
+        "unchanged_provider_code": true,
+        "reexecuted_publication_cells": [
+          39
+        ]
+      }
+    },
+    {
+      "notebook": "mhm_usfem_rad",
+      "coefficient": 0.001,
+      "stabilized": true,
+      "macro_resolution": 4,
+      "cell": 0,
+      "local_subdivisions": 2,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.0834667307208316e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.0834667307208316e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 1.4210854715202004e-14,
+          "relative": 5.555781656137962e-17
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "e91722998e6b17b8389af76b195e2cce14cc9d27293e437f00e1ef597855f4d5",
+      "current_notebook_sha256": "a8ac8fd830317a784376f6038defbe69bdc70740f85c427408a71232f946cae2",
+      "numerical_code_sha256": "0655519881e891b7c5f81e94e5cdcfe9c0c622b5a9a0a0d4046eb58745837e55",
+      "provider_code_sha256": "fcfce6b0258cae6e7f7599cf6874fa2dd7ecf2ac2dd7121ba1b676fbcd2c309c",
+      "publication_only_source_update": {
+        "original_control_notebook_sha256": "96a5756e87aa408c66b06e2d9f1901200de4fd5a37bef3319b127af1776bba0f",
+        "unchanged_provider_code": true,
+        "reexecuted_publication_cells": [
+          39
+        ]
+      }
+    },
+    {
+      "notebook": "mhm_usfem_rad",
+      "coefficient": 0.001,
+      "stabilized": true,
+      "macro_resolution": 4,
+      "cell": 10,
+      "local_subdivisions": 2,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.199177923332954e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.199177923332954e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 2.842170943040401e-14,
+          "relative": 1.7439957087211806e-16
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "e91722998e6b17b8389af76b195e2cce14cc9d27293e437f00e1ef597855f4d5",
+      "current_notebook_sha256": "a8ac8fd830317a784376f6038defbe69bdc70740f85c427408a71232f946cae2",
+      "numerical_code_sha256": "0655519881e891b7c5f81e94e5cdcfe9c0c622b5a9a0a0d4046eb58745837e55",
+      "provider_code_sha256": "fcfce6b0258cae6e7f7599cf6874fa2dd7ecf2ac2dd7121ba1b676fbcd2c309c",
+      "publication_only_source_update": {
+        "original_control_notebook_sha256": "96a5756e87aa408c66b06e2d9f1901200de4fd5a37bef3319b127af1776bba0f",
+        "unchanged_provider_code": true,
+        "reexecuted_publication_cells": [
+          39
+        ]
+      }
+    },
+    {
+      "notebook": "mhm_usfem_rad",
+      "coefficient": 1e-05,
+      "stabilized": false,
+      "macro_resolution": 4,
+      "cell": 0,
+      "local_subdivisions": 2,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.0834667307208316e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.0834667307208316e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 2.1316282072803006e-14,
+          "relative": 1.8488405541605132e-16
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "e91722998e6b17b8389af76b195e2cce14cc9d27293e437f00e1ef597855f4d5",
+      "current_notebook_sha256": "a8ac8fd830317a784376f6038defbe69bdc70740f85c427408a71232f946cae2",
+      "numerical_code_sha256": "0655519881e891b7c5f81e94e5cdcfe9c0c622b5a9a0a0d4046eb58745837e55",
+      "provider_code_sha256": "fcfce6b0258cae6e7f7599cf6874fa2dd7ecf2ac2dd7121ba1b676fbcd2c309c",
+      "publication_only_source_update": {
+        "original_control_notebook_sha256": "96a5756e87aa408c66b06e2d9f1901200de4fd5a37bef3319b127af1776bba0f",
+        "unchanged_provider_code": true,
+        "reexecuted_publication_cells": [
+          39
+        ]
+      }
+    },
+    {
+      "notebook": "mhm_usfem_rad",
+      "coefficient": 1e-05,
+      "stabilized": false,
+      "macro_resolution": 4,
+      "cell": 10,
+      "local_subdivisions": 2,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.199177923332954e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.199177923332954e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 2.1316282072803006e-14,
+          "relative": 2.1079782002967743e-16
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "e91722998e6b17b8389af76b195e2cce14cc9d27293e437f00e1ef597855f4d5",
+      "current_notebook_sha256": "a8ac8fd830317a784376f6038defbe69bdc70740f85c427408a71232f946cae2",
+      "numerical_code_sha256": "0655519881e891b7c5f81e94e5cdcfe9c0c622b5a9a0a0d4046eb58745837e55",
+      "provider_code_sha256": "fcfce6b0258cae6e7f7599cf6874fa2dd7ecf2ac2dd7121ba1b676fbcd2c309c",
+      "publication_only_source_update": {
+        "original_control_notebook_sha256": "96a5756e87aa408c66b06e2d9f1901200de4fd5a37bef3319b127af1776bba0f",
+        "unchanged_provider_code": true,
+        "reexecuted_publication_cells": [
+          39
+        ]
+      }
+    },
+    {
+      "notebook": "mhm_usfem_rad",
+      "coefficient": 1e-05,
+      "stabilized": true,
+      "macro_resolution": 4,
+      "cell": 0,
+      "local_subdivisions": 2,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.0834667307208316e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.0834667307208316e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 1.8189894035458565e-12,
+          "relative": 8.758428310957526e-17
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "e91722998e6b17b8389af76b195e2cce14cc9d27293e437f00e1ef597855f4d5",
+      "current_notebook_sha256": "a8ac8fd830317a784376f6038defbe69bdc70740f85c427408a71232f946cae2",
+      "numerical_code_sha256": "0655519881e891b7c5f81e94e5cdcfe9c0c622b5a9a0a0d4046eb58745837e55",
+      "provider_code_sha256": "fcfce6b0258cae6e7f7599cf6874fa2dd7ecf2ac2dd7121ba1b676fbcd2c309c",
+      "publication_only_source_update": {
+        "original_control_notebook_sha256": "96a5756e87aa408c66b06e2d9f1901200de4fd5a37bef3319b127af1776bba0f",
+        "unchanged_provider_code": true,
+        "reexecuted_publication_cells": [
+          39
+        ]
+      }
+    },
+    {
+      "notebook": "mhm_usfem_rad",
+      "coefficient": 1e-05,
+      "stabilized": true,
+      "macro_resolution": 4,
+      "cell": 10,
+      "local_subdivisions": 2,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.199177923332954e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 1.199177923332954e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 3.637978807091713e-12,
+          "relative": 1.516687331188333e-16
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "e91722998e6b17b8389af76b195e2cce14cc9d27293e437f00e1ef597855f4d5",
+      "current_notebook_sha256": "a8ac8fd830317a784376f6038defbe69bdc70740f85c427408a71232f946cae2",
+      "numerical_code_sha256": "0655519881e891b7c5f81e94e5cdcfe9c0c622b5a9a0a0d4046eb58745837e55",
+      "provider_code_sha256": "fcfce6b0258cae6e7f7599cf6874fa2dd7ecf2ac2dd7121ba1b676fbcd2c309c",
+      "publication_only_source_update": {
+        "original_control_notebook_sha256": "96a5756e87aa408c66b06e2d9f1901200de4fd5a37bef3319b127af1776bba0f",
+        "unchanged_provider_code": true,
+        "reexecuted_publication_cells": [
+          39
+        ]
+      }
+    },
+    {
+      "notebook": "stokes_brinkman_boundary_layer",
+      "coefficient": 0.01,
+      "stabilized": false,
+      "macro_resolution": 4,
+      "cell": 0,
+      "local_subdivisions": 4,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 1.9539925233402755e-14,
+          "relative": 5.260702017610598e-16
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "804a65781e7cee2f777ae4df9033604e354122a3c9e48dcecab256e9a69add2d",
+      "current_notebook_sha256": "827c68c1fd185947e4e7f9331fc22ed5ae6956d93b58097622bb612755ae871d",
+      "numerical_code_sha256": "66a1c3c1e16b798e5ab867f0127ccbd22b54dd3e273203f9ebf7407b33f28cf4",
+      "plot_only_source_update": {
+        "original_control_notebook_sha256": "e8a810b3f270acc34f50c234bb2ec829760fd56c71d13fcbfd0832d1c5ccf2bd",
+        "unchanged_numerical_code": true,
+        "reexecuted_plot_cells": [
+          31,
+          32,
+          33
+        ]
+      }
+    },
+    {
+      "notebook": "stokes_brinkman_boundary_layer",
+      "coefficient": 0.01,
+      "stabilized": false,
+      "macro_resolution": 4,
+      "cell": 10,
+      "local_subdivisions": 4,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 1.9539925233402755e-14,
+          "relative": 5.260702017610598e-16
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "804a65781e7cee2f777ae4df9033604e354122a3c9e48dcecab256e9a69add2d",
+      "current_notebook_sha256": "827c68c1fd185947e4e7f9331fc22ed5ae6956d93b58097622bb612755ae871d",
+      "numerical_code_sha256": "66a1c3c1e16b798e5ab867f0127ccbd22b54dd3e273203f9ebf7407b33f28cf4",
+      "plot_only_source_update": {
+        "original_control_notebook_sha256": "e8a810b3f270acc34f50c234bb2ec829760fd56c71d13fcbfd0832d1c5ccf2bd",
+        "unchanged_numerical_code": true,
+        "reexecuted_plot_cells": [
+          31,
+          32,
+          33
+        ]
+      }
+    },
+    {
+      "notebook": "stokes_brinkman_boundary_layer",
+      "coefficient": 0.01,
+      "stabilized": true,
+      "macro_resolution": 4,
+      "cell": 0,
+      "local_subdivisions": 4,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 1.4210854715202004e-14,
+          "relative": 4.1456346290768104e-16
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "804a65781e7cee2f777ae4df9033604e354122a3c9e48dcecab256e9a69add2d",
+      "current_notebook_sha256": "827c68c1fd185947e4e7f9331fc22ed5ae6956d93b58097622bb612755ae871d",
+      "numerical_code_sha256": "66a1c3c1e16b798e5ab867f0127ccbd22b54dd3e273203f9ebf7407b33f28cf4",
+      "plot_only_source_update": {
+        "original_control_notebook_sha256": "e8a810b3f270acc34f50c234bb2ec829760fd56c71d13fcbfd0832d1c5ccf2bd",
+        "unchanged_numerical_code": true,
+        "reexecuted_plot_cells": [
+          31,
+          32,
+          33
+        ]
+      }
+    },
+    {
+      "notebook": "stokes_brinkman_boundary_layer",
+      "coefficient": 0.01,
+      "stabilized": true,
+      "macro_resolution": 4,
+      "cell": 10,
+      "local_subdivisions": 4,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 1.4210854715202004e-14,
+          "relative": 4.1456346290768104e-16
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "804a65781e7cee2f777ae4df9033604e354122a3c9e48dcecab256e9a69add2d",
+      "current_notebook_sha256": "827c68c1fd185947e4e7f9331fc22ed5ae6956d93b58097622bb612755ae871d",
+      "numerical_code_sha256": "66a1c3c1e16b798e5ab867f0127ccbd22b54dd3e273203f9ebf7407b33f28cf4",
+      "plot_only_source_update": {
+        "original_control_notebook_sha256": "e8a810b3f270acc34f50c234bb2ec829760fd56c71d13fcbfd0832d1c5ccf2bd",
+        "unchanged_numerical_code": true,
+        "reexecuted_plot_cells": [
+          31,
+          32,
+          33
+        ]
+      }
+    },
+    {
+      "notebook": "stokes_brinkman_boundary_layer",
+      "coefficient": 1e-05,
+      "stabilized": false,
+      "macro_resolution": 4,
+      "cell": 0,
+      "local_subdivisions": 4,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 1.6768808563938364e-12,
+          "relative": 3.1545084385765628e-15
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "804a65781e7cee2f777ae4df9033604e354122a3c9e48dcecab256e9a69add2d",
+      "current_notebook_sha256": "827c68c1fd185947e4e7f9331fc22ed5ae6956d93b58097622bb612755ae871d",
+      "numerical_code_sha256": "66a1c3c1e16b798e5ab867f0127ccbd22b54dd3e273203f9ebf7407b33f28cf4",
+      "plot_only_source_update": {
+        "original_control_notebook_sha256": "e8a810b3f270acc34f50c234bb2ec829760fd56c71d13fcbfd0832d1c5ccf2bd",
+        "unchanged_numerical_code": true,
+        "reexecuted_plot_cells": [
+          31,
+          32,
+          33
+        ]
+      }
+    },
+    {
+      "notebook": "stokes_brinkman_boundary_layer",
+      "coefficient": 1e-05,
+      "stabilized": false,
+      "macro_resolution": 4,
+      "cell": 10,
+      "local_subdivisions": 4,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 1.6768808563938364e-12,
+          "relative": 3.1545084385765628e-15
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "804a65781e7cee2f777ae4df9033604e354122a3c9e48dcecab256e9a69add2d",
+      "current_notebook_sha256": "827c68c1fd185947e4e7f9331fc22ed5ae6956d93b58097622bb612755ae871d",
+      "numerical_code_sha256": "66a1c3c1e16b798e5ab867f0127ccbd22b54dd3e273203f9ebf7407b33f28cf4",
+      "plot_only_source_update": {
+        "original_control_notebook_sha256": "e8a810b3f270acc34f50c234bb2ec829760fd56c71d13fcbfd0832d1c5ccf2bd",
+        "unchanged_numerical_code": true,
+        "reexecuted_plot_cells": [
+          31,
+          32,
+          33
+        ]
+      }
+    },
+    {
+      "notebook": "stokes_brinkman_boundary_layer",
+      "coefficient": 1e-05,
+      "stabilized": true,
+      "macro_resolution": 4,
+      "cell": 0,
+      "local_subdivisions": 4,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 5.684341886080801e-13,
+          "relative": 4.224728491027761e-16
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "804a65781e7cee2f777ae4df9033604e354122a3c9e48dcecab256e9a69add2d",
+      "current_notebook_sha256": "827c68c1fd185947e4e7f9331fc22ed5ae6956d93b58097622bb612755ae871d",
+      "numerical_code_sha256": "66a1c3c1e16b798e5ab867f0127ccbd22b54dd3e273203f9ebf7407b33f28cf4",
+      "plot_only_source_update": {
+        "original_control_notebook_sha256": "e8a810b3f270acc34f50c234bb2ec829760fd56c71d13fcbfd0832d1c5ccf2bd",
+        "unchanged_numerical_code": true,
+        "reexecuted_plot_cells": [
+          31,
+          32,
+          33
+        ]
+      }
+    },
+    {
+      "notebook": "stokes_brinkman_boundary_layer",
+      "coefficient": 1e-05,
+      "stabilized": true,
+      "macro_resolution": 4,
+      "cell": 10,
+      "local_subdivisions": 4,
+      "trace_degree": 0,
+      "differences": {
+        "matrix": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "load": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "test_coupling": {
+          "maximum_absolute": 2.7755575615628914e-17,
+          "relative": 3.03754603556678e-16
+        },
+        "constraints": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "kernel": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "coarse_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_source": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        },
+        "response_lifts": {
+          "maximum_absolute": 5.684341886080801e-13,
+          "relative": 4.224728491027761e-16
+        },
+        "response_retained_basis": {
+          "maximum_absolute": 0.0,
+          "relative": 0.0
+        }
+      },
+      "baseline_notebook_sha256": "804a65781e7cee2f777ae4df9033604e354122a3c9e48dcecab256e9a69add2d",
+      "current_notebook_sha256": "827c68c1fd185947e4e7f9331fc22ed5ae6956d93b58097622bb612755ae871d",
+      "numerical_code_sha256": "66a1c3c1e16b798e5ab867f0127ccbd22b54dd3e273203f9ebf7407b33f28cf4",
+      "plot_only_source_update": {
+        "original_control_notebook_sha256": "e8a810b3f270acc34f50c234bb2ec829760fd56c71d13fcbfd0832d1c5ccf2bd",
+        "unchanged_numerical_code": true,
+        "reexecuted_plot_cells": [
+          31,
+          32,
+          33
+        ]
+      }
+    }
+  ],
+  "source_inventory_reference": "equivalence.json"
+}

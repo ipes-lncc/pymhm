@@ -43,6 +43,9 @@ submodules documented below.
 
 | Task | API owner |
 | --- | --- |
+| Bind meshes, interface spaces and user forms | `MeshHierarchy`, `bind_interface`, `bind_problem`, `LocalContext`, `GlobalContext` in [hybrid API](api/hybrid.md) |
+| Declare custom interface representations | `InterfaceSpace`, `TraceBinding` in [hybrid API](api/hybrid.md) |
+| Evaluate named physical fields | `DiscreteField`, `solution_field`, `evaluate_field` in [hybrid API](api/hybrid.md) |
 | Declare local and global variational blocks | [`Equation`, `LocalEquations`, `columns`, `rows`](api/hybrid.md#pymhm.core.equations) |
 | Assemble, solve and reconstruct a hierarchy | [`MultiscaleProblem`, `NestedEquations`, `assemble`, `solve`](api/hybrid.md#pymhm.core.multiscale) |
 | Reuse an assembled hierarchy and recover coefficients | [`with_global_load`, `with_global_equation`, `solve_multiscale_system`, `reconstruct_multiscale`](api/hybrid.md#pymhm.core.multiscale) |

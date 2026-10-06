@@ -6,15 +6,27 @@ import multiprocessing
 import os
 import subprocess
 import sys
+from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
 import pymhm
-from pymhm import Equation, LocalEquations, MultiscaleProblem, assemble
+from pymhm import (
+    CartesianMacroMesh,
+    Equation,
+    LocalContext,
+    LocalEquations,
+    MeshHierarchy,
+    MultiscaleProblem,
+    TraceBinding,
+    assemble,
+    bind_problem,
+)
 from pymhm.core.assembly import SolverConfig
 from pymhm.core.contracts import LocalProblem
 from pymhm.core.system import HybridSystem
@@ -50,6 +62,36 @@ def _local_equations(cell: int, *, source: float) -> LocalEquations:
             "pid": os.getpid(),
             "start_method": multiprocessing.get_start_method(allow_none=True),
         },
+    )
+
+
+@dataclass(frozen=True)
+class _StripInterface:
+    """Declare constant normal densities on vertical faces of two y-independent strips."""
+
+    mesh: Any
+    size: int = 3
+
+    def binding(self, cell: int) -> TraceBinding:
+        """Map global increasing-x density into outward left/right local coordinates."""
+        return TraceBinding(
+            [cell, cell + 1],
+            np.diag([-1.0, 1.0]),
+            basis_id="constant vertical-face density, increasing-x global normal",
+        )
+
+
+def _context_equations(local: LocalContext, *, source: float) -> LocalEquations:
+    """Reuse the diffusion owner while letting the context supply orientation and layout."""
+    explicit = _local_equations(local.cell, source=source)
+    return local.equations(
+        a=explicit.a,
+        L=explicit.L,
+        b=np.eye(2),
+        c=np.eye(2),
+        kernel=explicit.kernel,
+        moments=explicit.moments,
+        metadata=explicit.metadata,
     )
 
 
@@ -100,15 +142,30 @@ def test_generic_hybrid_and_dsl_preserve_conforming_fields_under_spawn(
             execution=execution,
             solvers=solvers,
         )
-        for record in declared.cells:
-            metadata = record.equations.metadata
-            if backend == "process":
-                assert metadata["pid"] != os.getpid()
-                assert metadata["start_method"] == "spawn"
-            else:
-                assert metadata["pid"] == os.getpid()
+        macro = CartesianMacroMesh(2, 1)
+        interface = _StripInterface(macro)
+        hierarchy = MeshHierarchy(macro, tuple(macro.submesh(cell, 1) for cell in range(2)))
+        bound = assemble(
+            bind_problem(
+                hierarchy,
+                interface,
+                partial(_context_equations, source=source),
+                retained=1,
+                global_equation=lambda context: Equation(0, context.trace_load(boundary_load)),
+            ),
+            execution=execution,
+            solvers=solvers,
+        )
+        for contextual in (declared, bound):
+            for record in contextual.cells:
+                metadata = record.equations.metadata
+                if backend == "process":
+                    assert metadata["pid"] != os.getpid()
+                    assert metadata["start_method"] == "spawn"
+                else:
+                    assert metadata["pid"] == os.getpid()
 
-        for system in (direct, declared):
+        for system in (direct, declared, bound):
             result = system.solve(solver=solver)
             solutions.append(result)
             assert_allclose(result.fields, expected_fields, rtol=2e-12, atol=2e-12)
@@ -130,6 +187,18 @@ def test_generic_hybrid_and_dsl_preserve_conforming_fields_under_spawn(
                 assert field.dtype == np.dtype(float)
             actual_integral = sum(float(np.full(2, 0.25) @ field) for field in result.fields)
             assert_allclose(actual_integral, np.array([0.25, 0.5, 0.25]) @ expected, atol=2e-12)
+            if system is bound:
+                for cell in range(2):
+                    binding = interface.binding(cell)
+                    assert result.trace_bindings[cell].basis_digest == binding.basis_digest
+                    assert not result.trace_bindings[cell].trial_map.flags.writeable
+                    assert_allclose(
+                        result.local_trace(cell), binding.trial_map @ result.trace[binding.dofs]
+                    )
+                    assert_allclose(
+                        result.local_trace(cell, test=True),
+                        binding.test_map @ result.trace[binding.test_dofs],
+                    )
 
     for result in solutions[1:]:
         assert_allclose(result.trace, solutions[0].trace, rtol=2e-12, atol=2e-12)
@@ -161,7 +230,10 @@ class BlockNative(importlib.abc.MetaPathFinder):
             raise AssertionError('Portable operation imported ' + fullname)
 
 sys.meta_path.insert(0, BlockNative())
-from pymhm import Equation, LocalEquations, MultiscaleProblem, solve
+from pymhm import (
+    CartesianMacroMesh, Equation, LocalEquations, MeshHierarchy, MultiscaleProblem,
+    SkeletonSpace, TraceBinding, bind_interface, bind_problem, solve,
+)
 from pymhm.fem.reference import ReferenceElementSpec, create_reference_element, tabulate_reference
 
 def local(cell):
@@ -171,6 +243,37 @@ problem = MultiscaleProblem(Equation(0, 0), local, [0], 1, (0,))
 result = solve(problem)
 np.testing.assert_allclose(result.trace, [1 / 3], atol=1e-14)
 np.testing.assert_allclose(result.fields, [[1 / 3]], atol=1e-14)
+
+macro = CartesianMacroMesh(1)
+hierarchy = MeshHierarchy(macro, (macro,))
+
+class CustomInterface:
+    size = 1
+    def binding(self, cell):
+        return TraceBinding([0], [[2.0]], test_map=[[-3.0]], basis_id='scaled face basis')
+
+def context_local(context):
+    return context.equations(a=[[2.0]], L=[1.0], b=[[1.0]], c=[[-1.0]], d=[[1.0]])
+
+custom = CustomInterface()
+bound = bind_problem(hierarchy, custom, context_local)
+result = solve(bound)
+np.testing.assert_allclose(result.fields, [[1/3]], atol=1e-14)
+np.testing.assert_allclose(result.trace, [1/6], atol=1e-14)
+np.testing.assert_allclose(result.local_trace(0), [1/3], atol=1e-14)
+np.testing.assert_allclose(result.local_trace(0, test=True), [-1/2], atol=1e-14)
+assert result.trace_bindings[0].basis_digest == custom.binding(0).basis_digest
+
+interface = bind_interface(SkeletonSpace(macro), convention='normal')
+def face_local(context):
+    width = context.binding.trial_size
+    return context.equations(a=[[2.0]], L=[1.0], b=np.ones((1,width)),
+                             c=-np.ones((width,1)), d=np.eye(width))
+
+result = solve(bind_problem(hierarchy, interface, face_local))
+np.testing.assert_allclose(result.fields, [[1/6]], atol=1e-14)
+np.testing.assert_allclose(result.trace, np.full(4,1/6), atol=1e-14)
+np.testing.assert_allclose(result.local_trace(0), result.trace, atol=1e-14)
 element = create_reference_element(
     ReferenceElementSpec('P', 'triangle', 1, lagrange_variant='equispaced')
 )

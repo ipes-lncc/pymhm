@@ -150,14 +150,35 @@ def generate_changelog(root: Path, *, initial: bool = False) -> tuple[ChangelogS
 
 
 def _releases(changelog: str) -> list[re.Match[str]]:
-    """Locate exact version headings without treating subsections as releases."""
+    """Locate release headings, allowing one separate leading Unreleased section."""
     if not re.match(r"\A# Changelog(?:\r?\n|\Z)", changelog):
         raise ValueError("CHANGELOG.md must start with # Changelog")
-    return list(re.finditer(r"(?m)^## (?P<version>\S+)\r?$", changelog))
+    headings = list(re.finditer(r"(?m)^## (?P<version>\S+)\r?$", changelog))
+    pending = [
+        index for index, heading in enumerate(headings) if heading["version"] == "Unreleased"
+    ]
+    if pending and pending != [0]:
+        raise ValueError("CHANGELOG.md permits only one leading ## Unreleased section")
+    return headings[1:] if pending else headings
+
+
+def _generated_span(body: str) -> tuple[int, int]:
+    """Select one complete generated block without discarding handwritten notes."""
+    first, last = body.find(GENERATED_START), body.find(GENERATED_END)
+    if (
+        first < 0
+        or last < first
+        or body.count(GENERATED_START) != 1
+        or body.count(GENERATED_END) != 1
+    ):
+        raise ValueError(
+            "The current release needs exactly one generated block; preserve its markers"
+        )
+    return first, last + len(GENERATED_END)
 
 
 def release_notes(changelog: str, version: str) -> str:
-    """Return the first release's complete notes, rejecting empty or TODO entries."""
+    """Return the first actual release's notes, excluding pending Unreleased changes."""
     releases = _releases(changelog)
     if not releases or releases[0]["version"] != version:
         raise ValueError(f"The first CHANGELOG.md release must be ## {version}")
@@ -170,10 +191,20 @@ def release_notes(changelog: str, version: str) -> str:
 
 
 def update_changelog(changelog: str, version: str, notes: str) -> str:
-    """Replace only the current generated block, preserving manual and previous notes."""
+    """Consume pending notes and refresh one release without changing historical records."""
     releases = _releases(changelog)
     newline = "\r\n" if "\r\n" in changelog else "\n"
-    notes = notes.replace("\n", newline)
+    notes = notes.replace("\r\n", "\n").replace("\n", newline)
+    pending = ""
+    unreleased = re.search(r"(?m)^## Unreleased\r?$", changelog)
+    if unreleased is not None:
+        end = releases[0].start() if releases else len(changelog)
+        pending = changelog[unreleased.end() : end].strip()
+        if GENERATED_START in pending or GENERATED_END in pending:
+            first, last = _generated_span(pending)
+            pending = (pending[:first] + pending[last:]).strip()
+        changelog = changelog[: unreleased.start()] + changelog[end:]
+        releases = _releases(changelog)
     current = next((release for release in releases if release["version"] == version), None)
     if current is None:
         position = releases[0].start() if releases else len(changelog)
@@ -181,29 +212,20 @@ def update_changelog(changelog: str, version: str, notes: str) -> str:
         separator = "" if preamble.endswith(newline * 2) else newline
         if not preamble.endswith(newline):
             separator += newline
+        body = notes + (newline * 2 + pending if pending else "")
         return (
             f"{preamble}{separator}## {version}{newline}{newline}"
-            f"{notes}{newline}{newline}{changelog[position:]}"
+            f"{body}{newline}{newline}{changelog[position:]}"
         )
     if current is not releases[0]:
         raise ValueError("Do not rewrite an older changelog release")
     end = releases[1].start() if len(releases) > 1 else len(changelog)
     body = changelog[current.start() : end]
-    first, last = body.find(GENERATED_START), body.find(GENERATED_END)
-    if (
-        first < 0
-        or last < first
-        or body.count(GENERATED_START) != 1
-        or body.count(GENERATED_END) != 1
-    ):
-        raise ValueError(
-            "The current release needs exactly one generated block; preserve its markers"
-        )
-    return (
-        changelog[: current.start() + first]
-        + notes
-        + changelog[current.start() + last + len(GENERATED_END) :]
-    )
+    first, last = _generated_span(body)
+    updated = body[:first] + notes + body[last:]
+    if pending:
+        updated = updated.rstrip() + newline * 2 + pending + newline * 2
+    return changelog[: current.start()] + updated + changelog[end:]
 
 
 def _stage_file(path: Path, data: bytes, mode: int) -> Path:

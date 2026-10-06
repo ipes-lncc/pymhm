@@ -15,7 +15,7 @@ from scipy import sparse
 from pymhm.core.validation import FloatArray, IntArray, positive_int
 from pymhm.fem.quadrature.material import material_triangle_quadrature
 from pymhm.fem.scalar.triangle import element_tabulate, scalar_operators, trace_coupling
-from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace, interface_pairing
 from pymhm.linalg.linear import LinearSolveError, factorize, solve_linear
 from pymhm.materials.evaluation import scalar_values, tensor_values, vector_values
 from pymhm.meshes.polygonal import PolygonMesh
@@ -146,24 +146,14 @@ def _local_problem(
     )
     coupling = trace_coupling(cast(TriangleMesh, mesh), cell, fine, flux, degree)
     trace_ids = gamma.cell_dofs(cell)
-    pairing = np.zeros((coupling.shape[1], len(trace_ids)))
+    pairing = interface_pairing(flux, gamma, cell, order=order)
     constant = np.zeros(coupling.shape[1])
     offset = 0
     for side, face in enumerate(mesh.cell_faces[cell]):
-        lam, rho = flux.faces[face], gamma.faces[face]
+        lam = flux.faces[face]
         width = lam.size
         coupling[:, offset : offset + width] *= mesh.signs[cell][side]
         constant[offset : offset + width] = lam.constant_coefficients()
-        cuts = tuple(sorted(set(lam.breaks) | set(rho.breaks)))
-        t, w = FaceSpace(cuts, (0,) * (len(cuts) - 1)).quadrature(
-            max(lam.degrees) + max(rho.degrees) + 2
-        )
-        block = lam.evaluate(t).T @ (w[:, None] * rho.evaluate(t)) * mesh.lengths[face]
-        pairing[
-            np.ix_(
-                np.arange(offset, offset + width), np.searchsorted(trace_ids, gamma.face_dofs[face])
-            )
-        ] = block
         offset += width
     return _neumann_maps(
         fine, trace_ids, stiffness, mass, load, coupling, pairing, constant, solver

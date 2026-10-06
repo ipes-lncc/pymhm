@@ -2,6 +2,8 @@
 
 Follow the numbered steps: state the variational problem, choose the local and trace spaces, declare the local and global equations, solve, and inspect the physical fields.
 
+The main workflow is **meshes → spaces → local equations → global balance → assemble → solve → fields and errors**. `MeshHierarchy` associates macro and local meshes; `bind_interface` and `LocalContext` own supported numbering, geometric orientation and native coordinate conversions. The mathematical forms, physical trace meaning, local modes and gauge remain explicit in the cells below. Fully manual/custom spaces use the same numerical owners; see the [custom-interface notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/custom_interface.ipynb).
+
 We build the local mixed equations and the global skeletal equation explicitly. The classical baseline is an independently assembled, globally conforming **Taylor–Hood P2/P1** solution on three fine meshes. We compare MHM with Taylor–Hood locals against MHM-USFEM with stabilized P2/P2 locals. Both MHM configurations use the **same local velocity mesh, velocity degree and macroface space**. We also assess the published single-element USFEM degree family independently of that Taylor–Hood comparison.
 
 The analytical problem is the boundary-layer example in [Araya, Harder, Poza and Valentin (2017), §3.1.2](https://doi.org/10.1016/j.cma.2017.05.027); its [2016 author preprint](https://www.ci2ma.udec.cl/pdf/pre-publicaciones2/2016/pp16-15.pdf) gives the equations and exact fields. This notebook uses a declared SW–NE triangulation. We distinguish the paper's single-element local degree family from the locally refined Taylor–Hood/USFEM comparison and from a resolved subface control. Geometry, coefficient, source and boundary data are the same throughout.
@@ -12,6 +14,7 @@ Run the notebook with the locked Pixi `introduction` environment. Every physical
 ```python
 from pathlib import Path
 import sys
+import os
 
 ROOT = next(
     path for path in (Path.cwd(), *Path.cwd().parents) if (path / "pixi.toml").exists()
@@ -21,7 +24,6 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import sparse
-from scipy.spatial import cKDTree
 from pymhm import TriangleMesh, FaceSpace, SkeletonSpace
 from pymhm.core.equations import Equation, LocalEquations, compile_form
 from pymhm.core.multiscale import MultiscaleProblem, assemble
@@ -41,16 +43,10 @@ from threadpoolctl import threadpool_limits
 
 threadpool_limits(limits=1)
 
+from pymhm import MeshHierarchy, LocalContext, bind_interface, bind_problem
+from pymhm.backends.spaces import bind_space
+
 ```
-
-
-
-
-```text
-<threadpoolctl.threadpool_limits at 0x7f8eabd30d70>
-```
-
-
 
 ## 1. State the operator and derive the source independently
 
@@ -379,7 +375,7 @@ def brinkman_forms(
 
 ```
 
-The following two small adapters only create a serial affine native mesh and match nodal coordinates. They do not choose the operator, source, boundary data or multiscale method. Keeping this geometry plumbing separate lets the next cell read directly as the mathematical formulation.
+The native mesh and coefficient conversions come from the shared backend binding. The provider below writes the volume and boundary forms, chooses its physical boundary conditions and registers the scalar field. The explicit restriction to free scalar coordinates imposes the declared vertical Dirichlet data; it is part of the formulation.
 
 
 ```python
@@ -388,36 +384,9 @@ import basix.ufl
 import dolfinx
 import ufl
 from mpi4py import MPI
-from scipy.spatial import cKDTree
 
 
-def native_mesh(fine: TriangleMesh) -> Any:
-    """Create a serial native affine mesh from the declared PyMHM geometry."""
-    coordinate_element = basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))
-    return dolfinx.mesh.create_mesh(
-        MPI.COMM_SELF, fine.cells.copy(), fine.points.copy(), ufl.Mesh(coordinate_element)
-    )
-
-
-def canonical_nodal_order(
-    space: Any,
-    fine: TriangleMesh,
-    degree: int,
-    components: int = 1,
-    parent_dofs: Any = None,
-) -> np.ndarray:
-    """Map canonical nodal coefficients to native coordinates, including mixed subspaces.
-
-    This is only a coordinate permutation. It neither changes the physical
-    form nor constructs a multiscale method or boundary condition.
-    """
-    _, nodes = nodal_space(fine, degree)
-    coordinates = space.tabulate_dof_coordinates()[:, :2]
-    distances, indices = cKDTree(coordinates).query(nodes)
-    assert distances.max() < 1e-12 and len(np.unique(indices)) == len(nodes)
-    order = (components * indices[:, None] + np.arange(components)).ravel()
-    return order if parent_dofs is None else np.asarray(parent_dofs)[order]
-
+from pymhm.backends.spaces import create_native_mesh, coefficient_map
 
 def mixed_nodal_blocks(
     W: Any,
@@ -429,11 +398,10 @@ def mixed_nodal_blocks(
     velocity_degree: int = VELOCITY_DEGREE,
 ) -> tuple[Any, np.ndarray, np.ndarray, int]:
     """Compile supplied vector/scalar forms in declared canonical nodal coordinates."""
-    V, vmap = W.sub(0).collapse()
-    Q, pmap = W.sub(1).collapse()
+    binding = bind_space(fine, W)
     order = np.r_[
-        canonical_nodal_order(V, fine, velocity_degree, 2, vmap),
-        canonical_nodal_order(Q, fine, pressure_degree, 1, pmap),
+        coefficient_map(binding, component=0),
+        coefficient_map(binding, component=1),
     ]
     native_A, native_F = compile_form(a), compile_form(L)
     A, F = native_A[order][:, order], native_F[order]
@@ -468,12 +436,12 @@ The right-hand side is a velocity moment, not prescribed traction. All exterior 
 
 Whole-boundary velocity data leave a global pressure constant undetermined. `mean_constraint` lifts the explicit local pressure weights into a global row. We constrain the **physical reconstructed pressure integral**; pinning a skeletal coefficient would generally choose a different gauge.
 
-The short provider below connects the declared UFL operator with the generic nodal-coordinate adapter and `trace_coupling`. The pressure mean form is retained explicitly for the global physical gauge.
+The provider below binds the mixed velocity–pressure space to the local mesh, writes both UFL interface pairings independently, and registers named velocity and pressure fields. A shared native coefficient adapter supplies the executed mixed representation used by the following norms and archives. The pressure mean form remains explicit for the global physical gauge.
 
 
 ```python
 def local_brinkman(
-    cell: int,
+    local: LocalContext,
     *,
     macro: TriangleMesh,
     skeleton: SkeletonSpace,
@@ -484,10 +452,10 @@ def local_brinkman(
     quadrature_degree: int = 28,
 ) -> LocalEquations:
     """Connect the declared mixed UFL equations to their oriented skeletal coordinates."""
-    fine = macro.submesh(cell, subdivisions)
+    cell, fine = local.cell, local.mesh
     pressure_degree = velocity_degree if stabilized else velocity_degree - 1
     W, a, L, mean_form = brinkman_forms(
-        native_mesh(fine),
+        create_native_mesh(fine),
         stabilized=stabilized,
         velocity_degree=velocity_degree,
         inverse_m=inverse_m,
@@ -496,16 +464,26 @@ def local_brinkman(
     A, F, pweights, nv = mixed_nodal_blocks(
         W, a, L, mean_form, fine, pressure_degree, velocity_degree
     )
-    B = np.zeros((len(F), len(skeleton.cell_dofs(cell))))
-    B[: 2 * nv] = np.kron(
-        trace_coupling(macro, cell, fine, skeleton, velocity_degree), np.eye(2)
-    )
-    return LocalEquations(
+    from pymhm.backends.forms import assemble_pairing
+    binding = local.native_space(W)
+    u, p = ufl.TrialFunctions(W)
+    v, q = ufl.TestFunctions(W)
+    pair_b = local.trace_pairings(lambda phi, ds: ufl.inner(phi, v) * ds)
+    pair_c = local.trace_pairings(lambda phi, ds: -ufl.inner(phi, u) * ds, axis="rows")
+    order = np.r_[coefficient_map(binding, component=0), coefficient_map(binding, component=1)]
+    B = assemble_pairing(pair_b.forms, axis="columns")[order]
+    C = assemble_pairing(pair_c.forms, axis="rows")[:, order]
+    # Preserve the declared (canonical velocity, canonical pressure) record layout.
+    identity = np.eye(len(F))
+    native_layout = (binding.to_native(identity[:2 * nv], component=0)
+                     + binding.to_native(identity[2 * nv:], component=1))
+    local.field("velocity", binding, component=0, reconstruction=native_layout)
+    local.field("pressure", binding, component=1, reconstruction=native_layout)
+    return local.equations(
         a=A,
         L=F,
         b=B,
-        c=-B.T,
-        dofs=skeleton.cell_dofs(cell),
+        c=C,
         metadata={
             "mesh": fine,
             "velocity_nodes": nv,
@@ -558,6 +536,8 @@ def flow_error_norms(
     exact: BrinkmanLayer,
     *,
     order: int = 20,
+    named_velocity: Sequence[Any] | None = None,
+    named_pressure: Sequence[Any] | None = None,
 ) -> dict[str, float]:
     """Integrate velocity, pressure, gradient and macro mass measurements.
 
@@ -569,17 +549,25 @@ def flow_error_norms(
     bary, weights = triangle_quadrature(order)
     totals = np.zeros(5)
     mass, mean = 0.0, 0.0
-    for mesh, u, p in zip(meshes, velocity, pressure, strict=True):
+    for cell, (mesh, u, p) in enumerate(zip(meshes, velocity, pressure, strict=True)):
         udofs, ubasis, gradients = nodal_evaluation(mesh, velocity_degree, bary)
         pdofs, pbasis, _ = nodal_evaluation(mesh, pressure_degree, bary, gradient=False)
         points = np.einsum("qi,tia->tqa", bary, mesh.points[mesh.cells], optimize=True)
         flat = points.reshape(-1, 2)
-        delta_u = np.einsum(
-            "qi,tia->tqa", ubasis, u[udofs], optimize=True
-        ) - exact.velocity(flat).reshape(points.shape)
-        numerical_p = p[pdofs] @ pbasis.T
+        if named_velocity is not None and named_pressure is not None:
+            owners = np.repeat(np.arange(len(mesh.cells)), len(bary))
+            numerical_u, numerical_gradient = named_velocity[cell].values_and_gradient(flat, cells=owners)
+            delta_u = numerical_u.reshape(points.shape) - exact.velocity(flat).reshape(points.shape)
+            numerical_p = named_pressure[cell].evaluate(flat, cells=owners).reshape(points.shape[:2])
+            derivative = numerical_gradient.reshape((*points.shape[:2], 2, 2))
+        else:
+            # Explicit coefficient evaluation for independent references and basis replay.
+            delta_u = np.einsum(
+                "qi,tia->tqa", ubasis, u[udofs], optimize=True
+            ) - exact.velocity(flat).reshape(points.shape)
+            numerical_p = p[pdofs] @ pbasis.T
+            derivative = np.einsum("tqia,tic->tqca", gradients, u[udofs], optimize=True)
         delta_p = numerical_p - exact.pressure(flat).reshape(points.shape[:2])
-        derivative = np.einsum("tqia,tic->tqca", gradients, u[udofs], optimize=True)
         delta_gradient = derivative - exact.gradient(flat).reshape(derivative.shape)
         divergence = np.trace(derivative, axis1=-2, axis2=-1)
         delta_stress = exact.viscosity * delta_gradient - delta_p[..., None, None] * np.eye(
@@ -694,30 +682,28 @@ for n in (4, 8, 16):
     boundary, fixed = boundary_data(skeleton, truth.velocity, {}, order=32)
     assert not fixed
     for method, stabilized in (("MHM Taylor-Hood", False), ("MHM-USFEM", True)):
-        provider = lambda cell, m=macro, s=skeleton, flag=stabilized: local_brinkman(
-            cell, macro=m, skeleton=s, stabilized=flag
+        provider = lambda local, m=macro, s=skeleton, flag=stabilized: local_brinkman(
+            local, macro=m, skeleton=s, stabilized=flag
         )
-        problem = MultiscaleProblem(
-            global_equation=Equation(0, -boundary),
-            local_provider=provider,
-            items=range(len(macro.cells)),
-            trace_size=skeleton.size,
-            coarse_sizes=(0,) * len(macro.cells),
-        )
+        problem = bind_problem(
+                      MeshHierarchy(macro, tuple(macro.submesh(cell, LOCAL_SUBDIVISIONS) for cell in range(len(macro.cells)))),
+                      bind_interface(skeleton, convention="normal"), provider,
+                      global_equation=Equation(0, -boundary), retained=0,
+                  )
         system = assemble(problem)
         gauge = system.mean_constraint(
             [data["pressure_weights"] for data in system.local_metadata], 0.0
         )
         solution = system.solve(constraints=[gauge])
-        meshes, velocity, pressure = [], [], []
-        for data, field in zip(system.local_metadata, solution.fields, strict=True):
-            nv = data["velocity_nodes"]
-            meshes.append(data["mesh"])
-            velocity.append(field[: 2 * nv].reshape(-1, 2))
-            pressure.append(field[2 * nv :])
+        velocity_fields = solution.field("velocity")
+        pressure_fields = solution.field("pressure")
+        meshes = tuple(field.mesh for field in velocity_fields)
+        velocity = tuple(field.portable_coefficients.reshape(-1, 2) for field in velocity_fields)
+        pressure = tuple(field.portable_coefficients for field in pressure_fields)
         pdegree = 2 if stabilized else 1
         metrics = flow_error_norms(
-            meshes, velocity, pressure, 2, pdegree, truth, order=ERROR_ORDER
+            meshes, velocity, pressure, 2, pdegree, truth, order=ERROR_ORDER,
+            named_velocity=velocity_fields, named_pressure=pressure_fields
         )
         assert abs(metrics["pressure_integral"]) < 1e-9
         assert metrics["macro_mass_defect"] < 1e-9
@@ -765,27 +751,27 @@ for n in (4, 8, 16):
 ```
 
 ```text
-Archived-state replay MHM Taylor-Hood 4 {'velocity_l2': 0.39299629379773865, 'pressure_l2': 0.11142492150892278, 'velocity_h1_seminorm': 7.656771279205774}
+MHM Taylor-Hood 4 {'velocity_l2': 0.3929962937977377, 'pressure_l2': 0.11142492150892233, 'macro_mass_defect': 1.0345457129856683e-15}
 ```
 
 ```text
-Archived-state replay MHM-USFEM 4 {'velocity_l2': 0.39292591769800667, 'pressure_l2': 0.11241240860432784, 'velocity_h1_seminorm': 7.660902758706779}
+MHM-USFEM 4 {'velocity_l2': 0.3929259176980058, 'pressure_l2': 0.11241240860432737, 'macro_mass_defect': 2.3566489471688046e-15}
 ```
 
 ```text
-Archived-state replay MHM Taylor-Hood 8 {'velocity_l2': 0.21599126611390576, 'pressure_l2': 0.06433041001089647, 'velocity_h1_seminorm': 6.399098664936228}
+MHM Taylor-Hood 8 {'velocity_l2': 0.21599126611390915, 'pressure_l2': 0.06433041001089805, 'macro_mass_defect': 1.3109630568608477e-15}
 ```
 
 ```text
-Archived-state replay MHM-USFEM 8 {'velocity_l2': 0.21596941590579544, 'pressure_l2': 0.06471481794611493, 'velocity_h1_seminorm': 6.399062717361086}
+MHM-USFEM 8 {'velocity_l2': 0.21596941590579988, 'pressure_l2': 0.06471481794611718, 'macro_mass_defect': 1.242278849233891e-15}
 ```
 
 ```text
-Archived-state replay MHM Taylor-Hood 16 {'velocity_l2': 0.13349651144454627, 'pressure_l2': 0.04487650670657389, 'velocity_h1_seminorm': 6.050133863860383}
+MHM Taylor-Hood 16 {'velocity_l2': 0.13349651144453092, 'pressure_l2': 0.044876506706566135, 'macro_mass_defect': 1.3172243244069515e-15}
 ```
 
 ```text
-Archived-state replay MHM-USFEM 16 {'velocity_l2': 0.1334906785885809, 'pressure_l2': 0.044959140245531506, 'velocity_h1_seminorm': 6.049084688057467}
+MHM-USFEM 16 {'velocity_l2': 0.13349067858857142, 'pressure_l2': 0.0449591402455254, 'macro_mass_defect': 1.6500422041080057e-15}
 ```
 
 ### Assess the published single-element degree family
@@ -804,15 +790,31 @@ $$
 
 
 
-We select these spaces explicitly, keeping the same analytical problem and global pressure gauge. The `velocity_degree` argument changes the UFL element, the nodal permutation and oriented trace integration together. There are no fine local submeshes in this experiment. The mesh parameter is the actual macrotriangle diameter $H=\sqrt2/n$.
+We select these spaces explicitly, keeping the same analytical problem and global pressure gauge. The `velocity_degree` argument changes the UFL element, its executed field representation and interface integration together. There are no fine local submeshes in this experiment. The mesh parameter is the actual macrotriangle diameter $H=\sqrt2/n$.
 
 The paper reports eventual rates $\ell+2$ for velocity $L^2$ and $\ell+1$ for pressure $L^2$ and broken velocity-gradient error, with loss of rates while the layer is unresolved. These are literature observations for this example; the measured slopes below determine which regime our resolutions reach. The inverse coefficient is computed from each executed polynomial space, without using the exact solution or fitted error. The historical numerical inverse constants and connectivity are not supplied by the article, so this is a comparison of its PDE and degree family rather than a literal reproduction of its plotted values.
+
+The default introductory profile uses $n=8,16,32$ for each of the three degrees.
+It measures the same PDE and published approximation family on three resolutions;
+these levels can remain preasymptotic, so they do not establish the eventual
+literature rates. The main Taylor–Hood/USFEM study at $n=4,8,16$, all three refined
+classical references, and the enriched face/local-space control are unchanged.
+
+Set `PYMHM_FULL_STUDY=1` before execution to acquire the original full
+qualification sequence: $n=8,16,32,64,128$ for $\ell=0$ and
+$n=8,16,32,64$ for $\ell=1,2$. The selected profile and actual levels are recorded
+in the numerical provenance; either profile computes its own fields and slopes.
 
 
 
 ```python
 published_cases, published_rows = {}, []
-PUBLISHED_LEVELS = {0: (8, 16, 32, 64, 128), 1: (8, 16, 32, 64), 2: (8, 16, 32, 64)}
+# The full qualification sequence remains available on dedicated resources.
+FULL_STUDY = os.environ.get("PYMHM_FULL_STUDY", "0") == "1"
+PUBLISHED_FULL_LEVELS = {0: (8, 16, 32, 64, 128), 1: (8, 16, 32, 64), 2: (8, 16, 32, 64)}
+PUBLISHED_LEVELS = PUBLISHED_FULL_LEVELS if FULL_STUDY else {ell: (8, 16, 32) for ell in (0, 1, 2)}
+STUDY_PROFILE = "full qualification" if FULL_STUDY else "introductory three-level profile"
+print("Single-element family profile:", STUDY_PROFILE, PUBLISHED_LEVELS)
 for ell in (0, 1, 2):
     degree = ell + 2
     for n in PUBLISHED_LEVELS[ell]:
@@ -822,8 +824,8 @@ for ell in (0, 1, 2):
         )
         boundary, fixed = boundary_data(skeleton, truth.velocity, {}, order=32)
         assert not fixed
-        provider = lambda cell, m=macro, s=skeleton, k=degree: local_brinkman(
-            cell,
+        provider = lambda local, m=macro, s=skeleton, k=degree: local_brinkman(
+            local,
             macro=m,
             skeleton=s,
             stabilized=True,
@@ -831,24 +833,21 @@ for ell in (0, 1, 2):
             velocity_degree=k,
             inverse_m=inverse_parameters[k],
         )
-        problem = MultiscaleProblem(
-            Equation(0, -boundary),
-            provider,
-            range(len(macro.cells)),
-            skeleton.size,
-            (0,) * len(macro.cells),
-        )
+        problem = bind_problem(
+                      MeshHierarchy(macro, tuple(macro.submesh(cell, 1) for cell in range(len(macro.cells)))),
+                      bind_interface(skeleton, convention="normal"), provider,
+                      global_equation=Equation(0, -boundary), retained=0,
+                  )
         system = assemble(problem)
         gauge = system.mean_constraint(
             [data["pressure_weights"] for data in system.local_metadata], 0.0
         )
         solution = system.solve(constraints=[gauge])
-        meshes, velocity, pressure = [], [], []
-        for data, field in zip(system.local_metadata, solution.fields, strict=True):
-            nv = data["velocity_nodes"]
-            meshes.append(data["mesh"])
-            velocity.append(field[: 2 * nv].reshape(-1, 2))
-            pressure.append(field[2 * nv :])
+        velocity_fields = solution.field("velocity")
+        pressure_fields = solution.field("pressure")
+        meshes = tuple(field.mesh for field in velocity_fields)
+        velocity = tuple(field.portable_coefficients.reshape(-1, 2) for field in velocity_fields)
+        pressure = tuple(field.portable_coefficients for field in pressure_fields)
         metrics = flow_error_norms(
             meshes, velocity, pressure, degree, degree, truth, order=ERROR_ORDER
         )
@@ -888,55 +887,43 @@ for ell in (0, 1, 2):
 ```
 
 ```text
-Archived-state replay MHM-USFEM single element 8 {'velocity_l2': 0.22784628836433202, 'pressure_l2': 0.07469651596792919, 'velocity_h1_seminorm': 8.296979333667746}
+Single-element family profile: introductory three-level profile {0: (8, 16, 32), 1: (8, 16, 32), 2: (8, 16, 32)}
 ```
 
 ```text
-Archived-state replay MHM-USFEM single element 16 {'velocity_l2': 0.13684729724035313, 'pressure_l2': 0.05087995811645622, 'velocity_h1_seminorm': 6.994233652188219}
+single-element USFEM 0 2 8 {'velocity_l2': 0.22784628836433193, 'pressure_l2': 0.07469651596792912, 'velocity_h1_seminorm': 8.296979333667744}
 ```
 
 ```text
-Archived-state replay MHM-USFEM single element 32 {'velocity_l2': 0.0642703947795504, 'pressure_l2': 0.03214003264757396, 'velocity_h1_seminorm': 5.418213098615583}
+single-element USFEM 0 2 16 {'velocity_l2': 0.13684729724035957, 'pressure_l2': 0.05087995811645847, 'velocity_h1_seminorm': 6.994233652188203}
 ```
 
 ```text
-Archived-state replay MHM-USFEM single element 64 {'velocity_l2': 0.021729712733901212, 'pressure_l2': 0.01792928967018477, 'velocity_h1_seminorm': 3.4372479449811952}
+single-element USFEM 0 2 32 {'velocity_l2': 0.06427039477956957, 'pressure_l2': 0.03214003264757917, 'velocity_h1_seminorm': 5.418213098615565}
 ```
 
 ```text
-Archived-state replay MHM-USFEM single element 128 {'velocity_l2': 0.006054998323804523, 'pressure_l2': 0.009140437835728916, 'velocity_h1_seminorm': 1.873876735477136}
+single-element USFEM 1 3 8 {'velocity_l2': 0.0600439083609486, 'pressure_l2': 0.03135005926922251, 'velocity_h1_seminorm': 4.615242249111755}
 ```
 
 ```text
-Archived-state replay MHM-USFEM single element 8 {'velocity_l2': 0.06004390836094864, 'pressure_l2': 0.03135005926922261, 'velocity_h1_seminorm': 4.615242249111757}
+single-element USFEM 1 3 16 {'velocity_l2': 0.021989892750822727, 'pressure_l2': 0.016737578281073574, 'velocity_h1_seminorm': 2.619558930811687}
 ```
 
 ```text
-Archived-state replay MHM-USFEM single element 16 {'velocity_l2': 0.02198989275082214, 'pressure_l2': 0.016737578281072817, 'velocity_h1_seminorm': 2.619558930811701}
+single-element USFEM 1 3 32 {'velocity_l2': 0.0055097437352279195, 'pressure_l2': 0.0069172685098203976, 'velocity_h1_seminorm': 1.1444781448074353}
 ```
 
 ```text
-Archived-state replay MHM-USFEM single element 32 {'velocity_l2': 0.0055097437352288605, 'pressure_l2': 0.006917268509819748, 'velocity_h1_seminorm': 1.1444781448074839}
+single-element USFEM 2 4 8 {'velocity_l2': 0.02413511833943785, 'pressure_l2': 0.01455038568775532, 'velocity_h1_seminorm': 2.497680308189383}
 ```
 
 ```text
-Archived-state replay MHM-USFEM single element 64 {'velocity_l2': 0.0009768229042508522, 'pressure_l2': 0.002206090244242449, 'velocity_h1_seminorm': 0.38195818732564596}
+single-element USFEM 2 4 16 {'velocity_l2': 0.005237527262253736, 'pressure_l2': 0.005781670625628373, 'velocity_h1_seminorm': 0.8887876488192209}
 ```
 
 ```text
-Archived-state replay MHM-USFEM single element 8 {'velocity_l2': 0.024135118339437992, 'pressure_l2': 0.014550385687755194, 'velocity_h1_seminorm': 2.497680308189385}
-```
-
-```text
-Archived-state replay MHM-USFEM single element 16 {'velocity_l2': 0.005237527262253043, 'pressure_l2': 0.005781670625628837, 'velocity_h1_seminorm': 0.8887876488192847}
-```
-
-```text
-Archived-state replay MHM-USFEM single element 32 {'velocity_l2': 0.0006940151358107591, 'pressure_l2': 0.0014560134273624015, 'velocity_h1_seminorm': 0.21153178616079596}
-```
-
-```text
-Archived-state replay MHM-USFEM single element 64 {'velocity_l2': 6.0896459900896785e-05, 'pressure_l2': 0.00024764408081809114, 'velocity_h1_seminorm': 0.03569022538699791}
+single-element USFEM 2 4 32 {'velocity_l2': 0.0006940151358108268, 'pressure_l2': 0.0014560134273614688, 'velocity_h1_seminorm': 0.21153178616086232}
 ```
 
 
@@ -953,8 +940,12 @@ for ell in (0, 1, 2):
         np.any(np.isclose(probe_macro.points[probe_macro.cells, 0], 1.0), axis=1)
     )
     cell_index = int(candidates[0])
+    probe_problem = bind_problem(
+        MeshHierarchy(probe_macro, tuple(probe_macro.submesh(cell, 1) for cell in range(len(probe_macro.cells)))),
+        bind_interface(probe_skeleton, convention="normal"), lambda local: None,
+    )
     standard = local_brinkman(
-        cell_index,
+        probe_problem.local_context(cell_index),
         macro=probe_macro,
         skeleton=probe_skeleton,
         stabilized=True,
@@ -964,7 +955,7 @@ for ell in (0, 1, 2):
         quadrature_degree=28,
     )
     higher = local_brinkman(
-        cell_index,
+        probe_problem.local_context(cell_index),
         macro=probe_macro,
         skeleton=probe_skeleton,
         stabilized=True,
@@ -1042,31 +1033,28 @@ for n in (4, 8, 16):
     )
     boundary, _ = boundary_data(skeleton, truth.velocity, {}, order=32)
     for method, stabilized in (("MHM Taylor-Hood", False), ("MHM-USFEM", True)):
-        provider = lambda cell, m=macro, s=skeleton, flag=stabilized: local_brinkman(
-            cell,
+        provider = lambda local, m=macro, s=skeleton, flag=stabilized: local_brinkman(
+            local,
             macro=m,
             skeleton=s,
             stabilized=flag,
             subdivisions=CONTROL_LOCAL_SUBDIVISIONS,
         )
-        problem = MultiscaleProblem(
-            Equation(0, -boundary),
-            provider,
-            range(len(macro.cells)),
-            skeleton.size,
-            (0,) * len(macro.cells),
-        )
+        problem = bind_problem(
+                      MeshHierarchy(macro, tuple(macro.submesh(cell, CONTROL_LOCAL_SUBDIVISIONS) for cell in range(len(macro.cells)))),
+                      bind_interface(skeleton, convention="normal"), provider,
+                      global_equation=Equation(0, -boundary), retained=0,
+                  )
         system = assemble(problem)
         gauge = system.mean_constraint(
             [data["pressure_weights"] for data in system.local_metadata], 0.0
         )
         solution = system.solve(constraints=[gauge])
-        meshes, u, p = [], [], []
-        for data, field in zip(system.local_metadata, solution.fields, strict=True):
-            nv = data["velocity_nodes"]
-            meshes.append(data["mesh"])
-            u.append(field[: 2 * nv].reshape(-1, 2))
-            p.append(field[2 * nv :])
+        velocity_fields = solution.field("velocity")
+        pressure_fields = solution.field("pressure")
+        meshes = tuple(field.mesh for field in velocity_fields)
+        u = tuple(field.portable_coefficients.reshape(-1, 2) for field in velocity_fields)
+        p = tuple(field.portable_coefficients for field in pressure_fields)
         pd = 2 if stabilized else 1
         metrics = flow_error_norms(meshes, u, p, 2, pd, truth, order=ERROR_ORDER)
         assert (
@@ -1108,27 +1096,27 @@ for n in (4, 8, 16):
 ```
 
 ```text
-Archived-state replay MHM Taylor-Hood 4 {'velocity_l2': 0.014890301506250278, 'pressure_l2': 0.00789782167356286, 'velocity_h1_seminorm': 2.5719509044515014}
+enriched MHM Taylor-Hood 4 {'velocity_l2': 0.014890301506250278, 'pressure_l2': 0.007897821673562662, 'velocity_h1_seminorm': 2.5719509044515014}
 ```
 
 ```text
-Archived-state replay MHM-USFEM 4 {'velocity_l2': 0.014716213371011533, 'pressure_l2': 0.010804803489100933, 'velocity_h1_seminorm': 2.5585030756287948}
+enriched MHM-USFEM 4 {'velocity_l2': 0.01471621337101159, 'pressure_l2': 0.010804803489100819, 'velocity_h1_seminorm': 2.5585030756287943}
 ```
 
 ```text
-Archived-state replay MHM Taylor-Hood 8 {'velocity_l2': 0.0035786076339778816, 'pressure_l2': 0.004422336103783826, 'velocity_h1_seminorm': 1.0444252326604222}
+enriched MHM Taylor-Hood 8 {'velocity_l2': 0.0035786076339810093, 'pressure_l2': 0.0044223361037836195, 'velocity_h1_seminorm': 1.044425232660424}
 ```
 
 ```text
-Archived-state replay MHM-USFEM 8 {'velocity_l2': 0.0035216124012716625, 'pressure_l2': 0.005566186665399676, 'velocity_h1_seminorm': 1.0307332924301822}
+enriched MHM-USFEM 8 {'velocity_l2': 0.003521612401268686, 'pressure_l2': 0.005566186665395186, 'velocity_h1_seminorm': 1.0307332924301857}
 ```
 
 ```text
-Archived-state replay MHM Taylor-Hood 16 {'velocity_l2': 0.0007287227636411195, 'pressure_l2': 0.0019685893704491884, 'velocity_h1_seminorm': 0.3863699116916899}
+enriched MHM Taylor-Hood 16 {'velocity_l2': 0.0007287227636964459, 'pressure_l2': 0.0019685893704412152, 'velocity_h1_seminorm': 0.3863699116916705}
 ```
 
 ```text
-Archived-state replay MHM-USFEM 16 {'velocity_l2': 0.0007188233882186943, 'pressure_l2': 0.0024270780275750655, 'velocity_h1_seminorm': 0.3784068165706804}
+enriched MHM-USFEM 16 {'velocity_l2': 0.0007188233882701563, 'pressure_l2': 0.0024270780275819134, 'velocity_h1_seminorm': 0.3784068165706137}
 ```
 
 ## 4. Independently assemble a classical Taylor–Hood baseline
@@ -1146,9 +1134,8 @@ from mpi4py import MPI
 
 references, reference_rows = {}, []
 for n in (32, 64, 128):
-    domain = dolfinx.mesh.create_unit_square(
-        MPI.COMM_SELF, n, n, diagonal=dolfinx.mesh.DiagonalType.right
-    )
+    reference_mesh = TriangleMesh.unit_square(n)
+    domain = create_native_mesh(reference_mesh)
     element = basix.ufl.mixed_element(
         [
             basix.ufl.element("Lagrange", "triangle", 2, shape=(2,)),
@@ -1217,15 +1204,10 @@ for n in (32, 64, 128):
         "pressure_integral": float(pressure_moment @ values),
     }
     assert abs(metrics["pressure_integral"]) < 1e-9
-    # Convert only by matching physical nodal coordinates, preserving native coefficients.
-    reference_mesh = TriangleMesh.unit_square(n)
-    _, unodes = nodal_space(reference_mesh, 2)
-    _, pnodes = nodal_space(reference_mesh, 1)
-    distance, ui = cKDTree(coordinates).query(unodes)
-    pdistance, pi = cKDTree(Q.tabulate_dof_coordinates()[:, :2]).query(pnodes)
-    assert max(distance.max(), pdistance.max()) < 1e-12
-    uvalues = values[vmap].reshape(-1, 2)[ui]
-    pvalues = values[pmap][pi]
+    # The space binding owns native/canonical mixed-field coordinate maps.
+    reference_binding = bind_space(reference_mesh, W)
+    uvalues = reference_binding.to_portable(values, component=0).reshape(-1, 2)
+    pvalues = reference_binding.to_portable(values, component=1)
     reference_state = REPORTS / f"brinkman-reference-n{n}-state.npz"
     np.savez_compressed(
         reference_state,
@@ -1254,15 +1236,15 @@ for n in (32, 64, 128):
 ```
 
 ```text
-Native reference archived-state replay 32 {'velocity_l2': 0.01086969678816265, 'pressure_l2': 0.0009276145766830697, 'velocity_h1_seminorm': 2.3347183820122956, 'divergence_l2': 0.15054432764508885, 'pseudostress_l2': 0.023384010133772205, 'macro_mass_defect': 3.4233683596229803e-15, 'pressure_integral': 5.204170427930421e-18}
+Conforming Taylor-Hood 32 {'velocity_l2': 0.010869696788162705, 'pressure_l2': 0.0009276145766863469, 'velocity_h1_seminorm': 2.3347183820122606, 'pressure_integral': 7.182839392716467e-18}
 ```
 
 ```text
-Native reference archived-state replay 64 {'velocity_l2': 0.001889858282391754, 'pressure_l2': 0.00012204647107488486, 'velocity_h1_seminorm': 0.7917985117231873, 'divergence_l2': 0.043609172103473745, 'pseudostress_l2': 0.00791986609728404, 'macro_mass_defect': 6.90569021237486e-15, 'pressure_integral': 9.107298248878237e-18}
+Conforming Taylor-Hood 64 {'velocity_l2': 0.001889858282391986, 'pressure_l2': 0.00012204647106742278, 'velocity_h1_seminorm': 0.7917985117231237, 'pressure_integral': -4.4086370838691824e-17}
 ```
 
 ```text
-Native reference archived-state replay 128 {'velocity_l2': 0.0002633185796563364, 'pressure_l2': 1.2303023348270949e-05, 'velocity_h1_seminorm': 0.21904523130827508, 'divergence_l2': 0.008399401623505071, 'pseudostress_l2': 0.0021905214138776565, 'macro_mass_defect': 1.3907850701178406e-14, 'pressure_integral': -1.973247953923618e-17}
+Conforming Taylor-Hood 128 {'velocity_l2': 0.00026331857965651665, 'pressure_l2': 1.2303023340059912e-05, 'velocity_h1_seminorm': 0.21904523130804715, 'pressure_integral': -1.1383106371561091e-16}
 ```
 
 ## 5. Measure convergence, without assuming the asymptotic regime
@@ -1290,7 +1272,9 @@ def plot_errors(H: np.ndarray, errors: dict, name: str) -> None:
         axes[1].semilogx(H[1:], rates(H, error), "o-", label=label)
     axes[0].set(xlabel="H", ylabel="Absolute error")
     axes[1].set(xlabel="H", ylabel="Observed rate")
-    for ax in axes:
+    for ax, samples in zip(axes, (H, H[1:]), strict=True):
+        ax.set_xticks(samples, labels=[f"{value:.3g}" for value in samples])
+        ax.tick_params(axis="x", which="minor", labelbottom=False)
         ax.invert_xaxis()
         ax.grid(True, which="both", alpha=0.25)
         ax.legend(fontsize=8)
@@ -1337,10 +1321,10 @@ for label, error in control_errors.items():
 
 
 ```text
-MHM Taylor-Hood: velocity_l2 rates: [0.863543 0.694171]
-MHM Taylor-Hood: pressure_l2 rates: [0.792499 0.519541]
-MHM-USFEM: velocity_l2 rates: [0.86343  0.694088]
-MHM-USFEM: pressure_l2 rates: [0.796633 0.525482]
+MHM Taylor-Hood: velocity_l2 rates: [0.86354273 0.69417093]
+MHM Taylor-Hood: pressure_l2 rates: [0.79249916 0.51954051]
+MHM-USFEM: velocity_l2 rates: [0.86343031 0.69408802]
+MHM-USFEM: pressure_l2 rates: [0.7966333  0.52548164]
 ```
 
 
@@ -1354,10 +1338,10 @@ MHM-USFEM: pressure_l2 rates: [0.796633 0.525482]
 
 
 ```text
-enriched MHM Taylor-Hood: velocity_l2 rates: [2.056903 2.295956]
-enriched MHM Taylor-Hood: pressure_l2 rates: [0.836646 1.167646]
-enriched MHM-USFEM: velocity_l2 rates: [2.063098 2.292527]
-enriched MHM-USFEM: pressure_l2 rates: [0.956912 1.197469]
+enriched MHM Taylor-Hood: velocity_l2 rates: [2.05690269 2.29595641]
+enriched MHM Taylor-Hood: pressure_l2 rates: [0.83664612 1.16764647]
+enriched MHM-USFEM: velocity_l2 rates: [2.06309846 2.29252688]
+enriched MHM-USFEM: pressure_l2 rates: [0.95691164 1.1974688 ]
 ```
 
 
@@ -1395,7 +1379,7 @@ for ell in (0, 1, 2):
 
 
 ```text
-single-element 0 measured rates {'velocity_l2': [0.7354939276379825, 1.0903407022496943, 1.5644852318622104, 1.8434706366101912], 'pressure_l2': [0.5539434706637575, 0.6627260885287539, 0.84205306242556, 0.9719831535399036], 'velocity_h1_seminorm': [0.24642020056837913, 0.3683488561625103, 0.6565632120369513, 0.8752278689562141]}
+single-element 0 measured rates {'velocity_l2': [0.7354939276379141, 1.090340702249332], 'pressure_l2': [0.5539434706636922, 0.6627260885285837], 'velocity_h1_seminorm': [0.2464202005683821, 0.36834885616251173]}
 ```
 
 
@@ -1404,7 +1388,7 @@ single-element 0 measured rates {'velocity_l2': [0.7354939276379825, 1.090340702
 
 
 ```text
-single-element 1 measured rates {'velocity_l2': [1.4491773196159405, 1.9967834438954037, 2.495816285169247], 'pressure_l2': [0.9053773675339313, 1.2748164388242034, 1.6487106507911338], 'velocity_h1_seminorm': [0.8170824574643543, 1.194634004755977, 1.5832032918717553]}
+single-element 1 measured rates {'velocity_l2': [1.449177319615901, 1.9967834438956886], 'pressure_l2': [0.9053773675338614, 1.2748164388241332], 'velocity_h1_seminorm': [0.8170824574643614, 1.1946340047560302]}
 ```
 
 
@@ -1413,7 +1397,7 @@ single-element 1 measured rates {'velocity_l2': [1.4491773196159405, 1.996783443
 
 
 ```text
-single-element 2 measured rates {'velocity_l2': [2.2041761472034196, 2.915846816246164, 3.510536859586928], 'pressure_l2': [1.331499067445725, 1.9894627625289507, 2.555683616897678], 'velocity_h1_seminorm': [1.4906781569714473, 2.0709642997189994, 2.5672735512254334]}
+single-element 2 measured rates {'velocity_l2': [2.20417614720322, 2.915846816246214], 'pressure_l2': [1.3314990674458533, 1.9894627625297587], 'velocity_h1_seminorm': [1.4906781569715497, 2.0709642997184434]}
 ```
 
 ## 6. Inspect velocity, pressure, error and one-sided profiles
@@ -1774,6 +1758,9 @@ def execution_provenance(notebook: str) -> dict:
             name: importlib.metadata.version(name)
             for name in ("numpy", "scipy", "fenics-basix", "fenics-dolfinx", "pymhm")
         },
+        "study_profile": STUDY_PROFILE,
+        "single_element_levels": PUBLISHED_LEVELS,
+        "full_qualification_levels": PUBLISHED_FULL_LEVELS,
         "basis_convention": "Basix equispaced Pk in PyMHM nodal_space order; no local nullspace modes",
         "reference_project": "DOLFINx",
         "reference_source_url": "https://docs.fenicsproject.org/dolfinx/v0.9.0/python/",
@@ -1851,7 +1838,7 @@ for ell in (0, 1, 2):
 
 
 ```text
-49427
+29124
 ```
 
 

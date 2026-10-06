@@ -2,11 +2,13 @@
 
 Follow the numbered steps: state the variational problem, choose the local and trace spaces, declare the local and global equations, solve, and inspect the physical fields.
 
-Build a plane-strain primal MHM model explicitly with UFL energy forms, `LocalEquations`, a global `Equation`, and `MultiscaleProblem`. A heterogeneous solid under horizontal extension creates nonuniform strains that a small classical mesh misses. MHM keeps a small global mesh while resolving the material inside each macroelement.
+The main workflow is **meshes → spaces → local equations → global balance → assemble → solve → fields and errors**. `MeshHierarchy` associates macro and local meshes; `bind_interface` and `LocalContext` own supported numbering, geometric orientation and native coordinate conversions. The mathematical forms, physical trace meaning, local modes and gauge remain explicit in the cells below. Fully manual/custom spaces use the same numerical owners; see the [custom-interface notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/custom_interface.ipynb).
+
+Build a plane-strain primal MHM model explicitly with UFL energy forms, a `LocalContext`, a global `Equation`, and `bind_problem`. A heterogeneous solid under horizontal extension creates nonuniform strains that a small classical mesh misses. MHM keeps a small global mesh while resolving the material inside each macroelement.
 
 The baseline is separately assembled classical conforming displacement Galerkin, on three successively refined meshes. There is no analytical solution for this physical case. We measure the baseline's own refinement in displacement and physical Cauchy stress before comparing methods.
 
-Start with `pixi run --locked -e introduction jupyter lab` in the repository root. Every physical coefficient, form, local kernel, coordinate map, reference, evaluation and plot is defined below. Optional DOLFINx/UFL imports belong to this notebook environment; the portable PyMHM core does not import them.
+Start with `pixi run --locked -e introduction jupyter lab` in the repository root. Every physical coefficient, form, local kernel, reference, evaluation and plot is defined below. Mesh-associated bindings provide the supported coordinate maps. Optional DOLFINx/UFL imports belong to this notebook environment; the portable PyMHM core does not import them.
 
 The local rigid-motion complement and global traction coupling follow [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046). The oscillatory material and extension loading define an original application here.
 
@@ -15,6 +17,8 @@ The local rigid-motion complement and global traction coupling follow [Harder, M
 from pathlib import Path
 import sys
 from dataclasses import dataclass
+from collections.abc import Callable
+from functools import partial
 from typing import Any, Sequence, Mapping
 import numpy as np
 from numpy.typing import NDArray
@@ -41,6 +45,9 @@ from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.linalg.linear import solve_linear
 
 Array = NDArray[np.float64]
+from pymhm import MeshHierarchy, LocalContext, bind_interface, bind_problem
+from pymhm.backends.spaces import bind_space
+
 ```
 
 ## 1. Declare the material and physical loading
@@ -100,46 +107,25 @@ print({"macro_triangles": len(macro.cells), "material_wavelength": 1/8,
 {'macro_triangles': 32, 'material_wavelength': 0.125, 'material_contrast': 20.085536923187668, 'local_degree': 3, 'local_refinement': 16, 'trace_degree': 1, 'trace_segments': 4}
 ```
 
-## 2. Keep native and portable coefficient coordinates explicit
+## 2. Declare the finite element and bind it to the local mesh
 
-DOLFINx assembles UFL in its own nodal order. PyMHM trace kernels use the portable equispaced `nodal_space` order. The coordinate map below checks a bijection before translating vector pairings and reconstructed coefficients. Two displacement components are interleaved at each scalar node.
+Choose a vector Basix/UFL element for displacement. `local.native_space` binds it to the current local mesh and provides its native function space. PyMHM owns the topology and coefficient conversions, so the local UFL forms do not contain numbering or orientation arrays. The later physical-norm and archive sections state the executed nodal basis explicitly.
 
 The mesh is the actual independent local refinement of a macro triangle. No global refined mesh is passed to MHM. Native forms use `MPI.COMM_SELF`; the generic form compiler copies their assembled arrays and releases native assembly resources.
 
 
 ```python
 def native_vector_space(mesh: TriangleMesh, degree: int) -> tuple[Any, Any, NDArray[np.int64]]:
-    """Create serial native equispaced Pk vectors and map the portable nodal basis.
-
-    ``mapping[portable_vector_dof]`` is its native vector coefficient index.
-    Components are interleaved at each scalar node in both conventions. A
-    bijection and physical coordinate equality are checked before use.
-    """
+    """Bind a user-declared Basix element; PyMHM owns topology and coefficient order."""
     import basix
     import basix.ufl
-    import ufl
-    from dolfinx import fem, mesh as native_mesh
-    from mpi4py import MPI
-
-    coordinate_element = basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))
-    domain = native_mesh.create_mesh(
-        MPI.COMM_SELF, mesh.cells, mesh.points, ufl.Mesh(coordinate_element)
-    )
     element = basix.ufl.element(
         "Lagrange", "triangle", degree,
-        lagrange_variant=basix.LagrangeVariant.equispaced, shape=(2,)
+        lagrange_variant=basix.LagrangeVariant.equispaced, shape=(2,),
     )
-    space = fem.functionspace(domain, element)
-    _, points = nodal_space(mesh, degree)
-    native_points = space.tabulate_dof_coordinates()[:, :2]
-    distances, scalar_map = cKDTree(native_points).query(points)
-    tolerance = 512 * np.finfo(float).eps * max(1., np.max(np.abs(points)))
-    if np.any(distances > tolerance) or len(np.unique(scalar_map)) != len(points):
-        raise ValueError("native and portable equispaced coordinate bases are not bijective")
-    if space.dofmap.index_map_bs != 2 or len(native_points) != len(points):
-        raise ValueError("the native space must have interleaved two-component nodal blocks")
-    mapping = (2 * scalar_map[:, None] + np.arange(2)).reshape(-1)
-    return domain, space, mapping
+    binding = bind_space(mesh, element)
+    return binding.mesh, binding.space, binding.mapping
+
 
 def rigid_modes(points: Array, center: Array) -> Array:
     """Return two translations and centered counterclockwise rotation, shape (n,2,3)."""
@@ -173,10 +159,10 @@ The trace contains the restrictions of rigid motions: degree one. The local degr
 | Weak-form term | Visible code |
 | --- | --- |
 | $2\mu\varepsilon(u):\varepsilon(v)+\lambda\operatorname{div}u\operatorname{div}v$ | UFL expression `a` |
-| $\langle s_{TF}\lambda,v\rangle$ | signed `trace_coupling`, then native coordinate map |
+| $\langle s_{TF}\lambda,v\rangle$ | `local.trace_pairings(lambda phi, ds: inner(phi,v)*ds)` |
 | Rigid kernel | `kernel` |
 | Physical rigid moments | `columns` of UFL linear forms |
-| Global displacement continuity | `c=-b.T` |
+| Global displacement continuity | independent UFL pairing `-inner(phi,u)*ds`, with `axis="rows"` |
 
 
 ```python
@@ -189,10 +175,17 @@ class ElasticityLocalProvider:
     refinement: int
     quadrature_degree: int = 16
 
-    def __call__(self, cell: int) -> LocalEquations:
+    def __call__(self, local: LocalContext) -> LocalEquations:
         """Declare plane-strain UFL energy, negative Cauchy traction and rigid moments."""
-        fine = self.macro.submesh(cell,self.refinement)
-        domain, space, mapping = native_vector_space(fine,self.degree)
+        cell, fine = local.cell, local.mesh
+        import basix
+        import basix.ufl
+        element = basix.ufl.element(
+            "Lagrange", "triangle", self.degree,
+            lagrange_variant=basix.LagrangeVariant.equispaced, shape=(2,),
+        )
+        binding = local.native_space(element)
+        domain, space, mapping = binding.mesh, binding.space, binding.mapping
         u,v = ufl.TrialFunction(space),ufl.TestFunction(space)
         x = ufl.SpatialCoordinate(domain)
         mu = ufl.exp(1.5*ufl.sin(16*np.pi*x[0])*ufl.sin(16*np.pi*x[1]))
@@ -205,16 +198,16 @@ class ElasticityLocalProvider:
         _,nodes = nodal_space(fine,self.degree)
         center = self.macro.points[self.macro.cells[cell]].mean(axis=0)
         portable_kernel = rigid_modes(nodes,center).reshape(-1,3)
-        kernel = np.empty_like(portable_kernel);kernel[mapping]=portable_kernel
+        kernel = binding.to_native(portable_kernel)
         rigid = (ufl.as_vector((1.,0.)),ufl.as_vector((0.,1.)),
                  ufl.as_vector((-(x[1]-center[1]),x[0]-center[0])))
         moments = columns(*(ufl.inner(v,mode)*dx for mode in rigid))
-        portable_b = np.kron(trace_coupling(
-            self.macro,cell,fine,self.skeleton,self.degree),np.eye(2))
-        b = np.empty_like(portable_b);b[mapping]=portable_b
-        return LocalEquations(
-            a=a,L=np.zeros(len(mapping)),b=b,c=-b.T,
-            dofs=self.skeleton.cell_dofs(cell),kernel=kernel,moments=moments,
+        local.field("displacement", binding)
+        b = local.trace_pairings(lambda phi, ds: ufl.inner(phi, v) * ds)
+        c = local.trace_pairings(lambda phi, ds: -ufl.inner(phi, u) * ds, axis="rows")
+        return local.equations(
+            a=a,L=np.zeros(len(mapping)),b=b,c=c,
+            kernel=kernel,moments=moments,
             metadata=(fine,mapping))
 ```
 
@@ -228,14 +221,19 @@ Only the macroface and three retained rigid coordinates per macroelement enter t
 ```python
 boundary,fixed = boundary_data(skeleton,extension_boundary,order=8)
 provider = ElasticityLocalProvider(macro,skeleton,local_degree,local_refinement)
-problem = MultiscaleProblem(
-    Equation(0,np.r_[-boundary,np.zeros(3*len(macro.cells))]),provider,
-    range(len(macro.cells)),skeleton.size,(3,)*len(macro.cells),fixed=fixed)
+hierarchy = MeshHierarchy(
+    macro, tuple(macro.submesh(cell, local_refinement) for cell in range(len(macro.cells)))
+)
+problem = bind_problem(
+    hierarchy, bind_interface(skeleton, convention="normal"), provider,
+    global_equation=lambda global_problem: Equation(0, global_problem.trace_load(-boundary)),
+    retained=3, fixed=fixed,
+)
 system = assemble(problem,execution=ExecutionConfig("serial",native_threads=1))
 solution = system.solve()
-local_meshes = tuple(record[0] for record in system.local_metadata)
-local_values = tuple(field[record[1]].reshape(-1,2)
-                     for field,record in zip(solution.fields,system.local_metadata,strict=True))
+displacement_fields = solution.field("displacement")
+local_meshes = tuple(field.mesh for field in displacement_fields)
+local_values = tuple(field.portable_coefficients.reshape(-1, 2) for field in displacement_fields)
 print({"global_unknowns":system.matrix.shape[0],
        "largest_local_unknowns":max(len(field) for field in solution.fields),
        "original_equations_relative_residual":solution.raw_residual})
@@ -244,11 +242,17 @@ singular_values=np.linalg.svd(first_local.coupling,compute_uv=False)
 print({"local_trace_pairing_smallest_singular_value":float(singular_values[-1]),
        "local_trace_pairing_condition":float(singular_values[0]/singular_values[-1])})
 assert singular_values[-1]>1e-12*singular_values[0]
+# Named fields carry their mesh and executed basis; no index map is needed to evaluate.
+displacement_fields = solution.field("displacement")
+first_point = macro.points[macro.cells[0]].mean(axis=0, keepdims=True)
+print("First macrocell displacement at its center:", displacement_fields[0].evaluate(first_point))
+
 ```
 
 ```text
-{'global_unknowns': 992, 'largest_local_unknowns': 2450, 'original_equations_relative_residual': 3.0752561574997656e-16}
+{'global_unknowns': 992, 'largest_local_unknowns': 2450, 'original_equations_relative_residual': 3.9615770861266295e-16}
 {'local_trace_pairing_smallest_singular_value': 0.010000445141455936, 'local_trace_pairing_condition': 2.585612165689401}
+First macrocell displacement at its center: [[1.75336324e-03 2.24948452e-05]]
 ```
 
 ## 5. Physical evaluation and norms in the executed bases
@@ -271,6 +275,11 @@ Raw primal stress is symmetric but is not claimed to belong to $H(\mathrm{div})$
 
 
 ```python
+def evaluate_named_displacement(field: Any, points: Array) -> tuple[Array, Array]:
+    """Read named displacement and its raw physical Jacobian from the executed space."""
+    return field.values_and_gradient(points)
+
+# The explicit Basix evaluator below also supplies the independent classical reference.
 @dataclass
 class TriangleVectorEvaluator:
     """Evaluate a conforming Pk vector in its executed portable nodal basis.
@@ -321,7 +330,7 @@ class BrokenVectorEvaluator:
     """Evaluate independent macrocell vectors, retaining one-sided interface values."""
 
     macro: TriangleMesh
-    local_evaluators: tuple[TriangleVectorEvaluator, ...]
+    local_evaluators: tuple[Callable[[Array], tuple[Array, Array]], ...]
 
     def __post_init__(self) -> None:
         """Build a locator on the actual macro triangles."""
@@ -465,9 +474,9 @@ def plot_field_panels(
 
 
 ```python
-mhm_evaluator = BrokenVectorEvaluator(macro,tuple(
-    TriangleVectorEvaluator(mesh,local_degree,values)
-    for mesh,values in zip(local_meshes,local_values,strict=True)))
+mhm_evaluator = BrokenVectorEvaluator(
+    macro, tuple(partial(evaluate_named_displacement, field) for field in displacement_fields)
+)
 # Resolve every reference/local interface on a common 256×256 square grid.
 error_points,error_weights = triangle_grid_quadrature(256,order=5)
 ```
@@ -540,12 +549,12 @@ print("Higher-order norm quadrature:",quadrature_check)
 
 ```text
 Successive reference differences: [{'displacement_L2': 1.3539381724721906e-06, 'stress_L2': 0.0013045673465273515, 'energy': 0.0006527778985510608, 'displacement_relative': 0.00023390865144668044, 'stress_relative': 0.04279971823989789, 'energy_relative': 0.039921389253835954}, {'displacement_L2': 1.5905888722220743e-07, 'stress_L2': 0.00035507806879778723, 'energy': 0.0001757575145861932, 'displacement_relative': 2.7479279830560456e-05, 'stress_relative': 0.011651067995652334, 'energy_relative': 0.010749275556865832}]
-MHM versus fine reference: {'displacement_L2': 2.792229078427532e-05, 'stress_L2': 0.004200499227306419, 'energy': 0.0021457904346996637, 'displacement_relative': 0.004823901734578804, 'stress_relative': 0.13782969553352817, 'energy_relative': 0.13123588328032462}
+MHM versus fine reference: {'displacement_L2': 2.7922290784276454e-05, 'stress_L2': 0.004200499227306708, 'energy': 0.002145790434699797, 'displacement_relative': 0.004823901734579, 'stress_relative': 0.13782969553353766, 'energy_relative': 0.13123588328033275}
 Coarse Galerkin versus fine reference: {'displacement_L2': 0.00011155141106296178, 'stress_L2': 0.03027893648710682, 'energy': 0.011243157713672135, 'displacement_relative': 0.01927180865920849, 'stress_relative': 0.9935334757276298, 'energy_relative': 0.687628069150321}
 ```
 
 ```text
-Higher-order norm quadrature: {'displacement_L2': 2.7922290784275325e-05, 'stress_L2': 0.004200499227307706, 'energy': 0.0021457904346996264, 'displacement_relative': 0.004823901734578807, 'stress_relative': 0.13782969553357086, 'energy_relative': 0.13123588328032293}
+Higher-order norm quadrature: {'displacement_L2': 2.7922290784276464e-05, 'stress_L2': 0.004200499227307993, 'energy': 0.0021457904346997582, 'displacement_relative': 0.004823901734579004, 'stress_relative': 0.13782969553358027, 'energy_relative': 0.13123588328033098}
 ```
 
 ### Baseline refinement increments
@@ -600,7 +609,7 @@ print("Reference uncertainty/MHM difference ratios:",
 
 
 ```text
-Reference uncertainty/MHM difference ratios: {'displacement_L2': 0.005696484162101156, 'stress_L2': 0.0845323495096753, 'energy': 0.0819080520371474}
+Reference uncertainty/MHM difference ratios: {'displacement_L2': 0.005696484162100925, 'stress_L2': 0.08453234950966948, 'energy': 0.08190805203714233}
 ```
 
 ## 7. See why a multiscale discretization helps
@@ -639,7 +648,7 @@ The baseline is finite, so its successive displacement and stress differences re
 
 This tutorial verifies a heterogeneous, compressible plane-strain application. It does not claim locking-free nearly incompressible behavior, fine-cell stress conservation, or reproduction of a particular published material experiment. Global dimensions alone do not establish a timing gain; local setup and response solves are part of the computational work.
 
-The explicit coefficient map, declared rigid basis, physical traction sign, moment rows, Dirichlet convention and approximation spaces make the numerical result auditable. Changing the material or boundary condition requires revisiting those choices before interpreting a small algebraic residual.
+The bound coefficient convention, declared rigid basis, physical traction sign, moment rows, Dirichlet convention and approximation spaces make the numerical result auditable. Changing the material or boundary condition requires revisiting those choices before interpreting a small algebraic residual.
 
 ## References
 

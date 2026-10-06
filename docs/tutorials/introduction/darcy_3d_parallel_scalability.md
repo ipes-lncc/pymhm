@@ -2,6 +2,8 @@
 
 Follow the numbered steps: state the variational problem, choose the local and trace spaces, declare the local and global equations, solve, and inspect the physical fields.
 
+The main workflow is **meshes → spaces → local equations → global balance → assemble → solve → fields and errors**. `MeshHierarchy` associates macro and local meshes; `bind_interface` and `LocalContext` own supported numbering, geometric orientation and native coordinate conversions. The mathematical forms, physical trace meaning, local modes and gauge remain explicit in the cells below. Fully manual/custom spaces use the same numerical owners; see the [custom-interface notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/custom_interface.ipynb).
+
 This tutorial writes an anisotropic multiscale Darcy problem directly in UFL,
 then declares its local and global MHM equations. Generic native workspaces
 reuse geometry, spaces and compiled form resources across compatible local calls. We compare the physical
@@ -76,6 +78,11 @@ OUTPUT = ROOT / "build/introduction/darcy_3d_workspace_scalability"
 OUTPUT.mkdir(parents=True, exist_ok=True)
 PUBLISHED = ROOT / "benchmarks/results/execution/introduction-3d-workspace-lu-20261005/results.json"
 plt.rcParams.update({"figure.dpi": 110, "font.size": 10})
+
+from pymhm import MeshHierarchy, LocalContext, bind_interface, bind_problem
+from pymhm.backends.spaces import bind_space
+
+from pymhm import TraceBinding
 
 ```
 
@@ -423,7 +430,7 @@ def create_cell_workspace(extent: np.ndarray, *, refinement: int, trace_degree: 
         raise
 
 
-def assemble_cell_equations(record: CellWorkspace, macro: HexMesh, cell: int,
+def assemble_cell_equations(record: CellWorkspace, local: LocalContext,
                             lower: np.ndarray, upper: np.ndarray, *, refinement: int,
                             trace_degree: int, data: DarcyData, builds: int,
                             started: float, key: tuple[Any, ...]) -> LocalEquations:
@@ -443,12 +450,10 @@ def assemble_cell_equations(record: CellWorkspace, macro: HexMesh, cell: int,
     f = record.native.assemble("load")
     record.assembly_count += 1
     width = (trace_degree+1)**2
-    signs = np.repeat(macro.signs[cell], width)
-    B = record.unsigned_coupling*signs
-    dofs = np.concatenate([face*width+np.arange(width) for face in macro.cell_faces[cell]])
+    B = record.unsigned_coupling
     coordinates = record.relative_nodes+lower
     moments = record.physical_moments.copy()
-    return LocalEquations(a=A, L=f, b=B, c=-B.T, dofs=dofs,
+    return local.equations(a=A, L=f, b=B, c=-B.T,
         kernel=np.ones((len(coordinates), 1)), moments=moments,
         metadata={"coordinates": coordinates, "bounds": np.vstack((lower, upper)),
                   "refinement": refinement, "fine_cells": refinement**3,
@@ -485,6 +490,37 @@ That property would need rechecking for a Robin or material-weighted trace form.
 
 
 ```python
+@dataclass(frozen=True)
+class TensorFaceInterface:
+    """Declare Cartesian tensor-face coordinates through the custom-space contract.
+
+    The native workspace integrates unsigned face shapes. This adapter alone
+    declares their canonical/outward-normal coefficient transport. Mathematical
+    signs in the local and global equations remain explicit in their forms.
+    """
+
+    mesh: HexMesh
+    degree: int
+
+    @property
+    def size(self) -> int:
+        """Count the independent Qk coefficients on every global macroface."""
+        return len(self.mesh.faces) * (self.degree + 1) ** 2
+
+    def binding(self, cell: int) -> TraceBinding:
+        """Declare numbering, basis identity and both geometric coefficient maps."""
+        width = (self.degree + 1) ** 2
+        dofs = np.concatenate([
+            face * width + np.arange(width) for face in self.mesh.cell_faces[cell]
+        ])
+        outward = np.diag(np.repeat(self.mesh.signs[cell], width))
+        return TraceBinding(
+            dofs, outward,
+            basis_id=f"Cartesian face Q{self.degree}; increasing physical tangent axes",
+            require_injective=True,
+        )
+
+
 @dataclass
 class LocalProvider:
     """Assemble independent Q1 Neumann cells through isolated native workspaces.
@@ -574,9 +610,14 @@ class LocalProvider:
         self._thread_state.builds = index
         return record
 
-    def __call__(self, cell: int) -> LocalEquations:
+    def local_mesh(self, cell: int) -> HexMesh:
+        """Describe the matching portable fine mesh without allocating native objects."""
+        return self.macro.submesh(cell, self.refinement)[0]
+
+    def __call__(self, local: LocalContext) -> LocalEquations:
         """Assemble this cell's A/f and declare oriented coupling and constant kernel."""
         started = time.perf_counter()
+        cell = local.cell
         corners = self.macro.points[self.macro.cells[cell]]
         lower, upper = corners.min(axis=0), corners.max(axis=0)
         extent = upper-lower
@@ -591,7 +632,7 @@ class LocalProvider:
         cache = self._thread_cache()
         record = cache.get(key, lambda: self._build(extent))
         current_data = self.data if self.cell_data is None else self.cell_data.get(cell, self.data)
-        return assemble_cell_equations(record, self.macro, cell, lower, upper,
+        return assemble_cell_equations(record, local, lower, upper,
             refinement=self.refinement, trace_degree=self.trace_degree, data=current_data,
             builds=self._thread_state.builds, started=started, key=key)
 
@@ -609,7 +650,12 @@ also provide sufficient independent boundary DOFs for the selected trace.
 def audit_local(provider: LocalProvider, cell: int = 0) -> dict[str, float]:
     """Check local identities and close the audit provider on success or failure."""
     try:
-        equations = provider(cell)
+        problem = bind_problem(
+            MeshHierarchy(provider.macro, provider.local_mesh),
+            TensorFaceInterface(provider.macro, provider.trace_degree), provider,
+            global_equation=Equation(0, 0), retained=1,
+        )
+        equations = problem.local_provider(cell)
         matrix, coupling = equations.a, equations.b
         ones = np.ones(matrix.shape[0])
         lower, upper = equations.metadata["bounds"]
@@ -686,13 +732,14 @@ import os
 import threading
 from typing import Any
 import numpy as np
-from pymhm.core.equations import LocalEquations, compile_form
+from pymhm.core.equations import Equation, LocalEquations, compile_form
+from pymhm import MeshHierarchy, LocalContext, TraceBinding, bind_problem
 from pymhm.fem.reference import tensor_lagrange_tabulation
 from pymhm.meshes.hexahedron import HexMesh
 """
 export_started = time.perf_counter()
 worker_source = WORKER_IMPORTS + "\n" + literal_definitions(("DarcyData", "symbolic_data", "CellWorkspace",
-        "create_cell_workspace", "assemble_cell_equations", "LocalProvider")) + "\n"
+        "create_cell_workspace", "assemble_cell_equations", "TensorFaceInterface", "LocalProvider")) + "\n"
 worker_sha256 = hashlib.sha256(worker_source.encode()).hexdigest()
 spawn_directory = tempfile.TemporaryDirectory(prefix="pymhm_darcy3d_spawn_")
 atexit.register(spawn_directory.cleanup)
@@ -712,7 +759,7 @@ print({"worker_source_sha256": worker_sha256, "one_time_export_import_seconds": 
 ```
 
 ```text
-{'worker_source_sha256': 'c96a3a4560e890ead6fb45459b8d84b6e022a8a6deb32a95885387f2e6c6f13f', 'one_time_export_import_seconds': 0.03449813462793827}
+{'worker_source_sha256': '2481d5bf97719f70c264358a77eb371b6fb87311e81ee650f88250434ba3b41d', 'one_time_export_import_seconds': 0.034636493772268295}
 ```
 
 ## 5. Declare the global problem and complete timer
@@ -768,9 +815,12 @@ def run_mhm(fine_n: int, *, workers: int = 1, backend: str = "process", solver: 
             period=data.period, anisotropy=data.anisotropy)
         provider = provider_type(macro, fine_n//macro_count, data=provider_data,
             trace_degree=trace_degree, quadrature_degree=quadrature_degree)
-        width = (trace_degree+1)**2
-        problem = MultiscaleProblem(Equation(0, 0), provider, range(len(macro.cells)),
-                                   len(macro.faces)*width, (1,)*len(macro.cells))
+        interface_type = TensorFaceInterface if backend == "serial" else worker_module.TensorFaceInterface
+        problem = bind_problem(
+            MeshHierarchy(macro, provider.local_mesh),
+            interface_type(macro, trace_degree), provider,
+            global_equation=Equation(0, 0), retained=1,
+        )
         prepared = time.perf_counter()
         system = assemble(problem,
             execution=ExecutionConfig(backend, workers, native_threads=1,
@@ -1412,35 +1462,35 @@ if RUN_SMALL_REPRODUCTION or RUN_LARGE_CAMPAIGN:
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'scipy', 'total_seconds': 2.7804926857352257, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'scipy', 'total_seconds': 3.885816188529134, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'scipy', 'total_seconds': 1.707984283566475, 'physical_errors': {'pressure_L2': 0.001658052529591906, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.001658052529591906, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'scipy', 'total_seconds': 1.6759192124009132, 'physical_errors': {'pressure_L2': 0.001658052529591906, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.001658052529591906, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'pyamg', 'total_seconds': 5.304720060899854, 'physical_errors': {'pressure_L2': 0.001658052529591889, 'flux_L2': 0.19812974250262508, 'pressure_L2_per_sqrt_volume': 0.001658052529591889, 'flux_L2_per_sqrt_volume': 0.19812974250262508, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'pyamg', 'total_seconds': 6.110676731914282, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 8.496439818292856, 'physical_errors': {'pressure_L2': 0.001658052529591889, 'flux_L2': 0.19812974250262508, 'pressure_L2_per_sqrt_volume': 0.001658052529591889, 'flux_L2_per_sqrt_volume': 0.19812974250262508, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 9.506132928654552, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'scipy', 'total_seconds': 0.5736630503088236, 'physical_errors': {'pressure_L2': 0.0014456896117105641, 'flux_L2': 0.19568823135874996, 'pressure_L2_per_sqrt_volume': 0.0014456896117105641, 'flux_L2_per_sqrt_volume': 0.19568823135874996, 'pressure_relative_L2': 0.0040890277117259285, 'flux_relative_L2': 0.05657212369630176, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.2571761369096059, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
+{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'scipy', 'total_seconds': 0.5961810238659382, 'physical_errors': {'pressure_L2': 0.0014456896117105641, 'flux_L2': 0.19568823135874996, 'pressure_L2_per_sqrt_volume': 0.0014456896117105641, 'flux_L2_per_sqrt_volume': 0.19568823135874996, 'pressure_relative_L2': 0.0040890277117259285, 'flux_relative_L2': 0.05657212369630176, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.2571761369096059, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'scipy', 'total_seconds': 2.132846150547266, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'scipy', 'total_seconds': 2.9537327270954847, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 6.976768065243959, 'physical_errors': {'pressure_L2': 0.001658052529591889, 'flux_L2': 0.19812974250262508, 'pressure_L2_per_sqrt_volume': 0.001658052529591889, 'flux_L2_per_sqrt_volume': 0.19812974250262508, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 7.837804462760687, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 0.4799548014998436, 'physical_errors': {'pressure_L2': 0.0014456896117183515, 'flux_L2': 0.1956882313588107, 'pressure_L2_per_sqrt_volume': 0.0014456896117183515, 'flux_L2_per_sqrt_volume': 0.1956882313588107, 'pressure_relative_L2': 0.004089027711747954, 'flux_relative_L2': 0.05657212369631932, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.25717613690960167, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
+{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 0.5095803253352642, 'physical_errors': {'pressure_L2': 0.001445689611718351, 'flux_L2': 0.1956882313588107, 'pressure_L2_per_sqrt_volume': 0.001445689611718351, 'flux_L2_per_sqrt_volume': 0.1956882313588107, 'pressure_relative_L2': 0.0040890277117479525, 'flux_relative_L2': 0.05657212369631932, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.25717613690960167, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
 ```
 
 The weak study below changes domain length, rather than refining the local mesh or changing the coefficient wavelength. Each workflow includes its larger global assembly and solve.
@@ -2979,9 +3029,17 @@ class FullGpuAssembleOnly:
 
     provider: Any
 
+    def __post_init__(self) -> None:
+        """Bind the same custom interface once in each worker's portable state."""
+        self.problem = bind_problem(
+            MeshHierarchy(self.provider.macro, self.provider.local_mesh),
+            TensorFaceInterface(self.provider.macro, self.provider.trace_degree), self.provider,
+            global_equation=Equation(0, 0), retained=1,
+        )
+
     def __call__(self, cell: int) -> LocalAssembly:
         """Delegate form assembly and return validated portable coefficients."""
-        compiled = compile_local_equations(self.provider(cell))
+        compiled = compile_local_equations(self.problem.local_provider(cell))
         return LocalAssembly(compiled.problem, compiled.metadata)
 
     def prepare_runtime(self) -> None:
@@ -3109,7 +3167,7 @@ from pymhm.core.equations import compile_local_equations
 """
 full_gpu_source = FULL_GPU_WORKER_IMPORTS + "\n" + literal_definitions((
     "DarcyData", "symbolic_data", "CellWorkspace", "create_cell_workspace",
-    "assemble_cell_equations", "LocalProvider", "FullGpuAssembleOnly",
+    "assemble_cell_equations", "TensorFaceInterface", "LocalProvider", "FullGpuAssembleOnly",
     "FullGpuResponseArrays", "condense_full_gpu_shard")) + "\n"
 full_gpu_source_sha256 = hashlib.sha256(full_gpu_source.encode()).hexdigest()
 full_gpu_module_name = "pymhm_darcy3d_fullgpu_" + full_gpu_source_sha256[:16]
@@ -3125,7 +3183,7 @@ print({"full_gpu_worker_source_sha256": full_gpu_source_sha256})
 ```
 
 ```text
-{'full_gpu_worker_source_sha256': '48cabb0e75baf4b89d3cefe99f39c0cc8dd8d92e236e1f13dec7810e77cd7923'}
+{'full_gpu_worker_source_sha256': 'd76caffd974cfa0ece848d508f49fc7ec507d9f9230f03d7c69ab7d1682badb2'}
 ```
 
 ### Assemble shared faces once in the coordinator
