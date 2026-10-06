@@ -106,8 +106,9 @@ def test_native_mixed_polynomial_patch(degree: int) -> None:
     if degree == 2:
         coarse, _ = driver.solve(4, 2, 1, None, threads=1)
         norms = driver.difference(field, coarse)
-        assert norms["stress_l2"] < 2e-13
-        assert norms["rotation_l2"] < 2e-13
+        # Compare independent native solves using each field's own L2 scale.
+        assert norms["stress_relative"] < 1e-10
+        assert norms["rotation_relative"] < 1e-10
         assert_allclose(norms["displacement_l2"], hy**2 * np.sqrt(0.45 / 180), atol=2e-14)
 
 

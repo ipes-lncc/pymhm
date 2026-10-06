@@ -1,6 +1,15 @@
 # Changelog
 
-## Unreleased
+## 1.1.0
+
+<!-- pymhm:generated:start -->
+<!-- Source: v1.0.1..36a3d7936352a20b69dccee16aa5d74ccfc2e50c -->
+
+### Features
+
+- simplify multiscale formulations with mesh and space contexts (#5) ([36a3d79](https://github.com/ipes-lncc/pymhm/commit/36a3d7936352a20b69dccee16aa5d74ccfc2e50c))
+
+<!-- pymhm:generated:end -->
 
 ### Features
 
