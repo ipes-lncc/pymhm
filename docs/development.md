@@ -268,6 +268,12 @@ See [GitHub's workflow rerun rules](https://docs.github.com/en/actions/how-tos/m
 If a release failed before publishing any distributions or release artifacts,
 the same version can be used again. Confirm that the version has no published
 files on PyPI and no GitHub Release, then commit the correction on `main`.
+Also check the project's upload history: [PyPI permanently reserves uploaded
+distribution filenames](https://pypi.org/help/#file-name-reuse), even when their
+files or project have been deleted. A public `404` does not establish that a
+filename has never been used. A deleted distribution cannot be uploaded again
+under the same filename; publishing the standard wheel and source archive then
+requires a version whose filenames have not previously been uploaded.
 Keep the prepared version metadata and CHANGELOG section; do not run
 `release-prepare` again, because that command rejects an existing release tag.
 For an unpublished `v0.1.0`, run these commands in Bash after committing:

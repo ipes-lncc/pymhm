@@ -159,6 +159,9 @@ tag with the guarded push described in the
 [distribution guide](docs/development.md#automatic-publication).
 Keep published release tags immutable. The release workflow already declares
 the token permissions needed by its reusable workflows and publishing jobs.
+PyPI permanently reserves previously uploaded filenames, including deleted
+files. A missing public release is insufficient to establish that its filenames
+are available; consult the upload history before retrying the same version.
 
 Before the first publication, configure the PyPI trusted publisher with owner
 `ipes-lncc`, repository `pymhm`, workflow `publish-pypi.yml` and environment
