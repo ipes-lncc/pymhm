@@ -40,8 +40,8 @@ def _compare(trace_degree: int, segments_count: int) -> tuple[dict, np.ndarray]:
         domain = dolfinx.mesh.create_mesh(
             MPI.COMM_SELF,
             fine.cells,
-            fine.points,
-            ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
+            x=fine.points,
+            e=ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
         )
         space = dolfinx.fem.functionspace(
             domain,

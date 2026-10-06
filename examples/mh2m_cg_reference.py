@@ -187,7 +187,7 @@ def solve(
         axis=1,
     ).reshape(-1, 3)
     geometry = ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,)))
-    domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, cells, points, geometry)
+    domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, cells, x=points, e=geometry)
     element = basix.ufl.element(
         "Lagrange", "triangle", 3, lagrange_variant=basix.LagrangeVariant.equispaced
     )

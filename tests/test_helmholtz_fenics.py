@@ -44,7 +44,7 @@ def test_acoustic_local_operators_match_native_ufl(degree, rectangle, pml):
     kind = "quadrilateral" if rectangle else "triangle"
     coordinate = ufl.Mesh(basix.ufl.element("Lagrange", kind, 1, shape=(2,)))
     cells = fine.cells[:, [0, 1, 3, 2]] if rectangle else fine.cells
-    domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, cells, fine.points, coordinate)
+    domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, cells, x=fine.points, e=coordinate)
     space = dolfinx.fem.functionspace(
         domain,
         basix.ufl.element(

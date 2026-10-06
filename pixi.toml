@@ -104,11 +104,13 @@ platforms = ["linux-64", "linux-64-cuda"]
 freefem = { version = ">=4.13,<5", build = "*nompi*" }
 
 [feature.fem]
-platforms = ["linux-64", "osx-64", "osx-arm64"]
+platforms = ["linux-64", "win-64", "osx-64", "osx-arm64"]
 
 [feature.fem.dependencies]
 fenics-dolfinx = ">=0.9,<0.11"
 mpi4py = ">=4"
+
+[feature.fem.target.unix.dependencies]
 petsc4py = ">=3.22"
 
 [feature.introduction.dependencies]
@@ -178,6 +180,9 @@ coverage-run = "python scripts/run_tests.py --coverage"
 test-cov = { cmd = "python scripts/check_coverage.py build/reports/coverage/coverage.json", depends-on = ["coverage-run"] }
 test-parallel = "python scripts/run_tests.py"
 test-fem = "python scripts/run_tests.py -- -m 'fem and not mpi and not gpu'"
+test-fem-portable = "python scripts/run_tests.py -- tests/test_fenics_portability.py"
+fem-portable-check = "python tests/fenics_portability_probe.py --solver scipy --report build/reports/fem-portable-scipy.json"
+fem-portable-pardiso-check = "python tests/fenics_portability_probe.py --solver pypardiso --report build/reports/fem-portable-pardiso.json"
 test-fem-cov = "python scripts/run_tests.py --coverage --report-dir build/reports/fem-coverage -- -m 'fem and not mpi and not gpu'"
 test-mpi = "python scripts/run_tests.py -- -m 'mpi and not gpu'"
 test-meshing = "python scripts/run_tests.py -- -m meshing"
@@ -333,6 +338,7 @@ packaging = { features = ["native", "dev", "packaging"], solve-group = "packagin
 release = { features = ["native", "dev", "release"], solve-group = "release" }
 meshing = { features = ["native", "dev", "test", "meshing"], solve-group = "meshing" }
 fem = { features = ["dev", "test", "fem"], solve-group = "fem" }
+fem-intel = { features = ["dev", "test", "fem", "intel"], solve-group = "fem-intel" }
 remeshing = { features = ["dev", "test", "freefem"], solve-group = "remeshing" }
 intel = { features = ["dev", "test", "intel"], solve-group = "intel" }
 gpu = { features = ["dev", "test", "gpu"], solve-group = "gpu" }

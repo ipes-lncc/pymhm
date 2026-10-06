@@ -46,7 +46,9 @@ def test_bdm2_darcy_matches_independent_global_dolfinx():
         cells.extend(inverse[offset + mesh.cells])
         offset += len(mesh.points)
     coordinate_element = ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,)))
-    domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, np.array(cells), points, coordinate_element)
+    domain = dolfinx.mesh.create_mesh(
+        MPI.COMM_SELF, np.array(cells), x=points, e=coordinate_element
+    )
     element = basix.ufl.mixed_element(
         [basix.ufl.element("BDM", "triangle", 2), basix.ufl.element("DG", "triangle", 1)]
     )

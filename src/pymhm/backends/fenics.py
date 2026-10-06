@@ -7,41 +7,32 @@ pairs, or macroface orientation. Local meshes must live on one MPI rank.
 
 from __future__ import annotations
 
-from collections.abc import Iterable
-from importlib import import_module
+from collections.abc import Iterable, Mapping
 from types import ModuleType
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 from scipy import sparse
 
+from pymhm.backends.forms import EntityMaps, _require, _zero, assemble_form
 from pymhm.core.contracts import LocalProblem
 from pymhm.core.validation import FloatArray
 from pymhm.core.variational import LocalForm, compile_local_forms
 
 
-def _require(module: str) -> ModuleType:
-    """Load optional finite-element modules only when an adapter is requested."""
-    try:
-        return import_module(module)
-    except (ImportError, OSError) as exc:
-        raise ImportError(
-            f"Cannot load {module}. Install compatible DOLFINx, Basix and UFL "
-            "packages, or use the Pixi fem environment."
-        ) from exc
-
-
-def _assemble_linear(form: Any, fem: ModuleType, space: Any, size: int) -> FloatArray:
+def _assemble_linear(
+    form: Any,
+    space: Any,
+    size: int,
+    options: Mapping[str, Any],
+) -> FloatArray:
     """Assemble one matching linear form, including UFL's simplified zero form."""
     arguments = form.arguments()
-    if not arguments and all(integral.integrand() == 0 for integral in form.integrals()):
-        return np.zeros(size)
-    if len(arguments) != 1 or arguments[0].ufl_function_space() != space:
+    if (not arguments and not _zero(form)) or (
+        arguments and (len(arguments) != 1 or arguments[0].ufl_function_space() != space)
+    ):
         raise ValueError("every load, trace and constraint form must use the same test space")
-    vector = fem.assemble_vector(fem.form(form))
-    if np.iscomplexobj(vector.array):
-        raise ValueError("the MHM local adapter currently requires real-valued forms")
-    return np.array(vector.array, dtype=float, copy=True)
+    return cast(FloatArray, assemble_form(form, shape=(size,), **options))
 
 
 def from_ufl(
@@ -53,6 +44,9 @@ def from_ufl(
     kernel: Any = None,
     constraint_forms: Iterable[Any] | None = None,
     coarse_basis: Any = None,
+    form_compiler_options: Mapping[str, Any] | None = None,
+    jit_options: Mapping[str, Any] | None = None,
+    entity_maps: EntityMaps | None = None,
 ) -> LocalProblem:
     """Assemble UFL forms as ``A u + B lambda = f`` on a serial local mesh.
 
@@ -81,39 +75,48 @@ def from_ufl(
         global system. Mutually exclusive with ``kernel``; these vectors need
         not be null vectors. Constraint moments must pair nonsingularly with
         the retained basis, as checked by ``LocalProblem``.
+    form_compiler_options, jit_options
+        Compiler and JIT settings forwarded to each form through
+        :func:`pymhm.backends.forms.assemble_form`. The dictionaries are copied.
+        Supply suitable assembly quadrature for the operator and all pairings.
+    entity_maps
+        Explicit cross-mesh integration maps forwarded to DOLFINx: mesh/index
+        mappings for DOLFINx 0.9 or native ``EntityMap`` sequences for 0.10.
+        The container is copied; its declared correspondence is not inferred.
 
     Notes
     -----
-    Assembly uses DOLFINx's native CSR interface, without a PETSc requirement.
+    Assembly uses DOLFINx's native CSR/vector interfaces and real binary64
+    kernels, without a PETSc requirement. Solver selection belongs to the
+    existing local condensation and global algebra APIs, after assembly.
     ``MPI.COMM_SELF`` is the recommended mesh communicator; any communicator
     containing exactly one rank is accepted. MPI-distributed local meshes and
     complex forms are rejected. Local problems may subsequently be sent to CPU
-    workers because their arrays no longer hold DOLFINx or MPI objects.
+    workers because their independent array copies no longer hold DOLFINx or
+    MPI objects. Native buffers and compiled-form references are released after
+    each form is assembled. Argument-preserving UFL zero forms are supported.
 
     No essential boundary condition is applied. In an H(div) formulation, a
     prescribed normal velocity is an essential condition and must be expressed
     with an appropriate augmented form or eliminated before local condensation.
     Merely attaching boundary pressure forms changes the hybrid formulation.
     """
-    fem = _require("dolfinx.fem")
     arguments = a.arguments()
     if len(arguments) != 2:
         raise ValueError("a must be a bilinear UFL form")
     space = arguments[0].ufl_function_space()
     if arguments[1].ufl_function_space() != space:
         raise ValueError("trial and test spaces must be the same")
-    compiled = fem.form(a)
-    if compiled.mesh.comm.size != 1:
-        raise ValueError("local DOLFINx meshes must use a single-rank communicator (COMM_SELF)")
-    assembled = fem.assemble_matrix(compiled)
-    assembled.scatter_reverse()
-    matrix = sparse.csr_matrix(assembled.to_scipy(), copy=True)
-    if np.iscomplexobj(matrix.data):
-        raise ValueError("the MHM local adapter currently requires real-valued forms")
+    options: dict[str, Any] = {
+        "form_compiler_options": form_compiler_options,
+        "jit_options": jit_options,
+        "entity_maps": entity_maps,
+    }
+    matrix = cast(sparse.csr_matrix, assemble_form(a, **options))
     size = matrix.shape[0]
     traces = list(trace_forms)
     coupling = (
-        np.column_stack([_assemble_linear(form, fem, space, size) for form in traces])
+        np.column_stack([_assemble_linear(form, space, size, options) for form in traces])
         if traces
         else np.empty((size, 0))
     )
@@ -121,7 +124,7 @@ def from_ufl(
     if constraint_forms is not None:
         forms = list(constraint_forms)
         constraints = (
-            np.column_stack([_assemble_linear(form, fem, space, size) for form in forms])
+            np.column_stack([_assemble_linear(form, space, size, options) for form in forms])
             if forms
             else np.empty((size, 0))
         )
@@ -131,7 +134,7 @@ def from_ufl(
     return LocalProblem(
         matrix,
         coupling,
-        _assemble_linear(load, fem, space, size),
+        _assemble_linear(load, space, size, options),
         dofs,
         kernel=kernel,
         constraints=constraints,

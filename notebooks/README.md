@@ -167,6 +167,7 @@ pixi run --locked -e introduction notebooks-run introduction --timeout 1800
 
 | Notebook | Methods |
 | --- | --- |
+| [DOLFINx/UFL with independent sparse solvers](foundations/operators/dolfinx_sparse_solvers.ipynb) | Native CSR assembly without PETSc; independent SciPy/PARDISO local/global solves; primal P1 Darcy; signed normal-flux traces; integral pressure moments; serial/spawn execution |
 | [Custom interface spaces](foundations/operators/custom_interface.ipynb) | MeshHierarchy/bind_problem; structural InterfaceSpace/TraceBinding; nonorthogonal bases; manual numbering/orientation; physical-field equivalence |
 | [Start here: Local and global forms, providers and ordered batches](foundations/operators/local_global_providers.ipynb) | LocalEquations/Equation; primal and mixed local forms; serial/thread/spawn batches; external local solver |
 | [Start here: User-written UFL local and global equations](foundations/operators/ufl_provider.ipynb) | UFL/DOLFINx forms; independent row and column pairings; COMM_SELF local assembly |

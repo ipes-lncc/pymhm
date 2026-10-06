@@ -119,7 +119,7 @@ def test_usfem_matrix_and_force_match_independent_ufl(
         independent_bound = _independent_inverse_constants(fine, degree)
         assert_allclose(native_bound, independent_bound, atol=2e-14, rtol=2e-12)
         geometry = ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,)))
-        domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, fine.cells, fine.points, geometry)
+        domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, fine.cells, x=fine.points, e=geometry)
         # The native nodal Pk basis is equispaced. Basix's default GLL points
         # differ at degree three, requiring a basis change instead of a permutation.
         variant = basix.LagrangeVariant.equispaced

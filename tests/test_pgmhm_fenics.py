@@ -41,7 +41,7 @@ def test_native_uncondensed_petrov_galerkin_and_enrichment(degree):
     for cell in range(len(mesh.cells)):
         fine = mesh.submesh(cell, 1)
         coordinate = ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,)))
-        domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, fine.cells, fine.points, coordinate)
+        domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, fine.cells, x=fine.points, e=coordinate)
         element = basix.ufl.element(
             "Lagrange", "triangle", degree, lagrange_variant=basix.LagrangeVariant.equispaced
         )

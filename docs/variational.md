@@ -243,6 +243,10 @@ elimination, gauge, quadrature and transpose relations remain explicit.
 The higher-level context applies its declared interface orientation maps once.
 Cross-mesh integration requires explicit DOLFINx `entity_maps`; use
 `assemble_form` or a custom compiler to pass these maps and compilation options.
+DOLFINx 0.9 uses a mapping from native meshes to entity-index arrays; DOLFINx
+0.10 uses a sequence of native `EntityMap` objects. The adapter copies the
+supplied container to a dictionary or list respectively. Mesh correspondence,
+trace orientation and the underlying map data remain explicitly supplied inputs.
 Zero forms whose arguments were simplified away require an explicit shape.
 Complex-valued blocks, nonzero rank-zero functionals and higher-rank forms are
 outside this compiler contract. Declare complex formulations in explicit real

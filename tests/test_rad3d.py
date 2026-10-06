@@ -280,8 +280,8 @@ def test_native_dolfinx_tetrahedral_rad_operator(degree, stabilization):
     domain = dolfinx.mesh.create_mesh(
         mpi.COMM_SELF,
         mesh.cells,
-        mesh.points,
-        ufl.Mesh(basix.element("Lagrange", "tetrahedron", 1, shape=(3,))),
+        x=mesh.points,
+        e=ufl.Mesh(basix.element("Lagrange", "tetrahedron", 1, shape=(3,))),
     )
     space = dolfinx.fem.functionspace(
         domain,

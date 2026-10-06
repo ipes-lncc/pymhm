@@ -33,8 +33,8 @@ activation, a repository checkout and Pixi are unnecessary. See the
 [installation guide](installation.md) for extras and upgrades.
 The pip installation provides the coefficient/Basix core. Native UFL assembly
 requires a separate DOLFINx environment; see
-[native UFL assembly](installation.md#native-ufl-assembly) for the supported
-Linux/macOS setup.
+[native UFL assembly](installation.md#native-ufl-assembly) and the
+[native FEM scope](#native-fem-scope) below for installation and qualification.
 
 ### Repository development with Pixi
 
@@ -63,8 +63,9 @@ pixi run --locked -e intel pytest -q tests/test_windows_portability.py
 
 Use `pixi run --locked -e notebooks jupyter lab` for portable notebooks.
 The coefficient-based notebooks in `notebooks/foundations/operators` introduce
-the generic API. Cells calling the DOLFINx adapter require a supported native
-FEM environment; the `introduction` FEM environment is not a native Windows profile.
+the generic API. Cells calling the DOLFINx adapter require the native FEM stack
+and a working JIT compiler. Notebook sections that explicitly select PETSc or
+distributed PETSc reference solves require that separate runtime.
 See the [notebook catalogue](tutorials.md) for the physical examples and methods.
 
 Pip commands resolve their own environment. Use Pixi's locked profiles
@@ -86,7 +87,8 @@ contract. Basix remains the reference-element provider.
 | Krylov methods | `cg`, `minres`, `gmres`, with their stated operator conditions |
 | CPU algebraic multigrid | Optional `pyamg`; available in the locked test/notebook profiles |
 | Ordered serial, thread and spawn-process local execution | Portable core |
-| Native DOLFINx/PETSc adapter and PETSc/MPI workflows | Current FEM/HPC profiles exclude Windows |
+| Native UFL/DOLFINx local assembly | Locked `fem` profile; native CSR/vector assembly with a single-rank local mesh |
+| PETSc/MUMPS solvers and distributed PETSc assembly | Separate optional capability; the locked Windows FEM stack does not supply PETSc |
 | CUDA solvers | Separate optional GPU profile; CPU portability does not qualify Windows GPU execution |
 
 Choose local and global solvers explicitly with `SolverConfig` as explained in
@@ -143,12 +145,67 @@ each factorization. This host-call policy follows the
 
 ## Native FEM scope
 
-The current PyMHM DOLFINx integration uses the locked Unix FEM stack and PETSc
-objects. Its native Windows execution is not qualified by the portable-core
-or PARDISO tests. Use the Linux profiles in WSL2 for those notebooks and adapters.
+The optional UFL/DOLFINx adapter assembles matrices and vectors with DOLFINx's
+native interfaces and copies them to SciPy/NumPy. It does not import
+`dolfinx.fem.petsc` or require `petsc4py`. DOLFINx 0.9 and 0.10 are supported
+by the adapter; use the platform's resolution in the checked-in lockfile.
+Both the generic form compiler and the local hybrid adapter require a
+single-rank mesh communicator. Create local meshes with `MPI.COMM_SELF`,
+including inside spawned workers. DOLFINx still requires a compatible MPI
+runtime even when the numerical solve uses SciPy or PARDISO.
 
-The current [DOLFINx installation guidance](https://github.com/FEniCS/dolfinx/blob/main/README.md)
-also describes native Windows conda packages in beta testing, without PETSc or
-`petsc4py`, and a Visual Studio requirement for just-in-time compilation. That
-upstream route is distinct from PyMHM's current adapter and is not advertised
-as a verified PyMHM native Windows FEM backend.
+Choose the local and global solvers independently of assembly. The default
+`SolverConfig(local_solver="scipy", global_solver="scipy")` uses SuperLU;
+optional PARDISO and the other solvers retain their matrix and platform
+requirements. A selected `petsc` backend requires PETSc/MUMPS and does not
+fall back silently. Distributed PETSc assembly and the three-dimensional
+introductory notebook's distributed reference solves require the Unix PETSc
+stack; WSL2 can supply that environment on a Windows host.
+
+For a checkout, prepare and test the native Windows FEM profile in PowerShell:
+
+```powershell
+pixi install --locked -e fem
+pixi run --locked -e fem python -c "import dolfinx, ufl; from mpi4py import MPI; print(dolfinx.__version__, MPI.Get_library_version())"
+pixi run --locked -e fem test-fem-portable
+pixi run --locked -e fem fem-portable-check
+```
+
+The locked `fem-intel` profile combines DOLFINx/UFL with Intel MKL PARDISO
+on Windows and Linux. Use `SolverConfig(local_solver="pypardiso", global_solver="scipy")`
+for local PARDISO factors, or choose `global_solver="pypardiso"` separately
+when the global matrix satisfies that backend's requirements:
+
+```powershell
+pixi install --locked -e fem-intel
+pixi run --locked -e fem-intel test-fem-portable
+pixi run --locked -e fem-intel fem-portable-pardiso-check
+```
+
+The required native checks fail when their selected backend is unavailable
+and write `build/reports/fem-portable-scipy.json` or
+`build/reports/fem-portable-pardiso.json`. The records identify the platform,
+dependency and solver-package versions, blocked PETSc imports, solver selections
+and analytical field/residual controls. `source_revision` identifies Git HEAD;
+`executed_source_sha256` identifies the actual tracked `src/pymhm` file contents,
+including working-tree changes. The recorded source snapshot must remain unchanged
+throughout the control. DOLFINx PETSc capability flags are recorded separately
+from the absent PETSc Python modules. CI artifacts also identify their workflow revision.
+
+The [DOLFINx/UFL sparse-solver notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/dolfinx_sparse_solvers.ipynb)
+uses the `introduction-intel` notebook profile to demonstrate independent
+local/global solver choices, signed Darcy traces, pressure moments and spawn
+workers. Execute it with
+`pixi run --locked -e introduction-intel notebooks-run foundations/operators/dolfinx_sparse_solvers.ipynb`.
+Its native Windows execution requires its own qualification receipt.
+
+Install Visual Studio with its C/C++ compiler and Windows SDK, and use a
+developer terminal that makes the compiler available to DOLFINx/FFCx JIT.
+The [official DOLFINx installation guidance](https://github.com/FEniCS/dolfinx/blob/main/README.md#conda)
+describes its Windows Conda packages as beta and requires Visual Studio;
+those packages do not include PETSc or `petsc4py`.
+
+The Tests workflow configures actual Windows FEM assembly and solve checks,
+including a process that blocks PETSc imports. Check the reports for the
+identified revision before claiming native execution. Portable-core tests,
+PARDISO tests, Linux FEM execution and lockfile resolution are separate evidence.

@@ -27,6 +27,9 @@ spaces and coefficient data. A worker can retain its own bindings and assembly
 buffers while updating geometry, Functions and Constants between local problems.
 Each thread owns the mesh and coefficient data it mutates; sharing compiled code
 uses explicit bindings to those separate native objects.
+All bound argument and coefficient spaces belong to the workspace's integration
+mesh. Explicit `entity_maps` use DOLFINx 0.9 mappings or 0.10 native `EntityMap`
+sequences; this version convention preserves the same workspace mesh contract.
 Each assembly returns independent arrays; material matrices, loads and solver
 factors remain specific to each local problem. Native integration controls cover
 single-mesh scalar, vector and mixed forms in 2D, tensor diffusion in 3D, and

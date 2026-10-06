@@ -52,8 +52,8 @@ def test_mixed_boundary_operator_and_nonzero_load_match_ufl(physical_diffusion):
     domain = dolfinx.mesh.create_mesh(
         MPI.COMM_SELF,
         fine.cells,
-        fine.points,
-        ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
+        x=fine.points,
+        e=ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
     )
     space = dolfinx.fem.functionspace(
         domain,

@@ -766,6 +766,19 @@
       "kind": "study"
     },
     {
+      "path": "notebooks/foundations/operators/dolfinx_sparse_solvers.ipynb",
+      "family": "foundations/operators",
+      "title": "DOLFINx/UFL with independent sparse solvers",
+      "methods": [
+        "native CSR assembly without PETSc",
+        "independent SciPy/PARDISO local and global solvers",
+        "primal P1 Darcy with signed normal-flux traces",
+        "constant local kernel and integral pressure moments",
+        "serial and spawn-process execution"
+      ],
+      "kind": "introductory"
+    },
+    {
       "path": "notebooks/foundations/operators/custom_interface.ipynb",
       "family": "foundations/operators",
       "title": "Custom interface spaces: own the basis, numbering and orientation",

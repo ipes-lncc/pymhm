@@ -30,8 +30,8 @@ def test_native_fitted_tensor_transmission_matrix(degree) -> None:
         domain = dolfinx.mesh.create_mesh(
             mpi.COMM_SELF,
             fine.cells,
-            fine.points,
-            ufl.Mesh(basix.ufl.element("Lagrange", "tetrahedron", 1, shape=(3,))),
+            x=fine.points,
+            e=ufl.Mesh(basix.ufl.element("Lagrange", "tetrahedron", 1, shape=(3,))),
         )
         space = dolfinx.fem.functionspace(
             domain,

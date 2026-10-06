@@ -27,8 +27,8 @@ def test_mapped_piola_operator_against_native_ufl(degree):
     domain = dolfinx.mesh.create_mesh(
         MPI.COMM_SELF,
         mesh.cells[:, [0, 4, 2, 6, 1, 5, 3, 7]],
-        mesh.points,
-        ufl.Mesh(basix.ufl.element("Lagrange", "hexahedron", 1, shape=(3,))),
+        x=mesh.points,
+        e=ufl.Mesh(basix.ufl.element("Lagrange", "hexahedron", 1, shape=(3,))),
     )
     vector = basix.ufl.element("RT", "hexahedron", degree + 1)
     scalar = basix.ufl.element(

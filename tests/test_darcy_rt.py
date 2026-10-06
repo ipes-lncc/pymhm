@@ -164,7 +164,7 @@ def test_native_dolfinx_classical_rt_fields(degree):
 
     mesh = TriangleMesh.unit_square(2)
     geometry = ufl.Mesh(basix.element("Lagrange", "triangle", 1, shape=(2,)))
-    domain = dolfinx.mesh.create_mesh(mpi.COMM_SELF, mesh.cells, mesh.points, geometry)
+    domain = dolfinx.mesh.create_mesh(mpi.COMM_SELF, mesh.cells, x=mesh.points, e=geometry)
     element = basix.mixed_element(
         [basix.element("RT", "triangle", degree + 1), basix.element("DG", "triangle", degree)]
     )

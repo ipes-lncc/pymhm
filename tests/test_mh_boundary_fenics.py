@@ -55,7 +55,9 @@ def test_native_full_robin_system_with_physical_neumann_data(boundary):
         operators, loads, means = [], [], []
         for cell, fine in enumerate(result.local_meshes):
             coordinate = ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,)))
-            domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, fine.cells, fine.points, coordinate)
+            domain = dolfinx.mesh.create_mesh(
+                MPI.COMM_SELF, fine.cells, x=fine.points, e=coordinate
+            )
             element = basix.ufl.element(
                 "Lagrange", "triangle", 2, lagrange_variant=basix.LagrangeVariant.equispaced
             )

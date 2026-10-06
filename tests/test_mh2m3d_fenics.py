@@ -34,7 +34,7 @@ def test_native_full_three_field_neumann_system():
         )
         fine = result.local_meshes[0]
         coordinate = ufl.Mesh(basix.ufl.element("Lagrange", "tetrahedron", 1, shape=(3,)))
-        domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, fine.cells, fine.points, coordinate)
+        domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, fine.cells, x=fine.points, e=coordinate)
         space = dolfinx.fem.functionspace(
             domain,
             basix.ufl.element(

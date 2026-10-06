@@ -13,6 +13,14 @@ bound forward error for an ill-conditioned operator. Singular direct solves,
 iteration failures, nonfinite values and incompatible dimensions raise errors.
 Requested optional solvers never silently fall back to another backend.
 
+UFL/DOLFINx assembly and numerical solver selection are independent. The
+native FEM adapters return SciPy/NumPy operators without importing PETSc;
+`SolverConfig(local_solver="scipy", global_solver="scipy")` uses the same
+portable solvers as coefficient-defined problems. Optional solver choices
+retain the restrictions below. MPI runtime requirements for DOLFINx meshes
+remain even when SciPy or PARDISO performs the solve; distributed PETSc assembly
+is a separate capability.
+
 A small residual alone does not establish uniqueness: an unstable trace/local
 space combination can have a compatible right-hand side and an almost singular
 skeleton. SciPy LU therefore equilibrates rows and columns explicitly and checks

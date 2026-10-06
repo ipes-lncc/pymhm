@@ -51,7 +51,7 @@ def _native_mesh(fine: TriangleMesh, stack: tuple[Any, Any, Any, Any]) -> Any:
     dolfinx, basix_ufl, ufl, mpi = stack
     coordinate = ufl.Mesh(basix_ufl.element("Lagrange", "triangle", 1, shape=(2,)))
     return dolfinx.mesh.create_mesh(
-        mpi.COMM_SELF, fine.cells.copy(), fine.points.copy(), coordinate
+        mpi.COMM_SELF, fine.cells.copy(), x=fine.points.copy(), e=coordinate
     )
 
 

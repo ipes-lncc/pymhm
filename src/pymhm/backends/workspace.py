@@ -12,6 +12,7 @@ from collections import OrderedDict
 from collections.abc import Callable, Hashable, Mapping
 from dataclasses import dataclass, field
 from hashlib import sha256
+from inspect import signature
 from threading import get_ident
 from typing import Any, Generic, Protocol, TypeVar
 
@@ -19,7 +20,9 @@ import numpy as np
 from scipy import sparse
 
 from pymhm.backends.forms import (
+    EntityMaps,
     _assemble_compiled,
+    _copy_entity_maps,
     _form_domains,
     _real_coefficients,
     _require,
@@ -232,11 +235,11 @@ def _integration_domains(form: Any, mesh: Any, fem: Any) -> dict[Any, Any]:
                 dim = mesh.topology.dim
                 mesh.topology.create_connectivity(dim - 1, dim)
                 mesh.topology.create_connectivity(dim, dim - 1)
+                arguments: tuple[Any, ...] = (kind, mesh.topology, data.find(identifier))
+                if "dim" in signature(fem.compute_integration_domains).parameters:
+                    arguments += (data.dim,)
                 packed[identifier] = np.asarray(
-                    fem.compute_integration_domains(
-                        kind, mesh.topology, data.find(identifier), data.dim
-                    ),
-                    dtype=np.int32,
+                    fem.compute_integration_domains(*arguments), dtype=np.int32
                 )
             else:
                 packed.update((key, np.array(value, copy=True)) for key, value in data)
@@ -251,7 +254,7 @@ def create_workspace(
     coefficient_map: Mapping[Any, Any] | None = None,
     constant_map: Mapping[Any, Any] | None = None,
     subdomains: Mapping[Any, Any] | None = None,
-    entity_maps: Mapping[Any, Any] | None = None,
+    entity_maps: EntityMaps | None = None,
 ) -> FormWorkspace:
     """Bind compiled kernels to a mesh, native spaces, coefficients and constants.
 
@@ -265,6 +268,9 @@ def create_workspace(
     The bound mesh preserves the compiled coordinate element. Native mesh,
     Function and Constant storage uses binary64 precision. All native argument
     and coefficient spaces belong to this bound integration mesh.
+    ``entity_maps`` preserves the explicit mapping accepted by DOLFINx 0.9 or
+    native ``EntityMap`` sequence accepted by DOLFINx 0.10, with a copied
+    container. It does not relax this workspace's same-mesh space contract.
     Rows follow test arguments, columns trial arguments; no gauge, sign or boundary rule
     is inferred. A workspace holds no solver or material-dependent response.
     """
@@ -323,7 +329,7 @@ def create_workspace(
             domains,
             local_coefficients,
             local_constants,
-            entity_maps=None if entity_maps is None else dict(entity_maps),
+            entity_maps=_copy_entity_maps(entity_maps),
         )
     return FormWorkspace(bundle, mesh, bound, expected, used_coefficients, used_constants)
 
@@ -387,13 +393,36 @@ def _digest_array(value: Any) -> tuple[Any, ...]:
     return array.shape, array.dtype.str, sha256(array.tobytes()).hexdigest()
 
 
+def _entity_map_key(entity_maps: EntityMaps | None) -> tuple[Any, ...]:
+    """Record explicit map identities, dimension and declared entity correspondence."""
+    if entity_maps is None:
+        return ()
+    if isinstance(entity_maps, Mapping):
+        return tuple(
+            (id(domain), _digest_array(entities)) for domain, entities in entity_maps.items()
+        )
+    result = []
+    for entity_map in entity_maps:
+        index_map = entity_map.sub_topology.index_map(entity_map.dim)
+        entities = np.arange(index_map.size_local + index_map.num_ghosts, dtype=np.int32)
+        result.append(
+            (
+                id(entity_map.topology._cpp_object),
+                id(entity_map.sub_topology._cpp_object),
+                entity_map.dim,
+                _digest_array(entity_map.sub_topology_to_topology(entities, inverse=False)),
+            )
+        )
+    return tuple(result)
+
+
 def workspace_key(
     mesh: Any,
     forms: Mapping[str, Any],
     *,
     space_map: Mapping[Any, Any] | None = None,
     subdomains: Mapping[Any, Any] | None = None,
-    entity_maps: Mapping[Any, Any] | None = None,
+    entity_maps: EntityMaps | None = None,
     form_compiler_options: Mapping[str, Any] | None = None,
 ) -> tuple[Any, ...]:
     """Describe kernel, FE, geometry-layout and topology compatibility, excluding data.
@@ -401,6 +430,8 @@ def workspace_key(
     Form signatures include approximation elements and quadrature metadata.
     Geometry coordinates are intentionally absent; their layout and cell
     connectivity remain fixed. Values of coefficients/constants are absent.
+    Explicit entity-map keys include their declared entity correspondence;
+    native ``EntityMap`` keys also include dimension and both topology identities.
     Custom cache keys must enforce these same structural distinctions and any
     additional application-specific reusable data contracts.
     """
@@ -439,10 +470,7 @@ def workspace_key(
             (str(kind), tuple((key, _digest_array(entities)) for key, entities in values))
             for kind, values in (subdomains or {}).items()
         ),
-        tuple(
-            (id(domain), _digest_array(entities))
-            for domain, entities in (entity_maps or {}).items()
-        ),
+        _entity_map_key(entity_maps),
         tuple(sorted((key, repr(value)) for key, value in (form_compiler_options or {}).items())),
     )
 

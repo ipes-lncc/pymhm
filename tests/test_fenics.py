@@ -2,20 +2,22 @@
 
 from __future__ import annotations
 
+import weakref
 from types import SimpleNamespace
 from typing import Any
 
 import numpy as np
 import pytest
 from numpy.testing import assert_allclose
+from scipy import sparse
 
-from pymhm.backends import fenics
+from pymhm.backends import fenics, forms
 
 
 class SimulatedForm:
     """Explicit assembly-contract fake, not a finite-element implementation."""
 
-    def __init__(self, values: Any, rank: int = 1, space: str = "V") -> None:
+    def __init__(self, values: Any, rank: int = 1, space: Any = "V") -> None:
         self.values = np.asarray(values)
         self.rank = rank
         self.space = space
@@ -27,21 +29,59 @@ class SimulatedForm:
         )
 
     def integrals(self) -> list[Any]:
-        return [SimpleNamespace(integrand=lambda: self.values.item())]
+        return [SimpleNamespace(integrand=lambda: self.values.item() if self.rank == 0 else 1)]
+
+    def ufl_domains(self) -> tuple[Any, ...]:
+        """Expose the integration mesh so it can be checked before native JIT."""
+        return (SimpleNamespace(ufl_cargo=lambda: self.mesh),)
 
 
 @pytest.fixture
 def simulated_fem(monkeypatch: pytest.MonkeyPatch) -> Any:
     """Simulate the documented native DOLFINx CSR/vector assembly interface."""
-    fake = SimpleNamespace(
-        form=lambda form: form,
-        assemble_matrix=lambda form: SimpleNamespace(
-            to_scipy=lambda: form.values, scatter_reverse=lambda: None
-        ),
-        assemble_vector=lambda form: SimpleNamespace(array=form.values),
+    observed = SimpleNamespace(options=[], references=[], scatters=[])
+
+    class Compiled:
+        """Hold native form data for only the duration of assembly."""
+
+        def __init__(self, form: Any, options: Any) -> None:
+            """Record precision and options while simulating native option mutation."""
+            self.form, self.mesh = form, form.mesh
+            observed.options.append(options)
+            options["form_compiler_options"]["scalar_type"] = options["dtype"]
+            observed.references.append(weakref.ref(self))
+
+    class Buffer:
+        """Own native coefficients whose lifetime ends before returning local arrays."""
+
+        def __init__(self, compiled: Any) -> None:
+            """Track native coefficient ownership without performing finite elements."""
+            self.array = compiled.form.values.copy()
+            self.matrix = sparse.csr_matrix(self.array) if self.array.ndim == 2 else None
+            observed.references.append(weakref.ref(self))
+
+        def scatter_reverse(self, *mode: str) -> None:
+            """Record matrix completion or additive vector accumulation."""
+            observed.scatters.append(mode)
+
+        def to_scipy(self) -> Any:
+            """Expose a matrix view that must be copied by the shared adapter."""
+            return self.matrix
+
+    fem = SimpleNamespace(
+        form=lambda form, **options: Compiled(form, options),
+        assemble_matrix=Buffer,
+        assemble_vector=Buffer,
     )
-    monkeypatch.setattr(fenics, "import_module", lambda name: fake)
-    return fake
+    actual_import = forms.import_module
+    native = {
+        "dolfinx.fem": fem,
+        "dolfinx.la": SimpleNamespace(InsertMode=SimpleNamespace(add="add")),
+    }
+    monkeypatch.setattr(
+        forms, "import_module", lambda name: native.get(name) or actual_import(name)
+    )
+    return observed
 
 
 def test_simulated_local_assembly_contract(simulated_fem: Any) -> None:
@@ -58,6 +98,42 @@ def test_simulated_local_assembly_contract(simulated_fem: Any) -> None:
     assert_allclose(problem.coupling, np.eye(2))
     assert_allclose(problem.constraints, [[0.5], [0.5]])
     assert_allclose(problem.condense().source, [0.0, 0.0])
+    assert simulated_fem.scatters == [(), ("add",), ("add",), ("add",), ("add",)]
+    assert all(reference() is None for reference in simulated_fem.references)
+
+
+def test_binary64_compile_options_and_independent_assembly_copies(simulated_fem: Any) -> None:
+    """Local assembly shares the generic adapter's precision, options and ownership."""
+    a = SimulatedForm(np.eye(2, dtype=np.float32), 2)
+    load = SimulatedForm(np.array([1.0, 2.0], dtype=np.float32))
+    compiler_options = {"quadrature_degree": 7}
+    jit_options = {"timeout": 60}
+    entity_maps = {"mesh": np.array([0], dtype=np.int32)}
+    problem = fenics.from_ufl(
+        a,
+        load,
+        [SimulatedForm([1.0, -1.0])],
+        [0],
+        coarse_basis=np.ones((2, 1)),
+        constraint_forms=[SimulatedForm([0.5, 0.5])],
+        form_compiler_options=compiler_options,
+        jit_options=jit_options,
+        entity_maps=entity_maps,
+    )
+    assert problem.matrix.dtype == problem.load.dtype == np.dtype(np.float64)
+    assert len(simulated_fem.options) == 4
+    for options in simulated_fem.options:
+        assert options["dtype"] is np.float64
+        assert options["form_compiler_options"]["quadrature_degree"] == 7
+        assert options["form_compiler_options"] is not compiler_options
+        assert options["jit_options"] == jit_options and options["jit_options"] is not jit_options
+        assert options["entity_maps"] is not entity_maps
+    assert compiler_options == {"quadrature_degree": 7}
+    problem.matrix.data[:] = 3
+    problem.load[:] = 4
+    assert_allclose(a.values, np.eye(2))
+    assert_allclose(load.values, [1.0, 2.0])
+    assert all(reference() is None for reference in simulated_fem.references)
 
 
 def test_simulated_general_coarse_basis_forwarded(simulated_fem: Any) -> None:
@@ -115,9 +191,13 @@ def test_distributed_mesh_rejected(simulated_fem: Any) -> None:
     a.mesh.comm.size = 2
     with pytest.raises(ValueError, match="single-rank"):
         fenics.from_ufl(a, None, [], [])
+    assert not simulated_fem.options
 
 
-@pytest.mark.parametrize("bad_load", [SimulatedForm(1.0, 0), SimulatedForm([1, 2], 1, "W")])
+@pytest.mark.parametrize(
+    "bad_load",
+    [SimulatedForm(1.0, 0), SimulatedForm([1, 2], 1, "W"), SimulatedForm(np.eye(2), 2)],
+)
 def test_bad_linear_form_rejected(bad_load: SimulatedForm, simulated_fem: Any) -> None:
     with pytest.raises(ValueError, match="same test space"):
         fenics.from_ufl(SimulatedForm(np.eye(2), 2), bad_load, [], [])
@@ -136,9 +216,9 @@ def test_optional_import_diagnosis(error: Exception, monkeypatch: pytest.MonkeyP
     def unavailable(name: str) -> Any:
         raise error
 
-    monkeypatch.setattr(fenics, "import_module", unavailable)
+    monkeypatch.setattr(forms, "import_module", unavailable)
     with pytest.raises(ImportError, match="Pixi fem"):
-        fenics.from_ufl(None, None, [], [])
+        fenics.from_ufl(SimulatedForm(np.eye(2), 2), SimulatedForm([0.0, 0.0]), [], [])
 
 
 @pytest.fixture
@@ -165,6 +245,21 @@ def ufl_spaces() -> tuple[Any, Any, Any, Any]:
             ),
         ),
     )
+
+
+def test_local_adapter_supports_argument_preserving_ufl_zero_forms(
+    ufl_spaces: tuple[Any, ...], simulated_fem: Any
+) -> None:
+    """ZeroBaseForm loads and trace columns use explicit local coefficient dimensions."""
+    import ufl
+
+    space = ufl_spaces[0]
+    zero = ufl.ZeroBaseForm((ufl.TestFunction(space),))
+    problem = fenics.from_ufl(SimulatedForm(np.eye(2), 2, space), zero, [zero], [0])
+    assert_allclose(problem.load, [0.0, 0.0])
+    assert_allclose(problem.coupling, [[0.0], [0.0]])
+    assert len(simulated_fem.options) == 1
+    assert all(reference() is None for reference in simulated_fem.references)
 
 
 def test_real_ufl_volume_form_helpers(ufl_spaces: tuple[Any, ...]) -> None:

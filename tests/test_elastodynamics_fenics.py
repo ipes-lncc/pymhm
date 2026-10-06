@@ -37,8 +37,8 @@ def test_inertial_effective_operator_source_and_mass_projection(dimension):
     domain = dolfinx.mesh.create_mesh(
         MPI.COMM_SELF,
         fine.cells,
-        fine.points,
-        ufl.Mesh(basix.ufl.element("Lagrange", kind, 1, shape=(dimension,))),
+        x=fine.points,
+        e=ufl.Mesh(basix.ufl.element("Lagrange", kind, 1, shape=(dimension,))),
     )
     space = dolfinx.fem.functionspace(
         domain,

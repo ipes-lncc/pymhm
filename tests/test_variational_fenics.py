@@ -33,7 +33,7 @@ def test_native_forms_preserve_operator_moments_and_signed_interfaces(mode: str)
     for cell in range(2):
         fine = coarse.submesh(cell, 2)
         domain = ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,)))
-        local_mesh = mesh.create_mesh(MPI.COMM_SELF, fine.cells, fine.points, domain)
+        local_mesh = mesh.create_mesh(MPI.COMM_SELF, fine.cells, x=fine.points, e=domain)
         space = fem.functionspace(local_mesh, ("Lagrange", 1))
         trial, test = ufl.TrialFunction(space), ufl.TestFunction(space)
         x = ufl.SpatialCoordinate(local_mesh)

@@ -114,15 +114,17 @@ def simulated_native(monkeypatch: pytest.MonkeyPatch) -> Any:
 
 
 @pytest.mark.parametrize("rank", [1, 2])
+@pytest.mark.parametrize("map_kind", ["mapping", "sequence"])
 def test_owned_real_coefficients_rectangular_spaces_and_copied_options(
-    rank: int, simulated_native: Any
+    rank: int, map_kind: str, simulated_native: Any
 ) -> None:
     """The adapter preserves coefficients and dimensions without retaining native owners."""
     original = np.arange(3 if rank == 1 else 6).reshape((3,) if rank == 1 else (3, 2))
     form = SimulatedForm(original, rank=rank)
     compiler_options = {"quadrature_degree": 5}
     jit_options = {"timeout": 10}
-    entity_maps = {"native mesh": np.array([0, 1], dtype=np.int32)}
+    native_map = np.array([0, 1], dtype=np.int32)
+    entity_maps: Any = {"native mesh": native_map} if map_kind == "mapping" else (native_map,)
     value = forms.assemble_form(
         form,
         shape=original.shape,
@@ -139,6 +141,8 @@ def test_owned_real_coefficients_rectangular_spaces_and_copied_options(
     assert compiler_options == {"quadrature_degree": 5}
     assert jit_options == {"timeout": 10}
     assert simulated_native.options[0]["entity_maps"] is not entity_maps
+    supplied_map = simulated_native.options[0]["entity_maps"]
+    assert (supplied_map["native mesh"] if map_kind == "mapping" else supplied_map[0]) is native_map
     assert simulated_native.options[0]["jit_options"] is not jit_options
     assert simulated_native.options[0]["form_compiler_options"] is not compiler_options
     assert simulated_native.scatters == (["vector"] if rank == 1 else ["matrix"])

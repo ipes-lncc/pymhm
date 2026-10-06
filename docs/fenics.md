@@ -61,6 +61,9 @@ UFL forms into owned numerical arrays. `columns` and `rows` supply independent
 rectangular pairings on supported native spaces. The local pivot and full global
 operator must be square. These interfaces require the explicit basis maps that
 the bound introductory path derives from declared spaces.
+Explicit cross-mesh `entity_maps` follow the installed DOLFINx version:
+mesh-to-entity-index mappings for 0.9, or sequences of native `EntityMap` objects
+for 0.10. See [native compilation limits](variational.md#native-compilation-limits).
 
 ## Fixed hybrid local-form adapter
 
@@ -90,6 +93,40 @@ MPI-distributed assembly of a local mesh is not implemented by this adapter.
 The assembled arrays can be condensed using the serial, thread or spawn-process
 execution modes and any compatible linear-solver backend. GPU solving does not
 move finite-element assembly to the GPU.
+
+The locked `fem` profile resolves this assembly stack on Linux, macOS and
+Windows. DOLFINx still needs an MPI runtime, and UFL form compilation needs
+a working native C compiler; on Windows, use Visual Studio's C/C++ compiler
+and Windows SDK in a developer terminal. See
+[installation](installation.md#native-ufl-assembly) and
+[Windows FEM requirements](windows.md#native-fem-scope).
+PETSc/MUMPS is an optional numerical solver capability supplied by the Unix
+FEM profiles, rather than a requirement of either UFL adapter.
+
+Select solvers independently of the provider, for example:
+
+```python
+from pymhm import SolverConfig, solve
+
+solution = solve(
+    problem,
+    solvers=SolverConfig(local_solver="scipy", global_solver="scipy"),
+)
+```
+
+SciPy is the portable default. The locked `fem-intel` profile combines native
+assembly and PARDISO on Linux and Windows. Select
+`SolverConfig(local_solver="pypardiso", global_solver="scipy")` for local
+PARDISO factors, or choose `global_solver="pypardiso"` independently.
+Symmetric-indefinite presets, Krylov and AMG choices retain the operator
+restrictions in the [solver guide](solvers.md). Solver selection does not change
+the UFL form, local kernel, physical moments or trace orientation. Requesting
+`petsc` requires PETSc/MUMPS explicitly and does not silently select another solver.
+
+The [DOLFINx/UFL sparse-solver notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/dolfinx_sparse_solvers.ipynb)
+demonstrates primal P1 Darcy with independent local/global SciPy and PARDISO
+choices, signed normal-flux traces, integral pressure moments and spawn workers.
+Run it with `pixi run --locked -e introduction-intel notebooks-run foundations/operators/dolfinx_sparse_solvers.ipynb`.
 
 ## Local form contract
 
@@ -365,6 +402,12 @@ These checks establish the implemented local form and coupling contracts. They
 do not establish all stability estimates or reproduce every benchmark in the
 literature. DOLFINx's assembly APIs are documented in the
 [official finite-element reference](https://docs.fenicsproject.org/dolfinx/v0.9.0/python/generated/dolfinx.fem.html).
+Native tests also run assembly and local/global SciPy and optional PARDISO
+solves in a fresh process that rejects imports of `petsc4py` and
+`dolfinx.fem.petsc`. This verifies the assembly dependency boundary using the
+installed DOLFINx runtime. Platform qualification requires that platform's
+actual test reports for the identified revision; a locked Windows resolution
+or a Linux run alone does not establish native Windows execution.
 
 ## References
 

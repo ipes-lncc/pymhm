@@ -60,7 +60,7 @@ def test_condensed_bdm2_matches_independent_conforming_dolfinx(lame_lambda, mean
         offset += len(mesh.points)
     cells = np.array(cells)
     coordinate_element = ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,)))
-    domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, cells, points, coordinate_element)
+    domain = dolfinx.mesh.create_mesh(MPI.COMM_SELF, cells, x=points, e=coordinate_element)
     bdm = basix.ufl.element("BDM", "triangle", 2)
     displacement = basix.ufl.element("DG", "triangle", 1, shape=(2,))
     rotation = basix.ufl.element("DG", "triangle", 1)

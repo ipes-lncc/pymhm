@@ -60,8 +60,8 @@ def test_native_dg_curl_and_tensor_masses(kind, degree):
     domain = dolfinx.mesh.create_mesh(
         MPI.COMM_SELF,
         fine.cells[:, [0, 1, 3, 2]] if rectangle else fine.cells,
-        fine.points,
-        ufl.Mesh(basix.ufl.element("Lagrange", kind, 1, shape=(dimension,))),
+        x=fine.points,
+        e=ufl.Mesh(basix.ufl.element("Lagrange", kind, 1, shape=(dimension,))),
     )
     space = dolfinx.fem.functionspace(
         domain,

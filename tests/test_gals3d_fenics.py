@@ -39,8 +39,8 @@ def test_gals_tetra_operator_against_ufl(formulation, degree, variable):
         domain = dolfinx.mesh.create_mesh(
             MPI.COMM_SELF,
             fine.cells,
-            fine.points,
-            ufl.Mesh(basix.ufl.element("Lagrange", "tetrahedron", 1, shape=(3,))),
+            x=fine.points,
+            e=ufl.Mesh(basix.ufl.element("Lagrange", "tetrahedron", 1, shape=(3,))),
         )
         pdegree = degree if formulation == "gals" else degree - 1
         space = dolfinx.fem.functionspace(

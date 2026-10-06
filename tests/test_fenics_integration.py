@@ -43,7 +43,7 @@ def test_two_subdomain_darcy_affine_reconstruction() -> None:
     for cell in range(2):
         fine = coarse.submesh(cell, 3)
         domain = ufl.Mesh(basix_ufl.element("Lagrange", "triangle", 1, shape=(2,)))
-        local_mesh = dmesh.create_mesh(mpi.COMM_SELF, fine.cells, fine.points, domain)
+        local_mesh = dmesh.create_mesh(mpi.COMM_SELF, fine.cells, x=fine.points, e=domain)
         space = fem.functionspace(local_mesh, ("Lagrange", 1))
         test = ufl.TestFunction(space)
         a, load = primal_darcy_forms(space, 1.0, 0.0)

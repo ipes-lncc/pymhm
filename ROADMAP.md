@@ -290,14 +290,21 @@ property is inferred from a PDE or method name.
 
 ## R5 — Verify native Windows execution
 
+- [x] Provide locked native DOLFINx/UFL assembly on Windows with CSR/vector
+  interfaces independent of PETSc, and the `fem-intel` profile for local/global
+  PARDISO selection. Require single-rank local meshes and worker-owned native
+  resources; retain the physical forms, trace conventions and gauges.
+- [x] Configure native FEM CI on Linux, Windows and macOS, including assembly
+  and SciPy solves with PETSc imports blocked and PARDISO checks on Linux/Windows.
 - [ ] Execute an identified revision on Windows x86-64: `test-core`, Basix,
-  SciPy/PyAMG, PARDISO, shared faces and serial/thread/spawn-process paths.
+  native DOLFINx/UFL, SciPy/PyAMG, PARDISO, shared faces and
+  serial/thread/spawn-process paths. Publish the actual native FEM reports.
 - [ ] Build and install a wheel outside the checkout; verify import ownership,
   MKL runtime, factor cleanup and fields against independent assembly.
 - [ ] Execute selected portable notebooks and publish the measured platform/backend
-  matrix. DOLFINx/PETSc remain outside the current native Windows profile.
-- [ ] Consider a PETSc-free Windows FEM backend only for a concrete need that
-  fits the general contracts. Keep WSL2 and native Windows qualification distinct.
+  matrix. Notebook sections requiring PETSc/MUMPS, including distributed
+  conforming references, require the Unix stack. Keep WSL2 and native Windows
+  qualification distinct.
 
 **Acceptance:** a native Windows receipt identifies the revision, locked
 dependencies and supported options. The core has no mandatory optional-runtime
@@ -315,6 +322,15 @@ native execution. See [Windows support](docs/windows.md).
 - [ ] Evaluate optional preCICE integration for a justified coupling use case,
   including transfers, synchronization, licensing and platform availability.
   Keep it outside core dependencies; native Windows support requires evidence.
+- [ ] Evaluate scikit-fem as an optional local assembly backend, outside the
+  core dependencies and alongside Basix and DOLFINx. Begin with primal Darcy
+  P1/P2 in 2D, matching geometry, forms, spaces, boundary data, physical moments
+  and oriented traces; compare fields and conservation for homogeneous and
+  nonhomogeneous data. Extend to 3D and mixed problems only after checking
+  dimension-dependent element degrees, derivative support, trace compatibility,
+  kernels, gauges and stability hypotheses. Qualify installation and native
+  execution separately on Linux, macOS and Windows; measure performance rather
+  than assuming a speedup.
 
 **Acceptance:** providers are interchangeable without changing global equations,
 worker data support spawn transfer and native resources have explicit owners.
@@ -422,8 +438,10 @@ numerical cases; missing dependencies do not count as backend validation.
 and [Docs](https://github.com/ipes-lncc/pymhm/actions/workflows/docs.yml) have
 dedicated responsibilities and run independently on pull requests and main pushes.
 Within Tests, the Integration matrix starts only after **all Core matrix jobs
-succeed**. Its four native solver jobs cover DOLFINx/PETSc, MPI and PARDISO
-on Linux, plus PARDISO on Windows. Optional native mesh-generation, remeshing
+succeed**. Its native jobs cover DOLFINx assembly with SciPy on Linux, Windows
+and macOS, FEM/PARDISO on Linux and Windows, and PETSc/MUMPS and distributed MPI
+on Linux. PETSc-blocked processes verify the assembly dependency boundary.
+Optional native mesh-generation, remeshing
 and visualization checks run in the manually dispatched full Linux/two-GPU
 suite after Core succeeds. Reusable checks use both locked workspaces.
 

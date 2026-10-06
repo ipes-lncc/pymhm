@@ -102,9 +102,14 @@ All implemented capabilities ship
 with the package; optional native backends require their separate dependencies.
 
 The [Windows guide](docs/windows.md) describes native portable-core execution,
-SciPy/PyPardiso selection, process workers and installed-wheel checks. The
-current native FEM/PETSc profiles use Linux or macOS; WSL2 provides those
-environments on a Windows host.
+SciPy/PyPardiso selection, process workers, installed-wheel checks and the
+native DOLFINx/UFL profile. Local FEM assembly uses DOLFINx's CSR/vector
+interfaces independently of PETSc; choose compatible numerical solvers through
+`SolverConfig`. The locked `fem-intel` profile combines FEM assembly with
+PARDISO on Linux and Windows. Native Windows requires an MPI runtime and a
+Visual Studio JIT compiler. PETSc/MUMPS solvers and distributed PETSc workflows
+use the Unix stack, including WSL2 on a Windows host. CI reports qualify each
+platform separately.
 
 ## Verified discretizations and integrations
 
@@ -222,6 +227,7 @@ pixi run --locked -e test-core lint
 pixi run --locked -e test-core typecheck
 pixi run --locked -e test-core coverage-run
 pixi run -e fem test-fem
+pixi run --locked -e fem-intel test-fem-portable
 pixi run -e meshing test-meshing
 pixi run -e packaging build
 pixi run -e packaging check-dist

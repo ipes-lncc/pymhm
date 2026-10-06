@@ -77,8 +77,8 @@ def test_tetrahedral_flow_operator_against_independent_ufl(
         domain = dolfinx.mesh.create_mesh(
             MPI.COMM_SELF,
             fine.cells,
-            fine.points,
-            ufl.Mesh(basix.ufl.element("Lagrange", "tetrahedron", 1, shape=(3,))),
+            x=fine.points,
+            e=ufl.Mesh(basix.ufl.element("Lagrange", "tetrahedron", 1, shape=(3,))),
         )
         pk = degree - 1 if formulation == "taylor-hood" else degree
         variant = basix.LagrangeVariant.equispaced

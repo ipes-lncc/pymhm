@@ -23,8 +23,8 @@ def native_space(mesh, degree):
     domain = dolfinx.mesh.create_mesh(
         MPI.COMM_SELF,
         mesh.cells,
-        mesh.points,
-        ufl.Mesh(basix.ufl.element("Lagrange", "tetrahedron", 1, shape=(3,))),
+        x=mesh.points,
+        e=ufl.Mesh(basix.ufl.element("Lagrange", "tetrahedron", 1, shape=(3,))),
     )
     bdm = basix.ufl.element("BDM", "tetrahedron", degree)
     scalar = basix.ufl.element(

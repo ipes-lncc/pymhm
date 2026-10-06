@@ -63,8 +63,8 @@ def test_custom_mesh_time_residual_and_previous_mass_match_native_ufl(stabilizat
     domain = dolfinx.mesh.create_mesh(
         MPI.COMM_SELF,
         fine.cells,
-        fine.points,
-        ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
+        x=fine.points,
+        e=ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
     )
     space = dolfinx.fem.functionspace(
         domain,

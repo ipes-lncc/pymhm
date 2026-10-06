@@ -209,8 +209,8 @@ def _interface_mesh(skeleton: SkeletonSpace) -> tuple[Any, tuple[tuple[int, int]
     native = _require("dolfinx.mesh").create_mesh(
         _require("mpi4py.MPI").COMM_SELF,
         np.asarray(cells, dtype=np.int64),
-        np.asarray(points),
-        domain,
+        x=np.asarray(points),
+        e=domain,
     )
     return native, tuple(segments)
 

@@ -35,8 +35,8 @@ def test_p4_cut_material_segmented_p2_matches_full_ufl_saddle(split):
         domain = dolfinx.mesh.create_mesh(
             MPI.COMM_SELF,
             fine.cells,
-            fine.points,
-            ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
+            x=fine.points,
+            e=ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,))),
         )
         space = dolfinx.fem.functionspace(
             domain,

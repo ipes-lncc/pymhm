@@ -58,7 +58,7 @@ def test_variable_tensor_neumann_lifts_match_independent_ufl(degree, polygonal, 
     local = result.local[0]
     coordinate = ufl.Mesh(basix.ufl.element("Lagrange", "triangle", 1, shape=(2,)))
     domain = dolfinx.mesh.create_mesh(
-        MPI.COMM_SELF, local.mesh.cells, local.mesh.points, coordinate
+        MPI.COMM_SELF, local.mesh.cells, x=local.mesh.points, e=coordinate
     )
     element = basix.ufl.element(
         "Lagrange", "triangle", degree, lagrange_variant=basix.LagrangeVariant.equispaced
