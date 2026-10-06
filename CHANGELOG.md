@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.0.0
+
+<!-- pymhm:generated:start -->
+<!-- Source: v0.1.1..2b47121916a405ca938a7853e9da714e20113fdc -->
+
+### Maintenance
+
+- adopt official release metadata ([2b47121](https://github.com/ipes-lncc/pymhm/commit/2b47121916a405ca938a7853e9da714e20113fdc))
+
+<!-- pymhm:generated:end -->
+
+### Official release
+
+- PyMHM 1.0.0 provides the composable variational API for global and local
+  multiscale problems, user-defined local providers and nested multiscale solves.
+  Basix supplies finite-element bases and tabulation.
+- The portable core supports Linux, macOS and Windows, with serial, threaded and
+  process-based execution. Optional integrations provide native FEM, MPI and
+  accelerator capabilities within their documented platform and numerical scope.
+- Installation guides cover `pip install pymhm`, optional dependencies and
+  platform requirements. Scientific documentation and introductory notebooks
+  describe the supported formulations, numerical results and limitations.
+
 ## 0.1.1
 
 <!-- pymhm:generated:start -->
