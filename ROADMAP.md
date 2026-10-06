@@ -405,7 +405,14 @@ numerical cases; missing dependencies do not count as backend validation.
 and [Docs](https://github.com/volpatto/pymhm/actions/workflows/docs.yml) have
 dedicated responsibilities and run independently on pull requests and main pushes.
 Within Tests, the Integration matrix starts only after **all Core matrix jobs
-succeed**. Reusable checks use both locked workspaces.
+succeed**. Its four native solver jobs cover DOLFINx/PETSc, MPI and PARDISO
+on Linux, plus PARDISO on Windows. Optional native mesh-generation, remeshing
+and visualization checks run in the manually dispatched full Linux/two-GPU
+suite after Core succeeds. Reusable checks use both locked workspaces.
+
+Jobs that install environments explicitly enable `setup-pixi` caching, keyed
+by platform, requested environments, Pixi binary, lockfile and paths. The
+workspace-only validation job installs no environments and disables caching.
 
 The active matrix targets Linux x86-64, Windows x86-64 and Apple Silicon
 macOS ARM64 with `macos-latest`. macOS x86-64 resolution remains available

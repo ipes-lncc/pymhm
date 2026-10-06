@@ -128,17 +128,33 @@ The workflows use Pixi 0.76.2 and the checked-in lockfiles. Locked workspace
 validation checks both the package and separate AmgX toolchain without installing
 their environments.
 
+Every job that installs Pixi environments enables the cache managed by
+[`setup-pixi`](https://github.com/prefix-dev/setup-pixi/tree/v0.10.2#caching).
+Its keys include the platform, requested environments, Pixi binary, lockfile
+and environment paths. Changing these inputs creates a separate cache.
+The workspace validation job installs no environments and disables this cache.
+Release distributions and the documentation site pass between jobs as validated
+artifacts.
+
 The Tests portable matrix uses `test-core` on Linux x86-64, Windows x86-64 and
 macOS Apple Silicon (ARM64), with additional Python 3.11 and 3.12 jobs on Linux.
 The Integration matrix starts only after every Core matrix job succeeds. It
-exercises FEniCS/PETSc, MPI, meshing and FreeFEM on Linux, PARDISO on Linux
-and Windows, and PyVista/VTK on those three CI targets. Every portable coverage job
-enforces the independent 99% line and branch gates.
+contains four native solver jobs: FEniCS/PETSc and MPI on Linux, and PARDISO
+on Linux and Windows. Every portable coverage job enforces the independent
+99% line and branch gates. `test-fem` selects CPU FEM tests without MPI;
+`test-mpi` selects CPU MPI tests, including runs with one, two and four ranks.
+The MPI job uploads separate parallel/serial JUnit reports even when a test
+fails. GPU integrations run in the complete native suite.
 
 The complete CPU/GPU job is an explicit opt-in: dispatch Tests with `full_native`
 enabled on a configured self-hosted Linux runner with the `gpu` label and two
-NVIDIA devices. It prepares AmgX, requires the complete native stack and runs the
-whole suite with the same parallel/serial phases and independent coverage gates.
+NVIDIA devices. After all Core jobs succeed, it prepares AmgX, requires the
+complete native stack and runs the whole suite with the same parallel/serial
+phases and independent coverage gates. Native Gmsh/Netgen, FreeFEM/BAMG and
+PyVista/VTK checks belong to this full Linux suite. FreeFEM provides optional
+metric remeshing for adaptive studies; the PyMHM PDE solver remains independent
+of it. Portable adapter contracts run in Core; native visualization on Windows
+and macOS requires separate local qualification.
 It is not scheduled by an ordinary push, pull request or release tag. A skipped
 integration test does not constitute passed backend verification. Scientific
 acquisitions, notebook execution, field and figure acceptance, and browser-side

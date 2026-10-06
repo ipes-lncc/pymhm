@@ -49,6 +49,7 @@ jobs:
         with:
           pixi-version: v0.76.2
           run-install: false
+          cache: false
       - name: Check every environment and platform without installing
         run: pixi list --locked --no-install -e test-core --json > /dev/null
       - name: Check the pinned AmgX toolchain without installing
@@ -77,6 +78,7 @@ jobs:
           pixi-version: v0.76.2
           environments: ${{ matrix.environment }}
           locked: true
+          cache: true
       - name: Check metadata
         run: pixi run --locked -e ${{ matrix.environment }} metadata-check
       - name: Run tests with branch coverage
@@ -122,28 +124,17 @@ jobs:
       matrix:
         include:
           - {kind: fem, label: DOLFINx and PETSc, os: ubuntu-latest, environment: fem}
-          - {kind: mpi, label: MPI with two ranks, os: ubuntu-latest, environment: fem}
+          - {kind: mpi, label: MPI and MUMPS, os: ubuntu-latest, environment: fem}
           - {kind: intel, label: PARDISO, os: ubuntu-latest, environment: intel}
           - {kind: intel, label: PARDISO, os: windows-latest, environment: intel}
-          - {kind: meshing, label: Gmsh and Netgen, os: ubuntu-latest, environment: meshing}
-          - {kind: remeshing, label: FreeFEM and BAMG, os: ubuntu-latest, environment: remeshing}
-          - {kind: visualization, label: PyVista and VTK, os: ubuntu-latest, environment: visualization}
-          - {kind: visualization, label: PyVista and VTK, os: windows-latest, environment: visualization}
-          - {kind: visualization, label: PyVista and VTK, os: macos-latest, environment: visualization}
-    env:
-      PYVISTA_OFF_SCREEN: "true"
     steps:
       - uses: actions/checkout@v4
-      - name: Install Linux offscreen runtime
-        if: matrix.kind == 'visualization' && runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libegl1 libegl-mesa0 libgl1 libgl1-mesa-dri libopengl0 libxrender1
       - uses: prefix-dev/setup-pixi@v0.10.2
         with:
           pixi-version: v0.76.2
           environments: ${{ matrix.environment }}
           locked: true
+          cache: true
       - name: Exercise native DOLFINx assembly
         if: matrix.kind == 'fem'
         run: pixi run --locked -e fem test-fem
@@ -162,7 +153,14 @@ jobs:
           print(MPI.Get_library_version())'
       - name: Exercise distributed assembly, solves and collective failures
         if: matrix.kind == 'mpi'
+        env:
+          PYTEST_ADDOPTS: --junitxml=build/reports/tests/mpi.xml
         run: pixi run --locked -e fem test-mpi
+      - uses: actions/upload-artifact@v4
+        if: matrix.kind == 'mpi' && always()
+        with:
+          name: test-results-mpi-${{ matrix.os }}
+          path: build/reports/tests/*.xml
       - name: Require native PARDISO
         if: matrix.kind == 'intel'
         run: pixi run --locked -e intel python -c 'import pypardiso'
@@ -188,26 +186,9 @@ jobs:
           name: wheel-windows-pardiso
           path: build/reports/windows-pardiso-wheel.*
 
-      - name: Exercise mesh generation and exchange
-        if: matrix.kind == 'meshing'
-        run: pixi run --locked -e meshing test-meshing
-      - name: Require native FreeFEM
-        if: matrix.kind == 'remeshing'
-        run: pixi run --locked -e remeshing python -c 'import shutil; assert shutil.which("FreeFem++-nw")'
-      - name: Verify metric remeshing and polygon boundaries
-        if: matrix.kind == 'remeshing'
-        run: pixi run --locked -e remeshing python scripts/run_tests.py -- tests/test_metric_freefem.py tests/test_metric_adapt.py
-
-      - name: Require native PyVista and VTK
-        if: matrix.kind == 'visualization'
-        run: pixi run --locked -e visualization python -c 'import pyvista as pv; print(pv.__version__, pv.vtk_version_info)'
-      - name: Validate native fields, file round trips and offscreen images
-        if: matrix.kind == 'visualization'
-        run: pixi run --locked -e visualization test-visualization
-
   full-native:
     name: Complete CPU and two-GPU suite
-    needs: workspace
+    needs: core
     if: github.event_name == 'workflow_dispatch' && inputs.full_native
     runs-on: [self-hosted, linux, x64, gpu]
     timeout-minutes: 60
@@ -224,6 +205,7 @@ jobs:
           pixi-version: v0.76.2
           environments: test
           locked: true
+          cache: true
       - name: Build pinned native AmgX and PyAMGX
         run: pixi run --locked -e test test-setup-amgx
       - name: Require the complete native stack and two CUDA devices

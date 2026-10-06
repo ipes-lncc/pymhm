@@ -43,6 +43,7 @@ jobs:
           pixi-version: v0.76.2
           environments: docs
           locked: true
+          cache: true
       - run: pixi run --locked -e docs docs-check
       - name: Upload the validated release site
         if: >-

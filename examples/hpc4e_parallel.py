@@ -189,7 +189,16 @@ def checked_solve(
         scaled_rhs.array[:] = diagonal * load
         ksp.solve(scaled_rhs, state)
         if ksp.getConvergedReason() <= 0:
-            raise RuntimeError(f"MUMPS failed with reason {ksp.getConvergedReason()}")
+            pc = ksp.getPC()
+            factor = pc.getFactorMatrix()
+            try:
+                status = (factor.getMumpsInfog(1), factor.getMumpsInfog(2))
+            finally:
+                factor.destroy()
+            raise RuntimeError(
+                f"MUMPS failed with KSP reason {ksp.getConvergedReason()}, "
+                f"PC reason {pc.getFailedReason()}, INFOG(1,2)={status}"
+            )
         return diagonal * state.array.copy()
 
     dtype = np.longdouble if refinement_precision == "extended" else np.float64

@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import sys
 import tempfile
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 from mpi4py import MPI
@@ -13,6 +16,41 @@ from numpy.testing import assert_allclose
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from examples import hpc4e_parallel as algebra  # noqa: E402
 from examples import solve_hpc4e_reference as driver  # noqa: E402
+
+
+@contextmanager
+def bounded_factor_workspace() -> Iterator[None]:
+    """Allow 128 MiB above loaded libraries during each Linux native factor solve.
+
+    Address-space limits expose oversized MUMPS work arrays without requiring
+    allocation of their physical pages. The operator, solver and field gates
+    remain unchanged. Other platforms retain the native numerical controls.
+    """
+    original = algebra.checked_solve
+
+    def bounded(ksp: Any, *args: Any, **kwargs: Any) -> Any:
+        """Restrict only the factor/solve phase after its native libraries are loaded."""
+        if sys.platform != "linux":
+            return original(ksp, *args, **kwargs)
+        import resource
+
+        status = Path("/proc/self/status").read_text().splitlines()
+        virtual = next(int(line.split()[1]) * 1024 for line in status if line.startswith("VmSize:"))
+        previous = resource.getrlimit(resource.RLIMIT_AS)
+        limit = virtual + 128 * 1024**2
+        if previous[0] != resource.RLIM_INFINITY:
+            limit = min(limit, previous[0])
+        resource.setrlimit(resource.RLIMIT_AS, (limit, previous[1]))
+        try:
+            return original(ksp, *args, **kwargs)
+        finally:
+            resource.setrlimit(resource.RLIMIT_AS, previous)
+
+    algebra.checked_solve = bounded
+    try:
+        yield
+    finally:
+        algebra.checked_solve = original
 
 
 def check_prescribed_coordinates() -> None:
@@ -77,6 +115,25 @@ def check_prescribed_coordinates() -> None:
         )
         np.testing.assert_allclose(result.array, exact[lo:hi], rtol=2e-14, atol=2e-14)
         assert len(history) == 1, history
+        singular = bc.copy()
+        resources.callback(singular.destroy)
+        singular.zeroEntries()
+        failed = PETSc.KSP().create(comm)
+        resources.callback(failed.destroy)
+        failed.setOperators(singular)
+        failed.setType("preonly")
+        failed.getPC().setType("lu")
+        failed.getPC().setFactorSolverType("mumps")
+        try:
+            algebra.checked_solve(
+                failed, a, rhs, force, prescribed, values, np.ones(hi - lo), resources
+            )
+        except RuntimeError as error:
+            assert "KSP reason -11" in str(error), error
+            assert "PC reason" in str(error), error
+            assert "INFOG(1,2)=(-10," in str(error), error
+        else:
+            raise AssertionError("a singular MUMPS factorization was accepted")
 
 
 def run() -> None:
@@ -127,24 +184,13 @@ def run() -> None:
         defect = algebra.original_residual(original, (full @ exact)[lo:hi], exact[lo:hi])
         assert np.linalg.norm(defect) < 3e-13
 
-    data = driver.HPC4EData(
-        np.tile([1e8, 2e8], (2, 1)), np.zeros((2, 2)), np.tile([1000.0, 2000.0], (2, 1))
-    )
-    for degree in (1, 2):
-        for material in (None, data):
-            field, record = driver.solve(
-                4,
-                4,
-                degree,
-                material,
-                threads=1,
-                factorization="ldlt",
-                equilibration="symmetric",
-                comm=comm,
-                refinement_precision="extended",
-            )
-            if comm.rank == 0:
-                serial, serial_record = driver.solve(
+    with bounded_factor_workspace():
+        data = driver.HPC4EData(
+            np.tile([1e8, 2e8], (2, 1)), np.zeros((2, 2)), np.tile([1000.0, 2000.0], (2, 1))
+        )
+        for degree in (1, 2):
+            for material in (None, data):
+                field, record = driver.solve(
                     4,
                     4,
                     degree,
@@ -152,47 +198,60 @@ def run() -> None:
                     threads=1,
                     factorization="ldlt",
                     equilibration="symmetric",
+                    comm=comm,
                     refinement_precision="extended",
                 )
-                for attribute in ("stress", "displacement", "rotation"):
-                    assert_allclose(
-                        getattr(field, attribute),
-                        getattr(serial, attribute),
-                        rtol=2e-10,
-                        atol=2e-12,
+                assert record["mumps_options"]["mat_mumps_icntl_23"] == 0
+                if comm.rank == 0:
+                    serial, serial_record = driver.solve(
+                        4,
+                        4,
+                        degree,
+                        material,
+                        threads=1,
+                        factorization="ldlt",
+                        equilibration="symmetric",
+                        refinement_precision="extended",
                     )
-                assert record["native_dofs"] == serial_record["native_dofs"]
-                assert record["free_dofs"] == serial_record["free_dofs"]
-                assert record["residual"] < 1e-12
-                assert record["equilibrium_relative"] < 1e-12
-                assert record["conversion_relative"] < 1e-12
-                if material is not None:
-                    assert record["energy_work_relative"] < 1e-12
-            comm.barrier()
-        scratch = comm.bcast(
-            tempfile.mkdtemp(prefix="pymhm-hpc4e-ooc-") if comm.rank == 0 else None, root=0
-        )
-        disk, disk_record = driver.solve(
-            4,
-            4,
-            degree,
-            data,
-            threads=1,
-            factorization="ldlt",
-            equilibration="symmetric",
-            comm=comm,
-            out_of_core_directory=Path(scratch),
-        )
-        for attribute in ("stress", "displacement", "rotation"):
-            assert_allclose(
-                getattr(disk, attribute), getattr(field, attribute), rtol=2e-13, atol=2e-13
+                    for attribute in ("stress", "displacement", "rotation"):
+                        assert_allclose(
+                            getattr(field, attribute),
+                            getattr(serial, attribute),
+                            rtol=2e-10,
+                            atol=2e-12,
+                        )
+                    assert record["native_dofs"] == serial_record["native_dofs"]
+                    assert record["free_dofs"] == serial_record["free_dofs"]
+                    assert record["residual"] < 1e-12
+                    assert record["equilibrium_relative"] < 1e-12
+                    assert record["conversion_relative"] < 1e-12
+                    if material is not None:
+                        assert record["energy_work_relative"] < 1e-12
+                comm.barrier()
+            scratch = comm.bcast(
+                tempfile.mkdtemp(prefix="pymhm-hpc4e-ooc-") if comm.rank == 0 else None, root=0
             )
-        assert disk_record["factor_storage"] == "out-of-core"
-        assert disk_record["mumps_options"]["mat_mumps_icntl_22"] == 1
-        comm.barrier()
-        if comm.rank == 0:
-            assert not list(Path(scratch).iterdir())
-            Path(scratch).rmdir()
+            disk, disk_record = driver.solve(
+                4,
+                4,
+                degree,
+                data,
+                threads=1,
+                factorization="ldlt",
+                equilibration="symmetric",
+                comm=comm,
+                out_of_core_directory=Path(scratch),
+            )
+            for attribute in ("stress", "displacement", "rotation"):
+                assert_allclose(
+                    getattr(disk, attribute), getattr(field, attribute), rtol=2e-13, atol=2e-13
+                )
+            assert disk_record["factor_storage"] == "out-of-core"
+            assert disk_record["mumps_options"]["mat_mumps_icntl_22"] == 1
+            comm.barrier()
+            if comm.rank == 0:
+                assert not list(Path(scratch).iterdir())
+                Path(scratch).rmdir()
     if comm.rank == 0:
         print(f"HPC4E native MPI parity: PASS on {comm.size} ranks", flush=True)
 

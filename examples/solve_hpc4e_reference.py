@@ -289,7 +289,7 @@ def _solve(
     data: HPC4EData | None,
     *,
     threads: int = 8,
-    workspace_limit_mb: int = 45000,
+    workspace_limit_mb: int = 0,
     factorization: str = "lu",
     solver_python: Path | None = None,
     equilibration: Literal["none", "symmetric"] = "none",
@@ -313,7 +313,7 @@ def _solve(
     from mpi4py import MPI
     from petsc4py import PETSc
 
-    if degree not in (1, 2) or min(nx, ny, threads, workspace_limit_mb) < 1:
+    if degree not in (1, 2) or min(nx, ny, threads) < 1 or workspace_limit_mb < 0:
         raise ValueError("positive grid/thread counts and RT degree one or two required")
     if data is not None and (nx % data.young.shape[0] or ny % data.young.shape[1]):
         raise ValueError("the classical grid must align with every material pixel")
@@ -711,7 +711,7 @@ def solve(
     data: HPC4EData | None,
     *,
     threads: int = 8,
-    workspace_limit_mb: int = 45000,
+    workspace_limit_mb: int = 0,
     factorization: str = "lu",
     solver_python: Path | None = None,
     equilibration: Literal["none", "symmetric"] = "none",
@@ -731,6 +731,9 @@ def solve(
     equation check at 1e-10; no physical acceptance tolerance is relaxed.
     An explicit ``out_of_core_directory`` selects MUMPS disk-backed factor
     storage; it changes neither the operator nor the original-equation gates.
+    ``workspace_limit_mb=0`` lets MUMPS size its working arrays from the analysis
+    estimates. A positive value sets a per-process memory budget and may enlarge
+    native work arrays even for a small operator; it is not a shared MPI budget.
     An explicit ``comm`` partitions native cells, matrix rows and MUMPS factors
     across MPI ranks. Only the validated canonical field archive is replicated.
     The distributed path discards exactly zero matrix entries, retains saddle
@@ -762,6 +765,12 @@ def solve(
         raise ValueError("the isolated solver requires an existing solver_python executable")
     if isinstance(threads, bool) or not isinstance(threads, int) or threads < 1:
         raise ValueError("threads must be a positive integer")
+    if (
+        isinstance(workspace_limit_mb, bool)
+        or not isinstance(workspace_limit_mb, int)
+        or workspace_limit_mb < 0
+    ):
+        raise ValueError("workspace_limit_mb must be a nonnegative integer")
     if out_of_core_directory is not None:
         if factorization == "pypardiso-symmetric-matching":
             raise ValueError("out-of-core storage requires native MUMPS")
@@ -805,7 +814,12 @@ def main() -> None:
     parser.add_argument("--equilibration", choices=("none", "symmetric"), default="none")
     parser.add_argument("--mpi", action="store_true", help="assemble and solve on MPI.COMM_WORLD")
     parser.add_argument("--refinement-precision", choices=("double", "extended"), default="double")
-    parser.add_argument("--workspace-limit-mb", type=int, default=45000)
+    parser.add_argument(
+        "--workspace-limit-mb",
+        type=int,
+        default=0,
+        help="MUMPS memory budget in MB per process; 0 uses analysis estimates",
+    )
     parser.add_argument("--out-of-core-directory", type=Path)
     parser.add_argument("--data-dir", type=Path, default=DATA_DIRECTORY)
     parser.add_argument("--download", action="store_true")

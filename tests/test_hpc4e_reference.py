@@ -77,6 +77,9 @@ def test_reference_contracts() -> None:
         driver.ReferenceField(
             field.stress, field.displacement, field.rotation, 2, 3, 1, (1, 0, 0, 1)
         )
+    for budget in (-1, True, 1.5):
+        with pytest.raises(ValueError, match="workspace_limit_mb"):
+            driver.solve(2, 2, 1, None, workspace_limit_mb=budget)
 
 
 @pytest.mark.fem
@@ -85,6 +88,7 @@ def test_native_mixed_polynomial_patch(degree: int) -> None:
     """Verify RT stress, weak rotation and exact displacement L2 projection independently."""
     pytest.importorskip("dolfinx")
     field, record = driver.solve(4, 2, degree, None, threads=1)
+    assert record["mumps_options"]["mat_mumps_icntl_23"] == 0
     points = np.random.default_rng(293).random((239, 2)) * [1, 0.45]
     x, y = points.T
     stress, displacement, rotation = field.evaluate(points)
@@ -251,8 +255,16 @@ def test_native_ldlt_equilibration_cleanup_success(hpc4e_native_lifecycle) -> No
     """The scaled LDLt route preserves the exact quadratic field and cleans successful solves."""
     handles, options, expected = hpc4e_native_lifecycle
     field, record = driver.solve(
-        4, 2, 2, None, threads=1, factorization="ldlt", equilibration="symmetric"
+        4,
+        2,
+        2,
+        None,
+        threads=1,
+        factorization="ldlt",
+        equilibration="symmetric",
+        workspace_limit_mb=64,
     )
+    assert record["mumps_options"]["mat_mumps_icntl_23"] == 64
     points = np.array([[0.17, 0.12], [0.63, 0.31], [0.93, 0.43]])
     x, y = points.T
     stress, displacement, rotation = field.evaluate(points)

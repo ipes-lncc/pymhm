@@ -220,6 +220,12 @@ suite.
 
 ## Reproduction
 
+The reference driver defaults to `--workspace-limit-mb 0`, letting MUMPS size
+its work arrays from the analysis estimates. A positive value specifies MB
+**per MPI process** and can enlarge the allocated work arrays; it is not a
+node-wide memory budget. See the [MUMPS user guide](https://mumps-solver.org/doc/userguide_5.8.1.pdf),
+`ICNTL(23)`, for the allocation convention.
+
 ```bash
 pixi install -e intel
 pixi run --locked -e test-core python examples/solve_hpc4e_mhm.py --download --segments 1 2 4 8 --workers 8
