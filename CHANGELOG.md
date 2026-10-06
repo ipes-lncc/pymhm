@@ -3,7 +3,7 @@
 ## 0.1.0
 
 <!-- pymhm:generated:start -->
-<!-- Source: origin/main@8a1b8444613b78a2bf234fa0ec5eeb84dd939382 (initial release) -->
+<!-- Source: origin/main@45dc1b1538a47726fa57284c5ca1d993bf5eaaae (initial release) -->
 
 ### Features
 
@@ -16,9 +16,16 @@
 - add release preparation scripts and metadata validation ([8a1b844](https://github.com/ipes-lncc/pymhm/commit/8a1b8444613b78a2bf234fa0ec5eeb84dd939382))
 
 
+### Fixes
+
+- grant reusable documentation permissions for releases ([a4fdd5c](https://github.com/ipes-lncc/pymhm/commit/a4fdd5c16524f5609b1de0afb77ae5bf71d719a9))
+
+
 ### Maintenance
 
 - update CI configuration for macOS and improve test descriptions ([4f43032](https://github.com/ipes-lncc/pymhm/commit/4f43032c18a1ca6f6d0c979e4f31b7d564dc55d2))
+
+- update CHANGELOG with recent features, maintenance, and refactoring details ([9de2617](https://github.com/ipes-lncc/pymhm/commit/9de2617f3772cb6139c8f9771932d14cb5f79cb3))
 
 
 ### Other changes
@@ -55,6 +62,11 @@
 ### Refactoring
 
 - **Breaking:** reorganize PyMHM around a composable variational API ([1427bc2](https://github.com/ipes-lncc/pymhm/commit/1427bc29c1a62e3c25fe3d4b541fb285feb19ab7))
+
+
+### Tests
+
+- verify parallel refinement beyond roundoff ([45dc1b1](https://github.com/ipes-lncc/pymhm/commit/45dc1b1538a47726fa57284c5ca1d993bf5eaaae))
 
 <!-- pymhm:generated:end -->
 
