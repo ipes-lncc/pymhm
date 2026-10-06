@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: prefix-dev/setup-pixi@v0.10.2
         with:
           pixi-version: v0.76.2
@@ -72,7 +72,7 @@ jobs:
           - {os: ubuntu-latest, environment: test-py311}
           - {os: ubuntu-latest, environment: test-py312}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: prefix-dev/setup-pixi@v0.10.2
         with:
           pixi-version: v0.76.2
@@ -95,19 +95,19 @@ jobs:
         run: >-
           pixi run --locked -e ${{ matrix.environment }} python scripts/check_portable_wheel.py
           build/windows-wheel --report build/reports/windows-wheel.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: runner.os == 'Windows' && always()
         with:
           name: wheel-windows-${{ matrix.environment }}
           path: build/reports/windows-wheel.*
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: test-results-${{ matrix.os }}-${{ matrix.environment }}
           path: |
             build/reports/tests/*.xml
             build/reports/coverage/coverage.xml
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v7
         if: matrix.os == 'ubuntu-latest' && matrix.environment == 'test-core'
         with:
           files: build/reports/coverage/coverage.xml
@@ -128,7 +128,7 @@ jobs:
           - {kind: intel, label: PARDISO, os: ubuntu-latest, environment: intel}
           - {kind: intel, label: PARDISO, os: windows-latest, environment: intel}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: prefix-dev/setup-pixi@v0.10.2
         with:
           pixi-version: v0.76.2
@@ -156,7 +156,7 @@ jobs:
         env:
           PYTEST_ADDOPTS: --junitxml=build/reports/tests/mpi.xml
         run: pixi run --locked -e fem test-mpi
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: matrix.kind == 'mpi' && always()
         with:
           name: test-results-mpi-${{ matrix.os }}
@@ -180,7 +180,7 @@ jobs:
         run: >-
           pixi run --locked -e intel python scripts/check_portable_wheel.py build/windows-wheel
           --require-pardiso --report build/reports/windows-pardiso-wheel.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: matrix.kind == 'intel' && runner.os == 'Windows' && always()
         with:
           name: wheel-windows-pardiso
@@ -199,7 +199,7 @@ jobs:
       PYVISTA_OFF_SCREEN: "true"
       MPLBACKEND: "Agg"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: prefix-dev/setup-pixi@v0.10.2
         with:
           pixi-version: v0.76.2
@@ -212,7 +212,7 @@ jobs:
         run: pixi run --locked -e test test-dependencies
       - name: Run all CPU workers followed by exclusive serial tests
         run: pixi run --locked -e test test-cov
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: coverage-full-native-linux-cuda

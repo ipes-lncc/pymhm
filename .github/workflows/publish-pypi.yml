@@ -20,7 +20,7 @@ jobs:
     outputs:
       prerelease: ${{ steps.release.outputs.prerelease }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: prefix-dev/setup-pixi@v0.10.2
@@ -39,7 +39,7 @@ jobs:
             exit 1
           fi
           pixi run --locked -e release version-check --tag "$RELEASE_TAG" --notes-output build/release-notes.md --github-output "$GITHUB_OUTPUT"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-notes
           path: build/release-notes.md
@@ -83,7 +83,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: python-distributions
           path: dist/
@@ -102,11 +102,11 @@ jobs:
       RELEASE_TAG: ${{ github.ref_name }}
       PRERELEASE: ${{ needs.validate.outputs.prerelease }}
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: release-notes
           path: build/
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: python-distributions
           path: dist/
