@@ -295,7 +295,7 @@ def test_native_non_nodal_spaces_and_hex_geometry_do_not_guess_portable_maps() -
 
 def test_bound_layout_and_evaluation_reject_invalid_contracts() -> None:
     """Malformed topology, coefficient shapes, components and points fail clearly."""
-    from dolfinx import fem
+    fem = pytest.importorskip("dolfinx.fem")
 
     mesh = TriangleMesh.unit_square()
     binding = bind_space(mesh, _element("triangle", 2))
