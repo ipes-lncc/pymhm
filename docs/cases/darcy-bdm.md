@@ -10,7 +10,7 @@ The divergence space is exactly P1.
 P0, P1 and P2 traces are supported, including subface partitions aligned with
 fine edges. The default is an unsplit P1 trace on every macroface. The
 contravariant Piola transform and oriented Legendre normal moments are shared
-with the [mixed elasticity implementation](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-elasticity.md).
+with the [mixed elasticity implementation](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-elasticity.md).
 
 ```python
 from pymhm import TriangleMesh
@@ -115,6 +115,6 @@ Regenerate these package-owned analytical cases with:
 pixi run -e notebooks python examples/plot_darcy_bdm.py
 ```
 
-The [numerical records](https://github.com/volpatto/pymhm/blob/main/examples/results/darcy-bdm.json)
+The [numerical records](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/darcy-bdm.json)
 state meshes, quadratures, trace degrees and physical errors. External reference
 solver sources are not needed to execute this gallery.

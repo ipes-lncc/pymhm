@@ -185,7 +185,7 @@ Zero forms whose arguments were simplified away require an explicit shape.
 Complex-valued blocks, nonzero rank-zero functionals and higher-rank forms are
 outside this compiler contract. Declare complex formulations in explicit real
 and imaginary coordinates, as in the
-[Helmholtz notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/waves/helmholtz/introductory_methods.ipynb);
+[Helmholtz notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/helmholtz/introductory_methods.ipynb);
 the compiler assembles the resulting real blocks.
 
 ## Retain local modes and physical constraints
@@ -294,9 +294,9 @@ moment `value` therefore uses the global constraint `(row, value - offset)`.
 It does not replace that integral by a mean of coarse coefficients or include
 auxiliary reactions in a physical pressure gauge.
 
-The [three-level coefficient notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/foundations/operators/variational_hierarchy.ipynb)
+The [three-level coefficient notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/variational_hierarchy.ipynb)
 checks operator recursion against an independently assembled full matrix.
-The [spatial recursive MHM notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/darcy/36_recursive_mhm.ipynb)
+The [spatial recursive MHM notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/36_recursive_mhm.ipynb)
 declares Q2 leaf forms, P1 trace restrictions and `NestedEquations`, with a
 physical leaf-integral gauge for Neumann data. Its live analytical checks are
 separate from the archived convergence acquisitions and their provenance.

@@ -13,7 +13,7 @@ declared `entity_maps`. A provider constructs and compiles native resources
 inside its worker; no live native object crosses a spawn boundary. See the
 [variational guide](variational.md) for all compilation and recursion limits.
 
-The [UFL provider notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/foundations/operators/ufl_provider.ipynb)
+The [UFL provider notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/ufl_provider.ipynb)
 defines its scalar volume operator, both trace pairings and physical mean
 directly. The [provider tutorial](tutorials/providers.md) also declares mixed
 flux, pressure and auxiliary boundary fields without a PDE-specific solver.
@@ -31,7 +31,7 @@ well posed.
 
 Here FEniCSx means [DOLFINx](https://docs.fenicsproject.org/dolfinx/) assembly
 of forms expressed in [UFL](https://docs.fenicsproject.org/ufl/). The
-[Darcy reference comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy-audit.md) records DOLFINx 0.9.0. The
+[Darcy reference comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy-audit.md) records DOLFINx 0.9.0. The
 examples assemble their local forms directly through UFL and DOLFINx.
 
 Use the optional environment:
@@ -298,7 +298,7 @@ boundary terms and, in the Stokes limit, different rigid-motion modes. They must
 not be interchanged while keeping the same boundary and kernel definitions.
 See [the published construction](https://doi.org/10.1016/j.cma.2017.05.027) and
 [the literature map](literature.md).
-The [high-order reproduction](https://github.com/volpatto/pymhm/blob/main/docs/cases/reproduction.md#stokes-2017-equal-order-local-spaces-and-direct-figure-comparison)
+The [high-order reproduction](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reproduction.md#stokes-2017-equal-order-local-spaces-and-direct-figure-comparison)
 used P2/P2 and P3/P3 local spaces through DOLFINx with a computed inverse
 estimate, then compared their numerical errors with digitized article curves.
 These calculations use pyMHM with DOLFINx local assembly; they do not execute

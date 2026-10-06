@@ -302,6 +302,8 @@ contracts do not qualify external software. See [providers](docs/tutorials/provi
 
 - [ ] Select capabilities and cases for the release using evidence valid for
   the delivered source; synchronize version, dependencies, metadata and release notes.
+- [x] Provide locked git-cliff release tasks that synchronize all current-version
+  fields, preserve handwritten and historical notes, and validate matching tags.
 - [x] Verify complete, minimal wheel/sdist and noarch Conda contents, byte-identical
   runtime payloads, isolated wheel installation and rebuilding from the sdist
   outside the checkout. Optional backend adapters ship with the package;
@@ -310,8 +312,9 @@ contracts do not qualify external software. See [providers](docs/tutorials/provi
   Version only selected figures under an explicit allowlist. Large field archives
   and intermediate outputs remain outside Git.
 - [ ] Verify administrative prerequisites for automatic publication: PyPI trusted
-  publisher for `publish-pypi.yml` and environment `pypi`; GitHub Actions as
-  the Pages source; release-tag deployment allowed in `github-pages`.
+  publisher for owner `ipes-lncc`, repository `pymhm`, workflow `publish-pypi.yml`
+  and environment `pypi`; GitHub Actions as the Pages source; `main` and `v*`
+  release-tag deployment allowed in `github-pages`.
 - [ ] Publish validated `v*` releases through the workflow sequence below.
   Submit the conda-forge recipe separately when target dependencies are available.
 
@@ -400,9 +403,9 @@ numerical cases; missing dependencies do not count as backend validation.
 
 ### CI and release ordering
 
-[Tests](https://github.com/volpatto/pymhm/actions/workflows/tests.yml),
-[Lint and Quality](https://github.com/volpatto/pymhm/actions/workflows/lint-and-quality.yml)
-and [Docs](https://github.com/volpatto/pymhm/actions/workflows/docs.yml) have
+[Tests](https://github.com/ipes-lncc/pymhm/actions/workflows/tests.yml),
+[Lint and Quality](https://github.com/ipes-lncc/pymhm/actions/workflows/lint-and-quality.yml)
+and [Docs](https://github.com/ipes-lncc/pymhm/actions/workflows/docs.yml) have
 dedicated responsibilities and run independently on pull requests and main pushes.
 Within Tests, the Integration matrix starts only after **all Core matrix jobs
 succeed**. Its four native solver jobs cover DOLFINx/PETSc, MPI and PARDISO
@@ -421,9 +424,16 @@ and `test-py312` on their configured platforms; these do not replace native
 backend qualification. Full two-GPU Tests requires manual dispatch with
 `full_native` enabled.
 
-The [release workflow](https://github.com/volpatto/pymhm/actions/workflows/publish-pypi.yml)
-runs **Tests and Quality in parallel → Docs validation/deployment → PyPI
-publication of checked artifacts**. Administrative prerequisites are tracked in R7.
+The [release workflow](https://github.com/ipes-lncc/pymhm/actions/workflows/publish-pypi.yml)
+runs **Version/tag validation → Tests, Quality and Docs checks in parallel →
+PyPI publication of checked artifacts → GitHub Release → Docs deployment**.
+Use `release-fetch`, `changelog-preview`, `release-prepare VERSION` and
+`version-check` in the locked `release` environment; initial preparation requires
+`--initial`. The [development guide](docs/development.md#prepare-versions-and-release-notes)
+describes the first-parent main history and version synchronization rules.
+Administrative prerequisites are tracked in R7.
+Docs also supports manual publication with `publish=true` from `main` or a `v*`
+tag, including an initial documentation deployment before the next release.
 Keep platform/release claims tied to successful identified runs.
 
 ### Scientific documentation and notebooks

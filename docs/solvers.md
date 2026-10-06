@@ -103,7 +103,7 @@ native refinement steps, with a pivot-perturbation threshold of \(10^{-13}\).
 The profiles are separate choices: matching is not uniformly more accurate,
 and neither is an automatic fallback for the other. Residuals and correction
 equations use the complete original matrix and the requested tolerance.
-The [HPC4e case](https://github.com/volpatto/pymhm/blob/main/docs/cases/hpc4e.md) checks complete physical fields against the
+The [HPC4e case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/hpc4e.md) checks complete physical fields against the
 SciPy factorization.
 
 `petsc-symmetric` requests the MUMPS symmetric-indefinite factorization through
@@ -167,7 +167,7 @@ already passed. Local physical balances must still meet their separate checks.
 The conservative transport and RAD drivers expose it as
 `global_refinement_precision="extended"`. It does not imply extended local
 assembly or factorization. Local and global accumulation must be selected
-separately when both are needed. The [RAD coefficient study](https://github.com/volpatto/pymhm/blob/main/docs/cases/rad-conditioning.md)
+separately when both are needed. The [RAD coefficient study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/rad-conditioning.md)
 reports the parameter combinations that still fail the residual criterion;
 wider accumulation does not guarantee an accurate solution for every condition
 number.
@@ -230,7 +230,7 @@ For local multiscale basis construction, one factorization solves the source
 and all trace right-hand sides together. A GPU factorization can therefore
 amortize setup over several local basis vectors, but transfer and setup costs
 remain significant for small local problems. See the measured
-[performance cases](https://github.com/volpatto/pymhm/blob/main/docs/performance.md).
+[performance cases](https://github.com/ipes-lncc/pymhm/blob/main/docs/performance.md).
 
 ## CPU algebraic multigrid
 
@@ -431,5 +431,5 @@ pixi run --locked -e test-core python benchmarks/block_solver.py --backend pyamg
 pixi run -e gpu python benchmarks/block_solver.py --backend amgx --output block-gpu.json
 ```
 
-The [individual measurements](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution)
+The [individual measurements](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution)
 include setup, all repeated solves, iteration counts, residuals and source hashes.

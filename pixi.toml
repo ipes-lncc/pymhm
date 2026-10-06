@@ -29,6 +29,8 @@ ruff = ">=0.11"
 twine = ">=5"
 
 [feature.test.dependencies]
+git = ">=2.25"
+git-cliff = "==2.13.1"
 pytest = ">=8"
 pytest-cov = ">=5"
 pytest-xdist = ">=3.6"
@@ -77,6 +79,17 @@ vtk = ">=9.5,<9.7"
 [feature.packaging.dependencies]
 rattler-build = ">=0.40"
 actionlint = ">=1.7"
+
+[feature.release.dependencies]
+git = ">=2.25"
+git-cliff = "==2.13.1"
+
+[feature.release.tasks]
+release-fetch = "git fetch origin +refs/heads/main:refs/remotes/origin/main --tags"
+changelog-preview = "python -m scripts.release preview"
+release-prepare = "python -m scripts.release prepare"
+version-set = "python -m scripts.release prepare"
+version-check = "python -m scripts.release check"
 
 [feature.meshing.dependencies]
 python-gmsh = ">=4.13"
@@ -312,6 +325,7 @@ introduction = { features = ["dev", "test", "fem", "notebooks", "introduction"],
 introduction-intel = { features = ["dev", "test", "fem", "notebooks", "introduction", "intel"], solve-group = "introduction-intel" }
 introduction-gpu = { features = ["dev", "test", "fem-gpu", "notebooks", "introduction", "gpu"], solve-group = "introduction-gpu" }
 packaging = { features = ["native", "dev", "packaging"], solve-group = "packaging" }
+release = { features = ["native", "dev", "release"], solve-group = "release" }
 meshing = { features = ["native", "dev", "test", "meshing"], solve-group = "meshing" }
 fem = { features = ["dev", "test", "fem"], solve-group = "fem" }
 remeshing = { features = ["dev", "test", "freefem"], solve-group = "remeshing" }

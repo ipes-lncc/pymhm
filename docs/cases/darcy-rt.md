@@ -123,7 +123,7 @@ pixi run -e notebooks python examples/plot_darcy_rt.py
 pixi run -e fem pytest tests/test_darcy_rt.py -m fem
 ```
 
-[Acquisition record](https://github.com/volpatto/pymhm/blob/main/examples/results/darcy-rt.json)
+[Acquisition record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/darcy-rt.json)
 and notebook `33_darcy_rt.ipynb` identify the executed spaces, norms, source hashes
 and archived fields. This campaign validates the native RT family; it does not
 claim that every heterogeneous published RT2 reservoir study has been reproduced.

@@ -59,7 +59,7 @@ Pressure uses ordinary scalar composition. Since $\det J$ is constant, the
 physical divergence and pressure spaces coincide. Normal moment transformations
 handle both orientation signs and permutations of shared face vertices.
 Nonaffine prisms are rejected; curved-cell pressure conventions are outside
-this API. [Mapped hexahedra](https://github.com/volpatto/pymhm/blob/main/docs/cases/mapped-well.md) have their own geometry contract.
+this API. [Mapped hexahedra](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mapped-well.md) have their own geometry contract.
 
 Pressure Dirichlet values enter the weak boundary load. Neumann data are physical
 outward normal-flux densities. A pure-Neumann solve retains the joint constant
@@ -114,7 +114,7 @@ norms are computed separately with orders 7 and 10. Pressure and **vector** flux
 errors are physical volume $L^2$ norms, divided by the corresponding exact norm.
 The pressure denominator includes the 25 MPa datum; it is not the norm of the
 pressure increment. The hexahedral curve reuses the independently recorded
-[RT1/Q1 study](https://github.com/volpatto/pymhm/blob/main/docs/cases/mapped-well.md) with this same pressure normalization. The affine
+[RT1/Q1 study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mapped-well.md) with this same pressure normalization. The affine
 triangular subdivisions and the trilinear hexahedral spaces are different
 discretizations on the same physical domain. A common refinement factor does
 not imply equal cell counts or equal computational work across these families.

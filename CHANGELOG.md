@@ -1,6 +1,9 @@
 # Changelog
 
-## 0.1.0 — unreleased
+## 0.1.0
+
+<!-- pymhm:generated:start -->
+<!-- pymhm:generated:end -->
 
 - Make user-declared `Equation` and `LocalEquations` the primary API: independent
   local A/B and global C/D blocks, rectangular trial/test trace maps, explicit

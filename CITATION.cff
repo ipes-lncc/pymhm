@@ -7,8 +7,8 @@ authors:
     given-names: Diego
 version: "0.1.0"
 license: LGPL-2.1-only
-repository-code: https://github.com/volpatto/pymhm
-url: https://github.com/volpatto/pymhm
+repository-code: https://github.com/ipes-lncc/pymhm
+url: https://github.com/ipes-lncc/pymhm
 keywords:
   - finite element methods
   - multiscale hybrid mixed

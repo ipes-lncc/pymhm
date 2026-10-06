@@ -1,8 +1,8 @@
 site_name: PyMHM
 site_description: Composable Multiscale Hybrid Mixed finite element methods in Python
-site_url: https://volpatto.github.io/pymhm/
-repo_url: https://github.com/volpatto/pymhm
-repo_name: volpatto/pymhm
+site_url: https://ipes-lncc.github.io/pymhm/
+repo_url: https://github.com/ipes-lncc/pymhm
+repo_name: ipes-lncc/pymhm
 edit_uri: edit/main/docs/
 strict: true
 theme:
@@ -268,7 +268,7 @@ nav:
   - Finite element bases: api/elements.md
   - Helmholtz and Maxwell: api/waves.md
   - Solvers and execution backends: api/backends.md
-- Roadmap: https://github.com/volpatto/pymhm/blob/main/ROADMAP.md
+- Roadmap: https://github.com/ipes-lncc/pymhm/blob/main/ROADMAP.md
 - Development: development.md
 plugins:
 - search

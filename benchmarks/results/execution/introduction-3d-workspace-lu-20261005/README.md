@@ -1,8 +1,8 @@
 # Three-dimensional Darcy: reusable native workspaces, LU and AMG
 
 This record accompanies the explicit-UFL
-[introductory notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb)
-and [case description](https://volpatto.github.io/pymhm/cases/darcy-3d-scalability/).
+[introductory notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb)
+and [case description](https://ipes-lncc.github.io/pymhm/cases/darcy-3d-scalability/).
 It contains actual complete-workflow samples with their physical data,
 resource counts, software/source/lockfile digests, executed-basis archive
 digests, replay controls and independent numerical checks in [results.json](results.json).

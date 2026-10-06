@@ -524,8 +524,8 @@ including when $\lambda_L$ varies spatially. If the entire material is exactly
 incompressible, compatibility requires zero boundary volume flux and one global
 pressure mean instead. The unconstrained physical equations are checked after
 this augmentation; a nonzero imposed mean does not replace equilibrium.
-The [elasticity cases](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity.md) and
-[MSL comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity-reference.md) provide non-affine verification.
+The [elasticity cases](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity.md) and
+[MSL comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity-reference.md) provide non-affine verification.
 
 ### Implemented weak-symmetry stress method
 
@@ -545,7 +545,7 @@ the stress trace fixes its pressure gauge.
 Weak symmetry, divergence moments and normal-traction agreement are measured
 separately. P1 force projection is enforced in every fine cell, whereas the
 pointwise divergence error against a non-polynomial force remains nonzero.
-See [mixed elasticity](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-elasticity.md) for the oscillatory-modulus
+See [mixed elasticity](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-elasticity.md) for the oscillatory-modulus
 example, convergence, material sweep and independent finite-element comparison.
 
 ## Stability and error assessment

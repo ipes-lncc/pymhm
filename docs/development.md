@@ -118,10 +118,10 @@ thresholds and scientific acceptance criteria are separate controls.
 Larger literature campaigns run through the problem notebooks outside the CI
 suite.
 
-CI separates responsibilities into four workflows: [Tests](https://github.com/volpatto/pymhm/actions/workflows/tests.yml),
-[Lint and Quality](https://github.com/volpatto/pymhm/actions/workflows/lint-and-quality.yml),
-[Docs](https://github.com/volpatto/pymhm/actions/workflows/docs.yml) and
-[Publish to PyPI](https://github.com/volpatto/pymhm/actions/workflows/publish-pypi.yml).
+CI separates responsibilities into four workflows: [Tests](https://github.com/ipes-lncc/pymhm/actions/workflows/tests.yml),
+[Lint and Quality](https://github.com/ipes-lncc/pymhm/actions/workflows/lint-and-quality.yml),
+[Docs](https://github.com/ipes-lncc/pymhm/actions/workflows/docs.yml) and
+[Publish to PyPI](https://github.com/ipes-lncc/pymhm/actions/workflows/publish-pypi.yml).
 Tests, Quality and Docs run independently on pull requests and main-branch pushes.
 They also expose `workflow_call` so release validation reuses the same checks.
 The workflows use Pixi 0.76.2 and the checked-in lockfiles. Locked workspace
@@ -171,8 +171,8 @@ outputs with environment and hardware provenance when measuring performance.
 Identify each reference implementation by its project name, module, revision
 and source URL when available. State whether the result comes from an unchanged
 application, an instrumented driver, or an independently assembled restriction.
-The [MSL comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/reference-comparison.md) identifies MSL_MHM,
-MSL_CG and MSL_Core; the [NeoPZ comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/neopz.md) distinguishes its
+The [MSL comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reference-comparison.md) identifies MSL_MHM,
+MSL_CG and MSL_Core; the [NeoPZ comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/neopz.md) distinguishes its
 RT0 driver from Labmec/MHM. Record source-access requirements when a repository
 cannot be fetched anonymously. Matching a library name or polynomial degree
 alone does not establish identical discrete equations.
@@ -184,28 +184,98 @@ native DOLFINx integration tests remain executable parts of its test suite.
 
 ## Distribution
 
-The `publish-pypi.yml` release workflow runs for a `v*` tag pushed to
-`volpatto/pymhm`. It calls Tests and Lint and Quality in parallel for that revision.
-The quality gate validates the version tag against release metadata and uploads
-the checked distributions. Once both gates succeed, the release workflow calls
-Docs with `publish=true` to build, validate and deploy the documentation artifact
-to GitHub Pages through `github-pages`. The final PyPI job waits for Tests,
-Quality and Docs, downloads the checked Python distributions and publishes them
-through the configured `pypi` environment. The PyPI publishing job runs directly
-in `publish-pypi.yml`.
+### Prepare versions and release notes
 
-Before a release, configure the PyPI trusted publisher with owner `volpatto`,
-repository `pymhm`, workflow `publish-pypi.yml` and environment `pypi`. Enable Pages in
-**Settings → Pages → Build and deployment → Source: GitHub Actions**.
-Allow release tags in the `github-pages` environment's deployment rules, and
-ensure the release jobs can run automatically under both environments' protection
-rules. The Pages job declares `pages: write`
+The release tasks follow [SciAstro's release preparation strategy](https://github.com/volpatto/sciastro/blob/main/scripts/changelog.mjs).
+Use the locked `release` environment, which provides Git and git-cliff 2.13.1:
+
+```bash
+pixi run --locked -e release release-fetch
+pixi run --locked -e release changelog-preview
+pixi run --locked -e release release-prepare 0.2.0
+pixi run --locked -e release version-check
+```
+
+For the first release, before any canonical release tag exists on `origin/main`,
+add `--initial` to both `changelog-preview` and `release-prepare`. For example,
+`pixi run --locked -e release release-prepare 0.1.0 --initial` prepares an initial
+`0.1.0` release. Subsequent releases require a version newer than the last
+release. Supported versions use `X.Y.Z`, optionally followed by `aN`, `bN` or
+`rcN`; their tags are exactly `vVERSION`.
+
+Merge the changes to release into `main` before fetching and preparing. Preparation
+uses the nearest canonical release tag on `origin/main`'s first-parent history
+and generates notes from that exact commit to the fetched main tip. Tags on
+other branches do not split the notes, and commits confined to the preparation
+branch do not enter the range. Initial preparation uses the whole fetched main
+history. A shallow checkout must fetch the full history first.
+
+`cliff.toml` groups conventional commits into features, fixes, documentation,
+tests, performance, refactoring and maintenance; other commits remain included.
+Notes link to the source commits and retain breaking-change markers. Only the
+marked generated block of the current release is replaced. Handwritten notes,
+older releases and historical numerical records remain intact.
+
+`release-prepare VERSION` synchronizes the versions in `pyproject.toml`,
+`pixi.toml`, `src/pymhm/__init__.py`, `CITATION.cff`, the Conda recipe, the README
+badge and text, and the documentation landing page. It updates `CHANGELOG.md`
+in the same operation after validating every field. Failed writes restore the
+original files. `version-set VERSION` is an alias for this full preparation;
+`version-check` checks every current version and the release notes.
+
+Review the generated diff, run the release gates, then commit the prepared files
+and push `main` with its matching tag. The following example assumes preparation
+on `main`. If preparation uses a separate branch, commit and merge it into `main`
+before tagging the resulting main commit. The tasks create no commit or tag:
+
+```bash
+git add CHANGELOG.md pyproject.toml pixi.toml src/pymhm/__init__.py
+git add CITATION.cff recipe/recipe.yaml README.md docs/index.md
+git commit -m "chore(release): prepare 0.2.0"
+git tag -a v0.2.0 -m "PyMHM 0.2.0"
+git push origin main v0.2.0
+```
+
+### Automatic publication
+
+The `publish-pypi.yml` workflow runs for a `v*` tag pushed to
+`ipes-lncc/pymhm`. It validates synchronized versions, usable release notes and
+the tagged commit's inclusion in `main`. Tests, Lint and Quality, and Docs
+validation then run in parallel. Quality builds and checks the distributions;
+after all checks pass, PyPI receives those same artifacts through trusted
+publishing. The workflow then creates a GitHub Release using the matching
+CHANGELOG section and checked wheel/sdist, and deploys the documentation through
+`github-pages`. Alpha, beta and release-candidate versions are marked as
+prereleases on GitHub. Push one release tag at a time; release workflows share a
+single concurrency group and never cancel an active publication.
+
+Ordinary pushes to `main` check versions and notes without publishing a package.
+The PyPI job runs directly in `publish-pypi.yml`.
+
+Before a release, configure the [PyPI trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)
+with owner `ipes-lncc`, repository `pymhm`, workflow `publish-pypi.yml` and
+environment `pypi`. The publisher's GitHub owner must match this organization;
+an existing publisher registered to a different owner must be replaced.
+
+Configure [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
+in **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+The documentation URL is **https://ipes-lncc.github.io/pymhm/**. In
+**Settings → Environments → github-pages**, allow `main` and release tags
+matching `v*` in the deployment rules. Ensure release jobs can run automatically
+under both environments' protection rules. The Pages job declares `pages: write`
 and `id-token: write`; the PyPI job declares `id-token: write`.
 
-Ordinary branch pushes, pull requests and manual dispatches do not publish a
-package or deploy documentation. The optional GPU job is qualified separately
-and does not block tag releases. The Conda recipe builds a portable package and
-tests its installed import/dependencies; conda-forge acceptance requires a
+To publish documentation before the next release, open **Actions → Docs** and
+select **Run workflow**, choose `main` or a `v*` release tag, and enable `publish`.
+The workflow builds and checks the site before deploying it to GitHub Pages.
+The manual input defaults to `false`; an ordinary manual run validates the site
+without deploying.
+Publication is restricted to `ipes-lncc/pymhm` and these refs.
+
+Ordinary branch pushes and pull requests validate documentation without deploying.
+Manual dispatches never publish a Python package. The optional GPU job is
+qualified separately and does not block tag releases. The Conda recipe builds a
+portable package and tests its installed import/dependencies; conda-forge acceptance requires a
 feedstock review. Release maintainers must validate optional runtime compatibility
 and publish notes describing the actual scientific scope.
 Inspect the source archive as well as the installed runtime: reference solver

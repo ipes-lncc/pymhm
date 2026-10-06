@@ -12,7 +12,7 @@ viscosity one, zero drag, homogeneous velocity boundary data, and zero mean
 pressure. The exact pressure is
 \(p=150(x-1/2)(y-1/2)\), with \(\|p\|_{L^2}=12.5\).
 The velocity is derived from the streamfunction given in the
-[flow case](https://github.com/volpatto/pymhm/blob/main/docs/cases/flow.md#equations-and-independent-reference).
+[flow case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/flow.md#equations-and-independent-reference).
 
 The study compares pyMHM's native USFEM and Taylor–Hood implementations.
 The independent finite element reference is

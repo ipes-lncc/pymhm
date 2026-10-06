@@ -167,7 +167,7 @@
   "source_policy": "Supplementary case Markdown remains versioned and is linked to its repository source. The default site compiles canonical cases and retains only assets referenced by included Markdown.",
   "canonical_case_count": 6,
   "essential_embedded_figures": 38,
-  "supplementary_source_url": "https://github.com/volpatto/pymhm/blob/main/docs/",
+  "supplementary_source_url": "https://github.com/ipes-lncc/pymhm/blob/main/docs/",
   "case_figures": [
     {
       "page": "cases/nested.md",

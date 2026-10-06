@@ -5,6 +5,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish the checked documentation from main or a release tag
+        type: boolean
+        required: false
+        default: false
   workflow_call:
     inputs:
       publish:
@@ -17,8 +23,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: docs-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref_type != 'tag' }}
+  group: docs-${{ github.ref }}-${{ inputs.publish && 'publish' || 'check' }}
+  cancel-in-progress: ${{ !inputs.publish && github.ref_type != 'tag' }}
 
 env:
   PYTHONFAULTHANDLER: "1"
@@ -45,20 +51,24 @@ jobs:
           locked: true
           cache: true
       - run: pixi run --locked -e docs docs-check
-      - name: Upload the validated release site
+      - name: Upload the validated site
         if: >-
-          inputs.publish && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') &&
-          github.repository == 'volpatto/pymhm'
+          inputs.publish && github.repository == 'ipes-lncc/pymhm' &&
+          ((github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) ||
+          (github.event_name == 'workflow_dispatch' &&
+          (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))))
         uses: actions/upload-pages-artifact@v5
         with:
           path: site/
 
   deploy:
-    name: Publish validated release documentation
+    name: Publish validated documentation
     needs: build
     if: >-
-      inputs.publish && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') &&
-      github.repository == 'volpatto/pymhm'
+      inputs.publish && github.repository == 'ipes-lncc/pymhm' &&
+      ((github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) ||
+      (github.event_name == 'workflow_dispatch' &&
+      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))))
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -72,6 +82,6 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/configure-pages@v6
-      - name: Deploy the validated release site
+      - name: Deploy the validated site
         id: deployment
         uses: actions/deploy-pages@v5

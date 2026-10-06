@@ -125,5 +125,5 @@ pixi run -e fem pytest tests/test_planar3d_fenics.py
 
 The [campaign JSON](../figures/planar3d/campaign.json) records geometry counts,
 area ranges, boundary conventions, source and field hashes, norms and residuals.
-[Notebook 63](https://github.com/volpatto/pymhm/blob/main/notebooks/darcy/63_planar3d.ipynb)
+[Notebook 63](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/63_planar3d.ipynb)
 executes a light mixed-boundary patch and replays the accepted records and figures.

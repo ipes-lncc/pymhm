@@ -38,7 +38,7 @@ one and does not imply a known reliability constant.
 
 Polynomial boundary representability, regularity and exact local lifts are
 assumptions of the published theorem. For numerically solved local problems,
-the [weighted reconstruction estimator](https://github.com/volpatto/pymhm/blob/main/docs/cases/adaptive-darcy.md) accounts separately
+the [weighted reconstruction estimator](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/adaptive-darcy.md) accounts separately
 for flux, nonconformity, divergence and data terms. Neither a pressure jump of
 zero nor a small algebraic residual establishes a small PDE error.
 

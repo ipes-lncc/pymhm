@@ -180,7 +180,7 @@ pixi run -e notebooks python examples/plot_gals3d.py
 pixi run -e fem pytest tests/test_gals3d_fenics.py
 ```
 
-[Notebook 55](https://github.com/volpatto/pymhm/blob/main/notebooks/elasticity/55_gals3d.ipynb)
+[Notebook 55](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/elasticity/55_gals3d.ipynb)
 checks an incompressible patch and replays the archived fields and figures.
 The acquisition JSON records source hashes for each acquisition batch, actual
 spaces, stabilization bounds, quadrature comparisons and field digests.

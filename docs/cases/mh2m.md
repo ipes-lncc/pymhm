@@ -22,7 +22,7 @@ spaces. Local ear triangulations supply continuous finite-element spaces;
 internal diagonals of this triangulation do not become macrofaces.
 
 `solve_mh2m_3d` supplies a separately verified
-[tetrahedral implementation](https://github.com/volpatto/pymhm/blob/main/docs/cases/mh3d.md) with a continuous triangular
+[tetrahedral implementation](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mh3d.md) with a continuous triangular
 pressure skeleton and independently resolved conormal faces. Its original
 three-dimensional tests are distinct from the two-dimensional published
 experiments below.
@@ -281,7 +281,7 @@ postprocessing step.
 
 ## Nonconvex polygons and physical boundary data
 
-The [shared analytical boundary campaign](https://github.com/volpatto/pymhm/blob/main/docs/cases/mh.md#nonhomogeneous-boundaries-on-nonconvex-polygons)
+The [shared analytical boundary campaign](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mh.md#nonhomogeneous-boundaries-on-nonconvex-polygons)
 uses two complementary L polygons per grid rectangle, with
 $n=1,2,4,8,16$ and $2n^2$ macroelements. The anisotropic tensor has
 off-diagonal entries; the exact nonpolynomial pressure provides nonzero
@@ -340,4 +340,4 @@ Notebook `52_mh2m.ipynb` executes a small solve and displays these archived stud
 The polygonal driver and the published-case studies on this page are
 two-dimensional. Their verification does not establish uniform stability for
 arbitrary independent face partitions. The tetrahedral implementation and its
-separate dimensional verification are described on the [MH/MH²M 3D page](https://github.com/volpatto/pymhm/blob/main/docs/cases/mh3d.md).
+separate dimensional verification are described on the [MH/MH²M 3D page](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mh3d.md).

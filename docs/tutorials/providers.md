@@ -7,9 +7,9 @@ coefficient maps; `assemble` supplies compilation, local elimination and
 ordered shared-face reduction. Changing the assembly backend does not require
 subclassing the solver or selecting a PDE-specific runtime entry point.
 
-Open the [local/global provider notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/foundations/operators/local_global_providers.ipynb)
+Open the [local/global provider notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/local_global_providers.ipynb)
 and edit the forms, boundary, local solver and execution cells. The
-[UFL notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/foundations/operators/ufl_provider.ipynb)
+[UFL notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/ufl_provider.ipynb)
 contains user-written UFL forms and reports whether DOLFINx executed.
 
 ```bash

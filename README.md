@@ -1,17 +1,17 @@
 # PyMHM
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/volpatto/pymhm/main/docs/assets/branding/pymhm-logo-readme.png" width="720" alt="PyMHM — Composable Multiscale Hybrid Mixed finite element methods in Python">
+  <img src="https://raw.githubusercontent.com/ipes-lncc/pymhm/main/docs/assets/branding/pymhm-logo-readme.png" width="720" alt="PyMHM — Composable Multiscale Hybrid Mixed finite element methods in Python">
 </p>
 
-[![Tests](https://github.com/volpatto/pymhm/actions/workflows/tests.yml/badge.svg)](https://github.com/volpatto/pymhm/actions/workflows/tests.yml)
-[![Lint and Quality](https://github.com/volpatto/pymhm/actions/workflows/lint-and-quality.yml/badge.svg)](https://github.com/volpatto/pymhm/actions/workflows/lint-and-quality.yml)
-[![Docs](https://github.com/volpatto/pymhm/actions/workflows/docs.yml/badge.svg)](https://volpatto.github.io/pymhm/)
-[![Publish to PyPI](https://github.com/volpatto/pymhm/actions/workflows/publish-pypi.yml/badge.svg)](https://github.com/volpatto/pymhm/actions/workflows/publish-pypi.yml)
-[![Version: 0.1.0](https://img.shields.io/badge/version-0.1.0-21918c.svg)](https://github.com/volpatto/pymhm/blob/main/pyproject.toml)
-[![Python: 3.11–3.13](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-3776ab.svg)](https://github.com/volpatto/pymhm/blob/main/pyproject.toml)
-[![Supported OS](https://img.shields.io/badge/OS-Linux%20%7C%20macOS%20%7C%20Windows-3776ab.svg)](https://github.com/volpatto/pymhm/actions/workflows/tests.yml)
-[![License: LGPL-2.1-only](https://img.shields.io/badge/license-LGPL--2.1--only-440154.svg)](https://github.com/volpatto/pymhm/blob/main/LICENSE)
+[![Tests](https://github.com/ipes-lncc/pymhm/actions/workflows/tests.yml/badge.svg)](https://github.com/ipes-lncc/pymhm/actions/workflows/tests.yml)
+[![Lint and Quality](https://github.com/ipes-lncc/pymhm/actions/workflows/lint-and-quality.yml/badge.svg)](https://github.com/ipes-lncc/pymhm/actions/workflows/lint-and-quality.yml)
+[![Docs](https://github.com/ipes-lncc/pymhm/actions/workflows/docs.yml/badge.svg)](https://ipes-lncc.github.io/pymhm/)
+[![Publish to PyPI](https://github.com/ipes-lncc/pymhm/actions/workflows/publish-pypi.yml/badge.svg)](https://github.com/ipes-lncc/pymhm/actions/workflows/publish-pypi.yml)
+[![Version: 0.1.0](https://img.shields.io/badge/version-0.1.0-21918c.svg)](https://github.com/ipes-lncc/pymhm/blob/main/pyproject.toml)
+[![Python: 3.11–3.13](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-3776ab.svg)](https://github.com/ipes-lncc/pymhm/blob/main/pyproject.toml)
+[![Supported OS](https://img.shields.io/badge/OS-Linux%20%7C%20macOS%20%7C%20Windows-3776ab.svg)](https://github.com/ipes-lncc/pymhm/actions/workflows/tests.yml)
+[![License: LGPL-2.1-only](https://img.shields.io/badge/license-LGPL--2.1--only-440154.svg)](https://github.com/ipes-lncc/pymhm/blob/main/LICENSE)
 
 `pymhm` couples user-defined local and global variational equations through
 explicitly oriented trace coordinates. Declare the forms, choose a local
@@ -220,17 +220,25 @@ Windows x86-64 and macOS Apple Silicon (ARM64). Executable notebooks and
 analytical PDE examples are available in the repository. Optional
 dependency contracts and actual native-backend integrations are reported separately.
 
-Dedicated [Tests](https://github.com/volpatto/pymhm/actions/workflows/tests.yml),
-[Lint and Quality](https://github.com/volpatto/pymhm/actions/workflows/lint-and-quality.yml)
-and [Docs](https://github.com/volpatto/pymhm/actions/workflows/docs.yml) workflows
+Dedicated [Tests](https://github.com/ipes-lncc/pymhm/actions/workflows/tests.yml),
+[Lint and Quality](https://github.com/ipes-lncc/pymhm/actions/workflows/lint-and-quality.yml)
+and [Docs](https://github.com/ipes-lncc/pymhm/actions/workflows/docs.yml) workflows
 run independently on pull requests and main-branch pushes. The complete two-GPU
 suite is opt-in through manual dispatch. On a validated release tag,
-[Publish to PyPI](https://github.com/volpatto/pymhm/actions/workflows/publish-pypi.yml)
-reuses Tests and Quality in parallel, then builds and deploys the checked
-documentation to GitHub Pages, then publishes the checked Python distributions.
+[Publish to PyPI](https://github.com/ipes-lncc/pymhm/actions/workflows/publish-pypi.yml)
+validates metadata and runs Tests, Quality and Docs checks in parallel, then
+publishes the checked distributions to PyPI, creates the GitHub Release and
+deploys the documentation to GitHub Pages.
+The Docs workflow also supports manual publication from `main` or a release tag
+by enabling its `publish` input.
 Maintainers configure the PyPI trusted publisher for `publish-pypi.yml`, Pages
 with GitHub Actions as its source and the `github-pages` environment to accept
 release tags; see [development](docs/development.md).
+
+Prepare release notes and synchronize current versions with
+`pixi run --locked -e release release-prepare VERSION`, after running
+`release-fetch` in the same environment. The task uses git-cliff and preserves
+handwritten notes; the first release requires `--initial`.
 
 Licensed under LGPL-2.1-only. Citation metadata is in `CITATION.cff`.
 
@@ -246,12 +254,12 @@ Brazil.
 
 <p align="center">
   <a href="https://ipes.lncc.br/">
-    <img src="https://raw.githubusercontent.com/volpatto/pymhm/main/docs/assets/institutions/ipes.png" width="300" alt="IPES — Innovative Parallel numErical Solvers">
+    <img src="https://raw.githubusercontent.com/ipes-lncc/pymhm/main/docs/assets/institutions/ipes.png" width="300" alt="IPES — Innovative Parallel numErical Solvers">
   </a>
   <a href="https://www.gov.br/lncc/pt-br">
-    <img src="https://raw.githubusercontent.com/volpatto/pymhm/main/docs/assets/institutions/lncc-readme.svg" width="190" alt="LNCC — Laboratório Nacional de Computação Científica">
+    <img src="https://raw.githubusercontent.com/ipes-lncc/pymhm/main/docs/assets/institutions/lncc-readme.svg" width="190" alt="LNCC — Laboratório Nacional de Computação Científica">
   </a>
   <a href="https://www.gov.br/mcti/pt-br">
-    <img src="https://raw.githubusercontent.com/volpatto/pymhm/main/docs/assets/institutions/mcti-readme.svg" width="270" alt="MCTI — Ministério da Ciência, Tecnologia e Inovação">
+    <img src="https://raw.githubusercontent.com/ipes-lncc/pymhm/main/docs/assets/institutions/mcti-readme.svg" width="270" alt="MCTI — Ministério da Ciência, Tecnologia e Inovação">
   </a>
 </p>

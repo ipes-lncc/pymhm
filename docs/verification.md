@@ -170,11 +170,11 @@ or `examples.mh2m_crisscross_campaign`.
 
 ## Direct comparisons
 
-The [published-result comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/reproduction.md) matches all four
+The [published-result comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reproduction.md) matches all four
 Darcy Figure 5 curves of Harder et al. (2013) at five resolutions within the
 1% digitization allowance; the largest difference is 0.20%. It explicitly
 distinguishes primal P1 from classical RT0 and its quadratic potential.
-The [analytical MHM case](https://github.com/volpatto/pymhm/blob/main/docs/cases/analytic.md) separately verifies equation (42)
+The [analytical MHM case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/analytic.md) separately verifies equation (42)
 with full source moments and a nonconstant-source Neumann reconstruction;
 these give different coarse pressures for the same cosine forcing.
 These are pyMHM calculations against digitized article curves, not an execution
@@ -187,13 +187,13 @@ has 18 values across six levels and a maximum discrepancy of
 0.70%. The full stress L2 curves and the P3/P3 stress H(div) curve do **not**
 match; both the numerical values and the norm definitions remain reported.
 
-The [MSL implementation comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/reference-comparison.md) executes
+The [MSL implementation comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reference-comparison.md) executes
 `msl_mhm` with `msl_cg` local solves and `msl_core` geometry. It matches full
 Darcy pressure and raw flux fields on five meshes, up to 65,536
 fine triangles. The largest field L2 differences are approximately
 \(5.1\times10^{-14}\) and \(4.5\times10^{-13}\), respectively.
 
-For the [coarse cosine gallery case](https://github.com/volpatto/pymhm/blob/main/docs/cases/coarse-cosine.md), the exact
+For the [coarse cosine gallery case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/coarse-cosine.md), the exact
 32-macrotriangle/512-fine-triangle comparison gives flux differences of
 \(7.98\times10^{-15}\) against MSL primal assembly and
 \(6.94\times10^{-14}\) against restricted NeoPZ RT0 assembly. The MSL
@@ -202,9 +202,9 @@ Zero, constant, and affine pressure checks verify boundary assembly separately.
 The 22.42%/21.87% analytical flux errors remain;
 these are underresolved approximations, even though the codes agree.
 
-The [Darcy verification](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy-audit.md) compares actual physical fields with
+The [Darcy verification](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy-audit.md) compares actual physical fields with
 independent DOLFINx 0.9.0 mixed assembly and uncondensed primal UFL assembly.
-The [NeoPZ comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/neopz.md) adds 46 independent RT0/P0 field
+The [NeoPZ comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/neopz.md) adds 46 independent RT0/P0 field
 comparisons: five analytical cases, up to five refinement levels, and both
 complete and restricted macro traces. The largest flux L2 difference is
 \(3.94\times10^{-10}\), in a layered medium with contrast 1000 and flux norm
@@ -212,7 +212,7 @@ approximately \(1.414\times10^3\). A separate boundary-quadrature diagnostic
 quantifies the coarse cosine differences. RT0 trace partitions must align with
 the fine-edge partition under an absolute geometric tolerance.
 
-The [Stokes pressure verification](https://github.com/volpatto/pymhm/blob/main/docs/cases/flow-audit.md) checks native local operators,
+The [Stokes pressure verification](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/flow-audit.md) checks native local operators,
 full versus condensed global systems, five macro and local refinements, trace
 enrichment, and both one-sided pressure traces. Its low-order USFEM convergence
 is not substituted for the paper's higher-order local-space experiment.
@@ -222,7 +222,7 @@ check reuses the native pyMHM local matrices. The
 and distinguishes the auxiliary `msl_mfem` execution from the separately examined
 `mhm-mfem` repository; neither supplies these Stokes reference curves.
 
-The [GaLS elasticity comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity-reference.md) uses native MSL
+The [GaLS elasticity comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity-reference.md) uses native MSL
 local assembly on five matching P1/P1 macro meshes and two higher-order checks.
 The largest recorded L2 differences in displacement, pressure, displacement
 gradient and Cauchy stress are respectively \(2.59\times10^{-13}\),
@@ -231,12 +231,12 @@ gradient and Cauchy stress are respectively \(2.59\times10^{-13}\),
 the article's face-refinement tables or its missing stabilization parameter.
 
 Independent global DOLFINx assemblies also check the
-[BDM2/P1 Darcy](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy-bdm.md) and
-[BDM2/P1/P1 weak-symmetry elasticity](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-elasticity.md) fields.
+[BDM2/P1 Darcy](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy-bdm.md) and
+[BDM2/P1/P1 weak-symmetry elasticity](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-elasticity.md) fields.
 The latter checks stress, displacement and rotation for a non-exact solution,
 in addition to portable polynomial projection and equilibrium identities.
 
-The [unit-diffusion estimator](https://github.com/volpatto/pymhm/blob/main/docs/cases/estimator.md) is checked on two local/trace
+The [unit-diffusion estimator](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/estimator.md) is checked on two local/trace
 pairs across five macro meshes. Its measured effectivity remains above one;
 at the finest level it is 1.2895 for P2/P0 and 1.5652 for P3/P1, both using
 RT2 recovery. Error integration is independent of the estimator quadrature.
@@ -251,7 +251,7 @@ Reference accuracy remains unresolved. The MHM r128-to-r256 local increments
 retain the published Q1/P0 spaces and remain approximately 19% in broken H1.
 A comparison against another discretization does not establish greater accuracy.
 
-The [mixed-elasticity geological case](https://github.com/volpatto/pymhm/blob/main/docs/cases/hpc4e.md) uses the original HPC4e
+The [mixed-elasticity geological case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/hpc4e.md) uses the original HPC4e
 material arrays and the published RT1/Q1/P1 and 16 × 8 macro partition. Digitized
 stress-profile intervals and independently assembled classical mixed fields
 provide distinct checks of historical agreement and approximation error.
@@ -262,7 +262,7 @@ Against that finer reference, the finest MHM differences are 4.15940% in stress
 and 7.33891% in compliance. The measured reference increments are not continuum
 error bounds.
 
-The [tetrahedral and prismatic well study](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-well-geometries.md)
+The [tetrahedral and prismatic well study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-well-geometries.md)
 separates classical refinement from macro-trace restriction on a common
 faceted domain. Its 18 calculations check analytical pressure, vector flux,
 physical residuals, production and quadrature sensitivity; independent
@@ -274,8 +274,8 @@ replay checks across native thread counts. Fine-space approximation and skeletal
 restriction errors are measured separately; agreement between implementations
 does not remove the measured coarse-trace flux error.
 
-The adaptive [SPE10](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10-adaptive.md) and
-[Stokes–Brinkman cavity](https://github.com/volpatto/pymhm/blob/main/docs/cases/stokes-adaptive.md) campaigns compare estimator
+The adaptive [SPE10](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/spe10-adaptive.md) and
+[Stokes–Brinkman cavity](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/stokes-adaptive.md) campaigns compare estimator
 histories with independently refined classical solutions. The constant cavity
 lid has singular upper corners: pressure and velocity-gradient comparisons use
 a fixed interior exclusion, while global velocity L2 remains meaningful.
@@ -405,7 +405,7 @@ below \(1.5\times10^{-15}\). These are separate native executions, not extra
 portable-test counts.
 
 Other real solver runs exercise PARDISO and NVIDIA GPU libraries where available.
-See [performance](https://github.com/volpatto/pymhm/blob/main/docs/performance.md) for hardware, library versions, measured times
+See [performance](https://github.com/ipes-lncc/pymhm/blob/main/docs/performance.md) for hardware, library versions, measured times
 and residuals. A native integration skipped by pytest remains unverified in that
 particular environment, even when its Python adapter has complete coverage.
 
@@ -419,7 +419,7 @@ identical physical quadrature points and independently computed inverse
 constants are used. This checks the implemented formulas without identifying
 one convention as the undocumented historical heterogeneous implementation.
 
-An additional [SPE10 Brinkman control](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10.md) independently assembles
+An additional [SPE10 Brinkman control](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/spe10.md) independently assembles
 classical conforming P2/P1 Taylor–Hood elements with DOLFINx/UFL and solves them
 with PETSc/MUMPS. It uses the same PDE, coefficient and physical boundary
 conditions as the MHM case, with no residual stabilization. Successively refined
@@ -459,12 +459,12 @@ on the nonmatching meshes. Successive reference differences, MHM distances and
 display samples are distinct diagnostics; none is substituted for an exact
 solution or a certified error bound.
 
-The [SPE10 comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10.md) matches the reported Darcy geometry,
+The [SPE10 comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/spe10.md) matches the reported Darcy geometry,
 spaces and boundary conditions, including the 9,738,625-unknown Q3 reference.
 Its published pressure curve is compared at digitized coordinates with an
 explicit raster uncertainty; original field coefficients and the historical
 local Q1 refinement are unavailable. The separate
-[Darcy flux study](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10-flux.md) integrates physical vector-field differences
+[Darcy flux study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/spe10-flux.md) integrates physical vector-field differences
 against refined conforming Q3, native MSL_CG P1 and native NeoPZ RT0/P0 solutions.
 It reports each reference's own refinement changes; these numerical fields are
 not exact solutions. The published RT2 flux image uses different MHM spaces and

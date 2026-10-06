@@ -15,7 +15,7 @@ physical volume mean. The raw field `-K grad(p)` is generally broken across
 macrofaces. Conservation concerns the oriented skeleton flux, and does not
 assert fine-cell conservation of that raw gradient.
 
-Positive local degrees are supported. The [general tetrahedral Pk study](https://github.com/volpatto/pymhm/blob/main/docs/cases/tetra-pk.md)
+Positive local degrees are supported. The [general tetrahedral Pk study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/tetra-pk.md)
 includes independent P5/P6 element checks and a P5/P2 estimator campaign.
 
 ```python
@@ -46,14 +46,14 @@ subtriangle, independently of the local degree. Refinement preserves triangular 
 oriented normals without merging geometrically close unrelated vertices.
 
 This convenience solver uses affine tetrahedral Pk local spaces for any positive
-degree; [P5/P6 native checks and a P5/P2 study](https://github.com/volpatto/pymhm/blob/main/docs/cases/tetra-pk.md) document the
+degree; [P5/P6 native checks and a P5/P2 study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/tetra-pk.md) document the
 general-degree evaluation. Separate interfaces provide
-[star-shaped polyhedral macrocells](https://github.com/volpatto/pymhm/blob/main/docs/cases/star-polyhedra.md) and
+[star-shaped polyhedral macrocells](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/star-polyhedra.md) and
 [three-dimensional H(div) mixed local families](mixed-well-geometries.md).
 Curved tetrahedral geometry is not part of this primal solver. The [MPI assembly interface](../execution.md) accepts
 generic local algebra, while this convenience driver exposes serial, thread
 and spawned-process local factories with a single-process global solve.
-The [three-dimensional RAD case](https://github.com/volpatto/pymhm/blob/main/docs/cases/rad3d.md) uses the same geometric and polynomial
+The [three-dimensional RAD case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/rad3d.md) uses the same geometric and polynomial
 spaces with the conservative Robin formulation and local P4/face P1 degrees.
 
 ## Explicit face and volume partitions
@@ -154,5 +154,5 @@ pixi run -e fem pytest tests/test_tetrahedral.py -m fem
 pixi run -e meshing pytest tests/test_meshing3d.py -m meshing
 ```
 
-[Acquisition record](https://github.com/volpatto/pymhm/blob/main/examples/results/darcy3d.json)
+[Acquisition record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/darcy3d.json)
 and notebook `29_darcy3d.ipynb` retain the discretization, source hashes and checks.

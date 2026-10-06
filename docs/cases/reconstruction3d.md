@@ -189,7 +189,7 @@ This comparison evaluates physical errors directly. A \(P_4/P_2\) local/trace
 pair is not assigned the estimator theorem above, which requires \(P_5\) for
 \(\ell=2\) in three dimensions. This distinction preserves both the valid
 approximation experiment and the theorem's actual hypotheses.
-The [P5/P2 study](https://github.com/volpatto/pymhm/blob/main/docs/cases/tetra-pk.md) supplies the corresponding admissible
+The [P5/P2 study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/tetra-pk.md) supplies the corresponding admissible
 degree pair, with five uniform macro resolutions and a separate RT2/RT3
 comparison on the same 162-macrocell geometry.
 

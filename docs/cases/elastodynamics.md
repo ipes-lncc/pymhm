@@ -184,7 +184,7 @@ not imposed by the rendering.
 The [numerical records](../figures/elastodynamics/comparison.json) retain all
 seven spatial levels, all eight temporal comparisons, acquisition source
 hashes and field archive hashes. The
-[elastodynamic notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/waves/elastodynamics/71_elastodynamics.ipynb) replays these
+[elastodynamic notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/elastodynamics/71_elastodynamics.ipynb) replays these
 results.
 
 ## Independent verification

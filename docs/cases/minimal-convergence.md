@@ -42,7 +42,7 @@ pixi run --locked -e notebooks python examples/plot_initial_convergence.py \
   --output build/initial-convergence-figures
 ```
 
-The [overview notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/convergence/73_initial_convergence.ipynb)
+The [overview notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/73_initial_convergence.ipynb)
 checks the catalogue identities and displays representative completed series.
 
 ## Remaining scientific limits
@@ -50,7 +50,7 @@ checks the catalogue identities and displays representative completed series.
 The original HPC4e matched reproduction remains pending. SPE10 Brinkman has
 one accepted conforming resolution; its next level exceeded the stated memory
 budget, so no reference convergence or MHM agreement is claimed. Their
-[geometry, spaces and acquisition limits](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/flow-elasticity/limitations.json)
+[geometry, spaces and acquisition limits](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/flow-elasticity/limitations.json)
 are recorded separately. Mixed-well refinement has two accepted levels.
 
 The SPE10 Darcy-flux increments and the periodic H1 controls are not resolved.
@@ -110,7 +110,7 @@ Initial observations on explicitly constructed meshes; three levels do not estab
 
 ![Robin hybrid method](../figures/minimal-convergence/scalar-mh/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/scalar-mh/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/scalar-mh/study.json)
 
 
 <a id="scalar-mh2m"></a>
@@ -123,7 +123,7 @@ Initial observations on explicitly constructed meshes; three levels do not estab
 
 ![MH2M analytical pressure](../figures/minimal-convergence/scalar-mh2m/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/scalar-mh2m/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/scalar-mh2m/study.json)
 
 
 <a id="scalar-tensor-rt-k1"></a>
@@ -136,7 +136,7 @@ Initial observations on explicitly constructed meshes; three levels do not estab
 
 ![Tensor RT family, face degree 1](../figures/minimal-convergence/scalar-tensor-rt-k1/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/scalar-tensor-rt-k1/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/scalar-tensor-rt-k1/study.json)
 
 
 <a id="scalar-tensor-rt-k2"></a>
@@ -149,7 +149,7 @@ Initial observations on explicitly constructed meshes; three levels do not estab
 
 ![Tensor RT family, face degree 2](../figures/minimal-convergence/scalar-tensor-rt-k2/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/scalar-tensor-rt-k2/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/scalar-tensor-rt-k2/study.json)
 
 
 <a id="scalar-tensor-rt-k3"></a>
@@ -162,7 +162,7 @@ Initial observations on explicitly constructed meshes; three levels do not estab
 
 ![Tensor RT family, face degree 3](../figures/minimal-convergence/scalar-tensor-rt-k3/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/scalar-tensor-rt-k3/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/scalar-tensor-rt-k3/study.json)
 
 
 <a id="scalar-polygons"></a>
@@ -175,7 +175,7 @@ Initial observations on explicitly constructed meshes; three levels do not estab
 
 ![Polygonal advection–diffusion](../figures/minimal-convergence/scalar-polygons/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/scalar-polygons/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/scalar-polygons/study.json)
 
 
 <a id="scalar-rad-layer"></a>
@@ -188,7 +188,7 @@ Initial observations on explicitly constructed meshes; three levels do not estab
 
 ![RAD analytical boundary layer](../figures/minimal-convergence/scalar-rad-layer/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/scalar-rad-layer/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/scalar-rad-layer/study.json)
 
 
 <a id="scalar-transport-layer"></a>
@@ -201,7 +201,7 @@ Initial observations on explicitly constructed meshes; three levels do not estab
 
 ![SUPG analytical transport layer](../figures/minimal-convergence/scalar-transport-layer/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/scalar-transport-layer/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/scalar-transport-layer/study.json)
 
 
 <a id="darcy-unfitted"></a>
@@ -214,7 +214,7 @@ Trace refinement with fixed local discretization; macro convergence and the comp
 
 ![Unfitted Darcy trace refinement](../figures/minimal-convergence/darcy-unfitted/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/darcy-unfitted/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/darcy-unfitted/study.json)
 
 
 <a id="darcy-pgmhm"></a>
@@ -227,7 +227,7 @@ Raw broken gradient flux; only the enriched normal multiplier is macro conservat
 
 ![PGMHM enriched pressure and Darcy flux](../figures/minimal-convergence/darcy-pgmhm/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/darcy-pgmhm/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/darcy-pgmhm/study.json)
 
 
 <a id="darcy-unusual"></a>
@@ -240,7 +240,7 @@ Epsilon=1 analytical control with stated strong Dirichlet and zero Neumann data;
 
 ![UNUSUAL reaction-diffusion](../figures/minimal-convergence/darcy-unusual/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/darcy-unusual/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/darcy-unusual/study.json)
 
 
 <a id="darcy-spe10"></a>
@@ -253,7 +253,7 @@ The three local resolutions do not establish flux convergence or a converged num
 
 ![SPE10 Model 2, layer 36](../figures/minimal-convergence/darcy-spe10/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/darcy-spe10/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/darcy-spe10/study.json)
 
 
 <a id="darcy-quarter-obstacle"></a>
@@ -266,7 +266,7 @@ A fine numerical reference retains nonzero refinement error; it is not an exact 
 
 ![Quarter obstacle classical reference refinement](../figures/minimal-convergence/darcy-quarter-obstacle/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/darcy-quarter-obstacle/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/darcy-quarter-obstacle/study.json)
 
 
 <a id="darcy-mixedwell"></a>
@@ -279,7 +279,7 @@ Only two of three requested levels are accepted; no three-level convergence rate
 
 ![Mixed Darcy well, two accepted levels](../figures/minimal-convergence/darcy-mixedwell/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/darcy-mixedwell/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/darcy-mixedwell/study.json)
 
 
 <a id="wave-helmholtz"></a>
@@ -292,7 +292,7 @@ Three initial levels do not establish asymptotic rates or the full angular/stabi
 
 ![Helmholtz plane wave](../figures/minimal-convergence/wave-helmholtz/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/wave-helmholtz/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/wave-helmholtz/study.json)
 
 
 <a id="wave-elastic-wave"></a>
@@ -305,7 +305,7 @@ Five time steps give an initial spatial study; the original .5s horizon and asym
 
 ![Equation (53) analytical elastic wave](../figures/minimal-convergence/wave-elastic-wave/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/wave-elastic-wave/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/wave-elastic-wave/study.json)
 
 
 <a id="wave-nanoguide"></a>
@@ -318,7 +318,7 @@ n64 is a numerical comparison level, not an exact or resolved reference The shor
 
 ![Maxwell nanoguide: independent DG study](../figures/minimal-convergence/wave-nanoguide/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/wave-nanoguide/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/wave-nanoguide/study.json)
 
 
 <a id="wave-three-layer"></a>
@@ -331,7 +331,7 @@ Spatial refinement of h8 is unresolved; temporal increments do not certify spati
 
 ![Three layers: conforming temporal study](../figures/minimal-convergence/wave-three-layer/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/wave-three-layer/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/wave-three-layer/study.json)
 
 
 <a id="wave-marmousi"></a>
@@ -344,7 +344,7 @@ The crop changes lateral/bottom boundary locations; the full selected paper doma
 
 ![Marmousi: explicit 160x 80 m crop pilot](../figures/minimal-convergence/wave-marmousi/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/wave-marmousi/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/wave-marmousi/study.json)
 
 
 <a id="transport-random-temporal"></a>
@@ -357,7 +357,7 @@ Three time steps give two own temporal increments at T=0.005 on one 2048-triangl
 
 ![Random-coefficient transport: initial temporal increments](../figures/minimal-convergence/transport-random-temporal/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/transport-random-temporal/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/transport-random-temporal/study.json)
 
 
 <a id="periodic-local-reference"></a>
@@ -370,7 +370,7 @@ The Q1 finest-pair relative increments are approximately 0.99 percent in L2 and 
 
 ![Periodic coefficient: Q1 increments and MHM local sensitivity](../figures/minimal-convergence/periodic-local-reference/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/periodic-local-reference/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/periodic-local-reference/study.json)
 
 
 <a id="flow3d"></a>
@@ -383,7 +383,7 @@ Three initial levels do not establish asymptotic rates or uniform stability. The
 
 ![Analytical Stokes, Brinkman and Oseen in 3D](../figures/minimal-convergence/flow3d/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/flow3d/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/flow3d/study.json)
 
 
 <a id="gals3d"></a>
@@ -396,7 +396,7 @@ The three levels use one fixed nearly incompressible material; a locking sweep a
 
 ![Nearly incompressible GaLS elasticity in 3D](../figures/minimal-convergence/gals3d/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/gals3d/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/gals3d/study.json)
 
 
 <a id="initial-elasticity2d"></a>
@@ -409,7 +409,7 @@ Three initial levels do not establish every literature rate or uniform stability
 
 ![Weak-symmetry anisotropic elasticity in 2D](../figures/minimal-convergence/initial-elasticity2d/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/initial-elasticity2d/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/initial-elasticity2d/study.json)
 
 
 <a id="primal-elasticity3d"></a>
@@ -422,7 +422,7 @@ This minimum series selects P3/r1; the P2/r2 family and extensive sweeps remain 
 
 ![Anisotropic primal elasticity in 3D](../figures/minimal-convergence/primal-elasticity3d/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/primal-elasticity3d/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/primal-elasticity3d/study.json)
 
 
 <a id="mixed-elasticity3d"></a>
@@ -435,7 +435,7 @@ The selected BDM3/P2/P2 series is an initial analytical AFW study; the BDM2/r2 f
 
 ![AFW weak-symmetry mixed elasticity in 3D](../figures/minimal-convergence/mixed-elasticity3d/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/mixed-elasticity3d/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/mixed-elasticity3d/study.json)
 
 
 <a id="stokes2d"></a>
@@ -448,7 +448,7 @@ This initial series selects trace P1; the P0/P2 trace variants remain outside th
 
 ![Analytical stabilized Stokes in 2D](../figures/minimal-convergence/stokes2d/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/stokes2d/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/stokes2d/study.json)
 
 
 <a id="oseen2d-trace"></a>
@@ -461,7 +461,7 @@ This initial series selects trace P1; the P0/P2 trace variants remain outside th
 
 ![Analytical Oseen with P1 skeleton in 2D](../figures/minimal-convergence/oseen2d-trace/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/oseen2d-trace/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/oseen2d-trace/study.json)
 
 
 <a id="oseen2d-viscosity"></a>
@@ -474,7 +474,7 @@ The viscosity 1 acquisition UUIDs are reused from the trace-P1 study; these are 
 
 ![Analytical Oseen viscosity variants in 2D](../figures/minimal-convergence/oseen2d-viscosity/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/oseen2d-viscosity/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/oseen2d-viscosity/study.json)
 
 
 <a id="oseen2d-data"></a>
@@ -487,7 +487,7 @@ The internal-layer divergence does not converge on these three initial levels, d
 
 ![Oseen boundary, internal-layer and variable-advection data in 2D](../figures/minimal-convergence/oseen2d-data/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/oseen2d-data/study.json)
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/oseen2d-data/study.json)
 
 
 <a id="elasticity-l18-oscillatory"></a>
@@ -500,5 +500,4 @@ The historical rotation column remains unreconciled; this selected BDM2 finite-s
 
 ![Oscillatory L18 mixed elasticity in 2D](../figures/minimal-convergence/elasticity-l18-oscillatory/convergence.png)
 
-[Numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/minimal-convergence/elasticity-l18-oscillatory/study.json)
-
+[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/elasticity-l18-oscillatory/study.json)

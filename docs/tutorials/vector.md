@@ -58,8 +58,8 @@ from the explicitly H(div)-conforming mixed stress.
 The BDM variants retain all zero-normal interior bubbles of the declared higher
 degree, while preserving the normal trace degree. The tensor RT implementation
 uses its full stated tensor-product spaces. These choices are specified in the
-[mixed-family](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-families.md) and
-[tensor RT](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity-tensor-rt.md) pages. An instrumented comparison
+[mixed-family](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-families.md) and
+[tensor RT](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity-tensor-rt.md) pages. An instrumented comparison
 against a restricted Unicamp implementation has its own discretization and
 provenance; it is not identified as the pure BDM or tensor RT tutorial solver.
 The public 3D mixed-elasticity solver presently supplies the tetrahedral BDM

@@ -43,9 +43,9 @@ tests:
       pip_check: true
 
 about:
-  homepage: https://github.com/volpatto/pymhm
-  repository: https://github.com/volpatto/pymhm
-  documentation: https://volpatto.github.io/pymhm/
+  homepage: https://github.com/ipes-lncc/pymhm
+  repository: https://github.com/ipes-lncc/pymhm
+  documentation: https://ipes-lncc.github.io/pymhm/
   summary: Composable multiscale hybrid mixed finite element methods
   license: LGPL-2.1-only
   license_file: LICENSE

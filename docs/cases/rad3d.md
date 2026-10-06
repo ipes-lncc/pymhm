@@ -7,7 +7,7 @@ $$
 $$
 
 on affine tetrahedral macrocells. Local continuous Lagrange spaces accept any
-positive degree through the [general tetrahedral Pk evaluator](https://github.com/volpatto/pymhm/blob/main/docs/cases/tetra-pk.md).
+positive degree through the [general tetrahedral Pk evaluator](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/tetra-pk.md).
 `TriangularSkeleton` selects independent Bernstein Pk modes on each
 triangular macroface subdivision, with different degrees and dyadic partitions
 per face when desired. Physical node identity uses integer barycentric weights
@@ -162,7 +162,7 @@ pixi run -e notebooks python examples/plot_rad3d.py
 pixi run -e fem pytest tests/test_rad3d.py -m fem
 ```
 
-The [numerical record](https://github.com/volpatto/pymhm/blob/main/examples/results/rad3d.json)
+The [numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/rad3d.json)
 stores all five levels, quadrature checks, field digests and acquisition-source
 hashes. Notebook `41_rad3d.ipynb` combines a small patch with replay of these
 results and figures.

@@ -6,7 +6,7 @@ against another implementation. This comparison uses NeoPZ's public RT0
 element family on exactly the same triangular mesh. It also distinguishes
 that reference from Labmec's higher-order mixed MHM controller.
 
-An additional [coarse cosine check](https://github.com/volpatto/pymhm/blob/main/docs/cases/coarse-cosine.md#mixed-comparison-with-neopz)
+An additional [coarse cosine check](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/coarse-cosine.md#mixed-comparison-with-neopz)
 uses the gallery's exact 32-macrotriangle, 512-fine-triangle configuration.
 It reproduces its 21.8662% flux error and compares the complete RT0 fields.
 

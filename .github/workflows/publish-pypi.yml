@@ -8,12 +8,46 @@ permissions:
   contents: read
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: pymhm-release
   cancel-in-progress: false
 
 jobs:
+  validate:
+    name: Validate release version and membership in main
+    if: github.repository == 'ipes-lncc/pymhm'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      prerelease: ${{ steps.release.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          pixi-version: v0.76.2
+          environments: release
+          locked: true
+          cache: true
+      - name: Check tag, versions, changelog and membership in main
+        id: release
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          if ! git merge-base --is-ancestor HEAD origin/main; then
+            echo "::error::The release tag must point to a commit included in origin/main."
+            exit 1
+          fi
+          pixi run --locked -e release version-check --tag "$RELEASE_TAG" --notes-output build/release-notes.md --github-output "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-notes
+          path: build/release-notes.md
+          if-no-files-found: error
+
   tests:
     name: Release test acceptance
+    needs: validate
     uses: ./.github/workflows/tests.yml
     with:
       full_native: false
@@ -23,30 +57,24 @@ jobs:
 
   quality:
     name: Release quality and artifacts
+    needs: validate
     uses: ./.github/workflows/lint-and-quality.yml
     permissions:
       contents: read
 
-  docs:
-    name: Release documentation
-    needs: [tests, quality]
-    if: >-
-      github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') &&
-      github.repository == 'volpatto/pymhm'
+  docs-check:
+    name: Release documentation acceptance
+    needs: validate
     uses: ./.github/workflows/docs.yml
-    with:
-      publish: true
     permissions:
       contents: read
-      pages: write
-      id-token: write
 
   publish:
     name: Publish validated PyPI distributions
-    needs: [tests, quality, docs]
+    needs: [tests, quality, docs-check]
     if: >-
       github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') &&
-      github.repository == 'volpatto/pymhm'
+      github.repository == 'ipes-lncc/pymhm'
     runs-on: ubuntu-latest
     environment:
       name: pypi
@@ -60,3 +88,45 @@ jobs:
           name: python-distributions
           path: dist/
       - uses: pypa/gh-action-pypi-publish@release/v1
+
+  github-release:
+    name: Publish GitHub release notes and distributions
+    needs: [validate, publish]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RELEASE_TAG: ${{ github.ref_name }}
+      PRERELEASE: ${{ needs.validate.outputs.prerelease }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-notes
+          path: build/
+      - uses: actions/download-artifact@v4
+        with:
+          name: python-distributions
+          path: dist/
+      - name: Create the release and attach the checked distributions
+        shell: bash
+        run: |
+          if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            flags=()
+            if [ "$PRERELEASE" = 'true' ]; then flags+=(--prerelease); fi
+            gh release create "$RELEASE_TAG" --verify-tag --title "$RELEASE_TAG" --notes-file build/release-notes.md "${flags[@]}"
+          fi
+          gh release upload "$RELEASE_TAG" dist/*.whl dist/*.tar.gz --clobber
+
+  docs:
+    name: Deploy published release documentation
+    needs: github-release
+    uses: ./.github/workflows/docs.yml
+    with:
+      publish: true
+    permissions:
+      contents: read
+      pages: write
+      id-token: write

@@ -64,10 +64,10 @@ solution = system.solve()
 print(solution.trace)
 ```
 
-The [vector UFL notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/foundations/operators/vector_ufl.ipynb)
+The [vector UFL notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/vector_ufl.ipynb)
 declares a coercive two-component reaction-diffusion operator; it is separate
 from the mixed Brinkman formulations. The
-[three-level hierarchy](https://github.com/volpatto/pymhm/blob/main/notebooks/foundations/operators/variational_hierarchy.ipynb)
+[three-level hierarchy](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/variational_hierarchy.ipynb)
 checks recursive coefficients against an independently written full system.
 
 ## Executable formulations
@@ -99,8 +99,8 @@ Built-in geometries include triangles, rectangular cells, simple planar polygons
 tetrahedra, affine prisms, star-shaped polyhedra with planar faces and trilinearly
 mapped hexahedra.
 Nonconvex polyhedra require a certified positive-volume kernel and a conforming
-tetrahedral decomposition, as described in the [polyhedral case](https://github.com/volpatto/pymhm/blob/main/docs/cases/star-polyhedra.md).
-The [scope matrix](https://github.com/volpatto/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria) identifies the formulations available on each
+tetrahedral decomposition, as described in the [polyhedral case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/star-polyhedra.md).
+The [scope matrix](https://github.com/ipes-lncc/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria) identifies the formulations available on each
 geometry; they are not interchangeable backends for every equation.
 Face partitions and polynomial degrees are independent of local refinement.
 Planar edge bases can be discontinuous
@@ -108,7 +108,7 @@ Legendre polynomials or continuous nodal polynomials within each macroface.
 Normal-trace restrictions and local refinement must satisfy each formulation's
 compatibility conditions.
 
-[Scientific scope](https://github.com/volpatto/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria) maps the literature to the implemented paths and
+[Scientific scope](https://github.com/ipes-lncc/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria) maps the literature to the implemented paths and
 remaining mathematical requirements. The [literature catalog](literature.md)
 covers the 20-document reference collection, including the 2025–2026 analyses and
 reconstruction results; a catalog entry is not a claim of complete reproduction.
@@ -118,12 +118,12 @@ reconstruction results; a catalog entry is not a claim of complete reproduction.
 Use [verification](verification.md) for measured errors, conservation tests,
 convergence studies and backend integration results. Coverage measures executable
 branches; it does not prove stability, validate an unavailable backend or
-reproduce a paper. [Performance](https://github.com/volpatto/pymhm/blob/main/docs/performance.md) records timings, including cases
+reproduce a paper. [Performance](https://github.com/ipes-lncc/pymhm/blob/main/docs/performance.md) records timings, including cases
 where parallel execution is slower.
 
 Executed comparisons identify their reference implementations explicitly:
-[MSL_MHM with MSL_CG and MSL_Core](https://github.com/volpatto/pymhm/blob/main/docs/cases/reference-comparison.md) for primal
-Darcy, and [NeoPZ](https://github.com/volpatto/pymhm/blob/main/docs/cases/neopz.md) for conforming and restricted-trace RT0/P0
+[MSL_MHM with MSL_CG and MSL_Core](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reference-comparison.md) for primal
+Darcy, and [NeoPZ](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/neopz.md) for conforming and restricted-trace RT0/P0
 Darcy. Their case pages record the source revisions, discrete spaces, boundary
 conditions and complete-field comparisons. Labmec/MHM's positive-order
 controller has a separate source-level description from the executed RT0 NeoPZ driver.
@@ -132,11 +132,11 @@ This is version 0.1.0, a pre-alpha research implementation. Distribution machine
 is present; an installable artifact is not evidence of a published PyPI release
 or accepted conda-forge feedstock.
 
-The [MSL GaLS comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity-reference.md) checks displacement,
+The [MSL GaLS comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity-reference.md) checks displacement,
 pressure, gradients and full stress for P1/P1, P2/P2 and P3/P3 elasticity.
-The [near-incompressibility study](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity.md) includes finite material
+The [near-incompressibility study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity.md) includes finite material
 ratios through $10^8$, the exact incompressible limit and six refinement points.
-[BDM2 Darcy](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy-bdm.md) and [mixed elasticity](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-elasticity.md)
+[BDM2 Darcy](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy-bdm.md) and [mixed elasticity](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-elasticity.md)
 include independent DOLFINx/Basix assembly checks and analytical convergence cases.
 
 <section class="institutional-support" markdown="1">

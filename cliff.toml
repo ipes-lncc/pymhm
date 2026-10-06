@@ -1,0 +1,33 @@
+# Release preparation supplies an explicit last-release..origin/main range.
+# Do not let unrelated tags split that range into separate changelog sections.
+[changelog]
+header = ""
+footer = ""
+trim = true
+body = """
+{% for group, commits in commits | group_by(attribute="group") %}
+### {{ group }}
+{% for commit in commits %}
+- {% if commit.breaking %}**Breaking:** {% endif %}{{ commit.message | split(pat="\n") | first }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/ipes-lncc/pymhm/commit/{{ commit.id }}))
+{% endfor %}
+{% endfor %}
+"""
+
+[git]
+conventional_commits = true
+filter_unconventional = false
+require_conventional = false
+filter_commits = false
+split_commits = false
+ignore_tags = ".*"
+sort_commits = "oldest"
+commit_parsers = [
+  { message = "^feat", group = "Features" },
+  { message = "^fix", group = "Fixes" },
+  { message = "^docs?", group = "Documentation" },
+  { message = "^test", group = "Tests" },
+  { message = "^perf", group = "Performance" },
+  { message = "^refactor", group = "Refactoring" },
+  { message = "^(build|ci|chore)", group = "Maintenance" },
+  { message = ".*", group = "Other changes" },
+]

@@ -8,7 +8,7 @@ therefore assessed as separate physical cases.
 
 ## Scalar reaction–diffusion
 
-The [RAD notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/mhm_usfem_rad.ipynb)
+The [RAD notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/mhm_usfem_rad.ipynb)
 uses the analytical problem of
 [Santiago, Valentin and Martins, CILAMCE 2025](https://publicacoes.softaliza.com.br/cilamce-2025/article/view/14270):
 
@@ -95,7 +95,7 @@ and incident reconstructions retain their independent one-sided values.
 
 ## Incompressible Brinkman flow
 
-The [Brinkman notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/stokes_brinkman_boundary_layer.ipynb)
+The [Brinkman notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/stokes_brinkman_boundary_layer.ipynb)
 uses the operator and analytical data in Section 3.1.2 of
 [Araya, Harder, Poza and Valentin (2017)](https://www.ci2ma.udec.cl/pdf/pre-publicaciones2/2016/pp16-15.pdf):
 
@@ -199,7 +199,7 @@ errors of approximately 2.6332e-4 and 1.2303e-5. Its own convergence is
 checked independently, and the exact solution remains the error reference.
 
 Current numerical records and source/basis provenance are available in the
-[layer publication](https://github.com/volpatto/pymhm/tree/main/examples/results/introduction-layers).
+[layer publication](https://github.com/ipes-lncc/pymhm/tree/main/examples/results/introduction-layers).
 
 ## Independent discrete checks
 

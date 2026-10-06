@@ -260,7 +260,7 @@
   "canonical_case_count": 28,
   "compiled_markdown_pages": 60,
   "essential_embedded_figures": 79,
-  "supplementary_source_url": "https://github.com/volpatto/pymhm/blob/main/docs/",
+  "supplementary_source_url": "https://github.com/ipes-lncc/pymhm/blob/main/docs/",
   "case_figures": [
     {
       "page": "cases/reproduction.md",

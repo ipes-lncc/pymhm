@@ -54,7 +54,7 @@ The three physical fields remain distinct:
 The reconstruction has the continuous-P2 test equilibrium identity. This does
 not imply a separate source balance on every fine triangle. The classical mixed
 reference instead imposes all discontinuous-P2 divergence moments. See the
-[moment-reconstruction definitions](https://github.com/volpatto/pymhm/blob/main/docs/cases/reconstruction-moments.md).
+[moment-reconstruction definitions](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reconstruction-moments.md).
 
 ## Published indicator and four-triangle local spaces
 
@@ -78,7 +78,7 @@ The source is zero, so its oscillation term vanishes. Local marking values are
 terms contain neither an inverse-material weight nor an ellipticity factor.
 They are retained as numerical indicators for this heterogeneous case, without
 asserting a coefficient-independent bound in the physical energy norm.
-The [two normalization conventions](https://github.com/volpatto/pymhm/blob/main/docs/cases/weighted-estimator.md#published-and-energy-normalized-conventions)
+The [two normalization conventions](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/weighted-estimator.md#published-and-energy-normalized-conventions)
 are separate API choices.
 
 The remeshing input is the square root of each local marking value. Its
@@ -462,7 +462,7 @@ then uses nested uniform red refinement of those local partitions. Material
 interfaces remain fine edges. The macro trace remains constant on each whole
 macroface; fitting the local mesh does not enrich that trace.
 
-In this separate study, the [weighted estimator](https://github.com/volpatto/pymhm/blob/main/docs/cases/adaptive-darcy.md) supplies the macro marking values,
+In this separate study, the [weighted estimator](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/adaptive-darcy.md) supplies the macro marking values,
 and Dörfler marking uses \(\theta=0.5\). Local-resolution decisions use a
 separate quantity:
 
@@ -481,7 +481,7 @@ The declared balance policy refines local meshes uniformly when
 \(\delta_{\mathrm{loc}}>0.25\sqrt{\|\eta_1\|^2+\|\eta_2\|^2}\), and otherwise
 refines the bulk-selected macroelements by longest-edge propagation. The
 initial macro minimum angle is 28.6105°; terminal-edge bisections preserve the
-macro shape-regularity condition of the [refinement algorithm](https://github.com/volpatto/pymhm/blob/main/docs/cases/adaptive-darcy.md),
+macro shape-regularity condition of the [refinement algorithm](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/adaptive-darcy.md),
 and every recorded state reports its actual minimum angle. Material-intersection
 triangles form a different mesh family: their small edges and angles are measured
 separately, and the macro guarantee does not apply to them. These geometric

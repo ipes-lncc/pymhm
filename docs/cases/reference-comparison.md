@@ -8,7 +8,7 @@ finite elements, skeleton space, and boundary enforcement. Across five mesh
 sizes, full-field L2 differences stay below $5.1\times10^{-14}$ in pressure and
 $4.5\times10^{-13}$ in flux. The largest case contains 65,536 fine triangles.
 
-The [coarse cosine comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/coarse-cosine.md) separately checks the gallery's
+The [coarse cosine comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/coarse-cosine.md) separately checks the gallery's
 diagonal mesh and P0 traces. Both comparisons use the same boundary assembly;
 their prescribed pressures are zero and nonzero, respectively.
 
@@ -133,7 +133,7 @@ problems solved to sufficient accuracy. This experiment instead refines both
 macro and local meshes with fixed local ratio and P1 local approximation.
 It verifies agreement between MSL and pyMHM; it does **not**
 claim to reproduce that article's convergence curve or a P2/RT2 reconstruction
-table. The [Darcy gallery](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy.md) separately distinguishes raw and
+table. The [Darcy gallery](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy.md) separately distinguishes raw and
 conservative flux approximations.
 
 An additional run of **`ipes-lncc/msl_mfem`**, revision

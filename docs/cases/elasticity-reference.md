@@ -110,7 +110,7 @@ rather than averaging stresses across interfaces.
 
 The GaLS stress reconstructed from displacement and pressure is symmetric,
 but these plots and comparisons do not assert that it is globally H(div)
-conforming. The [mixed stress formulation](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-elasticity.md) enforces a
+conforming. The [mixed stress formulation](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-elasticity.md) enforces a
 different set of continuity and equilibrium conditions.
 
 ## Provenance and retained data

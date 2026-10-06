@@ -32,7 +32,7 @@ Its degree and subdivision are independent of the broken conormal space.
 The local boundary triangulation must resolve both partitions.
 
 This driver supports tetrahedral macroelements. The
-[two-dimensional polygonal extension](https://github.com/volpatto/pymhm/blob/main/docs/cases/mh.md#physical-neumann-and-mixed-boundaries)
+[two-dimensional polygonal extension](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mh.md#physical-neumann-and-mixed-boundaries)
 does not imply an implementation on general three-dimensional polyhedra.
 No mesh-uniform stability claim is made for arbitrary degree/subdivision
 pairs. Local inverse and global rank checks reject insufficient spaces, but
@@ -67,7 +67,7 @@ $$
 This follows by expanding the boundary term with the divergence theorem and
 applying Young's inequality to $2(\sigma v,\nabla v)_K$. No zero-mean local
 constraint is required. The local reconstruction and condensed Dirichlet
-operator use the [same Robin algebra](https://github.com/volpatto/pymhm/blob/main/docs/cases/mh.md#operator-multiplier-and-conservation)
+operator use the [same Robin algebra](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mh.md#operator-multiplier-and-conservation)
 as in two dimensions.
 
 On each exterior Neumann face, the auxiliary pressure and mass matrix impose

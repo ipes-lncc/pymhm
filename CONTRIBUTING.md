@@ -68,17 +68,95 @@ whether a case is a manufactured verification, an independently reproduced
 published result, or an exploratory calculation. Provide citations and explicit
 tolerances; do not infer validation from a visually plausible field.
 
-For releases, update the version in `pixi.toml`, `pyproject.toml`,
-`src/pymhm/__init__.py`, `CITATION.cff`, and `recipe/recipe.yaml`; update the changelog, regenerate the
-lock, and run the checks above. Tests, Lint and Quality, and Docs have dedicated
-workflows that run independently on pull requests and main-branch pushes and
-provide the same checks as reusable release gates. On a pushed `vVERSION` tag,
-`publish-pypi.yml` runs Tests and Quality in parallel, then builds and deploys the
-validated documentation, then publishes the checked Python distributions.
-The quality gate checks tag/version consistency before building artifacts.
-Maintainers must configure the `pypi` environment and PyPI trusted publisher for
-`publish-pypi.yml`, set Pages' source to GitHub Actions, and permit release tags
-in the `github-pages` environment. See the development guide for the release procedure.
+## Releases
+
+Merge the changes being released into `main`, then prepare the version and notes
+from its fetched history. Use the locked `release` environment, which supplies
+Git and git-cliff; preparation creates no commit, tag or publication:
+
+```bash
+pixi run --locked -e release release-fetch
+pixi run --locked -e release changelog-preview
+pixi run --locked -e release release-prepare 0.2.0
+pixi run --locked -e release version-check
+```
+
+Replace `0.2.0` with the intended version. Supported canonical PEP 440 versions
+are `X.Y.Z`, optionally followed by `aN`, `bN` or `rcN`, such as `0.2.0rc1`.
+The tag must be exactly `vVERSION`. For the first release, before a canonical
+release tag exists on `origin/main`, use `--initial` for both commands:
+
+```bash
+pixi run --locked -e release changelog-preview --initial
+pixi run --locked -e release release-prepare 0.1.0 --initial
+```
+
+Notes cover the nearest canonical release on the first-parent history of
+`origin/main` through its fetched tip. Commits confined to a preparation branch
+are excluded. If `main` advances, fetch and incorporate it before regenerating
+the pending release. Subsequent versions must be newer than the previous release;
+never rewrite an existing release tag.
+
+`release-prepare` synchronizes seven files: `pyproject.toml`, `pixi.toml`,
+`src/pymhm/__init__.py`, `CITATION.cff`, `recipe/recipe.yaml`, `README.md` and
+`docs/index.md`. It also updates the matching `CHANGELOG.md` section.
+Regenerating a pending version replaces its marked generated block while
+preserving handwritten notes and older releases. Add scientific scope,
+limitations and migration instructions outside that block. `version-set` is an
+alias for the same preparation; use these tasks instead of editing versions
+individually.
+
+Run the portable quality, coverage and distribution checks above, then validate
+the documentation, workflows and Conda artifact:
+
+```bash
+pixi run --locked -e release version-check
+pixi run --locked -e docs docs-check
+pixi run --locked -e packaging ci-check
+pixi run --locked -e packaging conda-build
+```
+
+For native-backend changes, qualify the complete suite on the supported Linux
+CUDA runner, with AmgX prepared and all dependencies available, using
+`pixi run --locked -e test test-cov`. Portable `test-core` acceptance covers the
+portable implementation; its optional-backend skips do not validate those
+backends. Both line and branch coverage must remain at least 99%.
+
+Review the eight prepared files and commit them on the preparation branch:
+
+```bash
+git add CHANGELOG.md pyproject.toml pixi.toml src/pymhm/__init__.py
+git add CITATION.cff recipe/recipe.yaml README.md docs/index.md
+git commit -m "chore(release): prepare 0.2.0"
+```
+
+Merge that branch into `main` before tagging. If preparation was performed
+directly on `main`, the reviewed commit is already there. From the synchronized
+`main` checkout, check the version again and push its annotated tag:
+
+```bash
+git switch main
+git pull --ff-only origin main
+pixi run --locked -e release version-check
+git tag -a v0.2.0 -m "PyMHM 0.2.0"
+git push origin main v0.2.0
+```
+
+Adjust the version consistently in these commands. Push one release tag at a
+time. A `v*` tag pushed to `ipes-lncc/pymhm` triggers validation of synchronized
+versions, usable changelog notes and inclusion in `main`. Tests, Lint and
+Quality, and Docs checks then run in parallel. On success, the workflow publishes
+the checked wheel and sdist to PyPI, creates a GitHub Release with their notes and
+artifacts, and deploys the documentation to GitHub Pages. Alpha, beta and release
+candidates are marked as GitHub prereleases. Ordinary pushes to `main` validate
+the changes without publishing.
+
+Before the first publication, configure the PyPI trusted publisher with owner
+`ipes-lncc`, repository `pymhm`, workflow `publish-pypi.yml` and environment
+`pypi`. Set GitHub Pages' source to **GitHub Actions** and allow `main` and tags
+matching `v*` in the `github-pages` environment. The
+[distribution guide](docs/development.md#distribution) documents these settings
+and the optional manual Docs run with `publish=true`.
 
 The complete CPU/two-GPU job runs only on manual dispatch with `full_native`
 enabled; it does not run for ordinary pushes or tags.

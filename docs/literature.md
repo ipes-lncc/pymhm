@@ -25,15 +25,15 @@ implementation.
 
 | Code or source | Verified role in this repository |
 |---|---|
-| MSL: `msl_mhm` at `4cb8cf81518284313b680b13fd586ee619f08b99`, `msl_cg` at `afb76d14c1baf50f0b9e69f7bcac675749ef4458`, `msl_core` at `7f15f455717173d29080d411a7e732c72c1e87f8` | Executed primal MHM Darcy reference: MSL global coupling, continuous Galerkin local solves, and crisscross geometry. The [field comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/reference-comparison.md) uses the same discrete spaces and weak Dirichlet moments as pyMHM. |
-| MSL_MHM + MSL_CG (GaLS), at the same pinned MSL revisions above | [Independent displacement–pressure comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity-reference.md) with a recorded mixed-field MHM adapter, five P1/P1 macro meshes and P2/P2/P3/P3 checks. Native GaLS element assembly is unchanged. |
-| MSL_CG + MSL_Core, at the same pinned revisions above | [SPE10 Darcy flux comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10-flux.md) using native global conforming triangular P1 assembly and Eigen SparseLU on five pixel-aligned meshes. This classical reference is distinct from MSL's MHM coupling. |
+| MSL: `msl_mhm` at `4cb8cf81518284313b680b13fd586ee619f08b99`, `msl_cg` at `afb76d14c1baf50f0b9e69f7bcac675749ef4458`, `msl_core` at `7f15f455717173d29080d411a7e732c72c1e87f8` | Executed primal MHM Darcy reference: MSL global coupling, continuous Galerkin local solves, and crisscross geometry. The [field comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reference-comparison.md) uses the same discrete spaces and weak Dirichlet moments as pyMHM. |
+| MSL_MHM + MSL_CG (GaLS), at the same pinned MSL revisions above | [Independent displacement–pressure comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity-reference.md) with a recorded mixed-field MHM adapter, five P1/P1 macro meshes and P2/P2/P3/P3 checks. Native GaLS element assembly is unchanged. |
+| MSL_CG + MSL_Core, at the same pinned revisions above | [SPE10 Darcy flux comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/spe10-flux.md) using native global conforming triangular P1 assembly and Eigen SparseLU on five pixel-aligned meshes. This classical reference is distinct from MSL's MHM coupling. |
 | `msl_mfem` at `b9a67e7079c7e487e4ab1679c1bb3c880cc1909a`, with MFEM 4.9 | Executed as an auxiliary strong-Dirichlet reference. Its boundary enforcement differs from the five-mesh MSL comparison above; its fields are not substituted for that comparison. |
 | `mhm-mfem` at `fb535acec1be87c19b3aa538ac73a265570e9fdc`, with MFEM 4.9 | A separate MFEM-based flow implementation. No validated Stokes field comparison is available for this revision. It is distinct from the historical 2017 equal-order implementation. |
-| [DOLFINx/UFL](https://docs.fenicsproject.org/dolfinx/) | Independently written finite element assemblies for [Darcy](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy-audit.md), [Stokes](https://github.com/volpatto/pymhm/blob/main/docs/cases/flow-audit.md), [tetrahedral full-saddle Darcy](https://github.com/volpatto/pymhm/blob/main/docs/cases/reconstruction3d.md), [3D flow](https://github.com/volpatto/pymhm/blob/main/docs/cases/flow3d.md), [GaLS3D](https://github.com/volpatto/pymhm/blob/main/docs/cases/gals3d.md) and the dedicated wave operators, plus local assembly through pyMHM's adapter. The recorded native comparisons identify DOLFINx 0.9.0 and their actual solvers. |
-| [NeoPZ at `4c6b6d2`](https://github.com/labmec/neopz/tree/4c6b6d277ce097b97bfc8dea1b6725860f4fe05a) | Executed native RT0/P0 assembly, including restricted macro traces: [mixed comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/neopz.md) and [classical SPE10 reference](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10-flux.md). The [tetrahedral/prismatic study](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-well-geometries.md) also executes native mixed spaces and `TPZMHMixedMeshControl`; its records distinguish NeoPZ assembly/restriction/field evaluation from the linear solver used in each comparison. |
+| [DOLFINx/UFL](https://docs.fenicsproject.org/dolfinx/) | Independently written finite element assemblies for [Darcy](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy-audit.md), [Stokes](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/flow-audit.md), [tetrahedral full-saddle Darcy](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reconstruction3d.md), [3D flow](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/flow3d.md), [GaLS3D](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/gals3d.md) and the dedicated wave operators, plus local assembly through pyMHM's adapter. The recorded native comparisons identify DOLFINx 0.9.0 and their actual solvers. |
+| [NeoPZ at `4c6b6d2`](https://github.com/labmec/neopz/tree/4c6b6d277ce097b97bfc8dea1b6725860f4fe05a) | Executed native RT0/P0 assembly, including restricted macro traces: [mixed comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/neopz.md) and [classical SPE10 reference](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/spe10-flux.md). The [tetrahedral/prismatic study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-well-geometries.md) also executes native mixed spaces and `TPZMHMixedMeshControl`; its records distinguish NeoPZ assembly/restriction/field evaluation from the linear solver used in each comparison. |
 | [Labmec/MHM at `f978f29`](https://github.com/labmec/MHM/tree/f978f29d657d28fe58bcea20fabee68953093482) | Source-level description of the mixed MHM controller and application settings. The executed NeoPZ RT0 driver is distinct from this positive-order application. |
-| The Darcy 2013 and Stokes 2017 articles | Published curves digitized and compared with new pyMHM calculations in the [paper comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/reproduction.md). The historical coefficient arrays and diagnostic programs for those particular figures have not been recovered. |
+| The Darcy 2013 and Stokes 2017 articles | Published curves digitized and compared with new pyMHM calculations in the [paper comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reproduction.md). The historical coefficient arrays and diagnostic programs for those particular figures have not been recovered. |
 
 The DOLFINx assemblies are original verification code using a separate finite
 element library. A monolithic solve that reuses pyMHM's local matrices checks
@@ -45,7 +45,7 @@ The MSL repositories are not public. Their names and revisions identify the
 executed references; the documented results do not imply distribution of their
 source code or comparison drivers with this package.
 
-The [coarse cosine comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/coarse-cosine.md) also executes the diagonal
+The [coarse cosine comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/coarse-cosine.md) also executes the diagonal
 mesh with constant traces. Its MSL adapter shares the assembly of prescribed
 weak boundary moments with the sine comparison. The numerical libraries remain
 unchanged; the reports identify the reference revisions and adapter digests.
@@ -157,12 +157,12 @@ Sections 6–7 explicitly identify [NeoPZ](https://github.com/labmec/neopz) as
 the implementation framework for both MHM-H1 and MHM-H(div). This attributes
 the paper's numerical experiments to NeoPZ, but does not identify the exact
 repository revision that generated each figure. The present
-[NeoPZ RT0 comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/neopz.md) states its own revision and spaces.
-The native [triangular RT0/RT1/RT2](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy-rt.md) and
-[BDM2/P1](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy-bdm.md) implementations preserve their discontinuous
+[NeoPZ RT0 comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/neopz.md) states its own revision and spaces.
+The native [triangular RT0/RT1/RT2](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy-rt.md) and
+[BDM2/P1](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy-bdm.md) implementations preserve their discontinuous
 pressure equilibrium moments and independent aligned skeletal restrictions.
 Independent DOLFINx operators check the full-trace spaces. The
-[rectangular RT family](https://github.com/volpatto/pymhm/blob/main/docs/cases/tensor-rt.md) additionally separates normal degree
+[rectangular RT family](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/tensor-rt.md) additionally separates normal degree
 from zero-normal interior enrichment. Its Figure 3 comparison uses the
 reference-source frequency and records all 50 distinguishable markers within
 the stated three-pixel digitization uncertainty.
@@ -175,7 +175,7 @@ permeability. The three-dimensional cases use hexahedral, tetrahedral, or prisma
 elements. Comparing the primal gradient with an H(div) flux requires separate
 normal-continuity and divergence diagnostics, not just pressure errors.
 
-The [affine tetrahedral and prismatic mixed implementation](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-well-geometries.md)
+The [affine tetrahedral and prismatic mixed implementation](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-well-geometries.md)
 supplies explicit normal-degree-one families: 18 tetrahedral flux modes with P1
 pressure, 32 enriched modes with P2 pressure, and 27 prismatic modes with W11
 pressure. Native NeoPZ basis evaluations and independent Basix tabulations
@@ -242,8 +242,8 @@ local solves.
 `FaceSpace(..., continuous=True)` implements continuous polynomial interpolation
 within a subdivided macroface. Continuity is not imposed between distinct
 macrofaces. Both continuous and discontinuous bases are available independently
-of the local refinement. The [layer-36 campaign](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10.md) records Q1/C0-P1
-MHM fields and the [flux comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10-flux.md) adds independently
+of the local refinement. The [layer-36 campaign](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/spe10.md) records Q1/C0-P1
+MHM fields and the [flux comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/spe10-flux.md) adds independently
 refined Q3, MSL conforming P1 and NeoPZ global RT0 references. The historical
 local/material quadrature choices and original coefficient arrays are not
 identified solely by their agreement with sampled published pressure curves.
@@ -287,18 +287,18 @@ moments, projected convergence and independent Basix/DOLFINx interpolation are
 checked. The primal wrapper requires `m <= k`; the optimal-estimate hypothesis
 is dimension-dependent: \(k\geq\ell+d\) and \(\ell\leq m\leq k\).
 Theorems 3.1, 4.4, 4.7 and 5.2 retain this dimensional hypothesis.
-In three dimensions the [tetrahedral reconstruction and estimator](https://github.com/volpatto/pymhm/blob/main/docs/cases/reconstruction3d.md)
+In three dimensions the [tetrahedral reconstruction and estimator](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reconstruction3d.md)
 therefore require local \(P_3\) for a constant skeletal space when those
 estimates are invoked. Merely constructing RT moments is a separate algebraic
 operation and need not satisfy the stronger error-estimate hypothesis.
 Material jumps inside a macrocell require explicit one-sided flux evaluation.
-The [oblique three-dimensional transmission checks](https://github.com/volpatto/pymhm/blob/main/docs/cases/planar3d.md) combine
+The [oblique three-dimensional transmission checks](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/planar3d.md) combine
 material-fitted local tetrahedra with unequal-area triangular partitions of
 the original macrofaces. Their nine polynomial patches include Dirichlet,
 mixed and pure-Neumann data. Since the analytical pressure belongs to the
 material-wise local space, these are exact-representation and interface checks,
 not a measured convergence rate or a historical L09 experiment.
-The separate [unit-diffusion estimator](https://github.com/volpatto/pymhm/blob/main/docs/cases/estimator.md) adds Oswald potential
+The separate [unit-diffusion estimator](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/estimator.md) adds Oswald potential
 recovery and all four terms of equations (5.3)–(5.7). It requires globally
 conforming fine meshes, convex macrotriangles and homogeneous Dirichlet data.
 Five-level energy-error and effectivity measurements accompany the mathematical
@@ -307,10 +307,10 @@ distinguishes `convention="published"`, the unweighted terms printed in equation
 (5.3)–(5.7), from `convention="energy"`, the coefficient-weighted energy version.
 These choices can produce different adaptive rankings; the energy variant is
 not substituted for the printed indicator in a publication comparison.
-The [material-weighted estimator](https://github.com/volpatto/pymhm/blob/main/docs/cases/weighted-estimator.md) states
-its coefficient and boundary assumptions separately. [Macro adaptation](https://github.com/volpatto/pymhm/blob/main/docs/cases/adaptive-darcy.md)
+The [material-weighted estimator](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/weighted-estimator.md) states
+its coefficient and boundary assumptions separately. [Macro adaptation](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/adaptive-darcy.md)
 supports Dörfler marking, conforming red/green and longest-edge refinement.
-The [SPE10 adaptive campaign](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10-adaptive.md) instead uses
+The [SPE10 adaptive campaign](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/spe10-adaptive.md) instead uses
 `PublishedDarcyIndicator` and the documented isotropic residual metric with
 native FreeFEM/BAMG 4.13, coefficient one, P2/P0 spaces and four local triangles.
 Seven solved states reach 4,783 macrotriangles / 12,001 global unknowns, compared
@@ -363,7 +363,7 @@ placing skeletal subdivision points at the material intersections recovers the
 favorable behavior. Observed exponential degree convergence for an analytic
 solution is explicitly distinguished from the theorem’s super-algebraic result.
 
-The [implemented interface study](https://github.com/volpatto/pymhm/blob/main/docs/cases/unfitted.md) separates exact material
+The [implemented interface study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/unfitted.md) separates exact material
 integration, fitted local triangular approximation and fitted skeletal
 subfaces. Cartesian clipping and explicit one-sided evaluations preserve the
 physical material regions. Recorded perturbation and local-refinement studies
@@ -397,7 +397,7 @@ reaction, with Galerkin or consistent SUPG local forms. The conservative strong
 residual includes both `div(alpha) * u` and the spatial divergence of the
 diffusion tensor; coefficient derivatives are explicit inputs. Stabilization
 changes the source as well as the operator. The [face estimator and adaptive
-loop](https://github.com/volpatto/pymhm/blob/main/docs/cases/adaptive-transport.md) implement equations (4.3)–(4.4), with declared
+loop](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/adaptive-transport.md) implement equations (4.3)–(4.4), with declared
 material bounds, strong Dirichlet conditions on essential faces and prescribed
 Robin or physical diffusive-flux data on natural faces. Natural exterior
 indicators are zero; local-discretization error and approximation of boundary
@@ -415,7 +415,7 @@ local error, including its DG0 gradient lower bound. At local subdivision
 intervals; the final gradient error remains 59.28% above its marker.
 The full-Dirichlet P3
 study remains a separate control; historical local connectivity is not inferred.
-[Transient transport](https://github.com/volpatto/pymhm/blob/main/docs/cases/transient-transport.md) uses backward Euler,
+[Transient transport](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/transient-transport.md) uses backward Euler,
 operator reuse, RT0 Darcy velocity and the hydrodynamic dispersion law. Its
 heterogeneous exact test is an original realization, not the article's
 unavailable random coefficient field. None of these methods implies a discrete
@@ -447,23 +447,23 @@ velocity tangent to the exterior boundary admits a constant global mode only
 if the discrete half-advection Robin trace also represents that mode. The
 verified polynomial test uses local P4 and a cubic skeletal trace; a coarse
 constant trace cannot be substituted in that test without changing the discrete
-kernel. [Simple polygonal macrocells](https://github.com/volpatto/pymhm/blob/main/docs/cases/polygons.md), including nonconvex
+kernel. [Simple polygonal macrocells](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/polygons.md), including nonconvex
 cells, support the common local operators through conforming local
 triangulation. Five polygon families have five-level oscillatory studies.
 The explicit `coarse_space="kernel"` option selects primal or mixed local
 problems cell by cell; reconstructed fields agree with complementary elimination.
-The [tetrahedral RAD path](https://github.com/volpatto/pymhm/blob/main/docs/cases/rad3d.md) uses general positive-degree local
+The [tetrahedral RAD path](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/rad3d.md) uses general positive-degree local
 Pk fields and independent Bernstein face polynomials. The
-[general-degree verification](https://github.com/volpatto/pymhm/blob/main/docs/cases/tetra-pk.md) includes native P5/P6 basis,
+[general-degree verification](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/tetra-pk.md) includes native P5/P6 basis,
 derivative and operator comparisons, and an admissible P5/P2 estimator study.
 Its five-level P4/P1 RAD study uses the published
 three-dimensional sine solution and a separately assembled classical P2
 comparison. Both studies identify their original meshes instead of claiming
-the article's historical connectivity. The [conditioning study](https://github.com/volpatto/pymhm/blob/main/docs/cases/rad-conditioning.md)
+the article's historical connectivity. The [conditioning study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/rad-conditioning.md)
 uses all five published coefficient cases, separate parameter/local/face sweeps
 and directly extracted figure markers. Global ordinates agree closely at unit
 parameters; local ordinates and floating-point limits are reported separately.
-The [hexagonal boundary layer](https://github.com/volpatto/pymhm/blob/main/docs/cases/rad-layer.md) uses the published P3/P1
+The [hexagonal boundary layer](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/rad-layer.md) uses the published P3/P1
 spaces, an exact profile, classical P2 and independent macro/skeleton/local
 refinement histories in the correctly normalized $V$ norm.
 Independent DOLFINx/UFL complete saddle solves also cover three boundary-layer
@@ -472,10 +472,10 @@ values. They agree with the corresponding PyMHM physical fields to within
 $2.96\times10^{-13}$ relatively. This verifies the specified discrete problems;
 it does not resolve the unavailable historical mesh or the local spectral
 ordinates reported separately in the conditioning study.
-The [polyhedral scalar path](https://github.com/volpatto/pymhm/blob/main/docs/cases/polyhedral-rad.md) retains P0/P1 traces on
+The [polyhedral scalar path](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/polyhedral-rad.md) retains P0/P1 traces on
 original polygonal faces and Pk local tetrahedral fields. Its convex studies
 cover cubes, triangular prisms and Voronoi prisms. The
-[nonconvex extension](https://github.com/volpatto/pymhm/blob/main/docs/cases/star-polyhedra.md) certifies an interior kernel ball
+[nonconvex extension](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/star-polyhedra.md) certifies an interior kernel ball
 for each cell, as required by §4.1(iii), and preserves reentrant faces and
 notches through validated tetrahedral cones. It rejects empty kernels,
 disconnected cavity shells and intersecting cones. Curved faces and arbitrary
@@ -505,7 +505,7 @@ SPE10 flow. Tables 1–2 measure **macroelement** mass balance; they do not show
 pointwise incompressibility of every fine element. The exact local stress is
 H(div), while raw derivatives of an approximate primal local solution need not be.
 
-The [published-curve comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/reproduction.md#stress-norms-and-published-values)
+The [published-curve comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reproduction.md#stress-norms-and-published-values)
 also checks the full Frobenius pseudostress against its pressure/gradient
 identity and the USFEM pressure equation. For the declared right-isosceles
 P2/P2 geometry, no admissible stabilization constant reconciles all four
@@ -513,7 +513,7 @@ digitized Figure 3 norms, even with independent 1% ordinate intervals.
 That conclusion is conditional on the stated stress and broken-norm
 conventions; it does not identify the historical diagnostic or connectivity.
 
-The [SPE10 case](https://github.com/volpatto/pymhm/blob/main/docs/cases/spe10.md) identifies layer 1 by the reported extrema,
+The [SPE10 case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/spe10.md) identifies layer 1 by the reported extrema,
 retains the 264-macrotriangle P3/P3 configuration and separates the 2017
 stabilization convention from L16. The slip-wall component conditions and
 the material-pixel intersections are explicit in the implementation.
@@ -548,10 +548,10 @@ viscosity, uniform skeletal degree and material jumps aligned with fine cells.
 Its source residual is integrated explicitly; there is no separate certified
 oscillation bound or constant-one error guarantee. `adapt_flow_macros` implements
 the macrocell marking of Algorithm 1, and `adapt_flow` implements the face and
-local marking of Algorithm 2. The [Stokes–Brinkman campaigns](https://github.com/volpatto/pymhm/blob/main/docs/cases/stokes-adaptive.md)
+local marking of Algorithm 2. The [Stokes–Brinkman campaigns](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/stokes-adaptive.md)
 state the mesh-closure choices, estimator contributions and stopping criteria;
 the historical mesh connectivity and numerical reliability constants are not
-identified by these comparisons. The [Oseen campaigns](https://github.com/volpatto/pymhm/blob/main/docs/cases/oseen.md) use L15's
+identified by these comparisons. The [Oseen campaigns](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/oseen.md) use L15's
 estimator and identify that variant separately.
 
 ### L15. Adaptive Oseen, 2021
@@ -575,7 +575,7 @@ effectivity changing with viscosity; parameter-robust constants must not be
 claimed. Solving a prescribed-convection Oseen problem is not a Navier–Stokes
 nonlinear or transient solver.
 
-The [Oseen implementation](https://github.com/volpatto/pymhm/blob/main/docs/cases/oseen.md) includes variable convection,
+The [Oseen implementation](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/oseen.md) includes variable convection,
 consistent equal-order stabilization, the two-level estimator and a closed
 face/local refinement loop. Eight recorded analytical/adaptive studies contain
 five states each, with independent velocity/pressure errors and effectivity.
@@ -639,10 +639,10 @@ an affine displacement patch test does not establish uniform accuracy as the
 Poisson ratio approaches one half. In particular, the P1 displacement method
 and the mixed locking-free methods below are distinct discretizations.
 
-The [two-dimensional primal implementation](https://github.com/volpatto/pymhm/blob/main/docs/cases/primal-elasticity.md) includes
+The [two-dimensional primal implementation](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/primal-elasticity.md) includes
 general Kelvin material tensors, P1–P4 and enriched local spaces, an explicit
 lifting-injectivity check and the one-level face indicator. The
-[three-dimensional implementation](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity3d.md) retains all six rigid
+[three-dimensional implementation](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity3d.md) retains all six rigid
 motions and accepts general Kelvin 6-by-6 tensors. Independent UFL operators,
 patches and five-level manufactured campaigns verify these paths. They do not
 turn raw primal stress into an H(div) field or establish uniform accuracy at
@@ -663,7 +663,7 @@ divergence matches the discrete equilibrium space. Suitable Poisson and Stokes
 finite element pairs underpin the stable mixed elasticity construction.
 
 The paper's table and numerical experiments are two-dimensional. A separate
-[three-dimensional mixed implementation](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-elasticity3d.md) uses
+[three-dimensional mixed implementation](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-elasticity3d.md) uses
 the classical AFW family $[\mathrm{BDM}_k]^3/[P_{k-1}]^3/[P_{k-1}]^3$
 on tetrahedra, with $k\ge2$ to contain all six rigid displacements exactly.
 Its justification refers to Arnold–Falk–Winther (2007), Eq. (7.1) and
@@ -693,7 +693,7 @@ Section 6 considers an oscillatory Young modulus and a layered geomechanical
 cross-section loaded by gravity, including nearly incompressible clay layers.
 Comparisons target stress profiles as well as displacement. Weak symmetry must be
 reported as a moment condition; it is not pointwise symmetric stress.
-The [HPC4e case](https://github.com/volpatto/pymhm/blob/main/docs/cases/hpc4e.md) uses the original 512 × 256 material arrays
+The [HPC4e case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/hpc4e.md) uses the original 512 × 256 material arrays
 published in `labmec/MHM`, with the 16 × 8 macro partition, RT1/Q1/P1 local
 spaces and four P1 skeleton resolutions of section 6.2. The source file revision,
 units, depth orientation and checksums are recorded with the results.
@@ -719,9 +719,9 @@ paper's mixed stress/displacement/rotation formulation. The native pyMHM
 displacement gallery is a different method and does not execute that NeoPZ
 elasticity program.
 
-The native [triangular mixed families](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-families.md) implement BDMk
+The native [triangular mixed families](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-families.md) implement BDMk
 with zero, one or two additional interior degrees while retaining the prescribed
-normal degree. The [rectangular RT families](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity-tensor-rt.md) use
+normal degree. The [rectangular RT families](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity-tensor-rt.md) use
 displacement Qs and total-degree Ps rotation. Independent UFL compliance,
 divergence and weak-symmetry operators, five-level field studies and finite/
 infinite modulus sweeps accompany both paths. The oscillatory section-6.1 data
@@ -789,7 +789,7 @@ identify which data generated the published tables.
 
 The formulation and analysis permit dimensions two and three; the paper's
 numerical section uses two dimensions. The original [tetrahedral GaLS and
-Taylor–Hood studies](https://github.com/volpatto/pymhm/blob/main/docs/cases/gals3d.md) retain all six rigid modes and evaluate
+Taylor–Hood studies](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/gals3d.md) retain all six rigid modes and evaluate
 the strain inverse bound on the physical tetrahedron. Independent UFL checks
 cover the variable-shear residual, including its coefficient derivative,
 and finite/infinite Lamé limits. These checks do not substitute triangular
@@ -826,7 +826,7 @@ distributed PETSc matrix and solves it with MUMPS without gathering all local
 responses or fields. Native tests include empty ranks and incompatible physical
 data. The measured one-host strong-scaling studies have modest global matrices;
 they do not reproduce the historical multi-node cluster campaign.
-The [3D Darcy study](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy3d.md) uses the same analytical sine PDE on
+The [3D Darcy study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy3d.md) uses the same analytical sine PDE on
 recorded tetrahedral meshes. Resident P1 GPU assembly and batched local LU are
 separate original engineering capabilities, with transfers, synchronization and
 resource limits stated explicitly. The GPU campaign does not claim acceleration
@@ -838,7 +838,7 @@ The [case evidence guide](cases/index.md) is the canonical map from this catalog
 to representative calculations, public acquisition programs and comparison limits.
 It distinguishes published comparisons, matched problem data, independent
 references and analytical verification. The case pages retain the numerical tables,
-reference refinement and approximation settings; the [scientific scope](https://github.com/volpatto/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria)
+reference refinement and approximation settings; the [scientific scope](https://github.com/ipes-lncc/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria)
 identifies historical targets that remain open.
 
 The collection is not fully reproduced. In particular, unresolved historical

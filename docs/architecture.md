@@ -227,14 +227,14 @@ with planar polygonal faces: shared face triangulations and cell-center cones
 define local tetrahedra, while `PolygonalSkeleton3D` keeps one P0 or P1 space
 on each **original** face. Triangulating a quadrilateral face therefore does
 not introduce independent multipliers on its two triangles. The
-[polyhedral RAD cases](https://github.com/volpatto/pymhm/blob/main/docs/cases/polyhedral-rad.md) exercise cubes and two prism
-families; [polygonal cases](https://github.com/volpatto/pymhm/blob/main/docs/cases/polygons.md) cover five planar families.
+[polyhedral RAD cases](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/polyhedral-rad.md) exercise cubes and two prism
+families; [polygonal cases](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/polygons.md) cover five planar families.
 
 Mapped hexahedral RT fields use a trilinear geometry and contravariant Piola
 transformation, with surface Jacobians in normal moments and the physical
 Jacobian in divergence. Independent normal and interior degrees distinguish
 the rectangular enriched RT spaces from a uniformly raised polynomial degree.
-The [well studies](https://github.com/volpatto/pymhm/blob/main/docs/cases/mapped-well.md) report geometric, normal-continuity
+The [well studies](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mapped-well.md) report geometric, normal-continuity
 and physical-rate checks separately from pressure and flux approximation.
 
 ## Local backends
@@ -328,8 +328,8 @@ multiplier, and its constraints are physical displacement moments.
 The enriched BDM and rectangular RT variants preserve their boundary normal
 degree while adding zero-normal interior fields; their displacement and rotation
 spaces follow the resulting divergence degree. See the
-[mixed-family definitions](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-families.md) and
-[rectangular weak-symmetry construction](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity-tensor-rt.md).
+[mixed-family definitions](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-families.md) and
+[rectangular weak-symmetry construction](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity-tensor-rt.md).
 
 Primal Darcy, conservative RAD and backward Euler use a shared nodal Pk
 tabulation, including physical gradients and Hessians. Displacement–pressure
@@ -348,12 +348,12 @@ meshes must join conformingly, and boundary and continuous-test moments are
 checked. Its explicit coefficient and boundary restrictions are part of the
 API; the recovery is never silently used to replace a plotted original field.
 
-Independent checks use [MSL_MHM with MSL_CG and MSL_Core](https://github.com/volpatto/pymhm/blob/main/docs/cases/reference-comparison.md)
-for primal P1 local problems and [NeoPZ](https://github.com/volpatto/pymhm/blob/main/docs/cases/neopz.md) for RT0/P0 mixed
+Independent checks use [MSL_MHM with MSL_CG and MSL_Core](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reference-comparison.md)
+for primal P1 local problems and [NeoPZ](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/neopz.md) for RT0/P0 mixed
 assembly. These comparisons match physical fields and trace spaces rather than
 assuming that internal basis coefficients or retained pressure coordinates
 have the same meaning in each implementation.
-The [GaLS comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity-reference.md) also checks displacement,
+The [GaLS comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity-reference.md) also checks displacement,
 pressure, gradient and Cauchy stress against native MSL GaLS assembly.
 
 ## Physical global gauges
@@ -417,7 +417,7 @@ must be picklable. Construct and release native FEM, MPI, PETSc or CUDA resource
 inside the worker, returning numerical arrays and ordinary metadata. The serial
 and thread variants also accept closures. Exceptions propagate to the caller;
 there is no automatic serial fallback. The global assembly and solve remain in
-the parent process. See the [measured workloads](https://github.com/volpatto/pymhm/blob/main/docs/performance.md) for costs of
+the parent process. See the [measured workloads](https://github.com/ipes-lncc/pymhm/blob/main/docs/performance.md) for costs of
 startup, data transfer, local work, and the complete solve.
 
 `solve_distributed` provides a separate MPI path: ranks own local cells, PETSc

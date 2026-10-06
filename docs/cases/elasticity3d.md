@@ -102,7 +102,7 @@ Errors remain bounded for these two discretizations and this specific
 solenoidal field. This experiment does not establish parameter-uniform
 stability, eliminate locking for general loads, or extend the solver to
 \(\lambda=\infty\). The [mixed stress](mixed-elasticity3d.md) and
-[displacement-pressure](https://github.com/volpatto/pymhm/blob/main/docs/cases/gals3d.md) formulations provide separate
+[displacement-pressure](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/gals3d.md) formulations provide separate
 three-dimensional incompressibility contracts.
 
 The original acquisition driver is `examples/solve_elasticity3d.py`; numerical

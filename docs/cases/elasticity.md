@@ -9,7 +9,7 @@ These native pyMHM experiments compare against exact fields, using bounded
 forces as the first Lamé modulus grows. The analytical family agrees with the
 MSL GaLS elasticity case. The curves below are not an independent execution
 of MSL or a digitized reproduction of the article's figures.
-The separate [MSL GaLS field comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity-reference.md) reports
+The separate [MSL GaLS field comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity-reference.md) reports
 matched runs of both implementations, including higher-order local spaces.
 
 ## Formulation and constraints

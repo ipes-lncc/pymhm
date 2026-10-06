@@ -30,7 +30,7 @@ Optional dyadic refinement identifies shared nodes by integer barycentric
 topology. Local fields are continuous Pk across these tetrahedra; the basis
 accepts arbitrary positive degree and the chosen formulation still requires
 adequate quadrature and compatible trace coupling. The additional
-[nonconvex campaign](https://github.com/volpatto/pymhm/blob/main/docs/cases/star-polyhedra.md) verifies five L-prism/cuboid resolutions
+[nonconvex campaign](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/star-polyhedra.md) verifies five L-prism/cuboid resolutions
 and a native UFL full-saddle comparison on two reentrant cells.
 
 ![Original polyhedral macrocells and polygonal faces](../figures/polyhedral-rad/geometry.png)

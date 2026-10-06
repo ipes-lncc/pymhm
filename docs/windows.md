@@ -11,7 +11,7 @@ They also install a built wheel outside the checkout and repeat the generic
 local/global checks against an independently assembled conforming system.
 An environment resolved in the lockfile or a Linux test run does not establish
 that a particular revision passed native Windows execution; inspect that
-revision's [Tests workflow](https://github.com/volpatto/pymhm/actions/workflows/tests.yml).
+revision's [Tests workflow](https://github.com/ipes-lncc/pymhm/actions/workflows/tests.yml).
 Validated release tags automatically publish the portable package and its
 documentation; [development](development.md) describes the required release settings.
 

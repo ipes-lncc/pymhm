@@ -1,7 +1,7 @@
 # Coarse cosine flux: matched reference computations
 
 This comparison uses exactly the coarse discretization in the
-[Darcy gallery](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy.md#physical-flux-retain-the-coarse-diagnostic):
+[Darcy gallery](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy.md#physical-flux-retain-the-coarse-diagnostic):
 32 macrotriangles, 512 fine triangles, and one constant normal-flux trace per
 macroface. It checks complete physical fields, rather than comparing only
 error norms or visual similarity.
@@ -31,14 +31,14 @@ pressure. It is imposed weakly through the global skeleton.
 | pyMHM quadrature | Duffy order 6 for assembly; order 8 for analytical errors; Gauss 5 for boundary moments |
 | Error normalization | $\lVert q\rVert_{L^2}=\pi/\sqrt{2}$ and $\lVert p\rVert_{L^2}=1/2$ |
 
-The separate [MSL sine comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/reference-comparison.md) uses crisscross
+The separate [MSL sine comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reference-comparison.md) uses crisscross
 macrotriangles, P1 traces, a different local refinement, and homogeneous
 boundary data. Its agreement does not establish agreement for this case.
 
 ## Primal comparison with MSL
 
 The reference uses `msl_mhm`, `msl_cg`, and `msl_core` at the revisions listed
-in the [MSL provenance](https://github.com/volpatto/pymhm/blob/main/docs/cases/reference-comparison.md#reference-code-and-revisions).
+in the [MSL provenance](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reference-comparison.md#reference-code-and-revisions).
 Its comparison adapter assembles the weak boundary functional
 $\int_{\partial\Omega}g\,\psi_i\,ds$ using MSL's signed trace orientation and
 native boundary quadrature. MSL supplies the local operators, global matrix,
@@ -89,7 +89,7 @@ with `EHDivConstant` order zero. The native operator is restricted to one
 constant normal-flux trace per macroface using $T^{\mathsf T}AT$; the restricted
 system is solved with SciPy, and the physical fields are reconstructed by
 NeoPZ. This is separate from execution of an MSL mixed solver or NeoPZ's
-historical MHM controller. The [NeoPZ comparison](https://github.com/volpatto/pymhm/blob/main/docs/cases/neopz.md) defines the spaces
+historical MHM controller. The [NeoPZ comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/neopz.md) defines the spaces
 and the restriction in detail.
 
 | Quantity | NeoPZ restricted RT0 | pyMHM mixed RT0 |
@@ -134,7 +134,7 @@ Keep both meshes fixed and enrich only the mixed trace to four P0 segments
 per macroface. The relative flux error drops from **21.8662% to 5.6697%**.
 The enriched pyMHM and NeoPZ fluxes still agree to $2.32\times10^{-14}$ in L2.
 This controlled experiment separates trace resolution from local refinement.
-The [five-point refinement studies](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy-audit.md) examine both separately.
+The [five-point refinement studies](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy-audit.md) examine both separately.
 
 These comparisons establish agreement for the specified discrete problems.
 The approximately 22% flux error remains substantial: agreement between codes

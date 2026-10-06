@@ -37,7 +37,7 @@ part is constrained through P_s moments and is not removed pointwise.
 The multiplier is negative physical traction; rotation approximates
 \((\partial_y u_x-\partial_x u_y)/2\). The finite-modulus hydrostatic identity,
 exact infinite-lambda pressure gauge and pure-traction rigid moments follow
-[the mixed-elasticity conventions](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-elasticity.md). The implementation uses
+[the mixed-elasticity conventions](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-elasticity.md). The implementation uses
 the same stable bulk-compliance operation as the triangular families.
 
 `evaluate` returns displacement, full stress, stress divergence and rotation.

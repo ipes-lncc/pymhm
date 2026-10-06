@@ -257,7 +257,7 @@ Run the package's analytical gallery with:
 pixi run -e notebooks python examples/plot_mixed_elasticity.py
 ```
 
-[Numerical records](https://github.com/volpatto/pymhm/blob/main/examples/results/mixed-elasticity.json)
+[Numerical records](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/mixed-elasticity.json)
 contain the errors and defects. Plot fields are sampled independently within
 each fine triangle, preserving broken one-sided values. P2 stress is sampled on
 nine display subtriangles; reported norms use separate order-10 quadrature,

@@ -136,7 +136,7 @@ Physical mean rows must be supplied explicitly to `solve`; the compact system
 cannot infer them from missing local lifts. Persist the executed local basis,
 constraints, orientation maps and operator identity alongside coarse and trace
 coefficients. A matching matrix dimension does not identify a reconstruction
-basis. The [periodic acquisition](https://github.com/volpatto/pymhm/blob/main/docs/cases/periodic.md) implements this procedure
+basis. The [periodic acquisition](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/periodic.md) implements this procedure
 for its declared constant kernel and fixed Q1/P0 spaces.
 
 ## Repeated sources and boundary values
@@ -385,7 +385,7 @@ multi-node performance.
 The [three-dimensional Darcy study](cases/darcy-3d-accelerators.md) reports
 complete CPU PARDISO and one/two-GPU workflows, strong and weak scaling,
 and separate pressure and physical-flux errors. Its
-[numerical records and figures](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-3d-accelerators-20261005)
+[numerical records and figures](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution/introduction-3d-accelerators-20261005)
 preserve the executed environments, timing scope and each field's own controls.
 
 The campaign in `benchmarks/execution_modes.py` records one untimed warmup and
@@ -406,7 +406,7 @@ The workloads contain 8,192 and 131,072 fine triangles. The global matrices have
 coarse-solver scaling. Other project campaigns were paused during acquisition;
 the host had no exclusive operating-system reservation or CPU affinity policy.
 Individual durations and ownership counts are in
-[the MPI reports](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution).
+[the MPI reports](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution).
 
 For 32 macrotriangles with 16 fine subdivisions, twelve changing source/boundary
 queries per preparation gave median preparation `0.08227 s`, median online
@@ -425,7 +425,7 @@ constraint/boundary upload, LU, first and repeated solves, synchronization and
 final download. Maximum differences from CPU local lifts were `9.77e-15` and
 `4.24e-14`. These timings demonstrate the measured resident path; no GPU
 speedup is claimed because an equivalent CPU batch campaign was not measured.
-The [GPU and offline records](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution)
+The [GPU and offline records](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution)
 preserve phase times and every repetition.
 
 ```bash

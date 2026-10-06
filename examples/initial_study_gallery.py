@@ -201,11 +201,11 @@ def render_catalogue(entries: list[dict[str, Any]], path: Path) -> None:
                 "",
                 f"![{entry['title']}](../{Path(entry['figure']).relative_to('docs').as_posix()})",
                 "",
-                f"[Numerical record](https://github.com/volpatto/pymhm/blob/main/{entry['public_record']})",
+                f"[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/{entry['public_record']})",
                 "",
             ]
         )
-    path.write_text("\n".join(lines) + "\n")
+    path.write_text("\n".join(lines).rstrip() + "\n")
 
 
 def main() -> None:

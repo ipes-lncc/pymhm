@@ -1,11 +1,11 @@
 # Three-dimensional Darcy: CPU direct solvers and GPU local solves
 
-The [introductory notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb)
+The [introductory notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb)
 defines the manufactured Darcy problem and the local/global mathematical forms.
 This performance study extends that application with CPU PARDISO and independent
-GPU local solves. The [immutable accelerator edition](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-3d-accelerators-20261005)
+GPU local solves. The [immutable accelerator edition](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution/introduction-3d-accelerators-20261005)
 contains the selected raw acquisitions, their own numerical controls and the
-plotted summaries. The [earlier workspace/LU/AMG edition](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-3d-workspace-lu-20261005)
+plotted summaries. The [earlier workspace/LU/AMG edition](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution/introduction-3d-workspace-lu-20261005)
 retains its original results; its CPU weak observations appear as separately
 identified historical references here.
 

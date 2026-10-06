@@ -158,16 +158,16 @@ verify that an existing Gmsh model survives generation.
 `pymhm.io.tetrahedral.read_tetra_mesh` and `write_tetra_mesh` separately exchange
 linear tetrahedra and integer volume/boundary tags through meshio. Their
 `TetraMeshData` container keeps volume cells distinct from boundary triangles.
-Use the [three-dimensional Darcy](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy3d.md),
-[RAD](https://github.com/volpatto/pymhm/blob/main/docs/cases/rad3d.md) and [elasticity](https://github.com/volpatto/pymhm/blob/main/docs/cases/elasticity3d.md) paths with these
+Use the [three-dimensional Darcy](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy3d.md),
+[RAD](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/rad3d.md) and [elasticity](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity3d.md) paths with these
 tetrahedral meshes.
 
 `PolygonMesh` retains original polygonal edges, `PolyhedralMesh` retains original
 polygonal faces of star-shaped cells (including nonconvex cells), and `HexMesh` supplies trilinear hexahedral
 maps. These native geometry constructors have their own validation contracts;
 they do not silently convert arbitrary CAD or curved high-order elements.
-See [polyhedral RAD](https://github.com/volpatto/pymhm/blob/main/docs/cases/polyhedral-rad.md) and the
-[mapped RT well](https://github.com/volpatto/pymhm/blob/main/docs/cases/mapped-well.md) for concrete constructions.
+See [polyhedral RAD](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/polyhedral-rad.md) and the
+[mapped RT well](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mapped-well.md) for concrete constructions.
 
 ## Conforming adaptive triangles
 

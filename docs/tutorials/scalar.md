@@ -143,7 +143,7 @@ defined only by normal and divergence constraints: that larger space contains
 one additional solenoidal bubble. These examples check the implemented spaces;
 they do not reproduce the historical well geometry or resolve ambiguous BDFM
 order labels in the paper. The
-[mixed-well documentation](https://github.com/volpatto/pymhm/blob/main/docs/cases/mixed-well-geometries.md)
+[mixed-well documentation](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-well-geometries.md)
 gives the explicit tensor factors, Piola convention and physical mean gauge.
 
 ```python
@@ -188,10 +188,10 @@ condition is not a universal numerical threshold. Its raw volume gradients
 remain distinct from its conservatively enriched face flux.
 
 The dedicated pages describe
-[MH](https://github.com/volpatto/pymhm/blob/main/docs/cases/mh.md),
-[MH2M](https://github.com/volpatto/pymhm/blob/main/docs/cases/mh2m.md),
+[MH](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mh.md),
+[MH2M](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mh2m.md),
 [MsHHO](../cases/mshho.md) and
-[PGMHM](https://github.com/volpatto/pymhm/blob/main/docs/cases/pgmhm.md),
+[PGMHM](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/pgmhm.md),
 including their additional hypotheses.
 
 ## Reaction, advection and complex acoustics
@@ -218,7 +218,7 @@ uses the package's interleaved real convention. Positive frequency introduces
 no pressure gauge. At unit density, the measured complex gradient error equals
 the physical flux error. A successful low-frequency patch does not certify
 wave-resolution or resonance conditions for another frequency. See
-[Helmholtz](https://github.com/volpatto/pymhm/blob/main/docs/cases/helmholtz.md).
+[Helmholtz](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/helmholtz.md).
 
 ## Read the output and move to providers
 

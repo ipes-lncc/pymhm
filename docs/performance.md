@@ -13,10 +13,10 @@ original equations and reproduce the physical fields at the stated accuracy.
 
 ## Oscillatory Darcy with declared local and global forms
 
-The [thread notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/darcy_parallel_scalability.ipynb)
+The [thread notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_parallel_scalability.ipynb)
 defines its permeability, manufactured source, local UFL equations, skeletal
 couplings and conforming Q1 comparisons in executable cells. The
-[process companion](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/darcy_process_scalability.ipynb)
+[process companion](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_process_scalability.ipynb)
 defines the same physical case and exports its displayed worker definitions
 for `spawn`. Both use `LocalEquations`, `Equation` and `MultiscaleProblem`.
 
@@ -88,8 +88,8 @@ separate timing windows; unrelated host applications remain active and there
 is no exclusive operating-system allocation or CPU affinity policy. Native
 initialization is recorded with the existing compiler cache, rather than as
 a cold-cache measurement. The
-[thread records and figures](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-threads-20261004)
-and [process records and figures](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-processes-20261004)
+[thread records and figures](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution/introduction-threads-20261004)
+and [process records and figures](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution/introduction-processes-20261004)
 contain every repetition, software versions, source and lockfile hashes,
 field checks and archived-basis replay conventions. This is an analytical
 application, rather than a matched reproduction of a literature experiment.
@@ -127,7 +127,7 @@ physical-flux errors agree with the classical baseline within factors 1.023
 and 1.001. Original equations, physical moments and archived-basis replay are
 checked independently of timings.
 
-The [pilot records and figures](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-multigpu-20261004)
+The [pilot records and figures](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution/introduction-multigpu-20261004)
 include every sample, phase cost, initialization, actual basis digests and
 hardware/software provenance. CPU compilation and host analysis remain
 significant parts of this execution model. These measurements establish a
@@ -136,7 +136,7 @@ inter-node scalability claim.
 
 ## Three-dimensional Darcy: workspaces, LU and AMG
 
-The [3D tutorial](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb)
+The [3D tutorial](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb)
 shows the anisotropic material, exact fields, local/global UFL equations,
 oriented Q1 traces, independent references and native workspace provider.
 Compatible workers reuse mesh/space/kernel resources and buffers. Every
@@ -198,7 +198,7 @@ node-local measurements; no asymptotic or multi-node efficiency is inferred.
 
 The [case page](cases/darcy-3d-scalability.md) displays complete-time, speedup,
 efficiency, phase-cost and focused weak plots, together with physical errors.
-The [record and figures](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-3d-workspace-lu-20261005)
+The [record and figures](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution/introduction-3d-workspace-lu-20261005)
 contain the actual measured samples and independent numerical controls.
 Periods 0.1 and 0.137 remain separate. Fixed Q1 macro traces leave an interface
 error floor when only local meshes are refined. Classical CG/GAMG remains
@@ -206,7 +206,7 @@ faster in these measured cases. The separate
 [CPU PARDISO and GPU edition](cases/darcy-3d-accelerators.md) extends the study
 with larger grids, one/two-GPU measurements and focused CPU/GPU weak scaling.
 Each edition retains its own measured configurations and numerical controls.
-Its [numerical records and figures](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-3d-accelerators-20261005)
+Its [numerical records and figures](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution/introduction-3d-accelerators-20261005)
 include each acquisition's own pressure and physical-flux errors.
 
 ## Choosing and measuring an execution mode
@@ -240,9 +240,9 @@ multi-node efficiency.
 [Recorded MPI, resident GPU and offline/online measurements](execution.md#recorded-measurements)
 state their own hardware, spaces and timing scopes. Earlier CPU measurements
 remain available in the
-[benchmark records](https://github.com/volpatto/pymhm/tree/main/benchmarks/results).
+[benchmark records](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results).
 Their measured workloads and acquisition hashes are distinct from the
 oscillatory application above.
 
-[Additional 3D CPU and accelerator component measurements](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-3d-20261004)
+[Additional 3D CPU and accelerator component measurements](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution/introduction-3d-20261004)
 report their own CPU allocations, solver settings and timing scopes.

@@ -77,7 +77,7 @@ $$
 In two dimensions, RT2 has 15 local flux degrees of freedom: nine edge
 moments and six interior moments. BDM2 instead equals
 \([\mathbb P_2(T)]^2\), has 12 local degrees of freedom, and has divergence
-in P1. The [BDM2/P1 Darcy solver](https://github.com/volpatto/pymhm/blob/main/docs/cases/darcy-bdm.md) consequently represents a
+in P1. The [BDM2/P1 Darcy solver](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy-bdm.md) consequently represents a
 different mixed pair from the published RT2 reference.
 
 The paper does not identify whether its 1,314,000 count includes pressure.
@@ -137,7 +137,7 @@ conservation instead follows from the skeletal flux: for every macrocell
 Small macro balance defects do not imply that the raw gradient field is
 H(div)-conforming or pointwise divergence-free.
 
-The [RT moment reconstruction](https://github.com/volpatto/pymhm/blob/main/docs/cases/reconstruction-moments.md) is a separate
+The [RT moment reconstruction](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reconstruction-moments.md) is a separate
 algorithm on triangular submeshes. Its continuous-test-space conservation
 identity must not be strengthened to independent balance on every fine
 cell. Neither that reconstruction nor the published RT2 convergence

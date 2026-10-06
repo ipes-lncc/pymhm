@@ -1,11 +1,11 @@
 # Three-dimensional Darcy: native workspaces, LU and AMG
 
-The [introductory notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb)
+The [introductory notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb)
 defines the material, manufactured fields, local UFL forms, oriented trace
 pairings, global equations, reference methods and physical norm integration in
 executable cells. It introduces reusable native assembly resources after
 showing the mathematical forms. A small default demonstration accompanies the
-[recorded 3D campaign](https://github.com/volpatto/pymhm/tree/main/benchmarks/results/execution/introduction-3d-workspace-lu-20261005).
+[recorded 3D campaign](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution/introduction-3d-workspace-lu-20261005).
 
 The [CPU PARDISO and GPU extension](darcy-3d-accelerators.md) reports larger local
 grids, CPU strong/weak scaling and one/two-GPU complete workflows. Its acquisitions

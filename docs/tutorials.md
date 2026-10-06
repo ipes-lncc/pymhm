@@ -8,7 +8,7 @@ physical gauge.
 
 ## Self-contained introductory course
 
-The [introduction index](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/README.md)
+The [introduction index](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/README.md)
 provides a suggested reading order and execution instructions. Each notebook
 defines its data, weak forms, operator assembly, local problems, global equations,
 classical baseline and field plots in its own cells. The primary path writes
@@ -19,16 +19,16 @@ the physical formulation. The notebooks use the generic `LocalEquations`, `Equat
 
 | Problem | Notebook |
 | --- | --- |
-| Oscillatory Darcy and convergence | [Multiscale Darcy](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/darcy_multiscale_convergence.ipynb) |
-| Parallel local solves and performance | [Darcy speed-up and scalability](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/darcy_parallel_scalability.ipynb) |
-| Spawned processes and complete workflow scaling | [Darcy process scalability](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/darcy_process_scalability.ipynb) |
-| Three-dimensional local AMG and parallel comparisons | [Darcy 3D scalability](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb) |
-| Reservoir permeability | [Darcy on a SPE10 layer](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/darcy_spe10_layer.ipynb) |
-| Heterogeneous vector elasticity | [Multiscale elasticity](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/multiscale_elasticity.ipynb) |
-| Cell and face moment reconstruction | [MsHHO](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/mshho_multiscale.ipynb) |
-| Independent skeletal spaces | [MH²M](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/mh2m_multiscale.ipynb) |
-| Reaction-dominated local layers | [MHM-USFEM](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/mhm_usfem_rad.ipynb) |
-| Analytical velocity and pressure layers | [Stokes–Brinkman convergence](https://github.com/volpatto/pymhm/blob/main/notebooks/introduction/stokes_brinkman_boundary_layer.ipynb) |
+| Oscillatory Darcy and convergence | [Multiscale Darcy](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_multiscale_convergence.ipynb) |
+| Parallel local solves and performance | [Darcy speed-up and scalability](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_parallel_scalability.ipynb) |
+| Spawned processes and complete workflow scaling | [Darcy process scalability](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_process_scalability.ipynb) |
+| Three-dimensional local AMG and parallel comparisons | [Darcy 3D scalability](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb) |
+| Reservoir permeability | [Darcy on a SPE10 layer](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_spe10_layer.ipynb) |
+| Heterogeneous vector elasticity | [Multiscale elasticity](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/multiscale_elasticity.ipynb) |
+| Cell and face moment reconstruction | [MsHHO](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/mshho_multiscale.ipynb) |
+| Independent skeletal spaces | [MH²M](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/mh2m_multiscale.ipynb) |
+| Reaction-dominated local layers | [MHM-USFEM](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/mhm_usfem_rad.ipynb) |
+| Analytical velocity and pressure layers | [Stokes–Brinkman convergence](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/stokes_brinkman_boundary_layer.ipynb) |
 
 ```bash
 pixi run --locked -e introduction notebooks-run introduction --timeout 1800
@@ -57,19 +57,19 @@ verified discretizations; archive-only notebooks display the recorded results.
 
 | Problem | Notebook | Methods |
 | --- | --- | --- |
-| Darcy: primal locals | [Primal Galerkin](https://github.com/volpatto/pymhm/blob/main/notebooks/darcy/primal_galerkin.ipynb) | Declared P2 primal equations; P2/Q2 and 3D formulation comparisons, Dirichlet and Neumann |
-| Darcy: mixed locals | [Mixed H(div)](https://github.com/volpatto/pymhm/blob/main/notebooks/darcy/mixed_hdiv.ipynb) | Declared RT0/P0 mixed blocks; RT, BDM, enrichment, tensor RT, tetrahedral and prismatic comparisons |
-| Darcy: alternative hybrid forms | [Hybrid methods](https://github.com/volpatto/pymhm/blob/main/notebooks/darcy/hybrid_methods.ipynb) | Declared three-field MH²M and MsHHO moment blocks; Robin MH and PGMHM comparisons |
-| Elasticity | [Primal and mixed methods](https://github.com/volpatto/pymhm/blob/main/notebooks/elasticity/introductory_methods.ipynb) | Displacement Galerkin, displacement–pressure GaLS, weak-symmetry BDM/tensor RT stress |
-| Stokes–Brinkman and Oseen | [Flow methods](https://github.com/volpatto/pymhm/blob/main/notebooks/flow/introductory_methods.ipynb) | Taylor–Hood, USFEM and Oseen in 2D/3D |
-| Reaction–advection–diffusion | [Transport methods](https://github.com/volpatto/pymhm/blob/main/notebooks/transport/introductory_methods.ipynb) | Galerkin RAD, SUPG and UNUSUAL |
-| Complex acoustics | [Helmholtz fields](https://github.com/volpatto/pymhm/blob/main/notebooks/waves/helmholtz/introductory_methods.ipynb) | Complex scalar Helmholtz and interleaved trace coordinates |
-| Electromagnetics | [Maxwell trajectory](https://github.com/volpatto/pymhm/blob/main/notebooks/waves/maxwell/introductory_methods.ipynb) | Declared DG mass/curl stages, tangential hybrid traces and staggered time stepping |
-| Local/global algebra | [Providers and batches](https://github.com/volpatto/pymhm/blob/main/notebooks/foundations/operators/local_global_providers.ipynb) | Primal/mixed providers, physical gauges, external local solver, serial/spawn batches |
-| Native variational assembly | [UFL provider](https://github.com/volpatto/pymhm/blob/main/notebooks/foundations/operators/ufl_provider.ipynb) | UFL/DOLFINx local pairings and an independently declared global Equation |
-| Vector variational assembly | [Vector UFL](https://github.com/volpatto/pymhm/blob/main/notebooks/foundations/operators/vector_ufl.ipynb) | User-written coercive vector reaction-diffusion and oriented traces |
-| Recursive variational equations | [Three-level hierarchy](https://github.com/volpatto/pymhm/blob/main/notebooks/foundations/operators/variational_hierarchy.ipynb) | Independent A/B/C/D blocks, operator recursion and full-matrix comparison |
-| Spatial recursive equations | [Nested Cartesian MHM](https://github.com/volpatto/pymhm/blob/main/notebooks/darcy/36_recursive_mhm.ipynb) | Declared Q2/P1 leaf forms, NestedEquations, physical leaf-integral gauges and comparison in identical flat spaces |
+| Darcy: primal locals | [Primal Galerkin](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/primal_galerkin.ipynb) | Declared P2 primal equations; P2/Q2 and 3D formulation comparisons, Dirichlet and Neumann |
+| Darcy: mixed locals | [Mixed H(div)](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/mixed_hdiv.ipynb) | Declared RT0/P0 mixed blocks; RT, BDM, enrichment, tensor RT, tetrahedral and prismatic comparisons |
+| Darcy: alternative hybrid forms | [Hybrid methods](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/hybrid_methods.ipynb) | Declared three-field MH²M and MsHHO moment blocks; Robin MH and PGMHM comparisons |
+| Elasticity | [Primal and mixed methods](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/elasticity/introductory_methods.ipynb) | Displacement Galerkin, displacement–pressure GaLS, weak-symmetry BDM/tensor RT stress |
+| Stokes–Brinkman and Oseen | [Flow methods](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/flow/introductory_methods.ipynb) | Taylor–Hood, USFEM and Oseen in 2D/3D |
+| Reaction–advection–diffusion | [Transport methods](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/transport/introductory_methods.ipynb) | Galerkin RAD, SUPG and UNUSUAL |
+| Complex acoustics | [Helmholtz fields](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/helmholtz/introductory_methods.ipynb) | Complex scalar Helmholtz and interleaved trace coordinates |
+| Electromagnetics | [Maxwell trajectory](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/maxwell/introductory_methods.ipynb) | Declared DG mass/curl stages, tangential hybrid traces and staggered time stepping |
+| Local/global algebra | [Providers and batches](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/local_global_providers.ipynb) | Primal/mixed providers, physical gauges, external local solver, serial/spawn batches |
+| Native variational assembly | [UFL provider](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/ufl_provider.ipynb) | UFL/DOLFINx local pairings and an independently declared global Equation |
+| Vector variational assembly | [Vector UFL](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/vector_ufl.ipynb) | User-written coercive vector reaction-diffusion and oriented traces |
+| Recursive variational equations | [Three-level hierarchy](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/variational_hierarchy.ipynb) | Independent A/B/C/D blocks, operator recursion and full-matrix comparison |
+| Spatial recursive equations | [Nested Cartesian MHM](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/36_recursive_mhm.ipynb) | Declared Q2/P1 leaf forms, NestedEquations, physical leaf-integral gauges and comparison in identical flat spaces |
 
 The method-family notebooks expose the 28 scalar and 17 vector patch choices.
 The provider, vector UFL and hierarchy notebooks introduce user-written forms.
@@ -83,15 +83,15 @@ separate formulation comparisons. The moderate-resistance flow patches do
 not qualify extreme Brinkman regimes. The primary Helmholtz example has no
 absorption, PML or wave-resolution qualification.
 Native UFL execution is reported separately from the Basix-based provider.
-The [transport and heat notebook](https://github.com/volpatto/pymhm/blob/main/notebooks/transport/08_transport_and_heat.ipynb)
+The [transport and heat notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/transport/08_transport_and_heat.ipynb)
 also declares steady Robin transport and backward Euler equations, with the
 same data and spaces used by its predefined-formulation controls.
 
 ## Problem folders and detailed studies
 
-The complete [notebook catalogue](https://github.com/volpatto/pymhm/blob/main/notebooks/README.md)
+The complete [notebook catalogue](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/README.md)
 contains all 95 notebooks and the methods used by each. The
-[machine-readable index](https://github.com/volpatto/pymhm/blob/main/notebooks/catalogue.json)
+[machine-readable index](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/catalogue.json)
 uses paths relative to the repository root.
 
 | Folder | Detailed studies |
