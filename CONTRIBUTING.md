@@ -95,7 +95,7 @@ Notes cover the nearest canonical release on the first-parent history of
 `origin/main` through its fetched tip. Commits confined to a preparation branch
 are excluded. If `main` advances, fetch and incorporate it before regenerating
 the pending release. Subsequent versions must be newer than the previous release;
-never rewrite an existing release tag.
+never rewrite a published release tag.
 
 `release-prepare` synchronizes seven files: `pyproject.toml`, `pixi.toml`,
 `src/pymhm/__init__.py`, `CITATION.cff`, `recipe/recipe.yaml`, `README.md` and
@@ -150,6 +150,15 @@ the checked wheel and sdist to PyPI, creates a GitHub Release with their notes a
 artifacts, and deploys the documentation to GitHub Pages. Alpha, beta and release
 candidates are marked as GitHub prereleases. Ordinary pushes to `main` validate
 the changes without publishing.
+
+Rerunning a workflow uses its original tagged commit and workflow revision.
+Pushing a fix to `main` does not update an existing tag's workflow. If a release
+failed before publishing any distributions or release artifacts, its version can
+remain unchanged: commit the correction on `main`, then update the unpublished
+tag with the guarded push described in the
+[distribution guide](docs/development.md#automatic-publication).
+Keep published release tags immutable. The release workflow already declares
+the token permissions needed by its reusable workflows and publishing jobs.
 
 Before the first publication, configure the PyPI trusted publisher with owner
 `ipes-lncc`, repository `pymhm`, workflow `publish-pypi.yml` and environment

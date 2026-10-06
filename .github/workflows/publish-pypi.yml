@@ -66,8 +66,13 @@ jobs:
     name: Release documentation acceptance
     needs: validate
     uses: ./.github/workflows/docs.yml
+    with:
+      publish: false
     permissions:
       contents: read
+      # Required by the reusable workflow even when its deployment job is skipped.
+      pages: write
+      id-token: write
 
   publish:
     name: Publish validated PyPI distributions

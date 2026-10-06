@@ -252,6 +252,40 @@ single concurrency group and never cancel an active publication.
 Ordinary pushes to `main` check versions and notes without publishing a package.
 The PyPI job runs directly in `publish-pypi.yml`.
 
+Both release jobs that call the reusable Docs workflow declare `contents: read`,
+`pages: write` and `id-token: write`. GitHub validates the called workflow's
+permission requirements before evaluating whether its deployment job will run.
+The documentation build limits its own token to `contents: read`; the acceptance
+call passes `publish=false`, and only the final publication call passes
+`publish=true`. These job permissions are declared in the workflows and require
+no change to the repository's default token permissions.
+
+A workflow rerun uses the original run's commit and workflow revision. Pushing
+corrected files to `main` does not change the workflow associated with an existing
+release tag. Keep published release tags immutable.
+See [GitHub's workflow rerun rules](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs).
+
+If a release failed before publishing any distributions or release artifacts,
+the same version can be used again. Confirm that the version has no published
+files on PyPI and no GitHub Release, then commit the correction on `main`.
+Keep the prepared version metadata and CHANGELOG section; do not run
+`release-prepare` again, because that command rejects an existing release tag.
+For an unpublished `v0.1.0`, run these commands in Bash after committing:
+
+```bash
+pixi run --locked -e release version-check
+previous_release_tag=$(git rev-parse refs/tags/v0.1.0)
+git tag -f -a v0.1.0 -m "PyMHM 0.1.0" main
+git push --atomic \
+  --force-with-lease="refs/tags/v0.1.0:$previous_release_tag" \
+  origin main refs/tags/v0.1.0
+```
+
+The explicit [Git lease](https://git-scm.com/docs/git-push) guards only the tag
+against concurrent changes; `main` retains its normal fast-forward protection.
+The atomic push updates both refs together or neither. The updated tag triggers
+a fresh release run using the corrected workflow and the same package version.
+
 Before a release, configure the [PyPI trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)
 with owner `ipes-lncc`, repository `pymhm`, workflow `publish-pypi.yml` and
 environment `pypi`. The publisher's GitHub owner must match this organization;
