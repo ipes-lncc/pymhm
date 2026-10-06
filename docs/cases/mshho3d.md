@@ -5,7 +5,7 @@ polyhedral macro meshes. The local field minimizes physical diffusion energy
 subject to these moments. Local volume moments are condensed before the global
 face solve. It uses the same projected-source and reconstructed-source
 conventions as the [two-dimensional implementation](mshho.md), following
-[Chaumont-Frelet, Ern, Lemaire and Valentin (2022)](https://doi.org/10.1051/m2an/2021082).
+[Chaumont-Frelet et al. (2022)](https://doi.org/10.1051/m2an/2021082).
 The article proves equivalence for its ideal local reconstruction spaces.
 Generic finite local meshes approximate those spaces; algebraic reconstruction
 alone does not establish the hypotheses of the paper's error estimates.
@@ -180,3 +180,7 @@ The ten-case record is `examples/results/core-extensions/mshho3d.json`, with
 source hashes, error quadrature checks and section archives.
 The coefficient replay and display hashes are recorded separately in
 `examples/results/core-extensions/mshho3d-field-sampling.json`.
+
+## References
+
+- Théophile Chaumont-Frelet, Alexandre Ern, Simon Lemaire, and Frédéric Valentin (2022). *Bridging the Multiscale Hybrid-Mixed and Multiscale Hybrid High-Order Methods*, ESAIM: M2AN 56, 261–285. [DOI: 10.1051/m2an/2021082](https://doi.org/10.1051/m2an/2021082).

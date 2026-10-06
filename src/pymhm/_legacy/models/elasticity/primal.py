@@ -167,10 +167,11 @@ class PrimalElasticitySolution(VectorSolution):
 def _minimal_embedding(fine: TriangleMesh, degree: int, coupling: FloatArray) -> FloatArray:
     """Enrich Pk by one P(k+1) mode that detects its missing odd-degree trace.
 
-    This realizes the polynomial enrichment hypothesis of L17 Lemma 6.8 on
-    one triangular element. The added mode is selected from the null trace's
-    nonzero moment functional and is not a zero-boundary bubble. Coordinate
-    projection removes its Pk part without changing its missing-trace moment.
+    This realizes the polynomial enrichment hypothesis of Lemma 6.8 in
+    [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046) on one triangular
+    element. The added mode is selected from the null trace's nonzero moment functional and is not a
+    zero-boundary bubble. Coordinate projection removes its Pk part without changing its
+    missing-trace moment.
     """
     if len(fine.cells) != 1:
         raise ValueError("minimal enrichment requires exactly one local triangle")
@@ -268,22 +269,22 @@ def solve_primal_elasticity(
 ) -> PrimalElasticitySolution:
     """Solve primal MHM elasticity with general Pk displacement and SPD stiffness.
 
-    Neumann values are physical outward Cauchy tractions; other faces prescribe
-    displacement weakly. Pure traction requires the three integrated rigid
-    moments about the domain centroid. The default pure-traction skeleton is
-    P1, so it detects rigid rotations across macrofaces; the full-displacement
-    default remains P0. Local symmetric strain has exactly the
-    three rigid null modes. Skeletal-to-local compatibility is checked by the
-    global rank diagnostic; a single Pk triangle and trace Pell satisfy the
-    sufficient L17 local degree rule k>=ell+1 (ell even), k>=ell+2 (ell odd).
-    The L17 global theorem additionally requires rigid-motion traces in the
-    skeleton (at least P1); the legacy P0 default is outside that theorem.
-    ``minimal_enrichment=True`` implements Pk plus one P(k+1) polynomial per
-    displacement component for even k and unsplit P(k-1) traces on one local
-    triangle (L17 Lemma 6.8). The returned nodal representation has degree k+1
-    but the local system uses only dim(Pk)+1 scalar coordinates. Full polynomial
-    p-enrichment is also supported. This is a primal displacement
-    method and is not asserted to avoid locking near incompressibility.
+    Neumann values are physical outward Cauchy tractions; other faces prescribe displacement weakly.
+    Pure traction requires the three integrated rigid moments about the domain centroid. The default
+    pure-traction skeleton is P1, so it detects rigid rotations across macrofaces; the
+    full-displacement default remains P0. Local symmetric strain has exactly the three rigid null
+    modes. Skeletal-to-local compatibility is checked by the global rank diagnostic; a single Pk
+    triangle and trace Pell satisfy the sufficient local degree rule of
+    [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046): k>=ell+1 (ell
+    even), k>=ell+2 (ell odd). The global theorem of
+    [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046) additionally
+    requires rigid-motion traces in the skeleton (at least P1); the legacy P0 default is outside
+    that theorem. ``minimal_enrichment=True`` implements Pk plus one P(k+1) polynomial per
+    displacement component for even k and unsplit P(k-1) traces on one local triangle (Lemma 6.8 of
+    [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046)). The returned
+    nodal representation has degree k+1 but the local system uses only dim(Pk)+1 scalar coordinates.
+    Full polynomial p-enrichment is also supported. This is a primal displacement method and is not
+    asserted to avoid locking near incompressibility.
     """
     if not isinstance(minimal_enrichment, bool):
         raise ValueError("minimal_enrichment must be boolean")

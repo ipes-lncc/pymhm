@@ -194,35 +194,32 @@ def solve_transient_transport(
 ) -> TransientTransportResult:
     """Advance rho*u_t-div(K grad(u))+div(beta*u)+c*u=f by backward Euler.
 
-    Material, velocity, capacity and reaction are stationary. Source and boundary
-    callbacks accept ``(points,time)``; initial data accept ``points``. Positive
-    capacity is integrated consistently, including the previous-state part of
-    a SUPG residual. Coefficients may be MacroCoefficient instances to preserve
-    one-sided values. Velocity divergence and (for SUPG) diffusion divergence
+    Material, velocity, capacity and reaction are stationary. Source and boundary callbacks accept
+    ``(points,time)``; initial data accept ``points``. Positive capacity is integrated consistently,
+    including the previous-state part of a SUPG residual. Coefficients may be MacroCoefficient
+    instances to preserve one-sided values. Velocity divergence and (for SUPG) diffusion divergence
     must be supplied for variable coefficients.
 
-    ``neumann`` specifies the half-advection Robin flux; ``diffusive_flux``
-    instead specifies -K grad(u).n, as in L11 equation (5.4). They must be disjoint.
-    Local/global factorizations are reused for repeated increments; differences
-    caused solely by roundoff in the time coordinates share an operator.
-    No maximum-principle, unconditional accuracy or temporal adaptivity claim
-    follows from implicit time integration.
-    ``local_meshes`` supplies validated conforming fine partitions, taking
-    precedence over uniform refinement. Spatial operators, old-state mass,
-    boundary nodes and field reconstruction all use those same partitions.
-    ``output_steps`` optionally selects strictly increasing one-based step
-    indices to retain; every supplied time step is still computed. The result's
-    ``times`` and balance records then contain only these selected outputs,
-    while ``integration_times`` preserves the complete grid. By default all
-    steps are retained. ``on_step(step, time, solution, balance)`` runs after
-    each computed step, including outputs not retained in memory. Its numerical
-    arrays are read-only; it may persist them without changing the subsequent
-    evolution. Exceptions propagate after native factorizations are closed.
+    ``neumann`` specifies the half-advection Robin flux; ``diffusive_flux`` instead specifies -K
+    grad(u).n, as in equation (5.4) of
+    [Harder, Paredes and Valentin (2015)](https://doi.org/10.1137/130938499). They must be disjoint.
+    Local/global factorizations are reused for repeated increments; differences caused solely by
+    roundoff in the time coordinates share an operator. No maximum-principle, unconditional accuracy
+    or temporal adaptivity claim follows from implicit time integration. ``local_meshes`` supplies
+    validated conforming fine partitions, taking precedence over uniform refinement. Spatial
+    operators, old-state mass, boundary nodes and field reconstruction all use those same
+    partitions. ``output_steps`` optionally selects strictly increasing one-based step indices to
+    retain; every supplied time step is still computed. The result's ``times`` and balance records
+    then contain only these selected outputs, while ``integration_times`` preserves the complete
+    grid. By default all steps are retained. ``on_step(step, time, solution, balance)`` runs after
+    each computed step, including outputs not retained in memory. Its numerical arrays are
+    read-only; it may persist them without changing the subsequent evolution. Exceptions propagate
+    after native factorizations are closed.
 
-    ``check_original=True`` additionally checks every executed time step using
-    the shared original-equation verifier, without correcting the solution.
-    Its residual and physical RHS Euclidean norms are stored for all steps,
-    including discarded outputs, in the order of ``integration_times[1:]``.
+    ``check_original=True`` additionally checks every executed time step using the shared
+    original-equation verifier, without correcting the solution. Its residual and physical RHS
+    Euclidean norms are stored for all steps, including discarded outputs, in the order of
+    ``integration_times[1:]``.
     """
     from pymhm.core.offline import OfflineHybridSystem
 

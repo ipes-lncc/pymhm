@@ -1,7 +1,7 @@
 # Conforming potential and an energy-error estimator
 
 The scalar estimator in `pymhm.estimators.darcy` implements the unit-diffusion case of
-Section 5 in [Barrenechea et al.](https://doi.org/10.1137/24M1673073).
+Section 5 in [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073).
 It combines the [RT moment reconstruction](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reconstruction-moments.md) with a
 continuous recovered potential. The original broken MHM solution is preserved.
 This implementation assumes identity diffusion, homogeneous Dirichlet data,
@@ -161,3 +161,7 @@ The first command solves and archives `examples/results/estimator.json` and
 sampled potential fields. The second redraws those records without solving.
 Notebook `20_darcy_estimator.ipynb` runs a small consistency check and displays
 the preserved five-level figures.
+
+## References
+
+- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).

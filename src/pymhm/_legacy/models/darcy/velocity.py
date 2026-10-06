@@ -131,19 +131,18 @@ class PolynomialDarcyVelocity(_TriangleLocator):
 class PrimalDarcyVelocity(_TriangleLocator):
     """The explicit raw field -K grad(p_h), with material derivatives provided.
 
-    The field can have normal jumps inside a macrocell and is not asserted to
-    be H(div)-conforming or fine-cell conservative. ``permeability_gradient``
-    has axes (point, tensor row, tensor column, derivative). For a piecewise
-    constant material this broken derivative is zero. Material traces use the
-    specified incident triangle, including Cartesian/planar interfaces.
+    The field can have normal jumps inside a macrocell and is not asserted to be H(div)-conforming
+    or fine-cell conservative. ``permeability_gradient`` has axes (point, tensor row, tensor column,
+    derivative). For a piecewise constant material this broken derivative is zero. Material traces
+    use the specified incident triangle, including Cartesian/planar interfaces.
 
-    Transport uses the raw vector in volume integrals and the Darcy skeletal
-    multiplier as the numerical normal velocity. The conservative Galerkin
-    form is integrated directly; it does not replace distributional interface
-    derivatives by the broken divergence. The boundary term contains half this
-    numerical normal velocity, preserving the L11 Robin multiplier convention.
-    This explicitly declared discrete flux pair is distinct from an H(div)
-    vector field. Strong-residual stabilization is not provided for this pair.
+    Transport uses the raw vector in volume integrals and the Darcy skeletal multiplier as the
+    numerical normal velocity. The conservative Galerkin form is integrated directly; it does not
+    replace distributional interface derivatives by the broken divergence. The boundary term
+    contains half this numerical normal velocity, preserving the Robin multiplier convention of
+    [Harder, Paredes and Valentin (2015)](https://doi.org/10.1137/130938499). This explicitly
+    declared discrete flux pair is distinct from an H(div) vector field. Strong-residual
+    stabilization is not provided for this pair.
     """
 
     def __init__(self, solution: DarcySolution, cell: int, permeability_gradient: Any) -> None:
@@ -242,10 +241,11 @@ class PrimalDarcyVelocity(_TriangleLocator):
     ) -> Any:
         """Integrate half the numerical normal velocity on every macro boundary side.
 
-        The volume form is ``-(v_raw*u, grad(test))``. This term supplies the
-        corresponding L11 half-advection Robin boundary contribution. Integration
-        splits at both fine-edge and Darcy-trace breakpoints, independently of the
-        concentration skeleton; no pressure-gradient normal is substituted.
+        The volume form is ``-(v_raw*u, grad(test))``. This term supplies the half-advection Robin
+        boundary contribution of
+        [Harder, Paredes and Valentin (2015)](https://doi.org/10.1137/130938499). Integration splits
+        at both fine-edge and Darcy-trace breakpoints, independently of the concentration skeleton;
+        no pressure-gradient normal is substituted.
         """
         macro = self.solution.skeleton.mesh
         count = len(nodal_space(self.mesh, degree)[1])

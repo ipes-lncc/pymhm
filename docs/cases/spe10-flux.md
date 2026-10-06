@@ -1,7 +1,7 @@
 # Darcy flux in SPE10 layer 36
 
 The layer-36 Darcy experiment has a published **flux-magnitude comparison**
-in [Barrenechea, Martins, Pereira and Valentin (2026)](https://doi.org/10.1137/24M1673073),
+in [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073),
 §6.2, Figure 6. This complements the pressure maps and profiles of
 [Paredes, Valentin and Versieux (2024)](https://doi.org/10.1016/j.cam.2023.115415),
 §5.2. The two articles use different approximation spaces. Their figures
@@ -352,3 +352,9 @@ record reference revisions, solver conventions and artifact digests.
 The [notebook guide](../tutorials.md) includes notebook 23 for inspection
 of the reservoir results. Reference-code sources and comparison execution
 programs are not part of this distribution.
+
+## References
+
+- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).
+
+- Diego Paredes, Frédéric Valentin, and Henrique M. Versieux (2024). *Revisiting the robustness of the multiscale hybrid-mixed method: The face-based strategy*, Journal of Computational and Applied Mathematics 436, 115415. [DOI: 10.1016/j.cam.2023.115415](https://doi.org/10.1016/j.cam.2023.115415).

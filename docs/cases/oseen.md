@@ -193,3 +193,7 @@ from their approximation errors.
 
 
 ![Internal-layer adaptive errors and effectivity](../figures/oseen/internal-nu0.001-l1-adaptive-history.png)
+
+## References
+
+- Rodolfo Araya, Cristian Cárcamo, Abner H. Poza, and Frédéric Valentin (2021). *An adaptive multiscale hybrid-mixed method for the Oseen equations*, Advances in Computational Mathematics 47, article 15. [DOI: 10.1007/s10444-020-09833-8](https://doi.org/10.1007/s10444-020-09833-8).

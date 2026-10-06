@@ -2,7 +2,7 @@
 
 `estimate_weighted_darcy_error` uses the flux reconstruction and orthogonal
 energy decomposition of
-[Barrenechea, Martins, Pereira and Valentin](https://doi.org/10.1137/24M1673073).
+[Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073).
 It extends the identity-diffusion implementation to symmetric positive-definite
 permeability, with explicit material-dependent constants and represented mixed
 boundary data.
@@ -127,3 +127,7 @@ Run `pixi run -e notebooks python examples/verify_weighted_estimator.py`.
 The records in `examples/results/weighted-estimator.json` retain every separate
 term, true error, effectivity and equilibrium defect. Research refinement runs
 are separate from CI.
+
+## References
+
+- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).

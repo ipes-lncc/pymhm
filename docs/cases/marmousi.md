@@ -38,8 +38,7 @@ at the source point without replacing the Dirac distribution by a Gaussian
 or a finite well. The complex pressure and both of its real and imaginary
 parts are retained.
 
-The primary dataset is [Marmousi II, Martin, Wiley and Marfurt
-(2006)](https://doi.org/10.1190/1.2172306). The input files are the
+The primary dataset is [Martin, Wiley and Marfurt (2006)](https://doi.org/10.1190/1.2172306). The input files are the
 [compressional velocity](https://ahay.org/data/marm2/vp_marmousi-ii.segy)
 and [density](https://ahay.org/data/marm2/density_marmousi-ii.segy) SEG-Y
 records. Their SHA-256 digests are verified before extraction and included
@@ -340,3 +339,9 @@ pixi run -e notebooks python -m examples.plot_marmousi --data build/data/marmous
 [Notebook 72](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/helmholtz/72_marmousi.ipynb)
 checks a nonzero analytical field and reads the archived norms and figures
 without executing the full reference solves.
+
+## References
+
+- Théophile Chaumont-Frelet, and Frédéric Valentin (2020). *A Multiscale Hybrid-Mixed Method for the Helmholtz Equation in Heterogeneous Domains*. SIAM Journal on Numerical Analysis 58(2) 1029-1067. [DOI: 10.1137/19M1255616](https://doi.org/10.1137/19M1255616).
+
+- Gary S. Martin, Robert Wiley, and Kurt J. Marfurt (2006). *Marmousi2: An elastic upgrade for Marmousi*. The Leading Edge 25(2) 156-166. [DOI: 10.1190/1.2172306](https://doi.org/10.1190/1.2172306).

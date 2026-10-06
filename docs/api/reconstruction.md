@@ -27,3 +27,7 @@ Moment reconstruction, conforming potentials and dimension-dependent estimator h
 ::: pymhm.estimators.darcy_3d
     options:
       show_source: false
+
+## References
+
+- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).

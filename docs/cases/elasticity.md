@@ -39,7 +39,7 @@ Local stability also requires a compatible traction space. With a linear trace
 on each segment, GaLS requires at least four fine intervals per segment for
 P1/P1, two for P2/P2, and one for P3/P3. Segment endpoints must align with the
 fine boundary mesh. The sufficient degree/refinement conditions follow
-Lemma 4.5 of the [GaLS elasticity paper](https://arxiv.org/abs/2403.16890).
+Lemma 4.5 of the [Gomes, Pereira and Valentin (2024, preprint v1)](https://arxiv.org/abs/2403.16890v1).
 Insufficient pairs are rejected before solving; enriching only the trace does
 not guarantee stability.
 
@@ -213,3 +213,7 @@ The separate P1 baseline in `examples/plot_scalar_elasticity.py` uses
 moderately compressible experiment alone cannot establish resistance to
 locking. See [the theory](../theory.md) and
 [the literature catalog](../literature.md) for the other elasticity families.
+
+## References
+
+- Antônio Tadeu Azevedo Gomes, Weslley da Silva Pereira, and Frédéric Valentin (2024). *A low-order locking-free multiscale finite element method for isotropic elasticity*, arXiv preprint, version 1, 25 March 2024. [arXiv: 2403.16890v1](https://arxiv.org/abs/2403.16890v1).

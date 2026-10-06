@@ -1,9 +1,7 @@
 # Petrov–Galerkin MHM on polytopes
 
 `solve_pgmhm` implements the residual enrichment in equations (27)–(34) of
-Fernando, Martins, Pereira and Valentin, [*A Petrov–Galerkin multiscale
-hybrid-mixed method for the Darcy equation on polytopes*, Computational and
-Applied Mathematics 42, 173 (2023)](https://doi.org/10.1007/s40314-023-02304-y).
+[Fernando et al. (2023)](https://doi.org/10.1007/s40314-023-02304-y).
 The method changes the global test equations and reconstructs an additional
 local pressure correction. It is distinct from merely supplying unequal
 trial and test kernels to a generic condensation interface.
@@ -230,3 +228,7 @@ combines a small executable patch with these archived studies. These
 experiments address the analytical case; the article's 27-by-27 inclusions
 and first-layer SPE10 comparisons require their own heterogeneous reference
 campaigns and are not asserted to be reproduced by this page.
+
+## References
+
+- Honório Fernando, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2023). *A Petrov–Galerkin multiscale hybrid-mixed method for the Darcy equation on polytopes*. Computational and Applied Mathematics 42, article 173. [DOI: 10.1007/s40314-023-02304-y](https://doi.org/10.1007/s40314-023-02304-y).

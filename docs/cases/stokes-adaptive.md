@@ -1,7 +1,7 @@
 # Stokes–Brinkman estimation and adaptive meshes
 
 This case evaluates the two-level estimator and both refinement strategies of
-[L14](../literature.md), Araya, Rebolledo and Valentin's Stokes–Brinkman analysis.
+[Araya, Rebolledo and Valentin (2021)](https://doi.org/10.1093/imanum/drz053) for the Stokes–Brinkman problem.
 The local formulation uses the velocity-gradient viscous operator,
 continuous equal-order velocity and pressure, and residual stabilization. The
 first and second levels of the estimator are recorded separately; their sum is
@@ -54,7 +54,7 @@ selected local mesh once. With `local_error_marking="maximum"`, the fine-cell
 contributions to \(\eta_{2,K}^2\) instead select cells whose contribution norm
 is at least \(\theta\) times its local maximum. An interior fine-face residual
 is split equally between its two adjacent cells; their sum preserves the
-published local indicator. Every triggered local mesh is refined. L14 does
+published local indicator. Every triggered local mesh is refined. The paper by [Araya, Rebolledo and Valentin (2021)](https://doi.org/10.1093/imanum/drz053) does
 not prescribe this within-local selection, which is an explicit implementation
 choice. This avoids imposing a uniform grid throughout a macrocell
 solely to resolve a small boundary segment. The actual local meshes replace
@@ -195,14 +195,14 @@ assertion that the chosen meshes have reached a prescribed accuracy.
 ## Constant lid and corner singularities
 
 The separate constant-lid case uses \(u=(1,0)\) on the open top edge and zero
-velocity on the other open edges, as in the cavity model of L14 §5.4. The
+velocity on the other open edges, as in the cavity model of [Araya, Rebolledo and Valentin (2021)](https://doi.org/10.1093/imanum/drz053), §5.4. The
 MHM boundary functional integrates that discontinuous trace directly. Values
 at the two isolated corners have zero boundary measure. The conforming
 Taylor–Hood sequence sets corner nodes to zero and interior top-edge nodes
 to one, giving a mesh-dependent continuous approximation to the same trace.
 Finite-element approximation of nonsmooth Stokes boundary data, including
 the lid-driven cavity, is analyzed by
-[Durán, Gastaldi and Lombardi (2019)](https://arxiv.org/abs/1912.04962).
+[Durán, Gastaldi and Lombardi (2019)](https://arxiv.org/abs/1912.04962v1).
 
 The jumps at the upper corners do not belong to the global H1/2 trace space.
 Global velocity-gradient energy and pressure L2 norms therefore cannot be
@@ -314,3 +314,9 @@ The regression suite checks the element and face formulas independently,
 including sums outside square roots, ties, zero indicators, inherited local
 resolution and actual solves. These tests establish discrete contracts;
 adaptive contraction and optimality are not inferred from them.
+
+## References
+
+- Rodolfo Araya, Ramiro Rebolledo, and Frédéric Valentin (2021). *On a multiscale a posteriori error estimator for the Stokes and Brinkman equations*, IMA Journal of Numerical Analysis 41(1), 344–380. [DOI: 10.1093/imanum/drz053](https://doi.org/10.1093/imanum/drz053). An earlier version is [HAL: hal-01945934v1](https://hal.science/hal-01945934v1).
+
+- Ricardo G. Durán, Lucia Gastaldi, and Ariel L. Lombardi (2019). *Analysis of finite element approximations of Stokes equations with non-smooth data*. arXiv preprint, version 1, 10 December 2019. [arXiv: 1912.04962v1](https://arxiv.org/abs/1912.04962v1).

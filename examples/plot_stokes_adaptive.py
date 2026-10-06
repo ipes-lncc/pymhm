@@ -1,5 +1,6 @@
-"""Render physical fields, published estimator components and separate L14 adaptive histories."""
+"""Render fields, estimator components and adaptive histories of Araya et al. (2021)."""
 
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -85,6 +86,7 @@ def history(record: dict, name: str) -> None:
     """Show estimator components separately from integrated errors and changing mesh sizes."""
     rows = record["rows"]
     x = np.arange(len(rows))
+    ticks = x if len(x) <= 12 else np.unique(np.r_[x[:: int(np.ceil(len(x) / 10))], x[-1]])
     fig, axes = plt.subplots(1, 3, figsize=(14, 4.4), layout="constrained")
     for key, label in (
         ("eta1", "η₁ macro traces"),
@@ -109,15 +111,15 @@ def history(record: dict, name: str) -> None:
         ("trace_dofs", "Trace DOFs"),
     ):
         axes[2].semilogy(x, [row[key] for row in rows], "o-", label=label)
-    axes[0].set_title("L14 two-level estimator")
+    axes[0].set_title("Araya et al. (2021)\nTwo-level estimator")
     axes[2].set_title("Actual approximation sizes")
     for ax in axes:
-        set_refinement_ticks(ax, x)
+        set_refinement_ticks(ax, ticks)
         ax.set_xlabel("Solved refinement state")
         ax.grid(alpha=0.25)
         ax.legend(fontsize=9)
     fig.suptitle(
-        f"{record['case']} · {record['strategy']} · "
+        f"{record['case'].replace('L14', 'Araya et al. (2021)')} · {record['strategy']} · "
         f"ν={record['viscosity']:g} · γ={record['drag']:g}"
     )
     save(fig, name + "-history")
@@ -159,8 +161,8 @@ def publication() -> None:
                 ax.legend(fontsize=9)
     fig.suptitle(
         "Solid: PyMHM, declared solenoidal data and crisscross grid\n"
-        "Dashed: L14 Tables 1 and 3, printed values; "
-        "identical historical inputs are not established"
+        "Dashed: Araya et al. (2021), Tables 1 and 3, printed values\n"
+        "Identical historical inputs are not established"
     )
     save(fig, "published-components")
 
@@ -449,18 +451,31 @@ def classical_refinement() -> None:
 
 def main() -> None:
     """Replay complete native numerical records without acquiring new solutions."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--histories-only", action="store_true", help="Render estimator curves from compact records"
+    )
+    args = parser.parse_args()
     OUTPUT.mkdir(parents=True, exist_ok=True)
     for path in sorted(DATA.glob("*.json")):
         record = json.loads(path.read_text())
-        if isinstance(record, dict) and "norms" in record and "strategy" in record:
+        if (
+            not args.histories_only
+            and isinstance(record, dict)
+            and "norms" in record
+            and "strategy" in record
+        ):
             cavity_fields(record, path.stem)
         if not isinstance(record, dict) or "archive" not in record or "rows" not in record:
             continue
         history(record, path.stem)
-        if record["strategy"] != "uniform" or record["trace_degree"] == 1:
+        if not args.histories_only and (
+            record["strategy"] != "uniform" or record["trace_degree"] == 1
+        ):
             fields(record, path.stem)
     publication()
-    classical_refinement()
+    if not args.histories_only:
+        classical_refinement()
 
 
 if __name__ == "__main__":

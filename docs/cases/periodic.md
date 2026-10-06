@@ -273,3 +273,7 @@ Before increasing local refinement to r512, measure a maximum-trace single-cell
 assembly and factorization with the same Q1/P0 spaces, order 4 and original
 criterion. A full campaign, replay and r256-to-r512 increment follow the measured
 resource preflight. This refines the local resolution while retaining the published skeletal spaces.
+
+## References
+
+- Diego Paredes, Frédéric Valentin, and Henrique M. Versieux (2017). *On the robustness of multiscale hybrid-mixed methods*, Mathematics of Computation 86(304), 525–548. [DOI: 10.1090/mcom/3108](https://doi.org/10.1090/mcom/3108).

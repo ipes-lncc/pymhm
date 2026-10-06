@@ -98,7 +98,7 @@ remain separate work. The five detailed comparisons in the
 | [Analytical Oseen with P1 skeleton in 2D](#oseen2d-trace) | Macro n=2,4,8; selected stabilized P3/r1, trace P1, smooth data and viscosity 1 | Velocity, pressure, velocity gradient errors and divergence decrease over the three initial levels. |
 | [Analytical Oseen viscosity variants in 2D](#oseen2d-viscosity) | Macro n=2,4,8; stabilized P3/r1 with trace P1; selected viscosities 1 and 0.01 | Velocity, pressure, velocity gradient errors and divergence decrease for both selected viscosities. |
 | [Oseen boundary, internal-layer and variable-advection data in 2D](#oseen2d-data) | Macro n=2,4,8; stabilized P3/r1, trace P1; boundary-layer viscosity 0.01, internal-layer viscosity 0.001, variable-advection viscosity 1 | Velocity, pressure and velocity gradient errors decrease in all three series; internal-layer divergence increases from 0.1926 to 0.2822. |
-| [Oscillatory L18 mixed elasticity in 2D](#elasticity-l18-oscillatory) | Fixed macro H=1/4 and 32 triangular macrocells; face segments s=1,2,4, local r=2s; BDM2/P1/P1, trace P1, enrichment 0 | Displacement, Cauchy stress, weak rotation and stress divergence errors decrease for the original oscillatory geometry and data. |
+| [Oscillatory mixed elasticity in 2D](#elasticity-l18-oscillatory) | Fixed macro H=1/4 and 32 triangular macrocells; face segments s=1,2,4, local r=2s; BDM2/P1/P1, trace P1, enrichment 0 | Displacement, Cauchy stress, weak rotation and stress divergence errors decrease for the original oscillatory geometry and data. |
 
 <a id="scalar-mh"></a>
 
@@ -492,12 +492,18 @@ The internal-layer divergence does not converge on these three initial levels, d
 
 <a id="elasticity-l18-oscillatory"></a>
 
-### Oscillatory L18 mixed elasticity in 2D
+### Oscillatory mixed elasticity in 2D
+
+The coefficient and data follow [Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013).
 
 Displacement, Cauchy stress, weak rotation and stress divergence errors decrease for the original oscillatory geometry and data.
 
 The historical rotation column remains unreconciled; this selected BDM2 finite-space series is identified separately from a matched complete table reproduction. Three initial levels with assembly order 16 and norm orders 16/20 do not establish every asymptotic rate or uniform stability. Stress orders and rotation-enrichment sweeps, independent native whole-case comparison and coefficient field replay remain outside this scalar-record study.
 
-![Oscillatory L18 mixed elasticity in 2D](../figures/minimal-convergence/elasticity-l18-oscillatory/convergence.png)
+![Oscillatory mixed elasticity in 2D](../figures/minimal-convergence/elasticity-l18-oscillatory/convergence.png)
 
 [Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/minimal-convergence/elasticity-l18-oscillatory/study.json)
+
+## References
+
+- Philippe R. B. Devloo, Agnaldo M. Farias, Sônia M. Gomes, Weslley Pereira, Antonio J. B. dos Santos, and Frédéric Valentin (2021). *New H(div)-conforming multiscale hybrid-mixed methods for the elasticity problem on polygonal meshes*, ESAIM: M2AN 55, 1005–1037. [DOI: 10.1051/m2an/2021013](https://doi.org/10.1051/m2an/2021013).

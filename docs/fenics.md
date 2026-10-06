@@ -251,7 +251,8 @@ an appropriate augmented local system.
 
 ## USFEM Stokes–Brinkman formulation
 
-`usfem_brinkman_forms` implements equations (41)–(42) of the 2017 construction
+`usfem_brinkman_forms` implements equations (41)–(42) of
+[Araya, Harder, Poza and Valentin (2017)](https://doi.org/10.1016/j.cma.2017.05.027),
 with the pressure test sign changed consistently. Define
 
 $$
@@ -291,12 +292,16 @@ Gram-matrix quadrature. The same owner serves two- and three-dimensional flow
 assembly and the introductory polynomial-family comparison. The quotient
 requires one resolved constant kernel; it does not certify the separate
 velocity–pressure or skeletal approximation hypotheses.
+The a priori analysis of
+[Araya, Harder, Poza and Valentin (2025)](https://doi.org/10.1137/24M1649368)
+requires its local and skeletal compatibility conditions and justified inverse
+inequalities; assembling the displayed form alone does not verify them.
 
 This form uses \(\nu\nabla u:\nabla v\), so its natural boundary quantity is
 pseudostress. The physical symmetric-stress form in `brinkman_forms` has different
 boundary terms and, in the Stokes limit, different rigid-motion modes. They must
 not be interchanged while keeping the same boundary and kernel definitions.
-See [the published construction](https://doi.org/10.1016/j.cma.2017.05.027) and
+See [Araya, Harder, Poza and Valentin (2017)](https://doi.org/10.1016/j.cma.2017.05.027) and
 [the literature map](literature.md).
 The [high-order reproduction](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reproduction.md#stokes-2017-equal-order-local-spaces-and-direct-figure-comparison)
 used P2/P2 and P3/P3 local spaces through DOLFINx with a computed inverse
@@ -317,3 +322,9 @@ These checks establish the implemented local form and coupling contracts. They
 do not establish all stability estimates or reproduce every benchmark in the
 literature. DOLFINx's assembly APIs are documented in the
 [official finite-element reference](https://docs.fenicsproject.org/dolfinx/v0.9.0/python/generated/dolfinx.fem.html).
+
+## References
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2017). *Multiscale hybrid-mixed method for the Stokes and Brinkman equations—The method*, Computer Methods in Applied Mechanics and Engineering 324, 29–53. [DOI: 10.1016/j.cma.2017.05.027](https://doi.org/10.1016/j.cma.2017.05.027).
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2025). *Multiscale Hybrid-Mixed Methods for the Stokes and Brinkman Equations—A Priori Analysis*, SIAM Journal on Numerical Analysis 63(2), 588–618. [DOI: 10.1137/24M1649368](https://doi.org/10.1137/24M1649368).

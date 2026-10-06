@@ -10,7 +10,7 @@ V_h=[P_{k-1}]^3,\qquad Q_h=[P_{k-1}]^3.
 $$
 
 The classical three-dimensional family is established by
-[Arnold, Falk and Winther (2007), Eq. (7.1) and Theorems 7.1–7.2](https://arxiv.org/pdf/math/0701506).
+[Arnold, Falk and Winther (2007), Eq. (7.1) and Theorems 7.1–7.2](https://arxiv.org/abs/math/0701506v1).
 This implementation uses $k\ge2$ so that all six local rigid displacements
 are represented exactly. The skeletal MHM coupling and the analytical
 campaign below are original three-dimensional constructions. They are not
@@ -216,3 +216,9 @@ Every figure reuses that matrix for orientation and evaluation. Section
 polynomials are evaluated separately in each fine cell; no interface averaging
 or stress symmetrization is applied. Notebook 68 checks the recorded fields
 and displays the campaign.
+
+## References
+
+- Douglas N. Arnold, Richard S. Falk, and Ragnar Winther (2007). *Mixed finite element methods for linear elasticity with weakly imposed symmetry*. Mathematics of Computation 76, 1699–1723. [DOI: 10.1090/S0025-5718-07-01998-9](https://doi.org/10.1090/S0025-5718-07-01998-9). [Preprint: arXiv:math/0701506v1](https://arxiv.org/abs/math/0701506v1).
+
+- Philippe R. B. Devloo, Agnaldo M. Farias, Sônia M. Gomes, Weslley Pereira, Antonio J. B. dos Santos, and Frédéric Valentin (2021). *New H(div)-conforming multiscale hybrid-mixed methods for the elasticity problem on polygonal meshes*, ESAIM: M2AN 55, 1005–1037. [DOI: 10.1051/m2an/2021013](https://doi.org/10.1051/m2an/2021013).

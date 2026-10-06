@@ -212,21 +212,21 @@ def estimate_darcy_error(
     degree: int = 1,
     quadrature_order: int = 8,
 ) -> DarcyEstimator:
-    """Evaluate the L09 energy estimator for identity diffusion and zero Dirichlet data.
+    """Evaluate the energy estimator for identity diffusion and zero Dirichlet data.
 
-    Require a primal solution, globally conforming fine triangles, local
-    degree k>=ell+2 and ell<=m<=k. Here ell is the largest skeletal degree
-    and m is the nonnegative RT reconstruction degree. Macrocells are convex
-    triangles, hence their Poincare constant is bounded by diameter/pi.
+    Use the energy decomposition of [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073).
 
-    Coefficients must be the literal scalar 1 or identity matrix; arbitrary
-    SPD tensors and callbacks are rejected rather than inheriting an
-    unsupported coefficient-independent bound. Boundary moments and the
-    continuous-test conservation identity are checked using numerical
-    tolerances. The true source is integrated for oscillation; it is not
-    replaced by a projected source. The theorem assumes exact integration;
-    this implementation reports quadrature-based indicators and a separate
-    equilibrium defect, not an interval-certified upper bound.
+    Require a primal solution, globally conforming fine triangles, local degree k>=ell+2 and
+    ell<=m<=k. Here ell is the largest skeletal degree and m is the nonnegative RT reconstruction
+    degree. Macrocells are convex triangles, hence their Poincare constant is bounded by
+    diameter/pi.
+
+    Coefficients must be the literal scalar 1 or identity matrix; arbitrary SPD tensors and
+    callbacks are rejected rather than inheriting an unsupported coefficient-independent bound.
+    Boundary moments and the continuous-test conservation identity are checked using numerical
+    tolerances. The true source is integrated for oscillation; it is not replaced by a projected
+    source. The theorem assumes exact integration; this implementation reports quadrature-based
+    indicators and a separate equilibrium defect, not an interval-certified upper bound.
     """
     potential = recover_potential(solution, homogeneous_dirichlet=homogeneous_dirichlet)
     material = solution.permeability

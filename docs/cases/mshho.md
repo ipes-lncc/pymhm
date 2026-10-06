@@ -3,7 +3,7 @@
 `solve_mshho` constructs multiscale HHO cell and face unknowns from constrained
 local energy minimization. It uses finite conforming Galerkin realizations of
 the projected-source formulation (4.6) and reconstructed-source formulation (5.1) of
-[Chaumont-Frelet, Ern, Lemaire and Valentin (2022)](https://doi.org/10.1051/m2an/2021082).
+[Chaumont-Frelet et al. (2022)](https://doi.org/10.1051/m2an/2021082).
 The article establishes an equivalence theorem with exactly solved local problems;
 it does not provide a numerical benchmark table. The comparisons here measure a
 finite Galerkin analogue against the MHM construction in PyMHM. They do not reproduce
@@ -115,3 +115,7 @@ and comparison tools are kept outside the package's release artifacts.
 Run `pixi run --locked -e notebooks verify-mshho` to acquire and render the study.
 The numerical record is `examples/results/mshho.json`; compact algebraic,
 source-convention and polynomial-patch checks run in the test suite.
+
+## References
+
+- Théophile Chaumont-Frelet, Alexandre Ern, Simon Lemaire, and Frédéric Valentin (2022). *Bridging the Multiscale Hybrid-Mixed and Multiscale Hybrid High-Order Methods*, ESAIM: M2AN 56, 261–285. [DOI: 10.1051/m2an/2021082](https://doi.org/10.1051/m2an/2021082).

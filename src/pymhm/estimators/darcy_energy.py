@@ -278,14 +278,15 @@ def estimate_weighted_darcy_error(
     backend: Literal["serial", "thread", "process"] = "serial",
     workers: int | None = None,
 ) -> WeightedDarcyEstimator:
-    """Evaluate the energy-normalized L09 decomposition for SPD diffusion.
+    """Evaluate the energy-normalized decomposition for SPD diffusion.
 
-    Macro cells must be convex triangles; fine meshes must be globally conforming.
-    Require k>=ell+2 and ell<=m<=k. The constant/Cartesian coefficient's minimum
-    eigenvalue provides a certified bound automatically. Other callbacks require
-    an explicit positive lower bound, checked at quadrature nodes in addition to
-    the caller's certification between those nodes. Neumann data are outward
-    physical fluxes and must be exactly represented by the skeletal trace.
+    The decomposition follows [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073).
+
+    Macro cells must be convex triangles; fine meshes must be globally conforming. Require k>=ell+2
+    and ell<=m<=k. The constant/Cartesian coefficient's minimum eigenvalue provides a certified
+    bound automatically. Other callbacks require an explicit positive lower bound, checked at
+    quadrature nodes in addition to the caller's certification between those nodes. Neumann data are
+    outward physical fluxes and must be exactly represented by the skeletal trace.
     """
     return estimate_darcy_indicator(
         solution,
@@ -312,18 +313,18 @@ def estimate_darcy_indicator(
     backend: Literal["serial", "thread", "process"] = "serial",
     workers: int | None = None,
 ) -> WeightedDarcyEstimator:
-    """Select literal L09 indicators or the physical-energy normalization.
+    """Select published indicators or the physical-energy normalization.
 
-    ``published`` evaluates eta1=||K grad(p)+q||, eta2 in the K energy norm,
-    and eta3/oscillation with diameter/pi, exactly as (5.3)--(5.7) are printed.
-    ``energy`` uses K^-1 in eta1 and diameter/(pi sqrt(alpha_K)) in eta3 and
-    oscillation. The latter requires certified ellipticity lower bounds for
-    callable coefficients. Both conventions retain represented boundary data,
-    conforming local partitions, space restrictions and continuous equilibrium
-    checks. The published convention is a numerical indicator for general SPD
-    material, not a claim of a coefficient-independent physical-energy bound.
-    ``backend`` executes independent reconstruction and indicator calculations;
-    spawn workers require picklable coefficient and source callbacks.
+    The published indicators follow [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073).
+
+    ``published`` evaluates eta1=||K grad(p)+q||, eta2 in the K energy norm, and eta3/oscillation
+    with diameter/pi, exactly as (5.3)--(5.7) are printed. ``energy`` uses K^-1 in eta1 and
+    diameter/(pi sqrt(alpha_K)) in eta3 and oscillation. The latter requires certified ellipticity
+    lower bounds for callable coefficients. Both conventions retain represented boundary data,
+    conforming local partitions, space restrictions and continuous equilibrium checks. The published
+    convention is a numerical indicator for general SPD material, not a claim of a
+    coefficient-independent physical-energy bound. ``backend`` executes independent reconstruction
+    and indicator calculations; spawn workers require picklable coefficient and source callbacks.
     """
     if convention not in {"published", "energy"}:
         raise ValueError("convention must be 'published' or 'energy'")

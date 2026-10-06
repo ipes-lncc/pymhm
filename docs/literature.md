@@ -12,7 +12,7 @@ comparison and its public regeneration procedure.
 
 The core collection contains 20 documents representing 19 distinct works: the 2022
 preprint on unfitted meshes and its 2026 journal publication describe the same line
-of research. Publication metadata was checked on 28 September 2026. Numerical
+of research. Each citation identifies its publication or preprint version. Numerical
 results from a preprint must be identified by version when compared with a later
 journal article.
 
@@ -52,12 +52,9 @@ unchanged; the reports identify the reference revisions and adapter digests.
 
 ## Darcy and elliptic diffusion
 
-### L01. The original Darcy family, 2013
+### Harder, Paredes and Valentin (2013): The original Darcy family {#harder-paredes-valentin-2013-darcy}
 
-Christopher Harder, Diego Paredes, and Frédéric Valentin,
-*A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation
-with rough coefficients*, Journal of Computational Physics 245, 107–130.
-[DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
+Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
 
 Primal hybridization produces global normal-flux degrees of freedom and one
 pressure constant per macroelement. Independent zero-mean Neumann problems
@@ -73,11 +70,9 @@ oscillatory example uses a fine finite element solution as a **reference**, rath
 than an exact analytical solution. The random field requires the actual realization
 for an exact reproduction; a new random seed defines a related benchmark.
 
-### L02. A priori and a posteriori analysis, 2013
+### Araya et al. (2013): A priori and a posteriori analysis {#araya-et-al-2013-mhm}
 
-Rodolfo Araya, Christopher Harder, Diego Paredes, and Frédéric Valentin,
-*Multiscale Hybrid-Mixed Method*, SIAM Journal on Numerical Analysis 51(6),
-3505–3531. [DOI: 10.1137/120888223](https://doi.org/10.1137/120888223).
+Rodolfo Araya, Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *Multiscale Hybrid-Mixed Method*, SIAM Journal on Numerical Analysis 51(6), 3505–3531. [DOI: 10.1137/120888223](https://doi.org/10.1137/120888223).
 
 This work establishes well-posedness, approximation estimates, and a face-residual
 estimator for the elliptic formulation. The analysis distinguishes the ideal local
@@ -91,13 +86,9 @@ Dirac-well example outside the regularity assumptions of the theory. Constants u
 to scale the estimator in the numerical section must be retained when comparing
 effectivity indices.
 
-### L03. Abstract foundations, 2016
+### Harder and Valentin (2016): Abstract foundations {#harder-valentin-2016-foundations}
 
-Christopher Harder and Frédéric Valentin, *Foundations of the MHM Method*, in
-*Building Bridges: Connections and Challenges in Modern Approaches to Numerical
-Partial Differential Equations*, Lecture Notes in Computational Science and
-Engineering 114, Springer.
-[DOI: 10.1007/978-3-319-41640-3_13](https://doi.org/10.1007/978-3-319-41640-3_13).
+Christopher Harder and Frédéric Valentin (2016). *Foundations of the MHM Method*, in *Building Bridges: Connections and Challenges in Modern Approaches to Numerical Partial Differential Equations*, Lecture Notes in Computational Science and Engineering 114, Springer. [DOI: 10.1007/978-3-319-41640-3_13](https://doi.org/10.1007/978-3-319-41640-3_13).
 
 The abstract construction separates an operator kernel from a complementary local
 space and uses generalized inverses to connect hybrid and global/local
@@ -119,11 +110,9 @@ checks implement the construction; they do not establish the analytical
 hypotheses for every user-defined operator. The chapter supplies no numerical
 benchmark table requiring historical curve matching.
 
-### L04. Periodic-coefficient robustness, 2017
+### Paredes, Valentin and Versieux (2017): Periodic-coefficient robustness {#paredes-valentin-versieux-2017-robustness}
 
-Diego Paredes, Frédéric Valentin, and Henrique M. Versieux,
-*On the robustness of multiscale hybrid-mixed methods*, Mathematics of Computation
-86(304), 525–548. [DOI: 10.1090/mcom/3108](https://doi.org/10.1090/mcom/3108).
+Diego Paredes, Frédéric Valentin, and Henrique M. Versieux (2017). *On the robustness of multiscale hybrid-mixed methods*, Mathematics of Computation 86(304), 525–548. [DOI: 10.1090/mcom/3108](https://doi.org/10.1090/mcom/3108).
 
 Homogenization estimates for periodic coefficients establish convergence in
 specified relations between mesh size and physical wavelength without oversampling.
@@ -137,12 +126,9 @@ macro refinement can increase the error; face enrichment addresses that behavior
 in the experiments. The fine reference uses 16,777,216 quadrilateral bilinear
 elements, so matching only the coarse mesh does not reproduce the experiment.
 
-### L05. Mixed local Darcy solvers, 2019
+### Durán et al. (2019): Mixed local Darcy solvers {#duran-et-al-2019-mixed-darcy}
 
-Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin,
-*A multiscale hybrid method for Darcy’s problems using mixed finite element local
-solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244.
-[DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).
+Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin (2019). *A multiscale hybrid method for Darcy’s problems using mixed finite element local solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244. [DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).
 
 MHM–H(div) constrains local normal traces to the skeletal space while retaining
 finer interior flux and pressure spaces. The key compatibility is
@@ -189,17 +175,14 @@ that the maximal W22 trace/divergence constraints alone would permit.
 Independent NeoPZ classical mixed solves and its native `TPZMHMixedMeshControl`
 add physical-field comparisons on matched cells and skeletal spaces. The
 executed controller configuration and linear solver are recorded separately
-from polynomial-space checks. L05 Figure 15 normalizes by the classical
+from polynomial-space checks. [Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013) Figure 15 normalizes by the classical
 fine-mesh approximation error, whereas the gallery also reports errors relative
 to the exact field norm. Historical mesh reproduction and same-space agreement
 between codes are distinct comparisons.
 
-### L06. The MHM–MsHHO connection, 2022
+### Chaumont-Frelet et al. (2022): The MHM–MsHHO connection {#chaumont-frelet-et-al-2022-mhm-mshho}
 
-Théophile Chaumont-Frelet, Alexandre Ern, Simon Lemaire, and Frédéric Valentin,
-*Bridging the Multiscale Hybrid-Mixed and Multiscale Hybrid High-Order Methods*,
-ESAIM: M2AN 56, 261–285.
-[DOI: 10.1051/m2an/2021082](https://doi.org/10.1051/m2an/2021082).
+Théophile Chaumont-Frelet, Alexandre Ern, Simon Lemaire, and Frédéric Valentin (2022). *Bridging the Multiscale Hybrid-Mixed and Multiscale Hybrid High-Order Methods*, ESAIM: M2AN 56, 261–285. [DOI: 10.1051/m2an/2021082](https://doi.org/10.1051/m2an/2021082).
 
 Theorem 5.1 proves equivalence on general polytopal meshes under exact local
 solves. For the original semi-explicit MHM scheme, the source must belong to the
@@ -220,12 +203,9 @@ qualification are stated on the case page. Separate
 [operator-reuse measurements](execution.md) are original engineering evidence,
 not a timing reproduction of this article.
 
-### L07. Face-based robustness, 2024
+### Paredes, Valentin and Versieux (2024): Face-based robustness {#paredes-valentin-versieux-2024-face-robustness}
 
-Diego Paredes, Frédéric Valentin, and Henrique M. Versieux,
-*Revisiting the robustness of the multiscale hybrid-mixed method: The face-based
-strategy*, Journal of Computational and Applied Mathematics 436, 115415.
-[DOI: 10.1016/j.cam.2023.115415](https://doi.org/10.1016/j.cam.2023.115415).
+Diego Paredes, Frédéric Valentin, and Henrique M. Versieux (2024). *Revisiting the robustness of the multiscale hybrid-mixed method: The face-based strategy*, Journal of Computational and Applied Mathematics 436, 115415. [DOI: 10.1016/j.cam.2023.115415](https://doi.org/10.1016/j.cam.2023.115415).
 
 Continuous piecewise polynomial spaces on independently refined faces complement
 the original discontinuous multiplier construction. Convergence with a fixed macro
@@ -248,24 +228,18 @@ refined Q3, MSL conforming P1 and NeoPZ global RT0 references. The historical
 local/material quadrature choices and original coefficient arrays are not
 identified solely by their agreement with sampled published pressure curves.
 
-### L08. Unfitted flux approximation, 2022 preprint
+### Chaumont-Frelet, Paredes and Valentin (2022, preprint v1): Unfitted flux approximation {#chaumont-frelet-paredes-valentin-2022-unfitted}
 
-Théophile Chaumont-Frelet, Diego Paredes, and Frédéric Valentin,
-*Flux approximation on unfitted meshes and application to multiscale hybrid-mixed
-methods*, preprint, HAL version 1, 31 October 2022.
-[HAL: hal-03834748v1](https://inria.hal.science/hal-03834748v1).
+Théophile Chaumont-Frelet, Diego Paredes, and Frédéric Valentin (2022). *Flux approximation on unfitted meshes and application to multiscale hybrid-mixed methods*, preprint, HAL version 1, 31 October 2022. [HAL: hal-03834748v1](https://inria.hal.science/hal-03834748v1).
 
 The preprint develops flux projection in negative trace norms using regularity on
-physical material regions. It is an earlier version of L10, not an independent
+physical material regions. It is an earlier version of [Chaumont-Frelet, Paredes and Valentin (2026)](https://doi.org/10.1016/j.camwa.2026.01.016), not an independent
 method to count twice. The journal publication adds numerical examples and gives
 the authoritative published statement for a new verification campaign.
 
-### L09. H(div) flux reconstruction, 2026
+### Barrenechea et al. (2026): H(div) flux reconstruction {#barrenechea-et-al-2026-flux-reconstruction}
 
-Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin,
-*An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed
-Method*, Multiscale Modeling & Simulation 24(2), 399–428.
-[DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).
+Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).
 
 The accepted manuscript circulated before journal publication. It addresses the
 loss of H(div) conformity when local problems are approximated by primal finite
@@ -297,7 +271,7 @@ material-fitted local tetrahedra with unequal-area triangular partitions of
 the original macrofaces. Their nine polynomial patches include Dirichlet,
 mixed and pure-Neumann data. Since the analytical pressure belongs to the
 material-wise local space, these are exact-representation and interface checks,
-not a measured convergence rate or a historical L09 experiment.
+not a measured convergence rate or a historical [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073) experiment.
 The separate [unit-diffusion estimator](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/estimator.md) adds Oswald potential
 recovery and all four terms of equations (5.3)–(5.7). It requires globally
 conforming fine meshes, convex macrotriangles and homogeneous Dirichlet data.
@@ -342,12 +316,9 @@ cannot identify a global material scale, which also affects the printed
 indicator's relative terms. These records do not establish a historical flux
 reproduction, optimal adaptive complexity or arbitrary-contrast effectivity.
 
-### L10. Unfitted flux approximation, 2026 publication
+### Chaumont-Frelet, Paredes and Valentin (2026): Unfitted flux approximation {#chaumont-frelet-paredes-valentin-2026-unfitted}
 
-Théophile Chaumont-Frelet, Diego Paredes, and Frédéric Valentin,
-*Flux approximation on unfitted meshes and application to multiscale hybrid-mixed
-methods*, Computers & Mathematics with Applications 209, 16–27.
-[DOI: 10.1016/j.camwa.2026.01.016](https://doi.org/10.1016/j.camwa.2026.01.016).
+Théophile Chaumont-Frelet, Diego Paredes, and Frédéric Valentin (2026). *Flux approximation on unfitted meshes and application to multiscale hybrid-mixed methods*, Computers & Mathematics with Applications 209, 16–27. [DOI: 10.1016/j.camwa.2026.01.016](https://doi.org/10.1016/j.camwa.2026.01.016).
 
 The macro mesh need not fit material interfaces, but the **skeletal subface
 partition does fit the physical partition**: each subface lies within one material
@@ -374,12 +345,9 @@ not asserted.
 
 ## Reactive, advective, and diffusive transport
 
-### L11. Advective/reactive domination, 2015
+### Harder, Paredes and Valentin (2015): Advective/reactive domination {#harder-paredes-valentin-2015-rad}
 
-Christopher Harder, Diego Paredes, and Frédéric Valentin,
-*On a Multiscale Hybrid-Mixed Method for Advective-Reactive Dominated Problems
-with Heterogeneous Coefficients*, Multiscale Modeling & Simulation 13(2), 491–518.
-[DOI: 10.1137/130938499](https://doi.org/10.1137/130938499).
+Christopher Harder, Diego Paredes, and Frédéric Valentin (2015). *On a Multiscale Hybrid-Mixed Method for Advective-Reactive Dominated Problems with Heterogeneous Coefficients*, Multiscale Modeling & Simulation 13(2), 491–518. [DOI: 10.1137/130938499](https://doi.org/10.1137/130938499).
 
 The conservative equation is `div(-K grad u + αu) + σu = f`. Its local
 skew-symmetric weak form leads to a Robin multiplier
@@ -421,12 +389,9 @@ heterogeneous exact test is an original realization, not the article's
 unavailable random coefficient field. None of these methods implies a discrete
 maximum principle or monotone adaptive error reduction.
 
-### L12. Generalized RAD on polytopes, 2024
+### Araya et al. (2024): Generalized RAD on polytopes {#araya-et-al-2024-generalized-rad}
 
-Rodolfo Araya, Fabrice Jaillet, Diego Paredes, and Frédéric Valentin,
-*Generalizing the multiscale hybrid-mixed method for reactive-advective-diffusive
-equations*, Computer Methods in Applied Mechanics and Engineering 428, 117089.
-[DOI: 10.1016/j.cma.2024.117089](https://doi.org/10.1016/j.cma.2024.117089).
+Rodolfo Araya, Fabrice Jaillet, Diego Paredes, and Frédéric Valentin (2024). *Generalizing the multiscale hybrid-mixed method for reactive-advective-diffusive equations*, Computer Methods in Applied Mechanics and Engineering 428, 117089. [DOI: 10.1016/j.cma.2024.117089](https://doi.org/10.1016/j.cma.2024.117089).
 
 This unifies diffusion-dominated and reaction/advection cases by identifying the
 local constant kernel from the operator. Different macroelements can contribute
@@ -484,12 +449,9 @@ construction does not provide polyhedral flow or elasticity operators.
 
 ## Stokes, Brinkman, and Oseen
 
-### L13. Stokes and Brinkman construction, 2017
+### Araya et al. (2017): Stokes and Brinkman construction {#araya-et-al-2017-stokes-brinkman}
 
-Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin,
-*Multiscale hybrid-mixed method for the Stokes and Brinkman equations—The method*,
-Computer Methods in Applied Mechanics and Engineering 324, 29–53.
-[DOI: 10.1016/j.cma.2017.05.027](https://doi.org/10.1016/j.cma.2017.05.027).
+Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2017). *Multiscale hybrid-mixed method for the Stokes and Brinkman equations—The method*, Computer Methods in Applied Mechanics and Engineering 324, 29–53. [DOI: 10.1016/j.cma.2017.05.027](https://doi.org/10.1016/j.cma.2017.05.027).
 
 The model uses the vector Laplacian, `-ν Δu + Θu + grad p = f`, and
 `div u = 0`. Its multiplier is the pseudotraction
@@ -515,19 +477,15 @@ conventions; it does not identify the historical diagnostic or connectivity.
 
 The [SPE10 case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/spe10.md) identifies layer 1 by the reported extrema,
 retains the 264-macrotriangle P3/P3 configuration and separates the 2017
-stabilization convention from L16. The slip-wall component conditions and
+stabilization convention from [Araya et al. (2025)](https://doi.org/10.1137/24M1649368). The slip-wall component conditions and
 the material-pixel intersections are explicit in the implementation.
 The independently refined classical Taylor–Hood comparison uses the same PDE
 and componentwise boundary conditions, but a different global finite element
 space. Its own refinement differences quantify the numerical reference limit.
 
-### L14. Multilevel Stokes/Brinkman estimator, 2021
+### Araya, Rebolledo and Valentin (2021): Multilevel Stokes/Brinkman estimator {#araya-rebolledo-valentin-2021-estimator}
 
-Rodolfo Araya, Ramiro Rebolledo, and Frédéric Valentin,
-*On a multiscale a posteriori error estimator for the Stokes and Brinkman
-equations*, IMA Journal of Numerical Analysis 41(1), 344–380.
-[DOI: 10.1093/imanum/drz053](https://doi.org/10.1093/imanum/drz053).
-An earlier version is [HAL: hal-01945934v1](https://hal.science/hal-01945934v1).
+Rodolfo Araya, Ramiro Rebolledo, and Frédéric Valentin (2021). *On a multiscale a posteriori error estimator for the Stokes and Brinkman equations*, IMA Journal of Numerical Analysis 41(1), 344–380. [DOI: 10.1093/imanum/drz053](https://doi.org/10.1093/imanum/drz053). An earlier version is [HAL: hal-01945934v1](https://hal.science/hal-01945934v1).
 
 The estimator combines coarse-skeleton residuals and fine local residuals.
 Efficiency and reliability apply to that complete quantity. The face-adaptive
@@ -551,15 +509,12 @@ the macrocell marking of Algorithm 1, and `adapt_flow` implements the face and
 local marking of Algorithm 2. The [Stokes–Brinkman campaigns](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/stokes-adaptive.md)
 state the mesh-closure choices, estimator contributions and stopping criteria;
 the historical mesh connectivity and numerical reliability constants are not
-identified by these comparisons. The [Oseen campaigns](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/oseen.md) use L15's
+identified by these comparisons. The [Oseen campaigns](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/oseen.md) use [Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8)'s
 estimator and identify that variant separately.
 
-### L15. Adaptive Oseen, 2021
+### Araya et al. (2021): Adaptive Oseen {#araya-et-al-2021-oseen}
 
-Rodolfo Araya, Cristian Cárcamo, Abner H. Poza, and Frédéric Valentin,
-*An adaptive multiscale hybrid-mixed method for the Oseen equations*, Advances in
-Computational Mathematics 47, article 15.
-[DOI: 10.1007/s10444-020-09833-8](https://doi.org/10.1007/s10444-020-09833-8).
+Rodolfo Araya, Cristian Cárcamo, Abner H. Poza, and Frédéric Valentin (2021). *An adaptive multiscale hybrid-mixed method for the Oseen equations*, Advances in Computational Mathematics 47, article 15. [DOI: 10.1007/s10444-020-09833-8](https://doi.org/10.1007/s10444-020-09833-8).
 
 The Oseen operator extends the flow model with a prescribed convection field.
 The coercivity assumption in the analysis is
@@ -582,12 +537,9 @@ five states each, with independent velocity/pressure errors and effectivity.
 The declared meshes and marking parameters are original; historical adaptive
 connectivity and all numerical tables are not claimed to be reproduced.
 
-### L16. Stokes/Brinkman a priori analysis, 2025
+### Araya et al. (2025): Stokes/Brinkman a priori analysis {#araya-et-al-2025-stokes-brinkman-analysis}
 
-Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin,
-*Multiscale Hybrid-Mixed Methods for the Stokes and Brinkman Equations—A Priori
-Analysis*, SIAM Journal on Numerical Analysis 63(2), 588–618.
-[DOI: 10.1137/24M1649368](https://doi.org/10.1137/24M1649368).
+Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2025). *Multiscale Hybrid-Mixed Methods for the Stokes and Brinkman Equations—A Priori Analysis*, SIAM Journal on Numerical Analysis 63(2), 588–618. [DOI: 10.1137/24M1649368](https://doi.org/10.1137/24M1649368).
 
 This analyzes both one- and two-level formulations using an abstract hybrid
 framework. Stable Taylor–Hood local spaces and stabilized equal-order spaces are
@@ -596,11 +548,11 @@ Conditions on local inf-sup stability, trace compatibility, and kernel coupling
 are separate obligations. A local solver with a familiar finite element name is
 not sufficient by itself to establish global stability.
 
-The resistance bound used in stabilization differs between L13 and L16:
-L13, equations (41)–(42), names the minimum eigenvalue, whereas L16, section 4.1,
+The resistance bound used in stabilization differs between [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) and [Araya et al. (2025)](https://doi.org/10.1137/24M1649368):
+[Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027), equations (41)–(42), names the minimum eigenvalue, whereas [Araya et al. (2025)](https://doi.org/10.1137/24M1649368), section 4.1,
 uses the maximum eigenvalue over each fine cell. For anisotropic resistance the
 latter controls the negative squared-residual term. The inverse constants are
-also written with different conventions: L13 bounds squared norms, while L16
+also written with different conventions: [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) bounds squared norms, while [Araya et al. (2025)](https://doi.org/10.1137/24M1649368)
 writes an unsquared inequality. A computed constant and its convention must be
 recorded; copying the same symbol does not identify the numerical parameter.
 
@@ -612,11 +564,9 @@ discretization error independently before attributing differences to a formulati
 
 ## Elasticity
 
-### L17. Primal hybrid elasticity, 2016
+### Harder, Madureira and Valentin (2016): Primal hybrid elasticity {#harder-madureira-valentin-2016-elasticity}
 
-Christopher Harder, Alexandre L. Madureira, and Frédéric Valentin,
-*A hybrid-mixed method for elasticity*, ESAIM: M2AN 50, 311–336.
-[DOI: 10.1051/m2an/2015046](https://doi.org/10.1051/m2an/2015046).
+Christopher Harder, Alexandre L. Madureira, and Frédéric Valentin (2016). *A hybrid-mixed method for elasticity*, ESAIM: M2AN 50, 311–336. [DOI: 10.1051/m2an/2015046](https://doi.org/10.1051/m2an/2015046).
 
 The coarse unknowns include all rigid-body motions: three per two-dimensional
 cell and six per three-dimensional cell. Face multipliers represent signed
@@ -648,13 +598,9 @@ patches and five-level manufactured campaigns verify these paths. They do not
 turn raw primal stress into an H(div) field or establish uniform accuracy at
 infinite Lamé modulus.
 
-### L18. Mixed elasticity with weak stress symmetry, 2021
+### Devloo et al. (2021): Mixed elasticity with weak stress symmetry {#devloo-et-al-2021-mixed-elasticity}
 
-Philippe R. B. Devloo, Agnaldo M. Farias, Sônia M. Gomes, Weslley Pereira,
-Antonio J. B. dos Santos, and Frédéric Valentin,
-*New H(div)-conforming multiscale hybrid-mixed methods for the elasticity problem
-on polygonal meshes*, ESAIM: M2AN 55, 1005–1037.
-[DOI: 10.1051/m2an/2021013](https://doi.org/10.1051/m2an/2021013).
+Philippe R. B. Devloo, Agnaldo M. Farias, Sônia M. Gomes, Weslley Pereira, Antonio J. B. dos Santos, and Frédéric Valentin (2021). *New H(div)-conforming multiscale hybrid-mixed methods for the elasticity problem on polygonal meshes*, ESAIM: M2AN 55, 1005–1037. [DOI: 10.1051/m2an/2021013](https://doi.org/10.1051/m2an/2021013).
 
 The two-dimensional local mixed problem approximates stress, displacement, and
 rotation. Normal stress traces are restricted to the skeletal space; the rotation
@@ -666,7 +612,7 @@ The paper's table and numerical experiments are two-dimensional. A separate
 [three-dimensional mixed implementation](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-elasticity3d.md) uses
 the classical AFW family $[\mathrm{BDM}_k]^3/[P_{k-1}]^3/[P_{k-1}]^3$
 on tetrahedra, with $k\ge2$ to contain all six rigid displacements exactly.
-Its justification refers to Arnold–Falk–Winther (2007), Eq. (7.1) and
+Its justification refers to [Arnold, Falk and Winther (2007)](https://arxiv.org/abs/math/0701506v1), Eq. (7.1) and
 Theorems 7.1–7.2, rather than transferring the paper's two-dimensional
 enrichment theorem. Native UFL checks verify local operators and complete
 classical systems; the original MHM convergence and bulk-modulus studies
@@ -728,12 +674,9 @@ infinite modulus sweeps accompany both paths. The oscillatory section-6.1 data
 are evaluated with explicitly recorded trace and local spaces; incomplete
 historical mesh and size conventions prevent an unqualified Table 3 claim.
 
-### L19. Low-order locking-free elasticity, 2024
+### Gomes, Pereira and Valentin (2024, preprint v1): Low-order locking-free elasticity {#gomes-pereira-valentin-2024-locking-free}
 
-Antônio Tadeu Azevedo Gomes, Weslley da Silva Pereira, and Frédéric Valentin,
-*A low-order locking-free multiscale finite element method for isotropic
-elasticity*, arXiv preprint, version 1, 25 March 2024.
-[arXiv: 2403.16890v1](https://arxiv.org/abs/2403.16890v1).
+Antônio Tadeu Azevedo Gomes, Weslley da Silva Pereira, and Frédéric Valentin (2024). *A low-order locking-free multiscale finite element method for isotropic elasticity*, arXiv preprint, version 1, 25 March 2024. [arXiv: 2403.16890v1](https://arxiv.org/abs/2403.16890v1).
 
 Local displacement–Herrmann-pressure problems use consistent Galerkin least-squares
 terms. The pressure is `p = -λ_L div u`; the stress is
@@ -797,12 +740,9 @@ inverse constants into a tetrahedral problem or identify historical 3D tables.
 
 ## Computational architecture
 
-### L20. Scalable implementation, 2017
+### Gomes et al. (2017, preprint v1): Scalable implementation {#gomes-et-al-2017-scalable-implementation}
 
-Antônio Tadeu A. Gomes, Weslley S. Pereira, Frédéric Valentin, and Diego Paredes,
-*On the Implementation of a Scalable Simulator for Multiscale Hybrid-Mixed
-Methods*, arXiv preprint, version 1, 30 March 2017.
-[arXiv: 1703.10435v1](https://arxiv.org/abs/1703.10435v1).
+Antônio Tadeu A. Gomes, Weslley S. Pereira, Frédéric Valentin, and Diego Paredes (2017). *On the Implementation of a Scalable Simulator for Multiscale Hybrid-Mixed Methods*, arXiv preprint, version 1, 30 March 2017. [arXiv: 1703.10435v1](https://arxiv.org/abs/1703.10435v1).
 
 Independent local work, reduction/assembly, the global solve, and reconstruction
 are separate computational stages. The study compares MPI and Erlang coordination
@@ -874,13 +814,71 @@ the twenty-document catalog above.
 
 | Reference | Implemented method and current numerical scope |
 | --- | --- |
-| De Barros, Madureira and Valentin, [A Three-Field Multiscale Method, version 3](https://arxiv.org/abs/2404.16978v3) | MH²M has independent pressure and conormal traces and the complete source lifting. The initial catalogue contains three polynomial-family series for the analytical quartic pressure on explicit triangular meshes. Oscillatory media, recovered historical meshes and independently refined heterogeneous references are separate comparisons. |
-| Barrenechea, Gomes and Paredes, [2024](https://doi.org/10.1137/22M1542556) | MH uses positive Robin local problems and distinguishes the Robin multiplier from physical Darcy flux. Two three-level analytical series use triangles and nonconvex polygons. Mixed and pure-Neumann inputs require physical compatibility and the declared pressure gauge. |
-| Fernando, Martins, Pereira and Valentin, [2023](https://doi.org/10.1007/s40314-023-02304-y) | PGMHM uses residual local enrichment and its own global test equations. The current initial series measures enriched pressure and raw-gradient flux on three triangular smooth-problem meshes. Inclusion and SPE10 reproductions require their own material fitting, stabilization and resolved classical baselines. |
-| Santiago, Valentin and Martins, [CILAMCE 2025](https://doi.org/10.55592/cilamce2025.v5i.14270) | Scalar MHM-UNUSUAL uses the negative strong-residual reaction–diffusion form with its stated inverse constants and boundary convention. Three smooth epsilon=1 meshes provide the current initial convergence control; no singular-perturbation or heterogeneous rate follows from it. |
-| Chaumont-Frelet and Valentin, [2020](https://doi.org/10.1137/19M1255616) | The initial Helmholtz study uses the published analytical plane-wave data with declared Cartesian Q4/P2 spaces. Angular, resonance, local-resolution and PML studies are separate targets. The Marmousi pilot states its 160-by-80-metre crop and fixed fine spacing; it does not reproduce the full historical domain or establish a resolved reference. |
-| Lanteri, Paredes, Scheid and Valentin, [2018](https://doi.org/10.1137/16M110037X) | Maxwell has tangential coupling and central-DG local dynamics. The current nanoguide study refines an independently assembled DG Q2 discretization of the complete selected device at a shortened observation horizon. Its finest field is a numerical comparison level; MHM agreement and resolved-reference accuracy remain separate requirements. |
-| Gomes, Paredes, Pereira, Souto and Valentin, [2017](https://doi.org/10.20906/CPS/CILAMCE2017-0399) | Elastodynamics uses Newmark local responses and slabwise traction coupling. Equation (53) supplies the exact analytical data for three spatial levels at the explicitly shortened time 0.025s. The three-layer study varies the time step on one fixed conforming spatial mesh; it does not verify spatial resolution or a complete MHM/reference comparison. |
+| [de Barros, Madureira and Valentin (2026, preprint v3)](https://arxiv.org/abs/2404.16978v3) | MH²M has independent pressure and conormal traces and the complete source lifting. The initial catalogue contains three polynomial-family series for the analytical quartic pressure on explicit triangular meshes. Oscillatory media, recovered historical meshes and independently refined heterogeneous references are separate comparisons. |
+| [Barrenechea, Gomes and Paredes (2024)](https://doi.org/10.1137/22M1542556) | MH uses positive Robin local problems and distinguishes the Robin multiplier from physical Darcy flux. Two three-level analytical series use triangles and nonconvex polygons. Mixed and pure-Neumann inputs require physical compatibility and the declared pressure gauge. |
+| [Fernando et al. (2023)](https://doi.org/10.1007/s40314-023-02304-y) | PGMHM uses residual local enrichment and its own global test equations. The current initial series measures enriched pressure and raw-gradient flux on three triangular smooth-problem meshes. Inclusion and SPE10 reproductions require their own material fitting, stabilization and resolved classical baselines. |
+| [Santiago, Valentin and Martins (CILAMCE 2025)](https://doi.org/10.55592/cilamce2025.v5i.14270) | Scalar MHM-UNUSUAL uses the negative strong-residual reaction–diffusion form with its stated inverse constants and boundary convention. Three smooth epsilon=1 meshes provide the current initial convergence control; no singular-perturbation or heterogeneous rate follows from it. |
+| [Chaumont-Frelet and Valentin (2020)](https://doi.org/10.1137/19M1255616) | The initial Helmholtz study uses the published analytical plane-wave data with declared Cartesian Q4/P2 spaces. Angular, resonance, local-resolution and PML studies are separate targets. The Marmousi pilot states its 160-by-80-metre crop and fixed fine spacing; it does not reproduce the full historical domain or establish a resolved reference. |
+| [Lanteri et al. (2018)](https://doi.org/10.1137/16M110037X) | Maxwell has tangential coupling and central-DG local dynamics. The current nanoguide study refines an independently assembled DG Q2 discretization of the complete selected device at a shortened observation horizon. Its finest field is a numerical comparison level; MHM agreement and resolved-reference accuracy remain separate requirements. |
+| [Gomes et al. (2017)](https://doi.org/10.20906/CPS/CILAMCE2017-0399) | Elastodynamics uses Newmark local responses and slabwise traction coupling. Equation (53) supplies the exact analytical data for three spatial levels at the explicitly shortened time 0.025s. The three-layer study varies the time step on one fixed conforming spatial mesh; it does not verify spatial resolution or a complete MHM/reference comparison. |
 
 These entries establish specific implementations and evidence, not universal
 coverage of every mesh, coefficient regime or experiment in the wider literature.
+
+## References
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
+
+- Rodolfo Araya, Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *Multiscale Hybrid-Mixed Method*, SIAM Journal on Numerical Analysis 51(6), 3505–3531. [DOI: 10.1137/120888223](https://doi.org/10.1137/120888223).
+
+- Christopher Harder and Frédéric Valentin (2016). *Foundations of the MHM Method*, in *Building Bridges: Connections and Challenges in Modern Approaches to Numerical Partial Differential Equations*, Lecture Notes in Computational Science and Engineering 114, Springer. [DOI: 10.1007/978-3-319-41640-3_13](https://doi.org/10.1007/978-3-319-41640-3_13).
+
+- Diego Paredes, Frédéric Valentin, and Henrique M. Versieux (2017). *On the robustness of multiscale hybrid-mixed methods*, Mathematics of Computation 86(304), 525–548. [DOI: 10.1090/mcom/3108](https://doi.org/10.1090/mcom/3108).
+
+- Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin (2019). *A multiscale hybrid method for Darcy’s problems using mixed finite element local solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244. [DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).
+
+- Théophile Chaumont-Frelet, Alexandre Ern, Simon Lemaire, and Frédéric Valentin (2022). *Bridging the Multiscale Hybrid-Mixed and Multiscale Hybrid High-Order Methods*, ESAIM: M2AN 56, 261–285. [DOI: 10.1051/m2an/2021082](https://doi.org/10.1051/m2an/2021082).
+
+- Diego Paredes, Frédéric Valentin, and Henrique M. Versieux (2024). *Revisiting the robustness of the multiscale hybrid-mixed method: The face-based strategy*, Journal of Computational and Applied Mathematics 436, 115415. [DOI: 10.1016/j.cam.2023.115415](https://doi.org/10.1016/j.cam.2023.115415).
+
+- Théophile Chaumont-Frelet, Diego Paredes, and Frédéric Valentin (2022). *Flux approximation on unfitted meshes and application to multiscale hybrid-mixed methods*, preprint, HAL version 1, 31 October 2022. [HAL: hal-03834748v1](https://inria.hal.science/hal-03834748v1).
+
+- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).
+
+- Théophile Chaumont-Frelet, Diego Paredes, and Frédéric Valentin (2026). *Flux approximation on unfitted meshes and application to multiscale hybrid-mixed methods*, Computers & Mathematics with Applications 209, 16–27. [DOI: 10.1016/j.camwa.2026.01.016](https://doi.org/10.1016/j.camwa.2026.01.016).
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2015). *On a Multiscale Hybrid-Mixed Method for Advective-Reactive Dominated Problems with Heterogeneous Coefficients*, Multiscale Modeling & Simulation 13(2), 491–518. [DOI: 10.1137/130938499](https://doi.org/10.1137/130938499).
+
+- Rodolfo Araya, Fabrice Jaillet, Diego Paredes, and Frédéric Valentin (2024). *Generalizing the multiscale hybrid-mixed method for reactive-advective-diffusive equations*, Computer Methods in Applied Mechanics and Engineering 428, 117089. [DOI: 10.1016/j.cma.2024.117089](https://doi.org/10.1016/j.cma.2024.117089).
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2017). *Multiscale hybrid-mixed method for the Stokes and Brinkman equations—The method*, Computer Methods in Applied Mechanics and Engineering 324, 29–53. [DOI: 10.1016/j.cma.2017.05.027](https://doi.org/10.1016/j.cma.2017.05.027).
+
+- Rodolfo Araya, Ramiro Rebolledo, and Frédéric Valentin (2021). *On a multiscale a posteriori error estimator for the Stokes and Brinkman equations*, IMA Journal of Numerical Analysis 41(1), 344–380. [DOI: 10.1093/imanum/drz053](https://doi.org/10.1093/imanum/drz053). An earlier version is [HAL: hal-01945934v1](https://hal.science/hal-01945934v1).
+
+- Rodolfo Araya, Cristian Cárcamo, Abner H. Poza, and Frédéric Valentin (2021). *An adaptive multiscale hybrid-mixed method for the Oseen equations*, Advances in Computational Mathematics 47, article 15. [DOI: 10.1007/s10444-020-09833-8](https://doi.org/10.1007/s10444-020-09833-8).
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2025). *Multiscale Hybrid-Mixed Methods for the Stokes and Brinkman Equations—A Priori Analysis*, SIAM Journal on Numerical Analysis 63(2), 588–618. [DOI: 10.1137/24M1649368](https://doi.org/10.1137/24M1649368).
+
+- Christopher Harder, Alexandre L. Madureira, and Frédéric Valentin (2016). *A hybrid-mixed method for elasticity*, ESAIM: M2AN 50, 311–336. [DOI: 10.1051/m2an/2015046](https://doi.org/10.1051/m2an/2015046).
+
+- Philippe R. B. Devloo, Agnaldo M. Farias, Sônia M. Gomes, Weslley Pereira, Antonio J. B. dos Santos, and Frédéric Valentin (2021). *New H(div)-conforming multiscale hybrid-mixed methods for the elasticity problem on polygonal meshes*, ESAIM: M2AN 55, 1005–1037. [DOI: 10.1051/m2an/2021013](https://doi.org/10.1051/m2an/2021013).
+
+- Antônio Tadeu Azevedo Gomes, Weslley da Silva Pereira, and Frédéric Valentin (2024). *A low-order locking-free multiscale finite element method for isotropic elasticity*, arXiv preprint, version 1, 25 March 2024. [arXiv: 2403.16890v1](https://arxiv.org/abs/2403.16890v1).
+
+- Antônio Tadeu A. Gomes, Weslley S. Pereira, Frédéric Valentin, and Diego Paredes (2017). *On the Implementation of a Scalable Simulator for Multiscale Hybrid-Mixed Methods*, arXiv preprint, version 1, 30 March 2017. [arXiv: 1703.10435v1](https://arxiv.org/abs/1703.10435v1).
+
+- Stéphane Lanteri, Diego Paredes, Claire Scheid, and Frédéric Valentin (2018). *The Multiscale Hybrid-Mixed method for the Maxwell Equations in Heterogeneous Media*. Multiscale Modeling & Simulation 16(4) 1648-1683. [DOI: 10.1137/16M110037X](https://doi.org/10.1137/16M110037X).
+
+- Théophile Chaumont-Frelet, and Frédéric Valentin (2020). *A Multiscale Hybrid-Mixed Method for the Helmholtz Equation in Heterogeneous Domains*. SIAM Journal on Numerical Analysis 58(2) 1029-1067. [DOI: 10.1137/19M1255616](https://doi.org/10.1137/19M1255616).
+
+- Antonio Tadeu Gomes, Diego Paredes, Weslley Pereira, Roberto Souto, and Frederic Valentin (2017). *A Multiscale Hybrid-Mixed Method for the Elastodynamic Model with Rough Coefficients*. Proceedings of the XXXVIII Iberian Latin American Congress on Computational Methods in Engineering. [DOI: 10.20906/CPS/CILAMCE2017-0399](https://doi.org/10.20906/CPS/CILAMCE2017-0399).
+
+- Honório Fernando, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2023). *A Petrov–Galerkin multiscale hybrid-mixed method for the Darcy equation on polytopes*. Computational and Applied Mathematics 42, article 173. [DOI: 10.1007/s40314-023-02304-y](https://doi.org/10.1007/s40314-023-02304-y).
+
+- Gabriel R. Barrenechea, Antonio Tadeu A. Gomes, and Diego Paredes (2024). *A Multiscale Hybrid Method*. SIAM Journal on Scientific Computing 46(3), A1628–A1657. [DOI: 10.1137/22M1542556](https://doi.org/10.1137/22M1542556).
+
+- Juan Felipe Pacazuca Santiago, Frédéric Valentin, and Larissa Martins (2025). *A Multiscale Hybrid-Mixed Method with Local Stabilization*. Proceedings of the Ibero-Latin American Congress on Computational Methods in Engineering, CILAMCE 2025, volume 5, article 14270; published online 18 March 2026. [DOI: 10.55592/cilamce2025.v5i.14270](https://doi.org/10.55592/cilamce2025.v5i.14270).
+
+- Franklin de Barros, Alexandre L. Madureira, and Frédéric Valentin (2026). *A three-field Multiscale Method*. arXiv preprint, version 3, 5 August 2026; first submitted 25 April 2024. [arXiv: 2404.16978v3](https://arxiv.org/abs/2404.16978v3).
+
+- Douglas N. Arnold, Richard S. Falk, and Ragnar Winther (2007). *Mixed finite element methods for linear elasticity with weakly imposed symmetry*. Mathematics of Computation 76, 1699–1723. [DOI: 10.1090/S0025-5718-07-01998-9](https://doi.org/10.1090/S0025-5718-07-01998-9). [Preprint: arXiv:math/0701506v1](https://arxiv.org/abs/math/0701506v1).

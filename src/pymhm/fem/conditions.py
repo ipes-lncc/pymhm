@@ -1,4 +1,8 @@
-"""Dimension-dependent polynomial hypotheses for the L09 MHM flux estimator."""
+"""Dimension-dependent polynomial hypotheses for the MHM flux estimator.
+
+The sufficient degree condition follows Theorem 5.2 of
+[Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073).
+"""
 
 from pymhm.core.validation import positive_int
 

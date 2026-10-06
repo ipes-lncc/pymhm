@@ -3,7 +3,7 @@
 This case evaluates the triangular P2/P0 MHM formulation, RT2 moment
 reconstruction and the published numerical indicators on SPE10 Model 2,
 layer 36. The published adaptive experiment is §6.2 of
-[Barrenechea, Martins, Pereira and Valentin (2026)](https://doi.org/10.1137/24M1673073).
+[Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073).
 It is distinct from the quadrilateral Q1/continuous-P1
 [66-square experiment](spe10.md) and its [flux comparisons](spe10-flux.md).
 
@@ -178,7 +178,7 @@ an error bound for the adaptive MHM field.
 ## Published diagonal pressure profile
 
 
-Figure 9 of Barrenechea et al. (2026), accepted manuscript p.26, reports pressure
+Figure 9 of [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073), accepted manuscript p.26, reports pressure
 along the domain diagonal. Its caption identifies the MHM field as the raw
 pressure \(u_{Hh}\), not the Oswald potential. The image is the unchanged embedded raster;
 [extraction provenance](../figures/reservoir-papers/l09-figure-9-source.json)
@@ -546,3 +546,7 @@ Extended coefficients use three portable float64 arrays: the principal value,
 its rounding correction and a remaining tail. `examples.archive_precision`
 reconstructs their sum in the consumer's native extended precision; the records
 do not depend on a platform-specific binary long-double representation.
+
+## References
+
+- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).

@@ -107,7 +107,8 @@ including Linux affinity restrictions. Direct
 must select `-m "not serial"`; attempting to distribute selected serial tests is
 an error. The phase filter respects user `-k` and `-m` selections. Requested
 JUnit XML reports receive `-parallel` and `-serial` filename suffixes so both
-results remain available.
+results remain available. Workers that exit abnormally are not restarted: the
+run fails and retains the failing test's report instead of retrying it.
 
 Coverage starts from fresh, separate measurements for the two phases and combines
 only successful phases. A failed parallel phase stops before the serial phase,
@@ -143,8 +144,16 @@ contains four native solver jobs: FEniCS/PETSc and MPI on Linux, and PARDISO
 on Linux and Windows. Every portable coverage job enforces the independent
 99% line and branch gates. `test-fem` selects CPU FEM tests without MPI;
 `test-mpi` selects CPU MPI tests, including runs with one, two and four ranks.
-The MPI job uploads separate parallel/serial JUnit reports even when a test
-fails. GPU integrations run in the complete native suite.
+The FEM and MPI jobs upload separate parallel/serial JUnit reports even when a
+test fails. The FEM job checks native imports before starting the suite and
+leaves native standard error visible while capturing Python output. GPU
+integrations run in the complete native suite.
+
+Hosted integrations configure `UCX_TLS=tcp,sm,self` to use sockets, shared memory
+and loopback communication. They require no RDMA hardware. This transport
+selection applies only to the hosted Integration matrix; HPC and GPU runs use
+their own runtime configuration. See the
+[UCX transport conventions](https://openucx.readthedocs.io/en/master/faq.html#which-transports-does-ucx-use).
 
 The complete CPU/GPU job is an explicit opt-in: dispatch Tests with `full_native`
 enabled on a configured self-hosted Linux runner with the `gpu` label and two
@@ -167,6 +176,27 @@ conditions, gauges, spaces, quadrature, refinement and solver tolerances. Separa
 verification of an analytical problem from reproduction of a specific table.
 Do not use rounded paper values as an exact algebraic oracle. Store numerical
 outputs with environment and hardware provenance when measuring performance.
+
+### Cite the literature on each page
+
+Use an author–year citation beside the mathematical statement, theorem,
+comparison or attributed figure. Link it to the publisher's DOI record or to
+the exact version of an arXiv or HAL preprint. For example,
+`[Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019)`
+identifies the source without requiring a reader to interpret catalog codes.
+Include a `## References` section on the same page with the full authors,
+title, venue, year and persistent link for every work cited. Retain theorem,
+equation and section numbers beside the claim they support.
+
+The [literature catalog](literature.md) explains the scope of the methods; a
+link to that catalog does not replace a page's bibliography. Distinguish a
+preprint version from its journal publication, and distinguish an original
+PyMHM application from a reproduction of an article's numerical experiment.
+References in rendered introductory tutorials belong in their source
+notebooks. Regenerate those pages with
+`pixi run --locked -e introduction tutorials-render` after editing notebook
+Markdown; preserve the recorded execution and numerical outputs when only
+the exposition changes.
 
 Identify each reference implementation by its project name, module, revision
 and source URL when available. State whether the result comes from an unchanged

@@ -171,7 +171,7 @@ or `examples.mh2m_crisscross_campaign`.
 ## Direct comparisons
 
 The [published-result comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reproduction.md) matches all four
-Darcy Figure 5 curves of Harder et al. (2013) at five resolutions within the
+Darcy Figure 5 curves of [Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019) at five resolutions within the
 1% digitization allowance; the largest difference is 0.20%. It explicitly
 distinguishes primal P1 from classical RT0 and its quadratic potential.
 The [analytical MHM case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/analytic.md) separately verifies equation (42)
@@ -333,7 +333,7 @@ They are **not reproductions of the published numerical tables**.
 
 For `p=cos(pi*x)cos(pi*y)`, `K=I`, and `f=2*pi²*p`, prescribe exact boundary
 pressure on the unit square. The analytical problem follows
-[Duran et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013).
+[Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013).
 Use `n×n` macro squares split into two triangles, four subdivisions per local
 edge, and a constant trace on each macroface. Assembly uses Duffy order 6;
 error integration uses order 8.
@@ -478,3 +478,11 @@ benchmark, not a figure attributed to an article.
 No exact-table claim is made for certified adaptive Oseen, unfitted
 superconvergence or every mixed/locking-free elasticity table. Their acceptance
 criteria remain in the literature catalog.
+
+## References
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
+
+- Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin (2019). *A multiscale hybrid method for Darcy’s problems using mixed finite element local solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244. [DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2017). *Multiscale hybrid-mixed method for the Stokes and Brinkman equations—The method*, Computer Methods in Applied Mechanics and Engineering 324, 29–53. [DOI: 10.1016/j.cma.2017.05.027](https://doi.org/10.1016/j.cma.2017.05.027).

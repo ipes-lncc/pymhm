@@ -201,7 +201,7 @@ records.
 
 ## Stokes 2017: equal-order local spaces and direct figure comparison
 
-[Araya, Harder, Poza and Valentin (2017)](https://doi.org/10.1016/j.cma.2017.05.027),
+[Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027),
 Section 3.1.1, uses **one triangle per local problem** and USFEM equal-order
 spaces \(P_{\ell+2}^2/P_{\ell+2}\). The comparison assembled these
 spaces through DOLFINx/UFL using `from_ufl`, and solved the skeleton problem
@@ -426,7 +426,7 @@ weight $w=2$ makes the upper bound smaller. Thus changing the admissible
 stabilization constant cannot reconcile all four ordinates **under the stated
 geometry, spaces and stress conventions**. This does not identify the
 historical connectivity or diagnostic. The
-[preprint](https://www.ci2ma.udec.cl/pdf/pre-publicaciones2/2016/pp16-15.pdf)
+[Araya et al. (2016)](https://www.ci2ma.udec.cl/pdf/pre-publicaciones2/2016/pp16-15.pdf)
 uses the same full-stress definition. The
 [consistency record](../figures/reproduction/stokes/stokes2017-stress-consistency.json)
 preserves the assumptions, inverse constants, digitized inputs, interval
@@ -515,7 +515,7 @@ remain nonzero. Neither statement implies exactly divergence-free local fields.
 ## Flux-reconstruction manuscript: Table 2
 
 The author manuscript associated with
-[Barrenechea et al., DOI 10.1137/24M1673073](https://doi.org/10.1137/24M1673073)
+[Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073)
 provides a further numerical table on printed page 23. These values are
 identified by manuscript version; identity with the final journal table has
 not been asserted.
@@ -540,3 +540,13 @@ of equation (5.1) uses RT2; the native minimum-energy RT0 correction is a
 different construction and is not a reproduction of this table. Exact mesh
 connectivity, unrounded diameters and quadrature remain necessary inputs for a
 fully specified comparison.
+
+## References
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2017). *Multiscale hybrid-mixed method for the Stokes and Brinkman equations—The method*, Computer Methods in Applied Mechanics and Engineering 324, 29–53. [DOI: 10.1016/j.cma.2017.05.027](https://doi.org/10.1016/j.cma.2017.05.027).
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2016). *Multiscale hybrid-mixed method for the Stokes and Brinkman equations—The method*. Universidad de Concepción, CI²MA, Preprint 2016-15. [Institutional preprint](https://www.ci2ma.udec.cl/pdf/pre-publicaciones2/2016/pp16-15.pdf). The journal publication is Computer Methods in Applied Mechanics and Engineering 324, 29–53 (2017), [DOI: 10.1016/j.cma.2017.05.027](https://doi.org/10.1016/j.cma.2017.05.027).
+
+- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).

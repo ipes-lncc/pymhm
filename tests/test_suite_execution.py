@@ -172,7 +172,7 @@ def test_direct_xdist_rejects_serial_but_honors_user_selection(
     assert not (case.parent / "serial.executed").exists()
 
 
-@pytest.mark.parametrize("failing_phase", ["parallel", "serial"])
+@pytest.mark.parametrize("failing_phase", ["parallel", "serial", "native-crash"])
 def test_failed_phase_removes_stale_reports_and_cannot_publish_coverage(
     tmp_path: Path, failing_phase: str
 ) -> None:
@@ -180,9 +180,14 @@ def test_failed_phase_removes_stale_reports_and_cannot_publish_coverage(
     case = _cases(
         tmp_path / "suite",
         f"""
+        import os
         from pathlib import Path
         import pytest
         def test_parallel():
+            with Path("parallel.started").open("a") as stream:
+                stream.write(os.environ["PYTEST_XDIST_WORKER"] + "\\n")
+            if {failing_phase == "native-crash"}:
+                os._exit(1)
             assert {failing_phase != "parallel"}
         @pytest.mark.serial
         def test_serial():
@@ -211,6 +216,11 @@ def test_failed_phase_removes_stale_reports_and_cannot_publish_coverage(
     assert result.returncode == 1, result.stdout + result.stderr
     assert (case.parent / "serial.started").exists() == (failing_phase == "serial")
     assert not list(report.iterdir())
+    if failing_phase == "native-crash":
+        assert (case.parent / "parallel.started").read_text().splitlines() == ["gw0"]
+        assert "crashed while running" in result.stdout
+        assert "test_parallel" in result.stdout
+        assert "INTERNALERROR" not in result.stdout + result.stderr
 
 
 @pytest.mark.parametrize("selector,expected", [(["-m", "serial"], 0), (["-k", "absent"], 5)])
@@ -234,12 +244,15 @@ def test_empty_phase_is_allowed_but_empty_entire_selection_is_not(
     assert result.returncode == expected, result.stdout + result.stderr
 
 
-def test_runner_rejects_environment_scheduling_flags_before_launch(tmp_path: Path) -> None:
+@pytest.mark.parametrize("flag", ["-nauto", "--max-worker-restart=1"])
+def test_runner_rejects_environment_scheduling_flags_before_launch(
+    tmp_path: Path, flag: str
+) -> None:
     """Environment flags cannot bypass the runner's bounded worker ownership."""
     result = _run(
         [str(RUNNER), "--workers", "1"],
         tmp_path,
-        extra_environment={"PYTEST_ADDOPTS": "-nauto"},
+        extra_environment={"PYTEST_ADDOPTS": flag},
     )
     assert result.returncode == 2
     assert "pytest scheduling, coverage and phase options are reserved" in result.stderr

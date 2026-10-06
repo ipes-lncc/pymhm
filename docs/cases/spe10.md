@@ -18,10 +18,10 @@ Neither material values nor finite-element fields are smoothed across cells.
 
 | Article and figure | Layer, one based | Kx minimum–maximum, mD | Evidence |
 | --- | --- | --- | --- |
-| Paredes–Valentin–Versieux, 2024, Figures 5–8 | 36 | 0.002163–8412.63 | Layer explicitly specified; channel geometry matches |
-| Araya–Harder–Poza–Valentin, 2017, Figures 18–20 | 1 | 0.003033–4647.5 | Text says top layer; both extrema match Figure 18 |
-| Araya–Harder–Poza–Valentin, 2025, Figures 4–5 | 36 | 0.002163–8412.63 | Layer explicitly specified |
-| Araya–Rebolledo–Valentin, 2021, Figure 4 | Figure supports 36; text says 85 | Figure: approximately 0.0022–8400 | Text/figure discrepancy; layer 85 reaches 20000 |
+| [Paredes, Valentin and Versieux (2024)](https://doi.org/10.1016/j.cam.2023.115415), Figures 5–8 | 36 | 0.002163–8412.63 | Layer explicitly specified; channel geometry matches |
+| [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027), Figures 18–20 | 1 | 0.003033–4647.5 | Text says top layer; both extrema match Figure 18 |
+| [Araya et al. (2025)](https://doi.org/10.1137/24M1649368), Figures 4–5 | 36 | 0.002163–8412.63 | Layer explicitly specified |
+| [Araya, Rebolledo and Valentin (2021)](https://doi.org/10.1093/imanum/drz053), Figure 4 | Figure supports 36; text says 85 | Figure: approximately 0.0022–8400 | Text/figure discrepancy; layer 85 reaches 20000 |
 
 The following common-scale comparison makes the layer choice inspectable.
 Kx equals Ky in these slices. Kz is preserved in the archived data, but is not
@@ -44,7 +44,7 @@ are retained in the dataset used here.
 
 ## Darcy: the 66-square face-based experiment
 
-[Paredes, Valentin and Versieux](https://doi.org/10.1016/j.cam.2023.115415),
+[Paredes, Valentin and Versieux (2024)](https://doi.org/10.1016/j.cam.2023.115415),
 §5.2, solve
 
 $$
@@ -373,3 +373,13 @@ The first command refreshes display samples from the finest coefficient
 archive. The second replays the checked samples without rerunning the large
 reference solves. The source notebook verifies the archived provenance,
 reported spaces, residuals and refinement comparisons.
+
+## References
+
+- Diego Paredes, Frédéric Valentin, and Henrique M. Versieux (2024). *Revisiting the robustness of the multiscale hybrid-mixed method: The face-based strategy*, Journal of Computational and Applied Mathematics 436, 115415. [DOI: 10.1016/j.cam.2023.115415](https://doi.org/10.1016/j.cam.2023.115415).
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2017). *Multiscale hybrid-mixed method for the Stokes and Brinkman equations—The method*, Computer Methods in Applied Mechanics and Engineering 324, 29–53. [DOI: 10.1016/j.cma.2017.05.027](https://doi.org/10.1016/j.cma.2017.05.027).
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2025). *Multiscale Hybrid-Mixed Methods for the Stokes and Brinkman Equations—A Priori Analysis*, SIAM Journal on Numerical Analysis 63(2), 588–618. [DOI: 10.1137/24M1649368](https://doi.org/10.1137/24M1649368).
+
+- Rodolfo Araya, Ramiro Rebolledo, and Frédéric Valentin (2021). *On a multiscale a posteriori error estimator for the Stokes and Brinkman equations*, IMA Journal of Numerical Analysis 41(1), 344–380. [DOI: 10.1093/imanum/drz053](https://doi.org/10.1093/imanum/drz053). An earlier version is [HAL: hal-01945934v1](https://hal.science/hal-01945934v1).

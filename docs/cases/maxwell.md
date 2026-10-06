@@ -248,3 +248,7 @@ geometry, circular material inclusions, local Q2 fields and the two published
 skeletal dimensions. Its heterogeneous acquisition has separate material
 quadrature, time and classical DG refinement controls. The implementation does not infer an H(div)-conforming
 magnetic field or a divergence-cleaning property from energy conservation.
+
+## References
+
+- Stéphane Lanteri, Diego Paredes, Claire Scheid, and Frédéric Valentin (2018). *The Multiscale Hybrid-Mixed method for the Maxwell Equations in Heterogeneous Media*. Multiscale Modeling & Simulation 16(4) 1648-1683. [DOI: 10.1137/16M110037X](https://doi.org/10.1137/16M110037X).

@@ -7,6 +7,13 @@ coefficient maps; `assemble` supplies compilation, local elimination and
 ordered shared-face reduction. Changing the assembly backend does not require
 subclassing the solver or selecting a PDE-specific runtime entry point.
 
+The local/global decomposition is developed by
+[Harder and Valentin (2016)](https://doi.org/10.1007/978-3-319-41640-3_13).
+The primal and mixed Darcy constructions below follow
+[Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019)
+and [Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013), respectively.
+Their analytical patch data are defined for this tutorial.
+
 Open the [local/global provider notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/local_global_providers.ipynb)
 and edit the forms, boundary, local solver and execution cells. The
 [UFL notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/ufl_provider.ipynb)
@@ -180,6 +187,9 @@ the worker budget.
 
 ## Write native UFL forms directly
 
+UFL represents weak forms in mathematical notation, as described by
+[Alnæs et al. (2014)](https://doi.org/10.1145/2566630).
+
 The UFL notebook supplies a native context inside each worker and defines
 both pairings as forms. Its affine solution is $p=1+x+2y$ on the same two
 macrotriangles, with continuous local $P_1$ pressure and a $P_0$ normal-flux
@@ -216,3 +226,13 @@ moment restrictions and trace incidence. Native Basix RT degree `m+1` denotes
 mathematical $\mathrm{RT}_m$; simplicial BDM degree `m` denotes
 $\mathrm{BDM}_m$. Persisted coefficients also need their actual executed basis,
 digest and orientation maps. See the [reference-element API](../api/elements.md).
+
+## References
+
+- Christopher Harder and Frédéric Valentin (2016). *Foundations of the MHM Method*, in *Building Bridges: Connections and Challenges in Modern Approaches to Numerical Partial Differential Equations*, Lecture Notes in Computational Science and Engineering 114, Springer. [DOI: 10.1007/978-3-319-41640-3_13](https://doi.org/10.1007/978-3-319-41640-3_13).
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
+
+- Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin (2019). *A multiscale hybrid method for Darcy’s problems using mixed finite element local solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244. [DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).
+
+- Martin S. Alnæs, Anders Logg, Kristian B. Ølgaard, Marie E. Rognes, and Garth N. Wells (2014). *Unified Form Language: A domain-specific language for weak formulations of partial differential equations*. ACM Transactions on Mathematical Software 40(2), article 9, 1–37. [DOI: 10.1145/2566630](https://doi.org/10.1145/2566630). [Author preprint: arXiv:1211.4047v2](https://arxiv.org/abs/1211.4047v2).

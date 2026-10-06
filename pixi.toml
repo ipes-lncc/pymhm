@@ -67,6 +67,7 @@ NO_MKDOCS_2_WARNING = "1"
 ipykernel = ">=6.29"
 jupyterlab = ">=4"
 nbclient = ">=0.10"
+nbconvert-core = ">=7"
 nbformat = ">=5.10"
 meshio = ">=5.3"
 matplotlib-base = ">=3.8"
@@ -255,6 +256,9 @@ precommit = "pre-commit run --all-files"
 docs-build = "mkdocs build --strict"
 docs-check = { cmd = "python scripts/check_docs_math.py", depends-on = ["docs-build"] }
 docs-serve = "mkdocs serve"
+
+[feature.notebooks.tasks]
+tutorials-render = "python scripts/render_tutorials.py"
 
 [feature.notebooks.tasks.mh-campaign]
 cmd = "python -m examples.mh_campaign --workers 8"

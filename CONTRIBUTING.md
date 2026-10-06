@@ -68,6 +68,13 @@ whether a case is a manufactured verification, an independently reproduced
 published result, or an exploratory calculation. Provide citations and explicit
 tolerances; do not infer validation from a visually plausible field.
 
+Place readable author–year citations beside the statements or figures they
+support, linked to a DOI or an explicitly versioned preprint. Add full
+bibliographic entries under `## References` on each page that cites literature.
+Keep theorem and equation numbers with their claims. For introductory
+tutorials, edit the source notebook's Markdown and regenerate its rendered
+documentation; see the [documentation citation conventions](docs/development.md#cite-the-literature-on-each-page).
+
 ## Releases
 
 Merge the changes being released into `main`, then prepare the version and notes

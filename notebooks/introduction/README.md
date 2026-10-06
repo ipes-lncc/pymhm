@@ -1,5 +1,10 @@
 # Learning PyMHM through multiscale problems
 
+Read the [API overview](https://ipes-lncc.github.io/pymhm/tutorials/overview/)
+and the [rendered introductory course](https://ipes-lncc.github.io/pymhm/tutorials/)
+in the documentation. The course includes the code, numerical outputs and plots
+from these ten notebooks. Use the notebooks below to run or modify the examples.
+
 These ten notebooks define their problems in executable cells. Each starts
 from the differential equations, writes executable UFL weak forms and their
 interface couplings, and assembles a global multiscale problem

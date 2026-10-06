@@ -8,12 +8,12 @@ wells while respecting material barriers.
 
 ## The published point-well problem
 
-[Harder, Paredes and Valentin](https://doi.org/10.1016/j.jcp.2013.03.019),
+[Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019),
 §5.2, consider both K=1 and layered permeability. The lower layer has K=1000
 and the upper layer K=1, with interfaces at y=0.5 and y=0.484375.
 
 
-[Araya et al.](https://doi.org/10.1137/120888223), §6.3, explicitly model the
+[Araya et al. (2013)](https://doi.org/10.1137/120888223), §6.3, explicitly model the
 wells by Dirac loads and note the example's singular regularity. The numerical
 functional used here is
 
@@ -385,3 +385,13 @@ vector directions, without executing the reference programs. The classical
 command renders the unrestricted RT0 reference and trace-enrichment study.
 Notebook 22
 checks the geometry and well rates and displays these records.
+
+## References
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
+
+- Rodolfo Araya, Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *Multiscale Hybrid-Mixed Method*, SIAM Journal on Numerical Analysis 51(6), 3505–3531. [DOI: 10.1137/120888223](https://doi.org/10.1137/120888223).
+
+- Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin (2019). *A multiscale hybrid method for Darcy’s problems using mixed finite element local solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244. [DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).
+
+- Théophile Chaumont-Frelet, Diego Paredes, and Frédéric Valentin (2026). *Flux approximation on unfitted meshes and application to multiscale hybrid-mixed methods*, Computers & Mathematics with Applications 209, 16–27. [DOI: 10.1016/j.camwa.2026.01.016](https://doi.org/10.1016/j.camwa.2026.01.016).

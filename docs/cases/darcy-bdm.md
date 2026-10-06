@@ -118,3 +118,7 @@ pixi run -e notebooks python examples/plot_darcy_bdm.py
 The [numerical records](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/darcy-bdm.json)
 state meshes, quadratures, trace degrees and physical errors. External reference
 solver sources are not needed to execute this gallery.
+
+## References
+
+- Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin (2019). *A multiscale hybrid method for Darcy’s problems using mixed finite element local solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244. [DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).

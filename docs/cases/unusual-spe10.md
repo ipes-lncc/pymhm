@@ -1,7 +1,7 @@
 # SPE10 reaction layers with MHM-UNUSUAL
 
 This case evaluates the scalar stabilized method of
-[Santiago, Valentin and Martins, §4.2](https://doi.org/10.55592/cilamce2025.v5i.14270)
+[Santiago, Valentin and Martins (2025), §4.2](https://doi.org/10.55592/cilamce2025.v5i.14270)
 on the stated SPE10 layer and compares physical fields against a separately
 refined **DOLFINx/UFL conforming CG2** solution. The nominal macro partition,
 local degree and skeleton degree follow the paper. Material fitting and the
@@ -312,3 +312,7 @@ verified on the analytical configurations described on the operator page.
 It does not contain an executable SPE10 fixture with the paper's complete
 input data. That analytical code comparison is therefore not presented as an
 execution of the heterogeneous figure.
+
+## References
+
+- Juan Felipe Pacazuca Santiago, Frédéric Valentin, and Larissa Martins (2025). *A Multiscale Hybrid-Mixed Method with Local Stabilization*. Proceedings of the Ibero-Latin American Congress on Computational Methods in Engineering, CILAMCE 2025, volume 5, article 14270; published online 18 March 2026. [DOI: 10.55592/cilamce2025.v5i.14270](https://doi.org/10.55592/cilamce2025.v5i.14270).

@@ -6,6 +6,10 @@ elimination, ordered global assembly and reconstruction. Scalar, vector and
 mixed fields use the same records. The physical operator, boundary convention,
 trace space and retained modes belong to the problem definition.
 
+For the abstract MHM decomposition and local/global interpretation, see
+[Harder and Valentin (2016)](https://doi.org/10.1007/978-3-319-41640-3_13).
+The four-block API below also accepts independently declared trial/test forms.
+
 The current contract is a linear system with real coefficients. Nonlinear
 iterations and time integration can compose these systems; their update rules
 and scientific qualification belong to the application.
@@ -309,11 +313,11 @@ method implementations provide their separately verified cases.
 
 | Construction | Required form and space choices |
 | --- | --- |
-| Neumann-local MHM | Local operator on the complement of its declared kernel; normal-flux trace, source lift, physical moments and retained compatibility equations. |
-| Robin-local MH | Robin terms inside the local operator and their matching global balance; the multiplier must be distinguished from physical flux. |
-| Three-field MH²M | Local solution and duplicated conormal coefficients as mixed local fields; continuous pressure trace globally; complete source lifting and a boundary-mean local normalization. |
-| MsHHO | Constrained energy reconstruction with declared cell and face moments; a local moment saddle and subsequent cell/face condensation, with the selected source projection. |
-| Residual Petrov–Galerkin MHM | Independently declared trial/test pairings, enriched local responses and cross-cell macroface terms, with the published stabilization and reconstruction. |
+| Neumann-local MHM — [Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019) | Local operator on the complement of its declared kernel; normal-flux trace, source lift, physical moments and retained compatibility equations. |
+| Robin-local MH — [Barrenechea, Gomes and Paredes (2024)](https://doi.org/10.1137/22M1542556) | Robin terms inside the local operator and their matching global balance; the multiplier must be distinguished from physical flux. |
+| Three-field MH²M — [de Barros, Madureira and Valentin (2026, v3)](https://arxiv.org/abs/2404.16978v3) | Local solution and duplicated conormal coefficients as mixed local fields; continuous pressure trace globally; complete source lifting and a boundary-mean local normalization. |
+| MsHHO — [Chaumont-Frelet, Ern, Lemaire and Valentin (2022)](https://doi.org/10.1051/m2an/2021082) | Constrained energy reconstruction with declared cell and face moments; a local moment saddle and subsequent cell/face condensation, with the selected source projection. |
+| Residual Petrov–Galerkin MHM — [Fernando, Martins, Pereira and Valentin (2023)](https://doi.org/10.1007/s40314-023-02304-y) | Independently declared trial/test pairings, enriched local responses and cross-cell macroface terms, with the published stabilization and reconstruction. |
 
 For MsHHO, the reconstruction uses the mixed block
 
@@ -338,19 +342,44 @@ those response maps, bases and children in a new system. Automatic coupling
 of reconstructed fields on different meshes, jump signs and penalties are
 not inferred by `Equation`.
 
-The literature imposes additional conditions. The original MHM–MsHHO
-equivalence needs exact local solves and the prescribed polynomial source
-space; the source-projected variant has a different equivalence statement.
-The three-field analysis requires its local injectivity and uniform norm
-bounds, not just an observed full-rank matrix. Residual Petrov–Galerkin error
-estimates include dimension-dependent enrichment and stabilization bounds:
-the stated theorem uses trace degree $\ell\geq1$, local degree
-$k\geq\ell+d$ in dimension $d$, and $0<\alpha\leq\alpha_0$.
-The admissible upper constant is part of the analysis, not a numerical value
-inferred from a successful solve. The original MHM–MsHHO equivalence also
-excludes its face-only $m=-1$ variant.
+The literature imposes additional conditions. The MHM–MsHHO equivalence in
+[Chaumont-Frelet, Ern, Lemaire and Valentin (2022)](https://doi.org/10.1051/m2an/2021082)
+needs exact local solves and the prescribed polynomial source space; the
+source-projected variant has a different equivalence statement. The original
+equivalence also excludes the face-only $m=-1$ variant.
+
+The three-field analysis of
+[de Barros, Madureira and Valentin (2026, v3)](https://arxiv.org/abs/2404.16978v3)
+requires its local injectivity and uniform norm bounds, not just an observed
+full-rank matrix.
+
+The residual Petrov–Galerkin error estimates of
+[Fernando, Martins, Pereira and Valentin (2023)](https://doi.org/10.1007/s40314-023-02304-y)
+include dimension-dependent enrichment and stabilization bounds: the stated
+theorem uses trace degree $\ell\geq1$, local degree $k\geq\ell+d$ in dimension
+$d$, and $0<\alpha\leq\alpha_0$. The admissible upper constant is part of the
+analysis, not a numerical value inferred from a successful solve.
+
 Mixed $H(\mathrm{div})$ methods require compatible divergence, pressure and
-normal-trace spaces. See the [primary literature and scope](literature.md) for
-the specific hypotheses and the [case gallery](cases/index.md) for executed
-evidence. None of these theorems follows from the ability to assemble four
-blocks.
+normal-trace spaces; see
+[Durán, Devloo, Gomes and Valentin (2019)](https://doi.org/10.1016/j.cma.2019.05.013)
+for the mixed-local multiscale construction. The
+[primary literature and scope](literature.md) give the specific hypotheses and
+the [case gallery](cases/index.md) gives executed evidence. None of these
+theorems follows from the ability to assemble four blocks.
+
+## References
+
+- Christopher Harder and Frédéric Valentin (2016). *Foundations of the MHM Method*, in *Building Bridges: Connections and Challenges in Modern Approaches to Numerical Partial Differential Equations*, Lecture Notes in Computational Science and Engineering 114, Springer. [DOI: 10.1007/978-3-319-41640-3_13](https://doi.org/10.1007/978-3-319-41640-3_13).
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
+
+- Gabriel R. Barrenechea, Antonio Tadeu A. Gomes, and Diego Paredes (2024). *A Multiscale Hybrid Method*. SIAM Journal on Scientific Computing 46(3), A1628–A1657. [DOI: 10.1137/22M1542556](https://doi.org/10.1137/22M1542556).
+
+- Franklin de Barros, Alexandre L. Madureira, and Frédéric Valentin (2026). *A three-field Multiscale Method*. arXiv preprint, version 3, 5 August 2026; first submitted 25 April 2024. [arXiv: 2404.16978v3](https://arxiv.org/abs/2404.16978v3).
+
+- Théophile Chaumont-Frelet, Alexandre Ern, Simon Lemaire, and Frédéric Valentin (2022). *Bridging the Multiscale Hybrid-Mixed and Multiscale Hybrid High-Order Methods*, ESAIM: M2AN 56, 261–285. [DOI: 10.1051/m2an/2021082](https://doi.org/10.1051/m2an/2021082).
+
+- Honório Fernando, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2023). *A Petrov–Galerkin multiscale hybrid-mixed method for the Darcy equation on polytopes*. Computational and Applied Mathematics 42, article 173. [DOI: 10.1007/s40314-023-02304-y](https://doi.org/10.1007/s40314-023-02304-y).
+
+- Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin (2019). *A multiscale hybrid method for Darcy’s problems using mixed finite element local solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244. [DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).

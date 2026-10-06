@@ -6,11 +6,11 @@ physical outward flux, mixed boundaries and compatible pure Neumann data.
 The local pressure degree, fine tetrahedral refinement and interface spaces
 are explicit inputs.
 
-The [MH paper](https://doi.org/10.1137/22M1542556) presents its analysis and
+The [Barrenechea, Gomes and Paredes (2024)](https://doi.org/10.1137/22M1542556) presents its analysis and
 numerical examples in two dimensions and indicates an extension to three
 dimensions. The Robin formulation here is that dimensional extension, with
 its coercivity bound derived below. The
-[MH²M paper](https://arxiv.org/abs/2404.16978v3) states the model and local-map
+[de Barros, Madureira and Valentin (2026)](https://arxiv.org/abs/2404.16978v3) states the model and local-map
 construction for dimensions two and three; its sufficient polynomial-space
 constructions and numerical examples are two-dimensional. The computations
 on this page are original three-dimensional verification cases, not numerical
@@ -221,3 +221,9 @@ These studies verify the stated tetrahedral configurations. A general
 three-dimensional polynomial-space stability theorem, arbitrary polyhedral
 macroelements and historical three-dimensional numerical reproduction are
 not inferred from these results.
+
+## References
+
+- Gabriel R. Barrenechea, Antonio Tadeu A. Gomes, and Diego Paredes (2024). *A Multiscale Hybrid Method*. SIAM Journal on Scientific Computing 46(3), A1628–A1657. [DOI: 10.1137/22M1542556](https://doi.org/10.1137/22M1542556).
+
+- Franklin de Barros, Alexandre L. Madureira, and Frédéric Valentin (2026). *A three-field Multiscale Method*. arXiv preprint, version 3, 5 August 2026; first submitted 25 April 2024. [arXiv: 2404.16978v3](https://arxiv.org/abs/2404.16978v3).

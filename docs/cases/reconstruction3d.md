@@ -1,8 +1,7 @@
 # Tetrahedral flux reconstruction and adaptive resolution
 
 The three-dimensional construction uses the canonical Raviart–Thomas moments
-and energy decomposition of [Barrenechea, Martins, Pereira and
-Valentin](https://doi.org/10.1137/24M1673073). Their analysis explicitly treats
+and energy decomposition of [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073). Their analysis explicitly treats
 dimensions two and three. This page uses analytical cube problems to verify the
 three-dimensional implementation; these are not historical numerical figures
 from the paper.
@@ -255,3 +254,7 @@ The complete downloadable records are the
 [fixed-geometry resolution comparison](../figures/reconstruction3d/resolution.json)
 and [RT3 reconstruction of the unchanged P4 field](../figures/reconstruction3d/reconstruction-order.json).
 Their recorded source guards report no changes during acquisition.
+
+## References
+
+- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).

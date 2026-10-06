@@ -123,13 +123,17 @@ The original parameter plots are included for direct inspection:
 
 ![Published Figure 8](../figures/rad-conditioning/published-figure8.png)
 
-*Araya et al. (2024), Figure 8. Local and global conditioning versus diffusion.*
+*[Araya et al. (2024)](https://doi.org/10.1016/j.cma.2024.117089), Figure 8. Local and global conditioning versus diffusion.*
 
 ![Published Figure 9](../figures/rad-conditioning/published-figure9.png)
 
-*Araya et al. (2024), Figure 9. Local and global conditioning versus advection.*
+*[Araya et al. (2024)](https://doi.org/10.1016/j.cma.2024.117089), Figure 9. Local and global conditioning versus advection.*
 
 Run `pixi run -e notebooks verify-rad-conditioning`, followed by
 `pixi run -e notebooks python examples/plot_rad_conditioning.py`.
 Results and digitized markers are under `examples/results`; the parameter sweeps
 are research jobs, separate from the compact automated nullspace tests.
+
+## References
+
+- Rodolfo Araya, Fabrice Jaillet, Diego Paredes, and Frédéric Valentin (2024). *Generalizing the multiscale hybrid-mixed method for reactive-advective-diffusive equations*, Computer Methods in Applied Mechanics and Engineering 428, 117089. [DOI: 10.1016/j.cma.2024.117089](https://doi.org/10.1016/j.cma.2024.117089).

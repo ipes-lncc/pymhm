@@ -35,13 +35,15 @@ def mark_flow_faces(
     *,
     variant: Literal["oseen-2021", "stokes-brinkman-2021"] = "oseen-2021",
 ) -> tuple[tuple[np.ndarray, ...], np.ndarray]:
-    """Apply L15 Algorithm 1 or L14 Algorithm 2, including local-error dominance.
+    """Apply face marking with local-error dominance.
 
-    Both algorithms use eta_F=eta_1,F+sum eta_2,K, with
-    eta_1,F=sqrt(sum_segments eta_1,Ftilde²). Mark faces above theta times the maximum and,
-    within each marked face, every segment tied for its largest indicator.
-    Refine incident local meshes when eta_1,F < sum eta_2,K. Values of eta_2,K
-    are unscaled, exactly as in those algorithms.
+    Use Algorithm 1 of [Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8) or
+    Algorithm 2 of [Araya, Rebolledo and Valentin (2021)](https://doi.org/10.1093/imanum/drz053).
+
+    Both algorithms use eta_F=eta_1,F+sum eta_2,K, with eta_1,F=sqrt(sum_segments eta_1,Ftilde²).
+    Mark faces above theta times the maximum and, within each marked face, every segment tied for
+    its largest indicator. Refine incident local meshes when eta_1,F < sum eta_2,K. Values of
+    eta_2,K are unscaled, exactly as in those algorithms.
     """
     if not np.isfinite(theta) or not 0 < theta < 1:
         raise ValueError("theta must lie strictly between zero and one")
@@ -97,25 +99,23 @@ def adapt_flow(
 ) -> AdaptiveFlowResult:
     """Solve, estimate and refine traces/local meshes with a fixed macro topology.
 
-    Defaults are local P3/P3 Oseen with discontinuous P1 traces. Supply physical
-    coefficients and forcing through solve_flow keyword arguments. Full Dirichlet
-    data are required by these published estimators. The initial local meshes
-    must resolve the supplied skeleton. Each subsequent local grid doubles on
-    local-error dominance and is additionally refined to contain every new
-    skeletal breakpoint, as in the matching submesh construction of L15 §5.3.
-    This rational uniform-grid closure is explicit, not a minimal unstructured
-    refinement. The maximum local resolution bounds memory consumption and
-    returns a distinct stop reason; it never changes tolerances or solver choice.
-    ``local_refiner='longest-edge'`` instead closes new boundary breakpoints
-    with local longest-edge propagation; local-error dominance red-refines
-    that local mesh once. ``max_local_cells`` limits this nonuniform route.
-    Its ``refinements`` result is empty because a uniform subdivision count
-    does not describe these meshes; actual meshes are stored in each solution.
-    With longest-edge closure, ``local_error_marking='maximum'`` selects cells
-    whose eta_2 contribution is at least theta times the local maximum, within
-    every local mesh triggered by the published macroface marking. Interior
-    fine-face terms are split equally between their two neighboring cells.
-    This within-local policy is explicit: L14 does not prescribe that policy.
+    Defaults are local P3/P3 Oseen with discontinuous P1 traces. Supply physical coefficients and
+    forcing through solve_flow keyword arguments. Full Dirichlet data are required by these
+    published estimators. The initial local meshes must resolve the supplied skeleton. Each
+    subsequent local grid doubles on local-error dominance and is additionally refined to contain
+    every new skeletal breakpoint, as in the matching submesh construction in Section 5.3 of
+    [Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8). This rational uniform-grid
+    closure is explicit, not a minimal unstructured refinement. The maximum local resolution bounds
+    memory consumption and returns a distinct stop reason; it never changes tolerances or solver
+    choice. ``local_refiner='longest-edge'`` instead closes new boundary breakpoints with local
+    longest-edge propagation; local-error dominance red-refines that local mesh once.
+    ``max_local_cells`` limits this nonuniform route. Its ``refinements`` result is empty because a
+    uniform subdivision count does not describe these meshes; actual meshes are stored in each
+    solution. With longest-edge closure, ``local_error_marking='maximum'`` selects cells whose eta_2
+    contribution is at least theta times the local maximum, within every local mesh triggered by the
+    published macroface marking. Interior fine-face terms are split equally between their two
+    neighboring cells. This within-local policy is explicit; it is not prescribed by
+    [Araya, Rebolledo and Valentin (2021)](https://doi.org/10.1093/imanum/drz053).
     """
     iterations = positive_int(iterations, "iterations", 0)
     limit = positive_int(max_local_refinement, "max_local_refinement")

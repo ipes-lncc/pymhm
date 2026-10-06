@@ -54,7 +54,7 @@ the independently integrated volume norms
 [three-dimensional reconstruction study](reconstruction3d.md).
 
 The sufficient degree condition for the estimator of
-[Barrenechea, Martins, Pereira and Valentin](https://doi.org/10.1137/24M1673073)
+[Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073)
 is \(k\geq\ell+d\), together with \(\ell\leq m\leq k\).
 The present local P5 / skeletal P2 configuration satisfies the three-dimensional
 boundary case \(5=2+3\). Both RT2 and RT3 reconstructions satisfy the stated
@@ -145,3 +145,7 @@ the numerical campaign. Run these commands from a repository checkout containing
 the generated field archives. Release archives contain installation and build
 sources; scientific examples, records and notebook resources remain in the
 repository.
+
+## References
+
+- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).

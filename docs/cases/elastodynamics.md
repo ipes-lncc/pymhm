@@ -1,7 +1,7 @@
 # Elastodynamic MHM with local time propagation
 
 `ElastodynamicStepper` implements the space-time MHM construction of
-[Gomes, Paredes, Pereira, Souto and Valentin (2017)](https://doi.org/10.20906/CPS/CILAMCE2017-0399),
+[Gomes et al. (2017)](https://doi.org/10.20906/CPS/CILAMCE2017-0399),
 Equations (42)–(48). Independent local Newmark responses determine a global
 traction problem at each macro time. The implementation supports triangles in
 two dimensions and tetrahedra in three dimensions, continuous local Pk fields,
@@ -88,7 +88,7 @@ of this study, rather than an assertion of identical historical matrices.
 
 ![Published elastodynamic convergence](../figures/elastodynamics/published-convergence.png)
 
-*Gomes et al. (2017), Figure 3. The spatial and temporal reference slopes
+*[Gomes et al. (2017)](https://doi.org/10.20906/CPS/CILAMCE2017-0399), Figure 3. The spatial and temporal reference slopes
 concern different refinement sequences.*
 
 The stress norm includes the divergence inside every fine tetrahedron:
@@ -327,3 +327,7 @@ pixi run -e notebooks python -m examples.elastodynamics_results
 pixi run -e notebooks python -m examples.plot_elastodynamics_native
 pixi run -e notebooks notebooks-run notebooks/waves/elastodynamics/71_elastodynamics.ipynb
 ```
+
+## References
+
+- Antonio Tadeu Gomes, Diego Paredes, Weslley Pereira, Roberto Souto, and Frederic Valentin (2017). *A Multiscale Hybrid-Mixed Method for the Elastodynamic Model with Rough Coefficients*. Proceedings of the XXXVIII Iberian Latin American Congress on Computational Methods in Engineering. [DOI: 10.20906/CPS/CILAMCE2017-0399](https://doi.org/10.20906/CPS/CILAMCE2017-0399).

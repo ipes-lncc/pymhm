@@ -6,6 +6,11 @@ spaces inside each macrocell and the same normal-flux skeleton as triangular
 Darcy. Both the source response and the face responses are assembled and
 condensed inside the selected local worker.
 
+The primal Neumann-local construction follows
+[Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019).
+The Cartesian geometry, local Qk spaces and independent face partitions used
+here are specified below.
+
 ```python
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.meshes.cartesian import CartesianMacroMesh
@@ -107,7 +112,7 @@ comparisons. These checks establish the tested Cartesian implementation;
 they do not extend it to warped or curved quadrilaterals.
 
 The 66-cell geometry and continuous-face construction correspond to
-[the face-based MHM study](https://doi.org/10.1016/j.cam.2023.115415), §5.2.
+[Paredes, Valentin and Versieux (2024)](https://doi.org/10.1016/j.cam.2023.115415), §5.2.
 Its MHM local refinement count is not reported. The local-refinement campaign
 therefore states each numerical choice and measures its sensitivity. The
 article's reference grid does not specify the MHM local grid.
@@ -130,3 +135,9 @@ pixi run -e intel python -m examples.solve_spe10_reference --shape 768 1408 --or
 The MHM command reuses archived cases after checking their checksums. The Q3
 command assembles and solves the requested reference, requiring substantially
 more memory than the smaller 240-by-440 default reference.
+
+## References
+
+- Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
+
+- Diego Paredes, Frédéric Valentin, and Henrique M. Versieux (2024). *Revisiting the robustness of the multiscale hybrid-mixed method: The face-based strategy*, Journal of Computational and Applied Mathematics 436, 115415. [DOI: 10.1016/j.cam.2023.115415](https://doi.org/10.1016/j.cam.2023.115415).

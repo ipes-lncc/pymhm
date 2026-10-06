@@ -33,7 +33,7 @@ f(x,y)&=2\pi^2\cos(\pi x)\cos(\pi y).
 $$
 
 This analytical problem appears in
-[Duran et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013).
+[Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013).
 The present triangular discretization and local spaces differ from the paper's
 numerical experiments; the figures verify the specified problem rather than
 reproduce its tables.
@@ -235,3 +235,7 @@ keeps `r=12,s=6` while using the requested macro resolution.
 The analytical panels use a separate display grid. Error maps and norms use
 quadrature on the actual finite elements. The SVG and PNG files share the same
 computed data and are suitable for inspection or export.
+
+## References
+
+- Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin (2019). *A multiscale hybrid method for Darcy’s problems using mixed finite element local solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244. [DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).

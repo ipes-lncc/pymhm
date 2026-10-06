@@ -153,3 +153,7 @@ pixi run -e notebooks python examples/plot_flow_audit.py
 
 The uncondensed check and global reference used SciPy's sparse direct solver
 independently of the package's linear-solver adapter.
+
+## References
+
+- Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2017). *Multiscale hybrid-mixed method for the Stokes and Brinkman equations—The method*, Computer Methods in Applied Mechanics and Engineering 324, 29–53. [DOI: 10.1016/j.cma.2017.05.027](https://doi.org/10.1016/j.cma.2017.05.027).

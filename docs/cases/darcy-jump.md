@@ -1,8 +1,7 @@
 # Darcy face-jump indicator
 
 `estimate_darcy_jumps` evaluates the face residuals in equations (5.1)–(5.3) of
-[Araya, Harder, Paredes and Valentin, *Multiscale Hybrid-Mixed Method*,
-SIAM Journal on Numerical Analysis 51 (2013), 3505–3531](https://doi.org/10.1137/120888223).
+[Araya et al. (2013)](https://doi.org/10.1137/120888223).
 The indicator measures mismatches of the broken pressure traces. Its reliability
 theorem concerns exact local solution operators; finite-dimensional local solves
 introduce an additional error that this indicator alone does not control.
@@ -105,3 +104,7 @@ The ten numerical records and macro-indicator arrays are in
 analytical case and displays the archived campaign. Light tests verify face
 multiplicity, permeability scaling, Neumann classification, affine consistency
 and input restrictions. The multilevel experiment runs separately from CI.
+
+## References
+
+- Rodolfo Araya, Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *Multiscale Hybrid-Mixed Method*, SIAM Journal on Numerical Analysis 51(6), 3505–3531. [DOI: 10.1137/120888223](https://doi.org/10.1137/120888223).

@@ -119,6 +119,9 @@ jobs:
     needs: core
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
+    env:
+      # Hosted VMs use sockets and shared memory, without requiring RDMA devices.
+      UCX_TLS: tcp,sm,self
     strategy:
       fail-fast: false
       matrix:
@@ -135,15 +138,28 @@ jobs:
           environments: ${{ matrix.environment }}
           locked: true
           cache: true
+      - name: Require native DOLFINx and PETSc
+        if: matrix.kind == 'fem'
+        run: >-
+          pixi run --locked -e fem python -c
+          'import dolfinx; from mpi4py import MPI; from petsc4py import PETSc;
+          print("DOLFINx:", dolfinx.__version__);
+          print("PETSc:", PETSc.Sys.getVersion()); print(MPI.Get_library_version())'
       - name: Exercise native DOLFINx assembly
         if: matrix.kind == 'fem'
+        env:
+          PYTEST_ADDOPTS: --capture=tee-sys --junitxml=build/reports/tests/fem.xml
         run: pixi run --locked -e fem test-fem
-      - name: Require native PETSc
-        if: matrix.kind == 'fem'
-        run: pixi run --locked -e fem python -c 'from petsc4py import PETSc; print(PETSc.Sys.getVersion())'
       - name: Exercise native PETSc solver
         if: matrix.kind == 'fem'
+        env:
+          PYTEST_ADDOPTS: --capture=tee-sys --junitxml=build/reports/tests/petsc.xml
         run: pixi run --locked -e fem python scripts/run_tests.py -- tests/test_solvers.py -k 'native_optional_cpu_integration and petsc'
+      - uses: actions/upload-artifact@v7
+        if: matrix.kind == 'fem' && always()
+        with:
+          name: test-results-fem-${{ matrix.os }}
+          path: build/reports/tests/*.xml
       - name: Require native MPI and MUMPS
         if: matrix.kind == 'mpi'
         run: >-

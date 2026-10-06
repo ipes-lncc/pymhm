@@ -1,4 +1,8 @@
-"""Face-residual marking and fixed-macro-mesh RAD adaptivity from L11 Section 4."""
+"""Face-residual marking and fixed-macro-mesh RAD adaptivity.
+
+The face indicator follows Section 4 of
+[Harder, Paredes and Valentin (2015)](https://doi.org/10.1137/130938499).
+"""
 
 from dataclasses import dataclass
 from typing import Any
@@ -16,11 +20,13 @@ from pymhm.fem.traces.scalar import prepare_scalar_trace
 
 @dataclass(frozen=True)
 class TransportBounds:
-    """Declared global bounds for the L11 transport face indicator.
+    """Declared global bounds for the transport face indicator.
 
-    ``diffusion`` bounds the largest eigenvalue of K, ``velocity`` bounds the
-    Euclidean magnitude of beta, and ``effective_reaction`` bounds
-    abs(c+div(beta)/2). Callers supply analytical bounds, not sampled maxima.
+    The indicator follows [Harder, Paredes and Valentin (2015)](https://doi.org/10.1137/130938499).
+
+    ``diffusion`` bounds the largest eigenvalue of K, ``velocity`` bounds the Euclidean magnitude of
+    beta, and ``effective_reaction`` bounds abs(c+div(beta)/2). Callers supply analytical bounds,
+    not sampled maxima.
     """
 
     diffusion: float
@@ -46,7 +52,10 @@ class TransportBounds:
 
 @dataclass(frozen=True)
 class FaceIndicators:
-    """One nonnegative L11 indicator per skeletal segment, including exterior zeros."""
+    """One nonnegative indicator per skeletal segment, including exterior zeros.
+
+    The indicator follows [Harder, Paredes and Valentin (2015)](https://doi.org/10.1137/130938499).
+    """
 
     skeleton: SkeletonSpace
     values: tuple[FloatArray, ...]
@@ -68,27 +77,27 @@ class FaceIndicators:
 def estimate_transport_faces(
     solution: ScalarSolution, bounds: TransportBounds, *, order: int | None = None
 ) -> FaceIndicators:
-    """Integrate the jump estimator in L11 equations (4.3)--(4.4).
+    """Integrate the skeletal jump estimator.
+
+    Use equations (4.3)--(4.4) of
+    [Harder, Paredes and Valentin (2015)](https://doi.org/10.1137/130938499).
 
     On an interior macroface F, R_F=-jump(u)/2 and each segment Fhat receives
-    ``C*norm(R_F,Fhat)/sqrt(length(F))``. The denominator is the original
-    macroface length, not the refined segment length. Dirichlet conditions must
-    be imposed strongly on the essential boundary. Prescribed natural faces are
-    also supported: their multiplier variations vanish, so neither essential
-    nor natural exterior faces contribute to this interior-jump indicator.
-    ``solve_transport`` preserves the distinction between its Robin multiplier
-    and a prescribed physical ``diffusive_flux``; the latter has its own
-    half-advection boundary mass. In L11 section 5.1 the velocity is tangent to
-    the natural walls, and the two flux conventions coincide there.
+    ``C*norm(R_F,Fhat)/sqrt(length(F))``. The denominator is the original macroface length, not the
+    refined segment length. Dirichlet conditions must be imposed strongly on the essential boundary.
+    Prescribed natural faces are also supported: their multiplier variations vanish, so neither
+    essential nor natural exterior faces contribute to this interior-jump indicator.
+    ``solve_transport`` preserves the distinction between its Robin multiplier and a prescribed
+    physical ``diffusive_flux``; the latter has its own half-advection boundary mass. In Section 5.1
+    of [Harder, Paredes and Valentin (2015)](https://doi.org/10.1137/130938499) the velocity is
+    tangent to the natural walls, and the two flux conventions coincide there.
 
-    This is a refinement indicator, not a computable constant-one upper bound
-    or a maximum-principle certificate. Local-discretization errors and the
-    approximation of nonrepresentable boundary data are not measured. A
-    solution with weak Dirichlet imposition is rejected.
+    This is a refinement indicator, not a computable constant-one upper bound or a maximum-principle
+    certificate. Local-discretization errors and the approximation of nonrepresentable boundary data
+    are not measured. A solution with weak Dirichlet imposition is rejected.
 
-    Quadrature splits at both one-sided fine-edge partitions. The returned
-    values therefore preserve broken macro traces and exactly integrate their
-    polynomial squared jump for the default order.
+    Quadrature splits at both one-sided fine-edge partitions. The returned values therefore preserve
+    broken macro traces and exactly integrate their polynomial squared jump for the default order.
     """
     if not solution.strong_dirichlet:
         raise ValueError("L11 face indicators require strong Dirichlet imposition")

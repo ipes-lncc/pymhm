@@ -4,7 +4,7 @@
 stress, discontinuous displacement, and an independent rotation multiplier.
 Its default local spaces are BDM2 for each stress row, vector P1 for displacement, and
 scalar P1 for rotation. These are the BDM2/P1/P1 spaces in Table 1 of the
-[2021 MHM weak-symmetry elasticity paper](https://doi.org/10.1051/m2an/2021013).
+[Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013).
 The three rigid motions belong exactly to the local displacement space.
 [Additional BDM and enriched families](mixed-families.md) retain these conventions
 while independently varying fine-edge normal and interior polynomial degrees.
@@ -262,3 +262,7 @@ contain the errors and defects. Plot fields are sampled independently within
 each fine triangle, preserving broken one-sided values. P2 stress is sampled on
 nine display subtriangles; reported norms use separate order-10 quadrature,
 not the display interpolation.
+
+## References
+
+- Philippe R. B. Devloo, Agnaldo M. Farias, Sônia M. Gomes, Weslley Pereira, Antonio J. B. dos Santos, and Frédéric Valentin (2021). *New H(div)-conforming multiscale hybrid-mixed methods for the elasticity problem on polygonal meshes*, ESAIM: M2AN 55, 1005–1037. [DOI: 10.1051/m2an/2021013](https://doi.org/10.1051/m2an/2021013).

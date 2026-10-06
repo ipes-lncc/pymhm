@@ -9,7 +9,7 @@ $$
 $$
 
 This is the displacement formulation analysed in
-[Harder et al. (2016)](https://doi.org/10.1051/m2an/2015046).
+[Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046).
 Its coefficient-dependent estimates do not establish uniform robustness as
 Poisson ratio approaches one half. Use the displacement-pressure or
 weak-symmetry mixed formulations for the incompressible limit.
@@ -40,7 +40,7 @@ and \(k\geq\ell+2\) for odd \(\ell\). The separate global assumption
 \(\Lambda_{rm}\subset\Lambda_h\) requires traces of rigid motions: P1 on every
 face is sufficient in two dimensions. Scalar trace injectivity alone does not
 establish this global property. The original P0 default remains a primal
-baseline outside that L17 hypothesis; the campaigns below explicitly use P1.
+baseline outside that hypothesis of [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046); the campaigns below explicitly use P1.
 
 For even `degree=k`, unsplit P(k−1) traces and one local triangle,
 `minimal_enrichment=True` adds exactly one P(k+1) polynomial per displacement
@@ -99,7 +99,7 @@ spaces, the returned quantity is only a face indicator. It does not measure
 all local approximation error and has no declared unit reliability constant.
 A zero-boundary local bubble can have zero indicator and nonzero displacement
 error; a CI test verifies this distinction. Local refinement must be assessed
-separately. L17 supplies analysis rather than a published numerical table for
+separately. The paper by [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046) supplies analysis rather than a published numerical table for
 this general-tensor case.
 
 ## Independent assembly and five-level evidence
@@ -132,3 +132,7 @@ pixi run --locked -e test-core python examples/solve_primal_elasticity.py --degr
 pixi run --locked -e test-core python examples/solve_primal_elasticity.py --degree 2 --constant
 pixi run -e notebooks python examples/plot_elasticity_extensions.py
 ```
+
+## References
+
+- Christopher Harder, Alexandre L. Madureira, and Frédéric Valentin (2016). *A hybrid-mixed method for elasticity*, ESAIM: M2AN 50, 311–336. [DOI: 10.1051/m2an/2015046](https://doi.org/10.1051/m2an/2015046).

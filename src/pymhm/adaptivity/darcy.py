@@ -83,26 +83,24 @@ def solve_adaptive_darcy(
 ) -> AdaptiveDarcyResult:
     """Solve, estimate, mark and red-green-refine a primal Darcy macro mesh.
 
-    This loop uses the weighted L09 energy decomposition and Dörfler bulk marking;
-    it is an original adaptive policy, not a reproduction of a published marking
-    schedule. All estimator assumptions remain required: polynomial represented
-    boundary data, conforming fine triangulations, certified ellipticity and
-    ``local degree >= trace degree + 2``. Local refinement and degree stay fixed.
-    Neumann face data and macro-local ellipticity bounds follow exact ancestry.
-    ``iterations`` counts solves. A proposed refinement exceeding
-    ``maximum_cells`` is not solved. No contraction or optimality theorem is
-    inferred from the loop, and indicator changes need not be monotone.
-    ``local_mesh_factory(macro_mesh, cell_index)`` can construct material-fitted
-    local partitions afresh at each level. Static ``local_meshes`` are rejected
-    because their ancestry changes after refinement.
-    ``macro_refiner`` defaults to red-green refinement. Passing
-    ``refine_longest_edge`` selects conforming longest-edge propagation; either
+    This loop uses the weighted energy decomposition of
+    [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073) and Dörfler bulk marking; it is
+    an original adaptive policy, not a reproduction of a published marking schedule. All estimator
+    assumptions remain required: polynomial represented boundary data, conforming fine
+    triangulations, certified ellipticity and ``local degree >= trace degree + 2``. Local refinement
+    and degree stay fixed. Neumann face data and macro-local ellipticity bounds follow exact
+    ancestry. ``iterations`` counts solves. A proposed refinement exceeding ``maximum_cells`` is not
+    solved. No contraction or optimality theorem is inferred from the loop, and indicator changes
+    need not be monotone. ``local_mesh_factory(macro_mesh, cell_index)`` can construct
+    material-fitted local partitions afresh at each level. Static ``local_meshes`` are rejected
+    because their ancestry changes after refinement. ``macro_refiner`` defaults to red-green
+    refinement. Passing ``refine_longest_edge`` selects conforming longest-edge propagation; either
     operation must provide cell/face ancestors for boundary and trace transfer.
-    ``estimator_convention='published'`` selects the literal numerical terms
-    (5.3)--(5.7); the default ``'energy'`` uses physical material weights.
-    The printed convention does not imply a general-SPD energy upper bound.
-    ``estimator_backend`` and ``estimator_workers`` select independent execution
-    of local reconstruction and indicator terms separately from the PDE solver.
+    ``estimator_convention='published'`` selects the literal numerical terms (5.3)--(5.7); the
+    default ``'energy'`` uses physical material weights. The printed convention does not imply a
+    general-SPD energy upper bound. ``estimator_backend`` and ``estimator_workers`` select
+    independent execution of local reconstruction and indicator terms separately from the PDE
+    solver.
     """
     positive_int(iterations, "iterations")
     positive_int(maximum_cells, "maximum_cells")

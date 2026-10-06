@@ -27,7 +27,7 @@ $$
 
 This convention follows the weak form in Equation (2.4) and the explicit
 incident-wave datum in Section 6.2 of the
-[author manuscript](https://hal.science/hal-01698914/document).
+[Chaumont-Frelet and Valentin (2019)](https://inria.hal.science/hal-01698914v2).
 Neumann data prescribe the outward physical flux. Dirichlet data enter through
 their weak face moments. Absorbing and Neumann subsets must be disjoint; the
 remaining exterior faces use Dirichlet data. The default selects the entire
@@ -385,7 +385,7 @@ data acquisition.
 ## Marmousi II: published experiment and material identification
 
 Section 6.4 and Table 6.1 of the
-[author manuscript](https://hal.science/hal-01698914/document) specify a
+[Chaumont-Frelet and Valentin (2019)](https://inria.hal.science/hal-01698914v2) specify a
 $10{,}240\,\mathrm{m}\times2{,}560\,\mathrm{m}$ domain, material arrays on a
 $2048\times512$ Cartesian grid, $\kappa=\rho c_p^2$, and a frequency of
 $20\,\mathrm{Hz}$, so $\omega=40\pi\,\mathrm{s}^{-1}$. The unit point source
@@ -467,3 +467,9 @@ The [Marmousi point-source case](marmousi.md) specifies the selected coefficient
 arrays, executes independent classical refinements and compares their complex
 pressure and physical flux. It uses the published operator and numerical
 spaces while keeping the unresolved historical data conventions explicit.
+
+## References
+
+- Théophile Chaumont-Frelet, and Frédéric Valentin (2020). *A Multiscale Hybrid-Mixed Method for the Helmholtz Equation in Heterogeneous Domains*. SIAM Journal on Numerical Analysis 58(2) 1029-1067. [DOI: 10.1137/19M1255616](https://doi.org/10.1137/19M1255616).
+
+- Théophile Chaumont-Frelet and Frédéric Valentin (2019). *A multiscale hybrid-mixed method for the Helmholtz equation in heterogeneous domains*. HAL author manuscript, version 2, submitted 16 April 2019. [HAL: hal-01698914v2](https://inria.hal.science/hal-01698914v2). The journal publication is SIAM Journal on Numerical Analysis 58(2), 1029–1067 (2020), [DOI: 10.1137/19M1255616](https://doi.org/10.1137/19M1255616).

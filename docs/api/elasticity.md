@@ -43,3 +43,7 @@ Displacement, displacement–pressure and weakly symmetric stress formulations.
 ::: pymhm._legacy.models.elasticity.pressure_forms_3d
     options:
       show_source: false
+
+## References
+
+- Christopher Harder, Alexandre L. Madureira, and Frédéric Valentin (2016). *A hybrid-mixed method for elasticity*, ESAIM: M2AN 50, 311–336. [DOI: 10.1051/m2an/2015046](https://doi.org/10.1051/m2an/2015046).

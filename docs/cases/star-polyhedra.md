@@ -6,7 +6,7 @@ polygonal faces remain the skeletal entities, including concave faces. The
 local tetrahedra partition the physical cell: reentrant notches are preserved.
 
 This is the geometric class in §4.1(iii) of
-[Araya, Jaillet, Paredes and Valentin (2024)](https://doi.org/10.1016/j.cma.2024.117089).
+[Araya et al. (2024)](https://doi.org/10.1016/j.cma.2024.117089).
 The campaign uses their smooth three-dimensional PDE and $P_4/P_1$ degrees on
 an original nonconvex mesh family. It does not identify these meshes with the
 article's historical realization.
@@ -129,3 +129,7 @@ another PDE. Slice values belong to independent fine tetrahedra; no averaging
 is performed across local or macro interfaces. Actual macro boundaries are
 overlaid on every exact, numerical and difference panel. Notebook 67 reads and
 checks the recorded evidence.
+
+## References
+
+- Rodolfo Araya, Fabrice Jaillet, Diego Paredes, and Frédéric Valentin (2024). *Generalizing the multiscale hybrid-mixed method for reactive-advective-diffusive equations*, Computer Methods in Applied Mechanics and Engineering 428, 117089. [DOI: 10.1016/j.cma.2024.117089](https://doi.org/10.1016/j.cma.2024.117089).

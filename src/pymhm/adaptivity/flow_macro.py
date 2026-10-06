@@ -1,4 +1,8 @@
-"""Macroelement marking from the Stokes--Brinkman estimator in L14 Algorithm 1."""
+"""Macroelement marking for the Stokes--Brinkman estimator.
+
+The marking rule follows Algorithm 1 of
+[Araya, Rebolledo and Valentin (2021)](https://doi.org/10.1093/imanum/drz053).
+"""
 
 from dataclasses import dataclass
 from typing import Any, Literal
@@ -18,10 +22,11 @@ from pymhm.meshes.triangle import TriangleMesh
 def mark_flow_cells(estimator: FlowEstimator, theta: float = 0.5) -> np.ndarray:
     """Mark eta_K >= theta*max(eta_K), where eta_K=eta_2,K+sum_F eta_1,F.
 
-    The first-level contribution on each macroface is the square root of its
-    summed segment contributions. Interior macrofaces contribute to both cells.
-    Local indicators are unscaled; this is L14 Algorithm 1, not bulk marking.
-    A zero estimator gives an empty marking set.
+    The first-level contribution on each macroface is the square root of its summed segment
+    contributions. Interior macrofaces contribute to both cells. Local indicators are unscaled; this
+    follows Algorithm 1 of
+    [Araya, Rebolledo and Valentin (2021)](https://doi.org/10.1093/imanum/drz053), rather than bulk
+    marking. A zero estimator gives an empty marking set.
     """
     if not np.isfinite(theta) or not 0 < theta < 1:
         raise ValueError("theta must lie strictly between zero and one")
@@ -55,23 +60,24 @@ def adapt_flow_macros(
     macro_refiner: Literal["red-green", "longest-edge"] = "red-green",
     **solve_options: Any,
 ) -> AdaptiveFlowMacroResult:
-    """Apply L14 Algorithm 1 with an explicitly selected conforming macro refinement.
+    """Apply macro marking with an explicitly selected conforming refinement.
 
-    ``iterations`` counts refinement steps after the initial solve. Marked
-    triangles use red--green closure by default. ``macro_refiner='longest-edge'``
-    selects longest-edge propagation, preserving the same marking rule and
-    controlling the minimum angle under repeated local refinement. Each
-    child inherits its parent's local subdivision count, so no additional
-    local refinement is induced. Local physical cells shrink only with their
-    parent macrocell. Traces are unsplit discontinuous P_ell on every current
-    macroface. This fully specified closure is an original realization of the
-    published strategy; the paper does not provide its historical connectivity.
+    The marking rule follows Algorithm 1 of
+    [Araya, Rebolledo and Valentin (2021)](https://doi.org/10.1093/imanum/drz053).
 
-    The estimator assumes full Dirichlet Stokes/Brinkman data. Defaults are
-    local P3/P3 USFEM and P0 traces. ``solve_options`` carries the same physical
-    data to both solver and estimator; advection and prescribed tractions are
-    excluded. A cell cap stops before solving an oversized mesh. No convergence
-    rate or unit reliability constant is asserted by this adaptive loop.
+    ``iterations`` counts refinement steps after the initial solve. Marked triangles use red--green
+    closure by default. ``macro_refiner='longest-edge'`` selects longest-edge propagation,
+    preserving the same marking rule and controlling the minimum angle under repeated local
+    refinement. Each child inherits its parent's local subdivision count, so no additional local
+    refinement is induced. Local physical cells shrink only with their parent macrocell. Traces are
+    unsplit discontinuous P_ell on every current macroface. This fully specified closure is an
+    original realization of the published strategy; the paper does not provide its historical
+    connectivity.
+
+    The estimator assumes full Dirichlet Stokes/Brinkman data. Defaults are local P3/P3 USFEM and P0
+    traces. ``solve_options`` carries the same physical data to both solver and estimator; advection
+    and prescribed tractions are excluded. A cell cap stops before solving an oversized mesh. No
+    convergence rate or unit reliability constant is asserted by this adaptive loop.
     """
     iterations = positive_int(iterations, "iterations", 0)
     maximum_cells = positive_int(maximum_cells, "maximum_cells")

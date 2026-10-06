@@ -87,7 +87,7 @@ an MHM restriction, not an independent classical reference.
 
 ## Dupuit–Thiem well and geometry
 
-The physical parameters are those of [L05](../literature.md#l05-mixed-local-darcy-solvers-2019)
+The physical parameters are those of [Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013)
 Problem 4: inner/outer radii $0.2/50$ m, height 10 m,
 permeability $10^{-13}$ m², viscosity $10^{-3}$ Pa s, outer pressure 25 MPa
 and production rate $0.01$ m³/s. The exact pressure and Darcy flux are
@@ -157,11 +157,11 @@ $$
 
 This is the error relative to the classical approximation error, rather than
 relative to the norm of the exact flux. A value of one means that the MHM error
-has reached that classical error. L05 fixes the fine mesh at H/8 and varies the
+has reached that classical error. The paper by [Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013) fixes the fine mesh at H/8 and varies the
 macro partition; the present affine study reaches factor four on its explicitly
 declared geometry. Its ratios therefore assess the same approximation mechanism,
 without reproducing the historical mesh or its Figure 15 values. The pressure
-and flux profiles in L05 Figure 14 use hexahedra, not tetrahedra or prisms.
+and flux profiles in Figure 14 of [Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013) use hexahedra, not tetrahedra or prisms.
 
 At fine factor four, the errors for increasing macro resolution are:
 
@@ -326,3 +326,9 @@ which NumPy `longdouble` has more precision than `float64`. The solver's default
 double-precision path and the notebook patch do not impose that requirement.
 The package supports affine tetrahedra and
 prisms here; no mixed pyramidal or curved-prism implementation is implied.
+
+## References
+
+- Douglas A. Castro, Philippe R.B. Devloo, Agnaldo M. Farias, Sônia M. Gomes, Denise de Siqueira, and Omar Durán (2016). *Three dimensional hierarchical mixed finite element approximations with enhanced primal variable accuracy*. Computer Methods in Applied Mechanics and Engineering 306 479-502. [DOI: 10.1016/j.cma.2016.03.050](https://doi.org/10.1016/j.cma.2016.03.050).
+
+- Omar Durán, Philippe R. B. Devloo, Sônia M. Gomes, and Frédéric Valentin (2019). *A multiscale hybrid method for Darcy’s problems using mixed finite element local solvers*, Computer Methods in Applied Mechanics and Engineering 354, 213–244. [DOI: 10.1016/j.cma.2019.05.013](https://doi.org/10.1016/j.cma.2019.05.013).

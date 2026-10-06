@@ -235,7 +235,20 @@ nav:
 - MPI, GPU and operator reuse: execution.md
 - Performance and scaling: performance.md
 - Tutorials:
+  - Start here — API overview: tutorials/overview.md
   - Guide and notebooks: tutorials.md
+  - Introductory problems:
+    - Multiscale Darcy and convergence: tutorials/introduction/darcy_multiscale_convergence.md
+    - Darcy on a SPE10 layer: tutorials/introduction/darcy_spe10_layer.md
+    - Multiscale elasticity: tutorials/introduction/multiscale_elasticity.md
+    - MsHHO with multiscale permeability: tutorials/introduction/mshho_multiscale.md
+    - MH²M with multiscale permeability: tutorials/introduction/mh2m_multiscale.md
+    - MHM-USFEM reaction–diffusion layers: tutorials/introduction/mhm_usfem_rad.md
+    - Stokes–Brinkman boundary layers: tutorials/introduction/stokes_brinkman_boundary_layer.md
+  - Parallel execution:
+    - Two-dimensional Darcy with threads: tutorials/introduction/darcy_parallel_scalability.md
+    - Two-dimensional Darcy with processes: tutorials/introduction/darcy_process_scalability.md
+    - Three-dimensional Darcy scaling: tutorials/introduction/darcy_3d_parallel_scalability.md
   - Scalar formulations: tutorials/scalar.md
   - Vector formulations: tutorials/vector.md
   - Local providers and assembly: tutorials/providers.md

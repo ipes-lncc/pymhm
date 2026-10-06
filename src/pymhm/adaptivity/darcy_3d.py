@@ -49,11 +49,11 @@ def solve_adaptive_darcy_3d(
 ) -> AdaptiveDarcy3DResult:
     """Solve, estimate, mark and bisect tetrahedral edge stars.
 
-    The marking policy is original, using the dimension-independent L09
-    estimator and Dörfler bulk sets. It is not a reproduction of a historical
-    3D mesh sequence and implies no contraction or optimality guarantee.
-    Physical Neumann data and per-cell ellipticity bounds follow their exact
-    parent entities. The callback persists each solved state before refinement.
+    The marking policy is original, using the dimension-independent estimator of
+    [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073) and Dörfler bulk sets. It is not
+    a reproduction of a historical 3D mesh sequence and implies no contraction or optimality
+    guarantee. Physical Neumann data and per-cell ellipticity bounds follow their exact parent
+    entities. The callback persists each solved state before refinement.
     """
     positive_int(iterations, "iterations")
     positive_int(maximum_cells, "maximum cells")
