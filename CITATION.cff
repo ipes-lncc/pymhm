@@ -5,7 +5,7 @@ type: software
 authors:
   - family-names: Volpatto
     given-names: Diego
-version: "1.0.0"
+version: "1.0.1"
 license: LGPL-2.1-only
 repository-code: https://github.com/ipes-lncc/pymhm
 url: https://github.com/ipes-lncc/pymhm
