@@ -9,7 +9,7 @@
 [![Lint and Quality](https://github.com/ipes-lncc/pymhm/actions/workflows/lint-and-quality.yml/badge.svg)](https://github.com/ipes-lncc/pymhm/actions/workflows/lint-and-quality.yml)
 [![Docs](https://github.com/ipes-lncc/pymhm/actions/workflows/docs.yml/badge.svg)](https://ipes-lncc.github.io/pymhm/)
 [![Publish to PyPI](https://github.com/ipes-lncc/pymhm/actions/workflows/publish-pypi.yml/badge.svg)](https://github.com/ipes-lncc/pymhm/actions/workflows/publish-pypi.yml)
-[![Version: 1.0.0](https://img.shields.io/badge/version-1.0.0-21918c.svg)](https://github.com/ipes-lncc/pymhm/blob/main/pyproject.toml)
+[![Version: 1.0.1](https://img.shields.io/badge/version-1.0.1-21918c.svg)](https://github.com/ipes-lncc/pymhm/blob/main/pyproject.toml)
 [![Python: 3.11–3.13](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-3776ab.svg)](https://github.com/ipes-lncc/pymhm/blob/main/pyproject.toml)
 [![Supported OS](https://img.shields.io/badge/OS-Linux%20%7C%20macOS%20%7C%20Windows-3776ab.svg)](https://github.com/ipes-lncc/pymhm/actions/workflows/tests.yml)
 [![License: LGPL-2.1-only](https://img.shields.io/badge/license-LGPL--2.1--only-440154.svg)](https://github.com/ipes-lncc/pymhm/blob/main/LICENSE)
@@ -21,7 +21,7 @@ the same interface; a local operator can itself be another multiscale problem.
 NumPy/SciPy coefficients and optional FEniCS/UFL forms share this contract.
 Basix supplies finite-element bases and tabulation.
 
-Version 1.0.0 is an official release of PyMHM. Built-in workflows
+Version 1.0.1 is an official release of PyMHM. Built-in workflows
 include triangular and polygonal meshes, Cartesian quadrilaterals, tetrahedra,
 affine prisms, star-shaped polyhedra and mapped hexahedra. Available equations and approximation
 spaces depend on the geometry; the documentation states each verified scope
