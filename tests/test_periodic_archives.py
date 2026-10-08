@@ -3,6 +3,7 @@
 import hashlib
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -24,6 +25,7 @@ def _example(name):
     return sys.modules[name]
 
 
+_example("_entrypoint")
 _example("periodic_norms")
 _example("verify_periodic")
 _example("periodic_reference")
@@ -538,12 +540,45 @@ def test_verify_reference_sidecar_flow_enforces_the_new_basis_contract(tmp_path,
 
 @pytest.mark.parametrize("name", ["verify_periodic", "periodic_reference", "compare_periodic"])
 @pytest.mark.parametrize("module", [False, True])
-def test_periodic_cli_supports_file_and_module_entrypoints(name, module):
+def test_periodic_cli_supports_file_and_module_entrypoints(name, module, tmp_path):
     """A fresh interpreter resolves every example dependency in either supported form."""
     root = Path(__file__).resolve().parents[1]
     command = ["-m", f"examples.{name}"] if module else [str(root / "examples" / f"{name}.py")]
+    environment = os.environ.copy()
+    environment.pop("PYTHONPATH", None)
     result = subprocess.run(
-        [sys.executable, *command, "--help"], cwd=root, capture_output=True, text=True, check=False
+        [sys.executable, *command, "--help"],
+        cwd=root if module else tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
     )
     assert result.returncode == 0, result.stderr
     assert "usage:" in result.stdout
+
+
+def test_example_import_paths_are_script_relative_and_idempotent(tmp_path, monkeypatch):
+    """File execution adds its own checkout once; package imports preserve every path."""
+    entrypoint = _example("_entrypoint")
+    checkout = tmp_path / "checkout"
+    script = checkout / "examples" / "driver.py"
+    script.parent.mkdir(parents=True)
+    script.touch()
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    monkeypatch.chdir(workspace)
+    original = sys.path.copy()
+    monkeypatch.setattr(sys, "path", original.copy())
+    observed = sys.path
+
+    entrypoint.prepare_example_imports(str(script), "examples")
+    assert sys.path is observed
+    assert sys.path == original
+
+    entrypoint.prepare_example_imports(str(script), None)
+    assert sys.path == [str(checkout), *original]
+    entrypoint.prepare_example_imports(str(script), "")
+    assert sys.path is observed
+    assert sys.path == [str(checkout), *original]
+    assert Path.cwd() == workspace

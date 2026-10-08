@@ -17,6 +17,13 @@ from pymhm.io.provenance import current_source_manifest
 from pymhm.io.workspace import case_workspace, source_file, source_label
 
 if __package__:
+    from ._entrypoint import prepare_example_imports
+else:
+    from _entrypoint import prepare_example_imports
+
+    prepare_example_imports(__file__, __package__)
+
+if __package__:
     from .periodic_norms import difference
 else:
     from examples.periodic_norms import difference

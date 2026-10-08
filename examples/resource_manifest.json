@@ -28,7 +28,7 @@
     "notebooks/darcy/31_weighted_energy_estimator.ipynb": "96b2c52c8c62e91b7c0ff1f42842405275354ae80f5c63b11937fd5d217234ec",
     "notebooks/darcy/33_darcy_rt.ipynb": "af2247bc8f55d70e72fc2829e167de942b39651fa242c83b9ecda8d8c46d2708",
     "notebooks/darcy/36_recursive_mhm.ipynb": "0ef901b9d645fbd653e6a81556be3ad1b6004a89feeca35d3d270cb99af14ea0",
-    "notebooks/darcy/37_periodic_darcy.ipynb": "6dcc435af57dcf9e0b69c65c15202d8f4041a49cbd9bc8453d0b51e31e253525",
+    "notebooks/darcy/37_periodic_darcy.ipynb": "2b0b6e11286aa84afca5604333dec56a148a5a5704e8601b3a796032e3714779",
     "notebooks/darcy/38_unfitted_darcy.ipynb": "9a755c6fb5c3b3d4fdcf8b6405ddb5ebe0d34400a49d6162ad36a44b4879fad3",
     "notebooks/darcy/39_adaptive_darcy.ipynb": "4b73c2e57bfe37a0873fb57023cc4930d3b54d8377f4a45dd957414ad256353f",
     "notebooks/darcy/40_spe10_adaptive.ipynb": "80d9fb35e83896b6794c0d2e77bdcfd0845b665bdda421e92def8e74ac61cab9",

@@ -24,6 +24,13 @@ from pymhm.io.provenance import (
 from pymhm.io.workspace import source_file, source_identity
 
 if __package__:
+    from ._entrypoint import prepare_example_imports
+else:
+    from _entrypoint import prepare_example_imports
+
+    prepare_example_imports(__file__, __package__)
+
+if __package__:
     from .verify_periodic import (
         ARTIFACTS,
         ROOT,

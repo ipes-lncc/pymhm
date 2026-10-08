@@ -18,6 +18,13 @@ from pymhm.io.workspace import (
 )
 
 if __package__:
+    from ._entrypoint import prepare_example_imports
+else:
+    from _entrypoint import prepare_example_imports
+
+    prepare_example_imports(__file__, __package__)
+
+if __package__:
     from .periodic_norms import difference
     from .periodic_reference import validate_reference_archive
     from .verify_periodic import (
