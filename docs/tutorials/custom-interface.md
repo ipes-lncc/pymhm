@@ -14,7 +14,7 @@ physical pressure fields. The local/global interpretation follows
 This is an analytical representation check, not a convergence study.
 
 ```bash
-pixi run --locked -e introduction notebooks-run foundations/operators/custom_interface.ipynb --timeout 1800
+jupyter lab custom_interface.ipynb
 ```
 
 ## 1. Choose your level of control

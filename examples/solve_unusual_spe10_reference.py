@@ -8,14 +8,6 @@ an inference about an unspecified historical experiment.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -29,7 +21,9 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_info, threadpool_limits
 
-ROOT = Path(__file__).resolve().parents[1]
+from pymhm.io.workspace import case_workspace, ensure_resource, local_resource, source_file
+
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/unusual-spe10"
 LAYER = ROOT / "examples/results/spe10/layer-36.npz"
 
@@ -239,7 +233,7 @@ class CG2Field:
     @classmethod
     def load(cls, path: Path) -> CG2Field:
         """Read complete portable coefficients and their material from an archive."""
-        with np.load(path) as archive:
+        with np.load(local_resource(path)) as archive:
             return cls(
                 archive["coefficients"],
                 archive["permeability"],
@@ -351,7 +345,7 @@ def graded_axes(factor: int, *, horizontal: bool = False) -> tuple[np.ndarray, n
     Optional horizontal grading resolves transitions beside every vertical
     material interface. Isotropic subdivision gives a nested triangular sequence.
     """
-    with np.load(LAYER) as archive:
+    with np.load(ensure_resource("examples/results/spe10/layer-36.npz", ROOT)) as archive:
         step = float(np.sqrt(archive["permeability"][:, 0, 0].min()) / 8)
     near = [0.0]
     while near[-1] + step < 10:
@@ -422,7 +416,7 @@ def solve(
         material = np.full((1, 1), 2.0)
         coefficient.x.array[:] = 2.0
     else:
-        with np.load(LAYER) as archive:
+        with np.load(ensure_resource("examples/results/spe10/layer-36.npz", ROOT)) as archive:
             material = archive["permeability"][..., 0]
         pixel = np.floor(centers / [20.0, 10.0]).astype(int)
         coefficient.x.array[:] = material[pixel[:, 0], pixel[:, 1]]
@@ -596,7 +590,7 @@ def main() -> None:
     OUTPUT.mkdir(parents=True, exist_ok=True)
     source_bytes = Path(__file__).read_bytes()
     driver_sha = hashlib.sha256(source_bytes).hexdigest()
-    profile_source = ROOT / "examples/cg2_profiles.py"
+    profile_source = source_file("examples/cg2_profiles.py", root=ROOT)
     profile_bytes = profile_source.read_bytes()
     profile_sha = hashlib.sha256(profile_bytes).hexdigest()
     snapshot = ROOT / "build/results/unusual-spe10/acquisition-sources"
@@ -697,4 +691,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_unusual_spe10_reference").main()

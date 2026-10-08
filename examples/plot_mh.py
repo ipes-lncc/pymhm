@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 import shutil
@@ -23,8 +15,9 @@ import numpy as np
 from examples.mh_campaign import exact, exact_flux
 from examples.plot_mh2m import panel, read_archive, save
 from examples.plot_style import set_refinement_ticks
+from pymhm.io.workspace import case_workspace, read_resource_text
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 RESULTS = ROOT / "examples/results/mh"
 OUTPUT = ROOT / "docs/figures/mh"
 
@@ -124,7 +117,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=OUTPUT)
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
-    record = json.loads((args.results / "comparison.json").read_text())
+    record = json.loads(read_resource_text(args.results / "comparison.json"))
     plt.rcParams.update({"font.size": 12, "axes.titlesize": 13})
     convergence(record, args.output)
     vanishing_robin(record, args.output)
@@ -134,4 +127,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_mh").main()

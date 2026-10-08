@@ -8,27 +8,45 @@ Build a plane-strain primal MHM model explicitly with UFL energy forms, a `Local
 
 The baseline is separately assembled classical conforming displacement Galerkin, on three successively refined meshes. There is no analytical solution for this physical case. We measure the baseline's own refinement in displacement and physical Cauchy stress before comparing methods.
 
-Start with `pixi run --locked -e introduction jupyter lab` in the repository root. Physical coefficients, weak forms, local rigid-motion modes and conforming reference forms are declared below. Importable vector helpers handle field evaluation, norms, figures and archives. Mesh-associated bindings provide the supported coordinate maps. Optional DOLFINx/UFL imports belong to this notebook environment; the portable PyMHM core does not import them.
+Install `pymhm[notebooks,visualization]` and the compatible native DOLFINx/UFL backend, then open this notebook with `jupyter lab` in a writable directory. Physical coefficients, weak forms, local rigid-motion modes and conforming reference forms are declared below. Importable vector helpers handle field evaluation, norms, figures and archives. Mesh-associated bindings provide the supported coordinate maps. Optional DOLFINx/UFL imports belong to this notebook environment; the portable PyMHM core does not import them.
 
 The local rigid-motion complement and global traction coupling follow [Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046). The oscillatory material and extension loading define an original application here.
 
+The PyMHM distribution contains only the library. The first cell explicitly
+downloads a checksum-verified companion archive and prepares the declared data
+using its local Python helpers. You can inspect these support files in `ROOT`.
+Complete studies and historical replay retain their existing opt-in flags.
 
 ```python
 from pathlib import Path
+import os
 import sys
+from pymhm.io.workspace import workspace_from_archive
+
+# Download verified support files; this operation does not execute them.
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/2b0663951f6f2c17f969bd2660d2ff7e054da6e3e56831ecf9d8246ce5f46362/multiscale_elasticity-companion.zip"
+COMPANION_SHA256 = "2b0663951f6f2c17f969bd2660d2ff7e054da6e3e56831ecf9d8246ce5f46362"
+WORKSPACE = Path(
+    os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
+)
+ROOT = workspace_from_archive(COMPANION_URL, sha256=COMPANION_SHA256, directory=WORKSPACE)
+os.environ["PYMHM_WORKSPACE"] = str(ROOT)
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+# Explicitly prepare declared data with the downloaded Python helpers.
+from scripts.notebook_reproduction import notebook_workspace
+
+ROOT = notebook_workspace("introduction/multiscale_elasticity.ipynb", directory=ROOT)
+root = ROOT
+print("Workspace:", ROOT)
+
 from functools import partial
 import numpy as np
 from numpy.typing import NDArray
 import matplotlib.pyplot as plt
 import ufl
 
-ROOT = next(
-    p
-    for p in (Path.cwd(), *Path.cwd().parents)
-    if (p / "pyproject.toml").is_file() and (p / "src/pymhm").is_dir()
-)
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
 
 from pymhm import (
     Equation,
@@ -57,7 +75,6 @@ from examples.introduction.vector import (
 )
 
 Array = NDArray[np.float64]
-
 ```
 
 ## 1. Declare the material and physical loading
@@ -100,9 +117,7 @@ def micro_modulus(points: Array) -> Array:
 def extension_boundary(points: Array) -> Array:
     """Prescribe a one-percent horizontal extension, with zero vertical displacement."""
     return np.column_stack((0.01 * points[:, 0], np.zeros(len(points))))
-
 ```
-
 
 ```python
 macro = TriangleMesh.unit_square(4)
@@ -121,7 +136,6 @@ print(
         "trace_segments": trace_segments,
     }
 )
-
 ```
 
 ```text
@@ -143,7 +157,6 @@ def rigid_modes(points: Array, center: Array) -> Array:
     modes[:, 0, 2] = -(points[:, 1] - center[1])
     modes[:, 1, 2] = points[:, 0] - center[0]
     return modes
-
 ```
 
 ## 3. Derive each local equation and identify its kernel
@@ -223,7 +236,6 @@ def local_elasticity(local: LocalContext) -> LocalEquations:
         moments=moments,
         metadata=(fine, mapping),
     )
-
 ```
 
 ## 4. Declare the global displacement equation and solve
@@ -250,7 +262,6 @@ system = assemble(problem, execution=ExecutionConfig("serial", native_threads=1)
 solution = system.solve()
 displacement_fields = solution.field("displacement")
 inspect_elasticity_solution(system, solution, macro)
-
 ```
 
 ```text
@@ -281,9 +292,7 @@ Raw primal stress is symmetric but is not claimed to belong to $H(\mathrm{div})$
 ```python
 # Norms and one-sided field sampling use the importable helpers above.
 # Their implementation is in examples/introduction/vector.py.
-
 ```
-
 
 ```python
 mhm_evaluator = BrokenVectorEvaluator(
@@ -291,7 +300,6 @@ mhm_evaluator = BrokenVectorEvaluator(
 )
 # Resolve every reference/local interface on a common 256×256 square grid.
 error_points, error_weights = triangle_grid_quadrature(256, order=5)
-
 ```
 
 ## 6. Independent classical assembly, including a coarse comparison
@@ -325,12 +333,7 @@ coarse_evaluator = references[4][0]
 reference_evaluators = [references[n][0] for n in (64, 128, 256)]
 reference_rows = [references[n][1] for n in (64, 128, 256)]
 reference_rows
-
 ```
-
-
-
-
 
 ```text
 [{'square_grid': 64, 'triangles': 8192, 'displacement_unknowns': 33282},
@@ -360,7 +363,6 @@ assert reference_refinement[-1]["stress_L2"] < reference_refinement[0]["stress_L
 check_points, check_weights = triangle_grid_quadrature(256, order=7)
 quadrature_check = measure_error(mhm_evaluator, reference, check_points, check_weights)
 print("Higher-order norm quadrature:", quadrature_check)
-
 ```
 
 ```text
@@ -396,10 +398,7 @@ print(
         for field in ("displacement_L2", "stress_L2", "energy")
     },
 )
-
 ```
-
-
 
 [![Figure 1 — Multiscale elasticity: resolve material structure through local equations](../../assets/tutorials/multiscale_elasticity/figure_18_0.png)](../../assets/tutorials/multiscale_elasticity/figure_18_0.png)
 
@@ -418,10 +417,7 @@ The material has multiple oscillations inside a macro triangle. Its effect enter
 ```python
 plot_elasticity_fields(macro, mhm_evaluator, reference, coarse_evaluator, micro_modulus)
 plt.show()
-
 ```
-
-
 
 [![Figure 2 — Multiscale elasticity: resolve material structure through local equations](../../assets/tutorials/multiscale_elasticity/figure_20_0.png)](../../assets/tutorials/multiscale_elasticity/figure_20_0.png)
 
@@ -440,11 +436,21 @@ The bound coefficient convention, declared rigid basis, physical traction sign, 
 
 ## Reproduce this tutorial
 
-[View the source notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/multiscale_elasticity.ipynb) or [download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/multiscale_elasticity.ipynb). Run its cells interactively, or execute the notebook from the repository root with the checked-in Pixi lockfile:
+[View the source notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/multiscale_elasticity.ipynb) or [download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/multiscale_elasticity.ipynb), then open it:
 
 ```bash
-pixi install --locked -e introduction
-pixi run --locked -e introduction notebooks-run introduction/multiscale_elasticity.ipynb --timeout 7200
+python -m pip install 'pymhm[notebooks,visualization]'
+jupyter lab multiscale_elasticity.ipynb
 ```
 
-The runner writes the executed copy to `build/notebooks/introduction/`. The figures and numerical outputs on this page come from that execution. Timings describe the recorded hardware and solver settings; rerun performance examples on an idle machine to measure your own environment.
+The first cell explicitly downloads a SHA256-verified companion archive. Acquisition does not execute its code. The local support files are inspectable in the printed `ROOT` directory; the following helper call prepares only the declared inputs. The library distribution contains only `pymhm`. Notebooks, support code and data are separate downloads. Native UFL forms require the compatible DOLFINx/UFL backend described in the [installation guide](../../installation.md). A clone and Pixi are unnecessary.
+
+For batch execution, extract the same companion, change to its workspace, and use its local runner with the actual downloaded notebook path:
+
+```bash
+python -m scripts.run_notebooks /path/to/multiscale_elasticity.ipynb --timeout 7200
+```
+
+The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
+
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `2607501e1c91c494d525aa445ba336c8eab8648b9bf0595f00d1efb8706a967e` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

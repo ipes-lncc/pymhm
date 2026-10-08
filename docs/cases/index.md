@@ -28,3 +28,15 @@ The full campaign profile is retained in `docs/publication-full.json`. Its
 parameter sweeps, fine-reference studies and supplementary case sources are
 separate from the selected current evidence. Missing or unresolved campaign
 results are not substituted with short-series values.
+
+## Reproduce a case
+
+Download the case notebook and open it with the installed `pymhm` and the
+declared optional dependencies. Its first cell acquires the verified companion
+sources and selected inputs into a writable directory; generated fields remain
+there. Examples, notebooks, documentation and datasets are separate from the
+library distribution. The [notebook guide](../tutorials.md#execute-downloaded-notebooks)
+explains this workflow, and [data downloads](../data.md) list available inputs.
+
+Commands beginning with `pixi run` on individual case pages are developer
+reproduction commands for a repository checkout and its checked-in lockfile.

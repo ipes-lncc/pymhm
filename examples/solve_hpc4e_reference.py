@@ -7,14 +7,6 @@ Displacement is discontinuous Qk squared and independent rotation is total Pk.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -29,6 +21,13 @@ from typing import Any, Literal
 import numpy as np
 
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    source_file,
+    source_identity,
+    source_label,
+)
 
 if __package__:
     from .hpc4e_data import BOUNDS, DATA_DIRECTORY, LENGTH_SCALE, STRESS_SCALE, HPC4EData, load_data
@@ -47,7 +46,7 @@ from pymhm.fem.scalar.quadrilateral import quadrilateral_quadrature
 from pymhm.fem.vector.stress_tensor import complete_rotation_basis as _rotation_basis
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/hpc4e"
 ARCHIVES = ROOT / "build/results/hpc4e"
 
@@ -134,7 +133,7 @@ class ReferenceField:
 
 def load_field(path: Path) -> ReferenceField:
     """Reload a classical field independently of native finite-element numbering."""
-    with np.load(path) as data:
+    with np.load(local_resource(path)) as data:
         return ReferenceField(
             data["stress"],
             data["displacement"],
@@ -551,7 +550,7 @@ def _solve(
                 subprocess.run(
                     [
                         str(solver_python),
-                        str(ROOT / "examples/solve_hpc4e_algebra.py"),
+                        str(source_file("examples/solve_hpc4e_algebra.py", root=ROOT)),
                         str(algebra / "matrix.npz"),
                         str(algebra / "rhs.npy"),
                         str(algebra / "solution.npy"),
@@ -856,27 +855,22 @@ def main() -> None:
     sources = [
         Path(__file__),
         Path(__file__).with_name("hpc4e_data.py"),
-        ROOT / "src/pymhm/fem/hdiv/tensor_rt.py",
-        ROOT / "src/pymhm/_legacy/models/darcy/cartesian.py",
-        ROOT / "src/pymhm/_legacy/models/elasticity/stress_tensor.py",
-        ROOT / "src/pymhm/linalg/linear.py",
+        source_file("src/pymhm/fem/hdiv/tensor_rt.py", root=ROOT),
+        source_file("src/pymhm/_legacy/models/darcy/cartesian.py", root=ROOT),
+        source_file("src/pymhm/_legacy/models/elasticity/stress_tensor.py", root=ROOT),
+        source_file("src/pymhm/linalg/linear.py", root=ROOT),
     ]
     if comm.size > 1:
         sources.append(Path(__file__).with_name("hpc4e_parallel.py"))
     if args.factorization == "pypardiso-symmetric-matching":
-        sources.append(ROOT / "examples/solve_hpc4e_algebra.py")
+        sources.append(source_file("examples/solve_hpc4e_algebra.py", root=ROOT))
     source_hashes = current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in sources
-        }
+        source_identity(ROOT, sources), packages=("pymhm", "examples")
     )
     snapshots = ARCHIVES / "acquisition-sources"
     snapshots.mkdir(parents=True, exist_ok=True)
     for path in sources if comm.rank == 0 else []:
-        (snapshots / f"{source_hashes[path.relative_to(ROOT).as_posix()]}.py").write_bytes(
-            path.read_bytes()
-        )
+        (snapshots / f"{source_hashes[source_label(path, ROOT)]}.py").write_bytes(path.read_bytes())
     field, record = solve(
         args.nx,
         args.ny,
@@ -892,8 +886,7 @@ def main() -> None:
         out_of_core_directory=args.out_of_core_directory,
     )
     changed = any(
-        hashlib.sha256(path.read_bytes()).hexdigest()
-        != source_hashes[path.relative_to(ROOT).as_posix()]
+        hashlib.sha256(path.read_bytes()).hexdigest() != source_hashes[source_label(path, ROOT)]
         for path in sources
     )
     if changed:
@@ -910,7 +903,7 @@ def main() -> None:
     record.update(
         archive=archive.name,
         archive_sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),
-        source_sha256=source_hashes[Path(__file__).relative_to(ROOT).as_posix()],
+        source_sha256=source_hashes[source_label(Path(__file__), ROOT)],
         source_hashes=source_hashes,
         source_changed=False,
         material_sha256=None
@@ -919,7 +912,8 @@ def main() -> None:
             {
                 name: hashlib.sha256(getattr(data, name).tobytes()).hexdigest()
                 for name in ("young", "poisson", "density")
-            }
+            },
+            packages=("pymhm", "examples"),
         ),
     )
     (OUTPUT / f"{stem}.json").write_text(json.dumps(record, indent=2) + "\n")
@@ -927,4 +921,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_hpc4e_reference").main()

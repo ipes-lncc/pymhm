@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -24,6 +16,7 @@ from threadpoolctl import threadpool_limits
 
 from examples.spe10_adaptive import DATA, StructuredRT
 from examples.spe10_adaptive_norms import BrokenP2, integrated_squared_norms, norm_record
+from pymhm.io.workspace import local_resource, read_resource_bytes, source_file
 
 _FIELDS: tuple[BrokenP2, StructuredRT, int] | None = None
 _THREAD_LIMIT: Any = None
@@ -55,21 +48,23 @@ def acquire(
     """Save integrated norms with input digests and per-order progress checkpoints."""
     if workers < 1 or not orders or min(orders) < 4:
         raise ValueError("require positive workers and norm orders at least four")
-    with np.load(archive) as values:
+    with np.load(local_resource(archive)) as values:
         count = len(values["macro_cells"])
     groups = [np.arange(start, min(start + 32, count)) for start in range(0, count, 32)]
     sources = (
         Path(__file__),
         Path(__file__).with_name("spe10_adaptive_norms.py"),
         Path(__file__).with_name("spe10_adaptive.py"),
-        Path(__file__).resolve().parents[1] / "src/pymhm/fem/hdiv/rt.py",
+        source_file("src/pymhm/fem/hdiv/rt.py"),
     )
-    fingerprint = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in sources}
+    fingerprint = {
+        path.name: hashlib.sha256(read_resource_bytes(path)).hexdigest() for path in sources
+    }
     result: dict[str, Any] = {
         "archive": archive.name,
-        "archive_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
+        "archive_sha256": hashlib.sha256(read_resource_bytes(archive)).hexdigest(),
         "reference": reference.name,
-        "reference_sha256": hashlib.sha256(reference.read_bytes()).hexdigest(),
+        "reference_sha256": hashlib.sha256(read_resource_bytes(reference)).hexdigest(),
         "integration": "exact intersections of local triangles, reference triangles and pixels",
         "denominator": "corresponding norm of the stated classical RT2 reference",
         "source_hashes": fingerprint,
@@ -95,7 +90,7 @@ def acquire(
         totals = np.sum(partials, axis=0, dtype=np.longdouble)
         result["rows"].append({**norm_record(totals, order), "seconds": perf_counter() - started})
         result["source_changed_during_run"] = any(
-            hashlib.sha256(path.read_bytes()).hexdigest() != fingerprint[path.name]
+            hashlib.sha256(read_resource_bytes(path)).hexdigest() != fingerprint[path.name]
             for path in sources
         )
         if result["source_changed_during_run"]:
@@ -125,4 +120,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.compare_spe10_resolution").main()

@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -26,9 +18,15 @@ from examples.maxwell_data import CavityMode
 from examples.plot_darcy3d import slice_polygon
 from examples.plot_style import set_refinement_ticks
 from pymhm.fem.vector.curl import scalar_basis
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 RESULTS = ROOT / "examples/results/maxwell"
 OUTPUT = ROOT / "docs/figures/maxwell"
 
@@ -111,9 +109,9 @@ def panel(axis: Any, sampled: dict[str, Any], values: np.ndarray, title: str, li
 def fields(row: dict[str, Any], source: Path, output: Path) -> None:
     """Plot analytical/numerical/difference components at exactly the archived field times."""
     path = source / row["fields"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != row["fields_sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["fields_sha256"]:
         raise ValueError("Maxwell field archive digest mismatch")
-    with np.load(path) as stored:
+    with np.load(local_resource(path)) as stored:
         data = {name: stored[name] for name in stored.files}
     sampled = sampled_fields(data)
     mode = CavityMode(row["dimension"], float(data["wavenumber"]))
@@ -219,7 +217,7 @@ def main() -> None:
     parser.add_argument("--input", type=Path, default=RESULTS)
     parser.add_argument("--output", type=Path, default=OUTPUT)
     args = parser.parse_args()
-    record = json.loads((args.input / "comparison.json").read_text())
+    record = json.loads(read_resource_text(args.input / "comparison.json"))
     if record.get("source_changed_during_run") is not False:
         raise ValueError("require a complete Maxwell acquisition with unchanged sources")
     args.output.mkdir(parents=True, exist_ok=True)
@@ -233,4 +231,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_maxwell").main()

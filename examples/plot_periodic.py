@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import csv
 import json
@@ -17,6 +9,8 @@ from pathlib import Path
 
 import matplotlib
 import numpy as np
+
+from pymhm.io.workspace import local_resource, read_resource_text, resource_glob
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -102,9 +96,12 @@ def reference_changes(records: list[dict], comparisons: list[dict], reference: s
 
 def convergence(reference: str, *, macro: int = 8, refinement: int | None = None) -> int:
     """Separate historical markers from measured baseline and local-grid uncertainty."""
-    records = [json.loads(path.read_text()) for path in sorted(RECORDS.glob("periodic*.json"))]
+    records = [
+        json.loads(read_resource_text(path))
+        for path in sorted(resource_glob(RECORDS, "periodic*.json"))
+    ]
     records = [item for item in records if "mhm" in item and "reference" in item]
-    comparisons = json.loads(COMPARISON.read_text())["comparisons"]
+    comparisons = json.loads(read_resource_text(COMPARISON))["comparisons"]
     selected = [
         row
         for row in comparisons
@@ -115,7 +112,9 @@ def convergence(reference: str, *, macro: int = 8, refinement: int | None = None
     finest = max(row["refinement"] for row in selected) if refinement is None else refinement
     if not any(row["refinement"] == finest for row in selected):
         raise ValueError("selected local refinement has no recorded MHM norm comparisons")
-    with (ROOT / "examples/results/published/paredes2017_figure6.csv").open() as stream:
+    with (
+        local_resource(ROOT / "examples/results/published/paredes2017_figure6.csv")
+    ).open() as stream:
         published = [row for row in csv.DictReader(stream) if row["series"] == "face"]
     fig, axes = plt.subplots(1, 3, figsize=(16, 5.3), layout="constrained")
     ax = axes[0]
@@ -351,7 +350,9 @@ def main() -> None:
     FOLDER, COMPARISON, RECORDS = args.output, args.comparison, args.records
     compare_periodic.ARTIFACTS = args.artifacts
     compare_periodic.REFERENCE_RECORDS = args.records
-    reference = args.reference or json.loads(COMPARISON.read_text()).get("primary_reference")
+    reference = args.reference or json.loads(read_resource_text(COMPARISON)).get(
+        "primary_reference"
+    )
     if reference is None:
         parser.error("supply --reference or select primary_reference in the comparison record")
     plt.rcParams.update({"font.size": 11, "axes.titlesize": 12})
@@ -368,4 +369,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_periodic").main()

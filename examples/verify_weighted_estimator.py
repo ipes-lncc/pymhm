@@ -2,9 +2,10 @@
 
 import argparse
 import json
-from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import case_workspace
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -17,7 +18,7 @@ from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 from pymhm.estimators.darcy_energy import estimate_weighted_darcy_error
 from pymhm.materials.cartesian import CartesianCellField
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def problem(name: str) -> tuple:
@@ -27,16 +28,16 @@ def problem(name: str) -> tuple:
         rotation = np.array([[np.cos(angle), -np.sin(angle)], [np.sin(angle), np.cos(angle)]])
         material = rotation @ np.diag([100.0, 1.0]) @ rotation.T
 
-        def pressure(x):
+        def pressure(x: np.ndarray) -> np.ndarray:
             """Zero-boundary oscillatory pressure of the L09 smooth example."""
             return np.sin(2 * np.pi * x[:, 0]) * np.sin(2 * np.pi * x[:, 1])
 
-        def gradient(x):
+        def gradient(x: np.ndarray) -> np.ndarray:
             """Gradient evaluated independently of the finite element functions."""
             a, b = 2 * np.pi * x.T
             return 2 * np.pi * np.column_stack((np.cos(a) * np.sin(b), np.sin(a) * np.cos(b)))
 
-        def source(x):
+        def source(x: np.ndarray) -> np.ndarray:
             """Full rotated-tensor diffusion, including both off-diagonal terms."""
             a, b = 2 * np.pi * x.T
             return (
@@ -47,15 +48,15 @@ def problem(name: str) -> tuple:
     else:
         material = CartesianCellField(np.array([[1.0], [100.0]]), (0.5, 1.0))
 
-        def pressure(x):
+        def pressure(x: np.ndarray) -> np.ndarray:
             """Continuous pressure with the exact reciprocal-permeability derivative jump."""
             return 1 - np.sin(2 * np.pi * x[:, 0]) / (2 * np.pi * material(x))
 
-        def gradient(x):
+        def gradient(x: np.ndarray) -> np.ndarray:
             """One-sided exact gradients; the physical normal flux is continuous."""
             return np.column_stack((-np.cos(2 * np.pi * x[:, 0]) / material(x), np.zeros(len(x))))
 
-        def source(x):
+        def source(x: np.ndarray) -> np.ndarray:
             """Divergence of q=(cos(2 pi x),0), including no interface distribution."""
             return -2 * np.pi * np.sin(2 * np.pi * x[:, 0])
 
@@ -165,4 +166,6 @@ def plots(rows: list[dict]) -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.verify_weighted_estimator").main()

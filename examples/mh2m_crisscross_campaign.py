@@ -7,14 +7,6 @@ integer dimensions and its lower-row subdivision label are not conflated.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import gc
 import hashlib
@@ -38,10 +30,11 @@ from examples.mh2m_heterogeneous_norms import difference
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.fem.traces.pressure_2d import PressureTraceSpace
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file
 from pymhm.meshes.crisscross import crisscross_submesh
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def configurations() -> list[tuple[str, str, int, int, int, int]]:
@@ -78,8 +71,8 @@ def hashes() -> dict[str, str]:
         "src/pymhm/meshes/refinement.py",
         "src/pymhm/meshes/roundoff.py",
     ):
-        result[name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
-    return current_source_manifest(result)
+        result[name] = hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
+    return current_source_manifest(result, packages=("pymhm", "examples"))
 
 
 def acquire(name: str, method: str, n: int, r: int, gamma: int, flux: int, output: Path) -> dict:
@@ -329,4 +322,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.mh2m_crisscross_campaign").main()

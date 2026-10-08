@@ -33,17 +33,35 @@ $$
 
 The custom interface supplies the canonical-to-outward-normal transport. The global multiplier system also retains one local pressure constant. Reported Darcy flux is the broken physical field $-K\nabla p_h$; no fine-cell H(div) property is assumed.
 
+The PyMHM distribution contains only the library. The first cell explicitly
+downloads a checksum-verified companion archive and prepares the declared data
+using its local Python helpers. You can inspect these support files in `ROOT`.
+Complete studies and historical replay retain their existing opt-in flags.
 
 ```python
-import os
-for name in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "BLIS_NUM_THREADS"):
-    os.environ[name] = "1"
-
 from pathlib import Path
+import os
 import sys
-ROOT = next(p for p in (Path.cwd(), *Path.cwd().parents) if (p / "pixi.toml").is_file())
+from pymhm.io.workspace import workspace_from_archive
+
+# Download verified support files; this operation does not execute them.
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/0e4b57acb8713616252c75aefac2656634a1e923bd32711ae0ba1c84b2fba55d/darcy_3d_parallel_scalability-companion.zip"
+COMPANION_SHA256 = "0e4b57acb8713616252c75aefac2656634a1e923bd32711ae0ba1c84b2fba55d"
+WORKSPACE = Path(
+    os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
+)
+ROOT = workspace_from_archive(COMPANION_URL, sha256=COMPANION_SHA256, directory=WORKSPACE)
+os.environ["PYMHM_WORKSPACE"] = str(ROOT)
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+# Explicitly prepare declared data with the downloaded Python helpers.
+from scripts.notebook_reproduction import notebook_workspace
+
+ROOT = notebook_workspace("introduction/darcy_3d_parallel_scalability.ipynb", directory=ROOT)
+root = ROOT
+print("Workspace:", ROOT)
+
 
 import inspect
 import numpy as np
@@ -58,7 +76,6 @@ DATA = study.DarcyData(period=0.1)
 FINE_N, MACRO_COUNT = 16, 4
 TRACE_DEGREE, ASSEMBLY_QUADRATURE_DEGREE = 1, 8
 print({"anisotropy": DATA.anisotropy, "source_control": study.verify_source(DATA)})
-
 ```
 
 ```text
@@ -71,10 +88,7 @@ These are the actual executed physical-data and local-equation declarations. Nat
 ```python
 display(Code(inspect.getsource(study.symbolic_data), language="python"))
 display(Code(inspect.getsource(study.assemble_cell_equations), language="python"))
-
 ```
-
-
 
 ```python
 def symbolic_data(domain: Any, omega: Any, anisotropy: Any) -> tuple[Any, Any, Any, Any]:
@@ -93,10 +107,6 @@ def symbolic_data(domain: Any, omega: Any, anisotropy: Any) -> tuple[Any, Any, A
     flux = -ufl.dot(tensor, ufl.grad(pressure))
     return pressure, tensor, flux, ufl.div(flux)
 ```
-
-
-
-
 
 ```python
 def assemble_cell_equations(
@@ -159,8 +169,6 @@ def assemble_cell_equations(
     )
 ```
 
-
-
 Bind the hierarchy and the custom normal-trace interface, then assemble and solve through the generic API. A spawned worker imports the provider directly; no cell compilation or temporary Python module is needed.
 
 
@@ -181,7 +189,6 @@ system = assemble(problem, execution=ExecutionConfig(
 solution = system.solve()
 print(study.mhm_physical_errors(system, solution, data=DATA, order=7))
 print({"trace_dofs": problem.trace_size, "relative_residual": solution.residual})
-
 ```
 
 ```text
@@ -205,7 +212,6 @@ reproduction = study.run_study(
     data=DATA, trace_degree=TRACE_DEGREE,
     quadrature_degree=ASSEMBLY_QUADRATURE_DEGREE, small_fine_n=FINE_N,
 )
-
 ```
 
 ```text
@@ -2486,11 +2492,21 @@ The full helpers preserve all resource checks, synchronization, coefficient/basi
 
 ## Reproduce this tutorial
 
-[View the source notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb) or [download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb). Run its cells interactively, or execute the notebook from the repository root with the checked-in Pixi lockfile:
+[View the source notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb) or [download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/darcy_3d_parallel_scalability.ipynb), then open it:
 
 ```bash
-pixi install --locked -e introduction
-pixi run --locked -e introduction notebooks-run introduction/darcy_3d_parallel_scalability.ipynb --timeout 7200
+python -m pip install 'pymhm[notebooks,visualization]'
+jupyter lab darcy_3d_parallel_scalability.ipynb
 ```
 
-The runner writes the executed copy to `build/notebooks/introduction/`. The figures and numerical outputs on this page come from that execution. Timings describe the recorded hardware and solver settings; rerun performance examples on an idle machine to measure your own environment.
+The first cell explicitly downloads a SHA256-verified companion archive. Acquisition does not execute its code. The local support files are inspectable in the printed `ROOT` directory; the following helper call prepares only the declared inputs. The library distribution contains only `pymhm`. Notebooks, support code and data are separate downloads. Native UFL forms require the compatible DOLFINx/UFL backend described in the [installation guide](../../installation.md). A clone and Pixi are unnecessary.
+
+For batch execution, extract the same companion, change to its workspace, and use its local runner with the actual downloaded notebook path:
+
+```bash
+python -m scripts.run_notebooks /path/to/darcy_3d_parallel_scalability.ipynb --timeout 7200
+```
+
+The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
+
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `cf7ac325fb6668b6539cfa673a24058cb96824965d156b17b225afd79e2d8ce4` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

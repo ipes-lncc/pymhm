@@ -20,7 +20,16 @@ from typing import Any
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[1]
+from pymhm.io.workspace import (
+    case_workspace,
+    ensure_resource,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    source_label,
+)
+
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/spe10"
 COEFFICIENTS = ROOT / "build/results/spe10/taylor-hood"
 
@@ -110,7 +119,7 @@ class TaylorHoodField:
 
 def load_field(path: str | Path) -> TaylorHoodField:
     """Reload canonical coefficients independently of DOLFINx numbering."""
-    with np.load(path) as data:
+    with np.load(local_resource(path)) as data:
         bounds = tuple(data["bounds"]) if "bounds" in data else (0.0, 1200.0, 0.0, 2200.0)
         return TaylorHoodField(data["velocity"], data["pressure"], bounds)
 
@@ -125,7 +134,7 @@ def load_archived_reference(
     """
     nx, ny = shape
     stem = f"taylor-hood-{nx}x{ny}"
-    report = json.loads((OUTPUT / f"{stem}.json").read_text())
+    report = json.loads(read_resource_text(OUTPUT / f"{stem}.json"))
     if report.get("mesh_shape") != [nx, ny] or report.get("archive") != f"{stem}.npz":
         raise ValueError("reference archive metadata does not match the requested shape")
     coefficient_path = COEFFICIENTS / f"{stem}.npz"
@@ -133,7 +142,7 @@ def load_archived_reference(
         (coefficient_path, "coefficient_sha256"),
         (OUTPUT / f"{stem}.npz", "sha256"),
     ):
-        if hashlib.sha256(path.read_bytes()).hexdigest() != report.get(key):
+        if hashlib.sha256(read_resource_bytes(path)).hexdigest() != report.get(key):
             raise ValueError(f"reference archive checksum mismatch: {path.name}")
     field = load_field(coefficient_path)
     if field.velocity.shape != (2 * ny + 1, 2 * nx + 1, 2) or field.pressure.shape != (
@@ -308,7 +317,7 @@ def solve(
     gamma = dolfinx.fem.Function(DG)
     centers = DG.tabulate_dof_coordinates()[:, :2]
     if constant_drag is None:
-        with np.load(OUTPUT / "layer-1.npz") as data:
+        with np.load(ensure_resource("examples/results/spe10/layer-1.npz", ROOT)) as data:
             permeability = data["permeability"][..., 0]
         pixel = np.floor(centers / [20.0, 10.0]).astype(int)
         gamma.x.array[:] = 0.3 / permeability[pixel[:, 0], pixel[:, 1]]
@@ -504,7 +513,7 @@ def archive(field: TaylorHoodField, report: dict[str, Any]) -> Path:
     report.update(
         archive=path.name,
         sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
-        coefficient_archive=coefficient_path.relative_to(ROOT).as_posix(),
+        coefficient_archive=source_label(coefficient_path, ROOT),
         coefficient_sha256=hashlib.sha256(coefficient_path.read_bytes()).hexdigest(),
         layer_sha256=hashlib.sha256((OUTPUT / "layer-1.npz").read_bytes()).hexdigest(),
         driver_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
@@ -548,7 +557,7 @@ def main() -> None:
     elif not args.compare_only:
         if args.previous:
             report["successive_difference"] = difference(field, load_field(args.previous))
-            report["previous_coefficients"] = args.previous.resolve().relative_to(ROOT).as_posix()
+            report["previous_coefficients"] = source_label(args.previous.resolve(), ROOT)
         archive(field, report)
     print(json.dumps(report, indent=2), flush=True)
     if args.mhm:
@@ -575,4 +584,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_spe10_taylor_hood").main()

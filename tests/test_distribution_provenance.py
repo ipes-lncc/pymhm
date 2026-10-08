@@ -17,6 +17,7 @@ package_sources = _CHECKS["package_sources"]
 validate_package_sources = _CHECKS["validate_package_sources"]
 validate_metadata = _CHECKS["validate_metadata"]
 validate_sdist_rebuild = _CHECKS["validate_sdist_rebuild"]
+validate_library_build = _CHECKS["validate_library_build"]
 
 ReleaseFixture = tuple[Path, dict[str, bytes], dict[str, bytes], list[list[str]]]
 
@@ -52,6 +53,10 @@ def release_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> ReleaseF
             b'dependencies = ["numpy>=1.26"]\n'
             b'[project.optional-dependencies]\namg = ["pyamg>=5.3"]\n'
             b"intel = [\"pypardiso>=0.4; sys_platform == 'win32'\"]\n"
+            b'[tool.hatch.build.targets.wheel]\npackages = ["src/pymhm"]\n'
+            b"[tool.hatch.build.targets.sdist]\n"
+            b'only-include = ["src/pymhm", "pyproject.toml", "README.md", '
+            b'"LICENSE", ".gitignore"]\n'
         ),
         "README.md": b"package readme",
         "LICENSE": b"license",
@@ -105,10 +110,48 @@ def test_recursive_runtime_sources_include_typing_stubs_and_marker(tmp_path: Pat
         "pymhm/core/assembly.py": b"assembly",
         "pymhm/core/assembly.pyi": b"assembly stub",
     }
-    for name, payload in {**sources, "pymhm/core/cached.pyc": b"cache"}.items():
+    (tmp_path / "src/pymhm_examples/formulations").mkdir(parents=True)
+    ignored = {
+        "pymhm/core/cached.pyc": b"cache",
+        "pymhm/core/field.npz": b"generated field",
+        "pymhm_examples/__init__.py": b"example namespace",
+        "pymhm_examples/formulations/darcy.py": b"case formulation",
+    }
+    for name, payload in {**sources, **ignored}.items():
         (tmp_path / "src" / name).write_bytes(payload)
     assert package_sources(tmp_path) == sources
     validate_package_sources(dict(reversed(list(sources.items()))), sources, "Wheel")
+
+
+@pytest.mark.parametrize(
+    "problem",
+    ["valid", "wheel", "source", "global_force", "wheel_force", "sdist_force", "custom_force"],
+)
+def test_library_build_contract_rejects_case_namespaces_and_all_resource_mappings(
+    problem: str,
+) -> None:
+    """Release configuration cannot admit companions or datasets through a build target."""
+    build = {
+        "targets": {
+            "wheel": {"packages": ["src/pymhm"]},
+            "sdist": {"only-include": ["src/pymhm", "pyproject.toml", "README.md", "LICENSE"]},
+        }
+    }
+    configuration = {"tool": {"hatch": {"build": build}}}
+    if problem == "wheel":
+        build["targets"]["wheel"]["packages"].append("src/pymhm_examples")
+    elif problem == "source":
+        build["targets"]["sdist"]["only-include"].append("notebooks")
+    elif problem == "global_force":
+        build["force-include"] = {"fields.npz": "pymhm/fields.npz"}
+    elif problem.endswith("_force"):
+        target = problem.removesuffix("_force")
+        build["targets"].setdefault(target, {})["force-include"] = {}
+    if problem == "valid":
+        validate_library_build(configuration)
+    else:
+        with pytest.raises(SystemExit, match="only|force-include"):
+            validate_library_build(configuration)
 
 
 @pytest.mark.parametrize("problem", ["empty", "missing", "extra", "changed"])
@@ -140,6 +183,9 @@ def test_runtime_distribution_requires_exact_source_names_and_bytes(problem: str
         "changed_license",
         "missing_pkg_info",
         "wheel_asset",
+        "wheel_case_namespace",
+        "wheel_case_registry",
+        "wheel_field",
         "wheel_metadata_extra",
         "docs",
         "scripts",
@@ -174,6 +220,12 @@ def test_release_gate_keeps_only_runtime_and_build_inputs(
         del archive_sources["PKG-INFO"]
     elif problem == "wheel_asset":
         wheel_sources["pymhm/notebooks/demo.ipynb"] = b"notebook"
+    elif problem == "wheel_case_namespace":
+        wheel_sources["pymhm_examples/__init__.py"] = b"case namespace"
+    elif problem == "wheel_case_registry":
+        wheel_sources["pymhm/resource_manifest.json"] = b"{}"
+    elif problem == "wheel_field":
+        wheel_sources["pymhm/data/pressure.npz"] = b"field"
     elif problem == "wheel_metadata_extra":
         wheel_sources["pymhm-0.1.0.dist-info/extra.json"] = b"{}"
     elif problem != "valid":

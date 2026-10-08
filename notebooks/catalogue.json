@@ -1,6 +1,6 @@
 {
   "schema": "pymhm-problem-notebooks-v1",
-  "source_notebooks": "unexecuted; executed copies are written under build/notebooks with the same problem folders",
+  "source_notebooks": "installed unexecuted resources; executed copies are written under the selected workspace build/notebooks with the same problem folders",
   "rows": [
     {
       "path": "notebooks/convergence/73_initial_convergence.ipynb",
@@ -14,10 +14,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 73",
+        "command": "python -m pymhm_examples.notebooks 73",
         "current_study_command": null,
         "current_study_steps": [],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 73 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 73 --historical",
         "limitation": "Scalar JSON observations and their original source attribution are versioned and can be rendered standalone. Original figure payload identities require the supplied historical assets; rendering scalar records does not execute the underlying PDE acquisitions."
       }
     },
@@ -46,7 +46,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run darcy/hybrid_methods.ipynb",
+        "command": "python -m pymhm_examples.notebooks darcy/hybrid_methods.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -80,7 +80,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run darcy/mixed_hdiv.ipynb",
+        "command": "python -m pymhm_examples.notebooks darcy/mixed_hdiv.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -106,7 +106,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run darcy/primal_galerkin.ipynb",
+        "command": "python -m pymhm_examples.notebooks darcy/primal_galerkin.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -124,7 +124,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 01",
+        "command": "python -m pymhm_examples.notebooks 01",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -142,7 +142,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 02",
+        "command": "python -m pymhm_examples.notebooks 02",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -160,7 +160,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 03",
+        "command": "python -m pymhm_examples.notebooks 03",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -179,7 +179,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 04",
+        "command": "python -m pymhm_examples.notebooks 04",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -197,10 +197,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 11",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 11 --study",
+        "command": "python -m pymhm_examples.notebooks 11",
+        "current_study_command": "python -m pymhm_examples.notebooks 11 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.plot_reproductions"
+          "python -m pymhm_examples.plot_reproductions"
         ]
       }
     },
@@ -217,10 +217,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 14",
+        "command": "python -m pymhm_examples.notebooks 14",
         "current_study_command": null,
         "current_study_steps": [],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 14 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 14 --historical",
         "limitation": "The archived NeoPZ RT0 comparison records identify reference revision 4c6b6d277ce097b97bfc8dea1b6725860f4fe05a and a private instrumented driver. The original field archives are not published with the checkout or release; fresh PyMHM/native-reference controls are separate calculations."
       }
     },
@@ -236,10 +236,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 17",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 17 --study",
+        "command": "python -m pymhm_examples.notebooks 17",
+        "current_study_command": "python -m pymhm_examples.notebooks 17 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.plot_darcy_bdm"
+          "python -m pymhm_examples.plot_darcy_bdm"
         ]
       }
     },
@@ -256,10 +256,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 18",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 18 --study",
+        "command": "python -m pymhm_examples.notebooks 18",
+        "current_study_command": "python -m pymhm_examples.notebooks 18 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.plot_reconstruction_moments"
+          "python -m pymhm_examples.plot_reconstruction_moments"
         ]
       }
     },
@@ -277,10 +277,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 20",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 20 --study",
+        "command": "python -m pymhm_examples.notebooks 20",
+        "current_study_command": "python -m pymhm_examples.notebooks 20 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.plot_estimator"
+          "python -m pymhm_examples.plot_estimator"
         ]
       }
     },
@@ -297,12 +297,12 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 21",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 21 --study",
+        "command": "python -m pymhm_examples.notebooks 21",
+        "current_study_command": "python -m pymhm_examples.notebooks 21 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.plot_spe10_data --download"
+          "python -m pymhm_examples.plot_spe10_data --download"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 21 --historical"
+        "original_replay_command": "python -m pymhm_examples.notebooks 21 --historical"
       }
     },
     {
@@ -318,13 +318,13 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 22",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 22 --study",
+        "command": "python -m pymhm_examples.notebooks 22",
+        "current_study_command": "python -m pymhm_examples.notebooks 22 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.plot_quarter_spot --stage all --macro 32 --output 'build/results/quarter-points-{acquisition}'",
-          "pixi run --locked -e notebooks python -m examples.solve_quarter_obstacle --refinements 4 8 16 --segments 1 2 4 --formulations primal mixed --output 'build/results/quarter-obstacle-{acquisition}' --workers 1 --native-threads 1"
+          "python -m pymhm_examples.plot_quarter_spot --stage all --macro 32 --output 'build/results/quarter-points-{acquisition}'",
+          "python -m pymhm_examples.solve_quarter_obstacle --refinements 4 8 16 --segments 1 2 4 --formulations primal mixed --output 'build/results/quarter-obstacle-{acquisition}' --workers 1 --native-threads 1"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 22 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 22 --historical",
         "resources": "Complete 2048-macrotriangle point-well case and homogeneous/layered variants; point-series refinement and obstacle P2/RT0 local refinements4/8/16 with trace segments1/2/4. External original obstacle comparisons are separate historical inputs.",
         "limitation": "The public complete point-well/Green-series and fixed-macro square-obstacle acquisitions execute in fresh output directories. Original independently acquired MSL/NeoPZ obstacle and classical-reference coefficients require the attributed external payloads; their instrumented comparison sources are not distributed."
       }
@@ -342,24 +342,24 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 23",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 23 --study",
+        "command": "python -m pymhm_examples.notebooks 23",
+        "current_study_command": "python -m pymhm_examples.notebooks 23 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_spe10 --force --refinements 40 60 80 100 120 128 --segments 8 16 32 --degree 1 --order 3",
-          "pixi run --locked -e intel python -m examples.solve_spe10_reference --shape 120 220 --order 5",
-          "pixi run --locked -e intel python -m examples.solve_spe10_reference --shape 240 440 --order 6",
-          "pixi run --locked -e intel python -m examples.solve_spe10_reference --shape 480 880 --order 6",
-          "pixi run --locked -e intel python -m examples.solve_spe10_reference --shape 768 1408 --order 5",
-          "pixi run --locked -e intel python -m examples.solve_spe10_reference --shape 960 1760 --order 5",
-          "pixi run --locked -e notebooks python -m examples.solve_spe10_brinkman --degree 3 --refinement 10 --segments 10 --order 5 --stabilization pointwise-2017 --output 'build/results/spe10-brinkman-{acquisition}'",
-          "pixi run --locked -e notebooks python -m examples.solve_spe10_brinkman --degree 3 --refinement 10 --segments 10 --order 8 --stabilization pointwise-2017 --output 'build/results/spe10-brinkman-{acquisition}'",
-          "pixi run --locked -e fem python -m examples.solve_spe10_taylor_hood --shape 60 220",
-          "pixi run --locked -e fem python -m examples.solve_spe10_taylor_hood --shape 120 440",
-          "pixi run --locked -e fem python -m examples.solve_spe10_taylor_hood --shape 240 880",
-          "pixi run --locked -e fem python -m examples.solve_spe10_taylor_hood --shape 480 1760",
-          "pixi run --locked -e fem python -m examples.solve_spe10_taylor_hood --shape 960 3520"
+          "python -m pymhm_examples.solve_spe10 --force --refinements 40 60 80 100 120 128 --segments 8 16 32 --degree 1 --order 3",
+          "python -m pymhm_examples.solve_spe10_reference --shape 120 220 --order 5",
+          "python -m pymhm_examples.solve_spe10_reference --shape 240 440 --order 6",
+          "python -m pymhm_examples.solve_spe10_reference --shape 480 880 --order 6",
+          "python -m pymhm_examples.solve_spe10_reference --shape 768 1408 --order 5",
+          "python -m pymhm_examples.solve_spe10_reference --shape 960 1760 --order 5",
+          "python -m pymhm_examples.solve_spe10_brinkman --degree 3 --refinement 10 --segments 10 --order 5 --stabilization pointwise-2017 --output 'build/results/spe10-brinkman-{acquisition}'",
+          "python -m pymhm_examples.solve_spe10_brinkman --degree 3 --refinement 10 --segments 10 --order 8 --stabilization pointwise-2017 --output 'build/results/spe10-brinkman-{acquisition}'",
+          "python -m pymhm_examples.solve_spe10_taylor_hood --shape 60 220",
+          "python -m pymhm_examples.solve_spe10_taylor_hood --shape 120 440",
+          "python -m pymhm_examples.solve_spe10_taylor_hood --shape 240 880",
+          "python -m pymhm_examples.solve_spe10_taylor_hood --shape 480 1760",
+          "python -m pymhm_examples.solve_spe10_taylor_hood --shape 960 3520"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 23 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 23 --historical",
         "resources": "Complete SPE10 layer36 Q1/continuous-P1 Darcy local/trace refinement and independent Q3 references; layer1 P3/P3 Brinkman and independent Taylor-Hood refinements. High-resolution references need large native sparse factorizations and substantial RAM/storage.",
         "limitation": "The complete SPE10 comparison includes historical MSL/NeoPZ fields, high-resolution classical references and attributed article rasters; original external comparison payloads are not distributed."
       }
@@ -377,10 +377,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 24",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 24 --study",
+        "command": "python -m pymhm_examples.notebooks 24",
+        "current_study_command": "python -m pymhm_examples.notebooks 24 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.verify_mshho --output 'build/results/mshho-{acquisition}'"
+          "python -m pymhm_examples.verify_mshho --output 'build/results/mshho-{acquisition}'"
         ]
       }
     },
@@ -396,10 +396,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 25",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 25 --study",
+        "command": "python -m pymhm_examples.notebooks 25",
+        "current_study_command": "python -m pymhm_examples.notebooks 25 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.verify_tensor_rt"
+          "python -m pymhm_examples.verify_tensor_rt"
         ]
       }
     },
@@ -415,11 +415,11 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 29",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 29 --study",
+        "command": "python -m pymhm_examples.notebooks 29",
+        "current_study_command": "python -m pymhm_examples.notebooks 29 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_darcy3d",
-          "pixi run --locked -e notebooks python -m examples.plot_darcy3d"
+          "python -m pymhm_examples.solve_darcy3d",
+          "python -m pymhm_examples.plot_darcy3d"
         ]
       }
     },
@@ -435,10 +435,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 30",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 30 --study",
+        "command": "python -m pymhm_examples.notebooks 30",
+        "current_study_command": "python -m pymhm_examples.notebooks 30 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.verify_polygons"
+          "python -m pymhm_examples.verify_polygons"
         ]
       }
     },
@@ -455,10 +455,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 31",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 31 --study",
+        "command": "python -m pymhm_examples.notebooks 31",
+        "current_study_command": "python -m pymhm_examples.notebooks 31 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.verify_weighted_estimator"
+          "python -m pymhm_examples.verify_weighted_estimator"
         ]
       }
     },
@@ -476,11 +476,11 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 33",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 33 --study",
+        "command": "python -m pymhm_examples.notebooks 33",
+        "current_study_command": "python -m pymhm_examples.notebooks 33 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_darcy_rt",
-          "pixi run --locked -e notebooks python -m examples.plot_darcy_rt"
+          "python -m pymhm_examples.solve_darcy_rt",
+          "python -m pymhm_examples.plot_darcy_rt"
         ]
       }
     },
@@ -498,12 +498,12 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 36",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 36 --study",
+        "command": "python -m pymhm_examples.notebooks 36",
+        "current_study_command": "python -m pymhm_examples.notebooks 36 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.verify_nested --levels 1 2 4 8 16 --boundary both --output 'build/results/nested-{acquisition}'"
+          "python -m pymhm_examples.verify_nested --levels 1 2 4 8 16 --boundary both --output 'build/results/nested-{acquisition}'"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 36 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 36 --historical",
         "resources": "All ten homogeneous/nonhomogeneous nested Q2/P1 acquisitions, levels1/2/4/8/16, original-equation and flat-space comparisons, physical pressure/gradient errors and generated current figures.",
         "limitation": "The published recursive-MHM archive refers to an independent private native-verification record. Public verify_nested.py performs a fresh analytical acquisition, which has its own provenance and record format."
       }
@@ -520,17 +520,17 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 37",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 37 --study",
+        "command": "python -m pymhm_examples.notebooks 37",
+        "current_study_command": "python -m pymhm_examples.notebooks 37 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.periodic_reference --degree 1 --order 4 --sizes 512 1024 2048 4096 --artifacts 'build/results/periodic-{acquisition}/fields' --records 'build/results/periodic-{acquisition}/records'",
-          "pixi run --locked -e notebooks python -m examples.verify_periodic --macro 8 --local-refinement 128 --segments 1 2 4 8 16 32 --stage all --native-threads 1 --refinement-precision extended --original-refinement-steps 2 --artifacts 'build/results/periodic-{acquisition}/fields' --output 'build/results/periodic-{acquisition}/records/periodic-r128.json'",
-          "pixi run --locked -e notebooks python -m examples.verify_periodic --macro 8 --local-refinement 256 --segments 1 2 4 8 16 32 --stage all --native-threads 1 --refinement-precision extended --original-refinement-steps 2 --artifacts 'build/results/periodic-{acquisition}/fields' --output 'build/results/periodic-{acquisition}/records/periodic-r256.json'",
-          "pixi run --locked -e notebooks python -m examples.verify_periodic --macro 8 --local-refinement 512 --segments 1 2 4 8 16 32 --stage all --native-threads 1 --refinement-precision extended --original-refinement-steps 2 --artifacts 'build/results/periodic-{acquisition}/fields' --output 'build/results/periodic-{acquisition}/records/periodic-r512.json'",
-          "pixi run --locked -e notebooks python -m examples.compare_periodic --reference 1:4096:4 --compare-references 1:512:4 1:1024:4 1:2048:4 --refinements 128 256 512 --primary --artifacts 'build/results/periodic-{acquisition}/fields' --reference-records 'build/results/periodic-{acquisition}/records' --output 'build/results/periodic-{acquisition}/records/periodic-comparison.json'",
-          "pixi run --locked -e notebooks python -m examples.plot_periodic --reference 1:4096:4 --local-refinement 512 --artifacts 'build/results/periodic-{acquisition}/fields' --records 'build/results/periodic-{acquisition}/records' --comparison 'build/results/periodic-{acquisition}/records/periodic-comparison.json' --output 'build/results/periodic-{acquisition}/figures'"
+          "python -m pymhm_examples.periodic_reference --degree 1 --order 4 --sizes 512 1024 2048 4096 --artifacts 'build/results/periodic-{acquisition}/fields' --records 'build/results/periodic-{acquisition}/records'",
+          "python -m pymhm_examples.verify_periodic --macro 8 --local-refinement 128 --segments 1 2 4 8 16 32 --stage all --native-threads 1 --refinement-precision extended --original-refinement-steps 2 --artifacts 'build/results/periodic-{acquisition}/fields' --output 'build/results/periodic-{acquisition}/records/periodic-r128.json'",
+          "python -m pymhm_examples.verify_periodic --macro 8 --local-refinement 256 --segments 1 2 4 8 16 32 --stage all --native-threads 1 --refinement-precision extended --original-refinement-steps 2 --artifacts 'build/results/periodic-{acquisition}/fields' --output 'build/results/periodic-{acquisition}/records/periodic-r256.json'",
+          "python -m pymhm_examples.verify_periodic --macro 8 --local-refinement 512 --segments 1 2 4 8 16 32 --stage all --native-threads 1 --refinement-precision extended --original-refinement-steps 2 --artifacts 'build/results/periodic-{acquisition}/fields' --output 'build/results/periodic-{acquisition}/records/periodic-r512.json'",
+          "python -m pymhm_examples.compare_periodic --reference 1:4096:4 --compare-references 1:512:4 1:1024:4 1:2048:4 --refinements 128 256 512 --primary --artifacts 'build/results/periodic-{acquisition}/fields' --reference-records 'build/results/periodic-{acquisition}/records' --output 'build/results/periodic-{acquisition}/records/periodic-comparison.json'",
+          "python -m pymhm_examples.plot_periodic --reference 1:4096:4 --local-refinement 512 --artifacts 'build/results/periodic-{acquisition}/fields' --records 'build/results/periodic-{acquisition}/records' --comparison 'build/results/periodic-{acquisition}/records/periodic-comparison.json' --output 'build/results/periodic-{acquisition}/figures'"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 37 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 37 --historical",
         "resources": "Full periodic case: fixed 8x8 macro mesh, r128/r256/r512 locals and Q1 references up to4096x4096. Requires extended coefficient precision and substantial RAM/storage.",
         "limitation": "Retained original streamed native-verification and acquisition identities require their original payloads. The public current study acquires new periodic Q1/P0 fields, independent conforming refinements and stated physical norms."
       }
@@ -548,22 +548,22 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 38",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 38 --study",
+        "command": "python -m pymhm_examples.notebooks 38",
+        "current_study_command": "python -m pymhm_examples.notebooks 38 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.unfitted_campaign --collect --fit-locals --refinement 4",
-          "pixi run --locked -e notebooks python -m examples.unfitted_campaign --collect --fit-locals --refinement 8",
-          "pixi run --locked -e notebooks python -m examples.unfitted_campaign --collect --fit-locals --refinement 16",
-          "pixi run --locked -e notebooks python -m examples.unfitted_campaign --collect --refinement 8",
-          "pixi run --locked -e notebooks python -m examples.unfitted_campaign --collect --refinement 16",
-          "pixi run --locked -e notebooks python -m examples.unfitted_convergence --study smooth --refinement 16 --degree 8 --maximum-segments 32 --output 'build/results/unfitted-{acquisition}/convergence'",
-          "pixi run --locked -e notebooks python -m examples.unfitted_convergence --study smooth --refinement 24 --degree 8 --maximum-segments 32 --output 'build/results/unfitted-{acquisition}/convergence'",
-          "pixi run --locked -e notebooks python -m examples.unfitted_convergence --study smooth --refinement 32 --degree 8 --maximum-segments 32 --output 'build/results/unfitted-{acquisition}/convergence'",
-          "pixi run --locked -e notebooks python -m examples.unfitted_convergence --study smooth --refinement 64 --degree 8 --maximum-segments 32 --output 'build/results/unfitted-{acquisition}/convergence'",
-          "pixi run --locked -e notebooks python -m examples.unfitted_convergence --study contrast --refinement 8 --degree 4 --contrasts 10 100 1000 10000 100000 1000000 --output 'build/results/unfitted-{acquisition}/convergence'",
-          "pixi run --locked -e notebooks python -m examples.unfitted_convergence --study contrast --refinement 16 --degree 4 --contrasts 10 100 1000 10000 100000 1000000 --output 'build/results/unfitted-{acquisition}/convergence'"
+          "python -m pymhm_examples.unfitted_campaign --collect --fit-locals --refinement 4",
+          "python -m pymhm_examples.unfitted_campaign --collect --fit-locals --refinement 8",
+          "python -m pymhm_examples.unfitted_campaign --collect --fit-locals --refinement 16",
+          "python -m pymhm_examples.unfitted_campaign --collect --refinement 8",
+          "python -m pymhm_examples.unfitted_campaign --collect --refinement 16",
+          "python -m pymhm_examples.unfitted_convergence --study smooth --refinement 16 --degree 8 --maximum-segments 32 --output 'build/results/unfitted-{acquisition}/convergence'",
+          "python -m pymhm_examples.unfitted_convergence --study smooth --refinement 24 --degree 8 --maximum-segments 32 --output 'build/results/unfitted-{acquisition}/convergence'",
+          "python -m pymhm_examples.unfitted_convergence --study smooth --refinement 32 --degree 8 --maximum-segments 32 --output 'build/results/unfitted-{acquisition}/convergence'",
+          "python -m pymhm_examples.unfitted_convergence --study smooth --refinement 64 --degree 8 --maximum-segments 32 --output 'build/results/unfitted-{acquisition}/convergence'",
+          "python -m pymhm_examples.unfitted_convergence --study contrast --refinement 8 --degree 4 --contrasts 10 100 1000 10000 100000 1000000 --output 'build/results/unfitted-{acquisition}/convergence'",
+          "python -m pymhm_examples.unfitted_convergence --study contrast --refinement 16 --degree 4 --contrasts 10 100 1000 10000 100000 1000000 --output 'build/results/unfitted-{acquisition}/convergence'"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 38 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 38 --historical",
         "resources": "P4 local transmission studies r4/8/16; full P8 smooth hp studies r16/24/32/64 and maximum32segments, plus P4 contrasts10 through1e6 at r8/r16. High-degree local matrices and endpoint campaigns require substantial RAM and time.",
         "limitation": "The public S0/S1/S2 transmission problem, material-fitted/unfitted local studies, complete smooth hp sweeps and contrast sweeps have fresh acquisition recipes. Original independent MSL and instrumented native verification fields retain separate external provenance and require their original payloads."
       }
@@ -581,10 +581,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 39",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 39 --study",
+        "command": "python -m pymhm_examples.notebooks 39",
+        "current_study_command": "python -m pymhm_examples.notebooks 39 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.adaptive_darcy_campaign --collect"
+          "python -m pymhm_examples.adaptive_darcy_campaign --collect"
         ]
       }
     },
@@ -601,17 +601,17 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 40",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 40 --study",
+        "command": "python -m pymhm_examples.notebooks 40",
+        "current_study_command": "python -m pymhm_examples.notebooks 40 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.spe10_adaptive_aligned --resolutions 15 30 60 120",
-          "pixi run --locked -e intel python -m examples.spe10_adaptive_aligned --resolutions 240 --solver pypardiso --previous-archive examples/results/spe10-adaptive/reference-rt2-120x440.npz",
-          "pixi run --locked -e intel python -m examples.spe10_adaptive_aligned --resolutions 480 --solver pypardiso --previous-archive examples/results/spe10-adaptive/reference-rt2-240x880.npz",
-          "pixi run --locked -e remeshing python -m examples.solve_spe10_published --levels 24 --target-cells 3786 --executable FreeFem++-nw --output 'build/results/spe10-adaptive-{acquisition}/published'",
-          "pixi run --locked -e notebooks python -m examples.spe10_adaptive_norms --data 'build/results/spe10-adaptive-{acquisition}/published' --reference examples/results/spe10-adaptive/reference-rt2-480x1760.npz --order 4",
-          "pixi run --locked -e notebooks python -m examples.plot_spe10_adaptive --data 'build/results/spe10-adaptive-{acquisition}/published' --output 'build/figures/spe10-adaptive-{acquisition}'"
+          "python -m pymhm_examples.spe10_adaptive_aligned --resolutions 15 30 60 120",
+          "python -m pymhm_examples.spe10_adaptive_aligned --resolutions 240 --solver pypardiso --previous-archive examples/results/spe10-adaptive/reference-rt2-120x440.npz",
+          "python -m pymhm_examples.spe10_adaptive_aligned --resolutions 480 --solver pypardiso --previous-archive examples/results/spe10-adaptive/reference-rt2-240x880.npz",
+          "python -m pymhm_examples.solve_spe10_published --levels 24 --target-cells 3786 --executable FreeFem++-nw --output 'build/results/spe10-adaptive-{acquisition}/published'",
+          "python -m pymhm_examples.spe10_adaptive_norms --data 'build/results/spe10-adaptive-{acquisition}/published' --reference examples/results/spe10-adaptive/reference-rt2-480x1760.npz --order 4",
+          "python -m pymhm_examples.plot_spe10_adaptive --data 'build/results/spe10-adaptive-{acquisition}/published' --output 'build/figures/spe10-adaptive-{acquisition}'"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 40 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 40 --historical",
         "resources": "Complete P2/four-local-triangle/P0 adaptive sequence through the published mesh budget, FreeFEM/BAMG locked profile, and classical RT2 references through480x1760 fine squares. Largest measured reference peak memory exceeds100GiB; inspect full commands before execution.",
         "limitation": "The complete public layer36 adaptive P2/P0/RT2 study uses the documented FreeFEM/BAMG metric and new connectivity, with independently refined RT2/P2 references. The original six-argument remeshing wrapper and historical connectivity are not published; the current acquisition does not claim identical historical macro meshes or hashes."
       }
@@ -629,10 +629,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 42",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 42 --study",
+        "command": "python -m pymhm_examples.notebooks 42",
+        "current_study_command": "python -m pymhm_examples.notebooks 42 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.darcy_jump_campaign --collect"
+          "python -m pymhm_examples.darcy_jump_campaign --collect"
         ]
       }
     },
@@ -648,12 +648,12 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 43",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 43 --study",
+        "command": "python -m pymhm_examples.notebooks 43",
+        "current_study_command": "python -m pymhm_examples.notebooks 43 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.verify_analytic"
+          "python -m pymhm_examples.verify_analytic"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 43 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 43 --historical",
         "limitation": "The current analytical Neumann problem executes directly with its physical mean-pressure gauge. The full public analytical acquisition is available through --study. Exact original archived field/figure identities require their original historical payloads."
       }
     },
@@ -669,18 +669,18 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 44",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 44 --study",
+        "command": "python -m pymhm_examples.notebooks 44",
+        "current_study_command": "python -m pymhm_examples.notebooks 44 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 8 --macro-factor 1",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 8 --macro-factor 2",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 8 --macro-factor 4",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 8 --macro-factor 8",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 1 --macro-factor 1",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 2 --macro-factor 2",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 3 --macro-factor 3",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 4 --macro-factor 4",
-          "pixi run --locked -e notebooks python -m examples.plot_mapped_well"
+          "python -m pymhm_examples.solve_mapped_well --fine-factor 8 --macro-factor 1",
+          "python -m pymhm_examples.solve_mapped_well --fine-factor 8 --macro-factor 2",
+          "python -m pymhm_examples.solve_mapped_well --fine-factor 8 --macro-factor 4",
+          "python -m pymhm_examples.solve_mapped_well --fine-factor 8 --macro-factor 8",
+          "python -m pymhm_examples.solve_mapped_well --fine-factor 1 --macro-factor 1",
+          "python -m pymhm_examples.solve_mapped_well --fine-factor 2 --macro-factor 2",
+          "python -m pymhm_examples.solve_mapped_well --fine-factor 3 --macro-factor 3",
+          "python -m pymhm_examples.solve_mapped_well --fine-factor 4 --macro-factor 4",
+          "python -m pymhm_examples.plot_mapped_well"
         ]
       }
     },
@@ -696,33 +696,33 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 47",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 47 --study",
+        "command": "python -m pymhm_examples.notebooks 47",
+        "current_study_command": "python -m pymhm_examples.notebooks 47 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 1 --quadrature-xy 20 --quadrature-z 10",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 1 --quadrature-xy 28 --quadrature-z 10",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 1 --quadrature-xy 40 --quadrature-z 10",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 2 --quadrature-xy 40 --quadrature-z 10",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 4 --quadrature-xy 40 --quadrature-z 10",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 16 --macro-factor 4 --quadrature-xy 28 --quadrature-z 10",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 16 --macro-factor 4 --quadrature-xy 40 --quadrature-z 10",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 2 --quadrature-xy 40 --quadrature-z 10 --classical",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_well_classical --fine-factor 2 --quadrature-xy 20 --quadrature-z 10",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_well_classical --fine-factor 8 --quadrature-xy 40 --quadrature-z 10",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_well_classical --fine-factor 16 --quadrature-xy 20 --quadrature-z 10",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_well_classical --fine-factor 32 --quadrature-xy 10 --quadrature-z 10",
-          "pixi run --locked -e notebooks python -m examples.solve_mapped_well_classical --fine-factor 32 --quadrature-xy 20 --quadrature-z 10",
-          "pixi run --locked -e fem python -m examples.solve_mapped_well_invariant --fine-factor 2 --quadrature-xy 20 --solver petsc",
-          "pixi run --locked -e fem python -m examples.solve_mapped_well_invariant --fine-factor 8 --quadrature-xy 40 --solver petsc",
-          "pixi run --locked -e fem python -m examples.solve_mapped_well_invariant --fine-factor 16 --quadrature-xy 40 --solver petsc",
-          "pixi run --locked -e fem python -m examples.solve_mapped_well_invariant --fine-factor 32 --quadrature-xy 20 --solver petsc",
-          "pixi run --locked -e fem python -m examples.solve_mapped_well_invariant --fine-factor 64 --quadrature-xy 10 --solver petsc",
-          "pixi run --locked -e fem python -m examples.solve_mapped_well_invariant --fine-factor 64 --quadrature-xy 14 --solver petsc",
-          "pixi run --locked -e fem python -m examples.solve_mapped_well_invariant --fine-factor 128 --quadrature-xy 8 --solver petsc",
-          "pixi run --locked -e notebooks python -m examples.compare_mapped_well",
-          "pixi run --locked -e notebooks python -m examples.plot_mapped_oscillatory_well"
+          "python -m pymhm_examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 1 --quadrature-xy 20 --quadrature-z 10",
+          "python -m pymhm_examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 1 --quadrature-xy 28 --quadrature-z 10",
+          "python -m pymhm_examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 1 --quadrature-xy 40 --quadrature-z 10",
+          "python -m pymhm_examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 2 --quadrature-xy 40 --quadrature-z 10",
+          "python -m pymhm_examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 4 --quadrature-xy 40 --quadrature-z 10",
+          "python -m pymhm_examples.solve_mapped_oscillatory_well --fine-factor 16 --macro-factor 4 --quadrature-xy 28 --quadrature-z 10",
+          "python -m pymhm_examples.solve_mapped_oscillatory_well --fine-factor 16 --macro-factor 4 --quadrature-xy 40 --quadrature-z 10",
+          "python -m pymhm_examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 2 --quadrature-xy 40 --quadrature-z 10 --classical",
+          "python -m pymhm_examples.solve_mapped_well_classical --fine-factor 2 --quadrature-xy 20 --quadrature-z 10",
+          "python -m pymhm_examples.solve_mapped_well_classical --fine-factor 8 --quadrature-xy 40 --quadrature-z 10",
+          "python -m pymhm_examples.solve_mapped_well_classical --fine-factor 16 --quadrature-xy 20 --quadrature-z 10",
+          "python -m pymhm_examples.solve_mapped_well_classical --fine-factor 32 --quadrature-xy 10 --quadrature-z 10",
+          "python -m pymhm_examples.solve_mapped_well_classical --fine-factor 32 --quadrature-xy 20 --quadrature-z 10",
+          "python -m pymhm_examples.solve_mapped_well_invariant --fine-factor 2 --quadrature-xy 20 --solver petsc",
+          "python -m pymhm_examples.solve_mapped_well_invariant --fine-factor 8 --quadrature-xy 40 --solver petsc",
+          "python -m pymhm_examples.solve_mapped_well_invariant --fine-factor 16 --quadrature-xy 40 --solver petsc",
+          "python -m pymhm_examples.solve_mapped_well_invariant --fine-factor 32 --quadrature-xy 20 --solver petsc",
+          "python -m pymhm_examples.solve_mapped_well_invariant --fine-factor 64 --quadrature-xy 10 --solver petsc",
+          "python -m pymhm_examples.solve_mapped_well_invariant --fine-factor 64 --quadrature-xy 14 --solver petsc",
+          "python -m pymhm_examples.solve_mapped_well_invariant --fine-factor 128 --quadrature-xy 8 --solver petsc",
+          "python -m pymhm_examples.compare_mapped_well",
+          "python -m pymhm_examples.plot_mapped_oscillatory_well"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 47 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 47 --historical",
         "resources": "Full producing-well geometry and oscillatory tensor material; fine factors through128, three-dimensional RT1/Q1 fields and separate quadrature checks. Native PETSc/MUMPS and substantial RAM/storage are required for the fine invariant reference.",
         "limitation": "Original native-discrete verification coefficients and attributed external reference acquisitions are historical inputs. Fresh public Piola RT1 equations, full/invariant classical refinements and physical norm comparisons have their own executed provenance."
       }
@@ -739,28 +739,28 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 51",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 51 --study",
+        "command": "python -m pymhm_examples.notebooks 51",
+        "current_study_command": "python -m pymhm_examples.notebooks 51 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 1 --macro-factor 1",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 2 --macro-factor 1",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 2 --macro-factor 2",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 4 --macro-factor 1",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 4 --macro-factor 2",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 4 --macro-factor 4",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 1 --macro-factor 1",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 2 --macro-factor 1",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 2 --macro-factor 2",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 4 --macro-factor 1",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 4 --macro-factor 2",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 4 --macro-factor 4",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 1 --macro-factor 1",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 2 --macro-factor 1",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 2 --macro-factor 2",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 4 --macro-factor 1",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 4 --macro-factor 2",
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 4 --macro-factor 4",
-          "pixi run --locked -e notebooks python -m examples.plot_mixed_well_geometries"
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 1 --macro-factor 1",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 2 --macro-factor 1",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 2 --macro-factor 2",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 4 --macro-factor 1",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 4 --macro-factor 2",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 4 --macro-factor 4",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 1 --macro-factor 1",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 2 --macro-factor 1",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 2 --macro-factor 2",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 4 --macro-factor 1",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 4 --macro-factor 2",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 4 --macro-factor 4",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 1 --macro-factor 1",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 2 --macro-factor 1",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 2 --macro-factor 2",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 4 --macro-factor 1",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 4 --macro-factor 2",
+          "python -m pymhm_examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 4 --macro-factor 4",
+          "python -m pymhm_examples.plot_mixed_well_geometries"
         ]
       }
     },
@@ -776,12 +776,12 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 52",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 52 --study",
+        "command": "python -m pymhm_examples.notebooks 52",
+        "current_study_command": "python -m pymhm_examples.notebooks 52 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.mh2m_campaign",
-          "pixi run --locked -e notebooks python -m examples.mh2m_trace_campaign",
-          "pixi run --locked -e notebooks python -m examples.plot_mh2m"
+          "python -m pymhm_examples.mh2m_campaign",
+          "python -m pymhm_examples.mh2m_trace_campaign",
+          "python -m pymhm_examples.plot_mh2m"
         ]
       }
     },
@@ -797,11 +797,11 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 56",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 56 --study",
+        "command": "python -m pymhm_examples.notebooks 56",
+        "current_study_command": "python -m pymhm_examples.notebooks 56 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.mh_campaign",
-          "pixi run --locked -e notebooks python -m examples.plot_mh"
+          "python -m pymhm_examples.mh_campaign",
+          "python -m pymhm_examples.plot_mh"
         ]
       }
     },
@@ -819,14 +819,14 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 58",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 58 --study",
+        "command": "python -m pymhm_examples.notebooks 58",
+        "current_study_command": "python -m pymhm_examples.notebooks 58 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_reconstruction3d uniform",
-          "pixi run --locked -e notebooks python -m examples.solve_reconstruction3d adaptive",
-          "pixi run --locked -e notebooks python -m examples.reconstruction3d_resolution",
-          "pixi run --locked -e notebooks python -m examples.reconstruction3d_rt_order",
-          "pixi run --locked -e notebooks python -m examples.plot_reconstruction3d"
+          "python -m pymhm_examples.solve_reconstruction3d uniform",
+          "python -m pymhm_examples.solve_reconstruction3d adaptive",
+          "python -m pymhm_examples.reconstruction3d_resolution",
+          "python -m pymhm_examples.reconstruction3d_rt_order",
+          "python -m pymhm_examples.plot_reconstruction3d"
         ]
       }
     },
@@ -842,13 +842,13 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 59",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 59 --study",
+        "command": "python -m pymhm_examples.notebooks 59",
+        "current_study_command": "python -m pymhm_examples.notebooks 59 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.pgmhm_campaign",
-          "pixi run --locked -e notebooks python -m examples.plot_pgmhm"
+          "python -m pymhm_examples.pgmhm_campaign",
+          "python -m pymhm_examples.plot_pgmhm"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 59 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 59 --historical",
         "limitation": "The public complete smooth PGMHM macro/trace campaign is declared as the current study. Original independent inclusion/SPE10 reference acquisitions and attributed article pixels require the original historical payloads; no matched historical field identity is claimed by the new smooth campaign."
       }
     },
@@ -866,11 +866,11 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 63",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 63 --study",
+        "command": "python -m pymhm_examples.notebooks 63",
+        "current_study_command": "python -m pymhm_examples.notebooks 63 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_planar3d",
-          "pixi run --locked -e notebooks python -m examples.plot_planar3d"
+          "python -m pymhm_examples.solve_planar3d",
+          "python -m pymhm_examples.plot_planar3d"
         ]
       }
     },
@@ -887,13 +887,13 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 64",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 64 --study",
+        "command": "python -m pymhm_examples.notebooks 64",
+        "current_study_command": "python -m pymhm_examples.notebooks 64 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_tetra_pk uniform",
-          "pixi run --locked -e notebooks python -m examples.solve_tetra_pk fixed",
-          "pixi run --locked -e notebooks python -m examples.tetra_pk_reconstruction",
-          "pixi run --locked -e notebooks python -m examples.plot_tetra_pk"
+          "python -m pymhm_examples.solve_tetra_pk uniform",
+          "python -m pymhm_examples.solve_tetra_pk fixed",
+          "python -m pymhm_examples.tetra_pk_reconstruction",
+          "python -m pymhm_examples.plot_tetra_pk"
         ]
       }
     },
@@ -911,11 +911,11 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 65",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 65 --study",
+        "command": "python -m pymhm_examples.notebooks 65",
+        "current_study_command": "python -m pymhm_examples.notebooks 65 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.mh_boundary_campaign",
-          "pixi run --locked -e notebooks python -m examples.plot_mh_boundary"
+          "python -m pymhm_examples.mh_boundary_campaign",
+          "python -m pymhm_examples.plot_mh_boundary"
         ]
       }
     },
@@ -932,11 +932,11 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 69",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 69 --study",
+        "command": "python -m pymhm_examples.notebooks 69",
+        "current_study_command": "python -m pymhm_examples.notebooks 69 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.mh3d_campaign",
-          "pixi run --locked -e notebooks python -m examples.plot_mh3d"
+          "python -m pymhm_examples.mh3d_campaign",
+          "python -m pymhm_examples.plot_mh3d"
         ]
       }
     },
@@ -953,17 +953,17 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 70",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 70 --study",
+        "command": "python -m pymhm_examples.notebooks 70",
+        "current_study_command": "python -m pymhm_examples.notebooks 70 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.mh2m_heterogeneous --output 'build/results/mh2m-{acquisition}' --references 32 64 128 256 512 1024 --resolutions 4 8 16 32 64 --norm-workers 8",
-          "pixi run --locked -e fem python -m examples.mh2m_cg_reference --sizes 32 64 128 256 512 --order 16 --output 'build/results/mh2m-{acquisition}/cg3'",
-          "pixi run --locked -e fem python -m examples.mh2m_cg_reference --sizes 512 --order 12 --output 'build/results/mh2m-{acquisition}/cg3'",
-          "pixi run --locked -e notebooks python -m examples.compare_mh2m_cg3 --data 'build/results/mh2m-{acquisition}' --sizes 32 64 128 256 512 --assembly-order 16 --quadrature-control 12 --orders 8 10 --workers 4",
-          "pixi run --locked -e notebooks python -m examples.compare_mh2m_cg3_controls --data 'build/results/mh2m-{acquisition}' --workers 2",
-          "pixi run --locked -e notebooks python -m examples.mh2m_crisscross_campaign --output 'build/results/mh2m-{acquisition}/crisscross' --reference-data 'build/results/mh2m-{acquisition}' --stage all --norm-workers 2"
+          "python -m pymhm_examples.mh2m_heterogeneous --output 'build/results/mh2m-{acquisition}' --references 32 64 128 256 512 1024 --resolutions 4 8 16 32 64 --norm-workers 8",
+          "python -m pymhm_examples.mh2m_cg_reference --sizes 32 64 128 256 512 --order 16 --output 'build/results/mh2m-{acquisition}/cg3'",
+          "python -m pymhm_examples.mh2m_cg_reference --sizes 512 --order 12 --output 'build/results/mh2m-{acquisition}/cg3'",
+          "python -m pymhm_examples.compare_mh2m_cg3 --data 'build/results/mh2m-{acquisition}' --sizes 32 64 128 256 512 --assembly-order 16 --quadrature-control 12 --orders 8 10 --workers 4",
+          "python -m pymhm_examples.compare_mh2m_cg3_controls --data 'build/results/mh2m-{acquisition}' --workers 2",
+          "python -m pymhm_examples.mh2m_crisscross_campaign --output 'build/results/mh2m-{acquisition}/crisscross' --reference-data 'build/results/mh2m-{acquisition}' --stage all --norm-workers 2"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 70 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 70 --historical",
         "resources": "Complete unchanged oscillatory permeability/source case: diagonal and recovered crisscross MHM/MH2M campaigns, independent conforming P1 through1024 and native P3 through512, assembly/error quadrature controls. New output directories preserve the original attributed acquisitions.",
         "limitation": "The full heterogeneous MH2M campaign includes independent high-resolution P1/P3 references, quadrature controls, native verification and article rasters. All stages must be acquired consistently before archive replay."
       }
@@ -982,7 +982,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 74",
+        "command": "python -m pymhm_examples.notebooks 74",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1017,7 +1017,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run elasticity/introductory_methods.ipynb",
+        "command": "python -m pymhm_examples.notebooks elasticity/introductory_methods.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1035,10 +1035,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 07",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 07 --study",
+        "command": "python -m pymhm_examples.notebooks 07",
+        "current_study_command": "python -m pymhm_examples.notebooks 07 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.plot_elasticity"
+          "python -m pymhm_examples.plot_elasticity"
         ]
       }
     },
@@ -1055,10 +1055,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 15",
+        "command": "python -m pymhm_examples.notebooks 15",
         "current_study_command": null,
         "current_study_steps": [],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 15 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 15 --historical",
         "limitation": "The archived MSL GaLS comparison uses external reference adapters and revisions recorded in elasticity-reference.json. Seven original coefficient archives are not published with the checkout; reproducing their historical checksums requires those original archives."
       }
     },
@@ -1074,12 +1074,12 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 16",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 16 --study",
+        "command": "python -m pymhm_examples.notebooks 16",
+        "current_study_command": "python -m pymhm_examples.notebooks 16 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.plot_mixed_elasticity"
+          "python -m pymhm_examples.plot_mixed_elasticity"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 16 --historical"
+        "original_replay_command": "python -m pymhm_examples.notebooks 16 --historical"
       }
     },
     {
@@ -1096,13 +1096,13 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 28",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 28 --study",
+        "command": "python -m pymhm_examples.notebooks 28",
+        "current_study_command": "python -m pymhm_examples.notebooks 28 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_elasticity_families --degree 1 --enrichment 2",
-          "pixi run --locked -e notebooks python -m examples.solve_elasticity_families --degree 2 --enrichment 1",
-          "pixi run --locked -e notebooks python -m examples.solve_elasticity_families --degree 3 --enrichment 0",
-          "pixi run --locked -e notebooks python -m examples.plot_elasticity_families"
+          "python -m pymhm_examples.solve_elasticity_families --degree 1 --enrichment 2",
+          "python -m pymhm_examples.solve_elasticity_families --degree 2 --enrichment 1",
+          "python -m pymhm_examples.solve_elasticity_families --degree 3 --enrichment 0",
+          "python -m pymhm_examples.plot_elasticity_families"
         ]
       }
     },
@@ -1118,19 +1118,19 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 32",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 32 --study",
+        "command": "python -m pymhm_examples.notebooks 32",
+        "current_study_command": "python -m pymhm_examples.notebooks 32 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 1 --constant",
-          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 2 --constant",
-          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 3 --constant",
-          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 1",
-          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 2",
-          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 3",
-          "pixi run --locked -e notebooks python -m examples.solve_elasticity_tensor_rt --degree 1 --enrichment 0",
-          "pixi run --locked -e notebooks python -m examples.solve_elasticity_tensor_rt --degree 1 --enrichment 1",
-          "pixi run --locked -e notebooks python -m examples.solve_elasticity_tensor_rt --degree 2 --enrichment 0",
-          "pixi run --locked -e notebooks python -m examples.plot_elasticity_extensions"
+          "python -m pymhm_examples.solve_primal_elasticity --degree 1 --constant",
+          "python -m pymhm_examples.solve_primal_elasticity --degree 2 --constant",
+          "python -m pymhm_examples.solve_primal_elasticity --degree 3 --constant",
+          "python -m pymhm_examples.solve_primal_elasticity --degree 1",
+          "python -m pymhm_examples.solve_primal_elasticity --degree 2",
+          "python -m pymhm_examples.solve_primal_elasticity --degree 3",
+          "python -m pymhm_examples.solve_elasticity_tensor_rt --degree 1 --enrichment 0",
+          "python -m pymhm_examples.solve_elasticity_tensor_rt --degree 1 --enrichment 1",
+          "python -m pymhm_examples.solve_elasticity_tensor_rt --degree 2 --enrichment 0",
+          "python -m pymhm_examples.plot_elasticity_extensions"
         ]
       }
     },
@@ -1146,19 +1146,19 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 34",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 34 --study",
+        "command": "python -m pymhm_examples.notebooks 34",
+        "current_study_command": "python -m pymhm_examples.notebooks 34 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 1 --constant",
-          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 2 --constant",
-          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 3 --constant",
-          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 1",
-          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 2",
-          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 3",
-          "pixi run --locked -e notebooks python -m examples.solve_elasticity_tensor_rt --degree 1 --enrichment 0",
-          "pixi run --locked -e notebooks python -m examples.solve_elasticity_tensor_rt --degree 1 --enrichment 1",
-          "pixi run --locked -e notebooks python -m examples.solve_elasticity_tensor_rt --degree 2 --enrichment 0",
-          "pixi run --locked -e notebooks python -m examples.plot_elasticity_extensions"
+          "python -m pymhm_examples.solve_primal_elasticity --degree 1 --constant",
+          "python -m pymhm_examples.solve_primal_elasticity --degree 2 --constant",
+          "python -m pymhm_examples.solve_primal_elasticity --degree 3 --constant",
+          "python -m pymhm_examples.solve_primal_elasticity --degree 1",
+          "python -m pymhm_examples.solve_primal_elasticity --degree 2",
+          "python -m pymhm_examples.solve_primal_elasticity --degree 3",
+          "python -m pymhm_examples.solve_elasticity_tensor_rt --degree 1 --enrichment 0",
+          "python -m pymhm_examples.solve_elasticity_tensor_rt --degree 1 --enrichment 1",
+          "python -m pymhm_examples.solve_elasticity_tensor_rt --degree 2 --enrichment 0",
+          "python -m pymhm_examples.plot_elasticity_extensions"
         ]
       }
     },
@@ -1174,13 +1174,13 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 35",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 35 --study",
+        "command": "python -m pymhm_examples.notebooks 35",
+        "current_study_command": "python -m pymhm_examples.notebooks 35 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_elasticity3d --degree 2",
-          "pixi run --locked -e notebooks python -m examples.solve_elasticity3d --degree 3",
-          "pixi run --locked -e notebooks python -m examples.solve_elasticity3d --sweep",
-          "pixi run --locked -e notebooks python -m examples.plot_elasticity3d"
+          "python -m pymhm_examples.solve_elasticity3d --degree 2",
+          "python -m pymhm_examples.solve_elasticity3d --degree 3",
+          "python -m pymhm_examples.solve_elasticity3d --sweep",
+          "python -m pymhm_examples.plot_elasticity3d"
         ]
       }
     },
@@ -1196,19 +1196,19 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 50",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 50 --study",
+        "command": "python -m pymhm_examples.notebooks 50",
+        "current_study_command": "python -m pymhm_examples.notebooks 50 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_hpc4e_mhm --download --segments 1 2 4 8",
-          "pixi run --locked -e fem python -m examples.solve_hpc4e_reference --degree 1 --factorization lu --equilibration symmetric --threads 4",
-          "pixi run --locked -e fem python -m examples.solve_hpc4e_reference --degree 2 --factorization ldlt --equilibration symmetric --threads 4 --workspace-limit-mb 80000",
-          "pixi run --locked -e notebooks python -m examples.compare_hpc4e",
-          "pixi run --locked -e notebooks python -m examples.compare_hpc4e_fields",
-          "pixi run --locked -e fem python -m examples.solve_hpc4e_reference --nx 1024 --ny 512 --degree 2 --factorization ldlt --equilibration symmetric --threads 2 --refinement-precision extended --workspace-limit-mb 17500 --out-of-core-directory build/tmp/hpc4e-mumps-ooc",
-          "pixi run --locked -e notebooks python -m examples.compare_hpc4e_fields --reference build/results/hpc4e/classical-rt2-1024x512-mumps.npz --approximations build/results/hpc4e/classical-rt2-512x256-mumps.npz build/results/hpc4e/mhm-s1.npz build/results/hpc4e/mhm-s2.npz build/results/hpc4e/mhm-s4.npz build/results/hpc4e/mhm-s8.npz --orders 4 5 --output examples/results/hpc4e/reference-spatial-refinement.json",
-          "pixi run --locked -e notebooks python -m examples.plot_hpc4e --reference build/results/hpc4e/classical-rt2-1024x512-mumps.npz"
+          "python -m pymhm_examples.solve_hpc4e_mhm --download --segments 1 2 4 8",
+          "python -m pymhm_examples.solve_hpc4e_reference --degree 1 --factorization lu --equilibration symmetric --threads 4",
+          "python -m pymhm_examples.solve_hpc4e_reference --degree 2 --factorization ldlt --equilibration symmetric --threads 4 --workspace-limit-mb 80000",
+          "python -m pymhm_examples.compare_hpc4e",
+          "python -m pymhm_examples.compare_hpc4e_fields",
+          "python -m pymhm_examples.solve_hpc4e_reference --nx 1024 --ny 512 --degree 2 --factorization ldlt --equilibration symmetric --threads 2 --refinement-precision extended --workspace-limit-mb 17500 --out-of-core-directory build/tmp/hpc4e-mumps-ooc",
+          "python -m pymhm_examples.compare_hpc4e_fields --reference build/results/hpc4e/classical-rt2-1024x512-mumps.npz --approximations build/results/hpc4e/classical-rt2-512x256-mumps.npz build/results/hpc4e/mhm-s1.npz build/results/hpc4e/mhm-s2.npz build/results/hpc4e/mhm-s4.npz build/results/hpc4e/mhm-s8.npz --orders 4 5 --output examples/results/hpc4e/reference-spatial-refinement.json",
+          "python -m pymhm_examples.plot_hpc4e --reference build/results/hpc4e/classical-rt2-1024x512-mumps.npz"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 50 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 50 --historical",
         "resources": "Complete heterogeneous plane-strain tensor-RT study, pinned HPC4e material data, four trace restrictions and independently assembled refined native references. The fine reference requires native PETSc/MUMPS and large memory/workspace (recorded budgets up to80GB).",
         "limitation": "Original attributed article rasters and historical comparison payload identities are separate from the current public acquisition. Their private instrumented tooling is not distributed."
       }
@@ -1226,12 +1226,12 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 55",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 55 --study",
+        "command": "python -m pymhm_examples.notebooks 55",
+        "current_study_command": "python -m pymhm_examples.notebooks 55 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_gals3d --primal-refinement-precision extended",
-          "pixi run --locked -e notebooks python -m examples.solve_gals3d --primal-only --primal-refinement-precision extended --output examples/results/gals3d/primal",
-          "pixi run --locked -e notebooks python -m examples.plot_gals3d"
+          "python -m pymhm_examples.solve_gals3d --primal-refinement-precision extended",
+          "python -m pymhm_examples.solve_gals3d --primal-only --primal-refinement-precision extended --output examples/results/gals3d/primal",
+          "python -m pymhm_examples.plot_gals3d"
         ]
       }
     },
@@ -1247,11 +1247,11 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 68",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 68 --study",
+        "command": "python -m pymhm_examples.notebooks 68",
+        "current_study_command": "python -m pymhm_examples.notebooks 68 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_mixed_elasticity3d",
-          "pixi run --locked -e notebooks python -m examples.plot_mixed_elasticity3d"
+          "python -m pymhm_examples.solve_mixed_elasticity3d",
+          "python -m pymhm_examples.plot_mixed_elasticity3d"
         ]
       }
     },
@@ -1280,7 +1280,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run flow/introductory_methods.ipynb",
+        "command": "python -m pymhm_examples.notebooks flow/introductory_methods.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1300,11 +1300,11 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 54",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 54 --study",
+        "command": "python -m pymhm_examples.notebooks 54",
+        "current_study_command": "python -m pymhm_examples.notebooks 54 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_flow3d",
-          "pixi run --locked -e notebooks python -m examples.plot_flow3d"
+          "python -m pymhm_examples.solve_flow3d",
+          "python -m pymhm_examples.plot_flow3d"
         ]
       }
     },
@@ -1322,7 +1322,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 06",
+        "command": "python -m pymhm_examples.notebooks 06",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1340,26 +1340,26 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 27",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 27 --study",
+        "command": "python -m pymhm_examples.notebooks 27",
+        "current_study_command": "python -m pymhm_examples.notebooks 27 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case smooth --viscosity 1",
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case smooth --viscosity 1 --adaptive",
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case smooth --viscosity 0.01",
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case smooth --viscosity 0.01 --adaptive",
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case variable --viscosity 1",
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case variable --viscosity 1 --adaptive",
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case variable --viscosity 0.01",
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case variable --viscosity 0.01 --adaptive",
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case boundary --viscosity 1",
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case boundary --viscosity 1 --adaptive",
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case boundary --viscosity 0.01",
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case boundary --viscosity 0.01 --adaptive",
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case internal --viscosity 1",
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case internal --viscosity 1 --adaptive",
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case internal --viscosity 0.01",
-          "pixi run --locked -e notebooks python -m examples.solve_oseen --case internal --viscosity 0.01 --adaptive",
-          "pixi run --locked -e notebooks python -m examples.plot_oseen"
+          "python -m pymhm_examples.solve_oseen --case smooth --viscosity 1",
+          "python -m pymhm_examples.solve_oseen --case smooth --viscosity 1 --adaptive",
+          "python -m pymhm_examples.solve_oseen --case smooth --viscosity 0.01",
+          "python -m pymhm_examples.solve_oseen --case smooth --viscosity 0.01 --adaptive",
+          "python -m pymhm_examples.solve_oseen --case variable --viscosity 1",
+          "python -m pymhm_examples.solve_oseen --case variable --viscosity 1 --adaptive",
+          "python -m pymhm_examples.solve_oseen --case variable --viscosity 0.01",
+          "python -m pymhm_examples.solve_oseen --case variable --viscosity 0.01 --adaptive",
+          "python -m pymhm_examples.solve_oseen --case boundary --viscosity 1",
+          "python -m pymhm_examples.solve_oseen --case boundary --viscosity 1 --adaptive",
+          "python -m pymhm_examples.solve_oseen --case boundary --viscosity 0.01",
+          "python -m pymhm_examples.solve_oseen --case boundary --viscosity 0.01 --adaptive",
+          "python -m pymhm_examples.solve_oseen --case internal --viscosity 1",
+          "python -m pymhm_examples.solve_oseen --case internal --viscosity 1 --adaptive",
+          "python -m pymhm_examples.solve_oseen --case internal --viscosity 0.01",
+          "python -m pymhm_examples.solve_oseen --case internal --viscosity 0.01 --adaptive",
+          "python -m pymhm_examples.plot_oseen"
         ]
       }
     },
@@ -1376,29 +1376,29 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 48",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 48 --study",
+        "command": "python -m pymhm_examples.notebooks 48",
+        "current_study_command": "python -m pymhm_examples.notebooks 48 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --strategy uniform --viscosity 1 --trace-degree 0 --save-history",
-          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --strategy macro --viscosity 1 --trace-degree 0 --save-history",
-          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --strategy face --viscosity 1 --trace-degree 1 --save-history",
-          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --strategy uniform --viscosity 0.01 --trace-degree 0 --save-history",
-          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --strategy macro --viscosity 0.01 --trace-degree 0 --save-history",
-          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --strategy face --viscosity 0.01 --trace-degree 1 --save-history",
-          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid regularized --drag 0 --strategy macro --trace-degree 0 --save-history",
-          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid regularized --drag 0 --strategy face --trace-degree 0 --save-history",
-          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid regularized --drag 10000 --strategy macro --trace-degree 0 --save-history",
-          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid regularized --drag 10000 --strategy face --trace-degree 0 --save-history",
-          "pixi run --locked -e fem python -m examples.solve_cavity_reference --lid regularized --levels 8 16 32 64 128 256 512",
-          "pixi run --locked -e notebooks python -m examples.compare_stokes_cavity --lid regularized",
-          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid constant --drag 0 --strategy macro --trace-degree 0 --save-history",
-          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid constant --drag 0 --strategy face --trace-degree 0 --save-history",
-          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid constant --drag 10000 --strategy macro --trace-degree 0 --save-history",
-          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid constant --drag 10000 --strategy face --trace-degree 0 --save-history",
-          "pixi run --locked -e fem python -m examples.solve_cavity_reference --lid constant --levels 8 16 32 64 128 256 512",
-          "pixi run --locked -e notebooks python -m examples.compare_stokes_cavity --lid constant"
+          "python -m pymhm_examples.solve_stokes_adaptive --strategy uniform --viscosity 1 --trace-degree 0 --save-history",
+          "python -m pymhm_examples.solve_stokes_adaptive --strategy macro --viscosity 1 --trace-degree 0 --save-history",
+          "python -m pymhm_examples.solve_stokes_adaptive --strategy face --viscosity 1 --trace-degree 1 --save-history",
+          "python -m pymhm_examples.solve_stokes_adaptive --strategy uniform --viscosity 0.01 --trace-degree 0 --save-history",
+          "python -m pymhm_examples.solve_stokes_adaptive --strategy macro --viscosity 0.01 --trace-degree 0 --save-history",
+          "python -m pymhm_examples.solve_stokes_adaptive --strategy face --viscosity 0.01 --trace-degree 1 --save-history",
+          "python -m pymhm_examples.solve_stokes_adaptive --cavity --lid regularized --drag 0 --strategy macro --trace-degree 0 --save-history",
+          "python -m pymhm_examples.solve_stokes_adaptive --cavity --lid regularized --drag 0 --strategy face --trace-degree 0 --save-history",
+          "python -m pymhm_examples.solve_stokes_adaptive --cavity --lid regularized --drag 10000 --strategy macro --trace-degree 0 --save-history",
+          "python -m pymhm_examples.solve_stokes_adaptive --cavity --lid regularized --drag 10000 --strategy face --trace-degree 0 --save-history",
+          "python -m pymhm_examples.solve_cavity_reference --lid regularized --levels 8 16 32 64 128 256 512",
+          "python -m pymhm_examples.compare_stokes_cavity --lid regularized",
+          "python -m pymhm_examples.solve_stokes_adaptive --cavity --lid constant --drag 0 --strategy macro --trace-degree 0 --save-history",
+          "python -m pymhm_examples.solve_stokes_adaptive --cavity --lid constant --drag 0 --strategy face --trace-degree 0 --save-history",
+          "python -m pymhm_examples.solve_stokes_adaptive --cavity --lid constant --drag 10000 --strategy macro --trace-degree 0 --save-history",
+          "python -m pymhm_examples.solve_stokes_adaptive --cavity --lid constant --drag 10000 --strategy face --trace-degree 0 --save-history",
+          "python -m pymhm_examples.solve_cavity_reference --lid constant --levels 8 16 32 64 128 256 512",
+          "python -m pymhm_examples.compare_stokes_cavity --lid constant"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 48 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 48 --historical",
         "resources": "Complete two-level polynomial and cavity campaigns plus independent Taylor-Hood references up to512x512 for both lid conditions and drag0/10000. Native FEM, large reference factorization memory and long execution time are required.",
         "limitation": "Original continued longest-edge histories and their exact archived coefficient identities require the original acquisitions. The public current study starts complete new uniform/macro/face campaigns with stated parameters, both physical lid conditions and independently refined native Taylor-Hood references; it does not recreate old resumed field hashes."
       }
@@ -1417,7 +1417,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 05",
+        "command": "python -m pymhm_examples.notebooks 05",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1436,10 +1436,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 12",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 12 --study",
+        "command": "python -m pymhm_examples.notebooks 12",
+        "current_study_command": "python -m pymhm_examples.notebooks 12 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.plot_flow_audit"
+          "python -m pymhm_examples.plot_flow_audit"
         ]
       }
     },
@@ -1455,10 +1455,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 13",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 13 --study",
+        "command": "python -m pymhm_examples.notebooks 13",
+        "current_study_command": "python -m pymhm_examples.notebooks 13 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.plot_reproductions"
+          "python -m pymhm_examples.plot_reproductions"
         ]
       }
     },
@@ -1478,7 +1478,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 10",
+        "command": "python -m pymhm_examples.notebooks 10",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1499,10 +1499,10 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 19",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 19 --study",
+        "command": "python -m pymhm_examples.notebooks 19",
+        "current_study_command": "python -m pymhm_examples.notebooks 19 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.plot_native_extensions"
+          "python -m pymhm_examples.plot_native_extensions"
         ]
       }
     },
@@ -1520,15 +1520,15 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 57",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 57 --study",
+        "command": "python -m pymhm_examples.notebooks 57",
+        "current_study_command": "python -m pymhm_examples.notebooks 57 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_core_extensions elasticity",
-          "pixi run --locked -e notebooks python -m examples.solve_core_extensions mshho3d",
-          "pixi run --locked -e notebooks python -m examples.solve_core_extensions hdiv3d",
-          "pixi run --locked -e notebooks python -m examples.plot_core_extensions elasticity",
-          "pixi run --locked -e notebooks python -m examples.plot_core_extensions mshho3d",
-          "pixi run --locked -e notebooks python -m examples.plot_core_extensions hdiv3d"
+          "python -m pymhm_examples.solve_core_extensions elasticity",
+          "python -m pymhm_examples.solve_core_extensions mshho3d",
+          "python -m pymhm_examples.solve_core_extensions hdiv3d",
+          "python -m pymhm_examples.plot_core_extensions elasticity",
+          "python -m pymhm_examples.plot_core_extensions mshho3d",
+          "python -m pymhm_examples.plot_core_extensions hdiv3d"
         ]
       }
     },
@@ -1545,7 +1545,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 60",
+        "command": "python -m pymhm_examples.notebooks 60",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1568,7 +1568,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run foundations/operators/dolfinx_sparse_solvers.ipynb",
+        "command": "python -m pymhm_examples.notebooks foundations/operators/dolfinx_sparse_solvers.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1587,7 +1587,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run foundations/operators/custom_interface.ipynb",
+        "command": "python -m pymhm_examples.notebooks foundations/operators/custom_interface.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1607,7 +1607,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run foundations/operators/local_global_providers.ipynb",
+        "command": "python -m pymhm_examples.notebooks foundations/operators/local_global_providers.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1629,7 +1629,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run foundations/operators/ufl_provider.ipynb",
+        "command": "python -m pymhm_examples.notebooks foundations/operators/ufl_provider.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1647,7 +1647,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run foundations/operators/variational_hierarchy.ipynb",
+        "command": "python -m pymhm_examples.notebooks foundations/operators/variational_hierarchy.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1668,7 +1668,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run foundations/operators/vector_ufl.ipynb",
+        "command": "python -m pymhm_examples.notebooks foundations/operators/vector_ufl.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1687,7 +1687,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 09",
+        "command": "python -m pymhm_examples.notebooks 09",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1714,7 +1714,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run transport/introductory_methods.ipynb",
+        "command": "python -m pymhm_examples.notebooks transport/introductory_methods.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1732,7 +1732,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 08",
+        "command": "python -m pymhm_examples.notebooks 08",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1750,25 +1750,25 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 26",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 26 --study",
+        "command": "python -m pymhm_examples.notebooks 26",
+        "current_study_command": "python -m pymhm_examples.notebooks 26 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.transport_mixed_campaign",
-          "pixi run --locked -e notebooks python -m examples.transport_coefficient_controls --resolutions 8 16 32 64 128",
-          "pixi run --locked -e notebooks python -m examples.transport_face_controls --strategy adaptive --iterations 8",
-          "pixi run --locked -e notebooks python -m examples.transport_face_controls --strategy uniform --iterations 8",
-          "pixi run --locked -e notebooks python -m examples.transport_face_resolution --local-refinement 16",
-          "pixi run --locked -e notebooks python -m examples.transport_face_resolution --local-refinement 32",
-          "pixi run --locked -e notebooks python -m examples.transport_face_resolution --local-refinement 64",
-          "pixi run --locked -e notebooks python -m examples.transport_face_resolution --local-refinement 128",
-          "pixi run --locked -e notebooks python -m examples.transport_face_resolution --local-refinement 256",
-          "pixi run --locked -e notebooks python -m examples.transport_face_resolution --local-refinement 512 --endpoint-only",
-          "pixi run --locked -e notebooks python -m examples.transport_adaptive_resolution --local-refinement 32",
-          "pixi run --locked -e notebooks python -m examples.transport_adaptive_resolution --local-refinement 64",
-          "pixi run --locked -e notebooks python -m examples.transport_adaptive_resolution --local-refinement 128",
-          "pixi run --locked -e notebooks python -m examples.verify_transport_published",
-          "pixi run --locked -e notebooks python -m examples.plot_transport_mixed",
-          "pixi run --locked -e notebooks python -m examples.transport_campaign --collect"
+          "python -m pymhm_examples.transport_mixed_campaign",
+          "python -m pymhm_examples.transport_coefficient_controls --resolutions 8 16 32 64 128",
+          "python -m pymhm_examples.transport_face_controls --strategy adaptive --iterations 8",
+          "python -m pymhm_examples.transport_face_controls --strategy uniform --iterations 8",
+          "python -m pymhm_examples.transport_face_resolution --local-refinement 16",
+          "python -m pymhm_examples.transport_face_resolution --local-refinement 32",
+          "python -m pymhm_examples.transport_face_resolution --local-refinement 64",
+          "python -m pymhm_examples.transport_face_resolution --local-refinement 128",
+          "python -m pymhm_examples.transport_face_resolution --local-refinement 256",
+          "python -m pymhm_examples.transport_face_resolution --local-refinement 512 --endpoint-only",
+          "python -m pymhm_examples.transport_adaptive_resolution --local-refinement 32",
+          "python -m pymhm_examples.transport_adaptive_resolution --local-refinement 64",
+          "python -m pymhm_examples.transport_adaptive_resolution --local-refinement 128",
+          "python -m pymhm_examples.verify_transport_published",
+          "python -m pymhm_examples.plot_transport_mixed",
+          "python -m pymhm_examples.transport_campaign --collect"
         ],
         "resources": "Complete stationary, adaptive and Darcy-coupled transient cases, including r512 fixed-trace endpoint. Large local-response acquisitions require substantial RAM and execution time."
       }
@@ -1785,11 +1785,11 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 41",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 41 --study",
+        "command": "python -m pymhm_examples.notebooks 41",
+        "current_study_command": "python -m pymhm_examples.notebooks 41 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_rad3d",
-          "pixi run --locked -e notebooks python -m examples.plot_rad3d"
+          "python -m pymhm_examples.solve_rad3d",
+          "python -m pymhm_examples.plot_rad3d"
         ]
       }
     },
@@ -1806,11 +1806,11 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 45",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 45 --study",
+        "command": "python -m pymhm_examples.notebooks 45",
+        "current_study_command": "python -m pymhm_examples.notebooks 45 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.verify_rad_conditioning",
-          "pixi run --locked -e notebooks python -m examples.plot_rad_conditioning"
+          "python -m pymhm_examples.verify_rad_conditioning",
+          "python -m pymhm_examples.plot_rad_conditioning"
         ]
       }
     },
@@ -1826,12 +1826,12 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 46",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 46 --study",
+        "command": "python -m pymhm_examples.notebooks 46",
+        "current_study_command": "python -m pymhm_examples.notebooks 46 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.verify_rad_layer"
+          "python -m pymhm_examples.verify_rad_layer"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 46 --historical"
+        "original_replay_command": "python -m pymhm_examples.notebooks 46 --historical"
       }
     },
     {
@@ -1846,11 +1846,11 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 49",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 49 --study",
+        "command": "python -m pymhm_examples.notebooks 49",
+        "current_study_command": "python -m pymhm_examples.notebooks 49 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_polyhedral_rad",
-          "pixi run --locked -e notebooks python -m examples.plot_polyhedral_rad"
+          "python -m pymhm_examples.solve_polyhedral_rad",
+          "python -m pymhm_examples.plot_polyhedral_rad"
         ]
       }
     },
@@ -1866,16 +1866,16 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 53",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 53 --study",
+        "command": "python -m pymhm_examples.notebooks 53",
+        "current_study_command": "python -m pymhm_examples.notebooks 53 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_unusual",
-          "pixi run --locked -e notebooks python -m examples.verify_unusual_resolution",
-          "pixi run --locked -e notebooks python -m examples.plot_unusual",
-          "pixi run --locked -e notebooks python -m examples.solve_unusual_spe10 --refinement 8 16 32 --segments 8",
-          "pixi run --locked -e fem python -m examples.solve_unusual_spe10_reference --levels 1 2 4 --graded --graded-x"
+          "python -m pymhm_examples.solve_unusual",
+          "python -m pymhm_examples.verify_unusual_resolution",
+          "python -m pymhm_examples.plot_unusual",
+          "python -m pymhm_examples.solve_unusual_spe10 --refinement 8 16 32 --segments 8",
+          "python -m pymhm_examples.solve_unusual_spe10_reference --levels 1 2 4 --graded --graded-x"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 53 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 53 --historical",
         "resources": "All five-level analytical Galerkin/UNUSUAL studies, resolved exponential layers and variable anisotropic source; full SPE10 layer36 material-fitted P1/P0 acquisitions r8/16/32 with8tracepieces and separately refined native CG2 graded references. Historical instrumented verification identities remain separate; large layer-resolved fields/reference factorizations need substantial memory and time.",
         "limitation": "Public analytical UNUSUAL mixed-boundary, resolved-layer and heterogeneous SPE10 acquisitions have declared full current recipes. Independent public native CG2 graded references perform their own refinement study. Original instrumented DOLFINx verification and exact historical comparison payload identities remain separate historical inputs."
       }
@@ -1892,11 +1892,11 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 67",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 67 --study",
+        "command": "python -m pymhm_examples.notebooks 67",
+        "current_study_command": "python -m pymhm_examples.notebooks 67 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.solve_star_polyhedra",
-          "pixi run --locked -e notebooks python -m examples.plot_star_polyhedra"
+          "python -m pymhm_examples.solve_star_polyhedra",
+          "python -m pymhm_examples.plot_star_polyhedra"
         ]
       }
     },
@@ -1912,29 +1912,29 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 71",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 71 --study",
+        "command": "python -m pymhm_examples.notebooks 71",
+        "current_study_command": "python -m pymhm_examples.notebooks 71 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 1 --dt 0.005 --order 12",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.005 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 3 --dt 0.005 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 4 --dt 0.005 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 5 --dt 0.005 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 6 --dt 0.005 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 8 --dt 0.005 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.1 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.05 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.025 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.0125 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.00625 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.003125 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.0015625 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.00078125 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.0001953125 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 9.765625e-05 --order 8",
-          "pixi run --locked -e notebooks python -m examples.elastodynamics_results"
+          "python -m pymhm_examples.elastodynamics_campaign --n 1 --dt 0.005 --order 12",
+          "python -m pymhm_examples.elastodynamics_campaign --n 2 --dt 0.005 --order 8",
+          "python -m pymhm_examples.elastodynamics_campaign --n 3 --dt 0.005 --order 8",
+          "python -m pymhm_examples.elastodynamics_campaign --n 4 --dt 0.005 --order 8",
+          "python -m pymhm_examples.elastodynamics_campaign --n 5 --dt 0.005 --order 8",
+          "python -m pymhm_examples.elastodynamics_campaign --n 6 --dt 0.005 --order 8",
+          "python -m pymhm_examples.elastodynamics_campaign --n 8 --dt 0.005 --order 8",
+          "python -m pymhm_examples.elastodynamics_campaign --n 2 --dt 0.1 --order 8",
+          "python -m pymhm_examples.elastodynamics_campaign --n 2 --dt 0.05 --order 8",
+          "python -m pymhm_examples.elastodynamics_campaign --n 2 --dt 0.025 --order 8",
+          "python -m pymhm_examples.elastodynamics_campaign --n 2 --dt 0.0125 --order 8",
+          "python -m pymhm_examples.elastodynamics_campaign --n 2 --dt 0.00625 --order 8",
+          "python -m pymhm_examples.elastodynamics_campaign --n 2 --dt 0.003125 --order 8",
+          "python -m pymhm_examples.elastodynamics_campaign --n 2 --dt 0.0015625 --order 8",
+          "python -m pymhm_examples.elastodynamics_campaign --n 2 --dt 0.00078125 --order 8",
+          "python -m pymhm_examples.elastodynamics_campaign --n 2 --dt 0.0001953125 --order 8",
+          "python -m pymhm_examples.elastodynamics_campaign --n 2 --dt 9.765625e-05 --order 8",
+          "python -m pymhm_examples.elastodynamics_results"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 71 --historical"
+        "original_replay_command": "python -m pymhm_examples.notebooks 71 --historical"
       }
     },
     {
@@ -1955,7 +1955,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run waves/helmholtz/introductory_methods.ipynb",
+        "command": "python -m pymhm_examples.notebooks waves/helmholtz/introductory_methods.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1973,16 +1973,16 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 61",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 61 --study",
+        "command": "python -m pymhm_examples.notebooks 61",
+        "current_study_command": "python -m pymhm_examples.notebooks 61 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.helmholtz_campaign",
-          "pixi run --locked -e notebooks python -m examples.plot_helmholtz",
-          "pixi run --locked -e notebooks python -m examples.helmholtz_article",
-          "pixi run --locked -e notebooks python -m examples.plot_helmholtz_article",
-          "pixi run --locked -e notebooks python -m examples.helmholtz_stability --ell 0",
-          "pixi run --locked -e notebooks python -m examples.helmholtz_stability --ell 1",
-          "pixi run --locked -e notebooks python -m examples.plot_helmholtz_stability"
+          "python -m pymhm_examples.helmholtz_campaign",
+          "python -m pymhm_examples.plot_helmholtz",
+          "python -m pymhm_examples.helmholtz_article",
+          "python -m pymhm_examples.plot_helmholtz_article",
+          "python -m pymhm_examples.helmholtz_stability --ell 0",
+          "python -m pymhm_examples.helmholtz_stability --ell 1",
+          "python -m pymhm_examples.plot_helmholtz_stability"
         ]
       }
     },
@@ -1999,19 +1999,19 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 72",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 72 --study",
+        "command": "python -m pymhm_examples.notebooks 72",
+        "current_study_command": "python -m pymhm_examples.notebooks 72 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.marmousi_data --directory build/data/marmousi",
-          "pixi run --locked -e fem python -m examples.marmousi_reference --data build/data/marmousi --degree 1",
-          "pixi run --locked -e fem python -m examples.marmousi_reference --data build/data/marmousi --degree 2",
-          "pixi run --locked -e fem python -m examples.marmousi_reference --data build/data/marmousi --degree 3",
-          "pixi run --locked -e fem python -m examples.marmousi_reference --data build/data/marmousi --degree 4",
-          "pixi run --locked -e notebooks python -m examples.marmousi_fields examples/results/marmousi/classical-p1.json examples/results/marmousi/classical-p2.json examples/results/marmousi/classical-p3.json examples/results/marmousi/classical-p4.json --data build/data/marmousi",
-          "pixi run --locked -e notebooks python -m examples.marmousi_campaign --data build/data/marmousi --H 20 --trace-degree 1",
-          "pixi run --locked -e notebooks python -m examples.marmousi_comparison examples/results/marmousi/mhm-H20-ell1.json examples/results/marmousi/classical-p4.json --data build/data/marmousi",
-          "pixi run --locked -e notebooks python -m examples.plot_marmousi --data build/data/marmousi",
-          "pixi run --locked -e notebooks python -m examples.plot_marmousi_mhm examples/results/marmousi/mhm-H20-ell1.json examples/results/marmousi/classical-p4.json"
+          "python -m pymhm_examples.marmousi_data --directory build/data/marmousi",
+          "python -m pymhm_examples.marmousi_reference --data build/data/marmousi --degree 1",
+          "python -m pymhm_examples.marmousi_reference --data build/data/marmousi --degree 2",
+          "python -m pymhm_examples.marmousi_reference --data build/data/marmousi --degree 3",
+          "python -m pymhm_examples.marmousi_reference --data build/data/marmousi --degree 4",
+          "python -m pymhm_examples.marmousi_fields examples/results/marmousi/classical-p1.json examples/results/marmousi/classical-p2.json examples/results/marmousi/classical-p3.json examples/results/marmousi/classical-p4.json --data build/data/marmousi",
+          "python -m pymhm_examples.marmousi_campaign --data build/data/marmousi --H 20 --trace-degree 1",
+          "python -m pymhm_examples.marmousi_comparison examples/results/marmousi/mhm-H20-ell1.json examples/results/marmousi/classical-p4.json --data build/data/marmousi",
+          "python -m pymhm_examples.plot_marmousi --data build/data/marmousi",
+          "python -m pymhm_examples.plot_marmousi_mhm examples/results/marmousi/mhm-H20-ell1.json examples/results/marmousi/classical-p4.json"
         ],
         "resources": "Full Marmousi crop, 2048x512 material cells, native P1-P4 PETSc/MUMPS references and MHM H=20. Requires two pinned property datasets (exact byte count and SHA-256 verified by marmousi_data), substantial RAM/disk and a potentially long native factorization; no reduced crop substitutes for this recipe."
       }
@@ -2033,7 +2033,7 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run waves/maxwell/introductory_methods.ipynb",
+        "command": "python -m pymhm_examples.notebooks waves/maxwell/introductory_methods.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -2050,11 +2050,11 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 62",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 62 --study",
+        "command": "python -m pymhm_examples.notebooks 62",
+        "current_study_command": "python -m pymhm_examples.notebooks 62 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.maxwell_campaign",
-          "pixi run --locked -e notebooks python -m examples.plot_maxwell"
+          "python -m pymhm_examples.maxwell_campaign",
+          "python -m pymhm_examples.plot_maxwell"
         ]
       }
     },
@@ -2071,12 +2071,12 @@
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "pixi run --locked -e notebooks notebooks-run 66",
-        "current_study_command": "pixi run --locked -e notebooks notebooks-run 66 --study",
+        "command": "python -m pymhm_examples.notebooks 66",
+        "current_study_command": "python -m pymhm_examples.notebooks 66 --study",
         "current_study_steps": [
-          "pixi run --locked -e notebooks python -m examples.maxwell_nanoguide"
+          "python -m pymhm_examples.maxwell_nanoguide"
         ],
-        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 66 --historical",
+        "original_replay_command": "python -m pymhm_examples.notebooks 66 --historical",
         "limitation": "The complete public PyMHM nanoguide final-time acquisition is available. Original independent central-DG reference fields were acquired by an external instrumented driver; its source and coefficient archives are not published with this checkout. Original comparison replay requires those exact inputs."
       }
     },
@@ -2097,7 +2097,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run introduction/darcy_multiscale_convergence.ipynb",
+        "command": "python -m pymhm_examples.notebooks introduction/darcy_multiscale_convergence.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -2119,7 +2119,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run introduction/darcy_spe10_layer.ipynb",
+        "command": "python -m pymhm_examples.notebooks introduction/darcy_spe10_layer.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -2141,7 +2141,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run introduction/mh2m_multiscale.ipynb",
+        "command": "python -m pymhm_examples.notebooks introduction/mh2m_multiscale.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -2164,7 +2164,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run introduction/mhm_usfem_rad.ipynb",
+        "command": "python -m pymhm_examples.notebooks introduction/mhm_usfem_rad.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -2185,7 +2185,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run introduction/mshho_multiscale.ipynb",
+        "command": "python -m pymhm_examples.notebooks introduction/mshho_multiscale.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -2207,7 +2207,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run introduction/multiscale_elasticity.ipynb",
+        "command": "python -m pymhm_examples.notebooks introduction/multiscale_elasticity.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -2230,7 +2230,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run introduction/stokes_brinkman_boundary_layer.ipynb",
+        "command": "python -m pymhm_examples.notebooks introduction/stokes_brinkman_boundary_layer.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -2253,7 +2253,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run introduction/darcy_parallel_scalability.ipynb",
+        "command": "python -m pymhm_examples.notebooks introduction/darcy_parallel_scalability.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -2276,7 +2276,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run introduction/darcy_process_scalability.ipynb",
+        "command": "python -m pymhm_examples.notebooks introduction/darcy_process_scalability.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -2298,7 +2298,7 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "pixi run --locked -e introduction notebooks-run introduction/darcy_3d_parallel_scalability.ipynb",
+        "command": "python -m pymhm_examples.notebooks introduction/darcy_3d_parallel_scalability.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }

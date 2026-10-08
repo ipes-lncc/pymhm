@@ -1,10 +1,14 @@
 """Canonical RT3D duality, represented traces and continuous-test equilibrium."""
 
+import hashlib
+import json
+
 import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
+from examples import reconstruction3d_resolution
 from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
 from pymhm.fem.hdiv.family_3d import (
     cell_quadrature,
@@ -16,6 +20,7 @@ from pymhm.fem.hdiv.family_3d import (
 )
 from pymhm.fem.hdiv.rt_3d import RTTetraFamily, rt3d_interior_tests
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.io.workspace import source_file
 from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.recovery.moments_3d import reconstruct_darcy_moments_3d
 
@@ -25,6 +30,63 @@ def one_thread():
     """Avoid nested native threads in small reference moment matrices."""
     with threadpool_limits(1):
         yield
+
+
+def test_resolution_campaign_creates_fresh_output_directory(tmp_path, monkeypatch):
+    """The first published state captures its literal basis in a new output directory.
+
+    Geometry, Gaussian data, quadrature and residual criteria are unchanged.
+    The acquisition stops before its second solve; this tests fresh capture IO,
+    while the notebook separately acquires the complete four-state study.
+    """
+    original_geometry = source_file("examples/data/reconstruction3d-macro.json")
+    data = json.loads(original_geometry.read_text())
+    mesh = TetraMesh(np.asarray(data["macro_points"]), np.asarray(data["macro_cells"]))
+    geometry = tmp_path / "examples/data/reconstruction3d-macro.json"
+    geometry.parent.mkdir(parents=True)
+    geometry.write_bytes(original_geometry.read_bytes())
+    output = tmp_path / "examples/results/reconstruction3d"
+    assert not output.exists()
+    monkeypatch.setattr(reconstruction3d_resolution, "ROOT", tmp_path)
+    monkeypatch.setattr(reconstruction3d_resolution, "OUTPUT", output)
+    solve = reconstruction3d_resolution.solve_darcy_3d
+    calls = 0
+
+    class FirstCaptureComplete(Exception):
+        """Stop this IO regression before repeating the remaining published solves."""
+
+    def first_solve(*args, **kwargs):
+        """Execute the first actual solve and stop before constructing the second case."""
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            raise FirstCaptureComplete
+        return solve(*args, **kwargs)
+
+    monkeypatch.setattr(reconstruction3d_resolution, "solve_darcy_3d", first_solve)
+    with pytest.raises(FirstCaptureComplete):
+        reconstruction3d_resolution.run()
+    record = json.loads((output / "resolution.json").read_text())
+    assert "source_changed_during_run" not in record  # The four-state acquisition is incomplete.
+    owner = source_file("examples/reconstruction3d_resolution.py")
+    assert record["source_sha256"]["examples/reconstruction3d_resolution.py"] == (
+        hashlib.sha256(owner.read_bytes()).hexdigest()
+    )
+    assert len(record["rows"]) == 1
+    for row in record["rows"]:
+        assert row["macro_cells"] == 162
+        assert row["local_refinement"] == 2
+        assert row["error_quadrature_change"] <= 2e-9
+        assert row["macro_balance"] <= 1e-9
+        archive_path = output / row["archive"]
+        assert hashlib.sha256(archive_path.read_bytes()).hexdigest() == row["archive_sha256"]
+        with np.load(archive_path, allow_pickle=False) as archive:
+            np.testing.assert_array_equal(archive["macro_points"], mesh.points)
+            np.testing.assert_array_equal(archive["macro_cells"], mesh.cells)
+            assert int(archive["local_degree"]) == row["local_degree"]
+            assert int(archive["reconstruction_degree"]) == row["reconstruction_degree"]
+            current = RTTetraFamily(row["reconstruction_degree"])
+            np.testing.assert_array_equal(archive["rt_basis"], current.coefficients)
 
 
 @pytest.mark.parametrize("degree", range(4))

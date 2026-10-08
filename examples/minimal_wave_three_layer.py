@@ -9,7 +9,12 @@ from typing import Any
 import numpy as np
 from scipy import sparse
 
-from examples.minimal_wave_convergence import ROOT, digest, quadrature_change, require_original
+from examples.minimal_wave_convergence import (
+    ROOT,
+    digest,
+    quadrature_change,
+    require_original,
+)
 
 BASE = ROOT / "build/results/completion/three-layer-classical-h8-basis-v2-afd43c6b731c"
 REFERENCE = ROOT / "build/results/completion/three-layer-classical-h8-dt001-basis-v2-afd43c6b731c"

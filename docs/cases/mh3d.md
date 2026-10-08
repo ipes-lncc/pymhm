@@ -213,7 +213,7 @@ The archive stores the full local pressure coefficients and physical geometry.
 ```bash
 pixi run --locked -e notebooks python -m examples.mh3d_campaign
 pixi run --locked -e notebooks python -m examples.plot_mh3d
-pixi run --locked -e notebooks python scripts/run_notebooks.py notebooks/darcy/69_mh3d.ipynb
+jupyter lab notebooks/darcy/69_mh3d.ipynb
 pixi run --locked -e fem pytest -q tests/test_mh3d_fenics.py tests/test_mh2m3d_fenics.py
 ```
 

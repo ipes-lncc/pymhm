@@ -180,6 +180,10 @@ and load entry, including physical Hessians, opposite adjoint convection signs,
 variable tensors and all stabilization selections. Their inverse constants are
 computed with an independent monomial basis.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
 from examples.formulations.application import flow as solve_flow_3d

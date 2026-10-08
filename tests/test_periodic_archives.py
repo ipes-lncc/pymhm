@@ -312,7 +312,7 @@ def test_reference_acquisition_uses_the_requested_qk_space(tmp_path, degree, ord
     assert record["refinement_precision"] == precision
     for name, digest in record["source_sha256"].items():
         assert (artifacts / "acquisition-sources" / f"{digest}.py").read_bytes() == (
-            acquisition.ROOT / name
+            acquisition.source_file(name, root=acquisition.ROOT)
         ).read_bytes()
 
 
@@ -344,7 +344,8 @@ def test_reference_acquisition_rejects_immediately_excluded_inputs(tmp_path, arg
 def test_reference_acquisition_rejects_changes_during_solve(tmp_path, monkeypatch, changed):
     """Publication cannot attach old provenance to a field executed during edits."""
     acquisition = _example("periodic_reference")
-    original_sources, original_fingerprint = acquisition.sources, acquisition.fingerprint
+    original_sources = acquisition.sources
+    original_lock_digest = acquisition.optional_file_digest
     state = {"solved": False}
 
     def solve(*args, **kwargs):
@@ -358,16 +359,16 @@ def test_reference_acquisition_rejects_changes_during_solve(tmp_path, monkeypatc
             else original_sources()
         )
 
-    def fingerprint(path):
+    def lock_digest(path):
         return (
             "0" * 64
             if state["solved"] and changed == "lockfile" and path.name == "pixi.lock"
-            else original_fingerprint(path)
+            else original_lock_digest(path)
         )
 
     monkeypatch.setattr(acquisition, "solve_separable_krylov", solve)
     monkeypatch.setattr(acquisition, "sources", sources)
-    monkeypatch.setattr(acquisition, "fingerprint", fingerprint)
+    monkeypatch.setattr(acquisition, "optional_file_digest", lock_digest)
     with pytest.raises(RuntimeError, match="sources or lockfile"):
         acquisition.run(
             2, 2, degree=1, refinement_precision="double", artifacts=tmp_path, records=tmp_path

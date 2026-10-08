@@ -6,14 +6,6 @@ the archived measurements without numerical solves.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -23,7 +15,15 @@ from typing import Any
 
 import matplotlib
 
-from pymhm.io.provenance import current_source_manifest
+from pymhm.io.provenance import current_source_manifest, optional_file_digest
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    source_file,
+    source_identity,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -60,7 +60,7 @@ from examples.native_extension_data import (
 from examples.plot_mesh import draw_macro_mesh, mark_macro_interfaces
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/native-extensions"
 REPORT = OUTPUT / "report.json"
 FIGURES = ROOT / "docs/figures/high-order"
@@ -92,17 +92,23 @@ def add_case(report: dict[str, Any], section: str, row: dict[str, Any]) -> None:
 def snapshot() -> dict[str, str]:
     """Record numerical sources and the original analytical-data implementation."""
     paths = [
-        *sorted((ROOT / "src/pymhm").rglob("*.py")),
+        *sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")),
         Path(__file__).resolve(),
-        ROOT / "examples/native_extension_data.py",
-        ROOT / "examples/field_sampling.py",
-        ROOT / "examples/manufactured.py",
+        source_file("examples/native_extension_data.py", root=ROOT),
+        source_file("examples/field_sampling.py", root=ROOT),
+        source_file("examples/manufactured.py", root=ROOT),
     ]
     return current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in paths
-        }
+        source_identity(
+            ROOT,
+            (
+                path
+                for path in paths
+                if path.name not in ("pixi.lock", "pixi.toml", "pyproject.toml")
+                or local_resource(path).is_file()
+            ),
+        ),
+        packages=("pymhm", "examples"),
     )
 
 
@@ -110,7 +116,10 @@ def save_fields(name: str, mesh: TriangleMesh, arrays: dict[str, np.ndarray]) ->
     """Archive sampled broken fields together with the actual macrotriangulation."""
     filename = OUTPUT / f"{name}.npz"
     np.savez_compressed(filename, macro_points=mesh.points, macro_cells=mesh.cells, **arrays)
-    return {"file": filename.name, "sha256": hashlib.sha256(filename.read_bytes()).hexdigest()}
+    return {
+        "file": filename.name,
+        "sha256": hashlib.sha256(read_resource_bytes(filename)).hexdigest(),
+    }
 
 
 def run_darcy(report: dict[str, Any], workers: int) -> None:
@@ -363,7 +372,7 @@ def field_panel(
 
 def plot_map(name: str, title: str, *, vector: bool = False, quantity: str = "values") -> None:
     """Compare exact and numerical values with their actual scalar/vector error."""
-    data = np.load(OUTPUT / f"{name}.npz")
+    data = np.load(local_resource(OUTPUT / f"{name}.npz"))
     if quantity == "flux":
         exact, actual = data["exact_flux"], -data["gradient"]
     elif quantity == "pressure":
@@ -490,7 +499,9 @@ def plot_layers(report: dict[str, Any]) -> None:
         for column, segments in enumerate((1, 8)):
             axis = axes[row, column]
             for method, color in (("galerkin", "#3367b5"), ("supg", "#097c83")):
-                data = np.load(OUTPUT / f"layer-{epsilon:g}-{method}-{segments}.npz")
+                data = np.load(
+                    local_resource(OUTPUT / f"layer-{epsilon:g}-{method}-{segments}.npz")
+                )
                 for index, parameter in enumerate(data["profile_parameter"]):
                     if method == "galerkin":
                         axis.plot(
@@ -562,7 +573,11 @@ def main() -> None:
     args = parser.parse_args()
     if args.workers < 1:
         parser.error("workers must be positive")
-    report = json.loads(REPORT.read_text()) if REPORT.exists() else {"provenance": {}}
+    report = (
+        json.loads(read_resource_text(REPORT))
+        if local_resource(REPORT).exists()
+        else {"provenance": {}}
+    )
     report["evidence"] = (
         "Native PDE solutions against independently differentiated exact fields; "
         "no external solver execution."
@@ -574,7 +589,7 @@ def main() -> None:
                 "numpy": np.__version__,
                 "scipy": scipy.__version__,
                 "platform": platform.platform(),
-                "pixi_lock_sha256": hashlib.sha256((ROOT / "pixi.lock").read_bytes()).hexdigest(),
+                "pixi_lock_sha256": optional_file_digest(ROOT / "pixi.lock"),
                 "workers": args.workers,
                 "native_threads": 1,
             }
@@ -601,4 +616,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_native_extensions").main()

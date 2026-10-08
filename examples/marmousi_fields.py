@@ -7,14 +7,6 @@ No continuity is imposed on fields from the MHM acquisition.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -31,6 +23,14 @@ from examples.marmousi_records import checked_reference
 from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.triangle import multiindices, reference_basis
 from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    source_file,
+    source_identity,
+)
 
 
 @dataclass(frozen=True)
@@ -114,7 +114,7 @@ def load_reference(record: Path) -> PixelCGField:
     entire compressed field archive into an extra byte buffer. Replay never
     converts a wider persisted coefficient vector to double precision.
     """
-    metadata = json.loads(record.read_text())
+    metadata = json.loads(read_resource_text(record))
     degree = int(metadata["degree"])
     counts = np.asarray(metadata["geometry"], dtype=int)
     bounds = tuple(metadata.get("bounds", (0.0, 10240.0, 0.0, 2560.0)))
@@ -123,17 +123,17 @@ def load_reference(record: Path) -> PixelCGField:
     dtype = np.dtype(complex)
     for entry in metadata["archives"]:
         path = record.parent / entry["archive"]
-        if file_digest(path) != entry["sha256"]:
+        if file_digest(local_resource(path)) != entry["sha256"]:
             raise ValueError("reference archive digest does not match its acquisition record")
-        with np.load(path, allow_pickle=False) as archive:
+        with np.load(local_resource(path), allow_pickle=False) as archive:
             dtype = np.result_type(dtype, archive["pressure"].dtype)
     nodes = np.empty(tuple(counts * degree + 1), dtype=dtype)
     seen = np.zeros(nodes.shape, dtype=bool)
     for entry in metadata["archives"]:
         path = record.parent / entry["archive"]
-        if file_digest(path) != entry["sha256"]:
+        if file_digest(local_resource(path)) != entry["sha256"]:
             raise ValueError("reference archive digest does not match its acquisition record")
-        with np.load(path, allow_pickle=False) as archive:
+        with np.load(local_resource(path), allow_pickle=False) as archive:
             coordinates = archive["coordinates"][:, :2]
             pressure = archive["pressure"]
         scaled = (coordinates - lower) / spacing * degree
@@ -371,20 +371,15 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=Path("examples/results/marmousi"))
     args = parser.parse_args()
     material = load_marmousi_crop(args.data)
-    root = Path(__file__).resolve().parents[1]
+    root = case_workspace()
     sources = [
         Path(__file__),
         Path(__file__).with_name("marmousi_data.py"),
         Path(__file__).with_name("campaign_provenance.py"),
         Path(__file__).with_name("marmousi_records.py"),
-        *sorted((root / "src/pymhm").rglob("*.py")),
+        *sorted(source_file("src/pymhm/__init__.py", root=root).parent.rglob("*.py")),
     ]
-    hashes = current_source_manifest(
-        {
-            p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in sources
-        }
-    )
+    hashes = current_source_manifest(source_identity(root, sources), packages=("pymhm", "examples"))
     x, y = np.meshgrid(np.linspace(0, 10240, 513), np.linspace(0, 2560, 129), indexing="ij")
     points = np.column_stack((x.ravel(), y.ravel()))
     rows = []
@@ -422,7 +417,7 @@ def main() -> None:
             np.savez_compressed(archive, points=points, pressure=samples)
             row = {
                 "reference_record": path.name,
-                "reference_record_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                "reference_record_sha256": hashlib.sha256(read_resource_bytes(path)).hexdigest(),
                 "degree": field.degree,
                 "complex_dofs": int(field.nodes.size),
                 "physical_norms": norms,
@@ -430,7 +425,7 @@ def main() -> None:
                     norms["reference_pressure_norm"] / metadata["pressure_l2"] - 1
                 ),
                 "sample_archive": archive.name,
-                "sample_archive_sha256": file_digest(archive),
+                "sample_archive_sha256": file_digest(local_resource(archive)),
             }
             if row["native_pressure_norm_relative_difference"] > 1e-11:
                 raise ValueError(
@@ -474,10 +469,7 @@ def main() -> None:
                 "source_sha256": hashes,
                 "source_changed_during_run": hashes
                 != current_source_manifest(
-                    {
-                        p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-                        for p in sources
-                    }
+                    source_identity(root, sources), packages=("pymhm", "examples")
                 ),
             }
             if result["source_changed_during_run"]:
@@ -489,4 +481,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.marmousi_fields").main()

@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -26,8 +18,15 @@ from examples.helmholtz_article import (
     solve_configuration,
     validate_row,
 )
+from pymhm.io.workspace import (
+    case_workspace,
+    read_resource_bytes,
+    read_resource_text,
+    source_file,
+    source_label,
+)
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def configurations() -> list[Configuration]:
@@ -42,15 +41,15 @@ def configurations() -> list[Configuration]:
 def hashes() -> dict[str, str]:
     """Bind the analytical, incident and local-control numerical owners."""
     result = article_hashes()
-    result[Path(__file__).relative_to(ROOT).as_posix()] = hashlib.sha256(
-        Path(__file__).read_bytes()
+    result[source_label(Path(__file__), ROOT)] = hashlib.sha256(
+        read_resource_bytes(Path(__file__))
     ).hexdigest()
     return result
 
 
 def publication_rows(output: Path) -> list[dict[str, Any]]:
     """Require all four current local-resolution controls before rendering them."""
-    record = json.loads((output / "local-refinement-eight.json").read_text())
+    record = json.loads(read_resource_text(output / "local-refinement-eight.json"))
     require_sources(record["source_sha256"], hashes())
     return complete_rows(record, configurations(), output)
 
@@ -66,7 +65,7 @@ def main() -> None:
     sources = hashes()
     record = {"source_sha256": sources, "rows": []}
     if path.exists():
-        record = json.loads(path.read_text())
+        record = json.loads(read_resource_text(path))
         require_sources(record["source_sha256"], sources)
         for row in record["rows"]:
             validate_row(row, output)
@@ -76,7 +75,8 @@ def main() -> None:
             continue
         row = solve_configuration(config, output)
         if sources != {
-            name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in sources
+            name: hashlib.sha256(read_resource_bytes(source_file(name, root=ROOT))).hexdigest()
+            for name in sources
         }:
             raise RuntimeError("local-resolution sources changed during acquisition")
         record["rows"].append(row)
@@ -87,4 +87,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.helmholtz_local_control").main()

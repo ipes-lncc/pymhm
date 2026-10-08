@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -18,6 +10,14 @@ from pathlib import Path
 from typing import Any
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    resource_glob,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -28,12 +28,12 @@ from examples.plot_style import set_refinement_ticks
 from examples.spe10_adaptive import DATA, StructuredRT
 from examples.spe10_adaptive_norms import BrokenP2
 
-FIGURES = Path(__file__).resolve().parents[1] / "docs/figures/spe10-adaptive/resolution"
+FIGURES = case_workspace() / "docs/figures/spe10-adaptive/resolution"
 
 
 def material_resolution(archive: Path) -> dict[str, float | int]:
     """Count geometrically pixel-crossing triangles, accounting for coordinate roundoff."""
-    with np.load(archive) as stored:
+    with np.load(local_resource(archive)) as stored:
         values = {key: stored[key] for key in ("local_points", "local_cells")}
         if "point_offsets" in stored:
             values.update({key: stored[key] for key in ("point_offsets", "cell_offsets")})
@@ -87,7 +87,7 @@ def material_resolution(archive: Path) -> dict[str, float | int]:
 
 def read_controls(directory: Path) -> list[dict[str, Any]]:
     """Verify every physical archive before collecting its integrated comparisons."""
-    published = json.loads((DATA / "published/adaptive.json").read_text())[-1]
+    published = json.loads(read_resource_text(DATA / "published/adaptive.json"))[-1]
     baseline = {
         **published,
         "material_fitted": False,
@@ -108,7 +108,7 @@ def read_controls(directory: Path) -> list[dict[str, Any]]:
         stem = f"mhm-{'fitted-' if fitted else ''}r{refinement}-s{segments}"
         controls.append(
             {
-                **json.loads((directory / f"{stem}.json").read_text()),
+                **json.loads(read_resource_text(directory / f"{stem}.json")),
                 "archive_directory": directory,
                 "norm_file": directory / f"{stem}-norms.json",
             }
@@ -116,27 +116,30 @@ def read_controls(directory: Path) -> list[dict[str, Any]]:
     joint = directory / "mhm-fitted-r8-s8.json"
     joint_norm = directory / "mhm-fitted-r8-s8-norms.json"
     if (
-        joint.exists()
-        and joint_norm.exists()
-        and len(json.loads(joint_norm.read_text())["rows"]) >= 2
+        local_resource(joint).exists()
+        and local_resource(joint_norm).exists()
+        and len(json.loads(read_resource_text(joint_norm))["rows"]) >= 2
     ):
         controls.append(
             {
-                **json.loads(joint.read_text()),
+                **json.loads(read_resource_text(joint)),
                 "archive_directory": directory,
                 "norm_file": joint_norm,
             }
         )
     for row in controls:
-        norm_record = json.loads(row["norm_file"].read_text())
+        norm_record = json.loads(read_resource_text(row["norm_file"]))
         if len({entry["quadrature_order"] for entry in norm_record["rows"]}) < 2:
             raise ValueError("two distinct norm quadratures are required before publication")
         archive = row["archive_directory"] / row["archive"]
-        digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+        digest = hashlib.sha256(read_resource_bytes(archive)).hexdigest()
         if digest != row["archive_sha256"] or digest != norm_record["archive_sha256"]:
             raise ValueError("physical archive checksum differs from its solve or norm record")
         reference = DATA / norm_record["reference"]
-        if hashlib.sha256(reference.read_bytes()).hexdigest() != norm_record["reference_sha256"]:
+        if (
+            hashlib.sha256(read_resource_bytes(reference)).hexdigest()
+            != norm_record["reference_sha256"]
+        ):
             raise ValueError("classical reference checksum differs from the norm record")
         row["norms"] = norm_record["rows"][-1]
         row["reference"] = norm_record["reference"]
@@ -309,7 +312,7 @@ def export_records(rows: list[dict[str, Any]], directory: Path, output: Path) ->
         for row in rows
     ]
     (directory / "comparison.json").write_text(json.dumps(summary, indent=2) + "\n")
-    for record in directory.glob("*.json"):
+    for record in resource_glob(directory, "*.json"):
         shutil.copy2(record, output / record.name)
 
 
@@ -332,4 +335,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_spe10_resolution").main()

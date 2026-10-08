@@ -2,19 +2,17 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
-from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -28,7 +26,7 @@ from examples.tetra_section_samples import section_grid
 from pymhm.fem.scalar.tetrahedron import tetra_nodal_space
 from pymhm.meshes.tetrahedron import TetraMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/elastodynamics/native"
 OUTPUT = ROOT / "docs/figures/elastodynamics"
 
@@ -77,12 +75,12 @@ def samples(
 
 def main() -> None:
     """Draw independently solved fields with shared scales and explicit macro intersections."""
-    record = json.loads((DATA / "verification.json").read_text())
+    record = json.loads(read_resource_text(DATA / "verification.json"))
     row = next(item for item in record["rows"] if item["n"] == 2 and item["dt"] == 0.005)
     path = DATA / row["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != row["archive_sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["archive_sha256"]:
         raise ValueError("native comparison archive differs from its recorded digest")
-    with np.load(path) as archive:
+    with np.load(local_resource(path)) as archive:
         tri, edges, (native, candidate) = samples(dict(archive))
     plt.rcParams.update({"font.size": 11, "axes.titlesize": 12})
     for vector, name, symbol in ((0, "displacement", "u"), (1, "velocity", "v")):
@@ -139,4 +137,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_elastodynamics_native").main()

@@ -7,14 +7,6 @@ provide the common reference and independently selected quadrature checks.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -31,17 +23,20 @@ from examples.formulations.application import weak_stress_elasticity as solve_el
 from examples.formulations.application import (
     weak_stress_elasticity as solve_elasticity_mixed_polygons,
 )
-from examples.formulations.application import weak_stress_elasticity as solve_elasticity_tensor_rt
+from examples.formulations.application import (
+    weak_stress_elasticity as solve_elasticity_tensor_rt,
+)
 from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
 from pymhm.fem.scalar.triangle import reference_basis
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_basis, hdiv3d_dofs
 from pymhm.meshes.polygonal import PolygonMesh
 from pymhm.meshes.polyhedral import PolyhedralMesh
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/core-extensions"
 
 
@@ -259,13 +254,11 @@ def run(suite: str, levels: list[int] | None = None) -> None:
         if suite == "elasticity"
         else []
     )
-    paths = [ROOT / f"src/pymhm/{name}.py" for name in modules] + [
+    paths = [source_file(f"src/pymhm/{name}.py", root=ROOT) for name in modules] + [
         Path(__file__),
-        ROOT / "examples/core_extension_data.py",
+        source_file("examples/core_extension_data.py", root=ROOT),
     ]
-    hashes = current_source_manifest(
-        {path.relative_to(ROOT).as_posix(): digest(path) for path in paths}
-    )
+    hashes = current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
     report: dict[str, Any] = {
         "suite": suite,
         "reference": "analytical",
@@ -355,15 +348,22 @@ def run(suite: str, levels: list[int] | None = None) -> None:
                 )
             (OUTPUT / f"{suite}.json").write_text(json.dumps(report, indent=2) + "\n")
     report["source_changed"] = any(
-        digest(ROOT / name) != expected for name, expected in hashes.items()
+        digest(source_file(name, root=ROOT)) != expected for name, expected in hashes.items()
     )
     (OUTPUT / f"{suite}.json").write_text(json.dumps(report, indent=2) + "\n")
     if report["source_changed"]:
         raise RuntimeError("a guarded numerical source changed during acquisition")
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("suite", choices=("elasticity", "mshho3d", "hdiv3d"))
     with threadpool_limits(1):
         run(parser.parse_args().suite)
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.solve_core_extensions").main()

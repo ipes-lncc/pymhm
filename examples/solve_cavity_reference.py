@@ -2,27 +2,19 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
 from contextlib import ExitStack
-from pathlib import Path
 from time import perf_counter
 from typing import Any
 
 import numpy as np
 
 from examples.solve_spe10_taylor_hood import TaylorHoodField, difference
+from pymhm.io.workspace import case_workspace, source_label
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def solve(n: int, drag: float, lid: str = "regularized") -> tuple[TaylorHoodField, dict[str, Any]]:
@@ -194,7 +186,7 @@ def main() -> None:
                     bounds=np.array(field.bounds),
                 )
                 report.update(
-                    archive=path.relative_to(ROOT).as_posix(),
+                    archive=source_label(path, ROOT),
                     sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
                 )
             if previous is not None:
@@ -214,4 +206,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_cavity_reference").main()

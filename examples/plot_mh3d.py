@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -25,16 +17,22 @@ from examples.mh3d_campaign import flux, pressure
 from examples.plot_darcy3d import slice_polygon
 from examples.plot_style import set_refinement_ticks
 from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 from pymhm.meshes.tetrahedron import TetraMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def fields(archive: Path, row: dict, output: Path) -> None:
     """Sample the archived polynomial independently on each actual fine-cell cut."""
-    if hashlib.sha256(archive.read_bytes()).hexdigest() != row["fields_sha256"]:
+    if hashlib.sha256(read_resource_bytes(archive)).hexdigest() != row["fields_sha256"]:
         raise ValueError("MH3D field archive digest mismatch")
-    with np.load(archive) as stored:
+    with np.load(local_resource(archive)) as stored:
         data = {key: stored[key] for key in stored.files}
     height, degree = 0.375, int(data["degree"])
     polygons, actual, exact, lines = [], [], [], []
@@ -108,7 +106,7 @@ def fields(archive: Path, row: dict, output: Path) -> None:
 
 def render(record: Path, output: Path) -> None:
     """Render convergence and the finest saved field from each independent method."""
-    data = json.loads(record.read_text())
+    data = json.loads(read_resource_text(record))
     output.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.size": 12, "axes.titlesize": 14})
     fig, axes = plt.subplots(1, 2, figsize=(11.5, 5), layout="constrained")
@@ -144,4 +142,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_mh3d").main()

@@ -53,9 +53,20 @@ Start with the [step-by-step UFL overview](docs/tutorials/overview.md) and the
 mathematical local and global formulations to the code for scalar, vector and
 mixed problems.
 
-The examples describe the API in this repository revision. Follow the
-[source installation instructions](docs/installation.md#from-a-checkout) and
-use the checked-in Pixi lockfile to reproduce their declared environments.
+Install the notebook dependencies, download a notebook from the catalogue and
+open it in Jupyter:
+
+```bash
+python -m pip install "pymhm[notebooks]"
+jupyter lab primal_galerkin.ipynb
+```
+
+The distribution contains only the `pymhm` library. A downloaded notebook's
+first cell verifies and extracts its separate companion ZIP of importable helpers
+and small configurations into a writable workspace. Its data and recorded fields
+use separate verified downloads. This workflow needs no checkout or Pixi. Native UFL examples also need the DOLFINx installation described above.
+Use the [locked checkout environments](docs/installation.md#from-a-checkout)
+for development and the repository's qualified dependency combinations.
 
 The portable coefficient interface follows the same mesh-to-solution workflow:
 
@@ -92,13 +103,14 @@ physical constraints and recursive problems, and states the supported limits.
 For complete control, see the [custom-space tutorial](docs/tutorials/custom-interface.md),
 which declares a nonorthogonal basis and its independent trial/test maps.
 
-The wheel contains every `pymhm` runtime module, typing files and distribution
-metadata. The source distribution contains `src/pymhm`, `pyproject.toml`,
-`README.md`, `LICENSE`, backend-required `.gitignore` and generated package metadata.
-Documentation, notebooks, examples, tests, scripts, benchmarks, recipes and
-environment files remain in the repository and are excluded from both archives.
-All implemented capabilities ship
-with the package; optional native backends require their separate dependencies.
+The wheel contains every `pymhm` runtime module, typing and distribution metadata.
+The source distribution also carries the README, license and build metadata
+needed to rebuild that wheel independently. Neither archive contains notebooks,
+example helpers, case registries, configurations, datasets, computed fields,
+figures or comparison tools. These repository files have separate
+[notebook companions and data downloads](docs/data.md), with declared SHA-256
+identities, provenance and terms. Optional native backends require their separate
+dependencies.
 
 The [Windows guide](docs/windows.md) describes native portable-core execution,
 SciPy/PyPardiso selection, process workers, installed-wheel checks and the
@@ -113,7 +125,7 @@ platform separately.
 ## Verified discretizations and integrations
 
 The physical formulations compose public finite-element, material, trace and
-linear-algebra operations. Editable providers in `examples/formulations/`
+linear-algebra operations. Importable providers in `examples.formulations`
 declare their local and global equations without invoking predefined solvers;
 the [variational guide](docs/variational.md) identifies these operations and
 their numerical conventions. Existing solver entry points remain available.
@@ -191,7 +203,11 @@ an analytical series, and MSL/NeoPZ comparisons for a low-permeability obstacle.
 Git contains sources, scientific JSON records, three compact SPE10 input layers
 and the selected figures used by the published documentation. Large computed
 fields and intermediate outputs are generated locally and stay outside Git.
-An ordinary package installation and core tests require no archived outputs.
+The installed distribution contains only the `pymhm` library. Notebook sources,
+companions and acquisition metadata are separate repository and website files.
+Selected data and recorded figures use verified downloads; current fields and
+intermediate outputs are generated in the user's working directory. An
+ordinary package installation and core tests require no computed field archives.
 [ROADMAP.md](ROADMAP.md) sets implementation and validation priorities,
 dependencies and acceptance criteria for the next milestones.
 
@@ -201,6 +217,9 @@ The [notebook catalogue](notebooks/README.md) groups examples by physical proble
 and lists their methods. Start with a small analytical example:
 
 ```bash
+python -m scripts.run_notebooks darcy/primal_galerkin.ipynb
+python -m scripts.run_notebooks flow/introductory_methods.ipynb
+# The same examples in the locked checkout environment:
 pixi run --locked -e notebooks notebooks-run darcy/primal_galerkin.ipynb
 pixi run --locked -e notebooks notebooks-run flow/introductory_methods.ipynb
 ```
@@ -209,19 +228,19 @@ Executed copies retain the problem folders under `build/notebooks`. Historical
 numeric IDs also select their notebooks. Analytical patches introduce the API;
 they do not replace a published benchmark reproduction.
 
-Before executing a notebook that reads computed fields, inspect its required
-local inputs and generate the corresponding calculations:
+Inspect the declared calculations before a complete study:
 
 ```bash
-pixi run --locked -e notebooks python scripts/notebook_data.py --notebook 68
-pixi run --locked -e notebooks python scripts/notebook_data.py --notebook 68 --check
+python -m scripts.run_notebooks 68 --study --plan
 ```
 
-Missing fields are reported explicitly. Neither notebooks nor documentation
-automatically download computed results. The publication figures included in Git
-support documentation builds from a checkout. Regenerating a scientific case or
-replaying its fields requires its documented calculations and local outputs;
-package builds and core tests do not depend on those outputs.
+Current inputs are prepared by their public recipes using the active Python
+environment. Pinned raw datasets are downloaded only when the selected case
+needs them; checksum and size conventions remain explicit. Complete studies
+retain their original cost and numerical scope. Historical external field archives
+require their original supplied payloads and are identified separately. Regenerating
+a scientific case or replaying its fields requires its documented calculations;
+package builds and core tests do not require computed field archives.
 
 ## Development
 
@@ -251,8 +270,8 @@ CI tests the portable core on Linux x86-64, Windows x86-64 and macOS Apple
 Silicon (ARM64). It enforces independent 99% line and branch coverage gates on
 the combined Linux core and native FEM measurements from the same revision.
 The [development guide](docs/development.md#coverage) provides the local commands.
-Executable notebooks and
-analytical PDE examples are available in the repository. Optional
+Executable notebooks and their companion helpers are separate repository and
+website downloads. Optional
 dependency contracts and actual native-backend integrations are reported separately.
 
 Dedicated [Tests](https://github.com/ipes-lncc/pymhm/actions/workflows/tests.yml),

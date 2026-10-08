@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -27,6 +19,7 @@ from pymhm.fem.hdiv.rt import rt_evaluate_points
 from pymhm.fem.quadrature.material import cartesian_trace_values
 from pymhm.fem.scalar.operators import p1_geometry, triangle_quadrature
 from pymhm.fem.scalar.triangle import nodal_space, reference_basis
+from pymhm.io.workspace import local_resource, read_resource_bytes, read_resource_text
 from pymhm.meshes.geometry import clip_polygon
 from pymhm.meshes.triangle import TriangleMesh
 
@@ -36,7 +29,7 @@ class BrokenP2:
 
     def __init__(self, path: Path) -> None:
         """Restore the exact geometry and independent one-sided local fields."""
-        with np.load(path) as arrays:
+        with np.load(local_resource(path)) as arrays:
             self.macro = TriangleMesh(arrays["macro_points"], arrays["macro_cells"])
             if "point_offsets" in arrays:
                 count = len(arrays["point_offsets"]) - 1
@@ -377,13 +370,13 @@ def main() -> None:
     parser.add_argument("--levels", type=int, nargs="+")
     options = parser.parse_args()
     levels = (
-        [row["level"] for row in json.loads((options.data / "adaptive.json").read_text())]
+        [row["level"] for row in json.loads(read_resource_text(options.data / "adaptive.json"))]
         if options.levels is None
         else options.levels
     )
     reference = StructuredRT.load(options.reference)
-    reference_digest = hashlib.sha256(options.reference.read_bytes()).hexdigest()
-    source_digest = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    reference_digest = hashlib.sha256(read_resource_bytes(options.reference)).hexdigest()
+    source_digest = hashlib.sha256(read_resource_bytes(Path(__file__))).hexdigest()
     rows = []
     destination = options.output or options.data / f"comparison-order{options.order}.json"
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -394,7 +387,7 @@ def main() -> None:
                 "level": level,
                 "reference": options.reference.name,
                 "reference_sha256": reference_digest,
-                "archive_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
+                "archive_sha256": hashlib.sha256(read_resource_bytes(archive)).hexdigest(),
                 "norm_source_sha256": source_digest,
                 **compare(BrokenP2(archive), reference, options.order),
             }
@@ -404,4 +397,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.spe10_adaptive_norms").main()

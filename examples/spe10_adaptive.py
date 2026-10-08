@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -20,25 +12,25 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-import pymhm
-from examples.formulations.mixed_darcy import conforming_rt_reference as solve_darcy_rt_conforming
+from examples.formulations.mixed_darcy import (
+    conforming_rt_reference as solve_darcy_rt_conforming,
+)
 from examples.solve_spe10 import load_layer, pressure_boundary
 from pymhm.fem.hdiv.rt import RTField
 from pymhm.fem.hdiv.rt_forms import pressure_basis
 from pymhm.fem.quadrature.material import material_triangle_quadrature
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, local_resource, source_file
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/spe10-adaptive"
 DOMAIN = np.array([1200.0, 2200.0])
 
 
 def source_path(name: str) -> Path:
     """Resolve canonical source names to the package actually imported by this process."""
-    if name.startswith("src/pymhm/"):
-        return Path(pymhm.__file__).resolve().parent / name.removeprefix("src/pymhm/")
-    return ROOT / name
+    return source_file(name, root=ROOT)
 
 
 def mesh_rectangle(nx: int, ny: int) -> TriangleMesh:
@@ -73,7 +65,8 @@ def hashes() -> dict[str, str]:
     ]
     names += ["examples/spe10_adaptive.py", "examples/results/spe10/layer-36.npz"]
     return current_source_manifest(
-        {name: hashlib.sha256(source_path(name).read_bytes()).hexdigest() for name in names}
+        {name: hashlib.sha256(source_path(name).read_bytes()).hexdigest() for name in names},
+        packages=("pymhm", "examples"),
     )
 
 
@@ -93,7 +86,7 @@ class StructuredRT:
     @classmethod
     def load(cls, path: Path) -> StructuredRT:
         """Restore a numerical reference from its original coefficient arrays."""
-        with np.load(path) as arrays:
+        with np.load(local_resource(path)) as arrays:
             return cls(int(arrays["nx"]), int(arrays["ny"]), arrays["pressure"], arrays["flux"])
 
     def evaluate(self, points: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -262,4 +255,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.spe10_adaptive").main()

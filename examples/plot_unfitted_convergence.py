@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -22,13 +14,14 @@ import numpy as np
 from matplotlib.lines import Line2D
 
 from examples.plot_style import set_refinement_ticks
+from pymhm.io.workspace import case_workspace, read_resource_bytes, read_resource_text
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def read_campaign(path: Path, count: int) -> dict:
     """Require complete unchanged acquisitions and identify every actual field archive."""
-    record = json.loads(path.read_text())
+    record = json.loads(read_resource_text(path))
     if (
         not record.get("complete")
         or record["source_changed_during_run"]
@@ -36,7 +29,7 @@ def read_campaign(path: Path, count: int) -> dict:
     ):
         raise ValueError(f"incomplete campaign: {path.name}")
     for row in record["cases"]:
-        actual = hashlib.sha256((path.parent / row["archive"]).read_bytes()).hexdigest()
+        actual = hashlib.sha256(read_resource_bytes(path.parent / row["archive"])).hexdigest()
         if actual != row["archive_sha256"]:
             raise ValueError(f"field digest mismatch: {row['archive']}")
     return record
@@ -62,7 +55,7 @@ def local_differences(data: Path, smooth: dict[int, dict]) -> list[dict]:
         digests = {}
         for order in (9, 11):
             path = data / "local-resolution" / f"{name}-r{first}-r{second}-q{order}.json"
-            record = json.loads(path.read_text())
+            record = json.loads(read_resource_text(path))
             if (
                 record["fields"] != expected
                 or record["quadrature_order"] != order
@@ -74,7 +67,7 @@ def local_differences(data: Path, smooth: dict[int, dict]) -> list[dict]:
             if not np.all(np.isfinite(values)) or np.any(np.asarray(values) < 0):
                 raise ValueError(f"invalid physical local-resolution norm: {path.name}")
             records[str(order)] = record["norms"]
-            digests[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
+            digests[path.name] = hashlib.sha256(read_resource_bytes(path)).hexdigest()
         result.append(
             {
                 "name": name,
@@ -164,7 +157,7 @@ def main() -> None:
     }
     contrast = {r: read_campaign(data / f"contrast-p4-r{r}.json", 12) for r in (8, 16)}
     differences = local_differences(data, smooth)
-    publication = json.loads((args.source / "published-convergence.json").read_text())
+    publication = json.loads(read_resource_text(args.source / "published-convergence.json"))
     published = {row["figure"]: row for row in publication["figures"]}
     args.output.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.size": 12, "axes.labelsize": 12, "legend.fontsize": 11})
@@ -303,7 +296,7 @@ def main() -> None:
     summary = {
         "comparison_scope": "Printed PDE and trace sweeps; local P8/P4 discretizations declared",
         "published_sha256": hashlib.sha256(
-            (args.source / "published-convergence.json").read_bytes()
+            read_resource_bytes(args.source / "published-convergence.json")
         ).hexdigest(),
         "printed_comparisons": printed_comparisons(smooth[32], contrast[16], published),
         "smooth_local_controls": local_rows,
@@ -322,7 +315,7 @@ def main() -> None:
             for row in contrast[16]["cases"]
         ],
         "acquisition_sha256": {
-            path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+            path.name: hashlib.sha256(read_resource_bytes(path)).hexdigest()
             for path in sorted(
                 [data / f"smooth-p8-r{r}.json" for r in smooth]
                 + [data / f"contrast-p4-r{r}.json" for r in contrast]
@@ -339,4 +332,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_unfitted_convergence").main()

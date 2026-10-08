@@ -1,5 +1,8 @@
 # Local providers, forms and execution
 
+The example imports below refer to the verified local companion downloaded
+by the notebook’s first cell; they are separate from the installed library.
+
 This tutorial declares primal Galerkin and mixed $H(\mathrm{div})$ Darcy
 problems through `LocalEquations`, `Equation` and `MultiscaleProblem`.
 A provider is an ordinary callable. It supplies the physical equations and
@@ -20,8 +23,8 @@ and edit the forms, boundary, local solver and execution cells. The
 contains user-written UFL forms and reports whether DOLFINx executed.
 
 ```bash
-pixi run --locked -e notebooks notebooks-run foundations/operators/local_global_providers.ipynb
-pixi run --locked -e notebooks notebooks-run foundations/operators/ufl_provider.ipynb
+jupyter lab local_global_providers.ipynb
+jupyter lab ufl_provider.ipynb
 ```
 
 The first example uses two macrotriangles and two subdivisions per local

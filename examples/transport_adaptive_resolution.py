@@ -2,19 +2,10 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
 from functools import partial
-from pathlib import Path
 
 import numpy as np
 from threadpoolctl import threadpool_limits
@@ -28,9 +19,10 @@ from pymhm.adaptivity.transport import TransportBounds, estimate_transport_faces
 from pymhm.execution.cpu import map_local
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/transport"
 
 
@@ -64,7 +56,8 @@ def acquire(refinement: int, workers: int) -> dict:
         "src/pymhm/execution/cpu.py",
     )
     hashes = current_source_manifest(
-        {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in paths}
+        {p: hashlib.sha256(source_file(p, root=ROOT).read_bytes()).hexdigest() for p in paths},
+        packages=("pymhm", "examples"),
     )
     backend = "process" if workers > 1 else "serial"
     with threadpool_limits(1):
@@ -127,7 +120,10 @@ def acquire(refinement: int, workers: int) -> dict:
                 workers=workers,
             )
             bounds[str(order)] = float(np.sqrt(sum(values)))
-    if not all(hashlib.sha256((ROOT / p).read_bytes()).hexdigest() == h for p, h in hashes.items()):
+    if not all(
+        hashlib.sha256(source_file(p, root=ROOT).read_bytes()).hexdigest() == h
+        for p, h in hashes.items()
+    ):
         raise RuntimeError("a source changed during the local-resolution acquisition")
     report = dict(
         epsilon=1.0,
@@ -168,4 +164,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.transport_adaptive_resolution").main()

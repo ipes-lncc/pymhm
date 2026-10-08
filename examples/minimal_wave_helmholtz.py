@@ -11,7 +11,12 @@ import numpy as np
 from examples.helmholtz_basis_archive import basis_payload
 from examples.helmholtz_campaign import AcousticWave, norms
 from examples.helmholtz_trace_family import verify_helmholtz_solution
-from examples.minimal_wave_convergence import digest, quadrature_change, require_original, write
+from examples.minimal_wave_convergence import (
+    digest,
+    quadrature_change,
+    require_original,
+    write,
+)
 from examples.tutorial_helmholtz_equations import solve_acoustic
 from pymhm.fem.scalar.quadrilateral import cardinal_polynomials
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton

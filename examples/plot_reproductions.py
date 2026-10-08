@@ -2,20 +2,14 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import csv
 import json
 from pathlib import Path
 
 import matplotlib
 import numpy as np
+
+from pymhm.io.workspace import case_workspace, local_resource, read_resource_text, source_file
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -111,8 +105,8 @@ def plot_results(path: Path) -> None:
 
     from examples.plot_mesh import draw_macro_mesh
 
-    data = json.loads(path.read_text())
-    root = Path(__file__).resolve().parents[1]
+    data = json.loads(read_resource_text(path))
+    root = case_workspace()
     folder = (
         root
         / "docs/figures/reproduction/stokes"
@@ -128,8 +122,10 @@ def plot_results(path: Path) -> None:
     }
     (folder / "results.json").write_text(json.dumps(summary, indent=2) + "\n")
     figure_number = 3 + data["trace_degree"]
-    reference = root / f"examples/results/published/araya2017_figure{figure_number}.csv"
-    with reference.open(newline="") as stream:
+    reference = source_file(
+        f"examples/results/published/araya2017_figure{figure_number}.csv", root=root
+    )
+    with local_resource(reference).open(newline="") as stream:
         published = [
             {key: float(value) for key, value in row.items()} for row in csv.DictReader(stream)
         ]
@@ -257,10 +253,12 @@ def plot_results(path: Path) -> None:
 
 def main() -> None:
     """Plot the original and matched discretizations from their measured records."""
-    root = Path(__file__).resolve().parents[1]
+    root = case_workspace()
     results = root / "examples" / "results"
     output = root / "docs" / "figures" / "reproduction"
-    with (results / "published" / "harder2013_figure5.csv").open(newline="") as stream:
+    with (local_resource(results / "published" / "harder2013_figure5.csv")).open(
+        newline=""
+    ) as stream:
         published = [
             {key: float(value) for key, value in row.items()} for row in csv.DictReader(stream)
         ]
@@ -268,7 +266,7 @@ def main() -> None:
         ("darcy_2013_comparison.json", output),
         ("darcy_2013_mixed_comparison.json", output / "mixed"),
     ):
-        data = json.loads((results / name).read_text())
+        data = json.loads(read_resource_text(results / name))
         plot_comparison(data["results"], published, folder, data["formulation"])
         (folder / "darcy-2013-comparison.json").write_text(json.dumps(data, indent=2) + "\n")
     for name in (
@@ -280,4 +278,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_reproductions").main()

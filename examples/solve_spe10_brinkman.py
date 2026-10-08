@@ -9,14 +9,6 @@ cut triangular fine elements; the volume quadrature order is recorded explicitly
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -36,10 +28,11 @@ from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.triangle import nodal_space, tabulate
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, ensure_resource, source_file, source_identity
 from pymhm.materials.cartesian import CartesianCellField
 from pymhm.postprocessing.solutions import VectorSolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/spe10"
 
 
@@ -64,7 +57,7 @@ def inlet_velocity(points: np.ndarray) -> np.ndarray:
 
 def layer_resistance() -> CartesianCellField:
     """Return scalar gamma=0.3/Kx from the unchanged layer-1 material pixels."""
-    with np.load(OUTPUT / "layer-1.npz") as data:
+    with np.load(ensure_resource("examples/results/spe10/layer-1.npz", ROOT)) as data:
         return CartesianCellField(0.3 / data["permeability"][..., 0], (20.0, 10.0))
 
 
@@ -177,13 +170,11 @@ def physical_diagnostics(solution: VectorSolution, refinement: int) -> dict[str,
 
 def source_hashes() -> dict[str, str]:
     """Record all package sources and this driver at the time of acquisition."""
-    paths = [*sorted((ROOT / "src/pymhm").rglob("*.py")), Path(__file__).resolve()]
-    return current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in paths
-        }
-    )
+    paths = [
+        *sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")),
+        Path(__file__).resolve(),
+    ]
+    return current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
 
 
 def run_case(args: argparse.Namespace) -> dict[str, Any]:
@@ -364,4 +355,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_spe10_brinkman").main()

@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -25,6 +17,7 @@ from examples.campaign_checkpoint import require_sources, verify_checkpoint
 from examples.formulations.application import herrmann_elasticity as solve_elasticity_gals_3d
 from examples.formulations.application import primal_elasticity as solve_elasticity_3d
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.postprocessing.solutions import GaLS3DSolution
 
@@ -33,15 +26,15 @@ if __package__:
 else:
     from examples.gals3d_data import GaLS3DData
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 CASES = (("gals-p1", "gals", 1, 4), ("gals-p2", "gals", 2, 2), ("th-p2", "taylor-hood", 2, 2))
 
 
 def snapshot() -> dict[str, str]:
     """Capture the exact operators and original analytic-data source bytes."""
-    paths = [Path(__file__), ROOT / "examples/gals3d_data.py"]
+    paths = [Path(__file__), source_file("examples/gals3d_data.py", root=ROOT)]
     paths.extend(
-        ROOT / f"src/pymhm/{name}"
+        source_file(f"src/pymhm/{name}", root=ROOT)
         for name in (
             "_legacy/models/elasticity/mixed_pressure_3d.py",
             "_legacy/models/elasticity/pressure_forms_3d.py",
@@ -55,12 +48,7 @@ def snapshot() -> dict[str, str]:
             "execution/cpu.py",
         )
     )
-    return current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in paths
-        }
-    )
+    return current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
 
 
 def norms(solution: GaLS3DSolution, data: GaLS3DData, order: int) -> dict[str, float]:
@@ -302,4 +290,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_gals3d").main()

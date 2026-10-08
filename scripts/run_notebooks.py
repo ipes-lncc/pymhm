@@ -7,29 +7,51 @@ import hashlib
 import json
 import os
 import sys
+from collections.abc import Iterator, Mapping
+from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 
 import nbformat
 from jupyter_client import KernelManager
 from nbclient import NotebookClient
-from notebook_data import (
+
+from pymhm.io.workspace import case_workspace
+from scripts.notebook_data import (
     DEFAULT_MAX_BYTES,
     dependency_plan,
+    notebook_selector,
     select_notebooks,
     validate_archives,
 )
-from notebook_reproduction import (
+from scripts.notebook_reproduction import (
     execute_in_environment,
     execution_inputs,
     native_requirements,
     notebook_contract,
+    notebook_workspace,
     preparation_plan,
     prepare_notebook_inputs,
     required_environment,
+    stage_notebook_resources,
     validate_native_requirements,
     validate_reproduction_manifest,
 )
+
+
+@contextmanager
+def _temporary_environment(values: Mapping[str, str]) -> Iterator[None]:
+    """Scope preparation flags without modifying the caller's Python environment."""
+    previous = {name: os.environ.get(name) for name in values}
+    try:
+        os.environ.update(values)
+        yield
+    finally:
+        for name, value in previous.items():
+            if value is None:
+                os.environ.pop(name, None)
+            else:
+                os.environ[name] = value
 
 
 def output_notebook_path(root: Path, source: Path) -> Path:
@@ -56,7 +78,7 @@ def main() -> None:
     )
     parser.add_argument("--timeout", type=int, default=600, help="Cell timeout in seconds")
     parser.add_argument(
-        "--plan", action="store_true", help="List selected inputs and locked preparation commands"
+        "--plan", action="store_true", help="List selected inputs and public preparation commands"
     )
     parser.add_argument(
         "--no-prepare",
@@ -73,6 +95,11 @@ def main() -> None:
     )
     parser.add_argument("--no-dispatch", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument(
+        "--dispatch",
+        action="store_true",
+        help="Explicit development-only dispatch into a locked Pixi environment",
+    )
+    parser.add_argument(
         "--study",
         action="store_true",
         help="Acquire complete declared current studies before execution",
@@ -84,7 +111,9 @@ def main() -> None:
         help="Explicit size budget for selected computed field archives",
     )
     args = parser.parse_args()
-    root = Path(__file__).resolve().parents[1]
+    if args.dispatch and args.no_dispatch:
+        parser.error("--dispatch and --no-dispatch cannot be combined")
+    root = case_workspace()
     try:
         notebooks = select_notebooks(root, args.paths, allow_external=True)
     except ValueError as error:
@@ -97,7 +126,24 @@ def main() -> None:
         raise SystemExit("Archive size budget must be positive")
     if args.check:
         try:
-            validate_reproduction_manifest(root)
+            validate_reproduction_manifest(root, notebooks)
+        except ValueError as error:
+            raise SystemExit(str(error)) from error
+    preparation_environment = {
+        "PYMHM_WORKSPACE": str(root),
+        "PYMHM_NOTEBOOK_HISTORICAL": "1" if args.historical else "0",
+        "PYMHM_NOTEBOOK_STUDY": "1" if args.study else "0",
+        "PYMHM_NOTEBOOK_MAX_DATA_BYTES": str(args.max_data_bytes),
+    }
+    if not args.plan:
+        try:
+            if not args.dispatch:
+                validate_native_requirements(root, notebooks)
+            with _temporary_environment(preparation_environment):
+                for source in notebooks:
+                    selector = notebook_selector(root, source)
+                    if selector is not None:
+                        stage_notebook_resources(selector)
         except ValueError as error:
             raise SystemExit(str(error)) from error
     data = dependency_plan(
@@ -108,8 +154,6 @@ def main() -> None:
         print(json.dumps({**data, **plan}, indent=2), flush=True)
         return
     try:
-        if args.no_dispatch:
-            validate_native_requirements(root, notebooks)
         if not args.no_prepare:
             prepare_notebook_inputs(root, plan)
         validate_archives(
@@ -127,8 +171,7 @@ def main() -> None:
     kernel_environment = {
         **os.environ,
         "MPLBACKEND": "module://matplotlib_inline.backend_inline",
-        "PYMHM_NOTEBOOK_HISTORICAL": "1" if args.historical else "0",
-        "PYMHM_NOTEBOOK_STUDY": "1" if args.study else "0",
+        **preparation_environment,
     }
     receipt = {
         "schema": "pymhm-notebook-execution-v1",
@@ -147,7 +190,7 @@ def main() -> None:
     for path in notebooks:
         destination = output_notebook_path(root, path)
         source_identity = hashlib.sha256(path.read_bytes()).hexdigest()
-        environment = None if args.no_dispatch else required_environment(root, path)
+        environment = required_environment(root, path) if args.dispatch else None
         if environment is not None:
             flags = ["--timeout", str(args.timeout), "--max-data-bytes", str(args.max_data_bytes)]
             if args.no_prepare:
@@ -173,8 +216,23 @@ def main() -> None:
             )
             continue
         print(f"Executing {path}", flush=True)
+        selector = notebook_selector(root, path)
+        per_notebook_environment = {
+            **kernel_environment,
+            "PYMHM_NOTEBOOK_SOURCE": str(path.resolve()),
+            "PYMHM_NOTEBOOK_PREPARED": selector or "",
+        }
+        if selector is not None:
+            # The producers above run once. Workspace staging acquires this
+            # selector's data and checks it; the kernel repeats validation only.
+            with _temporary_environment(
+                {**preparation_environment, "PYMHM_NOTEBOOK_PREPARED": selector}
+            ):
+                notebook_workspace(selector)
         notebook = nbformat.read(path, as_version=4)
         manager = KernelManager(kernel_name="python3")
+        if manager.kernel_spec is None:
+            raise RuntimeError("The notebook extra requires an installed Python ipykernel")
         manager.kernel_spec.argv = [
             sys.executable,
             "-m",
@@ -189,7 +247,7 @@ def main() -> None:
             kernel_name="python3",
             resources={"metadata": {"path": str(root)}},
         )
-        client.execute(env=kernel_environment, cleanup_kc=True)
+        client.execute(env=per_notebook_environment, cleanup_kc=True)
         if hashlib.sha256(path.read_bytes()).hexdigest() != source_identity:
             raise RuntimeError(f"Notebook source changed during execution: {path}")
         notebook.metadata["pymhm_execution"] = {

@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -22,8 +14,15 @@ from threadpoolctl import threadpool_limits
 from examples.hpc4e_data import DATA_DIRECTORY, load_data
 from examples.hpc4e_fields import RectangularElasticityField, compare_fields
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import (
+    case_workspace,
+    read_resource_bytes,
+    resource_file,
+    source_file,
+    source_identity,
+)
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 ARCHIVES = ROOT / "build/results/hpc4e"
 
 
@@ -71,9 +70,9 @@ def main() -> None:
         Path(__file__),
         Path(__file__).with_name("hpc4e_fields.py"),
         Path(__file__).with_name("hpc4e_data.py"),
-        Path(__file__).with_name("results") / "hpc4e/dataset.json",
+        resource_file("examples/results/hpc4e/dataset.json"),
         *(
-            ROOT / f"src/pymhm/{name}.py"
+            source_file(f"src/pymhm/{name}.py", root=ROOT)
             for name in (
                 "fem/hdiv/tensor_rt",
                 "_legacy/models/elasticity/stress_tensor",
@@ -83,15 +82,14 @@ def main() -> None:
         ),
     ]
     source_hashes = current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in sources
-        }
+        source_identity(ROOT, sources), packages=("pymhm", "examples")
     )
     input_paths = [*args.approximations, args.reference]
     if len({path.name for path in input_paths}) != len(input_paths):
         parser.error("comparison archives must have distinct filenames")
-    inputs = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in input_paths}
+    inputs = {
+        path.name: hashlib.sha256(read_resource_bytes(path)).hexdigest() for path in input_paths
+    }
     jobs = [
         (path, args.reference, args.data_dir, order)
         for path in args.approximations
@@ -102,13 +100,12 @@ def main() -> None:
         for row in pool.map(compare, jobs):
             rows.append(row)
             print(json.dumps(row), flush=True)
-    if inputs != {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in input_paths}:
+    if inputs != {
+        path.name: hashlib.sha256(read_resource_bytes(path)).hexdigest() for path in input_paths
+    }:
         raise RuntimeError("HPC4E comparison archives changed during integration")
     if source_hashes != current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in sources
-        }
+        source_identity(ROOT, sources), packages=("pymhm", "examples")
     ):
         raise RuntimeError("HPC4E comparison sources changed during integration")
     report = dict(
@@ -126,4 +123,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.compare_hpc4e_fields").main()

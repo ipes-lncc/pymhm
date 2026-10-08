@@ -7,14 +7,6 @@ are distinguished from exact-local literature equivalence and its estimates.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 import shutil
@@ -33,10 +25,11 @@ from examples.mshho3d_field_archive import original_checks, read_field, replay, 
 from examples.mshho3d_ideal_p0 import ideal_p0_audit
 from examples.transport_checkpoints import write_progress
 from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.polyhedral import PolyhedralMesh
 from pymhm.meshes.tetrahedron import TetraMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def physical_errors(arrays: Mapping[str, np.ndarray], order: int) -> dict[str, float]:
@@ -61,29 +54,37 @@ def physical_errors(arrays: Mapping[str, np.ndarray], order: int) -> dict[str, f
 def capture_sources(output: Path) -> dict[str, str]:
     """Archive exact executed sources and the lockfile before a fresh acquisition."""
     paths = [
-        *sorted((ROOT / "src/pymhm").rglob("*.py")),
+        *sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")),
         Path(__file__),
-        ROOT / "examples/mshho3d_field_archive.py",
-        ROOT / "examples/archive_precision.py",
-        ROOT / "examples/campaign_provenance.py",
-        ROOT / "examples/local_response_cache.py",
-        ROOT / "examples/transport_checkpoints.py",
-        ROOT / "examples/core_extension_data.py",
-        ROOT / "examples/mshho3d_sections.py",
-        ROOT / "examples/mshho3d_ideal_p0.py",
-        ROOT / "examples/sample_core_sections.py",
-        ROOT / "examples/solve_core_extensions.py",
+        source_file("examples/mshho3d_field_archive.py", root=ROOT),
+        source_file("examples/archive_precision.py", root=ROOT),
+        source_file("examples/campaign_provenance.py", root=ROOT),
+        source_file("examples/local_response_cache.py", root=ROOT),
+        source_file("examples/transport_checkpoints.py", root=ROOT),
+        source_file("examples/core_extension_data.py", root=ROOT),
+        source_file("examples/mshho3d_sections.py", root=ROOT),
+        source_file("examples/mshho3d_ideal_p0.py", root=ROOT),
+        source_file("examples/sample_core_sections.py", root=ROOT),
+        source_file("examples/solve_core_extensions.py", root=ROOT),
         ROOT / "pixi.lock",
         ROOT / "pixi.toml",
         ROOT / "pyproject.toml",
     ]
     hashes = current_source_manifest(
-        {path.relative_to(ROOT).as_posix(): file_digest(path) for path in paths}
+        source_identity(
+            ROOT,
+            (
+                path
+                for path in paths
+                if path.name not in ("pixi.lock", "pixi.toml", "pyproject.toml") or path.is_file()
+            ),
+        ),
+        packages=("pymhm", "examples"),
     )
     for name, expected in hashes.items():
         target = output / "executed-sources/files" / name
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(ROOT / name, target)
+        shutil.copyfile(source_file(name, root=ROOT), target)
         if file_digest(target) != expected:
             raise RuntimeError("Captured numerical source differs from its executed bytes")
     write_progress(
@@ -244,7 +245,9 @@ def run(levels: Sequence[int] = (1, 2, 3, 4, 5), *, output: Path) -> dict[str, A
                     ),
                     flush=True,
                 )
-    if any(file_digest(ROOT / name) != expected for name, expected in hashes.items()):
+    if any(
+        file_digest(source_file(name, root=ROOT)) != expected for name, expected in hashes.items()
+    ):
         raise RuntimeError("Executed numerical sources changed during acquisition")
     report["source_changed"] = False
     report["status"] = (
@@ -266,4 +269,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.verify_mshho3d").main()

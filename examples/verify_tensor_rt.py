@@ -2,20 +2,13 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
-from pathlib import Path
 from time import perf_counter
 
 import matplotlib
+
+from pymhm.io.workspace import case_workspace
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -25,7 +18,7 @@ from threadpoolctl import threadpool_limits
 from examples.formulations.application import tensor_darcy as solve_darcy_tensor_rt
 from pymhm import CartesianMacroMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/tensor-rt.json"
 FIGURES = ROOT / "docs/figures/tensor-rt"
 
@@ -184,4 +177,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.verify_tensor_rt").main()

@@ -21,8 +21,9 @@ import numpy as np
 from threadpoolctl import threadpool_info, threadpool_limits
 
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 CASES = ("helmholtz", "elastic-wave", "three-layer", "marmousi")
 
 
@@ -36,8 +37,10 @@ def source_hashes(extra: tuple[Path, ...] = ()) -> dict[str, str]:
     """Identify all core, lock and already loaded example/private numerical owners."""
     import sys
 
-    files = set((ROOT / "src/pymhm").rglob("*.py"))
-    files.update((ROOT / name) for name in ("pixi.lock", "pixi.toml", "pyproject.toml"))
+    files = set(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py"))
+    files.update(
+        (source_file(name, root=ROOT)) for name in ("pixi.lock", "pixi.toml", "pyproject.toml")
+    )
     files.update(extra)
     for module in tuple(sys.modules.values()):
         name = getattr(module, "__file__", None)
@@ -51,7 +54,15 @@ def source_hashes(extra: tuple[Path, ...] = ()) -> dict[str, str]:
             ):
                 files.add(path)
     return current_source_manifest(
-        {path.relative_to(ROOT).as_posix(): digest(path) for path in sorted(files)}
+        source_identity(
+            ROOT,
+            (
+                path
+                for path in sorted(files)
+                if path.name not in ("pixi.lock", "pixi.toml", "pyproject.toml") or path.is_file()
+            ),
+        ),
+        packages=("pymhm", "examples"),
     )
 
 
@@ -120,7 +131,7 @@ def run(case: str, output: Path, *, level: int | None = None) -> dict[str, Any]:
     snapshot = output / "executed-sources"
     snapshot.mkdir()
     for name, expected in before.items():
-        path = ROOT / name
+        path = source_file(name, root=ROOT)
         if digest(path) != expected:
             raise RuntimeError("Source changed before the original acquisition")
         target = snapshot / name
@@ -135,7 +146,7 @@ def run(case: str, output: Path, *, level: int | None = None) -> dict[str, Any]:
         pools = threadpool_info()
         if any(pool["num_threads"] != 1 for pool in pools):
             raise RuntimeError("The initial numerical study requires one native thread")
-    after = source_hashes(tuple(ROOT / name for name in before))
+    after = source_hashes(tuple(source_file(name, root=ROOT) for name in before))
     changed = [name for name, value in before.items() if after.get(name) != value]
     if changed:
         raise RuntimeError("Executed numerical sources changed: " + ", ".join(changed))
@@ -174,7 +185,7 @@ def assemble(case: str, output: Path, directories: tuple[Path, ...]) -> dict[str
     output.mkdir(parents=True)
     with threadpool_limits(1):
         record = module.combine(output, directories)
-    after = source_hashes(tuple(ROOT / name for name in before))
+    after = source_hashes(tuple(source_file(name, root=ROOT) for name in before))
     if any(after.get(name) != value for name, value in before.items()):
         raise RuntimeError("A data-only numerical consumer changed during integration")
     record.update(
@@ -225,4 +236,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.minimal_wave_convergence").main()

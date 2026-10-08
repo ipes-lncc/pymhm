@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -28,9 +20,10 @@ from examples.solve_pgmhm_inclusions_reference import InclusionField, load_field
 from pymhm.fem.scalar.operators import p1_geometry
 from pymhm.fem.scalar.triangle import nodal_space, reference_basis
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, local_resource, read_resource_bytes, source_file
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 _FIELDS: tuple[InclusionMHMField, InclusionField] | None = None
 _LIMIT = None
 
@@ -40,7 +33,7 @@ class InclusionMHMField:
 
     def __init__(self, archive: Path) -> None:
         """Restore ragged geometry and all portable correction components once."""
-        with np.load(archive) as arrays:
+        with np.load(local_resource(archive)) as arrays:
             point, cell, value = (
                 arrays[name] for name in ("point_offsets", "cell_offsets", "coefficient_offsets")
             )
@@ -141,15 +134,19 @@ def acquire(archive: Path, reference: Path, workers: int, output: Path | None = 
         "src/pymhm/fem/scalar/triangle.py",
     )
     hashes = current_source_manifest(
-        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+        {
+            name: hashlib.sha256(read_resource_bytes(source_file(name, root=ROOT))).hexdigest()
+            for name in names
+        },
+        packages=("pymhm", "examples"),
     )
-    with np.load(archive) as data:
+    with np.load(local_resource(archive)) as data:
         count = len(data["point_offsets"]) - 1
     row = dict(
         archive=archive.name,
-        archive_sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),
+        archive_sha256=hashlib.sha256(read_resource_bytes(archive)).hexdigest(),
         reference=reference.name,
-        reference_sha256=hashlib.sha256(reference.read_bytes()).hexdigest(),
+        reference_sha256=hashlib.sha256(read_resource_bytes(reference)).hexdigest(),
         integration="exact geometric intersections; Duffy orders3/4; raw -K grad p",
         denominator="corresponding physical norm of the stated CG2 reference",
         source_hashes=hashes,
@@ -189,7 +186,11 @@ def acquire(archive: Path, reference: Path, workers: int, output: Path | None = 
             }
         row["rows"].append(record)
         row["source_changed_during_run"] = hashes != current_source_manifest(
-            {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+            {
+                name: hashlib.sha256(read_resource_bytes(source_file(name, root=ROOT))).hexdigest()
+                for name in names
+            },
+            packages=("pymhm", "examples"),
         )
         if row["source_changed_during_run"]:
             raise RuntimeError("norm sources changed during acquisition")
@@ -210,4 +211,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.compare_pgmhm_inclusions").main()

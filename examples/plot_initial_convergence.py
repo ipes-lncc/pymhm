@@ -1,6 +1,6 @@
 """Render the public initial catalogue from hash-checked scalar JSON data only.
 
-Run ``python examples/plot_initial_convergence.py --output build/initial-figures``
+Run ``python -m examples.plot_initial_convergence --output build/initial-figures``
 in the locked Pixi notebooks environment. No PDE driver, coefficient archive,
 external solver or private acquisition source is imported or read. Errors,
 field norms and numerical differences retain separate physical interpretations;
@@ -19,7 +19,9 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[1]
+from pymhm.io.workspace import case_workspace, local_resource, read_resource_text
+
+ROOT = case_workspace()
 CATALOGUE = ROOT / "examples/results/minimal-convergence/catalogue.json"
 FIELDS = {
     "pressure_l2": "Pressure",
@@ -57,13 +59,13 @@ class Panel:
 
 def digest(path: Path) -> str:
     """Return SHA256 of the literal catalogue, record or rendered artifact."""
-    with path.open("rb") as stream:
+    with local_resource(path).open("rb") as stream:
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
 def read_json(path: Path) -> dict[str, Any]:
     """Read a JSON object without following its provenance or archive paths."""
-    value = json.loads(path.read_text())
+    value = json.loads(read_resource_text(path))
     if not isinstance(value, dict):
         raise ValueError(f"Expected a JSON object: {path}")
     return value
@@ -358,4 +360,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_initial_convergence").main()

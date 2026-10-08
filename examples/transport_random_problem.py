@@ -21,12 +21,13 @@ import numpy as np
 
 from pymhm import TriangleMesh
 from pymhm.core.validation import positive_int
+from pymhm.io.workspace import resource_file
 from pymhm.materials.cartesian import CartesianCellField
 
 DEFAULT_SEED = 20261003
 SHAPE = (64, 16)
 SPACING = (3 / 64, 1 / 16)
-INPUT = Path(__file__).resolve().parent / "data/transport-random-2015/permeability.json"
+INPUT = resource_file("examples/data/transport-random-2015/permeability.json")
 
 
 def permeability_digest(values: np.ndarray) -> str:
@@ -184,4 +185,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.transport_random_problem").main()

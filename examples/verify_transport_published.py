@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
 from pathlib import Path
@@ -20,9 +12,10 @@ from threadpoolctl import threadpool_limits
 
 from examples.transport_face_resolution import local_bound
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/transport"
 FIGURES = ROOT / "docs/figures/transport"
 
@@ -136,7 +129,7 @@ def coarse_gradient_bound() -> Path:
         archive_sha256=row["archive_sha256"],
         source_hashes=current_source_manifest(
             {
-                p: digest(ROOT / p)
+                p: digest(source_file(p, root=ROOT))
                 for p in (
                     "examples/verify_transport_published.py",
                     "examples/transport_trace_family.py",
@@ -144,7 +137,8 @@ def coarse_gradient_bound() -> Path:
                     "src/pymhm/fem/scalar/operators.py",
                     "src/pymhm/meshes/triangle.py",
                 )
-            }
+            },
+            packages=("pymhm", "examples"),
         ),
     )
     output = DATA / "mixed-gradient-bound-r16.json"
@@ -259,4 +253,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.verify_transport_published").main()

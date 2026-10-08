@@ -76,6 +76,10 @@ constant null modes. An all-Robin problem admits a physical mean when reaction
 vanishes and the velocity is divergence-free and tangent to the full exterior.
 The original physical equations are checked after imposing this mean.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 import numpy as np
 from pymhm import assemble

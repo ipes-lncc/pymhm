@@ -3,7 +3,7 @@
 The 6-by-11 macrogrid and continuous-P1 face spaces follow Paredes et al.
 (JCAM 436, 115415, Section 5.2). The historical local refinement was not
 reported. This program therefore records and varies it independently.
-Run from the checkout with ``pixi run python -m examples.solve_spe10`` after
+Run with PyMHM installed using ``python -m examples.solve_spe10`` after
 creating the compact layer archive with ``examples/plot_spe10_data.py``.
 """
 
@@ -12,7 +12,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-from pathlib import Path
 from time import perf_counter
 
 import numpy as np
@@ -21,17 +20,18 @@ from threadpoolctl import threadpool_limits
 from examples.formulations.application import cartesian_darcy as solve_darcy_quadrilateral
 from pymhm.core.contracts import HybridSolution
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.io.workspace import case_workspace, ensure_resource, local_resource
 from pymhm.materials.cartesian import CartesianCellField
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.postprocessing.solutions import QuadrilateralDarcySolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/spe10"
 
 
 def load_layer(number: int = 36) -> CartesianCellField:
     """Load unchanged horizontal tensor values from the compact pinned archive."""
-    with np.load(OUTPUT / f"layer-{number}.npz") as data:
+    with np.load(ensure_resource(f"examples/results/spe10/layer-{number}.npz", ROOT)) as data:
         horizontal = data["permeability"][..., :2]
         tensor = np.zeros(horizontal.shape[:2] + (2, 2))
         tensor[..., 0, 0] = horizontal[..., 0]
@@ -93,7 +93,7 @@ def sample_solution(solution: QuadrilateralDarcySolution) -> dict[str, np.ndarra
 
 def load_solution(record: dict) -> QuadrilateralDarcySolution:
     """Restore archived nodal coefficients for sampling without another PDE solve."""
-    with np.load(OUTPUT / record["archive"]) as arrays:
+    with np.load(local_resource(OUTPUT / record["archive"])) as arrays:
         mesh = CartesianMacroMesh(6, 11, tuple(record["domain"]))
         skeleton = SkeletonSpace(
             mesh,
@@ -266,4 +266,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_spe10").main()

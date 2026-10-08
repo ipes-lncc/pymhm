@@ -11,6 +11,10 @@ The primal Neumann-local construction follows
 The Cartesian geometry, local Qk spaces and independent face partitions used
 here are specified below.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](tutorials.md#execute-downloaded-notebooks).
+
 ```python
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.meshes.cartesian import CartesianMacroMesh

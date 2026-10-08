@@ -2,19 +2,18 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
 from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -28,7 +27,7 @@ from examples.plot_style import set_refinement_ticks
 from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
 from pymhm.meshes.tetrahedron import TetraMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 LABELS = {
     "stokes-th2": "Stokes: Taylor–Hood P2/P1",
     "brinkman-usfem1": "Brinkman: USFEM P1/P1",
@@ -41,7 +40,7 @@ def slices(
     archive: Path, data: Flow3DData, height: float = 0.37, *, vector_key: str = "velocity"
 ) -> tuple:
     """Evaluate actual local nodal fields at polygon centroids without cross-interface averaging."""
-    with np.load(archive) as stored:
+    with np.load(local_resource(archive)) as stored:
         polygons, points, actual, macros = [], [], [], []
         degree, pk = int(stored["degree"]), int(stored["pressure_degree"])
         for vertices in stored["macro_points"][stored["macro_cells"]]:
@@ -88,7 +87,7 @@ def overlay(axis: plt.Axes, macros: list) -> None:
 def save_fields(row: dict, output: Path, *, components: bool = False) -> None:
     """Give exact/numerical fields common scales and independent explicitly labeled error scales."""
     path = ROOT / "examples/results/flow3d" / row["fields"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != row["fields_sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["fields_sha256"]:
         raise ValueError("flow archive digest mismatch")
     polygons, actual, exact, macros = slices(path, Flow3DData(row["physical_case"]))
     if components:
@@ -169,7 +168,7 @@ def save_fields(row: dict, output: Path, *, components: bool = False) -> None:
 def main() -> None:
     """Render archived flow fields and absolute physical errors at five recorded resolutions."""
     report_path = ROOT / "examples/results/flow3d/campaign.json"
-    report = json.loads(report_path.read_text())
+    report = json.loads(read_resource_text(report_path))
     output = ROOT / "docs/figures/flow3d"
     output.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.size": 12, "axes.labelsize": 13, "legend.fontsize": 10})
@@ -201,8 +200,10 @@ def main() -> None:
     for suffix in ("png", "svg"):
         fig.savefig(output / f"convergence.{suffix}", dpi=180)
     plt.close(fig)
-    (output / "campaign.json").write_bytes(report_path.read_bytes())
+    (output / "campaign.json").write_bytes(read_resource_bytes(report_path))
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_flow3d").main()

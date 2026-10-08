@@ -18,15 +18,25 @@ import numpy as np
 from examples.campaign_provenance import require_equal, verify_archive
 from examples.marmousi_data import FILES
 from pymhm.io.provenance import file_digest
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_text,
+    source_file,
+    source_label,
+)
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 EXCLUSION = [5000.0, 50.0, 50.0]
 
 
 def check_sources(record: Mapping[str, Any], required: tuple[str, ...]) -> None:
     """Require executed public owners and all guarded core files to match current bytes."""
     hashes = record.get("source_sha256")
-    core = {path.relative_to(ROOT).as_posix() for path in (ROOT / "src/pymhm").rglob("*.py")}
+    core = {
+        source_label(path, ROOT)
+        for path in source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")
+    }
     if (
         record.get("source_changed_during_run") is not False
         or not isinstance(hashes, dict)
@@ -34,8 +44,8 @@ def check_sources(record: Mapping[str, Any], required: tuple[str, ...]) -> None:
     ):
         raise ValueError("Marmousi publication requires complete current executed sources")
     for name, digest in hashes.items():
-        path = (ROOT / name).resolve()
-        if not path.is_relative_to(ROOT) or not path.is_file() or file_digest(path) != digest:
+        path = (source_file(name, root=ROOT)).resolve()
+        if not local_resource(path).is_file() or file_digest(local_resource(path)) != digest:
             raise ValueError("Marmousi executed source bytes differ from the current owner")
 
 
@@ -81,7 +91,7 @@ def check_residual(record: Mapping[str, Any], name: str) -> None:
 
 def checked_mhm(path: Path) -> dict[str, Any]:
     """Verify a full declared Q3 field and its original local and skeleton equations."""
-    record = json.loads(path.read_text())
+    record = json.loads(read_resource_text(path))
     check_sources(
         record,
         (
@@ -139,7 +149,7 @@ def checked_mhm(path: Path) -> dict[str, Any]:
 
 def checked_reference(path: Path) -> dict[str, Any]:
     """Verify a native full-crop CG acquisition, original residual and runtime attribution."""
-    record = json.loads(path.read_text())
+    record = json.loads(read_resource_text(path))
     check_sources(
         record,
         (
@@ -223,7 +233,7 @@ def check_physical_norms(values: Mapping[str, Any], order: int) -> None:
 
 def checked_comparison(path: Path, candidate: Path, reference: Path) -> dict[str, Any]:
     """Validate the current comparison chain and its common circular derivative domains."""
-    record = json.loads(path.read_text())
+    record = json.loads(read_resource_text(path))
     check_sources(
         record,
         (
@@ -235,7 +245,7 @@ def checked_comparison(path: Path, candidate: Path, reference: Path) -> dict[str
         ),
     )
     for prefix, field in (("candidate", candidate), ("reference", reference)):
-        if record.get(f"{prefix}_record_sha256") != file_digest(field):
+        if record.get(f"{prefix}_record_sha256") != file_digest(local_resource(field)):
             raise ValueError("Marmousi comparison identifies different acquired field records")
     norms = record.get("norms")
     if not isinstance(norms, dict) or set(norms) != {"8", "10"}:
@@ -265,7 +275,7 @@ def checked_convergence(path: Path, reference: Path) -> dict[str, Any]:
     Measured reference increments remain explicit; this validation does not
     treat an increment as an error bound or an unrefined field as exact.
     """
-    record = json.loads(path.read_text())
+    record = json.loads(read_resource_text(path))
     check_sources(
         record,
         (
@@ -281,7 +291,7 @@ def checked_convergence(path: Path, reference: Path) -> dict[str, Any]:
     for row in rows:
         field_path = path.parent / row["reference_record"]
         checked_reference(field_path)
-        if row.get("reference_record_sha256") != file_digest(field_path):
+        if row.get("reference_record_sha256") != file_digest(local_resource(field_path)):
             raise ValueError("reference refinement identifies different native fields")
         verify_archive(path.parent / row["sample_archive"], row["sample_archive_sha256"])
         orders = (("physical_norms", 8),)
@@ -290,6 +300,6 @@ def checked_convergence(path: Path, reference: Path) -> dict[str, Any]:
         for key, order in orders:
             values = row.get(key, {})
             check_physical_norms(values, order)
-    if rows[-1]["reference_record_sha256"] != file_digest(reference):
+    if rows[-1]["reference_record_sha256"] != file_digest(local_resource(reference)):
         raise ValueError("the plotted P4 denominator differs from the measured finest reference")
     return record

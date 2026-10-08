@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 import shutil
@@ -23,6 +15,7 @@ from examples.plot_style import set_refinement_ticks
 from examples.solve_unusual_spe10 import OUTPUT, ROOT, UnusualSPE10Field
 from examples.solve_unusual_spe10_reference import CG2Field
 from examples.spe10_plot_records import CASES, completed_cases, digest, validate_pair
+from pymhm.io.workspace import local_resource, read_resource_text, resource_glob
 
 FIGURES = ROOT / "docs/figures/unusual-spe10"
 REFERENCE = "classical-cg2-graded-xy-1440x498"
@@ -30,7 +23,7 @@ REFERENCE = "classical-cg2-graded-xy-1440x498"
 
 def read(path: Path) -> dict:
     """Require the physical field digest used by the acquisition or norm record."""
-    record = json.loads(path.read_text())
+    record = json.loads(read_resource_text(path))
     for key in ("archive", "reference"):
         if key in record:
             actual = digest(path.parent / record[key])
@@ -197,7 +190,7 @@ def plot(data: Path, output: Path) -> None:
 
     points = np.column_stack((np.full(1201, 33.0), np.r_[0.0, np.geomspace(1e-4, 2200, 1200)]))
     truth = reference.evaluate(points)[0]
-    with np.load(data / rows[0]["archive"]) as arrays:
+    with np.load(local_resource(data / rows[0]["archive"])) as arrays:
         crossings = np.unique(arrays["profile_points"][:, [0, -1], 1])
     fig = plt.figure(figsize=(13.2, 5.3), layout="constrained")
     grid = fig.add_gridspec(2, 3, height_ratios=(3.6, 1.1))
@@ -346,7 +339,7 @@ def plot(data: Path, output: Path) -> None:
                 axis.set_title(title)
         save(fig, output, name)
 
-    for path in data.glob("*.json"):
+    for path in resource_glob(data, "*.json"):
         shutil.copy2(path, output / path.name)
 
 
@@ -360,4 +353,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_unusual_spe10").main()

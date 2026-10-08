@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -37,9 +29,10 @@ from pymhm.fem.scalar.triangle import tabulate
 from pymhm.fem.traces.interval import SkeletonSpace
 from pymhm.fem.traces.scalar import prepare_scalar_trace
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file
 from pymhm.postprocessing.solutions import ScalarSolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/transport"
 SOURCES = (
     "src/pymhm/adaptivity/transport.py",
@@ -188,7 +181,10 @@ def record(solution: ScalarSolution, name: str, refinement: int) -> dict[str, An
 
 def collect() -> dict[str, Any]:
     """Run bounded spatial, adaptive and same-skeleton local-resolution controls."""
-    source_hashes = current_source_manifest({name: digest(ROOT / name) for name in SOURCES})
+    source_hashes = current_source_manifest(
+        {name: digest(source_file(name, root=ROOT)) for name in SOURCES},
+        packages=("pymhm", "examples"),
+    )
     start = perf_counter()
     report: dict[str, Any] = dict(
         source_hashes=source_hashes,
@@ -232,7 +228,9 @@ def collect() -> dict[str, Any]:
         row["resolution"] = resolution
         report["spatial"].append(row)
         print("spatial", resolution, row["quadrature"]["12"], flush=True)
-    assert all(digest(ROOT / name) == value for name, value in source_hashes.items())
+    assert all(
+        digest(source_file(name, root=ROOT)) == value for name, value in source_hashes.items()
+    )
     report["source_changed_during_run"] = False
     report["total_seconds_including_errors_and_archives"] = perf_counter() - start
     return report
@@ -240,7 +238,10 @@ def collect() -> dict[str, Any]:
 
 def spatial_control(resolution: int) -> dict[str, Any]:
     """Acquire one additional unchanged P1/P0/r16 macro-resolution control."""
-    before = current_source_manifest({name: digest(ROOT / name) for name in SOURCES})
+    before = current_source_manifest(
+        {name: digest(source_file(name, root=ROOT)) for name in SOURCES},
+        packages=("pymhm", "examples"),
+    )
     start = perf_counter()
     with threadpool_limits(1):
         row = record(
@@ -248,7 +249,7 @@ def spatial_control(resolution: int) -> dict[str, Any]:
             f"mixed-spatial-n{resolution}",
             16,
         )
-    assert all(digest(ROOT / name) == value for name, value in before.items())
+    assert all(digest(source_file(name, root=ROOT)) == value for name, value in before.items())
     row.update(
         resolution=resolution,
         acquisition_source_hashes=before,
@@ -285,4 +286,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.transport_mixed_campaign").main()

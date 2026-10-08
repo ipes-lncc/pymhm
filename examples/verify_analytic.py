@@ -1,5 +1,7 @@
 """Verify the analytical Darcy lifts with full source moments and Figure 5 data."""
 
+from __future__ import annotations
+
 import argparse
 import csv
 import json
@@ -9,6 +11,8 @@ from time import perf_counter
 import matplotlib
 import numpy as np
 from threadpoolctl import threadpool_limits
+
+from pymhm.io.workspace import case_workspace
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -20,23 +24,23 @@ from pymhm import TriangleMesh
 from pymhm.fem.scalar.operators import rt0_evaluate, triangle_quadrature
 
 
-def pressure(points):
+def pressure(points: np.ndarray) -> np.ndarray:
     """Evaluate the zero-mean exact pressure in Harder--Paredes--Valentin Section 5.1."""
     return np.prod(np.cos(2 * np.pi * points), axis=-1)
 
 
-def flux(points):
+def flux(points: np.ndarray) -> np.ndarray:
     """Exact physical Darcy flux, with homogeneous normal boundary data."""
     x, y = (2 * np.pi * points).T
     return 2 * np.pi * np.column_stack((np.sin(x) * np.cos(y), np.cos(x) * np.sin(y)))
 
 
-def source(points):
+def source(points: np.ndarray) -> np.ndarray:
     """Independently differentiated source, minus the pressure Laplacian."""
     return 8 * np.pi**2 * pressure(points)
 
 
-def measure(n, refinement=2, order=10):
+def measure(n: int, refinement: int = 2, order: int = 10) -> dict[str, float | int]:
     """Integrate each declared pressure/flux convention without fitting ordinates."""
     start = perf_counter()
     mesh = TriangleMesh.unit_square(n)
@@ -72,7 +76,7 @@ def measure(n, refinement=2, order=10):
         potential = space.integrate_rt0(classical.hybrid.coarse[cell][0], centroid_flux, divergence)
         integrated.append(space.evaluate(points[cell])[0] @ potential)
 
-    def scalar_error(values):
+    def scalar_error(values: np.ndarray | list[np.ndarray]) -> float:
         """Physical L2 error on the actual macrotriangles."""
         return float(np.sqrt(mesh.areas @ ((exact - values) ** 2 @ weights)))
 
@@ -108,7 +112,7 @@ def measure(n, refinement=2, order=10):
     return record
 
 
-def plots(rows, root):
+def plots(rows: list[dict[str, float | int]], root: Path) -> None:
     """Compare full-source analytical MHM, classical RT0 and digitized publication data."""
     with (root / "examples/results/published/harder2013_figure5.csv").open() as stream:
         published = [
@@ -174,13 +178,13 @@ def plots(rows, root):
 
 
 @threadpool_limits.wrap(limits=1)
-def main():
+def main() -> None:
     """Acquire six resolutions and an independent source/quadrature sensitivity check."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--levels", type=int, nargs="+", default=[4, 6, 8, 16, 32, 64])
     parser.add_argument("--plot-only", action="store_true")
     args = parser.parse_args()
-    root = Path(__file__).resolve().parents[1]
+    root = case_workspace()
     path = root / "examples/results/analytic.json"
     if args.plot_only:
         data = json.loads(path.read_text())
@@ -203,4 +207,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.verify_analytic").main()

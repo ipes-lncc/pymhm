@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -25,9 +17,10 @@ from examples.tutorial_maxwell_equations import EquationLeapfrog
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.fem.vector.curl import TangentialTraceSpace as MaxwellSkeleton
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 @dataclass(frozen=True)
@@ -67,7 +60,7 @@ class NanoWaveguide:
 def hashes() -> dict[str, str]:
     """Record immutable acquisition, operator, geometry and algebra sources."""
     paths = [Path(__file__)] + [
-        ROOT / f"src/pymhm/{name}.py"
+        source_file(f"src/pymhm/{name}.py", root=ROOT)
         for name in (
             "_legacy/models/waves/maxwell",
             "fem/vector/curl",
@@ -81,11 +74,9 @@ def hashes() -> dict[str, str]:
             "fem/quadrature/planar",
         )
     ]
-    paths += list(sorted((ROOT / "src/pymhm").rglob("*.py")))
-    paths.append(ROOT / "examples/tutorial_maxwell_equations.py")
-    return current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
-    )
+    paths += list(sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")))
+    paths.append(source_file("examples/tutorial_maxwell_equations.py", root=ROOT))
+    return current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
 
 
 def save_fields(solution: Any, path: Path, fine_resolution: int) -> None:
@@ -227,4 +218,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.maxwell_nanoguide").main()

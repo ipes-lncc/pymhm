@@ -10,17 +10,19 @@ from typing import Any
 
 import matplotlib
 
+from pymhm.io.workspace import case_workspace, read_resource_bytes, read_resource_text, source_label
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import NullFormatter
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def digest(path: Path) -> str:
     """Identify literal record, field or executed source bytes."""
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return hashlib.sha256(read_resource_bytes(path)).hexdigest()
 
 
 def checked_source_copies(record: dict[str, Any], directory: Path) -> int:
@@ -80,7 +82,7 @@ def render(
         for suffix in ("png", "svg"):
             path = directory / f"convergence.{suffix}"
             fig.savefig(path, dpi=120)
-            paths[suffix] = dict(path=path.relative_to(ROOT).as_posix(), sha256=digest(path))
+            paths[suffix] = dict(path=source_label(path, ROOT), sha256=digest(path))
         plt.close(fig)
     return paths
 
@@ -88,13 +90,13 @@ def render(
 def summarize(directory: Path, resource: Path, *, allow_incomplete: bool = False) -> dict[str, Any]:
     """Publish accepted norms, qualifying a deliberately selected interrupted study."""
     path = directory / "minimal-convergence.json"
-    record = json.loads(path.read_text())
+    record = json.loads(read_resource_text(path))
     if (not record["complete"] or len(record["rows"]) != 3) and not allow_incomplete:
         raise ValueError("A completed three-level acquisition is required")
     if not record["rows"]:
         raise ValueError("At least one accepted field with completed norms is required")
     count = checked_source_copies(record, directory)
-    budget = json.loads(resource.read_text())
+    budget = json.loads(read_resource_text(resource))
     interrupted = allow_incomplete and not record["complete"]
     if budget["changed_sources"] or not budget["owned_group_empty"]:
         raise ValueError("The supplied acquisition resource receipt did not pass")
@@ -105,7 +107,7 @@ def summarize(directory: Path, resource: Path, *, allow_incomplete: bool = False
         raise ValueError("The supplied acquisition resource receipt did not pass")
     resources = [
         dict(
-            path=resource.relative_to(ROOT).as_posix(),
+            path=source_label(resource, ROOT),
             sha256=digest(resource),
             receipt=budget,
             role="interrupted after accepted levels" if interrupted else "completed acquisition",
@@ -117,7 +119,7 @@ def summarize(directory: Path, resource: Path, *, allow_incomplete: bool = False
             receipt_path = ROOT / phase["path"]
             if digest(receipt_path) != phase["sha256"]:
                 raise ValueError("An original resource phase receipt differs")
-            receipt = json.loads(receipt_path.read_text())
+            receipt = json.loads(read_resource_text(receipt_path))
             if receipt["changed_sources"] or not receipt["owned_group_empty"]:
                 raise ValueError("A resource phase has changed sources or retained processes")
             interrupted = phase["role"] == "interrupted after accepted levels"
@@ -197,7 +199,7 @@ def summarize(directory: Path, resource: Path, *, allow_incomplete: bool = False
         acquisition_complete=record["complete"],
         accepted_level_count=len(rows),
         requested_levels=record.get("requested_levels", [row["level"] for row in rows]),
-        acquisition_record=dict(path=path.relative_to(ROOT).as_posix(), sha256=digest(path)),
+        acquisition_record=dict(path=source_label(path, ROOT), sha256=digest(path)),
         resource_phases=[
             {key: value for key, value in phase.items() if key != "receipt"} for phase in resources
         ],
@@ -217,16 +219,23 @@ def summarize(directory: Path, resource: Path, *, allow_incomplete: bool = False
             for check in row["checked_original_solves"]
         ),
         interpretation=(
-            "Two accepted levels on the fixed polygonal well geometry; the third level "
-            "did not close within its acquisition deadline. These two points are an "
-            "initial resolution comparison, not an established three-level convergence rate."
-            if interrupted
-            else "SPE10 pressure increments decrease, but the relative Darcy-flux increments "
-            "exceed unity and increase. These local levels do not establish flux convergence "
-            "or a sufficiently refined numerical reference."
-            if relative
-            else "Initial empirical rates for the stated analytical problem and physical spaces; "
-            "no matched historical reproduction or general stability theorem is asserted."
+            "Two accepted levels on the fixed polygonal well geometry; the "
+            "third level did not close within its acquisition deadline. These "
+            "two points are an initial resolution comparison, not an "
+            "established three-level convergence rate."
+        )
+        if interrupted
+        else (
+            "SPE10 pressure increments decrease, but the relative Darcy-flux "
+            "increments exceed unity and increase. These local levels do not "
+            "establish flux convergence or a sufficiently refined numerical "
+            "reference."
+        )
+        if relative
+        else (
+            "Initial empirical rates for the stated analytical problem and "
+            "physical spaces; no matched historical reproduction or general "
+            "stability theorem is asserted."
         ),
         historical_reproduction=False,
         converged_numerical_reference=False,
@@ -243,11 +252,11 @@ def summarize(directory: Path, resource: Path, *, allow_incomplete: bool = False
 def reuse_quarter(directory: Path) -> dict[str, Any]:
     """Reuse four verified NeoPZ classical levels with their original provenance."""
     source = ROOT / "examples/results/quarter-five-spot/reference/classical-convergence.json"
-    record = json.loads(source.read_text())
+    record = json.loads(read_resource_text(source))
     directory.mkdir(parents=True, exist_ok=False)
     snapshot = directory / "original-records"
     snapshot.mkdir()
-    (snapshot / source.name).write_bytes(source.read_bytes())
+    (snapshot / source.name).write_bytes(read_resource_bytes(source))
     checked = []
     for row in record["levels"]:
         path = source.parent / row["fields"]
@@ -255,14 +264,12 @@ def reuse_quarter(directory: Path) -> dict[str, Any]:
             raise ValueError(f"Quarter obstacle field archive differs: {path}")
         metadata = path.with_suffix(".json")
         copied = snapshot / metadata.name
-        copied.write_bytes(metadata.read_bytes())
+        copied.write_bytes(read_resource_bytes(metadata))
         checked.append(
             dict(
                 refinement=row["refinement"],
-                fields=dict(path=path.relative_to(ROOT).as_posix(), sha256=digest(path)),
-                original_metadata=dict(
-                    path=metadata.relative_to(ROOT).as_posix(), sha256=digest(metadata)
-                ),
+                fields=dict(path=source_label(path, ROOT), sha256=digest(path)),
+                original_metadata=dict(path=source_label(metadata, ROOT), sha256=digest(metadata)),
                 basis_sha256=row["executed_native_basis_sha256"],
                 algebra=row["algebra"],
                 physical_checks=row["physical_checks"],
@@ -283,17 +290,19 @@ def reuse_quarter(directory: Path) -> dict[str, Any]:
         schema="pymhm-minimal-quarter-classical-reuse-v1",
         case="quarter-obstacle",
         new_pde_solves=0,
-        original_record=dict(path=source.relative_to(ROOT).as_posix(), sha256=digest(source)),
+        original_record=dict(path=source_label(source, ROOT), sha256=digest(source)),
         original_geometry=record["geometry"],
         method=record["method"],
         levels=checked,
         refinement_differences=increments,
         interpretation=(
-            "Four existing classical conforming reference levels show decreasing physical "
-            "pressure and Darcy-flux increments. The finest field remains a numerical "
-            "reference with nonzero refinement error; this initial study does not certify "
-            "a converged baseline or an exact solution. Original source and native basis "
-            "provenance are retained without retagging to the present checkout."
+            "Four existing classical conforming reference levels show "
+            "decreasing physical pressure and Darcy-flux increments. The "
+            "finest field remains a numerical reference with nonzero "
+            "refinement error; this initial study does not certify a "
+            "converged baseline or an exact solution. Original source and "
+            "native basis provenance are retained without retagging to the "
+            "present checkout."
         ),
         converged_numerical_reference=False,
         historical_reproduction=False,
@@ -327,4 +336,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_minimal_darcy").main()

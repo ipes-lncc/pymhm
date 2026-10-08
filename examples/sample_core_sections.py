@@ -7,14 +7,6 @@ Physical error checks integrate volume polynomials independently of the plot.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -35,9 +27,10 @@ from examples.mshho3d_sections import replay_section
 from examples.verify_hdiv3d import physical_errors as hdiv_physical_errors
 from examples.verify_mshho3d import physical_errors
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/core-extensions"
 HEIGHT = 0.37
 
@@ -142,18 +135,18 @@ def run(suite: str, refinement: int = 6) -> None:
             "core/contracts",
             "linalg/linear",
         ]
-    paths = [ROOT / f"src/pymhm/{name}.py" for name in names] + [
+    paths = [source_file(f"src/pymhm/{name}.py", root=ROOT) for name in names] + [
         Path(__file__),
-        ROOT / "examples/core_extension_data.py",
+        source_file("examples/core_extension_data.py", root=ROOT),
     ]
     if suite == "hdiv3d":
         paths += [
-            ROOT / "examples/hdiv3d_field_archive.py",
-            ROOT / "examples/hdiv3d_sections.py",
-            ROOT / "examples/verify_hdiv3d.py",
-            ROOT / "examples/archive_precision.py",
+            source_file("examples/hdiv3d_field_archive.py", root=ROOT),
+            source_file("examples/hdiv3d_sections.py", root=ROOT),
+            source_file("examples/verify_hdiv3d.py", root=ROOT),
+            source_file("examples/archive_precision.py", root=ROOT),
         ]
-    hashes = current_source_manifest({p.relative_to(ROOT).as_posix(): digest(p) for p in paths})
+    hashes = current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
     report = dict(
         suite=suite,
         section_height=HEIGHT,
@@ -208,17 +201,24 @@ def run(suite: str, refinement: int = 6) -> None:
         report["cases"][name] = info
         print(json.dumps({name: info}), flush=True)
     report["source_changed"] = hashes != current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): digest(p) for p in paths}
+        source_identity(ROOT, paths), packages=("pymhm", "examples")
     )
     if report["source_changed"]:
         raise RuntimeError("a polynomial replay source changed during acquisition")
     (DATA / f"{suite}-field-sampling.json").write_text(json.dumps(report, indent=2) + "\n")
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("suite", choices=("hdiv3d", "mshho3d"))
     parser.add_argument("--refinement", type=int, default=6)
     arguments = parser.parse_args()
     with threadpool_limits(1):
         run(arguments.suite, arguments.refinement)
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.sample_core_sections").main()

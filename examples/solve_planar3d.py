@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -25,18 +17,19 @@ from examples.planar3d_data import Planar3DData
 from pymhm.fem.scalar.tetrahedron import tetrahedron_quadrature
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.fitting import fit_planar_material, planar_face_partitions
 from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.recovery.moments_3d import reconstruct_darcy_moments_3d
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def snapshot() -> dict[str, str]:
     """Capture executed numerical owners and analytical data without local machine paths."""
-    paths = [Path(__file__), ROOT / "examples/planar3d_data.py"]
+    paths = [Path(__file__), source_file("examples/planar3d_data.py", root=ROOT)]
     paths.extend(
-        ROOT / f"src/pymhm/{name}"
+        source_file(f"src/pymhm/{name}", root=ROOT)
         for name in (
             "_legacy/models/darcy/primal_3d.py",
             "meshes/validation.py",
@@ -52,12 +45,7 @@ def snapshot() -> dict[str, str]:
             "meshes/mixed.py",
         )
     )
-    return current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in paths
-        }
-    )
+    return current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
 
 
 def main() -> None:
@@ -194,4 +182,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_planar3d").main()

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import hashlib
-from pathlib import Path
 
 import numpy as np
 import pytest
@@ -22,6 +21,7 @@ from examples.mshho3d_field_archive import (
 from examples.mshho3d_ideal_p0 import ideal_p0_audit
 from examples.mshho3d_sections import capture_section, replay_section, validate_section
 from pymhm.fem.scalar.tetrahedron import tetra_nodal_space, tetra_operators
+from pymhm.io.workspace import source_file
 from pymhm.meshes.polyhedral import PolyhedralMesh
 from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.methods.hho_3d import solve_mshho_3d
@@ -165,7 +165,7 @@ def test_physical_contract_rejects_changed_basis(example, corruption):
 def test_atomic_archive_digest_and_no_fresh_reconstruction(example, tmp_path, monkeypatch):
     """Data-only replay needs the archived matrices and rejects changed coefficient bytes."""
     solution, _ = example
-    owner = Path(__file__).resolve().parents[1] / "examples/mshho3d_field_archive.py"
+    owner = source_file("examples/mshho3d_field_archive.py")
     path = tmp_path / "field.npz"
     write_field(
         path,

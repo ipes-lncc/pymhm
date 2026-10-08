@@ -7,14 +7,6 @@ reconstructed one macrocell at a time after the complete global trace solve.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -29,17 +21,22 @@ from examples.campaign_checkpoint import archive_path, require_sources, verify_c
 from examples.helmholtz_campaign import AcousticWave, source_hashes
 from examples.helmholtz_compact_family import CompactFamily
 from examples.helmholtz_response_store import ResponseStore
-from examples.helmholtz_stability import checkpoint, continuous_local_resonance, projected_trace
+from examples.helmholtz_stability import (
+    checkpoint,
+    continuous_local_resonance,
+    projected_trace,
+)
 from examples.tutorial_helmholtz_equations import AcousticAssemblyProvider
 from pymhm.core.validation import positive_int
 from pymhm.fem.loads import split_point_sources
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton
 from pymhm.io.provenance import file_digest
+from pymhm.io.workspace import case_workspace, source_file
 from pymhm.linalg.linear import LinearSolveError
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.postprocessing.acoustics import local_helmholtz_error_squared
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def hashes() -> dict[str, str]:
@@ -56,7 +53,7 @@ def hashes() -> dict[str, str]:
         "examples/campaign_checkpoint.py",
         "examples/campaign_provenance.py",
     ):
-        sources[name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+        sources[name] = hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
     return sources
 
 
@@ -370,4 +367,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.helmholtz_stability_phases").main()

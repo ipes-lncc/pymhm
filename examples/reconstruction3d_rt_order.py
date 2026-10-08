@@ -12,9 +12,10 @@ from examples.reconstruction3d_data import fields
 from pymhm import TetraMesh, TriangularSkeleton, reconstruct_darcy_moments_3d
 from pymhm.core.contracts import HybridSolution
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.postprocessing.solutions import Darcy3DSolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/reconstruction3d"
 
 
@@ -34,7 +35,7 @@ def run() -> None:
     if hashlib.sha256(archive_path.read_bytes()).hexdigest() != row["archive_sha256"]:
         raise ValueError("the original field archive differs from its recorded digest")
     owners = [
-        ROOT / f"src/pymhm/{name}.py"
+        source_file(f"src/pymhm/{name}.py", root=ROOT)
         for name in (
             "_legacy/models/darcy/primal_3d",
             "recovery/moments_3d",
@@ -44,10 +45,8 @@ def run() -> None:
             "fem/scalar/tetrahedron",
             "fem/scalar/tetrahedron_topology",
         )
-    ] + [Path(__file__), ROOT / "examples/reconstruction3d_data.py"]
-    hashes = current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
-    )
+    ] + [Path(__file__), source_file("examples/reconstruction3d_data.py", root=ROOT)]
+    hashes = current_source_manifest(source_identity(ROOT, owners), packages=("pymhm", "examples"))
     with np.load(archive_path) as archive:
         arrays = {key: archive[key].copy() for key in archive.files}
     macro = TetraMesh(arrays["macro_points"], arrays["macro_cells"])
@@ -130,9 +129,7 @@ def run() -> None:
             "Continuous-test equilibrium differs from separate fine-cell source balance."
         ),
     )
-    current = current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
-    )
+    current = current_source_manifest(source_identity(ROOT, owners), packages=("pymhm", "examples"))
     if current != hashes:
         raise RuntimeError("sources changed during the reconstruction control")
     result["source_changed_during_run"] = False
@@ -140,6 +137,13 @@ def run() -> None:
     print(json.dumps(result, indent=2), flush=True)
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     with threadpool_limits(1):
         run()
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.reconstruction3d_rt_order").main()

@@ -2,18 +2,12 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import json
 from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import local_resource, read_resource_text, resource_glob
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -28,14 +22,17 @@ from pymhm.postprocessing.visualization import structured_cell_grid
 def records() -> list[dict]:
     """Read completed MHM cases in increasing local and skeleton resolution."""
     return sorted(
-        [json.loads(path.read_text()) for path in OUTPUT.glob("darcy-q1-r*-s*.json")],
+        [
+            json.loads(read_resource_text(path))
+            for path in resource_glob(OUTPUT, "darcy-q1-r*-s*.json")
+        ],
         key=lambda row: (row["local_refinement"][0], row["skeleton_segments"]),
     )
 
 
 def q1_grid(path: Path) -> pv.UnstructuredGrid:
     """Reconstruct separate Q1 macro-local display grids from archived nodal values."""
-    with np.load(path) as data:
+    with np.load(local_resource(path)) as data:
         pressure = data["local_pressure"]
         mesh = macro_mesh()
         refinement = int(round(np.sqrt(pressure.shape[1]))) - 1
@@ -62,7 +59,7 @@ def fields(row: dict) -> None:
     """Render the coefficient, full broken Q1 pressure and sampled raw flux."""
     path = OUTPUT / row["archive"]
     pressure_grid = q1_grid(path)
-    with np.load(path) as data:
+    with np.load(local_resource(path)) as data:
         flux_grid = structured_cell_grid(
             (60, 220),
             cell_data={"Raw flux magnitude": np.linalg.norm(data["flux"], axis=2)},
@@ -89,7 +86,10 @@ def fields(row: dict) -> None:
 
 def conforming_reference() -> dict:
     """Select the article-grid Q3 comparison independently of other reference grids."""
-    rows = [json.loads(path.read_text()) for path in OUTPUT.glob("reference-q3-*.json")]
+    rows = [
+        json.loads(read_resource_text(path))
+        for path in resource_glob(OUTPUT, "reference-q3-*.json")
+    ]
     return max(
         (row for row in rows if row["article_grid"]), key=lambda row: row["quadrature_order"]
     )
@@ -97,7 +97,10 @@ def conforming_reference() -> dict:
 
 def reference_fields(row: dict, reference: dict) -> None:
     """Compare pressure at identical material-pixel centers without spatial averaging."""
-    with np.load(OUTPUT / row["archive"]) as mhm, np.load(OUTPUT / reference["archive"]) as ref:
+    with (
+        np.load(local_resource(OUTPUT / row["archive"])) as mhm,
+        np.load(local_resource(OUTPUT / reference["archive"])) as ref,
+    ):
         fields = [ref["pressure"], mhm["pressure"], mhm["pressure"] - ref["pressure"]]
     plotter = pv.Plotter(shape=(1, 3), off_screen=True, window_size=(2100, 1000))
     for column, (values, title) in enumerate(
@@ -145,11 +148,11 @@ def profile_values(data: dict, coordinates: np.ndarray) -> np.ndarray:
 
 def plot_profiles(rows: list[dict]) -> None:
     """Compare both full and zoomed x=199 profiles with published curve samples."""
-    published = json.loads((OUTPUT / "published-profile.json").read_text())
+    published = json.loads(read_resource_text(OUTPUT / "published-profile.json"))
     reference = np.asarray(published["points"])
     uncertainty = published["digitization_uncertainty"]["pressure"]
     conforming = conforming_reference()
-    with np.load(OUTPUT / conforming["archive"]) as data:
+    with np.load(local_resource(OUTPUT / conforming["archive"])) as data:
         continuous_y = data["profile_points"][:, :, 1].ravel()
         continuous_p = data["profile_pressure"].ravel()
     available = {row["local_refinement"][0] for row in rows}
@@ -188,7 +191,7 @@ def plot_profiles(rows: list[dict]) -> None:
         for row in rows:
             if row["local_refinement"][0] != refinement or row["skeleton_segments"] not in colors:
                 continue
-            with np.load(OUTPUT / row["archive"]) as data:
+            with np.load(local_resource(OUTPUT / row["archive"])) as data:
                 for macro in range(11):
                     axis.plot(
                         data["profile_points"][macro, :, 1],
@@ -218,9 +221,9 @@ def plot_profiles(rows: list[dict]) -> None:
     plt.close(fig)
     measurements = []
     for row in rows:
-        with np.load(OUTPUT / row["archive"]) as data:
+        with np.load(local_resource(OUTPUT / row["archive"])) as data:
             difference = profile_values(data, reference[:, 0]) - reference[:, 1]
-            with np.load(OUTPUT / conforming["archive"]) as ref:
+            with np.load(local_resource(OUTPUT / conforming["archive"])) as ref:
                 pressure_difference = data["pressure"] - ref["pressure"]
                 flux_difference = data["flux"] - ref["flux"]
         measurements.append(
@@ -334,4 +337,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_spe10_darcy").main()

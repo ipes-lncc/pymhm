@@ -15,7 +15,11 @@ from typing import Any
 import numpy as np
 
 from examples.formulations.original import solve_original
-from examples.marmousi_data import MarmousiMaterial, download_marmousi_data, load_marmousi_crop
+from examples.marmousi_data import (
+    MarmousiMaterial,
+    download_marmousi_data,
+    load_marmousi_crop,
+)
 from examples.tutorial_helmholtz_equations import (
     acoustic_prescribed,
     acoustic_problem,

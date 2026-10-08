@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 import shutil
@@ -25,16 +17,17 @@ from matplotlib.ticker import MaxNLocator
 from examples.mh2m_campaign import _owners, exact, oscillatory
 from examples.plot_mesh import draw_macro_mesh
 from examples.plot_style import set_refinement_ticks
+from pymhm.io.workspace import case_workspace, local_resource, read_resource_text
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 RESULTS = ROOT / "examples/results/mh2m"
 OUTPUT = ROOT / "docs/figures/mh2m"
 
 
 def read_archive(path: Path) -> dict[str, np.ndarray]:
     """Read each compressed array once, retaining independent interface values."""
-    with np.load(path) as archive:
+    with np.load(local_resource(path)) as archive:
         return {key: archive[key] for key in archive.files}
 
 
@@ -275,10 +268,10 @@ def main() -> None:
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.size": 14, "axes.titlesize": 15, "axes.labelsize": 14})
-    record = json.loads((args.results / "comparison.json").read_text())
+    record = json.loads(read_resource_text(args.results / "comparison.json"))
     convergence(record, args.output)
     enrichment(record, args.output)
-    pressure_record = json.loads((args.results / "pressure-enrichment.json").read_text())
+    pressure_record = json.loads(read_resource_text(args.results / "pressure-enrichment.json"))
     pressure_enrichment(pressure_record, args.output)
     smooth_fields(args.results, args.output)
     oscillatory_fields(record, args.results, args.output)
@@ -289,4 +282,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_mh2m").main()

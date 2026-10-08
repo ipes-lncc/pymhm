@@ -15,7 +15,9 @@ import json
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[1]
+from pymhm.io.workspace import case_workspace, local_resource, read_resource_text, source_file
+
+ROOT = case_workspace()
 LABELS = {
     "pressure_l2": "Pressure L2 error",
     "flux_l2": "Darcy flux L2 error",
@@ -37,7 +39,7 @@ REFERENCES = {
 
 def digest(path: Path) -> str:
     """Return the SHA256 identity of complete immutable input bytes."""
-    with path.open("rb") as stream:
+    with local_resource(path).open("rb") as stream:
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
@@ -45,7 +47,7 @@ def checked_input(path: Path, expected: str) -> dict[str, Any]:
     """Read a numerical record only when its supplied acquisition digest matches."""
     if digest(path) != expected:
         raise ValueError(f"Numerical input digest differs: {path}")
-    record: dict[str, Any] = json.loads(path.read_text())
+    record: dict[str, Any] = json.loads(read_resource_text(path))
     return record
 
 
@@ -103,7 +105,10 @@ def collect_scalar(specification: dict[str, Any]) -> dict[str, Any]:
         if not record["complete"] or len(record["rows"]) < 3:
             raise ValueError("A complete initial scalar series requires three accepted levels")
         for source, expected in record["source_sha256"].items():
-            if source.startswith("src/pymhm/") and digest(ROOT / source) != expected:
+            if (
+                source.startswith("src/pymhm/")
+                and digest(source_file(source, root=ROOT)) != expected
+            ):
                 raise ValueError("The accepted numerical core differs from the current core")
         for row in record["rows"]:
             original = row["original_equations"]
@@ -215,7 +220,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--catalogue", action="store_true")
     args = parser.parse_args()
-    specification = json.loads(args.manifest.read_text())
+    specification = json.loads(read_resource_text(args.manifest))
     if args.catalogue:
         render_catalogue(specification["entries"], args.output)
     else:
@@ -230,4 +235,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.initial_study_gallery").main()

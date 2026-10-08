@@ -15,6 +15,7 @@ from urllib.request import urlopen
 
 import numpy as np
 
+from pymhm.io.workspace import case_workspace, read_resource_text, resource_file
 from pymhm.materials.cartesian import CartesianCellField
 
 REVISION = "f978f29d657d28fe58bcea20fabee68953093482"
@@ -23,12 +24,12 @@ LENGTH_SCALE = 10000.0
 STRESS_SCALE = 1e8
 GRAVITY = 9.81
 BOUNDS = (0.0, 1.0, 0.0, 0.45)
-DATA_DIRECTORY = Path(__file__).resolve().parents[1] / "build/datasets/hpc4e"
+DATA_DIRECTORY = case_workspace() / "build/datasets/hpc4e"
 
 
 def read_samples(path: Path) -> np.ndarray:
     """Read a finite rectangular array and convert depth to upward height."""
-    tokens = path.read_text(encoding="ascii").split()
+    tokens = read_resource_text(path, encoding="ascii").split()
     if len(tokens) < 3:
         raise ValueError("material file needs a two-integer shape and sample values")
     try:
@@ -89,7 +90,7 @@ def load_data(directory: Path = DATA_DIRECTORY, *, download: bool = False) -> HP
     """Load the pinned 512×256 samples, downloading only when explicitly requested."""
     import json
 
-    manifest = Path(__file__).with_name("results") / "hpc4e" / "dataset.json"
+    manifest = resource_file("examples/results/hpc4e/dataset.json")
     metadata = json.loads(manifest.read_text(encoding="utf-8"))
     fields = []
     for name in ("VE", "VPoisso", "Vden"):

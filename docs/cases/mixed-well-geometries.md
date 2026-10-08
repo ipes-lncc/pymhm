@@ -68,6 +68,10 @@ constitutive, divergence and prescribed-flux blocks each satisfy the stated
 $10^{-10}$ backward-error check. Fine-cell conservation tests every pressure
 moment, including the constant.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 from pymhm import AffineMixedMesh
 from examples.formulations.application import hdiv_darcy as solve_darcy_hdiv3d

@@ -2,17 +2,8 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
-from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -21,12 +12,15 @@ from threadpoolctl import threadpool_limits
 from examples.field_sampling import sample_field
 from examples.formulations.application import darcy as solve_darcy
 from examples.formulations.application import transport as solve_transport
-from examples.formulations.darcy_transport import solve_darcy_trajectory as solve_darcy_transport
+from examples.formulations.darcy_transport import (
+    solve_darcy_trajectory as solve_darcy_transport,
+)
 from examples.plot_mesh import draw_macro_mesh
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 from pymhm.adaptivity.transport import TransportBounds, solve_adaptive_transport
+from pymhm.io.workspace import case_workspace
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/transport"
 FIGURES = ROOT / "docs/figures/transport"
 
@@ -330,4 +324,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.transport_campaign").main()

@@ -61,6 +61,10 @@ exterior-tangent velocity and a representable constant mode. The original
 physical equations are checked after imposing that gauge. Local factories
 support serial, thread and spawned-process assembly and condensation.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 from pymhm import assemble
 from pymhm.meshes.tetrahedron import TetraMesh

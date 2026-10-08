@@ -2,19 +2,17 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
-from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -31,18 +29,18 @@ from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
 from pymhm.materials.elasticity import constitutive_values_3d
 from pymhm.meshes.tetrahedron import TetraMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 INPUT = ROOT / "examples/results/elasticity3d"
 OUTPUT = ROOT / "docs/figures/elasticity3d"
 
 
 def load(name: str) -> tuple[dict, dict]:
     """Read one completed campaign and verify the corresponding field archive."""
-    report = json.loads((INPUT / f"{name}.json").read_text())
+    report = json.loads(read_resource_text(INPUT / f"{name}.json"))
     path = INPUT / report["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != report["sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != report["sha256"]:
         raise ValueError("field archive digest mismatch")
-    with np.load(path) as archive:
+    with np.load(local_resource(path)) as archive:
         return report, dict(archive)
 
 
@@ -266,6 +264,13 @@ def main() -> None:
         save(fig, "convergence" if mode == "anisotropic" else "lame-sweep")
 
 
-if __name__ == "__main__":
+def cli() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     with threadpool_limits(1):
         main()
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.plot_elasticity3d").cli()

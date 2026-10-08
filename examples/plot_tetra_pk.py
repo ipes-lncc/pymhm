@@ -17,8 +17,14 @@ from examples.reconstruction3d_data import fields
 from examples.reconstruction3d_replay import evaluate, profile
 from examples.tetra_section_samples import section_grid
 from pymhm import TetraMesh
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/tetra-pk"
 OUTPUT = ROOT / "docs/figures/tetra-pk"
 
@@ -34,7 +40,7 @@ def save(figure: plt.Figure, name: str) -> None:
 def archive_path(row: dict[str, Any], directory: Path = DATA) -> Path:
     """Resolve an archive only after matching its published acquisition digest."""
     path = directory / row["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != row["archive_sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["archive_sha256"]:
         raise ValueError("archive differs from its recorded digest")
     return path
 
@@ -68,7 +74,9 @@ def convergence(record: dict[str, Any]) -> None:
 
 def fixed_comparison(record: dict[str, Any]) -> None:
     """Compare local P4/P5 at unchanged macro/fine geometry and two face partitions."""
-    previous = json.loads((ROOT / "examples/results/reconstruction3d/resolution.json").read_text())
+    previous = json.loads(
+        read_resource_text(ROOT / "examples/results/reconstruction3d/resolution.json")
+    )
     rows = [row for row in previous["rows"] if row["trace_degree"] == 2] + record["rows"]
     figure = plt.figure(figsize=(11, 5.8), layout="constrained")
     grid = figure.add_gridspec(2, 2, height_ratios=[1, 0.24])
@@ -109,7 +117,7 @@ def fixed_comparison(record: dict[str, Any]) -> None:
 def section(row: dict[str, Any]) -> None:
     """Display full polynomials on disconnected fine-cell sections, preserving every interface."""
     rt_degree = row["reconstruction_degree"]
-    with np.load(archive_path(row)) as archive:
+    with np.load(local_resource(archive_path(row))) as archive:
         macro = TetraMesh(archive["macro_points"], archive["macro_cells"])
         edges = section_grid(macro, refinement=1)["segments"]
         points, cells, numerical = [], [], []
@@ -186,11 +194,11 @@ def section(row: dict[str, Any]) -> None:
 def profiles(record: dict[str, Any], recovered: dict[str, Any]) -> None:
     """Show independent P4/P5 and RT2/RT3 traces with actual macro intersections."""
     previous_dir = ROOT / "examples/results/reconstruction3d"
-    previous = json.loads((previous_dir / "resolution.json").read_text())["rows"][-1]
+    previous = json.loads(read_resource_text(previous_dir / "resolution.json"))["rows"][-1]
     first, last = np.array([0.0, 0.413, 0.37]), np.array([1.0, 0.413, 0.37])
     samples = []
     for directory, row in ((previous_dir, previous), (DATA, record["rows"][-1]), (DATA, recovered)):
-        with np.load(archive_path(row, directory)) as archive:
+        with np.load(local_resource(archive_path(row, directory))) as archive:
             samples.append(profile(archive, first, last))
     parameter = np.linspace(0, 1, 501)
     p, q, _ = fields(first + parameter[:, None] * (last - first), True)
@@ -237,20 +245,27 @@ def profiles(record: dict[str, Any], recovered: dict[str, Any]) -> None:
 
 def run() -> None:
     """Render finalized records only, without assembling or resolving a finite element system."""
-    uniform = json.loads((DATA / "uniform.json").read_text())
-    fixed = json.loads((DATA / "fixed.json").read_text())
+    uniform = json.loads(read_resource_text(DATA / "uniform.json"))
+    fixed = json.loads(read_resource_text(DATA / "fixed.json"))
     if len(uniform["rows"]) != 5 or len(fixed["rows"]) != 2:
         raise ValueError(
             "the plotting campaign requires five uniform and two fixed-geometry states"
         )
     convergence(uniform)
     fixed_comparison(fixed)
-    recovered = json.loads((DATA / "reconstruction-order.json").read_text())
+    recovered = json.loads(read_resource_text(DATA / "reconstruction-order.json"))
     section(fixed["rows"][-1])
     section(recovered)
     profiles(fixed, recovered)
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     with threadpool_limits(1):
         run()
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.plot_tetra_pk").main()

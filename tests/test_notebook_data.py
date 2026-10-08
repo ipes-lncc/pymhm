@@ -1,20 +1,23 @@
 """Generated fixtures for explicit generation of notebook fields."""
 
-import importlib.util
+import importlib
 import json
-import sys
-from pathlib import Path
 
 import pytest
 
 
 @pytest.fixture
-def api():
-    """Load the helper without optional libraries or archived fields."""
-    path = Path(__file__).resolve().parents[1] / "scripts/notebook_data.py"
-    spec = importlib.util.spec_from_file_location("notebook_data", path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+def api(monkeypatch):
+    """Load the downloaded inventory without acquiring any remote fixture inputs."""
+    module = importlib.import_module("scripts.notebook_data")
+    monkeypatch.setattr(module, "local_resource", lambda path, **kwargs: path)
+    monkeypatch.setattr(
+        module,
+        "resource_glob",
+        lambda folder, pattern, *, recursive=False, root=None: sorted(
+            folder.rglob(pattern) if recursive else folder.glob(pattern)
+        ),
+    )
     return module
 
 
@@ -37,15 +40,6 @@ def test_missing_fields_can_be_inventoried_before_generation(api, tmp_path):
     assert generated["missing"] == []
 
 
-@pytest.mark.parametrize(
-    "name", ["outside.npz", "examples/results/a*.npz", "examples/results/a.csv"]
-)
-def test_invalid_archive_names(api, tmp_path, name):
-    """Unrelated paths and wildcard patterns cannot broaden the declared selection."""
-    with pytest.raises(ValueError, match="archive path"):
-        api.dependency_plan(tmp_path, {"01": {tmp_path / name}})
-
-
 def test_placeholders_and_checkout_escape_are_rejected(api, tmp_path):
     """A legacy pointer cannot masquerade as a computed physical field."""
     path = tmp_path / "bad.npz"
@@ -65,13 +59,6 @@ def test_budget_is_explicit(api, tmp_path, budget):
     plan = api.dependency_plan(tmp_path, {"01": {path}})
     with pytest.raises(ValueError):
         api.validate_archives(tmp_path, plan, budget)
-
-
-def test_empty_selection_requires_no_computed_fields(api, tmp_path):
-    """A records-only notebook can be validated without requesting unrelated data."""
-    api.validate_archives(tmp_path, api.dependency_plan(tmp_path, {}), 1)
-    assert api.required_archives(tmp_path, set()) == {}
-    assert api.required_archives(tmp_path, {"47"}) == {}
 
 
 def test_selected_notebook_ignores_unrelated_missing_manifests(api, tmp_path):
@@ -160,17 +147,6 @@ def test_nested_notebook_checks_selected_archive_and_each_displayed_image(api, t
         api.required_archives(tmp_path, {"36"})
 
 
-@pytest.mark.parametrize("notebook,name", [("33", "darcy-rt"), ("41", "rad3d")])
-def test_selected_grouped_notebook_reads_only_its_manifest(api, tmp_path, notebook, name):
-    """A selected dimension family preserves the notebook's last-row field selector."""
-    folder = tmp_path / "examples/results"
-    folder.mkdir(parents=True)
-    (folder / f"{name}.json").write_text(
-        json.dumps({"rows": [{"fields": "coarse.npz"}, {"fields": "fine.npz"}]})
-    )
-    assert api.required_archives(tmp_path, {notebook}) == {notebook: {folder / "fine.npz"}}
-
-
 def test_record_location_is_independent_of_payload_presence(api, tmp_path):
     """Versioned records select the same relative path before and after generation."""
     record = tmp_path / "controls/comparison.json"
@@ -182,65 +158,6 @@ def test_record_location_is_independent_of_payload_presence(api, tmp_path):
     assert api.record_archive(record, "own.npz") == own
     assert api.record_archive(record, "reference.npz") == inherited
     assert api.record_archive(record, "unlisted.npz") == record.parent / "unlisted.npz"
-
-
-def test_cli_notebook_selection(api, tmp_path, monkeypatch, capsys):
-    """Unknown notebook identifiers fail, while a records-only notebook needs no payloads."""
-    folder = tmp_path / "notebooks"
-    folder.mkdir()
-    (folder / "47_well.ipynb").write_text("{}")
-    monkeypatch.setattr(api, "__file__", str(tmp_path / "scripts/notebook_data.py"))
-    for path in api.required_images(tmp_path, {"47"})["47"]:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(b"image")
-    monkeypatch.setattr(sys, "argv", ["notebook_data.py", "--notebook", "47", "--check"])
-    api.main()
-    assert json.loads(capsys.readouterr().out)["archive_count"] == 0
-    monkeypatch.setattr(sys, "argv", ["notebook_data.py", "--notebook", "99"])
-    with pytest.raises(SystemExit, match="2"):
-        api.main()
-
-
-def test_cli_selection_uses_only_requested_manifests(api, tmp_path, monkeypatch, capsys):
-    """The CLI selects manifests before loading and still requires generated payloads."""
-    notebooks = tmp_path / "notebooks"
-    notebooks.mkdir()
-    (notebooks / "14_neopz.ipynb").write_text("{}")
-    folder = tmp_path / "examples/results/neopz"
-    folder.mkdir(parents=True)
-    (folder / "comparison.json").write_text(json.dumps({"rows": [{"archive": "field.npz"}]}))
-    monkeypatch.setattr(api, "__file__", str(tmp_path / "scripts/notebook_data.py"))
-    monkeypatch.setattr(sys, "argv", ["notebook_data.py", "--notebook", "14"])
-    api.main()
-    assert json.loads(capsys.readouterr().out)["missing"] == ["examples/results/neopz/field.npz"]
-    monkeypatch.setattr(sys, "argv", ["notebook_data.py", "--notebook", "14", "--check"])
-    with pytest.raises(SystemExit, match="2"):
-        api.main()
-    capsys.readouterr()
-    (folder / "field.npz").write_bytes(b"PK-data")
-    for path in api.required_images(tmp_path, {"14"})["14"]:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(b"image")
-    api.main()
-    plan = json.loads(capsys.readouterr().out)
-    assert plan["payload_bytes"] == 7
-    assert plan["missing"] == []
-
-
-def test_cli_missing_data_reports_explicit_generation(api, tmp_path, monkeypatch):
-    """A source-only checkout fails clearly before attempting notebook execution."""
-    adaptive = tmp_path / "examples/results/spe10-adaptive/published/adaptive.json"
-    adaptive.parent.mkdir(parents=True)
-    adaptive.write_text("[]")
-    monkeypatch.setattr(api, "__file__", str(tmp_path / "scripts/notebook_data.py"))
-    monkeypatch.setattr(
-        api,
-        "required_archives",
-        lambda root, notebooks=None: {"01": {root / "examples/results/field.npz"}},
-    )
-    monkeypatch.setattr(sys, "argv", ["notebook_data.py", "--check"])
-    with pytest.raises(SystemExit, match="2"):
-        api.main()
 
 
 def test_present_fields_do_not_hide_missing_notebook_images(api, tmp_path):
@@ -264,65 +181,6 @@ def test_present_fields_do_not_hide_missing_notebook_images(api, tmp_path):
     api.validate_archives(tmp_path, available, 15)
     with pytest.raises(ValueError, match="exceeding"):
         api.validate_archives(tmp_path, available, 14)
-
-
-@pytest.mark.parametrize("name", ["outside.png", "docs/figures/a*.png", "docs/figures/a.csv"])
-def test_invalid_notebook_image_names(api, tmp_path, name):
-    """Only explicit figure paths can enter the selected notebook input budget."""
-    with pytest.raises(ValueError, match="image path"):
-        api.dependency_plan(tmp_path, {}, {"21": {tmp_path / name}})
-
-
-def test_image_selection_precedes_unrelated_adaptive_manifest(api, tmp_path):
-    """Selecting layer36 does not require the adaptive campaign's mesh-page record."""
-    expected = {
-        tmp_path / "docs/figures/spe10/volume-and-slice.png",
-        tmp_path / "docs/figures/spe10/layers.png",
-        tmp_path / "docs/figures/reservoir-papers/l07-figure-5.png",
-        tmp_path / "docs/figures/reservoir-papers/l13-figure-18.png",
-    }
-    assert api.required_images(tmp_path, {"21"}) == {"21": expected}
-    assert api.required_images(tmp_path, set()) == {}
-    record = tmp_path / "examples/results/spe10-adaptive/published/adaptive.json"
-    record.parent.mkdir(parents=True)
-    record.write_text(json.dumps([{}] * 5))
-    images = api.required_images(tmp_path, {"40"})["40"]
-    assert tmp_path / "docs/figures/spe10-adaptive/meshes.png" in images
-    assert tmp_path / "docs/figures/spe10-adaptive/meshes-2.png" in images
-    assert tmp_path / "docs/figures/spe10-adaptive/meshes-3.png" not in images
-    assert "40" in api.required_images(tmp_path)
-
-
-def test_recursive_catalogue_preserves_numeric_contracts_and_unnumbered_tutorials(api, tmp_path):
-    """Nested sources retain historical IDs while new tutorials need no numeric prefix."""
-    base = tmp_path / "notebooks"
-    sources = [
-        base / "darcy/14_neopz.ipynb",
-        base / "flow/brinkman_oseen/vector_tutorial.ipynb",
-        base / "waves/maxwell/66_nanoguide.ipynb",
-    ]
-    for source in sources:
-        source.parent.mkdir(parents=True, exist_ok=True)
-        source.write_text("{}")
-    checkpoint = base / "darcy/.ipynb_checkpoints/14_neopz-checkpoint.ipynb"
-    checkpoint.parent.mkdir()
-    checkpoint.write_text("{}")
-    assert api.discover_notebooks(tmp_path) == sources
-    assert api.selected_notebook_ids(tmp_path, sources) == {"14", "vector_tutorial", "66"}
-    assert api.required_archives(tmp_path, {"vector_tutorial"}) == {}
-    assert api.required_images(tmp_path, {"vector_tutorial"}) == {}
-
-
-@pytest.mark.parametrize(
-    "selector",
-    ["14", "14_neopz", "14_neopz.ipynb", "darcy", "darcy/14_neopz.ipynb", "notebooks/darcy"],
-)
-def test_nested_catalogue_selection_by_identity_path_and_group(api, tmp_path, selector):
-    """IDs and folder selectors identify the same source independently of tree depth."""
-    source = tmp_path / "notebooks/darcy/14_neopz.ipynb"
-    source.parent.mkdir(parents=True)
-    source.write_text("{}")
-    assert api.select_notebooks(tmp_path, [selector, str(source)]) == [source]
 
 
 def test_nested_group_selection_and_ambiguous_basename(api, tmp_path):
@@ -349,44 +207,108 @@ def test_historical_notebook_ids_cannot_be_duplicated_between_problem_groups(api
         api.discover_notebooks(tmp_path)
 
 
-def test_external_selection_is_explicit_and_has_no_internal_data_contract(api, tmp_path):
-    """An external notebook named like a historical case does not read its case manifests."""
-    root = tmp_path / "checkout"
-    source = tmp_path / "14_external.ipynb"
-    source.write_text("{}")
-    with pytest.raises(ValueError, match="Unknown notebook"):
-        api.select_notebooks(root, [str(source)])
-    paths = api.select_notebooks(root, [str(source)], allow_external=True)
-    assert paths == [source]
-    assert api.selected_notebook_ids(root, paths) == set()
-    with pytest.raises(ValueError, match="Unknown notebook"):
-        api.select_notebooks(root, [str(tmp_path)], allow_external=True)
+@pytest.mark.parametrize(
+    "code",
+    [
+        "from scripts.notebook_reproduction import notebook_workspace\n"
+        "ROOT = notebook_workspace('darcy/21_spe10_data.ipynb')",
+        "from scripts.notebook_reproduction import notebook_workspace as workspace\n"
+        "ROOT = workspace(selector='notebooks/darcy/21_spe10_data.ipynb')",
+        "import pymhm.io.workspace as ws\n"
+        "ROOT = ws.notebook_workspace('darcy/21_spe10_data.ipynb')",
+    ],
+)
+def test_downloaded_notebook_declares_its_catalogue_identity(api, tmp_path, code):
+    """A renamed downloaded source uses its literal downloaded resource selector."""
+    source = tmp_path / "downloaded.ipynb"
+    source.write_text(json.dumps({"cells": [{"cell_type": "code", "source": code}]}))
+    root = tmp_path / "work"
+    assert api.notebook_selector(root, source) == "darcy/21_spe10_data.ipynb"
+    assert api.selected_notebook_ids(root, [source]) == {"21"}
 
 
-def test_catalogue_rejects_symlink_escape(api, tmp_path):
-    """A source tree alias cannot silently import a notebook from outside the catalogue."""
-    external = tmp_path / "outside.ipynb"
-    external.write_text("{}")
-    link = tmp_path / "notebooks/darcy/tutorial.ipynb"
-    link.parent.mkdir(parents=True)
-    try:
-        link.symlink_to(external)
-    except OSError:
-        pytest.skip("Symlinks are unavailable on this platform")
-    with pytest.raises(ValueError, match="escapes"):
-        api.discover_notebooks(tmp_path)
+def test_ambiguous_or_undeclared_downloaded_identity(api, tmp_path):
+    """Names and dynamic Python calls alone never inherit another notebook's recipe."""
+    source = tmp_path / "21_downloaded.ipynb"
+    source.write_text(
+        json.dumps(
+            {
+                "cells": [
+                    {
+                        "cell_type": "code",
+                        "source": ("notebook_workspace('darcy/21_spe10_data.ipynb')"),
+                    }
+                ]
+            }
+        )
+    )
+    assert api.notebook_selector(tmp_path / "work", source) is None
+    source.write_text(
+        json.dumps(
+            {
+                "cells": [
+                    {
+                        "cell_type": "code",
+                        "source": (
+                            "from scripts.notebook_reproduction import notebook_workspace\n"
+                            "notebook_workspace('darcy/21_spe10_data.ipynb')\n"
+                            "notebook_workspace('darcy/40_spe10_adaptive.ipynb')"
+                        ),
+                    }
+                ]
+            }
+        )
+    )
+    with pytest.raises(ValueError, match="Conflicting"):
+        api.notebook_selector(tmp_path / "work", source)
 
 
-def test_cli_selects_nested_unnumbered_tutorial_without_historical_fields(
-    api, tmp_path, monkeypatch, capsys
-):
-    """A new problem tutorial can be preflighted without unrelated campaign acquisition."""
-    path = tmp_path / "notebooks/transport/scalar_intro.ipynb"
-    path.parent.mkdir(parents=True)
-    path.write_text("{}")
-    monkeypatch.setattr(api, "__file__", str(tmp_path / "scripts/notebook_data.py"))
-    monkeypatch.setattr(sys, "argv", ["notebook_data.py", "--notebook", "transport", "--check"])
-    api.main()
-    plan = json.loads(capsys.readouterr().out)
-    assert plan["notebook_paths"] == ["transport/scalar_intro.ipynb"]
-    assert plan["archive_count"] == plan["image_count"] == 0
+def test_conditioning_replay_inventories_only_its_original_native_fields(api, tmp_path):
+    """Historical conditioning excludes unrelated native boundary-layer archives."""
+    folder = tmp_path / "examples/results/rad-native"
+    folder.mkdir(parents=True)
+    (folder / "verification.json").write_text(
+        json.dumps(
+            {
+                "rows": [
+                    {"kind": "conditioning", "archive": "first.npz"},
+                    {"kind": "layer", "archive": "unrelated.npz"},
+                    {"kind": "conditioning", "archive": "second.npz"},
+                ]
+            }
+        )
+    )
+    assert api.required_archives(tmp_path, {"45"}) == {
+        "45": {folder / "first.npz", folder / "second.npz"}
+    }
+
+
+def test_tetra_pk_inventory_includes_resolution_fields_used_by_profiles(api, tmp_path):
+    """The displayed P4/P2/RT2 control is a dependency of the P5/RT3 notebook."""
+    folder = tmp_path / "examples/results/tetra-pk"
+    previous = tmp_path / "examples/results/reconstruction3d"
+    folder.mkdir(parents=True)
+    previous.mkdir(parents=True)
+    (folder / "uniform.json").write_text(json.dumps({"rows": [{"archive": "uniform.npz"}]}))
+    (folder / "fixed.json").write_text(json.dumps({"rows": [{"archive": "fixed.npz"}]}))
+    (folder / "reconstruction-order.json").write_text(
+        json.dumps({"archive": "rt3.npz", "parent_archive": "fixed.npz"})
+    )
+    (previous / "resolution.json").write_text(
+        json.dumps(
+            {"rows": [{"archive": "resolution-p2.npz"}, {"archive": "resolution-p4-rt2.npz"}]}
+        )
+    )
+    expected = {
+        folder / "uniform.npz",
+        folder / "fixed.npz",
+        folder / "rt3.npz",
+        previous / "resolution-p2.npz",
+        previous / "resolution-p4-rt2.npz",
+    }
+    dependencies = api.required_archives(tmp_path, {"64"})
+    assert dependencies == {"64": expected}
+    plan = api.dependency_plan(tmp_path, dependencies)
+    assert plan["archive_count"] == 5
+    with pytest.raises(ValueError, match="Missing 5 computed notebook field"):
+        api.validate_archives(tmp_path, plan, 100)

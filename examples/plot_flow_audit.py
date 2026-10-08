@@ -2,19 +2,13 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import json
 from pathlib import Path
 from typing import Any
 
 import matplotlib
+
+from pymhm.io.workspace import read_resource_text
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -75,7 +69,7 @@ def convergence(data: dict[str, Any]) -> None:
 
 def main() -> None:
     """Plot the recorded measurements with explicit finite element conventions."""
-    data = json.loads(Path("examples/results/flow-audit.json").read_text())
+    data = json.loads(read_resource_text(Path("examples/results/flow-audit.json")))
     plt.rcParams.update({"font.size": 10, "svg.fonttype": "none"})
     convergence(data)
 
@@ -185,4 +179,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_flow_audit").main()

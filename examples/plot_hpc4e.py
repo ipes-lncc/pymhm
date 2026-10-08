@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
+from typing import TYPE_CHECKING
 
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
+if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
 
 import argparse
 import hashlib
@@ -23,13 +21,14 @@ from matplotlib.ticker import FormatStrFormatter, NullFormatter
 
 from examples.hpc4e_data import BOUNDS, LENGTH_SCALE, load_data
 from examples.hpc4e_fields import RectangularElasticityField
+from pymhm.io.workspace import case_workspace, read_resource_bytes, read_resource_text
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "docs/figures/hpc4e"
 
 
-def overlay(ax, *, alpha: float = 0.4) -> None:
+def overlay(ax: Axes, *, alpha: float = 0.4) -> None:
     """Draw actual 16×8 macrorectangle boundaries in physical metres."""
     mesh = CartesianMacroMesh(16, 8, BOUNDS)
     ax.add_collection(
@@ -45,7 +44,7 @@ def overlay(ax, *, alpha: float = 0.4) -> None:
     ax.set(xlabel="$x$ [m]", ylabel="$z$ [m]", xlim=(0, 10000), ylim=(0, 4500), aspect="equal")
 
 
-def save(fig, name: str) -> None:
+def save(fig: Figure, name: str) -> None:
     """Save a matching raster/vector pair with sufficient resolution for fine material pixels."""
     OUTPUT.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUTPUT / f"{name}.png", dpi=220)
@@ -120,7 +119,9 @@ def profiles(reference_path: Path, segments: list[int]) -> None:
 
 def published_profiles(segments: list[int]) -> None:
     """Compare signed stress with the article's red curves and pixel uncertainty."""
-    metadata = json.loads((ROOT / "examples/results/hpc4e/published-profile.json").read_text())
+    metadata = json.loads(
+        read_resource_text(ROOT / "examples/results/hpc4e/published-profile.json")
+    )
     fig, axes = plt.subplots(
         2, 2, figsize=(12, 8.1), layout="constrained", sharex=True, sharey=True
     )
@@ -260,11 +261,11 @@ def fields(reference_path: Path) -> None:
 def reference_sensitivity() -> None:
     """Show differences from the fine reference and its own classical h-refinement increment."""
     record_path = ROOT / "examples/results/hpc4e/reference-spatial-refinement.json"
-    record = json.loads(record_path.read_text())
+    record = json.loads(read_resource_text(record_path))
     OUTPUT.mkdir(parents=True, exist_ok=True)
-    (OUTPUT / record_path.name).write_bytes(record_path.read_bytes())
+    (OUTPUT / record_path.name).write_bytes(read_resource_bytes(record_path))
     degree_record = ROOT / "examples/results/hpc4e/reference-refinement.json"
-    (OUTPUT / degree_record.name).write_bytes(degree_record.read_bytes())
+    (OUTPUT / degree_record.name).write_bytes(read_resource_bytes(degree_record))
     rows = {
         row["approximation"]: row["norms"]
         for row in record["rows"]
@@ -325,12 +326,12 @@ def main() -> None:
             "field_samples": "Centres of the common fine rectangular partition; no averaging",
             "profile": "Six one-sided points per reference fine interval; z=2250.25 m",
             "macro_mesh": "16 by 8 physical rectangles",
-            "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            "source_sha256": hashlib.sha256(read_resource_bytes(Path(__file__))).hexdigest(),
             "input_sha256": {
-                path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs
+                path.name: hashlib.sha256(read_resource_bytes(path)).hexdigest() for path in inputs
             },
             "figure_sha256": {
-                path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+                path.name: hashlib.sha256(read_resource_bytes(path)).hexdigest()
                 for path in sorted(OUTPUT.glob("*.png"))
                 if path.name
                 in {
@@ -349,4 +350,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_hpc4e").main()

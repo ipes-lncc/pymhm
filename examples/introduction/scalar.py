@@ -21,10 +21,11 @@ from numpy.typing import NDArray
 from scipy import sparse
 
 from examples.field_sampling import sample_field as sample_nodal_fields
-from examples.introduction.provenance import source_digests
+from examples.introduction.provenance import notebook_provenance, support_manifest
 from pymhm.fem.scalar.operators import p1_geometry, triangle_quadrature
 from pymhm.fem.scalar.quadrilateral import qk_basis, qk_space, quadrilateral_quadrature
 from pymhm.fem.scalar.triangle import nodal_space, reference_basis
+from pymhm.io.provenance import current_source_manifest
 from pymhm.linalg.linear import solve_linear
 from pymhm.materials.cartesian import CartesianCellField
 from pymhm.materials.evaluation import tensor_values
@@ -657,21 +658,14 @@ def save_scalar_report(
                 "basix": basix.__version__,
                 "ufl": ufl.__version__,
             },
-            "notebook_sha256": hashlib.sha256(
-                (root / "notebooks" / "introduction" / (notebook + ".ipynb")).read_bytes()
-            ).hexdigest(),
-            "source_sha256": {
-                str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
-                for path in sorted((root / "src" / "pymhm").rglob("*.py"))
-            },
-            "pixi_lock_sha256": hashlib.sha256((root / "pixi.lock").read_bytes()).hexdigest(),
-            "support_sha256": source_digests(
-                root,
+            **notebook_provenance("introduction/" + notebook + ".ipynb", workspace=root),
+            "source_sha256": current_source_manifest({}),
+            "support_sha256": support_manifest(
                 (
                     Path(__file__),
-                    root / "examples/field_sampling.py",
-                    root / "examples/introduction/provenance.py",
-                ),
+                    Path(__file__).parent.parent / "field_sampling.py",
+                    Path(__file__).with_name("provenance.py"),
+                )
             ),
             "scope": (
                 "Original introductory case; finite local Galerkin realization; "

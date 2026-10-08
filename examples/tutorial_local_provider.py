@@ -1,6 +1,6 @@
 """Declare primal and RT0 Darcy providers and verify their original equations.
 
-Run ``pixi run -e test python -m examples.tutorial_local_provider`` or select
+Run ``python -m examples.tutorial_local_provider`` or select
 ``--formulation mixed --boundary neumann --local-solver external --backend
 process --workers 2 --batch-size 1``. Only numerical diagnostics are printed.
 """
@@ -309,4 +309,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.tutorial_local_provider").main()

@@ -21,6 +21,7 @@ from pymhm.fem.scalar import triangle as lagrange
 from pymhm.fem.scalar.operators import p1_geometry
 from pymhm.fem.scalar.triangle import element_tabulate, multiindices
 from pymhm.fem.vector.curl import physical_points, quadrature
+from pymhm.io.workspace import local_resource
 from pymhm.materials.elasticity import KELVIN_BASIS_2D as _KELVIN
 from pymhm.materials.elasticity import constitutive_values
 from pymhm.postprocessing.dynamics import ElastodynamicLocal
@@ -40,7 +41,8 @@ def array_digest(array: np.ndarray) -> str:
 
 
 def _file_digest(path: Path) -> str:
-    with path.open("rb") as stream:
+    """Hash literal archive bytes in bounded memory, acquiring only declared missing inputs."""
+    with local_resource(path).open("rb") as stream:
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 

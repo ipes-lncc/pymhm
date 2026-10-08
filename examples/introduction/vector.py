@@ -629,19 +629,16 @@ def execution_provenance(notebook: str, *, root: Path, **metadata: Any) -> dict[
     """Record current notebook/lock identities and installed numerical-library versions."""
     import importlib.metadata
 
-    from examples.introduction.provenance import source_digests
+    from examples.introduction.provenance import notebook_provenance, support_manifest
+    from pymhm.io.provenance import current_source_manifest
 
     support = tuple(
-        root / "examples/introduction" / name
-        for name in ("vector.py", "transport.py", "provenance.py")
+        Path(__file__).with_name(name) for name in ("vector.py", "transport.py", "provenance.py")
     )
-    owners = tuple((root / "src/pymhm").rglob("*.py"))
     return {
-        "notebook": notebook,
-        "notebook_sha256": hashlib.sha256((root / notebook).read_bytes()).hexdigest(),
-        "pixi_lock_sha256": hashlib.sha256((root / "pixi.lock").read_bytes()).hexdigest(),
-        "support_sha256": source_digests(root, support),
-        "source_sha256": source_digests(root, owners),
+        **notebook_provenance(notebook, workspace=root),
+        "support_sha256": support_manifest(support),
+        "source_sha256": current_source_manifest({}),
         "versions": {
             name: importlib.metadata.version(name)
             for name in ("numpy", "scipy", "fenics-basix", "fenics-dolfinx", "pymhm")

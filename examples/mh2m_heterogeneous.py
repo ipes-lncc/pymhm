@@ -8,14 +8,6 @@ article-v3 value1/14; mesh and array identity are not inferred.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -42,10 +34,11 @@ from pymhm.fem.scalar.triangle import scalar_operators
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.fem.traces.pressure_2d import PressureTraceSpace
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file
 from pymhm.linalg.linear import solve_linear
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/mh2m-heterogeneous"
 
 
@@ -87,7 +80,11 @@ def source_hashes() -> dict[str, str]:
         ),
     ]
     return current_source_manifest(
-        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+        {
+            name: hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
+            for name in names
+        },
+        packages=("pymhm", "examples"),
     )
 
 
@@ -467,4 +464,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.mh2m_heterogeneous").main()

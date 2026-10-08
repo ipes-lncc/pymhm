@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -21,10 +13,17 @@ from threadpoolctl import threadpool_limits
 from examples.solve_spe10_taylor_hood import TaylorHoodField
 from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.triangle import element_tabulate, nodal_space, reference_basis
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    resource_glob,
+)
 from pymhm.meshes.geometry import clip_polygon
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/stokes-adaptive"
 
 
@@ -217,16 +216,16 @@ def main() -> None:
         parser.error("history stride must be positive")
     for drag in args.drag:
         candidates = []
-        for path in DATA.glob(f"{prefix}-classical-gamma{drag:g}-n*.json"):
-            record = json.loads(path.read_text())
+        for path in resource_glob(DATA, f"{prefix}-classical-gamma{drag:g}-n*.json"):
+            record = json.loads(read_resource_text(path))
             candidates.append((record["n"], path, record))
         if len(candidates) < 3:
             raise ValueError("at least three conforming reference resolutions are required")
         _, reference_path, record = max(candidates, key=lambda value: value[0])
         path = ROOT / record["archive"]
-        if hashlib.sha256(path.read_bytes()).hexdigest() != record["sha256"]:
+        if hashlib.sha256(read_resource_bytes(path)).hexdigest() != record["sha256"]:
             raise ValueError("classical coefficient digest mismatch")
-        with np.load(path) as saved:
+        with np.load(local_resource(path)) as saved:
             reference = TaylorHoodField(
                 saved["velocity"], saved["pressure"], tuple(saved["bounds"])
             )
@@ -237,11 +236,11 @@ def main() -> None:
             )
             if configuration:
                 name += "-" + configuration
-            row = json.loads((DATA / (name + ".json")).read_text())
+            row = json.loads(read_resource_text(DATA / (name + ".json")))
             path = ROOT / row["coefficients"]
-            if hashlib.sha256(path.read_bytes()).hexdigest() != row["coefficients_sha256"]:
+            if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["coefficients_sha256"]:
                 raise ValueError("MHM coefficient digest mismatch")
-            with np.load(path) as saved:
+            with np.load(local_resource(path)) as saved:
                 arrays = dict(saved)
             with threadpool_limits(1):
                 measured = {
@@ -269,9 +268,12 @@ def main() -> None:
                 for state in indices:
                     saved_state = saved_history[state]
                     state_path = ROOT / saved_state["path"]
-                    if hashlib.sha256(state_path.read_bytes()).hexdigest() != saved_state["sha256"]:
+                    if (
+                        hashlib.sha256(read_resource_bytes(state_path)).hexdigest()
+                        != saved_state["sha256"]
+                    ):
                         raise ValueError("adaptive history coefficient digest mismatch")
-                    with np.load(state_path) as saved:
+                    with np.load(local_resource(state_path)) as saved:
                         state_arrays = dict(saved)
                     history.append(
                         dict(
@@ -291,9 +293,12 @@ def main() -> None:
                             },
                         )
                     )
-            with np.load(DATA / row["archive"]) as saved:
+            with np.load(local_resource(DATA / row["archive"])) as saved:
                 display = dict(saved)
-            if hashlib.sha256((DATA / row["archive"]).read_bytes()).hexdigest() != row["sha256"]:
+            if (
+                hashlib.sha256(read_resource_bytes(DATA / row["archive"])).hexdigest()
+                != row["sha256"]
+            ):
                 raise ValueError("MHM display archive digest mismatch")
             refu, refp = reference.evaluate(display["points"])
             display.update(reference_velocity=refu, reference_pressure=refp)
@@ -315,7 +320,7 @@ def main() -> None:
                 strategy=strategy,
                 drag=drag,
                 reference=reference_path.name,
-                reference_sha256=hashlib.sha256(reference_path.read_bytes()).hexdigest(),
+                reference_sha256=hashlib.sha256(read_resource_bytes(reference_path)).hexdigest(),
                 reference_coefficients_sha256=record["sha256"],
                 mhm_coefficients_sha256=row["coefficients_sha256"],
                 norms=measured,
@@ -326,12 +331,14 @@ def main() -> None:
                     "with the continuous reference"
                 ),
                 archive=output.name,
-                sha256=hashlib.sha256(output.read_bytes()).hexdigest(),
-                source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                sha256=hashlib.sha256(read_resource_bytes(output)).hexdigest(),
+                source_sha256=hashlib.sha256(read_resource_bytes(Path(__file__))).hexdigest(),
             )
             (DATA / (name + "-comparison.json")).write_text(json.dumps(report, indent=2) + "\n")
             print(name, json.dumps(measured), flush=True)
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.compare_stokes_cavity").main()

@@ -6,14 +6,6 @@ orders. They do not reproduce a historical mesh or establish uniform inf-sup.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 import shutil
@@ -39,9 +31,10 @@ from examples.hdiv3d_field_archive import (
 from examples.transport_checkpoints import write_progress
 from examples.verify_mshho3d import capture_sources as capture_shared_sources
 from pymhm.io.provenance import file_digest
+from pymhm.io.workspace import case_workspace, source_file, source_label
 from pymhm.meshes.mixed import AffineMixedMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 CASES = {
     "tetra-p1-k1": ("tetrahedron", 1, 1),
     "tetra-p2-k2": ("tetrahedron", 2, 2),
@@ -80,8 +73,8 @@ def physical_errors(arrays: Mapping[str, np.ndarray], order: int) -> dict[str, f
 def capture_sources(output: Path) -> dict[str, str]:
     """Capture exact shared-core bytes and this producer before any field acquisition."""
     hashes = capture_shared_sources(output)
-    for path in (Path(__file__), ROOT / "examples/hdiv3d_field_archive.py"):
-        name = path.relative_to(ROOT).as_posix()
+    for path in (Path(__file__), source_file("examples/hdiv3d_field_archive.py", root=ROOT)):
+        name = source_label(path, ROOT)
         hashes[name] = file_digest(path)
         target = output / "executed-sources/files" / name
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -198,7 +191,7 @@ def run(levels: Sequence[int], names: Sequence[str], output: Path) -> dict[str, 
             report["rows"].append(row)
             report["fields"][name] = {"archive": row["archive"], "sha256": row["sha256"]}
             write_progress(output / "hdiv3d.json", report)
-    if any(file_digest(ROOT / name) != value for name, value in sources.items()):
+    if any(file_digest(source_file(name, root=ROOT)) != value for name, value in sources.items()):
         raise ValueError("An executed source changed during acquisition")
     report["source_changed"] = False
     report["complete"] = True
@@ -206,7 +199,8 @@ def run(levels: Sequence[int], names: Sequence[str], output: Path) -> dict[str, 
     return report
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--levels", type=int, nargs="+", default=[1, 2, 3, 4, 5])
     parser.add_argument("--names", nargs="+", choices=tuple(CASES), default=list(CASES))
@@ -214,3 +208,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
     with threadpool_limits(1):
         run(args.levels, args.names, args.output)
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.verify_hdiv3d").main()

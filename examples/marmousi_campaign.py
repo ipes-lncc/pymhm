@@ -8,14 +8,6 @@ preserved separately from the sampled comparison norm.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -32,9 +24,10 @@ from examples.tutorial_helmholtz_equations import solve_acoustic
 from pymhm.fem.scalar.quadrilateral import qk_basis
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton
 from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.io.workspace import case_workspace, source_file, source_label
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def evaluate_fields(
@@ -90,10 +83,17 @@ def source_hashes() -> dict[str, str]:
         "examples/tutorial_helmholtz_equations.py",
         "examples/campaign_provenance.py",
         "examples/helmholtz_trace_family.py",
-        *(path.relative_to(ROOT).as_posix() for path in sorted((ROOT / "src/pymhm").rglob("*.py"))),
+        *(
+            source_label(path, ROOT)
+            for path in sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py"))
+        ),
     ]
     return current_source_manifest(
-        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+        {
+            name: hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
+            for name in names
+        },
+        packages=("pymhm", "examples"),
     )
 
 
@@ -199,4 +199,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.marmousi_campaign").main()

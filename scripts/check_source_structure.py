@@ -81,8 +81,8 @@ def main() -> None:
         "source",
         nargs="?",
         type=Path,
-        default=Path(__file__).resolve().parents[1] / "src/pymhm",
-        help="Runtime source directory (default: src/pymhm)",
+        default=Path(__file__).resolve().parents[1] / "src",
+        help="Installed package source directory (default: src)",
     )
     source = parser.parse_args().source
     modules = sorted(source.rglob("*.py"))

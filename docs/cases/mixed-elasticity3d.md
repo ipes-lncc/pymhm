@@ -79,6 +79,10 @@ of displacement amplitude. The hydrostatic indeterminacy then uses the
 prescribed mean of $-\mathrm{tr}\,\sigma/3$. At finite $\lambda$ the
 constitutive law determines this mean.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 import numpy as np
 from pymhm.meshes.mixed import AffineMixedMesh

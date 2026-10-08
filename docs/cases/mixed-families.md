@@ -25,6 +25,10 @@ admissible local choice in this implementation. Stability of a global AFW pair
 alone does not establish this local MHM requirement. The default BDM2/P1/P1
 solution and its coefficient conventions are preserved.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 from pymhm import TriangleMesh
 from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed
