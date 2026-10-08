@@ -75,7 +75,7 @@ The machine-readable index is [catalogue.json](catalogue.json).
 | [Stokes–Brinkman boundary-layer convergence](introduction/stokes_brinkman_boundary_layer.ipynb) | Velocity–pressure UFL; Taylor–Hood and USFEM local spaces; analytical layer; refined classical Taylor–Hood |
 
 ```bash
-pixi run --locked -e introduction notebooks-run introduction --timeout 1800
+pixi run --locked -e introduction notebooks-run introduction --timeout 7200
 ```
 
 ## convergence
