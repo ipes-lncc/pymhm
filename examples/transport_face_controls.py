@@ -2,18 +2,9 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
-from pathlib import Path
 from time import perf_counter
 
 import numpy as np
@@ -32,8 +23,9 @@ from pymhm.adaptivity.transport import (
 from pymhm.execution.cpu import map_local
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/transport"
 
 
@@ -47,7 +39,8 @@ def acquire(skeleton: SkeletonSpace, name: str, *, refinement: int, workers: int
         "src/pymhm/execution/cpu.py",
     )
     hashes = current_source_manifest(
-        {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in paths}
+        {p: hashlib.sha256(source_file(p, root=ROOT).read_bytes()).hexdigest() for p in paths},
+        packages=("pymhm", "examples"),
     )
     mesh = skeleton.mesh
     with threadpool_limits(1):
@@ -103,7 +96,10 @@ def acquire(skeleton: SkeletonSpace, name: str, *, refinement: int, workers: int
         segment_indicators=np.concatenate(indicator.values),
         marked_segments=np.concatenate(marked),
     )
-    assert all(hashlib.sha256((ROOT / p).read_bytes()).hexdigest() == h for p, h in hashes.items())
+    assert all(
+        hashlib.sha256(source_file(p, root=ROOT).read_bytes()).hexdigest() == h
+        for p, h in hashes.items()
+    )
     row = dict(
         name=name,
         epsilon=1.0,
@@ -173,4 +169,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.transport_face_controls").main()

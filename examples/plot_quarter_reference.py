@@ -7,21 +7,19 @@ pressures retain their independently stored macro traces.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
 import textwrap
-from pathlib import Path
 
 import numpy as np
 import pyvista as pv
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 if __package__:
     from .plot_pyvista_layout import horizontal_color_scale
@@ -47,7 +45,7 @@ else:
 from pymhm import TriangleMesh
 from pymhm.postprocessing.visualization import macro_edges
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/quarter-five-spot/reference"
 FIGURES = ROOT / "docs/figures/quarter-five-spot"
 DIRECTION_LENGTH = 0.035
@@ -56,9 +54,9 @@ DIRECTION_LENGTH = 0.035
 def load_record(row: dict) -> dict[str, np.ndarray]:
     """Read a field archive after validating its recorded content digest."""
     path = DATA / row["fields"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != row["fields_sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["fields_sha256"]:
         raise ValueError(f"Field archive checksum differs: {path.name}")
-    with np.load(path) as archive:
+    with np.load(local_resource(path)) as archive:
         return dict(archive)
 
 
@@ -419,7 +417,7 @@ def problem_geometry() -> None:
 
 def main() -> None:
     """Redraw the numerical archives without invoking any comparison program."""
-    report = json.loads((DATA / "comparison.json").read_text())
+    report = json.loads(read_resource_text(DATA / "comparison.json"))
     candidates = [row for row in report["cases"] if row["segments"] == 2]
     refinement = max(row["refinement"] for row in candidates)
     rows = [row for row in candidates if row["refinement"] == refinement]
@@ -438,4 +436,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_quarter_reference").main()

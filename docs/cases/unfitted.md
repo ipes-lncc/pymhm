@@ -128,6 +128,10 @@ does not identify the convention used to generate the published numerical curves
 The following repository example constructs S2 at $\delta=1/6$, using the
 same sixteen macrotriangles as the campaign and initial local refinement four.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 import numpy as np
 from examples.unfitted_geometry import macro_mesh

@@ -10,6 +10,22 @@ from numpy.testing import assert_allclose
 
 
 @pytest.mark.visualization
+def test_acoustic_figure_export_to_independent_directory(tmp_path):
+    """A public renderer writes its PNG/SVG pair without another plotting CLI."""
+    plt = pytest.importorskip("matplotlib.pyplot")
+    from examples.plot_helmholtz import save
+
+    figure, axis = plt.subplots()
+    axis.plot([0, 1], [0, 1], label="Pressure")
+    axis.set(xlabel="x", ylabel="Pressure")
+    output = tmp_path / "figures" / "acoustic"
+    save(figure, output, "pressure")
+    assert (output / "pressure.png").read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
+    assert "Pressure" in (output / "pressure.svg").read_text()
+    assert not plt.fignum_exists(figure.number)
+
+
+@pytest.mark.visualization
 def test_archived_q4_profile_preserves_interface_values(monkeypatch):
     """Quartic replay preserves the two distinct limits at a fine interface."""
     pytest.importorskip("matplotlib")

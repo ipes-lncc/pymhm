@@ -1,6 +1,6 @@
 """Clean-checkout recipes preserve study scope and explicit native execution."""
 
-import importlib.util
+import importlib
 import json
 import sys
 from pathlib import Path
@@ -10,14 +10,9 @@ import pytest
 
 @pytest.fixture
 def reproduction(monkeypatch):
-    """Load the portable planning layer without starting a notebook kernel."""
-    scripts = Path(__file__).resolve().parents[1] / "scripts"
-    monkeypatch.syspath_prepend(str(scripts))
-    spec = importlib.util.spec_from_file_location(
-        "notebook_reproduction", scripts / "notebook_reproduction.py"
-    )
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    """Load downloaded portable planning without a notebook kernel or checkout."""
+    module = importlib.import_module("scripts.notebook_reproduction")
+    monkeypatch.setattr(module, "REPRODUCTION_MANIFEST", module.REPRODUCTION_MANIFEST)
     monkeypatch.delenv("PIXI_EXE", raising=False)
     return module
 
@@ -49,20 +44,10 @@ def test_native_guard_cannot_silently_skip_required_demonstration(
     assert reproduction.native_requirements(path) == {"dolfinx", "ufl"}
     manifest(reproduction, tmp_path, {})
     monkeypatch.setattr(reproduction.importlib.util, "find_spec", lambda name: None)
-    with pytest.raises(ValueError, match="pixi run --locked -e introduction"):
+    with pytest.raises(ValueError, match="Install compatible DOLFINx/UFL"):
         reproduction.validate_native_requirements(tmp_path, [path])
     monkeypatch.setattr(reproduction.importlib.util, "find_spec", lambda name: object())
     reproduction.validate_native_requirements(tmp_path, [path])
-
-
-def test_external_notebook_has_no_checkout_producer(reproduction, tmp_path):
-    """External notebooks receive native checks without inheriting same-ID data recipes."""
-    root = tmp_path / "checkout"
-    root.mkdir()
-    path = source(tmp_path, "33_external.ipynb", "import cupy\n!echo optional\n")
-    manifest(reproduction, tmp_path, {})
-    assert reproduction.native_requirements(path) == set()
-    assert reproduction.notebook_contract(root, path)["preparation"] == []
 
 
 def test_preparation_selects_missing_inputs_and_deduplicates_steps(reproduction, tmp_path):
@@ -86,31 +71,9 @@ def test_preparation_selects_missing_inputs_and_deduplicates_steps(reproduction,
     assert plan["notebooks"][-1]["missing"] == []
 
 
-def test_unknown_historical_archives_fail_before_any_acquisition(
+def test_prepare_uses_current_python_argument_vectors_and_workspace(
     reproduction, tmp_path, monkeypatch
 ):
-    """A fresh solver cannot manufacture the checksum of an absent external acquisition."""
-    path = source(tmp_path, "14_reference.ipynb")
-    manifest(
-        reproduction,
-        tmp_path,
-        {
-            path.relative_to(tmp_path).as_posix(): {
-                "limitation": "Original NeoPZ archive not published"
-            }
-        },
-    )
-    data = {
-        "notebooks": {"14": ["examples/results/external.npz"]},
-        "missing": ["examples/results/external.npz"],
-    }
-    plan = reproduction.preparation_plan(tmp_path, [path], data)
-    monkeypatch.setattr(reproduction.subprocess, "run", lambda *a, **k: pytest.fail("producer ran"))
-    with pytest.raises(ValueError, match="Original NeoPZ archive not published"):
-        reproduction.prepare_notebook_inputs(tmp_path, plan)
-
-
-def test_prepare_uses_locked_pixi_argument_vectors_and_root(reproduction, tmp_path, monkeypatch):
     """Spaces and shell metacharacters stay literal subprocess arguments."""
     calls = []
     monkeypatch.setattr(reproduction.shutil, "which", lambda name: "/opt/Pixi Tools/pixi")
@@ -121,7 +84,11 @@ def test_prepare_uses_locked_pixi_argument_vectors_and_root(reproduction, tmp_pa
     }
     reproduction.prepare_notebook_inputs(tmp_path, {"preparation": [step], "unresolved": []})
     args, kwargs = calls[0]
-    assert args[0] == ["/opt/Pixi Tools/pixi", "run", "--locked", "-e", "notebooks", *step["argv"]]
+    assert args[0] == [
+        sys.executable,
+        str(reproduction.source_file("examples/case.py", root=tmp_path)),
+        *step["argv"][2:],
+    ]
     assert kwargs["cwd"] == tmp_path
     assert kwargs["check"]
     assert kwargs["env"]["MPLBACKEND"] == "Agg"
@@ -130,55 +97,15 @@ def test_prepare_uses_locked_pixi_argument_vectors_and_root(reproduction, tmp_pa
     reproduction.prepare_notebook_inputs(tmp_path, {"preparation": [], "unresolved": []})
     assert len(calls) == 1
     monkeypatch.setattr(reproduction.shutil, "which", lambda name: None)
-    with pytest.raises(ValueError, match="Pixi on PATH"):
-        reproduction.prepare_notebook_inputs(tmp_path, {"preparation": [step], "unresolved": []})
+    reproduction.prepare_notebook_inputs(tmp_path, {"preparation": [step], "unresolved": []})
+    assert len(calls) == 2
+    assert calls[1][1]["env"]["PYMHM_WORKSPACE"] == str(tmp_path)
 
 
 def test_manifest_covers_every_source_and_executable_producer(reproduction):
     """The repository contract has no unclassified or stale source/producer paths."""
     root = Path(__file__).resolve().parents[1]
     reproduction.validate_reproduction_manifest(root)
-
-
-@pytest.mark.parametrize(
-    "contract,message",
-    [
-        ({"kind": "unknown", "preparation": []}, "reproducibility kind"),
-        ({"kind": "standalone", "preparation": [{"argv": "python case.py"}]}, "argument vector"),
-        (
-            {
-                "kind": "generated-study",
-                "preparation": [{"argv": ["python", "missing.py"], "environment": "notebooks"}],
-            },
-            "producer source",
-        ),
-    ],
-)
-def test_invalid_manifest_contract_is_rejected(reproduction, tmp_path, contract, message):
-    """A source catalogue cannot claim a usable recipe without a real public producer."""
-    path = source(tmp_path, "study.ipynb")
-    manifest(reproduction, tmp_path, {path.relative_to(tmp_path).as_posix(): contract})
-    with pytest.raises(ValueError, match=message):
-        reproduction.validate_reproduction_manifest(tmp_path)
-
-
-def test_catalogue_drift_and_cli(reproduction, tmp_path, monkeypatch, capsys):
-    """Clean source audits diagnose unregistered tutorials without acquiring any data."""
-    path = source(tmp_path, "study.ipynb")
-    manifest(reproduction, tmp_path, {})
-    monkeypatch.setattr(
-        reproduction, "__file__", str(tmp_path / "scripts/notebook_reproduction.py")
-    )
-    monkeypatch.setattr(sys, "argv", ["notebook_reproduction.py", "--check"])
-    with pytest.raises(SystemExit, match="2"):
-        reproduction.main()
-    manifest(
-        reproduction,
-        tmp_path,
-        {path.relative_to(tmp_path).as_posix(): {"kind": "standalone", "preparation": []}},
-    )
-    reproduction.main()
-    assert json.loads(capsys.readouterr().out)["classifications"]["standalone"] == 1
 
 
 def test_public_import_audit_survives_magics(reproduction, tmp_path):
@@ -204,7 +131,7 @@ def test_public_import_audit_survives_magics(reproduction, tmp_path):
 
 def test_execution_modes_preserve_original_inventory(reproduction, tmp_path, monkeypatch):
     """Default controls, complete studies and exact historical replay have distinct inputs."""
-    import notebook_data
+    import scripts.notebook_data as notebook_data
 
     paths = [source(tmp_path, f"{n}_study.ipynb") for n in (14, 33, 71)]
     contracts = [
@@ -229,12 +156,16 @@ def test_execution_modes_preserve_original_inventory(reproduction, tmp_path, mon
     monkeypatch.setattr(
         notebook_data,
         "required_archives",
-        lambda *args: {key: set(value) for key, value in archives.items()},
+        lambda root, selected: {
+            key: set(value) for key, value in archives.items() if key in selected
+        },
     )
     monkeypatch.setattr(
         notebook_data,
         "required_images",
-        lambda *args: {key: set(value) for key, value in images.items()},
+        lambda root, selected: {
+            key: set(value) for key, value in images.items() if key in selected
+        },
     )
     actual, figures = reproduction.execution_inputs(tmp_path, paths)
     assert set(actual) == {"71"}
@@ -270,7 +201,8 @@ def test_native_dispatch_pins_locked_profile_and_literal_flags(reproduction, tmp
         "-e",
         "introduction",
         "python",
-        str(tmp_path / "scripts/run_notebooks.py"),
+        "-m",
+        "scripts.run_notebooks",
         str(path),
         "--no-dispatch",
         "--study",
@@ -307,20 +239,6 @@ def test_explicit_study_forces_complete_public_acquisition(reproduction, tmp_pat
     assert plan["preparation"][0]["argv"][-1] == "build/results/{acquisition}"
 
 
-def test_absolute_pixi_invocation_can_reenter_locked_environments(
-    reproduction, tmp_path, monkeypatch
-):
-    """An active Pixi executable need not be installed on the invoking user's PATH."""
-    executable = tmp_path / "Pixi Tools/pixi"
-    executable.parent.mkdir()
-    executable.write_text("executable fixture")
-    monkeypatch.setattr(reproduction.shutil, "which", lambda name: None)
-    monkeypatch.setenv("PIXI_EXE", str(executable))
-    assert reproduction.pixi_executable() == str(executable)
-    executable.unlink()
-    assert reproduction.pixi_executable() is None
-
-
 def test_historical_identity_is_not_replaced_by_current_producer(reproduction, tmp_path):
     """Known fresh producers do not recreate an absent original field checksum."""
     path = source(tmp_path, "71_original.ipynb")
@@ -336,3 +254,94 @@ def test_historical_identity_is_not_replaced_by_current_producer(reproduction, t
     assert plan["preparation"] == []
     assert len(plan["unresolved"]) == 1
     assert "Original historical payload identities" in plan["unresolved"][0]["reason"]
+
+
+def test_default_scope_filters_before_opening_historical_manifests(
+    reproduction, tmp_path, monkeypatch
+):
+    """Absent original comparison manifests are never read for a current default run."""
+    import scripts.notebook_data as data
+
+    paths = [source(tmp_path, "14_external.ipynb"), source(tmp_path, "33_study.ipynb")]
+    manifest(
+        reproduction,
+        tmp_path,
+        {
+            paths[0].relative_to(tmp_path).as_posix(): {"historical_inputs": True},
+            paths[1].relative_to(tmp_path).as_posix(): {"study_inputs": True},
+        },
+    )
+    seen = []
+
+    def inventory(root, selected):
+        assert selected == set()
+        seen.append(selected)
+        return {}
+
+    monkeypatch.setattr(data, "required_archives", inventory)
+    monkeypatch.setattr(data, "required_images", inventory)
+    assert reproduction.execution_inputs(tmp_path, paths) == ({}, {})
+    assert len(seen) == 2
+
+
+def test_historical_archives_keep_current_figures_and_public_plot_recipe(
+    reproduction, tmp_path, monkeypatch
+):
+    """Original native fields cannot block a default scalar-record figure render."""
+    import scripts.notebook_data as data
+
+    path = source(tmp_path, "45_conditioning.ipynb")
+    step = {
+        "environment": "notebooks",
+        "argv": ["python", "-m", "examples.plot_rad_conditioning"],
+    }
+    manifest(
+        reproduction,
+        tmp_path,
+        {
+            path.relative_to(tmp_path).as_posix(): {
+                "historical_archives": True,
+                "preparation": [step],
+            }
+        },
+    )
+    archive = tmp_path / "examples/results/rad-native/original.npz"
+    image = tmp_path / "docs/figures/rad-conditioning/epsilon.png"
+    lookups = []
+
+    def archives(root, selected):
+        lookups.append(set(selected))
+        return {"45": {archive}} if "45" in selected else {}
+
+    monkeypatch.setattr(data, "required_archives", archives)
+    monkeypatch.setattr(data, "required_images", lambda root, selected: {"45": {image}})
+    actual, figures = reproduction.execution_inputs(tmp_path, [path])
+    assert actual == {} and figures == {"45": {image}}
+    assert lookups == [set()]
+    plan = reproduction.preparation_plan(
+        tmp_path, [path], data.dependency_plan(tmp_path, actual, figures)
+    )
+    assert plan["preparation"] == [step]
+    assert plan["unresolved"] == []
+    actual, figures = reproduction.execution_inputs(tmp_path, [path], study=True)
+    assert actual == {} and figures == {"45": {image}}
+    actual, figures = reproduction.execution_inputs(tmp_path, [path], historical=True)
+    assert actual == {"45": {archive}}
+    assert lookups[-1] == {"45"}
+
+
+def test_tetra_pk_public_resolution_producer_precedes_its_profile_plot(reproduction):
+    """The downloaded recipe acquires the unchanged P4 control before plotting its fields."""
+    contracts = json.loads(reproduction.REPRODUCTION_MANIFEST.read_text())["notebooks"]
+    contract = contracts["notebooks/darcy/64_tetra_pk.ipynb"]
+    for key in ("preparation", "current_study"):
+        modules = [step["argv"][2] for step in contract[key]]
+        assert modules.index("examples.reconstruction3d_resolution") < modules.index(
+            "examples.plot_tetra_pk"
+        )
+        producer = next(
+            step
+            for step in contract[key]
+            if step["argv"][2] == "examples.reconstruction3d_resolution"
+        )
+        assert producer["argv"] == ["python", "-m", "examples.reconstruction3d_resolution"]

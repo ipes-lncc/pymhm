@@ -7,18 +7,12 @@ the integrated finite-element norms recorded with each comparison.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
 
 import matplotlib
+
+from pymhm.io.workspace import local_resource, read_resource_bytes, read_resource_text
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -33,9 +27,9 @@ from pymhm.postprocessing.visualization import structured_cell_grid
 def archive(record: dict) -> dict[str, np.ndarray]:
     """Read a physical-field archive only after checking its recorded digest."""
     path = OUTPUT / record["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != record["sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != record["sha256"]:
         raise ValueError(f"Archive checksum differs: {path.name}")
-    with np.load(path) as data:
+    with np.load(local_resource(path)) as data:
         values = {name: data[name] for name in ("points", "pressure", "flux")}
     if values["flux"].shape != (60, 220, 2) or not np.isfinite(values["flux"]).all():
         raise ValueError("Flux archive must contain finite 60-by-220 vector samples")
@@ -186,7 +180,7 @@ def refinement(report: dict) -> None:
 
 def main() -> None:
     """Replay the completed flux study without compiling or running reference codes."""
-    report = json.loads((OUTPUT / "darcy-flux-comparison.json").read_text())
+    report = json.loads(read_resource_text(OUTPUT / "darcy-flux-comparison.json"))
     FIGURES.mkdir(parents=True, exist_ok=True)
     for name, reference in report["references"].items():
         compare(report["mhm"], reference, name)
@@ -196,4 +190,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_spe10_flux").main()

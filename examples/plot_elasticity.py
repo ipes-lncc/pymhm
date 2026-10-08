@@ -1,20 +1,12 @@
 """Verify nearly incompressible elasticity and render exact-field comparisons.
 
-Run ``pixi run -e notebooks python examples/plot_elasticity.py --workers 4``.
+Run ``python -m examples.plot_elasticity --workers 4``.
 Use ``--reuse-results`` to redraw the archived results without solving a PDE.
 Importing the field helpers preserves the caller's Matplotlib backend; the
 command-line entry point selects Agg for file rendering.
 """
 
 from __future__ import annotations
-
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
 
 import argparse
 import hashlib
@@ -31,15 +23,25 @@ from threadpoolctl import threadpool_limits
 
 from examples.elasticity_data import TrigonometricElasticityData
 from examples.formulations.application import elasticity as solve_elasticity
-from examples.formulations.application import herrmann_elasticity as solve_displacement_pressure
+from examples.formulations.application import (
+    herrmann_elasticity as solve_displacement_pressure,
+)
 from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 from pymhm.fem.scalar.triangle import nodal_space, reference_basis, tabulate
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    source_file,
+    source_identity,
+)
 from pymhm.linalg.linear import LinearSolveError
 from pymhm.postprocessing.solutions import ElasticitySolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 RESULTS = ROOT / "examples/results/elasticity.json"
 FIELDS = ROOT / "examples/results/elasticity-fields.npz"
 FIGURES = ROOT / "docs/figures/elasticity"
@@ -76,16 +78,11 @@ def metrics(result: ElasticitySolution, exact: TrigonometricElasticityData) -> d
 def snapshot_hashes() -> dict[str, str]:
     """Record the public numerical and analytical sources used for acquisition."""
     paths = [
-        *sorted((ROOT / "src/pymhm").rglob("*.py")),
+        *sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")),
         Path(__file__).resolve(),
-        ROOT / "examples/elasticity_data.py",
+        source_file("examples/elasticity_data.py", root=ROOT),
     ]
-    return current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in paths
-        }
-    )
+    return current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
 
 
 def write_report(report: dict[str, Any]) -> None:
@@ -278,7 +275,7 @@ def generate(workers: int) -> dict[str, Any]:
                 np.savez_compressed(FIELDS, **arrays)
                 report["field_case"] = row | {
                     "file": FIELDS.name,
-                    "sha256": hashlib.sha256(FIELDS.read_bytes()).hexdigest(),
+                    "sha256": hashlib.sha256(read_resource_bytes(FIELDS)).hexdigest(),
                 }
             write_report(report)
     for name in ("gals-p1", "gals-p2"):
@@ -386,7 +383,7 @@ def plot_refinement(report: dict[str, Any]) -> None:
 
 def plot_fields(report: dict[str, Any]) -> None:
     """Compare sampled exact and broken finite-element fields on the real macro mesh."""
-    data = np.load(FIELDS)
+    data = np.load(local_resource(FIELDS))
     mesh = TriangleMesh(data["macro_points"], data["macro_cells"])
     triangulation = mtri.Triangulation(*data["points"].T, triangles=data["cells"])
     figure, axes = plt.subplots(3, 3, figsize=(12, 10), constrained_layout=True)
@@ -464,11 +461,17 @@ def main() -> None:
     if args.workers < 1:
         parser.error("workers must be positive")
     with threadpool_limits(limits=1):
-        report = json.loads(RESULTS.read_text()) if args.reuse_results else generate(args.workers)
+        report = (
+            json.loads(read_resource_text(RESULTS))
+            if args.reuse_results
+            else generate(args.workers)
+        )
         plot_sweeps(report)
         plot_refinement(report)
         plot_fields(report)
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_elasticity").main()

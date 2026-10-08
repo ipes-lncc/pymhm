@@ -15,6 +15,10 @@ and macroface resolution remain independent. The default skeleton uses P1 on
 interior macrofaces and full fine-edge Pk on the external boundary; custom
 traces must have degree at most k and fine-edge-aligned segmentation.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from examples.formulations.application import weak_stress_elasticity as solve_elasticity_tensor_rt

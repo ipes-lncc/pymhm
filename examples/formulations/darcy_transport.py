@@ -4,7 +4,9 @@ from typing import Any, Literal
 
 import numpy as np
 
-from examples.formulations.transient import solve_transport_trajectory as solve_transient_transport
+from examples.formulations.transient import (
+    solve_transport_trajectory as solve_transient_transport,
+)
 from pymhm.materials.dispersion import (
     HydrodynamicDispersion,
     RT0DarcyVelocity,

@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 import shutil
@@ -19,13 +11,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from examples.plot_style import set_refinement_ticks
+from pymhm.io.workspace import case_workspace, read_resource_text
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def render(record_path: Path, output: Path) -> None:
     """Render all five measured series without solving a finite-element problem."""
-    data = json.loads(record_path.read_text())
+    data = json.loads(read_resource_text(record_path))
     output.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.size": 12, "axes.titlesize": 14})
     figure, axes = plt.subplots(1, 2, figsize=(12.5, 5.2), layout="constrained")
@@ -65,4 +58,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_mh_boundary").main()

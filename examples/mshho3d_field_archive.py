@@ -29,12 +29,13 @@ from pymhm.fem.scalar.tetrahedron import (
 )
 from pymhm.fem.traces.moments_3d import face_moment_rule_3d as _face_rule
 from pymhm.io.provenance import file_digest
+from pymhm.io.workspace import case_workspace, local_resource, read_resource_text, source_file
 from pymhm.linalg.linear import LinearSolveError, accurate_residual
 from pymhm.materials.evaluation import scalar_values_3d, tensor_values_3d
 from pymhm.postprocessing.solutions import MsHHO3DSolution
 
 SCHEMA = "pymhm-mshho3d-p2-p0-field-v1"
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 _EDGES = tuple(combinations(range(4), 2))
 
 
@@ -198,6 +199,7 @@ def field_arrays(
 
 
 def _same(actual: np.ndarray, expected: np.ndarray, message: str, tolerance: float = 1e-10) -> None:
+    """Require equal array shapes and the stated absolute and relative value tolerance."""
     if actual.shape != expected.shape or not np.allclose(
         actual, expected, rtol=tolerance, atol=tolerance
     ):
@@ -473,9 +475,10 @@ def write_field(
         raise ValueError("Fresh paths, acquisition UUID and executed source digests required")
 
     def check_sources() -> None:
+        """Require every recorded numerical owner to retain its literal acquisition bytes."""
         for name, expected in source_sha256.items():
-            actual = (ROOT / name).resolve()
-            if not actual.is_relative_to(ROOT) or file_digest(actual) != expected:
+            actual = (source_file(name, root=ROOT)).resolve()
+            if file_digest(local_resource(actual)) != expected:
                 raise ValueError("Executed numerical source differs from its recorded bytes")
 
     check_sources()
@@ -518,14 +521,14 @@ def write_field(
 
 def read_field(path: Path) -> tuple[dict[str, np.ndarray], dict[str, Any]]:
     """Verify full-file/basis digests and physical contracts before data-only replay."""
-    record = json.loads(path.with_suffix(".json").read_text())
+    record = json.loads(read_resource_text(path.with_suffix(".json")))
     if (
         record.get("schema") != SCHEMA
         or record.get("archive") != path.name
-        or file_digest(path) != record["archive_sha256"]
+        or file_digest(local_resource(path)) != record["archive_sha256"]
     ):
         raise ValueError("MsHHO3D field archive identity differs")
-    with np.load(path, allow_pickle=False) as saved:
+    with np.load(local_resource(path), allow_pickle=False) as saved:
         arrays = {name: saved[name].copy() for name in saved.files}
     if set(arrays) != set(record["array_sha256"]) or any(
         array_identity(v) != record["array_sha256"][k] for k, v in arrays.items()

@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
 import shutil
@@ -27,20 +19,27 @@ from examples.pgmhm_inclusion_data import material_array
 from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from examples.plot_style import set_refinement_ticks
 from examples.solve_pgmhm_inclusions_reference import load_field
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    resource_glob,
+)
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/pgmhm-inclusions"
 FIGURES = ROOT / "docs/figures/pgmhm-inclusions"
 
 
 def read(path: Path) -> dict:
     """Check the current coefficient archive before using its numerical record."""
-    row = json.loads(path.read_text())
+    row = json.loads(read_resource_text(path))
     for key in ("archive", "reference"):
         if (
             key in row
             and key + "_sha256" in row
-            and hashlib.sha256((path.parent / row[key]).read_bytes()).hexdigest()
+            and hashlib.sha256(read_resource_bytes(path.parent / row[key])).hexdigest()
             != row[key + "_sha256"]
         ):
             raise ValueError(f"coefficient checksum mismatch in {path.name}")
@@ -87,7 +86,7 @@ def main() -> None:
     rows = [read(DATA / f"mhm-pgmhm-factor{factor}-s2.json") for factor in (1, 2, 4)]
     references = [read(DATA / f"classical-cg2-factor{factor}.json") for factor in (1, 2, 4)]
     available = sorted(
-        (read(path) for path in DATA.glob("classical-cg2-graded*.json")),
+        (read(path) for path in resource_glob(DATA, "classical-cg2-graded*.json")),
         key=lambda row: row["grading_level"],
     )
     comparisons = []
@@ -98,7 +97,7 @@ def main() -> None:
             DATA / f"mhm-pgmhm-factor{factor}-s2-graded{level}-comparison.json"
             for factor in (1, 2, 4)
         ]
-        if not all(path.exists() for path in paths):
+        if not all(local_resource(path).exists() for path in paths):
             continue
         records = [read(path) for path in paths]
         if all(len(record["rows"]) == 2 for record in records):
@@ -235,9 +234,11 @@ def main() -> None:
         axis.grid(alpha=0.2)
         axis.legend(fontsize=7.5)
     save(fig, "physical-norms")
-    for path in DATA.glob("*.json"):
+    for path in resource_glob(DATA, "*.json"):
         shutil.copy2(path, FIGURES / path.name)
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_pgmhm_inclusions").main()

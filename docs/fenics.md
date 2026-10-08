@@ -4,6 +4,10 @@ The introductory path binds the macro/local meshes and interface space first.
 A provider then receives `LocalContext` and declares its volume and boundary
 forms directly with UFL:
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](tutorials.md#execute-downloaded-notebooks).
+
 ```python
 def local_equations(local):
     binding = local.native_space(element)

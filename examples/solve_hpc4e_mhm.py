@@ -2,13 +2,10 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
+from typing import TYPE_CHECKING
 
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
+if TYPE_CHECKING:
+    from pymhm.postprocessing.stress_tensor import TensorRTElasticitySolution
 
 import argparse
 import hashlib
@@ -19,16 +16,19 @@ from time import perf_counter
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from examples.formulations.application import weak_stress_elasticity as solve_elasticity_tensor_rt
+from examples.formulations.application import (
+    weak_stress_elasticity as solve_elasticity_tensor_rt,
+)
 from examples.hpc4e_data import BOUNDS, DATA_DIRECTORY, LENGTH_SCALE, STRESS_SCALE, load_data
 from pymhm import FaceSpace, SkeletonSpace
 from pymhm.fem.hdiv.tensor_rt import tensor_rt_dofs
+from pymhm.io.workspace import case_workspace, source_file, source_label
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
-def archive(solution, path: Path) -> str:
+def archive(solution: TensorRTElasticitySolution, path: Path) -> str:
     """Store element-local polynomial coefficients with positive local RT orientation."""
     macro = solution.skeleton.mesh
     fine = solution.local_meshes[0]
@@ -87,15 +87,15 @@ def main() -> None:
     source_hashes = {}
     for path in (
         Path(__file__),
-        ROOT / "examples/hpc4e_data.py",
-        ROOT / "src/pymhm/_legacy/models/elasticity/stress_tensor.py",
-        ROOT / "src/pymhm/fem/hdiv/tensor_rt.py",
-        ROOT / "src/pymhm/core/contracts.py",
-        ROOT / "src/pymhm/linalg/linear.py",
+        source_file("examples/hpc4e_data.py", root=ROOT),
+        source_file("src/pymhm/_legacy/models/elasticity/stress_tensor.py", root=ROOT),
+        source_file("src/pymhm/fem/hdiv/tensor_rt.py", root=ROOT),
+        source_file("src/pymhm/core/contracts.py", root=ROOT),
+        source_file("src/pymhm/linalg/linear.py", root=ROOT),
     ):
         content = path.read_bytes()
         digest = hashlib.sha256(content).hexdigest()
-        source_hashes[path.relative_to(ROOT).as_posix()] = digest
+        source_hashes[source_label(path, ROOT)] = digest
         (snapshots / f"{digest}.py").write_bytes(content)
     mesh = CartesianMacroMesh(16, 8, BOUNDS)
     mids = mesh.points[mesh.faces].mean(axis=1)
@@ -166,7 +166,7 @@ def main() -> None:
                 workers=args.workers,
                 local_solver=args.local_solver,
                 diagnostics=diagnostics,
-                field_archive=target.relative_to(ROOT).as_posix(),
+                field_archive=source_label(target, ROOT),
                 sha256=digest,
                 source_hashes=source_hashes,
             )
@@ -176,4 +176,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_hpc4e_mhm").main()

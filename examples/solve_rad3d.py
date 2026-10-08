@@ -15,12 +15,13 @@ from examples.field_archive import field_archive_arrays
 from examples.formulations.transport_3d import conforming_transport_3d, transport_3d
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity, source_label
 from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.postprocessing.fields import DiscreteField
 from pymhm.postprocessing.nodal import nodal_field
 from pymhm.postprocessing.solutions import RAD3DSolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 WAVE = 2 * np.pi * np.array([3.0, 2.0, 1.0])
 
 
@@ -73,11 +74,11 @@ def main() -> None:
     args = parser.parse_args()
     paths = [
         Path(__file__),
-        ROOT / "examples/field_archive.py",
-        ROOT / "examples/formulations/scalar_3d.py",
-        ROOT / "examples/formulations/transport_3d.py",
+        source_file("examples/field_archive.py", root=ROOT),
+        source_file("examples/formulations/scalar_3d.py", root=ROOT),
+        source_file("examples/formulations/transport_3d.py", root=ROOT),
         *(
-            ROOT / f"src/pymhm/{name}"
+            source_file(f"src/pymhm/{name}", root=ROOT)
             for name in (
                 "fem/scalar/transport_3d.py",
                 "fem/traces/triangle_3d.py",
@@ -93,9 +94,7 @@ def main() -> None:
             )
         ),
     ]
-    hashes = current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
-    )
+    hashes = current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     rows = []
     with threadpool_limits(limits=1):
@@ -162,12 +161,12 @@ def main() -> None:
     report = dict(
         literature="Araya et al., CMAME 428 (2024) 117089, section 5.2.1 and Figure 4",
         problem=(
-            "Unit cube, K=.1 I, beta=(1,0,0), reaction=0; "
-            "u=sin(6pi x)sin(4pi y)sin(2pi z); homogeneous Dirichlet"
+            "Unit cube, K=.1 I, beta=(1,0,0), reaction=0; u=sin(6pi x)sin(4pi "
+            "y)sin(2pi z); homogeneous Dirichlet"
         ),
         formulation=(
-            "Conservative RAD skew form, Robin skeleton flux "
-            "(-K grad(u)+beta*u/2).n; Galerkin local solve"
+            "Conservative RAD skew form, Robin skeleton flux (-K "
+            "grad(u)+beta*u/2).n; Galerkin local solve"
         ),
         mhm=dict(
             degree=4,
@@ -187,14 +186,15 @@ def main() -> None:
             V="sqrt(H1_seminorm_squared+L2_squared/diameter_squared), diameter_squared=3",
         ),
         reproduction_limit=(
-            "Published PDE and polynomial degrees; deterministic Freudenthal/red-refined "
-            "meshes differ from the irregular meshes in Figure 4. Analytical refinement "
-            "comparison, not identical published mesh data."
+            "Published PDE and polynomial degrees; deterministic "
+            "Freudenthal/red-refined meshes differ from the irregular meshes "
+            "in Figure 4. Analytical refinement comparison, not identical "
+            "published mesh data."
         ),
         rows=rows,
         source_sha256=hashes,
         source_changed_during_run=any(
-            hashlib.sha256(p.read_bytes()).hexdigest() != hashes[p.relative_to(ROOT).as_posix()]
+            hashlib.sha256(p.read_bytes()).hexdigest() != hashes[source_label(p, ROOT)]
             for p in paths
         ),
         timestamp_utc=datetime.now(UTC).isoformat(),
@@ -206,4 +206,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_rad3d").main()

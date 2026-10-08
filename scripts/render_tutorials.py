@@ -1,6 +1,8 @@
 """Publish introductory notebooks as static Markdown with their executed figures.
 
-Run in the locked ``introduction`` Pixi environment after ``notebooks-run``.
+Run after executing the current source notebooks. Contributors can use the
+locked ``introduction`` Pixi environment; published users download notebooks
+and verified companions separately from the library.
 Documentation builds consume the published pages without executing notebooks or
 importing an optional finite-element backend. Source and execution digests retain
 the provenance of every published numerical output.
@@ -198,6 +200,47 @@ def _validated_execution(source: Path, executed: Path) -> NotebookNode:
     return result
 
 
+def _reproduction_instructions(source: Path, execution_source_sha256: str) -> str:
+    """Describe separate library, notebook and companion inputs without relabeling outputs.
+
+    ``execution_source_sha256`` identifies the source that actually produced
+    the retained figures. The downloadable source and its support archive can
+    be newer; running them creates a separate execution receipt.
+    """
+    return (
+        "\n\n## Reproduce this tutorial\n\n"
+        f"[View the source notebook]({_SOURCE_URL}/{source.name}) or "
+        "[download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/"
+        f"main/notebooks/introduction/{source.name}), then open it:\n\n"
+        "```bash\n"
+        "python -m pip install 'pymhm[notebooks,visualization]'\n"
+        f"jupyter lab {source.name}\n"
+        "```\n\n"
+        "The first cell explicitly downloads a SHA256-verified companion archive. "
+        "Acquisition does not execute its code. The local support files are inspectable "
+        "in the printed `ROOT` directory; the following helper call prepares only the "
+        "declared inputs. The library distribution contains only `pymhm`. Notebooks, "
+        "support code and data are separate downloads. Native UFL forms require the "
+        "compatible DOLFINx/UFL backend described in the "
+        "[installation guide](../../installation.md). A clone and Pixi are unnecessary.\n\n"
+        "For batch execution, extract the same companion, change to its workspace, "
+        "and use its local runner with the actual downloaded notebook path:\n\n"
+        "```bash\n"
+        f"python -m scripts.run_notebooks /path/to/{source.name} --timeout 7200\n"
+        "```\n\n"
+        "The runner uses the active Python interpreter and writes an executed copy "
+        "and receipt under `build/notebooks/introduction/`. Larger data and field "
+        "archives have [documented download links](../../data.md) and verified checksums.\n\n"
+        "The displayed figures and numerical outputs correspond to the retained "
+        f"validated execution of notebook SHA256 `{execution_source_sha256}` in the "
+        "[publication manifest](manifest.json). Current instructions use the separately "
+        "downloaded local `examples` and `scripts` support modules. Running the current "
+        "source produces a separate receipt for its actual notebook, support bytes and "
+        "environment. Timings describe the recorded hardware and solver settings; "
+        "measure your own environment on an idle machine.\n"
+    )
+
+
 def _render_tutorial(source: Path, executed: Path, root: Path) -> _RenderedTutorial:
     """Export one verified execution while preserving its code and output order."""
     notebook = deepcopy(_validated_execution(source, executed))
@@ -265,27 +308,11 @@ def _render_tutorial(source: Path, executed: Path, root: Path) -> _RenderedTutor
         assets[image_directory / path.name] = content
     if not assets:
         raise ValueError(f"Exporter produced no static figures: {source.name}")
-    reproduction = (
-        "\n\n## Reproduce this tutorial\n\n"
-        f"[View the source notebook]({_SOURCE_URL}/{source.name}) or "
-        "[download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/"
-        f"main/notebooks/introduction/{source.name}). "
-        "Run its cells interactively, or execute the notebook from the repository root "
-        "with the checked-in Pixi lockfile:\n\n"
-        "```bash\n"
-        "pixi install --locked -e introduction\n"
-        f"pixi run --locked -e introduction notebooks-run introduction/{source.name} "
-        "--timeout 7200\n"
-        "```\n\n"
-        "The runner writes the executed copy to `build/notebooks/introduction/`. "
-        "The figures and numerical outputs on this page come from that execution. "
-        "Timings describe the recorded hardware and solver settings; rerun performance "
-        "examples on an idle machine to measure your own environment.\n"
-    )
-    markdown = markdown.rstrip() + reproduction
+    source_sha256 = hashlib.sha256(source.read_bytes()).hexdigest()
+    markdown = markdown.rstrip() + _reproduction_instructions(source, source_sha256)
     provenance = {
         "source_notebook": source.relative_to(root).as_posix(),
-        "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        "source_sha256": source_sha256,
         "support_sha256": {
             path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in sorted(

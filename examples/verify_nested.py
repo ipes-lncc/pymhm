@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 from pathlib import Path
 from time import perf_counter
@@ -14,45 +13,28 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.formulations.cartesian_darcy import define_cartesian_darcy
+from examples.nested_field_archive import (
+    capture_display,
+    display_fields,
+    executed_arrays,
+    field_norms,
+    original_checks,
+    read_archive,
+    replay_responses,
+    restore,
+    write_archive,
+)
 from examples.nested_formulation import DiffusionDiscretization, child_problem
 from pymhm import FaceSpace, HybridSystem, SkeletonSpace, assemble
 from pymhm.core.nested import nest_hybrid_system, nested_trace_map
 from pymhm.fem.scalar.operators import boundary_data
 from pymhm.fem.scalar.quadrilateral import qk_basis, quadrilateral_quadrature
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.postprocessing.conforming import ConformingQuadrilateralSolution
 
-try:
-    from .nested_field_archive import (
-        capture_display,
-        display_fields,
-        executed_arrays,
-        field_norms,
-        original_checks,
-        read_archive,
-        replay_responses,
-        restore,
-        write_archive,
-    )
-except ImportError:
-    import sys
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    from examples.nested_field_archive import (
-        capture_display,
-        display_fields,
-        executed_arrays,
-        field_norms,
-        original_checks,
-        read_archive,
-        replay_responses,
-        restore,
-        write_archive,
-    )
-
-
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def exact(x: np.ndarray) -> np.ndarray:
@@ -108,13 +90,18 @@ def acquire(
         Path(__file__).with_name("transport_checkpoints.py"),
         Path(__file__).with_name("campaign_provenance.py"),
         ROOT / "pixi.lock",
-        *sorted((ROOT / "src/pymhm").rglob("*.py")),
+        *sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")),
     ]
     executed_sources = current_source_manifest(
-        {
-            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in source_files
-        }
+        source_identity(
+            ROOT,
+            (
+                path
+                for path in source_files
+                if path.name not in ("pixi.lock", "pixi.toml", "pyproject.toml") or path.is_file()
+            ),
+        ),
+        packages=("pymhm", "examples"),
     )
     macro = CartesianMacroMesh(n)
     outer = SkeletonSpace(macro, tuple(FaceSpace.uniform(1, 2) for _ in macro.faces))
@@ -261,10 +248,15 @@ def acquire(
         recursive_map="Signed exact P1 restriction; parent reactions and one-sided leaves retained",
     )
     if executed_sources != current_source_manifest(
-        {
-            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in source_files
-        }
+        source_identity(
+            ROOT,
+            (
+                path
+                for path in source_files
+                if path.name not in ("pixi.lock", "pixi.toml", "pyproject.toml") or path.is_file()
+            ),
+        ),
+        packages=("pymhm", "examples"),
     ):
         raise RuntimeError("executed acquisition source changed")
     if archive is not None:
@@ -401,4 +393,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.verify_nested").main()

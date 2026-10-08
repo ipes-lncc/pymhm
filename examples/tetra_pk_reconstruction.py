@@ -13,9 +13,10 @@ from pymhm import TetraMesh, TriangularSkeleton
 from pymhm.core.contracts import HybridSolution
 from pymhm.estimators.darcy_3d import estimate_darcy_error_3d
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity, source_label
 from pymhm.postprocessing.solutions import Darcy3DSolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/tetra-pk"
 
 
@@ -31,7 +32,7 @@ def run() -> None:
     if (int(arrays["local_degree"]), row["trace_degree"], row["trace_subdivisions"]) != (5, 2, 2):
         raise ValueError("the reconstruction control requires the P5/P2, four-subface archive")
     owners = [
-        ROOT / f"src/pymhm/{name}.py"
+        source_file(f"src/pymhm/{name}.py", root=ROOT)
         for name in (
             "_legacy/models/darcy/primal_3d",
             "fem/scalar/tetrahedron",
@@ -44,14 +45,12 @@ def run() -> None:
             "meshes/mixed",
             "linalg/linear",
         )
-    ] + [Path(__file__), ROOT / "examples/reconstruction3d_data.py"]
-    hashes = current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
-    )
+    ] + [Path(__file__), source_file("examples/reconstruction3d_data.py", root=ROOT)]
+    hashes = current_source_manifest(source_identity(ROOT, owners), packages=("pymhm", "examples"))
     snapshot = ROOT / "build/results/tetra-pk/acquisition-sources"
     snapshot.mkdir(parents=True, exist_ok=True)
     for owner in owners:
-        destination = snapshot / f"{hashes[owner.relative_to(ROOT).as_posix()]}-{owner.name}"
+        destination = snapshot / f"{hashes[source_label(owner, ROOT)]}-{owner.name}"
         destination.write_bytes(owner.read_bytes())
     mesh = TetraMesh(arrays["macro_points"], arrays["macro_cells"])
     fine = tuple(
@@ -123,7 +122,7 @@ def run() -> None:
     )
     result.pop("errors_by_order")
     if hashes != current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        source_identity(ROOT, owners), packages=("pymhm", "examples")
     ):
         raise RuntimeError("reconstruction sources changed during acquisition")
     result["source_changed_during_run"] = False
@@ -131,6 +130,13 @@ def run() -> None:
     print(json.dumps(result), flush=True)
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     with threadpool_limits(1):
         run()
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.tetra_pk_reconstruction").main()

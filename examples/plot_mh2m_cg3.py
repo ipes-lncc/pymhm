@@ -7,14 +7,6 @@ reference; the original P1 comparison records are preserved separately.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -24,13 +16,19 @@ from pathlib import Path
 from examples import plot_mh2m_crisscross as crossed
 from examples import plot_mh2m_heterogeneous as structured
 from examples.mh2m_cg_reference import CubicTriangularField
+from pymhm.io.workspace import (
+    case_workspace,
+    read_resource_bytes,
+    read_resource_text,
+    resource_glob,
+)
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def digest(path: Path) -> str:
     """Identify the actual archived field or scientific record used for rendering."""
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return hashlib.sha256(read_resource_bytes(path)).hexdigest()
 
 
 def checked_reference(directory: Path, record: dict) -> tuple[CubicTriangularField, dict]:
@@ -122,13 +120,13 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=ROOT / "docs/figures/mh2m-heterogeneous")
     args = parser.parse_args()
     cg = args.source / "cg3"
-    reference_record = json.loads((cg / "comparison.json").read_text())
-    control_record = json.loads((cg / "structured-comparison.json").read_text())
+    reference_record = json.loads(read_resource_text(cg / "comparison.json"))
+    control_record = json.loads(read_resource_text(cg / "structured-comparison.json"))
     reference, metadata = checked_reference(cg, reference_record)
     if control_record["reference_acquisition"] != metadata:
         raise ValueError("both mesh families must use the same P3 reference acquisition")
     diagonal = promoted_record(
-        json.loads((args.source / "comparison.json").read_text()),
+        json.loads(read_resource_text(args.source / "comparison.json")),
         control_record["cases"],
         args.source,
         18,
@@ -137,7 +135,7 @@ def main() -> None:
     )
     cross_source, cross_output = args.source / "crisscross", args.output / "crisscross"
     crisscross = promoted_record(
-        json.loads((cross_source / "comparison.json").read_text()),
+        json.loads(read_resource_text(cross_source / "comparison.json")),
         reference_record["cases"],
         cross_source,
         24,
@@ -190,7 +188,7 @@ def main() -> None:
     crossed.norms(crisscross, cross_output)
     target = args.output / "cg3"
     target.mkdir(parents=True, exist_ok=True)
-    for path in cg.glob("*.json"):
+    for path in resource_glob(cg, "*.json"):
         shutil.copy2(path, target / path.name)
     render_record = {
         "reference_archive": metadata["archive"],
@@ -212,4 +210,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_mh2m_cg3").main()

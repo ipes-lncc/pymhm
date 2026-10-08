@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -22,6 +14,7 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_label
 
 if __package__:
     from .periodic_norms import difference
@@ -37,7 +30,7 @@ from pymhm.materials.separable import SeparableField
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.postprocessing.conforming import ConformingQuadrilateralSolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 ARTIFACTS = ROOT / "build/results/periodic"
 RECORD = ROOT / "examples/results/periodic.json"
 EPSILON = np.pi / 150
@@ -109,17 +102,17 @@ def fingerprint(path: Path) -> str:
 
 def source_hashes(*, snapshot: bool = False) -> dict[str, str]:
     """Record the implementation used by a new acquisition, without inferring old hashes."""
-    sources = [Path(__file__), ROOT / "examples/periodic_norms.py"]
-    sources += sorted((ROOT / "src/pymhm").rglob("*.py"))
+    sources = [Path(__file__), source_file("examples/periodic_norms.py", root=ROOT)]
+    sources += sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py"))
     result = {}
     for path in sources:
         digest = fingerprint(path)
-        result[path.relative_to(ROOT).as_posix()] = digest
+        result[source_label(path, ROOT)] = digest
         if snapshot:
             destination = ARTIFACTS / "acquisition-sources" / f"{digest}.py"
             destination.parent.mkdir(parents=True, exist_ok=True)
             destination.write_bytes(path.read_bytes())
-    return current_source_manifest(result)
+    return current_source_manifest(result, packages=("pymhm", "examples"))
 
 
 def save(record: dict) -> None:
@@ -394,4 +387,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.verify_periodic").main()

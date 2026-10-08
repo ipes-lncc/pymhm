@@ -12,6 +12,10 @@ fine edges. The default is an unsplit P1 trace on every macroface. The
 contravariant Piola transform and oriented Legendre normal moments are shared
 with the [mixed elasticity implementation](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-elasticity.md).
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 from pymhm import TriangleMesh
 from examples.formulations.application import bdm_darcy as solve_darcy_bdm

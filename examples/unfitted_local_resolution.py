@@ -8,14 +8,6 @@ this helper; fitted material meshes are not silently treated as uniform.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -31,6 +23,7 @@ from examples.archive_precision import restore_precision
 from pymhm.fem.scalar.operators import p1_geometry, triangle_quadrature
 from pymhm.fem.scalar.triangle import multiindices, nodal_space, reference_basis
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file
 from pymhm.meshes.triangle import TriangleMesh
 
 
@@ -314,7 +307,7 @@ def main() -> None:
     parser.add_argument("--order", type=int, default=13)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    root = Path(__file__).resolve().parents[1]
+    root = case_workspace()
     sources = (
         "examples/unfitted_local_resolution.py",
         "examples/archive_precision.py",
@@ -323,7 +316,11 @@ def main() -> None:
         "src/pymhm/meshes/triangle.py",
     )
     before = current_source_manifest(
-        {name: hashlib.sha256((root / name).read_bytes()).hexdigest() for name in sources}
+        {
+            name: hashlib.sha256((source_file(name, root=root)).read_bytes()).hexdigest()
+            for name in sources
+        },
+        packages=("pymhm", "examples"),
     )
     fields = [
         dict(name=p.name, sha256=hashlib.sha256(p.read_bytes()).hexdigest())
@@ -332,7 +329,7 @@ def main() -> None:
     with threadpool_limits(1):
         norms = difference(args.first, args.second, order=args.order)
     if any(
-        hashlib.sha256((root / name).read_bytes()).hexdigest() != value
+        hashlib.sha256((source_file(name, root=root)).read_bytes()).hexdigest() != value
         for name, value in before.items()
     ) or any(
         hashlib.sha256(path.read_bytes()).hexdigest() != field["sha256"]
@@ -352,4 +349,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.unfitted_local_resolution").main()

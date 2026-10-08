@@ -18,27 +18,29 @@ from examples.formulations.application import weak_stress_elasticity as solve_el
 from examples.formulations.application import (
     weak_stress_elasticity as solve_elasticity_mixed_polygons,
 )
-from examples.formulations.application import weak_stress_elasticity as solve_elasticity_tensor_rt
+from examples.formulations.application import (
+    weak_stress_elasticity as solve_elasticity_tensor_rt,
+)
 from examples.solve_core_extensions import polygon_grid
 from pymhm import CartesianMacroMesh, TriangleMesh
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, read_resource_text, source_file, source_identity
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/core-extensions"
 
 
 def projection_study() -> None:
     """Measure the local projection and discrete error independently on four polygon meshes."""
+    OUTPUT.mkdir(parents=True, exist_ok=True)
     owners = [
         Path(__file__),
-        ROOT / "examples/elasticity_field_samples.py",
-        ROOT / "examples/core_extension_data.py",
-        ROOT / "src/pymhm/_legacy/models/elasticity/stress.py",
-        ROOT / "src/pymhm/fem/hdiv/bdm_family.py",
+        source_file("examples/elasticity_field_samples.py", root=ROOT),
+        source_file("examples/core_extension_data.py", root=ROOT),
+        source_file("src/pymhm/_legacy/models/elasticity/stress.py", root=ROOT),
+        source_file("src/pymhm/fem/hdiv/bdm_family.py", root=ROOT),
     ]
-    hashes = current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
-    )
+    hashes = current_source_manifest(source_identity(ROOT, owners), packages=("pymhm", "examples"))
     rows = []
     for n in (2, 4, 8, 16):
         solution = solve_elasticity_mixed_polygons(
@@ -53,7 +55,7 @@ def projection_study() -> None:
         rows.append({"resolution": n, **decomposition})
         print(json.dumps(rows[-1]), flush=True)
     if hashes != current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        source_identity(ROOT, owners), packages=("pymhm", "examples")
     ):
         raise RuntimeError("projection study sources changed during acquisition")
     (OUTPUT / "elasticity-projection.json").write_text(
@@ -63,8 +65,8 @@ def projection_study() -> None:
 
 def run() -> None:
     """Recompute each archived finest state and verify its physical norms before field export."""
-    record = json.loads((OUTPUT / "elasticity.json").read_text())
-    owner = ROOT / "examples/elasticity_field_samples.py"
+    record = json.loads(read_resource_text(OUTPUT / "elasticity.json"))
+    owner = source_file("examples/elasticity_field_samples.py", root=ROOT)
     report = dict(
         sampling_refinement=6,
         source_sha256=hashlib.sha256(owner.read_bytes()).hexdigest(),
@@ -130,9 +132,16 @@ def run() -> None:
         raise RuntimeError("field sampling owner changed during acquisition")
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--projection-study", action="store_true")
     arguments = parser.parse_args()
     with threadpool_limits(1):
         projection_study() if arguments.projection_study else run()
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.sample_core_elasticity").main()

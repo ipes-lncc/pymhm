@@ -2,19 +2,17 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
-from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -25,7 +23,7 @@ from examples.plot_mesh import draw_macro_mesh
 from pymhm.fem.hdiv.rt import rt_evaluate
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def exact(points: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -38,7 +36,7 @@ def exact(points: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
 def main() -> None:
     """Render five-level norms and flat fine-cell samples with explicit macro boundaries."""
-    report = json.loads((ROOT / "examples/results/darcy-rt.json").read_text())
+    report = json.loads(read_resource_text(ROOT / "examples/results/darcy-rt.json"))
     output = ROOT / "docs/figures/darcy-rt"
     output.mkdir(parents=True, exist_ok=True)
     fig, axes = plt.subplots(1, 3, figsize=(15, 4.8), layout="constrained")
@@ -69,9 +67,9 @@ def main() -> None:
     plt.close(fig)
     row = report["rows"][-1]
     path = ROOT / "examples/results" / row["fields"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != row["fields_sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["fields_sha256"]:
         raise ValueError("RT field digest mismatch")
-    data = np.load(path)
+    data = np.load(local_resource(path))
     macro = TriangleMesh(data["macro_points"], data["macro_cells"])
     vertices = []
     triangles = []
@@ -132,4 +130,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_darcy_rt").main()

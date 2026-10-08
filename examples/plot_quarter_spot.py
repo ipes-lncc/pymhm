@@ -2,26 +2,25 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
 import platform
-import subprocess
 import time
 from dataclasses import dataclass
 from pathlib import Path
 
 import matplotlib
 
-from pymhm.io.provenance import current_source_manifest
+from pymhm.io.provenance import current_source_manifest, optional_file_digest, workspace_revision
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    source_file,
+    source_identity,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -50,7 +49,7 @@ from pymhm.fem.scalar.triangle import tabulate
 from pymhm.postprocessing.solutions import DarcySolution
 from pymhm.postprocessing.visualization import macro_edges
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/quarter-five-spot"
 FIGURES = ROOT / "docs/figures/quarter-five-spot"
 WELLS = np.array([[0.0, 0.0, -1.0], [1.0, 1.0, 1.0]])
@@ -60,15 +59,21 @@ def _source_digests() -> dict[str, str]:
     """Fingerprint the complete portable solver and its point-case evaluators."""
     sources = [
         Path(__file__),
-        ROOT / "examples/quarter_point_archive.py",
-        ROOT / "examples/field_sampling.py",
-        *sorted((ROOT / "src/pymhm").rglob("*.py")),
+        source_file("examples/quarter_point_archive.py", root=ROOT),
+        source_file("examples/field_sampling.py", root=ROOT),
+        *sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")),
     ]
     return current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in sources
-        }
+        source_identity(
+            ROOT,
+            (
+                path
+                for path in sources
+                if path.name not in ("pixi.lock", "pixi.toml", "pyproject.toml")
+                or local_resource(path).is_file()
+            ),
+        ),
+        packages=("pymhm", "examples"),
     )
 
 
@@ -223,10 +228,8 @@ def run_cases(
         ),
         "point_sharing": "incident-angle partition, without duplicated strengths",
         "source_sha256": source_digests,
-        "lockfile_sha256": hashlib.sha256((ROOT / "pixi.lock").read_bytes()).hexdigest(),
-        "git_revision": subprocess.run(
-            ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, capture_output=True, text=True
-        ).stdout.strip(),
+        "lockfile_sha256": optional_file_digest(ROOT / "pixi.lock"),
+        "git_revision": workspace_revision(ROOT),
         "python": platform.python_version(),
         "numpy": np.__version__,
         "native_libraries": threadpool_info(),
@@ -238,7 +241,9 @@ def run_cases(
     }
     mesh = TriangleMesh.unit_square(macro_resolution)
     np.savez_compressed(output / "macro.npz", points=mesh.points, cells=mesh.cells)
-    report["macro_archive_sha256"] = hashlib.sha256((output / "macro.npz").read_bytes()).hexdigest()
+    report["macro_archive_sha256"] = hashlib.sha256(
+        read_resource_bytes(output / "macro.npz")
+    ).hexdigest()
     for name in names:
         coefficient = materials[name]
         for method in formulations:
@@ -299,11 +304,11 @@ def run_cases(
                 output / f"{name}-{method}.npz", points=points, pressure=p, flux=q, areas=area
             )
             row["centroid_archive_sha256"] = hashlib.sha256(
-                (output / f"{name}-{method}.npz").read_bytes()
+                read_resource_bytes(output / f"{name}-{method}.npz")
             ).hexdigest()
             sampled_grid(solution).save(output / f"{name}-{method}.vtu")
             row["display_archive_sha256"] = hashlib.sha256(
-                (output / f"{name}-{method}.vtu").read_bytes()
+                read_resource_bytes(output / f"{name}-{method}.vtu")
             ).hexdigest()
             row["seconds"] = time.perf_counter() - start
             report["rows"].append(row)
@@ -385,7 +390,7 @@ def convergence(*, output: Path = OUTPUT) -> None:
                 "check_terms": 4096,
                 "excluded_radius": 0.125,
                 "source_sha256": source_digests,
-                "lockfile_sha256": hashlib.sha256((ROOT / "pixi.lock").read_bytes()).hexdigest(),
+                "lockfile_sha256": optional_file_digest(ROOT / "pixi.lock"),
                 "rows": rows,
             },
         )
@@ -395,7 +400,7 @@ def convergence(*, output: Path = OUTPUT) -> None:
 def plot_cases() -> None:
     """Render broken pressure and flux on the actual macrotriangulation."""
     FIGURES.mkdir(parents=True, exist_ok=True)
-    with np.load(OUTPUT / "macro.npz") as data:
+    with np.load(local_resource(OUTPUT / "macro.npz")) as data:
         mesh = TriangleMesh(data["points"], data["cells"])
     for name in ("homogeneous", "layer-half", "layer-offset"):
         grids = [pv.read(OUTPUT / f"{name}-{method}.vtu") for method in ("primal", "mixed")]
@@ -435,7 +440,7 @@ def plot_cases() -> None:
                 )
         plotter.screenshot(FIGURES / f"{name}.png")
         plotter.close()
-    rows = json.loads((OUTPUT / "point-convergence.json").read_text())["rows"]
+    rows = json.loads(read_resource_text(OUTPUT / "point-convergence.json"))["rows"]
     fig, axes = plt.subplots(1, 2, figsize=(10, 4), constrained_layout=True)
     for axis, key, title in zip(
         axes, ("sampled_pressure_rms", "sampled_flux_rms"), ("Pressure", "Flux"), strict=True
@@ -490,4 +495,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_quarter_spot").main()

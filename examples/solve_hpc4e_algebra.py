@@ -91,6 +91,7 @@ def solve_archive(
             {key: value for key, value in pool.items() if key != "filepath"}
             for pool in threadpool_info()
         ]
+    solution_path.parent.mkdir(parents=True, exist_ok=True)
     np.save(solution_path, solution, allow_pickle=False)
     solver_source = Path(importlib.import_module("pymhm.linalg.linear").__file__)
     return dict(
@@ -129,9 +130,12 @@ def main() -> None:
         solver=args.solver,
         equilibration=args.equilibration,
     )
+    args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(record, indent=2) + "\n")
     print(json.dumps(record), flush=True)
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_hpc4e_algebra").main()

@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -20,7 +12,9 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_info, threadpool_limits
 
-from examples.formulations.mixed_darcy import conforming_rt_reference as solve_darcy_rt_conforming
+from examples.formulations.mixed_darcy import (
+    conforming_rt_reference as solve_darcy_rt_conforming,
+)
 from examples.solve_spe10 import load_layer, pressure_boundary
 from examples.spe10_adaptive import (
     DATA,
@@ -31,6 +25,7 @@ from examples.spe10_adaptive import (
     natural_faces,
     reference_integrals,
 )
+from pymhm.io.workspace import source_file
 
 
 def peak_resident_memory_kib() -> int | None:
@@ -62,7 +57,7 @@ def collect(
         mesh = mesh_rectangle(nx, ny)
         fingerprint = hashes()
         fingerprint["examples/spe10_adaptive_aligned.py"] = hashlib.sha256(
-            (ROOT / "examples/spe10_adaptive_aligned.py").read_bytes()
+            source_file("examples/spe10_adaptive_aligned.py", root=ROOT).read_bytes()
         ).hexdigest()
         started = perf_counter()
         solution = solve_darcy_rt_conforming(
@@ -111,7 +106,7 @@ def collect(
             ],
             "source_hashes": fingerprint,
             "source_changed_during_solve": any(
-                hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != digest
+                hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest() != digest
                 for name, digest in fingerprint.items()
             ),
         }
@@ -150,4 +145,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.spe10_adaptive_aligned").main()

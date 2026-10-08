@@ -12,11 +12,14 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.formulations.application import rt_darcy as solve_darcy_rt
-from examples.formulations.mixed_darcy import conforming_rt_reference as solve_darcy_rt_conforming
+from examples.formulations.mixed_darcy import (
+    conforming_rt_reference as solve_darcy_rt_conforming,
+)
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity, source_label
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def potential(points: np.ndarray) -> np.ndarray:
@@ -49,7 +52,7 @@ def main() -> None:
     paths = [
         Path(__file__),
         *(
-            ROOT / f"src/pymhm/{name}"
+            source_file(f"src/pymhm/{name}", root=ROOT)
             for name in (
                 "_legacy/models/darcy/mixed_rt.py",
                 "fem/hdiv/rt.py",
@@ -62,7 +65,7 @@ def main() -> None:
             )
         ),
     ]
-    hashes = current_source_manifest({p.relative_to(ROOT).as_posix(): digest(p) for p in paths})
+    hashes = current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
     rows = []
     with threadpool_limits(limits=1):
         for degree in (0, 1, 2):
@@ -119,9 +122,7 @@ def main() -> None:
         analytical_reference=True,
         rows=rows,
         source_sha256=hashes,
-        source_changed_during_run=any(
-            digest(p) != hashes[p.relative_to(ROOT).as_posix()] for p in paths
-        ),
+        source_changed_during_run=any(digest(p) != hashes[source_label(p, ROOT)] for p in paths),
         timestamp_utc=datetime.now(UTC).isoformat(),
         native_threads=1,
     )
@@ -131,4 +132,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_darcy_rt").main()

@@ -69,6 +69,7 @@ def replay_section(arrays: Mapping[str, np.ndarray], refinement: int = 6) -> dic
     )
 
     def sample(macro: int, cell: int, points: np.ndarray) -> np.ndarray:
+        """Evaluate pressure and physical flux on the specified incident fine cell."""
         scalar, flux, _ = evaluate(arrays, macro, cell, points)
         return np.column_stack((scalar, flux))
 

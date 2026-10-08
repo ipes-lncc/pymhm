@@ -1,20 +1,12 @@
 """Plot exact and reconstructed Stokes, Brinkman, and Oseen verification fields.
 
-Run ``pixi run -e notebooks python examples/plot_flow_cases.py``. The script
+Run ``python -m examples.plot_flow_cases``. The script
 writes standalone PNG/SVG figures and unrounded quantitative results. Analytical
 fields follow the 2017 Stokes example; Brinkman and Oseen forces are derived from
 those fields. These meshes do not reproduce a published numerical table.
 """
 
 from __future__ import annotations
-
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
 
 import argparse
 import json
@@ -468,6 +460,13 @@ def main() -> None:
     print(json.dumps(records, indent=2))
 
 
-if __name__ == "__main__":
+def cli() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     with threadpool_limits(limits=1):
         main()
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.plot_flow_cases").cli()

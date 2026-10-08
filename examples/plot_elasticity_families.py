@@ -1,10 +1,24 @@
 """Replay mixed-elasticity family fields, convergence and modulus sweeps from archives."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from matplotlib.figure import Figure
+
 import hashlib
 import json
-from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    resource_glob,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -15,12 +29,12 @@ from matplotlib.tri import Triangulation
 from examples.plot_mesh import draw_macro_mesh
 from pymhm import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/elasticity-families"
 FIGURES = ROOT / "docs/figures/elasticity-families"
 
 
-def save(figure, name: str) -> None:
+def save(figure: Figure, name: str) -> None:
     """Export the same laid-out figure in PNG and SVG with rasterized dense fields."""
     for extension in ("png", "svg"):
         figure.savefig(FIGURES / f"{name}.{extension}", dpi=180)
@@ -30,9 +44,9 @@ def save(figure, name: str) -> None:
 def fields(record: dict, name: str) -> None:
     """Use shared exact/numerical limits and preserve independent values per fine cell."""
     path = DATA / record["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != record["sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != record["sha256"]:
         raise ValueError("Mixed-elasticity field archive checksum mismatch")
-    with np.load(path) as data:
+    with np.load(local_resource(path)) as data:
         triangulation = Triangulation(*data["points"].T, data["cells"])
         macro = TriangleMesh(data["macro_points"], data["macro_cells"])
         figure, axes = plt.subplots(2, 3, figsize=(12, 7.5), constrained_layout=True)
@@ -125,8 +139,8 @@ def oscillatory_studies() -> None:
         ("stress_l2", "Stress L² error"),
         ("stress_divergence_l2", "Stress divergence L² error"),
     ]
-    for path in sorted(DATA.glob("l18-*.json")):
-        record = json.loads(path.read_text())
+    for path in sorted(resource_glob(DATA, "l18-*.json")):
+        record = json.loads(read_resource_text(path))
         rows = record["rows"]
         k = rows[0]["trace_degree"]
         degree = rows[0]["local_normal_degree"]
@@ -153,8 +167,8 @@ def main() -> None:
     """Render completed polynomial campaign records without executing a solver."""
     FIGURES.mkdir(parents=True, exist_ok=True)
     records = []
-    for path in sorted(DATA.glob("bdm*.json")):
-        record = json.loads(path.read_text())
+    for path in sorted(resource_glob(DATA, "bdm*.json")):
+        record = json.loads(read_resource_text(path))
         records.append(record)
         fields(record, path.stem)
     studies(records)
@@ -162,4 +176,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_elasticity_families").main()

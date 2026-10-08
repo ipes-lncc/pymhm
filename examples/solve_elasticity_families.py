@@ -5,6 +5,13 @@ than a claim of reproducing a particular historical table. Numerical campaigns
 remain separate from the small algebraic and native-assembly tests in CI.
 """
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pymhm.postprocessing.stress import MixedElasticitySolution
+
 import argparse
 import hashlib
 import json
@@ -18,8 +25,9 @@ from examples.formulations.application import weak_stress_elasticity as solve_el
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 from pymhm.fem.scalar.triangle import reference_basis
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/elasticity-families"
 
 
@@ -78,7 +86,7 @@ def acquire(degree: int, enrichment: int, resolution: int, lam: float) -> tuple:
     return solution, data, row
 
 
-def archive(solution, data: ElasticityData, filename: Path) -> str:
+def archive(solution: MixedElasticitySolution, data: ElasticityData, filename: Path) -> str:
     """Save broken display samples, keeping every fine triangle's one-sided values."""
     reference = TriangleMesh([[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]], [[0, 1, 2]]).submesh(0, 3)
     bary = np.column_stack((1 - reference.points.sum(axis=1), reference.points))
@@ -129,9 +137,9 @@ def main() -> None:
         ]
     sources = (
         Path(__file__),
-        ROOT / "examples/elasticity_data.py",
-        ROOT / "src/pymhm/fem/hdiv/bdm_family.py",
-        ROOT / "src/pymhm/_legacy/models/elasticity/stress.py",
+        source_file("examples/elasticity_data.py", root=ROOT),
+        source_file("src/pymhm/fem/hdiv/bdm_family.py", root=ROOT),
+        source_file("src/pymhm/_legacy/models/elasticity/stress.py", root=ROOT),
     )
     report = dict(
         case="original bounded-force polynomial elasticity",
@@ -143,14 +151,13 @@ def main() -> None:
         archive=name + ".npz",
         sha256=checksum,
         source_hashes=current_source_manifest(
-            {
-                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-                for p in sources
-            }
+            source_identity(ROOT, sources), packages=("pymhm", "examples")
         ),
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_elasticity_families").main()

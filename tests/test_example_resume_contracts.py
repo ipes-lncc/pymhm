@@ -9,6 +9,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+from pymhm.io.workspace import source_file, source_label
+
 
 @pytest.fixture
 def example(monkeypatch):
@@ -26,10 +28,8 @@ def test_frequency_filename_collision_rejected_before_solve(example, tmp_path, m
     m.run(tmp_path, 0, 10, [], 1)
     # run writes only completed rows; construct its declared source and identity instead.
     sources = m.source_hashes()
-    for path in (Path(m.__file__), m.ROOT / "examples/helmholtz_threshold.py"):
-        sources[path.relative_to(m.ROOT).as_posix()] = m.hashlib.sha256(
-            path.read_bytes()
-        ).hexdigest()
+    for path in (Path(m.__file__), source_file("examples/helmholtz_threshold.py", root=m.ROOT)):
+        sources[source_label(path, m.ROOT)] = m.hashlib.sha256(path.read_bytes()).hexdigest()
     record = dict(
         source_sha256=sources,
         ell=0,

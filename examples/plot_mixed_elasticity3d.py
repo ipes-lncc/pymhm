@@ -2,7 +2,6 @@
 
 import hashlib
 import json
-from pathlib import Path
 from typing import Any
 
 import matplotlib.pyplot as plt
@@ -16,9 +15,15 @@ from examples.mixed_elasticity3d_data import SolenoidalElasticity3D
 from examples.plot_style import set_refinement_ticks
 from examples.tetra_section_samples import section_grid
 from pymhm.fem.hdiv.family_3d import HDiv3DFamily
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_dofs, hdiv3d_transform
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/mixed-elasticity3d"
 OUTPUT = ROOT / "docs/figures/mixed-elasticity3d"
 
@@ -93,13 +98,13 @@ def incompressibility(record: dict[str, Any]) -> None:
 def fields(row: dict[str, Any]) -> dict[str, Any]:
     """Replay stored H(div) coordinates on disconnected fine-tetrahedron section triangles."""
     path = DATA / row["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != row["archive_sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["archive_sha256"]:
         raise ValueError("mixed-elasticity field archive does not match its acquisition digest")
     points, cells, values = [], [], []
     offset = 0
     degree = row["stress_degree"]
     family = HDiv3DFamily("tetrahedron", degree - 1, degree)
-    with np.load(path) as archive:
+    with np.load(local_resource(path)) as archive:
         coefficients = archive["basis"]
         digest = hashlib.sha256(np.ascontiguousarray(coefficients).tobytes()).hexdigest()
         if digest != row["basis_sha256"]:
@@ -215,7 +220,7 @@ def fields(row: dict[str, Any]) -> dict[str, Any]:
 
 def run() -> None:
     """Render complete checked records and save explicit basis-replay provenance."""
-    record = json.loads((DATA / "comparison.json").read_text())
+    record = json.loads(read_resource_text(DATA / "comparison.json"))
     if len(record["convergence"]) != 10 or len(record["locking"]) != 7:
         raise ValueError("the two five-level sequences and seven Lamé cases must be complete")
     convergence(record)
@@ -226,6 +231,13 @@ def run() -> None:
     (OUTPUT / "field-sampling.json").write_text(json.dumps(sampling, indent=2) + "\n")
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     with threadpool_limits(1):
         run()
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.plot_mixed_elasticity3d").main()

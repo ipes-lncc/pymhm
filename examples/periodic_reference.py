@@ -2,19 +2,10 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
 import platform
-import subprocess
 import sys
 import time
 from pathlib import Path
@@ -24,7 +15,13 @@ import numpy as np
 import scipy
 from threadpoolctl import threadpool_info, threadpool_limits
 
-from pymhm.io.provenance import current_source_manifest
+from pymhm.io.provenance import (
+    current_source_manifest,
+    optional_file_digest,
+    workspace_git_dirty,
+    workspace_revision,
+)
+from pymhm.io.workspace import source_file, source_identity
 
 if __package__:
     from .verify_periodic import (
@@ -58,9 +55,9 @@ from pymhm.meshes.cartesian import CartesianMacroMesh
 
 def sources() -> dict[str, str]:
     """Fingerprint the executed acquisition and all numerical dependency owners."""
-    paths = [Path(__file__), ROOT / "examples/verify_periodic.py"]
+    paths = [Path(__file__), source_file("examples/verify_periodic.py", root=ROOT)]
     paths += [
-        ROOT / f"src/pymhm/{name}.py"
+        source_file(f"src/pymhm/{name}.py", root=ROOT)
         for name in (
             "linalg/separable",
             "_legacy/models/darcy/separable",
@@ -74,7 +71,17 @@ def sources() -> dict[str, str]:
             "fem/scalar/triangle",
         )
     ]
-    return current_source_manifest({p.relative_to(ROOT).as_posix(): fingerprint(p) for p in paths})
+    return current_source_manifest(
+        source_identity(
+            ROOT,
+            (
+                path
+                for path in paths
+                if path.name not in ("pixi.lock", "pixi.toml", "pyproject.toml") or path.is_file()
+            ),
+        ),
+        packages=("pymhm", "examples"),
+    )
 
 
 def _array_digest(values: np.ndarray) -> str:
@@ -178,7 +185,8 @@ def validate_reference_archive(path: Path, record: dict) -> None:
     )
     if (
         any(
-            owner_hashes.get(f"src/pymhm/{owner}.py") != fingerprint(ROOT / f"src/pymhm/{owner}.py")
+            owner_hashes.get(f"src/pymhm/{owner}.py")
+            != fingerprint(source_file(f"src/pymhm/{owner}.py", root=ROOT))
             for owner in owners
         )
         or record.get("operator_dtype") != np.dtype(float).str
@@ -234,7 +242,7 @@ def run(
     if refinement_precision == "extended" and np.finfo(np.longdouble).eps >= np.finfo(float).eps:
         raise SolverUnavailableError("extended refinement requires a wider long-double type")
     original = sources()
-    lockfile_digest = fingerprint(ROOT / "pixi.lock")
+    lockfile_digest = optional_file_digest(ROOT / "pixi.lock")
     directory = ARTIFACTS if artifacts is None else Path(artifacts)
     record_directory = ROOT / "examples/results" if records is None else Path(records)
     path = directory / f"reference-q{degree}-{n}-current-order{order}-lor.npz"
@@ -274,7 +282,7 @@ def run(
             {key: value for key, value in info.items() if key != "filepath"}
             for info in threadpool_info()
         ]
-    if sources() != original or fingerprint(ROOT / "pixi.lock") != lockfile_digest:
+    if sources() != original or optional_file_digest(ROOT / "pixi.lock") != lockfile_digest:
         raise RuntimeError("reference sources or lockfile changed during acquisition")
     _check_field(solution.pressure, solution.relative_equation_residual, n, degree)
     directory.mkdir(parents=True, exist_ok=True)
@@ -287,18 +295,8 @@ def run(
             residual=solution.relative_equation_residual,
             **basis,
         )
-    revision = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True, capture_output=True, check=True
-    ).stdout.strip()
-    dirty = bool(
-        subprocess.run(
-            ["git", "status", "--porcelain", "--untracked-files=no"],
-            cwd=ROOT,
-            text=True,
-            capture_output=True,
-            check=True,
-        ).stdout
-    )
+    revision = workspace_revision(ROOT)
+    dirty = workspace_git_dirty(ROOT)
     record = {
         "schema": "pymhm-conforming-periodic-reference-v1",
         "n": n,
@@ -343,9 +341,14 @@ def run(
     snapshot_directory = directory / "acquisition-sources"
     snapshot_directory.mkdir(exist_ok=True)
     for name, digest in original.items():
-        (snapshot_directory / f"{digest}.py").write_bytes((ROOT / name).read_bytes())
-    (snapshot_directory / f"{lockfile_digest}.lock").write_bytes((ROOT / "pixi.lock").read_bytes())
-    if sources() != original or fingerprint(ROOT / "pixi.lock") != lockfile_digest:
+        (snapshot_directory / f"{digest}.py").write_bytes(
+            (source_file(name, root=ROOT)).read_bytes()
+        )
+    if lockfile_digest is not None:
+        (snapshot_directory / f"{lockfile_digest}.lock").write_bytes(
+            (ROOT / "pixi.lock").read_bytes()
+        )
+    if sources() != original or optional_file_digest(ROOT / "pixi.lock") != lockfile_digest:
         raise RuntimeError("reference sources or lockfile changed before publication")
     temporary_archive.replace(path)
     temporary_record.replace(record_path)
@@ -380,4 +383,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.periodic_reference").main()

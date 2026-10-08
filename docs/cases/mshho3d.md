@@ -29,6 +29,10 @@ prescribes physical outward Darcy flux on selected faces. For pure Neumann data,
 compatibility is checked and `mean_pressure` selects the physical volume mean.
 The global mean is not a coordinate-dependent choice of one nodal value.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 from pymhm import TetraMesh
 from examples.formulations.application import moment_diffusion as solve_mshho_3d

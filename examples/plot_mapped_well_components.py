@@ -8,19 +8,13 @@ intersections with the upper incident side of the horizontal plane.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import read_resource_text
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -134,10 +128,14 @@ def main() -> None:
     parser.add_argument("--fine", type=int, nargs="+", choices=(8, 16), default=[8, 16])
     parser.add_argument("--output", type=Path, default=OUTPUT)
     args = parser.parse_args()
-    reference = args.reference or json.loads((DATA / "comparisons.json").read_text())["reference"]
+    reference = (
+        args.reference or json.loads(read_resource_text(DATA / "comparisons.json"))["reference"]
+    )
     for fine in args.fine:
         flux_components(reference, fine=fine, output=args.output)
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_mapped_well_components").main()

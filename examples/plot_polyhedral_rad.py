@@ -2,19 +2,18 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
 from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -29,7 +28,7 @@ from examples.solve_rad3d import exact
 from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
 from pymhm.meshes.tetrahedron import TetraMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 FOLDER = ROOT / "docs/figures/polyhedral-rad"
 FAMILIES = ("cube", "triangular-prism", "hexagonal-prism")
 
@@ -79,7 +78,7 @@ def evaluate_slice(
     mesh, base = partition(n, family)
     zlayer = min(int(points[0, 2] * n), n - 1)
     result = np.full(len(points), np.nan)
-    with np.load(archive) as data:
+    with np.load(local_resource(archive)) as data:
         for polygon, ids in enumerate(base.cells):
             xy = base.points[ids]
             edges = np.roll(xy, -1, axis=0) - xy
@@ -129,7 +128,7 @@ def fields(rows: list[dict]) -> None:
     for family in FAMILIES:
         row = max((r for r in rows if r["family"] == family), key=lambda r: r["n"])
         path = ROOT / "build/results/polyhedral-rad" / row["field_archive"]
-        if hashlib.sha256(path.read_bytes()).hexdigest() != row["field_sha256"]:
+        if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["field_sha256"]:
             raise ValueError("archived fields differ from their acquisition digest")
         values, base = evaluate_slice(path, row["n"], family, points)
         samples.append((row, values, base))
@@ -197,11 +196,15 @@ def convergence(rows: list[dict]) -> None:
 
 def main() -> None:
     """Read completed records and render geometry, analytical comparisons and convergence."""
-    rows = json.loads((ROOT / "examples/results/polyhedral-rad.json").read_text())["convergence"]
+    rows = json.loads(read_resource_text(ROOT / "examples/results/polyhedral-rad.json"))[
+        "convergence"
+    ]
     geometry()
     fields(rows)
     convergence(rows)
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_polyhedral_rad").main()

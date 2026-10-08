@@ -7,14 +7,6 @@ classical conforming mixed method, without a macro-skeleton restriction.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -28,6 +20,7 @@ from threadpoolctl import threadpool_limits
 from examples.solve_mapped_oscillatory_well import OUTPUT, ROOT, OscillatoryWellData
 from pymhm.fem.hdiv.mapped import mapped_rt_basis
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import source_file, source_identity, source_label
 from pymhm.linalg.linear import factorize
 from pymhm.meshes.hexahedron import HexMesh, cube_quadrature, hexahedral_mapping
 
@@ -212,21 +205,16 @@ def main() -> None:
     )
     paths = [
         Path(__file__),
-        ROOT / "examples/solve_mapped_oscillatory_well.py",
-        ROOT / "examples/solve_mapped_well.py",
-        ROOT / "src/pymhm/_legacy/models/darcy/mapped.py",
-        ROOT / "src/pymhm/linalg/linear.py",
+        source_file("examples/solve_mapped_oscillatory_well.py", root=ROOT),
+        source_file("examples/solve_mapped_well.py", root=ROOT),
+        source_file("src/pymhm/_legacy/models/darcy/mapped.py", root=ROOT),
+        source_file("src/pymhm/linalg/linear.py", root=ROOT),
     ]
-    hashes = current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in paths
-        }
-    )
+    hashes = current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
     snapshots = ROOT / "build/source-snapshots/mapped-well-oscillatory"
     snapshots.mkdir(parents=True, exist_ok=True)
     for path in paths:
-        (snapshots / f"{hashes[path.relative_to(ROOT).as_posix()]}-{path.name}").write_bytes(
+        (snapshots / f"{hashes[source_label(path, ROOT)]}-{path.name}").write_bytes(
             path.read_bytes()
         )
     with threadpool_limits(1):
@@ -274,7 +262,7 @@ def main() -> None:
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
     if any(
-        hashlib.sha256(path.read_bytes()).hexdigest() != hashes[path.relative_to(ROOT).as_posix()]
+        hashlib.sha256(path.read_bytes()).hexdigest() != hashes[source_label(path, ROOT)]
         for path in paths
     ):
         raise RuntimeError("Acquisition sources changed; inspect the preserved source snapshots")
@@ -282,4 +270,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_mapped_well_invariant").main()

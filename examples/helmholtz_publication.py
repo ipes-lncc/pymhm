@@ -11,6 +11,7 @@ import numpy as np
 from examples.campaign_checkpoint import require_sources, verify_checkpoint
 from examples.helmholtz_article import article_hashes
 from pymhm.io.provenance import file_digest
+from pymhm.io.workspace import local_resource, read_resource_text
 
 
 def support_rows(
@@ -23,8 +24,8 @@ def support_rows(
     current candidate operators separately from the independent reference code,
     and retain runtime attribution plus physical coefficient and residual gates.
     """
-    published = json.loads((directory / "published-convergence.json").read_text())
-    native = json.loads((directory / "native-convergence-verification.json").read_text())
+    published = json.loads(read_resource_text(directory / "published-convergence.json"))
+    native = json.loads(read_resource_text(directory / "native-convergence-verification.json"))
     expected = {
         (r["ell"], r["n"], r["trace_basis"], field): r
         for r in rows
@@ -36,7 +37,7 @@ def support_rows(
         raise ValueError("the published Helmholtz graph comparison is incomplete")
     identity = published["pymhm_source"]
     require_sources(identity["source_sha256"], article_hashes())
-    if identity["sha256"] != file_digest(directory / "article.json"):
+    if identity["sha256"] != file_digest(local_resource(directory / "article.json")):
         raise ValueError("the primary graph comparison identifies different analytical data")
     for key, row in zip(graph_keys, published["rows"], strict=True):
         case = expected[key]

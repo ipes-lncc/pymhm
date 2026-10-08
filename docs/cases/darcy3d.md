@@ -20,6 +20,10 @@ assert fine-cell conservation of that raw gradient.
 Positive local degrees are supported. The [general tetrahedral Pk study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/tetra-pk.md)
 includes independent P5/P6 element checks and a P5/P2 estimator campaign.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton

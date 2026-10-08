@@ -7,20 +7,12 @@ Pixel-aligned 240-by-440 and 480-by-880 grids provide intermediate resolution
 checks. The article grid cuts material pixels, so its Gauss order must be
 resolved by integrating on exact material-pixel intersections.
 
-Run from the checkout with ``pixi run -e intel python -m
+Run with PyMHM installed using ``pixi run -e intel python -m
 examples.solve_spe10_reference --shape 768 1408 --order 5``. The default
 240-by-440 grid is the smaller, pixel-aligned reference.
 """
 
 from __future__ import annotations
-
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
 
 import argparse
 import hashlib
@@ -183,4 +175,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_spe10_reference").main()

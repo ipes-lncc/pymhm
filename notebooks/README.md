@@ -18,40 +18,52 @@ comparisons. The local providers declare mathematical blocks, physical kernels,
 moments, trace orientations and boundary loads; method-ready solvers are optional
 conveniences. Original-system comparisons assemble the stated equations directly.
 
-Instructional examples are notebooks. Reusable Python modules in `examples/`
-provide analytical patch data, campaign acquisition, archive readers and figure
-renderers. Import them from cells when needed; numerical algorithms remain in
-`pymhm`. Process-worker callables remain importable to preserve spawn semantics.
+The PyMHM distribution contains only `pymhm`. Download a notebook from the
+links below or the documentation. Its first cell explicitly downloads a
+SHA256-verified companion ZIP containing local `examples` helpers, notebook
+execution tools and small configurations. It then prepares only the declared
+inputs. These support files are separate from the installed library; you can
+inspect or edit them in the printed `ROOT` directory. Numerical algorithms
+remain in `pymhm`, and worker definitions remain importable for spawn.
 
-Source notebooks remain unexecuted in Git. The runner writes executed copies
-under `build/notebooks`, preserving these folders:
+Install the optional notebook/plot dependencies and open the downloaded file:
 
 ```bash
-pixi run --locked -e notebooks notebooks-run darcy/primal_galerkin.ipynb
-pixi run --locked -e notebooks notebooks-run flow/introductory_methods.ipynb
-pixi run --locked -e notebooks notebooks-run 01
-pixi run --locked -e notebooks notebooks-run --plan --check
+python -m pip install 'pymhm[notebooks,visualization]'
+jupyter lab downloaded-notebook.ipynb
 ```
 
-A folder selects all its notebooks. Missing current-study archives and figures
-are prepared automatically by the complete public recipes in
-[`scripts/notebook_reproduction.json`](../scripts/notebook_reproduction.json).
-`--plan` lists their locked commands and resource requirements without executing
-them. The runner selects the declared native Pixi environment and pins its actual
-Python interpreter as the kernel; required UFL/DOLFINx examples execute there.
-`--no-prepare` requires the current inputs to exist already.
+Native DOLFINx/UFL examples additionally require the compatible backend in the
+[installation guide](https://ipes-lncc.github.io/pymhm/installation/). NumPy/SciPy
+formulations remain independent of it. No clone or Pixi installation is needed.
+Downloading the companion does not execute its code. The following explicit
+preparation call prints any declared acquisition commands before running them.
+Larger inputs remain separate [downloads](https://ipes-lncc.github.io/pymhm/data/),
+verified by SHA256 and cached. Generated outputs stay in the writable workspace.
+
+After extracting the companion, run its optional tool from that workspace:
+
+```bash
+python -m scripts.run_notebooks /path/to/downloaded-notebook.ipynb --plan --check
+python -m scripts.run_notebooks /path/to/downloaded-notebook.ipynb --timeout 7200
+```
+
+The runner uses the active Python, preserves the downloaded source and writes
+executed copies under `build/notebooks`. `--plan` only lists inputs and commands;
+`--no-prepare` requires current inputs to exist. `PYMHM_WORKSPACE` selects an
+explicit directory; otherwise the first cell uses `.pymhm-companions/<SHA256>`.
 
 `--study` acquires the complete available current scientific campaign with its
 stated meshes, spaces, refinement levels and references. Inspect its cost and
-exact commands first with `notebooks-run <selector> --study --plan`. Fresh
-output-directory recipes share one automatically expanded `{acquisition}` UUID.
-The immediate
-physical example and the complete campaign state their separate discretizations;
-an analytical patch is not a substitute for a heterogeneous or published case.
+commands first with `python -m scripts.run_notebooks /path/to/downloaded-notebook.ipynb --study --plan`.
+Fresh output-directory recipes share one automatically expanded acquisition UUID.
+The immediate physical example and the complete campaign state their separate
+discretizations; an analytical patch is not a substitute for a heterogeneous
+or published case.
 
 Original external comparison coefficients and attributed article rasters form
 explicitly optional historical sections. `--historical` requires those original
-payloads and preserves their checksum checks. The retained JSON measurements
+payloads and preserves their checksum checks. Retained JSON measurements
 identify their executed revisions; rendering scalar observations does not
 recompute a PDE. Current controls, complete current acquisitions and matched
 literature reproductions have separate declared scopes. Large full studies can
@@ -75,7 +87,7 @@ The machine-readable index is [catalogue.json](catalogue.json).
 | [Stokes–Brinkman boundary-layer convergence](introduction/stokes_brinkman_boundary_layer.ipynb) | Velocity–pressure UFL; Taylor–Hood and USFEM local spaces; analytical layer; refined classical Taylor–Hood |
 
 ```bash
-pixi run --locked -e introduction notebooks-run introduction --timeout 7200
+jupyter lab darcy_multiscale_convergence.ipynb
 ```
 
 ## convergence

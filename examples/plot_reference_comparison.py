@@ -2,18 +2,11 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import json
-from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import case_workspace, local_resource, read_resource_text, source_file
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -23,7 +16,7 @@ import numpy as np
 from examples.plot_mesh import draw_macro_mesh
 from pymhm import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "docs/figures/reference"
 
 
@@ -82,11 +75,11 @@ def plot_errors(report: dict) -> None:
 
 def plot_fields() -> None:
     """Show exact and computed signed components on shared physical color scales."""
-    with np.load(ROOT / "examples/results/reference-darcy-fields.npz") as data:
+    with np.load(local_resource(ROOT / "examples/results/reference-darcy-fields.npz")) as data:
         points, cells = data["points"], data["cells"]
         reference_p, ours_p = data["reference_pressure"], data["pymhm_pressure"]
         reference_q, ours_q = data["reference_flux"], data["pymhm_flux"]
-    with np.load(ROOT / "examples/results/reference-darcy-64.npz") as data:
+    with np.load(local_resource(ROOT / "examples/results/reference-darcy-64.npz")) as data:
         macro_mesh = TriangleMesh(data["macro_points"], data["macro_cells"])
     triangulation = mtri.Triangulation(points[:, 0], points[:, 1], cells)
     x, y = (2 * np.pi * points).T
@@ -139,7 +132,7 @@ def plot_coarse_cosine() -> None:
     these samples are only a visualization; full-field L2 differences in the
     report were integrated with a rule exact for squared affine vectors.
     """
-    report = json.loads((ROOT / "examples/results/coarse-cosine/comparison.json").read_text())
+    report = json.loads(read_resource_text(ROOT / "examples/results/coarse-cosine/comparison.json"))
     coordinates = np.linspace(0, 1, 151)
     x, y = np.meshgrid(coordinates, coordinates)
     exact_magnitude = np.pi * np.sqrt(
@@ -147,7 +140,11 @@ def plot_coarse_cosine() -> None:
     )
     for formulation in ("primal", "mixed"):
         record = report[formulation]
-        with np.load(ROOT / f"examples/results/coarse-cosine/{formulation}-fields.npz") as data:
+        with np.load(
+            local_resource(
+                source_file(f"examples/results/coarse-cosine/{formulation}-fields.npz", root=ROOT)
+            )
+        ) as data:
             points, cells = data["points"], data["cells"]
             macro_mesh = TriangleMesh(data["macro_points"], data["macro_cells"])
             native, ours = data["reference_flux"], data["pymhm_flux"]
@@ -232,7 +229,9 @@ def plot_coarse_cosine() -> None:
 
 def main() -> None:
     """Render convergence and signed field comparisons from recorded data."""
-    report = json.loads((ROOT / "examples/results/reference-darcy-comparison.json").read_text())
+    report = json.loads(
+        read_resource_text(ROOT / "examples/results/reference-darcy-comparison.json")
+    )
     plt.rcParams.update({"font.size": 10, "svg.fonttype": "none"})
     plot_errors(report)
     plot_fields()
@@ -240,4 +239,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_reference_comparison").main()

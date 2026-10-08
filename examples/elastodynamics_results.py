@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
 from pathlib import Path
@@ -26,16 +18,23 @@ from pymhm.fem.scalar.tetrahedron import (
     tetra_nodal_space,
     tetrahedron_quadrature,
 )
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    resource_glob,
+)
 from pymhm.meshes.tetrahedron import TetraMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/elastodynamics"
 OUTPUT = ROOT / "docs/figures/elastodynamics"
 
 
 def load(path: Path) -> dict[str, np.ndarray]:
     """Load only the explicitly archived mesh and physical polynomial coefficients."""
-    with np.load(path) as archive:
+    with np.load(local_resource(path)) as archive:
         return dict(archive)
 
 
@@ -242,7 +241,7 @@ def main() -> None:
     from matplotlib.ticker import FixedLocator, FormatStrFormatter, NullFormatter
 
     spatial = [
-        json.loads((DATA / f"n{n}-dt0.005-q{12 if n == 1 else 8}-s1.json").read_text())
+        json.loads(read_resource_text(DATA / f"n{n}-dt0.005-q{12 if n == 1 else 8}-s1.json"))
         for n in (1, 2, 3, 4, 5, 6, 8)
     ]
     temporal = []
@@ -340,7 +339,8 @@ def main() -> None:
             },
         },
         "field_sha256": {
-            p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in DATA.glob("*.npz")
+            p.name: hashlib.sha256(read_resource_bytes(p)).hexdigest()
+            for p in resource_glob(DATA, "*.npz")
         },
     }
     (DATA / "comparison.json").write_text(json.dumps(record, indent=2) + "\n")
@@ -348,4 +348,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.elastodynamics_results").main()

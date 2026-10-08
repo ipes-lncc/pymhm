@@ -16,8 +16,9 @@ from examples.solve_rad3d import exact, gradient, physical_flux, source
 from pymhm import PolyhedralMesh
 from pymhm.fem.traces.polygon_3d import PolygonalSkeleton3D
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity, source_label
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/star-polyhedra"
 
 
@@ -30,7 +31,7 @@ def run(workers: int) -> None:
     """Acquire exact-field errors with geometric-kernel certificates and independent quadrature."""
     OUTPUT.mkdir(parents=True, exist_ok=True)
     owners = [
-        ROOT / f"src/pymhm/{name}.py"
+        source_file(f"src/pymhm/{name}.py", root=ROOT)
         for name in (
             "meshes/polyhedral",
             "meshes/geometry",
@@ -48,19 +49,17 @@ def run(workers: int) -> None:
         )
     ] + [
         Path(__file__),
-        ROOT / "examples/polygon_meshes.py",
-        ROOT / "examples/solve_rad3d.py",
-        ROOT / "examples/field_archive.py",
-        ROOT / "examples/formulations/scalar_3d.py",
-        ROOT / "examples/formulations/transport_3d.py",
+        source_file("examples/polygon_meshes.py", root=ROOT),
+        source_file("examples/solve_rad3d.py", root=ROOT),
+        source_file("examples/field_archive.py", root=ROOT),
+        source_file("examples/formulations/scalar_3d.py", root=ROOT),
+        source_file("examples/formulations/transport_3d.py", root=ROOT),
     ]
-    hashes = current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
-    )
+    hashes = current_source_manifest(source_identity(ROOT, owners), packages=("pymhm", "examples"))
     snapshot = ROOT / "build/results/star-polyhedra/acquisition-sources"
     snapshot.mkdir(parents=True, exist_ok=True)
     for path in owners:
-        destination = snapshot / f"{hashes[path.relative_to(ROOT).as_posix()]}-{path.name}"
+        destination = snapshot / f"{hashes[source_label(path, ROOT)]}-{path.name}"
         destination.write_bytes(path.read_bytes())
     record = dict(
         reference="10.1016/j.cma.2024.117089, section 5.2.1 analytical 3D problem",
@@ -176,10 +175,7 @@ def run(workers: int) -> None:
             elapsed_seconds=perf_counter() - started,
         )
         if hashes != current_source_manifest(
-            {
-                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-                for p in owners
-            }
+            source_identity(ROOT, owners), packages=("pymhm", "examples")
         ):
             raise RuntimeError("campaign sources changed during acquisition")
         record["rows"].append(row)
@@ -188,8 +184,15 @@ def run(workers: int) -> None:
         print(json.dumps(row), flush=True)
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workers", type=int, default=4)
     with threadpool_limits(1):
         run(parser.parse_args().workers)
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.solve_star_polyhedra").main()

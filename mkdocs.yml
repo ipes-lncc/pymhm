@@ -223,6 +223,7 @@ nav:
 - Overview: index.md
 - Installation: installation.md
 - Windows: windows.md
+- Data and notebook downloads: data.md
 - Mathematical foundations: theory.md
 - Literature and scope: literature.md
 - Architecture: architecture.md
@@ -282,6 +283,7 @@ nav:
   - Finite element bases: api/elements.md
   - Helmholtz and Maxwell: api/waves.md
   - Solvers and execution backends: api/backends.md
+  - Resources and writable workspaces: api/resources.md
 - Roadmap: https://github.com/ipes-lncc/pymhm/blob/main/ROADMAP.md
 - Development: development.md
 plugins:
@@ -296,6 +298,8 @@ plugins:
           show_source: true
           show_signature_annotations: true
           members_order: source
+hooks:
+- scripts/docs_downloads.py
 markdown_extensions:
 - admonition
 - attr_list

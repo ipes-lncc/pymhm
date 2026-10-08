@@ -8,10 +8,10 @@ The **Multiscale-Hybrid-Hybrid Method** uses three fields: local pressure, local
 
 Our two-dimensional P1/P0/P1 family follows [de Barros, Madureira and Valentin (2026, version 3)](https://arxiv.org/abs/2404.16978v3), equations (7), (28)–(29) and section 6.2. The oscillatory material and meshes below define an original introductory case, not a reproduction of the article's heterogeneous figures.
 
-All problem data, boundary conditions, provider, classical baseline, reconstruction, norms and plots are defined in notebook cells. PyMHM supplies only generic finite-element and algebraic operations. Execute with the checked-in lockfile:
+All problem data, boundary conditions, provider, classical baseline, reconstruction, norms and plots are defined in notebook cells. PyMHM supplies only generic finite-element and algebraic operations. Open the downloaded notebook in a writable directory:
 
 ```bash
-pixi run --locked -e introduction python scripts/run_notebooks.py notebooks/introduction/mh2m_multiscale.ipynb
+jupyter lab mh2m_multiscale.ipynb
 ```
 
 Execution is serial; process workers need importable provider callables.
@@ -21,14 +21,35 @@ Field evaluation, norms, plots and executed-array archives use the importable
 The physical data and local/global variational equations remain explicit below.
 
 
+The PyMHM distribution contains only the library. The first cell explicitly
+downloads a checksum-verified companion archive and prepares the declared data
+using its local Python helpers. You can inspect these support files in `ROOT`.
+Complete studies and historical replay retain their existing opt-in flags.
 
 ```python
 from pathlib import Path
+import os
 import sys
+from pymhm.io.workspace import workspace_from_archive
 
-ROOT = next(p for p in (Path.cwd(), *Path.cwd().parents) if (p / "pixi.toml").is_file())
+# Download verified support files; this operation does not execute them.
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/ef26e403306c68050416a77d509c298dd77f7db70b64a9baed48a66763b4a035/mh2m_multiscale-companion.zip"
+COMPANION_SHA256 = "ef26e403306c68050416a77d509c298dd77f7db70b64a9baed48a66763b4a035"
+WORKSPACE = Path(
+    os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
+)
+ROOT = workspace_from_archive(COMPANION_URL, sha256=COMPANION_SHA256, directory=WORKSPACE)
+os.environ["PYMHM_WORKSPACE"] = str(ROOT)
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+# Explicitly prepare declared data with the downloaded Python helpers.
+from scripts.notebook_reproduction import notebook_workspace
+
+ROOT = notebook_workspace("introduction/mh2m_multiscale.ipynb", directory=ROOT)
+root = ROOT
+print("Workspace:", ROOT)
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -58,7 +79,6 @@ from pymhm.backends.forms import assemble_pairing
 plt.rcParams.update({"figure.dpi": 110, "font.size": 10})
 from pymhm import solve
 from pymhm.fem.traces.pressure_2d import PressureTraceSpace
-
 ```
 
 ### 1. The physical problem and the conormal sign
@@ -111,7 +131,6 @@ print(
         "source": source,
     }
 )
-
 ```
 
 ```text
@@ -122,10 +141,7 @@ print(
 ```python
 fig_material = plot_material(macro, permeability, resolution=64, limits=(1, 3))
 plt.show()
-
 ```
-
-
 
 [![Figure 1 — MH²M with multiscale permeability: pressure, conormal and trace](../../assets/tutorials/mh2m_multiscale/figure_4_0.png)](../../assets/tutorials/mh2m_multiscale/figure_4_0.png)
 
@@ -174,7 +190,6 @@ print(
         "local_P1_nodes_per_macrocell": (local_refinement + 1) * (local_refinement + 2) // 2,
     }
 )
-
 ```
 
 ```text
@@ -266,9 +281,7 @@ def user_volume_forms(
     if portable:
         return A[order][:, order].tocsc(), M[order][:, order].tocsc(), F[order]
     return A, M, F
-
 ```
-
 
 ```python
 first_fine = macro.submesh(0, local_refinement)
@@ -283,7 +296,6 @@ print(
     }
 )
 form_equivalence = {}  # Filled by the optional convenience check at the end.
-
 ```
 
 ```text
@@ -337,7 +349,6 @@ def local_three_field_equations(local: LocalContext) -> LocalEquations:
             "volume_moments": np.asarray(mass.sum(axis=1)).ravel(),
         },
     )
-
 ```
 
 ### 4. Declare the shared trace equation and recover pressure
@@ -375,7 +386,6 @@ conormal_fields = tuple(
     for data, mixed in zip(system.local_metadata, solution.fields, strict=True)
 )
 print({"global_pressure_trace_free": global_free_unknowns, "global_residual": solution.residual})
-
 ```
 
 ```text
@@ -456,7 +466,6 @@ for cell, (data, field, eta) in enumerate(
 assert np.linalg.matrix_rank(system.local_metadata[0]["B"]) == 3 * conormal_segments
 assert max(diagnostics.values()) < 1e-10
 print(diagnostics)
-
 ```
 
 ```text
@@ -504,7 +513,6 @@ for resolution in (32, 64, 128):
     )
     print(reference_dimensions[-1])
 reference = references[-1]
-
 ```
 
 ```text
@@ -540,7 +548,6 @@ plt.show()
 # A reference must resolve its own physical fields before serving as a baseline.
 assert reference_refinement[-1]["pressure_relative"] < reference_refinement[0]["pressure_relative"]
 assert reference_refinement[-1]["flux_relative"] < reference_refinement[0]["flux_relative"]
-
 ```
 
 ```text
@@ -598,7 +605,6 @@ figure = plot_scalar_comparison(
     numerical_label="MH²M",
 )
 plt.show()
-
 ```
 
 ```text
@@ -648,7 +654,6 @@ form_equivalence = {
 }
 assert max(form_equivalence.values()) < 1e-10
 print(form_equivalence)
-
 ```
 
 ```text
@@ -690,7 +695,6 @@ print(
         },
     )
 )
-
 ```
 
 ```text
@@ -703,11 +707,21 @@ print(
 
 ## Reproduce this tutorial
 
-[View the source notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/mh2m_multiscale.ipynb) or [download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/mh2m_multiscale.ipynb). Run its cells interactively, or execute the notebook from the repository root with the checked-in Pixi lockfile:
+[View the source notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/mh2m_multiscale.ipynb) or [download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/mh2m_multiscale.ipynb), then open it:
 
 ```bash
-pixi install --locked -e introduction
-pixi run --locked -e introduction notebooks-run introduction/mh2m_multiscale.ipynb --timeout 7200
+python -m pip install 'pymhm[notebooks,visualization]'
+jupyter lab mh2m_multiscale.ipynb
 ```
 
-The runner writes the executed copy to `build/notebooks/introduction/`. The figures and numerical outputs on this page come from that execution. Timings describe the recorded hardware and solver settings; rerun performance examples on an idle machine to measure your own environment.
+The first cell explicitly downloads a SHA256-verified companion archive. Acquisition does not execute its code. The local support files are inspectable in the printed `ROOT` directory; the following helper call prepares only the declared inputs. The library distribution contains only `pymhm`. Notebooks, support code and data are separate downloads. Native UFL forms require the compatible DOLFINx/UFL backend described in the [installation guide](../../installation.md). A clone and Pixi are unnecessary.
+
+For batch execution, extract the same companion, change to its workspace, and use its local runner with the actual downloaded notebook path:
+
+```bash
+python -m scripts.run_notebooks /path/to/mh2m_multiscale.ipynb --timeout 7200
+```
+
+The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
+
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `375d4beaf0503f6f297cf26195a942237e46ee1c8f461960159638d20ef96bc3` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

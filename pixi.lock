@@ -47040,6 +47040,16 @@ packages:
   - matplotlib>=3.8 ; extra == 'visualization'
   - pyvista>=0.46,<0.50 ; extra == 'visualization'
   - vtk>=9.5,<9.7 ; extra == 'visualization'
+  - ipykernel>=6.29 ; extra == 'notebooks'
+  - jupyterlab>=4 ; extra == 'notebooks'
+  - nbclient>=0.10 ; extra == 'notebooks'
+  - nbconvert>=7 ; extra == 'notebooks'
+  - nbformat>=5.10 ; extra == 'notebooks'
+  - matplotlib>=3.8 ; extra == 'notebooks'
+  - pyvista>=0.46,<0.50 ; extra == 'notebooks'
+  - vtk>=9.5,<9.7 ; extra == 'notebooks'
+  - meshio>=5.3 ; extra == 'notebooks'
+  - pyamg>=5.3 ; extra == 'notebooks'
   requires_python: '>=3.11,<3.14'
 - pypi: https://files.pythonhosted.org/packages/00/51/5abfa4dc321b864e57bde87be8a328ee97b3aa33cc5e8f736c162fac63cb/vtk-9.6.2-cp313-cp313-macosx_11_0_arm64.whl
   name: vtk

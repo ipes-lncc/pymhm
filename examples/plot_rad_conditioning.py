@@ -2,9 +2,10 @@
 
 import csv
 import json
-from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import case_workspace, local_resource, read_resource_text
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -12,16 +13,18 @@ import numpy as np
 
 from examples.plot_style import set_refinement_ticks
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 COLORS = ("#cf352e", "#a52a8b", "#168449", "#2166ac", "#9a7016")
 MARKERS = ("^", "o", "s", "D", "x")
 
 
 def main() -> None:
     """Render physical sweeps, mesh sensitivity and measured asymptotic exponents."""
-    data = json.loads((ROOT / "examples/results/rad-conditioning.json").read_text())
+    data = json.loads(read_resource_text(ROOT / "examples/results/rad-conditioning.json"))
     rows = data["records"]
-    with (ROOT / "examples/results/published/araya2024_conditioning.csv").open() as stream:
+    with (
+        local_resource(ROOT / "examples/results/published/araya2024_conditioning.csv")
+    ).open() as stream:
         published = list(csv.DictReader(stream))
     target = ROOT / "docs/figures/rad-conditioning"
     target.mkdir(parents=True, exist_ok=True)
@@ -113,4 +116,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_rad_conditioning").main()

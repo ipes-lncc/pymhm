@@ -1,7 +1,6 @@
 """One-sided constitutive sampling and single-tabulation analytical norm checks."""
 
-import importlib.util
-from pathlib import Path
+import importlib
 from types import ModuleType
 from typing import Any
 
@@ -98,13 +97,8 @@ def test_shared_stress_matches_cartesian_and_kelvin_laws(dimension: int, anisotr
 
 
 def _campaign() -> ModuleType:
-    """Import the example by explicit location so it remains outside the package core."""
-    path = Path(__file__).resolve().parents[1] / "examples/elastodynamics_campaign.py"
-    spec = importlib.util.spec_from_file_location("sampling_elastodynamics_campaign", path)
-    assert spec is not None and spec.loader is not None
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+    """Import the installed case owner so patches target its numerical globals."""
+    return importlib.import_module("examples.elastodynamics_campaign")
 
 
 class _QuadraticMotion:

@@ -18,7 +18,7 @@ those forms with meshes, spaces and interface representations. Prepared operator
 functions are introduced as conveniences. All notebooks are written in English.
 
 Start by editing the parameter cells, then follow the local equations, global
-assembly and field comparisons. Helpers are versioned with the checkout and
+assembly and field comparisons. Helpers are downloaded separately as local `examples` modules and
 use the same public numerical API. Spawned workers use importable definitions;
 their actual formulation source is shown or linked where it is introduced.
 The detailed reference, quadrature and conservation controls remain available
@@ -40,13 +40,14 @@ parallel tutorials assume familiarity with this local/global workflow.
 | Spawned processes and complete workflow scaling | [Darcy process scalability](tutorials/introduction/darcy_process_scalability.md) |
 | Three-dimensional local AMG and parallel comparisons | [Darcy 3D scalability](tutorials/introduction/darcy_3d_parallel_scalability.md) |
 
-Each page links to its source notebook and gives a command for reproducing it
-from a repository checkout. The native UFL examples use the locked
-`introduction` environment. The [installation guide](installation.md) explains
-the portable pip installation and optional native backends separately.
+Each page links to its source notebook and gives a command for executing it
+with the installed library and a separately downloaded companion, without a clone. Install the notebook and
+plotting extras; native UFL examples additionally require the compatible
+DOLFINx/UFL backend described in the [installation guide](installation.md).
 
 ```bash
-pixi run --locked -e introduction notebooks-run introduction/darcy_multiscale_convergence.ipynb --timeout 1800
+python -m pip install 'pymhm[notebooks,visualization]'
+jupyter lab darcy_multiscale_convergence.ipynb
 ```
 
 The examples compare with classical conforming methods and state how their
@@ -71,7 +72,10 @@ The main computational paths declare local and global forms. Comparisons and
 scientific acquisition helpers also use predefined formulations with their
 verified discretizations; archive-only notebooks display the recorded results.
 
-Rendered pages preserve the outputs of the completed acquisitions. Performance
+Rendered pages identify their retained validated numerical execution in the
+publication manifest. Current standalone instructions are presented
+alongside those outputs; running the current notebook produces a separate
+receipt for its actual sources and environment. Performance
 measurements belong to their recorded hardware and configurations; rendering a
 page does not run a new timing campaign. The plots and numerical outputs retain
 the notebook's distinction between analytical solutions and classical numerical
@@ -114,8 +118,8 @@ the built-in mesh-associated adapters.
 The method-family notebooks expose the 28 scalar and 17 vector patch choices.
 The provider, vector UFL and hierarchy notebooks introduce user-written forms.
 The native primary examples in elasticity, flow, transport and Helmholtz
-require the Pixi `fem` kernel. They report explicitly when that backend has
-not executed. Edit the parameters in a cell and run it to inspect separate
+require the optional native DOLFINx/UFL backend. The runner verifies its
+availability before execution. Edit the parameters in a cell and run it to inspect separate
 field errors and original-equation diagnostics.
 They are analytical patches, not convergence studies or paper reproductions.
 The primary transport example uses Galerkin RAD; SUPG and UNUSUAL remain
@@ -132,7 +136,11 @@ same data and spaces used by its predefined-formulation controls.
 The complete [notebook catalogue](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/README.md)
 contains all 98 notebooks and the methods used by each. The
 [machine-readable index](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/catalogue.json)
-uses paths relative to the repository root.
+uses stable notebook selectors and logical resource paths. The library distribution contains only `pymhm`. Notebook sources and their
+verified support ZIPs are separate downloads; small configurations accompany
+the support files. Larger data and field
+archives remain separate in the [download index](data.md), with source
+attribution, checksums and acquisition procedures.
 
 | Folder | Detailed studies |
 | --- | --- |
@@ -149,21 +157,33 @@ The [continuous-macroface 3D notebook](https://github.com/ipes-lncc/pymhm/blob/m
 is a self-contained affine Darcy check of continuous, discontinuous and mixed
 polynomial face spaces, including independent positive degrees per face.
 
-## Execute selected notebooks
+## Execute downloaded notebooks
+
+Download the `.ipynb` linked from its tutorial or the catalogue, then open it:
 
 ```bash
-pixi run --locked -e notebooks notebooks-run darcy/primal_galerkin.ipynb
-pixi run --locked -e notebooks notebooks-run flow/introductory_methods.ipynb
-pixi run --locked -e notebooks notebooks-run 01
-pixi run --locked -e introduction-intel notebooks-run foundations/operators/dolfinx_sparse_solvers.ipynb
+jupyter lab downloaded-notebook.ipynb
 ```
 
-A folder selects its notebooks recursively. Use a qualified path when different
-folders contain the same filename. Historical numeric identifiers remain valid.
-Executed copies are written to `build/notebooks` with the same subfolders; the
-source notebooks remain unexecuted in Git.
+The first cell explicitly downloads a SHA256-verified companion, adds its local
+support directory to the import path and calls the declared preparation helper.
+Downloading the archive does not execute code. Its `examples` and `scripts`
+sources are inspectable in the printed `ROOT` directory. Numerical algorithms
+remain in `pymhm`. The notebook source itself is preserved outside that directory.
 
-To refresh the ten rendered introductory pages after executing their notebooks:
+For batch execution, extract the companion and run its tool from its workspace:
+
+```bash
+python -m scripts.run_notebooks /path/to/downloaded-notebook.ipynb --timeout 7200
+```
+
+The runner uses the active Python and writes an executed copy and receipt to
+`build/notebooks`. Set `PYMHM_WORKSPACE` for an explicit writable directory;
+the notebook otherwise uses `.pymhm-companions/<SHA256>` below its current directory.
+No examples, notebooks, documentation or datasets are installed by pip.
+
+For documentation contributors working in a source checkout, refresh the ten
+rendered introductory pages after executing their notebooks:
 
 ```bash
 pixi run --locked -e introduction tutorials-render
@@ -178,7 +198,7 @@ or performance acquisitions.
 Inspect the current reproduction plan and its declared inputs before execution:
 
 ```bash
-pixi run --locked -e notebooks notebooks-run darcy --plan --check
+python -m scripts.run_notebooks /path/to/downloaded-notebook.ipynb --plan --check
 ```
 
 The default plan selects the current executable examples. Use `--study` for
@@ -186,8 +206,7 @@ their complete acquisition recipes. Some publication galleries additionally
 require historical fields and images; inspect that separate inventory with:
 
 ```bash
-pixi run --locked -e notebooks python scripts/notebook_data.py --notebook 68
-pixi run --locked -e notebooks python scripts/notebook_data.py --notebook darcy --check
+python -m scripts.run_notebooks /path/to/downloaded-notebook.ipynb --historical --plan
 ```
 
 Missing historical inputs are reported explicitly; their absence does not

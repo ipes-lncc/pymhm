@@ -24,13 +24,14 @@ from pymhm.core.validation import positive_int
 from pymhm.fem.scalar.operators import boundary_data, p1_geometry, triangle_quadrature
 from pymhm.fem.scalar.triangle import multiindices, nodal_space, reference_basis
 from pymhm.io.provenance import file_digest
+from pymhm.io.workspace import case_workspace, local_resource, read_resource_text, source_file
 from pymhm.linalg.linear import LinearSolveError, accurate_residual
 from pymhm.materials.evaluation import tensor_values
 from pymhm.postprocessing.solutions import DarcySolution, MsHHOSolution
 
 SCHEMA = "pymhm-mshho-field-archive-v2"
 LEGACY_SCHEMA = "pymhm-mshho-field-archive-v1"
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def field_arrays(solution: MsHHOSolution, order: int = 10) -> dict[str, np.ndarray]:
@@ -494,9 +495,10 @@ def write_field(
         raise ValueError("MsHHO fields require their actual acquisition UUID and numerical sources")
 
     def check_sources() -> None:
+        """Require every recorded numerical owner to retain its literal acquisition bytes."""
         for name, expected in source_sha256.items():
-            owned = (ROOT / name).resolve()
-            if not owned.is_relative_to(ROOT) or file_digest(owned) != expected:
+            owned = (source_file(name, root=ROOT)).resolve()
+            if file_digest(local_resource(owned)) != expected:
                 raise ValueError("MsHHO executed numerical source differs from its recorded bytes")
 
     check_sources()
@@ -536,12 +538,12 @@ def write_field(
 
 def read_field(path: Path) -> tuple[dict[str, np.ndarray], dict[str, Any]]:
     """Require every actual field, geometry, moment and numerical-basis digest before replay."""
-    record = json.loads(path.with_suffix(".json").read_text())
+    record = json.loads(read_resource_text(path.with_suffix(".json")))
     if record.get("schema") not in (SCHEMA, LEGACY_SCHEMA) or record.get("archive") != path.name:
         raise ValueError("MsHHO field schema or archive identity differs")
-    if file_digest(path) != record["archive_sha256"]:
+    if file_digest(local_resource(path)) != record["archive_sha256"]:
         raise ValueError("MsHHO coefficient archive digest changed")
-    with np.load(path, allow_pickle=False) as saved:
+    with np.load(local_resource(path), allow_pickle=False) as saved:
         arrays = {name: saved[name].copy() for name in saved.files}
     if set(arrays) != set(record["array_sha256"]):
         raise ValueError("MsHHO executed array contract is incomplete")

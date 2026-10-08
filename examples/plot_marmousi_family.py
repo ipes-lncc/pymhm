@@ -7,14 +7,6 @@ norms use the common integration records and the fixed point-source cutout.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -23,6 +15,8 @@ from pathlib import Path
 from typing import Any
 
 import matplotlib
+
+from pymhm.io.workspace import case_workspace, read_resource_bytes, read_resource_text
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -38,7 +32,7 @@ from examples.marmousi_records import (
     checked_reference,
 )
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 COLORS = {20: "#0072B2", 40: "#D55E00", 80: "#009E73"}
 
 
@@ -53,7 +47,7 @@ def read_rows(source: Path) -> list[dict[str, Any]]:
             comparison = path.with_name(f"{path.stem}-vs-classical-p4.json")
             record = checked_mhm(path)
             norms = checked_comparison(comparison, path, reference)
-            digest = hashlib.sha256(path.read_bytes()).hexdigest()
+            digest = hashlib.sha256(read_resource_bytes(path)).hexdigest()
             if record["H_m"] != width or record["trace_degree"] != degree:
                 raise ValueError("trace-family filename and discretization disagree")
             rows.append(
@@ -71,7 +65,9 @@ def read_rows(source: Path) -> list[dict[str, Any]]:
                     "candidate_record": path.name,
                     "candidate_record_sha256": digest,
                     "comparison_record": comparison.name,
-                    "comparison_record_sha256": hashlib.sha256(comparison.read_bytes()).hexdigest(),
+                    "comparison_record_sha256": hashlib.sha256(
+                        read_resource_bytes(comparison)
+                    ).hexdigest(),
                 }
             )
     return rows
@@ -184,7 +180,7 @@ def main() -> None:
     rows = read_rows(args.source)
     published_path = args.source / "published-table.json"
     reference_path = args.source / "classical-convergence.json"
-    published = json.loads(published_path.read_text())
+    published = json.loads(read_resource_text(published_path))
     reference = checked_convergence(reference_path, args.source / "classical-p4.json")
     args.output.mkdir(parents=True, exist_ok=True)
     plot_family(rows, published, reference, args.output)
@@ -194,9 +190,9 @@ def main() -> None:
         "historical_article_arrays_identified": False,
         "incident_sampling": "All four incident conventions retained; no pressure averaging",
         "gradient_exclusion_m": [5000.0, 50.0, 50.0],
-        "published_table_sha256": hashlib.sha256(published_path.read_bytes()).hexdigest(),
-        "reference_series_sha256": hashlib.sha256(reference_path.read_bytes()).hexdigest(),
-        "plot_source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "published_table_sha256": hashlib.sha256(read_resource_bytes(published_path)).hexdigest(),
+        "reference_series_sha256": hashlib.sha256(read_resource_bytes(reference_path)).hexdigest(),
+        "plot_source_sha256": hashlib.sha256(read_resource_bytes(Path(__file__))).hexdigest(),
     }
     destination = args.source / "trace-family-comparison.json"
     destination.write_text(json.dumps(record, indent=2) + "\n")
@@ -209,4 +205,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_marmousi_family").main()

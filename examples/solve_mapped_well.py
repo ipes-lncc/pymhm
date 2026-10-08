@@ -14,9 +14,10 @@ from threadpoolctl import threadpool_limits
 from examples.formulations.application import mapped_darcy as solve_darcy_mapped_rt
 from pymhm.fem.hdiv.mapped import mapped_rt_dofs
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.hexahedron import HexMesh, cube_quadrature
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/mapped-well"
 
 
@@ -79,20 +80,15 @@ def main() -> None:
     }
     sources = [
         Path(__file__),
-        ROOT / "src/pymhm/_legacy/models/darcy/mapped.py",
-        ROOT / "src/pymhm/linalg/linear.py",
+        source_file("src/pymhm/_legacy/models/darcy/mapped.py", root=ROOT),
+        source_file("src/pymhm/linalg/linear.py", root=ROOT),
     ]
-    hybrid_source = ROOT / "src/pymhm/core/contracts.py"
+    hybrid_source = source_file("src/pymhm/core/contracts.py", root=ROOT)
     hybrid_start = hashlib.sha256(hybrid_source.read_bytes()).hexdigest()
     snapshot = ROOT / "build/source-snapshots/mapped-well"
     snapshot.mkdir(parents=True, exist_ok=True)
     (snapshot / f"{hybrid_start}-hybrid.py").write_bytes(hybrid_source.read_bytes())
-    hashes = current_source_manifest(
-        {
-            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in sources
-        }
-    )
+    hashes = current_source_manifest(source_identity(ROOT, sources), packages=("pymhm", "examples"))
     with threadpool_limits(1):
         result = solve_darcy_mapped_rt(
             mesh,
@@ -204,14 +200,13 @@ def main() -> None:
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
     if hashes != current_source_manifest(
-        {
-            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in sources
-        }
+        source_identity(ROOT, sources), packages=("pymhm", "examples")
     ):
         raise RuntimeError("Acquisition source changed during the numerical solve")
     print(json.dumps(report), flush=True)
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_mapped_well").main()

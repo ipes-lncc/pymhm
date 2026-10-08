@@ -7,14 +7,6 @@ separate field norms. They do not assert a historical paper reproduction.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 import platform
@@ -46,9 +38,10 @@ from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.triangle import tabulate
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.io.workspace import case_workspace, source_file, source_label
 from pymhm.meshes.tetrahedron import TetraMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 FLOW3D = {
     "stokes-th2": ("stokes", "taylor-hood", 2, 2),
@@ -131,7 +124,7 @@ def acquire(family: str, name: str, n: int, output: Path) -> dict[str, Any]:
     extra = [
         Path(__file__),
         *(
-            ROOT / "examples" / source
+            source_file(f"examples/{source}", root=ROOT)
             for source in (
                 "flow3d_data.py",
                 "gals3d_data.py",
@@ -217,7 +210,6 @@ def acquire(family: str, name: str, n: int, output: Path) -> dict[str, Any]:
                 "six retained physical rigid modes"
             )
         else:
-            sys.path.insert(0, str(ROOT / "examples"))
             from examples.solve_oseen import OseenData, crisscross
             from examples.solve_stokes_adaptive import StokesData
 
@@ -277,12 +269,11 @@ def acquire(family: str, name: str, n: int, output: Path) -> dict[str, Any]:
         filename = getattr(module, "__file__", None)
         if filename:
             path = Path(filename).resolve()
-            if (
-                path.is_relative_to(ROOT)
-                and path.suffix == ".py"
-                and path.relative_to(ROOT).parts[0] in ("src", "examples")
+            if path.suffix == ".py" and (
+                module_name in ("pymhm", "examples")
+                or module_name.startswith(("pymhm.", "examples."))
             ):
-                origins[module_name] = path.relative_to(ROOT).as_posix()
+                origins[module_name] = source_label(path, ROOT)
     if any(origin not in hashes for origin in origins.values()):
         raise ValueError("An executed numerical module was not captured")
     record = {
@@ -342,7 +333,8 @@ def acquire(family: str, name: str, n: int, output: Path) -> dict[str, Any]:
     return record
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--family", choices=("flow3d", "gals3d", "flow2d", "elasticity3d"), required=True
@@ -352,3 +344,9 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     acquire(args.family, args.case, args.resolution, args.output)
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.minimal_flow_studies").main()

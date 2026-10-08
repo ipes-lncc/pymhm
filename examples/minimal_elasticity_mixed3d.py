@@ -6,14 +6,6 @@ two. No locking sweep, coefficient archive or replay assertion is included.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 import platform
@@ -26,7 +18,9 @@ from uuid import uuid4
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed_3d
+from examples.formulations.application import (
+    weak_stress_elasticity as solve_elasticity_mixed_3d,
+)
 from examples.minimal_flow_originals import (
     capture_sources,
     observe_originals,
@@ -36,9 +30,10 @@ from examples.minimal_flow_originals import (
 )
 from examples.mixed_elasticity3d_data import SolenoidalElasticity3D
 from pymhm.fem.hdiv.family_3d import cell_quadrature
+from pymhm.io.workspace import case_workspace, source_file, source_label
 from pymhm.meshes.mixed import AffineMixedMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def physical_errors(solution: Any, data: Any, order: int) -> dict[str, float]:
@@ -63,7 +58,9 @@ def acquire(n: int, degree: int, output: Path) -> dict[str, Any]:
     if output.exists() or n not in (1, 2, 3) or degree not in (2, 3):
         raise ValueError("Fresh output, n1/n2/n3 and BDM2/BDM3 are required")
     output.mkdir(parents=True)
-    hashes = capture_sources(output, [Path(__file__), ROOT / "examples/mixed_elasticity3d_data.py"])
+    hashes = capture_sources(
+        output, [Path(__file__), source_file("examples/mixed_elasticity3d_data.py", root=ROOT)]
+    )
     refinement = 2 if degree == 2 else 1
     assembly = 18 if n == 1 else 12 if n == 2 else 9
     orders = (18, 22) if n == 1 else (14, 16) if n == 2 else (11, 13)
@@ -127,12 +124,10 @@ def acquire(n: int, degree: int, output: Path) -> dict[str, Any]:
         filename = getattr(module, "__file__", None)
         if filename:
             path = Path(filename).resolve()
-            if (
-                path.is_relative_to(ROOT)
-                and path.suffix == ".py"
-                and path.relative_to(ROOT).parts[0] in ("src", "examples")
+            if path.suffix == ".py" and (
+                name in ("pymhm", "examples") or name.startswith(("pymhm.", "examples."))
             ):
-                origins[name] = path.relative_to(ROOT).as_posix()
+                origins[name] = source_label(path, ROOT)
     record: dict[str, Any] = {
         "schema": "pymhm-initial-analytical-scalar-record-v1",
         "family": "mixed-elasticity3d",
@@ -197,10 +192,17 @@ def acquire(n: int, degree: int, output: Path) -> dict[str, Any]:
     return record
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--resolution", type=int, required=True)
     parser.add_argument("--degree", type=int, choices=(2, 3), required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     acquire(args.resolution, args.degree, args.output)
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.minimal_elasticity_mixed3d").main()

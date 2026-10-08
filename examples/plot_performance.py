@@ -9,11 +9,13 @@ from typing import Any
 
 import matplotlib
 
+from pymhm.io.workspace import case_workspace, read_resource_text
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 COLORS = ("#406c86", "#ca7739", "#739453", "#876a99", "#578b8b", "#b85a66")
 LABELS = {
     "serial": "Serial",
@@ -30,7 +32,7 @@ LABELS = {
 
 def read_report(path: Path) -> dict[str, Any]:
     """Read a stable-source benchmark and validate the recorded repetitions."""
-    report = json.loads(path.read_text(encoding="utf-8"))
+    report = json.loads(read_resource_text(path, encoding="utf-8"))
     if report["source_changed_during_run"]:
         raise ValueError(f"Cannot plot a changing-source benchmark: {path.name}")
     for case in report["cases"]:
@@ -157,4 +159,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_performance").main()

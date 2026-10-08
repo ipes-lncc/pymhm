@@ -9,14 +9,6 @@ inf-sup stability, continuum accuracy or the missing historical realization.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import platform
 import sys
@@ -30,7 +22,9 @@ import scipy
 from threadpoolctl import threadpool_info, threadpool_limits
 
 from examples.formulations.application import darcy as solve_darcy
-from examples.formulations.darcy_transport import solve_darcy_trajectory as solve_darcy_transport
+from examples.formulations.darcy_transport import (
+    solve_darcy_trajectory as solve_darcy_transport,
+)
 from examples.transport_checkpoints import checkpoint_field, write_progress
 from examples.transport_random_problem import (
     INPUT,
@@ -50,10 +44,11 @@ from examples.transport_trajectory import (
 from pymhm import FaceSpace, SkeletonSpace
 from pymhm.core.validation import positive_int
 from pymhm.fem.traces.scalar import strong_boundary_dofs
-from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.postprocessing.solutions import ScalarSolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def time_grid(dt: float, final_time: float) -> np.ndarray:
@@ -70,9 +65,13 @@ def time_grid(dt: float, final_time: float) -> np.ndarray:
 
 def source_digests() -> dict[str, str]:
     """Guard the actual input, lockfile, all core sources and acquisition owners."""
-    paths = [*sorted((ROOT / "src/pymhm").rglob("*.py")), INPUT, ROOT / "pixi.lock"]
+    paths = [
+        *sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")),
+        INPUT,
+        ROOT / "pixi.lock",
+    ]
     paths += [
-        ROOT / "examples" / f"{name}.py"
+        source_file(f"examples/{name}.py", root=ROOT)
         for name in (
             "transport_random_campaign",
             "transport_random_problem",
@@ -84,7 +83,15 @@ def source_digests() -> dict[str, str]:
         )
     ]
     return current_source_manifest(
-        {path.relative_to(ROOT).as_posix(): file_digest(path) for path in paths}
+        source_identity(
+            ROOT,
+            (
+                path
+                for path in paths
+                if path.name not in ("pixi.lock", "pixi.toml", "pyproject.toml") or path.is_file()
+            ),
+        ),
+        packages=("pymhm", "examples"),
     )
 
 
@@ -388,4 +395,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.transport_random_campaign").main()

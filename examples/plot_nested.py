@@ -11,20 +11,15 @@ from typing import Any
 import matplotlib
 import numpy as np
 
+from examples.nested_field_archive import array_digest, display_fields, read_archive
+from pymhm.io.workspace import case_workspace, read_resource_bytes, read_resource_text, source_label
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
 from matplotlib.ticker import ScalarFormatter
 
-if __package__:
-    from .nested_field_archive import array_digest, display_fields, read_archive
-else:
-    import sys
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    from examples.nested_field_archive import array_digest, display_fields, read_archive
-
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def sample_edges(samples: np.ndarray) -> np.ndarray:
@@ -51,7 +46,7 @@ def save(figure: plt.Figure, folder: Path, name: str) -> dict[str, str]:
     for extension in ("png", "svg"):
         path = folder / f"{name}.{extension}"
         figure.savefig(path, dpi=190)
-        result[path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
+        result[path.name] = hashlib.sha256(read_resource_bytes(path)).hexdigest()
     plt.close(figure)
     return result
 
@@ -176,7 +171,7 @@ def fields(arrays: dict[str, np.ndarray], output: Path) -> tuple[dict[str, str],
 
 def render(record_path: Path, output: Path) -> dict[str, Any]:
     """Render current numerical and analytical data from the checked executed archive."""
-    record = json.loads(record_path.read_text())
+    record = json.loads(read_resource_text(record_path))
     if record["schema"] not in ("pymhm-recursive-study-v2", 2) or len(record["rows"]) != 10:
         raise ValueError("current complete recursive study record required")
     cases = {(row["n"], row["boundary_case"]) for row in record["rows"]}
@@ -205,7 +200,7 @@ def render(record_path: Path, output: Path) -> dict[str, Any]:
         source_identity = hashlib.sha256(json.dumps(sources, sort_keys=True).encode()).hexdigest()
         source_scope = "Executed source map recorded by this fresh acquisition"
     archive = record_path.parent / selected["archive"]
-    if hashlib.sha256(archive.read_bytes()).hexdigest() != selected["archive_sha256"]:
+    if hashlib.sha256(read_resource_bytes(archive)).hexdigest() != selected["archive_sha256"]:
         raise ValueError("selected executed display archive changed")
     acquisition, arrays = read_archive(archive)
     if acquisition["n"] != selected["n"] or acquisition["boundary_case"] != "sine_zero_dirichlet":
@@ -218,12 +213,12 @@ def render(record_path: Path, output: Path) -> dict[str, Any]:
         numerical_source_identity_sha256=source_identity,
         numerical_source_identity_scope=source_scope,
         acquisition_uuid=acquisition["acquisition_uuid"],
-        input_archive=archive.relative_to(ROOT).as_posix(),
+        input_archive=source_label(archive, ROOT),
         input_archive_sha256=selected["archive_sha256"],
-        input_record_sha256=hashlib.sha256(record_path.read_bytes()).hexdigest(),
+        input_record_sha256=hashlib.sha256(read_resource_bytes(record_path)).hexdigest(),
         render_source_sha256={
-            Path(__file__).relative_to(ROOT).as_posix(): hashlib.sha256(
-                Path(__file__).read_bytes()
+            source_label(Path(__file__), ROOT): hashlib.sha256(
+                read_resource_bytes(Path(__file__))
             ).hexdigest()
         },
         actual_display_digests=samples,
@@ -231,12 +226,12 @@ def render(record_path: Path, output: Path) -> dict[str, Any]:
             "Bound within each independent leaf; no shared-face averaging or color interpolation"
         ),
         macro_mesh=(
-            "Actual archived outer and inner face endpoints on every analytical, numerical "
-            "and error panel"
+            "Actual archived outer and inner face endpoints on every analytical, "
+            "numerical and error panel"
         ),
         colorbars="Nine independent field/axis/colorbar regions",
         figures_sha256=figures,
-        mathematical_flux="minus the one-sided Q2 gradient; not an H(div) field",
+        mathematical_flux=("minus the one-sided Q2 gradient; not an H(div) field"),
         physical_norms=(
             "Actual archived q8/q10 tables; pointwise figure errors do not replace "
             "integrated physical norms"
@@ -256,4 +251,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_nested").main()

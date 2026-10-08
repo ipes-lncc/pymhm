@@ -13,14 +13,6 @@ do not need access to comparison tools or review files outside the repository.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -43,6 +35,7 @@ from examples.mh2m_crisscross_campaign import validate_campaign_resume as valida
 from examples.mh2m_heterogeneous import data_conventions
 from examples.mh2m_heterogeneous import validate_campaign_resume as validate_structured
 from pymhm.io.provenance import file_digest
+from pymhm.io.workspace import source_file
 
 KINDS = {
     "structured": "comparison.json",
@@ -88,7 +81,7 @@ def validate_campaign(data: Path, kind: str) -> dict[str, Any]:
         "examples/mh2m_crisscross_campaign.py",
         "examples/compare_mh2m_cg3_controls.py",
     }
-    sources = {name: file_digest(ROOT / name) for name in sorted(source_names)}
+    sources = {name: file_digest(source_file(name, root=ROOT)) for name in sorted(source_names)}
     configuration: dict[str, Any]
     checked: list[str]
     if kind == "cg3":
@@ -141,7 +134,9 @@ def validate_campaign(data: Path, kind: str) -> dict[str, Any]:
     evidence = independent_reference_evidence(data)
     if evidence is not None:
         source_check["independent_reference_verification"] = evidence
-    if sources != {name: file_digest(ROOT / name) for name in sorted(source_names)}:
+    if sources != {
+        name: file_digest(source_file(name, root=ROOT)) for name in sorted(source_names)
+    }:
         raise RuntimeError("validation sources changed during the checks")
     acquired_digest = hashlib.sha256(payload).hexdigest()
     save_validation(target, configuration, source_check, checked, acquired_digest)
@@ -158,4 +153,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.validate_mh2m_campaign").main()

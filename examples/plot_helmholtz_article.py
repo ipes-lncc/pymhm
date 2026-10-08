@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 from pathlib import Path
 
@@ -21,8 +13,9 @@ from examples.helmholtz_local_control import publication_rows as local_rows
 from examples.helmholtz_publication import support_rows
 from examples.plot_helmholtz import save
 from examples.plot_style import set_refinement_ticks
+from pymhm.io.workspace import case_workspace
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def main(data: Path | None = None, output: Path | None = None) -> None:
@@ -194,9 +187,16 @@ def main(data: Path | None = None, output: Path | None = None) -> None:
     save(fig, output, "article-local-control")
 
 
-if __name__ == "__main__":
+def cli() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     main(args.data, args.output)
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.plot_helmholtz_article").cli()

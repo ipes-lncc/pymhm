@@ -6,14 +6,6 @@ both pressure spaces and every material interface. No broken field is averaged.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -40,6 +32,14 @@ from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.quadrilateral import qk_basis
 from pymhm.fem.scalar.triangle import reference_basis
 from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    source_file,
+    source_identity,
+)
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
@@ -79,13 +79,13 @@ class BrokenQField:
     @classmethod
     def load(cls, record: Path) -> BrokenQField:
         """Verify the executed archive digest and its complete Cartesian macro geometry."""
-        metadata = json.loads(record.read_text())
+        metadata = json.loads(read_resource_text(record))
         path = record.parent / metadata["archive"]
-        if file_digest(path) != metadata["archive_sha256"]:
+        if file_digest(local_resource(path)) != metadata["archive_sha256"]:
             raise ValueError("MHM archive digest does not match its acquisition record")
         bounds = tuple(metadata.get("bounds", (0, 10240, 0, 2560)))
         mesh = CartesianMacroMesh(*metadata["macro_shape"], bounds)
-        with np.load(path, allow_pickle=False) as archive:
+        with np.load(local_resource(path), allow_pickle=False) as archive:
             if not np.array_equal(archive["macro_points"], mesh.points) or not np.array_equal(
                 archive["macro_cells"], mesh.cells
             ):
@@ -278,24 +278,19 @@ def main() -> None:
             or record["point_source"] != [5000, 50, 1.0]
         ):
             raise ValueError("comparison requires identical material, frequency and point source")
-    root = Path(__file__).resolve().parents[1]
+    root = case_workspace()
     sources = [
         Path(__file__),
         *(
             Path(__file__).with_name(f"marmousi_{name}.py")
             for name in ("fields", "campaign", "data")
         ),
-        root / "examples/campaign_provenance.py",
-        root / "examples/helmholtz_trace_family.py",
-        root / "examples/marmousi_records.py",
-        *sorted((root / "src/pymhm").rglob("*.py")),
+        source_file("examples/campaign_provenance.py", root=root),
+        source_file("examples/helmholtz_trace_family.py", root=root),
+        source_file("examples/marmousi_records.py", root=root),
+        *sorted(source_file("src/pymhm/__init__.py", root=root).parent.rglob("*.py")),
     ]
-    hashes = current_source_manifest(
-        {
-            p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in sources
-        }
-    )
+    hashes = current_source_manifest(source_identity(root, sources), packages=("pymhm", "examples"))
     candidate, reference = BrokenQField.load(args.candidate), load_reference(args.reference)
     exclusion = (5000.0, 50.0, 50.0)
     measured = {
@@ -311,7 +306,9 @@ def main() -> None:
         )
         for order in (8, 10)
     }
-    with np.load(args.candidate.parent / metadata[0]["archive"], allow_pickle=False) as archive:
+    with np.load(
+        local_resource(args.candidate.parent / metadata[0]["archive"]), allow_pickle=False
+    ) as archive:
         points = archive["sample_points"]
         stored = archive["sample_pressure"]
         sides = archive["incident_sides"]
@@ -339,17 +336,14 @@ def main() -> None:
             }
         )
     if hashes != current_source_manifest(
-        {
-            p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in sources
-        }
+        source_identity(root, sources), packages=("pymhm", "examples")
     ):
         raise RuntimeError("comparison sources changed during integration")
     result = {
         "candidate": args.candidate.name,
-        "candidate_record_sha256": hashlib.sha256(args.candidate.read_bytes()).hexdigest(),
+        "candidate_record_sha256": hashlib.sha256(read_resource_bytes(args.candidate)).hexdigest(),
         "reference": args.reference.name,
-        "reference_record_sha256": hashlib.sha256(args.reference.read_bytes()).hexdigest(),
+        "reference_record_sha256": hashlib.sha256(read_resource_bytes(args.reference)).hexdigest(),
         "norms": measured,
         "sampled_pressure": samples,
         "denominator": "Physical or sampled norm of the named classical reference field",
@@ -360,9 +354,12 @@ def main() -> None:
     output = args.output or args.candidate.with_name(
         f"{args.candidate.stem}-vs-{args.reference.stem}.json"
     )
+    output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result), flush=True)
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.marmousi_comparison").main()

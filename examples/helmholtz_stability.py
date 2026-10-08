@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -33,17 +25,18 @@ from pymhm.core.validation import positive_int
 from pymhm.fem.scalar.helmholtz import complex_vector, real_vector
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton
 from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.io.workspace import case_workspace, source_file, source_label
 from pymhm.linalg.linear import LinearSolveError
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.postprocessing.acoustics import HelmholtzSolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def checkpoint(path: Path, record: dict[str, Any]) -> None:
     """Save accepted and rejected attempts under one source and threshold contract."""
     if record["source_sha256"] != {
-        name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+        name: hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
         for name in record["source_sha256"]
     }:
         raise RuntimeError("stability sources changed during acquisition")
@@ -163,11 +156,11 @@ def run(
     output.mkdir(parents=True, exist_ok=True)
     path = output / f"ell{ell}-frequency{frequency:g}.json"
     original = source_hashes()
-    original[Path(__file__).relative_to(ROOT).as_posix()] = hashlib.sha256(
+    original[source_label(Path(__file__), ROOT)] = hashlib.sha256(
         Path(__file__).read_bytes()
     ).hexdigest()
-    helper = ROOT / "examples/helmholtz_threshold.py"
-    original[helper.relative_to(ROOT).as_posix()] = hashlib.sha256(helper.read_bytes()).hexdigest()
+    helper = source_file("examples/helmholtz_threshold.py", root=ROOT)
+    original[source_label(helper, ROOT)] = hashlib.sha256(helper.read_bytes()).hexdigest()
     record: dict[str, Any] = {
         "reference": "Chaumont-Frelet and Valentin (2020), Section 6.1, Equation (6.3)",
         "ell": ell,
@@ -310,4 +303,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.helmholtz_stability").main()

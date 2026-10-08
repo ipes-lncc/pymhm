@@ -7,14 +7,6 @@ the original local matrices and response maps are shared throughout.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import gc
 import hashlib
@@ -34,9 +26,10 @@ from examples.tutorial_helmholtz_equations import AcousticAssemblyProvider
 from pymhm.fem.loads import split_point_sources
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton
 from pymhm.io.provenance import file_digest
+from pymhm.io.workspace import case_workspace, source_file
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def hashes() -> dict[str, str]:
@@ -52,7 +45,7 @@ def hashes() -> dict[str, str]:
         "examples/campaign_checkpoint.py",
         "examples/campaign_provenance.py",
     ):
-        result[name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+        result[name] = hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
     return result
 
 
@@ -252,4 +245,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.marmousi_trace_family").main()

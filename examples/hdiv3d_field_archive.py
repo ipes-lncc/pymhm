@@ -25,6 +25,7 @@ from examples.transport_checkpoints import checkpoint_field, write_progress
 from pymhm.core.system import HybridSystem
 from pymhm.fem.hdiv.family_3d import cell_quadrature
 from pymhm.io.provenance import file_digest
+from pymhm.io.workspace import local_resource, read_resource_text
 from pymhm.linalg.linear import accurate_residual
 from pymhm.meshes.mixed import hdiv3d_dofs, hdiv3d_transform
 from pymhm.postprocessing.solutions import Mixed3DDarcySolution
@@ -388,7 +389,7 @@ def write_field(
     metadata = {
         "schema": SCHEMA,
         "acquisition_uuid": acquisition_uuid,
-        "archive_sha256": file_digest(path),
+        "archive_sha256": file_digest(local_resource(path)),
         "arrays_sha256": {key: array_identity(value) for key, value in arrays.items()},
         "source_sha256": dict(source_sha256),
         "configuration": dict(configuration),
@@ -409,10 +410,12 @@ def write_field(
 
 def read_field(path: Path) -> tuple[dict[str, np.ndarray], dict[str, Any]]:
     """Verify actual archive identities, basis tables and original rows without a solve."""
-    metadata = json.loads(path.with_suffix(".json").read_text())
-    if metadata.get("schema") != SCHEMA or metadata["archive_sha256"] != file_digest(path):
+    metadata = json.loads(read_resource_text(path.with_suffix(".json")))
+    if metadata.get("schema") != SCHEMA or metadata["archive_sha256"] != file_digest(
+        local_resource(path)
+    ):
         raise ValueError("Executed field archive schema or digest differs")
-    with np.load(path, allow_pickle=False) as archive:
+    with np.load(local_resource(path), allow_pickle=False) as archive:
         arrays = {key: archive[key] for key in archive.files}
     if (
         arrays["schema"].tobytes().decode() != SCHEMA

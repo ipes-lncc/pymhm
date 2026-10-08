@@ -2,16 +2,7 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
-import hashlib
 import json
 import time
 from dataclasses import dataclass
@@ -29,10 +20,11 @@ from examples.tutorial_helmholtz_equations import solve_acoustic
 from pymhm.fem.scalar.helmholtz import acoustic_quadrature
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.postprocessing.acoustics import HelmholtzSolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 RESULTS = ROOT / "examples/results/helmholtz"
 
 
@@ -93,18 +85,13 @@ class AcousticWave:
 def source_hashes() -> dict[str, str]:
     """Record every original operator, geometry and acquisition owner used here."""
     paths = [
-        *sorted((ROOT / "src/pymhm").rglob("*.py")),
+        *sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")),
         Path(__file__),
-        ROOT / "examples/helmholtz_trace_family.py",
-        ROOT / "examples/helmholtz_basis_archive.py",
-        ROOT / "examples/tutorial_helmholtz_equations.py",
+        source_file("examples/helmholtz_trace_family.py", root=ROOT),
+        source_file("examples/helmholtz_basis_archive.py", root=ROOT),
+        source_file("examples/tutorial_helmholtz_equations.py", root=ROOT),
     ]
-    return current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in paths
-        }
-    )
+    return current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
 
 
 def norms(solution: HelmholtzSolution, wave: AcousticWave, order: int = 12) -> dict[str, float]:
@@ -347,4 +334,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.helmholtz_campaign").main()

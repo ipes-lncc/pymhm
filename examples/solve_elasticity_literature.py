@@ -6,7 +6,6 @@ published values or asserting a complete historical reproduction.
 """
 
 import argparse
-import hashlib
 import json
 from pathlib import Path
 
@@ -16,8 +15,9 @@ from examples.formulations.application import weak_stress_elasticity as solve_el
 from examples.plot_mixed_elasticity import metrics, oscillatory_fields, oscillatory_modulus
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/elasticity-families"
 
 
@@ -78,9 +78,9 @@ def main() -> None:
             rows.append(row)
     sources = [
         Path(__file__),
-        ROOT / "examples/plot_mixed_elasticity.py",
-        ROOT / "src/pymhm/_legacy/models/elasticity/stress.py",
-        ROOT / "src/pymhm/fem/hdiv/bdm_family.py",
+        source_file("examples/plot_mixed_elasticity.py", root=ROOT),
+        source_file("src/pymhm/_legacy/models/elasticity/stress.py", root=ROOT),
+        source_file("src/pymhm/fem/hdiv/bdm_family.py", root=ROOT),
     ]
     report = dict(
         case="L18 section 6.1.2/Table 3 oscillatory Young modulus",
@@ -93,10 +93,7 @@ def main() -> None:
         error_quadrature=10,
         rows=rows,
         source_hashes=current_source_manifest(
-            {
-                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-                for p in sources
-            }
+            source_identity(ROOT, sources), packages=("pymhm", "examples")
         ),
     )
     (OUTPUT / f"l18-k{args.trace_degree}-enrichment{args.enrichment}.json").write_text(
@@ -105,4 +102,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_elasticity_literature").main()

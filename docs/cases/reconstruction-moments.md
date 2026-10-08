@@ -48,6 +48,10 @@ where \(\ell\) is the skeletal degree, together with the stated mesh,
 coefficient and solution regularity assumptions. An accepted API input alone
 does not establish those estimates.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 import numpy as np
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh

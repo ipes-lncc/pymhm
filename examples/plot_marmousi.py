@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -20,6 +12,14 @@ from typing import Any
 import matplotlib
 
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    resource_glob,
+    source_file,
+    source_identity,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -33,7 +33,7 @@ from examples.marmousi_records import checked_reference
 from examples.plot_mesh import draw_macro_mesh
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 BOUNDS = (0, 10240, 0, 2560)
 plt.rcParams.update({"font.size": 13, "axes.titlesize": 13, "axes.labelsize": 12})
 
@@ -145,20 +145,21 @@ def render_material(material: MarmousiMaterial, directory: Path) -> None:
             "source_marker_m": [5000, 50],
             "source_marker_meaning": "Declared acoustic forcing location",
         },
-        "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "source_sha256": hashlib.sha256(read_resource_bytes(Path(__file__))).hexdigest(),
         "dependency_sha256": current_source_manifest(
-            {
-                path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-                for path in (
+            source_identity(
+                ROOT,
+                (
                     Path(__file__).with_name("marmousi_data.py"),
                     Path(__file__).with_name("plot_mesh.py"),
-                    ROOT / "src/pymhm/_legacy/models/darcy/cartesian.py",
-                )
-            }
+                    source_file("src/pymhm/_legacy/models/darcy/cartesian.py", root=ROOT),
+                ),
+            ),
+            packages=("pymhm", "examples"),
         ),
         "figure_sha256": {
             f"material.{suffix}": hashlib.sha256(
-                (directory / f"material.{suffix}").read_bytes()
+                read_resource_bytes(directory / f"material.{suffix}")
             ).hexdigest()
             for suffix in ("png", "svg")
         },
@@ -189,7 +190,9 @@ def main() -> None:
         render_material(material, args.output)
         return
     available = [
-        degree for degree in range(1, 5) if (args.source / f"classical-p{degree}.json").exists()
+        degree
+        for degree in range(1, 5)
+        if (local_resource(args.source / f"classical-p{degree}.json")).exists()
     ]
     degrees = args.degrees or available[-2:]
     if len(degrees) != 2 or degrees[0] >= degrees[1] or any(d not in available for d in degrees):
@@ -252,7 +255,7 @@ def main() -> None:
     provenance = {
         "material": material.provenance,
         "reference_records": {
-            path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in records
+            path.name: hashlib.sha256(read_resource_bytes(path)).hexdigest() for path in records
         },
         "display_grid": (
             f"All native nodal pressure coordinates; differences on the P{degrees[1]} nodal grid"
@@ -262,22 +265,24 @@ def main() -> None:
         "displayed_nodal_max_abs": [float(np.max(abs(value))) for value in values],
         "pressure_display": "Signed asinh transform, linear_width=1; physical-value color ticks",
         "macro_overlay": "Declared H20/H80 comparison partitions, not additional numerical solves",
-        "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "source_sha256": hashlib.sha256(read_resource_bytes(Path(__file__))).hexdigest(),
         "dependency_sha256": {
             f"examples/{name}.py": hashlib.sha256(
-                Path(__file__).with_name(f"{name}.py").read_bytes()
+                read_resource_bytes(Path(__file__).with_name(f"{name}.py"))
             ).hexdigest()
             for name in ("marmousi_data", "marmousi_fields", "plot_mesh")
         },
     }
     (args.output / "display.json").write_text(json.dumps(provenance, indent=2) + "\n")
     for source in [
-        *args.source.glob("classical-p[1-4].json"),
+        *resource_glob(args.source, "classical-p[1-4].json"),
         args.source / "classical-convergence.json",
     ]:
-        if source.exists():
+        if local_resource(source).exists():
             shutil.copyfile(source, args.output / source.name)
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_marmousi").main()

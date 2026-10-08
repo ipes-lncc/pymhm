@@ -1,5 +1,8 @@
 # Vector primal, displacement–pressure and H(div) stress tutorials
 
+The example imports below refer to the verified local companion downloaded
+by the notebook’s first cell; they are separate from the installed library.
+
 Run 17 small, executable analytical patches: primal elasticity, Herrmann
 displacement–pressure elasticity, weak-symmetry H(div) stress families,
 incompressible flow and a vector Maxwell trajectory. Every stationary variant
@@ -19,8 +22,8 @@ The separate three-dimensional BDM stress family uses the classical
 spaces; it does not transfer a two-dimensional enrichment theorem to tetrahedra.
 
 The primary elasticity and Brinkman cells declare their UFL equations through
-the generic variational interface and require the Pixi `fem` kernel. Their
-method-family controls use editable providers in `examples/formulations` that
+the generic variational interface and require the compatible native DOLFINx/UFL backend. Their
+method-family controls use editable providers in `examples.formulations` that
 declare the actual coefficient spaces, operators, trace signs and physical
 moment rows before calling `assemble`.
 The primary Maxwell trajectory declares coefficient forms for each mass/curl
@@ -33,9 +36,9 @@ Choose the [problem notebook](../tutorials.md) and edit `selected_methods`.
 The elasticity, flow and Maxwell notebooks expose their own supported variants.
 
 ```bash
-pixi run --locked -e notebooks notebooks-run elasticity/introductory_methods.ipynb
-pixi run --locked -e notebooks notebooks-run flow/introductory_methods.ipynb
-pixi run --locked -e notebooks notebooks-run waves/maxwell/introductory_methods.ipynb
+jupyter lab introductory_methods.ipynb
+jupyter lab introductory_methods.ipynb
+jupyter lab introductory_methods.ipynb
 ```
 
 The notebooks report each physical field's error separately, its original-equation

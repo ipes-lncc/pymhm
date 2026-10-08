@@ -1,5 +1,8 @@
 # Scalar methods and local element choices
 
+The example imports below refer to the verified local companion downloaded
+by the notebook’s first cell; they are separate from the installed library.
+
 This tutorial solves small analytical problems through publicly declared
 local and global equations. Select a method and a local element family in its notebook cell; each
 choice assembles its declared spaces and measures the scalar and available flux
@@ -13,7 +16,7 @@ The analytical patches below use explicitly declared data and discretizations.
 
 The primary notebook cells declare local and global equations through the
 generic variational interface. Their method-family controls use editable
-providers in `examples/formulations`; each states its spaces, energy, coupling,
+providers in `examples.formulations`; each states its spaces, energy, coupling,
 kernel and boundary data. The [provider tutorial](providers.md) and
 [variational guide](../variational.md) explain the form contract independently
 of those comparisons.
@@ -24,9 +27,9 @@ Open the [problem notebook catalogue](../tutorials.md). Darcy examples are
 The notebooks expose the same analytical patch choices through `selected_methods`.
 
 ```bash
-pixi run --locked -e notebooks notebooks-run darcy/primal_galerkin.ipynb
-pixi run --locked -e notebooks notebooks-run darcy/mixed_hdiv.ipynb
-pixi run --locked -e notebooks notebooks-run darcy/hybrid_methods.ipynb
+jupyter lab primal_galerkin.ipynb
+jupyter lab mixed_hdiv.ipynb
+jupyter lab hybrid_methods.ipynb
 ```
 
 The default patches use two macrotriangles, two macrorectangles, six

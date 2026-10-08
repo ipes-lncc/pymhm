@@ -2,19 +2,10 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
 from functools import partial
-from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -27,9 +18,10 @@ from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.triangle import nodal_space, tabulate
 from pymhm.fem.scalar.unusual import UnusualParameters
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file
 from pymhm.materials.evaluation import tensor_values
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 TARGET = ROOT / "examples/results/unusual"
 TENSOR = np.array([[2.0, 0.3], [0.3, 1.0]])
 
@@ -224,7 +216,11 @@ def main() -> None:
         "examples/solve_unusual.py",
     )
     hashes = current_source_manifest(
-        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in sources}
+        {
+            name: hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
+            for name in sources
+        },
+        packages=("pymhm", "examples"),
     )
     levels = (2, 4) if arguments.smoke else (2, 4, 8, 16, 32)
     settings = [
@@ -259,7 +255,7 @@ def main() -> None:
                 ),
                 source_hashes=hashes,
                 source_changed_during_run=any(
-                    hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != value
+                    hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest() != value
                     for name, value in hashes.items()
                 ),
                 rows=rows,
@@ -268,4 +264,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_unusual").main()

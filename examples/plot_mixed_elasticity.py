@@ -2,19 +2,12 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import json
-from pathlib import Path
 from typing import Any
 
 import matplotlib
+
+from pymhm.io.workspace import case_workspace
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -28,7 +21,7 @@ from pymhm import TriangleMesh
 from pymhm.fem.hdiv.bdm import bdm2_evaluate
 from pymhm.postprocessing.stress import MixedElasticitySolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 FIGURES = ROOT / "docs/figures/mixed-elasticity"
 RESULTS = ROOT / "examples/results/mixed-elasticity.json"
 
@@ -324,4 +317,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_mixed_elasticity").main()

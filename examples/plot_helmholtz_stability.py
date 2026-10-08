@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 from pathlib import Path
@@ -20,8 +12,9 @@ import numpy as np
 from examples.helmholtz_threshold import sampled_threshold
 from examples.plot_helmholtz import save
 from examples.plot_style import set_refinement_ticks
+from pymhm.io.workspace import case_workspace, read_resource_bytes, read_resource_text
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/helmholtz-stability"
 
 
@@ -30,7 +23,7 @@ def main(data: Path = DATA, output: Path | None = None) -> None:
     configurations = ((0, 10, 128), (0, 20, 256), (1, 15, 128), (1, 75, 512))
     records = []
     for ell, frequency, finest in configurations:
-        record = json.loads((data / f"ell{ell}-frequency{frequency}.json").read_text())
+        record = json.loads(read_resource_text(data / f"ell{ell}-frequency{frequency}.json"))
         if record["rows"][-1]["n"] < finest:
             raise ValueError(f"the ell={ell}, frequency={frequency} sequence is incomplete")
         records.append(record)
@@ -115,12 +108,21 @@ def main(data: Path = DATA, output: Path | None = None) -> None:
         )
         + "\n"
     )
-    (output / "stability-comparison.json").write_bytes((data / "comparison.json").read_bytes())
+    (output / "stability-comparison.json").write_bytes(
+        read_resource_bytes(data / "comparison.json")
+    )
 
 
-if __name__ == "__main__":
+def cli() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=DATA)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     main(args.data, args.output)
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.plot_helmholtz_stability").cli()

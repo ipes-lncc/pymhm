@@ -8,19 +8,18 @@ the display triangulation is not used for integration.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    resource_glob,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -32,6 +31,7 @@ from examples.plot_mesh import mark_macro_interfaces
 from examples.plot_spe10_data import FIGURES, OUTPUT, ROOT, panel
 from examples.solve_spe10_taylor_hood import load_field
 from pymhm import TriangleMesh
+from pymhm.io.workspace import ensure_resource
 from pymhm.postprocessing.visualization import broken_triangle_grid
 
 MHM = "flow-layer1-n6x11-p3-r10-s10-q8-pointwise-2017.npz"
@@ -42,24 +42,29 @@ METADATA = OUTPUT / "taylor-hood-display.json"
 def checked_records() -> list[dict]:
     """Validate every displayed reference and norm against its acquisition record."""
     records = sorted(
-        (json.loads(path.read_text()) for path in OUTPUT.glob("taylor-hood-[0-9]*x[0-9]*.json")),
+        (
+            json.loads(read_resource_text(path))
+            for path in resource_glob(OUTPUT, "taylor-hood-[0-9]*x[0-9]*.json")
+        ),
         key=lambda row: row["unknowns"],
     )
     if len(records) < 2:
         raise ValueError("At least two completed Taylor-Hood refinements are required")
-    layer_hash = hashlib.sha256((OUTPUT / "layer-1.npz").read_bytes()).hexdigest()
-    mhm_hash = hashlib.sha256((OUTPUT / MHM).read_bytes()).hexdigest()
+    layer_hash = hashlib.sha256(
+        read_resource_bytes(ensure_resource("examples/results/spe10/layer-1.npz", ROOT))
+    ).hexdigest()
+    mhm_hash = hashlib.sha256(read_resource_bytes(OUTPUT / MHM)).hexdigest()
     for record in records:
         if (
-            hashlib.sha256((OUTPUT / record["archive"]).read_bytes()).hexdigest()
+            hashlib.sha256(read_resource_bytes(OUTPUT / record["archive"])).hexdigest()
             != record["sha256"]
             or record["layer_sha256"] != layer_hash
         ):
             raise ValueError(f"Stale reference archive or material: {record['archive']}")
         nx, ny = record["mesh_shape"]
         path = OUTPUT / f"taylor-hood-mhm-{nx}x{ny}.json"
-        if path.exists():
-            comparison = json.loads(path.read_text())
+        if local_resource(path).exists():
+            comparison = json.loads(read_resource_text(path))
             if (
                 comparison["reference"] != record["archive"]
                 or comparison["reference_sha256"] != record["sha256"]
@@ -73,7 +78,7 @@ def checked_records() -> list[dict]:
 
 def mhm_grid() -> tuple[pv.UnstructuredGrid, TriangleMesh]:
     """Sample the broken local P3 fields without identifying opposite traces."""
-    with np.load(OUTPUT / MHM) as data:
+    with np.load(local_resource(OUTPUT / MHM)) as data:
         macro = TriangleMesh(data["macro_points"], data["macro_cells"])
         meshes = tuple(
             TriangleMesh(points, cells)
@@ -89,7 +94,10 @@ def mhm_grid() -> tuple[pv.UnstructuredGrid, TriangleMesh]:
 def sample_reference(record: dict, grid: pv.UnstructuredGrid) -> None:
     """Archive actual P2/P1 evaluations at the common broken display vertices."""
     coefficient_path = ROOT / record["coefficient_archive"]
-    if hashlib.sha256(coefficient_path.read_bytes()).hexdigest() != record["coefficient_sha256"]:
+    if (
+        hashlib.sha256(read_resource_bytes(coefficient_path)).hexdigest()
+        != record["coefficient_sha256"]
+    ):
         raise ValueError("Reference coefficient checksum does not match its numerical record")
     reference = load_field(coefficient_path)
     velocity, pressure = reference.evaluate(grid.points[:, :2])
@@ -100,7 +108,7 @@ def sample_reference(record: dict, grid: pv.UnstructuredGrid) -> None:
                 "reference": record["archive"],
                 "reference_coefficients_sha256": record["coefficient_sha256"],
                 "mhm": MHM,
-                "mhm_sha256": hashlib.sha256((OUTPUT / MHM).read_bytes()).hexdigest(),
+                "mhm_sha256": hashlib.sha256(read_resource_bytes(OUTPUT / MHM)).hexdigest(),
                 "display_subdivision": 6,
                 "display_points_sha256": hashlib.sha256(grid.points.tobytes()).hexdigest(),
                 "sampling": (
@@ -108,7 +116,7 @@ def sample_reference(record: dict, grid: pv.UnstructuredGrid) -> None:
                     "display vertices; piecewise linear rendering, no interface averaging"
                 ),
                 "archive": SAMPLES.name,
-                "sha256": hashlib.sha256(SAMPLES.read_bytes()).hexdigest(),
+                "sha256": hashlib.sha256(read_resource_bytes(SAMPLES)).hexdigest(),
             },
             indent=2,
         )
@@ -118,17 +126,17 @@ def sample_reference(record: dict, grid: pv.UnstructuredGrid) -> None:
 
 def field_comparison(grid: pv.UnstructuredGrid, macro: TriangleMesh, record: dict) -> None:
     """Render common-scale fields and vector/pressure differences on six panels."""
-    metadata = json.loads(METADATA.read_text())
+    metadata = json.loads(read_resource_text(METADATA))
     checks = (
         metadata["reference"] == record["archive"],
         metadata["reference_coefficients_sha256"] == record["coefficient_sha256"],
-        metadata["mhm_sha256"] == hashlib.sha256((OUTPUT / MHM).read_bytes()).hexdigest(),
+        metadata["mhm_sha256"] == hashlib.sha256(read_resource_bytes(OUTPUT / MHM)).hexdigest(),
         metadata["display_points_sha256"] == hashlib.sha256(grid.points.tobytes()).hexdigest(),
-        metadata["sha256"] == hashlib.sha256(SAMPLES.read_bytes()).hexdigest(),
+        metadata["sha256"] == hashlib.sha256(read_resource_bytes(SAMPLES)).hexdigest(),
     )
     if not all(checks):
         raise ValueError("Stale Taylor-Hood display samples: regenerate with --sample")
-    with np.load(SAMPLES) as data:
+    with np.load(local_resource(SAMPLES)) as data:
         reference_u, reference_p = data["velocity"], data["pressure"]
     state = grid["State"]
     velocity = [np.linalg.norm(reference_u, axis=1), np.linalg.norm(state[:, :2], axis=1)]
@@ -186,7 +194,7 @@ def field_comparison(grid: pv.UnstructuredGrid, macro: TriangleMesh, record: dic
 
 def profiles(records: list[dict]) -> None:
     """Compare continuous reference profiles with independent one-sided MHM values."""
-    with np.load(OUTPUT / MHM) as data:
+    with np.load(local_resource(OUTPUT / MHM)) as data:
         points = data["profile_points"].copy()
         mhm = np.concatenate(
             (data["profile_velocity"], data["profile_pressure"][..., None]), axis=-1
@@ -196,7 +204,7 @@ def profiles(records: list[dict]) -> None:
         fig, axes = plt.subplots(1, 3, figsize=(10.5, 3.8))
         fig.subplots_adjust(left=0.065, right=0.99, bottom=0.17, top=0.79, wspace=0.36)
         for index, record in enumerate(records[-2:]):
-            with np.load(OUTPUT / record["archive"]) as data:
+            with np.load(local_resource(OUTPUT / record["archive"])) as data:
                 values = np.column_stack((data["profile_velocity"], data["profile_pressure"]))
                 for component, axis in enumerate(axes):
                     nx, ny = record["mesh_shape"]
@@ -228,7 +236,7 @@ def profiles(records: list[dict]) -> None:
                 visible = (points[..., 1] >= domain[0]) & (points[..., 1] <= domain[1])
                 low, high = mhm[..., component][visible].min(), mhm[..., component][visible].max()
                 for record in records[-2:]:
-                    with np.load(OUTPUT / record["archive"]) as data:
+                    with np.load(local_resource(OUTPUT / record["archive"])) as data:
                         mask = (data["profile_points"][:, 1] >= domain[0]) & (
                             data["profile_points"][:, 1] <= domain[1]
                         )
@@ -278,9 +286,10 @@ def convergence(records: list[dict]) -> None:
         for record in records:
             nx, ny = record["mesh_shape"]
             path = OUTPUT / f"taylor-hood-mhm-{nx}x{ny}.json"
-            if path.exists():
+            if local_resource(path).exists():
                 norms = max(
-                    json.loads(path.read_text())["norms"], key=lambda row: row["quadrature_order"]
+                    json.loads(read_resource_text(path))["norms"],
+                    key=lambda row: row["quadrature_order"],
                 )
                 comparisons.append((record["unknowns"], 100 * norms[f"{variable}_relative"]))
         if comparisons:
@@ -312,6 +321,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sample", action="store_true", help="evaluate reference coefficients")
     args = parser.parse_args()
+    FIGURES.mkdir(parents=True, exist_ok=True)
     records = checked_records()
     grid, macro = mhm_grid()
     if args.sample:
@@ -322,4 +332,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_spe10_taylor_hood").main()

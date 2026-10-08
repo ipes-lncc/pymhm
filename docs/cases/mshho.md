@@ -40,6 +40,10 @@ an arbitrary full-source finite-element MHM solve. The face-only setting
 `cell_degree=-1` uses the reconstructed-source variant, as in Remark 5.4;
 it is not the same method as MHM with a source lifting.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 from examples.formulations.application import moment_diffusion as solve_mshho

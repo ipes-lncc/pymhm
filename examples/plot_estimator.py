@@ -2,20 +2,13 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
-from pathlib import Path
 from typing import Any
 
 import matplotlib
+
+from pymhm.io.workspace import case_workspace, local_resource, read_resource_text
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -30,7 +23,7 @@ from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 from pymhm.estimators.darcy import DarcyEstimator, estimate_darcy_error
 from pymhm.fem.scalar.triangle import tabulate
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 RESULTS = ROOT / "examples/results"
 FIGURES = ROOT / "docs/figures/estimator"
 
@@ -271,11 +264,13 @@ def main() -> None:
             )
             + "\n"
         )
-    records = json.loads((RESULTS / "estimator.json").read_text())
+    records = json.loads(read_resource_text(RESULTS / "estimator.json"))
     convergence(records["rows"])
-    with np.load(RESULTS / "estimator-fields.npz") as data:
+    with np.load(local_resource(RESULTS / "estimator-fields.npz")) as data:
         fields(data)
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_estimator").main()

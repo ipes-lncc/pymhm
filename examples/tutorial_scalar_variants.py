@@ -8,14 +8,6 @@ reported separately from conservation moments and algebraic residuals.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 from collections.abc import Callable
@@ -28,7 +20,10 @@ import numpy as np
 from numpy.typing import NDArray
 from threadpoolctl import threadpool_limits
 
-from examples.formulations.cartesian_darcy import define_cartesian_darcy, recover_cartesian_darcy
+from examples.formulations.cartesian_darcy import (
+    define_cartesian_darcy,
+    recover_cartesian_darcy,
+)
 from examples.formulations.darcy import define_darcy, pressure_constraints, recover_darcy
 from examples.formulations.mixed_darcy import (
     conforming_rt_reference,
@@ -40,7 +35,10 @@ from examples.formulations.mixed_darcy import (
 from examples.formulations.mixed_darcy_3d import define_hdiv_darcy, recover_hdiv_darcy
 from examples.formulations.moments import define_moment_diffusion, recover_moment_diffusion
 from examples.formulations.moments import pressure_constraints as moment_constraints
-from examples.formulations.moments_3d import define_moment_diffusion_3d, recover_moment_diffusion_3d
+from examples.formulations.moments_3d import (
+    define_moment_diffusion_3d,
+    recover_moment_diffusion_3d,
+)
 from examples.formulations.penalty import add_jump_form, recover_penalty
 from examples.formulations.residual_transport import streamline_equations
 from examples.formulations.robin import (
@@ -643,4 +641,6 @@ def main(argv: list[str] | None = None) -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.tutorial_scalar_variants").main()

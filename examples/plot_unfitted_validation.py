@@ -2,20 +2,19 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
 from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -29,7 +28,7 @@ from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 from pymhm.fem.quadrature.material import cartesian_trace_values, fit_material_faces
 from pymhm.materials.cartesian import CartesianCellField
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/unfitted"
 
 
@@ -91,7 +90,7 @@ def read_flux(setting: str) -> dict[str, np.ndarray]:
     triangle. Its independent P4 gradients are retained at those nodes.
     Samples on a material boundary use the incident triangle, without averaging.
     """
-    with np.load(DATA / f"{setting}-fitted-r16.npz") as archive:
+    with np.load(local_resource(DATA / f"{setting}-fitted-r16.npz")) as archive:
         data = {key: archive[key] for key in archive.files}
     points = data["points"]
     groups = points.reshape(-1, 6, 2)
@@ -130,8 +129,8 @@ def published_comparison(rows: list[dict], published: dict) -> None:
         label="Chaumont-Frelet et al. (2026), Fig. 5, S0",
     )
     axes[0].set(xlabel="Macro perturbation δ", ylabel="Absolute broken-gradient L² error")
-    fitted = json.loads((DATA / "mhm-fitted-r16.json").read_text())
-    unfitted = json.loads((DATA / "mhm-r16.json").read_text())
+    fitted = json.loads(read_resource_text(DATA / "mhm-fitted-r16.json"))
+    unfitted = json.loads(read_resource_text(DATA / "mhm-r16.json"))
     for table, label, style in (
         (fitted, "Material-fitted local P4", "o-"),
         (unfitted, "Unfitted local P4 + exact cuts", "x--"),
@@ -242,8 +241,8 @@ def main() -> None:
         help="Render published comparisons from compact records",
     )
     args = parser.parse_args()
-    rows = json.loads((DATA / "mhm-fitted-r16.json").read_text())
-    published = json.loads((DATA / "published-figure5.json").read_text())
+    rows = json.loads(read_resource_text(DATA / "mhm-fitted-r16.json"))
+    published = json.loads(read_resource_text(DATA / "published-figure5.json"))
     if args.publication_only:
         (ROOT / "docs/figures/unfitted").mkdir(parents=True, exist_ok=True)
         published_comparison(rows, published)
@@ -256,7 +255,7 @@ def main() -> None:
             {
                 "setting": setting,
                 "archive": path.name,
-                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                "sha256": hashlib.sha256(read_resource_bytes(path)).hexdigest(),
                 "sampled_flux_component_error_linf": np.abs(data["flux"] - data["exact_flux"])
                 .max(axis=0)
                 .tolist(),
@@ -271,9 +270,9 @@ def main() -> None:
             "-a grad(p_h), not an H(div) reconstruction or the conservative skeleton multiplier"
         ),
         "rows": metrics,
-        "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "source_sha256": hashlib.sha256(read_resource_bytes(Path(__file__))).hexdigest(),
         "input_record_sha256": {
-            name: hashlib.sha256((DATA / name).read_bytes()).hexdigest()
+            name: hashlib.sha256(read_resource_bytes(DATA / name)).hexdigest()
             for name in ("published-figure5.json", "mhm-fitted-r16.json", "mhm-r16.json")
         },
     }
@@ -287,4 +286,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_unfitted_validation").main()

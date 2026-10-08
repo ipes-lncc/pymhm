@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -27,8 +19,9 @@ from examples.pgmhm_inclusion_data import axis
 from examples.solve_pgmhm_inclusions_reference import InclusionField, load_field
 from examples.solve_unusual_spe10_reference import CG2Field
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, read_resource_bytes, source_file, source_identity
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 _DATA: tuple[InclusionField, InclusionField, np.ndarray, np.ndarray, np.ndarray] | None = None
 _LIMIT: Any = None
 
@@ -124,21 +117,19 @@ def acquire(reference: Path, previous: Path, output: Path, workers: int = 4) -> 
     """Archive two exact-overlay norm rules, preserving actual input and source digests."""
     paths = [
         Path(__file__),
-        ROOT / "examples/compare_unusual_spe10.py",
-        ROOT / "examples/solve_pgmhm_inclusions_reference.py",
-        ROOT / "examples/solve_unusual_spe10_reference.py",
-        ROOT / "examples/pgmhm_inclusion_data.py",
-        ROOT / "examples/spe10_adaptive_norms.py",
-        ROOT / "src/pymhm/fem/scalar/operators.py",
+        source_file("examples/compare_unusual_spe10.py", root=ROOT),
+        source_file("examples/solve_pgmhm_inclusions_reference.py", root=ROOT),
+        source_file("examples/solve_unusual_spe10_reference.py", root=ROOT),
+        source_file("examples/pgmhm_inclusion_data.py", root=ROOT),
+        source_file("examples/spe10_adaptive_norms.py", root=ROOT),
+        source_file("src/pymhm/fem/scalar/operators.py", root=ROOT),
     ]
-    hashes = current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
-    )
+    hashes = current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
     record = dict(
         reference=reference.name,
-        reference_sha256=hashlib.sha256(reference.read_bytes()).hexdigest(),
+        reference_sha256=hashlib.sha256(read_resource_bytes(reference)).hexdigest(),
         previous=previous.name,
-        previous_sha256=hashlib.sha256(previous.read_bytes()).hexdigest(),
+        previous_sha256=hashlib.sha256(read_resource_bytes(previous)).hexdigest(),
         denominator="corresponding physical norm of the reference field",
         integration="exact nonnested-triangle intersections, repeated per material rectangle",
         source_hashes=hashes,
@@ -173,10 +164,7 @@ def acquire(reference: Path, previous: Path, output: Path, workers: int = 4) -> 
             )
         record["rows"].append(row)
         record["source_changed_during_run"] = hashes != current_source_manifest(
-            {
-                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-                for p in paths
-            }
+            source_identity(ROOT, paths), packages=("pymhm", "examples")
         )
         if record["source_changed_during_run"]:
             raise RuntimeError("reference comparison sources changed during integration")
@@ -200,4 +188,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.compare_inclusion_references").main()

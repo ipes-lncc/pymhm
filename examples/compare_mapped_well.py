@@ -2,16 +2,7 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
-import hashlib
 import json
 from pathlib import Path
 
@@ -21,8 +12,17 @@ from examples.mapped_well_comparison import differences
 from examples.mapped_well_fields import MappedWellField
 from pymhm.execution.cpu import map_local
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_text,
+    resource_glob,
+    source_file,
+    source_identity,
+    source_label,
+)
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DIRECTORY = ROOT / "examples/results/mapped-well-oscillatory"
 
 
@@ -78,19 +78,16 @@ def main() -> None:
         parser.error("workers must be positive")
     source_paths = [
         Path(__file__),
-        ROOT / "examples/mapped_well_fields.py",
-        ROOT / "examples/mapped_well_comparison.py",
-        ROOT / "src/pymhm/_legacy/models/darcy/mapped.py",
+        source_file("examples/mapped_well_fields.py", root=ROOT),
+        source_file("examples/mapped_well_comparison.py", root=ROOT),
+        source_file("src/pymhm/_legacy/models/darcy/mapped.py", root=ROOT),
     ]
     source_hashes = current_source_manifest(
-        {
-            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in source_paths
-        }
+        source_identity(ROOT, source_paths), packages=("pymhm", "examples")
     )
     classical = {}
-    for path in DIRECTORY.glob("classical-*.json"):
-        record = json.loads(path.read_text())
+    for path in resource_glob(DIRECTORY, "classical-*.json"):
+        record = json.loads(read_resource_text(path))
         level = record["fine_factor"]
         priority = (record["quadrature"][0], "invariant" in path.stem)
         if level >= 8 and (level not in classical or priority > classical[level][0]):
@@ -120,8 +117,8 @@ def main() -> None:
     ]
     local_control = "fine16-macro4-s1-q40z10"
     local_reference = "classical-invariant-xy16-z1-q40"
-    if (DIRECTORY / f"{local_control}.json").exists():
-        if not (DIRECTORY / f"{local_reference}.json").exists():
+    if (local_resource(DIRECTORY / f"{local_control}.json")).exists():
+        if not (local_resource(DIRECTORY / f"{local_reference}.json")).exists():
             raise ValueError("the F16 local control requires its matching quadrature-40 reference")
         jobs += [
             (ref, local_control, "local-control refined reference"),
@@ -135,7 +132,7 @@ def main() -> None:
                 "classical material quadrature",
             ),
         ]
-    if (DIRECTORY / "classical-xy32-z1-q20z10.json").exists():
+    if (local_resource(DIRECTORY / "classical-xy32-z1-q20z10.json")).exists():
         jobs.append(
             (
                 "classical-xy32-z1-q20z10",
@@ -143,7 +140,7 @@ def main() -> None:
                 "classical material quadrature",
             )
         )
-    if (DIRECTORY / "classical-invariant-xy64-z1-q14.json").exists():
+    if (local_resource(DIRECTORY / "classical-invariant-xy64-z1-q14.json")).exists():
         jobs.append(
             (
                 "classical-invariant-xy64-z1-q14",
@@ -154,7 +151,7 @@ def main() -> None:
     for factor, order in ((2, 20), (8, 40), (32, 20)):
         invariant = f"classical-invariant-xy{factor}-z1-q{order}"
         full = f"classical-xy{factor}-z1-q{order}z10"
-        if (DIRECTORY / (invariant + ".json")).exists():
+        if (local_resource(DIRECTORY / (invariant + ".json"))).exists():
             jobs.append((invariant, full, "exact vertical subspace"))
     jobs += [
         (fine, coarse, "classical spatial refinement")
@@ -168,20 +165,17 @@ def main() -> None:
     )
     report = dict(
         method="Native Piola RT1/Q1 pressure and vector-flux physical L2 differences",
-        pressure_offset=25e6,
+        pressure_offset=25000000.0,
         reference=ref,
         units="m, Pa, s",
         rows=rows,
-        analysis_source_sha256=source_hashes[Path(__file__).relative_to(ROOT).as_posix()],
+        analysis_source_sha256=source_hashes[source_label(Path(__file__), ROOT)],
         field_reader_sha256=source_hashes["examples/mapped_well_fields.py"],
         norm_workers=args.workers,
         source_hashes=source_hashes,
     )
     if source_hashes != current_source_manifest(
-        {
-            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in source_paths
-        }
+        source_identity(ROOT, source_paths), packages=("pymhm", "examples")
     ):
         raise RuntimeError("Physical-norm sources changed during acquisition")
     (DIRECTORY / "comparisons.json").write_text(json.dumps(report, indent=2) + "\n")
@@ -189,4 +183,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.compare_mapped_well").main()

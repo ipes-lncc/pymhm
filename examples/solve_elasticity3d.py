@@ -11,9 +11,10 @@ from threadpoolctl import threadpool_limits
 
 from examples.formulations.application import primal_elasticity as solve_elasticity_3d
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.tetrahedron import TetraMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/elasticity3d"
 STIFFNESS = np.diag([5.0, 6, 7, 2, 3, 4]) + 0.1 * np.ones((6, 6))
 
@@ -153,15 +154,12 @@ def main() -> None:
     data = ElasticityData3D(not args.sweep)
     sources = [
         Path(__file__),
-        ROOT / "src/pymhm/_legacy/models/elasticity/primal_3d.py",
-        ROOT / "src/pymhm/fem/scalar/tetrahedron.py",
-        ROOT / "src/pymhm/fem/scalar/tetrahedron_topology.py",
+        source_file("src/pymhm/_legacy/models/elasticity/primal_3d.py", root=ROOT),
+        source_file("src/pymhm/fem/scalar/tetrahedron.py", root=ROOT),
+        source_file("src/pymhm/fem/scalar/tetrahedron_topology.py", root=ROOT),
     ]
     start_hashes = current_source_manifest(
-        {
-            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in sources
-        }
+        source_identity(ROOT, sources), packages=("pymhm", "examples")
     )
     rows = []
     with threadpool_limits(1):
@@ -184,10 +182,7 @@ def main() -> None:
         values=np.stack(solution.values),
     )
     if start_hashes != current_source_manifest(
-        {
-            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in sources
-        }
+        source_identity(ROOT, sources), packages=("pymhm", "examples")
     ):
         raise RuntimeError("Acquisition sources changed during the numerical campaign")
     record = dict(
@@ -204,14 +199,13 @@ def main() -> None:
         archive=path.name,
         sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
         source_hashes=current_source_manifest(
-            {
-                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-                for p in sources
-            }
+            source_identity(ROOT, sources), packages=("pymhm", "examples")
         ),
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(record, indent=2) + "\n")
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_elasticity3d").main()

@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -35,6 +27,7 @@ from examples.mh2m_campaign_contracts import verify_difference_result as verify_
 from examples.mh2m_cg_reference import CubicTriangularField, coefficient
 from examples.mh2m_heterogeneous import load_field
 from examples.mh2m_heterogeneous_norms import difference
+from pymhm.io.workspace import read_resource_text, source_file
 
 
 def validate_existing(
@@ -81,7 +74,7 @@ def main() -> None:
     directory = args.data / "cg3"
     target = args.output if args.output is not None else directory / "structured-comparison.json"
     sources = (*SOURCES, "examples/compare_mh2m_cg3_controls.py")
-    hashes = {name: digest(ROOT / name) for name in sources}
+    hashes = {name: digest(source_file(name, root=ROOT)) for name in sources}
     metadata = reference_metadata(512, 16, directory)
     acquired_payload = target.read_bytes() if target.exists() else None
     record: dict[str, Any] = (
@@ -96,7 +89,7 @@ def main() -> None:
         }
     )
     require_equal(record["reference_acquisition"], metadata, label="reference acquisition")
-    reviewed = json.loads(args.resume_review.read_text()) if args.resume_review else {}
+    reviewed = json.loads(read_resource_text(args.resume_review)) if args.resume_review else {}
     try:
         source_check = source_validation(
             record["source_sha256"],
@@ -111,10 +104,11 @@ def main() -> None:
         )
     except ValueError as error:
         raise ValueError(
-            f"{error}. Validate archived results with python -m examples.validate_mh2m_campaign "
+            f"{error}. Validate archived results with "
+            "python -m examples.validate_mh2m_campaign "
             "or acquire a new analysis with --output NEW.json."
         ) from error
-    cases = json.loads((args.data / "comparison.json").read_text())["cases"]
+    cases = json.loads(read_resource_text(args.data / "comparison.json"))["cases"]
     checked = validate_existing(record, metadata, cases, args.data)
     if acquired_payload is not None:
         save_validation(
@@ -146,7 +140,7 @@ def main() -> None:
                     for order in (8, 10)
                 },
             }
-            if hashes != {name: digest(ROOT / name) for name in sources}:
+            if hashes != {name: digest(source_file(name, root=ROOT)) for name in sources}:
                 raise RuntimeError("comparison sources changed while integrating")
             record["cases"].append(row)
             validate_existing(record, metadata, cases, args.data)
@@ -158,4 +152,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.compare_mh2m_cg3_controls").main()

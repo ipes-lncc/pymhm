@@ -2,19 +2,17 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
-from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -25,7 +23,7 @@ from examples.plot_mesh import draw_macro_mesh, mark_macro_interfaces
 from examples.plot_style import set_refinement_ticks
 from pymhm import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 SOURCE = ROOT / "examples/results/unusual"
 TARGET = ROOT / "docs/figures/unusual"
 COLORS = {"galerkin": "#a94929", "unusual": "#146d83"}
@@ -41,9 +39,9 @@ def save(figure: plt.Figure, name: str) -> None:
 def read_field(row: dict) -> dict[str, np.ndarray]:
     """Verify a field archive before displaying its unmodified data."""
     path = SOURCE / row["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != row["archive_sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["archive_sha256"]:
         raise ValueError(f"archive checksum mismatch: {path.name}")
-    with np.load(path) as data:
+    with np.load(local_resource(path)) as data:
         return {key: data[key] for key in data.files}
 
 
@@ -206,7 +204,7 @@ def profiles(rows: list[dict], high_order: list[dict]) -> None:
 
 def native() -> None:
     """Display independent-code agreement separately from discretization accuracy."""
-    record = json.loads((SOURCE / "native-comparison.json").read_text())
+    record = json.loads(read_resource_text(SOURCE / "native-comparison.json"))
     figure, axes = plt.subplots(1, 2, figsize=(9.5, 3.8), layout="constrained")
     for degree in (2, 3):
         rows = [row for row in record["rows"] if row["local_degree"] == degree]
@@ -234,8 +232,8 @@ def native() -> None:
 def main() -> None:
     """Render reproducible figures from verified numerical archives only."""
     TARGET.mkdir(parents=True, exist_ok=True)
-    rows = json.loads((SOURCE / "analytical.json").read_text())["rows"]
-    high_order = json.loads((SOURCE / "resolution-control.json").read_text())["rows"]
+    rows = json.loads(read_resource_text(SOURCE / "analytical.json"))["rows"]
+    high_order = json.loads(read_resource_text(SOURCE / "resolution-control.json"))["rows"]
     convergence(rows, high_order)
     spatial(rows, "layer", "scalar", "layer-fields")
     spatial(rows, "tensor", "flux", "tensor-flux")
@@ -243,8 +241,10 @@ def main() -> None:
     profiles(rows, high_order)
     native()
     for name in ("analytical.json", "native-comparison.json", "resolution-control.json"):
-        (TARGET / name).write_bytes((SOURCE / name).read_bytes())
+        (TARGET / name).write_bytes(read_resource_bytes(SOURCE / name))
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_unusual").main()

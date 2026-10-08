@@ -4,9 +4,15 @@ from __future__ import annotations
 
 import hashlib
 import json
-from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -17,7 +23,7 @@ from matplotlib.ticker import MaxNLocator
 
 from pymhm.fem.scalar.triangle import reference_basis
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/rad-native"
 OUTPUT = ROOT / "docs/figures/rad-layer"
 
@@ -58,16 +64,16 @@ def sample(data: dict[str, np.ndarray]) -> tuple[mtri.Triangulation, tuple[np.nd
 
 def main() -> None:
     """Compare the full n=8, r=8 layer fields without executing external reference code."""
-    record = json.loads((DATA / "verification.json").read_text())
+    record = json.loads(read_resource_text(DATA / "verification.json"))
     row = next(
         item
         for item in record["rows"]
         if item["kind"] == "layer" and item["n"] == 8 and item["local_refinement"] == 8
     )
     path = DATA / row["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != row["archive_sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["archive_sha256"]:
         raise ValueError("archived native comparison differs from its recorded digest")
-    with np.load(path) as archive:
+    with np.load(local_resource(path)) as archive:
         data = dict(archive)
     tri, (native, candidate) = sample(data)
     plt.rcParams.update({"font.size": 11, "axes.titlesize": 12})
@@ -134,4 +140,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_rad_native").main()

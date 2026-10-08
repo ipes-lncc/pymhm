@@ -7,14 +7,6 @@ All display limits include the complete native nodal ranges of both fields.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -27,8 +19,9 @@ from examples.marmousi_campaign import evaluate_fields
 from examples.marmousi_comparison import BrokenQField
 from examples.marmousi_fields import PixelCGField, load_reference
 from examples.marmousi_records import checked_mhm, checked_reference
+from pymhm.io.workspace import case_workspace, read_resource_bytes
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def centre_fields(
@@ -185,16 +178,20 @@ def main() -> None:
     display.update(
         {
             "candidate_record": args.candidate.name,
-            "candidate_record_sha256": hashlib.sha256(args.candidate.read_bytes()).hexdigest(),
+            "candidate_record_sha256": hashlib.sha256(
+                read_resource_bytes(args.candidate)
+            ).hexdigest(),
             "reference_record": args.reference.name,
-            "reference_record_sha256": hashlib.sha256(args.reference.read_bytes()).hexdigest(),
+            "reference_record_sha256": hashlib.sha256(
+                read_resource_bytes(args.reference)
+            ).hexdigest(),
             "map_sampling": "Original material-cell centres; no incident-field averaging",
             "color_scale": "Signed asinh, linear width 1; physical-value ticks; no clipping",
             "profile_depth_m": depth,
             "profile_intersections": "Exact one-sided macro endpoints; no joins across faces",
             "source_sha256": {
                 f"examples/{name}.py": hashlib.sha256(
-                    Path(__file__).with_name(f"{name}.py").read_bytes()
+                    read_resource_bytes(Path(__file__).with_name(f"{name}.py"))
                 ).hexdigest()
                 for name in (
                     "plot_marmousi_mhm",
@@ -211,4 +208,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_marmousi_mhm").main()

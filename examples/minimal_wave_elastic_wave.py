@@ -11,7 +11,12 @@ from unittest.mock import patch
 import numpy as np
 
 from examples.elastodynamics_campaign import ElasticWave
-from examples.minimal_wave_convergence import digest, quadrature_change, require_original, write
+from examples.minimal_wave_convergence import (
+    digest,
+    quadrature_change,
+    require_original,
+    write,
+)
 from examples.tutorial_elastodynamic_equations import advance, initialize, prepare
 from pymhm.fem.reference import (
     monomial_tabulation,

@@ -2,24 +2,16 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
-from pathlib import Path
 
 import numpy as np
 
 from examples.hpc4e_data import LENGTH_SCALE
 from examples.hpc4e_fields import RectangularElasticityField
+from pymhm.io.workspace import case_workspace, read_resource_text
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def stress_interval(
@@ -68,7 +60,9 @@ def profile_comparison(segments: int) -> dict:
     its separate fine-cell traces. The overlap count is a raster consistency
     diagnostic, not a field error or a replacement for a refined classical solve.
     """
-    metadata = json.loads((ROOT / "examples/results/hpc4e/published-profile.json").read_text())
+    metadata = json.loads(
+        read_resource_text(ROOT / "examples/results/hpc4e/published-profile.json")
+    )
     curve = next(row for row in metadata["curves"] if row["segments"] == segments)
     field = RectangularElasticityField.load(ROOT / f"build/results/hpc4e/mhm-s{segments}.npz")
     x = np.array([row["x_m"] for row in curve["samples"]])
@@ -111,4 +105,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.compare_hpc4e").main()

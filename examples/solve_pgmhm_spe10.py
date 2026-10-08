@@ -9,14 +9,6 @@ explicitly declared where the historical executable specification is absent.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -32,7 +24,9 @@ from threadpoolctl import threadpool_limits
 from examples.archive_precision import precision_fields, restore_precision
 from examples.field_sampling import local_values
 from examples.formulations.application import petrov_galerkin_diffusion as solve_pgmhm
-from examples.formulations.mixed_darcy import conforming_rt_reference as solve_darcy_rt_conforming
+from examples.formulations.mixed_darcy import (
+    conforming_rt_reference as solve_darcy_rt_conforming,
+)
 from examples.pgmhm_campaign import diagnostics
 from examples.spe10_adaptive import DOMAIN, ROOT, StructuredRT, mesh_rectangle, natural_faces
 from examples.spe10_adaptive_norms import overlay_quadrature
@@ -41,6 +35,7 @@ from pymhm.fem.scalar.operators import p1_geometry, triangle_quadrature
 from pymhm.fem.scalar.triangle import nodal_space, reference_basis
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import ensure_resource, source_file
 from pymhm.materials.cartesian import CartesianCellField
 from pymhm.meshes.triangle import TriangleMesh
 
@@ -51,7 +46,7 @@ def load_material(component: str = "kz") -> CartesianCellField:
     """Return the selected layer-one component as an explicit isotropic scalar field."""
     if component not in ("kx", "kz"):
         raise ValueError("component must be kx or kz")
-    with np.load(ROOT / "examples/results/spe10/layer-1.npz") as arrays:
+    with np.load(ensure_resource("examples/results/spe10/layer-1.npz", ROOT)) as arrays:
         return CartesianCellField(
             arrays["permeability"][..., 0 if component == "kx" else 2], tuple(arrays["spacing"])
         )
@@ -98,7 +93,11 @@ def fingerprint() -> dict[str, str]:
         "examples/results/spe10/layer-1.npz",
     ]
     return current_source_manifest(
-        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+        {
+            name: hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
+            for name in names
+        },
+        packages=("pymhm", "examples"),
     )
 
 
@@ -593,4 +592,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_pgmhm_spe10").main()

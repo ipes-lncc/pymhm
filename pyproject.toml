@@ -36,6 +36,10 @@ mpi = ["mpi4py>=4"]
 amg = ["pyamg>=5.3"]
 meshing = ["gmsh>=4.13", "meshio>=5.3", "netgen-mesher>=6.2"]
 visualization = ["matplotlib>=3.8", "pyvista>=0.46,<0.50", "vtk>=9.5,<9.7"]
+notebooks = [
+  "ipykernel>=6.29", "jupyterlab>=4", "nbclient>=0.10", "nbconvert>=7", "nbformat>=5.10",
+  "matplotlib>=3.8", "pyvista>=0.46,<0.50", "vtk>=9.5,<9.7", "meshio>=5.3", "pyamg>=5.3",
+]
 
 [project.urls]
 Homepage = "https://github.com/ipes-lncc/pymhm"

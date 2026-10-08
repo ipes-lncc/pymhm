@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -23,6 +15,7 @@ from examples.formulations.application import darcy as solve_equations
 from examples.solve_spe10 import load_layer, pressure_boundary
 from examples.spe10_adaptive import DATA, ROOT, hashes, mesh_rectangle, natural_faces
 from pymhm.adaptivity.darcy import solve_adaptive_darcy
+from pymhm.io.workspace import source_file
 
 
 def acquire(levels: int = 5) -> list[dict[str, Any]]:
@@ -30,7 +23,7 @@ def acquire(levels: int = 5) -> list[dict[str, Any]]:
     DATA.mkdir(parents=True, exist_ok=True)
     fingerprint = hashes()
     fingerprint["examples/solve_spe10_adaptive.py"] = hashlib.sha256(
-        (ROOT / "examples/solve_spe10_adaptive.py").read_bytes()
+        source_file("examples/solve_spe10_adaptive.py", root=ROOT).read_bytes()
     ).hexdigest()
     mesh = mesh_rectangle(16, 16)
     started = perf_counter()
@@ -110,7 +103,7 @@ def acquire(levels: int = 5) -> list[dict[str, Any]]:
             ),
             "source_hashes": fingerprint,
             "source_changed_during_solve": any(
-                hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != digest
+                hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest() != digest
                 for name, digest in fingerprint.items()
             ),
             "campaign_seconds": elapsed,
@@ -131,4 +124,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_spe10_adaptive").main()

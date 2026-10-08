@@ -14,6 +14,10 @@ pressure trace. The formulation enforces every discontinuous \(\mathbb P_m\)
 moment of \(\nabla\cdot q-f\) in each fine cell. This differs from testing a
 reconstructed flux only against continuous macro-local pressure functions.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 from pymhm import TriangleMesh
 from examples.formulations.application import rt_darcy as solve_darcy_rt

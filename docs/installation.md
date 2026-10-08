@@ -59,7 +59,8 @@ the same `pymhm` package and adds the dependencies listed below.
 | `python -m pip install "pymhm[mpi]"` | MPI communication through mpi4py | Compatible MPI runtime and launcher; follow the [mpi4py installation guide](https://mpi4py.readthedocs.io/en/stable/install.html) |
 | `python -m pip install "pymhm[gpu]"` | CuPy and nvmath CUDA solvers | Linux or Windows with a compatible NVIDIA GPU and driver; CUDA 12 packages |
 | `python -m pip install "pymhm[meshing]"` | Gmsh, Netgen and meshio | Native library and wheel availability for your platform |
-| `python -m pip install "pymhm[visualization]"` | PyVista and VTK plotting | A compatible graphics or offscreen rendering environment |
+| `python -m pip install "pymhm[visualization]"` | Matplotlib, PyVista and VTK plotting | A compatible graphics or offscreen rendering environment |
+| `python -m pip install "pymhm[notebooks]"` | JupyterLab, notebook execution and plotting | Native notebooks also require the backend stated in the catalogue |
 
 Combine extras in one installation, for example:
 
@@ -76,8 +77,47 @@ GPU solver configuration and verified measurements.
 DOLFINx, UFL, PETSc/MUMPS and AmgX are separate backend installations. There is
 no `fem` or `amgx` pip extra. Installing the `mpi` extra supplies mpi4py. See
 [optional capabilities](#optional-capabilities) for PETSc/MUMPS and AmgX
-requirements. Notebooks and their datasets are available
-in the repository, with an index in the [notebook catalogue](tutorials.md).
+requirements. The distribution contains only the `pymhm` library, typing and
+release metadata. Notebook sources, example helpers, configurations and data
+remain in the repository and separate [downloads](data.md). See the
+[notebook catalogue](tutorials.md) for each example's backend requirements.
+
+### Run a downloaded notebook or example
+
+Install the notebook dependencies, download a notebook, and open it in JupyterLab:
+
+```bash
+python -m pip install "pymhm[notebooks]"
+jupyter lab primal_galerkin.ipynb
+```
+
+Each downloaded notebook declares the URL and SHA-256 of a separate companion
+ZIP in its first cell. PyMHM's generic `workspace_from_archive` operation verifies
+and extracts that archive without executing it. The notebook then imports its
+helpers from the extracted `examples/` and `scripts/` directories. These sources
+are inspectable and editable in the workspace; they are absent from the installed
+library. No clone or Pixi installation is required for this workflow.
+
+The notebook uses a writable subdirectory `.pymhm-companions/<checksum>` below
+the current directory by default. Set `PYMHM_WORKSPACE` to choose another location.
+Selected datasets, records and figures use verified
+separate downloads or declared public acquisition recipes. The [data catalogue](data.md)
+lists sources, identities and terms. Optional historical comparisons require their
+original external payloads; a fresh numerical field cannot replace them.
+A download or numerical reference does not establish a matched paper reproduction.
+
+After the first cell acquires the companion, its importable runner can execute a
+copied notebook from that workspace or inspect its complete study recipe:
+
+```bash
+cd /path/to/extracted-companion  # the notebook's ROOT directory
+python -m scripts.run_notebooks /path/to/primal_galerkin.ipynb
+python -m scripts.run_notebooks /path/to/72_marmousi.ipynb --study --plan
+```
+
+Native notebooks require compatible DOLFINx/UFL and other explicitly selected
+backends in the kernel's environment. The `notebooks` extra supplies notebook
+and plotting dependencies; it does not supply the DOLFINx C++ runtime.
 
 ### Native UFL assembly
 
@@ -113,9 +153,10 @@ execution is qualified separately for each platform in CI. The `introduction`
 profile adds the introductory notebook stack; notebook sections using distributed
 PETSc references still require PETSc.
 
-The tutorials describe the API in this repository revision. Use the checkout
-and its checked-in Pixi lockfile to reproduce the `bind_problem`/`LocalContext`
-workflow with the declared native dependencies.
+The same `bind_problem`/`LocalContext` API is available in an installed package.
+Install `"pymhm[notebooks]"` in the compatible native environment to execute
+downloaded native notebooks. A checkout and its Pixi lockfile provide the pinned
+dependency combinations used for the repository's scientific qualification.
 
 ## From a checkout
 
@@ -149,33 +190,30 @@ python -m pip install .
 pixi run --locked -e test-core build
 ```
 
-Use a checkout for development, notebooks and reproducible scientific runs.
+Use a checkout for development and the locked scientific qualification profiles.
 The repository includes a Conda recipe and CI that automatically publishes
 checked PyPI distributions and documentation on validated release tags.
 Building distribution artifacts locally does not publish them. Release
 configuration and required repository settings are described in
 [development](development.md).
 
-Both release formats provide the complete `pymhm` runtime. The wheel contains
-runtime modules, typing files, license and distribution metadata. The source
-distribution contains `src/pymhm`, `pyproject.toml`, `README.md`, `LICENSE`, the
-backend-required `.gitignore` and generated package metadata, sufficient to build
-and install the same runtime.
-Documentation, scripts, examples, tests, benchmarks, notebooks, recipes, roadmap
-and Pixi files are excluded from both archives. Use the repository checkout for
-development, scientific acquisitions and notebooks, including the corresponding
-generated figures and field archives when required.
+Both release formats contain only the `pymhm` library, its typing files and
+release metadata. The source distribution also carries the README, license and
+build configuration needed to rebuild the same wheel independently. Notebooks,
+example helpers, case registries, configurations, datasets, fields, figures,
+development tools and external comparison sources stay outside both archives.
+Notebook companions and data are separate [website downloads](data.md).
 
 Optional backend adapters are included in the package. Install their dependencies
 for the capabilities you use; native runtimes, drivers and solver libraries are
 not bundled in the `pymhm` archives. The environments below provide reproducible
 combinations, subject to their platform and hardware requirements.
 
-Selected publication figures and the three compact SPE10 input layers are
-ordinary Git files. Large computed field archives and intermediate outputs are
-generated locally and remain outside Git. Core tests generate small fixtures;
-installing the wheel or source distribution does not require previously computed
-scientific outputs.
+Selected publication figures and the three compact SPE10 input layers have
+separate verified download links, provenance and dataset notices in the
+[data catalogue](data.md). Large computed field archives and intermediate outputs
+are generated in the workspace. Core tests generate small fixtures; installing the
+wheel or source distribution requires no previously computed scientific outputs.
 
 Generate a case with its documented public command. Before using its results,
 verify geometry, material and boundary data, approximation spaces, physical norms
@@ -221,7 +259,7 @@ historical inventory is available through `scripts/notebook_data.py`. Its raw
 `--check` requires all selected original payloads independently of the current
 execution mode.
 
-The selected figures in Git support documentation builds from a checkout.
+The selected figures support documentation builds and verified notebook downloads.
 Regenerate and accept figures when changing a scientific case. For example, the
 public `gallery-darcy` task computes and plots stated
 analytical problems; it does not reproduce a published numerical table. Source

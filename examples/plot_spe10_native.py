@@ -2,20 +2,19 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
 from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -29,14 +28,14 @@ from examples.plot_mesh import draw_macro_mesh
 from examples.spe10_adaptive_norms import BrokenP2
 from pymhm.fem.scalar.triangle import reference_basis
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/spe10-adaptive/published"
 FIGURES = ROOT / "docs/figures/spe10-adaptive"
 
 
 def digest(path: Path) -> str:
     """Verify each archived field against its acquisition record."""
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return hashlib.sha256(read_resource_bytes(path)).hexdigest()
 
 
 class PressureView:
@@ -66,7 +65,7 @@ def pressure_view(candidate: BrokenP2, archive: Path, expected_sha256: str) -> P
     if digest(archive) != expected_sha256:
         raise ValueError("current pressure archive differs from its acquisition record")
     count = len(candidate.meshes)
-    with np.load(archive, allow_pickle=False) as values:
+    with np.load(local_resource(archive), allow_pickle=False) as values:
         if not np.array_equal(values["macro_points"], candidate.macro.points) or not np.array_equal(
             values["macro_cells"], candidate.macro.cells
         ):
@@ -138,7 +137,7 @@ def samples(
 
 def plot(level: int = 6, output: Path = FIGURES) -> None:
     """Compare accepted native MHM pressure/flux components on common physical scales."""
-    record = json.loads((DATA / "native-system-verification.json").read_text())
+    record = json.loads(read_resource_text(DATA / "native-system-verification.json"))
     row = next(item for item in record["rows"] if item["level"] == level)
     path = DATA / f"mhm-level{level}.npz"
     native_path = DATA / row["native_pressure_archive"]
@@ -154,7 +153,7 @@ def plot(level: int = 6, output: Path = FIGURES) -> None:
         candidate = pressure_view(
             candidate, DATA / current, row["candidate_pressure_archive_sha256"]
         )
-    with np.load(native_path) as arrays:
+    with np.load(local_resource(native_path)) as arrays:
         native = restore_precision(
             arrays["pressure"], arrays["pressure_correction"], arrays["pressure_tail"]
         )
@@ -238,4 +237,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_spe10_native").main()

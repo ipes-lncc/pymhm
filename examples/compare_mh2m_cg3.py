@@ -6,14 +6,6 @@ separate from comparisons with the article's continuous P1 reference on n=128.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -36,8 +28,15 @@ from examples.mh2m_crisscross_norms import CrossedP1, common_triangles
 from examples.mh2m_heterogeneous import load_field
 from examples.mh2m_heterogeneous_norms import difference
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    source_file,
+)
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/mh2m-heterogeneous"
 SOURCES = (
     "examples/compare_mh2m_cg3.py",
@@ -54,12 +53,12 @@ SOURCES = (
 
 def digest(path: Path) -> str:
     """Identify the bytes actually used for a source or physical field."""
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return hashlib.sha256(read_resource_bytes(path)).hexdigest()
 
 
 def reference_metadata(n: int, order: int, directory: Path) -> dict[str, Any]:
     """Verify an independent acquisition before using its persisted field."""
-    metadata = json.loads((directory / f"reference-cg3-n{n}-q{order}.json").read_text())
+    metadata = json.loads(read_resource_text(directory / f"reference-cg3-n{n}-q{order}.json"))
     if (
         metadata["source_changed_during_run"]
         or metadata["archive_sha256"] != digest(directory / metadata["archive"])
@@ -197,14 +196,14 @@ def save_validation(
     expected_manifest_sha256: str,
 ) -> None:
     """Write a separate validation record linked to the exact acquired manifest bytes."""
-    payload = target.read_bytes()
+    payload = read_resource_bytes(target)
     if hashlib.sha256(payload).hexdigest() != expected_manifest_sha256:
         raise ValueError("acquired manifest changed during validation")
     snapshot = target.with_name(
         target.stem + "-validated-input-" + expected_manifest_sha256 + ".json"
     )
-    if snapshot.exists():
-        if snapshot.read_bytes() != payload:
+    if local_resource(snapshot).exists():
+        if read_resource_bytes(snapshot) != payload:
             raise ValueError("validation snapshot already exists with different bytes")
     else:
         snapshot.write_bytes(payload)
@@ -240,7 +239,10 @@ def main() -> None:
     configuration = mathematical_configuration(args)
     directory = args.data / "cg3"
     target = args.output if args.output is not None else directory / "comparison.json"
-    hashes = current_source_manifest({name: digest(ROOT / name) for name in SOURCES})
+    hashes = current_source_manifest(
+        {name: digest(source_file(name, root=ROOT)) for name in SOURCES},
+        packages=("pymhm", "examples"),
+    )
     acquired_payload = target.read_bytes() if target.exists() else None
     record: dict[str, Any] = (
         json.loads(acquired_payload)
@@ -258,7 +260,7 @@ def main() -> None:
             "cases": [],
         }
     )
-    reviewed = json.loads(args.resume_review.read_text()) if args.resume_review else {}
+    reviewed = json.loads(read_resource_text(args.resume_review)) if args.resume_review else {}
     try:
         source_check = source_validation(
             record["source_sha256"],
@@ -269,7 +271,8 @@ def main() -> None:
         )
     except ValueError as error:
         raise ValueError(
-            f"{error}. Validate archived results with python -m examples.validate_mh2m_campaign "
+            f"{error}. Validate archived results with "
+            "python -m examples.validate_mh2m_campaign "
             "or acquire a new analysis with --output NEW.json."
         ) from error
     if acquired_payload is not None:
@@ -279,7 +282,10 @@ def main() -> None:
 
     def checkpoint() -> None:
         """Atomically persist only completed norms from unchanged source files."""
-        if hashes != current_source_manifest({name: digest(ROOT / name) for name in SOURCES}):
+        if hashes != current_source_manifest(
+            {name: digest(source_file(name, root=ROOT)) for name in SOURCES},
+            packages=("pymhm", "examples"),
+        ):
             raise RuntimeError("comparison sources changed while integrating")
         validate_existing(record, acquisitions, control, case_rows, directory, configuration)
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -302,7 +308,7 @@ def main() -> None:
         control = reference_metadata(args.sizes[-1], args.quadrature_control, directory)
         campaign = args.data / "crisscross"
         case_rows = (
-            json.loads((campaign / "comparison.json").read_text())["cases"]
+            json.loads(read_resource_text(campaign / "comparison.json"))["cases"]
             if record["cases"] or args.stage in ("cases", "all")
             else []
         )
@@ -371,7 +377,7 @@ def main() -> None:
                 archive = campaign / case["archive"]
                 if digest(archive) != case["archive_sha256"]:
                     raise ValueError("MH2M field differs from its acquisition record")
-                with np.load(archive, allow_pickle=False) as arrays:
+                with np.load(local_resource(archive), allow_pickle=False) as arrays:
                     other = CrossedP1.from_arrays(arrays["vertices"], arrays["pressure"])
                 row = dict(
                     name=case["name"],
@@ -388,4 +394,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.compare_mh2m_cg3").main()

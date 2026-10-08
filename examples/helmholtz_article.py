@@ -7,14 +7,6 @@ separate local-refinement controls. Each completed configuration is checkpointed
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -35,10 +27,11 @@ from examples.helmholtz_incident_family import IncidentFamily
 from examples.helmholtz_trace_family import verify_helmholtz_solution
 from examples.tutorial_helmholtz_equations import solve_acoustic
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton
+from pymhm.io.workspace import case_workspace, source_file, source_label
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.postprocessing.acoustics import HelmholtzSolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 @dataclass(frozen=True)
@@ -196,10 +189,10 @@ def article_hashes() -> dict[str, str]:
     hashes = source_hashes()
     for path in (
         Path(__file__),
-        ROOT / "examples/helmholtz_incident_family.py",
-        ROOT / "examples/local_response_cache.py",
+        source_file("examples/helmholtz_incident_family.py", root=ROOT),
+        source_file("examples/local_response_cache.py", root=ROOT),
     ):
-        hashes[path.relative_to(ROOT).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
+        hashes[source_label(path, ROOT)] = hashlib.sha256(path.read_bytes()).hexdigest()
     return hashes
 
 
@@ -296,7 +289,10 @@ def run(
 
     def save_row(row: dict[str, Any]) -> None:
         """Commit each completed point only while its numerical sources remain fixed."""
-        current = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in hashes}
+        current = {
+            name: hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
+            for name in hashes
+        }
         if current != hashes:
             raise RuntimeError("runtime sources changed during the wave acquisition")
         record["rows"].append(row)
@@ -321,7 +317,10 @@ def run(
         futures = {pool.submit(solve_configuration, c, output): c for c in pending}
         for future in as_completed(futures):
             save_row(future.result())
-    current = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in hashes}
+    current = {
+        name: hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
+        for name in hashes
+    }
     if current != hashes:
         raise RuntimeError("runtime sources changed during the wave acquisition")
 
@@ -344,4 +343,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.helmholtz_article").main()

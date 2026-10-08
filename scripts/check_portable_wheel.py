@@ -11,6 +11,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import zipfile
 from pathlib import Path
 
 
@@ -27,6 +28,21 @@ def check_wheel(directory: Path, report: Path, *, require_pardiso: bool = False)
     if len(wheels) != 1:
         raise ValueError("the wheel directory must contain exactly one pymhm wheel")
     wheel = wheels[0]
+    with zipfile.ZipFile(wheel) as archive:
+        for name in archive.namelist():
+            path = Path(name)
+            library_file = path.parts[0] == "pymhm" and (
+                path.suffix in {".py", ".pyi"} or path.name == "py.typed"
+            )
+            prefix = wheel.name.removesuffix("-py3-none-any.whl") + ".dist-info/"
+            metadata = name.startswith(prefix) and name.removeprefix(prefix) in {
+                "METADATA",
+                "WHEEL",
+                "RECORD",
+                "licenses/LICENSE",
+            }
+            if not library_file and not metadata:
+                raise ValueError(f"Wheel contains a non-library payload: {name}")
     repository = Path(__file__).resolve().parents[1]
     native_library = None
     if require_pardiso:
@@ -72,6 +88,28 @@ def check_wheel(directory: Path, report: Path, *, require_pardiso: bool = False)
         variables = os.environ.copy()
         variables.pop("PYTHONPATH", None)
         variables["PYMHM_EXPECT_INSTALL_ROOT"] = str(environment)
+        guard = root / "import-guard"
+        guard.mkdir()
+        (guard / "sitecustomize.py").write_text(
+            "import os, sys\n"
+            "from pathlib import Path\n"
+            f"FORBIDDEN = Path({str(repository)!r}).resolve()\n"
+            f"DEPENDENCIES = Path({sys.prefix!r}).resolve()\n"
+            "sys.path[:] = [value for value in sys.path\n"
+            "    if not Path(value).resolve().is_relative_to(FORBIDDEN)\n"
+            "    or Path(value).resolve().is_relative_to(DEPENDENCIES)]\n"
+            "def audit(event, arguments):\n"
+            "    if event in {'open', 'os.listdir', 'os.scandir'} and arguments:\n"
+            "        value = arguments[0]\n"
+            "        if isinstance(value, (str, bytes, os.PathLike)):\n"
+            "            path = Path(os.fsdecode(value)).resolve()\n"
+            "            denied = path.is_relative_to(FORBIDDEN)\n"
+            "            if denied and not path.is_relative_to(DEPENDENCIES):\n"
+            "                raise RuntimeError(f'Wheel check accessed checkout: {path}')\n"
+            "sys.addaudithook(audit)\n",
+            encoding="utf-8",
+        )
+        variables["PYTHONPATH"] = str(guard)
         if native_library is not None:
             variables["PYPARDISO_MKL_RT"] = native_library["path"]
         identity = subprocess.run(
@@ -79,6 +117,9 @@ def check_wheel(directory: Path, report: Path, *, require_pardiso: bool = False)
                 str(python),
                 "-c",
                 "import json, platform, pymhm; "
+                "from pathlib import Path; import os; "
+                "assert Path(pymhm.__file__).resolve().is_relative_to("
+                "Path(os.environ['PYMHM_EXPECT_INSTALL_ROOT'])); "
                 "print(json.dumps({'platform': platform.platform(), 'package': pymhm.__file__}))",
             ],
             cwd=root,
@@ -97,7 +138,14 @@ def check_wheel(directory: Path, report: Path, *, require_pardiso: bool = False)
         tests = root / "test_windows_portability.py"
         shutil.copyfile(repository / "tests/test_windows_portability.py", tests)
         result = subprocess.run(
-            [str(python), "-m", "pytest", "-q", str(tests), "--junitxml=portable-wheel.xml"],
+            [
+                str(python),
+                "-m",
+                "pytest",
+                "-q",
+                str(tests),
+                "--junitxml=portable-wheel.xml",
+            ],
             cwd=root,
             env=variables,
             check=False,
@@ -115,6 +163,9 @@ def check_wheel(directory: Path, report: Path, *, require_pardiso: bool = False)
                     "python": sys.version,
                     "host_platform": platform.platform(),
                     "installed_identity": json.loads(identity.stdout),
+                    "checkout_io_guard": str(repository),
+                    "locked_dependency_root": sys.prefix,
+                    "library_only_payload": True,
                     "required_pardiso": require_pardiso,
                     "native_library": native_library,
                     "test_exit_code": result.returncode,

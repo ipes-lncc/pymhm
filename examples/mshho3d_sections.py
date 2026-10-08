@@ -46,6 +46,7 @@ def capture_section(
     }
 
     def evaluate(macro: int, cell: int, points: np.ndarray) -> np.ndarray:
+        """Evaluate one incident P2 pressure/raw flux and retain its executed basis tables."""
         inverse = inverses[macro][cell]
         bary = np.column_stack((np.ones(len(points)), points)) @ inverse
         values, derivatives = tetra_basis(2, bary)

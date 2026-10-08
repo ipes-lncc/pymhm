@@ -6,18 +6,40 @@ The main workflow is **meshes → spaces → local equations → global balance 
 
 We explicitly construct `Equation`, `LocalEquations` and `MultiscaleProblem`, then connect each code block to the physical formulation. **MHM-USFEM** is the name used here for scalar **MHM-UNUSUAL** of [Santiago, Valentin and Martins (2025), Eqs. (14)–(15), §4.1](https://doi.org/10.55592/cilamce2025.v5i.14270). This is a scalar reaction–diffusion example; the separate Stokes–Brinkman tutorial treats velocity and pressure. Advection is zero here, and the negative residual stabilization is different from SUPG.
 
-Run with the project's locked Pixi `introduction` environment. Exact data, sources, local and global forms, boundary conditions, independent references, norms and plots are all defined below. PyMHM supplies generic UFL compilation, oriented trace integration, condensation and checked linear algebra.
+Open the downloaded notebook with `jupyter lab` after installing `pymhm[notebooks,visualization]` and the compatible native DOLFINx/UFL backend. Exact data, sources, local and global forms, boundary conditions, independent references, norms and plots are all defined below. PyMHM supplies generic UFL compilation, oriented trace integration, condensation and checked linear algebra.
 
 We compare an intentionally underresolved P1/P0 control with a refined P1/P0 family that partitions each macroface and satisfies the paper's red-refinement condition. Both use the same physical equation and the published stabilization parameter. Reduced nodal oscillation can coexist with a larger integrated error; we report both. Our declared SW–NE connectivity, strong exterior Dirichlet enforcement and local meshes do not constitute a reproduction of the paper's historical figures.
 
 
+The PyMHM distribution contains only the library. The first cell explicitly
+downloads a checksum-verified companion archive and prepares the declared data
+using its local Python helpers. You can inspect these support files in `ROOT`.
+Complete studies and historical replay retain their existing opt-in flags.
 
 ```python
 from pathlib import Path
+import os
 import sys
+from pymhm.io.workspace import workspace_from_archive
 
-ROOT = next(path for path in (Path.cwd(), *Path.cwd().parents) if (path / "pixi.toml").exists())
-sys.path.insert(0, str(ROOT))
+# Download verified support files; this operation does not execute them.
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/fd8b6dd65c12aa3cf9532774452085ac69ee53f00d3e17fab3579d900106d733/mhm_usfem_rad-companion.zip"
+COMPANION_SHA256 = "fd8b6dd65c12aa3cf9532774452085ac69ee53f00d3e17fab3579d900106d733"
+WORKSPACE = Path(
+    os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
+)
+ROOT = workspace_from_archive(COMPANION_URL, sha256=COMPANION_SHA256, directory=WORKSPACE)
+os.environ["PYMHM_WORKSPACE"] = str(ROOT)
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+# Explicitly prepare declared data with the downloaded Python helpers.
+from scripts.notebook_reproduction import notebook_workspace
+
+ROOT = notebook_workspace("introduction/mhm_usfem_rad.ipynb", directory=ROOT)
+root = ROOT
+print("Workspace:", ROOT)
+
 
 import json
 import numpy as np
@@ -50,7 +72,6 @@ from examples.introduction.transport import (
 from examples.introduction.vector import execution_provenance
 
 measure_case = partial(record_rad_case, reports=REPORTS, root=ROOT)
-
 ```
 
 ## 1. Identify the equation, boundary data and difficult length scale
@@ -111,9 +132,7 @@ class ReactionLayer:
         x = points[:, 0]
         derivative = scale * (np.exp(-scale * x) - np.exp(-scale * (1 - x))) / (1 + np.exp(-scale))
         return np.column_stack((derivative, np.zeros(len(points))))
-
 ```
-
 
 ```python
 EPSILON = 1e-3
@@ -129,7 +148,6 @@ scale = 1 / np.sqrt(EPSILON)
 second = -(scale**2) * (np.exp(-scale * x) + np.exp(-scale * (1 - x))) / (1 + np.exp(-scale))
 np.testing.assert_allclose(-EPSILON * second + truth.value(points), 1, atol=2e-15)
 np.testing.assert_allclose(truth.gradient(points)[:, 1], 0)
-
 ```
 
 ## 2. Write the local equations and skeletal balance
@@ -192,7 +210,6 @@ def rad_forms(domain: Any, *, epsilon: float, stabilized: bool) -> tuple[Any, An
         a -= tau * Lu * Lv * dx
         L -= tau * Lv * dx
     return V, a, L
-
 ```
 
 The native mesh and coefficient conversions come from the shared backend binding. The provider below writes the volume and boundary forms, chooses its physical boundary conditions and registers the scalar field. The explicit restriction to free scalar coordinates imposes the declared vertical Dirichlet data; it is part of the formulation.
@@ -203,7 +220,6 @@ import basix
 
 
 from pymhm.backends.spaces import create_native_mesh
-
 ```
 
 `LocalEquations` now receives the executed forms through the shared native-space binding. `LocalContext` owns the mesh and interface maps. The following provider applies the vertical Dirichlet nodes, keeps the horizontal physical-flux convention, and exposes the two oriented trace blocks directly.
@@ -254,7 +270,6 @@ def local_rad(
             "local_subdivisions": local_subdivisions,
         },
     )
-
 ```
 
 The primary operator above is the executed UFL form. As a secondary convenience check, `scalar_operators` can assemble its unstabilized part. We compare its restricted matrix and load against our declared Galerkin equation on one representative macrocell; it is not used to define the tutorial's MHM operators.
@@ -289,7 +304,6 @@ ready_A, _, ready_F = scalar_operators(
 free = probe_equation.metadata["free"]
 np.testing.assert_allclose(probe_equation.a.toarray(), ready_A[free][:, free].toarray(), atol=1e-14)
 np.testing.assert_allclose(probe_equation.L, ready_F[free], atol=1e-14)
-
 ```
 
 ## 3. Declare and solve the global problem
@@ -303,7 +317,6 @@ Norm integration, archive replay and field/profile displays are importable from 
 
 ```python
 # Physical scalar/gradient/flux norms are integrated by scalar_error_norms (imported above).
-
 ```
 
 ### Record the numerical coordinates for reproducibility
@@ -364,12 +377,7 @@ for n in (2, 4, 8, 16):
         rows.append(row)
         state_archives.append(archive)
 rows
-
 ```
-
-
-
-
 
 ??? note "Numerical output and provenance"
 
@@ -523,7 +531,6 @@ for epsilon, nx, ny in REFERENCE_GRIDS:
     references[epsilon, nx] = case
     reference_rows.append(row)
     state_archives.append(archive)
-
 ```
 
 ```text
@@ -563,10 +570,7 @@ The display utility evaluates each local polynomial independently, including its
 
 ```python
 plot_rad_primary(cases, rows, reference_rows, references, truth, reports=REPORTS)
-
 ```
-
-
 
 [![Figure 1 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_23_0.png)](../../assets/tutorials/mhm_usfem_rad/figure_23_0.png)
 
@@ -644,12 +648,7 @@ for epsilon in dict.fromkeys((1e-2, EPSILON, 1e-5)):
         sweep.append(row)
         state_archives.append(archive)
 sweep
-
 ```
-
-
-
-
 
 ??? note "Numerical output and provenance"
 
@@ -746,10 +745,7 @@ sweep
 
 ```python
 plot_rad_severe(macro, challenging, references, sweep, ReactionLayer, reports=REPORTS)
-
 ```
-
-
 
 [![Figure 5 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_26_0.png)](../../assets/tutorials/mhm_usfem_rad/figure_26_0.png)
 
@@ -800,7 +796,6 @@ for epsilon, resolutions in RESOLVED_LEVELS.items():
             state_archives.append(archive)
             print("Refined P1/P0", epsilon, n, method, row)
 resolved_rows
-
 ```
 
 ```text
@@ -998,10 +993,7 @@ The following severe-layer panels use the finest declared P1/P0 family. They sho
 
 ```python
 plot_rad_refined(resolved_cases, resolved_rows, references, ReactionLayer, reports=REPORTS)
-
 ```
-
-
 
 [![Figure 6 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_30_0.png)](../../assets/tutorials/mhm_usfem_rad/figure_30_0.png)
 
@@ -1069,12 +1061,7 @@ for family, orders in (("underresolved", (40, 48)), ("refined", (24, 32))):
             )
         )
 quadrature_controls
-
 ```
-
-
-
-
 
 ```text
 [{'family': 'underresolved',
@@ -1120,9 +1107,7 @@ provenance = execution_provenance(
     root=ROOT,
     literature_comparison="same analytical PDE; declared SW-NE topology and strong exterior Dirichlet data; historical matching local triangulation/connectivity is unresolved; no matched-figure reproduction",
 )
-
 ```
-
 
 ```python
 plot_rad_profiles(
@@ -1176,10 +1161,7 @@ _ = (REPORTS / "mhm-usfem-rad.json").write_text(
     )
     + "\n"
 )
-
 ```
-
-
 
 [![Figure 9 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_35_0.png)](../../assets/tutorials/mhm_usfem_rad/figure_35_0.png)
 
@@ -1203,11 +1185,21 @@ The exact data, stabilization and compatibility condition follow [Santiago, Vale
 
 ## Reproduce this tutorial
 
-[View the source notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/mhm_usfem_rad.ipynb) or [download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/mhm_usfem_rad.ipynb). Run its cells interactively, or execute the notebook from the repository root with the checked-in Pixi lockfile:
+[View the source notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/mhm_usfem_rad.ipynb) or [download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/mhm_usfem_rad.ipynb), then open it:
 
 ```bash
-pixi install --locked -e introduction
-pixi run --locked -e introduction notebooks-run introduction/mhm_usfem_rad.ipynb --timeout 7200
+python -m pip install 'pymhm[notebooks,visualization]'
+jupyter lab mhm_usfem_rad.ipynb
 ```
 
-The runner writes the executed copy to `build/notebooks/introduction/`. The figures and numerical outputs on this page come from that execution. Timings describe the recorded hardware and solver settings; rerun performance examples on an idle machine to measure your own environment.
+The first cell explicitly downloads a SHA256-verified companion archive. Acquisition does not execute its code. The local support files are inspectable in the printed `ROOT` directory; the following helper call prepares only the declared inputs. The library distribution contains only `pymhm`. Notebooks, support code and data are separate downloads. Native UFL forms require the compatible DOLFINx/UFL backend described in the [installation guide](../../installation.md). A clone and Pixi are unnecessary.
+
+For batch execution, extract the same companion, change to its workspace, and use its local runner with the actual downloaded notebook path:
+
+```bash
+python -m scripts.run_notebooks /path/to/mhm_usfem_rad.ipynb --timeout 7200
+```
+
+The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
+
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `aaf4e40d37cc7a88ded60988e2cce876cb11240af193399aedaf13d387be8171` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

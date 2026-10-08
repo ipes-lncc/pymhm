@@ -2,19 +2,10 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
 import textwrap
-from pathlib import Path
 
 import numpy as np
 import pyvista as pv
@@ -28,10 +19,11 @@ from pymhm.io.datasets.spe10 import (
     load_spe10_model2,
 )
 from pymhm.io.reservoir import ReservoirData
+from pymhm.io.workspace import case_workspace, ensure_resource, local_resource, read_resource_bytes
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.postprocessing.visualization import macro_edges, structured_cell_grid
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/spe10"
 FIGURES = ROOT / "docs/figures/spe10"
 CACHE = ROOT / "build/data/spe10"
@@ -44,7 +36,9 @@ def macro_mesh() -> CartesianMacroMesh:
 
 def data_grid(layer: int) -> pv.ImageData:
     """Load an archived layer without requiring a full-volume download."""
-    with np.load(OUTPUT / f"layer-{layer}.npz") as data:
+    with np.load(
+        local_resource(ensure_resource(f"examples/results/spe10/layer-{layer}.npz", ROOT))
+    ) as data:
         return structured_cell_grid(
             (60, 220),
             cell_data={
@@ -179,7 +173,7 @@ def save_layers(data: ReservoirData) -> None:
                 "kx_range_md": [float(k[..., 0].min()), float(k[..., 0].max())],
                 "phi_range": [float(phi.min()), float(phi.max())],
                 "kx_equals_ky": bool(np.array_equal(k[..., 0], k[..., 1])),
-                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                "sha256": hashlib.sha256(read_resource_bytes(path)).hexdigest(),
                 "file": path.name,
             }
         )
@@ -270,4 +264,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_spe10_data").main()

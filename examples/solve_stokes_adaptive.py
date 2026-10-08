@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -28,10 +20,11 @@ from pymhm.adaptivity.flow_macro import adapt_flow_macros
 from pymhm.estimators.flow import estimate_flow_error
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity, source_label
 from pymhm.meshes.triangle import TriangleMesh
 from pymhm.postprocessing.solutions import VectorSolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/stokes-adaptive"
 
 
@@ -50,9 +43,7 @@ def save_coefficients(solution: VectorSolution, path: Path) -> dict:
         raw[f"velocity_{cell}"] = solution.values[cell]
         raw[f"pressure_{cell}"] = solution.pressure[cell]
     np.savez_compressed(path, **raw)
-    return dict(
-        path=path.relative_to(ROOT).as_posix(), sha256=hashlib.sha256(path.read_bytes()).hexdigest()
-    )
+    return dict(path=source_label(path, ROOT), sha256=hashlib.sha256(path.read_bytes()).hexdigest())
 
 
 @dataclass(frozen=True)
@@ -191,21 +182,19 @@ def main() -> None:
     )
     paths = [
         Path(__file__),
-        ROOT / "src/pymhm/_legacy/models/flow/solver.py",
-        ROOT / "src/pymhm/estimators/flow.py",
-        ROOT / "src/pymhm/adaptivity/flow.py",
-        ROOT / "src/pymhm/adaptivity/flow_macro.py",
-        ROOT / "src/pymhm/meshes/refinement.py",
-        ROOT / "src/pymhm/adaptivity/flow_local_mesh.py",
-        ROOT / "src/pymhm/meshes/longest_edge.py",
+        source_file("src/pymhm/_legacy/models/flow/solver.py", root=ROOT),
+        source_file("src/pymhm/estimators/flow.py", root=ROOT),
+        source_file("src/pymhm/adaptivity/flow.py", root=ROOT),
+        source_file("src/pymhm/adaptivity/flow_macro.py", root=ROOT),
+        source_file("src/pymhm/meshes/refinement.py", root=ROOT),
+        source_file("src/pymhm/adaptivity/flow_local_mesh.py", root=ROOT),
+        source_file("src/pymhm/meshes/longest_edge.py", root=ROOT),
     ]
-    hashes = current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
-    )
+    hashes = current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
     snapshots = ROOT / "build/source-snapshots/stokes-adaptive"
     snapshots.mkdir(parents=True, exist_ok=True)
     for path in paths:
-        (snapshots / f"{hashes[path.relative_to(ROOT).as_posix()]}-{path.name}").write_bytes(
+        (snapshots / f"{hashes[source_label(path, ROOT)]}-{path.name}").write_bytes(
             path.read_bytes()
         )
     solutions, estimators = [], []
@@ -366,11 +355,12 @@ def main() -> None:
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
     if any(
-        hashlib.sha256(p.read_bytes()).hexdigest() != hashes[p.relative_to(ROOT).as_posix()]
-        for p in paths
+        hashlib.sha256(p.read_bytes()).hexdigest() != hashes[source_label(p, ROOT)] for p in paths
     ):
         raise RuntimeError("Campaign numerical source changed during acquisition")
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_stokes_adaptive").main()

@@ -2,18 +2,9 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
-from pathlib import Path
 from time import perf_counter
 
 import numpy as np
@@ -32,8 +23,9 @@ from examples.pgmhm_inclusion_data import (
 )
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/pgmhm-inclusions"
 
 
@@ -59,7 +51,11 @@ def acquire(factor: int, *, segments: int = 2, workers: int = 8) -> dict:
         )
     ]
     hashes = current_source_manifest(
-        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+        {
+            name: hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
+            for name in names
+        },
+        packages=("pymhm", "examples"),
     )
     mesh, local = local_meshes(factor)
     skeleton = SkeletonSpace(mesh, tuple(FaceSpace.uniform(0, segments) for _ in mesh.faces))
@@ -132,7 +128,11 @@ def acquire(factor: int, *, segments: int = 2, workers: int = 8) -> dict:
         source_hashes=hashes,
     )
     row["source_changed_during_run"] = hashes != current_source_manifest(
-        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+        {
+            name: hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
+            for name in names
+        },
+        packages=("pymhm", "examples"),
     )
     if row["source_changed_during_run"]:
         raise RuntimeError("numerical source changed during acquisition")
@@ -154,4 +154,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_pgmhm_inclusions").main()

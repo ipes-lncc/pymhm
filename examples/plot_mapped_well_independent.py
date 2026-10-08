@@ -4,9 +4,15 @@ from __future__ import annotations
 
 import hashlib
 import json
-from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -14,19 +20,19 @@ import numpy as np
 from matplotlib.collections import LineCollection, PolyCollection
 from matplotlib.colors import AsinhNorm, Normalize
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/mapped-well-oscillatory"
 OUTPUT = ROOT / "docs/figures/mapped-well-oscillatory"
 
 
 def main() -> None:
     """Preserve independent point samples, signed differences and actual macro boundaries."""
-    report = json.loads((DATA / "native-discrete-verification.json").read_text())
+    report = json.loads(read_resource_text(DATA / "native-discrete-verification.json"))
     display = report["display"]
     path = DATA / display["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != display["sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != display["sha256"]:
         raise ValueError("independent well sample archive digest mismatch")
-    with np.load(path) as archive:
+    with np.load(local_resource(path)) as archive:
         arrays = dict(archive)
     polygons, segments = arrays["polygons"], arrays["macro_segments"]
     datum = report["physical_case"]["pressure_datum_pa"]
@@ -105,4 +111,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_mapped_well_independent").main()

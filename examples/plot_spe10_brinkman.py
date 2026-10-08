@@ -2,17 +2,11 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import json
 
 import matplotlib
+
+from pymhm.io.workspace import local_resource, read_resource_text, resource_glob
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -27,17 +21,20 @@ from pymhm.postprocessing.visualization import broken_triangle_grid
 
 def run(layer: int = 1) -> None:
     """Display each broken P3 field with the actual crisscross macro edges."""
+    FIGURES.mkdir(parents=True, exist_ok=True)
     records = sorted(
         [
-            json.loads(path.read_text())
-            for path in OUTPUT.glob(f"flow-layer{layer}-n6x11-p3-r10-s10-q*-pointwise-2017.json")
+            json.loads(read_resource_text(path))
+            for path in resource_glob(
+                OUTPUT, f"flow-layer{layer}-n6x11-p3-r10-s10-q*-pointwise-2017.json"
+            )
         ],
         key=lambda row: row["quadrature_order"],
     )
     if not records:
         raise ValueError("Run the declared 2017 P3/P3, r=10, ten-segment SPE10 configuration first")
     row = next(record for record in records if record["quadrature_order"] == 5)
-    with np.load(OUTPUT / row["archive"]) as data:
+    with np.load(local_resource(OUTPUT / row["archive"])) as data:
         macro = TriangleMesh(data["macro_points"], data["macro_cells"])
         meshes = tuple(
             TriangleMesh(points, cells)
@@ -73,7 +70,7 @@ def run(layer: int = 1) -> None:
     plotter.close()
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.5), constrained_layout=True)
     for record in records:
-        with np.load(OUTPUT / record["archive"]) as data:
+        with np.load(local_resource(OUTPUT / record["archive"])) as data:
             for component, axis in enumerate(axes):
                 values = (
                     data["profile_pressure"]
@@ -104,5 +101,12 @@ def run(layer: int = 1) -> None:
     plt.close(fig)
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     run()
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.plot_spe10_brinkman").main()

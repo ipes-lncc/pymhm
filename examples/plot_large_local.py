@@ -1,6 +1,6 @@
 """Render measured complete and prepared-local Darcy timings with phase profiles.
 
-Run after ``pixi run -e test python benchmarks/large_local.py``. This plotting
+Run ``python -m examples.plot_large_local --input RESULTS.json``. This plotting
 script never executes a numerical benchmark or estimates unmeasured speedups.
 """
 
@@ -13,6 +13,8 @@ from typing import Any
 
 import matplotlib
 import numpy as np
+
+from pymhm.io.workspace import case_workspace, read_resource_text
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -133,12 +135,12 @@ def phases(data: dict[str, Any], output: Path) -> None:
 
 def main() -> None:
     """Render complete, unchanged-source benchmark records and preserve their raw data."""
-    root = Path(__file__).resolve().parents[1]
+    root = case_workspace()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, default=root / "benchmarks/results/large-local.json")
     parser.add_argument("--output", type=Path, default=root / "docs/figures/large-local")
     args = parser.parse_args()
-    data = json.loads(args.input.read_text(encoding="utf-8"))
+    data = json.loads(read_resource_text(args.input, encoding="utf-8"))
     if data["pilot"] or data["source_changed_during_run"]:
         raise ValueError("Publication figures require the complete, unchanged-source measured run")
     args.output.mkdir(parents=True, exist_ok=True)
@@ -151,4 +153,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_large_local").main()
