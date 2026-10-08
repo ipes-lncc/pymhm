@@ -56,7 +56,9 @@ class MultiscaleProblem(Generic[Item]):
     """
 
     global_equation: Equation
-    local_provider: Callable[[Item], LocalEquations | NestedEquations | CompiledLocalEquations]
+    local_provider: (
+        Callable[[Item], LocalEquations | NestedEquations | CompiledLocalEquations] | None
+    )
     items: Iterable[Item]
     trace_size: int
     coarse_sizes: tuple[int, ...]
@@ -68,7 +70,10 @@ class MultiscaleProblem(Generic[Item]):
         """Validate coordinates and form/compiler contracts without consuming the items."""
         if not isinstance(self.global_equation, Equation):
             raise TypeError("global_equation must be an Equation")
-        if not callable(self.local_provider) or not callable(self.compiler):
+        if (
+            not callable(self.local_provider)
+            and not (self.local_provider is None and not self.coarse_sizes)
+        ) or not callable(self.compiler):
             raise TypeError("local_provider and compiler must be callable")
         layout = GlobalForm(
             self.trace_size,
@@ -80,6 +85,27 @@ class MultiscaleProblem(Generic[Item]):
         object.__setattr__(self, "coarse_sizes", layout.coarse_sizes)
         object.__setattr__(self, "fixed", layout.fixed_trace)
         object.__setattr__(self, "constraints", layout.constraints)
+
+    @classmethod
+    def from_global(
+        cls,
+        equation: Equation,
+        size: int,
+        *,
+        fixed: Mapping[int, float] | None = None,
+        constraints: tuple[tuple[FloatArray, float], ...] = (),
+        compiler: FormCompiler = compile_form,
+    ) -> MultiscaleProblem[Any]:
+        """Declare a global equation with no local fields or condensation.
+
+        All size coordinates belong to the stated global trial/test basis.
+        Essential coefficient values and physical integral constraints retain
+        the ordinary solve contract. This supports classical reference forms
+        or any explicitly assembled global operator through the same API.
+        """
+        return cls(
+            equation, None, (), size, (), fixed=fixed, constraints=constraints, compiler=compiler
+        )
 
 
 @dataclass(frozen=True)
@@ -126,11 +152,11 @@ class MultiscaleSolution(HybridSolution):
     field_data: tuple[tuple[Any, ...], ...] = ()
     trace_bindings: tuple[Any, ...] = ()
 
-    def field(self, name: str) -> Any:
-        """Return named mesh-associated views using their executed field definitions."""
+    def field(self, name: str, *, recursive: bool = False) -> Any:
+        """Recover named views; recursive=True descends into undeclared child cells."""
         from pymhm.postprocessing.fields import solution_field
 
-        return solution_field(self, name)
+        return solution_field(self, name, recursive=recursive)
 
     def local_trace(self, index: int, *, test: bool = False) -> FloatArray:
         """Delegate trace recovery in the executed local basis, in assembly item order."""
@@ -152,7 +178,7 @@ class _CellRecord:
 class _Provider(Generic[Item]):
     """Compile a cell and all its finer levels entirely inside its worker."""
 
-    provider: Callable[[Item], LocalEquations | NestedEquations | CompiledLocalEquations]
+    provider: Callable[[Item], LocalEquations | NestedEquations | CompiledLocalEquations] | None
     compiler: FormCompiler
     solvers: SolverConfig
 
@@ -169,7 +195,7 @@ class _Provider(Generic[Item]):
 
     def __call__(self, item: Item) -> LocalAssembly:
         """Return one checked local operator with coefficient-only reconstruction data."""
-        supplied = self.provider(item)
+        supplied = cast(Callable[[Item], Any], self.provider)(item)
         child = None
         nested = None
         if isinstance(supplied, NestedEquations):
@@ -250,6 +276,8 @@ class MultiscaleSystem(HybridSystem):
     layout: GlobalForm
     solvers: SolverConfig
     cells: tuple[_CellRecord, ...]
+    global_load: FloatArray
+    global_matrix: Any
 
     @property
     def trace_bindings(self) -> tuple[Any, ...]:
@@ -285,6 +313,8 @@ def with_global_load(
     updated.responses = system.responses
     updated.local_metadata = system.local_metadata
     updated.layout, updated.solvers, updated.cells = (system.layout, system.solvers, system.cells)
+    updated.global_load = system.global_load + updated.rhs - system.rhs
+    updated.global_matrix = system.global_matrix
     return updated
 
 
@@ -441,6 +471,8 @@ def with_global_equation(
     updated.matrix.eliminate_zeros()
     updated.rhs = system.rhs + load
     updated.load_scale = system.load_scale + abs(load)
+    updated.global_load = system.global_load + load
+    updated.global_matrix = (system.global_matrix + sparse.csc_matrix(a)).tocsc()
     return updated
 
 
@@ -483,6 +515,8 @@ def assemble(
     system.__dict__.update(hybrid.__dict__)
     system.layout, system.solvers = layout, solvers
     system.cells = hybrid.local_metadata
+    system.global_load = np.zeros_like(system.rhs)
+    system.global_matrix = sparse.csc_matrix(system.matrix.shape)
     system.local_metadata = tuple(record.equations.metadata for record in system.cells)
     return with_global_equation(system, problem.global_equation, compiler=problem.compiler)
 

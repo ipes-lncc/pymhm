@@ -10,7 +10,7 @@ from examples.archive_precision import precision_fields, restore_precision
 from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
 from pymhm.materials.evaluation import tensor_values_3d
 from pymhm.meshes.polyhedral import PolyhedralMesh
-from pymhm.methods.hho_3d import MsHHO3DSolution
+from pymhm.postprocessing.solutions import MsHHO3DSolution
 
 
 def capture_section(

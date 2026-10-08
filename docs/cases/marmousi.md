@@ -263,21 +263,24 @@ Vertical markers show the $H=80$ m comparison-face intersections.
 
 ## Execution
 
-Download the two linked primary SEG-Y files into a data directory. The
-loader requires the verified files and does not download them implicitly.
-The following commands acquire and inspect the classical $P_1$ level:
+The importable `examples.marmousi_data.download_marmousi_data` helper acquires
+the two primary SEG-Y files at the stated URLs. It checks exact file size and
+SHA-256, reuses verified cached files and exposes each completed download
+atomically. The numerical loader continues to require verified local files.
+The following locked commands acquire and inspect the classical $P_1$ level:
 
 ~~~bash
-pixi run -e fem mpiexec -n 4 python -m examples.marmousi_reference \
+pixi run --locked -e notebooks python -m examples.marmousi_data --directory build/data/marmousi
+pixi run --locked -e fem mpiexec -n 4 python -m examples.marmousi_reference \
   --data build/data/marmousi --degree 1
-pixi run -e notebooks python -m examples.marmousi_fields \
+pixi run --locked -e notebooks python -m examples.marmousi_fields \
   examples/results/marmousi/classical-p1.json --data build/data/marmousi
 ~~~
 
 The MHM driver exposes the published macro/local configuration explicitly:
 
 ~~~bash
-pixi run -e notebooks python -m examples.marmousi_campaign \
+pixi run --locked -e notebooks python -m examples.marmousi_campaign \
   --data build/data/marmousi --H 20 --trace-degree 1 --workers 8
 ~~~
 
@@ -286,6 +289,24 @@ coefficients and dense local response maps. The trace-family driver can
 store these responses in independently verified batches and release them
 before the global factorization. Reconstruction reads the original response
 coefficients without changing precision, quadrature or the discrete operator.
+
+`pixi run --locked -e notebooks notebooks-run 72` executes the current full-crop
+physical problem with Q1 local fields and P0 conormal traces on a 32×8 macrogrid.
+It acquires both pinned primary datasets automatically, solves through the
+public local/global equations and compares two exact-pixel quadrature orders
+and the independently assembled original block system. This coarse
+configuration checks the current operator; its physical approximation accuracy
+is not established by a small residual or quadrature difference. The pinned
+data occupy approximately 310 MB and the measured two-order control takes about
+three minutes on the acquisition machine.
+
+`pixi run --locked -e notebooks notebooks-run 72 --study --plan` lists the complete
+current scientific acquisition: classical $P_1$ through $P_4$ references, the
+stated $H=20$ MHM configuration, norm comparisons and physical figures. Omitting
+`--plan` executes those complete producer stages. They use the same complete
+crop and point-source problem; their native factorizations require substantial
+RAM, disk and execution time. The archive budget can be specified with
+`--max-data-bytes`.
 Field records include material provenance, executed-source hashes,
 archive digests and original-equation residuals.
 
@@ -318,7 +339,7 @@ of the reuse procedure, not equality with the article's historical inputs.
 The corresponding command is
 
 ~~~bash
-pixi run -e intel python -m examples.marmousi_trace_family \
+pixi run --locked -e intel python -m examples.marmousi_trace_family \
   --data build/data/marmousi --H 20 --workers 8 --solver pypardiso \
   --response-store build/checkpoints/marmousi-H20 --response-batch-size 1024
 ~~~
@@ -333,7 +354,7 @@ complex equations. Omitting `--response-store` keeps the responses in memory.
 The archived fields and primary material data generate the gallery with
 
 ~~~bash
-pixi run -e notebooks python -m examples.plot_marmousi --data build/data/marmousi
+pixi run --locked -e notebooks python -m examples.plot_marmousi --data build/data/marmousi
 ~~~
 
 [Notebook 72](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/helmholtz/72_marmousi.ipynb)

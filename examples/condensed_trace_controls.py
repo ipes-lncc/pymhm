@@ -16,7 +16,7 @@ from pymhm.core.contracts import HybridSolution
 from pymhm.core.system import HybridSystem
 from pymhm.fem.traces.interval import SkeletonSpace
 from pymhm.linalg.linear import solve_linear
-from pymhm.methods.petrov_galerkin import PGMHMSolution
+from pymhm.postprocessing.solutions import PGMHMSolution
 
 
 def p0_injection(coarse: SkeletonSpace, fine: SkeletonSpace) -> sparse.csr_matrix:

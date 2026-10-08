@@ -337,7 +337,7 @@ precision; they are not a certified error bound.
 ## Inspect the records and redraw the figures
 
 ```sh
-pixi run -e notebooks gallery-spe10-flux
+pixi run --locked -e notebooks gallery-spe10-flux
 ```
 
 This command reads the archived fields and norms without executing the

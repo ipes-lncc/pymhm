@@ -82,7 +82,7 @@ constitutive law determines this mean.
 ```python
 import numpy as np
 from pymhm.meshes.mixed import AffineMixedMesh
-from pymhm._legacy.models.elasticity.stress_3d import solve_elasticity_mixed_3d
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed_3d
 
 solution = solve_elasticity_mixed_3d(
     AffineMixedMesh.unit_cube(2),
@@ -206,8 +206,8 @@ physical moment balances, the complementary-energy/body-work identity and
 process-spawn parity.
 
 ```bash
-pixi run -e notebooks python -m examples.solve_mixed_elasticity3d --workers 4
-pixi run -e notebooks python -m examples.plot_mixed_elasticity3d
+pixi run --locked -e notebooks python -m examples.solve_mixed_elasticity3d --workers 4
+pixi run --locked -e notebooks python -m examples.plot_mixed_elasticity3d
 ```
 
 Archives retain local stress/displacement/rotation coefficients, fine geometry,

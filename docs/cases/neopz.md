@@ -294,20 +294,25 @@ the imported restricted coefficients gives the $s=1$ field comparisons above.
 ## Inspect the archived comparison
 
 The executed C++ comparison driver is named **`neopz_rt0`**. It uses **NeoPZ**
-for finite element assembly and field evaluation. The distribution provides
-46 field archives, hashes, quadrature diagnostic results and complete JSON
-measurements; reference sources and comparison execution programs are not
-included. Render the archived results without installing NeoPZ:
+for finite element assembly and field evaluation. The checkout provides complete
+JSON measurements, field hashes and boundary-quadrature diagnostics. The original
+46 coefficient archives and instrumented external driver are not distributed.
+The standalone notebook assembles fresh RT0/P0 equations through the public API
+for the same five analytical physical cases and reports pressure, physical-flux
+and fine-cell equilibrium errors:
 
 ```sh
-pixi run -e notebooks gallery-neopz
+pixi run --locked -e notebooks notebooks-run 14
 ```
 
 Results are in `examples/results/neopz/comparison.json`; the boundary diagnostic
 is in `examples/results/neopz/boundary-quadrature.json`. Execution provenance
 records source and archive SHA-256 digests. The accompanying
-[notebook](../tutorials.md) loads all 46 results, displays these figures and
-checks the archived files' integrity without rerunning the solvers. The
+[notebook](../tutorials.md) reads the retained original provenance separately from
+its current analytical refinement. Selecting `--historical` additionally loads
+all 46 original coefficient archives, validates their recorded hashes and
+displays their comparison figures. This option requires the original payloads;
+newly solved fields do not recreate their acquisition identity. The
 recorded execution establishes agreement for the tested
 triangular RT0/P0 problems and trace restrictions. Higher-order spaces,
 three-dimensional elements, Neumann penalties and unchanged historical MHM

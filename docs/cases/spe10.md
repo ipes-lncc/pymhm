@@ -310,14 +310,14 @@ the separate Darcy experiment.
 ## Reproduce the data visualization
 
 ```bash
-pixi run -e notebooks python examples/plot_spe10_data.py --download
+pixi run --locked -e notebooks python -m examples.plot_spe10_data --download
 ```
 
 The download is explicit and checksum verified. To redraw the distributed
 slices without downloading the complete reservoir:
 
 ```bash
-pixi run -e notebooks python examples/plot_spe10_data.py --layers-only
+pixi run --locked -e notebooks python -m examples.plot_spe10_data --layers-only
 ```
 
 Use `pymhm.io.reservoir` for strict include-file reading and piecewise constant
@@ -328,9 +328,9 @@ indices, physical units, material extrema, source hashes and file provenance.
 To compute and redraw the Darcy comparison from the distributed layer:
 
 ```bash
-pixi run python -m examples.solve_spe10
-pixi run -e intel python -m examples.solve_spe10_reference --shape 768 1408 --order 5
-pixi run -e notebooks gallery-spe10-darcy
+pixi run --locked python -m examples.solve_spe10
+pixi run --locked -e intel python -m examples.solve_spe10_reference --shape 768 1408 --order 5
+pixi run --locked -e notebooks gallery-spe10-darcy
 ```
 
 The reference solve is optional for replaying the figures; its sampled fields,
@@ -339,9 +339,9 @@ profile and residual diagnostics are archived with the example results.
 For the declared 2017 Brinkman calculation and its integration check:
 
 ```bash
-pixi run -e notebooks python examples/solve_spe10_brinkman.py --stabilization pointwise-2017 --order 5 --output build/spe10-brinkman
-pixi run -e notebooks python examples/solve_spe10_brinkman.py --stabilization pointwise-2017 --order 8 --output build/spe10-brinkman
-pixi run -e notebooks gallery-spe10-brinkman
+pixi run --locked -e notebooks python -m examples.solve_spe10_brinkman --stabilization pointwise-2017 --order 5 --output build/spe10-brinkman
+pixi run --locked -e notebooks python -m examples.solve_spe10_brinkman --stabilization pointwise-2017 --order 8 --output build/spe10-brinkman
+pixi run --locked -e notebooks gallery-spe10-brinkman
 ```
 
 The first two commands write numerical records in the build directory.
@@ -351,9 +351,9 @@ For the independent conforming baseline, first verify the constant-drag
 patch and then double both mesh directions successively:
 
 ```bash
-pixi run -e fem python examples/solve_spe10_taylor_hood.py --patch --shape 12 22
-pixi run -e fem python examples/solve_spe10_taylor_hood.py --shape 60 220
-pixi run -e fem python examples/solve_spe10_taylor_hood.py --shape 120 440 --previous build/results/spe10/taylor-hood/taylor-hood-60x220.npz
+pixi run --locked -e fem python -m examples.solve_spe10_taylor_hood --patch --shape 12 22
+pixi run --locked -e fem python -m examples.solve_spe10_taylor_hood --shape 60 220
+pixi run --locked -e fem python -m examples.solve_spe10_taylor_hood --shape 120 440 --previous build/results/spe10/taylor-hood/taylor-hood-60x220.npz
 ```
 
 Continue with the mesh levels recorded in the refinement table, passing
@@ -365,8 +365,8 @@ independent integration check. Full coefficients are retained as build
 outputs, while display samples and diagnostics accompany the case.
 
 ```bash
-pixi run -e notebooks python examples/plot_spe10_taylor_hood.py --sample
-pixi run -e notebooks gallery-spe10-taylor-hood
+pixi run --locked -e notebooks python -m examples.plot_spe10_taylor_hood --sample
+pixi run --locked -e notebooks gallery-spe10-taylor-hood
 ```
 
 The first command refreshes display samples from the finest coefficient

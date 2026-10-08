@@ -326,10 +326,10 @@ mixed-boundary and pure-Neumann system against independent UFL assembly,
 including the auxiliary boundary pressure and physical volume gauge.
 
 ```bash
-pixi run -e notebooks python -m examples.mh_campaign --workers 8
-pixi run -e notebooks python -m examples.plot_mh
-pixi run -e notebooks python -m examples.mh_boundary_campaign
-pixi run -e notebooks python -m examples.plot_mh_boundary
+pixi run --locked -e notebooks python -m examples.mh_campaign --workers 8
+pixi run --locked -e notebooks python -m examples.plot_mh
+pixi run --locked -e notebooks python -m examples.mh_boundary_campaign
+pixi run --locked -e notebooks python -m examples.plot_mh_boundary
 ```
 
 The [numerical record](../figures/mh/comparison.json) includes dimensions,

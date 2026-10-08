@@ -7,6 +7,14 @@ pressures retain their independently stored macro traces.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import hashlib
 import json
 import textwrap
@@ -26,8 +34,8 @@ if __package__:
         source,
     )
 else:
-    from plot_pyvista_layout import horizontal_color_scale
-    from quarter_spot_problem import (
+    from examples.plot_pyvista_layout import horizontal_color_scale
+    from examples.quarter_spot_problem import (
         OBSTACLE_AREA,
         OBSTACLE_LOWER,
         OBSTACLE_UPPER,

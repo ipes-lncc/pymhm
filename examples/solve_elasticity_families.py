@@ -11,11 +11,11 @@ import json
 from pathlib import Path
 
 import numpy as np
-from elasticity_data import ElasticityData
 from threadpoolctl import threadpool_limits
 
+from examples.elasticity_data import ElasticityData
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
 from pymhm.fem.scalar.triangle import reference_basis
 from pymhm.io.provenance import current_source_manifest
 

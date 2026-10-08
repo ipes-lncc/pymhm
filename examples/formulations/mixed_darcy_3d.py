@@ -4,25 +4,28 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from functools import partial
+from itertools import product
 from typing import Any
 
 import numpy as np
 from scipy import sparse
 
-from pymhm._legacy.models.darcy._mixed import normal_flux_blocks
-from pymhm._legacy.models.darcy.hdiv_3d import (
-    Mixed3DDarcySolution,
-    Mixed3DSkeleton,
-    _boundary,
-    _trace_mapping,
-    hdiv3d_operators,
-)
 from pymhm.core.contracts import HybridSolution
 from pymhm.core.equations import Equation, LocalEquations, columns, rows
 from pymhm.core.multiscale import MultiscaleProblem, MultiscaleSystem
 from pymhm.core.validation import positive_int
 from pymhm.fem.hdiv.family_3d import HDiv3DFamily, face_size
+from pymhm.fem.hdiv.mixed import normal_flux_blocks
+from pymhm.fem.hdiv.mixed_3d import (
+    Mixed3DSkeleton,
+    hdiv3d_boundary_data,
+    hdiv3d_operators,
+    hdiv3d_trace_mapping,
+)
 from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_face_offsets
+from pymhm.postprocessing.modal import modal_field
+from pymhm.postprocessing.piola import hdiv_field
+from pymhm.postprocessing.solutions import Mixed3DDarcySolution
 
 
 @dataclass(frozen=True)
@@ -61,7 +64,7 @@ def local_equations(
     nq, npres = mass.shape[0], len(force)
     offsets = hdiv3d_face_offsets(fine, family)
     ids = np.concatenate([np.arange(offsets[f], offsets[f + 1]) for f in fine.boundary_faces])
-    mapping = _trace_mapping(skeleton, cell, fine, family.normal_degree)
+    mapping = hdiv3d_trace_mapping(skeleton, cell, fine, family.normal_degree)
     matrix, coupling, load = normal_flux_blocks(mass, divergence, force, ids, mapping)
     constant = np.zeros((len(fine.cells), family.pressure_size))
     constant[:, 0] = 1
@@ -86,6 +89,32 @@ def local_equations(
         kernel=kernel / scaling[:, None],
         moments=weights[:, None],
         metadata=((fine, nq, npres, scaling, weights), weights),
+        field_data=(
+            modal_field(
+                "pressure",
+                fine,
+                tuple(
+                    e
+                    for e in product(range(family.pressure_degree + 1), repeat=3)
+                    if (
+                        sum(e) <= family.pressure_degree
+                        if family.kind == "tetrahedron"
+                        else e[0] + e[1] <= family.pressure_degree
+                    )
+                ),
+                reconstruction=sparse.diags(scaling, format="csr")[nq : nq + npres],
+            ),
+            hdiv_field(
+                "flux", fine, family, reconstruction=sparse.diags(scaling, format="csr")[:nq]
+            ),
+            hdiv_field(
+                "flux_divergence",
+                fine,
+                family,
+                reconstruction=sparse.diags(scaling, format="csr")[:nq],
+                divergence=True,
+            ),
+        ),
     )
 
 
@@ -126,7 +155,7 @@ def define_hdiv_darcy(
         if boundary_quadrature_order is None
         else positive_int(boundary_quadrature_order, "boundary_quadrature_order")
     )
-    boundary, fixed = _boundary(skeleton, dirichlet, natural, boundary_order)
+    boundary, fixed = hdiv3d_boundary_data(skeleton, dirichlet, natural, boundary_order)
     provider = partial(
         local_equations,
         skeleton=skeleton,

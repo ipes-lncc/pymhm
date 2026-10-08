@@ -12,6 +12,7 @@ from matplotlib.ticker import MaxNLocator
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from threadpoolctl import threadpool_limits
 
+from examples.field_archive import load_trusted_field
 from examples.plot_mesh import draw_macro_mesh
 from examples.plot_style import set_refinement_ticks
 from examples.polygon_meshes import polygon_partition
@@ -149,21 +150,26 @@ def fields(row: dict[str, Any]) -> None:
             cut = section_grid(fine, refinement=5)
             if not len(cut["points"]):
                 continue
-            dofs, _ = tetra_nodal_space(fine, 4)
-            coefficient = archive[f"coefficients_{cell}"][dofs[cut["parents"]]]
-            basis, derivative = tetra_basis(4, cut["barycentric"])
-            scalar = np.einsum("qi,qi->q", basis, coefficient)
-            jacobian = (fine.points[fine.cells[:, 1:]] - fine.points[fine.cells[:, :1]]).transpose(
-                0, 2, 1
-            )
-            inverse = np.linalg.inv(jacobian)
-            bary_gradients = np.concatenate((-inverse.sum(axis=1)[:, None], inverse), axis=1)
-            gradient = np.einsum(
-                "qia,qi,qab->qb",
-                derivative,
-                coefficient,
-                bary_gradients[cut["parents"]],
-            )
+            recorded = load_trusted_field(archive, cell)
+            if recorded is None:
+                dofs, _ = tetra_nodal_space(fine, 4)
+                coefficient = archive[f"coefficients_{cell}"][dofs[cut["parents"]]]
+                basis, derivative = tetra_basis(4, cut["barycentric"])
+                scalar = np.einsum("qi,qi->q", basis, coefficient)
+                jacobian = (
+                    fine.points[fine.cells[:, 1:]] - fine.points[fine.cells[:, :1]]
+                ).transpose(0, 2, 1)
+                inverse = np.linalg.inv(jacobian)
+                bary_gradients = np.concatenate((-inverse.sum(axis=1)[:, None], inverse), axis=1)
+                gradient = np.einsum(
+                    "qia,qi,qab->qb",
+                    derivative,
+                    coefficient,
+                    bary_gradients[cut["parents"]],
+                )
+            else:
+                scalar = recorded.evaluate(cut["points"], cells=cut["parents"])
+                gradient = recorded.gradient(cut["points"], cells=cut["parents"])
             flux = -0.1 * gradient
             flux[:, 0] += scalar
             points.append(cut["points"])

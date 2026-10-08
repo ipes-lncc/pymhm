@@ -21,7 +21,7 @@ from pymhm.fem.reference import (
 from pymhm.meshes.hexahedron import HexMesh, _points
 
 
-def _modal(degree: int, points: FloatArray) -> FloatArray:
+def tensor_legendre_values(degree: int, points: FloatArray) -> FloatArray:
     """Evaluate tensor Legendre polynomials, with the last coordinate varying fastest."""
     tables = [legendre_values(2 * points[:, a] - 1, degree) for a in range(points.shape[1])]
     return np.column_stack(
@@ -46,7 +46,7 @@ def mapped_rt_dofs(mesh: HexMesh, degree: int) -> IntArray:
 
 
 @lru_cache(maxsize=8)
-def _reference_rt_map(degree: int) -> FloatArray:
+def mapped_reference_coefficients(degree: int) -> FloatArray:
     """Express declared hexahedral face lifts and bubble coefficients in native RT."""
     k = degree
     element = create_reference_element(
@@ -58,10 +58,10 @@ def _reference_rt_map(degree: int) -> FloatArray:
     normalizers = np.array([(2 * i + 1) * (2 * j + 1) for i, j in product(range(k + 1), repeat=2)])
     for side in range(6):
         axis, end = divmod(side, 2)
-        face = _modal(k, points[:, np.arange(3) != axis]) * normalizers
+        face = tensor_legendre_values(k, points[:, np.arange(3) != axis]) * normalizers
         indices = slice(side * count, (side + 1) * count)
         values[:, indices, axis] = (points[:, axis] - (1 - end))[:, None] * face
-    modal = _modal(k, points)
+    modal = tensor_legendre_values(k, points)
     offset = 6 * count
     for axis in range(3):
         for index in product(*(range(k) if a == axis else range(k + 1) for a in range(3))):
@@ -84,7 +84,7 @@ def mapped_rt_basis(
     count = (k + 1) ** 2
     width = 3 * (k + 2) * count
     native, native_divergence = vector_tabulation("RT", "hexahedron", k + 1, points)
-    transform = _reference_rt_map(k)
+    transform = mapped_reference_coefficients(k)
     local = np.einsum("qia,ij->qja", native, transform)
     local_divergence = native_divergence @ transform
     reference = np.broadcast_to(local, (len(mesh.cells), len(points), width, 3)).copy()
@@ -106,4 +106,8 @@ def mapped_rt_basis(
             * phase[:, None, :]
         )
     values = np.einsum("tqab,tqib->tqia", jacobian, reference) / determinant[:, :, None, None]
-    return values, divergence / determinant[:, :, None], _modal(k, points)
+    return values, divergence / determinant[:, :, None], tensor_legendre_values(k, points)
+
+
+_modal = tensor_legendre_values
+_reference_rt_map = mapped_reference_coefficients

@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -11,8 +19,8 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import mapped_darcy as solve_darcy_mapped_rt
 from examples.solve_mapped_well import WellData
-from pymhm._legacy.models.darcy.mapped import solve_darcy_mapped_rt
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.hexahedron import HexMesh
 

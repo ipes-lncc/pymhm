@@ -116,6 +116,25 @@ class BDMFamily:
         )
         return np.column_stack((edges, interior))
 
+    @property
+    def reference_coefficients(self) -> FloatArray:
+        """Return the executed native-BDM to normal/interior moment transform.
+
+        Rows follow the native Basix candidate basis; columns follow three face
+        blocks of retained normal degree and every complete interior bubble.
+        Persist this matrix together with the native coefficient matrix when
+        replaying physical coefficients across numerical-library versions.
+        """
+        degree = self.polynomial_degree
+        selected = np.r_[
+            np.concatenate([np.arange(self.degree + 1) + side * (degree + 1) for side in range(3)]),
+            np.arange(3 * (degree + 1), (degree + 1) * (degree + 2)),
+        ]
+        coefficients = _full_dual(degree)[:, selected]
+        result = np.array(coefficients, copy=True)
+        result.setflags(write=False)
+        return result
+
     def basis(self, mesh: TriangleMesh, barycentric: FloatArray) -> tuple[FloatArray, FloatArray]:
         """Evaluate Piola vector bases and divergence at common or cellwise points.
 
@@ -137,11 +156,7 @@ class BDMFamily:
                 "barycentric coordinates require finite shape (q,3) or (cells,q,3) and sum one"
             )
         degree = self.polynomial_degree
-        selected = np.r_[
-            np.concatenate([np.arange(self.degree + 1) + side * (degree + 1) for side in range(3)]),
-            np.arange(3 * (degree + 1), (degree + 1) * (degree + 2)),
-        ]
-        coefficients = _full_dual(degree)[:, selected]
+        coefficients = self.reference_coefficients
         cellwise = np.broadcast_to(bary, (len(mesh.cells), *bary.shape)) if bary.ndim == 2 else bary
         polynomial, derivative = _polynomials(cellwise.reshape(-1, 3)[:, 1:], degree)
         reference = np.einsum("qja,ji->qia", polynomial, coefficients).reshape(

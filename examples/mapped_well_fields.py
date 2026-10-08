@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 
 from pymhm.fem.hdiv.mapped import mapped_rt_basis, mapped_rt_dofs
-from pymhm.meshes.hexahedron import HexMesh, _geometry, cube_quadrature
+from pymhm.meshes.hexahedron import HexMesh, cube_quadrature, hexahedral_mapping
 
 
 @dataclass(frozen=True)
@@ -100,7 +100,7 @@ class MappedWellField:
             unit_basis, _, modal = mapped_rt_basis(HexMesh.unit_cube(), 1, reference)
         else:
             unit_basis, modal = tables
-        _, jacobian, determinant = _geometry(self.vertices[cells], reference)
+        _, jacobian, determinant = hexahedral_mapping(self.vertices[cells], reference)
         reference_flux = np.einsum("ti,qia->tqa", self.flux[cells], unit_basis[0], optimize=True)
         physical_flux = (
             np.einsum("tqab,tqb->tqa", jacobian, reference_flux) / determinant[..., None]
@@ -153,8 +153,8 @@ def difference(
             cp, cq = coarse.values(
                 coarse_ids[ids], coarse_points, tables=(coarse_basis, coarse_modal)
             )
-            x, _, det = _geometry(fine.vertices[fine_ids[ids]], fine_points)
-            cx = _geometry(coarse.vertices[coarse_ids[ids]], coarse_points)[0]
+            x, _, det = hexahedral_mapping(fine.vertices[fine_ids[ids]], fine_points)
+            cx = hexahedral_mapping(coarse.vertices[coarse_ids[ids]], coarse_points)[0]
             if not np.allclose(x, cx, rtol=0.0, atol=2e-12):
                 raise ValueError("field hierarchies have inconsistent physical geometry")
             physical_weights = det * weights / np.prod(fine_ratio)

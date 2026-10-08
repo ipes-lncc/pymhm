@@ -8,6 +8,14 @@ intersections with the upper incident side of the horizontal plane.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 from pathlib import Path

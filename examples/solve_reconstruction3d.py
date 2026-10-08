@@ -10,9 +10,9 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import tetrahedral_darcy as solve_darcy_3d
 from examples.reconstruction3d_data import fields
 from pymhm import TetraMesh
-from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
 from pymhm.adaptivity.darcy_3d import solve_adaptive_darcy_3d
 from pymhm.estimators.darcy_3d import estimate_darcy_error_3d
 from pymhm.io.provenance import current_source_manifest
@@ -162,7 +162,7 @@ def run(suite: str) -> None:
         (OUTPUT / f"{suite}.json").write_text(json.dumps(report, indent=2) + "\n")
         print(json.dumps(row), flush=True)
 
-    options = dict(
+    options: dict[str, Any] = dict(
         source=source,
         degree=3,
         local_refinement=2,
@@ -178,6 +178,7 @@ def run(suite: str) -> None:
             maximum_cells=6000,
             estimator_order=12,
             on_state=capture,
+            solve_step=solve_darcy_3d,
             **options,
         )
     else:

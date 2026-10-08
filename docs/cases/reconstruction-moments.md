@@ -51,7 +51,7 @@ does not establish those estimates.
 ```python
 import numpy as np
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.darcy.primal import solve_darcy
+from examples.formulations.application import darcy as solve_darcy
 from pymhm.recovery.moments import reconstruct_darcy_moments
 
 mesh = TriangleMesh.unit_square(4)
@@ -174,7 +174,7 @@ the paper also requires a conforming potential reconstruction, divergence
 correction and data oscillation terms with their assumptions.
 
 ```console
-pixi run -e notebooks python examples/plot_reconstruction_moments.py
+pixi run --locked -e notebooks python -m examples.plot_reconstruction_moments
 ```
 
 The [archived numerical records](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/reconstruction-moments.json)

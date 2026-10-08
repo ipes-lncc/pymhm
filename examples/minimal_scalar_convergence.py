@@ -23,11 +23,11 @@ from uuid import uuid4
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import transport as solve_transport
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.transport.solver import solve_transport
 from pymhm.core.system import HybridSystem
 from pymhm.io.provenance import current_source_manifest
-from pymhm.linalg.linear import _accurate_residual
+from pymhm.linalg.linear import accurate_residual
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES = ("mh", "mh2m", "tensor-rt", "polygons", "rad-layer", "transport-layer")
@@ -82,7 +82,7 @@ def hybrid_original(
         problem = response.problem
         traction = problem.coupling.astype(np.longdouble) @ solution.trace[problem.trace_dofs]
         load = np.asarray(problem.load, dtype=np.longdouble)
-        defect = _accurate_residual(problem.matrix.tocsr(), load - traction, field)
+        defect = accurate_residual(problem.matrix.tocsr(), load - traction, field)
         local.append(residual_record(defect, abs(load) + abs(traction)))
         action = problem.test_coupling.astype(np.longdouble).T @ field
         np.add.at(trace_action, problem.trace_dofs, action)
@@ -101,7 +101,7 @@ def hybrid_original(
     full = residual_record(np.array([full_norm]), np.array([np.sqrt(physical_rhs_squared)]))
     coefficients = np.concatenate((solution.trace, *solution.coarse))
     free = np.setdiff1d(np.arange(system.matrix.shape[0]), list(fixed))
-    defect = _accurate_residual(system.matrix.tocsr(), system.rhs, coefficients)[free]
+    defect = accurate_residual(system.matrix.tocsr(), system.rhs, coefficients)[free]
     scale = np.asarray(system.load_scale)[free]
     return {
         "local_original_rows": local,
@@ -123,7 +123,7 @@ def _mh2m_original(result: Any) -> dict:
         load = np.asarray(data.load, dtype=np.longdouble)
         local.append(
             residual_record(
-                _accurate_residual(data.stiffness.tocsr(), load + action, values),
+                accurate_residual(data.stiffness.tocsr(), load + action, values),
                 abs(load) + abs(action),
             )
         )
@@ -144,7 +144,7 @@ def _mh2m_original(result: Any) -> dict:
         + np.sum(weak[result.free_dofs] ** 2)
     )
     full = residual_record(np.array([full_norm]), np.array([np.sqrt(original_rhs_squared)]))
-    defect = _accurate_residual(result.matrix.tocsr(), result.rhs, result.trace)[result.free_dofs]
+    defect = accurate_residual(result.matrix.tocsr(), result.rhs, result.trace)[result.free_dofs]
     return {
         "local_original_rows": local,
         "pressure_trace_moments": moments,
@@ -165,7 +165,7 @@ def _acquire(case: str, variant: str, n: int) -> tuple[Any, dict, dict]:
     result: Any
     mesh: Any
     if case == "mh":
-        from pymhm.methods.robin import solve_mh
+        from examples.formulations.application import robin_diffusion as solve_mh
 
         data = importlib.import_module("examples.mh_campaign")
         mesh = TriangleMesh.unit_square(n) if variant == "triangles" else data.l_mesh(n)
@@ -195,7 +195,8 @@ def _acquire(case: str, variant: str, n: int) -> tuple[Any, dict, dict]:
             "assembly_order": 12,
         }
     elif case == "mh2m":
-        from pymhm.methods.three_field import PressureTraceSpace, solve_mh2m
+        from examples.formulations.application import three_field_diffusion as solve_mh2m
+        from pymhm.fem.traces.pressure_2d import PressureTraceSpace
 
         data = importlib.import_module("examples.mh2m_campaign")
         mesh = TriangleMesh.unit_square(n)
@@ -226,7 +227,7 @@ def _acquire(case: str, variant: str, n: int) -> tuple[Any, dict, dict]:
             "assembly_order": 8,
         }
     elif case == "tensor-rt":
-        from pymhm._legacy.models.darcy.tensor import solve_darcy_tensor_rt
+        from examples.formulations.application import tensor_darcy as solve_darcy_tensor_rt
         from pymhm.meshes.cartesian import CartesianMacroMesh
 
         data = importlib.import_module("examples.verify_tensor_rt")
@@ -259,7 +260,7 @@ def _acquire(case: str, variant: str, n: int) -> tuple[Any, dict, dict]:
             "multiplier": "physical globally oriented Darcy normal flux",
         }
     else:
-        from pymhm._legacy.models.geometry import solve_transport_polygons
+        from examples.formulations.application import transport as solve_transport_polygons
 
         polygon_partition = importlib.import_module("examples.polygon_meshes").polygon_partition
 

@@ -370,8 +370,8 @@ with and without complex PML coefficients. The PML and Hankel analytical data
 are also checked independently by differentiation.
 
 ```bash
-pixi run -e notebooks python -m examples.helmholtz_campaign --workers 8
-pixi run -e notebooks python -m examples.plot_helmholtz
+pixi run --locked -e notebooks python -m examples.helmholtz_campaign --workers 8
+pixi run --locked -e notebooks python -m examples.plot_helmholtz
 ```
 
 The [numerical records](../figures/helmholtz/comparison.json) declare the executed

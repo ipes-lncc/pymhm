@@ -37,8 +37,8 @@ if __package__:
         validate_case_provenance,
     )
 else:
-    from archive_precision import precision_fields, restore_precision
-    from verify_periodic import (
+    from examples.archive_precision import precision_fields, restore_precision
+    from examples.verify_periodic import (
         ROOT,
         case_conventions,
         fingerprint,
@@ -48,9 +48,9 @@ else:
         validate_case_provenance,
     )
 
+from examples.formulations.local_records import CartesianTask as _QuadTask
+from examples.formulations.local_records import assemble_cartesian_task as _assemble_quad
 from pymhm import FaceSpace, HybridSystem, SkeletonSpace
-from pymhm._legacy.models.darcy.cartesian import _assemble_quad, _QuadTask
-from pymhm._legacy.models.darcy.conforming import ConformingQuadrilateralSolution
 from pymhm.core.contracts import HybridSolution, LocalProblem
 from pymhm.core.refinement import (
     HybridRefinementCase,
@@ -59,8 +59,9 @@ from pymhm.core.refinement import (
 )
 from pymhm.core.subspaces import restrict_response
 from pymhm.core.validation import positive_int
-from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError, _accurate_residual
+from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError, accurate_residual
 from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.postprocessing.conforming import ConformingQuadrilateralSolution
 
 
 def array_digest(value: np.ndarray) -> str:
@@ -647,13 +648,13 @@ class PeriodicAcquisition:
                 ]
             )
             load = p.load.astype(np.longdouble)
-            forcing = _accurate_residual(
+            forcing = accurate_residual(
                 scipy.sparse.csr_matrix(p.coupling),
                 np.broadcast_to(load[:, None], pressure.shape),
                 trace,
             )
-            defects = _accurate_residual(p.matrix.tocsr(), forcing, pressure)
-            actions = -_accurate_residual(p.matrix.tocsr(), np.zeros_like(pressure), pressure)
+            defects = accurate_residual(p.matrix.tocsr(), forcing, pressure)
+            actions = -accurate_residual(p.matrix.tocsr(), np.zeros_like(pressure), pressure)
             for column, (s, (indices, injection)) in enumerate(
                 zip(solutions, local.trace_maps, strict=True)
             ):

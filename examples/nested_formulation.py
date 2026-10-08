@@ -22,6 +22,7 @@ from pymhm.fem.scalar.quadrilateral import (
 )
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.postprocessing.nodal import nodal_field
 
 
 @dataclass(frozen=True)
@@ -63,6 +64,7 @@ def leaf_equations(cell: int, *, data: DiffusionDiscretization) -> LocalEquation
         kernel=kernel,
         moments=mass @ kernel,
         metadata=(fine, np.asarray(mass @ kernel)[:, 0]),
+        field_data=(nodal_field("pressure", fine, data.degree),),
     )
 
 

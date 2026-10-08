@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -14,18 +22,16 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.campaign_checkpoint import require_sources, verify_checkpoint
-from pymhm._legacy.models.elasticity.mixed_pressure_3d import (
-    GaLS3DSolution,
-    solve_elasticity_gals_3d,
-)
-from pymhm._legacy.models.elasticity.primal_3d import solve_elasticity_3d
+from examples.formulations.application import herrmann_elasticity as solve_elasticity_gals_3d
+from examples.formulations.application import primal_elasticity as solve_elasticity_3d
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.postprocessing.solutions import GaLS3DSolution
 
 if __package__:
     from .gals3d_data import GaLS3DData
 else:
-    from gals3d_data import GaLS3DData
+    from examples.gals3d_data import GaLS3DData
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES = (("gals-p1", "gals", 1, 4), ("gals-p2", "gals", 2, 2), ("th-p2", "taylor-hood", 2, 2))

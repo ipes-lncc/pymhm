@@ -15,12 +15,13 @@ import numpy as np
 
 from examples.helmholtz_trace_family import verify_helmholtz_solution
 from examples.local_response_cache import array_identity, operator_identity
-from pymhm._legacy.models.waves.helmholtz import HelmholtzSolution, _HelmholtzFactory
+from examples.tutorial_helmholtz_equations import AcousticAssemblyProvider
 from pymhm.core.contracts import LocalResponse
 from pymhm.core.system import HybridSystem
 from pymhm.fem.scalar.helmholtz import complex_vector
 from pymhm.linalg.linear import LinearFactorization, factorize
 from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.postprocessing.acoustics import HelmholtzSolution
 
 
 class IncidentFamily:
@@ -60,7 +61,7 @@ class IncidentFamily:
             if np.finfo(prepared.hybrid.trace.dtype).eps < np.finfo(float).eps
             else "double"
         )
-        self.factory = _HelmholtzFactory(
+        self.factory = AcousticAssemblyProvider(
             mesh,
             prepared.skeleton,
             prepared.omega,

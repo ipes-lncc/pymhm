@@ -8,6 +8,14 @@ the display triangulation is not used for integration.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -19,10 +27,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pyvista as pv
 from matplotlib.ticker import NullFormatter
-from plot_mesh import mark_macro_interfaces
-from plot_spe10_data import FIGURES, OUTPUT, ROOT, panel
-from solve_spe10_taylor_hood import load_field
 
+from examples.plot_mesh import mark_macro_interfaces
+from examples.plot_spe10_data import FIGURES, OUTPUT, ROOT, panel
+from examples.solve_spe10_taylor_hood import load_field
 from pymhm import TriangleMesh
 from pymhm.postprocessing.visualization import broken_triangle_grid
 

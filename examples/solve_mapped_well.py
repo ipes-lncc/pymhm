@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm._legacy.models.darcy.mapped import solve_darcy_mapped_rt
+from examples.formulations.application import mapped_darcy as solve_darcy_mapped_rt
 from pymhm.fem.hdiv.mapped import mapped_rt_dofs
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.hexahedron import HexMesh, cube_quadrature

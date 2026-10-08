@@ -10,7 +10,16 @@
         "cross-family convergence catalogue"
       ],
       "id": 73,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 73",
+        "current_study_command": null,
+        "current_study_steps": [],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 73 --historical",
+        "limitation": "Scalar JSON observations and their original source attribution are versioned and can be rendered standalone. Original figure payload identities require the supplied historical assets; rendering scalar records does not execute the underlying PDE acquisitions."
+      }
     },
     {
       "path": "notebooks/darcy/hybrid_methods.ipynb",
@@ -33,7 +42,14 @@
         "mshho3d",
         "mshho-face",
         "pgmhm"
-      ]
+      ],
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run darcy/hybrid_methods.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/darcy/mixed_hdiv.ipynb",
@@ -60,7 +76,14 @@
         "hdiv-tetra",
         "hdiv-tetra-plus",
         "hdiv-prism"
-      ]
+      ],
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run darcy/mixed_hdiv.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/darcy/primal_galerkin.ipynb",
@@ -79,7 +102,14 @@
         "primal-neumann",
         "primal-rectangle",
         "primal3d"
-      ]
+      ],
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run darcy/primal_galerkin.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/darcy/01_darcy_convergence.ipynb",
@@ -90,7 +120,14 @@
         "mixed RT0/P0 MHM"
       ],
       "id": 1,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 01",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/darcy/02_heterogeneous_darcy.ipynb",
@@ -101,7 +138,14 @@
         "heterogeneous permeability"
       ],
       "id": 2,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 02",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/darcy/03_skeleton_hp.ipynb",
@@ -112,7 +156,14 @@
         "independent hp face traces"
       ],
       "id": 3,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 03",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/darcy/04_mixed_and_reconstructed_flux.ipynb",
@@ -124,7 +175,14 @@
         "equilibrated H(div) flux"
       ],
       "id": 4,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 04",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/darcy/11_published_darcy_2013.ipynb",
@@ -135,18 +193,36 @@
         "mixed RT0/P0 MHM"
       ],
       "id": 11,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 11",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 11 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.plot_reproductions"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/14_neopz_hdiv_comparison.ipynb",
       "family": "darcy",
-      "title": "NeoPZ H(div): archived comparison results",
+      "title": "RT0/P0 Darcy equations and attributed NeoPZ comparisons",
       "methods": [
         "RT H(div) MHM",
         "restricted NeoPZ reference"
       ],
       "id": 14,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 14",
+        "current_study_command": null,
+        "current_study_steps": [],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 14 --historical",
+        "limitation": "The archived NeoPZ RT0 comparison records identify reference revision 4c6b6d277ce097b97bfc8dea1b6725860f4fe05a and a private instrumented driver. The original field archives are not published with the checkout or release; fresh PyMHM/native-reference controls are separate calculations."
+      }
     },
     {
       "path": "notebooks/darcy/17_darcy_bdm.ipynb",
@@ -156,7 +232,16 @@
         "BDM2/P1 mixed Darcy MHM"
       ],
       "id": 17,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 17",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 17 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.plot_darcy_bdm"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/18_reconstruction_moments.ipynb",
@@ -167,7 +252,16 @@
         "RT moment reconstruction"
       ],
       "id": 18,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 18",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 18 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.plot_reconstruction_moments"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/20_darcy_estimator.ipynb",
@@ -179,7 +273,16 @@
         "energy estimator"
       ],
       "id": 20,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 20",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 20 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.plot_estimator"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/21_spe10_pyvista.ipynb",
@@ -190,7 +293,17 @@
         "PyVista visualization"
       ],
       "id": 21,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 21",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 21 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.plot_spe10_data --download"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 21 --historical"
+      }
     },
     {
       "path": "notebooks/darcy/22_quarter_five_spot.ipynb",
@@ -201,7 +314,20 @@
         "mixed RT0/P0 MHM"
       ],
       "id": 22,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 22",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 22 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.plot_quarter_spot --stage all --macro 32 --output 'build/results/quarter-points-{acquisition}'",
+          "pixi run --locked -e notebooks python -m examples.solve_quarter_obstacle --refinements 4 8 16 --segments 1 2 4 --formulations primal mixed --output 'build/results/quarter-obstacle-{acquisition}' --workers 1 --native-threads 1"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 22 --historical",
+        "resources": "Complete 2048-macrotriangle point-well case and homogeneous/layered variants; point-series refinement and obstacle P2/RT0 local refinements4/8/16 with trace segments1/2/4. External original obstacle comparisons are separate historical inputs.",
+        "limitation": "The public complete point-well/Green-series and fixed-macro square-obstacle acquisitions execute in fresh output directories. Original independently acquired MSL/NeoPZ obstacle and classical-reference coefficients require the attributed external payloads; their instrumented comparison sources are not distributed."
+      }
     },
     {
       "path": "notebooks/darcy/23_spe10_mhm_comparison.ipynb",
@@ -212,7 +338,31 @@
         "USFEM Brinkman"
       ],
       "id": 23,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 23",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 23 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_spe10 --force --refinements 40 60 80 100 120 128 --segments 8 16 32 --degree 1 --order 3",
+          "pixi run --locked -e intel python -m examples.solve_spe10_reference --shape 120 220 --order 5",
+          "pixi run --locked -e intel python -m examples.solve_spe10_reference --shape 240 440 --order 6",
+          "pixi run --locked -e intel python -m examples.solve_spe10_reference --shape 480 880 --order 6",
+          "pixi run --locked -e intel python -m examples.solve_spe10_reference --shape 768 1408 --order 5",
+          "pixi run --locked -e intel python -m examples.solve_spe10_reference --shape 960 1760 --order 5",
+          "pixi run --locked -e notebooks python -m examples.solve_spe10_brinkman --degree 3 --refinement 10 --segments 10 --order 5 --stabilization pointwise-2017 --output 'build/results/spe10-brinkman-{acquisition}'",
+          "pixi run --locked -e notebooks python -m examples.solve_spe10_brinkman --degree 3 --refinement 10 --segments 10 --order 8 --stabilization pointwise-2017 --output 'build/results/spe10-brinkman-{acquisition}'",
+          "pixi run --locked -e fem python -m examples.solve_spe10_taylor_hood --shape 60 220",
+          "pixi run --locked -e fem python -m examples.solve_spe10_taylor_hood --shape 120 440",
+          "pixi run --locked -e fem python -m examples.solve_spe10_taylor_hood --shape 240 880",
+          "pixi run --locked -e fem python -m examples.solve_spe10_taylor_hood --shape 480 1760",
+          "pixi run --locked -e fem python -m examples.solve_spe10_taylor_hood --shape 960 3520"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 23 --historical",
+        "resources": "Complete SPE10 layer36 Q1/continuous-P1 Darcy local/trace refinement and independent Q3 references; layer1 P3/P3 Brinkman and independent Taylor-Hood refinements. High-resolution references need large native sparse factorizations and substantial RAM/storage.",
+        "limitation": "The complete SPE10 comparison includes historical MSL/NeoPZ fields, high-resolution classical references and attributed article rasters; original external comparison payloads are not distributed."
+      }
     },
     {
       "path": "notebooks/darcy/24_mshho.ipynb",
@@ -223,7 +373,16 @@
         "MsHHO"
       ],
       "id": 24,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 24",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 24 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.verify_mshho --output 'build/results/mshho-{acquisition}'"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/25_tensor_rt.ipynb",
@@ -233,7 +392,16 @@
         "rectangular RT mixed MHM"
       ],
       "id": 25,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 25",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 25 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.verify_tensor_rt"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/29_darcy3d.ipynb",
@@ -243,7 +411,17 @@
         "tetrahedral primal MHM"
       ],
       "id": 29,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 29",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 29 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_darcy3d",
+          "pixi run --locked -e notebooks python -m examples.plot_darcy3d"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/30_polygonal_macro_meshes.ipynb",
@@ -253,7 +431,16 @@
         "polygonal primal MHM"
       ],
       "id": 30,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 30",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 30 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.verify_polygons"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/31_weighted_energy_estimator.ipynb",
@@ -264,7 +451,16 @@
         "material-weighted energy estimator"
       ],
       "id": 31,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 31",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 31 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.verify_weighted_estimator"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/33_darcy_rt.ipynb",
@@ -276,7 +472,17 @@
         "RT2"
       ],
       "id": 33,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 33",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 33 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_darcy_rt",
+          "pixi run --locked -e notebooks python -m examples.plot_darcy_rt"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/36_recursive_mhm.ipynb",
@@ -288,7 +494,19 @@
         "direct leaf-space MHM"
       ],
       "id": 36,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 36",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 36 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.verify_nested --levels 1 2 4 8 16 --boundary both --output 'build/results/nested-{acquisition}'"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 36 --historical",
+        "resources": "All ten homogeneous/nonhomogeneous nested Q2/P1 acquisitions, levels1/2/4/8/16, original-equation and flat-space comparisons, physical pressure/gradient errors and generated current figures.",
+        "limitation": "The published recursive-MHM archive refers to an independent private native-verification record. Public verify_nested.py performs a fresh analytical acquisition, which has its own provenance and record format."
+      }
     },
     {
       "path": "notebooks/darcy/37_periodic_darcy.ipynb",
@@ -298,7 +516,24 @@
         "periodic quadrilateral MHM"
       ],
       "id": 37,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 37",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 37 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.periodic_reference --degree 1 --order 4 --sizes 512 1024 2048 4096 --artifacts 'build/results/periodic-{acquisition}/fields' --records 'build/results/periodic-{acquisition}/records'",
+          "pixi run --locked -e notebooks python -m examples.verify_periodic --macro 8 --local-refinement 128 --segments 1 2 4 8 16 32 --stage all --native-threads 1 --refinement-precision extended --original-refinement-steps 2 --artifacts 'build/results/periodic-{acquisition}/fields' --output 'build/results/periodic-{acquisition}/records/periodic-r128.json'",
+          "pixi run --locked -e notebooks python -m examples.verify_periodic --macro 8 --local-refinement 256 --segments 1 2 4 8 16 32 --stage all --native-threads 1 --refinement-precision extended --original-refinement-steps 2 --artifacts 'build/results/periodic-{acquisition}/fields' --output 'build/results/periodic-{acquisition}/records/periodic-r256.json'",
+          "pixi run --locked -e notebooks python -m examples.verify_periodic --macro 8 --local-refinement 512 --segments 1 2 4 8 16 32 --stage all --native-threads 1 --refinement-precision extended --original-refinement-steps 2 --artifacts 'build/results/periodic-{acquisition}/fields' --output 'build/results/periodic-{acquisition}/records/periodic-r512.json'",
+          "pixi run --locked -e notebooks python -m examples.compare_periodic --reference 1:4096:4 --compare-references 1:512:4 1:1024:4 1:2048:4 --refinements 128 256 512 --primary --artifacts 'build/results/periodic-{acquisition}/fields' --reference-records 'build/results/periodic-{acquisition}/records' --output 'build/results/periodic-{acquisition}/records/periodic-comparison.json'",
+          "pixi run --locked -e notebooks python -m examples.plot_periodic --reference 1:4096:4 --local-refinement 512 --artifacts 'build/results/periodic-{acquisition}/fields' --records 'build/results/periodic-{acquisition}/records' --comparison 'build/results/periodic-{acquisition}/records/periodic-comparison.json' --output 'build/results/periodic-{acquisition}/figures'"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 37 --historical",
+        "resources": "Full periodic case: fixed 8x8 macro mesh, r128/r256/r512 locals and Q1 references up to4096x4096. Requires extended coefficient precision and substantial RAM/storage.",
+        "limitation": "Retained original streamed native-verification and acquisition identities require their original payloads. The public current study acquires new periodic Q1/P0 fields, independent conforming refinements and stated physical norms."
+      }
     },
     {
       "path": "notebooks/darcy/38_unfitted_darcy.ipynb",
@@ -309,7 +544,29 @@
         "independent skeletal partitions"
       ],
       "id": 38,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 38",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 38 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.unfitted_campaign --collect --fit-locals --refinement 4",
+          "pixi run --locked -e notebooks python -m examples.unfitted_campaign --collect --fit-locals --refinement 8",
+          "pixi run --locked -e notebooks python -m examples.unfitted_campaign --collect --fit-locals --refinement 16",
+          "pixi run --locked -e notebooks python -m examples.unfitted_campaign --collect --refinement 8",
+          "pixi run --locked -e notebooks python -m examples.unfitted_campaign --collect --refinement 16",
+          "pixi run --locked -e notebooks python -m examples.unfitted_convergence --study smooth --refinement 16 --degree 8 --maximum-segments 32 --output 'build/results/unfitted-{acquisition}/convergence'",
+          "pixi run --locked -e notebooks python -m examples.unfitted_convergence --study smooth --refinement 24 --degree 8 --maximum-segments 32 --output 'build/results/unfitted-{acquisition}/convergence'",
+          "pixi run --locked -e notebooks python -m examples.unfitted_convergence --study smooth --refinement 32 --degree 8 --maximum-segments 32 --output 'build/results/unfitted-{acquisition}/convergence'",
+          "pixi run --locked -e notebooks python -m examples.unfitted_convergence --study smooth --refinement 64 --degree 8 --maximum-segments 32 --output 'build/results/unfitted-{acquisition}/convergence'",
+          "pixi run --locked -e notebooks python -m examples.unfitted_convergence --study contrast --refinement 8 --degree 4 --contrasts 10 100 1000 10000 100000 1000000 --output 'build/results/unfitted-{acquisition}/convergence'",
+          "pixi run --locked -e notebooks python -m examples.unfitted_convergence --study contrast --refinement 16 --degree 4 --contrasts 10 100 1000 10000 100000 1000000 --output 'build/results/unfitted-{acquisition}/convergence'"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 38 --historical",
+        "resources": "P4 local transmission studies r4/8/16; full P8 smooth hp studies r16/24/32/64 and maximum32segments, plus P4 contrasts10 through1e6 at r8/r16. High-degree local matrices and endpoint campaigns require substantial RAM and time.",
+        "limitation": "The public S0/S1/S2 transmission problem, material-fitted/unfitted local studies, complete smooth hp sweeps and contrast sweeps have fresh acquisition recipes. Original independent MSL and instrumented native verification fields retain separate external provenance and require their original payloads."
+      }
     },
     {
       "path": "notebooks/darcy/39_adaptive_darcy.ipynb",
@@ -320,7 +577,16 @@
         "weighted energy estimator"
       ],
       "id": 39,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 39",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 39 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.adaptive_darcy_campaign --collect"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/40_spe10_adaptive.ipynb",
@@ -331,7 +597,24 @@
         "classical RT2/P2 reference"
       ],
       "id": 40,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 40",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 40 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.spe10_adaptive_aligned --resolutions 15 30 60 120",
+          "pixi run --locked -e intel python -m examples.spe10_adaptive_aligned --resolutions 240 --solver pypardiso --previous-archive examples/results/spe10-adaptive/reference-rt2-120x440.npz",
+          "pixi run --locked -e intel python -m examples.spe10_adaptive_aligned --resolutions 480 --solver pypardiso --previous-archive examples/results/spe10-adaptive/reference-rt2-240x880.npz",
+          "pixi run --locked -e remeshing python -m examples.solve_spe10_published --levels 24 --target-cells 3786 --executable FreeFem++-nw --output 'build/results/spe10-adaptive-{acquisition}/published'",
+          "pixi run --locked -e notebooks python -m examples.spe10_adaptive_norms --data 'build/results/spe10-adaptive-{acquisition}/published' --reference examples/results/spe10-adaptive/reference-rt2-480x1760.npz --order 4",
+          "pixi run --locked -e notebooks python -m examples.plot_spe10_adaptive --data 'build/results/spe10-adaptive-{acquisition}/published' --output 'build/figures/spe10-adaptive-{acquisition}'"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 40 --historical",
+        "resources": "Complete P2/four-local-triangle/P0 adaptive sequence through the published mesh budget, FreeFEM/BAMG locked profile, and classical RT2 references through480x1760 fine squares. Largest measured reference peak memory exceeds100GiB; inspect full commands before execution.",
+        "limitation": "The complete public layer36 adaptive P2/P0/RT2 study uses the documented FreeFEM/BAMG metric and new connectivity, with independently refined RT2/P2 references. The original six-argument remeshing wrapper and historical connectivity are not published; the current acquisition does not claim identical historical macro meshes or hashes."
+      }
     },
     {
       "path": "notebooks/darcy/42_darcy_jump_estimator.ipynb",
@@ -342,7 +625,16 @@
         "pressure jump indicator"
       ],
       "id": 42,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 42",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 42 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.darcy_jump_campaign --collect"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/43_analytical_darcy.ipynb",
@@ -352,7 +644,18 @@
         "analytical local Darcy MHM"
       ],
       "id": 43,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 43",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 43 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.verify_analytic"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 43 --historical",
+        "limitation": "The current analytical Neumann problem executes directly with its physical mean-pressure gauge. The full public analytical acquisition is available through --study. Exact original archived field/figure identities require their original historical payloads."
+      }
     },
     {
       "path": "notebooks/darcy/44_mapped_well.ipynb",
@@ -362,7 +665,24 @@
         "mapped hexahedral RT1 MHM"
       ],
       "id": 44,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 44",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 44 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 8 --macro-factor 1",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 8 --macro-factor 2",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 8 --macro-factor 4",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 8 --macro-factor 8",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 1 --macro-factor 1",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 2 --macro-factor 2",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 3 --macro-factor 3",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_well --fine-factor 4 --macro-factor 4",
+          "pixi run --locked -e notebooks python -m examples.plot_mapped_well"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/47_mapped_oscillatory_well.ipynb",
@@ -372,7 +692,40 @@
         "mapped hexahedral RT1 MHM"
       ],
       "id": 47,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 47",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 47 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 1 --quadrature-xy 20 --quadrature-z 10",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 1 --quadrature-xy 28 --quadrature-z 10",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 1 --quadrature-xy 40 --quadrature-z 10",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 2 --quadrature-xy 40 --quadrature-z 10",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 4 --quadrature-xy 40 --quadrature-z 10",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 16 --macro-factor 4 --quadrature-xy 28 --quadrature-z 10",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 16 --macro-factor 4 --quadrature-xy 40 --quadrature-z 10",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_oscillatory_well --fine-factor 8 --macro-factor 2 --quadrature-xy 40 --quadrature-z 10 --classical",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_well_classical --fine-factor 2 --quadrature-xy 20 --quadrature-z 10",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_well_classical --fine-factor 8 --quadrature-xy 40 --quadrature-z 10",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_well_classical --fine-factor 16 --quadrature-xy 20 --quadrature-z 10",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_well_classical --fine-factor 32 --quadrature-xy 10 --quadrature-z 10",
+          "pixi run --locked -e notebooks python -m examples.solve_mapped_well_classical --fine-factor 32 --quadrature-xy 20 --quadrature-z 10",
+          "pixi run --locked -e fem python -m examples.solve_mapped_well_invariant --fine-factor 2 --quadrature-xy 20 --solver petsc",
+          "pixi run --locked -e fem python -m examples.solve_mapped_well_invariant --fine-factor 8 --quadrature-xy 40 --solver petsc",
+          "pixi run --locked -e fem python -m examples.solve_mapped_well_invariant --fine-factor 16 --quadrature-xy 40 --solver petsc",
+          "pixi run --locked -e fem python -m examples.solve_mapped_well_invariant --fine-factor 32 --quadrature-xy 20 --solver petsc",
+          "pixi run --locked -e fem python -m examples.solve_mapped_well_invariant --fine-factor 64 --quadrature-xy 10 --solver petsc",
+          "pixi run --locked -e fem python -m examples.solve_mapped_well_invariant --fine-factor 64 --quadrature-xy 14 --solver petsc",
+          "pixi run --locked -e fem python -m examples.solve_mapped_well_invariant --fine-factor 128 --quadrature-xy 8 --solver petsc",
+          "pixi run --locked -e notebooks python -m examples.compare_mapped_well",
+          "pixi run --locked -e notebooks python -m examples.plot_mapped_oscillatory_well"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 47 --historical",
+        "resources": "Full producing-well geometry and oscillatory tensor material; fine factors through128, three-dimensional RT1/Q1 fields and separate quadrature checks. Native PETSc/MUMPS and substantial RAM/storage are required for the fine invariant reference.",
+        "limitation": "Original native-discrete verification coefficients and attributed external reference acquisitions are historical inputs. Fresh public Piola RT1 equations, full/invariant classical refinements and physical norm comparisons have their own executed provenance."
+      }
     },
     {
       "path": "notebooks/darcy/51_mixed_well_geometries.ipynb",
@@ -382,7 +735,34 @@
         "tetrahedral and prismatic H(div) Darcy MHM"
       ],
       "id": 51,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 51",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 51 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 1 --macro-factor 1",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 2 --macro-factor 1",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 2 --macro-factor 2",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 4 --macro-factor 1",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 4 --macro-factor 2",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind prism --pressure-degree 1 --fine-factor 4 --macro-factor 4",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 1 --macro-factor 1",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 2 --macro-factor 1",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 2 --macro-factor 2",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 4 --macro-factor 1",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 4 --macro-factor 2",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 1 --fine-factor 4 --macro-factor 4",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 1 --macro-factor 1",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 2 --macro-factor 1",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 2 --macro-factor 2",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 4 --macro-factor 1",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 4 --macro-factor 2",
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 4 --macro-factor 4",
+          "pixi run --locked -e notebooks python -m examples.plot_mixed_well_geometries"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/52_mh2m.ipynb",
@@ -392,7 +772,18 @@
         "three-field MH2M"
       ],
       "id": 52,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 52",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 52 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.mh2m_campaign",
+          "pixi run --locked -e notebooks python -m examples.mh2m_trace_campaign",
+          "pixi run --locked -e notebooks python -m examples.plot_mh2m"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/56_mh.ipynb",
@@ -402,7 +793,17 @@
         "Robin-local Multiscale Hybrid (MH)"
       ],
       "id": 56,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 56",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 56 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.mh_campaign",
+          "pixi run --locked -e notebooks python -m examples.plot_mh"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/58_reconstruction3d.ipynb",
@@ -414,7 +815,20 @@
         "energy estimator"
       ],
       "id": 58,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 58",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 58 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_reconstruction3d uniform",
+          "pixi run --locked -e notebooks python -m examples.solve_reconstruction3d adaptive",
+          "pixi run --locked -e notebooks python -m examples.reconstruction3d_resolution",
+          "pixi run --locked -e notebooks python -m examples.reconstruction3d_rt_order",
+          "pixi run --locked -e notebooks python -m examples.plot_reconstruction3d"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/59_pgmhm.ipynb",
@@ -424,7 +838,19 @@
         "Petrov-Galerkin MHM"
       ],
       "id": 59,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 59",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 59 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.pgmhm_campaign",
+          "pixi run --locked -e notebooks python -m examples.plot_pgmhm"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 59 --historical",
+        "limitation": "The public complete smooth PGMHM macro/trace campaign is declared as the current study. Original independent inclusion/SPE10 reference acquisitions and attributed article pixels require the original historical payloads; no matched historical field identity is claimed by the new smooth campaign."
+      }
     },
     {
       "path": "notebooks/darcy/63_planar3d.ipynb",
@@ -436,7 +862,17 @@
         "RT reconstruction"
       ],
       "id": 63,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 63",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 63 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_planar3d",
+          "pixi run --locked -e notebooks python -m examples.plot_planar3d"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/64_tetra_pk.ipynb",
@@ -447,7 +883,19 @@
         "P5/P2 error estimation"
       ],
       "id": 64,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 64",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 64 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_tetra_pk uniform",
+          "pixi run --locked -e notebooks python -m examples.solve_tetra_pk fixed",
+          "pixi run --locked -e notebooks python -m examples.tetra_pk_reconstruction",
+          "pixi run --locked -e notebooks python -m examples.plot_tetra_pk"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/65_mh_boundary.ipynb",
@@ -459,7 +907,17 @@
         "physical Neumann data"
       ],
       "id": 65,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 65",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 65 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.mh_boundary_campaign",
+          "pixi run --locked -e notebooks python -m examples.plot_mh_boundary"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/69_mh3d.ipynb",
@@ -470,7 +928,17 @@
         "tetrahedral MH2M"
       ],
       "id": 69,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 69",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 69 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.mh3d_campaign",
+          "pixi run --locked -e notebooks python -m examples.plot_mh3d"
+        ]
+      }
     },
     {
       "path": "notebooks/darcy/70_mh2m_heterogeneous.ipynb",
@@ -481,7 +949,24 @@
         "independent pressure and conormal traces"
       ],
       "id": 70,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 70",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 70 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.mh2m_heterogeneous --output 'build/results/mh2m-{acquisition}' --references 32 64 128 256 512 1024 --resolutions 4 8 16 32 64 --norm-workers 8",
+          "pixi run --locked -e fem python -m examples.mh2m_cg_reference --sizes 32 64 128 256 512 --order 16 --output 'build/results/mh2m-{acquisition}/cg3'",
+          "pixi run --locked -e fem python -m examples.mh2m_cg_reference --sizes 512 --order 12 --output 'build/results/mh2m-{acquisition}/cg3'",
+          "pixi run --locked -e notebooks python -m examples.compare_mh2m_cg3 --data 'build/results/mh2m-{acquisition}' --sizes 32 64 128 256 512 --assembly-order 16 --quadrature-control 12 --orders 8 10 --workers 4",
+          "pixi run --locked -e notebooks python -m examples.compare_mh2m_cg3_controls --data 'build/results/mh2m-{acquisition}' --workers 2",
+          "pixi run --locked -e notebooks python -m examples.mh2m_crisscross_campaign --output 'build/results/mh2m-{acquisition}/crisscross' --reference-data 'build/results/mh2m-{acquisition}' --stage all --norm-workers 2"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 70 --historical",
+        "resources": "Complete unchanged oscillatory permeability/source case: diagonal and recovered crisscross MHM/MH2M campaigns, independent conforming P1 through1024 and native P3 through512, assembly/error quadrature controls. New output directories preserve the original attributed acquisitions.",
+        "limitation": "The full heterogeneous MH2M campaign includes independent high-resolution P1/P3 references, quadrature controls, native verification and article rasters. All stages must be acquired consistently before archive replay."
+      }
     },
     {
       "path": "notebooks/darcy/74_continuous_macrofaces3d.ipynb",
@@ -493,7 +978,14 @@
         "mixed continuity and independent face degrees"
       ],
       "id": 74,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 74",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/elasticity/introductory_methods.ipynb",
@@ -518,7 +1010,17 @@
         "elasticity-bdm-3d",
         "elasticity-rt-2d",
         "elasticity-rt-plus-2d"
-      ]
+      ],
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run elasticity/introductory_methods.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/elasticity/07_elasticity.ipynb",
@@ -529,18 +1031,36 @@
         "GaLS elasticity MHM"
       ],
       "id": 7,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 07",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 07 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.plot_elasticity"
+        ]
+      }
     },
     {
       "path": "notebooks/elasticity/15_elasticity_reference.ipynb",
       "family": "elasticity",
-      "title": "Independent MSL GaLS elasticity fields",
+      "title": "GaLS elasticity equations and attributed MSL comparisons",
       "methods": [
         "GaLS elasticity MHM",
         "independent MSL reference"
       ],
       "id": 15,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 15",
+        "current_study_command": null,
+        "current_study_steps": [],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 15 --historical",
+        "limitation": "The archived MSL GaLS comparison uses external reference adapters and revisions recorded in elasticity-reference.json. Seven original coefficient archives are not published with the checkout; reproducing their historical checksums requires those original archives."
+      }
     },
     {
       "path": "notebooks/elasticity/16_mixed_elasticity.ipynb",
@@ -550,7 +1070,17 @@
         "weak-symmetry H(div) elasticity MHM"
       ],
       "id": 16,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 16",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 16 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.plot_mixed_elasticity"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 16 --historical"
+      }
     },
     {
       "path": "notebooks/elasticity/28_mixed_elasticity_families.ipynb",
@@ -562,7 +1092,19 @@
         "BDM-double-plus"
       ],
       "id": 28,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 28",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 28 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_elasticity_families --degree 1 --enrichment 2",
+          "pixi run --locked -e notebooks python -m examples.solve_elasticity_families --degree 2 --enrichment 1",
+          "pixi run --locked -e notebooks python -m examples.solve_elasticity_families --degree 3 --enrichment 0",
+          "pixi run --locked -e notebooks python -m examples.plot_elasticity_families"
+        ]
+      }
     },
     {
       "path": "notebooks/elasticity/32_primal_tensor_elasticity.ipynb",
@@ -572,7 +1114,25 @@
         "general-tensor primal elasticity MHM"
       ],
       "id": 32,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 32",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 32 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 1 --constant",
+          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 2 --constant",
+          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 3 --constant",
+          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 1",
+          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 2",
+          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 3",
+          "pixi run --locked -e notebooks python -m examples.solve_elasticity_tensor_rt --degree 1 --enrichment 0",
+          "pixi run --locked -e notebooks python -m examples.solve_elasticity_tensor_rt --degree 1 --enrichment 1",
+          "pixi run --locked -e notebooks python -m examples.solve_elasticity_tensor_rt --degree 2 --enrichment 0",
+          "pixi run --locked -e notebooks python -m examples.plot_elasticity_extensions"
+        ]
+      }
     },
     {
       "path": "notebooks/elasticity/34_rectangular_mixed_elasticity.ipynb",
@@ -582,7 +1142,25 @@
         "rectangular RT mixed elasticity MHM"
       ],
       "id": 34,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 34",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 34 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 1 --constant",
+          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 2 --constant",
+          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 3 --constant",
+          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 1",
+          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 2",
+          "pixi run --locked -e notebooks python -m examples.solve_primal_elasticity --degree 3",
+          "pixi run --locked -e notebooks python -m examples.solve_elasticity_tensor_rt --degree 1 --enrichment 0",
+          "pixi run --locked -e notebooks python -m examples.solve_elasticity_tensor_rt --degree 1 --enrichment 1",
+          "pixi run --locked -e notebooks python -m examples.solve_elasticity_tensor_rt --degree 2 --enrichment 0",
+          "pixi run --locked -e notebooks python -m examples.plot_elasticity_extensions"
+        ]
+      }
     },
     {
       "path": "notebooks/elasticity/35_elasticity3d.ipynb",
@@ -592,7 +1170,19 @@
         "tetrahedral general-tensor primal elasticity MHM"
       ],
       "id": 35,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 35",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 35 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_elasticity3d --degree 2",
+          "pixi run --locked -e notebooks python -m examples.solve_elasticity3d --degree 3",
+          "pixi run --locked -e notebooks python -m examples.solve_elasticity3d --sweep",
+          "pixi run --locked -e notebooks python -m examples.plot_elasticity3d"
+        ]
+      }
     },
     {
       "path": "notebooks/elasticity/50_hpc4e_geomechanics.ipynb",
@@ -602,7 +1192,26 @@
         "rectangular RT mixed elasticity MHM"
       ],
       "id": 50,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 50",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 50 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_hpc4e_mhm --download --segments 1 2 4 8",
+          "pixi run --locked -e fem python -m examples.solve_hpc4e_reference --degree 1 --factorization lu --equilibration symmetric --threads 4",
+          "pixi run --locked -e fem python -m examples.solve_hpc4e_reference --degree 2 --factorization ldlt --equilibration symmetric --threads 4 --workspace-limit-mb 80000",
+          "pixi run --locked -e notebooks python -m examples.compare_hpc4e",
+          "pixi run --locked -e notebooks python -m examples.compare_hpc4e_fields",
+          "pixi run --locked -e fem python -m examples.solve_hpc4e_reference --nx 1024 --ny 512 --degree 2 --factorization ldlt --equilibration symmetric --threads 2 --refinement-precision extended --workspace-limit-mb 17500 --out-of-core-directory build/tmp/hpc4e-mumps-ooc",
+          "pixi run --locked -e notebooks python -m examples.compare_hpc4e_fields --reference build/results/hpc4e/classical-rt2-1024x512-mumps.npz --approximations build/results/hpc4e/classical-rt2-512x256-mumps.npz build/results/hpc4e/mhm-s1.npz build/results/hpc4e/mhm-s2.npz build/results/hpc4e/mhm-s4.npz build/results/hpc4e/mhm-s8.npz --orders 4 5 --output examples/results/hpc4e/reference-spatial-refinement.json",
+          "pixi run --locked -e notebooks python -m examples.plot_hpc4e --reference build/results/hpc4e/classical-rt2-1024x512-mumps.npz"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 50 --historical",
+        "resources": "Complete heterogeneous plane-strain tensor-RT study, pinned HPC4e material data, four trace restrictions and independently assembled refined native references. The fine reference requires native PETSc/MUMPS and large memory/workspace (recorded budgets up to80GB).",
+        "limitation": "Original attributed article rasters and historical comparison payload identities are separate from the current public acquisition. Their private instrumented tooling is not distributed."
+      }
     },
     {
       "path": "notebooks/elasticity/55_gals3d.ipynb",
@@ -613,7 +1222,18 @@
         "tetrahedral GaLS elasticity MHM"
       ],
       "id": 55,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 55",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 55 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_gals3d --primal-refinement-precision extended",
+          "pixi run --locked -e notebooks python -m examples.solve_gals3d --primal-only --primal-refinement-precision extended --output examples/results/gals3d/primal",
+          "pixi run --locked -e notebooks python -m examples.plot_gals3d"
+        ]
+      }
     },
     {
       "path": "notebooks/elasticity/68_mixed_elasticity3d.ipynb",
@@ -623,7 +1243,17 @@
         "3D Arnold-Falk-Winther mixed elasticity MHM"
       ],
       "id": 68,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 68",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 68 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_mixed_elasticity3d",
+          "pixi run --locked -e notebooks python -m examples.plot_mixed_elasticity3d"
+        ]
+      }
     },
     {
       "path": "notebooks/flow/introductory_methods.ipynb",
@@ -643,7 +1273,17 @@
         "flow-usfem-3d",
         "flow-oseen-2d",
         "flow-oseen-3d"
-      ]
+      ],
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run flow/introductory_methods.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/flow/54_flow3d.ipynb",
@@ -656,7 +1296,17 @@
         "3D Oseen MHM"
       ],
       "id": 54,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 54",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 54 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_flow3d",
+          "pixi run --locked -e notebooks python -m examples.plot_flow3d"
+        ]
+      }
     },
     {
       "path": "notebooks/flow/brinkman_oseen/06_brinkman_and_oseen.ipynb",
@@ -668,7 +1318,14 @@
         "Oseen MHM"
       ],
       "id": 6,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 06",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/flow/brinkman_oseen/27_oseen_adaptivity.ipynb",
@@ -679,7 +1336,32 @@
         "macro and local adaptivity"
       ],
       "id": 27,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 27",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 27 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case smooth --viscosity 1",
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case smooth --viscosity 1 --adaptive",
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case smooth --viscosity 0.01",
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case smooth --viscosity 0.01 --adaptive",
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case variable --viscosity 1",
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case variable --viscosity 1 --adaptive",
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case variable --viscosity 0.01",
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case variable --viscosity 0.01 --adaptive",
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case boundary --viscosity 1",
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case boundary --viscosity 1 --adaptive",
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case boundary --viscosity 0.01",
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case boundary --viscosity 0.01 --adaptive",
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case internal --viscosity 1",
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case internal --viscosity 1 --adaptive",
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case internal --viscosity 0.01",
+          "pixi run --locked -e notebooks python -m examples.solve_oseen --case internal --viscosity 0.01 --adaptive",
+          "pixi run --locked -e notebooks python -m examples.plot_oseen"
+        ]
+      }
     },
     {
       "path": "notebooks/flow/brinkman_oseen/48_stokes_adaptive.ipynb",
@@ -690,7 +1372,36 @@
         "local and macro adaptivity"
       ],
       "id": 48,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 48",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 48 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --strategy uniform --viscosity 1 --trace-degree 0 --save-history",
+          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --strategy macro --viscosity 1 --trace-degree 0 --save-history",
+          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --strategy face --viscosity 1 --trace-degree 1 --save-history",
+          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --strategy uniform --viscosity 0.01 --trace-degree 0 --save-history",
+          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --strategy macro --viscosity 0.01 --trace-degree 0 --save-history",
+          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --strategy face --viscosity 0.01 --trace-degree 1 --save-history",
+          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid regularized --drag 0 --strategy macro --trace-degree 0 --save-history",
+          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid regularized --drag 0 --strategy face --trace-degree 0 --save-history",
+          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid regularized --drag 10000 --strategy macro --trace-degree 0 --save-history",
+          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid regularized --drag 10000 --strategy face --trace-degree 0 --save-history",
+          "pixi run --locked -e fem python -m examples.solve_cavity_reference --lid regularized --levels 8 16 32 64 128 256 512",
+          "pixi run --locked -e notebooks python -m examples.compare_stokes_cavity --lid regularized",
+          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid constant --drag 0 --strategy macro --trace-degree 0 --save-history",
+          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid constant --drag 0 --strategy face --trace-degree 0 --save-history",
+          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid constant --drag 10000 --strategy macro --trace-degree 0 --save-history",
+          "pixi run --locked -e notebooks python -m examples.solve_stokes_adaptive --cavity --lid constant --drag 10000 --strategy face --trace-degree 0 --save-history",
+          "pixi run --locked -e fem python -m examples.solve_cavity_reference --lid constant --levels 8 16 32 64 128 256 512",
+          "pixi run --locked -e notebooks python -m examples.compare_stokes_cavity --lid constant"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 48 --historical",
+        "resources": "Complete two-level polynomial and cavity campaigns plus independent Taylor-Hood references up to512x512 for both lid conditions and drag0/10000. Native FEM, large reference factorization memory and long execution time are required.",
+        "limitation": "Original continued longest-edge histories and their exact archived coefficient identities require the original acquisitions. The public current study starts complete new uniform/macro/face campaigns with stated parameters, both physical lid conditions and independently refined native Taylor-Hood references; it does not recreate old resumed field hashes."
+      }
     },
     {
       "path": "notebooks/flow/stokes/05_stokes_published_problem.ipynb",
@@ -702,7 +1413,14 @@
         "USFEM MHM"
       ],
       "id": 5,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 05",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/flow/stokes/12_stokes_pressure_audit.ipynb",
@@ -714,7 +1432,16 @@
         "conforming DOLFINx reference"
       ],
       "id": 12,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 12",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 12 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.plot_flow_audit"
+        ]
+      }
     },
     {
       "path": "notebooks/flow/stokes/13_published_stokes_2017.ipynb",
@@ -724,7 +1451,16 @@
         "DOLFINx/UFL local USFEM MHM"
       ],
       "id": 13,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 13",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 13 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.plot_reproductions"
+        ]
+      }
     },
     {
       "path": "notebooks/foundations/general/10_visual_gallery.ipynb",
@@ -738,7 +1474,14 @@
         "elasticity"
       ],
       "id": 10,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 10",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/foundations/general/19_native_extensions.ipynb",
@@ -752,7 +1495,16 @@
         "heat"
       ],
       "id": 19,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 19",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 19 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.plot_native_extensions"
+        ]
+      }
     },
     {
       "path": "notebooks/foundations/general/57_core_extensions.ipynb",
@@ -764,7 +1516,21 @@
         "3D MsHHO"
       ],
       "id": 57,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 57",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 57 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_core_extensions elasticity",
+          "pixi run --locked -e notebooks python -m examples.solve_core_extensions mshho3d",
+          "pixi run --locked -e notebooks python -m examples.solve_core_extensions hdiv3d",
+          "pixi run --locked -e notebooks python -m examples.plot_core_extensions elasticity",
+          "pixi run --locked -e notebooks python -m examples.plot_core_extensions mshho3d",
+          "pixi run --locked -e notebooks python -m examples.plot_core_extensions hdiv3d"
+        ]
+      }
     },
     {
       "path": "notebooks/foundations/geometry/60_mesh_exchange.ipynb",
@@ -775,7 +1541,14 @@
         "volume mesh exchange"
       ],
       "id": 60,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 60",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/foundations/operators/dolfinx_sparse_solvers.ipynb",
@@ -788,7 +1561,17 @@
         "constant local kernel and integral pressure moments",
         "serial and spawn-process execution"
       ],
-      "kind": "introductory"
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run foundations/operators/dolfinx_sparse_solvers.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/foundations/operators/custom_interface.ipynb",
@@ -800,7 +1583,14 @@
         "arbitrary numbering and normal orientation",
         "canonical/custom physical-field equivalence"
       ],
-      "kind": "introductory"
+      "kind": "introductory",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run foundations/operators/custom_interface.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/foundations/operators/local_global_providers.ipynb",
@@ -813,7 +1603,14 @@
         "external local solver"
       ],
       "kind": "introductory",
-      "variants": []
+      "variants": [],
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run foundations/operators/local_global_providers.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/foundations/operators/ufl_provider.ipynb",
@@ -825,7 +1622,17 @@
         "COMM_SELF local assembly"
       ],
       "kind": "introductory",
-      "variants": []
+      "variants": [],
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run foundations/operators/ufl_provider.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/foundations/operators/variational_hierarchy.ipynb",
@@ -836,7 +1643,14 @@
         "three-level operator recursion",
         "independent full-system comparison"
       ],
-      "kind": "introductory"
+      "kind": "introductory",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run foundations/operators/variational_hierarchy.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/foundations/operators/vector_ufl.ipynb",
@@ -847,7 +1661,17 @@
         "UFL/DOLFINx compilation",
         "oriented trace pairings"
       ],
-      "kind": "introductory"
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run foundations/operators/vector_ufl.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/foundations/operators/09_local_operators_and_amg.ipynb",
@@ -859,7 +1683,14 @@
         "AMG"
       ],
       "id": 9,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 09",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/transport/introductory_methods.ipynb",
@@ -876,7 +1707,17 @@
         "rad",
         "rad-supg",
         "rad-unusual"
-      ]
+      ],
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run transport/introductory_methods.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/transport/08_transport_and_heat.ipynb",
@@ -887,7 +1728,14 @@
         "identical-space compatibility controls"
       ],
       "id": 8,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 08",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/transport/26_adaptive_transient_transport.ipynb",
@@ -898,7 +1746,32 @@
         "Darcy-coupled backward Euler transport"
       ],
       "id": 26,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 26",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 26 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.transport_mixed_campaign",
+          "pixi run --locked -e notebooks python -m examples.transport_coefficient_controls --resolutions 8 16 32 64 128",
+          "pixi run --locked -e notebooks python -m examples.transport_face_controls --strategy adaptive --iterations 8",
+          "pixi run --locked -e notebooks python -m examples.transport_face_controls --strategy uniform --iterations 8",
+          "pixi run --locked -e notebooks python -m examples.transport_face_resolution --local-refinement 16",
+          "pixi run --locked -e notebooks python -m examples.transport_face_resolution --local-refinement 32",
+          "pixi run --locked -e notebooks python -m examples.transport_face_resolution --local-refinement 64",
+          "pixi run --locked -e notebooks python -m examples.transport_face_resolution --local-refinement 128",
+          "pixi run --locked -e notebooks python -m examples.transport_face_resolution --local-refinement 256",
+          "pixi run --locked -e notebooks python -m examples.transport_face_resolution --local-refinement 512 --endpoint-only",
+          "pixi run --locked -e notebooks python -m examples.transport_adaptive_resolution --local-refinement 32",
+          "pixi run --locked -e notebooks python -m examples.transport_adaptive_resolution --local-refinement 64",
+          "pixi run --locked -e notebooks python -m examples.transport_adaptive_resolution --local-refinement 128",
+          "pixi run --locked -e notebooks python -m examples.verify_transport_published",
+          "pixi run --locked -e notebooks python -m examples.plot_transport_mixed",
+          "pixi run --locked -e notebooks python -m examples.transport_campaign --collect"
+        ],
+        "resources": "Complete stationary, adaptive and Darcy-coupled transient cases, including r512 fixed-trace endpoint. Large local-response acquisitions require substantial RAM and execution time."
+      }
     },
     {
       "path": "notebooks/transport/41_rad3d.ipynb",
@@ -908,7 +1781,17 @@
         "tetrahedral conservative RAD"
       ],
       "id": 41,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 41",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 41 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_rad3d",
+          "pixi run --locked -e notebooks python -m examples.plot_rad3d"
+        ]
+      }
     },
     {
       "path": "notebooks/transport/45_rad_conditioning.ipynb",
@@ -919,7 +1802,17 @@
         "selective local kernels"
       ],
       "id": 45,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 45",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 45 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.verify_rad_conditioning",
+          "pixi run --locked -e notebooks python -m examples.plot_rad_conditioning"
+        ]
+      }
     },
     {
       "path": "notebooks/transport/46_hexagonal_boundary_layer.ipynb",
@@ -929,7 +1822,17 @@
         "hexagonal conservative RAD"
       ],
       "id": 46,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 46",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 46 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.verify_rad_layer"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 46 --historical"
+      }
     },
     {
       "path": "notebooks/transport/49_polyhedral_rad.ipynb",
@@ -939,7 +1842,17 @@
         "polyhedral conservative RAD"
       ],
       "id": 49,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 49",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 49 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_polyhedral_rad",
+          "pixi run --locked -e notebooks python -m examples.plot_polyhedral_rad"
+        ]
+      }
     },
     {
       "path": "notebooks/transport/53_unusual.ipynb",
@@ -949,7 +1862,23 @@
         "scalar reaction-diffusion MHM-UNUSUAL"
       ],
       "id": 53,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 53",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 53 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_unusual",
+          "pixi run --locked -e notebooks python -m examples.verify_unusual_resolution",
+          "pixi run --locked -e notebooks python -m examples.plot_unusual",
+          "pixi run --locked -e notebooks python -m examples.solve_unusual_spe10 --refinement 8 16 32 --segments 8",
+          "pixi run --locked -e fem python -m examples.solve_unusual_spe10_reference --levels 1 2 4 --graded --graded-x"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 53 --historical",
+        "resources": "All five-level analytical Galerkin/UNUSUAL studies, resolved exponential layers and variable anisotropic source; full SPE10 layer36 material-fitted P1/P0 acquisitions r8/16/32 with8tracepieces and separately refined native CG2 graded references. Historical instrumented verification identities remain separate; large layer-resolved fields/reference factorizations need substantial memory and time.",
+        "limitation": "Public analytical UNUSUAL mixed-boundary, resolved-layer and heterogeneous SPE10 acquisitions have declared full current recipes. Independent public native CG2 graded references perform their own refinement study. Original instrumented DOLFINx verification and exact historical comparison payload identities remain separate historical inputs."
+      }
     },
     {
       "path": "notebooks/transport/67_star_polyhedra.ipynb",
@@ -959,7 +1888,17 @@
         "star-shaped polyhedral conservative RAD"
       ],
       "id": 67,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 67",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 67 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.solve_star_polyhedra",
+          "pixi run --locked -e notebooks python -m examples.plot_star_polyhedra"
+        ]
+      }
     },
     {
       "path": "notebooks/waves/elastodynamics/71_elastodynamics.ipynb",
@@ -969,7 +1908,34 @@
         "Newmark elastodynamic MHM"
       ],
       "id": 71,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 71",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 71 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 1 --dt 0.005 --order 12",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.005 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 3 --dt 0.005 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 4 --dt 0.005 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 5 --dt 0.005 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 6 --dt 0.005 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 8 --dt 0.005 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.1 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.05 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.025 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.0125 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.00625 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.003125 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.0015625 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.00078125 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 0.0001953125 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_campaign --n 2 --dt 9.765625e-05 --order 8",
+          "pixi run --locked -e notebooks python -m examples.elastodynamics_results"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 71 --historical"
+      }
     },
     {
       "path": "notebooks/waves/helmholtz/introductory_methods.ipynb",
@@ -982,7 +1948,17 @@
       "kind": "introductory",
       "variants": [
         "helmholtz"
-      ]
+      ],
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run waves/helmholtz/introductory_methods.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/waves/helmholtz/61_helmholtz.ipynb",
@@ -993,7 +1969,22 @@
         "PML"
       ],
       "id": 61,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 61",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 61 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.helmholtz_campaign",
+          "pixi run --locked -e notebooks python -m examples.plot_helmholtz",
+          "pixi run --locked -e notebooks python -m examples.helmholtz_article",
+          "pixi run --locked -e notebooks python -m examples.plot_helmholtz_article",
+          "pixi run --locked -e notebooks python -m examples.helmholtz_stability --ell 0",
+          "pixi run --locked -e notebooks python -m examples.helmholtz_stability --ell 1",
+          "pixi run --locked -e notebooks python -m examples.plot_helmholtz_stability"
+        ]
+      }
     },
     {
       "path": "notebooks/waves/helmholtz/72_marmousi.ipynb",
@@ -1004,7 +1995,26 @@
         "classical conforming reference"
       ],
       "id": 72,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 72",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 72 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.marmousi_data --directory build/data/marmousi",
+          "pixi run --locked -e fem python -m examples.marmousi_reference --data build/data/marmousi --degree 1",
+          "pixi run --locked -e fem python -m examples.marmousi_reference --data build/data/marmousi --degree 2",
+          "pixi run --locked -e fem python -m examples.marmousi_reference --data build/data/marmousi --degree 3",
+          "pixi run --locked -e fem python -m examples.marmousi_reference --data build/data/marmousi --degree 4",
+          "pixi run --locked -e notebooks python -m examples.marmousi_fields examples/results/marmousi/classical-p1.json examples/results/marmousi/classical-p2.json examples/results/marmousi/classical-p3.json examples/results/marmousi/classical-p4.json --data build/data/marmousi",
+          "pixi run --locked -e notebooks python -m examples.marmousi_campaign --data build/data/marmousi --H 20 --trace-degree 1",
+          "pixi run --locked -e notebooks python -m examples.marmousi_comparison examples/results/marmousi/mhm-H20-ell1.json examples/results/marmousi/classical-p4.json --data build/data/marmousi",
+          "pixi run --locked -e notebooks python -m examples.plot_marmousi --data build/data/marmousi",
+          "pixi run --locked -e notebooks python -m examples.plot_marmousi_mhm examples/results/marmousi/mhm-H20-ell1.json examples/results/marmousi/classical-p4.json"
+        ],
+        "resources": "Full Marmousi crop, 2048x512 material cells, native P1-P4 PETSc/MUMPS references and MHM H=20. Requires two pinned property datasets (exact byte count and SHA-256 verified by marmousi_data), substantial RAM/disk and a potentially long native factorization; no reduced crop substitutes for this recipe."
+      }
     },
     {
       "path": "notebooks/waves/maxwell/introductory_methods.ipynb",
@@ -1019,7 +2029,14 @@
       "kind": "introductory",
       "variants": [
         "maxwell-vector-3d"
-      ]
+      ],
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run waves/maxwell/introductory_methods.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/waves/maxwell/62_maxwell.ipynb",
@@ -1029,7 +2046,17 @@
         "2D and 3D Maxwell MHM"
       ],
       "id": 62,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 62",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 62 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.maxwell_campaign",
+          "pixi run --locked -e notebooks python -m examples.plot_maxwell"
+        ]
+      }
     },
     {
       "path": "notebooks/waves/maxwell/66_maxwell_nanoguide.ipynb",
@@ -1040,7 +2067,18 @@
         "classical numerical reference"
       ],
       "id": 66,
-      "kind": "study"
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "pixi run --locked -e notebooks notebooks-run 66",
+        "current_study_command": "pixi run --locked -e notebooks notebooks-run 66 --study",
+        "current_study_steps": [
+          "pixi run --locked -e notebooks python -m examples.maxwell_nanoguide"
+        ],
+        "original_replay_command": "pixi run --locked -e notebooks notebooks-run 66 --historical",
+        "limitation": "The complete public PyMHM nanoguide final-time acquisition is available. Original independent central-DG reference fields were acquired by an external instrumented driver; its source and coefficient archives are not published with this checkout. Original comparison replay requires those exact inputs."
+      }
     },
     {
       "path": "notebooks/introduction/darcy_multiscale_convergence.ipynb",
@@ -1052,7 +2090,17 @@
         "classical conforming Galerkin",
         "pressure and flux convergence"
       ],
-      "kind": "introductory"
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run introduction/darcy_multiscale_convergence.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/introduction/darcy_spe10_layer.ipynb",
@@ -1064,7 +2112,17 @@
         "classical conforming Galerkin",
         "SPE10 layer 36"
       ],
-      "kind": "introductory"
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run introduction/darcy_spe10_layer.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/introduction/mh2m_multiscale.ipynb",
@@ -1076,7 +2134,17 @@
         "independent potential and conormal traces",
         "classical conforming Galerkin"
       ],
-      "kind": "introductory"
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run introduction/mh2m_multiscale.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/introduction/mhm_usfem_rad.ipynb",
@@ -1089,7 +2157,17 @@
         "classical conforming Galerkin",
         "analytical layer"
       ],
-      "kind": "introductory"
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run introduction/mhm_usfem_rad.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/introduction/mshho_multiscale.ipynb",
@@ -1100,7 +2178,17 @@
         "MsHHO moment reconstruction",
         "classical conforming Galerkin"
       ],
-      "kind": "introductory"
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run introduction/mshho_multiscale.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/introduction/multiscale_elasticity.ipynb",
@@ -1112,7 +2200,17 @@
         "rigid-motion kernel",
         "classical conforming elasticity"
       ],
-      "kind": "introductory"
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run introduction/multiscale_elasticity.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb",
@@ -1125,7 +2223,17 @@
         "classical Taylor–Hood",
         "analytical layer convergence"
       ],
-      "kind": "introductory"
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run introduction/stokes_brinkman_boundary_layer.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/introduction/darcy_parallel_scalability.ipynb",
@@ -1138,7 +2246,17 @@
         "matched fine-element count",
         "strong and weak scalability"
       ],
-      "kind": "introductory"
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run introduction/darcy_parallel_scalability.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/introduction/darcy_process_scalability.ipynb",
@@ -1151,7 +2269,17 @@
         "matched fine-element count",
         "strong and weak scalability"
       ],
-      "kind": "introductory"
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run introduction/darcy_process_scalability.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     },
     {
       "path": "notebooks/introduction/darcy_3d_parallel_scalability.ipynb",
@@ -1163,7 +2291,17 @@
         "classical Q1 PyAMG and PETSc GAMG",
         "native GPU AMG local condensation"
       ],
-      "kind": "introductory"
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "pixi run --locked -e introduction notebooks-run introduction/darcy_3d_parallel_scalability.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
     }
   ],
   "supporting_modules": {
@@ -1171,5 +2309,12 @@
     "examples/tutorial_vector_variants.py": "Shared analytical elasticity, flow and Maxwell patches with importable spawn callables.",
     "examples/tutorial_local_provider.py": "Shared local/global provider construction and per-field diagnostics.",
     "examples/variational_darcy.py": "Basix/UFL provider with worker-owned native resources."
+  },
+  "execution_manifest": "scripts/notebook_reproduction.json",
+  "execution_modes": {
+    "default": "Current standalone physical example; missing current required inputs are prepared automatically.",
+    "study": "Complete declared public current acquisition with stated numerical spaces and resources.",
+    "historical": "Original external replay requires exactly attributed coefficient archives and figure payloads.",
+    "fresh_outputs": "The runner replaces the {acquisition} token consistently with one fresh UUID for all recipe steps. Result directories preserve original attributed acquisitions."
   }
 }

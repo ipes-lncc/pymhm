@@ -7,7 +7,6 @@ normal traction. Rotation uses ``q=(du_x/dy-du_y/dx)/2`` and symmetry is imposed
 through displacement-space moments of ``sigma_xy-sigma_yx``, not pointwise equality.
 """
 
-from dataclasses import dataclass
 from typing import Any, Literal
 
 import numpy as np
@@ -15,182 +14,25 @@ from scipy import sparse
 
 from pymhm._legacy.models.elasticity.boundary import require_compatible_displacement_flux
 from pymhm._legacy.models.elasticity.mixed_pressure import _boundary_volume_flux
-from pymhm.core.contracts import HybridSolution, LocalProblem
+from pymhm.core.contracts import LocalProblem
 from pymhm.core.system import HybridSystem
-from pymhm.core.validation import FloatArray, positive_int
+from pymhm.core.validation import positive_int
+from pymhm.fem.assembly import assemble_element_blocks
 from pymhm.fem.hdiv.bdm_family import BDMFamily
-from pymhm.fem.scalar.operators import boundary_data, triangle_quadrature
-from pymhm.fem.scalar.triangle import multiindices, reference_basis
+from pymhm.fem.scalar.operators import boundary_data
+from pymhm.fem.scalar.triangle import multiindices
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
-from pymhm.materials.elasticity import compliance_products
-from pymhm.materials.evaluation import scalar_values, vector_values
+from pymhm.fem.vector.stress import bulk_compliance
+from pymhm.fem.vector.stress import displacement_rigid_moments as _displacement_moments
+from pymhm.fem.vector.stress import mixed_elasticity_operators as _operators
+from pymhm.fem.vector.stress import rigid_values as _rigid_values
+from pymhm.fem.vector.stress import stress_trace_moments as _stress_trace_moments
+from pymhm.fem.vector.stress import traction_mapping as _traction_map
+from pymhm.materials.evaluation import vector_values
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.stress import MixedElasticitySolution as MixedElasticitySolution
 
 _DEFAULT_FAMILY = BDMFamily()
-
-
-def _scatter(block: FloatArray, rows: Any, columns: Any, shape: tuple[int, int]) -> Any:
-    """Assemble rectangular cell blocks with independently supplied DOF maps."""
-    return sparse.coo_matrix(
-        (
-            block.ravel(),
-            (
-                np.repeat(rows, block.shape[2], axis=1).ravel(),
-                np.tile(columns, (1, block.shape[1])).ravel(),
-            ),
-        ),
-        shape=shape,
-    ).tocsc()
-
-
-def _operators(
-    mesh: TriangleMesh,
-    lame_lambda: Any,
-    lame_mu: Any,
-    source: Any,
-    order: int,
-    family: BDMFamily = _DEFAULT_FAMILY,
-    compliance: Any = None,
-) -> tuple[Any, Any, Any, FloatArray]:
-    """Assemble compliance, divergence, asymmetry and body-force moments."""
-    bary, weights = triangle_quadrature(order)
-    values, divergence = family.basis(mesh, bary)
-    scalar_basis = reference_basis(family.polynomial_degree - 1, bary)[0]
-    scalar_size = scalar_basis.shape[1]
-    local_size = family.local_size
-    points = np.einsum("qi,tij->tqj", bary, mesh.points[mesh.cells])
-    tensors = np.zeros((*values.shape[:2], 2 * local_size, 2, 2))
-    tensors[:, :, 0::2, 0], tensors[:, :, 1::2, 1] = values, values
-    if compliance is None:
-        mu = scalar_values(lame_mu, points.reshape(-1, 2)).reshape(points.shape[:2])
-        bulk = _bulk_compliance(lame_lambda, mu.ravel(), points.reshape(-1, 2)).reshape(mu.shape)
-        trace = np.trace(tensors, axis1=-2, axis2=-1)
-        deviator = tensors - trace[..., None, None] * np.eye(2) / 2
-        # The split avoids cancellation near the incompressible limit.
-        mass = np.einsum(
-            "q,tq,tqiab,tqjab,t->tij", weights, 1 / (2 * mu), deviator, deviator, mesh.areas
-        )
-        mass += np.einsum("q,tq,tqi,tqj,t->tij", weights, bulk / 2, trace, trace, mesh.areas)
-    else:
-        products, _, _ = compliance_products(compliance, points, tensors)
-        mass = np.einsum("q,tqij,t->tij", weights, products, mesh.areas)
-    div = np.zeros((len(mesh.cells), 2 * scalar_size, 2 * local_size))
-    scalar_div = np.einsum("q,qi,tqj,t->tij", weights, scalar_basis, divergence, mesh.areas)
-    div[:, 0::2, 0::2], div[:, 1::2, 1::2] = scalar_div, scalar_div
-    asym = np.einsum(
-        "q,qi,tqj,t->tij",
-        weights,
-        scalar_basis,
-        tensors[..., 0, 1] - tensors[..., 1, 0],
-        mesh.areas,
-    )
-    force = np.einsum(
-        "q,qi,tqa,t->tia",
-        weights,
-        scalar_basis,
-        vector_values(source, points.reshape(-1, 2)).reshape(*points.shape[:2], 2),
-        mesh.areas,
-    )
-    stress_dofs = (2 * family.dofs(mesh)[:, :, None] + np.arange(2)).reshape(
-        -1, 2 * family.local_size
-    )
-    nstress = 2 * family.size(mesh)
-    nc = len(mesh.cells)
-    return (
-        _scatter(mass, stress_dofs, stress_dofs, (nstress, nstress)),
-        _scatter(
-            div,
-            np.arange(2 * scalar_size * nc).reshape(nc, 2 * scalar_size),
-            stress_dofs,
-            (2 * scalar_size * nc, nstress),
-        ),
-        _scatter(
-            asym,
-            np.arange(scalar_size * nc).reshape(nc, scalar_size),
-            stress_dofs,
-            (scalar_size * nc, nstress),
-        ),
-        force.ravel(),
-    )
-
-
-def _bulk_compliance(lame_lambda: Any, mu: FloatArray, points: FloatArray) -> FloatArray:
-    """Evaluate 1/[2(mu+lambda)], including a zero incompressible compliance."""
-    raw = lame_lambda(points) if callable(lame_lambda) else lame_lambda
-    if np.iscomplexobj(raw):
-        raise ValueError("Lamé lambda must be real")
-    lam = np.broadcast_to(np.asarray(raw, dtype=float), (len(points),))
-    if np.any(np.isnan(lam)) or np.any(lam < 0) or np.any(mu <= 0):
-        raise ValueError("Lamé lambda must be nonnegative and mu strictly positive")
-    scale = np.maximum(mu, lam)
-    return np.asarray((0.5 / scale) / (1 + np.minimum(mu, lam) / scale))
-
-
-def _stress_trace_moments(
-    mesh: TriangleMesh,
-    size: int,
-    lame_lambda: Any,
-    lame_mu: Any,
-    order: int,
-    family: BDMFamily = _DEFAULT_FAMILY,
-    compliance: Any = None,
-) -> tuple[FloatArray, FloatArray, float]:
-    """Integrate trace(sigma) and its physical bulk-compliance-weighted moment."""
-    bary, weights = triangle_quadrature(order)
-    basis, _ = family.basis(mesh, bary)
-    points = np.einsum("qi,tij->tqj", bary, mesh.points[mesh.cells]).reshape(-1, 2)
-    # Row zero contributes sigma_xx; row one contributes sigma_yy.
-    traces = basis.reshape(len(mesh.cells), len(bary), 2 * family.local_size)
-    dofs = (2 * family.dofs(mesh)[:, :, None] + np.arange(2)).reshape(-1, 2 * family.local_size)
-    plain = np.einsum("q,tqi,t->ti", weights, traces, mesh.areas)
-    if compliance is None:
-        mu = scalar_values(lame_mu, points)
-        bulk = _bulk_compliance(lame_lambda, mu, points).reshape(len(mesh.cells), -1)
-        weighted = np.einsum("q,tq,tqi,t->ti", weights, bulk, traces, mesh.areas)
-        scale = float(bulk.max())
-    else:
-        tensors = np.zeros((*basis.shape[:2], 2 * family.local_size, 2, 2))
-        tensors[:, :, 0::2, 0], tensors[:, :, 1::2, 1] = basis, basis
-        _, weighted_trace, scale = compliance_products(compliance, points, tensors)
-        weighted = np.einsum("q,tqi,t->ti", weights, weighted_trace, mesh.areas)
-    return (
-        np.bincount(dofs.ravel(), weights=plain.ravel(), minlength=size),
-        np.bincount(dofs.ravel(), weights=weighted.ravel(), minlength=size),
-        scale,
-    )
-
-
-def _traction_map(
-    mesh: TriangleMesh,
-    cell: int,
-    fine: TriangleMesh,
-    skeleton: SkeletonSpace,
-    family: BDMFamily = _DEFAULT_FAMILY,
-) -> FloatArray:
-    """Apply the shared BDM normal-moment map to each stress row."""
-    return np.asarray(np.kron(family.trace_map(mesh, cell, fine, skeleton), np.eye(2)), dtype=float)
-
-
-def _rigid_values(points: FloatArray, center: FloatArray) -> FloatArray:
-    """Evaluate two translations and one centered rigid rotation."""
-    values = np.zeros((*points.shape[:-1], 2, 3))
-    values[..., 0, 0], values[..., 1, 1] = 1, 1
-    values[..., 0, 2] = -(points[..., 1] - center[1])
-    values[..., 1, 2] = points[..., 0] - center[0]
-    return values
-
-
-def _displacement_moments(
-    mesh: TriangleMesh, center: FloatArray, family: BDMFamily = _DEFAULT_FAMILY
-) -> FloatArray:
-    """Integrate discontinuous displacement basis against the three rigid motions."""
-    degree = family.polynomial_degree - 1
-    bary, weights = triangle_quadrature(degree + 2)
-    basis = reference_basis(degree, bary)[0]
-    points = np.einsum("qi,tij->tqj", bary, mesh.points[mesh.cells])
-    return np.einsum(
-        "q,qi,tqak,t->tiak", weights, basis, _rigid_values(points, center), mesh.areas
-    ).reshape(-1, 3)
 
 
 def _local_problem(
@@ -262,159 +104,6 @@ def _local_problem(
         kernel,
         constraints,
     )
-
-
-@dataclass(frozen=True)
-class MixedElasticitySolution:
-    """H(div) Cauchy stress, broken displacement and independent weak rotation.
-
-    Stress coefficients have shape ``(family.size(mesh), 2)`` on each local mesh;
-    displacement and rotation have shapes ``(cells,d,2)`` and ``(cells,d)``,
-    where d is the scalar dimension of P(k+n-1).
-    Rotation approximates half the asymmetry of the exact displacement gradient. The skeletal
-    traction is ``-sigma n`` and stress symmetry holds through P(k+n-1) moments.
-    """
-
-    skeleton: SkeletonSpace
-    local_meshes: tuple[TriangleMesh, ...]
-    stress: tuple[FloatArray, ...]
-    displacement: tuple[FloatArray, ...]
-    rotation: tuple[FloatArray, ...]
-    hybrid: HybridSolution
-    source: Any
-    quadrature_order: int
-    family: BDMFamily = _DEFAULT_FAMILY
-
-    @property
-    def displacement_degree(self) -> int:
-        """Return the discontinuous displacement and rotation polynomial degree."""
-        return self.family.polynomial_degree - 1
-
-    def l2_error(self, exact: Any, order: int = 5) -> float:
-        """Integrate the broken displacement error against an analytical field."""
-        bary, weights = triangle_quadrature(order)
-        total = 0.0
-        for mesh, field in zip(self.local_meshes, self.displacement, strict=True):
-            points = np.einsum("qi,tij->tqj", bary, mesh.points[mesh.cells])
-            values = np.einsum(
-                "qi,tia->tqa", reference_basis(self.displacement_degree, bary)[0], field
-            )
-            error = values - vector_values(exact, points.reshape(-1, 2)).reshape(values.shape)
-            total += float(mesh.areas @ (np.sum(error**2, axis=2) @ weights))
-        return float(np.sqrt(total))
-
-    def stress_l2_error(self, exact: Any, order: int = 5) -> float:
-        """Integrate the full Cauchy stress Frobenius error, including its skew part."""
-        bary, weights = triangle_quadrature(order)
-        total = 0.0
-        for mesh, field in zip(self.local_meshes, self.stress, strict=True):
-            points = np.einsum("qi,tij->tqj", bary, mesh.points[mesh.cells])
-            value = exact(points.reshape(-1, 2)) if callable(exact) else exact
-            target = np.broadcast_to(np.asarray(value), (points.shape[0] * points.shape[1], 2, 2))
-            if np.iscomplexobj(target) or not np.isfinite(target).all():
-                raise ValueError("exact stress must be real and finite")
-            values, _ = self.family.evaluate(mesh, field, bary)
-            error = values - target.reshape(values.shape)
-            total += float(mesh.areas @ (np.sum(error**2, axis=(2, 3)) @ weights))
-        return float(np.sqrt(total))
-
-    def divergence_l2_error(self, exact: Any, order: int = 5) -> float:
-        """Integrate stress-divergence error, distinct from integrated force moments."""
-        bary, weights = triangle_quadrature(order)
-        total = 0.0
-        for mesh, field in zip(self.local_meshes, self.stress, strict=True):
-            points = np.einsum("qi,tij->tqj", bary, mesh.points[mesh.cells])
-            _, divergence = self.family.evaluate(mesh, field, bary)
-            target = vector_values(exact, points.reshape(-1, 2)).reshape(divergence.shape)
-            total += float(mesh.areas @ (np.sum((divergence - target) ** 2, axis=2) @ weights))
-        return float(np.sqrt(total))
-
-    def rotation_l2_error(self, exact: Any, order: int = 5) -> float:
-        """Integrate rotation error with the convention q=(du_x/dy-du_y/dx)/2."""
-        bary, weights = triangle_quadrature(order)
-        total = 0.0
-        for mesh, field in zip(self.local_meshes, self.rotation, strict=True):
-            points = np.einsum("qi,tij->tqj", bary, mesh.points[mesh.cells])
-            values = field @ reference_basis(self.displacement_degree, bary)[0].T
-            error = values - scalar_values(exact, points.reshape(-1, 2)).reshape(values.shape)
-            total += float(mesh.areas @ (error**2 @ weights))
-        return float(np.sqrt(total))
-
-    def fine_force_residuals(self) -> tuple[FloatArray, ...]:
-        """Return displacement-space moments of div(sigma)+f in every fine cell and component."""
-        bary, weights = triangle_quadrature(self.quadrature_order)
-        residuals = []
-        for mesh, field in zip(self.local_meshes, self.stress, strict=True):
-            points = np.einsum("qi,tij->tqj", bary, mesh.points[mesh.cells])
-            _, divergence = self.family.evaluate(mesh, field, bary)
-            force = vector_values(self.source, points.reshape(-1, 2)).reshape(divergence.shape)
-            residuals.append(
-                np.einsum(
-                    "q,qi,tqa,t->tia",
-                    weights,
-                    reference_basis(self.displacement_degree, bary)[0],
-                    divergence + force,
-                    mesh.areas,
-                )
-            )
-        return tuple(residuals)
-
-    def weak_symmetry_residuals(self) -> tuple[FloatArray, ...]:
-        """Return rotation-space moments of sigma_xy-sigma_yx, without symmetrizing the field."""
-        bary, weights = triangle_quadrature(self.family.polynomial_degree + 2)
-        result = []
-        for mesh, field in zip(self.local_meshes, self.stress, strict=True):
-            values, _ = self.family.evaluate(mesh, field, bary)
-            result.append(
-                np.einsum(
-                    "q,qi,tq,t->ti",
-                    weights,
-                    reference_basis(self.displacement_degree, bary)[0],
-                    values[..., 0, 1] - values[..., 1, 0],
-                    mesh.areas,
-                )
-            )
-        return tuple(result)
-
-    def normal_traction_residuals(self) -> tuple[FloatArray, ...]:
-        """Return moments of sigma n plus the signed macro traction on fine faces."""
-        residuals = []
-        for cell, (mesh, stress) in enumerate(zip(self.local_meshes, self.stress, strict=True)):
-            count = self.family.degree + 1
-            rows = (count * mesh.boundary_faces[:, None] + np.arange(count)).ravel()
-            expected = (
-                _traction_map(self.skeleton.mesh, cell, mesh, self.skeleton, self.family)
-                @ (self.hybrid.trace[self.skeleton.cell_dofs(cell)])
-            )
-            residuals.append(stress[rows] + expected.reshape(-1, 2))
-        return tuple(residuals)
-
-    def equilibrium_residuals(self) -> FloatArray:
-        """Return macro force and moment defects for the negative-traction skeleton."""
-        bary, weights = triangle_quadrature(self.quadrature_order)
-        result = np.zeros((len(self.local_meshes), 3))
-        coarse = self.skeleton.mesh
-        for cell, fine in enumerate(self.local_meshes):
-            center = coarse.points[coarse.cells[cell]].mean(axis=0)
-            points = np.einsum("qi,tij->tqj", bary, fine.points[fine.cells])
-            force = vector_values(self.source, points.reshape(-1, 2)).reshape(points.shape)
-            result[cell] -= np.einsum(
-                "t,q,tqa,tqak->k", fine.areas, weights, force, _rigid_values(points, center)
-            )
-            for side, face in enumerate(coarse.cell_faces[cell]):
-                space = self.skeleton.faces[face]
-                parameter, w = space.quadrature(max(4, self.family.degree + 2))
-                start, end = coarse.points[coarse.faces[face]]
-                points_face = start + parameter[:, None] * (end - start)
-                traction = space.evaluate(parameter) @ self.hybrid.trace[
-                    self.skeleton.dofs(int(face))
-                ].reshape(-1, 2)
-                result[cell] += (
-                    coarse.signs[cell, side]
-                    * coarse.lengths[face]
-                    * np.einsum("q,qa,qak->k", w, traction, _rigid_values(points_face, center))
-                )
-        return result
 
 
 def solve_elasticity_mixed(
@@ -593,3 +282,8 @@ def solve_elasticity_mixed(
         quadrature_order,
         family,
     )
+
+
+_bulk_compliance = bulk_compliance
+
+_scatter = assemble_element_blocks

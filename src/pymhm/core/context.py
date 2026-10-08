@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field, replace
+from types import TracebackType
 from typing import Any, Literal
 
 import numpy as np
@@ -73,7 +74,7 @@ class GlobalContext:
         """Assemble user-written global interface UFL forms in the bound coordinates.
 
         forms(trial, test, measure) returns Equation or its (a, L) pair. The
-        built-in adapter integrates supported planar polynomial face spaces;
+        built-in adapter integrates supported edge/triangle polynomial spaces;
         custom spaces may declare the same capability. Retained-mode rows and
         columns are padded by zero, without inventing a coupling or boundary sign.
         """
@@ -96,7 +97,7 @@ class GlobalContext:
     def boundary_data(
         self, value: Any, neumann: Mapping[int, Any] | None = None, *, order: int = 6
     ) -> tuple[FloatArray, dict[int, float]]:
-        """Project declared planar value/normal data using the existing boundary owner.
+        """Integrate weak value data and project fixed normal-density coefficients.
 
         This returns an unsigned interface functional and fixed coefficients;
         callers choose its sign in their global equation. Custom spaces may
@@ -109,7 +110,21 @@ class GlobalContext:
         space = getattr(self.interface, "space", None)
         if space is None:
             raise TypeError("custom interface does not declare a boundary-data capability")
+        from pymhm.core.spaces import ComponentTraceSpace
         from pymhm.fem.traces.interval import SkeletonSpace
+        from pymhm.fem.traces.polygon_3d import PolygonalSkeleton3D
+        from pymhm.fem.traces.triangle_3d import TriangularSkeleton, tetra_boundary_data
+        from pymhm.fem.vector.curl import TangentialTraceSpace
+
+        if isinstance(space, (ComponentTraceSpace, TangentialTraceSpace, PolygonalSkeleton3D)):
+            from pymhm.fem.traces.forms import trace_boundary_data
+
+            return trace_boundary_data(space, value, neumann, order=order)
+
+        if isinstance(space, TriangularSkeleton):
+            return tetra_boundary_data(
+                space, value, {} if neumann is None else dict(neumann), order
+            )
 
         if not isinstance(space, SkeletonSpace) or space.mesh.points.shape[1] != 2:
             raise TypeError("this interface requires an explicit boundary-data projection")
@@ -124,19 +139,29 @@ class GlobalContext:
         boundary condition. Nonconstant or custom data use a declared projection.
         """
         space = getattr(self.interface, "space", None)
-        if space is None or not hasattr(space, "faces"):
+        if space is None or not hasattr(space, "mesh"):
             raise TypeError("custom interface must declare its own face-value projection")
         constant = real_array([value], "face value")[0]
         fixed: dict[int, float] = {}
         for face in faces:
             face = positive_int(face, "face", 0)
-            if face >= len(space.faces):
+            if face >= len(space.mesh.faces):
                 raise ValueError("face index outside interface mesh")
             face_dofs = getattr(space, "dofs", None)
             dofs = face_dofs(face) if callable(face_dofs) else np.asarray(space.face_dofs[face])
-            coefficients = np.repeat(
-                space.faces[face].constant_coefficients(), getattr(space, "components", 1)
-            )
+            base = getattr(space, "base", space)
+            declaration = getattr(base, "constant_coefficients", None)
+            if declaration is not None and not callable(declaration):
+                scalar_dofs = getattr(base, "dofs", None)
+                indices = scalar_dofs(face) if callable(scalar_dofs) else base.face_dofs[face]
+                coefficients = np.asarray(declaration)[indices]
+            elif hasattr(base, "faces"):
+                coefficients = base.faces[face].constant_coefficients()
+            elif hasattr(base, "face_dofs"):
+                coefficients = np.ones(len(base.face_dofs[face]))
+            else:
+                raise TypeError("custom interface must declare its own face-value projection")
+            coefficients = np.repeat(coefficients, getattr(space, "components", 1))
             fixed.update(zip(dofs.tolist(), (constant * coefficients).tolist(), strict=True))
         return fixed
 
@@ -232,7 +257,7 @@ class LocalContext:
         expression(trace_value, face_measure) returns its UFL linear form. The
         trace value has the declared scalar/vector shape; geometry orientation
         is applied once by equations(), not hidden in the expression. Built-in
-        planar polynomial traces have a native adapter; custom spaces may supply
+        edge and triangular polynomial traces have a native adapter; custom spaces may supply
         a trace_pairings(context, expression, axis=...) capability explicitly.
         interface selects an independent local boundary basis when a formulation
         has local trace unknowns as well as its global interface. Returned forms
@@ -266,7 +291,7 @@ class LocalContext:
         trial_space = getattr(self.global_context.interface, "space", None)
         if test_space is None or trial_space is None:
             raise TypeError("custom interface must declare a boundary-pairing capability")
-        from pymhm.fem.traces.interval import interface_pairing
+        from pymhm.fem.traces.pairing import interface_pairing
 
         return interface_pairing(test_space, trial_space, self.cell, order=order)
 
@@ -296,6 +321,9 @@ class LocalContext:
         evaluator: Callable[..., Any] | None = None,
         gradient_evaluator: Callable[..., Any] | None = None,
         reconstruction: Any = None,
+        trace_reconstruction: Any = None,
+        trace_dofs: Any = None,
+        offset: Any = None,
         mesh: Any = None,
         basis_id: str = "",
     ) -> None:
@@ -303,7 +331,9 @@ class LocalContext:
 
         space is an optional NativeSpace; component selects a mixed subfield.
         Custom fields provide an evaluator and basis_id, or expose coefficients
-        only. reconstruction explicitly maps the local solution into field data.
+        only. reconstruction maps the local solution into field data. The
+        optional trace_reconstruction maps global trace[trace_dofs]; offset
+        supplies an explicit affine lifting, for example essential boundary data.
         """
         from pymhm.postprocessing.fields import FieldDefinition
 
@@ -319,6 +349,9 @@ class LocalContext:
                 reconstruction,
                 basis_id,
                 gradient_evaluator,
+                trace_reconstruction,
+                trace_dofs,
+                offset,
             )
         )
 
@@ -373,6 +406,19 @@ class LocalContext:
             space.close()
         self._native.clear()
         self._native_mesh = None
+
+    def __enter__(self) -> LocalContext:
+        """Own native resources during a manually requested local context."""
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None:
+        """Release spaces on every exit; bound providers already manage this lifetime."""
+        self.close()
 
 
 @dataclass

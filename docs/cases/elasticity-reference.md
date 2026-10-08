@@ -126,16 +126,25 @@ coefficients as displacement. The results record the adapter digests and
 reference revisions, identifying the complete computational configuration.
 
 `examples/results/elasticity-reference.json` contains the parameters, norms,
-reference revisions and archive checksums. Seven NPZ archives retain the
-actual macro geometry, fine-element connectivity, nodal coordinates, and
-both implementations' displacement and pressure coefficients.
+reference revisions and archive checksums. The original seven NPZ acquisitions
+contain macro geometry, connectivity, nodal coordinates and both implementations'
+displacement/pressure coefficients. Those external coefficient archives and
+instrumented reference adapters are not distributed with the checkout.
 
-The public plotter reads those records and evaluates the archived fields;
-it does not rerun the comparison:
+The standalone notebook declares and solves P1/P1 GaLS local equations through
+the public API for the same trigonometric physical data, including rigid-motion
+moments and the physical compliance-weighted pressure identity. It reports
+analytical displacement, pressure and stress errors on a uniform triangle macro
+mesh. That mesh differs from the original matched crisscross reference:
 
 ```bash
-pixi run -e notebooks python examples/plot_elasticity_reference.py
+pixi run --locked -e notebooks notebooks-run 15
 ```
+
+With the original coefficient archives available, `notebooks-run 15 --historical`
+also checks their recorded hashes and displays the original matched comparisons.
+The public `gallery-elasticity-reference` plotter consumes those original fields;
+it does not acquire new external reference results.
 
 The source paper's tables fix 32 macrotriangles and refine skeletal and
 local meshes together, while the main series here changes the macro mesh.

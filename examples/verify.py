@@ -7,13 +7,24 @@ and low-order local spaces do not reproduce the papers' full numerical tables.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 import platform
 from pathlib import Path
 
 import numpy as np
-from manufactured import (
+
+from examples.formulations.application import brinkman as solve_brinkman
+from examples.formulations.application import darcy as solve_darcy
+from examples.manufactured import (
     darcy_flux,
     darcy_pressure,
     darcy_source,
@@ -21,10 +32,7 @@ from manufactured import (
     stokes_source,
     stokes_velocity,
 )
-
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.darcy.primal import solve_darcy
-from pymhm._legacy.models.vector import solve_brinkman
 
 
 def run() -> dict[str, object]:

@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import hashlib
 import json
 from pathlib import Path
@@ -12,9 +20,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 import numpy as np
-from plot_mesh import draw_macro_mesh, mark_macro_interfaces
-from plot_style import set_refinement_ticks
 
+from examples.plot_mesh import draw_macro_mesh, mark_macro_interfaces
+from examples.plot_style import set_refinement_ticks
 from pymhm import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]

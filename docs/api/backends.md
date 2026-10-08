@@ -55,6 +55,18 @@ constrained Neumann reconstruction in both dimensions.
     options:
       show_source: false
 
+::: pymhm.linalg.complex
+    options:
+      show_source: false
+
+::: pymhm.fem.assembly
+    options:
+      show_source: false
+
+::: pymhm.fem.loads
+    options:
+      show_source: false
+
 ::: pymhm.execution.cpu
     options:
       show_source: false
@@ -68,10 +80,6 @@ constrained Neumann reconstruction in both dimensions.
       show_source: false
 
 ::: pymhm.linalg.block
-    options:
-      show_source: false
-
-::: pymhm._legacy.models.darcy.separable
     options:
       show_source: false
 

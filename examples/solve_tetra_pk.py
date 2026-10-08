@@ -10,10 +10,10 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import tetrahedral_darcy as solve_darcy_3d
 from examples.reconstruction3d_data import fields
 from examples.reconstruction3d_resolution import reference_norms
 from pymhm import TetraMesh, TriangularSkeleton
-from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
 from pymhm.estimators.darcy_3d import estimate_darcy_error_3d
 from pymhm.io.provenance import current_source_manifest
 

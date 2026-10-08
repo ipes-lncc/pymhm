@@ -58,9 +58,11 @@ pixi run --locked -e introduction jupyter lab notebooks/introduction
 ```
 
 The two 2D performance notebooks default to a fresh 200×200 numerical control
-and the recorded 2026-10-04 campaign. The historical plots retain their original
-source revision and are verified against the archive checksums. Their timings
-are not measurements of the current package. To acquire complete new strong,
+and the retained scalar observations from the recorded 2026-10-04 campaign.
+Historical figures are displayed when their original payloads are available;
+available payloads retain their checksum checks. Missing historical figures do
+not prevent the fresh numerical control from executing. Historical timings
+identify their original source revision. To acquire complete new strong,
 weak and crossover samples on dedicated resources, enable the explicit flag:
 
 ```bash

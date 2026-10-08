@@ -132,7 +132,7 @@ same sixteen macrotriangles as the campaign and initial local refinement four.
 import numpy as np
 from examples.unfitted_geometry import macro_mesh
 from pymhm import FaceSpace, SkeletonSpace
-from pymhm._legacy.models.darcy.primal import solve_darcy
+from examples.formulations.application import darcy as solve_darcy
 from pymhm.fem.quadrature.material import fit_material_faces, fit_material_mesh
 from pymhm.io.reservoir import CartesianCellField
 
@@ -808,11 +808,11 @@ not an independent external code or the article's finest reference mesh.
 Recreate the numerical records outside CI and render their figures with:
 
 ```bash
-pixi run -e notebooks python -m examples.unfitted_campaign --collect --fit-locals --refinement 4
-pixi run -e notebooks python -m examples.unfitted_campaign --collect --fit-locals --refinement 8
-pixi run -e notebooks python -m examples.unfitted_campaign --collect --fit-locals --refinement 16
-pixi run -e notebooks python -m examples.unfitted_campaign --fit-locals --refinement 16
-pixi run -e notebooks python -m examples.plot_unfitted_validation
+pixi run --locked -e notebooks python -m examples.unfitted_campaign --collect --fit-locals --refinement 4
+pixi run --locked -e notebooks python -m examples.unfitted_campaign --collect --fit-locals --refinement 8
+pixi run --locked -e notebooks python -m examples.unfitted_campaign --collect --fit-locals --refinement 16
+pixi run --locked -e notebooks python -m examples.unfitted_campaign --fit-locals --refinement 16
+pixi run --locked -e notebooks python -m examples.plot_unfitted_validation
 ```
 
 The light tests include polynomial moments on material intersections,

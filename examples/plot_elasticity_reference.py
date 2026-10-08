@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -14,10 +22,10 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 import numpy as np
-from elasticity_data import TrigonometricElasticityData
-from plot_mesh import draw_macro_mesh
 from threadpoolctl import threadpool_limits
 
+from examples.elasticity_data import TrigonometricElasticityData
+from examples.plot_mesh import draw_macro_mesh
 from pymhm import TriangleMesh
 from pymhm.fem.scalar.triangle import reference_basis
 

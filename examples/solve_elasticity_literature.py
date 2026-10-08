@@ -10,11 +10,11 @@ import hashlib
 import json
 from pathlib import Path
 
-from plot_mixed_elasticity import metrics, oscillatory_fields, oscillatory_modulus
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed
+from examples.plot_mixed_elasticity import metrics, oscillatory_fields, oscillatory_modulus
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
 from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]

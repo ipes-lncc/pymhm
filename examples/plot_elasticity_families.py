@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import NullFormatter
 from matplotlib.tri import Triangulation
-from plot_mesh import draw_macro_mesh
 
+from examples.plot_mesh import draw_macro_mesh
 from pymhm import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]

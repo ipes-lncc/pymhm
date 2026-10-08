@@ -15,9 +15,8 @@ from typing import Any
 import numpy as np
 from scipy import sparse
 
+from examples.formulations.transport import rad_local_assembly as _rad_local
 from examples.unfitted_trace_family import nested_trace_injection
-from pymhm._legacy.models.transport.rad import _rad_local
-from pymhm._legacy.models.transport.solver import ScalarSolution
 from pymhm.core.contracts import HybridSolution
 from pymhm.core.validation import positive_int
 from pymhm.execution.cpu import map_local
@@ -26,6 +25,7 @@ from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.linalg.linear import solve_linear
 from pymhm.materials.evaluation import vector_values
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.solutions import ScalarSolution
 
 
 def gradient_projection_squared(mesh: TriangleMesh, gradient: Any, order: int) -> float:

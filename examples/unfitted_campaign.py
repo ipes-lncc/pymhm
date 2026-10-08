@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 from pathlib import Path
@@ -16,11 +24,11 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.field_sampling import sample_field
+from examples.formulations.application import darcy as solve_darcy
 from examples.layered_poisson import LayeredPoissonSeries
 from examples.plot_mesh import draw_macro_mesh
 from examples.unfitted_geometry import macro_mesh
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.darcy.primal import solve_darcy
 from pymhm.fem.quadrature.material import (
     fit_material_faces,
     fit_material_mesh,

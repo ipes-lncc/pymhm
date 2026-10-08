@@ -57,7 +57,7 @@ def test_stability_acquisition_checkpoints_failed_attempts(tmp_path, monkeypatch
         """Represent a solver rejection without accepting a fabricated field."""
         raise LinearSolveError("local physical residual criterion failed")
 
-    monkeypatch.setattr(campaign, "solve_helmholtz", rejected)
+    monkeypatch.setattr(campaign, "solve_acoustic", rejected)
     with pytest.raises(LinearSolveError, match="physical residual"):
         campaign.run(tmp_path, 0, 10, [1], 1)
     path = tmp_path / "ell0-frequency10.json"
@@ -113,7 +113,7 @@ def test_continuous_square_resonance_preserves_admissible_neighbours(tmp_path, m
     def unexpected_solve(*args, **kwargs):
         raise AssertionError("A finite inverse cannot make the continuous lifting unique")
 
-    monkeypatch.setattr(campaign, "solve_helmholtz", unexpected_solve)
+    monkeypatch.setattr(campaign, "solve_acoustic", unexpected_solve)
     campaign.run(tmp_path, 1, 15, [30], 1)
     record = json.loads((tmp_path / "ell1-frequency15.json").read_text())
     assert record["rows"] == []

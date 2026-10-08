@@ -20,8 +20,8 @@ from examples.minimal_wave_convergence import (
     require_original,
     write,
 )
-from pymhm._legacy.models.waves.helmholtz import solve_helmholtz
-from pymhm.fem.scalar.quadrilateral import _cardinals, qk_space
+from examples.tutorial_helmholtz_equations import solve_acoustic
+from pymhm.fem.scalar.quadrilateral import cardinal_polynomials, qk_space
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
@@ -70,7 +70,7 @@ def acquire(output: Path) -> dict[str, Any]:
             for face in mesh.boundary_faces
             if not np.all(mesh.points[mesh.faces[face], 1] == 0)
         }
-        solution = solve_helmholtz(
+        solution = solve_acoustic(
             mesh,
             omega=40 * np.pi,
             density=material.density,
@@ -98,7 +98,7 @@ def acquire(output: Path) -> dict[str, Any]:
             values[y, x] = pressure[dofs]
         if not occupied.all():
             raise ValueError("Marmousi fine-cell coverage is incomplete")
-        matrix = np.asarray(_cardinals(3))
+        matrix = np.asarray(cardinal_polynomials(3))
         low, high = physical_norm(values, matrix, order=4), physical_norm(values, matrix, order=5)
         sensitivity = quadrature_change({"pressure_l2": low}, {"pressure_l2": high})
         if sensitivity > 1e-10:

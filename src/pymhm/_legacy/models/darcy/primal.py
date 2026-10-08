@@ -7,143 +7,22 @@ from typing import Any, Literal
 import numpy as np
 
 from pymhm._legacy.models.darcy._mixed import normal_flux_blocks
-from pymhm.core.contracts import HybridSolution, LocalAssembly, LocalProblem
+from pymhm.core.contracts import LocalAssembly, LocalProblem
 from pymhm.core.refinement import refine_hybrid
 from pymhm.core.system import HybridSystem
 from pymhm.core.validation import FloatArray, positive_int
 from pymhm.fem.loads import point_load_vector, split_point_sources
-from pymhm.fem.quadrature.material import material_triangle_quadrature
+from pymhm.fem.quadrature.orders import nodal_quadrature_order
 from pymhm.fem.scalar.operators import (
     boundary_data,
     face_integration,
-    rt0_evaluate,
     rt0_operators,
 )
-from pymhm.fem.scalar.triangle import element_tabulate, scalar_operators, tabulate, trace_coupling
+from pymhm.fem.scalar.triangle import scalar_operators, tabulate, trace_coupling
 from pymhm.fem.traces.interval import SkeletonSpace
-from pymhm.materials.evaluation import scalar_values, tensor_values, vector_values
+from pymhm.materials.evaluation import tensor_values
 from pymhm.meshes.triangle import TriangleMesh
-
-
-def _assembly_quadrature_order(degree: int, quadrature_order: int) -> int:
-    """Resolve Darcy's volume and requested boundary count, with the degree+2 floor.
-
-    The order counts points in each Duffy coordinate on triangles and in each
-    boundary integration interval; it is not a polynomial exactness degree.
-    Boundary data also apply the trace degree+2 floor, and polynomial trace
-    coupling uses its own exact degree-dependent rule.
-    Variable coefficients and nonpolynomial loads require independent controls.
-    """
-    return max(
-        positive_int(quadrature_order, "quadrature_order"), positive_int(degree, "degree") + 2
-    )
-
-
-@dataclass(frozen=True)
-class DarcySolution:
-    """Broken pressure and conservative skeleton flux of a Darcy solve.
-
-    Primal pressure coefficients are continuous Pk nodal values on each macrocell.
-    Mixed pressure coefficients
-    are P0 cell values and the flux is RT0 conforming, with integrated face DOFs.
-    For the primal formulation, ``flux`` stores samples of ``-K grad(p)`` at
-    fine-cell centroids; these are not piecewise-constant coefficients when
-    the degree exceeds one or K varies. Error norms evaluate the full field
-    at quadrature points. Raw primal flux is generally not H(div)-conforming.
-    """
-
-    skeleton: SkeletonSpace
-    local_meshes: tuple[TriangleMesh, ...]
-    pressure: tuple[FloatArray, ...]
-    flux: tuple[FloatArray, ...]
-    hybrid: HybridSolution
-    formulation: str
-    permeability: Any
-    source: Any
-    quadrature_order: int = 4
-    degree: int = 1
-    point_sources: tuple[FloatArray, ...] = ()
-
-    def l2_error(self, exact: Any, order: int = 5) -> float:
-        """Integrate pressure error with independent higher-order quadrature."""
-        total = 0.0
-        for mesh, pressure in zip(self.local_meshes, self.pressure, strict=True):
-            bary, weights, _ = material_triangle_quadrature(mesh, self.permeability, order)
-            points = np.einsum("tqi,tij->tqj", bary, mesh.points[mesh.cells])
-            if self.formulation == "primal":
-                dofs, _, basis, _, _ = element_tabulate(mesh, self.degree, bary)
-                values = np.einsum("ti,tqi->tq", pressure[dofs], basis)
-            else:
-                values = np.broadcast_to(pressure[:, None], weights.shape)
-            difference = values - scalar_values(exact, points.reshape(-1, 2)).reshape(values.shape)
-            total += float(mesh.areas @ np.sum(difference**2 * weights, axis=1))
-        return float(np.sqrt(total))
-
-    def flux_l2_error(self, exact: Any, order: int = 5) -> float:
-        """Integrate physical flux error; primal flux is evaluated as -K grad p."""
-        total = 0.0
-        for mesh, pressure, flux in zip(self.local_meshes, self.pressure, self.flux, strict=True):
-            bary, weights, material = material_triangle_quadrature(mesh, self.permeability, order)
-            points = np.einsum("tqi,tij->tqj", bary, mesh.points[mesh.cells])
-            if self.formulation == "mixed":
-                values = rt0_evaluate(mesh, flux, bary)
-            else:
-                dofs, _, _, gradients, _ = element_tabulate(mesh, self.degree, bary)
-                grad = np.einsum("ti,tqia->tqa", pressure[dofs], gradients)
-                tensors = tensor_values(material, points.reshape(-1, 2)).reshape(
-                    *weights.shape, 2, 2
-                )
-                values = -np.einsum("tqab,tqb->tqa", tensors, grad)
-            difference = values - vector_values(exact, points.reshape(-1, 2)).reshape(values.shape)
-            total += float(mesh.areas @ np.sum(np.sum(difference**2, axis=2) * weights, axis=1))
-        return float(np.sqrt(total))
-
-    def conservation_residuals(self, order: int | None = None) -> FloatArray:
-        """Return macro flux minus source, using assembly quadrature by default.
-
-        Supply a higher order to measure source integration error separately.
-        """
-        residuals = []
-        for cell, mesh in enumerate(self.local_meshes):
-            bary, weights, _ = material_triangle_quadrature(
-                mesh, self.permeability, self.quadrature_order if order is None else order
-            )
-            flux = 0.0
-            for side, face in enumerate(self.skeleton.mesh.cell_faces[cell]):
-                space = self.skeleton.faces[face]
-                parameter, w = space.quadrature(max(space.degrees) + 2)
-                moments = w @ space.evaluate(parameter)
-                flux += (
-                    self.skeleton.mesh.signs[cell, side]
-                    * self.skeleton.mesh.lengths[face]
-                    * float(moments @ self.hybrid.trace[self.skeleton.dofs(int(face))])
-                )
-            points = np.einsum("tqi,tij->tqj", bary, mesh.points[mesh.cells])
-            integral = mesh.areas @ np.sum(
-                scalar_values(self.source, points.reshape(-1, 2)).reshape(weights.shape) * weights,
-                axis=1,
-            )
-            if self.point_sources:
-                integral += self.point_sources[cell][:, 2].sum()
-            residuals.append(flux - integral)
-        return np.asarray(residuals)
-
-    def fine_conservation_residuals(self) -> tuple[FloatArray, ...]:
-        """Return RT0 cellwise mass defects; reject raw primal flux diagnostics."""
-        if self.formulation != "mixed":
-            raise ValueError("fine-cell conservation requires the mixed RT0 formulation")
-        residuals = []
-        for cell, (mesh, flux) in enumerate(zip(self.local_meshes, self.flux, strict=True)):
-            force = rt0_operators(mesh, self.permeability, self.source, self.quadrature_order)[2]
-            if self.point_sources:
-                force += np.array(
-                    [
-                        part[:, 2].sum()
-                        for part in split_point_sources(mesh, self.point_sources[cell])
-                    ]
-                )
-            residuals.append(np.sum(flux[mesh.cell_faces] * mesh.signs, axis=1) - force)
-        return tuple(residuals)
+from pymhm.postprocessing.solutions import DarcySolution as DarcySolution
 
 
 @dataclass(frozen=True)
@@ -463,3 +342,6 @@ def solve_darcy(
         degree,
         point_parts if any(len(part) for part in point_parts) else (),
     )
+
+
+_assembly_quadrature_order = nodal_quadrature_order

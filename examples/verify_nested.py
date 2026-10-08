@@ -13,14 +13,15 @@ from uuid import uuid4
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm import FaceSpace, HybridSystem, SkeletonSpace
-from pymhm._legacy.models.darcy.cartesian import _assemble_quad, _QuadTask
-from pymhm._legacy.models.darcy.conforming import ConformingQuadrilateralSolution
+from examples.formulations.cartesian_darcy import define_cartesian_darcy
+from examples.nested_formulation import DiffusionDiscretization, child_problem
+from pymhm import FaceSpace, HybridSystem, SkeletonSpace, assemble
 from pymhm.core.nested import nest_hybrid_system, nested_trace_map
 from pymhm.fem.scalar.operators import boundary_data
 from pymhm.fem.scalar.quadrilateral import qk_basis, quadrilateral_quadrature
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.postprocessing.conforming import ConformingQuadrilateralSolution
 
 try:
     from .nested_field_archive import (
@@ -121,10 +122,7 @@ def acquire(
     for cell in range(len(macro.cells)):
         mesh = macro.submesh(cell, 2)
         skeleton = SkeletonSpace(mesh, tuple(FaceSpace.uniform(1) for _ in mesh.faces))
-        inner = HybridSystem.from_local_factory(
-            _assemble_quad,
-            [_QuadTask(mesh, i, (2, 2), skeleton, 2, 1.0, source, 6) for i in range(4)],
-        )
+        inner = assemble(child_problem(DiffusionDiscretization(mesh, skeleton, source=source)))
         kernel = np.r_[np.zeros(skeleton.size), np.ones(4)][:, None]
         moments = [metadata[1] for metadata in inner.local_metadata]
         constraint = inner.mean_constraint(moments)[0][:, None]
@@ -150,14 +148,17 @@ def acquire(
     flat_boundary, flat_fixed = boundary_data(
         flat_skeleton, dirichlet if nonhomogeneous else 0.0, order=8
     )
-    flat = HybridSystem.from_local_factory(
-        _assemble_quad,
-        [
-            _QuadTask(flat_mesh, i, (2, 2), flat_skeleton, 2, 1.0, source, 6)
-            for i in range(4 * n * n)
-        ],
-        boundary_load=flat_boundary,
+    flat_definition = define_cartesian_darcy(
+        flat_mesh,
+        skeleton=flat_skeleton,
+        degree=2,
+        permeability=1.0,
+        source=source,
+        dirichlet=dirichlet if nonhomogeneous else 0.0,
+        local_refinement=(2, 2),
+        quadrature_order=6,
     )
+    flat = assemble(flat_definition.problem)
     flat_result = flat.solve(fixed=flat_fixed)
     arrays = executed_arrays(
         n,

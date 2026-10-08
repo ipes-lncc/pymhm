@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -11,14 +19,11 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm._legacy.models.waves.elastodynamics import (
-    ElastodynamicSolution,
-    ElastodynamicStepper,
-    _stress_from_gradient,
-)
+from examples.tutorial_elastodynamic_equations import advance, initialize, prepare
 from pymhm.fem.scalar.tetrahedron import tetra_element_tabulate, tetrahedron_quadrature
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.postprocessing.dynamics import ElastodynamicSolution, stress_from_gradient
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -116,7 +121,7 @@ def norms(solution: ElastodynamicSolution, model: ElasticWave, order: int) -> di
         numerical_velocity = np.einsum("qi,tia->tqa", basis, velocity_coefficients)
         displacement_gradient = np.einsum("tqib,tia->tqab", derivative, displacement_coefficients)
         velocity_gradient = np.einsum("tqib,tia->tqab", derivative, velocity_coefficients)
-        stress = _stress_from_gradient(local, points, displacement_gradient)
+        stress = stress_from_gradient(local, points, displacement_gradient)
         exact_stress = (
             0.4
             * amplitude
@@ -142,7 +147,7 @@ def norms(solution: ElastodynamicSolution, model: ElasticWave, order: int) -> di
             totals[component] += np.sum(
                 local.mesh.volumes[:, None] * weights * defect, dtype=np.longdouble
             )
-    u, v, du, dv, stress, divergence = totals
+    u, v, du, dv, stress_squared, divergence_squared = totals
     return dict(
         zip(
             (
@@ -153,7 +158,13 @@ def norms(solution: ElastodynamicSolution, model: ElasticWave, order: int) -> di
                 "stress_l2",
                 "stress_broken_hdiv",
             ),
-            np.sqrt([u, v, u + du, v + dv, stress, stress + divergence]).astype(float).tolist(),
+            np.sqrt(
+                np.asarray(
+                    [u, v, u + du, v + dv, stress_squared, stress_squared + divergence_squared]
+                )
+            )
+            .astype(float)
+            .tolist(),
             strict=True,
         )
     )
@@ -182,6 +193,8 @@ def run(
             "execution/cpu",
         )
     ]
+    files += list(sorted((ROOT / "src/pymhm").rglob("*.py")))
+    files.append(ROOT / "examples/tutorial_elastodynamic_equations.py")
     original = current_source_manifest(
         {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
     )
@@ -192,7 +205,7 @@ def run(
         raise ValueError("final time must equal an integer number of macro time steps")
     with (
         threadpool_limits(1),
-        ElastodynamicStepper(
+        prepare(
             TetraMesh.unit_cube(n),
             time_step=dt,
             degree=3,
@@ -205,11 +218,11 @@ def run(
             workers=workers,
         ) as stepper,
     ):
-        result = stepper.initialize()
+        result = initialize(stepper)
         setup = time.perf_counter() - start
         history = []
         for step in range(steps):
-            result = stepper.advance(model.source)
+            result = advance(stepper, result, model.source)
             history.append((result.time, result.energy, result.constraint_residual))
             if step % 20 == 0:
                 print(
@@ -228,8 +241,8 @@ def run(
         name = f"n{n}-dt{dt:g}-q{order}-s{substeps}"
         np.savez_compressed(
             output / (name + ".npz"),
-            macro_points=stepper.mesh.points,
-            macro_cells=stepper.mesh.cells,
+            macro_points=stepper.skeleton.mesh.points,
+            macro_cells=stepper.skeleton.mesh.cells,
             displacement=np.array(result.displacement),
             velocity=np.array(result.velocity),
             trace=result.trace,
@@ -250,7 +263,7 @@ def run(
             "lambda": 0.4,
             "mu": 0.4,
             "rho": 1.0,
-            "macro_cells": len(stepper.mesh.cells),
+            "macro_cells": len(stepper.skeleton.mesh.cells),
             "trace_dofs": len(result.trace),
             "norms": measured,
             "quadrature_relative_change": sensitivity,

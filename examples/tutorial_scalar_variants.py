@@ -8,10 +8,19 @@ reported separately from conservation moments and algebraic residuals.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
+from functools import partial
 from pathlib import Path
 from typing import Any, TypedDict
 
@@ -19,32 +28,57 @@ import numpy as np
 from numpy.typing import NDArray
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.cartesian_darcy import define_cartesian_darcy, recover_cartesian_darcy
+from examples.formulations.darcy import define_darcy, pressure_constraints, recover_darcy
+from examples.formulations.mixed_darcy import (
+    conforming_rt_reference,
+    define_bdm_darcy,
+    define_rt_darcy,
+    recover_bdm_darcy,
+    recover_rt_darcy,
+)
+from examples.formulations.mixed_darcy_3d import define_hdiv_darcy, recover_hdiv_darcy
+from examples.formulations.moments import define_moment_diffusion, recover_moment_diffusion
+from examples.formulations.moments import pressure_constraints as moment_constraints
+from examples.formulations.moments_3d import define_moment_diffusion_3d, recover_moment_diffusion_3d
+from examples.formulations.penalty import add_jump_form, recover_penalty
+from examples.formulations.residual_transport import streamline_equations
+from examples.formulations.robin import (
+    define_robin,
+    define_robin_3d,
+    recover_robin,
+    recover_robin_3d,
+    robin_gauge,
+    robin_gauge_3d,
+)
+from examples.formulations.scalar import ScalarDiscretization
+from examples.formulations.tensor_darcy import define_tensor_darcy, recover_tensor_darcy
+from examples.formulations.tetrahedral_darcy import (
+    define_tetrahedral_darcy,
+    recover_tetrahedral_darcy,
+)
+from examples.formulations.three_field import (
+    define_three_field,
+    define_three_field_3d,
+    recover_three_field,
+    recover_three_field_3d,
+)
+from examples.tutorial_helmholtz_equations import solve_acoustic
 from pymhm import (
     AffineMixedMesh,
     CartesianMacroMesh,
+    Equation,
     FaceSpace,
+    MultiscaleProblem,
     SkeletonSpace,
     TetraMesh,
     TriangleMesh,
     TriangularSkeleton,
+    assemble,
 )
-from pymhm._legacy.models.darcy.cartesian import solve_darcy_quadrilateral
-from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
-from pymhm._legacy.models.darcy.mixed_bdm import solve_darcy_bdm
-from pymhm._legacy.models.darcy.mixed_rt import solve_darcy_rt, solve_darcy_rt_conforming
-from pymhm._legacy.models.darcy.primal import solve_darcy
-from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
-from pymhm._legacy.models.darcy.tensor import solve_darcy_tensor_rt
-from pymhm._legacy.models.transport.solver import solve_transport
-from pymhm._legacy.models.waves.helmholtz import solve_helmholtz
 from pymhm.core.validation import FloatArray, positive_int
-from pymhm.methods.hho import solve_mshho
-from pymhm.methods.hho_3d import solve_mshho_3d
-from pymhm.methods.petrov_galerkin import solve_pgmhm
-from pymhm.methods.robin import solve_mh
-from pymhm.methods.robin_3d import solve_mh_3d
-from pymhm.methods.three_field import solve_mh2m
-from pymhm.methods.three_field_3d import solve_mh2m_3d
+from pymhm.fem.scalar.operators import boundary_data
+from pymhm.postprocessing.solutions import ScalarSolution
 
 
 class _PatchOptions(TypedDict):
@@ -302,13 +336,22 @@ def acoustic_source(points: FloatArray) -> NDArray[np.complex128]:
     return np.asarray(-0.25 * acoustic_pressure(points), dtype=np.complex128)
 
 
+def _execute(definition: Any, recovery: Any, constraints: Any = pressure_constraints) -> Any:
+    """Compile declared local/global equations and apply their explicit physical gauge."""
+    system = assemble(definition.problem)
+    gauges = constraints(definition, system)
+    solution = system.solve(fixed=definition.problem.fixed, constraints=gauges)
+    return recovery(definition, system, solution)
+
+
 def solve_variant(variant: str, *, refinement: int | None = None) -> Any:
-    """Execute one named patch through its public high-level solver.
+    """Execute one named patch from explicitly declared public mathematical equations.
 
     All patches use identity diffusion/permeability. ``refinement`` overrides
     the declared edge subdivisions; 3D tetrahedral refinements must be dyadic.
-    Classical RT uses global mesh subdivisions instead. High-level solvers
-    own assembly, actual bases, trace signs, boundary elimination and gauges.
+    Classical RT uses global mesh subdivisions as an independent conforming
+    reference. Application providers declare actual bases, trace signs,
+    kernel moments and boundary data; generic assembly/solve executes them.
     An invalid family name raises ``ValueError`` before constructing a mesh.
     """
     if variant not in VARIANTS:
@@ -321,40 +364,62 @@ def solve_variant(variant: str, *, refinement: int | None = None) -> Any:
         dirichlet=boundary, source=source, local_refinement=r, quadrature_order=6
     )
     if variant.startswith("hdiv-"):
-        return solve_darcy_hdiv3d(
-            AffineMixedMesh.unit_cube(kind="prism" if variant == "hdiv-prism" else "tetrahedron"),
-            pressure_degree=2 if variant == "hdiv-tetra-plus" else 1,
-            normal_degree=1,
-            trace_degree=1,
-            **options,
+        return _execute(
+            define_hdiv_darcy(
+                AffineMixedMesh.unit_cube(
+                    kind="prism" if variant == "hdiv-prism" else "tetrahedron"
+                ),
+                pressure_degree=2 if variant == "hdiv-tetra-plus" else 1,
+                normal_degree=1,
+                trace_degree=1,
+                **options,
+            ),
+            recover_hdiv_darcy,
         )
     if variant in {"primal3d", "mh-robin3d", "mh2m3d", "mshho3d"}:
         tetra = TetraMesh.unit_cube()
         if variant == "primal3d":
-            return solve_darcy_3d(tetra, degree=2, **options)
+            return _execute(
+                define_tetrahedral_darcy(tetra, degree=2, **options), recover_tetrahedral_darcy
+            )
         if variant == "mh-robin3d":
-            return solve_mh_3d(
-                tetra,
-                degree=2,
-                skeleton=TriangularSkeleton(tetra, degree=1),
-                robin_parameter=0.1,
-                **options,
+            return _execute(
+                define_robin_3d(
+                    tetra,
+                    degree=2,
+                    skeleton=TriangularSkeleton(tetra, degree=1),
+                    robin_parameter=0.1,
+                    **options,
+                ),
+                recover_robin_3d,
+                robin_gauge_3d,
             )
         if variant == "mh2m3d":
-            return solve_mh2m_3d(tetra, degree=2, **options)
-        return solve_mshho_3d(tetra, degree=2, cell_degree=0, **options)
+            return _execute(
+                define_three_field_3d(tetra, degree=2, **options), recover_three_field_3d
+            )
+        return _execute(
+            define_moment_diffusion_3d(tetra, degree=2, cell_degree=0, **options),
+            recover_moment_diffusion_3d,
+            moment_constraints,
+        )
     if variant in {"primal-rectangle", "tensor-rt", "tensor-rt-plus"}:
         rectangle = CartesianMacroMesh(2, 1)
         if variant == "primal-rectangle":
-            return solve_darcy_quadrilateral(rectangle, degree=2, **options)
-        return solve_darcy_tensor_rt(
-            rectangle,
-            degree=0 if variant == "tensor-rt-plus" else 1,
-            enrichment=1 if variant == "tensor-rt-plus" else 0,
-            **options,
+            return _execute(
+                define_cartesian_darcy(rectangle, degree=2, **options), recover_cartesian_darcy
+            )
+        return _execute(
+            define_tensor_darcy(
+                rectangle,
+                degree=0 if variant == "tensor-rt-plus" else 1,
+                enrichment=1 if variant == "tensor-rt-plus" else 0,
+                **options,
+            ),
+            recover_tensor_darcy,
         )
     if variant == "classical-rt1":
-        return solve_darcy_rt_conforming(
+        return conforming_rt_reference(
             TriangleMesh.unit_square(r),
             degree=1,
             source=0,
@@ -372,42 +437,66 @@ def solve_variant(variant: str, *, refinement: int | None = None) -> Any:
                 int(face): float(np.array([-1.0, -2.0]) @ triangle.normals[face])
                 for face in triangle.boundary_faces
             }
-        return solve_darcy(
-            triangle,
-            degree=2,
-            skeleton=skeleton,
-            neumann=neumann,
-            mean_pressure=spec.gauge or 0.0,
-            **options,
+        return _execute(
+            define_darcy(
+                triangle,
+                degree=2,
+                skeleton=skeleton,
+                neumann=neumann,
+                mean_pressure=spec.gauge or 0.0,
+                **options,
+            ),
+            recover_darcy,
         )
     if variant in {"rt0", "rt1"}:
-        return solve_darcy_rt(triangle, degree=int(variant == "rt1"), **options)
+        return _execute(
+            define_rt_darcy(triangle, degree=int(variant == "rt1"), **options), recover_rt_darcy
+        )
     if variant in {"bdm", "bdm-plus", "bdm-double-plus"}:
-        return solve_darcy_bdm(
-            triangle,
-            degree=2 if variant == "bdm" else 1,
-            enrichment={"bdm": 0, "bdm-plus": 1, "bdm-double-plus": 2}[variant],
-            **options,
+        return _execute(
+            define_bdm_darcy(
+                triangle,
+                degree=2 if variant == "bdm" else 1,
+                enrichment={"bdm": 0, "bdm-plus": 1, "bdm-double-plus": 2}[variant],
+                **options,
+            ),
+            recover_bdm_darcy,
         )
     if variant == "mh2m":
-        return solve_mh2m(triangle, degree=2, **options)
+        return _execute(define_three_field(triangle, degree=2, **options), recover_three_field)
     if variant in {"mshho", "mshho-face"}:
-        return solve_mshho(
-            triangle,
-            degree=2,
-            cell_degree=-1 if variant == "mshho-face" else 0,
-            source_variant="reconstructed" if variant == "mshho-face" else "projected",
-            **options,
+        return _execute(
+            define_moment_diffusion(
+                triangle,
+                degree=2,
+                cell_degree=-1 if variant == "mshho-face" else 0,
+                source_variant="reconstructed" if variant == "mshho-face" else "projected",
+                **options,
+            ),
+            recover_moment_diffusion,
+            moment_constraints,
         )
     linear_trace = SkeletonSpace(triangle, tuple(FaceSpace.uniform(1) for _ in triangle.faces))
     if variant == "mh-robin":
-        return solve_mh(triangle, degree=2, skeleton=linear_trace, robin_parameter=0.1, **options)
-    if variant == "pgmhm":
-        return solve_pgmhm(
-            triangle, degree=3, skeleton=linear_trace, stabilization_parameter=0.1, **options
+        return _execute(
+            define_robin(triangle, degree=2, skeleton=linear_trace, robin_parameter=0.1, **options),
+            recover_robin,
+            robin_gauge,
         )
+    if variant == "pgmhm":
+        definition = define_darcy(
+            triangle, degree=3, skeleton=linear_trace, **{**options, "dirichlet": 0.0}
+        )
+        assembled = assemble(definition.problem)
+        system, jump_forms, lower = add_jump_form(
+            definition, assembled, alpha=0.1, dirichlet=affine_pressure
+        )
+        result = system.solve(
+            fixed=definition.problem.fixed, constraints=pressure_constraints(definition, system)
+        )
+        return recover_penalty(definition, system, result, jump_forms, lower, alpha=0.1)
     if variant == "helmholtz":
-        return solve_helmholtz(
+        return solve_acoustic(
             triangle,
             omega=0.5,
             degree=2,
@@ -419,18 +508,33 @@ def solve_variant(variant: str, *, refinement: int | None = None) -> Any:
             quadrature_order=6,
         )
     stabilization = {"rad": "galerkin", "rad-supg": "supg", "rad-unusual": "unusual"}[variant]
-    return solve_transport(
-        triangle,
-        degree=2,
-        skeleton=linear_trace,
-        diffusion=1,
-        velocity=(0.0, 0.0) if variant == "rad-unusual" else (0.25, -0.5),
-        reaction=0.5,
-        source=reaction_source if variant == "rad-unusual" else rad_source,
-        dirichlet=affine_pressure,
-        local_refinement=r,
-        quadrature_order=6,
-        stabilization=stabilization,
+    data = ScalarDiscretization(
+        triangle, linear_trace, diffusion=1.0, degree=2, refinement=r, order=6
+    )
+    velocity = (0.0, 0.0) if variant == "rad-unusual" else (0.25, -0.5)
+    forcing = reaction_source if variant == "rad-unusual" else rad_source
+    boundary_load, fixed = boundary_data(linear_trace, affine_pressure, order=6)
+    equations = MultiscaleProblem(
+        Equation(0, -np.r_[boundary_load, np.zeros(len(triangle.cells))]),
+        partial(
+            streamline_equations,
+            data=data,
+            velocity=velocity,
+            velocity_divergence=0.0,
+            diffusion_divergence=(0.0, 0.0),
+            reaction=0.5,
+            source=forcing,
+            stabilization=stabilization,
+        ),
+        range(len(triangle.cells)),
+        linear_trace.size,
+        (1,) * len(triangle.cells),
+        fixed=fixed,
+    )
+    system = assemble(equations)
+    result = system.solve(fixed=fixed)
+    return ScalarSolution(
+        linear_trace, tuple(item[0] for item in system.local_metadata), result.fields, result, 2
     )
 
 

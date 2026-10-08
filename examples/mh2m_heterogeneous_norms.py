@@ -13,8 +13,8 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm.fem.quadrature.material import _clip_polygon
 from pymhm.fem.scalar.operators import triangle_quadrature
+from pymhm.meshes.geometry import clip_polygon
 
 
 @dataclass(frozen=True)
@@ -127,11 +127,11 @@ def _overlay_batches(first: int, second: int, batch: int = 2048) -> Iterator[np.
             transformed = np.column_stack((polygon[:, 0] - polygon[:, 1], polygon[:, 1]))
             parts = [transformed]
             for offset in offsets:
-                divided = []
+                divided: list[np.ndarray] = []
                 for part in parts:
                     if part[:, 0].min() < offset < part[:, 0].max():
                         divided.extend(
-                            _clip_polygon(part, 0, offset, sign) for sign in (False, True)
+                            clip_polygon(part, 0, offset, sign) for sign in (False, True)
                         )
                     else:
                         divided.append(part)

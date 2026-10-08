@@ -647,7 +647,7 @@ print({"literal_provider_sha256": provider_source_sha256,
 ```
 
 ```text
-{'literal_provider_sha256': '75a5366446fae8fc59e3f78355ca65a00a419c01199e2684a0201eebc39c5741', 'module_sha256': '1ca109553770ff6713acce5e5e6ef1c9e0e8071135e3d027e764fc0a9cd11c2b', 'one_time_export_import_seconds': 0.016314398497343063}
+{'literal_provider_sha256': '75a5366446fae8fc59e3f78355ca65a00a419c01199e2684a0201eebc39c5741', 'module_sha256': '1ca109553770ff6713acce5e5e6ef1c9e0e8071135e3d027e764fc0a9cd11c2b', 'one_time_export_import_seconds': 0.020114725455641747}
 ```
 
 ## 5. Declare the selected workloads and repetition protocol
@@ -1133,12 +1133,6 @@ if not RUN_CAMPAIGN:
     from IPython.display import Image, display
 
     archive_folder = ROOT / "benchmarks/results/execution/introduction-processes-20261004"
-    # Verify every persisted receipt and figure before presenting its measurements.
-    for checksum in (archive_folder / "SHA256SUMS").read_text().splitlines():
-        expected, relative = checksum.split(maxsplit=1)
-        actual = hashlib.sha256((archive_folder / relative).read_bytes()).hexdigest()
-        if actual != expected:
-            raise ValueError(f"Archive integrity mismatch: {relative}")
     _, current_mhm = run_mhm("process", workers=2, fine_n=200, trace_segments=4)
     _, current_classical = run_classical(200, solver="scipy")
     current_errors = {
@@ -1174,9 +1168,26 @@ if not RUN_CAMPAIGN:
         field_fig.colorbar(artist, ax=ax, label="pressure")
     plt.show()
 
-    print("Historical campaign figures (2026-10-04; original revision retained above):")
+    # Published timings retain their original revision. Verify every available
+    # artifact and identify the original payloads absent from a source checkout.
+    historical_missing = []
+    for checksum in (archive_folder / "SHA256SUMS").read_text().splitlines():
+        expected, relative = checksum.split(maxsplit=1)
+        original = archive_folder / relative
+        if original.is_file():
+            if hashlib.sha256(original.read_bytes()).hexdigest() != expected:
+                raise ValueError(f"Archive integrity mismatch: {relative}")
+        else:
+            historical_missing.append(relative)
+    print("Historical artifacts absent from this checkout:", historical_missing)
+    print("The current numerical control above is independent of these historical timings.")
+    print("Available historical campaign figures (original revision retained above):")
     for figure_name in ('pressure_fields.png', 'flux_fields.png', 'reference_refinement_errors.png', 'strong_and_weak_scaling.png', 'strong_stage_costs.png', 'workload_crossover.png', 'weak_efficiency_and_physical_errors.png'):
-        display(Image(filename=str(archive_folder / "figures" / figure_name)))
+        original_figure = archive_folder / "figures" / figure_name
+        if original_figure.is_file():
+            display(Image(filename=str(original_figure)))
+        else:
+            print(f"Historical figure unavailable: {figure_name}; run PYMHM_RUN_CAMPAIGN=1 for new measurements.")
 ```
 
 ??? note "Numerical output and provenance"
@@ -1381,7 +1392,9 @@ if not RUN_CAMPAIGN:
 
 
 ```text
-Historical campaign figures (2026-10-04; original revision retained above):
+Historical artifacts absent from this checkout: []
+The current numerical control above is independent of these historical timings.
+Available historical campaign figures (original revision retained above):
 ```
 
 

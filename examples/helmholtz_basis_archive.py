@@ -115,7 +115,7 @@ def restore_trace_skeleton(mesh: Any, archive: Mapping[str, np.ndarray]) -> Skel
                         "executed oscillatory transform digest differs from its archive"
                     )
                 matrices.append(matrix)
-            space = OscillatoryFaceSpace.from_executed_transforms(
+            space: FaceSpace | OscillatoryFaceSpace = OscillatoryFaceSpace.from_executed_transforms(
                 breaks,
                 degrees,
                 matrices,

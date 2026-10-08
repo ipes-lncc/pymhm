@@ -6,10 +6,10 @@ import numpy as np
 from numpy.testing import assert_allclose
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import mapped_darcy as solve_darcy_mapped_rt
 from examples.mapped_well_fields import MappedWellField, difference
 from examples.solve_mapped_oscillatory_well import OscillatoryWellData
 from examples.solve_mapped_well import WellData
-from pymhm._legacy.models.darcy.mapped import solve_darcy_mapped_rt
 from pymhm.meshes.hexahedron import HexMesh
 
 

@@ -95,8 +95,8 @@ without changing the numerical solution.
 ## Reproduction
 
 ```bash
-pixi run -e notebooks python -m examples.darcy_jump_campaign --collect
-pixi run -e notebooks python -m examples.darcy_jump_campaign
+pixi run --locked -e notebooks python -m examples.darcy_jump_campaign --collect
+pixi run --locked -e notebooks python -m examples.darcy_jump_campaign
 ```
 
 The ten numerical records and macro-indicator arrays are in

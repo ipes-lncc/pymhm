@@ -7,13 +7,14 @@ from typing import Any, Literal
 
 import numpy as np
 
-from pymhm._legacy.models.darcy.primal import DarcySolution, solve_darcy
+from pymhm._legacy.models.darcy.primal import solve_darcy
 from pymhm.core.validation import FloatArray, positive_int
 from pymhm.estimators.darcy_energy import WeightedDarcyEstimator, estimate_darcy_indicator
 from pymhm.fem.conditions import minimum_estimator_degree
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.meshes.refinement import TriangleRefinement, refine_triangles, transfer_skeleton
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.solutions import DarcySolution
 
 
 def mark_dorfler(local_squared: Any, theta: float = 0.5) -> np.ndarray:
@@ -70,6 +71,7 @@ def solve_adaptive_darcy(
     maximum_cells: int = 10000,
     trace_degree: int = 0,
     trace_segments: int = 1,
+    trace_space: FaceSpace | None = None,
     reconstruction_degree: int = 1,
     estimator_order: int = 8,
     estimator_convention: Literal["published", "energy"] = "energy",
@@ -79,6 +81,7 @@ def solve_adaptive_darcy(
     skeleton: SkeletonSpace | None = None,
     local_mesh_factory: Callable[[TriangleMesh, int], TriangleMesh] | None = None,
     macro_refiner: Callable[[TriangleMesh, Any], TriangleRefinement] = refine_triangles,
+    solve_step: Callable[..., DarcySolution] | None = None,
     **problem: Any,
 ) -> AdaptiveDarcyResult:
     """Solve, estimate, mark and red-green-refine a primal Darcy macro mesh.
@@ -100,25 +103,35 @@ def solve_adaptive_darcy(
     default ``'energy'`` uses physical material weights. The printed convention does not imply a
     general-SPD energy upper bound. ``estimator_backend`` and ``estimator_workers`` select
     independent execution of local reconstruction and indicator terms separately from the PDE
-    solver.
+    solver. ``trace_space`` declares the scalar face space used initially and
+    on new macrofaces; its literal degree and continuity override trace_degree
+    and trace_segments. Existing faces retain their transferred partitions.
+    ``solve_step(mesh, skeleton=current_space, **problem_data)`` may assemble
+    the user's own mathematical equations at each state. It receives the actual
+    transferred boundary data and local partitions; its returned physical field
+    must satisfy the estimator's existing hypotheses. The default retains the
+    built-in solve. Callback exceptions propagate without changing refinement.
     """
     positive_int(iterations, "iterations")
     positive_int(maximum_cells, "maximum_cells")
     if not np.isreal(tolerance) or not np.isfinite(tolerance) or tolerance < 0:
         raise ValueError("tolerance must be finite and nonnegative")
     mark_dorfler([1.0], theta)
-    space = FaceSpace.uniform(trace_degree, trace_segments)
+    space = FaceSpace.uniform(trace_degree, trace_segments) if trace_space is None else trace_space
     skeleton = (
         SkeletonSpace(mesh, tuple(space for _ in mesh.faces)) if skeleton is None else skeleton
     )
     if skeleton.mesh is not mesh or skeleton.components != 1:
         raise ValueError("adaptive Darcy requires a scalar skeleton on the supplied mesh")
+    if solve_step is not None and not callable(solve_step):
+        raise TypeError("solve_step must be callable or None")
+    solve = solve_darcy if solve_step is None else solve_step
     parameters = dict(problem)
     if "local_meshes" in parameters:
         raise ValueError("use local_mesh_factory for adaptive local partitions")
     if parameters.get("formulation", "primal") != "primal":
         raise ValueError("the adaptive energy estimator requires primal Darcy")
-    parameters.setdefault("degree", minimum_estimator_degree(trace_degree, 2))
+    parameters.setdefault("degree", minimum_estimator_degree(max(space.degrees), 2))
     parameters.setdefault("quadrature_order", estimator_order)
     solutions, estimates, marks, refinements = [], [], [], []
     bound = ellipticity_lower_bound
@@ -127,7 +140,7 @@ def solve_adaptive_darcy(
             parameters["local_meshes"] = tuple(
                 local_mesh_factory(mesh, cell) for cell in range(len(mesh.cells))
             )
-        solution = solve_darcy(mesh, skeleton=skeleton, **parameters)
+        solution = solve(mesh, skeleton=skeleton, **parameters)
         estimate = estimate_darcy_indicator(
             solution,
             convention=estimator_convention,

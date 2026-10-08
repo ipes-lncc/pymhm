@@ -8,6 +8,14 @@ preserved separately from the sampled comparison norm.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -20,7 +28,7 @@ from threadpoolctl import threadpool_limits
 
 from examples.helmholtz_trace_family import verify_helmholtz_solution
 from examples.marmousi_data import load_marmousi_crop
-from pymhm._legacy.models.waves.helmholtz import solve_helmholtz
+from examples.tutorial_helmholtz_equations import solve_acoustic
 from pymhm.fem.scalar.quadrilateral import qk_basis
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton
 from pymhm.io.provenance import current_source_manifest, file_digest
@@ -79,6 +87,7 @@ def source_hashes() -> dict[str, str]:
     names = [
         "examples/marmousi_campaign.py",
         "examples/marmousi_data.py",
+        "examples/tutorial_helmholtz_equations.py",
         "examples/campaign_provenance.py",
         "examples/helmholtz_trace_family.py",
         *(path.relative_to(ROOT).as_posix() for path in sorted((ROOT / "src/pymhm").rglob("*.py"))),
@@ -108,7 +117,7 @@ def main() -> None:
     before = source_hashes()
     start = time.perf_counter()
     with threadpool_limits(1):
-        solution = solve_helmholtz(
+        solution = solve_acoustic(
             mesh,
             omega=40 * np.pi,
             density=material.density,

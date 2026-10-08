@@ -14,11 +14,13 @@ from examples.elasticity_field_samples import (
     sample_elasticity_fields,
     sample_elasticity_profile,
 )
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed
+from examples.formulations.application import (
+    weak_stress_elasticity as solve_elasticity_mixed_polygons,
+)
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_tensor_rt
 from examples.solve_core_extensions import polygon_grid
 from pymhm import CartesianMacroMesh, TriangleMesh
-from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
-from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
-from pymhm._legacy.models.geometry import solve_elasticity_mixed_polygons
 from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]

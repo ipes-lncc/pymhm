@@ -9,7 +9,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-from plot_style import set_refinement_ticks
+
+from examples.plot_style import set_refinement_ticks
 
 ROOT = Path(__file__).resolve().parents[1]
 COLORS = ("#cf352e", "#a52a8b", "#168449", "#2166ac", "#9a7016")

@@ -71,7 +71,7 @@ coefficient weights and boundary liftings require their own derivation.
 
 ```python
 from pymhm import TriangleMesh
-from pymhm._legacy.models.darcy.primal import solve_darcy
+from examples.formulations.application import darcy as solve_darcy
 from pymhm.estimators.darcy import estimate_darcy_error
 
 solution = solve_darcy(
@@ -162,8 +162,8 @@ refinement loop or establish contrast-uniform efficiency. The article's
 efficiency estimates contain mesh-ratio and additional flux/oscillation terms.
 
 ```console
-pixi run -e notebooks python examples/plot_estimator.py
-pixi run -e notebooks python examples/plot_estimator.py --reuse-results
+pixi run --locked -e notebooks python -m examples.plot_estimator
+pixi run --locked -e notebooks python -m examples.plot_estimator --reuse-results
 ```
 
 The first command solves and archives `examples/results/estimator.json` and

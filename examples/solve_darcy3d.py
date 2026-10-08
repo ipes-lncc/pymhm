@@ -14,7 +14,7 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from examples.formulations.application import tetrahedral_darcy as solve_darcy_3d
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.tetrahedron import TetraMesh

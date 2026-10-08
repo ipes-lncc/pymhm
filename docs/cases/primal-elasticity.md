@@ -55,7 +55,7 @@ with 20 for full P3.
 ```python
 import numpy as np
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.vector import solve_elasticity
+from examples.formulations.application import elasticity as solve_elasticity
 
 mesh = TriangleMesh.unit_square(4)
 trace = SkeletonSpace(mesh, tuple(FaceSpace.uniform(1) for _ in mesh.faces), 2)
@@ -128,9 +128,9 @@ Assembly/error quadrature orders are 10/12.
 ![Variable-tensor P1 displacement and raw stress](../figures/primal-elasticity/variable-p1-fields.png)
 
 ```bash
-pixi run --locked -e test-core python examples/solve_primal_elasticity.py --degree 2
-pixi run --locked -e test-core python examples/solve_primal_elasticity.py --degree 2 --constant
-pixi run -e notebooks python examples/plot_elasticity_extensions.py
+pixi run --locked -e test-core python -m examples.solve_primal_elasticity --degree 2
+pixi run --locked -e test-core python -m examples.solve_primal_elasticity --degree 2 --constant
+pixi run --locked -e notebooks python -m examples.plot_elasticity_extensions
 ```
 
 ## References

@@ -28,7 +28,9 @@ def test_runner_retains_matplotlib_display_with_headless_parent(
     monkeypatch.setattr(runner, "__file__", str(tmp_path / "scripts/run_notebooks.py"))
     source = (
         "from pathlib import Path\n"
+        "import sys\n"
         f"assert Path.cwd() == Path({str(tmp_path)!r})\n"
+        f"assert Path(sys.executable).resolve() == Path({sys.executable!r}).resolve()\n"
         "import matplotlib.pyplot as plt\n"
         "fig, ax = plt.subplots()\n"
         "ax.plot([0, 1], [0, 1])\n"
@@ -141,3 +143,77 @@ def test_runner_rejects_invalid_selection_before_execution(
     monkeypatch.setattr(sys, "argv", ["run_notebooks.py", *arguments])
     with pytest.raises(SystemExit, match=message):
         runner.main()
+
+
+def test_plan_and_auto_preparation_of_clean_inputs(runner, tmp_path, monkeypatch, capsys):
+    """A clean notebook selection prepares its declared fields before launching a kernel."""
+    import json
+
+    import notebook_reproduction as reproduction
+
+    manifest_path = tmp_path / "reproduction.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "notebooks": {
+                    "notebooks/darcy/33_darcy_rt.ipynb": {
+                        "environment": "notebooks",
+                        "requires": [],
+                        "preparation": [
+                            {
+                                "environment": "notebooks",
+                                "argv": [
+                                    "python",
+                                    "-m",
+                                    "examples.solve_darcy_rt",
+                                ],
+                            }
+                        ],
+                    },
+                }
+            }
+        )
+    )
+    monkeypatch.setattr(reproduction, "REPRODUCTION_MANIFEST", manifest_path)
+    path = tmp_path / "notebooks/darcy/33_darcy_rt.ipynb"
+    path.parent.mkdir(parents=True)
+    runner.nbformat.write(runner.nbformat.v4.new_notebook(), path)
+    fields = tmp_path / "examples/results"
+    fields.mkdir(parents=True)
+    (fields / "darcy-rt.json").write_text(json.dumps({"rows": [{"fields": "field.npz"}]}))
+    monkeypatch.setattr(runner, "__file__", str(tmp_path / "scripts/run_notebooks.py"))
+    monkeypatch.setattr(sys, "argv", ["run_notebooks.py", "33", "--plan"])
+    runner.main()
+    plan = json.loads(capsys.readouterr().out)
+    assert plan["missing"] == ["examples/results/field.npz"]
+    assert plan["preparation"][0]["argv"] == ["python", "-m", "examples.solve_darcy_rt"]
+    assert not (tmp_path / "build/notebooks").exists()
+    monkeypatch.setattr(sys, "argv", ["run_notebooks.py", "33", "--no-prepare"])
+    with pytest.raises(SystemExit, match="Missing 1 computed"):
+        runner.main()
+    calls = []
+
+    def prepare(root, acquisition):
+        calls.append(acquisition)
+        (fields / "field.npz").write_bytes(b"PK-produced")
+        for image in runner.execution_inputs(root, [path])[1]["33"]:
+            image.parent.mkdir(parents=True, exist_ok=True)
+            image.write_bytes(b"produced-png")
+
+    class Client:
+        def __init__(self, notebook, **kwargs):
+            self.notebook = notebook
+            assert kwargs["km"].kernel_spec.argv[0] == sys.executable
+
+        def execute(self, **kwargs):
+            assert kwargs["cleanup_kc"] is True
+
+    monkeypatch.setattr(runner, "prepare_notebook_inputs", prepare)
+    monkeypatch.setattr(runner, "NotebookClient", Client)
+    monkeypatch.setattr(sys, "argv", ["run_notebooks.py", "33"])
+    runner.main()
+    assert len(calls) == 1
+    assert (tmp_path / "build/notebooks/darcy/33_darcy_rt.ipynb").is_file()
+    receipt = json.loads((tmp_path / "build/notebooks/execution.json").read_text())
+    assert receipt["python_executable"] == sys.executable
+    assert receipt["notebooks"][0]["source_sha256"]

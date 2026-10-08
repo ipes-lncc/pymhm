@@ -18,19 +18,23 @@ from scipy import sparse
 from pymhm.core.contracts import HybridSolution
 from pymhm.core.equations import Equation, LocalEquations
 from pymhm.core.multiscale import MultiscaleProblem, MultiscaleSystem
-from pymhm.core.validation import positive_int
+from pymhm.core.validation import dyadic_refinement, positive_int
+from pymhm.fem.scalar.neumann import NeumannMaps, neumann_maps
 from pymhm.fem.scalar.tetrahedron import tetra_operators
 from pymhm.fem.scalar.triangle import scalar_operators, trace_coupling
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
-from pymhm.fem.traces.pressure_3d import PressureTraceSpace3D, boundary_rules, broken_face_basis
+from pymhm.fem.traces.pairing import interface_pairing
+from pymhm.fem.traces.pressure_2d import PressureTraceSpace
+from pymhm.fem.traces.pressure_3d import PressureTraceSpace3D, boundary_rules
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton, tetra_trace_coupling
 from pymhm.materials.evaluation import scalar_values, scalar_values_3d
 from pymhm.meshes.polygonal import PolygonMesh
 from pymhm.meshes.refinement import validate_submesh
-from pymhm.meshes.tetrahedron import TetraMesh, _dyadic
+from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.meshes.triangle import TriangleMesh
-from pymhm.methods.three_field import MH2MLocal, MH2MSolution, PressureTraceSpace, _neumann_maps
-from pymhm.methods.three_field_3d import MH2M3DSolution
+from pymhm.postprocessing.fields import FieldDefinition
+from pymhm.postprocessing.nodal import nodal_field
+from pymhm.postprocessing.solutions import MH2M3DSolution, MH2MSolution
 
 
 @dataclass(frozen=True)
@@ -47,7 +51,7 @@ class ThreeFieldDefinition:
     pressure_integral: float | None
 
 
-def _equations(data: MH2MLocal) -> LocalEquations:
+def _equations(data: NeumannMaps, degree: int) -> LocalEquations:
     """Write Ap-Beta eta=f, -Beta.T p+P rho=0 and P.T eta=g.
 
     Local u=(p,eta) contains a private outward conormal on every macroface.
@@ -68,6 +72,20 @@ def _equations(data: MH2MLocal) -> LocalEquations:
         coupling.T,
         data.trace_dofs,
         metadata=(data, np.r_[data.volume_moments, np.zeros(nlambda)]),
+        field_data=(
+            nodal_field(
+                "pressure",
+                data.mesh,
+                degree,
+                reconstruction=sparse.eye(npres + nlambda, format="csr")[:npres],
+            ),
+            FieldDefinition(
+                "conormal",
+                mesh=data.mesh,
+                reconstruction=sparse.eye(npres + nlambda, format="csr")[npres:],
+                basis_id="outward-conormal:facewise-coordinates",
+            ),
+        ),
     )
 
 
@@ -117,10 +135,10 @@ def triangular_local_equations(
             )
         ] = block
         offset += width
-    inspection = _neumann_maps(
+    inspection = neumann_maps(
         fine, trace_ids, stiffness, mass, load, beta, pairing, constant, inspection_solver
     )
-    return _equations(inspection)
+    return _equations(inspection, degree)
 
 
 def tetrahedral_local_equations(
@@ -143,22 +161,13 @@ def tetrahedral_local_equations(
     )
     beta = tetra_trace_coupling(mesh, cell, fine, flux, degree)
     trace_ids = gamma.cell_dofs(cell)
-    pairing = np.zeros((beta.shape[1], len(trace_ids)))
-    face_rows = {}
+    pairing = interface_pairing(flux, gamma, cell, order=order)
     offset = 0
     for side, face in enumerate(mesh.cell_faces[cell]):
         width = len(flux.dofs(int(face)))
         beta[:, offset : offset + width] *= mesh.signs[cell, side]
-        face_rows[int(face)] = np.arange(offset, offset + width)
         offset += width
-    for face, _, _, _, weights, bary in boundary_rules(
-        mesh, cell, fine, degree, max(order, gamma.degree + int(flux.degrees.max()) + 2)
-    ):
-        lam, rho = broken_face_basis(flux, face, bary), gamma.evaluate(face, bary)
-        pairing[np.ix_(face_rows[face], np.searchsorted(trace_ids, gamma.face_dofs[face]))] += (
-            lam.T @ (weights[:, None] * rho)
-        )
-    inspection = _neumann_maps(
+    inspection = neumann_maps(
         fine,
         trace_ids,
         stiffness,
@@ -169,7 +178,7 @@ def tetrahedral_local_equations(
         np.ones(beta.shape[1]),
         inspection_solver,
     )
-    return _equations(inspection)
+    return _equations(inspection, degree)
 
 
 def define_three_field(
@@ -281,7 +290,7 @@ def define_three_field_3d(
     if not isinstance(mesh, TetraMesh):
         raise TypeError("three-field 3D equations require a tetrahedral macro mesh")
     degree = positive_int(degree, "degree")
-    refinement = _dyadic(local_refinement, "local_refinement")
+    refinement = dyadic_refinement(local_refinement, "local_refinement")
     order = max(positive_int(quadrature_order, "quadrature_order"), degree + 2)
     gamma = PressureTraceSpace3D(mesh) if pressure_trace is None else pressure_trace
     flux = TriangularSkeleton(mesh) if flux_space is None else flux_space

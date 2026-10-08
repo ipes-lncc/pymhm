@@ -8,7 +8,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from examples.mh2m_heterogeneous_norms import overlay_triangles
-from pymhm.fem.quadrature.material import _clip_polygon
+from pymhm.meshes.geometry import clip_polygon
 
 PATTERN = np.array(
     [
@@ -97,7 +97,7 @@ def common_triangles(reference_resolution: int, crossed_resolution: int) -> Iter
         for triangle, offset in zip(vertices[cut], offsets[cut], strict=True):
             transformed = np.column_stack((triangle.sum(axis=1), triangle[:, 1]))
             for side in (False, True):
-                polygon = _clip_polygon(transformed, 0, offset, side)
+                polygon = clip_polygon(transformed, 0, offset, side)
                 physical = np.column_stack((polygon[:, 0] - polygon[:, 1], polygon[:, 1]))
                 for corner in range(1, len(physical) - 1):
                     tri = physical[[0, corner, corner + 1]]

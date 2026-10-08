@@ -8,6 +8,14 @@ reference or matched historical reproduction is asserted.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -22,22 +30,22 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples import pgmhm_campaign, solve_spe10, solve_unusual
+from examples.formulations.application import cartesian_darcy as solve_darcy_quadrilateral
+from examples.formulations.application import hdiv_darcy as solve_darcy_hdiv3d
+from examples.formulations.application import petrov_galerkin_diffusion as solve_pgmhm
+from examples.formulations.application import transport as solve_rad
 from examples.solve_mapped_well import WellData
-from pymhm._legacy.models.darcy.cartesian import solve_darcy_quadrilateral
-from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
-from pymhm._legacy.models.transport.rad import solve_rad
 from pymhm.fem.scalar.quadrilateral import (
-    _cartesian_rectangle_quadrature,
     quadrilateral_trace_coupling,
+    rectangle_intersection_quadrature,
 )
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
-from pymhm.linalg.linear import LinearFactorization, _accurate_residual
+from pymhm.linalg.linear import LinearFactorization, accurate_residual
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.meshes.hexahedron import HexMesh
 from pymhm.meshes.mixed import AffineMixedMesh
 from pymhm.meshes.triangle import TriangleMesh
-from pymhm.methods.petrov_galerkin import solve_pgmhm
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -81,7 +89,7 @@ def observe_checked_solves() -> Iterator[list[dict[str, Any]]]:
     def observed(self: Any, rhs: Any, *args: Any, **kwargs: Any) -> Any:
         result = original(self, rhs, *args, **kwargs)
         forcing = np.asarray(rhs, dtype=np.result_type(np.asarray(rhs).dtype, result.dtype))
-        defect = _accurate_residual(self._matrix, forcing, result)
+        defect = accurate_residual(self._matrix, forcing, result)
         norms = np.atleast_1d(np.linalg.norm(defect, axis=0))
         denominators = np.atleast_1d(np.linalg.norm(forcing, axis=0))
         relative = [
@@ -316,7 +324,7 @@ def spe_norms(solution: Any, previous: Any, order: int) -> dict[str, float]:
     totals = np.zeros(4, dtype=np.longdouble)
     for cell, fine in enumerate(solution.local_meshes):
         origins = fine.points[fine.cells[:, 0]]
-        reference, weights = _cartesian_rectangle_quadrature(
+        reference, weights = rectangle_intersection_quadrature(
             origins, fine.spacing, solution.permeability, order
         )
         physical = origins[:, None] + reference * fine.spacing

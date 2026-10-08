@@ -13,26 +13,34 @@ from functools import partial
 from typing import Any
 
 import numpy as np
+from numpy.polynomial.legendre import leggauss
+from scipy import sparse
 
-from pymhm._legacy.models.darcy._mixed import (
-    normal_flux_blocks,
-    triangle_mixed_operators,
-    triangle_pressure_basis,
-    triangle_pressure_integrals,
-)
-from pymhm._legacy.models.darcy.mixed_bdm import BDMDarcySolution
-from pymhm._legacy.models.darcy.mixed_rt import RTDarcySolution, rt_trace_map
 from pymhm.core.contracts import HybridSolution
 from pymhm.core.equations import Equation, LocalEquations, columns, rows
 from pymhm.core.multiscale import MultiscaleProblem, MultiscaleSystem
 from pymhm.core.validation import positive_int
 from pymhm.fem.hdiv.bdm import bdm2_basis, bdm2_trace_map
 from pymhm.fem.hdiv.bdm_family import BDMFamily
+from pymhm.fem.hdiv.mixed import (
+    normal_flux_blocks,
+    triangle_mixed_operators,
+    triangle_pressure_basis,
+    triangle_pressure_integrals,
+)
 from pymhm.fem.hdiv.rt import rt_basis, rt_degree, rt_dofs
+from pymhm.fem.hdiv.rt_forms import rt_operators
+from pymhm.fem.hdiv.rt_trace import rt_trace_map
 from pymhm.fem.quadrature.material import material_triangle_quadrature
+from pymhm.fem.reference import legendre_values
 from pymhm.fem.scalar.operators import boundary_data
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.linalg.linear import solve_linear
+from pymhm.materials.evaluation import scalar_values
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.nodal import nodal_field
+from pymhm.postprocessing.piola import hdiv_field
+from pymhm.postprocessing.solutions import BDMDarcySolution, RTDarcySolution
 
 
 @dataclass(frozen=True)
@@ -109,6 +117,30 @@ def rt_local_equations(
         kernel=kernel,
         moments=physical_mean[:, None],
         metadata=(fine, physical_mean, nq, npres),
+        field_data=(
+            nodal_field(
+                "pressure",
+                fine,
+                degree,
+                discontinuous=True,
+                reconstruction=sparse.eye(len(load), format="csr")[nq : nq + npres],
+            ),
+            hdiv_field(
+                "flux",
+                fine,
+                "RT",
+                degree=degree,
+                reconstruction=sparse.eye(len(load), format="csr")[:nq],
+            ),
+            hdiv_field(
+                "flux_divergence",
+                fine,
+                "RT",
+                degree=degree,
+                reconstruction=sparse.eye(len(load), format="csr")[:nq],
+                divergence=True,
+            ),
+        ),
     )
 
 
@@ -170,6 +202,25 @@ def bdm_local_equations(
         kernel=kernel,
         moments=physical_mean[:, None],
         metadata=(fine, physical_mean, nq, npres),
+        field_data=(
+            nodal_field(
+                "pressure",
+                fine,
+                family.polynomial_degree - 1,
+                discontinuous=True,
+                reconstruction=sparse.eye(len(load), format="csr")[nq : nq + npres],
+            ),
+            hdiv_field(
+                "flux", fine, family, reconstruction=sparse.eye(len(load), format="csr")[:nq]
+            ),
+            hdiv_field(
+                "flux_divergence",
+                fine,
+                family,
+                reconstruction=sparse.eye(len(load), format="csr")[:nq],
+                divergence=True,
+            ),
+        ),
     )
 
 
@@ -348,4 +399,91 @@ def recover_bdm_darcy(
         definition.source,
         definition.quadrature_order,
         definition.family,
+    )
+
+
+def conforming_rt_reference(
+    mesh: TriangleMesh,
+    *,
+    degree: int = 2,
+    permeability: Any = 1.0,
+    source: Any = 0.0,
+    dirichlet: Any = 0.0,
+    neumann: dict[int, Any] | None = None,
+    quadrature_order: int = 5,
+    mean_pressure: float = 0.0,
+    solver: str = "scipy",
+) -> RTDarcySolution:
+    """Solve the classical globally conforming RTm/Pm mixed problem without macro restrictions.
+
+    Pressure is natural weak data; outward normal flux moments are essential.
+    The unknowns are fine-mesh flux/pressure coefficients. A pure Neumann solve
+    adds only the physical mean gauge, then checks the original free equations.
+    This is a classical numerical reference, not an exact analytical solution.
+    """
+    # This independent reference declares its full global Equation, rather than local condensation.
+    m = rt_degree(degree)
+    order = max(positive_int(quadrature_order, "quadrature_order"), m + 3)
+    neumann = {} if neumann is None else neumann
+    if any(face not in mesh.boundary_faces for face in neumann):
+        raise ValueError("Neumann data require external faces")
+    M, D, f, moment = rt_operators(mesh, m, permeability, source, order)
+    nq = M.shape[0]
+    A = sparse.bmat([[M, -D.T], [-D, None]], format="csc")
+    b = np.r_[np.zeros(nq), -f]
+    x, w = leggauss(order)
+    basis = legendre_values(x, m)
+    fixed: dict[int, float] = {}
+    lengths = mesh.lengths
+    for face in mesh.boundary_faces:
+        a, z = mesh.points[mesh.faces[face]]
+        points = a + (x[:, None] + 1) / 2 * (z - a)
+        data = scalar_values(neumann.get(int(face), dirichlet), points)
+        moments = (w * data / 2) @ basis
+        indices = (m + 1) * face + np.arange(m + 1)
+        if face in neumann:
+            fixed.update(
+                (int(i), float(v)) for i, v in zip(indices, lengths[face] * moments, strict=True)
+            )
+        else:
+            b[indices] = -(2 * np.arange(m + 1) + 1) * moments
+    values = np.zeros(len(b))
+    known = np.array(sorted(fixed), dtype=int)
+    values[known] = [fixed[i] for i in known]
+    free = np.setdiff1d(np.arange(len(b)), known)
+    physical = A[free][:, free]
+    rhs = b[free] - A[free][:, known] @ values[known]
+    matrix = physical
+    if len(neumann) == len(mesh.boundary_faces):
+        weights = np.r_[np.zeros(nq), moment][free]
+        matrix = sparse.bmat(
+            [
+                [physical, sparse.csc_matrix(weights[:, None])],
+                [sparse.csc_matrix(weights[None]), None],
+            ],
+            format="csc",
+        )
+        solve_rhs = np.r_[rhs, mean_pressure * mesh.areas.sum()]
+    else:
+        solve_rhs = rhs
+    values[free] = solve_linear(matrix, solve_rhs, solver=solver)[: len(free)]
+    residual = float(
+        np.linalg.norm(physical @ values[free] - rhs)
+        / max(
+            np.linalg.norm(rhs),
+            np.linalg.norm(abs(physical) @ np.abs(values[free])),
+            np.finfo(float).tiny,
+        )
+    )
+    if residual > 1e-8:
+        raise ValueError("incompatible data: pressure gauge changed the physical equations")
+    return RTDarcySolution(
+        (mesh,),
+        (values[nq:].reshape(len(mesh.cells), -1),),
+        (values[:nq],),
+        m,
+        permeability,
+        source,
+        order,
+        residual=residual,
     )

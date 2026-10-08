@@ -173,11 +173,11 @@ family approaching incompressibility, all six rigid moments, mixed boundaries,
 variable Lamé coefficients, and serial/thread/spawn parity.
 
 ```bash
-pixi run --locked -e test-core python examples/solve_gals3d.py --workers 4 --primal-refinement-precision extended
-pixi run -e notebooks python examples/solve_gals3d.py --primal-only \
+pixi run --locked -e test-core python -m examples.solve_gals3d --workers 4 --primal-refinement-precision extended
+pixi run --locked -e notebooks python -m examples.solve_gals3d --primal-only \
   --primal-refinement-precision extended --output examples/results/gals3d/primal
-pixi run -e notebooks python examples/plot_gals3d.py
-pixi run -e fem pytest tests/test_gals3d_fenics.py
+pixi run --locked -e notebooks python -m examples.plot_gals3d
+pixi run --locked -e fem pytest tests/test_gals3d_fenics.py
 ```
 
 [Notebook 55](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/elasticity/55_gals3d.ipynb)

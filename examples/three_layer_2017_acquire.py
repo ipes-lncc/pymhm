@@ -9,6 +9,14 @@ require separately measured resource budgets.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -29,17 +37,21 @@ from examples.three_layer_field_archive import (
     capture_field_basis,
     product_recipe,
 )
-from pymhm import TriangleMesh
-from pymhm._legacy.models.elasticity.mixed_pressure import _rigid
-from pymhm._legacy.models.waves.elastodynamics import (
-    ElastodynamicLocal,
-    ElastodynamicSolution,
-    ElastodynamicStepper,
-    _make_local,
+from examples.tutorial_elastodynamic_equations import (
+    advance,
+    initialize,
+    prepare_source,
+    spatial_forms,
 )
+from examples.tutorial_elastodynamic_equations import (
+    prepare as prepare_newmark,
+)
+from pymhm import TriangleMesh
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.fem.vector.elasticity import rigid_modes as _rigid
 from pymhm.io.provenance import file_digest
 from pymhm.linalg.linear import factorize
+from pymhm.postprocessing.dynamics import ElastodynamicLocal, ElastodynamicSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -61,6 +73,8 @@ def source_hashes() -> dict[str, str]:
                 "three_layer_2017_acquire",
                 "three_layer_field_archive",
                 "campaign_provenance",
+                "tutorial_elastodynamic_equations",
+                "formulations/original",
             )
         }
     )
@@ -399,10 +413,10 @@ def acquire(
 ) -> list[dict[str, Any]]:
     """Acquire original local M/K/B/f and actual nodal coordinates one macro at a time.
 
-    No alternate local quadrature, Newmark formula, gauge or source vector is
-    implemented here. ``_make_local`` is the shared spatial owner used by the
-    public stepper. Archives are numeric; they are not serialized local objects
-    or a substitute for independent native comparisons and global acceptance.
+    Spatial forms explicitly integrate public mass/strain energy and oriented
+    trace pairings in the stated spaces. Archives retain numeric operators and
+    their executed bases; independent native comparison and global trajectory
+    acceptance remain separate scientific controls.
     """
     order = assembly_order(order)
     if (
@@ -441,7 +455,9 @@ def acquire(
             records.append(record)
             continue
         started = perf_counter()
-        local = _make_local(cell, case.mesh, skeleton, 3, 8, order, density, stiffness, None, None)
+        local = spatial_forms(
+            case.mesh, skeleton, cell, 3, 8, order, density, None, None, stiffness
+        )
         mass_error = float(
             sparse.linalg.norm(local.mass - local.mass.T) / sparse.linalg.norm(local.mass)
         )
@@ -514,7 +530,7 @@ def acquire(
 
 
 def original_step_checks(
-    stepper: ElastodynamicStepper,
+    stepper: Any,
     before: ElastodynamicSolution,
     after: ElastodynamicSolution,
     source: Any,
@@ -528,15 +544,22 @@ def original_step_checks(
     traction must be zero, and both endpoint fields satisfy displacement moments.
     Native assembly/trajectory and classical refinement remain separate controls.
     """
-    if stepper.dimension != 2:
+    mesh = stepper.skeleton.mesh
+    if mesh.points.shape[1] != 2:
         raise ValueError("selected-case physical checks require two dimensions")
     boundary_dofs = np.concatenate(
-        [stepper.skeleton.dofs(int(face)) for face in stepper.mesh.boundary_faces]
+        [stepper.skeleton.dofs(int(face)) for face in mesh.boundary_faces]
     )
+    free = (
+        np.setdiff1d(np.arange(len(stepper.boundary)), list(stepper.fixed))
+        if isinstance(stepper.fixed, dict)
+        else stepper.free
+    )
+    prescribed = list(stepper.fixed.values()) if isinstance(stepper.fixed, dict) else stepper.fixed
     if (
         any(count != 1 for count in stepper.substeps)
-        or np.any(stepper.fixed)
-        or np.intersect1d(stepper.free, boundary_dofs).size
+        or np.any(prescribed)
+        or np.intersect1d(free, boundary_dofs).size
     ):
         raise ValueError("original selected-case checks require one substep and zero traction")
     dt = stepper.time_step
@@ -547,11 +570,7 @@ def original_step_checks(
         np.zeros(3, dtype=np.longdouble) for _ in range(3)
     )
     rigid_scale = 0.0
-    center = (
-        stepper.mesh.areas
-        @ stepper.mesh.points[stepper.mesh.cells].mean(axis=1)
-        / stepper.mesh.areas.sum()
-    )
+    center = mesh.areas @ mesh.points[mesh.cells].mean(axis=1) / mesh.areas.sum()
     for local, old_u, old_v, new_u, new_v in zip(
         stepper.locals,
         before.displacement,
@@ -609,7 +628,7 @@ def original_step_checks(
 def trajectory(
     case: ThreeLayerCase, directory: Path, *, steps: int = 300, order: int = 5
 ) -> dict[str, Any]:
-    """Run the public fresh stepper, retaining every physical state and signed slab multiplier.
+    """Run declared public Newmark equations, retaining every physical state and slab multiplier.
 
     Setup assembles all 341 macros and must first receive a measured campaign
     budget. Restarting serialized private local objects is unsupported; a fresh
@@ -643,7 +662,7 @@ def trajectory(
         },
     )
     started = perf_counter()
-    with ElastodynamicStepper(
+    with prepare_newmark(
         case.mesh,
         time_step=0.001 / case.scales[3],
         degree=3,
@@ -656,7 +675,7 @@ def trajectory(
     ) as stepper:
         setup_seconds = perf_counter() - started
         source_started = perf_counter()
-        source = stepper.prepare_source(case.source())
+        source = prepare_source(stepper, case.source())
         source_preparation_seconds = perf_counter() - source_started
         archive_started = perf_counter()
         operators, contracts, fields = {}, {}, {}
@@ -692,9 +711,9 @@ def trajectory(
                     "force vectors and original endpoint/substep temporal factors"
                 ),
                 "macros": len(stepper.locals),
-                "free_trace_dofs": len(stepper.free),
-                "global_trace_dofs": stepper.size,
-                "global_matrix_nnz": stepper.matrix.nnz,
+                "free_trace_dofs": stepper.trace_size - len(stepper.fixed),
+                "global_trace_dofs": stepper.trace_size,
+                "global_matrix_nnz": stepper.endpoint_system.template.matrix.nnz,
                 "executed_operator_archives_sha256": operators,
                 "executed_field_basis": fields,
                 "executed_macro_geometry_sha256": file_digest(macro_archive),
@@ -705,7 +724,11 @@ def trajectory(
         step_measurements = []
         for index in range(steps + 1):
             step_started = perf_counter()
-            solution = stepper.initialize() if index == 0 else stepper.advance(source)
+            if index == 0:
+                solution = initialize(stepper)
+            else:
+                assert previous is not None
+                solution = advance(stepper, previous, source)
             numerical_seconds = perf_counter() - step_started
             gate_started = perf_counter()
             checks: dict[str, Any] = (

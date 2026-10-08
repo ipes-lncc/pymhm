@@ -47,7 +47,7 @@ def test_frequency_filename_collision_rejected_before_solve(example, tmp_path, m
     def unexpected_solve(*args, **kwargs):
         raise AssertionError("filename collisions must be rejected before solving")
 
-    monkeypatch.setattr(m, "solve_helmholtz", unexpected_solve)
+    monkeypatch.setattr(m, "solve_acoustic", unexpected_solve)
     with pytest.raises(ValueError, match="identity"):
         m.run(tmp_path, 0, 10.000001, [8], 1)
     assert path.read_text() == raw

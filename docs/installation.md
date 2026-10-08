@@ -113,10 +113,9 @@ execution is qualified separately for each platform in CI. The `introduction`
 profile adds the introductory notebook stack; notebook sections using distributed
 PETSc references still require PETSc.
 
-The mesh-associated `bind_problem`/`LocalContext` workflow in the current
-tutorials is available from a source checkout and will be included in the next
-release. The published PyPI 1.0.0 provides the explicit
-`Equation`/`MultiscaleProblem` interface.
+The tutorials describe the API in this repository revision. Use the checkout
+and its checked-in Pixi lockfile to reproduce the `bind_problem`/`LocalContext`
+workflow with the declared native dependencies.
 
 ## From a checkout
 
@@ -131,7 +130,7 @@ pixi install --locked -e test-core
 pixi run --locked -e test-core coverage-run
 pixi run --locked -e test-core lint
 pixi run --locked -e test-core typecheck
-pixi run -e docs docs-check
+pixi run --locked -e docs docs-check
 ```
 
 The `test-core` environment contains the portable test and development tools.
@@ -184,19 +183,43 @@ and the applicable reference or convergence criteria. A plotting command may
 read an existing JSON record; that operation alone does not recompute the physical
 field or establish that the record still matches the current implementation.
 
-Inspect or validate the field selection for one notebook with:
+Execute a notebook directly from a clean checkout, or inspect all declared
+acquisitions before computing them:
 
 ```bash
-pixi run -e notebooks python scripts/notebook_data.py --notebook 23
-pixi run -e notebooks python scripts/notebook_data.py --notebook 23 --check
+pixi run --locked -e notebooks notebooks-run darcy/primal_galerkin.ipynb
+pixi run --locked -e notebooks notebooks-run --plan --check
+pixi run --locked -e notebooks notebooks-run 72 --study --plan
 ```
 
-The first command lists missing files without downloading anything. The second
-requires real local payloads and applies an explicit three-GiB budget. Generate
-missing fields with the corresponding public case command. The selectors follow
-the versioned JSON records; update `scripts/notebook_data.py` when adding field
-reads. The notebook runner checks its selected dependencies before execution.
-Existing checksum and numerical checks remain active.
+The runner automatically prepares missing current inputs using the complete
+public recipes in `scripts/notebook_reproduction.json`. Each command runs in its
+locked Pixi environment. Required native notebooks are dispatched to the
+declared environment and use that interpreter as their kernel. `--plan` reads
+the selected scientific records and lists missing inputs, commands and explicit
+source-access limitations without downloading or computing. `--no-prepare`
+requires existing current inputs; `--max-data-bytes` selects an explicit archive
+budget (three GiB by default).
+
+`--study` executes a complete declared current study even when old inputs are
+present. `notebooks-run <selector> --study --plan` lists its exact locked producer
+commands, numerical scope and resource requirements first. The machine-readable
+`notebooks/catalogue.json` includes these commands for every available study.
+The runner expands `{acquisition}` to one fresh UUID shared by all relevant
+steps, preserving original attributed result directories.
+
+Original external comparison fields and attributed article images are optional
+historical sections. `--historical` requires their original payloads and checksum
+identities; fresh PyMHM fields cannot replace them. Standalone analytical controls,
+full current-study acquisitions, retained scalar measurements and matched paper
+reproductions state their respective scopes. Full Marmousi and high-resolution
+reference campaigns require substantial memory, disk and execution time.
+
+Executed copies and a receipt containing source, output and lockfile digests are
+written under `build/notebooks`; source notebooks remain unchanged. The complete
+historical inventory is available through `scripts/notebook_data.py`. Its raw
+`--check` requires all selected original payloads independently of the current
+execution mode.
 
 The selected figures in Git support documentation builds from a checkout.
 Regenerate and accept figures when changing a scientific case. For example, the
@@ -238,16 +261,16 @@ main-branch pushes; the release workflow reuses their checks before publishing.
 
 | Environment / extra | Purpose | Native requirements |
 | --- | --- | --- |
-| `pixi run -e fem ...` | UFL/DOLFINx assembly with independently selected solvers | Linux, macOS or Windows; MPI runtime and JIT compiler; optional PETSc/MUMPS on Unix |
+| `pixi run --locked -e fem ...` | UFL/DOLFINx assembly with independently selected solvers | Linux, macOS or Windows; MPI runtime and JIT compiler; optional PETSc/MUMPS on Unix |
 | `pixi run --locked -e fem-intel ...` | Native UFL/DOLFINx assembly and PARDISO factors | Linux or Windows x86-64; locked MPI, compiler and Intel MKL stack |
 | `pixi run --locked -e introduction ...` | Self-contained introductory notebooks | Locked DOLFINx 0.9, UFL, Basix and notebook stack |
-| `pixi run -e meshing ...` | Gmsh, Netgen, meshio | Meshing libraries resolved by Pixi |
-| `pixi run -e intel ...` | PARDISO | Intel MKL, supported x86-64 platform |
-| `pixi run -e gpu ...` | CuPy QR and cuDSS | NVIDIA device and driver; locked CUDA 12.9 runtime |
+| `pixi run --locked -e meshing ...` | Gmsh, Netgen, meshio | Meshing libraries resolved by Pixi |
+| `pixi run --locked -e intel ...` | PARDISO | Intel MKL, supported x86-64 platform |
+| `pixi run --locked -e gpu ...` | CuPy QR and cuDSS | NVIDIA device and driver; locked CUDA 12.9 runtime |
 | `pixi run --locked -e hpc ...` | MPI, distributed MUMPS and local cuDSS on GPUs | Linux CUDA host; MPI/PETSc and CUDA resolved together |
 | `python -m pip install "pymhm[amg]"` | CPU algebraic multigrid | PyAMG |
 | `python -m pip install "pymhm[meshing]"` | Import/export and generators | Wheel availability depends on platform |
-| `pixi run -e notebooks ...` | Execute notebooks | Jupyter/nbclient and plotting stack |
+| `pixi run --locked -e notebooks ...` | Execute notebooks | Jupyter/nbclient and plotting stack |
 
 AmgX uses the optional `pyamgx` bindings and the native NVIDIA AmgX library. The
 binding is built against that library; it is not treated as an ordinary
@@ -270,11 +293,11 @@ assert PETSc.Sys.hasExternalPackage("mumps")
 
 ```bash
 pixi run --locked -e test-core test
-pixi run -e fem test-fem
+pixi run --locked -e fem test-fem
 pixi run --locked -e fem-intel test-fem-portable
 pixi run --locked -e meshing test-meshing
-pixi run -e notebooks notebooks-run
-pixi run --locked -e test-core python examples/verify.py
+pixi run --locked -e notebooks notebooks-run
+pixi run --locked -e test-core python -m examples.verify
 ```
 
 Environment definitions and task names in `pixi.toml` are authoritative. The

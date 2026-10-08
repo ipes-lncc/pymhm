@@ -4,9 +4,9 @@ import numpy as np
 import pytest
 
 from examples.periodic_norms import difference, field_norms, quadrature_difference
-from pymhm._legacy.models.darcy.conforming import ConformingQuadrilateralSolution
 from pymhm.fem.scalar.quadrilateral import qk_space, quadrilateral_quadrature
 from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.postprocessing.conforming import ConformingQuadrilateralSolution
 
 
 def field(n: int, degree: int, seed: int, bounds=(0.0, 1.0, 0.0, 1.0)):

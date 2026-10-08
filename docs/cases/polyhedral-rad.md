@@ -78,18 +78,33 @@ The original physical equations are checked after imposing this mean.
 
 ```python
 import numpy as np
+from pymhm import assemble
 from pymhm.meshes.polyhedral import PolyhedralMesh
-from pymhm._legacy.models.transport.polyhedral import solve_polyhedral_rad
+from examples.formulations.transport_3d import define_transport_3d
+from examples.formulations.scalar_3d import scalar_constraints_3d, recover_transport_3d
 
 mesh = PolyhedralMesh.cubes(2)
-solution = solve_polyhedral_rad(
+definition = define_transport_3d(
     mesh,
     degree=4,
     diffusion=0.1,
     velocity=(1.0, 0.0, 0.0),
     source=lambda x: np.ones(len(x)),
 )
+system = assemble(definition.problem)
+coefficients = system.solve(constraints=scalar_constraints_3d(definition, system))
+solution = recover_transport_3d(definition, system, coefficients)
 ```
+
+The user-defined provider in `examples/formulations/scalar_3d.py` composes the
+public `tetra_transport_operators`, `polygonal_trace_coupling` and boundary
+projection with explicit four-block equations. Natural data, coefficient
+derivatives, Galerkin/SUPG, retained constants or selective kernels, and a
+physical mean use the same declarations as the tetrahedral example. Assembly
+supports serial, thread and spawn workers through generic `ExecutionConfig`;
+`SolverConfig` declares independent local/global solvers and arithmetic for
+iterative refinement. Original polygonal faces retain their unknowns throughout.
+
 
 ## Analytical campaign
 
@@ -162,8 +177,8 @@ $P_3/P_4$ test functions against affine polygonal-face loads on cubes, shared
 faces, hexagonal prisms and distinct coplanar faces.
 
 ```bash
-pixi run -e notebooks python examples/solve_polyhedral_rad.py --workers 4
-pixi run -e notebooks python examples/plot_polyhedral_rad.py
+pixi run --locked -e notebooks python -m examples.solve_polyhedral_rad --workers 4
+pixi run --locked -e notebooks python -m examples.plot_polyhedral_rad
 ```
 
 Numerical summaries and source hashes are in `examples/results/polyhedral-rad.json`;

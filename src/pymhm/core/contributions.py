@@ -95,6 +95,8 @@ def assemble_hybrid_contributions(
     ``require_local_trace_coverage=False`` permits coordinates belonging only
     to an explicitly assembled global form; retained cell intervals are always
     checked. The complete global solver still rejects a singular operator.
+    A single kernel offset and no contributions represent a global-only form;
+    uncovered trace coordinates require require_local_trace_coverage=False.
     """
     if (
         isinstance(trace_size, (bool, np.bool_))
@@ -105,7 +107,7 @@ def assemble_hybrid_contributions(
     kernel_offsets = np.asarray(kernel_offsets)
     if (
         kernel_offsets.ndim != 1
-        or len(kernel_offsets) < 2
+        or len(kernel_offsets) < (2 if require_local_trace_coverage else 1)
         or not np.issubdtype(kernel_offsets.dtype, np.integer)
         or kernel_offsets[0] != trace_size
         or np.any(kernel_offsets[1:] < kernel_offsets[:-1])

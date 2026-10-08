@@ -33,7 +33,7 @@ def quadrilateral_quadrature(order: int = 4) -> tuple[FloatArray, FloatArray]:
 
 
 @lru_cache(maxsize=16)
-def _cardinals(degree: int) -> tuple[FloatArray, ...]:
+def cardinal_polynomials(degree: int) -> tuple[FloatArray, ...]:
     """Export the reordered Basix interval basis in ascending power coordinates.
 
     This representation conversion supports coefficient archives; evaluation
@@ -49,7 +49,10 @@ def _cardinals(degree: int) -> tuple[FloatArray, ...]:
     for j in range(degree + 1):
         coefficients = Legendre.basis(j, domain=[0, 1]).convert(kind=Polynomial).coef
         transformation[j, : len(coefficients)] = np.sqrt(2 * j + 1) * coefficients
-    return tuple(np.asarray(row) for row in basis.basis_matrix @ transformation)
+    rows = tuple(np.asarray(row) for row in basis.basis_matrix @ transformation)
+    for row in rows:
+        row.setflags(write=False)
+    return rows
 
 
 def _cardinal_values(degree: int, points: FloatArray) -> tuple[FloatArray, FloatArray]:
@@ -110,7 +113,7 @@ def qk_space(mesh: CartesianMacroMesh, degree: int) -> tuple[IntArray, FloatArra
     return (origin[:, None] + local).astype(np.int64), nodes
 
 
-def _grid_resolves_material(mesh: CartesianMacroMesh, field: CartesianCellField) -> bool:
+def grid_resolves_material(mesh: CartesianMacroMesh, field: CartesianCellField) -> bool:
     """Determine whether every material line coincides with a fine-grid line."""
     if len(field.spacing) != 2:
         raise ValueError("quadrilateral material integration requires a two-dimensional field")
@@ -130,7 +133,7 @@ def _grid_resolves_material(mesh: CartesianMacroMesh, field: CartesianCellField)
     return bool(np.all(abs(values - np.rint(values)) <= tolerance))
 
 
-def _cartesian_rectangle_quadrature(
+def rectangle_intersection_quadrature(
     origins: FloatArray,
     spacing: FloatArray,
     field: CartesianCellField,
@@ -216,7 +219,7 @@ def quadrilateral_operators(
     for begin in range(0, len(mesh.cells), 256):
         origins = mesh.points[mesh.cells[begin : begin + 256, 0]]
         if cuts:
-            cell_reference, cell_weights = _cartesian_rectangle_quadrature(
+            cell_reference, cell_weights = rectangle_intersection_quadrature(
                 origins, mesh.spacing, permeability, order
             )
             cell_basis, cell_gradient = qk_basis(degree, cell_reference.reshape(-1, 2))
@@ -293,3 +296,10 @@ def quadrilateral_trace_coupling(
                 )
         offset += space.size
     return matrix
+
+
+_cardinals = cardinal_polynomials
+
+_grid_resolves_material = grid_resolves_material
+
+_cartesian_rectangle_quadrature = rectangle_intersection_quadrature

@@ -210,23 +210,9 @@ def _pairing_layout(space: Any, mesh: Any, cell: int) -> tuple[IntArray, list[In
 def interface_pairing(
     test_space: Any, trial_space: Any, cell: int, *, order: int = 6
 ) -> FloatArray:
-    """Integrate the local unsigned L2 pairing of two planar interface spaces.
+    """Compatibility entry point for the dimension-independent physical trace pairing."""
+    from pymhm.fem.traces.pairing import interface_pairing as physical_pairing
 
-    Rows follow ``test_space.cell_dofs(cell)`` and columns follow
-    ``trial_space.cell_dofs(cell)``. Both spaces declare one ``FaceSpace`` per
-    edge and ``dofs(face)`` or ``face_dofs``; shared vertex coordinates are
-    accumulated across incident faces. Scalar spaces and equal-sized vector
-    spaces use component-interleaved coefficients and the Euclidean inner
-    product. Both spaces must share the identical two-dimensional macro mesh.
-
-    Integration splits at the union of both partitions and uses at least the
-    Gauss order required for the polynomial product. ``order`` is a positive
-    minimum order. No outward incidence, physical coupling sign or external
-    ``TraceBinding`` change of basis is inferred: callers transport this local
-    matrix through their declared trial/test maps when necessary. Custom bases
-    without these polynomial and coordinate capabilities require an explicit
-    pairing implementation.
-    """
     mesh: Any = getattr(test_space, "mesh", None)
     if mesh is None:
         raise TypeError("interface pairing requires mesh-associated polynomial spaces")
@@ -248,19 +234,9 @@ def interface_pairing(
     trial, trial_positions, trial_components = _pairing_layout(trial_space, mesh, cell)
     if components != trial_components:
         raise ValueError("paired interface spaces must have the same component count")
-    result = np.zeros((len(test), len(trial)))
-    for face, rows, columns in zip(
-        mesh.cell_faces[cell], test_positions, trial_positions, strict=True
-    ):
-        left, right = test_space.faces[face], trial_space.faces[face]
-        cuts = tuple(sorted(set(left.breaks) | set(right.breaks)))
-        exact_order = (max(left.degrees) + max(right.degrees) + 2) // 2
-        parameter, weights = FaceSpace(cuts, (0,) * (len(cuts) - 1)).quadrature(
-            max(order, exact_order)
-        )
+    for face in mesh.cell_faces[cell]:
         length = float(mesh.lengths[face])
         if not np.isfinite(length) or length <= 0:
             raise ValueError("paired interfaces require finite positive face lengths")
-        block = left.evaluate(parameter).T @ (weights[:, None] * right.evaluate(parameter)) * length
-        result[np.ix_(rows, columns)] += np.kron(block, np.eye(components))
-    return result
+
+    return physical_pairing(test_space, trial_space, cell, order=order)

@@ -53,10 +53,9 @@ Start with the [step-by-step UFL overview](docs/tutorials/overview.md) and the
 mathematical local and global formulations to the code for scalar, vector and
 mixed problems.
 
-The mesh-associated binding API below is available in the current source checkout
-and will be included in the next release. The published PyPI 1.0.0 supports the
-explicit `Equation`/`MultiscaleProblem` interface; see the
-[source installation instructions](docs/installation.md#from-a-checkout).
+The examples describe the API in this repository revision. Follow the
+[source installation instructions](docs/installation.md#from-a-checkout) and
+use the checked-in Pixi lockfile to reproduce their declared environments.
 
 The portable coefficient interface follows the same mesh-to-solution workflow:
 
@@ -113,10 +112,14 @@ platform separately.
 
 ## Verified discretizations and integrations
 
-The predefined physical formulations live in the private `_legacy.models`
-package and are imported from their implementation owners. Their numerical
-records and stored coefficient contracts document the verified discretizations,
-materials and boundary data; they do not qualify arbitrary user-defined forms.
+The physical formulations compose public finite-element, material, trace and
+linear-algebra operations. Editable providers in `examples/formulations/`
+declare their local and global equations without invoking predefined solvers;
+the [variational guide](docs/variational.md) identifies these operations and
+their numerical conventions. Existing solver entry points remain available.
+Numerical records and stored coefficient contracts document the verified
+discretizations, materials and boundary data; they do not qualify arbitrary
+user-defined forms.
 
 - Primal Pk, general triangular RT/BDM and enriched rectangular RT Darcy;
   anisotropic permeability, mixed boundary data and physical pure-Neumann gauges.
@@ -210,8 +213,8 @@ Before executing a notebook that reads computed fields, inspect its required
 local inputs and generate the corresponding calculations:
 
 ```bash
-pixi run -e notebooks python scripts/notebook_data.py --notebook 68
-pixi run -e notebooks python scripts/notebook_data.py --notebook 68 --check
+pixi run --locked -e notebooks python scripts/notebook_data.py --notebook 68
+pixi run --locked -e notebooks python scripts/notebook_data.py --notebook 68 --check
 ```
 
 Missing fields are reported explicitly. Neither notebooks nor documentation
@@ -226,15 +229,15 @@ package builds and core tests do not depend on those outputs.
 pixi run --locked -e test-core lint
 pixi run --locked -e test-core typecheck
 pixi run --locked -e test-core coverage-run
-pixi run -e fem test-fem
+pixi run --locked -e fem test-fem
 pixi run --locked -e fem-intel test-fem-portable
-pixi run -e meshing test-meshing
-pixi run -e packaging build
-pixi run -e packaging check-dist
+pixi run --locked -e meshing test-meshing
+pixi run --locked -e packaging build
+pixi run --locked -e packaging check-dist
 ```
 
 After generating and accepting the selected scientific cases, execute their
-notebooks and run `pixi run -e docs docs-check`. Inspect the rendered figures and
+notebooks and run `pixi run --locked -e docs docs-check`. Inspect the rendered figures and
 MathJax in the browser. CI checks documentation markup; scientific acquisition,
 notebook execution and full gallery generation require their separate acceptance.
 

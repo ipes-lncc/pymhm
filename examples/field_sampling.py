@@ -73,7 +73,7 @@ def sample_segment_profile(
     separately. The segment must lie in the domain and must not follow a
     macroface, where selecting a side would require an additional convention.
     """
-    from plot_mesh import macro_profile_breaks
+    from examples.plot_mesh import macro_profile_breaks
 
     mesh = solution.skeleton.mesh
     start, end = np.asarray(start, dtype=float), np.asarray(end, dtype=float)
@@ -112,7 +112,7 @@ def sample_darcy_pressure_profile(solution: Any, start: Any, end: Any) -> dict[s
     A line coincident with a fine interface has no unique one-sided value and
     is rejected. Macroface intersections are retained separately for marking.
     """
-    from plot_mesh import macro_profile_breaks
+    from examples.plot_mesh import macro_profile_breaks
 
     first, last = np.asarray(start, dtype=float), np.asarray(end, dtype=float)
     macro_breaks = macro_profile_breaks(solution.skeleton.mesh, first, last)

@@ -1,18 +1,18 @@
 """Scalar conservative reaction-advection-diffusion and implicit heat evolution."""
 
-from dataclasses import dataclass
 from typing import Any, Literal
 
 import numpy as np
 
-from pymhm.core.contracts import HybridSolution, LocalProblem
+from pymhm.core.contracts import LocalProblem
 from pymhm.core.system import HybridSystem
-from pymhm.core.validation import FloatArray, positive_int
-from pymhm.fem.scalar.operators import boundary_data, triangle_quadrature
-from pymhm.fem.scalar.triangle import nodal_space, scalar_operators, tabulate, trace_coupling
+from pymhm.core.validation import positive_int
+from pymhm.fem.scalar.operators import boundary_data
+from pymhm.fem.scalar.triangle import nodal_space, scalar_operators, trace_coupling
 from pymhm.fem.traces.interval import SkeletonSpace
 from pymhm.materials.evaluation import scalar_values
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.solutions import ScalarSolution as ScalarSolution
 
 
 def _transport_local_meshes(
@@ -34,32 +34,6 @@ def _transport_local_meshes(
     for cell, fine in enumerate(supplied):
         validate_submesh(mesh, cell, fine)
     return tuple(supplied)
-
-
-@dataclass(frozen=True)
-class ScalarSolution:
-    """Broken Pk scalar field reconstructed from a hybrid system."""
-
-    skeleton: SkeletonSpace
-    local_meshes: tuple[TriangleMesh, ...]
-    values: tuple[FloatArray, ...]
-    hybrid: HybridSolution
-    degree: int = 1
-    strong_dirichlet: bool = False
-    natural_faces: tuple[int, ...] = ()
-
-    def l2_error(self, exact: Any, order: int = 5) -> float:
-        """Integrate scalar error using quadrature independent of assembly."""
-        bary, weights = triangle_quadrature(order)
-        total = 0.0
-        for mesh, values in zip(self.local_meshes, self.values, strict=True):
-            points = np.einsum("qi,tij->tqj", bary, mesh.points[mesh.cells])
-            dofs, _, basis, _, _ = tabulate(mesh, self.degree, bary)
-            difference = values[dofs] @ basis.T - scalar_values(
-                exact, points.reshape(-1, 2)
-            ).reshape(len(mesh.cells), len(weights))
-            total += float(mesh.areas @ (difference**2 @ weights))
-        return float(np.sqrt(total))
 
 
 def solve_transport(

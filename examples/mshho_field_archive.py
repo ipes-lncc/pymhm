@@ -17,16 +17,16 @@ import numpy as np
 from scipy import sparse
 
 from examples.archive_precision import precision_fields, restore_precision
+from examples.formulations.local_records import DarcyLocalFactory as _DarcyLocalFactory
 from examples.local_response_cache import array_identity
 from examples.transport_checkpoints import checkpoint_field, write_progress
-from pymhm._legacy.models.darcy.primal import DarcySolution, _DarcyLocalFactory
 from pymhm.core.validation import positive_int
 from pymhm.fem.scalar.operators import boundary_data, p1_geometry, triangle_quadrature
 from pymhm.fem.scalar.triangle import multiindices, nodal_space, reference_basis
 from pymhm.io.provenance import file_digest
-from pymhm.linalg.linear import LinearSolveError, _accurate_residual
+from pymhm.linalg.linear import LinearSolveError, accurate_residual
 from pymhm.materials.evaluation import tensor_values
-from pymhm.methods.hho import MsHHOSolution
+from pymhm.postprocessing.solutions import DarcySolution, MsHHOSolution
 
 SCHEMA = "pymhm-mshho-field-archive-v2"
 LEGACY_SCHEMA = "pymhm-mshho-field-archive-v1"
@@ -434,11 +434,11 @@ def original_saddle_residuals(arrays: Mapping[str, np.ndarray]) -> dict[str, flo
             ids = arrays[f"original_trace_dofs_{cell}"]
             load = arrays[f"original_f_{cell}"]
             operator = sparse.hstack((matrix, sparse.csr_matrix(coupling)), format="csr")
-            defect = _accurate_residual(operator, load, np.r_[field, trace[ids]])
+            defect = accurate_residual(operator, load, np.r_[field, trace[ids]])
             volume_squared += np.sum(defect**2)
             rhs_squared += np.sum(load.astype(np.longdouble) ** 2)
             test = arrays[f"original_test_b_{cell}"]
-            local_weak = -_accurate_residual(sparse.csr_matrix(test.T), np.zeros(len(ids)), field)
+            local_weak = -accurate_residual(sparse.csr_matrix(test.T), np.zeros(len(ids)), field)
             np.add.at(weak, ids, local_weak)
         rhs_norm = float(np.sqrt(rhs_squared + np.sum(boundary**2)))
         residual = float(np.sqrt(volume_squared + np.sum(weak**2)))

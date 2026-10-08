@@ -165,15 +165,23 @@ current notebooks. It writes Markdown, plot assets and a digest manifest;
 ordinary documentation builds use these saved pages and require no FEM solves
 or performance acquisitions.
 
-Some detailed studies read large locally computed fields and publication images.
-Their dependency inventory checks the selected notebooks before execution:
+Inspect the current reproduction plan and its declared inputs before execution:
+
+```bash
+pixi run --locked -e notebooks notebooks-run darcy --plan --check
+```
+
+The default plan selects the current executable examples. Use `--study` for
+their complete acquisition recipes. Some publication galleries additionally
+require historical fields and images; inspect that separate inventory with:
 
 ```bash
 pixi run --locked -e notebooks python scripts/notebook_data.py --notebook 68
 pixi run --locked -e notebooks python scripts/notebook_data.py --notebook darcy --check
 ```
 
-Missing computed inputs are reported explicitly. A fine numerical reference
+Missing historical inputs are reported explicitly; their absence does not
+prevent execution of the current examples. A fine numerical reference
 retains its own discretization and refinement uncertainty; it is not an exact
 solution. Archived comparisons identify solver provenance and do not execute
 external reference programs. See the [case gallery](cases/index.md) for the

@@ -1,68 +1,10 @@
 """Historical vector solution records and plane flow/elasticity solver dispatch."""
 
-from dataclasses import dataclass
 from typing import Any, Literal
 
-import numpy as np
-
-from pymhm.core.contracts import HybridSolution
-from pymhm.core.validation import FloatArray
-from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.traces.interval import SkeletonSpace
-from pymhm.fem.vector.operators import _lagrange
-from pymhm.materials.evaluation import scalar_values, vector_values
 from pymhm.meshes.triangle import TriangleMesh
-
-
-@dataclass(frozen=True)
-class VectorSolution:
-    """Reconstructed velocity/displacement and optional P1 pressure fields."""
-
-    skeleton: SkeletonSpace
-    local_meshes: tuple[TriangleMesh, ...]
-    values: tuple[FloatArray, ...]
-    pressure: tuple[FloatArray, ...]
-    hybrid: HybridSolution
-    degree: int
-    pressure_degree: int = 1
-
-    def l2_error(self, exact: Any, order: int = 5) -> float:
-        """Integrate the error in velocity or displacement."""
-        bary, weights = triangle_quadrature(order)
-        total = 0.0
-        for mesh, values in zip(self.local_meshes, self.values, strict=True):
-            dofs, _, basis, _ = _lagrange(mesh, self.degree, bary)
-            points = np.einsum("qi,tij->tqj", bary, mesh.points[mesh.cells])
-            difference = np.einsum("qi,tia->tqa", basis, values[dofs]) - vector_values(
-                exact, points.reshape(-1, 2)
-            ).reshape(len(mesh.cells), len(weights), 2)
-            total += float(mesh.areas @ (np.sum(difference**2, axis=2) @ weights))
-        return float(np.sqrt(total))
-
-    def pressure_l2_error(self, exact: Any, order: int = 5) -> float:
-        """Integrate pressure error with the same global gauge as the exact field."""
-        if not self.pressure:
-            raise ValueError("elasticity solution has no pressure field")
-        bary, weights = triangle_quadrature(order)
-        total = 0.0
-        for mesh, pressure in zip(self.local_meshes, self.pressure, strict=True):
-            points = np.einsum("qi,tij->tqj", bary, mesh.points[mesh.cells])
-            dofs, _, basis, _ = _lagrange(mesh, self.pressure_degree, bary)
-            difference = pressure[dofs] @ basis.T - scalar_values(
-                exact, points.reshape(-1, 2)
-            ).reshape(len(mesh.cells), len(weights))
-            total += float(mesh.areas @ (difference**2 @ weights))
-        return float(np.sqrt(total))
-
-    def divergence_l2(self) -> float:
-        """Measure the pointwise divergence norm of the reconstructed vector field."""
-        bary, weights = triangle_quadrature(4)
-        total = 0.0
-        for mesh, values in zip(self.local_meshes, self.values, strict=True):
-            dofs, _, _, gradients = _lagrange(mesh, self.degree, bary)
-            divergence = np.einsum("tqia,tia->tq", gradients, values[dofs])
-            total += float(mesh.areas @ (divergence**2 @ weights))
-        return float(np.sqrt(total))
+from pymhm.postprocessing.solutions import VectorSolution as VectorSolution
 
 
 def solve_brinkman(

@@ -2,16 +2,24 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import json
 from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
-from polygon_meshes import polygon_partition
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.transport import rad_local_assembly as _rad_local
+from examples.polygon_meshes import polygon_partition
 from pymhm import FaceSpace, HybridSystem, LocalProblem, SkeletonSpace
-from pymhm._legacy.models.transport.rad import _rad_local
 from pymhm.linalg.linear import LinearSolveError
 
 ROOT = Path(__file__).resolve().parents[1]

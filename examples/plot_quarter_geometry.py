@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import matplotlib
 
 matplotlib.use("Agg")
@@ -12,8 +20,9 @@ from matplotlib.collections import LineCollection
 from matplotlib.colors import LogNorm
 from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
-from plot_quarter_reference import FIGURES, geometry_record, problem_geometry
-from quarter_spot_problem import OBSTACLE_LOWER, OBSTACLE_UPPER, macro_mesh
+
+from examples.plot_quarter_reference import FIGURES, geometry_record, problem_geometry
+from examples.quarter_spot_problem import OBSTACLE_LOWER, OBSTACLE_UPPER, macro_mesh
 
 
 def geometry_detail() -> None:

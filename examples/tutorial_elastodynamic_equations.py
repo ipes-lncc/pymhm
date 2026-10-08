@@ -11,29 +11,49 @@ from __future__ import annotations
 from collections.abc import Iterator
 from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass
-from typing import Any
+from functools import partial
+from typing import Any, cast
 
 import numpy as np
 from scipy import sparse
 
-from pymhm._legacy.models.waves.elastodynamics import ElastodynamicLocal, ElastodynamicSolution
+from examples.formulations.original import solve_original
 from pymhm.core.equations import Equation, LocalEquations
 from pymhm.core.multiscale import MultiscaleProblem, assemble
+from pymhm.core.online import OfflineMultiscaleSystem
+from pymhm.execution.cpu import map_local
+from pymhm.fem.assembly import assemble_element_blocks
 from pymhm.fem.scalar.operators import boundary_data
+from pymhm.fem.scalar.tetrahedron import tetra_nodal_space
 from pymhm.fem.scalar.triangle import nodal_space, trace_coupling
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton, tetra_trace_coupling
 from pymhm.fem.vector.curl import physical_basis, physical_points, quadrature
-from pymhm.fem.vector.operators import _assemble_blocks
+from pymhm.fem.vector.elasticity_3d import KELVIN_BASIS_3D, vector_boundary_data_3d
 from pymhm.linalg.dynamics import newmark_step
 from pymhm.linalg.linear import LinearFactorization, LinearSolveError, factorize
+from pymhm.materials.elasticity import (
+    KELVIN_BASIS_2D,
+    constitutive_values,
+    constitutive_values_3d,
+)
+from pymhm.materials.evaluation import scalar_values_3d
+from pymhm.materials.sources import SeparableTriangleField, TriangleQuadratureField
+from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.dynamics import (
+    ElastodynamicLocal,
+    ElastodynamicSolution,
+    PreparedElastodynamicSource,
+)
+from pymhm.postprocessing.nodal import nodal_field
 
 
 @dataclass(frozen=True)
 class NewmarkOperators:
     """Executed coefficient bases and owner-held factors for one macro time step."""
 
-    skeleton: SkeletonSpace
+    skeleton: Any
     locals: tuple[ElastodynamicLocal, ...]
     mass_factors: tuple[LinearFactorization, ...]
     step_factors: tuple[LinearFactorization, ...]
@@ -43,71 +63,126 @@ class NewmarkOperators:
     substeps: tuple[int, ...]
     boundary: Any
     fixed: dict[int, float]
+    endpoint_system: Any = None
+    endpoint_factor: Any = None
+
+    @property
+    def trace_size(self) -> int:
+        """Return interleaved Cartesian traction coordinates in the declared dimension."""
+        return self.skeleton.size * (3 if isinstance(self.skeleton, TriangularSkeleton) else 1)
+
+
+def prepare_source(
+    data: NewmarkOperators, source: SeparableTriangleField
+) -> PreparedElastodynamicSource:
+    """Integrate a declared separable planar source once in the executed local test bases.
+
+    The snapshot retains physical force-density vectors without a density factor.
+    Its temporal scalar is evaluated at every original Newmark endpoint/substep;
+    no time equation or alternate spatial rule is selected by this operation.
+    """
+    if data.locals[0].nodes.shape[1] != 2:
+        raise ValueError("prepared triangular sources require two dimensions")
+    if not isinstance(source, SeparableTriangleField):
+        raise TypeError("source must declare an explicit separable triangular field")
+    spatial = source.spatial_field()
+    if not isinstance(spatial, TriangleQuadratureField):
+        raise TypeError("separable spatial source must provide triangular quadrature")
+    return PreparedElastodynamicSource(
+        data.locals, tuple(local.load(spatial) for local in data.locals), source.time_scale
+    )
 
 
 def spatial_forms(
-    mesh: TriangleMesh,
-    skeleton: SkeletonSpace,
+    mesh: TriangleMesh | TetraMesh,
+    skeleton: Any,
     cell: int,
     degree: int,
     refinement: int,
     order: int,
-    density: float,
-    lame_lambda: float,
-    lame_mu: float,
+    density: Any,
+    lame_lambda: Any,
+    lame_mu: Any,
+    constitutive: Any = None,
 ) -> ElastodynamicLocal:
     """Declare rho mass and lambda div/div plus twice mu symmetric-gradient energy.
 
-    The tutorial uses positive constant density, positive mu and nonnegative
-    lambda in planar strain. Nodes and vector components are interleaved; the
-    canonical signed traction map is the common scalar trace map times I2.
+    Positive density and elliptic constitutive samples define either planar
+    strain or three-dimensional elasticity. Nodes/components are interleaved;
+    the canonical traction map is the scalar trace map times the identity.
     This displacement energy has no incompressible-limit guarantee.
     """
     fine = mesh.submesh(cell, refinement)
-    bary, weights, _ = quadrature(fine, 1.0, order)
+    dimension = mesh.points.shape[1]
+    bary, weights, material_data = quadrature(fine, constitutive, order)
     basis, gradients = physical_basis(fine, degree, bary)
-    dofs, nodes = nodal_space(fine, degree)
-    width = 2 * basis.shape[-1]
-    vector_dofs = (2 * dofs[:, :, None] + np.arange(2)).reshape(len(fine.cells), width)
-    strain = np.zeros((*weights.shape, 3, width))
-    strain[:, :, 0, 0::2] = gradients[..., 0]
-    strain[:, :, 1, 1::2] = gradients[..., 1]
-    strain[:, :, 2, 0::2] = gradients[..., 1] / np.sqrt(2)
-    strain[:, :, 2, 1::2] = gradients[..., 0] / np.sqrt(2)
-    material = np.array(
-        [
-            [lame_lambda + 2 * lame_mu, lame_lambda, 0],
-            [lame_lambda, lame_lambda + 2 * lame_mu, 0],
-            [0, 0, 2 * lame_mu],
-        ]
+    dofs, nodes = (
+        nodal_space(cast(TriangleMesh, fine), degree)
+        if dimension == 2
+        else tetra_nodal_space(cast(TetraMesh, fine), degree)
     )
-    stiffness = _assemble_blocks(
-        np.einsum("tq,tqai,ab,tqbj->tij", weights, strain, material, strain),
+    kelvin = KELVIN_BASIS_2D if dimension == 2 else KELVIN_BASIS_3D
+    strain = np.einsum("aij,tqnj->tqani", kelvin, gradients).reshape(
+        *gradients.shape[:2], len(kelvin), -1
+    )
+    points = physical_points(fine, bary)
+    material = (constitutive_values if dimension == 2 else constitutive_values_3d)(
+        material_data, points.reshape(-1, dimension), lame_lambda=lame_lambda, lame_mu=lame_mu
+    ).reshape(*weights.shape, len(kelvin), len(kelvin))
+    width = dimension * basis.shape[-1]
+    vector_dofs = (dimension * dofs[:, :, None] + np.arange(dimension)).reshape(
+        len(fine.cells), width
+    )
+    stiffness = assemble_element_blocks(
+        np.einsum("tq,tqai,tqab,tqbj->tij", weights, strain, material, strain),
         vector_dofs,
-        2 * len(nodes),
+        vector_dofs,
+        (dimension * len(nodes), dimension * len(nodes)),
     )
-    rho = np.full(weights.shape, density)
-    scalar_mass = _assemble_blocks(
-        np.einsum("tq,tqi,tqj->tij", weights * rho, basis, basis), dofs, len(nodes)
+    bary, weights, density_data = quadrature(fine, density, order)
+    basis, _ = physical_basis(fine, degree, bary)
+    points = physical_points(fine, bary)
+    raw = density_data(points.reshape(-1, dimension)) if callable(density_data) else density_data
+    raw = np.asarray(raw)
+    if raw.shape[-2:] == (dimension, dimension):
+        if not np.all(raw == raw[..., :1, :1] * np.eye(dimension)):
+            raise ValueError("density requires scalar or isotropic material values")
+        raw = raw[..., 0, 0]
+    rho = scalar_values_3d(raw, points.reshape(-1, dimension)).reshape(weights.shape)
+    if np.any(rho <= 0):
+        raise ValueError("density must be positive")
+    scalar_mass = assemble_element_blocks(
+        np.einsum("tq,tqi,tqj->tij", weights * rho, basis, basis),
+        dofs,
+        dofs,
+        (len(nodes), len(nodes)),
     )
-    mass = sparse.kron(scalar_mass, sparse.eye(2), format="csc")
-    coupling = np.asarray(
-        np.kron(trace_coupling(mesh, cell, fine, skeleton, degree), np.eye(2)), dtype=np.float64
+    mass = sparse.kron(scalar_mass, sparse.eye(dimension), format="csc")
+    coupling_scalar = (
+        trace_coupling(cast(TriangleMesh, mesh), cell, cast(TriangleMesh, fine), skeleton, degree)
+        if dimension == 2
+        else tetra_trace_coupling(
+            cast(TetraMesh, mesh), cell, cast(TetraMesh, fine), skeleton, degree
+        )
     )
+    coupling = np.asarray(np.kron(coupling_scalar, np.eye(dimension)), dtype=np.float64)
+    trace_dofs = skeleton.cell_dofs(cell)
+    if dimension == 3:
+        trace_dofs = (dimension * trace_dofs[:, None] + np.arange(dimension)).ravel()
     return ElastodynamicLocal(
         fine,
         degree,
         mass,
         stiffness,
         coupling,
-        skeleton.cell_dofs(cell),
+        trace_dofs,
         dofs,
         nodes,
         basis,
-        physical_points(fine, bary),
+        points,
         weights,
         rho,
-        None,
+        constitutive,
         lame_lambda,
         lame_mu,
         order,
@@ -116,36 +191,34 @@ def spatial_forms(
 
 @contextmanager
 def prepare(
-    mesh: TriangleMesh,
+    mesh: TriangleMesh | TetraMesh,
     *,
     time_step: float,
     degree: int = 2,
     local_refinement: int = 2,
     local_substeps: Any = 1,
     quadrature_order: int = 8,
-    density: float = 1.0,
-    lame_lambda: float = 1.0,
-    lame_mu: float = 1.0,
+    density: Any = 1.0,
+    constitutive: Any = None,
+    lame_lambda: Any = 1.0,
+    lame_mu: Any = 1.0,
+    skeleton: Any = None,
     dirichlet: Any = 0.0,
     traction: dict[int, Any] | None = None,
+    backend: Any = "serial",
+    workers: int | None = None,
 ) -> Iterator[NewmarkOperators]:
-    """Own reusable factors while preparing the declared planar coefficient response.
+    """Own reusable factors while preparing the declared simplex coefficient response.
 
     Each macrocell can use a distinct positive substep count, ending at the
     same macro time. Loads remain physical force densities. The multiplier is
     negative physical traction, constant over a macro time slab; arbitrary
     subcycling does not automatically inherit a global energy identity.
     """
-    if not isinstance(mesh, TriangleMesh):
-        raise TypeError("this tutorial declares planar triangular forms")
+    if not isinstance(mesh, (TriangleMesh, TetraMesh)):
+        raise TypeError("this tutorial declares triangular or tetrahedral forms")
     if not np.isfinite(time_step) or time_step <= 0:
         raise ValueError("time_step must be finite and positive")
-    if (
-        not all(np.isfinite([density, lame_lambda, lame_mu]))
-        or min(density, lame_mu) <= 0
-        or lame_lambda < 0
-    ):
-        raise ValueError("require positive density/mu and nonnegative lambda")
     raw_counts = np.broadcast_to(np.asarray(local_substeps), (len(mesh.cells),))
     if any(
         isinstance(value, (bool, np.bool_)) or int(value) != value or value < 1
@@ -154,17 +227,47 @@ def prepare(
         raise ValueError("local_substeps must contain positive integers")
     counts = tuple(int(value) for value in raw_counts)
     order = max(quadrature_order, degree + 2)
-    skeleton = SkeletonSpace(mesh, tuple(FaceSpace.uniform(1) for _ in mesh.faces), components=2)
+    dimension = mesh.points.shape[1]
+    if skeleton is None:
+        skeleton = (
+            SkeletonSpace(
+                cast(TriangleMesh, mesh),
+                tuple(FaceSpace.uniform(1) for _ in mesh.faces),
+                components=2,
+            )
+            if dimension == 2
+            else TriangularSkeleton(cast(TetraMesh, mesh), degree=1)
+        )
+    if skeleton.mesh is not mesh:
+        raise ValueError("traction skeleton must belong to the supplied mesh")
+    if dimension == 2 and skeleton.components != 2:
+        raise ValueError("planar traction traces require two Cartesian components")
     traction = {} if traction is None else traction
     if not set(traction).issubset(set(mesh.boundary_faces)):
         raise ValueError("traction keys must identify exterior faces")
-    target, physical_tractions = boundary_data(skeleton, dirichlet, traction, order=order)
-    fixed = {int(index): -float(value) for index, value in physical_tractions.items()}
+    if dimension == 2:
+        target, physical_tractions = boundary_data(skeleton, dirichlet, traction, order=order)
+        fixed = {int(index): -float(value) for index, value in physical_tractions.items()}
+    else:
+        target, fixed = vector_boundary_data_3d(skeleton, dirichlet, traction, order)
     locals_ = tuple(
-        spatial_forms(
-            mesh, skeleton, cell, degree, local_refinement, order, density, lame_lambda, lame_mu
+        map_local(
+            partial(
+                spatial_forms,
+                mesh,
+                skeleton,
+                degree=degree,
+                refinement=local_refinement,
+                order=order,
+                density=density,
+                lame_lambda=lame_lambda,
+                lame_mu=lame_mu,
+                constitutive=constitutive,
+            ),
+            range(len(mesh.cells)),
+            backend=backend,
+            workers=workers,
         )
-        for cell in range(len(mesh.cells))
     )
     with ExitStack() as resources:
         masses = tuple(resources.enter_context(factorize(local.mass)) for local in locals_)
@@ -193,6 +296,23 @@ def prepare(
                 )
             lifts.append(u)
             velocity_lifts.append(v)
+        zero_fields = tuple(np.zeros(local.mass.shape[0]) for local in locals_)
+        endpoint = MultiscaleProblem(
+            endpoint_global(target),
+            endpoint_equations,
+            tuple(zip(locals_, zero_fields, lifts, strict=True)),
+            len(target),
+            (0,) * len(locals_),
+            fixed=fixed,
+        )
+        template = assemble(endpoint)
+        offline = resources.enter_context(OfflineMultiscaleSystem(template))
+        free = np.setdiff1d(np.arange(len(target)), list(fixed))
+        endpoint_factor = (
+            resources.enter_context(factorize(template.matrix[free][:, free]))
+            if len(free)
+            else None
+        )
         yield NewmarkOperators(
             skeleton,
             locals_,
@@ -204,6 +324,8 @@ def prepare(
             counts,
             target,
             fixed,
+            offline,
+            endpoint_factor,
         )
 
 
@@ -221,6 +343,9 @@ def endpoint_equations(item: tuple[ElastodynamicLocal, Any, Any]) -> LocalEquati
         b=lift,
         c=-local.coupling.T,
         dofs=local.trace_dofs,
+        field_data=(
+            nodal_field("displacement", local.mesh, local.degree, components=local.nodes.shape[1]),
+        ),
     )
 
 
@@ -238,6 +363,9 @@ def projection_equations(item: tuple[ElastodynamicLocal, Any]) -> LocalEquations
         b=local.coupling,
         c=-local.coupling.T,
         dofs=local.trace_dofs,
+        field_data=(
+            nodal_field("projection", local.mesh, local.degree, components=local.nodes.shape[1]),
+        ),
     )
 
 
@@ -245,10 +373,10 @@ def _state(
     data: NewmarkOperators, u: tuple[Any, ...], v: tuple[Any, ...], trace: Any, time: float
 ) -> ElastodynamicSolution:
     """Store fields and check the original free-face displacement constraint."""
-    moments = np.zeros(data.skeleton.size)
+    moments = np.zeros(data.trace_size)
     for local, values in zip(data.locals, u, strict=True):
         np.add.at(moments, local.trace_dofs, local.coupling.T @ values)
-    free = np.setdiff1d(np.arange(data.skeleton.size), list(data.fixed))
+    free = np.setdiff1d(np.arange(data.trace_size), list(data.fixed))
     residual = float(np.linalg.norm((moments - data.boundary)[free]))
     scale = max(
         float(np.linalg.norm(moments)),
@@ -278,28 +406,33 @@ def _state(
 
 
 def initialize(
-    data: NewmarkOperators, displacement: Any = 0.0, velocity: Any = 0.0
+    data: NewmarkOperators, displacement: Any = 0.0, velocity: Any = 0.0, *, original: bool = False
 ) -> ElastodynamicSolution:
     """Solve two explicit constrained physical mass projections through the core."""
     fields = []
-    for datum, target in ((displacement, data.boundary), (velocity, np.zeros(data.skeleton.size))):
+    for datum, target in ((displacement, data.boundary), (velocity, np.zeros(data.trace_size))):
         items = tuple((local, datum) for local in data.locals)
         problem = MultiscaleProblem(
             endpoint_global(target),
             projection_equations,
             items,
-            data.skeleton.size,
+            data.trace_size,
             (0,) * len(items),
             fixed={index: 0.0 for index in data.fixed},
         )
-        fields.append(assemble(problem).solve().fields)
-    trace = np.zeros(data.skeleton.size)
+        system = assemble(problem)
+        fields.append((solve_original(system) if original else system.solve()).fields)
+    trace = np.zeros(data.trace_size)
     trace[list(data.fixed)] = list(data.fixed.values())
     return _state(data, fields[0], fields[1], trace, 0.0)
 
 
 def advance(
-    data: NewmarkOperators, previous: ElastodynamicSolution, source: Any = 0.0
+    data: NewmarkOperators,
+    previous: ElastodynamicSolution,
+    source: Any = 0.0,
+    *,
+    original: bool = False,
 ) -> ElastodynamicSolution:
     """Propagate every local substep then impose the declared global endpoint forms.
 
@@ -334,15 +467,24 @@ def advance(
         free_v.append(v)
         histories.append(loads)
     items = tuple(zip(data.locals, free_u, data.lifts, strict=True))
-    problem = MultiscaleProblem(
-        endpoint_global(data.boundary),
-        endpoint_equations,
-        items,
-        data.skeleton.size,
-        (0,) * len(items),
-        fixed=data.fixed,
-    )
-    solution = assemble(problem).solve()
+    if data.endpoint_system is None or original:
+        problem = MultiscaleProblem(
+            endpoint_global(data.boundary),
+            endpoint_equations,
+            items,
+            data.trace_size,
+            (0,) * len(items),
+            fixed=data.fixed,
+        )
+        system = assemble(problem)
+        solution = solve_original(system) if original else system.solve()
+    else:
+        solution = data.endpoint_system.solve(
+            tuple(free_u),
+            global_load=-data.boundary,
+            fixed=data.fixed,
+            factorization=data.endpoint_factor,
+        )
     velocity = tuple(
         values - lift @ solution.trace[local.trace_dofs]
         for local, lift, values in zip(data.locals, data.velocity_lifts, free_v, strict=True)

@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import hashlib
 import json
 from dataclasses import dataclass
@@ -11,9 +19,9 @@ from typing import Any
 
 import numpy as np
 from scipy.spatial import cKDTree
-from solve_mapped_well import WellData
 from threadpoolctl import threadpool_limits
 
+from examples.solve_mapped_well import WellData
 from pymhm.fem.hdiv.family_3d import HDiv3DFamily, cell_quadrature, face_quadrature, face_shape
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_dofs, hdiv3d_transform

@@ -16,7 +16,6 @@ import numpy as np
 from scipy import sparse
 
 from pymhm import Equation, LocalEquations, MultiscaleProblem
-from pymhm._legacy.models.transport.solver import ScalarSolution
 from pymhm.core.contracts import HybridSolution
 from pymhm.core.multiscale import MultiscaleSystem
 from pymhm.fem.scalar.operators import boundary_data
@@ -25,6 +24,8 @@ from pymhm.fem.traces.interval import SkeletonSpace
 from pymhm.fem.traces.scalar import strong_boundary_dofs
 from pymhm.materials.evaluation import scalar_values
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.nodal import nodal_field
+from pymhm.postprocessing.solutions import ScalarSolution
 
 
 @dataclass(frozen=True)
@@ -81,6 +82,7 @@ def transport_equations(
         coarse_basis=None if pure_diffusion else constant,
         moments=mass @ constant,
         metadata=fine,
+        field_data=(nodal_field("scalar", fine, data.degree),),
     )
 
 
@@ -146,6 +148,7 @@ def heat_equations(
         coarse_basis=constant,
         moments=mass @ constant,
         metadata=fine,
+        field_data=(nodal_field("temperature", fine, data.degree),),
     )
 
 
@@ -171,10 +174,18 @@ def heat_problem(
 
 
 def recover_scalar(
-    data: ScalarDiscretization, result: HybridSolution, local_meshes: tuple[TriangleMesh, ...]
+    data: ScalarDiscretization,
+    result: HybridSolution,
+    local_meshes: tuple[TriangleMesh | tuple[Any, ...], ...],
 ) -> ScalarSolution:
-    """Interpret existing scalar coefficients through the shared field norm record."""
-    return ScalarSolution(data.skeleton, local_meshes, result.fields, result, data.degree)
+    """Interpret scalar coefficients using the actual meshes retained by providers.
+
+    A provider may store its fine mesh alone or as the first entry of a tuple
+    carrying additional integrated moments. Recovery uses that executed mesh;
+    it does not construct another mesh or basis from the refinement parameter.
+    """
+    meshes = tuple(record[0] if isinstance(record, tuple) else record for record in local_meshes)
+    return ScalarSolution(data.skeleton, meshes, result.fields, result, data.degree)
 
 
 def strong_diffusion_equations(
@@ -223,6 +234,14 @@ def strong_diffusion_equations(
         kernel=kernel,
         moments=moments,
         metadata=(fine, size),
+        field_data=(
+            nodal_field(
+                "scalar",
+                fine,
+                data.degree,
+                reconstruction=sparse.eye(len(load), format="csr")[:size],
+            ),
+        ),
     )
 
 

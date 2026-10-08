@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -15,11 +23,11 @@ from typing import NamedTuple
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import transport as solve_transport
 from examples.pgmhm_campaign import crisscross
 from examples.transport_campaign import layer, natural_horizontal
 from examples.transport_checkpoints import checkpoint_field, checkpoint_norm
 from examples.transport_mixed_campaign import SOURCES
-from pymhm._legacy.models.transport.solver import solve_transport
 from pymhm.execution.cpu import map_local
 from pymhm.fem.scalar.operators import p1_geometry, triangle_quadrature
 from pymhm.fem.scalar.triangle import nodal_space, reference_basis

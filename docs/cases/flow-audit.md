@@ -148,7 +148,7 @@ Measurements and separate profile segments are available in
 finite element solves:
 
 ```bash
-pixi run -e notebooks python examples/plot_flow_audit.py
+pixi run --locked -e notebooks python -m examples.plot_flow_audit
 ```
 
 The uncondensed check and global reference used SciPy's sparse direct solver

@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -9,10 +17,10 @@ from concurrent.futures import ProcessPoolExecutor
 from multiprocessing import get_context
 from pathlib import Path
 
-from hpc4e_data import DATA_DIRECTORY, load_data
-from hpc4e_fields import RectangularElasticityField, compare_fields
 from threadpoolctl import threadpool_limits
 
+from examples.hpc4e_data import DATA_DIRECTORY, load_data
+from examples.hpc4e_fields import RectangularElasticityField, compare_fields
 from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]

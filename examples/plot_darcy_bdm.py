@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import json
 from pathlib import Path
 from typing import Any
@@ -12,13 +20,14 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 import numpy as np
-from plot_mesh import draw_macro_mesh
 from threadpoolctl import threadpool_limits
 
-from pymhm._legacy.models.darcy.mixed_bdm import BDMDarcySolution, solve_darcy_bdm
+from examples.formulations.application import bdm_darcy as solve_darcy_bdm
+from examples.plot_mesh import draw_macro_mesh
 from pymhm.fem.hdiv.bdm import bdm2_evaluate
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.solutions import BDMDarcySolution
 
 ROOT = Path(__file__).resolve().parents[1]
 FIGURES = ROOT / "docs/figures/darcy-bdm"

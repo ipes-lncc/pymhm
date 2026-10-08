@@ -1,6 +1,5 @@
 """Polynomial BDM Darcy fluxes with independent normal and interior enrichment."""
 
-from dataclasses import dataclass
 from functools import partial
 from typing import Any, Literal
 
@@ -9,55 +8,23 @@ import numpy as np
 from pymhm._legacy.models.darcy._mixed import (
     normal_flux_blocks,
     triangle_mixed_operators,
-    triangle_pressure_basis,
     triangle_pressure_integrals,
 )
-from pymhm.core.contracts import HybridSolution, LocalAssembly, LocalProblem
+from pymhm.core.contracts import LocalAssembly, LocalProblem
 from pymhm.core.system import HybridSystem
 from pymhm.core.validation import FloatArray, positive_int
-from pymhm.fem.hdiv.bdm import bdm2_basis, bdm2_evaluate, bdm2_trace_map
 from pymhm.fem.hdiv.bdm_family import BDMFamily
+from pymhm.fem.hdiv.bdm_forms import bdm_basis as _basis
+from pymhm.fem.hdiv.bdm_forms import bdm_evaluate
+from pymhm.fem.hdiv.bdm_forms import bdm_pressure_basis as _pressure_basis
+from pymhm.fem.hdiv.bdm_forms import bdm_trace_map as _trace_map
 from pymhm.fem.quadrature.material import material_triangle_quadrature
 from pymhm.fem.scalar.operators import boundary_data
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
-from pymhm.materials.evaluation import scalar_values, vector_values
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.solutions import BDMDarcySolution as BDMDarcySolution
 
 _BDM2 = BDMFamily()
-
-
-def _pressure_basis(family: BDMFamily, bary: FloatArray) -> FloatArray:
-    """Return a cardinal complete pressure space with partition of unity."""
-    return triangle_pressure_basis(family.polynomial_degree - 1, bary)
-
-
-def _basis(
-    family: BDMFamily, mesh: TriangleMesh, bary: FloatArray
-) -> tuple[FloatArray, FloatArray]:
-    """Tabulate BDM fluxes in their declared normal/interior moment coordinates."""
-    return bdm2_basis(mesh, bary) if family == BDMFamily() else family.basis(mesh, bary)
-
-
-def _evaluate(
-    family: BDMFamily, mesh: TriangleMesh, flux: FloatArray, bary: FloatArray
-) -> tuple[FloatArray, FloatArray]:
-    """Evaluate vectors in the same executed coordinate convention as assembly."""
-    return (
-        bdm2_evaluate(mesh, flux, bary)
-        if family == BDMFamily()
-        else family.evaluate(mesh, flux, bary)
-    )
-
-
-def _trace_map(
-    family: BDMFamily, mesh: TriangleMesh, cell: int, fine: TriangleMesh, skeleton: SkeletonSpace
-) -> FloatArray:
-    """Map the physical multiplier into the family's oriented boundary moments."""
-    return (
-        bdm2_trace_map(mesh, cell, fine, skeleton)
-        if family == BDMFamily()
-        else family.trace_map(mesh, cell, fine, skeleton)
-    )
 
 
 def _operators(
@@ -122,117 +89,6 @@ def _assemble_local(
         constraints,
     )
     return LocalAssembly(problem, (fine, constraints[:, 0]))
-
-
-@dataclass(frozen=True)
-class BDMDarcySolution:
-    """Conforming BDM(k,n) flux and complete discontinuous pressure from a MHM solve.
-
-    Flux stores integrated normal moments and cell moments as specified in
-    ``pymhm.fem.hdiv.bdm_family``. The default BDM2/P1 uses the equivalent coordinates
-    in ``pymhm.fem.hdiv.bdm``. Pressure has degree k+n-1 and cardinal coefficients.
-    The skeletal multiplier is the physical flux q.n in the macro orientation.
-    """
-
-    skeleton: SkeletonSpace
-    local_meshes: tuple[TriangleMesh, ...]
-    pressure: tuple[FloatArray, ...]
-    flux: tuple[FloatArray, ...]
-    hybrid: HybridSolution
-    permeability: Any
-    source: Any
-    quadrature_order: int
-    family: BDMFamily = BDMFamily()
-
-    def l2_error(self, exact: Any, order: int = 5) -> float:
-        """Integrate broken pressure error against an analytical pressure."""
-        total = 0.0
-        for mesh, pressure in zip(self.local_meshes, self.pressure, strict=True):
-            bary, weights, _ = material_triangle_quadrature(mesh, self.permeability, order)
-            points = np.einsum("tqi,tij->tqj", bary, mesh.points[mesh.cells])
-            values = np.einsum("ti,tqi->tq", pressure, _pressure_basis(self.family, bary))
-            error = values - scalar_values(exact, points.reshape(-1, 2)).reshape(values.shape)
-            total += float(mesh.areas @ np.sum(error**2 * weights, axis=1))
-        return float(np.sqrt(total))
-
-    def flux_l2_error(self, exact: Any, order: int = 5) -> float:
-        """Integrate physical BDM flux error without gradient recovery or smoothing."""
-        total = 0.0
-        for mesh, flux in zip(self.local_meshes, self.flux, strict=True):
-            bary, weights, _ = material_triangle_quadrature(mesh, self.permeability, order)
-            points = np.einsum("tqi,tij->tqj", bary, mesh.points[mesh.cells])
-            values, _ = _evaluate(self.family, mesh, flux, bary)
-            error = values - vector_values(exact, points.reshape(-1, 2)).reshape(values.shape)
-            total += float(mesh.areas @ np.sum(np.sum(error**2, axis=2) * weights, axis=1))
-        return float(np.sqrt(total))
-
-    def divergence_l2_error(self, exact: Any, order: int = 5) -> float:
-        """Integrate divergence error; exact=source measures strong equilibrium error."""
-        total = 0.0
-        for mesh, flux in zip(self.local_meshes, self.flux, strict=True):
-            bary, weights, _ = material_triangle_quadrature(mesh, self.permeability, order)
-            points = np.einsum("tqi,tij->tqj", bary, mesh.points[mesh.cells])
-            _, values = _evaluate(self.family, mesh, flux, bary)
-            error = values - scalar_values(exact, points.reshape(-1, 2)).reshape(values.shape)
-            total += float(mesh.areas @ np.sum(error**2 * weights, axis=1))
-        return float(np.sqrt(total))
-
-    def fine_equilibrium_residuals(self) -> tuple[FloatArray, ...]:
-        """Return all complete pressure moments of div(q)-f in every fine triangle."""
-        residuals = []
-        for mesh, flux in zip(self.local_meshes, self.flux, strict=True):
-            bary, weights, _ = material_triangle_quadrature(
-                mesh, self.permeability, self.quadrature_order
-            )
-            points = np.einsum("tqi,tij->tqj", bary, mesh.points[mesh.cells])
-            _, divergence = _evaluate(self.family, mesh, flux, bary)
-            source = scalar_values(self.source, points.reshape(-1, 2)).reshape(divergence.shape)
-            residuals.append(
-                np.einsum(
-                    "tq,tqi,tq,t->ti",
-                    weights,
-                    _pressure_basis(self.family, bary),
-                    divergence - source,
-                    mesh.areas,
-                )
-            )
-        return tuple(residuals)
-
-    def fine_conservation_residuals(self) -> tuple[FloatArray, ...]:
-        """Return integrated div(q)-f over each fine cell, using assembly quadrature."""
-        return tuple(residual.sum(axis=1) for residual in self.fine_equilibrium_residuals())
-
-    def conservation_residuals(self) -> FloatArray:
-        """Return macro flux minus source integrals, with the signed skeleton flux."""
-        defects = []
-        coarse = self.skeleton.mesh
-        for cell, fine in enumerate(self.local_meshes):
-            bary, weights, _ = material_triangle_quadrature(
-                fine, self.permeability, self.quadrature_order
-            )
-            points = np.einsum("tqi,tij->tqj", bary, fine.points[fine.cells])
-            source = scalar_values(self.source, points.reshape(-1, 2)).reshape(points.shape[:2])
-            defect = -float(fine.areas @ np.sum(source * weights, axis=1))
-            for side, face in enumerate(coarse.cell_faces[cell]):
-                parameter, w = self.skeleton.faces[face].quadrature(max(4, self.family.degree + 1))
-                values = self.skeleton.faces[face].evaluate(parameter)
-                defect += (
-                    coarse.signs[cell, side]
-                    * coarse.lengths[face]
-                    * float(w @ values @ self.hybrid.trace[self.skeleton.dofs(int(face))])
-                )
-            defects.append(defect)
-        return np.asarray(defects)
-
-    def normal_flux_residuals(self) -> tuple[FloatArray, ...]:
-        """Return all boundary normal-moment differences between BDM flux and skeleton."""
-        defects = []
-        for cell, (fine, flux) in enumerate(zip(self.local_meshes, self.flux, strict=True)):
-            count = self.family.degree + 1
-            dofs = (count * fine.boundary_faces[:, None] + np.arange(count)).ravel()
-            mapping = _trace_map(self.family, self.skeleton.mesh, cell, fine, self.skeleton)
-            defects.append(flux[dofs] - mapping @ self.hybrid.trace[self.skeleton.cell_dofs(cell)])
-        return tuple(defects)
 
 
 def solve_darcy_bdm(
@@ -342,3 +198,6 @@ def solve_darcy_bdm(
         quadrature_order,
         family,
     )
+
+
+_evaluate = bdm_evaluate

@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -59,6 +67,7 @@ def validate_existing(
 def main() -> None:
     """Reevaluate unchanged archives using shared physical norms and checked provenance."""
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--data", type=Path, default=DATA)
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument(
         "--output", type=Path, help="new comparison JSON using the same input archives"
@@ -69,7 +78,7 @@ def main() -> None:
         help="explicit before/after SHA review of validation-only source changes",
     )
     args = parser.parse_args()
-    directory = DATA / "cg3"
+    directory = args.data / "cg3"
     target = args.output if args.output is not None else directory / "structured-comparison.json"
     sources = (*SOURCES, "examples/compare_mh2m_cg3_controls.py")
     hashes = {name: digest(ROOT / name) for name in sources}
@@ -105,8 +114,8 @@ def main() -> None:
             f"{error}. Validate archived results with python -m examples.validate_mh2m_campaign "
             "or acquire a new analysis with --output NEW.json."
         ) from error
-    cases = json.loads((DATA / "comparison.json").read_text())["cases"]
-    checked = validate_existing(record, metadata, cases, DATA)
+    cases = json.loads((args.data / "comparison.json").read_text())["cases"]
+    checked = validate_existing(record, metadata, cases, args.data)
     if acquired_payload is not None:
         save_validation(
             target,
@@ -120,7 +129,7 @@ def main() -> None:
         for case in cases:
             if any(row["archive"] == case["archive"] for row in record["cases"]):
                 continue
-            archive = DATA / case["archive"]
+            archive = args.data / case["archive"]
             if digest(archive) != case["archive_sha256"]:
                 raise ValueError("control field differs from its acquisition record")
             other = load_field(archive)
@@ -140,7 +149,7 @@ def main() -> None:
             if hashes != {name: digest(ROOT / name) for name in sources}:
                 raise RuntimeError("comparison sources changed while integrating")
             record["cases"].append(row)
-            validate_existing(record, metadata, cases, DATA)
+            validate_existing(record, metadata, cases, args.data)
             target.parent.mkdir(parents=True, exist_ok=True)
             temporary = target.with_suffix(".json.tmp")
             temporary.write_text(json.dumps(record, indent=2) + "\n")

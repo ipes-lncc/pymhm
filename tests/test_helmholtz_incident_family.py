@@ -115,11 +115,11 @@ def test_incident_family_rejects_corrupted_physical_field_even_with_small_schur_
 
 
 def test_incident_family_rejects_changed_trace_injection_map(monkeypatch):
-    from pymhm._legacy.models.waves.helmholtz import _HelmholtzFactory
+    from examples.tutorial_helmholtz_equations import AcousticAssemblyProvider
 
     mesh = CartesianMacroMesh(2)
     prepared = solve_helmholtz(mesh, omega=2.0, degree=3, absorbing=1j)
-    original = _HelmholtzFactory.__call__
+    original = AcousticAssemblyProvider.__call__
 
     def different_map(self, cell):
         value = original(self, cell)
@@ -130,7 +130,7 @@ def test_incident_family_rejects_changed_trace_injection_map(monkeypatch):
         return replace(value, problem=altered)
 
     with IncidentFamily(prepared) as owner:
-        monkeypatch.setattr(_HelmholtzFactory, "__call__", different_map)
+        monkeypatch.setattr(AcousticAssemblyProvider, "__call__", different_map)
         with pytest.raises(ValueError, match="operator or injection map"):
             owner.solve(1j)
 
@@ -140,13 +140,15 @@ def test_angular_family_records_complete_norms_and_one_shared_condensation(tmp_p
     cases = [Configuration("direction", 2, 2, True, 4.1, angle) for angle in (0, np.pi / 13)]
     expected = [solve_configuration(c, tmp_path) for c in cases]
     calls = []
-    original = LocalProblem.condense
+    from pymhm.core import assembly
+
+    original = assembly.condense_local
 
     def counted(self, *args, **kwargs):
         calls.append(self)
         return original(self, *args, **kwargs)
 
-    monkeypatch.setattr(LocalProblem, "condense", counted)
+    monkeypatch.setattr(assembly, "condense_local", counted)
     rows = list(solve_direction_family(cases, tmp_path))
     assert len(calls) == 4
     assert len(rows) == len(cases)

@@ -20,6 +20,34 @@ describes the four blocks, global additions and current compilation limits.
     options:
       show_source: false
 
+::: pymhm.postprocessing.nodal
+    options:
+      show_source: false
+
+::: pymhm.postprocessing.modal
+    options:
+      show_source: false
+
+::: pymhm.postprocessing.piola
+    options:
+      show_source: false
+
+::: pymhm.fem.traces.forms
+    options:
+      show_source: false
+
+::: pymhm.fem.traces.pairing
+    options:
+      show_source: false
+
+::: pymhm.fem.traces.boundary_forms
+    options:
+      show_source: false
+
+::: pymhm.fem.traces.normal
+    options:
+      show_source: false
+
 ## Explicit equations and shared hierarchy
 
 ::: pymhm.core.equations
@@ -27,6 +55,10 @@ describes the four blocks, global additions and current compilation limits.
       show_source: false
 
 ::: pymhm.core.multiscale
+    options:
+      show_source: false
+
+::: pymhm.core.original
     options:
       show_source: false
 
@@ -72,6 +104,10 @@ describes the four blocks, global additions and current compilation limits.
     options:
       show_source: false
 
+::: pymhm.core.online
+    options:
+      show_source: false
+
 ::: pymhm.core.nested
     options:
       show_source: false
@@ -88,6 +124,6 @@ describes the four blocks, global additions and current compilation limits.
     options:
       show_source: false
 
-::: pymhm._legacy.models.geometry
+::: pymhm.meshes.geometry
     options:
       show_source: false

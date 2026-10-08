@@ -3,8 +3,9 @@
 from dataclasses import dataclass
 
 import numpy as np
-from manufactured import stokes_source, stokes_velocity
 from numpy.typing import NDArray
+
+from examples.manufactured import stokes_source, stokes_velocity
 
 FloatArray = NDArray[np.float64]
 

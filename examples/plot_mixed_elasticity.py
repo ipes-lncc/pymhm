@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import json
 from pathlib import Path
 from typing import Any
@@ -12,12 +20,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 import numpy as np
-from plot_mesh import draw_macro_mesh
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed
+from examples.plot_mesh import draw_macro_mesh
 from pymhm import TriangleMesh
-from pymhm._legacy.models.elasticity.stress import MixedElasticitySolution, solve_elasticity_mixed
 from pymhm.fem.hdiv.bdm import bdm2_evaluate
+from pymhm.postprocessing.stress import MixedElasticitySolution
 
 ROOT = Path(__file__).resolve().parents[1]
 FIGURES = ROOT / "docs/figures/mixed-elasticity"

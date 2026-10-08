@@ -7,6 +7,14 @@ published numerical table. All reported integrals use explicit quadrature.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 import platform
@@ -17,20 +25,22 @@ from typing import Any
 
 import matplotlib
 import numpy as np
-from field_sampling import sample_darcy_pressure_profile
-from manufactured import darcy_flux, darcy_pressure, darcy_source
 from numpy.typing import NDArray
-from plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from threadpoolctl import threadpool_limits
+
+from examples.field_sampling import sample_darcy_pressure_profile
+from examples.manufactured import darcy_flux, darcy_pressure, darcy_source
+from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 from matplotlib.tri import Triangulation
 
+from examples.formulations.application import darcy as solve_darcy
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.darcy.primal import DarcySolution, solve_darcy
 from pymhm.fem.scalar.operators import rt0_evaluate, rt0_operators, triangle_quadrature
+from pymhm.postprocessing.solutions import DarcySolution
 from pymhm.recovery.equilibrated import EquilibratedFlux, equilibrate_flux
 
 Array = NDArray[np.float64]

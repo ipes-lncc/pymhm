@@ -221,7 +221,7 @@ discussed in the [literature catalogue](../literature.md).
 From the repository checkout, run:
 
 ```bash
-pixi run -e notebooks python examples/plot_darcy_cases.py
+pixi run --locked -e notebooks python -m examples.plot_darcy_cases
 ```
 
 The script limits numerical thread pools to one thread and writes ten SVG

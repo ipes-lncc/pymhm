@@ -323,9 +323,9 @@ done
 for dt in 0.1 0.05 0.025 0.0125 0.00625 0.003125 0.0015625 0.00078125 0.0001953125 0.00009765625; do
   pixi run --locked -e test-core python -m examples.elastodynamics_campaign --n 2 --dt "$dt" --order 8
 done
-pixi run -e notebooks python -m examples.elastodynamics_results
-pixi run -e notebooks python -m examples.plot_elastodynamics_native
-pixi run -e notebooks notebooks-run notebooks/waves/elastodynamics/71_elastodynamics.ipynb
+pixi run --locked -e notebooks python -m examples.elastodynamics_results
+pixi run --locked -e notebooks python -m examples.plot_elastodynamics_native
+pixi run --locked -e notebooks notebooks-run notebooks/waves/elastodynamics/71_elastodynamics.ipynb
 ```
 
 ## References

@@ -185,7 +185,7 @@ stress–displacement–rotation method remains a distinct formulation.
 ```python
 import numpy as np
 from pymhm import TriangleMesh
-from pymhm._legacy.models.vector import solve_elasticity
+from examples.formulations.application import elasticity as solve_elasticity
 
 solution = solve_elasticity(
     TriangleMesh.unit_square(4),
@@ -197,9 +197,9 @@ solution = solve_elasticity(
 ```
 
 ```bash
-pixi run -e notebooks python examples/plot_elasticity.py --workers 4
-pixi run -e notebooks python examples/plot_elasticity.py --reuse-results
-pixi run -e notebooks notebooks-run notebooks/elasticity/07_elasticity.ipynb
+pixi run --locked -e notebooks python -m examples.plot_elasticity --workers 4
+pixi run --locked -e notebooks python -m examples.plot_elasticity --reuse-results
+pixi run --locked -e notebooks notebooks-run notebooks/elasticity/07_elasticity.ipynb
 ```
 
 The first command performs solves and saves JSON, sampled fields and PNG/SVG

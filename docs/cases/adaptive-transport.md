@@ -403,24 +403,24 @@ rank checks. No hidden local refinement or tolerance adjustment is made.
 ## Reproduce the measurements
 
 ```bash
-pixi run -e notebooks python -m examples.transport_mixed_campaign
-pixi run -e notebooks python -m examples.transport_mixed_campaign \
+pixi run --locked -e notebooks python -m examples.transport_mixed_campaign
+pixi run --locked -e notebooks python -m examples.transport_mixed_campaign \
   --append-spatial 8 12 16
-pixi run -e notebooks python -m examples.transport_coefficient_controls \
+pixi run --locked -e notebooks python -m examples.transport_coefficient_controls \
   --resolutions 8 16 32 64 128 --epsilon 1 --local-refinement 16 --local-workers 4
-pixi run -e notebooks python -m examples.transport_face_controls \
+pixi run --locked -e notebooks python -m examples.transport_face_controls \
   --strategy adaptive --iterations 8 --local-refinement 16
 for r in 16 32 64 128 256; do
-  pixi run -e notebooks python -m examples.transport_face_resolution \
+  pixi run --locked -e notebooks python -m examples.transport_face_resolution \
     --local-refinement "$r" --workers 2
 done
 for r in 32 64 128; do
-  pixi run -e notebooks python -m examples.transport_adaptive_resolution \
+  pixi run --locked -e notebooks python -m examples.transport_adaptive_resolution \
     --local-refinement "$r" --workers 2
 done
-pixi run -e notebooks python -m examples.verify_transport_published
-pixi run -e notebooks python -m examples.plot_transport_mixed
-pixi run -e notebooks python -m examples.transport_campaign --collect
+pixi run --locked -e notebooks python -m examples.verify_transport_published
+pixi run --locked -e notebooks python -m examples.plot_transport_mixed
+pixi run --locked -e notebooks python -m examples.transport_campaign --collect
 ```
 
 The mixed campaign acquires the nominal Figure-12 physical data and its

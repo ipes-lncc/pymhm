@@ -19,10 +19,10 @@ from numpy.typing import NDArray
 
 from examples.campaign_provenance import verify_archive
 from pymhm import PolylineLayerField, RadialDiskLoad, TriangleMesh
-from pymhm._legacy.models.elasticity.primal import constitutive_values
 from pymhm.core.validation import positive_int
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import file_digest
+from pymhm.materials.elasticity import constitutive_values
 
 DATA = Path(__file__).resolve().parent / "data/three-layer-2017"
 Array = NDArray[np.float64]

@@ -2,6 +2,13 @@
 
 Darcy refinement policies, local error controls, metric remeshing and the primal elasticity indicator.
 
+Darcy and transport controllers accept `solve_step` to assemble each state
+from user-defined equations. The callable receives the current mesh and
+skeleton with the problem's keyword options; it returns the physical solution
+required by the chosen estimator. The default formulation remains available.
+See the [variational guide](../variational.md#formulations-composed-from-the-same-api)
+for composition with mathematical definition factories.
+
 [All API families](../api.md)
 
 ::: pymhm.adaptivity.darcy

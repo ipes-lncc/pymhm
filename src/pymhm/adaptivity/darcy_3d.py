@@ -6,7 +6,7 @@ from typing import Any, Literal
 
 import numpy as np
 
-from pymhm._legacy.models.darcy.primal_3d import Darcy3DSolution, solve_darcy_3d
+from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
 from pymhm.adaptivity.darcy import mark_dorfler
 from pymhm.core.validation import FloatArray, positive_int
 from pymhm.estimators.darcy_3d import Darcy3DEstimator, estimate_darcy_error_3d
@@ -14,6 +14,7 @@ from pymhm.fem.conditions import minimum_estimator_degree
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
 from pymhm.meshes.refinement_3d import TetraRefinement, refine_tetrahedra
 from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.postprocessing.solutions import Darcy3DSolution
 
 
 @dataclass(frozen=True)
@@ -45,6 +46,7 @@ def solve_adaptive_darcy_3d(
     estimator_convention: Literal["energy", "published"] = "energy",
     ellipticity_lower_bound: Any = None,
     on_state: Callable[[int, Darcy3DSolution, Darcy3DEstimator], None] | None = None,
+    solve_step: Callable[..., Darcy3DSolution] | None = None,
     **problem: Any,
 ) -> AdaptiveDarcy3DResult:
     """Solve, estimate, mark and bisect tetrahedral edge stars.
@@ -54,12 +56,22 @@ def solve_adaptive_darcy_3d(
     a reproduction of a historical 3D mesh sequence and implies no contraction or optimality
     guarantee. Physical Neumann data and per-cell ellipticity bounds follow their exact parent
     entities. The callback persists each solved state before refinement.
+
+    ``solve_step(mesh, skeleton=current, **problem)`` may assemble each state
+    through user-declared public equations. It must return a Darcy3DSolution
+    in the supplied mesh and trace space; all physical data, coefficient bounds
+    and refinement ancestry retain their declared meaning. ``None`` preserves
+    the built-in Darcy solver. Selecting a callable changes only state assembly,
+    not the estimator, marking, boundary transfer or stopping policy.
     """
     positive_int(iterations, "iterations")
     positive_int(maximum_cells, "maximum cells")
     if np.iscomplexobj(tolerance) or not np.isfinite(tolerance) or tolerance < 0:
         raise ValueError("tolerance must be finite and nonnegative")
     mark_dorfler([1.0], theta)
+    if solve_step is not None and not callable(solve_step):
+        raise TypeError("solve_step must be callable or None")
+    solver = solve_darcy_3d if solve_step is None else solve_step
     parameters = dict(problem)
     if "skeleton" in parameters:
         raise ValueError("adaptive tetrahedral traces are selected by trace_degree/subdivisions")
@@ -69,7 +81,7 @@ def solve_adaptive_darcy_3d(
     solutions, estimates, marks, refinements = [], [], [], []
     for step in range(iterations):
         skeleton = TriangularSkeleton(mesh, trace_subdivisions, degree=trace_degree)
-        solution = solve_darcy_3d(mesh, skeleton=skeleton, **parameters)
+        solution = solver(mesh, skeleton=skeleton, **parameters)
         estimate = estimate_darcy_error_3d(
             solution,
             degree=reconstruction_degree,

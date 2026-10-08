@@ -42,7 +42,7 @@ it is not the same method as MHM with a source lifting.
 
 ```python
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm.methods.hho import solve_mshho
+from examples.formulations.application import moment_diffusion as solve_mshho
 
 mesh = TriangleMesh.unit_square(4)
 faces = tuple(FaceSpace.uniform(1) for _ in mesh.faces)

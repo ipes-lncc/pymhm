@@ -8,6 +8,14 @@ and skeletal spaces in MH and MHM, with genuine broken energy integration.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -20,14 +28,15 @@ from threadpoolctl import threadpool_limits
 
 from examples.campaign_checkpoint import archive_identity, require_sources, verify_checkpoint
 from examples.field_sampling import sample_field
-from pymhm._legacy.models.darcy.primal import solve_darcy
+from examples.formulations.application import darcy as solve_darcy
+from examples.formulations.application import robin_diffusion as solve_mh
 from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.triangle import tabulate
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.polygonal import PolygonMesh
 from pymhm.meshes.triangle import TriangleMesh
-from pymhm.methods.robin import MHSolution, solve_mh
+from pymhm.postprocessing.solutions import MHSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/mh"

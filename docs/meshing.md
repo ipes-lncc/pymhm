@@ -10,7 +10,7 @@ meshio imports and exports them. Optional dependencies load only when used.
 ```bash
 pip install '.[meshing]'
 # Reproducible development environment:
-pixi run -e meshing test-meshing
+pixi run --locked -e meshing test-meshing
 ```
 
 ## Generate a mesh
@@ -222,7 +222,7 @@ Pass an executable path when it is outside `PATH`. The locked Linux environment
 and native integration check are available with
 
 ```bash
-pixi run -e remeshing pytest -q tests/test_metric_freefem.py tests/test_metric_adapt.py
+pixi run --locked -e remeshing pytest -q tests/test_metric_freefem.py tests/test_metric_adapt.py
 ```
 
 
@@ -311,7 +311,7 @@ and solver interoperability; they do not establish mesh-quality bounds or
 support for every CAD topology.
 
 ```bash
-pixi run -e meshing pytest tests/test_mesh_exchange.py tests/test_meshing_native3d.py
+pixi run --locked -e meshing pytest tests/test_mesh_exchange.py tests/test_meshing_native3d.py
 ```
 
 Notebook `60_mesh_exchange.ipynb` demonstrates the four in-memory geometries and

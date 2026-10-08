@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import hashlib
 import json
 from pathlib import Path
@@ -11,12 +19,12 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-from flow3d_data import Flow3DData
 from matplotlib.collections import LineCollection, PolyCollection
 from matplotlib.colors import Normalize, TwoSlopeNorm
-from plot_darcy3d import slice_polygon
-from plot_style import set_refinement_ticks
 
+from examples.flow3d_data import Flow3DData
+from examples.plot_darcy3d import slice_polygon
+from examples.plot_style import set_refinement_ticks
 from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
 from pymhm.meshes.tetrahedron import TetraMesh
 

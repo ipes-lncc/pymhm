@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import csv
 import json
@@ -20,11 +28,11 @@ if __package__:
     from .plot_style import set_refinement_ticks
     from .verify_periodic import ROOT, material, source
 else:
-    import compare_periodic
-    from compare_periodic import load_fields, load_reference
-    from plot_mesh import draw_macro_mesh
-    from plot_style import set_refinement_ticks
-    from verify_periodic import ROOT, material, source
+    import examples.compare_periodic as compare_periodic
+    from examples.compare_periodic import load_fields, load_reference
+    from examples.plot_mesh import draw_macro_mesh
+    from examples.plot_style import set_refinement_ticks
+    from examples.verify_periodic import ROOT, material, source
 
 from pymhm.meshes.cartesian import CartesianMacroMesh
 

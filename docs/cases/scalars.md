@@ -105,7 +105,7 @@ the spatial error floor. Rates in the table are computed as
 ## Reproduce and inspect
 
 ```bash
-pixi run -e notebooks python examples/plot_scalar_elasticity.py
+pixi run --locked -e notebooks python -m examples.plot_scalar_elasticity
 ```
 
 The script checks decreasing heat energy and refinement error, writes the

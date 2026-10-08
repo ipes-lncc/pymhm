@@ -16,7 +16,7 @@ from typing import Any, Literal, Protocol
 import numpy as np
 from scipy import sparse
 
-from pymhm.core.equations import FormCompiler, LocalEquations, _dofs, compile_form
+from pymhm.core.equations import FormCompiler, LocalEquations, _compile_block, _dofs, compile_form
 from pymhm.core.validation import FloatArray, positive_int, real_array
 
 
@@ -129,6 +129,53 @@ class InterfaceSpace(Protocol):
     def binding(self, cell: int) -> TraceBinding:
         """Return independent trace maps for the selected macrocell."""
         ...
+
+
+@dataclass(frozen=True)
+class ComponentTraceSpace:
+    """Interleave scalar trace coordinates for a declared vector-valued interface.
+
+    ``base`` owns the scalar basis, geometry and any continuity constraints.
+    Coordinate ``components*i+j`` is component j of scalar coordinate i. This
+    wrapper shares exactly the same vertices/edges as the base and introduces
+    no normal or tangential rotation. Use ``bind_interface`` to declare value
+    or canonical-normal transport, or ``TraceBinding`` for a different frame.
+    """
+
+    base: Any
+    components: int
+
+    def __post_init__(self) -> None:
+        """Validate a scalar mesh-associated layout without loading a FEM backend."""
+        if not hasattr(self.base, "mesh") or not callable(getattr(self.base, "cell_dofs", None)):
+            raise TypeError("component traces require a mesh-associated scalar trace space")
+        if getattr(self.base, "components", 1) != 1:
+            raise ValueError("component trace base must be scalar")
+        positive_int(self.base.size, "scalar interface size", 0)
+        object.__setattr__(self, "components", positive_int(self.components, "components"))
+
+    @property
+    def mesh(self) -> Any:
+        """Return the unchanged scalar interface's macro mesh."""
+        return self.base.mesh
+
+    @property
+    def size(self) -> int:
+        """Return the component-interleaved global coefficient dimension."""
+        return int(self.base.size * self.components)
+
+    def _interleave(self, dofs: Any) -> np.ndarray:
+        """Expand scalar indices without changing their declared order."""
+        return (np.asarray(dofs)[:, None] * self.components + np.arange(self.components)).ravel()
+
+    def dofs(self, face: int) -> np.ndarray:
+        """Return one face's vector coefficients, including any shared scalar nodes."""
+        owner = getattr(self.base, "dofs", None)
+        return self._interleave(owner(face) if callable(owner) else self.base.face_dofs[face])
+
+    def cell_dofs(self, cell: int) -> np.ndarray:
+        """Preserve the scalar cell-coordinate order with interleaved components."""
+        return self._interleave(self.base.cell_dofs(cell))
 
 
 def validate_trace_binding(binding: TraceBinding, size: int) -> TraceBinding:
@@ -288,9 +335,9 @@ def bind_interface(
     return BoundInterface(space, convention)
 
 
-def _dense_form(compiler: FormCompiler, form: Any, shape: tuple[int, ...]) -> FloatArray:
+def _dense_form(compiler: FormCompiler, form: Any, shape: tuple[int, ...], name: str) -> FloatArray:
     """Compile a local block once and materialize only the trace-sized sparse result."""
-    result = compiler(form, shape)
+    result = _compile_block(compiler, form, name, shape)
     return result.toarray() if sparse.issparse(result) else result
 
 
@@ -328,16 +375,16 @@ def bind_local_equations(
         raise ValueError("trace binding basis identity is stale")
     if coordinates not in {"local", "global"}:
         raise ValueError("equation coordinates must be local or global")
-    operator = compiler(a)
+    operator = _compile_block(compiler, a, "a")
     if len(operator.shape) != 2 or operator.shape[0] != operator.shape[1]:
         raise ValueError("the local trial and test operator must be square")
     width = operator.shape[0]
     trial = binding.trial_size if coordinates == "local" else len(binding.dofs)
     test = binding.test_size if coordinates == "local" else len(binding.test_dofs)
-    paired_b = _dense_form(compiler, b, (width, trial))
-    paired_c = _dense_form(compiler, c, (test, width))
-    paired_d = _dense_form(compiler, d, (test, trial))
-    paired_g = _dense_form(compiler, g, (test,))
+    paired_b = _dense_form(compiler, b, (width, trial), "b")
+    paired_c = _dense_form(compiler, c, (test, width), "c")
+    paired_d = _dense_form(compiler, d, (test, trial), "d")
+    paired_g = _dense_form(compiler, g, (test,), "g")
     if coordinates == "local":
         paired_b = paired_b @ binding.trial_map
         paired_c = binding.test_map.T @ paired_c

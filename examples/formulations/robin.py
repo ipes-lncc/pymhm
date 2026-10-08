@@ -17,15 +17,18 @@ from scipy import sparse
 from pymhm import Equation, LocalEquations, MultiscaleProblem
 from pymhm.core.contracts import HybridSolution
 from pymhm.core.multiscale import MultiscaleSystem
+from pymhm.fem.scalar.robin import nodal_volume_moments, robin_boundary_operator
+from pymhm.fem.scalar.robin_3d import tetra_robin_boundary_operator
 from pymhm.fem.scalar.tetrahedron import tetra_operators
 from pymhm.fem.scalar.triangle import scalar_operators, tabulate, trace_coupling
 from pymhm.fem.traces.integration import integrate_dirichlet_trace
 from pymhm.fem.traces.interval import SkeletonSpace
 from pymhm.fem.traces.pressure_3d import boundary_rules, broken_face_basis
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton, tetra_trace_coupling
+from pymhm.materials.bounds import ellipticity_lower_bound as material_ellipticity_lower_bound
 from pymhm.materials.evaluation import scalar_values_3d, tensor_values, tensor_values_3d
-from pymhm.methods.robin import MHSolution, _ellipticity, _robin_operator, _volume_weights
-from pymhm.methods.robin_3d import MH3DSolution, _robin_matrix
+from pymhm.postprocessing.nodal import nodal_field
+from pymhm.postprocessing.solutions import MH3DSolution, MHSolution
 
 
 @dataclass(frozen=True)
@@ -49,7 +52,7 @@ def robin_equations(
     cell: int,
     *,
     mesh: Any,
-    skeleton: SkeletonSpace,
+    skeleton: SkeletonSpace | None = None,
     permeability: Any,
     source: Any,
     degree: int,
@@ -63,17 +66,23 @@ def robin_equations(
     stiffness, _, load = scalar_operators(
         fine, degree, diffusion=permeability, source=source, order=order
     )
-    robin = _robin_operator(fine, degree, parameter, origin, order)
+    robin = robin_boundary_operator(fine, degree, parameter, origin, order)
     b = trace_coupling(mesh, cell, fine, skeleton, degree)
     return LocalEquations(
-        stiffness + robin, load, b, -b.T, skeleton.cell_dofs(cell), metadata=(fine, robin)
+        stiffness + robin,
+        load,
+        b,
+        -b.T,
+        skeleton.cell_dofs(cell),
+        metadata=(fine, robin),
+        field_data=(nodal_field("pressure", fine, degree),),
     )
 
 
 def define_robin(
     mesh: Any,
     *,
-    skeleton: SkeletonSpace,
+    skeleton: SkeletonSpace | None = None,
     permeability: Any = 1.0,
     source: Any = 0.0,
     dirichlet: Any = 0.0,
@@ -92,8 +101,9 @@ def define_robin(
     Robin lambda. The two-dimensional certified parameter bound is retained.
     The physical pressure mean is requested only for a fully Neumann boundary.
     """
+    skeleton = SkeletonSpace(mesh) if skeleton is None else skeleton
     order = max(quadrature_order, degree + 2)
-    lower = _ellipticity(permeability, ellipticity_lower_bound)
+    lower = material_ellipticity_lower_bound(permeability, ellipticity_lower_bound)
     point = np.min(mesh.points, axis=0) if origin is None else np.asarray(origin)
     radius = float(np.max(np.linalg.norm(mesh.points - point, axis=1))) / 2
     upper = lower / (4 * radius**2)
@@ -178,7 +188,10 @@ def robin_gauge(definition: RobinDefinition, system: MultiscaleSystem) -> list[A
         return []
     return [
         system.mean_constraint(
-            [_volume_weights(record[0], definition.degree) for record in system.local_metadata],
+            [
+                nodal_volume_moments(record[0], definition.degree)
+                for record in system.local_metadata
+            ],
             definition.pressure_integral,
         )
     ]
@@ -252,7 +265,7 @@ def robin_equations_3d(
     stiffness, mass, load = tetra_operators(
         fine, degree, diffusion=permeability, source=source, order=order
     )
-    robin = _robin_matrix(mesh, cell, fine, degree, order, parameter, origin)
+    robin = tetra_robin_boundary_operator(mesh, cell, fine, degree, order, parameter, origin)
     b = tetra_trace_coupling(mesh, cell, fine, skeleton, degree)
     return LocalEquations(
         stiffness + robin,
@@ -261,6 +274,7 @@ def robin_equations_3d(
         -b.T,
         skeleton.cell_dofs(cell),
         metadata=(fine, robin, np.asarray(mass.sum(axis=1)).ravel()),
+        field_data=(nodal_field("pressure", fine, degree),),
     )
 
 

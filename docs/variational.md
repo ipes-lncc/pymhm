@@ -20,6 +20,9 @@ The four-block API below also accepts independently declared trial/test forms.
 The current contract is a linear system with real coefficients. Nonlinear
 iterations and time integration can compose these systems; their update rules
 and scientific qualification belong to the application.
+Complex formulations use the general `realify_operator`, `realify_vector` and
+`complexify_vector` operations, with interleaved real and imaginary coordinates
+for each coefficient. This representation applies to every operator block and load.
 
 The [provider notebooks](tutorials/providers.md) give executable scalar and
 mixed examples. The [API](api/hybrid.md) gives the complete signatures.
@@ -71,6 +74,35 @@ For an additional supported global interface form, pass a builder to
 trial/test functions and measure; the adapter transports the assembled form to
 the declared face coordinates and retains the complete global layout. Boundary
 loads and gauges are separate explicit data.
+
+The built-in native trace adapters support polynomial edges and triangular
+faces in 2D and 3D. `ComponentTraceSpace(scalar_space, components=3)` declares
+Cartesian vector values without changing the scalar space's continuity.
+`TangentialTraceSpace` instead uses the declared canonical tangent frame.
+Facewise C0 Bernstein coefficients remain shared within their macroface;
+`PressureTraceSpace` and `PressureTraceSpace3D` also share macrovertices and
+macroedges. Native boundary facets must resolve the selected trace partition.
+This geometric condition does not replace a method's degree or stability
+conditions. On the triangular global integration mesh, subfaces are separate
+geometric cells; coefficient embeddings enforce the declared continuity.
+Cross-face facet terms are supplied explicitly as additional global blocks.
+
+For already assembled formulations, the same basis is available directly:
+
+```python
+from pymhm import project_trace, trace_bilinear_form, trace_linear_form
+
+boundary_load = trace_linear_form(skeleton, prescribed_value, faces=boundary_faces)
+boundary_operator = trace_bilinear_form(skeleton, coefficient, faces=boundary_faces)
+fixed_coefficients = project_trace(skeleton, prescribed_trace, faces=essential_faces)
+```
+
+These operations integrate the physical scalar/vector value represented by
+the trace. They choose no pressure, normal-flux or traction meaning and insert
+no incidence sign. The coefficient in `trace_bilinear_form` can be a scalar or
+a matrix in physical value components. Shared nodes accumulate every selected
+face contribution; `project_trace` solves their joint Gram system. The same
+operations serve reaction, Robin, impedance and other interface terms.
 
 The [custom-space tutorial](tutorials/custom-interface.md) shows how to own
 all numbering, basis and orientation conventions. Fully manual coefficient
@@ -160,6 +192,105 @@ coefficients without another global solve. Its `solve` and `reconstruct`
 methods delegate to those free functions. `with_global_load(system, rhs)`
 reuses the local responses for a new global balance load while preserving
 retained source-compatibility rows. It does not change a local volume source.
+
+For repeated volume sources, preserve the operator and its factors explicitly:
+
+```python
+from pymhm import OfflineMultiscaleSystem
+
+with OfflineMultiscaleSystem(system) as offline:
+    updated = offline.with_loads(local_loads, global_load=additional_global_load)
+    solution = solve(updated)
+```
+
+`local_loads` contains one new $L_K$ in each assembled test-coordinate order.
+Optional `balance_loads` replaces each $g_K$ in its compiled trace-coordinate
+union. `global_load` replaces the additional global functional, rather than
+the complete condensed right-hand side. Local source responses and retained
+compatibility rows are recomputed while harmonic lifts and basis matrices are
+reused literally. A source-dependent physical gauge is computed from `updated`
+before solving. This operation supplies no time integrator or source projection.
+Leaf systems use this cache directly; recursive sources are updated in their
+child hierarchy before the parent is assembled. The ordinary `factorization`
+solver argument also permits explicit global factor reuse.
+
+Named fields can combine eliminated, trace and prescribed coordinates. A
+`FieldDefinition` stores the explicit reconstruction
+
+$$
+w_K=R_Ku_K+T_K\lambda[\mathrm{trace\_dofs}_K]+w_K^0.
+$$
+
+Declare those maps with `reconstruction`, `trace_reconstruction`, `trace_dofs`
+and `offset` in `local.field(...)`, or use the public
+`pymhm.postprocessing.nodal.nodal_field` helper for portable nodal fields.
+The trace map uses the stated global coordinates; include any required
+orientation in that matrix. This supports hybrid moment reconstructions and
+essential-boundary liftings without a method-specific solution object.
+`solution.field(name)` returns a tuple of recovered `DiscreteField` views, each
+using its archived basis. Evaluate a view at physical points with an explicit
+cell selection when one-sided interface values are needed:
+
+```python
+views = solution.field("pressure")
+values = views[0].evaluate(points, cells=local_cells)
+```
+
+Field names do not select an operator, gauge or reconstruction formula.
+For a hierarchy, `solution.field(name, recursive=True)` descends into cells
+without a definition and returns their recovered leaf fields in deterministic
+order. Each view uses the trace vector at its own level. A cell declaring the
+field takes precedence over its children, so the result does not duplicate it.
+
+`FieldDefinition.basis_matrix` exposes an immutable copy when the declared
+nodal, modal or native basis has a single polynomial matrix. A composite Piola
+basis additionally needs moment maps and orientation matrices; archive the
+complete `FieldDefinition` and its `basis_digest` for replay. The public
+`nodal_field`, `modal_field`, `piola_field` and `hdiv_field` constructors retain
+their executed coordinate contracts and support one-sided evaluation.
+
+## Formulations composed from the same API
+
+The importable providers under `examples/formulations/` state the local spaces,
+operators, boundary data and recovery maps. Their main paths compose public
+numerical operations with `LocalEquations`, `Equation`, `assemble` and `solve`.
+They require no predefined physical solver or private numerical helper.
+
+| Formulation family | Provider and explicit mathematical ingredients |
+| --- | --- |
+| Primal Darcy, tensor diffusion and Cartesian/tetrahedral variants | `darcy`, `tensor_darcy`, `cartesian_darcy`, `tetrahedral_darcy`: stiffness, signed normal pairings, constant kernel and pressure moment. |
+| Mixed Darcy on triangles, tetrahedra, prisms and hexahedra | `mixed_darcy`, `mixed_darcy_3d`, `mapped_darcy`: inverse-material mass, divergence, normal-flux constraints and pressure gauge; trilinear hexahedra use the mapped provider. |
+| Analytical metric-quadratic Darcy | `analytic_darcy`: exact scalar energy and signed face moments, polynomial source response and separate mean-zero nodal source potential. |
+| Robin MH | `robin`: volume and weighted boundary bilinear forms, independently signed trace equations and physical pressure moment. |
+| Three-field MH²M | `three_field`: independent pressure/conormal spaces, moment complement and their L2 pairing. |
+| MsHHO | `moments`, `moments_3d`: cell/face moments and energy reconstruction, including its trace-dependent field map. |
+| Residual Petrov–Galerkin MHM and stationary transport | `penalty`, `scalar`, `transport`, `residual_transport`, `scalar_3d`, `transport_3d`: residual operators, test/trial spaces, stabilization and explicit additional face terms, with declared strong or weak boundary data. |
+| Displacement, pressure and weak-stress elasticity | `elasticity`, `tetrahedral_vector`, `primal_elasticity`, `weak_stress`, `vector`: strain/compliance operators, rotation or pressure constraints, rigid modes and their physical moments. |
+| Stokes, Brinkman and Oseen | `flow`, `vector`: velocity/pressure pairings, reaction/advection, stated stabilization and pressure gauge. |
+| Helmholtz and PML | `examples/tutorial_helmholtz_equations.py`: complex physical blocks represented in general real coordinates, boundary impedance and point loads. |
+| Maxwell and elastodynamics | Wave tutorial providers: mass/curl or mass/strain operators and explicit time-step equations with reusable factors. |
+| Hierarchical and adaptive variants | `NestedEquations`, `adaptive`: declared child restrictions, recovered physical fields, estimators and marking. |
+| Classical conforming references | `conforming`: element or exact separated-factor energy, strong nodal data, outward-flux load and physical integral gauge. |
+
+A fully global formulation declares
+`MultiscaleProblem.from_global(Equation(A, L), size, fixed=..., constraints=...)`.
+It uses the same assembly and solver contracts without a dummy local provider.
+The numerical owners also permit direct composition with `solve_linear` when a
+user wants to manage the coefficient elimination explicitly.
+
+Adaptive controllers accept an optional `solve_step` callable. It receives the
+current mesh, transferred skeleton and declared problem options, and returns
+the physical solution used by the estimator. The callable can assemble and
+solve user-written `LocalEquations` through the same API; the shared controller
+owns estimation, marking and mesh transfer. Omitting it retains the existing
+predefined formulation. `examples/formulations/adaptive.py` shows this
+composition with an editable mathematical definition factory.
+
+The notebooks under the corresponding physical-problem directories are the
+executable entry points. The [notebook catalogue](tutorials.md) gives locked
+environments and reproduction commands. An analytical control qualifies its
+stated data and spaces; literature reproductions and historical external
+comparisons retain their own data and provenance requirements.
 
 ## Use UFL or assembled blocks
 
@@ -261,6 +392,15 @@ pairings `moments=C`. For distinct left modes, supply `left_kernel`,
 `test_moments` and the explicit test-side pairing. These arrays use the actual
 local coefficient basis. They are checked without rediscovering or rotating
 the basis. A nonsingular moment pairing is required for the chosen modes.
+
+`moment_complement(C, pivots=...)` constructs coordinates satisfying
+`C.T @ coefficients == 0`. Columns of `C` are the declared linear functionals;
+free coordinates use identity rows in ascending order, and the pivot rows
+enforce the moments. For example, quadrature integrals of basis functions
+define a zero-integral complement. The operation is equally applicable to
+several conservation or orthogonality constraints. Specify admissible pivots
+for a fixed coordinate convention and archive the executed basis when saving
+its coefficients.
 
 `coarse_basis` can retain modes that need not be exact null vectors, with an
 independent `test_basis` when needed. This uses the same complementary

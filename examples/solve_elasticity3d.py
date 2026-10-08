@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm._legacy.models.elasticity.primal_3d import solve_elasticity_3d
+from examples.formulations.application import primal_elasticity as solve_elasticity_3d
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.tetrahedron import TetraMesh
 

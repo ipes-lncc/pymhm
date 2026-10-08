@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -29,7 +37,7 @@ if __package__:
         validate_case_provenance,
     )
 else:
-    from verify_periodic import (
+    from examples.verify_periodic import (
         ARTIFACTS,
         ROOT,
         case_conventions,
@@ -39,11 +47,12 @@ else:
         validate_case_provenance,
     )
 
-from pymhm._legacy.models.darcy.separable import SeparableField, _line_data
 from pymhm.core.validation import positive_int
 from pymhm.fem.scalar.quadrilateral import qk_basis, qk_space
+from pymhm.fem.scalar.separable import interval_nodal_quadrature as _line_data
 from pymhm.linalg.linear import SolverUnavailableError
 from pymhm.linalg.separable import solve_separable_krylov
+from pymhm.materials.separable import SeparableField
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
 

@@ -11,14 +11,14 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm._legacy.models.transport.rad_3d import (
-    RAD3DSolution,
-    solve_rad_3d,
-    solve_rad_3d_conforming,
-)
+from examples.field_archive import field_archive_arrays
+from examples.formulations.transport_3d import conforming_transport_3d, transport_3d
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.postprocessing.fields import DiscreteField
+from pymhm.postprocessing.nodal import nodal_field
+from pymhm.postprocessing.solutions import RAD3DSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 WAVE = 2 * np.pi * np.array([3.0, 2.0, 1.0])
@@ -73,11 +73,18 @@ def main() -> None:
     args = parser.parse_args()
     paths = [
         Path(__file__),
+        ROOT / "examples/field_archive.py",
+        ROOT / "examples/formulations/scalar_3d.py",
+        ROOT / "examples/formulations/transport_3d.py",
         *(
             ROOT / f"src/pymhm/{name}"
             for name in (
-                "_legacy/models/transport/rad_3d.py",
-                "_legacy/models/darcy/primal_3d.py",
+                "fem/scalar/transport_3d.py",
+                "fem/traces/triangle_3d.py",
+                "fem/traces/normal.py",
+                "postprocessing/solutions.py",
+                "core/multiscale.py",
+                "core/equations.py",
                 "fem/scalar/tetrahedron.py",
                 "fem/scalar/tetrahedron_topology.py",
                 "core/contracts.py",
@@ -95,7 +102,7 @@ def main() -> None:
         for n in (1, 2, 3, 4, 5):
             mesh = TetraMesh.unit_cube(n)
             skeleton = TriangularSkeleton(mesh, degree=1)
-            solution = solve_rad_3d(
+            solution = transport_3d(
                 mesh,
                 diffusion=0.1,
                 velocity=[1, 0, 0],
@@ -106,7 +113,7 @@ def main() -> None:
                 quadrature_order=8,
             )
             classical_mesh = TetraMesh.unit_cube(n * args.refinement)
-            classical = solve_rad_3d_conforming(
+            classical = conforming_transport_3d(
                 classical_mesh, degree=2, diffusion=0.1, velocity=[1, 0, 0], source=source, order=8
             )
             row = dict(
@@ -136,6 +143,15 @@ def main() -> None:
                     classical_points=classical_mesh.points,
                     classical_cells=classical_mesh.cells,
                     classical_values=classical.values[0],
+                    **field_archive_arrays(solution.hybrid.field("scalar")),
+                    **field_archive_arrays(
+                        (
+                            DiscreteField(
+                                nodal_field("scalar", classical_mesh, 2), classical.values[0]
+                            ),
+                        ),
+                        prefix="classical",
+                    ),
                 )
                 row.update(
                     fields=archive.name,

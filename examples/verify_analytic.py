@@ -12,11 +12,11 @@ from threadpoolctl import threadpool_limits
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from plot_style import set_refinement_ticks
 
+from examples.formulations.analytic_darcy import analytic_darcy as solve_darcy_analytic
+from examples.formulations.application import darcy as solve_darcy
+from examples.plot_style import set_refinement_ticks
 from pymhm import TriangleMesh
-from pymhm._legacy.models.darcy.analytic import solve_darcy_analytic
-from pymhm._legacy.models.darcy.primal import solve_darcy
 from pymhm.fem.scalar.operators import rt0_evaluate, triangle_quadrature
 
 

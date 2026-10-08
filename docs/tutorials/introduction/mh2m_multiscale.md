@@ -52,7 +52,7 @@ from pymhm.meshes.triangle import TriangleMesh
 
 plt.rcParams.update({"figure.dpi": 110, "font.size": 10})
 
-from pymhm.methods.three_field import PressureTraceSpace
+from pymhm.fem.traces.pressure_2d import PressureTraceSpace
 
 from pymhm import MeshHierarchy, LocalContext, bind_interface, bind_problem, solve
 from pymhm.backends.spaces import bind_space
@@ -135,12 +135,12 @@ Use $k=0$ in the two-dimensional family of section 6.2:
 
 $$
 \begin{aligned}
- \Gamma_{H_\Gamma}&=\text{continuous P1 pressure trace},\\
- \Lambda_{H_\Lambda}(K)&=\text{discontinuous P0 on }\partial K,\\
- V_h(K)&=\text{continuous P1 on the local triangulation},\\
- H_\Gamma&\sim H/4,
- &H_\Lambda&\sim H/8,
- &h&\sim H/16.
+ \Gamma_{H_\Gamma}&=P_1^{\mathrm{C0}}(\text{pressure segments}),\\
+ \Lambda_{H_\Lambda}(K)&=P_0^{\mathrm{broken}}(\text{conormal segments}),\\
+ V_h(K)&=P_1^{\mathrm{C0}}(\text{local triangles}),\\
+ H_\Gamma&\sim H/4,\\
+ H_\Lambda&\sim H/8,\\
+ h&\sim H/16.
 \end{aligned}
 $$
 
@@ -397,7 +397,7 @@ print({"global_pressure_trace_free": global_free_unknowns,
 ```
 
 ```text
-{'global_pressure_trace_free': 129, 'global_residual': 1.087033410919318e-16}
+{'global_pressure_trace_free': 129, 'global_residual': 1.1041680519794778e-16}
 ```
 
 ### 5. Check injectivity, trace moments and macro conservation
@@ -469,7 +469,7 @@ print(diagnostics)
 ```
 
 ```text
-{'constant_kernel_relative': 2.1836088566646393e-16, 'trace_moment_max': 6.505213034913027e-19, 'macro_conservation_max': 9.124645483638005e-16, 'original_local_relative_residual': 8.20673263589874e-14}
+{'constant_kernel_relative': 2.1836088566646393e-16, 'trace_moment_max': 4.336808689942018e-19, 'macro_conservation_max': 1.0443035325380379e-15, 'original_local_relative_residual': 7.692601965273089e-14}
 ```
 
 ### 6. A classical primal Galerkin baseline, with its own refinement check
@@ -749,7 +749,7 @@ plt.show()
 ```
 
 ```text
-{'physical_relative_errors': {'pressure_L2': 0.00019495407271238573, 'flux_L2': 0.019449591904094187, 'flux_energy': 0.01341267956291061, 'pressure_relative': 0.009176834899960531, 'flux_relative': 0.10178745352163333, 'energy_relative': 0.09976483322479031}, 'relative_norm_change_q8_q10': 2.085495363217584e-15}
+{'physical_relative_errors': {'pressure_L2': 0.00019495407271239985, 'flux_L2': 0.01944959190409417, 'flux_energy': 0.013412679562910609, 'pressure_relative': 0.009176834899961196, 'flux_relative': 0.10178745352163324, 'energy_relative': 0.0997648332247903}, 'relative_norm_change_q8_q10': 1.9464623390029375e-15}
 ```
 
 

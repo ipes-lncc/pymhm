@@ -30,7 +30,7 @@ from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.quadrilateral import quadrilateral_quadrature
 from pymhm.fem.scalar.triangle import reference_basis
 from pymhm.io.provenance import file_digest
-from pymhm.linalg.linear import _accurate_residual
+from pymhm.linalg.linear import accurate_residual
 
 SCHEMA = "pymhm-core-elasticity-executed-field-v1"
 
@@ -63,17 +63,25 @@ def observe_system() -> Iterator[ProductionObservation]:
     scoped observer must not overlap another production solve in that process.
     Assembly tables and BDM coefficient bytes come from the original calls.
     """
+    import examples.formulations.weak_stress as declared
     import pymhm._legacy.models.elasticity.stress as triangle
     import pymhm._legacy.models.elasticity.stress_tensor as rectangle
     import pymhm.fem.hdiv.bdm_family as bdm
+    import pymhm.fem.vector.stress as triangle_forms
+    import pymhm.fem.vector.stress_tensor as rectangle_forms
+    from pymhm.core.multiscale import MultiscaleSystem
 
     observed = ProductionObservation()
     original_solve, original_assemble = HybridSystem.solve, HybridSystem._assemble_global
+    original_multiscale_solve = MultiscaleSystem.solve
     original_mean, original_boundary = HybridSystem.mean_constraint, triangle.boundary_data
     original_dual, original_basis = bdm._full_dual, BDMFamily.basis
-    original_rt = rectangle.tensor_rt_basis
-    original_compliance = triangle.compliance_products
-    original_scalar, original_rotation = triangle.reference_basis, rectangle._rotation_basis
+    original_rt = rectangle_forms.tensor_rt_basis
+    original_compliance = triangle_forms.compliance_products
+    original_scalar, original_rotation = (
+        triangle_forms.reference_basis,
+        rectangle_forms.complete_rotation_basis,
+    )
 
     def scalar(degree: int, points: np.ndarray) -> Any:
         """Capture the cardinal displacement table actually consumed by triangular assembly."""
@@ -103,9 +111,10 @@ def observe_system() -> Iterator[ProductionObservation]:
     def assemble(system: HybridSystem, responses: Any, metadata: Any, boundary_load: Any) -> None:
         """Capture the actual signed boundary load supplied to global assembly."""
         original_assemble(system, responses, metadata, boundary_load)
-        if observed.applied_boundary is not None or boundary_load is None:
-            raise ValueError("One explicit production boundary vector is required")
-        observed.applied_boundary = np.asarray(boundary_load).copy()
+        if boundary_load is not None:
+            if observed.applied_boundary is not None:
+                raise ValueError("One explicit production boundary vector is required")
+            observed.applied_boundary = np.asarray(boundary_load).copy()
 
     def boundary(*args: Any, **kwargs: Any) -> Any:
         """Capture actual Dirichlet moments and prescribed negative-traction coordinates."""
@@ -124,7 +133,11 @@ def observe_system() -> Iterator[ProductionObservation]:
 
     def solve(system: HybridSystem, *args: Any, **kwargs: Any) -> Any:
         """Retain the actual solved system and gauge rows, without changing its solve."""
-        result = original_solve(system, *args, **kwargs)
+        result = (
+            original_multiscale_solve if isinstance(system, MultiscaleSystem) else original_solve
+        )(system, *args, **kwargs)
+        if isinstance(system, MultiscaleSystem):
+            observed.applied_boundary = -system.global_load[: system.trace_size].copy()
         if observed.system is not None:
             raise ValueError("One production system is required")
         observed.system = system
@@ -164,15 +177,17 @@ def observe_system() -> Iterator[ProductionObservation]:
         patch.object(HybridSystem, "_assemble_global", assemble),
         patch.object(HybridSystem, "mean_constraint", mean),
         patch.object(HybridSystem, "solve", solve),
+        patch.object(MultiscaleSystem, "solve", solve),
+        patch.object(declared, "boundary_data", boundary),
         patch.object(triangle, "boundary_data", boundary),
         patch.object(rectangle, "boundary_data", boundary),
         patch.object(bdm, "_full_dual", dual),
         patch.object(BDMFamily, "basis", basis),
-        patch.object(rectangle, "tensor_rt_basis", rt),
-        patch.object(triangle, "compliance_products", compliance),
-        patch.object(rectangle, "compliance_products", compliance),
-        patch.object(triangle, "reference_basis", scalar),
-        patch.object(rectangle, "_rotation_basis", rotation),
+        patch.object(rectangle_forms, "tensor_rt_basis", rt),
+        patch.object(triangle_forms, "compliance_products", compliance),
+        patch.object(rectangle_forms, "compliance_products", compliance),
+        patch.object(triangle_forms, "reference_basis", scalar),
+        patch.object(rectangle_forms, "complete_rotation_basis", rotation),
     ):
         yield observed
 
@@ -223,7 +238,7 @@ def _tables(solution: Any, mesh: Any, points: np.ndarray) -> tuple[np.ndarray, .
         values, divergence = solution.family.basis(mesh, points)
         displacement = rotation = reference_basis(1, points)[0]
     else:
-        from pymhm._legacy.models.elasticity.stress_tensor import _rotation_basis
+        from pymhm.fem.vector.stress_tensor import complete_rotation_basis as _rotation_basis
 
         values, divergence, displacement = tensor_rt_basis(mesh, 1, 0, points)
         rotation = _rotation_basis(1, points)
@@ -793,7 +808,7 @@ def original_checks(arrays: Mapping[str, np.ndarray]) -> dict[str, Any]:
             raise ValueError("Invalid local original block/trace map")
         combined = sparse.hstack((matrix, sparse.csr_matrix(coupling)), format="csr")
         values = np.r_[field, trace[dofs]]
-        defect = _accurate_residual(combined, load, values)
+        defect = accurate_residual(combined, load, values)
         action = abs(combined) @ abs(values) + abs(load)
         cuts = np.r_[0, np.cumsum(sizes)]
         blocks = [
@@ -871,7 +886,7 @@ def original_checks(arrays: Mapping[str, np.ndarray]) -> dict[str, Any]:
     )
     global_values = np.r_[trace, coarse]
     global_matrix = _csr(arrays, "global_matrix")
-    compact_defect = _accurate_residual(global_matrix, rhs, global_values)
+    compact_defect = accurate_residual(global_matrix, rhs, global_values)
     compact_free = np.r_[free, np.ones(len(coarse), dtype=bool)]
     fixed_values = np.zeros_like(global_values)
     fixed_values[fixed] = trace[fixed]

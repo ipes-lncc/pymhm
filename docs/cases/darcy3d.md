@@ -23,7 +23,7 @@ includes independent P5/P6 element checks and a P5/P2 estimator campaign.
 ```python
 from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
-from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from examples.formulations.application import tetrahedral_darcy as solve_darcy_3d
 
 mesh = TetraMesh.unit_cube(2)
 skeleton = TriangularSkeleton(mesh, subdivisions=2)
@@ -210,10 +210,10 @@ three-dimensional CAD-generation wrapper. Higher-order geometric cells, prisms,
 hexahedra and polyhedra are explicitly rejected by this tetrahedral reader.
 
 ```bash
-pixi run --locked -e test-core python examples/solve_darcy3d.py
-pixi run -e notebooks python examples/plot_darcy3d.py
-pixi run -e fem pytest tests/test_tetrahedral.py -m fem
-pixi run -e meshing pytest tests/test_meshing3d.py -m meshing
+pixi run --locked -e test-core python -m examples.solve_darcy3d
+pixi run --locked -e notebooks python -m examples.plot_darcy3d
+pixi run --locked -e fem pytest tests/test_tetrahedral.py -m fem
+pixi run --locked -e meshing pytest tests/test_meshing3d.py -m meshing
 ```
 
 [Acquisition record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/darcy3d.json)

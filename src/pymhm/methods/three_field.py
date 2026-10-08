@@ -6,124 +6,23 @@ outward conormal coefficients on each macrocell. Equations (25)--(29) of the
 system. The paper's lambda=A grad(p).n is minus the physical Darcy flux q.n.
 """
 
-from dataclasses import dataclass, field
 from typing import Any, cast
 
 import numpy as np
 from scipy import sparse
 
-from pymhm.core.validation import FloatArray, IntArray, positive_int
-from pymhm.fem.quadrature.material import material_triangle_quadrature
-from pymhm.fem.scalar.triangle import element_tabulate, scalar_operators, trace_coupling
-from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace, interface_pairing
-from pymhm.linalg.linear import LinearSolveError, factorize, solve_linear
-from pymhm.materials.evaluation import scalar_values, tensor_values, vector_values
+from pymhm.core.validation import positive_int
+from pymhm.fem.scalar.neumann import NeumannMaps as MH2MLocal
+from pymhm.fem.scalar.neumann import neumann_maps as _neumann_maps
+from pymhm.fem.scalar.triangle import scalar_operators, trace_coupling
+from pymhm.fem.traces.interval import SkeletonSpace, interface_pairing
+from pymhm.fem.traces.pressure_2d import PressureTraceSpace as PressureTraceSpace
+from pymhm.linalg.linear import solve_linear
+from pymhm.materials.evaluation import scalar_values
 from pymhm.meshes.polygonal import PolygonMesh
 from pymhm.meshes.refinement import validate_submesh
-from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.meshes.triangle import TriangleMesh
-
-
-@dataclass(frozen=True)
-class PressureTraceSpace:
-    """Globally continuous nodal polynomials on triangular or polygonal edges.
-
-    ``faces`` may prescribe different positive degrees and segment partitions.
-    Endpoints of different macrofaces share the mesh vertex unknown. Interior
-    edge nodes belong to that face only. This is Gamma, not the flux skeleton.
-    """
-
-    mesh: TriangleMesh | PolygonMesh
-    faces: tuple[FaceSpace, ...] = ()
-    nodes: FloatArray = field(init=False, repr=False)
-    face_dofs: tuple[IntArray, ...] = field(init=False, repr=False)
-
-    def __post_init__(self) -> None:
-        """Assign shared vertices and private face-interior interpolation nodes."""
-        if not isinstance(self.mesh, (TriangleMesh, PolygonMesh)):
-            raise TypeError("pressure traces require a TriangleMesh or PolygonMesh")
-        faces = self.faces
-        faces = (
-            tuple(FaceSpace.uniform(1, continuous=True) for _ in self.mesh.faces)
-            if not faces
-            else tuple(faces)
-        )
-        if len(faces) != len(self.mesh.faces) or any(
-            not isinstance(f, FaceSpace) or not f.continuous for f in faces
-        ):
-            raise ValueError(
-                "Gamma requires one continuous positive-degree FaceSpace per macroface"
-            )
-        points, dofs = list(self.mesh.points), []
-        for edge, space in zip(self.mesh.faces, faces, strict=True):
-            t = np.r_[
-                space.breaks,
-                np.concatenate(
-                    [
-                        a + (b - a) * np.arange(1, k) / k
-                        for a, b, k in zip(
-                            space.breaks[:-1], space.breaks[1:], space.degrees, strict=True
-                        )
-                    ]
-                ),
-            ]
-            ids = np.empty(space.size, dtype=np.int64)
-            ids[0], ids[len(space.breaks) - 1] = edge
-            for j in range(space.size):
-                if j not in (0, len(space.breaks) - 1):
-                    ids[j] = len(points)
-                    points.append(
-                        (1 - t[j]) * self.mesh.points[edge[0]] + t[j] * self.mesh.points[edge[1]]
-                    )
-            dofs.append(ids)
-        object.__setattr__(self, "faces", faces)
-        object.__setattr__(self, "nodes", np.asarray(points))
-        object.__setattr__(self, "face_dofs", tuple(dofs))
-
-    @classmethod
-    def uniform(
-        cls, mesh: TriangleMesh | PolygonMesh, degree: int = 1, segments: int = 1
-    ) -> "PressureTraceSpace":
-        """Use the same continuous nodal degree and subdivision on every face."""
-        face = FaceSpace.uniform(degree, segments, continuous=True)
-        return cls(mesh, tuple(face for _ in mesh.faces))
-
-    @property
-    def size(self) -> int:
-        """Return the number of shared pressure-trace unknowns before boundary elimination."""
-        return len(self.nodes)
-
-    def cell_dofs(self, cell: int) -> IntArray:
-        """Return unique Gamma indices touching one macrocell, in increasing order."""
-        return np.unique(np.concatenate([self.face_dofs[f] for f in self.mesh.cell_faces[cell]]))
-
-
-@dataclass(frozen=True)
-class MH2MLocal:
-    """Local operators and Eq. (29) lifts in declared nodal/Legendre coordinates.
-
-    ``conormal_lift`` and ``conormal_source`` use the paper's lambda convention.
-    ``neumann_energy`` acts on zero-boundary-average Lambda coordinates.
-    Boundary averages, rather than volume averages, define the local complement.
-    """
-
-    mesh: TriangleMesh | TetraMesh
-    trace_dofs: IntArray
-    stiffness: Any
-    load: FloatArray
-    boundary_coupling: FloatArray
-    trace_pairing: FloatArray
-    flux_integrals: FloatArray
-    zero_mean_basis: FloatArray
-    neumann_energy: FloatArray
-    source_lift: FloatArray
-    pressure_lift: FloatArray
-    pressure_source: FloatArray
-    conormal_lift: FloatArray
-    conormal_source: FloatArray
-    volume_moments: FloatArray
-    trace_matrix: FloatArray
-    trace_rhs: FloatArray
+from pymhm.postprocessing.solutions import MH2MSolution as MH2MSolution
 
 
 def _local_problem(
@@ -158,167 +57,6 @@ def _local_problem(
     return _neumann_maps(
         fine, trace_ids, stiffness, mass, load, coupling, pairing, constant, solver
     )
-
-
-def _neumann_maps(
-    fine: TriangleMesh | TetraMesh,
-    trace_ids: IntArray,
-    stiffness: Any,
-    mass: Any,
-    load: FloatArray,
-    coupling: FloatArray,
-    pairing: FloatArray,
-    constant: FloatArray,
-    solver: str,
-) -> MH2MLocal:
-    """Construct the dimension-independent Neumann inverses and Eq. (29) lifts.
-
-    Coupling has the unsigned outward-conormal convention. Boundary integrals
-    supply its physical mean; mass supplies the volume mean used only by gauges.
-    """
-    integrals = coupling.sum(axis=0)
-    boundary = coupling @ constant
-    perimeter = float(integrals @ constant)
-    pivot = int(np.argmax(abs(integrals)))
-    others = np.delete(np.arange(len(integrals)), pivot)
-    zero_mean = np.eye(len(integrals))[:, others]
-    zero_mean[pivot] = -integrals[others] / integrals[pivot]
-    rhs = np.column_stack((coupling @ zero_mean, load))
-    rhs -= boundary[:, None] * (rhs.sum(axis=0) / perimeter)
-    lifts = np.zeros_like(rhs)
-    with factorize(stiffness[1:, 1:], solver=solver) as factor:
-        lifts[1:] = factor.solve(rhs[1:])
-    lifts -= (boundary @ lifts / perimeter)[None, :]
-    neumann, eta = lifts[:, :-1], lifts[:, -1]
-    energy = (coupling @ zero_mean).T @ neumann
-    energy = (energy + energy.T) / 2
-    moments = zero_mean.T @ pairing
-    source_moments = (coupling @ zero_mean).T @ eta
-    try:
-        with factorize(energy, solver=solver) as factor:
-            inverse = factor.solve(np.column_stack((moments, source_moments)))
-    except LinearSolveError as error:
-        raise ValueError(
-            "Lambda and Vh violate local Neumann injectivity (Assumption A)"
-        ) from error
-    response, source_response = inverse[:, :-1], inverse[:, -1]
-    mean_row = constant @ pairing / perimeter
-    pressure_lift = neumann @ response + mean_row[None, :]
-    pressure_source = eta - neumann @ source_response
-    conormal_lift = zero_mean @ response
-    conormal_source = -constant * load.sum() / perimeter - zero_mean @ source_response
-    trace_matrix = moments.T @ response
-    trace_matrix = (trace_matrix + trace_matrix.T) / 2
-    trace_rhs = -pairing.T @ conormal_source
-    return MH2MLocal(
-        fine,
-        trace_ids,
-        stiffness,
-        load,
-        coupling,
-        pairing,
-        integrals,
-        zero_mean,
-        energy,
-        eta,
-        pressure_lift,
-        pressure_source,
-        conormal_lift,
-        conormal_source,
-        np.asarray(mass.sum(axis=1)).ravel(),
-        trace_matrix,
-        trace_rhs,
-    )
-
-
-@dataclass(frozen=True)
-class MH2MSolution:
-    """Pressure trace, broken local pressure, and outward physical flux moments.
-
-    ``conormal`` stores lambda=A grad(p).n separately on each macrocell; its
-    negative is the physical normal flux. Continuity holds against Gamma test
-    functions. Neither pointwise normal continuity nor fine-cell equilibrium
-    follows from this weak condition. Raw fluxes are -A grad(p_h).
-    """
-
-    trace_space: PressureTraceSpace
-    flux_space: SkeletonSpace
-    local: tuple[MH2MLocal, ...]
-    trace: FloatArray
-    pressure: tuple[FloatArray, ...]
-    conormal: tuple[FloatArray, ...]
-    matrix: Any
-    rhs: FloatArray
-    free_dofs: IntArray
-    degree: int
-    permeability: Any
-    residual: float
-
-    def conservation_residuals(self) -> FloatArray:
-        """Return integral(q.n)-integral(f) per macrocell from conormal moments."""
-        return np.array(
-            [
-                -data.flux_integrals @ lam - data.load.sum()
-                for data, lam in zip(self.local, self.conormal, strict=True)
-            ]
-        )
-
-    def trace_moment_residuals(self) -> tuple[FloatArray, ...]:
-        """Return Lambda-tested differences between local pressure and Gamma trace."""
-        return tuple(
-            data.boundary_coupling.T @ p - data.trace_pairing @ self.trace[data.trace_dofs]
-            for data, p in zip(self.local, self.pressure, strict=True)
-        )
-
-    def local_equation_residuals(self) -> tuple[FloatArray, ...]:
-        """Return original nodal equations A p-B lambda-f, without condensation."""
-        return tuple(
-            data.stiffness @ p - data.boundary_coupling @ lam - data.load
-            for data, p, lam in zip(self.local, self.pressure, self.conormal, strict=True)
-        )
-
-    def _error(self, exact: Any, order: int, derivative: bool, flux: bool) -> float:
-        """Integrate a physical field error, cutting Cartesian coefficient interfaces."""
-        total = 0.0
-        for data, coefficients in zip(self.local, self.pressure, strict=True):
-            bary, weights, material = material_triangle_quadrature(
-                cast(TriangleMesh, data.mesh),
-                self.permeability,
-                positive_int(order, "quadrature order"),
-            )
-            dofs, _, basis, gradients, _ = element_tabulate(
-                cast(TriangleMesh, data.mesh), self.degree, bary
-            )
-            points = np.einsum("tqi,tia->tqa", bary, data.mesh.points[data.mesh.cells])
-            if derivative:
-                field_values = np.einsum("tqia,ti->tqa", gradients, coefficients[dofs])
-                if flux:
-                    tensor = tensor_values(material, points.reshape(-1, 2)).reshape(
-                        *weights.shape, 2, 2
-                    )
-                    field_values = -np.einsum("tqab,tqb->tqa", tensor, field_values)
-                defect = field_values - vector_values(exact, points.reshape(-1, 2)).reshape(
-                    field_values.shape
-                )
-                squared = np.sum(defect**2, axis=-1)
-            else:
-                values = np.einsum("tqi,ti->tq", basis, coefficients[dofs])
-                defect = values - scalar_values(exact, points.reshape(-1, 2)).reshape(weights.shape)
-                squared = defect**2
-            total += float(np.sum(cast(TriangleMesh, data.mesh).areas[:, None] * weights * squared))
-        return float(np.sqrt(total))
-
-    def l2_error(self, exact: Any, order: int = 8) -> float:
-        """Return the broken pressure L2 error using independent quadrature."""
-        return self._error(exact, order, False, False)
-
-    def gradient_l2_error(self, exact: Any, order: int = 8) -> float:
-        """Return the unweighted broken H1 seminorm error."""
-        return self._error(exact, order, True, False)
-
-    def flux_l2_error(self, exact: Any, order: int = 8) -> float:
-        """Return the raw physical Darcy flux L2 error; this is not the trace error."""
-        return self._error(exact, order, True, True)
 
 
 def solve_mh2m(

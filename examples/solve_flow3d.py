@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -11,13 +19,14 @@ from pathlib import Path
 from time import perf_counter
 
 import numpy as np
-from flow3d_data import Flow3DData
 from threadpoolctl import threadpool_limits
 
-from pymhm._legacy.models.flow.solver_3d import Flow3DSolution, solve_flow_3d
+from examples.flow3d_data import Flow3DData
+from examples.formulations.application import flow as solve_flow_3d
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.postprocessing.solutions import Flow3DSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES = (

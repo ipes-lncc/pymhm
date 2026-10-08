@@ -7,12 +7,12 @@ from typing import Any, Literal
 
 import numpy as np
 
-from pymhm._legacy.models.darcy.primal import DarcySolution
 from pymhm.adaptivity.darcy import AdaptiveDarcyResult, solve_adaptive_darcy
 from pymhm.core.validation import positive_int
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.meshes.refinement import TriangleRefinement, refine_triangles, transfer_skeleton
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.solutions import DarcySolution
 
 
 @dataclass(frozen=True)
@@ -47,6 +47,7 @@ def solve_balanced_adaptive_darcy(
     local_error_indicator: Callable[[DarcySolution], float] | None = None,
     on_state: Callable[[BalancedDarcyResult], None] | None = None,
     macro_refiner: Callable[[TriangleMesh, Any], TriangleRefinement] = refine_triangles,
+    solve_step: Callable[..., DarcySolution] | None = None,
     **problem: Any,
 ) -> BalancedDarcyResult:
     """Alternate globally uniform local refinement and marked macro refinement.
@@ -76,6 +77,11 @@ def solve_balanced_adaptive_darcy(
     applies longest-edge propagation without green descendants.
     ``estimator_convention`` selects the literal published numerical terms or
     physical-energy material weights, without changing the finite-element PDE.
+    ``solve_step(mesh, skeleton=current_space, **problem_data)`` may assemble
+    the user's own mathematical equations at each state. It receives the actual
+    transferred boundary data and local partitions; its returned physical field
+    must satisfy the estimator's existing hypotheses. The default retains the
+    built-in solve. Callback exceptions propagate without changing refinement.
     """
     positive_int(iterations, "iterations")
     positive_int(local_refinement, "local_refinement")
@@ -88,6 +94,8 @@ def solve_balanced_adaptive_darcy(
         or local_error_ratio <= 0
     ):
         raise ValueError("local_error_ratio must be finite and positive")
+    if solve_step is not None and not callable(solve_step):
+        raise TypeError("solve_step must be callable or None")
     parameters = dict(problem)
     space = FaceSpace.uniform(trace_degree, trace_segments)
     skeleton = (
@@ -108,6 +116,7 @@ def solve_balanced_adaptive_darcy(
         )
         state = solve_adaptive_darcy(
             mesh,
+            solve_step=solve_step,
             iterations=1,
             theta=theta,
             tolerance=tolerance,

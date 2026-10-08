@@ -5,7 +5,6 @@ Q_s squared, whereas independent rotation is total-degree P_s. This distinction
 is essential to the quadrilateral family in the 2021 weak-symmetry analysis.
 """
 
-from dataclasses import dataclass
 from functools import partial
 from typing import Any, Literal, cast
 
@@ -14,115 +13,25 @@ from scipy import sparse
 
 from pymhm._legacy.models.elasticity.boundary import require_compatible_displacement_flux
 from pymhm._legacy.models.elasticity.mixed_pressure import _boundary_volume_flux
-from pymhm._legacy.models.elasticity.stress import _bulk_compliance, _rigid_values, _scatter
-from pymhm.core.contracts import HybridSolution, LocalAssembly, LocalProblem
+from pymhm._legacy.models.elasticity.stress import _rigid_values
+from pymhm.core.contracts import LocalAssembly, LocalProblem
 from pymhm.core.system import HybridSystem
-from pymhm.core.validation import FloatArray, positive_int
-from pymhm.fem.hdiv.tensor_rt import _trace_map, tensor_rt_basis, tensor_rt_dofs
-from pymhm.fem.reference import legendre_values
+from pymhm.core.validation import positive_int
+from pymhm.fem.hdiv.tensor_rt import _trace_map
 from pymhm.fem.scalar.operators import boundary_data
-from pymhm.fem.scalar.quadrilateral import _grid_resolves_material, quadrilateral_quadrature
+from pymhm.fem.scalar.quadrilateral import _grid_resolves_material
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.fem.vector.stress_tensor import complete_rotation_basis
+from pymhm.fem.vector.stress_tensor import tensor_rigid_moments as _modal_rigid
+from pymhm.fem.vector.stress_tensor import tensor_stress_operators as _operators
 from pymhm.materials.cartesian import CartesianCellField
-from pymhm.materials.elasticity import compliance_products
-from pymhm.materials.evaluation import scalar_values, vector_values
+from pymhm.materials.evaluation import vector_values
 from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.postprocessing.stress_tensor import (
+    TensorRTElasticitySolution as TensorRTElasticitySolution,
+)
 
-
-def _rotation_basis(degree: int, points: FloatArray) -> FloatArray:
-    """Tabulate total-degree Legendre products P_s, excluding the Q_s cross corners."""
-    x, y = np.moveaxis(points, -1, 0)
-    lx, ly = legendre_values(2 * x - 1, degree), legendre_values(2 * y - 1, degree)
-    return np.stack(
-        [lx[..., a] * ly[..., b] for b in range(degree + 1) for a in range(degree + 1 - b)], axis=-1
-    )
-
-
-def _modal_rigid(
-    mesh: CartesianMacroMesh, degree: int, center: FloatArray
-) -> tuple[FloatArray, FloatArray]:
-    """Project rigid displacement into Q_s and return its physical moment matrix."""
-    points, weights = quadrilateral_quadrature(degree + 2)
-    _, _, basis = tensor_rt_basis(mesh, 1, degree - 1, points)
-    physical = mesh.points[mesh.cells[:, 0], None] + points * mesh.spacing
-    moments = np.einsum(
-        "q,qi,tqak,t->tiak", weights, basis, _rigid_values(physical, center), mesh.areas
-    )
-    mass = mesh.areas[:, None] * np.einsum("q,qi,qi->i", weights, basis, basis)
-    return (moments / mass[:, :, None, None]).reshape(-1, 3), moments.reshape(-1, 3)
-
-
-def _operators(
-    mesh: CartesianMacroMesh,
-    degree: int,
-    enrichment: int,
-    lame_lambda: Any,
-    lame_mu: Any,
-    source: Any,
-    order: int,
-    compliance: Any = None,
-) -> tuple:
-    """Assemble compliance, Q_s divergence, P_s asymmetry and physical force moments."""
-    points, weights = quadrilateral_quadrature(order)
-    values, divergence, displacement = tensor_rt_basis(mesh, degree, enrichment, points)
-    rotation = _rotation_basis(degree + enrichment, points)
-    physical = mesh.points[mesh.cells[:, 0], None] + points * mesh.spacing
-    width = values.shape[2]
-    tensors = np.zeros((*values.shape[:2], 2 * width, 2, 2))
-    tensors[:, :, 0::2, 0], tensors[:, :, 1::2, 1] = values, values
-    trace = np.trace(tensors, axis1=-2, axis2=-1)
-    if compliance is None:
-        mu = scalar_values(lame_mu, physical.reshape(-1, 2)).reshape(physical.shape[:2])
-        bulk = _bulk_compliance(lame_lambda, mu.ravel(), physical.reshape(-1, 2)).reshape(mu.shape)
-        deviator = tensors - trace[..., None, None] * np.eye(2) / 2
-        mass = np.einsum(
-            "q,tq,tqiab,tqjab,t->tij", weights, 1 / (2 * mu), deviator, deviator, mesh.areas
-        )
-        mass += np.einsum("q,tq,tqi,tqj,t->tij", weights, bulk / 2, trace, trace, mesh.areas)
-        weighted_trace = bulk[:, :, None] * trace
-        compliance_scale = float(bulk.max())
-    else:
-        products, weighted_trace, compliance_scale = compliance_products(
-            compliance, physical, tensors
-        )
-        mass = np.einsum("q,tqij,t->tij", weights, products, mesh.areas)
-    scalar_div = np.einsum("q,qi,tqj,t->tij", weights, displacement, divergence, mesh.areas)
-    nd, nr = displacement.shape[1], rotation.shape[1]
-    div = np.zeros((len(mesh.cells), 2 * nd, 2 * width))
-    div[:, 0::2, 0::2], div[:, 1::2, 1::2] = scalar_div, scalar_div
-    asym = np.einsum(
-        "q,qi,tqj,t->tij", weights, rotation, tensors[..., 0, 1] - tensors[..., 1, 0], mesh.areas
-    )
-    force = np.einsum(
-        "q,qi,tqa,t->tia",
-        weights,
-        displacement,
-        vector_values(source, physical.reshape(-1, 2)).reshape(*physical.shape[:2], 2),
-        mesh.areas,
-    )
-    dofs = (2 * tensor_rt_dofs(mesh, degree, enrichment)[:, :, None] + np.arange(2)).reshape(
-        -1, 2 * width
-    )
-    ns, nu, nrot = int(dofs.max()) + 1, 2 * nd * len(mesh.cells), nr * len(mesh.cells)
-    plain = np.bincount(
-        dofs.ravel(),
-        weights=np.einsum("q,tqi,t->ti", weights, trace, mesh.areas).ravel(),
-        minlength=ns,
-    )
-    weighted = np.bincount(
-        dofs.ravel(),
-        weights=np.einsum("q,tqi,t->ti", weights, weighted_trace, mesh.areas).ravel(),
-        minlength=ns,
-    )
-    return (
-        _scatter(mass, dofs, dofs, (ns, ns)),
-        _scatter(div, np.arange(nu).reshape(len(mesh.cells), -1), dofs, (nu, ns)),
-        _scatter(asym, np.arange(nrot).reshape(len(mesh.cells), -1), dofs, (nrot, ns)),
-        force.ravel(),
-        plain,
-        weighted,
-        compliance_scale,
-    )
+_rotation_basis = complete_rotation_basis
 
 
 def _local(
@@ -220,152 +129,6 @@ def _local(
             global_moments,
         ),
     )
-
-
-@dataclass(frozen=True)
-class TensorRTElasticitySolution:
-    """H(div) Cauchy stress with Q_s displacement and independent P_s weak rotation."""
-
-    skeleton: SkeletonSpace
-    local_meshes: tuple[CartesianMacroMesh, ...]
-    stress: tuple[FloatArray, ...]
-    displacement: tuple[FloatArray, ...]
-    rotation: tuple[FloatArray, ...]
-    hybrid: HybridSolution
-    degree: int
-    enrichment: int
-    source: Any
-    quadrature_order: int
-
-    def evaluate(
-        self, cell: int, points: FloatArray
-    ) -> tuple[FloatArray, FloatArray, FloatArray, FloatArray]:
-        """Return displacement, full stress, stress divergence and rotation at reference points."""
-        mesh = self.local_meshes[cell]
-        basis, div, scalar = tensor_rt_basis(mesh, self.degree, self.enrichment, points)
-        values = self.stress[cell][tensor_rt_dofs(mesh, self.degree, self.enrichment)]
-        scalar = np.broadcast_to(scalar, (*basis.shape[:2], scalar.shape[-1]))
-        rotation = _rotation_basis(self.degree + self.enrichment, points)
-        rotation = np.broadcast_to(rotation, (*basis.shape[:2], rotation.shape[-1]))
-        return (
-            np.einsum("tqi,tia->tqa", scalar, self.displacement[cell]),
-            np.einsum("tqib,tia->tqab", basis, values),
-            np.einsum("tqi,tia->tqa", div, values),
-            np.einsum(
-                "tqi,ti->tq",
-                rotation,
-                self.rotation[cell],
-            ),
-        )
-
-    def errors(
-        self, displacement: Any, stress: Any, divergence: Any, rotation: Any, order: int = 6
-    ) -> dict[str, float]:
-        """Integrate four physical L2 errors with full Frobenius stress, without symmetrization."""
-        points, weights = quadrilateral_quadrature(order)
-        errors = np.zeros(4)
-        for cell, mesh in enumerate(self.local_meshes):
-            physical = mesh.points[mesh.cells[:, 0], None] + points * mesh.spacing
-            flat = physical.reshape(-1, 2)
-            target = stress(flat) if callable(stress) else stress
-            if np.iscomplexobj(target) or not np.isfinite(target).all():
-                raise ValueError("exact stress must be real and finite")
-            u, sigma, div, rot = self.evaluate(cell, points)
-            targets = (
-                vector_values(displacement, flat).reshape(u.shape),
-                np.broadcast_to(target, (len(flat), 2, 2)).reshape(sigma.shape),
-                vector_values(divergence, flat).reshape(div.shape),
-                scalar_values(rotation, flat).reshape(rot.shape),
-            )
-            for index, (value, exact) in enumerate(zip((u, sigma, div, rot), targets, strict=True)):
-                error = (value - exact).reshape(len(mesh.cells), len(points), -1)
-                errors[index] += mesh.areas @ (np.sum(error**2, axis=-1) @ weights)
-        return dict(
-            zip(
-                ("displacement_l2", "stress_l2", "divergence_l2", "rotation_l2"),
-                np.sqrt(errors),
-                strict=True,
-            )
-        )
-
-    def fine_force_residuals(self) -> tuple[FloatArray, ...]:
-        """Return every fine-cell Q_s vector moment of div(sigma)+f."""
-        points, weights = quadrilateral_quadrature(self.quadrature_order)
-        result = []
-        for cell, mesh in enumerate(self.local_meshes):
-            physical = mesh.points[mesh.cells[:, 0], None] + points * mesh.spacing
-            force = vector_values(self.source, physical.reshape(-1, 2)).reshape(physical.shape)
-            _, _, basis = tensor_rt_basis(mesh, self.degree, self.enrichment, points)
-            result.append(
-                np.einsum(
-                    "t,q,qi,tqa->tia",
-                    mesh.areas,
-                    weights,
-                    basis,
-                    self.evaluate(cell, points)[2] + force,
-                )
-            )
-        return tuple(result)
-
-    def weak_symmetry_residuals(self) -> tuple[FloatArray, ...]:
-        """Return P_s moments of stress asymmetry, which need not vanish pointwise."""
-        points, weights = quadrilateral_quadrature(self.degree + self.enrichment + 2)
-        result = []
-        for cell, mesh in enumerate(self.local_meshes):
-            sigma = self.evaluate(cell, points)[1]
-            result.append(
-                np.einsum(
-                    "t,q,qi,tq->ti",
-                    mesh.areas,
-                    weights,
-                    _rotation_basis(self.degree + self.enrichment, points),
-                    sigma[..., 0, 1] - sigma[..., 1, 0],
-                )
-            )
-        return tuple(result)
-
-    def normal_traction_residuals(self) -> tuple[FloatArray, ...]:
-        """Return moments of sigma n plus the signed macro traction on each fine boundary."""
-        result = []
-        for cell, mesh in enumerate(self.local_meshes):
-            ids = (
-                (self.degree + 1) * mesh.boundary_faces[:, None] + np.arange(self.degree + 1)
-            ).ravel()
-            mapping = _trace_map(
-                cast(CartesianMacroMesh, self.skeleton.mesh), cell, mesh, self.skeleton, self.degree
-            )
-            result.append(
-                self.stress[cell][ids]
-                + mapping @ self.hybrid.trace[self.skeleton.cell_dofs(cell)].reshape(-1, 2)
-            )
-        return tuple(result)
-
-    def equilibrium_residuals(self) -> FloatArray:
-        """Return macro force and moment balance using physical signed skeletal traction."""
-        points, weights = quadrilateral_quadrature(self.quadrature_order)
-        result = np.zeros((len(self.local_meshes), 3))
-        coarse = self.skeleton.mesh
-        for cell, mesh in enumerate(self.local_meshes):
-            center = coarse.points[coarse.cells[cell]].mean(axis=0)
-            physical = mesh.points[mesh.cells[:, 0], None] + points * mesh.spacing
-            force = vector_values(self.source, physical.reshape(-1, 2)).reshape(physical.shape)
-            result[cell] -= np.einsum(
-                "t,q,tqa,tqak->k", mesh.areas, weights, force, _rigid_values(physical, center)
-            )
-            for side, face in enumerate(coarse.cell_faces[cell]):
-                space = self.skeleton.faces[face]
-                parameter, w = space.quadrature(self.quadrature_order)
-                start, end = coarse.points[coarse.faces[face]]
-                face_points = start + parameter[:, None] * (end - start)
-                traction = space.evaluate(parameter) @ self.hybrid.trace[
-                    self.skeleton.dofs(int(face))
-                ].reshape(-1, 2)
-                result[cell] += (
-                    coarse.signs[cell, side]
-                    * coarse.lengths[face]
-                    * np.einsum("q,qa,qak->k", w, traction, _rigid_values(face_points, center))
-                )
-        return result
 
 
 def solve_elasticity_tensor_rt(

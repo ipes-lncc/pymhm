@@ -135,7 +135,7 @@ balances on each fine tetrahedron; those residuals are recorded separately.
 pixi run --locked -e test-core python -m examples.solve_tetra_pk uniform --workers 4
 pixi run --locked -e test-core python -m examples.solve_tetra_pk fixed --workers 4
 pixi run --locked -e test-core python -m examples.tetra_pk_reconstruction
-pixi run -e notebooks python -m examples.plot_tetra_pk
+pixi run --locked -e notebooks python -m examples.plot_tetra_pk
 ```
 
 Records in `examples/results/tetra-pk` include quadrature checks, source and

@@ -20,6 +20,32 @@ from pymhm import (
 from pymhm.core.equations import LinearForms
 
 
+@pytest.mark.parametrize("block", ["b", "c", "d", "L", "g", "moments", "test_moments"])
+def test_form_shape_errors_identify_the_mathematical_block(block):
+    """Incorrect pairings report their name and intended trial/test coordinate shape."""
+    declaration = LocalEquations(
+        np.eye(2),
+        [0, 0],
+        np.ones((2, 1)),
+        np.ones((1, 2)),
+        [0],
+        coarse_basis=np.ones((2, 1)),
+        moments=np.ones((2, 1)),
+    )
+    with pytest.raises(ValueError, match=f"local block '{block}'.*shape"):
+        compile_local_equations(replace(declaration, **{block: np.ones((3, 3))}))
+
+
+def test_custom_compiler_type_errors_keep_their_type_and_block_name():
+    """Native/custom form failures retain the exception contract and useful form context."""
+
+    def unsupported(form, shape=None):
+        raise TypeError("unsupported declared form")
+
+    with pytest.raises(TypeError, match="local block 'a'.*unsupported"):
+        compile_local_equations(LocalEquations([[1]], [0], 0, 0, []), unsupported)
+
+
 def test_four_blocks_use_explicit_balance_sign_and_independent_trace_maps():
     a = np.array([[2.0, 1.0], [0.0, 3.0]])
     b = np.array([[1.0, 2.0], [3.0, 4.0]])

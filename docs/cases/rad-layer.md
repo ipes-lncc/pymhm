@@ -144,7 +144,7 @@ archive digests. Saved nodal coordinates, fine connectivity and basis ordering
 support replay. This comparison verifies the declared discrete realization;
 it does not identify the article's unavailable mesh connectivity.
 
-Run `pixi run -e notebooks verify-rad-layer`. Numerical records are in
+Run `pixi run --locked -e notebooks verify-rad-layer`. Numerical records are in
 `examples/results/rad-layer.json`. The research campaign is separate from the
 small kernel, boundary and polynomial checks run in CI.
 

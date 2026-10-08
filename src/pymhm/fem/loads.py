@@ -7,6 +7,7 @@ from typing import Any
 import numpy as np
 
 from pymhm.core.validation import FloatArray
+from pymhm.fem.assembly import assemble_element_blocks
 from pymhm.fem.scalar.quadrilateral import qk_basis, qk_space
 from pymhm.fem.scalar.triangle import nodal_space, reference_basis
 from pymhm.meshes.cartesian import CartesianMacroMesh
@@ -145,3 +146,48 @@ def point_load_vector(
         basis, _, _ = reference_basis(degree, barycentric[cell][None, :])
         np.add.at(load, dofs[cell], point[2] * basis[0])
     return load
+
+
+def assemble_load(tests: Any, samples: Any, weights: Any, rows: Any, size: int) -> Any:
+    """Scatter ``sum_q weights[t,q]*tests[t,q,i]*samples[t,q]`` into test rows.
+
+    Tests have axes (cell, point, local test). Physical Jacobians and any
+    conjugation are explicit parts of the supplied tests or weights; none is
+    inferred. Samples/weights broadcast to (cell, point). Real and complex
+    coefficients are supported. Continuous and discontinuous spaces differ
+    only in the integer row map, whose repeated coordinates are summed.
+    """
+    basis = np.asarray(tests)
+    if basis.ndim != 3:
+        raise ValueError("test tabulation must have axes (cell, point, local test)")
+    force = np.broadcast_to(samples, basis.shape[:2])
+    measure = np.broadcast_to(weights, basis.shape[:2])
+    if not all(np.isfinite(value).all() for value in (basis, force, measure)):
+        raise ValueError("load tabulation, samples and weights must be finite")
+    elemental = np.einsum("tqi,tq,tq->ti", basis, force, measure)
+    # The shared scatter validates integer maps, dimensions and global bounds.
+    matrix = assemble_element_blocks(
+        elemental[:, :, None], rows, np.zeros((len(basis), 1), dtype=int), (size, 1)
+    )
+    return np.asarray(matrix.toarray()[:, 0])
+
+
+def assemble_mass(
+    tests: Any, trials: Any, weights: Any, rows: Any, columns: Any, shape: tuple[int, int]
+) -> Any:
+    """Scatter the literal test/trial pairing with physical weighted measure.
+
+    Tabs have axes (cell, point, local basis), with possibly different trial
+    and test counts. ``weights`` broadcasts to (cell, point) and may contain
+    density, capacity or signed/Petrov coefficients. This operation makes no
+    positivity, Hermitian or time-scheme assumption. A sesquilinear form
+    supplies conjugated test values explicitly.
+    """
+    test, trial = np.asarray(tests), np.asarray(trials)
+    if test.ndim != 3 or trial.ndim != 3 or test.shape[:2] != trial.shape[:2]:
+        raise ValueError("test and trial tabs require matching cell and point axes")
+    measure = np.broadcast_to(weights, test.shape[:2])
+    if not all(np.isfinite(value).all() for value in (test, trial, measure)):
+        raise ValueError("mass tabulations and weighted measure must be finite")
+    blocks = np.einsum("tqi,tqj,tq->tij", test, trial, measure)
+    return assemble_element_blocks(blocks, rows, columns, shape)

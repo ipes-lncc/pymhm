@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -9,19 +17,19 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
-from field_sampling import sample_field
 from numpy.polynomial import Polynomial
-from solve_oseen import crisscross
 from threadpoolctl import threadpool_limits
 
-from pymhm._legacy.models.flow.solver import solve_flow
-from pymhm._legacy.models.vector import VectorSolution
+from examples.field_sampling import sample_field
+from examples.formulations.application import flow as solve_flow
+from examples.solve_oseen import crisscross
 from pymhm.adaptivity.flow import adapt_flow
 from pymhm.adaptivity.flow_macro import adapt_flow_macros
 from pymhm.estimators.flow import estimate_flow_error
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.solutions import VectorSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/stokes-adaptive"
@@ -224,6 +232,7 @@ def main() -> None:
             if args.strategy == "macro":
                 result = adapt_flow_macros(
                     mesh,
+                    solve_step=solve_flow,
                     trace_degree=args.trace_degree,
                     iterations=args.iterations,
                     theta=args.theta,
@@ -238,6 +247,7 @@ def main() -> None:
                 )
                 result = adapt_flow(
                     mesh,
+                    solve_step=solve_flow,
                     skeleton=skeleton,
                     iterations=args.iterations,
                     theta=args.theta,

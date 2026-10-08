@@ -246,5 +246,5 @@ def test_original_field_gate_detects_wrong_boundary_functional_after_trace_solve
     assert stale.solve_trace(0).residual == trace.residual
     with pytest.raises(ValueError, match="original Helmholtz trace"):
         stale.verify_fields(trace, fields)
-    with pytest.raises(ValueError, match="finite real interleaved nodal"):
+    with pytest.raises(ValueError, match="finite"):
         family.verify_fields(trace, [np.full_like(field, np.nan) for field in fields])

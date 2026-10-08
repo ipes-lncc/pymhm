@@ -1,110 +1,24 @@
 """Historical Darcy solve and coefficient records on enriched rectangular RT spaces."""
 
-from dataclasses import dataclass
 from typing import Any, cast
 
 import numpy as np
 from scipy import sparse
 
-from pymhm.core.contracts import HybridSolution, LocalProblem
+from pymhm.core.contracts import LocalProblem
 from pymhm.core.offline import condense_cached
 from pymhm.core.system import HybridSystem
-from pymhm.core.validation import FloatArray, positive_int
+from pymhm.core.validation import positive_int
 from pymhm.fem.hdiv.tensor_rt import (
-    _material_rule,
     _operators,
     _trace_map,
-    tensor_rt_basis,
     tensor_rt_dofs,
 )
 from pymhm.fem.scalar.operators import boundary_data
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
-from pymhm.materials.evaluation import scalar_values, vector_values
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.meshes.triangle import TriangleMesh
-
-
-@dataclass(frozen=True)
-class TensorRTDarcySolution:
-    """Enriched rectangular RT flux, modal Q_s pressure and physical skeleton flux."""
-
-    skeleton: SkeletonSpace
-    local_meshes: tuple[CartesianMacroMesh, ...]
-    pressure: tuple[FloatArray, ...]
-    flux: tuple[FloatArray, ...]
-    hybrid: HybridSolution
-    degree: int
-    enrichment: int
-    permeability: Any
-    source: Any
-    quadrature_order: int
-
-    def evaluate(self, cell: int, points: FloatArray) -> tuple[FloatArray, FloatArray, FloatArray]:
-        """Evaluate pressure, physical flux and divergence on every local rectangle."""
-        fine = self.local_meshes[cell]
-        basis, div, pressure = tensor_rt_basis(fine, self.degree, self.enrichment, points)
-        coefficients = self.flux[cell][tensor_rt_dofs(fine, self.degree, self.enrichment)]
-        return (
-            np.einsum(
-                "ti,tqi->tq",
-                self.pressure[cell],
-                np.broadcast_to(pressure, (*basis.shape[:2], pressure.shape[-1])),
-            ),
-            np.einsum("tqia,ti->tqa", basis, coefficients),
-            np.einsum("tqi,ti->tq", div, coefficients),
-        )
-
-    def errors(self, pressure: Any, flux: Any, divergence: Any, order: int = 8) -> dict[str, float]:
-        """Integrate three independent physical L2 errors without smoothing interfaces."""
-        errors = np.zeros(3)
-        for cell, fine in enumerate(self.local_meshes):
-            points, weights = _material_rule(fine, self.permeability, order)
-            physical = fine.points[fine.cells[:, 0], None] + points * fine.spacing
-            flat = physical.reshape(-1, 2)
-            p, q, d = self.evaluate(cell, points)
-            errors[0] += fine.areas @ (
-                np.sum((p - scalar_values(pressure, flat).reshape(p.shape)) ** 2 * weights, axis=1)
-            )
-            errors[1] += fine.areas @ (
-                np.sum(
-                    np.sum((q - vector_values(flux, flat).reshape(q.shape)) ** 2, axis=-1)
-                    * weights,
-                    axis=1,
-                )
-            )
-            errors[2] += fine.areas @ (
-                np.sum(
-                    (d - scalar_values(divergence, flat).reshape(d.shape)) ** 2 * weights, axis=1
-                )
-            )
-        return dict(zip(("pressure_l2", "flux_l2", "divergence_l2"), np.sqrt(errors), strict=True))
-
-    def equilibrium_residuals(self) -> tuple[FloatArray, ...]:
-        """Return all Q_s moments of div(q)-f in each local fine cell."""
-        residuals = []
-        for cell, fine in enumerate(self.local_meshes):
-            points, weights = _material_rule(fine, self.permeability, self.quadrature_order)
-            physical = fine.points[fine.cells[:, 0], None] + points * fine.spacing
-            _, _, pressure = tensor_rt_basis(fine, self.degree, self.enrichment, points)
-            d = self.evaluate(cell, points)[2]
-            force = scalar_values(self.source, physical.reshape(-1, 2)).reshape(d.shape)
-            residuals.append(np.einsum("t,tq,tqi,tq->ti", fine.areas, weights, pressure, d - force))
-        return tuple(residuals)
-
-    def normal_flux_residuals(self) -> tuple[FloatArray, ...]:
-        """Return all fine-boundary moments of q.n minus the represented macro trace."""
-        residuals = []
-        for cell, fine in enumerate(self.local_meshes):
-            ids = (
-                (self.degree + 1) * fine.boundary_faces[:, None] + np.arange(self.degree + 1)
-            ).ravel()
-            mapping = _trace_map(
-                cast(CartesianMacroMesh, self.skeleton.mesh), cell, fine, self.skeleton, self.degree
-            )
-            residuals.append(
-                self.flux[cell][ids] - mapping @ self.hybrid.trace[self.skeleton.cell_dofs(cell)]
-            )
-        return tuple(residuals)
+from pymhm.postprocessing.solutions import TensorRTDarcySolution as TensorRTDarcySolution
 
 
 def solve_darcy_tensor_rt(

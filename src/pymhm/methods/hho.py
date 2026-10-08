@@ -10,7 +10,6 @@ Both the projected-source formulation (4.6) and reconstructed-source variant
 (5.1) are available. The face-only case m=-1 requires the latter variant.
 """
 
-from dataclasses import dataclass
 from typing import Any, Literal
 
 import numpy as np
@@ -23,74 +22,10 @@ from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.triangle import scalar_operators, tabulate, trace_coupling
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.linalg.moments import solve_moment_system
-from pymhm.materials.evaluation import scalar_values, tensor_values
+from pymhm.materials.evaluation import scalar_values
 from pymhm.meshes.triangle import TriangleMesh
-
-
-@dataclass(frozen=True)
-class MsHHOLocal:
-    """One constrained Galerkin lift and its represented local moment operator.
-
-    ``energy`` is R.T A R, retaining the represented assembly's small
-    antisymmetry. For the exactly symmetric diffusion form it is the energy
-    Hessian. Projecting this matrix to its symmetric part would change the
-    original finite equations.
-    """
-
-    mesh: Any
-    reconstruction: FloatArray
-    moments: FloatArray
-    energy: FloatArray
-    load: FloatArray
-    cell_count: int
-    integral: FloatArray
-
-
-@dataclass(frozen=True)
-class MsHHOSolution:
-    """Broken pressure fields, common face moments and represented condensed operator."""
-
-    skeleton: Any
-    local: tuple[MsHHOLocal, ...]
-    pressure: tuple[FloatArray, ...]
-    face_moments: FloatArray
-    cell_moments: tuple[FloatArray, ...]
-    matrix: Any
-    residual: float
-    degree: int
-    permeability: Any
-    source_variant: str
-    local_refinement_precision: str = "double"
-
-    def l2_error(self, exact: Any, order: int = 8) -> float:
-        """Integrate broken pressure error with independent quadrature."""
-        bary, weights = triangle_quadrature(positive_int(order, "quadrature order"))
-        total = 0.0
-        for local, values in zip(self.local, self.pressure, strict=True):
-            mesh = local.mesh
-            dofs, _, basis, _, _ = tabulate(mesh, self.degree, bary)
-            points = np.einsum("qi,tia->tqa", bary, mesh.points[mesh.cells])
-            exact_values = scalar_values(exact, points.reshape(-1, 2)).reshape(points.shape[:2])
-            error = values[dofs] @ basis.T - exact_values
-            total += float(mesh.areas @ (error**2 @ weights))
-        return float(np.sqrt(total))
-
-    def flux_l2_error(self, exact: Any, order: int = 8) -> float:
-        """Integrate the physical raw flux -A grad(u); no H(div) claim is made."""
-        from pymhm.materials.evaluation import vector_values
-
-        bary, weights = triangle_quadrature(positive_int(order, "quadrature order"))
-        total = 0.0
-        for local, values in zip(self.local, self.pressure, strict=True):
-            mesh = local.mesh
-            dofs, _, _, gradient, _ = tabulate(mesh, self.degree, bary)
-            points = np.einsum("qi,tia->tqa", bary, mesh.points[mesh.cells])
-            flat = points.reshape(-1, 2)
-            tensor = tensor_values(self.permeability, flat).reshape(*points.shape[:2], 2, 2)
-            flux = -np.einsum("tqab,tqib,ti->tqa", tensor, gradient, values[dofs])
-            error = flux - vector_values(exact, flat).reshape(flux.shape)
-            total += float(mesh.areas @ (np.sum(error**2, axis=-1) @ weights))
-        return float(np.sqrt(total))
+from pymhm.postprocessing.solutions import MsHHOLocal as MsHHOLocal
+from pymhm.postprocessing.solutions import MsHHOSolution as MsHHOSolution
 
 
 def _local_reconstruction(

@@ -6,11 +6,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
-from hpc4e_data import HPC4EData
 
-from pymhm._legacy.models.elasticity.stress_tensor import _rotation_basis
+from examples.hpc4e_data import HPC4EData
 from pymhm.fem.hdiv.tensor_rt import tensor_rt_basis
 from pymhm.fem.scalar.quadrilateral import quadrilateral_quadrature
+from pymhm.fem.vector.stress_tensor import complete_rotation_basis as _rotation_basis
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
 

@@ -1,22 +1,21 @@
 """Three-field MH²M on tetrahedra with independently resolved interface spaces."""
 
-from dataclasses import dataclass
 from math import fsum
 from typing import Any, cast
 
 import numpy as np
 from scipy import sparse
 
-from pymhm._legacy.models.darcy.primal_3d import Darcy3DSolution
-from pymhm.core.contracts import HybridSolution
-from pymhm.core.validation import FloatArray, IntArray, positive_int
+from pymhm.core.validation import positive_int
 from pymhm.fem.scalar.tetrahedron import tetra_operators
-from pymhm.fem.traces.pressure_3d import PressureTraceSpace3D, boundary_rules, broken_face_basis
+from pymhm.fem.traces.pairing import interface_pairing
+from pymhm.fem.traces.pressure_3d import PressureTraceSpace3D, boundary_rules
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton, tetra_trace_coupling
 from pymhm.linalg.linear import solve_linear
 from pymhm.materials.evaluation import scalar_values_3d
 from pymhm.meshes.tetrahedron import TetraMesh, _dyadic
 from pymhm.methods.three_field import MH2MLocal, _neumann_maps
+from pymhm.postprocessing.solutions import MH2M3DSolution as MH2M3DSolution
 
 
 def _local(
@@ -38,20 +37,12 @@ def _local(
     )
     coupling = tetra_trace_coupling(mesh, cell, fine, flux, degree)
     trace_ids = gamma.cell_dofs(cell)
-    pairing = np.zeros((coupling.shape[1], len(trace_ids)))
-    rows = {}
+    pairing = interface_pairing(flux, gamma, cell, order=order)
     offset = 0
     for side, face in enumerate(mesh.cell_faces[cell]):
         width = len(flux.dofs(int(face)))
         coupling[:, offset : offset + width] *= mesh.signs[cell, side]
-        rows[int(face)] = np.arange(offset, offset + width)
         offset += width
-    for face, _, _, _, weights, bary in boundary_rules(
-        mesh, cell, fine, degree, max(order, gamma.degree + int(flux.degrees.max()) + 2)
-    ):
-        lam, rho = broken_face_basis(flux, face, bary), gamma.evaluate(face, bary)
-        columns = np.searchsorted(trace_ids, gamma.face_dofs[face])
-        pairing[np.ix_(rows[face], columns)] += lam.T @ (weights[:, None] * rho)
     return _neumann_maps(
         fine,
         trace_ids,
@@ -63,86 +54,6 @@ def _local(
         np.ones(coupling.shape[1]),
         solver,
     )
-
-
-@dataclass(frozen=True)
-class MH2M3DSolution:
-    """Continuous pressure trace and reconstructed broken tetrahedral fields.
-
-    Each macrocell has independent outward conormal coefficients
-    lambda=K grad(p).n. Their negatives are physical normal fluxes. Global
-    continuity is tested by Gamma, not pointwise. The local complement has
-    boundary mean zero; a global pure-Neumann gauge fixes the volume mean.
-    """
-
-    trace_space: PressureTraceSpace3D
-    flux_space: TriangularSkeleton
-    local: tuple[MH2MLocal, ...]
-    trace: FloatArray
-    pressure: tuple[FloatArray, ...]
-    conormal: tuple[FloatArray, ...]
-    matrix: Any
-    rhs: FloatArray
-    free_dofs: IntArray
-    degree: int
-    permeability: Any
-    source: Any
-    quadrature_order: int
-    residual: float
-
-    @property
-    def local_meshes(self) -> tuple[TetraMesh, ...]:
-        """Return each conforming local tetrahedral partition."""
-        return tuple(cast(TetraMesh, data.mesh) for data in self.local)
-
-    def _fields(self) -> Darcy3DSolution:
-        """Reuse only volume-field evaluation; this trace is not a Darcy flux skeleton."""
-        hybrid = HybridSolution(self.trace, (), self.pressure, self.residual, np.empty(0))
-        return Darcy3DSolution(
-            self.flux_space,
-            self.local_meshes,
-            self.pressure,
-            hybrid,
-            self.degree,
-            self.permeability,
-            self.source,
-            self.quadrature_order,
-        )
-
-    def evaluate(self, cell: int, bary: FloatArray) -> tuple[FloatArray, FloatArray]:
-        """Evaluate complete reconstructed pressure and raw physical flux."""
-        return self._fields().evaluate(cell, bary)
-
-    def l2_error(self, exact: Any, order: int = 6) -> float:
-        """Integrate the broken pressure error with independent tetrahedral quadrature."""
-        return self._fields().l2_error(exact, order)
-
-    def flux_l2_error(self, exact: Any, order: int = 6) -> float:
-        """Integrate the raw physical flux error, keeping the full permeability tensor."""
-        return self._fields().flux_l2_error(exact, order)
-
-    def conservation_residuals(self) -> FloatArray:
-        """Return integrated outward physical conormal flux minus source per macrocell."""
-        return np.array(
-            [
-                -data.flux_integrals @ lam - data.load.sum()
-                for data, lam in zip(self.local, self.conormal, strict=True)
-            ]
-        )
-
-    def trace_moment_residuals(self) -> tuple[FloatArray, ...]:
-        """Return Lambda-tested differences of the local pressure and Gamma trace."""
-        return tuple(
-            data.boundary_coupling.T @ p - data.trace_pairing @ self.trace[data.trace_dofs]
-            for data, p in zip(self.local, self.pressure, strict=True)
-        )
-
-    def local_equation_residuals(self) -> tuple[FloatArray, ...]:
-        """Return original nodal equations A p-B lambda-f before condensation."""
-        return tuple(
-            data.stiffness @ p - data.boundary_coupling @ lam - data.load
-            for data, p, lam in zip(self.local, self.pressure, self.conormal, strict=True)
-        )
 
 
 def solve_mh2m_3d(

@@ -7,6 +7,14 @@ provide the common reference and independently selected quadrature checks.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -18,10 +26,12 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples import core_extension_data as data
-from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
-from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
-from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
-from pymhm._legacy.models.geometry import solve_elasticity_mixed_polygons
+from examples.formulations.application import hdiv_darcy as solve_darcy_hdiv3d
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed
+from examples.formulations.application import (
+    weak_stress_elasticity as solve_elasticity_mixed_polygons,
+)
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_tensor_rt
 from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
 from pymhm.fem.scalar.triangle import reference_basis
 from pymhm.io.provenance import current_source_manifest

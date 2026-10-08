@@ -103,8 +103,8 @@ trace space.
 ```python
 import numpy as np
 from pymhm import TriangleMesh
-from pymhm._legacy.models.transport.solver import solve_transport
-from pymhm._legacy.models.transport.stabilization import UnusualParameters
+from examples.formulations.application import transport as solve_transport
+from pymhm.fem.scalar.unusual import UnusualParameters
 
 mesh = TriangleMesh.unit_square(4)
 A0 = np.array([[2.0, 0.3], [0.3, 1.0]])
@@ -284,10 +284,10 @@ by the comparisons reported here.
 ## Reproducing the package's analytical evidence
 
 ```sh
-pixi run --locked -e test-core python examples/solve_unusual.py
-pixi run --locked -e test-core python examples/verify_unusual_resolution.py
-pixi run -e notebooks python examples/plot_unusual.py
-pixi run -e fem python -m pytest -q tests/test_unusual_fenics.py
+pixi run --locked -e test-core python -m examples.solve_unusual
+pixi run --locked -e test-core python -m examples.verify_unusual_resolution
+pixi run --locked -e notebooks python -m examples.plot_unusual
+pixi run --locked -e fem python -m pytest -q tests/test_unusual_fenics.py
 ```
 
 The producer records mesh sizes, quadrature checks, original-equation residuals,

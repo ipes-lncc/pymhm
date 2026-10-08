@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -14,10 +22,10 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 import numpy as np
-from analytical_darcy import darcy_fields
-from plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from threadpoolctl import threadpool_limits
 
+from examples.analytical_darcy import darcy_fields
+from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from pymhm import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]

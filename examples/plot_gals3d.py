@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import hashlib
 import json
 from pathlib import Path
@@ -11,11 +19,12 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-from gals3d_data import GaLS3DData
 from matplotlib.collections import PolyCollection
 from matplotlib.colors import Normalize, TwoSlopeNorm
-from plot_flow3d import overlay, slices
-from plot_style import set_refinement_ticks
+
+from examples.gals3d_data import GaLS3DData
+from examples.plot_flow3d import overlay, slices
+from examples.plot_style import set_refinement_ticks
 
 ROOT = Path(__file__).resolve().parents[1]
 LABELS = {"gals-p1": "GaLS P1/P1", "gals-p2": "GaLS P2/P2", "th-p2": "Taylor–Hood P2/P1"}

@@ -209,8 +209,14 @@ def test_declared_layout_and_optional_custom_boundary_capabilities() -> None:
     context_3d = GlobalContext(
         hierarchy_3d, bind_interface(TriangularSkeleton(volume)), (0,) * len(volume.cells)
     )
-    with pytest.raises(TypeError, match="explicit boundary-data projection"):
-        context_3d.boundary_data(0)
+    load3d, fixed3d = context_3d.boundary_data(0)
+    assert_array_equal(load3d, np.zeros(context_3d.trace_size))
+    assert fixed3d == {}
+    assert set(context_3d.fix_faces(volume.boundary_faces)) == {
+        int(dof)
+        for face in volume.boundary_faces
+        for dof in context_3d.interface.space.dofs(int(face))
+    }
     skeleton = SkeletonSpace(macro, [FaceSpace(degrees=(1,)) for _ in macro.faces])
     built = GlobalContext(hierarchy, bind_interface(skeleton), (0, 0))
     load, fixed = built.boundary_data(1.0, {int(macro.boundary_faces[0]): 2.0})

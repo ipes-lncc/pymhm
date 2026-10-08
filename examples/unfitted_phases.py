@@ -14,6 +14,14 @@ does not specify its finite local approximation or integration rules.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -33,6 +41,7 @@ from scipy import sparse
 from threadpoolctl import threadpool_info, threadpool_limits
 
 from examples.archive_precision import precision_fields, restore_precision
+from examples.formulations.local_records import DarcyLocalFactory as _DarcyLocalFactory
 from examples.unfitted_convergence import (
     ROOT,
     error_norms,
@@ -43,7 +52,6 @@ from examples.unfitted_convergence import (
 )
 from examples.unfitted_geometry import macro_mesh
 from examples.unfitted_trace_family import nested_trace_injection
-from pymhm._legacy.models.darcy.primal import _assembly_quadrature_order, _DarcyLocalFactory
 from pymhm.core.contracts import HybridSolution, LocalProblem
 from pymhm.core.refinement import (
     HybridRefinementCase,
@@ -54,10 +62,11 @@ from pymhm.core.refinement import (
 from pymhm.core.subspaces import restrict_response
 from pymhm.core.system import HybridSystem
 from pymhm.core.validation import positive_int
+from pymhm.fem.quadrature.orders import nodal_quadrature_order as _assembly_quadrature_order
 from pymhm.fem.scalar.triangle import multiindices, nodal_space
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
-from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError, _accurate_residual
+from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError, accurate_residual
 from pymhm.meshes.triangle import TriangleMesh
 
 
@@ -717,7 +726,7 @@ class UnfittedAcquisition:
             load = problem.load.astype(np.longdouble)
             boundary = np.einsum("ij,jk->ik", problem.coupling, trace, dtype=np.longdouble)
             forcing = load[:, None] - boundary
-            defects = _accurate_residual(problem.matrix.tocsr(), forcing, pressure)
+            defects = accurate_residual(problem.matrix.tocsr(), forcing, pressure)
             for column, (name, (indices, injection)) in enumerate(
                 zip(solutions, local.trace_maps, strict=True)
             ):

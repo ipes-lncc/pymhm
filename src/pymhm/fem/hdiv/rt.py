@@ -62,7 +62,7 @@ def _polynomials(degree: int, points: FloatArray) -> tuple[FloatArray, FloatArra
 
 
 @lru_cache(maxsize=8)
-def _dual_coefficients(degree: int) -> FloatArray:
+def rt_moment_coefficients(degree: int) -> FloatArray:
     """Construct the canonical RT dual basis from exact reference moments."""
     size = (degree + 1) * (degree + 3)
     matrix = np.empty((size, size))
@@ -122,7 +122,7 @@ def rt_basis(
     ):
         raise ValueError("barycentric coordinates must be finite with shape (n,3) and sum one")
     polynomial, derivative = _polynomials(m, bary.reshape(-1, 3)[:, 1:])
-    coefficients = _dual_coefficients(m)
+    coefficients = rt_moment_coefficients(m)
     reference = np.einsum("qja,ji->qia", polynomial, coefficients)
     reference_divergence = derivative @ coefficients
     if bary.ndim == 2:
@@ -254,7 +254,7 @@ def _evaluate_points(
     if np.any(bary < -1e-12):
         raise ValueError("evaluation point lies outside its declared incident triangle")
     polynomial, derivative = _polynomials(m, coordinates)
-    dual = _dual_coefficients(m)
+    dual = rt_moment_coefficients(m)
     reference = np.einsum("qja,ji->qia", polynomial, dual)
     orientation = np.ones((len(points), (m + 1) * (m + 3)))
     orientation[:, : 3 * (m + 1)] = (mesh.signs[owners, :, None] ** np.arange(1, m + 2)).reshape(
@@ -297,3 +297,6 @@ def rt_interpolate(mesh: TriangleMesh, field: Any, degree: int, order: int = 6) 
             "q,qi,tqa,t->tia", weights, rt_interior_tests(m, bary[:, 1:]), pullback, mesh.areas
         ).ravel()
     return coefficients
+
+
+_dual_coefficients = rt_moment_coefficients

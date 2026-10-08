@@ -245,11 +245,11 @@ Vertical dotted lines identify macroface intersections.
 Run the estimator sequences and the separate approximation-space comparison:
 
 ```bash
-pixi run -e notebooks reconstruction3d-uniform
-pixi run -e notebooks reconstruction3d-adaptive
-pixi run -e notebooks reconstruction3d-resolution
-pixi run -e notebooks reconstruction3d-rt-order
-pixi run -e notebooks gallery-reconstruction3d
+pixi run --locked -e notebooks reconstruction3d-uniform
+pixi run --locked -e notebooks reconstruction3d-adaptive
+pixi run --locked -e notebooks reconstruction3d-resolution
+pixi run --locked -e notebooks reconstruction3d-rt-order
+pixi run --locked -e notebooks gallery-reconstruction3d
 ```
 
 The resolution comparison uses the fixed geometry in

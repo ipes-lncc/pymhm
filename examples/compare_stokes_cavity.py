@@ -2,18 +2,26 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
 from pathlib import Path
 
 import numpy as np
-from solve_spe10_taylor_hood import TaylorHoodField
 from threadpoolctl import threadpool_limits
 
-from pymhm.fem.quadrature.material import _clip_polygon
+from examples.solve_spe10_taylor_hood import TaylorHoodField
 from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.triangle import element_tabulate, nodal_space, reference_basis
+from pymhm.meshes.geometry import clip_polygon
 from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,7 +35,8 @@ def interior_quadrature(mesh: TriangleMesh, order: int, cutout: float) -> tuple:
     base, weight = triangle_quadrature(order)
     rules = []
     for vertices, area in zip(mesh.points[mesh.cells], mesh.areas, strict=True):
-        parts, weights = [], []
+        parts: list[np.ndarray] = []
+        part_weights: list[np.ndarray] = []
         transform = (vertices[1:] - vertices[0]).T
         for bounds in ((0, 1, 0, 1 - cutout), (cutout, 1 - cutout, 1 - cutout, 1)):
             polygon = vertices.copy()
@@ -37,7 +46,7 @@ def interior_quadrature(mesh: TriangleMesh, order: int, cutout: float) -> tuple:
                 (1, bounds[2], True),
                 (1, bounds[3], False),
             ):
-                polygon = _clip_polygon(polygon, axis, level, lower)
+                polygon = clip_polygon(polygon, axis, level, lower)
                 if len(polygon) < 3:
                     break
             for index in range(1, len(polygon) - 1):
@@ -47,9 +56,9 @@ def interior_quadrature(mesh: TriangleMesh, order: int, cutout: float) -> tuple:
                     continue
                 local = np.linalg.solve(transform, (base @ triangle - vertices[0]).T).T
                 parts.append(np.column_stack((1 - local.sum(axis=1), local)))
-                weights.append(weight * size / area)
+                part_weights.append(weight * size / area)
         rules.append(
-            (np.concatenate(parts), np.concatenate(weights))
+            (np.concatenate(parts), np.concatenate(part_weights))
             if parts
             else (np.full((1, 3), 1 / 3), np.zeros(1))
         )
@@ -144,7 +153,7 @@ def profiles(arrays: dict, reference: TaylorHoodField) -> dict:
             )
             for cell in selected:
                 triangle = vertices[cell]
-                crossing = []
+                crossing: list[np.ndarray] = []
                 for first, second in ((0, 1), (1, 2), (2, 0)):
                     a, b = triangle[[first, second]]
                     if a[axis] == b[axis]:

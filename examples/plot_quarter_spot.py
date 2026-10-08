@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -26,15 +34,20 @@ if __package__:
     from .plot_quarter_reference import finish_quarter_panel
     from .quarter_point_archive import point_field_arrays, write_point_archive, write_point_record
 else:
-    from field_sampling import sample_field
-    from plot_quarter_reference import finish_quarter_panel
-    from quarter_point_archive import point_field_arrays, write_point_archive, write_point_record
+    from examples.field_sampling import sample_field
+    from examples.plot_quarter_reference import finish_quarter_panel
+    from examples.quarter_point_archive import (
+        point_field_arrays,
+        write_point_archive,
+        write_point_record,
+    )
 
+from examples.formulations.application import darcy as solve_darcy
 from pymhm import SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.darcy.primal import DarcySolution, solve_darcy
 from pymhm.core.validation import positive_int
 from pymhm.fem.scalar.operators import rt0_evaluate
 from pymhm.fem.scalar.triangle import tabulate
+from pymhm.postprocessing.solutions import DarcySolution
 from pymhm.postprocessing.visualization import macro_edges
 
 ROOT = Path(__file__).resolve().parents[1]

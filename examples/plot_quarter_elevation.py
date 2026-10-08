@@ -8,6 +8,14 @@ to resolve the interior field without the singular corner values dominating.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import hashlib
 import json
 from pathlib import Path
@@ -20,9 +28,9 @@ if __package__:
     from .plot_pyvista_layout import horizontal_color_scale
     from .plot_quarter_spot import FIGURES, OUTPUT
 else:
-    from campaign_provenance import file_digest, verify_archive
-    from plot_pyvista_layout import horizontal_color_scale
-    from plot_quarter_spot import FIGURES, OUTPUT
+    from examples.campaign_provenance import file_digest, verify_archive
+    from examples.plot_pyvista_layout import horizontal_color_scale
+    from examples.plot_quarter_spot import FIGURES, OUTPUT
 
 from pymhm import TriangleMesh
 from pymhm.postprocessing.visualization import macro_edges

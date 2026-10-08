@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -9,11 +17,11 @@ from pathlib import Path
 from time import perf_counter
 
 import numpy as np
-from hpc4e_data import BOUNDS, DATA_DIRECTORY, LENGTH_SCALE, STRESS_SCALE, load_data
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_tensor_rt
+from examples.hpc4e_data import BOUNDS, DATA_DIRECTORY, LENGTH_SCALE, STRESS_SCALE, load_data
 from pymhm import FaceSpace, SkeletonSpace
-from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
 from pymhm.fem.hdiv.tensor_rt import tensor_rt_dofs
 from pymhm.meshes.cartesian import CartesianMacroMesh
 

@@ -7,18 +7,21 @@ from functools import partial
 from typing import Any, cast
 
 import numpy as np
+from scipy import sparse
 
-from pymhm._legacy.models.darcy._mixed import normal_flux_blocks
-from pymhm._legacy.models.darcy.tensor import TensorRTDarcySolution
 from pymhm.core.contracts import HybridSolution
 from pymhm.core.equations import Equation, LocalEquations, columns, rows
 from pymhm.core.multiscale import MultiscaleProblem, MultiscaleSystem
 from pymhm.core.validation import positive_int
-from pymhm.fem.hdiv.tensor_rt import _operators, _trace_map
+from pymhm.fem.hdiv.mixed import normal_flux_blocks
+from pymhm.fem.hdiv.tensor_rt import tensor_rt_operators, tensor_rt_trace_map
 from pymhm.fem.scalar.operators import boundary_data
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.modal import modal_field
+from pymhm.postprocessing.piola import hdiv_field
+from pymhm.postprocessing.solutions import TensorRTDarcySolution
 
 
 @dataclass(frozen=True)
@@ -55,10 +58,12 @@ def local_equations(
     integral moments preserve the executed Basix-based moment coordinate order.
     """
     fine = mesh.submesh(cell, refinement)
-    mass, divergence, force = _operators(fine, degree, enrichment, permeability, source, order)
+    mass, divergence, force = tensor_rt_operators(
+        fine, degree, enrichment, permeability, source, order
+    )
     nq, npres = mass.shape[0], divergence.shape[0]
     ids = ((degree + 1) * fine.boundary_faces[:, None] + np.arange(degree + 1)).ravel()
-    mapping = _trace_map(mesh, cell, fine, skeleton, degree)
+    mapping = tensor_rt_trace_map(mesh, cell, fine, skeleton, degree)
     matrix, coupling, load = normal_flux_blocks(mass, divergence, force, ids, mapping)
     width = (degree + enrichment + 1) ** 2
     constant = np.zeros(npres)
@@ -75,6 +80,36 @@ def local_equations(
         kernel=kernel,
         moments=moments[:, None],
         metadata=(fine, moments, nq, npres),
+        field_data=(
+            modal_field(
+                "pressure",
+                fine,
+                tuple(
+                    (a, b)
+                    for b in range(degree + enrichment + 1)
+                    for a in range(degree + enrichment + 1)
+                ),
+                convention="legendre",
+                reconstruction=sparse.eye(len(load), format="csr")[nq : nq + npres],
+            ),
+            hdiv_field(
+                "flux",
+                fine,
+                "tensor-RT",
+                degree=degree,
+                enrichment=enrichment,
+                reconstruction=sparse.eye(len(load), format="csr")[:nq],
+            ),
+            hdiv_field(
+                "flux_divergence",
+                fine,
+                "tensor-RT",
+                degree=degree,
+                enrichment=enrichment,
+                reconstruction=sparse.eye(len(load), format="csr")[:nq],
+                divergence=True,
+            ),
+        ),
     )
 
 

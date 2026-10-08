@@ -216,9 +216,9 @@ permeability, cubic source and exponential boundary data for P2 and P3.
 It compares both pressure fields and the physical multiplier.
 
 ```bash
-pixi run -e notebooks python -m examples.pgmhm_campaign --workers 8
-pixi run -e notebooks python -m examples.plot_pgmhm
-pixi run -e fem pytest tests/test_pgmhm_fenics.py
+pixi run --locked -e notebooks python -m examples.pgmhm_campaign --workers 8
+pixi run --locked -e notebooks python -m examples.plot_pgmhm
+pixi run --locked -e fem pytest tests/test_pgmhm_fenics.py
 ```
 
 The [numerical record](../figures/pgmhm/comparison.json) includes every

@@ -16,12 +16,13 @@ from typing import Any
 import numpy as np
 from scipy import sparse
 
-from pymhm._legacy.models.darcy.primal import DarcySolution, _DarcyLocalFactory
+from examples.formulations.local_records import DarcyLocalFactory as _DarcyLocalFactory
 from pymhm.core.validation import positive_int
 from pymhm.fem.scalar.operators import rt0_evaluate, triangle_quadrature
 from pymhm.fem.scalar.triangle import tabulate
-from pymhm.linalg.linear import LinearSolveError, _accurate_residual
+from pymhm.linalg.linear import LinearSolveError, accurate_residual
 from pymhm.materials.evaluation import tensor_values
+from pymhm.postprocessing.solutions import DarcySolution
 
 
 def matrix_digest(array: np.ndarray) -> str:
@@ -159,7 +160,7 @@ def point_field_arrays(solution: DarcySolution, order: int = 4) -> tuple[dict, d
         assembly = factory(cell)
         problem = assembly.problem
         operator = sparse.hstack((problem.matrix, sparse.csr_matrix(problem.coupling))).tocsr()
-        defect = _accurate_residual(
+        defect = accurate_residual(
             operator, problem.load, np.r_[field, solution.hybrid.trace[problem.trace_dofs]]
         )
         norm_squared += np.sum(defect**2)

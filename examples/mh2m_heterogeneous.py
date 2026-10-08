@@ -8,6 +8,14 @@ article-v3 value1/14; mesh and array identity are not inferred.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -25,16 +33,17 @@ from examples.campaign_provenance import (
     require_equal,
     verify_archive,
 )
+from examples.formulations.application import darcy as solve_darcy
+from examples.formulations.application import three_field_diffusion as solve_mh2m
 from examples.mh2m_campaign import diagnostics, source
 from examples.mh2m_campaign_contracts import verify_difference_result as verify_result
 from examples.mh2m_heterogeneous_norms import StructuredP1, difference
-from pymhm._legacy.models.darcy.primal import solve_darcy
 from pymhm.fem.scalar.triangle import scalar_operators
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.fem.traces.pressure_2d import PressureTraceSpace
 from pymhm.io.provenance import current_source_manifest
 from pymhm.linalg.linear import solve_linear
 from pymhm.meshes.triangle import TriangleMesh
-from pymhm.methods.three_field import PressureTraceSpace, solve_mh2m
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/mh2m-heterogeneous"

@@ -62,12 +62,14 @@ physical equations are checked after imposing that gauge. Local factories
 support serial, thread and spawned-process assembly and condensation.
 
 ```python
+from pymhm import assemble
 from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
-from pymhm._legacy.models.transport.rad_3d import solve_rad_3d
+from examples.formulations.transport_3d import define_transport_3d
+from examples.formulations.scalar_3d import scalar_constraints_3d, recover_transport_3d
 
 mesh = TetraMesh.unit_cube(2)
-solution = solve_rad_3d(
+definition = define_transport_3d(
     mesh,
     diffusion=0.1,
     velocity=(1.0, 0.0, 0.0),
@@ -76,7 +78,20 @@ solution = solve_rad_3d(
     skeleton=TriangularSkeleton(mesh, degree=1),
     local_refinement=2,
 )
+system = assemble(definition.problem)
+coefficients = system.solve(constraints=scalar_constraints_3d(definition, system))
+solution = recover_transport_3d(definition, system, coefficients)
 ```
+
+The editable provider declares `LocalEquations(A, f, B, -B.T, dofs)` from
+public volume integration and oriented trace pairings. `neumann`, coefficient
+derivatives, Galerkin/SUPG, `coarse_space="constants"` or `"kernel"`, and
+`mean_value` are explicit mathematical inputs. Assembly independently accepts
+`ExecutionConfig` and `SolverConfig`; no prepared physical solver is required.
+`conforming_transport_3d` in the same example module assembles the original
+continuous-Pk global matrix with strong exterior nodal values. Both definitions
+are importable after cloning the repository.
+
 
 ## Oscillatory case from the literature
 
@@ -157,9 +172,9 @@ Optional native tests independently assemble P3/P4 Galerkin and full-residual
 SUPG matrices and loads with Basix/DOLFINx/UFL on a distorted tetrahedron.
 
 ```bash
-pixi run --locked -e test-core python examples/solve_rad3d.py
-pixi run -e notebooks python examples/plot_rad3d.py
-pixi run -e fem pytest tests/test_rad3d.py -m fem
+pixi run --locked -e test-core python -m examples.solve_rad3d
+pixi run --locked -e notebooks python -m examples.plot_rad3d
+pixi run --locked -e fem pytest tests/test_rad3d.py -m fem
 ```
 
 The [numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/rad3d.json)

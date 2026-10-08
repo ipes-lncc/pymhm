@@ -15,6 +15,7 @@ from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.materials.cartesian import CartesianCellField
 from pymhm.materials.planar import PlanarMaterial
 from pymhm.materials.sources import TriangleQuadratureField, triangle_field_quadrature
+from pymhm.meshes.geometry import clip_polygon
 from pymhm.meshes.roundoff import area_coordinate_uncertainty, cartesian_coordinates
 from pymhm.meshes.triangle import TriangleMesh
 
@@ -324,21 +325,8 @@ def _merge_grid_vertices(vertices: FloatArray, tolerance: float) -> tuple[IntArr
 
 
 def _clip_polygon(polygon: FloatArray, axis: int, level: float, lower: bool) -> FloatArray:
-    """Clip a counterclockwise convex polygon against one Cartesian half-plane."""
-    vertices = []
-    previous = polygon[-1]
-    previous_inside = previous[axis] >= level if lower else previous[axis] <= level
-    for current in polygon:
-        current_inside = current[axis] >= level if lower else current[axis] <= level
-        if current_inside != previous_inside:
-            fraction = (level - previous[axis]) / (current[axis] - previous[axis])
-            intersection = previous + fraction * (current - previous)
-            intersection[axis] = level
-            vertices.append(intersection)
-        if current_inside:
-            vertices.append(current)
-        previous, previous_inside = current, current_inside
-    return np.asarray(vertices, dtype=float).reshape(-1, 2)
+    """Compatibility spelling of the shared public Cartesian half-plane clipping."""
+    return clip_polygon(polygon, axis, level, lower)
 
 
 @overload

@@ -22,6 +22,7 @@ from pymhm.fem.scalar.quadrilateral import (
 )
 from pymhm.fem.scalar.triangle import element_tabulate, nodal_space
 from pymhm.fem.traces.scalar import edge_basis, edge_pieces
+from pymhm.linalg.complex import complexify_vector, realify_operator, realify_vector
 from pymhm.materials.cartesian import CartesianCellField
 from pymhm.materials.planar import PlanarMaterial
 from pymhm.meshes.triangle import TriangleMesh
@@ -76,22 +77,17 @@ def stretch_values(value: Any, points: FloatArray) -> Any:
 
 def real_vector(value: Any) -> FloatArray:
     """Interleave the real and imaginary coordinates of a complex vector."""
-    data = np.asarray(value)
-    return np.column_stack((data.real, data.imag)).ravel()
+    return realify_vector(value)
 
 
 def complex_vector(value: Any) -> Any:
     """Decode the component-interleaved real coordinates without a sign change."""
-    data = np.asarray(value).reshape(-1, 2)
-    return data[:, 0] + 1j * data[:, 1]
+    return complexify_vector(value)
 
 
 def real_matrix(matrix: Any) -> Any:
     """Represent complex multiplication by [[Re,-Im],[Im,Re]] per scalar entry."""
-    return (
-        sparse.kron(sparse.csc_matrix(matrix.real), sparse.eye(2))
-        + sparse.kron(sparse.csc_matrix(matrix.imag), [[0.0, -1.0], [1.0, 0.0]])
-    ).tocsc()
+    return realify_operator(matrix)
 
 
 def acoustic_space(mesh: Any, degree: int) -> tuple[IntArray, FloatArray]:

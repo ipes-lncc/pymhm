@@ -1,61 +1,26 @@
 """Three-dimensional MsHHO on tetrahedral and convex polyhedral macro partitions."""
 
-from dataclasses import dataclass
 from typing import Any, Literal
 
 import numpy as np
 
 from pymhm._legacy.models.transport.polyhedral import (
     PolygonalSkeleton3D,
-    _face_quadrature,
     polygonal_trace_coupling,
 )
 from pymhm.core.moments import energy_reconstruction
-from pymhm.core.validation import FloatArray, positive_int
+from pymhm.core.validation import positive_int
 from pymhm.fem.reference import legendre_values
-from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.tetrahedron import tetra_operators, tetra_tabulate, tetrahedron_quadrature
+from pymhm.fem.traces.moments_3d import face_moment_rule_3d as _face_rule
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton, tetra_trace_coupling
-from pymhm.materials.evaluation import scalar_values_3d, tensor_values_3d, vector_values_3d
+from pymhm.materials.evaluation import scalar_values_3d
 from pymhm.meshes.polyhedral import PolyhedralMesh
 from pymhm.meshes.tetrahedron import TetraMesh, _dyadic
-from pymhm.methods.hho import MsHHOLocal, MsHHOSolution, _condense_moments
+from pymhm.methods.hho import MsHHOLocal, _condense_moments
+from pymhm.postprocessing.solutions import MsHHO3DSolution as MsHHO3DSolution
 
 # Preserve the previous module attribute without duplicating the implementation.
-
-
-@dataclass(frozen=True)
-class MsHHO3DSolution(MsHHOSolution):
-    """Broken tetrahedral pressure reconstructions with original-macroface moments."""
-
-    def l2_error(self, exact: Any, order: int = 6) -> float:
-        """Integrate pressure error in physical volume using independent quadrature."""
-        bary, weights = tetrahedron_quadrature(order)
-        total = 0.0
-        for local, field in zip(self.local, self.pressure, strict=True):
-            fine = local.mesh
-            dofs, _, basis, _ = tetra_tabulate(fine, self.degree, bary)
-            physical = np.einsum("qi,tia->tqa", bary, fine.points[fine.cells])
-            target = scalar_values_3d(exact, physical.reshape(-1, 3)).reshape(physical.shape[:2])
-            difference = field[dofs] @ basis.T - target
-            total += float(fine.volumes @ (difference**2 @ weights))
-        return float(np.sqrt(total))
-
-    def flux_l2_error(self, exact: Any, order: int = 6) -> float:
-        """Integrate the physical raw flux -A grad(p), without an H(div) assertion."""
-        bary, weights = tetrahedron_quadrature(order)
-        total = 0.0
-        for local, field in zip(self.local, self.pressure, strict=True):
-            fine = local.mesh
-            dofs, _, _, gradient = tetra_tabulate(fine, self.degree, bary)
-            physical = np.einsum("qi,tia->tqa", bary, fine.points[fine.cells])
-            material = tensor_values_3d(self.permeability, physical.reshape(-1, 3)).reshape(
-                *physical.shape[:2], 3, 3
-            )
-            flux = -np.einsum("tqab,tqib,ti->tqa", material, gradient, field[dofs])
-            exact_flux = vector_values_3d(exact, physical.reshape(-1, 3)).reshape(flux.shape)
-            total += float(fine.volumes @ (np.sum((flux - exact_flux) ** 2, axis=-1) @ weights))
-        return float(np.sqrt(total))
 
 
 def _local(
@@ -120,30 +85,6 @@ def _local(
         load = np.r_[projected, np.zeros(faces.shape[1])]
     integral = np.asarray(mass.sum(axis=1)).ravel() @ reconstruction
     return MsHHOLocal(fine, reconstruction, moments, energy, load, count, integral)
-
-
-def _face_rule(
-    mesh: Any, skeleton: Any, face: int, order: int
-) -> tuple[FloatArray, FloatArray, FloatArray]:
-    """Return physical moment rules, integrating the degree-2ell face mass exactly."""
-    order = max(positive_int(order, "face quadrature order"), int(skeleton.degrees[face]) + 1)
-    if isinstance(mesh, PolyhedralMesh):
-        points, weights = _face_quadrature(mesh, face, order)
-        return points, weights, np.asarray(skeleton.basis(face, points), dtype=np.float64)
-    bary, weights = triangle_quadrature(order)
-    partition = skeleton.face_partition(int(face))
-    points = np.einsum("qi,sij->sqj", bary, partition @ mesh.points[mesh.faces[face]])
-    if skeleton.continuous[face]:
-        original_bary = np.einsum("qi,sij->sqj", bary, partition)
-        basis = skeleton.evaluate(face, original_bary.reshape(-1, 3))
-    else:
-        values = skeleton.basis(face, bary)
-        basis = np.kron(np.eye(len(partition)), values)
-    return (
-        points.reshape(-1, 3),
-        (skeleton.face_weights(int(face))[:, None] * weights).ravel() * mesh.areas[face],
-        np.asarray(basis, dtype=np.float64),
-    )
 
 
 def solve_mshho_3d(

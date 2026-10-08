@@ -52,7 +52,9 @@ def test_physical_symbols_require_their_explicit_owner(
     generic = importlib.import_module(module_name)
     physical = importlib.import_module(owner)
     for name in symbols:
-        assert getattr(physical, name).__module__ == owner
+        canonical = "pymhm.postprocessing.solutions" if name.endswith("Solution") else owner
+        assert getattr(physical, name).__module__ == canonical
+        assert pickle.loads(f"c{owner}\n{name}\n.".encode("ascii")) is getattr(physical, name)
         with pytest.raises(AttributeError, match=f"has no attribute '{name}'"):
             getattr(generic, name)
     assert "__getattr__" not in vars(generic)
@@ -90,7 +92,7 @@ def test_current_vector_pickle_preserves_fields_and_physical_evaluation() -> Non
     )
     solution = VectorSolution(skeleton, (mesh,), (values,), (pressure,), hybrid, 1)
     archived = pickle.dumps(solution)
-    assert b"pymhm._legacy.models.vector" in archived
+    assert b"pymhm.postprocessing.solutions" in archived
     replay = pickle.loads(archived)
     assert type(replay) is VectorSolution
     assert replay.degree == 1 and replay.pressure_degree == 1
@@ -121,7 +123,7 @@ def test_current_tensor_pickle_preserves_oriented_flux_and_pressure_gauge() -> N
         mesh, degree=1, enrichment=1, neumann=neumann, mean_pressure=3.5, local_refinement=1
     )
     archived = pickle.dumps(solution)
-    assert b"pymhm._legacy.models.darcy.tensor" in archived
+    assert b"pymhm.postprocessing.solutions" in archived
     replay = pickle.loads(archived)
     assert type(replay) is TensorRTDarcySolution
     assert replay.degree == solution.degree and replay.enrichment == solution.enrichment

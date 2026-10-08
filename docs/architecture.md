@@ -90,7 +90,10 @@ equation or boundary convention.
 corresponding free functions. A global load update reuses the executed local
 responses and their literal bases; retained source-compatibility rows remain
 unchanged. Changing a volume source requires new local equations or explicitly
-cached local factors.
+cached local factors. `OfflineMultiscaleSystem` owns those factors and updates
+volume sources, local balance loads and the additional global functional while
+preserving executed harmonic lifts, metadata and field maps. It is independent
+of a physical problem or time integrator.
 `with_global_equation` adds an independent operator and load after local
 responses are available, including an explicitly assembled jump of reconstructed
 fields. It returns a new system and preserves the executed bases and children.
@@ -109,14 +112,21 @@ trial/test relations remain explicit.
 `backends.spaces` binds supported portable meshes to user-selected native
 spaces. Nodal coordinate conversion uses incidence and Basix reference
 interpolation data. H(div)/H(curl) moment coordinates retain their declared
-native conventions. `backends.traces` binds supported planar polynomial
+native conventions. `backends.traces` binds supported edge and triangular
 traces and additional global interface UFL forms. Custom spaces may supply
 those capabilities independently; unsupported couplings fail explicitly.
 
 `postprocessing.fields` associates reconstructed vectors with named fields,
-meshes, components, declared reconstructions and executed basis descriptors.
+meshes, components, declared affine local/trace reconstructions and executed
+basis descriptors.
 Its free functions own evaluation and the solution's convenience `field`
 method delegates to them. Independent one-sided values are preserved.
+
+`ComponentTraceSpace` preserves a scalar interface layout and interleaves
+Cartesian components. Tangential traces instead retain their declared physical
+frames. The general trace integration owner supplies Gram operators, linear
+functionals and projections in these same coordinates; it chooses no PDE or
+physical boundary variable.
 
 Built-in bindings and fully manual definitions share the same numerical
 owners. See the [overview](tutorials/overview.md) for the principal workflow
@@ -136,20 +146,20 @@ source, trace-lift and retained responses.
 
 ## Darcy formulations
 
-The private predefined Darcy subpackage distinguishes approximation spaces
-and boundary variables. These are different discretizations of the same
-physical law, rather than separate campaign implementations.
+Darcy providers compose the following public owners to distinguish approximation
+spaces and boundary variables. Their discretizations preserve their respective
+physical laws, spaces and coefficient conventions.
 
 | Owner | Local approximation and scope |
 | --- | --- |
-| `_legacy.models.darcy.primal` and `primal_3d` | Conforming local scalar pressure on triangles or tetrahedra, coupled by a physical normal-flux skeleton. |
-| `_legacy.models.darcy.cartesian` | Tensor-product local pressure on Cartesian macrorectangles. |
-| `_legacy.models.darcy.mixed_rt` | Raviart–Thomas Darcy flux and discontinuous pressure, with hybrid or classical conforming assembly. |
-| `_legacy.models.darcy.mixed_bdm` | BDM flux with the declared normal restriction and interior enrichment, coupled to discontinuous pressure. |
-| `_legacy.models.darcy.hdiv_3d` and `mapped` | Mixed spaces on affine tetrahedra/prisms or mapped hexahedra, with their stated Piola and moment conventions. |
-| `_legacy.models.darcy.analytic` | An explicit analytical local-response space. |
-| `_legacy.models.darcy.conforming` and `separable` | Classical Cartesian reference discretizations and reusable separable operators. |
-| `_legacy.models.darcy.velocity` | Conversion of supported Darcy fields into physical transport velocities. |
+| `fem.scalar.triangle`, `operators` and `tetrahedron` | Conforming local scalar pressure on triangles or tetrahedra, coupled by a physical normal-flux skeleton. |
+| `fem.scalar.quadrilateral` | Tensor-product local pressure on Cartesian macrorectangles. |
+| `fem.hdiv.rt_forms`, `rt_trace` and `mixed` | Raviart–Thomas Darcy flux and discontinuous pressure, with hybrid or classical conforming assembly. |
+| `fem.hdiv.bdm_forms` and `mixed` | BDM flux with the declared normal restriction and interior enrichment, coupled to discontinuous pressure. |
+| `fem.hdiv.mixed_3d`, `family_3d` and `mapped` | Mixed spaces on affine tetrahedra/prisms or mapped hexahedra, with their stated Piola and moment conventions. |
+| `core.contracts`, `core.equations` and `core.subspaces` | Explicit analytical local-response spaces and declared moment complements. |
+| `fem.scalar.quadrilateral` and `linalg.separable` | Classical Cartesian reference assembly and reusable separable operators. |
+| `postprocessing.velocity` | Conversion of supported Darcy fields into physical transport velocities. |
 
 Shared mixed assembly integrates supplied flux/divergence/pressure tables and
 constructs the normal-flux saddle in one owner. Element families supply their

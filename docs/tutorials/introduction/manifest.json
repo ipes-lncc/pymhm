@@ -4,12 +4,12 @@
   "notebooks": [
     {
       "source_notebook": "notebooks/introduction/darcy_3d_parallel_scalability.ipynb",
-      "source_sha256": "7750c12e5547a89be66e5a8177d60009cce03b24160268c9f0ee5d9ba93f3b12",
+      "source_sha256": "134f1b8630d27eefe954b5faa8b8e2e9ce3567e52d96bd216087572afc2b65c6",
       "executed_notebook": "build/notebooks/introduction/darcy_3d_parallel_scalability.ipynb",
-      "executed_sha256": "b0524cbbee9ee6ac32f2e435de1deabeadd66545e5ddad2250d83b62e0c8c904",
+      "executed_sha256": "779b7717710bf79b7c05cef2e51b440fcdb82d971bae0e00e343ef616b8c91d2",
       "executed_code_cells": 34,
       "page": "tutorials/introduction/darcy_3d_parallel_scalability.md",
-      "page_sha256": "f9260952d49bd69d0f2c43b445aba41fef178a16ec8f41900bf06ebc0ae4bfdc",
+      "page_sha256": "ff800760ed8d521f8e843a62be2d2f7071e551d78af82d0b741b45c1951b7b2c",
       "assets": [
         {
           "path": "assets/tutorials/darcy_3d_parallel_scalability/figure_34_0.png",
@@ -90,12 +90,12 @@
     },
     {
       "source_notebook": "notebooks/introduction/darcy_parallel_scalability.ipynb",
-      "source_sha256": "1f9f1bc010513782e42ebebc05a91fcf5baab578a8495265b4241126963cf35f",
+      "source_sha256": "9cdcaa74319c788c669a44c22e72daebbb5e2344ed3bbf90b2b6a9c54ec99670",
       "executed_notebook": "build/notebooks/introduction/darcy_parallel_scalability.ipynb",
-      "executed_sha256": "bbfd1c2016540414bc4a7ed62f1551887cb38db7cf855cdb523c615b68a0ee9c",
+      "executed_sha256": "ebb458b61c911ce671d7a2589872f1add76d9111f4c1114ed9ad825ef5f37483",
       "executed_code_cells": 61,
       "page": "tutorials/introduction/darcy_parallel_scalability.md",
-      "page_sha256": "60009d9aba70c728ccbbc1922de34ccd93604887b5b903cea1932f5f2fcfa105",
+      "page_sha256": "23d63bdc7f6c45b9e9edf42c4852380f4e83c4caf52aaa344e1f9fc29cbf6887",
       "assets": [
         {
           "path": "assets/tutorials/darcy_parallel_scalability/figure_23_1.png",
@@ -125,12 +125,12 @@
     },
     {
       "source_notebook": "notebooks/introduction/darcy_process_scalability.ipynb",
-      "source_sha256": "5c0ca59dd4595476843567c512dae2010d7c41d855f024f55a50128ad0822407",
+      "source_sha256": "bbb95480bba3700411a21adfdd3501ce898472345d0add939937d6ecd995b009",
       "executed_notebook": "build/notebooks/introduction/darcy_process_scalability.ipynb",
-      "executed_sha256": "a2aaf2bca4bfef11feb6f165b09142987ac5f66d6e5e8fb3657aa75b0d3258d0",
+      "executed_sha256": "8aee04a868aa1a2b540ea1fca9b946353db458a9b64e00fe3e70bc17510e70a9",
       "executed_code_cells": 42,
       "page": "tutorials/introduction/darcy_process_scalability.md",
-      "page_sha256": "102c621e39479dc44f3f77dc9fae507e79be14d2f7a2c66248fa663f0830dbc7",
+      "page_sha256": "33a8f67da74e7eca0fbf49de735c1d27f230e6a1cf76810fb44deac947c6e56f",
       "assets": [
         {
           "path": "assets/tutorials/darcy_process_scalability/figure_34_1.png",
@@ -168,12 +168,12 @@
     },
     {
       "source_notebook": "notebooks/introduction/darcy_spe10_layer.ipynb",
-      "source_sha256": "8301726bf5ae442276d26e8a015078099b717059f601929628259c04785a2e44",
+      "source_sha256": "d764ecbe8bd37f77803fff9aa5e7381bc3037ecb8b6a09dced88b14db3b4cbb4",
       "executed_notebook": "build/notebooks/introduction/darcy_spe10_layer.ipynb",
-      "executed_sha256": "8809ed0364ad722974f483d94ed7d309c350543ba7180b34a896269152cdb9cb",
+      "executed_sha256": "07e0366030a08628393e6b38e723dc099ecbd6d27bf8aab116baea0616032de5",
       "executed_code_cells": 16,
       "page": "tutorials/introduction/darcy_spe10_layer.md",
-      "page_sha256": "f66262bde9178fdb85dd31d5e7539f15c23be8475b1d3783df783566295397ce",
+      "page_sha256": "7c4d66ea45ac7fd578c828c20c6a2d8524f464b09dba16fc5559ec131c655813",
       "assets": [
         {
           "path": "assets/tutorials/darcy_spe10_layer/figure_20_0.png",
@@ -195,12 +195,12 @@
     },
     {
       "source_notebook": "notebooks/introduction/mh2m_multiscale.ipynb",
-      "source_sha256": "af94f6cbb96144c752ba6d0c5cfb1d3b39becc283c064dda0769bd1fafa13354",
+      "source_sha256": "a65c8052d5329c883c8cef90764000b8b5586f31b688aaebaafc48e2cf909a44",
       "executed_notebook": "build/notebooks/introduction/mh2m_multiscale.ipynb",
-      "executed_sha256": "be83a6e6cd721e0996384bede7fba740d14ce0ec93cbb78dec74dd72bdc77e64",
+      "executed_sha256": "dad69a6058a784bbe790384f0fc55b5f22299f703fb7ca7c6036c0c42581c486",
       "executed_code_cells": 18,
       "page": "tutorials/introduction/mh2m_multiscale.md",
-      "page_sha256": "c28af33079af748ac23be348429d5dcdf6c4564bf385d176cb27369ec17ccb60",
+      "page_sha256": "f64fcf36ea69399959f8b9c9e9b494a073db6b74e1952e4a2fd852f51c69d827",
       "assets": [
         {
           "path": "assets/tutorials/mh2m_multiscale/figure_21_1.png",

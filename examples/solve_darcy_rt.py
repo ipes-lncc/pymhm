@@ -11,7 +11,8 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm._legacy.models.darcy.mixed_rt import solve_darcy_rt, solve_darcy_rt_conforming
+from examples.formulations.application import rt_darcy as solve_darcy_rt
+from examples.formulations.mixed_darcy import conforming_rt_reference as solve_darcy_rt_conforming
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.triangle import TriangleMesh
 

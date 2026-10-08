@@ -13,9 +13,9 @@ import numpy as np
 from matplotlib.collections import LineCollection
 from matplotlib.patches import Rectangle
 from matplotlib.tri import Triangulation
-from plot_mesh import draw_macro_mesh
-from plot_style import set_refinement_ticks
 
+from examples.plot_mesh import draw_macro_mesh
+from examples.plot_style import set_refinement_ticks
 from pymhm.meshes.triangle import TriangleMesh
 
 ROOT = Path(__file__).resolve().parents[1]

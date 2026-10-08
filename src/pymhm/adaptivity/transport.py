@@ -4,6 +4,7 @@ The face indicator follows Section 4 of
 [Harder, Paredes and Valentin (2015)](https://doi.org/10.1137/130938499).
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
@@ -12,10 +13,11 @@ from numpy.polynomial.legendre import leggauss
 from scipy.spatial import ConvexHull
 from scipy.spatial.distance import pdist
 
-from pymhm._legacy.models.transport.solver import ScalarSolution, solve_transport
+from pymhm._legacy.models.transport.solver import solve_transport
 from pymhm.core.validation import FloatArray, positive_int
 from pymhm.fem.traces.interval import SkeletonSpace
 from pymhm.fem.traces.scalar import prepare_scalar_trace
+from pymhm.postprocessing.solutions import ScalarSolution
 
 
 @dataclass(frozen=True)
@@ -175,6 +177,7 @@ def solve_adaptive_transport(
     theta: float = 0.75,
     tolerance: float = 0.0,
     max_trace_dofs: int | None = None,
+    solve_step: Callable[..., ScalarSolution] | None = None,
     **options: Any,
 ) -> AdaptiveTransportResult:
     """Solve, estimate, mark and bisect faces while keeping macro/local meshes fixed.
@@ -187,8 +190,18 @@ def solve_adaptive_transport(
     The local resolution must remain adequate as the trace space grows; the
     shared rank diagnostics reject incompatible enrichments. Neither local
     refinement nor a solver tolerance is changed automatically.
+
+    ``solve_step(mesh, skeleton=current, **options)`` may consume user-declared
+    public variational equations instead of the built-in transport solver. It
+    must return a ScalarSolution in the supplied mesh and trace space, with the
+    same strong essential boundary and physical Robin/diffusive-flux data.
+    ``None`` retains the built-in solver. The indicator, marking, enrichment
+    and stopping rules are unchanged by this assembly choice.
     """
     positive_int(iterations, "iterations")
+    if solve_step is not None and not callable(solve_step):
+        raise TypeError("solve_step must be callable or None")
+    solver = solve_transport if solve_step is None else solve_step
     if not np.isfinite(tolerance) or tolerance < 0:
         raise ValueError("tolerance must be finite and nonnegative")
     if max_trace_dofs is not None:
@@ -201,7 +214,7 @@ def solve_adaptive_transport(
     solutions, indicators = [], []
     reason = "iterations"
     for iteration in range(iterations):
-        solution = solve_transport(skeleton.mesh, skeleton=skeleton, **options)
+        solution = solver(skeleton.mesh, skeleton=skeleton, **options)
         indicator = estimate_transport_faces(solution, bounds)
         solutions.append(solution)
         indicators.append(indicator)

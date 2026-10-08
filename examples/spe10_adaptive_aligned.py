@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -12,6 +20,7 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_info, threadpool_limits
 
+from examples.formulations.mixed_darcy import conforming_rt_reference as solve_darcy_rt_conforming
 from examples.solve_spe10 import load_layer, pressure_boundary
 from examples.spe10_adaptive import (
     DATA,
@@ -22,7 +31,6 @@ from examples.spe10_adaptive import (
     natural_faces,
     reference_integrals,
 )
-from pymhm._legacy.models.darcy.mixed_rt import solve_darcy_rt_conforming
 
 
 def peak_resident_memory_kib() -> int | None:

@@ -10,31 +10,15 @@ import numpy as np
 from pymhm._legacy.models.transport.rad import _rad_local, _streamline_scale
 from pymhm._legacy.models.transport.solver import ScalarSolution, _transport_local_meshes
 from pymhm.core.validation import FloatArray, IntArray, positive_int
+from pymhm.fem.loads import assemble_load, assemble_mass
 from pymhm.fem.quadrature.material import material_triangle_quadrature
 from pymhm.fem.scalar.operators import boundary_data
 from pymhm.fem.scalar.triangle import element_tabulate, nodal_space
 from pymhm.fem.traces.interval import SkeletonSpace
-from pymhm.fem.vector.operators import _assemble_blocks
 from pymhm.materials.evaluation import scalar_values, tensor_values, vector_values
+from pymhm.materials.macro import MacroCoefficient
 from pymhm.meshes.triangle import TriangleMesh
-
-
-@dataclass(frozen=True)
-class MacroCoefficient:
-    """Explicit one-sided coefficient callbacks, one for each macroelement.
-
-    Entries follow mesh.cells. This wrapper distinguishes a tuple of local
-    fields from an ordinary constant vector or tensor. A field is evaluated
-    exclusively on the corresponding macroelement, including its boundary.
-    """
-
-    fields: tuple[Any, ...]
-
-    def for_cell(self, cell: int, count: int) -> Any:
-        """Select a field after checking the coefficient-to-macro association."""
-        if len(self.fields) != count:
-            raise ValueError("MacroCoefficient requires one field per macroelement")
-        return self.fields[cell]
+from pymhm.postprocessing.transport import TransientTransportResult
 
 
 def _cell_field(field: Any, cell: int, count: int) -> Any:
@@ -78,8 +62,7 @@ class _LoadMap:
     def load(self, source: Any, old: FloatArray, increment: float, boundary: Any) -> FloatArray:
         """Assemble source, consistent previous state, and essential nodal values."""
         force = scalar_values(source, self.points.reshape(-1, 2)).reshape(self.points.shape[:2])
-        elemental = np.einsum("tqi,tq->ti", self.tests, force)
-        load = np.bincount(self.dofs.ravel(), weights=elemental.ravel(), minlength=self.count)
+        load = assemble_load(self.tests, force, 1.0, self.dofs, self.count)
         load += self.previous_mass @ old / increment
         return np.r_[load, scalar_values(boundary, self.boundary_nodes)]
 
@@ -114,54 +97,13 @@ def _load_map(
         tau = _streamline_scale(fine, tensor, beta, effective)
         test += tau[:, :, None] * np.einsum("tqa,tqia->tqi", beta, gradients)
     tests = test * fine.areas[:, None, None] * weights[:, :, None]
-    blocks = np.einsum("tqi,tqj,tq->tij", tests, basis, rho)
-    mass = _assemble_blocks(blocks, dofs, len(nodes))
+    mass = assemble_mass(tests, basis, rho, dofs, dofs, (len(nodes), len(nodes)))
     moments = np.bincount(
         dofs.ravel(),
         weights=np.einsum("t,tq,tqi,tq->ti", fine.areas, weights, basis, rho).ravel(),
         minlength=len(nodes),
     )
     return _LoadMap(dofs, points, tests, mass, moments, len(nodes), nodes[boundary_dofs])
-
-
-@dataclass(frozen=True)
-class TransientTransportResult:
-    """Time history, mass diagnostics and the number of distinct offline operators.
-
-    ``times`` includes the initial time and the retained output times;
-    ``solutions`` excludes the initial state. ``integration_times`` records the
-    complete time grid, including steps discarded by ``output_steps``. The balance
-    residuals sum the original discrete physical equations on each macrocell,
-    including essential-boundary reaction forces. They measure the discrete
-    weak balance, not independent error or fine-cell conservation.
-    When requested, ``original_residual_norms`` and ``original_rhs_norms``
-    include every executed step, in ``integration_times[1:]`` order. They check
-    the full original physical rows and free trace equations, not just their
-    macro sums, using the shared original-equation convention.
-    """
-
-    times: FloatArray
-    solutions: tuple[ScalarSolution, ...]
-    initial_values: tuple[FloatArray, ...]
-    mass_moments: tuple[FloatArray, ...]
-    balance_residuals: tuple[FloatArray, ...]
-    operator_builds: int
-    integration_times: FloatArray | None = None
-    original_residual_norms: FloatArray | None = None
-    original_rhs_norms: FloatArray | None = None
-
-    def total_mass(self) -> FloatArray:
-        """Integrate capacity*u at the initial time and every retained output time."""
-        fields = (self.initial_values, *(solution.values for solution in self.solutions))
-        return np.asarray(
-            [
-                sum(
-                    float(moment @ value)
-                    for moment, value in zip(self.mass_moments, state, strict=True)
-                )
-                for state in fields
-            ]
-        )
 
 
 def solve_transient_transport(

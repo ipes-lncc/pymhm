@@ -60,10 +60,10 @@ def _field(shape: tuple[int, int, int], seed: int) -> MappedWellField:
 
 @pytest.mark.parametrize("order", [(6, 6, 3), (8, 8, 3)])
 @pytest.mark.parametrize("backend,workers", [("thread", 1), ("thread", 4), ("process", 2)])
-def test_joint_equals_pairwise_bitwise(
+def test_joint_matches_pairwise_physical_norms(
     order: tuple[int, int, int], workers: int, backend: str, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Reuse leaves every result bitwise equal, including distinct candidate geometries."""
+    """Spawned BLAS evaluations preserve norms within the declared numerical precision."""
     monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[1] / "examples"))
     fine = _field((4, 4, 1), 31)
     candidates = [_field((2, 2, 2), seed) for seed in (4, 7, 12)]
@@ -83,8 +83,35 @@ def test_joint_equals_pairwise_bitwise(
             backend=backend,
             progress=lambda i, n: progress.append((i, n)),
         )
-    assert actual == expected
+    for result, reference in zip(actual, expected, strict=True):
+        assert result.keys() == reference.keys()
+        for name, value in reference.items():
+            if isinstance(value, float):
+                assert result[name] == pytest.approx(value, rel=1e-10, abs=1e-12)
+            else:
+                assert result[name] == value
     assert progress[-1] == (8, 8)
+
+
+def test_geometry_reuse_requires_identical_coordinates(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Numerical norm tolerances never permit reuse of a distinct geometry array."""
+    module = _example("mapped_well_comparison")
+    constructor = module._GroupIntegrator
+    owners = []
+
+    def record(*args: object) -> object:
+        integrator = constructor(*args)
+        owners.append(integrator.geometry_owner)
+        return integrator
+
+    monkeypatch.setattr(module, "_GroupIntegrator", record)
+    fine = _field((2, 2, 1), 9)
+    first, second = (_field((1, 1, 1), seed) for seed in (3, 4))
+    vertices = second.vertices.copy()
+    vertices[..., 0] += 1e-14
+    third = replace(second, vertices=vertices)
+    differences(fine, [first, second, third], (3, 3, 3))
+    assert owners == [[0, 0, 2]]
 
 
 def test_different_shapes_keep_each_pair_partition_and_zero_norms() -> None:

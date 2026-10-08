@@ -150,7 +150,7 @@ are outside its scope.
 From the repository root:
 
 ```bash
-pixi run -e notebooks python examples/plot_flow_cases.py
+pixi run --locked -e notebooks python -m examples.plot_flow_cases
 ```
 
 The script writes **12 SVG figures, 12 matching PNG files, and `metrics.json`**

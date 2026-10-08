@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import json
 from pathlib import Path
 from typing import Any
@@ -12,16 +20,17 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 import numpy as np
-from field_sampling import sample_profile
 from matplotlib import patheffects
 from matplotlib.collections import LineCollection
 from matplotlib.ticker import NullFormatter
-from plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from threadpoolctl import threadpool_limits
 
+from examples.field_sampling import sample_profile
+from examples.formulations.application import elasticity as solve_elasticity
+from examples.formulations.application import transport as solve_transport
+from examples.formulations.transient import solve_heat_trajectory as solve_heat
+from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.transport.solver import solve_heat, solve_transport
-from pymhm._legacy.models.vector import solve_elasticity
 
 ROOT = Path(__file__).resolve().parents[1]
 FIGURES = ROOT / "docs/figures/scalar-elasticity"

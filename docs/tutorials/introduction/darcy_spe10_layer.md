@@ -109,10 +109,12 @@ skeleton = SkeletonSpace(macro, tuple(FaceSpace.uniform(1, trace_segments, conti
 
 $$
 \begin{aligned}
-\boldsymbol q&=-K\nabla p,&\nabla\cdot\boldsymbol q&=0
-&&\text{in }(0,1200)\times(0,2200),\\
-p(x,0)&=1,&p(x,2200)&=0,&&\\
-\boldsymbol q\cdot\boldsymbol n&=0&&\text{on }x=0\text{ and }x=1200.
+\boldsymbol q&=-K\nabla p,\\
+\nabla\cdot\boldsymbol q&=0
+\quad\text{in }(0,1200)\times(0,2200),\\
+p(x,0)&=1,\qquad p(x,2200)=0,\\
+\boldsymbol q\cdot\boldsymbol n&=0
+\quad\text{on }x=0\text{ and }x=1200.
 \end{aligned}
 $$
 

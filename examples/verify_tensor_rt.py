@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 from pathlib import Path
@@ -14,8 +22,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import tensor_darcy as solve_darcy_tensor_rt
 from pymhm import CartesianMacroMesh
-from pymhm._legacy.models.darcy.tensor import solve_darcy_tensor_rt
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/tensor-rt.json"
@@ -40,7 +48,7 @@ def source(points: np.ndarray) -> np.ndarray:
 
 def plot(rows: list[dict]) -> None:
     """Plot pressure and flux errors in the same panel order as published axis labels."""
-    from plot_style import set_refinement_ticks
+    from examples.plot_style import set_refinement_ticks
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     fig, axes = plt.subplots(3, 2, figsize=(10, 12), layout="constrained")

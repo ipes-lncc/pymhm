@@ -759,7 +759,7 @@ print({"worker_source_sha256": worker_sha256, "one_time_export_import_seconds": 
 ```
 
 ```text
-{'worker_source_sha256': '2481d5bf97719f70c264358a77eb371b6fb87311e81ee650f88250434ba3b41d', 'one_time_export_import_seconds': 0.034636493772268295}
+{'worker_source_sha256': '2481d5bf97719f70c264358a77eb371b6fb87311e81ee650f88250434ba3b41d', 'one_time_export_import_seconds': 0.05595061182975769}
 ```
 
 ## 5. Declare the global problem and complete timer
@@ -1462,35 +1462,35 @@ if RUN_SMALL_REPRODUCTION or RUN_LARGE_CAMPAIGN:
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'scipy', 'total_seconds': 3.885816188529134, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'scipy', 'total_seconds': 3.318527990952134, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'scipy', 'total_seconds': 1.6759192124009132, 'physical_errors': {'pressure_L2': 0.001658052529591906, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.001658052529591906, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'scipy', 'total_seconds': 1.625518025830388, 'physical_errors': {'pressure_L2': 0.001658052529591906, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.001658052529591906, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'pyamg', 'total_seconds': 6.110676731914282, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'pyamg', 'total_seconds': 7.358932936564088, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 9.506132928654552, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 10.415519006550312, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'scipy', 'total_seconds': 0.5961810238659382, 'physical_errors': {'pressure_L2': 0.0014456896117105641, 'flux_L2': 0.19568823135874996, 'pressure_L2_per_sqrt_volume': 0.0014456896117105641, 'flux_L2_per_sqrt_volume': 0.19568823135874996, 'pressure_relative_L2': 0.0040890277117259285, 'flux_relative_L2': 0.05657212369630176, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.2571761369096059, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
+{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'scipy', 'total_seconds': 0.7604887038469315, 'physical_errors': {'pressure_L2': 0.0014456896117105641, 'flux_L2': 0.19568823135874996, 'pressure_L2_per_sqrt_volume': 0.0014456896117105641, 'flux_L2_per_sqrt_volume': 0.19568823135874996, 'pressure_relative_L2': 0.0040890277117259285, 'flux_relative_L2': 0.05657212369630176, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.2571761369096059, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'scipy', 'total_seconds': 2.9537327270954847, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'scipy', 'total_seconds': 2.7255172841250896, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 7.837804462760687, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 7.545385412871838, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 0.5095803253352642, 'physical_errors': {'pressure_L2': 0.001445689611718351, 'flux_L2': 0.1956882313588107, 'pressure_L2_per_sqrt_volume': 0.001445689611718351, 'flux_L2_per_sqrt_volume': 0.1956882313588107, 'pressure_relative_L2': 0.0040890277117479525, 'flux_relative_L2': 0.05657212369631932, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.25717613690960167, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
+{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 0.4931635707616806, 'physical_errors': {'pressure_L2': 0.001445689611718351, 'flux_L2': 0.1956882313588107, 'pressure_L2_per_sqrt_volume': 0.001445689611718351, 'flux_L2_per_sqrt_volume': 0.1956882313588107, 'pressure_relative_L2': 0.0040890277117479525, 'flux_relative_L2': 0.05657212369631932, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.25717613690960167, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
 ```
 
 The weak study below changes domain length, rather than refining the local mesh or changing the coefficient wavelength. Each workflow includes its larger global assembly and solve.
@@ -5315,7 +5315,8 @@ def published_accelerator_figures(record: dict[str, Any]) -> list[tuple[Path, st
             if repository_destination.is_file():
                 destination = repository_destination
             else:
-                raise FileNotFoundError(destination)
+                print(f"Historical accelerator figure unavailable in this source checkout: {filename}")
+                continue
         figures.append((destination, caption))
     return figures
 
