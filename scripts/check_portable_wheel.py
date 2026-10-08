@@ -14,6 +14,21 @@ import tempfile
 import zipfile
 from pathlib import Path
 
+_INSTALLED_IDENTITY_PROGRAM = """
+import json
+import os
+import platform
+from pathlib import Path
+import pymhm
+
+package = Path(pymhm.__file__).resolve()
+installation = Path(os.environ["PYMHM_EXPECT_INSTALL_ROOT"]).resolve()
+assert package.is_relative_to(installation), (
+    f"Imported package {package} is outside wheel installation {installation}"
+)
+print(json.dumps({"platform": platform.platform(), "package": str(package)}))
+"""
+
 
 def check_wheel(directory: Path, report: Path, *, require_pardiso: bool = False) -> int:
     """Check an installed wheel outside the checkout with native dependencies inherited unchanged.
@@ -113,21 +128,29 @@ def check_wheel(directory: Path, report: Path, *, require_pardiso: bool = False)
         if native_library is not None:
             variables["PYPARDISO_MKL_RT"] = native_library["path"]
         identity = subprocess.run(
-            [
-                str(python),
-                "-c",
-                "import json, platform, pymhm; "
-                "from pathlib import Path; import os; "
-                "assert Path(pymhm.__file__).resolve().is_relative_to("
-                "Path(os.environ['PYMHM_EXPECT_INSTALL_ROOT'])); "
-                "print(json.dumps({'platform': platform.platform(), 'package': pymhm.__file__}))",
-            ],
+            [str(python), "-c", _INSTALLED_IDENTITY_PROGRAM],
             cwd=root,
             env=variables,
-            check=True,
+            check=False,
             capture_output=True,
             text=True,
         )
+        print(identity.stderr, end="", file=sys.stderr)
+        report.parent.mkdir(parents=True, exist_ok=True)
+        report.write_text(
+            json.dumps(
+                {
+                    "wheel": wheel.name,
+                    "identity_exit_code": identity.returncode,
+                    "stdout": identity.stdout,
+                    "stderr": identity.stderr,
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        identity.check_returncode()
         if require_pardiso:
             subprocess.run(
                 [str(python), "-c", "import pypardiso"],
@@ -154,7 +177,6 @@ def check_wheel(directory: Path, report: Path, *, require_pardiso: bool = False)
         )
         print(result.stdout, end="")
         print(result.stderr, end="", file=sys.stderr)
-        report.parent.mkdir(parents=True, exist_ok=True)
         report.write_text(
             json.dumps(
                 {
