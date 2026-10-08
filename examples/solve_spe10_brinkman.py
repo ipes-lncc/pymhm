@@ -9,6 +9,14 @@ cut triangular fine elements; the volume quadrature order is recorded explicitly
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -19,16 +27,17 @@ from typing import Any
 
 import numpy as np
 import scipy
-from field_sampling import local_values
-from plot_mesh import macro_profile_breaks
 from threadpoolctl import threadpool_limits
 
+from examples.field_sampling import local_values
+from examples.formulations.application import brinkman as solve_brinkman
+from examples.plot_mesh import macro_profile_breaks
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.vector import VectorSolution, solve_brinkman
 from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.triangle import nodal_space, tabulate
 from pymhm.io.provenance import current_source_manifest
 from pymhm.materials.cartesian import CartesianCellField
+from pymhm.postprocessing.solutions import VectorSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/spe10"

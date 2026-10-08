@@ -18,12 +18,12 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from pymhm.fem.hdiv.mapped import mapped_rt_basis
-from pymhm.meshes.hexahedron import HexMesh, _geometry, cube_quadrature
+from pymhm.meshes.hexahedron import HexMesh, cube_quadrature, hexahedral_mapping
 
 if __package__:
     from .mapped_well_fields import MappedWellField
 else:
-    from mapped_well_fields import MappedWellField
+    from examples.mapped_well_fields import MappedWellField
 
 Geometry = tuple[np.ndarray, np.ndarray, np.ndarray]
 Tables = tuple[np.ndarray, np.ndarray]
@@ -98,7 +98,7 @@ class _GroupIntegrator:
         coarse_basis, _, coarse_modal = mapped_rt_basis(HexMesh.unit_cube(), 1, coarse_points)
         for start in range(0, len(selected), 64):
             ids = selected[start : start + 64]
-            fine_geometry = _geometry(fine.vertices[fine_ids[ids]], fine_points)
+            fine_geometry = hexahedral_mapping(fine.vertices[fine_ids[ids]], fine_points)
             fp, fq = _values(fine, fine_ids[ids], (fine_basis, fine_modal), fine_geometry)
             x, _, det = fine_geometry
             physical_weights = det * weights / np.prod(fine_ratio)
@@ -112,7 +112,9 @@ class _GroupIntegrator:
             for index, field in enumerate(candidates):
                 owner = geometry_owner[index]
                 if owner not in geometries:
-                    geometries[owner] = _geometry(field.vertices[coarse_ids[ids]], coarse_points)
+                    geometries[owner] = hexahedral_mapping(
+                        field.vertices[coarse_ids[ids]], coarse_points
+                    )
                 coarse_geometry = geometries[owner]
                 cp, cq = _values(
                     field, coarse_ids[ids], (coarse_basis, coarse_modal), coarse_geometry

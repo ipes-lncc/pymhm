@@ -175,7 +175,6 @@ def test_compiler_output_must_preserve_literal_map_and_basis() -> None:
         ({"coarse_sizes": [False]}, "integers"),
         ({"coarse_sizes": [1.2]}, "integers"),
         ({"coarse_sizes": [-1]}, "integers"),
-        ({"coarse_sizes": []}, "at least"),
         ({"boundary_load": [1]}, "shape"),
         ({"boundary_load": [1j, 0]}, "real"),
         ({"boundary_load": [1, np.inf]}, "finite"),

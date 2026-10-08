@@ -1,7 +1,7 @@
 # Scalar methods and local element choices
 
-This tutorial solves small analytical problems through the public high-level
-interfaces. Select a method and a local element family in its notebook cell; each
+This tutorial solves small analytical problems through publicly declared
+local and global equations. Select a method and a local element family in its notebook cell; each
 choice assembles its declared spaces and measures the scalar and available flux
 errors separately. The examples exercise boundary conventions and physical
 fields. They are analytical patches, not convergence studies or reproductions
@@ -12,8 +12,9 @@ The primal Darcy construction follows
 The analytical patches below use explicitly declared data and discretizations.
 
 The primary notebook cells declare local and global equations through the
-generic variational interface. Their method-family comparisons retain the
-predefined solvers. The [provider tutorial](providers.md) and
+generic variational interface. Their method-family controls use editable
+providers in `examples/formulations`; each states its spaces, energy, coupling,
+kernel and boundary data. The [provider tutorial](providers.md) and
 [variational guide](../variational.md) explain the form contract independently
 of those comparisons.
 
@@ -59,15 +60,16 @@ $$
 p=1+x^2+2y^2,\qquad q=(-2x,-4y),\qquad f=-6.
 $$
 
-A direct public solve contains the same information as the corresponding
+A direct API composition contains the same information as the corresponding
 tutorial choice:
 
 ```python
-from pymhm import TriangleMesh
-from pymhm._legacy.models.darcy.mixed_bdm import solve_darcy_bdm
+from pymhm import TriangleMesh, assemble
+from examples.formulations.darcy import pressure_constraints
+from examples.formulations.mixed_darcy import define_bdm_darcy, recover_bdm_darcy
 from examples.tutorial_scalar_variants import affine_pressure, affine_flux
 
-solution = solve_darcy_bdm(
+definition = define_bdm_darcy(
     TriangleMesh.unit_square(),
     degree=1,
     enrichment=1,
@@ -76,8 +78,12 @@ solution = solve_darcy_bdm(
     dirichlet=affine_pressure,
     source=0.0,
 )
+system = assemble(definition.problem)
+coefficients = system.solve(constraints=pressure_constraints(definition, system))
+solution = recover_bdm_darcy(definition, system, coefficients)
 print(solution.l2_error(affine_pressure, order=8))
 print(solution.flux_l2_error(affine_flux, order=8))
+print(coefficients.field("flux_divergence")[0].evaluate([[0.1, 0.1]]))
 ```
 
 Here `degree` controls the fine-edge normal degree; `enrichment` changes
@@ -151,11 +157,12 @@ order labels in the paper. The
 gives the explicit tensor factors, Piola convention and physical mean gauge.
 
 ```python
-from pymhm import AffineMixedMesh
-from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
+from pymhm import AffineMixedMesh, assemble
+from examples.formulations.darcy import pressure_constraints
+from examples.formulations.mixed_darcy_3d import define_hdiv_darcy, recover_hdiv_darcy
 from examples.tutorial_scalar_variants import affine_pressure, affine_flux
 
-solution = solve_darcy_hdiv3d(
+definition = define_hdiv_darcy(
     AffineMixedMesh.unit_cube(kind="tetrahedron"),
     pressure_degree=2,
     normal_degree=1,
@@ -164,6 +171,9 @@ solution = solve_darcy_hdiv3d(
     local_refinement=1,
     dirichlet=affine_pressure,
 )
+system = assemble(definition.problem)
+coefficients = system.solve(constraints=pressure_constraints(definition, system))
+solution = recover_hdiv_darcy(definition, system, coefficients)
 print(solution.errors(affine_pressure, affine_flux))
 ```
 
@@ -210,9 +220,11 @@ and [Fernando et al. (2023)](https://doi.org/10.1007/s40314-023-02304-y) for PGM
 `rad` and `rad-supg` solve the conservative scalar operator
 
 $$
--\Delta u+\nabla\cdot(\beta u)+cu=f,\qquad
-\beta=(1/4,-1/2),\quad c=1/2,\quad
-f=-3/4+\frac12(1+x+2y).
+\begin{aligned}
+-\Delta u+\nabla\cdot(\beta u)+cu&=f,\\
+\beta&=(1/4,-1/2),\qquad c=1/2,\\
+f&=-3/4+\frac12(1+x+2y).
+\end{aligned}
 $$
 
 The solution is $u=1+x+2y$. Both use $P_2$ local fields and the $P_1$

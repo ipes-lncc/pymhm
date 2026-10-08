@@ -9,8 +9,8 @@ from pathlib import Path
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import elasticity as solve_elasticity
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.vector import solve_elasticity
 from pymhm.estimators.elasticity import estimate_primal_elasticity_error
 from pymhm.fem.scalar.triangle import nodal_space, reference_basis
 from pymhm.io.provenance import current_source_manifest

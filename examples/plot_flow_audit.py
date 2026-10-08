@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import json
 from pathlib import Path
 from typing import Any
@@ -12,8 +20,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.figure import Figure
-from plot_mesh import macro_profile_breaks, mark_macro_interfaces
 
+from examples.plot_mesh import macro_profile_breaks, mark_macro_interfaces
 from pymhm import TriangleMesh
 
 LABELS = {"usfem": "USFEM P1/P1", "taylor-hood": "Taylor–Hood P2/P1"}

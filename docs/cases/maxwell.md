@@ -234,8 +234,8 @@ curl identities, divergence and PEC traces are checked by complex-step
 differentiation.
 
 ```bash
-pixi run -e notebooks python -m examples.maxwell_campaign
-pixi run -e notebooks python -m examples.plot_maxwell
+pixi run --locked -e notebooks python -m examples.maxwell_campaign
+pixi run --locked -e notebooks python -m examples.plot_maxwell
 ```
 
 The [numerical records](../figures/maxwell/comparison.json) identify every

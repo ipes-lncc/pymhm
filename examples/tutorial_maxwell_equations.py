@@ -10,14 +10,18 @@ patch comparison, without a temporal convergence or conforming H(curl) claim.
 from __future__ import annotations
 
 from collections.abc import Callable
+from contextlib import ExitStack
 from dataclasses import dataclass
 from functools import partial
+from types import TracebackType
 from typing import Any
 
 import numpy as np
 
-from pymhm.core.equations import Equation, LocalEquations
-from pymhm.core.multiscale import MultiscaleProblem, assemble, solve
+from examples.formulations.original import solve_original
+from pymhm.core.equations import Equation, LocalEquations, compile_form
+from pymhm.core.multiscale import MultiscaleProblem, assemble
+from pymhm.core.online import OfflineMultiscaleSystem
 from pymhm.core.validation import FloatArray
 from pymhm.execution.cpu import ExecutionConfig
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
@@ -35,7 +39,10 @@ from pymhm.fem.vector.curl import (
     tangential_moments,
     volume_load,
 )
+from pymhm.linalg.linear import factorize
 from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.postprocessing.electromagnetic import MaxwellSolution
+from pymhm.postprocessing.nodal import nodal_field
 
 _SERIAL = ExecutionConfig()
 ElectricItem = tuple[CurlOperators, FloatArray, FloatArray, FloatArray, float]
@@ -59,16 +66,9 @@ class Discretization:
 
 
 @dataclass(frozen=True)
-class LeapfrogState:
+class LeapfrogState(MaxwellSolution):
     """Independent coefficients with electric time leading magnetic time by dt/2."""
 
-    electric: tuple[FloatArray, ...]
-    magnetic: tuple[FloatArray, ...]
-    trace: FloatArray
-    electric_time: float
-    magnetic_time: float
-    energy: float
-    energy_balance_residual: float = 0.0
     constraint_moment_norm: float = 0.0
     original_electric_residual: float = 0.0
 
@@ -161,6 +161,15 @@ def electric_equations(item: ElectricItem) -> LocalEquations:
         b=duration / 2 * local.coupling,
         c=-local.coupling.T,
         dofs=local.trace_dofs,
+        field_data=(
+            nodal_field(
+                "electric_midpoint",
+                local.mesh,
+                local.degree,
+                components=1 if local.mesh.points.shape[1] == 2 else 3,
+                discontinuous=True,
+            ),
+        ),
     )
 
 
@@ -173,6 +182,15 @@ def magnetic_equations(item: MagneticItem) -> LocalEquations:
         b=0,
         c=0,
         dofs=[],
+        field_data=(
+            nodal_field(
+                "magnetic",
+                local.mesh,
+                local.degree,
+                components=local.mesh.points.shape[1],
+                discontinuous=True,
+            ),
+        ),
     )
 
 
@@ -182,11 +200,12 @@ def electric_global(data: Discretization, boundary: FloatArray) -> Equation:
 
 
 def _independent_mass(
-    items: tuple[tuple[Any, FloatArray], ...], execution: ExecutionConfig
+    items: tuple[tuple[Any, FloatArray], ...], execution: ExecutionConfig, original: bool = False
 ) -> tuple[FloatArray, ...]:
     """Solve independent mass equations through the same zero-trace global problem."""
     problem = MultiscaleProblem(Equation(0, 0), mass_equations, items, 0, (0,) * len(items))
-    return solve(problem, execution=execution).fields
+    system = assemble(problem, execution=execution)
+    return (solve_original(system) if original else system.solve()).fields
 
 
 def _source(data: Discretization, value: Any, time: float) -> tuple[FloatArray, ...]:
@@ -215,6 +234,8 @@ def electric_kick(
     execution: ExecutionConfig = _SERIAL,
     electric_provider: Callable[[ElectricItem], LocalEquations] = electric_equations,
     global_provider: Callable[[Discretization, FloatArray], Equation] = electric_global,
+    runtime: EquationLeapfrog | None = None,
+    original: bool = False,
 ) -> tuple[tuple[FloatArray, ...], FloatArray, tuple[FloatArray, ...], float, float]:
     """Solve the declared midpoint hybrid equations and recover Enew=2w-Eold.
 
@@ -226,20 +247,23 @@ def electric_kick(
         (local, e, h, f, duration)
         for local, e, h, f in zip(data.locals, electric, magnetic, forcing, strict=True)
     )
-    problem = MultiscaleProblem(
-        global_provider(data, boundary),
-        electric_provider,
-        items,
-        data.skeleton.size,
-        (0,) * len(items),
-    )
-    system = assemble(problem, execution=execution)
-    solution = system.solve()
+    if runtime is None or original:
+        problem = MultiscaleProblem(
+            global_provider(data, boundary),
+            electric_provider,
+            items,
+            data.skeleton.size,
+            (0,) * len(items),
+        )
+        system = assemble(problem, execution=execution)
+        solution = solve_original(system) if original else system.solve()
+    else:
+        system, solution = runtime.electric_solve(items, boundary)
     average, trace = solution.fields, solution.trace
     updated = tuple(2 * mean - old for mean, old in zip(average, electric, strict=True))
     moments = tangential_moments(data.locals, average, data.skeleton.size)
     constraint = moments - data.impedance @ trace - boundary
-    original = 0.0
+    original_residual = 0.0
     scale = max(
         np.linalg.norm(moments),
         np.linalg.norm(data.impedance @ trace),
@@ -259,12 +283,14 @@ def electric_kick(
             + np.linalg.norm(abs(load)),
             np.finfo(float).tiny,
         )
-        original = max(original, float(np.linalg.norm(lhs + coupling - load) / row_scale))
+        original_residual = max(
+            original_residual, float(np.linalg.norm(lhs + coupling - load) / row_scale)
+        )
         uncancelled += np.linalg.norm(
             abs(local.coupling).T
             @ (abs(response.source) + abs(response.lifts) @ abs(trace[local.trace_dofs]))
         )
-    if original > 1e-10 or np.linalg.norm(constraint) > 1e-10 * max(scale, uncancelled):
+    if original_residual > 1e-10 or np.linalg.norm(constraint) > 1e-10 * max(scale, uncancelled):
         raise RuntimeError("user-defined electric equations fail their original physical balance")
     return updated, trace, average, float(np.linalg.norm(constraint)), original
 
@@ -292,6 +318,8 @@ def initialize(
     execution: ExecutionConfig = _SERIAL,
     electric_provider: Callable[[ElectricItem], LocalEquations] = electric_equations,
     global_provider: Callable[[Discretization, FloatArray], Equation] = electric_global,
+    runtime: EquationLeapfrog | None = None,
+    original: bool = False,
 ) -> LeapfrogState:
     """Mass-project initial fields, enforce PEC moments and take the half electric kick."""
     dimension = data.skeleton.mesh.points.shape[1]
@@ -305,6 +333,7 @@ def initialize(
             for local in data.locals
         ),
         execution,
+        original,
     )
     h = _independent_mass(
         tuple(
@@ -315,6 +344,7 @@ def initialize(
             for local in data.locals
         ),
         execution,
+        original,
     )
     absorbing_ids = (
         np.concatenate([data.skeleton.dofs(face) for face in data.absorbing])
@@ -340,9 +370,10 @@ def initialize(
             (0,) * len(items),
             fixed={int(index): 0.0 for index in absorbing_ids},
         )
-        e = solve(problem, execution=execution).fields
+        system = assemble(problem, execution=execution)
+        e = (solve_original(system) if original else system.solve()).fields
     duration = data.time_step / 2
-    e, trace, _, constraint, original = electric_kick(
+    e, trace, _, constraint, original_residual = electric_kick(
         data,
         e,
         h,
@@ -352,16 +383,23 @@ def initialize(
         execution=execution,
         electric_provider=electric_provider,
         global_provider=global_provider,
+        runtime=runtime,
+        original=original,
     )
     return LeapfrogState(
-        e,
-        h,
-        trace,
-        duration,
-        0.0,
-        modified_energy(data, e, h),
+        skeleton=data.skeleton,
+        locals=data.locals,
+        electric=e,
+        magnetic=h,
+        trace=trace,
+        electric_time=duration,
+        magnetic_time=0.0,
+        time_step=data.time_step,
+        frequency_bound=data.frequency_bound,
+        energy=modified_energy(data, e, h),
+        energy_balance_residual=0.0,
         constraint_moment_norm=constraint,
-        original_electric_residual=original,
+        original_electric_residual=original_residual,
     )
 
 
@@ -380,6 +418,8 @@ def advance(
     electric_provider: Callable[[ElectricItem], LocalEquations] = electric_equations,
     magnetic_provider: Callable[[MagneticItem], LocalEquations] = magnetic_equations,
     global_provider: Callable[[Discretization, FloatArray], Equation] = electric_global,
+    runtime: EquationLeapfrog | None = None,
+    original: bool = False,
 ) -> LeapfrogState:
     """Advance magnetic then electric fields using user-specified LocalEquations."""
     dt = data.time_step
@@ -387,13 +427,17 @@ def advance(
         (local, e, h, dt)
         for local, e, h in zip(data.locals, state.electric, state.magnetic, strict=True)
     )
-    magnetic_problem = MultiscaleProblem(
-        Equation(0, 0), magnetic_provider, magnetic_items, 0, (0,) * len(magnetic_items)
-    )
-    magnetic = solve(magnetic_problem, execution=execution).fields
+    if runtime is None:
+        magnetic_problem = MultiscaleProblem(
+            Equation(0, 0), magnetic_provider, magnetic_items, 0, (0,) * len(magnetic_items)
+        )
+        system = assemble(magnetic_problem, execution=execution)
+        magnetic = (solve_original(system) if original else system.solve()).fields
+    else:
+        magnetic = runtime.magnetic_solve(magnetic_items)
     time = state.magnetic_time + dt
     forcing, boundary = _source(data, source, time), boundary_load(data, time)
-    electric, trace, average, constraint, original = electric_kick(
+    electric, trace, average, constraint, original_residual = electric_kick(
         data,
         state.electric,
         magnetic,
@@ -403,21 +447,27 @@ def advance(
         execution=execution,
         electric_provider=electric_provider,
         global_provider=global_provider,
+        runtime=runtime,
+        original=original,
     )
     energy = modified_energy(data, electric, magnetic)
     work = sum(f @ e for f, e in zip(forcing, average, strict=True))
     loss = trace @ (data.impedance @ trace + boundary)
     balance = float(energy - state.energy - dt * (work - loss))
     return LeapfrogState(
-        electric,
-        magnetic,
-        trace,
-        state.electric_time + dt,
-        time,
-        energy,
-        balance,
-        constraint,
-        original,
+        skeleton=data.skeleton,
+        locals=data.locals,
+        electric=electric,
+        magnetic=magnetic,
+        trace=trace,
+        electric_time=state.electric_time + dt,
+        magnetic_time=time,
+        time_step=data.time_step,
+        frequency_bound=data.frequency_bound,
+        energy=energy,
+        energy_balance_residual=balance,
+        constraint_moment_norm=constraint,
+        original_electric_residual=original_residual,
     )
 
 
@@ -457,3 +507,111 @@ def compare_state(state: LeapfrogState, reference: Any) -> dict[str, float]:
     result["electric_time_difference"] = float(abs(state.electric_time - reference.electric_time))
     result["magnetic_time_difference"] = float(abs(state.magnetic_time - reference.magnetic_time))
     return result
+
+
+class EquationLeapfrog:
+    """Execute the declared leapfrog forms with explicitly owned reusable factors.
+
+    This application helper owns its mathematical midpoint/magnetic equations;
+    the package supplies only generic assembly, source updates and solves.
+    Fixed spaces and materials keep all A/B/C/D blocks unchanged during this
+    march. The full-step and initial half-step electric equations have separate
+    offline systems. Callers changing an operator prepare a new runtime.
+    """
+
+    def __init__(
+        self,
+        mesh: Any,
+        *,
+        degree: int = 3,
+        local_refinement: int = 1,
+        absorbing: Any = None,
+        **options: Any,
+    ) -> None:
+        """Prepare declared curl/mass/trace operators without invoking a physical solver."""
+        self.data = prepare(
+            mesh,
+            degree=degree,
+            local_refinement=local_refinement,
+            absorbing=absorbing,
+            **options,
+        )
+        self.skeleton, self.locals = self.data.skeleton, self.data.locals
+        self.time_step, self.frequency_bound = self.data.time_step, self.data.frequency_bound
+        self._resources = ExitStack()
+        self._electric: dict[float, tuple[Any, Any]] = {}
+        self._magnetic: Any = None
+        self._closed = False
+        self.state: LeapfrogState | None = None
+
+    def electric_solve(
+        self, items: tuple[ElectricItem, ...], boundary: FloatArray
+    ) -> tuple[Any, Any]:
+        """Update only midpoint forcing and boundary moments in fixed variational operators."""
+        if self._closed:
+            raise RuntimeError("equation leapfrog runtime is closed")
+        duration = items[0][-1]
+        if duration not in self._electric:
+            problem = MultiscaleProblem(
+                electric_global(self.data, boundary),
+                electric_equations,
+                items,
+                self.skeleton.size,
+                (0,) * len(items),
+            )
+            system = assemble(problem)
+            offline = self._resources.enter_context(OfflineMultiscaleSystem(system))
+            factor = self._resources.enter_context(factorize(system.matrix))
+            self._electric[duration] = offline, factor
+        offline, factor = self._electric[duration]
+        loads = tuple(compile_form(electric_equations(item).L) for item in items)
+        system = offline.with_loads(loads, global_load=-boundary)
+        return system, system.solve(factorization=factor)
+
+    def magnetic_solve(self, items: tuple[MagneticItem, ...]) -> tuple[FloatArray, ...]:
+        """Reuse independent mass operators for the explicit magnetic right-hand sides."""
+        if self._closed:
+            raise RuntimeError("equation leapfrog runtime is closed")
+        if self._magnetic is None:
+            problem = MultiscaleProblem(
+                Equation(0, 0), magnetic_equations, items, 0, (0,) * len(items)
+            )
+            self._magnetic = self._resources.enter_context(
+                OfflineMultiscaleSystem(assemble(problem))
+            )
+        loads = tuple(compile_form(magnetic_equations(item).L) for item in items)
+        return self._magnetic.solve(loads).fields
+
+    def initialize(
+        self, electric: Any = 0.0, magnetic: Any = 0.0, *, source: Any = 0.0
+    ) -> LeapfrogState:
+        """Mass-project the supplied physical fields and execute the initial half kick."""
+        self.state = initialize(self.data, electric, magnetic, source=source, runtime=self)
+        return self.state
+
+    def advance(self, source: Any = 0.0) -> LeapfrogState:
+        """Advance the explicit stored state through the user-written time equations."""
+        if self.state is None:
+            raise RuntimeError("initialize the physical fields before advancing")
+        self.state = advance(self.data, self.state, source=source, runtime=self)
+        return self.state
+
+    def close(self) -> None:
+        """Release every retained local/global factor on all exit paths."""
+        self._closed = True
+        self._resources.close()
+
+    def __enter__(self) -> EquationLeapfrog:
+        """Enter an open explicit-lifetime equation runtime."""
+        if self._closed:
+            raise RuntimeError("equation leapfrog runtime is closed")
+        return self
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None:
+        """Release factors after success or an unsuccessful field update."""
+        self.close()

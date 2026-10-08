@@ -10,13 +10,9 @@ from unittest.mock import patch
 
 import numpy as np
 
-from examples.elastodynamics_campaign import ElasticWave, norms
+from examples.elastodynamics_campaign import ElasticWave
 from examples.minimal_wave_convergence import digest, quadrature_change, require_original, write
-from pymhm._legacy.models.waves.elastodynamics import (
-    ElastodynamicLocal,
-    ElastodynamicStepper,
-    _stress_from_gradient,
-)
+from examples.tutorial_elastodynamic_equations import advance, initialize, prepare
 from pymhm.fem.reference import (
     monomial_tabulation,
     orthogonal_polynomial_tabulation,
@@ -25,6 +21,7 @@ from pymhm.fem.reference import (
 from pymhm.fem.scalar.tetrahedron import tetra_nodal_space, tetra_tabulate, tetrahedron_quadrature
 from pymhm.fem.scalar.tetrahedron_topology import tetra_indices
 from pymhm.meshes.tetrahedron import TetraMesh, tetra_barycentric_gradients
+from pymhm.postprocessing.dynamics import ElastodynamicLocal, stress_from_gradient
 
 
 def executed_basis_arrays(degree: int) -> dict[str, np.ndarray]:
@@ -130,8 +127,8 @@ def field_norms(
         v = solution.velocity[index].reshape(-1, 3)[dofs]
         numerical_u = np.einsum("qi,tia->tqa", basis, u)
         numerical_v = np.einsum("qi,tia->tqa", basis, v)
-        stress = _stress_from_gradient(local, points, np.einsum("tqib,tia->tqab", gradient, u))
-        exact_stress = _stress_from_gradient(local, points, amplitude * exact_gradient)
+        stress = stress_from_gradient(local, points, np.einsum("tqib,tia->tqab", gradient, u))
+        exact_stress = stress_from_gradient(local, points, amplitude * exact_gradient)
         errors = (
             np.sum((numerical_u - amplitude * exact) ** 2, axis=-1),
             np.sum((numerical_v - velocity * exact) ** 2, axis=-1),
@@ -151,23 +148,27 @@ def field_norms(
 
 
 def original_update(
-    stepper: ElastodynamicStepper,
+    stepper: Any,
     old_u: tuple[np.ndarray, ...],
     old_v: tuple[np.ndarray, ...],
     loads: dict[int, list[np.ndarray]],
     old_energy: float,
+    *,
+    after: Any = None,
 ) -> dict[str, float]:
     """Evaluate original Newmark momentum, kinematics, weak trace and energy/work blocks."""
     dt = stepper.time_step
     momentum, kinematic, work = 0.0, 0.0, 0.0
-    work_scale = abs(old_energy) + abs(stepper.solution().energy)
+    current = stepper if after is None else after
+    energy = stepper.solution().energy if after is None else after.energy
+    work_scale = abs(old_energy) + abs(energy)
     for local, u0, v0, u1, v1 in zip(
-        stepper.locals, old_u, old_v, stepper.displacement, stepper.velocity, strict=True
+        stepper.locals, old_u, old_v, current.displacement, current.velocity, strict=True
     ):
         f0, f1 = loads[id(local)]
         inertia = local.mass @ (v1 - v0)
         internal = local.stiffness @ (u0 + u1)
-        traction = 2 * (local.coupling @ stepper.trace[local.trace_dofs])
+        traction = 2 * (local.coupling @ current.trace[local.trace_dofs])
         defect = inertia - dt / 2 * (f0 + f1 - internal - traction)
         scale = np.linalg.norm(inertia) + dt / 2 * (
             np.linalg.norm(f0 + f1) + np.linalg.norm(internal) + np.linalg.norm(traction)
@@ -183,19 +184,22 @@ def original_update(
         term = np.dot(u1 - u0, f0 + f1 - traction) / 2
         work += float(term)
         work_scale += abs(float(term))
-    moments = stepper._moments(stepper.displacement)
+    moments = np.zeros(len(stepper.boundary))
+    for local, values in zip(stepper.locals, current.displacement, strict=True):
+        np.add.at(moments, local.trace_dofs, local.coupling.T @ values)
+    free = np.setdiff1d(np.arange(len(stepper.boundary)), list(getattr(stepper, "fixed", {})))
     trace_scale = sum(
         float(np.linalg.norm(abs(local.coupling).T @ abs(u)))
-        for local, u in zip(stepper.locals, stepper.displacement, strict=True)
+        for local, u in zip(stepper.locals, current.displacement, strict=True)
     )
     return {
         "momentum_relative": momentum,
         "kinematic_relative": kinematic,
         "weak_displacement_trace_relative": float(
-            np.linalg.norm((moments - stepper.boundary)[stepper.free])
+            np.linalg.norm((moments - stepper.boundary)[free])
             / max(trace_scale, np.finfo(float).tiny)
         ),
-        "energy_work_relative": abs(stepper.solution().energy - old_energy - work)
+        "energy_work_relative": abs(energy - old_energy - work)
         / max(work_scale, np.finfo(float).tiny),
     }
 
@@ -207,7 +211,7 @@ def acquire(output: Path, *, levels: tuple[int, ...] = (1, 2, 3)) -> dict[str, A
         raise ValueError("Initial spatial levels are n=1,2,3")
     for n in levels:
         started = perf_counter()
-        with ElastodynamicStepper(
+        with prepare(
             TetraMesh.unit_cube(n),
             time_step=0.005,
             degree=3,
@@ -218,7 +222,7 @@ def acquire(output: Path, *, levels: tuple[int, ...] = (1, 2, 3)) -> dict[str, A
             backend="serial",
             workers=1,
         ) as stepper:
-            result = stepper.initialize()
+            result = initialize(stepper)
             maxima: dict[str, float] = {}
             original_load = ElastodynamicLocal.load_at_time
             loads: dict[int, list[np.ndarray]] = {}
@@ -238,16 +242,19 @@ def acquire(output: Path, *, levels: tuple[int, ...] = (1, 2, 3)) -> dict[str, A
 
             with patch.object(ElastodynamicLocal, "load_at_time", observed_load):
                 for _ in range(5):
-                    old_u, old_v, energy = stepper.displacement, stepper.velocity, result.energy
+                    old_u, old_v, energy = result.displacement, result.velocity, result.energy
                     loads.clear()
-                    result = stepper.advance(model.source)
-                    checks = original_update(stepper, old_u, old_v, loads, energy)
+                    result = advance(stepper, result, model.source)
+                    checks = original_update(stepper, old_u, old_v, loads, energy, after=result)
                     require_original(checks)
                     maxima = {
                         key: max(maxima.get(key, 0.0), value) for key, value in checks.items()
                     }
-            error_order = 10
-            low, high = norms(result, model, error_order), norms(result, model, error_order + 2)
+            error_order = 12
+            low, high = (
+                field_norms(result, model, error_order),
+                field_norms(result, model, error_order + 2),
+            )
             sensitivity = quadrature_change(low, high)
             if sensitivity > 1e-6:
                 raise ArithmeticError("Elastic-wave physical error quadrature is unresolved")
@@ -258,8 +265,8 @@ def acquire(output: Path, *, levels: tuple[int, ...] = (1, 2, 3)) -> dict[str, A
                 displacement=np.asarray(result.displacement),
                 velocity=np.asarray(result.velocity),
                 trace=result.trace,
-                macro_points=stepper.mesh.points,
-                macro_cells=stepper.mesh.cells,
+                macro_points=stepper.skeleton.mesh.points,
+                macro_cells=stepper.skeleton.mesh.cells,
                 local_points=np.asarray([local.mesh.points for local in stepper.locals]),
                 local_cells=np.asarray([local.mesh.cells for local in stepper.locals]),
                 **retained_basis,
@@ -270,7 +277,7 @@ def acquire(output: Path, *, levels: tuple[int, ...] = (1, 2, 3)) -> dict[str, A
             rows.append(
                 {
                     "level": n,
-                    "macro_cells": len(stepper.mesh.cells),
+                    "macro_cells": len(stepper.skeleton.mesh.cells),
                     "time": result.time,
                     "norms": high,
                     "original_equations": maxima,

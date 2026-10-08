@@ -15,31 +15,23 @@ from typing import Any
 import numpy as np
 from scipy import sparse
 
-from pymhm._legacy.models.elasticity.boundary import require_compatible_displacement_flux
-from pymhm._legacy.models.elasticity.mixed_pressure import _boundary_volume_flux
-from pymhm._legacy.models.elasticity.stress import (
-    MixedElasticitySolution,
-    _displacement_moments,
-    _rigid_values,
-    _stress_trace_moments,
-)
-from pymhm._legacy.models.elasticity.stress import (
-    _operators as bdm_operators,
-)
-from pymhm._legacy.models.elasticity.stress_tensor import (
-    TensorRTElasticitySolution,
-    _modal_rigid,
-)
-from pymhm._legacy.models.elasticity.stress_tensor import (
-    _operators as tensor_operators,
-)
 from pymhm.core.equations import Equation, LocalEquations
 from pymhm.core.multiscale import MultiscaleProblem, MultiscaleSystem, assemble
 from pymhm.fem.hdiv.bdm_family import BDMFamily
-from pymhm.fem.hdiv.tensor_rt import _trace_map
+from pymhm.fem.hdiv.tensor_rt import tensor_rt_trace_map as _trace_map
 from pymhm.fem.scalar.operators import boundary_data
 from pymhm.fem.scalar.triangle import multiindices
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.fem.traces.physical import boundary_normal_integral as _boundary_volume_flux
+from pymhm.fem.traces.physical import require_compatible_displacement_flux
+from pymhm.fem.vector.stress import displacement_rigid_moments as _displacement_moments
+from pymhm.fem.vector.stress import mixed_elasticity_operators as bdm_operators
+from pymhm.fem.vector.stress import rigid_values as _rigid_values
+from pymhm.fem.vector.stress import stress_trace_moments as _stress_trace_moments
+from pymhm.fem.vector.stress_tensor import tensor_rigid_moments as _modal_rigid
+from pymhm.fem.vector.stress_tensor import tensor_stress_operators as tensor_operators
+from pymhm.postprocessing.stress import MixedElasticitySolution
+from pymhm.postprocessing.stress_tensor import TensorRTElasticitySolution
 
 
 @dataclass(frozen=True)

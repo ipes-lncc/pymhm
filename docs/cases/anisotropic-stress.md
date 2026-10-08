@@ -149,10 +149,10 @@ show the signed error on its physical scale.
 ## Reproduce
 
 ```bash
-pixi run -e notebooks python -m examples.solve_core_extensions elasticity
-pixi run -e notebooks python -m examples.sample_core_elasticity
-pixi run -e notebooks python -m examples.sample_core_elasticity --projection-study
-pixi run -e notebooks python -m examples.plot_core_extensions elasticity
+pixi run --locked -e notebooks python -m examples.solve_core_extensions elasticity
+pixi run --locked -e notebooks python -m examples.sample_core_elasticity
+pixi run --locked -e notebooks python -m examples.sample_core_elasticity --projection-study
+pixi run --locked -e notebooks python -m examples.plot_core_extensions elasticity
 ```
 
 The acquisition stores physical errors, quadrature comparisons, source hashes

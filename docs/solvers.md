@@ -436,7 +436,7 @@ bound or an acceleration claim.
 
 ```bash
 pixi run --locked -e test-core python benchmarks/block_solver.py --backend pyamg --output block-cpu.json
-pixi run -e gpu python benchmarks/block_solver.py --backend amgx --output block-gpu.json
+pixi run --locked -e gpu python benchmarks/block_solver.py --backend amgx --output block-gpu.json
 ```
 
 The [individual measurements](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution)

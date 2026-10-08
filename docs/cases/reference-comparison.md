@@ -111,7 +111,7 @@ not included in the distribution. The visualization script reads the archived
 results without an MSL installation or a new finite element solve:
 
 ```bash
-pixi run -e notebooks python examples/plot_reference_comparison.py
+pixi run --locked -e notebooks python -m examples.plot_reference_comparison
 ```
 
 The executed verification checked every pressure coefficient and every raw flux

@@ -5,6 +5,66 @@ from typing import Any
 import numpy as np
 
 from pymhm.core.contracts import LocalProblem, LocalResponse, _array
+from pymhm.core.validation import FloatArray, real_array
+
+
+def moment_complement(moments: Any, *, pivots: Any = None) -> FloatArray:
+    """Construct coordinates annihilating independent declared moments.
+
+    ``moments`` is a real ``(n, m)`` matrix: its columns represent linear
+    functionals on an ``n``-coefficient vector. A vector declares one moment.
+    The returned ``(n, n - m)`` matrix ``Z`` satisfies ``moments.T @ Z = 0``.
+    Its free-coordinate rows form the identity, in ascending coordinate order;
+    pivot rows enforce the moments. This convention fixes scale and orientation
+    without choosing an arbitrary numerical nullspace basis.
+
+    ``pivots`` optionally declares the ``m`` constrained coordinates. Otherwise
+    the largest absolute entry is selected for one moment, and column-pivoted
+    QR of ``moments.T`` selects coordinates for several moments. Near-ties in
+    QR can depend on the numerical platform: archive the executed matrix with
+    persisted coefficients, or supply fixed admissible pivots. No physical
+    kernel or integration measure is inferred from these algebraic moments.
+    """
+    matrix = real_array(moments, "moments")
+    if matrix.ndim == 1:
+        matrix = matrix[:, None]
+    if matrix.ndim != 2:
+        raise ValueError("moments must be a vector or a matrix")
+    size, count = matrix.shape
+    if count > size:
+        raise ValueError("there cannot be more independent moments than coordinates")
+    if count and np.linalg.matrix_rank(matrix) != count:
+        raise ValueError("moments must be linearly independent")
+    if pivots is None:
+        if not count:
+            selected = np.empty(0, dtype=int)
+        elif count == 1:
+            selected = np.array([np.argmax(np.abs(matrix[:, 0]))])
+        else:
+            from scipy.linalg import qr
+
+            _, _, coordinates = qr(matrix.T, mode="economic", pivoting=True)
+            selected = np.sort(coordinates[:count])
+    else:
+        selected = np.asarray(pivots)
+        if (
+            selected.shape != (count,)
+            or (selected.size and selected.dtype.kind not in "iu")
+            or np.any(selected < 0)
+            or np.any(selected >= size)
+            or len(np.unique(selected)) != count
+        ):
+            raise ValueError("pivots must be distinct valid integer coordinates, one per moment")
+        selected = selected.astype(int, copy=False)
+    if count and np.linalg.matrix_rank(matrix[selected]) != count:
+        raise ValueError("the selected pivot coordinates must determine all moments")
+    free = np.setdiff1d(np.arange(size), selected)
+    basis = np.eye(size)[:, free]
+    if count == 1:
+        basis[selected] = -matrix[free, 0] / matrix[selected[0], 0]
+    elif count:
+        basis[selected] = np.linalg.solve(matrix[selected].T, -matrix[free].T)
+    return basis
 
 
 def restrict_response(

@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -17,6 +25,7 @@ from threadpoolctl import threadpool_limits
 
 from examples.archive_precision import precision_fields
 from examples.campaign_checkpoint import require_sources, verify_checkpoint
+from examples.formulations.application import darcy as solve_equations
 from examples.solve_spe10 import load_layer, pressure_boundary
 from examples.spe10_adaptive import DATA, hashes, mesh_rectangle, natural_faces, source_path
 from pymhm.adaptivity.darcy_balanced import solve_balanced_adaptive_darcy
@@ -213,6 +222,7 @@ def acquire(
 
     solve_balanced_adaptive_darcy(
         mesh,
+        solve_step=solve_equations,
         iterations=levels - len(records),
         local_refinement=local_refinement,
         maximum_local_refinement=16,

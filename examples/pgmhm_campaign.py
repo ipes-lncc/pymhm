@@ -8,6 +8,14 @@ choices because their complete historical numerical specification is absent.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -19,13 +27,14 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.field_sampling import sample_field
+from examples.formulations.application import petrov_galerkin_diffusion as solve_pgmhm
 from examples.mh_campaign import l_mesh
 from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.triangle import tabulate
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.triangle import TriangleMesh
-from pymhm.methods.petrov_galerkin import PGMHMSolution, solve_pgmhm
+from pymhm.postprocessing.solutions import PGMHMSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/pgmhm"

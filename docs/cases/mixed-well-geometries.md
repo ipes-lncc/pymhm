@@ -70,7 +70,7 @@ moment, including the constant.
 
 ```python
 from pymhm import AffineMixedMesh
-from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
+from examples.formulations.application import hdiv_darcy as solve_darcy_hdiv3d
 
 mesh = AffineMixedMesh.unit_cube(kind="prism")
 solution = solve_darcy_hdiv3d(
@@ -310,10 +310,10 @@ give the same inaccurate flux in both codes.
 ## Reproduction
 
 ```bash
-pixi run --locked -e test-core python examples/solve_mixed_well_geometries.py --kind prism --fine-factor 4 --macro-factor 1 --workers 4
-pixi run --locked -e test-core python examples/solve_mixed_well_geometries.py --kind tetrahedron --pressure-degree 2 --fine-factor 4 --macro-factor 4 --workers 4
-pixi run -e notebooks python examples/plot_mixed_well_geometries.py
-pixi run --locked -e test-core python examples/verify_mixed_well_fields.py
+pixi run --locked -e test-core python -m examples.solve_mixed_well_geometries --kind prism --fine-factor 4 --macro-factor 1 --workers 4
+pixi run --locked -e test-core python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 4 --macro-factor 4 --workers 4
+pixi run --locked -e notebooks python -m examples.plot_mixed_well_geometries
+pixi run --locked -e test-core python -m examples.verify_mixed_well_fields
 ```
 
 `51_mixed_well_geometries.ipynb` executes a small physical patch and reads the

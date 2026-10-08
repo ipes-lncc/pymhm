@@ -20,7 +20,9 @@ spaces; it does not transfer a two-dimensional enrichment theorem to tetrahedra.
 
 The primary elasticity and Brinkman cells declare their UFL equations through
 the generic variational interface and require the Pixi `fem` kernel. Their
-method-family comparisons use the predefined solvers.
+method-family controls use editable providers in `examples/formulations` that
+declare the actual coefficient spaces, operators, trace signs and physical
+moment rows before calling `assemble`.
 The primary Maxwell trajectory declares coefficient forms for each mass/curl
 stage and composes them with free time-integration functions in the example.
 Scalar, vector and mixed user-defined forms share the
@@ -142,8 +144,33 @@ An H(div) stress formulation also needs its stress/displacement/rotation spaces,
 weak-symmetry pairing and normal-stress treatment. Normal H(div) constraints are
 essential data in the corresponding local variational formulation. Attaching
 ordinary mixed volume forms or boundary-pressure terms does not construct the
-MHM flux/stress interface conditions. Use the supported high-level mixed
-assemblers, or supply the appropriate augmented/eliminated local equations.
+MHM flux/stress interface conditions. The mixed providers declare the appropriate
+augmented local equations explicitly; the same generic assembler consumes them.
+
+For example, the Taylor–Hood provider composes public velocity energy,
+divergence and pressure moments with a separately declared trace coupling:
+
+```python
+from pymhm import TriangleMesh, assemble
+from examples.formulations.vector import define_flow, flow_constraints, recover_vector
+
+definition = define_flow(
+    TriangleMesh.unit_square(), formulation="taylor-hood",
+    degree=2, local_refinement=2,
+    viscosity=1.0, drag=2.0, source=(0.0, 0.0),
+    dirichlet=(0.0, 0.0), mean_pressure=0.0,
+)
+system = assemble(definition.problem)
+coefficients = system.solve(constraints=flow_constraints(definition, system))
+solution = recover_vector(definition, system, coefficients)
+print(coefficients.field("velocity")[0].evaluate([[0.1, 0.1]]))
+```
+
+Changing the local bilinear form occurs in the provider's `LocalEquations`,
+while boundary values and gauges remain explicit application data. Named fields
+carry the executed basis and reconstruction matrix independently of the optional
+physical result record. Mixed stress providers additionally declare `stress`
+and `stress_divergence`, using the same archived row-wise Piola coordinates.
 
 ## Physical data, pressure and rigid moments
 

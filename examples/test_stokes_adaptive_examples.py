@@ -10,7 +10,7 @@ from pymhm.meshes.triangle import TriangleMesh
 
 def test_solenoidal_data_and_smooth_lid():
     """Verify the manufactured divergence and the explicitly compatible cavity corners."""
-    from solve_stokes_adaptive import StokesData
+    from examples.solve_stokes_adaptive import StokesData
 
     points = np.random.default_rng(16).uniform(0.1, 0.9, (17, 2))
     data = StokesData(viscosity=0.01)
@@ -33,7 +33,7 @@ def test_solenoidal_data_and_smooth_lid():
 
 def test_cavity_comparison_norms_have_correct_area_and_denominators():
     """Affine vector and pressure fields provide independent nonzero L2/H1 integrals."""
-    from compare_stokes_cavity import norms
+    from examples.compare_stokes_cavity import norms
 
     n = 2
     y, x = np.meshgrid(
@@ -95,7 +95,7 @@ def test_cavity_comparison_norms_have_correct_area_and_denominators():
 
 def test_cavity_profiles_preserve_polynomials_and_macro_intersections():
     """Profiles evaluate each fine-cell polynomial separately, with physical macro crossings."""
-    from compare_stokes_cavity import profiles
+    from examples.compare_stokes_cavity import profiles
 
     mesh = TriangleMesh.unit_square()
     axis = np.linspace(0, 1, 5)

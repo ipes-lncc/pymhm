@@ -95,8 +95,16 @@ def _valid_solution(rhs: Array, result: Any) -> Array:
     return solution
 
 
-def _accurate_residual(matrix: sparse.csr_matrix, rhs: Array, solution: Array) -> Array:
-    """Accumulate b-Ax with extended precision or portable compensated row sums."""
+def accurate_residual(matrix: sparse.csr_matrix, rhs: Array, solution: Array) -> Array:
+    """Evaluate ``rhs - matrix @ solution`` with accurate row accumulation.
+
+    The finite CSR operator may be rectangular. ``rhs`` and ``solution`` have
+    matching column counts, with shapes ``(rows,)``/``(columns,)`` or
+    ``(rows, nrhs)``/``(columns, nrhs)``. Real and complex coefficients are
+    supported. Extended precision is used when the platform supplies it;
+    otherwise each real and imaginary row sum is compensated independently.
+    This operation neither rescales the equations nor applies a tolerance.
+    """
     if _EXTENDED_PRECISION:
         precision = np.result_type(matrix.dtype, rhs.dtype, solution.dtype, np.longdouble)
         return np.asarray(rhs, dtype=precision) - matrix.astype(precision) @ np.asarray(
@@ -116,6 +124,9 @@ def _accurate_residual(matrix: sparse.csr_matrix, rhs: Array, solution: Array) -
                 real + 1j * fsum(terms[:, column].imag) if np.iscomplexobj(terms) else real
             )
     return result.reshape(rhs.shape)
+
+
+_accurate_residual = accurate_residual
 
 
 def _checked(matrix: sparse.csr_matrix, rhs: Array, result: Any, rtol: float, atol: float) -> Array:
@@ -426,12 +437,16 @@ def validate_invertible(matrix: Any) -> None:
     _equilibrated_lu(_matrix(matrix))
 
 
-def _symmetric_equilibration(matrix: sparse.csr_matrix) -> tuple[sparse.csr_matrix, Array]:
+def symmetric_equilibration(matrix: sparse.csr_matrix) -> tuple[sparse.csr_matrix, Array]:
     """Return five infinity-row Ruiz congruences and their positive diagonal.
 
     The relation is ``balanced = D @ matrix @ D``. Symmetry is preserved;
     neither rows nor equations are discarded, and the diagonal is not a
-    regularization. A zero row is incompatible with invertible direct solves.
+    regularization. Input is a finite square CSR operator. A zero row is
+    incompatible with invertible direct solves. The returned vector contains
+    the diagonal of ``D``; transform a right-hand side by ``D @ rhs`` and
+    recover a physical solution by ``D @ balanced_solution``. This scaling
+    does not establish positive definiteness or remove a physical kernel.
     """
     _hermitian(matrix, "symmetric equilibration")
     balanced = matrix.copy()
@@ -444,6 +459,9 @@ def _symmetric_equilibration(matrix: sparse.csr_matrix) -> tuple[sparse.csr_matr
         diagonal *= scaling
         balanced = (sparse.diags(scaling) @ balanced @ sparse.diags(scaling)).tocsr()
     return balanced, diagonal
+
+
+_symmetric_equilibration = symmetric_equilibration
 
 
 def factorize(
@@ -643,13 +661,22 @@ def factorize(
     return LinearFactorization(operator, solve_function, resources.close, solver, rtol, atol)
 
 
-def _hermitian(matrix: sparse.csr_matrix, solver: str) -> None:
-    """Reject operators violating the symmetry required by the selected method."""
+def require_hermitian(matrix: sparse.csr_matrix, operation: str = "operation") -> None:
+    """Require a square CSR operator to be Hermitian within relative roundoff.
+
+    The maximum entry of ``A - A.conjugate().T`` must not exceed ``1e-13``
+    times the maximum absolute entry of ``A``. Real symmetry uses the same
+    convention. ``operation`` identifies the caller in a rejection message.
+    Passing this check establishes neither invertibility nor positivity.
+    """
     difference = matrix - matrix.conjugate().T
     if difference.nnz and np.max(np.abs(difference.data)) > 1e-13 * float(
         np.max(np.abs(matrix.data), initial=0)
     ):
-        raise ValueError(f"{solver} requires a Hermitian/symmetric matrix")
+        raise ValueError(f"{operation} requires a Hermitian/symmetric matrix")
+
+
+_hermitian = require_hermitian
 
 
 def prepare_amgx(

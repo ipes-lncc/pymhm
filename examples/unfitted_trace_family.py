@@ -20,19 +20,17 @@ from numpy.polynomial.legendre import leggauss
 from scipy import sparse
 from threadpoolctl import threadpool_limits
 
-from pymhm._legacy.models.darcy.primal import (
-    DarcySolution,
-    _assembly_quadrature_order,
-    _DarcyLocalFactory,
-)
+from examples.formulations.local_records import DarcyLocalFactory as _DarcyLocalFactory
 from pymhm.core.contracts import HybridSolution, LocalResponse
 from pymhm.core.validation import positive_int
+from pymhm.fem.quadrature.orders import nodal_quadrature_order as _assembly_quadrature_order
 from pymhm.fem.scalar.operators import boundary_data
 from pymhm.fem.scalar.triangle import tabulate
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.linalg.linear import preload_solver_backend, solve_linear
 from pymhm.materials.evaluation import tensor_values
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.solutions import DarcySolution
 
 
 def nested_trace_injection(fine: FaceSpace, coarse: FaceSpace) -> np.ndarray:

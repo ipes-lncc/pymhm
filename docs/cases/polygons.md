@@ -54,7 +54,7 @@ separate scale, and every panel shows the actual macro boundaries. Display
 sampling evaluates the cubic local functions independently on each fine triangle.
 All error norms use volume quadrature rather than image samples.
 
-Run `pixi run -e notebooks verify-polygons`. The records are stored in
+Run `pixi run --locked -e notebooks verify-polygons`. The records are stored in
 `examples/results/polygons.json`. These research runs are separate from the
 small polynomial and geometry checks used in CI.
 

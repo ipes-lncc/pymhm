@@ -16,35 +16,43 @@ from pathlib import Path
 import sys
 import os
 
-ROOT = next(
-    path for path in (Path.cwd(), *Path.cwd().parents) if (path / "pixi.toml").exists()
-)
+ROOT = next(path for path in (Path.cwd(), *Path.cwd().parents) if (path / "pixi.toml").exists())
 sys.path.insert(0, str(ROOT))
 import json
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy import sparse
 from pymhm import TriangleMesh, FaceSpace, SkeletonSpace
 from pymhm.core.equations import Equation, LocalEquations, compile_form
-from pymhm.core.multiscale import MultiscaleProblem, assemble
-from pymhm.fem.assembly import assemble_element_blocks
+from pymhm.core.multiscale import assemble
 from pymhm.fem.scalar.operators import triangle_quadrature, boundary_data
-from pymhm.fem.scalar.triangle import nodal_space, tabulate, trace_coupling
+from pymhm.fem.scalar.triangle import nodal_space, tabulate
 
 REPORTS = ROOT / "build/introduction"
 REPORTS.mkdir(parents=True, exist_ok=True)
 np.set_printoptions(precision=6, suppress=True)
 
-from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import Any
-from pymhm.linalg.linear import solve_linear
 from threadpoolctl import threadpool_limits
 
 threadpool_limits(limits=1)
 
 from pymhm import MeshHierarchy, LocalContext, bind_interface, bind_problem
 from pymhm.backends.spaces import bind_space
+
+from functools import partial
+from examples.introduction.vector import (
+    flow_error_norms,
+    record_brinkman_case,
+    brinkman_reference,
+    execution_provenance,
+    plot_brinkman_convergence,
+    plot_brinkman_family_rates,
+    plot_brinkman_family_fields,
+    plot_brinkman_enriched_fields,
+    plot_brinkman_profiles,
+)
+
+measure_case = partial(record_brinkman_case, reports=REPORTS, root=ROOT)
 
 ```
 
@@ -160,8 +168,9 @@ class BrinkmanLayer:
 ```python
 NU, GAMMA = 1e-2, 1.0
 truth = BrinkmanLayer(NU, GAMMA)
-ASSEMBLY_ORDER, ERROR_ORDER = 12, 20
-LOCAL_SUBDIVISIONS, VELOCITY_DEGREE, TRACE_DEGREE = 4, 2, 0
+# The main family fixes P2 velocity, P1/P2 pressure and P0 multipliers.
+LOCAL_SUBDIVISIONS = 4
+LOCAL_QUADRATURE_DEGREE, ERROR_ORDER = 28, 20
 INVERSE_M = 1 / 100
 points = np.array([[0.21, 0.34], [0.72, 0.81], [0.97, 0.98]])
 np.testing.assert_allclose(np.trace(truth.gradient(points), axis1=1, axis2=2), 0.0)
@@ -289,22 +298,21 @@ for degree in (2, 3, 4):
     )[:, -1]
     assert margins.max() < 1e-10 * max(1.0, np.abs(stiffness).max())
     inverse_controls.append(
-        dict(
-            degree=degree, m=float(selected[0]), maximum_signed_margin=float(margins.max())
-        )
+        dict(degree=degree, m=float(selected[0]), maximum_signed_margin=float(margins.max()))
     )
 # The comparison's declared conservative P2 parameter also obeys the bound.
-_, _, _, gradient, hessian = tabulate(probe, VELOCITY_DEGREE, bary)
+_, _, _, gradient, hessian = tabulate(probe, 2, bary)
 stiffness = np.einsum("q,tqia,tqja->tij", weights, gradient, gradient)
 laplacian = np.trace(hessian, axis1=-2, axis2=-1)
 residual_gram = np.einsum("q,tqi,tqj->tij", weights, laplacian, laplacian)
-bound_margins = np.linalg.eigvalsh(
-    INVERSE_M * h[:, None, None] ** 2 * residual_gram - stiffness
-)[:, -1]
+bound_margins = np.linalg.eigvalsh(INVERSE_M * h[:, None, None] ** 2 * residual_gram - stiffness)[
+    :, -1
+]
 assert bound_margins.max() < 1e-10
 inverse_controls
 
 ```
+
 
 
 
@@ -324,14 +332,15 @@ inverse_controls
 
 
 
+
 ```python
 def brinkman_forms(
     domain: Any,
     *,
     stabilized: bool,
-    velocity_degree: int = VELOCITY_DEGREE,
+    velocity_degree: int = 2,
     inverse_m: float = INVERSE_M,
-    quadrature_degree: int = 28,
+    quadrature_degree: int = LOCAL_QUADRATURE_DEGREE,
 ) -> tuple[Any, Any, Any, Any]:
     """Declare the executed vector-Laplacian mixed form and its USFEM residual."""
     pressure_degree = velocity_degree if stabilized else velocity_degree - 1
@@ -380,13 +389,10 @@ The native mesh and coefficient conversions come from the shared backend binding
 
 ```python
 import basix
-import basix.ufl
-import dolfinx
-import ufl
-from mpi4py import MPI
 
 
 from pymhm.backends.spaces import create_native_mesh, coefficient_map
+
 
 def mixed_nodal_blocks(
     W: Any,
@@ -395,7 +401,7 @@ def mixed_nodal_blocks(
     mean_form: Any,
     fine: TriangleMesh,
     pressure_degree: int,
-    velocity_degree: int = VELOCITY_DEGREE,
+    velocity_degree: int = 2,
 ) -> tuple[Any, np.ndarray, np.ndarray, int]:
     """Compile supplied vector/scalar forms in declared canonical nodal coordinates."""
     binding = bind_space(fine, W)
@@ -447,12 +453,12 @@ def local_brinkman(
     skeleton: SkeletonSpace,
     stabilized: bool,
     subdivisions: int = LOCAL_SUBDIVISIONS,
-    velocity_degree: int = VELOCITY_DEGREE,
+    velocity_degree: int = 2,
     inverse_m: float = INVERSE_M,
-    quadrature_degree: int = 28,
+    quadrature_degree: int = LOCAL_QUADRATURE_DEGREE,
 ) -> LocalEquations:
     """Connect the declared mixed UFL equations to their oriented skeletal coordinates."""
-    cell, fine = local.cell, local.mesh
+    fine = local.mesh
     pressure_degree = velocity_degree if stabilized else velocity_degree - 1
     W, a, L, mean_form = brinkman_forms(
         create_native_mesh(fine),
@@ -465,6 +471,7 @@ def local_brinkman(
         W, a, L, mean_form, fine, pressure_degree, velocity_degree
     )
     from pymhm.backends.forms import assemble_pairing
+
     binding = local.native_space(W)
     u, p = ufl.TrialFunctions(W)
     v, q = ufl.TestFunctions(W)
@@ -475,8 +482,9 @@ def local_brinkman(
     C = assemble_pairing(pair_c.forms, axis="rows")[:, order]
     # Preserve the declared (canonical velocity, canonical pressure) record layout.
     identity = np.eye(len(F))
-    native_layout = (binding.to_native(identity[:2 * nv], component=0)
-                     + binding.to_native(identity[2 * nv:], component=1))
+    native_layout = binding.to_native(identity[: 2 * nv], component=0) + binding.to_native(
+        identity[2 * nv :], component=1
+    )
     local.field("velocity", binding, component=0, reconstruction=native_layout)
     local.field("pressure", binding, component=1, reconstruction=native_layout)
     return local.equations(
@@ -499,100 +507,12 @@ def local_brinkman(
 Before the refinement loop, define the measurements: velocity and pressure $L^2$ errors, velocity-gradient error, broken pseudostress error, the fine-cell divergence norm and the separate macro mass defect. These quadrature operations evaluate fields; they do not define a local PDE.
 
 The measurements use the general Basix kernel with the declared nodal order and affine geometry. The adapter below requests values and the first derivatives required by the norms; it does not select or assemble an operator.
+Physical norms, executed-state archives and one-sided field/profile displays are importable from `examples/introduction/vector.py`. The local forms and the complete global solve remain in this notebook, together with separately declared conforming reference forms.
 
-
-```python
-from pymhm.fem.reference import physical_simplex_tabulation
-from pymhm.fem.scalar.operators import p1_geometry
-from pymhm.fem.scalar.triangle import multiindices
-
-
-def nodal_evaluation(
-    mesh: TriangleMesh, degree: int, bary: np.ndarray, *, gradient: bool = True
-) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Evaluate declared nodal coordinates through the package's native Basix kernel."""
-    dofs, _ = nodal_space(mesh, degree)
-    geometry, _ = p1_geometry(mesh)
-    values, first, _ = physical_simplex_tabulation(
-        "triangle",
-        degree,
-        bary,
-        nodes=multiindices(degree) / degree,
-        reference_gradients=geometry[:, 1:],
-        nderiv=1 if gradient else 0,
-    )
-    return dofs, values, first
-
-```
 
 
 ```python
-def flow_error_norms(
-    meshes: Sequence[TriangleMesh],
-    velocity: Sequence[np.ndarray],
-    pressure: Sequence[np.ndarray],
-    velocity_degree: int,
-    pressure_degree: int,
-    exact: BrinkmanLayer,
-    *,
-    order: int = 20,
-    named_velocity: Sequence[Any] | None = None,
-    named_pressure: Sequence[Any] | None = None,
-) -> dict[str, float]:
-    """Integrate velocity, pressure, gradient and macro mass measurements.
-
-    Pressure must already use the zero-volume-mean gauge. Macro mass is the
-    largest absolute macro integral of div(u_h); ``divergence_l2`` measures
-    the different fine-cell incompressibility defect. Raw gradients and
-    pseudostress are broken fields, without a conservative reconstruction.
-    """
-    bary, weights = triangle_quadrature(order)
-    totals = np.zeros(5)
-    mass, mean = 0.0, 0.0
-    for cell, (mesh, u, p) in enumerate(zip(meshes, velocity, pressure, strict=True)):
-        udofs, ubasis, gradients = nodal_evaluation(mesh, velocity_degree, bary)
-        pdofs, pbasis, _ = nodal_evaluation(mesh, pressure_degree, bary, gradient=False)
-        points = np.einsum("qi,tia->tqa", bary, mesh.points[mesh.cells], optimize=True)
-        flat = points.reshape(-1, 2)
-        if named_velocity is not None and named_pressure is not None:
-            owners = np.repeat(np.arange(len(mesh.cells)), len(bary))
-            numerical_u, numerical_gradient = named_velocity[cell].values_and_gradient(flat, cells=owners)
-            delta_u = numerical_u.reshape(points.shape) - exact.velocity(flat).reshape(points.shape)
-            numerical_p = named_pressure[cell].evaluate(flat, cells=owners).reshape(points.shape[:2])
-            derivative = numerical_gradient.reshape((*points.shape[:2], 2, 2))
-        else:
-            # Explicit coefficient evaluation for independent references and basis replay.
-            delta_u = np.einsum(
-                "qi,tia->tqa", ubasis, u[udofs], optimize=True
-            ) - exact.velocity(flat).reshape(points.shape)
-            numerical_p = p[pdofs] @ pbasis.T
-            derivative = np.einsum("tqia,tic->tqca", gradients, u[udofs], optimize=True)
-        delta_p = numerical_p - exact.pressure(flat).reshape(points.shape[:2])
-        delta_gradient = derivative - exact.gradient(flat).reshape(derivative.shape)
-        divergence = np.trace(derivative, axis1=-2, axis2=-1)
-        delta_stress = exact.viscosity * delta_gradient - delta_p[..., None, None] * np.eye(
-            2
-        )
-        integrands = (
-            np.sum(delta_u**2, axis=-1),
-            delta_p**2,
-            np.sum(delta_gradient**2, axis=(-2, -1)),
-            divergence**2,
-            np.sum(delta_stress**2, axis=(-2, -1)),
-        )
-        totals += [float(mesh.areas @ (value @ weights)) for value in integrands]
-        mass = max(mass, abs(float(mesh.areas @ (divergence @ weights))))
-        mean += float(mesh.areas @ (numerical_p @ weights))
-    errors = np.sqrt(totals)
-    return dict(
-        velocity_l2=float(errors[0]),
-        pressure_l2=float(errors[1]),
-        velocity_h1_seminorm=float(errors[2]),
-        divergence_l2=float(errors[3]),
-        pseudostress_l2=float(errors[4]),
-        macro_mass_defect=mass,
-        pressure_integral=mean,
-    )
+# Physical field norms, macro mass and pressure integral use flow_error_norms (imported above).
 
 ```
 
@@ -602,150 +522,77 @@ The next utility saves the actual local coordinate basis, coefficients, orientat
 
 
 ```python
-import hashlib
-
-
-def preserve_state(name: str, skeleton: SkeletonSpace, system: Any, solution: Any) -> dict:
-    """Archive executed coefficients, orientation, local lifts and actual retained bases."""
-    payload = {
-        "macro_points": skeleton.mesh.points,
-        "macro_cells": skeleton.mesh.cells,
-        "macro_faces": skeleton.mesh.faces,
-        "macro_signs": skeleton.mesh.signs,
-        "trace": solution.trace,
-        "skeleton_components": np.array(skeleton.components),
-    }
-    basis_digest = hashlib.sha256()
-    for face, space in enumerate(skeleton.faces):
-        payload[f"face_breaks_{face}"] = np.asarray(space.breaks)
-        payload[f"face_degrees_{face}"] = np.asarray(space.degrees)
-    for cell, (response, data, field, coarse) in enumerate(
-        zip(
-            system.responses,
-            system.local_metadata,
-            solution.fields,
-            solution.coarse,
-            strict=True,
-        )
-    ):
-        payload[f"local_points_{cell}"] = data["mesh"].points
-        payload[f"local_cells_{cell}"] = data["mesh"].cells
-        payload[f"field_{cell}"] = field
-        payload[f"coarse_{cell}"] = coarse
-        payload[f"source_{cell}"] = response.source
-        payload[f"lifts_{cell}"] = response.lifts
-        payload[f"basis_{cell}"] = response.retained_basis
-        payload[f"trace_dofs_{cell}"] = response.problem.trace_dofs
-        if "free" in data:
-            payload[f"free_nodes_{cell}"] = data["free"]
-        if "velocity_nodes" in data:
-            payload[f"velocity_nodes_{cell}"] = np.array(data["velocity_nodes"])
-            payload[f"velocity_degree_{cell}"] = np.array(data["velocity_degree"])
-            payload[f"pressure_degree_{cell}"] = np.array(data["pressure_degree"])
-        else:
-            payload[f"scalar_degree_{cell}"] = np.array(1)
-        basis_digest.update(str(response.retained_basis.shape).encode())
-        basis_digest.update(response.retained_basis.tobytes())
-    path = REPORTS / f"{name}-state.npz"
-    np.savez_compressed(path, **payload)
-    # Replay this executed basis literally at two BLAS thread counts.
-    with np.load(path) as saved:
-        for count in (1, 2):
-            with threadpool_limits(count):
-                for cell in range(len(system.responses)):
-                    reconstructed = (
-                        saved[f"source_{cell}"]
-                        - saved[f"lifts_{cell}"]
-                        @ saved["trace"][saved[f"trace_dofs_{cell}"]]
-                        + saved[f"basis_{cell}"] @ saved[f"coarse_{cell}"]
-                    )
-                    np.testing.assert_allclose(
-                        reconstructed, saved[f"field_{cell}"], rtol=1e-11, atol=1e-12
-                    )
-    return {
-        "path": str(path.relative_to(ROOT)),
-        "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
-        "executed_basis_sha256": basis_digest.hexdigest(),
-        "replay_blas_threads": [1, 2],
-    }
-
-```
-
-
-```python
-cases, rows, state_archives = {}, [], []
-for n in (4, 8, 16):
+def solve_brinkman_case(
+    n,
+    stabilized,
+    *,
+    subdivisions=LOCAL_SUBDIVISIONS,
+    degree=2,
+    trace_degree=0,
+    segments=1,
+    inverse_m=INVERSE_M,
+):
+    """Declare the mesh, trace space, weak velocity data and physical pressure gauge."""
     macro = TriangleMesh.unit_square(n)
     skeleton = SkeletonSpace(
-        macro, tuple(FaceSpace.uniform(0) for _ in macro.faces), components=2
+        macro, tuple(FaceSpace.uniform(trace_degree, segments) for _ in macro.faces), components=2
     )
     boundary, fixed = boundary_data(skeleton, truth.velocity, {}, order=32)
-    assert not fixed
-    for method, stabilized in (("MHM Taylor-Hood", False), ("MHM-USFEM", True)):
-        provider = lambda local, m=macro, s=skeleton, flag=stabilized: local_brinkman(
-            local, macro=m, skeleton=s, stabilized=flag
-        )
-        problem = bind_problem(
-                      MeshHierarchy(macro, tuple(macro.submesh(cell, LOCAL_SUBDIVISIONS) for cell in range(len(macro.cells)))),
-                      bind_interface(skeleton, convention="normal"), provider,
-                      global_equation=Equation(0, -boundary), retained=0,
-                  )
-        system = assemble(problem)
-        gauge = system.mean_constraint(
-            [data["pressure_weights"] for data in system.local_metadata], 0.0
-        )
-        solution = system.solve(constraints=[gauge])
-        velocity_fields = solution.field("velocity")
-        pressure_fields = solution.field("pressure")
-        meshes = tuple(field.mesh for field in velocity_fields)
-        velocity = tuple(field.portable_coefficients.reshape(-1, 2) for field in velocity_fields)
-        pressure = tuple(field.portable_coefficients for field in pressure_fields)
-        pdegree = 2 if stabilized else 1
-        metrics = flow_error_norms(
-            meshes, velocity, pressure, 2, pdegree, truth, order=ERROR_ORDER,
-            named_velocity=velocity_fields, named_pressure=pressure_fields
-        )
-        assert abs(metrics["pressure_integral"]) < 1e-9
-        assert metrics["macro_mass_defect"] < 1e-9
-        row = dict(
+    assert not fixed  # All exterior velocity data enter the global trace load.
+    provider = lambda local: local_brinkman(
+        local,
+        macro=macro,
+        skeleton=skeleton,
+        stabilized=stabilized,
+        subdivisions=subdivisions,
+        velocity_degree=degree,
+        inverse_m=inverse_m,
+    )
+    hierarchy = MeshHierarchy(
+        macro, tuple(macro.submesh(c, subdivisions) for c in range(len(macro.cells)))
+    )
+    problem = bind_problem(
+        hierarchy,
+        bind_interface(skeleton, convention="normal"),
+        provider,
+        global_equation=Equation(0, -boundary),
+        retained=0,
+    )
+    system = assemble(problem)
+    gauge = system.mean_constraint(
+        [data["pressure_weights"] for data in system.local_metadata], 0.0
+    )
+    solution = system.solve(constraints=[gauge])
+    return macro, skeleton, system, solution, gauge
+
+
+METHODS = (("MHM Taylor-Hood", False), ("MHM-USFEM", True))
+cases, rows, state_archives = {}, [], []
+for n in (4, 8, 16):
+    for method, stabilized in METHODS:
+        macro, skeleton, system, solution, gauge = solve_brinkman_case(n, stabilized)
+        case, row, archive = measure_case(
+            macro,
+            skeleton,
+            system,
+            solution,
+            truth,
+            velocity_degree=2,
+            pressure_degree=2 if stabilized else 1,
+            order=ERROR_ORDER,
+            name=f"brinkman-n{n}-{method.lower().replace(' ', '-')}",
+            named=True,
+            gauge=gauge if n == 4 else None,
             method=method,
             n=n,
-            H=float(macro.lengths[macro.cell_faces].max()),
-            macro_cells=len(macro.cells),
-            fine_cells=sum(len(mesh.cells) for mesh in meshes),
-            trace_dofs=skeleton.size,
-            residual=float(solution.residual),
-            **metrics,
         )
-        if n == 4:
-            gauge_row = gauge[0]
-            gauged = sparse.bmat(
-                [
-                    [system.matrix, sparse.csc_matrix(gauge_row[:, None])],
-                    [sparse.csc_matrix(gauge_row[None]), None],
-                ]
-            ).toarray()
-            singular_values = np.linalg.svd(gauged, compute_uv=False)
-            row["smallest_gauged_singular_value"] = float(singular_values[-1])
-            row["gauged_dimension"] = len(gauged)
-            assert singular_values[-1] > 1e-10 * singular_values[0]
+        cases[n, method] = case
         rows.append(row)
-        state_archives.append(
-            preserve_state(
-                f"brinkman-n{n}-{method.lower().replace(' ', '-')}",
-                skeleton,
-                system,
-                solution,
-            )
-        )
-        cases[n, method] = (macro, meshes, velocity, pressure, pdegree)
+        state_archives.append(archive)
         print(
             method,
             n,
-            {
-                key: metrics[key]
-                for key in ("velocity_l2", "pressure_l2", "macro_mass_defect")
-            },
+            {key: row[key] for key in ("velocity_l2", "pressure_l2", "macro_mass_defect")},
         )
 
 ```
@@ -808,80 +655,50 @@ in the numerical provenance; either profile computes its own fields and slopes.
 
 
 ```python
-published_cases, published_rows = {}, []
-# The full qualification sequence remains available on dedicated resources.
+# Set PYMHM_FULL_STUDY=1 to extend each family to its complete qualification grids.
 FULL_STUDY = os.environ.get("PYMHM_FULL_STUDY", "0") == "1"
 PUBLISHED_FULL_LEVELS = {0: (8, 16, 32, 64, 128), 1: (8, 16, 32, 64), 2: (8, 16, 32, 64)}
 PUBLISHED_LEVELS = PUBLISHED_FULL_LEVELS if FULL_STUDY else {ell: (8, 16, 32) for ell in (0, 1, 2)}
 STUDY_PROFILE = "full qualification" if FULL_STUDY else "introductory three-level profile"
 print("Single-element family profile:", STUDY_PROFILE, PUBLISHED_LEVELS)
-for ell in (0, 1, 2):
+published_cases, published_rows = {}, []
+for ell, levels in PUBLISHED_LEVELS.items():
     degree = ell + 2
-    for n in PUBLISHED_LEVELS[ell]:
-        macro = TriangleMesh.unit_square(n)
-        skeleton = SkeletonSpace(
-            macro, tuple(FaceSpace.uniform(ell) for _ in macro.faces), components=2
-        )
-        boundary, fixed = boundary_data(skeleton, truth.velocity, {}, order=32)
-        assert not fixed
-        provider = lambda local, m=macro, s=skeleton, k=degree: local_brinkman(
-            local,
-            macro=m,
-            skeleton=s,
-            stabilized=True,
+    for n in levels:
+        macro, skeleton, system, solution, _ = solve_brinkman_case(
+            n,
+            True,
             subdivisions=1,
-            velocity_degree=k,
-            inverse_m=inverse_parameters[k],
+            degree=degree,
+            trace_degree=ell,
+            inverse_m=inverse_parameters[degree],
         )
-        problem = bind_problem(
-                      MeshHierarchy(macro, tuple(macro.submesh(cell, 1) for cell in range(len(macro.cells)))),
-                      bind_interface(skeleton, convention="normal"), provider,
-                      global_equation=Equation(0, -boundary), retained=0,
-                  )
-        system = assemble(problem)
-        gauge = system.mean_constraint(
-            [data["pressure_weights"] for data in system.local_metadata], 0.0
+        case, row, archive = measure_case(
+            macro,
+            skeleton,
+            system,
+            solution,
+            truth,
+            velocity_degree=degree,
+            pressure_degree=degree,
+            order=ERROR_ORDER,
+            name=f"brinkman-single-ell{ell}-n{n}",
+            method="MHM-USFEM single element",
+            ell=ell,
+            local_degree=degree,
+            n=n,
+            local_subdivisions=1,
+            inverse_m=inverse_parameters[degree],
         )
-        solution = system.solve(constraints=[gauge])
-        velocity_fields = solution.field("velocity")
-        pressure_fields = solution.field("pressure")
-        meshes = tuple(field.mesh for field in velocity_fields)
-        velocity = tuple(field.portable_coefficients.reshape(-1, 2) for field in velocity_fields)
-        pressure = tuple(field.portable_coefficients for field in pressure_fields)
-        metrics = flow_error_norms(
-            meshes, velocity, pressure, degree, degree, truth, order=ERROR_ORDER
-        )
-        assert abs(metrics["pressure_integral"]) < 1e-9
-        assert metrics["macro_mass_defect"] < 1e-9
-        published_rows.append(
-            dict(
-                method="MHM-USFEM single element",
-                ell=ell,
-                local_degree=degree,
-                n=n,
-                H=float(macro.lengths[macro.cell_faces].max()),
-                macro_cells=len(macro.cells),
-                fine_cells=len(macro.cells),
-                trace_dofs=skeleton.size,
-                local_subdivisions=1,
-                inverse_m=inverse_parameters[degree],
-                residual=float(solution.residual),
-                **metrics,
-            )
-        )
-        published_cases[ell, n] = (macro, meshes, velocity, pressure, degree)
-        state_archives.append(
-            preserve_state(f"brinkman-single-ell{ell}-n{n}", skeleton, system, solution)
-        )
+        published_cases[ell, n] = case
+        published_rows.append(row)
+        state_archives.append(archive)
         print(
             "single-element USFEM",
             ell,
             degree,
             n,
-            {
-                name: metrics[name]
-                for name in ("velocity_l2", "pressure_l2", "velocity_h1_seminorm")
-            },
+            {key: row[key] for key in ("velocity_l2", "pressure_l2", "velocity_h1_seminorm")},
         )
 
 ```
@@ -935,54 +752,46 @@ for ell in (0, 1, 2):
     probe_skeleton = SkeletonSpace(
         probe_macro, tuple(FaceSpace.uniform(ell) for _ in probe_macro.faces), components=2
     )
-    # Probe a macrotriangle touching the layer x=1, with the same executed source.
     candidates = np.flatnonzero(
         np.any(np.isclose(probe_macro.points[probe_macro.cells, 0], 1.0), axis=1)
     )
-    cell_index = int(candidates[0])
+    cell_index = int(candidates[0])  # A macrotriangle touching the actual layer x=1.
+    hierarchy = MeshHierarchy(
+        probe_macro, tuple(probe_macro.submesh(c, 1) for c in range(len(probe_macro.cells)))
+    )
     probe_problem = bind_problem(
-        MeshHierarchy(probe_macro, tuple(probe_macro.submesh(cell, 1) for cell in range(len(probe_macro.cells)))),
-        bind_interface(probe_skeleton, convention="normal"), lambda local: None,
+        hierarchy, bind_interface(probe_skeleton, convention="normal"), lambda local: None
     )
-    standard = local_brinkman(
-        probe_problem.local_context(cell_index),
-        macro=probe_macro,
-        skeleton=probe_skeleton,
-        stabilized=True,
-        subdivisions=1,
-        velocity_degree=degree,
-        inverse_m=inverse_parameters[degree],
-        quadrature_degree=28,
-    )
-    higher = local_brinkman(
-        probe_problem.local_context(cell_index),
-        macro=probe_macro,
-        skeleton=probe_skeleton,
-        stabilized=True,
-        subdivisions=1,
-        velocity_degree=degree,
-        inverse_m=inverse_parameters[degree],
-        quadrature_degree=40,
-    )
-    np.testing.assert_allclose(
-        standard.a.toarray(), higher.a.toarray(), rtol=1e-11, atol=1e-13
-    )
+    operators = [
+        local_brinkman(
+            probe_problem.local_context(cell_index),
+            macro=probe_macro,
+            skeleton=probe_skeleton,
+            stabilized=True,
+            subdivisions=1,
+            velocity_degree=degree,
+            inverse_m=inverse_parameters[degree],
+            quadrature_degree=q,
+        )
+        for q in (LOCAL_QUADRATURE_DEGREE, max(40, LOCAL_QUADRATURE_DEGREE + 12))
+    ]
+    standard, higher = operators
+    np.testing.assert_allclose(standard.a.toarray(), higher.a.toarray(), rtol=1e-11, atol=1e-13)
     np.testing.assert_allclose(standard.L, higher.L, rtol=1e-10, atol=1e-13)
     assembly_quadrature_controls.append(
         dict(
             ell=ell,
             local_degree=degree,
             cell=cell_index,
-            quadrature_degrees=[28, 40],
-            matrix_maximum_difference=float(
-                np.max(np.abs((standard.a - higher.a).toarray()))
-            ),
+            quadrature_degrees=[LOCAL_QUADRATURE_DEGREE, max(40, LOCAL_QUADRATURE_DEGREE + 12)],
+            matrix_maximum_difference=float(np.max(np.abs((standard.a - higher.a).toarray()))),
             load_maximum_difference=float(np.max(np.abs(standard.L - higher.L))),
         )
     )
 assembly_quadrature_controls
 
 ```
+
 
 
 
@@ -1010,6 +819,7 @@ assembly_quadrature_controls
 
 
 
+
 ### Resolve the layer while retaining a simple macro mesh
 
 The unsplit P0 sequence and the degree family assess their measured layer regime separately. A small algebraic residual and macro mass defect do not imply a resolved velocity gradient. To separate this limitation from the local mixed solver, we add a **distinct resolution control**: eight local subdivisions per macro edge and eight independent P0 subfaces per original macroface, on macro grids $n=4,8,16$. The actual mesh scales are $\mathcal H=\sqrt{2}/n$ for macrotriangles and $\bar H=h=\mathcal H/8$ for their aligned subface and local partitions.
@@ -1025,72 +835,33 @@ The initial enriched level remains relatively coarse compared with the layer wid
 control_rows, enriched_cases = [], {}
 TRACE_SUBFACES, CONTROL_LOCAL_SUBDIVISIONS = 8, 8
 for n in (4, 8, 16):
-    macro = TriangleMesh.unit_square(n)
-    skeleton = SkeletonSpace(
-        macro,
-        tuple(FaceSpace.uniform(0, TRACE_SUBFACES) for _ in macro.faces),
-        components=2,
-    )
-    boundary, _ = boundary_data(skeleton, truth.velocity, {}, order=32)
-    for method, stabilized in (("MHM Taylor-Hood", False), ("MHM-USFEM", True)):
-        provider = lambda local, m=macro, s=skeleton, flag=stabilized: local_brinkman(
-            local,
-            macro=m,
-            skeleton=s,
-            stabilized=flag,
-            subdivisions=CONTROL_LOCAL_SUBDIVISIONS,
+    for method, stabilized in METHODS:
+        macro, skeleton, system, solution, _ = solve_brinkman_case(
+            n, stabilized, subdivisions=CONTROL_LOCAL_SUBDIVISIONS, segments=TRACE_SUBFACES
         )
-        problem = bind_problem(
-                      MeshHierarchy(macro, tuple(macro.submesh(cell, CONTROL_LOCAL_SUBDIVISIONS) for cell in range(len(macro.cells)))),
-                      bind_interface(skeleton, convention="normal"), provider,
-                      global_equation=Equation(0, -boundary), retained=0,
-                  )
-        system = assemble(problem)
-        gauge = system.mean_constraint(
-            [data["pressure_weights"] for data in system.local_metadata], 0.0
+        case, row, archive = measure_case(
+            macro,
+            skeleton,
+            system,
+            solution,
+            truth,
+            velocity_degree=2,
+            pressure_degree=2 if stabilized else 1,
+            order=ERROR_ORDER,
+            name=f"brinkman-enriched-n{n}-{method.lower().replace(' ', '-')}",
+            method=method,
+            n=n,
+            trace_subfaces=TRACE_SUBFACES,
+            local_subdivisions=CONTROL_LOCAL_SUBDIVISIONS,
         )
-        solution = system.solve(constraints=[gauge])
-        velocity_fields = solution.field("velocity")
-        pressure_fields = solution.field("pressure")
-        meshes = tuple(field.mesh for field in velocity_fields)
-        u = tuple(field.portable_coefficients.reshape(-1, 2) for field in velocity_fields)
-        p = tuple(field.portable_coefficients for field in pressure_fields)
-        pd = 2 if stabilized else 1
-        metrics = flow_error_norms(meshes, u, p, 2, pd, truth, order=ERROR_ORDER)
-        assert (
-            abs(metrics["pressure_integral"]) < 1e-9 and metrics["macro_mass_defect"] < 1e-9
-        )
-        control_rows.append(
-            dict(
-                method=method,
-                n=n,
-                H=float(macro.lengths[macro.cell_faces].max()),
-                macro_cells=len(macro.cells),
-                fine_cells=sum(len(m.cells) for m in meshes),
-                trace_dofs=skeleton.size,
-                trace_subfaces=TRACE_SUBFACES,
-                local_subdivisions=CONTROL_LOCAL_SUBDIVISIONS,
-                residual=float(solution.residual),
-                **metrics,
-            )
-        )
-        enriched_cases[n, method] = (macro, meshes, u, p, pd)
-        state_archives.append(
-            preserve_state(
-                f"brinkman-enriched-n{n}-{method.lower().replace(' ', '-')}",
-                skeleton,
-                system,
-                solution,
-            )
-        )
+        enriched_cases[n, method] = case
+        control_rows.append(row)
+        state_archives.append(archive)
         print(
             "enriched",
             method,
             n,
-            {
-                key: metrics[key]
-                for key in ("velocity_l2", "pressure_l2", "velocity_h1_seminorm")
-            },
+            {key: row[key] for key in ("velocity_l2", "pressure_l2", "velocity_h1_seminorm")},
         )
 
 ```
@@ -1127,124 +898,43 @@ The native pressure test $q$ supplies the volume-moment row. The reference solve
 
 
 ```python
-import basix.ufl
-import dolfinx
-import ufl
-from mpi4py import MPI
-
-references, reference_rows = {}, []
-for n in (32, 64, 128):
-    reference_mesh = TriangleMesh.unit_square(n)
-    domain = create_native_mesh(reference_mesh)
-    element = basix.ufl.mixed_element(
-        [
-            basix.ufl.element("Lagrange", "triangle", 2, shape=(2,)),
-            basix.ufl.element("Lagrange", "triangle", 1),
-        ]
-    )
-    W = dolfinx.fem.functionspace(domain, element)
-    V, vmap = W.sub(0).collapse()
-    Q, pmap = W.sub(1).collapse()
-    vmap, pmap = np.asarray(vmap), np.asarray(pmap)
-    u, p = ufl.TrialFunctions(W)
-    v, q = ufl.TestFunctions(W)
+def classical_brinkman_forms(space):
+    """Declare the separate conforming P2/P1 energy, source and pressure moment."""
+    u, p = ufl.TrialFunctions(space)
+    v, q = ufl.TestFunctions(space)
+    domain = space.ufl_domain()
     uexact, pexact, f = brinkman_ufl_data(domain)
     dx = ufl.Measure("dx", domain=domain, metadata={"quadrature_degree": 20})
-
     a = (
         NU * ufl.inner(ufl.grad(u), ufl.grad(v))
         + GAMMA * ufl.inner(u, v)
         - p * ufl.div(v)
         - q * ufl.div(u)
     ) * dx
-    L = ufl.inner(f, v) * dx
-    A, F, pressure_moment = compile_form(a), compile_form(L), compile_form(q * dx)
-    coordinates = V.tabulate_dof_coordinates()[:, :2]
-    boundary_nodes = np.flatnonzero(
-        np.any(
-            np.isclose(coordinates, 0, atol=1e-12) | np.isclose(coordinates, 1, atol=1e-12),
-            axis=1,
-        )
+    return a, ufl.inner(f, v) * dx, q * dx, uexact, pexact, dx
+
+
+references, reference_rows = {}, []
+for n in (32, 64, 128):
+    case, row, archive = brinkman_reference(
+        n, classical_brinkman_forms, truth, reports=REPORTS, root=ROOT
     )
-    fixed = vmap[(2 * boundary_nodes[:, None] + np.arange(2)).ravel()]
-    prescribed = truth.velocity(coordinates[boundary_nodes]).ravel()
-    free = np.setdiff1d(np.arange(len(F)), fixed)
-    values = np.zeros(len(F))
-    values[fixed] = prescribed
-    reduced = A[free][:, free]
-    forcing = F[free] - A[free][:, fixed] @ prescribed
-    moment = pressure_moment[free]
-    augmented = sparse.bmat(
-        [
-            [reduced, sparse.csc_matrix(moment[:, None])],
-            [sparse.csc_matrix(moment[None]), None],
-        ],
-        format="csc",
-    )
-    solved = solve_linear(augmented, np.r_[forcing, -pressure_moment[fixed] @ prescribed])
-    values[free] = solved[:-1]
-    numerical = dolfinx.fem.Function(W)
-    numerical.x.array[:] = values
-    uh, ph = ufl.split(numerical)
-    du, dp = uh - uexact, ph - pexact
-    metrics = {
-        "velocity_l2": float(
-            np.sqrt(dolfinx.fem.assemble_scalar(dolfinx.fem.form(ufl.inner(du, du) * dx)))
-        ),
-        "pressure_l2": float(
-            np.sqrt(dolfinx.fem.assemble_scalar(dolfinx.fem.form(dp**2 * dx)))
-        ),
-        "velocity_h1_seminorm": float(
-            np.sqrt(
-                dolfinx.fem.assemble_scalar(
-                    dolfinx.fem.form(ufl.inner(ufl.grad(du), ufl.grad(du)) * dx)
-                )
-            )
-        ),
-        "pressure_integral": float(pressure_moment @ values),
-    }
-    assert abs(metrics["pressure_integral"]) < 1e-9
-    # The space binding owns native/canonical mixed-field coordinate maps.
-    reference_binding = bind_space(reference_mesh, W)
-    uvalues = reference_binding.to_portable(values, component=0).reshape(-1, 2)
-    pvalues = reference_binding.to_portable(values, component=1)
-    reference_state = REPORTS / f"brinkman-reference-n{n}-state.npz"
-    np.savez_compressed(
-        reference_state,
-        points=reference_mesh.points,
-        cells=reference_mesh.cells,
-        velocity_coefficients=uvalues,
-        pressure_coefficients=pvalues,
-        velocity_degree=np.array(2),
-        pressure_degree=np.array(1),
-        viscosity=np.array(NU),
-        drag=np.array(GAMMA),
-    )
-    state_archives.append(
-        {
-            "path": str(reference_state.relative_to(ROOT)),
-            "sha256": hashlib.sha256(reference_state.read_bytes()).hexdigest(),
-            "basis_convention": "Basix canonical equispaced P2 velocity/P1 pressure nodal coefficients",
-        }
-    )
-    references[n] = (reference_mesh, uvalues, pvalues)
-    reference_rows.append(
-        dict(n=n, triangles=len(reference_mesh.cells), total_dofs=len(F), **metrics)
-    )
-    print("Conforming Taylor-Hood", n, metrics)
+    references[n] = case
+    reference_rows.append(row)
+    state_archives.append(archive)
 
 ```
 
 ```text
-Conforming Taylor-Hood 32 {'velocity_l2': 0.010869696788162705, 'pressure_l2': 0.0009276145766863469, 'velocity_h1_seminorm': 2.3347183820122606, 'pressure_integral': 7.182839392716467e-18}
+Conforming Taylor-Hood 32 {'velocity_l2': 0.010869696788162906, 'pressure_l2': 0.0009276145766838451, 'velocity_h1_seminorm': 2.3347183820122535, 'pressure_integral': -1.713039432527097e-17}
 ```
 
 ```text
-Conforming Taylor-Hood 64 {'velocity_l2': 0.001889858282391986, 'pressure_l2': 0.00012204647106742278, 'velocity_h1_seminorm': 0.7917985117231237, 'pressure_integral': -4.4086370838691824e-17}
+Conforming Taylor-Hood 64 {'velocity_l2': 0.0018898582823922592, 'pressure_l2': 0.00012204647106008795, 'velocity_h1_seminorm': 0.7917985117231211, 'pressure_integral': -1.543632843076237e-17}
 ```
 
 ```text
-Conforming Taylor-Hood 128 {'velocity_l2': 0.00026331857965651665, 'pressure_l2': 1.2303023340059912e-05, 'velocity_h1_seminorm': 0.21904523130804715, 'pressure_integral': -1.1383106371561091e-16}
+Conforming Taylor-Hood 128 {'velocity_l2': 0.0002633185796566055, 'pressure_l2': 1.23030233163184e-05, 'velocity_h1_seminorm': 0.2190452313080452, 'pressure_integral': -8.2135090829355e-17}
 ```
 
 ## 5. Measure convergence, without assuming the asymptotic regime
@@ -1259,123 +949,48 @@ For two successive resolutions, the measured slope is $r=\log(e_1/e_2)/\log(H_1/
 
 
 ```python
-def rates(H: np.ndarray, errors: np.ndarray) -> np.ndarray:
-    """Compute successive measured slopes without imposing a theoretical order."""
-    return np.log(errors[:-1] / errors[1:]) / np.log(H[:-1] / H[1:])
+plot_brinkman_convergence(rows, reference_rows, control_rows, reports=REPORTS)
+
+```
 
 
-def plot_errors(H: np.ndarray, errors: dict, name: str) -> None:
-    """Show measured norms and successive rates in separate axes."""
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4.2), layout="constrained")
-    for label, error in errors.items():
-        axes[0].loglog(H, error, "o-", label=label)
-        axes[1].semilogx(H[1:], rates(H, error), "o-", label=label)
-    axes[0].set(xlabel="H", ylabel="Absolute error")
-    axes[1].set(xlabel="H", ylabel="Observed rate")
-    for ax, samples in zip(axes, (H, H[1:]), strict=True):
-        ax.set_xticks(samples, labels=[f"{value:.3g}" for value in samples])
-        ax.tick_params(axis="x", which="minor", labelbottom=False)
-        ax.invert_xaxis()
-        ax.grid(True, which="both", alpha=0.25)
-        ax.legend(fontsize=8)
-    fig.savefig(REPORTS / f"{name}.png", dpi=160)
-    plt.show()
 
+[![Figure 1 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_0.png)
+
+
+```text
+MHM Taylor-Hood: velocity_l2 rates: [0.863543 0.694171]
+MHM Taylor-Hood: pressure_l2 rates: [0.792499 0.519541]
+MHM-USFEM: velocity_l2 rates: [0.86343  0.694088]
+MHM-USFEM: pressure_l2 rates: [0.796633 0.525482]
+```
+
+
+
+[![Figure 2 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_2.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_2.png)
+
+
+
+
+[![Figure 3 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_3.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_3.png)
+
+
+```text
+enriched MHM Taylor-Hood: velocity_l2 rates: [2.056903 2.295956]
+enriched MHM Taylor-Hood: pressure_l2 rates: [0.836646 1.167646]
+enriched MHM-USFEM: velocity_l2 rates: [2.063098 2.292527]
+enriched MHM-USFEM: pressure_l2 rates: [0.956912 1.197469]
 ```
 
 
 ```python
-H = np.array([r["H"] for r in rows if r["method"] == "MHM-USFEM"])
-errors = {
-    f"{method}: {norm}": np.array([row[norm] for row in rows if row["method"] == method])
-    for method in ("MHM Taylor-Hood", "MHM-USFEM")
-    for norm in ("velocity_l2", "pressure_l2")
-}
-plot_errors(H, errors, "brinkman-convergence")
-for label, error in errors.items():
-    print(label, "rates:", rates(H, error))
-reference_H = np.sqrt(2) / np.array([r["n"] for r in reference_rows])
-plot_errors(
-    reference_H,
-    {
-        name: np.array([r[name] for r in reference_rows])
-        for name in ("velocity_l2", "pressure_l2", "velocity_h1_seminorm")
-    },
-    "brinkman-reference-convergence",
-)
-control_H = np.array([r["H"] for r in control_rows if r["method"] == "MHM-USFEM"])
-control_errors = {
-    f"{method}: {norm}": np.array([r[norm] for r in control_rows if r["method"] == method])
-    for method in ("MHM Taylor-Hood", "MHM-USFEM")
-    for norm in ("velocity_l2", "pressure_l2")
-}
-plot_errors(control_H, control_errors, "brinkman-enriched-convergence")
-for label, error in control_errors.items():
-    print("enriched", label, "rates:", rates(control_H, error))
+published_rates = plot_brinkman_family_rates(published_rows, reports=REPORTS)
 
 ```
 
 
 
-[![Figure 1 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_0.png)
-
-
-```text
-MHM Taylor-Hood: velocity_l2 rates: [0.86354273 0.69417093]
-MHM Taylor-Hood: pressure_l2 rates: [0.79249916 0.51954051]
-MHM-USFEM: velocity_l2 rates: [0.86343031 0.69408802]
-MHM-USFEM: pressure_l2 rates: [0.7966333  0.52548164]
-```
-
-
-
-[![Figure 2 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_2.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_2.png)
-
-
-
-
-[![Figure 3 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_3.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_3.png)
-
-
-```text
-enriched MHM Taylor-Hood: velocity_l2 rates: [2.05690269 2.29595641]
-enriched MHM Taylor-Hood: pressure_l2 rates: [0.83664612 1.16764647]
-enriched MHM-USFEM: velocity_l2 rates: [2.06309846 2.29252688]
-enriched MHM-USFEM: pressure_l2 rates: [0.95691164 1.1974688 ]
-```
-
-
-```python
-published_rates = []
-for ell in (0, 1, 2):
-    selected = [row for row in published_rows if row["ell"] == ell]
-    H = np.array([row["H"] for row in selected])
-    errors = {
-        name: np.array([row[name] for row in selected])
-        for name in ("velocity_l2", "pressure_l2", "velocity_h1_seminorm")
-    }
-    plot_errors(H, errors, f"brinkman-single-element-ell{ell}-convergence")
-    measured = {name: rates(H, values).tolist() for name, values in errors.items()}
-    published_rates.append(
-        dict(
-            ell=ell,
-            local_degree=ell + 2,
-            levels=[r["n"] for r in selected],
-            measured=measured,
-            literature={
-                "velocity_l2": ell + 2,
-                "pressure_l2": ell + 1,
-                "velocity_h1_seminorm": ell + 1,
-            },
-        )
-    )
-    print("single-element", ell, "measured rates", measured)
-
-```
-
-
-
-[![Figure 4 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_33_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_33_0.png)
+[![Figure 4 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_0.png)
 
 
 ```text
@@ -1384,7 +999,7 @@ single-element 0 measured rates {'velocity_l2': [0.7354939276379141, 1.090340702
 
 
 
-[![Figure 5 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_33_2.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_33_2.png)
+[![Figure 5 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_2.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_2.png)
 
 
 ```text
@@ -1393,7 +1008,7 @@ single-element 1 measured rates {'velocity_l2': [1.449177319615901, 1.9967834438
 
 
 
-[![Figure 6 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_33_4.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_33_4.png)
+[![Figure 6 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_4.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_4.png)
 
 
 ```text
@@ -1408,333 +1023,49 @@ We show the enriched $n=16$ MHM fields and a detailed profile in the layer near 
 
 The display utility evaluates each local polynomial independently, including its one-sided boundary values. Every panel overlays the actual macro mesh and has its own color scale. It changes only the display sampling.
 
-
-```python
-from matplotlib.collections import LineCollection
-from matplotlib.tri import Triangulation
-
-
-def display_samples(
-    meshes: Sequence[TriangleMesh],
-    fields: Sequence[np.ndarray],
-    degree: int,
-    subdivisions: int = 2,
-) -> dict:
-    """Evaluate Basix polynomials without merging any incident macro traces."""
-    template = TriangleMesh(
-        np.array([[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]]), np.array([[0, 1, 2]])
-    ).submesh(0, subdivisions)
-    bary = np.column_stack((1 - template.points.sum(axis=1), template.points))
-    points, cells, values, derivatives = [], [], [], []
-    offset = 0
-    for mesh, field in zip(meshes, fields, strict=True):
-        dofs, phi, gradients = nodal_evaluation(mesh, degree, bary)
-        coordinates = np.einsum("qi,tia->tqa", bary, mesh.points[mesh.cells])
-        value = np.einsum("qi,ti...->tq...", phi, field[dofs])
-        gradient = np.einsum("tqia,ti...->tq...a", gradients, field[dofs])
-        points.append(coordinates.reshape(-1, 2))
-        cells.append(
-            (
-                template.cells[None]
-                + offset
-                + np.arange(len(mesh.cells))[:, None, None] * len(bary)
-            ).reshape(-1, 3)
-        )
-        values.append(value.reshape((-1, *value.shape[2:])))
-        derivatives.append(gradient.reshape((-1, *gradient.shape[2:])))
-        offset += len(mesh.cells) * len(bary)
-    return dict(
-        points=np.concatenate(points),
-        cells=np.concatenate(cells),
-        values=np.concatenate(values),
-        gradient=np.concatenate(derivatives),
-    )
-
-
-def plot_fields(macro: TriangleMesh, panels: dict, name: str) -> None:
-    """Show separate one-sided display arrays and each actual macroface."""
-    columns = min(3, len(panels))
-    rows = (len(panels) + columns - 1) // columns
-    fig, axes = plt.subplots(
-        rows,
-        columns,
-        figsize=(4.3 * columns, 3.7 * rows),
-        squeeze=False,
-        layout="constrained",
-    )
-    for ax, (label, data) in zip(axes.flat, panels.items(), strict=False):
-        points, cells, values = data
-        artist = ax.tripcolor(
-            Triangulation(*points.T, cells), values, shading="gouraud", rasterized=True
-        )
-        ax.add_collection(
-            LineCollection(
-                macro.points[macro.faces], colors=".25", linewidths=0.35, alpha=0.7
-            )
-        )
-        ax.set(title=label, xlabel="x", ylabel="y", aspect="equal")
-        fig.colorbar(artist, ax=ax, shrink=0.85, pad=0.025)
-    for ax in list(axes.flat)[len(panels) :]:
-        ax.set_visible(False)
-    fig.savefig(REPORTS / f"{name}.png", dpi=160)
-    plt.show()
-
-```
-
 The additional single-element figure evaluates the $\ell=2$, P4/P4 degree-family solution on its own macro mesh. Its coefficients and pressure mean come from that experiment, with no subface enrichment. The refined Taylor–Hood solution remains the independently assembled numerical baseline.
 
 
 
 ```python
-macro, meshes, velocity, pressure, degree = published_cases[2, PUBLISHED_LEVELS[2][-1]]
-family_velocity = display_samples(meshes, velocity, degree, subdivisions=4)
-family_pressure = display_samples(meshes, pressure, degree, subdivisions=4)
-rmesh, ru, rp = references[128]
-reference_velocity = display_samples((rmesh,), (ru,), 2, subdivisions=1)
-reference_pressure = display_samples((rmesh,), (rp,), 1, subdivisions=1)
-plot_fields(
-    macro,
-    {
-        "velocity magnitude exact": (
-            family_velocity["points"],
-            family_velocity["cells"],
-            np.linalg.norm(truth.velocity(family_velocity["points"]), axis=1),
-        ),
-        "velocity magnitude\nsingle-element USFEM P4/P4": (
-            family_velocity["points"],
-            family_velocity["cells"],
-            np.linalg.norm(family_velocity["values"], axis=1),
-        ),
-        "velocity magnitude\nTaylor-Hood reference": (
-            reference_velocity["points"],
-            reference_velocity["cells"],
-            np.linalg.norm(reference_velocity["values"], axis=1),
-        ),
-        "pressure exact": (
-            family_pressure["points"],
-            family_pressure["cells"],
-            truth.pressure(family_pressure["points"]),
-        ),
-        "pressure\nsingle-element USFEM P4/P4": (
-            family_pressure["points"],
-            family_pressure["cells"],
-            family_pressure["values"],
-        ),
-        "pressure Taylor-Hood reference": (
-            reference_pressure["points"],
-            reference_pressure["cells"],
-            reference_pressure["values"],
-        ),
-        "velocity error magnitude\nsingle-element USFEM P4/P4": (
-            family_velocity["points"],
-            family_velocity["cells"],
-            np.linalg.norm(
-                family_velocity["values"] - truth.velocity(family_velocity["points"]),
-                axis=1,
-            ),
-        ),
-        "pressure error\nsingle-element USFEM P4/P4": (
-            family_pressure["points"],
-            family_pressure["cells"],
-            family_pressure["values"] - truth.pressure(family_pressure["points"]),
-        ),
-    },
-    "brinkman-single-element-fields",
-)
+plot_brinkman_family_fields(published_cases, PUBLISHED_LEVELS, references, truth, reports=REPORTS)
 
 ```
 
 
 
-[![Figure 7 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_38_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_38_0.png)
+[![Figure 7 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_34_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_34_0.png)
 
 
 
 ```python
-macro, meshes, velocity, pressure, pdegree = enriched_cases[16, "MHM-USFEM"]
-us = display_samples(meshes, velocity, 2, 2)
-usp = display_samples(meshes, pressure, pdegree, 2)
-_, gmeshes, gu, gp, gpd = enriched_cases[16, "MHM Taylor-Hood"]
-gal = display_samples(gmeshes, gu, 2, 2)
-galp = display_samples(gmeshes, gp, gpd, 2)
-rmesh, ru, rp = references[128]
-ref = display_samples((rmesh,), (ru,), 2, 1)
-refp = display_samples((rmesh,), (rp,), 1, 1)
-plot_fields(
-    macro,
-    {
-        "velocity magnitude exact": (
-            us["points"],
-            us["cells"],
-            np.linalg.norm(truth.velocity(us["points"]), axis=1),
-        ),
-        "velocity magnitude MHM Taylor-Hood enriched": (
-            gal["points"],
-            gal["cells"],
-            np.linalg.norm(gal["values"], axis=1),
-        ),
-        "velocity magnitude MHM-USFEM enriched": (
-            us["points"],
-            us["cells"],
-            np.linalg.norm(us["values"], axis=1),
-        ),
-        "pressure exact": (usp["points"], usp["cells"], truth.pressure(usp["points"])),
-        "pressure MHM Taylor-Hood": (galp["points"], galp["cells"], galp["values"]),
-        "pressure MHM-USFEM": (usp["points"], usp["cells"], usp["values"]),
-        "velocity magnitude Taylor-Hood reference": (
-            ref["points"],
-            ref["cells"],
-            np.linalg.norm(ref["values"], axis=1),
-        ),
-        "velocity error magnitude MHM-USFEM": (
-            us["points"],
-            us["cells"],
-            np.linalg.norm(us["values"] - truth.velocity(us["points"]), axis=1),
-        ),
-        "pressure error MHM-USFEM": (
-            usp["points"],
-            usp["cells"],
-            usp["values"] - truth.pressure(usp["points"]),
-        ),
-    },
-    "brinkman-fields",
-)
+plot_brinkman_enriched_fields(enriched_cases, references, truth, reports=REPORTS)
 
 ```
 
 
 
-[![Figure 8 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_39_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_39_0.png)
+[![Figure 8 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_35_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_35_0.png)
+
+
+
+
+[![Figure 9 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_35_1.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_35_1.png)
 
 
 The classical pressure reference uses the same physical zero-mean gauge. The additional comparison below shows that field and the separate pressure errors of both multiscale methods.
-
-
-```python
-plot_fields(
-    macro,
-    {
-        "pressure Taylor-Hood reference": (refp["points"], refp["cells"], refp["values"]),
-        "pressure error MHM Taylor-Hood": (
-            galp["points"],
-            galp["cells"],
-            galp["values"] - truth.pressure(galp["points"]),
-        ),
-        "pressure error MHM-USFEM": (
-            usp["points"],
-            usp["cells"],
-            usp["values"] - truth.pressure(usp["points"]),
-        ),
-    },
-    "brinkman-pressure-comparison",
-)
-
-```
-
-
-
-[![Figure 9 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_41_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_41_0.png)
-
 
 Horizontal profiles retain a separate segment for each incident macrocell. Vertical markers identify macroface crossings; neighboring endpoint values are evaluated independently instead of being averaged.
 
 
 ```python
-from pymhm.fem.scalar.triangle import reference_basis
-
-
-def evaluate_incident(
-    mesh: TriangleMesh, field: np.ndarray, degree: int, points: np.ndarray
-) -> np.ndarray:
-    """Evaluate from this specified macrocell, including its own boundary limits."""
-    vertices = mesh.points[mesh.cells]
-    inverse = np.linalg.inv((vertices[:, 1:] - vertices[:, :1]).swapaxes(1, 2))
-    local = np.einsum("tij,tqj->tqi", inverse, points[None] - vertices[:, None, 0])
-    bary = np.concatenate((1 - local.sum(axis=2, keepdims=True), local), axis=2)
-    incident = np.argmax(bary.min(axis=2), axis=0)
-    chosen = bary[incident, np.arange(len(points))]
-    assert chosen.min() > -1e-10
-    dofs, _ = nodal_space(mesh, degree)
-    phi = reference_basis(degree, chosen)[0]
-    return np.einsum("qi,qi...->q...", phi, field[dofs[incident]])
-
-
-def profile_segments(
-    macro: TriangleMesh,
-    meshes: Sequence[TriangleMesh],
-    fields: Sequence[np.ndarray],
-    degree: int,
-    height: float = 0.37,
-) -> list:
-    """Return separate horizontal segments; each endpoint retains its incident value."""
-    segments = []
-    for cell, vertices in enumerate(macro.points[macro.cells]):
-        intersections = []
-        for i, j in ((0, 1), (1, 2), (2, 0)):
-            if (vertices[i, 1] - height) * (vertices[j, 1] - height) < 0:
-                fraction = (height - vertices[i, 1]) / (vertices[j, 1] - vertices[i, 1])
-                intersections.append(
-                    vertices[i, 0] + fraction * (vertices[j, 0] - vertices[i, 0])
-                )
-        if len(intersections) == 2:
-            x = np.linspace(min(intersections), max(intersections), 101)
-            points = np.column_stack((x, np.full_like(x, height)))
-            segments.append(
-                (x, evaluate_incident(meshes[cell], fields[cell], degree, points))
-            )
-    return segments
-
-```
-
-
-```python
-fig, axes = plt.subplots(1, 2, figsize=(12, 4.2), layout="constrained")
-x = np.linspace(0, 1, 2001)
-points = np.column_stack((x, x * 0 + 0.37))
-axes[0].plot(x, truth.velocity(points)[:, 1], "k--", label="exact velocity component y")
-axes[1].plot(x, truth.pressure(points), "k--", label="exact pressure")
-for method in ("MHM Taylor-Hood", "MHM-USFEM"):
-    m, meshes, u, p, pd = enriched_cases[16, method]
-    for index, (position, values) in enumerate(profile_segments(m, meshes, u, 2)):
-        axes[0].plot(
-            position,
-            values[:, 1],
-            color={"MHM Taylor-Hood": "tab:blue", "MHM-USFEM": "tab:orange"}[method],
-            label=method if index == 0 else None,
-        )
-        for cross in (position[0], position[-1]):
-            axes[0].axvline(cross, color=".7", linewidth=0.4, alpha=0.6)
-    for index, (position, values) in enumerate(profile_segments(m, meshes, p, pd)):
-        axes[1].plot(
-            position,
-            values,
-            color={"MHM Taylor-Hood": "tab:blue", "MHM-USFEM": "tab:orange"}[method],
-            label=method if index == 0 else None,
-        )
-        for cross in (position[0], position[-1]):
-            axes[1].axvline(cross, color=".7", linewidth=0.4, alpha=0.6)
-axes[0].set(
-    xlim=(0.85, 1),
-    xlabel="x at y=0.37",
-    ylabel="velocity component y",
-    title="Boundary-layer profile",
-)
-axes[1].set(
-    xlim=(0, 1),
-    xlabel="x at y=0.37",
-    ylabel="pressure",
-    title="One-sided pressure profiles; mean zero",
-)
-for ax in axes:
-    ax.legend(fontsize=8)
-fig.savefig(REPORTS / "brinkman-profiles.png", dpi=160)
-plt.show()
+plot_brinkman_profiles(enriched_cases, truth, reports=REPORTS)
 
 ```
 
 
 
-[![Figure 10 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_44_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_44_0.png)
+[![Figure 10 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_38_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_38_0.png)
 
 
 ## 7. Check quadrature and record the precise method provenance
@@ -1745,27 +1076,14 @@ The raw pseudostress $\nu\nabla\boldsymbol u_h-p_hI$ is a broken derived field. 
 
 
 ```python
-import importlib.metadata
-
-
-def execution_provenance(notebook: str) -> dict:
-    """Record source/lock digests and installed numerical-library versions."""
-    return {
-        "notebook": notebook,
-        "notebook_sha256": hashlib.sha256((ROOT / notebook).read_bytes()).hexdigest(),
-        "pixi_lock_sha256": hashlib.sha256((ROOT / "pixi.lock").read_bytes()).hexdigest(),
-        "versions": {
-            name: importlib.metadata.version(name)
-            for name in ("numpy", "scipy", "fenics-basix", "fenics-dolfinx", "pymhm")
-        },
-        "study_profile": STUDY_PROFILE,
-        "single_element_levels": PUBLISHED_LEVELS,
-        "full_qualification_levels": PUBLISHED_FULL_LEVELS,
-        "basis_convention": "Basix equispaced Pk in PyMHM nodal_space order; no local nullspace modes",
-        "reference_project": "DOLFINx",
-        "reference_source_url": "https://docs.fenicsproject.org/dolfinx/v0.9.0/python/",
-        "literature_comparison": "same analytical PDE; declared tutorial discretization, no matched-figure reproduction",
-    }
+provenance = execution_provenance(
+    "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb",
+    root=ROOT,
+    study_profile=STUDY_PROFILE,
+    single_element_levels=PUBLISHED_LEVELS,
+    full_qualification_levels=PUBLISHED_FULL_LEVELS,
+    literature_comparison="same analytical PDE; declared tutorial discretization, no matched-figure reproduction",
+)
 
 ```
 
@@ -1810,7 +1128,7 @@ for ell in (0, 1, 2):
             "boundary": "full velocity Dirichlet, weak MHM / strong conforming reference",
             "pressure_gauge": "zero physical volume mean",
             "reference_backend": f"DOLFINx {dolfinx.__version__}; independent P2/P1 UFL",
-            "local_ufl_quadrature_degree": 28,
+            "local_ufl_quadrature_degree": LOCAL_QUADRATURE_DEGREE,
             "error_duffy_order": ERROR_ORDER,
             "convergence": rows,
             "reference_refinement": reference_rows,
@@ -1824,9 +1142,7 @@ for ell in (0, 1, 2):
             "mesh_size_convention": "actual maximum macrotriangle diameter H=sqrt(2)/n",
             "theory_url": "https://doi.org/10.1137/24M1649368",
             "state_archives": state_archives,
-            "provenance": execution_provenance(
-                "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb"
-            ),
+            "provenance": provenance,
         },
         indent=2,
     )
@@ -1837,9 +1153,11 @@ for ell in (0, 1, 2):
 
 
 
+
 ```text
-29124
+57799
 ```
+
 
 
 
@@ -1859,7 +1177,7 @@ This configuration requires positive drag. In the pure Stokes limit, the vector-
 
 ```bash
 pixi install --locked -e introduction
-pixi run --locked -e introduction notebooks-run introduction/stokes_brinkman_boundary_layer.ipynb --timeout 3600
+pixi run --locked -e introduction notebooks-run introduction/stokes_brinkman_boundary_layer.ipynb --timeout 7200
 ```
 
 The runner writes the executed copy to `build/notebooks/introduction/`. The figures and numerical outputs on this page come from that execution. Timings describe the recorded hardware and solver settings; rerun performance examples on an idle machine to measure your own environment.

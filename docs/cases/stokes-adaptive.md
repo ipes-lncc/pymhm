@@ -299,15 +299,15 @@ macro meshes, both estimator components, mixed errors and physical L2 norms.
 The uniform and adaptive campaigns run separately from CI:
 
 ```sh
-pixi run --locked -e test-core python examples/solve_stokes_adaptive.py \
+pixi run --locked -e test-core python -m examples.solve_stokes_adaptive \
   --strategy uniform --viscosity 0.01 --trace-degree 1
-pixi run --locked -e test-core python examples/solve_stokes_adaptive.py \
+pixi run --locked -e test-core python -m examples.solve_stokes_adaptive \
   --strategy macro --viscosity 0.01 --iterations 4
-pixi run --locked -e test-core python examples/solve_stokes_adaptive.py \
+pixi run --locked -e test-core python -m examples.solve_stokes_adaptive \
   --strategy face --viscosity 0.01 --trace-degree 1 --iterations 4
-pixi run -e fem python examples/solve_cavity_reference.py --levels 8 16 32 64 128 256 512
-pixi run -e notebooks python examples/compare_stokes_cavity.py
-pixi run -e notebooks python examples/plot_stokes_adaptive.py
+pixi run --locked -e fem python -m examples.solve_cavity_reference --levels 8 16 32 64 128 256 512
+pixi run --locked -e notebooks python -m examples.compare_stokes_cavity
+pixi run --locked -e notebooks python -m examples.plot_stokes_adaptive
 ```
 
 The regression suite checks the element and face formulas independently,

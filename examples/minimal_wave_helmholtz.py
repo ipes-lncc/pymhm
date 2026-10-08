@@ -12,8 +12,8 @@ from examples.helmholtz_basis_archive import basis_payload
 from examples.helmholtz_campaign import AcousticWave, norms
 from examples.helmholtz_trace_family import verify_helmholtz_solution
 from examples.minimal_wave_convergence import digest, quadrature_change, require_original, write
-from pymhm._legacy.models.waves.helmholtz import solve_helmholtz
-from pymhm.fem.scalar.quadrilateral import _cardinals
+from examples.tutorial_helmholtz_equations import solve_acoustic
+from pymhm.fem.scalar.quadrilateral import cardinal_polynomials
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
@@ -26,7 +26,7 @@ def acquire(output: Path) -> dict[str, Any]:
         started = perf_counter()
         mesh = CartesianMacroMesh(n)
         skeleton = helmholtz_skeleton(mesh, wave.omega, degree=2, oscillatory=False)
-        solution = solve_helmholtz(
+        solution = solve_acoustic(
             mesh,
             omega=wave.omega,
             skeleton=skeleton,
@@ -56,7 +56,7 @@ def acquire(output: Path) -> dict[str, Any]:
             macro_faces=mesh.faces,
             local_points=np.asarray([fine.points for fine in solution.local_meshes]),
             local_cells=np.asarray([fine.cells for fine in solution.local_meshes]),
-            actual_cardinal_ascending_power_matrix=np.asarray(_cardinals(4)),
+            actual_cardinal_ascending_power_matrix=np.asarray(cardinal_polynomials(4)),
             local_degree=np.asarray(4),
             local_refinement=np.asarray(2),
             **basis_payload(skeleton),

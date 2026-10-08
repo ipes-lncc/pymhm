@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -16,13 +24,14 @@ from threadpoolctl import threadpool_limits
 
 from examples.maxwell_data import CavityMode
 from examples.maxwell_norms import MaxwellNorms
-from pymhm._legacy.models.waves.maxwell import MaxwellSolution, MaxwellStepper
+from examples.tutorial_maxwell_equations import EquationLeapfrog
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
 from pymhm.fem.vector.curl import TangentialTraceSpace as MaxwellSkeleton
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.electromagnetic import MaxwellSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/maxwell"
@@ -46,6 +55,8 @@ def source_hashes() -> dict[str, str]:
         "linalg/linear",
     )
     paths = [ROOT / f"src/pymhm/{name}.py" for name in names]
+    paths += list(sorted((ROOT / "src/pymhm").rglob("*.py")))
+    paths.append(ROOT / "examples/tutorial_maxwell_equations.py")
     paths += [Path(__file__), ROOT / "examples/maxwell_data.py", ROOT / "examples/maxwell_norms.py"]
     return current_source_manifest(
         {
@@ -88,7 +99,7 @@ def cavity_row(dimension: int, resolution: int, ell: int, output: Path) -> dict[
         else TriangularSkeleton(mesh, degree=ell)
     )
     mode = CavityMode(dimension)
-    with MaxwellStepper(
+    with EquationLeapfrog(
         mesh, time_step=0.0005, skeleton=MaxwellSkeleton(base), degree=ell + 2, quadrature_order=8
     ) as stepper:
         solution = stepper.initialize(mode.electric_shape)
@@ -140,7 +151,7 @@ def temporal_row(time_step: float) -> dict[str, Any]:
     No continuum error is subtracted to infer the temporal order.
     """
     mesh, mode = TriangleMesh.unit_square(), CavityMode(2)
-    with MaxwellStepper(mesh, time_step=time_step, quadrature_order=8) as stepper:
+    with EquationLeapfrog(mesh, time_step=time_step, quadrature_order=8) as stepper:
         initial = stepper.initialize(mode.electric_shape)
         me = sparse.block_diag([local.electric_mass for local in stepper.locals]).toarray()
         mh = sparse.block_diag([local.magnetic_mass for local in stepper.locals]).toarray()

@@ -129,8 +129,8 @@ The original parameter plots are included for direct inspection:
 
 *[Araya et al. (2024)](https://doi.org/10.1016/j.cma.2024.117089), Figure 9. Local and global conditioning versus advection.*
 
-Run `pixi run -e notebooks verify-rad-conditioning`, followed by
-`pixi run -e notebooks python examples/plot_rad_conditioning.py`.
+Run `pixi run --locked -e notebooks verify-rad-conditioning`, followed by
+`pixi run --locked -e notebooks python -m examples.plot_rad_conditioning`.
 Results and digitized markers are under `examples/results`; the parameter sweeps
 are research jobs, separate from the compact automated nullspace tests.
 

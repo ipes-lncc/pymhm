@@ -7,6 +7,14 @@ Displacement is discontinuous Qk squared and independent rotation is total Pk.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -25,11 +33,18 @@ from pymhm.io.provenance import current_source_manifest
 if __package__:
     from .hpc4e_data import BOUNDS, DATA_DIRECTORY, LENGTH_SCALE, STRESS_SCALE, HPC4EData, load_data
 else:
-    from hpc4e_data import BOUNDS, DATA_DIRECTORY, LENGTH_SCALE, STRESS_SCALE, HPC4EData, load_data
+    from examples.hpc4e_data import (
+        BOUNDS,
+        DATA_DIRECTORY,
+        LENGTH_SCALE,
+        STRESS_SCALE,
+        HPC4EData,
+        load_data,
+    )
 
-from pymhm._legacy.models.elasticity.stress_tensor import _rotation_basis
 from pymhm.fem.hdiv.tensor_rt import tensor_rt_basis
 from pymhm.fem.scalar.quadrilateral import quadrilateral_quadrature
+from pymhm.fem.vector.stress_tensor import complete_rotation_basis as _rotation_basis
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -390,7 +405,11 @@ def _solve(
             if __package__:
                 from .hpc4e_parallel import checked_solve, compact_matrix, symmetric_equilibration
             else:
-                from hpc4e_parallel import checked_solve, compact_matrix, symmetric_equilibration
+                from examples.hpc4e_parallel import (
+                    checked_solve,
+                    compact_matrix,
+                    symmetric_equilibration,
+                )
             original, matrix_storage = compact_matrix(original, resources)
             if comm.rank == 0:
                 print(f"Verified and compacted native matrix: {matrix_storage}", flush=True)
@@ -439,11 +458,14 @@ def _solve(
         elif equilibration == "symmetric" and factorization != "pypardiso-symmetric-matching":
             from scipy import sparse
 
-            from pymhm.linalg.linear import LinearFactorization, _symmetric_equilibration
+            from pymhm.linalg.linear import LinearFactorization
+            from pymhm.linalg.linear import (
+                symmetric_equilibration as sparse_symmetric_equilibration,
+            )
 
             pointer, indices, values = matrix.getValuesCSR()
             original_csr = sparse.csr_matrix((values, indices, pointer), shape=matrix.getSize())
-            balanced, diagonal = _symmetric_equilibration(original_csr)
+            balanced, diagonal = sparse_symmetric_equilibration(original_csr)
             balanced_matrix = PETSc.Mat().createAIJ(
                 size=balanced.shape,
                 csr=(balanced.indptr, balanced.indices, balanced.data),
@@ -464,10 +486,10 @@ def _solve(
         elif factorization == "ldlt":
             from scipy import sparse
 
-            from pymhm.linalg.linear import _hermitian
+            from pymhm.linalg.linear import require_hermitian
 
             pointer, indices, values = factor_matrix.getValuesCSR()
-            _hermitian(
+            require_hermitian(
                 sparse.csr_matrix((values, indices, pointer), shape=factor_matrix.getSize()),
                 "symmetric MUMPS",
             )

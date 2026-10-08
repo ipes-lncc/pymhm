@@ -10,10 +10,10 @@ from threadpoolctl import threadpool_limits
 
 from examples.reconstruction3d_data import fields
 from pymhm import TetraMesh, TriangularSkeleton
-from pymhm._legacy.models.darcy.primal_3d import Darcy3DSolution
 from pymhm.core.contracts import HybridSolution
 from pymhm.estimators.darcy_3d import estimate_darcy_error_3d
 from pymhm.io.provenance import current_source_manifest
+from pymhm.postprocessing.solutions import Darcy3DSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/tetra-pk"

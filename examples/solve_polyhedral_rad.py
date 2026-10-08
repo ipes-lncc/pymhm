@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -10,11 +18,13 @@ from pathlib import Path
 from time import perf_counter
 
 import numpy as np
-from polygon_meshes import polygon_partition
-from solve_rad3d import exact, gradient, physical_flux, source
 from threadpoolctl import threadpool_limits
 
-from pymhm._legacy.models.transport.polyhedral import PolygonalSkeleton3D, solve_polyhedral_rad
+from examples.field_archive import field_archive_arrays
+from examples.formulations.transport_3d import transport_3d
+from examples.polygon_meshes import polygon_partition
+from examples.solve_rad3d import exact, gradient, physical_flux, source
+from pymhm.fem.traces.polygon_3d import PolygonalSkeleton3D
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.polyhedral import PolyhedralMesh
 
@@ -48,15 +58,25 @@ def main() -> None:
     destination = ROOT / "examples/results/polyhedral-rad.json"
     folder = ROOT / "build/results/polyhedral-rad"
     folder.mkdir(exist_ok=True, parents=True)
-    paths = [Path(__file__), ROOT / "examples/polygon_meshes.py", ROOT / "examples/solve_rad3d.py"]
+    paths = [
+        Path(__file__),
+        ROOT / "examples/polygon_meshes.py",
+        ROOT / "examples/solve_rad3d.py",
+        ROOT / "examples/field_archive.py",
+        ROOT / "examples/formulations/scalar_3d.py",
+        ROOT / "examples/formulations/transport_3d.py",
+    ]
     paths += [
         ROOT / f"src/pymhm/{name}"
         for name in (
             "meshes/polyhedral.py",
-            "_legacy/models/transport/polyhedral.py",
+            "fem/traces/polygon_3d.py",
+            "fem/traces/normal.py",
+            "core/multiscale.py",
+            "postprocessing/scalar_3d.py",
             "fem/scalar/tetrahedron.py",
             "fem/scalar/tetrahedron_topology.py",
-            "_legacy/models/transport/rad_3d.py",
+            "fem/scalar/transport_3d.py",
             "core/contracts.py",
             "linalg/linear.py",
             "execution/cpu.py",
@@ -100,7 +120,7 @@ def main() -> None:
                     continue
                 start = perf_counter()
                 mesh, base = partition(n, family)
-                solution = solve_polyhedral_rad(
+                solution = transport_3d(
                     mesh,
                     degree=4,
                     skeleton=PolygonalSkeleton3D(mesh, 1),
@@ -144,6 +164,7 @@ def main() -> None:
                         arrays[f"points_{cell}"] = fine.points
                         arrays[f"cells_{cell}"] = fine.cells
                         arrays[f"coefficients_{cell}"] = solution.values[cell]
+                    arrays.update(field_archive_arrays(solution.hybrid.field("scalar")))
                     archive = folder / f"{family}-n{n}.npz"
                     np.savez_compressed(archive, **arrays)
                     row["field_archive"] = archive.name

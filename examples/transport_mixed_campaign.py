@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -16,9 +24,9 @@ from numpy.polynomial.legendre import leggauss
 from threadpoolctl import threadpool_limits
 
 from examples.field_sampling import sample_field
+from examples.formulations.application import transport as solve_transport
 from examples.pgmhm_campaign import crisscross
 from examples.transport_campaign import layer, natural_horizontal
-from pymhm._legacy.models.transport.solver import ScalarSolution, solve_transport
 from pymhm.adaptivity.transport import (
     TransportBounds,
     estimate_transport_faces,
@@ -29,6 +37,7 @@ from pymhm.fem.scalar.triangle import tabulate
 from pymhm.fem.traces.interval import SkeletonSpace
 from pymhm.fem.traces.scalar import prepare_scalar_trace
 from pymhm.io.provenance import current_source_manifest
+from pymhm.postprocessing.solutions import ScalarSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/transport"

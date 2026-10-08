@@ -7,29 +7,28 @@ import numpy as np
 from scipy import sparse
 
 from pymhm._legacy.models.transport.solver import ScalarSolution
-from pymhm._legacy.models.transport.stabilization import UnusualParameters, unusual_scale
+from pymhm._legacy.models.transport.stabilization import UnusualParameters as UnusualParameters
+from pymhm._legacy.models.transport.stabilization import unusual_scale as unusual_scale
 from pymhm.core.contracts import LocalAssembly, LocalProblem
 from pymhm.core.system import HybridSystem
 from pymhm.core.validation import positive_int
-from pymhm.fem.quadrature.material import material_triangle_quadrature
+from pymhm.fem.quadrature.material import (
+    material_triangle_quadrature as material_triangle_quadrature,
+)
 from pymhm.fem.scalar.operators import boundary_data
-from pymhm.fem.scalar.triangle import element_tabulate, trace_coupling
+from pymhm.fem.scalar.stabilization import streamline_scale
+from pymhm.fem.scalar.transport import triangle_transport_operators
+from pymhm.fem.scalar.triangle import element_tabulate as element_tabulate
+from pymhm.fem.scalar.triangle import trace_coupling as trace_coupling
 from pymhm.fem.traces.interval import SkeletonSpace
+from pymhm.fem.traces.normal import boundary_tangent_2d as _boundary_tangent
 from pymhm.fem.traces.scalar import diffusive_boundary_matrix, strong_boundary_dofs
-from pymhm.fem.vector.operators import _assemble_blocks
+from pymhm.fem.vector.operators import _assemble_blocks as _assemble_blocks
 from pymhm.materials.cartesian import CartesianCellField
-from pymhm.materials.evaluation import scalar_values, tensor_values, vector_values
+from pymhm.materials.evaluation import scalar_values as scalar_values
+from pymhm.materials.evaluation import tensor_values as tensor_values
+from pymhm.materials.evaluation import vector_values as vector_values
 from pymhm.meshes.triangle import TriangleMesh
-
-
-def _streamline_scale(fine: TriangleMesh, tensor: Any, beta: Any, strong_reaction: Any) -> Any:
-    """Return the common positive residual time scale for spatial and time-step forms."""
-    h = np.max(fine.lengths[fine.cell_faces], axis=1)[:, None]
-    magnitude = np.linalg.norm(beta, axis=-1)
-    diffusivity = np.linalg.eigvalsh(tensor)[..., -1]
-    return 1 / np.sqrt(
-        (2 * magnitude / h) ** 2 + (4 * diffusivity / h**2) ** 2 + strong_reaction**2
-    )
 
 
 def _rad_local(
@@ -56,79 +55,27 @@ def _rad_local(
 ) -> LocalAssembly:
     """Assemble the conservative skew form and its complete streamline residual."""
     fine = mesh.submesh(cell, refinement) if local_meshes is None else local_meshes[cell]
-    bary, weights, material = material_triangle_quadrature(fine, diffusion, max(order, degree + 2))
-    dofs, nodes, basis, gradient, hessian = element_tabulate(fine, degree, bary)
-    physical = np.einsum("tqi,tij->tqj", bary, fine.points[fine.cells])
-    flat = physical.reshape(-1, 2)
-    nt, nq = weights.shape
-    tensor = tensor_values(material, flat).reshape(nt, nq, 2, 2)
-    beta = vector_values(velocity, flat).reshape(nt, nq, 2)
-    normal_pair = hasattr(velocity, "advection_boundary_matrix")
-    if normal_pair and stabilization != "galerkin":
-        raise ValueError("raw volume/numerical-normal velocity requires Galerkin stabilization")
-    div_beta = (
-        np.zeros((nt, nq))
-        if normal_pair
-        else scalar_values(velocity_divergence, flat).reshape(nt, nq)
+    forms = triangle_transport_operators(
+        fine,
+        degree=degree,
+        diffusion=diffusion,
+        velocity=velocity,
+        velocity_divergence=velocity_divergence,
+        diffusion_divergence=diffusion_divergence,
+        reaction=reaction,
+        source=source,
+        stabilization=stabilization,
+        order=order,
+        unusual_parameters=unusual_parameters,
     )
-    c = scalar_values(reaction, flat).reshape(nt, nq)
-    effective = c + div_beta / 2
-    if np.any(effective < 0):
-        raise ValueError("reaction+div(velocity)/2 must be nonnegative")
-    force = scalar_values(source, flat).reshape(nt, nq)
-    blocks = np.einsum("tq,tqia,tqab,tqjb,t->tij", weights, gradient, tensor, gradient, fine.areas)
-    blocks += np.einsum("tq,tqi,tqj,tq,t->tij", weights, basis, basis, effective, fine.areas)
-    streamline = np.einsum("tqa,tqia->tqi", beta, gradient)
-    advective = np.einsum("tq,tqi,tqj,t->tij", weights, basis, streamline, fine.areas)
-    blocks += (
-        -advective.swapaxes(1, 2) if normal_pair else (advective - advective.swapaxes(1, 2)) / 2
-    )
-    element_load = np.einsum("tq,tqi,tq,t->ti", weights, basis, force, fine.areas)
-    if stabilization in ("supg", "unusual"):
-        div_tensor = vector_values(diffusion_divergence, flat).reshape(nt, nq, 2)
-        diffusion_residual = np.einsum("tqab,tqiab->tqi", tensor, hessian) + np.einsum(
-            "tqa,tqia->tqi", div_tensor, gradient
-        )
-        strong = -diffusion_residual + streamline + (c + div_beta)[:, :, None] * basis
-        if stabilization == "supg":
-            tau = _streamline_scale(fine, tensor, beta, c + div_beta)
-            test_residual = streamline
-        else:
-            if isinstance(diffusion, CartesianCellField) and np.any(tensor != tensor[:, :1]):
-                raise ValueError(
-                    "UNUSUAL requires material interfaces aligned with local fine cells"
-                )
-            tau = unusual_scale(
-                basis,
-                gradient,
-                diffusion_residual,
-                weights,
-                fine.lengths[fine.cell_faces].max(axis=1),
-                tensor,
-                c,
-                fine.points[fine.cells].mean(axis=1),
-                unusual_parameters or UnusualParameters(),
-            )[:, None]
-            test_residual = -strong
-        blocks += np.einsum("tq,tqi,tqj,tq,t->tij", weights, test_residual, strong, tau, fine.areas)
-        element_load += np.einsum(
-            "tq,tqi,tq,tq,t->ti", weights, test_residual, force, tau, fine.areas
-        )
-    matrix = _assemble_blocks(blocks, dofs, len(nodes))
-    if normal_pair:
-        matrix += velocity.advection_boundary_matrix(degree, order)
-    load = np.bincount(dofs.ravel(), weights=element_load.ravel(), minlength=len(nodes))
-    moments = np.zeros(len(nodes))
-    np.add.at(moments, dofs, fine.areas[:, None] * np.einsum("tq,tqi->ti", weights, basis))
+    matrix, load, moments, nodes = forms.matrix, forms.load, forms.moments, forms.nodes
     constant = np.ones((len(nodes), 1))
-    pure_diffusion = not np.any(effective) and not np.any(beta)
+    pure_diffusion = forms.pure_diffusion
     retained = {"kernel": constant} if pure_diffusion else {"coarse_basis": constant}
     constraints = moments[:, None]
     if coarse_space == "kernel" and not pure_diffusion:
-        kernel = (
-            not np.any(c)
-            and not np.any(div_beta)
-            and _boundary_tangent(SkeletonSpace(fine), velocity, order)
+        kernel = forms.zero_reaction_divergence and _boundary_tangent(
+            SkeletonSpace(fine), velocity, order
         )
         retained = {"kernel": constant} if kernel else {}
         if not kernel:
@@ -162,7 +109,7 @@ def _rad_local(
     )
     return LocalAssembly(
         problem,
-        (fine, moments, pure_diffusion, not np.any(c) and not np.any(div_beta), len(nodes), ids),
+        (fine, moments, pure_diffusion, forms.zero_reaction_divergence, len(nodes), ids),
     )
 
 
@@ -390,17 +337,4 @@ def solve_rad(
     )
 
 
-def _boundary_tangent(
-    skeleton: SkeletonSpace, velocity: Any, order: int, faces: tuple[int, ...] | None = None
-) -> bool:
-    """Check zero external normal advection with componentwise cancellation scales."""
-    for face in skeleton.mesh.boundary_faces if faces is None else faces:
-        parameter, _ = skeleton.faces[face].quadrature(max(order, 8))
-        start, end = skeleton.mesh.points[skeleton.mesh.faces[face]]
-        points = start + parameter[:, None] * (end - start)
-        beta = vector_values(velocity, points)
-        normal = skeleton.mesh.normals[face]
-        scale = float(np.max(np.abs(beta) @ np.abs(normal)))
-        if np.any(np.abs(beta @ normal) > 64 * np.finfo(float).eps * scale):
-            return False
-    return True
+_streamline_scale = streamline_scale

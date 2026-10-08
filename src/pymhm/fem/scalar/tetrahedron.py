@@ -187,3 +187,24 @@ def tetra_operators(
     assembled_load = np.zeros(size)
     np.add.at(assembled_load, dofs, load)
     return matrix, assembled_mass, assembled_load
+
+
+def tetra_boundary_nodes(mesh: TetraMesh, degree: int) -> IntArray:
+    """Return sorted continuous-Pk nodal coordinates on the exterior boundary.
+
+    Exterior incidence is tested in affine barycentric coordinates against the
+    opposite local vertex, with the existing geometric tolerance 1e-12. This
+    identifies nodes; it neither projects boundary data nor chooses a PDE sign.
+    """
+    dofs, nodes = tetra_nodal_space(mesh, degree)
+    boundary: set[int] = set()
+    for face in mesh.boundary_faces:
+        cell = int(mesh.face_cells[face, 0])
+        vertices = mesh.points[mesh.cells[cell]]
+        reference = (nodes[dofs[cell]] - vertices[0]) @ np.linalg.inv(
+            (vertices[1:] - vertices[0]).T
+        ).T
+        bary = np.column_stack((1 - reference.sum(axis=1), reference))
+        opposite = int(np.flatnonzero(mesh.cell_faces[cell] == face)[0])
+        boundary.update(dofs[cell][np.abs(bary[:, opposite]) < 1e-12])
+    return np.array(sorted(boundary), dtype=np.int64)

@@ -9,6 +9,14 @@ inf-sup stability, continuum accuracy or the missing historical realization.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import platform
 import sys
@@ -21,6 +29,8 @@ import numpy as np
 import scipy
 from threadpoolctl import threadpool_info, threadpool_limits
 
+from examples.formulations.application import darcy as solve_darcy
+from examples.formulations.darcy_transport import solve_darcy_trajectory as solve_darcy_transport
 from examples.transport_checkpoints import checkpoint_field, write_progress
 from examples.transport_random_problem import (
     INPUT,
@@ -38,12 +48,10 @@ from examples.transport_trajectory import (
     vector_coefficients,
 )
 from pymhm import FaceSpace, SkeletonSpace
-from pymhm._legacy.models.darcy.primal import solve_darcy
-from pymhm._legacy.models.transport.dispersion import solve_darcy_transport
-from pymhm._legacy.models.transport.solver import ScalarSolution
 from pymhm.core.validation import positive_int
 from pymhm.fem.traces.scalar import strong_boundary_dofs
 from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.postprocessing.solutions import ScalarSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 

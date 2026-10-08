@@ -23,10 +23,9 @@ reproduction of a published application.
 python -m pip install pymhm
 ```
 
-The mesh-associated binding API used in this course is available in the current
-source checkout and will be included in the next release. The published PyPI
-1.0.0 provides the explicit `Equation`/`MultiscaleProblem` interface. Use the
-[source installation](../installation.md#from-a-checkout) for this workflow.
+The course describes the API in this repository revision. Use the
+[source installation](../installation.md#from-a-checkout) and its checked-in
+Pixi lockfile to reproduce the examples with their declared dependencies.
 
 The portable package works independently of DOLFINx, PETSc, MPI and GPU
 libraries. This UFL example uses the optional native DOLFINx backend. In a

@@ -7,6 +7,14 @@ the original local matrices and response maps are shared throughout.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import gc
 import hashlib
@@ -22,7 +30,7 @@ from examples.helmholtz_field_store import write_coefficients
 from examples.helmholtz_response_store import ResponseStore
 from examples.marmousi_campaign import evaluate_fields, source_hashes
 from examples.marmousi_data import load_marmousi_crop
-from pymhm._legacy.models.waves.helmholtz import _HelmholtzFactory
+from examples.tutorial_helmholtz_equations import AcousticAssemblyProvider
 from pymhm.fem.loads import split_point_sources
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton
 from pymhm.io.provenance import file_digest
@@ -75,7 +83,7 @@ def main() -> None:
     before, started = hashes(), time.perf_counter()
     args.output.mkdir(parents=True, exist_ok=True)
     with threadpool_limits(1):
-        factory = _HelmholtzFactory(
+        factory = AcousticAssemblyProvider(
             mesh,
             skeleton,
             40 * np.pi,

@@ -182,7 +182,7 @@ computed with an independent monomial basis.
 
 ```python
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
-from pymhm._legacy.models.flow.solver_3d import solve_flow_3d
+from examples.formulations.application import flow as solve_flow_3d
 from pymhm.meshes.tetrahedron import TetraMesh
 
 mesh = TetraMesh.unit_cube(2)
@@ -198,9 +198,9 @@ solution = solve_flow_3d(
 
 ```bash
 pixi run --locked -e test-core pytest -q tests/test_flow3d.py
-pixi run -e fem pytest -q tests/test_flow3d_fenics.py
-pixi run --locked -e test-core python examples/solve_flow3d.py --workers 4
-pixi run -e notebooks python examples/plot_flow3d.py
+pixi run --locked -e fem pytest -q tests/test_flow3d_fenics.py
+pixi run --locked -e test-core python -m examples.solve_flow3d --workers 4
+pixi run --locked -e notebooks python -m examples.plot_flow3d
 ```
 
 The [campaign record](../figures/flow3d/campaign.json) identifies operators,

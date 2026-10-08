@@ -22,12 +22,12 @@ from scipy import sparse
 from examples.archive_precision import precision_fields, restore_precision
 from examples.local_response_cache import array_identity
 from examples.transport_checkpoints import checkpoint_field, write_progress
-from pymhm._legacy.models.darcy.hdiv_3d import Mixed3DDarcySolution
 from pymhm.core.system import HybridSystem
 from pymhm.fem.hdiv.family_3d import cell_quadrature
 from pymhm.io.provenance import file_digest
-from pymhm.linalg.linear import _accurate_residual
+from pymhm.linalg.linear import accurate_residual
 from pymhm.meshes.mixed import hdiv3d_dofs, hdiv3d_transform
+from pymhm.postprocessing.solutions import Mixed3DDarcySolution
 
 SCHEMA = "pymhm-affine-hdiv3d-executed-field-v1"
 
@@ -284,7 +284,7 @@ def original_checks(arrays: Mapping[str, np.ndarray]) -> dict[str, Any]:
     ]
     global_matrix = _csr(arrays, "global_matrix")
     global_rhs = restore(arrays, "global_rhs")
-    compact = _accurate_residual(global_matrix, global_rhs, global_values)
+    compact = accurate_residual(global_matrix, global_rhs, global_values)
     compact_free = np.ones(len(global_rhs), dtype=bool)
     compact_free[arrays["fixed_trace_indices"]] = False
     compact_relative = float(
@@ -302,7 +302,7 @@ def original_checks(arrays: Mapping[str, np.ndarray]) -> dict[str, Any]:
         scaling = arrays[f"scaling_{cell}"]
         combined = sparse.hstack((matrix, sparse.csr_matrix(coupling)), format="csr")
         values = np.r_[field, local_trace]
-        defect = _accurate_residual(combined, load, values) / scaling
+        defect = accurate_residual(combined, load, values) / scaling
         action = (abs(combined) @ abs(values) + abs(load)) / scaling
         nq, npres = int(arrays[f"flux_size_{cell}"]), int(arrays[f"pressure_size_{cell}"])
         blocks = [

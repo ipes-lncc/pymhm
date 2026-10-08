@@ -144,7 +144,7 @@ class CartesianMacroMesh:
         return CartesianMacroMesh(nx, ny, (lower[0], upper[0], lower[1], upper[1]))
 
 
-def _refinement(value: int | tuple[int, int]) -> tuple[int, int]:
+def cartesian_refinement(value: int | tuple[int, int]) -> tuple[int, int]:
     """Normalize a scalar or rectangular pair of local subdivision counts."""
     if isinstance(value, tuple):
         if len(value) != 2:
@@ -154,3 +154,6 @@ def _refinement(value: int | tuple[int, int]) -> tuple[int, int]:
         )
     n = positive_int(value, "local_refinement")
     return n, n
+
+
+_refinement = cartesian_refinement

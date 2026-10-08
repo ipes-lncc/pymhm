@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 from pathlib import Path
@@ -14,8 +22,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import darcy as solve_darcy
 from examples.plot_style import set_refinement_ticks
-from pymhm._legacy.models.darcy.primal import solve_darcy
 from pymhm.estimators.darcy_jump import estimate_darcy_jumps
 from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.triangle import tabulate

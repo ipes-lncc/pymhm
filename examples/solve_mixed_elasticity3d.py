@@ -10,8 +10,8 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed_3d
 from examples.mixed_elasticity3d_data import SolenoidalElasticity3D
-from pymhm._legacy.models.elasticity.stress_3d import solve_elasticity_mixed_3d
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.hexahedron import cube_quadrature
 from pymhm.meshes.mixed import AffineMixedMesh

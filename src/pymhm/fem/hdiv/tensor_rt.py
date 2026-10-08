@@ -35,7 +35,7 @@ from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
 @cache
-def _reference_map(degree: int, enriched_degree: int) -> FloatArray:
+def tensor_rt_moment_coefficients(degree: int, enriched_degree: int) -> FloatArray:
     """Express declared face lifts and bubble coordinates in native rectangular RT."""
     k, s = degree, enriched_degree
     element = create_reference_element(
@@ -90,7 +90,7 @@ def tensor_rt_basis(
     lx, ly = legendre_values(2 * x - 1, s), legendre_values(2 * y - 1, s)
     width = 4 * (k + 1) + 2 * s * (s + 1)
     native, native_divergence = vector_tabulation("RT", "quadrilateral", s + 1, points)
-    transform = _reference_map(k, s)
+    transform = tensor_rt_moment_coefficients(k, s)
     values = np.einsum("qia,ij->qja", native, transform)
     divergence = native_divergence @ transform
     orientation = np.ones((len(mesh.cells), width))
@@ -123,7 +123,7 @@ def tensor_rt_dofs(mesh: CartesianMacroMesh, degree: int, enrichment: int) -> In
     return np.column_stack((face, interior))
 
 
-def _trace_map(
+def tensor_rt_trace_map(
     mesh: CartesianMacroMesh,
     cell: int,
     fine: CartesianMacroMesh,
@@ -179,7 +179,7 @@ def _material_rule(
     )
 
 
-def _operators(
+def tensor_rt_operators(
     mesh: CartesianMacroMesh,
     degree: int,
     enrichment: int,
@@ -221,3 +221,10 @@ def _operators(
     force = scalar_values(source, physical.reshape(-1, 2)).reshape(physical.shape[:2])
     load = np.einsum("t,tq,tqi,tq->ti", mesh.areas, weights, pressure, force).ravel()
     return mass, divergence, load
+
+
+# Internal compatibility spellings retain the same numerical implementations.
+_trace_map = tensor_rt_trace_map
+_operators = tensor_rt_operators
+
+_reference_map = tensor_rt_moment_coefficients

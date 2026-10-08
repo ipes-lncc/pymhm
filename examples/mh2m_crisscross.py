@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -11,13 +19,14 @@ from time import perf_counter
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import three_field_diffusion as solve_mh2m
 from examples.mh2m_campaign import diagnostics, source, source_hashes
 from examples.mh2m_heterogeneous import OscillatoryCoefficient
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.fem.traces.pressure_2d import PressureTraceSpace
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.crisscross import crisscross_submesh
 from pymhm.meshes.triangle import TriangleMesh
-from pymhm.methods.three_field import PressureTraceSpace, solve_mh2m
 
 ROOT = Path(__file__).resolve().parents[1]
 

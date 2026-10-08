@@ -8,6 +8,14 @@ physical boundary conditions of the archived adaptive state.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -20,10 +28,10 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.archive_precision import precision_fields
+from examples.formulations.application import darcy as solve_darcy
 from examples.solve_spe10 import load_layer, pressure_boundary
 from examples.solve_spe10_balanced import offsets
 from examples.spe10_adaptive import DATA, hashes, natural_faces, source_path
-from pymhm._legacy.models.darcy.primal import solve_darcy
 from pymhm.core.validation import positive_int
 from pymhm.execution.cpu import map_local
 from pymhm.fem.quadrature.material import fit_material_mesh

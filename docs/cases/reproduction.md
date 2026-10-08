@@ -461,7 +461,7 @@ All field samples are saved independently of plotting. Render the archived
 Darcy and Stokes comparisons with:
 
 ```bash
-pixi run -e notebooks python examples/plot_reproductions.py
+pixi run --locked -e notebooks python -m examples.plot_reproductions
 ```
 
 The notebook `13_published_stokes_2017.ipynb` presents the archived comparisons,

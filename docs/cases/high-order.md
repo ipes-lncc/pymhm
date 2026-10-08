@@ -275,8 +275,8 @@ broken-field arrays. Notebook `19_native_extensions.ipynb` demonstrates the
 operators and inspects the archived six-point series.
 
 ```bash
-pixi run -e notebooks python examples/plot_native_extensions.py --workers 4
-pixi run -e notebooks python examples/plot_native_extensions.py --reuse-results
+pixi run --locked -e notebooks python -m examples.plot_native_extensions --workers 4
+pixi run --locked -e notebooks python -m examples.plot_native_extensions --reuse-results
 ```
 
 Use `--sections darcy flow rad layer heat` with any subset to recompute selected

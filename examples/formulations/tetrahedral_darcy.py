@@ -8,15 +8,20 @@ from typing import Any
 
 import numpy as np
 
-from pymhm._legacy.models.darcy.primal_3d import Darcy3DSolution
 from pymhm.core.contracts import HybridSolution
 from pymhm.core.equations import Equation, LocalEquations, columns, rows
 from pymhm.core.multiscale import MultiscaleProblem, MultiscaleSystem
-from pymhm.core.validation import positive_int
+from pymhm.core.validation import dyadic_refinement, positive_int
 from pymhm.fem.scalar.tetrahedron import tetra_nodal_space, tetra_operators
-from pymhm.fem.traces.triangle_3d import TriangularSkeleton, _boundary, tetra_trace_coupling
-from pymhm.meshes.tetrahedron import TetraMesh, _dyadic
+from pymhm.fem.traces.triangle_3d import (
+    TriangularSkeleton,
+    tetra_boundary_data,
+    tetra_trace_coupling,
+)
+from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.meshes.validation import validate_tetra_submesh
+from pymhm.postprocessing.nodal import nodal_field
+from pymhm.postprocessing.solutions import Darcy3DSolution
 
 
 @dataclass(frozen=True)
@@ -67,6 +72,7 @@ def local_equations(
         kernel=kernel,
         moments=mean[:, None],
         metadata=(fine, mean),
+        field_data=(nodal_field("pressure", fine, degree),),
     )
 
 
@@ -91,7 +97,7 @@ def define_tetrahedral_darcy(
     Neumann data are outward physical flux; all other exterior faces impose
     pressure weakly. The physical mean gauge applies only to pure Neumann data.
     """
-    refinement = _dyadic(local_refinement, "local_refinement")
+    refinement = dyadic_refinement(local_refinement, "local_refinement")
     tetra_nodal_space(mesh, degree)
     order = max(positive_int(quadrature_order, "quadrature_order"), degree + 2)
     skeleton = TriangularSkeleton(mesh) if skeleton is None else skeleton
@@ -107,7 +113,7 @@ def define_tetrahedral_darcy(
     if not np.isfinite(mean_pressure):
         raise ValueError("mean_pressure must be finite")
     neumann = {} if neumann is None else neumann
-    boundary, fixed = _boundary(skeleton, dirichlet, neumann, order)
+    boundary, fixed = tetra_boundary_data(skeleton, dirichlet, neumann, order)
     provider = partial(
         local_equations,
         mesh=mesh,

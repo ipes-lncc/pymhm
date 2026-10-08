@@ -1,6 +1,5 @@
 """Native tetrahedral MHM Stokes, Brinkman and Oseen velocity-pressure problems."""
 
-from dataclasses import dataclass
 from functools import partial
 from typing import Any, Literal
 
@@ -8,62 +7,16 @@ import numpy as np
 
 from pymhm._legacy.models.flow.forms_3d import flow_contract_3d, tetra_flow_operators
 from pymhm._legacy.models.transport.rad_3d import _boundary_tangent_3d
-from pymhm.core.contracts import HybridSolution, LocalAssembly, LocalProblem
+from pymhm.core.contracts import LocalAssembly, LocalProblem
 from pymhm.core.system import HybridSystem
-from pymhm.core.validation import FloatArray, positive_int
+from pymhm.core.validation import positive_int
 from pymhm.core.validation import real_array as _real
 from pymhm.fem.scalar.operators import triangle_quadrature
-from pymhm.fem.scalar.tetrahedron import tetra_tabulate, tetrahedron_quadrature
-from pymhm.fem.traces.triangle_3d import TriangularSkeleton, _boundary, tetra_trace_coupling
-from pymhm.materials.evaluation import scalar_values_3d, vector_values_3d
+from pymhm.fem.traces.triangle_3d import TriangularSkeleton, tetra_trace_coupling
+from pymhm.fem.traces.vector_boundary_3d import vector_boundary_components_3d as _boundary_flow
+from pymhm.materials.evaluation import vector_values_3d
 from pymhm.meshes.tetrahedron import TetraMesh, _dyadic
-
-
-def _component(points: FloatArray, *, datum: Any, component: int) -> FloatArray:
-    """Evaluate one vector component through the shared three-dimensional validator."""
-    return vector_values_3d(datum, points)[:, component]
-
-
-def _boundary_flow(
-    skeleton: TriangularSkeleton,
-    dirichlet: Any,
-    traction: dict[int, Any],
-    components: dict[int, dict[int, Any]],
-    order: int,
-) -> tuple[FloatArray, dict[int, float]]:
-    """Project physical outward traction and assemble all remaining velocity moments."""
-    exterior = set(skeleton.mesh.boundary_faces)
-    if not set(traction).issubset(exterior) or not set(components).issubset(exterior):
-        raise ValueError("traction keys must identify exterior faces")
-    if set(traction) & set(components):
-        raise ValueError("full and componentwise traction must not overlap")
-    for values in components.values():
-        if (
-            not isinstance(values, dict)
-            or not values
-            or any(
-                isinstance(component, (bool, np.bool_)) or component not in (0, 1, 2)
-                for component in values
-            )
-        ):
-            raise ValueError(
-                "traction_components needs nonempty dictionaries with components 0, 1 or 2"
-            )
-    load = np.zeros((skeleton.size, 3))
-    fixed = {}
-    for component in range(3):
-        prescribed = {
-            face: partial(_component, datum=value, component=component)
-            for face, value in traction.items()
-        }
-        prescribed.update(
-            {face: values[component] for face, values in components.items() if component in values}
-        )
-        load[:, component], scalar_fixed = _boundary(
-            skeleton, partial(_component, datum=dirichlet, component=component), prescribed, order
-        )
-        fixed.update({3 * int(index) + component: -value for index, value in scalar_fixed.items()})
-    return load.ravel(), fixed
+from pymhm.postprocessing.solutions import Flow3DSolution as Flow3DSolution
 
 
 def _local_flow(
@@ -96,112 +49,6 @@ def _local_flow(
     )
     pressure_moment = np.r_[np.zeros(3 * nv), forms.pressure_moments]
     return LocalAssembly(problem, (fine, forms, moments, pressure_moment))
-
-
-@dataclass(frozen=True)
-class Flow3DSolution:
-    """Broken velocity, pressure and grad-grad pseudostress on tetrahedral local meshes.
-
-    The scalar ``skeleton`` supplies face geometry and scalar modes. Its hybrid
-    trace interleaves three canonical negative-traction coefficients per mode.
-    Velocity and pressure are continuous only inside each macrocell. The raw
-    pseudostress is not claimed to be globally H(div)-conforming.
-    """
-
-    skeleton: TriangularSkeleton
-    local_meshes: tuple[TetraMesh, ...]
-    velocity: tuple[FloatArray, ...]
-    pressure: tuple[FloatArray, ...]
-    hybrid: HybridSolution
-    degree: int
-    pressure_degree: int
-    viscosity: float
-    advection: Any
-    formulation: str
-
-    def _index(self, cell: int) -> int:
-        """Validate a macrocell index before array access."""
-        cell = positive_int(cell, "cell", 0)
-        if cell >= len(self.local_meshes):
-            raise ValueError("cell outside local meshes")
-        return cell
-
-    def evaluate(self, cell: int, bary: FloatArray) -> tuple[FloatArray, FloatArray]:
-        """Evaluate one-sided velocity and pressure on all fine tetrahedra of a macrocell."""
-        cell = self._index(cell)
-        fine = self.local_meshes[cell]
-        udofs, _, ubasis, _ = tetra_tabulate(fine, self.degree, bary)
-        pdofs, _, pbasis, _ = tetra_tabulate(fine, self.pressure_degree, bary)
-        return np.einsum("qi,tia->tqa", ubasis, self.velocity[cell][udofs]), self.pressure[cell][
-            pdofs
-        ] @ pbasis.T
-
-    def gradient(self, cell: int, bary: FloatArray) -> FloatArray:
-        """Evaluate grad(u)[component, derivative] without averaging macro interfaces."""
-        cell = self._index(cell)
-        dofs, _, _, gradient = tetra_tabulate(self.local_meshes[cell], self.degree, bary)
-        return np.einsum("tia,tqib->tqab", self.velocity[cell][dofs], gradient)
-
-    def pseudostress(self, cell: int, bary: FloatArray) -> FloatArray:
-        """Return -nu*grad(u)+p*I+u tensor beta/2, whose normal is the MHM multiplier."""
-        velocity, pressure = self.evaluate(cell, bary)
-        fine = self.local_meshes[cell]
-        points = np.einsum("qi,tia->tqa", bary, fine.points[fine.cells])
-        beta = vector_values_3d(self.advection, points.reshape(-1, 3)).reshape(velocity.shape)
-        return (
-            -self.viscosity * self.gradient(cell, bary)
-            + pressure[..., None, None] * np.eye(3)
-            + np.einsum("tqa,tqb->tqab", velocity, beta) / 2
-        )
-
-    def _error(self, exact: Any, kind: str, order: int) -> float:
-        """Integrate one selected physical squared error using positive volume quadrature."""
-        bary, weights = tetrahedron_quadrature(order)
-        total = 0.0
-        for cell, fine in enumerate(self.local_meshes):
-            points = np.einsum("qi,tia->tqa", bary, fine.points[fine.cells]).reshape(-1, 3)
-            if kind == "gradient":
-                values = self.gradient(cell, bary)
-                expected = _real(exact(points) if callable(exact) else exact, "exact gradient")
-                expected = np.broadcast_to(expected, (len(points), 3, 3)).reshape(values.shape)
-                difference = np.sum((values - expected) ** 2, axis=(-1, -2))
-            elif kind == "velocity":
-                values = self.evaluate(cell, bary)[0]
-                expected = vector_values_3d(exact, points).reshape(values.shape)
-                difference = np.sum((values - expected) ** 2, axis=-1)
-            else:
-                values = self.evaluate(cell, bary)[1]
-                expected = scalar_values_3d(exact, points).reshape(values.shape)
-                difference = (values - expected) ** 2
-            total += float(fine.volumes @ (difference @ weights))
-        return float(np.sqrt(total))
-
-    def l2_error(self, exact: Any, order: int = 7) -> float:
-        """Return the complete broken velocity L2 error."""
-        return self._error(exact, "velocity", order)
-
-    def pressure_l2_error(self, exact: Any, order: int = 7) -> float:
-        """Return pressure L2 error with the explicitly imposed physical gauge."""
-        return self._error(exact, "pressure", order)
-
-    def h1_seminorm_error(self, exact_gradient: Any, order: int = 7) -> float:
-        """Return the complete broken velocity-gradient L2 error."""
-        return self._error(exact_gradient, "gradient", order)
-
-    def divergence_l2(self, order: int = 7) -> float:
-        """Integrate the raw pointwise velocity divergence; no H(div) recovery is implied."""
-        bary, weights = tetrahedron_quadrature(order)
-        return float(
-            np.sqrt(
-                sum(
-                    float(
-                        fine.volumes
-                        @ (np.trace(self.gradient(cell, bary), axis1=-2, axis2=-1) ** 2 @ weights)
-                    )
-                    for cell, fine in enumerate(self.local_meshes)
-                )
-            )
-        )
 
 
 def _translation_trace_compatible(skeleton: TriangularSkeleton, beta: Any, order: int) -> bool:

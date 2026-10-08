@@ -8,10 +8,15 @@ cells sample their centres without interpolation.
 
 from __future__ import annotations
 
+import argparse
 import hashlib
+import os
+import tempfile
+import urllib.request
 from dataclasses import dataclass
+from mmap import mmap
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol, cast
 
 import numpy as np
 
@@ -29,6 +34,63 @@ FILES = {
         "10ec5c4274a63ffde2ac94dda4f062d5b83827efcefeb1a2ab22438a85f32967",
     ),
 }
+PRIMARY_FILE_BYTES = 3600 + 13601 * (240 + 4 * 2801)
+
+
+class _MappedBuffer(Protocol):
+    """NumPy memmap resource handle omitted from its third-party type stubs."""
+
+    _mmap: mmap
+
+
+def download_marmousi_data(
+    directory: str | Path, *, maximum_bytes_per_file: int = PRIMARY_FILE_BYTES
+) -> dict[str, Path]:
+    """Acquire the two pinned primary SEG-Y files into a verified atomic cache.
+
+    Each file has 13,601 traces with 2,801 IBM-float samples and a 240-byte trace
+    header. The explicit byte budget applies independently to velocity and
+    density; the two original payloads total ``2 * PRIMARY_FILE_BYTES`` bytes.
+    Existing correct files are reused. A wrong cached file is rejected without
+    replacing it. Interrupted or rejected transfers leave no partial cache file.
+    """
+    if type(maximum_bytes_per_file) is not int or maximum_bytes_per_file < PRIMARY_FILE_BYTES:
+        raise ValueError("The byte budget must accommodate one complete primary SEG-Y file")
+    cache = Path(directory)
+    cache.mkdir(parents=True, exist_ok=True)
+    result = {}
+    for key, (filename, url, expected) in FILES.items():
+        destination = cache / filename
+        if destination.is_file():
+            with destination.open("rb") as stream:
+                actual = hashlib.file_digest(stream, "sha256").hexdigest()
+            if actual != expected or destination.stat().st_size != PRIMARY_FILE_BYTES:
+                raise ValueError(f"Pinned Marmousi cache differs: {destination}")
+            result[key] = destination
+            continue
+        temporary = None
+        try:
+            with tempfile.NamedTemporaryFile(dir=cache, suffix=".part", delete=False) as stream:
+                temporary = Path(stream.name)
+                digest = hashlib.sha256()
+                transferred = 0
+                with urllib.request.urlopen(url, timeout=60) as response:
+                    while chunk := response.read(1024 * 1024):
+                        transferred += len(chunk)
+                        if transferred > min(maximum_bytes_per_file, PRIMARY_FILE_BYTES):
+                            raise ValueError(
+                                f"Primary Marmousi transfer exceeds its declared size: {filename}"
+                            )
+                        stream.write(chunk)
+                        digest.update(chunk)
+            if transferred != PRIMARY_FILE_BYTES or digest.hexdigest() != expected:
+                raise ValueError(f"Pinned Marmousi download size or SHA-256 differs: {filename}")
+            os.replace(temporary, destination)
+            result[key] = destination
+        finally:
+            if temporary is not None:
+                temporary.unlink(missing_ok=True)
+    return result
 
 
 def _ibm_values(words: Any) -> Any:
@@ -58,7 +120,7 @@ def _read_samples(path: Path, ix: Any, iz: Any, *, shape: tuple[int, int]) -> An
         words = np.ndarray((nx, nz), dtype=">u4", buffer=mapped, offset=3840, strides=(stride, 4))
         return _ibm_values(words[np.ix_(ix, iz)])
     finally:
-        mapped._mmap.close()
+        cast(_MappedBuffer, mapped)._mmap.close()
 
 
 @dataclass(frozen=True)
@@ -80,8 +142,8 @@ def load_marmousi_crop(
 ) -> MarmousiMaterial:
     """Load pinned primary files and sample a rectangular cell-centred crop.
 
-    Download the two files named in FILES explicitly before calling this
-    function. SHA-256 verification is mandatory. The source covers 17 km by
+    Use ``download_marmousi_data`` to acquire the two files named in FILES before
+    calling this function. SHA-256 verification is mandatory. The source covers 17 km by
     3.5 km; its nominal 1.25-metre convention differs from the 1.249-metre
     value in Madagascar's example conversion recipe. Native velocity (km/s)
     and density (g/cm3) are multiplied by 1000. No smoothing, clipping,
@@ -145,3 +207,20 @@ def load_marmousi_crop(
             "historical_article_arrays_identified": False,
         },
     )
+
+
+def main() -> None:
+    """Acquire the complete primary SEG-Y data using the pinned public source."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--directory",
+        type=Path,
+        default=Path(__file__).resolve().parents[1] / "build/data/marmousi",
+    )
+    args = parser.parse_args()
+    for key, path in download_marmousi_data(args.directory).items():
+        print(f"Verified {key}: {path}", flush=True)
+
+
+if __name__ == "__main__":
+    main()

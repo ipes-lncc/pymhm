@@ -273,7 +273,7 @@ def tetra_trace_coupling(
     return matrix
 
 
-def _boundary(
+def tetra_boundary_data(
     skeleton: TriangularSkeleton, dirichlet: Any, neumann: dict[int, Any], order: int
 ) -> tuple[FloatArray, dict[int, float]]:
     """Integrate weak pressure moments and project prescribed outward normal fluxes.
@@ -329,3 +329,6 @@ def _boundary(
                 mesh.areas[face] * skeleton.face_weights(int(face))[:, None] * moments
             ).ravel()
     return load, fixed
+
+
+_boundary = tetra_boundary_data

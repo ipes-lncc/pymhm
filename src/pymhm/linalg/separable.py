@@ -12,18 +12,22 @@ import numpy as np
 from scipy import sparse
 from scipy.sparse.linalg import LinearOperator, cg
 
-from pymhm._legacy.models.darcy.conforming import ConformingQuadrilateralSolution
-from pymhm._legacy.models.darcy.separable import (
-    SeparableField,
-    _factor,
-    _line_data,
-    _line_operators,
-    _positive,
-)
 from pymhm.core.validation import FloatArray, positive_int
+from pymhm.fem.scalar.separable import (
+    interval_nodal_quadrature as _line_data,
+)
+from pymhm.fem.scalar.separable import (
+    interval_weighted_operators as _line_operators,
+)
+from pymhm.fem.scalar.separable import (
+    require_positive_separated as _positive,
+)
 from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError, _optional, _tolerances
 from pymhm.materials.evaluation import scalar_values
+from pymhm.materials.separable import SeparableField
+from pymhm.materials.separable import factor_values as _factor
 from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.postprocessing.conforming import ConformingQuadrilateralSolution
 
 
 @dataclass(frozen=True)

@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -9,12 +17,12 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
-from hpc4e_data import BOUNDS, LENGTH_SCALE, load_data
-from hpc4e_fields import RectangularElasticityField
 from matplotlib.collections import LineCollection
 from matplotlib.colors import SymLogNorm
 from matplotlib.ticker import FormatStrFormatter, NullFormatter
 
+from examples.hpc4e_data import BOUNDS, LENGTH_SCALE, load_data
+from examples.hpc4e_fields import RectangularElasticityField
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
 ROOT = Path(__file__).resolve().parents[1]

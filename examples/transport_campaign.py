@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 from pathlib import Path
@@ -11,11 +19,11 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.field_sampling import sample_field
+from examples.formulations.application import darcy as solve_darcy
+from examples.formulations.application import transport as solve_transport
+from examples.formulations.darcy_transport import solve_darcy_trajectory as solve_darcy_transport
 from examples.plot_mesh import draw_macro_mesh
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.darcy.primal import solve_darcy
-from pymhm._legacy.models.transport.dispersion import solve_darcy_transport
-from pymhm._legacy.models.transport.solver import solve_transport
 from pymhm.adaptivity.transport import TransportBounds, solve_adaptive_transport
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,7 +44,9 @@ def natural_horizontal(mesh: TriangleMesh) -> dict[int, float]:
 
 def archive(solution: Any, name: str, exact: Any) -> None:
     """Save separate fine-element samples and the actual macrogeometry."""
-    samples = sample_field(solution.local_meshes, solution.values, solution.degree, 3)
+    samples: dict[str, Any] = sample_field(
+        solution.local_meshes, solution.values, solution.degree, 3
+    )
     np.savez_compressed(
         DATA / f"{name}.npz",
         **samples,
@@ -87,6 +97,7 @@ def adaptive() -> list[dict[str, Any]]:
         TransportBounds(0.02, 1, 0),
         iterations=5,
         theta=0.75,
+        solve_step=solve_transport,
         diffusion=0.02,
         velocity=(1, 0),
         source=1,
@@ -202,7 +213,9 @@ def plot_fields(name: str) -> None:
 
     data = np.load(DATA / f"{name}.npz")
     mesh = TriangleMesh(data["macro_points"], data["macro_cells"])
-    triangulation = mtri.Triangulation(*data["points"].T, triangles=data["cells"])
+    triangulation = mtri.Triangulation(
+        data["points"][:, 0], data["points"][:, 1], triangles=data["cells"]
+    )
     exact, numerical = data["exact"], data["values"]
     figure, axes = plt.subplots(
         1, 3, figsize=(12, 2.9 if name == "darcy-transient" else 4.4), layout="constrained"

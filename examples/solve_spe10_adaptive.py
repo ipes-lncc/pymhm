@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -11,6 +19,7 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import darcy as solve_equations
 from examples.solve_spe10 import load_layer, pressure_boundary
 from examples.spe10_adaptive import DATA, ROOT, hashes, mesh_rectangle, natural_faces
 from pymhm.adaptivity.darcy import solve_adaptive_darcy
@@ -27,6 +36,7 @@ def acquire(levels: int = 5) -> list[dict[str, Any]]:
     started = perf_counter()
     result = solve_adaptive_darcy(
         mesh,
+        solve_step=solve_equations,
         iterations=levels,
         theta=0.5,
         maximum_cells=20000,

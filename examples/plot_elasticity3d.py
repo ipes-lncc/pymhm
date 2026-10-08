@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import hashlib
 import json
 from pathlib import Path
@@ -19,8 +27,8 @@ from threadpoolctl import threadpool_limits
 
 from examples.solve_elasticity3d import ElasticityData3D
 from examples.tetra_section_samples import section_grid
-from pymhm._legacy.models.elasticity.primal_3d import constitutive_values_3d
 from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
+from pymhm.materials.elasticity import constitutive_values_3d
 from pymhm.meshes.tetrahedron import TetraMesh
 
 ROOT = Path(__file__).resolve().parents[1]

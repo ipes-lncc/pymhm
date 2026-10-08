@@ -9,6 +9,14 @@ explicitly declared where the historical executable specification is absent.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -23,10 +31,11 @@ from threadpoolctl import threadpool_limits
 
 from examples.archive_precision import precision_fields, restore_precision
 from examples.field_sampling import local_values
+from examples.formulations.application import petrov_galerkin_diffusion as solve_pgmhm
+from examples.formulations.mixed_darcy import conforming_rt_reference as solve_darcy_rt_conforming
 from examples.pgmhm_campaign import diagnostics
 from examples.spe10_adaptive import DOMAIN, ROOT, StructuredRT, mesh_rectangle, natural_faces
 from examples.spe10_adaptive_norms import overlay_quadrature
-from pymhm._legacy.models.darcy.mixed_rt import solve_darcy_rt_conforming
 from pymhm.fem.quadrature.material import fit_material_faces, fit_material_mesh
 from pymhm.fem.scalar.operators import p1_geometry, triangle_quadrature
 from pymhm.fem.scalar.triangle import nodal_space, reference_basis
@@ -34,7 +43,6 @@ from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
 from pymhm.materials.cartesian import CartesianCellField
 from pymhm.meshes.triangle import TriangleMesh
-from pymhm.methods.petrov_galerkin import solve_pgmhm
 
 OUTPUT = ROOT / "examples/results/pgmhm-spe10"
 

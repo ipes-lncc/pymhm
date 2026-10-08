@@ -314,11 +314,11 @@ arrays. Local residual refinement is explicitly requested without changing the
 operator or its residual tolerance.
 
 ```bash
-pixi run -e intel python -m examples.solve_pgmhm_spe10 mhm --component kx --segments 1 2 4 8 16
-pixi run -e intel python -m examples.solve_pgmhm_spe10 reference --component kx \
+pixi run --locked -e intel python -m examples.solve_pgmhm_spe10 mhm --component kx --segments 1 2 4 8 16
+pixi run --locked -e intel python -m examples.solve_pgmhm_spe10 reference --component kx \
   --nx 60 120 240 --solver pypardiso --native-threads 4
-pixi run -e fem python -m pytest -q tests/test_pgmhm_heterogeneous_fenics.py
-pixi run -e intel python -m examples.solve_pgmhm_spe10 mhm --component kx \
+pixi run --locked -e fem python -m pytest -q tests/test_pgmhm_heterogeneous_fenics.py
+pixi run --locked -e intel python -m examples.solve_pgmhm_spe10 mhm --component kx \
   --refinement 32 --segments 64 --material-fitted --trace-fitted \
   --output examples/results/pgmhm-spe10/kx/controls
 pixi run --locked -e test-core python -m examples.solve_pgmhm_spe10 compare --component kx \

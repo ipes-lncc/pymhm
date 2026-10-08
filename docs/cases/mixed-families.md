@@ -27,7 +27,7 @@ solution and its coefficient conventions are preserved.
 
 ```python
 from pymhm import TriangleMesh
-from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed
 
 solution = solve_elasticity_mixed(
     TriangleMesh.unit_square(2),
@@ -97,8 +97,8 @@ heterogeneous contrast or arbitrary skeletal space.
 
 
 ```bash
-pixi run --locked -e test-core python examples/solve_elasticity_families.py --degree 2 --enrichment 1
-pixi run -e notebooks python examples/plot_elasticity_families.py
+pixi run --locked -e test-core python -m examples.solve_elasticity_families --degree 2 --enrichment 1
+pixi run --locked -e notebooks python -m examples.plot_elasticity_families
 ```
 
 ## Oscillatory coefficients from the 2021 paper
@@ -150,7 +150,7 @@ agreement does not resolve the historical mesh and table conventions described
 above.
 
 ```bash
-pixi run -e notebooks python examples/solve_elasticity_literature.py --trace-degree 1 --enrichment 1
+pixi run --locked -e notebooks python -m examples.solve_elasticity_literature --trace-degree 1 --enrichment 1
 ```
 
 

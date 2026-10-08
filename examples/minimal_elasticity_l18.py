@@ -7,6 +7,14 @@ study does not claim to reproduce every historical table entry or enrichment.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import importlib
 import json
@@ -19,6 +27,7 @@ from uuid import uuid4
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed
 from examples.minimal_flow_originals import (
     capture_sources,
     observe_originals,
@@ -27,7 +36,6 @@ from examples.minimal_flow_originals import (
     write_record,
 )
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
 
 ROOT = Path(__file__).resolve().parents[1]
 

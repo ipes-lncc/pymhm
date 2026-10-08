@@ -44,7 +44,7 @@ are integrated over their exact intersections.
 
 ```python
 from pymhm import CartesianMacroMesh
-from pymhm._legacy.models.darcy.tensor import solve_darcy_tensor_rt
+from examples.formulations.application import tensor_darcy as solve_darcy_tensor_rt
 
 solution = solve_darcy_tensor_rt(
     CartesianMacroMesh(4), degree=2, enrichment=1,
@@ -95,7 +95,7 @@ improvement. The physical flux order remains approximately $k+1$. Refining only
 the interior therefore improves pressure substantially but cannot remove the
 normal-trace approximation error.
 
-Run `pixi run -e notebooks verify-tensor-rt` for the research campaign.
+Run `pixi run --locked -e notebooks verify-tensor-rt` for the research campaign.
 Use `--plot-only` to render stored results. The numerical, published and comparison
 records are `examples/results/tensor-rt.json`, `tensor-rt-published.json` and
 `tensor-rt-comparison.json`. The full campaign is separate from the lightweight

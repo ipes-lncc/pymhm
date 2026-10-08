@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import json
 from pathlib import Path
 
@@ -16,7 +24,7 @@ from matplotlib.colors import LogNorm, Normalize
 from examples.mapped_well_fields import MappedWellField
 from examples.plot_style import set_refinement_ticks
 from examples.solve_mapped_oscillatory_well import OscillatoryWellData
-from pymhm.meshes.hexahedron import _geometry
+from pymhm.meshes.hexahedron import hexahedral_mapping
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/mapped-well-oscillatory"
@@ -61,7 +69,7 @@ def slice_values(field: MappedWellField) -> tuple:
     zeta = -nodes[ids[0], :, 2].min() / np.ptp(nodes[ids[0], :, 2])
     reference = np.array([[0.5, 0.5, zeta]])
     pressure, flux = field.values(ids, reference)
-    points = _geometry(nodes[ids], reference)[0][:, 0]
+    points = hexahedral_mapping(nodes[ids], reference)[0][:, 0]
     return ids, nodes[ids][:, CORNERS, :2], points, pressure[:, 0], flux[:, 0]
 
 
@@ -87,7 +95,7 @@ def plane_values(field: MappedWellField, grid: MappedWellField) -> tuple[np.ndar
         mask = groups == number
         reference = np.array([[*(offset + 0.5) / ratio, 0.5 if vertical % 2 else 0.0]])
         p, q = field.values(selected[mask], reference)
-        physical = _geometry(field.vertices[selected[mask]], reference)[0][:, 0]
+        physical = hexahedral_mapping(field.vertices[selected[mask]], reference)[0][:, 0]
         if not np.allclose(physical, points[mask], rtol=0, atol=2e-12):
             raise ValueError("display grid does not share the physical annular hierarchy")
         values[mask], flux[mask] = p[:, 0], q[:, 0]
@@ -258,7 +266,7 @@ def profiles(reference_name: str) -> None:
         )
         zeta = -nodes[ids[0], :, 2].min() / np.ptp(nodes[ids[0], :, 2])
         reference = np.column_stack((np.linspace(0, 1, 9), np.ones(9), np.full(9, zeta)))
-        points = _geometry(nodes[ids], reference)[0]
+        points = hexahedral_mapping(nodes[ids], reference)[0]
         p, q = field.values(ids, reference)
         signed = np.sign(points[:, :, 0]) * np.linalg.norm(points[:, :, :2], axis=2)
         radial = np.einsum("tqa,tqa->tq", q[:, :, :2], points[:, :, :2]) / np.linalg.norm(

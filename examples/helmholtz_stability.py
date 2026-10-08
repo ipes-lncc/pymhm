@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -20,13 +28,14 @@ from threadpoolctl import threadpool_limits
 from examples.campaign_checkpoint import require_sources, verify_checkpoint
 from examples.helmholtz_campaign import AcousticWave, norms, source_hashes
 from examples.helmholtz_threshold import sampled_threshold
-from pymhm._legacy.models.waves.helmholtz import HelmholtzSolution, solve_helmholtz
+from examples.tutorial_helmholtz_equations import solve_acoustic
 from pymhm.core.validation import positive_int
 from pymhm.fem.scalar.helmholtz import complex_vector, real_vector
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton
 from pymhm.fem.traces.interval import SkeletonSpace
 from pymhm.linalg.linear import LinearSolveError
 from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.postprocessing.acoustics import HelmholtzSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -83,7 +92,7 @@ def projected_trace(
 
 
 def projected_solution(
-    solution: HelmholtzSolution, wave: AcousticWave, order: int = 24
+    solution: HelmholtzSolution, wave: Any, order: int = 24
 ) -> HelmholtzSolution:
     """Lift the oriented physical-flux L2 projection through the actual local inverse.
 
@@ -227,7 +236,7 @@ def run(
         mesh = CartesianMacroMesh(n)
         with threadpool_limits(1):
             try:
-                result = solve_helmholtz(
+                result = solve_acoustic(
                     mesh,
                     omega=wave.omega,
                     degree=ell + 3,

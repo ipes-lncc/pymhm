@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -10,10 +18,10 @@ from functools import partial
 from pathlib import Path
 
 import numpy as np
-from planar3d_data import Planar3DData
 from threadpoolctl import threadpool_limits
 
-from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from examples.formulations.application import tetrahedral_darcy as solve_darcy_3d
+from examples.planar3d_data import Planar3DData
 from pymhm.fem.scalar.tetrahedron import tetrahedron_quadrature
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
 from pymhm.io.provenance import current_source_manifest

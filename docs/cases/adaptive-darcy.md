@@ -71,15 +71,23 @@ separate from any claim about estimator contraction.
 import numpy as np
 from pymhm import TriangleMesh
 from pymhm.adaptivity.darcy import solve_adaptive_darcy
+from examples.formulations.application import darcy as solve_equations
 
 result = solve_adaptive_darcy(
-    TriangleMesh.unit_square(2), iterations=5, theta=0.5,
+    TriangleMesh.unit_square(2), solve_step=solve_equations,
+    iterations=5, theta=0.5,
     trace_degree=1, degree=3, reconstruction_degree=2,
     local_refinement=2, quadrature_order=10, estimator_order=10,
     source=lambda x: 8*np.pi**2*np.prod(np.sin(2*np.pi*x), axis=1),
 )
 print(result.totals)
 ```
+
+`solve_step` receives the current mesh, oriented skeleton, physical data and
+local partitions. The editable `application.darcy` helper composes the public
+mathematical provider with generic assembly, pressure constraints and field
+recovery. Users may supply their own callback with the same contract. The
+shared adaptive owner retains marking, boundary ancestry and estimator checks.
 
 A `local_mesh_factory(macro_mesh, cell_index)` may construct fresh
 [material-fitted local meshes](unfitted.md) at each level. A fixed list of local
@@ -162,8 +170,8 @@ fine-element values remain independent at interfaces.
 ## Reproduction and scope
 
 ```bash
-pixi run -e notebooks python -m examples.adaptive_darcy_campaign --collect
-pixi run -e notebooks python -m examples.adaptive_darcy_campaign
+pixi run --locked -e notebooks python -m examples.adaptive_darcy_campaign --collect
+pixi run --locked -e notebooks python -m examples.adaptive_darcy_campaign
 ```
 
 Records and sampled fields are in `examples/results/adaptive-darcy`.

@@ -51,7 +51,7 @@ cell, without moving quadrature points or averaging the permeability.
 
 ```python
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
-from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
+from examples.formulations.application import tetrahedral_darcy as solve_darcy_3d
 from pymhm.meshes.fitting import fit_planar_material, planar_face_partitions
 
 parts = planar_face_partitions(macro, material)
@@ -117,10 +117,10 @@ Black/white lines mark the original macroface intersections.
 ## Reproduction
 
 ```bash
-pixi run --locked -e test-core python examples/solve_planar3d.py
-pixi run -e notebooks python examples/plot_planar3d.py
+pixi run --locked -e test-core python -m examples.solve_planar3d
+pixi run --locked -e notebooks python -m examples.plot_planar3d
 pixi run --locked -e test-core pytest tests/test_planar3d_example.py tests/test_planar_reconstruction.py
-pixi run -e fem pytest tests/test_planar3d_fenics.py
+pixi run --locked -e fem pytest tests/test_planar3d_fenics.py
 ```
 
 The [campaign JSON](../figures/planar3d/campaign.json) records geometry counts,

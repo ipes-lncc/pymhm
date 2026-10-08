@@ -227,23 +227,23 @@ node-wide memory budget. See the [MUMPS user guide](https://mumps-solver.org/doc
 `ICNTL(23)`, for the allocation convention.
 
 ```bash
-pixi install -e intel
-pixi run --locked -e test-core python examples/solve_hpc4e_mhm.py --download --segments 1 2 4 8 --workers 8
-pixi run -e fem python examples/solve_hpc4e_reference.py --degree 1 --factorization pypardiso-symmetric-matching --solver-python .pixi/envs/intel/bin/python --equilibration symmetric --threads 4
-pixi run -e fem python examples/solve_hpc4e_reference.py --degree 2 --factorization ldlt --equilibration symmetric --threads 4 --workspace-limit-mb 80000
-pixi run --locked -e test-core python examples/compare_hpc4e.py
-pixi run --locked -e test-core python examples/compare_hpc4e_fields.py --workers 4
-pixi run -e fem mpiexec -n 4 python examples/solve_hpc4e_reference.py \
+pixi install --locked -e intel
+pixi run --locked -e test-core python -m examples.solve_hpc4e_mhm --download --segments 1 2 4 8 --workers 8
+pixi run --locked -e fem python -m examples.solve_hpc4e_reference --degree 1 --factorization pypardiso-symmetric-matching --solver-python .pixi/envs/intel/bin/python --equilibration symmetric --threads 4
+pixi run --locked -e fem python -m examples.solve_hpc4e_reference --degree 2 --factorization ldlt --equilibration symmetric --threads 4 --workspace-limit-mb 80000
+pixi run --locked -e test-core python -m examples.compare_hpc4e
+pixi run --locked -e test-core python -m examples.compare_hpc4e_fields --workers 4
+pixi run --locked -e fem mpiexec -n 4 python -m examples.solve_hpc4e_reference \
   --nx 1024 --ny 512 --degree 2 --factorization ldlt \
   --equilibration symmetric --mpi --threads 2 --refinement-precision extended \
   --workspace-limit-mb 17500 --out-of-core-directory build/tmp/hpc4e-mumps-ooc
-pixi run --locked -e test-core python examples/compare_hpc4e_fields.py --workers 2 \
+pixi run --locked -e test-core python -m examples.compare_hpc4e_fields --workers 2 \
   --reference build/results/hpc4e/classical-rt2-1024x512-mumps.npz \
   --approximations build/results/hpc4e/classical-rt2-512x256-mumps.npz \
     build/results/hpc4e/mhm-s1.npz build/results/hpc4e/mhm-s2.npz \
     build/results/hpc4e/mhm-s4.npz build/results/hpc4e/mhm-s8.npz \
   --orders 4 5 --output examples/results/hpc4e/reference-spatial-refinement.json
-pixi run -e notebooks python examples/plot_hpc4e.py \
+pixi run --locked -e notebooks python -m examples.plot_hpc4e \
   --reference build/results/hpc4e/classical-rt2-1024x512-mumps.npz
 ```
 

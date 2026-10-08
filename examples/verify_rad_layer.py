@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import json
 from pathlib import Path
 
@@ -11,13 +19,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 import numpy as np
-from plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
-from plot_style import set_refinement_ticks
-from polygon_meshes import polygon_partition
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import transport as solve_transport_polygons
+from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
+from examples.plot_style import set_refinement_ticks
+from examples.polygon_meshes import polygon_partition
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.geometry import solve_transport_polygons
 from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.triangle import nodal_space, reference_basis, scalar_operators, tabulate
 from pymhm.linalg.linear import solve_linear

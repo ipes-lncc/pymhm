@@ -7,15 +7,12 @@ from typing import Any, Literal
 
 import numpy as np
 
-from pymhm.core.contracts import HybridSolution, LocalAssembly, LocalProblem
+from pymhm.core.contracts import LocalAssembly, LocalProblem
 from pymhm.core.system import HybridSystem
-from pymhm.core.validation import FloatArray, positive_int
-from pymhm.core.validation import real_array as _real
+from pymhm.core.validation import positive_int
 from pymhm.fem.scalar.tetrahedron import (
     tetra_nodal_space,
     tetra_operators,
-    tetra_tabulate,
-    tetrahedron_quadrature,
 )
 from pymhm.fem.traces.triangle_3d import (
     TriangularSkeleton as TriangularSkeleton,
@@ -26,9 +23,9 @@ from pymhm.fem.traces.triangle_3d import (
 from pymhm.fem.traces.triangle_3d import (
     tetra_trace_coupling as tetra_trace_coupling,
 )
-from pymhm.materials.evaluation import scalar_values_3d, tensor_values_3d
 from pymhm.meshes.tetrahedron import TetraMesh, _dyadic
 from pymhm.meshes.validation import validate_tetra_submesh
+from pymhm.postprocessing.solutions import Darcy3DSolution as Darcy3DSolution
 
 
 @dataclass(frozen=True)
@@ -66,96 +63,6 @@ class _DarcyFactory:
             constraints=mean[:, None],
         )
         return LocalAssembly(problem, (fine, mean))
-
-
-@dataclass(frozen=True)
-class Darcy3DSolution:
-    """Broken tetrahedral pressure and physical gradient flux with conservative trace.
-
-    ``flux`` evaluates ``-K grad(p)`` and is generally not H(div)-conforming.
-    Macro conservation refers to ``hybrid.trace``, not this raw gradient field.
-    """
-
-    skeleton: TriangularSkeleton
-    local_meshes: tuple[TetraMesh, ...]
-    pressure: tuple[FloatArray, ...]
-    hybrid: HybridSolution
-    degree: int
-    permeability: Any
-    source: Any
-    quadrature_order: int
-
-    def evaluate(self, cell: int, bary: FloatArray) -> tuple[FloatArray, FloatArray]:
-        """Evaluate pressure and physical flux at common fine-cell barycentric points."""
-        cell = positive_int(cell, "cell", 0)
-        if cell >= len(self.local_meshes):
-            raise ValueError("cell outside local meshes")
-        fine = self.local_meshes[cell]
-        dofs, _, basis, gradient = tetra_tabulate(fine, self.degree, bary)
-        pressure = self.pressure[cell][dofs] @ basis.T
-        grad = np.einsum("ti,tqij->tqj", self.pressure[cell][dofs], gradient)
-        points = np.einsum("qi,tij->tqj", bary, fine.points[fine.cells])
-        diffusion = tensor_values_3d(self.permeability, points.reshape(-1, 3)).reshape(
-            *points.shape[:2], 3, 3
-        )
-        return pressure, -np.einsum("tqij,tqj->tqi", diffusion, grad)
-
-    def l2_error(self, exact: Any, order: int = 6) -> float:
-        """Integrate the broken pressure error with independently selected positive quadrature."""
-        bary, weights = tetrahedron_quadrature(order)
-        total = 0.0
-        for cell, fine in enumerate(self.local_meshes):
-            values = self.evaluate(cell, bary)[0]
-            points = np.einsum("qi,tij->tqj", bary, fine.points[fine.cells])
-            expected = scalar_values_3d(exact, points.reshape(-1, 3)).reshape(values.shape)
-            total += float(fine.volumes @ ((values - expected) ** 2 @ weights))
-        return float(np.sqrt(total))
-
-    def flux_l2_error(self, exact: Any, order: int = 6) -> float:
-        """Integrate the full physical flux, including P2 gradient and variable diffusion."""
-        bary, weights = tetrahedron_quadrature(order)
-        total = 0.0
-        for cell, fine in enumerate(self.local_meshes):
-            values = self.evaluate(cell, bary)[1]
-            points = np.einsum("qi,tij->tqj", bary, fine.points[fine.cells])
-            expected = _real(
-                exact(points.reshape(-1, 3)) if callable(exact) else exact, "exact flux"
-            )
-            try:
-                expected = np.broadcast_to(expected, (len(points.reshape(-1, 3)), 3)).reshape(
-                    values.shape
-                )
-            except ValueError as exc:
-                raise ValueError("exact flux must return three components per point") from exc
-            total += float(fine.volumes @ (np.sum((values - expected) ** 2, axis=2) @ weights))
-        return float(np.sqrt(total))
-
-    def conservation_residuals(self, order: int | None = None) -> FloatArray:
-        """Return outward skeletal flux minus integrated source in every macrocell."""
-        mesh = self.skeleton.mesh
-        bary, weights = tetrahedron_quadrature(self.quadrature_order if order is None else order)
-        residuals = []
-        for cell, fine in enumerate(self.local_meshes):
-            total = sum(
-                mesh.signs[cell, side]
-                * mesh.areas[face]
-                * (
-                    self.skeleton.face_weights(int(face))
-                    @ np.array(
-                        [
-                            self.hybrid.trace[
-                                self.skeleton.subtriangle_dofs(int(face), segment)
-                            ].mean()
-                            for segment in range(len(self.skeleton.face_partition(int(face))))
-                        ]
-                    )
-                )
-                for side, face in enumerate(mesh.cell_faces[cell])
-            )
-            points = np.einsum("qi,tij->tqj", bary, fine.points[fine.cells])
-            load = scalar_values_3d(self.source, points.reshape(-1, 3)).reshape(len(fine.cells), -1)
-            residuals.append(total - float(fine.volumes @ (load @ weights)))
-        return np.asarray(residuals)
 
 
 def solve_darcy_3d(

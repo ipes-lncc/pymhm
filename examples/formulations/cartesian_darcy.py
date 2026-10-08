@@ -8,7 +8,6 @@ from typing import Any, cast
 
 import numpy as np
 
-from pymhm._legacy.models.darcy.cartesian import QuadrilateralDarcySolution
 from pymhm.core.contracts import HybridSolution
 from pymhm.core.equations import Equation, LocalEquations, columns, rows
 from pymhm.core.multiscale import MultiscaleProblem, MultiscaleSystem
@@ -16,8 +15,10 @@ from pymhm.core.validation import positive_int
 from pymhm.fem.scalar.operators import boundary_data
 from pymhm.fem.scalar.quadrilateral import quadrilateral_operators, quadrilateral_trace_coupling
 from pymhm.fem.traces.interval import SkeletonSpace
-from pymhm.meshes.cartesian import CartesianMacroMesh, _refinement
+from pymhm.meshes.cartesian import CartesianMacroMesh, cartesian_refinement
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.nodal import nodal_field
+from pymhm.postprocessing.solutions import QuadrilateralDarcySolution
 
 
 @dataclass(frozen=True)
@@ -66,6 +67,7 @@ def local_equations(
         kernel=kernel,
         moments=moments,
         metadata=(fine, moments[:, 0]),
+        field_data=(nodal_field("pressure", fine, degree),),
     )
 
 
@@ -93,7 +95,7 @@ def define_cartesian_darcy(
         raise TypeError("Cartesian Darcy requires CartesianMacroMesh")
     degree = positive_int(degree, "degree")
     order = max(positive_int(quadrature_order, "quadrature_order"), degree + 1)
-    refinement = _refinement(local_refinement)
+    refinement = cartesian_refinement(local_refinement)
     skeleton = SkeletonSpace(cast(TriangleMesh, mesh)) if skeleton is None else skeleton
     if skeleton.mesh is not mesh or skeleton.components != 1:
         raise ValueError("Cartesian Darcy requires its own scalar skeleton")

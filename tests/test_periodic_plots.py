@@ -14,6 +14,8 @@ from examples import plot_periodic
 from pymhm._legacy.models.darcy.conforming import ConformingQuadrilateralSolution
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
+pytestmark = pytest.mark.visualization
+
 
 def test_profiles_keep_both_macro_side_values_and_mark_faces(monkeypatch):
     """A real nodal pressure jump stays two independent limits in the rendered plot."""

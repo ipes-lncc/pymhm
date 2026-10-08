@@ -13,19 +13,18 @@ from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
+from scipy import sparse
 
 from pymhm import LocalEquations
-from pymhm._legacy.models.flow.solver import _resistance_values
-from pymhm._legacy.models.vector import VectorSolution
 from pymhm.core.contracts import HybridSolution
 from pymhm.core.multiscale import MultiscaleSystem
-from pymhm.fem.assembly import assemble_element_blocks
 from pymhm.fem.inequalities import laplacian_inverse_bound
-from pymhm.fem.scalar.operators import triangle_quadrature
-from pymhm.fem.scalar.triangle import element_tabulate, tabulate, trace_coupling
+from pymhm.fem.scalar.triangle import trace_coupling
 from pymhm.fem.traces.interval import SkeletonSpace
-from pymhm.materials.evaluation import vector_values
+from pymhm.fem.vector.flow import advection_contract, minimum_resistance, triangle_flow_operators
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.nodal import nodal_field
+from pymhm.postprocessing.solutions import VectorSolution
 
 
 @dataclass(frozen=True)
@@ -92,125 +91,87 @@ def velocity_pressure_equations(
     drag: Any = 0.0,
     advection: Any = (0.0, 0.0),
     residual_weight: Any = None,
+    advection_divergence: Any = None,
+    advection_bound: float | None = None,
+    formulation: str | None = None,
+    stabilization: str = "tensor-2025",
+    gamma_min: float | None = None,
+    local_meshes: tuple[TriangleMesh, ...] | None = None,
 ) -> LocalEquations:
-    """Declare grad-grad, skew-advection, drag and symmetric div/pressure blocks.
+    """Declare grad-grad flow, skew transport, resistance and residual operators.
 
-    With a residual-weight callback, subtract the full strong residual pairing
-    ``tau*(-nu*Delta(u)+drag*u+grad(p),-nu*Delta(v)+drag*v+grad(q))`` and its
-    source pairing. That contract requires equal velocity/pressure degrees and
-    zero advection. The callable receives the fine mesh, viscosity, drag and
-    tabulation/resistance keyword data, returning one weight per fine cell. Translation moments
-    are physical velocity integrals, and pressure weights are physical integrals.
-    B is signed trace integration and C=-B.T; D and g are explicitly zero.
+    A residual callback explicitly supplies positive tau per fine cell. USFEM
+    subtracts the full momentum residual product; Oseen declares opposite test
+    convection and grad-div. Volume operators integrate the chosen forms, while
+    this application declares B, C, translation kernel/coarse modes and moments.
+    Pk/P(k-1) Taylor--Hood or Pk/Pk equal-order spaces remain explicit inputs.
     """
     if viscosity <= 0 or not np.isfinite(viscosity):
-        raise ValueError("this application needs positive finite viscosity")
-    beta = np.asarray(advection, dtype=float)
-    if beta.shape != (2,) or not np.isfinite(beta).all():
-        raise ValueError("this application declares constant two-dimensional advection")
-    if residual_weight is not None and (
-        space.velocity_degree != space.pressure_degree or np.any(beta)
-    ):
-        raise ValueError("the declared residual pairing requires equal degrees and zero advection")
-    fine = space.mesh.submesh(cell, space.refinement)
-    bary, weights = triangle_quadrature(max(space.quadrature_order, space.velocity_degree + 2))
-    udofs, nodes, values, grad, hessian = tabulate(fine, space.velocity_degree, bary)
-    bary_cells = np.broadcast_to(bary, (len(fine.cells), *bary.shape))
-    basis = np.broadcast_to(values, (*bary_cells.shape[:2], values.shape[1]))
-    if space.pressure_degree == space.velocity_degree:
-        pdofs, pnodes, pbasis, pgrad = udofs, nodes, basis, grad
-    else:
-        pdofs, pnodes, pbasis, pgrad, _ = element_tabulate(fine, space.pressure_degree, bary_cells)
-    nc, nq, ns = basis.shape
-    np_local, nv, npres = pbasis.shape[-1], len(nodes), len(pnodes)
-    vdofs = (2 * udofs[:, :, None] + np.arange(2)).reshape(nc, -1)
-    dofs = np.column_stack((vdofs, 2 * nv + pdofs))
-    qweights = np.broadcast_to(weights, (nc, nq))
-    physical = np.einsum("tqi,tij->tqj", bary_cells, fine.points[fine.cells])
-    convection = np.broadcast_to(beta, (nc, nq, 2))
-    resistance = _resistance_values(drag, physical.reshape(-1, 2)).reshape(nc, nq, 2, 2)
-    stiffness = np.einsum("tq,tqia,tqja,t->tij", qweights, grad, grad, fine.areas)
-    advective = np.einsum("tq,tqi,tqa,tqja,t->tij", qweights, basis, convection, grad, fine.areas)
-    scalar = viscosity * stiffness + (advective - advective.swapaxes(1, 2)) / 2
-    blocks = np.zeros((nc, 2 * ns + np_local, 2 * ns + np_local))
-    blocks[:, : 2 * ns, : 2 * ns] = np.einsum("tij,ab->tiajb", scalar, np.eye(2)).reshape(
-        nc, 2 * ns, 2 * ns
+        raise ValueError("viscosity must be finite and positive")
+    form = (
+        ("usfem" if residual_weight is not None else "taylor-hood")
+        if formulation is None
+        else formulation
     )
-    blocks[:, : 2 * ns, : 2 * ns] += np.einsum(
-        "tq,tqi,tqj,tqab,t->tiajb", qweights, basis, basis, resistance, fine.areas
-    ).reshape(nc, 2 * ns, 2 * ns)
-    divergence = grad.reshape(nc, nq, 2 * ns)
-    cross = -np.einsum("tq,tqi,tqj,t->tij", qweights, divergence, pbasis, fine.areas)
-    blocks[:, : 2 * ns, 2 * ns :] = cross
-    blocks[:, 2 * ns :, : 2 * ns] = cross.swapaxes(1, 2)
-    force = vector_values(source, physical.reshape(-1, 2)).reshape(nc, nq, 2)
-    element_load = np.zeros((nc, 2 * ns + np_local))
-    element_load[:, : 2 * ns] = np.einsum(
-        "tq,tqi,tqa,t->tia", qweights, basis, force, fine.areas
-    ).reshape(nc, -1)
-    if residual_weight is not None:
-        tau = np.asarray(
-            residual_weight(
-                fine,
-                viscosity,
-                drag,
-                tabulation=(grad, hessian, weights),
-                resistance=resistance,
-            ),
-            dtype=float,
-        )
-        if tau.shape != (nc,) or not np.isfinite(tau).all() or np.any(tau <= 0):
-            raise ValueError("the residual weight must be positive on each fine cell")
-        residual = np.zeros((nc, nq, 2, 2 * ns + np_local))
-        laplacian = -viscosity * np.trace(hessian, axis1=-2, axis2=-1)
-        for component in range(2):
-            for coordinate in range(2):
-                residual[:, :, component, coordinate : 2 * ns : 2] = (
-                    resistance[:, :, component, coordinate, None] * basis
-                    + (component == coordinate) * laplacian
-                )
-        residual[:, :, :, 2 * ns :] = pgrad.swapaxes(-1, -2)
-        blocks -= np.einsum(
-            "tq,tqai,tqaj,t->tij", qweights * tau[:, None], residual, residual, fine.areas
-        )
-        element_load -= np.einsum(
-            "tq,tqai,tqa,t->ti", qweights * tau[:, None], residual, force, fine.areas
-        )
-    size = 2 * nv + npres
-    a = assemble_element_blocks(blocks, dofs, dofs, (size, size))
-    load = np.bincount(dofs.ravel(), weights=element_load.ravel(), minlength=size)
+    expected = space.velocity_degree - 1 if form == "taylor-hood" else space.velocity_degree
+    if space.pressure_degree != expected:
+        raise ValueError("pressure degree must match the declared flow formulation")
+    beta, divergence, bound = advection_contract(
+        advection, advection_divergence, advection_bound, stabilized=form == "oseen"
+    )
+    minimum = minimum_resistance(drag, gamma_min) if stabilization == "minimum-2017" else None
+    fine = (
+        space.mesh.submesh(cell, space.refinement) if local_meshes is None else local_meshes[cell]
+    )
+    forms = triangle_flow_operators(
+        fine,
+        degree=space.velocity_degree,
+        formulation=form,
+        viscosity=viscosity,
+        drag=drag,
+        beta=beta,
+        source=source,
+        order=max(space.quadrature_order, space.velocity_degree + 2),
+        gamma_min=minimum,
+        pointwise=stabilization == "pointwise-2017",
+        residual_weight=residual_weight,
+        beta_divergence=divergence,
+        beta_bound=bound,
+    )
+    nv, size = len(forms.velocity_nodes), len(forms.load)
     b = np.zeros((size, len(space.skeleton.cell_dofs(cell))))
     b[: 2 * nv] = np.kron(
         trace_coupling(space.mesh, cell, fine, space.skeleton, space.velocity_degree), np.eye(2)
     )
-    translations = np.zeros((size, 2))
-    translations[: 2 * nv] = np.tile(np.eye(2), (nv, 1))
-    velocity_weights = np.zeros(nv)
-    np.add.at(
-        velocity_weights,
-        udofs,
-        fine.areas[:, None] * np.einsum("tq,tqi->ti", qweights, basis),
-    )
-    moments = np.zeros_like(translations)
-    moments[: 2 * nv] = (velocity_weights[:, None, None] * np.eye(2)).reshape(2 * nv, 2)
-    pressure_weights = np.zeros(size)
-    np.add.at(
-        pressure_weights,
-        2 * nv + pdofs,
-        fine.areas[:, None] * np.einsum("tq,tqi->ti", qweights, pbasis),
-    )
+    selector = sparse.eye(size, format="csr")
     return LocalEquations(
-        a,
-        load,
+        forms.matrix,
+        forms.load,
         b,
         -b.T,
         space.skeleton.cell_dofs(cell),
-        d=0,
-        g=0,
-        kernel=translations if not np.any(resistance) and not np.any(beta) else None,
-        coarse_basis=translations if np.any(resistance) or np.any(beta) else None,
-        moments=moments,
-        metadata=(fine, nv, pressure_weights),
+        kernel=forms.kernel if forms.pure else None,
+        coarse_basis=None if forms.pure else forms.kernel,
+        moments=forms.translation_moments,
+        metadata=(
+            fine,
+            nv,
+            forms.pressure_moments,
+            forms.translation_moments,
+            forms.resistance_moment,
+            forms.absolute_resistance_moment,
+            forms.zero_columns,
+        ),
+        field_data=(
+            nodal_field(
+                "velocity",
+                fine,
+                space.velocity_degree,
+                components=2,
+                reconstruction=selector[: 2 * nv],
+            ),
+            nodal_field("pressure", fine, space.pressure_degree, reconstruction=selector[2 * nv :]),
+        ),
     )
 
 

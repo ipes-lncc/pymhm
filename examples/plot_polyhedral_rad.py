@@ -2,6 +2,15 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
+import hashlib
 import json
 from pathlib import Path
 
@@ -11,11 +20,12 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-from plot_mesh import draw_macro_mesh
-from plot_style import set_refinement_ticks
-from solve_polyhedral_rad import partition
-from solve_rad3d import exact
 
+from examples.field_archive import load_trusted_field
+from examples.plot_mesh import draw_macro_mesh
+from examples.plot_style import set_refinement_ticks
+from examples.solve_polyhedral_rad import partition
+from examples.solve_rad3d import exact
 from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
 from pymhm.meshes.tetrahedron import TetraMesh
 
@@ -81,19 +91,28 @@ def evaluate_slice(
             selected = np.flatnonzero(inside)
             cell = zlayer * len(base.cells) + polygon
             fine = TetraMesh(data[f"points_{cell}"], data[f"cells_{cell}"])
-            dofs, _ = tetra_nodal_space(fine, 4)
             values = data[f"coefficients_{cell}"]
+            recorded = load_trusted_field(data, cell)
+            if recorded is None:
+                dofs, _ = tetra_nodal_space(fine, 4)
             remaining = np.ones(len(selected), dtype=bool)
+            owners = np.full(len(selected), -1, dtype=int)
             for element, vertices in enumerate(fine.points[fine.cells]):
                 local = (points[selected] - vertices[0]) @ np.linalg.inv(
                     (vertices[1:] - vertices[0]).T
                 ).T
                 bary = np.column_stack((1 - local.sum(axis=1), local))
                 belongs = remaining & np.all(bary >= -1e-12, axis=1)
-                result[selected[belongs]] = tetra_basis(4, bary[belongs])[0] @ values[dofs[element]]
+                owners[belongs] = element
+                if recorded is None:
+                    result[selected[belongs]] = (
+                        tetra_basis(4, bary[belongs])[0] @ values[dofs[element]]
+                    )
                 remaining[belongs] = False
             if remaining.any():
                 raise ValueError("slice sample not found in its polyhedral local mesh")
+            if recorded is not None:
+                result[selected] = recorded.evaluate(points[selected], cells=owners)
     if not np.isfinite(result).all():
         raise ValueError("slice has samples outside the macro partition")
     return result, base
@@ -109,9 +128,10 @@ def fields(rows: list[dict]) -> None:
     samples = []
     for family in FAMILIES:
         row = max((r for r in rows if r["family"] == family), key=lambda r: r["n"])
-        values, base = evaluate_slice(
-            ROOT / "build/results/polyhedral-rad" / row["field_archive"], row["n"], family, points
-        )
+        path = ROOT / "build/results/polyhedral-rad" / row["field_archive"]
+        if hashlib.sha256(path.read_bytes()).hexdigest() != row["field_sha256"]:
+            raise ValueError("archived fields differ from their acquisition digest")
+        values, base = evaluate_slice(path, row["n"], family, points)
         samples.append((row, values, base))
     limit = max(float(abs(exact_values).max()), *(float(abs(item[1]).max()) for item in samples))
     error_limit = max(float(abs(item[1] - exact_values).max()) for item in samples)

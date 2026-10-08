@@ -89,7 +89,7 @@ digitized figure.
 Run the research campaign with:
 
 ```bash
-pixi run -e notebooks python examples/verify_analytic.py
+pixi run --locked -e notebooks python -m examples.verify_analytic
 ```
 
 The unrounded record is `examples/results/analytic.json`; notebook

@@ -16,7 +16,8 @@ reconstructed flux only against continuous macro-local pressure functions.
 
 ```python
 from pymhm import TriangleMesh
-from pymhm._legacy.models.darcy.mixed_rt import solve_darcy_rt, solve_darcy_rt_conforming
+from examples.formulations.application import rt_darcy as solve_darcy_rt
+from examples.formulations.mixed_darcy import conforming_rt_reference as solve_darcy_rt_conforming
 
 macro = TriangleMesh.unit_square(4)
 solution = solve_darcy_rt(
@@ -118,9 +119,9 @@ assemble classical RT0/P0, RT1/P1 and RT2/P2 systems independently in
 DOLFINx/UFL and compare pressure and physical flux evaluations on matching cells.
 
 ```bash
-pixi run --locked -e test-core python examples/solve_darcy_rt.py
-pixi run -e notebooks python examples/plot_darcy_rt.py
-pixi run -e fem pytest tests/test_darcy_rt.py -m fem
+pixi run --locked -e test-core python -m examples.solve_darcy_rt
+pixi run --locked -e notebooks python -m examples.plot_darcy_rt
+pixi run --locked -e fem pytest tests/test_darcy_rt.py -m fem
 ```
 
 [Acquisition record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/darcy-rt.json)

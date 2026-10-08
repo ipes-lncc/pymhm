@@ -7,6 +7,14 @@ reconstructed one macrocell at a time after the complete global trace solve.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -22,13 +30,14 @@ from examples.helmholtz_campaign import AcousticWave, source_hashes
 from examples.helmholtz_compact_family import CompactFamily
 from examples.helmholtz_response_store import ResponseStore
 from examples.helmholtz_stability import checkpoint, continuous_local_resonance, projected_trace
-from pymhm._legacy.models.waves.helmholtz import _HelmholtzFactory, local_helmholtz_error_squared
+from examples.tutorial_helmholtz_equations import AcousticAssemblyProvider
 from pymhm.core.validation import positive_int
 from pymhm.fem.loads import split_point_sources
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton
 from pymhm.io.provenance import file_digest
 from pymhm.linalg.linear import LinearSolveError
 from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.postprocessing.acoustics import local_helmholtz_error_squared
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -102,7 +111,7 @@ def solve_configuration(
         "exact_field": "Hankel H0(omega*|x-(1.5,0.5)|)",
         "trace": "Discontinuous polynomial P(ell), physical globally oriented normal flux",
     }
-    factory = _HelmholtzFactory(
+    factory = AcousticAssemblyProvider(
         mesh,
         skeleton,
         wave.omega,

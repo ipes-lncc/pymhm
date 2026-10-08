@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -10,8 +18,8 @@ from pathlib import Path
 
 import numpy as np
 import pyvista as pv
-from plot_pyvista_layout import horizontal_color_scale
 
+from examples.plot_pyvista_layout import horizontal_color_scale
 from pymhm import TriangleMesh
 from pymhm.io.datasets.spe10 import (
     SPE10_FILES,

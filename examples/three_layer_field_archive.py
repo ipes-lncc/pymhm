@@ -11,18 +11,19 @@ import hashlib
 import json
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 from numpy.polynomial import Polynomial
 
-from pymhm._legacy.models.elasticity.primal import _KELVIN, constitutive_values
-from pymhm._legacy.models.waves.elastodynamics import ElastodynamicLocal
 from pymhm.fem.reference import orthogonal_polynomial_tabulation, simplex_lagrange_basis
 from pymhm.fem.scalar import triangle as lagrange
 from pymhm.fem.scalar.operators import p1_geometry
 from pymhm.fem.scalar.triangle import element_tabulate, multiindices
 from pymhm.fem.vector.curl import physical_points, quadrature
+from pymhm.materials.elasticity import KELVIN_BASIS_2D as _KELVIN
+from pymhm.materials.elasticity import constitutive_values
+from pymhm.postprocessing.dynamics import ElastodynamicLocal
 
 SCHEMA = "pymhm-three-layer-basix-basis-v2"
 LEGACY_SCHEMA = "pymhm-three-layer-product-basis-v1"
@@ -167,7 +168,8 @@ def _recipe(owner_sha256: str, runtime_json: str) -> tuple[dict[str, Any], dict[
 def product_recipe() -> tuple[dict[str, Any], dict[str, np.ndarray]]:
     """Capture the producer's actual native P3 matrix, retaining its node order."""
     record, arrays = _recipe(
-        _file_digest(Path(lagrange.__file__)), json.dumps(product_runtime(), sort_keys=True)
+        _file_digest(Path(lagrange.__file__)),
+        json.dumps(product_runtime(), sort_keys=True),
     )
     return json.loads(json.dumps(record)), dict(arrays)
 
@@ -262,13 +264,16 @@ def capture_field_basis(
             for path in (
                 Path(__file__),
                 Path(lagrange.__file__),
-                Path(__import__("pymhm.fem.scalar.operators", fromlist=["__file__"]).__file__),
-                Path(__import__("pymhm.fem.vector.curl", fromlist=["__file__"]).__file__),
                 Path(
-                    __import__(
-                        "pymhm._legacy.models.elasticity.primal", fromlist=["__file__"]
-                    ).__file__
+                    cast(
+                        str,
+                        __import__("pymhm.fem.scalar.operators", fromlist=["__file__"]).__file__,
+                    )
                 ),
+                Path(
+                    cast(str, __import__("pymhm.fem.vector.curl", fromlist=["__file__"]).__file__)
+                ),
+                Path(cast(str, __import__("pymhm.fem.reference", fromlist=["__file__"]).__file__)),
             )
         },
         arrays_sha256={key: array_digest(value) for key, value in arrays.items()},

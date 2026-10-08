@@ -6,6 +6,14 @@ two. No locking sweep, coefficient archive or replay assertion is included.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 import platform
@@ -18,6 +26,7 @@ from uuid import uuid4
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed_3d
 from examples.minimal_flow_originals import (
     capture_sources,
     observe_originals,
@@ -26,7 +35,6 @@ from examples.minimal_flow_originals import (
     write_record,
 )
 from examples.mixed_elasticity3d_data import SolenoidalElasticity3D
-from pymhm._legacy.models.elasticity.stress_3d import solve_elasticity_mixed_3d
 from pymhm.fem.hdiv.family_3d import cell_quadrature
 from pymhm.meshes.mixed import AffineMixedMesh
 

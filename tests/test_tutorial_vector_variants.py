@@ -119,7 +119,7 @@ def test_maxwell_rejects_field_or_energy_defect(
         def advance(self) -> Any:
             return self.solution
 
-    monkeypatch.setattr(tutorial, "MaxwellStepper", Stepper)
+    monkeypatch.setattr(tutorial, "EquationLeapfrog", Stepper)
     with pytest.raises(RuntimeError, match="Maxwell patch was not recovered"):
         run_variant("maxwell-vector-3d")
 

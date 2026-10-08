@@ -11,20 +11,43 @@ independent of the local finite-element degree. Continuous faces accept every
 positive polynomial degree, subject to the
 [trace compatibility conditions](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy3d.md).
 
-::: pymhm.fem.traces.triangle_3d.TriangularSkeleton
+User-defined formulations compose these public numerical owners with
+`LocalEquations` and `Equation`; their editable providers are listed in the
+[variational guide](../variational.md#formulations-composed-from-the-same-api).
+Physical field records provide optional interpretation of the resulting
+coefficients. Named `FieldDefinition` views require no physical solver object.
+
+::: pymhm.fem.scalar.tetrahedron
     options:
       show_source: false
 
-::: pymhm._legacy.models.darcy.primal_3d
+::: pymhm.fem.hdiv.mixed_3d
     options:
       show_source: false
 
-::: pymhm._legacy.models.darcy.mapped
+Affine H(div) families, quadrature and their moment conventions are documented
+in the [finite-element API](elements.md).
+
+::: pymhm.fem.hdiv.mapped
     options:
       show_source: false
 
+::: pymhm.fem.traces.polygon_3d
+    options:
+      show_source: false
 
+::: pymhm.fem.traces.triangle_3d
+    options:
+      show_source: false
 
-::: pymhm._legacy.models.darcy.hdiv_3d
+::: pymhm.fem.traces.pressure_3d
+    options:
+      show_source: false
+
+::: pymhm.postprocessing.solutions.Darcy3DSolution
+    options:
+      show_source: false
+
+::: pymhm.postprocessing.solutions.Mixed3DDarcySolution
     options:
       show_source: false

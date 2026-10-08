@@ -51,7 +51,7 @@ def candidates(kind: CellKind, degree: int, points: FloatArray) -> tuple[FloatAr
     """
     if kind == "tetrahedron":
         values, divergence = vector_tabulation("BDM", "tetrahedron", degree + 1, points)
-        transform = _tetrahedral_candidate_map(degree)
+        transform = tetrahedral_candidate_coefficients(degree)
         return np.einsum("qia,ij->qja", values, transform), divergence @ transform
     fields, derivatives = [], []
     for axis in range(3):
@@ -71,7 +71,7 @@ def candidates(kind: CellKind, degree: int, points: FloatArray) -> tuple[FloatAr
 
 
 @cache
-def _tetrahedral_candidate_map(degree: int) -> FloatArray:
+def tetrahedral_candidate_coefficients(degree: int) -> FloatArray:
     """Preserve archived component/Bernstein rows through native BDM interpolation."""
     element = create_reference_element(
         ReferenceElementSpec("BDM", "tetrahedron", degree + 1, lagrange_variant="legendre")
@@ -192,3 +192,6 @@ def coefficients(kind: CellKind, pressure_degree: int, normal_degree: int) -> Fl
     result = np.column_stack((lift, bubbles))
     result.setflags(write=False)
     return result
+
+
+_tetrahedral_candidate_map = tetrahedral_candidate_coefficients

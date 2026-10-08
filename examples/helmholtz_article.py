@@ -7,6 +7,14 @@ separate local-refinement controls. Each completed configuration is checkpointed
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -25,9 +33,10 @@ from examples.campaign_checkpoint import archive_identity, require_sources, veri
 from examples.helmholtz_campaign import AcousticWave, archive, norms, source_hashes
 from examples.helmholtz_incident_family import IncidentFamily
 from examples.helmholtz_trace_family import verify_helmholtz_solution
-from pymhm._legacy.models.waves.helmholtz import HelmholtzSolution, solve_helmholtz
+from examples.tutorial_helmholtz_equations import solve_acoustic
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton
 from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.postprocessing.acoustics import HelmholtzSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -59,7 +68,7 @@ def solve_configuration(configuration: Configuration, output: Path) -> dict[str,
     skeleton = helmholtz_skeleton(mesh, c.omega, degree=c.ell, oscillatory=c.oscillatory)
     start = time.perf_counter()
     with threadpool_limits(1):
-        solution = solve_helmholtz(
+        solution = solve_acoustic(
             mesh,
             omega=c.omega,
             skeleton=skeleton,
@@ -120,7 +129,7 @@ def solve_direction_family(cases: list[Configuration], output: Path) -> Iterator
     )
     start = time.perf_counter()
     with threadpool_limits(1):
-        prepared = solve_helmholtz(
+        prepared = solve_acoustic(
             mesh,
             omega=first.omega,
             skeleton=skeleton,

@@ -153,5 +153,5 @@ plots are not substituted for the full-field L2 comparison.
 The figure reader performs no reference solves:
 
 ```bash
-pixi run -e notebooks python examples/plot_reference_comparison.py
+pixi run --locked -e notebooks python -m examples.plot_reference_comparison
 ```

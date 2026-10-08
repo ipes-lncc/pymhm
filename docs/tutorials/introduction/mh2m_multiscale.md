@@ -16,10 +16,13 @@ pixi run --locked -e introduction python scripts/run_notebooks.py notebooks/intr
 
 Execution is serial; process workers need importable provider callables.
 
+Field evaluation, norms, plots and executed-array archives use the importable
+[supporting scalar helpers](https://github.com/ipes-lncc/pymhm/blob/main/examples/introduction/scalar.py).
+The physical data and local/global variational equations remain explicit below.
+
 
 
 ```python
-
 from pathlib import Path
 import sys
 
@@ -27,36 +30,34 @@ ROOT = next(p for p in (Path.cwd(), *Path.cwd().parents) if (p / "pixi.toml").is
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from collections.abc import Callable, Sequence
-from dataclasses import dataclass
-from functools import cached_property
-from typing import Any
-import hashlib
-import json
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.tri import Triangulation
-from matplotlib.collections import LineCollection
+from typing import Any
 from scipy import sparse
 from threadpoolctl import threadpool_limits
-
-from pymhm.core.equations import Equation, LocalEquations
-from pymhm.core.multiscale import MultiscaleProblem, assemble
-from pymhm.fem.scalar.triangle import (
-    nodal_space, reference_basis, tabulate,
-)
-from pymhm.fem.scalar.operators import p1_geometry, triangle_quadrature
+from pymhm import Equation, LocalEquations, assemble
+from pymhm import MeshHierarchy, LocalContext, bind_interface, bind_problem
+from pymhm.core.equations import compile_form
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
-from pymhm.linalg.linear import solve_linear
+from examples.introduction.scalar import (
+    plot_material,
+    plot_reference_differences,
+    plot_scalar_comparison,
+    executed_array_digest,
+    ScalarField,
+    archive_cell,
+    compare_scalar_fields,
+    dirichlet_solve,
+    native_scalar_space,
+    save_scalar_report,
+)
+from pymhm.fem.scalar.triangle import nodal_space
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.backends.forms import assemble_pairing
 
 plt.rcParams.update({"figure.dpi": 110, "font.size": 10})
-
-from pymhm.methods.three_field import PressureTraceSpace
-
-from pymhm import MeshHierarchy, LocalContext, bind_interface, bind_problem, solve
-from pymhm.backends.spaces import bind_space
-from pymhm.backends.forms import assemble_pairing
+from pymhm import solve
+from pymhm.fem.traces.pressure_2d import PressureTraceSpace
 
 ```
 
@@ -89,18 +90,27 @@ Our 32 macrotriangles do not resolve eight oscillations per direction. Each loca
 ```python
 epsilon = 1 / 8
 
+
 def permeability(points: np.ndarray) -> np.ndarray:
     """Evaluate aε I through its positive scalar factor, with ε=1/8."""
     phase = 2 * np.pi * points / epsilon
     return 2 + np.sin(phase[:, 0]) * np.sin(phase[:, 1])
 
+
 macro = TriangleMesh.unit_square(4)
 source = 1.0
 local_refinement = 16
 assembly_order = 8
-print({"macro_triangles": len(macro.cells), "epsilon": epsilon,
-       "H_max": float(macro.lengths.max()), "h_max": float(macro.lengths.max() / local_refinement),
-       "ellipticity_bounds": [1.0, 3.0], "source": source})
+print(
+    {
+        "macro_triangles": len(macro.cells),
+        "epsilon": epsilon,
+        "H_max": float(macro.lengths.max()),
+        "h_max": float(macro.lengths.max() / local_refinement),
+        "ellipticity_bounds": [1.0, 3.0],
+        "source": source,
+    }
+)
 
 ```
 
@@ -110,14 +120,7 @@ print({"macro_triangles": len(macro.cells), "epsilon": epsilon,
 
 
 ```python
-preview = TriangleMesh.unit_square(64)
-fig_material, axis = plt.subplots(figsize=(5.4, 4.2), layout="constrained")
-artist = axis.tripcolor(Triangulation(*preview.points.T, preview.cells),
-                       permeability(preview.points), shading="gouraud", vmin=1, vmax=3)
-axis.add_collection(LineCollection(macro.points[macro.faces], colors="white", linewidths=1.1))
-axis.add_collection(LineCollection(macro.points[macro.faces], colors="#24343c", linewidths=.45))
-axis.set(title="Multiscale permeability and actual macro mesh", xlabel="x", ylabel="y", aspect="equal")
-fig_material.colorbar(artist, ax=axis, label="Permeability aε")
+fig_material = plot_material(macro, permeability, resolution=64, limits=(1, 3))
 plt.show()
 
 ```
@@ -135,12 +138,12 @@ Use $k=0$ in the two-dimensional family of section 6.2:
 
 $$
 \begin{aligned}
- \Gamma_{H_\Gamma}&=\text{continuous P1 pressure trace},\\
- \Lambda_{H_\Lambda}(K)&=\text{discontinuous P0 on }\partial K,\\
- V_h(K)&=\text{continuous P1 on the local triangulation},\\
- H_\Gamma&\sim H/4,
- &H_\Lambda&\sim H/8,
- &h&\sim H/16.
+ \Gamma_{H_\Gamma}&=P_1^{\mathrm{C0}}(\text{pressure segments}),\\
+ \Lambda_{H_\Lambda}(K)&=P_0^{\mathrm{broken}}(\text{conormal segments}),\\
+ V_h(K)&=P_1^{\mathrm{C0}}(\text{local triangles}),\\
+ H_\Gamma&\sim H/4,\\
+ H_\Lambda&\sim H/8,\\
+ h&\sim H/16.
 \end{aligned}
 $$
 
@@ -157,15 +160,20 @@ local_degree = 1
 gamma_segments, conormal_segments = 4, 8
 gamma = PressureTraceSpace.uniform(macro, degree=1, segments=gamma_segments)
 conormal = SkeletonSpace(
-    macro, tuple(FaceSpace.uniform(0, conormal_segments) for _ in macro.faces),
+    macro,
+    tuple(FaceSpace.uniform(0, conormal_segments) for _ in macro.faces),
 )
 assert conormal_segments == 2 * gamma_segments
 assert local_refinement == 2 * conormal_segments
 pressure_interface = bind_interface(gamma, convention="value")
 conormal_interface = bind_interface(conormal, convention="value")
-print({"global_pressure_trace_coordinates": gamma.size,
-       "local_conormal_unknowns_per_macrocell": 3 * conormal_segments,
-       "local_P1_nodes_per_macrocell": (local_refinement + 1) * (local_refinement + 2) // 2})
+print(
+    {
+        "global_pressure_trace_coordinates": gamma.size,
+        "local_conormal_unknowns_per_macrocell": 3 * conormal_segments,
+        "local_P1_nodes_per_macrocell": (local_refinement + 1) * (local_refinement + 2) // 2,
+    }
+)
 
 ```
 
@@ -232,28 +240,19 @@ $$
 
 ```python
 import basix.ufl
-import dolfinx
 import ufl
-from mpi4py import MPI
-from pymhm.core.equations import compile_form
-
-
-def native_scalar_space(fine: TriangleMesh, degree: int) -> tuple[Any, np.ndarray]:
-    """Bind the declared nodal element with shared topology and coefficient maps."""
-    element = basix.ufl.element(
-        "Lagrange", "triangle", degree,
-        lagrange_variant=basix.LagrangeVariant.equispaced,
-    )
-    binding = bind_space(fine, element)
-    return binding.space, binding.mapping
 
 
 def user_volume_forms(
-    fine: TriangleMesh, degree: int, *, binding: Any = None, portable: bool = True,
+    fine: TriangleMesh,
+    degree: int,
+    *,
+    binding: Any = None,
+    portable: bool = True,
 ) -> tuple[Any, Any, np.ndarray]:
     """Assemble the user weak form in native or declared portable nodal coordinates."""
     if binding is None:
-        V, order = native_scalar_space(fine, degree)
+        _, V, order = native_scalar_space(fine, degree)
     else:
         V, order = binding.space, binding.mapping
     p, v = ufl.TrialFunction(V), ufl.TestFunction(V)
@@ -274,8 +273,15 @@ def user_volume_forms(
 ```python
 first_fine = macro.submesh(0, local_refinement)
 A_ufl, M_ufl, F_ufl = user_volume_forms(first_fine, local_degree)
-print({"operator": "user-written UFL", "local_nodal_unknowns": A_ufl.shape[0],
-       "constant_kernel_relative": float(np.linalg.norm(A_ufl @ np.ones(A_ufl.shape[0])) / sparse.linalg.norm(A_ufl))})
+print(
+    {
+        "operator": "user-written UFL",
+        "local_nodal_unknowns": A_ufl.shape[0],
+        "constant_kernel_relative": float(
+            np.linalg.norm(A_ufl @ np.ones(A_ufl.shape[0])) / sparse.linalg.norm(A_ufl)
+        ),
+    }
+)
 form_equivalence = {}  # Filled by the optional convenience check at the end.
 
 ```
@@ -290,16 +296,22 @@ def local_three_field_equations(local: LocalContext) -> LocalEquations:
     """Declare native pressure/conormal equations and the shared pressure balance."""
     fine = local.mesh
     element = basix.ufl.element(
-        "Lagrange", "triangle", local_degree,
+        "Lagrange",
+        "triangle",
+        local_degree,
         lagrange_variant=basix.LagrangeVariant.equispaced,
     )
     pressure_space = local.native_space(element)
     stiffness, mass, force = user_volume_forms(
-        fine, local_degree, binding=pressure_space, portable=False,
+        fine,
+        local_degree,
+        binding=pressure_space,
+        portable=False,
     )
     v = ufl.TestFunction(pressure_space.space)
     boundary_forms = local.trace_pairings(
-        lambda phi, ds: phi * v * ds, interface=conormal_interface,
+        lambda phi, ds: phi * v * ds,
+        interface=conormal_interface,
     )
     B = assemble_pairing(boundary_forms.forms)
     P = local.interface_pairing(conormal_interface, order=4)
@@ -311,10 +323,19 @@ def local_three_field_equations(local: LocalContext) -> LocalEquations:
     pressure_reconstruction = np.hstack((np.eye(npressure), np.zeros((npressure, nconormal))))
     local.field("pressure", pressure_space, reconstruction=pressure_reconstruction)
     return local.equations(
-        a=local_saddle, L=np.r_[force, np.zeros(nconormal)],
-        b=coupling, c=coupling.T,
-        metadata={"mesh": fine, "A": stiffness, "F": force, "B": B, "P": P,
-                  "pressure_count": npressure, "volume_moments": np.asarray(mass.sum(axis=1)).ravel()},
+        a=local_saddle,
+        L=np.r_[force, np.zeros(nconormal)],
+        b=coupling,
+        c=coupling.T,
+        metadata={
+            "mesh": fine,
+            "A": stiffness,
+            "F": force,
+            "B": B,
+            "P": P,
+            "pressure_count": npressure,
+            "volume_moments": np.asarray(mass.sum(axis=1)).ravel(),
+        },
     )
 
 ```
@@ -330,53 +351,15 @@ The article's Neumann maps use a **boundary-mean-zero** decomposition. The full 
 
 
 ```python
-@dataclass(frozen=True)
-class ScalarField:
-    """A physical Pk nodal coefficient vector on one existing triangular mesh."""
-    mesh: TriangleMesh
-    degree: int
-    values: np.ndarray
-
-    @cached_property
-    def dofs(self) -> np.ndarray:
-        """Use the package's declared nodal ordering without changing its basis."""
-        return nodal_space(self.mesh, self.degree)[0]
-
-    @cached_property
-    def locator(self) -> Any:
-        """Find triangles from original connectivity, without retriangulating nodes."""
-        return Triangulation(*self.mesh.points.T, self.mesh.cells).get_trifinder()
-
-    @cached_property
-    def geometry(self) -> np.ndarray:
-        """Return the package's physical barycentric gradients."""
-        return p1_geometry(self.mesh)[0]
-
-
-def evaluate_scalar(field: ScalarField, points: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    """Evaluate pressure and raw gradient; choose one incident fine cell on edges."""
-    selected = np.asarray(field.locator(*points.T), dtype=int)
-    if np.any(selected < 0):
-        raise ValueError("evaluation point lies outside the declared field mesh")
-    displacement = points - field.mesh.points[field.mesh.cells[selected, 0]]
-    bary = np.einsum("qia,qa->qi", field.geometry[selected], displacement)
-    bary[:, 0] += 1
-    basis, derivative, _ = reference_basis(field.degree, bary)
-    nodal = field.values[field.dofs[selected]]
-    pressure = np.einsum("qi,qi->q", basis, nodal)
-    gradient = np.einsum("qib,qba,qi->qa", derivative, field.geometry[selected], nodal)
-    return pressure, gradient
-
-```
-
-
-```python
 hierarchy = MeshHierarchy(
     macro, tuple(macro.submesh(cell, local_refinement) for cell in range(len(macro.cells)))
 )
 problem = bind_problem(
-    hierarchy, pressure_interface, local_three_field_equations,
-    global_equation=Equation(0, 0), retained=0,
+    hierarchy,
+    pressure_interface,
+    local_three_field_equations,
+    global_equation=Equation(0, 0),
+    retained=0,
     fixed=lambda global_context: global_context.fix_faces(macro.boundary_faces, 0),
 )
 with threadpool_limits(1):
@@ -384,20 +367,19 @@ with threadpool_limits(1):
     solution = solve(system)
 pressure_fields = solution.field("pressure")
 physical_fields = tuple(
-    ScalarField(field.mesh, local_degree, field.portable_coefficients)
-    for field in pressure_fields
+    ScalarField(field.mesh, local_degree, field.portable_coefficients) for field in pressure_fields
 )
 global_free_unknowns = gamma.size - len(problem.fixed)
 conormal_fields = tuple(
-    mixed[data["pressure_count"]:] for data, mixed in zip(system.local_metadata, solution.fields, strict=True)
+    mixed[data["pressure_count"] :]
+    for data, mixed in zip(system.local_metadata, solution.fields, strict=True)
 )
-print({"global_pressure_trace_free": global_free_unknowns,
-       "global_residual": solution.residual})
+print({"global_pressure_trace_free": global_free_unknowns, "global_residual": solution.residual})
 
 ```
 
 ```text
-{'global_pressure_trace_free': 129, 'global_residual': 1.087033410919318e-16}
+{'global_pressure_trace_free': 129, 'global_residual': 1.1041680519794778e-16}
 ```
 
 ### 5. Check injectivity, trace moments and macro conservation
@@ -421,11 +403,19 @@ The physical reconstruction reads `solution.local_trace(cell)`: the bound space 
 
 
 ```python
-diagnostics = {"constant_kernel_relative": 0.0, "trace_moment_max": 0.0,
-               "macro_conservation_max": 0.0, "original_local_relative_residual": 0.0}
+diagnostics = {
+    "constant_kernel_relative": 0.0,
+    "trace_moment_max": 0.0,
+    "macro_conservation_max": 0.0,
+    "original_local_relative_residual": 0.0,
+}
 basis_digests = []
-archive = {"macro_points": macro.points, "macro_cells": macro.cells,
-           "pressure_trace": solution.trace, "gamma_nodes": gamma.nodes}
+archive = {
+    "macro_points": macro.points,
+    "macro_cells": macro.cells,
+    "pressure_trace": solution.trace,
+    "gamma_nodes": gamma.nodes,
+}
 for cell, (data, field, eta) in enumerate(
     zip(system.local_metadata, physical_fields, conormal_fields, strict=True)
 ):
@@ -437,31 +427,32 @@ for cell, (data, field, eta) in enumerate(
         float(np.linalg.norm(A @ np.ones(A.shape[0])) / np.linalg.norm(A.data)),
     )
     diagnostics["trace_moment_max"] = max(
-        diagnostics["trace_moment_max"], float(np.max(abs(B.T @ executed_pressure - P @ rho))),
+        diagnostics["trace_moment_max"],
+        float(np.max(abs(B.T @ executed_pressure - P @ rho))),
     )
     diagnostics["macro_conservation_max"] = max(
-        diagnostics["macro_conservation_max"], float(abs(B.sum(axis=0) @ eta + F.sum())),
+        diagnostics["macro_conservation_max"],
+        float(abs(B.sum(axis=0) @ eta + F.sum())),
     )
     defect = A @ executed_pressure - B @ eta - F
     scale = max(np.linalg.norm(F), np.linalg.norm(A @ executed_pressure), np.linalg.norm(B @ eta))
     diagnostics["original_local_relative_residual"] = max(
-        diagnostics["original_local_relative_residual"], float(np.linalg.norm(defect) / scale),
+        diagnostics["original_local_relative_residual"],
+        float(np.linalg.norm(defect) / scale),
     )
-    digest = hashlib.sha256(np.ascontiguousarray(B).tobytes())
-    digest.update(np.ascontiguousarray(P).tobytes())
-    basis_digests.append(digest.hexdigest())
+    basis_digests.append(executed_array_digest(B, P))
     descriptor = pressure_fields[cell].definition.descriptor
     binding = solution.trace_bindings[cell]
-    archive.update({f"executed_pressure_{cell}": executed_pressure,
-                    f"executed_pressure_mapping_{cell}": descriptor.mapping,
-                    f"executed_pressure_basis_{cell}": descriptor.basis_matrix,
-                    f"executed_pressure_basis_points_{cell}": descriptor.basis_points,
-                    f"pressure_basis_digest_{cell}": np.array(pressure_fields[cell].basis_digest),
-                    f"trace_trial_map_{cell}": binding.trial_map,
-                    f"points_{cell}": field.mesh.points, f"cells_{cell}": field.mesh.cells,
-                    f"pressure_{cell}": field.values, f"conormal_{cell}": eta,
-                    f"boundary_pairing_{cell}": B, f"pressure_trace_pairing_{cell}": P,
-                    f"gamma_dofs_{cell}": binding.dofs})
+    archive_cell(
+        archive,
+        cell,
+        field,
+        executed=pressure_fields[cell],
+        trace_binding=binding,
+        conormal=eta,
+        boundary_pairing=B,
+        pressure_trace_pairing=P,
+    )
 assert np.linalg.matrix_rank(system.local_metadata[0]["B"]) == 3 * conormal_segments
 assert max(diagnostics.values()) < 1e-10
 print(diagnostics)
@@ -469,7 +460,7 @@ print(diagnostics)
 ```
 
 ```text
-{'constant_kernel_relative': 2.1836088566646393e-16, 'trace_moment_max': 6.505213034913027e-19, 'macro_conservation_max': 9.124645483638005e-16, 'original_local_relative_residual': 8.20673263589874e-14}
+{'constant_kernel_relative': 2.1836088566646393e-16, 'trace_moment_max': 4.336808689942018e-19, 'macro_conservation_max': 1.0443035325380379e-15, 'original_local_relative_residual': 7.692601965273089e-14}
 ```
 
 ### 6. A classical primal Galerkin baseline, with its own refinement check
@@ -495,20 +486,6 @@ The finest classical field is a **numerical reference**, not an exact solution. 
 
 
 ```python
-def dirichlet_solve(
-    matrix: Any, load: np.ndarray, dofs: np.ndarray, values: np.ndarray,
-) -> np.ndarray:
-    """Lift prescribed nodal values and delegate the free linear solve to PyMHM."""
-    pressure = np.zeros(len(load))
-    pressure[dofs] = values
-    free = np.setdiff1d(np.arange(len(load)), dofs)
-    pressure[free] = solve_linear(matrix[free][:, free], (load - matrix @ pressure)[free])
-    return pressure
-
-```
-
-
-```python
 references = []
 reference_dimensions = []
 for resolution in (32, 64, 128):
@@ -518,9 +495,13 @@ for resolution in (32, 64, 128):
     boundary = np.flatnonzero(np.any(np.isclose(xy, 0) | np.isclose(xy, 1), axis=1))
     p_ref = dirichlet_solve(A_ref, F_ref, boundary, np.zeros(len(boundary)))
     references.append(ScalarField(fine_global, 2, p_ref))
-    reference_dimensions.append({"squares_per_direction": resolution,
-                                 "triangles": len(fine_global.cells),
-                                 "free_unknowns": len(p_ref) - len(boundary)})
+    reference_dimensions.append(
+        {
+            "squares_per_direction": resolution,
+            "triangles": len(fine_global.cells),
+            "free_unknowns": len(p_ref) - len(boundary),
+        }
+    )
     print(reference_dimensions[-1])
 reference = references[-1]
 
@@ -540,59 +521,6 @@ reference = references[-1]
 
 
 ```python
-def compare_scalar_fields(
-    fields: Sequence[ScalarField], reference: ScalarField,
-    coefficient: Callable[[np.ndarray], np.ndarray], *, order: int = 8,
-) -> dict[str, float]:
-    """Integrate on the finest reference partition resolving all compared meshes.
-
-    This notebook uses nested uniform triangular grids. Gaussian points lie
-    strictly inside each reference triangle; no interface averaging is used.
-    The scalar coefficient multiplies the gradient in physical flux norms.
-    """
-    bary, weights = triangle_quadrature(order)
-    basis, derivative, _ = reference_basis(reference.degree, bary)
-    errors, norms = np.zeros(3), np.zeros(3)
-    for start in range(0, len(reference.mesh.cells), 256):
-        stop = min(start + 256, len(reference.mesh.cells))
-        triangles = reference.mesh.cells[start:stop]
-        points = np.einsum("qi,tia->tqa", bary, reference.mesh.points[triangles])
-        flat = points.reshape(-1, 2)
-        pressure, gradient = np.empty(len(flat)), np.empty((len(flat), 2))
-        assigned = np.zeros(len(flat), dtype=bool)
-        for field in fields:
-            inside = np.asarray(field.locator(*flat.T)) >= 0
-            if np.any(inside):
-                pressure[inside], gradient[inside] = evaluate_scalar(field, flat[inside])
-                assigned[inside] = True
-        if not np.all(assigned):
-            raise ValueError("compared fields do not cover the physical integration domain")
-        nodal = reference.values[reference.dofs[start:stop]]
-        pref = (nodal @ basis.T).ravel()
-        gref = np.einsum(
-            "qib,tba,ti->tqa", derivative, reference.geometry[start:stop], nodal,
-        ).reshape(-1, 2)
-        a = coefficient(flat)
-        measure = (reference.mesh.areas[start:stop, None] * weights).ravel()
-        dp, dg = pressure - pref, gradient - gref
-        dq, qref = -a[:, None] * dg, -a[:, None] * gref
-        errors += np.array([measure @ dp**2, measure @ np.sum(dq**2, axis=1),
-                            measure @ (a * np.sum(dg**2, axis=1))])
-        norms += np.array([measure @ pref**2, measure @ np.sum(qref**2, axis=1),
-                           measure @ (a * np.sum(gref**2, axis=1))])
-    if np.any(norms <= 0):
-        raise ValueError("relative norms require a nonzero reference field")
-    absolute, relative = np.sqrt(errors), np.sqrt(errors / norms)
-    return dict(pressure_L2=float(absolute[0]), flux_L2=float(absolute[1]),
-                flux_energy=float(absolute[2]), pressure_relative=float(relative[0]),
-                flux_relative=float(relative[1]), energy_relative=float(relative[2]))
-
-```
-
-
-```python
-from matplotlib.ticker import NullFormatter
-
 reference_refinement = [
     compare_scalar_fields((coarser,), finer, permeability, order=8)
     for coarser, finer in zip(references[:-1], references[1:])
@@ -602,18 +530,11 @@ for interval, norms in zip(("32 → 64", "64 → 128"), reference_refinement):
 
 # These rates concern differences between successive reference meshes.
 # They are indicators, not exact-solution error rates.
-refinement_h = np.array([1 / 64, 1 / 128])
-refinement_figure, axes = plt.subplots(1, 2, figsize=(9, 3.4), layout="constrained")
-for ax, key, label in zip(axes, ("pressure_relative", "flux_relative"),
-                          ("Pressure difference / reference norm", "Flux difference / reference norm")):
-    difference = np.array([row[key] for row in reference_refinement])
-    rate = float(np.log(difference[0] / difference[1]) / np.log(2))
-    ax.loglog(refinement_h, difference, "o-", label=f"observed difference rate = {rate:.2f}")
-    ax.set_xticks(refinement_h, labels=[f"{h:.3g}" for h in refinement_h])
-    ax.xaxis.set_minor_formatter(NullFormatter())
-    ax.set(xlabel="Finer classical mesh spacing", ylabel=label)
-    ax.grid(True, which="both", alpha=.25)
-    ax.legend(fontsize=9)
+refinement_figure = plot_reference_differences(
+    [1 / 64, 1 / 128],
+    reference_refinement,
+)
+
 plt.show()
 
 # A reference must resolve its own physical fields before serving as a baseline.
@@ -623,13 +544,13 @@ assert reference_refinement[-1]["flux_relative"] < reference_refinement[0]["flux
 ```
 
 ```text
-32 → 64 {'pressure_L2': 3.823696684608936e-05, 'flux_L2': 0.007334647810617816, 'flux_energy': 0.005272480435871398, 'pressure_relative': 0.0018001151790877515, 'flux_relative': 0.03838323140026158, 'energy_relative': 0.03921980440020734}
-64 → 128 {'pressure_L2': 3.7669518113256023e-06, 'flux_L2': 0.0021132796164602483, 'flux_energy': 0.00154056976620498, 'pressure_relative': 0.00017731712073356501, 'flux_relative': 0.011059633117206046, 'energy_relative': 0.01145890983794155}
+32 → 64 {'pressure_L2': 3.823696684608936e-05, 'flux_L2': 0.0073346478106178165, 'flux_energy': 0.005272480435871399, 'pressure_relative': 0.0018001151790877515, 'flux_relative': 0.03838323140026158, 'energy_relative': 0.03921980440020735}
+64 → 128 {'pressure_L2': 3.7669518113256023e-06, 'flux_L2': 0.0021132796164602475, 'flux_energy': 0.0015405697662049793, 'pressure_relative': 0.00017731712073356501, 'flux_relative': 0.011059633117206041, 'energy_relative': 0.011458909837941546}
 ```
 
 
 
-[![Figure 2 — MH²M with multiscale permeability: pressure, conormal and trace](../../assets/tutorials/mh2m_multiscale/figure_21_1.png)](../../assets/tutorials/mh2m_multiscale/figure_21_1.png)
+[![Figure 2 — MH²M with multiscale permeability: pressure, conormal and trace](../../assets/tutorials/mh2m_multiscale/figure_18_1.png)](../../assets/tutorials/mh2m_multiscale/figure_18_1.png)
 
 
 ### 7. Compare pressure and physical flux on a common fine partition
@@ -658,103 +579,35 @@ For plotting, sample every fine triangle separately. Duplicate interface points 
 
 
 ```python
-def sample_field(fields: Sequence[ScalarField], refinement: int = 2) -> dict[str, np.ndarray]:
-    """Sample each fine triangle separately, preserving both sides of interfaces."""
-    template = TriangleMesh(np.array([[0., 0.], [1., 0.], [0., 1.]]),
-                            np.array([[0, 1, 2]])).submesh(0, refinement)
-    bary = np.column_stack((1 - template.points.sum(axis=1), template.points))
-    points, cells, pressure, gradients = [], [], [], []
-    offset = 0
-    for field in fields:
-        dofs, _, basis, gradient, _ = tabulate(field.mesh, field.degree, bary)
-        coordinates = np.einsum("qi,tia->tqa", bary, field.mesh.points[field.mesh.cells])
-        values = field.values[dofs]
-        points.append(coordinates.reshape(-1, 2))
-        cells.append((template.cells[None] + len(bary) * np.arange(len(dofs))[:, None, None]
-                      + offset).reshape(-1, 3))
-        pressure.append((values @ basis.T).ravel())
-        gradients.append(np.einsum("tqia,ti->tqa", gradient, values).reshape(-1, 2))
-        offset += len(coordinates) * len(bary)
-    return dict(points=np.concatenate(points), cells=np.concatenate(cells),
-                values=np.concatenate(pressure), gradient=np.concatenate(gradients))
-
-
-def plot_field_panels(
-    macro_mesh: TriangleMesh,
-    panels: dict[str, tuple[np.ndarray, np.ndarray, np.ndarray]],
-) -> Any:
-    """Draw independent field/colorbar panels and the actual macro mesh."""
-    count = len(panels)
-    columns = min(3, count)
-    rows = (count + columns - 1) // columns
-    figure, axes = plt.subplots(rows, columns, figsize=(4.3 * columns, 3.8 * rows),
-                                squeeze=False, layout="constrained")
-    # Share scales between numerical and reference panels of the same field.
-    pressure_max = max((float(np.max(v[2])) for k, v in panels.items()
-                        if k.startswith("Pressure:")), default=1.)
-    flux_max = max((float(np.max(v[2])) for k, v in panels.items()
-                   if k.startswith("Flux magnitude:")), default=1.)
-    for axis, (label, (points, triangles, values)) in zip(axes.flat, panels.items()):
-        settings = {}
-        if label.startswith("Pressure:"):
-            settings = dict(vmin=0., vmax=pressure_max)
-        elif label.startswith("Flux magnitude:"):
-            settings = dict(vmin=0., vmax=flux_max)
-        elif label == "Signed pressure difference":
-            bound = max(float(np.max(abs(values))), np.finfo(float).tiny)
-            settings = dict(vmin=-bound, vmax=bound, cmap="RdBu_r")
-        artist = axis.tripcolor(Triangulation(*points.T, triangles), values,
-                               shading="gouraud", rasterized=True, **settings)
-        axis.add_collection(LineCollection(macro_mesh.points[macro_mesh.faces],
-                                           colors="white", linewidths=1.0, alpha=.85))
-        axis.add_collection(LineCollection(macro_mesh.points[macro_mesh.faces],
-                                           colors="#24343c", linewidths=.45))
-        axis.set(title=label, xlabel="x", ylabel="y", aspect="equal")
-        figure.colorbar(artist, ax=axis, shrink=.85, pad=.025)
-    for axis in list(axes.flat)[count:]:
-        axis.set_visible(False)
-    return figure
-
-```
-
-
-```python
 errors_q8 = compare_scalar_fields(physical_fields, reference, permeability, order=8)
 errors_q10 = compare_scalar_fields(physical_fields, reference, permeability, order=10)
 quadrature_difference = max(
     abs(errors_q8[key] - errors_q10[key]) / max(abs(errors_q10[key]), np.finfo(float).tiny)
     for key in ("pressure_L2", "flux_L2", "flux_energy")
 )
-print({"physical_relative_errors": errors_q10,
-       "relative_norm_change_q8_q10": quadrature_difference})
+print(
+    {"physical_relative_errors": errors_q10, "relative_norm_change_q8_q10": quadrature_difference}
+)
 assert quadrature_difference < 1e-5
 
-samples = sample_field(physical_fields, refinement=2)
-points, triangles = samples["points"], samples["cells"]
-p_h, grad_h = samples["values"], samples["gradient"]
-p_reference, grad_reference = evaluate_scalar(reference, points)
-a = permeability(points)
-q_h, q_reference = -a[:, None] * grad_h, -a[:, None] * grad_reference
-panels = {
-    "Pressure: classical P2": (points, triangles, p_reference),
-    "Pressure: MH²M": (points, triangles, p_h),
-    "Signed pressure difference": (points, triangles, p_h - p_reference),
-    "Flux magnitude: classical P2": (points, triangles, np.linalg.norm(q_reference, axis=1)),
-    "Flux magnitude: MH²M": (points, triangles, np.linalg.norm(q_h, axis=1)),
-    "Flux difference magnitude": (points, triangles, np.linalg.norm(q_h - q_reference, axis=1)),
-}
-figure = plot_field_panels(macro, panels)
+figure = plot_scalar_comparison(
+    macro,
+    physical_fields,
+    reference,
+    permeability,
+    numerical_label="MH²M",
+)
 plt.show()
 
 ```
 
 ```text
-{'physical_relative_errors': {'pressure_L2': 0.00019495407271238573, 'flux_L2': 0.019449591904094187, 'flux_energy': 0.01341267956291061, 'pressure_relative': 0.009176834899960531, 'flux_relative': 0.10178745352163333, 'energy_relative': 0.09976483322479031}, 'relative_norm_change_q8_q10': 2.085495363217584e-15}
+{'physical_relative_errors': {'pressure_L2': 0.00019495407271239985, 'flux_L2': 0.01944959190409417, 'flux_energy': 0.013412679562910609, 'pressure_relative': 0.009176834899961196, 'flux_relative': 0.10178745352163324, 'energy_relative': 0.0997648332247903}, 'relative_norm_change_q8_q10': 1.9464623390029375e-15}
 ```
 
 
 
-[![Figure 3 — MH²M with multiscale permeability: pressure, conormal and trace](../../assets/tutorials/mh2m_multiscale/figure_24_1.png)](../../assets/tutorials/mh2m_multiscale/figure_24_1.png)
+[![Figure 3 — MH²M with multiscale permeability: pressure, conormal and trace](../../assets/tutorials/mh2m_multiscale/figure_20_1.png)](../../assets/tutorials/mh2m_multiscale/figure_20_1.png)
 
 
 ### 8. Interpret and archive the experiment
@@ -778,11 +631,18 @@ finite-element space and basis before substituting this convenience.
 
 ```python
 from pymhm.fem.scalar.triangle import scalar_operators
+
 A_prepared, M_prepared, F_prepared = scalar_operators(
-    first_fine, local_degree, diffusion=permeability, source=source, order=assembly_order,
+    first_fine,
+    local_degree,
+    diffusion=permeability,
+    source=source,
+    order=assembly_order,
 )
 form_equivalence = {
-    "stiffness_relative": float(sparse.linalg.norm(A_ufl - A_prepared) / sparse.linalg.norm(A_prepared)),
+    "stiffness_relative": float(
+        sparse.linalg.norm(A_ufl - A_prepared) / sparse.linalg.norm(A_prepared)
+    ),
     "mass_relative": float(sparse.linalg.norm(M_ufl - M_prepared) / sparse.linalg.norm(M_prepared)),
     "source_relative": float(np.linalg.norm(F_ufl - F_prepared) / np.linalg.norm(F_prepared)),
 }
@@ -797,33 +657,39 @@ print(form_equivalence)
 
 
 ```python
-output = ROOT / "build" / "introduction" / "mh2m_multiscale"
-output.mkdir(parents=True, exist_ok=True)
-figure.savefig(output / "physical-fields.png", dpi=160)
-fig_material.savefig(output / "permeability.png", dpi=160)
-refinement_figure.savefig(output / "reference-refinement.png", dpi=160)
 record = {
-    "method": "MH²M", "physical_problem": "-div(aε grad(p))=1, p|boundary=0",
-    "epsilon": epsilon, "macro_triangles": len(macro.cells),
-    "local_refinement": local_refinement, "local_degree": local_degree,
-    "assembly_order": assembly_order, "error_orders": [8, 10],
+    "method": "MH²M",
+    "physical_problem": f"-div(aε grad(p))={source:g}, p|boundary=0",
+    "source": float(source),
+    "epsilon": epsilon,
+    "macro_triangles": len(macro.cells),
+    "local_refinement": local_refinement,
+    "local_degree": local_degree,
+    "assembly_order": assembly_order,
+    "error_orders": [8, 10],
     "global_free_unknowns": global_free_unknowns,
     "reference_dimensions": reference_dimensions,
     "reference_refinement": reference_refinement,
     "physical_errors": errors_q10,
     "quadrature_relative_difference": quadrature_difference,
-    "global_residual": solution.residual, "diagnostics": diagnostics,
-    "basis_digests": basis_digests, "form_equivalence": form_equivalence, "operator_language": "executed UFL",
-    "native_backend": {"dolfinx": dolfinx.__version__, "basix": basix.__version__, "ufl": ufl.__version__},
-    "notebook_sha256": hashlib.sha256((ROOT / "notebooks/introduction/mh2m_multiscale.ipynb").read_bytes()).hexdigest(),
-    "source_sha256": {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
-                      for path in sorted((ROOT / "src" / "pymhm").rglob("*.py"))},
-    "pixi_lock_sha256": hashlib.sha256((ROOT / "pixi.lock").read_bytes()).hexdigest(),
-    "scope": "Original introductory case; finite local Galerkin realization; numerical classical baseline",
+    "global_residual": solution.residual,
+    "diagnostics": diagnostics,
+    "basis_digests": basis_digests,
+    "form_equivalence": form_equivalence,
 }
-(output / "report.json").write_text(json.dumps(record, indent=2) + "\n")
-np.savez_compressed(output / "executed-fields.npz", **archive)
-print(output)
+print(
+    save_scalar_report(
+        ROOT,
+        "mh2m_multiscale",
+        record,
+        archive,
+        {
+            "physical-fields": figure,
+            "permeability": fig_material,
+            "reference-refinement": refinement_figure,
+        },
+    )
+)
 
 ```
 
@@ -841,7 +707,7 @@ print(output)
 
 ```bash
 pixi install --locked -e introduction
-pixi run --locked -e introduction notebooks-run introduction/mh2m_multiscale.ipynb --timeout 3600
+pixi run --locked -e introduction notebooks-run introduction/mh2m_multiscale.ipynb --timeout 7200
 ```
 
 The runner writes the executed copy to `build/notebooks/introduction/`. The figures and numerical outputs on this page come from that execution. Timings describe the recorded hardware and solver settings; rerun performance examples on an idle machine to measure your own environment.

@@ -16,9 +16,10 @@ from examples.formulations.darcy import DarcyDefinition
 from pymhm import Equation, with_global_equation
 from pymhm.core.contracts import HybridSolution
 from pymhm.core.multiscale import MultiscaleSystem
+from pymhm.fem.traces.jump import face_jump_form
 from pymhm.linalg.linear import solve_linear
-from pymhm.methods.petrov_galerkin import PGMHMSolution, _penalty
-from pymhm.methods.robin import _ellipticity
+from pymhm.materials.bounds import ellipticity_lower_bound
+from pymhm.postprocessing.solutions import PGMHMSolution
 
 
 def jump_equation(
@@ -27,6 +28,8 @@ def jump_equation(
     *,
     dirichlet: Any,
     alpha: float,
+    neumann_faces: tuple[int, ...] = (),
+    lower_bound: float | None = None,
 ) -> tuple[Equation, tuple[Any, ...], float]:
     """Write J.T*W*J and J.T*W*(g-J_source) in executed reduced coordinates.
 
@@ -39,9 +42,9 @@ def jump_equation(
         raise ValueError("alpha must be finite and positive")
     if definition.degree < max(max(face.degrees) for face in skeleton.faces) + 2:
         raise ValueError("local degree must satisfy k>=ell+2")
-    lower = _ellipticity(definition.permeability, None)
+    lower = ellipticity_lower_bound(definition.permeability, lower_bound)
     penalties = tuple(
-        _penalty(
+        face_jump_form(
             system,
             skeleton,
             face,
@@ -52,6 +55,7 @@ def jump_equation(
             dirichlet,
         )
         for face in range(len(skeleton.mesh.faces))
+        if face not in neumann_faces
     )
     rows, columns, entries = [], [], []
     load = np.zeros_like(system.rhs)
@@ -78,9 +82,18 @@ def add_jump_form(
     *,
     dirichlet: Any,
     alpha: float = 0.1,
+    neumann_faces: tuple[int, ...] = (),
+    lower_bound: float | None = None,
 ) -> tuple[MultiscaleSystem, tuple[Any, ...], float]:
     """Add the user-declared residual jump equation to the existing local responses."""
-    equation, penalties, lower = jump_equation(definition, system, dirichlet=dirichlet, alpha=alpha)
+    equation, penalties, lower = jump_equation(
+        definition,
+        system,
+        dirichlet=dirichlet,
+        alpha=alpha,
+        neumann_faces=neumann_faces,
+        lower_bound=lower_bound,
+    )
     return with_global_equation(system, equation), penalties, lower
 
 

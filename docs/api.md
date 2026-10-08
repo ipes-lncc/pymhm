@@ -10,10 +10,13 @@ Each family page contains the complete signatures and docstrings of its document
 objects. Optional dependencies are identified by the relevant adapters; the native
 multiscale formulations remain part of the portable package.
 
-Physical family pages also document the predefined formulations used by the
-verified case gallery, including their coefficient contracts. Import them
-directly from the private `_legacy.models` owners shown on those pages.
-The root namespace presents the generic variational and infrastructure API.
+Physical family pages document reusable element, trace, material and recovery
+operations together with the predefined formulations used by the verified
+gallery. User implementations compose the public operations with their own
+equations; they require no private solver imports. The root namespace presents
+the generic variational and infrastructure API. The
+[formulation inventory](variational.md#formulations-composed-from-the-same-api)
+links the mathematical ingredients to importable, editable providers.
 
 | Family | Scope |
 | --- | --- |
@@ -38,17 +41,23 @@ The root namespace presents the generic variational and infrastructure API.
 Use `from pymhm import ...` for high-level problem descriptions, meshes and
 generic numerical operations. The package resolves those exports on demand;
 importing its root does not import Basix or optional native backends. Import
-predefined physical solvers and method-specific operations from the canonical
-submodules documented below.
+element, material, trace and field operations from the canonical submodules
+documented below. The editable providers in `examples/formulations/` compose
+these operations into each mathematical formulation.
 
 | Task | API owner |
 | --- | --- |
 | Bind meshes, interface spaces and user forms | `MeshHierarchy`, `bind_interface`, `bind_problem`, `LocalContext`, `GlobalContext` in [hybrid API](api/hybrid.md) |
 | Declare custom interface representations | `InterfaceSpace`, `TraceBinding` in [hybrid API](api/hybrid.md) |
+| Declare Cartesian vector traces | `ComponentTraceSpace` in [hybrid API](api/hybrid.md) |
+| Integrate, project and prescribe interface values | `trace_quadrature`, `trace_linear_form`, `trace_bilinear_form`, `project_trace`, `trace_boundary_data` in [hybrid API](api/hybrid.md) |
 | Evaluate named physical fields | `DiscreteField`, `solution_field`, `evaluate_field` in [hybrid API](api/hybrid.md) |
+| Declare executed nodal, modal or Piola field coordinates | `nodal_field`, `modal_field`, `piola_field`, `hdiv_field` in [hybrid API](api/hybrid.md) |
 | Declare local and global variational blocks | [`Equation`, `LocalEquations`, `columns`, `rows`](api/hybrid.md#pymhm.core.equations) |
 | Assemble, solve and reconstruct a hierarchy | [`MultiscaleProblem`, `NestedEquations`, `assemble`, `solve`](api/hybrid.md#pymhm.core.multiscale) |
+| Declare a fully global form without local elimination | `MultiscaleProblem.from_global(Equation(A, L), size, ...)` in [hybrid API](api/hybrid.md) |
 | Reuse an assembled hierarchy and recover coefficients | [`with_global_load`, `with_global_equation`, `solve_multiscale_system`, `reconstruct_multiscale`](api/hybrid.md#pymhm.core.multiscale) |
+| Change volume and interface sources with reusable factors | [`OfflineMultiscaleSystem`](api/hybrid.md#pymhm.core.online) |
 | Represent a physical finest-scale integral | [`leaf_moment`](api/hybrid.md#pymhm.core.multiscale) |
 | Reconstruct from prescribed cell/face moments | [`energy_reconstruction`](api/hybrid.md#pymhm.core.moments) |
 | Describe fixed hybrid forms | [`LocalForm`, `GlobalForm`, `HybridProblem`](api/hybrid.md#pymhm.core.variational) |
@@ -59,6 +68,8 @@ submodules documented below.
 | Select serial, threaded or spawned local execution | [`ExecutionConfig`](api/backends.md#pymhm.execution.cpu) |
 | Define and tabulate native reference elements | [Basix adapter](api/elements.md#pymhm.fem.reference) |
 | Compile user-written local and global UFL forms | [Generic DOLFINx compiler](api/backends.md#pymhm.backends.forms) |
+| Scatter arbitrary rectangular element blocks | [`assemble_element_blocks`](api/backends.md#pymhm.fem.assembly) |
+| Represent arbitrary complex blocks in real coordinates | [Complex coordinate operations](api/backends.md#pymhm.linalg.complex) |
 | Reuse local UFL kernels and worker-owned assembly buffers | [Native form workspaces](api/backends.md#pymhm.backends.workspace) |
 
 The family pages generate signatures and documentation directly from their

@@ -6,43 +6,18 @@ from dataclasses import dataclass
 from typing import Any, Literal
 
 import numpy as np
-from scipy import sparse
 
-from pymhm._legacy.models.darcy.primal_3d import Darcy3DSolution
-from pymhm.core.contracts import HybridSolution, LocalAssembly, LocalProblem
+from pymhm.core.contracts import LocalAssembly, LocalProblem
 from pymhm.core.system import HybridSystem
 from pymhm.core.validation import FloatArray, positive_int
-from pymhm.fem.scalar.tetrahedron import tetra_nodal_space, tetra_operators
+from pymhm.fem.scalar.robin_3d import tetra_robin_boundary_operator as _robin_matrix
+from pymhm.fem.scalar.tetrahedron import tetra_operators
 from pymhm.fem.traces.pressure_3d import boundary_rules, broken_face_basis
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton, tetra_trace_coupling
 from pymhm.materials.evaluation import scalar_values_3d, tensor_values_3d
 from pymhm.meshes.tetrahedron import TetraMesh, _dyadic
 from pymhm.methods.boundary import RobinBoundaryFace, solve_robin_neumann
-
-
-def _robin_matrix(
-    mesh: TetraMesh,
-    cell: int,
-    fine: TetraMesh,
-    degree: int,
-    order: int,
-    nu: float,
-    origin: FloatArray,
-) -> Any:
-    """Integrate sigma.n uv over every fine boundary triangle with sigma=nu(x-a)/3."""
-    size = len(tetra_nodal_space(fine, degree)[1])
-    rows: list[int] = []
-    columns: list[int] = []
-    values: list[float] = []
-    for face, dofs, basis, points, weights, _ in boundary_rules(mesh, cell, fine, degree, order):
-        side = int(np.flatnonzero(mesh.cell_faces[cell] == face)[0])
-        outward = mesh.signs[cell, side] * mesh.normals[face]
-        coefficient = nu * ((points - origin) @ outward) / 3
-        block = basis.T @ ((weights * coefficient)[:, None] * basis)
-        rows.extend(np.repeat(dofs, len(dofs)))
-        columns.extend(np.tile(dofs, len(dofs)))
-        values.extend(block.ravel())
-    return sparse.coo_matrix((values, (rows, columns)), shape=(size, size)).tocsc()
+from pymhm.postprocessing.solutions import MH3DSolution as MH3DSolution
 
 
 @dataclass(frozen=True)
@@ -75,99 +50,6 @@ class _Factory:
         coupling = tetra_trace_coupling(self.mesh, cell, fine, self.skeleton, self.degree)
         problem = LocalProblem(stiffness + robin, coupling, load, self.skeleton.cell_dofs(cell))
         return LocalAssembly(problem, (fine, robin, np.asarray(mass.sum(axis=1)).ravel()))
-
-
-@dataclass(frozen=True)
-class MH3DSolution:
-    """Tetrahedral MH pressure, Robin multiplier and physical boundary diagnostics.
-
-    The multiplier is (q-p sigma).n_global, with sigma=nu(x-origin)/3.
-    Raw volume flux is q=-K grad(p); normal_flux_moments restores p sigma.n.
-    The Neumann boundary extension is symmetric indefinite, even though the
-    local Robin matrices and the Dirichlet Schur operator are positive definite.
-    """
-
-    skeleton: TriangularSkeleton
-    local_meshes: tuple[TetraMesh, ...]
-    pressure: tuple[FloatArray, ...]
-    hybrid: HybridSolution
-    system: HybridSystem
-    degree: int
-    permeability: Any
-    source: Any
-    quadrature_order: int
-    robin_parameter: float
-    origin: FloatArray
-    boundary_pressure: dict[int, FloatArray]
-    global_matrix: Any
-    global_rhs: FloatArray
-
-    def _fields(self) -> Darcy3DSolution:
-        """Reuse only physical volume evaluation, not the Darcy trace convention."""
-        return Darcy3DSolution(
-            self.skeleton,
-            self.local_meshes,
-            self.pressure,
-            self.hybrid,
-            self.degree,
-            self.permeability,
-            self.source,
-            self.quadrature_order,
-        )
-
-    def evaluate(self, cell: int, bary: FloatArray) -> tuple[FloatArray, FloatArray]:
-        """Evaluate the full pressure and physical flux at fine-cell barycentric points."""
-        return self._fields().evaluate(cell, bary)
-
-    def l2_error(self, exact: Any, order: int = 6) -> float:
-        """Integrate the broken pressure error using an independent volume rule."""
-        return self._fields().l2_error(exact, order)
-
-    def flux_l2_error(self, exact: Any, order: int = 6) -> float:
-        """Integrate the raw physical flux error, not the Robin multiplier error."""
-        return self._fields().flux_l2_error(exact, order)
-
-    @property
-    def global_coefficients(self) -> FloatArray:
-        """Order Robin lambda before auxiliary pressures on sorted Neumann faces."""
-        return np.concatenate((self.hybrid.trace, *self.boundary_pressure.values()))
-
-    def normal_flux_moments(self, cell: int, face: int) -> FloatArray:
-        """Integrate outward physical flux against all conormal modes on one side."""
-        mesh = self.skeleton.mesh
-        if face not in mesh.cell_faces[cell]:
-            raise ValueError("face must be incident to the supplied macrocell")
-        side = int(np.flatnonzero(mesh.cell_faces[cell] == face)[0])
-        normal = mesh.signs[cell, side] * mesh.normals[face]
-        result = np.zeros(len(self.skeleton.dofs(face)))
-        for found, dofs, values, points, weights, bary in boundary_rules(
-            mesh, cell, self.local_meshes[cell], self.degree, self.quadrature_order
-        ):
-            if found != face:
-                continue
-            basis = broken_face_basis(self.skeleton, face, bary)
-            multiplier = mesh.signs[cell, side] * (
-                basis @ self.hybrid.trace[self.skeleton.dofs(face)]
-            )
-            pressure = values @ self.pressure[cell][dofs]
-            coefficient = self.robin_parameter * ((points - self.origin) @ normal) / 3
-            result += basis.T @ (weights * (multiplier + pressure * coefficient))
-        return result
-
-    def conservation_residuals(self) -> FloatArray:
-        """Return integrated outward physical flux minus source in every macrocell."""
-        return np.array(
-            [
-                np.sum(
-                    response.problem.coupling @ self.hybrid.trace[response.problem.trace_dofs]
-                    + metadata[1] @ pressure
-                    - response.problem.load
-                )
-                for response, pressure, metadata in zip(
-                    self.system.responses, self.pressure, self.system.local_metadata, strict=True
-                )
-            ]
-        )
 
 
 def solve_mh_3d(

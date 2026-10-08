@@ -38,7 +38,7 @@ executed numerical bases. Rendering consumes the completed records and does
 not solve the PDE again. Regenerate figures from the public norm records with:
 
 ```bash
-pixi run --locked -e notebooks python examples/plot_initial_convergence.py \
+pixi run --locked -e notebooks python -m examples.plot_initial_convergence \
   --output build/initial-convergence-figures
 ```
 

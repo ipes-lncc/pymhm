@@ -8,6 +8,14 @@ studies or reproductions of published heterogeneous applications.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 from dataclasses import dataclass
@@ -16,16 +24,34 @@ from typing import Any, Literal
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm._legacy.models.elasticity.mixed_pressure import solve_displacement_pressure
-from pymhm._legacy.models.elasticity.mixed_pressure_3d import solve_elasticity_gals_3d
-from pymhm._legacy.models.elasticity.primal import solve_primal_elasticity
-from pymhm._legacy.models.elasticity.primal_3d import solve_elasticity_3d
-from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
-from pymhm._legacy.models.elasticity.stress_3d import solve_elasticity_mixed_3d
-from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
-from pymhm._legacy.models.flow.solver import solve_flow
-from pymhm._legacy.models.flow.solver_3d import solve_flow_3d
-from pymhm._legacy.models.waves.maxwell import MaxwellStepper
+from examples.formulations.application import (
+    flow as solve_flow,
+)
+from examples.formulations.application import (
+    flow as solve_flow_3d,
+)
+from examples.formulations.application import (
+    herrmann_elasticity as solve_displacement_pressure,
+)
+from examples.formulations.application import (
+    herrmann_elasticity as solve_elasticity_gals_3d,
+)
+from examples.formulations.application import (
+    primal_elasticity as solve_elasticity_3d,
+)
+from examples.formulations.application import (
+    primal_elasticity as solve_primal_elasticity,
+)
+from examples.formulations.application import (
+    weak_stress_elasticity as solve_elasticity_mixed,
+)
+from examples.formulations.application import (
+    weak_stress_elasticity as solve_elasticity_mixed_3d,
+)
+from examples.formulations.application import (
+    weak_stress_elasticity as solve_elasticity_tensor_rt,
+)
+from examples.tutorial_maxwell_equations import EquationLeapfrog
 from pymhm.core.validation import FloatArray
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.meshes.cartesian import CartesianMacroMesh
@@ -150,7 +176,7 @@ def _maxwell(*, homogeneous: bool) -> dict[str, Any]:
     magnetic = np.zeros(3) if homogeneous else np.array([0.4, 0.8, -0.2])
     with (
         threadpool_limits(1),
-        MaxwellStepper(
+        EquationLeapfrog(
             _tetra_patch(),
             time_step=0.001,
             degree=2,
@@ -174,7 +200,7 @@ def _maxwell(*, homogeneous: bool) -> dict[str, Any]:
         "dimension": 3,
         "macrocells": 2,
         "boundary_data": "homogeneous" if homogeneous else "nonhomogeneous impedance",
-        "method": "PyMHM Maxwell leapfrog stepper with reused mass/skeleton factors",
+        "method": "User-defined DG curl and leapfrog LocalEquations with reused factors",
         "scope": (
             "stationary vector patch over 4 steps; no temporal convergence or wave-accuracy claim"
         ),

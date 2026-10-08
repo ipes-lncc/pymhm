@@ -6,7 +6,7 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.helmholtz_stability import projected_solution
-from pymhm._legacy.models.waves.helmholtz import solve_helmholtz
+from examples.tutorial_helmholtz_equations import solve_acoustic
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
@@ -31,7 +31,7 @@ def test_exact_flux_projection_reconstructs_complex_quadratic() -> None:
 
     mesh = CartesianMacroMesh(2)
     with threadpool_limits(1):
-        solution = solve_helmholtz(
+        solution = solve_acoustic(
             mesh,
             omega=omega,
             degree=3,

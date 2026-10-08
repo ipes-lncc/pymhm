@@ -377,9 +377,9 @@ runs distinct names. Their numerical records retain the actual source digests.
 The refined invariant classical references are acquired with:
 
 ```sh
-pixi run -e fem python -m examples.solve_mapped_well_invariant \
+pixi run --locked -e fem python -m examples.solve_mapped_well_invariant \
   --fine-factor 128 --quadrature-xy 8 --solver petsc
-pixi run -e fem python -m examples.solve_mapped_well_invariant \
+pixi run --locked -e fem python -m examples.solve_mapped_well_invariant \
   --fine-factor 16 --quadrature-xy 40 --solver petsc
 ```
 

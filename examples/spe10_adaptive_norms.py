@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -16,9 +24,10 @@ from examples.archive_precision import restore_precision
 from examples.solve_spe10 import load_layer
 from examples.spe10_adaptive import DATA, DOMAIN, StructuredRT
 from pymhm.fem.hdiv.rt import rt_evaluate_points
-from pymhm.fem.quadrature.material import _clip_polygon, cartesian_trace_values
+from pymhm.fem.quadrature.material import cartesian_trace_values
 from pymhm.fem.scalar.operators import p1_geometry, triangle_quadrature
 from pymhm.fem.scalar.triangle import nodal_space, reference_basis
+from pymhm.meshes.geometry import clip_polygon
 from pymhm.meshes.triangle import TriangleMesh
 
 
@@ -146,15 +155,15 @@ def overlay_quadrature(
     ]
     triangles = []
     for i in indices[0]:
-        xpart = _clip_polygon(vertices, 0, axes[0][i], True)
+        xpart = clip_polygon(vertices, 0, axes[0][i], True)
         if not len(xpart):
             continue
-        xpart = _clip_polygon(xpart, 0, axes[0][i + 1], False)
+        xpart = clip_polygon(xpart, 0, axes[0][i + 1], False)
         for j in indices[1]:
-            polygon = _clip_polygon(xpart, 1, axes[1][j], True)
+            polygon = clip_polygon(xpart, 1, axes[1][j], True)
             if not len(polygon):
                 continue
-            polygon = _clip_polygon(polygon, 1, axes[1][j + 1], False)
+            polygon = clip_polygon(polygon, 1, axes[1][j + 1], False)
             if len(polygon) < 3:
                 continue
             midpoint = np.array(
@@ -164,7 +173,7 @@ def overlay_quadrature(
             local = (polygon - origin) / reference_spacing
             transformed = np.column_stack((local[:, 0] - local[:, 1], local[:, 1]))
             for positive in (True, False):
-                part = _clip_polygon(transformed, 0, 0.0, positive)
+                part = clip_polygon(transformed, 0, 0.0, positive)
                 if len(part) < 3:
                     continue
                 physical = np.column_stack((part[:, 0] + part[:, 1], part[:, 1]))
@@ -231,7 +240,7 @@ def _barycentric_overlay(
         for axis, grid in enumerate(axes)
     ]
     origin, edges = vertices[0], vertices[1:] - vertices[0]
-    parts = []
+    parts: list[np.ndarray] = []
     for i in indices[0]:
         for j in indices[1]:
             polygon = np.array([[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]])

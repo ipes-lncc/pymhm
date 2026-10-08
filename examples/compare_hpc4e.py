@@ -2,13 +2,22 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 from pathlib import Path
 
 import numpy as np
-from hpc4e_data import LENGTH_SCALE
-from hpc4e_fields import RectangularElasticityField
+
+from examples.hpc4e_data import LENGTH_SCALE
+from examples.hpc4e_fields import RectangularElasticityField
 
 ROOT = Path(__file__).resolve().parents[1]
 

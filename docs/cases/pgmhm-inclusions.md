@@ -244,8 +244,8 @@ The following original application commands keep the geometry, coefficient,
 stabilization and field-replay coordinates explicit:
 
 ```bash
-pixi run -e fem python -m examples.solve_pgmhm_inclusions_reference --factors 1 2 4
-pixi run -e fem python -m examples.solve_pgmhm_inclusions_reference --graded --factors 1 2
+pixi run --locked -e fem python -m examples.solve_pgmhm_inclusions_reference --factors 1 2 4
+pixi run --locked -e fem python -m examples.solve_pgmhm_inclusions_reference --graded --factors 1 2
 pixi run --locked -e test-core python -m examples.solve_pgmhm_inclusions --factors 1 2 4 --workers 8
 pixi run --locked -e test-core python -m examples.compare_pgmhm_inclusions \
   examples/results/pgmhm-inclusions/mhm-pgmhm-factor4-s2.npz \

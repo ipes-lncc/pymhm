@@ -9,6 +9,14 @@ errors are kept distinct from material-weighted energy and physical flux errors.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -22,22 +30,24 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.archive_precision import precision_fields
+from examples.formulations.application import darcy as solve_darcy
 from examples.layered_poisson import LayeredPoissonSeries
 from examples.unfitted_geometry import macro_mesh
 from examples.unfitted_trace_family import ScalarTraceFamily
-from pymhm._legacy.models.darcy.primal import DarcySolution, _assembly_quadrature_order, solve_darcy
 from pymhm.core.validation import positive_int
 from pymhm.fem.quadrature.material import (
     fit_material_faces,
     fit_material_mesh,
     material_triangle_quadrature,
 )
+from pymhm.fem.quadrature.orders import nodal_quadrature_order as _assembly_quadrature_order
 from pymhm.fem.scalar.triangle import element_tabulate, multiindices, nodal_space
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
 from pymhm.materials.cartesian import CartesianCellField
 from pymhm.materials.evaluation import tensor_values
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.solutions import DarcySolution
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "examples/results/unfitted/convergence"

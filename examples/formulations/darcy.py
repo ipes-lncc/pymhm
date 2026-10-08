@@ -15,7 +15,6 @@ from typing import Any, Literal, Protocol, cast
 import numpy as np
 from scipy import sparse
 
-from pymhm._legacy.models.darcy.primal import DarcySolution
 from pymhm.core.contracts import HybridSolution
 from pymhm.core.equations import Equation, LocalEquations, columns, rows
 from pymhm.core.multiscale import MultiscaleProblem, MultiscaleSystem
@@ -28,6 +27,9 @@ from pymhm.materials.evaluation import tensor_values
 from pymhm.meshes.polygonal import PolygonMesh
 from pymhm.meshes.refinement import validate_submesh
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.fields import FieldDefinition
+from pymhm.postprocessing.nodal import nodal_field
+from pymhm.postprocessing.solutions import DarcySolution
 
 
 @dataclass(frozen=True)
@@ -120,6 +122,25 @@ def local_equations(
         kernel=kernel,
         moments=physical_mean / (kernel.T @ physical_mean).item(),
         metadata=(fine, physical_mean[:, 0]),
+        field_data=(
+            (nodal_field("pressure", fine, degree),)
+            if formulation == "primal"
+            else (
+                nodal_field(
+                    "pressure",
+                    fine,
+                    0,
+                    discontinuous=True,
+                    reconstruction=sparse.eye(len(load), format="csr")[nq : nq + npres],
+                ),
+                FieldDefinition(
+                    "flux",
+                    mesh=fine,
+                    reconstruction=sparse.eye(len(load), format="csr")[:nq],
+                    basis_id="RT0:integral-normal-moments",
+                ),
+            )
+        ),
     )
 
 

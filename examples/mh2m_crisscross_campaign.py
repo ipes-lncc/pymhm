@@ -7,6 +7,14 @@ integer dimensions and its lower-row subdivision label are not conflated.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import gc
 import hashlib
@@ -20,17 +28,18 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.campaign_provenance import index_records, require_equal, verify_archive
+from examples.formulations.application import darcy as solve_darcy
+from examples.formulations.application import three_field_diffusion as solve_mh2m
 from examples.mh2m_campaign import diagnostics, source
 from examples.mh2m_campaign_contracts import verify_difference_result as verify_result
 from examples.mh2m_crisscross_norms import CrossedP1, common_triangles
 from examples.mh2m_heterogeneous import OscillatoryCoefficient, load_field, source_hashes
 from examples.mh2m_heterogeneous_norms import difference
-from pymhm._legacy.models.darcy.primal import solve_darcy
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from pymhm.fem.traces.pressure_2d import PressureTraceSpace
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.crisscross import crisscross_submesh
 from pymhm.meshes.triangle import TriangleMesh
-from pymhm.methods.three_field import PressureTraceSpace, solve_mh2m
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -202,13 +211,16 @@ def main() -> None:
     parser.add_argument(
         "--output", type=Path, default=ROOT / "examples/results/mh2m-heterogeneous/crisscross"
     )
+    parser.add_argument(
+        "--reference-data", type=Path, default=ROOT / "examples/results/mh2m-heterogeneous"
+    )
     parser.add_argument("--stage", choices=("acquire", "norms", "all"), default="all")
     parser.add_argument("--names", nargs="+")
     parser.add_argument("--norm-workers", type=int, default=2)
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     path, before = args.output / "comparison.json", hashes()
-    reference_path = ROOT / "examples/results/mh2m-heterogeneous/comparison.json"
+    reference_path = args.reference_data / "comparison.json"
     prior = json.loads(reference_path.read_text())
     references = [
         {

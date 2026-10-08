@@ -191,10 +191,10 @@ The plotting driver consumes these saved tables without solving or tabulating
 a new numerical basis:
 
 ```sh
-pixi run --locked -e notebooks python examples/verify_nested.py \
+pixi run --locked -e notebooks python -m examples.verify_nested \
   --levels 1 2 4 8 16 --boundary both --native-threads 1 \
   --acquire-only --output examples/results/nested-regenerated
-pixi run --locked -e notebooks python examples/plot_nested.py \
+pixi run --locked -e notebooks python -m examples.plot_nested \
   --record examples/results/nested-regenerated/nested.json \
   --output build/figures/nested-regenerated
 pixi run --locked -e notebooks python scripts/run_notebooks.py \

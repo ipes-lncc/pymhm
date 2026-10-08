@@ -4,6 +4,12 @@ Geometric partitions, skeletal topology and conforming refinement.
 
 [All API families](../api.md)
 
+## Geometric integration operations
+
+::: pymhm.meshes.geometry
+    options:
+      show_root_heading: true
+
 ::: pymhm.meshes.triangle
     options:
       show_source: false

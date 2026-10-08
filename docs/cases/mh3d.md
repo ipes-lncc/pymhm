@@ -211,10 +211,10 @@ configuration, executed source digest, field archive, norm and quadrature check.
 The archive stores the full local pressure coefficients and physical geometry.
 
 ```bash
-pixi run -e notebooks python -m examples.mh3d_campaign
-pixi run -e notebooks python -m examples.plot_mh3d
-pixi run -e notebooks python scripts/run_notebooks.py notebooks/darcy/69_mh3d.ipynb
-pixi run -e fem pytest -q tests/test_mh3d_fenics.py tests/test_mh2m3d_fenics.py
+pixi run --locked -e notebooks python -m examples.mh3d_campaign
+pixi run --locked -e notebooks python -m examples.plot_mh3d
+pixi run --locked -e notebooks python scripts/run_notebooks.py notebooks/darcy/69_mh3d.ipynb
+pixi run --locked -e fem pytest -q tests/test_mh3d_fenics.py tests/test_mh2m3d_fenics.py
 ```
 
 These studies verify the stated tetrahedral configurations. A general

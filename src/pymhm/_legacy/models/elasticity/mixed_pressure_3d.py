@@ -1,26 +1,25 @@
 """Three-dimensional GaLS/Taylor-Hood displacement-pressure MHM elasticity."""
 
-from dataclasses import dataclass
 from functools import partial
 from typing import Any, Literal
 
 import numpy as np
 
 from pymhm._legacy.models.elasticity.boundary import require_compatible_displacement_flux
-from pymhm._legacy.models.elasticity.mixed_pressure import _compressibility
 from pymhm._legacy.models.elasticity.pressure_forms_3d import (
     elasticity_contract_3d,
     tetra_elasticity_pressure_operators,
 )
 from pymhm._legacy.models.elasticity.primal_3d import _boundary_vector
-from pymhm.core.contracts import HybridSolution, LocalAssembly, LocalProblem
+from pymhm.core.contracts import LocalAssembly, LocalProblem
 from pymhm.core.system import HybridSystem
-from pymhm.core.validation import FloatArray, positive_int
+from pymhm.core.validation import FloatArray as FloatArray
+from pymhm.core.validation import positive_int as positive_int
 from pymhm.core.validation import real_array as _real
-from pymhm.fem.scalar.tetrahedron import tetra_tabulate, tetrahedron_quadrature
+from pymhm.fem.traces.physical import boundary_normal_integral
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton, tetra_trace_coupling
-from pymhm.materials.evaluation import scalar_values_3d, vector_values_3d
 from pymhm.meshes.tetrahedron import TetraMesh, _dyadic
+from pymhm.postprocessing.solutions import GaLS3DSolution as GaLS3DSolution
 
 
 def _local_elasticity_pressure(
@@ -52,123 +51,6 @@ def _local_elasticity_pressure(
         ),
         (fine, forms),
     )
-
-
-@dataclass(frozen=True)
-class GaLS3DSolution:
-    """Displacement, Herrmann pressure and raw symmetric Cauchy stress in three dimensions."""
-
-    skeleton: TriangularSkeleton
-    local_meshes: tuple[TetraMesh, ...]
-    displacement: tuple[FloatArray, ...]
-    pressure: tuple[FloatArray, ...]
-    hybrid: HybridSolution
-    degree: int
-    pressure_degree: int
-    lame_lambda: Any
-    lame_mu: Any
-    formulation: str
-    stabilization: tuple[float, ...]
-
-    def _index(self, cell: int) -> int:
-        """Check a macrocell index before local array access."""
-        index = positive_int(cell, "cell", 0)
-        if index >= len(self.local_meshes):
-            raise ValueError("cell outside local meshes")
-        return index
-
-    def evaluate(self, cell: int, bary: FloatArray) -> tuple[FloatArray, FloatArray]:
-        """Evaluate one-sided displacement and pressure on the local tetrahedra."""
-        cell = self._index(cell)
-        fine = self.local_meshes[cell]
-        dofs, _, basis, _ = tetra_tabulate(fine, self.degree, bary)
-        pdofs, _, pbasis, _ = tetra_tabulate(fine, self.pressure_degree, bary)
-        return np.einsum("qi,tia->tqa", basis, self.displacement[cell][dofs]), self.pressure[cell][
-            pdofs
-        ] @ pbasis.T
-
-    def gradient(self, cell: int, bary: FloatArray) -> FloatArray:
-        """Return the broken displacement gradient indexed component then derivative."""
-        cell = self._index(cell)
-        dofs, _, _, derivative = tetra_tabulate(self.local_meshes[cell], self.degree, bary)
-        return np.einsum("tia,tqib->tqab", self.displacement[cell][dofs], derivative)
-
-    def stress(self, cell: int, bary: FloatArray) -> FloatArray:
-        """Return 2*mu*epsilon(u)-p*I without multiplying lambda by a small divergence."""
-        gradient = self.gradient(cell, bary)
-        pressure = self.evaluate(cell, bary)[1]
-        fine = self.local_meshes[cell]
-        points = np.einsum("qi,tia->tqa", bary, fine.points[fine.cells])
-        mu = scalar_values_3d(self.lame_mu, points.reshape(-1, 3)).reshape(pressure.shape)
-        return mu[..., None, None] * (gradient + gradient.swapaxes(-1, -2)) - pressure[
-            ..., None, None
-        ] * np.eye(3)
-
-    def _error(self, exact: Any, kind: str, order: int) -> float:
-        """Integrate a physical scalar, vector or tensor error without interface averaging."""
-        bary, weights = tetrahedron_quadrature(order)
-        total = 0.0
-        for cell, fine in enumerate(self.local_meshes):
-            points = np.einsum("qi,tia->tqa", bary, fine.points[fine.cells]).reshape(-1, 3)
-            if kind == "displacement":
-                value = self.evaluate(cell, bary)[0]
-                target = vector_values_3d(exact, points).reshape(value.shape)
-                error = np.sum((value - target) ** 2, axis=-1)
-            elif kind == "pressure":
-                value = self.evaluate(cell, bary)[1]
-                target = scalar_values_3d(exact, points).reshape(value.shape)
-                error = (value - target) ** 2
-            else:
-                value = self.stress(cell, bary) if kind == "stress" else self.gradient(cell, bary)
-                target = _real(exact(points) if callable(exact) else exact, "exact tensor")
-                target = np.broadcast_to(target, (len(points), 3, 3)).reshape(value.shape)
-                error = np.sum((value - target) ** 2, axis=(-1, -2))
-            total += float(fine.volumes @ (error @ weights))
-        return float(np.sqrt(total))
-
-    def l2_error(self, exact: Any, order: int = 7) -> float:
-        """Integrate the displacement L2 error."""
-        return self._error(exact, "displacement", order)
-
-    def pressure_l2_error(self, exact: Any, order: int = 7) -> float:
-        """Integrate physical Herrmann-pressure error with the imposed mean convention."""
-        return self._error(exact, "pressure", order)
-
-    def h1_seminorm_error(self, exact_gradient: Any, order: int = 7) -> float:
-        """Integrate the full broken displacement-gradient error."""
-        return self._error(exact_gradient, "gradient", order)
-
-    def stress_l2_error(self, exact_stress: Any, order: int = 7) -> float:
-        """Integrate the complete symmetric Cauchy-stress Frobenius error."""
-        return self._error(exact_stress, "stress", order)
-
-    def compressibility_l2(self, order: int = 7) -> float:
-        """Measure div(u)+p/lambda in physical L2, including zero inverse lambda at infinity."""
-        bary, weights = tetrahedron_quadrature(order)
-        total = 0.0
-        for cell, fine in enumerate(self.local_meshes):
-            points = np.einsum("qi,tia->tqa", bary, fine.points[fine.cells])
-            compliance = _compressibility(self.lame_lambda, points.reshape(-1, 3)).reshape(
-                points.shape[:2]
-            )
-            residual = (
-                np.trace(self.gradient(cell, bary), axis1=-2, axis2=-1)
-                + self.evaluate(cell, bary)[1] * compliance
-            )
-            total += float(fine.volumes @ (residual**2 @ weights))
-        return float(np.sqrt(total))
-
-
-def _boundary_volume_flux(
-    skeleton: TriangularSkeleton, boundary: FloatArray, *, absolute: bool = False
-) -> float:
-    """Apply the hydrostatic trace to the same assembled displacement boundary moments."""
-    load = boundary.reshape(-1, 3).astype(np.longdouble)
-    total = np.longdouble(0)
-    for face in skeleton.mesh.boundary_faces:
-        terms = load[skeleton.dofs(int(face))] * skeleton.mesh.normals[face].astype(np.longdouble)
-        total += np.sum(abs(terms) if absolute else terms)
-    return float(total)
 
 
 def solve_elasticity_gals_3d(
@@ -312,3 +194,6 @@ def solve_elasticity_gals_3d(
         formulation,
         tuple(data[1].stabilization_alpha for data in system.local_metadata),
     )
+
+
+_boundary_volume_flux = boundary_normal_integral

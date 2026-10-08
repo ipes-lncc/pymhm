@@ -195,6 +195,16 @@ def test_invalid_problem_contracts_are_rejected(change, match):
         replace(leaf_problem(), **change)
 
 
+def test_global_only_form_needs_no_dummy_local_provider():
+    """Explicit global equations use the same essential/gauge solver conventions."""
+    problem = MultiscaleProblem.from_global(Equation([[2, -1], [-1, 2]], [0, 3]), 2, fixed={0: 1.0})
+    solution = assemble(problem).solve()
+    assert_allclose(solution.trace, [1, 2], atol=1e-12, rtol=1e-10)
+    assert solution.fields == () and solution.children == ()
+    with pytest.raises(ValueError, match="one local item"):
+        assemble(replace(problem, items=[0]))
+
+
 def test_provider_and_recursive_boundary_contracts_are_explicit():
     with pytest.raises(TypeError, match="MultiscaleProblem"):
         assemble(None)

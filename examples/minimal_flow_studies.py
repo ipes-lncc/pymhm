@@ -7,6 +7,14 @@ separate field norms. They do not assert a historical paper reproduction.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 import platform
@@ -21,6 +29,10 @@ import numpy as np
 from threadpoolctl import threadpool_info, threadpool_limits
 
 from examples.flow3d_data import Flow3DData
+from examples.formulations.application import flow as solve_flow
+from examples.formulations.application import flow as solve_flow_3d
+from examples.formulations.application import herrmann_elasticity as solve_elasticity_gals_3d
+from examples.formulations.application import primal_elasticity as solve_elasticity_3d
 from examples.gals3d_data import GaLS3DData
 from examples.minimal_flow_originals import (
     capture_sources,
@@ -30,10 +42,6 @@ from examples.minimal_flow_originals import (
     write_record,
 )
 from examples.solve_elasticity3d import ElasticityData3D
-from pymhm._legacy.models.elasticity.mixed_pressure_3d import solve_elasticity_gals_3d
-from pymhm._legacy.models.elasticity.primal_3d import solve_elasticity_3d
-from pymhm._legacy.models.flow.solver import solve_flow
-from pymhm._legacy.models.flow.solver_3d import solve_flow_3d
 from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.triangle import tabulate
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace

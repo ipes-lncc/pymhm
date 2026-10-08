@@ -4,11 +4,25 @@ Incompressible-flow formulations, residual estimators and adaptive policies.
 
 [All API families](../api.md)
 
+User-defined formulations compose these public numerical owners with
+`LocalEquations` and `Equation`; their editable providers are listed in the
+[variational guide](../variational.md#formulations-composed-from-the-same-api).
+Physical field records provide optional interpretation of the resulting
+coefficients. Named `FieldDefinition` views require no physical solver object.
+
 ::: pymhm.fem.vector.operators
     options:
       show_source: false
 
-::: pymhm._legacy.models.flow.solver
+::: pymhm.fem.vector.flow
+    options:
+      show_source: false
+
+::: pymhm.fem.vector.flow_3d
+    options:
+      show_source: false
+
+::: pymhm.materials.resistance
     options:
       show_source: false
 
@@ -24,11 +38,7 @@ Incompressible-flow formulations, residual estimators and adaptive policies.
     options:
       show_source: false
 
-::: pymhm._legacy.models.flow.solver_3d
-    options:
-      show_source: false
-
-::: pymhm._legacy.models.flow.forms_3d
+::: pymhm.postprocessing.solutions.Flow3DSolution
     options:
       show_source: false
 

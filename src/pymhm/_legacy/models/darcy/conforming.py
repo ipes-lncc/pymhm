@@ -1,58 +1,24 @@
 """Classical conforming Cartesian Qk diffusion for independently refined baselines."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass as dataclass
 from typing import Any, Literal
 
 import numpy as np
-from numpy.polynomial.legendre import leggauss
+from numpy.polynomial.legendre import leggauss as leggauss
 from scipy import sparse
 
-from pymhm.core.validation import FloatArray, positive_int
-from pymhm.fem.scalar.quadrilateral import qk_basis, qk_space, quadrilateral_operators
+from pymhm.core.validation import FloatArray as FloatArray
+from pymhm.core.validation import positive_int
+from pymhm.fem.scalar.quadrilateral import qk_basis as qk_basis
+from pymhm.fem.scalar.quadrilateral import qk_space, quadrilateral_operators
+from pymhm.fem.traces.conforming import quadrilateral_boundary_data
 from pymhm.linalg.linear import solve_linear
-from pymhm.materials.evaluation import scalar_values, tensor_values
+from pymhm.materials.evaluation import scalar_values as scalar_values
+from pymhm.materials.evaluation import tensor_values as tensor_values
 from pymhm.meshes.cartesian import CartesianMacroMesh
-
-
-@dataclass(frozen=True)
-class ConformingQuadrilateralSolution:
-    """One global continuous Qk field, with physical evaluation at arbitrary points."""
-
-    mesh: CartesianMacroMesh
-    degree: int
-    pressure: FloatArray
-    permeability: Any
-    residual: float
-
-    def evaluate(self, points: FloatArray) -> tuple[FloatArray, FloatArray]:
-        """Return pressure and gradient without interpolation or material averaging."""
-        raw = np.asarray(points)
-        if np.iscomplexobj(raw) or raw.ndim != 2 or raw.shape[1] != 2 or not np.isfinite(raw).all():
-            raise ValueError("evaluation points must be finite real XY pairs")
-        points = np.asarray(raw, dtype=float)
-        origin = self.mesh.points[0]
-        coordinates = (points - origin) / self.mesh.spacing
-        counts = np.array([self.mesh.nx, self.mesh.ny])
-        tolerance = 64 * np.finfo(float).eps * counts
-        if np.any(coordinates < -tolerance) or np.any(coordinates > counts + tolerance):
-            raise ValueError("evaluation points lie outside the rectangular mesh")
-        indices = np.minimum(np.maximum(coordinates.astype(int), 0), counts - 1)
-        reference = np.clip(coordinates - indices, 0, 1)
-        width = self.mesh.nx * self.degree + 1
-        offsets = np.array(
-            [j * width + i for j in range(self.degree + 1) for i in range(self.degree + 1)]
-        )
-        node_ids = (indices[:, 1] * width + indices[:, 0])[:, None] * self.degree + offsets
-        basis, gradients = qk_basis(self.degree, reference)
-        values = self.pressure[node_ids]
-        return np.einsum("qi,qi->q", basis, values), np.einsum(
-            "qi,qia->qa", values, gradients / self.mesh.spacing
-        )
-
-    def physical_flux(self, points: FloatArray) -> FloatArray:
-        """Evaluate -K grad(p) using the coefficient's declared pointwise convention."""
-        gradient = self.evaluate(points)[1]
-        return -np.einsum("qab,qb->qa", tensor_values(self.permeability, points), gradient)
+from pymhm.postprocessing.conforming import (
+    ConformingQuadrilateralSolution as ConformingQuadrilateralSolution,
+)
 
 
 def solve_conforming_quadrilateral(
@@ -81,36 +47,16 @@ def solve_conforming_quadrilateral(
     matrix, mass, load = quadrilateral_operators(
         mesh, degree, permeability=permeability, source=source, order=order
     )
-    dofs, nodes = qk_space(mesh, degree)
-    natural = {} if neumann is None else neumann
-    if any(face not in mesh.boundary_faces for face in natural):
-        raise ValueError("Neumann keys must identify boundary faces")
+    _, nodes = qk_space(mesh, degree)
+    boundary, prescribed = quadrilateral_boundary_data(
+        mesh, degree, dirichlet=dirichlet, neumann=neumann, order=order
+    )
+    load += boundary
     fixed = np.zeros(len(nodes), dtype=bool)
-    gauss, weights = leggauss(order)
-    t = (gauss + 1) / 2
-    for face in mesh.boundary_faces:
-        start, end = mesh.points[mesh.faces[face]]
-        tangent = end - start
-        cell = mesh.face_cells[face, 0]
-        if face in natural:
-            physical = start + t[:, None] * tangent
-            reference = (physical - mesh.points[mesh.cells[cell, 0]]) / mesh.spacing
-            basis = qk_basis(degree, reference)[0]
-            load[dofs[cell]] -= mesh.lengths[face] * (
-                basis.T @ (weights / 2 * scalar_values(natural[int(face)], physical))
-            )
-        else:
-            side = int(np.flatnonzero(mesh.cell_faces[cell] == face)[0])
-            edge_nodes = (
-                np.arange(degree + 1),
-                np.arange(degree + 1) * (degree + 1) + degree,
-                degree * (degree + 1) + np.arange(degree + 1),
-                np.arange(degree + 1) * (degree + 1),
-            )[side]
-            fixed[dofs[cell, edge_nodes]] = True
+    fixed[list(prescribed)] = True
     pressure = np.zeros(len(nodes))
     if fixed.any():
-        pressure[fixed] = scalar_values(dirichlet, nodes[fixed])
+        pressure[list(prescribed)] = list(prescribed.values())
         free = np.flatnonzero(~fixed)
         if len(free):
             solved = solve_linear(

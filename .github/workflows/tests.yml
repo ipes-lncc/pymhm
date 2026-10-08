@@ -116,6 +116,40 @@ jobs:
           include-hidden-files: true
           if-no-files-found: error
 
+  visualization:
+    name: Graphics and notebook execution contracts
+    needs: workspace
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYVISTA_OFF_SCREEN: "true"
+      MPLBACKEND: "Agg"
+      LIBGL_ALWAYS_SOFTWARE: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: prefix-dev/setup-pixi@v0.10.2
+        with:
+          pixi-version: v0.76.2
+          environments: visualization
+          locked: true
+          cache: true
+      - name: Require the locked graphics dependencies
+        run: >-
+          pixi run --locked -e visualization python -c
+          'import matplotlib, pyvista, vtk;
+          print("Matplotlib:", matplotlib.__version__);
+          print("PyVista:", pyvista.__version__);
+          print("VTK:", vtk.vtkVersion.GetVTKVersion())'
+      - name: Exercise notebook execution, graphic contracts and native offscreen rendering
+        env:
+          PYTEST_ADDOPTS: --junitxml=build/reports/tests/visualization.xml
+        run: pixi run --locked -e visualization test-visualization
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: test-results-visualization-linux
+          path: build/reports/tests/visualization-*.xml
+
   integration:
     name: ${{ matrix.label }} (${{ matrix.os }})
     needs: core
@@ -171,6 +205,7 @@ jobs:
           tests/test_generic_forms_fenics.py tests/test_bound_spaces_fenics.py
           tests/test_bound_traces_fenics.py tests/test_context_fenics.py
           tests/test_form_workspace_fenics.py tests/test_fenics_integration.py
+          tests/test_fenics_portability.py
       - uses: actions/upload-artifact@v7
         if: matrix.kind == 'fem-portable' && always()
         with:

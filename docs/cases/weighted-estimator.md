@@ -131,7 +131,7 @@ Effectivity above one verifies the bound numerically for these runs. Its size
 also measures how conservative the material and Poincaré weights are; a large
 effectivity is not evidence of a correspondingly large solution error.
 
-Run `pixi run -e notebooks python examples/verify_weighted_estimator.py`.
+Run `pixi run --locked -e notebooks python -m examples.verify_weighted_estimator`.
 The records in `examples/results/weighted-estimator.json` retain every separate
 term, true error, effectivity and equilibrium defect. Research refinement runs
 are separate from CI.

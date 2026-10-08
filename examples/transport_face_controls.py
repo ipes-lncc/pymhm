@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -11,11 +19,11 @@ from time import perf_counter
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import transport as solve_transport
 from examples.pgmhm_campaign import crisscross
 from examples.transport_campaign import natural_horizontal
 from examples.transport_coefficient_controls import norm_contribution
 from examples.transport_mixed_campaign import SOURCES
-from pymhm._legacy.models.transport.solver import solve_transport
 from pymhm.adaptivity.transport import (
     TransportBounds,
     estimate_transport_faces,

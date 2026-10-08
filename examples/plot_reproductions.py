@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import csv
 import json
 from pathlib import Path
@@ -100,7 +108,8 @@ def plot_results(path: Path) -> None:
     import matplotlib.pyplot as plt
     from matplotlib.ticker import FixedFormatter, FixedLocator, NullFormatter
     from matplotlib.tri import Triangulation
-    from plot_mesh import draw_macro_mesh
+
+    from examples.plot_mesh import draw_macro_mesh
 
     data = json.loads(path.read_text())
     root = Path(__file__).resolve().parents[1]

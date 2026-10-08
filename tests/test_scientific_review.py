@@ -64,11 +64,12 @@ def test_usfem_matrix_and_force_match_independent_ufl(
     from mpi4py import MPI
 
     import pymhm._legacy.models.flow.solver
+    import pymhm.fem.vector.flow
 
     native_problems = []
     native_constants = []
     assemble = pymhm._legacy.models.flow.solver._flow_local
-    inverse_bound = pymhm._legacy.models.flow.solver.laplacian_inverse_bound
+    inverse_bound = pymhm.fem.vector.flow.laplacian_inverse_bound
 
     def capture(cell: int, **kwargs: Any) -> LocalAssembly:
         """Capture the exact native local matrix before global condensation."""
@@ -94,7 +95,7 @@ def test_usfem_matrix_and_force_match_independent_ufl(
         return np.broadcast_to(drag * np.eye(2), (len(points), 2, 2))
 
     monkeypatch.setattr(pymhm._legacy.models.flow.solver, "_flow_local", capture)
-    monkeypatch.setattr(pymhm._legacy.models.flow.solver, "laplacian_inverse_bound", capture_bound)
+    monkeypatch.setattr(pymhm.fem.vector.flow, "laplacian_inverse_bound", capture_bound)
     viscosity = 2.0
     square = TriangleMesh.unit_square()
     coarse = TriangleMesh(square.points @ np.array([[1.1, 0.25], [-0.15, 0.85]]), square.cells)

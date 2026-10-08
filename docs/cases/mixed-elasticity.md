@@ -70,7 +70,7 @@ moments, with no independent rotation gauge.
 ```python
 import numpy as np
 from pymhm import TriangleMesh
-from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed
 
 
 def displacement(x):
@@ -254,7 +254,7 @@ normal-moment orientation and the three-dimensional local rigid kernel.
 Run the package's analytical gallery with:
 
 ```console
-pixi run -e notebooks python examples/plot_mixed_elasticity.py
+pixi run --locked -e notebooks python -m examples.plot_mixed_elasticity
 ```
 
 [Numerical records](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/mixed-elasticity.json)

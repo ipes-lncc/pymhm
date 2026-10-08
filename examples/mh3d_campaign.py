@@ -11,12 +11,12 @@ from time import perf_counter
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import robin_diffusion as solve_mh_3d
+from examples.formulations.application import three_field_diffusion as solve_mh2m_3d
 from pymhm.fem.traces.pressure_3d import PressureTraceSpace3D
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.tetrahedron import TetraMesh
-from pymhm.methods.robin_3d import solve_mh_3d
-from pymhm.methods.three_field_3d import solve_mh2m_3d
 
 ROOT = Path(__file__).resolve().parents[1]
 

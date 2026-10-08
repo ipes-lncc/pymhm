@@ -9,10 +9,12 @@ from time import perf_counter
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.field_archive import field_archive_arrays
+from examples.formulations.transport_3d import transport_3d
 from examples.polygon_meshes import polygon_partition
 from examples.solve_rad3d import exact, gradient, physical_flux, source
 from pymhm import PolyhedralMesh
-from pymhm._legacy.models.transport.polyhedral import PolygonalSkeleton3D, solve_polyhedral_rad
+from pymhm.fem.traces.polygon_3d import PolygonalSkeleton3D
 from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -32,16 +34,26 @@ def run(workers: int) -> None:
         for name in (
             "meshes/polyhedral",
             "meshes/geometry",
-            "_legacy/models/transport/polyhedral",
+            "fem/traces/polygon_3d",
+            "fem/traces/normal",
+            "core/multiscale",
+            "postprocessing/scalar_3d",
             "meshes/polygonal",
             "fem/scalar/tetrahedron",
             "fem/scalar/tetrahedron_topology",
-            "_legacy/models/transport/rad_3d",
+            "fem/scalar/transport_3d",
             "core/contracts",
             "linalg/linear",
             "execution/cpu",
         )
-    ] + [Path(__file__), ROOT / "examples/polygon_meshes.py", ROOT / "examples/solve_rad3d.py"]
+    ] + [
+        Path(__file__),
+        ROOT / "examples/polygon_meshes.py",
+        ROOT / "examples/solve_rad3d.py",
+        ROOT / "examples/field_archive.py",
+        ROOT / "examples/formulations/scalar_3d.py",
+        ROOT / "examples/formulations/transport_3d.py",
+    ]
     hashes = current_source_manifest(
         {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
     )
@@ -87,7 +99,7 @@ def run(workers: int) -> None:
             raise ArithmeticError("local tetrahedra do not reproduce their polyhedral volumes")
         assembly_order = 20 if n == 2 else 16 if n == 3 else 14
         error_orders = (20, 24) if n == 2 else (16, 20) if n == 3 else (14, 16)
-        solution = solve_polyhedral_rad(
+        solution = transport_3d(
             mesh,
             degree=4,
             skeleton=PolygonalSkeleton3D(mesh),
@@ -136,6 +148,7 @@ def run(workers: int) -> None:
                     f"coefficients_{cell}": solution.values[cell],
                 }
             )
+        arrays.update(field_archive_arrays(solution.hybrid.field("scalar")))
         path = OUTPUT / f"n{n}.npz"
         np.savez_compressed(path, **arrays)
         row = dict(

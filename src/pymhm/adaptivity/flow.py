@@ -1,5 +1,6 @@
 """Fixed-macro-mesh face and local refinement for the two-level flow estimators."""
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from fractions import Fraction
 from math import lcm
@@ -8,13 +9,13 @@ from typing import Any, Literal
 import numpy as np
 
 from pymhm._legacy.models.flow.solver import solve_flow
-from pymhm._legacy.models.vector import VectorSolution
 from pymhm.adaptivity.flow_local_mesh import refine_flow_local_meshes
 from pymhm.adaptivity.transport import refine_skeleton_faces
 from pymhm.core.validation import positive_int
 from pymhm.estimators.flow import FlowEstimator, estimate_flow_error
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.solutions import VectorSolution
 
 
 @dataclass(frozen=True)
@@ -95,6 +96,7 @@ def adapt_flow(
     local_refiner: Literal["uniform", "longest-edge"] = "uniform",
     max_local_cells: int = 65536,
     local_error_marking: Literal["uniform", "maximum"] = "uniform",
+    solve_step: Callable[..., VectorSolution] | None = None,
     **solve_options: Any,
 ) -> AdaptiveFlowResult:
     """Solve, estimate and refine traces/local meshes with a fixed macro topology.
@@ -116,7 +118,15 @@ def adapt_flow(
     published macroface marking. Interior fine-face terms are split equally between their two
     neighboring cells. This within-local policy is explicit; it is not prescribed by
     [Araya, Rebolledo and Valentin (2021)](https://doi.org/10.1093/imanum/drz053).
+    ``solve_step(mesh, skeleton=current_space, **problem_data)`` may assemble
+    the user's own mathematical equations at each state. It receives the actual
+    transferred boundary data and local partitions; its returned physical field
+    must satisfy the estimator's existing hypotheses. The default retains the
+    built-in solve. Callback exceptions propagate without changing refinement.
     """
+    if solve_step is not None and not callable(solve_step):
+        raise TypeError("solve_step must be callable or None")
+    solve = solve_flow if solve_step is None else solve_step
     iterations = positive_int(iterations, "iterations", 0)
     limit = positive_int(max_local_refinement, "max_local_refinement")
     cell_limit = positive_int(max_local_cells, "max_local_cells")
@@ -161,7 +171,7 @@ def adapt_flow(
     reason = "iterations"
     iteration = 0
     while True:
-        solution = solve_flow(
+        solution = solve(
             mesh,
             skeleton=skeleton,
             local_refinement=refinement,

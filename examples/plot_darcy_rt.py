@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import hashlib
 import json
 from pathlib import Path
@@ -12,8 +20,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import Normalize, TwoSlopeNorm
-from plot_mesh import draw_macro_mesh
 
+from examples.plot_mesh import draw_macro_mesh
 from pymhm.fem.hdiv.rt import rt_evaluate
 from pymhm.meshes.triangle import TriangleMesh
 
@@ -70,7 +78,7 @@ def main() -> None:
     pressure = []
     magnitude = []
     centers = []
-    from pymhm._legacy.models.darcy.mixed_rt import pressure_basis
+    from pymhm.fem.hdiv.rt_forms import pressure_basis
 
     bary = np.ones((1, 3)) / 3
     for i in range(len(data["local_points"])):

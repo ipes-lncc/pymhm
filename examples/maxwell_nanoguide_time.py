@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -13,7 +21,7 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.maxwell_nanoguide import ROOT, NanoWaveguide, hashes, save_fields
-from pymhm._legacy.models.waves.maxwell import MaxwellStepper
+from examples.tutorial_maxwell_equations import EquationLeapfrog
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.fem.vector.curl import TangentialTraceSpace as MaxwellSkeleton
 from pymhm.meshes.cartesian import CartesianMacroMesh
@@ -40,7 +48,7 @@ def run(output: Path, dt: float, order: int) -> None:
     balance = 0.0
     with (
         threadpool_limits(1),
-        MaxwellStepper(
+        EquationLeapfrog(
             mesh,
             time_step=dt,
             degree=2,

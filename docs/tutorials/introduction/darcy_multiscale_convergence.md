@@ -12,46 +12,46 @@ The manufactured solution distinguishes the finite-reference error from the mult
 
 The local Neumann responses, skeletal flux unknowns and retained cell constants follow [Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019). The oscillatory manufactured data and refinement sequence are defined for this tutorial.
 
+Field evaluation, norms, plots and executed-array archives use the importable
+[supporting scalar helpers](https://github.com/ipes-lncc/pymhm/blob/main/examples/introduction/scalar.py).
+The physical data and local/global variational equations remain explicit below.
+
+
 
 ```python
 from pathlib import Path
 import sys
-import hashlib
-import json
+
+ROOT = next(p for p in (Path.cwd(), *Path.cwd().parents) if (p / "pixi.toml").is_file())
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+import numpy as np
+import matplotlib.pyplot as plt
 from dataclasses import dataclass
 from functools import partial
-from typing import Any, Callable, Sequence, Mapping
-import numpy as np
-from numpy.typing import NDArray
-from scipy import sparse
-from matplotlib.collections import LineCollection
-import matplotlib.pyplot as plt
-import ufl
-from pymhm.core.equations import compile_form
-
-ROOT = next(p for p in (Path.cwd(), *Path.cwd().parents)
-            if (p / "pyproject.toml").is_file() and (p / "src/pymhm").is_dir())
-if str(ROOT) not in sys.path:
-    sys.path.insert(0,str(ROOT))
-
-from pymhm import Equation, LocalEquations, MultiscaleProblem, assemble, columns
-from pymhm.core.assembly import SolverConfig
-from pymhm.execution.cpu import ExecutionConfig
-from pymhm.meshes.cartesian import CartesianMacroMesh
-from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
-from pymhm.fem.scalar.quadrilateral import (
-    qk_space, qk_basis, quadrilateral_quadrature,
-    quadrilateral_operators, quadrilateral_trace_coupling)
-from pymhm.fem.scalar.operators import boundary_data
-from pymhm.linalg.linear import solve_linear
-from pymhm.materials.cartesian import CartesianCellField
-from pymhm.materials.evaluation import tensor_values, scalar_values
-from pymhm.fem.assembly import assemble_element_blocks
-
-Array = NDArray[np.float64]
-Evaluator = Callable[[Array], tuple[Array, Array]]
+from typing import Any
+from pymhm import Equation, LocalEquations, assemble, columns
 from pymhm import MeshHierarchy, LocalContext, bind_interface, bind_problem
-from pymhm.backends.spaces import bind_space
+from pymhm.core.equations import compile_form
+from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
+from examples.introduction.scalar import (
+    Array,
+    dirichlet_solve,
+    evaluate_bound_pressure,
+    evaluate_qk,
+    grid_quadrature,
+    native_scalar_space,
+    observed_rates,
+    physical_errors,
+    plot_convergence,
+    plot_field_panels,
+    rectangle_panel,
+)
+import ufl
+from pymhm import ExecutionConfig, CartesianMacroMesh
+from pymhm.fem.scalar.quadrilateral import qk_space, quadrilateral_operators
+from pymhm.fem.scalar.operators import boundary_data
 
 ```
 
@@ -147,6 +147,7 @@ class OscillatoryDarcyData:
             - derivative_x * gradient[:, 0]
             - derivative_y * gradient[:, 1]
         )
+
 ```
 
 ## 2. Choose the three approximation scales
@@ -156,17 +157,24 @@ class OscillatoryDarcyData:
 
 
 ```python
-data = OscillatoryDarcyData(epsilon=1/8, amplitude=1.5)
+data = OscillatoryDarcyData(epsilon=1 / 8, amplitude=1.5)
 exact = lambda points: (data.pressure(points), data.gradient(points))
 macro = CartesianMacroMesh(4, 4)
 # H=1/4; h_local=H/r=1/64; degree k=2; trace degree ell=1.
 local_degree, local_refinement, trace_segments = 2, 16, 2
 skeleton = SkeletonSpace(
-    macro, tuple(FaceSpace.uniform(1, trace_segments, continuous=True)
-                 for _ in macro.faces))
-print({"macro_cells": len(macro.cells), "H": 1/4,
-       "local_h": 1/64, "epsilon": data.epsilon,
-       "spectral_contrast": float(np.exp(2*data.amplitude))})
+    macro, tuple(FaceSpace.uniform(1, trace_segments, continuous=True) for _ in macro.faces)
+)
+print(
+    {
+        "macro_cells": len(macro.cells),
+        "H": 1 / 4,
+        "local_h": 1 / 64,
+        "epsilon": data.epsilon,
+        "spectral_contrast": float(np.exp(2 * data.amplitude)),
+    }
+)
+
 ```
 
 ```text
@@ -213,38 +221,26 @@ The provider below declares the executable UFL weak forms and each coupling sign
 
 
 ```python
-def native_scalar_space(fine: CartesianMacroMesh, degree: int) -> tuple[Any, Any, NDArray[np.int64]]:
-    """Bind a user-declared Basix element; PyMHM owns topology and coefficient order."""
-    import basix
-    import basix.ufl
-    element = basix.ufl.element(
-        "Lagrange", "quadrilateral", degree,
-        lagrange_variant=basix.LagrangeVariant.equispaced, shape=(),
-    )
-    binding = bind_space(fine, element)
-    return binding.mesh, binding.space, binding.mapping
-
-
-
 def ufl_coefficient_source(domain: Any, physical_data: OscillatoryDarcyData) -> tuple[Any, Any]:
     """Declare the same smooth K and independently differentiated manufactured f in UFL."""
-    x=ufl.SpatialCoordinate(domain)
-    a,omega=physical_data.amplitude,2*np.pi/physical_data.epsilon
-    kxx=ufl.exp(a*ufl.sin(omega*x[0]))
-    kyy=ufl.exp(a*ufl.cos(omega*x[1]))
-    tensor=ufl.as_matrix(((kxx,0.),(0.,kyy)))
-    exact_pressure=ufl.sin(np.pi*x[0])*ufl.sin(np.pi*x[1])
-    pressure_x=np.pi*ufl.cos(np.pi*x[0])*ufl.sin(np.pi*x[1])
-    pressure_y=np.pi*ufl.sin(np.pi*x[0])*ufl.cos(np.pi*x[1])
-    kxx_x=a*omega*ufl.cos(omega*x[0])*kxx
-    kyy_y=-a*omega*ufl.sin(omega*x[1])*kyy
-    force=np.pi**2*(kxx+kyy)*exact_pressure-kxx_x*pressure_x-kyy_y*pressure_y
-    return tensor,force
+    x = ufl.SpatialCoordinate(domain)
+    a, omega = physical_data.amplitude, 2 * np.pi / physical_data.epsilon
+    kxx = ufl.exp(a * ufl.sin(omega * x[0]))
+    kyy = ufl.exp(a * ufl.cos(omega * x[1]))
+    tensor = ufl.as_matrix(((kxx, 0.0), (0.0, kyy)))
+    exact_pressure = ufl.sin(np.pi * x[0]) * ufl.sin(np.pi * x[1])
+    pressure_x = np.pi * ufl.cos(np.pi * x[0]) * ufl.sin(np.pi * x[1])
+    pressure_y = np.pi * ufl.sin(np.pi * x[0]) * ufl.cos(np.pi * x[1])
+    kxx_x = a * omega * ufl.cos(omega * x[0]) * kxx
+    kyy_y = -a * omega * ufl.sin(omega * x[1]) * kyy
+    force = np.pi**2 * (kxx + kyy) * exact_pressure - kxx_x * pressure_x - kyy_y * pressure_y
+    return tensor, force
 
 
 @dataclass(frozen=True)
 class DarcyLocalProvider:
     """Declare primal Qk UFL energy, physical flux coupling and pressure moments."""
+
     macro: CartesianMacroMesh
     skeleton: SkeletonSpace
     data: object
@@ -257,28 +253,37 @@ class DarcyLocalProvider:
         cell, fine = local.cell, local.mesh
         import basix
         import basix.ufl
+
         element = basix.ufl.element(
-            "Lagrange", "quadrilateral", self.degree,
+            "Lagrange",
+            "quadrilateral",
+            self.degree,
             lagrange_variant=basix.LagrangeVariant.equispaced,
         )
         binding = local.native_space(element)
         domain, space = binding.mesh, binding.space
         mapping = binding.mapping
-        p,v=ufl.TrialFunction(space),ufl.TestFunction(space)
-        K,f=ufl_coefficient_source(domain,self.data)
-        dx=ufl.Measure("dx",domain=domain,
-                       metadata={"quadrature_degree":2*self.quadrature_order-1})
+        p, v = ufl.TrialFunction(space), ufl.TestFunction(space)
+        K, f = ufl_coefficient_source(domain, self.data)
+        dx = ufl.Measure(
+            "dx", domain=domain, metadata={"quadrature_degree": 2 * self.quadrature_order - 1}
+        )
         # These executed UFL forms are the local weak formulation, directly.
-        a=ufl.inner(K*ufl.grad(p),ufl.grad(v))*dx
-        load=f*v*dx
+        a = ufl.inner(K * ufl.grad(p), ufl.grad(v)) * dx
+        load = f * v * dx
         local.field("pressure", binding)
         b = local.trace_pairings(lambda phi, ds: phi * v * ds)
         c = local.trace_pairings(lambda phi, ds: -phi * p * ds, axis="rows")
-        area=float(fine.areas.sum())
+        area = float(fine.areas.sum())
         return local.equations(
-            a=a,L=load,b=b,c=c,
-            kernel=np.ones((len(mapping),1)),moments=columns((v/area)*dx),
-            metadata=(fine,mapping))
+            a=a,
+            L=load,
+            b=b,
+            c=c,
+            kernel=np.ones((len(mapping), 1)),
+            moments=columns((v / area) * dx),
+            metadata=(fine, mapping),
+        )
 
 ```
 
@@ -294,74 +299,19 @@ Before reconstructing fields, define how the x-fastest Qk coefficients represent
 
 
 ```python
-def evaluate_bound_pressure(
-    macro: CartesianMacroMesh, fields: tuple[Any, ...], points: Array
-) -> tuple[Array, Array]:
-    """Evaluate named pressure and gradient on each owning macrocell, without averaging."""
-    coordinates = (points - macro.points[0]) / macro.spacing
-    indices = np.clip(np.floor(coordinates).astype(int), 0, [macro.nx - 1, int(macro.ny) - 1])
-    owners = indices[:, 1] * macro.nx + indices[:, 0]
-    pressure, gradient = np.empty(len(points)), np.empty((len(points), 2))
-    for cell in np.unique(owners):
-        selected = owners == cell
-        pressure[selected], gradient[selected] = fields[cell].values_and_gradient(points[selected])
-    return pressure, gradient
-
-# Optional explicit Basix evaluation for classical references and coefficient replay.
-def evaluate_qk(
-    mesh: CartesianMacroMesh, degree: int, coefficients: Array, points: Array
-) -> tuple[Array, Array]:
-    """Evaluate x-fastest Qk coefficients as pressure and raw gradient.
-
-    Values at an internal fine-grid interface use the cell on its positive
-    side. Passing each macrocell separately retains its independent traces.
-    """
-    coordinates = (points - mesh.points[0]) / mesh.spacing
-    counts = np.asarray([mesh.nx, mesh.ny])
-    indices = np.clip(np.floor(coordinates).astype(int), 0, counts - 1)
-    reference = np.clip(coordinates - indices, 0, 1)
-    width = mesh.nx * degree + 1
-    offsets = np.asarray([j * width + i for j in range(degree + 1) for i in range(degree + 1)])
-    ids = degree * (indices[:, 1] * width + indices[:, 0])[:, None] + offsets
-    basis, gradients = qk_basis(degree, reference)
-    local = coefficients[ids]
-    return np.einsum("qi,qi->q", basis, local), np.einsum(
-        "qi,qia->qa", local, gradients / mesh.spacing
-    )
-
-def evaluate_broken_qk(
-    macro: CartesianMacroMesh,
-    locals_: tuple[CartesianMacroMesh, ...],
-    degree: int,
-    coefficients: tuple[Array, ...],
-    points: Array,
-) -> tuple[Array, Array]:
-    """Evaluate broken macrocell coefficients without blending their interfaces."""
-    coordinates = (points - macro.points[0]) / macro.spacing
-    indices = np.clip(np.floor(coordinates).astype(int), 0, [macro.nx - 1, int(macro.ny) - 1])
-    owners = indices[:, 1] * macro.nx + indices[:, 0]
-    pressure, gradient = np.empty(len(points)), np.empty((len(points), 2))
-    for cell in np.unique(owners):
-        selected = owners == cell
-        pressure[selected], gradient[selected] = evaluate_qk(
-            locals_[cell], degree, coefficients[cell], points[selected]
-        )
-    return pressure, gradient
-```
-
-
-```python
-provider = DarcyLocalProvider(macro, skeleton, data,
-                              local_degree, local_refinement, 7)
+provider = DarcyLocalProvider(macro, skeleton, data, local_degree, local_refinement, 7)
 boundary, fixed = boundary_data(skeleton, data.pressure, order=7)
 hierarchy = MeshHierarchy(
     macro, tuple(macro.submesh(cell, local_refinement) for cell in range(len(macro.cells)))
 )
 interface = bind_interface(skeleton, convention="normal")
 problem = bind_problem(
-    hierarchy, interface, provider,
+    hierarchy,
+    interface,
+    provider,
     global_equation=lambda global_problem: Equation(0, global_problem.trace_load(-boundary)),
-    retained=1, fixed=fixed,
+    retained=1,
+    fixed=fixed,
 )
 system = assemble(problem, execution=ExecutionConfig("serial", native_threads=1))
 solution = system.solve()
@@ -369,11 +319,14 @@ pressure_fields = solution.field("pressure")
 local_meshes = tuple(field.mesh for field in pressure_fields)
 mhm_fields = tuple(field.portable_coefficients for field in pressure_fields)
 mhm_evaluator = partial(evaluate_bound_pressure, macro, pressure_fields)
-print({"global_unknowns": system.matrix.shape[0],
-       "largest_local_unknowns": max(len(v) for v in solution.fields),
-       "original_equations_relative_residual": solution.raw_residual})
+print(
+    {
+        "global_unknowns": system.matrix.shape[0],
+        "largest_local_unknowns": max(len(v) for v in solution.fields),
+        "original_equations_relative_residual": solution.raw_residual,
+    }
+)
 # Named fields carry their mesh and executed basis; no index map is needed to evaluate.
-pressure_fields = solution.field("pressure")
 first_point = macro.points[macro.cells[0]].mean(axis=0, keepdims=True)
 print("First macrocell pressure at its center:", pressure_fields[0].evaluate(first_point))
 
@@ -390,17 +343,23 @@ The main formulation above is the executed UFL weak form. Once its operator and 
 
 
 ```python
-declared=problem.local_provider(0)
-fine,mapping=declared.metadata
-ufl_a=compile_form(declared.a)
-ufl_load=compile_form(declared.L,(len(mapping),))
-ready_a,_,ready_load=quadrilateral_operators(fine,local_degree,
-    permeability=data.permeability,source=data.source,order=provider.quadrature_order)
-operator_defect=np.max(np.abs((ufl_a[mapping][:,mapping]-ready_a).data),initial=0.)
-load_defect=float(np.max(np.abs(ufl_load[mapping]-ready_load),initial=0.))
-print({"UFL_vs_ready_operator_max":float(operator_defect),"UFL_vs_ready_source_max":load_defect})
-assert operator_defect<1e-10*max(1.,float(np.max(np.abs(ready_a.data))))
-assert load_defect<1e-10*max(1.,float(np.max(np.abs(ready_load))))
+declared = problem.local_provider(0)
+fine, mapping = declared.metadata
+ufl_a = compile_form(declared.a)
+ufl_load = compile_form(declared.L, (len(mapping),))
+ready_a, _, ready_load = quadrilateral_operators(
+    fine,
+    local_degree,
+    permeability=data.permeability,
+    source=data.source,
+    order=provider.quadrature_order,
+)
+operator_defect = np.max(np.abs((ufl_a[mapping][:, mapping] - ready_a).data), initial=0.0)
+load_defect = float(np.max(np.abs(ufl_load[mapping] - ready_load), initial=0.0))
+print({"UFL_vs_ready_operator_max": float(operator_defect), "UFL_vs_ready_source_max": load_defect})
+assert operator_defect < 1e-10 * max(1.0, float(np.max(np.abs(ready_a.data))))
+assert load_defect < 1e-10 * max(1.0, float(np.max(np.abs(ready_load))))
+
 ```
 
 ```text
@@ -434,96 +393,29 @@ The baseline is assembled independently as a different classical discretization,
 
 
 ```python
-def dirichlet_solve(matrix: Any, load: Array, dofs: NDArray[np.int64], values: Array) -> Array:
-    """Lift strong Dirichlet values and solve the remaining classical equations."""
-    operator=sparse.csc_matrix(matrix)
-    coefficients=np.zeros(len(load))
-    coefficients[dofs]=values
-    free=np.setdiff1d(np.arange(len(load)),dofs)
-    forcing=load[free]-operator[free][:,dofs]@coefficients[dofs]
-    coefficients[free]=solve_linear(operator[free][:,free],forcing)
-    return coefficients
-
-def grid_quadrature(
-    bounds: tuple[float, float, float, float], shape: tuple[int, int], order: int = 5
-) -> tuple[Array, Array]:
-    """Return Gauss points and physical weights on an explicitly resolved grid.
-
-    The caller chooses a common grid resolving every compared finite-element
-    interface and material pixel; the function never infers hidden jumps.
-    """
-    grid = CartesianMacroMesh(*shape, bounds)
-    reference, unit_weights = quadrilateral_quadrature(order)
-    origins = grid.points[grid.cells[:, 0]]
-    return (origins[:, None] + reference * grid.spacing).reshape(-1, 2), np.tile(
-        unit_weights * np.prod(grid.spacing), len(grid.cells)
-    )
-
-def physical_errors(
-    first: Evaluator,
-    second: Evaluator,
-    permeability: Any,
-    points: Array,
-    weights: Array,
-    *,
-    batch_size: int = 65536,
-) -> dict[str, float]:
-    """Integrate L2 pressure, L2 physical flux and K-inverse flux-energy differences.
-
-    Fields are evaluated directly in their executed coefficient bases on the
-    same quadrature, never through image samples or averaged gradients.
-    """
-    totals = np.zeros(6)
-    for begin in range(0, len(points), batch_size):
-        selected = slice(begin, begin + batch_size)
-        x, w = points[selected], weights[selected]
-        p, grad = first(x)
-        pref, gradref = second(x)
-        k = tensor_values(permeability, x)
-        dq = -np.einsum("qab,qb->qa", k, grad - gradref)
-        qref = -np.einsum("qab,qb->qa", k, gradref)
-        totals += np.asarray(
-            [
-                w @ (p - pref) ** 2,
-                w @ np.sum(dq**2, axis=1),
-                w @ np.einsum("qa,qa->q", dq, np.linalg.solve(k, dq[..., None])[..., 0]),
-                w @ pref**2,
-                w @ np.sum(qref**2, axis=1),
-                w @ np.einsum("qa,qa->q", qref, np.linalg.solve(k, qref[..., None])[..., 0]),
-            ]
-        )
-    values = np.sqrt(totals)
-    return dict(
-        pressure_L2=float(values[0]),
-        flux_L2=float(values[1]),
-        flux_energy=float(values[2]),
-        pressure_relative=float(values[0] / values[3]),
-        flux_relative=float(values[1] / values[4]),
-        energy_relative=float(values[2] / values[5]),
-    )
-```
-
-
-```python
 reference_rows, reference_evaluators = [], []
 error_points, error_weights = grid_quadrature(macro.bounds, (128, 128), order=7)
 for n in (32, 64, 128):
     fine = CartesianMacroMesh(n, n)
-    domain,space,mapping=native_scalar_space(fine,2)
-    p,v=ufl.TrialFunction(space),ufl.TestFunction(space)
-    K,f=ufl_coefficient_source(domain,data)
-    dx=ufl.Measure("dx",domain=domain,metadata={"quadrature_degree":13})
-    a_cg=compile_form(ufl.inner(K*ufl.grad(p),ufl.grad(v))*dx)
-    load_cg=compile_form(f*v*dx)
+    domain, space, mapping = native_scalar_space(fine, 2)
+    p, v = ufl.TrialFunction(space), ufl.TestFunction(space)
+    K, f = ufl_coefficient_source(domain, data)
+    dx = ufl.Measure("dx", domain=domain, metadata={"quadrature_degree": 13})
+    a_cg = compile_form(ufl.inner(K * ufl.grad(p), ufl.grad(v)) * dx)
+    load_cg = compile_form(f * v * dx)
     _, nodes = qk_space(fine, 2)
     exterior = np.flatnonzero(np.any(np.isclose(nodes, 0) | np.isclose(nodes, 1), axis=1))
-    coefficients = dirichlet_solve(a_cg, load_cg, mapping[exterior], data.pressure(nodes[exterior]))[mapping]
+    coefficients = dirichlet_solve(
+        a_cg, load_cg, mapping[exterior], data.pressure(nodes[exterior])
+    )[mapping]
     evaluator = partial(evaluate_qk, fine, 2, coefficients)
     reference_evaluators.append(evaluator)
     errors = physical_errors(evaluator, exact, data.permeability, error_points, error_weights)
     reference_rows.append({"n": n, "unknowns": len(nodes), **errors})
 reference_rows
+
 ```
+
 
 
 
@@ -558,21 +450,24 @@ reference_rows
 
 
 
+
 ```python
 reference_refinement = [
     physical_errors(first, second, data.permeability, error_points, error_weights)
-    for first, second in zip(reference_evaluators[:-1], reference_evaluators[1:])]
+    for first, second in zip(reference_evaluators[:-1], reference_evaluators[1:])
+]
 print("Successive reference differences:", reference_refinement)
 reference = reference_evaluators[-1]
-comparison = physical_errors(mhm_evaluator, reference, data.permeability,
-                             error_points, error_weights)
-exact_errors = physical_errors(mhm_evaluator, exact, data.permeability,
-                              error_points, error_weights)
+comparison = physical_errors(
+    mhm_evaluator, reference, data.permeability, error_points, error_weights
+)
+exact_errors = physical_errors(mhm_evaluator, exact, data.permeability, error_points, error_weights)
 print("MHM versus fine CG:", comparison)
 print("MHM versus exact solution:", exact_errors)
-# A solução exata mantém a conclusão independente da incerteza da referência.
+# The exact solution keeps this conclusion independent of reference uncertainty.
 assert reference_rows[-1]["flux_L2"] < reference_rows[0]["flux_L2"]
 assert reference_rows[-1]["pressure_L2"] < reference_rows[0]["pressure_L2"]
+
 ```
 
 ```text
@@ -592,102 +487,19 @@ The permeability tensor has two distinct diagonal components: $K_{xx}$ controls 
 
 
 ```python
-def rectangle_panel(
-    macro: CartesianMacroMesh,
-    evaluator: Evaluator,
-    *,
-    quantity: str = "pressure",
-    permeability: Any = 1.0,
-    points_per_side: int = 21,
-) -> tuple[Array, NDArray[np.int64], Array]:
-    """Sample each macro rectangle independently, retaining two interface limits.
-
-    Evaluation points approach boundary nodes from their macrocell interior.
-    Plot coordinates stay on the true interfaces. ``quantity`` is pressure,
-    permeability_xx, permeability_yy or physical Darcy flux magnitude.
-    """
-    axis = np.linspace(0, 1, points_per_side)
-    x, y = np.meshgrid(axis, axis)
-    reference = np.column_stack((x.ravel(), y.ravel()))
-    indices = np.arange(points_per_side**2).reshape(points_per_side, points_per_side)
-    a, b = indices[:-1, :-1].ravel(), indices[:-1, 1:].ravel()
-    c, d = indices[1:, 1:].ravel(), indices[1:, :-1].ravel()
-    base = np.vstack((np.column_stack((a, b, c)), np.column_stack((a, c, d))))
-    points, triangles, values = [], [], []
-    for cell, vertices in enumerate(macro.cells):
-        lower = macro.points[vertices[0]]
-        physical = lower + reference * macro.spacing
-        center = macro.points[vertices].mean(axis=0)
-        inside = np.nextafter(physical, center)
-        if quantity in {"permeability_xx", "permeability_yy"}:
-            component = 0 if quantity == "permeability_xx" else 1
-            value = tensor_values(permeability, inside)[:, component, component]
-        else:
-            pressure, gradient = evaluator(inside)
-            if quantity == "pressure":
-                value = pressure
-            elif quantity == "flux_magnitude":
-                flux = -np.einsum("qab,qb->qa", tensor_values(permeability, inside), gradient)
-                value = np.linalg.norm(flux, axis=1)
-            else:
-                raise ValueError("unknown Darcy plot quantity")
-        points.append(physical)
-        triangles.append(base + cell * len(reference))
-        values.append(value)
-    return np.vstack(points), np.vstack(triangles), np.concatenate(values)
-
-def plot_field_panels(
-    macro_mesh: Any,
-    panels: Mapping[str, tuple[np.ndarray, np.ndarray, np.ndarray]],
-    *,
-    figsize: tuple[float, float] | None = None,
-    color_limits: Mapping[str, tuple[float, float]] | None = None,
-) -> Any:
-    """Plot independent nodal scalar panels and their actual macrofaces.
-
-    Each panel supplies physical points, its explicit triangular connectivity
-    and values. Duplicate coordinates are retained, so broken one-sided fields
-    are never averaged across a macroface. Each field has its own colorbar.
-    ``color_limits`` optionally sets physical minimum/maximum values by label,
-    allowing related fields to use matching scales without merging colorbars.
-    """
-    import matplotlib.pyplot as plt
-    from matplotlib.tri import Triangulation
-
-    count = len(panels)
-    if not count:
-        raise ValueError("provide at least one field panel")
-    columns = min(3, count)
-    rows = (count + columns - 1) // columns
-    size = figsize or (4.1 * columns, 3.6 * rows)
-    figure, axes = plt.subplots(rows, columns, figsize=size, squeeze=False, layout="constrained")
-    for axis, (label, (points, triangles, values)) in zip(axes.flat, panels.items(), strict=False):
-        coordinates = np.asarray(points)
-        triangulation = Triangulation(*coordinates.T, triangles)
-        limits = {}
-        if color_limits is not None and label in color_limits:
-            lower, upper = color_limits[label]
-            if not np.isfinite([lower, upper]).all() or lower >= upper:
-                raise ValueError("color limits must be finite and increasing")
-            limits = {"vmin": lower, "vmax": upper}
-        artist = axis.tripcolor(triangulation, values, shading="gouraud", rasterized=True, **limits)
-        axis.add_collection(LineCollection(macro_mesh.points[macro_mesh.faces], colors="0.2", linewidths=0.65, zorder=3))
-        axis.set(title=label, xlabel="x", ylabel="y", aspect="equal")
-        figure.colorbar(artist, ax=axis, shrink=0.87, pad=0.025)
-    for axis in list(axes.flat)[count:]:
-        axis.set_visible(False)
-    return figure
-```
-
-
-```python
 permeability_panels = {
-    "Permeability $K_{xx}$": rectangle_panel(macro, exact, quantity="permeability_xx", permeability=data.permeability),
-    "Permeability $K_{yy}$": rectangle_panel(macro, exact, quantity="permeability_yy", permeability=data.permeability),
+    "Permeability $K_{xx}$": rectangle_panel(
+        macro, exact, quantity="permeability_xx", permeability=data.permeability
+    ),
+    "Permeability $K_{yy}$": rectangle_panel(
+        macro, exact, quantity="permeability_yy", permeability=data.permeability
+    ),
 }
 permeability_bounds = (np.exp(-data.amplitude), np.exp(data.amplitude))
 plot_field_panels(
-    macro, permeability_panels, figsize=(12, 4.8),
+    macro,
+    permeability_panels,
+    figsize=(12, 4.8),
     color_limits={label: permeability_bounds for label in permeability_panels},
 )
 plt.show()
@@ -696,22 +508,29 @@ panels = {
     "Analytical pressure": rectangle_panel(macro, exact),
     "MHM pressure": rectangle_panel(macro, mhm_evaluator),
     "Fine CG pressure": rectangle_panel(macro, reference),
-    "Analytical Darcy flux magnitude": rectangle_panel(macro, exact, quantity="flux_magnitude", permeability=data.permeability),
-    "MHM Darcy flux magnitude": rectangle_panel(macro, mhm_evaluator, quantity="flux_magnitude", permeability=data.permeability),
-    "Fine CG Darcy flux magnitude": rectangle_panel(macro, reference, quantity="flux_magnitude", permeability=data.permeability),
+    "Analytical Darcy flux magnitude": rectangle_panel(
+        macro, exact, quantity="flux_magnitude", permeability=data.permeability
+    ),
+    "MHM Darcy flux magnitude": rectangle_panel(
+        macro, mhm_evaluator, quantity="flux_magnitude", permeability=data.permeability
+    ),
+    "Fine CG Darcy flux magnitude": rectangle_panel(
+        macro, reference, quantity="flux_magnitude", permeability=data.permeability
+    ),
 }
 plot_field_panels(macro, panels, figsize=(15, 9))
 plt.show()
+
 ```
 
 
 
-[![Figure 1 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_20_0.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_20_0.png)
+[![Figure 1 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_17_0.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_17_0.png)
 
 
 
 
-[![Figure 2 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_20_1.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_20_1.png)
+[![Figure 2 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_17_1.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_17_1.png)
 
 
 ## 7. Separate macro size, local size and macroface resolution
@@ -726,76 +545,62 @@ The driver below repeats the same visible local/global declarations. Successive 
 
 
 ```python
-def observed_rates(mesh_sizes: Any, errors: Any) -> np.ndarray:
-    """Return log(error[i]/error[i+1])/log(H[i]/H[i+1]) without assumed orders."""
-    h, e = np.asarray(mesh_sizes, dtype=float), np.asarray(errors, dtype=float)
-    if h.ndim != 1 or e.shape != h.shape or len(h) < 2:
-        raise ValueError("provide at least two matching refinement levels")
-    if np.any(h <= 0) or np.any(np.diff(h) >= 0) or np.any(e <= 0):
-        raise ValueError("mesh sizes must decrease and measured errors must be positive")
-    return np.log(e[:-1] / e[1:]) / np.log(h[:-1] / h[1:])
-
-def plot_convergence(mesh_sizes: Any, errors: Mapping[str, Any]) -> Any:
-    """Plot actual errors and observed successive rates in separate readable axes."""
-    import matplotlib.pyplot as plt
-    from matplotlib.ticker import NullLocator
-
-    h = np.asarray(mesh_sizes, dtype=float)
-    figure, axes = plt.subplots(1, 2, figsize=(10, 3.5), layout="constrained")
-    for label, values in errors.items():
-        e = np.asarray(values, dtype=float)
-        axes[0].loglog(h, e, "o-", label=label)
-        axes[1].semilogx(h[1:], observed_rates(h, e), "o-", label=label)
-    axes[0].set(xlabel="H", ylabel="Measured error")
-    axes[1].set(xlabel="H", ylabel="Observed rate")
-    for axis, locations in zip(axes, (h, h[1:]), strict=True):
-        axis.set_xticks(locations, [f"{value:.4g}" for value in locations])
-        axis.xaxis.set_minor_locator(NullLocator())
-        axis.invert_xaxis()
-        axis.grid(True, which="both", alpha=0.25)
-        axis.legend(fontsize=8)
-    return figure
-```
-
-
-```python
 def run_discretization(n: int, refinement: int, segments: int) -> dict:
     """Repeat the declared local/global equations for one explicit resolution."""
     grid = CartesianMacroMesh(n, n)
-    trace = SkeletonSpace(grid, tuple(FaceSpace.uniform(1, segments, continuous=True)
-                                     for _ in grid.faces))
+    trace = SkeletonSpace(
+        grid, tuple(FaceSpace.uniform(1, segments, continuous=True) for _ in grid.faces)
+    )
     local = DarcyLocalProvider(grid, trace, data, 2, refinement, 7)
     boundary, fixed = boundary_data(trace, data.pressure, order=7)
     hierarchy = MeshHierarchy(
         grid, tuple(grid.submesh(cell, refinement) for cell in range(len(grid.cells)))
     )
     declared = bind_problem(
-        hierarchy, bind_interface(trace, convention="normal"), local,
+        hierarchy,
+        bind_interface(trace, convention="normal"),
+        local,
         global_equation=lambda global_problem: Equation(0, global_problem.trace_load(-boundary)),
-        retained=1, fixed=fixed,
+        retained=1,
+        fixed=fixed,
     )
     assembled = assemble(declared, execution=ExecutionConfig("serial", native_threads=1))
     resolved = assembled.solve()
     evaluate = partial(evaluate_bound_pressure, grid, resolved.field("pressure"))
-    return {"H": 1/n, "h": 1/(n*refinement), "segments": segments,
-            "trace_segment_length": 1/(n*segments),
-            "global_unknowns": assembled.matrix.shape[0],
-            "residual": resolved.raw_residual,
-            **physical_errors(evaluate, exact, data.permeability, error_points, error_weights)}
+    return {
+        "H": 1 / n,
+        "h": 1 / (n * refinement),
+        "segments": segments,
+        "trace_segment_length": 1 / (n * segments),
+        "global_unknowns": assembled.matrix.shape[0],
+        "residual": resolved.raw_residual,
+        **physical_errors(evaluate, exact, data.permeability, error_points, error_weights),
+    }
 
-macro_rows = [run_discretization(n, 64//n, 2) for n in (2, 4, 8)]
+
+macro_rows = [run_discretization(n, 64 // n, 2) for n in (2, 4, 8)]
 local_rows = [run_discretization(4, r, 2) for r in (2, 4, 8, 16)]
 trace_rows = [run_discretization(4, 16, s) for s in (1, 2, 4)]
-for name, rows, variable in (("H", macro_rows, "H"), ("h", local_rows, "h"),
-                             ("macroface segment", trace_rows, "trace_segment_length")):
+for name, rows, variable in (
+    ("H", macro_rows, "H"),
+    ("h", local_rows, "h"),
+    ("macroface segment", trace_rows, "trace_segment_length"),
+):
     scales = [row[variable] for row in rows]
     print(name, rows)
     print("Observed pressure rates:", observed_rates(scales, [r["pressure_L2"] for r in rows]))
     print("Observed flux rates:", observed_rates(scales, [r["flux_L2"] for r in rows]))
-    figure=plot_convergence(scales, {"pressure L2": [r["pressure_L2"] for r in rows],
-                             "Darcy flux L2": [r["flux_L2"] for r in rows]})
-    for axis in figure.axes: axis.set_xlabel(name)
+    figure = plot_convergence(
+        scales,
+        {
+            "pressure L2": [r["pressure_L2"] for r in rows],
+            "Darcy flux L2": [r["flux_L2"] for r in rows],
+        },
+    )
+    for axis in figure.axes:
+        axis.set_xlabel(name)
     plt.show()
+
 ```
 
 ```text
@@ -806,7 +611,7 @@ Observed flux rates: [1.92657722 2.05278112]
 
 
 
-[![Figure 3 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_23_1.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_23_1.png)
+[![Figure 3 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_19_1.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_19_1.png)
 
 
 ```text
@@ -817,7 +622,7 @@ Observed flux rates: [2.74633606 0.00634591 0.00575373]
 
 
 
-[![Figure 4 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_23_3.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_23_3.png)
+[![Figure 4 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_19_3.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_19_3.png)
 
 
 ```text
@@ -828,7 +633,7 @@ Observed flux rates: [2.35182789 2.55449901]
 
 
 
-[![Figure 5 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_23_5.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_23_5.png)
+[![Figure 5 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_19_5.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_19_5.png)
 
 
 ## 8. Interpret accuracy and cost with their physical meaning
@@ -849,7 +654,7 @@ The smooth coefficient gives a controlled analytical study. The following SPE10 
 
 ```bash
 pixi install --locked -e introduction
-pixi run --locked -e introduction notebooks-run introduction/darcy_multiscale_convergence.ipynb --timeout 3600
+pixi run --locked -e introduction notebooks-run introduction/darcy_multiscale_convergence.ipynb --timeout 7200
 ```
 
 The runner writes the executed copy to `build/notebooks/introduction/`. The figures and numerical outputs on this page come from that execution. Timings describe the recorded hardware and solver settings; rerun performance examples on an idle machine to measure your own environment.

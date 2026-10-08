@@ -7,6 +7,14 @@ classical conforming mixed method, without a macro-skeleton restriction.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -21,7 +29,7 @@ from examples.solve_mapped_oscillatory_well import OUTPUT, ROOT, OscillatoryWell
 from pymhm.fem.hdiv.mapped import mapped_rt_basis
 from pymhm.io.provenance import current_source_manifest
 from pymhm.linalg.linear import factorize
-from pymhm.meshes.hexahedron import HexMesh, _geometry, cube_quadrature
+from pymhm.meshes.hexahedron import HexMesh, cube_quadrature, hexahedral_mapping
 
 FLUX_MODES = np.array([0, 2, 4, 6, 8, 10, 12, 14, 24, 26, 28, 30])
 PRESSURE_MODES = np.array([0, 2, 4, 6])
@@ -61,7 +69,7 @@ def assemble(mesh: HexMesh, data: OscillatoryWellData, order: int) -> tuple:
     moments = np.empty((count, 4))
     for start in range(0, count, 128):
         stop = min(start + 128, count)
-        physical, jacobian, determinant = _geometry(vertices[start:stop], points)
+        physical, jacobian, determinant = hexahedral_mapping(vertices[start:stop], points)
         basis = np.einsum("tqab,qib->tqia", jacobian, reference) / determinant[..., None, None]
         tensor = data.tensor(physical.reshape(-1, 3)).reshape(*determinant.shape, 3, 3)
         # This experiment has the explicitly diagonal OscillatoryWellData tensor.
@@ -93,7 +101,7 @@ def assemble(mesh: HexMesh, data: OscillatoryWellData, order: int) -> tuple:
         axis, end = divmod(side, 2)
         ref = np.empty((len(uv), 3))
         ref[:, axis], ref[:, np.arange(3) != axis] = end, uv
-        physical = _geometry(vertices[cell : cell + 1], ref)[0][0]
+        physical = hexahedral_mapping(vertices[cell : cell + 1], ref)[0][0]
         boundary = -face_basis.T @ (face_weights * data.pressure(physical))
         load[[mapping[int(4 * face + mode)] for mode in (0, 2)]] += boundary
     operator = sparse.bmat([[mass, -derivative.T], [-derivative, None]], format="csr")

@@ -7,10 +7,29 @@ from dataclasses import dataclass
 from hashlib import sha256
 from typing import Any
 
+import numpy as np
 from scipy import sparse
 
 from pymhm.core.spaces import validate_trace_binding
 from pymhm.core.validation import FloatArray, positive_int, real_array
+
+
+def _immutable_matrix(value: Any, name: str) -> Any:
+    """Own finite real dense/sparse reconstruction coordinates in immutable storage."""
+    if sparse.issparse(value):
+        matrix = sparse.csr_matrix(value, copy=True)
+        matrix.data = real_array(matrix.data, name)
+        matrix.sum_duplicates()
+        matrix.eliminate_zeros()
+        matrix.sort_indices()
+        for array in (matrix.data, matrix.indices, matrix.indptr):
+            array.setflags(write=False)
+    else:
+        matrix = real_array(value, name)
+        matrix.setflags(write=False)
+    if matrix.ndim != 2:
+        raise ValueError(f"{name} must be a matrix")
+    return matrix
 
 
 @dataclass(frozen=True)
@@ -22,6 +41,10 @@ class FieldDefinition:
     declared basis_id identifies the coordinate convention. reconstruction maps
     local coefficients to the evaluator's coefficients. Without an evaluator or
     descriptor, the field supports coefficient access but no spatial evaluation.
+    The reconstructed coefficients are R*local + T*global_trace[trace_dofs] +
+    offset. Every trace orientation and basis change is explicit in T; no
+    incident normal sign or local binding is inferred. All maps and the affine
+    offset form part of the archived coefficient and basis-digest contract.
     """
 
     name: str
@@ -31,6 +54,9 @@ class FieldDefinition:
     reconstruction: Any = None
     basis_id: str = ""
     gradient_evaluator: Callable[..., Any] | None = None
+    trace_reconstruction: Any = None
+    trace_dofs: Any = None
+    offset: Any = None
 
     def __post_init__(self) -> None:
         """Own a reconstruction map and reject ambiguous evaluation conventions."""
@@ -51,39 +77,96 @@ class FieldDefinition:
         ) and not self.basis_id:
             raise ValueError("custom field evaluation requires a declared basis_id")
         if self.reconstruction is not None:
-            matrix: Any
-            if sparse.issparse(self.reconstruction):
-                matrix = sparse.csr_matrix(self.reconstruction, copy=True)
-                matrix.data = real_array(matrix.data, "field reconstruction")
-                matrix.sum_duplicates()
-                matrix.eliminate_zeros()
-                matrix.sort_indices()
-                for array in (matrix.data, matrix.indices, matrix.indptr):
-                    array.setflags(write=False)
-            else:
-                matrix = real_array(self.reconstruction, "field reconstruction")
-                matrix.setflags(write=False)
-            if matrix.ndim != 2:
-                raise ValueError("field reconstruction must be a matrix")
+            matrix = _immutable_matrix(self.reconstruction, "field reconstruction")
             if self.descriptor is not None and matrix.shape[0] != self.descriptor.size:
                 raise ValueError("field reconstruction must produce the descriptor's coordinates")
             object.__setattr__(self, "reconstruction", matrix)
+        if (self.trace_reconstruction is None) != (self.trace_dofs is None):
+            raise ValueError(
+                "trace reconstruction and explicit global trace coordinates are paired"
+            )
+        if self.trace_reconstruction is not None:
+            matrix = _immutable_matrix(self.trace_reconstruction, "field trace reconstruction")
+            indices = np.asarray(self.trace_dofs)
+            if indices.size == 0 and indices.ndim == 1:
+                indices = indices.astype(np.int64)
+            if (
+                indices.ndim != 1
+                or indices.dtype.kind not in "iu"
+                or np.any(indices < 0)
+                or len(np.unique(indices)) != len(indices)
+                or np.any(indices > np.iinfo(np.int64).max)
+            ):
+                raise ValueError("field trace coordinates must be distinct nonnegative integers")
+            indices = np.array(indices, dtype=np.int64, copy=True)
+            indices.setflags(write=False)
+            if matrix.shape[1] != len(indices):
+                raise ValueError(
+                    "field trace reconstruction must match its global trace coordinates"
+                )
+            width = (
+                self.reconstruction.shape[0]
+                if self.reconstruction is not None
+                else self.descriptor.size
+                if self.descriptor is not None
+                else None
+            )
+            if width is not None and matrix.shape[0] != width:
+                raise ValueError(
+                    "field local and trace reconstructions must produce the same coordinates"
+                )
+            object.__setattr__(self, "trace_reconstruction", matrix)
+            object.__setattr__(self, "trace_dofs", indices)
+        if self.offset is not None:
+            offset = real_array(self.offset, "field affine offset")
+            if offset.ndim != 1:
+                raise ValueError("field affine offset must be a vector")
+            width = (
+                self.reconstruction.shape[0]
+                if self.reconstruction is not None
+                else self.trace_reconstruction.shape[0]
+                if self.trace_reconstruction is not None
+                else self.descriptor.size
+                if self.descriptor is not None
+                else None
+            )
+            if width is not None and len(offset) != width:
+                raise ValueError("field affine offset must match its reconstructed coordinates")
+            offset.setflags(write=False)
+            object.__setattr__(self, "offset", offset)
+
+    @property
+    def basis_matrix(self) -> FloatArray:
+        """Return an owned read-only copy of a declared single polynomial matrix.
+
+        Nodal/native and modal evaluators declare this coordinate matrix. A
+        custom or composite Piola basis may require several matrices and then
+        raises TypeError. Archive this entire definition with its digest to
+        retain cell maps, orientation and reconstruction as well as the matrix.
+        """
+        owner = self.descriptor if self.descriptor is not None else self.evaluator
+        matrix = getattr(owner, "basis_matrix", None)
+        if matrix is None:
+            raise TypeError("this field has no declared single basis matrix")
+        return _immutable_matrix(matrix, "field basis matrix")
 
     @property
     def basis_digest(self) -> str:
         """Identify the executed descriptor and any additional reconstruction map."""
         digest = sha256(self.basis_id.encode())
         digest.update(getattr(self.descriptor, "basis_digest", "").encode())
-        if self.reconstruction is not None:
-            digest.update(str(self.reconstruction.shape).encode())
+        for name, value in (
+            ("", self.reconstruction),
+            ("trace_reconstruction", self.trace_reconstruction),
+            ("trace_dofs", self.trace_dofs),
+            ("offset", self.offset),
+        ):
+            if value is None:
+                continue
+            digest.update(name.encode())
+            digest.update(str(value.shape).encode())
             arrays = (
-                (
-                    self.reconstruction.data,
-                    self.reconstruction.indices,
-                    self.reconstruction.indptr,
-                )
-                if sparse.issparse(self.reconstruction)
-                else (self.reconstruction,)
+                (value.data, value.indices, value.indptr) if sparse.issparse(value) else (value,)
             )
             for array in arrays:
                 digest.update(array.dtype.str.encode())
@@ -100,6 +183,9 @@ class FieldDefinition:
             self.reconstruction,
             self.basis_id,
             self.gradient_evaluator,
+            self.trace_reconstruction,
+            self.trace_dofs,
+            self.offset,
         )
 
 
@@ -235,11 +321,29 @@ def evaluate_field_and_gradient(
     )
 
 
-def solution_field(solution: Any, name: str) -> tuple[DiscreteField, ...]:
-    """Recover a named field in deterministic macrocell order from stored definitions."""
+def solution_field(
+    solution: Any, name: str, *, recursive: bool = False
+) -> tuple[DiscreteField, ...]:
+    """Recover named fields in deterministic macrocell order.
+
+    With recursive=True, a cell without its own definition delegates to its
+    recovered child solution. Cells declaring the field are visited once; their
+    children are not also returned. Each reconstruction uses its own level's
+    trace vector, retaining one-sided values and executed orientations.
+    """
+    if not isinstance(recursive, bool):
+        raise TypeError("recursive must be boolean")
     result: list[DiscreteField] = []
-    for definitions, values in zip(solution.field_data, solution.fields, strict=True):
+    for index, (definitions, values) in enumerate(
+        zip(solution.field_data, solution.fields, strict=True)
+    ):
         matches = [definition for definition in definitions if definition.name == name]
+        if recursive and not matches:
+            children = getattr(solution, "children", ())
+            child = children[index] if index < len(children) else None
+            if child is not None:
+                result.extend(solution_field(child, name, recursive=True))
+                continue
         if len(matches) != 1:
             raise KeyError(f"field {name!r} must be declared once in each local context")
         definition = matches[0]
@@ -248,6 +352,19 @@ def solution_field(solution: Any, name: str) -> tuple[DiscreteField, ...]:
             if definition.reconstruction.shape[1] != len(values):
                 raise ValueError("field reconstruction does not match the executed local vector")
             coefficients = definition.reconstruction @ values
+        if definition.trace_reconstruction is not None:
+            if np.any(definition.trace_dofs >= len(solution.trace)):
+                raise ValueError("field trace coordinates must belong to the executed global trace")
+            coefficients = (
+                coefficients
+                + definition.trace_reconstruction @ solution.trace[definition.trace_dofs]
+            )
+        if definition.offset is not None:
+            if definition.offset.shape != coefficients.shape:
+                raise ValueError(
+                    "field affine offset must match the executed reconstructed coordinates"
+                )
+            coefficients = coefficients + definition.offset
         result.append(DiscreteField(definition, coefficients))
     if not result:
         raise KeyError(f"field {name!r} is not declared")

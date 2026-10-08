@@ -7,6 +7,14 @@ not reproduce an unidentified historical mesh or establish uniform inf-sup.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 import shutil
@@ -28,11 +36,13 @@ from examples.core_elasticity_field_archive import (
     replay,
     write_field,
 )
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed
+from examples.formulations.application import (
+    weak_stress_elasticity as solve_elasticity_mixed_polygons,
+)
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_tensor_rt
 from examples.solve_core_extensions import polygon_grid
 from examples.transport_checkpoints import write_progress
-from pymhm._legacy.models.elasticity.stress import solve_elasticity_mixed
-from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
-from pymhm._legacy.models.geometry import solve_elasticity_mixed_polygons
 from pymhm.io.provenance import current_source_manifest, file_digest
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.meshes.triangle import TriangleMesh

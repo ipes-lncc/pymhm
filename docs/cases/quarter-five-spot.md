@@ -364,12 +364,12 @@ original-equation residuals accompany each archived case.
 ## Reproduction
 
 ```bash
-pixi run -e notebooks python examples/plot_quarter_spot.py
+pixi run --locked -e notebooks python -m examples.plot_quarter_spot
 pixi run --locked -e test-core python -m examples.solve_quarter_obstacle --refinements 4 8 16 --segments 1 2 --formulations primal mixed --workers 1 --native-threads 1
-pixi run -e notebooks gallery-quarter-elevation
-pixi run -e notebooks gallery-quarter-geometry
-pixi run -e notebooks gallery-quarter-reference
-pixi run -e notebooks gallery-quarter-classical
+pixi run --locked -e notebooks gallery-quarter-elevation
+pixi run --locked -e notebooks gallery-quarter-geometry
+pixi run --locked -e notebooks gallery-quarter-reference
+pixi run --locked -e notebooks gallery-quarter-classical
 ```
 
 The source program reproduces the PyMHM point-well cases and analytical-series

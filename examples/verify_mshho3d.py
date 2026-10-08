@@ -7,6 +7,14 @@ are distinguished from exact-local literature equivalence and its estimates.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 import shutil
@@ -20,13 +28,13 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples import core_extension_data as exact
+from examples.formulations.application import moment_diffusion as solve_mshho_3d
 from examples.mshho3d_field_archive import original_checks, read_field, replay, write_field
 from examples.mshho3d_ideal_p0 import ideal_p0_audit
 from examples.transport_checkpoints import write_progress
 from pymhm.io.provenance import current_source_manifest, file_digest
 from pymhm.meshes.polyhedral import PolyhedralMesh
 from pymhm.meshes.tetrahedron import TetraMesh
-from pymhm.methods.hho_3d import solve_mshho_3d
 
 ROOT = Path(__file__).resolve().parents[1]
 

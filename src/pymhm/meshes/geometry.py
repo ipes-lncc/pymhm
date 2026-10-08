@@ -1,11 +1,58 @@
-"""Oriented surface and geometric-kernel checks for star-shaped polyhedral cells."""
+"""Oriented geometry operations for polygons and star-shaped polyhedral cells."""
 
 from itertools import combinations
 
 import numpy as np
+from numpy.typing import ArrayLike
 from scipy.optimize import linprog
 
-from pymhm.core.validation import FloatArray, IntArray
+from pymhm.core.validation import FloatArray, IntArray, positive_int, real_array
+
+
+def clip_polygon(polygon: ArrayLike, axis: int, level: float, lower: bool) -> FloatArray:
+    """Intersect an ordered convex planar polygon with a closed Cartesian half-plane.
+
+    ``polygon`` contains finite real vertices with shape (n,2), without a
+    repeated closing vertex. ``axis`` is 0 or 1. ``lower=True`` retains
+    coordinate >= level; ``lower=False`` retains coordinate <= level. Output
+    vertices follow the input's clockwise or counterclockwise orientation.
+    An empty intersection has shape (0,2); point/segment intersections and
+    repeated boundary vertices are retained for the caller's measure checks.
+
+    Computation uses binary64 and strict comparisons of represented
+    coordinates. An intersection's clipped coordinate is set exactly to
+    ``level``. No geometric tolerance, vertex merging or grid snapping is
+    inferred; applications requiring those conventions declare them before
+    clipping. Convexity and cyclic ordering are caller hypotheses.
+    """
+    polygon = real_array(polygon, "polygon vertices")
+    axis = positive_int(axis, "axis", 0)
+    if polygon.ndim != 2 or polygon.shape[1] != 2:
+        raise ValueError("polygon vertices must have shape (n,2)")
+    if axis > 1:
+        raise ValueError("axis must be 0 or 1")
+    boundary = real_array(level, "clipping level")
+    if boundary.ndim != 0:
+        raise ValueError("clipping level must be a scalar")
+    level = float(boundary)
+    if not isinstance(lower, (bool, np.bool_)):
+        raise ValueError("lower must be a boolean half-plane selector")
+    if not len(polygon):
+        return polygon
+    vertices = []
+    previous = polygon[-1]
+    previous_inside = previous[axis] >= level if lower else previous[axis] <= level
+    for current in polygon:
+        current_inside = current[axis] >= level if lower else current[axis] <= level
+        if current_inside != previous_inside:
+            fraction = (level - previous[axis]) / (current[axis] - previous[axis])
+            intersection = previous + fraction * (current - previous)
+            intersection[axis] = level
+            vertices.append(intersection)
+        if current_inside:
+            vertices.append(current)
+        previous, previous_inside = current, current_inside
+    return np.asarray(vertices, dtype=float).reshape(-1, 2)
 
 
 def oriented_cell_faces(

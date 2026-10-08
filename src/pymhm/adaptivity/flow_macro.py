@@ -4,19 +4,20 @@ The marking rule follows Algorithm 1 of
 [Araya, Rebolledo and Valentin (2021)](https://doi.org/10.1093/imanum/drz053).
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, Literal
 
 import numpy as np
 
 from pymhm._legacy.models.flow.solver import solve_flow
-from pymhm._legacy.models.vector import VectorSolution
 from pymhm.core.validation import positive_int
 from pymhm.estimators.flow import FlowEstimator, estimate_flow_error
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.meshes.longest_edge import refine_longest_edge
 from pymhm.meshes.refinement import TriangleRefinement, refine_triangles
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.solutions import VectorSolution
 
 
 def mark_flow_cells(estimator: FlowEstimator, theta: float = 0.5) -> np.ndarray:
@@ -58,6 +59,7 @@ def adapt_flow_macros(
     maximum_cells: int = 10000,
     estimator_order: int = 8,
     macro_refiner: Literal["red-green", "longest-edge"] = "red-green",
+    solve_step: Callable[..., VectorSolution] | None = None,
     **solve_options: Any,
 ) -> AdaptiveFlowMacroResult:
     """Apply macro marking with an explicitly selected conforming refinement.
@@ -78,7 +80,15 @@ def adapt_flow_macros(
     traces. ``solve_options`` carries the same physical data to both solver and estimator; advection
     and prescribed tractions are excluded. A cell cap stops before solving an oversized mesh. No
     convergence rate or unit reliability constant is asserted by this adaptive loop.
+    ``solve_step(mesh, skeleton=current_space, **problem_data)`` may assemble
+    the user's own mathematical equations at each state. It receives the actual
+    transferred boundary data and local partitions; its returned physical field
+    must satisfy the estimator's existing hypotheses. The default retains the
+    built-in solve. Callback exceptions propagate without changing refinement.
     """
+    if solve_step is not None and not callable(solve_step):
+        raise TypeError("solve_step must be callable or None")
+    solve = solve_flow if solve_step is None else solve_step
     iterations = positive_int(iterations, "iterations", 0)
     maximum_cells = positive_int(maximum_cells, "maximum_cells")
     if macro_refiner not in ("red-green", "longest-edge"):
@@ -110,7 +120,7 @@ def adapt_flow_macros(
     step = 0
     while True:
         skeleton = SkeletonSpace(mesh, tuple(space for _ in mesh.faces), 2)
-        solution = solve_flow(mesh, skeleton=skeleton, local_refinement=counts, **options)
+        solution = solve(mesh, skeleton=skeleton, local_refinement=counts, **options)
         estimate = estimate_flow_error(
             solution,
             full_dirichlet=True,

@@ -9,80 +9,23 @@ from dataclasses import dataclass
 from typing import Any, Literal, cast
 
 import numpy as np
-from numpy.polynomial.legendre import leggauss
 from scipy import sparse
 
-from pymhm._legacy.models.darcy.primal import DarcySolution, _DarcyLocalFactory
-from pymhm.core.contracts import HybridSolution, LocalAssembly
+from pymhm._legacy.models.darcy.primal import _DarcyLocalFactory
+from pymhm.core.contracts import LocalAssembly
 from pymhm.core.system import HybridSystem
-from pymhm.core.validation import FloatArray, IntArray, positive_int
-from pymhm.fem.reference import legendre_values
+from pymhm.core.validation import positive_int
 from pymhm.fem.scalar.operators import boundary_data
-from pymhm.fem.scalar.triangle import nodal_space
-from pymhm.fem.traces.integration import incident_face_breaks
 from pymhm.fem.traces.interval import SkeletonSpace
-from pymhm.fem.traces.scalar import PreparedScalarTrace, edge_basis, prepare_scalar_trace
+from pymhm.fem.traces.jump import FaceJumpForm as _compat_FacePenalty
+from pymhm.fem.traces.jump import face_jump_form as _penalty
+from pymhm.fem.traces.jump import scalar_trace_matrix as _compat_trace_matrix
 from pymhm.linalg.linear import solve_linear
-from pymhm.materials.evaluation import scalar_values, tensor_values
+from pymhm.materials.evaluation import tensor_values
 from pymhm.meshes.polygonal import PolygonMesh
 from pymhm.meshes.triangle import TriangleMesh
 from pymhm.methods.robin import _ellipticity
-
-
-def _trace_matrix(
-    macro: Any,
-    fine: TriangleMesh,
-    face: int,
-    degree: int,
-    parameter: FloatArray,
-    prepared: PreparedScalarTrace | None = None,
-) -> Any:
-    """Represent one-sided local nodal traces as a sparse evaluation operator."""
-    count = len(nodal_space(fine, degree)[1])
-    rows: list[int] = []
-    columns: list[int] = []
-    values: list[float] = []
-    covered = np.zeros(len(parameter), dtype=bool)
-    prepared = prepare_scalar_trace(macro, fine, face, degree) if prepared is None else prepared
-    for positions, ids, candidates in prepared.selections(parameter):
-        selected = candidates[~covered[candidates]]
-        local = (parameter[selected] - positions[0]) / (positions[1] - positions[0])
-        basis = edge_basis(degree, local)
-        rows.extend(np.repeat(selected, len(ids)))
-        columns.extend(np.tile(ids, len(selected)))
-        values.extend(basis.ravel())
-        covered[selected] = True
-    if not covered.all():
-        raise ValueError("fine boundary does not cover the requested macroface")
-    return sparse.coo_matrix((values, (rows, columns)), shape=(len(parameter), count)).tocsr()
-
-
-@dataclass(frozen=True)
-class _FacePenalty:
-    """Common face quadrature, signed jumps and projected Dirichlet moments."""
-
-    face: int
-    parameter: FloatArray
-    weights: FloatArray
-    coefficient: float
-    indices: IntArray
-    jump: FloatArray
-    source_jump: FloatArray
-    prescribed: FloatArray
-    breaks: FloatArray
-    projection: FloatArray
-    sides: tuple[tuple[int, float, Any], ...]
-    traces: tuple[PreparedScalarTrace, ...]
-
-    def boundary_value(self, parameter: FloatArray) -> FloatArray:
-        """Evaluate the piecewise Pk orthogonal boundary projection used in enrichment."""
-        owners = np.clip(
-            np.searchsorted(self.breaks, parameter, side="right") - 1, 0, len(self.breaks) - 2
-        )
-        t = 2 * (parameter - self.breaks[owners]) / np.diff(self.breaks)[owners] - 1
-        return np.einsum(
-            "qi,qi->q", legendre_values(t, self.projection.shape[1] - 1), self.projection[owners]
-        )
+from pymhm.postprocessing.solutions import PGMHMSolution as PGMHMSolution
 
 
 @dataclass(frozen=True)
@@ -100,158 +43,6 @@ class _PGFactory:
         if minimum < self.lower * (1 - 64 * np.finfo(float).eps):
             raise ValueError("ellipticity_lower_bound exceeds a sampled material eigenvalue")
         return item
-
-
-def _penalty(
-    system: HybridSystem,
-    skeleton: SkeletonSpace,
-    face: int,
-    degree: int,
-    order: int,
-    alpha: float,
-    lower: float,
-    dirichlet: Any,
-) -> _FacePenalty:
-    """Assemble one macroface jump on the common incident fine-edge partition."""
-    mesh = skeleton.mesh
-    neighbors = mesh.face_cells[face]
-    neighbors = neighbors[neighbors >= 0]
-    breaks = incident_face_breaks(
-        skeleton,
-        {int(cell): system.local_metadata[cell][0] for cell in neighbors},
-        face,
-        degree,
-    )
-    gauss, weights = leggauss(max(order, degree + 1))
-    parameter = (breaks[:-1, None] + (gauss + 1) / 2 * np.diff(breaks)[:, None]).ravel()
-    measure = (np.diff(breaks)[:, None] * weights / 2 * mesh.lengths[face]).ravel()
-    ids = []
-    for cell in neighbors:
-        ids.extend(system.responses[cell].problem.trace_dofs)
-        ids.append(system.kernel_offsets[cell])
-    indices = np.unique(ids).astype(np.int64)
-    dtype = np.result_type(*(system.responses[cell].source.dtype for cell in neighbors))
-    jump = np.zeros((len(parameter), len(indices)), dtype=dtype)
-    source_jump = np.zeros(len(parameter), dtype=dtype)
-    sides, traces = [], []
-    for cell in neighbors:
-        response = system.responses[cell]
-        fine = system.local_metadata[cell][0]
-        side = int(np.flatnonzero(mesh.cell_faces[cell] == face)[0])
-        sign = float(mesh.signs[cell, side])
-        prepared = prepare_scalar_trace(mesh, fine, face, degree)
-        evaluation = _trace_matrix(mesh, fine, face, degree, parameter, prepared)
-        local_ids = np.r_[response.problem.trace_dofs, system.kernel_offsets[cell]]
-        derivative = np.column_stack((-response.lifts, response.retained_basis))
-        jump[:, np.searchsorted(indices, local_ids)] += sign * (evaluation @ derivative)
-        source_jump += sign * (evaluation @ response.source)
-        sides.append((int(cell), sign, evaluation))
-        traces.append(prepared)
-    projection = np.zeros((len(breaks) - 1, degree + 1))
-    if len(neighbors) == 1:
-        start, end = mesh.points[mesh.faces[face]]
-        points = start + parameter[:, None] * (end - start)
-        values = scalar_values(dirichlet, points).reshape(-1, len(gauss))
-        basis = legendre_values(gauss, degree)
-        projection = (values * weights / 2) @ basis * (2 * np.arange(degree + 1) + 1)
-        prescribed = (projection @ basis.T).ravel()
-    else:
-        prescribed = np.zeros(len(parameter))
-    return _FacePenalty(
-        face,
-        parameter,
-        measure,
-        alpha * lower / (2 * mesh.lengths[face]),
-        indices,
-        jump,
-        source_jump,
-        prescribed,
-        breaks,
-        projection,
-        tuple(sides),
-        tuple(traces),
-    )
-
-
-@dataclass(frozen=True)
-class PGMHMSolution:
-    """Base and enriched Darcy fields of the residual-based Petrov-Galerkin method.
-
-    ``pressure`` is equation (31); ``enriched_pressure`` is equation (34).
-    ``hybrid.trace`` stores the unenriched physical flux multiplier. Physical
-    macro conservation requires ``normal_flux(..., enriched=True)``.
-    Both volume flux fields are raw gradients, not H(div) reconstructions.
-    """
-
-    skeleton: SkeletonSpace
-    local_meshes: tuple[TriangleMesh, ...]
-    pressure: tuple[FloatArray, ...]
-    enriched_pressure: tuple[FloatArray, ...]
-    hybrid: HybridSolution
-    system: HybridSystem
-    permeability: Any
-    source: Any
-    degree: int
-    quadrature_order: int
-    stabilization_parameter: float
-    ellipticity_lower_bound: float
-    penalties: tuple[_FacePenalty, ...]
-    enrichment_loads: tuple[FloatArray, ...]
-
-    def _fields(self, enriched: bool) -> DarcySolution:
-        """Reuse only physical volume norm integration with the selected pressure field."""
-        values = self.enriched_pressure if enriched else self.pressure
-        return DarcySolution(
-            self.skeleton,
-            self.local_meshes,
-            values,
-            tuple(np.empty(0) for _ in values),
-            self.hybrid,
-            "primal",
-            self.permeability,
-            self.source,
-            self.quadrature_order,
-            self.degree,
-        )
-
-    def l2_error(self, exact: Any, order: int = 8, *, enriched: bool = False) -> float:
-        """Integrate base or enriched pressure error in the physical L2 norm."""
-        return self._fields(enriched).l2_error(exact, order)
-
-    def flux_l2_error(self, exact: Any, order: int = 8, *, enriched: bool = False) -> float:
-        """Integrate -K grad(p) error with the selected base or enriched pressure."""
-        return self._fields(enriched).flux_l2_error(exact, order)
-
-    def normal_flux(
-        self, cell: int, face: int, parameter: Any, *, enriched: bool = True
-    ) -> FloatArray:
-        """Evaluate one-sided outward flux, including the residual enrichment by default."""
-        mesh = self.skeleton.mesh
-        if face not in mesh.cell_faces[cell]:
-            raise ValueError("face must be incident to the supplied macrocell")
-        t = np.asarray(parameter, dtype=float)
-        if t.ndim != 1 or not np.isfinite(t).all() or np.any((t < 0) | (t > 1)):
-            raise ValueError("face parameters must be finite points in [0,1]")
-        result = self.skeleton.faces[face].evaluate(t) @ self.hybrid.trace[self.skeleton.dofs(face)]
-        data = next((item for item in self.penalties if item.face == face), None)
-        if enriched and data is not None:
-            jump = np.zeros(len(t))
-            for (neighbor, sign, _), trace in zip(data.sides, data.traces, strict=True):
-                jump += sign * trace.evaluate(self.pressure[neighbor], t)
-            result -= data.coefficient * (jump - data.boundary_value(t))
-        side = int(np.flatnonzero(mesh.cell_faces[cell] == face)[0])
-        return mesh.signs[cell, side] * result
-
-    def conservation_residuals(self, *, enriched: bool = True) -> FloatArray:
-        """Return integral(q.n)-integral(f); only the enriched multiplier conserves macros."""
-        residuals = []
-        for response, extra in zip(self.system.responses, self.enrichment_loads, strict=True):
-            p = response.problem
-            residual = p.coupling @ self.hybrid.trace[p.trace_dofs] - p.load
-            if enriched:
-                residual = residual + extra
-            residuals.append(np.sum(residual))
-        return np.asarray(residuals)
 
 
 def solve_pgmhm(
@@ -421,3 +212,7 @@ def solve_pgmhm(
         penalties,
         tuple(extra),
     )
+
+
+_trace_matrix = _compat_trace_matrix
+_FacePenalty = _compat_FacePenalty

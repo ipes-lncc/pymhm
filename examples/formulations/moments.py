@@ -24,7 +24,8 @@ from pymhm.fem.scalar.triangle import scalar_operators, tabulate, trace_coupling
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.materials.evaluation import scalar_values
 from pymhm.meshes.triangle import TriangleMesh
-from pymhm.methods.hho import MsHHOLocal, MsHHOSolution
+from pymhm.postprocessing.nodal import nodal_field
+from pymhm.postprocessing.solutions import MsHHOLocal, MsHHOSolution
 
 
 @dataclass(frozen=True)
@@ -123,6 +124,16 @@ def local_equations(
         d=energy[count:, count:],
         g=load[count:],
         metadata=(data, integral[:count]),
+        field_data=(
+            nodal_field(
+                "pressure",
+                fine,
+                degree,
+                reconstruction=reconstruction[:, :count],
+                trace_reconstruction=reconstruction[:, count:],
+                trace_dofs=skeleton.cell_dofs(cell),
+            ),
+        ),
     )
 
 

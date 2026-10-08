@@ -8,6 +8,14 @@ those fields. These meshes do not reproduce a published numerical table.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 import platform
@@ -20,18 +28,19 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy
-from field_sampling import sample_segment_profile
-from manufactured import stokes_pressure, stokes_source, stokes_velocity
 from matplotlib.figure import Figure
 from matplotlib.tri import Triangulation
 from numpy.polynomial import Polynomial
 from numpy.typing import NDArray
-from plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from threadpoolctl import threadpool_limits
 
+from examples.field_sampling import sample_segment_profile
+from examples.formulations.application import brinkman as solve_brinkman
+from examples.manufactured import stokes_pressure, stokes_source, stokes_velocity
+from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.vector import VectorSolution, solve_brinkman
 from pymhm.fem.scalar.operators import p1_geometry
+from pymhm.postprocessing.solutions import VectorSolution
 
 FloatArray = NDArray[np.float64]
 LABELS = {"taylor-hood": "Taylor–Hood P2/P1", "usfem": "USFEM P1/P1"}

@@ -205,15 +205,23 @@ def tabulate_reference(element: ReferenceElement, points: ArrayLike, nderiv: int
     return np.asarray(element._native.tabulate(order, coordinates), dtype=np.float64)
 
 
-def tabulate_archived_nodal_basis(
-    cell: str, degree: int, basis_matrix: ArrayLike, points: ArrayLike, *, nderiv: int = 0
+def tabulate_archived_basis(
+    cell: str,
+    degree: int,
+    basis_matrix: ArrayLike,
+    points: ArrayLike,
+    *,
+    components: int = 1,
+    nderiv: int = 0,
 ) -> FloatArray:
-    """Evaluate an executed scalar polynomial basis from its archived matrix.
+    """Evaluate an executed scalar/vector polynomial basis from its archived matrix.
 
     ``basis_matrix`` contains rows of the actual Basix ``coefficient_matrix``
     in its native orthonormal Legendre polynomial coordinates. Its rows may
     include a declared change of basis. The returned array has axes
-    ``(points, executed_basis)`` for ``nderiv=0``. Positive derivative orders
+    ``(points, executed_basis)`` for a scalar and
+    ``(points, executed_basis, components)`` for a vector for ``nderiv=0``.
+    Positive derivative orders
     add a leading derivative axis in Basix's ``index`` convention, including
     values at index zero. Evaluation uses the supplied matrix directly, without
     dualizing or rebuilding finite-element basis coefficients. Physical maps,
@@ -232,17 +240,33 @@ def tabulate_archived_nodal_basis(
     if matrix.dtype.kind not in "fiu" or matrix.ndim != 2 or not np.isfinite(matrix).all():
         raise ValueError("archived basis_matrix must be a finite real matrix")
     width = basix.polynomials.dim(basix.PolynomialType.legendre, native_cell, order)
-    if matrix.shape[1] != width:
+    components = _integer(components, "components", minimum=1)
+    if matrix.shape[1] != components * width:
         raise ValueError("archived basis columns must match the reference polynomial dimension")
     if derivatives == 0:
         polynomials = basix.polynomials.tabulate_polynomials(
             basix.PolynomialType.legendre, native_cell, order, coordinates
         )
-        return np.asarray(polynomials.T @ matrix.T, dtype=np.float64)
+        if components == 1:
+            return np.asarray(polynomials.T @ matrix.T, dtype=np.float64)
+        return np.einsum("pq,iap->qia", polynomials, matrix.reshape(-1, components, width))
     tables = basix.polynomials.tabulate_polynomial_set(
         native_cell, basix.PolysetType.standard, order, derivatives, coordinates
     )
-    return np.stack([table.T @ matrix.T for table in tables])
+    if components == 1:
+        return np.stack([table.T @ matrix.T for table in tables])
+    return np.einsum("dpq,iap->dqia", tables, matrix.reshape(-1, components, width))
+
+
+def tabulate_archived_nodal_basis(
+    cell: str, degree: int, basis_matrix: ArrayLike, points: ArrayLike, *, nderiv: int = 0
+) -> FloatArray:
+    """Evaluate the literal executed scalar basis in archived orthonormal coordinates.
+
+    Return (point,basis), or (derivative,point,basis) when nderiv is positive.
+    No finite element or independent coefficient matrix is regenerated.
+    """
+    return tabulate_archived_basis(cell, degree, basis_matrix, points, nderiv=nderiv)
 
 
 def reference_interpolation_points(element: ReferenceElement) -> FloatArray:
@@ -597,7 +621,7 @@ def legendre_values(points: ArrayLike, degree: int) -> FloatArray:
 
 
 @lru_cache(maxsize=32)
-def _monomial_legendre_map(degree: int) -> FloatArray:
+def monomial_coefficients(degree: int) -> FloatArray:
     """Map orthonormal interval coefficients to the declared power convention.
 
     The coefficients are exact integral moments of x^k against the shifted
@@ -646,7 +670,7 @@ def monomial_tabulation(
         orthogonal_polynomial_tabulation(
             "interval", degree, coordinates[:, axis, None], derivatives
         )
-        @ _monomial_legendre_map(degree)
+        @ monomial_coefficients(degree)
         for axis in range(dimension)
     ]
     for derivative in range(len(result)):
@@ -697,6 +721,24 @@ def _bernstein_order(
     if np.any(exponents < 0) or np.any(exponents.sum(axis=1) != degree):
         raise ArithmeticError("native Bernstein moments do not identify the declared degree")
     return element, tuple(tuple(int(a) for a in row) for row in exponents)
+
+
+def bernstein_basis_matrix(
+    dimension: int, degree: int, exponents: tuple[tuple[int, ...], ...]
+) -> FloatArray:
+    """Return the literal executed Bernstein matrix in a declared barycentric order.
+
+    Rows are only permuted from the native matrix used by bernstein_tabulation;
+    columns retain Basix's orthonormal reference polynomial coordinates. No
+    interpolation fit or new basis is generated to describe these coefficients.
+    """
+    element, native_exponents = _bernstein_order(dimension, degree)
+    lookup = {exponent: index for index, exponent in enumerate(native_exponents)}
+    try:
+        order = [lookup[exponent] for exponent in exponents]
+    except KeyError as error:
+        raise ValueError("Bernstein exponents must belong to the declared degree") from error
+    return _readonly(element.basis_matrix[order])
 
 
 def bernstein_tabulation(
@@ -778,3 +820,6 @@ def physical_simplex_tabulation(
         else np.empty((*second.shape[:3], 0, 0))
     )
     return values, gradient, hessian
+
+
+_monomial_legendre_map = monomial_coefficients

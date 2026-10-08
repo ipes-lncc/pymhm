@@ -6,6 +6,14 @@ orders. They do not reproduce a historical mesh or establish uniform inf-sup.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 import shutil
@@ -20,6 +28,7 @@ from threadpoolctl import threadpool_limits
 
 from examples import core_extension_data as exact
 from examples.campaign_provenance import positive_integers
+from examples.formulations.application import hdiv_darcy as solve_darcy_hdiv3d
 from examples.hdiv3d_field_archive import (
     field_arrays,
     observe_system,
@@ -29,7 +38,6 @@ from examples.hdiv3d_field_archive import (
 )
 from examples.transport_checkpoints import write_progress
 from examples.verify_mshho3d import capture_sources as capture_shared_sources
-from pymhm._legacy.models.darcy.hdiv_3d import solve_darcy_hdiv3d
 from pymhm.io.provenance import file_digest
 from pymhm.meshes.mixed import AffineMixedMesh
 

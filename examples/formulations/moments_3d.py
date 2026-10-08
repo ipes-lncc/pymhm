@@ -12,14 +12,15 @@ from pymhm.core.contracts import HybridSolution
 from pymhm.core.equations import Equation, LocalEquations
 from pymhm.core.moments import energy_reconstruction
 from pymhm.core.multiscale import MultiscaleProblem, MultiscaleSystem
-from pymhm.core.validation import positive_int
+from pymhm.core.validation import dyadic_refinement, positive_int
 from pymhm.fem.reference import legendre_values
 from pymhm.fem.scalar.tetrahedron import tetra_operators, tetra_tabulate, tetrahedron_quadrature
+from pymhm.fem.traces.moments_3d import face_moment_rule_3d
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton, tetra_trace_coupling
 from pymhm.materials.evaluation import scalar_values_3d
-from pymhm.meshes.tetrahedron import TetraMesh, _dyadic
-from pymhm.methods.hho import MsHHOLocal
-from pymhm.methods.hho_3d import MsHHO3DSolution, _face_rule
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.postprocessing.nodal import nodal_field
+from pymhm.postprocessing.solutions import MsHHO3DSolution, MsHHOLocal
 
 
 def local_equations(
@@ -98,6 +99,16 @@ def local_equations(
         d=energy[count:, count:],
         g=load[count:],
         metadata=(data, integral[:count]),
+        field_data=(
+            nodal_field(
+                "pressure",
+                fine,
+                degree,
+                reconstruction=reconstruction[:, :count],
+                trace_reconstruction=reconstruction[:, count:],
+                trace_dofs=skeleton.cell_dofs(cell),
+            ),
+        ),
     )
 
 
@@ -127,7 +138,7 @@ def define_moment_diffusion_3d(
     """
     if not isinstance(mesh, TetraMesh):
         raise TypeError("this definition uses tetrahedral moment geometry")
-    refinement = _dyadic(local_refinement, "local_refinement")
+    refinement = dyadic_refinement(local_refinement, "local_refinement")
     degree = positive_int(degree, "degree")
     m = positive_int(cell_degree, "cell_degree", -1)
     order = positive_int(quadrature_order, "quadrature_order")
@@ -151,7 +162,7 @@ def define_moment_diffusion_3d(
     fixed: dict[int, float] = {}
     natural = np.zeros(skeleton.size)
     for face in range(len(mesh.faces)):
-        points, weights, basis = _face_rule(mesh, skeleton, face, max(order, 3))
+        points, weights, basis = face_moment_rule_3d(mesh, skeleton, face, max(order, 3))
         ids = skeleton.dofs(face)
         if face in prescribed:
             gram = basis.T @ (weights[:, None] * basis)

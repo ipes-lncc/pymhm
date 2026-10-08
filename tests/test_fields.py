@@ -148,3 +148,58 @@ def test_field_contracts_reject_ambiguous_and_incompatible_definitions() -> None
     assert native.basis_digest != definition.basis_digest
     with pytest.raises(ValueError, match="descriptor"):
         FieldDefinition("native", descriptor=descriptor, reconstruction=[[1, 2]])
+
+
+def test_basis_matrix_accessor_preserves_owned_coordinates() -> None:
+    """The public archive accessor returns the declared matrix without regeneration."""
+    matrix = np.array([[1.0, 2.0], [0.0, 3.0]])
+    descriptor = SimpleNamespace(basis_matrix=matrix)
+    definition = FieldDefinition("pressure", descriptor=descriptor)
+    archived = definition.basis_matrix
+    matrix[:] = 0
+    assert_array_equal(archived, [[1, 2], [0, 3]])
+    assert not archived.flags.writeable
+    # A callable object can declare a different basis contract than a native descriptor.
+    polynomial_evaluator.__dict__["basis_matrix"] = archived
+    try:
+        custom = FieldDefinition("pressure", evaluator=polynomial_evaluator, basis_id="declared")
+        assert_array_equal(custom.basis_matrix, archived)
+    finally:
+        delattr(polynomial_evaluator, "basis_matrix")
+    with pytest.raises(TypeError, match="single basis matrix"):
+        _ = FieldDefinition("coefficients").basis_matrix
+
+
+def test_recursive_field_views_use_each_child_trace_once() -> None:
+    """Missing parent definitions descend, while declared parents retain precedence."""
+    definition = FieldDefinition(
+        "pressure", reconstruction=[[2]], trace_reconstruction=[[3]], trace_dofs=[0], offset=[4]
+    )
+    leaf = SimpleNamespace(
+        field_data=((definition,),),
+        fields=(np.array([1.0]),),
+        trace=np.array([5.0]),
+        children=(None,),
+    )
+    parent = SimpleNamespace(
+        field_data=((), (definition,)),
+        fields=(np.array([9.0]), np.array([2.0])),
+        trace=np.array([7.0]),
+        children=(leaf, leaf),
+    )
+    fields = solution_field(parent, "pressure", recursive=True)
+    assert [float(field.coefficients[0]) for field in fields] == [21, 29]
+    with pytest.raises(KeyError, match="once"):
+        solution_field(parent, "pressure")
+    with pytest.raises(TypeError, match="boolean"):
+        solution_field(parent, "pressure", recursive=1)
+    for children in ((), (None,)):
+        with pytest.raises(KeyError, match="once"):
+            solution_field(
+                SimpleNamespace(field_data=((),), fields=([1],), children=children),
+                "pressure",
+                recursive=True,
+            )
+    duplicate = SimpleNamespace(field_data=((definition, definition),), fields=([1],))
+    with pytest.raises(KeyError, match="once"):
+        solution_field(duplicate, "pressure", recursive=True)

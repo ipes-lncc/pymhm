@@ -14,7 +14,7 @@ with the [mixed elasticity implementation](https://github.com/ipes-lncc/pymhm/bl
 
 ```python
 from pymhm import TriangleMesh
-from pymhm._legacy.models.darcy.mixed_bdm import solve_darcy_bdm
+from examples.formulations.application import bdm_darcy as solve_darcy_bdm
 
 solution = solve_darcy_bdm(
     TriangleMesh.unit_square(4),
@@ -112,7 +112,7 @@ checked in the portable test suite.
 Regenerate these package-owned analytical cases with:
 
 ```console
-pixi run -e notebooks python examples/plot_darcy_bdm.py
+pixi run --locked -e notebooks python -m examples.plot_darcy_bdm
 ```
 
 The [numerical records](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/darcy-bdm.json)

@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 import shutil
@@ -22,16 +30,16 @@ from threadpoolctl import threadpool_limits
 
 from examples.archive_precision import precision_fields
 from examples.campaign_provenance import positive_integers
+from examples.formulations.application import darcy as solve_darcy
+from examples.formulations.application import moment_diffusion as solve_mshho
 from examples.local_response_cache import array_identity
 from examples.mshho_field_archive import attach_mhm, field_arrays, replay, write_field
 from examples.plot_mesh import draw_macro_mesh
 from examples.transport_checkpoints import write_progress
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.darcy.primal import solve_darcy
 from pymhm.fem.scalar.triangle import tabulate
 from pymhm.io.provenance import file_digest
 from pymhm.linalg.linear import LinearSolveError
-from pymhm.methods.hho import solve_mshho
 
 ROOT = Path(__file__).resolve().parents[1]
 

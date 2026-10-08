@@ -7,6 +7,14 @@ itself is valid for arbitrary archived physical fields.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -26,8 +34,14 @@ if __package__:
         load_field,
     )
 else:
-    from hpc4e_data import DATA_DIRECTORY, HPC4EData, load_data
-    from solve_hpc4e_reference import ARCHIVES, OUTPUT, ReferenceField, difference, load_field
+    from examples.hpc4e_data import DATA_DIRECTORY, HPC4EData, load_data
+    from examples.solve_hpc4e_reference import (
+        ARCHIVES,
+        OUTPUT,
+        ReferenceField,
+        difference,
+        load_field,
+    )
 
 
 def complementary_energy(

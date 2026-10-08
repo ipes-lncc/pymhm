@@ -133,5 +133,5 @@ Portable unit tests inspect data contracts without VTK on the Core CI targets;
 those checks are distinct from the native rendering tests.
 
 ```bash
-pixi run -e visualization test-visualization
+pixi run --locked -e visualization test-visualization
 ```

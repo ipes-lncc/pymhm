@@ -6,6 +6,14 @@ the archived measurements without numerical solves.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -23,9 +31,21 @@ import matplotlib.ticker as ticker
 import matplotlib.tri as mtri
 import numpy as np
 import scipy
-from field_sampling import sample_field, sample_profile
-from manufactured import darcy_flux, darcy_pressure, darcy_source, stokes_pressure, stokes_velocity
-from native_extension_data import (
+from threadpoolctl import threadpool_limits
+
+from examples.field_sampling import sample_field, sample_profile
+from examples.formulations.application import brinkman as solve_brinkman
+from examples.formulations.application import darcy as solve_darcy
+from examples.formulations.application import transport as solve_transport
+from examples.formulations.transient import solve_heat_trajectory as solve_heat
+from examples.manufactured import (
+    darcy_flux,
+    darcy_pressure,
+    darcy_source,
+    stokes_pressure,
+    stokes_velocity,
+)
+from examples.native_extension_data import (
     BoundaryLayer,
     flow_source,
     heat_exact,
@@ -37,13 +57,8 @@ from native_extension_data import (
     resistance,
     sine,
 )
-from plot_mesh import draw_macro_mesh, mark_macro_interfaces
-from threadpoolctl import threadpool_limits
-
+from examples.plot_mesh import draw_macro_mesh, mark_macro_interfaces
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.darcy.primal import solve_darcy
-from pymhm._legacy.models.transport.solver import solve_heat, solve_transport
-from pymhm._legacy.models.vector import solve_brinkman
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/native-extensions"

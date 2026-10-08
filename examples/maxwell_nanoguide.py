@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -13,7 +21,7 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from pymhm._legacy.models.waves.maxwell import MaxwellStepper
+from examples.tutorial_maxwell_equations import EquationLeapfrog
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.fem.vector.curl import TangentialTraceSpace as MaxwellSkeleton
 from pymhm.io.provenance import current_source_manifest
@@ -73,6 +81,8 @@ def hashes() -> dict[str, str]:
             "fem/quadrature/planar",
         )
     ]
+    paths += list(sorted((ROOT / "src/pymhm").rglob("*.py")))
+    paths.append(ROOT / "examples/tutorial_maxwell_equations.py")
     return current_source_manifest(
         {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     )
@@ -127,7 +137,7 @@ def run(output: Path, macro: int, fine: int, order: int, steps: int, dt: float) 
     history = []
     with (
         threadpool_limits(1),
-        MaxwellStepper(
+        EquationLeapfrog(
             mesh,
             time_step=dt,
             degree=2,

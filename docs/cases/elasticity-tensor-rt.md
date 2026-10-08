@@ -17,7 +17,7 @@ traces must have degree at most k and fine-edge-aligned segmentation.
 
 ```python
 from pymhm.meshes.cartesian import CartesianMacroMesh
-from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_tensor_rt
 
 solution = solve_elasticity_tensor_rt(
     CartesianMacroMesh(4), degree=1, enrichment=1,
@@ -79,8 +79,8 @@ they do not establish robustness for every heterogeneous contrast.
 ![RT1-plus displacement and stress compared with exact fields](../figures/elasticity-tensor-rt/rt1-enrichment1-fields.png)
 
 ```bash
-pixi run --locked -e test-core python examples/solve_elasticity_tensor_rt.py --degree 1 --enrichment 1
-pixi run -e notebooks python examples/plot_elasticity_extensions.py
+pixi run --locked -e test-core python -m examples.solve_elasticity_tensor_rt --degree 1 --enrichment 1
+pixi run --locked -e notebooks python -m examples.plot_elasticity_extensions
 ```
 
 ## References

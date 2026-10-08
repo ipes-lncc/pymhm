@@ -27,10 +27,11 @@ from pymhm.fem.scalar.tetrahedron import (
     tetra_operators,
     tetrahedron_quadrature,
 )
+from pymhm.fem.traces.moments_3d import face_moment_rule_3d as _face_rule
 from pymhm.io.provenance import file_digest
-from pymhm.linalg.linear import LinearSolveError, _accurate_residual
+from pymhm.linalg.linear import LinearSolveError, accurate_residual
 from pymhm.materials.evaluation import scalar_values_3d, tensor_values_3d
-from pymhm.methods.hho_3d import MsHHO3DSolution, _face_rule
+from pymhm.postprocessing.solutions import MsHHO3DSolution
 
 SCHEMA = "pymhm-mshho3d-p2-p0-field-v1"
 ROOT = Path(__file__).resolve().parents[1]
@@ -402,13 +403,13 @@ def original_checks(arrays: Mapping[str, np.ndarray]) -> dict[str, float]:
         coupling, load = arrays[f"audit_b_{cell}"], arrays[f"audit_projected_f_{cell}"]
         ids = arrays[f"face_dofs_{cell}"]
         operator = sparse.hstack((matrix, sparse.csr_matrix(coupling)), format="csr")
-        defect = _accurate_residual(operator, load, np.r_[pressure, trace[ids]])
+        defect = accurate_residual(operator, load, np.r_[pressure, trace[ids]])
         defects += np.sum(defect**2)
         rhs += np.sum(load.astype(np.longdouble) ** 2)
         np.add.at(
             weak,
             ids,
-            -_accurate_residual(sparse.csr_matrix(coupling.T), np.zeros(len(ids)), pressure),
+            -accurate_residual(sparse.csr_matrix(coupling.T), np.zeros(len(ids)), pressure),
         )
     scale = np.sqrt(rhs + np.sum(boundary**2))
     if scale <= 0:

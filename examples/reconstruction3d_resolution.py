@@ -9,9 +9,9 @@ import numpy as np
 from numpy.polynomial.legendre import leggauss
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import tetrahedral_darcy as solve_darcy_3d
 from examples.reconstruction3d_data import fields
 from pymhm import TetraMesh, TriangularSkeleton, reconstruct_darcy_moments_3d
-from pymhm._legacy.models.darcy.primal_3d import solve_darcy_3d
 from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]

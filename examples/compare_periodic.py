@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 from pathlib import Path
@@ -21,9 +29,9 @@ if __package__:
         validate_case_provenance,
     )
 else:
-    from periodic_norms import difference
-    from periodic_reference import validate_reference_archive
-    from verify_periodic import (
+    from examples.periodic_norms import difference
+    from examples.periodic_reference import validate_reference_archive
+    from examples.verify_periodic import (
         ARTIFACTS,
         ROOT,
         fingerprint,
@@ -32,8 +40,8 @@ else:
         validate_case_provenance,
     )
 
-from pymhm._legacy.models.darcy.conforming import ConformingQuadrilateralSolution
 from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.postprocessing.conforming import ConformingQuadrilateralSolution
 
 REFERENCE_RECORDS: Path | None = None
 
@@ -127,7 +135,7 @@ def load_fields(macro: int, refinement: int, segments: int) -> tuple[tuple, Path
     if __package__:
         from .periodic_phases import load_fields as load_archived_fields
     else:
-        from periodic_phases import load_fields as load_archived_fields
+        from examples.periodic_phases import load_fields as load_archived_fields
     path = ARTIFACTS / f"mhm-{macro}-r{refinement}-s{segments}.npz"
     fields = load_archived_fields(path, macro=macro, refinement=refinement, segments=segments)
     return fields, path

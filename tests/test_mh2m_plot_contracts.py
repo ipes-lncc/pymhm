@@ -10,6 +10,8 @@ pytest.importorskip("pyvista")
 
 from examples.plot_mh2m_cg3 import checked_reference, promoted_record
 
+pytestmark = pytest.mark.visualization
+
 
 def acquired(path, value):
     """Write a small distinct field payload and its acquisition identity."""

@@ -2,13 +2,21 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 from scipy.special import hankel1
@@ -17,11 +25,12 @@ from threadpoolctl import threadpool_limits
 from examples.campaign_checkpoint import archive_identity, require_sources, verify_checkpoint
 from examples.helmholtz_basis_archive import basis_payload
 from examples.helmholtz_trace_family import verify_helmholtz_solution
-from pymhm._legacy.models.waves.helmholtz import HelmholtzSolution, solve_helmholtz
+from examples.tutorial_helmholtz_equations import solve_acoustic
 from pymhm.fem.scalar.helmholtz import acoustic_quadrature
 from pymhm.fem.traces.helmholtz import helmholtz_skeleton
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.postprocessing.acoustics import HelmholtzSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "examples/results/helmholtz"
@@ -88,6 +97,7 @@ def source_hashes() -> dict[str, str]:
         Path(__file__),
         ROOT / "examples/helmholtz_trace_family.py",
         ROOT / "examples/helmholtz_basis_archive.py",
+        ROOT / "examples/tutorial_helmholtz_equations.py",
     ]
     return current_source_manifest(
         {
@@ -131,7 +141,8 @@ def archive(solution: HelmholtzSolution, path: Path, wave: AcousticWave) -> None
     """Persist one-sided complex fields and all executed oscillatory coordinate maps."""
     t = np.linspace(0, 1, 5)
     reference = np.array([(x, y) for y in t for x in t])
-    points, values, gradients, cells = [], [], [], []
+    points, values, gradients = [], [], []
+    cells: list[list[int]] = []
     offset = 0
     for cell in range(len(solution.local_meshes)):
         p, u, g = solution.sample(cell, reference)
@@ -157,7 +168,7 @@ def archive(solution: HelmholtzSolution, path: Path, wave: AcousticWave) -> None
         omega=wave.omega,
         angle=wave.angle,
         kind=wave.kind,
-        **basis_payload(solution.skeleton),
+        **cast(dict[str, Any], basis_payload(solution.skeleton)),
     )
 
 
@@ -250,7 +261,7 @@ def run(
         mesh = CartesianMacroMesh(n)
         skeleton = helmholtz_skeleton(mesh, wave.omega, degree=ell, oscillatory=oscillatory)
         start = time.perf_counter()
-        solution = solve_helmholtz(
+        solution = solve_acoustic(
             mesh,
             omega=wave.omega,
             skeleton=skeleton,

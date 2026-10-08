@@ -6,10 +6,10 @@ import json
 from pathlib import Path
 
 import numpy as np
-from elasticity_data import ElasticityData
 from threadpoolctl import threadpool_limits
 
-from pymhm._legacy.models.elasticity.stress_tensor import solve_elasticity_tensor_rt
+from examples.elasticity_data import ElasticityData
+from examples.formulations.application import weak_stress_elasticity as solve_elasticity_tensor_rt
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.cartesian import CartesianMacroMesh
 

@@ -12,33 +12,21 @@ from dataclasses import dataclass
 from typing import Any, Literal, cast
 
 import numpy as np
-from numpy.polynomial.legendre import leggauss
-from scipy import sparse
 
-from pymhm._legacy.models.darcy.primal import DarcySolution
 from pymhm.core.contracts import HybridSolution, LocalAssembly, LocalProblem
 from pymhm.core.system import HybridSystem
 from pymhm.core.validation import FloatArray, positive_int
-from pymhm.fem.scalar.operators import triangle_quadrature
-from pymhm.fem.scalar.triangle import nodal_space, scalar_operators, tabulate, trace_coupling
+from pymhm.fem.scalar.robin import nodal_volume_moments as _volume_weights
+from pymhm.fem.scalar.robin import robin_boundary_operator as _robin_operator
+from pymhm.fem.scalar.triangle import scalar_operators, tabulate, trace_coupling
 from pymhm.fem.traces.integration import integrate_dirichlet_trace
 from pymhm.fem.traces.interval import SkeletonSpace
-from pymhm.fem.traces.scalar import edge_basis, scalar_trace
-from pymhm.materials.cartesian import CartesianCellField
+from pymhm.materials.bounds import ellipticity_lower_bound as _ellipticity
 from pymhm.materials.evaluation import tensor_values
 from pymhm.meshes.polygonal import PolygonMesh
 from pymhm.meshes.triangle import TriangleMesh
 from pymhm.methods.boundary import RobinBoundaryFace, solve_robin_neumann
-
-
-def _volume_weights(fine: TriangleMesh, degree: int) -> FloatArray:
-    """Integrate every local nodal basis function for the physical pressure mean."""
-    bary, weights = triangle_quadrature(degree + 1)
-    dofs, points, basis, _, _ = tabulate(fine, degree, bary)
-    result = np.zeros(len(points))
-    local = np.einsum("q,qi,t->ti", weights, basis, fine.areas)
-    np.add.at(result, dofs.ravel(), local.ravel())
-    return result
+from pymhm.postprocessing.solutions import MHSolution as MHSolution
 
 
 def _physical_neumann_solve(
@@ -96,47 +84,6 @@ def _physical_neumann_solve(
     )
 
 
-def _ellipticity(material: Any, supplied: Any) -> float:
-    """Infer a constant-material bound or require a certified callback bound."""
-    if supplied is None:
-        if isinstance(material, CartesianCellField):
-            data = material.values
-            supplied = np.min(data) if data.ndim == 2 else np.min(np.linalg.eigvalsh(data))
-        elif callable(material):
-            raise ValueError("material callbacks require a certified ellipticity_lower_bound")
-        else:
-            supplied = np.linalg.eigvalsh(tensor_values(material, np.zeros((1, 2)))).min()
-    value = np.asarray(supplied)
-    if value.shape != () or np.iscomplexobj(value) or not np.isfinite(value) or value <= 0:
-        raise ValueError("ellipticity_lower_bound must be a finite positive scalar")
-    return float(value)
-
-
-def _robin_operator(
-    fine: TriangleMesh, degree: int, parameter: float, origin: FloatArray, order: int
-) -> Any:
-    """Assemble integral_boundary (sigma.n) u v exactly for the affine sigma."""
-    count = len(nodal_space(fine, degree)[1])
-    rows: list[int] = []
-    columns: list[int] = []
-    values: list[float] = []
-    t, weights = leggauss(max(order, degree + 1))
-    t, weights = (t + 1) / 2, weights / 2
-    basis = edge_basis(degree, t)
-    for face in fine.boundary_faces:
-        start, end = fine.points[fine.faces[face]]
-        points = start + t[:, None] * (end - start)
-        sigma_n = parameter * ((points - origin) @ fine.normals[face]) / 2
-        ids = np.r_[
-            fine.faces[face], len(fine.points) + face * (degree - 1) + np.arange(degree - 1)
-        ]
-        block = basis.T @ ((weights * fine.lengths[face] * sigma_n)[:, None] * basis)
-        rows.extend(np.repeat(ids, len(ids)))
-        columns.extend(np.tile(ids, len(ids)))
-        values.extend(block.ravel())
-    return sparse.coo_matrix((values, (rows, columns)), shape=(count, count)).tocsc()
-
-
 @dataclass(frozen=True)
 class _MHFactory:
     """Portable local Robin assembly, preserving physical source and boundary terms."""
@@ -166,109 +113,6 @@ class _MHFactory:
         coupling = trace_coupling(self.mesh, cell, fine, self.skeleton, self.degree)
         problem = LocalProblem(stiffness + robin, coupling, load, self.skeleton.cell_dofs(cell))
         return LocalAssembly(problem, (fine, robin))
-
-
-@dataclass(frozen=True)
-class MHSolution:
-    """Broken pressure and modified Robin multiplier of the elliptic MH method.
-
-    ``hybrid.trace`` represents (-K grad(p)-p sigma).n in the globally oriented
-    skeleton basis. Use ``normal_flux`` for the physical one-sided outward
-    flux lambda+p sigma.n. Raw volume fluxes are -K grad(p). These distinctions
-    prevent using the Robin multiplier as a conservative Darcy trace.
-    """
-
-    skeleton: SkeletonSpace
-    local_meshes: tuple[TriangleMesh, ...]
-    pressure: tuple[FloatArray, ...]
-    flux: tuple[FloatArray, ...]
-    hybrid: HybridSolution
-    system: HybridSystem
-    permeability: Any
-    source: Any
-    degree: int
-    quadrature_order: int
-    robin_parameter: float
-    origin: FloatArray
-    ellipticity_lower_bound: float
-    boundary_pressure: dict[int, FloatArray]
-    global_matrix: Any
-    global_rhs: FloatArray
-
-    @property
-    def global_coefficients(self) -> FloatArray:
-        """Return Robin lambda followed by pressure on sorted Neumann faces.
-
-        These coefficients satisfy global_matrix/global_rhs before any mean
-        augmentation. The system attribute retains the underlying Robin
-        condensation, whose response objects reconstruct the volume pressure.
-        """
-        return np.concatenate((self.hybrid.trace, *self.boundary_pressure.values()))
-
-    def _primal_fields(self) -> DarcySolution:
-        """Reuse only the established volume-field integration, not Darcy trace diagnostics."""
-        return DarcySolution(
-            self.skeleton,
-            self.local_meshes,
-            self.pressure,
-            self.flux,
-            self.hybrid,
-            "primal",
-            self.permeability,
-            self.source,
-            self.quadrature_order,
-            self.degree,
-        )
-
-    def l2_error(self, exact: Any, order: int = 8) -> float:
-        """Integrate pressure error by independent physical quadrature."""
-        return self._primal_fields().l2_error(exact, order)
-
-    def flux_l2_error(self, exact: Any, order: int = 8) -> float:
-        """Integrate the raw physical Darcy flux error, not the Robin multiplier error."""
-        return self._primal_fields().flux_l2_error(exact, order)
-
-    def normal_flux(self, cell: int, face: int, parameter: Any) -> FloatArray:
-        """Evaluate outward physical flux on one incident side of a macroface.
-
-        The Robin multiplier is shared with opposite orientations. Its added
-        pressure trace is one-sided; pointwise physical-flux continuity is not
-        implied when the discrete pressure jumps.
-        """
-        mesh = self.skeleton.mesh
-        if face not in mesh.cell_faces[cell]:
-            raise ValueError("face must be incident to the supplied macrocell")
-        side = int(np.flatnonzero(mesh.cell_faces[cell] == face)[0])
-        sign = mesh.signs[cell, side]
-        t = np.asarray(parameter, dtype=float)
-        if t.ndim != 1 or not np.isfinite(t).all() or np.any((t < 0) | (t > 1)):
-            raise ValueError("face parameters must be finite points in [0,1]")
-        start, end = mesh.points[mesh.faces[face]]
-        points = start + t[:, None] * (end - start)
-        pressure = scalar_trace(
-            mesh, self.local_meshes[cell], face, self.degree, self.pressure[cell], t
-        )
-        multiplier = (
-            self.skeleton.faces[face].evaluate(t) @ self.hybrid.trace[self.skeleton.dofs(face)]
-        )
-        sigma_n = self.robin_parameter * ((points - self.origin) @ mesh.normals[face]) / 2
-        return sign * (multiplier + pressure * sigma_n)
-
-    def conservation_residuals(self) -> FloatArray:
-        """Return integral(lambda+p sigma.n)-integral(f) for every macrocell."""
-        values = []
-        for response, pressure, (_, robin) in zip(
-            self.system.responses, self.pressure, self.system.local_metadata, strict=True
-        ):
-            problem = response.problem
-            values.append(
-                np.sum(
-                    problem.coupling @ self.hybrid.trace[problem.trace_dofs]
-                    + robin @ pressure
-                    - problem.load
-                )
-            )
-        return np.asarray(values)
 
 
 def solve_mh(

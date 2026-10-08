@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import json
 from pathlib import Path
 
@@ -11,9 +19,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pyvista as pv
-from plot_mesh import mark_macro_interfaces
-from plot_spe10_data import FIGURES, OUTPUT, data_grid, macro_mesh, panel
 
+from examples.plot_mesh import mark_macro_interfaces
+from examples.plot_spe10_data import FIGURES, OUTPUT, data_grid, macro_mesh, panel
 from pymhm.postprocessing.visualization import structured_cell_grid
 
 

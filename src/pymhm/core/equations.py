@@ -194,6 +194,17 @@ class CompiledLocalEquations:
     trace_binding: Any = None
 
 
+def _compile_block(
+    compiler: FormCompiler, form: Any, name: str, shape: tuple[int, ...] | None = None
+) -> Any:
+    """Attach the mathematical block and expected coordinates to compiler errors."""
+    try:
+        return compiler(form) if shape is None else compiler(form, shape)
+    except (TypeError, ValueError) as error:
+        convention = "" if shape is None else f" with shape {shape}"
+        raise type(error)(f"local block {name!r}{convention}: {error}") from error
+
+
 def compile_local_equations(
     equations: LocalEquations, compiler: FormCompiler = compile_form
 ) -> CompiledLocalEquations:
@@ -206,7 +217,7 @@ def compile_local_equations(
     """
     if not isinstance(equations, LocalEquations):
         raise TypeError("equations must be LocalEquations")
-    a = compiler(equations.a)
+    a = _compile_block(compiler, equations.a, "a")
     if len(a.shape) != 2 or a.shape[0] != a.shape[1]:
         raise ValueError("the local trial and test operator must be square")
     n = a.shape[0]
@@ -215,8 +226,8 @@ def compile_local_equations(
     indices = {int(value): i for i, value in enumerate(union)}
     trial_indices = np.array([indices[int(value)] for value in trial], dtype=np.int64)
     test_indices = np.array([indices[int(value)] for value in test], dtype=np.int64)
-    b = compiler(equations.b, (n, len(trial)))
-    c = compiler(equations.c, (len(test), n))
+    b = _compile_block(compiler, equations.b, "b", (n, len(trial)))
+    c = _compile_block(compiler, equations.c, "c", (len(test), n))
     b = b.toarray() if sparse.issparse(b) else b
     c = c.toarray() if sparse.issparse(c) else c
     coupling = np.zeros((n, len(union)), dtype=np.result_type(b, c))
@@ -225,9 +236,15 @@ def compile_local_equations(
     test_coupling[:, test_indices] = -c.T
     basis = equations.kernel if equations.coarse_basis is None else equations.coarse_basis
     width = 0 if basis is None else np.asarray(basis).shape[-1]
-    moments = None if equations.moments is None else compiler(equations.moments, (n, width))
+    moments = (
+        None
+        if equations.moments is None
+        else _compile_block(compiler, equations.moments, "moments", (n, width))
+    )
     test_moments = (
-        None if equations.test_moments is None else compiler(equations.test_moments, (n, width))
+        None
+        if equations.test_moments is None
+        else _compile_block(compiler, equations.test_moments, "test_moments", (n, width))
     )
     if moments is not None and sparse.issparse(moments):
         moments = moments.toarray()
@@ -236,7 +253,7 @@ def compile_local_equations(
     problem = LocalProblem(
         a,
         coupling,
-        compiler(equations.L, (n,)),
+        _compile_block(compiler, equations.L, "L", (n,)),
         union,
         kernel=equations.kernel,
         constraints=moments,
@@ -246,11 +263,11 @@ def compile_local_equations(
         test_basis=equations.test_basis,
         test_constraints=test_moments,
     )
-    direct = compiler(equations.d, (len(test), len(trial)))
+    direct = _compile_block(compiler, equations.d, "d", (len(test), len(trial)))
     direct = direct.toarray() if sparse.issparse(direct) else direct
     matrix = np.zeros((len(union), len(union)), dtype=np.result_type(direct, float))
     matrix[np.ix_(test_indices, trial_indices)] = direct
-    load = compiler(equations.g, (len(test),))
+    load = _compile_block(compiler, equations.g, "g", (len(test),))
     global_load = np.zeros(len(union), dtype=np.result_type(load, float))
     global_load[test_indices] = load
     return CompiledLocalEquations(

@@ -13,17 +13,26 @@ from pymhm.fem.scalar.triangle import nodal_space, reference_basis, tabulate
 def sample_field(
     meshes: Any, fields: Any, degree: int, refinement: int = 3
 ) -> dict[str, np.ndarray]:
-    """Evaluate values and physical gradients on separate fine-element display grids."""
+    """Evaluate values and physical gradients on separate fine-element display grids.
+
+    Every point retains its incident field index, local cell index and physical
+    cell center. These declarations let a comparison choose the same side of
+    an interface on a different mesh, without merging coincident coordinates.
+    """
     template = TriangleMesh(
         np.array([[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]]), np.array([[0, 1, 2]])
     ).submesh(0, refinement)
     bary = np.column_stack((1 - template.points.sum(axis=1), template.points))
     points, cells, values, derivatives = [], [], [], []
+    centers, cell_owners, field_owners = [], [], []
     offset = 0
-    for mesh, field in zip(meshes, fields, strict=True):
+    for field_index, (mesh, field) in enumerate(zip(meshes, fields, strict=True)):
         dofs, _, basis, gradient, _ = tabulate(mesh, degree, bary)
         coordinates = np.einsum("qi,tij->tqj", bary, mesh.points[mesh.cells])
         points.append(coordinates.reshape(-1, 2))
+        centers.append(np.repeat(mesh.points[mesh.cells].mean(axis=1), len(bary), axis=0))
+        cell_owners.append(np.repeat(np.arange(len(mesh.cells), dtype=np.int64), len(bary)))
+        field_owners.append(np.full(len(mesh.cells) * len(bary), field_index, dtype=np.int64))
         cells.extend(template.cells + offset + len(bary) * i for i in range(len(mesh.cells)))
         sampled = np.einsum("qi,ti...->tq...", basis, field[dofs])
         differentiated = np.einsum("tqia,ti...->tq...a", gradient, field[dofs])
@@ -35,6 +44,9 @@ def sample_field(
         "cells": np.concatenate(cells),
         "values": np.concatenate(values),
         "gradient": np.concatenate(derivatives),
+        "incident_centers": np.concatenate(centers),
+        "incident_cells": np.concatenate(cell_owners),
+        "field_indices": np.concatenate(field_owners),
     }
 
 
@@ -73,7 +85,7 @@ def sample_segment_profile(
     separately. The segment must lie in the domain and must not follow a
     macroface, where selecting a side would require an additional convention.
     """
-    from plot_mesh import macro_profile_breaks
+    from examples.plot_mesh import macro_profile_breaks
 
     mesh = solution.skeleton.mesh
     start, end = np.asarray(start, dtype=float), np.asarray(end, dtype=float)
@@ -112,7 +124,7 @@ def sample_darcy_pressure_profile(solution: Any, start: Any, end: Any) -> dict[s
     A line coincident with a fine interface has no unique one-sided value and
     is rejected. Macroface intersections are retained separately for marking.
     """
-    from plot_mesh import macro_profile_breaks
+    from examples.plot_mesh import macro_profile_breaks
 
     first, last = np.asarray(start, dtype=float), np.asarray(end, dtype=float)
     macro_breaks = macro_profile_breaks(solution.skeleton.mesh, first, last)

@@ -136,6 +136,8 @@ class GlobalForm:
     in cell order with widths ``coarse_sizes``. For each cell, its response's
     ``global_contribution`` supplies the bilinear block and linear load; the
     shared hybrid assembler sums these records on their declared indices.
+    An empty coarse_sizes tuple declares a global form with no local cells;
+    its complete operator must be supplied explicitly by its owning formulation.
     This is an algebraic global form, not an arbitrary UFL skeleton compiler.
 
     ``boundary_load`` is a trace vector subtracted from the assembled RHS with
@@ -164,8 +166,6 @@ class GlobalForm:
                 or width < 0
             ):
                 raise ValueError("trace_size and coarse_sizes must be nonnegative integers")
-        if not sizes:
-            raise ValueError("coarse_sizes must declare at least one local cell")
         object.__setattr__(self, "trace_size", int(self.trace_size))
         object.__setattr__(self, "coarse_sizes", tuple(int(width) for width in sizes))
         size = self.trace_size + sum(self.coarse_sizes)

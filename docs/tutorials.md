@@ -9,13 +9,20 @@ to enlarge it, or use its original image to inspect the field labels and scales.
 
 ## Self-contained introductory course
 
-Each tutorial
-defines its data, weak forms, operator assembly, local problems, global equations,
-classical baseline and field plots in its own cells. The primary path writes
-executable UFL weak forms before introducing prepared operator functions as
-conveniences. `MeshHierarchy`, `LocalContext` and `bind_problem` provide mesh/space bindings
-and supported representation details. UFL expresses local/global mathematics
-before prepared conveniences. All notebooks are written in English.
+Each tutorial declares its physical data, approximation spaces, local weak
+forms and global equations in focused cells. Importable helpers handle field
+evaluation, reference comparisons, plotting, archives and performance campaigns.
+The primary path expresses the local and global mathematics through executable
+UFL weak forms. `MeshHierarchy`, `LocalContext` and `bind_problem` associate
+those forms with meshes, spaces and interface representations. Prepared operator
+functions are introduced as conveniences. All notebooks are written in English.
+
+Start by editing the parameter cells, then follow the local equations, global
+assembly and field comparisons. Helpers are versioned with the checkout and
+use the same public numerical API. Spawned workers use importable definitions;
+their actual formulation source is shown or linked where it is introduced.
+The detailed reference, quadrature and conservation controls remain available
+alongside the plots and full campaign settings.
 
 Read Darcy convergence first, then choose a scalar or vector application. The
 parallel tutorials assume familiarity with this local/global workflow.
@@ -42,10 +49,13 @@ the portable pip installation and optional native backends separately.
 pixi run --locked -e introduction notebooks-run introduction/darcy_multiscale_convergence.ipynb --timeout 1800
 ```
 
-Every example compares with a classical conforming method on several finer
-meshes and reports that reference's refinement differences. Analytical solutions
-and fine numerical references are distinguished. Macro meshes appear on field
-panels, and the local and skeletal resolutions are declared separately.
+The examples compare with classical conforming methods and state how their
+references are checked: errors against an analytical solution where available,
+or differences between refined reference meshes. The parallel tutorials
+distinguish the current numerical control from the recorded or optional full
+campaign. Analytical solutions and fine numerical references are distinguished.
+Macro meshes appear on field panels, and the local and skeletal resolutions are
+declared separately.
 
 The [boundary-layer comparisons](cases/introduction-layers.md) distinguish
 unresolved RAD profiles from admissible refinement controls and compare the
@@ -165,15 +175,23 @@ current notebooks. It writes Markdown, plot assets and a digest manifest;
 ordinary documentation builds use these saved pages and require no FEM solves
 or performance acquisitions.
 
-Some detailed studies read large locally computed fields and publication images.
-Their dependency inventory checks the selected notebooks before execution:
+Inspect the current reproduction plan and its declared inputs before execution:
+
+```bash
+pixi run --locked -e notebooks notebooks-run darcy --plan --check
+```
+
+The default plan selects the current executable examples. Use `--study` for
+their complete acquisition recipes. Some publication galleries additionally
+require historical fields and images; inspect that separate inventory with:
 
 ```bash
 pixi run --locked -e notebooks python scripts/notebook_data.py --notebook 68
 pixi run --locked -e notebooks python scripts/notebook_data.py --notebook darcy --check
 ```
 
-Missing computed inputs are reported explicitly. A fine numerical reference
+Missing historical inputs are reported explicitly; their absence does not
+prevent execution of the current examples. A fine numerical reference
 retains its own discretization and refinement uncertainty; it is not an exact
 solution. Archived comparisons identify solver provenance and do not execute
 external reference programs. See the [case gallery](cases/index.md) for the

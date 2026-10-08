@@ -447,7 +447,7 @@ pressure gradients. Reproduce an individual control and its comparison with:
 ```bash
 pixi run --locked -e test-core python -m examples.solve_spe10_resolution --refinement 4 --segments 4 --fit-material
 pixi run --locked -e test-core python -m examples.compare_spe10_resolution examples/results/spe10-adaptive/resolution/mhm-fitted-r4-s4.npz --reference examples/results/spe10-adaptive/reference-rt2-480x1760.npz --orders 4 5 --workers 8
-pixi run -e notebooks python -m examples.plot_spe10_resolution
+pixi run --locked -e notebooks python -m examples.plot_spe10_resolution
 ```
 
 The final joint control uses `--refinement 8 --segments 8 --fit-material`.
@@ -511,20 +511,20 @@ archived before the next refinement step.
 The classical hierarchy and the adaptive campaign are separate from light CI:
 
 ```bash
-pixi run -e notebooks python -m examples.spe10_adaptive_aligned --resolutions 15 30 60 120
-pixi run -e intel python -m examples.spe10_adaptive_aligned --resolutions 240 --solver pypardiso --previous-archive examples/results/spe10-adaptive/reference-rt2-120x440.npz
-pixi run -e remeshing python -m examples.solve_spe10_published --target-cells 3786 --executable FreeFem++-nw
-pixi run -e intel python -m examples.spe10_adaptive_aligned --resolutions 480 --solver pypardiso --previous-archive examples/results/spe10-adaptive/reference-rt2-240x880.npz
-pixi run -e notebooks python -m examples.spe10_adaptive_norms --data examples/results/spe10-adaptive/published --reference examples/results/spe10-adaptive/reference-rt2-480x1760.npz
-pixi run -e notebooks python -m examples.plot_spe10_adaptive
+pixi run --locked -e notebooks python -m examples.spe10_adaptive_aligned --resolutions 15 30 60 120
+pixi run --locked -e intel python -m examples.spe10_adaptive_aligned --resolutions 240 --solver pypardiso --previous-archive examples/results/spe10-adaptive/reference-rt2-120x440.npz
+pixi run --locked -e remeshing python -m examples.solve_spe10_published --target-cells 3786 --executable FreeFem++-nw
+pixi run --locked -e intel python -m examples.spe10_adaptive_aligned --resolutions 480 --solver pypardiso --previous-archive examples/results/spe10-adaptive/reference-rt2-240x880.npz
+pixi run --locked -e notebooks python -m examples.spe10_adaptive_norms --data examples/results/spe10-adaptive/published --reference examples/results/spe10-adaptive/reference-rt2-480x1760.npz
+pixi run --locked -e notebooks python -m examples.plot_spe10_adaptive
 ```
 
 The separate fitted, energy-normalized policy can be acquired and continued
 to a larger total number of solved states:
 
 ```bash
-pixi run -e notebooks python -m examples.solve_spe10_balanced --levels 10
-pixi run -e notebooks python -m examples.solve_spe10_balanced --resume examples/results/spe10-adaptive/longest-edge --levels 12
+pixi run --locked -e notebooks python -m examples.solve_spe10_balanced --levels 10
+pixi run --locked -e notebooks python -m examples.solve_spe10_balanced --resume examples/results/spe10-adaptive/longest-edge --levels 12
 ```
 
 Continuation verifies the material, approximation spaces, marking policy and

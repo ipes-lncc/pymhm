@@ -12,8 +12,8 @@ import numpy as np
 from matplotlib.ticker import NullLocator
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import darcy as solve_darcy
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.darcy.primal import solve_darcy
 from pymhm.estimators.darcy_energy import estimate_weighted_darcy_error
 from pymhm.materials.cartesian import CartesianCellField
 

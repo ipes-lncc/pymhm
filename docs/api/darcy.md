@@ -4,32 +4,69 @@ Primal, mixed, analytical and residual-enriched Darcy discretizations.
 
 [All API families](../api.md)
 
-::: pymhm._legacy.models.darcy.primal
+User-defined formulations compose these public numerical owners with
+`LocalEquations` and `Equation`; their editable providers are listed in the
+[variational guide](../variational.md#formulations-composed-from-the-same-api).
+Physical field records provide optional interpretation of the resulting
+coefficients. Named `FieldDefinition` views require no physical solver object.
+
+::: pymhm.fem.scalar.operators
     options:
       show_source: false
 
-::: pymhm._legacy.models.darcy.mixed_bdm
+::: pymhm.fem.scalar.triangle
     options:
       show_source: false
 
-::: pymhm._legacy.models.darcy.mixed_rt
+::: pymhm.fem.scalar.quadrilateral
     options:
       show_source: false
 
-::: pymhm._legacy.models.darcy.conforming
+::: pymhm.fem.scalar.metric
     options:
       show_source: false
 
-::: pymhm._legacy.models.darcy.analytic
+::: pymhm.fem.scalar.separable
     options:
       show_source: false
 
-::: pymhm._legacy.models.darcy.cartesian
+::: pymhm.materials.separable
     options:
       show_source: false
 
+::: pymhm.fem.traces.conforming
+    options:
+      show_source: false
 
-::: pymhm.methods.petrov_galerkin
+::: pymhm.postprocessing.analytic
+    options:
+      show_source: false
+
+::: pymhm.postprocessing.conforming
+    options:
+      show_source: false
+
+::: pymhm.fem.hdiv.mixed
+    options:
+      show_source: false
+
+::: pymhm.fem.hdiv.rt_trace
+    options:
+      show_source: false
+
+::: pymhm.fem.hdiv.tensor_rt
+    options:
+      show_source: false
+
+::: pymhm.postprocessing.solutions.DarcySolution
+    options:
+      show_source: false
+
+::: pymhm.postprocessing.solutions.RTDarcySolution
+    options:
+      show_source: false
+
+::: pymhm.postprocessing.solutions.BDMDarcySolution
     options:
       show_source: false
 

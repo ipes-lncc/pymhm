@@ -5,17 +5,18 @@ and the [ten rendered introductory tutorials](https://ipes-lncc.github.io/pymhm/
 Their [source notebooks](introduction/README.md) are available for interactive use. Then
 use the problem folders and numbered notebooks for additional formulations,
 convergence records, geometry variants and literature comparisons. The new
-course defines meshes, spaces, material, local forms, global equations, classical
-references and plots in its cells. `LocalContext` supplies representation details
+course declares meshes, spaces, material, local forms and global equations in
+focused cells. Importable helpers provide reference controls, field evaluation,
+plots, archives and performance campaigns. `LocalContext` supplies representation details
 while UFL expresses the mathematics; prepared operators follow as conveniences. All ten tutorials are in English.
 
 For user-written forms, begin with the local/global, UFL, vector UFL and
 hierarchy notebooks in `foundations/operators`. They use the generic
 `LocalEquations`, `Equation` and `MultiscaleProblem` interface. Introductory
 physical notebooks put user-written equations before their method-family
-comparisons. Those comparisons retain compatibility solvers for established
-discretizations; the catalogue does not claim that all cases use the generic
-interface.
+comparisons. The local providers declare mathematical blocks, physical kernels,
+moments, trace orientations and boundary loads; method-ready solvers are optional
+conveniences. Original-system comparisons assemble the stated equations directly.
 
 Instructional examples are notebooks. Reusable Python modules in `examples/`
 provide analytical patch data, campaign acquisition, archive readers and figure
@@ -29,14 +30,32 @@ under `build/notebooks`, preserving these folders:
 pixi run --locked -e notebooks notebooks-run darcy/primal_galerkin.ipynb
 pixi run --locked -e notebooks notebooks-run flow/introductory_methods.ipynb
 pixi run --locked -e notebooks notebooks-run 01
-pixi run --locked -e notebooks python scripts/notebook_data.py --notebook darcy --check
+pixi run --locked -e notebooks notebooks-run --plan --check
 ```
 
-A folder selects all its notebooks. Some numbered studies require large locally
-computed archives and publication figures; the runner checks their declared
-inputs before execution. An introductory patch does not replace a convergence
-study or a matched paper reproduction. Native UFL cells require the Pixi `fem`
-kernel and report explicitly when the optional DOLFINx runtime has not executed.
+A folder selects all its notebooks. Missing current-study archives and figures
+are prepared automatically by the complete public recipes in
+[`scripts/notebook_reproduction.json`](../scripts/notebook_reproduction.json).
+`--plan` lists their locked commands and resource requirements without executing
+them. The runner selects the declared native Pixi environment and pins its actual
+Python interpreter as the kernel; required UFL/DOLFINx examples execute there.
+`--no-prepare` requires the current inputs to exist already.
+
+`--study` acquires the complete available current scientific campaign with its
+stated meshes, spaces, refinement levels and references. Inspect its cost and
+exact commands first with `notebooks-run <selector> --study --plan`. Fresh
+output-directory recipes share one automatically expanded `{acquisition}` UUID.
+The immediate
+physical example and the complete campaign state their separate discretizations;
+an analytical patch is not a substitute for a heterogeneous or published case.
+
+Original external comparison coefficients and attributed article rasters form
+explicitly optional historical sections. `--historical` requires those original
+payloads and preserves their checksum checks. The retained JSON measurements
+identify their executed revisions; rendering scalar observations does not
+recompute a PDE. Current controls, complete current acquisitions and matched
+literature reproductions have separate declared scopes. Large full studies can
+require substantial memory, storage and computation time.
 
 The machine-readable index is [catalogue.json](catalogue.json).
 
@@ -56,7 +75,7 @@ The machine-readable index is [catalogue.json](catalogue.json).
 | [Stokes–Brinkman boundary-layer convergence](introduction/stokes_brinkman_boundary_layer.ipynb) | Velocity–pressure UFL; Taylor–Hood and USFEM local spaces; analytical layer; refined classical Taylor–Hood |
 
 ```bash
-pixi run --locked -e introduction notebooks-run introduction --timeout 1800
+pixi run --locked -e introduction notebooks-run introduction --timeout 7200
 ```
 
 ## convergence
@@ -77,7 +96,7 @@ pixi run --locked -e introduction notebooks-run introduction --timeout 1800
 | [Independent face partitions and degrees](darcy/03_skeleton_hp.ipynb) | primal MHM; independent hp face traces |
 | [Fine-cell conservation in H(div)](darcy/04_mixed_and_reconstructed_flux.ipynb) | primal MHM; mixed RT0/P0 MHM; equilibrated H(div) flux |
 | [Published Darcy curves: archived results](darcy/11_published_darcy_2013.ipynb) | primal MHM; mixed RT0/P0 MHM |
-| [NeoPZ H(div): archived comparison results](darcy/14_neopz_hdiv_comparison.ipynb) | RT H(div) MHM; restricted NeoPZ reference |
+| [RT0/P0 Darcy equations and attributed NeoPZ comparisons](darcy/14_neopz_hdiv_comparison.ipynb) | user-written RT0/P0 equations; same-physical-case analytical refinement; retained NeoPZ provenance |
 | [BDM2/P1 Darcy: conservative high-order local flux](darcy/17_darcy_bdm.ipynb) | BDM2/P1 mixed Darcy MHM |
 | [RT moment reconstruction: normal conformity and continuous-test balance](darcy/18_reconstruction_moments.ipynb) | primal MHM; RT moment reconstruction |
 | [Unit-diffusion MHM energy estimator](darcy/20_darcy_estimator.ipynb) | primal MHM; Oswald potential recovery; energy estimator |
@@ -117,7 +136,7 @@ pixi run --locked -e introduction notebooks-run introduction --timeout 1800
 | --- | --- |
 | [Start here: Primal and mixed elasticity methods](elasticity/introductory_methods.ipynb) | user-written UFL primal plane elasticity; primal Galerkin; GaLS displacement-pressure; BDM weak-symmetry stress; tensor RT stress |
 | [Mixed elasticity and the incompressible limit](elasticity/07_elasticity.ipynb) | user-written P1/P1 GaLS equations and physical rigid/pressure gauges; GaLS elasticity MHM |
-| [Independent MSL GaLS elasticity fields](elasticity/15_elasticity_reference.ipynb) | GaLS elasticity MHM; independent MSL reference |
+| [GaLS elasticity equations and attributed MSL comparisons](elasticity/15_elasticity_reference.ipynb) | user-written P1/P1 GaLS equations; physical pressure identity; retained independent MSL reference |
 | [Mixed elasticity: H(div) stress and weak symmetry](elasticity/16_mixed_elasticity.ipynb) | weak-symmetry H(div) elasticity MHM |
 | [Mixed H(div) elasticity families](elasticity/28_mixed_elasticity_families.ipynb) | BDM; BDM-plus; BDM-double-plus |
 | [General-tensor primal elasticity](elasticity/32_primal_tensor_elasticity.ipynb) | general-tensor primal elasticity MHM |

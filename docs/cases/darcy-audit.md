@@ -44,7 +44,7 @@ The numerical measurements are available in
 `examples/results/darcy-audit.json`. Render its figures from those records:
 
 ```bash
-pixi run -e notebooks python examples/plot_darcy_audit.py
+pixi run --locked -e notebooks python -m examples.plot_darcy_audit
 ```
 
 The [complete numerical record](../figures/darcy-audit/metrics.json) includes

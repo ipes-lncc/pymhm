@@ -7,6 +7,14 @@ a historical numerical table from either method's paper.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -16,11 +24,12 @@ from time import perf_counter
 import numpy as np
 from threadpoolctl import threadpool_limits
 
+from examples.formulations.application import robin_diffusion as solve_mh
+from examples.formulations.application import three_field_diffusion as solve_mh2m
 from examples.mh_campaign import l_mesh
 from pymhm import FaceSpace, SkeletonSpace
+from pymhm.fem.traces.pressure_2d import PressureTraceSpace
 from pymhm.io.provenance import current_source_manifest
-from pymhm.methods.robin import solve_mh
-from pymhm.methods.three_field import PressureTraceSpace, solve_mh2m
 
 ROOT = Path(__file__).resolve().parents[1]
 MATERIAL = np.array([[3.0, 0.4], [0.4, 2.0]])

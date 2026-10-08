@@ -8,6 +8,14 @@ command-line entry point selects Agg for file rendering.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -19,19 +27,17 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
 import numpy as np
-from elasticity_data import TrigonometricElasticityData
-from plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from threadpoolctl import threadpool_limits
 
+from examples.elasticity_data import TrigonometricElasticityData
+from examples.formulations.application import elasticity as solve_elasticity
+from examples.formulations.application import herrmann_elasticity as solve_displacement_pressure
+from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.elasticity.mixed_pressure import (
-    ElasticitySolution,
-    solve_displacement_pressure,
-)
-from pymhm._legacy.models.vector import solve_elasticity
 from pymhm.fem.scalar.triangle import nodal_space, reference_basis, tabulate
 from pymhm.io.provenance import current_source_manifest
 from pymhm.linalg.linear import LinearSolveError
+from pymhm.postprocessing.solutions import ElasticitySolution
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "examples/results/elasticity.json"

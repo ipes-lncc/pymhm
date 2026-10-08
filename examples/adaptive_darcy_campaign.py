@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import json
 from pathlib import Path
@@ -17,6 +25,7 @@ from matplotlib.ticker import MaxNLocator, NullFormatter, ScalarFormatter
 from threadpoolctl import threadpool_limits
 
 from examples.field_sampling import sample_field
+from examples.formulations.application import darcy as solve_equations
 from examples.plot_mesh import draw_macro_mesh
 from pymhm.adaptivity.darcy import solve_adaptive_darcy
 from pymhm.meshes.triangle import TriangleMesh
@@ -43,6 +52,7 @@ def collect() -> list[dict[str, Any]]:
     for ell in (0, 1):
         result = solve_adaptive_darcy(
             TriangleMesh.unit_square(2),
+            solve_step=solve_equations,
             iterations=5,
             theta=0.5,
             trace_degree=ell,

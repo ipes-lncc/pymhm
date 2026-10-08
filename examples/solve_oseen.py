@@ -8,6 +8,14 @@ historical adaptive meshes or table values.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -17,12 +25,12 @@ from pathlib import Path
 
 import numpy as np
 import scipy
-from field_sampling import sample_field
 from numpy.polynomial import Polynomial
 from threadpoolctl import threadpool_limits
 
+from examples.field_sampling import sample_field
+from examples.formulations.application import flow as solve_flow
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.flow.solver import solve_flow
 from pymhm.adaptivity.flow import adapt_flow
 from pymhm.estimators.flow import estimate_flow_error
 from pymhm.io.provenance import current_source_manifest
@@ -216,6 +224,7 @@ def main() -> None:
             )
             result = adapt_flow(
                 mesh,
+                solve_step=solve_flow,
                 skeleton=skeleton,
                 iterations=args.iterations,
                 theta=0.5,

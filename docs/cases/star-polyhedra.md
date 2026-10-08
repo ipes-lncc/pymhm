@@ -119,8 +119,8 @@ not a separate convergence theorem for every nonconvex geometry.
 ## Reproduction
 
 ```bash
-pixi run -e notebooks python -m examples.solve_star_polyhedra --workers 4
-pixi run -e notebooks python -m examples.plot_star_polyhedra
+pixi run --locked -e notebooks python -m examples.solve_star_polyhedra --workers 4
+pixi run --locked -e notebooks python -m examples.plot_star_polyhedra
 ```
 
 The acquisition writes source snapshots, geometry certificates, complete local

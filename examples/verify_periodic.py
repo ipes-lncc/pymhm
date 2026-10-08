@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -18,15 +26,16 @@ from pymhm.io.provenance import current_source_manifest
 if __package__:
     from .periodic_norms import difference
 else:
-    from periodic_norms import difference
+    from examples.periodic_norms import difference
 
-from pymhm._legacy.models.darcy.conforming import (
-    ConformingQuadrilateralSolution,
-    solve_conforming_quadrilateral,
+from examples.formulations.conforming import (
+    conforming_quadrilateral as solve_conforming_quadrilateral,
 )
-from pymhm._legacy.models.darcy.separable import SeparableField, solve_separable_diffusion
+from examples.formulations.conforming import conforming_separated as solve_separable_diffusion
 from pymhm.linalg.separable import solve_separable_krylov
+from pymhm.materials.separable import SeparableField
 from pymhm.meshes.cartesian import CartesianMacroMesh
+from pymhm.postprocessing.conforming import ConformingQuadrilateralSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACTS = ROOT / "build/results/periodic"
@@ -158,7 +167,7 @@ def main() -> None:
     if __package__:
         from .periodic_phases import PeriodicAcquisition, load_fields
     else:
-        from periodic_phases import PeriodicAcquisition, load_fields
+        from examples.periodic_phases import PeriodicAcquisition, load_fields
     acquisition = (
         None
         if args.reference_only
@@ -241,7 +250,7 @@ def main() -> None:
                         if __package__:
                             from .periodic_reference import validate_reference_archive
                         else:
-                            from periodic_reference import validate_reference_archive
+                            from examples.periodic_reference import validate_reference_archive
                         validate_reference_archive(path, row)
                 else:
                     row = next(

@@ -5,12 +5,12 @@ import json
 from pathlib import Path
 
 import numpy as np
-from field_sampling import sample_field, sample_profile
-from solve_unusual import configuration, errors
 from threadpoolctl import threadpool_limits
 
+from examples.field_sampling import sample_field, sample_profile
+from examples.formulations.application import transport as solve_rad
+from examples.solve_unusual import configuration, errors
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
-from pymhm._legacy.models.transport.rad import solve_rad
 from pymhm.io.provenance import current_source_manifest
 
 ROOT = Path(__file__).resolve().parents[1]

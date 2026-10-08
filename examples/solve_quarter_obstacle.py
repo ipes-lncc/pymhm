@@ -8,6 +8,14 @@ H(div) field. This selected finite-well case is distinct from point wells.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -30,13 +38,15 @@ from pymhm.io.provenance import current_source_manifest
 if __package__:
     from .quarter_spot_problem import coefficient, macro_mesh, source
 else:
-    from quarter_spot_problem import coefficient, macro_mesh, source
+    from examples.quarter_spot_problem import coefficient, macro_mesh, source
 
+from examples.formulations.application import darcy as solve_darcy
+from examples.formulations.local_records import DarcyLocalFactory as _DarcyLocalFactory
 from pymhm import FaceSpace, SkeletonSpace
-from pymhm._legacy.models.darcy.primal import DarcySolution, _DarcyLocalFactory, solve_darcy
 from pymhm.core.validation import positive_int
 from pymhm.fem.scalar.operators import rt0_evaluate
-from pymhm.linalg.linear import _accurate_residual
+from pymhm.linalg.linear import accurate_residual
+from pymhm.postprocessing.solutions import DarcySolution
 
 ROOT = Path(__file__).resolve().parents[1]
 BARYCENTRIC = np.array([[2 / 3, 1 / 6, 1 / 6], [1 / 6, 2 / 3, 1 / 6], [1 / 6, 1 / 6, 2 / 3]])
@@ -129,7 +139,7 @@ def _audit(solution: DarcySolution, config: ObstacleConfiguration) -> tuple[dict
         problem = assembly.problem
         trace = solution.hybrid.trace[problem.trace_dofs]
         operator = sparse.hstack((problem.matrix, sparse.csr_matrix(problem.coupling))).tocsr()
-        defect = _accurate_residual(operator, problem.load, np.r_[field, trace])
+        defect = accurate_residual(operator, problem.load, np.r_[field, trace])
         rhs = problem.load - problem.coupling @ trace
         scale = float(np.linalg.norm(rhs))
         norm = float(np.linalg.norm(defect))

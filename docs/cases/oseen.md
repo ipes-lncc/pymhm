@@ -106,9 +106,11 @@ limit and returns a distinct stop reason.
 import numpy as np
 from pymhm import TriangleMesh
 from pymhm.adaptivity.flow import adapt_flow
+from examples.formulations.application import flow as solve_equations
 
 result = adapt_flow(
     TriangleMesh.unit_square(2),
+    solve_step=solve_equations,
     formulation="oseen",
     degree=3,
     drag=2.0,
@@ -120,6 +122,11 @@ result = adapt_flow(
     theta=0.5,
 )
 ```
+
+`solve_step` builds the current mathematical velocity/pressure equations through
+the public provider; the shared adaptive owner supplies refinement and estimator
+checks. The callback receives the actual oriented trace and local partitions.
+The same contract applies to macro refinement through `adapt_flow_macros`.
 
 ## Analytical campaigns
 
@@ -157,9 +164,9 @@ routine CI; CI covers analytical patches, exact estimator moments, marking,
 and small adaptive solves.
 
 ```bash
-pixi run --locked -e test-core python examples/solve_oseen.py --case smooth --levels 2 4 8 16 32
-pixi run --locked -e test-core python examples/solve_oseen.py --case boundary --viscosity .01 --levels 2 --adaptive --iterations 4 --order 20
-pixi run -e notebooks python examples/plot_oseen.py
+pixi run --locked -e test-core python -m examples.solve_oseen --case smooth --levels 2 4 8 16 32
+pixi run --locked -e test-core python -m examples.solve_oseen --case boundary --viscosity .01 --levels 2 --adaptive --iterations 4 --order 20
+pixi run --locked -e notebooks python -m examples.plot_oseen
 ```
 
 ## Archived results

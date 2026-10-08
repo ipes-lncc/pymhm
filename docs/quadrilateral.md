@@ -1,7 +1,7 @@
 # Quadrilateral Darcy MHM
 
 `CartesianMacroMesh` represents axis-aligned rectangles with shared, oriented
-faces. `solve_darcy_quadrilateral` uses continuous tensor-product Qk pressure
+faces. The Cartesian formulation uses continuous tensor-product Qk pressure
 spaces inside each macrocell and the same normal-flux skeleton as triangular
 Darcy. Both the source response and the face responses are assembled and
 condensed inside the selected local worker.
@@ -14,7 +14,10 @@ here are specified below.
 ```python
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.meshes.cartesian import CartesianMacroMesh
-from pymhm._legacy.models.darcy.cartesian import solve_darcy_quadrilateral
+from pymhm import assemble
+from examples.formulations.cartesian_darcy import (
+    define_cartesian_darcy, recover_cartesian_darcy,
+)
 
 mesh = CartesianMacroMesh(6, 11, bounds=(0, 1200, 0, 2200))
 skeleton = SkeletonSpace(
@@ -28,7 +31,7 @@ no_flow = {
 }
 
 # Supply a permeability callback with an explicit physical-unit convention.
-solution = solve_darcy_quadrilateral(
+definition = define_cartesian_darcy(
     mesh,
     permeability=1.0,
     dirichlet=lambda x: 1.0 - x[:, 1] / 2200.0,
@@ -37,6 +40,9 @@ solution = solve_darcy_quadrilateral(
     degree=1,
     local_refinement=(80, 80),
 )
+system = assemble(definition.problem)
+coefficients = system.solve()
+solution = recover_cartesian_darcy(definition, system, coefficients)
 ```
 
 This configuration has 127 free macrofaces, 33 coefficients per continuous-P1
@@ -121,7 +127,7 @@ The archived, pixel-aligned local-refinement family uses 40, 60, 80, 100 and
 120 subdivisions in each direction with 32 continuous-P1 face segments:
 
 ```bash
-pixi run python -m examples.solve_spe10
+pixi run --locked python -m examples.solve_spe10
 ```
 
 The separate conforming Q3 assembly uses the same tensor-product basis and
@@ -129,7 +135,7 @@ operators; it is not a comparison against an independent code. Its largest
 reference has the article's 768-by-1408 grid and 9,738,625 coefficients:
 
 ```bash
-pixi run -e intel python -m examples.solve_spe10_reference --shape 768 1408 --order 5
+pixi run --locked -e intel python -m examples.solve_spe10_reference --shape 768 1408 --order 5
 ```
 
 The MHM command reuses archived cases after checking their checksums. The Q3

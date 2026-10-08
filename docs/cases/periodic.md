@@ -234,7 +234,7 @@ flux of a primal Q1 field is not an $H(\mathrm{div})$ reconstruction.
 For the conforming Q1 reference space:
 
 ~~~bash
-pixi run --locked -e test-core python examples/periodic_reference.py \
+pixi run --locked -e test-core python -m examples.periodic_reference \
   --degree 1 --order 4 --sizes 512 1024 2048 4096 --native-threads 1 \
   --artifacts build/results/periodic-q1-reference \
   --records build/results/periodic-q1-reference-records
@@ -251,7 +251,7 @@ archived basis and the shared owners used for physical evaluation.
 For a phased Q1/P0 acquisition at an accepted local/trace pair:
 
 ~~~bash
-pixi run --locked -e test-core python examples/verify_periodic.py \
+pixi run --locked -e test-core python -m examples.verify_periodic \
   --macro 8 --local-refinement 256 --segments 1 2 4 8 16 32 \
   --stage all --workers 1 --native-threads 1 \
   --refinement-precision extended --original-refinement-steps 2 \

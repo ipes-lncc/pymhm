@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -12,6 +20,8 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.archive_precision import precision_fields
+from examples.formulations.application import darcy as solve_darcy_polygons
+from examples.formulations.application import petrov_galerkin_diffusion as solve_pgmhm
 from examples.pgmhm_inclusion_data import (
     CONTRAST,
     COUNT,
@@ -20,10 +30,8 @@ from examples.pgmhm_inclusion_data import (
     coefficient,
     local_meshes,
 )
-from pymhm._legacy.models.geometry import solve_darcy_polygons
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
-from pymhm.methods.petrov_galerkin import solve_pgmhm
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/pgmhm-inclusions"

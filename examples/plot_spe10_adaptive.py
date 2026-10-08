@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -20,7 +28,7 @@ from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro
 from examples.plot_style import set_refinement_ticks
 from examples.spe10_adaptive import DATA, DOMAIN, ROOT, StructuredRT
 from examples.spe10_adaptive_norms import BrokenP2
-from pymhm._legacy.models.darcy.mixed_rt import pressure_basis
+from pymhm.fem.hdiv.rt_forms import pressure_basis
 from pymhm.fem.quadrature.material import fit_material_mesh
 from pymhm.meshes.triangle import TriangleMesh
 

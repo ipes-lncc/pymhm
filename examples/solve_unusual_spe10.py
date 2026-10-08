@@ -8,6 +8,14 @@ residual across a coefficient jump. The zero source is a declared data choice.
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import argparse
 import hashlib
 import json
@@ -20,16 +28,16 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.field_sampling import local_values
+from examples.formulations.application import transport as solve_rad
 from examples.solve_spe10 import load_layer, pressure_boundary
 from examples.unusual_spe10_refinement import prepare_local
-from pymhm._legacy.models.transport.rad import solve_rad
-from pymhm._legacy.models.transport.solver import ScalarSolution
 from pymhm.execution.cpu import map_local
 from pymhm.fem.quadrature.material import fit_material_faces, fit_material_mesh
 from pymhm.fem.scalar.operators import p1_geometry
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing.solutions import ScalarSolution
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "examples/results/unusual-spe10"

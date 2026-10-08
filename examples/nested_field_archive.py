@@ -20,12 +20,12 @@ import numpy as np
 try:
     from .archive_precision import precision_fields, restore_precision
 except ImportError:
-    from archive_precision import precision_fields, restore_precision
+    from examples.archive_precision import precision_fields, restore_precision
 from examples.transport_checkpoints import checkpoint_field, write_progress
 from pymhm.core.contracts import HybridSolution, LocalResponse
 from pymhm.core.nested import NestedLocalProblem, NestedSolution
 from pymhm.core.system import HybridSystem
-from pymhm.fem.scalar.quadrilateral import _cardinals, qk_basis, qk_space
+from pymhm.fem.scalar.quadrilateral import cardinal_polynomials, qk_basis, qk_space
 from pymhm.fem.traces.interval import SkeletonSpace
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
@@ -288,7 +288,7 @@ def executed_arrays(
         outer_face_normals=outer.mesh.normals,
         outer_cell_faces=outer.mesh.cell_faces,
         outer_cell_signs=outer.mesh.signs,
-        q2_cardinal_matrix=np.kron(_cardinals(2), _cardinals(2)),
+        q2_cardinal_matrix=np.kron(cardinal_polynomials(2), cardinal_polynomials(2)),
         q2_monomial_powers=np.asarray([(x, y) for y in range(3) for x in range(3)]),
         recursive_duplicate_trace_defect=np.asarray(duplicate_defect),
     )

@@ -2,29 +2,43 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import hashlib
 import json
 from pathlib import Path
 
-import matplotlib
-
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.collections import LineCollection, PolyCollection
-from matplotlib.colors import Normalize, TwoSlopeNorm
-from plot_darcy3d import slice_polygon
-from solve_rad3d import exact, physical_flux
 
+from examples.field_archive import load_trusted_field
+from examples.plot_darcy3d import slice_polygon
+from examples.solve_rad3d import exact, physical_flux
 from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
 from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.postprocessing.fields import DiscreteField
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def slice_fields(mesh: TetraMesh, coefficients: np.ndarray, degree: int, height: float) -> tuple:
-    """Evaluate each intersected fine tetrahedron on its own side at its polygon centroid."""
-    dofs, _ = tetra_nodal_space(mesh, degree)
+def slice_fields(
+    mesh: TetraMesh,
+    coefficients: np.ndarray,
+    degree: int,
+    height: float,
+    *,
+    field: DiscreteField | None = None,
+) -> tuple:
+    """Evaluate each section centroid with its recorded one-sided fine-cell owner.
+
+    New archives use the entire executed field definition. Coefficient-only
+    historical archives retain the documented legacy nodal-basis replay.
+    """
     polygons, ids, points, inverse = [], [], [], []
     for cell, vertices in enumerate(mesh.points[mesh.cells]):
         polygon = slice_polygon(vertices, height)
@@ -38,10 +52,15 @@ def slice_fields(mesh: TetraMesh, coefficients: np.ndarray, degree: int, height:
         return [], np.empty((0, 2)), np.empty((0, 2))
     points, inverse = np.asarray(points), np.asarray(inverse)
     bary = np.einsum("ti,tij->tj", np.column_stack((np.ones(len(points)), points)), inverse)
-    basis, derivative = tetra_basis(degree, bary)
-    local = coefficients[dofs[ids]]
-    values = np.einsum("ti,ti->t", local, basis)
-    gradient = np.einsum("ti,tij,taj->ta", local, derivative, inverse[:, 1:])
+    if field is None:
+        dofs, _ = tetra_nodal_space(mesh, degree)
+        basis, derivative = tetra_basis(degree, bary)
+        local = coefficients[dofs[ids]]
+        values = np.einsum("ti,ti->t", local, basis)
+        gradient = np.einsum("ti,tij,taj->ta", local, derivative, inverse[:, 1:])
+    else:
+        values = field.evaluate(points, cells=np.asarray(ids, dtype=int))
+        gradient = field.gradient(points, cells=np.asarray(ids, dtype=int))
     flux = -0.1 * gradient
     flux[:, 0] += values
     return (
@@ -53,6 +72,13 @@ def slice_fields(mesh: TetraMesh, coefficients: np.ndarray, degree: int, height:
 
 def main() -> None:
     """Plot the archived classical/MHM fields with matching physical ranges and macro geometry."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.collections import LineCollection, PolyCollection
+    from matplotlib.colors import Normalize, TwoSlopeNorm
+
     report = json.loads((ROOT / "examples/results/rad3d.json").read_text())
     last = report["rows"][-1]
     archive = ROOT / "examples/results" / last["fields"]
@@ -66,10 +92,16 @@ def main() -> None:
         if len(polygon):
             edges.extend(zip(polygon[:, :2], np.roll(polygon[:, :2], -1, axis=0), strict=True))
     polygons, numerical, expected = [], [], []
-    for points, cells, coefficients in zip(
-        data["local_points"], data["local_cells"], data["values"], strict=True
+    for cell, (points, cells, coefficients) in enumerate(
+        zip(data["local_points"], data["local_cells"], data["values"], strict=True)
     ):
-        poly, actual, reference = slice_fields(TetraMesh(points, cells), coefficients, 4, height)
+        poly, actual, reference = slice_fields(
+            TetraMesh(points, cells),
+            coefficients,
+            4,
+            height,
+            field=load_trusted_field(data, cell),
+        )
         polygons.extend(poly)
         numerical.extend(actual)
         expected.extend(reference)
@@ -79,6 +111,7 @@ def main() -> None:
         data["classical_values"],
         2,
         height,
+        field=load_trusted_field(data, 0, prefix="classical"),
     )
     output = ROOT / "docs/figures/rad3d"
     output.mkdir(parents=True, exist_ok=True)

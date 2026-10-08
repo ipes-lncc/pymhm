@@ -114,6 +114,7 @@ def test_thin_material_fitted_triangle_has_canonical_partition_and_exact_moments
     assert_allclose(weights @ (points**2), second, rtol=3e-15)
 
 
+@pytest.mark.visualization
 def test_fitted_display_uses_original_owners_without_recutting(monkeypatch):
     """Preserve analytical samples bitwise while bypassing redundant fitting and point searches."""
     pytest.importorskip("matplotlib")

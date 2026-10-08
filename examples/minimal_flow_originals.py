@@ -21,7 +21,7 @@ from examples.core_elasticity_field_archive import ProductionObservation
 from examples.transport_checkpoints import write_progress
 from pymhm.core.system import HybridSystem
 from pymhm.io.provenance import current_source_manifest, file_digest
-from pymhm.linalg.linear import _accurate_residual
+from pymhm.linalg.linear import accurate_residual
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -139,7 +139,7 @@ def original_diagnostics(
         matrix = sparse.hstack((problem.matrix, sparse.csr_matrix(problem.coupling)), format="csr")
         field = np.asarray(field)
         values = np.r_[field, trace[problem.trace_dofs]]
-        defect = _accurate_residual(matrix, problem.load, values)
+        defect = accurate_residual(matrix, problem.load, values)
         scale = abs(matrix) @ abs(values) + abs(problem.load)
         start, row = 0, {}
         for name, size in declared.items():

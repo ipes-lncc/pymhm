@@ -3,7 +3,7 @@
 ## Numerical tests
 
 The test suite checks both executable branches and the mathematical meaning of
-results. Run `pixi run -e test test-cov` to measure the current source tree against
+results. Run `pixi run --locked -e test test-cov` to measure the current source tree against
 the independent 99% line and branch coverage gates. Optional-backend contract
 tests check dispatch, error handling and resource cleanup; native integration
 tests are separately marked and must run with their dependencies installed.

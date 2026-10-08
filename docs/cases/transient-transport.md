@@ -246,7 +246,7 @@ it is not a claim of fine-element conservation, an independent physical error,
 or a positivity certificate.
 
 The source is available as `examples/transport_campaign.py`. Run
-`pixi run -e notebooks python -m examples.transport_campaign --collect` to recompute
+`pixi run --locked -e notebooks python -m examples.transport_campaign --collect` to recompute
 all levels, or omit `--collect` to render the archived results. The lightweight
 test suite separately checks a linear-in-time variable-coefficient patch,
 mass preservation with closed boundaries, the heat limit, exact RT0 evaluation,

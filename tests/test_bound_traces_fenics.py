@@ -104,8 +104,11 @@ def test_native_trace_forms_preserve_degree_partition_and_signed_coordinate_cont
                 wrong_macro = bind_interface(SkeletonSpace(TriangleMesh.unit_square()))
                 with pytest.raises(ValueError, match="same macro mesh"):
                     alternate.trace_pairings(lambda phi, ds: phi * v * ds, interface=wrong_macro)
-                with pytest.raises(TypeError, match="capability"):
-                    alternate.trace_pairings(lambda phi, ds: phi * v * ds)
+                pressure_forms = alternate.trace_pairings(lambda phi, ds: phi * v * ds)
+                pressure_matrix = compile_form(
+                    pressure_forms, (native.size, alternate.binding.trial_size)
+                )
+                assert np.linalg.norm(pressure_matrix) > 0
             finally:
                 plain.close()
                 alternate.close()

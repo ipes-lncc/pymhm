@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
+if not __package__:
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 import hashlib
 import json
 from dataclasses import dataclass
@@ -16,9 +24,9 @@ import numpy as np
 from matplotlib.collections import LineCollection, PolyCollection
 from matplotlib.colors import Normalize, SymLogNorm, TwoSlopeNorm
 from mpl_toolkits.mplot3d.art3d import Line3DCollection
-from plot_style import set_refinement_ticks
-from solve_mapped_well import WellData
 
+from examples.plot_style import set_refinement_ticks
+from examples.solve_mapped_well import WellData
 from pymhm.fem.hdiv.family_3d import HDiv3DFamily, reference_faces
 from pymhm.meshes.hexahedron import HexMesh
 from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_dofs, hdiv3d_transform

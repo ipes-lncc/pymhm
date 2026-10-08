@@ -14,21 +14,15 @@ import numpy as np
 from scipy import sparse
 
 from pymhm import LocalEquations
-from pymhm._legacy.models.elasticity.mixed_pressure_3d import GaLS3DSolution
-from pymhm._legacy.models.elasticity.pressure_forms_3d import _strain_inverse_bound
-from pymhm._legacy.models.elasticity.primal_3d import _KELVIN3, _boundary_vector, rigid_modes_3d
-from pymhm._legacy.models.flow.solver_3d import Flow3DSolution
 from pymhm.core.contracts import HybridSolution
 from pymhm.core.multiscale import MultiscaleSystem
-from pymhm.fem.assembly import assemble_element_blocks
-from pymhm.fem.scalar.tetrahedron import (
-    tetra_element_tabulate,
-    tetra_tabulate,
-    tetrahedron_quadrature,
-)
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton, tetra_trace_coupling
-from pymhm.materials.evaluation import vector_values_3d
+from pymhm.fem.vector.elasticity_3d import vector_boundary_data_3d
+from pymhm.fem.vector.flow_3d import tetra_flow_operators
+from pymhm.fem.vector.pressure_3d import tetra_elasticity_pressure_operators
 from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.postprocessing.nodal import nodal_field
+from pymhm.postprocessing.solutions import Flow3DSolution, GaLS3DSolution
 
 
 @dataclass(frozen=True)
@@ -52,7 +46,7 @@ def vector_boundary_moments(
     tractions project to negative fixed multiplier coefficients. This operation
     selects no physical local operator or solution method.
     """
-    return _boundary_vector(skeleton, datum, traction, order)
+    return vector_boundary_data_3d(skeleton, datum, traction, order)
 
 
 def _trace_blocks(
@@ -68,63 +62,75 @@ def _trace_blocks(
 
 
 def tetra_velocity_pressure_equations(
-    cell: int, *, data: TetrahedralVectorSpace, source: Any, viscosity: float = 1.0
+    cell: int,
+    *,
+    data: TetrahedralVectorSpace,
+    source: Any,
+    viscosity: float = 1.0,
+    drag: Any = 0.0,
+    advection: Any = (0.0, 0.0, 0.0),
+    advection_divergence: Any = None,
+    advection_bound: float | None = None,
+    formulation: str = "taylor-hood",
+    stabilization: str = "tensor-2025",
+    gamma_min: float | None = None,
 ) -> LocalEquations:
-    """Write grad-grad, symmetric pressure/divergence and negative trace-balance forms.
+    """Declare grad-grad flow, pressure/divergence and an explicit residual choice.
 
-    This example declares Taylor–Hood P2/P1, zero drag and zero advection. Three
-    translations are its local kernel and their moments integrate physical
-    velocity. The pressure mean is a separately prescribed global constraint.
-    No residual stabilization or three-dimensional Brinkman-extreme claim is made.
+    Taylor--Hood has Pk/P(k-1); USFEM and Oseen have equal-order Pk/Pk.
+    The common volume owner integrates the stated skew transport, resistance,
+    inverse bound and residual test/trial operators. B couples negative physical
+    pseudo-traction and C=-B.T. Translations are a kernel only for exactly zero
+    drag and constant zero advection; otherwise they remain declared coarse modes.
+    Pressure moments and all Cartesian field coordinates are literal physical data.
     """
-    if data.vector_degree != 2 or data.pressure_degree != 1:
-        raise ValueError("this tetrahedral velocity application declares P2/P1")
+    expected = data.vector_degree - 1 if formulation == "taylor-hood" else data.vector_degree
+    if data.pressure_degree != expected:
+        raise ValueError("pressure degree must match the declared flow formulation")
     fine = data.mesh.submesh(cell, data.refinement)
-    bary, weights = tetrahedron_quadrature(max(data.quadrature_order, 4))
-    udofs, nodes, basis, gradient, _ = tetra_element_tabulate(fine, 2, bary)
-    pdofs, pnodes, pbasis, _ = tetra_tabulate(fine, 1, bary)
-    nc, nq, ns, _ = gradient.shape
-    nv, npres, ps = len(nodes), len(pnodes), pbasis.shape[1]
-    vdofs = (3 * udofs[:, :, None] + np.arange(3)).reshape(nc, -1)
-    dofs = np.column_stack((vdofs, 3 * nv + pdofs))
-    points = np.einsum("qi,tij->tqj", bary, fine.points[fine.cells])
-    stiffness = np.einsum("q,tqia,tqja,t->tij", weights, gradient, gradient, fine.volumes)
-    blocks = np.zeros((nc, 3 * ns + ps, 3 * ns + ps))
-    blocks[:, : 3 * ns, : 3 * ns] = np.einsum(
-        "tij,ab->tiajb", viscosity * stiffness, np.eye(3)
-    ).reshape(nc, 3 * ns, 3 * ns)
-    divergence = gradient.reshape(nc, nq, 3 * ns)
-    cross = -np.einsum("q,tqi,qj,t->tij", weights, divergence, pbasis, fine.volumes)
-    blocks[:, : 3 * ns, 3 * ns :] = cross
-    blocks[:, 3 * ns :, : 3 * ns] = cross.swapaxes(1, 2)
-    force = vector_values_3d(source, points.reshape(-1, 3)).reshape(nc, nq, 3)
-    load_blocks = np.zeros((nc, 3 * ns + ps))
-    load_blocks[:, : 3 * ns] = np.einsum(
-        "q,qi,tqa,t->tia", weights, basis, force, fine.volumes
-    ).reshape(nc, -1)
-    size = 3 * nv + npres
-    a = assemble_element_blocks(blocks, dofs, dofs, (size, size))
-    load = np.bincount(dofs.ravel(), weights=load_blocks.ravel(), minlength=size)
+    forms = tetra_flow_operators(
+        fine,
+        viscosity=viscosity,
+        drag=drag,
+        advection=advection,
+        advection_divergence=advection_divergence,
+        advection_bound=advection_bound,
+        source=source,
+        degree=data.vector_degree,
+        formulation=formulation,
+        stabilization=stabilization,
+        gamma_min=gamma_min,
+        order=data.quadrature_order,
+    )
+    nv, size = len(forms.velocity_nodes), len(forms.load)
     b, indices = _trace_blocks(cell, fine, size, nv, data)
-    kernel = np.zeros((size, 3))
-    kernel[: 3 * nv] = np.tile(np.eye(3), (nv, 1))
-    velocity_weights = np.zeros(nv)
-    np.add.at(velocity_weights, udofs, fine.volumes[:, None] * (weights @ basis))
-    moments = np.zeros_like(kernel)
-    moments[: 3 * nv] = (velocity_weights[:, None, None] * np.eye(3)).reshape(3 * nv, 3)
-    pressure_weights = np.zeros(size)
-    np.add.at(pressure_weights, 3 * nv + pdofs, fine.volumes[:, None] * (weights @ pbasis))
+    translation = np.zeros((size, 3))
+    translation[: 3 * nv] = np.tile(np.eye(3), (nv, 1))
+    moments = np.zeros_like(translation)
+    moments[: 3 * nv] = (forms.velocity_moments[:, None, None] * np.eye(3)).reshape(3 * nv, 3)
+    pure = np.all(forms.zero_columns) and not callable(advection) and not np.any(advection)
+    pressure_weights = np.r_[np.zeros(3 * nv), forms.pressure_moments]
+    selector = sparse.eye(size, format="csr")
     return LocalEquations(
-        a,
-        load,
+        forms.matrix,
+        forms.load,
         b,
         -b.T,
         indices,
-        d=0,
-        g=0,
-        kernel=kernel,
+        kernel=translation if pure else None,
+        coarse_basis=None if pure else translation,
         moments=moments,
-        metadata=(fine, nv, pressure_weights),
+        metadata=(fine, nv, pressure_weights, forms, moments),
+        field_data=(
+            nodal_field(
+                "velocity",
+                fine,
+                data.vector_degree,
+                components=3,
+                reconstruction=selector[: 3 * nv],
+            ),
+            nodal_field("pressure", fine, data.pressure_degree, reconstruction=selector[3 * nv :]),
+        ),
     )
 
 
@@ -133,113 +139,73 @@ def tetra_displacement_pressure_equations(
     *,
     data: TetrahedralVectorSpace,
     source: Any,
-    lame_lambda: float = np.inf,
-    lame_mu: float = 1.0,
+    lame_lambda: Any = np.inf,
+    lame_mu: Any = 1.0,
+    lame_mu_gradient: Any = None,
+    shear_bounds: tuple[float, float, float] | None = None,
+    formulation: str = "gals",
+    stabilization_alpha: float | None = None,
 ) -> LocalEquations:
-    """Write GaLS P2/P2 with its physically computed tetrahedral inverse bound.
+    """Declare isotropic Herrmann elasticity and GaLS or Taylor--Hood volume forms.
 
-    Constant shear gives R(u,p)=div(2*mu*epsilon(u))-grad(p). The negative
-    residual product and positive source pairing use alpha at half the sufficient
-    bound, computed by the existing pure six-rigid-mode inverse-bound owner.
-    It is computed on each physical tetrahedral local mesh and not inherited from
-    a two-dimensional constant. Kernels and mass moments use the declared global
-    volume center. Pressure is Herrmann pressure and B's multiplier is -sigma*n.
+    The residual is div(2*mu*epsilon(u))-grad(p), including grad(mu).
+    GaLS subtracts its residual product and adds its source functional. The
+    sufficient inverse/coefficient bound is computed on the physical tetrahedra;
+    caller-supplied variable-shear bounds remain explicit. Six rigid modes and
+    their volume moments use the global volume centroid. Lambda may be infinite.
     """
-    if data.vector_degree != 2 or data.pressure_degree != 2:
-        raise ValueError("this displacement application declares GaLS P2/P2")
-    if lame_mu <= 0 or not np.isfinite(lame_mu) or lame_lambda <= 0 or np.isnan(lame_lambda):
-        raise ValueError("constant positive shear and positive/infinite lambda are required")
+    expected = data.vector_degree if formulation == "gals" else data.vector_degree - 1
+    if data.pressure_degree != expected:
+        raise ValueError("pressure degree must match the declared elasticity formulation")
     fine = data.mesh.submesh(cell, data.refinement)
     vertices = data.mesh.points[data.mesh.cells[cell]]
-    diameter = np.linalg.norm(vertices[:, None] - vertices[None, :], axis=-1).max()
+    diameter = float(np.linalg.norm(vertices[:, None] - vertices[None, :], axis=-1).max())
     center = (
         data.mesh.volumes @ data.mesh.points[data.mesh.cells].mean(axis=1) / data.mesh.volumes.sum()
     )
-    bary, weights = tetrahedron_quadrature(max(data.quadrature_order, 4))
-    dofs, nodes, basis, gradient, hessian = tetra_element_tabulate(fine, 2, bary)
-    pdofs, pnodes, pbasis, pgradient = tetra_tabulate(fine, 2, bary)
-    nc, nq, ns, _ = gradient.shape
-    nv, npres, nps = len(nodes), len(pnodes), pbasis.shape[1]
-    udofs = (3 * dofs[:, :, None] + np.arange(3)).reshape(nc, 3 * ns)
-    all_dofs = np.column_stack((udofs, 3 * nv + pdofs))
-    points = np.einsum("qi,tia->tqa", bary, fine.points[fine.cells])
-    mu = np.full(points.shape[:2], lame_mu)
-    compliance = np.full(mu.shape, 0.0 if np.isinf(lame_lambda) else 1 / lame_lambda)
-    strain = np.einsum("aij,tqnj->tqani", _KELVIN3, gradient).reshape(*mu.shape, 6, 3 * ns)
-    divergence = gradient.reshape(*mu.shape, 3 * ns)
-    laplacian = np.trace(hessian, axis1=-2, axis2=-1)
-    strong = np.empty((*mu.shape, 3, 3 * ns))
-    for axis in range(3):
-        for component in range(3):
-            strong[:, :, axis, component::3] = (
-                hessian[:, :, :, axis, component] + (axis == component) * laplacian
-            ) / 2
-    blocks = np.zeros((nc, 3 * ns + nps, 3 * ns + nps))
-    blocks[:, : 3 * ns, : 3 * ns] = np.einsum(
-        "t,q,tqai,tqaj,tq->tij", fine.volumes, weights, strain, strain, 2 * mu
+    forms = tetra_elasticity_pressure_operators(
+        fine,
+        lame_lambda=lame_lambda,
+        lame_mu=lame_mu,
+        lame_mu_gradient=lame_mu_gradient,
+        shear_bounds=shear_bounds,
+        source=source,
+        degree=data.vector_degree,
+        formulation=formulation,
+        stabilization_alpha=stabilization_alpha,
+        macro_diameter=diameter,
+        rigid_center=center,
+        order=data.quadrature_order,
     )
-    mixed = -np.einsum("t,q,tqi,qj->tij", fine.volumes, weights, divergence, pbasis)
-    blocks[:, : 3 * ns, 3 * ns :] = mixed
-    blocks[:, 3 * ns :, : 3 * ns] = mixed.swapaxes(1, 2)
-    blocks[:, 3 * ns :, 3 * ns :] = -np.einsum(
-        "t,q,qi,qj,tq->tij", fine.volumes, weights, pbasis, pbasis, compliance
-    )
-    force = vector_values_3d(source, points.reshape(-1, 3)).reshape(points.shape)
-    load_blocks = np.zeros((nc, 3 * ns + nps))
-    load_blocks[:, : 3 * ns] = np.einsum(
-        "t,q,qi,tqa->tia", fine.volumes, weights, basis, force
-    ).reshape(nc, 3 * ns)
-    fine_vertices = fine.points[fine.cells]
-    lengths = np.max(
-        np.linalg.norm(fine_vertices[:, :, None] - fine_vertices[:, None, :], axis=-1), axis=(1, 2)
-    )
-    bound = _strain_inverse_bound(strain, strong, weights, lengths, float(diameter)) / (2 * lame_mu)
-    alpha = bound / 2
-    residual = np.concatenate(
-        (2 * mu[:, :, None, None] * strong, -pgradient.swapaxes(-1, -2)), axis=-1
-    )
-    blocks -= np.einsum(
-        "t,q,tqai,tqaj->tij", alpha * lengths**2 * fine.volumes, weights, residual, residual
-    )
-    load_blocks += np.einsum(
-        "t,q,tqai,tqa->ti", alpha * lengths**2 * fine.volumes, weights, residual, force
-    )
-    size = 3 * nv + npres
-    a = assemble_element_blocks(blocks, all_dofs, all_dofs, (size, size))
-    load = np.bincount(all_dofs.ravel(), weights=load_blocks.ravel(), minlength=size)
+    nv, size = len(forms.displacement_nodes), len(forms.load)
     b, indices = _trace_blocks(cell, fine, size, nv, data)
-    rigid = rigid_modes_3d(nodes, center).reshape(3 * nv, 6)
-    mass = assemble_element_blocks(
-        np.einsum("t,q,qi,qj->tij", fine.volumes, weights, basis, basis), dofs, dofs, (nv, nv)
-    )
-    kernel, moments = np.zeros((size, 6)), np.zeros((size, 6))
-    kernel[: 3 * nv] = rigid
-    moments[: 3 * nv] = sparse.kron(mass, sparse.eye(3)) @ rigid
-    pressure_weights, compliance_weights = np.zeros(size), np.zeros(size)
-    np.add.at(pressure_weights, 3 * nv + pdofs, fine.volumes[:, None] * (weights @ pbasis))
-    np.add.at(
-        compliance_weights,
-        3 * nv + pdofs,
-        np.einsum("t,q,qi,tq->ti", fine.volumes, weights, pbasis, compliance),
-    )
+    selector = sparse.eye(size, format="csr")
     return LocalEquations(
-        a,
-        load,
+        forms.matrix,
+        forms.load,
         b,
         -b.T,
         indices,
-        d=0,
-        g=0,
-        kernel=kernel,
-        moments=moments,
+        kernel=forms.kernel,
+        moments=forms.rigid_moments,
         metadata=(
             fine,
             nv,
-            pressure_weights,
-            alpha,
-            moments,
-            compliance_weights,
-            float(compliance.max()),
+            forms.pressure_moments,
+            forms.stabilization_alpha,
+            forms.rigid_moments,
+            forms.compliance_moments,
+            forms.compliance_scale,
+        ),
+        field_data=(
+            nodal_field(
+                "displacement",
+                fine,
+                data.vector_degree,
+                components=3,
+                reconstruction=selector[: 3 * nv],
+            ),
+            nodal_field("pressure", fine, data.pressure_degree, reconstruction=selector[3 * nv :]),
         ),
     )
 
@@ -249,6 +215,8 @@ def tetra_velocity_fields(
     solution: HybridSolution,
     data: TetrahedralVectorSpace,
     viscosity: float = 1.0,
+    advection: Any = (0.0, 0.0, 0.0),
+    formulation: str = "taylor-hood",
 ) -> Flow3DSolution:
     """Interpret the declared coefficients in the unchanged grad-grad flow field record."""
     return Flow3DSolution(
@@ -266,8 +234,8 @@ def tetra_velocity_fields(
         data.vector_degree,
         data.pressure_degree,
         viscosity,
-        (0.0, 0.0, 0.0),
-        "taylor-hood",
+        advection,
+        formulation,
     )
 
 
@@ -276,7 +244,8 @@ def tetra_displacement_fields(
     solution: HybridSolution,
     data: TetrahedralVectorSpace,
     lame_lambda: float = np.inf,
-    lame_mu: float = 1.0,
+    lame_mu: Any = 1.0,
+    formulation: str = "gals",
 ) -> GaLS3DSolution:
     """Interpret displacement, Herrmann pressure and Cauchy stress in the executed basis."""
     return GaLS3DSolution(
@@ -295,6 +264,6 @@ def tetra_displacement_fields(
         data.pressure_degree,
         lame_lambda,
         lame_mu,
-        "gals",
+        formulation,
         tuple(record[3] for record in system.local_metadata),
     )

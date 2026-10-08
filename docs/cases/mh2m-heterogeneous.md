@@ -534,15 +534,34 @@ the explicit data convention, every space and mesh, field-archive digests,
 executed source hashes, quadrature checks and physical residuals.
 
 ```bash
-pixi run -e notebooks mh2m-heterogeneous-campaign \
-  --references 32 64 128 256 512 1024 --norm-workers 8
-pixi run -e fem python -m examples.mh2m_cg_reference --sizes 32 64 128 256 512 --order 16
-pixi run -e fem python -m examples.mh2m_cg_reference --sizes 512 --order 12
-pixi run -e notebooks mh2m-cg3-comparison
-pixi run -e notebooks mh2m-cg3-controls
-pixi run -e notebooks gallery-mh2m-cg3
-pixi run -e notebooks python scripts/run_notebooks.py notebooks/darcy/70_mh2m_heterogeneous.ipynb
+pixi run --locked -e notebooks notebooks-run 70
+pixi run --locked -e notebooks notebooks-run 70 --study --plan
+pixi run --locked -e notebooks notebooks-run 70 --study
 ```
+
+The default notebook executes the same oscillatory coefficient with
+$\gamma=1.8$, $\epsilon=1/14$, quartic forcing and homogeneous Dirichlet data.
+Its declared coarse control uses a diagonal macro mesh with four squares per
+axis, local $P_1$ pressures at refinement 16, continuous $P_1$ pressure traces
+and one or two broken constant conormal segments. Assembly orders 8 and 10
+are reported separately. The condensed fields agree with a direct assembly of
+the original coefficient equations in those same spaces. A separate global
+conforming $P_1$ sequence at resolutions 64, 128 and 256 reports its own pressure,
+raw Darcy flux and energy increments before use as a numerical comparison.
+The remaining increment limits its resolution; this coarse control does not
+identify the full published crisscross discretization or certify its accuracy.
+The default sequence's final 128-to-256 increment is approximately 1.41% in
+pressure and 12.20% in raw Darcy flux. Its finest field remains an unresolved
+numerical comparison for a precision claim.
+
+The complete current study acquires the declared diagonal and recovered
+crisscross fields and both independently refined reference families in a fresh
+`build/results/mh2m-<acquisition>` directory. The runner expands the shared
+acquisition identifier, preserving attributed original records and their
+checksums. The catalogue lists every locked producer command and its physical
+scope. Exact original instrumented verification and article-raster comparisons
+are optional `--historical` sections and require the original payloads.
+
 
 The $P_1$ controls use a separate global conforming assembly with the
 package's shared finite-element kernels. The additional $P_3$ reference is
