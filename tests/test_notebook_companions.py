@@ -8,7 +8,9 @@ import os
 import subprocess
 import sys
 import zipfile
+from collections.abc import Callable
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -205,3 +207,30 @@ def test_companion_rejects_unsafe_or_case_payloads(tmp_path: Path, source: str) 
     """Notebook pins cannot legitimize traversals, fields or the circular global case registry."""
     with pytest.raises(ValueError, match="Invalid|Unsupported"):
         build_companion(tmp_path, [source], tmp_path / "output", name="companion.zip")
+
+
+def test_notebook_bootstrap_requires_verified_local_companions(
+    prepare_notebook_companion: Callable[[str], Path], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The actual bootstrap accepts exact local ZIPs and rejects corruption or network fallback."""
+    selector = "flow/introductory_methods.ipynb"
+    workspace = prepare_notebook_companion(selector)
+    monkeypatch.chdir(workspace)
+    root = Path(__file__).resolve().parents[1]
+    notebook = json.loads((root / "notebooks" / selector).read_text())
+    bootstrap = compile("".join(notebook["cells"][1]["source"]), selector, "exec")
+    scope: dict[str, Any] = {}
+    exec(bootstrap, scope)
+    assert scope["ROOT"] == workspace
+    archive = (
+        Path(os.environ["PYMHM_CACHE_DIR"])
+        / "archives"
+        / scope["COMPANION_SHA256"]
+        / "resources.zip"
+    )
+    archive.write_bytes(b"corrupt companion")
+    with pytest.raises(ValueError, match="SHA256 mismatch for existing resource"):
+        exec(bootstrap, scope)
+    archive.unlink()
+    with pytest.raises(AssertionError, match="must use locally built resources"):
+        exec(bootstrap, scope)
