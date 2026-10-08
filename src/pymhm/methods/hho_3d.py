@@ -125,15 +125,20 @@ def _local(
 def _face_rule(
     mesh: Any, skeleton: Any, face: int, order: int
 ) -> tuple[FloatArray, FloatArray, FloatArray]:
-    """Return physical points, area weights and moment basis for either face topology."""
+    """Return physical moment rules, integrating the degree-2ell face mass exactly."""
+    order = max(positive_int(order, "face quadrature order"), int(skeleton.degrees[face]) + 1)
     if isinstance(mesh, PolyhedralMesh):
         points, weights = _face_quadrature(mesh, face, order)
         return points, weights, np.asarray(skeleton.basis(face, points), dtype=np.float64)
     bary, weights = triangle_quadrature(order)
     partition = skeleton.face_partition(int(face))
     points = np.einsum("qi,sij->sqj", bary, partition @ mesh.points[mesh.faces[face]])
-    values = skeleton.basis(face, bary)
-    basis = np.kron(np.eye(len(partition)), values)
+    if skeleton.continuous[face]:
+        original_bary = np.einsum("qi,sij->sqj", bary, partition)
+        basis = skeleton.evaluate(face, original_bary.reshape(-1, 3))
+    else:
+        values = skeleton.basis(face, bary)
+        basis = np.kron(np.eye(len(partition)), values)
     return (
         points.reshape(-1, 3),
         (skeleton.face_weights(int(face))[:, None] * weights).ravel() * mesh.areas[face],

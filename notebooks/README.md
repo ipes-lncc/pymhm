@@ -87,6 +87,7 @@ pixi run --locked -e introduction notebooks-run introduction --timeout 1800
 | [MHM and MsHHO field equivalence](darcy/24_mshho.ipynb) | primal MHM; MsHHO |
 | [Enriched rectangular RT elements](darcy/25_tensor_rt.ipynb) | rectangular RT mixed MHM |
 | [Three-dimensional tetrahedral MHM](darcy/29_darcy3d.ipynb) | tetrahedral primal MHM |
+| [Continuous polynomial macrofaces in three-dimensional MHM](darcy/74_continuous_macrofaces3d.ipynb) | tetrahedral primal MHM; continuous/discontinuous Bernstein face polynomials; mixed continuity and independent degrees |
 | [Polygonal macro meshes](darcy/30_polygonal_macro_meshes.ipynb) | polygonal primal MHM |
 | [Material-weighted energy estimation](darcy/31_weighted_energy_estimator.ipynb) | primal MHM; material-weighted energy estimator |
 | [Raviart–Thomas Darcy: RT0, RT1 and RT2](darcy/33_darcy_rt.ipynb) | RT0; RT1; RT2 |

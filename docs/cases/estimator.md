@@ -53,6 +53,15 @@ subject to these space conditions and adequate quadrature. The five-level
 campaigns below use RT2 reconstruction; their numerical evidence does not
 extend automatically to every supported order.
 
+The cited analysis also uses independent polynomial tests on every skeletal
+subface. Its local efficiency proof tests a constant supported on one subface
+to obtain a zero mean pressure jump there. Continuous polynomials on a face
+with several segments remove those individual tests, so this estimator API
+rejects that choice. A continuous face with a single segment has the same
+polynomial space as its discontinuous counterpart. RT moment reconstruction
+remains available for subdivided continuous traces; that algebraic construction
+does not transfer the estimator's theorem to the reduced test space.
+
 Neither an arbitrary SPD coefficient nor nonzero boundary data is accepted
 under this formula. In particular, a coefficient-dependent energy bound must
 not be inferred from the unweighted unit-diffusion flux norm. More general

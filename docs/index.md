@@ -93,6 +93,7 @@ arbitrary user-supplied forms.
 | Problem | Local approximation | Skeleton / normalization |
 | --- | --- | --- |
 | Darcy | Primal Pk, triangular RT0–RT2/BDM2 and enriched rectangular RT | Scalar normal flux; physical local means; pure Neumann gauge |
+| Three-dimensional primal Darcy | Conforming local tetrahedral Pk | Continuous or discontinuous polynomials within independently partitioned triangular macrofaces |
 | Three-dimensional mixed Darcy | Tetrahedral 18/P1 and 32/P2 families, prismatic 27/W11 and mapped hexahedral RT | Oriented Piola normal traces; physical cell moments and production balances |
 | Cartesian Darcy | Conforming local Qk on rectangular grids | Continuous or discontinuous face traces; geometric material-pixel integration |
 | Stokes–Brinkman | Pk/P(k−1) Taylor–Hood or Pk/Pk USFEM | Vector pseudotraction; tensor resistance; global pressure mean for full velocity data |
@@ -118,6 +119,9 @@ geometry; they are not interchangeable backends for every equation.
 Face partitions and polynomial degrees are independent of local refinement.
 Planar edge bases can be discontinuous
 Legendre polynomials or continuous nodal polynomials within each macroface.
+Triangular macrofaces likewise support discontinuous Bernstein polynomials or
+continuous piecewise polynomials, with independent degrees and continuity
+choices per face.
 Normal-trace restrictions and local refinement must satisfy each formulation's
 compatibility conditions.
 

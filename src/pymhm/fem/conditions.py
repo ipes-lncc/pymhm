@@ -4,7 +4,24 @@ The sufficient degree condition follows Theorem 5.2 of
 [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073).
 """
 
+from collections.abc import Iterable
+
 from pymhm.core.validation import positive_int
+
+
+def validate_estimator_face_partitions(
+    continuous: Iterable[bool], subface_counts: Iterable[int]
+) -> None:
+    """Require independent subface polynomials for the cited estimator theorem.
+
+    Equation (3.1) and Theorem 5.2 use tests supported on each individual
+    skeletal subface in dimensions two and three. C0 over several subfaces
+    excludes these tests. C0 on one subface coincides with its DG polynomial
+    space; canonical RT reconstruction is not restricted by this condition.
+    """
+    for is_continuous, count in zip(continuous, subface_counts, strict=True):
+        if is_continuous and positive_int(count, "subface count") > 1:
+            raise ValueError("published estimator requires independent polynomials on each subface")
 
 
 def minimum_estimator_degree(trace_degree: int, dimension: int) -> int:

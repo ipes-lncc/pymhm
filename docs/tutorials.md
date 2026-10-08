@@ -120,7 +120,7 @@ same data and spaces used by its predefined-formulation controls.
 ## Problem folders and detailed studies
 
 The complete [notebook catalogue](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/README.md)
-contains all 97 notebooks and the methods used by each. The
+contains all 98 notebooks and the methods used by each. The
 [machine-readable index](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/catalogue.json)
 uses paths relative to the repository root.
 
@@ -134,6 +134,10 @@ uses paths relative to the repository root.
 | `waves/` | `helmholtz/`, `maxwell/` and `elastodynamics/` |
 | `foundations/` | Local/global `operators/`, `geometry/` and `general/` examples |
 | `convergence/` | The initial cross-problem convergence catalogue |
+
+The [continuous-macroface 3D notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/74_continuous_macrofaces3d.ipynb)
+is a self-contained affine Darcy check of continuous, discontinuous and mixed
+polynomial face spaces, including independent positive degrees per face.
 
 ## Execute selected notebooks
 

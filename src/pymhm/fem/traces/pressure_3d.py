@@ -149,19 +149,5 @@ def boundary_rules(
 
 
 def broken_face_basis(skeleton: TriangularSkeleton, face: int, bary: Any) -> FloatArray:
-    """Evaluate all discontinuous conormal face modes on its aligned subtriangles."""
-    parts = skeleton.face_partition(face)
-    points = np.asarray(bary)
-    transformed = np.einsum("qi,sij->sqj", points, np.linalg.inv(parts))
-    valid = np.min(transformed, axis=-1) >= -1e-10
-    if not np.all(np.any(valid, axis=0)):
-        raise ValueError("conormal partition does not cover evaluation points")
-    owners = np.argmax(valid, axis=0)
-    output = np.zeros((len(points), len(skeleton.dofs(face))))
-    modes = int(skeleton.modes[face])
-    for segment in np.unique(owners):
-        rows = np.flatnonzero(owners == segment)
-        output[np.ix_(rows, segment * modes + np.arange(modes))] = skeleton.basis(
-            face, transformed[segment, rows]
-        )
-    return output
+    """Evaluate DG or macroface-C0 conormal modes in the skeleton's coefficient order."""
+    return skeleton.evaluate(face, bary)

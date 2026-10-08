@@ -80,6 +80,14 @@ checks equilibrium numerically and evaluates the indicators by quadrature;
 it does not provide interval-certified integrals. Point-source wells are outside
 this $L^2$-source energy estimate.
 
+Both conventions retain the published polynomial test-space contract:
+independent tests on each skeletal subface. Faces with continuous polynomials
+across several segments are rejected. The local efficiency argument uses a
+constant test supported on each subface, which that continuous space does not
+contain. A single-segment continuous face still spans the same polynomial
+space as a discontinuous face. Canonical RT reconstruction can be used with
+subdivided continuous traces independently of this estimator contract.
+
 Literal constant tensors and Cartesian material fields provide eigenvalue bounds
 directly. Other coefficient callbacks require `ellipticity_lower_bound`, either
 one scalar or one value per macrocell. Sampling checks that the bound is not

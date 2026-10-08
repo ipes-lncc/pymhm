@@ -22,7 +22,7 @@ from pymhm.estimators.darcy import (
     _restrict_potential,
 )
 from pymhm.execution.cpu import map_local
-from pymhm.fem.conditions import validate_estimator_spaces
+from pymhm.fem.conditions import validate_estimator_face_partitions, validate_estimator_spaces
 from pymhm.fem.hdiv.rt import rt_evaluate
 from pymhm.fem.quadrature.material import material_triangle_quadrature
 from pymhm.fem.scalar.triangle import element_tabulate, nodal_space
@@ -325,6 +325,9 @@ def estimate_darcy_indicator(
     convention is a numerical indicator for general SPD material, not a claim of a
     coefficient-independent physical-energy bound. ``backend`` executes independent reconstruction
     and indicator calculations; spawn workers require picklable coefficient and source callbacks.
+    Independent polynomial tests on each skeletal subface are required by
+    the cited theorem. Subdivided C0 macrofaces are excluded in either
+    convention; one-segment C0 and DG spaces coincide.
     """
     if convention not in {"published", "energy"}:
         raise ValueError("convention must be 'published' or 'energy'")
@@ -332,6 +335,10 @@ def estimate_darcy_indicator(
     if any(len(part) for part in solution.point_sources):
         raise ValueError("energy estimation requires an L2 source, not point wells")
     coarse, skeleton = solution.skeleton.mesh, solution.skeleton
+    validate_estimator_face_partitions(
+        (face.continuous for face in skeleton.faces),
+        (len(face.degrees) for face in skeleton.faces),
+    )
     if any(len(cell) != 3 for cell in coarse.cells):
         raise ValueError("the diameter/pi reliability constant requires triangular macrocells")
     ell = max(max(face.degrees) for face in skeleton.faces)
