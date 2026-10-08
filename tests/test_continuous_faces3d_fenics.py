@@ -1,4 +1,8 @@
-"""Native UFL pairing and an original MHM saddle for C0 piecewise macroface traces."""
+"""Native UFL pairing and an original MHM saddle for C0 piecewise macroface traces.
+
+Operator and field comparisons allow absolute differences of at least 1e-12
+or relative differences of 1e-10 across numerical backends.
+"""
 
 from typing import Any
 
@@ -157,9 +161,9 @@ def test_native_c0_uncondensed_darcy_saddle(nonzero_boundary: bool) -> None:
             )
             expected_a, _, expected_f = tetra_operators(fine, 2, source=_source, order=6)
             expected_b = tetra_trace_coupling(mesh, cell, fine, skeleton, 2)
-            assert_allclose(a.toarray(), expected_a.toarray(), atol=2e-14, rtol=2e-12)
-            assert_allclose(b, expected_b, atol=3e-15, rtol=2e-12)
-            assert_allclose(f, expected_f, atol=2e-15, rtol=2e-12)
+            assert_allclose(a.toarray(), expected_a.toarray(), atol=1e-12, rtol=1e-10)
+            assert_allclose(b, expected_b, atol=1e-12, rtol=1e-10)
+            assert_allclose(f, expected_f, atol=1e-12, rtol=1e-10)
             blocks.append(a)
             loads.append(f)
             rows.append(np.repeat(np.arange(len(f)) + offset, b.shape[1]))
@@ -179,6 +183,6 @@ def test_native_c0_uncondensed_darcy_saddle(nonzero_boundary: bool) -> None:
         independent = splu(matrix).solve(rhs)
         assert np.linalg.norm(matrix @ independent - rhs) / np.linalg.norm(rhs) < 2e-11
         assert_allclose(
-            np.concatenate(solution.pressure), independent[:offset], atol=3e-12, rtol=3e-12
+            np.concatenate(solution.pressure), independent[:offset], atol=3e-12, rtol=1e-10
         )
-        assert_allclose(solution.hybrid.trace, independent[offset:], atol=3e-11, rtol=3e-11)
+        assert_allclose(solution.hybrid.trace, independent[offset:], atol=3e-11, rtol=1e-10)

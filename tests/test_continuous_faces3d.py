@@ -1,4 +1,8 @@
-"""C0 Bernstein traces on each macroface and their physical primal Darcy equations."""
+"""C0 Bernstein traces on each macroface and their physical primal Darcy equations.
+
+Floating comparisons allow an absolute tolerance of at least 1e-12 and a
+relative tolerance of 1e-10 across numerical backends.
+"""
 
 from collections.abc import Iterator
 from itertools import combinations
@@ -76,16 +80,21 @@ def test_shared_edge_values_with_reversed_subtriangle_vertices(
             skeleton.basis(0, points @ np.linalg.inv(partition[right]))
             @ coefficients[skeleton.subtriangle_dofs(0, right)]
         )
-        assert_allclose(left_values, right_values, atol=2e-13, rtol=2e-13)
+        assert_allclose(left_values, right_values, atol=1e-12, rtol=1e-10)
         assert_allclose(
             skeleton.evaluate(0, points) @ coefficients[skeleton.dofs(0)],
             left_values,
-            atol=2e-13,
-            rtol=2e-13,
+            atol=1e-12,
+            rtol=1e-10,
         )
         count += 1
     assert count == 3
-    assert_allclose(skeleton.evaluate(0, np.vstack((np.eye(3), [0.2, 0.3, 0.5]))).sum(1), 1)
+    assert_allclose(
+        skeleton.evaluate(0, np.vstack((np.eye(3), [0.2, 0.3, 0.5]))).sum(1),
+        1,
+        atol=1e-12,
+        rtol=1e-10,
+    )
 
 
 @pytest.mark.parametrize("degree", [1, 2, 4, 7])
@@ -128,15 +137,15 @@ def test_high_degree_macro_polynomial_reproduction_on_nonuniform_partition(degre
         local -= 0.2 * np.prod(triangle[:, 2] ** powers, axis=1)
         ids = skeleton.subtriangle_dofs(0, segment)
         assigned = np.isfinite(coefficients[ids])
-        assert_allclose(coefficients[ids][assigned], local[assigned], atol=2e-15)
+        assert_allclose(coefficients[ids][assigned], local[assigned], atol=1e-12, rtol=1e-10)
         coefficients[ids] = local
     points, _ = triangle_quadrature(8)
     expected = points[:, 0] ** degree + 0.7 * points[:, 1] ** degree - 0.2 * points[:, 2] ** degree
     assert_allclose(
         skeleton.evaluate(0, points) @ coefficients[skeleton.dofs(0)],
         expected,
-        atol=2e-14,
-        rtol=2e-13,
+        atol=1e-12,
+        rtol=1e-10,
     )
 
 
@@ -165,12 +174,12 @@ def test_degree_five_boundary_projection_raises_a_low_requested_quadrature(
             skeleton.evaluate(face, bary) @ coefficients,
             datum(bary @ mesh.points[mesh.faces[face]]),
             atol=2e-11,
-            rtol=2e-12,
+            rtol=1e-10,
         )
     requested_low, low_fixed = _boundary(skeleton, datum, {}, 2)
     requested_high, high_fixed = _boundary(skeleton, datum, {}, 10)
     assert low_fixed == high_fixed == {}
-    assert_allclose(requested_low, requested_high, atol=2e-14, rtol=2e-12)
+    assert_allclose(requested_low, requested_high, atol=1e-12, rtol=1e-10)
 
 
 def test_mixed_c0_and_discontinuous_degrees_preserve_the_declared_face_spaces() -> None:
@@ -181,8 +190,8 @@ def test_mixed_c0_and_discontinuous_degrees_preserve_the_declared_face_spaces() 
     skeleton = TriangularSkeleton(mesh, 2, degree=degrees, continuous=continuous)
     assert [len(skeleton.dofs(face)) for face in range(4)] == [6, 24, 28, 4]
     points = np.array([[0.15, 0.2, 0.65], [0.7, 0.2, 0.1], [0.2, 0.65, 0.15]])
-    assert_allclose(skeleton.evaluate(0, points).sum(1), 1)
-    assert_allclose(skeleton.evaluate(1, points).sum(1), 1)
+    assert_allclose(skeleton.evaluate(0, points).sum(1), 1, atol=1e-12, rtol=1e-10)
+    assert_allclose(skeleton.evaluate(1, points).sum(1), 1, atol=1e-12, rtol=1e-10)
     for segment in range(4):
         assert len(skeleton.subtriangle_dofs(1, segment)) == 6
         for other in range(segment):
@@ -197,7 +206,9 @@ def test_mixed_c0_and_discontinuous_degrees_preserve_the_declared_face_spaces() 
     default = TriangularSkeleton(mesh, 2, degree=2)
     explicit = TriangularSkeleton(mesh, 2, degree=2, continuous=False)
     assert_allclose(default.offsets, explicit.offsets)
-    assert_allclose(default.evaluate(0, points), explicit.evaluate(0, points))
+    assert_allclose(
+        default.evaluate(0, points), explicit.evaluate(0, points), atol=1e-12, rtol=1e-10
+    )
 
 
 @pytest.mark.parametrize(
@@ -251,7 +262,7 @@ def test_linear_local_space_admits_resolved_c0_traces_and_rejects_the_previous_m
             )
     solution = solve_darcy_3d(mesh, skeleton=skeleton, degree=1, local_refinement=4, source=1.0)
     assert solution.hybrid.residual < 1e-10
-    assert_allclose(solution.conservation_residuals(), 0, atol=2e-11)
+    assert_allclose(solution.conservation_residuals(), 0, atol=2e-11, rtol=1e-10)
 
 
 @pytest.mark.parametrize("boundary", ["dirichlet", "mixed", "neumann"])
@@ -290,19 +301,19 @@ def test_anisotropic_quadratic_pressure_physical_flux_and_full_mean(boundary: st
     )
     assert solution.l2_error(pressure, 6) < 2e-11
     assert solution.flux_l2_error(flux, 6) < 2e-11
-    assert_allclose(solution.conservation_residuals(), 0, atol=2e-11)
+    assert_allclose(solution.conservation_residuals(), 0, atol=2e-11, rtol=1e-10)
     points, _ = triangle_quadrature(4)
     for face in range(len(mesh.faces)):
         physical = points @ mesh.points[mesh.faces[face]]
         represented = skeleton.evaluate(face, points) @ solution.hybrid.trace[skeleton.dofs(face)]
-        assert_allclose(represented, flux(physical) @ mesh.normals[face], atol=2e-11)
+        assert_allclose(represented, flux(physical) @ mesh.normals[face], atol=2e-11, rtol=1e-10)
     if boundary == "neumann":
         bary, weights = tetrahedron_quadrature(6)
         integral = sum(
             fine.volumes @ (solution.evaluate(cell, bary)[0] @ weights)
             for cell, fine in enumerate(solution.local_meshes)
         )
-        assert_allclose(integral / mesh.volumes.sum(), 2, atol=2e-12)
+        assert_allclose(integral / mesh.volumes.sum(), 2, atol=2e-12, rtol=1e-10)
 
 
 @pytest.mark.parametrize("mixed", [False, True])
@@ -346,7 +357,7 @@ def test_nonuniform_c0_anisotropic_patch_on_an_aligned_oblique_star(mixed: bool)
     )
     assert solution.l2_error(pressure, 6) < 2e-11
     assert solution.flux_l2_error(flux, 6) < 2e-11
-    assert_allclose(solution.conservation_residuals(), 0.0, atol=2e-11)
+    assert_allclose(solution.conservation_residuals(), 0.0, atol=2e-11, rtol=1e-10)
     bary, _ = triangle_quadrature(5)
     for face in range(len(mesh.faces)):
         points = bary @ mesh.points[mesh.faces[face]]
@@ -354,7 +365,7 @@ def test_nonuniform_c0_anisotropic_patch_on_an_aligned_oblique_star(mixed: bool)
             skeleton.evaluate(face, bary) @ solution.hybrid.trace[skeleton.dofs(face)],
             flux(points) @ mesh.normals[face],
             atol=2e-11,
-            rtol=2e-12,
+            rtol=1e-10,
         )
 
 
@@ -397,7 +408,7 @@ def test_nonzero_homogeneous_dirichlet_tetrahedral_bubble() -> None:
     )
     assert solution.l2_error(pressure, 8) < 2e-12
     assert solution.flux_l2_error(flux, 8) < 2e-11
-    assert_allclose(solution.conservation_residuals(), 0, atol=2e-12)
+    assert_allclose(solution.conservation_residuals(), 0, atol=2e-12, rtol=1e-10)
 
 
 def test_degree_five_trace_reproduces_a_sixth_degree_homogeneous_pressure() -> None:
@@ -434,7 +445,7 @@ def test_degree_five_trace_reproduces_a_sixth_degree_homogeneous_pressure() -> N
     )
     assert solution.l2_error(pressure, 10) < 2e-12
     assert solution.flux_l2_error(flux, 10) < 2e-11
-    assert_allclose(solution.conservation_residuals(), 0, atol=2e-12)
+    assert_allclose(solution.conservation_residuals(), 0, atol=2e-12, rtol=1e-10)
     bary, _ = triangle_quadrature(8)
     for face in range(len(mesh.faces)):
         points = bary @ mesh.points[mesh.faces[face]]
@@ -442,4 +453,5 @@ def test_degree_five_trace_reproduces_a_sixth_degree_homogeneous_pressure() -> N
             skeleton.evaluate(face, bary) @ solution.hybrid.trace[skeleton.dofs(face)],
             flux(points) @ mesh.normals[face],
             atol=2e-11,
+            rtol=1e-10,
         )

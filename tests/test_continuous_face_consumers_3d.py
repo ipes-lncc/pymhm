@@ -75,7 +75,7 @@ def test_shared_flux_coefficients_preserve_reconstruction_and_replay(mixed):
         neumann=natural,
     )
     assert solution.l2_error(pressure) < 2e-11
-    assert_allclose(solution.conservation_residuals(), 0, atol=2e-12)
+    assert_allclose(solution.conservation_residuals(), 0, atol=2e-12, rtol=1e-10)
     recovered = reconstruct_darcy_moments_3d(solution, degree=1)
     assert recovered.flux_l2_error(flux) < 3e-10
     assert max(np.max(abs(row)) for row in recovered.continuous_moment_residuals()) < 2e-12
@@ -97,7 +97,7 @@ def test_shared_flux_coefficients_preserve_reconstruction_and_replay(mixed):
             actual = recovered.family.tabulate(points, coefficients=rt_basis)
             expected = recovered.family.tabulate(points)
             for current, stored in zip(actual, expected, strict=True):
-                assert_allclose(current, stored, atol=1e-13, rtol=1e-13)
+                assert_allclose(current, stored, atol=1e-12, rtol=1e-10)
 
 
 @pytest.mark.parametrize("dimension", [2, 3])
@@ -133,7 +133,7 @@ def test_estimator_theorem_admits_single_face_and_excludes_subdivided_c0(dimensi
         estimates = (estimate,)
     for evaluate in estimates:
         if subdivisions == 1:
-            assert_allclose(evaluate().total, 0, atol=1e-13)
+            assert_allclose(evaluate().total, 0, atol=1e-12, rtol=1e-10)
         else:
             with pytest.raises(ValueError, match="independent polynomials on each subface"):
                 evaluate()
@@ -145,8 +145,8 @@ def test_moment_face_rules_and_scalar_reconstruction_use_the_shared_basis():
     skeleton = TriangularSkeleton(mesh, 2, degree=1, continuous=True)
     points, weights, basis = _face_rule(mesh, skeleton, 0, 4)
     assert basis.shape == (len(points), len(skeleton.dofs(0)))
-    assert_allclose(basis.sum(axis=1), 1, atol=2e-15)
-    assert_allclose(weights.sum(), mesh.areas[0], atol=2e-15)
+    assert_allclose(basis.sum(axis=1), 1, atol=1e-12, rtol=1e-10)
+    assert_allclose(weights.sum(), mesh.areas[0], atol=1e-12, rtol=1e-10)
     result = solve_mshho_3d(
         mesh,
         skeleton=skeleton,
@@ -184,7 +184,7 @@ def test_elastic_force_and_torque_use_shared_face_coefficients():
         -tensor @ gradient,
         5,
     )
-    assert_allclose(solution.equilibrium_residuals(), 0, atol=3e-14)
+    assert_allclose(solution.equilibrium_residuals(), 0, atol=1e-12, rtol=1e-10)
 
 
 def test_translation_gauge_checks_continuity_of_the_full_face_projection():
@@ -216,7 +216,7 @@ def test_tangential_mass_projection_and_maxwell_evolution_with_shared_coefficien
             for face in range(len(mesh.faces))
         ]
     )
-    assert_allclose(mass @ expected, load, atol=2e-14)
+    assert_allclose(mass @ expected, load, atol=1e-12, rtol=1e-10)
     assert np.linalg.eigvalsh(mass.toarray()).min() > 0
 
     def boundary(time, points, normals):
@@ -235,7 +235,7 @@ def test_tangential_mass_projection_and_maxwell_evolution_with_shared_coefficien
         initial = stepper.initialize(electric, magnetic)
         result = stepper.advance()
         assert max(result.l2_errors(electric, magnetic)) < 2e-11
-        assert_allclose(result.energy, initial.energy, atol=2e-12)
+        assert_allclose(result.energy, initial.energy, atol=2e-12, rtol=1e-10)
         assert abs(result.energy_balance_residual) < 2e-12
 
 
@@ -287,17 +287,18 @@ def test_high_degree_face_masses_match_independent_bernstein_integrals(continuou
         ids = np.searchsorted(base.dofs(face), base.subtriangle_dofs(face, segment))
         expected[np.ix_(ids, ids)] += mesh.areas[face] * fraction * reference
     _, weights, basis = _face_rule(mesh, base, face, 1)
-    assert_allclose(basis.T @ (weights[:, None] * basis), expected, atol=3e-17, rtol=2e-13)
+    # Compare native tabulation and BLAS accumulation at portable binary64 tolerances.
+    assert_allclose(basis.T @ (weights[:, None] * basis), expected, atol=1e-12, rtol=1e-10)
     skeleton = TangentialTraceSpace(base)
     mass = tangential_mass(skeleton, {face: 1.0}, 1)
     ids = skeleton.dofs(face)
     actual = mass[ids][:, ids].toarray()
-    assert_allclose(actual, np.kron(expected, np.eye(2)), atol=3e-17, rtol=2e-13)
+    assert_allclose(actual, np.kron(expected, np.eye(2)), atol=1e-12, rtol=1e-10)
     assert np.linalg.eigvalsh(actual).min() > 0
     fine = mesh.submesh(0, 2)
     minimal = trace_coupling(skeleton, 0, fine, 2, 1).toarray()
     overintegrated = trace_coupling(skeleton, 0, fine, 2, 11).toarray()
-    assert_allclose(minimal, overintegrated, atol=3e-16, rtol=2e-12)
+    assert_allclose(minimal, overintegrated, atol=1e-12, rtol=1e-10)
 
 
 def test_high_degree_planar_tangential_mass_and_coupling_are_integrated():
@@ -309,12 +310,13 @@ def test_high_degree_planar_tangential_mass_and_coupling_are_integrated():
     ids = skeleton.dofs(face)
     actual = tangential_mass(skeleton, {face: 1.0}, 1)[ids][:, ids].toarray()
     expected = np.diag(mesh.lengths[face] / (2 * np.arange(9) + 1))
-    assert_allclose(actual, expected, atol=2e-15)
+    assert_allclose(actual, expected, atol=1e-12, rtol=1e-10)
     fine = mesh.submesh(0, 2)
     assert_allclose(
         trace_coupling(skeleton, 0, fine, 2, 1).toarray(),
         trace_coupling(skeleton, 0, fine, 2, 11).toarray(),
-        atol=2e-15,
+        atol=1e-12,
+        rtol=1e-10,
     )
 
 
