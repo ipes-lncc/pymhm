@@ -11,6 +11,8 @@ from examples.plot_unfitted_convergence import (  # noqa: E402
     printed_comparisons,
 )
 
+pytestmark = pytest.mark.visualization
+
 
 def local_records(folder):
     """Create six completed comparisons with distinct field identities and nonzero norms."""

@@ -2,6 +2,8 @@
 
 Operators are supplied by notebook formulas. These helpers integrate physical
 fields, record executed coordinates and plot independently sampled macro sides.
+Matplotlib is loaded only by plotting functions; numerical helpers do not
+require the visualization environment.
 """
 
 from __future__ import annotations
@@ -12,10 +14,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.collections import LineCollection
-from matplotlib.tri import Triangulation
 from numpy.typing import NDArray
 from threadpoolctl import threadpool_limits
 
@@ -208,6 +207,7 @@ def plot_field_panels(
     are never averaged across a macroface. Each field has its own color scale.
     """
     import matplotlib.pyplot as plt
+    from matplotlib.collections import LineCollection
     from matplotlib.tri import Triangulation
 
     count = len(panels)
@@ -534,6 +534,10 @@ def display_samples(
 
 def plot_fields(macro: TriangleMesh, panels: dict, name: str, *, reports: Path) -> None:
     """Show separate one-sided display arrays and each actual macroface."""
+    import matplotlib.pyplot as plt
+    from matplotlib.collections import LineCollection
+    from matplotlib.tri import Triangulation
+
     columns = min(3, len(panels))
     rows = (len(panels) + columns - 1) // columns
     fig, axes = plt.subplots(
@@ -571,6 +575,8 @@ def rates(H: np.ndarray, errors: np.ndarray) -> np.ndarray:
 
 def plot_errors(H: np.ndarray, errors: dict, name: str, *, reports: Path) -> None:
     """Show measured norms and successive rates in separate axes."""
+    import matplotlib.pyplot as plt
+
     fig, axes = plt.subplots(1, 2, figsize=(12, 4.2), layout="constrained")
     for label, error in errors.items():
         axes[0].loglog(H, error, "o-", label=label)
@@ -1035,6 +1041,8 @@ def plot_brinkman_enriched_fields(
 def plot_brinkman_profiles(enriched_cases: Any, truth: Any, *, reports: Path) -> None:
     """Display physical measured fields and rates without changing a formulation."""
     from functools import partial
+
+    import matplotlib.pyplot as plt
 
     partial(plot_fields, reports=reports)
     partial(plot_errors, reports=reports)

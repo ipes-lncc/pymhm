@@ -73,6 +73,15 @@ meshio = ">=5.3"
 matplotlib-base = ">=3.8"
 pyamg = ">=5.3"
 
+[feature.visualization.dependencies]
+matplotlib-base = ">=3.8"
+
+[feature.notebook-tests.dependencies]
+ipykernel = ">=6.29"
+nbclient = ">=0.10"
+nbformat = ">=5.10"
+matplotlib-inline = ">=0.1.7"
+
 [feature.visualization.pypi-dependencies]
 pyvista = ">=0.46,<0.50"
 vtk = ">=9.5,<9.7"
@@ -186,7 +195,7 @@ fem-portable-pardiso-check = "python tests/fenics_portability_probe.py --solver 
 test-fem-cov = "python scripts/run_tests.py --coverage --report-dir build/reports/fem-coverage -- -m 'fem and not mpi and not gpu'"
 test-mpi = "python scripts/run_tests.py -- -m 'mpi and not gpu'"
 test-meshing = "python scripts/run_tests.py -- -m meshing"
-test-visualization = "python scripts/run_tests.py -- tests/test_visualization.py"
+test-visualization = "python scripts/run_tests.py -- -m '(visualization or notebooks) and not gpu'"
 build = "python -m build --no-isolation"
 check-dist = "python scripts/check_distribution.py"
 conda-build = "rattler-build build --recipe recipe/recipe.yaml --output-dir build/conda --no-include-recipe"
@@ -346,4 +355,4 @@ intel = { features = ["dev", "test", "intel"], solve-group = "intel" }
 gpu = { features = ["dev", "test", "gpu"], solve-group = "gpu" }
 hpc = { features = ["dev", "test", "gpu", "hpc"], solve-group = "hpc" }
 
-visualization = { features = ["native", "dev", "test", "visualization"], solve-group = "visualization" }
+visualization = { features = ["native", "dev", "test", "visualization", "notebook-tests"], solve-group = "visualization" }

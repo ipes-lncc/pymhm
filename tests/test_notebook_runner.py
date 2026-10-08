@@ -8,7 +8,10 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.notebooks
 
+
+@pytest.mark.visualization
 @pytest.mark.parametrize(
     "relative_path",
     ["notebooks/foundations/general/02_display.ipynb", "external/14_display.ipynb"],

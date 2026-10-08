@@ -2,6 +2,8 @@
 
 The notebook declares every physical form and solve. Helpers read already
 computed fields or assemble a separately supplied conforming reference form.
+Matplotlib is loaded only by plotting functions; field measurements and
+reference assembly remain available without visualization dependencies.
 """
 
 from __future__ import annotations
@@ -12,9 +14,7 @@ from functools import partial
 from pathlib import Path
 from typing import Any
 
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.tri import Triangulation
 
 from examples.introduction.vector import (
     display_samples,
@@ -311,6 +311,9 @@ def plot_rad_profiles(
     reports: Path,
 ) -> None:
     """Display measured fields and curves without selecting or solving a formulation."""
+    import matplotlib.pyplot as plt
+    from matplotlib.tri import Triangulation
+
     fig, axes = plt.subplots(2, 2, figsize=(13, 8), layout="constrained")
     for column, epsilon in enumerate((epsilon_primary, 1e-5)):
         for row, family in enumerate(("underresolved", "refined")):

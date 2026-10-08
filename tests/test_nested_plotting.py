@@ -9,6 +9,8 @@ import pytest
 pytest.importorskip("matplotlib")
 from examples import plot_nested as plotting
 
+pytestmark = pytest.mark.visualization
+
 
 def test_independent_leaf_pixels_do_not_overlap_or_mix_macroface_values():
     """Pixel bounds conserve each leaf interval while its two face values stay separate."""

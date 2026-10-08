@@ -9,6 +9,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 
+@pytest.mark.visualization
 def test_archived_q4_profile_preserves_interface_values(monkeypatch):
     """Quartic replay preserves the two distinct limits at a fine interface."""
     pytest.importorskip("matplotlib")

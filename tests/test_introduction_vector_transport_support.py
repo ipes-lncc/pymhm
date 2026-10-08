@@ -1,5 +1,7 @@
 """Introduction helpers preserve physical norms, executed coordinates and boundary gauges."""
 
+import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +20,43 @@ from examples.introduction.vector import (
 )
 from pymhm.fem.scalar.triangle import nodal_space
 from pymhm.meshes.triangle import TriangleMesh
+
+
+def test_numerical_helpers_import_without_visualization_dependencies() -> None:
+    """Numerical acquisition and evaluation import without loading Matplotlib."""
+    code = """
+import builtins
+
+original_import = builtins.__import__
+
+def without_matplotlib(name, *args, **kwargs):
+    if name == "matplotlib" or name.startswith("matplotlib."):
+        raise ModuleNotFoundError("Matplotlib is unavailable in this numerical environment")
+    return original_import(name, *args, **kwargs)
+
+builtins.__import__ = without_matplotlib
+
+from examples.introduction.transport import scalar_error_norms, scalar_reference
+from examples.introduction.vector import TriangleVectorEvaluator, brinkman_reference
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.meshes.triangle import TriangleMesh
+
+mesh = TriangleMesh.unit_square()
+_, points = nodal_space(mesh, 1)
+field = TriangleVectorEvaluator(mesh, 1, points)
+values, gradients = field(points)
+assert values.shape == (len(points), 2)
+assert gradients.shape == (len(points), 2, 2)
+helpers = (scalar_error_norms, scalar_reference, brinkman_reference)
+assert all(callable(helper) for helper in helpers)
+"""
+    subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=Path(__file__).resolve().parents[1],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
 
 
 def test_vector_evaluation_and_plane_strain_norms() -> None:
@@ -115,6 +154,7 @@ def test_broken_physical_scalar_and_flow_norms() -> None:
         assert abs(flow[name]) < 1e-12
 
 
+@pytest.mark.fem
 def test_supplied_conforming_scalar_form_and_natural_horizontal_data(tmp_path: Path) -> None:
     """Generic global assembly preserves zero vertical data and exact quadratic source."""
     pytest.importorskip("dolfinx")
@@ -145,6 +185,7 @@ def test_supplied_conforming_scalar_form_and_natural_horizontal_data(tmp_path: P
     assert (tmp_path / archive["path"]).is_file()
 
 
+@pytest.mark.fem
 def test_supplied_mixed_form_preserves_nonzero_boundary_and_physical_gauge(tmp_path: Path) -> None:
     """Generic constrained assembly exactly recovers a P2/P1 manufactured solution."""
     pytest.importorskip("dolfinx")

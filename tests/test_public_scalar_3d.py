@@ -16,6 +16,7 @@ from pymhm._legacy.models.transport.rad_3d import solve_rad_3d, solve_rad_3d_con
 from pymhm.fem.scalar.tetrahedron import tetra_boundary_nodes, tetra_nodal_space
 from pymhm.fem.traces.polygon_3d import PolygonalSkeleton3D
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
+from pymhm.linalg.linear import SolverUnavailableError
 from pymhm.meshes.polyhedral import PolyhedralMesh
 from pymhm.meshes.tetrahedron import TetraMesh
 
@@ -174,9 +175,21 @@ def test_true_tangent_kernel_retains_constant_and_compatible_gauge(kind: str) ->
 
 @pytest.mark.parametrize("kind", ["tetrahedron", "polyhedron"])
 @pytest.mark.parametrize("scale", [1e-8, 1e-16])
+@pytest.mark.parametrize("precision_capability", ["native", "binary64"])
 def test_arbitrarily_small_transport_does_not_change_retained_count(
-    kind: str, scale: float
+    monkeypatch: pytest.MonkeyPatch, kind: str, scale: float, precision_capability: str
 ) -> None:
+    """Physical constant retention is independent of extended-precision availability."""
+    if precision_capability == "binary64":
+        from pymhm.fem.scalar import operators
+        from pymhm.linalg import linear
+
+        monkeypatch.setattr(np, "longdouble", np.float64)
+        monkeypatch.setattr(np, "clongdouble", np.complex128)
+        monkeypatch.setattr(operators, "_EXTENDED_PRECISION", False)
+        monkeypatch.setattr(linear, "_EXTENDED_PRECISION", False)
+
+    wider = np.finfo(np.longdouble).eps < np.finfo(np.float64).eps
     mesh, skeleton, refinement, reference = setup(kind)
     options = dict(
         degree=3,
@@ -186,13 +199,20 @@ def test_arbitrarily_small_transport_does_not_change_retained_count(
         reaction=scale,
         source=lambda p: scale * (1 + affine(p)),
         dirichlet=affine,
-        global_refinement_precision="extended",
+        global_refinement_precision="extended" if wider else "double",
     )
     actual = transport_3d(mesh, **options)
     expected = reference(mesh, **options)
     for left, right in zip(actual.values, expected.values, strict=True):
         np.testing.assert_allclose(left, right, atol=1e-12, rtol=1e-10)
     assert all(len(coarse) == 1 for coarse in actual.hybrid.coarse)
+    assert actual.l2_error(affine) < 1e-12
+    assert actual.hybrid.raw_residual < 1e-12
+    if not wider:
+        explicit_extended = options | {"global_refinement_precision": "extended"}
+        for solve in (transport_3d, reference):
+            with pytest.raises(SolverUnavailableError, match="wider long-double"):
+                solve(mesh, **explicit_extended)
 
 
 @pytest.mark.parametrize("backend", ["thread", "process"])

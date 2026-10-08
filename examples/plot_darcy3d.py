@@ -7,13 +7,7 @@ import json
 from itertools import combinations
 from pathlib import Path
 
-import matplotlib
-
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.collections import LineCollection, PolyCollection
-from matplotlib.colors import Normalize, TwoSlopeNorm
 
 from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
 from pymhm.meshes.tetrahedron import TetraMesh
@@ -58,6 +52,13 @@ def exact(points: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
 
 def main() -> None:
     """Plot archived fields with actual macro intersections and independent one-sided values."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.collections import LineCollection, PolyCollection
+    from matplotlib.colors import Normalize, TwoSlopeNorm
+
     report = json.loads((ROOT / "examples/results/darcy3d.json").read_text())
     finest = report["rows"][-1]
     path = ROOT / "examples/results" / finest["fields"]

@@ -32,6 +32,19 @@ coverage exclusions or relax solver tolerances to hide numerical failures. Use
 native backend integrations in addition to optional API contract tests. Preserve
 cross-platform spawn semantics and manage native resources explicitly.
 
+Validate changes locally before delivery with tests related to the changed code
+and its affected callers. Select the locked dependency profiles needed for those
+tests; include minimal portable environments when optional-dependency behavior
+is affected. Do not require unrelated tests or profiles solely because they are
+available. A passing test with optional dependencies does not establish that its
+collection or execution works without them. Inspect skips and marker selections
+for the relevant checks; native and plotting tests must actually execute when
+those paths are affected. Test the relevant mathematical invariants, geometries,
+boundary values and platform-dependent numerical capabilities, including their
+fallback or rejection contracts, without weakening tolerances. Coverage alone
+does not establish numerical correctness. Report the tests actually run and any
+untested limitations; do not defer this verification to CI.
+
 Fix numerical defects in the shared implementation that owns the operation,
 then reuse that implementation in every affected solver, example and comparison.
 Do not leave case-specific workarounds or duplicate corrected formulas in drivers.

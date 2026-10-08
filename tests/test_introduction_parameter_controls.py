@@ -2,6 +2,7 @@
 
 import ast
 import json
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -11,8 +12,10 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def formulation(name: str, controls: dict[str, Any]) -> dict[str, Any]:
-    """Load declared imports/forms while leaving the expensive scientific campaigns unexecuted."""
+def formulation(
+    name: str, controls: dict[str, Any], *, definitions: tuple[str, ...] = ()
+) -> dict[str, Any]:
+    """Load declared forms or selected portable definitions without executing campaigns."""
     notebook = json.loads((ROOT / f"notebooks/introduction/{name}.ipynb").read_text())
     nodes = [
         node
@@ -20,16 +23,25 @@ def formulation(name: str, controls: dict[str, Any]) -> dict[str, Any]:
         if cell["cell_type"] == "code"
         for node in ast.parse("".join(cell["source"])).body
     ]
-    namespace = {"__name__": "introduction_control_test", "ROOT": ROOT, **controls}
+    namespace = {
+        "__name__": "introduction_control_test",
+        "ROOT": ROOT,
+        "np": np,
+        "dataclass": dataclass,
+        **controls,
+    }
     for node in nodes:
-        if isinstance(node, ast.Import | ast.ImportFrom):
+        if not definitions and isinstance(node, ast.Import | ast.ImportFrom):
             exec(compile(ast.Module([node], type_ignores=[]), name, "exec"), namespace)
     for node in nodes:
-        if isinstance(node, ast.FunctionDef | ast.ClassDef):
+        if isinstance(node, ast.FunctionDef | ast.ClassDef) and (
+            not definitions or node.name in definitions
+        ):
             exec(compile(ast.Module([node], type_ignores=[]), name, "exec"), namespace)
     return namespace
 
 
+@pytest.mark.fem
 def test_rad_nondefault_diffusion_refinement_and_assembly_quadrature() -> None:
     """The visible controls change actual P1 operators and the independent local mesh."""
     pytest.importorskip("dolfinx")
@@ -69,6 +81,7 @@ def test_rad_nondefault_diffusion_refinement_and_assembly_quadrature() -> None:
     assert a.integrals()[0].metadata()["quadrature_degree"] == 10
 
 
+@pytest.mark.fem
 def test_brinkman_nondefault_subdivision_viscosity_drag_and_quadrature() -> None:
     """The main Taylor-Hood mesh and physical gauge follow the displayed controls."""
     pytest.importorskip("dolfinx")
@@ -94,9 +107,10 @@ def test_brinkman_nondefault_subdivision_viscosity_drag_and_quadrature() -> None
     assert a.integrals()[0].metadata()["quadrature_degree"] == 32
 
 
+@pytest.mark.visualization
 def test_rad_profiles_use_the_configured_primary_diffusion(tmp_path: Path) -> None:
     """A changed primary epsilon selects its actual references, fields and exact profile."""
-    import matplotlib.pyplot as plt
+    plt = pytest.importorskip("matplotlib.pyplot")
 
     from examples.introduction.transport import plot_rad_profiles
     from pymhm.fem.scalar.triangle import nodal_space
@@ -111,6 +125,7 @@ def test_rad_profiles_use_the_configured_primary_diffusion(tmp_path: Path) -> No
             OPERATOR_CHECK_ORDER=12,
             ERROR_ORDER=16,
         ),
+        definitions=("ReactionLayer",),
     )
     layer = namespace["ReactionLayer"]
     macro = TriangleMesh.unit_square()

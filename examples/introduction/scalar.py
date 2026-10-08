@@ -33,6 +33,7 @@ from pymhm.meshes.triangle import TriangleMesh
 from pymhm.postprocessing.conforming import ConformingQuadrilateralSolution
 from pymhm.postprocessing.fields import DiscreteField
 from pymhm.postprocessing.nodal import nodal_field
+from pymhm.postprocessing.sampling import TrianglePointLocator
 
 Array = NDArray[np.float64]
 Evaluator = Callable[[Array], tuple[Array, Array]]
@@ -333,13 +334,23 @@ class ScalarField:
         return nodal_space(self.mesh, self.degree)[0]
 
     @cached_property
-    def locator(self) -> Any:
-        """Find triangles from original connectivity, without retriangulating nodes."""
-        from matplotlib.tri import Triangulation
+    def locator(self) -> Callable[[Any, Any], np.ndarray]:
+        """Find incident cells portably, returning -1 outside the existing mesh.
 
-        return Triangulation(
-            self.mesh.points[:, 0], self.mesh.points[:, 1], triangles=self.mesh.cells
-        ).get_trifinder()
+        Zero barycentric tolerance retains strict containment. Interface queries
+        choose the public locator's deterministic incident owner; callers that
+        require a particular side provide explicit owners or interior probes.
+        The x/y adapter preserves the broadcast shape used by field samplers.
+        """
+        owner = TrianglePointLocator(self.mesh, tolerance=0.0)
+
+        def locate(x: Any, y: Any) -> np.ndarray:
+            """Locate original coordinates without retriangulation or averaging."""
+            x, y = np.broadcast_arrays(x, y)
+            points = np.column_stack((x.ravel(), y.ravel()))
+            return owner.locate(points, allow_outside=True).reshape(x.shape)
+
+        return locate
 
     @cached_property
     def geometry(self) -> np.ndarray:
@@ -353,7 +364,7 @@ class ScalarField:
 
 
 def evaluate_scalar(field: ScalarField, points: Array, *, cells: Any = None) -> tuple[Array, Array]:
-    """Evaluate a declared Pk field with the original one-sided triangle locator.
+    """Evaluate a declared Pk field with portable one-sided triangle ownership.
 
     Values and raw gradients use the public saved-basis field evaluator. Passing
     explicit cell owners preserves the original incident-cell convention.

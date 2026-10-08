@@ -35,7 +35,7 @@ gpu = [
 mpi = ["mpi4py>=4"]
 amg = ["pyamg>=5.3"]
 meshing = ["gmsh>=4.13", "meshio>=5.3", "netgen-mesher>=6.2"]
-visualization = ["pyvista>=0.46,<0.50", "vtk>=9.5,<9.7"]
+visualization = ["matplotlib>=3.8", "pyvista>=0.46,<0.50", "vtk>=9.5,<9.7"]
 
 [project.urls]
 Homepage = "https://github.com/ipes-lncc/pymhm"
@@ -61,7 +61,8 @@ markers = [
   "gpu: requires a compatible GPU and optional solver packages",
   "slow: computationally expensive convergence or performance verification",
   "meshing: requires optional mesh generators and mesh exchange libraries",
-  "visualization: requires native PyVista/VTK and optionally an offscreen renderer",
+  "visualization: requires optional Matplotlib or native PyVista/VTK graphics dependencies",
+  "notebooks: requires optional notebook execution dependencies",
 ]
 
 [tool.coverage.run]

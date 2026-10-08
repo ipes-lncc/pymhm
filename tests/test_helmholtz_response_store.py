@@ -1,13 +1,16 @@
 """Persistent responses preserve operators, physical fields and resume contracts."""
 
 import json
+import pickle
 from dataclasses import replace
 
 import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
+from threadpoolctl import threadpool_limits
 
 import examples.helmholtz_response_store as owner
+from examples.helmholtz_basis_archive import basis_payload
 from examples.helmholtz_compact_family import CompactFactory, CompactFamily
 from examples.helmholtz_response_store import ResponseStore
 from pymhm._legacy.models.waves.helmholtz import _HelmholtzFactory
@@ -170,13 +173,49 @@ def test_exact_cache_rejects_nonserial_native_factor_ownership(tmp_path, factory
         CompactFamily.prepare(factory, exact_response_cache=True, backend=backend, workers=workers)
 
 
-def test_spawn_store_preserves_serial_responses(tmp_path, factory):
-    serial = prepare(factory, tmp_path / "serial")
-    spawned = prepare(factory, tmp_path / "spawn", backend="process", workers=2)
-    for first, second in zip(serial, spawned, strict=True):
-        assert_array_equal(first.schur, second.schur, strict=True)
-        assert_array_equal(first.lifts, second.lifts, strict=True)
-        assert_array_equal(first.source, second.source, strict=True)
+def _assert_recomputed_equal(first: np.ndarray, second: np.ndarray) -> None:
+    """Retain dtype/layout and use absolute OR relative tolerance for fresh computations."""
+    assert first.shape == second.shape
+    assert first.dtype == second.dtype
+    assert np.all(np.isfinite(first)) and np.all(np.isfinite(second))
+    exceeds_absolute = abs(first - second) > 1e-12
+    assert_allclose(first[exceeds_absolute], second[exceeds_absolute], rtol=1e-10, atol=0)
+
+
+@pytest.mark.parametrize("parent_native_threads", [1, 2])
+def test_spawn_store_preserves_serial_responses(tmp_path, factory, parent_native_threads):
+    """Fresh responses agree numerically; their archived coordinates and replay stay literal."""
+    with threadpool_limits(parent_native_threads):
+        # Spawn transports this declared P4 Legendre basis; no eigenbasis is recomputed.
+        declared = basis_payload(factory.skeleton)
+        transported = basis_payload(pickle.loads(pickle.dumps(factory)).skeleton)
+        assert declared.keys() == transported.keys()
+        for name in declared:
+            assert_array_equal(declared[name], transported[name], strict=True)
+        serial = prepare(factory, tmp_path / "serial")
+        spawned = prepare(factory, tmp_path / "spawn", backend="process", workers=2)
+        for first, second in zip(serial, spawned, strict=True):
+            assert_array_equal(first.dofs, second.dofs, strict=True)
+            assert first.fixed == second.fixed
+            for name in ("schur", "lifts", "source"):
+                _assert_recomputed_equal(getattr(first, name), getattr(second, name))
+        # The same saved batch must replay every coefficient buffer without numerical changes.
+        for stored, replay in zip(serial, serial, strict=True):
+            for name in owner._ARRAYS:
+                assert_array_equal(getattr(stored, name), getattr(replay, name), strict=True)
+        families = [
+            CompactFamily.from_locals(factory.skeleton, store) for store in (serial, spawned)
+        ]
+        for degree in range(5):
+            first, second = (family.solve(degree) for family in families)
+            for field, other in zip(first.pressure, second.pressure, strict=True):
+                _assert_recomputed_equal(field, other)
+            for name in ("trace", "balance"):
+                _assert_recomputed_equal(getattr(first, name), getattr(second, name))
+            for solution in (first, second):
+                assert solution.residual < 1e-12
+                assert solution.local_residual_max < 1e-12
+                assert solution.original_trace_residual < 1e-12
 
 
 def test_resume_only_reacquires_uncommitted_batch(tmp_path, factory, monkeypatch):

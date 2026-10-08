@@ -1,6 +1,7 @@
 """Shared introductory support preserves fields, physical norms and executed coordinates."""
 
 import ast
+import builtins
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -100,6 +101,41 @@ def test_triangular_fields_use_public_evaluation_with_original_incident_owners()
         sample_field(())
 
 
+def test_triangular_sampling_and_partitioned_norms_do_not_import_matplotlib(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Outside masks and incident-cell evaluation remain available in the portable core."""
+    original_import = builtins.__import__
+
+    def portable_import(name: str, *args: Any, **kwargs: Any) -> Any:
+        """Forbid optional graphics imports while evaluating physical fields."""
+        if name == "matplotlib" or name.startswith("matplotlib."):
+            raise AssertionError("a numerical operation imported Matplotlib")
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", portable_import)
+    macro = TriangleMesh.unit_square(2)
+    fields = []
+    for cell in range(len(macro.cells)):
+        fine = macro.submesh(cell, 2)
+        _, nodes = nodal_space(fine, 1)
+        fields.append(ScalarField(fine, 1, nodes.sum(axis=1)))
+    reference_mesh = TriangleMesh.unit_square(4)
+    _, nodes = nodal_space(reference_mesh, 1)
+    reference = ScalarField(reference_mesh, 1, nodes.sum(axis=1))
+    inside = reference.locator(np.array([[0.2, 1.1], [0.7, -0.1]]), 0.25)
+    assert inside.shape == (2, 2)
+    assert_array_equal(inside >= 0, [[True, False], [True, False]])
+    errors = compare_scalar_fields(fields, reference, lambda x: np.ones(len(x)), order=5)
+    assert max(errors[key] for key in ("pressure_L2", "flux_L2", "flux_energy")) < 1e-12
+    sampled = sample_field(fields, refinement=2)
+    pressure, gradient = evaluate_incident_reference(
+        reference, sampled["points"], sampled["incident_centers"]
+    )
+    assert_allclose(pressure, sampled["values"], atol=1e-12, rtol=1e-10)
+    assert_allclose(gradient, sampled["gradient"], atol=1e-12, rtol=1e-10)
+
+
 def test_cartesian_panels_profiles_and_material_sides_are_not_averaged() -> None:
     """Pixel-fitted incident cells give two distinct flux limits at a shared interface."""
     mesh = CartesianMacroMesh(1, 2)
@@ -145,10 +181,8 @@ def test_named_macro_fields_and_explicit_essential_elimination() -> None:
     assert_allclose(resolved, [2.0, 2.5])
 
 
-def test_shared_graphics_preserve_panels_colorbars_and_convergence_labels() -> None:
-    """The helper draws all original quantities and separate incident macroface overlays."""
-    import matplotlib.pyplot as plt
-
+def test_rectangular_samples_and_observed_rates_are_portable() -> None:
+    """Numerical panel data and measured rates need no visualization dependency."""
     macro = CartesianMacroMesh(2)
     panel = rectangle_panel(macro, _linear, points_per_side=3)
     assert len(panel[0]) == 4 * 9
@@ -156,10 +190,18 @@ def test_shared_graphics_preserve_panels_colorbars_and_convergence_labels() -> N
         rectangle_panel(
             macro, _linear, quantity=quantity, permeability=np.diag([2.0, 3.0]), points_per_side=3
         )
+    assert_array_equal(observed_rates([0.5, 0.25], [0.25, 0.0625]), [2.0])
+
+
+@pytest.mark.visualization
+def test_shared_graphics_preserve_panels_colorbars_and_convergence_labels() -> None:
+    """The helper draws all original quantities and separate incident macroface overlays."""
+    plt = pytest.importorskip("matplotlib.pyplot")
+    macro = CartesianMacroMesh(2)
+    panel = rectangle_panel(macro, _linear, points_per_side=3)
     figure = plot_field_panels(macro, {"Pressure": panel})
     assert len(figure.axes) == 2
     assert len(figure.axes[0].collections) == 2
-    assert_array_equal(observed_rates([0.5, 0.25], [0.25, 0.0625]), [2.0])
     convergence = plot_convergence([0.5, 0.25], {"field": [0.25, 0.0625]})
     assert len(convergence.axes) == 2
     difference = plot_reference_differences(
@@ -264,8 +306,23 @@ def test_mshho_notebook_constant_source_scales_the_physical_solution() -> None:
     pytest.importorskip("basix")
     notebook = json.loads((ROOT / "notebooks/introduction/mshho_multiscale.ipynb").read_text())
     namespace: dict[str, Any] = {}
-    for index in (1, 3):
-        exec("".join(notebook["cells"][index]["source"]), namespace)
+    # Execute the notebook's numerical bootstrap without its optional display
+    # import and rcParams setup. The visualization profile tests display itself.
+    bootstrap = ast.parse("".join(notebook["cells"][1]["source"]))
+    bootstrap.body = [
+        node
+        for node in bootstrap.body
+        if not (
+            isinstance(node, ast.Import)
+            and any(alias.name.startswith("matplotlib") for alias in node.names)
+        )
+        and not (
+            isinstance(node, ast.Expr)
+            and any(isinstance(child, ast.Name) and child.id == "plt" for child in ast.walk(node))
+        )
+    ]
+    exec(compile(bootstrap, "notebook numerical bootstrap", "exec"), namespace)
+    exec("".join(notebook["cells"][3]["source"]), namespace)
     namespace["macro"] = TriangleMesh.unit_square(1)
     namespace["local_refinement"] = 4
     for index in (6, 9, 11):
@@ -302,8 +359,6 @@ def test_mshho_notebook_constant_source_scales_the_physical_solution() -> None:
 
 def test_reference_gradients_retain_opposite_incident_interface_sides() -> None:
     """A continuous piecewise linear cusp has two opposite gradients on its diagonal."""
-    import matplotlib.pyplot as plt
-
     mesh = TriangleMesh.unit_square(1)
     _, nodes = nodal_space(mesh, 1)
     field = ScalarField(mesh, 1, abs(nodes[:, 0] - nodes[:, 1]))
@@ -316,6 +371,18 @@ def test_reference_gradients_retain_opposite_incident_interface_sides() -> None:
     assert len(np.unique(gradient[interface], axis=0)) == 2
     assert_array_equal(sampled["field_indices"], np.zeros(len(points), dtype=np.int64))
     assert_array_equal(sampled["incident_cells"], np.repeat([0, 1], len(points) // 2))
+    pressure, gradient = evaluate_scalar(field, [[0.5, 0.5], [0.5, 0.5]], cells=[0, 1])
+    assert_allclose(pressure, 0, atol=1e-12, rtol=1e-10)
+    assert_allclose(gradient, [[1.0, -1.0], [-1.0, 1.0]], atol=1e-12, rtol=1e-10)
+
+
+@pytest.mark.visualization
+def test_reference_gradient_comparison_draws_independent_incident_sides() -> None:
+    """The plotted difference uses the numerical field's actual incident gradient."""
+    plt = pytest.importorskip("matplotlib.pyplot")
+    mesh = TriangleMesh.unit_square(1)
+    _, nodes = nodal_space(mesh, 1)
+    field = ScalarField(mesh, 1, abs(nodes[:, 0] - nodes[:, 1]))
     figure = plot_scalar_comparison(
         mesh, (field,), field, lambda x: np.ones(len(x)), numerical_label="same field"
     )

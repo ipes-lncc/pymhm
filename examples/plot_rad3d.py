@@ -14,13 +14,7 @@ import hashlib
 import json
 from pathlib import Path
 
-import matplotlib
-
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.collections import LineCollection, PolyCollection
-from matplotlib.colors import Normalize, TwoSlopeNorm
 
 from examples.field_archive import load_trusted_field
 from examples.plot_darcy3d import slice_polygon
@@ -78,6 +72,13 @@ def slice_fields(
 
 def main() -> None:
     """Plot the archived classical/MHM fields with matching physical ranges and macro geometry."""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.collections import LineCollection, PolyCollection
+    from matplotlib.colors import Normalize, TwoSlopeNorm
+
     report = json.loads((ROOT / "examples/results/rad3d.json").read_text())
     last = report["rows"][-1]
     archive = ROOT / "examples/results" / last["fields"]

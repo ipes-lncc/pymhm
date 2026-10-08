@@ -1,6 +1,8 @@
 """Scientific trusted replay uses the literal persisted field coordinate contract."""
 
 import pickle
+import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +19,42 @@ from pymhm.meshes.triangle import TriangleMesh
 from pymhm.postprocessing.fields import DiscreteField
 from pymhm.postprocessing.nodal import nodal_field
 from pymhm.postprocessing.piola import hdiv_field, piola_field
+
+
+def test_cross_section_evaluation_without_plotting_dependencies() -> None:
+    """Archived physical fields remain evaluable when Matplotlib imports are blocked."""
+    code = """
+import builtins
+import numpy as np
+
+original_import = builtins.__import__
+
+def without_matplotlib(name, *args, **kwargs):
+    if name == "matplotlib" or name.startswith("matplotlib."):
+        raise ModuleNotFoundError("Matplotlib is unavailable in this numerical environment")
+    return original_import(name, *args, **kwargs)
+
+builtins.__import__ = without_matplotlib
+
+from examples.plot_rad3d import slice_fields
+from pymhm.meshes.tetrahedron import TetraMesh
+from pymhm.postprocessing.fields import DiscreteField
+from pymhm.postprocessing.nodal import nodal_field
+
+mesh = TetraMesh.unit_cube(1)
+field = DiscreteField(nodal_field("scalar", mesh, 1), np.ones(len(mesh.points)))
+polygons, actual, expected = slice_fields(mesh, field.coefficients, 1, 0.37, field=field)
+assert len(polygons) > 0
+assert len(polygons) == len(actual) == len(expected)
+np.testing.assert_allclose(actual[:, 0], 1, atol=1e-12, rtol=1e-10)
+"""
+    subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=Path(__file__).resolve().parents[1],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
 
 
 def test_archived_one_sided_field_and_gradient_replay_without_basis_regeneration(
