@@ -248,6 +248,10 @@ basis additionally needs moment maps and orientation matrices; archive the
 complete `FieldDefinition` and its `basis_digest` for replay. The public
 `nodal_field`, `modal_field`, `piola_field` and `hdiv_field` constructors retain
 their executed coordinate contracts and support one-sided evaluation.
+Explicit cell owners evaluate only the requested point/cell pairs, with storage
+proportional to the number of points. For repeated queries on a planar triangle
+mesh, `TrianglePointLocator` provides a reusable search and validates each
+chosen cell's barycentric coordinates.
 
 ## Formulations composed from the same API
 

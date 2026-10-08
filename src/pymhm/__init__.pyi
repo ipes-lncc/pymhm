@@ -221,6 +221,7 @@ from pymhm.postprocessing.nodal import nodal_field as nodal_field
 from pymhm.postprocessing.piola import ReferenceVectorBasis as ReferenceVectorBasis
 from pymhm.postprocessing.piola import hdiv_field as hdiv_field
 from pymhm.postprocessing.piola import piola_field as piola_field
+from pymhm.postprocessing.sampling import TrianglePointLocator as TrianglePointLocator
 from pymhm.postprocessing.solutions import MH2M3DSolution as MH2M3DSolution
 from pymhm.postprocessing.solutions import MH2MSolution as MH2MSolution
 from pymhm.postprocessing.solutions import MH3DSolution as MH3DSolution

@@ -23,6 +23,7 @@ from urllib.parse import quote, unquote, urlsplit, urlunsplit
 
 import nbformat
 from nbconvert import MarkdownExporter
+from nbconvert.filters import DataTypeFilter
 from nbformat import NotebookNode
 
 _SOURCE_URL = "https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction"
@@ -43,7 +44,11 @@ _TEMPLATE = """{% extends 'index.md.j2' %}
 {{ output.text | strip_ansi | tutorial_output }}
 {% endblock stream %}
 {% block data_text scoped %}
+{% if output.metadata.get('tutorial_source_code') %}
+{{ output.data['text/plain'] | strip_ansi | tutorial_code }}
+{% else %}
 {{ output.data['text/plain'] | strip_ansi | tutorial_output }}
+{% endif %}
 {% endblock data_text %}
 """
 
@@ -58,7 +63,7 @@ class _RenderedTutorial:
     provenance: dict[str, Any]
 
 
-def _format_text_output(text: str, *, root: Path | None = None) -> str:
+def _format_text_output(text: str, *, root: Path | None = None, code: bool = False) -> str:
     """Keep numerical output verbatim and collapse long provenance records.
 
     Code fences protect printed TeX and Markdown-like metadata from rendering.
@@ -70,8 +75,8 @@ def _format_text_output(text: str, *, root: Path | None = None) -> str:
         text = text.replace(str(root), ".")
     longest = max((len(match.group()) for match in re.finditer(r"`{3,}", text)), default=2)
     fence = "`" * (longest + 1)
-    block = fence + "text\n" + text + "\n" + fence
-    if len(text) <= 5000 and len(text.splitlines()) <= 40:
+    block = fence + ("python\n" if code else "text\n") + text + "\n" + fence
+    if code or (len(text) <= 5000 and len(text.splitlines()) <= 40):
         return block
     return '??? note "Numerical output and provenance"\n\n' + "\n".join(
         "    " + line for line in block.splitlines()
@@ -208,6 +213,8 @@ def _render_tutorial(source: Path, executed: Path, root: Path) -> _RenderedTutor
                 _normalize_display_math(cell.source), source=source, root=root, page=page
             )
         for output in cell.get("outputs", []):
+            if 'class="highlight"' in output.get("data", {}).get("text/html", ""):
+                output.metadata["tutorial_source_code"] = True
             if {"image/png", "image/svg+xml", "image/jpeg"}.intersection(output.get("data", {})):
                 plot_number += 1
                 output.metadata["tutorial_alt"] = f"Figure {plot_number} — {title}"
@@ -220,13 +227,19 @@ def _render_tutorial(source: Path, executed: Path, root: Path) -> _RenderedTutor
                 )
     exporter = MarkdownExporter(raw_template=_TEMPLATE)
     exporter.register_filter("tutorial_output", partial(_format_text_output, root=root))
-    exporter.display_data_priority = [
-        "image/svg+xml",
-        "image/png",
-        "image/jpeg",
-        "text/markdown",
-        "text/plain",
-    ]
+    exporter.register_filter("tutorial_code", partial(_format_text_output, root=root, code=True))
+    exporter.register_filter(
+        "filter_data_type",
+        DataTypeFilter(
+            display_data_priority=[
+                "image/svg+xml",
+                "image/png",
+                "image/jpeg",
+                "text/markdown",
+                "text/plain",
+            ]
+        ),
+    )
     image_directory = Path("assets/tutorials") / source.stem
     image_prefix = "../../" + image_directory.as_posix()
     markdown, resources = exporter.from_notebook_node(
@@ -262,7 +275,7 @@ def _render_tutorial(source: Path, executed: Path, root: Path) -> _RenderedTutor
         "```bash\n"
         "pixi install --locked -e introduction\n"
         f"pixi run --locked -e introduction notebooks-run introduction/{source.name} "
-        "--timeout 3600\n"
+        "--timeout 7200\n"
         "```\n\n"
         "The runner writes the executed copy to `build/notebooks/introduction/`. "
         "The figures and numerical outputs on this page come from that execution. "
@@ -273,6 +286,16 @@ def _render_tutorial(source: Path, executed: Path, root: Path) -> _RenderedTutor
     provenance = {
         "source_notebook": source.relative_to(root).as_posix(),
         "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        "support_sha256": {
+            path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in sorted(
+                [
+                    *(root / "examples/introduction").glob("*.py"),
+                    root / "examples/field_sampling.py",
+                ]
+            )
+        },
+        "pixi_lock_sha256": hashlib.sha256((root / "pixi.lock").read_bytes()).hexdigest(),
         "executed_notebook": executed.relative_to(root).as_posix()
         if executed.is_relative_to(root)
         else executed.name,

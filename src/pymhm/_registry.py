@@ -238,6 +238,7 @@ _EXPORT_GROUPS: dict[str, tuple[str, ...]] = {
         "portable_field_coefficients",
         "solution_field",
     ),
+    "pymhm.postprocessing.sampling": ("TrianglePointLocator",),
 }
 
 PUBLIC_EXPORTS: dict[str, tuple[str, str]] = {

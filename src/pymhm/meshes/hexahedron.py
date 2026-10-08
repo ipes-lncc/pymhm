@@ -52,7 +52,7 @@ def _points(values: Any) -> FloatArray:
 
 
 def hexahedral_mapping(
-    vertices: FloatArray, points: FloatArray
+    vertices: FloatArray, points: FloatArray, *, paired: bool = False
 ) -> tuple[FloatArray, FloatArray, FloatArray]:
     """Evaluate batched trilinear maps from the unit cube to physical hexahedra.
 
@@ -65,6 +65,9 @@ def hexahedral_mapping(
     rows are physical coordinates and columns are reference coordinates.
     Determinants must be positive at every supplied point; this sampled check
     does not certify invertibility throughout a curved cell.
+    With ``paired=True``, evaluate point ``i`` only in cell ``i``. Their counts
+    must agree; return shapes ``(points, 3)``, ``(points, 3, 3)`` and
+    ``(points,)`` without forming the Cartesian product of cells and points.
     """
     vertices = np.asarray(vertices)
     if (
@@ -82,9 +85,13 @@ def hexahedral_mapping(
         or not np.all(np.isfinite(points))
     ):
         raise ValueError("reference coordinates must be finite real triples")
+    if not isinstance(paired, bool):
+        raise TypeError("paired must be boolean")
+    if paired and len(vertices) != len(points):
+        raise ValueError("paired maps require one cell per reference point")
     shape, gradients = tensor_lagrange_tabulation("hexahedron", 1, points, nodes=_CORNERS, nderiv=1)
-    physical = np.einsum("qi,tia->tqa", shape, vertices)
-    jacobian = np.einsum("qib,tia->tqab", gradients, vertices)
+    physical = np.einsum("qi,qia->qa" if paired else "qi,tia->tqa", shape, vertices)
+    jacobian = np.einsum("qib,qia->qab" if paired else "qib,tia->tqab", gradients, vertices)
     determinant = np.linalg.det(jacobian)
     if np.any(determinant <= 0):
         raise ValueError("hexahedral map requires a positive Jacobian at all sampled points")

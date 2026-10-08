@@ -1,5 +1,9 @@
 # Hybrid operators and multiscale constructions
 
+Field queries can supply explicit cell owners for independent one-sided values.
+This evaluates only the requested point/cell pairs. `TrianglePointLocator`
+provides reusable geometric searches for planar triangular fields.
+
 User-defined variational equations, local condensation, recursive reconstruction
 and distinct multiscale formulations. The [variational guide](../variational.md)
 describes the four blocks, global additions and current compilation limits.
@@ -17,6 +21,10 @@ describes the four blocks, global additions and current compilation limits.
       show_source: false
 
 ::: pymhm.postprocessing.fields
+    options:
+      show_source: false
+
+::: pymhm.postprocessing.sampling
     options:
       show_source: false
 

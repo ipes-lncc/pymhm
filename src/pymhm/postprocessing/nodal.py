@@ -75,7 +75,14 @@ class _NodalEvaluator:
         if values.shape != (self.size * self.components,):
             raise ValueError("field coefficients must match the recorded nodal map")
         owners, reference, jacobians, _ = pullback_points(mesh, points, cells=cells)
-        inverse = np.linalg.inv(jacobians)
+        if self.derivative:
+            if isinstance(mesh, (TriangleMesh, TetraMesh, CartesianMacroMesh)):
+                # Affine Jacobians depend on the cell, not the sampling point.
+                # Keep the original point order, including incident duplicates.
+                _, first, ordering = np.unique(owners, return_index=True, return_inverse=True)
+                inverse = np.linalg.inv(jacobians[first])[ordering]
+            else:
+                inverse = np.linalg.inv(jacobians)
         if self.cell_type == "quadrilateral":
             factors = [
                 tabulate_archived_nodal_basis(

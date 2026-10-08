@@ -5,8 +5,9 @@ and the [ten rendered introductory tutorials](https://ipes-lncc.github.io/pymhm/
 Their [source notebooks](introduction/README.md) are available for interactive use. Then
 use the problem folders and numbered notebooks for additional formulations,
 convergence records, geometry variants and literature comparisons. The new
-course defines meshes, spaces, material, local forms, global equations, classical
-references and plots in its cells. `LocalContext` supplies representation details
+course declares meshes, spaces, material, local forms and global equations in
+focused cells. Importable helpers provide reference controls, field evaluation,
+plots, archives and performance campaigns. `LocalContext` supplies representation details
 while UFL expresses the mathematics; prepared operators follow as conveniences. All ten tutorials are in English.
 
 For user-written forms, begin with the local/global, UFL, vector UFL and

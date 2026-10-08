@@ -6,7 +6,7 @@ import numpy as np
 
 from pymhm.core.validation import FloatArray, IntArray, real_array
 from pymhm.meshes.cartesian import CartesianMacroMesh
-from pymhm.meshes.hexahedron import HexMesh, _geometry
+from pymhm.meshes.hexahedron import HexMesh, hexahedral_mapping
 from pymhm.meshes.polygonal import PolygonMesh
 
 
@@ -40,6 +40,9 @@ def pullback_points(
     geometric map. Shared-interface evaluation chooses the first valid owner;
     explicit ``cells`` preserve independently chosen one-sided values.
     The Jacobian axes are (physical,reference), and det(J) is signed.
+    Explicit owners require storage proportional to the number of points,
+    independently of the total number of cells. Affine inverse maps and signed
+    determinants are computed once per distinct declared cell.
     """
     value = real_array(points, "physical points")
     dimension = mesh.points.shape[1]
@@ -67,8 +70,12 @@ def pullback_points(
         reference = coordinates - indices
         if np.any(reference < -1e-12) or np.any(reference > 1 + 1e-12):
             raise ValueError("points must belong to their declared one-sided cells")
-        jacobian = np.broadcast_to(np.diag(mesh.spacing), (len(value), dimension, dimension))
-        return owners.astype(np.int64), reference, jacobian, np.linalg.det(jacobian)
+        cell_jacobian = np.diag(mesh.spacing)
+        jacobian = np.broadcast_to(cell_jacobian, (len(value), dimension, dimension))
+        determinant = np.full(len(value), np.linalg.det(cell_jacobian))
+        return owners.astype(np.int64), reference, jacobian, determinant
+    if cells is not None:
+        return _owned_pullback(mesh, value, cells)
     vertices = mesh.points[mesh.cells]
     origins = vertices[:, 0]
     if isinstance(mesh, HexMesh):
@@ -77,12 +84,12 @@ def pullback_points(
         for cell, corners in enumerate(vertices):
             coordinates = np.full((len(value), dimension), 0.5)
             for _ in range(30):
-                mapped, jacobian, _ = _geometry(corners[None], coordinates)
+                mapped, jacobian, _ = hexahedral_mapping(corners[None], coordinates)
                 step = np.linalg.solve(jacobian[0], (mapped[0] - value)[..., None])[..., 0]
                 coordinates -= step
                 if np.max(abs(step), initial=0) <= 16 * np.finfo(float).eps:
                     break
-            mapped, jacobian, _ = _geometry(corners[None], coordinates)
+            mapped, jacobian, _ = hexahedral_mapping(corners[None], coordinates)
             reference[cell], jacobians[cell] = coordinates, jacobian[0]
         valid = (reference.min(axis=-1) >= -1e-12) & (reference.max(axis=-1) <= 1 + 1e-12)
     else:
@@ -105,21 +112,9 @@ def pullback_points(
             )
         else:
             valid &= reference.sum(axis=-1) <= 1 + 1e-12
-    if cells is None:
-        if not np.all(np.any(valid, axis=0)):
-            raise ValueError("field points must belong to the declared mesh")
-        owners = np.argmax(valid, axis=0)
-    else:
-        owners = np.asarray(cells)
-        if (
-            owners.shape != (len(value),)
-            or owners.dtype.kind not in "iu"
-            or np.any(owners < 0)
-            or np.any(owners >= len(vertices))
-        ):
-            raise ValueError("cell owners must contain one valid integer per physical point")
-        if not np.all(valid[owners, np.arange(len(value))]):
-            raise ValueError("points must belong to their declared one-sided cells")
+    if not np.all(np.any(valid, axis=0)):
+        raise ValueError("field points must belong to the declared mesh")
+    owners = np.argmax(valid, axis=0)
     jacobian = jacobians[owners, np.arange(len(value))]
     return (
         owners.astype(np.int64),
@@ -127,3 +122,49 @@ def pullback_points(
         jacobian,
         np.linalg.det(jacobian),
     )
+
+
+def _owned_pullback(
+    mesh: Any, points: FloatArray, cells: Any
+) -> tuple[IntArray, FloatArray, FloatArray, FloatArray]:
+    """Evaluate declared point/cell pairs without allocating cross-cell tables."""
+    owners = np.asarray(cells)
+    if (
+        owners.shape != (len(points),)
+        or owners.dtype.kind not in "iu"
+        or np.any(owners < 0)
+        or np.any(owners >= len(mesh.cells))
+    ):
+        raise ValueError("cell owners must contain one valid integer per physical point")
+    if isinstance(mesh, HexMesh):
+        vertices = mesh.points[mesh.cells[owners]]
+        reference = np.full_like(points, 0.5)
+        for _ in range(30):
+            physical, jacobian, _ = hexahedral_mapping(vertices, reference, paired=True)
+            step = np.linalg.solve(jacobian, (physical - points)[..., None])[..., 0]
+            reference -= step
+            if np.max(abs(step), initial=0) <= 16 * np.finfo(float).eps:
+                break
+        _, jacobian, determinant = hexahedral_mapping(vertices, reference, paired=True)
+        valid = (reference.min(axis=-1) >= -1e-12) & (reference.max(axis=-1) <= 1 + 1e-12)
+    else:
+        distinct, indices = np.unique(owners, return_inverse=True)
+        vertices = mesh.points[mesh.cells[distinct]]
+        cell_jacobians = (
+            mesh.jacobian[distinct]
+            if hasattr(mesh, "jacobian")
+            else (vertices[:, 1:] - vertices[:, :1]).swapaxes(1, 2)
+        )
+        jacobian = cell_jacobians[indices]
+        reference = np.einsum(
+            "qij,qj->qi", np.linalg.inv(cell_jacobians)[indices], points - vertices[indices, 0]
+        )
+        valid = reference.min(axis=-1) >= -1e-12
+        if getattr(mesh, "kind", None) == "prism":
+            valid &= (reference[:, :2].sum(axis=-1) <= 1 + 1e-12) & (reference[:, 2] <= 1 + 1e-12)
+        else:
+            valid &= reference.sum(axis=-1) <= 1 + 1e-12
+        determinant = np.linalg.det(cell_jacobians)[indices]
+    if not np.all(valid):
+        raise ValueError("points must belong to their declared one-sided cells")
+    return owners.astype(np.int64), reference, jacobian, determinant
