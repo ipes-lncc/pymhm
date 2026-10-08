@@ -287,6 +287,8 @@ def define_three_field_3d(
     flux = TriangularSkeleton(mesh) if flux_space is None else flux_space
     if gamma.mesh is not mesh or flux.mesh is not mesh:
         raise ValueError("Gamma and Lambda must use the supplied mesh")
+    if np.any(flux.continuous):
+        raise ValueError("Lambda uses discontinuous face polynomials")
     if gamma.subdivisions > refinement or np.any(flux.subdivisions > refinement):
         raise ValueError("local refinement must resolve both interface partitions")
     natural = {} if neumann is None else dict(neumann)

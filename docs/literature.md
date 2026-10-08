@@ -228,6 +228,16 @@ refined Q3, MSL conforming P1 and NeoPZ global RT0 references. The historical
 local/material quadrature choices and original coefficient arrays are not
 identified solely by their agreement with sampled published pressure curves.
 
+`TriangularSkeleton(..., continuous=True)` supplies the corresponding
+continuous piecewise polynomial choice on three-dimensional triangular
+macrofaces, including a separate continuity choice per face. The
+[author preprint](https://www.ci2ma.udec.cl/pdf/pre-publicaciones/2022/pp22-31.pdf),
+§2.1 and §3.2, equation (22), defines the model in dimensions two and three
+and continuity within each independently partitioned macroface. The
+[tetrahedral controls](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy3d.md) verify finite local Galerkin
+realizations. They are separate from the article's two-dimensional numerical
+studies and do not establish its estimates for arbitrary finite local spaces.
+
 ### Chaumont-Frelet, Paredes and Valentin (2022, preprint v1): Unfitted flux approximation {#chaumont-frelet-paredes-valentin-2022-unfitted}
 
 Théophile Chaumont-Frelet, Diego Paredes, and Frédéric Valentin (2022). *Flux approximation on unfitted meshes and application to multiscale hybrid-mixed methods*, preprint, HAL version 1, 31 October 2022. [HAL: hal-03834748v1](https://inria.hal.science/hal-03834748v1).

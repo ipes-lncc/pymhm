@@ -31,6 +31,16 @@ The API checks the spatial dimension explicitly. Canonical RT moment
 construction itself has a weaker algebraic requirement; its existence alone
 does not establish the hypotheses of this error estimate.
 
+The theorem's skeletal space has independent polynomial tests on each
+subtriangle. The local efficiency argument uses a constant test supported on
+one such subface to obtain its zero mean pressure jump. A continuous macroface
+with several subtriangles does not contain those tests and is rejected by
+`estimate_darcy_error_3d`. A continuous face with one subtriangle has the same
+polynomial space as a discontinuous face. `reconstruct_darcy_moments_3d`
+remains available for subdivided continuous traces; its shared-coefficient
+evaluation establishes an algebraic reconstruction, not the cited estimate
+for that different test space.
+
 Boundary RT moments equal the physical skeletal flux moments. Interior fine-face
 moments use the arithmetic average of the two incident raw fluxes, with their
 separate material traces. Interior vector moments use the raw physical gradient.

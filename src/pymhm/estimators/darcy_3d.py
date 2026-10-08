@@ -16,7 +16,7 @@ from scipy.spatial import cKDTree
 
 from pymhm._legacy.models.darcy.primal_3d import Darcy3DSolution
 from pymhm.core.validation import FloatArray, positive_int
-from pymhm.fem.conditions import validate_estimator_spaces
+from pymhm.fem.conditions import validate_estimator_face_partitions, validate_estimator_spaces
 from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.tetrahedron import (
     tetra_basis,
@@ -237,7 +237,20 @@ def estimate_darcy_error_3d(
     bound assumes exact integration, continuous-test equilibrium, represented boundary data, and
     certified ellipticity. Numerical quadrature supplies measured indicators, not interval-certified
     upper bounds.
+
+    The cited theorem requires independent polynomial tests on each skeletal
+    subface. A C0 macroface with several subtriangles is therefore excluded;
+    C0 with a single subtriangle has the same polynomial space as DG.
+    Canonical RT reconstruction remains available for subdivided C0 traces
+    without transferring this estimator's theorem to that space.
     """
+    validate_estimator_face_partitions(
+        solution.skeleton.continuous,
+        (
+            len(solution.skeleton.face_partition(face))
+            for face in range(len(solution.skeleton.mesh.faces))
+        ),
+    )
     ell = int(solution.skeleton.degrees.max())
     m = positive_int(degree, "RT degree", 0)
     validate_estimator_spaces(solution.degree, ell, m, 3)
@@ -265,8 +278,11 @@ def estimate_darcy_error_3d(
         partition = solution.skeleton.face_partition(int(face))
         points = np.einsum("qi,sij->sqj", face_bary, partition @ coarse.points[coarse.faces[face]])
         expected = scalar_values_3d(datum, points.reshape(-1, 3)).reshape(points.shape[:2])
-        coefficients = solution.hybrid.trace[solution.skeleton.dofs(face)].reshape(
-            len(partition), -1
+        coefficients = np.array(
+            [
+                solution.hybrid.trace[solution.skeleton.subtriangle_dofs(face, segment)]
+                for segment in range(len(partition))
+            ]
         )
         represented = coefficients @ solution.skeleton.basis(face, face_bary).T
         scale = max(np.max(abs(expected)), np.max(abs(represented)), np.finfo(float).tiny)

@@ -484,6 +484,18 @@
       "kind": "study"
     },
     {
+      "path": "notebooks/darcy/74_continuous_macrofaces3d.ipynb",
+      "family": "darcy",
+      "title": "Continuous polynomial macrofaces in three-dimensional MHM",
+      "methods": [
+        "tetrahedral primal MHM",
+        "continuous/discontinuous Bernstein face polynomials",
+        "mixed continuity and independent face degrees"
+      ],
+      "id": 74,
+      "kind": "study"
+    },
+    {
       "path": "notebooks/elasticity/introductory_methods.ipynb",
       "family": "elasticity",
       "title": "Primal and mixed elasticity methods",

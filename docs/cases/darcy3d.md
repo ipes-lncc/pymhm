@@ -1,8 +1,10 @@
 # Three-dimensional tetrahedral Darcy
 
 The native three-dimensional primal MHM solver uses straight-sided tetrahedral
-macrocells, continuous local Pk pressure, and independent Bernstein Pk normal
-flux densities on triangular subdivisions of each macroface. It solves
+macrocells, continuous local Pk pressure, and piecewise polynomial normal flux
+densities on triangular subdivisions of each macroface. The skeletal space can
+be discontinuous or continuous within a macroface, independently for each face.
+It solves
 
 $$
 q=-K\nabla p,\qquad \nabla\cdot q=f,
@@ -41,9 +43,69 @@ per face. Local refinement and skeletal subdivisions are dyadic, and the fine
 boundary triangulation must resolve the trace partition. These counts describe
 mesh subdivisions, not polynomial degree. Local P2 functions include topologically
 shared edge midpoints; P3/P4 also share topologically identified face nodes.
-`TriangularSkeleton(mesh, degree=1)` selects three linear nodal modes per
-subtriangle, independently of the local degree. Refinement preserves triangular interface alignment and
+`TriangularSkeleton(mesh, degree=1)` selects three independent linear Bernstein
+modes per subtriangle, independently of the local degree. Refinement preserves triangular interface alignment and
 oriented normals without merging geometrically close unrelated vertices.
+
+## Continuous polynomials within each macroface
+
+`continuous=True` shares the polynomial trace degrees of freedom along the
+internal edges and vertices of a macroface partition. Distinct macrofaces keep
+separate coordinates, including at their shared macroedges and macrovertices.
+This is continuity of the normal-flux density within one face, not a globally
+continuous pressure trace. The latter is the separate variable used by MH²M.
+
+```python
+skeleton = TriangularSkeleton(mesh, subdivisions=2, degree=1, continuous=True)
+solution = solve_darcy_3d(
+    mesh, skeleton=skeleton, degree=3, local_refinement=2,
+    source=1.0, dirichlet=0.0,
+)
+```
+
+For this uniform partition, continuous P1 has six coordinates per macroface;
+the default discontinuous P1 space has twelve. Both represent densities with
+respect to the original face's canonical normal. `continuous` accepts a boolean
+or one boolean per macroface, so a single skeleton can mix the two spaces.
+`degree` likewise accepts independent face degrees. Every degree $k\geq1$
+is available for a continuous face; degree zero remains available for
+discontinuous faces. P1 in this example is a choice, not a maximum degree.
+Explicit face partitions support the same choice.
+
+The [face-based MHM construction of Paredes, Valentin and Versieux](https://doi.org/10.1016/j.cam.2023.115415)
+defines continuous piecewise polynomial multipliers on independently partitioned
+macrofaces. Its [author preprint](https://www.ci2ma.udec.cl/pdf/pre-publicaciones/2022/pp22-31.pdf),
+§2.1 and §3.2, equation (22), covers dimensions two and three. The published
+numerical examples are two-dimensional. The present tetrahedral controls are
+original implementation checks, not a reproduction of those examples.
+The analytical local Neumann maps in the paper and their regularity hypotheses
+remain distinct from finite local Galerkin approximations. A face choice still
+needs adequate local trace resolution and rank; selecting continuous
+polynomials alone does not establish a mesh-uniform stability estimate.
+
+The [continuous-macroface notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/74_continuous_macrofaces3d.ipynb)
+solves the same affine patch with discontinuous, continuous, mixed-continuity
+and independent-degree face spaces through the generic formulation helper.
+It compares physical pressure and flux norms and checks the integrated macro
+balances. Canonical RT moment reconstruction also accepts the shared
+coefficients. The [published energy estimator](reconstruction3d.md) requires
+independent polynomial tests on each skeletal subface and excludes subdivided
+continuous faces; an algebraic reconstruction does not imply that estimate.
+
+The affine pressure is $p=1+x+2y+3z$ with identity permeability, zero source
+and its nonhomogeneous Dirichlet data. Six macrotetrahedra use two local edge
+subdivisions. The executed notebook gives:
+
+| Face space | Local degree | Skeletal coordinates | Pressure L² error | Physical flux L² error | Maximum macro imbalance |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| DG P1 | 3 | 216 | 1.23e−14 | 2.25e−13 | 3.16e−15 |
+| C0 P1 | 3 | 108 | 3.47e−15 | 4.20e−14 | 3.05e−15 |
+| C0 interior / DG boundary | 3 | 180 | 7.43e−15 | 1.37e−13 | 3.22e−15 |
+| C0 P1/P2 by face | 4 | 189 | 8.06e−15 | 1.29e−13 | 9.21e−15 |
+
+Coordinate counts precede boundary treatment and exclude local setup work.
+These exact-field checks verify representation, orientations and macro
+conservation; they do not establish convergence or uniform stability.
 
 This convenience solver uses affine tetrahedral Pk local spaces for any positive
 degree; [P5/P6 native checks and a P5/P2 study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/tetra-pk.md) document the
@@ -160,3 +222,4 @@ and notebook `29_darcy3d.ipynb` retain the discretization, source hashes and che
 ## References
 
 - Antônio Tadeu A. Gomes, Weslley S. Pereira, Frédéric Valentin, and Diego Paredes (2017). *On the Implementation of a Scalable Simulator for Multiscale Hybrid-Mixed Methods*, arXiv preprint, version 1, 30 March 2017. [arXiv: 1703.10435v1](https://arxiv.org/abs/1703.10435v1).
+- Diego Paredes, Frédéric Valentin, and Henrique M. Versieux (2024). *Revisiting the robustness of the multiscale hybrid-mixed method: The face-based strategy*, Journal of Computational and Applied Mathematics 436, 115415. [DOI: 10.1016/j.cam.2023.115415](https://doi.org/10.1016/j.cam.2023.115415).

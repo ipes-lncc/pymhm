@@ -12,7 +12,7 @@ from numpy.polynomial.legendre import leggauss
 from scipy import sparse
 from scipy.linalg import solve_triangular
 
-from pymhm.core.validation import FloatArray, IntArray
+from pymhm.core.validation import FloatArray, IntArray, positive_int
 from pymhm.fem.quadrature.material import material_triangle_quadrature
 from pymhm.fem.quadrature.planar import planar_simplex_quadrature
 from pymhm.fem.scalar.helmholtz import acoustic_quadrature, positive_values
@@ -191,7 +191,8 @@ class TangentialTraceSpace:
 def trace_coupling(
     skeleton: TangentialTraceSpace, cell: int, fine: Any, degree: int, order: int
 ) -> Any:
-    """Integrate signed scalar/tangential moments against incident DG electric fields."""
+    """Integrate signed electric/trace products with a degree-dependent quadrature floor."""
+    order = positive_int(order, "trace quadrature order")
     macro = skeleton.mesh
     components = 1 if skeleton.components == 1 else 3
     width = (
@@ -230,7 +231,8 @@ def trace_coupling(
                 space = skeleton.base.faces[face]
                 breaks = np.asarray(space.breaks)
                 cuts = np.unique(np.r_[low, breaks[(breaks > low) & (breaks < high)], high])
-                gauss, weight = leggauss(order)
+                integration_order = max(order, (degree + max(space.degrees) + 2) // 2)
+                gauss, weight = leggauss(integration_order)
                 parameter = np.concatenate(
                     [
                         left + (gauss + 1) * (right - left) / 2
@@ -262,13 +264,16 @@ def trace_coupling(
                 segment = int(candidates[0])
                 if np.min(face_bary @ np.linalg.inv(partitions[segment])) < -1e-11:
                     raise ValueError("Maxwell fine boundary must align with skeleton subtriangles")
-                face_rule, weight = triangle_quadrature(order)
+                integration_order = max(order, (degree + int(skeleton.base.degrees[face]) + 3) // 2)
+                face_rule, weight = triangle_quadrature(integration_order)
                 points = face_rule @ fine.points[nodes]
                 weights = weight * fine.areas[fine_face]
                 trace = skeleton.base.basis(
                     face, (face_rule @ face_bary) @ np.linalg.inv(partitions[segment])
                 )
-                local_columns = segment * trace.shape[1] + np.arange(trace.shape[1])
+                local_columns = np.searchsorted(
+                    skeleton.base.dofs(face), skeleton.base.subtriangle_dofs(face, segment)
+                )
                 frame = skeleton.frames[face]
             values = cell_basis(fine, owner, degree, points)
             block = macro.signs[cell, side] * values.T @ (weights[:, None] * trace)
@@ -418,11 +423,17 @@ def tangential_rules(
     The basis and weights retain every explicit segment or triangular partition.
     Scalar edge pairings use the unit scalar frame; vector face pairings use
     the declared canonical orthonormal tangent frame.
+    The quadrature floor integrates the polynomial trace mass exactly;
+    nonpolynomial material and boundary data require independent order checks.
     """
     mesh, base = skeleton.mesh, skeleton.base
     for face in faces:
         if skeleton.components == 1:
-            parameter, weights = base.faces[face].quadrature(order)
+            parameter, weights = base.faces[face].quadrature(
+                max(
+                    positive_int(order, "trace quadrature order"), max(base.faces[face].degrees) + 1
+                )
+            )
             start, end = mesh.points[mesh.faces[face]]
             points = start + parameter[:, None] * (end - start)
             yield (
@@ -434,13 +445,16 @@ def tangential_rules(
                 skeleton.dofs(face),
             )
         else:
-            bary, weights = triangle_quadrature(order)
+            bary, weights = triangle_quadrature(
+                max(positive_int(order, "trace quadrature order"), int(base.degrees[face]) + 1)
+            )
             for segment, partition in enumerate(base.face_partition(face)):
                 points = bary @ partition @ mesh.points[mesh.faces[face]]
                 basis = base.basis(face, bary)
-                ids = skeleton.dofs(face)[
-                    segment * basis.shape[1] * 2 : (segment + 1) * basis.shape[1] * 2
-                ]
+                ids = (
+                    base.subtriangle_dofs(face, segment)[:, None] * skeleton.components
+                    + np.arange(skeleton.components)
+                ).ravel()
                 yield (
                     face,
                     points,

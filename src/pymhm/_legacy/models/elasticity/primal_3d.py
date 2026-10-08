@@ -236,10 +236,17 @@ class Elasticity3DSolution:
                 partitions = self.skeleton.face_partition(int(face))
                 subvertices = partitions @ mesh.points[mesh.faces[face]]
                 points = np.einsum("qi,sij->sqj", fbary, subvertices)
-                coefficients = self.hybrid.trace.reshape(-1, 3)[
-                    self.skeleton.dofs(int(face))
-                ].reshape(len(partitions), 3, 3)
-                traction = np.einsum("qi,sia->sqa", fbary, coefficients)
+                coefficients = np.array(
+                    [
+                        self.hybrid.trace.reshape(-1, 3)[
+                            self.skeleton.subtriangle_dofs(int(face), segment)
+                        ]
+                        for segment in range(len(partitions))
+                    ]
+                )
+                traction = np.einsum(
+                    "qi,sia->sqa", self.skeleton.basis(int(face), fbary), coefficients
+                )
                 result[cell] += (
                     mesh.signs[cell, side]
                     * mesh.areas[face]

@@ -55,10 +55,9 @@ def _boundary_moments(
                 raise ValueError("RT reconstruction requires aligned skeleton subfaces")
             segment = containing[0]
             coordinates = face_shape(uv, 3) @ bary @ np.linalg.inv(partitions[segment])
-            modes = int(skeleton.modes[parent])
             # The skeleton owns its density basis and partition convention.
             basis = skeleton.basis(int(parent), coordinates)
-            coefficients = trace[skeleton.dofs(int(parent))].reshape(-1, modes)[segment]
+            coefficients = trace[skeleton.subtriangle_dofs(int(parent), segment)]
             value = coarse.signs[cell, side] * (basis @ coefficients)
             result[row * count : (row + 1) * count] = (
                 fine.measures[face] * tests.T @ (weights * value)
@@ -241,6 +240,9 @@ def reconstruct_darcy_moments_3d(
     The scalar local test space must contain continuous Pm and the multiplier
     must belong to its RT normal space. Coefficient quadrature must resolve
     material interfaces; pointwise callbacks do not supply geometric cuts.
+    Both discontinuous and C0 multiplier bases are supported through their
+    declared subtriangle coefficient maps. This algebraic construction alone
+    does not establish the hypotheses of a posteriori estimator theorems.
     """
     m = solution.degree if degree is None else positive_int(degree, "RT degree", 0)
     if m > solution.degree or np.any(solution.skeleton.degrees > m):

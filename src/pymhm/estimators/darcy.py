@@ -10,7 +10,7 @@ from scipy.spatial import cKDTree
 
 from pymhm._legacy.models.darcy.primal import DarcySolution
 from pymhm.core.validation import FloatArray, positive_int
-from pymhm.fem.conditions import validate_estimator_spaces
+from pymhm.fem.conditions import validate_estimator_face_partitions, validate_estimator_spaces
 from pymhm.fem.hdiv.rt import rt_evaluate
 from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.triangle import nodal_space, tabulate, trace_coupling
@@ -227,7 +227,14 @@ def estimate_darcy_error(
     tolerances. The true source is integrated for oscillation; it is not replaced by a projected
     source. The theorem assumes exact integration; this implementation reports quadrature-based
     indicators and a separate equilibrium defect, not an interval-certified upper bound.
+    The theorem requires independent polynomials on each skeletal subface;
+    C0 over several segments of one macroface is excluded, while C0 on a
+    single segment has the same polynomial space as DG.
     """
+    validate_estimator_face_partitions(
+        (face.continuous for face in solution.skeleton.faces),
+        (len(face.degrees) for face in solution.skeleton.faces),
+    )
     potential = recover_potential(solution, homogeneous_dirichlet=homogeneous_dirichlet)
     material = solution.permeability
     if callable(material) or np.iscomplexobj(material):

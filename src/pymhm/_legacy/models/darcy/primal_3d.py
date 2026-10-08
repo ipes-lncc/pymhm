@@ -1,4 +1,4 @@
-"""Three-dimensional primal MHM Darcy with P1–P4 tetrahedral local spaces."""
+"""Three-dimensional primal MHM Darcy with positive-degree Pk tetrahedral local spaces."""
 
 from __future__ import annotations
 
@@ -141,9 +141,14 @@ class Darcy3DSolution:
                 * mesh.areas[face]
                 * (
                     self.skeleton.face_weights(int(face))
-                    @ self.hybrid.trace[self.skeleton.dofs(int(face))]
-                    .reshape(-1, self.skeleton.modes[face])
-                    .mean(axis=1)
+                    @ np.array(
+                        [
+                            self.hybrid.trace[
+                                self.skeleton.subtriangle_dofs(int(face), segment)
+                            ].mean()
+                            for segment in range(len(self.skeleton.face_partition(int(face))))
+                        ]
+                    )
                 )
                 for side, face in enumerate(mesh.cell_faces[cell])
             )
@@ -180,7 +185,9 @@ def solve_darcy_3d(
     unspecified exterior face receives ``dirichlet`` pressure.
     Pure Neumann data impose one physical pressure mean and must be compatible.
     Local Pk spaces accept positive polynomial degrees; skeletal modes have an
-    independently selected polynomial degree on each triangular subdivision.
+    independently selected polynomial degree on each macroface. Skeletal
+    Bernstein coefficients may be discontinuous or C0 between its subtriangles;
+    different macrofaces retain independent coordinates, including shared edges.
     Nonrepresentable trace enrichment is rejected by
     the condensed rank check, without diagonal regularization.
     """

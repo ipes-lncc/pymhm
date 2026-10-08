@@ -151,6 +151,9 @@ def _source_basis_id(space: Any, cell: int) -> str:
     digest.update(np.asarray(space.cell_dofs(cell), dtype=np.int64).tobytes(order="C"))
     digest.update(str(getattr(space, "components", 1)).encode("ascii"))
     digest.update(str(getattr(space, "basis_id", "")).encode("utf8"))
+    base = getattr(space, "base", None)
+    if base is not None and callable(getattr(base, "cell_dofs", None)):
+        digest.update(_source_basis_id(base, cell).encode("ascii"))
     face_dofs = getattr(space, "dofs", None)
     if callable(face_dofs):
         for face in faces:
@@ -162,6 +165,7 @@ def _source_basis_id(space: Any, cell: int) -> str:
         "degree",
         "degrees",
         "subdivisions",
+        "continuous",
         "face_dofs",
         "element_dofs",
         "partitions",
@@ -183,6 +187,15 @@ def _source_basis_id(space: Any, cell: int) -> str:
     if callable(partition):
         for face in faces:
             digest.update(np.asarray(partition(int(face))).tobytes(order="C"))
+    subtriangle_dofs = getattr(space, "subtriangle_dofs", None)
+    if callable(partition) and callable(subtriangle_dofs):
+        for face in faces:
+            for segment in range(len(partition(int(face)))):
+                digest.update(
+                    np.asarray(subtriangle_dofs(int(face), segment), dtype=np.int64).tobytes(
+                        order="C"
+                    )
+                )
     if hasattr(space.mesh, "points") and hasattr(space.mesh, "faces"):
         for face in faces:
             digest.update(space.mesh.points[space.mesh.faces[int(face)]].tobytes(order="C"))

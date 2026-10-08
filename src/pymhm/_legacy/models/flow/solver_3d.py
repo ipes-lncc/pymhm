@@ -212,8 +212,10 @@ def _translation_trace_compatible(skeleton: TriangularSkeleton, beta: Any, order
     is checked at the declared face integration points, with only floating-point
     cancellation allowed. This is not a certified bound for arbitrary callbacks
     between quadrature points.
+    The weighted least-squares projection avoids squaring the basis condition
+    number; a numerically unresolved polynomial basis is rejected.
     """
-    bary, weights = triangle_quadrature(max(8, order))
+    bary, weights = triangle_quadrature(max(8, order, int(skeleton.degrees.max()) + 1))
     for face, ids in enumerate(skeleton.mesh.faces):
         vertices = skeleton.mesh.points[ids]
         partitions = skeleton.face_partition(int(face))
@@ -224,11 +226,27 @@ def _translation_trace_compatible(skeleton: TriangularSkeleton, beta: Any, order
         vectors = vector_values_3d(beta, points.reshape(-1, 3)).reshape(points.shape)
         normal = skeleton.mesh.normals[face]
         values = vectors @ normal
-        basis = skeleton.basis(int(face), bary)
-        mass = np.einsum("q,qi,qj->ij", weights, basis, basis)
-        moments = np.einsum("q,sq,qi->si", weights, values, basis)
-        coefficients = np.linalg.solve(mass, moments.T).T
-        difference = values - coefficients @ basis.T
+        if skeleton.continuous[face]:
+            original_bary = np.einsum("qi,sij->sqj", bary, partitions)
+            basis = skeleton.evaluate(int(face), original_bary.reshape(-1, 3))
+            area_weights = (skeleton.face_weights(int(face))[:, None] * weights).ravel()
+            weighted = np.sqrt(area_weights)
+            coefficients, _, rank, _ = np.linalg.lstsq(
+                weighted[:, None] * basis, weighted * values.ravel(), rcond=None
+            )
+            if rank != basis.shape[1]:
+                return False
+            difference = values - (basis @ coefficients).reshape(values.shape)
+        else:
+            basis = skeleton.basis(int(face), bary)
+            weighted = np.sqrt(weights)
+            projection, _, rank, _ = np.linalg.lstsq(
+                weighted[:, None] * basis, weighted[:, None] * values.T, rcond=None
+            )
+            if rank != basis.shape[1]:
+                return False
+            coefficients = projection.T
+            difference = values - coefficients @ basis.T
         scale = np.max(np.abs(vectors) @ np.abs(normal), axis=1)
         if np.any(np.max(np.abs(difference), axis=1) > 256 * np.finfo(float).eps * scale):
             return False
