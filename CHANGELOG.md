@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.3.1
+
+<!-- pymhm:generated:start -->
+<!-- Source: v1.3.0..e29f90a4e89f6625097ed5130ea0064e58681098 -->
+
+### Performance
+
+- accelerate numerical kernels with Numba (#15) ([e29f90a](https://github.com/ipes-lncc/pymhm/commit/e29f90a4e89f6625097ed5130ea0064e58681098))
+
+<!-- pymhm:generated:end -->
+
 ## 1.3.0
 
 <!-- pymhm:generated:start -->
