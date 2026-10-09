@@ -2,9 +2,16 @@
 
 import hashlib
 import json
-from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    resource_glob,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -14,7 +21,7 @@ from matplotlib.tri import Triangulation
 from examples.plot_mesh import draw_macro_mesh
 from pymhm import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/oseen"
 FIGURES = ROOT / "docs/figures/oseen"
 
@@ -22,9 +29,9 @@ FIGURES = ROOT / "docs/figures/oseen"
 def fields(record: dict, name: str) -> None:
     """Plot exact/numerical fields with common scales and separate physical-error scales."""
     path = DATA / record["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != record["sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != record["sha256"]:
         raise ValueError("Oseen field archive does not match its recorded checksum")
-    with np.load(path) as data:
+    with np.load(local_resource(path)) as data:
         triangulation = Triangulation(*data["points"].T, data["cells"])
         mesh = TriangleMesh(data["macro_points"], data["macro_cells"])
         exact_u, numerical_u = data["exact_velocity"], data["velocity"]
@@ -105,11 +112,13 @@ def history(record: dict, name: str) -> None:
 def main() -> None:
     """Render each completed verified archive without changing numerical records."""
     FIGURES.mkdir(parents=True, exist_ok=True)
-    for path in sorted(DATA.glob("*.json")):
-        record = json.loads(path.read_text())
+    for path in sorted(resource_glob(DATA, "*.json")):
+        record = json.loads(read_resource_text(path))
         fields(record, path.stem)
         history(record, path.stem)
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_oseen").main()

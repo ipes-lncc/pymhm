@@ -3,6 +3,7 @@
 import ast
 import builtins
 import json
+from collections.abc import Callable
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -300,10 +301,15 @@ def test_native_mapping_field_archive_and_compiled_operator(kind: str, tmp_path:
 
 
 @pytest.mark.fem
-def test_mshho_notebook_constant_source_scales_the_physical_solution() -> None:
+def test_mshho_notebook_constant_source_scales_the_physical_solution(
+    prepare_notebook_companion: Callable[[str], Path],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """The visible P1 moments/P2 realization uses its declared source, including nonunit data."""
     pytest.importorskip("dolfinx")
     pytest.importorskip("basix")
+    workspace = prepare_notebook_companion("introduction/mshho_multiscale.ipynb")
+    monkeypatch.chdir(workspace)
     notebook = json.loads((ROOT / "notebooks/introduction/mshho_multiscale.ipynb").read_text())
     namespace: dict[str, Any] = {}
     # Execute the notebook's numerical bootstrap without its optional display
@@ -322,6 +328,7 @@ def test_mshho_notebook_constant_source_scales_the_physical_solution() -> None:
         )
     ]
     exec(compile(bootstrap, "notebook numerical bootstrap", "exec"), namespace)
+    assert namespace["ROOT"] == workspace
     exec("".join(notebook["cells"][3]["source"]), namespace)
     namespace["macro"] = TriangleMesh.unit_square(1)
     namespace["local_refinement"] = 4

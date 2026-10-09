@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -24,6 +16,7 @@ from examples.maxwell_nanoguide import ROOT, NanoWaveguide, hashes, save_fields
 from examples.tutorial_maxwell_equations import EquationLeapfrog
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.fem.vector.curl import TangentialTraceSpace as MaxwellSkeleton
+from pymhm.io.workspace import source_file, source_label
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
@@ -35,7 +28,7 @@ def run(output: Path, dt: float, order: int) -> None:
         SkeletonSpace(mesh, tuple(FaceSpace.uniform(1, 8) for _ in mesh.faces))
     )
     original = hashes()
-    original[Path(__file__).relative_to(ROOT).as_posix()] = hashlib.sha256(
+    original[source_label(Path(__file__), ROOT)] = hashlib.sha256(
         Path(__file__).read_bytes()
     ).hexdigest()
     start = time.perf_counter()
@@ -83,7 +76,8 @@ def run(output: Path, dt: float, order: int) -> None:
         path = output / f"mhm-n16-f128-q{order}-dt{dt:g}-aligned.npz"
         save_fields(aligned, path, 128)
         current = {
-            name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in original
+            name: hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
+            for name in original
         }
         if current != original:
             raise RuntimeError("temporal-control acquisition sources changed")
@@ -120,4 +114,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.maxwell_nanoguide_time").main()

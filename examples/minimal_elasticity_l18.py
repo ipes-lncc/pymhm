@@ -7,18 +7,9 @@ study does not claim to reproduce every historical table entry or enrichment.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import importlib
 import json
-import sys
 from pathlib import Path
 from time import perf_counter
 from typing import Any
@@ -36,23 +27,23 @@ from examples.minimal_flow_originals import (
     write_record,
 )
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
+from pymhm.io.workspace import case_workspace, source_file
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def acquire(segments: int, output: Path) -> dict[str, Any]:
     """Run unchanged oscillatory analytical physics and persist scalar field errors only."""
     if segments not in (1, 2, 4) or output.exists():
         raise ValueError("Segments 1/2/4 and a fresh output directory are required")
-    sys.path.insert(0, str(ROOT / "examples"))
     data = importlib.import_module("examples.plot_mixed_elasticity")
     output.mkdir(parents=True)
     hashes = capture_sources(
         output,
         [
             Path(__file__),
-            ROOT / "examples/plot_mixed_elasticity.py",
-            ROOT / "examples/plot_mesh.py",
+            source_file("examples/plot_mixed_elasticity.py", root=ROOT),
+            source_file("examples/plot_mesh.py", root=ROOT),
         ],
     )
     data.check_manufactured_data()
@@ -192,9 +183,16 @@ def acquire(segments: int, output: Path) -> dict[str, Any]:
     return record
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--segments", type=int, choices=(1, 2, 4), required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     acquire(args.segments, args.output)
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.minimal_elasticity_l18").main()

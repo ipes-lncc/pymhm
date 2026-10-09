@@ -2,17 +2,11 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import json
 
 import matplotlib
+
+from pymhm.io.workspace import read_resource_text
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -79,7 +73,7 @@ def convergence_figure(report: dict) -> None:
 
 def main() -> None:
     """Read verified archives and redraw the classical-reference comparisons."""
-    report = json.loads((DATA / "classical-convergence.json").read_text())
+    report = json.loads(read_resource_text(DATA / "classical-convergence.json"))
     row = next(item for item in report["mhm_trace_enrichment"] if item["segments"] == 2)
     record = load_record(row)
     row = {
@@ -95,4 +89,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_quarter_classical").main()

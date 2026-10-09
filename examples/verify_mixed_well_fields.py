@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
 from dataclasses import dataclass
@@ -24,15 +16,23 @@ from threadpoolctl import threadpool_limits
 from examples.solve_mapped_well import WellData
 from pymhm.fem.hdiv.family_3d import HDiv3DFamily, cell_quadrature, face_quadrature, face_shape
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    source_file,
+    source_identity,
+)
 from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_dofs, hdiv3d_transform
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/mixed-well-geometries"
 
 
 def digest(path: Path) -> str:
     """Return a file's SHA256 without relying on filesystem timestamps."""
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return hashlib.sha256(read_resource_bytes(path)).hexdigest()
 
 
 def powers(kind: str, degree: int) -> np.ndarray:
@@ -74,11 +74,11 @@ class ArchivedField:
 
 def read_field(name: str, directory: Path = DATA) -> ArchivedField:
     """Validate the archive and recover its physical field using its executed reference matrix."""
-    record = json.loads((directory / f"{name}.json").read_text())
+    record = json.loads(read_resource_text(directory / f"{name}.json"))
     path = directory / record["archive"]
     if record.get("archive_schema") != 2 or digest(path) != record["sha256"]:
         raise ValueError("the archived field requires schema 2 and its recorded SHA256")
-    with np.load(path) as archive:
+    with np.load(local_resource(path)) as archive:
         arrays = {key: archive[key] for key in archive.files}
     matrix = arrays["flux_basis_coefficients"]
     if hashlib.sha256(matrix.tobytes()).hexdigest() != record["flux_basis_sha256"]:
@@ -232,12 +232,12 @@ def main() -> None:
     """Verify the current immutable archives without solving or changing any physical field."""
     watched = [
         Path(__file__),
-        ROOT / "examples/solve_mapped_well.py",
-        ROOT / "src/pymhm/fem/hdiv/family_3d.py",
-        ROOT / "src/pymhm/meshes/mixed.py",
+        source_file("examples/solve_mapped_well.py", root=ROOT),
+        source_file("src/pymhm/fem/hdiv/family_3d.py", root=ROOT),
+        source_file("src/pymhm/meshes/mixed.py", root=ROOT),
     ]
     sources = current_source_manifest(
-        {path.relative_to(ROOT).as_posix(): digest(path) for path in watched}
+        source_identity(ROOT, watched), packages=("pymhm", "examples")
     )
     rows, replay = [], []
     for kind, degree in (("prism", 1), ("tetrahedron", 1), ("tetrahedron", 2)):
@@ -283,7 +283,7 @@ def main() -> None:
             }
         )
     if sources != current_source_manifest(
-        {path.relative_to(ROOT).as_posix(): digest(path) for path in watched}
+        source_identity(ROOT, watched), packages=("pymhm", "examples")
     ):
         raise RuntimeError("field verification source changed during execution")
     metadata = {
@@ -302,4 +302,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.verify_mixed_well_fields").main()

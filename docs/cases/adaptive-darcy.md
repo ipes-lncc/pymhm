@@ -67,6 +67,10 @@ coordinates remain subject to the mesh validity checks. Cell and face ancestry
 is preserved through the entire propagation path. This geometric bound is
 separate from any claim about estimator contraction.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 import numpy as np
 from pymhm import TriangleMesh

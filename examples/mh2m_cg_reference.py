@@ -19,7 +19,9 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-ROOT = Path(__file__).resolve().parents[1]
+from pymhm.io.workspace import case_workspace
+
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/mh2m-heterogeneous/cg3"
 LATTICE = np.array(
     [
@@ -380,4 +382,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.mh2m_cg_reference").main()

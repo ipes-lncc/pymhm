@@ -52,6 +52,10 @@ use P(k+1) nodal coordinates, while `hybrid.fields` retain only
 `2*(dim(Pk)+1)` local coordinates. For P2 this gives 14 coordinates, compared
 with 20 for full P3.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 import numpy as np
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh

@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -26,9 +18,10 @@ from examples.polygon_meshes import polygon_partition
 from examples.solve_rad3d import exact, gradient, physical_flux, source
 from pymhm.fem.traces.polygon_3d import PolygonalSkeleton3D
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity, source_label
 from pymhm.meshes.polyhedral import PolyhedralMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def partition(n: int, family: str) -> tuple:
@@ -60,14 +53,14 @@ def main() -> None:
     folder.mkdir(exist_ok=True, parents=True)
     paths = [
         Path(__file__),
-        ROOT / "examples/polygon_meshes.py",
-        ROOT / "examples/solve_rad3d.py",
-        ROOT / "examples/field_archive.py",
-        ROOT / "examples/formulations/scalar_3d.py",
-        ROOT / "examples/formulations/transport_3d.py",
+        source_file("examples/polygon_meshes.py", root=ROOT),
+        source_file("examples/solve_rad3d.py", root=ROOT),
+        source_file("examples/field_archive.py", root=ROOT),
+        source_file("examples/formulations/scalar_3d.py", root=ROOT),
+        source_file("examples/formulations/transport_3d.py", root=ROOT),
     ]
     paths += [
-        ROOT / f"src/pymhm/{name}"
+        source_file(f"src/pymhm/{name}", root=ROOT)
         for name in (
             "meshes/polyhedral.py",
             "fem/traces/polygon_3d.py",
@@ -82,9 +75,7 @@ def main() -> None:
             "execution/cpu.py",
         )
     ]
-    hashes = current_source_manifest(
-        {path.relative_to(ROOT).as_posix(): fingerprint(path) for path in paths}
-    )
+    hashes = current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
     snapshots = folder / "acquisition-sources"
     snapshots.mkdir(exist_ok=True)
     for path in paths:
@@ -170,7 +161,7 @@ def main() -> None:
                     row["field_archive"] = archive.name
                     row["field_sha256"] = fingerprint(archive)
                 row["source_changed"] = any(
-                    fingerprint(path) != hashes[path.relative_to(ROOT).as_posix()] for path in paths
+                    fingerprint(path) != hashes[source_label(path, ROOT)] for path in paths
                 )
                 record["convergence"].append(row)
                 temporary = destination.with_suffix(".json.part")
@@ -182,4 +173,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_polyhedral_rad").main()

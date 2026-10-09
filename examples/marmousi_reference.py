@@ -7,16 +7,7 @@ All material interfaces must be mesh edges; no cell averaging is permitted.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
-import hashlib
 import json
 import time
 from contextlib import ExitStack
@@ -34,6 +25,7 @@ from examples.hpc4e_parallel import (
 )
 from examples.marmousi_data import load_marmousi_crop
 from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.materials.cartesian import CartesianCellField
 
 
@@ -266,20 +258,15 @@ def main() -> None:
     args = parser.parse_args()
     material = load_marmousi_crop(args.data)
     comm = MPI.COMM_WORLD
-    root = Path(__file__).resolve().parents[1]
+    root = case_workspace()
     sources = [
         Path(__file__),
-        root / "examples/marmousi_data.py",
-        root / "examples/hpc4e_parallel.py",
-        root / "examples/campaign_provenance.py",
-        *sorted((root / "src/pymhm").rglob("*.py")),
+        source_file("examples/marmousi_data.py", root=root),
+        source_file("examples/hpc4e_parallel.py", root=root),
+        source_file("examples/campaign_provenance.py", root=root),
+        *sorted(source_file("src/pymhm/__init__.py", root=root).parent.rglob("*.py")),
     ]
-    before = current_source_manifest(
-        {
-            path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in sources
-        }
-    )
+    before = current_source_manifest(source_identity(root, sources), packages=("pymhm", "examples"))
     with threadpool_limits(1):
         result = native_reference(
             (2048, 512),
@@ -291,12 +278,7 @@ def main() -> None:
             point_sources=((5000, 50, 1.0),),
             progress=True,
         )
-    after = current_source_manifest(
-        {
-            path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in sources
-        }
-    )
+    after = current_source_manifest(source_identity(root, sources), packages=("pymhm", "examples"))
     if comm.allreduce(before != after, op=MPI.LOR):
         raise RuntimeError("reference acquisition sources changed during execution")
     args.output.mkdir(parents=True, exist_ok=True)
@@ -334,4 +316,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.marmousi_reference").main()

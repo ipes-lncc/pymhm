@@ -2,16 +2,7 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
-import hashlib
 import json
 import time
 from pathlib import Path
@@ -22,10 +13,11 @@ from threadpoolctl import threadpool_limits
 from examples.tutorial_elastodynamic_equations import advance, initialize, prepare
 from pymhm.fem.scalar.tetrahedron import tetra_element_tabulate, tetrahedron_quadrature
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.postprocessing.dynamics import ElastodynamicSolution, stress_from_gradient
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 class ElasticWave:
@@ -181,7 +173,7 @@ def run(
 ) -> None:
     """Acquire source-frozen P3/P1 tetrahedral MHM at one spatial/temporal resolution."""
     files = [Path(__file__)] + [
-        ROOT / f"src/pymhm/{name}.py"
+        source_file(f"src/pymhm/{name}.py", root=ROOT)
         for name in (
             "_legacy/models/waves/elastodynamics",
             "_legacy/models/elasticity/primal_3d",
@@ -193,11 +185,9 @@ def run(
             "execution/cpu",
         )
     ]
-    files += list(sorted((ROOT / "src/pymhm").rglob("*.py")))
-    files.append(ROOT / "examples/tutorial_elastodynamic_equations.py")
-    original = current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
-    )
+    files += list(sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")))
+    files.append(source_file("examples/tutorial_elastodynamic_equations.py", root=ROOT))
+    original = current_source_manifest(source_identity(ROOT, files), packages=("pymhm", "examples"))
     model = ElasticWave()
     start = time.perf_counter()
     steps = round(final / dt)
@@ -274,10 +264,7 @@ def run(
             "source_sha256": original,
         }
         if original != current_source_manifest(
-            {
-                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-                for p in files
-            }
+            source_identity(ROOT, files), packages=("pymhm", "examples")
         ):
             raise RuntimeError("elastodynamic acquisition sources changed")
         (output / (name + ".json")).write_text(json.dumps(record, indent=2) + "\n")
@@ -299,4 +286,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.elastodynamics_campaign").main()

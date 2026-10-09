@@ -1,19 +1,11 @@
 """Render Darcy solutions, analytical comparisons and conservation diagnostics.
 
-Run with ``pixi run -e notebooks python examples/plot_darcy_cases.py``.
+Run with ``python -m examples.plot_darcy_cases``.
 The figures verify specified analytical problems; they do not reproduce a
 published numerical table. All reported integrals use explicit quadrature.
 """
 
 from __future__ import annotations
-
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
 
 import argparse
 import json
@@ -31,6 +23,7 @@ from threadpoolctl import threadpool_limits
 from examples.field_sampling import sample_darcy_pressure_profile
 from examples.manufactured import darcy_flux, darcy_pressure, darcy_source
 from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
+from pymhm.io.workspace import case_workspace
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -416,7 +409,7 @@ def conservation_figures(
 @threadpool_limits.wrap(limits=1)
 def main() -> None:
     """Solve declared analytical problems, save ten figure pairs and record metrics."""
-    root = Path(__file__).resolve().parents[1]
+    root = case_workspace()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-directory", type=Path, default=root / "docs/figures/darcy")
     parser.add_argument("--macro-resolution", type=int, default=4)
@@ -549,4 +542,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_darcy_cases").main()

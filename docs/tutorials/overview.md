@@ -23,15 +23,24 @@ reproduction of a published application.
 python -m pip install pymhm
 ```
 
-The course describes the API in this repository revision. Use the
-[source installation](../installation.md#from-a-checkout) and its checked-in
-Pixi lockfile to reproduce the examples with their declared dependencies.
+The installed distribution contains only `pymhm`. Download the notebook from
+the [catalogue](../tutorials.md); its first cell explicitly acquires verified
+local companion helpers and prepares the declared data. Install notebook and
+plot dependencies with:
+
+```bash
+python -m pip install 'pymhm[notebooks,visualization]'
+jupyter lab ufl_provider.ipynb
+```
 
 The portable package works independently of DOLFINx, PETSc, MPI and GPU
-libraries. This UFL example uses the optional native DOLFINx backend. In a
-checkout, run it in the locked `introduction` environment; the
-[installation guide](../installation.md) describes available backends and
-native Windows support.
+libraries. This UFL example additionally requires the compatible native
+DOLFINx/UFL backend described in the [installation guide](../installation.md).
+The runner uses the active Python interpreter; no source checkout or Pixi
+installation is required. Outputs are written in the current directory, or
+in the directory selected by `PYMHM_WORKSPACE`. Large inputs are fetched from
+the [data download index](../data.md) into a SHA256-verified user cache; only
+the selected notebook's inputs are prepared.
 
 ## 1. Choose the macro mesh, local meshes and interface space
 

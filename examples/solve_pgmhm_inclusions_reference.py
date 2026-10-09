@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -29,8 +21,9 @@ from examples.pgmhm_inclusion_data import axis, coefficient, material_array
 from examples.solve_unusual_spe10_reference import CG2Field, subdivide_axis
 from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, local_resource, source_file
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/pgmhm-inclusions"
 
 
@@ -79,7 +72,7 @@ class InclusionField(CG2Field):
 
 def load_field(path: Path) -> InclusionField:
     """Keep both portable components until after their independent P2 evaluations."""
-    with np.load(path) as data:
+    with np.load(local_resource(path)) as data:
         correction = data["coefficients_correction"].astype(np.longdouble)
         correction += data["coefficients_tail"]
         return InclusionField(
@@ -396,7 +389,11 @@ def main() -> None:
         "src/pymhm/fem/scalar/operators.py",
     )
     hashes = current_source_manifest(
-        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+        {
+            name: hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
+            for name in names
+        },
+        packages=("pymhm", "examples"),
     )
     with threadpool_limits(1):
         for factor in args.factors:
@@ -445,7 +442,11 @@ def main() -> None:
                 row["previous_archive"] = previous.name
                 row["previous_sha256"] = hashlib.sha256(previous.read_bytes()).hexdigest()
             if hashes != current_source_manifest(
-                {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+                {
+                    name: hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
+                    for name in names
+                },
+                packages=("pymhm", "examples"),
             ):
                 raise RuntimeError("reference sources changed during acquisition")
             path.with_suffix(".json").write_text(json.dumps(row, indent=2) + "\n")
@@ -453,4 +454,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_pgmhm_inclusions_reference").main()

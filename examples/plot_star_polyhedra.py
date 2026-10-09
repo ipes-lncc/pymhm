@@ -2,7 +2,6 @@
 
 import hashlib
 import json
-from pathlib import Path
 from typing import Any
 
 import matplotlib.pyplot as plt
@@ -20,9 +19,15 @@ from examples.solve_rad3d import exact, physical_flux
 from examples.tetra_section_samples import section_grid
 from pymhm import PolygonMesh, PolyhedralMesh
 from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 from pymhm.meshes.tetrahedron import TetraMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/star-polyhedra"
 OUTPUT = ROOT / "docs/figures/star-polyhedra"
 
@@ -140,11 +145,11 @@ def convergence(record: dict[str, Any]) -> None:
 def fields(row: dict[str, Any]) -> None:
     """Evaluate full P4 scalar and physical flux on disconnected fine-cell sections."""
     path = DATA / row["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != row["archive_sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["archive_sha256"]:
         raise ValueError("archived fields differ from their acquisition digest")
     points, cells, values = [], [], []
     offset = 0
-    with np.load(path) as archive:
+    with np.load(local_resource(path)) as archive:
         for cell in range(row["macro_cells"]):
             fine = TetraMesh(archive[f"points_{cell}"], archive[f"cells_{cell}"])
             cut = section_grid(fine, refinement=5)
@@ -235,7 +240,7 @@ def fields(row: dict[str, Any]) -> None:
 
 def run() -> None:
     """Render only complete, digest-verified records without another PDE solve."""
-    record = json.loads((DATA / "comparison.json").read_text())
+    record = json.loads(read_resource_text(DATA / "comparison.json"))
     if len(record["rows"]) != 5:
         raise ValueError("five completed mesh levels are required")
     geometry()
@@ -243,6 +248,13 @@ def run() -> None:
     fields(record["rows"][-1])
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     with threadpool_limits(1):
         run()
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.plot_star_polyhedra").main()

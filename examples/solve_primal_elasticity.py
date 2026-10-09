@@ -1,5 +1,12 @@
 """Acquire original general-tensor primal elasticity convergence separately from CI."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pymhm.postprocessing.primal_elasticity import PrimalElasticitySolution
+
 import argparse
 import hashlib
 import json
@@ -14,8 +21,9 @@ from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 from pymhm.estimators.elasticity import estimate_primal_elasticity_error
 from pymhm.fem.scalar.triangle import nodal_space, reference_basis
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/primal-elasticity"
 STIFFNESS = np.array([[5.0, 1.0, 0.4], [1.0, 4.0, 0.3], [0.4, 0.3, 2.0]])
 
@@ -95,7 +103,7 @@ class TensorData:
         return -self.stress_and_divergence(points)[1]
 
 
-def archive(solution, data: TensorData, path: Path) -> str:
+def archive(solution: PrimalElasticitySolution, data: TensorData, path: Path) -> str:
     """Archive independent one-sided triangular display samples and exact fields."""
     reference = TriangleMesh([[0, 0], [1, 0], [0, 1]], [[0, 1, 2]]).submesh(0, 5)
     bary = np.column_stack((1 - reference.points.sum(axis=1), reference.points))
@@ -182,8 +190,8 @@ def main() -> None:
     digest = archive(solution, data, path)
     sources = [
         Path(__file__),
-        ROOT / "src/pymhm/_legacy/models/elasticity/primal.py",
-        ROOT / "src/pymhm/estimators/elasticity.py",
+        source_file("src/pymhm/_legacy/models/elasticity/primal.py", root=ROOT),
+        source_file("src/pymhm/estimators/elasticity.py", root=ROOT),
     ]
     report = dict(
         case="Original trigonometric anisotropic elasticity",
@@ -198,14 +206,13 @@ def main() -> None:
         archive=path.name,
         sha256=digest,
         source_hashes=current_source_manifest(
-            {
-                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-                for p in sources
-            }
+            source_identity(ROOT, sources), packages=("pymhm", "examples")
         ),
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_primal_elasticity").main()

@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -22,6 +14,7 @@ from threadpoolctl import threadpool_limits
 from examples.formulations.application import mapped_darcy as solve_darcy_mapped_rt
 from examples.solve_mapped_oscillatory_well import OUTPUT, ROOT, OscillatoryWellData
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import source_file, source_identity, source_label
 from pymhm.meshes.hexahedron import HexMesh, cube_quadrature
 
 
@@ -51,24 +44,17 @@ def main() -> None:
     order = (args.quadrature_xy, args.quadrature_xy, args.quadrature_z)
     sources = [
         Path(__file__),
-        ROOT / "examples/solve_mapped_oscillatory_well.py",
-        ROOT / "examples/solve_mapped_well.py",
-        ROOT / "src/pymhm/_legacy/models/darcy/mapped.py",
-        ROOT / "src/pymhm/linalg/linear.py",
-        ROOT / "src/pymhm/core/contracts.py",
+        source_file("examples/solve_mapped_oscillatory_well.py", root=ROOT),
+        source_file("examples/solve_mapped_well.py", root=ROOT),
+        source_file("src/pymhm/_legacy/models/darcy/mapped.py", root=ROOT),
+        source_file("src/pymhm/linalg/linear.py", root=ROOT),
+        source_file("src/pymhm/core/contracts.py", root=ROOT),
     ]
-    hashes = current_source_manifest(
-        {
-            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in sources
-        }
-    )
+    hashes = current_source_manifest(source_identity(ROOT, sources), packages=("pymhm", "examples"))
     snapshot = ROOT / "build/source-snapshots/mapped-well-oscillatory"
     snapshot.mkdir(parents=True, exist_ok=True)
     for p in sources:
-        (snapshot / f"{hashes[p.relative_to(ROOT).as_posix()]}-{p.name}").write_bytes(
-            p.read_bytes()
-        )
+        (snapshot / f"{hashes[source_label(p, ROOT)]}-{p.name}").write_bytes(p.read_bytes())
     with threadpool_limits(1):
         solution = solve_darcy_mapped_rt(
             mesh,
@@ -148,12 +134,13 @@ def main() -> None:
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
     if any(
-        hashlib.sha256(p.read_bytes()).hexdigest() != hashes[p.relative_to(ROOT).as_posix()]
-        for p in sources
+        hashlib.sha256(p.read_bytes()).hexdigest() != hashes[source_label(p, ROOT)] for p in sources
     ):
         raise RuntimeError("Acquisition source changed; inspect snapshots before publication")
     print(json.dumps(report), flush=True)
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_mapped_well_classical").main()

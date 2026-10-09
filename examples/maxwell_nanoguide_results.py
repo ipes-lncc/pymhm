@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -20,14 +12,15 @@ import numpy as np
 from numpy.polynomial.legendre import leggauss
 
 from pymhm.fem.scalar.quadrilateral import qk_basis
+from pymhm.io.workspace import case_workspace, local_resource, read_resource_bytes
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/maxwell-nanoguide"
 
 
 def fields(path: Path) -> tuple[np.ndarray, dict[str, Any]]:
     """Read every discontinuous Q2 coefficient, checking the archived physical times."""
-    with np.load(path) as data:
+    with np.load(local_resource(path)) as data:
         if int(data["degree"]) != 2 or not np.array_equal(data["bounds"], [0, 10, 0, 10]):
             raise ValueError("expected the Q2 nanoguide field contract")
         value = np.concatenate((data["electric"][..., None], data["magnetic"]), axis=-1)
@@ -35,7 +28,7 @@ def fields(path: Path) -> tuple[np.ndarray, dict[str, Any]]:
             "electric_time": float(data["electric_time"]),
             "magnetic_time": float(data["magnetic_time"]),
             "resolution": value.shape[0],
-            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "sha256": hashlib.sha256(read_resource_bytes(path)).hexdigest(),
             "file": path.name,
         }
     return value, metadata
@@ -115,7 +108,7 @@ def plot(paths: list[Path], labels: list[str], output: Path) -> None:
                 norm=norm,
                 interpolation="nearest",
             )
-            with np.load(path) as data:
+            with np.load(local_resource(path)) as data:
                 if "macro_points" in data:
                     from matplotlib.collections import LineCollection
 
@@ -174,7 +167,7 @@ def plot_errors(paths: list[Path], labels: list[str], reference: Path, output: P
                 norm=Normalize(-maximum, maximum),
                 interpolation="nearest",
             )
-            with np.load(path) as data:
+            with np.load(local_resource(path)) as data:
                 if "macro_points" in data:
                     ax.add_collection(
                         LineCollection(
@@ -321,7 +314,7 @@ def main() -> None:
     output = ROOT / "docs/figures/maxwell-nanoguide"
     output.mkdir(parents=True, exist_ok=True)
     for name in ("comparison.json", "refinement-controls.json", "dg-device-verification.json"):
-        (output / name).write_bytes((DATA / name).read_bytes())
+        (output / name).write_bytes(read_resource_bytes(DATA / name))
     if args.plot:
         plot(
             [args.reference, *paths],
@@ -338,4 +331,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.maxwell_nanoguide_results").main()

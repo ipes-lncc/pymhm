@@ -6,16 +6,7 @@ output from the original pairwise campaign and checkpoint each integration order
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
-import hashlib
 import json
 import platform
 from pathlib import Path
@@ -28,24 +19,28 @@ from examples.mapped_well_comparison import differences
 from examples.mapped_well_fields import MappedWellField
 from pymhm.execution.cpu import map_local
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import (
+    case_workspace,
+    read_resource_bytes,
+    source_file,
+    source_identity,
+    source_label,
+)
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DIRECTORY = ROOT / "examples/results/mapped-well-oscillatory"
 SOURCE_PATHS = (
     Path(__file__),
-    ROOT / "examples/mapped_well_comparison.py",
-    ROOT / "examples/mapped_well_fields.py",
-    ROOT / "src/pymhm/_legacy/models/darcy/mapped.py",
+    source_file("examples/mapped_well_comparison.py", root=ROOT),
+    source_file("examples/mapped_well_fields.py", root=ROOT),
+    source_file("src/pymhm/_legacy/models/darcy/mapped.py", root=ROOT),
 )
 
 
 def _source_hashes() -> dict[str, str]:
     """Record the actual analysis and Piola-map implementation bytes."""
     return current_source_manifest(
-        {
-            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in SOURCE_PATHS
-        }
+        source_identity(ROOT, SOURCE_PATHS), packages=("pymhm", "examples")
     )
 
 
@@ -140,8 +135,8 @@ def main() -> None:
     snapshots = args.output.parent / "mapped-well-joint-sources"
     snapshots.mkdir(exist_ok=True)
     for path in SOURCE_PATHS:
-        (snapshots / f"{sources[path.relative_to(ROOT).as_posix()]}.py").write_bytes(
-            path.read_bytes()
+        (snapshots / f"{sources[source_label(path, ROOT)]}.py").write_bytes(
+            read_resource_bytes(path)
         )
     jobs = [
         (
@@ -193,4 +188,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.compare_mapped_well_joint").main()

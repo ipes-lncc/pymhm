@@ -20,6 +20,7 @@ from typing import Any, Protocol, cast
 
 import numpy as np
 
+from pymhm.io.workspace import case_workspace
 from pymhm.materials.cartesian import CartesianCellField
 
 FILES = {
@@ -215,7 +216,7 @@ def main() -> None:
     parser.add_argument(
         "--directory",
         type=Path,
-        default=Path(__file__).resolve().parents[1] / "build/data/marmousi",
+        default=case_workspace() / "build/data/marmousi",
     )
     args = parser.parse_args()
     for key, path in download_marmousi_data(args.directory).items():
@@ -223,4 +224,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.marmousi_data").main()

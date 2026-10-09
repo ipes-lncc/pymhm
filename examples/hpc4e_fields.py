@@ -11,6 +11,7 @@ from examples.hpc4e_data import HPC4EData
 from pymhm.fem.hdiv.tensor_rt import tensor_rt_basis
 from pymhm.fem.scalar.quadrilateral import quadrilateral_quadrature
 from pymhm.fem.vector.stress_tensor import complete_rotation_basis as _rotation_basis
+from pymhm.io.workspace import local_resource
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
 
@@ -39,7 +40,7 @@ class RectangularElasticityField:
         Classical RTk/Qk/Pk archives omit the independent interior enrichment;
         their canonical coefficient shapes correspond to enrichment zero.
         """
-        with np.load(path, allow_pickle=False) as data:
+        with np.load(local_resource(path), allow_pickle=False) as data:
             return cls(
                 int(data["nx"]),
                 int(data["ny"]),

@@ -20,6 +20,7 @@ from examples.formulations.local_records import DarcyLocalFactory as _DarcyLocal
 from pymhm.core.validation import positive_int
 from pymhm.fem.scalar.operators import rt0_evaluate, triangle_quadrature
 from pymhm.fem.scalar.triangle import tabulate
+from pymhm.io.workspace import read_resource_bytes
 from pymhm.linalg.linear import LinearSolveError, accurate_residual
 from pymhm.materials.evaluation import tensor_values
 from pymhm.postprocessing.solutions import DarcySolution
@@ -271,7 +272,7 @@ def write_point_archive(path: Path, arrays: dict[str, np.ndarray]) -> str:
         stream.flush()
         os.fsync(stream.fileno())
     temporary.replace(path)
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return hashlib.sha256(read_resource_bytes(path)).hexdigest()
 
 
 def write_point_record(path: Path, record: dict) -> None:

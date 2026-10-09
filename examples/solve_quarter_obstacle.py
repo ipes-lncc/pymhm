@@ -8,20 +8,11 @@ H(div) field. This selected finite-well case is distinct from point wells.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
 import os
 import platform
-import subprocess
 from dataclasses import asdict, dataclass
 from math import fsum
 from pathlib import Path
@@ -33,7 +24,19 @@ import scipy
 from scipy import sparse
 from threadpoolctl import threadpool_info, threadpool_limits
 
-from pymhm.io.provenance import current_source_manifest
+from pymhm.io.provenance import (
+    current_source_manifest,
+    optional_file_digest,
+    workspace_git_dirty,
+    workspace_revision,
+)
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_text,
+    source_file,
+    source_identity,
+)
 
 if __package__:
     from .quarter_spot_problem import coefficient, macro_mesh, source
@@ -48,7 +51,7 @@ from pymhm.fem.scalar.operators import rt0_evaluate
 from pymhm.linalg.linear import accurate_residual
 from pymhm.postprocessing.solutions import DarcySolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 BARYCENTRIC = np.array([[2 / 3, 1 / 6, 1 / 6], [1 / 6, 2 / 3, 1 / 6], [1 / 6, 1 / 6, 2 / 3]])
 
 
@@ -279,8 +282,8 @@ def acquire(
     _atomic_archive(archive, arrays)
     sources = [
         Path(__file__),
-        ROOT / "examples/quarter_spot_problem.py",
-        *sorted((ROOT / "src/pymhm").rglob("*.py")),
+        source_file("examples/quarter_spot_problem.py", root=ROOT),
+        *sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")),
     ]
     record = {
         "schema": "pymhm-quarter-obstacle-v1",
@@ -315,21 +318,20 @@ def acquire(
         "archive": archive.name,
         "archive_sha256": _fingerprint(archive),
         "source_sha256": current_source_manifest(
-            {path.relative_to(ROOT).as_posix(): _fingerprint(path) for path in sources}
+            source_identity(
+                ROOT,
+                (
+                    path
+                    for path in sources
+                    if path.name not in ("pixi.lock", "pixi.toml", "pyproject.toml")
+                    or path.is_file()
+                ),
+            ),
+            packages=("pymhm", "examples"),
         ),
-        "lockfile_sha256": _fingerprint(ROOT / "pixi.lock"),
-        "git_revision": subprocess.run(
-            ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, text=True, capture_output=True
-        ).stdout.strip(),
-        "git_dirty": bool(
-            subprocess.run(
-                ["git", "status", "--porcelain"],
-                cwd=ROOT,
-                check=True,
-                text=True,
-                capture_output=True,
-            ).stdout.strip()
-        ),
+        "lockfile_sha256": optional_file_digest(ROOT / "pixi.lock"),
+        "git_revision": workspace_revision(ROOT),
+        "git_dirty": workspace_git_dirty(ROOT),
         "coefficient_dtype": pressure.dtype.str,
         "python": platform.python_version(),
         "numpy": np.__version__,
@@ -358,7 +360,7 @@ def load_archive(path: Path) -> tuple[dict[str, np.ndarray], dict]:
     coefficient spaces. Reading archived fields does not reconstruct omitted
     local responses or establish reference accuracy.
     """
-    record = json.loads(path.with_suffix(".json").read_text())
+    record = json.loads(read_resource_text(path.with_suffix(".json")))
     config = ObstacleConfiguration(**record["configuration"])
     expected_sources = ("examples/quarter_spot_problem.py", "examples/solve_quarter_obstacle.py")
     if (
@@ -366,12 +368,12 @@ def load_archive(path: Path) -> tuple[dict[str, np.ndarray], dict]:
         or record["archive"] != path.name
         or record["archive_sha256"] != _fingerprint(path)
         or any(
-            record["source_sha256"].get(name) != _fingerprint(ROOT / name)
+            record["source_sha256"].get(name) != _fingerprint(source_file(name, root=ROOT))
             for name in expected_sources
         )
     ):
         raise ValueError("quarter-obstacle acquisition or physical case provenance mismatch")
-    with np.load(path, allow_pickle=False) as archive:
+    with np.load(local_resource(path), allow_pickle=False) as archive:
         arrays = dict(archive)
     macro = macro_mesh()
     kernel, constraints = arrays["executed_kernel"], arrays["executed_constraints"]
@@ -452,4 +454,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_quarter_obstacle").main()

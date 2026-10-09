@@ -1,4 +1,4 @@
-"""Verify lean release archives preserve every runtime module and declared feature."""
+"""Verify library-only release archives preserve every runtime and typing file."""
 
 from __future__ import annotations
 
@@ -23,13 +23,33 @@ WHEEL_METADATA_FILES = frozenset({"METADATA", "WHEEL", "RECORD", "licenses/LICEN
 
 
 def package_sources(root: Path) -> dict[str, bytes]:
-    """Read runtime modules, typing stubs and the marker under their installed paths."""
-    package = root / "src/pymhm"
+    """Read library modules and typing under their installed ``pymhm`` paths."""
     return {
-        f"pymhm/{path.relative_to(package).as_posix()}": path.read_bytes()
-        for path in sorted(package.rglob("*"))
+        path.relative_to(root / "src").as_posix(): path.read_bytes()
+        for path in sorted((root / "src/pymhm").rglob("*"))
         if path.is_file() and (path.suffix in {".py", ".pyi"} or path.name == "py.typed")
     }
+
+
+def validate_library_build(configuration: Mapping[str, Any]) -> None:
+    """Require the library-only wheel and independently rebuildable source allowlists.
+
+    Notebook sources, companion modules, case registries, fields and datasets
+    belong to repository and documentation downloads. Forced resource mappings
+    are forbidden at every Hatch build level, including unused custom targets.
+    """
+    build = configuration.get("tool", {}).get("hatch", {}).get("build", {})
+    targets = build.get("targets", {})
+    if "force-include" in build or any("force-include" in value for value in targets.values()):
+        raise SystemExit("Library releases must not declare force-include mappings")
+    if targets.get("wheel", {}).get("packages") != ["src/pymhm"]:
+        raise SystemExit("Wheel must contain only the src/pymhm package")
+    source_names = targets.get("sdist", {}).get("only-include", [])
+    required = {"src/pymhm", *SOURCE_BUILD_FILES}
+    if set(source_names) not in (required, required | {".gitignore"}) or len(source_names) != len(
+        set(source_names)
+    ):
+        raise SystemExit("Source archive must contain only the library and build metadata")
 
 
 def validate_archive_names(names: Collection[str], expected: Collection[str], label: str) -> None:
@@ -161,11 +181,13 @@ def validate_sdist_rebuild(sdist: Path, wheel: Path, version: str) -> None:
 
 
 def main() -> None:
-    """Validate minimal wheel/sdist contents, features and independent sdist rebuilding."""
+    """Validate exact wheel/sdist contents, features and independent sdist rebuilding."""
     root = Path(__file__).resolve().parents[1]
-    project = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))["project"]
+    configuration = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
+    project = configuration["project"]
     version = project["version"]
     sources = package_sources(root)
+    validate_library_build(configuration)
     if not {"pymhm/__init__.py", "pymhm/py.typed"}.issubset(sources):
         raise SystemExit("Runtime source lacks the package entry point or typing marker")
     wheel = root / "dist" / f"pymhm-{version}-py3-none-any.whl"
@@ -197,14 +219,18 @@ def main() -> None:
         build_files[".gitignore"] = (root / ".gitignore").read_bytes()
     validate_archive_names(
         list(files),
-        {*build_files, *("src/" + name for name in sources), "PKG-INFO"},
+        {
+            *build_files,
+            *("src/" + name for name in sources),
+            "PKG-INFO",
+        },
         "Source archive",
     )
     validate_package_sources(
         {
             name.removeprefix("src/"): payload
             for name, payload in files.items()
-            if name.startswith("src/")
+            if name.removeprefix("src/") in sources
         },
         sources,
         "Source archive",
@@ -216,7 +242,10 @@ def main() -> None:
         [sys.executable, "-m", "twine", "check", "--strict", str(wheel), str(sdist)],
         check=True,
     )
-    print(f"Validated runtime-only wheel and minimal source archive for pymhm {version}")
+    print(
+        f"Validated pymhm {version}: {len(sources)} library Python/typing files; "
+        "no case payloads; independent sdist rebuild"
+    )
 
 
 if __name__ == "__main__":

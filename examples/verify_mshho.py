@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 import shutil
@@ -21,6 +13,7 @@ from uuid import uuid4
 import matplotlib
 
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -41,7 +34,7 @@ from pymhm.fem.scalar.triangle import tabulate
 from pymhm.io.provenance import file_digest
 from pymhm.linalg.linear import LinearSolveError
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def exact(points: np.ndarray) -> np.ndarray:
@@ -73,8 +66,8 @@ def main() -> None:
         raise ValueError("Material contrasts must be distinct finite values at least one")
     if args.output.exists():
         raise ValueError("MsHHO acquisition requires a fresh output directory")
-    files = list((ROOT / "src/pymhm").rglob("*.py")) + [
-        ROOT / name
+    files = list(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")) + [
+        source_file(name, root=ROOT)
         for name in (
             "pixi.lock",
             "pixi.toml",
@@ -89,13 +82,21 @@ def main() -> None:
         )
     ]
     sources = current_source_manifest(
-        {path.relative_to(ROOT).as_posix(): file_digest(path) for path in files}
+        source_identity(
+            ROOT,
+            (
+                path
+                for path in files
+                if path.name not in ("pixi.lock", "pixi.toml", "pyproject.toml") or path.is_file()
+            ),
+        ),
+        packages=("pymhm", "examples"),
     )
     args.output.mkdir(parents=True)
     for name in sources:
         destination = args.output / "executed_sources" / name
         destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(ROOT / name, destination)
+        shutil.copyfile(source_file(name, root=ROOT), destination)
         if file_digest(destination) != sources[name]:
             raise ValueError("MsHHO numerical source changed while creating its executed snapshot")
     acquisition = str(uuid4())
@@ -274,7 +275,7 @@ def main() -> None:
                 )
             )
             assert difference / scale < 2e-8
-    if any(file_digest(ROOT / name) != digest for name, digest in sources.items()):
+    if any(file_digest(source_file(name, root=ROOT)) != digest for name, digest in sources.items()):
         raise ValueError("MsHHO executed numerical sources changed during acquisition")
     metadata.update(
         status="fields-acquired",
@@ -389,7 +390,7 @@ def main() -> None:
     fig.savefig(figures / "fields.png", dpi=200)
     fig.savefig(figures / "fields.svg")
     plt.close(fig)
-    if any(file_digest(ROOT / name) != digest for name, digest in sources.items()):
+    if any(file_digest(source_file(name, root=ROOT)) != digest for name, digest in sources.items()):
         raise ValueError("MsHHO executed numerical sources changed while rendering")
     metadata["status"] = "verified-gallery"
     write_progress(args.output / "study.json", metadata)
@@ -408,4 +409,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.verify_mshho").main()

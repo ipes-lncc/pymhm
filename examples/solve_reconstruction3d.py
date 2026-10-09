@@ -16,8 +16,9 @@ from pymhm import TetraMesh
 from pymhm.adaptivity.darcy_3d import solve_adaptive_darcy_3d
 from pymhm.estimators.darcy_3d import estimate_darcy_error_3d
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/reconstruction3d"
 
 
@@ -38,13 +39,11 @@ def run(suite: str) -> None:
         "core/contracts",
         "linalg/linear",
     ]
-    owners = [ROOT / f"src/pymhm/{name}.py" for name in modules] + [
+    owners = [source_file(f"src/pymhm/{name}.py", root=ROOT) for name in modules] + [
         Path(__file__),
-        ROOT / "examples/reconstruction3d_data.py",
+        source_file("examples/reconstruction3d_data.py", root=ROOT),
     ]
-    hashes = current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
-    )
+    hashes = current_source_manifest(source_identity(ROOT, owners), packages=("pymhm", "examples"))
     report: dict[str, Any] = dict(
         suite=suite,
         reference="analytical",
@@ -187,15 +186,22 @@ def run(suite: str) -> None:
             estimate = estimate_darcy_error_3d(solution, quadrature_order=12)
             capture(n, solution, estimate)
     if hashes != current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        source_identity(ROOT, owners), packages=("pymhm", "examples")
     ):
         raise RuntimeError("campaign sources changed during acquisition")
     report["source_changed_during_run"] = False
     (OUTPUT / f"{suite}.json").write_text(json.dumps(report, indent=2) + "\n")
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("suite", choices=("uniform", "adaptive"))
     with threadpool_limits(1):
         run(parser.parse_args().suite)
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.solve_reconstruction3d").main()

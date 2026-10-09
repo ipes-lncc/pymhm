@@ -17,6 +17,8 @@ from uuid import UUID
 
 import numpy as np
 
+from pymhm.io.workspace import local_resource, read_resource_bytes, read_resource_text
+
 try:
     from .archive_precision import precision_fields, restore_precision
 except ImportError:
@@ -1140,13 +1142,13 @@ def write_archive(
 
 def read_archive(path: Path) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
     """Reject changed basis/operator/coefficient bytes before replaying any field."""
-    record = json.loads(path.with_suffix(".json").read_text())
+    record = json.loads(read_resource_text(path.with_suffix(".json")))
     if (
         record["archive"] != path.name
-        or hashlib.sha256(path.read_bytes()).hexdigest() != record["archive_sha256"]
+        or hashlib.sha256(read_resource_bytes(path)).hexdigest() != record["archive_sha256"]
     ):
         raise ValueError("executed field archive digest changed")
-    with np.load(path, allow_pickle=False) as saved:
+    with np.load(local_resource(path), allow_pickle=False) as saved:
         arrays = {name: saved[name] for name in saved.files}
     if set(arrays) != set(record["arrays_sha256"]) or any(
         array_digest(v) != record["arrays_sha256"][name] for name, v in arrays.items()

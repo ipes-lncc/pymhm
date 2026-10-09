@@ -21,9 +21,10 @@ from examples.core_elasticity_field_archive import ProductionObservation
 from examples.transport_checkpoints import write_progress
 from pymhm.core.system import HybridSystem
 from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.linalg.linear import accurate_residual
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 @contextmanager
@@ -77,25 +78,33 @@ def observe_originals() -> Iterator[ProductionObservation]:
 def capture_sources(output: Path, extra: Sequence[Path]) -> dict[str, str]:
     """Copy exact core, observer, analytical data and lock bytes before solving."""
     paths = [
-        *sorted((ROOT / "src/pymhm").rglob("*.py")),
-        ROOT / "examples/minimal_flow_originals.py",
-        ROOT / "examples/core_elasticity_field_archive.py",
-        ROOT / "examples/archive_precision.py",
-        ROOT / "examples/campaign_provenance.py",
-        ROOT / "examples/transport_checkpoints.py",
-        ROOT / "examples/local_response_cache.py",
+        *sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")),
+        source_file("examples/minimal_flow_originals.py", root=ROOT),
+        source_file("examples/core_elasticity_field_archive.py", root=ROOT),
+        source_file("examples/archive_precision.py", root=ROOT),
+        source_file("examples/campaign_provenance.py", root=ROOT),
+        source_file("examples/transport_checkpoints.py", root=ROOT),
+        source_file("examples/local_response_cache.py", root=ROOT),
         ROOT / "pixi.lock",
         ROOT / "pixi.toml",
         ROOT / "pyproject.toml",
         *extra,
     ]
     hashes = current_source_manifest(
-        {path.relative_to(ROOT).as_posix(): file_digest(path) for path in paths}
+        source_identity(
+            ROOT,
+            (
+                path
+                for path in paths
+                if path.name not in ("pixi.lock", "pixi.toml", "pyproject.toml") or path.is_file()
+            ),
+        ),
+        packages=("pymhm", "examples"),
     )
     for name, expected in hashes.items():
         target = output / "executed-sources/files" / name
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(ROOT / name, target)
+        shutil.copyfile(source_file(name, root=ROOT), target)
         if file_digest(target) != expected:
             raise ValueError("An executed source snapshot differs")
     write_progress(output / "executed-sources/manifest.json", {"source_sha256": hashes})
@@ -104,7 +113,9 @@ def capture_sources(output: Path, extra: Sequence[Path]) -> dict[str, str]:
 
 def sources_unchanged(hashes: Mapping[str, str]) -> bool:
     """Check every declared numerical owner/input after execution."""
-    return all(file_digest(ROOT / name) == expected for name, expected in hashes.items())
+    return all(
+        file_digest(source_file(name, root=ROOT)) == expected for name, expected in hashes.items()
+    )
 
 
 def original_diagnostics(

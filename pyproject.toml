@@ -36,6 +36,10 @@ mpi = ["mpi4py>=4"]
 amg = ["pyamg>=5.3"]
 meshing = ["gmsh>=4.13", "meshio>=5.3", "netgen-mesher>=6.2"]
 visualization = ["matplotlib>=3.8", "pyvista>=0.46,<0.50", "vtk>=9.5,<9.7"]
+notebooks = [
+  "ipykernel>=6.29", "jupyterlab>=4", "nbclient>=0.10", "nbconvert>=7", "nbformat>=5.10",
+  "matplotlib>=3.8", "pyvista>=0.46,<0.50", "vtk>=9.5,<9.7", "meshio>=5.3", "pyamg>=5.3",
+]
 
 [project.urls]
 Homepage = "https://github.com/ipes-lncc/pymhm"
@@ -76,33 +80,3 @@ fail_under = 99
 show_missing = true
 skip_covered = true
 precision = 2
-
-[tool.ruff]
-target-version = "py311"
-line-length = 100
-extend-exclude = ["notebooks"]
-
-[tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B", "SIM", "D"]
-ignore = ["D203", "D213"]
-
-[tool.ruff.lint.per-file-ignores]
-"tests/**" = ["D"]
-
-[tool.ruff.lint.pydocstyle]
-convention = "numpy"
-
-[tool.mypy]
-# Current NumPy stubs use PEP 695; Ruff and the Python 3.11 job check source compatibility.
-python_version = "3.12"
-files = ["src/pymhm"]
-check_untyped_defs = true
-disallow_untyped_defs = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_unused_configs = true
-
-[[tool.mypy.overrides]]
-module = ["scipy.*", "dolfinx.*", "ufl.*", "basix.*", "mpi4py.*", "petsc4py.*", "pypardiso.*", "cupy.*", "nvmath.*", "threadpoolctl.*", "pyamg.*", "pyamgx.*", "gmsh.*", "meshio.*", "netgen.*", "pyvista.*"]
-ignore_missing_imports = true

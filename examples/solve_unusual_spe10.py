@@ -8,14 +8,6 @@ residual across a coefficient jump. The zero source is a declared data choice.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -36,10 +28,11 @@ from pymhm.fem.quadrature.material import fit_material_faces, fit_material_mesh
 from pymhm.fem.scalar.operators import p1_geometry
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file
 from pymhm.meshes.triangle import TriangleMesh
 from pymhm.postprocessing.solutions import ScalarSolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/unusual-spe10"
 
 
@@ -73,7 +66,11 @@ def hashes() -> dict[str, str]:
         )
     ]
     return current_source_manifest(
-        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+        {
+            name: hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
+            for name in names
+        },
+        packages=("pymhm", "examples"),
     )
 
 
@@ -346,4 +343,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_unusual_spe10").main()

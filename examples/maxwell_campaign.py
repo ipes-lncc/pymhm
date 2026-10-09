@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -29,11 +21,12 @@ from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
 from pymhm.fem.vector.curl import TangentialTraceSpace as MaxwellSkeleton
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.meshes.triangle import TriangleMesh
 from pymhm.postprocessing.electromagnetic import MaxwellSolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/maxwell"
 
 
@@ -54,16 +47,15 @@ def source_hashes() -> dict[str, str]:
         "core/contracts",
         "linalg/linear",
     )
-    paths = [ROOT / f"src/pymhm/{name}.py" for name in names]
-    paths += list(sorted((ROOT / "src/pymhm").rglob("*.py")))
-    paths.append(ROOT / "examples/tutorial_maxwell_equations.py")
-    paths += [Path(__file__), ROOT / "examples/maxwell_data.py", ROOT / "examples/maxwell_norms.py"]
-    return current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in paths
-        }
-    )
+    paths = [source_file(f"src/pymhm/{name}.py", root=ROOT) for name in names]
+    paths += list(sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")))
+    paths.append(source_file("examples/tutorial_maxwell_equations.py", root=ROOT))
+    paths += [
+        Path(__file__),
+        source_file("examples/maxwell_data.py", root=ROOT),
+        source_file("examples/maxwell_norms.py", root=ROOT),
+    ]
+    return current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
 
 
 def archive(solution: MaxwellSolution, path: Path, mode: CavityMode) -> None:
@@ -252,4 +244,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.maxwell_campaign").main()

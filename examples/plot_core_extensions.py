@@ -2,7 +2,6 @@
 
 import argparse
 import json
-from pathlib import Path
 from typing import Any
 
 import matplotlib.pyplot as plt
@@ -13,8 +12,9 @@ from matplotlib.colors import Normalize
 from matplotlib.ticker import MaxNLocator
 
 from examples.plot_mesh import mark_macro_interfaces
+from pymhm.io.workspace import case_workspace, local_resource, read_resource_text
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/core-extensions"
 OUTPUT = ROOT / "docs/figures/core-extensions"
 NAMES = {
@@ -73,7 +73,7 @@ def convergence(suite: str, record: dict[str, Any]) -> None:
 
 def fields(name: str, entry: dict[str, str], suite: str) -> None:
     """Compare exact, one-sided computed and signed-error samples on identical polygons."""
-    with np.load(DATA / entry["archive"]) as archive:
+    with np.load(local_resource(DATA / entry["archive"])) as archive:
         data = {key: archive[key] for key in archive.files}
     polygons = data.get("polygons")
     if polygons is None and "vertices" in data:
@@ -172,11 +172,11 @@ def fields(name: str, entry: dict[str, str], suite: str) -> None:
 
 def run(suite: str) -> None:
     """Render only completed, source-guarded acquisitions without rerunning numerical solvers."""
-    record = json.loads((DATA / f"{suite}.json").read_text())
+    record = json.loads(read_resource_text(DATA / f"{suite}.json"))
     if record.get("source_changed") is not False:
         raise ValueError("the scientific acquisition must complete before plotting")
     convergence(suite, record)
-    sampling = json.loads((DATA / f"{suite}-field-sampling.json").read_text())
+    sampling = json.loads(read_resource_text(DATA / f"{suite}-field-sampling.json"))
     if sampling.get("source_changed", False):
         raise ValueError("polynomial display fields require a completed source-guarded replay")
     archives = sampling["cases"]
@@ -188,7 +188,7 @@ def run(suite: str) -> None:
 
 def profiles(name: str, entry: dict[str, str]) -> None:
     """Render exact and broken displacement/stress profiles with separate physical error panels."""
-    with np.load(DATA / entry["archive"]) as archive:
+    with np.load(local_resource(DATA / entry["archive"])) as archive:
         data = {key: archive[key] for key in archive.files if key.startswith("profile_")}
     for category, components, symbols in (
         ("displacement", (0, 1), ("$u_x$", "$u_y$")),
@@ -252,8 +252,15 @@ def profiles(name: str, entry: dict[str, str]) -> None:
         save(figure, f"{name}-{category}-profiles")
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("suite", choices=("elasticity", "mshho3d", "hdiv3d"))
     plt.rcParams.update({"font.size": 12, "svg.fonttype": "none"})
     run(parser.parse_args().suite)
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.plot_core_extensions").main()

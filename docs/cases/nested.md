@@ -197,8 +197,7 @@ pixi run --locked -e notebooks python -m examples.verify_nested \
 pixi run --locked -e notebooks python -m examples.plot_nested \
   --record examples/results/nested-regenerated/nested.json \
   --output build/figures/nested-regenerated
-pixi run --locked -e notebooks python scripts/run_notebooks.py \
-  notebooks/darcy/36_recursive_mhm.ipynb --timeout 60
+jupyter lab notebooks/darcy/36_recursive_mhm.ipynb
 ```
 
 The notebook validates the selected current archive and displays the current

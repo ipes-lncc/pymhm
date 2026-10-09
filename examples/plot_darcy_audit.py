@@ -1,7 +1,7 @@
 """Plot recorded Darcy accuracy studies without repeating timed or native solves.
 
 Read the archived Darcy audit measurements and
-render it with ``pixi run -e notebooks python examples/plot_darcy_audit.py``.
+render it with ``python -m examples.plot_darcy_audit``.
 """
 
 from __future__ import annotations
@@ -13,6 +13,8 @@ from typing import Any
 
 import matplotlib
 import numpy as np
+
+from pymhm.io.workspace import case_workspace, read_resource_text
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -148,12 +150,12 @@ def conservation(data: dict[str, Any], directory: Path) -> None:
 
 def main() -> None:
     """Read complete reproducible records and export three figure pairs and their data."""
-    root = Path(__file__).resolve().parents[1]
+    root = case_workspace()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, default=root / "examples/results/darcy-audit.json")
     parser.add_argument("--output", type=Path, default=root / "docs/figures/darcy-audit")
     args = parser.parse_args()
-    data = json.loads(args.input.read_text(encoding="utf-8"))
+    data = json.loads(read_resource_text(args.input, encoding="utf-8"))
     args.output.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.size": 10, "axes.titlesize": 10, "svg.fonttype": "none"})
     refinement(data, args.output)
@@ -163,4 +165,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_darcy_audit").main()

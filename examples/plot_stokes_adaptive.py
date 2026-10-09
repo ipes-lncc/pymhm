@@ -3,9 +3,16 @@
 import argparse
 import hashlib
 import json
-from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    resource_glob,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -18,7 +25,7 @@ from examples.plot_mesh import draw_macro_mesh
 from examples.plot_style import set_refinement_ticks
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/stokes-adaptive"
 OUTPUT = ROOT / "docs/figures/stokes-adaptive"
 
@@ -33,9 +40,9 @@ def save(fig: plt.Figure, name: str) -> None:
 def fields(record: dict, name: str) -> None:
     """Keep exact/numerical limits identical and preserve independent macro traces."""
     path = DATA / record["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != record["sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != record["sha256"]:
         raise ValueError("Stokes archive differs from its recorded digest")
-    with np.load(path) as values:
+    with np.load(local_resource(path)) as values:
         points, cells = values["points"], values["cells"]
         mesh = TriangleMesh(values["macro_points"], values["macro_cells"])
         triangulation = Triangulation(*points.T, cells)
@@ -127,15 +134,15 @@ def history(record: dict, name: str) -> None:
 
 def publication() -> None:
     """Compare every printed component without replacing the inconsistent Ei column."""
-    published = json.loads((DATA / "published-tables.json").read_text())["rows"]
+    published = json.loads(read_resource_text(DATA / "published-tables.json"))["rows"]
     fig, axes = plt.subplots(2, 3, figsize=(14, 8), layout="constrained")
     for row, nu in enumerate((1, 0.01)):
         for degree in (0, 1, 2):
             name = f"polynomial-uniform-nu{nu:g}-g0-l{degree}"
             path = DATA / (name + ".json")
-            if not path.exists():
+            if not local_resource(path).exists():
                 raise FileNotFoundError("All six viscosity/trace-degree series are required")
-            records = json.loads(path.read_text())["rows"]
+            records = json.loads(read_resource_text(path))["rows"]
             h = np.array([2 / np.sqrt(v["macro_cells"]) for v in records])
             paper = sorted(
                 [v for v in published if v["viscosity"] == nu and v["trace_degree"] == degree],
@@ -170,9 +177,9 @@ def publication() -> None:
 def cavity_fields(record: dict, name: str) -> None:
     """Compare the regularized cavity against the independently refined classical baseline."""
     path = DATA / record["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != record["sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != record["sha256"]:
         raise ValueError("cavity comparison archive digest mismatch")
-    with np.load(path) as arrays:
+    with np.load(local_resource(path)) as arrays:
         triangle = Triangulation(*arrays["points"].T, arrays["cells"])
         mesh = TriangleMesh(arrays["macro_points"], arrays["macro_cells"])
         panels = [
@@ -387,8 +394,8 @@ def classical_refinement() -> None:
     fig, axes = plt.subplots(1, 2, figsize=(12, 4.7), layout="constrained")
     for ax, drag in zip(axes, (0, 10000), strict=True):
         records = [
-            json.loads(path.read_text())
-            for path in DATA.glob(f"cavity-classical-gamma{drag}-n*.json")
+            json.loads(read_resource_text(path))
+            for path in resource_glob(DATA, f"cavity-classical-gamma{drag}-n*.json")
         ]
         records = sorted(
             (row for row in records if row.get("difference_from_previous")),
@@ -420,8 +427,8 @@ def classical_refinement() -> None:
     for ax, drag in zip(axes, (0, 10000), strict=True):
         rows = sorted(
             (
-                json.loads(path.read_text())
-                for path in DATA.glob(f"cavity-constant-classical-gamma{drag}-n*.json")
+                json.loads(read_resource_text(path))
+                for path in resource_glob(DATA, f"cavity-constant-classical-gamma{drag}-n*.json")
             ),
             key=lambda row: row["n"],
         )
@@ -457,8 +464,8 @@ def main() -> None:
     )
     args = parser.parse_args()
     OUTPUT.mkdir(parents=True, exist_ok=True)
-    for path in sorted(DATA.glob("*.json")):
-        record = json.loads(path.read_text())
+    for path in sorted(resource_glob(DATA, "*.json")):
+        record = json.loads(read_resource_text(path))
         if (
             not args.histories_only
             and isinstance(record, dict)
@@ -479,4 +486,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_stokes_adaptive").main()

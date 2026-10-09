@@ -14,7 +14,6 @@ import hashlib
 import json
 import os
 import platform
-import subprocess
 import sys
 from pathlib import Path
 from time import perf_counter
@@ -24,6 +23,8 @@ from uuid import uuid4
 import numpy as np
 import scipy
 from threadpoolctl import threadpool_info, threadpool_limits
+
+from pymhm.io.provenance import optional_file_digest, workspace_git_dirty, workspace_revision
 
 if __package__:
     from .archive_precision import precision_fields, restore_precision
@@ -120,6 +121,7 @@ class _RefinementStore:
     def __init__(
         self, acquisition: PeriodicAcquisition, fields: dict, *, check_only: bool = False
     ) -> None:
+        """Bind the acquisition and ordered cell fields to a local correction directory."""
         self.acquisition = acquisition
         self.fields = fields
         self.directory = acquisition.cell_directory / "original-refinement"
@@ -129,13 +131,16 @@ class _RefinementStore:
         self.last = None
 
     def read_fields(self, cell: int) -> np.ndarray:
+        """Stack one cell's fields as columns in their declared case ordering."""
         return np.column_stack([field[cell] for field in self.fields.values()])
 
     def write_fields(self, cell: int, fields: np.ndarray) -> None:
+        """Update each case from its corresponding cell coefficient column."""
         for column, field in enumerate(self.fields.values()):
             field[cell] = fields[:, column]
 
     def write_record(self, name: str, step: int, cell: int, values: np.ndarray) -> None:
+        """Persist an executed correction with its precision components and literal digests."""
         key = f"{name}-{step}-cell-{cell}"
         if self.check_only:
             self.last = (key, values.copy())
@@ -147,6 +152,7 @@ class _RefinementStore:
         )
 
     def read_record(self, name: str, step: int, cell: int) -> np.ndarray:
+        """Verify and restore an executed correction in the acquisition coefficient precision."""
         key = f"{name}-{step}-cell-{cell}"
         if self.check_only:
             if self.last is None or self.last[0] != key:
@@ -246,18 +252,8 @@ class PeriodicAcquisition:
             ):
                 raise ValueError("periodic phase manifest configuration mismatch")
         else:
-            revision = subprocess.run(
-                ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True, capture_output=True, check=True
-            ).stdout.strip()
-            dirty = bool(
-                subprocess.run(
-                    ["git", "status", "--porcelain", "--untracked-files=no"],
-                    cwd=ROOT,
-                    text=True,
-                    capture_output=True,
-                    check=True,
-                ).stdout
-            )
+            revision = workspace_revision(ROOT)
+            dirty = workspace_git_dirty(ROOT)
             self.record = dict(
                 schema="pymhm-periodic-phases-v1",
                 acquisition_id=str(uuid4()),
@@ -267,7 +263,7 @@ class PeriodicAcquisition:
                 precision_source_sha256=fingerprint(
                     Path(__file__).with_name("archive_precision.py")
                 ),
-                lockfile_sha256=fingerprint(ROOT / "pixi.lock"),
+                lockfile_sha256=optional_file_digest(ROOT / "pixi.lock"),
                 git_revision=revision,
                 git_dirty=dirty,
                 python=sys.version.split()[0],
@@ -293,7 +289,7 @@ class PeriodicAcquisition:
             or self.record["phase_source_sha256"] != fingerprint(Path(__file__))
             or self.record["precision_source_sha256"]
             != fingerprint(Path(__file__).with_name("archive_precision.py"))
-            or self.record["lockfile_sha256"] != fingerprint(ROOT / "pixi.lock")
+            or self.record["lockfile_sha256"] != optional_file_digest(ROOT / "pixi.lock")
         ):
             raise ValueError("periodic acquisition source or lockfile mismatch")
 
@@ -603,6 +599,7 @@ class PeriodicAcquisition:
         with np.load(path, allow_pickle=False) as data:
 
             def restored(name: str) -> np.ndarray:
+                """Restore the archived leading, correction and tail coefficient components."""
                 return restore_precision(
                     data[name], data[f"{name}_correction"], data[f"{name}_tail"]
                 ).astype(self.coefficient_dtype)

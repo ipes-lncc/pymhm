@@ -102,6 +102,10 @@ every new trace breakpoint. Thus the macro topology stays fixed while local
 meshes and traces adapt. `max_local_refinement` imposes a declared resolution
 limit and returns a distinct stop reason.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 import numpy as np
 from pymhm import TriangleMesh

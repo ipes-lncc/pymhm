@@ -8,20 +8,14 @@ to resolve the interior field without the singular corner values dominating.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
 from pathlib import Path
 
 import numpy as np
 import pyvista as pv
+
+from pymhm.io.workspace import local_resource, read_resource_bytes, read_resource_text
 
 if __package__:
     from .campaign_provenance import file_digest, verify_archive
@@ -153,9 +147,9 @@ def render_elevation(grids: list[pv.UnstructuredGrid], macro: TriangleMesh, radi
 def main() -> None:
     """Verify acquired point fields and display bytes before both elevation views."""
     record_path = OUTPUT / "point-wells.json"
-    acquisition = json.loads(record_path.read_text())
+    acquisition = json.loads(read_resource_text(record_path))
     verify_archive(OUTPUT / "macro.npz", acquisition["macro_archive_sha256"])
-    with np.load(OUTPUT / "macro.npz") as data:
+    with np.load(local_resource(OUTPUT / "macro.npz")) as data:
         macro = TriangleMesh(data["points"], data["cells"])
     selected = []
     for method in ("primal", "mixed"):
@@ -188,16 +182,16 @@ def main() -> None:
         "local_refinement": 2,
         "trace_degree": 0,
         "display_sampling": "Existing one-sided nodal display fields; independent cell vertices",
-        "acquisition_record_sha256": file_digest(record_path),
+        "acquisition_record_sha256": file_digest(local_resource(record_path)),
         "physical_field_archives_sha256": {
             row["field_archive"]: row["field_archive_sha256"] for row in selected
         },
         "original_saddle_relative_load_residuals": [
             row["original_saddle_relative_load_residual"] for row in selected
         ],
-        "renderer_sha256": file_digest(Path(__file__)),
+        "renderer_sha256": file_digest(local_resource(Path(__file__))),
         "source_sha256": {
-            path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in paths
+            path.name: hashlib.sha256(read_resource_bytes(path)).hexdigest() for path in paths
         },
         "sampled_flux_peaks": [float(grid["Flux magnitude"].max()) for grid in grids],
         "views": [render_elevation(grids, macro, radius) for radius in (0.0, 0.125)],
@@ -206,4 +200,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_quarter_elevation").main()

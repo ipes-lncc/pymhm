@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -24,6 +16,7 @@ from threadpoolctl import threadpool_limits
 
 from examples.spe10_adaptive_norms import BrokenP2
 from pymhm.fem.quadrature.material import material_triangle_quadrature
+from pymhm.io.workspace import local_resource, read_resource_bytes
 from pymhm.recovery.moments import _PrimalFlux
 
 _FIELDS: tuple[BrokenP2, BrokenP2, int] | None = None
@@ -101,7 +94,7 @@ def main() -> None:
     parser.add_argument("--order", type=int, default=4)
     parser.add_argument("--output", type=Path, required=True)
     options = parser.parse_args()
-    with np.load(options.second) as data:
+    with np.load(local_resource(options.second)) as data:
         count = len(data["macro_cells"])
     groups = [np.arange(i, min(i + 32, count)) for i in range(0, count, 32)]
     started = perf_counter()
@@ -116,8 +109,8 @@ def main() -> None:
     result = {
         "first": options.first.name,
         "second": options.second.name,
-        "first_sha256": hashlib.sha256(options.first.read_bytes()).hexdigest(),
-        "second_sha256": hashlib.sha256(options.second.read_bytes()).hexdigest(),
+        "first_sha256": hashlib.sha256(read_resource_bytes(options.first)).hexdigest(),
+        "second_sha256": hashlib.sha256(read_resource_bytes(options.second)).hexdigest(),
         "kind": options.kind,
         "first_energy_squared": float(totals[0]),
         "second_energy_squared": float(totals[1]),
@@ -126,7 +119,7 @@ def main() -> None:
         "identity_relative_defect": float(abs(expected - totals[2]) / totals[2]),
         "quadrature_order": options.order,
         "integration": "nested local cells, exact material intersections",
-        "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "source_sha256": hashlib.sha256(read_resource_bytes(Path(__file__))).hexdigest(),
         "seconds": perf_counter() - started,
     }
     options.output.parent.mkdir(parents=True, exist_ok=True)
@@ -135,4 +128,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.compare_spe10_resolution_energy").main()

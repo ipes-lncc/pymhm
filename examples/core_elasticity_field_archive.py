@@ -30,6 +30,7 @@ from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.fem.scalar.quadrilateral import quadrilateral_quadrature
 from pymhm.fem.scalar.triangle import reference_basis
 from pymhm.io.provenance import file_digest
+from pymhm.io.workspace import local_resource, read_resource_text
 from pymhm.linalg.linear import accurate_residual
 
 SCHEMA = "pymhm-core-elasticity-executed-field-v1"
@@ -962,7 +963,7 @@ def write_field(
     metadata = {
         "schema": SCHEMA,
         "acquisition_uuid": acquisition_uuid,
-        "archive_sha256": file_digest(path),
+        "archive_sha256": file_digest(local_resource(path)),
         "arrays_sha256": {key: array_identity(value) for key, value in arrays.items()},
         "source_sha256": dict(source_sha256),
         "configuration": dict(configuration),
@@ -988,10 +989,12 @@ def write_field(
 
 def read_field(path: Path) -> tuple[dict[str, np.ndarray], dict[str, Any]]:
     """Check executed identities, physical originals and finite basis semantics without a solve."""
-    metadata = json.loads(path.with_suffix(".json").read_text())
-    if metadata.get("schema") != SCHEMA or metadata.get("archive_sha256") != file_digest(path):
+    metadata = json.loads(read_resource_text(path.with_suffix(".json")))
+    if metadata.get("schema") != SCHEMA or metadata.get("archive_sha256") != file_digest(
+        local_resource(path)
+    ):
         raise ValueError("Executed elasticity archive schema or digest differs")
-    with np.load(path, allow_pickle=False) as archive:
+    with np.load(local_resource(path), allow_pickle=False) as archive:
         arrays = {key: archive[key] for key in archive.files}
     if (
         arrays["schema"].tobytes().decode() != SCHEMA

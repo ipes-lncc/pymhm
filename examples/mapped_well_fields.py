@@ -10,6 +10,7 @@ from pathlib import Path
 import numpy as np
 
 from pymhm.fem.hdiv.mapped import mapped_rt_basis, mapped_rt_dofs
+from pymhm.io.workspace import local_resource, read_resource_bytes, read_resource_text
 from pymhm.meshes.hexahedron import HexMesh, cube_quadrature, hexahedral_mapping
 
 
@@ -35,11 +36,11 @@ class MappedWellField:
     @classmethod
     def load(cls, record_path: Path) -> tuple[MappedWellField, dict]:
         """Verify a field digest and convert oriented coefficients to reference-cell moments."""
-        report = json.loads(record_path.read_text())
+        report = json.loads(read_resource_text(record_path))
         path = record_path.parent / report["archive"]
-        if hashlib.sha256(path.read_bytes()).hexdigest() != report["sha256"]:
+        if hashlib.sha256(read_resource_bytes(path)).hexdigest() != report["sha256"]:
             raise ValueError("mapped field archive digest mismatch")
-        with np.load(path) as archive:
+        with np.load(local_resource(path)) as archive:
             if report.get("archive_layout") == "canonical-reference-cell":
                 field = cls(
                     archive["vertices"],

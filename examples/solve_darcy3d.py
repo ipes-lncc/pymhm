@@ -17,9 +17,10 @@ from threadpoolctl import threadpool_limits
 from examples.formulations.application import tetrahedral_darcy as solve_darcy_3d
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.tetrahedron import TetraMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def potential(points: np.ndarray) -> np.ndarray:
@@ -53,7 +54,7 @@ def hashes() -> dict[str, str]:
     paths = [
         Path(__file__),
         *(
-            ROOT / f"src/pymhm/{name}"
+            source_file(f"src/pymhm/{name}", root=ROOT)
             for name in (
                 "fem/scalar/tetrahedron.py",
                 "_legacy/models/darcy/primal_3d.py",
@@ -63,12 +64,7 @@ def hashes() -> dict[str, str]:
             )
         ),
     ]
-    return current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in paths
-        }
-    )
+    return current_source_manifest(source_identity(ROOT, paths), packages=("pymhm", "examples"))
 
 
 def run(output: Path, refinement: int = 4) -> None:
@@ -171,4 +167,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_darcy3d").main()

@@ -1,6 +1,7 @@
 """Polynomial, archive and integration controls for the native HPC4E example."""
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -181,7 +182,7 @@ def test_compliance_energy_has_physical_scaling_and_no_implicit_orthogonality() 
         complementary_energy(reference, zero_field(2, 3, 2), data)
 
 
-def test_isolated_algebra_archive_and_original_residual(tmp_path: Path) -> None:
+def test_isolated_algebra_archive_and_original_residual(tmp_path: Path, monkeypatch) -> None:
     """Solve a scaled saddle archive and verify serialization and the original equations."""
     from scipy import sparse
 
@@ -190,7 +191,7 @@ def test_isolated_algebra_archive_and_original_residual(tmp_path: Path) -> None:
     expected = np.array([1.0, 2.0, 3.0])
     rhs = matrix @ expected
     matrix_path, rhs_path = tmp_path / "matrix.npz", tmp_path / "rhs.npy"
-    solution_path = tmp_path / "solution.npy"
+    solution_path = tmp_path / "coefficients" / "nested" / "solution.npy"
     sparse.save_npz(matrix_path, matrix)
     np.save(rhs_path, rhs)
     record = algebra.solve_archive(
@@ -201,6 +202,25 @@ def test_isolated_algebra_archive_and_original_residual(tmp_path: Path) -> None:
     assert record["matrix_sha256"] == algebra._digest(matrix_path)
     assert all("filepath" not in pool for pool in record["native_threadpools"])
     assert algebra.relative_residual(matrix, np.zeros(3), np.zeros(3)) == 0
+    report_path = tmp_path / "diagnostics" / "nested" / "report.json"
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "solve_hpc4e_algebra",
+            str(matrix_path),
+            str(rhs_path),
+            str(solution_path),
+            str(report_path),
+            "--threads",
+            "1",
+            "--solver",
+            "scipy",
+        ],
+    )
+    algebra.main()
+    saved_record = json.loads(report_path.read_text())
+    assert saved_record["solution_sha256"] == algebra._digest(solution_path)
+    assert saved_record["original_rhs_relative_residual"] < 1e-12
     with pytest.raises(ValueError, match="threads"):
         algebra.solve_archive(matrix_path, rhs_path, solution_path, threads=0)
     np.save(rhs_path, rhs[:, None])

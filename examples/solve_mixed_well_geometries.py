@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -23,10 +15,11 @@ from examples.formulations.application import hdiv_darcy as solve_darcy_hdiv3d
 from examples.solve_mapped_well import WellData
 from pymhm.fem.hdiv.family_3d import cell_quadrature
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.hexahedron import HexMesh
 from pymhm.meshes.mixed import AffineMixedMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def acquire(
@@ -45,7 +38,7 @@ def acquire(
         int(f): 0.0 for f in mesh.boundary_faces if np.ptp(mesh.points[mesh.faces[f], 2]) < 1e-12
     }
     watched = [
-        ROOT / f"src/pymhm/{name}"
+        source_file(f"src/pymhm/{name}", root=ROOT)
         for name in (
             "fem/hdiv/family_3d.py",
             "meshes/mixed.py",
@@ -53,13 +46,8 @@ def acquire(
             "core/contracts.py",
             "linalg/linear.py",
         )
-    ] + [Path(__file__), ROOT / "examples/solve_mapped_well.py"]
-    hashes = current_source_manifest(
-        {
-            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in watched
-        }
-    )
+    ] + [Path(__file__), source_file("examples/solve_mapped_well.py", root=ROOT)]
+    hashes = current_source_manifest(source_identity(ROOT, watched), packages=("pymhm", "examples"))
     started = time.perf_counter()
     with threadpool_limits(1):
         solution = solve_darcy_hdiv3d(
@@ -90,10 +78,7 @@ def acquire(
             qnorm += np.sum(fine.determinants[:, None] * w * np.sum(q * q, axis=2))
         balance = max(float(np.max(abs(v))) for v in solution.equilibrium_residuals())
     current = current_source_manifest(
-        {
-            p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in watched
-        }
+        source_identity(ROOT, watched), packages=("pymhm", "examples")
     )
     if current != hashes:
         raise RuntimeError("acquisition source changed during the solve")
@@ -178,4 +163,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_mixed_well_geometries").main()

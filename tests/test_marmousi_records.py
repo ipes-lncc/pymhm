@@ -14,6 +14,7 @@ import pytest
 from examples import marmousi_records as driver
 from examples.marmousi_data import FILES
 from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.io.workspace import source_file, source_identity
 
 
 @pytest.fixture
@@ -31,12 +32,10 @@ def sources() -> dict[str, str]:
         "hpc4e_parallel",
     )
     paths = [
-        *sorted((driver.ROOT / "src/pymhm").rglob("*.py")),
-        *(driver.ROOT / f"examples/{name}.py" for name in names),
+        *sorted(source_file("src/pymhm/__init__.py").parent.rglob("*.py")),
+        *(source_file(f"examples/{name}.py") for name in names),
     ]
-    return current_source_manifest(
-        {path.relative_to(driver.ROOT).as_posix(): file_digest(path) for path in paths}
-    )
+    return current_source_manifest(source_identity(driver.ROOT, paths))
 
 
 @pytest.fixture

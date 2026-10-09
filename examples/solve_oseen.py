@@ -8,13 +8,11 @@ historical adaptive meshes or table values.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
+from typing import TYPE_CHECKING
 
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
+if TYPE_CHECKING:
+    from pymhm.estimators.flow import FlowEstimator
+    from pymhm.postprocessing.solutions import VectorSolution
 
 import argparse
 import hashlib
@@ -34,8 +32,9 @@ from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 from pymhm.adaptivity.flow import adapt_flow
 from pymhm.estimators.flow import estimate_flow_error
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/oseen"
 
 
@@ -160,7 +159,7 @@ def crisscross(resolution: int) -> TriangleMesh:
     return TriangleMesh(points, cells)
 
 
-def record(solution, estimator, data: OseenData, order: int) -> dict:
+def record(solution: VectorSolution, estimator: FlowEstimator, data: OseenData, order: int) -> dict:
     """Record physical norms and estimator components on one solved state."""
     mixed = estimator.mixed_error(data.velocity, data.gradient, data.pressure, order=order)
     return dict(
@@ -178,7 +177,7 @@ def record(solution, estimator, data: OseenData, order: int) -> dict:
     )
 
 
-def archive(solution, data: OseenData, path: Path) -> str:
+def archive(solution: VectorSolution, data: OseenData, path: Path) -> str:
     """Archive discontinuous display samples without gluing macro interfaces."""
     velocity = sample_field(solution.local_meshes, solution.values, solution.degree, 4)
     pressure = sample_field(solution.local_meshes, solution.pressure, solution.pressure_degree, 4)
@@ -272,9 +271,9 @@ def main() -> None:
         checksum = archive(solution, data, OUTPUT / filename)
     sources = [
         Path(__file__),
-        ROOT / "src/pymhm/_legacy/models/flow/solver.py",
-        ROOT / "src/pymhm/estimators/flow.py",
-        ROOT / "src/pymhm/adaptivity/flow.py",
+        source_file("src/pymhm/_legacy/models/flow/solver.py", root=ROOT),
+        source_file("src/pymhm/estimators/flow.py", root=ROOT),
+        source_file("src/pymhm/adaptivity/flow.py", root=ROOT),
     ]
     report = dict(
         case=args.case,
@@ -287,8 +286,8 @@ def main() -> None:
         marking_theta=0.5 if args.adaptive else None,
         stop_reason=stop,
         literature=(
-            "L15 sections 5.1–5.3; variable beta is supplementary; "
-            "historical marking threshold/meshes not identified"
+            "L15 sections 5.1–5.3; variable beta is supplementary; historical "
+            "marking threshold/meshes not identified"
         ),
         reference_doi="10.1007/s10444-020-09833-8",
         rows=rows,
@@ -298,14 +297,13 @@ def main() -> None:
             python=platform.python_version(), numpy=np.__version__, scipy=scipy.__version__
         ),
         source_hashes=current_source_manifest(
-            {
-                path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-                for path in sources
-            }
+            source_identity(ROOT, sources), packages=("pymhm", "examples")
         ),
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_oseen").main()

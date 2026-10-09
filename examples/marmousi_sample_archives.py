@@ -15,10 +15,12 @@ from typing import Any
 
 import numpy as np
 
+from pymhm.io.workspace import case_workspace, local_resource, read_resource_text
+
 
 def digest(path: Path) -> str:
     """Hash an archive in bounded memory, including materialized LFS payloads."""
-    with path.open("rb") as stream:
+    with local_resource(path).open("rb") as stream:
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
@@ -30,7 +32,7 @@ def export_samples(record_path: Path, destination: Path) -> dict[str, Any]:
     Both the original acquisition digest and the small output digest are retained.
     """
     record_digest = digest(record_path)
-    record = json.loads(record_path.read_text())
+    record = json.loads(read_resource_text(record_path))
     if record["source_changed_during_run"]:
         raise ValueError("the acquisition sources changed during execution")
     archive_name = record["archive"]
@@ -45,7 +47,7 @@ def export_samples(record_path: Path, destination: Path) -> dict[str, Any]:
     source = record_path.parent / archive_name
     if digest(source) != record["archive_sha256"]:
         raise ValueError("the acquired archive does not match its recorded digest")
-    with np.load(source, allow_pickle=False) as archive:
+    with np.load(local_resource(source), allow_pickle=False) as archive:
         points = archive["sample_points"]
         pressure = archive["sample_pressure"]
         sides = archive["incident_sides"]
@@ -86,7 +88,7 @@ def export_samples(record_path: Path, destination: Path) -> dict[str, Any]:
 
 def main() -> None:
     """Export the fifteen acquired H/trace-degree pairs and their sample manifest."""
-    root = Path(__file__).resolve().parents[1]
+    root = case_workspace()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, default=root / "examples/results/marmousi/family")
     parser.add_argument("--output", type=Path)
@@ -111,4 +113,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.marmousi_sample_archives").main()

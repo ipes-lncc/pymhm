@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 import shutil
@@ -25,13 +17,14 @@ from examples.plot_style import set_refinement_ticks
 from examples.solve_pgmhm_spe10 import OUTPUT, PGMHMField, load_material, macro_mesh
 from examples.spe10_adaptive import ROOT, StructuredRT
 from examples.spe10_plot_records import checked_comparison, comparison_reference, digest
+from pymhm.io.workspace import local_resource, read_resource_text, resource_glob
 
 FIGURES = ROOT / "docs/figures/pgmhm-spe10"
 
 
 def read(path: Path) -> dict:
     """Verify the archived physical coefficients before plotting a numerical record."""
-    row = json.loads(path.read_text())
+    row = json.loads(read_resource_text(path))
     if "archive" in row:
         actual = digest(path.parent / row["archive"])
         if actual != row["archive_sha256"]:
@@ -95,7 +88,7 @@ def plot(output: Path, data: Path, reference_path: Path | None = None) -> None:
         raise ValueError("acquisitions and displayed comparisons identify different fields")
     controls = [
         checked_comparison(path, data)
-        for path in sorted((data / "controls").glob("pgmhm-*-comparison.json"))
+        for path in sorted(resource_glob(data / "controls", "pgmhm-*-comparison.json"))
     ]
     selected_reference = comparison_reference(data, [*comparisons, *controls])
     if reference_path is not None and reference_path.resolve() != selected_reference.resolve():
@@ -132,8 +125,8 @@ def plot(output: Path, data: Path, reference_path: Path | None = None) -> None:
         axis.set(xlabel="y (ft), x = 600 ft", ylabel="Pressure", xlim=(0, 2200))
         axis.grid(alpha=0.2)
     digitization = OUTPUT / "profile-digitization.json"
-    if digitization.exists():
-        points = json.loads(digitization.read_text())["rows"]
+    if local_resource(digitization).exists():
+        points = json.loads(read_resource_text(digitization))["rows"]
         for axis in axes[1:]:
             axis.errorbar(
                 [point["y"] for point in points],
@@ -146,7 +139,7 @@ def plot(output: Path, data: Path, reference_path: Path | None = None) -> None:
                 label="Published reference (digitized)",
             )
     for color_index, row in enumerate(rows):
-        with np.load(data / row["archive"]) as arrays:
+        with np.load(local_resource(data / row["archive"])) as arrays:
             profile_points = arrays["profile_points"]
             profiles = [arrays[key] for key in ("profile_pressure", "profile_enriched_pressure")]
             for index in range(2):
@@ -215,7 +208,7 @@ def plot(output: Path, data: Path, reference_path: Path | None = None) -> None:
         axis.set_ylabel("")
     save(fig, output, "fields")
 
-    references = [read(path) for path in sorted(data.glob("classical-rt2-*.json"))]
+    references = [read(path) for path in sorted(resource_glob(data, "classical-rt2-*.json"))]
     references.sort(key=lambda row: row["nx"])
     fig = plt.figure(figsize=(12, 4.4), layout="constrained")
     grid = fig.add_gridspec(2, 3, height_ratios=(3.7, 0.4))
@@ -271,9 +264,9 @@ def plot(output: Path, data: Path, reference_path: Path | None = None) -> None:
         "quadrature-verification.json",
     ):
         path = OUTPUT / name
-        if path.exists():
+        if local_resource(path).exists():
             shutil.copy2(path, output / name)
-    for path in data.glob("*.json"):
+    for path in resource_glob(data, "*.json"):
         shutil.copy2(path, output / path.name)
 
 
@@ -290,4 +283,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_pgmhm_spe10").main()

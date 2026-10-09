@@ -16,9 +16,10 @@ from examples.formulations.application import three_field_diffusion as solve_mh2
 from pymhm.fem.traces.pressure_3d import PressureTraceSpace3D
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file
 from pymhm.meshes.tetrahedron import TetraMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def pressure(points: np.ndarray) -> np.ndarray:
@@ -62,7 +63,11 @@ def source_hashes() -> dict[str, str]:
         ),
     ]
     return current_source_manifest(
-        {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in paths}
+        {
+            path: hashlib.sha256((source_file(path, root=ROOT)).read_bytes()).hexdigest()
+            for path in paths
+        },
+        packages=("pymhm", "examples"),
     )
 
 
@@ -179,4 +184,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.mh3d_campaign").main()

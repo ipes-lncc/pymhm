@@ -7,6 +7,8 @@ import re
 import tomllib
 from pathlib import Path
 
+from packaging.requirements import Requirement
+
 # Only current-release fields belong here. Historical acquisition records,
 # earlier changelog sections and synthetic distribution fixtures keep their versions.
 VERSION_FIELDS: dict[str, tuple[str, ...]] = {
@@ -22,6 +24,28 @@ VERSION_FIELDS: dict[str, tuple[str, ...]] = {
     ),
     "docs/index.md": (r"(?m)^This is version (?P<version>[^,\s]+),",),
 }
+
+
+def validate_notebook_dependencies(project: dict, pixi: dict) -> None:
+    """Keep notebook dependency capabilities aligned with the locked graphics stack.
+
+    Conda names ``matplotlib-base`` and ``nbconvert-core`` map to their Python
+    distribution names. Native FEM, MPI and accelerator installations retain
+    their separate contracts and are not dependencies of this extra.
+    """
+    optional = project.get("optional-dependencies", {})
+    if "notebooks" not in optional:
+        return
+    aliases = {"matplotlib-base": "matplotlib", "nbconvert-core": "nbconvert"}
+    expected = set()
+    for name in ("notebooks", "visualization"):
+        feature = pixi["feature"][name]
+        for key in ("dependencies", "pypi-dependencies"):
+            for distribution, constraint in feature.get(key, {}).items():
+                expected.add(str(Requirement(aliases.get(distribution, distribution) + constraint)))
+    actual = {str(Requirement(entry)) for entry in optional["notebooks"]}
+    if actual != expected:
+        raise ValueError("Notebook extra differs from the locked notebook and visualization stack")
 
 
 def version_files(root: Path, version: str, replacement: str | None = None) -> dict[Path, bytes]:
@@ -67,6 +91,7 @@ def validate_metadata(root: Path, tag: str | None = None) -> str:
         raise ValueError("Runtime dependencies differ between Pixi and PyPI metadata")
     if project["requires-python"] != pixi["dependencies"]["python"]:
         raise ValueError("Python constraints differ between Pixi and PyPI metadata")
+    validate_notebook_dependencies(project, pixi)
     version = str(project["version"])
     version_files(root, version)
     if tag is not None and tag != f"v{version}":

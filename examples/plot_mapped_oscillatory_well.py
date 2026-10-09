@@ -2,18 +2,11 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import json
-from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import case_workspace, local_resource, read_resource_text
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -26,7 +19,7 @@ from examples.plot_style import set_refinement_ticks
 from examples.solve_mapped_oscillatory_well import OscillatoryWellData
 from pymhm.meshes.hexahedron import hexahedral_mapping
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/mapped-well-oscillatory"
 OUTPUT = ROOT / "docs/figures/mapped-well-oscillatory"
 CORNERS = np.array([0, 4, 6, 2])
@@ -47,7 +40,7 @@ def finest_norm(row: dict) -> dict:
 def read(name: str) -> tuple[MappedWellField, dict, dict]:
     """Verify provenance before opening any field archive for display."""
     field, record = MappedWellField.load(DATA / (name + ".json"))
-    with np.load(DATA / record["archive"]) as archive:
+    with np.load(local_resource(DATA / record["archive"])) as archive:
         arrays = dict(archive)
     return field, record, arrays
 
@@ -316,7 +309,7 @@ def profiles(reference_name: str) -> None:
 
 def convergence(report: dict) -> None:
     """Separate fixed-fine trace restriction, refined-reference differences and integration."""
-    reference_factor = json.loads((DATA / (report["reference"] + ".json")).read_text())[
+    reference_factor = json.loads(read_resource_text(DATA / (report["reference"] + ".json")))[
         "fine_factor"
     ]
     fig, axes = plt.subplots(2, 2, figsize=(12.5, 8.4), layout="constrained")
@@ -345,24 +338,20 @@ def convergence(report: dict) -> None:
             ("flux_relative", "Physical flux"),
         ):
             ax.semilogy(x, [100 * finest_norm(r)[key] for r in rows], "o-", label=label)
-        labels = (
-            ["0", "1", "2"]
-            if kind in ("macro trace restriction", "MHM versus refined reference")
-            else [
-                f"{json.loads((DATA / (row['candidate'] + '.json')).read_text())['fine_factor']}"
-                "→"
-                f"{json.loads((DATA / (row['reference'] + '.json')).read_text())['fine_factor']}"
-                for row in rows
-            ]
-            if kind == "classical spatial refinement"
-            else [
-                f"F{json.loads((DATA / (row['reference'] + '.json')).read_text())['fine_factor']} "
-                f"{json.loads((DATA / (row['candidate'] + '.json')).read_text())['quadrature'][0]}"
-                "→"
-                f"{json.loads((DATA / (row['reference'] + '.json')).read_text())['quadrature'][0]}"
-                for row in rows
-            ]
-        )
+        if kind in ("macro trace restriction", "MHM versus refined reference"):
+            labels = ["0", "1", "2"]
+        else:
+            labels = []
+            for row in rows:
+                candidate = json.loads(read_resource_text(DATA / (row["candidate"] + ".json")))
+                reference = json.loads(read_resource_text(DATA / (row["reference"] + ".json")))
+                if kind == "classical spatial refinement":
+                    labels.append(f"{candidate['fine_factor']}→{reference['fine_factor']}")
+                else:
+                    labels.append(
+                        f"F{reference['fine_factor']} "
+                        f"{candidate['quadrature'][0]}→{reference['quadrature'][0]}"
+                    )
         set_refinement_ticks(ax, x, labels=labels)
         ax.set(
             title=title,
@@ -380,7 +369,7 @@ def convergence(report: dict) -> None:
 
 def local_resolution(report: dict) -> None:
     """Separate local enrichment from its matching-fine and refined-reference comparisons."""
-    reference_factor = json.loads((DATA / (report["reference"] + ".json")).read_text())[
+    reference_factor = json.loads(read_resource_text(DATA / (report["reference"] + ".json")))[
         "fine_factor"
     ]
     pairs = (
@@ -426,10 +415,10 @@ def local_resolution(report: dict) -> None:
 def main() -> None:
     """Render verified physical records without rerunning a numerical solve."""
     OUTPUT.mkdir(parents=True, exist_ok=True)
-    report = json.loads((DATA / "comparisons.json").read_text())
+    report = json.loads(read_resource_text(DATA / "comparisons.json"))
     for row in report["rows"]:
         for key in ("reference", "candidate"):
-            record = json.loads((DATA / (row[key] + ".json")).read_text())
+            record = json.loads(read_resource_text(DATA / (row[key] + ".json")))
             if record["sha256"] != row[key + "_sha256"]:
                 raise ValueError("physical norm record does not match its current field archive")
     reference, _, _ = read(report["reference"])
@@ -456,4 +445,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_mapped_oscillatory_well").main()

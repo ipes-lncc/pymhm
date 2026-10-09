@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import json
 import shutil
 from pathlib import Path
@@ -29,6 +21,7 @@ from examples.solve_pgmhm_spe10 import OUTPUT, PGMHMField
 from examples.spe10_adaptive import StructuredRT
 from examples.spe10_plot_records import checked_comparison, comparison_reference, digest
 from pymhm.fem.scalar.triangle import reference_basis
+from pymhm.io.workspace import local_resource, read_resource_text, resource_glob
 
 DATA = OUTPUT / "kx"
 
@@ -36,13 +29,13 @@ DATA = OUTPUT / "kx"
 def records() -> list[tuple[Path, dict, dict]]:
     """Accept only complete two-rule comparisons of the same physical reference."""
     paths = [DATA / "pgmhm-s16-q5.json"]
-    paths += sorted((DATA / "controls").glob("pgmhm-*-q5.json"))
+    paths += sorted(resource_glob(DATA / "controls", "pgmhm-*-q5.json"))
     result = []
     for path in paths:
         comparison = path.with_name(path.stem + "-comparison.json")
-        if not comparison.exists():
+        if not local_resource(comparison).exists():
             continue
-        row, norms = json.loads(path.read_text()), checked_comparison(comparison, DATA)
+        row, norms = json.loads(read_resource_text(path)), checked_comparison(comparison, DATA)
         identity = digest(path.with_suffix(".npz"))
         if identity != row["archive_sha256"] or identity != norms["mhm_sha256"]:
             raise ValueError("PGMHM control and physical norms must identify the same field")
@@ -147,4 +140,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_pgmhm_spe10_controls").main()

@@ -9,19 +9,21 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
+from pymhm.io.workspace import local_resource, read_resource_text
+
 if TYPE_CHECKING:
     from examples.solve_unusual_spe10 import UnusualSPE10Field
 
 
 def digest(path: Path) -> str:
     """Identify field archives with bounded memory during figure replay."""
-    with path.open("rb") as stream:
+    with local_resource(path).open("rb") as stream:
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
 def checked_comparison(path: Path, data: Path) -> dict:
     """Require both integration rules and the actual MHM and reference field identities."""
-    row = json.loads(path.read_text())
+    row = json.loads(read_resource_text(path))
     if (
         len(row.get("norms", [])) != 2
         or {item.get("order") for item in row["norms"]} != {4, 5}
@@ -71,8 +73,8 @@ def completed_cases(data: Path) -> tuple[tuple[str, str], ...]:
         for stem, _ in PAIRED_CASES
         for suffix in (".json", ".npz", "-comparison.json")
     ]
-    if any(path.exists() for path in paths):
-        if not all(path.is_file() for path in paths):
+    if any(local_resource(path).exists() for path in paths):
+        if not all(local_resource(path).is_file() for path in paths):
             raise ValueError("both paired r64 fields and their norm records must be complete")
         return (*CASES, *PAIRED_CASES)
     return CASES

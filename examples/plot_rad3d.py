@@ -2,17 +2,8 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
-from pathlib import Path
 
 import numpy as np
 
@@ -20,10 +11,16 @@ from examples.field_archive import load_trusted_field
 from examples.plot_darcy3d import slice_polygon
 from examples.solve_rad3d import exact, physical_flux
 from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.postprocessing.fields import DiscreteField
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def slice_fields(
@@ -79,12 +76,12 @@ def main() -> None:
     from matplotlib.collections import LineCollection, PolyCollection
     from matplotlib.colors import Normalize, TwoSlopeNorm
 
-    report = json.loads((ROOT / "examples/results/rad3d.json").read_text())
+    report = json.loads(read_resource_text(ROOT / "examples/results/rad3d.json"))
     last = report["rows"][-1]
     archive = ROOT / "examples/results" / last["fields"]
-    if hashlib.sha256(archive.read_bytes()).hexdigest() != last["fields_sha256"]:
+    if hashlib.sha256(read_resource_bytes(archive)).hexdigest() != last["fields_sha256"]:
         raise ValueError("field archive digest mismatch")
-    data = np.load(archive)
+    data = np.load(local_resource(archive))
     height = 0.25
     edges = []
     for vertices in data["macro_points"][data["macro_cells"]]:
@@ -194,4 +191,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_rad3d").main()

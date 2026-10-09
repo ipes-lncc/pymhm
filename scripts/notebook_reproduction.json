@@ -2615,6 +2615,14 @@
           "argv": [
             "python",
             "-m",
+            "examples.reconstruction3d_resolution"
+          ]
+        },
+        {
+          "environment": "notebooks",
+          "argv": [
+            "python",
+            "-m",
             "examples.plot_tetra_pk"
           ]
         }
@@ -2644,6 +2652,14 @@
             "python",
             "-m",
             "examples.tetra_pk_reconstruction"
+          ]
+        },
+        {
+          "environment": "notebooks",
+          "argv": [
+            "python",
+            "-m",
+            "examples.reconstruction3d_resolution"
           ]
         },
         {
@@ -5358,14 +5374,6 @@
           "argv": [
             "python",
             "-m",
-            "examples.verify_rad_conditioning"
-          ]
-        },
-        {
-          "environment": "notebooks",
-          "argv": [
-            "python",
-            "-m",
             "examples.plot_rad_conditioning"
           ]
         }
@@ -5387,7 +5395,9 @@
             "examples.plot_rad_conditioning"
           ]
         }
-      ]
+      ],
+      "historical_archives": true,
+      "limitation": "Default figures render the retained scalar spectra. Original independent native coefficient archives are not distributed and are required for explicit historical field replay; current public spectral acquisition uses --study."
     },
     "notebooks/transport/46_hexagonal_boundary_layer.ipynb": {
       "kind": "generated-study",

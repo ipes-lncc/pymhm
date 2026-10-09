@@ -2,19 +2,13 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
 from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import case_workspace, read_resource_bytes, read_resource_text
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -26,14 +20,14 @@ from examples.gals3d_data import GaLS3DData
 from examples.plot_flow3d import overlay, slices
 from examples.plot_style import set_refinement_ticks
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 LABELS = {"gals-p1": "GaLS P1/P1", "gals-p2": "GaLS P2/P2", "th-p2": "Taylor–Hood P2/P1"}
 
 
 def save_fields(row: dict, output: Path) -> None:
     """Render exact, numerical and one-sided error sections with the true macro geometry."""
     path = ROOT / "examples/results/gals3d" / row["fields"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != row["fields_sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["fields_sha256"]:
         raise ValueError("elasticity archive digest mismatch")
     data = GaLS3DData(float(row["lame_lambda"]))
     polygons, actual, exact, macros = slices(path, data, vector_key="displacement")
@@ -147,9 +141,9 @@ def curves(report: dict, output: Path, study: str) -> None:
 def main() -> None:
     """Replay only accepted archived fields and measured numerical records."""
     source = ROOT / "examples/results/gals3d/campaign.json"
-    report = json.loads(source.read_text())
+    report = json.loads(read_resource_text(source))
     control = ROOT / "examples/results/gals3d/primal/campaign.json"
-    report["primal_control"] = json.loads(control.read_text())["primal_control"]
+    report["primal_control"] = json.loads(read_resource_text(control))["primal_control"]
     output = ROOT / "docs/figures/gals3d"
     output.mkdir(parents=True, exist_ok=True)
     for case in LABELS:
@@ -157,9 +151,11 @@ def main() -> None:
         save_fields(max(rows, key=lambda r: r["macro_subdivisions"]), output)
     for study in ["refinement", "lambda"]:
         curves(report, output, study)
-    (output / "campaign.json").write_bytes(source.read_bytes())
-    (output / "primal-control.json").write_bytes(control.read_bytes())
+    (output / "campaign.json").write_bytes(read_resource_bytes(source))
+    (output / "primal-control.json").write_bytes(read_resource_bytes(control))
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_gals3d").main()

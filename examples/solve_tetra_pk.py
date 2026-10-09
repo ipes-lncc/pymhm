@@ -16,8 +16,9 @@ from examples.reconstruction3d_resolution import reference_norms
 from pymhm import TetraMesh, TriangularSkeleton
 from pymhm.estimators.darcy_3d import estimate_darcy_error_3d
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity, source_label
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/tetra-pk"
 
 
@@ -43,10 +44,10 @@ def source_files() -> list[Path]:
         "estimators/darcy_3d",
         "fem/conditions",
     )
-    return [ROOT / f"src/pymhm/{name}.py" for name in names] + [
+    return [source_file(f"src/pymhm/{name}.py", root=ROOT) for name in names] + [
         Path(__file__),
-        ROOT / "examples/reconstruction3d_data.py",
-        ROOT / "examples/reconstruction3d_resolution.py",
+        source_file("examples/reconstruction3d_data.py", root=ROOT),
+        source_file("examples/reconstruction3d_resolution.py", root=ROOT),
     ]
 
 
@@ -174,13 +175,11 @@ def run(suite: str, workers: int) -> None:
     """Acquire five uniform resolutions or two fixed-geometry controls without changing the PDE."""
     OUTPUT.mkdir(parents=True, exist_ok=True)
     owners = source_files()
-    hashes = current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
-    )
+    hashes = current_source_manifest(source_identity(ROOT, owners), packages=("pymhm", "examples"))
     snapshot = ROOT / "build/results/tetra-pk/acquisition-sources"
     snapshot.mkdir(parents=True, exist_ok=True)
     for path in owners:
-        (snapshot / f"{hashes[path.relative_to(ROOT).as_posix()]}-{path.name}").write_bytes(
+        (snapshot / f"{hashes[source_label(path, ROOT)]}-{path.name}").write_bytes(
             path.read_bytes()
         )
     norms = reference_norms()
@@ -221,7 +220,7 @@ def run(suite: str, workers: int) -> None:
         geometry = json.loads(path.read_text())
         mesh = TetraMesh(np.asarray(geometry["macro_points"]), np.asarray(geometry["macro_cells"]))
         record.update(
-            fixed_macro_input=path.relative_to(ROOT).as_posix(),
+            fixed_macro_input=source_label(path, ROOT),
             fixed_macro_input_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
         )
         cases = [(mesh, f"fixed-s{s}", 2, s, 12, (12, 14)) for s in (1, 2)]
@@ -239,20 +238,24 @@ def run(suite: str, workers: int) -> None:
             )
         )
         if hashes != current_source_manifest(
-            {
-                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-                for p in owners
-            }
+            source_identity(ROOT, owners), packages=("pymhm", "examples")
         ):
             raise RuntimeError("campaign sources changed during acquisition")
         record["source_changed_during_run"] = False
         (OUTPUT / f"{suite}.json").write_text(json.dumps(record, indent=2) + "\n")
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("suite", choices=("uniform", "fixed"))
     parser.add_argument("--workers", type=int, default=4)
     args = parser.parse_args()
     with threadpool_limits(1):
         run(args.suite, args.workers)
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.solve_tetra_pk").main()

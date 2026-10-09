@@ -1,5 +1,12 @@
 """Acquire original rectangular RT mixed-elasticity convergence and locking studies."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pymhm.postprocessing.stress_tensor import TensorRTElasticitySolution
+
 import argparse
 import hashlib
 import json
@@ -9,11 +16,14 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 
 from examples.elasticity_data import ElasticityData
-from examples.formulations.application import weak_stress_elasticity as solve_elasticity_tensor_rt
+from examples.formulations.application import (
+    weak_stress_elasticity as solve_elasticity_tensor_rt,
+)
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/elasticity-tensor-rt"
 
 
@@ -62,7 +72,7 @@ def acquire(degree: int, enrichment: int, resolution: int, lam: float) -> tuple:
     return result, data, row
 
 
-def archive(solution, data: ElasticityData, path: Path) -> str:
+def archive(solution: TensorRTElasticitySolution, data: ElasticityData, path: Path) -> str:
     """Archive independent one-sided values inside every fine rectangular cell."""
     reference = CartesianMacroMesh(5)
     points, values, stresses, cells = [], [], [], []
@@ -113,9 +123,9 @@ def main() -> None:
         ]
     sources = [
         Path(__file__),
-        ROOT / "examples/elasticity_data.py",
-        ROOT / "src/pymhm/_legacy/models/elasticity/stress_tensor.py",
-        ROOT / "src/pymhm/fem/hdiv/tensor_rt.py",
+        source_file("examples/elasticity_data.py", root=ROOT),
+        source_file("src/pymhm/_legacy/models/elasticity/stress_tensor.py", root=ROOT),
+        source_file("src/pymhm/fem/hdiv/tensor_rt.py", root=ROOT),
     ]
     report = dict(
         case="Original bounded-force polynomial elasticity",
@@ -129,14 +139,13 @@ def main() -> None:
         archive=path.name,
         sha256=digest,
         source_hashes=current_source_manifest(
-            {
-                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-                for p in sources
-            }
+            source_identity(ROOT, sources), packages=("pymhm", "examples")
         ),
     )
     (OUTPUT / (name + ".json")).write_text(json.dumps(report, indent=2) + "\n")
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_elasticity_tensor_rt").main()

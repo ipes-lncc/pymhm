@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -19,6 +11,13 @@ from pathlib import Path
 from typing import Any
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.patheffects as path_effects
@@ -32,7 +31,7 @@ from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro
 from examples.plot_style import set_refinement_ticks
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 plt.rcParams.update(
     {"font.size": 12, "axes.titlesize": 13, "axes.labelsize": 12, "legend.fontsize": 11}
@@ -195,7 +194,7 @@ def fields(
 ) -> None:
     """Show the Figure-5 spatial configuration with raw, independently sampled flux."""
     target = next(r for r in record["cases"] if r["family"] == "figure-5-discretization")
-    arrays = dict(np.load(source / target["archive"]))
+    arrays = dict(np.load(local_resource(source / target["archive"])))
     macro = TriangleMesh(arrays["macro_points"], arrays["macro_cells"])
     vertices = arrays["vertices"]
     points = vertices.reshape(-1, 2)
@@ -308,10 +307,10 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=ROOT / "docs/figures/mh2m-heterogeneous")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
-    record = json.loads((args.source / "comparison.json").read_text())
+    record = json.loads(read_resource_text(args.source / "comparison.json"))
     for row in (*record["references"], *record["cases"]):
         archive = args.source / row["archive"]
-        if hashlib.sha256(archive.read_bytes()).hexdigest() != row["archive_sha256"]:
+        if hashlib.sha256(read_resource_bytes(archive)).hexdigest() != row["archive_sha256"]:
             raise ValueError(f"field archive does not match its numerical record: {archive.name}")
     refinement(record, args.output)
     enrichment(record, args.output)
@@ -319,9 +318,11 @@ def main() -> None:
     fields(record, args.source, args.output)
     shutil.copy2(args.source / "comparison.json", args.output / "comparison.json")
     equivalence = args.source / "norm-equivalence.json"
-    if equivalence.exists():
+    if local_resource(equivalence).exists():
         shutil.copy2(equivalence, args.output / equivalence.name)
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_mh2m_heterogeneous").main()

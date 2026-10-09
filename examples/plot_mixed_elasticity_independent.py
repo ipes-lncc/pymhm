@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-
 import matplotlib
+
+from pymhm.io.workspace import case_workspace, local_resource
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -14,7 +14,7 @@ from matplotlib.collections import LineCollection
 from matplotlib.colors import TwoSlopeNorm
 from matplotlib.ticker import FuncFormatter
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def field_panels(
@@ -92,7 +92,7 @@ def field_panels(
 def main() -> None:
     """Render field comparisons from numerical archives without executing reference code."""
     with np.load(
-        ROOT / "examples/results/mixed-elasticity/native-comparison-fields.npz"
+        local_resource(ROOT / "examples/results/mixed-elasticity/native-comparison-fields.npz")
     ) as archive:
         data = {key: archive[key] for key in archive.files}
     with plt.rc_context({"font.size": 10, "axes.titlesize": 11}):
@@ -118,4 +118,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_mixed_elasticity_independent").main()

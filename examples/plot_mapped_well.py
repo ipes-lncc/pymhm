@@ -2,19 +2,17 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
-from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -27,18 +25,18 @@ from examples.solve_mapped_well import WellData
 from pymhm.fem.hdiv.mapped import mapped_rt_basis, mapped_rt_dofs
 from pymhm.meshes.hexahedron import HexMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 INPUT = ROOT / "examples/results/mapped-well"
 OUTPUT = ROOT / "docs/figures/mapped-well"
 
 
 def load(fine: int, macro: int) -> tuple[dict, dict]:
     """Read one numerical record only after verifying its field archive digest."""
-    report = json.loads((INPUT / f"fine{fine}-macro{macro}-q6.json").read_text())
+    report = json.loads(read_resource_text(INPUT / f"fine{fine}-macro{macro}-q6.json"))
     path = INPUT / report["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != report["sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != report["sha256"]:
         raise ValueError("mapped well field archive digest mismatch")
-    with np.load(path) as data:
+    with np.load(local_resource(path)) as data:
         return report, dict(data)
 
 
@@ -242,4 +240,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_mapped_well").main()

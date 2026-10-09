@@ -2,7 +2,6 @@
 
 import hashlib
 import json
-from pathlib import Path
 
 import numpy as np
 from threadpoolctl import threadpool_limits
@@ -12,13 +11,15 @@ from examples.formulations.application import transport as solve_rad
 from examples.solve_unusual import configuration, errors
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 TARGET = ROOT / "examples/results/unusual"
 
 
 def main() -> None:
     """Check P3/P2 spaces over three additional meshes at unchanged epsilon=0.001."""
+    TARGET.mkdir(parents=True, exist_ok=True)
     rows = []
     names = (
         "src/pymhm/_legacy/models/transport/rad.py",
@@ -27,7 +28,11 @@ def main() -> None:
         "examples/verify_unusual_resolution.py",
     )
     hashes = current_source_manifest(
-        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in names}
+        {
+            name: hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
+            for name in names
+        },
+        packages=("pymhm", "examples"),
     )
     with threadpool_limits(1):
         for n in (8, 16, 32):
@@ -85,7 +90,8 @@ def main() -> None:
                 rows=rows,
                 source_hashes=hashes,
                 source_changed_during_run=any(
-                    hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != digest
+                    hashlib.sha256((source_file(name, root=ROOT)).read_bytes()).hexdigest()
+                    != digest
                     for name, digest in hashes.items()
                 ),
             )
@@ -93,4 +99,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.verify_unusual_resolution").main()

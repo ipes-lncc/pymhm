@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 import shutil
@@ -24,14 +16,16 @@ from matplotlib.collections import LineCollection
 from examples.helmholtz_campaign import AcousticWave
 from examples.plot_style import set_refinement_ticks
 from pymhm.fem.scalar.quadrilateral import qk_basis
+from pymhm.io.workspace import case_workspace, local_resource, read_resource_text, resource_glob
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 RESULTS = ROOT / "examples/results/helmholtz"
 OUTPUT = ROOT / "docs/figures/helmholtz"
 
 
 def save(figure: Any, output: Path, name: str) -> None:
     """Export publication-sized PNG and vector text with rasterized dense fields."""
+    output.mkdir(parents=True, exist_ok=True)
     figure.savefig(output / f"{name}.png", dpi=180, bbox_inches="tight", pad_inches=0.12)
     figure.savefig(output / f"{name}.svg", bbox_inches="tight", pad_inches=0.12)
     plt.close(figure)
@@ -132,7 +126,7 @@ def panel(
 
 def fields(path: Path, output: Path) -> None:
     """Display exact, numerical and error maps for the complex pressure components."""
-    with np.load(path) as archive:
+    with np.load(local_resource(path)) as archive:
         data = {key: archive[key] for key in archive.files}
     wave = AcousticWave(float(data["omega"]), float(data["angle"]), str(data["kind"]))
     exact, computed = wave.pressure(data["points"]), data["values"]
@@ -204,7 +198,7 @@ def pml(record: dict[str, Any], output: Path, archive: Path) -> None:
     values = wave.pressure(np.column_stack((x, x * 0 + y)))
     axes[1].plot(x, values.real, color="black", label="Exact real part")
     axes[1].plot(x, abs(values), color="#009E73", label="Exact magnitude")
-    with np.load(archive) as data:
+    with np.load(local_resource(archive)) as data:
         profiles = q4_profile(dict(data), y)
         faces = data["macro_points"][data["macro_faces"]]
     for index, (coordinate, value) in enumerate(profiles):
@@ -244,17 +238,19 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=OUTPUT)
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
-    record = json.loads((args.input / "comparison.json").read_text())
+    record = json.loads(read_resource_text(args.input / "comparison.json"))
     if record.get("source_changed_during_run") is not False:
         raise ValueError("require a complete acquisition with unchanged recorded sources")
     plt.rcParams.update({"font.size": 14, "axes.titlesize": 15, "figure.titlesize": 17})
     convergence(record, args.output)
     directions(record, args.output)
     pml(record, args.output, args.input / "pml-fields.npz")
-    for path in sorted(args.input.glob("*-fields.npz")):
+    for path in sorted(resource_glob(args.input, "*-fields.npz")):
         fields(path, args.output)
     shutil.copy2(args.input / "comparison.json", args.output / "comparison.json")
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_helmholtz").main()

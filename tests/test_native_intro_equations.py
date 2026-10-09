@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -19,17 +20,22 @@ ROOT = Path(__file__).resolve().parents[1]
     [("flow", 2), ("elasticity", 3), ("transport", 1), ("waves/helmholtz", 0)],
 )
 def test_user_native_equations_recover_manufactured_fields(
-    family: str, retained: int, monkeypatch: pytest.MonkeyPatch
+    family: str,
+    retained: int,
+    monkeypatch: pytest.MonkeyPatch,
+    prepare_notebook_companion: Callable[[str], Path],
 ) -> None:
     """Each actual primary solve checks fields, physical gauge and original rows."""
     pytest.importorskip("dolfinx")
-    monkeypatch.chdir(ROOT)
+    workspace = prepare_notebook_companion(f"{family}/introductory_methods.ipynb")
+    monkeypatch.chdir(workspace)
     path = ROOT / "notebooks" / family / "introductory_methods.ipynb"
     notebook = json.loads(path.read_text())
     scope: dict[str, Any] = {"__name__": "__main__"}
     for cell in notebook["cells"][:4]:
         if cell["cell_type"] == "code":
             exec(compile("".join(cell["source"]), str(path), "exec"), scope)
+    assert scope["ROOT"] == workspace
     assert scope["native_available"] is True
     system, solution = scope["system"], scope["solution"]
     assert_array_equal(system.kernel_offsets - system.trace_size, (0, retained, 2 * retained))

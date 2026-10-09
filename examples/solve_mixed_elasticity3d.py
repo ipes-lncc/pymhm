@@ -10,13 +10,16 @@ from typing import Any
 import numpy as np
 from threadpoolctl import threadpool_limits
 
-from examples.formulations.application import weak_stress_elasticity as solve_elasticity_mixed_3d
+from examples.formulations.application import (
+    weak_stress_elasticity as solve_elasticity_mixed_3d,
+)
 from examples.mixed_elasticity3d_data import SolenoidalElasticity3D
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity, source_label
 from pymhm.meshes.hexahedron import cube_quadrature
 from pymhm.meshes.mixed import AffineMixedMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/mixed-elasticity3d"
 
 
@@ -137,7 +140,7 @@ def run(workers: int) -> None:
     """Record two five-level sequences and one fixed-mesh lambda-to-infinity comparison."""
     OUTPUT.mkdir(parents=True, exist_ok=True)
     owners = [
-        ROOT / f"src/pymhm/{name}.py"
+        source_file(f"src/pymhm/{name}.py", root=ROOT)
         for name in (
             "_legacy/models/elasticity/stress_3d",
             "_legacy/models/elasticity/stress_forms_3d",
@@ -151,16 +154,12 @@ def run(workers: int) -> None:
             "execution/cpu",
         )
     ]
-    owners += [Path(__file__), ROOT / "examples/mixed_elasticity3d_data.py"]
-    hashes = current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
-    )
+    owners += [Path(__file__), source_file("examples/mixed_elasticity3d_data.py", root=ROOT)]
+    hashes = current_source_manifest(source_identity(ROOT, owners), packages=("pymhm", "examples"))
     snapshot = ROOT / "build/results/mixed-elasticity3d/acquisition-sources"
     snapshot.mkdir(parents=True, exist_ok=True)
     for p in owners:
-        (snapshot / f"{hashes[p.relative_to(ROOT).as_posix()]}-{p.name}").write_bytes(
-            p.read_bytes()
-        )
+        (snapshot / f"{hashes[source_label(p, ROOT)]}-{p.name}").write_bytes(p.read_bytes())
     data = SolenoidalElasticity3D()
     norms, control = exact_norms(data, 18), exact_norms(data, 22)
     if max(abs(norms[k] - control[k]) for k in norms) > 2e-11:
@@ -185,10 +184,7 @@ def run(workers: int) -> None:
     for group, n, k, r, lam in jobs:
         row = acquire(n, k, r, lam, workers, data, control, group == "convergence")
         if hashes != current_source_manifest(
-            {
-                p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-                for p in owners
-            }
+            source_identity(ROOT, owners), packages=("pymhm", "examples")
         ):
             raise RuntimeError("AFW3D acquisition sources changed during the run")
         record[group].append(row)
@@ -197,8 +193,15 @@ def run(workers: int) -> None:
         print(json.dumps(row), flush=True)
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workers", type=int, default=4)
     with threadpool_limits(1):
         run(parser.parse_args().workers)
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.solve_mixed_elasticity3d").main()

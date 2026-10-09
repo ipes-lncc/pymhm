@@ -1,5 +1,12 @@
 """Replay general-tensor primal and rectangular mixed-elasticity numerical archives."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from matplotlib.figure import Figure
+
 import argparse
 import hashlib
 import json
@@ -7,6 +14,14 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    resource_glob,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -16,10 +31,10 @@ from matplotlib.tri import Triangulation
 from examples.plot_mesh import draw_macro_mesh
 from pymhm import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
-def save(figure, directory: Path, name: str) -> None:
+def save(figure: Figure, directory: Path, name: str) -> None:
     """Write vector and raster figures with identical layout."""
     directory.mkdir(parents=True, exist_ok=True)
     for extension in ("png", "svg"):
@@ -30,9 +45,9 @@ def save(figure, directory: Path, name: str) -> None:
 def fields(record: dict, path: Path, directory: Path) -> None:
     """Show exact/numerical/difference fields with common scales and actual macro boundaries."""
     archive = path.parent / record["archive"]
-    if hashlib.sha256(archive.read_bytes()).hexdigest() != record["sha256"]:
+    if hashlib.sha256(read_resource_bytes(archive)).hexdigest() != record["sha256"]:
         raise ValueError("Elasticity archive checksum mismatch")
-    with np.load(archive) as data:
+    with np.load(local_resource(archive)) as data:
         triangulation = Triangulation(*data["points"].T, data["cells"])
         macro = (
             SimpleNamespace(points=data["macro_points"], faces=data["macro_faces"])
@@ -87,8 +102,8 @@ def primal(*, include_fields: bool = True) -> None:
     for variable in (False, True):
         name = "variable" if variable else "constant"
         figure, axes = plt.subplots(1, 3, figsize=(14, 4.2), constrained_layout=True)
-        for path in sorted(data.glob(name + "-*.json")):
-            record = json.loads(path.read_text())
+        for path in sorted(resource_glob(data, name + "-*.json")):
+            record = json.loads(read_resource_text(path))
             rows = record["rows"]
             degree = rows[0]["degree"]
             label = (
@@ -129,8 +144,8 @@ def mixed_rectangular() -> None:
     output = ROOT / "docs/figures/elasticity-tensor-rt"
     figure, axes = plt.subplots(1, 3, figsize=(14, 4.2), constrained_layout=True)
     sweep, saxes = plt.subplots(1, 3, figsize=(14, 4.2), constrained_layout=True)
-    for path in sorted(data.glob("*.json")):
-        record = json.loads(path.read_text())
+    for path in sorted(resource_glob(data, "*.json")):
+        record = json.loads(read_resource_text(path))
         rows = record["rows"]
         label = f"RT{rows[0]['degree']}" + "+" * rows[0]["enrichment"]
         for axis, saxis, key, title in zip(
@@ -178,4 +193,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_elasticity_extensions").main()

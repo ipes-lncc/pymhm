@@ -2,13 +2,12 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
+from typing import TYPE_CHECKING
 
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
+if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+    from matplotlib.collections import PolyCollection
+    from matplotlib.figure import Figure
 
 import argparse
 import hashlib
@@ -16,6 +15,8 @@ import json
 from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import local_resource, read_resource_bytes, read_resource_text
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -35,7 +36,7 @@ from pymhm.meshes.triangle import TriangleMesh
 FIGURES = ROOT / "docs/figures/spe10-adaptive"
 
 
-def save(figure, name: str, directory: Path = FIGURES) -> None:
+def save(figure: Figure, name: str, directory: Path = FIGURES) -> None:
     """Export readable vector text and rasterized dense maps in both formats."""
     for extension in ("png", "svg"):
         figure.savefig(
@@ -104,7 +105,7 @@ def reference_pressure_profile(reference: StructuredRT) -> tuple[np.ndarray, np.
 
 def fine_mesh_quality(path: Path) -> tuple[float, float]:
     """Measure local-cell angles and diameter/area ratios from the archived coordinates."""
-    with np.load(path) as arrays:
+    with np.load(local_resource(path)) as arrays:
         if "point_offsets" in arrays:
             points, cells = arrays["local_points"], arrays["local_cells"]
             po, co = arrays["point_offsets"], arrays["cell_offsets"]
@@ -128,7 +129,17 @@ def fine_mesh_quality(path: Path) -> tuple[float, float]:
     return float(np.min(angles) * 180 / np.pi), float(np.max(np.max(lengths, axis=0) / areas))
 
 
-def panel(axis, field, values, macro, title, bounds, *, signed=False, asinh=False):
+def panel(
+    axis: Axes,
+    field: dict[str, np.ndarray],
+    values: np.ndarray,
+    macro: TriangleMesh,
+    title: str,
+    bounds: tuple[float, float],
+    *,
+    signed: bool = False,
+    asinh: bool = False,
+) -> PolyCollection:
     """Reserve a horizontal scale below each field and display real macro boundaries."""
     normalization = (
         matplotlib.colors.AsinhNorm(
@@ -174,9 +185,9 @@ def plot(data: Path = DATA / "published", output: Path = FIGURES) -> None:
     """Render mesh, estimator, reference refinement and unsmoothed physical fields."""
     output.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.size": 13})
-    rows = json.loads((data / "adaptive.json").read_text())
-    references = json.loads((DATA / "references-aligned.json").read_text())
-    comparison = json.loads((data / "comparison-order4.json").read_text())
+    rows = json.loads(read_resource_text(data / "adaptive.json"))
+    references = json.loads(read_resource_text(DATA / "references-aligned.json"))
+    comparison = json.loads(read_resource_text(data / "comparison-order4.json"))
     if [row["level"] for row in comparison] != [row["level"] for row in rows]:
         raise ValueError("each adaptive state requires its own integrated comparison record")
     mhm = BrokenP2(data / rows[-1]["archive"])
@@ -186,7 +197,7 @@ def plot(data: Path = DATA / "published", output: Path = FIGURES) -> None:
     reference_name = reference_names.pop()
     reference_record = next(row for row in references if row["archive"] == reference_name)
     reference_path = DATA / reference_name
-    digest = hashlib.sha256(reference_path.read_bytes()).hexdigest()
+    digest = hashlib.sha256(read_resource_bytes(reference_path)).hexdigest()
     if any(row["reference_sha256"] != digest for row in comparison):
         raise ValueError("comparison reference checksum mismatch")
     reference = StructuredRT.load(reference_path)
@@ -274,7 +285,7 @@ def plot(data: Path = DATA / "published", output: Path = FIGURES) -> None:
             if level >= len(rows):
                 axis.axis("off")
                 continue
-            arrays = np.load(data / rows[level]["archive"])
+            arrays = np.load(local_resource(data / rows[level]["archive"]))
             mesh = TriangleMesh(arrays["macro_points"], arrays["macro_cells"])
             if not published:
                 axis.tripcolor(
@@ -376,8 +387,8 @@ def plot(data: Path = DATA / "published", output: Path = FIGURES) -> None:
         axis.grid(alpha=0.25)
         axis.legend()
     save(figure, "reference-refinement", output)
-    profile_records = json.loads((DATA / "published-profile-mhm.json").read_text())["curves"]
-    reference_samples = json.loads((DATA / "published-profile.json").read_text())["samples"]
+    profile_records = json.loads(read_resource_text(DATA / "published-profile-mhm.json"))["curves"]
+    reference_samples = json.loads(read_resource_text(DATA / "published-profile.json"))["samples"]
     t, reference_pressure = reference_pressure_profile(reference)
     figure, axes = plt.subplots(1, 2, figsize=(11.5, 5.2), layout="constrained", sharey=True)
     for axis, record in zip(axes, profile_records, strict=True):
@@ -422,14 +433,21 @@ def plot(data: Path = DATA / "published", output: Path = FIGURES) -> None:
     figure.supxlabel("Physical profile: (x, y) = t (1200, 2200) ft", fontsize=12)
     save(figure, "diagonal-profile", output)
     quadrature_record = data / "quadrature-check.json"
-    if quadrature_record.is_file():
-        (output / quadrature_record.name).write_bytes(quadrature_record.read_bytes())
+    if local_resource(quadrature_record).is_file():
+        (output / quadrature_record.name).write_bytes(read_resource_bytes(quadrature_record))
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data", type=Path, default=DATA / "published")
     parser.add_argument("--output", type=Path, default=FIGURES)
     options = parser.parse_args()
     with threadpool_limits(1):
         plot(options.data, options.output)
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.plot_spe10_adaptive").main()

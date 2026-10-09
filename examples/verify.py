@@ -1,19 +1,11 @@
 """Run reproducible PDE verification cases and save numerical results as JSON.
 
-Execute ``pixi run -e test python examples/verify.py`` from the repository root.
+Execute ``python -m examples.verify`` in the selected working directory.
 The benchmark problems follow published analytical data, but these triangulations
 and low-order local spaces do not reproduce the papers' full numerical tables.
 """
 
 from __future__ import annotations
-
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
 
 import argparse
 import json
@@ -109,4 +101,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.verify").main()

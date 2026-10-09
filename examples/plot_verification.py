@@ -3,16 +3,17 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 import matplotlib.pyplot as plt
+
+from pymhm.io.workspace import case_workspace, read_resource_text
 
 
 def main() -> None:
     """Render convergence panels with explicit norms and independent method labels."""
-    root = Path(__file__).resolve().parents[1]
-    darcy = json.loads((root / "examples/results/darcy-audit.json").read_text())
-    flow = json.loads((root / "examples/results/flow-audit.json").read_text())
+    root = case_workspace()
+    darcy = json.loads(read_resource_text(root / "examples/results/darcy-audit.json"))
+    flow = json.loads(read_resource_text(root / "examples/results/flow-audit.json"))
     figure, axes = plt.subplots(1, 2, figsize=(10, 4), constrained_layout=True)
     for formulation, label in (("primal", "Darcy: P1 primal"), ("mixed", "Darcy: RT0/P0 mixed")):
         rows = [
@@ -47,4 +48,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_verification").main()

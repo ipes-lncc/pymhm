@@ -2,20 +2,13 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
-from pathlib import Path
 from typing import Any
 
 import matplotlib
+
+from pymhm.io.workspace import case_workspace
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -30,7 +23,7 @@ from examples.plot_mesh import draw_macro_mesh
 from pymhm.adaptivity.darcy import solve_adaptive_darcy
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/adaptive-darcy"
 FIGURES = ROOT / "docs/figures/adaptive-darcy"
 
@@ -219,4 +212,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.adaptive_darcy_campaign").main()

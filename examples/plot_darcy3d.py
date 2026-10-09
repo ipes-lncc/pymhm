@@ -5,14 +5,19 @@ from __future__ import annotations
 import hashlib
 import json
 from itertools import combinations
-from pathlib import Path
 
 import numpy as np
 
 from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 from pymhm.meshes.tetrahedron import TetraMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def slice_polygon(vertices: np.ndarray, height: float) -> np.ndarray:
@@ -59,12 +64,12 @@ def main() -> None:
     from matplotlib.collections import LineCollection, PolyCollection
     from matplotlib.colors import Normalize, TwoSlopeNorm
 
-    report = json.loads((ROOT / "examples/results/darcy3d.json").read_text())
+    report = json.loads(read_resource_text(ROOT / "examples/results/darcy3d.json"))
     finest = report["rows"][-1]
     path = ROOT / "examples/results" / finest["fields"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != finest["fields_sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != finest["fields_sha256"]:
         raise ValueError("field archive digest mismatch")
-    data = np.load(path)
+    data = np.load(local_resource(path))
     height = 0.375
     polygons = []
     actual = []
@@ -156,4 +161,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_darcy3d").main()

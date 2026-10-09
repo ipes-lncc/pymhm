@@ -8,16 +8,39 @@ We build the local mixed equations and the global skeletal equation explicitly. 
 
 The analytical problem is the boundary-layer example in [Araya, Harder, Poza and Valentin (2017), §3.1.2](https://doi.org/10.1016/j.cma.2017.05.027); its [2016 author preprint](https://www.ci2ma.udec.cl/pdf/pre-publicaciones2/2016/pp16-15.pdf) gives the equations and exact fields. This notebook uses a declared SW–NE triangulation. We distinguish the paper's single-element local degree family from the locally refined Taylor–Hood/USFEM comparison and from a resolved subface control. Geometry, coefficient, source and boundary data are the same throughout.
 
-Run the notebook with the locked Pixi `introduction` environment. Every physical field, source, variational form, boundary condition, pressure gauge and measurement is defined in the cells below. PyMHM assembles the executed UFL forms, integrates oriented traces, condenses local equations and solves the global system.
+Open the downloaded notebook with `jupyter lab` after installing `pymhm[notebooks,visualization]` and the compatible native DOLFINx/UFL backend. Every physical field, source, variational form, boundary condition, pressure gauge and measurement is defined in the cells below. PyMHM assembles the executed UFL forms, integrates oriented traces, condenses local equations and solves the global system.
 
+The PyMHM distribution contains only the library. The first cell explicitly
+downloads a checksum-verified companion archive and prepares the declared data
+using its local Python helpers. You can inspect these support files in `ROOT`.
+Complete studies and historical replay retain their existing opt-in flags.
 
 ```python
 from pathlib import Path
+import os
 import sys
+from pymhm.io.workspace import workspace_from_archive
+
+# Download verified support files; this operation does not execute them.
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/85a07669980a7cbbc97fe1b09bb5388fabde9afbb790f771cbe8b28db8924e67/stokes_brinkman_boundary_layer-companion.zip"
+COMPANION_SHA256 = "85a07669980a7cbbc97fe1b09bb5388fabde9afbb790f771cbe8b28db8924e67"
+WORKSPACE = Path(
+    os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
+)
+ROOT = workspace_from_archive(COMPANION_URL, sha256=COMPANION_SHA256, directory=WORKSPACE)
+os.environ["PYMHM_WORKSPACE"] = str(ROOT)
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+# Explicitly prepare declared data with the downloaded Python helpers.
+from scripts.notebook_reproduction import notebook_workspace
+
+ROOT = notebook_workspace("introduction/stokes_brinkman_boundary_layer.ipynb", directory=ROOT)
+root = ROOT
+print("Workspace:", ROOT)
+
 import os
 
-ROOT = next(path for path in (Path.cwd(), *Path.cwd().parents) if (path / "pixi.toml").exists())
-sys.path.insert(0, str(ROOT))
 import json
 import numpy as np
 from pymhm import TriangleMesh, FaceSpace, SkeletonSpace
@@ -53,7 +76,6 @@ from examples.introduction.vector import (
 )
 
 measure_case = partial(record_brinkman_case, reports=REPORTS, root=ROOT)
-
 ```
 
 ## 1. State the operator and derive the source independently
@@ -161,9 +183,7 @@ class BrinkmanLayer:
             + self.drag * self.velocity(points)
             + np.array([1.0, -1.0])
         )
-
 ```
-
 
 ```python
 NU, GAMMA = 1e-2, 1.0
@@ -187,7 +207,6 @@ boundary_vertices = np.unique(probe_local_mesh.faces[probe_local_mesh.boundary_f
 local_interior_vertices = len(probe_local_mesh.points) - len(boundary_vertices)
 assert local_interior_vertices > 0
 print("Taylor-Hood local interior vertices:", local_interior_vertices)
-
 ```
 
 ```text
@@ -225,7 +244,6 @@ def brinkman_ufl_data(domain: Any) -> tuple[Any, Any, Any]:
         + ufl.as_vector((1.0, -1.0))
     )
     return uexact, pexact, f
-
 ```
 
 ## 2. Translate the mathematical mixed form directly into UFL
@@ -310,12 +328,7 @@ bound_margins = np.linalg.eigvalsh(INVERSE_M * h[:, None, None] ** 2 * residual_
 ]
 assert bound_margins.max() < 1e-10
 inverse_controls
-
 ```
-
-
-
-
 
 ```text
 [{'degree': 2,
@@ -381,7 +394,6 @@ def brinkman_forms(
         a -= tau * ufl.inner(R, Rtest) * dx
         L -= tau * ufl.inner(f, Rtest) * dx
     return W, a, L, q * dx
-
 ```
 
 The native mesh and coefficient conversions come from the shared backend binding. The provider below writes the volume and boundary forms, chooses its physical boundary conditions and registers the scalar field. The explicit restriction to free scalar coordinates imposes the declared vertical Dirichlet data; it is part of the formulation.
@@ -413,7 +425,6 @@ def mixed_nodal_blocks(
     A, F = native_A[order][:, order], native_F[order]
     pressure_weights = compile_form(mean_form)[order]
     return A, F, pressure_weights, len(nodal_space(fine, velocity_degree)[1])
-
 ```
 
 ## 3. State trace orientation, boundary data and the physical gauge
@@ -501,7 +512,6 @@ def local_brinkman(
             "pressure_weights": pweights,
         },
     )
-
 ```
 
 Before the refinement loop, define the measurements: velocity and pressure $L^2$ errors, velocity-gradient error, broken pseudostress error, the fine-cell divergence norm and the separate macro mass defect. These quadrature operations evaluate fields; they do not define a local PDE.
@@ -513,7 +523,6 @@ Physical norms, executed-state archives and one-sided field/profile displays are
 
 ```python
 # Physical field norms, macro mass and pressure integral use flow_error_norms (imported above).
-
 ```
 
 ### Record the numerical coordinates for reproducibility
@@ -594,7 +603,6 @@ for n in (4, 8, 16):
             n,
             {key: row[key] for key in ("velocity_l2", "pressure_l2", "macro_mass_defect")},
         )
-
 ```
 
 ```text
@@ -700,7 +708,6 @@ for ell, levels in PUBLISHED_LEVELS.items():
             n,
             {key: row[key] for key in ("velocity_l2", "pressure_l2", "velocity_h1_seminorm")},
         )
-
 ```
 
 ```text
@@ -789,12 +796,7 @@ for ell in (0, 1, 2):
         )
     )
 assembly_quadrature_controls
-
 ```
-
-
-
-
 
 ```text
 [{'ell': 0,
@@ -863,7 +865,6 @@ for n in (4, 8, 16):
             n,
             {key: row[key] for key in ("velocity_l2", "pressure_l2", "velocity_h1_seminorm")},
         )
-
 ```
 
 ```text
@@ -922,7 +923,6 @@ for n in (32, 64, 128):
     references[n] = case
     reference_rows.append(row)
     state_archives.append(archive)
-
 ```
 
 ```text
@@ -950,10 +950,7 @@ For two successive resolutions, the measured slope is $r=\log(e_1/e_2)/\log(H_1/
 
 ```python
 plot_brinkman_convergence(rows, reference_rows, control_rows, reports=REPORTS)
-
 ```
-
-
 
 [![Figure 1 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_0.png)
 
@@ -985,10 +982,7 @@ enriched MHM-USFEM: pressure_l2 rates: [0.956912 1.197469]
 
 ```python
 published_rates = plot_brinkman_family_rates(published_rows, reports=REPORTS)
-
 ```
-
-
 
 [![Figure 4 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_0.png)
 
@@ -1029,10 +1023,7 @@ The additional single-element figure evaluates the $\ell=2$, P4/P4 degree-family
 
 ```python
 plot_brinkman_family_fields(published_cases, PUBLISHED_LEVELS, references, truth, reports=REPORTS)
-
 ```
-
-
 
 [![Figure 7 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_34_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_34_0.png)
 
@@ -1040,10 +1031,7 @@ plot_brinkman_family_fields(published_cases, PUBLISHED_LEVELS, references, truth
 
 ```python
 plot_brinkman_enriched_fields(enriched_cases, references, truth, reports=REPORTS)
-
 ```
-
-
 
 [![Figure 8 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_35_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_35_0.png)
 
@@ -1060,10 +1048,7 @@ Horizontal profiles retain a separate segment for each incident macrocell. Verti
 
 ```python
 plot_brinkman_profiles(enriched_cases, truth, reports=REPORTS)
-
 ```
-
-
 
 [![Figure 10 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_38_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_38_0.png)
 
@@ -1084,9 +1069,7 @@ provenance = execution_provenance(
     full_qualification_levels=PUBLISHED_FULL_LEVELS,
     literature_comparison="same analytical PDE; declared tutorial discretization, no matched-figure reproduction",
 )
-
 ```
-
 
 ```python
 quadrature_checks = {}
@@ -1147,12 +1130,7 @@ for ell in (0, 1, 2):
         indent=2,
     )
 )
-
 ```
-
-
-
-
 
 ```text
 57799
@@ -1173,11 +1151,21 @@ This configuration requires positive drag. In the pure Stokes limit, the vector-
 
 ## Reproduce this tutorial
 
-[View the source notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/stokes_brinkman_boundary_layer.ipynb) or [download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/stokes_brinkman_boundary_layer.ipynb). Run its cells interactively, or execute the notebook from the repository root with the checked-in Pixi lockfile:
+[View the source notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/stokes_brinkman_boundary_layer.ipynb) or [download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/stokes_brinkman_boundary_layer.ipynb), then open it:
 
 ```bash
-pixi install --locked -e introduction
-pixi run --locked -e introduction notebooks-run introduction/stokes_brinkman_boundary_layer.ipynb --timeout 7200
+python -m pip install 'pymhm[notebooks,visualization]'
+jupyter lab stokes_brinkman_boundary_layer.ipynb
 ```
 
-The runner writes the executed copy to `build/notebooks/introduction/`. The figures and numerical outputs on this page come from that execution. Timings describe the recorded hardware and solver settings; rerun performance examples on an idle machine to measure your own environment.
+The first cell explicitly downloads a SHA256-verified companion archive. Acquisition does not execute its code. The local support files are inspectable in the printed `ROOT` directory; the following helper call prepares only the declared inputs. The library distribution contains only `pymhm`. Notebooks, support code and data are separate downloads. Native UFL forms require the compatible DOLFINx/UFL backend described in the [installation guide](../../installation.md). A clone and Pixi are unnecessary.
+
+For batch execution, extract the same companion, change to its workspace, and use its local runner with the actual downloaded notebook path:
+
+```bash
+python -m scripts.run_notebooks /path/to/stokes_brinkman_boundary_layer.ipynb --timeout 7200
+```
+
+The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
+
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `26ee07b8ec1c47e887342af62cc66121e5f53e7183e7892ed43f49742d279532` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

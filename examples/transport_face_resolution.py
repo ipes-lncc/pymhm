@@ -2,19 +2,10 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
 from functools import partial
-from pathlib import Path
 from time import perf_counter
 
 import numpy as np
@@ -28,9 +19,10 @@ from examples.transport_trace_family import TransportTraceFamily, gradient_proje
 from pymhm.execution.cpu import map_local
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/transport"
 
 
@@ -63,7 +55,8 @@ def acquire(refinement: int, workers: int, *, endpoint_only: bool = False) -> di
         "src/pymhm/execution/cpu.py",
     )
     hashes = current_source_manifest(
-        {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in paths}
+        {p: hashlib.sha256(source_file(p, root=ROOT).read_bytes()).hexdigest() for p in paths},
+        packages=("pymhm", "examples"),
     )
     start = perf_counter()
     macro = crisscross(8)
@@ -152,7 +145,8 @@ def acquire(refinement: int, workers: int, *, endpoint_only: bool = False) -> di
                 )
                 checkpoint_norm(archive, checkpoint, order, measurements[str(order)])
             assert all(
-                hashlib.sha256((ROOT / p).read_bytes()).hexdigest() == h for p, h in hashes.items()
+                hashlib.sha256(source_file(p, root=ROOT).read_bytes()).hexdigest() == h
+                for p, h in hashes.items()
             )
             row = dict(
                 name=name,
@@ -200,4 +194,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.transport_face_resolution").main()

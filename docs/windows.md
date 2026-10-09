@@ -36,6 +36,26 @@ requires a separate DOLFINx environment; see
 [native UFL assembly](installation.md#native-ufl-assembly) and the
 [native FEM scope](#native-fem-scope) below for installation and qualification.
 
+To open a downloaded notebook, install the notebook extra and launch JupyterLab
+with the same interpreter:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install "pymhm[notebooks]"
+.\.venv\Scripts\python.exe -m jupyterlab primal_galerkin.ipynb
+```
+
+The library installation contains no example helpers, notebooks or case data.
+The downloaded notebook's first cell verifies and extracts its separate companion
+ZIP, then imports the workspace's inspectable `examples/` and `scripts/` helpers.
+Selected data and recorded figures use verified separate links in the
+[data catalogue](data.md). No clone or Pixi installation is required.
+
+The notebook uses `.pymhm-companions/<checksum>` below the current directory
+as its writable workspace; `PYMHM_WORKSPACE` can select another directory. Outputs and acquired inputs are
+written there. Native notebooks require the separately installed backend stated
+in the catalogue; use a compatible DOLFINx Conda environment and install
+`"pymhm[notebooks]"` into it for native UFL examples.
+
 ### Repository development with Pixi
 
 Install [Pixi for Windows](https://pixi.prefix.dev/latest/installation/) version 0.76.2 and

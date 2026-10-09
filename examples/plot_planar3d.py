@@ -2,19 +2,18 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
 from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -28,13 +27,13 @@ from examples.plot_flow3d import overlay
 from pymhm.fem.scalar.tetrahedron import tetra_basis, tetra_nodal_space
 from pymhm.meshes.tetrahedron import TetraMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def section(path: Path, data: Planar3DData, height: float = 0.37) -> tuple:
     """Evaluate owned polynomial fields at centroids of true fine-tetrahedron cuts."""
     polygons, points, values, macros = [], [], [], []
-    with np.load(path) as archive:
+    with np.load(local_resource(path)) as archive:
         degree = int(archive["degree"])
         for vertices in archive["macro_points"][archive["macro_cells"]]:
             polygon = slice_polygon(vertices, height)
@@ -151,12 +150,12 @@ def field_panels(
 def main() -> None:
     """Replay the accepted n=2 mixed-boundary field and its geometry metadata."""
     source = ROOT / "examples/results/planar3d/campaign.json"
-    report = json.loads(source.read_text())
+    report = json.loads(read_resource_text(source))
     row = next(
         r for r in report["rows"] if r["macro_subdivisions"] == 2 and r["boundary"] == "mixed"
     )
     archive = source.parent / row["fields"]
-    if hashlib.sha256(archive.read_bytes()).hexdigest() != row["fields_sha256"]:
+    if hashlib.sha256(read_resource_bytes(archive)).hexdigest() != row["fields_sha256"]:
         raise ValueError("planar field archive digest mismatch")
     output = ROOT / "docs/figures/planar3d"
     output.mkdir(parents=True, exist_ok=True)
@@ -190,8 +189,10 @@ def main() -> None:
     for suffix in ("png", "svg"):
         fig.savefig(output / f"geometry.{suffix}", dpi=180)
     plt.close(fig)
-    (output / "campaign.json").write_bytes(source.read_bytes())
+    (output / "campaign.json").write_bytes(read_resource_bytes(source))
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_planar3d").main()

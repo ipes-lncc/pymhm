@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -18,6 +10,13 @@ from pathlib import Path
 from typing import Any
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -30,12 +29,12 @@ from examples.plot_mh2m_heterogeneous import fields, save
 from examples.plot_style import set_refinement_ticks
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def load_crossed(path: Path) -> CrossedP1:
     """Restore canonical fine triangles without averaging independent macro values."""
-    with np.load(path) as arrays:
+    with np.load(local_resource(path)) as arrays:
         return CrossedP1.from_arrays(arrays["vertices"], arrays["pressure"])
 
 
@@ -72,7 +71,7 @@ def profiles(
 ) -> None:
     """Compare the Figure-5 profile with two classical resolutions and both traces."""
     target = next(row for row in record["cases"] if row["name"] == "figure-5")
-    with np.load(source / target["archive"]) as arrays:
+    with np.load(local_resource(source / target["archive"])) as arrays:
         mesh = TriangleMesh(arrays["macro_points"], arrays["macro_cells"])
     numerical = load_crossed(source / target["archive"])
     x = np.linspace(0, 1, 3001)
@@ -105,9 +104,9 @@ def profiles(
 def published_profiles(record: dict, source: Path, output: Path) -> None:
     """Compare visible published raster spans without inferring occluded curves."""
     digitized = source / "published-profiles.json"
-    if not digitized.exists():
+    if not local_resource(digitized).exists():
         return
-    publication = json.loads(digitized.read_text())
+    publication = json.loads(read_resource_text(digitized))
     for printed in publication["figures"]:
         figure, axes = plt.subplots(3, 2, figsize=(10.8, 10.6), layout="constrained")
         figure.get_layout_engine().set(hspace=0.09, wspace=0.08)
@@ -154,7 +153,7 @@ def published_profiles(record: dict, source: Path, output: Path) -> None:
                         color=color,
                         label=f"PyMHM, incident y-side {side:+d}",
                     )
-                with np.load(source / row["archive"]) as arrays:
+                with np.load(local_resource(source / row["archive"])) as arrays:
                     mesh = TriangleMesh(arrays["macro_points"], arrays["macro_cells"])
                 positions = macro_profile_breaks(mesh, np.array([0.0, 0.5]), np.array([1.0, 0.5]))
                 mark_macro_interfaces(axis, positions[1:-1])
@@ -228,7 +227,7 @@ def figure6_profiles(
             for case, color in zip(names, ("#D55E00", "#0072B2", "#009E73"), strict=False):
                 row = next(row for row in record["cases"] if row["name"] == case)
                 field = load_crossed(source / row["archive"])
-                with np.load(source / row["archive"]) as arrays:
+                with np.load(local_resource(source / row["archive"])) as arrays:
                     mesh = TriangleMesh(arrays["macro_points"], arrays["macro_cells"])
                 intersections.extend(
                     macro_profile_breaks(mesh, np.array([0.0, 0.5]), np.array([1.0, 0.5]))[1:-1]
@@ -330,10 +329,10 @@ def main() -> None:
         "--output", type=Path, default=ROOT / "docs/figures/mh2m-heterogeneous/crisscross"
     )
     args = parser.parse_args()
-    record = json.loads((args.source / "comparison.json").read_text())
+    record = json.loads(read_resource_text(args.source / "comparison.json"))
     for row in (*record["cases"], *record["references"]):
         archive = args.source / row["archive"]
-        if hashlib.sha256(archive.read_bytes()).hexdigest() != row["archive_sha256"]:
+        if hashlib.sha256(read_resource_bytes(archive)).hexdigest() != row["archive_sha256"]:
             raise ValueError("archive digest differs from the acquired numerical record")
     args.output.mkdir(parents=True, exist_ok=True)
     adapted = {
@@ -354,4 +353,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_mh2m_crisscross").main()

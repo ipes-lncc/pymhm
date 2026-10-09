@@ -9,14 +9,6 @@ require separately measured resource budgets.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -50,10 +42,11 @@ from pymhm import TriangleMesh
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.fem.vector.elasticity import rigid_modes as _rigid
 from pymhm.io.provenance import file_digest
+from pymhm.io.workspace import case_workspace, source_file
 from pymhm.linalg.linear import factorize
 from pymhm.postprocessing.dynamics import ElastodynamicLocal, ElastodynamicSolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def source_hashes() -> dict[str, str]:
@@ -67,7 +60,7 @@ def source_hashes() -> dict[str, str]:
     }
     files.update(
         {
-            f"examples/{name}.py": ROOT / f"examples/{name}.py"
+            f"examples/{name}.py": source_file(f"examples/{name}.py", root=ROOT)
             for name in (
                 "three_layer_2017",
                 "three_layer_2017_acquire",
@@ -79,7 +72,11 @@ def source_hashes() -> dict[str, str]:
         }
     )
     files["pixi.lock"] = ROOT / "pixi.lock"
-    return {name: file_digest(path) for name, path in files.items()}
+    return {
+        name: file_digest(path)
+        for name, path in files.items()
+        if name != "pixi.lock" or path.is_file()
+    }
 
 
 def _write(path: Path, values: dict[str, Any]) -> None:
@@ -831,4 +828,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.three_layer_2017_acquire").main()

@@ -8,16 +8,7 @@ reference or matched historical reproduction is asserted.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
-import hashlib
 import json
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -41,21 +32,22 @@ from pymhm.fem.scalar.quadrilateral import (
 )
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, ensure_resource, source_file, source_identity
 from pymhm.linalg.linear import LinearFactorization, accurate_residual
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.meshes.hexahedron import HexMesh
 from pymhm.meshes.mixed import AffineMixedMesh
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 
 
 def source_hashes() -> dict[str, str]:
     """Identify every portable core owner, imported case helper and the Pixi lock."""
-    paths = list((ROOT / "src/pymhm").rglob("*.py"))
+    paths = list(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py"))
     paths += [Path(__file__), ROOT / "pixi.lock"]
     paths += [
-        ROOT / "examples" / name
+        source_file(f"examples/{name}", root=ROOT)
         for name in (
             "pgmhm_campaign.py",
             "mh_campaign.py",
@@ -66,12 +58,17 @@ def source_hashes() -> dict[str, str]:
             "archive_precision.py",
         )
     ]
-    paths.append(ROOT / "examples/results/spe10/layer-36.npz")
+    paths.append(ensure_resource("examples/results/spe10/layer-36.npz", ROOT))
     return current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in sorted(paths)
-        }
+        source_identity(
+            ROOT,
+            (
+                path
+                for path in sorted(paths)
+                if path.name not in ("pixi.lock", "pixi.toml", "pyproject.toml") or path.is_file()
+            ),
+        ),
+        packages=("pymhm", "examples"),
     )
 
 
@@ -87,6 +84,7 @@ def observe_checked_solves() -> Iterator[list[dict[str, Any]]]:
     original = LinearFactorization.solve
 
     def observed(self: Any, rhs: Any, *args: Any, **kwargs: Any) -> Any:
+        """Record original-row residuals while preserving the executed factorization and solve."""
         result = original(self, rhs, *args, **kwargs)
         forcing = np.asarray(rhs, dtype=np.result_type(np.asarray(rhs).dtype, result.dtype))
         defect = accurate_residual(self._matrix, forcing, result)
@@ -362,7 +360,7 @@ def run(case: str, output: Path) -> dict[str, Any]:
     for name in hashes:
         target = snapshot / name
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes((ROOT / name).read_bytes())
+        target.write_bytes((source_file(name, root=ROOT)).read_bytes())
     report: dict[str, Any] = dict(
         schema="pymhm-minimal-darcy-convergence-v1",
         case=case,
@@ -469,4 +467,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.minimal_darcy_convergence").main()

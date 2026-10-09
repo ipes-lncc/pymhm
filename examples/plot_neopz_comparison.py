@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -17,6 +9,13 @@ from pathlib import Path
 from typing import Any
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -28,7 +27,7 @@ from examples.analytical_darcy import darcy_fields
 from examples.plot_mesh import draw_macro_mesh, macro_profile_breaks, mark_macro_interfaces
 from pymhm import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DEFAULT_REPORT = ROOT / "examples/results/neopz/comparison.json"
 DEFAULT_OUTPUT = ROOT / "docs/figures/neopz"
 
@@ -44,9 +43,9 @@ def save_figure(figure: plt.Figure, output: Path, name: str) -> None:
 def load_archive(row: dict[str, Any], directory: Path) -> dict[str, np.ndarray]:
     """Read the exact comparison archive, checking its recorded checksum."""
     path = directory / row["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != row["archive_sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["archive_sha256"]:
         raise ValueError(f"Reference archive checksum mismatch: {path.name}")
-    with np.load(path, allow_pickle=False) as archive:
+    with np.load(local_resource(path), allow_pickle=False) as archive:
         return {key: archive[key] for key in archive.files}
 
 
@@ -357,7 +356,7 @@ def main() -> None:
     parser.add_argument("--field-resolution", type=int, default=8)
     parser.add_argument("--layer-resolution", type=int, default=4)
     args = parser.parse_args()
-    report = json.loads(args.report.read_text())
+    report = json.loads(read_resource_text(args.report))
     rows = report["rows"]
     directory = args.report.parent
     plt.rcParams.update({"font.size": 10, "svg.fonttype": "none"})
@@ -371,4 +370,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_neopz_comparison").main()

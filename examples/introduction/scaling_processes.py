@@ -13,7 +13,6 @@ import math
 import os
 import platform
 import random
-import subprocess
 import sys
 import time
 from collections.abc import Callable
@@ -30,6 +29,10 @@ from threadpoolctl import threadpool_info, threadpool_limits
 
 import examples.introduction.scaling_forms as provider_module
 from examples.introduction._scaling_timer import STARTED
+from examples.introduction.provenance import (
+    execution_source_manifest,
+    workspace_revision,
+)
 from examples.introduction.scaling_forms import (
     DEFAULT_DATA,
     EPSILON,
@@ -59,17 +62,13 @@ from pymhm.fem.scalar.quadrilateral import (
 )
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace
 from pymhm.linalg.linear import check_linear_solution, solve_linear
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = case_workspace()
 OUTPUT = ROOT / "build/introduction/darcy_process_scalability"
 OUTPUT.mkdir(parents=True, exist_ok=True)
-SOURCE_NOTEBOOK = Path(
-    os.environ.get(
-        "PYMHM_NOTEBOOK_SOURCE", ROOT / "notebooks/introduction/darcy_process_scalability.ipynb"
-    )
-)
 # Import setup is recorded once; no numerical factors are reused.
 PARENT_IMPORT_SECONDS = time.perf_counter() - STARTED
 
@@ -1669,8 +1668,9 @@ def run_campaign() -> dict[str, Any]:
         {
             **{
                 "importable_provider": module_sha256,
-                "source_notebook": hashlib.sha256(SOURCE_NOTEBOOK.read_bytes()).hexdigest(),
-                "pixi.lock": hashlib.sha256((ROOT / "pixi.lock").read_bytes()).hexdigest(),
+                **execution_source_manifest(
+                    "introduction/darcy_process_scalability.ipynb", workspace=ROOT
+                ),
             },
             "examples/introduction/scaling_processes.py": hashlib.sha256(
                 Path(__file__).read_bytes()
@@ -1687,9 +1687,7 @@ def run_campaign() -> dict[str, Any]:
         "schema": "pymhm.introduction.darcy-process-scalability.v1",
         "workload": WORKLOAD,
         "source_manifest": manifest,
-        "git_revision": subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
-        ).strip(),
+        "git_revision": workspace_revision(ROOT),
         "versions": {
             name: version(name)
             for name in (

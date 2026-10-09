@@ -2,21 +2,20 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import hashlib
 import json
 from dataclasses import dataclass
 from itertools import product
-from pathlib import Path
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    resource_glob,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -31,7 +30,7 @@ from pymhm.fem.hdiv.family_3d import HDiv3DFamily, reference_faces
 from pymhm.meshes.hexahedron import HexMesh
 from pymhm.meshes.mixed import AffineMixedMesh, hdiv3d_dofs, hdiv3d_transform
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUT = ROOT / "docs/figures/mixed-well-geometries"
 DATA = ROOT / "examples/results/mixed-well-geometries"
 
@@ -39,15 +38,15 @@ DATA = ROOT / "examples/results/mixed-well-geometries"
 def read_records() -> list[dict]:
     """Load only records whose public physical-field archive matches its acquisition digest."""
     records = []
-    for path in sorted(DATA.glob("*-fine*-macro*.json")):
-        row = json.loads(path.read_text())
+    for path in sorted(resource_glob(DATA, "*-fine*-macro*.json")):
+        row = json.loads(read_resource_text(path))
         if row.get("archive_schema") != 2:
             raise ValueError(
                 f"field archive must include its executed reference basis: {path.name}"
             )
-        if hashlib.sha256((DATA / row["archive"]).read_bytes()).hexdigest() != row["sha256"]:
+        if hashlib.sha256(read_resource_bytes(DATA / row["archive"])).hexdigest() != row["sha256"]:
             raise ValueError(f"field archive digest mismatch: {path.name}")
-        with np.load(DATA / row["archive"]) as archive:
+        with np.load(local_resource(DATA / row["archive"])) as archive:
             basis_digest = hashlib.sha256(archive["flux_basis_coefficients"].tobytes()).hexdigest()
         if basis_digest != row["flux_basis_sha256"]:
             raise ValueError(f"reference basis digest mismatch: {path.name}")
@@ -59,7 +58,7 @@ def boundary_rates(records: list[dict]) -> list[dict]:
     """Integrate archived constant normal moments on the physical exterior faces."""
     rates = []
     for row in records:
-        with np.load(DATA / row["archive"]) as archive:
+        with np.load(local_resource(DATA / row["archive"])) as archive:
             macro = AffineMixedMesh(archive["macro_points"], archive["macro_cells"], row["kind"])
             trace = archive["trace"]
             values = {"inner": 0.0, "outer": 0.0, "caps": 0.0}
@@ -160,8 +159,11 @@ def convergence(records: list[dict]) -> None:
     hexahedral = []
     for fine in (1, 2, 4):
         directory = ROOT / "examples/results/mapped-well"
-        row = json.loads((directory / f"fine{fine}-macro{fine}-q6.json").read_text())
-        if hashlib.sha256((directory / row["archive"]).read_bytes()).hexdigest() != row["sha256"]:
+        row = json.loads(read_resource_text(directory / f"fine{fine}-macro{fine}-q6.json"))
+        if (
+            hashlib.sha256(read_resource_bytes(directory / row["archive"])).hexdigest()
+            != row["sha256"]
+        ):
             raise ValueError("hexahedral well field archive digest mismatch")
         hexahedral.append(row)
     for j, key in enumerate(("pressure_relative", "flux_relative")):
@@ -239,7 +241,7 @@ class TopFaceSamples:
 
 def top_face_samples(row: dict) -> TopFaceSamples:
     """Evaluate archived mixed coefficients with physical Piola and no field averaging."""
-    with np.load(DATA / row["archive"]) as archive:
+    with np.load(local_resource(DATA / row["archive"])) as archive:
         macro = AffineMixedMesh(archive["macro_points"], archive["macro_cells"], row["kind"])
         local_points = archive["local_points"]
         local_cells = archive["local_cells"]
@@ -424,8 +426,8 @@ def main() -> None:
         "fine-space-separation.json",
         "replay-verification.json",
     ):
-        if (DATA / name).exists():
-            (OUT / name).write_bytes((DATA / name).read_bytes())
+        if (local_resource(DATA / name)).exists():
+            (OUT / name).write_bytes(read_resource_bytes(DATA / name))
     for kind, degree in [("prism", 1), ("tetrahedron", 1), ("tetrahedron", 2)]:
         rows = [
             r
@@ -447,4 +449,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_mixed_well_geometries").main()

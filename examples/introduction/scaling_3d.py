@@ -32,6 +32,9 @@ from matplotlib import patheffects
 from scipy import sparse
 from threadpoolctl import threadpool_info, threadpool_limits
 
+from examples.introduction.provenance import (
+    execution_source_manifest,
+)
 from pymhm import LocalContext, MeshHierarchy, TraceBinding, bind_problem
 from pymhm.core.assembly import SolverConfig
 from pymhm.core.contracts import LocalAssembly, LocalProblem, LocalResponse
@@ -41,9 +44,10 @@ from pymhm.core.system import HybridSystem
 from pymhm.execution.cpu import ExecutionConfig, map_local
 from pymhm.fem.reference import tensor_lagrange_tabulation
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace
 from pymhm.meshes.hexahedron import HexMesh
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = case_workspace()
 OUTPUT = ROOT / "build/introduction/darcy_3d_workspace_scalability"
 OUTPUT.mkdir(parents=True, exist_ok=True)
 PUBLISHED = ROOT / "benchmarks/results/execution/introduction-3d-workspace-lu-20261005/results.json"
@@ -2006,7 +2010,9 @@ def run_full_gpu_mhm(
     captured = current_source_manifest(
         {
             "importable_full_gpu_worker": full_gpu_source_sha256,
-            "pixi.lock": hashlib.sha256((ROOT / "pixi.lock").read_bytes()).hexdigest(),
+            **execution_source_manifest(
+                "introduction/darcy_3d_parallel_scalability.ipynb", workspace=ROOT
+            ),
         }
     )
     with threadpool_limits(1):
@@ -2116,9 +2122,7 @@ def published_accelerator_figures(record: dict[str, Any]) -> list[tuple[Path, st
             if repository_destination.is_file():
                 destination = repository_destination
             else:
-                print(
-                    f"Historical accelerator figure unavailable in this source checkout: {filename}"
-                )
+                print(f"Historical accelerator figure unavailable in this workspace: {filename}")
                 continue
         figures.append((destination, caption))
     return figures
@@ -2172,12 +2176,9 @@ def run_study(
             "python": platform.python_version(),
             "source_manifest": current_source_manifest(
                 {
-                    "source_notebook": hashlib.sha256(
-                        (
-                            ROOT / "notebooks/introduction/darcy_3d_parallel_scalability.ipynb"
-                        ).read_bytes()
-                    ).hexdigest(),
-                    "pixi.lock": hashlib.sha256((ROOT / "pixi.lock").read_bytes()).hexdigest(),
+                    **execution_source_manifest(
+                        "introduction/darcy_3d_parallel_scalability.ipynb", workspace=ROOT
+                    ),
                 }
             ),
             "load_average": list(os.getloadavg()) if hasattr(os, "getloadavg") else None,

@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -28,6 +20,7 @@ from examples.solve_unusual_spe10_reference import CG2Field
 from examples.spe10_adaptive_norms import _clip_affine_polygon
 from pymhm.fem.scalar.operators import triangle_quadrature
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import local_resource, read_resource_bytes, source_file
 
 _FIELDS: tuple[UnusualSPE10Field, CG2Field] | None = None
 _LIMIT: Any = None
@@ -215,16 +208,20 @@ def acquire(
         "src/pymhm/meshes/triangle.py",
     ]
     fingerprint = current_source_manifest(
-        {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in sources}
+        {
+            name: hashlib.sha256(read_resource_bytes(source_file(name, root=ROOT))).hexdigest()
+            for name in sources
+        },
+        packages=("pymhm", "examples"),
     )
-    with np.load(archive) as arrays:
+    with np.load(local_resource(archive)) as arrays:
         count = len(arrays["macro_cells"])
         cell_counts = np.diff(arrays["cell_offsets"])
     result: dict[str, Any] = {
         "archive": archive.name,
-        "archive_sha256": hashlib.sha256(archive.read_bytes()).hexdigest(),
+        "archive_sha256": hashlib.sha256(read_resource_bytes(archive)).hexdigest(),
         "reference": reference.name,
-        "reference_sha256": hashlib.sha256(reference.read_bytes()).hexdigest(),
+        "reference_sha256": hashlib.sha256(read_resource_bytes(reference)).hexdigest(),
         "integration": "exact intersections of both finite-element meshes and material pixels",
         "denominator": "corresponding physical norm of the stated numerical CG2 reference",
         "energy": "integral of K|gradient difference|^2 + |pressure difference|^2",
@@ -264,7 +261,7 @@ def acquire(
         }
         result["rows"].append({"order": order, "seconds": perf_counter() - started, **row})
         result["source_changed_during_run"] = any(
-            hashlib.sha256((ROOT / name).read_bytes()).hexdigest() != digest
+            hashlib.sha256(read_resource_bytes(source_file(name, root=ROOT))).hexdigest() != digest
             for name, digest in fingerprint.items()
         )
         if result["source_changed_during_run"]:
@@ -288,4 +285,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.compare_unusual_spe10").main()

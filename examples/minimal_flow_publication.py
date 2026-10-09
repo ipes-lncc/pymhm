@@ -16,7 +16,9 @@ from typing import Any
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[1]
+from pymhm.io.workspace import case_workspace, source_file, source_label
+
+ROOT = case_workspace()
 GROUPS = {
     "flow3d": ("flow3d", ("stokes-th2", "brinkman-usfem1", "brinkman-usfem2", "oseen-p2")),
     "gals3d": ("gals3d", ("gals-p1", "gals-p2", "th-p2")),
@@ -73,12 +75,15 @@ def collect(
             if record["family"] != family or record["case"] not in cases:
                 continue
             if not record["accepted"]:
-                rejected.append({"record": path.relative_to(ROOT).as_posix(), "reason": "criteria"})
+                rejected.append({"record": source_label(path, ROOT), "reason": "criteria"})
                 continue
             for source, expected in record["source_sha256"].items():
                 if digest(path.parent / "executed-sources/files" / source) != expected:
                     raise ValueError("The original executed source snapshot is inconsistent")
-                if source.startswith("src/pymhm/") and digest(ROOT / source) != expected:
+                if (
+                    source.startswith("src/pymhm/")
+                    and digest(source_file(source, root=ROOT)) != expected
+                ):
                     raise ValueError("The current numerical core differs from the accepted study")
             resources = tuple(
                 (ROOT / "build/reports/completion").glob(
@@ -101,9 +106,9 @@ def collect(
                 )
             receipt, resource = accepted_resources[0]
             record.update(
-                numerical_record=path.relative_to(ROOT).as_posix(),
+                numerical_record=source_label(path, ROOT),
                 numerical_record_sha256=digest(path),
-                resource_record=receipt.relative_to(ROOT).as_posix(),
+                resource_record=source_label(receipt, ROOT),
                 resource_record_sha256=digest(receipt),
                 owned_elapsed_seconds=resource["elapsed_seconds"],
                 owned_peak_rss_bytes=resource["peak_owned_rss_bytes"],
@@ -210,7 +215,8 @@ def plot(record: dict[str, Any], path: Path) -> None:
     plt.close(figure)
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--group", choices=tuple(GROUPS), required=True)
     parser.add_argument("--input", type=Path, nargs="+", required=True)
@@ -223,3 +229,9 @@ if __name__ == "__main__":
         args.output,
         cases=None if args.cases is None else tuple(args.cases),
     )
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.minimal_flow_publication").main()

@@ -2,7 +2,6 @@
 
 import hashlib
 import json
-from pathlib import Path
 
 import matplotlib.pyplot as plt
 import matplotlib.tri as mtri
@@ -15,8 +14,14 @@ from examples.reconstruction3d_data import fields
 from examples.reconstruction3d_replay import evaluate, profile
 from examples.tetra_section_samples import section_grid
 from pymhm import TetraMesh
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/reconstruction3d"
 OUTPUT = ROOT / "docs/figures/reconstruction3d"
 
@@ -65,9 +70,9 @@ def convergence(suite: str, record: dict) -> None:
 def section(suite: str, row: dict, *, localized: bool | None = None) -> None:
     """Replay full broken pressure/flux polynomials on z=0.37 using the archived RT basis."""
     path = DATA / row["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != row["archive_sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["archive_sha256"]:
         raise ValueError("field archive digest differs from its numerical record")
-    with np.load(path) as archive:
+    with np.load(local_resource(path)) as archive:
         coarse = TetraMesh(archive["macro_points"], archive["macro_cells"])
         macro = section_grid(coarse, refinement=1)["segments"]
         samples, cells, actual = [], [], []
@@ -171,7 +176,7 @@ def profiles(rows: list[dict]) -> None:
     for direction, (first, last, coordinate, title) in enumerate(definitions):
         sampled = []
         for row in rows:
-            with np.load(DATA / row["archive"]) as archive:
+            with np.load(local_resource(DATA / row["archive"])) as archive:
                 sampled.append(profile(archive, first, last))
         parameter = np.linspace(0, 1, 501)
         p, q, _ = fields(first + parameter[:, None] * (last - first), True)
@@ -231,7 +236,7 @@ def profiles(rows: list[dict]) -> None:
 def main() -> None:
     """Render complete records without changing any solved coefficient or error norm."""
     for suite in ("uniform", "adaptive"):
-        record = json.loads((DATA / f"{suite}.json").read_text())
+        record = json.loads(read_resource_text(DATA / f"{suite}.json"))
         if record.get("source_changed_during_run") is not False:
             raise ValueError(f"{suite} campaign is incomplete or its sources changed")
         convergence(suite, record)
@@ -240,19 +245,26 @@ def main() -> None:
             record["rows"][-1],
             localized=suite == "adaptive",
         )
-    resolution = json.loads((DATA / "resolution.json").read_text())
+    resolution = json.loads(read_resource_text(DATA / "resolution.json"))
     if resolution.get("source_changed_during_run") is not False:
         raise ValueError("resolution campaign is incomplete or its sources changed")
     section("adaptive-rt2", resolution["rows"][-1], localized=True)
-    control = json.loads((DATA / "reconstruction-order.json").read_text())
+    control = json.loads(read_resource_text(DATA / "reconstruction-order.json"))
     if control.get("source_changed_during_run") is not False:
         raise ValueError("reconstruction-order control is incomplete or its sources changed")
     section("adaptive", control, localized=True)
     profiles([resolution["rows"][0], control])
     for name in ("uniform", "adaptive", "resolution", "reconstruction-order"):
-        (OUTPUT / f"{name}.json").write_bytes((DATA / f"{name}.json").read_bytes())
+        (OUTPUT / f"{name}.json").write_bytes(read_resource_bytes(DATA / f"{name}.json"))
+
+
+def cli() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
+    with threadpool_limits(1):
+        main()
 
 
 if __name__ == "__main__":
-    with threadpool_limits(1):
-        main()
+    from importlib import import_module
+
+    import_module("examples.plot_reconstruction3d").cli()

@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -32,9 +24,10 @@ from pymhm.execution.cpu import map_local
 from pymhm.fem.scalar.operators import p1_geometry, triangle_quadrature
 from pymhm.fem.scalar.triangle import nodal_space, reference_basis
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/transport"
 
 
@@ -118,7 +111,8 @@ def acquire(
         "src/pymhm/execution/cpu.py",
     )
     hashes = current_source_manifest(
-        {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in paths}
+        {p: hashlib.sha256(source_file(p, root=ROOT).read_bytes()).hexdigest() for p in paths},
+        packages=("pymhm", "examples"),
     )
     start = perf_counter()
     mesh = crisscross(n)
@@ -181,7 +175,10 @@ def acquire(
             )
             checkpoint_norm(archive, checkpoint, order, measurements[str(order)])
             print("errors", n, order, measurements[str(order)], flush=True)
-    assert all(hashlib.sha256((ROOT / p).read_bytes()).hexdigest() == h for p, h in hashes.items())
+    assert all(
+        hashlib.sha256(source_file(p, root=ROOT).read_bytes()).hexdigest() == h
+        for p, h in hashes.items()
+    )
     record = dict(
         epsilon=epsilon,
         macro_resolution=n,
@@ -260,4 +257,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.transport_coefficient_controls").main()

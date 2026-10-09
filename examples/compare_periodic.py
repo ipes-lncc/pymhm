@@ -2,20 +2,27 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 from pathlib import Path
 
 import numpy as np
 from threadpoolctl import threadpool_limits
+
+from pymhm.io.workspace import (
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+    source_file,
+    source_label,
+)
+
+if __package__:
+    from ._entrypoint import prepare_example_imports
+else:
+    from _entrypoint import prepare_example_imports
+
+    prepare_example_imports(__file__, __package__)
 
 if __package__:
     from .periodic_norms import difference
@@ -82,8 +89,8 @@ def _load_reference(specification: str) -> tuple[ConformingQuadrilateralSolution
     if len(parts) == 4 and parts[-1] == "lor":
         folder = ROOT / "examples/results" if REFERENCE_RECORDS is None else REFERENCE_RECORDS
         manifest = folder / f"periodic-reference-q{degree}-{n}-order{entries[2]}.json"
-        if manifest.exists():
-            record = json.loads(manifest.read_text())
+        if local_resource(manifest).exists():
+            record = json.loads(read_resource_text(manifest))
             if (
                 (record["degree"], record["n"], record["quadrature_order"])
                 != (degree, n, entries[2])
@@ -94,8 +101,8 @@ def _load_reference(specification: str) -> tuple[ConformingQuadrilateralSolution
             path = ARTIFACTS / record["archive"]
             if fingerprint(path) != record["archive_sha256"]:
                 raise ValueError("periodic reference archive digest mismatch")
-    if record is None and path.with_suffix(".json").exists():
-        record = json.loads(path.with_suffix(".json").read_text())
+    if record is None and local_resource(path.with_suffix(".json")).exists():
+        record = json.loads(read_resource_text(path.with_suffix(".json")))
         if (
             record["degree"] != degree
             or record["n"] != n
@@ -114,7 +121,7 @@ def _load_reference(specification: str) -> tuple[ConformingQuadrilateralSolution
     recorded_residual = None if record is None else record.get("relative_equation_residual")
     if record is not None and recorded_residual is None:
         recorded_residual = record.get("residual")
-    with np.load(path) as data:
+    with np.load(local_resource(path)) as data:
         pressure, residual = data["pressure"], float(data["residual"])
         if (
             pressure.shape != ((n * degree + 1) ** 2,)
@@ -143,6 +150,7 @@ def load_fields(macro: int, refinement: int, segments: int) -> tuple[tuple, Path
 
 def save(path: Path, record: dict) -> None:
     """Publish a complete JSON checkpoint by atomic replacement."""
+    path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(".json.part")
     temporary.write_text(json.dumps(record, indent=2) + "\n")
     temporary.replace(path)
@@ -167,11 +175,11 @@ def main() -> None:
     args = parser.parse_args()
     ARTIFACTS, REFERENCE_RECORDS = args.artifacts, args.reference_records
     sources = source_hashes()
-    sources[Path(__file__).relative_to(ROOT).as_posix()] = fingerprint(Path(__file__))
+    sources[source_label(Path(__file__), ROOT)] = fingerprint(Path(__file__))
     for name, digest in sources.items():
         destination = ARTIFACTS / "acquisition-sources" / f"{digest}.py"
         destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_bytes((ROOT / name).read_bytes())
+        destination.write_bytes(read_resource_bytes(source_file(name, root=ROOT)))
     reference, reference_path, reference_verified = _load_reference(args.reference)
     reference_hash = fingerprint(reference_path)
     record = json.loads(args.output.read_text()) if args.output.exists() else {"comparisons": []}
@@ -236,7 +244,9 @@ def main() -> None:
                     macro=args.macro,
                     refinement=refinement,
                     segments=segments,
-                    material_case_provenance_verified=path.with_suffix(".json").exists(),
+                    material_case_provenance_verified=local_resource(
+                        path.with_suffix(".json")
+                    ).exists(),
                 )
                 del fields
     if args.primary:
@@ -245,4 +255,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.compare_periodic").main()

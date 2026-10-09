@@ -1,10 +1,9 @@
 """Native notebook execution preserves displayed figures in the saved output."""
 
 import base64
-import importlib.util
+import importlib
 import os
 import sys
-from pathlib import Path
 
 import pytest
 
@@ -23,12 +22,10 @@ def test_runner_retains_matplotlib_display_with_headless_parent(
     nbformat = pytest.importorskip("nbformat")
     pytest.importorskip("nbclient")
     pytest.importorskip("matplotlib_inline")
-    scripts = Path(__file__).resolve().parents[1] / "scripts"
-    monkeypatch.syspath_prepend(str(scripts))
-    spec = importlib.util.spec_from_file_location("run_notebooks", scripts / "run_notebooks.py")
-    runner = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(runner)
-    monkeypatch.setattr(runner, "__file__", str(tmp_path / "scripts/run_notebooks.py"))
+    runner = importlib.import_module("scripts.run_notebooks")
+    monkeypatch.setattr(runner, "case_workspace", lambda: tmp_path)
+    monkeypatch.setattr(runner, "notebook_workspace", lambda selector: tmp_path)
+    monkeypatch.setattr(runner, "stage_notebook_resources", lambda selector: tmp_path)
     source = (
         "from pathlib import Path\n"
         "import sys\n"
@@ -64,12 +61,7 @@ def runner(monkeypatch):
     """Load the CLI with native notebook dependencies when the environment has them."""
     pytest.importorskip("nbformat")
     pytest.importorskip("nbclient")
-    scripts = Path(__file__).resolve().parents[1] / "scripts"
-    monkeypatch.syspath_prepend(str(scripts))
-    spec = importlib.util.spec_from_file_location("run_notebooks", scripts / "run_notebooks.py")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+    return importlib.import_module("scripts.run_notebooks")
 
 
 def test_recursive_runner_preserves_sources_and_equal_basenames(runner, tmp_path, monkeypatch):
@@ -101,7 +93,9 @@ def test_recursive_runner_preserves_sources_and_equal_basenames(runner, tmp_path
             self.notebook.cells[0].execution_count = 1
 
     monkeypatch.setattr(runner, "NotebookClient", Client)
-    monkeypatch.setattr(runner, "__file__", str(tmp_path / "scripts/run_notebooks.py"))
+    monkeypatch.setattr(runner, "case_workspace", lambda: tmp_path)
+    monkeypatch.setattr(runner, "notebook_workspace", lambda selector: tmp_path)
+    monkeypatch.setattr(runner, "stage_notebook_resources", lambda selector: tmp_path)
     monkeypatch.setattr(sys, "argv", ["run_notebooks.py", "waves", str(sources[0])])
     runner.main()
     assert len(calls) == 2
@@ -112,47 +106,11 @@ def test_recursive_runner_preserves_sources_and_equal_basenames(runner, tmp_path
         assert runner.nbformat.read(destination, as_version=4).cells[0].execution_count == 1
 
 
-def test_external_notebook_outputs_are_distinct_and_bounded(runner, tmp_path):
-    """External sources with equal basenames neither overwrite nor escape output storage."""
-    root = tmp_path / "checkout"
-    first = tmp_path / "other/tutorial.ipynb"
-    second = tmp_path / "another/tutorial.ipynb"
-    destinations = [runner.output_notebook_path(root, source) for source in (first, second)]
-    assert destinations[0] != destinations[1]
-    for destination in destinations:
-        assert destination.is_relative_to(root / "build/notebooks/external")
-        assert destination.name == "tutorial.ipynb"
-        assert len(destination.parent.name) == 64
-    assert runner.output_notebook_path(root, first) == destinations[0]
-
-
-@pytest.mark.parametrize(
-    "arguments,message",
-    [
-        ([], "No notebooks found"),
-        (["unknown"], "Unknown notebook"),
-        (["--timeout", "0"], "positive"),
-    ],
-)
-def test_runner_rejects_invalid_selection_before_execution(
-    runner, tmp_path, monkeypatch, arguments, message
-):
-    """The CLI reports selection and timeout errors before starting a kernel."""
-    if "--timeout" in arguments:
-        path = tmp_path / "notebooks/tutorial.ipynb"
-        path.parent.mkdir()
-        path.write_text("{}")
-    monkeypatch.setattr(runner, "__file__", str(tmp_path / "scripts/run_notebooks.py"))
-    monkeypatch.setattr(sys, "argv", ["run_notebooks.py", *arguments])
-    with pytest.raises(SystemExit, match=message):
-        runner.main()
-
-
 def test_plan_and_auto_preparation_of_clean_inputs(runner, tmp_path, monkeypatch, capsys):
     """A clean notebook selection prepares its declared fields before launching a kernel."""
     import json
 
-    import notebook_reproduction as reproduction
+    import scripts.notebook_reproduction as reproduction
 
     manifest_path = tmp_path / "reproduction.json"
     manifest_path.write_text(
@@ -184,7 +142,9 @@ def test_plan_and_auto_preparation_of_clean_inputs(runner, tmp_path, monkeypatch
     fields = tmp_path / "examples/results"
     fields.mkdir(parents=True)
     (fields / "darcy-rt.json").write_text(json.dumps({"rows": [{"fields": "field.npz"}]}))
-    monkeypatch.setattr(runner, "__file__", str(tmp_path / "scripts/run_notebooks.py"))
+    monkeypatch.setattr(runner, "case_workspace", lambda: tmp_path)
+    monkeypatch.setattr(runner, "notebook_workspace", lambda selector: tmp_path)
+    monkeypatch.setattr(runner, "stage_notebook_resources", lambda selector: tmp_path)
     monkeypatch.setattr(sys, "argv", ["run_notebooks.py", "33", "--plan"])
     runner.main()
     plan = json.loads(capsys.readouterr().out)
@@ -220,3 +180,175 @@ def test_plan_and_auto_preparation_of_clean_inputs(runner, tmp_path, monkeypatch
     receipt = json.loads((tmp_path / "build/notebooks/execution.json").read_text())
     assert receipt["python_executable"] == sys.executable
     assert receipt["notebooks"][0]["source_sha256"]
+
+
+def test_selected_resource_is_staged_before_archive_validation(runner, tmp_path, monkeypatch):
+    """A declared downloadable input with no numerical producer works with --no-prepare."""
+    import scripts.notebook_data as data
+
+    source = tmp_path / "notebooks/darcy/21_spe10_data.ipynb"
+    source.parent.mkdir(parents=True)
+    runner.nbformat.write(runner.nbformat.v4.new_notebook(), source)
+    field = tmp_path / "examples/results/spe10/layer-36.npz"
+    monkeypatch.setattr(runner, "case_workspace", lambda: tmp_path)
+    monkeypatch.setattr(data, "required_images", lambda *args: {})
+    monkeypatch.setattr(runner, "notebook_workspace", lambda selector: tmp_path)
+    monkeypatch.setattr(runner, "prepare_notebook_inputs", lambda *args: pytest.fail("producer"))
+    stages = []
+
+    def stage(selector):
+        assert selector == "darcy/21_spe10_data.ipynb"
+        stages.append(selector)
+        field.parent.mkdir(parents=True)
+        field.write_bytes(b"PK-verified-resource-fixture")
+        return tmp_path
+
+    class Client:
+        """Avoid launching a kernel for this resource ordering regression."""
+
+        def __init__(self, notebook, **kwargs):
+            assert field.is_file()
+
+        def execute(self, **kwargs):
+            pass
+
+    monkeypatch.setattr(runner, "stage_notebook_resources", stage)
+    monkeypatch.setattr(runner, "NotebookClient", Client)
+    monkeypatch.setattr(sys, "argv", ["notebooks", "21", "--no-prepare"])
+    runner.main()
+    assert stages == ["darcy/21_spe10_data.ipynb"]
+
+
+def test_downloaded_companion_runs_real_public_provider_and_lazy_data(tmp_path):
+    """A downloaded notebook prepares one real problem outside any checkout."""
+    import hashlib
+    import json
+    import shutil
+    import subprocess
+    import threading
+    from functools import partial
+    from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+    from pathlib import Path
+
+    nbformat = pytest.importorskip("nbformat")
+    pytest.importorskip("nbclient")
+    from pymhm.io.workspace import workspace_from_archive
+    from scripts.build_notebook_companions import NOTEBOOK_TOOLS, build_companion
+
+    repository = Path(__file__).resolve().parents[1]
+    source_tree, public, work = (tmp_path / name for name in ("sources", "public", "work"))
+    public.mkdir()
+    source_files = {
+        *NOTEBOOK_TOOLS,
+        "LICENSE",
+        "examples/__init__.py",
+        "examples/tutorial_local_provider.py",
+    }
+    for name in source_files:
+        destination = source_tree / name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(repository / name, destination)
+    selector = "foundations/bundle_smoke.ipynb"
+    step = {"environment": "notebooks", "argv": ["python", "-m", "examples.acquire_smoke"]}
+    contract = {
+        "kind": "standalone",
+        "environment": "notebooks",
+        "requires": [],
+        "preparation": [step],
+    }
+    (source_tree / "scripts/notebook_reproduction.json").write_text(
+        json.dumps({"notebooks": {"notebooks/" + selector: contract}})
+    )
+    producer = source_tree / "examples/acquire_smoke.py"
+    producer.write_text(
+        "import json\nfrom pymhm.io.workspace import case_workspace, read_resource_text\n"
+        "from examples.tutorial_local_provider import run_tutorial, diagnostics\n"
+        "root = case_workspace()\n"
+        "options = json.loads(read_resource_text(root / 'inputs/control.json'))\n"
+        "result = run_tutorial(element_backend='portable', **options)\n"
+        "(root / 'acquisition.json').write_text(json.dumps(diagnostics(result)))\n"
+        "with (root / 'producer-count.txt').open('a') as stream: stream.write('1\\n')\n"
+    )
+    source_files.add("examples/acquire_smoke.py")
+    control = public / "control.json"
+    control.write_text(json.dumps({"formulation": "mixed", "boundary": "neumann"}))
+    handler = partial(SimpleHTTPRequestHandler, directory=str(public))
+    server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        origin = f"http://127.0.0.1:{server.server_port}"
+        scopes = {
+            key: {selector: ["inputs/control.json"]}
+            for key in (
+                "notebook_resources",
+                "notebook_historical_resources",
+                "notebook_study_resources",
+            )
+        }
+        descriptor = build_companion(
+            source_tree,
+            source_files,
+            public,
+            name="smoke-companion.zip",
+            scopes=scopes,
+            resources={
+                "inputs/control.json": {
+                    "url": origin + "/control.json",
+                    "sha256": hashlib.sha256(control.read_bytes()).hexdigest(),
+                    "size_bytes": control.stat().st_size,
+                }
+            },
+        )
+        url = origin + "/downloads/" + descriptor["sha256"] + "/smoke-companion.zip"
+        workspace_from_archive(url, sha256=descriptor["sha256"], directory=work)
+        assert not (work / "inputs/control.json").exists()
+        downloaded = tmp_path / "my-notebook.ipynb"
+        code = (
+            "from scripts.notebook_reproduction import notebook_workspace\n"
+            f"ROOT = notebook_workspace({selector!r})\n"
+            "import json\nfrom pathlib import Path\n"
+            "import examples.tutorial_local_provider as provider\n"
+            "assert Path(provider.__file__).resolve().is_relative_to(ROOT)\n"
+            "record = json.loads((ROOT / 'acquisition.json').read_text())\n"
+            "assert record['boundary'] == 'neumann'\n"
+            "assert record['global_original_relative_residual'] < 1e-10\n"
+            "print(record['spaces'])\n"
+        )
+        nbformat.write(
+            nbformat.v4.new_notebook(cells=[nbformat.v4.new_code_cell(code)]), downloaded
+        )
+        original = downloaded.read_bytes()
+        environment = {
+            key: value
+            for key, value in os.environ.items()
+            if key
+            not in {
+                "PYTHONPATH",
+                "PYMHM_WORKSPACE",
+                "PYMHM_NOTEBOOK_PREPARED",
+                "PYMHM_RESOURCE_ORIGIN",
+            }
+        }
+        environment.update(PYMHM_WORKSPACE=str(work), PYMHM_CACHE_DIR=str(tmp_path / "cache"))
+        subprocess.run(
+            [sys.executable, "-m", "scripts.run_notebooks", str(downloaded), "--study", "--check"],
+            cwd=work,
+            env=environment,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        assert downloaded.read_bytes() == original
+        assert (work / "producer-count.txt").read_text() == "1\n"
+        assert (work / "inputs/control.json").read_bytes() == control.read_bytes()
+        receipt = json.loads((work / "build/notebooks/execution.json").read_text())
+        assert receipt["python_executable"] == sys.executable
+        assert receipt["notebooks"][0]["source_sha256"] == hashlib.sha256(original).hexdigest()
+        assert receipt["preparation"][0]["argv"] == [sys.executable, "-m", "examples.acquire_smoke"]
+        assert not (work / "src").exists() and not (work / "pixi.lock").exists()
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join()

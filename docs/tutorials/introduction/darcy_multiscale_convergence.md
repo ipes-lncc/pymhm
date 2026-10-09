@@ -6,7 +6,7 @@ The main workflow is **meshes → spaces → local equations → global balance 
 
 This notebook builds primal MHM step by step: bind the macro and local meshes, declare the spaces, write local UFL equations and the global balance, then assemble and solve. A small macro mesh controls the global problem; independent local fine meshes resolve the material oscillations. The baseline is classical conforming Galerkin assembled on several much finer global meshes.
 
-Start Jupyter from the project root with `pixi run --locked -e introduction jupyter lab`. Run the cells in order. Every coefficient, source, equation, reference, field evaluation and plotting function is defined in this notebook. Imported PyMHM functions provide generic finite-element and algebraic operations.
+Install `pymhm[notebooks,visualization]` and the compatible native DOLFINx/UFL backend, then open this notebook with `jupyter lab` in a writable directory. Run the cells in order. Physical data and equations are declared here; downloaded companion helpers provide evaluation, norms, plots and archives.
 
 The manufactured solution distinguishes the finite-reference error from the multiscale error. This is an analytical control devised for this tutorial, rather than a matched paper reproduction.
 
@@ -17,14 +17,35 @@ Field evaluation, norms, plots and executed-array archives use the importable
 The physical data and local/global variational equations remain explicit below.
 
 
+The PyMHM distribution contains only the library. The first cell explicitly
+downloads a checksum-verified companion archive and prepares the declared data
+using its local Python helpers. You can inspect these support files in `ROOT`.
+Complete studies and historical replay retain their existing opt-in flags.
 
 ```python
 from pathlib import Path
+import os
 import sys
+from pymhm.io.workspace import workspace_from_archive
 
-ROOT = next(p for p in (Path.cwd(), *Path.cwd().parents) if (p / "pixi.toml").is_file())
+# Download verified support files; this operation does not execute them.
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/85260be4d549f31c34531d0a3f5d930d9bb60084b59995ae048e16ececad7d09/darcy_multiscale_convergence-companion.zip"
+COMPANION_SHA256 = "85260be4d549f31c34531d0a3f5d930d9bb60084b59995ae048e16ececad7d09"
+WORKSPACE = Path(
+    os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
+)
+ROOT = workspace_from_archive(COMPANION_URL, sha256=COMPANION_SHA256, directory=WORKSPACE)
+os.environ["PYMHM_WORKSPACE"] = str(ROOT)
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+# Explicitly prepare declared data with the downloaded Python helpers.
+from scripts.notebook_reproduction import notebook_workspace
+
+ROOT = notebook_workspace("introduction/darcy_multiscale_convergence.ipynb", directory=ROOT)
+root = ROOT
+print("Workspace:", ROOT)
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -52,7 +73,6 @@ import ufl
 from pymhm import ExecutionConfig, CartesianMacroMesh
 from pymhm.fem.scalar.quadrilateral import qk_space, quadrilateral_operators
 from pymhm.fem.scalar.operators import boundary_data
-
 ```
 
 ## 1. Physical problem and an independently derived source
@@ -147,7 +167,6 @@ class OscillatoryDarcyData:
             - derivative_x * gradient[:, 0]
             - derivative_y * gradient[:, 1]
         )
-
 ```
 
 ## 2. Choose the three approximation scales
@@ -174,7 +193,6 @@ print(
         "spectral_contrast": float(np.exp(2 * data.amplitude)),
     }
 )
-
 ```
 
 ```text
@@ -284,7 +302,6 @@ class DarcyLocalProvider:
             moments=columns((v / area) * dx),
             metadata=(fine, mapping),
         )
-
 ```
 
 ## 4. Construct, assemble and solve the global problem
@@ -329,7 +346,6 @@ print(
 # Named fields carry their mesh and executed basis; no index map is needed to evaluate.
 first_point = macro.points[macro.cells[0]].mean(axis=0, keepdims=True)
 print("First macrocell pressure at its center:", pressure_fields[0].evaluate(first_point))
-
 ```
 
 ```text
@@ -359,7 +375,6 @@ load_defect = float(np.max(np.abs(ufl_load[mapping] - ready_load), initial=0.0))
 print({"UFL_vs_ready_operator_max": float(operator_defect), "UFL_vs_ready_source_max": load_defect})
 assert operator_defect < 1e-10 * max(1.0, float(np.max(np.abs(ready_a.data))))
 assert load_defect < 1e-10 * max(1.0, float(np.max(np.abs(ready_load))))
-
 ```
 
 ```text
@@ -413,12 +428,7 @@ for n in (32, 64, 128):
     errors = physical_errors(evaluator, exact, data.permeability, error_points, error_weights)
     reference_rows.append({"n": n, "unknowns": len(nodes), **errors})
 reference_rows
-
 ```
-
-
-
-
 
 ```text
 [{'n': 32,
@@ -467,7 +477,6 @@ print("MHM versus exact solution:", exact_errors)
 # The exact solution keeps this conclusion independent of reference uncertainty.
 assert reference_rows[-1]["flux_L2"] < reference_rows[0]["flux_L2"]
 assert reference_rows[-1]["pressure_L2"] < reference_rows[0]["pressure_L2"]
-
 ```
 
 ```text
@@ -520,10 +529,7 @@ panels = {
 }
 plot_field_panels(macro, panels, figsize=(15, 9))
 plt.show()
-
 ```
-
-
 
 [![Figure 1 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_17_0.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_17_0.png)
 
@@ -600,7 +606,6 @@ for name, rows, variable in (
     for axis in figure.axes:
         axis.set_xlabel(name)
     plt.show()
-
 ```
 
 ```text
@@ -650,11 +655,21 @@ The smooth coefficient gives a controlled analytical study. The following SPE10 
 
 ## Reproduce this tutorial
 
-[View the source notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_multiscale_convergence.ipynb) or [download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/darcy_multiscale_convergence.ipynb). Run its cells interactively, or execute the notebook from the repository root with the checked-in Pixi lockfile:
+[View the source notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/introduction/darcy_multiscale_convergence.ipynb) or [download the notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/introduction/darcy_multiscale_convergence.ipynb), then open it:
 
 ```bash
-pixi install --locked -e introduction
-pixi run --locked -e introduction notebooks-run introduction/darcy_multiscale_convergence.ipynb --timeout 7200
+python -m pip install 'pymhm[notebooks,visualization]'
+jupyter lab darcy_multiscale_convergence.ipynb
 ```
 
-The runner writes the executed copy to `build/notebooks/introduction/`. The figures and numerical outputs on this page come from that execution. Timings describe the recorded hardware and solver settings; rerun performance examples on an idle machine to measure your own environment.
+The first cell explicitly downloads a SHA256-verified companion archive. Acquisition does not execute its code. The local support files are inspectable in the printed `ROOT` directory; the following helper call prepares only the declared inputs. The library distribution contains only `pymhm`. Notebooks, support code and data are separate downloads. Native UFL forms require the compatible DOLFINx/UFL backend described in the [installation guide](../../installation.md). A clone and Pixi are unnecessary.
+
+For batch execution, extract the same companion, change to its workspace, and use its local runner with the actual downloaded notebook path:
+
+```bash
+python -m scripts.run_notebooks /path/to/darcy_multiscale_convergence.ipynb --timeout 7200
+```
+
+The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
+
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `4443e7cd833207167fe541c3efbf7c7db91d0efa8054997c7967893cb2831c4c` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

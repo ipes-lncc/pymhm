@@ -7,14 +7,6 @@ itself is valid for arbitrary archived physical fields.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -23,6 +15,7 @@ from pathlib import Path
 import numpy as np
 
 from pymhm.fem.scalar.quadrilateral import quadrilateral_quadrature
+from pymhm.io.workspace import read_resource_bytes
 
 if __package__:
     from .hpc4e_data import DATA_DIRECTORY, HPC4EData, load_data
@@ -129,22 +122,25 @@ def main() -> None:
             dict(
                 segments=segments,
                 fields=path.name,
-                sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+                sha256=hashlib.sha256(read_resource_bytes(path)).hexdigest(),
                 l2=difference(ref, other),
                 energy=complementary_energy(ref, other, data),
             )
         )
     result = dict(
         reference=args.reference.name,
-        reference_sha256=hashlib.sha256(args.reference.read_bytes()).hexdigest(),
-        source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        reference_sha256=hashlib.sha256(read_resource_bytes(args.reference)).hexdigest(),
+        source_sha256=hashlib.sha256(read_resource_bytes(Path(__file__))).hexdigest(),
         convention="Discrete RT1 complementary-energy identity; no continuum error bound",
         material="Pinned HPC4E pixels, plane strain, dimensionless domain and moduli",
         rows=rows,
     )
+    args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2), flush=True)
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.hpc4e_comparison").main()

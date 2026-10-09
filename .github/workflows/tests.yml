@@ -125,21 +125,46 @@ jobs:
       PYVISTA_OFF_SCREEN: "true"
       MPLBACKEND: "Agg"
       LIBGL_ALWAYS_SOFTWARE: "1"
+      VTK_DEFAULT_OPENGL_WINDOW: "vtkEGLRenderWindow"
     steps:
       - uses: actions/checkout@v7
+      - name: Install the headless Mesa OpenGL runtime
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends --yes \
+            libegl1 libegl-mesa0 libgl1 libgl1-mesa-dri libopengl0 libxrender1
       - uses: prefix-dev/setup-pixi@v0.10.2
         with:
           pixi-version: v0.76.2
           environments: visualization
           locked: true
           cache: true
-      - name: Require the locked graphics dependencies
-        run: >-
-          pixi run --locked -e visualization python -c
-          'import matplotlib, pyvista, vtk;
-          print("Matplotlib:", matplotlib.__version__);
-          print("PyVista:", pyvista.__version__);
-          print("VTK:", vtk.vtkVersion.GetVTKVersion())'
+      - name: Verify the locked graphics stack with an actual EGL render
+        run: |
+          pixi run --locked -e visualization python - <<'PY'
+          import ctypes
+          import matplotlib
+          import pyvista as pv
+          import vtk
+
+          ctypes.CDLL("libEGL.so.1")
+          ctypes.CDLL("libEGL_mesa.so.0")
+          print("Matplotlib:", matplotlib.__version__, flush=True)
+          print("PyVista:", pv.__version__, flush=True)
+          print("VTK:", vtk.vtkVersion.GetVTKVersion(), flush=True)
+          plotter = pv.Plotter(off_screen=True, window_size=(64, 64))
+          try:
+              backend = plotter.ren_win.GetClassName()
+              print("Render backend:", backend, flush=True)
+              assert backend == "vtkEGLRenderWindow", backend
+              plotter.add_mesh(pv.Sphere())
+              image = plotter.screenshot()
+              assert image.shape == (64, 64, 3)
+              assert int(image.max()) - int(image.min()) > 100
+              print(plotter.ren_win.ReportCapabilities(), flush=True)
+          finally:
+              plotter.close()
+          PY
       - name: Exercise notebook execution, graphic contracts and native offscreen rendering
         env:
           PYTEST_ADDOPTS: --junitxml=build/reports/tests/visualization.xml

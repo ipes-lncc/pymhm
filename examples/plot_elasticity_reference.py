@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -17,6 +9,13 @@ from pathlib import Path
 from typing import Any
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -29,7 +28,7 @@ from examples.plot_mesh import draw_macro_mesh
 from pymhm import TriangleMesh
 from pymhm.fem.scalar.triangle import reference_basis
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DEFAULT_RECORD = ROOT / "examples/results/elasticity-reference.json"
 DEFAULT_OUTPUT = ROOT / "docs/figures/elasticity-reference"
 
@@ -45,9 +44,9 @@ def save_figure(figure: plt.Figure, output: Path, name: str) -> None:
 def load_archive(record: dict[str, Any], directory: Path) -> dict[str, np.ndarray]:
     """Verify the checksum before loading an archived nodal field."""
     path = directory / record["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != record["archive_sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != record["archive_sha256"]:
         raise ValueError(f"Reference archive checksum mismatch: {path.name}")
-    with np.load(path, allow_pickle=False) as data:
+    with np.load(local_resource(path), allow_pickle=False) as data:
         return {name: data[name] for name in data.files}
 
 
@@ -197,7 +196,7 @@ def main() -> None:
     parser.add_argument("--record", type=Path, default=DEFAULT_RECORD)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     arguments = parser.parse_args()
-    report = json.loads(arguments.record.read_text())
+    report = json.loads(read_resource_text(arguments.record))
     with threadpool_limits(1):
         plot_convergence(report["rows"], arguments.output)
         plot_differences(report["rows"], arguments.output)
@@ -208,4 +207,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_elasticity_reference").main()

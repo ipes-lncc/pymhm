@@ -14,14 +14,6 @@ does not specify its finite local approximation or integration rules.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -65,7 +57,8 @@ from pymhm.core.validation import positive_int
 from pymhm.fem.quadrature.orders import nodal_quadrature_order as _assembly_quadrature_order
 from pymhm.fem.scalar.triangle import multiindices, nodal_space
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
-from pymhm.io.provenance import current_source_manifest
+from pymhm.io.provenance import current_source_manifest, optional_file_digest
+from pymhm.io.workspace import source_file, source_identity
 from pymhm.linalg.linear import LinearSolveError, SolverUnavailableError, accurate_residual
 from pymhm.meshes.triangle import TriangleMesh
 
@@ -79,10 +72,17 @@ def fingerprint(path: Path) -> str:
 def core_source_hashes() -> dict[str, str]:
     """Identify the complete portable-core generation, including trace restriction."""
     return current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): fingerprint(path)
-            for path in sorted((ROOT / "src/pymhm").rglob("*.py"))
-        }
+        source_identity(
+            ROOT,
+            (
+                path
+                for path in sorted(
+                    source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")
+                )
+                if path.name not in ("pixi.lock", "pixi.toml", "pyproject.toml") or path.is_file()
+            ),
+        ),
+        packages=("pymhm", "examples"),
     )
 
 
@@ -164,6 +164,7 @@ class _RefinementStore:
     def __init__(
         self, acquisition: UnfittedAcquisition, fields: dict, *, check_only: bool = False
     ) -> None:
+        """Bind the acquisition and ordered cell fields to a local correction directory."""
         self.acquisition, self.fields = acquisition, fields
         self.directory = acquisition.cell_directory / "original-refinement"
         self.directory.mkdir(exist_ok=True)
@@ -198,7 +199,8 @@ class _RefinementStore:
             sha256=fingerprint(path),
             values_sha256=array_digest(values),
             case_values_sha256=current_source_manifest(
-                {case: array_digest(values[:, column]) for column, case in enumerate(self.fields)}
+                {case: array_digest(values[:, column]) for column, case in enumerate(self.fields)},
+                packages=("pymhm", "examples"),
             ),
         )
 
@@ -323,18 +325,19 @@ class UnfittedAcquisition:
                 source_sha256=source_hashes(),
                 core_source_sha256=core_source_hashes(),
                 phase_source_sha256=fingerprint(Path(__file__)),
-                lockfile_sha256=fingerprint(ROOT / "pixi.lock"),
+                lockfile_sha256=optional_file_digest(ROOT / "pixi.lock"),
                 source_changed_during_run=False,
                 paper="Chaumont-Frelet, Paredes, Valentin, CAMWA 209 (2026), Section 6.1",
                 doi="10.1016/j.camwa.2026.01.016",
                 primary_error="absolute broken H1 seminorm of pressure error",
                 basis_convention=(
-                    "equidistant barycentric cardinal nodes in archived multiindex/dof order; "
-                    "archived executed retained E"
+                    "equidistant barycentric cardinal nodes in archived "
+                    "multiindex/dof order; archived executed retained E"
                 ),
                 trace_convention=(
-                    "discontinuous Legendre pieces, face parameter from the mesh's first endpoint, "
-                    "physical flux normal to first adjacent macrotriangle"
+                    "discontinuous Legendre pieces, face parameter from the mesh's "
+                    "first endpoint, physical flux normal to first adjacent "
+                    "macrotriangle"
                 ),
                 execution=dict(
                     created_utc=datetime.now(UTC).isoformat(),
@@ -345,8 +348,9 @@ class UnfittedAcquisition:
                     host=platform.node(),
                     host_exclusive=False,
                     memory_convention=(
-                        "native ru_maxrss normalized to KiB where available, null otherwise; "
-                        "cumulative process maximum includes assembly, solve, norms and writes"
+                        "native ru_maxrss normalized to KiB where available, null "
+                        "otherwise; cumulative process maximum includes assembly, solve, "
+                        "norms and writes"
                     ),
                     synchronization=(
                         "synchronous CPU operations; archives fsynced before manifest replacement"
@@ -366,7 +370,7 @@ class UnfittedAcquisition:
             self.record["source_sha256"] != source_hashes()
             or self.record["core_source_sha256"] != core_source_hashes()
             or self.record["phase_source_sha256"] != fingerprint(Path(__file__))
-            or self.record["lockfile_sha256"] != fingerprint(ROOT / "pixi.lock")
+            or self.record["lockfile_sha256"] != optional_file_digest(ROOT / "pixi.lock")
         ):
             raise ValueError("unfitted acquisition source or lockfile mismatch")
 
@@ -1137,4 +1141,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.unfitted_phases").main()

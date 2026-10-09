@@ -49,6 +49,10 @@ moments. Normal-flux data are projected in the individual face space. Material
 values in RT face moments are one-sided traces selected by the incident fine
 cell, without moving quadrature points or averaging the permeability.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
 from examples.formulations.application import tetrahedral_darcy as solve_darcy_3d

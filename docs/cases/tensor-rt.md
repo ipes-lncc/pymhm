@@ -42,6 +42,10 @@ boundary flux moment, anisotropic patches, and a zero-normal polynomial bubble
 that requires interior enrichment. Material pixels cut through fine rectangles
 are integrated over their exact intersections.
 
+The example helpers below are repository sources, supplied separately from the
+installed library. Open the corresponding notebook to acquire its verified
+companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+
 ```python
 from pymhm import CartesianMacroMesh
 from examples.formulations.application import tensor_darcy as solve_darcy_tensor_rt

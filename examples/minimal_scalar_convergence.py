@@ -27,9 +27,10 @@ from examples.formulations.application import transport as solve_transport
 from pymhm import FaceSpace, SkeletonSpace, TriangleMesh
 from pymhm.core.system import HybridSystem
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.linalg.linear import accurate_residual
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 CASES = ("mh", "mh2m", "tensor-rt", "polygons", "rad-layer", "transport-layer")
 
 
@@ -41,8 +42,10 @@ def digest(path: Path) -> str:
 
 def source_hashes() -> dict[str, str]:
     """Identify the locked core and actually imported example numerical owners."""
-    files = set((ROOT / "src/pymhm").rglob("*.py"))
-    files.update(ROOT / name for name in ("pixi.lock", "pixi.toml", "pyproject.toml"))
+    files = set(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py"))
+    files.update(
+        source_file(name, root=ROOT) for name in ("pixi.lock", "pixi.toml", "pyproject.toml")
+    )
     files.add(Path(__file__))
     for module in tuple(sys.modules.values()):
         name = getattr(module, "__file__", None)
@@ -51,7 +54,15 @@ def source_hashes() -> dict[str, str]:
             if path.is_relative_to(ROOT / "examples") and path.suffix == ".py":
                 files.add(path)
     return current_source_manifest(
-        {path.relative_to(ROOT).as_posix(): digest(path) for path in sorted(files)}
+        source_identity(
+            ROOT,
+            (
+                path
+                for path in sorted(files)
+                if path.name not in ("pixi.lock", "pixi.toml", "pyproject.toml") or path.is_file()
+            ),
+        ),
+        packages=("pymhm", "examples"),
     )
 
 
@@ -114,6 +125,7 @@ def hybrid_original(
 
 
 def _mh2m_original(result: Any) -> dict:
+    """Measure the original pressure, conormal and free pressure-trace coefficient equations."""
     local, moments = [], []
     weak = np.zeros(len(result.trace), dtype=np.longdouble)
     weak_scale = np.zeros_like(weak)
@@ -162,6 +174,7 @@ def _mh2m_original(result: Any) -> dict:
 
 
 def _acquire(case: str, variant: str, n: int) -> tuple[Any, dict, dict]:
+    """Solve one declared scalar case and integrate its physical norms at the stated rules."""
     result: Any
     mesh: Any
     if case == "mh":
@@ -352,10 +365,12 @@ def run(case: str, variant: str, levels: list[int], output: Path) -> dict:
     original_assemble = HybridSystem._assemble_contributions
 
     def assembled(system: HybridSystem, contributions: Any, boundary_load: Any) -> None:
+        """Retain the executed boundary load without changing the assembled contributions."""
         original_assemble(system, contributions, boundary_load)
         boundaries.append(None if boundary_load is None else np.asarray(boundary_load).copy())
 
     def observed(system: HybridSystem, *args: Any, **kwargs: Any) -> Any:
+        """Capture original local and global equations after the unchanged hybrid solve."""
         solution = original_solve(system, *args, **kwargs)
         captures.append(
             hybrid_original(system, solution, kwargs.get("fixed") or {}, boundaries[-1])
@@ -423,7 +438,7 @@ def run(case: str, variant: str, levels: list[int], output: Path) -> dict:
         }
     snapshot = output / "executed-sources"
     for name, expected in record["source_sha256"].items():
-        source = ROOT / name
+        source = source_file(name, root=ROOT)
         if digest(source) != expected:
             raise RuntimeError("Executed source changed before completion")
         target = snapshot / name
@@ -446,4 +461,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.minimal_scalar_convergence").main()

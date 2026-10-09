@@ -13,8 +13,9 @@ from examples.formulations.application import tetrahedral_darcy as solve_darcy_3
 from examples.reconstruction3d_data import fields
 from pymhm import TetraMesh, TriangularSkeleton, reconstruct_darcy_moments_3d
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity, source_label
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 OUTPUT = ROOT / "examples/results/reconstruction3d"
 
 
@@ -34,12 +35,13 @@ def reference_norms() -> np.ndarray:
 
 def run() -> None:
     """Hold the physical problem and geometry fixed while changing approximation spaces."""
+    OUTPUT.mkdir(parents=True, exist_ok=True)
     path = ROOT / "examples/data/reconstruction3d-macro.json"
     geometry = json.loads(path.read_text())
     macro = TetraMesh(np.asarray(geometry["macro_points"]), np.asarray(geometry["macro_cells"]))
     norms = reference_norms()
     owners = [
-        ROOT / f"src/pymhm/{name}.py"
+        source_file(f"src/pymhm/{name}.py", root=ROOT)
         for name in (
             "_legacy/models/darcy/primal_3d",
             "recovery/moments_3d",
@@ -51,13 +53,11 @@ def run() -> None:
             "core/contracts",
             "linalg/linear",
         )
-    ] + [Path(__file__), ROOT / "examples/reconstruction3d_data.py"]
-    hashes = current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
-    )
+    ] + [Path(__file__), source_file("examples/reconstruction3d_data.py", root=ROOT)]
+    hashes = current_source_manifest(source_identity(ROOT, owners), packages=("pymhm", "examples"))
     record = dict(
         reference="analytical",
-        fixed_macro_input=path.relative_to(ROOT).as_posix(),
+        fixed_macro_input=source_label(path, ROOT),
         fixed_macro_input_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
         source_sha256=hashes,
         exact_norms=norms.tolist(),
@@ -142,13 +142,20 @@ def run() -> None:
         (OUTPUT / "resolution.json").write_text(json.dumps(record, indent=2) + "\n")
         print(json.dumps(row), flush=True)
     if hashes != current_source_manifest(
-        {p.relative_to(ROOT).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in owners}
+        source_identity(ROOT, owners), packages=("pymhm", "examples")
     ):
         raise RuntimeError("campaign sources changed during acquisition")
     record["source_changed_during_run"] = False
     (OUTPUT / "resolution.json").write_text(json.dumps(record, indent=2) + "\n")
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     with threadpool_limits(1):
         run()
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.reconstruction3d_resolution").main()

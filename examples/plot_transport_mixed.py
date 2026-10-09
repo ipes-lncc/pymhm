@@ -2,21 +2,19 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
-from pathlib import Path
 from typing import Any
 
 import matplotlib
+
+from pymhm.io.workspace import (
+    case_workspace,
+    local_resource,
+    read_resource_bytes,
+    read_resource_text,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -30,7 +28,7 @@ from examples.transport_mixed_campaign import exact
 from examples.verify_transport_published import checked_endpoint, checked_rows
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 DATA = ROOT / "examples/results/transport"
 FIGURES = ROOT / "docs/figures/transport"
 
@@ -45,9 +43,9 @@ def save(figure: Any, name: str) -> None:
 def load(row: dict) -> dict[str, np.ndarray]:
     """Check the exact archived field bytes before evaluating any plot."""
     path = DATA / row["archive"]
-    if hashlib.sha256(path.read_bytes()).hexdigest() != row["sha256"]:
+    if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["sha256"]:
         raise ValueError(f"field digest mismatch: {path.name}")
-    with np.load(path) as data:
+    with np.load(local_resource(path)) as data:
         return {key: data[key] for key in data.files}
 
 
@@ -98,7 +96,7 @@ def convergence(report: dict) -> None:
 
 def published_comparison(report: dict) -> None:
     """Keep graphical Figure 12 coordinates and computed absolute errors unscaled."""
-    published = json.loads((DATA / "published-figure-12.json").read_text())
+    published = json.loads(read_resource_text(DATA / "published-figure-12.json"))
     figure, axes = plt.subplots(1, 2, figsize=(11, 5.8))
     figure.subplots_adjust(left=0.08, right=0.98, bottom=0.33, top=0.85, wspace=0.3)
     for axis, panel, key in zip(
@@ -135,8 +133,8 @@ def published_comparison(report: dict) -> None:
                 label=label,
             )
         coefficient_path = DATA / "mixed-coefficient-e1.json"
-        if coefficient_path.exists():
-            controls = json.loads(coefficient_path.read_text())["records"]
+        if local_resource(coefficient_path).exists():
+            controls = json.loads(read_resource_text(coefficient_path))["records"]
             axis.loglog(
                 [row["free_trace_dofs"] for row in controls],
                 [row["quadrature"]["12"][key] for row in controls],
@@ -226,17 +224,19 @@ def fields(report: dict) -> None:
 
 def face_resolution() -> None:
     """Keep uniform, marked and local-resolution controls distinct on published axes."""
-    published = json.loads((DATA / "published-figure-12.json").read_text())
+    published = json.loads(read_resource_text(DATA / "published-figure-12.json"))
     controls = {}
     for refinement in (16, 32, 64, 128, 256):
         path = DATA / f"mixed-face-uniform-e1-r{refinement}.json"
-        if path.exists():
+        if local_resource(path).exists():
             rows = checked_rows(path)
             if len(rows) == 5:
                 controls[refinement] = rows
     adaptive = checked_rows(DATA / "mixed-face-adaptive-e1-r16.json")
     endpoint_path = DATA / "mixed-face-endpoint-e1-r512.json"
-    endpoint = checked_endpoint(endpoint_path)["records"] if endpoint_path.exists() else []
+    endpoint = (
+        checked_endpoint(endpoint_path)["records"] if local_resource(endpoint_path).exists() else []
+    )
     figure, axes = plt.subplots(1, 2, figsize=(11, 6))
     figure.subplots_adjust(left=0.08, right=0.98, bottom=0.29, top=0.84, wspace=0.3)
     for axis, panel, key in zip(
@@ -308,15 +308,15 @@ def local_resolution() -> None:
     uniform, adaptive, bounds = [], [], []
     for refinement in (16, 32, 64, 128, 256):
         path = DATA / f"mixed-face-uniform-e1-r{refinement}.json"
-        if path.exists() and len(rows := checked_rows(path)) == 5:
+        if local_resource(path).exists() and len(rows := checked_rows(path)) == 5:
             uniform.append((refinement, rows[-1]))
-            report = json.loads(path.read_text())
+            report = json.loads(read_resource_text(path))
             if "gradient_dg0_projection_error" in report:
                 bounds.append((refinement, report["gradient_dg0_projection_error"]["12"]))
             elif refinement == 16:
                 bound_path = DATA / "mixed-gradient-bound-r16.json"
-                if bound_path.exists():
-                    bound = json.loads(bound_path.read_text())
+                if local_resource(bound_path).exists():
+                    bound = json.loads(read_resource_text(bound_path))
                     if bound["archive_sha256"] != rows[-1]["archive_sha256"]:
                         raise ValueError("gradient bound uses a different physical field archive")
                     bounds.append((refinement, bound["gradient_dg0_projection_error"]["12"]))
@@ -325,16 +325,16 @@ def local_resolution() -> None:
             adaptive.append((refinement, row))
         else:
             path = DATA / f"mixed-adaptive-fixed-e1-r{refinement}.json"
-            if path.exists():
-                row = json.loads(path.read_text())
+            if local_resource(path).exists():
+                row = json.loads(read_resource_text(path))
                 if (
-                    hashlib.sha256((DATA / row["archive"]).read_bytes()).hexdigest()
+                    hashlib.sha256(read_resource_bytes(DATA / row["archive"])).hexdigest()
                     != row["archive_sha256"]
                 ):
                     raise ValueError("fixed-skeleton archive digest differs")
                 adaptive.append((refinement, row))
     endpoint = DATA / "mixed-face-endpoint-e1-r512.json"
-    if endpoint.exists():
+    if local_resource(endpoint).exists():
         report = checked_endpoint(endpoint)
         rows = report["records"]
         uniform.append((512, rows[0]))
@@ -424,7 +424,7 @@ def main() -> None:
     )
     args = parser.parse_args()
     FIGURES.mkdir(parents=True, exist_ok=True)
-    report = json.loads((DATA / "mixed-campaign.json").read_text())
+    report = json.loads(read_resource_text(DATA / "mixed-campaign.json"))
     convergence(report)
     published_comparison(report)
     if args.comparisons_only:
@@ -433,8 +433,10 @@ def main() -> None:
     local_resolution()
     fields(report)
     profiles(report)
-    (FIGURES / "mixed-campaign.json").write_bytes((DATA / "mixed-campaign.json").read_bytes())
+    (FIGURES / "mixed-campaign.json").write_bytes(read_resource_bytes(DATA / "mixed-campaign.json"))
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.plot_transport_mixed").main()

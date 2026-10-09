@@ -7,14 +7,6 @@ not reproduce an unidentified historical mesh or establish uniform inf-sup.
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import json
 import shutil
@@ -40,14 +32,17 @@ from examples.formulations.application import weak_stress_elasticity as solve_el
 from examples.formulations.application import (
     weak_stress_elasticity as solve_elasticity_mixed_polygons,
 )
-from examples.formulations.application import weak_stress_elasticity as solve_elasticity_tensor_rt
+from examples.formulations.application import (
+    weak_stress_elasticity as solve_elasticity_tensor_rt,
+)
 from examples.solve_core_extensions import polygon_grid
 from examples.transport_checkpoints import write_progress
 from pymhm.io.provenance import current_source_manifest, file_digest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.meshes.triangle import TriangleMesh
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 CASES = ("triangle-bdm2", "rectangle-rt1", "polygon-bdm2")
 LEVELS = (1, 2, 4, 8, 16)
 
@@ -86,26 +81,34 @@ def physical_errors(arrays: Mapping[str, np.ndarray], order: int) -> dict[str, f
 def capture_sources(output: Path) -> dict[str, str]:
     """Archive exact source/lock bytes before acquiring any current field coefficients."""
     paths = [
-        *sorted((ROOT / "src/pymhm").rglob("*.py")),
+        *sorted(source_file("src/pymhm/__init__.py", root=ROOT).parent.rglob("*.py")),
         Path(__file__),
-        ROOT / "examples/core_elasticity_field_archive.py",
-        ROOT / "examples/core_extension_data.py",
-        ROOT / "examples/solve_core_extensions.py",
-        ROOT / "examples/archive_precision.py",
-        ROOT / "examples/campaign_provenance.py",
-        ROOT / "examples/local_response_cache.py",
-        ROOT / "examples/transport_checkpoints.py",
+        source_file("examples/core_elasticity_field_archive.py", root=ROOT),
+        source_file("examples/core_extension_data.py", root=ROOT),
+        source_file("examples/solve_core_extensions.py", root=ROOT),
+        source_file("examples/archive_precision.py", root=ROOT),
+        source_file("examples/campaign_provenance.py", root=ROOT),
+        source_file("examples/local_response_cache.py", root=ROOT),
+        source_file("examples/transport_checkpoints.py", root=ROOT),
         ROOT / "pixi.lock",
         ROOT / "pixi.toml",
         ROOT / "pyproject.toml",
     ]
     hashes = current_source_manifest(
-        {path.relative_to(ROOT).as_posix(): file_digest(path) for path in paths}
+        source_identity(
+            ROOT,
+            (
+                path
+                for path in paths
+                if path.name not in ("pixi.lock", "pixi.toml", "pyproject.toml") or path.is_file()
+            ),
+        ),
+        packages=("pymhm", "examples"),
     )
     for name, expected in hashes.items():
         target = output / "executed-sources/files" / name
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(ROOT / name, target)
+        shutil.copyfile(source_file(name, root=ROOT), target)
         if file_digest(target) != expected:
             raise ValueError("Captured executed source bytes differ")
     write_progress(
@@ -237,14 +240,17 @@ def run(levels: Sequence[int], names: Sequence[str], output: Path) -> dict[str, 
             report["rows"].append(row)
             report["fields"][f"{name}-n{n}"] = {"archive": row["archive"], "sha256": row["sha256"]}
             write_progress(output / "elasticity.json", report)
-    if any(file_digest(ROOT / name) != expected for name, expected in sources.items()):
+    if any(
+        file_digest(source_file(name, root=ROOT)) != expected for name, expected in sources.items()
+    ):
         raise ValueError("An executed source changed during acquisition")
     report["complete"], report["source_changed"] = True, False
     write_progress(output / "elasticity.json", report)
     return report
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Parse the declared CLI controls and run the original case with its thread limits."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--levels", type=int, nargs="+", default=list(LEVELS))
     parser.add_argument("--names", nargs="+", choices=CASES, default=list(CASES))
@@ -254,3 +260,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
     with threadpool_limits(1):
         run(args.levels, args.names, args.output)
+
+
+if __name__ == "__main__":
+    from importlib import import_module
+
+    import_module("examples.verify_core_elasticity").main()

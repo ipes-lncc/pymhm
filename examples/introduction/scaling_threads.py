@@ -13,7 +13,6 @@ import math
 import os
 import platform
 import random
-import subprocess
 import sys
 import time
 from collections.abc import Callable
@@ -31,6 +30,11 @@ from numpy.polynomial.legendre import leggauss
 from scipy import sparse
 from threadpoolctl import threadpool_info, threadpool_limits
 
+from examples.introduction.provenance import (
+    execution_source_manifest,
+    notebook_provenance,
+    workspace_revision,
+)
 from examples.introduction.scaling_forms import (
     DEFAULT_DATA,
     EPSILON,
@@ -63,10 +67,11 @@ from pymhm.fem.scalar.quadrilateral import (
 )
 from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace
 from pymhm.linalg.linear import solve_linear
 from pymhm.meshes.cartesian import CartesianMacroMesh
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = case_workspace()
 OUTPUT = ROOT / "build/introduction/darcy_parallel_scalability"
 OUTPUT.mkdir(parents=True, exist_ok=True)
 
@@ -694,12 +699,7 @@ def run_campaign() -> dict[str, Any]:
     )
     REPETITIONS = 3
     RANDOM_SEED = 20261004
-    try:
-        revision = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
-        ).strip()
-    except (OSError, subprocess.CalledProcessError):
-        revision = None
+    revision = workspace_revision(ROOT)
     provenance = {
         "utc_start": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "platform": platform.platform(),
@@ -712,7 +712,9 @@ def run_campaign() -> dict[str, Any]:
         "git_revision": revision,
         "package_source_sha256": current_source_manifest(
             {
-                **{},
+                **execution_source_manifest(
+                    "introduction/darcy_parallel_scalability.ipynb", workspace=ROOT
+                ),
                 "examples/introduction/scaling_threads.py": hashlib.sha256(
                     Path(__file__).read_bytes()
                 ).hexdigest(),
@@ -724,10 +726,12 @@ def run_campaign() -> dict[str, Any]:
                 ).hexdigest(),
             }
         ),
-        "lockfile_sha256": hashlib.sha256((ROOT / "pixi.lock").read_bytes()).hexdigest(),
-        "notebook_sha256": hashlib.sha256(
-            (ROOT / "notebooks" / "introduction" / "darcy_parallel_scalability.ipynb").read_bytes()
-        ).hexdigest(),
+        "lockfile_sha256": notebook_provenance(
+            "introduction/darcy_parallel_scalability.ipynb", workspace=ROOT
+        )["pixi_lock_sha256"],
+        "notebook_sha256": notebook_provenance(
+            "introduction/darcy_parallel_scalability.ipynb", workspace=ROOT
+        )["notebook_sha256"],
         "cpu": cpu_metadata,
         "workers": WORKERS,
         "native_threads": 1,
@@ -1878,9 +1882,9 @@ def run_campaign() -> dict[str, Any]:
 
     crossover_record = {
         "schema": "pymhm.introduction.darcy-parallel-crossover-1000.v1",
-        "notebook_sha256": hashlib.sha256(
-            (ROOT / "notebooks/introduction/darcy_parallel_scalability.ipynb").read_bytes()
-        ).hexdigest(),
+        "notebook_sha256": notebook_provenance(
+            "introduction/darcy_parallel_scalability.ipynb", workspace=ROOT
+        )["notebook_sha256"],
         "git_revision": provenance["git_revision"],
         "package_source_sha256": provenance["package_source_sha256"],
         "lockfile_sha256": provenance["lockfile_sha256"],
@@ -2191,9 +2195,9 @@ def run_campaign() -> dict[str, Any]:
     )
     extended_record = {
         "schema": "pymhm.introduction.darcy-parallel-scalability-500.v1",
-        "notebook_sha256": hashlib.sha256(
-            (ROOT / "notebooks/introduction/darcy_parallel_scalability.ipynb").read_bytes()
-        ).hexdigest(),
+        "notebook_sha256": notebook_provenance(
+            "introduction/darcy_parallel_scalability.ipynb", workspace=ROOT
+        )["notebook_sha256"],
         "lockfile_sha256": provenance["lockfile_sha256"],
         "versions": provenance["versions"],
         "package_source_sha256": provenance["package_source_sha256"],

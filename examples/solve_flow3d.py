@@ -2,14 +2,6 @@
 
 from __future__ import annotations
 
-# Preserve direct-file execution alongside the canonical ``python -m examples`` entry point.
-if not __package__:
-    import sys
-    from pathlib import Path
-
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-
 import argparse
 import hashlib
 import json
@@ -25,10 +17,11 @@ from examples.flow3d_data import Flow3DData
 from examples.formulations.application import flow as solve_flow_3d
 from pymhm.fem.traces.triangle_3d import TriangularSkeleton
 from pymhm.io.provenance import current_source_manifest
+from pymhm.io.workspace import case_workspace, source_file, source_identity
 from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.postprocessing.solutions import Flow3DSolution
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = case_workspace()
 CASES = (
     ("stokes-th2", "stokes", "taylor-hood", 2, 2),
     ("brinkman-usfem1", "brinkman", "usfem", 1, 4),
@@ -50,9 +43,9 @@ def norms(solution: Flow3DSolution, data: Flow3DData, order: int) -> dict[str, f
 
 def snapshot() -> dict[str, str]:
     """Hash the exact shared runtime and original analytic acquisition sources."""
-    files = [Path(__file__), ROOT / "examples/flow3d_data.py"]
+    files = [Path(__file__), source_file("examples/flow3d_data.py", root=ROOT)]
     files.extend(
-        ROOT / f"src/pymhm/{name}"
+        source_file(f"src/pymhm/{name}", root=ROOT)
         for name in (
             "_legacy/models/flow/solver_3d.py",
             "_legacy/models/flow/forms_3d.py",
@@ -66,12 +59,7 @@ def snapshot() -> dict[str, str]:
             "execution/cpu.py",
         )
     )
-    return current_source_manifest(
-        {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in files
-        }
-    )
+    return current_source_manifest(source_identity(ROOT, files), packages=("pymhm", "examples"))
 
 
 def main() -> None:
@@ -182,4 +170,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from importlib import import_module
+
+    import_module("examples.solve_flow3d").main()

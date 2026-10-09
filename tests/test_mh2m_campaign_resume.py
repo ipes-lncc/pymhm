@@ -28,6 +28,9 @@ def campaign(tmp_path, monkeypatch):
     directory.mkdir(parents=True)
     monkeypatch.setattr(module, "ROOT", tmp_path)
     monkeypatch.setattr(module, "DATA", data)
+    # Model downloaded case companions with their own editable source bytes.
+    package = importlib.import_module("examples")
+    monkeypatch.setattr(package, "__file__", str(tmp_path / "examples/__init__.py"))
     for name in module.SOURCES:
         path = tmp_path / name
         path.parent.mkdir(parents=True, exist_ok=True)
