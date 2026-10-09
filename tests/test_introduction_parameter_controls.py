@@ -1,6 +1,7 @@
 """Visible introduction controls reach meshes, operators and profile acquisition."""
 
 import ast
+import builtins
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -15,7 +16,11 @@ ROOT = Path(__file__).resolve().parents[1]
 def formulation(
     name: str, controls: dict[str, Any], *, definitions: tuple[str, ...] = ()
 ) -> dict[str, Any]:
-    """Load declared forms or selected portable definitions without executing campaigns."""
+    """Load numerical definitions and their imports without campaigns or display cells.
+
+    Explicitly selected portable definitions use the supplied namespace. Native
+    formulations also import names referenced by their function and class bodies.
+    """
     notebook = json.loads((ROOT / f"notebooks/introduction/{name}.ipynb").read_text())
     nodes = [
         node
@@ -30,18 +35,48 @@ def formulation(
         "dataclass": dataclass,
         **controls,
     }
+    selected = [
+        node
+        for node in nodes
+        if isinstance(node, ast.FunctionDef | ast.ClassDef)
+        and (not definitions or node.name in definitions)
+    ]
+    referenced = {
+        child.id
+        for node in selected
+        for child in ast.walk(node)
+        if isinstance(child, ast.Name) and isinstance(child.ctx, ast.Load)
+    }
     for node in nodes:
-        if not definitions and isinstance(node, ast.Import | ast.ImportFrom):
-            exec(compile(ast.Module([node], type_ignores=[]), name, "exec"), namespace)
-    for node in nodes:
-        if isinstance(node, ast.FunctionDef | ast.ClassDef) and (
-            not definitions or node.name in definitions
+        if (
+            not definitions
+            and isinstance(node, ast.Import | ast.ImportFrom)
+            and any(
+                (alias.asname or alias.name.split(".")[0]) in referenced for alias in node.names
+            )
         ):
             exec(compile(ast.Module([node], type_ignores=[]), name, "exec"), namespace)
+    for node in selected:
+        exec(compile(ast.Module([node], type_ignores=[]), name, "exec"), namespace)
     return namespace
 
 
+@pytest.fixture
+def numerical_imports_only(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Reject display dependencies even when the complete test profile provides them."""
+    original_import = builtins.__import__
+
+    def import_numerical(name: str, *args: Any, **kwargs: Any) -> Any:
+        """Keep native assembly independent of notebook rendering dependencies."""
+        if name.split(".")[0] in {"matplotlib", "IPython"}:
+            raise AssertionError(f"Numerical formulation imports a display dependency: {name}")
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", import_numerical)
+
+
 @pytest.mark.fem
+@pytest.mark.usefixtures("numerical_imports_only")
 def test_rad_nondefault_diffusion_refinement_and_assembly_quadrature(tmp_path: Path) -> None:
     """The visible controls change actual P1 operators and the independent local mesh."""
     pytest.importorskip("dolfinx")
@@ -86,6 +121,7 @@ def test_rad_nondefault_diffusion_refinement_and_assembly_quadrature(tmp_path: P
 
 
 @pytest.mark.fem
+@pytest.mark.usefixtures("numerical_imports_only")
 def test_brinkman_nondefault_subdivision_viscosity_drag_and_quadrature(tmp_path: Path) -> None:
     """The main Taylor-Hood mesh and physical gauge follow the displayed controls."""
     pytest.importorskip("dolfinx")
