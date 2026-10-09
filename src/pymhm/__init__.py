@@ -9,7 +9,7 @@ from typing import Any
 
 from pymhm._registry import PUBLIC_EXPORTS, PUBLIC_NAMES
 
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 __all__ = PUBLIC_NAMES
 
 
