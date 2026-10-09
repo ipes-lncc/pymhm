@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.3.0
+
+<!-- pymhm:generated:start -->
+<!-- Source: v1.2.0..ddf0f92199cc6eb1656d572455efdc600770ec6d -->
+
+### Documentation
+
+- reorganize documentation and validate tutorial convergence (#13) ([ddf0f92](https://github.com/ipes-lncc/pymhm/commit/ddf0f92199cc6eb1656d572455efdc600770ec6d))
+
+
+### Features
+
+- Implement C0 piecewise macroface traces and native UFL pairing (#10) ([dfba1f8](https://github.com/ipes-lncc/pymhm/commit/dfba1f87c577338236270e3f9b593785ca72f125))
+
+- **Breaking:** improve API abstractions and refactoring for code reuse (#11) ([31181dc](https://github.com/ipes-lncc/pymhm/commit/31181dc6dbf6973b4ca1456d3b14d33169140d9a))
+
+
+### Fixes
+
+- standalone examples and tooling (#12) ([491635a](https://github.com/ipes-lncc/pymhm/commit/491635ac2453b12959fe32141db64d4de4539722))
+
+<!-- pymhm:generated:end -->
+
 ## 1.2.0
 
 <!-- pymhm:generated:start -->
