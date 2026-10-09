@@ -13,6 +13,7 @@ REQUIRED_MODULES = (
     "hypothesis",
     "numpy",
     "scipy",
+    "numba",
     "threadpoolctl",
     "basix",
     "ufl",

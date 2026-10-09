@@ -138,6 +138,8 @@ notebook-results/
 !/docs/figures/mshho/fields.png
 !/docs/figures/nested/convergence.png
 !/docs/figures/nested/fields.png
+!/docs/figures/performance-numba/complete-workflow.png
+!/docs/figures/performance-numba/kernel-speedups.png
 !/docs/figures/quarter-five-spot/classical-vs-mhm-components.png
 !/docs/figures/quarter-five-spot/obstacle-macro-cut.png
 !/docs/figures/quarter-five-spot/point-flux-elevation.png

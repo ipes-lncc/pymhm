@@ -1,0 +1,12 @@
+{
+  "plot_helper_sha256": "ca9e22235334b37de225bb50a847f9efed0665561ce398bc35699a3c8e737f12",
+  "report_sha256": "acc3decec50d32704497c67dff1c79eae5a5b65e280cb5a40768664c3b1e4f2b",
+  "figures": {
+    "docs/figures/performance-numba/complete-workflow.png": "a0259afa5e5a556a0e1ec9cc858f48cec01f4dd0a2a7ae920c795f08772ef676",
+    "docs/figures/performance-numba/complete-workflow.svg": "b3ab27342b945c9a8f57c95d32429914e9ba5947264398ef28cf61de6235a5f1",
+    "docs/figures/performance-numba/complete-workflow.pdf": "40908a2a0f6939d0a1f52e61448ad2497e2af62d191a4341bd53deda598f25b9",
+    "docs/figures/performance-numba/kernel-speedups.png": "b071bd04eee89b87abe19958a6a2a027ae32d87ff59b3fb1f9847e2b1956be2d",
+    "docs/figures/performance-numba/kernel-speedups.svg": "105e5bb73faa599654c258689223b92f88aeab17c030581194783e633a99bfbd",
+    "docs/figures/performance-numba/kernel-speedups.pdf": "75eb45550e7548ad8f3bb0d105403f2a02941b647b633a5099ca715105fcf132"
+  }
+}

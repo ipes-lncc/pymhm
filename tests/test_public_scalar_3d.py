@@ -181,12 +181,10 @@ def test_arbitrarily_small_transport_does_not_change_retained_count(
 ) -> None:
     """Physical constant retention is independent of extended-precision availability."""
     if precision_capability == "binary64":
-        from pymhm.fem.scalar import operators
         from pymhm.linalg import linear
 
         monkeypatch.setattr(np, "longdouble", np.float64)
         monkeypatch.setattr(np, "clongdouble", np.complex128)
-        monkeypatch.setattr(operators, "_EXTENDED_PRECISION", False)
         monkeypatch.setattr(linear, "_EXTENDED_PRECISION", False)
 
     wider = np.finfo(np.longdouble).eps < np.finfo(np.float64).eps

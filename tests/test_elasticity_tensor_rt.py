@@ -44,12 +44,9 @@ def test_rectangular_family_affine_patch(degree: int, enrichment: int) -> None:
 @pytest.mark.parametrize("lam", [1.0, 1e8, np.inf])
 @pytest.mark.parametrize("degree,enrichment", [(1, 1), (2, 0)])
 def test_quadratic_patch_and_incompressible_pressure_gauge(
-    lam: float, degree: int, enrichment: int, monkeypatch
+    lam: float, degree: int, enrichment: int
 ) -> None:
     """Portable boundary moments preserve affine stress for finite and infinite lambda."""
-    from pymhm.fem.scalar import operators
-
-    monkeypatch.setattr(operators, "_EXTENDED_PRECISION", False)
 
     def displacement(points: np.ndarray) -> np.ndarray:
         """Return an exactly solenoidal quadratic field."""

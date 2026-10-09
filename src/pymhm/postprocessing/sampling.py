@@ -8,6 +8,7 @@ from scipy.spatial import cKDTree
 
 from pymhm.core.validation import FloatArray, IntArray, positive_int, real_array
 from pymhm.meshes.triangle import TriangleMesh
+from pymhm.postprocessing._sampling_kernels import candidate_barycentric, containment_filter
 
 
 def _orientation_filter(
@@ -106,37 +107,14 @@ class TrianglePointLocator:
 
     def _barycentric(self, points: FloatArray, candidates: IntArray) -> FloatArray:
         """Apply only the supplied cell maps, retaining the query and candidate axes."""
-        local = np.einsum(
-            "qkba,qka->qkb", self.inverse[candidates], points[:, None] - self.origins[candidates]
-        )
-        return np.concatenate(((1 - local.sum(axis=2))[..., None], local), axis=2)
+        return candidate_barycentric(points, candidates, self.origins, self.inverse)
 
     def _contains(self, points: FloatArray, candidates: IntArray) -> np.ndarray:
         """Test closed triangles with filtered physical determinants and exact fallback."""
-        vertices = self._vertices[candidates]
-        numerator, error = _orientation_filter(
-            vertices[..., [1, 2, 0], :],
-            vertices[..., [2, 0, 1], :],
-            points[:, None, None, :],
+        inside, pending_mask = containment_filter(
+            points, candidates, self._vertices, self._area, self._area_error, self.tolerance
         )
-        area, area_error = self._area[candidates], self._area_error[candidates]
-        orientation = np.where(area < 0, -1, 1)
-        with np.errstate(over="ignore", under="ignore", invalid="ignore"):
-            threshold = self.tolerance * abs(area)
-            score = orientation[..., None] * numerator + threshold[..., None]
-            bound = error + self.tolerance * area_error[..., None]
-            bound += 8 * np.finfo(float).eps * (abs(numerator) + abs(threshold[..., None]))
-            threshold_underflow = (
-                (self.tolerance != 0) & (area != 0) & (abs(threshold) < np.finfo(float).tiny)
-            )
-            uncertain_area = (abs(area) <= area_error) | ~np.isfinite(area)
-            uncertain = np.any((abs(score) <= bound) | ~np.isfinite(bound + score), axis=2)
-            uncertain |= uncertain_area | threshold_underflow
-            outside = np.any(score < -bound, axis=2) & ~uncertain_area
-        inside = np.all(score >= 0, axis=2)
-        vertex = np.any(np.all(vertices == points[:, None, None, :], axis=3), axis=2)
-        inside[vertex] = True
-        pending = np.argwhere(uncertain & ~outside & ~vertex)
+        pending = np.argwhere(pending_mask)
         exact_cells: dict[int, tuple[tuple[_ExactPoint, ...], Fraction]] = {}
         tolerance = Fraction.from_float(self.tolerance)
         for query, slot in pending:

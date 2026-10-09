@@ -6,6 +6,7 @@ from typing import Any
 import numpy as np
 from scipy import sparse
 
+from pymhm.core._assembly import accumulate_load, contribution_coordinates
 from pymhm.core.contracts import LocalResponse, _array, _preserved_array
 from pymhm.core.validation import FloatArray, IntArray
 
@@ -118,9 +119,9 @@ def assemble_hybrid_contributions(
     size = int(kernel_offsets[-1])
     rhs = np.zeros(size)
     load_scale = np.zeros(size)
-    rows: list[int] = []
-    columns: list[int] = []
-    entries: list[float] = []
+    rows: list[IntArray] = []
+    columns: list[IntArray] = []
+    entries: list[FloatArray] = []
     all_indices = []
     count = 0
     for cell, (indices, block, local_rhs) in enumerate(contributions):
@@ -141,6 +142,9 @@ def assemble_hybrid_contributions(
             np.arange(kernel_offsets[cell], kernel_offsets[cell + 1]),
         ):
             raise ValueError("contribution coarse indices must match its ordered cell partition")
+        # Native kernels consume native-endian indices; persisted arrays can
+        # carry another byte order or an unsigned integer representation.
+        indices = np.asarray(indices, dtype=np.int64)
         checked_block = _array(block, (len(indices), len(indices)), "contribution matrix")
         checked_rhs = _array(local_rhs, (len(indices),), "contribution rhs")
         # Real floating inputs may contain explicitly retained correction digits.
@@ -150,19 +154,34 @@ def assemble_hybrid_contributions(
         local_rhs = local_rhs if local_rhs.dtype.kind == "f" else checked_rhs
         dtype = np.result_type(rhs.dtype, local_rhs.dtype)
         rhs, load_scale = rhs.astype(dtype, copy=False), load_scale.astype(dtype, copy=False)
-        all_indices.append(indices)
-        rows.extend(np.repeat(indices, len(indices)))
-        columns.extend(np.tile(indices, len(indices)))
-        entries.extend(block.ravel())
-        np.add.at(rhs, indices, local_rhs)
-        np.add.at(load_scale, indices, np.abs(local_rhs))
+        all_indices.append(indices.copy())
+        row, column = contribution_coordinates(indices)
+        rows.append(row)
+        columns.append(column)
+        # Providers may reuse a scratch block after yielding their contribution.
+        entries.append(block.ravel().copy())
+        if rhs.dtype == np.dtype(float):
+            accumulate_load(indices, checked_rhs, rhs, load_scale)
+        else:
+            # Explicit wider inputs preserve their data contract outside JIT.
+            np.add.at(rhs, indices, local_rhs)
+            np.add.at(load_scale, indices, np.abs(local_rhs))
     if count != len(kernel_offsets) - 1:
         raise ValueError("one contribution per coarse cell partition is required")
     if require_local_trace_coverage and not np.array_equal(
         np.unique(np.concatenate(all_indices)), np.arange(size)
     ):
         raise ValueError("contributions must cover the contiguous global numbering")
-    matrix = sparse.coo_matrix((entries, (rows, columns)), shape=(size, size)).tocsc()
+    matrix = sparse.coo_matrix(
+        (
+            np.concatenate(entries) if entries else np.empty(0),
+            (
+                np.concatenate(rows) if rows else np.empty(0, dtype=np.int64),
+                np.concatenate(columns) if columns else np.empty(0, dtype=np.int64),
+            ),
+        ),
+        shape=(size, size),
+    ).tocsc()
     matrix.eliminate_zeros()
     if boundary_load is not None:
         boundary = _array(boundary_load, (trace_size,), "boundary_load")

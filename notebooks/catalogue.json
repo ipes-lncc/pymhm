@@ -1043,6 +1043,26 @@
       }
     },
     {
+      "path": "notebooks/darcy/numba_kernel_performance.ipynb",
+      "family": "darcy",
+      "title": "Compiled kernels: cold and warm Darcy timings",
+      "methods": [
+        "user-written primal local and global equations",
+        "2D triangle and 3D tetrahedron P2 spaces",
+        "compiled scalar integration and ordered reduction",
+        "separate first-call and warm timings",
+        "physical fields and original-equation controls"
+      ],
+      "kind": "standalone",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "python -m scripts.run_notebooks notebooks/darcy/numba_kernel_performance.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
       "path": "notebooks/darcy/pgmhm_workflow.ipynb",
       "family": "darcy",
       "title": "Residual Petrov–Galerkin MHM: jump form and enrichment",

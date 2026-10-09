@@ -1,0 +1,21 @@
+{
+  "schema": "pymhm-numba-micro-equivalence-v1",
+  "rows": [
+    {
+      "dimension": 2,
+      "matrix_exact": true,
+      "rhs_exact": true,
+      "load_scale_exact": true,
+      "gram_linf_difference": 1.1102230246251565e-16,
+      "gram_relative_l2_difference": 7.314293206352293e-17
+    },
+    {
+      "dimension": 3,
+      "matrix_exact": true,
+      "rhs_exact": true,
+      "load_scale_exact": true,
+      "gram_linf_difference": 2.220446049250313e-16,
+      "gram_relative_l2_difference": 6.040699943441554e-17
+    }
+  ]
+}

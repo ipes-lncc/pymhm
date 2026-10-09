@@ -10,6 +10,11 @@ from numpy.typing import NDArray
 from scipy import sparse
 
 from pymhm.core.validation import FloatArray, positive_int
+from pymhm.fem.scalar._integration import (
+    boundary_moments,
+    diffusion_blocks,
+    ordinary_product_range,
+)
 from pymhm.fem.traces.interval import SkeletonSpace
 from pymhm.materials.evaluation import (
     scalar_values as scalar_values,
@@ -22,28 +27,36 @@ from pymhm.materials.evaluation import (
 )
 from pymhm.meshes.triangle import TriangleMesh
 
-_EXTENDED_PRECISION = np.finfo(np.longdouble).eps < np.finfo(float).eps
-
 
 def _boundary_moments(
     basis: FloatArray, weights: FloatArray, values: FloatArray
 ) -> NDArray[np.floating[Any]]:
-    """Integrate each real boundary moment with portable accurate accumulation.
+    """Integrate real boundary moments with compiled binary64 compensation.
 
-    A wider native real type retains product and summation digits where
-    available. Elsewhere, compensated summation avoids BLAS-dependent
-    reduction roundoff in opposite oriented constant moments. The represented
-    quadrature, basis and field values are unchanged; no moment is set to zero.
+    The declared basis, quadrature and field values retain their ordering and
+    magnitudes. Exceptional exponents use a wider native real type where
+    available and retain that result until the physical face measure is
+    applied. Platforms without that type retain compensated real moments.
+    No moment is clipped or replaced by a nullspace projection.
     """
-    if _EXTENDED_PRECISION:
-        return basis.astype(np.longdouble).T @ (
-            weights[:, None].astype(np.longdouble) * values.astype(np.longdouble)
+    if not all(ordinary_product_range(array) for array in (basis, weights, values)):
+        if np.finfo(np.longdouble).eps < np.finfo(float).eps:
+            return basis.astype(np.longdouble).T @ (
+                weights[:, None].astype(np.longdouble) * values.astype(np.longdouble)
+            )
+        result = np.array(
+            [
+                [fsum(basis[:, i] * weights * values[:, j]) for j in range(values.shape[1])]
+                for i in range(basis.shape[1])
+            ]
         )
-    return np.array(
-        [
-            [fsum(basis[:, i] * weights * values[:, j]) for j in range(values.shape[1])]
-            for i in range(basis.shape[1])
-        ]
+        if not np.isfinite(result).all():
+            raise ValueError("boundary moment products exceed the native real range")
+        return result
+    return boundary_moments(
+        np.asarray(basis, dtype=float),
+        np.asarray(weights, dtype=float),
+        np.asarray(values, dtype=float),
     )
 
 
@@ -74,55 +87,68 @@ def _scalar_diffusion_blocks(
 
     Trailing axes are q, (q,basis,dimension), (q,dimension,dimension),
     respectively; leading cell axes broadcast. Measures have only cell axes.
-    A wider native real type accumulates the quadrature and tensor contractions
-    before the final binary64 rounding where available. Otherwise a Neumaier
-    sum accumulates quadrature blocks with a compensation array of the same
-    size as the result. No kernel projection or operator-entry truncation is
-    applied; the same represented gradients, tensors and weights are used.
+    A compiled binary64 kernel compensates Cartesian contractions and the
+    quadrature sum. Leading cell axes and singleton quadrature axes broadcast
+    before entering that leaf. No kernel projection or operator-entry
+    truncation is applied; the represented inputs remain unchanged. Exceptional
+    exponents retain native NumPy accumulation within the platform's available
+    real range; representable intermediate products remain a platform-dependent
+    capability.
     """
-    if not _EXTENDED_PRECISION:
-        count = np.broadcast_shapes(
-            weights.shape[-1:], gradients.shape[-3:-2], tensors.shape[-3:-2]
-        )[0]
-        axes = np.broadcast_shapes(
-            weights.shape[:-1], gradients.shape[:-3], tensors.shape[:-3], np.shape(measures)
+    count = np.broadcast_shapes(weights.shape[-1:], gradients.shape[-3:-2], tensors.shape[-3:-2])[0]
+    axes = np.broadcast_shapes(
+        weights.shape[:-1], gradients.shape[:-3], tensors.shape[:-3], np.shape(measures)
+    )
+    cells = int(np.prod(axes, dtype=np.int64))
+    width, dimension = gradients.shape[-2:]
+    w = np.broadcast_to(np.asarray(weights, dtype=float), (*axes, count)).reshape(cells, count)
+    g = np.broadcast_to(
+        np.asarray(gradients, dtype=float), (*axes, count, width, dimension)
+    ).reshape(cells, count, width, dimension)
+    k = np.broadcast_to(
+        np.asarray(tensors, dtype=float), (*axes, count, dimension, dimension)
+    ).reshape(cells, count, dimension, dimension)
+    m = np.broadcast_to(np.asarray(measures, dtype=float), axes).reshape(cells)
+    if not all(ordinary_product_range(array) for array in (w, g, k, m)):
+        return _exceptional_diffusion_blocks(w, g, k, m).reshape(*axes, width, width)
+    return diffusion_blocks(w, g, k, m).reshape(*axes, width, width)
+
+
+def _exceptional_diffusion_blocks(
+    weights: FloatArray, gradients: FloatArray, tensors: FloatArray, measures: FloatArray
+) -> FloatArray:
+    """Retain extreme-exponent products through native real quadrature integration.
+
+    NumPy supplies the tensor contraction in its native extended real type.
+    On platforms where that type is binary64 the same product convention and
+    compensated quadrature sum retain the portable accumulation contract.
+    Only the final operator entries narrow to binary64. A finite final entry
+    may involve much larger intermediate products on very small cells.
+    """
+    w, g, k, m = (
+        np.asarray(array, dtype=np.longdouble) for array in (weights, gradients, tensors, measures)
+    )
+    total = np.zeros((g.shape[0], g.shape[2], g.shape[2]), dtype=np.longdouble)
+    correction = np.zeros_like(total)
+    for q in range(g.shape[1]):
+        block = np.einsum(
+            "...,...ia,...ab,...jb,...->...ij",
+            w[:, q],
+            g[:, q],
+            k[:, q],
+            g[:, q],
+            m,
+            optimize=False,
         )
-        w = np.broadcast_to(weights, (*axes, count))
-        g = np.broadcast_to(gradients, (*axes, count, *gradients.shape[-2:]))
-        k = np.broadcast_to(tensors, (*axes, count, *tensors.shape[-2:]))
-        total = np.zeros((*axes, gradients.shape[-2], gradients.shape[-2]))
-        correction = np.zeros_like(total)
-        for q in range(count):
-            block = np.einsum(
-                "...,...ia,...ab,...jb,...->...ij",
-                w[..., q],
-                g[..., q, :, :],
-                k[..., q, :, :],
-                g[..., q, :, :],
-                measures,
-                optimize=False,
-            )
-            combined = total + block
-            correction += np.where(
-                abs(total) >= abs(block),
-                (total - combined) + block,
-                (block - combined) + total,
-            )
-            total = combined
-        return total + correction
-    operands = tuple(
-        np.asarray(value, dtype=np.longdouble) for value in (weights, gradients, tensors, measures)
-    )
-    return np.asarray(
-        np.einsum(
-            "...q,...qia,...qab,...qjb,...->...ij",
-            *operands[:3],
-            operands[1],
-            operands[3],
-            optimize=True,
-        ),
-        dtype=np.float64,
-    )
+        combined = total + block
+        correction += np.where(
+            abs(total) >= abs(block), (total - combined) + block, (block - combined) + total
+        )
+        total = combined
+    result = np.asarray(total + correction, dtype=float)
+    if not np.isfinite(result).all():
+        raise ValueError("diffusion products exceed the native real range")
+    return result
 
 
 def p1_operators(
@@ -276,7 +302,7 @@ def boundary_data(
                 values[:, component] = scalar_values(field, points)
                 prescribed[component] = True
         # Keep the same quadrature in the trace equations and volume constraint.
-        # Accumulate before narrowing so opposite oriented faces do not acquire
+        # Compensate the reduction so opposite oriented faces do not acquire
         # different rounding errors in their constant displacement moments.
         moments = _boundary_moments(basis, weights, values)
         dofs = skeleton.dofs(int(face)).reshape(-1, skeleton.components)

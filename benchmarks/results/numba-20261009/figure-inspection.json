@@ -1,0 +1,19 @@
+{
+  "viewing_width_pixels": 850,
+  "format_checks": [
+    "axes and tick labels legible",
+    "titles and legends contained",
+    "independent plot regions",
+    "no clipping or overlap"
+  ],
+  "figures": {
+    "docs/figures/performance-numba/complete-workflow.png": {
+      "sha256": "a0259afa5e5a556a0e1ec9cc858f48cec01f4dd0a2a7ae920c795f08772ef676",
+      "passed": true
+    },
+    "docs/figures/performance-numba/kernel-speedups.png": {
+      "sha256": "b071bd04eee89b87abe19958a6a2a027ae32d87ff59b3fb1f9847e2b1956be2d",
+      "passed": true
+    }
+  }
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "label": "compiled-2d",
+    "outer_subprocess_seconds": 21.52925894036889,
+    "interpreter_launch_and_exit_seconds": 0.36913157254457474,
+    "acquisition_import_seconds": 1.0643789004534483,
+    "cache_absent_before_launch": true
+  },
+  {
+    "label": "original-3d",
+    "outer_subprocess_seconds": 60.77567211166024,
+    "interpreter_launch_and_exit_seconds": 0.15729009918868542,
+    "acquisition_import_seconds": 0.598628792911768,
+    "cache_absent_before_launch": true
+  },
+  {
+    "label": "compiled-3d",
+    "outer_subprocess_seconds": 55.126492807641625,
+    "interpreter_launch_and_exit_seconds": 0.34307798743247986,
+    "acquisition_import_seconds": 1.0479915868490934,
+    "cache_absent_before_launch": true
+  },
+  {
+    "label": "original-2d",
+    "outer_subprocess_seconds": 23.28801381215453,
+    "interpreter_launch_and_exit_seconds": 0.18250113911926746,
+    "acquisition_import_seconds": 0.8034342750906944,
+    "cache_absent_before_launch": true
+  }
+]

@@ -168,8 +168,8 @@ def tetra_operators(
     Basix tabulates equispaced Pk in the declared nodal order. Integration and
     affine geometry retain their conventions. ``element_backend='portable'``
     is a compatibility spelling for this same Basix execution.
-    Diffusion products accumulate in NumPy's widest real dtype before returning
-    binary64 blocks; mass, source and the physical operator keep their formulas.
+    Compiled binary64 diffusion integration compensates both Cartesian
+    contractions and quadrature sums; mass and source retain their formulas.
     """
     bary, weights = tetrahedron_quadrature(max(order, degree + 2))
     dofs, points, values, gradients = tetra_tabulate(mesh, degree, bary, backend=element_backend)

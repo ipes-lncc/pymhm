@@ -176,11 +176,8 @@ def test_nonmatching_fine_traces_and_nonpolynomial_boundary_moments():
 
 
 @pytest.mark.parametrize("pure", [False, True])
-def test_variable_coefficient_mixed_and_pure_neumann_physical_gauge(pure, monkeypatch):
+def test_variable_coefficient_mixed_and_pure_neumann_physical_gauge(pure):
     """Compensated binary64 assembly conserves mixed and pure-Neumann physical flux."""
-    from pymhm.fem.scalar import operators
-
-    monkeypatch.setattr(operators, "_EXTENDED_PRECISION", False)
     mesh = TriangleMesh.unit_square(2)
     skeleton = SkeletonSpace(mesh, tuple(FaceSpace.uniform(1) for _ in mesh.faces))
     boundary = {}
