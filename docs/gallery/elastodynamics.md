@@ -15,7 +15,7 @@ time interval is stated in the record. The three-layer series uses a conforming
 temporal reference, so it does not qualify an MHM spatial rate on its own.
 
 For static stresses and displacement, use the [elasticity gallery](elasticity.md).
-Related wave examples appear in [acoustics](acoustics.md) and
+**Related** wave examples appear in [acoustics](acoustics.md) and
 [Maxwell](maxwell.md), with their distinct physical fields.
 
 ## References
