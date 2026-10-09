@@ -14,7 +14,7 @@ with the [mixed elasticity implementation](https://github.com/ipes-lncc/pymhm/bl
 
 The example helpers below are repository sources, supplied separately from the
 installed library. Open the corresponding notebook to acquire its verified
-companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+companion, as described in the [notebook guide](../tutorials/notebooks.md#execute-downloaded-notebooks).
 
 ```python
 from pymhm import TriangleMesh

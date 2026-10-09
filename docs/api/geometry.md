@@ -53,3 +53,13 @@ Geometric partitions, skeletal topology and conforming refinement.
 ::: pymhm.meshes.mixed
     options:
       show_source: false
+
+## Source modules
+
+::: pymhm.meshes.roundoff
+    options:
+      show_source: false
+
+::: pymhm.meshes.validation
+    options:
+      show_source: false

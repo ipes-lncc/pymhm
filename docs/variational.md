@@ -291,7 +291,7 @@ predefined formulation. `examples/formulations/adaptive.py` shows this
 composition with an editable mathematical definition factory.
 
 The notebooks under the corresponding physical-problem directories are the
-executable entry points. The [notebook catalogue](tutorials.md) gives locked
+executable entry points. The [notebook catalogue](tutorials/notebooks.md) gives locked
 environments and reproduction commands. An analytical control qualifies its
 stated data and spaces; literature reproductions and historical external
 comparisons retain their own data and provenance requirements.

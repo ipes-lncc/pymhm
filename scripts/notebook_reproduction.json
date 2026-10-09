@@ -6542,6 +6542,118 @@
       "environment": "notebooks",
       "requires": [],
       "preparation": []
+    },
+    "notebooks/convergence/method_rates.ipynb": {
+      "kind": "standalone",
+      "environment": "notebooks",
+      "requires": [],
+      "preparation": []
+    },
+    "notebooks/darcy/heterogeneous_execution.ipynb": {
+      "kind": "standalone",
+      "environment": "introduction-gpu",
+      "requires": [
+        "dolfinx",
+        "ufl",
+        "mpi4py",
+        "cupy",
+        "nvmath"
+      ],
+      "preparation": []
+    },
+    "notebooks/darcy/mixed_mhm_workflow.ipynb": {
+      "kind": "standalone",
+      "environment": "notebooks",
+      "requires": [],
+      "preparation": []
+    },
+    "notebooks/darcy/pgmhm_workflow.ipynb": {
+      "kind": "standalone",
+      "environment": "introduction",
+      "requires": [
+        "dolfinx",
+        "ufl"
+      ],
+      "preparation": []
+    },
+    "notebooks/darcy/reconstruction_and_indicators.ipynb": {
+      "kind": "standalone",
+      "environment": "introduction",
+      "requires": [
+        "dolfinx",
+        "ufl"
+      ],
+      "preparation": []
+    },
+    "notebooks/darcy/robin_mh_workflow.ipynb": {
+      "kind": "standalone",
+      "environment": "introduction",
+      "requires": [
+        "dolfinx",
+        "ufl"
+      ],
+      "preparation": []
+    },
+    "notebooks/darcy/unfitted_trace_workflow.ipynb": {
+      "kind": "standalone",
+      "environment": "introduction",
+      "requires": [
+        "dolfinx",
+        "ufl"
+      ],
+      "preparation": []
+    },
+    "notebooks/flow/oseen_variational.ipynb": {
+      "kind": "standalone",
+      "environment": "introduction",
+      "requires": [
+        "dolfinx",
+        "ufl"
+      ],
+      "preparation": []
+    },
+    "notebooks/foundations/geometry/marked_materials.ipynb": {
+      "kind": "standalone",
+      "environment": "test",
+      "requires": [
+        "gmsh",
+        "meshio",
+        "matplotlib"
+      ],
+      "preparation": []
+    },
+    "notebooks/transport/transient_variational.ipynb": {
+      "kind": "standalone",
+      "environment": "introduction",
+      "requires": [
+        "dolfinx",
+        "ufl"
+      ],
+      "preparation": []
+    },
+    "notebooks/waves/elastodynamics/formulation_workflow.ipynb": {
+      "kind": "standalone",
+      "environment": "notebooks",
+      "requires": [],
+      "preparation": []
+    },
+    "notebooks/elasticity/gals_mhm_workflow.ipynb": {
+      "kind": "standalone",
+      "environment": "introduction",
+      "requires": [
+        "dolfinx",
+        "ufl"
+      ],
+      "preparation": []
+    },
+    "notebooks/elasticity/mixed_stress_mhm_workflow.ipynb": {
+      "kind": "standalone",
+      "environment": "introduction",
+      "requires": [
+        "dolfinx",
+        "ufl"
+      ],
+      "preparation": []
     }
   }
 }

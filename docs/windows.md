@@ -13,7 +13,7 @@ An environment resolved in the lockfile or a Linux test run does not establish
 that a particular revision passed native Windows execution; inspect that
 revision's [Tests workflow](https://github.com/ipes-lncc/pymhm/actions/workflows/tests.yml).
 Validated release tags automatically publish the portable package and its
-documentation; [development](development.md) describes the required release settings.
+documentation; [development](development/contributing.md) describes the required release settings.
 
 ## Installation
 
@@ -71,7 +71,7 @@ pixi run --locked -e test-core coverage-run
 
 Coverage qualification combines Linux core and native FEM measurements from
 the same revision and checks both 99% thresholds. The
-[coverage procedure](development.md#coverage) describes those commands.
+[coverage procedure](development/contributing.md#coverage) describes those commands.
 
 For Intel MKL PARDISO:
 
@@ -86,7 +86,7 @@ The coefficient-based notebooks in `notebooks/foundations/operators` introduce
 the generic API. Cells calling the DOLFINx adapter require the native FEM stack
 and a working JIT compiler. Notebook sections that explicitly select PETSc or
 distributed PETSc reference solves require that separate runtime.
-See the [notebook catalogue](tutorials.md) for the physical examples and methods.
+See the [notebook catalogue](tutorials/notebooks.md) for the physical examples and methods.
 
 Pip commands resolve their own environment. Use Pixi's locked profiles
 for the repository's reproducible development and scientific checks.

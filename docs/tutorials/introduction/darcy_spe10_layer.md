@@ -22,6 +22,8 @@ downloads a checksum-verified companion archive and prepares the declared data
 using its local Python helpers. You can inspect these support files in `ROOT`.
 Complete studies and historical replay retain their existing opt-in flags.
 
+
+
 ```python
 from pathlib import Path
 import os
@@ -29,8 +31,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/a07f5463f8f591eb32bb44cfc2824537bbbebb10ba3bf9d339c8c2ce538c2e88/darcy_spe10_layer-companion.zip"
-COMPANION_SHA256 = "a07f5463f8f591eb32bb44cfc2824537bbbebb10ba3bf9d339c8c2ce538c2e88"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/31145430a7cc8963d475260f4290dad148d4eef92907871261d3949fee13ad4e/darcy_spe10_layer-companion.zip"
+COMPANION_SHA256 = "31145430a7cc8963d475260f4290dad148d4eef92907871261d3949fee13ad4e"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -76,6 +78,11 @@ from pymhm.fem.scalar.quadrilateral import qk_space, quadrilateral_operators
 from pymhm.fem.scalar.operators import boundary_data
 from pymhm.materials.cartesian import CartesianCellField
 from matplotlib.collections import LineCollection
+
+```
+
+```text
+Workspace: ./build/docs-restructure/exact-source-workspaces-parallel/introduction/darcy_spe10_layer
 ```
 
 ## 1. Read the unchanged data and verify provenance
@@ -106,6 +113,7 @@ local_degree, local_refinement, trace_segments = 1, 80, 16
 skeleton = SkeletonSpace(
     macro, tuple(FaceSpace.uniform(1, trace_segments, continuous=True) for _ in macro.faces)
 )
+
 ```
 
 ```text
@@ -239,6 +247,7 @@ class DarcyLocalProvider:
             moments=columns((v / area) * dx),
             metadata=(fine, mapping),
         )
+
 ```
 
 ## 4. Declare global terms and solve MHM
@@ -288,6 +297,7 @@ print(
 # Named fields carry their mesh and executed basis; no index map is needed to evaluate.
 first_point = macro.points[macro.cells[0]].mean(axis=0, keepdims=True)
 print("First macrocell pressure at its center:", pressure_fields[0].evaluate(first_point))
+
 ```
 
 ```text
@@ -313,6 +323,7 @@ load_defect = float(np.max(np.abs(ufl_load[mapping] - ready_load), initial=0.0))
 print({"UFL_vs_ready_operator_max": float(operator_defect), "UFL_vs_ready_source_max": load_defect})
 assert operator_defect < 1e-10 * max(1.0, float(np.max(np.abs(ready_a.data))))
 assert load_defect < 1e-10 * max(1.0, float(np.max(np.abs(ready_load))))
+
 ```
 
 ```text
@@ -352,6 +363,7 @@ for nx, ny in ((60, 220), (120, 440), (240, 880)):
     reference_coefficients.append(coefficients)
     reference_rows.append({"shape": (nx, ny), "unknowns": len(nodes)})
 reference_rows
+
 ```
 
 ```text
@@ -393,6 +405,7 @@ print("MHM versus finest conforming reference:", comparison)
 # Refinement evidence is a field measurement, not only a linear residual.
 assert reference_refinement[-1]["pressure_L2"] < reference_refinement[0]["pressure_L2"]
 assert reference_refinement[-1]["flux_L2"] < reference_refinement[0]["flux_L2"]
+
 ```
 
 ```text
@@ -423,7 +436,10 @@ print(
         for field in ("pressure_L2", "flux_L2", "flux_energy")
     },
 )
+
 ```
+
+
 
 [![Figure 1 — Darcy on an original SPE10 layer: a small macro mesh and complete material data](../../assets/tutorials/darcy_spe10_layer/figure_16_0.png)](../../assets/tutorials/darcy_spe10_layer/figure_16_0.png)
 
@@ -454,7 +470,10 @@ axis.add_collection(LineCollection(macro.points[macro.faces], colors="0.15", lin
 axis.set(title="SPE10 layer 36: log10 Kxx [mD]", xlabel="x [ft]", ylabel="y [ft]")
 fig.colorbar(artist, ax=axis, shrink=0.9)
 plt.show()
+
 ```
+
+
 
 [![Figure 2 — Darcy on an original SPE10 layer: a small macro mesh and complete material data](../../assets/tutorials/darcy_spe10_layer/figure_18_0.png)](../../assets/tutorials/darcy_spe10_layer/figure_18_0.png)
 
@@ -482,7 +501,10 @@ panels = {
 }
 plot_field_panels(macro, panels, figsize=(15, 12))
 plt.show()
+
 ```
+
+
 
 [![Figure 3 — Darcy on an original SPE10 layer: a small macro mesh and complete material data](../../assets/tutorials/darcy_spe10_layer/figure_19_0.png)](../../assets/tutorials/darcy_spe10_layer/figure_19_0.png)
 
@@ -526,6 +548,7 @@ for ax, title in zip(axes, ("Pressure at x=199 ft", "Darcy flux y at x=199 ft"))
     ax.set_title(title)
     ax.legend()
 plt.show()
+
 ```
 
 ```text
@@ -572,4 +595,4 @@ python -m scripts.run_notebooks /path/to/darcy_spe10_layer.ipynb --timeout 7200
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `b8e06aa3911acb5aa4dfddc4660e406c685b8f6f3955ba30efdeea4eac6bac62` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `371245c5b54390b3ff884edfd4d7917c16c1538198b3317b0086647a5e91271d` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

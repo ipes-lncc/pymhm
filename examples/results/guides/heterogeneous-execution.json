@@ -1,0 +1,110 @@
+{
+  "case": "shared heterogeneous Darcy native execution guide",
+  "exact_pressure": "sin(pi*x)*sin(pi*y)",
+  "coefficient_convention": "see canonical PeriodicDarcyData.permeability; UFL forms shared with introduction",
+  "macro_divisions": [
+    2,
+    2
+  ],
+  "local_edge_subdivisions": 8,
+  "local_degree": 1,
+  "trace_degree": 1,
+  "face_segments": 1,
+  "trace_continuous": true,
+  "retained_modes": "constant kernel with physical integral",
+  "profiles": {
+    "cpu_mpi": "introduction",
+    "gpu_mpi": "introduction-gpu"
+  },
+  "execution_checks": {
+    "mpi-1-cpu": {
+      "pressure_L2": 0.0069963836620927,
+      "flux_L2": 0.19166396378928435,
+      "flux_energy": 0.17341986666450404,
+      "original_equations_relative": 4.842781562357767e-17,
+      "complete_seconds": 1.9635801445692778
+    },
+    "mpi-2-cpu": {
+      "pressure_L2": 0.006996383662092702,
+      "flux_L2": 0.19166396378928433,
+      "flux_energy": 0.17341986666450404,
+      "original_equations_relative": 1.6498580795262463e-16,
+      "complete_seconds": 1.0197737868875265
+    },
+    "mpi-2-cuda": {
+      "pressure_L2": 0.006996383662092728,
+      "flux_L2": 0.19166396378928452,
+      "flux_energy": 0.1734198666645042,
+      "original_equations_relative": 1.9167665709646087e-16,
+      "complete_seconds": 1.6922157518565655
+    },
+    "cpu-gpu": {
+      "serial": {
+        "pressure_L2": 0.0069963836620927,
+        "flux_L2": 0.19166396378928427,
+        "flux_energy": 0.17341986666450404,
+        "original_equations_relative": 1.4219306955290669e-16,
+        "complete_seconds": 10.348730565980077
+      },
+      "thread": {
+        "pressure_L2": 0.0069963836620927,
+        "flux_L2": 0.19166396378928427,
+        "flux_energy": 0.17341986666450404,
+        "original_equations_relative": 1.4219306955290669e-16,
+        "complete_seconds": 2.954306185245514
+      },
+      "process": {
+        "pressure_L2": 0.0069963836620927,
+        "flux_L2": 0.19166396378928427,
+        "flux_energy": 0.17341986666450404,
+        "original_equations_relative": 1.4219306955290669e-16,
+        "complete_seconds": 3.194235285744071
+      },
+      "cudss": {
+        "pressure_L2": 0.006996383662092714,
+        "flux_L2": 0.19166396378928446,
+        "flux_energy": 0.17341986666450424,
+        "original_equations_relative": 1.5886063213636275e-16,
+        "complete_seconds": 3.173234973102808
+      }
+    }
+  },
+  "classical_reference": {
+    "family": "conforming Q1 global Galerkin",
+    "rows": [
+      {
+        "n": 32,
+        "pressure_L2": 0.00047071528047370185,
+        "flux_L2": 0.07839676215399165
+      },
+      {
+        "n": 64,
+        "pressure_L2": 0.00011829377401570709,
+        "flux_L2": 0.03968462461529458
+      },
+      {
+        "n": 128,
+        "pressure_L2": 2.9615928644066887e-05,
+        "flux_L2": 0.019905606897008026
+      }
+    ]
+  },
+  "source_sha256": {
+    "examples/guides/heterogeneous_execution.py": "fa76e2c07c2ddc2501f34d3069fe5ee669ac4dcce31308a6d24abbebc0ef3504",
+    "examples/introduction/scaling_forms.py": "e0ea6da28bca1c54c3389ec61c6ed58442869679b12d0351d8e89d993fc2961f",
+    "notebooks/darcy/heterogeneous_execution.ipynb": "eaf3dda65519a0ed8d00f5b4fc574cd3b32efe298568d77cf3d94a9eefa0d4f0",
+    "notebooks/foundations/geometry/marked_materials.ipynb": "277fc9fab934175670636f52794de3fd52ffbd0b4343c7595a5abe54933a26cb"
+  },
+  "figures": {
+    "docs/figures/guides/heterogeneous-fields.png": "201462537d48141865f69fc67e400fce3eb4d487fdefca826537ba23368f55bb",
+    "docs/figures/guides/classical-fields.png": "986d35f946bd6c98994a16df3c341e66cfa5f23107b1d5b4c18cc67557d04666",
+    "docs/figures/guides/marked-materials.png": "978cf83c3990b1baaa658fcc584cb48131bd40005d349f96679b4aa4b2f6c495"
+  },
+  "operator_source": "    def permeability(self, points: np.ndarray) -> np.ndarray:\n        \"\"\"Return scalar isotropic permeability at points with final axis (x,y).\"\"\"\n        x, y = points[..., 0], points[..., 1]\n        frequency = 2 * np.pi / self.period\n        return np.exp(np.sin(frequency * x) * np.sin(frequency * y))\n",
+  "timing_scope": "Execution checks establish equivalent fields, not speedups. Single-run complete_seconds includes setup and errors; initial compilation/cache state differs between controls, so these times are not a fair performance comparison.",
+  "scientific_cells_sha256": {
+    "notebooks/darcy/heterogeneous_execution.ipynb": "95db6aecfb13dd9bc62c9f783e25e9f3a272ea463f4cb4b31345f18f98623d6b",
+    "notebooks/foundations/geometry/marked_materials.ipynb": "08eb5ddf2dde1519b67994641d2af23c43da95e1e2843ba3663639fd57dd9acc"
+  },
+  "scientific_cells_hash_scope": "UTF-8 JSON sequence of {cell_type, source}; sort_keys=True, ensure_ascii=False, separators=(comma,colon); excludes only cells tagged pymhm-companion-bootstrap, which install companion resources."
+}

@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="936" viewBox="0 0 1440 936" role="img" aria-labelledby="title description">
+  <title id="title">A software architecture inspired by the formulation</title>
+  <metadata>© IPES Research Group. Creative Commons Attribution 4.0 International (CC BY 4.0). https://creativecommons.org/licenses/by/4.0/ Source: https://ipes-lncc.github.io/pymhm/architecture/</metadata>
+  <desc id="description">A mesh hierarchy, approximation spaces and user-written equations bind into a multiscale problem. Local providers produce independent cell equations. Shared condensation produces local responses, and ordered assembly creates the global system. The global solve supplies interface and retained coefficients; reconstruction produces physical fields. Execution, solvers, reusable factors and recursive local problems support this common workflow.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto-start-reverse"><path d="M1 1L9 5L1 9" fill="none" stroke="#3776ab" stroke-width="1.8"/></marker>
+    <style>
+      text { font-family: Inter, Arial, sans-serif; fill: #17364e; }
+      .title { font-size: 30px; font-weight: 700; }
+      .label { font-size: 25px; font-weight: 650; }
+      .body { font-size: 22px; }
+      .small { font-size: 20px; fill: #465c6b; }
+      .code { font-family: Consolas, monospace; font-size: 22px; }
+      .tag { font-size: 17px; font-weight: 700; letter-spacing: 1.5px; }
+      .card { fill: #fff; stroke: #cedce7; stroke-width: 1.5; }
+      .flow { fill: none; stroke: #3776ab; stroke-width: 2.6; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1440" height="936" rx="18" fill="#f5f8fb"/>
+  <text x="48" y="52" class="title">A software architecture inspired by the formulation</text>
+  <text x="48" y="87" class="small">Definitions remain explicit. Shared operations own orientation, elimination and reconstruction.</text>
+
+  <rect x="48" y="122" width="416" height="140" rx="12" class="card"/>
+  <rect x="512" y="122" width="416" height="140" rx="12" class="card"/>
+  <rect x="976" y="122" width="416" height="140" rx="12" class="card"/>
+  <text x="72" y="154" class="tag" fill="#086f70">GEOMETRY</text>
+  <text x="72" y="190" class="label">Mesh hierarchy</text>
+  <text x="72" y="224" class="body">Macro cells · local meshes · levels</text>
+  <text x="536" y="154" class="tag" fill="#086f70">APPROXIMATION</text>
+  <text x="536" y="190" class="label">Local and interface spaces</text>
+  <text x="536" y="224" class="body">Degrees · components · field bases</text>
+  <text x="1000" y="154" class="tag" fill="#086f70">VARIATIONAL FORMULATION</text>
+  <text x="1000" y="190" class="label">Local and global equations</text>
+  <text x="1000" y="224" class="body">UFL forms or coefficient operators</text>
+
+  <path d="M256 262V294" class="flow"/>
+  <path d="M720 262V294" class="flow"/>
+  <path d="M1184 262V294" class="flow"/>
+  <rect x="48" y="300" width="1344" height="94" rx="12" fill="#17364e"/>
+  <text x="72" y="338" class="label" style="fill:white">Bind the problem</text>
+  <text x="72" y="371" class="code" style="fill:#e0edf6">bind_problem · LocalContext · GlobalContext</text>
+  <text x="1334" y="339" text-anchor="end" class="small" style="fill:#e0edf6">Numbering and oriented trace maps</text>
+  <text x="1334" y="371" text-anchor="end" class="small" style="fill:#e0edf6">Built-in bindings or explicit custom contracts</text>
+
+  <path d="M256 394V440" class="flow"/>
+  <rect x="48" y="448" width="416" height="174" rx="12" class="card"/>
+  <rect x="512" y="448" width="416" height="174" rx="12" class="card"/>
+  <rect x="976" y="448" width="416" height="174" rx="12" class="card"/>
+  <text x="72" y="480" class="tag">LOCAL PROVIDER</text>
+  <text x="72" y="518" class="label">Independent cell equations</text>
+  <text x="72" y="553" class="code">LocalEquations</text>
+  <text x="72" y="584" class="small">Native FEM or external providers</text>
+  <text x="72" y="609" class="small">A local problem may be nested MHM</text>
+  <text x="536" y="480" class="tag">SHARED ELIMINATION</text>
+  <text x="536" y="518" class="label">Condense local equations</text>
+  <text x="536" y="553" class="code">LocalResponse</text>
+  <text x="536" y="584" class="small">Kernel and physical constraints</text>
+  <text x="536" y="609" class="small">Source and interface responses</text>
+  <text x="1000" y="480" class="tag">GLOBAL ASSEMBLY</text>
+  <text x="1000" y="518" class="label">Assemble global equations</text>
+  <text x="1000" y="553" class="code">assemble(problem)</text>
+  <text x="1000" y="584" class="small">Shared faces and global forms</text>
+  <text x="1000" y="609" class="small">Physical gauges</text>
+  <path d="M464 532H504" class="flow"/>
+  <path d="M928 532H968" class="flow"/>
+  <path d="M1184 622V670" class="flow"/>
+
+  <rect x="48" y="678" width="416" height="142" rx="12" fill="#eaf6f3" stroke="#a4cdc4" stroke-width="1.5"/>
+  <rect x="512" y="678" width="416" height="142" rx="12" class="card"/>
+  <rect x="976" y="678" width="416" height="142" rx="12" class="card"/>
+  <text x="72" y="713" class="tag" fill="#086f70">PHYSICAL RESULTS</text>
+  <text x="72" y="749" class="label">Fields and error measures</text>
+  <text x="72" y="782" class="small">Flux recovery and indicators</text>
+  <text x="72" y="808" class="small">Plots and adaptive refinement</text>
+  <text x="536" y="713" class="tag">RECONSTRUCTION</text>
+  <text x="536" y="749" class="label">Recover local coefficients</text>
+  <text x="536" y="782" class="small">Executed bases and retained modes</text>
+  <text x="536" y="808" class="small">Independent one-sided values</text>
+  <text x="1000" y="713" class="tag">GLOBAL SOLVE</text>
+  <text x="1000" y="749" class="label">Solve the global system</text>
+  <text x="1000" y="782" class="code">solve(system)</text>
+  <text x="1000" y="808" class="small">Interface and retained unknowns</text>
+  <path d="M976 746H936" class="flow"/>
+  <path d="M512 746H472" class="flow"/>
+  <path d="M720 622V670" stroke="#21918c" stroke-width="2" stroke-dasharray="6 5" fill="none"/>
+  <text x="744" y="654" class="small">Reuse executed local responses</text>
+
+  <rect x="48" y="854" width="1344" height="72" rx="10" fill="#e7edf4"/>
+  <text x="72" y="882" class="small">Execution: serial · threads · spawn · MPI · CPU / GPU on supported paths</text>
+  <text x="72" y="911" class="small">Reuse: offline factors · recursive multiscale levels</text>
+</svg>

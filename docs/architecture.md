@@ -1,5 +1,32 @@
 # Architecture
 
+## General abstractions
+
+![PyMHM architecture: variational definitions, shared multiscale operations and physical fields](assets/architecture.svg)
+
+The user's workflow defines meshes and spaces, writes local and global
+equations, assembles, solves and evaluates physical fields. `bind_problem`
+connects those definitions to the shared multiscale operations. Built-in
+interface bindings provide numbering and orientation; custom spaces may supply
+their own declared maps. Physical boundary variables and the mathematical
+operator remain part of the user's equations.
+
+A local provider supplies equations and ordinary field metadata. It can use
+UFL/DOLFINx, PyMHM's finite-element operations, an external solver or another
+multiscale problem. Condensation, ordered global reduction and reconstruction
+have shared owners. Execution and solver settings select supported backends
+without changing that mathematical interface; individual backends retain their
+documented space, matrix and platform restrictions.
+
+The reconstruction uses the executed local responses and basis descriptors.
+Flux recovery and indicators consume the reconstructed fields; they can drive
+another refinement cycle. Offline factors reuse unchanged operators, and nested
+local problems repeat the same workflow at another scale.
+
+Follow the [feature overview](tutorials/overview.md) for a first calculation,
+the [method tutorials](tutorials/index.md) for formulations and
+the [source-generated API](api.md) for exact contracts.
+
 ## Package responsibilities
 
 The runtime is organized by numerical responsibility. Variational records,
@@ -249,7 +276,7 @@ responses when reaction or Brinkman drag approaches zero. The operator is not
 perturbed: the complementary solves include `A @ Z`, reconstruction uses
 `E=Z-R @ A @ Z`, and the global system retains the equations tested against `Z`.
 Here `R` denotes the constrained local solve. `kernel` and `coarse_basis` are
-mutually exclusive. See the [elimination equations](theory.md#retaining-nearly-null-local-modes)
+mutually exclusive. See the [elimination equations](theory/foundations.md#retaining-nearly-null-local-modes)
 for the nonsymmetric blocks and reconstruction of integral constraints.
 
 A constrained factorization solves all source and trace right-hand sides together.

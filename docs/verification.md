@@ -295,7 +295,7 @@ from pressure-profile agreement.
 Small positive reaction or Brinkman drag produces nearly null local modes.
 Direct inversion can amplify their contributions and cause cancellation between
 source and trace lifts during reconstruction. The
-[coarse elimination](theory.md#retaining-nearly-null-local-modes) retains these
+[coarse elimination](theory/foundations.md#retaining-nearly-null-local-modes) retains these
 modes explicitly while preserving the PDE and solver tolerances. The zero and
 small-positive parameter regimes are tested separately. Tests include nonzero
 pressure means, non-affine manufactured Stokes limits, scalar reaction

@@ -31,9 +31,9 @@ approximation and linear solvers are separate choices.
     <strong>Start the tutorials</strong>
     <span>New to PyMHM? Learn the API step by step with introductory cases, rendered code and field plots.</span>
   </a>
-  <a href="cases/">
-    <strong>Inspect the evidence</strong>
-    <span>Read numerical results, discretization choices and scientific limits.</span>
+  <a href="gallery/">
+    <strong>Explore the Gallery</strong>
+    <span>Browse problems and dimensions, field plots, convergence and scientific limits.</span>
   </a>
 </div>
 
@@ -47,41 +47,97 @@ spawn workers and installed-wheel verification, with the native FEM scope
 stated separately.
 
 Start with the [API overview tutorial](tutorials/overview.md) and the
-[rendered introductory course](tutorials.md) for scalar and vector
+[rendered introductory course](tutorials/notebooks.md) for scalar and vector
 formulations and interchangeable local providers. Use the
-[visual case gallery](cases/index.md) to compare numerical fields
+[visual case gallery](gallery/index.md) to compare numerical fields
 with exact references, inspect profiles and errors, and read what each case is
 expected to demonstrate.
 
-The overview derives a small Galerkin problem from its weak form. Its two
-macrointervals contribute to one shared interface coordinate:
+The [overview](tutorials/overview.md) introduces UFL from its weak form.
+The portable coefficient interface follows the same mesh-first workflow;
+mesh/space binding owns shared numbering and orientation maps:
 
 ```python
-from pymhm import Equation, LocalEquations, MultiscaleProblem, assemble
+import numpy as np
+from pymhm import (
+    CartesianMacroMesh, Equation, FaceSpace, LocalContext, LocalEquations,
+    MeshHierarchy, SkeletonSpace, assemble, bind_interface, bind_problem, solve,
+)
 
+macro = CartesianMacroMesh(1, 1)
+hierarchy = MeshHierarchy(macro, (macro.submesh(0, 2),))
+skeleton = SkeletonSpace(macro, tuple(FaceSpace.uniform(0) for _ in macro.faces))
+interface = bind_interface(skeleton, convention="value")
 
-def local_equations(cell: int) -> LocalEquations:
-    """Declare the local volume equation and its interface contribution."""
-    return LocalEquations(
-        a=[[8.0]], L=[0.25], b=[[-4.0]],
-        c=[[-4.0]], d=[[4.0]], g=[0.125], dofs=[0],
+def local(context: LocalContext) -> LocalEquations:
+    """Declare independent volume and interface equations."""
+    return context.equations(
+        a=[[2.0]], L=[1.0], b=np.ones((1, 4)), c=-np.ones((4, 1)),
+        d=np.eye(4),
     )
 
-
-problem = MultiscaleProblem(
-    global_equation=Equation(0, 0), local_provider=local_equations,
-    items=(0, 1), trace_size=1, coarse_sizes=(0, 0),
-)
+problem = bind_problem(hierarchy, interface, local, global_equation=Equation(0, 0))
 system = assemble(problem)
-solution = system.solve()
-print(solution.trace)  # [0.125]
+solution = solve(system)
+print(solution.trace, solution.fields)  # every coordinate is 1/6
 ```
+
+This small algebraic example declares $2u+\sum_F\lambda_F=1$ and
+$-u+\lambda_F=0$ on each face. The binding owns the shared numbering and geometric
+maps; the user supplies both equations. The
+[variational guide](variational.md) describes UFL forms, retained modes,
+physical constraints and recursive problems, and states the supported limits.
+For complete control, see the [custom-space tutorial](tutorials/custom-interface.md),
+which declares a nonorthogonal basis and its independent trial/test maps.
 
 The [vector UFL notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/vector_ufl.ipynb)
 declares a coercive two-component reaction-diffusion operator; it is separate
 from the mixed Brinkman formulations. The
 [three-level hierarchy](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/variational_hierarchy.ipynb)
 checks recursive coefficients against an independently written full system.
+
+## Available Methods
+
+Choose the variational method and its admissible approximation spaces independently
+of the linear solver and execution backend. **When publishing results obtained
+with PyMHM, cite the original publications of every method, reconstruction or
+estimator used**, together with the PyMHM version. The [Theoretical Background](theory.md) states degree, geometry and regularity
+conditions; each linked tutorial follows the mathematical formulation in code.
+
+| Method | Global/local construction | Original publication |
+| --- | --- | --- |
+| [Primal MHM](tutorials/methods/primal-mhm.md) | Normal-flux skeleton; conforming scalar local fields | [Harder et al. (2013)](https://doi.org/10.1016/j.jcp.2013.03.019) |
+| [Mixed H(div) MHM](tutorials/methods/mixed-mhm.md) | Restricted normal traces; RT/BDM local flux and pressure | [Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013) |
+| [Robin MH](tutorials/methods/robin-mh.md) | Coercive Robin locals and a face multiplier system | [Barrenechea et al. (2024)](https://doi.org/10.1137/22M1542556) |
+| [MH²M](tutorials/methods/mh2m.md) | Independent continuous pressure and broken conormal traces | [de Barros et al. (2026, v3)](https://arxiv.org/abs/2404.16978v3) |
+| [MsHHO](tutorials/methods/mshho.md) | Cell/face pressure moments and constrained energy reconstruction | [Cicuttin, Ern and Lemaire (2019)](https://doi.org/10.1515/cmam-2018-0013); [MHM connection (2022)](https://doi.org/10.1051/m2an/2021082) |
+| [Petrov–Galerkin MHM](tutorials/methods/pgmhm.md) | Face residual enrichment and independent global test equations | [Fernando et al. (2023)](https://doi.org/10.1007/s40314-023-02304-y) |
+| [MHM-USFEM (MHM-UNUSUAL)](tutorials/methods/mhm-usfem.md) | Residual-stabilized reaction–diffusion local problems | [Santiago et al. (CILAMCE 2025)](https://doi.org/10.55592/cilamce2025.v5i.14270) |
+| [Stokes–Brinkman MHM](tutorials/methods/stokes-brinkman.md) | Taylor–Hood or consistent USFEM velocity/pressure locals | [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) |
+| [Oseen MHM](tutorials/methods/oseen.md) | Prescribed convection, mixed locals and Robin pseudotraction | [Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8) |
+| [Primal elasticity MHM](tutorials/methods/primal-elasticity.md) | Displacement locals, traction skeleton and rigid modes | [Harder et al. (2016)](https://doi.org/10.1051/m2an/2015046) |
+| [GaLS elasticity MHM](tutorials/methods/gals-elasticity.md) | Displacement–pressure locals for nearly incompressible materials | [Gomes et al. (2024, v1)](https://arxiv.org/abs/2403.16890v1) |
+| [Mixed stress elasticity MHM](tutorials/methods/mixed-elasticity.md) | H(div) stress, displacement and weak-symmetry rotation | [Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013) |
+| [Conservative transport MHM](tutorials/methods/transient-transport.md) | Galerkin/SUPG RAD and backward-Euler transient extension | [Harder et al. (2015)](https://doi.org/10.1137/130938499) |
+| [Elastodynamic MHM](tutorials/methods/elastodynamics.md) | Local Newmark dynamics and slabwise traction coupling | [Gomes et al. (2017)](https://doi.org/10.20906/CPS/CILAMCE2017-0399) |
+| [Helmholtz MHM](tutorials/methods/helmholtz.md) | Complex local wave operators and polynomial/oscillatory traces | [Chaumont-Frelet and Valentin (2020)](https://doi.org/10.1137/19M1255616) |
+| [Maxwell MHM](tutorials/methods/maxwell.md) | Tangential coupling, central-DG locals and leapfrog dynamics | [Lanteri et al. (2018)](https://doi.org/10.1137/16M110037X) |
+| [Unfitted/face-refined MHM](tutorials/methods/unfitted.md) | Material-fitted subfaces on an unfitted macro mesh | [Chaumont-Frelet et al. (2026)](https://doi.org/10.1016/j.camwa.2026.01.016) |
+
+Recovery and adaptive strategies complement those discretizations:
+
+| Strategy | Purpose | Original analysis |
+| --- | --- | --- |
+| [Flux and potential recovery](tutorials/methods/flux-recovery.md) | RT0 equilibration, moment H(div) reconstruction and conforming potentials | [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073) |
+| [Error indicators](tutorials/methods/error-indicators.md) | Field-specific residual and reconstructed-energy diagnostics | [Araya et al. (2013)](https://doi.org/10.1137/120888223) |
+| [Adaptive approximation](tutorials/methods/adaptivity.md) | Independent macro, face, degree and local controls | [Araya et al. (2021)](https://doi.org/10.1093/imanum/drz053) |
+| [Recursive MHM](tutorials/methods/recursive-mhm.md) | A multiscale local operator with its own global/local hierarchy | [Harder and Valentin (2016)](https://doi.org/10.1007/978-3-319-41640-3_13) |
+
+The table identifies implemented families, not every theorem or historical
+experiment in their papers. The [Gallery](gallery/index.md) records verified
+spaces and remaining limitations. RT0 equilibration and moment reconstruction
+are distinct operators; a generic indicator does not inherit the reliability
+proof of a complete published estimator.
 
 ## Executable formulations
 
@@ -126,9 +182,9 @@ Normal-trace restrictions and local refinement must satisfy each formulation's
 compatibility conditions.
 
 [Scientific scope](https://github.com/ipes-lncc/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria) maps the literature to the implemented paths and
-remaining mathematical requirements. The [literature catalog](literature.md)
-covers the 20-document reference collection, including the 2025–2026 analyses and
-reconstruction results; a catalog entry is not a claim of complete reproduction.
+remaining mathematical requirements. The [Bibliography](literature.md) identifies the original formulations, analyses,
+reconstruction strategies and supporting numerical methods; a citation is not
+a claim of complete paper reproduction.
 
 ## Evidence and reproducibility
 
@@ -157,6 +213,10 @@ ratios through $10^8$, the exact incompressible limit and six refinement points.
 include independent DOLFINx/Basix assembly checks and analytical convergence cases.
 
 <section class="institutional-support" markdown="1">
+
+Original figures and diagrams are © IPES Research Group and licensed under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Commercial reuse and
+adaptations require attribution; see [figure reuse and attribution](licensing.md).
 
 ## Institutional Support
 

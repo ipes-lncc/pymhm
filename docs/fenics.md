@@ -6,7 +6,7 @@ forms directly with UFL:
 
 The example helpers below are repository sources, supplied separately from the
 installed library. Open the corresponding notebook to acquire its verified
-companion, as described in the [notebook guide](tutorials.md#execute-downloaded-notebooks).
+companion, as described in the [notebook guide](tutorials/notebooks.md#execute-downloaded-notebooks).
 
 ```python
 def local_equations(local):
@@ -161,7 +161,7 @@ to retain nearly null modes without declaring them exact null vectors. The same
 `constraint_forms` defines one physical moment per retained column. For example,
 scalar reaction–diffusion retains the constant coefficient vector with `[v * dx]`.
 The adapter passes these choices to the exact
-[coarse elimination](theory.md#retaining-nearly-null-local-modes); it does not
+[coarse elimination](theory/foundations.md#retaining-nearly-null-local-modes); it does not
 infer which modes are needed. Native tests compare a nonsymmetric UFL problem
 near the Poisson limit with an independent uncondensed saddle solve.
 

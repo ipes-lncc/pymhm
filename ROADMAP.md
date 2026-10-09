@@ -1,10 +1,10 @@
 # PyMHM implementation, verification and validation roadmap
 
-Updated **October 6, 2026**. This is the project's canonical roadmap.
+Updated **October 9, 2026**. This is the project's canonical roadmap.
 The [scientific scope](#scientific-scope-and-acceptance-criteria) and
 [literature acceptance matrix](#acceptance-by-literature-target) identify
 implemented capabilities and remaining evidence. Detailed results belong on the
-[case pages](docs/cases/index.md). This roadmap does not certify complete
+[Gallery](docs/gallery/index.md). This roadmap does not certify complete
 reproduction of the literature.
 
 ## Using this roadmap
@@ -37,25 +37,34 @@ owners. The fully explicit route remains available. See the
 [custom-interface tutorial](docs/tutorials/custom-interface.md).
 
 Implemented geometry, physics and backend scopes appear in the table below.
-The [case pages](docs/cases/index.md) retain numerical results and the
+The [Gallery](docs/gallery/index.md) retains numerical results and the
 [performance reports](docs/performance.md) identify measured workloads, hardware
-and accuracy. Current-source contextual APIs are awaiting their next package
-release; the published 1.0.0 exposes the explicit variational interface.
+and accuracy. The current source includes the contextual interface and portable
+native-form assembly; package metadata is synchronized at version 1.2.0.
 
-Local qualification includes **5,884 passing tests**, line coverage of
-**99.92%** and branch coverage of **99.66%**, together with lint, formatting,
-type checking and native FEM integrations. The installed wheel passes its eight
-portable execution and PARDISO checks outside the checkout. The
+Local qualification includes **6,442 passing tests**, line coverage of
+**99.80%** and branch coverage of **99.23%**, together with lint, formatting,
+type checking, native FEM, MPI and two-GPU integrations. The installed wheel
+passes its eight portable execution and PARDISO checks outside the checkout.
+The standalone wheel-ownership test requires that isolated installation;
+its skip in the checkout suite is not a missing dependency. The
 [API qualification record](benchmarks/results/api-binding-20261006/README.md)
-identifies the numerical controls and their scope. Verification applies to the
-executed cases; it does not establish stability or resolution in other regimes.
-The ten introductory notebooks and custom-interface example have executed
-271 code cells and produced 62 inspected figures. Generated tutorial pages
-retain their numerical provenance; historical scaling measurements identify
-their original source revisions.
-The final strict docs check validates 59 pages; actual Chrome inspection of
-19 current API/tutorial/performance pages renders 464 expressions and loads
-all 62 tutorial figures without mathematical rendering errors.
+identifies the earlier numerical controls and their scope. Verification applies
+to the executed cases; it does not establish stability or resolution in other
+regimes. The documentation is organized into Home, Getting Started, Theoretical
+Background, Guides, Tutorials, Gallery, Development, API and Bibliography.
+Seventeen formulation tutorials and four recovery/adaptation/hierarchy lessons
+pair the equations with their implementation. Seventeen attributed refinement
+series attain their stated asymptotic targets; patch tests, reconstruction and
+adaptivity use their relevant physical invariants instead of fitted rates.
+The [theory](docs/theory.md) and individual tutorials distinguish spatial rates,
+temporal rates, trace refinement and observations without a theorem claim.
+Historical scaling measurements retain their original source revisions.
+All 111 downloadable notebooks have checksum-pinned support archives. Public
+API pages render every canonical module directly from its source docstrings.
+Original documentation figures use CC BY 4.0 with attribution to IPES Research
+Group; third-party assets retain their own terms. Mathematical rendering and
+figure layout are inspected in native Chrome as well as through `docs-check`.
 Native Windows and macOS qualification of this changed revision remains a CI
 acceptance gate.
 Private `_legacy` implementations support comparisons, not the primary API.
@@ -168,6 +177,12 @@ Extend [execution strategies](docs/execution.md) and
 - [ ] Profile assembly, factors/hierarchies, all right-hand sides, communication,
   serialization, reduction, global solve, reconstruction and peak memory.
   Identify local/global bottlenecks and crossover size at each accuracy target.
+- [ ] Reduce physical-error integration costs in the shared field and reference
+  tabulation owners: reuse affine Jacobians and compute only requested derivatives.
+  Qualify batched and spawn-parallel evaluation of archived fields with importable
+  exact solutions, preserved basis digests and ordered per-field quadrature sums.
+  Compare scalar and vector norms against the existing independent controls;
+  measure complete notebook time separately from assembly and solver speedups.
 - [ ] Compare SciPy/PARDISO/MUMPS LU and CPU/GPU AMG with admissible operators
   and declared CPU/GPU/thread budgets. Define iterative tolerances before trials
   using field and discretization error; retain existing acquisition criteria.
@@ -290,12 +305,6 @@ property is inferred from a PDE or method name.
 
 ## R5 — Verify native Windows execution
 
-- [x] Provide locked native DOLFINx/UFL assembly on Windows with CSR/vector
-  interfaces independent of PETSc, and the `fem-intel` profile for local/global
-  PARDISO selection. Require single-rank local meshes and worker-owned native
-  resources; retain the physical forms, trace conventions and gauges.
-- [x] Configure native FEM CI on Linux, Windows and macOS, including assembly
-  and SciPy solves with PETSc imports blocked and PARDISO checks on Linux/Windows.
 - [ ] Execute an identified revision on Windows x86-64: `test-core`, Basix,
   native DOLFINx/UFL, SciPy/PyAMG, PARDISO, shared faces and
   serial/thread/spawn-process paths. Publish the actual native FEM reports.
@@ -466,14 +475,23 @@ runs **Version/tag validation → Tests, Quality and Docs checks in parallel →
 PyPI publication of checked artifacts → GitHub Release → Docs deployment**.
 Use `release-fetch`, `changelog-preview`, `release-prepare VERSION` and
 `version-check` in the locked `release` environment; initial preparation requires
-`--initial`. The [development guide](docs/development.md#prepare-versions-and-release-notes)
+`--initial`. The [development guide](docs/development/contributing.md#prepare-versions-and-release-notes)
 describes the first-parent main history and version synchronization rules.
-Release administration is described in the [development guide](docs/development.md).
+Release administration is described in the [development guide](docs/development/contributing.md).
 Docs also supports manual publication with `publish=true` from `main` or a `v*`
 tag, including an initial documentation deployment before the next release.
 Keep platform/release claims tied to successful identified runs.
 
 ### Scientific documentation and notebooks
+
+The documentation reorganization, method-based tutorials, problem/dimension
+gallery indexes, source-generated API coverage and architecture diagram are
+implemented. Keep their catalogues, theory hypotheses and original publication
+citations synchronized when adding a method or extending its admissible spaces.
+Current 3D Maxwell spatial measurements remain preasymptotic; the qualified
+temporal comparison uses the constrained semidiscrete ODE. Do not treat that
+algebraic reference as an independently refined conforming H(curl) simulation.
+Add such a physical reference when extending the Maxwell propagation examples.
 
 Use `introduction` for UFL introductory notebooks and the case's documented
 profile for other acquisitions. Run affected notebooks with `notebooks-run`
@@ -484,4 +502,4 @@ Run `docs-check` and inspect MathJax in the browser: a successful Markdown/site
 build does not compile TeX. Use standalone `$$` display blocks with blank
 lines, aligned long equations and protected TeX table delimiters. Inspect final
 figures at their intended viewing size. Detailed maintained procedures are in
-[development](docs/development.md) and [verification](docs/verification.md).
+[development](docs/development/contributing.md) and [verification](docs/verification.md).

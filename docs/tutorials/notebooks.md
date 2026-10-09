@@ -1,6 +1,6 @@
 # Learn PyMHM: tutorials and notebooks
 
-Start with the [API overview](tutorials/overview.md): define local equations,
+Start with the [API overview](overview.md): define local equations,
 couple them through global traces, assemble, solve and reconstruct a field.
 Then follow the introductory problems below. Their pages show the mathematical
 formulations, executable code, measured outputs and plots directly in the docs.
@@ -29,21 +29,21 @@ parallel tutorials assume familiarity with this local/global workflow.
 
 | Problem | Read the rendered tutorial |
 | --- | --- |
-| Oscillatory Darcy and convergence | [Multiscale Darcy](tutorials/introduction/darcy_multiscale_convergence.md) |
-| Reservoir permeability | [Darcy on a SPE10 layer](tutorials/introduction/darcy_spe10_layer.md) |
-| Heterogeneous vector elasticity | [Multiscale elasticity](tutorials/introduction/multiscale_elasticity.md) |
-| Cell and face moment reconstruction | [MsHHO](tutorials/introduction/mshho_multiscale.md) |
-| Independent skeletal spaces | [MH²M](tutorials/introduction/mh2m_multiscale.md) |
-| Reaction-dominated local layers | [MHM-USFEM](tutorials/introduction/mhm_usfem_rad.md) |
-| Analytical velocity and pressure layers | [Stokes–Brinkman convergence](tutorials/introduction/stokes_brinkman_boundary_layer.md) |
-| Parallel local solves and performance | [Darcy speed-up and scalability](tutorials/introduction/darcy_parallel_scalability.md) |
-| Spawned processes and complete workflow scaling | [Darcy process scalability](tutorials/introduction/darcy_process_scalability.md) |
-| Three-dimensional local AMG and parallel comparisons | [Darcy 3D scalability](tutorials/introduction/darcy_3d_parallel_scalability.md) |
+| Oscillatory Darcy and convergence | [Multiscale Darcy](introduction/darcy_multiscale_convergence.md) |
+| Reservoir permeability | [Darcy on a SPE10 layer](introduction/darcy_spe10_layer.md) |
+| Heterogeneous vector elasticity | [Multiscale elasticity](introduction/multiscale_elasticity.md) |
+| Cell and face moment reconstruction | [MsHHO](introduction/mshho_multiscale.md) |
+| Independent skeletal spaces | [MH²M](introduction/mh2m_multiscale.md) |
+| Reaction-dominated local layers | [MHM-USFEM](introduction/mhm_usfem_rad.md) |
+| Analytical velocity and pressure layers | [Stokes–Brinkman convergence](introduction/stokes_brinkman_boundary_layer.md) |
+| Parallel local solves and performance | [Darcy speed-up and scalability](introduction/darcy_parallel_scalability.md) |
+| Spawned processes and complete workflow scaling | [Darcy process scalability](introduction/darcy_process_scalability.md) |
+| Three-dimensional local AMG and parallel comparisons | [Darcy 3D scalability](introduction/darcy_3d_parallel_scalability.md) |
 
 Each page links to its source notebook and gives a command for executing it
 with the installed library and a separately downloaded companion, without a clone. Install the notebook and
 plotting extras; native UFL examples additionally require the compatible
-DOLFINx/UFL backend described in the [installation guide](installation.md).
+DOLFINx/UFL backend described in the [installation guide](../installation.md).
 
 ```bash
 python -m pip install 'pymhm[notebooks,visualization]'
@@ -58,13 +58,13 @@ campaign. Analytical solutions and fine numerical references are distinguished.
 Macro meshes appear on field panels, and the local and skeletal resolutions are
 declared separately.
 
-The [boundary-layer comparisons](cases/introduction-layers.md) distinguish
+The [boundary-layer comparisons](../cases/introduction-layers.md) distinguish
 unresolved RAD profiles from admissible refinement controls and compare the
 Brinkman polynomial family with the literature's approximation spaces. Layer
 resolution and observed asymptotic rates are reported separately from algebraic
 residuals and conservation checks.
 
-For user-defined problems, start with the [variational guide](variational.md)
+For user-defined problems, start with the [variational guide](../variational.md)
 and the provider notebooks below. They declare local and global equations
 through the generic form interface. The introductory physical notebooks put
 user-written equations before their comparisons of established formulations.
@@ -89,7 +89,7 @@ procedure and obtain new strong, weak and crossover measurements.
 
 ## Custom spaces and manual definitions
 
-The [custom-interface tutorial](tutorials/custom-interface.md) and its notebook
+The [custom-interface tutorial](custom-interface.md) and its notebook
 show how to own the basis, numbering and orientation explicitly. Fully manual
 `LocalEquations`/`MultiscaleProblem` records reuse the same numerical owners.
 Choose that level for an external convention or a capability not supplied by
@@ -139,7 +139,7 @@ contains all 98 notebooks and the methods used by each. The
 uses stable notebook selectors and logical resource paths. The library distribution contains only `pymhm`. Notebook sources and their
 verified support ZIPs are separate downloads; small configurations accompany
 the support files. Larger data and field
-archives remain separate in the [download index](data.md), with source
+archives remain separate in the [download index](../data.md), with source
 attribution, checksums and acquisition procedures.
 
 | Folder | Detailed studies |
@@ -213,7 +213,7 @@ Missing historical inputs are reported explicitly; their absence does not
 prevent execution of the current examples. A fine numerical reference
 retains its own discretization and refinement uncertainty; it is not an exact
 solution. Archived comparisons identify solver provenance and do not execute
-external reference programs. See the [case gallery](cases/index.md) for the
+external reference programs. See the [case gallery](../cases/index.md) for the
 separate convergence and scientific acceptance evidence.
 
 ## Reusable support and authoring
@@ -227,6 +227,6 @@ formulas have their owners in the package and are not copied between notebooks.
 Create a new example in its problem folder, identify its methods and numerical
 conventions, and add it to `notebooks/catalogue.json` and `notebooks/README.md`.
 Keep large computed fields and executed outputs under `build/` or their declared
-scientific archive paths. The [scalar](tutorials/scalar.md),
-[vector](tutorials/vector.md) and [provider](tutorials/providers.md) guides explain
+scientific archive paths. The [scalar](scalar.md),
+[vector](vector.md) and [provider](providers.md) guides explain
 spaces and contracts used by these notebooks.

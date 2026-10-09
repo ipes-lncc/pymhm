@@ -8,7 +8,7 @@ runtime. Functions and classes, including private and nested helpers, have
 docstrings and type annotations. The package includes its typing marker and
 typed root interface.
 Pip installs the coefficient/Basix core. Symbolic `fenics-ufl` alone does not
-provide native assembly; the [installation guide](installation.md#native-ufl-assembly)
+provide native assembly; the [installation guide](../installation.md#native-ufl-assembly)
 describes DOLFINx environments for UFL applications.
 
 Use the checked-in lockfiles for every environment. Validate workspace resolution
@@ -152,7 +152,7 @@ Each runner starts from fresh, separate measurements for the two phases and comb
 only successful phases. A failed parallel phase stops before the serial phase,
 and an incomplete run does not publish coverage reports. The independent line
 and branch thresholds remain **99%**. Numerical comparisons follow the
-[scale and precision conventions](verification.md#numerical-tests); coverage
+[scale and precision conventions](../verification.md#numerical-tests); coverage
 thresholds and scientific acceptance criteria are separate controls.
 Larger literature campaigns run through the problem notebooks outside the CI
 suite.
@@ -246,7 +246,7 @@ Include a `## References` section on the same page with the full authors,
 title, venue, year and persistent link for every work cited. Retain theorem,
 equation and section numbers beside the claim they support.
 
-The [literature catalog](literature.md) explains the scope of the methods; a
+The [literature catalog](../literature.md) explains the scope of the methods; a
 link to that catalog does not replace a page's bibliography. Distinguish a
 preprint version from its journal publication, and distinguish an original
 PyMHM application from a reproduction of an article's numerical experiment.

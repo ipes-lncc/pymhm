@@ -15,6 +15,8 @@ downloads a checksum-verified companion archive and prepares the declared data
 using its local Python helpers. You can inspect these support files in `ROOT`.
 Complete studies and historical replay retain their existing opt-in flags.
 
+
+
 ```python
 from pathlib import Path
 import os
@@ -22,8 +24,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/85a07669980a7cbbc97fe1b09bb5388fabde9afbb790f771cbe8b28db8924e67/stokes_brinkman_boundary_layer-companion.zip"
-COMPANION_SHA256 = "85a07669980a7cbbc97fe1b09bb5388fabde9afbb790f771cbe8b28db8924e67"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/c3a5efc09d81b35d06a0148b120214c7de2829b740e7a2f4416584c80c7dc5bf/stokes_brinkman_boundary_layer-companion.zip"
+COMPANION_SHA256 = "c3a5efc09d81b35d06a0148b120214c7de2829b740e7a2f4416584c80c7dc5bf"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -44,7 +46,7 @@ import os
 import json
 import numpy as np
 from pymhm import TriangleMesh, FaceSpace, SkeletonSpace
-from pymhm.core.equations import Equation, LocalEquations, compile_form
+from pymhm.core.equations import Equation, LocalEquations
 from pymhm.core.multiscale import assemble
 from pymhm.fem.scalar.operators import triangle_quadrature, boundary_data
 from pymhm.fem.scalar.triangle import nodal_space, tabulate
@@ -76,6 +78,27 @@ from examples.introduction.vector import (
 )
 
 measure_case = partial(record_brinkman_case, reports=REPORTS, root=ROOT)
+
+```
+
+```text
+Workspace: ./build/docs-restructure/exact-source-workspaces-provenance-final/introduction/stokes_brinkman_boundary_layer
+```
+
+### Runtime setup: an owned UFL compiler cache
+
+The local volume, pressure-mean and face forms use a notebook-owned temporary compiler cache. Its directory controls kernel storage only: operators, quadrature, approximation spaces, pressure gauge and solver checks are unchanged. We allow 7200 seconds for compilation; this timeout does not change any numerical tolerance.
+
+Keep this cache alive while running the study. The final cell releases it after assembly, reference solves, error checks and plots are complete. Before another solve, rerun the cache-setup cell. After an interruption, call `BRINKMAN_JIT_CACHE.cleanup()` or restart the kernel before rerunning the setup. The local/global assembly in this tutorial remains serial.
+
+
+
+```python
+from tempfile import TemporaryDirectory
+
+BRINKMAN_JIT_CACHE = TemporaryDirectory(prefix="pymhm-brinkman-jit-")
+BRINKMAN_JIT_OPTIONS = {"cache_dir": Path(BRINKMAN_JIT_CACHE.name), "timeout": 7200}
+
 ```
 
 ## 1. State the operator and derive the source independently
@@ -183,7 +206,9 @@ class BrinkmanLayer:
             + self.drag * self.velocity(points)
             + np.array([1.0, -1.0])
         )
+
 ```
+
 
 ```python
 NU, GAMMA = 1e-2, 1.0
@@ -207,6 +232,7 @@ boundary_vertices = np.unique(probe_local_mesh.faces[probe_local_mesh.boundary_f
 local_interior_vertices = len(probe_local_mesh.points) - len(boundary_vertices)
 assert local_interior_vertices > 0
 print("Taylor-Hood local interior vertices:", local_interior_vertices)
+
 ```
 
 ```text
@@ -244,6 +270,7 @@ def brinkman_ufl_data(domain: Any) -> tuple[Any, Any, Any]:
         + ufl.as_vector((1.0, -1.0))
     )
     return uexact, pexact, f
+
 ```
 
 ## 2. Translate the mathematical mixed form directly into UFL
@@ -328,7 +355,12 @@ bound_margins = np.linalg.eigvalsh(INVERSE_M * h[:, None, None] ** 2 * residual_
 ]
 assert bound_margins.max() < 1e-10
 inverse_controls
+
 ```
+
+
+
+
 
 ```text
 [{'degree': 2,
@@ -394,6 +426,7 @@ def brinkman_forms(
         a -= tau * ufl.inner(R, Rtest) * dx
         L -= tau * ufl.inner(f, Rtest) * dx
     return W, a, L, q * dx
+
 ```
 
 The native mesh and coefficient conversions come from the shared backend binding. The provider below writes the volume and boundary forms, chooses its physical boundary conditions and registers the scalar field. The explicit restriction to free scalar coordinates imposes the declared vertical Dirichlet data; it is part of the formulation.
@@ -404,6 +437,7 @@ import basix
 
 
 from pymhm.backends.spaces import create_native_mesh, coefficient_map
+from pymhm.backends.forms import assemble_form, assemble_pairing
 
 
 def mixed_nodal_blocks(
@@ -421,10 +455,12 @@ def mixed_nodal_blocks(
         coefficient_map(binding, component=0),
         coefficient_map(binding, component=1),
     ]
-    native_A, native_F = compile_form(a), compile_form(L)
+    native_A = assemble_form(a, jit_options=BRINKMAN_JIT_OPTIONS)
+    native_F = assemble_form(L, jit_options=BRINKMAN_JIT_OPTIONS)
     A, F = native_A[order][:, order], native_F[order]
-    pressure_weights = compile_form(mean_form)[order]
+    pressure_weights = assemble_form(mean_form, jit_options=BRINKMAN_JIT_OPTIONS)[order]
     return A, F, pressure_weights, len(nodal_space(fine, velocity_degree)[1])
+
 ```
 
 ## 3. State trace orientation, boundary data and the physical gauge
@@ -481,16 +517,18 @@ def local_brinkman(
     A, F, pweights, nv = mixed_nodal_blocks(
         W, a, L, mean_form, fine, pressure_degree, velocity_degree
     )
-    from pymhm.backends.forms import assemble_pairing
-
     binding = local.native_space(W)
     u, p = ufl.TrialFunctions(W)
     v, q = ufl.TestFunctions(W)
     pair_b = local.trace_pairings(lambda phi, ds: ufl.inner(phi, v) * ds)
     pair_c = local.trace_pairings(lambda phi, ds: -ufl.inner(phi, u) * ds, axis="rows")
     order = np.r_[coefficient_map(binding, component=0), coefficient_map(binding, component=1)]
-    B = assemble_pairing(pair_b.forms, axis="columns")[order]
-    C = assemble_pairing(pair_c.forms, axis="rows")[:, order]
+    B = assemble_pairing(
+        pair_b.forms, axis="columns", jit_options=BRINKMAN_JIT_OPTIONS
+    )[order]
+    C = assemble_pairing(
+        pair_c.forms, axis="rows", jit_options=BRINKMAN_JIT_OPTIONS
+    )[:, order]
     # Preserve the declared (canonical velocity, canonical pressure) record layout.
     identity = np.eye(len(F))
     native_layout = binding.to_native(identity[: 2 * nv], component=0) + binding.to_native(
@@ -512,6 +550,7 @@ def local_brinkman(
             "pressure_weights": pweights,
         },
     )
+
 ```
 
 Before the refinement loop, define the measurements: velocity and pressure $L^2$ errors, velocity-gradient error, broken pseudostress error, the fine-cell divergence norm and the separate macro mass defect. These quadrature operations evaluate fields; they do not define a local PDE.
@@ -523,6 +562,7 @@ Physical norms, executed-state archives and one-sided field/profile displays are
 
 ```python
 # Physical field norms, macro mass and pressure integral use flow_error_norms (imported above).
+
 ```
 
 ### Record the numerical coordinates for reproducibility
@@ -603,6 +643,7 @@ for n in (4, 8, 16):
             n,
             {key: row[key] for key in ("velocity_l2", "pressure_l2", "macro_mass_defect")},
         )
+
 ```
 
 ```text
@@ -708,6 +749,7 @@ for ell, levels in PUBLISHED_LEVELS.items():
             n,
             {key: row[key] for key in ("velocity_l2", "pressure_l2", "velocity_h1_seminorm")},
         )
+
 ```
 
 ```text
@@ -796,7 +838,12 @@ for ell in (0, 1, 2):
         )
     )
 assembly_quadrature_controls
+
 ```
+
+
+
+
 
 ```text
 [{'ell': 0,
@@ -865,6 +912,7 @@ for n in (4, 8, 16):
             n,
             {key: row[key] for key in ("velocity_l2", "pressure_l2", "velocity_h1_seminorm")},
         )
+
 ```
 
 ```text
@@ -923,6 +971,7 @@ for n in (32, 64, 128):
     references[n] = case
     reference_rows.append(row)
     state_archives.append(archive)
+
 ```
 
 ```text
@@ -950,9 +999,12 @@ For two successive resolutions, the measured slope is $r=\log(e_1/e_2)/\log(H_1/
 
 ```python
 plot_brinkman_convergence(rows, reference_rows, control_rows, reports=REPORTS)
+
 ```
 
-[![Figure 1 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_0.png)
+
+
+[![Figure 1 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_31_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_31_0.png)
 
 
 ```text
@@ -964,12 +1016,12 @@ MHM-USFEM: pressure_l2 rates: [0.796633 0.525482]
 
 
 
-[![Figure 2 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_2.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_2.png)
+[![Figure 2 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_31_2.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_31_2.png)
 
 
 
 
-[![Figure 3 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_3.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_3.png)
+[![Figure 3 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_31_3.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_31_3.png)
 
 
 ```text
@@ -982,9 +1034,12 @@ enriched MHM-USFEM: pressure_l2 rates: [0.956912 1.197469]
 
 ```python
 published_rates = plot_brinkman_family_rates(published_rows, reports=REPORTS)
+
 ```
 
-[![Figure 4 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_0.png)
+
+
+[![Figure 4 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_0.png)
 
 
 ```text
@@ -993,7 +1048,7 @@ single-element 0 measured rates {'velocity_l2': [0.7354939276379141, 1.090340702
 
 
 
-[![Figure 5 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_2.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_2.png)
+[![Figure 5 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_2.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_2.png)
 
 
 ```text
@@ -1002,7 +1057,7 @@ single-element 1 measured rates {'velocity_l2': [1.449177319615901, 1.9967834438
 
 
 
-[![Figure 6 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_4.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_4.png)
+[![Figure 6 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_4.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_4.png)
 
 
 ```text
@@ -1023,22 +1078,28 @@ The additional single-element figure evaluates the $\ell=2$, P4/P4 degree-family
 
 ```python
 plot_brinkman_family_fields(published_cases, PUBLISHED_LEVELS, references, truth, reports=REPORTS)
+
 ```
 
-[![Figure 7 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_34_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_34_0.png)
+
+
+[![Figure 7 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_36_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_36_0.png)
 
 
 
 ```python
 plot_brinkman_enriched_fields(enriched_cases, references, truth, reports=REPORTS)
+
 ```
 
-[![Figure 8 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_35_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_35_0.png)
+
+
+[![Figure 8 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_37_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_37_0.png)
 
 
 
 
-[![Figure 9 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_35_1.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_35_1.png)
+[![Figure 9 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_37_1.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_37_1.png)
 
 
 The classical pressure reference uses the same physical zero-mean gauge. The additional comparison below shows that field and the separate pressure errors of both multiscale methods.
@@ -1048,9 +1109,12 @@ Horizontal profiles retain a separate segment for each incident macrocell. Verti
 
 ```python
 plot_brinkman_profiles(enriched_cases, truth, reports=REPORTS)
+
 ```
 
-[![Figure 10 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_38_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_38_0.png)
+
+
+[![Figure 10 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_40_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_40_0.png)
 
 
 ## 7. Check quadrature and record the precise method provenance
@@ -1064,12 +1128,15 @@ The raw pseudostress $\nu\nabla\boldsymbol u_h-p_hI$ is a broken derived field. 
 provenance = execution_provenance(
     "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb",
     root=ROOT,
+    native_jit_cache="notebook-owned temporary directory; removed after final result save",
     study_profile=STUDY_PROFILE,
     single_element_levels=PUBLISHED_LEVELS,
     full_qualification_levels=PUBLISHED_FULL_LEVELS,
     literature_comparison="same analytical PDE; declared tutorial discretization, no matched-figure reproduction",
 )
+
 ```
+
 
 ```python
 quadrature_checks = {}
@@ -1130,14 +1197,26 @@ for ell in (0, 1, 2):
         indent=2,
     )
 )
+
 ```
+
+
+
+
 
 ```text
-57799
+58228
 ```
 
 
 
+
+
+```python
+# Local assembly and all postprocessing are complete.
+BRINKMAN_JIT_CACHE.cleanup()
+
+```
 
 The resulting rates describe these declared two-dimensional spaces and resolutions. The exact PDE and local residual are taken from [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027); the tutorial uses the explicitly declared SW–NE mesh and distinguishes the single-element P2/P2, P3/P3 and P4/P4 degree family from the refined P2 comparison. Reported pseudostress is a broken raw derived field. The independently assembled classical comparison uses [DOLFINx](https://docs.fenicsproject.org/dolfinx/) through UFL and the project's checked sparse linear solver.
 
@@ -1168,4 +1247,4 @@ python -m scripts.run_notebooks /path/to/stokes_brinkman_boundary_layer.ipynb --
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `26ee07b8ec1c47e887342af62cc66121e5f53e7183e7892ed43f49742d279532` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `bac0c4c62b8b76905f1d14845568f7949e976f821ceccbb3a8e2482d75efcb8e` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

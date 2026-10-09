@@ -21,7 +21,7 @@ kernel and boundary data. The [provider tutorial](providers.md) and
 [variational guide](../variational.md) explain the form contract independently
 of those comparisons.
 
-Open the [problem notebook catalogue](../tutorials.md). Darcy examples are
+Open the [problem notebook catalogue](notebooks.md). Darcy examples are
 `notebooks/darcy/primal_galerkin.ipynb`, `mixed_hdiv.ipynb` and
 `hybrid_methods.ipynb`; transport and Helmholtz have their own problem folders.
 The notebooks expose the same analytical patch choices through `selected_methods`.

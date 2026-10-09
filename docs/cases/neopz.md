@@ -308,7 +308,7 @@ pixi run --locked -e notebooks notebooks-run 14
 Results are in `examples/results/neopz/comparison.json`; the boundary diagnostic
 is in `examples/results/neopz/boundary-quadrature.json`. Execution provenance
 records source and archive SHA-256 digests. The accompanying
-[notebook](../tutorials.md) reads the retained original provenance separately from
+[notebook](../tutorials/notebooks.md) reads the retained original provenance separately from
 its current analytical refinement. Selecting `--historical` additionally loads
 all 46 original coefficient archives, validates their recorded hashes and
 displays their comparison figures. This option requires the original payloads;

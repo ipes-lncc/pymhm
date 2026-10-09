@@ -26,6 +26,8 @@ downloads a checksum-verified companion archive and prepares the declared data
 using its local Python helpers. You can inspect these support files in `ROOT`.
 Complete studies and historical replay retain their existing opt-in flags.
 
+
+
 ```python
 from pathlib import Path
 import os
@@ -33,8 +35,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/937342f2a5cd48b07eac2fc37c42cca53979543a2577915021dec02c9fbd0849/mshho_multiscale-companion.zip"
-COMPANION_SHA256 = "937342f2a5cd48b07eac2fc37c42cca53979543a2577915021dec02c9fbd0849"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/cd5ed11617e4b6010f8b9cd3473e91453fa2d8081b564cfcd5de29b18f8a4917/mshho_multiscale-companion.zip"
+COMPANION_SHA256 = "cd5ed11617e4b6010f8b9cd3473e91453fa2d8081b564cfcd5de29b18f8a4917"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -78,6 +80,11 @@ from pymhm.backends.forms import assemble_pairing
 
 plt.rcParams.update({"figure.dpi": 110, "font.size": 10})
 from pymhm.core.moments import energy_reconstruction
+
+```
+
+```text
+Workspace: ./build/docs-restructure/exact-source-workspaces-parallel/introduction/mshho_multiscale
 ```
 
 ### 1. The physical problem and its two scales
@@ -129,6 +136,7 @@ print(
         "source": source,
     }
 )
+
 ```
 
 ```text
@@ -139,7 +147,10 @@ print(
 ```python
 fig_material = plot_material(macro, permeability, resolution=64, limits=(1, 3))
 plt.show()
+
 ```
+
+
 
 [![Figure 1 — MsHHO with multiscale permeability: from the problem to the API](../../assets/tutorials/mshho_multiscale/figure_4_0.png)](../../assets/tutorials/mshho_multiscale/figure_4_0.png)
 
@@ -180,6 +191,7 @@ print(
         "local_polynomial_degree": local_degree,
     }
 )
+
 ```
 
 ```text
@@ -252,7 +264,9 @@ def user_volume_forms(
     L = source * v * dx
     A, M, F = compile_form(a), compile_form(mass), compile_form(L)
     return A[order][:, order].tocsc(), M[order][:, order].tocsc(), F[order]
+
 ```
+
 
 ```python
 first_fine = macro.submesh(0, local_refinement)
@@ -267,6 +281,7 @@ print(
     }
 )
 form_equivalence = {}  # Filled by the optional convenience check at the end.
+
 ```
 
 ```text
@@ -319,6 +334,7 @@ def local_moment_equations(local: LocalContext) -> LocalEquations:
             "energy": energy,
         },
     )
+
 ```
 
 ### 4. The global problem contains face moments
@@ -376,6 +392,7 @@ print(
         "local_nodal_unknowns_per_macrocell": len(physical_fields[0].values),
     }
 )
+
 ```
 
 ```text
@@ -423,6 +440,7 @@ for cell, (data, field, cell_moments) in enumerate(
     archive_cell(archive, cell, field, reconstruction=R, moments=C, moment_coordinates=target)
 assert max(diagnostics.values()) < 1e-10
 print(diagnostics)
+
 ```
 
 ```text
@@ -470,6 +488,7 @@ for resolution in (32, 64, 128):
     )
     print(reference_dimensions[-1])
 reference = references[-1]
+
 ```
 
 ```text
@@ -505,6 +524,7 @@ plt.show()
 # A reference must resolve its own physical fields before serving as a baseline.
 assert reference_refinement[-1]["pressure_relative"] < reference_refinement[0]["pressure_relative"]
 assert reference_refinement[-1]["flux_relative"] < reference_refinement[0]["flux_relative"]
+
 ```
 
 ```text
@@ -562,6 +582,7 @@ figure = plot_scalar_comparison(
     numerical_label="MsHHO",
 )
 plt.show()
+
 ```
 
 ```text
@@ -611,6 +632,7 @@ form_equivalence = {
 }
 assert max(form_equivalence.values()) < 1e-10
 print(form_equivalence)
+
 ```
 
 ```text
@@ -652,10 +674,11 @@ print(
         },
     )
 )
+
 ```
 
 ```text
-./build/introduction/mshho_multiscale
+./build/docs-restructure/exact-source-workspaces-parallel/introduction/mshho_multiscale/build/introduction/mshho_multiscale
 ```
 
 ## References
@@ -681,4 +704,4 @@ python -m scripts.run_notebooks /path/to/mshho_multiscale.ipynb --timeout 7200
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `59d1fd79d93fb18b8aabcba3cf817ad34ba080eb07ec99370a05c422c7f449ab` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `53c1894e8299a286f069a4841c2ac64438cde29b49b872079822674a6388a6c3` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

@@ -1,14 +1,14 @@
 # PyMHM examples by problem
 
 Start with the [API overview](https://ipes-lncc.github.io/pymhm/tutorials/overview/)
-and the [ten rendered introductory tutorials](https://ipes-lncc.github.io/pymhm/tutorials/).
-Their [source notebooks](introduction/README.md) are available for interactive use. Then
+and the [rendered method tutorials](https://ipes-lncc.github.io/pymhm/tutorials/).
+The foundational applications’ [source notebooks](introduction/README.md) are available for interactive use. Then
 use the problem folders and numbered notebooks for additional formulations,
 convergence records, geometry variants and literature comparisons. The new
 course declares meshes, spaces, material, local forms and global equations in
 focused cells. Importable helpers provide reference controls, field evaluation,
 plots, archives and performance campaigns. `LocalContext` supplies representation details
-while UFL expresses the mathematics; prepared operators follow as conveniences. All ten tutorials are in English.
+while UFL expresses the mathematics; prepared operators follow as conveniences. All tutorials are in English.
 
 For user-written forms, begin with the local/global, UFL, vector UFL and
 hierarchy notebooks in `foundations/operators`. They use the generic
@@ -19,7 +19,7 @@ moments, trace orientations and boundary loads; method-ready solvers are optiona
 conveniences. Original-system comparisons assemble the stated equations directly.
 
 The PyMHM distribution contains only `pymhm`. Download a notebook from the
-links below or the documentation. Its first cell explicitly downloads a
+links below or the documentation. Notebooks that use acquisition or plotting companions have a first cell that explicitly downloads a
 SHA256-verified companion ZIP containing local `examples` helpers, notebook
 execution tools and small configurations. It then prepares only the declared
 inputs. These support files are separate from the installed library; you can
@@ -70,6 +70,26 @@ literature reproductions have separate declared scopes. Large full studies can
 require substantial memory, storage and computation time.
 
 The machine-readable index is [catalogue.json](catalogue.json).
+
+## Method and strategy workflows
+
+These focused lessons define the physical data, local equations and global equations directly. Standalone Basix/SciPy and UFL workflows import numerical operations from the installed library; they need no application-specific solver helpers. The convergence reader additionally uses attributed records from its verified companion.
+
+| Notebook | Mathematical workflow |
+| --- | --- |
+| [Mixed-local MHM: flux, pressure and boundary pressure](darcy/mixed_mhm_workflow.ipynb) | explicit RT0/P0 mixed blocks; physical normal-flux binding; fine-cell balance |
+| [Robin MH: write the local and global equations](darcy/robin_mh_workflow.ipynb) | UFL Robin volume and boundary forms; Robin multiplier convention; physical pressure and gradient errors |
+| [Residual Petrov–Galerkin MHM: jump form and enrichment](darcy/pgmhm_workflow.ipynb) | primal LocalEquations; explicit residual global Equation; constrained residual lift; enriched macro conservation |
+| [Independent skeletal refinement for unfitted MHM](darcy/unfitted_trace_workflow.ipynb) | independent local/trace partitions; Basix volume forms; signed common-partition trace integration |
+| [Flux recovery, indicators and adaptive refinement](darcy/reconstruction_and_indicators.ipynb) | user-written UFL local/global forms; RT2 moment recovery; four-term energy estimator; Dörfler macro refinement; Oswald potential; RT0 fine-cell equilibration |
+| [Qualified method convergence and asymptotic orders](convergence/method_rates.ipynb) | attributed physical error records; space and time refinement; literature hypotheses; successive rate plots |
+| [One heterogeneous Darcy problem across CPU, MPI and GPU](darcy/heterogeneous_execution.ipynb) | primal MHM; serial/thread/spawn workers; MPI distributed assembly; CUDA local sparse LU |
+| [Generate, exchange and refine material-marked meshes](foundations/geometry/marked_materials.ipynb) | Gmsh physical groups; VTU meshio exchange; exact refinement ancestry |
+| [Elastodynamics: equations, Newmark stepping and physical fields](waves/elastodynamics/formulation_workflow.ipynb) | explicit endpoint local/global blocks; Newmark time integration; rigid displacement and velocity controls |
+| [GaLS elasticity: displacement-pressure local and global forms](elasticity/gals_mhm_workflow.ipynb) | user-written GaLS stabilized forms; physical pressure convention; elasticity field evaluation |
+| [Mixed-stress MHM: stress, displacement and weak rotation](elasticity/mixed_stress_mhm_workflow.ipynb) | mixed H(div) stress forms; weak symmetry; physical traction binding |
+| [Oseen MHM: write velocity-pressure and pseudo-traction forms](flow/oseen_variational.ipynb) | UFL Oseen equations; physical half-advection pseudo-traction; velocity and pressure gauges |
+| [Transient transport: local forms and time-step global equations](transport/transient_variational.ipynb) | UFL transport forms; backward Euler; OfflineMultiscaleSystem; repeated source stepping |
 
 ## introduction
 

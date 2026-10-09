@@ -100,6 +100,9 @@ notebook-results/
 !/docs/figures/introduction-layers/rad-resolved-convergence.png
 !/docs/figures/introduction-layers/rad-resolved-fields.png
 !/docs/figures/introduction-layers/rad-resolved-flux-fields.png
+!/docs/figures/guides/classical-fields.png
+!/docs/figures/guides/heterogeneous-fields.png
+!/docs/figures/guides/marked-materials.png
 !/docs/figures/minimal-convergence/darcy-mixedwell/convergence.png
 !/docs/figures/minimal-convergence/darcy-pgmhm/convergence.png
 !/docs/figures/minimal-convergence/darcy-quarter-obstacle/convergence.png

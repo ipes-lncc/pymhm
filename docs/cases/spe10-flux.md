@@ -349,7 +349,7 @@ Integrated comparisons are recorded in `darcy-flux-q3-norms.json`,
 energy comparison is `neopz-q3-480x1760-order7.json`, also included in
 `neopz-convergence.json`. `msl-cg-convergence.json` and `neopz-provenance.json`
 record reference revisions, solver conventions and artifact digests.
-The [notebook guide](../tutorials.md) includes notebook 23 for inspection
+The [notebook guide](../tutorials/notebooks.md) includes notebook 23 for inspection
 of the reservoir results. Reference-code sources and comparison execution
 programs are not part of this distribution.
 

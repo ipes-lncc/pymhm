@@ -22,11 +22,11 @@ pixi run --locked -e test-core check-dist
 CI runs these portable checks on Linux x86-64, Windows x86-64 and macOS Apple
 Silicon (ARM64). The core run collects coverage; the combined Linux core and
 native FEM measurements must pass independent 99% line and branch gates. Follow
-the [coverage procedure](docs/development.md#coverage) to qualify them locally.
+the [coverage procedure](docs/development/contributing.md#coverage) to qualify them locally.
 Full native acceptance uses the Linux CUDA `test` environment,
 including two-device GPU tests,
 FEniCS/PETSc, PARDISO, meshing, visualization and FreeFEM integrations. Follow
-[the development guide](docs/development.md) to prepare AmgX, check every required
+[the development guide](docs/development/contributing.md) to prepare AmgX, check every required
 dependency and run the complete suite. Both suites use all available CPU workers;
 mark a test `serial` only when shared native resources require isolation.
 
@@ -79,7 +79,7 @@ support, linked to a DOI or an explicitly versioned preprint. Add full
 bibliographic entries under `## References` on each page that cites literature.
 Keep theorem and equation numbers with their claims. For introductory
 tutorials, edit the source notebook's Markdown and regenerate its rendered
-documentation; see the [documentation citation conventions](docs/development.md#cite-the-literature-on-each-page).
+documentation; see the [documentation citation conventions](docs/development/contributing.md#cite-the-literature-on-each-page).
 
 ## Releases
 
@@ -170,7 +170,7 @@ Pushing a fix to `main` does not update an existing tag's workflow. If a release
 failed before publishing any distributions or release artifacts, its version can
 remain unchanged: commit the correction on `main`, then update the unpublished
 tag with the guarded push described in the
-[distribution guide](docs/development.md#automatic-publication).
+[distribution guide](docs/development/contributing.md#automatic-publication).
 Keep published release tags immutable. The release workflow already declares
 the token permissions needed by its reusable workflows and publishing jobs.
 PyPI permanently reserves previously uploaded filenames, including deleted
@@ -181,7 +181,7 @@ Before the first publication, configure the PyPI trusted publisher with owner
 `ipes-lncc`, repository `pymhm`, workflow `publish-pypi.yml` and environment
 `pypi`. Set GitHub Pages' source to **GitHub Actions** and allow `main` and tags
 matching `v*` in the `github-pages` environment. The
-[distribution guide](docs/development.md#distribution) documents these settings
+[distribution guide](docs/development/contributing.md#distribution) documents these settings
 and the optional manual Docs run with `publish=true`.
 
 The complete CPU/two-GPU job runs only on manual dispatch with `full_native`

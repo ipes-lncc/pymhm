@@ -104,7 +104,7 @@ limit and returns a distinct stop reason.
 
 The example helpers below are repository sources, supplied separately from the
 installed library. Open the corresponding notebook to acquire its verified
-companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+companion, as described in the [notebook guide](../tutorials/notebooks.md#execute-downloaded-notebooks).
 
 ```python
 import numpy as np

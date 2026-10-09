@@ -22,6 +22,8 @@ downloads a checksum-verified companion archive and prepares the declared data
 using its local Python helpers. You can inspect these support files in `ROOT`.
 Complete studies and historical replay retain their existing opt-in flags.
 
+
+
 ```python
 from pathlib import Path
 import os
@@ -29,8 +31,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/85260be4d549f31c34531d0a3f5d930d9bb60084b59995ae048e16ececad7d09/darcy_multiscale_convergence-companion.zip"
-COMPANION_SHA256 = "85260be4d549f31c34531d0a3f5d930d9bb60084b59995ae048e16ececad7d09"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/74c5f3e0ffa8e572f4716c0342e3a3f97e1163300a1b56e4b5111b26a47283bd/darcy_multiscale_convergence-companion.zip"
+COMPANION_SHA256 = "74c5f3e0ffa8e572f4716c0342e3a3f97e1163300a1b56e4b5111b26a47283bd"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -73,6 +75,11 @@ import ufl
 from pymhm import ExecutionConfig, CartesianMacroMesh
 from pymhm.fem.scalar.quadrilateral import qk_space, quadrilateral_operators
 from pymhm.fem.scalar.operators import boundary_data
+
+```
+
+```text
+Workspace: ./build/docs-restructure/exact-source-workspaces-final/introduction/darcy_multiscale_convergence
 ```
 
 ## 1. Physical problem and an independently derived source
@@ -167,6 +174,7 @@ class OscillatoryDarcyData:
             - derivative_x * gradient[:, 0]
             - derivative_y * gradient[:, 1]
         )
+
 ```
 
 ## 2. Choose the three approximation scales
@@ -193,6 +201,7 @@ print(
         "spectral_contrast": float(np.exp(2 * data.amplitude)),
     }
 )
+
 ```
 
 ```text
@@ -302,6 +311,7 @@ class DarcyLocalProvider:
             moments=columns((v / area) * dx),
             metadata=(fine, mapping),
         )
+
 ```
 
 ## 4. Construct, assemble and solve the global problem
@@ -346,6 +356,7 @@ print(
 # Named fields carry their mesh and executed basis; no index map is needed to evaluate.
 first_point = macro.points[macro.cells[0]].mean(axis=0, keepdims=True)
 print("First macrocell pressure at its center:", pressure_fields[0].evaluate(first_point))
+
 ```
 
 ```text
@@ -375,6 +386,7 @@ load_defect = float(np.max(np.abs(ufl_load[mapping] - ready_load), initial=0.0))
 print({"UFL_vs_ready_operator_max": float(operator_defect), "UFL_vs_ready_source_max": load_defect})
 assert operator_defect < 1e-10 * max(1.0, float(np.max(np.abs(ready_a.data))))
 assert load_defect < 1e-10 * max(1.0, float(np.max(np.abs(ready_load))))
+
 ```
 
 ```text
@@ -428,7 +440,12 @@ for n in (32, 64, 128):
     errors = physical_errors(evaluator, exact, data.permeability, error_points, error_weights)
     reference_rows.append({"n": n, "unknowns": len(nodes), **errors})
 reference_rows
+
 ```
+
+
+
+
 
 ```text
 [{'n': 32,
@@ -477,6 +494,7 @@ print("MHM versus exact solution:", exact_errors)
 # The exact solution keeps this conclusion independent of reference uncertainty.
 assert reference_rows[-1]["flux_L2"] < reference_rows[0]["flux_L2"]
 assert reference_rows[-1]["pressure_L2"] < reference_rows[0]["pressure_L2"]
+
 ```
 
 ```text
@@ -529,7 +547,10 @@ panels = {
 }
 plot_field_panels(macro, panels, figsize=(15, 9))
 plt.show()
+
 ```
+
+
 
 [![Figure 1 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_17_0.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_17_0.png)
 
@@ -606,6 +627,7 @@ for name, rows, variable in (
     for axis in figure.axes:
         axis.set_xlabel(name)
     plt.show()
+
 ```
 
 ```text
@@ -672,4 +694,4 @@ python -m scripts.run_notebooks /path/to/darcy_multiscale_convergence.ipynb --ti
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `4443e7cd833207167fe541c3efbf7c7db91d0efa8054997c7967893cb2831c4c` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `57a5c1ec9b47a1cdf57dd7283c1bc688ab989031e315b33456a1b5f7810483d3` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

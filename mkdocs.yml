@@ -5,12 +5,19 @@ repo_url: https://github.com/ipes-lncc/pymhm
 repo_name: ipes-lncc/pymhm
 edit_uri: edit/main/docs/
 strict: true
+copyright: >-
+  Original figures © IPES Research Group ·
+  <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> ·
+  <a href="/pymhm/licensing/">Reuse and attribution</a>
 theme:
   name: material
   logo: assets/branding/pymhm-icon.svg
   favicon: assets/branding/pymhm-icon.svg
   font: false
   features:
+  - navigation.tabs
+  - navigation.tabs.sticky
+  - navigation.indexes
   - navigation.sections
   - navigation.tracking
   - navigation.top
@@ -218,74 +225,145 @@ exclude_docs: '/cases/adaptive-darcy.md
 
   !/figures/minimal-convergence/**
 
+  !/figures/guides/**
+
   '
 nav:
-- Overview: index.md
-- Installation: installation.md
-- Windows: windows.md
-- Data and notebook downloads: data.md
-- Mathematical foundations: theory.md
-- Literature and scope: literature.md
-- Architecture: architecture.md
-- Variational problems: variational.md
-- Mesh generation: meshing.md
-- Cartesian Qk Darcy: quadrilateral.md
-- PyVista visualization: visualization.md
-- FEniCS local forms: fenics.md
-- Linear solvers: solvers.md
-- MPI, GPU and operator reuse: execution.md
-- Performance and scaling: performance.md
+- Home: index.md
+- Getting Started:
+  - getting-started/index.md
+  - Installation: installation.md
+  - Windows: windows.md
+  - Data and notebook downloads: data.md
+  - Figure reuse and attribution: licensing.md
+- Theoretical Background:
+  - theory.md
+  - Multiscale variational foundations: theory/foundations.md
+  - Primal, mixed and Robin elliptic methods: theory/elliptic.md
+  - MH²M, MsHHO, Petrov–Galerkin and unfitted methods: theory/alternatives.md
+  - Stokes, Brinkman and Oseen: theory/flow.md
+  - Elasticity and elastodynamics: theory/elasticity.md
+  - Transport and reaction–diffusion: theory/transport.md
+  - Helmholtz and Maxwell: theory/waves.md
+  - Meshes and approximation spaces: theory/meshes.md
+  - Recovery, indicators and adaptivity: theory/recovery.md
+- Guides:
+  - guides/index.md
+  - One heterogeneous Darcy problem: guides/heterogeneous-darcy.md
+  - Serial, threads and processes: guides/cpu.md
+  - MPI execution: guides/mpi.md
+  - GPU and multiple GPUs: guides/gpu.md
+  - Mesh generation, import and export: meshing.md
+  - Material and boundary markers: guides/materials.md
+  - UFL and DOLFINx local assembly: fenics.md
+  - Linear solver selection: solvers.md
+  - Execution and operator reuse: execution.md
+  - Performance measurement: performance.md
+  - Field visualization: visualization.md
+  - Cartesian Qk discretizations: quadrilateral.md
+  - Custom interface spaces: tutorials/custom-interface.md
+  - External local providers: tutorials/providers.md
 - Tutorials:
-  - Start here — API overview: tutorials/overview.md
-  - Guide and notebooks: tutorials.md
-  - Introductory problems:
+  - tutorials/index.md
+  - Start here -- feature overview: tutorials/overview.md
+  - Methods and verified rates: tutorials/methods/index.md
+  - Scalar elliptic methods:
+    - Primal MHM: tutorials/methods/primal-mhm.md
+    - Mixed H(div) MHM: tutorials/methods/mixed-mhm.md
+    - Robin MH: tutorials/methods/robin-mh.md
+    - Three-field MH²M: tutorials/methods/mh2m.md
+    - MsHHO: tutorials/methods/mshho.md
+    - Petrov–Galerkin MHM: tutorials/methods/pgmhm.md
+    - MHM-USFEM: tutorials/methods/mhm-usfem.md
+    - Unfitted MHM: tutorials/methods/unfitted.md
+  - Vector and time-dependent methods:
+    - Stokes–Brinkman MHM: tutorials/methods/stokes-brinkman.md
+    - Oseen MHM: tutorials/methods/oseen.md
+    - Primal elasticity: tutorials/methods/primal-elasticity.md
+    - GaLS elasticity: tutorials/methods/gals-elasticity.md
+    - Mixed stress elasticity: tutorials/methods/mixed-elasticity.md
+    - Transient transport: tutorials/methods/transient-transport.md
+    - Elastodynamics: tutorials/methods/elastodynamics.md
+    - Helmholtz: tutorials/methods/helmholtz.md
+    - Maxwell: tutorials/methods/maxwell.md
+  - Recovery and multiscale strategies:
+    - H(div) flux recovery: tutorials/methods/flux-recovery.md
+    - Error indicators: tutorials/methods/error-indicators.md
+    - Adaptive refinement: tutorials/methods/adaptivity.md
+    - Recursive MHM: tutorials/methods/recursive-mhm.md
+  - Worked physical examples:
     - Multiscale Darcy and convergence: tutorials/introduction/darcy_multiscale_convergence.md
     - Darcy on a SPE10 layer: tutorials/introduction/darcy_spe10_layer.md
     - Multiscale elasticity: tutorials/introduction/multiscale_elasticity.md
     - MsHHO with multiscale permeability: tutorials/introduction/mshho_multiscale.md
     - MH²M with multiscale permeability: tutorials/introduction/mh2m_multiscale.md
-    - MHM-USFEM reaction–diffusion layers: tutorials/introduction/mhm_usfem_rad.md
+    - Reaction–diffusion layers: tutorials/introduction/mhm_usfem_rad.md
     - Stokes–Brinkman boundary layers: tutorials/introduction/stokes_brinkman_boundary_layer.md
-  - Parallel execution:
-    - Two-dimensional Darcy with threads: tutorials/introduction/darcy_parallel_scalability.md
-    - Two-dimensional Darcy with processes: tutorials/introduction/darcy_process_scalability.md
-    - Three-dimensional Darcy scaling: tutorials/introduction/darcy_3d_parallel_scalability.md
-  - Scalar formulations: tutorials/scalar.md
-  - Vector formulations: tutorials/vector.md
-  - Custom interface spaces: tutorials/custom-interface.md
-  - Local providers and assembly: tutorials/providers.md
-- Case gallery:
-  - Evidence guide: cases/index.md
-  - Initial convergence studies: cases/minimal-convergence.md
-  - RAD and Brinkman boundary layers: cases/introduction-layers.md
-  - Three-dimensional Darcy scaling: cases/darcy-3d-scalability.md
-  - Three-dimensional CPU and GPU scaling: cases/darcy-3d-accelerators.md
-  - Recursive MHM: cases/nested.md
-  - MsHHO: cases/mshho.md
-  - Quarter-five spot and obstacle: cases/quarter-five-spot.md
-  - MsHHO in 3D: cases/mshho3d.md
-  - Mixed H(div) in 3D: cases/enriched-hdiv3d.md
-- Verification: verification.md
-- API reference:
-  - Overview: api.md
-  - Meshes and geometric refinement: api/geometry.md
-  - Materials and reservoir data: api/materials.md
-  - Mesh exchange and visualization: api/meshing.md
-  - Hybrid operators and multiscale constructions: api/hybrid.md
-  - Robin MH and three-field MH²M: api/mh.md
-  - Darcy in two dimensions: api/darcy.md
-  - Darcy in three dimensions: api/darcy3d.md
-  - Flux reconstruction and error estimation: api/reconstruction.md
-  - Adaptive scalar and elasticity indicators: api/adaptivity.md
-  - Stokes, Brinkman and Oseen: api/flow.md
-  - Elasticity: api/elasticity.md
-  - Transport, reaction and diffusion: api/transport.md
-  - Finite element bases: api/elements.md
-  - Helmholtz and Maxwell: api/waves.md
-  - Solvers and execution backends: api/backends.md
-  - Resources and writable workspaces: api/resources.md
-- Roadmap: https://github.com/ipes-lncc/pymhm/blob/main/ROADMAP.md
-- Development: development.md
+  - Parallel examples:
+    - Darcy with threads: tutorials/introduction/darcy_parallel_scalability.md
+    - Darcy with processes: tutorials/introduction/darcy_process_scalability.md
+    - Three-dimensional Darcy: tutorials/introduction/darcy_3d_parallel_scalability.md
+  - Notebook catalogue: tutorials/notebooks.md
+  - Scalar formulation examples: tutorials/scalar.md
+  - Vector formulation examples: tutorials/vector.md
+- Gallery:
+  - gallery/index.md
+  - By physical problem:
+    - Darcy: gallery/darcy.md
+    - Stokes, Brinkman and Oseen: gallery/flow.md
+    - Transport and reaction–diffusion: gallery/transport.md
+    - Transient transport: gallery/transient-transport.md
+    - Elasticity: gallery/elasticity.md
+    - Elastodynamics: gallery/elastodynamics.md
+    - Acoustics: gallery/acoustics.md
+    - Electromagnetism: gallery/maxwell.md
+  - By dimension:
+    - Two-dimensional cases: gallery/two-dimensional.md
+    - Three-dimensional cases: gallery/three-dimensional.md
+  - Detailed evidence:
+    - Reading the numerical evidence: cases/index.md
+    - Initial convergence studies: cases/minimal-convergence.md
+    - RAD and Brinkman boundary layers: cases/introduction-layers.md
+    - Three-dimensional Darcy scaling: cases/darcy-3d-scalability.md
+    - CPU and GPU scaling: cases/darcy-3d-accelerators.md
+    - Recursive MHM: cases/nested.md
+    - MsHHO: cases/mshho.md
+    - Quarter-five spot and obstacle: cases/quarter-five-spot.md
+    - MsHHO in 3D: cases/mshho3d.md
+    - Mixed H(div) in 3D: cases/enriched-hdiv3d.md
+- Development:
+  - development/index.md
+  - Contribution and release workflow: development/contributing.md
+  - Software architecture: architecture.md
+  - Variational API contracts: variational.md
+  - Verification procedures: verification.md
+  - Roadmap: https://github.com/ipes-lncc/pymhm/blob/main/ROADMAP.md
+- API:
+  - api.md
+  - Meshes, fields and data:
+    - Geometry and refinement: api/geometry.md
+    - Materials: api/materials.md
+    - Mesh exchange and visualization: api/meshing.md
+    - Resources and workspaces: api/resources.md
+  - Equations and finite elements:
+    - Hybrid and multiscale constructions: api/hybrid.md
+    - Elements and tabulation: api/elements.md
+    - Local differential operators: api/local-operators.md
+    - Degree and compatibility contracts: api/numerical-contracts.md
+    - Robin MH and MH²M: api/mh.md
+  - Field operators:
+    - Scalar operators in 2D: api/darcy.md
+    - Scalar operators in 3D: api/darcy3d.md
+    - Stokes, Brinkman and Oseen: api/flow.md
+    - Elasticity: api/elasticity.md
+    - Transport and reaction–diffusion: api/transport.md
+    - Helmholtz and Maxwell: api/waves.md
+  - Reconstruction and execution:
+    - Physical field postprocessing: api/postprocessing.md
+    - Flux recovery: api/reconstruction.md
+    - Indicators and adaptivity: api/adaptivity.md
+    - Solvers and execution: api/backends.md
+- Bibliography: literature.md
 plugins:
 - search
 - mkdocstrings:

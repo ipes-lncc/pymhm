@@ -10,6 +10,11 @@ Each family page contains the complete signatures and docstrings of its document
 objects. Optional dependencies are identified by the relevant adapters; the native
 multiscale formulations remain part of the portable package.
 
+The API pages render documentation directly from the canonical Python modules
+with `mkdocstrings`; signatures and numerical conventions come from the source.
+The reference includes the shared local operators, validation contracts and
+physical field containers, alongside the high-level problem interfaces.
+
 Physical family pages document reusable element, trace, material and recovery
 operations together with the predefined formulations used by the verified
 gallery. User implementations compose the public operations with their own
@@ -33,6 +38,9 @@ links the mathematical ingredients to importable, editable providers.
 | [Elasticity](api/elasticity.md) | Displacement, displacement–pressure and weakly symmetric stress formulations. |
 | [Transport, reaction and diffusion](api/transport.md) | Stationary and transient scalar problems, conservative transport and stabilization. |
 | [Finite element bases](api/elements.md) | Lagrange, BDM and RT bases, curl operators and tangential traces with their declared local degrees of freedom. |
+| [Local finite-element operators](api/local-operators.md) | Volume/trace forms, quadrature orders and reusable scalar and vector element operations. |
+| [Numerical contracts](api/numerical-contracts.md) | Admissible spaces, physical constraints and numerical validation. |
+| [Physical fields and post-processing](api/postprocessing.md) | Executed field coordinates, component evaluation and physical norms. |
 | [Helmholtz and Maxwell](api/waves.md) | Time-harmonic acoustic and transient electromagnetic formulations. |
 | [Solvers and execution backends](api/backends.md) | Finite-element adapters, sparse solvers, parallel execution and separable operators. |
 
@@ -75,5 +83,5 @@ these operations into each mathematical formulation.
 The family pages generate signatures and documentation directly from their
 owners. They contain the supported spaces, array conventions, orientations,
 physical gauges and failure conditions. See the [architecture](architecture.md)
-for package responsibilities and [tutorials](tutorials.md) for complete scalar,
+for package responsibilities and [tutorials](tutorials/notebooks.md) for complete scalar,
 vector and provider examples.

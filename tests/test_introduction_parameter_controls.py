@@ -42,9 +42,10 @@ def formulation(
 
 
 @pytest.mark.fem
-def test_rad_nondefault_diffusion_refinement_and_assembly_quadrature() -> None:
+def test_rad_nondefault_diffusion_refinement_and_assembly_quadrature(tmp_path: Path) -> None:
     """The visible controls change actual P1 operators and the independent local mesh."""
     pytest.importorskip("dolfinx")
+    from pymhm.execution.cpu import ExecutionConfig
     from pymhm.fem.scalar.triangle import scalar_operators
 
     controls = dict(
@@ -53,9 +54,12 @@ def test_rad_nondefault_diffusion_refinement_and_assembly_quadrature() -> None:
         LOCAL_QUADRATURE_DEGREE=10,
         OPERATOR_CHECK_ORDER=12,
         ERROR_ORDER=16,
+        RAD_JIT_OPTIONS={"cache_dir": tmp_path / "rad-jit", "timeout": 7200},
     )
     namespace = formulation("mhm_usfem_rad", controls)
-    macro, skeleton, system, solution = namespace["solve_rad_case"](2, controls["EPSILON"], False)
+    macro, skeleton, system, solution = namespace["solve_rad_case"](
+        2, controls["EPSILON"], False, execution=ExecutionConfig(backend="serial")
+    )
     assert len(macro.cells) == 8 and all(face.degrees == (0,) for face in skeleton.faces)
     assert all(
         len(data["mesh"].cells) == 16 and data["local_subdivisions"] == 4
@@ -82,7 +86,7 @@ def test_rad_nondefault_diffusion_refinement_and_assembly_quadrature() -> None:
 
 
 @pytest.mark.fem
-def test_brinkman_nondefault_subdivision_viscosity_drag_and_quadrature() -> None:
+def test_brinkman_nondefault_subdivision_viscosity_drag_and_quadrature(tmp_path: Path) -> None:
     """The main Taylor-Hood mesh and physical gauge follow the displayed controls."""
     pytest.importorskip("dolfinx")
     controls = dict(
@@ -92,6 +96,7 @@ def test_brinkman_nondefault_subdivision_viscosity_drag_and_quadrature() -> None
         LOCAL_QUADRATURE_DEGREE=32,
         ERROR_ORDER=16,
         INVERSE_M=0.01,
+        BRINKMAN_JIT_OPTIONS={"cache_dir": tmp_path / "brinkman-jit", "timeout": 7200},
     )
     namespace = formulation("stokes_brinkman_boundary_layer", controls)
     namespace["truth"] = namespace["BrinkmanLayer"](controls["NU"], controls["GAMMA"])
