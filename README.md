@@ -27,6 +27,49 @@ affine prisms, star-shaped polyhedra and mapped hexahedra. Available equations a
 spaces depend on the geometry; the documentation states each verified scope
 and distinguishes it from extensions described in the literature.
 
+## Available Methods
+
+Choose the variational method and its admissible approximation spaces independently
+of the linear solver and execution backend. **When publishing results obtained
+with PyMHM, cite the original publications of every method, reconstruction or
+estimator used**, together with the PyMHM version. The [Theoretical Background](docs/theory.md) states degree, geometry and regularity
+conditions; each linked tutorial follows the mathematical formulation in code.
+
+| Method | Original publication |
+| --- | --- |
+| [Primal MHM](docs/tutorials/methods/primal-mhm.md) | [Harder et al. (2013)](https://doi.org/10.1016/j.jcp.2013.03.019) |
+| [Mixed H(div) MHM](docs/tutorials/methods/mixed-mhm.md) | [Durán et al. (2019)](https://doi.org/10.1016/j.cma.2019.05.013) |
+| [Robin MH](docs/tutorials/methods/robin-mh.md) | [Barrenechea et al. (2024)](https://doi.org/10.1137/22M1542556) |
+| [MH²M](docs/tutorials/methods/mh2m.md) | [de Barros et al. (2026, v3)](https://arxiv.org/abs/2404.16978v3) |
+| [MsHHO](docs/tutorials/methods/mshho.md) | [Cicuttin, Ern and Lemaire (2019)](https://doi.org/10.1515/cmam-2018-0013); [MHM connection (2022)](https://doi.org/10.1051/m2an/2021082) |
+| [Petrov–Galerkin MHM](docs/tutorials/methods/pgmhm.md) | [Fernando et al. (2023)](https://doi.org/10.1007/s40314-023-02304-y) |
+| [MHM-USFEM (MHM-UNUSUAL)](docs/tutorials/methods/mhm-usfem.md) | [Santiago et al. (CILAMCE 2025)](https://doi.org/10.55592/cilamce2025.v5i.14270) |
+| [Stokes–Brinkman MHM](docs/tutorials/methods/stokes-brinkman.md) | [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) |
+| [Oseen MHM](docs/tutorials/methods/oseen.md) | [Araya et al. (2021)](https://doi.org/10.1007/s10444-020-09833-8) |
+| [Primal elasticity MHM](docs/tutorials/methods/primal-elasticity.md) | [Harder et al. (2016)](https://doi.org/10.1051/m2an/2015046) |
+| [GaLS elasticity MHM](docs/tutorials/methods/gals-elasticity.md) | [Gomes et al. (2024, v1)](https://arxiv.org/abs/2403.16890v1) |
+| [Mixed stress elasticity MHM](docs/tutorials/methods/mixed-elasticity.md) | [Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013) |
+| [Conservative transport MHM](docs/tutorials/methods/transient-transport.md) | [Harder et al. (2015)](https://doi.org/10.1137/130938499) |
+| [Elastodynamic MHM](docs/tutorials/methods/elastodynamics.md) | [Gomes et al. (2017)](https://doi.org/10.20906/CPS/CILAMCE2017-0399) |
+| [Helmholtz MHM](docs/tutorials/methods/helmholtz.md) | [Chaumont-Frelet and Valentin (2020)](https://doi.org/10.1137/19M1255616) |
+| [Maxwell MHM](docs/tutorials/methods/maxwell.md) | [Lanteri et al. (2018)](https://doi.org/10.1137/16M110037X) |
+| [Unfitted/face-refined MHM](docs/tutorials/methods/unfitted.md) | [Chaumont-Frelet et al. (2026)](https://doi.org/10.1016/j.camwa.2026.01.016) |
+
+Recovery and adaptive strategies complement those discretizations:
+
+| Strategy | Purpose | Original analysis |
+| --- | --- | --- |
+| [Flux and potential recovery](docs/tutorials/methods/flux-recovery.md) | RT0 equilibration, moment H(div) reconstruction and conforming potentials | [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073) |
+| [Error indicators](docs/tutorials/methods/error-indicators.md) | Field-specific residual and reconstructed-energy diagnostics | [Araya et al. (2013)](https://doi.org/10.1137/120888223) |
+| [Adaptive approximation](docs/tutorials/methods/adaptivity.md) | Independent macro, face, degree and local controls | [Araya et al. (2021)](https://doi.org/10.1093/imanum/drz053) |
+| [Recursive MHM](docs/tutorials/methods/recursive-mhm.md) | A multiscale local operator with its own global/local hierarchy | [Harder and Valentin (2016)](https://doi.org/10.1007/978-3-319-41640-3_13) |
+
+The table identifies implemented families, not every theorem or historical
+experiment in their papers. The [Gallery](docs/gallery/index.md) records verified
+spaces and remaining limitations. RT0 equilibration and moment reconstruction
+are distinct operators; a generic indicator does not inherit the reliability
+proof of a complete published estimator.
+
 ## Installation
 
 Use Python 3.11–3.13 on Linux, macOS or Windows:
@@ -49,7 +92,7 @@ Windows commands, upgrades and native backend requirements.
 ## Quick start
 
 Start with the [step-by-step UFL overview](docs/tutorials/overview.md) and the
-[introductory course with executed plots](docs/tutorials.md). They connect the
+[introductory course with executed plots](docs/tutorials/notebooks.md). They connect the
 mathematical local and global formulations to the code for scalar, vector and
 mixed problems.
 
@@ -180,10 +223,10 @@ The [scientific scope](ROADMAP.md#scientific-scope-and-acceptance-criteria) maps
 verification evidence and remaining reproduction limits. The stated geometry,
 space compatibility and estimator hypotheses are part of each capability.
 See [theory](docs/theory.md),
-[literature](docs/literature.md), [verification](docs/verification.md) and
+[Bibliography](docs/literature.md), [Gallery](docs/gallery/index.md) and
 [performance](docs/performance.md) for assumptions and evidence.
 
-The [visual case gallery](docs/cases/index.md) compares computed fields with
+The [visual case gallery](docs/gallery/index.md) compares computed fields with
 analytical references, error maps, profiles and convergence expectations.
 The [MSL field comparison](docs/cases/reference-comparison.md) checks primal
 Darcy fields against MSL_MHM with MSL_CG and MSL_Core. The
@@ -263,13 +306,13 @@ notebook execution and full gallery generation require their separate acceptance
 The portable `test-core` environment supports Linux, Windows and macOS. The
 complete `test` environment includes the native CPU and GPU integrations and
 requires a Linux CUDA host with two NVIDIA devices. Its pinned AmgX setup and
-mandatory dependency checks are described in the [development guide](docs/development.md).
+mandatory dependency checks are described in the [development guide](docs/development/contributing.md).
 Both suites use all available CPU workers and isolate tests marked `serial`.
 
 CI tests the portable core on Linux x86-64, Windows x86-64 and macOS Apple
 Silicon (ARM64). It enforces independent 99% line and branch coverage gates on
 the combined Linux core and native FEM measurements from the same revision.
-The [development guide](docs/development.md#coverage) provides the local commands.
+The [development guide](docs/development/contributing.md#coverage) provides the local commands.
 Executable notebooks and their companion helpers are separate repository and
 website downloads. Optional
 dependency contracts and actual native-backend integrations are reported separately.
@@ -287,7 +330,7 @@ The Docs workflow also supports manual publication from `main` or a release tag
 by enabling its `publish` input.
 Maintainers configure the PyPI trusted publisher for `publish-pypi.yml`, Pages
 with GitHub Actions as its source and the `github-pages` environment to accept
-release tags; see [development](docs/development.md).
+release tags; see [development](docs/development/contributing.md).
 
 Prepare release notes and synchronize current versions with
 `pixi run --locked -e release release-prepare VERSION`, after running
@@ -296,7 +339,12 @@ handwritten notes. Official releases use `X.Y.Z` versions and matching `vX.Y.Z`
 tags; for example, prepare `1.1.0` and tag `v1.1.0`. Use `--initial` only when no
 canonical release tag exists in the fetched main-branch history.
 
-Licensed under LGPL-2.1-only. Citation metadata is in `CITATION.cff`.
+The software is licensed under LGPL-2.1-only. Citation metadata is in `CITATION.cff`.
+Original documentation figures and diagrams are licensed under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), with attribution to
+**IPES Research Group**. Commercial reuse and adaptations are permitted with
+attribution and an indication of changes; see the
+[figure reuse guide](https://ipes-lncc.github.io/pymhm/licensing/).
 
 ## Institutional Support
 

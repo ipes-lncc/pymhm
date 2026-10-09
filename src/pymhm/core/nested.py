@@ -26,6 +26,9 @@ def nested_trace_map(
     must lie on individual straight parent edges, and every restricted outer
     basis function must belong to the inner face space. Extra material cuts or
     smaller inner degrees cannot silently project an unrepresentable trace.
+    Endpoint projections agree with parent breakpoints within the declared
+    coordinate-roundoff envelope. Corrections smaller than half the child edge
+    retain its ordering; genuine interior material cuts remain unrepresentable.
     Components retain the standard component-interleaved ordering.
     """
     if outer.components != inner.components:
@@ -43,7 +46,7 @@ def nested_trace_map(
             start, end = outer.mesh.points[outer.mesh.faces[parent]]
             tangent = end - start
             length = outer.mesh.lengths[parent]
-            parameter = (endpoints - start) @ tangent / length**2
+            parameter = (endpoints - start) @ tangent / (tangent @ tangent)
             defect = endpoints - start - parameter[:, None] * tangent
             tolerance = 128 * np.finfo(float).eps
             if (
@@ -51,6 +54,21 @@ def nested_trace_map(
                 and parameter.min() >= -tolerance
                 and parameter.max() <= 1 + tolerance
             ):
+                # Recognize the same partition vertex after coordinate evaluation.
+                # A geometric correction cannot collapse a nonzero child edge.
+                breaks = np.asarray(outer.faces[parent].breaks)
+                nearest = breaks[np.argmin(abs(parameter[:, None] - breaks), axis=1)]
+                envelope = (
+                    16
+                    * np.finfo(float).eps
+                    * (abs(endpoints) + abs(start) + abs(end))
+                    @ abs(tangent)
+                    / (tangent @ tangent)
+                    + tolerance
+                )
+                correction = abs(parameter - nearest)
+                snap = (correction <= envelope) & (correction < abs(np.diff(parameter))[0] / 2)
+                parameter = np.where(snap, nearest, parameter)
                 matches.append((side, parent, np.clip(parameter, 0, 1)))
         if len(matches) != 1:
             raise ValueError("each inner boundary face must belong to exactly one parent edge")

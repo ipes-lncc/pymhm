@@ -305,6 +305,9 @@ def _render_tutorial(source: Path, executed: Path, root: Path) -> _RenderedTutor
             ".jpeg",
         }:
             raise ValueError(f"Unexpected extracted asset path: {name}")
+        if path.suffix == ".svg":
+            # Keep textual figures stable under the repository's whitespace hook.
+            content = re.sub(rb"[ \t]+(?=\r?\n|$)", b"", content)
         assets[image_directory / path.name] = content
     if not assets:
         raise ValueError(f"Exporter produced no static figures: {source.name}")

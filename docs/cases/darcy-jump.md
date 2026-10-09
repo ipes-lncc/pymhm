@@ -100,7 +100,7 @@ pixi run --locked -e notebooks python -m examples.darcy_jump_campaign
 ```
 
 The ten numerical records and macro-indicator arrays are in
-`examples/results/darcy-jump`. [Notebook 42](../tutorials.md) executes a small
+`examples/results/darcy-jump`. [Notebook 42](../tutorials/notebooks.md) executes a small
 analytical case and displays the archived campaign. Light tests verify face
 multiplicity, permeability scaling, Neumann classification, affine consistency
 and input restrictions. The multilevel experiment runs separately from CI.

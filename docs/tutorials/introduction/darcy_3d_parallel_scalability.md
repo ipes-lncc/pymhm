@@ -38,6 +38,8 @@ downloads a checksum-verified companion archive and prepares the declared data
 using its local Python helpers. You can inspect these support files in `ROOT`.
 Complete studies and historical replay retain their existing opt-in flags.
 
+
+
 ```python
 from pathlib import Path
 import os
@@ -45,8 +47,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/0e4b57acb8713616252c75aefac2656634a1e923bd32711ae0ba1c84b2fba55d/darcy_3d_parallel_scalability-companion.zip"
-COMPANION_SHA256 = "0e4b57acb8713616252c75aefac2656634a1e923bd32711ae0ba1c84b2fba55d"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/459efa13b5376ab66440dde399289c04fe31f411d1222124cf88287760a166a2/darcy_3d_parallel_scalability-companion.zip"
+COMPANION_SHA256 = "459efa13b5376ab66440dde399289c04fe31f411d1222124cf88287760a166a2"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -76,19 +78,27 @@ DATA = study.DarcyData(period=0.1)
 FINE_N, MACRO_COUNT = 16, 4
 TRACE_DEGREE, ASSEMBLY_QUADRATURE_DEGREE = 1, 8
 print({"anisotropy": DATA.anisotropy, "source_control": study.verify_source(DATA)})
+
+```
+
+```text
+Workspace: ./build/docs-restructure/final-workspaces/provenance-final-darcy_3d_parallel_scalability-b6e58798ac5d
 ```
 
 ```text
 {'anisotropy': ((np.float64(2.0), np.float64(0.3), np.float64(0.2)), (np.float64(0.3), np.float64(1.5), np.float64(0.1)), (np.float64(0.2), np.float64(0.1), np.float64(1.0))), 'source_control': {'maximum_source_absolute_difference': 7.532553922828811e-07, 'anisotropy_minimum_eigenvalue': 0.9576748571757884, 'anisotropy_maximum_eigenvalue': 2.1827601656659152}}
 ```
 
-These are the actual executed physical-data and local-equation declarations. Native form compilation, workspace ownership and the importable spawn workers live in [scaling_3d.py](https://github.com/ipes-lncc/pymhm/blob/main/examples/introduction/scaling_3d.py). `create_cell_workspace` contains the full UFL volume and face forms; `LocalProvider` owns resource lifetime and orientation.
+These are the actual executed physical-data and local-equation declarations. Native form compilation, workspace ownership and the importable spawn workers live in [scaling_3d.py](https://github.com/ipes-lncc/pymhm/tree/main/examples/introduction/scaling_3d.py). `create_cell_workspace` contains the full UFL volume and face forms; `LocalProvider` owns resource lifetime and orientation.
 
 
 ```python
 display(Code(inspect.getsource(study.symbolic_data), language="python"))
 display(Code(inspect.getsource(study.assemble_cell_equations), language="python"))
+
 ```
+
+
 
 ```python
 def symbolic_data(domain: Any, omega: Any, anisotropy: Any) -> tuple[Any, Any, Any, Any]:
@@ -107,6 +117,10 @@ def symbolic_data(domain: Any, omega: Any, anisotropy: Any) -> tuple[Any, Any, A
     flux = -ufl.dot(tensor, ufl.grad(pressure))
     return pressure, tensor, flux, ufl.div(flux)
 ```
+
+
+
+
 
 ```python
 def assemble_cell_equations(
@@ -169,6 +183,8 @@ def assemble_cell_equations(
     )
 ```
 
+
+
 Bind the hierarchy and the custom normal-trace interface, then assemble and solve through the generic API. A spawned worker imports the provider directly; no cell compilation or temporary Python module is needed.
 
 
@@ -189,6 +205,7 @@ system = assemble(problem, execution=ExecutionConfig(
 solution = system.solve()
 print(study.mhm_physical_errors(system, solution, data=DATA, order=7))
 print({"trace_dofs": problem.trace_size, "relative_residual": solution.residual})
+
 ```
 
 ```text
@@ -212,38 +229,39 @@ reproduction = study.run_study(
     data=DATA, trace_degree=TRACE_DEGREE,
     quadrature_degree=ASSEMBLY_QUADRATURE_DEGREE, small_fine_n=FINE_N,
 )
+
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'scipy', 'total_seconds': 5.017104081809521, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'scipy', 'total_seconds': 5.098610606044531, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'scipy', 'total_seconds': 2.062043856829405, 'physical_errors': {'pressure_L2': 0.001658052529591906, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.001658052529591906, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'scipy', 'total_seconds': 2.264804543927312, 'physical_errors': {'pressure_L2': 0.001658052529591906, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.001658052529591906, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'pyamg', 'total_seconds': 7.463762082159519, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'pyamg', 'total_seconds': 8.097707675769925, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 11.983143145218492, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 12.07021987810731, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'scipy', 'total_seconds': 0.7697141617536545, 'physical_errors': {'pressure_L2': 0.0014456896117105641, 'flux_L2': 0.19568823135874996, 'pressure_L2_per_sqrt_volume': 0.0014456896117105641, 'flux_L2_per_sqrt_volume': 0.19568823135874996, 'pressure_relative_L2': 0.0040890277117259285, 'flux_relative_L2': 0.05657212369630176, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.2571761369096059, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
+{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'scipy', 'total_seconds': 0.7896870914846659, 'physical_errors': {'pressure_L2': 0.0014456896117105641, 'flux_L2': 0.19568823135874996, 'pressure_L2_per_sqrt_volume': 0.0014456896117105641, 'flux_L2_per_sqrt_volume': 0.19568823135874996, 'pressure_relative_L2': 0.0040890277117259285, 'flux_relative_L2': 0.05657212369630176, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.2571761369096059, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'scipy', 'total_seconds': 3.4314395394176245, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'scipy', 'total_seconds': 3.8181271385401487, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 7.9338173642754555, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 8.282001348212361, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 0.5156556889414787, 'physical_errors': {'pressure_L2': 0.001445689611718351, 'flux_L2': 0.1956882313588107, 'pressure_L2_per_sqrt_volume': 0.001445689611718351, 'flux_L2_per_sqrt_volume': 0.1956882313588107, 'pressure_relative_L2': 0.0040890277117479525, 'flux_relative_L2': 0.05657212369631932, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.25717613690960167, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
+{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 0.5560855977237225, 'physical_errors': {'pressure_L2': 0.001445689611718351, 'flux_L2': 0.1956882313588107, 'pressure_L2_per_sqrt_volume': 0.001445689611718351, 'flux_L2_per_sqrt_volume': 0.1956882313588107, 'pressure_relative_L2': 0.0040890277117479525, 'flux_relative_L2': 0.05657212369631932, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.25717613690960167, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
 ```
 
 
@@ -2509,4 +2527,4 @@ python -m scripts.run_notebooks /path/to/darcy_3d_parallel_scalability.ipynb --t
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `cf7ac325fb6668b6539cfa673a24058cb96824965d156b17b225afd79e2d8ce4` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `9d3b64495b8ae8b31a63b4ec689032dba4c9f6cc045b2d928eb10f83085f1aa8` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

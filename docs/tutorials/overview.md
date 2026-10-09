@@ -8,7 +8,7 @@ contributions in a deterministic order.
 
 This tutorial writes a complete two-dimensional problem with UFL. It uses
 ordinary functions for both equations, without a named physical-model
-constructor. The [introductory course](../tutorials.md) develops the same steps
+constructor. The [introductory course](notebooks.md) develops the same steps
 for heterogeneous Darcy, elasticity, MsHHO, MH²M, reaction–diffusion and
 Stokes–Brinkman, including fields, classical references and convergence studies.
 
@@ -24,7 +24,7 @@ python -m pip install pymhm
 ```
 
 The installed distribution contains only `pymhm`. Download the notebook from
-the [catalogue](../tutorials.md); its first cell explicitly acquires verified
+the [catalogue](notebooks.md); its first cell explicitly acquires verified
 local companion helpers and prepares the declared data. Install notebook and
 plot dependencies with:
 

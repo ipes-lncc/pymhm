@@ -626,14 +626,24 @@ def profile_segments(
 
 
 def execution_provenance(notebook: str, *, root: Path, **metadata: Any) -> dict[str, Any]:
-    """Record current notebook/lock identities and installed numerical-library versions."""
+    """Record notebook, numerical-library and mandatory support-source identities.
+
+    Literal repository-relative support labels also declare the source closure
+    to the companion builder. Every declared owner must exist in the extracted
+    companion; missing sources retain their ordinary filesystem exceptions.
+    """
     import importlib.metadata
 
     from examples.introduction.provenance import notebook_provenance, support_manifest
     from pymhm.io.provenance import current_source_manifest
 
     support = tuple(
-        Path(__file__).with_name(name) for name in ("vector.py", "transport.py", "provenance.py")
+        Path(__file__).resolve().parents[2] / name
+        for name in (
+            "examples/introduction/vector.py",
+            "examples/introduction/transport.py",
+            "examples/introduction/provenance.py",
+        )
     )
     return {
         **notebook_provenance(notebook, workspace=root),

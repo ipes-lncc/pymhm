@@ -292,7 +292,7 @@ def electric_kick(
         )
     if original_residual > 1e-10 or np.linalg.norm(constraint) > 1e-10 * max(scale, uncancelled):
         raise RuntimeError("user-defined electric equations fail their original physical balance")
-    return updated, trace, average, float(np.linalg.norm(constraint)), original
+    return updated, trace, average, float(np.linalg.norm(constraint)), original_residual
 
 
 def modified_energy(

@@ -26,6 +26,8 @@ downloads a checksum-verified companion archive and prepares the declared data
 using its local Python helpers. You can inspect these support files in `ROOT`.
 Complete studies and historical replay retain their existing opt-in flags.
 
+
+
 ```python
 from pathlib import Path
 import os
@@ -33,8 +35,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/937342f2a5cd48b07eac2fc37c42cca53979543a2577915021dec02c9fbd0849/mshho_multiscale-companion.zip"
-COMPANION_SHA256 = "937342f2a5cd48b07eac2fc37c42cca53979543a2577915021dec02c9fbd0849"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/3113e0d0f5bbf80fbeca7d681418d653cdbaf9d5cfc538c9e3204a2dbe2fe520/mshho_multiscale-companion.zip"
+COMPANION_SHA256 = "3113e0d0f5bbf80fbeca7d681418d653cdbaf9d5cfc538c9e3204a2dbe2fe520"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -78,6 +80,11 @@ from pymhm.backends.forms import assemble_pairing
 
 plt.rcParams.update({"figure.dpi": 110, "font.size": 10})
 from pymhm.core.moments import energy_reconstruction
+
+```
+
+```text
+Workspace: ./build/docs-restructure/final-workspaces/provenance-final-mshho_multiscale-ef542e24d568
 ```
 
 ### 1. The physical problem and its two scales
@@ -129,6 +136,7 @@ print(
         "source": source,
     }
 )
+
 ```
 
 ```text
@@ -139,7 +147,10 @@ print(
 ```python
 fig_material = plot_material(macro, permeability, resolution=64, limits=(1, 3))
 plt.show()
+
 ```
+
+
 
 [![Figure 1 — MsHHO with multiscale permeability: from the problem to the API](../../assets/tutorials/mshho_multiscale/figure_4_0.png)](../../assets/tutorials/mshho_multiscale/figure_4_0.png)
 
@@ -180,6 +191,7 @@ print(
         "local_polynomial_degree": local_degree,
     }
 )
+
 ```
 
 ```text
@@ -252,7 +264,9 @@ def user_volume_forms(
     L = source * v * dx
     A, M, F = compile_form(a), compile_form(mass), compile_form(L)
     return A[order][:, order].tocsc(), M[order][:, order].tocsc(), F[order]
+
 ```
+
 
 ```python
 first_fine = macro.submesh(0, local_refinement)
@@ -267,6 +281,7 @@ print(
     }
 )
 form_equivalence = {}  # Filled by the optional convenience check at the end.
+
 ```
 
 ```text
@@ -319,6 +334,7 @@ def local_moment_equations(local: LocalContext) -> LocalEquations:
             "energy": energy,
         },
     )
+
 ```
 
 ### 4. The global problem contains face moments
@@ -376,6 +392,7 @@ print(
         "local_nodal_unknowns_per_macrocell": len(physical_fields[0].values),
     }
 )
+
 ```
 
 ```text
@@ -423,6 +440,7 @@ for cell, (data, field, cell_moments) in enumerate(
     archive_cell(archive, cell, field, reconstruction=R, moments=C, moment_coordinates=target)
 assert max(diagnostics.values()) < 1e-10
 print(diagnostics)
+
 ```
 
 ```text
@@ -470,6 +488,7 @@ for resolution in (32, 64, 128):
     )
     print(reference_dimensions[-1])
 reference = references[-1]
+
 ```
 
 ```text
@@ -505,6 +524,7 @@ plt.show()
 # A reference must resolve its own physical fields before serving as a baseline.
 assert reference_refinement[-1]["pressure_relative"] < reference_refinement[0]["pressure_relative"]
 assert reference_refinement[-1]["flux_relative"] < reference_refinement[0]["flux_relative"]
+
 ```
 
 ```text
@@ -562,6 +582,7 @@ figure = plot_scalar_comparison(
     numerical_label="MsHHO",
 )
 plt.show()
+
 ```
 
 ```text
@@ -611,6 +632,7 @@ form_equivalence = {
 }
 assert max(form_equivalence.values()) < 1e-10
 print(form_equivalence)
+
 ```
 
 ```text
@@ -652,11 +674,101 @@ print(
         },
     )
 )
+
 ```
 
 ```text
-./build/introduction/mshho_multiscale
+./build/docs-restructure/final-workspaces/provenance-final-mshho_multiscale-ef542e24d568/build/introduction/mshho_multiscale
 ```
+
+## 9. Separate smooth source and energy convergence
+
+The oscillatory teaching problem above is not replaced by a smooth one. To qualify the asymptotic rate independently, use the identity coefficient on the unit square and
+
+
+
+$$
+p=\sin(\pi x)\sin(\pi y),\qquad
+f=2\pi^2p,\qquad q=-\nabla p.
+$$
+
+
+
+Exterior pressure is zero. Keep $m=\ell=0$ cell/face moments, the projected source, and P3 local energy reconstruction with two subdivisions. The macro sequence is $n=1,2,4,8,16,32$.
+
+Theorem 6.3 of [Chaumont-Frelet, Ern, Lemaire and Valentin (2022)](https://doi.org/10.1051/m2an/2021082) separates the $H^{m+2}$ source term and $H^{\ell+1}$ flux term, under the stated source/flux regularity assumptions. The energy target here is order one. Pressure order two is a measured observation. The ideal method uses exact local reconstructions; this executed finite Galerkin realization independently controls its reconstruction and moment equations rather than identifying P3/r2 with an exact local solve.
+
+The current norm-only record retains order-10/order-12 independent physical error integration, original cell/free-face moment equations and reconstruction moment constraints. Their algebraic moment residuals are distinct from the L2 pressure/flux errors plotted below.
+
+### Recompute every measured order
+
+For successive physical errors $E_{i-1},E_i$ at the actual refinement sizes, compute
+
+
+
+$$
+r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
+$$
+
+
+
+The first code lines read one attributed numerical record. They preserve every level and display the complete error/order table. The plotting helper only measures and plots these errors: it constructs no local or global PDE. Targets below are declared from the stated hypotheses, rather than fitted from the data. The final four measured levels give three consecutive orders and a fitted terminal slope. For each declared target $q$, a nearly constant $E/h^q$ provides a second view of the asymptotic regime.
+
+
+
+```python
+import json
+from IPython.display import Markdown, display
+from examples.tutorial_convergence import refinement_series, asymptotic_summary, plot_method_series
+refinement_record = ROOT / 'examples/results/tutorial-methods/mshho-current.json'
+refinement_data = json.loads(refinement_record.read_text(encoding='utf-8'))
+refinement_rows = refinement_data['rows']
+refinement_error_keys = {'pressure L2': 'pressure_l2', 'physical Darcy flux L2': 'flux_l2'}
+refinement_targets = {'physical Darcy flux L2': 1.0}
+refinement_rows = sorted(refinement_rows, key=lambda refinement_row: refinement_row['macro_diameter'], reverse=True)
+refinement_sizes = np.asarray([refinement_row['macro_diameter'] for refinement_row in refinement_rows])
+refinement_field_errors = {refinement_field: np.asarray([refinement_row[refinement_key] for refinement_row in refinement_rows]) for refinement_field, refinement_key in refinement_error_keys.items()}
+refinement_orders = {refinement_field: np.log(refinement_values[:-1] / refinement_values[1:]) / np.log(refinement_sizes[:-1] / refinement_sizes[1:]) for refinement_field, refinement_values in refinement_field_errors.items()}
+refinement_header = ['Refinement size'] + [refinement_column for refinement_field in refinement_error_keys for refinement_column in (refinement_field, 'Order')]
+refinement_lines = [' | '.join(refinement_header), ' | '.join(['---'] * len(refinement_header))]
+for refinement_index, refinement_size in enumerate(refinement_sizes):
+    refinement_values = [f'{refinement_size:.6g}']
+    for refinement_field in refinement_error_keys:
+        refinement_values.extend([f'{refinement_field_errors[refinement_field][refinement_index]:.6e}', '—' if refinement_index == 0 else f'{refinement_orders[refinement_field][refinement_index - 1]:.3f}'])
+    refinement_lines.append(' | '.join(refinement_values))
+display(Markdown('\n'.join(refinement_lines)))
+refinement_series_data = refinement_series(refinement_record, refinement_rows, 'macro_diameter', refinement_error_keys, refinement_targets, method='mshho', spaces='P0 cell and face moments; P3/r2 energy reconstruction; projected source', rate_provenance='Chaumont-Frelet et al. (2022), theorem 6.3: first-order energy; pressure order two observed', root=ROOT)
+print({'record': refinement_series_data['record'], 'sha256': refinement_series_data['sha256']})
+for refinement_field, refinement_summary in asymptotic_summary(refinement_series_data).items():
+    print(refinement_field, {'last_three_orders': [round(refinement_order, 3) for refinement_order in refinement_summary['orders']], 'fitted_order': round(refinement_summary['fitted_order'], 3), 'target': refinement_summary['target'], 'normalized_amplitude_ratio': refinement_summary.get('amplitude_ratio')})
+plot_method_series(refinement_series_data)
+plt.show()
+
+```
+
+
+Refinement size | pressure L2 | Order | physical Darcy flux L2 | Order
+--- | --- | --- | --- | ---
+1.41421 | 1.368302e-01 | — | 1.056841e+00 | —
+0.707107 | 1.001886e-01 | 0.450 | 9.830652e-01 | 0.104
+0.353553 | 2.681001e-02 | 1.902 | 5.019038e-01 | 0.970
+0.176777 | 6.791185e-03 | 1.981 | 2.516432e-01 | 0.996
+0.0883883 | 1.703111e-03 | 1.995 | 1.258917e-01 | 0.999
+0.0441942 | 4.261102e-04 | 1.999 | 6.295424e-02 | 1.000
+
+
+```text
+{'record': 'examples/results/tutorial-methods/mshho-current.json', 'sha256': 'bfdd177ea0910690cb9a909a49bf404936858d3a988078d231d4571956ce5c44'}
+pressure L2 {'last_three_orders': [1.981, 1.995, 1.999], 'fitted_order': 1.992, 'target': None, 'normalized_amplitude_ratio': None}
+physical Darcy flux L2 {'last_three_orders': [0.996, 0.999, 1.0], 'fitted_order': 0.998, 'target': 1.0, 'normalized_amplitude_ratio': 1.0034471025178162}
+```
+
+
+
+[![Figure 4 — MsHHO with multiscale permeability: from the problem to the API](../../assets/tutorials/mshho_multiscale/figure_27_2.png)](../../assets/tutorials/mshho_multiscale/figure_27_2.png)
+
+
+The upper panel preserves all coarse and fine measurements. Dashed lines show declared target powers anchored at the finest measured error. The shaded interval always contains the final four levels; it does not select points to improve a fitted slope. Read the consecutive orders together with the target-normalized errors and the stated quadrature/local-equation controls. A slope alone does not establish the hypotheses of an error estimate.
 
 ## References
 
@@ -681,4 +793,4 @@ python -m scripts.run_notebooks /path/to/mshho_multiscale.ipynb --timeout 7200
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `59d1fd79d93fb18b8aabcba3cf817ad34ba080eb07ec99370a05c422c7f449ab` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `bf74f41c2a8e6dfa7e0cd323dec66d951c5e43f086adbcacb595ca751253dd10` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

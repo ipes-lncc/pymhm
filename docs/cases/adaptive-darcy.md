@@ -69,7 +69,7 @@ separate from any claim about estimator contraction.
 
 The example helpers below are repository sources, supplied separately from the
 installed library. Open the corresponding notebook to acquire its verified
-companion, as described in the [notebook guide](../tutorials.md#execute-downloaded-notebooks).
+companion, as described in the [notebook guide](../tutorials/notebooks.md#execute-downloaded-notebooks).
 
 ```python
 import numpy as np
@@ -179,8 +179,8 @@ pixi run --locked -e notebooks python -m examples.adaptive_darcy_campaign
 ```
 
 Records and sampled fields are in `examples/results/adaptive-darcy`.
-[Notebook 39](../tutorials.md) presents the smooth adaptive example;
-[Notebook 38](../tutorials.md) treats material-fitted local approximation.
+[Notebook 39](../tutorials/notebooks.md) presents the smooth adaptive example;
+[Notebook 38](../tutorials/notebooks.md) treats material-fitted local approximation.
 Light CI checks cover conformity, ancestry, deterministic bulk marking, mixed
 boundary transfer and the measured estimator bound on small analytical cases.
 The five-level campaign is executed separately. No SPE10 adaptive result is

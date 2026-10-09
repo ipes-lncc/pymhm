@@ -24,7 +24,8 @@
       document.body.append(dialog);
     }
     document.querySelectorAll(
-      ".md-content img[src*='figures/'], .md-content img[src*='assets/tutorials/']"
+      ".md-content img[src*='figures/'], .md-content img[src*='assets/tutorials/'], " +
+      ".md-content img[src$='assets/architecture.svg']"
     ).forEach(image => {
       if (image.dataset.scientificFigure) return;
       image.dataset.scientificFigure = "true";

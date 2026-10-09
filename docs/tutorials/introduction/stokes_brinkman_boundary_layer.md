@@ -15,6 +15,8 @@ downloads a checksum-verified companion archive and prepares the declared data
 using its local Python helpers. You can inspect these support files in `ROOT`.
 Complete studies and historical replay retain their existing opt-in flags.
 
+
+
 ```python
 from pathlib import Path
 import os
@@ -22,8 +24,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/85a07669980a7cbbc97fe1b09bb5388fabde9afbb790f771cbe8b28db8924e67/stokes_brinkman_boundary_layer-companion.zip"
-COMPANION_SHA256 = "85a07669980a7cbbc97fe1b09bb5388fabde9afbb790f771cbe8b28db8924e67"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/8d9e73466a6d757a98605659c3c1cea2b25cfc87b65652ab310f7845487a944b/stokes_brinkman_boundary_layer-companion.zip"
+COMPANION_SHA256 = "8d9e73466a6d757a98605659c3c1cea2b25cfc87b65652ab310f7845487a944b"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -44,7 +46,7 @@ import os
 import json
 import numpy as np
 from pymhm import TriangleMesh, FaceSpace, SkeletonSpace
-from pymhm.core.equations import Equation, LocalEquations, compile_form
+from pymhm.core.equations import Equation, LocalEquations
 from pymhm.core.multiscale import assemble
 from pymhm.fem.scalar.operators import triangle_quadrature, boundary_data
 from pymhm.fem.scalar.triangle import nodal_space, tabulate
@@ -76,6 +78,27 @@ from examples.introduction.vector import (
 )
 
 measure_case = partial(record_brinkman_case, reports=REPORTS, root=ROOT)
+
+```
+
+```text
+Workspace: ./build/docs-restructure/final-workspaces/provenance-final-stokes_brinkman_boundary_layer-1476ab596271
+```
+
+### Runtime setup: an owned UFL compiler cache
+
+The local volume, pressure-mean and face forms use a notebook-owned temporary compiler cache. Its directory controls kernel storage only: operators, quadrature, approximation spaces, pressure gauge and solver checks are unchanged. We allow 7200 seconds for compilation; this timeout does not change any numerical tolerance.
+
+Keep this cache alive while running the study. The final cell releases it after assembly, reference solves, error checks and plots are complete. Before another solve, rerun the cache-setup cell. After an interruption, call `BRINKMAN_JIT_CACHE.cleanup()` or restart the kernel before rerunning the setup. The local/global assembly in this tutorial remains serial.
+
+
+
+```python
+from tempfile import TemporaryDirectory
+
+BRINKMAN_JIT_CACHE = TemporaryDirectory(prefix="pymhm-brinkman-jit-")
+BRINKMAN_JIT_OPTIONS = {"cache_dir": Path(BRINKMAN_JIT_CACHE.name), "timeout": 7200}
+
 ```
 
 ## 1. State the operator and derive the source independently
@@ -183,7 +206,9 @@ class BrinkmanLayer:
             + self.drag * self.velocity(points)
             + np.array([1.0, -1.0])
         )
+
 ```
+
 
 ```python
 NU, GAMMA = 1e-2, 1.0
@@ -207,6 +232,7 @@ boundary_vertices = np.unique(probe_local_mesh.faces[probe_local_mesh.boundary_f
 local_interior_vertices = len(probe_local_mesh.points) - len(boundary_vertices)
 assert local_interior_vertices > 0
 print("Taylor-Hood local interior vertices:", local_interior_vertices)
+
 ```
 
 ```text
@@ -244,6 +270,7 @@ def brinkman_ufl_data(domain: Any) -> tuple[Any, Any, Any]:
         + ufl.as_vector((1.0, -1.0))
     )
     return uexact, pexact, f
+
 ```
 
 ## 2. Translate the mathematical mixed form directly into UFL
@@ -328,7 +355,12 @@ bound_margins = np.linalg.eigvalsh(INVERSE_M * h[:, None, None] ** 2 * residual_
 ]
 assert bound_margins.max() < 1e-10
 inverse_controls
+
 ```
+
+
+
+
 
 ```text
 [{'degree': 2,
@@ -394,6 +426,7 @@ def brinkman_forms(
         a -= tau * ufl.inner(R, Rtest) * dx
         L -= tau * ufl.inner(f, Rtest) * dx
     return W, a, L, q * dx
+
 ```
 
 The native mesh and coefficient conversions come from the shared backend binding. The provider below writes the volume and boundary forms, chooses its physical boundary conditions and registers the scalar field. The explicit restriction to free scalar coordinates imposes the declared vertical Dirichlet data; it is part of the formulation.
@@ -404,6 +437,7 @@ import basix
 
 
 from pymhm.backends.spaces import create_native_mesh, coefficient_map
+from pymhm.backends.forms import assemble_form, assemble_pairing
 
 
 def mixed_nodal_blocks(
@@ -421,10 +455,12 @@ def mixed_nodal_blocks(
         coefficient_map(binding, component=0),
         coefficient_map(binding, component=1),
     ]
-    native_A, native_F = compile_form(a), compile_form(L)
+    native_A = assemble_form(a, jit_options=BRINKMAN_JIT_OPTIONS)
+    native_F = assemble_form(L, jit_options=BRINKMAN_JIT_OPTIONS)
     A, F = native_A[order][:, order], native_F[order]
-    pressure_weights = compile_form(mean_form)[order]
+    pressure_weights = assemble_form(mean_form, jit_options=BRINKMAN_JIT_OPTIONS)[order]
     return A, F, pressure_weights, len(nodal_space(fine, velocity_degree)[1])
+
 ```
 
 ## 3. State trace orientation, boundary data and the physical gauge
@@ -481,16 +517,18 @@ def local_brinkman(
     A, F, pweights, nv = mixed_nodal_blocks(
         W, a, L, mean_form, fine, pressure_degree, velocity_degree
     )
-    from pymhm.backends.forms import assemble_pairing
-
     binding = local.native_space(W)
     u, p = ufl.TrialFunctions(W)
     v, q = ufl.TestFunctions(W)
     pair_b = local.trace_pairings(lambda phi, ds: ufl.inner(phi, v) * ds)
     pair_c = local.trace_pairings(lambda phi, ds: -ufl.inner(phi, u) * ds, axis="rows")
     order = np.r_[coefficient_map(binding, component=0), coefficient_map(binding, component=1)]
-    B = assemble_pairing(pair_b.forms, axis="columns")[order]
-    C = assemble_pairing(pair_c.forms, axis="rows")[:, order]
+    B = assemble_pairing(
+        pair_b.forms, axis="columns", jit_options=BRINKMAN_JIT_OPTIONS
+    )[order]
+    C = assemble_pairing(
+        pair_c.forms, axis="rows", jit_options=BRINKMAN_JIT_OPTIONS
+    )[:, order]
     # Preserve the declared (canonical velocity, canonical pressure) record layout.
     identity = np.eye(len(F))
     native_layout = binding.to_native(identity[: 2 * nv], component=0) + binding.to_native(
@@ -512,6 +550,7 @@ def local_brinkman(
             "pressure_weights": pweights,
         },
     )
+
 ```
 
 Before the refinement loop, define the measurements: velocity and pressure $L^2$ errors, velocity-gradient error, broken pseudostress error, the fine-cell divergence norm and the separate macro mass defect. These quadrature operations evaluate fields; they do not define a local PDE.
@@ -523,6 +562,7 @@ Physical norms, executed-state archives and one-sided field/profile displays are
 
 ```python
 # Physical field norms, macro mass and pressure integral use flow_error_norms (imported above).
+
 ```
 
 ### Record the numerical coordinates for reproducibility
@@ -603,6 +643,7 @@ for n in (4, 8, 16):
             n,
             {key: row[key] for key in ("velocity_l2", "pressure_l2", "macro_mass_defect")},
         )
+
 ```
 
 ```text
@@ -708,6 +749,7 @@ for ell, levels in PUBLISHED_LEVELS.items():
             n,
             {key: row[key] for key in ("velocity_l2", "pressure_l2", "velocity_h1_seminorm")},
         )
+
 ```
 
 ```text
@@ -796,7 +838,12 @@ for ell in (0, 1, 2):
         )
     )
 assembly_quadrature_controls
+
 ```
+
+
+
+
 
 ```text
 [{'ell': 0,
@@ -865,6 +912,7 @@ for n in (4, 8, 16):
             n,
             {key: row[key] for key in ("velocity_l2", "pressure_l2", "velocity_h1_seminorm")},
         )
+
 ```
 
 ```text
@@ -923,6 +971,7 @@ for n in (32, 64, 128):
     references[n] = case
     reference_rows.append(row)
     state_archives.append(archive)
+
 ```
 
 ```text
@@ -950,9 +999,12 @@ For two successive resolutions, the measured slope is $r=\log(e_1/e_2)/\log(H_1/
 
 ```python
 plot_brinkman_convergence(rows, reference_rows, control_rows, reports=REPORTS)
+
 ```
 
-[![Figure 1 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_0.png)
+
+
+[![Figure 1 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_31_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_31_0.png)
 
 
 ```text
@@ -964,12 +1016,12 @@ MHM-USFEM: pressure_l2 rates: [0.796633 0.525482]
 
 
 
-[![Figure 2 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_2.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_2.png)
+[![Figure 2 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_31_2.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_31_2.png)
 
 
 
 
-[![Figure 3 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_3.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_29_3.png)
+[![Figure 3 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_31_3.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_31_3.png)
 
 
 ```text
@@ -982,9 +1034,12 @@ enriched MHM-USFEM: pressure_l2 rates: [0.956912 1.197469]
 
 ```python
 published_rates = plot_brinkman_family_rates(published_rows, reports=REPORTS)
+
 ```
 
-[![Figure 4 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_0.png)
+
+
+[![Figure 4 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_0.png)
 
 
 ```text
@@ -993,7 +1048,7 @@ single-element 0 measured rates {'velocity_l2': [0.7354939276379141, 1.090340702
 
 
 
-[![Figure 5 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_2.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_2.png)
+[![Figure 5 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_2.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_2.png)
 
 
 ```text
@@ -1002,7 +1057,7 @@ single-element 1 measured rates {'velocity_l2': [1.449177319615901, 1.9967834438
 
 
 
-[![Figure 6 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_4.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_30_4.png)
+[![Figure 6 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_4.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_32_4.png)
 
 
 ```text
@@ -1023,22 +1078,28 @@ The additional single-element figure evaluates the $\ell=2$, P4/P4 degree-family
 
 ```python
 plot_brinkman_family_fields(published_cases, PUBLISHED_LEVELS, references, truth, reports=REPORTS)
+
 ```
 
-[![Figure 7 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_34_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_34_0.png)
+
+
+[![Figure 7 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_36_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_36_0.png)
 
 
 
 ```python
 plot_brinkman_enriched_fields(enriched_cases, references, truth, reports=REPORTS)
+
 ```
 
-[![Figure 8 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_35_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_35_0.png)
+
+
+[![Figure 8 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_37_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_37_0.png)
 
 
 
 
-[![Figure 9 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_35_1.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_35_1.png)
+[![Figure 9 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_37_1.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_37_1.png)
 
 
 The classical pressure reference uses the same physical zero-mean gauge. The additional comparison below shows that field and the separate pressure errors of both multiscale methods.
@@ -1048,9 +1109,12 @@ Horizontal profiles retain a separate segment for each incident macrocell. Verti
 
 ```python
 plot_brinkman_profiles(enriched_cases, truth, reports=REPORTS)
+
 ```
 
-[![Figure 10 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_38_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_38_0.png)
+
+
+[![Figure 10 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_40_0.png)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_40_0.png)
 
 
 ## 7. Check quadrature and record the precise method provenance
@@ -1064,12 +1128,15 @@ The raw pseudostress $\nu\nabla\boldsymbol u_h-p_hI$ is a broken derived field. 
 provenance = execution_provenance(
     "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb",
     root=ROOT,
+    native_jit_cache="notebook-owned temporary directory; removed after final result save",
     study_profile=STUDY_PROFILE,
     single_element_levels=PUBLISHED_LEVELS,
     full_qualification_levels=PUBLISHED_FULL_LEVELS,
     literature_comparison="same analytical PDE; declared tutorial discretization, no matched-figure reproduction",
 )
+
 ```
+
 
 ```python
 quadrature_checks = {}
@@ -1130,18 +1197,122 @@ for ell in (0, 1, 2):
         indent=2,
     )
 )
+
 ```
+
+
+
+
 
 ```text
-57799
+58228
 ```
 
 
 
+
+
+```python
+# Local assembly and all postprocessing are complete.
+BRINKMAN_JIT_CACHE.cleanup()
+
+```
 
 The resulting rates describe these declared two-dimensional spaces and resolutions. The exact PDE and local residual are taken from [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027); the tutorial uses the explicitly declared SW–NE mesh and distinguishes the single-element P2/P2, P3/P3 and P4/P4 degree family from the refined P2 comparison. Reported pseudostress is a broken raw derived field. The independently assembled classical comparison uses [DOLFINx](https://docs.fenicsproject.org/dolfinx/) through UFL and the project's checked sparse linear solver.
 
 This configuration requires positive drag. In the pure Stokes limit, the vector-Laplacian local operator has two retained velocity translations in two dimensions; their basis moments and coarse amplitudes must be declared in the general problem API. That limit needs its own kernel configuration.
+
+## 8. Compare the two smooth approximation families
+
+The boundary-layer study above measures a difficult, distinct regime. To assess asymptotic approximation rates, use the smooth polynomial Stokes data with $\nu=1$, $\gamma=0$ and zero-volume-mean pressure:
+
+
+
+$$
+\begin{aligned}
+ \psi(x,y)&=128x^2(1-x)^2y^2(1-y)^2,\\
+ u&=(\partial_y\psi,-\partial_x\psi),\\
+ p&=150(x-\tfrac12)(y-\tfrac12),\qquad
+ f=-\Delta u+\nabla p.
+\end{aligned}
+$$
+
+
+
+These are the analytical data evaluated in the attributed PyMHM records. Section 3.1.1 of Araya et al. (2017) uses a negative streamfunction prefactor, so its velocity and force differ. This comparison assesses the published smooth-space estimates with the explicitly displayed data.
+
+The same displayed volume form loses its reaction term. In this pure Stokes case, its two local null modes are $Z_j=(e_j,0)$, $j=1,2$. Particular local responses have zero velocity moments $\int_T u_j$; their two translation amplitudes remain global unknowns (`retained=2`). The total physical velocity is not assigned zero mean. The pressure gauge remains the single physical condition $\int_\Omega p=0$.
+
+The two rate studies deliberately retain their different approximation spaces:
+
+- **MHM-USFEM:** local stabilized P3/P3 on one triangle, P1 vector traces and a crisscross macro grid, $H=1/n$.
+- **MHM with Taylor–Hood locals:** stable P2/P1 on 32 fine triangles per macrotriangle (four subdivisions per edge), P1 vector traces and the diagonal macro grid, $H=\sqrt2/n$.
+
+The Taylor–Hood local mesh has interior vertices. Its concrete saddle operator and trace lifting are checked independently. The single-triangle equal-order USFEM degree condition is not a degree rule for that stable, locally refined Galerkin pair. See [Araya et al. (2017), Section 2.2](https://doi.org/10.1016/j.cma.2017.05.027) and [Araya et al. (2025)](https://doi.org/10.1137/24M1649368) for the local stability, regularity and lifting hypotheses. Under the stated smooth compatible discretizations, the reference orders are three for velocity L2 and two for pressure L2.
+
+Read the attributed acquisition records below. The graphs retain every measured level and show all consecutive orders; their highlighted window always uses the final four levels. Reading a numerical record does not recompute its PDE or change its recorded source identity. The independent local/global equation checks, pressure gauge and quadrature controls are recorded separately from the physical field errors.
+
+
+
+```python
+import matplotlib.pyplot as plt
+from IPython.display import SVG, display
+
+from examples.tutorial_convergence import refinement_series, plot_method_series, asymptotic_summary
+
+usfem_path = ROOT / "examples/results/stokes-adaptive/polynomial-uniform-nu1-g0-l1.json"
+usfem_record = json.loads(usfem_path.read_text())
+usfem_rows = [dict(row, H=2 / np.sqrt(row["macro_cells"])) for row in usfem_record["rows"]]
+usfem_series = refinement_series(
+    usfem_path, usfem_rows, "H",
+    {"velocity L2": "velocity_l2", "pressure L2": "pressure_l2"},
+    {"velocity L2": 3.0, "pressure L2": 2.0}, method="stokes-brinkman",
+    spaces="Stabilized P3/P3 on one triangle; P1 vector traces; crisscross macro mesh",
+    rate_provenance="Araya et al. (2017, 2025): smooth compatible USFEM velocity/pressure estimates",
+    refinement="macro diameter", root=ROOT,
+)
+
+hood_path = ROOT / "examples/results/tutorial-methods/stokes-taylor-hood-asymptotic.json"
+hood_record = json.loads(hood_path.read_text())
+hood_series = refinement_series(
+    hood_path, hood_record["rows"], "H",
+    {"velocity L2": "velocity_l2", "pressure L2": "pressure_l2"},
+    {"velocity L2": 3.0, "pressure L2": 2.0}, method="stokes-galerkin",
+    spaces="Taylor-Hood P2/P1, r4 local mesh; unsplit vector P1 traces; diagonal macro mesh",
+    rate_provenance="Smooth stable locally refined Galerkin family; local stability and trace-lifting assumptions",
+    refinement="macro diameter", root=ROOT,
+)
+for series in (usfem_series, hood_series):
+    print(series["method"], "input", series["record"], "sha256", series["sha256"])
+    print(asymptotic_summary(series))
+    figure = plot_method_series(series)
+    convergence_path = REPORTS / (series["method"] + "-smooth-convergence.svg")
+    figure.savefig(convergence_path, bbox_inches="tight",
+                   metadata={"Creator": "IPES Research Group", "Rights": "CC BY 4.0"})
+    display(SVG(filename=str(convergence_path)))
+    plt.close(figure)
+
+```
+
+```text
+stokes-brinkman input examples/results/stokes-adaptive/polynomial-uniform-nu1-g0-l1.json sha256 a2248fb906e8957977d57a746645b154acd63153edb0cc40ca7be46f354e8c68
+{'velocity L2': {'start_index': 1, 'levels': 4, 'sizes': [0.25, 0.125, 0.0625, 0.03125], 'orders': [3.0644349493996885, 2.9913780094281828, 2.974092176861685], 'fitted_order': 3.0081093416496834, 'target': 3.0, 'amplitude_ratio': 1.0456753070099398}, 'pressure L2': {'start_index': 1, 'levels': 4, 'sizes': [0.25, 0.125, 0.0625, 0.03125], 'orders': [2.0771251271551012, 2.088109804627013, 2.0532112261882847], 'fitted_order': 2.07434482785382, 'target': 2.0, 'amplitude_ratio': 1.163479795696726}}
+```
+
+
+
+[![Figure 11 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_47_1.svg)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_47_1.svg)
+
+
+```text
+stokes-galerkin input examples/results/tutorial-methods/stokes-taylor-hood-asymptotic.json sha256 67678ccaa7fb23e2763b0ce10d36419a1b6f248bcbb1d205f8f6a66598fd9b21
+{'velocity L2': {'start_index': 3, 'levels': 4, 'sizes': [0.1767766952966369, 0.08838834764831845, 0.04419417382415922, 0.02209708691207961], 'orders': [2.9005507938524766, 2.949144763672128, 2.974021185386308], 'fitted_order': 2.9420294992404856, 'target': 3.0, 'amplitude_ratio': 1.129969049618751}, 'pressure L2': {'start_index': 3, 'levels': 4, 'sizes': [0.1767766952966369, 0.08838834764831845, 0.04419417382415922, 0.02209708691207961], 'orders': [2.039192773068021, 2.012510326437911, 2.00432992832044], 'fitted_order': 2.0180609409917007, 'target': 2.0, 'amplitude_ratio': 1.0396032346901678}}
+```
+
+
+
+[![Figure 12 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_47_3.svg)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_47_3.svg)
+
 
 ## References
 
@@ -1168,4 +1339,4 @@ python -m scripts.run_notebooks /path/to/stokes_brinkman_boundary_layer.ipynb --
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `26ee07b8ec1c47e887342af62cc66121e5f53e7183e7892ed43f49742d279532` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `5c3b1a00d3651cea8bf2b41156b6a2a778ad6891078537dfb6f2c6c7b35ab472` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

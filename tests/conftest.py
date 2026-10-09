@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import shutil
+import zipfile
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any, NoReturn
@@ -51,7 +54,7 @@ def prepare_notebook_companion(
     monkeypatch.setattr("pymhm.io.resources.urlopen", forbid_download)
 
     def prepare(selector: str) -> Path:
-        """Seed only the selected archive after checking the notebook's literal pins."""
+        """Seed the selected ZIP and its locally available, verified numerical inputs."""
         descriptor = descriptors[selector]
         validate_notebook_companion_pins(root, {selector: descriptor}, require_pins=True)
         digest = descriptor["sha256"]
@@ -59,6 +62,16 @@ def prepare_notebook_companion(
         destination = cache / "archives" / digest / "resources.zip"
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(archive, destination)
+        with zipfile.ZipFile(archive) as zipped:
+            resources = json.loads(zipped.read(".pymhm-resources.json"))["resources"]
+        for name, identity in resources.items():
+            source = root / name
+            if "url" not in identity or not source.is_file():
+                continue
+            assert hashlib.sha256(source.read_bytes()).hexdigest() == identity["sha256"], name
+            target = cache / "resources" / identity["sha256"] / source.name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, target)
         return workspace
 
     return prepare

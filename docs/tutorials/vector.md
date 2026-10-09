@@ -32,7 +32,7 @@ Scalar, vector and mixed user-defined forms share the
 [variational interface](../variational.md); its space and stability choices
 remain explicit.
 
-Choose the [problem notebook](../tutorials.md) and edit `selected_methods`.
+Choose the [problem notebook](notebooks.md) and edit `selected_methods`.
 The elasticity, flow and Maxwell notebooks expose their own supported variants.
 
 ```bash

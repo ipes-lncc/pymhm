@@ -24,6 +24,65 @@ from scripts.build_notebook_companions import (
 from scripts.docs_downloads import DOWNLOAD_BASE, export_downloads
 
 
+def test_extracted_vector_companion_executes_its_complete_provenance_contract(
+    tmp_path: Path,
+) -> None:
+    """Standalone provenance hashes every required owner and rejects a missing source."""
+    checkout = Path(__file__).resolve().parents[1]
+    output = tmp_path / "downloads"
+    descriptor = build_companion(
+        checkout,
+        module_sources(checkout, ["examples.introduction.vector"]),
+        output,
+        name="vector-companion.zip",
+    )
+    archive = output / "downloads" / descriptor["sha256"] / "vector-companion.zip"
+    workspace = tmp_path / "standalone"
+    workspace.mkdir()
+    with zipfile.ZipFile(archive) as source:
+        source.extractall(workspace)
+    code = """
+import hashlib
+import importlib.metadata
+from pathlib import Path
+from examples.introduction.vector import execution_provenance
+
+# Distribution versions do not participate in this source-closure contract.
+# Native numerical execution is verified by the separate FEM integrations.
+importlib.metadata.version = lambda name: "provenance-contract-test"
+root = Path.cwd()
+record = execution_provenance(
+    "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb", root=root
+)
+owners = (
+    "examples/introduction/vector.py",
+    "examples/introduction/transport.py",
+    "examples/introduction/provenance.py",
+)
+assert record["support_sha256"] == {
+    name: hashlib.sha256((root / name).read_bytes()).hexdigest() for name in owners
+}
+(root / "examples/introduction/transport.py").unlink()
+try:
+    execution_provenance("notebooks/introduction/stokes_brinkman_boundary_layer.ipynb", root=root)
+except FileNotFoundError:
+    pass
+else:
+    raise AssertionError("A missing mandatory provenance owner was silently omitted")
+"""
+    env = dict(os.environ)
+    env.pop("PYTHONPATH", None)
+    env.pop("PYMHM_NOTEBOOK_SOURCE", None)
+    subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=workspace,
+        env=env,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+
 def _companion_checkout(root: Path) -> None:
     """Create one copied notebook with transitive helpers and independently acquired inputs."""
     payloads = {

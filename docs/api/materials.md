@@ -39,3 +39,9 @@ Material fields, physical loads and integration across interfaces.
 ::: pymhm.materials.evaluation
     options:
       show_source: false
+
+## Source modules
+
+::: pymhm.materials.bounds
+    options:
+      show_source: false

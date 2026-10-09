@@ -37,6 +37,8 @@ downloads a checksum-verified companion archive and prepares the declared data
 using its local Python helpers. You can inspect these support files in `ROOT`.
 Complete studies and historical replay retain their existing opt-in flags.
 
+
+
 ```python
 from pathlib import Path
 import os
@@ -44,8 +46,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/0bd689ce621563ba85a3073f596b855fd462d5996b62a5b1b09ddb47d09a0925/darcy_process_scalability-companion.zip"
-COMPANION_SHA256 = "0bd689ce621563ba85a3073f596b855fd462d5996b62a5b1b09ddb47d09a0925"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/af1e75a40be0dd9f18607229302446518e43b317866d6c7afcfc72437393f39b/darcy_process_scalability-companion.zip"
+COMPANION_SHA256 = "af1e75a40be0dd9f18607229302446518e43b317866d6c7afcfc72437393f39b"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -74,6 +76,11 @@ from examples.introduction import scaling_forms as forms, scaling_processes as s
 
 DATA = forms.PeriodicDarcyData(period=0.1)
 RUN_CAMPAIGN = os.environ.get("PYMHM_RUN_CAMPAIGN", "0") == "1"
+
+```
+
+```text
+Workspace: ./build/docs-restructure/final-workspaces/provenance-final-darcy_process_scalability-2d5f1ebbf6e4
 ```
 
 The displayed source is the actual importable local declaration, shared by both 2D scaling notebooks. Importable providers allow the same declaration to run under threads or cross-platform spawn. To change the formulation, edit this provider or pass your own importable callable to `bind_problem`; no ready Darcy solver is called.
@@ -88,6 +95,8 @@ forms.verify_source(DATA)
 form_checks = study.verify_forms(DATA)
 print(form_checks)
 ```
+
+
 
 ```python
 def define_ufl_local_equations(
@@ -134,6 +143,10 @@ def define_ufl_local_equations(
     )
 ```
 
+
+
+
+
 ```python
     def __call__(self, local: LocalContext) -> LocalEquations:
         """Declare A p+B lambda=f and C=B.T with the physical volume mean."""
@@ -165,6 +178,8 @@ def define_ufl_local_equations(
             metadata={"mesh": fine},
         )
 ```
+
+
 
 ```text
 Executed UFL stiffness, source, mean moments and signed interface forms on four macroelements.
@@ -200,6 +215,7 @@ current_mhm = macro, system, solution
 assert len(macro.cells) * provider.refinement**2 == 200**2
 print({"fine_cells": 200**2, "trace_dofs": problem.trace_size,
        "retained_dofs": len(macro.cells), "relative_residual": solution.residual})
+
 ```
 
 ```text
@@ -212,6 +228,7 @@ The conforming reference assembles its own Q1 volume operator and strongly elimi
 ```python
 _, current_classical = study.run_classical(200, solver="scipy", data=DATA)
 current_errors = study.show_control(current_mhm, current_classical, data=DATA)
+
 ```
 
 ??? note "Numerical output and provenance"
@@ -458,12 +475,13 @@ Available historical campaign figures (original revision retained above):
 
 The helper owns timing boundaries, CPU/resource checks, independent norm integration, coefficient/basis archives and plotting. Current controls are shown separately from historical measurements. Each historical record retains its original revision and machine; absent original images are reported explicitly.
 
-Set `PYMHM_RUN_CAMPAIGN=1` before execution, or call `study.run_campaign()` explicitly, to acquire the complete 200/500/1000-axis strong, weak and crossover studies. These campaigns are expensive, require the declared CPU capacity and include fresh worker startup, data transfer, synchronization, global solve and reconstruction. Their source is in [the importable scaling helpers](https://github.com/ipes-lncc/pymhm/blob/main/examples/introduction).
+Set `PYMHM_RUN_CAMPAIGN=1` before execution, or call `study.run_campaign()` explicitly, to acquire the complete 200/500/1000-axis strong, weak and crossover studies. These campaigns are expensive, require the declared CPU capacity and include fresh worker startup, data transfer, synchronization, global solve and reconstruction. Their source is in [the importable scaling helpers](https://github.com/ipes-lncc/pymhm/tree/main/examples/introduction/).
 
 
 ```python
 if RUN_CAMPAIGN:
     campaign = study.run_campaign()
+
 ```
 
 ## Reproduce this tutorial
@@ -485,4 +503,4 @@ python -m scripts.run_notebooks /path/to/darcy_process_scalability.ipynb --timeo
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `129f7b8b5b57ba7c8658934fbdbed2da02e41ad6972f5c8673a4f7f23f3ad246` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `540e077b460da4c13a0ec71d448200a008b8e0d5691e06a8dc610d8e6bb5b4c0` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

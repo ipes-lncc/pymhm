@@ -135,3 +135,21 @@ describes the four blocks, global additions and current compilation limits.
 ::: pymhm.meshes.geometry
     options:
       show_source: false
+
+## Source modules
+
+::: pymhm.core.validation
+    options:
+      show_source: false
+
+::: pymhm.linalg.moments
+    options:
+      show_source: false
+
+::: pymhm.methods.boundary
+    options:
+      show_source: false
+
+::: pymhm.methods.petrov_galerkin
+    options:
+      show_source: false

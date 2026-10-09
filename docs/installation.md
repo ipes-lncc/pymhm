@@ -80,7 +80,7 @@ no `fem` or `amgx` pip extra. Installing the `mpi` extra supplies mpi4py. See
 requirements. The distribution contains only the `pymhm` library, typing and
 release metadata. Notebook sources, example helpers, configurations and data
 remain in the repository and separate [downloads](data.md). See the
-[notebook catalogue](tutorials.md) for each example's backend requirements.
+[notebook catalogue](tutorials/notebooks.md) for each example's backend requirements.
 
 ### Run a downloaded notebook or example
 
@@ -182,7 +182,7 @@ use; it is not an automatically tested CI target. A Linux run does not substitut
 for the native Windows/macOS CI jobs.
 The core run collects coverage. The independent 99% line and branch gates use
 combined Linux core and native FEM measurements; follow the
-[coverage procedure](development.md#coverage) to qualify them locally.
+[coverage procedure](development/contributing.md#coverage) to qualify them locally.
 
 ```bash
 python -m pip install .
@@ -195,7 +195,7 @@ The repository includes a Conda recipe and CI that automatically publishes
 checked PyPI distributions and documentation on validated release tags.
 Building distribution artifacts locally does not publish them. Release
 configuration and required repository settings are described in
-[development](development.md).
+[development](development/contributing.md).
 
 Both release formats contain only the `pymhm` library, its typing files and
 release metadata. The source distribution also carries the README, license and
@@ -286,7 +286,7 @@ pixi run --locked -e test test-cov
 The complete and portable suites use all available CPU workers, followed by a
 separate phase for tests marked `serial`. Native integration skips in the portable
 suite identify capabilities that it does not provide; they do not qualify those
-backends. See [development](development.md) for selectors and coverage policy.
+backends. See [development](development/contributing.md) for selectors and coverage policy.
 
 In CI, this complete profile runs only when the Tests workflow is manually
 dispatched with `full_native` enabled on the configured two-GPU runner. Portable

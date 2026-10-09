@@ -20,6 +20,7 @@ from pymhm.fem.vector.curl import (
     physical_basis,
     physical_points,
     quadrature,
+    trace_coupling,
 )
 from pymhm.linalg.linear import LinearSolveError
 from pymhm.materials.cartesian import CartesianCellField
@@ -27,6 +28,47 @@ from pymhm.materials.planar import PlanarMaterial, PlanarRegion
 from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.meshes.tetrahedron import TetraMesh
 from pymhm.meshes.triangle import TriangleMesh
+
+
+@pytest.mark.parametrize("degree, refinement", [(1, 1), (3, 1), (3, 2)])
+def test_non_dyadic_tangential_coupling_preserves_affine_scaling(degree, refinement):
+    """Valid translated half-cell edges preserve moments and both normal orientations."""
+    mesh = TriangleMesh.unit_square(24)
+    reference = TriangleMesh.unit_square(1)
+    skeletons = [
+        MaxwellSkeleton(SkeletonSpace(item, tuple(FaceSpace.uniform(1) for _ in item.faces)))
+        for item in (mesh, reference)
+    ]
+    for cell, reference_cell in ((148, 0), (149, 1)):
+        actual = trace_coupling(skeletons[0], cell, mesh.submesh(cell, refinement), degree, 8)
+        expected = trace_coupling(
+            skeletons[1], reference_cell, reference.submesh(reference_cell, refinement), degree, 8
+        )
+        trace_pullback = []
+        for face, reference_face in zip(
+            mesh.cell_faces[cell], reference.cell_faces[reference_cell], strict=True
+        ):
+            tangent = np.diff(mesh.points[mesh.faces[face]], axis=0)[0]
+            reference_tangent = np.diff(reference.points[reference.faces[reference_face]], axis=0)[
+                0
+            ]
+            normal_sign = mesh.normals[face] @ reference.normals[reference_face]
+            tangent_sign = np.sign(tangent @ reference_tangent)
+            # A canonical interior normal can oppose the reference exterior
+            # normal. Reversed face coordinates also reverse the odd moment.
+            trace_pullback.extend(normal_sign * np.array([1, tangent_sign]))
+        assert_allclose(
+            24 * actual.toarray() * trace_pullback, expected.toarray(), rtol=2e-12, atol=2e-12
+        )
+
+
+def test_tangential_coupling_rejects_a_collinear_fine_edge_overhang():
+    """A geometric error beyond coordinate roundoff cannot be snapped into a face."""
+    mesh = TriangleMesh.unit_square(1)
+    skeleton = MaxwellSkeleton(SkeletonSpace(mesh))
+    fine = TriangleMesh(np.array([[0.0, 0.0], [2.0, 0.0], [2.0, 2.0]]), np.array([[0, 1, 2]]))
+    with pytest.raises(ValueError, match="inside its macroedge"):
+        trace_coupling(skeleton, 0, fine, 2, 5)
 
 
 @pytest.mark.parametrize("amplitude", [1e-20, 1.0, 1e20])

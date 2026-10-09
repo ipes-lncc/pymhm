@@ -539,7 +539,7 @@ peak process resident memory of 105.3 GiB on the acquisition machine; those valu
 are resource observations rather than portable performance guarantees.
 Light tests independently check nested energy differences, physical moment
 preservation, geometric ancestry and polynomial exactness of common-overlay norms.
-[Notebook 40](../tutorials.md) reads the recorded campaign and illustrates the
+[Notebook 40](../tutorials/notebooks.md) reads the recorded campaign and illustrates the
 local-resolution indicator on a small affine patch. Archive and numerical-source
 digests identify the fields used for each integrated comparison.
 Extended coefficients use three portable float64 arrays: the principal value,

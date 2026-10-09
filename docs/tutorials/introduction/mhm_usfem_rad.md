@@ -16,6 +16,8 @@ downloads a checksum-verified companion archive and prepares the declared data
 using its local Python helpers. You can inspect these support files in `ROOT`.
 Complete studies and historical replay retain their existing opt-in flags.
 
+
+
 ```python
 from pathlib import Path
 import os
@@ -23,8 +25,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/fd8b6dd65c12aa3cf9532774452085ac69ee53f00d3e17fab3579d900106d733/mhm_usfem_rad-companion.zip"
-COMPANION_SHA256 = "fd8b6dd65c12aa3cf9532774452085ac69ee53f00d3e17fab3579d900106d733"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/5992b3553f968d52415fd29cf244d8c0229d40e999c247362afcb492381eb5d8/mhm_usfem_rad-companion.zip"
+COMPANION_SHA256 = "5992b3553f968d52415fd29cf244d8c0229d40e999c247362afcb492381eb5d8"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -44,7 +46,7 @@ print("Workspace:", ROOT)
 import json
 import numpy as np
 from pymhm import TriangleMesh, FaceSpace, SkeletonSpace
-from pymhm.core.equations import Equation, LocalEquations, compile_form
+from pymhm.core.equations import Equation, LocalEquations
 from pymhm.core.multiscale import assemble
 
 REPORTS = ROOT / "build/introduction"
@@ -52,7 +54,7 @@ REPORTS.mkdir(parents=True, exist_ok=True)
 np.set_printoptions(precision=5, suppress=True)
 from pymhm.fem.scalar.triangle import nodal_space
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any
 from threadpoolctl import threadpool_limits
 
@@ -72,6 +74,60 @@ from examples.introduction.transport import (
 from examples.introduction.vector import execution_provenance
 
 measure_case = partial(record_rad_case, reports=REPORTS, root=ROOT)
+
+```
+
+```text
+Workspace: ./build/docs-restructure/final-workspaces/provenance-final-mhm_usfem_rad-a6f8b128b0b4
+```
+
+### Runtime resources (independent of the formulation)
+
+The equations, approximation spaces, quadrature and error checks below do not depend on the worker count. We schedule independent local solves with `ExecutionConfig`; the coordinator adds their global contributions in a deterministic order, including contributions to shared faces. The conforming reference solves and postprocessing remain serial.
+
+The default `PYMHM_RAD_EXECUTION=auto` runs small cases serially. It selects processes for the resolved family when there are at least 512 macroelements, eight local subdivisions and four face segments. This choice follows a representative timing control for this tutorial, rather than a general performance claim. The default upper bound is 32 workers, limited by this process's CPU affinity. Set `PYMHM_RAD_WORKERS` to override that upper bound, or `PYMHM_RAD_EXECUTION=serial`, `thread` or `process` to explicitly select a backend. Passing an `ExecutionConfig` directly to `solve_rad_case` bypasses the automatic choice.
+
+Each worker uses one native BLAS/OpenMP thread. A bounded pipeline holds at most twice the active worker count in flight, and each solve caps the active worker count at its number of macroelements. These options change execution resources only.
+
+A notebook-owned temporary directory holds the local UFL compiler cache. For every solve configuration, we assemble the first two macrotriangles serially before starting workers: these triangles cover the two orientations in this mesh. This warms the volume and face kernels for the chosen diffusion, stabilization and face partition. The optional process worker module below is generated in this same owned directory from the notebook's functions. The cache remains alive throughout the study and is removed after the final result is saved. The 7200-second compiler timeout is not a solver tolerance.
+
+After the final cleanup, rerun both the runtime-resource and worker-export cells before solving again. If the study is interrupted, let PyMHM finish releasing its workers, then call `RAD_JIT_CACHE.cleanup()` or restart the kernel before restarting the setup.
+
+
+
+```python
+from tempfile import TemporaryDirectory
+from pymhm.execution.cpu import ExecutionConfig
+
+try:
+    RAD_AVAILABLE_CPUS = len(os.sched_getaffinity(0))
+except (AttributeError, OSError):
+    RAD_AVAILABLE_CPUS = os.cpu_count() or 1
+
+RAD_POLICY = os.environ.get("PYMHM_RAD_EXECUTION", "auto")
+if RAD_POLICY not in {"auto", "serial", "thread", "process"}:
+    raise ValueError("PYMHM_RAD_EXECUTION must be 'auto', 'serial', 'thread', or 'process'")
+RAD_WORKERS = int(os.environ.get("PYMHM_RAD_WORKERS", str(min(32, RAD_AVAILABLE_CPUS))))
+RAD_EXECUTION = ExecutionConfig(
+    backend="process" if RAD_POLICY == "auto" else RAD_POLICY,
+    workers=RAD_WORKERS,
+    native_threads=1,
+    batch_size=2 * RAD_WORKERS,
+    pipeline=True,
+)
+RAD_JIT_CACHE = TemporaryDirectory(prefix="pymhm-rad-jit-")
+RAD_JIT_OPTIONS = {"cache_dir": Path(RAD_JIT_CACHE.name), "timeout": 7200}
+print(
+    "Local execution policy:", RAD_POLICY,
+    "workers:", RAD_EXECUTION.effective_workers,
+    "native threads per worker:", RAD_EXECUTION.native_threads,
+    "pending bound:", RAD_EXECUTION.effective_batch_size,
+)
+
+```
+
+```text
+Local execution policy: auto workers: 32 native threads per worker: 1 pending bound: 64
 ```
 
 ## 1. Identify the equation, boundary data and difficult length scale
@@ -132,7 +188,9 @@ class ReactionLayer:
         x = points[:, 0]
         derivative = scale * (np.exp(-scale * x) - np.exp(-scale * (1 - x))) / (1 + np.exp(-scale))
         return np.column_stack((derivative, np.zeros(len(points))))
+
 ```
+
 
 ```python
 EPSILON = 1e-3
@@ -148,6 +206,7 @@ scale = 1 / np.sqrt(EPSILON)
 second = -(scale**2) * (np.exp(-scale * x) + np.exp(-scale * (1 - x))) / (1 + np.exp(-scale))
 np.testing.assert_allclose(-EPSILON * second + truth.value(points), 1, atol=2e-15)
 np.testing.assert_allclose(truth.gradient(points)[:, 1], 0)
+
 ```
 
 ## 2. Write the local equations and skeletal balance
@@ -182,7 +241,7 @@ $$
 
 
 
-Locals are P1, hence $\Delta v_h=0$ inside each fine triangle and $Lv_h=v_h$. This justifies the published $m=1/3$ for this space. Below we declare the Galerkin form directly in UFL, then add the **negative** residual form and its matching source. `compile_form` actually executes native assembly; the native space binding owns the coefficient convention, while context trace pairings supply the declared UFL interface integrals.
+Locals are P1, hence $\Delta v_h=0$ inside each fine triangle and $Lv_h=v_h$. This justifies the published $m=1/3$ for this space. Below we declare the Galerkin form directly in UFL, then add the **negative** residual form and its matching source. `assemble_form` executes native assembly; the native space binding owns the coefficient convention, while context trace pairings supply the declared UFL interface integrals.
 
 Reaction makes the local operator invertible: constants are not a kernel, and no retained coarse amplitudes are required. On vertical exterior faces, zero scalar data are imposed strongly by removing their nodal coordinates and exterior flux columns. Horizontal exterior faces prescribe zero normal flux. Vertical Dirichlet faces are absent from flux coupling: their zero dummy trace coordinates do not prescribe the physical flux. The global balance is tested on the free internal trace coordinates.
 
@@ -210,6 +269,7 @@ def rad_forms(domain: Any, *, epsilon: float, stabilized: bool) -> tuple[Any, An
         a -= tau * Lu * Lv * dx
         L -= tau * Lv * dx
     return V, a, L
+
 ```
 
 The native mesh and coefficient conversions come from the shared backend binding. The provider below writes the volume and boundary forms, chooses its physical boundary conditions and registers the scalar field. The explicit restriction to free scalar coordinates imposes the declared vertical Dirichlet data; it is part of the formulation.
@@ -220,6 +280,8 @@ import basix
 
 
 from pymhm.backends.spaces import create_native_mesh
+from pymhm.backends.forms import assemble_form, assemble_pairing
+
 ```
 
 `LocalEquations` now receives the executed forms through the shared native-space binding. `LocalContext` owns the mesh and interface maps. The following provider applies the vertical Dirichlet nodes, keeps the horizontal physical-flux convention, and exposes the two oriented trace blocks directly.
@@ -242,16 +304,19 @@ def local_rad(
     # Generic native assembly and coordinate permutation, independent of the PDE.
     binding = local.native_space(V)
     order = binding.mapping
-    native_A, native_F = compile_form(a), compile_form(L)
+    native_A = assemble_form(a, jit_options=RAD_JIT_OPTIONS)
+    native_F = assemble_form(L, jit_options=RAD_JIT_OPTIONS)
     A, F = native_A[order][:, order], native_F[order]
     _, nodes = nodal_space(fine, 1)
-    from pymhm.backends.forms import assemble_pairing
-
     u, v = ufl.TrialFunction(V), ufl.TestFunction(V)
     pair_b = local.trace_pairings(lambda phi, ds: phi * v * ds)
     pair_c = local.trace_pairings(lambda phi, ds: -phi * u * ds, axis="rows")
-    B = assemble_pairing(pair_b.forms, axis="columns")[order]
-    C = assemble_pairing(pair_c.forms, axis="rows")[:, order]
+    B = assemble_pairing(
+        pair_b.forms, axis="columns", jit_options=RAD_JIT_OPTIONS
+    )[order]
+    C = assemble_pairing(
+        pair_c.forms, axis="rows", jit_options=RAD_JIT_OPTIONS
+    )[:, order]
     fixed_nodes = np.flatnonzero(
         np.isclose(nodes[:, 0], 0, atol=1e-12) | np.isclose(nodes[:, 0], 1, atol=1e-12)
     )
@@ -270,6 +335,62 @@ def local_rad(
             "local_subdivisions": local_subdivisions,
         },
     )
+
+```
+
+### Optional runtime setup: importable functions for spawned workers
+
+The mathematical definitions above are the complete local formulation. The next cell concerns Python process execution only: a spawned worker must import its callable from a module, whereas a notebook function lives in an interactive session.
+
+We use `inspect.getsource` to export **the exact functions just defined above**, their imports and the declared constants to a temporary module. There is no second maintained copy of the operator or stabilization. PyMHM still owns process scheduling, local elimination, ordered assembly and native resource cleanup. You can select serial or thread execution with the same mathematical functions; those modes use the original notebook functions directly.
+
+The module name identifies the complete generated source payload. If you edit a function or constant and rerun this cell, workers import the new implementation rather than a previously imported notebook callback.
+
+
+
+```python
+import hashlib
+import importlib
+import inspect
+
+RAD_PROVIDER_SOURCE = "\n\n".join(
+    inspect.getsource(function).rstrip() for function in (rad_forms, local_rad)
+)
+RAD_WORKER_IMPORTS = """from pathlib import Path
+from typing import Any
+import numpy as np
+import basix.ufl
+import dolfinx
+import ufl
+from pymhm import TriangleMesh, SkeletonSpace, LocalContext
+from pymhm.core.equations import LocalEquations
+from pymhm.fem.scalar.triangle import nodal_space
+from pymhm.backends.spaces import create_native_mesh
+from pymhm.backends.forms import assemble_form, assemble_pairing
+"""
+RAD_WORKER_CONSTANTS = (
+    f"LOCAL_SUBDIVISIONS = {LOCAL_SUBDIVISIONS!r}\n"
+    f"LOCAL_QUADRATURE_DEGREE = {LOCAL_QUADRATURE_DEGREE!r}\n"
+    f"RAD_JIT_OPTIONS = {{'cache_dir': Path({RAD_JIT_CACHE.name!r}), 'timeout': 7200}}\n"
+)
+RAD_WORKER_PAYLOAD = (
+    RAD_WORKER_IMPORTS + "\n" + RAD_WORKER_CONSTANTS + "\n" + RAD_PROVIDER_SOURCE + "\n"
+)
+RAD_WORKER_MODULE_NAME = (
+    "_pymhm_rad_workers_" + hashlib.sha256(RAD_WORKER_PAYLOAD.encode()).hexdigest()
+)
+RAD_WORKER_FILE = Path(RAD_JIT_CACHE.name) / (RAD_WORKER_MODULE_NAME + ".py")
+RAD_WORKER_FILE.write_text(RAD_WORKER_PAYLOAD, encoding="utf-8")
+sys.path.insert(0, RAD_JIT_CACHE.name)
+importlib.invalidate_caches()
+RAD_WORKER_MODULE = importlib.import_module(RAD_WORKER_MODULE_NAME)
+RAD_PROVIDER_SOURCE_SHA256 = hashlib.sha256(RAD_PROVIDER_SOURCE.encode()).hexdigest()
+print("Spawned workers import the notebook's exact provider source:", RAD_PROVIDER_SOURCE_SHA256)
+
+```
+
+```text
+Spawned workers import the notebook's exact provider source: b0215d50091b1728a47c15d81a7439bd30101d9771889e373d002dc90c086766
 ```
 
 The primary operator above is the executed UFL form. As a secondary convenience check, `scalar_operators` can assemble its unstabilized part. We compare its restricted matrix and load against our declared Galerkin equation on one representative macrocell; it is not used to define the tutorial's MHM operators.
@@ -304,6 +425,7 @@ ready_A, _, ready_F = scalar_operators(
 free = probe_equation.metadata["free"]
 np.testing.assert_allclose(probe_equation.a.toarray(), ready_A[free][:, free].toarray(), atol=1e-14)
 np.testing.assert_allclose(probe_equation.L, ready_F[free], atol=1e-14)
+
 ```
 
 ## 3. Declare and solve the global problem
@@ -317,6 +439,7 @@ Norm integration, archive replay and field/profile displays are importable from 
 
 ```python
 # Physical scalar/gradient/flux norms are integrated by scalar_error_norms (imported above).
+
 ```
 
 ### Record the numerical coordinates for reproducibility
@@ -327,15 +450,37 @@ The next utility saves the actual local coordinate basis, coefficients, orientat
 
 ```python
 def solve_rad_case(
-    n, epsilon, stabilized, *, face_subdivisions=1, local_subdivisions=LOCAL_SUBDIVISIONS
+    n,
+    epsilon,
+    stabilized,
+    *,
+    face_subdivisions=1,
+    local_subdivisions=LOCAL_SUBDIVISIONS,
+    execution: ExecutionConfig | None = None,
 ):
     """Declare the mesh, multiplier space and scalar global equation for one configuration."""
     macro = TriangleMesh.unit_square(n)
     skeleton = SkeletonSpace(
         macro, tuple(FaceSpace.uniform(0, face_subdivisions) for _ in macro.faces)
     )
-    provider = lambda local: local_rad(
-        local,
+    if execution is None:
+        execution = RAD_EXECUTION
+        resolved_parallel_case = (
+            len(macro.cells) >= 512 and local_subdivisions >= 8 and face_subdivisions >= 4
+        )
+        if RAD_POLICY == "auto" and not resolved_parallel_case:
+            execution = replace(execution, backend="serial")
+    local_workers = min(execution.effective_workers, len(macro.cells))
+    case_execution = replace(
+        execution,
+        workers=local_workers,
+        batch_size=min(execution.effective_batch_size, 2 * local_workers),
+    )
+    local_function = (
+        RAD_WORKER_MODULE.local_rad if execution.backend == "process" else local_rad
+    )
+    provider = partial(
+        local_function,
         macro=macro,
         skeleton=skeleton,
         epsilon=epsilon,
@@ -355,7 +500,11 @@ def solve_rad_case(
         retained=0,
         fixed=fixed,
     )
-    system = assemble(problem)
+    # Compile both triangle orientations on the coordinator before starting workers.
+    # This covers this coefficient/stabilization/face-partition configuration.
+    for cell in range(min(2, len(macro.cells))):
+        problem.local_provider(cell)
+    system = assemble(problem, execution=case_execution)
     return macro, skeleton, system, system.solve()
 
 
@@ -377,7 +526,12 @@ for n in (2, 4, 8, 16):
         rows.append(row)
         state_archives.append(archive)
 rows
+
 ```
+
+
+
+
 
 ??? note "Numerical output and provenance"
 
@@ -531,6 +685,7 @@ for epsilon, nx, ny in REFERENCE_GRIDS:
     references[epsilon, nx] = case
     reference_rows.append(row)
     state_archives.append(archive)
+
 ```
 
 ```text
@@ -570,14 +725,17 @@ The display utility evaluates each local polynomial independently, including its
 
 ```python
 plot_rad_primary(cases, rows, reference_rows, references, truth, reports=REPORTS)
+
 ```
 
-[![Figure 1 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_23_0.png)](../../assets/tutorials/mhm_usfem_rad/figure_23_0.png)
+
+
+[![Figure 1 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_27_0.png)](../../assets/tutorials/mhm_usfem_rad/figure_27_0.png)
 
 
 
 
-[![Figure 2 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_23_1.png)](../../assets/tutorials/mhm_usfem_rad/figure_23_1.png)
+[![Figure 2 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_27_1.png)](../../assets/tutorials/mhm_usfem_rad/figure_27_1.png)
 
 
 ```text
@@ -589,12 +747,12 @@ MHM-USFEM flux_l2 rates: [0.24464 0.50566 0.75168]
 
 
 
-[![Figure 3 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_23_3.png)](../../assets/tutorials/mhm_usfem_rad/figure_23_3.png)
+[![Figure 3 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_27_3.png)](../../assets/tutorials/mhm_usfem_rad/figure_27_3.png)
 
 
 
 
-[![Figure 4 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_23_4.png)](../../assets/tutorials/mhm_usfem_rad/figure_23_4.png)
+[![Figure 4 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_27_4.png)](../../assets/tutorials/mhm_usfem_rad/figure_27_4.png)
 
 
 ## 6. Preserve a deliberately underresolved control
@@ -648,7 +806,12 @@ for epsilon in dict.fromkeys((1e-2, EPSILON, 1e-5)):
         sweep.append(row)
         state_archives.append(archive)
 sweep
+
 ```
+
+
+
+
 
 ??? note "Numerical output and provenance"
 
@@ -745,9 +908,12 @@ sweep
 
 ```python
 plot_rad_severe(macro, challenging, references, sweep, ReactionLayer, reports=REPORTS)
+
 ```
 
-[![Figure 5 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_26_0.png)](../../assets/tutorials/mhm_usfem_rad/figure_26_0.png)
+
+
+[![Figure 5 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_30_0.png)](../../assets/tutorials/mhm_usfem_rad/figure_30_0.png)
 
 
 ```text
@@ -796,6 +962,7 @@ for epsilon, resolutions in RESOLVED_LEVELS.items():
             state_archives.append(archive)
             print("Refined P1/P0", epsilon, n, method, row)
 resolved_rows
+
 ```
 
 ```text
@@ -993,19 +1160,22 @@ The following severe-layer panels use the finest declared P1/P0 family. They sho
 
 ```python
 plot_rad_refined(resolved_cases, resolved_rows, references, ReactionLayer, reports=REPORTS)
+
 ```
 
-[![Figure 6 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_30_0.png)](../../assets/tutorials/mhm_usfem_rad/figure_30_0.png)
+
+
+[![Figure 6 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_34_0.png)](../../assets/tutorials/mhm_usfem_rad/figure_34_0.png)
 
 
 
 
-[![Figure 7 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_30_1.png)](../../assets/tutorials/mhm_usfem_rad/figure_30_1.png)
+[![Figure 7 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_34_1.png)](../../assets/tutorials/mhm_usfem_rad/figure_34_1.png)
 
 
 
 
-[![Figure 8 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_30_2.png)](../../assets/tutorials/mhm_usfem_rad/figure_30_2.png)
+[![Figure 8 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_34_2.png)](../../assets/tutorials/mhm_usfem_rad/figure_34_2.png)
 
 
 ```text
@@ -1061,7 +1231,12 @@ for family, orders in (("underresolved", (40, 48)), ("refined", (24, 32))):
             )
         )
 quadrature_controls
+
 ```
+
+
+
+
 
 ```text
 [{'family': 'underresolved',
@@ -1105,9 +1280,23 @@ Horizontal profiles retain a separate segment for each incident macrocell. Verti
 provenance = execution_provenance(
     "notebooks/introduction/mhm_usfem_rad.ipynb",
     root=ROOT,
+    execution={
+        "policy": RAD_POLICY,
+        "parallel_backend": RAD_EXECUTION.backend,
+        "automatic_process_configuration": "at least 512 macroelements, 8 local subdivisions and 4 face segments",
+        "workers": RAD_EXECUTION.effective_workers,
+        "native_threads": RAD_EXECUTION.native_threads,
+        "pipeline": RAD_EXECUTION.pipeline,
+        "pending_bound": RAD_EXECUTION.effective_batch_size,
+        "workers_capped_to_macroelement_count": True,
+        "provider_source_sha256": RAD_PROVIDER_SOURCE_SHA256,
+        "jit_cache": "notebook-owned temporary directory; serial two-orientation warm-up",
+    },
     literature_comparison="same analytical PDE; declared SW-NE topology and strong exterior Dirichlet data; historical matching local triangulation/connectivity is unresolved; no matched-figure reproduction",
 )
+
 ```
+
 
 ```python
 plot_rad_profiles(
@@ -1161,9 +1350,17 @@ _ = (REPORTS / "mhm-usfem-rad.json").write_text(
     )
     + "\n"
 )
+
+# All local assembly is complete; release the notebook-owned compiler cache.
+sys.path.remove(RAD_JIT_CACHE.name)
+sys.modules.pop(RAD_WORKER_MODULE_NAME, None)
+RAD_JIT_CACHE.cleanup()
+
 ```
 
-[![Figure 9 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_35_0.png)](../../assets/tutorials/mhm_usfem_rad/figure_35_0.png)
+
+
+[![Figure 9 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_39_0.png)](../../assets/tutorials/mhm_usfem_rad/figure_39_0.png)
 
 
 ## Interpret the different error measures
@@ -1176,6 +1373,92 @@ This tutorial treats the reaction–diffusion member of RAD, with zero advection
 
 The exact data, stabilization and compatibility condition follow [Santiago, Valentin and Martins (2025)](https://doi.org/10.55592/cilamce2025.v5i.14270). The improved scalar UNUSUAL formulation follows [Franca and Valentin (2000)](https://doi.org/10.1016/S0045-7825(00)00190-0). The independent classical reference is executed with [DOLFINx](https://docs.fenicsproject.org/dolfinx/) and UFL.
 
+
+## Qualify smooth convergence separately from the sharp layer
+
+An underresolved singular perturbation is not an asymptotic smooth-problem test. Keep the reaction-diffusion operator, but take $\epsilon=\sigma=1$, $f=1$, zero exterior scalar values on the two vertical boundaries, and homogeneous normal data on the horizontal boundaries:
+
+
+
+$$
+u(x,y)=1-\frac{e^{-x}+e^{-(1-x)}}{1+e^{-1}}.
+$$
+
+
+
+The trace degree is $\ell=0$. Local P1 pressure with one red refinement satisfies the admissible $k=\ell+1$ refined alternative of theorem 1 in [Santiago, Valentin and Martins (2025)](https://doi.org/10.55592/cilamce2025.v5i.14270). Preserve the method's negative residual pairing. The macro sequence is $n=2,4,8,16,32$, with two local subdivisions at every level.
+
+The smooth broken-gradient target is order one; order-two scalar error is observed. This qualified sequence does not claim a diffusion-uniform rate for the sharp layers considered above. The attributed record preserves its formulation, error integration and source provenance.
+
+### Recompute every measured order
+
+For successive physical errors $E_{i-1},E_i$ at the actual refinement sizes, compute
+
+
+
+$$
+r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
+$$
+
+
+
+The first code lines read one attributed numerical record. They preserve every level and display the complete error/order table. The plotting helper only measures and plots these errors: it constructs no local or global PDE. Targets below are declared from the stated hypotheses, rather than fitted from the data. The final four measured levels give three consecutive orders and a fitted terminal slope. For each declared target $q$, a nearly constant $E/h^q$ provides a second view of the asymptotic regime.
+
+
+
+```python
+import json
+import matplotlib.pyplot as plt
+from IPython.display import Markdown, display
+from examples.tutorial_convergence import refinement_series, asymptotic_summary, plot_method_series
+refinement_record = ROOT / 'examples/results/unusual/analytical.json'
+refinement_data = json.loads(refinement_record.read_text(encoding='utf-8'))
+refinement_rows = [dict(H=2 ** 0.5 / refinement_row['n'], **refinement_row) for refinement_row in refinement_data['rows'] if refinement_row['case'] == 'smooth' and refinement_row['method'] == 'unusual']
+refinement_error_keys = {'scalar L2': 'scalar_l2', 'broken gradient L2': 'gradient_l2'}
+refinement_targets = {'broken gradient L2': 1.0}
+refinement_rows = sorted(refinement_rows, key=lambda refinement_row: refinement_row['H'], reverse=True)
+refinement_sizes = np.asarray([refinement_row['H'] for refinement_row in refinement_rows])
+refinement_field_errors = {refinement_field: np.asarray([refinement_row[refinement_key] for refinement_row in refinement_rows]) for refinement_field, refinement_key in refinement_error_keys.items()}
+refinement_orders = {refinement_field: np.log(refinement_values[:-1] / refinement_values[1:]) / np.log(refinement_sizes[:-1] / refinement_sizes[1:]) for refinement_field, refinement_values in refinement_field_errors.items()}
+refinement_header = ['Refinement size'] + [refinement_column for refinement_field in refinement_error_keys for refinement_column in (refinement_field, 'Order')]
+refinement_lines = [' | '.join(refinement_header), ' | '.join(['---'] * len(refinement_header))]
+for refinement_index, refinement_size in enumerate(refinement_sizes):
+    refinement_values = [f'{refinement_size:.6g}']
+    for refinement_field in refinement_error_keys:
+        refinement_values.extend([f'{refinement_field_errors[refinement_field][refinement_index]:.6e}', '—' if refinement_index == 0 else f'{refinement_orders[refinement_field][refinement_index - 1]:.3f}'])
+    refinement_lines.append(' | '.join(refinement_values))
+display(Markdown('\n'.join(refinement_lines)))
+refinement_series_data = refinement_series(refinement_record, refinement_rows, 'H', refinement_error_keys, refinement_targets, method='mhm-usfem', spaces='P1/r2 locals; P0 trace; epsilon=sigma=1; negative residual pairing', rate_provenance='Santiago, Valentin and Martins (2025), theorem 1: admissible smooth reaction-diffusion energy; scalar order two observed', root=ROOT)
+print({'record': refinement_series_data['record'], 'sha256': refinement_series_data['sha256']})
+for refinement_field, refinement_summary in asymptotic_summary(refinement_series_data).items():
+    print(refinement_field, {'last_three_orders': [round(refinement_order, 3) for refinement_order in refinement_summary['orders']], 'fitted_order': round(refinement_summary['fitted_order'], 3), 'target': refinement_summary['target'], 'normalized_amplitude_ratio': refinement_summary.get('amplitude_ratio')})
+plot_method_series(refinement_series_data)
+plt.show()
+
+```
+
+
+Refinement size | scalar L2 | Order | broken gradient L2 | Order
+--- | --- | --- | --- | ---
+0.707107 | 1.965642e-02 | — | 1.211875e-01 | —
+0.353553 | 5.527338e-03 | 1.830 | 6.541841e-02 | 0.889
+0.176777 | 1.457502e-03 | 1.923 | 3.387681e-02 | 0.949
+0.0883883 | 3.746517e-04 | 1.960 | 1.723394e-02 | 0.975
+0.0441942 | 9.503769e-05 | 1.979 | 8.691650e-03 | 0.988
+
+
+```text
+{'record': 'examples/results/unusual/analytical.json', 'sha256': 'e83d4dc1617b3ab8473dac0135fef861797fa057436f81a76718b70f45ab5c61'}
+scalar L2 {'last_three_orders': [1.923, 1.96, 1.979], 'fitted_order': 1.955, 'target': None, 'normalized_amplitude_ratio': None}
+broken gradient L2 {'last_three_orders': [0.949, 0.975, 0.988], 'fitted_order': 0.971, 'target': 1.0, 'normalized_amplitude_ratio': 1.0628994737060553}
+```
+
+
+
+[![Figure 10 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_43_2.png)](../../assets/tutorials/mhm_usfem_rad/figure_43_2.png)
+
+
+The upper panel preserves all coarse and fine measurements. Dashed lines show declared target powers anchored at the finest measured error. The shaded interval always contains the final four levels; it does not select points to improve a fitted slope. Read the consecutive orders together with the target-normalized errors and the stated quadrature/local-equation controls. A slope alone does not establish the hypotheses of an error estimate.
 
 ## References
 
@@ -1202,4 +1485,4 @@ python -m scripts.run_notebooks /path/to/mhm_usfem_rad.ipynb --timeout 7200
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `aaf4e40d37cc7a88ded60988e2cce876cb11240af193399aedaf13d387be8171` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `4e04e823bd700e3108ff564015f0a611ceb9524697759692cd4238911541cbb6` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

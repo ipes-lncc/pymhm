@@ -46,7 +46,7 @@ module; application sources resolve in the declared workspace. Missing Git or
 lockfile metadata remain absent from provenance records.
 
 For the notebook workflow and download catalogue, see the
-[notebook guide](../tutorials.md#execute-downloaded-notebooks) and
+[notebook guide](../tutorials/notebooks.md#execute-downloaded-notebooks) and
 [data downloads](../data.md).
 
 ::: pymhm.io.resources
@@ -54,3 +54,9 @@ For the notebook workflow and download catalogue, see the
 ::: pymhm.io.workspace
 
 ::: pymhm.io.provenance
+
+## Source modules
+
+::: pymhm.io.reservoir
+    options:
+      show_source: false

@@ -169,7 +169,7 @@ scale in exact and numerical panels. Profiles evaluate the local polynomials dir
 
 Notebooks `05_stokes_published_problem.ipynb` and `06_brinkman_and_oseen.ipynb`
 provide shorter interactive versions of the analytical problem and consistency
-checks; see the [notebook guide](../tutorials.md).
+checks; see the [notebook guide](../tutorials/notebooks.md).
 
 ## References
 

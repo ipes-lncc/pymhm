@@ -1,6 +1,6 @@
 {
   "schema": "pymhm-problem-notebooks-v1",
-  "source_notebooks": "installed unexecuted resources; executed copies are written under the selected workspace build/notebooks with the same problem folders",
+  "source_notebooks": "Unexecuted source notebooks and verified companions are downloadable from the documentation; executed copies are written under build/notebooks with the same problem folders.",
   "rows": [
     {
       "path": "notebooks/convergence/73_initial_convergence.ipynb",
@@ -22,91 +22,20 @@
       }
     },
     {
-      "path": "notebooks/darcy/hybrid_methods.ipynb",
-      "family": "darcy",
-      "title": "Alternative hybrid methods for scalar diffusion",
+      "path": "notebooks/convergence/method_rates.ipynb",
+      "family": "convergence",
+      "title": "Method convergence: hypotheses, refinement and asymptotic evidence",
       "methods": [
-        "user-written three-field MH2M and MsHHO moment blocks",
-        "Robin MH",
-        "MH2M",
-        "MsHHO",
-        "PGMHM"
+        "physical spatial, trace and temporal error records",
+        "complete refinement sequences",
+        "literature hypotheses",
+        "successive orders and normalized error amplitudes"
       ],
-      "kind": "introductory",
-      "variants": [
-        "mh-robin",
-        "mh-robin3d",
-        "mh2m",
-        "mh2m3d",
-        "mshho",
-        "mshho3d",
-        "mshho-face",
-        "pgmhm"
-      ],
+      "kind": "study",
       "execution": {
         "environment": "notebooks",
         "requires": [],
-        "command": "python -m pymhm_examples.notebooks darcy/hybrid_methods.ipynb",
-        "current_study_command": null,
-        "current_study_steps": []
-      }
-    },
-    {
-      "path": "notebooks/darcy/mixed_hdiv.ipynb",
-      "family": "darcy",
-      "title": "Darcy with mixed H(div) local problems",
-      "methods": [
-        "user-written RT0/P0 mixed LocalEquations/Equation",
-        "RT0/RT1",
-        "BDM/BDM+/BDM++",
-        "tensor RT",
-        "restricted tetrahedral/prismatic H(div)",
-        "classical conforming RT1"
-      ],
-      "kind": "introductory",
-      "variants": [
-        "rt0",
-        "rt1",
-        "classical-rt1",
-        "bdm",
-        "bdm-plus",
-        "bdm-double-plus",
-        "tensor-rt",
-        "tensor-rt-plus",
-        "hdiv-tetra",
-        "hdiv-tetra-plus",
-        "hdiv-prism"
-      ],
-      "execution": {
-        "environment": "notebooks",
-        "requires": [],
-        "command": "python -m pymhm_examples.notebooks darcy/mixed_hdiv.ipynb",
-        "current_study_command": null,
-        "current_study_steps": []
-      }
-    },
-    {
-      "path": "notebooks/darcy/primal_galerkin.ipynb",
-      "family": "darcy",
-      "title": "Darcy with primal Galerkin local problems",
-      "methods": [
-        "user-written P2 primal LocalEquations/Equation",
-        "primal MHM",
-        "local Galerkin P2/Q2",
-        "physical Neumann mean gauge"
-      ],
-      "kind": "introductory",
-      "variants": [
-        "primal",
-        "primal-quadratic",
-        "primal-neumann",
-        "primal-rectangle",
-        "primal3d"
-      ],
-      "execution": {
-        "environment": "notebooks",
-        "requires": [],
-        "command": "python -m pymhm_examples.notebooks darcy/primal_galerkin.ipynb",
+        "command": "python -m scripts.run_notebooks notebooks/convergence/method_rates.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -988,36 +917,235 @@
       }
     },
     {
-      "path": "notebooks/elasticity/introductory_methods.ipynb",
-      "family": "elasticity",
-      "title": "Primal and mixed elasticity methods",
+      "path": "notebooks/darcy/equilibrated_flux_workflow.ipynb",
+      "family": "darcy",
+      "title": "Equilibrated RT0 flux: fine-cell conservation and refinement",
       "methods": [
-        "user-written UFL primal plane elasticity",
-        "primal Galerkin",
-        "GaLS displacement-pressure",
-        "BDM weak-symmetry stress",
-        "tensor RT stress"
+        "native UFL primal MHM",
+        "RT0 minimum-distance flux recovery",
+        "fine-cell balance",
+        "independent physical flux norms"
       ],
-      "kind": "introductory",
-      "variants": [
-        "elasticity-primal-2d",
-        "elasticity-primal-3d",
-        "elasticity-gals-2d",
-        "elasticity-gals-3d",
-        "elasticity-bdm-2d",
-        "elasticity-bdm-plus-2d",
-        "elasticity-bdm-plusplus-2d",
-        "elasticity-bdm-3d",
-        "elasticity-rt-2d",
-        "elasticity-rt-plus-2d"
-      ],
+      "kind": "tutorial",
       "execution": {
         "environment": "introduction",
         "requires": [
           "dolfinx",
           "ufl"
         ],
-        "command": "python -m pymhm_examples.notebooks elasticity/introductory_methods.ipynb",
+        "command": "python -m scripts.run_notebooks notebooks/darcy/equilibrated_flux_workflow.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/darcy/heterogeneous_execution.ipynb",
+      "family": "darcy",
+      "title": "One heterogeneous Darcy problem across CPU, MPI and GPU",
+      "methods": [
+        "primal MHM",
+        "serial/thread/spawn workers",
+        "MPI distributed assembly",
+        "CUDA local sparse LU"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "petsc4py"
+        ],
+        "command": "python -m scripts.run_notebooks notebooks/darcy/heterogeneous_execution.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/darcy/hybrid_methods.ipynb",
+      "family": "darcy",
+      "title": "Alternative hybrid methods for scalar diffusion",
+      "methods": [
+        "user-written three-field MH2M and MsHHO moment blocks",
+        "Robin MH",
+        "MH2M",
+        "MsHHO",
+        "PGMHM"
+      ],
+      "kind": "introductory",
+      "variants": [
+        "mh-robin",
+        "mh-robin3d",
+        "mh2m",
+        "mh2m3d",
+        "mshho",
+        "mshho3d",
+        "mshho-face",
+        "pgmhm"
+      ],
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "python -m pymhm_examples.notebooks darcy/hybrid_methods.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/darcy/mixed_hdiv.ipynb",
+      "family": "darcy",
+      "title": "Darcy with mixed H(div) local problems",
+      "methods": [
+        "user-written RT0/P0 mixed LocalEquations/Equation",
+        "RT0/RT1",
+        "BDM/BDM+/BDM++",
+        "tensor RT",
+        "restricted tetrahedral/prismatic H(div)",
+        "classical conforming RT1"
+      ],
+      "kind": "introductory",
+      "variants": [
+        "rt0",
+        "rt1",
+        "classical-rt1",
+        "bdm",
+        "bdm-plus",
+        "bdm-double-plus",
+        "tensor-rt",
+        "tensor-rt-plus",
+        "hdiv-tetra",
+        "hdiv-tetra-plus",
+        "hdiv-prism"
+      ],
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "python -m pymhm_examples.notebooks darcy/mixed_hdiv.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/darcy/mixed_mhm_workflow.ipynb",
+      "family": "darcy",
+      "title": "Mixed-local MHM: flux, pressure and boundary pressure",
+      "methods": [
+        "explicit RT0/P0 mixed blocks",
+        "physical normal-flux binding",
+        "fine-cell balance"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "python -m scripts.run_notebooks notebooks/darcy/mixed_mhm_workflow.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/darcy/pgmhm_workflow.ipynb",
+      "family": "darcy",
+      "title": "Residual Petrov–Galerkin MHM: jump form and enrichment",
+      "methods": [
+        "primal LocalEquations",
+        "explicit residual global Equation",
+        "constrained residual lift",
+        "enriched macro conservation"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "python -m scripts.run_notebooks notebooks/darcy/pgmhm_workflow.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/darcy/primal_galerkin.ipynb",
+      "family": "darcy",
+      "title": "Darcy with primal Galerkin local problems",
+      "methods": [
+        "user-written P2 primal LocalEquations/Equation",
+        "primal MHM",
+        "local Galerkin P2/Q2",
+        "physical Neumann mean gauge"
+      ],
+      "kind": "introductory",
+      "variants": [
+        "primal",
+        "primal-quadratic",
+        "primal-neumann",
+        "primal-rectangle",
+        "primal3d"
+      ],
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "python -m pymhm_examples.notebooks darcy/primal_galerkin.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/darcy/reconstruction_and_indicators.ipynb",
+      "family": "darcy",
+      "title": "Flux recovery, indicators and adaptive refinement",
+      "methods": [
+        "user-written UFL local/global forms",
+        "RT2 moment recovery",
+        "four-term energy estimator",
+        "Dörfler macro refinement",
+        "Oswald potential",
+        "RT0 fine-cell equilibration"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m scripts.run_notebooks notebooks/darcy/reconstruction_and_indicators.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/darcy/robin_mh_workflow.ipynb",
+      "family": "darcy",
+      "title": "Robin MH: write the local and global equations",
+      "methods": [
+        "UFL Robin volume and boundary forms",
+        "Robin multiplier convention",
+        "physical pressure and gradient errors"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m scripts.run_notebooks notebooks/darcy/robin_mh_workflow.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/darcy/unfitted_trace_workflow.ipynb",
+      "family": "darcy",
+      "title": "Independent skeletal refinement for unfitted MHM",
+      "methods": [
+        "independent local/trace partitions",
+        "Basix volume forms",
+        "signed common-partition trace integration"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "python -m scripts.run_notebooks notebooks/darcy/unfitted_trace_workflow.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1256,23 +1384,49 @@
       }
     },
     {
-      "path": "notebooks/flow/introductory_methods.ipynb",
-      "family": "flow",
-      "title": "Stokes–Brinkman and Oseen introductory methods",
+      "path": "notebooks/elasticity/gals_mhm_workflow.ipynb",
+      "family": "elasticity",
+      "title": "GaLS elasticity: displacement-pressure local and global forms",
       "methods": [
-        "user-written UFL P2/P1 Taylor-Hood Brinkman",
-        "Taylor-Hood",
-        "USFEM",
-        "Oseen"
+        "user-written GaLS stabilized forms",
+        "physical pressure convention",
+        "elasticity field evaluation"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m scripts.run_notebooks notebooks/elasticity/gals_mhm_workflow.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/elasticity/introductory_methods.ipynb",
+      "family": "elasticity",
+      "title": "Primal and mixed elasticity methods",
+      "methods": [
+        "user-written UFL primal plane elasticity",
+        "primal Galerkin",
+        "GaLS displacement-pressure",
+        "BDM weak-symmetry stress",
+        "tensor RT stress"
       ],
       "kind": "introductory",
       "variants": [
-        "flow-taylor-hood-2d",
-        "flow-taylor-hood-3d",
-        "flow-usfem-2d",
-        "flow-usfem-3d",
-        "flow-oseen-2d",
-        "flow-oseen-3d"
+        "elasticity-primal-2d",
+        "elasticity-primal-3d",
+        "elasticity-gals-2d",
+        "elasticity-gals-3d",
+        "elasticity-bdm-2d",
+        "elasticity-bdm-plus-2d",
+        "elasticity-bdm-plusplus-2d",
+        "elasticity-bdm-3d",
+        "elasticity-rt-2d",
+        "elasticity-rt-plus-2d"
       ],
       "execution": {
         "environment": "introduction",
@@ -1280,7 +1434,28 @@
           "dolfinx",
           "ufl"
         ],
-        "command": "python -m pymhm_examples.notebooks flow/introductory_methods.ipynb",
+        "command": "python -m pymhm_examples.notebooks elasticity/introductory_methods.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/elasticity/mixed_stress_mhm_workflow.ipynb",
+      "family": "elasticity",
+      "title": "Mixed-stress MHM: stress, displacement and weak rotation",
+      "methods": [
+        "mixed H(div) stress forms",
+        "weak symmetry",
+        "physical traction binding"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m scripts.run_notebooks notebooks/elasticity/mixed_stress_mhm_workflow.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1401,6 +1576,57 @@
         "original_replay_command": "python -m pymhm_examples.notebooks 48 --historical",
         "resources": "Complete two-level polynomial and cavity campaigns plus independent Taylor-Hood references up to512x512 for both lid conditions and drag0/10000. Native FEM, large reference factorization memory and long execution time are required.",
         "limitation": "Original continued longest-edge histories and their exact archived coefficient identities require the original acquisitions. The public current study starts complete new uniform/macro/face campaigns with stated parameters, both physical lid conditions and independently refined native Taylor-Hood references; it does not recreate old resumed field hashes."
+      }
+    },
+    {
+      "path": "notebooks/flow/introductory_methods.ipynb",
+      "family": "flow",
+      "title": "Stokes–Brinkman and Oseen introductory methods",
+      "methods": [
+        "user-written UFL P2/P1 Taylor-Hood Brinkman",
+        "Taylor-Hood",
+        "USFEM",
+        "Oseen"
+      ],
+      "kind": "introductory",
+      "variants": [
+        "flow-taylor-hood-2d",
+        "flow-taylor-hood-3d",
+        "flow-usfem-2d",
+        "flow-usfem-3d",
+        "flow-oseen-2d",
+        "flow-oseen-3d"
+      ],
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m pymhm_examples.notebooks flow/introductory_methods.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/flow/oseen_variational.ipynb",
+      "family": "flow",
+      "title": "Oseen MHM: write velocity-pressure and pseudo-traction forms",
+      "methods": [
+        "UFL Oseen equations",
+        "physical half-advection pseudo-traction",
+        "velocity and pressure gauges"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m scripts.run_notebooks notebooks/flow/oseen_variational.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
       }
     },
     {
@@ -1551,24 +1777,41 @@
       }
     },
     {
-      "path": "notebooks/foundations/operators/dolfinx_sparse_solvers.ipynb",
-      "family": "foundations/operators",
-      "title": "DOLFINx/UFL with independent sparse solvers",
+      "path": "notebooks/foundations/geometry/marked_materials.ipynb",
+      "family": "foundations/geometry",
+      "title": "Generate, exchange and refine material-marked meshes",
       "methods": [
-        "native CSR assembly without PETSc",
-        "independent SciPy/PARDISO local and global solvers",
-        "primal P1 Darcy with signed normal-flux traces",
-        "constant local kernel and integral pressure moments",
-        "serial and spawn-process execution"
+        "Gmsh physical groups",
+        "VTU meshio exchange",
+        "exact refinement ancestry"
       ],
       "kind": "introductory",
       "execution": {
-        "environment": "introduction",
+        "environment": "test",
         "requires": [
-          "dolfinx",
-          "ufl"
+          "gmsh",
+          "meshio"
         ],
-        "command": "python -m pymhm_examples.notebooks foundations/operators/dolfinx_sparse_solvers.ipynb",
+        "command": "python -m scripts.run_notebooks notebooks/foundations/geometry/marked_materials.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/foundations/operators/09_local_operators_and_amg.ipynb",
+      "family": "foundations/operators",
+      "title": "Composing local operators and using AMG",
+      "methods": [
+        "free local operators",
+        "hybrid condensation",
+        "AMG"
+      ],
+      "id": 9,
+      "kind": "study",
+      "execution": {
+        "environment": "notebooks",
+        "requires": [],
+        "command": "python -m pymhm_examples.notebooks 09",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1588,6 +1831,29 @@
         "environment": "notebooks",
         "requires": [],
         "command": "python -m pymhm_examples.notebooks foundations/operators/custom_interface.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/foundations/operators/dolfinx_sparse_solvers.ipynb",
+      "family": "foundations/operators",
+      "title": "DOLFINx/UFL with independent sparse solvers",
+      "methods": [
+        "native CSR assembly without PETSc",
+        "independent SciPy/PARDISO local and global solvers",
+        "primal P1 Darcy with signed normal-flux traces",
+        "constant local kernel and integral pressure moments",
+        "serial and spawn-process execution"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m pymhm_examples.notebooks foundations/operators/dolfinx_sparse_solvers.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1674,47 +1940,224 @@
       }
     },
     {
-      "path": "notebooks/foundations/operators/09_local_operators_and_amg.ipynb",
-      "family": "foundations/operators",
-      "title": "Composing local operators and using AMG",
+      "path": "notebooks/introduction/darcy_3d_parallel_scalability.ipynb",
+      "family": "introduction",
+      "title": "Three-dimensional Darcy: processes, local AMG and GPU condensation",
       "methods": [
-        "free local operators",
-        "hybrid condensation",
-        "AMG"
-      ],
-      "id": 9,
-      "kind": "study",
-      "execution": {
-        "environment": "notebooks",
-        "requires": [],
-        "command": "python -m pymhm_examples.notebooks 09",
-        "current_study_command": null,
-        "current_study_steps": []
-      }
-    },
-    {
-      "path": "notebooks/transport/introductory_methods.ipynb",
-      "family": "transport",
-      "title": "Scalar reaction–advection–diffusion methods",
-      "methods": [
-        "user-written UFL skew Galerkin RAD",
-        "RAD Galerkin",
-        "SUPG",
-        "UNUSUAL"
+        "user-written Q1 UFL local and global equations",
+        "process MHM",
+        "classical Q1 PyAMG and PETSc GAMG",
+        "native GPU AMG local condensation"
       ],
       "kind": "introductory",
-      "variants": [
-        "rad",
-        "rad-supg",
-        "rad-unusual"
-      ],
       "execution": {
         "environment": "introduction",
         "requires": [
           "dolfinx",
           "ufl"
         ],
-        "command": "python -m pymhm_examples.notebooks transport/introductory_methods.ipynb",
+        "command": "python -m pymhm_examples.notebooks introduction/darcy_3d_parallel_scalability.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/introduction/darcy_multiscale_convergence.ipynb",
+      "family": "introduction",
+      "title": "Multiscale Darcy and convergence",
+      "methods": [
+        "explicit Q2 primal local operators",
+        "primal MHM",
+        "classical conforming Galerkin",
+        "pressure and flux convergence"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m pymhm_examples.notebooks introduction/darcy_multiscale_convergence.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/introduction/darcy_parallel_scalability.ipynb",
+      "family": "introduction",
+      "title": "Parallel Darcy: speed-up and strong/weak scalability",
+      "methods": [
+        "explicit Q1 primal local operators",
+        "parallel primal MHM",
+        "classical Q1 Galerkin with LU and AMG",
+        "matched fine-element count",
+        "strong and weak scalability"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m pymhm_examples.notebooks introduction/darcy_parallel_scalability.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/introduction/darcy_process_scalability.ipynb",
+      "family": "introduction",
+      "title": "Darcy with spawned processes: strong and weak scalability",
+      "methods": [
+        "explicit Q1 primal local operators",
+        "spawned-process primal MHM",
+        "classical Q1 Galerkin with LU and AMG",
+        "matched fine-element count",
+        "strong and weak scalability"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m pymhm_examples.notebooks introduction/darcy_process_scalability.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/introduction/darcy_spe10_layer.ipynb",
+      "family": "introduction",
+      "title": "Darcy on a SPE10 layer",
+      "methods": [
+        "explicit heterogeneous primal local operators",
+        "quadrilateral MHM",
+        "classical conforming Galerkin",
+        "SPE10 layer 36"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m pymhm_examples.notebooks introduction/darcy_spe10_layer.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/introduction/mh2m_multiscale.ipynb",
+      "family": "introduction",
+      "title": "MH²M with an oscillatory coefficient",
+      "methods": [
+        "explicit scalar local operators",
+        "MH²M local saddle equations",
+        "independent potential and conormal traces",
+        "classical conforming Galerkin"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m pymhm_examples.notebooks introduction/mh2m_multiscale.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/introduction/mhm_usfem_rad.ipynb",
+      "family": "introduction",
+      "title": "MHM-USFEM for reaction–diffusion layers",
+      "methods": [
+        "explicit Galerkin and stabilized local operators",
+        "primal MHM",
+        "MHM-USFEM",
+        "classical conforming Galerkin",
+        "analytical layer"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m pymhm_examples.notebooks introduction/mhm_usfem_rad.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/introduction/mshho_multiscale.ipynb",
+      "family": "introduction",
+      "title": "MsHHO with an oscillatory coefficient",
+      "methods": [
+        "explicit scalar local operators",
+        "MsHHO moment reconstruction",
+        "classical conforming Galerkin"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m pymhm_examples.notebooks introduction/mshho_multiscale.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/introduction/multiscale_elasticity.ipynb",
+      "family": "introduction",
+      "title": "Multiscale elasticity",
+      "methods": [
+        "user-written vector UFL",
+        "primal MHM",
+        "rigid-motion kernel",
+        "classical conforming elasticity"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m pymhm_examples.notebooks introduction/multiscale_elasticity.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb",
+      "family": "introduction",
+      "title": "Stokes–Brinkman boundary-layer convergence",
+      "methods": [
+        "user-written velocity–pressure UFL",
+        "Taylor–Hood local MHM",
+        "MHM-USFEM",
+        "classical Taylor–Hood",
+        "analytical layer convergence"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m pymhm_examples.notebooks introduction/stokes_brinkman_boundary_layer.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1901,6 +2344,76 @@
       }
     },
     {
+      "path": "notebooks/transport/introductory_methods.ipynb",
+      "family": "transport",
+      "title": "Scalar reaction–advection–diffusion methods",
+      "methods": [
+        "user-written UFL skew Galerkin RAD",
+        "RAD Galerkin",
+        "SUPG",
+        "UNUSUAL"
+      ],
+      "kind": "introductory",
+      "variants": [
+        "rad",
+        "rad-supg",
+        "rad-unusual"
+      ],
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m pymhm_examples.notebooks transport/introductory_methods.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/transport/spatial_refinement.ipynb",
+      "family": "transport",
+      "title": "Transient transport: spatial refinement and time refinement",
+      "methods": [
+        "native UFL conservative transient MHM",
+        "analytical physical concentration and gradient errors",
+        "independent classical refinement and time-step controls"
+      ],
+      "kind": "tutorial",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m scripts.run_notebooks notebooks/transport/spatial_refinement.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/transport/transient_variational.ipynb",
+      "family": "transport",
+      "title": "Transient transport: local forms and time-step global equations",
+      "methods": [
+        "UFL transport forms",
+        "backward Euler",
+        "OfflineMultiscaleSystem",
+        "repeated source stepping"
+      ],
+      "kind": "introductory",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m scripts.run_notebooks notebooks/transport/transient_variational.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
       "path": "notebooks/waves/elastodynamics/71_elastodynamics.ipynb",
       "family": "waves/elastodynamics",
       "title": "Elastodynamic MHM: spatial and temporal convergence",
@@ -1938,24 +2451,19 @@
       }
     },
     {
-      "path": "notebooks/waves/helmholtz/introductory_methods.ipynb",
-      "family": "waves/helmholtz",
-      "title": "Complex scalar Helmholtz fields",
+      "path": "notebooks/waves/elastodynamics/formulation_workflow.ipynb",
+      "family": "waves/elastodynamics",
+      "title": "Elastodynamics: equations, Newmark stepping and physical fields",
       "methods": [
-        "user-written UFL real embedding of complex Helmholtz",
-        "complex hybrid Helmholtz"
+        "explicit endpoint local/global blocks",
+        "Newmark time integration",
+        "rigid displacement and velocity controls"
       ],
       "kind": "introductory",
-      "variants": [
-        "helmholtz"
-      ],
       "execution": {
-        "environment": "introduction",
-        "requires": [
-          "dolfinx",
-          "ufl"
-        ],
-        "command": "python -m pymhm_examples.notebooks waves/helmholtz/introductory_methods.ipynb",
+        "environment": "notebooks",
+        "requires": [],
+        "command": "python -m scripts.run_notebooks notebooks/waves/elastodynamics/formulation_workflow.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -2017,23 +2525,24 @@
       }
     },
     {
-      "path": "notebooks/waves/maxwell/introductory_methods.ipynb",
-      "family": "waves/maxwell",
-      "title": "Vector Maxwell fields and a short trajectory",
+      "path": "notebooks/waves/helmholtz/introductory_methods.ipynb",
+      "family": "waves/helmholtz",
+      "title": "Complex scalar Helmholtz fields",
       "methods": [
-        "user-written DG mass/curl LocalEquations/Equation stages",
-        "DG Maxwell",
-        "tangential hybrid traces",
-        "staggered time stepping"
+        "user-written UFL real embedding of complex Helmholtz",
+        "complex hybrid Helmholtz"
       ],
       "kind": "introductory",
       "variants": [
-        "maxwell-vector-3d"
+        "helmholtz"
       ],
       "execution": {
-        "environment": "notebooks",
-        "requires": [],
-        "command": "python -m pymhm_examples.notebooks waves/maxwell/introductory_methods.ipynb",
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m pymhm_examples.notebooks waves/helmholtz/introductory_methods.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -2081,224 +2590,23 @@
       }
     },
     {
-      "path": "notebooks/introduction/darcy_multiscale_convergence.ipynb",
-      "family": "introduction",
-      "title": "Multiscale Darcy and convergence",
+      "path": "notebooks/waves/maxwell/introductory_methods.ipynb",
+      "family": "waves/maxwell",
+      "title": "Vector Maxwell fields and a short trajectory",
       "methods": [
-        "explicit Q2 primal local operators",
-        "primal MHM",
-        "classical conforming Galerkin",
-        "pressure and flux convergence"
+        "user-written DG mass/curl LocalEquations/Equation stages",
+        "DG Maxwell",
+        "tangential hybrid traces",
+        "staggered time stepping"
       ],
       "kind": "introductory",
-      "execution": {
-        "environment": "introduction",
-        "requires": [
-          "dolfinx",
-          "ufl"
-        ],
-        "command": "python -m pymhm_examples.notebooks introduction/darcy_multiscale_convergence.ipynb",
-        "current_study_command": null,
-        "current_study_steps": []
-      }
-    },
-    {
-      "path": "notebooks/introduction/darcy_spe10_layer.ipynb",
-      "family": "introduction",
-      "title": "Darcy on a SPE10 layer",
-      "methods": [
-        "explicit heterogeneous primal local operators",
-        "quadrilateral MHM",
-        "classical conforming Galerkin",
-        "SPE10 layer 36"
+      "variants": [
+        "maxwell-vector-3d"
       ],
-      "kind": "introductory",
       "execution": {
-        "environment": "introduction",
-        "requires": [
-          "dolfinx",
-          "ufl"
-        ],
-        "command": "python -m pymhm_examples.notebooks introduction/darcy_spe10_layer.ipynb",
-        "current_study_command": null,
-        "current_study_steps": []
-      }
-    },
-    {
-      "path": "notebooks/introduction/mh2m_multiscale.ipynb",
-      "family": "introduction",
-      "title": "MH²M with an oscillatory coefficient",
-      "methods": [
-        "explicit scalar local operators",
-        "MH²M local saddle equations",
-        "independent potential and conormal traces",
-        "classical conforming Galerkin"
-      ],
-      "kind": "introductory",
-      "execution": {
-        "environment": "introduction",
-        "requires": [
-          "dolfinx",
-          "ufl"
-        ],
-        "command": "python -m pymhm_examples.notebooks introduction/mh2m_multiscale.ipynb",
-        "current_study_command": null,
-        "current_study_steps": []
-      }
-    },
-    {
-      "path": "notebooks/introduction/mhm_usfem_rad.ipynb",
-      "family": "introduction",
-      "title": "MHM-USFEM for reaction–diffusion layers",
-      "methods": [
-        "explicit Galerkin and stabilized local operators",
-        "primal MHM",
-        "MHM-USFEM",
-        "classical conforming Galerkin",
-        "analytical layer"
-      ],
-      "kind": "introductory",
-      "execution": {
-        "environment": "introduction",
-        "requires": [
-          "dolfinx",
-          "ufl"
-        ],
-        "command": "python -m pymhm_examples.notebooks introduction/mhm_usfem_rad.ipynb",
-        "current_study_command": null,
-        "current_study_steps": []
-      }
-    },
-    {
-      "path": "notebooks/introduction/mshho_multiscale.ipynb",
-      "family": "introduction",
-      "title": "MsHHO with an oscillatory coefficient",
-      "methods": [
-        "explicit scalar local operators",
-        "MsHHO moment reconstruction",
-        "classical conforming Galerkin"
-      ],
-      "kind": "introductory",
-      "execution": {
-        "environment": "introduction",
-        "requires": [
-          "dolfinx",
-          "ufl"
-        ],
-        "command": "python -m pymhm_examples.notebooks introduction/mshho_multiscale.ipynb",
-        "current_study_command": null,
-        "current_study_steps": []
-      }
-    },
-    {
-      "path": "notebooks/introduction/multiscale_elasticity.ipynb",
-      "family": "introduction",
-      "title": "Multiscale elasticity",
-      "methods": [
-        "user-written vector UFL",
-        "primal MHM",
-        "rigid-motion kernel",
-        "classical conforming elasticity"
-      ],
-      "kind": "introductory",
-      "execution": {
-        "environment": "introduction",
-        "requires": [
-          "dolfinx",
-          "ufl"
-        ],
-        "command": "python -m pymhm_examples.notebooks introduction/multiscale_elasticity.ipynb",
-        "current_study_command": null,
-        "current_study_steps": []
-      }
-    },
-    {
-      "path": "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb",
-      "family": "introduction",
-      "title": "Stokes–Brinkman boundary-layer convergence",
-      "methods": [
-        "user-written velocity–pressure UFL",
-        "Taylor–Hood local MHM",
-        "MHM-USFEM",
-        "classical Taylor–Hood",
-        "analytical layer convergence"
-      ],
-      "kind": "introductory",
-      "execution": {
-        "environment": "introduction",
-        "requires": [
-          "dolfinx",
-          "ufl"
-        ],
-        "command": "python -m pymhm_examples.notebooks introduction/stokes_brinkman_boundary_layer.ipynb",
-        "current_study_command": null,
-        "current_study_steps": []
-      }
-    },
-    {
-      "path": "notebooks/introduction/darcy_parallel_scalability.ipynb",
-      "family": "introduction",
-      "title": "Parallel Darcy: speed-up and strong/weak scalability",
-      "methods": [
-        "explicit Q1 primal local operators",
-        "parallel primal MHM",
-        "classical Q1 Galerkin with LU and AMG",
-        "matched fine-element count",
-        "strong and weak scalability"
-      ],
-      "kind": "introductory",
-      "execution": {
-        "environment": "introduction",
-        "requires": [
-          "dolfinx",
-          "ufl"
-        ],
-        "command": "python -m pymhm_examples.notebooks introduction/darcy_parallel_scalability.ipynb",
-        "current_study_command": null,
-        "current_study_steps": []
-      }
-    },
-    {
-      "path": "notebooks/introduction/darcy_process_scalability.ipynb",
-      "family": "introduction",
-      "title": "Darcy with spawned processes: strong and weak scalability",
-      "methods": [
-        "explicit Q1 primal local operators",
-        "spawned-process primal MHM",
-        "classical Q1 Galerkin with LU and AMG",
-        "matched fine-element count",
-        "strong and weak scalability"
-      ],
-      "kind": "introductory",
-      "execution": {
-        "environment": "introduction",
-        "requires": [
-          "dolfinx",
-          "ufl"
-        ],
-        "command": "python -m pymhm_examples.notebooks introduction/darcy_process_scalability.ipynb",
-        "current_study_command": null,
-        "current_study_steps": []
-      }
-    },
-    {
-      "path": "notebooks/introduction/darcy_3d_parallel_scalability.ipynb",
-      "family": "introduction",
-      "title": "Three-dimensional Darcy: processes, local AMG and GPU condensation",
-      "methods": [
-        "user-written Q1 UFL local and global equations",
-        "process MHM",
-        "classical Q1 PyAMG and PETSc GAMG",
-        "native GPU AMG local condensation"
-      ],
-      "kind": "introductory",
-      "execution": {
-        "environment": "introduction",
-        "requires": [
-          "dolfinx",
-          "ufl"
-        ],
-        "command": "python -m pymhm_examples.notebooks introduction/darcy_3d_parallel_scalability.ipynb",
+        "environment": "notebooks",
+        "requires": [],
+        "command": "python -m pymhm_examples.notebooks waves/maxwell/introductory_methods.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }

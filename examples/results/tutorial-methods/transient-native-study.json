@@ -1,0 +1,73 @@
+{
+  "case": "native UFL MHM conservative transient transport",
+  "operator": "capacity=1, diffusion=1, beta=(0.25,-0.5), reaction=0.5",
+  "exact": "exp(-t)*sin(pi*x)*sin(pi*y)",
+  "final_time": 1.0,
+  "macro_divisions": 2,
+  "macro_cells": 8,
+  "local_degree": 2,
+  "local_edge_subdivisions": 16,
+  "trace_degree": 1,
+  "face_segments": 8,
+  "time_integrator": "backward Euler",
+  "assembly_quadrature_degree": 12,
+  "error_quadrature_orders": [
+    6,
+    8
+  ],
+  "rows": [
+    {
+      "dt": 0.1,
+      "concentration_L2": 0.0004945359824139641,
+      "original_equations_relative": 6.787573141559569e-16
+    },
+    {
+      "dt": 0.05,
+      "concentration_L2": 0.0002427496068019865,
+      "original_equations_relative": 8.298756023112675e-16
+    },
+    {
+      "dt": 0.025,
+      "concentration_L2": 0.00012024276534231534,
+      "original_equations_relative": 1.2397480227167467e-15
+    },
+    {
+      "dt": 0.0125,
+      "concentration_L2": 5.985055167158117e-05,
+      "original_equations_relative": 1.1755599613450178e-15
+    },
+    {
+      "dt": 0.00625,
+      "concentration_L2": 2.9933631854339127e-05,
+      "original_equations_relative": 1.1656334066651364e-15
+    }
+  ],
+  "concentration_L2_rates": [
+    1.0266065364089272,
+    1.013518864975912,
+    1.0065136434763182,
+    0.9995972132781884
+  ],
+  "classical_reference": {
+    "family": "conforming P2 Galerkin",
+    "resolutions": [
+      16,
+      32,
+      64
+    ],
+    "dt": 0.00625,
+    "spatial_L2_differences": {
+      "16 to 32": 2.5077010034828912e-05,
+      "32 to 64": 3.1391326563687385e-06
+    }
+  },
+  "source_notebook_sha256": "48f7a9877b35642cbf572a3d182a6f7b49d4b9921108280511d7c9ab28ac0106",
+  "scientific_cells_sha256": "50e528e621660ca0f455a9cb2f03f4d50f94a470cd373dbddeddf5ad78719592",
+  "scientific_cells_hash_scope": "UTF-8 JSON sequence of {cell_type, source}; sort_keys=True, ensure_ascii=False, separators=(comma,colon); excludes only cells tagged pymhm-companion-bootstrap, which install companion resources.",
+  "figures": {
+    "transient-concentration-fields.png": "2ef3bd9e2f810d0c6cd3fe4ea103783ed7003cb76e0d585d33baa1da81f1145d",
+    "transient-native-convergence.png": "9b99a9e3dd3b527aacd592295d279f9da04742d827e964e24e71ff15d730c375",
+    "transient-native-convergence.svg": "8b240ed1ac50fec89d92212a4bbda54943e567aa5238e342e0e3dc6fe7c892ee",
+    "transient-native-convergence.pdf": "9f5458ba302b3ece8869a0d78555b97d8d906cfc7d340d3e62b55552548517c8"
+  }
+}
