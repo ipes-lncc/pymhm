@@ -12,6 +12,116 @@ controls state any untimed preparation. Numerical agreement and performance
 are verified separately: a faster execution must still satisfy the original
 equations and reproduce the physical fields at the stated accuracy.
 
+## Compiled array kernels
+
+Selected scalar quadrature contractions, ordered contribution reduction and planar
+point-coordinate operations use cached Numba kernels. Local/global equations,
+providers and NumPy array contracts retain the same Python interface. Basix
+supplies finite-element tabulation; native DOLFINx assembly and external LU/AMG
+solvers keep their own compiled implementations. The
+[standalone Darcy notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/numba_kernel_performance.ipynb)
+shows explicit local/global equations, assembly, solution, physical fields and
+separate first/warm calls in two and three dimensions.
+
+The ordinary scalar integration path uses binary64 with compensated tensor
+contractions and quadrature sums. It does not enable `fastmath`. Exceptional
+exponent ranges retain a guarded native-precision integration path; an
+intermediate overflow must not destroy a finite final operator entry. Explicit
+extended-precision solver/refinement inputs retain their separate contracts.
+The compiled leaves release the GIL but create no inner parallel pool. Shared
+macroface loads are accumulated by the ordered coordinator, preserving their
+addition order and conservation convention.
+
+Numba specializes on first use and can cache its compiled code. These costs
+belong in first-call measurements; a warmed calculation alone does not describe
+startup. See the [Numba compilation options](https://numba.readthedocs.io/en/stable/user/jit.html)
+and [cache behavior](https://numba.readthedocs.io/en/stable/developer/caching.html).
+
+### First focused 2D and 3D campaign
+
+The smooth manufactured problem has
+
+$$
+\begin{aligned}
+K(x)&=\exp\left(0.25\prod_{i=1}^d\sin(2\pi x_i/0.137)\right),\\
+p_\star(x)&=\prod_{i=1}^d\sin(\pi x_i),\\
+f&=d\pi^2Kp_\star-\nabla K\cdot\nabla p_\star.
+\end{aligned}
+$$
+
+Continuous local P2 pressure and constant P0 macroface normal-flux traces are
+identical in both implementations. The material period is not aligned with
+macro translations; every local material matrix and factor is rebuilt. The
+reference is the package's original array implementation at
+[revision `55359af7`](https://github.com/ipes-lncc/pymhm/tree/55359af7220ad9db9d9255e6eae30a7beb243789),
+with the same locked dependencies and acquisition helper. It is an
+implementation-equivalence baseline, distinct from a classical-method comparison.
+
+Each complete timer includes geometry, description, native thread-limit setup,
+local assembly and factorization, ordered global reduction, global solution and
+reconstruction, analytical pressure/physical-flux norms, original-equation and
+macro-conservation controls, and named pressure samples. An isolated serial
+process uses one BLAS thread on the Xeon Silver 4216 workstation. Three fresh
+workflows follow the first call; only compiled code is reused. Imports and
+interpreter launch/exit are measured separately. Empty per-process Numba caches
+make compilation visible; no GPU transfers occur in this CPU campaign.
+
+| Case | Macroelements | Total local elements | Original warm median | Compiled warm median | Measured ratio |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 2D | 32 | 2,048 | 4.408 s | 4.180 s | 1.054× |
+| 3D | 48 | 3,072 | 13.644 s | 12.604 s | 1.083× |
+
+![First and warmed complete workflows, including every numerical phase](figures/performance-numba/complete-workflow.png)
+
+2D first workflow: 4.460 s original and 6.145 s compiled; 3D first workflow: 14.341 s original and 14.117 s compiled.
+First-call times include compilation and ordinary native initialization but
+exclude the separately recorded import/launch costs. The 2D repeated-time
+ranges overlap; the small median difference does not establish a general
+simulation speedup. The 3D result is also specific to this workload and machine.
+
+| Case | Pressure L2 error | Physical Darcy-flux L2 error | Original local L2 backward error | Macro skeleton balance |
+| --- | ---: | ---: | ---: | ---: |
+| 2D | 0.036286 | 0.511646 | 2.77e-16 | 7.49e-15 |
+| 3D | 0.117950 | 0.939673 | 3.39e-16 | 5.55e-16 |
+
+These P0 macroface controls are deliberately coarse. Their physical errors are
+reported as measured; they are not new high-accuracy or asymptotic convergence
+claims. Recorded pressure/trace differences between implementations remain at
+roundoff scale, with identical executed basis matrices and mesh coordinates.
+Original local equations and macro balance keep their unchanged `1e-10` limits.
+Macro conservation uses the skeleton normal flux, while the raw primal gradient
+flux is not claimed to conserve each fine cell. The notebook's field illustration
+uses explicitly enriched traces, separately from this fixed-space timing control.
+
+### Kernel gains and complete-workflow limits
+
+The microbenchmarks exclude coefficient callbacks, tabulation, local solvers,
+physical norms and process startup. The diffusion inputs contain 384 synthetic
+cells, 36/64 quadrature points and six/ten basis functions in 2D/3D. The larger
+reduction consumes 1,024 SPD 25×25 blocks sharing 128 trace coordinates; actual
+MHM response blocks are timed separately.
+
+| Warm kernel ratio | 2D inputs | 3D inputs |
+| --- | ---: | ---: |
+| Scalar diffusion Gram arrays | 2.36× | 1.77× |
+| 1,024 shared 25×25 blocks | 5.51× | 5.35× |
+| Actual MHM contribution blocks | 1.95× | 2.23× |
+
+![Isolated kernel gains, with surrounding solve costs explicitly excluded](figures/performance-numba/kernel-speedups.png)
+
+The shared-reduction matrix, RHS and absolute-load scale match exactly. Diffusion
+Gram differences are at binary64 roundoff scale. Planar point sampling has its
+own same-input geometric regression tests and timings; it is not a 3D locator
+optimization. These component gains do not predict an MPI/GPU speedup or a
+comparable gain for every PDE. Native tabulation, callback construction and
+other surrounding work remain significant in the complete simulations.
+
+The [complete report and raw repetitions](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/numba-20261009)
+include source/basis identities, package versions, CPU affinity, physical
+controls and separately measured launch costs. The
+[importable acquisition helper](https://github.com/ipes-lncc/pymhm/blob/main/examples/numba_performance.py)
+owns timers and archives while delegating numerical operations to the package.
+
 ## Cost of automatic native UFL trace assembly
 
 The contextual API supplies numbering and orientation without user-managed

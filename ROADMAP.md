@@ -40,10 +40,10 @@ Implemented geometry, physics and backend scopes appear in the table below.
 The [Gallery](docs/gallery/index.md) retains numerical results and the
 [performance reports](docs/performance.md) identify measured workloads, hardware
 and accuracy. The current source includes the contextual interface and portable
-native-form assembly; package metadata is synchronized at version 1.2.0.
+native-form assembly; package metadata is synchronized at version 1.3.0.
 
-Local qualification includes **6,460 passing tests**, line coverage of
-**99.80%** and branch coverage of **99.23%**, together with lint, formatting,
+Local qualification includes **6,517 passing tests**, line coverage of
+**99.80%** and branch coverage of **99.24%**, together with lint, formatting,
 type checking, native FEM, MPI and two-GPU integrations. The installed wheel
 passes its eight portable execution and PARDISO checks outside the checkout.
 The standalone wheel-ownership test requires that isolated installation;
@@ -69,10 +69,12 @@ homogeneous anisotropic primal-elasticity family. The recovery lessons verify
 RT moment errors, projected divergence, distinct fine-cell RT0 conservation,
 adaptive error against work and equivalence of physical recursive condensation.
 Historical scaling measurements retain their original source revisions.
-All 113 downloadable notebooks have checksum-pinned support archives. The
-focused tutorial campaign verifies complete execution of 25 notebooks against
-their final source checksums; it does not certify execution of the remaining
-88 notebooks. Public
+All 114 downloadable notebooks have checksum-pinned support archives. Existing
+tutorial receipts record complete executions of 25 notebooks at their identified
+source checksums. The CPU-kernel performance notebook defines and executes its
+own 2D/3D workflow. Numerical execution receipts and download archive integrity
+are verified separately; they do not certify complete execution of the entire
+notebook catalogue. Public
 API pages render every canonical module directly from its source docstrings.
 Original documentation figures use CC BY 4.0 with attribution to IPES Research
 Group; third-party assets retain their own terms. Mathematical rendering and
@@ -181,6 +183,16 @@ scope. Classical CG/GAMG is faster on the larger grids in that campaign.
 Extend [execution strategies](docs/execution.md) and
 [performance evidence](docs/performance.md) without assuming universal MHM speedups.
 
+Cached Numba kernels supply scalar diffusion integration, boundary moments,
+ordered sparse contribution reduction and planar field ownership/coordinates.
+The formulation, providers and native linear solvers retain their Python API.
+Ordinary quadrature uses compensated binary64; exceptional exponent ranges
+retain native wider accumulation when available and the portable accumulation
+contract otherwise. Explicit extended solver/refinement data remain supported.
+The bounded [kernel performance notebook](notebooks/darcy/numba_kernel_performance.ipynb)
+and performance report separate first-use compilation, warm kernel costs and
+complete 2D/3D execution, with identical-discretization field and equation checks.
+
 - [ ] Compare cost at common pressure and physical-flux error targets, refining
   macro meshes and traces. Keep equal-element-budget comparisons separate:
   they use different global approximation spaces and may have different accuracy.
@@ -190,7 +202,8 @@ Extend [execution strategies](docs/execution.md) and
   serialization, reduction, global solve, reconstruction and peak memory.
   Identify local/global bottlenecks and crossover size at each accuracy target.
 - [ ] Reduce physical-error integration costs in the shared field and reference
-  tabulation owners: reuse affine Jacobians and compute only requested derivatives.
+  tabulation owners beyond the compiled planar sampling path: reuse affine
+  Jacobians and compute only requested derivatives.
   Qualify batched and spawn-parallel evaluation of archived fields with importable
   exact solutions, preserved basis digests and ordered per-field quadrature sums.
   Compare scalar and vector norms against the existing independent controls;

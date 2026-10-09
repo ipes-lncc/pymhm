@@ -120,6 +120,7 @@ jupyter lab darcy_multiscale_convergence.ipynb
 
 | Notebook | Methods |
 | --- | --- |
+| [Compiled kernels: cold and warm Darcy timings](darcy/numba_kernel_performance.ipynb) | user-written local/global equations; P2 triangle/tetrahedron spaces; independent physical fields; first-call and warm CPU timings |
 | [Equilibrated RT0 flux: fine-cell conservation and refinement](darcy/equilibrated_flux_workflow.ipynb) | user-written native UFL local/global equations; constrained minimum-distance RT0 recovery; fine-cell balance; independent physical flux norms |
 | [Start here: Alternative hybrid methods for scalar diffusion](darcy/hybrid_methods.ipynb) | user-written three-field MH2M and MsHHO moment blocks; Robin MH; MH2M; MsHHO; PGMHM |
 | [Start here: Darcy with mixed H(div) local problems](darcy/mixed_hdiv.ipynb) | user-written RT0/P0 mixed LocalEquations/Equation; RT0/RT1; BDM/BDM+/BDM++; tensor RT; restricted tetrahedral/prismatic H(div); classical conforming RT1 |

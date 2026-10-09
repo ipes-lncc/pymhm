@@ -183,6 +183,10 @@ exclude_docs: '/cases/adaptive-darcy.md
 
   !/figures/darcy-3d-accelerators-20261005/**
 
+  !/figures/performance-numba/complete-workflow.png
+
+  !/figures/performance-numba/kernel-speedups.png
+
   !/figures/core-extensions/cube-p0-fields.png
 
   !/figures/core-extensions/hdiv3d-convergence.png

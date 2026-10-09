@@ -1,6 +1,7 @@
 # Installation and environments
 
-The core supports Python 3.11–3.13 and requires NumPy, SciPy, threadpoolctl and `fenics-basix>=0.9`.
+The core supports Python 3.11–3.13 and requires NumPy, SciPy, Numba, threadpoolctl
+and `fenics-basix>=0.9`.
 Basix supplies the built-in polynomial bases without requiring DOLFINx, PETSc or MPI.
 Optional native dependencies are loaded only when their functionality is called.
 
@@ -36,10 +37,17 @@ of `python` if your environment is not activated.
 
 The default installation includes the generic local/global problem API, Basix
 reference elements, portable assembly, SciPy direct and iterative solvers, and
-serial, thread and process execution. Pip installs NumPy, SciPy, threadpoolctl
+serial, thread and process execution. Pip installs NumPy, SciPy, Numba, threadpoolctl
 and Basix automatically. See the [variational guide](variational.md) for defining
 your equations and selecting solvers, and the [Windows guide](windows.md) for
 native Windows capabilities.
+
+Selected numerical kernels compile automatically with Numba on their first use
+and cache their native code. The public formulation and solver workflow remains
+Python. First-use time includes compilation; compare steady-state performance
+after warming the same numerical signatures. These CPU kernels release the GIL
+and do not create an additional thread pool. See the
+[performance guide](performance.md) for measured scopes and precision conventions.
 
 To update an existing installation:
 

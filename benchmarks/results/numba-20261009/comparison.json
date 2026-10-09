@@ -1,0 +1,97 @@
+{
+  "schema": "pymhm-numba-paired-comparison-v1",
+  "rows": [
+    {
+      "key": "2d-n4-r8-p2-q6",
+      "case": {
+        "dimension": 2,
+        "macro_resolution": 4,
+        "local_refinement": 8,
+        "degree": 2,
+        "quadrature_order": 6,
+        "period": 0.137,
+        "amplitude": 0.25
+      },
+      "original_first_seconds": 4.46040559373796,
+      "compiled_first_seconds": 6.144543820992112,
+      "original_warm_median_seconds": 4.407707083970308,
+      "compiled_warm_median_seconds": 4.180454533547163,
+      "complete_warm_speedup": 1.0543607276671705,
+      "coefficient_differences": {
+        "trace": {
+          "absolute_linf": 9.575673587391975e-15,
+          "relative_l2": 2.6436725679564386e-15
+        },
+        "pressure": {
+          "absolute_linf": 8.770761894538737e-15,
+          "relative_l2": 1.7532346740939655e-15
+        },
+        "global_values": {
+          "absolute_linf": 6.877311220510058e-15,
+          "relative_l2": 4.801478936629352e-15
+        },
+        "global_load": {
+          "absolute_linf": 1.249000902703301e-16,
+          "relative_l2": 1.8292057080933423e-16
+        }
+      },
+      "micro_speedups": {
+        "global_reduction": 1.95066394667716,
+        "shared_global_reduction": 5.513067731476251,
+        "scalar_diffusion_gram": 2.357234057072011
+      }
+    },
+    {
+      "key": "3d-n2-r4-p2-q6",
+      "case": {
+        "dimension": 3,
+        "macro_resolution": 2,
+        "local_refinement": 4,
+        "degree": 2,
+        "quadrature_order": 6,
+        "period": 0.137,
+        "amplitude": 0.25
+      },
+      "original_first_seconds": 14.341486152261496,
+      "compiled_first_seconds": 14.117163889110088,
+      "original_warm_median_seconds": 13.643879940733314,
+      "compiled_warm_median_seconds": 12.603738533332944,
+      "complete_warm_speedup": 1.0825264190184143,
+      "coefficient_differences": {
+        "trace": {
+          "absolute_linf": 3.1086244689504383e-15,
+          "relative_l2": 1.0207841511401725e-15
+        },
+        "pressure": {
+          "absolute_linf": 5.88418203051333e-15,
+          "relative_l2": 1.3780316498030598e-15
+        },
+        "global_values": {
+          "absolute_linf": 7.746285709230025e-16,
+          "relative_l2": 7.227334839608198e-16
+        },
+        "global_load": {
+          "absolute_linf": 8.326672684688674e-17,
+          "relative_l2": 2.015911549334235e-16
+        }
+      },
+      "micro_speedups": {
+        "global_reduction": 2.232654334622646,
+        "shared_global_reduction": 5.34848380412862,
+        "scalar_diffusion_gram": 1.772876270027106
+      }
+    }
+  ],
+  "reports_sha256": {
+    "original-2d.json": "15e7f17ed6670f73f32a1b6456210ddf1a89d7759170a5219f6e515489dda5d5",
+    "compiled-2d.json": "812a5f06cd2aea1733a127c79dc3952b61238340cbb6fd6dd7ea05286243dc43",
+    "original-3d.json": "27e967733414c540d119314aa11a04e6fa11602d6f84b4e58eeedc83f1a8f7f9",
+    "compiled-3d.json": "15a5f8f8d385566d48010cb1677ca93cf2e563b1e315d3430d04c01e90368bf2"
+  },
+  "scientific_scope": "same smooth scalar heterogeneity, P2 pressure, P0 oriented normal-flux traces; original equations and analytical pressure/physical Darcy flux norms; no material-equivalence reuse",
+  "timing_scope": "each fresh solve includes geometry/description/native thread setup, local assembly and factors, ordered global reduction, global solve/reconstruction, analytical norms, original-equation and macro conservation controls, named pressure samples",
+  "startup_scope": "first workflow call in a fresh Python process with an absent per-process Numba cache; imports and interpreter launch/exit reported separately",
+  "warm_scope": "median of three complete fresh workflows in the same process, reusing compiled code but no operators or factors",
+  "cpu_budget": "one serial workflow and one native BLAS thread; Numba inner kernels serial; no GPU transfers",
+  "limitation": "first focused CPU campaign; microkernel speedups do not establish full-simulation or MPI/GPU scalability gains"
+}

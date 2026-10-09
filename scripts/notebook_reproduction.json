@@ -6672,6 +6672,12 @@
         "ufl"
       ],
       "preparation": []
+    },
+    "notebooks/darcy/numba_kernel_performance.ipynb": {
+      "kind": "standalone",
+      "environment": "notebooks",
+      "requires": [],
+      "preparation": []
     }
   }
 }
