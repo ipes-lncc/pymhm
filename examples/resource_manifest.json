@@ -102,7 +102,7 @@
     "notebooks/introduction/mhm_usfem_rad.ipynb": "4e04e823bd700e3108ff564015f0a611ceb9524697759692cd4238911541cbb6",
     "notebooks/introduction/mshho_multiscale.ipynb": "bf74f41c2a8e6dfa7e0cd323dec66d951c5e43f086adbcacb595ca751253dd10",
     "notebooks/introduction/multiscale_elasticity.ipynb": "79c6ef3a9deb5849b7e0669a38bc904c5d598a8ea5d7ab6e5db5e6f96a568c43",
-    "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb": "5c3b1a00d3651cea8bf2b41156b6a2a778ad6891078537dfb6f2c6c7b35ab472",
+    "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb": "42130abca09c3d9a6b2aec83aff59ca6930c998a334e4717e5da95251baf86ba",
     "notebooks/transport/08_transport_and_heat.ipynb": "2d32a802d0f1562f4eae58d317f7eb820c3e440a3e8f119116cb2c024018f201",
     "notebooks/transport/26_adaptive_transient_transport.ipynb": "b02ca5e031003d35e161797a9aab7de2441fa631f65ecc020a52186ae878fe31",
     "notebooks/transport/41_rad3d.ipynb": "dc65f4eaa5f55cb91fd493f504ecbeb72f6cdc9dcb9609ede0606d8ffa425de3",
