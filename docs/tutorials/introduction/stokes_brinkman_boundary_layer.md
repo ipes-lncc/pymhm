@@ -24,8 +24,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/c3a5efc09d81b35d06a0148b120214c7de2829b740e7a2f4416584c80c7dc5bf/stokes_brinkman_boundary_layer-companion.zip"
-COMPANION_SHA256 = "c3a5efc09d81b35d06a0148b120214c7de2829b740e7a2f4416584c80c7dc5bf"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/8d9e73466a6d757a98605659c3c1cea2b25cfc87b65652ab310f7845487a944b/stokes_brinkman_boundary_layer-companion.zip"
+COMPANION_SHA256 = "8d9e73466a6d757a98605659c3c1cea2b25cfc87b65652ab310f7845487a944b"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -82,7 +82,7 @@ measure_case = partial(record_brinkman_case, reports=REPORTS, root=ROOT)
 ```
 
 ```text
-Workspace: ./build/docs-restructure/exact-source-workspaces-provenance-final/introduction/stokes_brinkman_boundary_layer
+Workspace: ./build/docs-restructure/final-workspaces/provenance-final-stokes_brinkman_boundary_layer-1476ab596271
 ```
 
 ### Runtime setup: an owned UFL compiler cache
@@ -1222,6 +1222,98 @@ The resulting rates describe these declared two-dimensional spaces and resolutio
 
 This configuration requires positive drag. In the pure Stokes limit, the vector-Laplacian local operator has two retained velocity translations in two dimensions; their basis moments and coarse amplitudes must be declared in the general problem API. That limit needs its own kernel configuration.
 
+## 8. Compare the two smooth approximation families
+
+The boundary-layer study above measures a difficult, distinct regime. To assess asymptotic approximation rates, use the smooth polynomial Stokes data with $\nu=1$, $\gamma=0$ and zero-volume-mean pressure:
+
+
+
+$$
+\begin{aligned}
+ \psi(x,y)&=128x^2(1-x)^2y^2(1-y)^2,\\
+ u&=(\partial_y\psi,-\partial_x\psi),\\
+ p&=150(x-\tfrac12)(y-\tfrac12),\qquad
+ f=-\Delta u+\nabla p.
+\end{aligned}
+$$
+
+
+
+These are the analytical data evaluated in the attributed PyMHM records. Section 3.1.1 of Araya et al. (2017) uses a negative streamfunction prefactor, so its velocity and force differ. This comparison assesses the published smooth-space estimates with the explicitly displayed data.
+
+The same displayed volume form loses its reaction term. In this pure Stokes case, its two local null modes are $Z_j=(e_j,0)$, $j=1,2$. Particular local responses have zero velocity moments $\int_T u_j$; their two translation amplitudes remain global unknowns (`retained=2`). The total physical velocity is not assigned zero mean. The pressure gauge remains the single physical condition $\int_\Omega p=0$.
+
+The two rate studies deliberately retain their different approximation spaces:
+
+- **MHM-USFEM:** local stabilized P3/P3 on one triangle, P1 vector traces and a crisscross macro grid, $H=1/n$.
+- **MHM with Taylor–Hood locals:** stable P2/P1 on 32 fine triangles per macrotriangle (four subdivisions per edge), P1 vector traces and the diagonal macro grid, $H=\sqrt2/n$.
+
+The Taylor–Hood local mesh has interior vertices. Its concrete saddle operator and trace lifting are checked independently. The single-triangle equal-order USFEM degree condition is not a degree rule for that stable, locally refined Galerkin pair. See [Araya et al. (2017), Section 2.2](https://doi.org/10.1016/j.cma.2017.05.027) and [Araya et al. (2025)](https://doi.org/10.1137/24M1649368) for the local stability, regularity and lifting hypotheses. Under the stated smooth compatible discretizations, the reference orders are three for velocity L2 and two for pressure L2.
+
+Read the attributed acquisition records below. The graphs retain every measured level and show all consecutive orders; their highlighted window always uses the final four levels. Reading a numerical record does not recompute its PDE or change its recorded source identity. The independent local/global equation checks, pressure gauge and quadrature controls are recorded separately from the physical field errors.
+
+
+
+```python
+import matplotlib.pyplot as plt
+from IPython.display import SVG, display
+
+from examples.tutorial_convergence import refinement_series, plot_method_series, asymptotic_summary
+
+usfem_path = ROOT / "examples/results/stokes-adaptive/polynomial-uniform-nu1-g0-l1.json"
+usfem_record = json.loads(usfem_path.read_text())
+usfem_rows = [dict(row, H=2 / np.sqrt(row["macro_cells"])) for row in usfem_record["rows"]]
+usfem_series = refinement_series(
+    usfem_path, usfem_rows, "H",
+    {"velocity L2": "velocity_l2", "pressure L2": "pressure_l2"},
+    {"velocity L2": 3.0, "pressure L2": 2.0}, method="stokes-brinkman",
+    spaces="Stabilized P3/P3 on one triangle; P1 vector traces; crisscross macro mesh",
+    rate_provenance="Araya et al. (2017, 2025): smooth compatible USFEM velocity/pressure estimates",
+    refinement="macro diameter", root=ROOT,
+)
+
+hood_path = ROOT / "examples/results/tutorial-methods/stokes-taylor-hood-asymptotic.json"
+hood_record = json.loads(hood_path.read_text())
+hood_series = refinement_series(
+    hood_path, hood_record["rows"], "H",
+    {"velocity L2": "velocity_l2", "pressure L2": "pressure_l2"},
+    {"velocity L2": 3.0, "pressure L2": 2.0}, method="stokes-galerkin",
+    spaces="Taylor-Hood P2/P1, r4 local mesh; unsplit vector P1 traces; diagonal macro mesh",
+    rate_provenance="Smooth stable locally refined Galerkin family; local stability and trace-lifting assumptions",
+    refinement="macro diameter", root=ROOT,
+)
+for series in (usfem_series, hood_series):
+    print(series["method"], "input", series["record"], "sha256", series["sha256"])
+    print(asymptotic_summary(series))
+    figure = plot_method_series(series)
+    convergence_path = REPORTS / (series["method"] + "-smooth-convergence.svg")
+    figure.savefig(convergence_path, bbox_inches="tight",
+                   metadata={"Creator": "IPES Research Group", "Rights": "CC BY 4.0"})
+    display(SVG(filename=str(convergence_path)))
+    plt.close(figure)
+
+```
+
+```text
+stokes-brinkman input examples/results/stokes-adaptive/polynomial-uniform-nu1-g0-l1.json sha256 a2248fb906e8957977d57a746645b154acd63153edb0cc40ca7be46f354e8c68
+{'velocity L2': {'start_index': 1, 'levels': 4, 'sizes': [0.25, 0.125, 0.0625, 0.03125], 'orders': [3.0644349493996885, 2.9913780094281828, 2.974092176861685], 'fitted_order': 3.0081093416496834, 'target': 3.0, 'amplitude_ratio': 1.0456753070099398}, 'pressure L2': {'start_index': 1, 'levels': 4, 'sizes': [0.25, 0.125, 0.0625, 0.03125], 'orders': [2.0771251271551012, 2.088109804627013, 2.0532112261882847], 'fitted_order': 2.07434482785382, 'target': 2.0, 'amplitude_ratio': 1.163479795696726}}
+```
+
+
+
+[![Figure 11 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_47_1.svg)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_47_1.svg)
+
+
+```text
+stokes-galerkin input examples/results/tutorial-methods/stokes-taylor-hood-asymptotic.json sha256 67678ccaa7fb23e2763b0ce10d36419a1b6f248bcbb1d205f8f6a66598fd9b21
+{'velocity L2': {'start_index': 3, 'levels': 4, 'sizes': [0.1767766952966369, 0.08838834764831845, 0.04419417382415922, 0.02209708691207961], 'orders': [2.9005507938524766, 2.949144763672128, 2.974021185386308], 'fitted_order': 2.9420294992404856, 'target': 3.0, 'amplitude_ratio': 1.129969049618751}, 'pressure L2': {'start_index': 3, 'levels': 4, 'sizes': [0.1767766952966369, 0.08838834764831845, 0.04419417382415922, 0.02209708691207961], 'orders': [2.039192773068021, 2.012510326437911, 2.00432992832044], 'fitted_order': 2.0180609409917007, 'target': 2.0, 'amplitude_ratio': 1.0396032346901678}}
+```
+
+
+
+[![Figure 12 — Stokes–Brinkman boundary layers: MHM and MHM-USFEM](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_47_3.svg)](../../assets/tutorials/stokes_brinkman_boundary_layer/figure_47_3.svg)
+
+
 ## References
 
 - Rodolfo Araya, Christopher Harder, Abner H. Poza, and Frédéric Valentin (2017). *Multiscale hybrid-mixed method for the Stokes and Brinkman equations—The method*, Computer Methods in Applied Mechanics and Engineering 324, 29–53. [DOI: 10.1016/j.cma.2017.05.027](https://doi.org/10.1016/j.cma.2017.05.027). Author preprint (2016): [CI²MA Preprint 2016-15](https://www.ci2ma.udec.cl/pdf/pre-publicaciones2/2016/pp16-15.pdf).
@@ -1247,4 +1339,4 @@ python -m scripts.run_notebooks /path/to/stokes_brinkman_boundary_layer.ipynb --
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `bac0c4c62b8b76905f1d14845568f7949e976f821ceccbb3a8e2482d75efcb8e` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `5c3b1a00d3651cea8bf2b41156b6a2a778ad6891078537dfb6f2c6c7b35ab472` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

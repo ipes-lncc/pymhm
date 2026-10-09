@@ -47,8 +47,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/99aab853d0b83d49c24e38c8db27f12a783c16c13f467c6a84a9ca0b3b0930e2/darcy_3d_parallel_scalability-companion.zip"
-COMPANION_SHA256 = "99aab853d0b83d49c24e38c8db27f12a783c16c13f467c6a84a9ca0b3b0930e2"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/459efa13b5376ab66440dde399289c04fe31f411d1222124cf88287760a166a2/darcy_3d_parallel_scalability-companion.zip"
+COMPANION_SHA256 = "459efa13b5376ab66440dde399289c04fe31f411d1222124cf88287760a166a2"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -82,7 +82,7 @@ print({"anisotropy": DATA.anisotropy, "source_control": study.verify_source(DATA
 ```
 
 ```text
-Workspace: ./build/docs-restructure/exact-source-workspaces/introduction/darcy_3d_parallel_scalability
+Workspace: ./build/docs-restructure/final-workspaces/provenance-final-darcy_3d_parallel_scalability-b6e58798ac5d
 ```
 
 ```text
@@ -233,36 +233,46 @@ reproduction = study.run_study(
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'scipy', 'total_seconds': 4.237068813294172, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'scipy', 'total_seconds': 5.098610606044531, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'scipy', 'total_seconds': 1.8654977045953274, 'physical_errors': {'pressure_L2': 0.001658052529591906, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.001658052529591906, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'scipy', 'total_seconds': 2.264804543927312, 'physical_errors': {'pressure_L2': 0.001658052529591906, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.001658052529591906, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'pyamg', 'total_seconds': 6.693634998053312, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'pyamg', 'total_seconds': 8.097707675769925, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 11.919587973505259, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 12.07021987810731, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'scipy', 'total_seconds': 0.7809592839330435, 'physical_errors': {'pressure_L2': 0.0014456896117105641, 'flux_L2': 0.19568823135874996, 'pressure_L2_per_sqrt_volume': 0.0014456896117105641, 'flux_L2_per_sqrt_volume': 0.19568823135874996, 'pressure_relative_L2': 0.0040890277117259285, 'flux_relative_L2': 0.05657212369630176, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.2571761369096059, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
+{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'scipy', 'total_seconds': 0.7896870914846659, 'physical_errors': {'pressure_L2': 0.0014456896117105641, 'flux_L2': 0.19568823135874996, 'pressure_L2_per_sqrt_volume': 0.0014456896117105641, 'flux_L2_per_sqrt_volume': 0.19568823135874996, 'pressure_relative_L2': 0.0040890277117259285, 'flux_relative_L2': 0.05657212369630176, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.2571761369096059, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'scipy', 'total_seconds': 3.8189446050673723, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'process', 'workers': 2, 'solver': 'scipy', 'total_seconds': 3.8181271385401487, 'physical_errors': {'pressure_L2': 0.0016580525295919067, 'flux_L2': 0.19812974250262486, 'pressure_L2_per_sqrt_volume': 0.0016580525295919067, 'flux_L2_per_sqrt_volume': 0.19812974250262486, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 8.097499264404178, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
+{'fine_n': 16, 'backend': 'serial', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 8.282001348212361, 'physical_errors': {'pressure_L2': 0.0016580525295918492, 'flux_L2': 0.19812974250262505, 'pressure_L2_per_sqrt_volume': 0.0016580525295918492, 'flux_L2_per_sqrt_volume': 0.19812974250262505, 'error_gauss_order': 7}}
 ```
 
 ```text
-{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 0.5207168646156788, 'physical_errors': {'pressure_L2': 0.001445689611718351, 'flux_L2': 0.1956882313588107, 'pressure_L2_per_sqrt_volume': 0.001445689611718351, 'flux_L2_per_sqrt_volume': 0.1956882313588107, 'pressure_relative_L2': 0.0040890277117479525, 'flux_relative_L2': 0.05657212369631932, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.25717613690960167, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
+{'fine_n': 16, 'backend': 'classical', 'workers': 1, 'solver': 'pyamg', 'total_seconds': 0.5560855977237225, 'physical_errors': {'pressure_L2': 0.001445689611718351, 'flux_L2': 0.1956882313588107, 'pressure_L2_per_sqrt_volume': 0.001445689611718351, 'flux_L2_per_sqrt_volume': 0.1956882313588107, 'pressure_relative_L2': 0.0040890277117479525, 'flux_relative_L2': 0.05657212369631932, 'exact_pressure_L2': 0.3535533905932754, 'exact_flux_L2': 3.4590928989915666, 'pressure_integral': 0.25717613690960167, 'exact_pressure_integral': 0.25801227546559596, 'error_quadrature_degree': 10}}
 ```
+
+
+
+[![Figure 1 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_8.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_8.png)
+
+
+
+
+[![Figure 2 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_9.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_9.png)
+
 
 ??? note "Numerical output and provenance"
 
@@ -572,6 +582,16 @@ reproduction = study.run_study(
     {'strong': 19, 'weak': 10, 'classical': 11, 'gpu': 0}
     [{'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'petsc', 'material_period': 0.1, 'workers': 1, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 262144.0, 'macro_cells_per_worker': 64.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 41.48806095123291, 'minimum_seconds': 41.48806095123291, 'maximum_seconds': 41.48806095123291, 'speedup_or_weak_efficiency': 1.0, 'strong_efficiency': 1.0, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'petsc', 'material_period': 0.1, 'workers': 2, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 131072.0, 'macro_cells_per_worker': 32.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 23.873619079589844, 'minimum_seconds': 23.873619079589844, 'maximum_seconds': 23.873619079589844, 'speedup_or_weak_efficiency': 1.7378203452488732, 'strong_efficiency': 0.8689101726244366, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'petsc', 'material_period': 0.1, 'workers': 4, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 65536.0, 'macro_cells_per_worker': 16.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 14.339047908782959, 'minimum_seconds': 14.339047908782959, 'maximum_seconds': 14.339047908782959, 'speedup_or_weak_efficiency': 2.893362321902881, 'strong_efficiency': 0.7233405804757203, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'petsc', 'material_period': 0.1, 'workers': 8, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 32768.0, 'macro_cells_per_worker': 8.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 8.746756076812744, 'minimum_seconds': 8.746756076812744, 'maximum_seconds': 8.746756076812744, 'speedup_or_weak_efficiency': 4.743251164990857, 'strong_efficiency': 0.5929063956238572, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'petsc', 'material_period': 0.1, 'workers': 16, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 16384.0, 'macro_cells_per_worker': 4.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 6.18654727935791, 'minimum_seconds': 6.18654727935791, 'maximum_seconds': 6.18654727935791, 'speedup_or_weak_efficiency': 6.70617374729558, 'strong_efficiency': 0.41913585920597374, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'petsc', 'material_period': 0.1, 'workers': 32, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 8192.0, 'macro_cells_per_worker': 2.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 5.166484355926514, 'minimum_seconds': 5.166484355926514, 'maximum_seconds': 5.166484355926514, 'speedup_or_weak_efficiency': 8.030230635198118, 'strong_efficiency': 0.2509447073499412, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'petsc', 'material_period': 0.137, 'workers': 16, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 16384.0, 'macro_cells_per_worker': 4.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 6.369869947433472, 'minimum_seconds': 6.369869947433472, 'maximum_seconds': 6.369869947433472, 'speedup_or_weak_efficiency': None, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'petsc', 'material_period': 0.137, 'workers': 32, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 8192.0, 'macro_cells_per_worker': 2.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 5.015876531600952, 'minimum_seconds': 5.015876531600952, 'maximum_seconds': 5.015876531600952, 'speedup_or_weak_efficiency': None, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'pyamg', 'material_period': 0.1, 'workers': 1, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 262144.0, 'macro_cells_per_worker': 64.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 109.5554051399231, 'minimum_seconds': 109.5554051399231, 'maximum_seconds': 109.5554051399231, 'speedup_or_weak_efficiency': 1.0, 'strong_efficiency': 1.0, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'pyamg', 'material_period': 0.1, 'workers': 2, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 131072.0, 'macro_cells_per_worker': 32.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 58.02238178253174, 'minimum_seconds': 58.02238178253174, 'maximum_seconds': 58.02238178253174, 'speedup_or_weak_efficiency': 1.888157669061871, 'strong_efficiency': 0.9440788345309356, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'pyamg', 'material_period': 0.1, 'workers': 4, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 65536.0, 'macro_cells_per_worker': 16.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 31.354162454605103, 'minimum_seconds': 31.354162454605103, 'maximum_seconds': 31.354162454605103, 'speedup_or_weak_efficiency': 3.494126347611377, 'strong_efficiency': 0.8735315869028443, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'pyamg', 'material_period': 0.1, 'workers': 8, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 32768.0, 'macro_cells_per_worker': 8.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 18.76947808265686, 'minimum_seconds': 18.76947808265686, 'maximum_seconds': 18.76947808265686, 'speedup_or_weak_efficiency': 5.836891396631487, 'strong_efficiency': 0.7296114245789359, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'pyamg', 'material_period': 0.1, 'workers': 16, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 16384.0, 'macro_cells_per_worker': 4.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 11.775877714157104, 'minimum_seconds': 11.775877714157104, 'maximum_seconds': 11.775877714157104, 'speedup_or_weak_efficiency': 9.303374899028906, 'strong_efficiency': 0.5814609311893066, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'pyamg', 'material_period': 0.1, 'workers': 32, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 8192.0, 'macro_cells_per_worker': 2.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 8.298593521118164, 'minimum_seconds': 8.298593521118164, 'maximum_seconds': 8.298593521118164, 'speedup_or_weak_efficiency': 13.201683497465899, 'strong_efficiency': 0.41255260929580934, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'pyamg', 'material_period': 0.137, 'workers': 32, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 8192.0, 'macro_cells_per_worker': 2.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 7.9709765911102295, 'minimum_seconds': 7.9709765911102295, 'maximum_seconds': 7.9709765911102295, 'speedup_or_weak_efficiency': None, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'scipy', 'material_period': 0.1, 'workers': 32, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 8192.0, 'macro_cells_per_worker': 2.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 6.005056381225586, 'minimum_seconds': 6.005056381225586, 'maximum_seconds': 6.005056381225586, 'speedup_or_weak_efficiency': None, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 96, 'trace_degree': 1, 'local_solver': 'petsc', 'material_period': 0.1, 'workers': 32, 'domain_length': 1, 'fine_cells': 884736, 'macro_cells': 64, 'local_fine_cells_per_worker': 27648.0, 'macro_cells_per_worker': 2.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 10.414645671844482, 'minimum_seconds': 10.414645671844482, 'maximum_seconds': 10.414645671844482, 'speedup_or_weak_efficiency': None, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 96, 'trace_degree': 1, 'local_solver': 'pyamg', 'material_period': 0.1, 'workers': 32, 'domain_length': 1, 'fine_cells': 884736, 'macro_cells': 64, 'local_fine_cells_per_worker': 27648.0, 'macro_cells_per_worker': 2.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 22.591615438461304, 'minimum_seconds': 22.591615438461304, 'maximum_seconds': 22.591615438461304, 'speedup_or_weak_efficiency': None, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'strong', 'fine_n': 96, 'trace_degree': 1, 'local_solver': 'scipy', 'material_period': 0.1, 'workers': 32, 'domain_length': 1, 'fine_cells': 884736, 'macro_cells': 64, 'local_fine_cells_per_worker': 27648.0, 'macro_cells_per_worker': 2.0, 'baseline_workers': 1, 'samples': 1, 'median_seconds': 56.021482706069946, 'minimum_seconds': 56.021482706069946, 'maximum_seconds': 56.021482706069946, 'speedup_or_weak_efficiency': None, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'weak', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'petsc', 'material_period': 0.1, 'workers': 8, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 32768.0, 'macro_cells_per_worker': 8.0, 'baseline_workers': 8, 'samples': 1, 'median_seconds': 8.746756076812744, 'minimum_seconds': 8.746756076812744, 'maximum_seconds': 8.746756076812744, 'speedup_or_weak_efficiency': 1.0, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'weak', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'petsc', 'material_period': 0.1, 'workers': 16, 'domain_length': 2, 'fine_cells': 524288, 'macro_cells': 128, 'local_fine_cells_per_worker': 32768.0, 'macro_cells_per_worker': 8.0, 'baseline_workers': 8, 'samples': 1, 'median_seconds': 14.445743083953857, 'minimum_seconds': 14.445743083953857, 'maximum_seconds': 14.445743083953857, 'speedup_or_weak_efficiency': 0.6054902143821543, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'weak', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'petsc', 'material_period': 0.1, 'workers': 32, 'domain_length': 4, 'fine_cells': 1048576, 'macro_cells': 256, 'local_fine_cells_per_worker': 32768.0, 'macro_cells_per_worker': 8.0, 'baseline_workers': 8, 'samples': 1, 'median_seconds': 18.77641201019287, 'minimum_seconds': 18.77641201019287, 'maximum_seconds': 18.77641201019287, 'speedup_or_weak_efficiency': 0.4658374598972649, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'weak', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'petsc', 'material_period': 0.137, 'workers': 16, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 16384.0, 'macro_cells_per_worker': 4.0, 'baseline_workers': 16, 'samples': 1, 'median_seconds': 6.369869947433472, 'minimum_seconds': 6.369869947433472, 'maximum_seconds': 6.369869947433472, 'speedup_or_weak_efficiency': 1.0, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'weak', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'petsc', 'material_period': 0.137, 'workers': 32, 'domain_length': 2, 'fine_cells': 524288, 'macro_cells': 128, 'local_fine_cells_per_worker': 16384.0, 'macro_cells_per_worker': 4.0, 'baseline_workers': 16, 'samples': 1, 'median_seconds': 13.556374788284302, 'minimum_seconds': 13.556374788284302, 'maximum_seconds': 13.556374788284302, 'speedup_or_weak_efficiency': 0.46988004145019985, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'weak', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'pyamg', 'material_period': 0.1, 'workers': 16, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 16384.0, 'macro_cells_per_worker': 4.0, 'baseline_workers': 16, 'samples': 1, 'median_seconds': 11.775877714157104, 'minimum_seconds': 11.775877714157104, 'maximum_seconds': 11.775877714157104, 'speedup_or_weak_efficiency': 1.0, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'weak', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'pyamg', 'material_period': 0.1, 'workers': 32, 'domain_length': 2, 'fine_cells': 524288, 'macro_cells': 128, 'local_fine_cells_per_worker': 16384.0, 'macro_cells_per_worker': 4.0, 'baseline_workers': 16, 'samples': 1, 'median_seconds': 20.00160312652588, 'minimum_seconds': 20.00160312652588, 'maximum_seconds': 20.00160312652588, 'speedup_or_weak_efficiency': 0.5887466939357516, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'weak', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'pyamg', 'material_period': 0.1, 'workers': 8, 'domain_length': 1, 'fine_cells': 262144, 'macro_cells': 64, 'local_fine_cells_per_worker': 32768.0, 'macro_cells_per_worker': 8.0, 'baseline_workers': 8, 'samples': 1, 'median_seconds': 18.76947808265686, 'minimum_seconds': 18.76947808265686, 'maximum_seconds': 18.76947808265686, 'speedup_or_weak_efficiency': 1.0, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'weak', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'pyamg', 'material_period': 0.1, 'workers': 16, 'domain_length': 2, 'fine_cells': 524288, 'macro_cells': 128, 'local_fine_cells_per_worker': 32768.0, 'macro_cells_per_worker': 8.0, 'baseline_workers': 8, 'samples': 1, 'median_seconds': 24.360405921936035, 'minimum_seconds': 24.360405921936035, 'maximum_seconds': 24.360405921936035, 'speedup_or_weak_efficiency': 0.7704911873309689, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}, {'study': 'weak', 'fine_n': 64, 'trace_degree': 1, 'local_solver': 'pyamg', 'material_period': 0.1, 'workers': 32, 'domain_length': 4, 'fine_cells': 1048576, 'macro_cells': 256, 'local_fine_cells_per_worker': 32768.0, 'macro_cells_per_worker': 8.0, 'baseline_workers': 8, 'samples': 1, 'median_seconds': 29.770087480545044, 'minimum_seconds': 29.770087480545044, 'maximum_seconds': 29.770087480545044, 'speedup_or_weak_efficiency': 0.6304811195104093, 'strong_efficiency': None, 'timing_scope': 'inclusive launch when recorded; complete solver pipeline otherwise'}]
     ```
+
+
+
+[![Figure 3 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_11.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_11.png)
+
+
+
+
+[![Figure 4 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_12.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_12.png)
+
 
 ??? note "Numerical output and provenance"
 
@@ -2427,7 +2447,7 @@ The measured one-spawn-process complete launch is the denominator. Worker axes u
 
 
 
-[![Figure 1 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_11.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_11.png)
+[![Figure 5 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_15.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_15.png)
 
 
 
@@ -2436,7 +2456,7 @@ Integer x-domain lengths grow at fixed macro/local/trace resolution and permeabi
 
 
 
-[![Figure 2 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_13.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_13.png)
+[![Figure 6 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_17.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_17.png)
 
 
 
@@ -2445,7 +2465,7 @@ The left panel includes the full measured launch. Means use actual repetitions, 
 
 
 
-[![Figure 3 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_15.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_15.png)
+[![Figure 7 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_19.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_19.png)
 
 
 
@@ -2454,7 +2474,7 @@ Domain volume, local task count and host CPU budget double together. Each GPU re
 
 
 
-[![Figure 4 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_17.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_17.png)
+[![Figure 8 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_21.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_21.png)
 
 
 
@@ -2463,7 +2483,7 @@ GPU curves use two GPUs plus 32 host CPU cores; CPU curves use 32 host CPU cores
 
 
 
-[![Figure 5 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_19.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_19.png)
+[![Figure 9 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_23.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_23.png)
 
 
 
@@ -2472,7 +2492,7 @@ Timing bars use configuration means; whiskers show observed sample extrema, not 
 
 
 
-[![Figure 6 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_21.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_21.png)
+[![Figure 10 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_25.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_25.png)
 
 
 
@@ -2481,7 +2501,7 @@ Only sequential parent-stage wall clocks are stacked. Parallel worker sums are e
 
 
 
-[![Figure 7 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_23.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_23.png)
+[![Figure 11 — Darcy in 3D: native workspaces and CPU/GPU scaling](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_27.png)](../../assets/tutorials/darcy_3d_parallel_scalability/figure_7_27.png)
 
 
 Set `RUN_LARGE_CAMPAIGN=True` for the complete 64/96/128-axis CPU strong/weak campaign (32 workers at the largest configuration). `RUN_GPU_COMPONENT=True` measures original local condensation on two GPUs; `RUN_FULL_GPU_WORKFLOW=True` includes CPU assembly, dedicated GPU solves, ordered global assembly and reconstruction with both cuDSS and AMGX. Optional device runs require the corresponding locked accelerator environment and two usable devices.
@@ -2507,4 +2527,4 @@ python -m scripts.run_notebooks /path/to/darcy_3d_parallel_scalability.ipynb --t
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `a372a6e95fad1c76198cdcdaef6f4ccb6e4fb1ef76fd71b0204e11af65946184` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `9d3b64495b8ae8b31a63b4ec689032dba4c9f6cc045b2d928eb10f83085f1aa8` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

@@ -6654,6 +6654,24 @@
         "ufl"
       ],
       "preparation": []
+    },
+    "notebooks/transport/spatial_refinement.ipynb": {
+      "kind": "standalone",
+      "environment": "introduction",
+      "requires": [
+        "dolfinx",
+        "ufl"
+      ],
+      "preparation": []
+    },
+    "notebooks/darcy/equilibrated_flux_workflow.ipynb": {
+      "kind": "standalone",
+      "environment": "introduction",
+      "requires": [
+        "dolfinx",
+        "ufl"
+      ],
+      "preparation": []
     }
   }
 }

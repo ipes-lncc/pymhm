@@ -31,8 +31,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/74c5f3e0ffa8e572f4716c0342e3a3f97e1163300a1b56e4b5111b26a47283bd/darcy_multiscale_convergence-companion.zip"
-COMPANION_SHA256 = "74c5f3e0ffa8e572f4716c0342e3a3f97e1163300a1b56e4b5111b26a47283bd"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/34fcc4d6005bbda56e46c37c1b157984d9dfba84c5ed349e6a7c101b485b8d21/darcy_multiscale_convergence-companion.zip"
+COMPANION_SHA256 = "34fcc4d6005bbda56e46c37c1b157984d9dfba84c5ed349e6a7c101b485b8d21"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -79,7 +79,7 @@ from pymhm.fem.scalar.operators import boundary_data
 ```
 
 ```text
-Workspace: ./build/docs-restructure/exact-source-workspaces-final/introduction/darcy_multiscale_convergence
+Workspace: ./build/docs-restructure/final-workspaces/provenance-final-darcy_multiscale_convergence-f44b601aa93c
 ```
 
 ## 1. Physical problem and an independently derived source
@@ -671,6 +671,94 @@ Compare global MHM unknowns with the fine Galerkin unknowns, and compare **flux 
 
 The smooth coefficient gives a controlled analytical study. The following SPE10 tutorial instead uses jumps and high contrast, resolves pixel integration, and measures the numerical baseline's own refinement.
 
+## 9. Qualify the smooth asymptotic rate separately
+
+The oscillatory coefficient above resolves distinct macro, local and trace scales. Its short refinement sequences measure that chosen material; a smooth energy theorem is not transferred to them without its regularity and scale assumptions.
+
+For an independent smooth check, take the unit square, $K=I$ and
+
+
+
+$$
+p=\cos(2\pi x)\cos(2\pi y),\qquad
+f=8\pi^2p,\qquad q=-\nabla p.
+$$
+
+
+
+The exterior normal flux is zero and the physical pressure has zero integral. The local spaces are P1 pressure with P0 normal-flux traces, preserving their compatible constant kernel and integral gauge. The macro sequence is $n=4,8,16,32,64$. The first-order energy estimate and second-order measured pressure follow the smooth setting discussed by [Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019).
+
+The record identifies the executed physical problem, spaces and source provenance. This analytical qualification uses its declared mesh family; it is not labeled a matching reconstruction of the paper's original meshes. The cell below recomputes the orders from the attributed full field norms.
+
+### Recompute every measured order
+
+For successive physical errors $E_{i-1},E_i$ at the actual refinement sizes, compute
+
+
+
+$$
+r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
+$$
+
+
+
+The first code lines read one attributed numerical record. They preserve every level and display the complete error/order table. The plotting helper only measures and plots these errors: it constructs no local or global PDE. Targets below are declared from the stated hypotheses, rather than fitted from the data. The final four measured levels give three consecutive orders and a fitted terminal slope. For each declared target $q$, a nearly constant $E/h^q$ provides a second view of the asymptotic regime.
+
+
+
+```python
+import json
+from IPython.display import Markdown, display
+from examples.tutorial_convergence import refinement_series, asymptotic_summary, plot_method_series
+refinement_record = ROOT / 'examples/results/darcy_2013_comparison.json'
+refinement_data = json.loads(refinement_record.read_text(encoding='utf-8'))
+refinement_rows = refinement_data['results']
+refinement_error_keys = {'pressure L2': 'pressure_l2', 'physical Darcy flux L2': 'flux_l2'}
+refinement_targets = {'physical Darcy flux L2': 1.0}
+refinement_rows = sorted(refinement_rows, key=lambda refinement_row: refinement_row['macro_diameter'], reverse=True)
+refinement_sizes = np.asarray([refinement_row['macro_diameter'] for refinement_row in refinement_rows])
+refinement_field_errors = {refinement_field: np.asarray([refinement_row[refinement_key] for refinement_row in refinement_rows]) for refinement_field, refinement_key in refinement_error_keys.items()}
+refinement_orders = {refinement_field: np.log(refinement_values[:-1] / refinement_values[1:]) / np.log(refinement_sizes[:-1] / refinement_sizes[1:]) for refinement_field, refinement_values in refinement_field_errors.items()}
+refinement_header = ['Refinement size'] + [refinement_column for refinement_field in refinement_error_keys for refinement_column in (refinement_field, 'Order')]
+refinement_lines = [' | '.join(refinement_header), ' | '.join(['---'] * len(refinement_header))]
+for refinement_index, refinement_size in enumerate(refinement_sizes):
+    refinement_values = [f'{refinement_size:.6g}']
+    for refinement_field in refinement_error_keys:
+        refinement_values.extend([f'{refinement_field_errors[refinement_field][refinement_index]:.6e}', '—' if refinement_index == 0 else f'{refinement_orders[refinement_field][refinement_index - 1]:.3f}'])
+    refinement_lines.append(' | '.join(refinement_values))
+display(Markdown('\n'.join(refinement_lines)))
+refinement_series_data = refinement_series(refinement_record, refinement_rows, 'macro_diameter', refinement_error_keys, refinement_targets, method='primal-mhm', spaces='P1 local pressure; P0 normal-flux trace', rate_provenance='Harder, Paredes and Valentin (2013): first-order energy; second-order pressure observed', root=ROOT)
+print({'record': refinement_series_data['record'], 'sha256': refinement_series_data['sha256']})
+for refinement_field, refinement_summary in asymptotic_summary(refinement_series_data).items():
+    print(refinement_field, {'last_three_orders': [round(refinement_order, 3) for refinement_order in refinement_summary['orders']], 'fitted_order': round(refinement_summary['fitted_order'], 3), 'target': refinement_summary['target'], 'normalized_amplitude_ratio': refinement_summary.get('amplitude_ratio')})
+plot_method_series(refinement_series_data)
+plt.show()
+
+```
+
+
+Refinement size | pressure L2 | Order | physical Darcy flux L2 | Order
+--- | --- | --- | --- | ---
+0.353553 | 1.114293e-01 | — | 2.419077e+00 | —
+0.176777 | 3.020032e-02 | 1.883 | 1.276715e+00 | 0.922
+0.0883883 | 7.721936e-03 | 1.968 | 6.472200e-01 | 0.980
+0.0441942 | 1.941659e-03 | 1.992 | 3.247330e-01 | 0.995
+0.0220971 | 4.861202e-04 | 1.998 | 1.625073e-01 | 0.999
+
+
+```text
+{'record': 'examples/results/darcy_2013_comparison.json', 'sha256': '81ccaf3b9e11a385ed92c01547881d18a5ad02ef694ea0cfd3aa9fa699011155'}
+pressure L2 {'last_three_orders': [1.968, 1.992, 1.998], 'fitted_order': 1.986, 'target': None, 'normalized_amplitude_ratio': None}
+physical Darcy flux L2 {'last_three_orders': [0.98, 0.995, 0.999], 'fitted_order': 0.992, 'target': 1.0, 'normalized_amplitude_ratio': 1.0182843961826575}
+```
+
+
+
+[![Figure 6 — Multiscale Darcy: the formulation, the API and three approximation scales](../../assets/tutorials/darcy_multiscale_convergence/figure_23_2.png)](../../assets/tutorials/darcy_multiscale_convergence/figure_23_2.png)
+
+
+The upper panel preserves all coarse and fine measurements. Dashed lines show declared target powers anchored at the finest measured error. The shaded interval always contains the final four levels; it does not select points to improve a fitted slope. Read the consecutive orders together with the target-normalized errors and the stated quadrature/local-equation controls. A slope alone does not establish the hypotheses of an error estimate.
+
 ## References
 
 - Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).
@@ -694,4 +782,4 @@ python -m scripts.run_notebooks /path/to/darcy_multiscale_convergence.ipynb --ti
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `57a5c1ec9b47a1cdf57dd7283c1bc688ab989031e315b33456a1b5f7810483d3` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `12afb56ea29eefbc1350b728df214610347854a4f5b164f498fed7295347402d` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

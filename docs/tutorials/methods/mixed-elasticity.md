@@ -52,7 +52,7 @@ from pymhm.postprocessing.stress import MixedElasticitySolution
 On the unit square, choose a smooth solenoidal displacement:
 
 $$
-u=(\sin(\pi x)\cos(\pi y),-\cos(\pi x)\sin(\pi y)),\qquad \mu=1,\quad\lambda=2.
+u=(\sin(\pi x)\cos(\pi y),-\cos(\pi x)\sin(\pi y)),\qquad \mu=1,\quad\lambda=1.
 $$
 
 Then $p=-\lambda\nabla\cdot u=0$, $\sigma=2\mu\varepsilon(u)$ and $f=2\pi^2u$. The weak rotation convention is $r=(\partial_yu_1-\partial_xu_2)/2$. The exact boundary displacement is nonzero on parts of the exterior; it must enter the global functional.
@@ -92,8 +92,8 @@ Stress rows use BDM2; displacement and rotation use discontinuous $P_1$. They co
 Interior macrofaces use vector $P_1$ negative traction. Exterior faces retain full $P_2$ moments on each fine boundary edge, as required to represent the prescribed normal-stress space in this comparison. The normal/interior degrees can be enriched independently through `BDMFamily`; its divergence and rotation degrees change with the selected interior family.
 
 ```python
-n, refinement = 2, 2
-lam, mu = 2.0, 1.0
+n, refinement = 8, 2
+lam, mu = 1.0, 1.0
 macro = TriangleMesh.unit_square(n)
 boundary = set(macro.boundary_faces)
 family = BDMFamily(2, 0)
@@ -364,7 +364,7 @@ assert physical["accepted"]
 
 ## 7. Build and refine the independent classical baseline
 
-The classical Taylor–Hood displacement–pressure system uses the same material, force and nonhomogeneous boundary values on global $32\times32$ and $64\times64$ meshes. These meshes are independent of the coarse $2\times2$ macro partition. Analytical errors qualify the refined baseline before its field is plotted.
+The classical Taylor–Hood displacement–pressure system uses the same material, force and nonhomogeneous boundary values on global $32\times32$ and $64\times64$ meshes. These meshes are independent of the coarse $8\times8$ macro partition. Analytical errors qualify the refined baseline before its field is plotted.
 
 ```python
 from dolfinx import fem
@@ -502,7 +502,7 @@ plt.show()
 
 ## 9. Reach the smooth asymptotic regime
 
-The archived refinement series uses this same smooth field, BDM2/DG-P1/DG-P1 local spaces, refinement two, interior vector $P_1$ tractions and full exterior fine-edge $P_2$ tractions. It increases the macro resolution through $1,2,4,8,16$. The current explicit equations above run its $n=2$ level; reading the remaining attributed records is not another solve.
+The archived refinement series uses this same smooth field, BDM2/DG-P1/DG-P1 local spaces, refinement two, interior vector $P_1$ tractions and full exterior fine-edge $P_2$ tractions. It increases the macro resolution through $1,2,4,8,16,32$. The current explicit equations above run its $n=8$ level; reading the remaining attributed records is not another solve.
 
 The compatible smooth mixed stress/rotation estimates give order two. Displacement is shown separately. Rough coefficients, singular domains, different trace partitions or incomplete rigid spaces require their own regularity and stability assessment.
 
@@ -515,8 +515,8 @@ from IPython.display import SVG, display
 from examples.introduction.vector import observed_rates
 from examples.tutorial_convergence import plot_method_series
 
-record = json.loads((ROOT / "examples/results/mixed-elasticity.json").read_text())
-rows = record["convergence"]
+record = json.loads((ROOT / "examples/results/tutorial-methods/mixed-elasticity-asymptotic.json").read_text())
+rows = record["rows"]
 sizes = np.asarray([1 / row["macro_resolution"] for row in rows])
 errors = {
     label: np.array([row[key] for row in rows])
@@ -533,7 +533,7 @@ series = dict(
     rates={k: observed_rates(sizes, v).tolist() for k, v in errors.items()},
     expected={"stress L2": 2.0, "rotation L2": 2.0},
     spaces="BDM2 stress / DG P1 displacement and rotation; interior P1, full boundary P2 traces",
-    refinement="macro size H",
+    refinement="macro grid spacing",
 )
 print("Final measured orders:", {k: v[-1] for k, v in series["rates"].items()})
 figure = plot_method_series(series)
@@ -547,11 +547,28 @@ plt.show()
 
 The final consecutive intervals confirm the stated smooth regime. A measured order for an observable without a separate stated reference is reported as **observed**.
 
-| Physical observable | Penultimate order | Final order | Reference order |
-| --- | ---: | ---: | ---: |
-| displacement L2 | 2.2899 | 2.1055 | observed |
-| stress L2 | 1.9128 | 1.9631 | 2.0 |
-| rotation L2 | 1.9310 | 1.9843 | 2.0 |
+| Physical observable | Reference order | Last three orders | Maximum/minimum of $E/H^q$ |
+| --- | ---: | --- | ---: |
+| displacement $L^2$ | observed | 2.2899, 2.1055, 2.0298 | — |
+| stress $L^2$ | 2 | 1.9128, 1.9631, 1.9843 | 1.1018 |
+| rotation $L^2$ | 2 | 1.9310, 1.9843, 1.9970 | 1.0627 |
+
+The final four levels are $n=4,8,16,32$. The stress and weak-rotation target
+amplitudes flatten together. Displacement is an additional observable and
+has its own measured orders. All coarse levels remain visible in the figure.
+The composite record identifies the exact source record and SHA-256 for every
+row. An independent $n=16$ control reproduces the archived stress, displacement,
+rotation and stress-divergence norms to relative differences below
+$1.5\times10^{-13}$; the $n=32$ extension also verifies original uncondensed
+rows, fine-cell force balance, weak symmetry and normal-traction continuity.
+
+The local weak-symmetry estimate and two-level extension assume the stated
+stable BDM2/P1/P1 family, smooth physical fields, adequate exterior traction
+resolution and complete rigid moments. See
+[Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013) and
+[Arnold, Falk and Winther (2007)](https://doi.org/10.1090/S0025-5718-07-01998-9).
+The table is an analytical qualification on these declared spaces, rather than
+a digitized or reformulated reproduction of a heterogeneous paper table.
 
 The [common convergence notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) preserves each sequence’s spaces, independent refinement variable and attributed numerical record.
 

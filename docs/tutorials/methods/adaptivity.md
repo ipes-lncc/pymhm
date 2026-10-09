@@ -1,315 +1,209 @@
-# Adaptive macro, local and skeletal spaces
+# Adaptive macro refinement and work
 
-[Complete executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/reconstruction_and_indicators.ipynb) · [Download](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/darcy/reconstruction_and_indicators.ipynb)
+[Executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/reconstruction_and_indicators.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/darcy/reconstruction_and_indicators.ipynb)
 
+This lesson uses the estimator of
+[Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073) on a smooth
+localized exact pressure. The uniform studies in the
+[recovery](flux-recovery.md) and [indicator](error-indicators.md) lessons first
+verify their asymptotic estimates. Here eight actual adaptive solves test the
+marking/refinement workflow and compare the same physical error against work.
 
-This lesson starts with user-written UFL local/global equations. It then defines a physical coefficient record, reconstructs an H(div) flux, evaluates an estimator and chooses cells for refinement. Numerical algorithms remain in the package; no physical-model constructor selects the equations.
+## 1. Define a localized physical solution
 
-The primary case is $p=\sin(2\pi x)\sin(2\pi y)$, $K=I$, $f=8\pi^2p$, with homogeneous Dirichlet pressure on the unit square. The formulation follows [Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019). Flux recovery and the four-term estimator follow [Barrenechea, Martins, Pereira and Valentin (2026)](https://doi.org/10.1137/24M1673073).
+$$
+p(x,y)=x(1-x)y(1-y)\exp\!\left[-80\big((x-0.3)^2+(y-0.4)^2\big)\right].
+$$
 
-Install the native UFL backend as explained in the installation guide. The workflow is **meshes → local forms → global forms → assemble → solve → recovery → indicators → marking**.
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-import ufl
-from pymhm import (
-    Equation, FaceSpace, LocalContext, MeshHierarchy, SkeletonSpace, TriangleMesh,
-    assemble, bind_interface, bind_problem, columns, solve,
-)
-from pymhm.postprocessing.solutions import DarcySolution
-from pymhm.recovery.moments import reconstruct_darcy_moments
-from pymhm.estimators.darcy import estimate_darcy_error
-from pymhm.adaptivity.darcy import mark_dorfler
-from threadpoolctl import threadpool_limits
-
-
-def exact_pressure(points: np.ndarray) -> np.ndarray:
-    """Analytical pressure; it vanishes on every exterior edge."""
-    return np.sin(2 * np.pi * points[:, 0]) * np.sin(2 * np.pi * points[:, 1])
-
-
-def exact_gradient(points: np.ndarray) -> np.ndarray:
-    """Independently differentiated physical pressure gradient."""
-    x, y = 2 * np.pi * points.T
-    return 2 * np.pi * np.column_stack((np.cos(x) * np.sin(y), np.sin(x) * np.cos(y)))
-
-
-def source(points: np.ndarray) -> np.ndarray:
-    """Negative Laplacian computed independently of the discrete operator."""
-    return 8 * np.pi**2 * exact_pressure(points)
-```
-
-## 1. Choose meshes and approximation spaces
-
-For reconstruction degree $m=2$ and trace degree $\ell=1$, choose local degree $k=3$. This satisfies the two-dimensional restriction $k\ge\ell+2$ and $\ell\le m\le k$. The estimator additionally needs convex macrotriangles, a globally conforming fine partition, identity diffusion and homogeneous Dirichlet data. These are mathematical restrictions, not conventions inferred by the software.
+The pressure vanishes on every boundary edge. Set $K=I$, $q=-\nabla p$, and
+$f=-\Delta p$. The notebook writes the NumPy derivatives explicitly and derives
+the UFL source from the analytical expression independently. This is an
+analytical extension of the paper's estimator examples, rather than a
+reproduction of its heterogeneous-material application.
 
 ```python
-macro = TriangleMesh.unit_square(2)
-local_meshes = tuple(macro.submesh(cell, 2) for cell in range(len(macro.cells)))
-hierarchy = MeshHierarchy(macro, local_meshes)
-skeleton = SkeletonSpace(macro, tuple(FaceSpace.uniform(1) for _ in macro.faces))
-interface = bind_interface(skeleton, convention="normal")
+def localized_forcing(domain):
+    """Differentiate the analytical UFL pressure independently of NumPy."""
+    x = ufl.SpatialCoordinate(domain)
+    p = x[0]*(1-x[0])*x[1]*(1-x[1])*ufl.exp(-80*((x[0]-.3)**2+(x[1]-.4)**2))
+    return -ufl.div(ufl.grad(p))
 ```
 
-## 2. Declare local equations
+## 2. Declare the local and global variational equations
+
+Reuse the explicitly written UFL volume and trace equations from the
+[recovery lesson](flux-recovery.md). Choose P3 local pressure, independent P1
+normal traces, RT2 reconstruction, two local edge subdivisions and the physical
+constant volume moment. Only the source expression changes; the method and
+polynomial degrees remain fixed.
 
 $$
 \begin{aligned}
 (\nabla p_T,\nabla v)_T+\langle\lambda_T,v\rangle_{\partial T}&=(f,v)_T,\\
--\langle p_T,\mu_T\rangle_{\partial T}&=g_T(\mu_T).
+-\sum_T\langle p_T,\mu_T\rangle_{\partial T}&=0.
 \end{aligned}
 $$
 
-The local volume form has a constant kernel. Its physical volume moment fixes the local complement and retains one mean per macrocell. The interface binding supplies normal incidence and numbering; the minus sign in the global test pairing is part of the formulation.
+## 3. Assemble, solve and measure before marking
+
+Start with 32 macrotriangles. Rebuild the same declared forms after each
+refinement. `solve_declared` in the notebook merely orchestrates those already
+written forms and caller-chosen spaces; it does not select a Darcy formulation.
 
 ```python
-def local_equations(local: LocalContext):
-    """Declare primal diffusion, independent trace tests and physical mean."""
-    space = local.native_space(degree=3)
-    p, v = ufl.TrialFunction(space.space), ufl.TestFunction(space.space)
-    x = ufl.SpatialCoordinate(space.mesh)
-    dx = ufl.Measure("dx", domain=space.mesh, metadata={"quadrature_degree": 12})
-    forcing = 8 * np.pi**2 * ufl.sin(2 * np.pi * x[0]) * ufl.sin(2 * np.pi * x[1])
-    local.field("pressure", space)
-    return local.equations(
-        a=ufl.inner(ufl.grad(p), ufl.grad(v)) * dx,
-        L=forcing * v * dx,
-        b=local.trace_pairings(lambda phi, ds: phi * v * ds),
-        c=local.trace_pairings(lambda phi, ds: -phi * p * ds, axis="rows"),
-        kernel=np.ones((space.size, 1)), moments=columns(v * dx),
+adaptive_mesh = TriangleMesh.unit_square(4)
+for step in range(8):
+    solution = solve_declared(adaptive_mesh, 1, localized_source, localized_forcing)
+    estimate = estimate_darcy_error(
+        solution, homogeneous_dirichlet=True, degree=2, quadrature_order=16,
     )
-```
-
-## 3. Declare global boundary moments
-
-$$
--\sum_T\langle p_T,\mu_T\rangle_{\partial T}
-=-\langle p_D,\mu\rangle_{\partial\Omega},\qquad p_D=0.
-$$
-
-The Dirichlet load is therefore zero. Its sign is kept explicit so that changing the boundary data does not change the formulation accidentally.
-
-```python
-def global_equation(global_context):
-    """Supply the weak Dirichlet moments in the bound interface layout."""
-    boundary, fixed = global_context.boundary_data(0.0, order=8)
-    assert not fixed
-    return Equation(0, global_context.trace_load(-boundary))
-
-
-problem = bind_problem(hierarchy, interface, local_equations,
-                       global_equation=global_equation, retained=1)
-```
-
-## 4. Assemble, solve and name the physical result
-
-Named fields preserve the native executed coefficient basis. `portable_coefficients` converts through its stored mapping; reshaping native vectors would not be equivalent. `DarcySolution` below is a data record for established reconstruction and estimator operations. Constructing it performs no PDE solve.
-
-```python
-with threadpool_limits(1):
-    system = assemble(problem)
-    coefficients = solve(system)
-pressure_fields = coefficients.field("pressure")
-solution = DarcySolution(
-    skeleton=skeleton, local_meshes=local_meshes,
-    pressure=tuple(field.portable_coefficients for field in pressure_fields),
-    flux=(), hybrid=coefficients, formulation="primal", permeability=1.0,
-    source=source, degree=3, quadrature_order=10,
-)
-print({"original_equation_residual": coefficients.raw_residual,
-       "pressure_L2": solution.l2_error(exact_pressure, order=12)})
-```
-
-```text
-{'original_equation_residual': 1.694165673686481e-16, 'pressure_L2': 0.1237896762091817}
-```
-
-## 5. Reconstruct a flux and distinguish its conservation tests
-
-The canonical RT moment reconstruction preserves boundary normal moments from the skeleton, averages interior normal moments and preserves raw interior vector moments. It is not the energy-minimizing RT0 equilibration. Its divergence balance is against continuous macro-local tests, not individual discontinuous fine-cell constants.
-
-$$
-\begin{aligned}
-\langle q_h\cdot n,\phi\rangle_E&=\text{declared normal moments},\\
-(q_h,\psi)_t&=(-\nabla p_h,\psi)_t.
-\end{aligned}
-$$
-
-```python
-recovered = reconstruct_darcy_moments(solution, degree=2, quadrature_order=10)
-normal_defect = max(np.max(abs(row)) for row in recovered.normal_flux_residuals())
-continuous_defect = max(np.max(abs(row)) for row in recovered.continuous_moment_residuals())
-fine_defect = max(np.max(abs(row)) for row in recovered.fine_conservation_residuals())
-assert normal_defect < 1e-10
-assert continuous_defect < 1e-10
-print({"normal_moment_defect": normal_defect,
-       "continuous_test_balance_defect": continuous_defect,
-       "fine_cell_balance_defect_not_imposed": fine_defect,
-       "recovered_flux_L2": recovered.flux_l2_error(lambda x: -exact_gradient(x), order=12)})
-```
-
-```text
-{'normal_moment_defect': np.float64(0.0), 'continuous_test_balance_defect': np.float64(1.1384941817418892e-11), 'fine_cell_balance_defect_not_imposed': np.float64(0.051186622282188746), 'recovered_flux_L2': 1.8060273070529842}
-```
-
-## 6. Evaluate the four-term indicator
-
-$$
-\eta^2=\sum_T\big[(\eta_{1,T}+\eta_{3,T}+\eta_{\mathrm{osc},T})^2
-+\eta_{2,T}^2\big].
-$$
-
-The contributions measure flux defect, potential nonconformity, divergence-projection defect and source oscillation. The recovered potential is a separate continuous field. For this unit-diffusion case, compare the estimator with the independently integrated broken energy error; numerical quadrature does not provide an interval-certified bound.
-
-```python
-estimate = estimate_darcy_error(solution, homogeneous_dirichlet=True,
-                                degree=2, quadrature_order=10)
-energy_error = estimate.energy_error(exact_gradient, order=12)
-assert max(estimate.equilibrium_defect) < 1e-10
-assert estimate.total >= energy_error
-print({"energy_error": energy_error, "estimator": estimate.total,
-       "effectivity": estimate.total / energy_error})
-```
-
-```text
-{'energy_error': 1.8000808304439524, 'estimator': 2.3912395807993514, 'effectivity': 1.3284067806052922}
-```
-
-## 7. Plot physical fields with the actual macro mesh
-
-Each field panel has its own color scale. Numerical values and errors are sampled independently in each local mesh, preserving interface sides.
-
-```python
-fig, axes = plt.subplots(1, 3, figsize=(12, 3.6), layout="constrained")
-all_exact, all_values, panels = [], [], []
-for fine, field in zip(local_meshes, pressure_fields, strict=True):
-    points = fine.points[fine.cells].mean(axis=1)
-    exact, values = exact_pressure(points), field.evaluate(points)
-    panels.append((fine, exact, values))
-    all_exact.extend(exact)
-    all_values.extend(values)
-common = max(np.max(np.abs(all_exact)), np.max(np.abs(all_values)))
-error_max = max(np.max(abs(values - exact)) for _, exact, values in panels)
-for index, (ax, title) in enumerate(zip(axes, ("Analytical pressure", "MHM pressure", "Pressure error"), strict=True)):
-    for fine, exact, values in panels:
-        value = (exact, values, values - exact)[index]
-        limit = error_max if index == 2 else common
-        artist = ax.tripcolor(*fine.points.T, fine.cells, facecolors=value,
-                             vmin=-limit, vmax=limit, cmap="coolwarm")
-    for edge in macro.faces:
-        ax.plot(*macro.points[edge].T, color="black", lw=0.5, alpha=0.7)
-    ax.set(title=title, xlabel="x", ylabel="y", aspect="equal")
-    fig.colorbar(artist, ax=ax)
-plt.show()
-```
-
-![Pressure and signed error sampled at fine-cell centroids](../../assets/tutorials/methods/adaptivity-field-00.png)
-
-The field panels use one sample at each fine triangle’s centroid $x_t$, drawn as a constant triangle color. The analytical panel shows $p(x_t)$; the numerical panel shows $p_h(x_t)$, and the error panel shows the **signed** difference $p_h(x_t)-p(x_t)$. These are display samples of the continuous analytical and local polynomial fields. The physical error norms above use independent volume quadrature. Macro edges are overlaid and values from opposite sides of an interface remain separate.
-
-## 8. Mark cells; choose the scale you want to improve
-
-Dörfler marking selects a minimal sorted collection carrying the prescribed fraction of the squared indicator:
-
-$$
-\sum_{T\in\mathcal M}\eta_T^2\ge\theta\sum_T\eta_T^2.
-$$
-
-Marking is distinct from refining. Before changing a mesh, choose whether the dominant error comes from the macro partition, local approximation, or trace resolution. Refinement ancestry must preserve material and boundary markers. Rebuild the equations on the new spaces and compare error against work; a general adaptive sequence has no predetermined uniform-grid rate.
-
-```python
-marked = mark_dorfler(estimate.local_squared, theta=0.5)
-assert estimate.local_squared[marked].sum() >= 0.5 * estimate.local_squared.sum()
-fig, ax = plt.subplots(figsize=(5, 4), layout="constrained")
-artist = ax.tripcolor(*macro.points.T, macro.cells, facecolors=estimate.local_squared,
-                     edgecolors="black", cmap="viridis")
-centers = macro.points[macro.cells[marked]].mean(axis=1)
-ax.scatter(*centers.T, marker="x", color="white", s=60, label="Dörfler marked")
-ax.set(xlabel="x", ylabel="y", title="Squared macro indicators", aspect="equal")
-ax.legend()
-fig.colorbar(artist, ax=ax)
-plt.show()
-print({"marked_macro_cells": np.flatnonzero(marked).tolist(), "marked_fraction":
-       float(estimate.local_squared[marked].sum() / estimate.local_squared.sum())})
-```
-
-![Integrated squared macro indicators and marked cells](../../assets/tutorials/methods/adaptivity-field-01.png)
-
-Each macrotriangle’s color represents its integrated squared indicator. Crosses locate the centroids of marked macroelements; they identify the selected cells and are not pointwise residual samples.
-
-```text
-{'marked_macro_cells': [2, 3, 4, 5], 'marked_fraction': 0.5152866001958776}
-```
-
-## 9. Refine, rebuild the declared equations and compare work
-
-This loop applies the same user-written local and global forms to successively marked macro meshes. The shared refinement owner makes a conforming triangulation and returns ancestry; the two local edge subdivisions keep the fine meshes globally conforming. The plot compares the actual energy error and estimator with global trace unknowns. It does not fit a uniform-grid convergence exponent to an adaptive path.
-
-```python
-from pymhm.meshes.refinement import refine_triangles
-
-adaptive_rows = [{"macro_cells": len(macro.cells), "trace_dofs": skeleton.size,
-                  "energy_error": energy_error, "estimator": estimate.total}]
-for _ in range(3):
-    marked = mark_dorfler(estimate.local_squared, theta=0.5)
-    refinement = refine_triangles(macro, marked)
-    macro = refinement.mesh
-    local_meshes = tuple(macro.submesh(i, 2) for i in range(len(macro.cells)))
-    hierarchy = MeshHierarchy(macro, local_meshes)
-    skeleton = SkeletonSpace(macro, tuple(FaceSpace.uniform(1) for _ in macro.faces))
-    interface = bind_interface(skeleton, convention="normal")
-    problem = bind_problem(hierarchy, interface, local_equations,
-                           global_equation=global_equation, retained=1)
-    with threadpool_limits(1):
-        system = assemble(problem)
-        coefficients = solve(system)
-    pressure_fields = coefficients.field("pressure")
-    solution = DarcySolution(
-        skeleton=skeleton, local_meshes=local_meshes,
-        pressure=tuple(field.portable_coefficients for field in pressure_fields),
-        flux=(), hybrid=coefficients, formulation="primal", permeability=1.0,
-        source=source, degree=3, quadrature_order=10,
-    )
-    estimate = estimate_darcy_error(solution, homogeneous_dirichlet=True,
-                                    degree=2, quadrature_order=10)
-    energy_error = estimate.energy_error(exact_gradient, order=12)
-    assert max(estimate.equilibrium_defect) < 1e-10
+    energy_error = estimate.energy_error(localized_gradient, order=16)
     assert estimate.total >= energy_error
-    assert energy_error < adaptive_rows[-1]["energy_error"]
-    adaptive_rows.append({"macro_cells": len(macro.cells), "trace_dofs": skeleton.size,
-                          "energy_error": energy_error, "estimator": estimate.total})
-for row in adaptive_rows:
-    print(row)
-fig, ax = plt.subplots(figsize=(6, 4), layout="constrained")
-work = [row["trace_dofs"] for row in adaptive_rows]
-for name in ("energy_error", "estimator"):
-    ax.loglog(work, [row[name] for row in adaptive_rows], "o-", label=name.replace("_", " "))
-ax.set(xlabel="Global trace unknowns", ylabel="Physical energy quantity",
-       title="Adaptive error and work")
-ax.grid(True, which="both", alpha=0.25)
-ax.legend()
-plt.show()
+    marked = mark_dorfler(estimate.local_squared, theta=0.5)
+    if step < 7:
+        adaptive_mesh = refine_triangles(adaptive_mesh, marked).mesh
 ```
 
-```text
-{'macro_cells': 8, 'trace_dofs': 32, 'energy_error': 1.8000808304439524, 'estimator': 2.3912395807993514}
-{'macro_cells': 24, 'trace_dofs': 84, 'energy_error': 0.8814077204792786, 'estimator': 1.49611704216676}
-{'macro_cells': 44, 'trace_dofs': 148, 'energy_error': 0.3530292611110866, 'estimator': 1.4392620396133493}
-{'macro_cells': 60, 'trace_dofs': 196, 'energy_error': 0.2585954533326044, 'estimator': 0.5532512331912383}
+The acquisition additionally integrates each physical error at orders 12 and
+16 and checks original global compatibility and continuous-test equilibrium at every
+cycle. A separate native eight-subdivision control verifies all original
+local volume/trace rows for this localized pressure: maximum local relative
+defect $4.20\times10^{-15}$ and full uncondensed defect relative to the
+physical load $6.12\times10^{-15}$. These algebraic checks use the
+unchanged $10^{-10}$ gate; they do not replace the physical-error study.
+The mesh owner performs conforming closure; refining only the selected
+triangles without this closure would not satisfy the estimator's mesh
+hypotheses.
+
+## 4. Distinguish marking from the chosen approximation scale
+
+Dörfler marking satisfies
+
+$$
+\sum_{T\in\mathcal M}\eta_T^2\ge\theta\sum_T\eta_T^2,\qquad\theta=\tfrac12.
+$$
+
+This study refines the macro partition and rebuilds local meshes. Refining
+local meshes or trace segments changes a different approximation scale and
+requires rechecking degree and partition compatibility. Refinement ancestry is
+available for preserving material and boundary markers.
+
+## 5. Compare adaptive error against a matching uniform sequence
+
+Uniform P3/P1/RT2 calculations use the same localized pressure, coefficient,
+source, boundary conditions and local mesh ratio on $n=4,8,16,32$. Work counts
+**trace plus retained mean unknowns**. The adaptive horizontal coordinate is
+not a single fictitious mesh size; no uniform-grid exponent is fitted to it.
+
+![Adaptive and uniform error against work, effectivity and the final macro mesh](../../assets/tutorials/methods/recovery-adaptive-work.png)
+
+[PDF](../../assets/tutorials/methods/recovery-adaptive-work.pdf) · [SVG](../../assets/tutorials/methods/recovery-adaptive-work.svg)
+
+| Adaptive cycle | Macrotriangles | Global trace + mean unknowns | Energy error | Effectivity |
+| --- | --- | --- | --- | --- |
+| 0 | 32 | 144 | 3.570890e-02 | 1.9984 |
+| 1 | 42 | 184 | 1.792702e-02 | 2.2090 |
+| 2 | 56 | 240 | 1.117302e-02 | 1.7902 |
+| 3 | 86 | 360 | 7.311391e-03 | 1.8809 |
+| 4 | 138 | 568 | 4.415988e-03 | 2.0999 |
+| 5 | 175 | 717 | 3.152546e-03 | 2.0823 |
+| 6 | 295 | 1197 | 2.060652e-03 | 2.0491 |
+| 7 | 507 | 2045 | 1.237290e-03 | 2.3031 |
+
+The last adaptive mesh has 2,045 global unknowns and energy error
+$1.23729\times10^{-3}$. The matching uniform 16-subdivision mesh has 2,112
+unknowns and error $2.51067\times10^{-3}$: a factor of 2.03 in physical
+error at comparable global work. A smaller physical error at comparable work
+is the relevant measured adaptive benefit. The estimator is checked against the exact energy error at every
+cycle. Its nonconformity and divergence terms are retained throughout.
+
+![Resolved localized analytical and recovered fields on the final adaptive macro mesh](../../assets/tutorials/methods/recovery-adaptive-fields.png)
+
+[PDF](../../assets/tutorials/methods/recovery-adaptive-fields.pdf) · [SVG](../../assets/tutorials/methods/recovery-adaptive-fields.svg)
+
+Field/error panels preserve the actual macro partition and independent
+one-sided values. These centroid display samples are separate from physical
+volume integration. The independently assembled classical reference below uses exactly this
+localized source, coefficient and boundary data. The analytical pressure
+remains the exact comparator for all reported physical norms.
+
+
+## 6. Verify a matching classical Galerkin reference
+
+The global reference assembles a continuous P3 Galerkin space independently of
+MHM. Its weak formulation has exactly the same identity coefficient and
+localized source. The UFL source is derived from the analytical pressure above:
+
+```python
+def reference_forms(domain, V):
+    p, v = ufl.TrialFunction(V), ufl.TestFunction(V)
+    dx = ufl.Measure("dx", domain=domain, metadata={"quadrature_degree": 20})
+    return (ufl.inner(ufl.grad(p), ufl.grad(v))*dx,
+            localized_forcing(domain)*v*dx)
 ```
 
-![Integrated energy error and estimator against global trace unknowns](../../assets/tutorials/methods/adaptivity-field-02.png)
+Use the notebook's explicitly defined `localized_pressure` and
+`localized_gradient` callbacks for the analytical comparison. The boundary
+selector below imposes the same zero pressure on all four sides. Execute all
+three reference meshes with the same forms and degree:
 
-Both curves use integrated physical energy quantities from the adaptive solves. The horizontal coordinate counts global trace unknowns, rather than a uniform mesh diameter.
+```python
+from examples.tutorial_recovery_reference import classical_reference_control
 
-## Decide which approximation scale to enrich
 
-The executed loop refines macrotriangles and rebuilds their local meshes. Its final four energy errors are 1.8001, 0.8814, 0.3530 and 0.2586 for 8, 24, 44 and 60 macroelements. That verifies error decrease for this case; an adaptive sequence has no single uniform $H$ for an automatic polynomial rate claim.
+def boundary_nodes(points):
+    """Select the homogeneous boundary values on the unit square."""
+    return np.flatnonzero(np.any(np.isclose(points, 0) | np.isclose(points, 1), axis=1))
 
-Skeletal segments, polynomial trace degree and local solver resolution are independent controls. Rebuild `SkeletonSpace`/`FaceSpace` for a trace h/p decision and the corresponding `MeshHierarchy` for local refinement. Check admissibility again after changing degrees. A metric chosen from material markers is a mesh-generation decision, distinct from an a posteriori error indicator; see [material-marked meshes](../../guides/materials.md). `refine_darcy_budget` additionally controls an explicit macro-cell budget while retaining the Dörfler bulk set and conforming closure. The closure can exceed that requested budget.
+
+classical_rows = []
+for n in (32, 64, 128):
+    with threadpool_limits(1):
+        row, reference_field = classical_reference_control(
+            TriangleMesh.unit_square(n), 3, reference_forms, boundary_nodes,
+            localized_pressure, localized_gradient,
+        )
+    row["mesh_resolution"] = n
+    classical_rows.append(row)
+    print(n, row["scalar_l2"], row["flux_l2"], row["quadrature_relative_difference"])
+```
+
+Native mesh/space mapping, essential elimination and independently integrated
+physical norms use the reusable acquisition owners in
+[the reference helper](https://github.com/ipes-lncc/pymhm/blob/main/examples/tutorial_recovery_reference.py).
+The caller supplies the mesh, degree, these variational forms, boundary-node
+indices and analytical pressure/gradient. No local MHM matrix or coefficients
+are passed to the global reference.
+
+The three refined reference meshes give:
+
+| Global square subdivisions | P3 nodal unknowns | Pressure error | Physical vector-flux error |
+| --- | --- | --- | --- |
+| 32 × 32 | 9409 | 3.490465e-07 | 1.126836e-04 |
+| 64 × 64 | 37249 | 2.150600e-08 | 1.414326e-05 |
+| 128 × 128 | 148225 | 1.338314e-09 | 1.769402e-06 |
+
+Pressure orders are 4.021 and 4.006; physical-flux
+orders are 2.994 and 2.999. Both norm rules agree to a maximum
+relative difference of 5.45e-12.
+
+![Classical conforming P3 reference of the same localized pressure and physical flux](../../assets/tutorials/methods/recovery-adaptive-classical-fields.png)
+
+[PDF](../../assets/tutorials/methods/recovery-adaptive-classical-fields.pdf) · [SVG](../../assets/tutorials/methods/recovery-adaptive-classical-fields.svg)
+
+The reference fields use the 64-subdivision global mesh. The overlay is the
+16-subdivision uniform comparison macro mesh, rather than the adaptive mesh.
+Every pressure/flux error shown compares the same analytical localized fields.
+
+## 7. Decide when to change another scale
+
+If the local solver or interface approximation dominates, macro refinement
+alone can become inefficient. Change `MeshHierarchy` for local resolution and
+`FaceSpace` for trace h/p refinement, then reassemble the declared equations.
+`refine_darcy_budget` controls a requested macro-cell budget while preserving
+the Dörfler bulk set and conforming closure, which can exceed that budget.
 
 ## References
 
-- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).
-- Rodolfo Araya, Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *Multiscale Hybrid-Mixed Method*, SIAM Journal on Numerical Analysis 51(6), 3505–3531. [DOI: 10.1137/120888223](https://doi.org/10.1137/120888223).
+- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073); [accepted author manuscript](https://strathprints.strath.ac.uk/94435/).
+- Christopher Harder, Diego Paredes and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).

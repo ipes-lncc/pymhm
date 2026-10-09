@@ -37,8 +37,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/cd5ed11617e4b6010f8b9cd3473e91453fa2d8081b564cfcd5de29b18f8a4917/mshho_multiscale-companion.zip"
-COMPANION_SHA256 = "cd5ed11617e4b6010f8b9cd3473e91453fa2d8081b564cfcd5de29b18f8a4917"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/3113e0d0f5bbf80fbeca7d681418d653cdbaf9d5cfc538c9e3204a2dbe2fe520/mshho_multiscale-companion.zip"
+COMPANION_SHA256 = "3113e0d0f5bbf80fbeca7d681418d653cdbaf9d5cfc538c9e3204a2dbe2fe520"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -86,7 +86,7 @@ from pymhm.core.moments import energy_reconstruction
 ```
 
 ```text
-Workspace: ./build/docs-restructure/exact-source-workspaces-parallel/introduction/mshho_multiscale
+Workspace: ./build/docs-restructure/final-workspaces/provenance-final-mshho_multiscale-ef542e24d568
 ```
 
 ### 1. The physical problem and its two scales
@@ -680,8 +680,97 @@ print(
 ```
 
 ```text
-./build/docs-restructure/exact-source-workspaces-parallel/introduction/mshho_multiscale/build/introduction/mshho_multiscale
+./build/docs-restructure/final-workspaces/provenance-final-mshho_multiscale-ef542e24d568/build/introduction/mshho_multiscale
 ```
+
+## 9. Separate smooth source and energy convergence
+
+The oscillatory teaching problem above is not replaced by a smooth one. To qualify the asymptotic rate independently, use the identity coefficient on the unit square and
+
+
+
+$$
+p=\sin(\pi x)\sin(\pi y),\qquad
+f=2\pi^2p,\qquad q=-\nabla p.
+$$
+
+
+
+Exterior pressure is zero. Keep $m=\ell=0$ cell/face moments, the projected source, and P3 local energy reconstruction with two subdivisions. The macro sequence is $n=1,2,4,8,16,32$.
+
+Theorem 6.3 of [Chaumont-Frelet, Ern, Lemaire and Valentin (2022)](https://doi.org/10.1051/m2an/2021082) separates the $H^{m+2}$ source term and $H^{\ell+1}$ flux term, under the stated source/flux regularity assumptions. The energy target here is order one. Pressure order two is a measured observation. The ideal method uses exact local reconstructions; this executed finite Galerkin realization independently controls its reconstruction and moment equations rather than identifying P3/r2 with an exact local solve.
+
+The current norm-only record retains order-10/order-12 independent physical error integration, original cell/free-face moment equations and reconstruction moment constraints. Their algebraic moment residuals are distinct from the L2 pressure/flux errors plotted below.
+
+### Recompute every measured order
+
+For successive physical errors $E_{i-1},E_i$ at the actual refinement sizes, compute
+
+
+
+$$
+r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
+$$
+
+
+
+The first code lines read one attributed numerical record. They preserve every level and display the complete error/order table. The plotting helper only measures and plots these errors: it constructs no local or global PDE. Targets below are declared from the stated hypotheses, rather than fitted from the data. The final four measured levels give three consecutive orders and a fitted terminal slope. For each declared target $q$, a nearly constant $E/h^q$ provides a second view of the asymptotic regime.
+
+
+
+```python
+import json
+from IPython.display import Markdown, display
+from examples.tutorial_convergence import refinement_series, asymptotic_summary, plot_method_series
+refinement_record = ROOT / 'examples/results/tutorial-methods/mshho-current.json'
+refinement_data = json.loads(refinement_record.read_text(encoding='utf-8'))
+refinement_rows = refinement_data['rows']
+refinement_error_keys = {'pressure L2': 'pressure_l2', 'physical Darcy flux L2': 'flux_l2'}
+refinement_targets = {'physical Darcy flux L2': 1.0}
+refinement_rows = sorted(refinement_rows, key=lambda refinement_row: refinement_row['macro_diameter'], reverse=True)
+refinement_sizes = np.asarray([refinement_row['macro_diameter'] for refinement_row in refinement_rows])
+refinement_field_errors = {refinement_field: np.asarray([refinement_row[refinement_key] for refinement_row in refinement_rows]) for refinement_field, refinement_key in refinement_error_keys.items()}
+refinement_orders = {refinement_field: np.log(refinement_values[:-1] / refinement_values[1:]) / np.log(refinement_sizes[:-1] / refinement_sizes[1:]) for refinement_field, refinement_values in refinement_field_errors.items()}
+refinement_header = ['Refinement size'] + [refinement_column for refinement_field in refinement_error_keys for refinement_column in (refinement_field, 'Order')]
+refinement_lines = [' | '.join(refinement_header), ' | '.join(['---'] * len(refinement_header))]
+for refinement_index, refinement_size in enumerate(refinement_sizes):
+    refinement_values = [f'{refinement_size:.6g}']
+    for refinement_field in refinement_error_keys:
+        refinement_values.extend([f'{refinement_field_errors[refinement_field][refinement_index]:.6e}', '—' if refinement_index == 0 else f'{refinement_orders[refinement_field][refinement_index - 1]:.3f}'])
+    refinement_lines.append(' | '.join(refinement_values))
+display(Markdown('\n'.join(refinement_lines)))
+refinement_series_data = refinement_series(refinement_record, refinement_rows, 'macro_diameter', refinement_error_keys, refinement_targets, method='mshho', spaces='P0 cell and face moments; P3/r2 energy reconstruction; projected source', rate_provenance='Chaumont-Frelet et al. (2022), theorem 6.3: first-order energy; pressure order two observed', root=ROOT)
+print({'record': refinement_series_data['record'], 'sha256': refinement_series_data['sha256']})
+for refinement_field, refinement_summary in asymptotic_summary(refinement_series_data).items():
+    print(refinement_field, {'last_three_orders': [round(refinement_order, 3) for refinement_order in refinement_summary['orders']], 'fitted_order': round(refinement_summary['fitted_order'], 3), 'target': refinement_summary['target'], 'normalized_amplitude_ratio': refinement_summary.get('amplitude_ratio')})
+plot_method_series(refinement_series_data)
+plt.show()
+
+```
+
+
+Refinement size | pressure L2 | Order | physical Darcy flux L2 | Order
+--- | --- | --- | --- | ---
+1.41421 | 1.368302e-01 | — | 1.056841e+00 | —
+0.707107 | 1.001886e-01 | 0.450 | 9.830652e-01 | 0.104
+0.353553 | 2.681001e-02 | 1.902 | 5.019038e-01 | 0.970
+0.176777 | 6.791185e-03 | 1.981 | 2.516432e-01 | 0.996
+0.0883883 | 1.703111e-03 | 1.995 | 1.258917e-01 | 0.999
+0.0441942 | 4.261102e-04 | 1.999 | 6.295424e-02 | 1.000
+
+
+```text
+{'record': 'examples/results/tutorial-methods/mshho-current.json', 'sha256': 'bfdd177ea0910690cb9a909a49bf404936858d3a988078d231d4571956ce5c44'}
+pressure L2 {'last_three_orders': [1.981, 1.995, 1.999], 'fitted_order': 1.992, 'target': None, 'normalized_amplitude_ratio': None}
+physical Darcy flux L2 {'last_three_orders': [0.996, 0.999, 1.0], 'fitted_order': 0.998, 'target': 1.0, 'normalized_amplitude_ratio': 1.0034471025178162}
+```
+
+
+
+[![Figure 4 — MsHHO with multiscale permeability: from the problem to the API](../../assets/tutorials/mshho_multiscale/figure_27_2.png)](../../assets/tutorials/mshho_multiscale/figure_27_2.png)
+
+
+The upper panel preserves all coarse and fine measurements. Dashed lines show declared target powers anchored at the finest measured error. The shaded interval always contains the final four levels; it does not select points to improve a fitted slope. Read the consecutive orders together with the target-normalized errors and the stated quadrature/local-equation controls. A slope alone does not establish the hypotheses of an error estimate.
 
 ## References
 
@@ -706,26 +795,87 @@ python -m scripts.run_notebooks /path/to/mshho_multiscale.ipynb --timeout 7200
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `53c1894e8299a286f069a4841c2ac64438cde29b49b872079822674a6388a6c3` in the [publication manifest](../introduction/manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `bf74f41c2a8e6dfa7e0cd323dec66d951c5e43f086adbcacb595ca751253dd10` in the [publication manifest](../introduction/manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+
+## Identify the source and energy terms in the estimate
+
+For the final refinement use identity diffusion and
+$p=\sin(\pi x)\sin(\pi y)$, with independently derived
+$f=2\pi^2p$ and homogeneous pressure. The code fixes matching P0 cell and face
+moments ($m=\ell=0$), the projected-source variant and local P3 reconstruction
+with two edge subdivisions. Refine $n=1,2,4,8,16,32$ while preserving those
+spaces.
+
+Theorem 6.3 of
+[Chaumont-Frelet, Ern, Lemaire and Valentin (2022)](https://doi.org/10.1051/m2an/2021082)
+assumes $f\in H^{m+1}(\mathcal T_H)$ and
+$K\nabla p\in H^{\ell+1}(\mathcal T_H)$, and separates the source and flux terms:
+
+$$
+\begin{aligned}
+\lVert K^{1/2}\nabla_H(p-p_H)\rVert_{L^2(\Omega)}
+&\le C\left(\sum_T K_{\min,T}^{-1}\mathcal E_T^2\right)^{1/2},\\
+\mathcal E_T^2
+&=H_T^{2(m+2)}\lvert f\rvert_{H^{m+1}(T)}^2\\
+&\quad+H_T^{2(\ell+1)}\lvert K\nabla p\rvert_{H^{\ell+1}(T)}^2.
+\end{aligned}
+$$
+
+The ideal local-space estimate gives first-order energy here. The plotted
+finite Galerkin realization additionally uses P3/r2 local solves, whose
+accuracy is controlled by the fixed higher-order local space; it is not
+relabelled as an exact local solve. With $K=I$, the raw physical-flux error
+equals the broken gradient error. The second-order pressure remains an
+observation, rather than an additional conclusion of this energy theorem.
+Both independent error quadratures and the original constrained reconstruction
+checks accompany the current sequence.
 
 ## Smooth refinement and the asymptotic regime
 
-The following independent qualification study uses **P0 cell and face moments; P3/r2 energy reconstruction** and refines the **macro diameter**. It states its own geometry, data and spaces; its smooth rates are not transferred to the oscillatory teaching case or to singular material interfaces. Successive orders use the independently integrated physical errors:
+This independent qualification uses **P0 cell and face moments; P3/r2 energy reconstruction; projected source** and refines the **macro diameter**. Its geometry, data and compatibility conditions are stated above. Its smooth rates do not transfer to a different material, unresolved local solve or singular physical domain. All coarse and fine measurements are retained. Successive orders use the actual refinement sizes and independently integrated physical errors:
 
 $$
 r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
 $$
 
-| Physical observable | Literature order under its hypotheses | Last three measured orders |
-| --- | ---: | --- |
-| pressure L2 | reported observation | 1.902 / 1.981 / 1.995 |
-| physical Darcy flux L2 | 1 | 0.970 / 0.996 / 0.999 |
+The terminal window always contains the **final four measured levels** and their three intervals. The fitted order uses those four points. For each justified target $q$, the amplitude ratio is the maximum divided by the minimum of $E/h^q$ in the same window; values near one show its stabilization. A pressure order labeled observed is not substituted for a proved energy estimate.
 
-![Physical errors and successive rates](../../assets/tutorials/methods/mshho-convergence.png)
+| Physical observable | Target $q$ | Final three orders | Fitted order | Amplitude ratio |
+| --- | ---: | --- | ---: | ---: |
+| pressure L2 | observed | 1.981 / 1.995 / 1.999 | 1.992 | — |
+| physical Darcy flux L2 | 1 | 0.996 / 0.999 / 1.000 | 0.998 | 1.003 |
 
-Download the figure as [SVG](../../assets/tutorials/methods/mshho-convergence.svg) or [PDF](../../assets/tutorials/methods/mshho-convergence.pdf).
+![All physical errors, successive orders and target-normalized amplitudes](../../assets/tutorials/methods/mshho-convergence.png)
 
-Chaumont-Frelet et al. (2022), theorem 6.3: first-order energy; pressure order two observed. The [source numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/mshho.json) has SHA256 `09b840e2f88eb7076360372ff911f9f9d84fa57a85d7bf4366e692f2dd5eed5d`. Its execution attribution remains in that record. The [rate notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) recomputes the orders; reading existing measurements does not execute the underlying PDE.
+Download the figure as [SVG](../../assets/tutorials/methods/mshho-convergence.svg) or [PDF](../../assets/tutorials/methods/mshho-convergence.pdf). Shading covers the same final four levels in every panel; dashed curves are target powers anchored to the finest measured error.
+
+### Complete numerical sequence
+
+| Refinement size | pressure L2 | Order | physical Darcy flux L2 | Order |
+| ---: | ---: | ---: | ---: | ---: |
+| 1.41421 | 1.368302e-01 | — | 1.056841e+00 | — |
+| 0.707107 | 1.001886e-01 | 0.450 | 9.830652e-01 | 0.104 |
+| 0.353553 | 2.681001e-02 | 1.902 | 5.019038e-01 | 0.970 |
+| 0.176777 | 6.791185e-03 | 1.981 | 2.516432e-01 | 0.996 |
+| 0.0883883 | 1.703111e-03 | 1.995 | 1.258917e-01 | 0.999 |
+| 0.0441942 | 4.261102e-04 | 1.999 | 6.295424e-02 | 1.000 |
+
+The current acquisition compares full physical norms at error quadrature orders 10 and 12; the largest relative difference over all levels and fields is `1.577e-14`. It also checks the original method equations in their declared coefficient coordinates, retaining global compatibility, local reconstruction and physical field errors as separate quantities. Its source closure is unchanged during execution. The norm-only record contains no persisted coefficient vector.
+
+### Local Galerkin sensitivity at fixed macro resolution
+
+Hold $n=8$, the physical data and all trace spaces fixed, and double only the local subdivisions from 2 to 4. Pairwise differences are integrated on the nested finer partition using the executed coefficient bases. Discontinuous pressure and independent interface values remain separate. Both solutions are also compared directly with the analytical fields:
+
+| Field | Coarse error | Refined error | Field difference | Difference / coarse error |
+| --- | ---: | ---: | ---: | ---: |
+| pressure L2 | 6.791185e-03 | 6.791185e-03 | 1.124624e-14 | 1.656e-12 |
+| physical Darcy flux L2 | 2.516432e-01 | 2.516432e-01 | 5.324106e-14 | 2.116e-13 |
+
+For this constant coefficient and projected P0 source, the local reconstructions can be represented in the P3 spaces. The r2/r4 physical fields agree at roundoff in this measurement. This statement applies to this homogeneous qualification; heterogeneous coefficients require their own local-resolution control.
+
+The full physical-error norms agree at quadrature orders 10 and 12, with maximum relative change `1.332e-15`. For the two-grid sensitivity, the change in the integrated field difference divided by the coarse analytical error is `3.200e-15`. This scale assesses the local contribution to that physical error and remains meaningful when the two fields differ only at roundoff. The raw differences at both quadrature orders and their unscaled relative changes remain in the [local-control record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/scalar-local-controls-current.json) (SHA256 `8933c2e8c4f68a626276c4a0fc8e1b06e14334f8f8c413a2649137de27fe2350`). Original equations and reconstruction constraints retain their separate unchanged checks.
+
+Chaumont-Frelet et al. (2022), theorem 6.3: first-order energy; pressure order two observed. The [source numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/mshho-current.json) has SHA256 `bfdd177ea0910690cb9a909a49bf404936858d3a988078d231d4571956ce5c44` and retains its execution attribution. The step-by-step notebook linked at the top now reads this individual record, displays this complete sequence and recomputes every order. The [shared rate notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) compares methods. Reading these measurements does not execute the underlying PDE acquisition.
 
 ## References for this method
 

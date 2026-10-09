@@ -120,6 +120,72 @@ def test_trace_restriction_rejects_incompatible_geometry_and_spaces():
         nested_trace_map(outer, 0, SkeletonSpace(shifted))
 
 
+@pytest.mark.parametrize("degree", [0, 1])
+@pytest.mark.parametrize("affine", [False, True])
+def test_triangle_segment_restriction_preserves_independent_one_sided_polynomials(degree, affine):
+    """Translated/skew normal traces restrict to the same mathematical half-edges."""
+    from pymhm.meshes.triangle import TriangleMesh
+
+    macro = TriangleMesh.unit_square(1)
+    if affine:
+        origin = np.array([0.8826192971400124, 0.3242537859615011])
+        vertices = np.array(
+            [[0.4921243078878566, -0.16874548542199747], [0.9575255425243296, -1.5247462502871534]]
+        )
+        macro = TriangleMesh(origin + macro.points @ (vertices - origin), macro.cells)
+    outer = SkeletonSpace(macro, tuple(FaceSpace.uniform(degree, 2) for _ in macro.faces))
+    coefficients = np.arange(1.0, outer.size + 1)
+    for cell in range(len(macro.cells)):
+        fine = macro.submesh(cell, 2)
+        inner = SkeletonSpace(fine, tuple(FaceSpace.uniform(degree) for _ in fine.faces))
+        boundary, transform = nested_trace_map(outer, cell, inner)
+        child_coefficients = transform @ coefficients[outer.cell_dofs(cell)]
+        offset = 0
+        for face in fine.boundary_faces:
+            child = inner.faces[face]
+            parameters, _ = child.quadrature(4)
+            vertices = fine.points[fine.faces[face]]
+            physical = vertices[0] + parameters[:, None] * (vertices[1] - vertices[0])
+            matching = []
+            for parent in macro.cell_faces[cell]:
+                endpoints = macro.points[macro.faces[parent]]
+                tangent = endpoints[1] - endpoints[0]
+                t = (physical - endpoints[0]) @ tangent / (tangent @ tangent)
+                delta = physical - endpoints[0] - t[:, None] * tangent
+                if np.max(abs(delta)) < 1e-14 and t.min() >= 0 and t.max() <= 1:
+                    matching.append((parent, t))
+            assert len(matching) == 1
+            parent, t = matching[0]
+            sign = fine.normals[face] @ macro.normals[parent]
+            expected = sign * outer.faces[parent].evaluate(t) @ coefficients[outer.dofs(parent)]
+            actual = child.evaluate(parameters) @ child_coefficients[offset : offset + child.size]
+            assert_allclose(actual, expected, atol=2e-12, rtol=2e-12)
+            assert np.array_equal(boundary[offset : offset + child.size], inner.dofs(int(face)))
+            offset += child.size
+
+
+@pytest.mark.parametrize("degree", [0, 1])
+@pytest.mark.parametrize("displacement", [8 * 128 * np.finfo(float).eps, 1e-12])
+def test_affine_segment_restriction_rejects_genuinely_distinct_trace_cut(degree, displacement):
+    """A true cut inside a child edge is not hidden by geometric endpoint snapping."""
+    from pymhm.meshes.triangle import TriangleMesh
+
+    macro = TriangleMesh.unit_square(1)
+    origin = np.array([0.8826192971400124, 0.3242537859615011])
+    vertices = np.array(
+        [[0.4921243078878566, -0.16874548542199747], [0.9575255425243296, -1.5247462502871534]]
+    )
+    macro = TriangleMesh(origin + macro.points @ (vertices - origin), macro.cells)
+    displaced_cut = 0.5 + displacement
+    parent_face = FaceSpace((0.0, displaced_cut, 1.0), (degree, degree))
+    outer = SkeletonSpace(macro, tuple(parent_face for _ in macro.faces))
+    for cell in range(len(macro.cells)):
+        fine = macro.submesh(cell, 2)
+        inner = SkeletonSpace(fine, tuple(FaceSpace.uniform(degree) for _ in fine.faces))
+        with pytest.raises(ValueError, match="cannot represent the restricted parent trace"):
+            nested_trace_map(outer, cell, inner)
+
+
 def test_three_recursive_levels_preserve_nonsymmetric_petrov_fields():
     """Condensation is associative for unequal trial/test trace pairings."""
     problem = LocalProblem(
@@ -144,3 +210,22 @@ def test_three_recursive_levels_preserve_nonsymmetric_petrov_fields():
         field = reconstruction.fields[0]
     assert_allclose(field, expected.fields[0], atol=2e-13)
     assert_allclose(solved.trace, expected.trace, atol=2e-13)
+
+
+def test_nested_trace_rejects_true_cut_inside_nonzero_roundoff_size_child_edge():
+    """Endpoint normalization preserves a short edge straddling an actual trace jump."""
+    from pymhm.meshes.triangle import TriangleMesh
+
+    macro = TriangleMesh(np.array([[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]]), np.array([[0, 1, 2]]))
+    offset = 16 * np.finfo(float).eps
+    child = TriangleMesh(
+        np.array([[0.0, 0.0], [0.5 - offset, 0.0], [0.5 + offset, 0.0], [1.0, 0.0], [0.0, 1.0]]),
+        np.array([[0, 1, 4], [1, 2, 4], [2, 3, 4]]),
+    )
+    assert np.all(child.areas > 0)
+    outer = SkeletonSpace(
+        macro,
+        (FaceSpace.uniform(0, 2), FaceSpace.uniform(0), FaceSpace.uniform(0)),
+    )
+    with pytest.raises(ValueError, match="cannot represent the restricted parent trace"):
+        nested_trace_map(outer, 0, SkeletonSpace(child))

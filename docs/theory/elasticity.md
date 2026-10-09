@@ -158,11 +158,18 @@ this positive local operator.
 For one local time step per macro step, zero forcing and homogeneous
 prescribed displacement, the scheme conserves its discrete physical
 energy. This does not extend automatically to asynchronous local substep
-counts. The linear-traction smooth spatial study targets displacement and
-velocity $L^2$ order three, broken $H^1$ order two and broken stress
-$H(\mathrm{div})$ order one. Time error must be reduced independently. The
-[elastodynamics tutorial](../tutorials/methods/elastodynamics.md) records
-these separate norms and the chosen local P3 tetrahedral realization.
+counts. Section 5.1 of Gomes et al. reports displacement and velocity $L^2$
+order three, broken $H^1$ order two and broken stress $H(\mathrm{div})$ order
+one for its smooth linear-traction experiment. These are published numerical
+targets; that paper does not prove a dynamic error estimate. Time error must
+be reduced independently.
+
+The [elastodynamics tutorial](../tutorials/methods/elastodynamics.md) evaluates
+a smooth two-dimensional analogue with P3 local displacement and P1 negative
+traction. It measures displacement, velocity and physical stress separately,
+with a time-step control and an independently refined classical reference.
+The tetrahedral applications are separate cases, rather than a claim of
+reproducing the paper's three-dimensional discretization in this tutorial.
 Primal dynamics is not a uniform locking-free extension of mixed static
 elasticity.
 

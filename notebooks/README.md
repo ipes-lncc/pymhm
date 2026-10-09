@@ -120,6 +120,7 @@ jupyter lab darcy_multiscale_convergence.ipynb
 
 | Notebook | Methods |
 | --- | --- |
+| [Equilibrated RT0 flux: fine-cell conservation and refinement](darcy/equilibrated_flux_workflow.ipynb) | user-written native UFL local/global equations; constrained minimum-distance RT0 recovery; fine-cell balance; independent physical flux norms |
 | [Start here: Alternative hybrid methods for scalar diffusion](darcy/hybrid_methods.ipynb) | user-written three-field MH2M and MsHHO moment blocks; Robin MH; MH2M; MsHHO; PGMHM |
 | [Start here: Darcy with mixed H(div) local problems](darcy/mixed_hdiv.ipynb) | user-written RT0/P0 mixed LocalEquations/Equation; RT0/RT1; BDM/BDM+/BDM++; tensor RT; restricted tetrahedral/prismatic H(div); classical conforming RT1 |
 | [Start here: Darcy with primal Galerkin local problems](darcy/primal_galerkin.ipynb) | user-written P2 primal LocalEquations/Equation; primal MHM; local Galerkin P2/Q2; physical Neumann mean gauge |
@@ -231,6 +232,7 @@ jupyter lab darcy_multiscale_convergence.ipynb
 
 | Notebook | Methods |
 | --- | --- |
+| [Transient transport: spatial and temporal refinement](transport/spatial_refinement.ipynb) | user-written native UFL local/global equations; analytical concentration and gradient errors; independent classical and time-step controls |
 | [Start here: Scalar reaction–advection–diffusion methods](transport/introductory_methods.ipynb) | user-written UFL skew Galerkin RAD; RAD Galerkin; SUPG; UNUSUAL |
 | [Robin transport and transient heat](transport/08_transport_and_heat.ipynb) | user-written Robin transport and backward Euler LocalEquations; identical-space compatibility controls |
 | [Adaptive and Darcy-coupled transient transport](transport/26_adaptive_transient_transport.ipynb) | adaptive RAD; Darcy-coupled backward Euler transport |

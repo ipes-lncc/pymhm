@@ -187,22 +187,151 @@ classical
 
 ```
 
-## 6. Qualified spatial and time refinement
+## 6. Define a smooth nonconstant dynamic problem
 
-The separate spatial study uses the analytical 3D displacement and velocity. Time differences use the same spatial discretization and a separately refined time reference; they are not exact-solution errors. Arbitrary asynchronous subcycling does not inherit the single-step global energy theorem.
+A translation patch verifies the equations but has no spatial approximation
+error. The notebook therefore continues with zero initial and exterior
+displacement on the square, unit density and Lamé coefficients, and
 
-![Physical errors and successive observed rates](../../assets/tutorials/methods/elastodynamics-convergence.png)
+$$
+\begin{aligned}
+w(x,y)&=(\sin(\pi x)\sin(\pi y),
+          \sin(2\pi x)\sin(\pi y)),\\
+u_*(t,x,y)&=\tfrac12t^2w(x,y),
+&v_*(t,x,y)&=tw(x,y),\\
+\sigma(w)&=2\varepsilon(w)+(\nabla\cdot w)I,
+&f(t,x,y)&=w-\tfrac12t^2\nabla\cdot\sigma(w).
+\end{aligned}
+$$
 
-[Vector SVG](../../assets/tutorials/methods/elastodynamics-convergence.svg) · [Publication PDF](../../assets/tutorials/methods/elastodynamics-convergence.pdf)
+First declare the stress and source with UFL; the notebook independently
+expands the derivatives in NumPy for the local force callback. The force is a
+physical density, without an extra multiplier from the discrete mass matrix.
 
-| Observable | Expected order | Penultimate interval | Final interval |
+```python
+def symbolic_dynamic_data(domain):
+    x = ufl.SpatialCoordinate(domain)
+    w = ufl.as_vector((ufl.sin(np.pi*x[0])*ufl.sin(np.pi*x[1]),
+                       ufl.sin(2*np.pi*x[0])*ufl.sin(np.pi*x[1])))
+    sigma = 2*ufl.sym(ufl.grad(w))+ufl.div(w)*ufl.Identity(2)
+    return w, sigma, -ufl.div(sigma)
+```
+
+Use $P_3$ local displacement on one triangle and unsplit vector $P_1$ negative
+traction. The notebook explicitly writes the endpoint equations before using
+`advance` as their convenience execution loop. Its original local-history
+replay checks the response reconstruction independently.
+
+```python
+macro = TriangleMesh.unit_square(8)
+skeleton = SkeletonSpace(
+    macro,tuple(FaceSpace.uniform(1) for _ in macro.faces),components=2,
+)
+with prepare(macro,skeleton=skeleton,time_step=0.005,degree=3,
+             local_refinement=1,density=1,lame_lambda=1,lame_mu=1,
+             quadrature_order=10) as data:
+    state = initialize(data)
+    for _ in range(20):
+        state = advance(data,state,dynamic_force)
+```
+
+The notebook defines `dynamic_force` explicitly from the mathematical source.
+The field panels compare the common physical time $T=0.1$. The spatial convergence
+study compares endpoint errors at the same fixed $T=0.1$. Section 5.1 of
+the publication specifies the spatial norms and rates; the temporal aggregation
+of its plotted errors is not explicit. This tutorial additionally measures the maximum error
+over every computed physical time as a separate control. Quadratic time
+dependence reduces truncation pollution, while a separately halved time step
+checks its influence on the discrete spatial result.
+
+![Nonconstant analytical, MHM, classical and displacement-error fields](../../assets/tutorials/methods/elastodynamics-smooth-fields.png)
+
+## 7. Refine the independent classical reference
+
+The global conforming vector $P_3$ control independently assembles the UFL mass,
+isotropic energy and symbolic source divergence. Strong exterior displacement
+and zero initial data match the MHM physical problem. It uses the same
+Newmark parameters, $\Delta t=0.005$ and $T=0.1$, with independent norm
+quadrature degrees 14 and 18.
+
+| Reference mesh | Displacement $L^2$ | Velocity $L^2$ | Physical stress $L^2$ |
 | --- | ---: | ---: | ---: |
-| displacement L2 difference | 2 | 2.003 | 2.017 |
-| velocity L2 difference | 2 | 1.991 | 2.014 |
+| $16\times16$ | $3.660\times10^{-8}$ | $7.345\times10^{-7}$ | $1.165\times10^{-5}$ |
+| $32\times32$ | $2.268\times10^{-9}$ | $4.570\times10^{-8}$ | $1.458\times10^{-6}$ |
+| $64\times64$ | $1.414\times10^{-10}$ | $2.850\times10^{-9}$ | $1.822\times10^{-7}$ |
 
-Spaces: Fixed spatial space; Newmark beta=1/4, gamma=1/2; independently refined time reference. Refinement variable: time step.
+Original momentum relative residuals remain below $4.4\times10^{-16}$.
+Halving the time step on the finest reference changes displacement and stress
+errors by 0.048% and 0.00037%, respectively, and velocity error by 0.95%.
+The refined numerical reference is qualified against the exact physical fields;
+it does not become an exact solution. The MHM uses its coarser independent
+macro mesh and local traction responses.
 
-[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/elastodynamics/comparison.json), SHA-256 `21cb3e4a77d334139dfb53859acac4c9254ebe6b872dc46b0569ee91472e817d`.
+## 8. Distinguish spatial MHM and temporal Newmark estimates
+
+For smooth admissible local lifting spaces and $P_\ell$ negative traction,
+Section 5.1 and Figure 3 of the original paper report displacement and velocity
+$L^2$ order $\ell+2$ and broken $H^1$ order $\ell+1$ after time error is resolved.
+Those dynamic rates are numerical results; the paper cites the theoretical
+superconvergence result for the corresponding elastostatic formulation.
+The present study measures physical Cauchy stress in $L^2$, with the gradient
+target $\ell+1$. This differs from the paper's broken $H(\mathrm{div})$ stress
+norm in equation (54), whose reported order is $\ell$.
+Here $\ell=1$. Raw primal Cauchy stress has no asserted global $H(\mathrm{div})$
+conformity. This two-dimensional manufactured qualification has explicitly
+stated data and spaces; it is not the paper's three-dimensional table.
+[Gomes et al. (2017)](https://doi.org/10.20906/CPS/CILAMCE2017-0399).
+
+The refinement sequence retains macro-grid resolutions
+$n=4,8,16,32,48,64,96,128,192$. The final four levels use the same analytical
+source, local P3 space, P1 negative-traction trace, time step $0.005$ and endpoint
+$T=0.1$. Rates use the actual consecutive mesh-size ratios, including the
+non-dyadic intervals.
+
+| Physical endpoint observable | Smooth-data target | Last three orders | Maximum/minimum of $E/H^q$ |
+| --- | ---: | --- | ---: |
+| displacement $L^2$ | 3 | 2.9447, 2.9681, 2.9816 | 1.0398 |
+| velocity $L^2$ | 3 | 2.9153, 2.8390, 3.0551 | 1.0840 |
+| Cauchy stress $L^2$ | 2 | 1.9796, 1.9886, 1.9934 | 1.0143 |
+
+Displacement and stress have stable asymptotic tails. The velocity error follows
+a third-order envelope: the fitted tail order is 2.9400 and its normalized
+amplitude varies by 8.4%, while the consecutive slopes fluctuate around that
+envelope. These observations retain all intervals rather than replacing them
+with a single fitted order. The independently evaluated maximum-in-time norms
+are preserved beside the endpoint norms in the same acquisition records.
+
+A separate $n=128$ control halves the time step from $0.005$ to $0.0025$ at
+the same endpoint $T=0.1$, preserving every spatial space and physical datum.
+The displacement, velocity and stress error norms change by 0.2994%, 3.3131%
+and 0.1391%, respectively. The maximum-in-time observations give the same
+sensitivities to the stated precision. These are measured sensitivities of
+physical error norms; the control belongs to $n=128$, rather than to the
+finest $n=192$ level, and does not identify a unique cause of the velocity
+slope fluctuations.
+
+Its independent norm quadratures of orders 10 and 14 agree to within
+$2.54\times10^{-12}$ relatively. Every endpoint response passes the replay
+against the original local Newmark histories. The separately recorded global
+displacement-moment compatibility residual is $1.07\times10^{-18}$.
+
+![Analytical spatial errors, consecutive orders and normalized amplitudes](../../assets/tutorials/methods/elastodynamics-convergence.svg)
+
+The separate time study fixes its spatial discretization and compares it
+against an independently refined time reference. These are time differences,
+not exact continuum errors. Arbitrary asynchronous subcycling does not inherit
+the single-step global energy theorem.
+
+![Newmark temporal differences and successive measured orders](../../assets/tutorials/methods/elastodynamics-time-convergence.svg)
+
+| Temporal observable | Expected order | Last three orders |
+| --- | ---: | --- |
+| displacement $L^2$ difference | 2 | 1.9938, 2.0030, 2.0168 |
+| velocity $L^2$ difference | 2 | 1.9519, 1.9910, 2.0143 |
+
+The figure retains all measured levels and uses the final four time levels
+for the normalized-amplitude check. A second-order temporal result alone
+does not establish the spatial multiscale estimates.
 
 ## References
 

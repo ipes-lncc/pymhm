@@ -1,190 +1,153 @@
 # Helmholtz MHM
 
-Write a complex pressure problem through real and imaginary components, then assemble and solve the global continuity equations. This affine control teaches the workflow; a separate plane-wave sequence measures convergence.
+Write a complex plane wave through real and imaginary components, define its
+outgoing physical data and local/global weak forms, then assemble, solve and
+postprocess. The refinement figure uses this same declared family.
 
-[Executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/helmholtz/introductory_methods.ipynb) · [Theory and resolution conditions](../../theory/waves.md)
+[Complete executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/helmholtz/introductory_methods.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/waves/helmholtz/introductory_methods.ipynb) · [Theory and resolution conditions](../../theory/waves.md)
 
-## 1. Choose the operator and its physical trace
+Run the locked `introduction` environment. The native UFL path executes;
+complex coordinates are never discarded. The notebook also preserves a
+low-frequency affine reproduction control after the plane-wave workflow.
 
+## 1. Derive the physical operator and boundary data
 
-The primary native forms use the exact real/imaginary embedding of complex
-pressure; no complex coefficient is discarded. Unit density/modulus give
-$-\Delta p-\omega^2p=f$ with $\omega=1/2$ and the independent affine
-source $f=-\omega^2p$. This chosen finite patch has invertible local operators;
-positive frequency alone does not exclude local resonances in other inputs.
+On the unit square, choose unit density and modulus, $\omega=10\pi$,
+$d=(\cos(\pi/13),\sin(\pi/13))$ and $p_*(x)=\exp(i\omega d\cdot x)$.
+Since $\lVert d\rVert=1$, the independently manufactured volume source is zero:
 
 $$
 \begin{aligned}
-a_T(p,v)&=(\nabla p,\nabla v)_T-\omega^2(p,v)_T,\\
-B_T\lambda&=\langle\lambda,v\rangle_{\partial T},\\
-C_Tp&=-\langle p,\mu\rangle_{\partial T}.
+-\Delta p-\omega^2p&=0,\\
+\partial_np-i\omega p&=g,
+&g&=i\omega(d\cdot n-1)p_* \quad\text{on }\partial\Omega.
 \end{aligned}
 $$
 
-The signed trace is $-\nabla p\cdot n$ in two interleaved real components.
-The global RHS explicitly prescribes negative complex Dirichlet moments.
-The native example has no absorption, PML or resonance-avoidance claim.
+The unknown interior multiplier is $\lambda_K=-\partial_{n_K}p$. On the
+physical exterior, the local impedance and prescribed $g$ already supply
+the boundary condition. Exterior multiplier coordinates are fixed zero
+placeholders; the actual physical exterior flux need not vanish.
 
-The two Cartesian components below represent real and imaginary pressure, not a physical vector. The local operator has no static constant kernel because of its negative mass term. Invertibility must be checked against local resonances.
+Represent pressure by $z=(\Re p,\Im p)$ with interleaved real coordinates.
+These are complex coordinates rather than a physical vector. The outgoing
+term $-i\omega p$ becomes $\omega(z_1v_0-z_0v_1)$ in the real weak form.
 
-## 2. Declare meshes, UFL volume forms and signed pairings
+## 2. Declare local and global variational equations
 
-Use the notebook companion for `NativeFormProvider`, a geometric assembly adapter. The callback defines the mathematical problem; the adapter creates the local mesh and oriented measures. In a locked FEM environment the following is the notebook's primary calculation.
+The local volume/Robin form and trial/test interface pairings are
+
+$$
+\begin{aligned}
+a_K(p,v)&=(\nabla p,\nabla v)_K-\omega^2(p,v)_K
+                   -\langle i\omega p,v\rangle_{\partial K\cap\partial\Omega},\\
+b_K(\lambda,v)&=\langle\lambda,v\rangle_{\partial K\setminus\partial\Omega},\\
+c_K(p,\mu)&=-\langle p,\mu\rangle_{\partial K\setminus\partial\Omega}.
+\end{aligned}
+$$
+
+The notebook first writes `wave_forms` explicitly. Here `exterior` is its UFL
+indicator of the physical boundary, $x=0,1$ or $y=0,1$:
 
 ```python
-import numpy as np
-import importlib.util
-from pymhm import Equation, LocalEquations, MultiscaleProblem, assemble, columns, rows, compile_form
-from pymhm.meshes.triangle import TriangleMesh
-from pymhm.fem.traces.interval import FaceSpace, SkeletonSpace
-from pymhm.fem.scalar.operators import boundary_data
-from examples.variational_darcy import NativeFormProvider
+z, v = ufl.TrialFunction(V), ufl.TestFunction(V)
+x = ufl.SpatialCoordinate(domain)
+n = ufl.FacetNormal(domain)
+phase = omega*(d[0]*x[0]+d[1]*x[1])
+normal_factor = omega*(ufl.dot(ufl.as_vector(d),n)-1)
+g = ufl.as_vector((-normal_factor*ufl.sin(phase),
+                   normal_factor*ufl.cos(phase)))
+a = (ufl.inner(ufl.grad(z),ufl.grad(v))-omega**2*ufl.inner(z,v))*dx
+a += omega*(z[1]*v[0]-z[0]*v[1])*exterior*ds
+L = ufl.inner(g,v)*exterior*ds
+```
 
-import ufl
-from dolfinx import fem
+Choose a Basix Q4 element with two real coordinates, on a $2\times2$ fine
+subdivision of each macro square. Declare the named field and pairings:
 
-mesh = TriangleMesh.unit_square()
-trace_space = SkeletonSpace(mesh, components=2)
-omega = 0.5
-
-def exact_components(points):
-    """Return real/imaginary components of (1+i)(1+x+2y)."""
-    scalar = 1 + points[:, 0] + 2 * points[:, 1]
-    return np.column_stack((scalar, scalar))
-
-def local_forms(context):
-    """Write both real components of the complex Helmholtz equation."""
-    space = fem.functionspace(context.space.mesh, ("Lagrange", 2, (2,)))
-    u, v = ufl.TrialFunction(space), ufl.TestFunction(space)
-    x = ufl.SpatialCoordinate(context.space.mesh)
-    dx = ufl.dx(domain=context.space.mesh)
-    exact = ufl.as_vector((1 + x[0] + 2 * x[1], 1 + x[0] + 2 * x[1]))
-    return LocalEquations(
-        (ufl.inner(ufl.grad(u), ufl.grad(v)) - omega**2 * ufl.inner(u, v)) * dx,
-        ufl.inner(-(omega**2) * exact, v) * dx,
-        columns(
-            *(
-                float(sign) * v[j] * context.ds(side + 1)
-                for side, sign in enumerate(context.signs)
-                for j in range(2)
-            )
-        ),
-        rows(
-            *(
-                -float(sign) * u[j] * context.ds(side + 1)
-                for side, sign in enumerate(context.signs)
-                for j in range(2)
-            )
-        ),
-        context.trace_dofs,
-        metadata={"points": space.tabulate_dof_coordinates()[:, :2].copy()},
+```python
+def wave_local(local):
+    native = local.native_space(wave_element)
+    z,v = ufl.TrialFunction(native.space),ufl.TestFunction(native.space)
+    a,L,exterior = wave_forms(native.space,native.mesh)
+    b = local.trace_pairings(
+        lambda phi,ds: ufl.inner(phi,v)*(1-exterior)*ds,
     )
+    c = local.trace_pairings(
+        lambda phi,ds: -ufl.inner(phi,z)*(1-exterior)*ds,axis="rows",
+    )
+    local.field("pressure",native)
+    return local.equations(a=a,L=L,b=b,c=c)
+```
 
-boundary, _ = boundary_data(trace_space, exact_components)
-problem = MultiscaleProblem(
-    Equation(0, -boundary),
-    NativeFormProvider(mesh, trace_space, local_forms, 2),
-    range(len(mesh.cells)),
-    trace_space.size,
-    (0,) * len(mesh.cells),
+The native binding owns coefficient ordering and the interface owns geometric
+incidence signs. The mathematical signs stay visible in these expressions.
+No retained static mode is inserted: the selected local wave operators are
+invertible. Positive frequency alone does not exclude other local resonances.
+
+## 3. Define meshes, assemble and solve
+
+Use a $12\times12$ square macro grid with polynomial P2 complex normal traces:
+
+```python
+macro = CartesianMacroMesh(12)
+skeleton = SkeletonSpace(
+    macro,tuple(FaceSpace.uniform(2) for _ in macro.faces),components=2,
+)
+hierarchy = MeshHierarchy(
+    macro,tuple(macro.submesh(i,2) for i in range(len(macro.cells))),
+)
+interface = bind_interface(skeleton,convention="normal")
+problem = bind_problem(
+    hierarchy,interface,wave_local,global_equation=Equation(0,0),
 )
 system = assemble(problem)
-solution = system.solve()
-errors = [
-    float(np.max(np.abs(field.reshape(-1, 2) - exact_components(record["points"]))))
-    for field, record in zip(solution.fields, system.local_metadata, strict=True)
-]
-assert max(errors) < 1e-10
-print(
-    {
-        "native_available": True,
-        "spaces": "complex P2 pressure / P0 complex trace",
-        "maximum_component_nodal_error_by_cell": errors,
-        "global_original_relative_residual": solution.raw_residual,
-    }
-)
+fixed = {int(dof):0.0 for face in macro.boundary_faces
+                     for dof in skeleton.dofs(int(face))}
+solution = solve(system,fixed=fixed)
+pressure = solution.field("pressure")
 ```
 
-## 3. Read the global problem in the code
+The global equation imposes zero incident pressure jumps on interior faces,
+with the sign of $c_K$. The Robin data are already part of each local load.
+There is no exterior Dirichlet pressure condition or pressure gauge here.
 
-`Equation(0, -boundary)` imposes the pressure moments with the same sign as `C=-B.T`. `MultiscaleProblem` lists the actual macrocells and zero retained static modes. `assemble` eliminates local volume coefficients; `system.solve()` reconstructs the pressure in both components. The nodal affine check verifies exact reproduction and the original equations. It does not measure a convergence rate.
+Integrating the physical errors with independent product Gauss rules of orders
+10 and 14 gives relative pressure error $1.03918\times10^{-3}$ and relative
+broken gradient error $5.07579\times10^{-3}$. These native norms agree with
+the attributed convergence record's n12 observations to about
+$4.3\times10^{-11}$ relatively. A separate original uncondensed coefficient-row
+check is accepted with relative residual $3.55\times10^{-14}$; it does not
+replace the physical error integration.
 
-## 4. Evaluate complex fields
+## 4. Independently refine the classical reference
 
-Recombine the returned components as `real + 1j * imaginary` in the executed basis. Compare real pressure, imaginary pressure and gradient separately. Use a common color scale for exact and numerical fields and a separate error color scale. The physical normal trace is the negative pressure gradient for the unit-density operator; absorbing boundaries and PML require their own complex terms.
+Assemble the same `wave_forms` on a single conforming global Q4 mesh, with the
+same outgoing data, through `MultiscaleProblem.from_global`. This reference
+uses no local response elimination or MHM multiplier. The native space is
+closed explicitly; its portable coefficient map retains the declared nodal
+basis for subsequent evaluation.
 
-The executable notebook includes this physical plot:
+| Global subdivisions | Relative pressure $L^2$ | Relative broken gradient $L^2$ |
+| --- | ---: | ---: |
+| 16 | $3.9855\times10^{-4}$ | $2.4560\times10^{-3}$ |
+| 32 | $1.2523\times10^{-5}$ | $1.5763\times10^{-4}$ |
+| 64 | $3.9272\times10^{-7}$ | $9.9183\times10^{-6}$ |
 
-```python
-assert native_available, "Select the locked introduction environment for this UFL demonstration."
-import matplotlib.pyplot as plt
-from matplotlib.tri import Triangulation
+Both analytical norms decrease on the refined global grids. The finest
+reference is substantially more accurate than the coarse MHM illustration;
+it remains a numerical approximation. Its global compatibility residual stays
+below $2.2\times10^{-16}$.
 
-fig, axes = plt.subplots(2, 3, figsize=(10, 6), layout="constrained")
-for component in range(2):
-    for column in range(3):
-        ax = axes[component, column]
-        for values, record in zip(solution.fields, system.local_metadata, strict=True):
-            points = record["points"]
-            exact = exact_components(points)[:, component]
-            numerical = values.reshape(-1, 2)[:, component]
-            shown = (exact, numerical, np.abs(numerical - exact))[column]
-            image = ax.tripcolor(Triangulation(points[:, 0], points[:, 1]), shown,
-                                 shading="gouraud", vmin=0 if column==2 else 1,
-                                 vmax=1e-10 if column==2 else 4)
-        ax.triplot(mesh.points[:, 0], mesh.points[:, 1], mesh.cells, color="black", linewidth=0.6)
-        name = "Real" if component==0 else "Imaginary"
-        ax.set(title=f"{name}: {('exact', 'MHM', 'absolute error')[column]}",
-               xlabel="x", ylabel="y", aspect="equal")
-        fig.colorbar(image, ax=ax, label="Pressure" if column<2 else "Pressure error")
-Path("build/tutorial-methods").mkdir(parents=True, exist_ok=True)
-fig.savefig("build/tutorial-methods/helmholtz-affine-fields.png", dpi=200, metadata={"Author":"IPES Research Group", "License":"CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/"})
-plt.show()
+## 5. Plot the wave, reference and physical errors
 
-```
+![Analytical, MHM and refined conforming wave fields and complex pressure errors](../../assets/tutorials/methods/helmholtz-wave-fields.png)
 
-![Executed physical fields with the actual macro mesh](../../assets/tutorials/methods/helmholtz-affine-fields.png)
+Every panel highlights the actual square macro mesh. Macrocells retain
+independent one-sided pressure values. Independent colorbars expose the
+reference's much smaller complex pressure error without merging scales.
 
-## Independent conforming Galerkin reference
-
-Assemble the same real/imaginary Helmholtz forms on global P2 grids of 16, 32 and 64 subdivisions. Prescribe the exact exterior pressure strongly and solve with the common sparse factorization owner. The affine field is exactly representable, so refinement verifies reproduction instead of supplying a fitted rate. The MHM example uses only two macrocells.
-
-```python
-from mpi4py import MPI
-from dolfinx import mesh as native_mesh
-from pymhm.linalg.linear import factorize
-
-classical = []
-for resolution in (16, 32, 64):
-    domain = native_mesh.create_unit_square(MPI.COMM_SELF, resolution, resolution)
-    space = fem.functionspace(domain, ("Lagrange", 2, (2,)))
-    u, v = ufl.TrialFunction(space), ufl.TestFunction(space)
-    x = ufl.SpatialCoordinate(domain)
-    dx = ufl.dx(domain=domain)
-    exact = ufl.as_vector((1+x[0]+2*x[1], 1+x[0]+2*x[1]))
-    a = (ufl.inner(ufl.grad(u), ufl.grad(v)) - omega**2*ufl.inner(u,v))*dx
-    L = -omega**2 * ufl.inner(exact, v)*dx
-    points = space.tabulate_dof_coordinates()[:, :2]
-    size = 2*len(points)
-    matrix, load = compile_form(a, (size,size)), compile_form(L, (size,))
-    exterior = np.any(np.isclose(points,0) | np.isclose(points,1), axis=1)
-    fixed = (2*np.flatnonzero(exterior)[:,None] + np.arange(2)).ravel()
-    free = np.setdiff1d(np.arange(size),fixed)
-    values = np.zeros(size)
-    values[fixed] = exact_components(points).ravel()[fixed]
-    with factorize(matrix[free][:,free]) as factor:
-        values[free] = factor.solve(load[free] - matrix[free][:,fixed] @ values[fixed])
-    reference = fem.Function(space)
-    reference.x.array[:] = values
-    difference = reference-exact
-    l2 = np.sqrt(fem.assemble_scalar(fem.form(ufl.inner(difference,difference)*dx)))
-    assert l2 < 1e-10
-    classical.append({"resolution":resolution,"pressure_L2":float(l2)})
-classical
-
-```
-
-## 5. Measure resolved plane-wave convergence
+## 6. Reach the fixed-frequency asymptotic regime
 
 The smooth fixed-frequency study uses polynomial trace degree two and local Q4 pressure on refined Cartesian cells. It targets pressure order four and gradient order three after the frequency and local error are resolved. The recorded errors are PyMHM observations against the analytical field, not values digitized from a paper. This analytical variant is distinct from a matched reproduction of the published curves.
 
@@ -192,12 +155,19 @@ The smooth fixed-frequency study uses polynomial trace degree two and local Q4 p
 
 [Vector SVG](../../assets/tutorials/methods/helmholtz-convergence.svg) · [Publication PDF](../../assets/tutorials/methods/helmholtz-convergence.pdf)
 
-| Observable | Expected order | Penultimate interval | Final interval |
-| --- | ---: | ---: | ---: |
-| relative pressure L2 | 4 | 3.992 | 3.993 |
-| relative gradient L2 | 3 | 2.993 | 2.994 |
+| Observable | Expected order | Last three orders | Maximum/minimum of $E/H^q$ |
+| --- | ---: | --- | ---: |
+| relative pressure $L^2$ | 4 | 3.9910, 3.9918, 3.9930 | 1.0080 |
+| relative gradient $L^2$ | 3 | 2.9906, 2.9928, 2.9941 | 1.0073 |
 
-Spaces: Local Q4/r2; polynomial P2 face trace; fixed analytical plane wave and frequency. Refinement variable: macro diameter.
+The plotted sequence retains all six measured levels. Its final four levels
+are $n=24,32,48,64$, and non-dyadic consecutive rates use their actual grid-spacing
+ratios. Normalized amplitudes vary by less than one percent across this window.
+The comparison concerns fixed frequency, smooth analytical data and resolved
+local polynomial approximation. It does not give a frequency-uniform pollution
+bound or transfer these rates to resonant or unresolved heterogeneous data.
+
+Spaces: Local Q4/r2; polynomial P2 face trace; fixed analytical plane wave and frequency. Refinement variable: macro grid spacing (square edge length).
 
 [Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/helmholtz-article/published-convergence.json), SHA-256 `fcfae8fd22ded4b560dc6ad6fbfb7aecca7da8e2a5681cffaeff886ea6d12e9e`.
 

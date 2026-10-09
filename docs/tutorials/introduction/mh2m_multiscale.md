@@ -35,8 +35,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/0f525344891e3ada5016130cb9b851667d46b2335d4b8beaf7d83713869c56c9/mh2m_multiscale-companion.zip"
-COMPANION_SHA256 = "0f525344891e3ada5016130cb9b851667d46b2335d4b8beaf7d83713869c56c9"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/f861940e8a825f406a1b107671806ccfd2a6f10c38d32425f4b153a88e0d1ad1/mh2m_multiscale-companion.zip"
+COMPANION_SHA256 = "f861940e8a825f406a1b107671806ccfd2a6f10c38d32425f4b153a88e0d1ad1"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -85,7 +85,7 @@ from pymhm.fem.traces.pressure_2d import PressureTraceSpace
 ```
 
 ```text
-Workspace: ./build/docs-restructure/exact-source-workspaces-parallel/introduction/mh2m_multiscale
+Workspace: ./build/docs-restructure/final-workspaces/provenance-final-mh2m_multiscale-ce2f83522ad1
 ```
 
 ### 1. The physical problem and the conormal sign
@@ -721,8 +721,98 @@ print(
 ```
 
 ```text
-./build/docs-restructure/exact-source-workspaces-parallel/introduction/mh2m_multiscale/build/introduction/mh2m_multiscale
+./build/docs-restructure/final-workspaces/provenance-final-mh2m_multiscale-ce2f83522ad1/build/introduction/mh2m_multiscale
 ```
+
+## 9. Verify a compatible smooth three-field family
+
+The heterogeneous teaching problem above is distinct from the smooth rate qualification. On the unit square with identity permeability, use the independently differentiated polynomial data
+
+
+
+$$
+\begin{aligned}
+p(x,y)&=x(x-1)y(y-1),\
+f(x,y)&=-2\bigl[x(x-1)+y(y-1)\bigr].
+\end{aligned}
+$$
+
+
+
+Exterior pressure is zero. The three-field declarations remain the equations written above. Choose continuous Gamma P2 on one macroface segment, Lambda P1 on **two segments**, and local P2 pressure with **four subdivisions**. Two Lambda segments per Gamma segment and two fine edges per Lambda segment satisfy M2 and M1 with fixed ratio two. The macro sequence is $n=2,4,8,16,32$.
+
+The compatible estimate of [de Barros, Madureira and Valentin (2026)](https://arxiv.org/abs/2404.16978v3) gives second-order broken gradient for this smooth family. Third-order pressure is observed. The paper's section-8.1 experimental P2/P1/P2 family with one Lambda segment and two local subdivisions is discussed under Remark 16; it is a different discretization, and is not substituted for the M1/M2-compatible family below.
+
+Each current acquisition checks the original local equations, Lambda pressure pairing and free Gamma equations, and integrates the physical fields independently at quadrature orders 10 and 12.
+
+### Recompute every measured order
+
+For successive physical errors $E_{i-1},E_i$ at the actual refinement sizes, compute
+
+
+
+$$
+r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
+$$
+
+
+
+The first code lines read one attributed numerical record. They preserve every level and display the complete error/order table. The plotting helper only measures and plots these errors: it constructs no local or global PDE. Targets below are declared from the stated hypotheses, rather than fitted from the data. The final four measured levels give three consecutive orders and a fitted terminal slope. For each declared target $q$, a nearly constant $E/h^q$ provides a second view of the asymptotic regime.
+
+
+
+```python
+import json
+from IPython.display import Markdown, display
+from examples.tutorial_convergence import refinement_series, asymptotic_summary, plot_method_series
+refinement_record = ROOT / 'examples/results/tutorial-methods/mh2m-compatible-current.json'
+refinement_data = json.loads(refinement_record.read_text(encoding='utf-8'))
+refinement_rows = refinement_data['rows']
+refinement_error_keys = {'pressure L2': 'pressure_l2', 'broken gradient L2': 'gradient_l2'}
+refinement_targets = {'broken gradient L2': 2.0}
+refinement_rows = sorted(refinement_rows, key=lambda refinement_row: refinement_row['macro_diameter'], reverse=True)
+refinement_sizes = np.asarray([refinement_row['macro_diameter'] for refinement_row in refinement_rows])
+refinement_field_errors = {refinement_field: np.asarray([refinement_row[refinement_key] for refinement_row in refinement_rows]) for refinement_field, refinement_key in refinement_error_keys.items()}
+refinement_orders = {refinement_field: np.log(refinement_values[:-1] / refinement_values[1:]) / np.log(refinement_sizes[:-1] / refinement_sizes[1:]) for refinement_field, refinement_values in refinement_field_errors.items()}
+refinement_header = ['Refinement size'] + [refinement_column for refinement_field in refinement_error_keys for refinement_column in (refinement_field, 'Order')]
+refinement_lines = [' | '.join(refinement_header), ' | '.join(['---'] * len(refinement_header))]
+for refinement_index, refinement_size in enumerate(refinement_sizes):
+    refinement_values = [f'{refinement_size:.6g}']
+    for refinement_field in refinement_error_keys:
+        refinement_values.extend([f'{refinement_field_errors[refinement_field][refinement_index]:.6e}', '—' if refinement_index == 0 else f'{refinement_orders[refinement_field][refinement_index - 1]:.3f}'])
+    refinement_lines.append(' | '.join(refinement_values))
+display(Markdown('\n'.join(refinement_lines)))
+refinement_series_data = refinement_series(refinement_record, refinement_rows, 'macro_diameter', refinement_error_keys, refinement_targets, method='mh2m', spaces='Gamma P2, one segment; Lambda P1, two segments; local P2/r4; M1=M2=2', rate_provenance='de Barros, Madureira and Valentin (2026): M1/M2-compatible smooth family; gradient order two; pressure order three observed', root=ROOT)
+print({'record': refinement_series_data['record'], 'sha256': refinement_series_data['sha256']})
+for refinement_field, refinement_summary in asymptotic_summary(refinement_series_data).items():
+    print(refinement_field, {'last_three_orders': [round(refinement_order, 3) for refinement_order in refinement_summary['orders']], 'fitted_order': round(refinement_summary['fitted_order'], 3), 'target': refinement_summary['target'], 'normalized_amplitude_ratio': refinement_summary.get('amplitude_ratio')})
+plot_method_series(refinement_series_data)
+plt.show()
+
+```
+
+
+Refinement size | pressure L2 | Order | broken gradient L2 | Order
+--- | --- | --- | --- | ---
+0.707107 | 1.484152e-03 | — | 2.405119e-02 | —
+0.353553 | 1.907832e-04 | 2.960 | 6.968576e-03 | 1.787
+0.176777 | 2.404196e-05 | 2.988 | 1.828945e-03 | 1.930
+0.0883883 | 3.020023e-06 | 2.993 | 4.639316e-04 | 1.979
+0.0441942 | 3.782056e-07 | 2.997 | 1.164489e-04 | 1.994
+
+
+```text
+{'record': 'examples/results/tutorial-methods/mh2m-compatible-current.json', 'sha256': '5b8d1d24620542d6fba18a991badfe3b37fa2f28fa497d599e600d3070747556'}
+pressure L2 {'last_three_orders': [2.988, 2.993, 2.997], 'fitted_order': 2.993, 'target': None, 'normalized_amplitude_ratio': None}
+broken gradient L2 {'last_three_orders': [1.93, 1.979, 1.994], 'fitted_order': 1.969, 'target': 2.0, 'normalized_amplitude_ratio': 1.0694762344273008}
+```
+
+
+
+[![Figure 4 — MH²M with multiscale permeability: pressure, conormal and trace](../../assets/tutorials/mh2m_multiscale/figure_27_2.png)](../../assets/tutorials/mh2m_multiscale/figure_27_2.png)
+
+
+The upper panel preserves all coarse and fine measurements. Dashed lines show declared target powers anchored at the finest measured error. The shaded interval always contains the final four levels; it does not select points to improve a fitted slope. Read the consecutive orders together with the target-normalized errors and the stated quadrature/local-equation controls. A slope alone does not establish the hypotheses of an error estimate.
 
 ## References
 
@@ -747,4 +837,4 @@ python -m scripts.run_notebooks /path/to/mh2m_multiscale.ipynb --timeout 7200
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `3c42f01fd56aad220fddf6dd99eb34cc99f2a2d9f9f44744b7e7e926570fb378` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `471d16e4f4e5bfa14e5933cfa8efce4a41996975b6115477935de8f565bfe953` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

@@ -4,7 +4,7 @@
   "notebooks": [
     {
       "source_notebook": "notebooks/introduction/darcy_3d_parallel_scalability.ipynb",
-      "source_sha256": "a372a6e95fad1c76198cdcdaef6f4ccb6e4fb1ef76fd71b0204e11af65946184",
+      "source_sha256": "9d3b64495b8ae8b31a63b4ec689032dba4c9f6cc045b2d928eb10f83085f1aa8",
       "support_sha256": {
         "examples/field_sampling.py": "724ec5fa3c5f2c2bd81ffbc369b0a781efd02ffb851ec1eb644a50395728d281",
         "examples/introduction/__init__.py": "7757162ed85329600321420702e52079e979444454fd659d93c2925970eeee1a",
@@ -20,44 +20,60 @@
       },
       "pixi_lock_sha256": "61c4793a3eb9ae6e84526770c024415c1c586818bddad9e9705c9abd2461133a",
       "executed_notebook": "build/notebooks/introduction/darcy_3d_parallel_scalability.ipynb",
-      "executed_sha256": "b99ae5d6786b7bd424817db64aa5bd26d44c0d6aecdb73f69c8d56fa03d04cf3",
+      "executed_sha256": "2203f29ed5769ced72db29a73bc93cf1463d7a002560e3aad26ff9a4277f2fc2",
       "executed_code_cells": 4,
       "page": "tutorials/introduction/darcy_3d_parallel_scalability.md",
-      "page_sha256": "8678172dc4fb77903eeb4faa49824ce2278695a996687b7becbc899ce6d3515f",
+      "page_sha256": "3e6b071464a91540dd25d3d801b43c6cc879315bf58804b79779e2da20de1232",
       "assets": [
         {
           "path": "assets/tutorials/darcy_3d_parallel_scalability/figure_7_11.png",
-          "sha256": "140be5bead5fdcdae0f3a14da4176185eb7b6d138e3ee35d6b1eee8201ad5c17"
+          "sha256": "79ffa32376c9cc0916da58eb7547c7fb8e48b39b3210748d0eea7f8a06cd97d8"
         },
         {
-          "path": "assets/tutorials/darcy_3d_parallel_scalability/figure_7_13.png",
-          "sha256": "c1da49eed4c4d33672468a7e6ccb88e073c6b4af1981437fcee770f7df7d9cbd"
+          "path": "assets/tutorials/darcy_3d_parallel_scalability/figure_7_12.png",
+          "sha256": "955f61ea7680769b1e64f139d40e6912d6e934d4ee3243c37491492d188922c7"
         },
         {
           "path": "assets/tutorials/darcy_3d_parallel_scalability/figure_7_15.png",
-          "sha256": "9f77e3c75cf54397b56c2dbbd72126089b20d3c0cadfbbdfe0c758a0d4772d4b"
+          "sha256": "140be5bead5fdcdae0f3a14da4176185eb7b6d138e3ee35d6b1eee8201ad5c17"
         },
         {
           "path": "assets/tutorials/darcy_3d_parallel_scalability/figure_7_17.png",
-          "sha256": "775083cc1a12a72d428c6afe479c0581d62a4f33f39c677af5c47749fd2c8c6c"
+          "sha256": "c1da49eed4c4d33672468a7e6ccb88e073c6b4af1981437fcee770f7df7d9cbd"
         },
         {
           "path": "assets/tutorials/darcy_3d_parallel_scalability/figure_7_19.png",
-          "sha256": "bbeb1d65d0076e1111cc4828db98875562a4b0dabbc14c252869e47194cfbcb1"
+          "sha256": "9f77e3c75cf54397b56c2dbbd72126089b20d3c0cadfbbdfe0c758a0d4772d4b"
         },
         {
           "path": "assets/tutorials/darcy_3d_parallel_scalability/figure_7_21.png",
-          "sha256": "806f8f7d014015a8453d8e12e8e05654d86599fb547fc1502c87c7711d86e47b"
+          "sha256": "775083cc1a12a72d428c6afe479c0581d62a4f33f39c677af5c47749fd2c8c6c"
         },
         {
           "path": "assets/tutorials/darcy_3d_parallel_scalability/figure_7_23.png",
+          "sha256": "bbeb1d65d0076e1111cc4828db98875562a4b0dabbc14c252869e47194cfbcb1"
+        },
+        {
+          "path": "assets/tutorials/darcy_3d_parallel_scalability/figure_7_25.png",
+          "sha256": "806f8f7d014015a8453d8e12e8e05654d86599fb547fc1502c87c7711d86e47b"
+        },
+        {
+          "path": "assets/tutorials/darcy_3d_parallel_scalability/figure_7_27.png",
           "sha256": "2d4d83e2470f445cdf2a3460b303c9815f92a3c30afa90c04a63f4bc8dc3c9ca"
+        },
+        {
+          "path": "assets/tutorials/darcy_3d_parallel_scalability/figure_7_8.png",
+          "sha256": "b1ff67a8c6583dfbbb57c9e90e02ac0703d132bdcf51ca009a73a886e66706bb"
+        },
+        {
+          "path": "assets/tutorials/darcy_3d_parallel_scalability/figure_7_9.png",
+          "sha256": "5a37c65f9f642f90096551899f197a0327eecd5a83b7d85fc123cfc0d148b32f"
         }
       ]
     },
     {
       "source_notebook": "notebooks/introduction/darcy_multiscale_convergence.ipynb",
-      "source_sha256": "57a5c1ec9b47a1cdf57dd7283c1bc688ab989031e315b33456a1b5f7810483d3",
+      "source_sha256": "12afb56ea29eefbc1350b728df214610347854a4f5b164f498fed7295347402d",
       "support_sha256": {
         "examples/field_sampling.py": "724ec5fa3c5f2c2bd81ffbc369b0a781efd02ffb851ec1eb644a50395728d281",
         "examples/introduction/__init__.py": "7757162ed85329600321420702e52079e979444454fd659d93c2925970eeee1a",
@@ -73,10 +89,10 @@
       },
       "pixi_lock_sha256": "61c4793a3eb9ae6e84526770c024415c1c586818bddad9e9705c9abd2461133a",
       "executed_notebook": "build/notebooks/introduction/darcy_multiscale_convergence.ipynb",
-      "executed_sha256": "bab3aefbaf079c4b4d5d65ee3a63798efcaf206526675dfb36bdca1ef6740866",
-      "executed_code_cells": 10,
+      "executed_sha256": "c0a994fdfa1b5557f6f584f14e9e38cc0497cae80bf9fe3b43e3527bd716c55b",
+      "executed_code_cells": 11,
       "page": "tutorials/introduction/darcy_multiscale_convergence.md",
-      "page_sha256": "87b3be368a209cde253eabb69cf87642588064b849c06685ed368d75bf4c55fe",
+      "page_sha256": "198b133a92e0ddfcc7a784a29c91ff8a5e95924a10361a64a56b4b1afb5c2537",
       "assets": [
         {
           "path": "assets/tutorials/darcy_multiscale_convergence/figure_17_0.png",
@@ -97,12 +113,16 @@
         {
           "path": "assets/tutorials/darcy_multiscale_convergence/figure_19_5.png",
           "sha256": "da94252abcdff5e5d4a9b9a462419eb3ef9f45e7c32eaefd42c61104f4e7d374"
+        },
+        {
+          "path": "assets/tutorials/darcy_multiscale_convergence/figure_23_2.png",
+          "sha256": "bf3d96e901bc7d21bda656a51e80c0eaedc028a8c44edf6a44666cc2eef32334"
         }
       ]
     },
     {
       "source_notebook": "notebooks/introduction/darcy_parallel_scalability.ipynb",
-      "source_sha256": "d0a161064855ab5e7690c771cc8641d689a3a2f2c931f62446f90d6d9a5e0f44",
+      "source_sha256": "8bcb5fe234b59a269546301a06842a4f932cd217ce7e80208c3ddbd64599335d",
       "support_sha256": {
         "examples/field_sampling.py": "724ec5fa3c5f2c2bd81ffbc369b0a781efd02ffb851ec1eb644a50395728d281",
         "examples/introduction/__init__.py": "7757162ed85329600321420702e52079e979444454fd659d93c2925970eeee1a",
@@ -118,36 +138,40 @@
       },
       "pixi_lock_sha256": "61c4793a3eb9ae6e84526770c024415c1c586818bddad9e9705c9abd2461133a",
       "executed_notebook": "build/notebooks/introduction/darcy_parallel_scalability.ipynb",
-      "executed_sha256": "9e06eb4ad5a5614e9bf89fcbb5109fa782e44c0e1f5a8afc06d35817f41fa4b0",
+      "executed_sha256": "9ecc51b8bbe228d41cf38323ba5c9cf6760492e0247ec69e4b4acef506dbe717",
       "executed_code_cells": 5,
       "page": "tutorials/introduction/darcy_parallel_scalability.md",
-      "page_sha256": "76909da59f30c6d57c205d7d3bf20003046d39fc61a28a996613b2edb8f466c6",
+      "page_sha256": "7b72374db79da797d1d04d8b80fbc20fd3c6641bdec2ef55971b68a06e250a90",
       "assets": [
         {
-          "path": "assets/tutorials/darcy_parallel_scalability/figure_7_2.png",
-          "sha256": "b34ee465adb40a1b34d9b2efc460f5e80b6b100983dbcc4f6c9030b2bbd24a28"
+          "path": "assets/tutorials/darcy_parallel_scalability/figure_7_1.png",
+          "sha256": "b85e7a7868a650b9bbc67b13392d684b74cf1d800ecbc4953cce4c59f0d95ce1"
         },
         {
           "path": "assets/tutorials/darcy_parallel_scalability/figure_7_3.png",
-          "sha256": "322993c7eedf24b8d92b4a359ea0cb697d138e07000bab5cbc27de948cb2d5d3"
+          "sha256": "b34ee465adb40a1b34d9b2efc460f5e80b6b100983dbcc4f6c9030b2bbd24a28"
         },
         {
           "path": "assets/tutorials/darcy_parallel_scalability/figure_7_4.png",
-          "sha256": "440f52deff56560843e5bd77471a426ab424a6e32ce31a656b4a3a861da8f936"
+          "sha256": "322993c7eedf24b8d92b4a359ea0cb697d138e07000bab5cbc27de948cb2d5d3"
         },
         {
           "path": "assets/tutorials/darcy_parallel_scalability/figure_7_5.png",
-          "sha256": "f302d6c6157f8a456a1647044a1ef970d7df3d4b2a107fb360cfb189b3143c57"
+          "sha256": "440f52deff56560843e5bd77471a426ab424a6e32ce31a656b4a3a861da8f936"
         },
         {
           "path": "assets/tutorials/darcy_parallel_scalability/figure_7_6.png",
+          "sha256": "f302d6c6157f8a456a1647044a1ef970d7df3d4b2a107fb360cfb189b3143c57"
+        },
+        {
+          "path": "assets/tutorials/darcy_parallel_scalability/figure_7_7.png",
           "sha256": "10066f261045dd64d780e1cd90d6d5ebf2a4aad58beda1cb1db17a956c957449"
         }
       ]
     },
     {
       "source_notebook": "notebooks/introduction/darcy_process_scalability.ipynb",
-      "source_sha256": "6b85b6625f95429c496f72f6505175c42829b2c0ffad082819dc8dc7b6b1122f",
+      "source_sha256": "540e077b460da4c13a0ec71d448200a008b8e0d5691e06a8dc610d8e6bb5b4c0",
       "support_sha256": {
         "examples/field_sampling.py": "724ec5fa3c5f2c2bd81ffbc369b0a781efd02ffb851ec1eb644a50395728d281",
         "examples/introduction/__init__.py": "7757162ed85329600321420702e52079e979444454fd659d93c2925970eeee1a",
@@ -163,44 +187,48 @@
       },
       "pixi_lock_sha256": "61c4793a3eb9ae6e84526770c024415c1c586818bddad9e9705c9abd2461133a",
       "executed_notebook": "build/notebooks/introduction/darcy_process_scalability.ipynb",
-      "executed_sha256": "b18b0eb38bfdeb136f7b781ac79003f96c4c99c452bfd8c0fcbe24e9ac8d3cc9",
+      "executed_sha256": "2513625b37e7faac9344f472b1e85e7ec29c5477d91bcb1c5ad0f98095168d05",
       "executed_code_cells": 5,
       "page": "tutorials/introduction/darcy_process_scalability.md",
-      "page_sha256": "473fa5a2d3c2049255b4c1d1446ea23181216b9ca595c382bfd5c4d70fe2e6fe",
+      "page_sha256": "0e1544b77087d322be4ad5b119ffa18a9e24e9251f3f67a536daa0c977d015cd",
       "assets": [
         {
-          "path": "assets/tutorials/darcy_process_scalability/figure_7_2.png",
-          "sha256": "1040c5df4f2e2442de33a520ebbfda0a512b6d67baaef486d238ec37e7273259"
+          "path": "assets/tutorials/darcy_process_scalability/figure_7_1.png",
+          "sha256": "b85e7a7868a650b9bbc67b13392d684b74cf1d800ecbc4953cce4c59f0d95ce1"
         },
         {
           "path": "assets/tutorials/darcy_process_scalability/figure_7_3.png",
-          "sha256": "e007c0c24448baae68051be917ce6c364576a67233f70fada6647abdd0cdba30"
+          "sha256": "1040c5df4f2e2442de33a520ebbfda0a512b6d67baaef486d238ec37e7273259"
         },
         {
           "path": "assets/tutorials/darcy_process_scalability/figure_7_4.png",
-          "sha256": "2a814f3f4e04c581ffded43700c037b81b29e0578dee12575f176b62d5ab3d77"
+          "sha256": "e007c0c24448baae68051be917ce6c364576a67233f70fada6647abdd0cdba30"
         },
         {
           "path": "assets/tutorials/darcy_process_scalability/figure_7_5.png",
-          "sha256": "522f15be067f7d8083dd0db7fab018395e005feecae8c7d6d65110b41204218a"
+          "sha256": "2a814f3f4e04c581ffded43700c037b81b29e0578dee12575f176b62d5ab3d77"
         },
         {
           "path": "assets/tutorials/darcy_process_scalability/figure_7_6.png",
-          "sha256": "ccc4ebe9332c4fcd4c8977bea6f205b7e42404083eedb77b3e766d216b5247e8"
+          "sha256": "522f15be067f7d8083dd0db7fab018395e005feecae8c7d6d65110b41204218a"
         },
         {
           "path": "assets/tutorials/darcy_process_scalability/figure_7_7.png",
-          "sha256": "a3f863005e61d5a23f92dfbebd25d9b73cdeaab9d7f34a9be8e04ed9ae6c3e05"
+          "sha256": "ccc4ebe9332c4fcd4c8977bea6f205b7e42404083eedb77b3e766d216b5247e8"
         },
         {
           "path": "assets/tutorials/darcy_process_scalability/figure_7_8.png",
+          "sha256": "a3f863005e61d5a23f92dfbebd25d9b73cdeaab9d7f34a9be8e04ed9ae6c3e05"
+        },
+        {
+          "path": "assets/tutorials/darcy_process_scalability/figure_7_9.png",
           "sha256": "26acd526d5fd402a3afc7a8e3b1da27828f8d9276ad4101c379282c67a9023dd"
         }
       ]
     },
     {
       "source_notebook": "notebooks/introduction/darcy_spe10_layer.ipynb",
-      "source_sha256": "371245c5b54390b3ff884edfd4d7917c16c1538198b3317b0086647a5e91271d",
+      "source_sha256": "073e30fde6cb2d86672a03262c72d9e514f6ca2956f175fdc7045ac9c23075f4",
       "support_sha256": {
         "examples/field_sampling.py": "724ec5fa3c5f2c2bd81ffbc369b0a781efd02ffb851ec1eb644a50395728d281",
         "examples/introduction/__init__.py": "7757162ed85329600321420702e52079e979444454fd659d93c2925970eeee1a",
@@ -216,10 +244,10 @@
       },
       "pixi_lock_sha256": "61c4793a3eb9ae6e84526770c024415c1c586818bddad9e9705c9abd2461133a",
       "executed_notebook": "build/notebooks/introduction/darcy_spe10_layer.ipynb",
-      "executed_sha256": "7983b58b9474eb8c63893c3bc17fc5b6513d2dabb477a0ad5261b572f27c6a71",
+      "executed_sha256": "873764311a4a20d8d7591038513224ea4585eff545764093c196ff4c3e0b901b",
       "executed_code_cells": 11,
       "page": "tutorials/introduction/darcy_spe10_layer.md",
-      "page_sha256": "c4f2462165376839a09666f52cf49945adcf7aa8c31f109127e06bafea09fef2",
+      "page_sha256": "b603da243390d2653fdca2e7fce1a72c0c740ab27a68c54be072c4d0ba4f5a5a",
       "assets": [
         {
           "path": "assets/tutorials/darcy_spe10_layer/figure_16_0.png",
@@ -241,7 +269,7 @@
     },
     {
       "source_notebook": "notebooks/introduction/mh2m_multiscale.ipynb",
-      "source_sha256": "3c42f01fd56aad220fddf6dd99eb34cc99f2a2d9f9f44744b7e7e926570fb378",
+      "source_sha256": "471d16e4f4e5bfa14e5933cfa8efce4a41996975b6115477935de8f565bfe953",
       "support_sha256": {
         "examples/field_sampling.py": "724ec5fa3c5f2c2bd81ffbc369b0a781efd02ffb851ec1eb644a50395728d281",
         "examples/introduction/__init__.py": "7757162ed85329600321420702e52079e979444454fd659d93c2925970eeee1a",
@@ -257,10 +285,10 @@
       },
       "pixi_lock_sha256": "61c4793a3eb9ae6e84526770c024415c1c586818bddad9e9705c9abd2461133a",
       "executed_notebook": "build/notebooks/introduction/mh2m_multiscale.ipynb",
-      "executed_sha256": "961c1bf2d6386089ec637c518e2eae8335330f6337764596d975b7a04f3dee5b",
-      "executed_code_cells": 14,
+      "executed_sha256": "98c4df69447fab0e538a730edb93c267b6f1c3a6e6361a0ddd31bd1fed5bfb91",
+      "executed_code_cells": 15,
       "page": "tutorials/introduction/mh2m_multiscale.md",
-      "page_sha256": "6fbc312a1ae9d34b7afc26f74597be74a3b9fd38d08925204145e32117e8dca9",
+      "page_sha256": "2af1542eb082105371123a8994286fb3d0f7a5053d4f8c64b14d17a5d6bde1e5",
       "assets": [
         {
           "path": "assets/tutorials/mh2m_multiscale/figure_18_1.png",
@@ -271,6 +299,10 @@
           "sha256": "fed45e9297bf5178965178ae0eec896811cef7f58061fc88e4bbefcee009c47f"
         },
         {
+          "path": "assets/tutorials/mh2m_multiscale/figure_27_2.png",
+          "sha256": "85bdb6d966e1bad0439e9cd41ae6a173061e7b08fed520542a6ce422d458413f"
+        },
+        {
           "path": "assets/tutorials/mh2m_multiscale/figure_4_0.png",
           "sha256": "109032af72b485bf15b7cfac3f2515a5a931e87f4117176cb90544e5def49c53"
         }
@@ -278,7 +310,7 @@
     },
     {
       "source_notebook": "notebooks/introduction/mhm_usfem_rad.ipynb",
-      "source_sha256": "4c9f7352c2f1dcf1896240d093370d1e9c0d426f79727a0e64ddbfa55cc1462d",
+      "source_sha256": "4e04e823bd700e3108ff564015f0a611ceb9524697759692cd4238911541cbb6",
       "support_sha256": {
         "examples/field_sampling.py": "724ec5fa3c5f2c2bd81ffbc369b0a781efd02ffb851ec1eb644a50395728d281",
         "examples/introduction/__init__.py": "7757162ed85329600321420702e52079e979444454fd659d93c2925970eeee1a",
@@ -294,10 +326,10 @@
       },
       "pixi_lock_sha256": "61c4793a3eb9ae6e84526770c024415c1c586818bddad9e9705c9abd2461133a",
       "executed_notebook": "build/notebooks/introduction/mhm_usfem_rad.ipynb",
-      "executed_sha256": "088a5ddbf999c5e9ef9840692ac8548a234ccf9eeb43f0603873387382cb1636",
-      "executed_code_cells": 20,
+      "executed_sha256": "97e079e57bac2fd3b574126de9d587ead4ee9b683ae9a67e021feb2fb96070db",
+      "executed_code_cells": 21,
       "page": "tutorials/introduction/mhm_usfem_rad.md",
-      "page_sha256": "1c554189cf01aa278913f7b03d38e96eb3bba4f286d13e9c781dee9a863819ff",
+      "page_sha256": "36dd76b9fe79b4cde8adb1e1b6d23c317da3b27ef7610820ddd626ab28e33500",
       "assets": [
         {
           "path": "assets/tutorials/mhm_usfem_rad/figure_27_0.png",
@@ -334,12 +366,16 @@
         {
           "path": "assets/tutorials/mhm_usfem_rad/figure_39_0.png",
           "sha256": "12dcc35f507e4f8935d44ef670cf3d99e4accf3a5386ca64b63b05f00f19f25d"
+        },
+        {
+          "path": "assets/tutorials/mhm_usfem_rad/figure_43_2.png",
+          "sha256": "948ffff2a372e0abe8396b73ae22a45a6477047677ab2d5d9922fa347b395e3b"
         }
       ]
     },
     {
       "source_notebook": "notebooks/introduction/mshho_multiscale.ipynb",
-      "source_sha256": "53c1894e8299a286f069a4841c2ac64438cde29b49b872079822674a6388a6c3",
+      "source_sha256": "bf74f41c2a8e6dfa7e0cd323dec66d951c5e43f086adbcacb595ca751253dd10",
       "support_sha256": {
         "examples/field_sampling.py": "724ec5fa3c5f2c2bd81ffbc369b0a781efd02ffb851ec1eb644a50395728d281",
         "examples/introduction/__init__.py": "7757162ed85329600321420702e52079e979444454fd659d93c2925970eeee1a",
@@ -355,10 +391,10 @@
       },
       "pixi_lock_sha256": "61c4793a3eb9ae6e84526770c024415c1c586818bddad9e9705c9abd2461133a",
       "executed_notebook": "build/notebooks/introduction/mshho_multiscale.ipynb",
-      "executed_sha256": "8655cb4cda12c92da2b58dafb3104785d123fac519706e8fb93a19f03727f7be",
-      "executed_code_cells": 14,
+      "executed_sha256": "65908501de04307acb09c0c66f65d73d27a4b480df62ac0dec477bb343a970d3",
+      "executed_code_cells": 15,
       "page": "tutorials/introduction/mshho_multiscale.md",
-      "page_sha256": "b14deeaf22a9a209e215a3ebe765f65216c8af8d1f6a9a54ccb7b34f3705e7fa",
+      "page_sha256": "1aec472485872889de25cdbd551ccb4a7fc03cecb0f3bf5a17e6f863da7ebc99",
       "assets": [
         {
           "path": "assets/tutorials/mshho_multiscale/figure_18_1.png",
@@ -369,6 +405,10 @@
           "sha256": "f7aedf0223fdec128404c96e5517c114429b8511053d2fc5cc57f9f75ba9d703"
         },
         {
+          "path": "assets/tutorials/mshho_multiscale/figure_27_2.png",
+          "sha256": "2175dafeef8acb275f017f8e30c2dcd02dd130b7d5bcc501ed513a000df208ea"
+        },
+        {
           "path": "assets/tutorials/mshho_multiscale/figure_4_0.png",
           "sha256": "109032af72b485bf15b7cfac3f2515a5a931e87f4117176cb90544e5def49c53"
         }
@@ -376,7 +416,7 @@
     },
     {
       "source_notebook": "notebooks/introduction/multiscale_elasticity.ipynb",
-      "source_sha256": "6b691c8dffa11956aa6075fb60d8fdd880e446ba603faa88b66376b91ca80d6c",
+      "source_sha256": "79c6ef3a9deb5849b7e0669a38bc904c5d598a8ea5d7ab6e5db5e6f96a568c43",
       "support_sha256": {
         "examples/field_sampling.py": "724ec5fa3c5f2c2bd81ffbc369b0a781efd02ffb851ec1eb644a50395728d281",
         "examples/introduction/__init__.py": "7757162ed85329600321420702e52079e979444454fd659d93c2925970eeee1a",
@@ -392,10 +432,10 @@
       },
       "pixi_lock_sha256": "61c4793a3eb9ae6e84526770c024415c1c586818bddad9e9705c9abd2461133a",
       "executed_notebook": "build/notebooks/introduction/multiscale_elasticity.ipynb",
-      "executed_sha256": "146d846c3c0f69faaabf77c5c7d8be87ce1c7b3b9ac7533f5da07846bd974d32",
+      "executed_sha256": "861182c18ef81d930d064aae9d4203a7dbc9b76e43d1490b8c1054b0dc9afb31",
       "executed_code_cells": 12,
       "page": "tutorials/introduction/multiscale_elasticity.md",
-      "page_sha256": "d529ceaca1bfe7f229338e09d643658745689a3365de2acfd9cb4400a0924cf8",
+      "page_sha256": "bc15076dd000cdc56cd03fad86840e0d62bfe186e0b5d1838ec15a830d91b920",
       "assets": [
         {
           "path": "assets/tutorials/multiscale_elasticity/figure_18_0.png",
@@ -409,7 +449,7 @@
     },
     {
       "source_notebook": "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb",
-      "source_sha256": "bac0c4c62b8b76905f1d14845568f7949e976f821ceccbb3a8e2482d75efcb8e",
+      "source_sha256": "5c3b1a00d3651cea8bf2b41156b6a2a778ad6891078537dfb6f2c6c7b35ab472",
       "support_sha256": {
         "examples/field_sampling.py": "724ec5fa3c5f2c2bd81ffbc369b0a781efd02ffb851ec1eb644a50395728d281",
         "examples/introduction/__init__.py": "7757162ed85329600321420702e52079e979444454fd659d93c2925970eeee1a",
@@ -425,10 +465,10 @@
       },
       "pixi_lock_sha256": "61c4793a3eb9ae6e84526770c024415c1c586818bddad9e9705c9abd2461133a",
       "executed_notebook": "build/notebooks/introduction/stokes_brinkman_boundary_layer.ipynb",
-      "executed_sha256": "89c2194e1a120fd622f003c6b1208c5be95fbe0d5fd06f30ac35c74e44e62df5",
-      "executed_code_cells": 23,
+      "executed_sha256": "b70a9f622afc3cbfe151ecbd58e59d2a9f3add840cdfd88cca392c3dafa7054a",
+      "executed_code_cells": 24,
       "page": "tutorials/introduction/stokes_brinkman_boundary_layer.md",
-      "page_sha256": "8da9d8e36aee189cb7c643b5ff4454be8e954a919db205f5ae4fdedb6b799838",
+      "page_sha256": "413e6a1429a8f64e828bf151b0efbe637bfd7207c16fa0b261ff915aab876346",
       "assets": [
         {
           "path": "assets/tutorials/stokes_brinkman_boundary_layer/figure_31_0.png",
@@ -469,6 +509,14 @@
         {
           "path": "assets/tutorials/stokes_brinkman_boundary_layer/figure_40_0.png",
           "sha256": "65e8c76994dbc58f76b9728fb249344a9988fa41324fd4b60ece19a1f4ee1a49"
+        },
+        {
+          "path": "assets/tutorials/stokes_brinkman_boundary_layer/figure_47_1.svg",
+          "sha256": "b0745cc26c20c7b7e2eac5902038563468f92cecb7bd07efacd9c351f08df1fa"
+        },
+        {
+          "path": "assets/tutorials/stokes_brinkman_boundary_layer/figure_47_3.svg",
+          "sha256": "a997d8b418dc20e15bc9f0356d980168d96222140b0627d58f86cab70ff3f86e"
         }
       ]
     }

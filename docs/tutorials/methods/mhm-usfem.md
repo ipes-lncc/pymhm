@@ -6,12 +6,6 @@ Follow the numbered steps: state the variational problem, choose the local and t
 
 The main workflow is **meshes → spaces → local equations → global balance → assemble → solve → fields and errors**. `MeshHierarchy` associates macro and local meshes; `bind_interface` and `LocalContext` own supported numbering, geometric orientation and native coordinate conversions. The mathematical forms, physical trace meaning, local modes and gauge remain explicit in the cells below. Fully manual/custom spaces use the same numerical owners; see the [custom-interface notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/foundations/operators/custom_interface.ipynb).
 
-!!! note "Execute every runtime setup cell"
-
-    Execute the worker-export setup cell in every backend mode. Here, “optional runtime setup” refers to the choice of serial, threaded or spawned-process execution. The recorded provider digest and final cleanup also use the exported worker resources.
-
-The recorded `parallel_backend`, `workers` and `pending_bound` describe the configured execution policy and its upper bounds. The automatic policy runs small cases serially; eligible larger cases cap the actual worker count at their number of macroelements.
-
 We explicitly construct `Equation`, `LocalEquations` and `MultiscaleProblem`, then connect each code block to the physical formulation. **MHM-USFEM** is the name used here for scalar **MHM-UNUSUAL** of [Santiago, Valentin and Martins (2025), Eqs. (14)–(15), §4.1](https://doi.org/10.55592/cilamce2025.v5i.14270). This is a scalar reaction–diffusion example; the separate Stokes–Brinkman tutorial treats velocity and pressure. Advection is zero here, and the negative residual stabilization is different from SUPG.
 
 Open the downloaded notebook with `jupyter lab` after installing `pymhm[notebooks,visualization]` and the compatible native DOLFINx/UFL backend. Exact data, sources, local and global forms, boundary conditions, independent references, norms and plots are all defined below. PyMHM supplies generic UFL compilation, oriented trace integration, condensation and checked linear algebra.
@@ -33,8 +27,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/ac2a815a7d4ea19407db9677477a28b1d9d3274dbe025826cc79be948e824467/mhm_usfem_rad-companion.zip"
-COMPANION_SHA256 = "ac2a815a7d4ea19407db9677477a28b1d9d3274dbe025826cc79be948e824467"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/5992b3553f968d52415fd29cf244d8c0229d40e999c247362afcb492381eb5d8/mhm_usfem_rad-companion.zip"
+COMPANION_SHA256 = "5992b3553f968d52415fd29cf244d8c0229d40e999c247362afcb492381eb5d8"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -86,7 +80,7 @@ measure_case = partial(record_rad_case, reports=REPORTS, root=ROOT)
 ```
 
 ```text
-Workspace: ./build/docs-restructure/exact-source-workspaces-provenance-final/introduction/mhm_usfem_rad
+Workspace: ./build/docs-restructure/final-workspaces/provenance-final-mhm_usfem_rad-a6f8b128b0b4
 ```
 
 ### Runtime resources (independent of the formulation)
@@ -1382,6 +1376,92 @@ This tutorial treats the reaction–diffusion member of RAD, with zero advection
 The exact data, stabilization and compatibility condition follow [Santiago, Valentin and Martins (2025)](https://doi.org/10.55592/cilamce2025.v5i.14270). The improved scalar UNUSUAL formulation follows [Franca and Valentin (2000)](https://doi.org/10.1016/S0045-7825(00)00190-0). The independent classical reference is executed with [DOLFINx](https://docs.fenicsproject.org/dolfinx/) and UFL.
 
 
+## Qualify smooth convergence separately from the sharp layer
+
+An underresolved singular perturbation is not an asymptotic smooth-problem test. Keep the reaction-diffusion operator, but take $\epsilon=\sigma=1$, $f=1$, zero exterior scalar values on the two vertical boundaries, and homogeneous normal data on the horizontal boundaries:
+
+
+
+$$
+u(x,y)=1-\frac{e^{-x}+e^{-(1-x)}}{1+e^{-1}}.
+$$
+
+
+
+The trace degree is $\ell=0$. Local P1 pressure with one red refinement satisfies the admissible $k=\ell+1$ refined alternative of theorem 1 in [Santiago, Valentin and Martins (2025)](https://doi.org/10.55592/cilamce2025.v5i.14270). Preserve the method's negative residual pairing. The macro sequence is $n=2,4,8,16,32$, with two local subdivisions at every level.
+
+The smooth broken-gradient target is order one; order-two scalar error is observed. This qualified sequence does not claim a diffusion-uniform rate for the sharp layers considered above. The attributed record preserves its formulation, error integration and source provenance.
+
+### Recompute every measured order
+
+For successive physical errors $E_{i-1},E_i$ at the actual refinement sizes, compute
+
+
+
+$$
+r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
+$$
+
+
+
+The first code lines read one attributed numerical record. They preserve every level and display the complete error/order table. The plotting helper only measures and plots these errors: it constructs no local or global PDE. Targets below are declared from the stated hypotheses, rather than fitted from the data. The final four measured levels give three consecutive orders and a fitted terminal slope. For each declared target $q$, a nearly constant $E/h^q$ provides a second view of the asymptotic regime.
+
+
+
+```python
+import json
+import matplotlib.pyplot as plt
+from IPython.display import Markdown, display
+from examples.tutorial_convergence import refinement_series, asymptotic_summary, plot_method_series
+refinement_record = ROOT / 'examples/results/unusual/analytical.json'
+refinement_data = json.loads(refinement_record.read_text(encoding='utf-8'))
+refinement_rows = [dict(H=2 ** 0.5 / refinement_row['n'], **refinement_row) for refinement_row in refinement_data['rows'] if refinement_row['case'] == 'smooth' and refinement_row['method'] == 'unusual']
+refinement_error_keys = {'scalar L2': 'scalar_l2', 'broken gradient L2': 'gradient_l2'}
+refinement_targets = {'broken gradient L2': 1.0}
+refinement_rows = sorted(refinement_rows, key=lambda refinement_row: refinement_row['H'], reverse=True)
+refinement_sizes = np.asarray([refinement_row['H'] for refinement_row in refinement_rows])
+refinement_field_errors = {refinement_field: np.asarray([refinement_row[refinement_key] for refinement_row in refinement_rows]) for refinement_field, refinement_key in refinement_error_keys.items()}
+refinement_orders = {refinement_field: np.log(refinement_values[:-1] / refinement_values[1:]) / np.log(refinement_sizes[:-1] / refinement_sizes[1:]) for refinement_field, refinement_values in refinement_field_errors.items()}
+refinement_header = ['Refinement size'] + [refinement_column for refinement_field in refinement_error_keys for refinement_column in (refinement_field, 'Order')]
+refinement_lines = [' | '.join(refinement_header), ' | '.join(['---'] * len(refinement_header))]
+for refinement_index, refinement_size in enumerate(refinement_sizes):
+    refinement_values = [f'{refinement_size:.6g}']
+    for refinement_field in refinement_error_keys:
+        refinement_values.extend([f'{refinement_field_errors[refinement_field][refinement_index]:.6e}', '—' if refinement_index == 0 else f'{refinement_orders[refinement_field][refinement_index - 1]:.3f}'])
+    refinement_lines.append(' | '.join(refinement_values))
+display(Markdown('\n'.join(refinement_lines)))
+refinement_series_data = refinement_series(refinement_record, refinement_rows, 'H', refinement_error_keys, refinement_targets, method='mhm-usfem', spaces='P1/r2 locals; P0 trace; epsilon=sigma=1; negative residual pairing', rate_provenance='Santiago, Valentin and Martins (2025), theorem 1: admissible smooth reaction-diffusion energy; scalar order two observed', root=ROOT)
+print({'record': refinement_series_data['record'], 'sha256': refinement_series_data['sha256']})
+for refinement_field, refinement_summary in asymptotic_summary(refinement_series_data).items():
+    print(refinement_field, {'last_three_orders': [round(refinement_order, 3) for refinement_order in refinement_summary['orders']], 'fitted_order': round(refinement_summary['fitted_order'], 3), 'target': refinement_summary['target'], 'normalized_amplitude_ratio': refinement_summary.get('amplitude_ratio')})
+plot_method_series(refinement_series_data)
+plt.show()
+
+```
+
+
+Refinement size | scalar L2 | Order | broken gradient L2 | Order
+--- | --- | --- | --- | ---
+0.707107 | 1.965642e-02 | — | 1.211875e-01 | —
+0.353553 | 5.527338e-03 | 1.830 | 6.541841e-02 | 0.889
+0.176777 | 1.457502e-03 | 1.923 | 3.387681e-02 | 0.949
+0.0883883 | 3.746517e-04 | 1.960 | 1.723394e-02 | 0.975
+0.0441942 | 9.503769e-05 | 1.979 | 8.691650e-03 | 0.988
+
+
+```text
+{'record': 'examples/results/unusual/analytical.json', 'sha256': 'e83d4dc1617b3ab8473dac0135fef861797fa057436f81a76718b70f45ab5c61'}
+scalar L2 {'last_three_orders': [1.923, 1.96, 1.979], 'fitted_order': 1.955, 'target': None, 'normalized_amplitude_ratio': None}
+broken gradient L2 {'last_three_orders': [0.949, 0.975, 0.988], 'fitted_order': 0.971, 'target': 1.0, 'normalized_amplitude_ratio': 1.0628994737060553}
+```
+
+
+
+[![Figure 10 — MHM-USFEM: difficult local reaction–diffusion problems](../../assets/tutorials/mhm_usfem_rad/figure_43_2.png)](../../assets/tutorials/mhm_usfem_rad/figure_43_2.png)
+
+
+The upper panel preserves all coarse and fine measurements. Dashed lines show declared target powers anchored at the finest measured error. The shaded interval always contains the final four levels; it does not select points to improve a fitted slope. Read the consecutive orders together with the target-normalized errors and the stated quadrature/local-equation controls. A slope alone does not establish the hypotheses of an error estimate.
+
 ## References
 
 - Juan Felipe Pacazuca Santiago, Frédéric Valentin, and Larissa Martins (2025). *A Multiscale Hybrid-Mixed Method with Local Stabilization*. Proceedings of the Ibero-Latin American Congress on Computational Methods in Engineering, CILAMCE 2025, volume 5, article 14270; published online 18 March 2026. [DOI: 10.55592/cilamce2025.v5i.14270](https://doi.org/10.55592/cilamce2025.v5i.14270).
@@ -1407,26 +1487,65 @@ python -m scripts.run_notebooks /path/to/mhm_usfem_rad.ipynb --timeout 7200
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `4c9f7352c2f1dcf1896240d093370d1e9c0d426f79727a0e64ddbfa55cc1462d` in the [publication manifest](../introduction/manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `4e04e823bd700e3108ff564015f0a611ceb9524697759692cd4238911541cbb6` in the [publication manifest](../introduction/manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+
+## Separate the smooth estimate from the layer experiment
+
+The layer experiment above tests the method's practical behavior as diffusion
+decreases. Its coefficient contrast and unresolved layer width do not satisfy
+the uniform smooth-regime interpretation of a macro slope. The final control
+uses the analytical case in section 4.1 of
+[Santiago, Valentin and Martins (2025)](https://doi.org/10.55592/cilamce2025.v5i.14270),
+with $\epsilon=\sigma=1$ and $f=1$:
+
+$$
+p(x)=1-\frac{e^{-x}+e^{-(1-x)}}{1+e^{-1}}.
+$$
+
+Vertical exterior sides impose zero pressure; horizontal sides impose zero
+outward physical flux. Local P1 pressure uses one red refinement, while the
+skeleton uses P0 traces. This is the admissible alternative
+$k=\ell+1$ with one red refinement in Theorem 1, rather than an unrefined
+P1/P0 local choice. The negative residual pairing and the independently
+derived stabilized source remain as written in the tutorial.
+
+The cited theorem contains local, skeletal and stabilization-consistency
+terms. Under these smooth data the published H1 target is order one, and the
+pressure order two is observed. The five levels $n=2,4,8,16,32$ show three
+terminal intervals approaching one; the compensated error curve checks that
+this behavior is not an isolated favorable slope. The layer plots and their
+separate physical errors are retained as a different accuracy question.
 
 ## Smooth refinement and the asymptotic regime
 
-The following independent qualification study uses **P1/r2 locals; P0 trace; epsilon=1; negative residual pairing** and refines the **macro diameter**. It states its own geometry, data and spaces; its smooth rates are not transferred to the oscillatory teaching case or to singular material interfaces. Successive orders use the independently integrated physical errors:
+This independent qualification uses **P1/r2 locals; P0 trace; epsilon=sigma=1; negative residual pairing** and refines the **macro diameter**. Its geometry, data and compatibility conditions are stated above. Its smooth rates do not transfer to a different material, unresolved local solve or singular physical domain. All coarse and fine measurements are retained. Successive orders use the actual refinement sizes and independently integrated physical errors:
 
 $$
 r_i=\frac{\log(E_{i-1}/E_i)}{\log(h_{i-1}/h_i)}.
 $$
 
-| Physical observable | Literature order under its hypotheses | Last three measured orders |
-| --- | ---: | --- |
-| scalar L2 | reported observation | 1.923 / 1.960 / 1.979 |
-| broken gradient L2 | 1 | 0.949 / 0.975 / 0.988 |
+The terminal window always contains the **final four measured levels** and their three intervals. The fitted order uses those four points. For each justified target $q$, the amplitude ratio is the maximum divided by the minimum of $E/h^q$ in the same window; values near one show its stabilization. A pressure order labeled observed is not substituted for a proved energy estimate.
 
-![Physical errors and successive rates](../../assets/tutorials/methods/mhm-usfem-convergence.png)
+| Physical observable | Target $q$ | Final three orders | Fitted order | Amplitude ratio |
+| --- | ---: | --- | ---: | ---: |
+| scalar L2 | observed | 1.923 / 1.960 / 1.979 | 1.955 | — |
+| broken gradient L2 | 1 | 0.949 / 0.975 / 0.988 | 0.971 | 1.063 |
 
-Download the figure as [SVG](../../assets/tutorials/methods/mhm-usfem-convergence.svg) or [PDF](../../assets/tutorials/methods/mhm-usfem-convergence.pdf).
+![All physical errors, successive orders and target-normalized amplitudes](../../assets/tutorials/methods/mhm-usfem-convergence.png)
 
-Santiago, Valentin and Martins (2025): admissible reaction-diffusion stabilization; smooth scalar order two observed. The [source numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/unusual/analytical.json) has SHA256 `e83d4dc1617b3ab8473dac0135fef861797fa057436f81a76718b70f45ab5c61`. Its execution attribution remains in that record. The [rate notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) recomputes the orders; reading existing measurements does not execute the underlying PDE.
+Download the figure as [SVG](../../assets/tutorials/methods/mhm-usfem-convergence.svg) or [PDF](../../assets/tutorials/methods/mhm-usfem-convergence.pdf). Shading covers the same final four levels in every panel; dashed curves are target powers anchored to the finest measured error.
+
+### Complete numerical sequence
+
+| Refinement size | scalar L2 | Order | broken gradient L2 | Order |
+| ---: | ---: | ---: | ---: | ---: |
+| 0.707107 | 1.965642e-02 | — | 1.211875e-01 | — |
+| 0.353553 | 5.527338e-03 | 1.830 | 6.541841e-02 | 0.889 |
+| 0.176777 | 1.457502e-03 | 1.923 | 3.387681e-02 | 0.949 |
+| 0.0883883 | 3.746517e-04 | 1.960 | 1.723394e-02 | 0.975 |
+| 0.0441942 | 9.503769e-05 | 1.979 | 8.691650e-03 | 0.988 |
+
+Santiago, Valentin and Martins (2025), theorem 1: admissible smooth reaction-diffusion energy; scalar order two observed. The [source numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/unusual/analytical.json) has SHA256 `e83d4dc1617b3ab8473dac0135fef861797fa057436f81a76718b70f45ab5c61` and retains its execution attribution. The step-by-step notebook linked at the top now reads this individual record, displays this complete sequence and recomputes every order. The [shared rate notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) compares methods. Reading these measurements does not execute the underlying PDE acquisition.
 
 ## References for this method
 

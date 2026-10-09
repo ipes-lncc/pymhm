@@ -145,6 +145,25 @@ The pressure gauge and mixed-space compatibility remain necessary. A prescribed
 convection solve may be a component of a time or nonlinear iteration, but a
 time integrator or Navier–Stokes iteration is an additional numerical method.
 
+The smooth degree-one trace comparison in
+[Araya et al. (2021), Section 5.1](https://doi.org/10.1007/s10444-020-09833-8)
+uses the product norm defined in Section 2.2:
+
+$$
+\begin{aligned}
+\lVert(e_u,e_p)\rVert_{V\times Q}^2
+={}&d_\Omega^{-2}\lVert e_u\rVert_{L^2(\Omega)}^2\\
+&+\sum_K\lVert\nabla e_u\rVert_{L^2(K)}^2
++\lVert e_p\rVert_{L^2(\Omega)}^2.
+\end{aligned}
+$$
+
+Here $d_\Omega$ is the domain diameter. The
+[Oseen tutorial](../tutorials/methods/oseen.md) compares order two in this
+observable on the same smooth space family. Its additional third-order
+velocity $L^2$ measurement is reported separately; the product-norm estimate
+alone does not establish that stronger velocity estimate.
+
 
 ## Space compatibility and rates
 

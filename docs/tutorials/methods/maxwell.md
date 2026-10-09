@@ -1,6 +1,11 @@
 # Maxwell MHM
 
-Advance user-written electric and magnetic equations with a tangential global coupling. The tetrahedral stationary patch below verifies the declarations over four steps. The final plot qualifies temporal order; [spatial targets from the original analysis](../../theory/waves.md#maxwell-tangential-coupling-and-staggered-dynamics) have separate refinement requirements.
+Advance user-written electric and magnetic equations with a tangential global
+coupling. Start with a tetrahedral stationary patch to verify the declarations,
+then propagate the original smooth two-dimensional TM cavity mode. Separate
+spatial and temporal studies compare physical fields and the fixed semidiscrete
+ODE, respectively. [The original analysis](../../theory/waves.md#maxwell-tangential-coupling-and-staggered-dynamics)
+states their different error estimates.
 
 [Executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/maxwell/introductory_methods.ipynb) · [Theory and CFL conditions](../../theory/waves.md)
 
@@ -144,7 +149,10 @@ for row in rows:
 
 Compare electric and magnetic fields at their own recorded times. The tangential moment norm, original electric equations and staggered energy balance are different checks. This stationary patch is not a propagation-accuracy test. The local spaces are discontinuous polynomial fields; they do not claim Nédélec conformity. The notebook also compares the declared providers against the uncondensed original coefficient equations on identical spaces. This is an algebraic check, not an independent physical discretization.
 
-An independently refined conforming H(curl) reference is still required for a classical physical baseline. The algebraic comparison and stationary patch do not supply that reference.
+The stationary patch supplies no propagation baseline. The TM example below
+has a separately assembled conforming scalar-wave Galerkin reference. That
+exact two-dimensional reduction supplies a classical control for this TM
+physical case; it does not qualify a general three-dimensional H(curl) solver.
 
 The executable notebook includes this physical plot:
 
@@ -175,22 +183,145 @@ plt.show()
 
 ![Executed physical fields with the actual macro mesh](../../assets/tutorials/methods/maxwell-vector-fields.png)
 
-## 6. Verify space and time convergence separately
+## 6. Propagate the original nonconstant TM mode
 
-For the smooth 2D TM cavity family of [Lanteri, Paredes, Scheid and Valentin (2018)](https://doi.org/10.1137/16M110037X), trace degree one targets combined L2 order two and combined broken-curl order one. Degree two targets orders three and two. A spatial study must reduce the time step until temporal error is negligible. The plot and table below qualify temporal refinement against the exact constrained semidiscrete ODE at the respective staggered electric and magnetic times. They do not establish those spatial rates. The current 3D cavity sequence is preasymptotic and is not assigned the 2D rates.
+Section 6.2 of [Lanteri et al. (2018)](https://doi.org/10.1137/16M110037X)
+uses the unit-square PEC cavity, unit permittivity and permeability, zero
+current, one local triangle per macrocell and local $P_{\ell+2}$ fields.
+The $P_\ell$ tangential multiplier is unchanged here. With
+$\omega=2\pi\sqrt2$, its exact fields are
 
-![Physical errors and successive observed rates](../../assets/tutorials/methods/maxwell-convergence.png)
+$$
+\begin{aligned}
+E_z(t,x,y)&=\cos(\omega t)\sin(2\pi x)\sin(2\pi y),\\
+H_x(t,x,y)&=-\tfrac1{\sqrt2}\sin(\omega t)
+                  \sin(2\pi x)\cos(2\pi y),\\
+H_y(t,x,y)&=\tfrac1{\sqrt2}\sin(\omega t)
+                  \cos(2\pi x)\sin(2\pi y).
+\end{aligned}
+$$
 
-[Vector SVG](../../assets/tutorials/methods/maxwell-convergence.svg) · [Publication PDF](../../assets/tutorials/methods/maxwell-convergence.pdf)
+Write the exact callbacks, choose the tangential space and reuse the local
+providers already declared above:
 
-| Observable | Expected order | Penultimate interval | Final interval |
-| --- | ---: | ---: | ---: |
-| electric L2 | 2 | 1.996 | 1.998 |
-| magnetic L2 | 2 | 2.000 | 2.000 |
+```python
+from pymhm import TriangleMesh, FaceSpace
+from pymhm.fem.vector.curl import TangentialTraceSpace
 
-Spaces: Fixed constrained spatial Maxwell operator; staggered electric/magnetic field times. Refinement variable: time step.
+macro = TriangleMesh.unit_square(8)
+trace = SkeletonSpace(macro, tuple(FaceSpace.uniform(1) for _ in macro.faces))
+skeleton = TangentialTraceSpace(trace)
+data = prepare(macro, skeleton=skeleton, time_step=0.0005,
+               degree=3, local_refinement=1, absorbing=None, quadrature_order=8)
+state = initialize(data, electric_at_zero, np.zeros(2),
+                   electric_provider=electric_local, global_provider=electric_global)
+for _ in range(20):
+    state = advance(data, state, electric_provider=electric_local,
+                    magnetic_provider=magnetic_local, global_provider=electric_global)
+```
 
-[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/maxwell-current-refinement.json), SHA-256 `82a0d9c3d7a1e7ca1c8e4862276c23f26502013a8d1c0d770b1456a7afe7b1bd`.
+The notebook defines every exact callback before this cell. Homogeneous PEC
+means the electric tangential trace vanishes on the exterior; `absorbing=None`
+introduces no impedance loss. This nonconstant field is a propagation example,
+not a stationary reproduction patch.
+
+![Analytical, MHM and signed-error TM fields with the actual macro mesh](../../assets/tutorials/methods/maxwell-tm-fields.png)
+
+The illustration uses $t_H=0.01$ and $t_E=0.01025$ on an $8\times8$ macro grid. The spatial convergence study below measures every staggered sample through $t_H=0.05$.
+
+Evaluate each field at its own staggered time. Keep separate values on incident
+macrocells and display the actual macro mesh on analytical, numerical and error
+panels. These are physical electric and magnetic fields; their broken curls do
+not assert global Nédélec conformity.
+
+## 7. Independently refine a classical physical baseline
+
+For this exact TM reduction, $E_{tt}-\Delta E=0$ with zero exterior $E$,
+$E(0)=\sin(2\pi x)\sin(2\pi y)$ and $E_t(0)=0$. Independently assemble the
+global conforming $P_3$ mass and stiffness with UFL, march with average-acceleration
+Newmark, and recover $H=-\operatorname{rot}\nabla\int_0^t E(s)\,ds$ by trapezoidal
+integration. No MHM trace, local lifting or condensed operator enters this solve.
+This is the same physical TM case, rather than the exact exponential of the
+MHM coefficient ODE.
+
+| Classical mesh | Electric $L^2$ error | Magnetic $L^2$ error |
+| --- | ---: | ---: |
+| $16\times16$ | $1.6592\times10^{-5}$ | $1.5940\times10^{-4}$ |
+| $32\times32$ | $1.1054\times10^{-6}$ | $1.9876\times10^{-5}$ |
+| $64\times64$ | $6.4592\times10^{-8}$ | $2.4810\times10^{-6}$ |
+
+The reference uses $\Delta t=0.000125$, final time $0.05$, strong homogeneous
+PEC data and independent error quadrature degrees 14 and 18. Original momentum
+relative residuals stay below $7.9\times10^{-15}$. Its analytical refinement
+errors qualify the physical baseline; its finest numerical field is not exact.
+Halving the time step on the finest reference changes the electric error by
+1.1% and the magnetic error by 0.0034%; the reference remains substantially
+more accurate than the measured multiscale fields.
+The MHM electric and magnetic errors use their own recorded times, so coefficient
+agreement at an invented common time is not claimed. The classical table
+qualifies the electric and magnetic $L^2$ fields; the MHM broken
+$H(\mathrm{curl})$ error is evaluated directly against the analytical derivatives.
+
+## 8. Reach the spatial estimates, then assess time integration
+
+For $\ell=1$, Section 6.2 reports combined maximum-in-time $L^2$ order two
+and combined broken $H(\mathrm{curl})$ order one. The comparison uses local $P_3$
+fields, unsplit $P_1$ tangential traces, regular macrotriangles, smooth cavity
+data and a recorded CFL-stable time step. Measure the same norm throughout the
+march, with independent quadrature orders 8 and 12. In this TM reduction,
+the electric curl is the rotated gradient of scalar $E$, while the magnetic
+curl is $\partial_x H_y-\partial_y H_x$. The combined broken curl norm includes
+both field $L^2$ errors and both cellwise curl errors. The individual electric
+field can converge more rapidly; that is additional observed accuracy,
+separate from the combined-field estimate.
+
+All six macro-grid resolutions $n=16,24,32,48,64,96$ remain in the figure.
+The common final four-level window is $n=32,48,64,96$, with unchanged local and
+trace spaces, final magnetic time $0.05$ and time step $0.0005$. The mesh variable
+is the square-grid spacing $H=1/n$. The consecutive orders use the actual
+non-dyadic refinement ratios, and both target-normalized error amplitudes vary
+by only approximately 3% across the final window.
+
+| Physical maximum-in-time observable | Literature order | Last three orders | Maximum/minimum of $E/H^q$ |
+| --- | ---: | --- | ---: |
+| combined $L^2$ | 2 | 1.9399, 2.1034, 1.9856 | 1.0302 |
+| combined broken $H(\mathrm{curl})$ | 1 | 1.0319, 1.0470, 1.0080 | 1.0301 |
+
+![Physical maximum-in-time spatial errors, consecutive orders and normalized amplitudes](../../assets/tutorials/methods/maxwell-convergence.svg)
+
+A separate $n=64$ control halves the time step to $0.00025$ while preserving
+the spaces and final magnetic time. The recorded combined $L^2$ and broken
+$H(\mathrm{curl})$ error maxima change by 0.0534% and 0.1538%, respectively.
+Each electric field retains its own staggered physical times. Its individual
+$L^2$ error maximum changes by 5.85%; it has no separate asserted spatial rate,
+and this control is not relabeled as an $n=96$ result. On the finest spatial
+level, the original electric-row relative residual is
+$3.5\times10^{-16}$, modified-energy relative drift is
+$3.2\times10^{-14}$ and the recorded CFL product is 1.0641. Independent
+quadrature orders 8 and 12 agree on its combined norms to within
+$4.9\times10^{-14}$ relatively.
+
+The separate time study fixes the complete spatial operator and compares
+leapfrog against `scipy.linalg.expm` of that same constrained DG ODE at the
+respective electric and magnetic times. This exact semidiscrete comparator
+isolates time integration; it is not a classical spatial reference.
+
+![Semidiscrete temporal errors, consecutive orders and normalized amplitudes](../../assets/tutorials/methods/maxwell-time-convergence.svg)
+
+| Temporal observable | Expected order | Last three orders |
+| --- | ---: | --- |
+| electric $L^2$ | 2 | 1.9913, 1.9957, 1.9978 |
+| magnetic $L^2$ | 2 | 2.0002, 2.0001, 2.0000 |
+
+Time steps are $0.002,0.001,0.0005,0.00025$, with unchanged local and tangential
+spaces. Numeric original electric-row residuals stay below
+$1.25\times10^{-16}$ and the maximum modified-energy relative drift is
+$9.8\times10^{-15}$. The temporal record reports the original electric equations and modified-energy
+drift independently of the physical field errors.
+
+The three-dimensional cavity sequence remains a separately identified
+preasymptotic study; this TM qualification does not transfer a two-dimensional
+rate or geometry hypothesis to it.
 
 ## References
 

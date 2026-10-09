@@ -227,7 +227,19 @@ def trace_coupling(
                 start, end = macro.points[macro.faces[face]]
                 tangent = end - start
                 position = (fine.points[nodes] - start) @ tangent / (tangent @ tangent)
-                low, high = sorted(position)
+                # The selected fine edge lies on this macro line. Bound its
+                # parameter error from coordinate arithmetic before snapping
+                # endpoints to [0, 1]; a genuine overhang is not admissible.
+                coordinate_error = (
+                    16 * np.finfo(float).eps * (abs(fine.points[nodes]) + abs(start) + abs(end))
+                )
+                parameter_error = (
+                    coordinate_error @ abs(tangent) / (tangent @ tangent)
+                    + 128 * np.finfo(float).eps
+                )
+                if np.any((position < -parameter_error) | (position > 1 + parameter_error)):
+                    raise ValueError("Maxwell fine boundary must lie inside its macroedge")
+                low, high = np.clip(np.sort(position), 0, 1)
                 space = skeleton.base.faces[face]
                 breaks = np.asarray(space.breaks)
                 cuts = np.unique(np.r_[low, breaks[(breaks > low) & (breaks < high)], high])

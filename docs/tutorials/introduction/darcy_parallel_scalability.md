@@ -46,8 +46,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/8748e02c2e4d8f0d503c9fd5397ed720a57a9da0ef0d8529ae2d9ae20e54c657/darcy_parallel_scalability-companion.zip"
-COMPANION_SHA256 = "8748e02c2e4d8f0d503c9fd5397ed720a57a9da0ef0d8529ae2d9ae20e54c657"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/245e93e64f738fde32ed780c4cadf52a6b010fcd3336a63e664869a03f1c34c4/darcy_parallel_scalability-companion.zip"
+COMPANION_SHA256 = "245e93e64f738fde32ed780c4cadf52a6b010fcd3336a63e664869a03f1c34c4"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -79,7 +79,7 @@ RUN_CAMPAIGN = os.environ.get("PYMHM_RUN_CAMPAIGN", "0") == "1"
 ```
 
 ```text
-Workspace: ./build/docs-restructure/exact-source-workspaces/introduction/darcy_parallel_scalability
+Workspace: ./build/docs-restructure/final-workspaces/provenance-final-darcy_parallel_scalability-cc8411f2fd7c
 ```
 
 The displayed source is the actual importable local declaration, shared by both 2D scaling notebooks. Importable providers allow the same declaration to run under threads or cross-platform spawn. To change the formulation, edit this provider or pass your own importable callable to `bind_problem`; no ready Darcy solver is called.
@@ -323,16 +323,16 @@ current_errors = study.show_control(current_mhm, current_classical, data=DATA)
     Current reduced-equation relative residual: 1.4123990698251368e-16
     ```
 
+
+
+[![Figure 1 — Darcy: thread scaling](../../assets/tutorials/darcy_parallel_scalability/figure_7_1.png)](../../assets/tutorials/darcy_parallel_scalability/figure_7_1.png)
+
+
 ```text
 Historical artifacts absent from this checkout: []
 The current numerical control above is independent of these historical timings.
 Available historical campaign figures (original revision retained above):
 ```
-
-
-
-[![Figure 1 — Darcy: thread scaling](../../assets/tutorials/darcy_parallel_scalability/figure_7_2.png)](../../assets/tutorials/darcy_parallel_scalability/figure_7_2.png)
-
 
 
 
@@ -352,6 +352,11 @@ Available historical campaign figures (original revision retained above):
 
 
 [![Figure 5 — Darcy: thread scaling](../../assets/tutorials/darcy_parallel_scalability/figure_7_6.png)](../../assets/tutorials/darcy_parallel_scalability/figure_7_6.png)
+
+
+
+
+[![Figure 6 — Darcy: thread scaling](../../assets/tutorials/darcy_parallel_scalability/figure_7_7.png)](../../assets/tutorials/darcy_parallel_scalability/figure_7_7.png)
 
 
 The helper owns timing boundaries, CPU/resource checks, independent norm integration, coefficient/basis archives and plotting. Current controls are shown separately from historical measurements. Each historical record retains its original revision and machine; absent original images are reported explicitly.
@@ -384,4 +389,4 @@ python -m scripts.run_notebooks /path/to/darcy_parallel_scalability.ipynb --time
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `d0a161064855ab5e7690c771cc8641d689a3a2f2c931f62446f90d6d9a5e0f44` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `8bcb5fe234b59a269546301a06842a4f932cd217ce7e80208c3ddbd64599335d` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

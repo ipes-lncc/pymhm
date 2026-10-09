@@ -31,8 +31,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/31145430a7cc8963d475260f4290dad148d4eef92907871261d3949fee13ad4e/darcy_spe10_layer-companion.zip"
-COMPANION_SHA256 = "31145430a7cc8963d475260f4290dad148d4eef92907871261d3949fee13ad4e"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/325a92a06c8bf97ff87a7497abd8d2d6fb0a1ec684e4e73ce08e4072d0cdf1c6/darcy_spe10_layer-companion.zip"
+COMPANION_SHA256 = "325a92a06c8bf97ff87a7497abd8d2d6fb0a1ec684e4e73ce08e4072d0cdf1c6"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -82,7 +82,7 @@ from matplotlib.collections import LineCollection
 ```
 
 ```text
-Workspace: ./build/docs-restructure/exact-source-workspaces-parallel/introduction/darcy_spe10_layer
+Workspace: ./build/docs-restructure/final-workspaces/provenance-final-darcy_spe10_layer-645117d9b6e0
 ```
 
 ## 1. Read the unchanged data and verify provenance
@@ -595,4 +595,4 @@ python -m scripts.run_notebooks /path/to/darcy_spe10_layer.ipynb --timeout 7200
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `371245c5b54390b3ff884edfd4d7917c16c1538198b3317b0086647a5e91271d` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `073e30fde6cb2d86672a03262c72d9e514f6ca2956f175fdc7045ac9c23075f4` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

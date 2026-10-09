@@ -194,14 +194,145 @@ The heterogeneous example illustrates material resolution. Its rates cannot be i
 
 [Vector SVG](../../assets/tutorials/methods/primal-elasticity-convergence.svg) · [Publication PDF](../../assets/tutorials/methods/primal-elasticity-convergence.pdf)
 
-| Observable | Expected order | Penultimate interval | Final interval |
-| --- | ---: | ---: | ---: |
-| displacement L2 | 3 | 2.836 | 2.934 |
-| physical stress L2 | 2 | 1.946 | 1.979 |
+| Observable | Expected order | Last three orders | Maximum/minimum of $E/H^q$ |
+| --- | ---: | --- | ---: |
+| displacement $L^2$ | 3 | 2.9680, 2.9792, 2.9861 | 1.0249 |
+| physical stress $L^2$ | 2 | 1.9898, 1.9933, 1.9955 | 1.0079 |
 
-Spaces: P3 local displacement; one local subdivision; P1 physical traction; fixed homogeneous anisotropic tensor. Refinement variable: macro diameter.
+The complete sequence is $n=8,16,32,64,96,128,192$. Its final four levels
+retain the actual non-dyadic macro diameters, so each consecutive order uses
+the exact logarithmic mesh ratio. Both target-normalized amplitudes flatten
+over the same three intervals; earlier coarse levels remain in the figure.
 
-[Numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/primal-elasticity-current.json), SHA-256 `1c18fa9f0d85048c9a6e846d1118eaf8c86da62cc295050386f445f6686fdfc1`.
+Spaces remain P3 local displacement on one triangle and P1 vector physical
+traction, with the same fixed homogeneous anisotropic positive-definite
+Kelvin tensor. The degree choice uses the admissible odd trace degree from
+[Harder, Madureira and Valentin (2016)](https://doi.org/10.1051/m2an/2015046).
+Full exterior displacement removes global rigid ambiguities; every local
+translation and rotation moment is retained. This smooth estimate assumes
+the stated regular mesh family and displacement regularity. The extra
+displacement $L^2$ order also requires the adjoint smoothing hypothesis in
+Theorem 5.2 and Corollary 6.4: the homogeneous Dirichlet dual solution $w$
+with $L^2$ load $e$ satisfies
+
+$$
+\lVert w\rVert_{H^2(\Omega)}\le C\lVert e\rVert_{L^2(\Omega)}.
+$$
+
+Corollary 6.4 additionally retains the error from approximating the local
+lifting operators. Smoothness of the manufactured primal displacement alone
+does not establish this dual hypothesis. The measured third-order displacement
+tail is consistent with the conditional estimate; it does not give a
+material-independent rate for the preceding oscillatory example.
+
+Norm integration uses independent quadrature orders 12 and 16. Their relative
+changes remain below $3.7\times10^{-11}$ on the finest extension, with the
+original equation checks evaluated separately. The
+[numerical record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/primal-elasticity-asymptotic.json)
+preserves each original row's input file and digest, including the current-source
+extensions. The notebook compares the field and stress through their
+independent physical norms, rather than using an algebraic residual as an error.
+
+## 7. Refine a classical reference for the same smooth problem
+
+The heterogeneous extension reference in Step 5 and the homogeneous rate study
+in Step 6 solve different physical problems. For the rate study, an additional
+independently assembled conforming P3 reference uses the **same** unit square,
+anisotropic tensor, manufactured displacement and zero exterior data. In the
+orthonormal Kelvin convention, its material and exact displacement are
+
+$$
+C=\begin{pmatrix}5&1&0.4\\1&4&0.3\\0.4&0.3&2\end{pmatrix},
+\qquad
+\boldsymbol u_{\mathrm{exact}}=
+\begin{pmatrix}\sin(\pi x)\sin(\pi y)\\\sin(2\pi x)\sin(\pi y)\end{pmatrix}.
+$$
+
+The Kelvin strain is $(\varepsilon_{xx},\varepsilon_{yy},
+\sqrt{2}\varepsilon_{xy})$. Multiplication by $C$ gives
+$(\sigma_{xx},\sigma_{yy},\sqrt{2}\sigma_{xy})$, so converting back to the
+physical tensor counts both shear entries in its Frobenius norm. The conforming
+form has no skeletal multiplier or local rigid coordinates:
+
+$$
+\begin{aligned}
+V_h&\subset[H^1_0(\Omega)]^2,\\
+\int_\Omega\sigma(\boldsymbol u_h):\varepsilon(\boldsymbol v_h)
+&=\int_\Omega\boldsymbol f\cdot\boldsymbol v_h
+\quad\text{for every }\boldsymbol v_h\in V_h,\\
+\boldsymbol f&=-\nabla\cdot\sigma(\boldsymbol u_{\mathrm{exact}}).
+\end{aligned}
+$$
+
+The following UFL definition differentiates the force independently of the
+analytical Hessian used in the MHM acquisition. Here `space` is the bound
+global vector P3 space and `domain` its mesh.
+
+```python
+C = ufl.as_matrix(((5.0, 1.0, 0.4), (1.0, 4.0, 0.3), (0.4, 0.3, 2.0)))
+
+def cauchy_stress(displacement):
+    """Map orthonormal Kelvin strains back to the physical symmetric tensor."""
+    strain = ufl.sym(ufl.grad(displacement))
+    kelvin = ufl.as_vector((strain[0, 0], strain[1, 1], np.sqrt(2) * strain[0, 1]))
+    stress = ufl.dot(C, kelvin)
+    return ufl.as_matrix(
+        ((stress[0], stress[2] / np.sqrt(2)), (stress[2] / np.sqrt(2), stress[1]))
+    )
+
+x = ufl.SpatialCoordinate(domain)
+exact = ufl.as_vector(
+    (ufl.sin(np.pi * x[0]) * ufl.sin(np.pi * x[1]),
+     ufl.sin(2 * np.pi * x[0]) * ufl.sin(np.pi * x[1]))
+)
+force = -ufl.div(cauchy_stress(exact))
+u, v = ufl.TrialFunction(space), ufl.TestFunction(space)
+dx = ufl.Measure("dx", domain=domain, metadata={"quadrature_degree": 14})
+a = ufl.inner(cauchy_stress(u), ufl.sym(ufl.grad(v))) * dx
+L = ufl.inner(force, v) * dx
+```
+
+Strong zero displacement is imposed on every exterior degree of freedom.
+Shared assembly and linear-solver functions solve the original free
+equilibrium equations. DOLFINx integrates the displacement and physical
+Cauchy-stress errors independently at quadrature degrees 14 and 18.
+
+| Classical P3 grid | Displacement $L^2$ error | Physical stress $L^2$ error |
+| --- | ---: | ---: |
+| $32\times32$ | $4.5539\times10^{-7}$ | $3.5862\times10^{-4}$ |
+| $64\times64$ | $2.8349\times10^{-8}$ | $4.4838\times10^{-5}$ |
+| $128\times128$ | $1.7686\times10^{-9}$ | $5.6046\times10^{-6}$ |
+
+The classical reference itself refines at orders 4.0057 and 4.0026 for
+displacement, and 2.9997 and 3.0000 for stress. These are its conforming P3
+rates, not the P1-traction MHM rates. On the finest classical grid, its
+displacement error is below 1% of the finest MHM error and its stress error
+below 1.9%. Original free-equilibrium relative residuals remain below
+$7.6\times10^{-12}$; the largest relative change under independent norm
+quadrature refinement is $4.91\times10^{-9}$. The exact solution remains the
+source of the convergence errors; the classical solution is a checked
+numerical baseline.
+
+[Matched classical refinement record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/primal-elasticity-classical-current.json)
+
+The panels below use the first measured MHM grid, $n=8$, and the conforming
+P3 grid $n=64$. The MHM keeps one local triangle per macrocell and its P1
+traction space; the classical reference solves on its independent finer
+global mesh. Every panel highlights the actual $n=8$ macro mesh. Physical
+fields share their color scales, while error panels use separate scales
+with their actual values. Independent incident reconstructions preserve
+macroface discontinuities.
+
+![Same-case analytical, primal MHM and refined classical displacement and Cauchy-stress fields](../../assets/tutorials/methods/primal-elasticity-smooth-fields.png)
+
+[Field SVG](../../assets/tutorials/methods/primal-elasticity-smooth-fields.svg)
+· [Field PDF](../../assets/tutorials/methods/primal-elasticity-smooth-fields.pdf)
+
+![Physical displacement and Cauchy-stress errors against the exact solution, with separate scales](../../assets/tutorials/methods/primal-elasticity-smooth-errors.png)
+
+[Error SVG](../../assets/tutorials/methods/primal-elasticity-smooth-errors.svg)
+· [Error PDF](../../assets/tutorials/methods/primal-elasticity-smooth-errors.pdf)
+· [Field acquisition record](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/tutorial-methods/primal-elasticity-fields-current.json)
 
 
 ## References

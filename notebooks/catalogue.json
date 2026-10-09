@@ -1,6 +1,6 @@
 {
   "schema": "pymhm-problem-notebooks-v1",
-  "source_notebooks": "installed unexecuted resources; executed copies are written under the selected workspace build/notebooks with the same problem folders",
+  "source_notebooks": "Unexecuted source notebooks and verified companions are downloadable from the documentation; executed copies are written under build/notebooks with the same problem folders.",
   "rows": [
     {
       "path": "notebooks/convergence/73_initial_convergence.ipynb",
@@ -24,12 +24,12 @@
     {
       "path": "notebooks/convergence/method_rates.ipynb",
       "family": "convergence",
-      "title": "Qualified method convergence and asymptotic orders",
+      "title": "Method convergence: hypotheses, refinement and asymptotic evidence",
       "methods": [
-        "attributed physical error records",
-        "space and time refinement",
+        "physical spatial, trace and temporal error records",
+        "complete refinement sequences",
         "literature hypotheses",
-        "successive rate plots"
+        "successive orders and normalized error amplitudes"
       ],
       "kind": "study",
       "execution": {
@@ -394,7 +394,7 @@
     {
       "path": "notebooks/darcy/33_darcy_rt.ipynb",
       "family": "darcy",
-      "title": "Raviart\u2013Thomas Darcy: RT0, RT1 and RT2",
+      "title": "Raviart–Thomas Darcy: RT0, RT1 and RT2",
       "methods": [
         "RT0",
         "RT1",
@@ -696,7 +696,7 @@
     {
       "path": "notebooks/darcy/52_mh2m.ipynb",
       "family": "darcy",
-      "title": "Three-field multiscale Darcy: MH\u00b2M",
+      "title": "Three-field multiscale Darcy: MH²M",
       "methods": [
         "three-field MH2M"
       ],
@@ -762,7 +762,7 @@
     {
       "path": "notebooks/darcy/59_pgmhm.ipynb",
       "family": "darcy",
-      "title": "Petrov\u2013Galerkin MHM on polytopes",
+      "title": "Petrov–Galerkin MHM on polytopes",
       "methods": [
         "Petrov-Galerkin MHM"
       ],
@@ -829,7 +829,7 @@
     {
       "path": "notebooks/darcy/65_mh_boundary.ipynb",
       "family": "darcy",
-      "title": "Physical Neumann data and nonconvex macroelements in MH and MH\u00b2M",
+      "title": "Physical Neumann data and nonconvex macroelements in MH and MH²M",
       "methods": [
         "MH",
         "MH2M",
@@ -851,7 +851,7 @@
     {
       "path": "notebooks/darcy/69_mh3d.ipynb",
       "family": "darcy",
-      "title": "Tetrahedral MH and MH\u00b2M",
+      "title": "Tetrahedral MH and MH²M",
       "methods": [
         "tetrahedral MH",
         "tetrahedral MH2M"
@@ -872,7 +872,7 @@
     {
       "path": "notebooks/darcy/70_mh2m_heterogeneous.ipynb",
       "family": "darcy",
-      "title": "MH\u00b2M with independently refined conormals",
+      "title": "MH²M with independently refined conormals",
       "methods": [
         "MH2M",
         "independent pressure and conormal traces"
@@ -912,6 +912,28 @@
         "environment": "notebooks",
         "requires": [],
         "command": "python -m pymhm_examples.notebooks 74",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/darcy/equilibrated_flux_workflow.ipynb",
+      "family": "darcy",
+      "title": "Equilibrated RT0 flux: fine-cell conservation and refinement",
+      "methods": [
+        "native UFL primal MHM",
+        "RT0 minimum-distance flux recovery",
+        "fine-cell balance",
+        "independent physical flux norms"
+      ],
+      "kind": "tutorial",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m scripts.run_notebooks notebooks/darcy/equilibrated_flux_workflow.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }
@@ -1023,7 +1045,7 @@
     {
       "path": "notebooks/darcy/pgmhm_workflow.ipynb",
       "family": "darcy",
-      "title": "Residual Petrov\u2013Galerkin MHM: jump form and enrichment",
+      "title": "Residual Petrov–Galerkin MHM: jump form and enrichment",
       "methods": [
         "primal LocalEquations",
         "explicit residual global Equation",
@@ -1073,7 +1095,7 @@
         "user-written UFL local/global forms",
         "RT2 moment recovery",
         "four-term energy estimator",
-        "D\u00f6rfler macro refinement",
+        "Dörfler macro refinement",
         "Oswald potential",
         "RT0 fine-cell equilibration"
       ],
@@ -1466,7 +1488,7 @@
       "family": "flow/brinkman_oseen",
       "title": "Brinkman stabilization and Oseen transport",
       "methods": [
-        "user-written USFEM drag0/1/100 and skew Taylor\u2013Hood Oseen blocks",
+        "user-written USFEM drag0/1/100 and skew Taylor–Hood Oseen blocks",
         "USFEM Brinkman",
         "Oseen MHM"
       ],
@@ -1519,7 +1541,7 @@
     {
       "path": "notebooks/flow/brinkman_oseen/48_stokes_adaptive.ipynb",
       "family": "flow/brinkman_oseen",
-      "title": "Stokes\u2013Brinkman: two levels of error and two adaptive strategies",
+      "title": "Stokes–Brinkman: two levels of error and two adaptive strategies",
       "methods": [
         "Stokes-Brinkman MHM",
         "local and macro adaptivity"
@@ -1559,7 +1581,7 @@
     {
       "path": "notebooks/flow/introductory_methods.ipynb",
       "family": "flow",
-      "title": "Stokes\u2013Brinkman and Oseen introductory methods",
+      "title": "Stokes–Brinkman and Oseen introductory methods",
       "methods": [
         "user-written UFL P2/P1 Taylor-Hood Brinkman",
         "Taylor-Hood",
@@ -1612,7 +1634,7 @@
       "family": "flow/stokes",
       "title": "The polynomial Stokes problem of Araya et al. (2017)",
       "methods": [
-        "user-written Taylor\u2013Hood and P1/P1 USFEM LocalEquations",
+        "user-written Taylor–Hood and P1/P1 USFEM LocalEquations",
         "Taylor-Hood MHM",
         "USFEM MHM"
       ],
@@ -2032,10 +2054,10 @@
     {
       "path": "notebooks/introduction/mh2m_multiscale.ipynb",
       "family": "introduction",
-      "title": "MH\u00b2M with an oscillatory coefficient",
+      "title": "MH²M with an oscillatory coefficient",
       "methods": [
         "explicit scalar local operators",
-        "MH\u00b2M local saddle equations",
+        "MH²M local saddle equations",
         "independent potential and conormal traces",
         "classical conforming Galerkin"
       ],
@@ -2054,7 +2076,7 @@
     {
       "path": "notebooks/introduction/mhm_usfem_rad.ipynb",
       "family": "introduction",
-      "title": "MHM-USFEM for reaction\u2013diffusion layers",
+      "title": "MHM-USFEM for reaction–diffusion layers",
       "methods": [
         "explicit Galerkin and stabilized local operators",
         "primal MHM",
@@ -2120,12 +2142,12 @@
     {
       "path": "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb",
       "family": "introduction",
-      "title": "Stokes\u2013Brinkman boundary-layer convergence",
+      "title": "Stokes–Brinkman boundary-layer convergence",
       "methods": [
-        "user-written velocity\u2013pressure UFL",
-        "Taylor\u2013Hood local MHM",
+        "user-written velocity–pressure UFL",
+        "Taylor–Hood local MHM",
         "MHM-USFEM",
-        "classical Taylor\u2013Hood",
+        "classical Taylor–Hood",
         "analytical layer convergence"
       ],
       "kind": "introductory",
@@ -2278,7 +2300,7 @@
     {
       "path": "notebooks/transport/53_unusual.ipynb",
       "family": "transport",
-      "title": "Scalar MHM-UNUSUAL reaction\u2013diffusion",
+      "title": "Scalar MHM-UNUSUAL reaction–diffusion",
       "methods": [
         "scalar reaction-diffusion MHM-UNUSUAL"
       ],
@@ -2324,7 +2346,7 @@
     {
       "path": "notebooks/transport/introductory_methods.ipynb",
       "family": "transport",
-      "title": "Scalar reaction\u2013advection\u2013diffusion methods",
+      "title": "Scalar reaction–advection–diffusion methods",
       "methods": [
         "user-written UFL skew Galerkin RAD",
         "RAD Galerkin",
@@ -2344,6 +2366,27 @@
           "ufl"
         ],
         "command": "python -m pymhm_examples.notebooks transport/introductory_methods.ipynb",
+        "current_study_command": null,
+        "current_study_steps": []
+      }
+    },
+    {
+      "path": "notebooks/transport/spatial_refinement.ipynb",
+      "family": "transport",
+      "title": "Transient transport: spatial refinement and time refinement",
+      "methods": [
+        "native UFL conservative transient MHM",
+        "analytical physical concentration and gradient errors",
+        "independent classical refinement and time-step controls"
+      ],
+      "kind": "tutorial",
+      "execution": {
+        "environment": "introduction",
+        "requires": [
+          "dolfinx",
+          "ufl"
+        ],
+        "command": "python -m scripts.run_notebooks notebooks/transport/spatial_refinement.ipynb",
         "current_study_command": null,
         "current_study_steps": []
       }

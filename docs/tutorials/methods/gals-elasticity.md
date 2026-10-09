@@ -130,13 +130,13 @@ exact = SimpleNamespace(
 
 ## 2. Choose macro, local and interface spaces
 
-There are $32$ macrotriangles. Each has its own refinement $r=4$, continuous vector $P_1$ displacement and continuous $P_1$ pressure. Each macroface carries two components of discontinuous $P_1$ negative traction. This $(k,r)=(1,4)$ choice resolves the linear trace; equal-order spaces require GaLS.
+There are $128$ macrotriangles. Each has its own refinement $r=4$, continuous vector $P_1$ displacement and continuous $P_1$ pressure. Each macroface carries two components of discontinuous $P_1$ negative traction. This $(k,r)=(1,4)$ choice resolves the linear trace; equal-order spaces require GaLS.
 
 `MeshHierarchy` associates the independent local meshes. `bind_interface` handles geometric incidence signs; the physical signs remain in the equations.
 
 ```python
 mu, lam, alpha = 1.0, 4999.0, 0.25
-degree, refinement, n = 1, 4, 4
+degree, refinement, n = 1, 4, 8
 macro = TriangleMesh.unit_square(n)
 skeleton = SkeletonSpace(macro, tuple(FaceSpace.uniform(1) for _ in macro.faces), 2)
 hierarchy = MeshHierarchy(
@@ -446,13 +446,22 @@ plt.show()
 
 [![Analytical, coarse multiscale and fine classical fields, with the actual macro mesh on every panel](../../assets/tutorials/methods/gals-elasticity-fields.png)](../../assets/tutorials/methods/gals-elasticity-fields.svg)
 
-The first coarse P1/P1 case has displacement error $4.8487\times10^{-2}$ and pressure error $1.9442$. The pressure panel retains its independent local values, including interface oscillations. Pressure requires its own refinement and error assessment; a good displacement profile does not qualify the pressure field.
+The pressure panel retains its independent local values. Pressure requires its own refinement and error assessment; a good displacement profile does not qualify the pressure field.
 
 ## 8. Refine both skeletal and local scales
 
-The smooth convergence campaign uses this same trigonometric data and $\lambda/\mu=4999$. It holds the $4\times4$ macro grid fixed, subdivides every trace into $s=1,2,4,8$ segments and chooses local refinement $r=4s$. The first row is the native UFL case executed above. The remaining rows are attributed archived acquisitions, not recomputed by reading them.
+The smooth convergence campaign uses this same trigonometric data and $\lambda/\mu=4999$. It holds the $4\times4$ macro grid fixed, subdivides every trace into $s=1,2,3,4,6,8$ segments and chooses local refinement $r=4s$. The plotted illustration above uses an independent $8\times8$ macro grid with one trace segment per face. The convergence family uses the same explicit equations on a fixed $4\times4$ macro grid and refines trace/local scales together. Its rows are attributed archived acquisitions, not recomputed by reading them.
 
-For this smooth admissible $P_1/P_1$ family, the reference orders are one for the broken gradient and two for displacement. Pressure is plotted separately; its measured order is not silently identified with displacement. Changing only the macro grid or only the trace with a fixed local resolution is a different study.
+For this smooth admissible $P_1/P_1$ family, the reference order is one for the
+broken gradient. Theorem 5.2 of
+[Gomes, Pereira and Valentin (2024)](https://arxiv.org/abs/2403.16890v1)
+provides the energy estimate. Displacement $L^2$ order two additionally uses
+the local and global dual smoothing assumptions of Remark 5.5; it does not
+follow from that energy theorem alone. The smooth square-domain study keeps
+the constant material and compatible approximation family fixed and measures
+both norms separately. Equation (5.8) in Theorem 5.2 also includes the pressure $L^2$ and stress $L^2$ errors in its combined order-one upper bound. An upper bound does not require every component to have exactly that observed exponent: the measured pressure orders are stronger and are reported separately.
+Changing only the macro grid or only the trace with a fixed local resolution
+defines another study.
 
 ```python
 import json
@@ -489,11 +498,18 @@ plt.show()
 
 The final consecutive intervals confirm the stated smooth regime. A measured order for an observable without a separate stated reference is reported as **observed**.
 
-| Physical observable | Penultimate order | Final order | Reference order |
-| --- | ---: | ---: | ---: |
-| displacement L2 | 2.0150 | 2.0311 | 2.0 |
-| pressure L2 | 1.4345 | 1.4562 | observed |
-| broken gradient L2 | 1.0657 | 1.0520 | 1.0 |
+| Physical observable | Reference order | Last three orders | Maximum/minimum of $E/h^q$ |
+| --- | ---: | --- | ---: |
+| displacement $L^2$ | 2 | 1.9799, 2.0150, 2.0311 | 1.0151 |
+| pressure $L^2$ | observed | 1.4021, 1.4345, 1.4562 | — |
+| broken gradient $L^2$ | 1 | 1.0787, 1.0657, 1.0520 | 1.0663 |
+
+Here the final four levels have $s=3,4,6,8$. The finite-element size $h$
+and macroface segment size decrease together, with $r=4s$; the macro grid
+remains fixed. Both theoretical target amplitudes flatten in this window.
+The pressure curve remains a separately measured observable. Its last three
+orders, 1.4021, 1.4345 and 1.4562, exceed the order-one combined upper estimate
+of Equation (5.8); no order-1.5 theorem is inferred from these measurements.
 
 The [common convergence notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb) preserves each sequence’s spaces, independent refinement variable and attributed numerical record.
 

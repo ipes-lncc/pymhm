@@ -23,6 +23,42 @@ from pymhm.meshes.cartesian import CartesianMacroMesh
 from pymhm.meshes.triangle import TriangleMesh
 
 
+@pytest.mark.parametrize("original", [False, True])
+def test_electric_kick_reports_its_numeric_original_equation_defect(original):
+    """The observer returns the integrated local-row residual in both solve routes."""
+    rng = np.random.default_rng(19)
+    data = tutorial.prepare(TriangleMesh.unit_square(), degree=2, local_refinement=1)
+    electric = tuple(rng.normal(size=local.electric_mass.shape[0]) for local in data.locals)
+    magnetic = tuple(rng.normal(size=local.magnetic_mass.shape[0]) for local in data.locals)
+    forcing = tuple(rng.normal(size=local.electric_mass.shape[0]) for local in data.locals)
+    duration = 0.003
+    _, trace, means, _, reported = tutorial.electric_kick(
+        data,
+        electric,
+        magnetic,
+        forcing,
+        duration,
+        np.zeros(data.skeleton.size),
+        original=original,
+    )
+    expected = 0.0
+    for local, old, h, force, mean in zip(
+        data.locals, electric, magnetic, forcing, means, strict=True
+    ):
+        coupling = duration / 2 * (local.coupling @ trace[local.trace_dofs])
+        load = local.electric_mass @ old + duration / 2 * (force - local.curl.T @ h)
+        defect = local.electric_mass @ mean + coupling - load
+        scale = (
+            np.linalg.norm(abs(local.electric_mass) @ abs(mean))
+            + np.linalg.norm(abs(coupling))
+            + np.linalg.norm(abs(load))
+        )
+        expected = max(expected, float(np.linalg.norm(defect) / scale))
+    assert expected > 0
+    assert not isinstance(reported, (bool, np.bool_))
+    assert reported == pytest.approx(expected, rel=1e-10, abs=0)
+
+
 @pytest.mark.parametrize("homogeneous", [False, True])
 def test_user_defined_stationary_vector_trajectory_matches_every_original_step(homogeneous):
     electric = np.zeros(3) if homogeneous else np.array([1.2, -0.3, 0.7])

@@ -1,13 +1,23 @@
 # Flux and conforming potential recovery
 
-[Complete executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/reconstruction_and_indicators.ipynb) · [Download](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/darcy/reconstruction_and_indicators.ipynb)
+[Executable notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/reconstruction_and_indicators.ipynb) · [Download notebook](https://raw.githubusercontent.com/ipes-lncc/pymhm/main/notebooks/darcy/reconstruction_and_indicators.ipynb)
 
+This tutorial first declares the local and global equations, then reconstructs
+physical fields from their solution. The refined analytical study uses the data
+of [Barrenechea et al. (2026), §6.1](https://doi.org/10.1137/24M1673073):
+$p=\sin(2\pi x)\sin(2\pi y)$, $K=I$, $f=8\pi^2p$, and homogeneous Dirichlet
+pressure on the unit square. The approximation spaces and mesh ratios are
+stated explicitly; the numerical observations are PyMHM computations with these
+data, rather than an assertion of identical published table ordinates.
 
-This lesson starts with user-written UFL local/global equations. It then defines a physical coefficient record, reconstructs an H(div) flux, evaluates an estimator and chooses cells for refinement. Numerical algorithms remain in the package; no physical-model constructor selects the equations.
+The workflow is **meshes → local equations → global balance → assemble → solve
+→ recovered fields → independently integrated errors**. Install the native
+UFL backend following the [installation guide](../../installation.md).
 
-The primary case is $p=\sin(2\pi x)\sin(2\pi y)$, $K=I$, $f=8\pi^2p$, with homogeneous Dirichlet pressure on the unit square. The formulation follows [Harder, Paredes and Valentin (2013)](https://doi.org/10.1016/j.jcp.2013.03.019). Flux recovery and the four-term estimator follow [Barrenechea, Martins, Pereira and Valentin (2026)](https://doi.org/10.1137/24M1673073).
+## 1. Declare analytical fields and the source
 
-Install the native UFL backend as explained in the installation guide. The workflow is **meshes → local forms → global forms → assemble → solve → recovery → indicators → marking**.
+The NumPy gradient and source are differentiated independently from the UFL
+volume form. The exact physical Darcy flux is $q=-\nabla p$.
 
 ```python
 import numpy as np
@@ -40,37 +50,46 @@ def source(points: np.ndarray) -> np.ndarray:
     return 8 * np.pi**2 * exact_pressure(points)
 ```
 
-## 1. Choose meshes and approximation spaces
 
-For reconstruction degree $m=2$ and trace degree $\ell=1$, choose local degree $k=3$. This satisfies the two-dimensional restriction $k\ge\ell+2$ and $\ell\le m\le k$. The estimator additionally needs convex macrotriangles, a globally conforming fine partition, identity diffusion and homogeneous Dirichlet data. These are mathematical restrictions, not conventions inferred by the software.
+## 2. Choose compatible spaces and bind their interface
+
+The field illustration uses 512 macrotriangles, each containing four fine
+triangles. The convergence study uses $n=4,8,16,32$ subdivisions per coordinate,
+$H=\sqrt{2}/n$, and $h=H/2$. Trace degree $\ell=0$ uses P2 local pressure;
+$\ell=1$ uses P3. RT reconstruction degree $m=2$ satisfies
+$k\ge\ell+2$ and $\ell\le m\le k$ in both branches. Convex macrocells and a
+conforming fine triangulation satisfy the estimator's geometric hypotheses.
 
 ```python
-macro = TriangleMesh.unit_square(2)
+macro = TriangleMesh.unit_square(16)
 local_meshes = tuple(macro.submesh(cell, 2) for cell in range(len(macro.cells)))
 hierarchy = MeshHierarchy(macro, local_meshes)
 skeleton = SkeletonSpace(macro, tuple(FaceSpace.uniform(1) for _ in macro.faces))
 interface = bind_interface(skeleton, convention="normal")
 ```
 
-## 2. Declare local equations
+## 3. Write the variational formulation as UFL
 
 $$
 \begin{aligned}
 (\nabla p_T,\nabla v)_T+\langle\lambda_T,v\rangle_{\partial T}&=(f,v)_T,\\
--\langle p_T,\mu_T\rangle_{\partial T}&=g_T(\mu_T).
+-\sum_T\langle p_T,\mu_T\rangle_{\partial T}&=0.
 \end{aligned}
 $$
 
-The local volume form has a constant kernel. Its physical volume moment fixes the local complement and retains one mean per macrocell. The interface binding supplies normal incidence and numbering; the minus sign in the global test pairing is part of the formulation.
+The local physical volume moment fixes the constant complement and retains one
+mean per macrocell. The minus sign in the global pairing is mathematical; the
+interface binding supplies numbering and normal orientation.
 
 ```python
-def local_equations(local: LocalContext):
+def local_equations(local: LocalContext, degree: int = 3, forcing=None):
     """Declare primal diffusion, independent trace tests and physical mean."""
-    space = local.native_space(degree=3)
+    space = local.native_space(degree=degree)
     p, v = ufl.TrialFunction(space.space), ufl.TestFunction(space.space)
     x = ufl.SpatialCoordinate(space.mesh)
-    dx = ufl.Measure("dx", domain=space.mesh, metadata={"quadrature_degree": 12})
-    forcing = 8 * np.pi**2 * ufl.sin(2 * np.pi * x[0]) * ufl.sin(2 * np.pi * x[1])
+    dx = ufl.Measure("dx", domain=space.mesh, metadata={"quadrature_degree": 20})
+    forcing = (8 * np.pi**2 * ufl.sin(2 * np.pi * x[0]) * ufl.sin(2 * np.pi * x[1])
+               if forcing is None else forcing(space.mesh))
     local.field("pressure", space)
     return local.equations(
         a=ufl.inner(ufl.grad(p), ufl.grad(v)) * dx,
@@ -81,14 +100,6 @@ def local_equations(local: LocalContext):
     )
 ```
 
-## 3. Declare global boundary moments
-
-$$
--\sum_T\langle p_T,\mu_T\rangle_{\partial T}
-=-\langle p_D,\mu\rangle_{\partial\Omega},\qquad p_D=0.
-$$
-
-The Dirichlet load is therefore zero. Its sign is kept explicit so that changing the boundary data does not change the formulation accidentally.
 
 ```python
 def global_equation(global_context):
@@ -102,9 +113,8 @@ problem = bind_problem(hierarchy, interface, local_equations,
                        global_equation=global_equation, retained=1)
 ```
 
-## 4. Assemble, solve and name the physical result
 
-Named fields preserve the native executed coefficient basis. `portable_coefficients` converts through its stored mapping; reshaping native vectors would not be equivalent. `DarcySolution` below is a data record for established reconstruction and estimator operations. Constructing it performs no PDE solve.
+## 4. Assemble, solve and retain the executed field basis
 
 ```python
 with threadpool_limits(1):
@@ -114,120 +124,198 @@ pressure_fields = coefficients.field("pressure")
 solution = DarcySolution(
     skeleton=skeleton, local_meshes=local_meshes,
     pressure=tuple(field.portable_coefficients for field in pressure_fields),
-    flux=(), hybrid=coefficients, formulation="primal", permeability=1.0,
-    source=source, degree=3, quadrature_order=10,
+    flux=tuple(-field.gradient(mesh.points[mesh.cells].mean(axis=1),
+                               cells=np.arange(len(mesh.cells)))
+               for mesh, field in zip(local_meshes, pressure_fields, strict=True)),
+    hybrid=coefficients, formulation="primal", permeability=1.0,
+    source=source, degree=3, quadrature_order=16,
 )
-print({"original_equation_residual": coefficients.raw_residual,
+print({"global_original_compatibility": coefficients.raw_residual,
        "pressure_L2": solution.l2_error(exact_pressure, order=12)})
 ```
 
-```text
-{'original_equation_residual': 1.694165673686481e-16, 'pressure_L2': 0.1237896762091817}
-```
 
-## 5. Reconstruct a flux and distinguish its conservation tests
+`DarcySolution` is a physical coefficient record; constructing it performs no
+additional PDE solve. Native fields carry their executed basis and expose
+`portable_coefficients` through that mapping.
 
-The canonical RT moment reconstruction preserves boundary normal moments from the skeleton, averages interior normal moments and preserves raw interior vector moments. It is not the energy-minimizing RT0 equilibration. Its divergence balance is against continuous macro-local tests, not individual discontinuous fine-cell constants.
+`coefficients.raw_residual` measures the original global compatibility defect
+of the assembled trace/retained system. It is not the norm of all local
+volume equations, nor a physical field error. A separate native observer checks
+every original local volume row and the original trace equations of the same
+eight-subdivision solve, reusing the shared original-row diagnostic:
+
+| Native eight-subdivision control | Maximum relative local volume rows | Full uncondensed rows / physical load |
+| --- | --- | --- |
+| Sinusoidal P2/P0 | 3.321e-15 | 5.667e-15 |
+| Sinusoidal P3/P1 | 1.040e-14 | 1.762e-14 |
+| Localized P3/P1 | 4.196e-15 | 6.124e-15 |
+| RT0-compatible sinusoidal P3/P0 | 1.376e-14 | 1.918e-14 |
+
+These are Euclidean coefficient-row diagnostics with stated action/physical-load
+scales. They retain the unchanged $10^{-10}$ gate and are distinct from physical
+volume norms and the reconstruction's normal/continuous-test invariants.
+
+
+## 5. Recover the canonical H(div) flux
+
+The canonical RT moments preserve the skeletal boundary normal moments,
+average the interior normal moments, and retain interior vector moments of the
+raw physical flux:
 
 $$
 \begin{aligned}
-\langle q_h\cdot n,\phi\rangle_E&=\text{declared normal moments},\\
-(q_h,\psi)_t&=(-\nabla p_h,\psi)_t.
+\langle q_h^R\cdot n,\phi\rangle_e&=\text{declared normal moment},\\
+(q_h^R,\psi)_t&=(-\nabla p_h,\psi)_t.
 \end{aligned}
 $$
 
 ```python
-recovered = reconstruct_darcy_moments(solution, degree=2, quadrature_order=10)
+recovered = reconstruct_darcy_moments(solution, degree=2, quadrature_order=16)
 normal_defect = max(np.max(abs(row)) for row in recovered.normal_flux_residuals())
 continuous_defect = max(np.max(abs(row)) for row in recovered.continuous_moment_residuals())
-fine_defect = max(np.max(abs(row)) for row in recovered.fine_conservation_residuals())
 assert normal_defect < 1e-10
 assert continuous_defect < 1e-10
-print({"normal_moment_defect": normal_defect,
-       "continuous_test_balance_defect": continuous_defect,
-       "fine_cell_balance_defect_not_imposed": fine_defect,
-       "recovered_flux_L2": recovered.flux_l2_error(lambda x: -exact_gradient(x), order=12)})
+flux_error = recovered.flux_l2_error(lambda x: -exact_gradient(x), order=16)
+projection_error = recovered.projected_divergence_l2_error(source, order=16)
 ```
 
-```text
-{'normal_moment_defect': np.float64(0.0), 'continuous_test_balance_defect': np.float64(1.1384941817418892e-11), 'fine_cell_balance_defect_not_imposed': np.float64(0.051186622282188746), 'recovered_flux_L2': 1.8060273070529842}
-```
+The conservation identity is tested against continuous macro-local P2 functions.
+It does not impose every discontinuous fine-cell constant balance. The raw
+broken gradient, canonical RT flux, and independently equilibrated RT0 flux are
+three distinct fields.
 
-## 6. Plot physical fields with the actual macro mesh
+## 6. Verify the asymptotic estimates on four refined levels
 
-Each field panel has its own color scale. Numerical values and errors are sampled independently in each local mesh, preserving interface sides.
+Theorem 4.7 and Remark 5.1 of the accepted author manuscript give, for the
+stated regularity and degree assumptions,
 
-```python
-fig, axes = plt.subplots(1, 3, figsize=(12, 3.6), layout="constrained")
-all_exact, all_values, panels = [], [], []
-for fine, field in zip(local_meshes, pressure_fields, strict=True):
-    points = fine.points[fine.cells].mean(axis=1)
-    exact, values = exact_pressure(points), field.evaluate(points)
-    panels.append((fine, exact, values))
-    all_exact.extend(exact)
-    all_values.extend(values)
-common = max(np.max(np.abs(all_exact)), np.max(np.abs(all_values)))
-error_max = max(np.max(abs(values - exact)) for _, exact, values in panels)
-for index, (ax, title) in enumerate(zip(axes, ("Analytical pressure", "MHM pressure", "Pressure error"), strict=True)):
-    for fine, exact, values in panels:
-        value = (exact, values, values - exact)[index]
-        limit = error_max if index == 2 else common
-        artist = ax.tripcolor(*fine.points.T, fine.cells, facecolors=value,
-                             vmin=-limit, vmax=limit, cmap="coolwarm")
-    for edge in macro.faces:
-        ax.plot(*macro.points[edge].T, color="black", lw=0.5, alpha=0.7)
-    ax.set(title=title, xlabel="x", ylabel="y", aspect="equal")
-    fig.colorbar(artist, ax=ax)
-plt.show()
-```
+$$
+\begin{aligned}
+\lVert q-q_h^R\rVert_{0,\Omega}&\le C(h^k+H^{\ell+1}+h^{\ell+1}),\\
+\lVert f-\Pi_{\Omega,2}\operatorname{div}q_h^R\rVert_{0,\Omega}&\le Ch^3.
+\end{aligned}
+$$
 
-![Pressure and signed error sampled at fine-cell centroids](../../assets/tutorials/methods/flux-recovery-field-00.png)
+Thus the physical flux has order one or two as $\ell=0$ or $1$, and the
+**projected** divergence has order three. Here $\Pi_{\Omega,2}$ acts separately
+on each macrotriangle: its range is continuous P2 on that macrotriangle's
+fine mesh, without continuity across macrofaces. The raw divergence is recorded
+separately and is not assigned the projected-divergence estimate. Both norms
+are integrated with 12 and 16 Gauss points per Duffy coordinate; their difference
+is checked before accepting each level. The figures display every measured
+level, every successive order, and the normalized $E/H^q$ plateau.
 
-The field panels use one sample at each fine triangle’s centroid $x_t$, drawn as a constant triangle color. The analytical panel shows $p(x_t)$; the numerical panel shows $p_h(x_t)$, and the error panel shows the **signed** difference $p_h(x_t)-p(x_t)$. These are display samples of the continuous analytical and local polynomial fields. The physical error norms above use independent volume quadrature. Macro edges are overlaid and values from opposite sides of an interface remain separate.
+![Order-one recovery, integrated errors and the asymptotic plateau](../../assets/tutorials/methods/recovery-convergence-l0.png)
 
-## 7. Recover a conforming potential and a separately equilibrated RT0 flux
+[PDF](../../assets/tutorials/methods/recovery-convergence-l0.pdf) · [SVG](../../assets/tutorials/methods/recovery-convergence-l0.svg)
 
-The Oswald potential averages incident finite-element nodal traces in the global continuous P3 space, then imposes the declared homogeneous boundary data. Its global coefficient vector supplies a single value at every shared node. This is a different field from the original broken pressure.
+![Order-two recovery and order-three projected divergence](../../assets/tutorials/methods/recovery-convergence-l1.png)
 
-For strict fine-cell balance, instead solve the weighted RT0 minimization with the same physical source and a **degree-zero aligned** skeletal trace. Reassemble those newly declared spaces first; do not pass incompatible P1 trace data to the RT0 operator. The minimization is an available reconstruction, not an assertion of equivalence to the published RT2 moment operator.
+[PDF](../../assets/tutorials/methods/recovery-convergence-l1.pdf) · [SVG](../../assets/tutorials/methods/recovery-convergence-l1.svg)
+
+| Trace degree | Quantity | Three consecutive orders | Expected order | Max/min normalized amplitude |
+| --- | --- | --- | --- | --- |
+| 0 | Energy error | 0.916, 0.978, 0.994 | 1 | 1.081 |
+| 0 | RT2 physical flux | 0.914, 0.977, 0.994 | 1 | 1.082 |
+| 0 | Projected divergence | 2.940, 2.984, 2.996 | 3 | 1.057 |
+| 1 | Energy error | 1.997, 1.997, 1.998 | 2 | 1.006 |
+| 1 | RT2 physical flux | 1.987, 1.994, 1.997 | 2 | 1.015 |
+| 1 | Projected divergence | 2.940, 2.984, 2.996 | 3 | 1.057 |
+
+The baseline is independently assembled classical conforming P3 Galerkin on
+$16\times16$, $32\times32$, and $64\times64$ global square subdivisions.
+Its pressure and physical-flux errors against the analytical fields verify its
+own refinement. The analytical solution supplies the exact comparator.
+
+| Global square subdivisions | P3 nodal unknowns | Pressure error | Physical vector-flux error |
+| --- | --- | --- | --- |
+| 16 × 16 | 2401 | 1.967367e-05 | 3.291818e-03 |
+| 32 × 32 | 9409 | 1.204168e-06 | 4.107999e-04 |
+| 64 × 64 | 37249 | 7.463012e-08 | 5.128221e-05 |
+
+![Fine classical P3 pressure, physical flux and analytical errors](../../assets/tutorials/methods/recovery-classical-fields.png)
+
+[PDF](../../assets/tutorials/methods/recovery-classical-fields.pdf) · [SVG](../../assets/tutorials/methods/recovery-classical-fields.svg)
+
+The global reference panels show the actual 64-subdivision solution with the
+16-subdivision comparison macro mesh overlaid. These are distinct meshes.
+Pressure orders are 4.030 and 4.012; flux orders are 3.002 and 3.002.
+
+## 7. Inspect fields on a resolved mesh
+
+![Analytical pressure and flux, MHM pressure, RT2 recovered flux and physical errors](../../assets/tutorials/methods/recovery-refined-fields.png)
+
+[PDF](../../assets/tutorials/methods/recovery-refined-fields.pdf) · [SVG](../../assets/tutorials/methods/recovery-refined-fields.svg)
+
+Every panel overlays the actual macro mesh and owns its color scale. Display
+samples are taken independently at each fine-triangle centroid; no averaging
+across an interface is used. Pressure error is signed; flux error is the
+magnitude of the vector difference. Error norms use volume quadrature.
+
+## 8. Recover a conforming potential or impose strict fine-cell balance
 
 ```python
 from pymhm.estimators.darcy import recover_potential
-from pymhm.recovery.equilibrated import equilibrate_flux
-from pymhm.fem.scalar.triangle import nodal_space
-
 potential = recover_potential(solution, homogeneous_dirichlet=True)
-_, potential_points = nodal_space(potential.mesh, potential.degree)
-boundary_nodes = np.any(np.isclose(potential_points, 0.0) | np.isclose(potential_points, 1.0), axis=1)
-assert np.max(abs(potential.values[boundary_nodes])) == 0.0
-print({"conforming_potential_L2": potential.l2_error(exact_pressure, order=12),
-       "potential_boundary_defect": float(np.max(abs(potential.values[boundary_nodes])))})
-
-rt0_skeleton = SkeletonSpace(macro)
-rt0_interface = bind_interface(rt0_skeleton, convention="normal")
-rt0_problem = bind_problem(hierarchy, rt0_interface, local_equations,
-                          global_equation=global_equation, retained=1)
-with threadpool_limits(1):
-    rt0_system = assemble(rt0_problem)
-    rt0_coefficients = solve(rt0_system)
-rt0_solution = DarcySolution(
-    skeleton=rt0_skeleton, local_meshes=local_meshes,
-    pressure=tuple(field.portable_coefficients for field in rt0_coefficients.field("pressure")),
-    flux=(), hybrid=rt0_coefficients, formulation="primal", permeability=1.0,
-    source=source, degree=3, quadrature_order=10,
-)
-equilibrated = equilibrate_flux(rt0_solution)
-fine_balance = max(np.max(abs(row)) for row in equilibrated.conservation_residuals())
-assert fine_balance < 1e-10
-print({"equilibrated_fine_cell_balance": fine_balance,
-       "equilibrated_Darcy_flux_L2": equilibrated.l2_error(lambda x: -exact_gradient(x), order=12)})
 ```
 
-## Properties to assess
+The Oswald potential averages incident finite-element nodal traces and imposes
+the declared homogeneous boundary values. It is a separate continuous Pk field.
+Its approximation error and boundary defect are reported in the notebook. The
+following integrated errors use the same independently checked rules and all
+four macro meshes; these potential orders are observations, rather than a
+new universal reconstruction estimate.
 
-The RT2 moment reconstruction preserves the declared normal moments and continuous P2 divergence-test balance. Fine-cell constant balance is a separate diagnostic and is not imposed by that operator. RT0 equilibration imposes the fine-cell source averages with an aligned P0 normal trace. The Oswald potential is globally conforming with the explicitly imposed homogeneous boundary condition. A recovery need not improve every raw L2 error, so conservation and approximation are reported separately.
+| Trace degree | Macro subdivisions | Conforming potential error | Consecutive observed order |
+| --- | --- | --- | --- |
+| 0 | 4 | 9.535888e-02 | — |
+| 0 | 8 | 2.630156e-02 | 1.858 |
+| 0 | 16 | 6.759941e-03 | 1.960 |
+| 0 | 32 | 1.703478e-03 | 1.989 |
+| 1 | 4 | 4.687328e-03 | — |
+| 1 | 8 | 5.518882e-04 | 3.086 |
+| 1 | 16 | 6.893670e-05 | 3.001 |
+| 1 | 32 | 8.671578e-06 | 2.991 |
+
+`equilibrate_flux` instead solves a weighted RT0 minimization with strict
+fine-cell source-average balance. Its P0 skeletal trace must align with fine
+boundary edges. The notebook explicitly rebuilds those compatible spaces
+before calling it. A dedicated [RT0 step-by-step notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/darcy/equilibrated_flux_workflow.ipynb)
+measures both raw and equilibrated physical flux errors on four native refined
+levels and checks every fine-cell balance. This available reconstruction is
+not identified with the published RT2 moment operator.
+
+| Macro subdivisions | Raw physical-flux error | Equilibrated RT0 error | Maximum fine-cell integrated defect |
+| --- | --- | --- | --- |
+| 4 | 1.853046e+00 | 1.942049e+00 | 1.005e-14 |
+| 8 | 9.856433e-01 | 9.980867e-01 | 1.274e-14 |
+| 16 | 5.008984e-01 | 5.024981e-01 | 1.337e-14 |
+| 32 | 2.514818e-01 | 2.516832e-01 | 1.353e-14 |
+
+The constrained RT0 flux has consecutive observed orders 0.96034, 0.99005
+and 0.99751. The normalized first-order amplitude has max/min ratio 1.03677.
+These order-one approximation controls concern the distinct P3/P0/RT0 workflow
+and are not assigned the published RT2 reconstruction theorem.
+
+![Distinct RT0 equilibration: raw and recovered physical errors, orders and amplitude](../../assets/tutorials/methods/recovery-rt0-convergence.png)
+
+[PDF](../../assets/tutorials/methods/recovery-rt0-convergence.pdf) · [SVG](../../assets/tutorials/methods/recovery-rt0-convergence.svg)
+
+![Actual P3/P0 pressure and strict RT0 flux on the refined macro mesh](../../assets/tutorials/methods/recovery-rt0-fields.png)
+
+[PDF](../../assets/tutorials/methods/recovery-rt0-fields.pdf) · [SVG](../../assets/tutorials/methods/recovery-rt0-fields.svg)
+
+The RT0 panels use 512 actual macrotriangles and independent one-sided
+fine-cell centroid samples. Strict integrated fine-cell balance, H(div)
+conformity and physical approximation error are separate properties.
+
+
+The [indicator lesson](error-indicators.md) evaluates reliability and
+convergence of the estimator; the [adaptive lesson](adaptivity.md) uses it on a
+localized smooth solution.
 
 ## References
 
-- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira, and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073).
-- Rodolfo Araya, Christopher Harder, Diego Paredes, and Frédéric Valentin (2013). *Multiscale Hybrid-Mixed Method*, SIAM Journal on Numerical Analysis 51(6), 3505–3531. [DOI: 10.1137/120888223](https://doi.org/10.1137/120888223).
+- Gabriel R. Barrenechea, Larissa Martins, Weslley Pereira and Frédéric Valentin (2026). *An H(div; Ω)-Conforming Flux Reconstruction for the Multiscale Hybrid-Mixed Method*, Multiscale Modeling & Simulation 24(2), 399–428. [DOI: 10.1137/24M1673073](https://doi.org/10.1137/24M1673073); [accepted author manuscript](https://strathprints.strath.ac.uk/94435/).
+- Christopher Harder, Diego Paredes and Frédéric Valentin (2013). *A family of Multiscale Hybrid-Mixed finite element methods for the Darcy equation with rough coefficients*, Journal of Computational Physics 245, 107–130. [DOI: 10.1016/j.jcp.2013.03.019](https://doi.org/10.1016/j.jcp.2013.03.019).

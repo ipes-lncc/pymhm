@@ -70,6 +70,16 @@ time step changes the discrete operator. Time-dependent Dirichlet and source
 data enter the new-time load. The transient extension must be qualified
 separately from a steady benchmark.
 
+The conservative transient study in the
+[tutorial](../tutorials/methods/transient-transport.md) also includes convection
+and reaction. It uses the smooth spatial estimate of
+[Araya et al. (2024), Theorems 2–3](https://doi.org/10.1016/j.cma.2024.117089),
+with the local approximation condition A2. For the stated two-dimensional
+P2/r2 volume and P1 trace family, the broken gradient target is order two.
+The measured concentration order three is additional observed accuracy.
+The manufactured concentration is linear in time; an independent half-step
+control checks that time integration does not set the spatial error floor.
+
 
 ## MHM-USFEM: reaction–diffusion stabilization
 

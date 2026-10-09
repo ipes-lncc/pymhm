@@ -26,8 +26,8 @@ import sys
 from pymhm.io.workspace import workspace_from_archive
 
 # Download verified support files; this operation does not execute them.
-COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/a91d2dca7f4f9ee03401812a3edfa4fc749ad3f5e2f433c37048364bd24426d5/multiscale_elasticity-companion.zip"
-COMPANION_SHA256 = "a91d2dca7f4f9ee03401812a3edfa4fc749ad3f5e2f433c37048364bd24426d5"
+COMPANION_URL = "https://ipes-lncc.github.io/pymhm/downloads/735a2aa9bd1ef9ae57aeaaab237a12cd1c524a86329939094a8a806e5cd1ade2/multiscale_elasticity-companion.zip"
+COMPANION_SHA256 = "735a2aa9bd1ef9ae57aeaaab237a12cd1c524a86329939094a8a806e5cd1ade2"
 WORKSPACE = Path(
     os.environ.get("PYMHM_WORKSPACE", Path.cwd() / ".pymhm-companions" / COMPANION_SHA256)
 )
@@ -81,7 +81,7 @@ Array = NDArray[np.float64]
 ```
 
 ```text
-Workspace: ./build/docs-restructure/exact-source-workspaces-provenance-final/introduction/multiscale_elasticity
+Workspace: ./build/docs-restructure/final-workspaces/provenance-final-multiscale_elasticity-1286e77e423f
 ```
 
 ## 1. Declare the material and physical loading
@@ -481,4 +481,4 @@ python -m scripts.run_notebooks /path/to/multiscale_elasticity.ipynb --timeout 7
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `6b691c8dffa11956aa6075fb60d8fdd880e446ba603faa88b66376b91ca80d6c` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `79c6ef3a9deb5849b7e0669a38bc904c5d598a8ea5d7ab6e5db5e6f96a568c43` in the [publication manifest](manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.

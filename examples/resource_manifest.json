@@ -6,122 +6,124 @@
     "examples/results/hpc4e/dataset.json": "f77137fc029f1f50e91d3a33e90054a97f74c3327814a253b6b4e67dee90043e",
     "examples/results/marmousi/dataset.json": "44f3fb4953c85163f710749e0dc148225e1553250f838dd6a769d1c6f2cf85eb",
     "examples/results/spe10/dataset.json": "0e1b94a95c331b6e102e4593d506d5ca9b3ee92101e48ddaaa83bf4cb2fe700a",
-    "notebooks/README.md": "c8d3c2b6f8aebb4ab788da835250844ac8bc82e5dabeaea21d37874cb84fe6ec",
-    "notebooks/catalogue.json": "473c8d65b0fe1b6bbee9da366f60ed180e33bb5e761468f248c47f4cc33a13d4",
-    "notebooks/convergence/73_initial_convergence.ipynb": "7f82fab5a0630c7c42cc53bc49d83faf89fe39878c433a6ea9b0af7ce65067b6",
-    "notebooks/convergence/method_rates.ipynb": "25adeea721e558cb63ef5c0fa4d3bd672ead6264fa45176c26e99fe9a85c4522",
-    "notebooks/darcy/01_darcy_convergence.ipynb": "a9a272fe6cf10657488e159f010ca2cede8d1f188541d88c928944517770da76",
-    "notebooks/darcy/02_heterogeneous_darcy.ipynb": "d33e3db69e415bda68663fef5f42fca593c0c3bf83f217f4713b9c8e0aeff3c5",
-    "notebooks/darcy/03_skeleton_hp.ipynb": "b8e9c2af121dfd8be8a922170d43c17d1ae80654176c9b925a9cfc1309bdf31e",
-    "notebooks/darcy/04_mixed_and_reconstructed_flux.ipynb": "21c2afb7917b0b6db8a7b64629353e317c76640f5825d47947691989528f9af4",
-    "notebooks/darcy/11_published_darcy_2013.ipynb": "aaa498e8497c47c9a2ebcee1a9c42f4e24cfe3ea4d784649ce116026c9209277",
-    "notebooks/darcy/14_neopz_hdiv_comparison.ipynb": "13a8565fa870d9171a8b0dfe84673d807fbb473ea35e2e4be0552dd527ced1b1",
-    "notebooks/darcy/17_darcy_bdm.ipynb": "843490c7972fbda1c4e8276ca795582d30d053b519b5e5283b63aec7ba005bf3",
-    "notebooks/darcy/18_reconstruction_moments.ipynb": "1c242c6c63b7bbe6093f48baa0ad28e377021062c447ec1726c0f6d5cbc71c96",
-    "notebooks/darcy/20_darcy_estimator.ipynb": "370d6214190d2bef986fc011970fead6edc60093d2e2876572b9e0bb2b68cdda",
-    "notebooks/darcy/21_spe10_pyvista.ipynb": "d170c3a11ee2a73ec4fdaee3c35232aabfcd3b785e0e6fe242e5489b8ff0ce5b",
-    "notebooks/darcy/22_quarter_five_spot.ipynb": "2b2a1fc454ae02c611cee0d9f662d17cd848f4f6ac47dc18ff50c4057771f0f3",
-    "notebooks/darcy/23_spe10_mhm_comparison.ipynb": "6f7b48b85b92d53e776707d9154fbf76ee37b17e975e532193135f845c5af32d",
-    "notebooks/darcy/24_mshho.ipynb": "8b2e3a53e4d8d719aa4783ebfaf402247dcc8ddc2ec4e874c7219ede77277fea",
-    "notebooks/darcy/25_tensor_rt.ipynb": "0cf40614556071cebb24e0585ed5b71737c9114a97eb8ada11f4948695fae1c4",
-    "notebooks/darcy/29_darcy3d.ipynb": "0745f75a219e49f19456316c890ef3c8df3fe5276f557ac1cb25288c9cb0f59d",
-    "notebooks/darcy/30_polygonal_macro_meshes.ipynb": "beac1ea1876420d810261ec2609ff2b8b3fdd43d990d367e377f1071f83e60cb",
-    "notebooks/darcy/31_weighted_energy_estimator.ipynb": "cc58d0bd6f60ab7f16eba40a04ebe5c6da9764c0399810eb14d543aa733c0666",
-    "notebooks/darcy/33_darcy_rt.ipynb": "34a24c3ede413574ba4a41a7f4aeb02b2d3650de6a88a5b14fac24cd6fb8e13f",
-    "notebooks/darcy/36_recursive_mhm.ipynb": "7d57bf44b5190397a9a1ed1a18a0b72929b020019a73ed95dc77eeef0e905deb",
-    "notebooks/darcy/37_periodic_darcy.ipynb": "2a2f431a793b6eb040588e3aab6ac258401ed235910828f5f859127d82ae84b3",
-    "notebooks/darcy/38_unfitted_darcy.ipynb": "98ad6b27a43f2baf55a61c373ae45310208c80fd602db72e16bde77b0235ec81",
-    "notebooks/darcy/39_adaptive_darcy.ipynb": "a22f7400f6d9cad2e8ab38fcae98b0ff84f25801f1cd18acd607e5a70dff1c1f",
-    "notebooks/darcy/40_spe10_adaptive.ipynb": "b5f899e30be6b0c566f491c308776d792e58df900bfd993ae639abaa8a60214b",
-    "notebooks/darcy/42_darcy_jump_estimator.ipynb": "682dc6f69e7362049f5331e5ac4f79674c7dc3348d4fa707cbdabbba8d933c92",
-    "notebooks/darcy/43_analytical_darcy.ipynb": "25dcff2975e3de99021adcfad4e4563d03914e2d2a7d833d4fdf8b99ae7e7680",
-    "notebooks/darcy/44_mapped_well.ipynb": "e80274d882ce6134ba9f06bace1a4af9421b13986708d2d3bd069b97d6e6cf25",
-    "notebooks/darcy/47_mapped_oscillatory_well.ipynb": "664cfacf535cb9f84aceeea28edecf2ed2ea7679083921ab7ab6df4bbfd42c56",
-    "notebooks/darcy/51_mixed_well_geometries.ipynb": "ff4d163036bf87b6eecf970c9d936e4c073d6f5fcfdcd0ea29364c8a678b6a1b",
-    "notebooks/darcy/52_mh2m.ipynb": "ea840f0838e50cf3b523e2fe3399c46721f1cd1b89519c1d94c2d1b09e455b76",
-    "notebooks/darcy/56_mh.ipynb": "00e8405c98b01496f6da7d7b3bfaa102e96b91904c493b9844dae06b162a6aa3",
-    "notebooks/darcy/58_reconstruction3d.ipynb": "02479c424754dc83215313c3d3e1c20e6fe4115a6dbf00351cb54989928ef69c",
-    "notebooks/darcy/59_pgmhm.ipynb": "db28c063ef7ca4e61a5f0a3b0ecd129cdc4cfaa758a68463198f2a4be8f68a32",
-    "notebooks/darcy/63_planar3d.ipynb": "d5d94fd10886d5f16e57f02a645302c5d4147b488b0ca4c5fc84e31a9c705123",
-    "notebooks/darcy/64_tetra_pk.ipynb": "cc9f1486f78dc9316bbc4cdd9953f1036010998b40b95a84ac901ae95b8a1dba",
-    "notebooks/darcy/65_mh_boundary.ipynb": "a01e8d7e286d39ebe1d8305f01eceb3da0a09b4e63f18568b1ec9868ceffa408",
-    "notebooks/darcy/69_mh3d.ipynb": "c1d7c36c84f5c77d7665d9046d7c8b08e5951ce38418882749a12c76ddb3f200",
-    "notebooks/darcy/70_mh2m_heterogeneous.ipynb": "c53d6ca7f2f8a0410a4ad702c3f737ca51a950076192e860de78d805e7a2196f",
-    "notebooks/darcy/74_continuous_macrofaces3d.ipynb": "e18f16b7e6ac78019386ffb41ff082379651092bccbd736b4e37e705d9a80393",
-    "notebooks/darcy/heterogeneous_execution.ipynb": "b5ee32b661c135ca3f51b62ecd3d49eae7a4169457a1e808f6e2c468de70a93b",
-    "notebooks/darcy/hybrid_methods.ipynb": "86792ca6e536167615d8178275959df03ddfe9fe4fbe1a8f09bc6a9be2cedc4d",
-    "notebooks/darcy/mixed_hdiv.ipynb": "26f84ed7f46e3ff0c42507da1baad8e1a994ec2dad64df725f656b1d03cd21be",
-    "notebooks/darcy/mixed_mhm_workflow.ipynb": "d4df000a9a2268a1c4740ed991e88e7be1b04efa2cf66d99d2be6033e779764a",
-    "notebooks/darcy/pgmhm_workflow.ipynb": "a08cf5314e3e0758c8a6d78b3aa7dc7ee501490588ec8eadb77c5b775d9471ba",
-    "notebooks/darcy/primal_galerkin.ipynb": "40e0a18a2f4bccdbef6f526031f00f0e2ae89efd35cb364ec1e1b58e5fc1c815",
-    "notebooks/darcy/reconstruction_and_indicators.ipynb": "810f371ecc355e8af8dfd8092fefe90e6a960bcff9fd7a41368ffc0552ef7614",
-    "notebooks/darcy/robin_mh_workflow.ipynb": "813c61563e10600f2df9c12b93369de145455b097349adfd713f869ba2dc4a48",
-    "notebooks/darcy/unfitted_trace_workflow.ipynb": "b1cc15f84a0bbb4426b0c91deaf6cb2f32bbe9e5baf16c7e91549676a007ef38",
-    "notebooks/elasticity/07_elasticity.ipynb": "5d54feb5daed19d6bf876a22d84d6f9365168200e8f7ca82a4f6d38ebe58720d",
-    "notebooks/elasticity/15_elasticity_reference.ipynb": "109d4113458118f8a91166b16be3e0a771a85a8479f2ede8b6a8f11574a9a29d",
-    "notebooks/elasticity/16_mixed_elasticity.ipynb": "6d764ee07f9e5067bbea20c7e19f1c4e8bd2f905a95dcaf690219d0ad04bdb47",
-    "notebooks/elasticity/28_mixed_elasticity_families.ipynb": "05b1f686885ea59f6d863b7719fd8f04bc5ac94b0d8f4ae8ea41db2886c45618",
-    "notebooks/elasticity/32_primal_tensor_elasticity.ipynb": "91e1e5bb46f601aefbc4ba48b23b307d32a369a1fbd047e430d4f1f41013120c",
-    "notebooks/elasticity/34_rectangular_mixed_elasticity.ipynb": "7d340550bf2e91e162303477b396e12a105a9067cbbbe204ac60500ff2dff9e4",
-    "notebooks/elasticity/35_elasticity3d.ipynb": "fa80fb539d984a3b981e268d5add41f46f69daae5974c451adb60a037317c4f0",
-    "notebooks/elasticity/50_hpc4e_geomechanics.ipynb": "7a4cec3dbcfb9170c380379b7ba167cefc1dea4d3bd721b13a1838191daf5f5b",
-    "notebooks/elasticity/55_gals3d.ipynb": "b106c9dde061f4f46dffccb8df69df4eea12b5a7903efaf2ffcf24dc9f232ebb",
-    "notebooks/elasticity/68_mixed_elasticity3d.ipynb": "fdc7c513de1bf494fb245867bfed155eede0519bf200bc315ba54c5337227684",
-    "notebooks/elasticity/gals_mhm_workflow.ipynb": "57553fdffb5a3e418af4c94705736a424cd68626cd971631363820e371300c2a",
-    "notebooks/elasticity/introductory_methods.ipynb": "24fd25765e113225d8ffc9d5a42048137b6c7f6ef18a0fd1c5ba402fd54dbd98",
-    "notebooks/elasticity/mixed_stress_mhm_workflow.ipynb": "f7955c6967fea48d5cde22ef93ae87abf3881428f1764d9f68f06a3825a3881f",
-    "notebooks/flow/54_flow3d.ipynb": "9a87e82c1af3cfae2e86610a78758a1509574191c55d596cf22c122904006710",
-    "notebooks/flow/brinkman_oseen/06_brinkman_and_oseen.ipynb": "da8aefe6b73cb3ff5885101536cf57e9de446424564314c0f9079304a0a42c28",
-    "notebooks/flow/brinkman_oseen/27_oseen_adaptivity.ipynb": "b2453dd60db4caa56267449be49d9a68bc89ba091c16e0aa3365d838fd0a7989",
-    "notebooks/flow/brinkman_oseen/48_stokes_adaptive.ipynb": "f89e942deea92a7b2f410ab2e9ee145859eb5c9eb6f997ff5461488c166b3921",
-    "notebooks/flow/introductory_methods.ipynb": "8e454fd972be678165a9fa9af0d97c909743f5995024ae8af47908be50517b51",
-    "notebooks/flow/oseen_variational.ipynb": "5aa2fd062f92d9ebf38e3b2e05fe7c3453ed58586eee80d78ef04d56c2d4d7d1",
-    "notebooks/flow/stokes/05_stokes_published_problem.ipynb": "21be7bc62a38968415892f281798246f7e0496401ef64bb4d16e605bd21856ea",
-    "notebooks/flow/stokes/12_stokes_pressure_audit.ipynb": "80523f96600264fa76bbae7f6825479c70676a861f59dbc4443dc2e74015c380",
-    "notebooks/flow/stokes/13_published_stokes_2017.ipynb": "15cc374aad748ed205c8dbe123dd72f6de675aa337dd41ec7780ac7d93d84857",
-    "notebooks/foundations/general/10_visual_gallery.ipynb": "b3ee6c14fc8018f4371949994fe590c03f0fe3c307e9f44b5cc240cdef79145e",
-    "notebooks/foundations/general/19_native_extensions.ipynb": "3b4967c7365075ce5362039cbd1c058521ce65747edbad46b449a9962b301ed5",
-    "notebooks/foundations/general/57_core_extensions.ipynb": "d09b0db5e87e7aa65ad7e6dea1404e08580a47842961a437bf4bbeac03f09d39",
-    "notebooks/foundations/geometry/60_mesh_exchange.ipynb": "67f329c8f4e4e79df51f7c442160e7d9ad740db51509c214272f7480fc5a9581",
-    "notebooks/foundations/geometry/marked_materials.ipynb": "5dc502e1e6f7b50dc715ec5c6d9581323f07d520b47bc1bd3cc811b46a176628",
-    "notebooks/foundations/operators/09_local_operators_and_amg.ipynb": "95ae610b99606c76b2266c0d583bf05724c3b926f46240850f3e2ebbcf4c3506",
-    "notebooks/foundations/operators/custom_interface.ipynb": "a31f45d3fd83d5f85f8e709e0fd7cccc8276aad8c2b76ba751d5e02951261e65",
-    "notebooks/foundations/operators/dolfinx_sparse_solvers.ipynb": "90dd30bc8c5a9ec4b27328761e5b4e13c390fd1943ec8963dbb729a2301e0c60",
-    "notebooks/foundations/operators/local_global_providers.ipynb": "f03a74c10438f3e252d0fb1b6beba068e4e3c167dd1797cf7f8ecc9f486cef78",
-    "notebooks/foundations/operators/ufl_provider.ipynb": "481207bdab7871ec90d4e00ee5484ddf11e88188510c428f50343189387f4764",
-    "notebooks/foundations/operators/variational_hierarchy.ipynb": "0f36f2f29cde04f9792df27076213f823de8a814bfefbfaff20cf3cfe08e5920",
-    "notebooks/foundations/operators/vector_ufl.ipynb": "0e861f67132baec22d8566fc3c4c887d6e62da71c81bbf27084c185e87174bf2",
+    "notebooks/README.md": "99a92cff2b38864081f91f4339c14089ffacd40986c15560e82a48d17a63d210",
+    "notebooks/catalogue.json": "ac52c500d79bfb38e1d73b21f4b9ce992b9fb3a53240250cdf7d7315198a2463",
+    "notebooks/convergence/73_initial_convergence.ipynb": "f1983657275c3e039c33d8da400d74d6e5e0fb29c0dc829532befca958630241",
+    "notebooks/convergence/method_rates.ipynb": "fd06194240cc3c7e2db9d9e754699f8408e0fe8903c2be4a5ca2229a6f958add",
+    "notebooks/darcy/01_darcy_convergence.ipynb": "cadca91922825b8acfc24c07c57b6cb3e6e454fad4fa99f64911c20663f0b43e",
+    "notebooks/darcy/02_heterogeneous_darcy.ipynb": "38c3f62250b80ccdb8d78cbcaf9e9a3724c66e2e6686b5725c957a8972d09a0b",
+    "notebooks/darcy/03_skeleton_hp.ipynb": "dd978e773d019c2a20814e13dd37e6524b42c578a7ad1d8653b620b57e66617c",
+    "notebooks/darcy/04_mixed_and_reconstructed_flux.ipynb": "a9e18ad4cfcd01443ca2645c7c0f747808721b2c034533cefd87835783c7a5ff",
+    "notebooks/darcy/11_published_darcy_2013.ipynb": "0a233dd75fd4dd172859fe6ef6248d06978ce9f99ee3f313434fb69beee0493c",
+    "notebooks/darcy/14_neopz_hdiv_comparison.ipynb": "9b34eabd72878e6a77e2fb0a56427a9396e26d1d6557f4d162ecb426cb80dcd5",
+    "notebooks/darcy/17_darcy_bdm.ipynb": "8c262cdd591322e3ffc0dc76660d5f4c9886cb1ea5aa009db916d312ede83dc6",
+    "notebooks/darcy/18_reconstruction_moments.ipynb": "b92fada8a7a2adf52b5efeec8504f2e2e69565a642963ec88ab9620501d6af9f",
+    "notebooks/darcy/20_darcy_estimator.ipynb": "bb5d7ca9791cbe8f44e656197cc42c6b04e7e6c387fd027d0e0644c064f50a2b",
+    "notebooks/darcy/21_spe10_pyvista.ipynb": "b0ff0b24481ee255ce66e7e97cbd500a49f0d46c4619a605d1920a7949f124c4",
+    "notebooks/darcy/22_quarter_five_spot.ipynb": "1eb8f1b58a00a9a6a28dbbc7441f0468de72ed49fe5edf00d01baf2b06afadcc",
+    "notebooks/darcy/23_spe10_mhm_comparison.ipynb": "77544ec20e7d9e0caabafb00b9d62304c96d9db0645ece8b0cb84985a12ba69f",
+    "notebooks/darcy/24_mshho.ipynb": "7c4a3806e3b1c4d378fa3181009829bc227ecacff78502d93d6ccf227dd58a1e",
+    "notebooks/darcy/25_tensor_rt.ipynb": "cfb3f5d428176f593820981e3fa410703ac863a42c8990c4d0d283affec7d6d0",
+    "notebooks/darcy/29_darcy3d.ipynb": "812404520360723c9bf390257b9d960025e03daf24a2deb98969a44d50ad29d5",
+    "notebooks/darcy/30_polygonal_macro_meshes.ipynb": "5a8d907e54f49061b6b5ac4911d23598f4110e7afc093ecf76399001c837c100",
+    "notebooks/darcy/31_weighted_energy_estimator.ipynb": "2fd5d870c4d76f4fdb2b35eaebdbb5aa4eea4198e8df36e48cc221e4c4508097",
+    "notebooks/darcy/33_darcy_rt.ipynb": "8056a8bf08e1ac0a06cbe6941e0e59ae0c8ab7e752f1b6af5bd114a75084af64",
+    "notebooks/darcy/36_recursive_mhm.ipynb": "ba7696d36fbd12a867ecf2335b54be3eb7d84a74cc74cbbb04b698ecc6e368b4",
+    "notebooks/darcy/37_periodic_darcy.ipynb": "88cef966dde848d429a8466973cb0d3c86ea0a2a8d8b34e60718fae9410a057e",
+    "notebooks/darcy/38_unfitted_darcy.ipynb": "d9f390858c5f9412fa0fe67ea52bc3351af732b001256d959fb38a77e2a7189a",
+    "notebooks/darcy/39_adaptive_darcy.ipynb": "247e766bd7370f033696fb4ee98e75e54c00c7cccff03d935a05d87885505a14",
+    "notebooks/darcy/40_spe10_adaptive.ipynb": "38a67881f87176b45e06458f62aee34f47dc446f677b3c938cc76a8097596627",
+    "notebooks/darcy/42_darcy_jump_estimator.ipynb": "20568e58e916c3b45cceb3ac3ae94f1a6779fc6869d42a51f184dd996bcea616",
+    "notebooks/darcy/43_analytical_darcy.ipynb": "2f23668ab7151ab761b2242239e12b43d4c6194542ca5673df87960b082d99b9",
+    "notebooks/darcy/44_mapped_well.ipynb": "154d4457e9b9f65a5f7467fc218de2a7776543ac85ef41b3721e74e58db4b175",
+    "notebooks/darcy/47_mapped_oscillatory_well.ipynb": "cd2abdd0a1dc24df7b2a92ff342a0f7e0209341d6b144fc3e53540a81e66744a",
+    "notebooks/darcy/51_mixed_well_geometries.ipynb": "b6c6819c43b0c8c63b9f7ade0068b26fb7c35c3b32969a5f6ae166a8e94bf18f",
+    "notebooks/darcy/52_mh2m.ipynb": "5cb4bcbc9b505d58755fcaaae9e05d46cddc04d3c366e303bff24b66f89e1fdb",
+    "notebooks/darcy/56_mh.ipynb": "644cd71e5145251083daa8bbed733179dabc6a4955f7100e4cfa7f0013783bb0",
+    "notebooks/darcy/58_reconstruction3d.ipynb": "1dface328a32cc612aec895ffd3e3d1ae14962355c210a566c7637689a5bb189",
+    "notebooks/darcy/59_pgmhm.ipynb": "f4ea8667fccee5b1877bd872dab79748ef248dcec8df1cfae0f3137682f1ec4f",
+    "notebooks/darcy/63_planar3d.ipynb": "43f2cda9e46ed568c1861152335d4aefccb7c469a3e476f16b8bc99060467614",
+    "notebooks/darcy/64_tetra_pk.ipynb": "6b155ea745a6b9644cfeec97fcc4fe2d09fb4d98092732714b7ccf5b0823fb93",
+    "notebooks/darcy/65_mh_boundary.ipynb": "b457d599f8bd77fa8f73be45d2df0b3127af4573e9a6675b5b44b378ce2025a1",
+    "notebooks/darcy/69_mh3d.ipynb": "bb8a7d0eec5a6a1cd6c7ca6a4ade552715652223c39bb03bbe19d3275610918c",
+    "notebooks/darcy/70_mh2m_heterogeneous.ipynb": "04de9d554a6752e1695055553a4d75632b7769ba8a03d99a1b671994c2a42404",
+    "notebooks/darcy/74_continuous_macrofaces3d.ipynb": "15f18b255a42dbd97ab3680f6194e3ecc420a0a755ca5ae50df80a9dd6ae6929",
+    "notebooks/darcy/equilibrated_flux_workflow.ipynb": "7f56d7e2c09bc242e4de7d980e622904783f90aa544bec859592d88f533c59e5",
+    "notebooks/darcy/heterogeneous_execution.ipynb": "35af85f9fd16957b9c69de8b3c6c25bd22da041f3b803c0e2bb484ad3d5e176c",
+    "notebooks/darcy/hybrid_methods.ipynb": "4ddce7aa3a1264d62568a39919106ae176d87cb2c7a2d78bbdf4b90a94a7960f",
+    "notebooks/darcy/mixed_hdiv.ipynb": "85b83149bdc63d9c15733c3aba118fbdd0d6f285a5f2f371a3ae88073e06a110",
+    "notebooks/darcy/mixed_mhm_workflow.ipynb": "6b3416921fd9585666c536a242f1c50bc38349c2426d207a84e6751f343ae514",
+    "notebooks/darcy/pgmhm_workflow.ipynb": "a7d6a3987a4f167869c159a44ea38e0e1491bc5b599e6307d0595ae069b63925",
+    "notebooks/darcy/primal_galerkin.ipynb": "916de72fa422864bf549494ee746a9ee6bdf462c6ca6a4fad07a4df4fa04315d",
+    "notebooks/darcy/reconstruction_and_indicators.ipynb": "bf74181fa111af5420105a6f823fa58c653d0505bcd548aab55418fc4ef73baf",
+    "notebooks/darcy/robin_mh_workflow.ipynb": "8602375b908d9c50f1c87a9d1d787523a33b57e83ac495a19334263243a2bab3",
+    "notebooks/darcy/unfitted_trace_workflow.ipynb": "17c9f8117e88e73fc6dcca15b59ba67b6dd6ae53af2fbc7428e5b225c9db741f",
+    "notebooks/elasticity/07_elasticity.ipynb": "2d843560c3f6ca1843289bb64da834856525726c25442d3404c0e12e66e7089d",
+    "notebooks/elasticity/15_elasticity_reference.ipynb": "cb0e20cdc144ff4b95e3e679db46304b3709d329481a1009f5abcdc5e3efcb6b",
+    "notebooks/elasticity/16_mixed_elasticity.ipynb": "620fe504e130c70e766efa7404b0530c866c531f791ea0af8995ebfc8b062f88",
+    "notebooks/elasticity/28_mixed_elasticity_families.ipynb": "32356693dd78046759316a12aa535b20ce61014be24ae69b8cd22af768a21e21",
+    "notebooks/elasticity/32_primal_tensor_elasticity.ipynb": "4983a51b6ca9cdb4fc9e0b6cfc2112fdd799c1f752eb119681b2a05e3a804e01",
+    "notebooks/elasticity/34_rectangular_mixed_elasticity.ipynb": "6a22ef3e5c82f159733ccdf8c24bb66236ba93543dda47ded83952b35b092940",
+    "notebooks/elasticity/35_elasticity3d.ipynb": "6028b63ad20b566a30cf4e831ce736852811a585b2847b451e4c56f4e4918175",
+    "notebooks/elasticity/50_hpc4e_geomechanics.ipynb": "c7414a6209edf6ce16ccf345d53b95796d05f23c542eefaeb156715b5b1746f1",
+    "notebooks/elasticity/55_gals3d.ipynb": "6169a7314c73114f86222095e97edc4e6154bd27c4678a4bb26b16da06d7858a",
+    "notebooks/elasticity/68_mixed_elasticity3d.ipynb": "df004b1d1b71bcb006a0d9d23e5b227af8f5cd6e48f858fe1b234e32c6cc6e6a",
+    "notebooks/elasticity/gals_mhm_workflow.ipynb": "afc1466d4729d29deb6aec98ccc2a2af42bfa1008c38dd552048fd680720af39",
+    "notebooks/elasticity/introductory_methods.ipynb": "be691d51b9af2ee16ad3b54ced184c965fee6240242628e2aa6802339e080a3e",
+    "notebooks/elasticity/mixed_stress_mhm_workflow.ipynb": "7eec02554a02a7c76344de74caebb802678d10a7fe59fc0bcf6b81a1b3b775d3",
+    "notebooks/flow/54_flow3d.ipynb": "1ebb653417c693561e68b2a77f9e6ece15b9095d9426d5c5c009778f21a65533",
+    "notebooks/flow/brinkman_oseen/06_brinkman_and_oseen.ipynb": "01d6dd6718a398abad136ca63a9c97843e1aded018b1a66715ed9fdd8f4fedcf",
+    "notebooks/flow/brinkman_oseen/27_oseen_adaptivity.ipynb": "6a37193aad990131527ee8ffc330921b9064bdd09a0b0d96afa7fd58f2d594c2",
+    "notebooks/flow/brinkman_oseen/48_stokes_adaptive.ipynb": "97be793e01c49844de3f447cf139f3022d9d8fe0ff52421b570ff8d0c7471069",
+    "notebooks/flow/introductory_methods.ipynb": "e7282bfbe50a5701bcee963b37743a1bff6a5134ad99ecd5380eac484dd5a4e1",
+    "notebooks/flow/oseen_variational.ipynb": "a9769063164b807741634e3dc6551ba99fcdea5a825c01819f1df47e7bf9a552",
+    "notebooks/flow/stokes/05_stokes_published_problem.ipynb": "1724e67a0d0d3ad04433c2ef6720af61fb0284ff731b22d1f7f3c1f5f47c228a",
+    "notebooks/flow/stokes/12_stokes_pressure_audit.ipynb": "f86f3283a456ec0f667094f0ce7ac1157d43f95cbd63e37e0b779062cd0229ac",
+    "notebooks/flow/stokes/13_published_stokes_2017.ipynb": "b17ef49e3cccd0f2bd17400ccf1d984dc4ed3d7a8afb0e8eb490ac236a26298d",
+    "notebooks/foundations/general/10_visual_gallery.ipynb": "b6c86581b74cb2fe63d4300c2e94bc73cd7a3a3579315f0ccf82d25eba305e3c",
+    "notebooks/foundations/general/19_native_extensions.ipynb": "eb8d0a6ca9693dc0e4aa9bb90efc2b560d79889f5006a2284633e01d49df21a7",
+    "notebooks/foundations/general/57_core_extensions.ipynb": "de77cbf31c7314e85c66782e0a9c646c5dfcd6fec8faf6b2bf9becec98be56b5",
+    "notebooks/foundations/geometry/60_mesh_exchange.ipynb": "4b90c9f9c33f1ff3c2759262b644ea1f2be83c79e3aacf7fd8ff8e9757e3ca7b",
+    "notebooks/foundations/geometry/marked_materials.ipynb": "1535aaf960f960579d8de6aa72652103f6ab63931683f18ff18b62d92b86860f",
+    "notebooks/foundations/operators/09_local_operators_and_amg.ipynb": "285e0819277c0b6fbffb20dc5a1d7995288e83015644db2a4fbe69c9a0bb3795",
+    "notebooks/foundations/operators/custom_interface.ipynb": "cd7bfe141050c876a5755af7f5c4921312580bf59be5cd7d3bd3f07e7c6aa5a9",
+    "notebooks/foundations/operators/dolfinx_sparse_solvers.ipynb": "f75304e51eaec714cd225a6be757a483b3dc2291e3926d768380c1ec61e6217d",
+    "notebooks/foundations/operators/local_global_providers.ipynb": "6f115de15a02a4e97ebefbcfe5bda7f48be44a3d2a1dee6c0955208b9e6c6527",
+    "notebooks/foundations/operators/ufl_provider.ipynb": "df0b279fc082872a7f6cde268243a14cbcf6625f592ee7b8de91b58c3fe07877",
+    "notebooks/foundations/operators/variational_hierarchy.ipynb": "bf91d9760db270a8c20659e557082df820fb6834130f5321e4326e957aeb3486",
+    "notebooks/foundations/operators/vector_ufl.ipynb": "e2a20d9745345d19c9cbd3d8635598779d8b9902d9628ce4d7a2031e8fbf0f59",
     "notebooks/introduction/README.md": "247bf3a067cd7657ad407a9722b79aaffaa8c47d312807523e5b0e61ac629984",
-    "notebooks/introduction/darcy_3d_parallel_scalability.ipynb": "a372a6e95fad1c76198cdcdaef6f4ccb6e4fb1ef76fd71b0204e11af65946184",
-    "notebooks/introduction/darcy_multiscale_convergence.ipynb": "57a5c1ec9b47a1cdf57dd7283c1bc688ab989031e315b33456a1b5f7810483d3",
-    "notebooks/introduction/darcy_parallel_scalability.ipynb": "d0a161064855ab5e7690c771cc8641d689a3a2f2c931f62446f90d6d9a5e0f44",
-    "notebooks/introduction/darcy_process_scalability.ipynb": "6b85b6625f95429c496f72f6505175c42829b2c0ffad082819dc8dc7b6b1122f",
-    "notebooks/introduction/darcy_spe10_layer.ipynb": "371245c5b54390b3ff884edfd4d7917c16c1538198b3317b0086647a5e91271d",
-    "notebooks/introduction/mh2m_multiscale.ipynb": "3c42f01fd56aad220fddf6dd99eb34cc99f2a2d9f9f44744b7e7e926570fb378",
-    "notebooks/introduction/mhm_usfem_rad.ipynb": "4c9f7352c2f1dcf1896240d093370d1e9c0d426f79727a0e64ddbfa55cc1462d",
-    "notebooks/introduction/mshho_multiscale.ipynb": "53c1894e8299a286f069a4841c2ac64438cde29b49b872079822674a6388a6c3",
-    "notebooks/introduction/multiscale_elasticity.ipynb": "6b691c8dffa11956aa6075fb60d8fdd880e446ba603faa88b66376b91ca80d6c",
-    "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb": "bac0c4c62b8b76905f1d14845568f7949e976f821ceccbb3a8e2482d75efcb8e",
-    "notebooks/transport/08_transport_and_heat.ipynb": "e9e01f7dee7a3d4c706b2dbaa43ad88bd063bf2b7cfa8103c594e4b9322464f3",
-    "notebooks/transport/26_adaptive_transient_transport.ipynb": "1152242c1051cbfcb540632ae8b36cfe0561a8e8d2774ec8cc889af1903eed85",
-    "notebooks/transport/41_rad3d.ipynb": "a769f2061a0a3294775f1b8ee2c9c890082b91596a31d64d17d635e611dff2ab",
-    "notebooks/transport/45_rad_conditioning.ipynb": "4fc06d5b9993fd26eb2969664ebe1c355c359a4008d3d6564025e99620b48dd5",
-    "notebooks/transport/46_hexagonal_boundary_layer.ipynb": "9da5abb9fd0525225d75627969768cdd20425b2490f9d3d0ffaddaa205cc73a8",
-    "notebooks/transport/49_polyhedral_rad.ipynb": "88320f96f744bf453bfce43572ff9ecdaa5bdd16c2938fdcf5c088feddc544df",
-    "notebooks/transport/53_unusual.ipynb": "5d73a19eadf9bff6fffe44f2a7b52af97250a0853443a5b98a4d06f821bff66b",
-    "notebooks/transport/67_star_polyhedra.ipynb": "7b11d5a9504d801ba08904ac5bf7299c711e2a3c93069ac3e4cf7c3219d5aa7e",
-    "notebooks/transport/introductory_methods.ipynb": "be1aa3077ed39868d83106389dbaef8b9c61e3b0172ff1e76d9ea4802d62ac15",
-    "notebooks/transport/transient_variational.ipynb": "48f7a9877b35642cbf572a3d182a6f7b49d4b9921108280511d7c9ab28ac0106",
-    "notebooks/waves/elastodynamics/71_elastodynamics.ipynb": "adf8577613c4c523da396819cff2be6ebf3aa8df1e67e27c989190511ac4e475",
-    "notebooks/waves/elastodynamics/formulation_workflow.ipynb": "9996a147fe07c1418b509784c86663192df6c657eb0a5ac8caf24161cef66e98",
-    "notebooks/waves/helmholtz/61_helmholtz.ipynb": "15e5f6b649de942b10f5eaba86d710927fda661ecb5cb08521475a3a6f68f711",
-    "notebooks/waves/helmholtz/72_marmousi.ipynb": "063e2a8aa6d5e21a5b74d19e0fa994b847d7f5c000a220c636083a73b345912d",
-    "notebooks/waves/helmholtz/introductory_methods.ipynb": "f38ce5ba73f745f71d5666436b2c5abc62670426175282fdff3b69ae63d3b9e2",
-    "notebooks/waves/maxwell/62_maxwell.ipynb": "adcdebd11c7ee7a50cc753eb70fd0303b71b6feb7b4cb5244c8a57db48aaf5da",
-    "notebooks/waves/maxwell/66_maxwell_nanoguide.ipynb": "1832d64afc957ab7f7c868afa24602fe07a345ff098ba8e179f4b904b340e6d7",
-    "notebooks/waves/maxwell/introductory_methods.ipynb": "5b9436edd758a699dd1b05df7a11d35927d7b02782c9b619b4cca5e14fe8aecd",
+    "notebooks/introduction/darcy_3d_parallel_scalability.ipynb": "9d3b64495b8ae8b31a63b4ec689032dba4c9f6cc045b2d928eb10f83085f1aa8",
+    "notebooks/introduction/darcy_multiscale_convergence.ipynb": "12afb56ea29eefbc1350b728df214610347854a4f5b164f498fed7295347402d",
+    "notebooks/introduction/darcy_parallel_scalability.ipynb": "8bcb5fe234b59a269546301a06842a4f932cd217ce7e80208c3ddbd64599335d",
+    "notebooks/introduction/darcy_process_scalability.ipynb": "540e077b460da4c13a0ec71d448200a008b8e0d5691e06a8dc610d8e6bb5b4c0",
+    "notebooks/introduction/darcy_spe10_layer.ipynb": "073e30fde6cb2d86672a03262c72d9e514f6ca2956f175fdc7045ac9c23075f4",
+    "notebooks/introduction/mh2m_multiscale.ipynb": "471d16e4f4e5bfa14e5933cfa8efce4a41996975b6115477935de8f565bfe953",
+    "notebooks/introduction/mhm_usfem_rad.ipynb": "4e04e823bd700e3108ff564015f0a611ceb9524697759692cd4238911541cbb6",
+    "notebooks/introduction/mshho_multiscale.ipynb": "bf74f41c2a8e6dfa7e0cd323dec66d951c5e43f086adbcacb595ca751253dd10",
+    "notebooks/introduction/multiscale_elasticity.ipynb": "79c6ef3a9deb5849b7e0669a38bc904c5d598a8ea5d7ab6e5db5e6f96a568c43",
+    "notebooks/introduction/stokes_brinkman_boundary_layer.ipynb": "5c3b1a00d3651cea8bf2b41156b6a2a778ad6891078537dfb6f2c6c7b35ab472",
+    "notebooks/transport/08_transport_and_heat.ipynb": "2d32a802d0f1562f4eae58d317f7eb820c3e440a3e8f119116cb2c024018f201",
+    "notebooks/transport/26_adaptive_transient_transport.ipynb": "b02ca5e031003d35e161797a9aab7de2441fa631f65ecc020a52186ae878fe31",
+    "notebooks/transport/41_rad3d.ipynb": "dc65f4eaa5f55cb91fd493f504ecbeb72f6cdc9dcb9609ede0606d8ffa425de3",
+    "notebooks/transport/45_rad_conditioning.ipynb": "c28e872ff3630f6d531dc919db8a050d790d61bbe2e9044cd7a1a73669df1032",
+    "notebooks/transport/46_hexagonal_boundary_layer.ipynb": "31c324de8e1e95a32c44c66254197e6ce3d2ab72c71ce22f0befff7a798de899",
+    "notebooks/transport/49_polyhedral_rad.ipynb": "d24d692de238cc9e6be21d0933051b330152d11725cac380eedc64f115697c50",
+    "notebooks/transport/53_unusual.ipynb": "edb5c626dcf9c836d3d18833840a8e1ecdc4b43fc92b1e2e87d655ade059862a",
+    "notebooks/transport/67_star_polyhedra.ipynb": "63787d40f65e8b03ec9a109f93ee2776ab217531d30ea869065de8700c99a580",
+    "notebooks/transport/introductory_methods.ipynb": "486abb79fe23a49e7e9e29bb2a94d74034c8d39678a09018de0ab71c7bf51ba7",
+    "notebooks/transport/spatial_refinement.ipynb": "26307717dd06721b8662e5a7f88ec19a795021d0cf1a5030481e9b91a523c8d1",
+    "notebooks/transport/transient_variational.ipynb": "15e32573baa1c494324bc59e802419bfa7e27634947fd80eac88cc873eeff812",
+    "notebooks/waves/elastodynamics/71_elastodynamics.ipynb": "647ffe6f0c1029a29fdfdb58c9f619313a66fc386de49ff6ad5ae8cd62cba79a",
+    "notebooks/waves/elastodynamics/formulation_workflow.ipynb": "462a687bc66cc9ad2bba1813468b4c7d24f53def70a542597600e5e8d6fd078b",
+    "notebooks/waves/helmholtz/61_helmholtz.ipynb": "27f699a183e9f13a524f047ae7b73d347c845b87ee077f1406ee258841088ea5",
+    "notebooks/waves/helmholtz/72_marmousi.ipynb": "eb7c8de95879517f237010aac10e57ec2e373587a29b667d416cfd2b8e8bfd32",
+    "notebooks/waves/helmholtz/introductory_methods.ipynb": "3151f763b381f98969635c375d801910f8f824dbc1de92e8624bfacf62dce46e",
+    "notebooks/waves/maxwell/62_maxwell.ipynb": "0d1c75978fd0b9c9ba57c24ebb03f08e86181f960cb198360ff43cad690b27d6",
+    "notebooks/waves/maxwell/66_maxwell_nanoguide.ipynb": "746df5456142361fe970f0584f731c9b797202f7af55373b573a27696d1232de",
+    "notebooks/waves/maxwell/introductory_methods.ipynb": "805b25953c8d76513b0a55c377e9600976369e210e9d618b06d9c8a30f5c26f6",
     "scripts/notebook_images.json": "76a1bb5c44a5b29167084ba0c1e58cca4e9cb6e67edf4e6053821f71cebee492",
-    "scripts/notebook_reproduction.json": "c1873c3292446931e16aa7eae3b94c12091d97801adebdc61d0c6acb120f603c"
+    "scripts/notebook_reproduction.json": "5713806842b8adce065e23019033e54d0250696dfba887ab1601aed4a3b6628a"
   },
   "notebook_historical_resources": {
     "convergence/73_initial_convergence.ipynb": [
@@ -844,7 +846,9 @@
     "transport/transient_variational.ipynb": [],
     "waves/elastodynamics/formulation_workflow.ipynb": [],
     "elasticity/gals_mhm_workflow.ipynb": [],
-    "elasticity/mixed_stress_mhm_workflow.ipynb": []
+    "elasticity/mixed_stress_mhm_workflow.ipynb": [],
+    "transport/spatial_refinement.ipynb": [],
+    "darcy/equilibrated_flux_workflow.ipynb": []
   },
   "notebook_resources": {
     "convergence/73_initial_convergence.ipynb": [
@@ -1176,7 +1180,9 @@
       "docs/figures/darcy-3d-workspace-lu-20261005/strong-time.png",
       "docs/figures/darcy-3d-workspace-lu-20261005/weak-scaling.png"
     ],
-    "introduction/darcy_multiscale_convergence.ipynb": [],
+    "introduction/darcy_multiscale_convergence.ipynb": [
+      "examples/results/darcy_2013_comparison.json"
+    ],
     "introduction/darcy_parallel_scalability.ipynb": [
       "benchmarks/results/execution/introduction-threads-20261004/README.md",
       "benchmarks/results/execution/introduction-threads-20261004/SHA256SUMS",
@@ -1206,11 +1212,20 @@
       "examples/results/spe10/dataset.json",
       "examples/results/spe10/layer-36.npz"
     ],
-    "introduction/mh2m_multiscale.ipynb": [],
-    "introduction/mhm_usfem_rad.ipynb": [],
-    "introduction/mshho_multiscale.ipynb": [],
+    "introduction/mh2m_multiscale.ipynb": [
+      "examples/results/tutorial-methods/mh2m-compatible-current.json"
+    ],
+    "introduction/mhm_usfem_rad.ipynb": [
+      "examples/results/unusual/analytical.json"
+    ],
+    "introduction/mshho_multiscale.ipynb": [
+      "examples/results/tutorial-methods/mshho-current.json"
+    ],
     "introduction/multiscale_elasticity.ipynb": [],
-    "introduction/stokes_brinkman_boundary_layer.ipynb": [],
+    "introduction/stokes_brinkman_boundary_layer.ipynb": [
+      "examples/results/stokes-adaptive/polynomial-uniform-nu1-g0-l1.json",
+      "examples/results/tutorial-methods/stokes-taylor-hood-asymptotic.json"
+    ],
     "transport/08_transport_and_heat.ipynb": [],
     "transport/26_adaptive_transient_transport.ipynb": [],
     "transport/41_rad3d.ipynb": [],
@@ -1229,46 +1244,83 @@
     "waves/elastodynamics/71_elastodynamics.ipynb": [],
     "waves/helmholtz/61_helmholtz.ipynb": [],
     "waves/helmholtz/72_marmousi.ipynb": [],
-    "waves/helmholtz/introductory_methods.ipynb": [],
+    "waves/helmholtz/introductory_methods.ipynb": [
+      "examples/results/helmholtz-article/published-convergence.json"
+    ],
     "waves/maxwell/62_maxwell.ipynb": [],
     "waves/maxwell/66_maxwell_nanoguide.ipynb": [],
-    "waves/maxwell/introductory_methods.ipynb": [],
+    "waves/maxwell/introductory_methods.ipynb": [
+      "examples/results/tutorial-methods/maxwell-classical-refinement.json",
+      "examples/results/tutorial-methods/maxwell-spatial-asymptotic.json",
+      "examples/results/tutorial-methods/maxwell-time-current.json"
+    ],
     "convergence/method_rates.ipynb": [
-      "examples/results/darcy-rt.json",
       "examples/results/darcy_2013_comparison.json",
       "examples/results/elasticity.json",
       "examples/results/elastodynamics/comparison.json",
       "examples/results/helmholtz-article/published-convergence.json",
       "examples/results/mh/comparison.json",
-      "examples/results/mh2m/comparison.json",
-      "examples/results/mixed-elasticity.json",
-      "examples/results/mshho.json",
       "examples/results/oseen/smooth-nu1-l1-uniform.json",
-      "examples/results/pgmhm/comparison.json",
       "examples/results/stokes-adaptive/polynomial-uniform-nu1-g0-l1.json",
-      "examples/results/tutorial-methods/maxwell-current-refinement.json",
-      "examples/results/tutorial-methods/primal-elasticity-current.json",
+      "examples/results/tutorial-methods/elastodynamics-spatial-asymptotic.json",
+      "examples/results/tutorial-methods/maxwell-spatial-asymptotic.json",
+      "examples/results/tutorial-methods/maxwell-time-current.json",
+      "examples/results/tutorial-methods/mh2m-compatible-current.json",
+      "examples/results/tutorial-methods/mixed-elasticity-asymptotic.json",
+      "examples/results/tutorial-methods/mixed-mhm-current.json",
+      "examples/results/tutorial-methods/mshho-current.json",
+      "examples/results/tutorial-methods/pgmhm-current.json",
+      "examples/results/tutorial-methods/primal-elasticity-asymptotic.json",
+      "examples/results/tutorial-methods/stokes-taylor-hood-asymptotic.json",
       "examples/results/tutorial-methods/transient-native-study.json",
+      "examples/results/tutorial-methods/transient-spatial-asymptotic.json",
       "examples/results/unfitted/convergence/rate-verification.json",
       "examples/results/unusual/analytical.json"
     ],
     "darcy/heterogeneous_execution.ipynb": [],
-    "darcy/mixed_mhm_workflow.ipynb": [],
-    "darcy/pgmhm_workflow.ipynb": [],
-    "darcy/reconstruction_and_indicators.ipynb": [],
-    "darcy/robin_mh_workflow.ipynb": [],
-    "darcy/unfitted_trace_workflow.ipynb": [],
+    "darcy/mixed_mhm_workflow.ipynb": [
+      "examples/results/tutorial-methods/mixed-mhm-current.json"
+    ],
+    "darcy/pgmhm_workflow.ipynb": [
+      "examples/results/tutorial-methods/pgmhm-current.json"
+    ],
+    "darcy/reconstruction_and_indicators.ipynb": [
+      "examples/results/tutorial-methods/adaptivity-current.json",
+      "examples/results/tutorial-methods/recovery-classical-current.json",
+      "examples/results/tutorial-methods/recovery-classical-field-current.json",
+      "examples/results/tutorial-methods/recovery-current.json",
+      "examples/results/tutorial-methods/recovery-field-current.json",
+      "examples/results/tutorial-methods/recursive-current.json"
+    ],
+    "darcy/robin_mh_workflow.ipynb": [
+      "examples/results/mh/comparison.json"
+    ],
+    "darcy/unfitted_trace_workflow.ipynb": [
+      "examples/results/unfitted/convergence/rate-verification.json"
+    ],
     "flow/oseen_variational.ipynb": [
       "examples/results/oseen/smooth-nu1-l1-uniform.json"
     ],
     "foundations/geometry/marked_materials.ipynb": [],
     "transport/transient_variational.ipynb": [],
-    "waves/elastodynamics/formulation_workflow.ipynb": [],
+    "waves/elastodynamics/formulation_workflow.ipynb": [
+      "examples/results/elastodynamics/comparison.json",
+      "examples/results/tutorial-methods/elastodynamics-classical-refinement.json",
+      "examples/results/tutorial-methods/elastodynamics-spatial-asymptotic.json"
+    ],
     "elasticity/gals_mhm_workflow.ipynb": [
       "examples/results/elasticity.json"
     ],
     "elasticity/mixed_stress_mhm_workflow.ipynb": [
-      "examples/results/mixed-elasticity.json"
+      "examples/results/mixed-elasticity.json",
+      "examples/results/tutorial-methods/mixed-elasticity-asymptotic.json"
+    ],
+    "transport/spatial_refinement.ipynb": [
+      "examples/results/tutorial-methods/transient-spatial-asymptotic.json",
+      "examples/results/tutorial-methods/transient-spatial-classical-refinement.json"
+    ],
+    "darcy/equilibrated_flux_workflow.ipynb": [
+      "examples/results/tutorial-methods/equilibrated-rt0-current.json"
     ]
   },
   "notebook_study_resources": {
@@ -1789,7 +1841,9 @@
     "transport/transient_variational.ipynb": [],
     "waves/elastodynamics/formulation_workflow.ipynb": [],
     "elasticity/gals_mhm_workflow.ipynb": [],
-    "elasticity/mixed_stress_mhm_workflow.ipynb": []
+    "elasticity/mixed_stress_mhm_workflow.ipynb": [],
+    "transport/spatial_refinement.ipynb": [],
+    "darcy/equilibrated_flux_workflow.ipynb": []
   },
   "remote": {
     "benchmarks/results/api-binding-20261006/README.md": {
@@ -12924,6 +12978,398 @@
       "url": "https://ipes-lncc.github.io/pymhm/downloads/23bd55c72ff05a7ac18915a520c04e2043c31aabb626942a79c0de709e22d502/transient-native-study.json",
       "kind": "numerical-record",
       "provenance": "Physical refinement measurements; discretization, source and theorem scope are recorded in the method tutorial and this record."
+    },
+    "examples/results/tutorial-methods/mixed-mhm-current.json": {
+      "sha256": "e4af57e118ab0b582f8dd6ba0189bff67ff17dda4ae030037577d18188034380",
+      "size_bytes": 543598,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/e4af57e118ab0b582f8dd6ba0189bff67ff17dda4ae030037577d18188034380/mixed-mhm-current.json",
+      "kind": "numerical-record",
+      "provenance": "Current-source physical measurements; the record identifies the executed discretization, source identities and independent diagnostic controls. Literature scope is stated in the associated tutorial."
+    },
+    "examples/results/tutorial-methods/pgmhm-current.json": {
+      "sha256": "c863231e79d60fe867fb492c7869396b5cb74eed001564d49fef634454ace47f",
+      "size_bytes": 40005,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/c863231e79d60fe867fb492c7869396b5cb74eed001564d49fef634454ace47f/pgmhm-current.json",
+      "kind": "numerical-record",
+      "provenance": "Current-source physical measurements; the record identifies the executed discretization, source identities and independent diagnostic controls. Literature scope is stated in the associated tutorial."
+    },
+    "examples/results/tutorial-methods/mh2m-compatible-current.json": {
+      "sha256": "5b8d1d24620542d6fba18a991badfe3b37fa2f28fa497d599e600d3070747556",
+      "size_bytes": 1054691,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/5b8d1d24620542d6fba18a991badfe3b37fa2f28fa497d599e600d3070747556/mh2m-compatible-current.json",
+      "kind": "numerical-record",
+      "provenance": "Current-source physical measurements; the record identifies the executed discretization, source identities and independent diagnostic controls. Literature scope is stated in the associated tutorial."
+    },
+    "examples/results/tutorial-methods/mshho-current.json": {
+      "sha256": "bfdd177ea0910690cb9a909a49bf404936858d3a988078d231d4571956ce5c44",
+      "size_bytes": 40630,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/bfdd177ea0910690cb9a909a49bf404936858d3a988078d231d4571956ce5c44/mshho-current.json",
+      "kind": "numerical-record",
+      "provenance": "Current-source physical measurements; the record identifies the executed discretization, source identities and independent diagnostic controls. Literature scope is stated in the associated tutorial."
+    },
+    "examples/results/tutorial-methods/mixed-elasticity-asymptotic.json": {
+      "sha256": "ea7db747f56878df09d78a1804b89f26fb2930246181de0e2bec5766727a6374",
+      "size_bytes": 40196,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/ea7db747f56878df09d78a1804b89f26fb2930246181de0e2bec5766727a6374/mixed-elasticity-asymptotic.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; every composite input retains its executed source identities and independent controls. The associated tutorial states the discretization and literature scope."
+    },
+    "examples/results/tutorial-methods/maxwell-time-current.json": {
+      "sha256": "0b0997fba54eff2c704f8c81e4bab17da48e31a78f9bf3cbc86637d13cb9869a",
+      "size_bytes": 32766,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/0b0997fba54eff2c704f8c81e4bab17da48e31a78f9bf3cbc86637d13cb9869a/maxwell-time-current.json",
+      "kind": "numerical-record",
+      "provenance": "Current-source physical measurements; the record identifies the executed discretization, source identities and independent diagnostic controls. Literature scope is stated in the associated tutorial."
+    },
+    "examples/results/tutorial-methods/maxwell-classical-refinement.json": {
+      "sha256": "9df872119d99a07753f5d2225f86f752b3e98cccaa8c1459859d775833b384eb",
+      "size_bytes": 35499,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/9df872119d99a07753f5d2225f86f752b3e98cccaa8c1459859d775833b384eb/maxwell-classical-refinement.json",
+      "kind": "numerical-record",
+      "provenance": "Current-source physical measurements; the record identifies the executed discretization, source identities and independent diagnostic controls. Literature scope is stated in the associated tutorial."
+    },
+    "examples/results/tutorial-methods/elastodynamics-classical-refinement.json": {
+      "sha256": "c5430670ee368df53ca095b5ba4d30b3279bf101fbc776a7571221c89866aad9",
+      "size_bytes": 32176,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/c5430670ee368df53ca095b5ba4d30b3279bf101fbc776a7571221c89866aad9/elastodynamics-classical-refinement.json",
+      "kind": "numerical-record",
+      "provenance": "Current-source physical measurements; the record identifies the executed discretization, source identities and independent diagnostic controls. Literature scope is stated in the associated tutorial."
+    },
+    "examples/results/tutorial-methods/transient-spatial-classical-refinement.json": {
+      "sha256": "e2c505aef478632e22e259c90fc9c4d87377d41dc6a7b04d82107032ab8899de",
+      "size_bytes": 29889,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/e2c505aef478632e22e259c90fc9c4d87377d41dc6a7b04d82107032ab8899de/transient-spatial-classical-refinement.json",
+      "kind": "numerical-record",
+      "provenance": "Current-source physical measurements; the record identifies the executed discretization, source identities and independent diagnostic controls. Literature scope is stated in the associated tutorial."
+    },
+    "examples/results/tutorial-methods/recovery-classical-current.json": {
+      "sha256": "c41070758ab3a54aafd207c498c2611c8d1ceb75e3e5eaaed862700b10cba6eb",
+      "size_bytes": 44036,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/c41070758ab3a54aafd207c498c2611c8d1ceb75e3e5eaaed862700b10cba6eb/recovery-classical-current.json",
+      "kind": "numerical-record",
+      "provenance": "Current-source physical measurements; the record identifies the executed discretization, source identities and independent diagnostic controls. Literature scope is stated in the associated tutorial."
+    },
+    "examples/results/tutorial-methods/recovery-field-current.json": {
+      "sha256": "37e65786bb74c60dc9f61d709cebc020ef1abc4403a45a5558097345a092cfdd",
+      "size_bytes": 1014595,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/37e65786bb74c60dc9f61d709cebc020ef1abc4403a45a5558097345a092cfdd/recovery-field-current.json",
+      "kind": "numerical-record",
+      "provenance": "Current-source physical measurements; the record identifies the executed discretization, source identities and independent diagnostic controls. Literature scope is stated in the associated tutorial."
+    },
+    "examples/results/tutorial-methods/recovery-classical-field-current.json": {
+      "sha256": "667694fe97f2df605b73b231e20f35a3bee7fc3bdcb23bde33390de35eef3c73",
+      "size_bytes": 1680885,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/667694fe97f2df605b73b231e20f35a3bee7fc3bdcb23bde33390de35eef3c73/recovery-classical-field-current.json",
+      "kind": "numerical-record",
+      "provenance": "Current-source physical measurements; the record identifies the executed discretization, source identities and independent diagnostic controls. Literature scope is stated in the associated tutorial."
+    },
+    "examples/results/tutorial-methods/transient-spatial-asymptotic.json": {
+      "sha256": "6315111e91732fc3d7e28159b1ed74447ee4b98673606330af63734ea534b6a0",
+      "size_bytes": 70901,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/6315111e91732fc3d7e28159b1ed74447ee4b98673606330af63734ea534b6a0/transient-spatial-asymptotic.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; every composite input retains its executed source identities and independent controls. The associated tutorial states the discretization and literature scope."
+    },
+    "examples/results/tutorial-methods/equilibrated-rt0-current.json": {
+      "sha256": "c1cebfd0d070aaad9a9b3056b4c981b72c4103499fce17fdd01c0b47d0173bdd",
+      "size_bytes": 1179758,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/c1cebfd0d070aaad9a9b3056b4c981b72c4103499fce17fdd01c0b47d0173bdd/equilibrated-rt0-current.json",
+      "kind": "numerical-record",
+      "provenance": "Current-source physical measurements; the record identifies the executed discretization, source identities and independent diagnostic controls. Literature scope is stated in the associated tutorial."
+    },
+    "examples/results/tutorial-methods/recovery-current.json": {
+      "sha256": "ea1b89088b51d476708baa2cefe0ace203f7d289fa716d81be50c034bc04c699",
+      "size_bytes": 471396,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/ea1b89088b51d476708baa2cefe0ace203f7d289fa716d81be50c034bc04c699/recovery-current.json",
+      "kind": "numerical-record",
+      "provenance": "Current-source physical measurements; the record identifies the executed discretization, source identities and independent diagnostic controls. Literature scope is stated in the associated tutorial."
+    },
+    "examples/results/tutorial-methods/adaptivity-current.json": {
+      "sha256": "204a49f0dd2b4e73550ffe92f2b8c541ce938b80ffe533f7ee7ae8c7b2026f46",
+      "size_bytes": 1364019,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/204a49f0dd2b4e73550ffe92f2b8c541ce938b80ffe533f7ee7ae8c7b2026f46/adaptivity-current.json",
+      "kind": "numerical-record",
+      "provenance": "Current-source physical measurements; the record identifies the executed discretization, source identities and independent diagnostic controls. Literature scope is stated in the associated tutorial."
+    },
+    "examples/results/tutorial-methods/recursive-current.json": {
+      "sha256": "2f94f17e78edb1200b3d6baea7bb498de7980b71739a8699311b7a1aa7e846dd",
+      "size_bytes": 45368,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/2f94f17e78edb1200b3d6baea7bb498de7980b71739a8699311b7a1aa7e846dd/recursive-current.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; executed numerical owners, discretizations, source identities and independent controls are identified in the record and tutorial. Composite inputs retain their own executed attribution."
+    },
+    "examples/results/tutorial-methods/primal-elasticity-asymptotic.json": {
+      "sha256": "eb458bce950f5f01bd89ad1fd69c19ec4d4e3f6331b2df8347505d0e6213ce70",
+      "size_bytes": 113626,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/eb458bce950f5f01bd89ad1fd69c19ec4d4e3f6331b2df8347505d0e6213ce70/primal-elasticity-asymptotic.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; every composite input retains its executed source identities and independent controls. The associated tutorial states the discretization and literature scope."
+    },
+    "examples/results/tutorial-methods/adaptivity-classical-current.json": {
+      "sha256": "f21ccabd03fd98212b68f41a6f9379a4736a1fb97322c159bb071f0b6dd83389",
+      "size_bytes": 1736538,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/f21ccabd03fd98212b68f41a6f9379a4736a1fb97322c159bb071f0b6dd83389/adaptivity-classical-current.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/elastodynamics-classical-time-control.json": {
+      "sha256": "e106f65336d664633af05877b3530618e5a2dfe0e3404c79868e1e299d113710",
+      "size_bytes": 29937,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/e106f65336d664633af05877b3530618e5a2dfe0e3404c79868e1e299d113710/elastodynamics-classical-time-control.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/elastodynamics-spatial-current.json": {
+      "sha256": "a96661c320d96523fb1524775da4200bbd5de0d66a8c1edc553d6c8498a75877",
+      "size_bytes": 40423,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/a96661c320d96523fb1524775da4200bbd5de0d66a8c1edc553d6c8498a75877/elastodynamics-spatial-current.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/elastodynamics-spatial-maximum-coarse.json": {
+      "sha256": "b9e3d91eb7d999556f0c038a9917d0b0d916fb3daeb9f0fd0072f03c9bc24056",
+      "size_bytes": 40178,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/b9e3d91eb7d999556f0c038a9917d0b0d916fb3daeb9f0fd0072f03c9bc24056/elastodynamics-spatial-maximum-coarse.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/elastodynamics-spatial-maximum-current.json": {
+      "sha256": "6537e217638bde4b3bb4b663f67846c44f9a2b54b67a08fcec9dd74184776bec",
+      "size_bytes": 40256,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/6537e217638bde4b3bb4b663f67846c44f9a2b54b67a08fcec9dd74184776bec/elastodynamics-spatial-maximum-current.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/elastodynamics-spatial-maximum-n128.json": {
+      "sha256": "96bb373fd90cdf8c9179a7a47fb29d1fa40346b5af8761dddcf3f20c9d4e8a2f",
+      "size_bytes": 35422,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/96bb373fd90cdf8c9179a7a47fb29d1fa40346b5af8761dddcf3f20c9d4e8a2f/elastodynamics-spatial-maximum-n128.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/elastodynamics-spatial-maximum-n96.json": {
+      "sha256": "0bf1cb847bfd04a3bcf508bd584308d1dc29ba1bcad07d6d7700650494ffd6b7",
+      "size_bytes": 35417,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/0bf1cb847bfd04a3bcf508bd584308d1dc29ba1bcad07d6d7700650494ffd6b7/elastodynamics-spatial-maximum-n96.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/elastodynamics-spatial-n96-current.json": {
+      "sha256": "81a4633f9052e7e9046499ec003aca1d8273fe8f1eb6c5dde28cbbc25b04d3f3",
+      "size_bytes": 34103,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/81a4633f9052e7e9046499ec003aca1d8273fe8f1eb6c5dde28cbbc25b04d3f3/elastodynamics-spatial-n96-current.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/elastodynamics-spatial-time-control.json": {
+      "sha256": "2ec2f94cb2625b038eac0706a283a08409d8b4a1f13c383d064ecb5b105a30b8",
+      "size_bytes": 34102,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/2ec2f94cb2625b038eac0706a283a08409d8b4a1f13c383d064ecb5b105a30b8/elastodynamics-spatial-time-control.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/maxwell-classical-time-control.json": {
+      "sha256": "8c0c61982a348a8d942f1ef7a4c6e8411a5158f7ec739d5c0e8d6fe06688950d",
+      "size_bytes": 33724,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/8c0c61982a348a8d942f1ef7a4c6e8411a5158f7ec739d5c0e8d6fe06688950d/maxwell-classical-time-control.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/maxwell-spatial-current.json": {
+      "sha256": "92df69cf5ba6a848e40f953ddb539f5e5a834582343680ed8549e85fbbd25e21",
+      "size_bytes": 39326,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/92df69cf5ba6a848e40f953ddb539f5e5a834582343680ed8549e85fbbd25e21/maxwell-spatial-current.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/maxwell-spatial-n48-current.json": {
+      "sha256": "cfda97d1fb2e6c5af844088de8df299336fcacf9debfc28aca9614301d2c8595",
+      "size_bytes": 35006,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/cfda97d1fb2e6c5af844088de8df299336fcacf9debfc28aca9614301d2c8595/maxwell-spatial-n48-current.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/maxwell-spatial-n64-current.json": {
+      "sha256": "bb04adbc0edfeaa82a6d622974addc6d16359b92d8ef76fed8575dbd2e6dd33b",
+      "size_bytes": 35001,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/bb04adbc0edfeaa82a6d622974addc6d16359b92d8ef76fed8575dbd2e6dd33b/maxwell-spatial-n64-current.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/maxwell-spatial-time-control.json": {
+      "sha256": "eb5c87bdadb54869a001e379562ad7b9a4920419c5b9b085500f03c4ccd59e46",
+      "size_bytes": 35006,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/eb5c87bdadb54869a001e379562ad7b9a4920419c5b9b085500f03c4ccd59e46/maxwell-spatial-time-control.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/mixed-elasticity-asymptotic-extension.json": {
+      "sha256": "42211562e481fbf2d386200174f95670f25b8be637cb78e933698528eeae721a",
+      "size_bytes": 2486486,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/42211562e481fbf2d386200174f95670f25b8be637cb78e933698528eeae721a/mixed-elasticity-asymptotic-extension.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/mixed-elasticity-current-control.json": {
+      "sha256": "70ffc5b6b7ce46126ea41bcfb188907aa6d95d0c4ba68925580db15d7665b03f",
+      "size_bytes": 647069,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/70ffc5b6b7ce46126ea41bcfb188907aa6d95d0c4ba68925580db15d7665b03f/mixed-elasticity-current-control.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/primal-elasticity-asymptotic-extension.json": {
+      "sha256": "9df307e927116f80f5c5b8bfc19dd7874930555deb69954374c3c09a64a45d81",
+      "size_bytes": 46728662,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/9df307e927116f80f5c5b8bfc19dd7874930555deb69954374c3c09a64a45d81/primal-elasticity-asymptotic-extension.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/recovery-original-current.json": {
+      "sha256": "48456b2b8afd5c8a2147b03d4368edcbb845de45f6b94c1f48e5452ff92239c2",
+      "size_bytes": 135934,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/48456b2b8afd5c8a2147b03d4368edcbb845de45f6b94c1f48e5452ff92239c2/recovery-original-current.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/scalar-local-controls-current.json": {
+      "sha256": "8933c2e8c4f68a626276c4a0fc8e1b06e14334f8f8c413a2649137de27fe2350",
+      "size_bytes": 185665,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/8933c2e8c4f68a626276c4a0fc8e1b06e14334f8f8c413a2649137de27fe2350/scalar-local-controls-current.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/transient-spatial-classical-time-control.json": {
+      "sha256": "5532d536ebb302cb9e8043f58ddec743611c4f41b13dd21340e2092bbfee51d2",
+      "size_bytes": 29251,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/5532d536ebb302cb9e8043f58ddec743611c4f41b13dd21340e2092bbfee51d2/transient-spatial-classical-time-control.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/transient-spatial-current-definition-control.json": {
+      "sha256": "79ade5e11229528de817b42068b740bf59fe903b27755817695ea98cb62a0be9",
+      "size_bytes": 71516,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/79ade5e11229528de817b42068b740bf59fe903b27755817695ea98cb62a0be9/transient-spatial-current-definition-control.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/transient-spatial-current.json": {
+      "sha256": "a38ffec73d2b663fc66f129bbd709786ea3bef42efb4471ed0775c0de4c71ce4",
+      "size_bytes": 33632,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/a38ffec73d2b663fc66f129bbd709786ea3bef42efb4471ed0775c0de4c71ce4/transient-spatial-current.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/transient-spatial-original-control.json": {
+      "sha256": "9f4db6f4051d8efdb841138b73879da3842702ce5da1926e5313c6fcc21c8110",
+      "size_bytes": 154510,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/9f4db6f4051d8efdb841138b73879da3842702ce5da1926e5313c6fcc21c8110/transient-spatial-original-control.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/transient-spatial-time-control.json": {
+      "sha256": "08b6b356e0b9d7c1aaed8477308a8522dbd65ab7f4a057e526aaab4c8a7da06b",
+      "size_bytes": 111545,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/08b6b356e0b9d7c1aaed8477308a8522dbd65ab7f4a057e526aaab4c8a7da06b/transient-spatial-time-control.json",
+      "kind": "numerical-record",
+      "provenance": "Physical measurements with declared operator, approximation spaces and native numerical-owner identities. Source and diagnostic scope are stated in the record and associated tutorial."
+    },
+    "examples/results/tutorial-methods/stokes-taylor-hood-asymptotic.json": {
+      "sha256": "67678ccaa7fb23e2763b0ce10d36419a1b6f248bcbb1d205f8f6a66598fd9b21",
+      "size_bytes": 81949,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/67678ccaa7fb23e2763b0ce10d36419a1b6f248bcbb1d205f8f6a66598fd9b21/stokes-taylor-hood-asymptotic.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; each input retains its executed discretization, source identities and independent diagnostic controls. Literature scope is stated in the associated tutorial."
+    },
+    "examples/results/tutorial-methods/maxwell-spatial-asymptotic.json": {
+      "sha256": "2fd33d8e3facb0595e0c45e9e77e8dedd20ef697abeb33c3a6864a2d6c4b5eb9",
+      "size_bytes": 152787,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/2fd33d8e3facb0595e0c45e9e77e8dedd20ef697abeb33c3a6864a2d6c4b5eb9/maxwell-spatial-asymptotic.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; executed numerical owners, discretizations, source identities and independent controls are identified in the record and tutorial. Composite inputs retain their own executed attribution."
+    },
+    "examples/results/tutorial-methods/elastodynamics-spatial-maximum-n192.json": {
+      "sha256": "ba1099e509e7a48dc680713b459e86c051a7837eed03b9000b1c5cf0cff7332f",
+      "size_bytes": 35418,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/ba1099e509e7a48dc680713b459e86c051a7837eed03b9000b1c5cf0cff7332f/elastodynamics-spatial-maximum-n192.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; executed numerical owners, discretizations, source identities and independent controls are identified in the record and tutorial. Composite inputs retain their own executed attribution."
+    },
+    "examples/results/tutorial-methods/maxwell-spatial-n96-current.json": {
+      "sha256": "75d6c1717c56a2838f90e999f3efdda72058c4f1ab51278799b04d11384393c7",
+      "size_bytes": 35016,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/75d6c1717c56a2838f90e999f3efdda72058c4f1ab51278799b04d11384393c7/maxwell-spatial-n96-current.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; executed numerical owners, discretizations, source identities and independent controls are identified in the record and tutorial. Composite inputs retain their own executed attribution."
+    },
+    "examples/results/tutorial-methods/stokes-taylor-hood-classical-current.json": {
+      "sha256": "4fde90e2eaf5aac5e53c12d4deaab0f286fac76e556df0015be5d1c2da536e34",
+      "size_bytes": 37338,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/4fde90e2eaf5aac5e53c12d4deaab0f286fac76e556df0015be5d1c2da536e34/stokes-taylor-hood-classical-current.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; executed numerical owners, discretizations, source identities and independent controls are identified in the record and tutorial. Composite inputs retain their own executed attribution."
+    },
+    "examples/results/tutorial-methods/stokes-taylor-hood-coarse-control.json": {
+      "sha256": "2fb92c981523265c6802be68a974a1354719adb09feb1b499736428410a07c39",
+      "size_bytes": 152194,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/2fb92c981523265c6802be68a974a1354719adb09feb1b499736428410a07c39/stokes-taylor-hood-coarse-control.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; executed numerical owners, discretizations, source identities and independent controls are identified in the record and tutorial. Composite inputs retain their own executed attribution."
+    },
+    "examples/results/tutorial-methods/stokes-taylor-hood-current16.json": {
+      "sha256": "cce4d6f514af7ae9d3255fec39e68621cab2ba072c438ad82220633dd0d63056",
+      "size_bytes": 359689,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/cce4d6f514af7ae9d3255fec39e68621cab2ba072c438ad82220633dd0d63056/stokes-taylor-hood-current16.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; executed numerical owners, discretizations, source identities and independent controls are identified in the record and tutorial. Composite inputs retain their own executed attribution."
+    },
+    "examples/results/tutorial-methods/stokes-taylor-hood-current32.json": {
+      "sha256": "ec363037e2cfbf5a3616e1c7462741d6f9d0fdb4c4c4c5df832bc0d09dae31d1",
+      "size_bytes": 1329239,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/ec363037e2cfbf5a3616e1c7462741d6f9d0fdb4c4c4c5df832bc0d09dae31d1/stokes-taylor-hood-current32.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; executed numerical owners, discretizations, source identities and independent controls are identified in the record and tutorial. Composite inputs retain their own executed attribution."
+    },
+    "examples/results/tutorial-methods/stokes-taylor-hood-current64.json": {
+      "sha256": "752f0b63aa48369c1b6e0862204f5ea9f4ffd0bc524c20cf0584b26d60946fbe",
+      "size_bytes": 5213846,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/752f0b63aa48369c1b6e0862204f5ea9f4ffd0bc524c20cf0584b26d60946fbe/stokes-taylor-hood-current64.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; executed numerical owners, discretizations, source identities and independent controls are identified in the record and tutorial. Composite inputs retain their own executed attribution."
+    },
+    "examples/results/tutorial-methods/stokes-taylor-hood-fields-current.json": {
+      "sha256": "8b38b18c35cae1799c37085aefc4bcd30ae9df0d0ce35a87f31a4dabb206cc86",
+      "size_bytes": 2952894,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/8b38b18c35cae1799c37085aefc4bcd30ae9df0d0ce35a87f31a4dabb206cc86/stokes-taylor-hood-fields-current.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; executed numerical owners, discretizations, source identities and independent controls are identified in the record and tutorial. Composite inputs retain their own executed attribution."
+    },
+    "examples/results/tutorial-methods/elastodynamics-spatial-asymptotic.json": {
+      "sha256": "b67b62e73eeeaa78492724fad94848657999aa5e4713d3606d88eb31f0c1c2ba",
+      "size_bytes": 201451,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/b67b62e73eeeaa78492724fad94848657999aa5e4713d3606d88eb31f0c1c2ba/elastodynamics-spatial-asymptotic.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; executed numerical owners, discretizations, source identities and independent controls are identified in the record and tutorial. Composite inputs retain their own executed attribution."
+    },
+    "examples/results/tutorial-methods/elastodynamics-spatial-time-control-n128.json": {
+      "sha256": "d7157fa0363fe7b9c38b92e12d5fc9d2a74b7aa259ec0ae4e487de95dd1a7597",
+      "size_bytes": 35423,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/d7157fa0363fe7b9c38b92e12d5fc9d2a74b7aa259ec0ae4e487de95dd1a7597/elastodynamics-spatial-time-control-n128.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; executed numerical owners, discretizations, source identities and independent controls are identified in the record and tutorial. Composite inputs retain their own executed attribution."
+    },
+    "examples/results/tutorial-methods/primal-elasticity-classical-current.json": {
+      "sha256": "124d641a901b5a3ff71845413dc42da07ceb800b13db41165c384ee2b648bd5f",
+      "size_bytes": 32863,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/124d641a901b5a3ff71845413dc42da07ceb800b13db41165c384ee2b648bd5f/primal-elasticity-classical-current.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; executed numerical owners, discretizations, source identities and independent controls are identified in the record and tutorial. Composite inputs retain their own executed attribution."
+    },
+    "examples/results/tutorial-methods/primal-elasticity-fields-current.json": {
+      "sha256": "8e1f873c3e165ec3f7043425270e7adabfa662a5abb16f02075e98b60f0e4ad6",
+      "size_bytes": 4614806,
+      "url": "https://ipes-lncc.github.io/pymhm/downloads/8e1f873c3e165ec3f7043425270e7adabfa662a5abb16f02075e98b60f0e4ad6/primal-elasticity-fields-current.json",
+      "kind": "numerical-record",
+      "provenance": "Attributed physical measurements; executed numerical owners, discretizations, source identities and independent controls are identified in the record and tutorial. Composite inputs retain their own executed attribution."
     }
   },
   "schema_version": 2,

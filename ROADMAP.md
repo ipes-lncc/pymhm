@@ -42,7 +42,7 @@ The [Gallery](docs/gallery/index.md) retains numerical results and the
 and accuracy. The current source includes the contextual interface and portable
 native-form assembly; package metadata is synchronized at version 1.2.0.
 
-Local qualification includes **6,442 passing tests**, line coverage of
+Local qualification includes **6,460 passing tests**, line coverage of
 **99.80%** and branch coverage of **99.23%**, together with lint, formatting,
 type checking, native FEM, MPI and two-GPU integrations. The installed wheel
 passes its eight portable execution and PARDISO checks outside the checkout.
@@ -54,13 +54,25 @@ to the executed cases; it does not establish stability or resolution in other
 regimes. The documentation is organized into Home, Getting Started, Theoretical
 Background, Guides, Tutorials, Gallery, Development, API and Bibliography.
 Seventeen formulation tutorials and four recovery/adaptation/hierarchy lessons
-pair the equations with their implementation. Seventeen attributed refinement
-series attain their stated asymptotic targets; patch tests, reconstruction and
-adaptivity use their relevant physical invariants instead of fitted rates.
+pair the equations with their implementation. Attributed refinement evidence
+distinguishes smooth spatial approximation, temporal integration, independent
+trace refinement and differences to qualified numerical references. Physical
+conservation, recovery errors, estimator effectivity and adaptive error against
+work accompany the applicable convergence estimates.
 The [theory](docs/theory.md) and individual tutorials distinguish spatial rates,
 temporal rates, trace refinement and observations without a theorem claim.
+The twenty-one formulation refinement series retain every measured level,
+successive orders and target-normalized errors. Smooth Stokes qualification
+includes both Taylor–Hood and stabilized local spaces; difficult Brinkman layers
+remain a separate resolution study. Matched conforming references include the
+homogeneous anisotropic primal-elasticity family. The recovery lessons verify
+RT moment errors, projected divergence, distinct fine-cell RT0 conservation,
+adaptive error against work and equivalence of physical recursive condensation.
 Historical scaling measurements retain their original source revisions.
-All 111 downloadable notebooks have checksum-pinned support archives. Public
+All 113 downloadable notebooks have checksum-pinned support archives. The
+focused tutorial campaign verifies complete execution of 25 notebooks against
+their final source checksums; it does not certify execution of the remaining
+88 notebooks. Public
 API pages render every canonical module directly from its source docstrings.
 Original documentation figures use CC BY 4.0 with attribution to IPES Research
 Group; third-party assets retain their own terms. Mathematical rendering and
@@ -488,10 +500,25 @@ The documentation reorganization, method-based tutorials, problem/dimension
 gallery indexes, source-generated API coverage and architecture diagram are
 implemented. Keep their catalogues, theory hypotheses and original publication
 citations synchronized when adding a method or extending its admissible spaces.
-Current 3D Maxwell spatial measurements remain preasymptotic; the qualified
-temporal comparison uses the constrained semidiscrete ODE. Do not treat that
-algebraic reference as an independently refined conforming H(curl) simulation.
-Add such a physical reference when extending the Maxwell propagation examples.
+The two-dimensional TM Maxwell tutorial demonstrates combined L2 order two
+and broken H(curl) order one over its final spatial levels, with a separately
+refined conforming scalar-wave reference for that exact physical reduction.
+Its time-step sensitivity control applies to the stated resolution and retains
+the larger sensitivity of the individual electric error. This evidence does not
+qualify general three-dimensional propagation: the 3D stationary patch and
+earlier preasymptotic measurements remain separate. An independently refined
+3D conforming H(curl) reference and spatial qualification are still required
+when extending that scope. The constrained semidiscrete ODE qualifies temporal
+integration, rather than a separate physical spatial discretization.
+
+The smooth two-dimensional elastodynamic tutorial retains all nine spatial
+levels and separate endpoint and trajectory-maximum norms. Displacement and
+physical Cauchy-stress errors approach the published numerical targets of
+orders three and two; velocity follows an order-three envelope with visible
+interval variation. Named time-step controls at resolutions 96 and 128 quantify
+their own sensitivity, without claiming a control at resolution 192. These
+targets are numerical observations from the cited work, not a proved dynamic
+error estimate or reproduction of its historical three-dimensional data.
 
 Use `introduction` for UFL introductory notebooks and the case's documented
 profile for other acquisitions. Run affected notebooks with `notebooks-run`

@@ -185,11 +185,12 @@ evaluated independently.
 
 ## 7. Finish with a smooth asymptotic refinement family
 
-The final notebook section reads the attributed smooth Oseen record, prints its
-SHA-256 digest and computes consecutive rates. That family uses **stabilized
-P3/P3 local fields, vector P1 traces and a crisscross macro mesh**; its operator,
-source and stabilization are identified in the record. It is separate from the
-affine Taylor–Hood control above.
+The notebook next defines the smooth refinement problem explicitly, assembles
+its stabilized local and global equations, and plots the resulting fields. It
+then reads the attributed refinement record, prints its SHA-256 digest and
+computes consecutive rates. This second family uses **stabilized P3/P3 local
+fields, vector P1 traces and a crisscross macro mesh**. Its local spaces and
+operator differ from the affine Taylor–Hood control above.
 
 For that rate family the independently differentiated data are
 
@@ -224,17 +225,88 @@ $$
 \qquad\kappa_\tau=b_\tau\min(1,b_\tau/d_\tau).
 $$
 
-The final velocity $L^2$ orders are $2.988$ and $2.970$, and pressure $L^2$ orders
-are $2.090$ and $2.055$, approaching the smooth targets three and two. The
-coercivity, regularity and residual-test hypotheses appear on the
-[theory page](../../theory/flow.md#space-compatibility-and-rates).
+In the notebook, the source is differentiated symbolically from the physical
+solution, before compiling a form. The same function declares the stabilized
+local form and the unstabilized classical reference:
 
-![Measured Oseen velocity and pressure errors and consecutive rates](../../assets/tutorials/methods/oseen-convergence.svg)
+```python
+x = ufl.SpatialCoordinate(domain)
+psi = -128*x[0]**2*(1-x[0])**2*x[1]**2*(1-x[1])**2
+truth = ufl.as_vector((psi.dx(1), -psi.dx(0)))
+truth_pressure = (x[0]-x[1])**6-1/28
+beta = ufl.as_vector((1/np.sqrt(2), 1/np.sqrt(2)))
+force = (-ufl.div(ufl.grad(truth))+ufl.grad(truth)*beta
+         +truth+ufl.grad(truth_pressure))
+residual = -ufl.div(ufl.grad(u))+ufl.grad(u)*beta+u+ufl.grad(p)
+adjoint = -ufl.div(ufl.grad(v))-ufl.grad(v)*beta+v+ufl.grad(q)
+a += (kappa*ufl.div(u)*ufl.div(v)-delta*ufl.inner(residual, adjoint))*dx
+L = (ufl.inner(force, v)-delta*ufl.inner(force, adjoint))*dx
+```
+
+The tutorial computes the required local inverse constant using the shared
+finite-element tabulation and inverse-bound operations, then binds the displayed
+$\delta_\tau$ and $\kappa_\tau$ as native coefficient values. It declares the
+velocity and pressure fields, two retained velocity moments, negative velocity
+jump pairing and one global zero-mean pressure gauge explicitly. With eight
+macro grid subdivisions, its independently integrated velocity, pressure and
+product-norm errors are $9.1431\times10^{-4}$, $4.6453\times10^{-2}$ and
+$7.9393\times10^{-2}$. The original uncondensed local and global equations have
+relative residual $1.36\times10^{-14}$; the reconstructed pressure mean is
+within $7.3\times10^{-16}$ of zero.
+
+For the independent classical reference, the notebook sets $\delta=\kappa=0$
+and assembles the same physical UFL operator in globally conforming P2/P1
+Taylor–Hood spaces, with strong zero exterior velocity and the same pressure
+gauge. Its own analytical errors decrease on three global meshes:
+
+| Global subdivisions | Velocity $L^2$ error | Pressure $L^2$ error | Product-norm error |
+| --- | ---: | ---: | ---: |
+| 16 | $6.7828\times10^{-4}$ | $3.1377\times10^{-3}$ | $8.3591\times10^{-2}$ |
+| 32 | $8.4786\times10^{-5}$ | $3.0846\times10^{-4}$ | $2.1030\times10^{-2}$ |
+| 64 | $1.0602\times10^{-5}$ | $4.6421\times10^{-5}$ | $5.2672\times10^{-3}$ |
+
+![Smooth analytical, MHM and refined Taylor–Hood fields with physical errors](../../assets/tutorials/methods/oseen-smooth-fields.png)
+
+The reference is a numerical approximation. The MHM panels retain independent
+incident reconstructions and the actual crisscross macro mesh; the coarse
+pressure visualization exposes its larger interface errors rather than smoothing
+them away.
+
+The direct literature comparison uses the product norm defined in
+[Araya et al. (2021), Section 2.2](https://doi.org/10.1007/s10444-020-09833-8):
+
+$$
+\begin{aligned}
+\lVert(e_u,e_p)\rVert_{V\times Q}^2
+={}&d_\Omega^{-2}\lVert e_u\rVert_{L^2(\Omega)}^2
++\sum_K\lVert\nabla e_u\rVert_{L^2(K)}^2
++\lVert e_p\rVert_{L^2(\Omega)}^2.
+\end{aligned}
+$$
+
+For face degree one, Section 5.1 reports order two in this norm. The same
+observable is integrated here, with $d_\Omega=\sqrt2$ on the unit square.
+The last three orders are $2.0268$, $2.0144$ and $1.9991$. Pressure has orders
+$2.0778$, $2.0904$ and $2.0549$, consistent with that product-norm estimate.
+The separately plotted velocity $L^2$ orders $3.0692$, $2.9885$ and $2.9697$
+are **observed additional accuracy**; the cited Oseen product-norm result
+does not by itself prove a third-order velocity $L^2$ estimate.
+
+The comparison assumes constant positive viscosity, full Dirichlet velocity,
+smooth data, a regular mesh family and positive effective reaction
+$\gamma-\tfrac12\nabla\cdot\beta$. These conditions hold for this fixed
+coefficient example. The stabilized P3/P3 local pair and vector P1 traces
+are preserved throughout refinement. The
+[theory page](../../theory/flow.md#space-compatibility-and-rates) explains the
+coercivity and residual-test requirements; decreasing viscosity is a different
+parameter study.
+
+![Measured Oseen product-norm and field errors, three terminal rates and normalized amplitudes](../../assets/tutorials/methods/oseen-convergence.svg)
 
 The notebook identifies the exact JSON acquisition and its source digest.
 The [flow gallery](../../gallery/flow.md) links the other current Oseen studies.
-This declared uniform family does not reproduce unidentified historical
-adaptive meshes.
+This study qualifies the declared uniform mesh family; adaptive refinement
+is evaluated in the separate gallery studies.
 
 ## References
 
