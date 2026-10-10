@@ -168,7 +168,7 @@ Built-in geometries include triangles, rectangular cells, simple planar polygons
 tetrahedra, affine prisms, star-shaped polyhedra with planar faces and trilinearly
 mapped hexahedra.
 Nonconvex polyhedra require a certified positive-volume kernel and a conforming
-tetrahedral decomposition, as described in the [polyhedral case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/star-polyhedra.md).
+tetrahedral decomposition, as described in the [polyhedral case](cases/star-polyhedra.md).
 The [scope matrix](https://github.com/ipes-lncc/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria) identifies the formulations available on each
 geometry; they are not interchangeable backends for every equation.
 Face partitions and polynomial degrees are independent of local refinement.

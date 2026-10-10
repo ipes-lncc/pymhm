@@ -264,6 +264,132 @@ def plot_material(output: Path) -> None:
     plt.close(fig)
 
 
+def plot_recorded_results(comparison: Path, controls: Path, output: Path) -> dict[str, Any]:
+    """Plot retained component norms without accessing or reconstructing field arrays.
+
+    Relative differences use each record's named numerical reference, not an
+    exact solution. Electric and magnetic fields retain their separate
+    physical times. This validates the recorded norm arithmetic and comparison
+    contracts; it does not revalidate the unavailable coefficient archives.
+    """
+    import matplotlib.pyplot as plt
+
+    records = json.loads(read_resource_bytes(comparison))["comparisons"]
+    increments = json.loads(read_resource_bytes(controls))
+    component_names = ["electric", "magnetic_x", "magnetic_y"]
+    for row in [*records, *increments.values()]:
+        absolute = np.asarray(row["absolute_l2"], dtype=float)
+        denominator = np.asarray(row["reference_l2"], dtype=float)
+        relative = np.asarray(row["relative_l2"], dtype=float)
+        if (
+            row["components"] != component_names
+            or any(value.shape != (3,) for value in (absolute, denominator, relative))
+            or not np.isfinite([absolute, denominator, relative]).all()
+            or np.any(absolute < 0)
+            or np.any(denominator <= 0)
+            or not np.allclose(relative, absolute / denominator, rtol=1e-12, atol=0)
+            or not np.isclose(
+                row["combined_relative_l2"],
+                np.linalg.norm(absolute) / np.linalg.norm(denominator),
+                rtol=1e-12,
+                atol=0,
+            )
+        ):
+            raise ValueError("recorded Maxwell norms require consistent physical components")
+        for name in ("electric_time", "magnetic_time"):
+            if not np.isclose(row["field"][name], row["reference"][name], rtol=0, atol=1e-12):
+                raise ValueError(f"recorded Maxwell fields have different {name}")
+    if len(records) != 3 or [row["field"]["resolution"] for row in records] != [128, 128, 32]:
+        raise ValueError("recorded Maxwell comparison requires the declared three field spaces")
+    control_names = {
+        "spatial_256_512": "DG spatial: 256 → 512",
+        "spatial_512_1024": "DG spatial: 512 → 1024",
+        "time_512": "DG time: 0.0025 → 0.00125",
+        "material_quadrature_256": "DG material rule: 12 → 20",
+        "mhm_time": "MHM time: 0.01 → 0.005",
+        "mhm_material_quadrature": "MHM material rule: 20 → 28",
+    }
+    if set(increments) != set(control_names):
+        raise ValueError("recorded Maxwell controls require each declared independent refinement")
+    output.mkdir(parents=True, exist_ok=True)
+    colors = ("#0072B2", "#D55E00", "#009E73")
+    figure, axis = plt.subplots(figsize=(9.0, 4.5), layout="constrained")
+    x = np.arange(3)
+    for index, (row, label, color) in enumerate(
+        zip(records, ("MHM 16 × 16", "MHM 8 × 8", "Classical DG 32 × 32"), colors, strict=True)
+    ):
+        axis.bar(
+            x + (index - 1) * 0.24,
+            100 * np.asarray(row["relative_l2"]),
+            width=0.24,
+            color=color,
+            label=label,
+        )
+    axis.set(
+        xticks=x,
+        xticklabels=(r"$E_z$", r"$H_x$", r"$H_y$"),
+        ylabel="Relative physical L2 difference (%)",
+        yscale="log",
+        title="Comparison with the classical DG Q2 1024 × 1024 reference",
+    )
+    axis.grid(axis="y", alpha=0.2)
+    axis.set_axisbelow(True)
+    axis.legend(loc="upper center", bbox_to_anchor=(0.5, -0.12), ncol=3, frameon=False)
+    names = ["recorded-component-errors"]
+    for suffix in ("png", "svg"):
+        figure.savefig(output / f"{names[-1]}.{suffix}", dpi=200)
+    plt.close(figure)
+
+    figure, axis = plt.subplots(figsize=(9.0, 5.8), layout="constrained")
+    y = np.arange(len(control_names))
+    values = np.array([increments[name]["relative_l2"] for name in control_names])
+    for component, (label, color) in enumerate(
+        zip((r"$E_z$", r"$H_x$", r"$H_y$"), colors, strict=True)
+    ):
+        axis.barh(
+            y + (component - 1) * 0.24,
+            100 * values[:, component],
+            height=0.24,
+            color=color,
+            label=label,
+        )
+    axis.set(
+        yticks=y,
+        yticklabels=list(control_names.values()),
+        xlabel="Relative physical L2 increment (%)",
+        xscale="log",
+        xlim=(0.01, 1.0),
+        title="Independent spatial, temporal and material integration controls",
+    )
+    axis.invert_yaxis()
+    axis.grid(axis="x", alpha=0.2)
+    axis.set_axisbelow(True)
+    axis.legend(loc="upper center", bbox_to_anchor=(0.5, -0.13), ncol=3, frameon=False)
+    names.append("recorded-refinement-controls")
+    for suffix in ("png", "svg"):
+        figure.savefig(output / f"{names[-1]}.{suffix}", dpi=200)
+    plt.close(figure)
+    receipt = {
+        "scope": "Plots of retained norm measurements; no field reconstruction or new simulation",
+        "electric_time": records[0]["field"]["electric_time"],
+        "magnetic_time": records[0]["field"]["magnetic_time"],
+        "source_records_sha256": {
+            path.name: hashlib.sha256(read_resource_bytes(path)).hexdigest()
+            for path in (comparison, controls)
+        },
+        "plot_owner_sha256": hashlib.sha256(read_resource_bytes(Path(__file__))).hexdigest(),
+        "figure_sha256": {
+            f"{name}.{suffix}": hashlib.sha256(
+                (output / f"{name}.{suffix}").read_bytes()
+            ).hexdigest()
+            for name in names
+            for suffix in ("png", "svg")
+        },
+    }
+    (output / "recorded-results.json").write_text(json.dumps(receipt, indent=2) + "\n")
+    return receipt
+
+
 def main() -> None:
     """Produce quadrature-checked comparisons from completed source-frozen acquisitions."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -271,7 +397,18 @@ def main() -> None:
         "--reference", type=Path, default=DATA / "dg-q2-n1024-q12-dt0.00125-device.npz"
     )
     parser.add_argument("--plot", action="store_true")
+    parser.add_argument(
+        "--records-only",
+        action="store_true",
+        help="Plot retained norms and material without acquiring or reading field arrays",
+    )
     args = parser.parse_args()
+    if args.records_only:
+        output = ROOT / "docs/figures/maxwell-nanoguide"
+        output.mkdir(parents=True, exist_ok=True)
+        plot_material(output)
+        plot_recorded_results(DATA / "comparison.json", DATA / "refinement-controls.json", output)
+        return
     paths = [
         DATA / "mhm-n16-f128-q12-dt0.01-fields.npz",
         DATA / "mhm-n8-f128-q12-dt0.01-fields.npz",

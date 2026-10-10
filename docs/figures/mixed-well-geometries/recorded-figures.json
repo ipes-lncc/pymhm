@@ -1,0 +1,29 @@
+{
+  "scope": "Plots of unchanged archived norm/profile measurements; coefficient archives are not reconstructed or revalidated.",
+  "records_sha256": {
+    "examples/results/mixed-well-geometries/prism-p1-fine1-macro1.json": "31fb7ba846a251ae2cecd18ba7790547aa879c61510895d729e8a455b45b9195",
+    "examples/results/mixed-well-geometries/prism-p1-fine2-macro1.json": "09c902e11ce5678a7d0f5a25334ab89f49a8c2f2b26ded8d953edd1b449450dd",
+    "examples/results/mixed-well-geometries/prism-p1-fine2-macro2.json": "5d83046825b0630ff79ae22dc274b096982d785f5121c406d984d499b4b41eae",
+    "examples/results/mixed-well-geometries/prism-p1-fine4-macro1.json": "731e0ee05024dc6067fe49721f681ef5107922f43882b3b334ff48f32dc63070",
+    "examples/results/mixed-well-geometries/prism-p1-fine4-macro2.json": "2966859dd5a457db13d48fd838898fe51c88894e845582f73cfd8abd16ce731c",
+    "examples/results/mixed-well-geometries/prism-p1-fine4-macro4.json": "862d9a99c154b81f977931fd765161c18e6a735f39ec2310adf6644866c75d38",
+    "examples/results/mixed-well-geometries/tetrahedron-p1-fine1-macro1.json": "0d3e041e497cff5bacb6b5bea1f7f535833ed358c4edfc7cd88c5ac51c72de2a",
+    "examples/results/mixed-well-geometries/tetrahedron-p1-fine2-macro1.json": "170c5f444da341ba9ddf6702e3e1930606a8ab358b3b77376eaf71bf09751068",
+    "examples/results/mixed-well-geometries/tetrahedron-p1-fine2-macro2.json": "5fbb3f2c6a77f0015de8be9ac6ac2cb405b18ed369b22e1f7695dec727baaaf0",
+    "examples/results/mixed-well-geometries/tetrahedron-p1-fine4-macro1.json": "05bab1353affd5ea3021f9e8484dc50471716b650d12a39061d44a4eb5c4d877",
+    "examples/results/mixed-well-geometries/tetrahedron-p1-fine4-macro2.json": "40c7f0dcbaeeb65f6873435e572b0a4c2106ed1413fbcf39e636947fda64da30",
+    "examples/results/mixed-well-geometries/tetrahedron-p1-fine4-macro4.json": "809df5d15ad843b545f222c8085c73228c5e0794513c350af83371ee511c890c",
+    "examples/results/mixed-well-geometries/tetrahedron-p2-fine1-macro1.json": "9d4546276025e14a0a542d228dca66b64ec7820de8e316b70f76baad259c55b1",
+    "examples/results/mixed-well-geometries/tetrahedron-p2-fine2-macro1.json": "1cdabd32b3cde63fbae86e01436a659b0b9d224514634b042414b2c93ea6d59e",
+    "examples/results/mixed-well-geometries/tetrahedron-p2-fine2-macro2.json": "8b541253e3feb240ca5a2a4c1d6302642e913ae5d48b4b32ca16c4a1fb430833",
+    "examples/results/mixed-well-geometries/tetrahedron-p2-fine4-macro1.json": "fc7085184ae71a80c1c3ef7186882f924fe9008efd82f6ff620e3958a4d14231",
+    "examples/results/mixed-well-geometries/tetrahedron-p2-fine4-macro2.json": "0708af9c6b7c9ccb99866800cb14cf02955eb0437e22075c0651862454df930b",
+    "examples/results/mixed-well-geometries/tetrahedron-p2-fine4-macro4.json": "e2cf33b4ecf0318ddab41c505258b438b25843502864933d4ddd5069c1aa3694",
+    "examples/results/mapped-well/fine1-macro1-q6.json": "0df8b43e3588d8723c9f9b24a4682e028f06424e0e10d2a640031f18d548bd96",
+    "examples/results/mapped-well/fine2-macro2-q6.json": "6d36806f37e89a77b892c0338e02a73d00b160c68d0049b90798f9a685d04ca9",
+    "examples/results/mapped-well/fine4-macro4-q6.json": "0eca16cdcc362da60450efbc665157e9cd9609e2c127e1759100b595a1c5f7f2"
+  },
+  "figures": [
+    "convergence.png"
+  ]
+}

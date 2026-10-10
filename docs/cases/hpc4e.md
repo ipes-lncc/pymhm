@@ -27,7 +27,6 @@ are reversed once to obtain upward height. Checksums pin all three arrays.
 
 ![HPC4e material fields and actual macro mesh](../figures/hpc4e/material.png)
 
-
 | Quantity | Published experiment and PyMHM setting |
 |---|---|
 | Macro partition | 16 × 8 rectangles |
@@ -58,8 +57,14 @@ traction transmission and can produce large stress oscillations. The expected
 published behavior is progressive agreement with the classical curve when the
 skeleton is refined, with the local grid and polynomial spaces held fixed.
 
+![Retained PyMHM signed-stress samples and digitized publication intervals](../figures/hpc4e/recorded-profile-comparison.png)
 
-![PyMHM and digitized published stress profiles](../figures/hpc4e/published-profile-comparison.png)
+Crosses show the retained numerical point samples. Dots and error bars show
+the publication's digitized values and pixel intervals. The numerical markers
+are unconnected because those sample points do not determine the one-sided
+stress polynomial between them. Vertical lines mark the actual macro columns.
+The [chart record](../figures/hpc4e/recorded-profile-source.json) identifies the
+retained point datasets and figure by their SHA-256 digests.
 
 The comparison samples the red curves directly from the embedded publication
 raster. Calibration uses the plotted coordinate axes. Each interval contains the
@@ -164,7 +169,6 @@ The [spatial-refinement and MHM records](../figures/hpc4e/reference-spatial-refi
 and [degree-refinement records](../figures/hpc4e/reference-refinement.json)
 include absolute norms and input checksums.
 
-
 The separate same-space RT1 comparison is:
 
 | Skeleton level | Stress L2 difference | Displacement L2 difference | Compliance difference |
@@ -188,17 +192,11 @@ nested discrete stress spaces, equilibrium and weak-symmetry constraints. It
 is not a bound on the error relative to the continuum solution, and it must not
 be applied automatically between RT1 and RT2 rotation/displacement spaces.
 
-
-![Signed stress and displacement comparison](../figures/hpc4e/stress-displacement-fields.png)
-
-The profiles and signed field panels compare MHM against the independently
-assembled RT2 baseline on 1024 × 512 cells. The signed maps use symmetric-log color scales, with a linear interval
-within 1% of each scale limit. Compared fields share limits; difference panels
-have their own symmetric scales. No values are clipped. Spatial field maps sample
-the centres of the common 1024 × 512 fine-cell partition; the reported norms
-use quadrature rather than these samples. Each sample uses its owning cell
-polynomial, without averaging across interfaces.
-
+Full displacement and stress comparison maps require the separate original
+RT2 reference coefficient archive on $1024\times512$ cells. This report publishes
+the actual material map, retained signed-stress samples and integrated comparison
+norms. The point samples are distinct from the full-field quadrature used for
+the norm and complementary-energy comparisons.
 
 ## Algebraic and physical checks
 
@@ -247,10 +245,17 @@ pixi run --locked -e notebooks python -m examples.plot_hpc4e \
   --reference build/results/hpc4e/classical-rt2-1024x512-mumps.npz
 ```
 
+The recorded stress-sample chart above can be rendered without the complete
+coefficient archives:
+
+```bash
+pixi run --locked -e notebooks python -c "from examples.plot_hpc4e import recorded_profiles; recorded_profiles()"
+```
+
 The dataset manifest records the public data source, revision and checksums.
 Numerical records identify the approximation spaces and source hashes. The
-reference implementation described in the paper is NeoPZ; the newly assembled
-classical fields shown here are DOLFINx/UFL results and are identified accordingly.
+reference implementation described in the paper is NeoPZ; the classical
+reference results reported here use DOLFINx/UFL and are identified accordingly.
 
 ## References
 

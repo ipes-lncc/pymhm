@@ -167,14 +167,156 @@ def render_material(material: MarmousiMaterial, directory: Path) -> None:
     (directory / "material.json").write_text(json.dumps(provenance, indent=2) + "\n")
 
 
+def plot_recorded_results(source: Path, directory: Path) -> dict[str, Any]:
+    """Plot archived norm measurements with their original square source cutout.
+
+    The published records use the full domain for pressure and exclude the
+    50-by-50 m square (4975, 5025) × (25, 75) for derivative norms. Successive
+    reference increments use the finer field as denominator; the MHM comparison
+    uses the named classical P4 reference. No field arrays are read, no fields
+    are reconstructed, and these plots do not certify the remaining reference
+    error or revalidate historical executed sources.
+    """
+    paths = [source / "classical-convergence.json", source / "mhm-H20-ell1-vs-classical-p4.json"]
+    convergence, comparison = [json.loads(read_resource_bytes(path)) for path in paths]
+    references = convergence["references"]
+    if [row["degree"] for row in references] != [1, 2, 3, 4]:
+        raise ValueError("Marmousi recorded refinement requires the declared P1 through P4 levels")
+    for row in references:
+        path = source / row["reference_record"]
+        if hashlib.sha256(read_resource_bytes(path)).hexdigest() != row["reference_record_sha256"]:
+            raise ValueError("Marmousi recorded refinement identifies a different acquisition")
+    for name in ("candidate", "reference"):
+        path = source / comparison[name]
+        if (
+            hashlib.sha256(read_resource_bytes(path)).hexdigest()
+            != comparison[f"{name}_record_sha256"]
+        ):
+            raise ValueError("Marmousi recorded comparison identifies a different acquisition")
+    selected = {
+        "pressure": "Global pressure L2",
+        "gradient": "Cutout gradient",
+        "flux": "Cutout acoustic flux",
+        "graph": "Cutout graph norm",
+    }
+    norm_records = [row["increment"] for row in references[1:]] + list(comparison["norms"].values())
+    for row in norm_records:
+        if (
+            row["domain_area"] != 10240 * 2560
+            or row["gradient_cutout"] != [4975.0, 5025.0, 25.0, 75.0]
+            or row["gradient_domain_area"] != 10240 * 2560 - 50 * 50
+        ):
+            raise ValueError(
+                "Marmousi recorded norms require the original 50 by 50 m square cutout"
+            )
+        for name in selected:
+            difference = row[f"{name}_difference"]
+            denominator = row[f"reference_{name}_norm"]
+            relative = row[f"{name}_relative_difference"]
+            if (
+                not np.isfinite([difference, denominator, relative]).all()
+                or difference < 0
+                or denominator <= 0
+                or not np.isclose(relative, difference / denominator, rtol=1e-12, atol=0)
+            ):
+                raise ValueError("Marmousi recorded norms require consistent physical ratios")
+    samples = comparison["sampled_pressure"]
+    if len(samples) != 4 or {tuple(row["incident_side"]) for row in samples} != {
+        (-1, -1),
+        (-1, 1),
+        (1, -1),
+        (1, 1),
+    }:
+        raise ValueError("Marmousi recorded samples require four independent incident sides")
+    for row in samples:
+        if not np.isclose(
+            row["relative_difference"],
+            row["difference"] / row["reference_norm"],
+            rtol=1e-12,
+            atol=0,
+        ):
+            raise ValueError("Marmousi recorded sample ratios must retain their stated denominator")
+    directory.mkdir(parents=True, exist_ok=True)
+    figure, axis = plt.subplots(figsize=(8.0, 4.8), layout="constrained")
+    for (name, label), color, marker in zip(
+        selected.items(),
+        ("#0072B2", "#D55E00", "#009E73", "#CC79A7"),
+        ("o", "s", "^", "D"),
+        strict=True,
+    ):
+        values = [100 * row["increment"][f"{name}_relative_difference"] for row in references[1:]]
+        axis.plot(np.arange(3), values, marker=marker, color=color, label=label, linewidth=1.6)
+    axis.set(
+        xticks=np.arange(3),
+        xticklabels=(r"$P_1 \to P_2$", r"$P_2 \to P_3$", r"$P_3 \to P_4$"),
+        ylabel="Successive physical norm increment (%)",
+        yscale="log",
+        title="Classical reference refinement on the fixed 5 m material mesh",
+    )
+    axis.grid(axis="y", alpha=0.2)
+    axis.legend(loc="upper center", bbox_to_anchor=(0.5, -0.13), ncol=2, frameon=False)
+    save(figure, directory, "recorded-reference-refinement")
+
+    figure, axes = plt.subplots(1, 2, figsize=(10.4, 4.4), layout="constrained")
+    physical = comparison["norms"]["10"]
+    values = [100 * physical[f"{name}_relative_difference"] for name in selected]
+    bars = axes[0].barh(list(selected.values()), values, color="#0072B2")
+    axes[0].bar_label(bars, fmt="%.4f", padding=3)
+    axes[0].set(
+        title="Physical field norms", xlabel="Difference from classical P4 (%)", xlim=(0, 3.6)
+    )
+    axes[0].invert_yaxis()
+    values = [100 * row["relative_difference"] for row in samples]
+    labels = [f"({row['incident_side'][0]:+d}, {row['incident_side'][1]:+d})" for row in samples]
+    bars = axes[1].barh(labels, values, color="#D55E00")
+    axes[1].bar_label(bars, fmt="%.4f", padding=3)
+    axes[1].set(
+        title="Unweighted sampled pressure",
+        xlabel="Difference from classical P4 (%)",
+        ylabel="Incident macro side (horizontal, depth)",
+        xlim=(0, 3.6),
+    )
+    axes[1].invert_yaxis()
+    for axis in axes:
+        axis.grid(axis="x", alpha=0.2)
+        axis.set_axisbelow(True)
+    figure.suptitle("MHM Q3; H = 20 m; linear conormal trace", fontsize=14)
+    save(figure, directory, "recorded-mhm-comparison")
+    names = ("recorded-reference-refinement", "recorded-mhm-comparison")
+    receipt = {
+        "scope": "Plots of retained norm measurements; no field reconstruction or new simulation",
+        "gradient_cutout_m": [4975.0, 5025.0, 25.0, 75.0],
+        "pressure_domain": "Complete physical domain",
+        "derivative_domain": "Physical domain minus the fixed 50 by 50 m source square",
+        "source_records_sha256": {
+            path.name: hashlib.sha256(read_resource_bytes(path)).hexdigest() for path in paths
+        },
+        "plot_owner_sha256": hashlib.sha256(read_resource_bytes(Path(__file__))).hexdigest(),
+        "figure_sha256": {
+            f"{name}.{suffix}": hashlib.sha256(
+                (directory / f"{name}.{suffix}").read_bytes()
+            ).hexdigest()
+            for name in names
+            for suffix in ("png", "svg")
+        },
+    }
+    (directory / "recorded-results.json").write_text(json.dumps(receipt, indent=2) + "\n")
+    return receipt
+
+
 def main() -> None:
     """Plot complete declared material and compare acquired classical pressure levels."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--data", type=Path, required=True)
+    parser.add_argument("--data", type=Path)
     parser.add_argument("--source", type=Path, default=ROOT / "examples/results/marmousi")
     parser.add_argument("--output", type=Path, default=ROOT / "docs/figures/marmousi")
     parser.add_argument(
         "--material-only", action="store_true", help="Render primary material without field records"
+    )
+    parser.add_argument(
+        "--records-only",
+        action="store_true",
+        help="Plot retained norm records without primary material or field arrays",
     )
     parser.add_argument(
         "--degrees",
@@ -185,6 +327,11 @@ def main() -> None:
     )
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
+    if args.records_only:
+        plot_recorded_results(args.source, args.output)
+        return
+    if args.data is None:
+        parser.error("--data is required for material or acquired-field plots")
     material = load_marmousi_crop(args.data)
     if args.material_only:
         render_material(material, args.output)

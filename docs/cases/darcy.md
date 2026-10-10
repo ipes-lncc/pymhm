@@ -15,8 +15,8 @@ The [theory](../theory.md) explains the trace sign and local elimination;
 
 Both local formulations and the flux reconstruction on this page are executed
 by pyMHM's native NumPy/SciPy backend. Their reference fields are analytical
-expressions. The separate [DOLFINx assembly verification](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy-audit.md),
-[MSL primal comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reference-comparison.md), and [NeoPZ mixed comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/neopz.md)
+expressions. The separate [DOLFINx assembly verification](darcy-audit.md),
+[MSL primal comparison](reference-comparison.md), and [NeoPZ mixed comparison](neopz.md)
 identify the external implementations used for additional checks.
 
 ## Smooth pressure: compare both local formulations
@@ -61,9 +61,9 @@ separate when plotting, and P0 pressure is not interpolated into a smooth field.
 The relative L2 flux errors are **22.42%** (primal) and **21.87%** (mixed).
 The visible mosaic includes a substantial approximation error. A small solver
 residual and a conservative RT0 field do not establish a sufficiently resolved
-solution. The [independent accuracy study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy-audit.md) quantifies the separate
+solution. The [independent accuracy study](darcy-audit.md) quantifies the separate
 effects of macro, local and trace refinement.
-The [matched coarse-case reference computations](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/coarse-cosine.md) compare this
+The [matched coarse-case reference computations](coarse-cosine.md) compare this
 specific discretization with MSL and NeoPZ, using the same nonzero weak
 Dirichlet pressure data.
 
@@ -118,7 +118,7 @@ unsmoothed, with identical scales within each comparison.
 The improvement requires enriching the trace. Refining only the local triangles
 leaves a flux-error plateau near 22%. Five-point macro, local and trace studies,
 normal-jump diagnostics, and independent DOLFINx/UFL checks are reported in the
-[Darcy flux verification study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy-audit.md). The separate
+[Darcy flux verification study](darcy-audit.md). The separate
 [published-result comparisons](reproduction.md) distinguish analytical
 verification from reproduction of an article's actual error curves.
 

@@ -8,7 +8,6 @@ are pinned by revision and SHA-256 checksums. The
 [MRST SPE10 documentation](https://www.sintef.no/contentassets/2551f5f85547478590ceca14bc13ad51/spe10.html)
 describes the two models and their unit conventions.
 
-
 The volume panel uses the true geometric aspect ratio. Only the slices are
 computational domains in these experiments. Their dark contours show the
 66-square Darcy macrogrid; the material grid is the finer 60×220 pixel grid.
@@ -26,7 +25,6 @@ Neither material values nor finite-element fields are smoothed across cells.
 The following common-scale comparison makes the layer choice inspectable.
 Kx equals Ky in these slices. Kz is preserved in the archived data, but is not
 used as an in-plane component.
-
 
 The plots use the natural logarithm of the numerical permeability in mD.
 For layer 36, its range is approximately −6.14 to 9.04, consistent with the
@@ -54,7 +52,6 @@ $$
 with bottom pressure 1, top pressure 0 and zero normal flux on both vertical
 sides. Their Figure 5 supplies the material and reference-pressure images:
 
-
 Their Figure 6 uses 6×11 square macrocells of side 200, bilinear Q1 local
 problems, and continuous piecewise P1 traces on 32 segments per macroface.
 After imposing the two sidewall fluxes, the global system has
@@ -67,7 +64,6 @@ unknowns: free trace coefficients plus retained cell constants. Continuous
 here means within a macroface; it does not identify values at vertices of
 different macrofaces. The package's Cartesian solver preserves this geometry
 and trace convention.
-
 
 The article does not specify the MHM local refinement count in §5.2. It does
 specify the independent reference: Q3 on 1,081,344 quadrilaterals, with
@@ -82,7 +78,6 @@ pressure and continuous P1 trace on 32 segments. Its local grid has 120×120
 quadrilaterals per macrocell. That last count is a declared computational
 choice, since the article does not report it. It must not be confused with
 the degree, macrogrid or skeleton resolution, which do match the article.
-
 
 **Expected result.** Pressure drops across low-permeability bands and follows
 the conducting channels. The flow is upward, with equal total inflow and
@@ -102,12 +97,10 @@ each intersection, the selected rule integrates the Q3 stiffness polynomial
 exactly. The free-system relative residual is 6.82×10⁻¹² and the total
 boundary-reaction imbalance is 1.34×10⁻¹⁰.
 
-
 All three panels show the same 66-square partition, even though the conforming
 reference has no MHM interfaces. Values in this comparison are sampled at
 the 60×220 material-cell centers. Their RMS difference is a sampling diagnostic,
 not an integrated finite-element error norm.
-
 
 The black dots are 221 coordinates digitized from the article's Q3 curve,
 providing the published profile values for comparison. The estimated raster
@@ -118,7 +111,6 @@ identity with the historical calculation. In particular, steep regions
 amplify uncertainty in the horizontal placement of a raster sample.
 
 ### Local and face refinement
-
 
 Solid curves use local cell edges aligned with the material pixels. Dashed
 curves use cells that cross permeability jumps, integrated by geometric
@@ -147,7 +139,10 @@ The reservoir experiments of
 [Araya et al. (2017)](https://doi.org/10.1016/j.cma.2017.05.027) use
 
 $$
--0.3\Delta u+0.3K^{-1}u+\nabla p=0,\qquad \nabla\cdot u=0.
+\begin{aligned}
+-0.3\Delta u+0.3K^{-1}u+\nabla p&=0,\\
+\nabla\cdot u&=0.
+\end{aligned}
 $$
 
 Bottom velocity is (0,1), top pseudotraction is zero, and each vertical wall
@@ -155,7 +150,6 @@ has zero normal velocity and zero tangential pseudotraction. These are **slip
 walls**. Imposing both velocity components as zero would define a different
 problem. The multiplier and traction conventions follow the grad–grad
 pseudostress, not the symmetric Cauchy stress.
-
 
 The 2017 calculation uses the following configuration. The 2025 experiment
 has a separate layer and macro mesh, described below.
@@ -183,9 +177,11 @@ same count, not with the boundary-reduced system dimension.
 The residual parameter is also part of the formulation. Equation (43) uses
 
 $$
-\kappa_\tau=\frac{h_\tau^2}
-{\max(\gamma_{\min}h_\tau^2,4\nu/m_\tau)+4\nu/m_\tau},
-\quad m_\tau=\min(1/3,C_\tau).
+\begin{aligned}
+\kappa_\tau&=\frac{h_\tau^2}{D_\tau+4\nu/m_\tau},\\
+D_\tau&=\max\left(\gamma_{\min}h_\tau^2,\frac{4\nu}{m_\tau}\right),\\
+m_\tau&=\min(1/3,C_\tau).
+\end{aligned}
 $$
 
 The article names the minimum eigenvalue but does not specify its spatial
@@ -204,8 +200,10 @@ local triangles are geometrically intersected with those pixels, preserving
 the same P3/P3 approximation space. Increasing the integration order from
 5 to 8 changes the integrated relative L2 velocity and pressure fields by
 1.85×10⁻¹¹ and 7.42×10⁻¹², respectively. Thus material quadrature is resolved
-for this declared interpretation.
-
+for this declared interpretation. The [field-map records](../figures/spe10/fields-replay.json)
+identify the executed coefficient archives and unchanged-source checks; the
+recorded velocity extrema, pressure extrema and broken divergence are retained
+within \(10^{-11}\) relatively.
 
 The cut x=199 is an additional integration diagnostic, not a profile specified
 by the 2017 article. The broken values on opposite macrofaces are retained.
@@ -255,7 +253,10 @@ the Euclidean norm of the **vector difference**, not the difference of
 velocity magnitudes. The pressure difference is signed. Both fields are
 evaluated at the same broken display vertices and rendered with linear
 display triangles; coincident values from opposite MHM sides remain
-independent. These visualization samples are not used to compute error norms.
+independent. These visualization samples are not used to compute error norms. The
+[field-map records](../figures/spe10/fields-replay.json) identify the actual
+finest-reference coefficients and common display samples, together with
+independent order-24/32 integrated comparisons against the original norm records.
 
 ![Taylor–Hood self-refinement and differences from the fixed MHM field](../figures/spe10/brinkman-taylor-hood-refinement.png)
 
@@ -291,7 +292,6 @@ The orange curve changes only the reference resolution: it is not an MHM
 convergence study. A coarse reference can lie closer to MHM through partial
 cancellation of their discretization errors, as the pressure comparison
 demonstrates. Closeness to that coarse field is not evidence of greater accuracy.
-
 
 The black curve is the finest Taylor–Hood reference, the gray curve is the
 preceding reference level, and the orange segments are the fixed MHM solution.
@@ -333,19 +333,22 @@ pixi run --locked -e intel python -m examples.solve_spe10_reference --shape 768 
 pixi run --locked -e notebooks gallery-spe10-darcy
 ```
 
-The reference solve is optional for replaying the figures; its sampled fields,
-profile and residual diagnostics are archived with the example results.
+The reference solve is optional when its sampled field archive is already
+available locally. The plotting command requires those field and profile
+arrays in addition to the public numerical records.
 
 For the declared 2017 Brinkman calculation and its integration check:
 
 ```bash
-pixi run --locked -e notebooks python -m examples.solve_spe10_brinkman --stabilization pointwise-2017 --order 5 --output build/spe10-brinkman
-pixi run --locked -e notebooks python -m examples.solve_spe10_brinkman --stabilization pointwise-2017 --order 8 --output build/spe10-brinkman
+pixi run --locked -e notebooks python -m examples.solve_spe10_brinkman --stabilization pointwise-2017 --order 5 --output examples/results/spe10
+pixi run --locked -e notebooks python -m examples.solve_spe10_brinkman --stabilization pointwise-2017 --order 8 --output examples/results/spe10
 pixi run --locked -e notebooks gallery-spe10-brinkman
 ```
 
-The first two commands write numerical records in the build directory.
-The gallery command replays the archived, checked records distributed with the example.
+The first two commands regenerate the numerical records and field arrays in
+the example result directory used by the plotting command. The gallery
+command checks their recorded digests before rendering the fields. The
+published figures can be viewed directly without these local arrays.
 
 For the independent conforming baseline, first verify the constant-drag
 patch and then double both mesh directions successively:
@@ -361,8 +364,10 @@ the preceding coefficient archive to `--previous`. The driver records
 original free-equation residuals, boundary fluxes, integration conventions,
 library versions and input/output checksums. `--mhm` selects the archived
 MHM field for physical L2 comparisons; `--comparison-orders` controls the
-independent integration check. Full coefficients are retained as build
-outputs, while display samples and diagnostics accompany the case.
+independent integration check. Full reference coefficients are local build
+outputs. Replaying the plots requires the corresponding reference sample
+archives, MHM field archive and display samples; the public numerical records
+alone do not contain these arrays.
 
 ```bash
 pixi run --locked -e notebooks python -m examples.plot_spe10_taylor_hood --sample

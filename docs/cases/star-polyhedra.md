@@ -91,13 +91,12 @@ are below $2\times10^{-15}$.
 
 ![Five nonconvex mesh levels and geometric certificates](../figures/star-polyhedra/convergence.png)
 
-The finest-field section evaluates the complete local $P_4$ polynomials and
-their derivatives on disconnected fine-tetrahedron sections. Exact and
-numerical panels use the same symmetric color limits; differences have their
-own symmetric limits. The displayed physical flux includes the advective
-term, and actual macro boundaries remain visible in all panels.
-
-![Full scalar and physical flux components on the finest nonconvex mesh](../figures/star-polyhedra/fields.png)
+The geometry and convergence figures above use the retained geometric
+certificates and physical norm records. The original finest local coefficient
+archive is not available in the published dataset; these records do not
+determine a spatial field. Full scalar and flux sections require acquiring
+the original $P_4$ problem with the commands below. The physical flux includes
+both diffusive and advective terms.
 
 ## Independent verification
 
@@ -124,11 +123,11 @@ pixi run --locked -e notebooks python -m examples.plot_star_polyhedra
 ```
 
 The acquisition writes source snapshots, geometry certificates, complete local
-coefficients and SHA256 digests. The plotter reads those fields without solving
-another PDE. Slice values belong to independent fine tetrahedra; no averaging
-is performed across local or macro interfaces. Actual macro boundaries are
-overlaid on every exact, numerical and difference panel. Notebook 67 reads and
-checks the recorded evidence.
+coefficients and SHA256 digests. With those coefficient archives available,
+the plotter evaluates spatial sections without solving another PDE. Slice
+values belong to independent fine tetrahedra; actual macro boundaries are
+overlaid without averaging interface values. Notebook 67 checks the retained
+records and requires these additional archives for its spatial sections.
 
 ## References
 

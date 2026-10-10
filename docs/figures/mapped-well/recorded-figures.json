@@ -1,0 +1,16 @@
+{
+  "scope": "Plots of unchanged archived norm/profile measurements; coefficient archives are not reconstructed or revalidated.",
+  "records_sha256": {
+    "examples/results/mapped-well/fine8-macro1-q6.json": "c9cd084d5f24a7f332260dd46af6073f2f3e20d8411af8da95dce68650aa8a85",
+    "examples/results/mapped-well/fine8-macro2-q6.json": "5e94650259eba4b8ebe08dd4aab882f7fac5e27fe6b7c2c3f9762c82c098a23d",
+    "examples/results/mapped-well/fine8-macro4-q6.json": "a0cd359b8c076db82bb31f1ae97d91420d87e0b6462fdc393396151d39f957aa",
+    "examples/results/mapped-well/fine8-macro8-q6.json": "832ed61ec39d1bb3a63d67593eb6aae3be908187c99ec858d8a4564f925eab8f",
+    "examples/results/mapped-well/fine1-macro1-q6.json": "0df8b43e3588d8723c9f9b24a4682e028f06424e0e10d2a640031f18d548bd96",
+    "examples/results/mapped-well/fine2-macro2-q6.json": "6d36806f37e89a77b892c0338e02a73d00b160c68d0049b90798f9a685d04ca9",
+    "examples/results/mapped-well/fine3-macro3-q6.json": "77a8425fdfa9577356d6321ebc8e00cfabb0d15838ceeca0fa5bca924fafb6d7",
+    "examples/results/mapped-well/fine4-macro4-q6.json": "0eca16cdcc362da60450efbc665157e9cd9609e2c127e1759100b595a1c5f7f2"
+  },
+  "figures": [
+    "convergence.svg"
+  ]
+}

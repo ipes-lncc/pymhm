@@ -59,7 +59,7 @@ Pressure uses ordinary scalar composition. Since $\det J$ is constant, the
 physical divergence and pressure spaces coincide. Normal moment transformations
 handle both orientation signs and permutations of shared face vertices.
 Nonaffine prisms are rejected; curved-cell pressure conventions are outside
-this API. [Mapped hexahedra](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mapped-well.md) have their own geometry contract.
+this API. [Mapped hexahedra](mapped-well.md) have their own geometry contract.
 
 Pressure Dirichlet values enter the weak boundary load. Neumann data are physical
 outward normal-flux densities. A pure-Neumann solve retains the joint constant
@@ -118,7 +118,7 @@ norms are computed separately with orders 7 and 10. Pressure and **vector** flux
 errors are physical volume $L^2$ norms, divided by the corresponding exact norm.
 The pressure denominator includes the 25 MPa datum; it is not the norm of the
 pressure increment. The hexahedral curve reuses the independently recorded
-[RT1/Q1 study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mapped-well.md) with this same pressure normalization. The affine
+[RT1/Q1 study](mapped-well.md) with this same pressure normalization. The affine
 triangular subdivisions and the trilinear hexahedral spaces are different
 discretizations on the same physical domain. A common refinement factor does
 not imply equal cell counts or equal computational work across these families.
@@ -237,15 +237,10 @@ absolute limit around zero; no values are clipped. Each difference panel uses
 its own full symmetric range. Pressure panels remain linear. Black lines are
 the actual macro edges. The view is restricted to the well neighborhood.
 
-For a direct assessment of the skeletal resolution, these component plots
-compare the exact field, the coarsest skeletal space and the complete fine-face
-space. Each row uses a common color scale. The latter is the classical mixed
-limit of the stated family, with the same fine refinement factor; it is not an
-exact solution. The three columns retain the actual macro boundaries of their
-respective configurations.
-
-The plots show top-face samples, while the title errors are volume integrals.
-Independent surface quadrature gives coarse/full top-cap flux errors of
+The maps compare the analytical field, the coarse-skeleton MHM field and their
+signed difference. The physical errors in the tables are volume integrals,
+rather than norms of top-face display samples. Recorded independent surface
+quadrature gives coarse/full top-cap flux errors of
 19.367%/2.290% for prisms, 22.113%/3.551% for tetrahedral P1 pressure, and
 22.085%/3.374% for tetrahedral P2 pressure. A tetrahedral discrete solution
 need not be invariant in the vertical direction, even though the analytical
@@ -256,7 +251,13 @@ preserves its physical values.
 
 
 The following panels include pressure and signed differences for the coarsest
-skeletal configuration. The error panels use their own full color ranges.
+skeletal configuration. They use fresh acquisitions of the same fine-factor-four,
+macro-factor-one configurations; historical numerical records remain unchanged.
+The [field replay receipt](../figures/mixed-well-geometries/current-field-replay.json)
+identifies the new coefficient and executed-basis digests, verifies immutable
+sources and records changes in the independently integrated norms. Both the
+oriented face transformation and physical field evaluation use each archive's
+stored basis matrix. The error panels use their own full color ranges.
 
 ![Prismatic pressure and signed flux components](../figures/mixed-well-geometries/prism-p1-fields.png)
 
@@ -315,7 +316,7 @@ give the same inaccurate flux in both codes.
 
 ```bash
 pixi run --locked -e test-core python -m examples.solve_mixed_well_geometries --kind prism --fine-factor 4 --macro-factor 1 --workers 4
-pixi run --locked -e test-core python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 4 --macro-factor 4 --workers 4
+pixi run --locked -e test-core python -m examples.solve_mixed_well_geometries --kind tetrahedron --pressure-degree 2 --fine-factor 4 --macro-factor 1 --workers 4
 pixi run --locked -e notebooks python -m examples.plot_mixed_well_geometries
 pixi run --locked -e test-core python -m examples.verify_mixed_well_fields
 ```

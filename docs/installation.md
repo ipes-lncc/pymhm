@@ -320,7 +320,7 @@ main-branch pushes; the release workflow reuses their checks before publishing.
 
 AmgX uses the optional `pyamgx` bindings and the native NVIDIA AmgX library. The
 binding is built against that library; it is not treated as an ordinary
-self-contained Python wheel. See [performance](https://github.com/ipes-lncc/pymhm/blob/main/docs/performance.md) for the verified
+self-contained Python wheel. See [performance](performance.md) for the verified
 runtime combinations. PETSc scalar types and available factorization packages
 are properties of the installed PETSc build. The `petsc` solver requires MUMPS
 for pivoted factorization of local and global saddle matrices. The locked Unix

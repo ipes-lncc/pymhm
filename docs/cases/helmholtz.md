@@ -142,7 +142,6 @@ macro edge length, and the macro diameter is $\sqrt2/n$.
 
 ![Plane-wave convergence on all selected grids](../figures/helmholtz/article-convergence.png)
 
-
 | Face degree | Basis | Finest n | Relative pressure L2 | Relative gradient L2 |
 |---|---|---:|---:|---:|
 | 2 | Polynomial | 64 | 1.30047e-6 | 3.44183e-5 |
@@ -167,7 +166,6 @@ as in Section 6.2: $(\ell,\omega,H)=(2,20\pi,1/11)$ and
 $(4,40\pi,1/21)$. The two bases have identical numbers of skeletal degrees
 of freedom within each comparison.
 
-
 The polynomial gradient-error maxima are 0.157928 and 0.00521541 for
 $\ell=2$ and $\ell=4$, respectively. These values do **not** quantitatively
 match the approximately 0.021 and 0.022 peaks printed in Figure 6.5.
@@ -175,7 +173,6 @@ The printed local discretization is unavailable; the discrepancy is not
 resolved by the following $r=2,4,8$ local-resolution controls.
 Accordingly, these are verified calculations with the stated inputs, not a
 completed reproduction of the printed error ordinates.
-
 
 At $\theta=\pi/13$, the relative gradient errors are:
 
@@ -247,9 +244,16 @@ Real and imaginary components retain their signs. Each analytical, numerical
 and error map shows the actual macro mesh and preserves independent local
 samples on its interfaces.
 
-
 ![Plane wave with oscillatory traces](../figures/helmholtz/plane-oscillatory-fields.png)
 
+The [spatial-map record](../figures/helmholtz/fields-replay.json) identifies
+this $n=16$, $\ell=2$, local-Q4 case and its executed basis. Physical
+pressure and gradient norms agree with the retained configuration within
+$2\times10^{-11}$ relatively; the reconstructed original local equations
+have relative residual below $2\times10^{-16}$. The
+[convergence-figure record](../figures/helmholtz/recorded-figures.json) separately
+identifies the literal measurements and source identities used in the
+convergence plot.
 
 ## Pollution and the exact-flux interpolant
 
@@ -270,7 +274,6 @@ The projection is the facewise L2 projection in the oriented trace basis.
 Absorbing faces contribute through the original impedance load. The
 interpolant uses the same finite local inverse as the computed MHM field;
 it is neither a best approximation nor a separate global solve.
-
 
 The four frequency/degree pairs are $(\ell,f)=(0,10),(0,20),(1,15),(1,75)$,
 where $\omega=2\pi f$. Local Q$_{\ell+3}$ fields use two subdivisions per
@@ -300,7 +303,6 @@ nor a nonsingular discrete matrix proves the condition at all unsampled
 mesh sizes.
 
 ![MHM and interpolant gradient errors](../figures/helmholtz/stability-errors.png)
-
 
 The refined sequences resolve the transition from pollution-dominated errors
 to ratios approaching one. The following thresholds concern the attempted
@@ -353,11 +355,9 @@ $n=16,20,24,28,32$, satisfying $\omega H_K<\pi$ in the undamped region.
 These norms measure discretization error for this stated transformed problem;
 they do not measure an unbounded-domain PML truncation error.
 
-
 The profile at $y=0.473$ evaluates the archived Q4 polynomials on the $n=24$
 macro mesh, with independent incident values at fine and macro interfaces.
 Vertical lines mark that field's actual macro intersections.
-
 
 ## Verification and use
 

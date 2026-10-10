@@ -121,6 +121,21 @@ by \(\|q\|_{L^2}\). Records also contain absolute norms and the error normalized
 by \(\|p\|_{L^2}\); the latter can look small because of the 25 MPa background.
 The original units are retained throughout.
 
+The spatial panels and profiles use fresh acquisitions of the same declared
+geometry, physical data, RT1/Q1 spaces and quadrature orders as the recorded
+study. Historical numerical records remain unchanged. The
+[field replay receipt](../figures/mapped-well/current-field-replay.json) records
+the original and new coefficient digests, checks immutable source identities,
+and compares the independently integrated physical norms and boundary rates.
+Each field is evaluated from its own archived fine-cell connectivity and
+coefficients with the canonical tensor-product RT1 basis and Piola mapping.
+The fresh finest replay has a maximum pressure-tested divergence moment of
+\(6.57\times10^{-16}\) m³/s, or \(6.57\times10^{-14}\) relative to the prescribed
+rate. Its maximum physical block backward residual is
+\(1.71\times10^{-11}\), below the unchanged \(10^{-10}\) acceptance criterion.
+These fresh diagnostics are recorded separately from the historical values
+quoted above.
+
 ![Coarse macro partition, full reservoir](../figures/mapped-well/reservoir-macro1.svg)
 
 ![Coarse macro partition, well neighborhood](../figures/mapped-well/well-macro1.svg)

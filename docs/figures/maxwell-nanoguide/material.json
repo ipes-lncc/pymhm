@@ -1,0 +1,34 @@
+{
+  "scope": "Analytical material input only; no acquired Maxwell field or error reconstruction",
+  "macro_shapes": [
+    [
+      16,
+      16
+    ],
+    [
+      8,
+      8
+    ]
+  ],
+  "bounds": [
+    0,
+    10,
+    0,
+    10
+  ],
+  "permittivity_values": [
+    1.0,
+    1.5,
+    3.14
+  ],
+  "inclusion_count": 15,
+  "display_interpolation": "nearest; actual macro mesh overlays",
+  "source_sha256": {
+    "examples/maxwell_nanoguide_results.py": "38023abaacee10d78147c08d4be9bff95591e3aee27df183a38aec6d811e32da",
+    "examples/maxwell_nanoguide.py": "b853fa1fcaf09c6f14edfe91bbbb66500f08977c975c05a61c23770e203441d1"
+  },
+  "figure_sha256": {
+    "material.png": "43d87f4b891bb4aa55b6c1f485f4df36c75ab28b4c1e4ff4ed9562c4fa7f3aa5",
+    "material.svg": "3d0ce6d1b507a7e4108f8f802a827d369e35ddf75814d4c36f02047d2f4dc7d2"
+  }
+}

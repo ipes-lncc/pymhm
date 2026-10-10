@@ -37,7 +37,7 @@ env:
 
 jobs:
   build:
-    name: Documentation and mathematical markup
+    name: Documentation, links, and mathematical markup
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:

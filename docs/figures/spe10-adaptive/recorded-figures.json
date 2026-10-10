@@ -1,0 +1,10 @@
+{
+  "scope": "Plots of unchanged archived norm/profile measurements; coefficient archives are not reconstructed or revalidated.",
+  "records_sha256": {
+    "examples/results/spe10-adaptive/published/adaptive.json": "20372927b460c4edc77283b38f4de605d964bf1a5aa311dab274eee0128b2a60",
+    "examples/results/spe10-adaptive/published/comparison-order4.json": "9b1bfd838e7704866767b56d20ec4c991754cf8a17a814fe372900e9c5004cc0"
+  },
+  "figures": [
+    "refinement.png"
+  ]
+}

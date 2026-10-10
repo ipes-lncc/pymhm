@@ -54,7 +54,7 @@ The three physical fields remain distinct:
 The reconstruction has the continuous-P2 test equilibrium identity. This does
 not imply a separate source balance on every fine triangle. The classical mixed
 reference instead imposes all discontinuous-P2 divergence moments. See the
-[moment-reconstruction definitions](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reconstruction-moments.md).
+[moment-reconstruction definitions](reconstruction-moments.md).
 
 ## Published indicator and four-triangle local spaces
 
@@ -78,7 +78,7 @@ The source is zero, so its oscillation term vanishes. Local marking values are
 terms contain neither an inverse-material weight nor an ellipticity factor.
 They are retained as numerical indicators for this heterogeneous case, without
 asserting a coefficient-independent bound in the physical energy norm.
-The [two normalization conventions](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/weighted-estimator.md#published-and-energy-normalized-conventions)
+The [two normalization conventions](weighted-estimator.md#published-and-energy-normalized-conventions)
 are separate API choices.
 
 The remeshing input is the square root of each local marking value. Its
@@ -132,16 +132,14 @@ also report broken-gradient and energy differences, coefficient digests,
 and the executed DOLFINx build separately from its verified upstream release.
 
 
-Each component shares a color scale between the two codes. Signed flux uses
-an explicitly nonlinear asinh scale, with linear width equal to one thousandth
-of the shared maximum absolute component, to resolve weak flow; difference panels
-use their own linear scales. Fields are sampled at raster-cell centers without
-averaging across interfaces, and the actual macro mesh is outlined on every
-panel. These displays are separate from the quadrature-based norms above.
 Agreement of these independently assembled fields verifies the selected MHM
 calculation. It does not reduce its discretization error or establish the
 historical adaptive connectivity; those questions require the refined baseline
 and the published-result comparisons below.
+The numerical records preserve norms and coefficient digests. Complete
+coefficients and adaptive connectivity for this historical campaign are not
+distributed with the checkout, so this page publishes its scalar refinement
+measurements and retained profile samples rather than reconstructed field maps.
 
 ## Independently refined classical mixed baseline
 
@@ -180,10 +178,10 @@ an error bound for the adaptive MHM field.
 
 Figure 9 of [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073), accepted manuscript p.26, reports pressure
 along the domain diagonal. Its caption identifies the MHM field as the raw
-pressure \(u_{Hh}\), not the Oswald potential. The image is the unchanged embedded raster;
-[extraction provenance](../figures/reservoir-papers/l09-figure-9-source.json)
-identifies its manuscript and checksum. It contains three pressure curves,
-not flux samples.
+pressure \(u_{Hh}\), not the Oswald potential. The
+[digitization provenance](../figures/reservoir-papers/l09-figure-9-source.json)
+identifies the manuscript and original raster checksum. The published figure
+contains three pressure curves, not flux samples.
 
 At 167 visible samples digitized from the red reference curve, the separately
 refined classical RT2 pressure has an RMS difference of **0.00415** and a maximum
@@ -258,10 +256,13 @@ the geometry, spaces, conventions, component indicators and field digests.
 ![Adaptive indicator and physical differences from the classical RT2 field](../figures/spe10-adaptive/refinement.png)
 
 
-![Signed horizontal and vertical flux components](../figures/spe10-adaptive/flux-components.png)
+![Recorded initial and adapted raw-pressure samples against digitized published samples, without interpolation between points.](../figures/spe10-adaptive/diagonal-profile.png)
 
-
-![One-sided initial and final raw-pressure profiles against published curves](../figures/spe10-adaptive/diagonal-profile.png)
+The markers reproduce only the archived point values, with
+[rendering provenance](../figures/spe10-adaptive/diagonal-profile-record.json).
+Lines are not drawn between samples: their historical macroface intersections
+are not contained in the sample record, so the figure cannot resolve
+independent one-sided profile limits or supply mesh-crossing markers.
 
 At the visible blue and green samples of Figure 9, the RMS differences between
 PyMHM and the published initial/adapted MHM curves are 0.01918 (190 samples)
@@ -293,17 +294,6 @@ The [normal-trace record](../figures/spe10-adaptive/trace-comparison.json)
 states its orientation and quadrature. This skeleton norm is distinct from
 both volume norms and provides no automatic bound for either one.
 
-Spatial plots retain the actual adaptive macro boundaries, including on the
-classical-reference panels. Each display triangle carries its own centroid
-sample; the reported norms instead integrate the full polynomial fields.
-Pressure uses a common linear scale. Flux magnitudes
-and signed components use a common asinh color mapping with fixed linear width
-\(10^{-6}\) mD/ft on the prescribed pressure scale, while retaining each
-comparison's complete displayed minimum and maximum.
-Colorbar labels remain physical values; the mapping changes only visualization,
-not the archived fields or their norms. Profile segments retain independent
-one-sided MHM values at macro interfaces. The classical discontinuous-P2
-pressure profile also separates its limits at every reference-triangle crossing.
 Adaptive global counts include prescribed skeletal coefficients before boundary
 elimination; the same counting convention is used throughout its refinement plots.
 
@@ -434,11 +424,6 @@ configuration. They preserve that original row explicitly. The reference's own
 percentages above is an exact error or a certified bound.
 
 
-The component maps report RT2 reconstructed flux in mD/ft, with the same signed
-asinh color scale within each row. The reference and MHM panels retain the actual
-macro edges. These one-sided cell samples are visualizations; the reported L2
-differences use physical volume integration.
-
 The [control records](../figures/spe10-adaptive/resolution/comparison.json) include
 archive checksums, physical norms, quadrature checks and geometric crossing
 fractions. The two energy identities are independently verified from the raw
@@ -462,7 +447,7 @@ then uses nested uniform red refinement of those local partitions. Material
 interfaces remain fine edges. The macro trace remains constant on each whole
 macroface; fitting the local mesh does not enrich that trace.
 
-In this separate study, the [weighted estimator](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/adaptive-darcy.md) supplies the macro marking values,
+In this separate study, the [weighted estimator](adaptive-darcy.md) supplies the macro marking values,
 and Dörfler marking uses \(\theta=0.5\). Local-resolution decisions use a
 separate quantity:
 
@@ -481,7 +466,7 @@ The declared balance policy refines local meshes uniformly when
 \(\delta_{\mathrm{loc}}>0.25\sqrt{\|\eta_1\|^2+\|\eta_2\|^2}\), and otherwise
 refines the bulk-selected macroelements by longest-edge propagation. The
 initial macro minimum angle is 28.6105°; terminal-edge bisections preserve the
-macro shape-regularity condition of the [refinement algorithm](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/adaptive-darcy.md),
+macro shape-regularity condition of the [refinement algorithm](adaptive-darcy.md),
 and every recorded state reports its actual minimum angle. Material-intersection
 triangles form a different mesh family: their small edges and angles are measured
 separately, and the macro guarantee does not apply to them. These geometric
@@ -534,6 +519,10 @@ actually used for their solves. Timing fields measure their producer invocation;
 separate resumed invocations do not share a cumulative clock.
 
 The source and field records reside in `examples/results/spe10-adaptive`.
+The commands generate new acquisitions. Replaying the historical full-field
+comparisons additionally requires the original NPZ coefficient and mesh payloads
+identified by the retained checksums; scalar JSON records and digitized samples
+cannot recreate those files. Newly acquired fields retain their own provenance.
 The final reference required about 1,640.3 seconds for assembly/solve and a recorded
 peak process resident memory of 105.3 GiB on the acquisition machine; those values
 are resource observations rather than portable performance guarantees.

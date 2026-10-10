@@ -16,12 +16,15 @@ material image does not establish equality of its cellwise coefficients.
 Let $x$ denote horizontal distance and $z$ depth, both in metres:
 
 $$
+\begin{gathered}
+\Omega=(0,10240)\times(0,2560),\\
 \begin{aligned}
-\Omega&=(0,10240)\times(0,2560),\\
--\nabla\cdot(\rho^{-1}\nabla p)
-  -\omega^2\kappa^{-1}p&=\delta_{(5000,50)},\\
-\omega&=2\pi(20\ {\rm Hz}),\qquad \kappa=\rho c^2.
-\end{aligned}
+&-\nabla\cdot(\rho^{-1}\nabla p)\\
+&\quad-\omega^2\kappa^{-1}p=\delta_{(5000,50)},
+\end{aligned}\\
+\omega=2\pi(20\ {\rm Hz}),\\
+\kappa=\rho c^2.
+\end{gathered}
 $$
 
 The top boundary $z=0$ has $p=0$. The other three sides use the outgoing
@@ -52,15 +55,22 @@ The decoded velocity is converted from km/s to m/s, density from
 g/cm$^3$ to kg/m$^3$, and $\kappa$ is stored in pascals. In this crop,
 
 $$
-\begin{aligned}
-1589.9992&\leq\rho\leq2626.9999\ {\rm kg/m^3},\\
-1027.9999&\leq c\leq4699.9998\ {\rm m/s},\\
-1.6802853\times10^9&\leq\kappa\leq5.8030422\times10^{10}\ {\rm Pa}.
-\end{aligned}
+\begin{gathered}
+1589.9992\leq\rho\leq2626.9999\ {\rm kg/m^3},\\
+1027.9999\leq c\leq4699.9998\ {\rm m/s},\\
+1.6802853\times10^9\leq\kappa\leq5.8030422\times10^{10}\\
+\text{with }\kappa\text{ in Pa}.
+\end{gathered}
 $$
 
 These values retain the decoded primary samples; rounding here is only
 for presentation.
+
+![Primary Marmousi II velocity and density on the comparison macro meshes](../figures/marmousi/material.png)
+
+The top row overlays $H=20$ m macroelements and the bottom row $H=80$ m
+macroelements on the same material samples. P-wave velocity is on the left,
+density on the right, and the star marks the point source.
 
 ## Classical reference and field verification
 
@@ -187,6 +197,13 @@ differences, not certified upper bounds on the remaining reference error.
 The [reference-refinement record](../figures/marmousi/classical-convergence.json)
 retains all norms, denominators, data and field digests.
 
+![Consecutive classical reference increments in physical field norms](../figures/marmousi/recorded-reference-refinement.png)
+
+This plot shows polynomial refinement on the fixed material mesh. The
+derivative norms retain the declared 50-by-50 m square exclusion; the
+pressure norm remains global. These increments are not errors against an
+exact solution or an asymptotic mesh-convergence study.
+
 ## MHM H20 with a linear conormal trace
 
 The acquired $H=20$ m, $\ell=1$ configuration has 65,536 quadrilateral
@@ -224,11 +241,17 @@ in horizontal and depth coordinates, respectively:
 
 The published Table 6.1 value, 2.90%, falls inside this interval. Numerical
 proximity does not identify the article's material arrays or its incident
-sampling convention. No crop, amplitude or side selection is adjusted to
-make one row equal that number.
+sampling convention. All four incident-side conventions use the same pinned
+crop, unit source and declared approximation spaces.
 The [MHM acquisition](../figures/marmousi/mhm-H20-ell1.json) and
 [physical comparison](../figures/marmousi/mhm-H20-ell1-vs-classical-p4.json)
 retain the exact archive digests and all four sample conventions.
+
+![MHM physical norm differences and four independent incident sampling conventions](../figures/marmousi/recorded-mhm-comparison.png)
+
+Physical integration and unweighted vertex sampling are shown separately.
+The four sampling bars preserve the original incident-side values without
+averaging them.
 
 ![Classical P4 and MHM Q3 complex pressure with their signed differences](../figures/marmousi/mhm-H20-ell1-fields.png)
 
@@ -238,13 +261,14 @@ scale includes all plotted differences. The one-sided profiles below use
 independent values at each intersected macroface, at depth 505 m, away from
 the point source.
 
+![Complex MHM and classical pressure profiles with independent macroface values](../figures/marmousi/mhm-H20-ell1-profiles.png)
 
-## Material, complex fields and profiles
+## Classical complex fields and profiles
 
-The two overlay partitions below are the specified $H=20$ m and $H=80$ m
-MHM comparison meshes. The displayed pressure fields remain **classical**
-$P_3$ and $P_4$ solutions. The star marks the point source.
-
+The pressure panels compare classical $P_3$ and $P_4$ fields on the same
+pixel-conforming material mesh. The $H=20$ m overlay identifies the MHM
+comparison partition; it does not change either classical space.
+The star marks the point source.
 
 The signed real and imaginary maps retain every native nodal value, including
 the source node. Color limits include the full nodal ranges, with a shared
@@ -255,11 +279,16 @@ without clipping or normalizing the pressure coefficients.
 
 ![Complex classical fields and differences with H20 comparison faces](../figures/marmousi/classical-fields-H20.png)
 
-
 Profiles at depth 500 m avoid the source and use linear amplitude axes.
 Vertical markers show the $H=80$ m comparison-face intersections.
 
 ![Signed classical pressure profiles away from the source](../figures/marmousi/classical-profiles.png)
+
+The [field-display record](../figures/marmousi/field-display.json) identifies
+the complete $Q_3$, $P_3$ and $P_4$ arrays, material digests and observed native
+runtime used by these field maps and profiles. The norm tables and summary
+plots retain their original acquisition records and square-cutout convention;
+the spatial figures show pressure over the entire declared crop.
 
 ## Execution
 
@@ -351,15 +380,35 @@ recomputed. The portable `scipy` solver is also supported; the Intel command
 above selects the nonsymmetric real PARDISO factorization of the interleaved
 complex equations. Omitting `--response-store` keeps the responses in memory.
 
-The archived fields and primary material data generate the gallery with
+The retained records regenerate the norm-summary figures without field
+archives or new solves:
 
 ~~~bash
-pixi run --locked -e notebooks python -m examples.plot_marmousi --data build/data/marmousi
+pixi run --locked -e notebooks python -m examples.plot_marmousi --records-only
+~~~
+
+The complete field maps and profiles additionally require the acquired MPI
+nodal arrays and local MHM coefficients named in their acquisition records.
+These large arrays are not included in the package or notebook companion.
+Reference records also require the observed DOLFINx runtime attribution
+accepted by the archive reader. Independent comparison infrastructure supplies
+that observation; its sources are not distributed with PyMHM. The field-display
+record publishes the executed project revision, package identities and native
+binary digests.
+With complete current acquisitions available, the original plotting owners
+render the maps without changing the discrete spaces:
+
+~~~bash
+pixi run --locked -e notebooks python -m examples.plot_marmousi \
+  --data build/data/marmousi --degrees 3 4
+pixi run --locked -e notebooks python -m examples.plot_marmousi_mhm \
+  examples/results/marmousi/mhm-H20-ell1.json \
+  examples/results/marmousi/classical-p4.json
 ~~~
 
 [Notebook 72](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/waves/helmholtz/72_marmousi.ipynb)
-checks a nonzero analytical field and reads the archived norms and figures
-without executing the full reference solves.
+defines the acoustic problem through the public local and global equations;
+its complete study mode acquires the reference and MHM fields explicitly.
 
 ## References
 

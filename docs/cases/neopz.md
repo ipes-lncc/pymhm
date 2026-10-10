@@ -6,7 +6,7 @@ against another implementation. This comparison uses NeoPZ's public RT0
 element family on exactly the same triangular mesh. It also distinguishes
 that reference from Labmec's higher-order mixed MHM controller.
 
-An additional [coarse cosine check](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/coarse-cosine.md#mixed-comparison-with-neopz)
+An additional [coarse cosine check](coarse-cosine.md#mixed-comparison-with-neopz)
 uses the gallery's exact 32-macrotriangle, 512-fine-triangle configuration.
 It reproduces its 21.8662% flux error and compares the complete RT0 fields.
 
@@ -246,30 +246,18 @@ with $s=2$ and $0.0164147/0.125766$ with $s=1$. Near-zero errors in the
 representable affine and layered fluxes are consistency checks, not
 convergence-rate measurements.
 
-![Cosine analytical, NeoPZ and pyMHM fields with actual macro boundaries](../figures/neopz/cos-fields-n8-s1.svg)
+The figure reads the retained pressure/flux errors and field differences against
+the declared macrogeometry; its [rendering provenance](../figures/neopz/convergence-record.json)
+records the original report digest and all five diameters. It does not
+reconstruct spatial fields from scalar errors. The original 46 coefficient
+archives are not distributed, so spatial panels and one-sided profiles for
+those acquisition files cannot be replayed from this checkout.
 
-The cosine comparison uses $n=8$, $r=2$, $s=1$. All spatial panels show the
-actual macrotriangle boundaries. Numerical pressure is piecewise constant;
-the affine RT0 flux is evaluated inside each fine triangle. Differences across
-cells are preserved. The field-difference panels compare the two numerical
-solutions, while their deviations from the analytical solution reflect the
-shared discretization error.
-
-![Layered contrast-10 fields and macro mesh](../figures/neopz/layer-fields-n4-s1.svg)
-
-![Layered contrast-1000 fields and macro mesh](../figures/neopz/layer1000-fields-n4-s1.svg)
-
-![Layered pressure and flux profiles with macroface intersections](../figures/neopz/layer-profiles.svg)
-
-For the layered cases, the expected result is a continuous exact pressure
-with a change of slope, constant normal flux $q_x=-1$, and a tangential
-flux jump from $-2$ to $-2k$. The numerical P0 pressure retains fine-cell
-steps. In these representable-flux cases it recovers cell averages of the
-exact pressure, not its values at the profile intersections; successive
-values need not straddle the analytical line along this particular cut.
-The flux profiles preserve the physical tangential jump; no averaging
-across the material interface is applied. Macroface intersections are marked
-on the profiles.
+The separate [coarse cosine field comparison](coarse-cosine.md#mixed-comparison-with-neopz)
+includes downloadable P0/RT0 field data, native NeoPZ reevaluation and actual
+macro boundaries. Its configuration is $n=4$, $r=4$, $s=1$, rather than the
+$r=2$ refinement series above. Both methods share a substantial coarse-trace
+flux error even when their reconstructed fields agree to roundoff.
 
 ### Restricted macro trace
 
@@ -329,8 +317,8 @@ With this compatibility condition, the reconstructed mixed field satisfies
 $\boldsymbol q_h\cdot\boldsymbol n=\lambda_h$ on every fine boundary edge,
 using the common macroface normal. Matching only the integrated flux across
 a macroface is a weaker condition and does not establish this trace identity.
-`solve_darcy(..., formulation="mixed")` validates the polynomial degree and
-partition alignment before assembly.
+The RT0 local-equation definition validates the polynomial degree and partition
+alignment before assembly; see the [mixed MHM tutorial](../tutorials/methods/mixed-mhm.md).
 
 [constant-basis]: https://github.com/labmec/neopz/blob/4c6b6d277ce097b97bfc8dea1b6725860f4fe05a/Shape/TPZShapeHDivConstant.cpp#L95-L146
 [constant-count]: https://github.com/labmec/neopz/blob/4c6b6d277ce097b97bfc8dea1b6725860f4fe05a/Shape/TPZShapeHDivConstant.cpp#L213-L241

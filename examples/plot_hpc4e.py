@@ -169,6 +169,66 @@ def published_profiles(segments: list[int]) -> None:
     save(fig, "published-profile-comparison")
 
 
+def recorded_profiles() -> None:
+    """Plot retained point samples without reconstructing unavailable field arrays.
+
+    Numerical markers are the recorded signed stress in MPa at the digitized
+    article abscissae. They are deliberately unconnected: these samples do not
+    specify the one-sided stress polynomial between sample points. Error bars
+    retain the publication's pixel intervals; vertical lines identify the
+    actual 625 m macro columns.
+    """
+    comparison = json.loads(
+        read_resource_text(ROOT / "examples/results/hpc4e/published-profile-comparison.json")
+    )
+    publication = json.loads(
+        read_resource_text(ROOT / "examples/results/hpc4e/published-profile.json")
+    )
+    fig, axes = plt.subplots(
+        2, 2, figsize=(12, 8.1), layout="constrained", sharex=True, sharey=True
+    )
+    for ax, row in zip(axes.flat, comparison, strict=True):
+        curve = next(
+            value for value in publication["curves"] if value["segments"] == row["segments"]
+        )
+        samples = curve["samples"]
+        x = np.array([sample["x_m"] for sample in samples])
+        stress = np.array([sample["stress_mpa"] for sample in samples])
+        lower = np.array([sample["stress_lower_mpa"] for sample in samples])
+        upper = np.array([sample["stress_upper_mpa"] for sample in samples])
+        if not np.array_equal(x, np.asarray(row["x_m"])):
+            raise ValueError("HPC4e numerical and publication sample abscissae differ")
+        for boundary in np.linspace(0, 10000, 17):
+            ax.axvline(boundary, color="0.5", linewidth=0.4, alpha=0.5)
+        ax.errorbar(
+            x,
+            stress,
+            xerr=row["horizontal_half_width_m"],
+            yerr=np.stack((stress - lower, upper - stress)),
+            fmt=".",
+            markersize=3,
+            color="#d55e00",
+            elinewidth=0.5,
+            alpha=0.8,
+            label="Article: pixel intervals",
+        )
+        ax.plot(row["x_m"], row["numerical_stress_mpa"], "x", markersize=3, label="PyMHM samples")
+        ax.set(
+            xlim=(0, 10000),
+            ylim=(-120, 60),
+            xlabel="Horizontal distance (m)",
+            ylabel="Signed stress σₓₓ (MPa)",
+            title=(
+                f"{row['segments']} P1 "
+                f"{'segment' if row['segments'] == 1 else 'segments'} per macroface"
+            ),
+        )
+        ax.grid(alpha=0.15)
+        ax.legend(loc="lower right", fontsize=8)
+    fig.suptitle("HPC4e: recorded stress samples at y = 2250.25 m")
+    save(fig, "recorded-profile-comparison")
+
+
 def fields(reference_path: Path) -> None:
     """Render signed stress and displacement with common physical units and macro boundaries."""
     reference = RectangularElasticityField.load(reference_path)

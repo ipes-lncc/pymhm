@@ -12,7 +12,7 @@ viscosity one, zero drag, homogeneous velocity boundary data, and zero mean
 pressure. The exact pressure is
 \(p=150(x-1/2)(y-1/2)\), with \(\|p\|_{L^2}=12.5\).
 The velocity is derived from the streamfunction given in the
-[flow case](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/flow.md#equations-and-independent-reference).
+[flow case](flow.md#equations-and-independent-reference).
 
 The study compares pyMHM's native USFEM and Taylor–Hood implementations.
 The independent finite element reference is
@@ -71,7 +71,7 @@ The final halving gives pressure rates approximately **1.05** for USFEM and
 These are measured rates for these spaces and meshes, not rates transferred
 from a different discretization in the paper.
 
-![Five-level velocity and pressure convergence and measured pressure jumps](../figures/flow-audit/convergence.svg)
+![Five-level velocity and pressure convergence and measured pressure jumps](../figures/flow-audit/convergence.png)
 
 The dotted conforming references use the same microtriangles but different
 continuity and boundary constraints. For example, at \(n=4\), their pressure
@@ -86,7 +86,7 @@ through **4, 6, 8, 12, and 16** reduces the USFEM pressure error from 0.648499 t
 0.373590. Taylor–Hood changes from 0.368393 to 0.366639. The latter is already
 limited primarily by the trace approximation on this sequence.
 
-![Separate local-refinement and trace-enrichment experiments](../figures/flow-audit/trace-local.svg)
+![Separate local-refinement and trace-enrichment experiments](../figures/flow-audit/trace-local.png)
 
 At eight local subdivisions, replacing the single linear trace by a quadratic
 trace reduces the pressure error from 0.414425 to 0.192241 for USFEM, and from
@@ -111,7 +111,7 @@ at each crossing of \(y=0.37\). Each curve ends at its macrocell boundary; no
 averaging joins the pressure traces. Open markers make those boundaries visible.
 The lower panels have different vertical ranges to retain the refined error.
 
-![Actual pressure polynomials, both interface limits, and pressure error at two refinement levels](../figures/flow-audit/pressure-profiles.svg)
+![Actual pressure polynomials, both interface limits, and pressure error at two refinement levels](../figures/flow-audit/pressure-profiles.png)
 
 | Configuration | Method | Pressure \(L^2\) error | Relative pressure error | Maximum sampled skeleton jump |
 | --- | --- | ---: | ---: | ---: |

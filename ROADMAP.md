@@ -79,6 +79,10 @@ API pages render every canonical module directly from its source docstrings.
 Original documentation figures use CC BY 4.0 with attribution to IPES Research
 Group; third-party assets retain their own terms. Mathematical rendering and
 figure layout are inspected in native Chrome as well as through `docs-check`.
+Result reports are rendered within the documentation site. The publication gate
+checks local routes, section anchors, figures and downloads, and requires copied
+documentation assets to be tracked in Git. Links to report sources on GitHub do
+not substitute for published report pages.
 Native Windows and macOS qualification of this changed revision remains a CI
 acceptance gate.
 Private `_legacy` implementations support comparisons, not the primary API.

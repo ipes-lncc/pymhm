@@ -272,7 +272,8 @@ benchmark-large = "python benchmarks/large_local.py"
 benchmark-gpu = "python benchmarks/gpu.py"
 precommit = "pre-commit run --all-files"
 docs-build = "mkdocs build --strict"
-docs-check = { cmd = "python scripts/check_docs_math.py", depends-on = ["docs-build"] }
+docs-links-check = { cmd = "python scripts/check_docs_links.py --include-assets --check-tracked", depends-on = ["docs-build"] }
+docs-check = { cmd = "python scripts/check_docs_math.py", depends-on = ["docs-links-check"] }
 docs-serve = "mkdocs serve"
 
 [feature.notebooks.tasks]

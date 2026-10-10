@@ -78,7 +78,7 @@ conservation does not assert conservation on every fine cell.
 The notebook computes conforming pressure and flux comparisons and checks
 the reference's own refinement. It reports numerical differences, rather
 than an exact-solution error. A separate
-[published-space reservoir study](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/spe10.md#darcy-the-66-square-face-based-experiment)
+[published-space reservoir study](../../cases/spe10.md#darcy-the-66-square-face-based-experiment)
 uses 32 trace segments and 120 local subdivisions; these distinct
 configurations are not mixed in one result.
 

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "source_report": "examples/results/neopz/comparison.json",
+  "source_report_sha256": "734f50d13a0d60738222e257584b77b60985d48363698807e5b81a705dc81d04",
+  "rendering": "Original retained pressure/flux errors and field differences against declared TriangleMesh.unit_square(n) geometry. No missing coefficient arrays or field samples are synthesized.",
+  "diameters": {
+    "1": 1.4142135623730951,
+    "2": 0.7071067811865476,
+    "4": 0.3535533905932738,
+    "8": 0.1767766952966369,
+    "16": 0.08838834764831845
+  },
+  "macro_cell_count": "2*n**2",
+  "fine_cell_count": "8*n**2",
+  "local_refinement": 2,
+  "trace_segments": [
+    1,
+    2
+  ],
+  "native_solve_performed": false
+}

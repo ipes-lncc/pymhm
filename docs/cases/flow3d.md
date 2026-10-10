@@ -162,13 +162,13 @@ is applied.
 
 ![Taylor–Hood Stokes velocity and pressure](../figures/flow3d/stokes-th2-fields.png)
 
-![USFEM P1 Brinkman velocity and pressure](../figures/flow3d/brinkman-usfem1-fields.png)
+The other configurations retain their independently integrated convergence
+records above. Their complete coefficient archives are separate acquisition
+inputs; those integrated norms do not determine additional spatial maps.
 
-![USFEM P2 Brinkman velocity and pressure](../figures/flow3d/brinkman-usfem2-fields.png)
-
-![Stabilized Oseen velocity and pressure](../figures/flow3d/oseen-p2-fields.png)
-
-![All three Oseen velocity components](../figures/flow3d/oseen-p2-components.png)
+The [field-map record](../figures/flow3d/fields-replay.json) identifies the
+executed Stokes coefficient archive, acquisition sources and independent
+physical-norm checks for this original finest-resolution configuration.
 
 ## Verification and reproduction
 

@@ -41,7 +41,7 @@ part is constrained through P_s moments and is not removed pointwise.
 The multiplier is negative physical traction; rotation approximates
 \((\partial_y u_x-\partial_x u_y)/2\). The finite-modulus hydrostatic identity,
 exact infinite-lambda pressure gauge and pure-traction rigid moments follow
-[the mixed-elasticity conventions](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-elasticity.md). The implementation uses
+[the mixed-elasticity conventions](mixed-elasticity.md). The implementation uses
 the same stable bulk-compliance operation as the triangular families.
 
 `evaluate` returns displacement, full stress, stress divergence and rotation.
@@ -82,9 +82,14 @@ they do not establish robustness for every heterogeneous contrast.
 
 ![RT1-plus displacement and stress compared with exact fields](../figures/elasticity-tensor-rt/rt1-enrichment1-fields.png)
 
+The [spatial-map record](../figures/elasticity-tensor-rt/fields-replay.json) retains
+the original and executed field identities separately. The map uses the
+recorded $n=16$, $\lambda=1$, RT1-plus case; displacement, stress and rotation
+norms agree with its retained values within $3\times10^{-13}$ relatively.
+
 ```bash
 pixi run --locked -e test-core python -m examples.solve_elasticity_tensor_rt --degree 1 --enrichment 1
-pixi run --locked -e notebooks python -m examples.plot_elasticity_extensions
+pixi run --locked -e notebooks python -c "from examples.plot_elasticity_extensions import mixed_rectangular; mixed_rectangular()"
 ```
 
 ## References

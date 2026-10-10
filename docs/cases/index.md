@@ -28,10 +28,10 @@ The [literature catalog](../literature.md) identifies the primary sources, and
 the [scope matrix](https://github.com/ipes-lncc/pymhm/blob/main/ROADMAP.md#scientific-scope-and-acceptance-criteria) distinguishes implemented capabilities from
 literature results and remaining comparisons.
 
-The full campaign profile is retained in `docs/publication-full.json`. Its
-parameter sweeps, fine-reference studies and supplementary case sources are
-separate from the selected current evidence. Missing or unresolved campaign
-results are not substituted with short-series values.
+Detailed application and reference reports are linked from their Gallery,
+theory and verification pages and open within this site. Each report identifies
+its available figures, numerical records and any inputs needed for field replay.
+A recorded error norm does not reconstruct a missing coefficient vector.
 
 ## Reproduce a case
 

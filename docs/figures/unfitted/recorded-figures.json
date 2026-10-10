@@ -1,0 +1,14 @@
+{
+  "scope": "Plots of unchanged archived norm/profile measurements; coefficient archives are not reconstructed or revalidated.",
+  "records_sha256": {
+    "examples/results/unfitted/convergence/smooth-p8-r32.json": "a16feb96bbea4f49c29c83f8f8c2877bfb987df67bc5818efcf9098001f181e3",
+    "examples/results/unfitted/published-convergence.json": "fb109d5e65b85a8d592a4627d885a938e973593574afaab455b36cb097236f15",
+    "examples/results/unfitted/mhm-fitted-r16.json": "2c6b01493cd3ebc0c9c493923da10d2d75ca7f3a4d69e01fc45ff9e0afa76211",
+    "examples/results/unfitted/published-figure5.json": "965b87df13f0285fe98bb504f43f189d2f61db6446d72b8bf17ea4c99cd552d8"
+  },
+  "figures": [
+    "publication-comparison.png",
+    "trace-h-convergence.png",
+    "trace-p-convergence.png"
+  ]
+}

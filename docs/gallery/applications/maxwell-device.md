@@ -108,7 +108,7 @@ controls give increments 0.127%, 0.080% and 0.035%, respectively.
 These numerical-reference increments quantify sensitivity; they are not
 rigorous bounds on its remaining error.
 
-The [complete result report](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/maxwell-nanoguide.md)
+The [complete result report](../../cases/maxwell-nanoguide.md)
 provides componentwise norms, physical times, reference controls and reproduction
 commands. The material figure is reproducible from the application's
 permittivity function; its [plot record](../../assets/gallery/maxwell-permittivity.json)

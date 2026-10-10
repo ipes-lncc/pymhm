@@ -108,7 +108,6 @@ That printed column is therefore not a universal numerical equality check.
 The individual errors and estimator components remain the quantities used for
 comparison.
 
-
 At \(H=1/32\), the measured mixed errors and effectivities are:
 
 | Viscosity | Trace degree | Mixed error | η / mixed error |
@@ -140,9 +139,7 @@ ranking of the marking rules. After four refinement steps:
 | 0.01 | Macro, P0 trace | 1,832 / 1,832 | 1.38933 | 0.469148 | 73.1837 |
 | 0.01 | Face, P1 trace | 16 / 2,560 | 0.0136072 | 0.00679364 | 1.18485 |
 
-
 ![Face and local adaptation at viscosity 0.01](../figures/stokes-adaptive/polynomial-face-nu0.01-g0-l1-history.png)
-
 
 ## Regularized cavity and independent classical reference
 
@@ -164,7 +161,6 @@ are separate from the MHM differences:
 |---:|---:|---:|---:|
 | 0 | 0.0000260% | 0.002027% | 0.005415% |
 | 10,000 | 0.03491% | 0.002316% | 0.5481% |
-
 
 Comparison norms integrate over every actual MHM fine triangle, including
 independent values at macro interfaces. Gaussian orders 12, 20 and 28 check
@@ -189,8 +185,12 @@ the estimator nor its divergence component decreases monotonically in every
 adaptive sequence. Four steps are a finite verification campaign, not an
 assertion that the chosen meshes have reached a prescribed accuracy.
 
-![Stokes cavity with macro adaptation](../figures/stokes-adaptive/cavity-macro-nu1-g0-l0-comparison-fields.png)
+![Successive refinement differences of the conforming cavity references](../figures/stokes-adaptive/cavity-reference-convergence.png)
 
+The plot uses the independently assembled reference's recorded refinement
+increments. Spatial maps comparing MHM with the $512\times512$ reference
+require the separate original coefficient arrays; they are not inferred from
+these integrated differences.
 
 ## Constant lid and corner singularities
 
@@ -230,7 +230,6 @@ checks, not exact error estimates.
 | 0 | 0.4902% | 0.001465% | 0.07148% | 0.1642% |
 | 10⁴ | 1.823% | 0.03543% | 0.01044% | 0.5456% |
 
-
 The fixed-topology Stokes series with \(\theta=0.5\) and selective local
 refinement contains 25 solved states. Its global size increases from 88 to
 404 trace-plus-coarse unknowns. Interior velocity differences decrease from
@@ -254,7 +253,6 @@ threshold and the local resolution are explicit parts of this configuration;
 the two sequences are not interchangeable accuracy claims based only on
 global unknown counts.
 
-
 For macro adaptation, conforming longest-edge closure retains a minimum angle
 of 45 degrees in the recorded constant-lid series. With \(\theta=0.1\),
 the Stokes configuration reaches 5,776 trace-plus-coarse unknowns and 1,126
@@ -264,7 +262,6 @@ also reaches a plateau while refinement continues around the two singular
 corners. Thus a small geometric scale at those corners does not establish
 that the remaining interior field is resolved.
 
-
 For constant-lid Brinkman flow, the macro sequence reaches 19,382 global
 unknowns and 3,798 macrotriangles. Relative interior differences are 9.407%
 in velocity L2, 33.966% in pressure L2 and 12.214% in velocity energy.
@@ -272,7 +269,6 @@ The final four refinement steps leave these interior quantities essentially
 unchanged while resolving smaller corner scales. The result documents the
 behavior of the stated maximum-marking rule for singular data; it does not
 establish that the interior pressure is accurately resolved.
-
 
 The Brinkman face/local strategy with \(\theta=0.5\) contains 25 solved
 states. Its final 664 global unknowns and 11,246 fine triangles give interior
@@ -282,15 +278,6 @@ velocity energy. The order-20 to order-28 energy comparison changes by
 reduction after local and trace refinement, including its nonmonotone
 intermediate steps; it is distinct from a claim that the global indicator
 contracts for discontinuous lid data.
-
-
-The component profiles use independent fine-cell pieces, including both
-values wherever a profile coincides with a macro interface. Gray rug ticks
-identify actual macroface intersections. Upper-layer maps enlarge the vertical
-axis; they do not use an equal horizontal-to-vertical aspect ratio. For
-\(γ=10^4\), the window is \(0.96\leq y\leq1\), four viscous-layer
-lengths at \(ν=1\). Common velocity-magnitude limits are used for the reference
-and MHM panels, with a separate scale for the vector difference.
 
 ## Reproducible numerical records
 

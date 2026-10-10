@@ -1,0 +1,26 @@
+{
+  "case": "GaLS P2/P2, macro n4, two traction segments, local refinement4, lambda4999",
+  "source": "examples/plot_elasticity.py",
+  "source_sha256": "339448650d8703a2a1cbf399ad094c714958398483318bc4b733729d1b6eb369",
+  "field_sha256": "3d69e82a3cef0e5f5e221594052df2e89470e27efc39d0d780b1aa355d1d1650",
+  "original_field_sha256": "07a802eff4b5a1e6b687d58841d01c71155a2781ab776784c657b85dc70ed110",
+  "physical_norms": {
+    "displacement_l2": 0.0023382800433718043,
+    "pressure_l2": 0.14588963253870563,
+    "gradient_l2": 0.17833921525485374,
+    "stress_l2": 0.35393425679560464,
+    "compressibility_l2": 0.06998262236610307,
+    "algebraic_residual": 3.86248210845861e-16,
+    "max_gauge_multiplier": 1.6301175288099341e-15,
+    "stabilization_min": 0.0029739776951672853,
+    "stabilization_max": 0.0029739776951672866
+  },
+  "relative_change": {
+    "displacement_l2": 3.5851356732987977e-13,
+    "pressure_l2": 1.3698036039641565e-14,
+    "gradient_l2": 2.910348479836767e-14,
+    "stress_l2": 9.880938226301237e-15
+  },
+  "seconds": 13.573421334847808,
+  "figure_sha256": "417a793e6901e6525a2190a958ea5eb8c407043f27b40b2e6f188a4b3fd260fe"
+}

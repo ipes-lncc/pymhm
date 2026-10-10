@@ -76,3 +76,63 @@ def test_horizontal_profile_interface_requires_an_explicit_side_convention(drive
     candidate = driver.BrokenQField(np.ones((4, 4), dtype=complex), mesh, 1, 1)
     with pytest.raises(ValueError, match="between horizontal"):
         driver.profile_segments(candidate, 20)
+
+
+@pytest.mark.visualization
+def test_recorded_marmousi_norm_plots_preserve_square_cutout_without_fields(tmp_path, monkeypatch):
+    """Recorded polynomial increments remain distinct from field reconstruction."""
+    import json
+
+    plt = pytest.importorskip("matplotlib.pyplot")
+    owner = importlib.import_module("examples.plot_marmousi")
+    source = Path(__file__).resolve().parents[1] / "examples/results/marmousi"
+    captured = []
+    original_close = plt.close
+
+    def capture(figure):
+        """Inspect each plotted physical norm before releasing the figure."""
+        captured.append(figure)
+        original_close(figure)
+
+    def forbidden(*args, **kwargs):
+        """Retained measurements must not require missing coefficient arrays."""
+        raise AssertionError("unexpected field read")
+
+    monkeypatch.setattr(plt, "close", capture)
+    monkeypatch.setattr(owner, "load_reference", forbidden)
+    result = owner.plot_recorded_results(source, tmp_path)
+    records = json.loads((source / "classical-convergence.json").read_text())["references"]
+    expected = [
+        100 * row["increment"]["pressure_difference"] / row["increment"]["reference_pressure_norm"]
+        for row in records[1:]
+    ]
+    np.testing.assert_allclose(
+        captured[0].axes[0].lines[0].get_ydata(), expected, rtol=1e-12, atol=0
+    )
+    assert result["gradient_cutout_m"] == [4975.0, 5025.0, 25.0, 75.0]
+    assert len(result["figure_sha256"]) == 4
+    assert all((tmp_path / name).is_file() for name in result["figure_sha256"])
+
+
+@pytest.mark.visualization
+@pytest.mark.parametrize("defect", ["cutout", "acquisition"])
+def test_recorded_marmousi_plot_rejects_changed_measure_or_acquisition(tmp_path, defect):
+    """A changed source exclusion or unrelated reference cannot relabel recorded norms."""
+    import json
+    import shutil
+
+    pytest.importorskip("matplotlib.pyplot")
+    owner = importlib.import_module("examples.plot_marmousi")
+    source = Path(__file__).resolve().parents[1] / "examples/results/marmousi"
+    copied = tmp_path / "records"
+    shutil.copytree(source, copied)
+    path = copied / "classical-convergence.json"
+    payload = json.loads(path.read_text())
+    if defect == "cutout":
+        payload["references"][1]["increment"]["gradient_cutout"] = [5000.0, 50.0, 50.0]
+    else:
+        payload["references"][3]["reference_record_sha256"] = "0" * 64
+    path.write_text(json.dumps(payload))
+    with pytest.raises(ValueError, match="square cutout|different acquisition"):
+        owner.plot_recorded_results(copied, tmp_path / "plots")
+    assert not (tmp_path / "plots").exists()

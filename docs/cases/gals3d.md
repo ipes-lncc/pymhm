@@ -149,19 +149,14 @@ quotient. Its numerical rank must separate exactly six rigid modes; a geometry
 whose positive modes cannot be resolved at the stated spectral threshold is
 rejected rather than assigned an uncertified stabilization constant.
 
-## Exact and numerical fields
+## Spatial field data
 
-The section is $z=0.37$. Flat colors evaluate each actual cut fine tetrahedron at
-its polygon centroid. Exact and numerical panels share their color scale;
-vector-error magnitude and signed pressure error have separately labeled scales.
-The black/white lines show real macro-face intersections. Values from different
-macrocells are never averaged across their common face.
-
-![GaLS P1 fields](../figures/gals3d/gals-p1-fields.png)
-
-![GaLS P2 fields](../figures/gals3d/gals-p2-fields.png)
-
-![Taylor–Hood fields](../figures/gals3d/th-p2-fields.png)
+The two figures above show the integrated displacement, pressure and full-stress
+errors for the recorded refinements and Lamé parameters. Their complete
+one-sided coefficient arrays are separate acquisition inputs. Reproducing a
+spatial slice requires those arrays; integrated norms alone do not specify
+the spatial fields. Slice visualizations must retain the cut tetrahedra,
+independent interface values and actual macroface intersections.
 
 ## Independent checks and reproduction
 

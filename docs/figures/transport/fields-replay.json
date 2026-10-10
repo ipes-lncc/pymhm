@@ -1,0 +1,14 @@
+{
+  "source": "examples/transport_campaign.py",
+  "source_sha256": "dd5f2e0d8d92ff600316ec56c8b59ccdb3da4e3f784c528cdaf2271b63e11db1",
+  "case": "layered Darcy-driven transport, 8 macrotriangles, local P3/SUPG, P2 traces, 64 backward-Euler steps",
+  "field_sha256": "1baf3f585556ac642e5486f20ba4cdfc6b3028ab3b34aa44ba6321c6e995de55",
+  "physical_l2_errors": {
+    "10": 0.006026882796604478,
+    "12": 0.006026882796604481
+  },
+  "relative_change": 4.131813466106725e-13,
+  "maximum_balance_residual": 2.2121193765656244e-14,
+  "seconds": 4.801908856257796,
+  "figure_sha256": "32b8b760bf04db7384af2641b7037d8f2a0fc02ab991c4a5849fcd1eefd5b395"
+}

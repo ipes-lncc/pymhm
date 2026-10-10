@@ -1,0 +1,500 @@
+{
+  "schema": "pymhm-scientific-field-display-v1",
+  "acquired_utc_date": "2026-10-10",
+  "scope": "Original nanoguide geometry, material, central-DG Q2 spaces, independent tangential traces, boundary convention and staggered times; full-size coefficient archives independently reacquired for field display. Historical comparison and refinement-control records remain immutable.",
+  "plot_owner": {
+    "module": "examples.maxwell_nanoguide_results",
+    "sha256": "5d873719135bd7288b144ac0c7915010ee0eb9034c8b266a6d593c75c4cb879c",
+    "functions": [
+      "plot",
+      "plot_errors",
+      "compare"
+    ]
+  },
+  "field_records": [
+    {
+      "n": 1024,
+      "dt": 0.00125,
+      "steps": 9052,
+      "quadrature": 12,
+      "electric_dofs": 9437184,
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "fields_sha256": "a0e57e8ee5c417190dbd44ce9394c6f863981f4315f36855772db4d83994b189",
+      "device": "NVIDIA RTX A5000",
+      "cupy_version": "14.2.0",
+      "precision": "float64",
+      "setup_seconds": 4.7260546665638685,
+      "elapsed_seconds": 987.8645023908466,
+      "interpolation": {
+        "electric_indices": [
+          9051,
+          9052
+        ],
+        "magnetic_indices": [
+          9048,
+          9048
+        ],
+        "method": "linear between staggered time levels"
+      },
+      "record_sha256": "d3532b9c3c3a85ab629bd46d149b9ff67a7911ce1d98bdc4da85212c1cab0baf",
+      "source_manifest_sha256": "cfa7e875254b632a241f69bdae85678936f5c017b49e89295a85f5405dfec197",
+      "source_manifest_entries": 3,
+      "executed_source_sha256": {
+        "classical_gpu.py": "e2e4a8025089e94c774d9800d4b745fc6e3debf148c47f59066f2b90df891f3d",
+        "classical.py": "fc290c8dc979f011dc74f44c521327312e18b9927e58a053b0fe62429455f703",
+        "maxwell_nanoguide.py": "b853fa1fcaf09c6f14edfe91bbbb66500f08977c975c05a61c23770e203441d1"
+      },
+      "field_contract": {
+        "electric": [
+          1024,
+          1024,
+          9
+        ],
+        "magnetic": [
+          1024,
+          1024,
+          9,
+          2
+        ],
+        "degree": 2,
+        "bounds": [
+          0,
+          10,
+          0,
+          10
+        ],
+        "coefficient_basis": "canonical tensor-product Q2 cardinal basis at 0, 0.5, 1; x varies fastest",
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "time_step": 0.00125
+      }
+    },
+    {
+      "reference": "Lanteri et al. (2018), Section 6.3, DOI 10.1137/16M110037X",
+      "data": "Figure 6.7 exact dimensions; epsilon=1/1.5/3.14; mu=1; f=0.5",
+      "incident_convention": "unit causal sin(pi*(t-x)), +x propagation; initially E=H=0",
+      "macro_resolution": 16,
+      "fine_resolution": 128,
+      "local_refinement": 8,
+      "local_degree": 2,
+      "trace_degree": 1,
+      "trace_subdivisions": 8,
+      "trace_dofs": 8704,
+      "local_electric_dofs": 147456,
+      "quadrature_order": 12,
+      "time_step": 0.01,
+      "steps": 1131,
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "cfl_bound": 166.82489337409822,
+      "cfl_product": 1.6682489337409823,
+      "energy_balance_max": 8.62088178621434e-14,
+      "history_columns": [
+        "electric_time",
+        "magnetic_time",
+        "modified_energy",
+        "energy_balance_residual"
+      ],
+      "setup_seconds": 564.2700418122113,
+      "elapsed_seconds": 1225.6124635227025,
+      "fields": "mhm-n16-f128-q12-dt0.01-fields.npz",
+      "fields_sha256": "29047a08e6d060a34ff08446c07e57323cc787c4e75e74a97a0edcdf00b5b56c",
+      "execution_owner": "pymhm._legacy.models.waves.maxwell.MaxwellStepper",
+      "acquisition_adapter_sha256": "489cbb2da8c1997277faf8f7cc52d547bb737ac73b24f6a119136d5dfa08f584",
+      "execution_scope": "Original tested mass/Schur leapfrog owner; the generic EquationLeapfrog tutorial runtime was not executed for this archive",
+      "record_sha256": "2f3a8409432d20865ff514a5710c5f0eddde767f89456dbdf1ad17223a5ef6f3",
+      "source_manifest_sha256": "bb1324416683d483bdc0473712ab6a506f04df83c329eee6ffb2c80039d4d865",
+      "source_manifest_entries": 642,
+      "executed_source_sha256": {
+        "examples/maxwell_nanoguide.py": "b853fa1fcaf09c6f14edfe91bbbb66500f08977c975c05a61c23770e203441d1",
+        "examples/tutorial_maxwell_equations.py": "23a3f3393a6b275343152a69d39c6fc8ed1f968d8a58cbe9faa4f81c2d6fabb7",
+        "src/pymhm/_legacy/models/waves/maxwell.py": "bc9dbdd82c820e2957870bfff18bff031fe8b06b790326f4f81c8e9a71498f03",
+        "src/pymhm/fem/scalar/quadrilateral.py": "cb0cbaa3e34d435c5238898c0e2cfe3f46bbb0d59cc7c1697df619f395d8415f"
+      },
+      "field_contract": {
+        "electric": [
+          128,
+          128,
+          9
+        ],
+        "magnetic": [
+          128,
+          128,
+          9,
+          2
+        ],
+        "degree": 2,
+        "bounds": [
+          0,
+          10,
+          0,
+          10
+        ],
+        "coefficient_basis": "canonical tensor-product Q2 cardinal basis at 0, 0.5, 1; x varies fastest",
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "time_step": 0.01,
+        "macro_geometry": {
+          "macro_points": {
+            "shape": [
+              289,
+              2
+            ],
+            "dtype": "float64",
+            "sha256": "0680ea5821008f2ccc229b12b402c352ea506c63a2495b67c8b9154d76f7c898"
+          },
+          "macro_faces": {
+            "shape": [
+              544,
+              2
+            ],
+            "dtype": "int64",
+            "sha256": "3d3004d4db4219008866a81c3ffde3b62ca137a541bbd2d6d590639e8212f4b6"
+          },
+          "trace": {
+            "shape": [
+              8704
+            ],
+            "dtype": "float64",
+            "sha256": "3f743594a88e995b6569e154b0ee3909e61a5e8bc787f4e9e014fa62c8859840"
+          }
+        }
+      }
+    },
+    {
+      "reference": "Lanteri et al. (2018), Section 6.3, DOI 10.1137/16M110037X",
+      "data": "Figure 6.7 exact dimensions; epsilon=1/1.5/3.14; mu=1; f=0.5",
+      "incident_convention": "unit causal sin(pi*(t-x)), +x propagation; initially E=H=0",
+      "macro_resolution": 8,
+      "fine_resolution": 128,
+      "local_refinement": 16,
+      "local_degree": 2,
+      "trace_degree": 1,
+      "trace_subdivisions": 16,
+      "trace_dofs": 4608,
+      "local_electric_dofs": 147456,
+      "quadrature_order": 12,
+      "time_step": 0.01,
+      "steps": 1131,
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "cfl_bound": 168.03519041833468,
+      "cfl_product": 1.6803519041833468,
+      "energy_balance_max": 5.1980988957645025e-14,
+      "history_columns": [
+        "electric_time",
+        "magnetic_time",
+        "modified_energy",
+        "energy_balance_residual"
+      ],
+      "setup_seconds": 583.8005297910422,
+      "elapsed_seconds": 967.8461789414287,
+      "fields": "mhm-n8-f128-q12-dt0.01-fields.npz",
+      "fields_sha256": "634a23209ab7b75fe6509d7b7fc3ca62205617af4ceca2ab1b0b64431847e098",
+      "execution_owner": "pymhm._legacy.models.waves.maxwell.MaxwellStepper",
+      "acquisition_adapter_sha256": "489cbb2da8c1997277faf8f7cc52d547bb737ac73b24f6a119136d5dfa08f584",
+      "execution_scope": "Original tested mass/Schur leapfrog owner; the generic EquationLeapfrog tutorial runtime was not executed for this archive",
+      "record_sha256": "adfe4945b081f3ccf1c01366714ff57efd7bd20cd97ee720d8bd7d356736866a",
+      "source_manifest_sha256": "bb1324416683d483bdc0473712ab6a506f04df83c329eee6ffb2c80039d4d865",
+      "source_manifest_entries": 642,
+      "executed_source_sha256": {
+        "examples/maxwell_nanoguide.py": "b853fa1fcaf09c6f14edfe91bbbb66500f08977c975c05a61c23770e203441d1",
+        "examples/tutorial_maxwell_equations.py": "23a3f3393a6b275343152a69d39c6fc8ed1f968d8a58cbe9faa4f81c2d6fabb7",
+        "src/pymhm/_legacy/models/waves/maxwell.py": "bc9dbdd82c820e2957870bfff18bff031fe8b06b790326f4f81c8e9a71498f03",
+        "src/pymhm/fem/scalar/quadrilateral.py": "cb0cbaa3e34d435c5238898c0e2cfe3f46bbb0d59cc7c1697df619f395d8415f"
+      },
+      "field_contract": {
+        "electric": [
+          128,
+          128,
+          9
+        ],
+        "magnetic": [
+          128,
+          128,
+          9,
+          2
+        ],
+        "degree": 2,
+        "bounds": [
+          0,
+          10,
+          0,
+          10
+        ],
+        "coefficient_basis": "canonical tensor-product Q2 cardinal basis at 0, 0.5, 1; x varies fastest",
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "time_step": 0.01,
+        "macro_geometry": {
+          "macro_points": {
+            "shape": [
+              81,
+              2
+            ],
+            "dtype": "float64",
+            "sha256": "d505c3dbf1cbdb2ae571020de4653a85426be2c382c917c0eaf86c7ae997b723"
+          },
+          "macro_faces": {
+            "shape": [
+              144,
+              2
+            ],
+            "dtype": "int64",
+            "sha256": "9f4acb56fb13dbb360915a98d299ed86e29a057c3b4453af7795a555433d7a71"
+          },
+          "trace": {
+            "shape": [
+              4608
+            ],
+            "dtype": "float64",
+            "sha256": "c43aae250594f7707ff2c5b1dff7f431724c96242ed912bc288ceba632680d01"
+          }
+        }
+      }
+    },
+    {
+      "n": 32,
+      "dt": 0.01,
+      "steps": 1131,
+      "quadrature": 12,
+      "electric_dofs": 9216,
+      "electric_time": 11.315,
+      "magnetic_time": 11.31,
+      "interpolation": {
+        "electric_indices": [
+          1131,
+          1131
+        ],
+        "magnetic_indices": [
+          1131,
+          1131
+        ],
+        "method": "linear between staggered time levels"
+      },
+      "fields_sha256": "4ca6c1b25c4acd9a5b874f7e9f689b9272822caf810c43b523e4a7be7318a1a7",
+      "elapsed_seconds": 6.302919007837772,
+      "record_sha256": "2842186127cf42f492d1d3fd3dc0075c6cafb6f20defb8df690938ffe91e888a",
+      "source_manifest_sha256": "0fb0496478ffe5726b8d190523a25dc37151f6f90a882abf38b482f86f13494c",
+      "source_manifest_entries": 2,
+      "executed_source_sha256": {
+        "classical.py": "fc290c8dc979f011dc74f44c521327312e18b9927e58a053b0fe62429455f703",
+        "maxwell_nanoguide.py": "b853fa1fcaf09c6f14edfe91bbbb66500f08977c975c05a61c23770e203441d1"
+      },
+      "field_contract": {
+        "electric": [
+          32,
+          32,
+          9
+        ],
+        "magnetic": [
+          32,
+          32,
+          9,
+          2
+        ],
+        "degree": 2,
+        "bounds": [
+          0,
+          10,
+          0,
+          10
+        ],
+        "coefficient_basis": "canonical tensor-product Q2 cardinal basis at 0, 0.5, 1; x varies fastest",
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "time_step": 0.01
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "field": {
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "resolution": 128,
+        "sha256": "29047a08e6d060a34ff08446c07e57323cc787c4e75e74a97a0edcdf00b5b56c",
+        "file": "mhm-n16-f128-q12-dt0.01-fields.npz"
+      },
+      "reference": {
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "resolution": 1024,
+        "sha256": "a0e57e8ee5c417190dbd44ce9394c6f863981f4315f36855772db4d83994b189",
+        "file": "dg-q2-n1024-q12-dt0.00125-device.npz"
+      },
+      "components": [
+        "electric",
+        "magnetic_x",
+        "magnetic_y"
+      ],
+      "absolute_l2": [
+        0.05233495327736082,
+        0.032800458787144104,
+        0.051377142187356686
+      ],
+      "reference_l2": [
+        6.173334534279304,
+        2.47779018550127,
+        6.957376998160574
+      ],
+      "relative_l2": [
+        0.008477582574985236,
+        0.013237787032604779,
+        0.007384556306340741
+      ],
+      "combined_relative_l2": 0.00834632703186687,
+      "integration_grid": 1024,
+      "gauss_order": 3
+    },
+    {
+      "field": {
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "resolution": 128,
+        "sha256": "634a23209ab7b75fe6509d7b7fc3ca62205617af4ceca2ab1b0b64431847e098",
+        "file": "mhm-n8-f128-q12-dt0.01-fields.npz"
+      },
+      "reference": {
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "resolution": 1024,
+        "sha256": "a0e57e8ee5c417190dbd44ce9394c6f863981f4315f36855772db4d83994b189",
+        "file": "dg-q2-n1024-q12-dt0.00125-device.npz"
+      },
+      "components": [
+        "electric",
+        "magnetic_x",
+        "magnetic_y"
+      ],
+      "absolute_l2": [
+        0.04466108059613861,
+        0.030499639651000544,
+        0.04397034181337783
+      ],
+      "reference_l2": [
+        6.173334534279304,
+        2.47779018550127,
+        6.957376998160574
+      ],
+      "relative_l2": [
+        0.00723451488788506,
+        0.012309209968409939,
+        0.006319959637806451
+      ],
+      "combined_relative_l2": 0.007241117526963865,
+      "integration_grid": 1024,
+      "gauss_order": 3
+    },
+    {
+      "field": {
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "resolution": 32,
+        "sha256": "4ca6c1b25c4acd9a5b874f7e9f689b9272822caf810c43b523e4a7be7318a1a7",
+        "file": "dg-q2-n32-q12-dt0.01.npz"
+      },
+      "reference": {
+        "electric_time": 11.315,
+        "magnetic_time": 11.31,
+        "resolution": 1024,
+        "sha256": "a0e57e8ee5c417190dbd44ce9394c6f863981f4315f36855772db4d83994b189",
+        "file": "dg-q2-n1024-q12-dt0.00125-device.npz"
+      },
+      "components": [
+        "electric",
+        "magnetic_x",
+        "magnetic_y"
+      ],
+      "absolute_l2": [
+        0.7532734486940704,
+        0.560280419392524,
+        0.8291306091051036
+      ],
+      "reference_l2": [
+        6.173334534279304,
+        2.47779018550127,
+        6.957376998160574
+      ],
+      "relative_l2": [
+        0.12202051330788768,
+        0.22612101003183865,
+        0.11917287353039993
+      ],
+      "combined_relative_l2": 0.1301215650361043,
+      "integration_grid": 1024,
+      "gauss_order": 3
+    }
+  ],
+  "comparison_with_retained_measurements": {
+    "record": "comparison.json",
+    "sha256": "d65aa835e9c6b3b69225b8df0c563fcc47845081ff32adb5d66a72e54f189050",
+    "agreement": [
+      {
+        "field": "mhm-n16-f128-q12-dt0.01-fields.npz",
+        "absolute_maximum_difference_from_retained_record": {
+          "absolute_l2": 3.4486302702418925e-15,
+          "reference_l2": 2.6645352591003757e-15,
+          "relative_l2": 8.205242041370298e-16,
+          "combined_relative_l2": 5.412337245047638e-16
+        }
+      },
+      {
+        "field": "mhm-n8-f128-q12-dt0.01-fields.npz",
+        "absolute_maximum_difference_from_retained_record": {
+          "absolute_l2": 4.170275236248244e-15,
+          "reference_l2": 2.6645352591003757e-15,
+          "relative_l2": 1.0061396160665481e-15,
+          "combined_relative_l2": 6.513886652292911e-16
+        }
+      },
+      {
+        "field": "dg-q2-n32-q12-dt0.01.npz",
+        "absolute_maximum_difference_from_retained_record": {
+          "absolute_l2": 5.551115123125783e-16,
+          "reference_l2": 2.6645352591003757e-15,
+          "relative_l2": 1.1102230246251565e-16,
+          "combined_relative_l2": 5.551115123125783e-17
+        }
+      }
+    ]
+  },
+  "current_cpu_gpu_verification": {
+    "record_sha256": "a3ff84767293e9f2d64e5dea512b51c597df349bcba463c6ca0169ee696229ce",
+    "checks": [
+      {
+        "n": 8,
+        "derivative_absolute_max": 4.440892098500626e-16,
+        "electric_relative_l2_coefficients": 2.4020415664899996e-16,
+        "magnetic_relative_l2_coefficients": 3.5781652197325455e-16
+      },
+      {
+        "n": 16,
+        "derivative_absolute_max": 2.220446049250313e-16,
+        "electric_relative_l2_coefficients": 5.238004722178681e-16,
+        "magnetic_relative_l2_coefficients": 5.00370668294873e-16
+      },
+      {
+        "n": 32,
+        "derivative_absolute_max": 0.0,
+        "electric_relative_l2_coefficients": 6.504115106938243e-16,
+        "magnetic_relative_l2_coefficients": 8.090356361931745e-16
+      }
+    ],
+    "scope": "Independent reference derivatives and 128-step CPU/GPU trajectories on 8, 16 and 32 cells per coordinate; not a full CPU replay of the 1024 grid."
+  },
+  "display": {
+    "fields": "Signed Ez, Hx and Hy; one shared signed scale per component across methods.",
+    "errors": "Separate signed component scales per method; MHM and coarse classical amplitudes are labelled independently.",
+    "macro_mesh": "Actual 16x16 and 8x8 geometries on respective MHM panels; 16x16 comparison overlay on classical panels.",
+    "profiles": "Independent one-sided Q2 traces per fine cell; dotted macroface intersections; no smoothing across discontinuities.",
+    "physical_norm": "Unweighted broken Q2 L2 on common 1024x1024 integration partition, 3 Gauss points per coordinate."
+  },
+  "images_sha256": {
+    "components.png": "7e769e0ee6ee205c53a25d6ebdc62f7847a92afab402f3e90fb7b71b7bd40fe6",
+    "errors.png": "2818fee46abd7a43c333c8b9c6935242b6b0225d03e3e6898b964b8a48d7f43a",
+    "profiles.png": "d73868043cd83629d1fb2481d0ce751447032d40d544248c955abbd1803971a2"
+  },
+  "distribution": "Full field arrays and private independent comparison sources are not distributed in wheels or documentation assets."
+}

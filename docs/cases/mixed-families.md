@@ -49,7 +49,7 @@ in section 6.1.2 uses macro degree \(k_{sk}\), local normal degree
 \(k_{in}=k_{sk}+1\), and optional additional interior bubbles. Thus the local
 normal degree is not the macroface degree.
 
-The [mixed-elasticity conventions](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-elasticity.md) apply to every family:
+The [mixed-elasticity conventions](mixed-elasticity.md) apply to every family:
 negative Cauchy traction, independent weak rotation, three physical rigid-motion
 constraints, heterogeneous Lamé callbacks, the finite-modulus hydrostatic
 identity, and the exact infinite-lambda gauge. The stress remains a full tensor;
@@ -99,7 +99,6 @@ heterogeneous contrast or arbitrary skeletal space.
 
 ![Mixed-family finite and infinite bulk-modulus sweep](../figures/elasticity-families/incompressible-sweep.png)
 
-
 ```bash
 pixi run --locked -e test-core python -m examples.solve_elasticity_families --degree 2 --enrichment 1
 pixi run --locked -e notebooks python -m examples.plot_elasticity_families
@@ -112,7 +111,7 @@ section 6.1.2/Table 3, including the gradient of the oscillatory Young modulus
 in the force. It uses Poisson ratio 0.3 and the exact displacement trace on the
 boundary; that trace is nonzero despite the paper's conflicting textual
 boundary description. The formulas are given on the
-[mixed-elasticity page](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-elasticity.md).
+[mixed-elasticity page](mixed-elasticity.md).
 
 The declared mesh has 32 diagonal macrotriangles, nominal \(H=1/4\), with
 \(s=1,2,4,8\) macroface segments and local refinement \(r=2s\).
@@ -129,7 +128,7 @@ the stated problem and nominal spaces, not a claim of reproducing Table 3.
 
 DOLFINx/UFL independently assembles this variable-modulus case in the same fine
 spaces, with a Basix normal-moment restriction matching each segmented macro
-traction. The [assembly and physical-norm conventions](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/mixed-elasticity.md#independent-assembly-and-reproduction)
+traction. The [assembly and physical-norm conventions](mixed-elasticity.md#independent-assembly-and-reproduction)
 apply to every branch, including the enriched interior stress modes. The maximum
 relative difference below is taken across full stress, displacement and rotation
 and both norm quadrature orders.
@@ -156,7 +155,6 @@ above.
 ```bash
 pixi run --locked -e notebooks python -m examples.solve_elasticity_literature --trace-degree 1 --enrichment 1
 ```
-
 
 The four-level acquisitions use assembly quadrature order 12 and error
 quadrature order 10. At the last nominal level, \(s=8\), \(r=16\):

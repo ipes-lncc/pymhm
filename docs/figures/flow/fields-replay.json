@@ -1,0 +1,57 @@
+{
+  "scope": "Only absent field, error and one-sided profile figures rendered for the original 32-macrotriangle/local edge-refinement four/P1-trace analytical cases. Original physical-norm records remain unchanged.",
+  "original_metrics_sha256": "0a1b342c355870a826d6592c535c58912e6e223f542752a20b1ce60296eedcac",
+  "field_map_metrics_sha256": "7eae52c03b41245d01f87b6e4fc92b0f4779aad35891c0300eb91e0469a45e03",
+  "maximum_physical_norm_relative_change": 4.0438611546346667e-14,
+  "physical_norm_relative_changes": {
+    "stokes": {
+      "taylor-hood": {
+        "velocity_l2": 4.0438611546346667e-14,
+        "pressure_l2": 1.8383526784012275e-14,
+        "divergence_l2": 1.831527532605572e-14
+      },
+      "usfem": {
+        "velocity_l2": 2.0071800280056837e-14,
+        "pressure_l2": 2.5679850574204132e-15,
+        "divergence_l2": 1.6032311795788997e-15
+      }
+    },
+    "brinkman": {
+      "taylor-hood": {
+        "velocity_l2": 1.1007634225243387e-14,
+        "pressure_l2": 3.925820800668746e-14,
+        "divergence_l2": 3.837098609977731e-15
+      },
+      "usfem": {
+        "velocity_l2": 2.3172593230652138e-14,
+        "pressure_l2": 6.968629501928265e-15,
+        "divergence_l2": 1.5891926070937297e-15
+      }
+    },
+    "oseen": {
+      "taylor-hood": {
+        "velocity_l2": 1.2637004504371892e-14,
+        "pressure_l2": 1.3738856221852237e-14,
+        "divergence_l2": 1.5105649464939013e-14
+      }
+    }
+  },
+  "source_sha256": {
+    "examples/plot_flow_cases.py": "fdfa1de3a4f574c7e073cb6d1153569212c62cc5cadc330e71310db01455116e",
+    "examples/manufactured.py": "45feeb5fd34284f041d6186e84ee329debfd6e16f3cf411fa0bb246d93c16e19"
+  },
+  "figures": {
+    "oseen-profiles.png": "0dab3f2d408e343284468c4fe15b7bd76e3178d305429ddb07a06e5ba86952f9",
+    "stokes-velocity.png": "138ff7a13d9d4e5e32fdd63253cfa8453bd651bde6c8dd3c2719c18668a26133",
+    "stokes-profiles.png": "553464f5054d849a95d746ba27cf930bd6a508879e440961650900aa144a78d7",
+    "stokes-diagnostics.png": "0dc57bc057dd6a62efd0dade498312f348bef429b388608d7d55dc03b1a040e1",
+    "brinkman-velocity.png": "935039c722059c1deb85334f061076ab911e7329c1ffaf13093fafda7e816998",
+    "oseen-pressure.png": "28d49d2157c39d214a1c0f55467f0ec862d2ae465915b148db48cd949fc90532",
+    "brinkman-profiles.png": "01890a3d485a8a648bab70f044f295d014b694709e6d97f3bf8822463800227a",
+    "oseen-velocity.png": "94c8b3b7bd605145d4130af57c66c3e514e9e128e4bf44b1201590cb8a07ee8e",
+    "brinkman-diagnostics.png": "c7e8082cbceb9739043b8d4acc1c7a7998d9e04b5badf120f92954415d2b2acd",
+    "stokes-pressure.png": "47a8a307d6c8bdfcd2f724741480522048ec9fb36854b90e457f74ee923efb7d",
+    "oseen-diagnostics.png": "5633dc6c1ac3d7dabde5c736e5bbd791fb5663722418e256f0462edc39a7daa5",
+    "brinkman-pressure.png": "b1287416eda5b0fc344d40d50c6e354903b77c2cc072fb4646fe603e51c53c65"
+  }
+}

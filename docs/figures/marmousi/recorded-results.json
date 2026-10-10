@@ -1,0 +1,22 @@
+{
+  "scope": "Plots of retained norm measurements; no field reconstruction or new simulation",
+  "gradient_cutout_m": [
+    4975.0,
+    5025.0,
+    25.0,
+    75.0
+  ],
+  "pressure_domain": "Complete physical domain",
+  "derivative_domain": "Physical domain minus the fixed 50 by 50 m source square",
+  "source_records_sha256": {
+    "classical-convergence.json": "d7e084b28acec798d8f8a4bd2eff3fe3751c8df91756e697cc41506bebcdcbfe",
+    "mhm-H20-ell1-vs-classical-p4.json": "89af97301b6a27feabc7e10927f66c14871d2561e5666e063588d6997d119b4c"
+  },
+  "plot_owner_sha256": "b64f472d2b004ce23d471ca9199cd0ebaf8045453b2c40667ffc829efe6d6062",
+  "figure_sha256": {
+    "recorded-reference-refinement.png": "c942a72caa7169d8fa1051b68b00e80e3775151cc9d938cc1d5d44a18724aff6",
+    "recorded-reference-refinement.svg": "7b2baca305f5acfaca62635b81123f1af352ba0fb33f8a8f45f7ceb541ce5acf",
+    "recorded-mhm-comparison.png": "251e9048209c64ee0ef99906157abf3d397294770f6508bdeddde73df344a3d7",
+    "recorded-mhm-comparison.svg": "aa9db20d38e71f5888850a68fbc83057083866939ca911019f5c77f73a399571"
+  }
+}

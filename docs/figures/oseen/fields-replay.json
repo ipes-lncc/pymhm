@@ -1,0 +1,27 @@
+{
+  "source": "examples/solve_oseen.py",
+  "source_sha256": "c9ad5d79346f509fb70a5cc83abafe0db95588e8411b701b1be2b0266ac22c99",
+  "original_record_sha256": "e250f85e8bbc31e322d351b4902037f29753e344b39f10f7df42a9e4723f9101",
+  "original_field_sha256": "7a3ca4b55a580de838149fe3c6f31562abd2963a1fc7ff1cc77e1bf8c8a94bff",
+  "replay_field_sha256": "7a58878d782273164f1197c39a6c0b69fcdcf79e7e3c2f9f5219086c5a4a4715",
+  "case": "boundary layer, viscosity0.01, local P3/P3, P1 traces, four adaptive iterations, order20",
+  "physical_norms": {
+    "macro_cells": 16,
+    "fine_cells": 2566,
+    "trace_dofs": 280,
+    "velocity_l2": 0.009006942130714764,
+    "pressure_l2": 0.00815895217861416,
+    "mixed_error": 0.5560659353019894,
+    "eta1": 0.07779772421146675,
+    "eta2": 0.010732208117880547,
+    "effectivity": 0.15920761677528092,
+    "divergence_l2": 0.030255848230948866,
+    "algebraic_residual": 3.712378265730277e-16
+  },
+  "relative_change": {
+    "velocity_l2": 2.5711898742316696e-13,
+    "pressure_l2": 2.6895919341971253e-13,
+    "mixed_error": 6.968019635724059e-14
+  },
+  "seconds": 259.41466744989157
+}

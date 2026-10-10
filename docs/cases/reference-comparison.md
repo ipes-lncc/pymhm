@@ -8,7 +8,7 @@ finite elements, skeleton space, and boundary enforcement. Across five mesh
 sizes, full-field L2 differences stay below $5.1\times10^{-14}$ in pressure and
 $4.5\times10^{-13}$ in flux. The largest case contains 65,536 fine triangles.
 
-The [coarse cosine comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/coarse-cosine.md) separately checks the gallery's
+The [coarse cosine comparison](coarse-cosine.md) separately checks the gallery's
 diagonal mesh and P0 traces. Both comparisons use the same boundary assembly;
 their prescribed pressures are zero and nonzero, respectively.
 
@@ -94,35 +94,41 @@ Across the five meshes:
 - the largest nodal pressure difference is $1.04\times10^{-13}$;
 - the largest raw flux component difference is $1.42\times10^{-12}$.
 
-![Exact, MSL, PyMHM, and PyMHM minus MSL fields](../figures/reference/darcy-fields.png)
-
-The pressure plots render nodal P1 values. Flux panels show **signed components**
-on the same scale for the analytic, MSL, and PyMHM fields. Analytic flux
-is sampled at fine-cell centroids for visualization; all reported analytic
-error norms use quadrature. Difference panels use separate roundoff scales.
-The scalar meshwise errors alone would not establish this fieldwise agreement.
+These measurements use the recorded coefficient-by-coefficient comparison,
+rather than inferring agreement from overlapping error curves. The retained
+JSON includes the checksums of the original field snapshots; those coefficient
+snapshots are not distributed with this checkout. Consequently, this page shows
+the retained norms and full-field differences, and does not present a spatial
+MSL reconstruction from unavailable coefficients.
 
 ## Inspect the archived results
 
-The repository includes the complete MSL numerical field snapshots for
-all five meshes, their connectivity, a JSON report with full precision metrics,
-and SHA256 checksums. MSL source and the comparison execution programs are
-not included in the distribution. The visualization script reads the archived
-results without an MSL installation or a new finite element solve:
+The [full precision numerical report](https://github.com/ipes-lncc/pymhm/blob/main/examples/results/reference-darcy-comparison.json)
+retains the five mesh levels, component revisions, comparison metrics and
+SHA-256 checksums. MSL source and comparison execution programs are not
+distributed. The convergence figure can be regenerated from this report without
+an MSL installation or another finite element solve:
 
-```bash
-pixi run --locked -e notebooks python -m examples.plot_reference_comparison
+```python
+import json
+from pathlib import Path
+from examples.plot_reference_comparison import plot_errors
+
+report = json.loads(
+    Path("examples/results/reference-darcy-comparison.json").read_text()
+)
+plot_errors(report)
 ```
 
 The executed verification checked every pressure coefficient and every raw flux
 component against the MSL solution. Its tolerances allow platform-dependent
 floating point roundoff and are much smaller than the discretization errors.
-The plotter displays that recorded evidence; it does not rerun the verification.
-
-- `examples/results/reference-darcy-comparison.json`: methods, metrics and checksums.
-- `examples/results/reference-darcy-{4,16,64,256,1024}.npz`: reference numerical fields.
-- `examples/results/reference-darcy-aligned-{4,16,64,256,1024}.npz`: paired MSL/pyMHM fields in the matched numbering.
-- `examples/results/reference-darcy-fields.npz`: the recorded 64-macrotriangle plot data.
+The plotter displays those measurements; it does not rerun the verification.
+The original `reference-darcy-*.npz` and aligned field snapshots are required
+to replay spatial reference fields. New PyMHM solves cannot replace those
+snapshots while retaining their original acquisition checksums. The
+[coarse cosine report](coarse-cosine.md#mixed-comparison-with-neopz) includes a
+separate, downloadable physical-field replay against native NeoPZ evaluation.
 
 ## Relation to the literature and other backends
 
@@ -133,7 +139,7 @@ problems solved to sufficient accuracy. This experiment instead refines both
 macro and local meshes with fixed local ratio and P1 local approximation.
 It verifies agreement between MSL and pyMHM; it does **not**
 claim to reproduce that article's convergence curve or a P2/RT2 reconstruction
-table. The [Darcy gallery](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy.md) separately distinguishes raw and
+table. The [Darcy gallery](darcy.md) separately distinguishes raw and
 conservative flux approximations.
 
 An additional run of **`ipes-lncc/msl_mfem`**, revision

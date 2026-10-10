@@ -77,7 +77,7 @@ $$
 In two dimensions, RT2 has 15 local flux degrees of freedom: nine edge
 moments and six interior moments. BDM2 instead equals
 \([\mathbb P_2(T)]^2\), has 12 local degrees of freedom, and has divergence
-in P1. The [BDM2/P1 Darcy solver](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/darcy-bdm.md) consequently represents a
+in P1. The [BDM2/P1 Darcy solver](darcy-bdm.md) consequently represents a
 different mixed pair from the published RT2 reference.
 
 The paper does not identify whether its 1,314,000 count includes pressure.
@@ -113,31 +113,24 @@ a separate conforming assembly using PyMHM's basis and integration kernels,
 not an independent implementation or the article's mixed RT2 reference.
 
 
-![Signed Darcy flux components and their differences: conforming Q3 and fixed MHM](../figures/spe10/darcy-flux-q3-components.png)
-
-Flux magnitude shows the conductive channels; signed components additionally
+Flux magnitude describes conductive channels; signed components additionally
 resolve the direction of flow. A difference of magnitudes,
 \(\lvert q_{\mathrm{MHM}}\rvert-\lvert q_{\mathrm{Q3}}\rvert\), is not the
 vector difference \(q_{\mathrm{MHM}}-q_{\mathrm{Q3}}\). Likewise, a finite
-set of displayed samples does not define an integrated L2 norm. The actual
-66-square macrogrid supplies the common spatial partition for the maps;
-it is an overlay on the conforming reference, which has no MHM interfaces.
+set of point samples does not define an integrated L2 norm. This report
+publishes the retained integrated comparisons and reference-refinement records.
+The original full coefficient and pixel-center field arrays needed to replay
+the Q3, MSL and NeoPZ spatial panels are not distributed with the checkout;
+scalar norms cannot be used to reconstruct those maps.
 
-Component maps use a blue–white–red diverging palette with zero at white.
-The color coordinate is \(\operatorname{asinh}(100q/M)/\operatorname{asinh}(100)\),
-where \(M\) is the common maximum absolute component value in the MHM and
-reference panels. This symmetric scale resolves small fluxes without clipping
-extrema; colorbar labels retain physical flux values. Signed differences use
-their own maximum absolute value. Magnitude maps retain linear scales.
-
-The displayed MHM flux is the raw one-sided field \(-K\nabla p_h\).
+The MHM flux in these comparisons is the raw one-sided field \(-K\nabla p_h\).
 Its normal component can jump across fine and macro interfaces. Macro
 conservation instead follows from the skeletal flux: for every macrocell
 \(K\), the oriented integral of that flux equals \(\int_K f\).
 Small macro balance defects do not imply that the raw gradient field is
 H(div)-conforming or pointwise divergence-free.
 
-The [RT moment reconstruction](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reconstruction-moments.md) is a separate
+The [RT moment reconstruction](reconstruction-moments.md) is a separate
 algorithm on triangular submeshes. Its continuous-test-space conservation
 identity must not be strengthened to independent balance on every fine
 cell. Neither that reconstruction nor the published RT2 convergence
@@ -174,20 +167,6 @@ physical-field evaluation. The sparse system is equilibrated and solved
 through `pypardiso` 0.4.7 with MKL 2026.1; its final residual is checked in
 the unscaled equations. This is the classical RT0/P0 method, not an
 execution of the NeoPZ MHM controller.
-
-![Classical Q3, MSL P1 and NeoPZ RT0 flux magnitudes on a common scale](../figures/spe10/darcy-flux-classical-references.png)
-
-### MSL P1 fields
-
-
-### NeoPZ RT0/P0 fields
-
-
-These maps use the same 60×220 material-pixel centers and overlay the actual
-66-square MHM partition on every panel. A deterministic one-sided value
-is used when a sample lies on a fine-element interface. The partition
-overlay on each classical reference provides spatial correspondence;
-those global reference methods have no MHM interfaces.
 
 ## Integrated differences
 
@@ -334,14 +313,17 @@ recorded \(10^{-7}\) identity criterion, which therefore remains **not
 satisfied**. These measurements quantify energy consistency and reaction
 precision; they are not a certified error bound.
 
-## Inspect the records and redraw the figures
+## Inspect the records and replay requirements
 
 ```sh
 pixi run --locked -e notebooks gallery-spe10-flux
 ```
 
-This command reads the archived fields and norms without executing the
-reference codes. Download the
+This command requires the original field archives identified by the comparison
+record. With those payloads, it reads their coefficients and norms without
+executing the reference codes. The checkout retains their digests and numerical
+measurements, rather than all historical full-field arrays. The refinement
+figure above uses only these retained measurements. Download the
 [case index and aggregated measurements](../figures/spe10/darcy-flux-comparison.json).
 Integrated comparisons are recorded in `darcy-flux-q3-norms.json`,
 `msl-cg-mhm-960x3520-q3.json` and `neopz-mhm-480x1760-order3.json`, all in

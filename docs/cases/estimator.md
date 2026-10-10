@@ -2,7 +2,7 @@
 
 The scalar estimator in `pymhm.estimators.darcy` implements the unit-diffusion case of
 Section 5 in [Barrenechea et al. (2026)](https://doi.org/10.1137/24M1673073).
-It combines the [RT moment reconstruction](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/reconstruction-moments.md) with a
+It combines the [RT moment reconstruction](reconstruction-moments.md) with a
 continuous recovered potential. The original broken MHM solution is preserved.
 This implementation assumes identity diffusion, homogeneous Dirichlet data,
 convex triangular macrocells and a globally conforming union of the fine meshes.
