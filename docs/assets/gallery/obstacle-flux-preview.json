@@ -1,0 +1,28 @@
+{
+  "field": "MHM physical Darcy flux magnitude",
+  "local_space": "RT0 flux / P0 pressure on 51200 fitted fine triangles",
+  "trace_space": "Two P0 physical normal-flux segments per macroface",
+  "macro_space": "200 macrotriangles on the actual archived partition",
+  "basis": "Already executed physical RT0 cell samples; no coefficient reinterpretation",
+  "sample_values_sha256": "b9060efa2883c3ab779209efbdc5e47c52c72c89c43e3a847af6dd7109d669d2",
+  "one_sided_values": "Cellwise constant display of the stored fine-cell samples",
+  "color_scale": "Power normalization with exponent 0.35; full magnitude range",
+  "color_range": [
+    2.084593529296994e-18,
+    6.79396805329053
+  ],
+  "schema": "pymhm-gallery-preview-v1",
+  "input_archive": "examples/results/quarter-five-spot/reference/classical-vs-mhm-r16-s2.npz",
+  "input_archive_sha256": "249fb23e9369c4e2fe2c20fd49cba18ed324bd2d3c2f829692ca7d91f83b6af9",
+  "figure_sha256": "53e1a2166ae5e5d202ddae91959dcec0bf0bc066139fe2b881fcdd2d0064afbc",
+  "source_sha256": {
+    "examples/gallery_previews.py": "4617c2574ca8c91b34b37bb0e3c6c074cfacac707152d2ca4dde5d30ccbcdd0c",
+    "examples/results/quarter-five-spot/reference/classical-convergence.json": "66f31b03f5b7bf402c22866e4f83eccc93e571cd9c2619700e4b4769e395becd",
+    "examples/plot_quarter_reference.py": "af4e83219a884f9c211f2f4a8fa97ff5ad6be9899887275839baaffe2e149a1c",
+    "examples/quarter_spot_problem.py": "822b725def3fddf79167a26e8c24f158cb36887e8c26f5000291440f4df1abb7",
+    "examples/plot_mesh.py": "e9a6ebba22061e1b8e61cc8cde84825d1341ccf853ac196b1945c0aac021f2c6"
+  },
+  "attribution": "IPES Research Group",
+  "license": "CC-BY-4.0",
+  "acquisition": "Replay of existing executed fields; no numerical solve"
+}

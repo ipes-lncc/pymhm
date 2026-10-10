@@ -1,4 +1,4 @@
-# Theoretical Background
+# Introduction
 
 PyMHM separates a variational formulation from its local numerical solver.
 A method is specified by its volume equations, skeleton spaces, retained
@@ -6,10 +6,34 @@ physical modes and global coupling equations. The common
 [hybrid construction](theory/foundations.md) makes these choices explicit;
 changing a linear solver backend does not change the method.
 
+## What is local, and what is global?
+
+Partition a physical domain $\Omega$ into macrocells $K$. A **local
+problem** computes a source response and responses to interface data on
+one $K$, using its coefficient field and fine mesh. A **global problem**
+chooses the interface coefficients so that neighboring responses satisfy
+the coupling conditions. Physical modes that a local Neumann operator
+cannot determine, such as a pressure constant or a rigid displacement,
+also belong to the global problem.
+
+For example, primal Darcy MHM solves for a mean-zero pressure correction
+inside each cell. Its global unknowns are normal Darcy-flux moments and
+one pressure mean per cell. The global equations impose pressure
+continuity in the selected trace moments, boundary data, and cell mass
+balance. MsHHO instead couples pressure moments on faces; Maxwell couples
+tangential electromagnetic moments. These are different formulations,
+even though all can use the same assembly and local-solver interfaces.
+
+Each page below identifies the physical operator, then states the local
+equations, global equations, admissible spaces and error estimates. The
+[hybrid construction](theory/foundations.md) connects those variational
+equations to the matrices returned by a provider. The
+[mesh discussion](theory/meshes.md) explains where each approximation lives.
+
 The [features overview](tutorials/overview.md) follows the complete
 mesh → local problems → global problem → assembly → solution → postprocessing
 workflow. The [Bibliography](literature.md) gives publication details;
-the [Gallery](gallery/index.md) records the discretizations actually evaluated.
+the [Gallery](gallery/index.md) presents applications using these formulations.
 
 ## Method families
 
@@ -77,8 +101,8 @@ the refinement variable, field norm and measured final interval rates.
 
 A measured slope qualifies the stated sequence. It does not qualify every
 material, geometry or backend. Method-specific sources and estimates follow
-on the linked pages; the [Gallery](gallery/index.md) distinguishes analytical
-verification, matched discrete comparisons and reproduction limits.
+on the linked pages; the application pages identify the physical data and
+reference used in each calculation.
 
 ## Geometry and meshes
 

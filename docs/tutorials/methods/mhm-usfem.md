@@ -1487,7 +1487,7 @@ python -m scripts.run_notebooks /path/to/mhm_usfem_rad.ipynb --timeout 7200
 
 The runner uses the active Python interpreter and writes an executed copy and receipt under `build/notebooks/introduction/`. Larger data and field archives have [documented download links](../../data.md) and verified checksums.
 
-The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `4e04e823bd700e3108ff564015f0a611ceb9524697759692cd4238911541cbb6` in the [publication manifest](../introduction/manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
+The displayed figures and numerical outputs correspond to the retained validated execution of notebook SHA256 `4e04e823bd700e3108ff564015f0a611ceb9524697759692cd4238911541cbb6` in the [publication manifest](notebook-manifest.json). Current instructions use the separately downloaded local `examples` and `scripts` support modules. Running the current source produces a separate receipt for its actual notebook, support bytes and environment. Timings describe the recorded hardware and solver settings; measure your own environment on an idle machine.
 
 ## Separate the smooth estimate from the layer experiment
 

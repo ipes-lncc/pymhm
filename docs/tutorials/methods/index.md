@@ -7,7 +7,7 @@ approximation spaces and hypotheses of its cited estimate. A polynomial patch
 checks the implementation; the refinement studies use solutions outside the chosen local spaces
 and several terminal intervals to examine the asymptotic regime.
 
-## Reading the convergence evidence
+## Interpret the convergence plots
 
 Each refinement figure preserves the coarse levels. Dashed curves show the
 cited target powers anchored to the finest measured error. The successive-rate
@@ -25,21 +25,11 @@ Stable consecutive rates near $q$, together with a plateau in $A_i$, distinguish
 the asymptotic regime from a single favorable slope. The shaded window always
 contains the last four measured levels. The accompanying table reports its
 three successive orders and the variation of its normalized amplitude.
-Independent local-resolution, quadrature, boundary and physical-equation checks
-remain necessary: a fitted exponent does not verify an error theorem.
-
-An error estimate is an upper bound; a faster measured order can satisfy it
-without producing a plateau at its guaranteed power. Each page distinguishes
-proved estimates from target rates reported in a published numerical experiment.
-The elastodynamic spatial targets, in particular, are published numerical rates
-and are not presented as a proved dynamic error estimate.
-
-Smooth spatial controls and heterogeneous applications appear separately. A
-temporal study holds the spatial discretization fixed; it cannot establish the
-multiscale spatial rate. Estimates for trace refinement use the trace segment
-size rather than the fixed macro diameter. An order marked **observed** has no
-separate theorem claim. The [convergence notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb)
-recomputes these diagnostics from the attributed records.
+Each page identifies whether its target comes from an error estimate or a
+published numerical observation. Spatial studies refine the macro or trace
+scale under the stated hypotheses; time studies keep spatial resolution fixed.
+The [convergence notebook](https://github.com/ipes-lncc/pymhm/blob/main/notebooks/convergence/method_rates.ipynb)
+recomputes these diagnostics from the stored records.
 
 ## Local and global formulations
 

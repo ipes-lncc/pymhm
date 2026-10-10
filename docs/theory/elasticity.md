@@ -21,10 +21,48 @@ $$
 
 Orthogonality to all these modes is required. Translation constraints alone leave
 rotation singularities. Testing against rigid motions imposes both resultant
-force and moment balance. With the generic positive boundary term used above,
+force and moment balance. With a positive boundary term in the local equation,
 the multiplier is $\lambda_K=-\tau n_K$. Some elasticity papers use
 $+\tau n_K$ and reverse the boundary signs; both conventions are valid when
 used consistently.
+
+### Primal local problems and global equilibrium
+
+Set $a_K(u,v)=(\mathsf C:\varepsilon(u),\varepsilon(v))_K$.
+**Locally**, find source and negative-traction responses in
+
+$$
+\widetilde V_h(K)=
+ \{v\in V_h(K)^d:(v,r)_K=0\text{ for every }r\in\mathcal R(K)\},
+$$
+
+by solving
+
+$$
+a_K(\widetilde u_K,v)+\langle\lambda_K,v\rangle_{\partial K}
+ =(f,v)_K,\qquad v\in\widetilde V_h(K).
+$$
+
+The full displacement is
+$u_K=\widetilde u_K+\sum_jc_{K,j}r_{K,j}$.
+**Globally**, determine the vector traction field $\lambda$ and all
+rigid-motion coefficients $c_{K,j}$ from
+
+$$
+\begin{aligned}
+\sum_K\langle\mu_K,u_K\rangle_{\partial K}
+ &=\langle\mu,u_D\rangle_{\Gamma_D},\\
+\langle\lambda_K,r\rangle_{\partial K}&=(f,r)_K,
+ &&r\in\mathcal R(K).
+\end{aligned}
+$$
+
+Translations give force balance and rotations give moment balance.
+Prescribed physical traction $t_N=\tau n$ fixes $\lambda=-t_N$ on
+$\Gamma_N$; free trace tests vanish there. A pure-traction problem needs
+global force/moment compatibility and one set of global rigid-displacement
+moments. Fixing every cell's rigid displacement would remove the coarse
+physical unknowns.
 
 The mixed weak-symmetry formulation of [Devloo et al. (2021)](https://doi.org/10.1051/m2an/2021013) uses stress in a tensor H(div) space,
 displacement in a discontinuous space, and a rotation multiplier. In two dimensions,
@@ -60,6 +98,23 @@ F_K(v,q)={}&(f,v)_K+\alpha_K\sum_{\tau\subset K}h_\tau^2(f,R(v,q))_\tau.
 \end{aligned}
 $$
 
+**Local unknowns** are the displacement–Herrmann-pressure pair $(u_K,p_K)$.
+The equation on the rigid-displacement complement is
+
+$$
+B_K((u_K,p_K),(v,q))+\langle\lambda_K,v\rangle_{\partial K}
+ =F_K(v,q).
+$$
+
+The pressure is left free.
+**Global unknowns** are the same negative tractions and rigid
+displacements as in primal elasticity. Their coupling uses the
+displacement-moment and rigid-equilibrium equations above, now with the
+GaLS pair reconstructed locally. Testing a rigid displacement introduces
+no strain or residual stabilization, so its force/moment balance is
+unchanged. Compressibility or the global incompressible pressure gauge
+supplies the pressure identity described below.
+
 Equal-order Pk/Pk fields are restricted only by physical displacement moments
 against the three rigid modes; there is no local pressure gauge. For variable
 shear modulus, $R$ includes $2\varepsilon(u)\nabla G$. The API requires its
@@ -85,6 +140,47 @@ The [elasticity cases](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/e
 [MSL comparison](https://github.com/ipes-lncc/pymhm/blob/main/docs/cases/elasticity-reference.md) provide non-affine verification.
 
 ### Implemented weak-symmetry stress method
+
+Write $\mathsf A$ for the material compliance and $r_K$ for a
+skew-symmetric rotation field. **Locally**, prescribe
+$\tau_hn_K=-\lambda_K$ and find stress, displacement and rotation from
+
+$$
+\begin{aligned}
+(\mathsf A\tau_h,S)_K+(u_h,\operatorname{div}S)_K+(r_h,S)_K&=0,
+ &&Sn_K=0,\\
+(\operatorname{div}\tau_h,v)_K&=-(f,v)_K,\\
+(\tau_h,s)_K&=0,
+ &&s\text{ in the skew-symmetric test space}.
+\end{aligned}
+$$
+
+Rigid displacement and its associated rotation form a coupled kernel.
+During a source or trace response, the displacement/rotation test pair
+belongs to the complement of this coupled kernel. The omitted kernel
+tests remain global equilibrium equations; the complete reconstructed
+solution satisfies the displayed divergence and symmetry rows for the
+full test space. The last equation enforces weak stress symmetry.
+
+**Globally**, negative-traction coefficients and the coupled rigid
+coefficients determine displacement continuity. The local displacement
+trace is the variational functional $\widehat u_K$ defined by
+
+$$
+\langle\widehat u_K,Sn_K\rangle_{\partial K}
+ =(\mathsf A\tau_h,S)_K+(u_h,\operatorname{div}S)_K+(r_h,S)_K.
+$$
+
+Its skeletal moments obey
+
+$$
+\sum_K\langle\mu_K,\widehat u_K\rangle_{\partial K}
+ =\langle\mu,u_D\rangle_{\Gamma_D},
+$$
+
+together with the same force/moment balances. This functional is determined by the mixed
+equations; a discontinuous volume displacement is not assigned an
+arbitrary pointwise boundary value.
 
 The two-dimensional stress solver uses two BDM2 rows, discontinuous P1
 vector displacement and discontinuous P1 scalar rotation. All local rigid
@@ -148,6 +244,29 @@ $$
 \rho\,\partial_{tt}u-\operatorname{div}(C\varepsilon(u))=f,
 \qquad v=\partial_tu.
 $$
+
+**Local problem on a macro time slab.** For a supplied negative traction
+$\lambda_K$ and the known displacement/velocity at the slab's start,
+propagate
+
+$$
+(\rho\,\partial_{tt}u_K,v)_K
+ +(C\varepsilon(u_K),\varepsilon(v))_K
+ +\langle\lambda_K,v\rangle_{\partial K}=(f,v)_K.
+$$
+
+Each cell computes its free response and responses to the slabwise
+constant traction coefficients. **The global problem** chooses those
+coefficients so that the end-of-slab displacement satisfies
+
+$$
+\sum_K\langle\mu_K,u_K(t_{n+1})\rangle_{\partial K}
+ =\langle\mu,u_D(t_{n+1})\rangle_{\Gamma_D}.
+$$
+
+Physical traction data fix the exterior negative-traction coefficients.
+Initial conditions determine the rigid displacement and velocity;
+static force/moment gauges are not added to the inertial local solve.
 
 The local Newmark parameters $\beta=1/4$, $\gamma=1/2$ give the effective
 operator $M+\delta t^2A/4$ and second-order time accuracy for sufficiently

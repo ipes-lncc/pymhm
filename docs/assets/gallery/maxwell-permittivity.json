@@ -1,0 +1,39 @@
+{
+  "scope": "Exact declared material geometry; no wave field is solved or shown",
+  "bounds": [
+    0,
+    10,
+    0,
+    10
+  ],
+  "macro_overlay": [
+    16,
+    16
+  ],
+  "inclusion_radius": 0.3125,
+  "sample_grid": [
+    1000,
+    1000
+  ],
+  "permittivities": [
+    1,
+    1.5,
+    3.14
+  ],
+  "image_interpolation": "nearest",
+  "attribution": "IPES Research Group",
+  "preview_sha256": "caea72c43ab9458ad46604137b4d733df5eba2e9ce08f687375da6ae66963f98",
+  "source_sha256": {
+    "examples/gallery_visuals.py": "8b23379f71ed3a294abf9d5f960760429fa87f8f0d66d84988695bf391e1c586",
+    "examples/maxwell_nanoguide.py": "b853fa1fcaf09c6f14edfe91bbbb66500f08977c975c05a61c23770e203441d1"
+  },
+  "runtime_versions": {
+    "pymhm": "1.3.1",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "numba": "0.68.0",
+    "fenics-basix": "0.11.0",
+    "matplotlib": "3.11.2"
+  },
+  "figure_sha256": "7fee4a7b20ca8a43623157107e51846a8f80e179eacce09865da3aec8b1e5570"
+}

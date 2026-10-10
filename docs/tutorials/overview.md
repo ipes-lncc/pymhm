@@ -248,16 +248,16 @@ Local workers return independent contributions. The coordinator accumulates
 shared faces in macroelement order. Process execution additionally requires
 importable, picklable providers and mesh factories; native resources are
 created and released in their owning workers. The
-[process tutorial](introduction/darcy_process_scalability.md) demonstrates
+[process tutorial](../gallery/notebooks/darcy_process_scalability.md) demonstrates
 that workflow. A solver or learned response provider can use the same
-[local contracts](providers.md), with their physical acceptance checks.
+[local contracts](../guides/providers.md), with their physical acceptance checks.
 
 ## More general formulations use the same contracts
 
 - **Vector and mixed fields:** declare a vector or mixed Basix/UFL element and
   write its trial/test forms. The
-  [elasticity](introduction/multiscale_elasticity.md) and
-  [Brinkman](introduction/stokes_brinkman_boundary_layer.md) tutorials declare
+  [elasticity](../gallery/notebooks/multiscale_elasticity.md) and
+  [Brinkman](../gallery/notebooks/stokes_brinkman_boundary_layer.md) tutorials declare
   rigid modes, velocity–pressure spaces and physical gauges explicitly.
 - **Independent pairings:** `b`, `c`, `d` and `g` are independent. Petrov–Galerkin,
   Robin and nonsymmetric systems do not require an inferred transpose.
@@ -265,7 +265,7 @@ that workflow. A solver or learned response provider can use the same
   `local.trace_pairings(expression, interface=other_interface)`.
   `local.interface_pairing(other_interface)` supplies the unsigned boundary
   mass matrix against the primary interface, accumulating shared vertices and
-  integrating unequal face partitions. The [MH²M tutorial](introduction/mh2m_multiscale.md)
+  integrating unequal face partitions. The [MH²M tutorial](methods/mh2m.md)
   uses these operations for its private conormal and shared pressure trace.
 - **Additional global UFL forms:** `global_problem.interface_equation(builder)`
   binds supported planar face spaces. For example, a user-selected term
@@ -280,7 +280,7 @@ that workflow. A solver or learned response provider can use the same
 - **Custom interfaces and full manual control:** provide your own
   `InterfaceSpace` and `TraceBinding`, or use `LocalEquations` and
   `MultiscaleProblem` directly. The
-  [custom-space tutorial](custom-interface.md) demonstrates dense basis changes,
+  [custom-space guide](../guides/custom-interface.md) demonstrates dense basis changes,
   arbitrary numbering and explicitly declared orientations while preserving
   physical fields.
 

@@ -39,199 +39,104 @@ theme:
     toggle:
       icon: material/brightness-4
       name: Switch to light mode
-exclude_docs: '/cases/adaptive-darcy.md
-
+exclude_docs: |
+  /cases/adaptive-darcy.md
   /cases/adaptive-transport.md
-
   /cases/analytic.md
-
   /cases/anisotropic-stress.md
-
   /cases/coarse-cosine.md
-
   /cases/darcy-audit.md
-
   /cases/darcy-bdm.md
-
   /cases/darcy-jump.md
-
   /cases/darcy-rt.md
-
   /cases/darcy.md
-
   /cases/darcy3d.md
-
   /cases/elasticity-reference.md
-
   /cases/elasticity-tensor-rt.md
-
   /cases/elasticity.md
-
   /cases/elasticity3d.md
-
   /cases/elastodynamics.md
-
   /cases/estimator.md
-
   /cases/flow-audit.md
-
   /cases/flow.md
-
   /cases/flow3d.md
-
   /cases/gals3d.md
-
   /cases/helmholtz.md
-
   /cases/high-order.md
-
   /cases/hpc4e.md
-
   /cases/mapped-well-oscillatory.md
-
   /cases/mapped-well.md
-
   /cases/marmousi.md
-
   /cases/maxwell-nanoguide.md
-
   /cases/maxwell.md
-
   /cases/mh.md
-
   /cases/mh2m-heterogeneous.md
-
   /cases/mh2m.md
-
   /cases/mh3d.md
-
   /cases/mixed-elasticity.md
-
   /cases/mixed-elasticity3d.md
-
   /cases/mixed-families.md
-
   /cases/mixed-well-geometries.md
-
   /cases/neopz.md
-
   /cases/oseen.md
-
   /cases/periodic.md
-
   /cases/pgmhm-inclusions.md
-
   /cases/pgmhm-spe10.md
-
   /cases/pgmhm.md
-
   /cases/planar3d.md
-
   /cases/polygons.md
-
   /cases/polyhedral-rad.md
-
   /cases/primal-elasticity.md
-
   /cases/rad-conditioning.md
-
   /cases/rad-layer.md
-
   /cases/rad3d.md
-
   /cases/reconstruction-moments.md
-
   /cases/reconstruction3d.md
-
   /cases/reference-comparison.md
-
   /cases/reproduction.md
-
   /cases/scalars.md
-
   /cases/spe10-adaptive.md
-
   /cases/spe10-flux.md
-
   /cases/spe10.md
-
   /cases/star-polyhedra.md
-
   /cases/stokes-adaptive.md
-
   /cases/tensor-rt.md
-
   /cases/tetra-pk.md
-
   /cases/transient-transport.md
-
   /cases/unfitted.md
-
   /cases/unusual-spe10.md
-
   /cases/unusual.md
-
   /cases/weighted-estimator.md
-
   /figures/**
-
   !/figures/introduction-layers/**
-
   !/figures/darcy-3d-scalability/**
-
   !/figures/darcy-3d-workspace-lu-20261005/**
-
   !/figures/darcy-3d-accelerators-20261005/**
-
   !/figures/performance-numba/complete-workflow.png
-
   !/figures/performance-numba/kernel-speedups.png
-
   !/figures/core-extensions/cube-p0-fields.png
-
   !/figures/core-extensions/hdiv3d-convergence.png
-
   !/figures/core-extensions/hdiv3d-native-verification.json
-
   !/figures/core-extensions/mshho3d-convergence.png
-
   !/figures/core-extensions/mshho3d-native-verification.json
-
   !/figures/core-extensions/prism-p2-k2-fields.png
-
   !/figures/core-extensions/tetra-p0-fields.png
-
   !/figures/core-extensions/tetra-p1-k1-fields.png
-
   !/figures/core-extensions/tetra-p2-k2-fields.png
-
   !/figures/core-extensions/tetra-p3-k1-fields.png
-
   !/figures/mshho/convergence.png
-
   !/figures/mshho/fields.png
-
   !/figures/nested/convergence.png
-
   !/figures/nested/fields.png
-
   !/figures/quarter-five-spot/classical-vs-mhm-components.png
-
   !/figures/quarter-five-spot/obstacle-macro-cut.png
-
   !/figures/quarter-five-spot/point-convergence.json
-
   !/figures/quarter-five-spot/point-flux-elevation.json
-
   !/figures/quarter-five-spot/point-flux-elevation.png
-
   !/figures/quarter-five-spot/reference/point-native-verification.json
-
   !/figures/minimal-convergence/**
-
   !/figures/guides/**
-
-  '
+  !/figures/marmousi/material.png
 nav:
 - Home: index.md
 - Getting Started:
@@ -241,7 +146,7 @@ nav:
   - Data and notebook downloads: data.md
   - Figure reuse and attribution: licensing.md
 - Theoretical Background:
-  - theory.md
+  - Introduction: theory.md
   - Multiscale variational foundations: theory/foundations.md
   - Primal, mixed and Robin elliptic methods: theory/elliptic.md
   - MH²M, MsHHO, Petrov–Galerkin and unfitted methods: theory/alternatives.md
@@ -253,7 +158,7 @@ nav:
   - Recovery, indicators and adaptivity: theory/recovery.md
 - Guides:
   - guides/index.md
-  - One heterogeneous Darcy problem: guides/heterogeneous-darcy.md
+  - Defining heterogeneous coefficients: guides/heterogeneous-darcy.md
   - Serial, threads and processes: guides/cpu.md
   - MPI execution: guides/mpi.md
   - GPU and multiple GPUs: guides/gpu.md
@@ -262,11 +167,10 @@ nav:
   - UFL and DOLFINx local assembly: fenics.md
   - Linear solver selection: solvers.md
   - Execution and operator reuse: execution.md
-  - Performance measurement: performance.md
   - Field visualization: visualization.md
-  - Cartesian Qk discretizations: quadrilateral.md
-  - Custom interface spaces: tutorials/custom-interface.md
-  - External local providers: tutorials/providers.md
+  - Cartesian meshes and local spaces: quadrilateral.md
+  - Custom interface spaces: guides/custom-interface.md
+  - External local providers: guides/providers.md
 - Tutorials:
   - tutorials/index.md
   - Start here -- feature overview: tutorials/overview.md
@@ -295,52 +199,38 @@ nav:
     - Error indicators: tutorials/methods/error-indicators.md
     - Adaptive refinement: tutorials/methods/adaptivity.md
     - Recursive MHM: tutorials/methods/recursive-mhm.md
-  - Worked physical examples:
-    - Multiscale Darcy and convergence: tutorials/introduction/darcy_multiscale_convergence.md
-    - Darcy on a SPE10 layer: tutorials/introduction/darcy_spe10_layer.md
-    - Multiscale elasticity: tutorials/introduction/multiscale_elasticity.md
-    - MsHHO with multiscale permeability: tutorials/introduction/mshho_multiscale.md
-    - MH²M with multiscale permeability: tutorials/introduction/mh2m_multiscale.md
-    - Reaction–diffusion layers: tutorials/introduction/mhm_usfem_rad.md
-    - Stokes–Brinkman boundary layers: tutorials/introduction/stokes_brinkman_boundary_layer.md
-  - Parallel examples:
-    - Darcy with threads: tutorials/introduction/darcy_parallel_scalability.md
-    - Darcy with processes: tutorials/introduction/darcy_process_scalability.md
-    - Three-dimensional Darcy: tutorials/introduction/darcy_3d_parallel_scalability.md
   - Notebook catalogue: tutorials/notebooks.md
-  - Scalar formulation examples: tutorials/scalar.md
-  - Vector formulation examples: tutorials/vector.md
 - Gallery:
   - gallery/index.md
-  - By physical problem:
-    - Darcy: gallery/darcy.md
-    - Stokes, Brinkman and Oseen: gallery/flow.md
-    - Transport and reaction–diffusion: gallery/transport.md
-    - Transient transport: gallery/transient-transport.md
-    - Elasticity: gallery/elasticity.md
-    - Elastodynamics: gallery/elastodynamics.md
-    - Acoustics: gallery/acoustics.md
-    - Electromagnetism: gallery/maxwell.md
-  - By dimension:
-    - Two-dimensional cases: gallery/two-dimensional.md
-    - Three-dimensional cases: gallery/three-dimensional.md
-  - Detailed evidence:
-    - Reading the numerical evidence: cases/index.md
-    - Initial convergence studies: cases/minimal-convergence.md
-    - RAD and Brinkman boundary layers: cases/introduction-layers.md
-    - Three-dimensional Darcy scaling: cases/darcy-3d-scalability.md
-    - CPU and GPU scaling: cases/darcy-3d-accelerators.md
-    - Recursive MHM: cases/nested.md
-    - MsHHO: cases/mshho.md
-    - Quarter-five spot and obstacle: cases/quarter-five-spot.md
-    - MsHHO in 3D: cases/mshho3d.md
-    - Mixed H(div) in 3D: cases/enriched-hdiv3d.md
+  - SPE10 reservoir flow: gallery/applications/spe10.md
+  - Marmousi II acoustics: gallery/applications/marmousi.md
+  - Flow around an obstacle: gallery/applications/quarter-five-spot.md
+  - Heterogeneous solid: gallery/applications/heterogeneous-elasticity.md
+  - Reaction–diffusion layers: gallery/applications/rad-layer.md
+  - Brinkman boundary layers: gallery/applications/brinkman-layer.md
+  - Transient transport: gallery/applications/transient-transport.md
+  - Photonic device: gallery/applications/maxwell-device.md
+  - Nested Darcy scales: gallery/applications/recursive-darcy.md
+  - Parallel Darcy simulations: gallery/applications/parallel-darcy.md
 - Development:
   - development/index.md
   - Contribution and release workflow: development/contributing.md
   - Software architecture: architecture.md
   - Variational API contracts: variational.md
   - Verification procedures: verification.md
+  - Verification studies:
+    - cases/index.md
+    - Refinement catalogue: cases/minimal-convergence.md
+    - RAD and Brinkman controls: cases/introduction-layers.md
+    - Recursive equivalence: cases/nested.md
+    - MsHHO verification: cases/mshho.md
+    - Well and obstacle references: cases/quarter-five-spot.md
+    - MsHHO in 3D: cases/mshho3d.md
+    - Mixed H(div) in 3D: cases/enriched-hdiv3d.md
+  - Performance reports:
+    - Overview: performance.md
+    - 3D CPU workspaces, LU and AMG: cases/darcy-3d-scalability.md
+    - 3D CPU and GPU scaling: cases/darcy-3d-accelerators.md
   - Roadmap: https://github.com/ipes-lncc/pymhm/blob/main/ROADMAP.md
 - API:
   - api.md
@@ -398,3 +288,5 @@ extra_javascript:
 - javascripts/figures.js
 extra_css:
 - stylesheets/extra.css
+not_in_nav: |
+  gallery/notebooks/**

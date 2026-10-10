@@ -386,7 +386,7 @@ synchronization and host work remain part of a complete GPU comparison.
 Native correctness controls and one-host measurements do not establish
 multi-node efficiency.
 
-[Recorded MPI, resident GPU and offline/online measurements](execution.md#recorded-measurements)
+[Recorded MPI, resident GPU and offline/online measurements](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results/execution)
 state their own hardware, spaces and timing scopes. Earlier CPU measurements
 remain available in the
 [benchmark records](https://github.com/ipes-lncc/pymhm/tree/main/benchmarks/results).

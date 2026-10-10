@@ -1,6 +1,6 @@
 # PyMHM implementation, verification and validation roadmap
 
-Updated **October 9, 2026**. This is the project's canonical roadmap.
+Updated **October 10, 2026**. This is the project's canonical roadmap.
 The [scientific scope](#scientific-scope-and-acceptance-criteria) and
 [literature acceptance matrix](#acceptance-by-literature-target) identify
 implemented capabilities and remaining evidence. Detailed results belong on the
@@ -34,7 +34,7 @@ and `bind_problem` supply coordinate maps through `LocalContext` and
 lower to the existing `Equation`, `LocalEquations` and `MultiscaleProblem`
 owners. The fully explicit route remains available. See the
 [overview](docs/tutorials/overview.md), [architecture](docs/architecture.md) and
-[custom-interface tutorial](docs/tutorials/custom-interface.md).
+[custom-interface guide](docs/guides/custom-interface.md).
 
 Implemented geometry, physics and backend scopes appear in the table below.
 The [Gallery](docs/gallery/index.md) retains numerical results and the
@@ -369,7 +369,7 @@ native execution. See [Windows support](docs/windows.md).
 **Acceptance:** providers are interchangeable without changing global equations,
 worker data support spawn transfer and native resources have explicit owners.
 Real integration demonstrates accuracy, stability and cost; mocks and API
-contracts do not qualify external software. See [providers](docs/tutorials/providers.md).
+contracts do not qualify external software. See [providers](docs/guides/providers.md).
 
 ## R7 — Release the demonstrated scope
 
@@ -509,10 +509,14 @@ Keep platform/release claims tied to successful identified runs.
 
 ### Scientific documentation and notebooks
 
-The documentation reorganization, method-based tutorials, problem/dimension
-gallery indexes, source-generated API coverage and architecture diagram are
-implemented. Keep their catalogues, theory hypotheses and original publication
-citations synchronized when adding a method or extending its admissible spaces.
+The documentation uses method-based tutorials, a flat visual Gallery of
+applications, task-specific configuration Guides, source-generated API coverage
+and an architecture diagram. Application notebooks are separate from method
+lessons; duplicated scalar lesson copies and problem/dimension Gallery indexes
+are consolidated. Theoretical pages identify local and global variational
+problems, their unknowns and approximation conditions. Keep these pages and
+their original-publication citations synchronized when adding a method or
+extending its admissible spaces.
 The two-dimensional TM Maxwell tutorial demonstrates combined L2 order two
 and broken H(curl) order one over its final spatial levels, with a separately
 refined conforming scalar-wave reference for that exact physical reduction.

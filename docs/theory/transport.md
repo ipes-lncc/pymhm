@@ -28,6 +28,39 @@ The physical transport flux is $j=-\mathsf K\nabla u+\alpha u$.
 These fields have different boundary balances, so the half-advection multiplier
 must not be inserted into a transport conservation diagnostic as if it were $j$.
 
+**Local problem.** For each macrocell, compute a source response and
+responses to the half-advection trace from
+
+$$
+a_K(u_K,v)+\langle\lambda_K,v\rangle_{\partial K}=(f,v)_K.
+$$
+
+Tests and local constraints use the operator's complement; any retained
+constant is added when the global coefficients are known.
+**Global problem.** Determine the oriented trace coefficients and
+retained constant coefficients from
+
+$$
+\begin{aligned}
+\sum_K\langle\mu_K,u_K\rangle_{\partial K}
+ &=\langle\mu,u_D\rangle_{\Gamma_D},\\
+a_K(u_K,1)+\langle\lambda_K,1\rangle_{\partial K}
+ &=(f,1)_K.
+\end{aligned}
+$$
+
+The second equation is used for the retained constant mode. For the
+unstabilized form, substituting the half-advection multiplier gives
+
+$$
+\int_{\partial K}j\cdot n_K+\int_K\sigma u_K=\int_Kf.
+$$
+
+Natural data in this hybrid form prescribe the Robin multiplier. A
+prescribed total transport flux instead requires the boundary correction
+$j\cdot n_K=\lambda_K+\tfrac12(\alpha\cdot n_K)u_K$.
+With stabilization, retained-mode tests use its full operator and load.
+
 [Araya et al. (2024)](https://doi.org/10.1016/j.cma.2024.117089) defines the coarse constant space from the kernel of $a_K$ on each cell.
 Positive effective reaction removes it; pure diffusion retains it. Divergence-free
 advection tangent to the cell boundary can also retain it. This explains the
@@ -49,37 +82,10 @@ $(\tau f,\alpha\cdot\nabla v)$ to the load. Both coefficient derivatives
 are supplied by the problem definition; they are not silently set to zero for
 variable coefficients. This consistent option does not imply a discrete maximum
 principle. The constant mode is retained even when it is not a kernel, using the
-general decomposition above to preserve the diffusion limit. Mixed boundary
+general [retained-mode decomposition](foundations.md#retaining-nearly-null-local-modes)
+to preserve the diffusion limit. Mixed boundary
 data prescribe the Robin multiplier; a pure-Neumann diffusion problem imposes
 one global scalar mean.
-
-## Time-dependent diffusion
-
-For $\partial_tu-\nabla\cdot(\mathsf K\nabla u)=f$, backward Euler
-uses the same scalar hybrid spatial operator. A step of length $\Delta t$ replaces each local operator by
-$A_K+M_K/\Delta t$ and its source by
-$f_K^{n+1}+M_Ku_K^n/\Delta t$. Positive mass removes the scalar local constant
-kernel. The skeletal trace still represents outward diffusive flux.
-The constant is retained as a coarse mode, so large time steps do not require
-inverting an almost singular Neumann operator.
-
-Spatial approximation and first-order temporal error must be assessed separately.
-Time-independent diffusion/mass matrices can be assembled once. A fixed time
-step permits reuse of the complete local and global step operators; a changed
-time step changes the discrete operator. Time-dependent Dirichlet and source
-data enter the new-time load. The transient extension must be qualified
-separately from a steady benchmark.
-
-The conservative transient study in the
-[tutorial](../tutorials/methods/transient-transport.md) also includes convection
-and reaction. It uses the smooth spatial estimate of
-[Araya et al. (2024), Theorems 2–3](https://doi.org/10.1016/j.cma.2024.117089),
-with the local approximation condition A2. For the stated two-dimensional
-P2/r2 volume and P1 trace family, the broken gradient target is order two.
-The measured concentration order three is additional observed accuracy.
-The manufactured concentration is linear in time; an independent half-step
-control checks that time integration does not set the spatial error floor.
-
 
 ## MHM-USFEM: reaction–diffusion stabilization
 
@@ -98,6 +104,23 @@ F_{\mathrm{UN}}(v)&=(f,v)_K
 \end{aligned}
 $$
 
+Here the **local problem** is
+
+$$
+a_{\mathrm{UN}}(u_K,v)+\langle\lambda_K,v\rangle_{\partial K}
+ =F_{\mathrm{UN}}(v).
+$$
+
+The local unknown is scalar concentration; its trace multiplier is
+outward diffusive flux because this displayed model has no advection.
+The **global problem** matches concentration moments using the same
+skeletal equation as RAD above. A retained constant uses the full
+stabilized constant-test equation; positive reaction does not justify
+inverting an almost-null mode without numerical control. Adding
+advection requires the corresponding conservative residual and Robin
+boundary convention, rather than reusing this reaction–diffusion
+formula unchanged.
+
 The negative residual sign and the matching load are part of the method.
 Inverse constants and certified cellwise coefficient bounds limit
 $\delta_\tau$; higher-order fields include their actual Hessians and
@@ -113,14 +136,45 @@ bound or layer accuracy on a fixed coarse local mesh. The
 before adding it to operator and load, and keeps layer and smooth-rate
 studies separate.
 
-## Conservative transient transport
+## Transient transport and diffusion
 
-With capacity $\rho>0$, backward Euler adds
-$(\rho u^{n+1},v)_K/\Delta t$ to the local operator and
-$(\rho u^n,v)_K/\Delta t$ to the load. Conservative advection includes
-physical source and boundary contributions at the new time. Operator
-reuse is valid while geometry, coefficient fields, stabilization and time
+For capacity $\rho>0$, consider
+
+$$
+\rho\,\partial_tu+\nabla\cdot(-\mathsf K\nabla u+\alpha u)
+ +\sigma u=f.
+$$
+
+**Local problem at step $n+1$.** With $u_K^n$ known, backward Euler
+computes responses using
+
+$$
+\begin{aligned}
+\frac1{\Delta t}(\rho u_K^{n+1},v)_K
+ +a_K(u_K^{n+1},v)
+ +\langle\lambda_K^{n+1},v\rangle_{\partial K}
+ &=(f^{n+1},v)_K\\
+ &\quad+\frac1{\Delta t}(\rho u_K^n,v)_K.
+\end{aligned}
+$$
+
+Consistent local stabilization must also include the mass residual and
+its previous-time right-hand side. **The global problem at that step**
+matches $u^{n+1}$ through the scalar trace equation and new-time
+Dirichlet moments. The retained constant equation now includes
+$\int_K\rho(u^{n+1}-u^n)/\Delta t$ in its physical balance.
+The initial condition supplies $u^0$; it is not a new global trace
+constraint. Diffusion is the special case $\alpha=0$, $\sigma=0$,
+where the multiplier is physical diffusive flux.
+
+Operator reuse is valid while geometry, coefficient fields, stabilization and time
 step remain unchanged; changing a source need not rebuild the kernel.
+
+Positive mass removes the diffusion constant kernel, but the constant is
+retained globally so a large time step does not require an almost-singular
+local inverse. Time-dependent source and Dirichlet data are evaluated at
+the new time. A changed time step changes the local and global step
+operators even for time-independent material.
 
 The implemented Darcy/transport coupling can use an equilibrated RT0 Darcy
 flux as its advective velocity, with the stated hydrodynamic dispersion
@@ -130,6 +184,15 @@ capacity-weighted mass and physical boundary transport fluxes. Backward
 Euler's temporal order is one; spatial and material errors must not hide
 that slope. No monotonicity or discrete maximum principle is implied by
 SUPG or MHM assembly alone.
+
+The smooth spatial study uses
+[Araya et al. (2024), Theorems 2–3](https://doi.org/10.1016/j.cma.2024.117089)
+and the local approximation condition A2. For its two-dimensional
+P2/r2 volume and P1 trace family, the broken-gradient target is order two;
+the measured concentration order three is additional observed accuracy.
+The manufactured concentration is linear in time, and an independent
+half-step control separates temporal and spatial error. A steady
+qualification alone does not establish this transient result.
 
 ## References
 

@@ -1,10 +1,11 @@
 # Serial, threads and processes
 
-Start with the [common heterogeneous Darcy problem](heterogeneous-darcy.md).
-The local equations, fine meshes, normal-flux traces, physical moments and
-global boundary data remain identical in every mode.
+Choose the execution policy after defining `problem`. These settings change
+how local work is scheduled; the local equations, materials, moments and
+interface remain the same. The [API overview](../tutorials/overview.md) supplies
+a complete problem definition.
 
-## 1. Run serially
+## Run sequentially
 
 ```python
 from pymhm import ExecutionConfig, assemble
@@ -13,11 +14,10 @@ system = assemble(problem, execution=ExecutionConfig(backend="serial"))
 solution = system.solve()
 ```
 
-The coordinator constructs and condenses one local problem at a time, then
-adds its small reduced blocks to the global matrix. This is the reference
-execution for coefficient and field comparisons.
+The coordinator constructs, condenses and adds one macrocell before requesting
+the next. Use this policy for initial correctness checks and small problems.
 
-## 2. Select independent CPU workers
+## Use independent workers
 
 ```python
 policy = ExecutionConfig(
@@ -27,47 +27,51 @@ policy = ExecutionConfig(
     pipeline=True,
     native_threads=1,
 )
-parallel_system = assemble(problem, execution=policy)
-parallel_solution = parallel_system.solve()
+system = assemble(problem, execution=policy)
+solution = system.solve()
 ```
 
-`workers` is the available process count; `native_threads=1` bounds nested
-BLAS/OpenMP work in each local solve. A larger rolling window lets the workers
-continue while the coordinator reduces an earlier cell. The coordinator adds
-shared-face contributions in deterministic cell order, so adjacent cells do
-not race to write the global matrix.
+| Option | Effect |
+| --- | --- |
+| `backend="process"` | Independent spawned Python processes |
+| `backend="thread"` | Threads within one process |
+| `workers` | Maximum local workers; respect the scheduler's CPU allocation |
+| `batch_size` | Maximum submitted work window; `None` uses the worker count |
+| `pipeline=True` | Refill the ordered window as contributions are consumed |
+| `native_threads=1` | Limit each worker's supported BLAS/OpenMP pools |
 
-Use `backend="thread"` with the same fields for a thread pool. Native FEM
-assembly and mutable workspaces must be thread safe; a provider must not share
-one mutable native mesh/space among concurrent calls. The common guide creates
-the native resources inside each invocation. Gmsh uses process-global state
-and must not be called concurrently by threads.
+Workers compute reduced local blocks. The coordinator adds their shared-face
+entries in input order; neighboring cells do not write concurrently to the global
+matrix. Increasing workers beyond the number of macrocells exposes no additional
+local parallel work.
 
-## 3. Keep spawn entry points importable
+Thread providers must keep concurrent mutable native workspaces independent.
+Gmsh uses process-global state and must be serialized within a process. Numba's
+compiled numerical kernels release the GIL, but that alone does not make every
+external provider thread safe.
 
-The package uses `spawn` on every platform. Define the provider and mesh
-callables in an importable module. In a Python script, guard execution:
+## Make process callbacks importable
+
+Processes use `spawn` on every platform. Put providers, mesh factories and
+coefficient callables in an importable Python module. Construct native meshes,
+forms and solver resources inside the worker; return portable numerical data.
+Protect the launch in a script:
 
 ```python
-from examples.guides.heterogeneous_execution import declared_problem, run_cpu
+from pymhm import ExecutionConfig, assemble
+from my_formulation import make_problem
 
 if __name__ == "__main__":
-    problem = declared_problem(n=2, refinement=8)
-    system, solution, report = run_cpu(problem, backend="process", workers=2)
-    print(report)
+    problem = make_problem()
+    system = assemble(problem, execution=ExecutionConfig(backend="process", workers=8))
+    solution = system.solve()
 ```
 
-Run the file inside the locked FEM/notebook environment:
+`my_formulation` is your module containing the mathematical definition, not a
+PyMHM model module. Notebook-defined closures are suitable for serial execution;
+use an importable companion module when selecting spawned workers.
 
-```bash
-pixi run --locked -e introduction python cpu_darcy.py
-```
-
-The notebook can use the importable provider directly from its kernel. Native
-UFL/DOLFINx objects, PETSc factors and CUDA arrays stay in their owning worker;
-only the compiled numerical equations and reconstruction data cross processes.
-
-## 4. Choose a solver independently
+## Select the numerical solver independently
 
 ```python
 from pymhm import SolverConfig
@@ -77,24 +81,14 @@ system = assemble(
     execution=policy,
     solvers=SolverConfig(local_solver="pypardiso", global_solver="scipy"),
 )
-solution = system.solve()
 ```
 
-Use `introduction-intel` for that PARDISO example. The constrained Neumann
-operator is a saddle system; select a compatible indefinite/general solver,
-rather than an SPD-only method. See [solver requirements](../solvers.md).
+This PARDISO choice requires its installed native runtime. Mean-constrained
+Neumann locals are saddle systems, so an SPD-only solver cannot be selected
+without the appropriate projected formulation. See [linear solvers](../solvers.md).
 
-## 5. Compare correctness before timing
-
-Compare each macrocell's independent coefficients and physical errors against
-serial execution, using the same meshes, coefficient/source quadrature and
-error integration. The guide performs this check for two threads and two spawn
-workers. Increasing workers beyond the number of macrocells cannot expose more
-local parallel work in this four-cell example.
-
-For performance measurements, exclude form-compilation cold starts through an
-explicit warmup and report startup, serialization, global solution and
-reconstruction costs. The [3D scaling campaign](../cases/darcy-3d-scalability.md)
-provides measured strong speedup and efficiency curves; this small execution
-guide makes no speedup claim. See [detailed execution policies](../execution.md)
-for resource closure and failure propagation.
+For reusable worker resources, implement `prepare_runtime()` and `close()`
+as described in [execution and repeated solves](../execution.md).
+For timing, warm the actual forms and kernels first, then include process startup,
+serialization, reduction, global solution and reconstruction in the complete
+clock. The [Gallery](../gallery/index.md) contains measured parallel applications.

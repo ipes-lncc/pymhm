@@ -11,13 +11,22 @@ $$
 $$
 
 With $a_K(u,v)=\nu(\nabla u,\nabla v)_K+(\Theta u,v)_K$, the
-momentum equation is
+local unknowns are velocity $u_K\in V_h(K)^d$ and pressure
+$p_K\in Q_h(K)$. For a supplied vector pseudotraction, their equations
+are
 
 $$
+\begin{aligned}
 a_K(u,v)-(p,\nabla\cdot v)_K+
-\langle\lambda_K,v\rangle_{\partial K}=(f,v)_K,
-\qquad\lambda_K=(-\nu\nabla u+pI)n_K.
+\langle\lambda_K,v\rangle_{\partial K}&=(f,v)_K,\\
+-(q,\nabla\cdot u)_K&=0,\\
+\lambda_K&=(-\nu\nabla u+pI)n_K.
+\end{aligned}
 $$
+
+Velocity is prescribed on $\Gamma_D$ and pseudotraction on $\Gamma_N$.
+The pressure test has been negated to match the symmetric saddle form
+used below; this does not change incompressibility.
 
 This is a pseudotraction associated with the vector Laplacian. Replacing the
 gradient term by $2\nu(\varepsilon(u),\varepsilon(v))$ changes the natural
@@ -32,8 +41,9 @@ natural-traction mixed problem: it acts on velocity boundary traces. The global
 pressure shift is represented jointly by $p\mapsto p+c$ and
 $\lambda_F\mapsto\lambda_F+c n_F$.
 
-Pressure normalization is global. If $m_K^Tw_K$ integrates the local pressure,
-the reconstruction above induces
+When a pressure normalization is required, it is global. If $m_K^Tw_K$
+integrates the local pressure, the
+[hybrid reconstruction](foundations.md#local-matrices-and-condensation) induces
 
 $$
 \sum_Km_K^T\left(w_K^f-W_K\lambda_K+Z_Kc_K\right)=0.
@@ -43,6 +53,41 @@ It is one scalar constraint on the assembled variables. It can be imposed in a
 saddle system, with a compatibility multiplier that should vanish for compatible
 data. Zero pressure mean imposed on every local problem without additional global
 pressure unknowns changes the formulation.
+
+### Global coupling and velocity modes
+
+The global unknown is the vector pseudotraction $\lambda$, together
+with $d$ translation coefficients per Stokes macrocell. Each local
+Stokes response is computed with zero velocity moments against those
+translations; its retained translation is reconstructed from the global
+coefficients. Positive Brinkman drag determines the translations locally;
+retaining them in the equivalent global decomposition is useful near the
+Stokes limit and does not declare them to be exact kernel vectors.
+
+The global coupling equations are
+
+$$
+\begin{aligned}
+\sum_K\langle\mu_K,u_K\rangle_{\partial K}
+ &=\langle\mu,u_D\rangle_{\Gamma_D},\\
+a_K(u_K,r)-(p_K,\nabla\cdot r)_K
+ +\langle\lambda_K,r\rangle_{\partial K}
+ &=(f,r)_K,\qquad r\text{ retained on }K.
+\end{aligned}
+$$
+
+The first condition matches velocity moments across macrofaces.
+For Stokes translations, the second becomes force balance
+$\int_{\partial K}\lambda_K=\int_Kf$ componentwise. For a stabilized
+local operator, this retained-mode equation uses the full stabilized
+bilinear form and load given below. Fixed natural coefficients are
+excluded from the free trace tests. A constant pressure test gives
+$\int_K\operatorname{div}u_K=0$ even in the residual-stabilized form.
+Fully prescribed velocity requires
+$\int_{\partial\Omega}u_D\cdot n=0$; when the boundary conditions leave
+the pressure shift undetermined, the single global normalization fixes it.
+
+### Local USFEM stabilization
 
 Stable mixed local spaces, such as Taylor–Hood under the relevant mesh conditions,
 and stabilized equal-order spaces are both possible. The USFEM construction in
@@ -64,6 +109,15 @@ B_K((u,p),(v,q))={}&a_K(u,v)-(p,\nabla\cdot v)_K
 F_K(v,q)={}&(f,v)_K-\sum_{\tau\subset K}\kappa_\tau(f,R(v,q))_\tau.
 \end{aligned}
 $$
+
+The source and trace responses therefore solve
+
+$$
+B_K((u_K,p_K),(v,q))+\langle\lambda_K,v\rangle_{\partial K}
+ =F_K(v,q),
+$$
+
+with the same retained velocity moments and global coupling as above.
 
 For constant scalar drag $\gamma\ge0$ and P1/P1 fields, the selected parameter is
 
@@ -140,6 +194,26 @@ $$
 \lambda_K=\left(-\nu\nabla u+pI+
 \tfrac12u\otimes\alpha\right)n_K.
 $$
+
+**Local problems** use the mixed momentum/divergence equations above,
+replacing the velocity bilinear form by
+
+$$
+\begin{aligned}
+a_K^{\mathrm O}(u,v)={}&\nu(\nabla u,\nabla v)_K
+ +\tfrac12((\alpha\cdot\nabla)u,v)_K\\
+&-\tfrac12(u,(\alpha\cdot\nabla)v)_K+(\gamma_0u,v)_K.
+\end{aligned}
+$$
+
+Consistent stabilized locals add the full Oseen momentum residual to
+both the operator and the source. **The global problem** couples the
+half-advection pseudotraction through the same velocity-moment equation,
+retained-mode equations and applicable pressure gauge. Thus the extra
+convection changes the local operator and physical boundary quantity,
+while the global test still measures velocity continuity. Prescribing
+$(-\nu\nabla u+pI)n$ as though it were the Oseen multiplier would omit
+the half-advection boundary term.
 
 The pressure gauge and mixed-space compatibility remain necessary. A prescribed
 convection solve may be a component of a time or nonlinear iteration, but a

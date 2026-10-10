@@ -1,11 +1,10 @@
 # CUDA and multiple GPUs
 
-Use the [same heterogeneous Darcy problem](heterogeneous-darcy.md). Choosing a
-CUDA solver changes the local numerical algebra, while its UFL/DOLFINx forms
-are still assembled on the CPU. Local matrices remain distinct when their
-materials differ.
+Choose a CUDA backend independently of the local variational form. UFL/DOLFINx
+assembly remains on the CPU; selecting a device solver moves the numerical
+factorization and solves. Distinct materials still have distinct local matrices.
 
-## 1. Solve local saddle systems on one GPU
+## Solve on one device
 
 ```python
 from pymhm import SolverConfig, assemble
@@ -17,85 +16,94 @@ system = assemble(
 solution = system.solve()
 ```
 
-The cuDSS backend factors the constrained sparse Neumann saddle systems with
-compatible pivoting. The global SciPy factorization remains on the CPU.
-Uploads, CUDA setup, factorization, residual checks, downloads and resource
-release are part of this workflow. Install the `introduction-gpu` profile and
-use a CUDA-capable device/driver; see [CUDA installation](../installation.md).
+The cuDSS backend factors general constrained sparse local saddle systems with
+pivoting. The global SciPy solve stays on the CPU. Use a supported CUDA device
+and driver with CuPy, nvmath and cuDSS; the locked `introduction-gpu` profile
+also supplies UFL assembly. See [installation](../installation.md).
 
-## 2. Batch small independent local systems
+## Assign batches to several devices
 
-The explicit numerical interface can assemble the same local UFL records
-first, then distribute condensation across two devices:
+The low-level numerical interface accepts assembled `LocalProblem` objects:
 
 ```python
-from pymhm.core.equations import compile_local_equations
-from pymhm.core.system import HybridSystem
 from pymhm.execution.cuda import condense_multi_gpu
 
-records = [
-    compile_local_equations(problem.local_provider(cell))
-    for cell in problem.context.hierarchy.items
-]
 responses = condense_multi_gpu(
-    (record.problem for record in records),
+    local_problems,
     devices=(0, 1),
     batch_size=8,
-    solver="batched",
+    solver="auto",
+    dense_size_limit=512,
 )
-system = HybridSystem.from_responses(
-    responses, metadata=(record.metadata for record in records)
-)
-solution = system.solve()
 ```
 
-This example's additional `D/g` and exterior pressure loads are zero, so the
-response-only global constructor represents the same problem. A general
-`LocalEquations` record can also contain nonzero direct global terms: preserve
-and add those terms explicitly when using this low-level interface. The
-ordinary `assemble` path handles them automatically.
+One dedicated worker thread owns each visible device. `auto` uses pivoted dense
+batched LU for sufficiently small augmented systems and sparse cuDSS above the
+size limit. Dense storage grows quadratically with each local system's size;
+choose `batch_size` according to device memory. Responses preserve input order
+and contain host data after transfer and synchronization complete.
 
-One dedicated worker thread owns each explicit device. Small size/RHS groups
-use pivoted batched LU; dense storage grows quadratically with each augmented
-local size. `solver="auto"` selects sparse cuDSS above its configured dense
-size limit. Transfers and stream synchronization finish before return.
+For the basic hybrid equations with no additional direct global `D/g` forms,
+construct the global system from those responses:
 
-## 3. Combine MPI and rank-owned GPUs
+```python
+from pymhm.core.system import HybridSystem
 
-Inside an MPI launch, give each rank one visible GPU through the scheduler:
+system = HybridSystem.from_responses(
+    responses, boundary_load=boundary_moments, metadata=local_metadata
+)
+solution = system.solve(fixed=prescribed_trace_values)
+```
+
+Here boundary moments and prescribed trace coefficients follow your formulation's
+convention. If the records also contain direct global terms, assemble those terms
+explicitly with the response contributions; `from_responses` alone does not
+recover them. The ordinary `assemble(problem)` path handles declared terms
+automatically. See [explicit contributions](../execution.md#compact-condensation-and-a-second-reconstruction-pass).
+
+## Combine MPI and GPUs
+
+Give each rank one visible device through the scheduler. Set its device context
+before solving the rank-owned cells:
 
 ```python
 import cupy as cp
 from mpi4py import MPI
-from examples.guides.heterogeneous_execution import declared_problem, run_mpi
+from pymhm.execution.mpi import solve_distributed
 
-# Scheduler allocation: one visible device per rank; its local CUDA ordinal is 0.
+comm = MPI.COMM_WORLD
+owned_cells = problem.context.hierarchy.items[comm.rank::comm.size]
 with cp.cuda.Device(0):
-    solution, report = run_mpi(
-        declared_problem(n=2, refinement=8), MPI.COMM_WORLD, local_solver="cudss"
+    solution = solve_distributed(
+        problem.local_provider,
+        owned_cells,
+        trace_size=problem.trace_size,
+        comm=comm,
+        local_solver="cudss",
     )
 ```
 
-Use the Linux `introduction-gpu` profile for this UFL/MPI/PETSc/CUDA example.
-The lean `hpc` profile supplies MPI/PETSc/CUDA for already assembled numerical
-operators; it does not install DOLFINx. On a single host with both GPUs
-visible to every rank, assign distinct devices using the MPI shared-memory
-communicator's **node-local** rank; the notebook demonstrates that mapping.
-A global-rank modulo device-count rule is not a general multi-node allocation
-policy. PETSc/MUMPS still solves the distributed global saddle system.
+This fragment assumes zero additional global/boundary loads, as in the basic
+[MPI fragment](mpi.md#assign-cells-once). Include owned boundary and global terms
+for your actual problem. If each rank sees one assigned GPU, its CUDA ordinal is
+zero. If all GPUs are visible, use the MPI **node-local** rank and the scheduler's
+allocation to select a device. Global rank modulo device count does not describe
+a general multi-node placement policy. PETSc/MUMPS still owns the distributed
+global solve.
 
-## AMG has operator requirements
+The Linux `hpc` profile supplies MPI/PETSc/CUDA for assembled numerical operators;
+`introduction-gpu` additionally supplies DOLFINx. The separate `gpu` profile
+supports device algebra on Linux and Windows.
 
-The local Neumann system with its integral constraint is indefinite. An
-SPD-only AMG backend is not interchangeable with its sparse LU. A projected
-positive-definite complement or a genuinely coercive local operator can use
-the compatible AMG workflow, with separate original-equation checks after
-reconstruction. The [solver guide](../solvers.md) states each backend's
-requirements. The [3D accelerator campaign](../cases/darcy-3d-accelerators.md)
-documents its particular projected/iterative local systems and controls.
+## Choose an admissible AMG operator
 
-The guide executes one-device cuDSS, two-device batched condensation and
-two-rank/two-device sparse LU on its actual installed hardware. Agreement is
-checked against the same CPU coefficients and field norms. This small problem
-is a correctness demonstration; it does not establish a speedup. The gallery
-retains measured absent gains as well as measured gains.
+The full constrained Neumann local matrix is indefinite. An SPD-only AMG preset
+cannot replace its LU directly. The supported projected local AMG path enforces
+kernel compatibility and restores physical moments; alternatively use a valid
+saddle block preconditioner. The [solver guide](../solvers.md) specifies these
+requirements and the independently checked original-equation residuals.
+
+A device solver is not a speedup guarantee. Measure setup, uploads, hierarchy or
+factor construction, repeated RHS work, synchronization, downloads and global
+solution. Recorded applications and scaling plots belong to the
+[Gallery](../gallery/index.md), separately from these configuration instructions.

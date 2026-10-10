@@ -1,0 +1,43 @@
+{
+  "scope": "Current-source acquisition of the documented layered analytical transport case",
+  "bounds": [
+    0,
+    3,
+    0,
+    1
+  ],
+  "time": 1,
+  "time_step": 0.0078125,
+  "steps": 128,
+  "macro_divisions": 8,
+  "macro_triangles": 128,
+  "local_refinement": 4,
+  "darcy_spaces": "RT0/P0",
+  "transport_degree": 3,
+  "trace_degree": 2,
+  "stabilization": "SUPG",
+  "l2_error_order10": 0.0030287630936034525,
+  "l2_error_order12": 0.0030287630936034586,
+  "darcy_flux_l2_error": 2.0584376521959827e-14,
+  "maximum_discrete_balance_residual": 5.761016663718976e-15,
+  "maximum_original_equation_relative_residual": 7.015716201884007e-16,
+  "sample_archive_sha256": "e002008f756e0f8715ca0995157b6e58fad08238e94cd0704679a52ae687c9bc",
+  "sample_archive_scope": "Broken physical display samples, not restart coefficients",
+  "attribution": "IPES Research Group",
+  "preview_sha256": "4a42556e03910d00589a351dec0ddcf9fdbbec55609d9efca6306b2b296bd146",
+  "source_sha256": {
+    "examples/gallery_visuals.py": "8b23379f71ed3a294abf9d5f960760429fa87f8f0d66d84988695bf391e1c586",
+    "examples/transport_campaign.py": "dd5f2e0d8d92ff600316ec56c8b59ccdb3da4e3f784c528cdaf2271b63e11db1",
+    "examples/formulations/darcy_transport.py": "a26c16d8a2f57909e76d382e035e0a78b9338b60c71a5d187bde20fff8ea1a8f",
+    "examples/formulations/transient.py": "8550477f0ae06ae78d4aa20bd8f37261da98c8d1b1fb043bf67116beca074931"
+  },
+  "runtime_versions": {
+    "pymhm": "1.3.1",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "numba": "0.68.0",
+    "fenics-basix": "0.11.0",
+    "matplotlib": "3.11.2"
+  },
+  "figure_sha256": "08e061fa52115e2d8723501ab21d8dcc25e86c8d97afb0e628712b4b21186005"
+}

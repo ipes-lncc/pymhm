@@ -1,21 +1,18 @@
 # Distributed MPI
 
-MPI distributes both local algebra and the global skeleton matrix. It is a
-separate capability from [spawned CPU workers](cpu.md), which reduce the global
-matrix on one coordinator. Use the same
-[heterogeneous Darcy problem](heterogeneous-darcy.md) to compare them.
+MPI partitions local work and the global skeleton matrix across ranks. CPU
+spawn workers instead contribute to a global matrix owned by one coordinator.
+Choose MPI when you need the distributed algebra, then supply your existing
+problem definition on each rank.
 
-## 1. Assign each macrocell once
+## Assign cells once
 
 ```python
 from mpi4py import MPI
 from pymhm.execution.mpi import solve_distributed
-from examples.guides.heterogeneous_execution import declared_problem
 
 comm = MPI.COMM_WORLD
-problem = declared_problem(n=2, refinement=8)
 owned_cells = problem.context.hierarchy.items[comm.rank::comm.size]
-
 solution = solve_distributed(
     problem.local_provider,
     owned_cells,
@@ -25,79 +22,60 @@ solution = solve_distributed(
 )
 ```
 
+This fragment assumes a bound problem with zero additional global/boundary
+loads. Define `problem` before it, using the [API workflow](../tutorials/overview.md).
 Every rank calls the collective solver, including ranks with no cells.
-`problem.local_provider` is the bound mathematical callback: it creates its
-local context and native `COMM_SELF` mesh on the requesting rank, compiles the
-same UFL equations and releases its native resources. The local numerical
-responses remain rank owned.
+The provider creates native local meshes on `COMM_SELF` in their owning rank.
+The application assigns each physical macrocell to exactly one rank; the solver
+does not infer a mesh partition.
 
-PETSc adds reduced blocks to the distributed matrix using global trace
-indices. It communicates shared rows to their owners, and MUMPS performs the
-distributed global LU. Retained coordinates are numbered by rank and local
-cell order; compare physical fields by macrocell identity, not by assuming
-serial and MPI retained-vector indices match.
+The skeleton numbering must agree across ranks. PETSc adds reduced blocks by
+global index and communicates shared rows to their owners. MUMPS performs the
+distributed global LU. Retained modes are numbered by rank and local cell order,
+so compare reconstructed fields by macrocell identity rather than assuming
+serial and MPI retained-vector indices coincide.
 
-## 2. Launch the installed native stack
-
-Save the cell above as `mpi_darcy.py`, then launch:
-
-```bash
-pixi run --locked -e introduction mpiexec -n 2 python mpi_darcy.py
-```
-
-Set BLAS/OpenMP limits before launching when the scheduler grants one core per
-rank. For example, `OMP_NUM_THREADS=1` and `OPENBLAS_NUM_THREADS=1` avoid nested
-oversubscription. The current distributed solver requires real binary64 data,
-MPI, petsc4py and a PETSc build with MUMPS. It does not silently substitute a
-sequential solver when MUMPS is unavailable.
-
-## Boundary and gauge ownership
-
-The common guide has zero prescribed pressure, so no nonzero boundary vector
-is replicated. For a general problem:
+## Supply boundary and gauge data with ownership
 
 ```python
 solution = solve_distributed(
-    factory,
+    problem.local_provider,
     owned_cells,
-    trace_size=trace_size,
+    trace_size=problem.trace_size,
     comm=comm,
-    boundary_load=(owned_face_indices, owned_pressure_moments),
+    boundary_load=(owned_face_indices, owned_boundary_moments),
     fixed=common_prescribed_trace_coefficients,
-    moments=rank_owned_physical_moment_rows,
+    moments=rank_owned_physical_moments,
+    global_equation=rank_owned_global_equation,
 )
 ```
 
-The boundary vector and additional global forms are **additive rank-owned**
-terms. Supply each physical term once. Prescribed trace coefficients and
-physical targets are common metadata and must agree on every rank. A pure
-Neumann problem requires its physical compatibility condition and a declared
-pressure gauge; a gauge cannot repair an incompatible source. The native
-tests cover nonhomogeneous Dirichlet data, Neumann means, empty ranks and
-collective failures.
+`boundary_load` and `global_equation` are additive rank-owned contributions.
+Supply each physical term once; replicating a nonzero term on every rank counts
+it repeatedly. Boundary load signs follow the declared hybrid equation.
+`fixed` and physical moment targets are common metadata and must agree on every
+rank. A pure Neumann problem also requires compatible source/outward-flux data
+and a physical pressure gauge.
 
-## 3. Measure collective physical errors
+Only rank-owned local responses and reconstructed fields are retained. For a
+field norm, integrate squared contributions on the owned meshes and combine
+them with `comm.allreduce(..., op=MPI.SUM)` before taking the square root.
+Use collective synchronization and the largest rank duration for a complete
+wall-time measurement.
 
-```python
-from examples.guides.heterogeneous_execution import run_mpi
+## Launch the native environment
 
-solution, report = run_mpi(problem, comm)
-if comm.rank == 0:
-    print(report)
+Save the problem definition and collective calls in `run_mpi.py`:
+
+```bash
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 pixi run --locked -e introduction mpiexec -n 4 python run_mpi.py
 ```
 
-Each rank integrates pressure and physical Darcy-flux squared errors on its
-own fine meshes; an MPI sum produces the common L2 norms. The complete clock
-uses the largest rank time after synchronization. The local fields and
-coefficient-basis metadata remain available for rank-local reconstruction.
+Respect the scheduler's CPU allocation and set native thread limits before
+imports. This path requires MPI, petsc4py and a real PETSc build with MUMPS.
+An unavailable MUMPS backend produces an explicit error.
 
-The guide compares one and two ranks against the same serial problem. This
-one-host check establishes its distributed assembly contract, not multi-node
-scalability. See the [execution reference](../execution.md#distributed-mpi-assembly)
-for additional global forms, explicit gauges and current nesting restrictions.
-
-## References
-
-- Antônio Tadeu A. Gomes, Weslley S. Pereira, Frédéric Valentin and Diego
-  Paredes (2017). *On the Implementation of a Scalable Simulator for Multiscale
-  Hybrid-Mixed Methods*. [arXiv: 1703.10435v1](https://arxiv.org/abs/1703.10435v1).
+The distributed interface uses real binary64 data and does not support recursive
+`MultiscaleProblem` local operators. Inspect [distributed assembly](../execution.md#distributed-mpi-assembly)
+for the numerical data contract and explicit additional forms. For rank-owned
+CUDA devices, continue with the [GPU guide](gpu.md#combine-mpi-and-gpus).

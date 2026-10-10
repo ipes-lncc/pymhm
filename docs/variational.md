@@ -24,7 +24,7 @@ Complex formulations use the general `realify_operator`, `realify_vector` and
 `complexify_vector` operations, with interleaved real and imaginary coordinates
 for each coefficient. This representation applies to every operator block and load.
 
-The [provider notebooks](tutorials/providers.md) give executable scalar and
+The [provider notebooks](guides/providers.md) give executable scalar and
 mixed examples. The [API](api/hybrid.md) gives the complete signatures.
 The case gallery also documents predefined physical formulations imported from
 their implementation owners. Their numerical qualification applies to the
@@ -104,7 +104,7 @@ a matrix in physical value components. Shared nodes accumulate every selected
 face contribution; `project_trace` solves their joint Gram system. The same
 operations serve reaction, Robin, impedance and other interface terms.
 
-The [custom-space tutorial](tutorials/custom-interface.md) shows how to own
+The [custom-space guide](guides/custom-interface.md) shows how to own
 all numbering, basis and orientation conventions. Fully manual coefficient
 records remain available below and use the same numerical owners.
 
